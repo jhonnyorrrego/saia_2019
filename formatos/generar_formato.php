@@ -1112,14 +1112,14 @@ function crear_vista_formato($idformato, $arreglo) {
 							alerta("No es posible generar el archivo " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
 					}
 				}
-			} else // $ruta_orig=$formato[0]["nombre"];
-{ // si el archivo existe dentro de la carpeta del formato actual
+			} else { // $ruta_orig=$formato[0]["nombre"];
+ // si el archivo existe dentro de la carpeta del formato actual
 				if (is_file($fpadre[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 					$includes .= incluir($funciones[$i]["ruta"], "librerias");
 				} elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
 					$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
-				} else // si no existe en ninguna de las dos
-{ // trato de crearlo dentro de la carpeta del formato actual
+				} else { // si no existe en ninguna de las dos
+ // trato de crearlo dentro de la carpeta del formato actual
 					if (crear_archivo($fpadre[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 						$includes .= incluir($funciones[$i]["ruta"], "librerias");
 					} else
@@ -1515,9 +1515,9 @@ function crear_formato_ae($idformato, $accion) {
 						if ($accion == "adicionar") {
 						    //$campos[$h]["idcampos_formato"]
 						    $idelemento = "dz_campo_{$campos[$h]["idcampos_formato"]}";
-						    $texto .= '<div id="' . $idelemento . '" class="saia_dz" data-nombre-campo="' . $campos[$h]["nombre"] . '" data-idcampo-formato="' . $campos[$h]["idcampos_formato"] . '" data-extensiones="' . $extensiones . '" data-multiple="'. $multiple . '">';
+						    $texto .= '<div id="' . $idelemento . '" class="saia_dz" data-nombre-campo="' . $campos[$h]["nombre"] . '" data-idformato="' . $idformato . '" data-idcampo-formato="' . $campos[$h]["idcampos_formato"] . '" data-extensiones="' . $extensiones . '" data-multiple="'. $multiple . '">';
 						    $texto .= '<div class="dz-message"><span>Arrastre aqu&iacute; los archivos adjuntos</span></div></div>';
-							$texto .= '<input ' . $tabindex . ' type="hidden" ' . $adicionales . ' id="'.$campos[$h]["nombre"].'" name="' . $campos[$h]["nombre"] . '" value="">';
+							//$texto .= '<input ' . $tabindex . ' type="hidden" ' . $adicionales . ' id="'.$campos[$h]["nombre"].'" name="' . $campos[$h]["nombre"] . '" value="">';
 							//$texto.=$ul_adicional_archivo;
 						}
 						if ($accion == "editar") {
@@ -1530,7 +1530,6 @@ function crear_formato_ae($idformato, $accion) {
 			</div>\'; ?' . '>';
 						}
 						echo '</td></tr>';
-
 						$indice_tabindex++;
 						$archivo++;
 						break;
@@ -1926,6 +1925,8 @@ function crear_formato_ae($idformato, $accion) {
 		$includes .= incluir_libreria("estilo_formulario.php", "librerias");
 		if ($archivo) {
 			$texto .= "<input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''>";
+			$id_unico = '<?php echo (uniqid("' . $idformato . '-") . "-" . uniqid());?>';
+			$texto .= "<input type='hidden' name='form_uuid'       id='form_uuid'       value='$id_unico'>";
 		}
 		$texto .= '</form></body>';
 		if ($textareas) {
@@ -2036,26 +2037,32 @@ $.ajax({url: '../librerias/validar_unico.php',
 			$js_archivos = "<script type='text/javascript'>
                 var upload_url = '../../dropzone/cargar_archivos.php';
                 var mensaje = 'Arrastre aquí los archivos';
-                var idformato = 388;
                 Dropzone.autoDiscover = false;
-
+                var lista_archivos = [];
                 $(document).ready(function () {
                     Dropzone.autoDiscover = false;
                     $('.saia_dz').each(function () {
+                        var idformato = $(this).attr('data-idformato');
                     	var idcampo = $(this).attr('id');
-                    	var paramName = $(this).data('nombre-campo');
-                    	var idcampoFormato = $(this).data('idcampo-formato');
-                    	var extensiones = $(this).data('extensiones');
+                    	var paramName = $(this).attr('data-nombre-campo');
+                    	var idcampoFormato = $(this).attr('data-idcampo-formato');
+                    	var extensiones = $(this).attr('data-extensiones');
+                    	var multiple_text = $(this).attr('data-multiple');
                     	var multiple = false;
-                    	var multiple_text = $(this).data('multiple');
+                    	var form_uuid = $('#form_uuid').val();
+                    	var maxFiles = 1;
                     	if(multiple_text == 'multiple') {
                     		multiple = true;
+                    		maxFiles = 10;
                     	}
                         var opciones = {
                         	ignoreHiddenFiles : true,
+                        	maxFiles : maxFiles,
                         	acceptedFiles: extensiones,
                        		addRemoveLinks: true,
                        		dictRemoveFile: 'Quitar archivo',
+                       		dictMaxFilesExceeded : 'No puede subir mas archivos',
+                       		dictResponseError : 'El servidor respondió con código {{statusCode}}',
                     		uploadMultiple: multiple,
                         	url: upload_url,
                         	paramName : paramName,
@@ -2063,17 +2070,41 @@ $.ajax({url: '../librerias/validar_unico.php',
                             	idformato : idformato,
                             	idcampo_formato : idcampoFormato,
                             	nombre_campo : paramName,
-                            	uuid : ''
+                            	uuid : form_uuid
                             },
-                            success : function(file, response){
-                                if(response && response[file.upload.uuid]) {
-                                    console.log(file.upload);
-                                   	$('#'+paramName).val(file.upload.uuid);
+                                removedfile : function(file) {
+                                    if(lista_archivos && lista_archivos[file.upload.uuid]) {
+                                    	$.ajax({
+                                    		url: upload_url,
+                                    		type: 'POST',
+                                    		data: {
+                                        		accion:'eliminar_temporal',
+                                            	idformato : idformato,
+                                            	idcampo_formato : idcampoFormato,
+                                        		archivo: lista_archivos[file.upload.uuid]}
+                                    		});
+                                    }
+                                    if (file.previewElement != null && file.previewElement.parentNode != null) {
+                                        file.previewElement.parentNode.removeChild(file.previewElement);
+                                    }
+                                    return this._updateMaxFilesReachedClass();
+                                },
+                                success : function(file, response) {
+                                	for (var key in response) {
+                                    	if(Array.isArray(response[key])) {
+                                        	for(var i=0; i < response[key].length; i++) {
+                                        		archivo=response[key][i];
+                                            	if(archivo.original_name == file.upload.filename) {
+                                            		lista_archivos[file.upload.uuid] = archivo.id;
+                                            	}
+                                        	}
+                                    	} else {
+                                    		if(response[key].original_name == file.upload.filename) {
+                                        		lista_archivos[file.upload.uuid] = response[key].id;
+                                    		}
+                                    	}
+                                	}
                                 }
-                            },
-                            sending: function(file, xhr, formData) {
-                            	  formData.append('uuid', file.upload.uuid);
-                            }
                         };
                         $(this).dropzone(opciones);
                         $(this).addClass('dropzone');
@@ -2086,7 +2117,7 @@ $.ajax({url: '../librerias/validar_unico.php',
 	$('#formulario_formatos').validate();
 
 });
-</script>" . $enmascarar . " $codigo_enter2tab</head><body>" . $texto . "</body>" . $js_archivos . "</html>";
+</script>" . $enmascarar . " $codigo_enter2tab</head>" . $texto . $js_archivos . "</html>";
 
 		if ($accion == "editar") {
 			$contenido .= '<?php include_once("../librerias/footer_plantilla.php");?' . '>';

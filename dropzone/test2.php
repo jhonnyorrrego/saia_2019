@@ -28,37 +28,42 @@ while ($max_salida > 0) {
 		<div id="dz_campo_4611" class="saia_dz" data-nombre-campo="archivo1" data-idcampo-formato="4611" data-extensiones=".png, .jpg" data-multiple="unico">
 			<div class="dz-message"><span>Arrastre aquí los archivos adjuntos</span></div>
 		</div>
-		<input type="hidden" id="archivo1" name="archivo1" value="">
-		<div id="dz_campo_4612" class="saia_dz" data-nombre-campo="archivo2" data-idcampo-formato="4612">
+		<div id="dz_campo_4612" class="saia_dz" data-nombre-campo="archivo2" data-idcampo-formato="4612" data-extensiones=".png, .jpg,.pdf" data-multiple="multiple">
 			<div class="dz-default dz-message"><span>Arrastre aquí los archivos adjuntos</span></div>
 		</div>
-		<input type="hidden" id="archivo2" name="archivo2" value="">
+		<input type="hidden" id="form_uuid" name="form_uuid" value="<?php echo uniqid("421-") . "-" . uniqid();?>">
 	</form>
 
 </body>
 <script type='text/javascript'>
 var upload_url = 'cargar_archivos.php';
 var mensaje = 'Arrastre aquí los archivos';
-var idformato = 388;
+var idformato = 421;
 Dropzone.autoDiscover = false;
-
+var lista_archivos = [];
 $(document).ready(function () {
     Dropzone.autoDiscover = false;
     $('.saia_dz').each(function () {
     	var idcampo = $(this).attr('id');
-    	var paramName = $(this).data('nombre-campo');
-    	var idcampoFormato = $(this).data('idcampo-formato');
-    	var extensiones = $(this).data('extensiones');
-    	var multiple_text = $(this).data('multiple');
+    	var paramName = $(this).attr('data-nombre-campo');
+    	var idcampoFormato = $(this).attr('data-idcampo-formato');
+    	var extensiones = $(this).attr('data-extensiones');
+    	var multiple_text = $(this).attr('data-multiple');
     	var multiple = false;
+    	var form_uuid = $('#form_uuid').val();
+    	var maxFiles = 1;
     	if(multiple_text == 'multiple') {
     		multiple = true;
+    		maxFiles = 10;
     	}
         var opciones = {
         	ignoreHiddenFiles : true,
+        	maxFiles : maxFiles,
         	acceptedFiles: extensiones,
        		addRemoveLinks: true,
        		dictRemoveFile: 'Quitar archivo',
+       		dictMaxFilesExceeded : 'No puede subir mas archivos',
+       		dictResponseError : 'El servidor respondió con código {{statusCode}}',
     		uploadMultiple: multiple,
         	url: upload_url,
         	paramName : paramName,
@@ -66,31 +71,63 @@ $(document).ready(function () {
             	idformato : idformato,
             	idcampo_formato : idcampoFormato,
             	nombre_campo : paramName,
-            	uuid : ''
-            },
-            success : function(file, response){
-                //console.log(file);
-                //console.log(response);
-                if(response && response[file.upload.uuid]) {
-                   	$('#'+paramName).val(file.upload.uuid);
-                }
+            	uuid : form_uuid
             },
             /*addedfile: function(file) {
                 // obtener el uuid del archivo para usarlo como token. Aqui this es el objeto dropzone
                 this.options.params.uuid = file.upload.uuid;
                 //console.log(this.options);
             },*/
-            sending: function(file, xhr, formData) {
-            	  // Will send the filesize along with the file as POST data.
-            	  formData.append('uuid', file.upload.uuid);
-            	  //this.options.params.uuid = file.upload.uuid;
-            }
+            removedfile : function(file) {
+                if(lista_archivos && lista_archivos[file.upload.uuid]) {
+                	$.ajax({
+                		url: upload_url,
+                		type: 'POST',
+                		data: {
+                    		accion:'eliminar_temporal',
+                        	idformato : idformato,
+                        	idcampo_formato : idcampoFormato,
+                    		archivo: lista_archivos[file.upload.uuid]}
+                		});
+                }
+                if (file.previewElement != null && file.previewElement.parentNode != null) {
+                    file.previewElement.parentNode.removeChild(file.previewElement);
+                }
+                return this._updateMaxFilesReachedClass();
+            },
+            success : function(file, response) {
+            	for (var key in response) {
+                	if(Array.isArray(response[key])) {
+                    	for(var i=0; i < response[key].length; i++) {
+                    		archivo=response[key][i];
+                        	if(archivo.original_name == file.upload.filename) {
+                        		lista_archivos[file.upload.uuid] = archivo.id;
+                        	}
+                    	}
+                	} else {
+                		if(response[key].original_name == file.upload.filename) {
+                    		lista_archivos[file.upload.uuid] = response[key].id;
+                		}
+                	}
+            	}
+            },
         };
         //new Dropzone($(this), opciones);
         $(this).dropzone(opciones);
         $(this).addClass('dropzone');
         //console.log(opciones);
     });
+    function iterar_input_archivo(archivos, nombreCampo) {
+    	var myForm = document.forms.formulario_formatos;
+    	var myControls = myForm.elements[nombreCampo+'[]'];
+    	for (var i = 0; i < myControls.length; i++) {
+    	    var aControl = myControls[i];
+    	}
+
+        if(Array.isArray(archivos)) {
+        } else {
+        }
+    }
 });
 
 </script>

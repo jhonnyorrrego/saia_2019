@@ -253,15 +253,15 @@ function radicar_documento_prueba($tipo_contador,$arreglo,$archivos=NULL,$idfluj
     elseif(!isset($arreglo["estado"]))
       $arreglo["estado"] = "'ACTIVO'";
     $arreglo["fecha_creacion"]=fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s");
-    
-    
+
+
 	//VENTANILLA RADICACION
 	$ventanilla_radicacion=usuario_actual('ventanilla_radicacion');
 	if(!$ventanilla_radicacion){
 		$ventanilla_radicacion=0;
-	}    
+	}
     $arreglo["ventanilla_radicacion"]=$ventanilla_radicacion;
-	
+
     $valores = implode(",",array_values($arreglo));
     $campos = implode(",",array_keys($arreglo));
 
@@ -269,7 +269,8 @@ function radicar_documento_prueba($tipo_contador,$arreglo,$archivos=NULL,$idfluj
 
   //   print_r($sql);die();
 
-    phpmkr_query($sql, $conn) or error($sql."    <br> -".phpmkr_error());
+    //phpmkr_query($sql, $conn) or error($sql."    <br> -".phpmkr_error());
+    phpmkr_query($sql, $conn) or die($sql);
     $doc = phpmkr_insert_id();
     if($doc && $arreglo["estado"] == "'APROBADO'"){
     	$nombre_contador=busca_filtro_tabla("nombre","contador","idcontador=".$arreglo["tipo_radicado"],"",$conn);
@@ -290,33 +291,29 @@ function radicar_documento_prueba($tipo_contador,$arreglo,$archivos=NULL,$idfluj
     }
 
     registrar_accion_digitalizacion($doc,'CREACION DOCUMENTO');
-    if($archivos<>NULL && $archivos<>"")
-    {
+    if(!empty($archivos)) {
       $config = busca_filtro_tabla("valor","configuracion","nombre='tipo_almacenamiento'","",$conn);
-     	if($config["numcampos"])
-        {
+     	if($config["numcampos"]) {
         	$tipo_almacenamiento=$config[0]["valor"];
-        }
-       else
+     	} else {
            $tipo_almacenamiento="archivo"; // Si no encuentra el registro en configuracion almacena en archivo
-    	if($tipo_almacenamiento=="archivo")
-    	{ $archivos=explode(",",$archivos);
-         foreach($archivos as $nombre)
-         {
+     	}
+     	if($tipo_almacenamiento=="archivo") {
+    	 $archivos=explode(",",$archivos);
+         foreach($archivos as $nombre) {
           $datos_anexo=explode(";",$nombre);
-          if(!is_dir("../anexos/$doc"))
-            {mkdir("../anexos/$doc/",PERMISOS_CARPETAS);
+          if(!is_dir("../anexos/$doc")) {
+             mkdir("../anexos/$doc/",PERMISOS_CARPETAS);
              chmod("../anexos/$doc/",PERMISOS_CARPETAS);
             }
-          if(rename('../anexos/temporal/'.$datos_anexo[0],"../anexos/$doc/".$datos_anexo[0]))
+            if(rename('../anexos/temporal/'.$datos_anexo[0],"../anexos/$doc/".$datos_anexo[0])) {
              $ruta="../anexos/$doc/".$datos_anexo[0];
-          else
+            } else {
              $ruta= '../anexos/temporal/'.$datos_anexo[0];
+            }
           phpmkr_query("INSERT INTO anexos(ruta,documento_iddocumento,tipo,etiqueta) VALUES ('$ruta',".$doc.",'".$datos_anexo[2]."','".$datos_anexo[1]."')", $conn);
          }
-      }
-      elseif($tipo_almacenamiento=="db")
-          {
+      } else if($tipo_almacenamiento=="db") {
            $archivos=explode(",",$archivos);
            foreach($archivos as $nombre)
     	      {
@@ -475,7 +472,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales,$anexos=NULL) 
 			}
 
 			$values_out .= "'" . $origen . "',1,1" . $otros_valores . ",'" . @$datos["ver_notas"] . "'";
-			
+
 			foreach ($destino as $user) {
 				if ($datos["nombre"] != "POR_APROBAR") {
 					$sql = "INSERT INTO buzon_salida (archivo_idarchivo,nombre,fecha,origen,tipo_origen,tipo_destino" . $otras_llaves . ",ver_notas,destino) values (" . $values_out . "," . $user . ")";
@@ -490,7 +487,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales,$anexos=NULL) 
 				}
 				$values_in = "$idarchivo,'" . $datos["nombre"] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'$origen',1," . $datos["ruta_idruta"] . ",$tipo_destino" . $otros_valores . ",'" . @$datos["ver_notas"] . "'";
 				$sql = "INSERT INTO buzon_entrada(archivo_idarchivo,nombre,fecha,destino,tipo_origen,ruta_idruta,tipo_destino" . $otras_llaves . ",ver_notas,origen) values(" . $values_in . "," . $user . ")";
-				
+
 				phpmkr_query($sql, $conn);
 				procesar_estados($origen, $user, $datos["nombre"], $idarchivo);
 			}
@@ -2119,17 +2116,18 @@ function guardar_documento($iddoc, $tipo = 0) {
 
 	$buscar = phpmkr_query("SELECT A.* FROM " . $_REQUEST["tabla"] . " A WHERE 1=0", $conn);
 
+	$idformato = null;
+	$form_uuid = null;
+	if (@$_REQUEST["form_uuid"]) {
+	    $form_uuid = $_REQUEST["form_uuid"];
+	}
 	if (@$_REQUEST["idformato"]) {
 		$idformato = $_REQUEST["idformato"];
 	} else if (@$_REQUEST["tabla"]) {
 		$formato = busca_filtro_tabla("idformato", "formato", "nombre_tabla LIKE '" . strtolower($_REQUEST["tabla"]) . "'", "", $conn);
 		if ($formato["numcampos"]) {
 			$idformato = $formato[0]["idformato"];
-		} else {
-			$idformato = 0;
 		}
-	} else {
-		$idformato = 0;
 	}
 	for ($i = 0; $i < phpmkr_num_fields($buscar); $i++) {
 		$nombre_campo = phpmkr_field_name($buscar, $i);
@@ -2169,7 +2167,11 @@ function guardar_documento($iddoc, $tipo = 0) {
 						break;
 					case "archivo" :
 						array_push($larchivos, $lcampos[$j]["idcampos_formato"]);
-						$_REQUEST[$lcampos[$j]["nombre"]] = 0;
+						if (@$_REQUEST["form_uuid"]) {
+						    array_push($campos, $lcampos[$j]["nombre"]);
+						    array_push($valores, "'$form_uuid'");
+						}
+						//$_REQUEST[$lcampos[$j]["nombre"]] = 0;
 						break;
 					case "fecha" :
 						if (@$_REQUEST["asig_" . $lcampos[$j]["nombre"]] && $_REQUEST["asig_" . $lcampos[$j]["nombre"]] != "") {
@@ -2221,11 +2223,11 @@ function guardar_documento($iddoc, $tipo = 0) {
 							break;
 						default :
 							$_REQUEST[$lcampos[$j]["nombre"]] = str_replace("'", "&#39;", stripslashes($_REQUEST[$lcampos[$j]["nombre"]]));
-							if (is_array($_REQUEST[$lcampos[$j]["nombre"]]))
+							if (is_array($_REQUEST[$lcampos[$j]["nombre"]])) {
 								array_push($valores, "'" . implode(',', @$_REQUEST[$lcampos[$j]["nombre"]]) . "'");
-							elseif (@$_REQUEST[$lcampos[$j]["nombre"]] != '')
+							} else if (@$_REQUEST[$lcampos[$j]["nombre"]] != '') {
 								array_push($valores, "'" . ((@$_REQUEST[$lcampos[$j]["nombre"]])) . "'");
-							else {
+							} else {
 								array_push($valores, "''");
 							}
 							array_push($campos, $lcampos[$j]["nombre"]);
@@ -2260,7 +2262,7 @@ function guardar_documento($iddoc, $tipo = 0) {
 
 		llama_funcion_accion($iddoc, $idformato, "adicionar", "ANTERIOR");
 		$sql = "INSERT INTO " . strtolower($_REQUEST["tabla"]) . "(" . implode(",", $campos) . ") VALUES (" . implode(",", $valores) . ")";
-		phpmkr_query($sql, $conn);
+		phpmkr_query($sql, $conn) or die($sql);
 		$insertado = phpmkr_insert_id();
 		$sql1 = "insert into permiso_documento(funcionario,documento_iddocumento,permisos) values('" . usuario_actual("funcionario_codigo") . "','" . $iddoc . "','e,m,r')";
 		phpmkr_query($sql1, $conn);
@@ -2324,15 +2326,15 @@ function guardar_documento($iddoc, $tipo = 0) {
 				}
 			}
 		}
-	} else if (!isset($_REQUEST["descripcion"]) && isset($_REQUEST["asunto"]))
+	} else if (!isset($_REQUEST["descripcion"]) && isset($_REQUEST["asunto"])) {
 		$descripcion = "'" . $_REQUEST["asunto"] . "'";
-	else if ($_REQUEST["descripcion"])
+	} else if ($_REQUEST["descripcion"]) {
 		$descripcion = "'" . $_REQUEST["descripcion"] . "'";
-	
+	}
 	$descripcion = str_replace("'", "", $descripcion);
 	$sql = "UPDATE documento SET descripcion='" . $descripcion . "' WHERE iddocumento='$iddoc'";
 	phpmkr_query($sql, $conn);
-	
+
 	if (count($ltareas)) {
 		include_once ("asignaciones/funciones.php");
 		asignar_tarea_a_documento($iddoc, $ltareas);
@@ -2344,7 +2346,8 @@ function guardar_documento($iddoc, $tipo = 0) {
 	}
 	if (count($larchivos)) {
 		include_once ("anexosdigitales/funciones_archivo.php");
-		cargar_archivo_formato($larchivos, $idformato, $iddoc);
+		cargar_archivo_formato($larchivos, $idformato, $iddoc, $form_uuid);
+		//cargar_archivo_formato($larchivos, $idformato, $iddoc);
 	}
 	return ($insertado);
 }
