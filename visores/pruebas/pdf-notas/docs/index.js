@@ -282,6 +282,7 @@ $("#opc_sello").hide();
 	})();
 
 	// Toolbar buttons
+	localStorage.setItem(RENDER_OPTIONS.documentId + '/tooltype', 'area');
 	(function () {
 	  var tooltype = localStorage.getItem(RENDER_OPTIONS.documentId + '/tooltype') || 'cursor';
 	  if (tooltype) {

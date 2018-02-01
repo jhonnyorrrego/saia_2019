@@ -134,7 +134,7 @@ if(!$_REQUEST["ruta"]){
 
     <div class="spacer"></div>
          
-    <button  "background-color: #f5f900" class="rectangle btn btn-inverse" type="button" title="Rectangle" data-tooltype="area">&nbsp;</button>
+    <button  "background-color: #f5f900" class="rectangle btn btn-inverse" type="button" id="boton_area" title="Rectangle" data-tooltype="area">&nbsp;</button>
     <!--div class="spacer"></div-->
     <button id="opc_highlight" class="highlight" type="button" title="Highlight" data-tooltype="highlight">&nbsp;</button>
     

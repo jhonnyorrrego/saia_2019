@@ -65,7 +65,7 @@ if((@$_REQUEST["iddoc"] || @$_REQUEST["key"])&& !@$_REQUEST["idpaso_documento"])
 		<div class="control-group">
 			<?php if(!isset($_REQUEST["idruta_aprob"])){
 				?>
-					<a class="previo_high" enlace="pantallas/tareas/adicionar_avance_tareas.php?idtareas=<?php echo($_REQUEST['idtareas']); ?>"></a>
+					<a class="previo_high" enlace="pantallas/tareas/adicionar_avance_tareas.php?idtareas=<?php echo($_REQUEST['idtareas']); ?>">Adicionar Avances</a>
 				<?php
 			}
 				?>

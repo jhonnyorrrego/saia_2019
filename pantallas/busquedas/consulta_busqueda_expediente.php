@@ -205,7 +205,6 @@ $(document).ready(function(){
           if(objeto.exito){
 	          $("#busqueda_pagina").val(objeto.page);
 	          $("#busqueda_total_paginas").val(objeto.total);
-	          //$("#busqueda_sql").html(objeto.sql);
 	          $("#fila_actual").val(objeto.actual_row);
 	          $.each(objeto.rows,function(index,item){
 	            if(objeto.page===2 && index===0){
@@ -252,7 +251,6 @@ $(document).ready(function(){
             if(objeto.exito){
   	          $("#busqueda_pagina_doc").val(objeto.page);
   	          $("#busqueda_total_paginas_doc").val(objeto.total);
-  	          //$("#busqueda_sql").html(objeto.sql);
   	          $("#fila_actual_doc").val(objeto.actual_row);
   	          $.each(objeto.rows,function(index,item){
   	            if(parseInt($("#busqueda_total_paginas").val())==0 && index===0){

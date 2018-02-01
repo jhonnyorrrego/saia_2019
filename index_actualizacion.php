@@ -65,7 +65,16 @@ if (@$_SESSION["LOGIN" . LLAVE_SAIA]) {
 
 	$per_mis_tareas = $permiso -> acceso_modulo_perfil("mis_tareas");
 	if ($per_mis_tareas) {
-		$tareas = busca_filtro_tabla("count(*) AS cant", "tareas A", "((" . implode(" OR ", $concat) . ") OR ejecutor =" . $usuario . ") AND estado_tarea<>2", "", $conn);
+	  $mis_roles=busca_filtro_tabla("","vfuncionario_dc","estado=1 and funcionario_codigo=".usuario_actual("funcionario_codigo"),"",$conn);
+    if($mis_roles["numcampos"]){
+      $roles=extrae_campo($mis_roles,"iddependencia_cargo");
+      $concat=array();
+      foreach ($roles AS $key=>$value){
+        array_push($concat,"CONCAT(',',responsable,',') LIKE('%,".$value.",%')");
+      }
+    }
+	  
+		$tareas=busca_filtro_tabla("count(*) AS cant","tareas A","((".implode(" or ",$concat).")) and estado_tarea<>2 and ruta_aprob<>-1 and ((ruta_aprob>0 and estado_tarea in (3,4,5)) or(ruta_aprob>0 and estado_tarea<>-1))","",$conn);
 		$componente_tareas = busca_filtro_tabla("", "busqueda_componente A", "A.nombre='listado_tareas_pendientes'", "", $conn);
 	}
 
