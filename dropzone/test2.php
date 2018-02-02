@@ -36,7 +36,7 @@ while ($max_salida > 0) {
 
 </body>
 <script type='text/javascript'>
-var upload_url = 'cargar_archivos.php';
+var upload_url = 'cargar_archivos_formato.php';
 var mensaje = 'Arrastre aquí los archivos';
 var idformato = 421;
 Dropzone.autoDiscover = false;

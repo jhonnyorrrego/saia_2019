@@ -8,27 +8,36 @@ if(parent.window.hs) {
 	}
 }
 
-function recargar_centro()
-{
-  parent.location.reload();
-  
+function recargar_centro(iddocumento) {
+	parent.location.reload();
+	if(parent.frames['arbol_formato']) {
+		parent.frames['arbol_formato'].postMessage({iddocumento: iddocumento}, "*");
+	} else if(parent.parent.frames['arbol_formato']) {
+		parent.parent.frames['arbol_formato'].postMessage({iddocumento: iddocumento}, "*");
+	} else if(parent.parent.parent.frames['arbol_formato']) {
+		parent.parent.parent.frames['arbol_formato'].postMessage({iddocumento: iddocumento}, "*");
+	} else {
+		console.log("No existe el frame arbol_formato");
+	}
+
 }
 </script>
-<?php 
+<?php
 include_once("funciones_archivo.php");
 
-if(isset($_REQUEST["Eliminar"])&&isset($_REQUEST["idanexo"])) // Permisos a una anexo ALMACENADO  
-{ 
+if(isset($_REQUEST["Eliminar"])&&isset($_REQUEST["idanexo"])) // Permisos a una anexo ALMACENADO
+{
   $idanexo=$_REQUEST["idanexo"];
   $anexo=busca_filtro_tabla("","anexos","idanexos=".$idanexo,"",$conn);
-  if($anexo["numcampos"]>0) 
-     { 
+  if($anexo["numcampos"]>0)
+     {
        $idanexo=$_REQUEST["idanexo"];
+       $iddocumento = $anexo[0]["documento_iddocumento"];
        borrar($idanexo);
        echo "Anexo Eliminado";
-       echo "<script> cerrar(); recargar_centro();</script>";
+       echo "<script> cerrar(); recargar_centro($iddocumento);</script>";
      }
-    else 
+    else
     {
      echo "No se encontraron los datos del anexo al confirmar la eliminacion";
      }
@@ -37,17 +46,17 @@ if(isset($_REQUEST["Eliminar"])&&isset($_REQUEST["idanexo"])) // Permisos a una 
 elseif(isset($_REQUEST["idanexo"]))// Obtiene el parametro y verifica la existencia del anexo
 {  $idanexo=$_REQUEST["idanexo"];
     $anexo=busca_filtro_tabla("","anexos","idanexos=".$idanexo,"",$conn);
-    if(!$anexo["numcampos"]>0) // Se recibe un anexo invalido no se imprime el formulario 
-    { alerta("No se encontraron los datos del anexo a eliminar",'error',4000); 
+    if(!$anexo["numcampos"]>0) // Se recibe un anexo invalido no se imprime el formulario
+    { alerta("No se encontraron los datos del anexo a eliminar",'error',4000);
       exit();
      }
  }
-else 
+else
 {
  echo ("No se recibio la informacion del anexo");
   exit();
  }
- 
+
 
 ?>
 <html>

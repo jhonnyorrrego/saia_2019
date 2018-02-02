@@ -2030,12 +2030,12 @@ $.ajax({url: '../librerias/validar_unico.php',
 			//$includes .= incluir("../../anexosdigitales/multiple-file-upload/jquery.MultiFile.js", "javascript");
 		    $includes .= incluir("../../dropzone/dist/dropzone.js", "javascript");
 			$includes .= incluir("../../anexosdigitales/funciones_archivo.php", "librerias");
-			//$includes .= incluir("../../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js", "javascript");
-			//$includes .= '<link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-4.0.10/highslide/highslide.css" /></style>';
+			$includes .= incluir("../../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js", "javascript");
+			$includes .= '<link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-4.0.10/highslide/highslide.css" /></style>';
 			$includes .= '<link href="../../dropzone/dist/dropzone.css" type="text/css" rel="stylesheet" />';
-			//$includes .= "<script type='text/javascript'> hs.graphicsDir = '../../anexosdigitales/highslide-4.0.10/highslide/graphics/'; hs.outlineType = 'rounded-white';</script>";
+			$includes .= "<script type='text/javascript'> hs.graphicsDir = '../../anexosdigitales/highslide-4.0.10/highslide/graphics/'; hs.outlineType = 'rounded-white';</script>";
 			$js_archivos = "<script type='text/javascript'>
-                var upload_url = '../../dropzone/cargar_archivos.php';
+                var upload_url = '../../dropzone/cargar_archivos_formato.php';
                 var mensaje = 'Arrastre aquí los archivos';
                 Dropzone.autoDiscover = false;
                 var lista_archivos = [];

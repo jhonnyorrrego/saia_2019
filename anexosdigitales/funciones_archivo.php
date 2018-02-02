@@ -376,6 +376,7 @@ function listar_anexos_documento($iddocumento, $idformato = NULL, $idcampo = NUL
 	} else {
 		$anexos = busca_filtro_tabla("a.*,d.estado", "anexos a,documento d", "a.documento_iddocumento=d.iddocumento and d.iddocumento=" . $iddocumento . " AND a.formato=" . $idformato . " AND a.campos_formato=" . $idcampo, "", $conn);
 	}
+
 	if ($anexos["numcampos"] > 0) {
 	    $impedir=0;
 	    $conf=busca_filtro_tabla("valor","configuracion","tipo='anexos' and nombre='impedir_eliminar'","",$conn);
@@ -402,7 +403,7 @@ function listar_anexos_documento($iddocumento, $idformato = NULL, $idcampo = NUL
 		    }
 		}
 		if (in_array("ENCABEZADO", explode("|", $limita_accion)) && $arreglo_anexos) {
-			$tabla .= '<table>';
+		    $tabla .= '<table id="listado_anexos_' . $iddocumento . '_' . $idcampo . '">';
 			$tabla .= '<tr><td class="encabezado_list" colspan="4">Anexos Digitales</td></tr>';
 			$tabla .= '<tr><td style="text-align:right">';
 			$tabla .= implode('</td></tr><tr><td style="text-align:right">', $arreglo_anexos);
@@ -599,7 +600,7 @@ function cargar_archivo($iddoc, $permisos_anexos, $formato = NULL, $campo = NULL
 		$tipo_almacenamiento = "archivo";
 
 	for ($j = 0; @$_FILES['anexos']['name'][$j]; $j++) {
-		if (is_uploaded_file($_FILES['anexos']['tmp_name'][$j]) && $_FILES['anexos']['size'][$j]) {
+	    if (is_uploaded_file($_FILES['anexos']['tmp_name'][$j]) && $_FILES['anexos']['size'][$j]) {
 			$nombre = (($_FILES['anexos']['name'][$j]));
 			$datos_anexo = pathinfo($_FILES['anexos']['name'][$j]);
 			$temp_filename = time() . "." . $datos_anexo["extension"];
@@ -672,6 +673,9 @@ function cargar_archivo($iddoc, $permisos_anexos, $formato = NULL, $campo = NULL
 
 				}
 			}
+		} else {
+		    //var_dump($_FILES['anexos']);
+		    die("NO VA A CARGAR");
 		}
 	}
 	return;
@@ -927,6 +931,12 @@ if(isset($_REQUEST["ft_funcion"])&& trim($_REQUEST["ft_funcion"])<>""){
   if(function_exists($funcion))
     call_user_func_array($funcion,explode(",",$parametros));
 }
+
+if(isset($_REQUEST["listar_anexos"]) && isset($_REQUEST["iddocumento"]) && isset($_REQUEST["idformato"])) {
+    echo listar_anexos_documento($_REQUEST["iddocumento"], $_REQUEST["idformato"], $_REQUEST["idcampo"]);
+    exit();
+}
+
 function listar_anexos_ver_descargar($idformato,$iddoc,$idcampo='',$tipo_mostrar='',$retorno=0){
 	global $ruta_db_superior,$conn;
 
