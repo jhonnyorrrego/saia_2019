@@ -25,7 +25,7 @@ if ($_REQUEST['guardar'] == 1) {
 	}
 	$sql = "INSERT INTO tareas (fecha,tarea,responsable,descripcion,prioridad,fecha_tarea,ejecutor,documento_iddocumento,ruta_aprob,orden_tareas,accion_tareas) VALUES(" . fecha_db_almacenar($_REQUEST['fecha'], "Y-m-d H:i:s") . ",'" . ($_REQUEST['tarea']) . "','" . $_REQUEST['responsable'] . "','" . ($_REQUEST[descripcion]) . "','" . $_REQUEST[prioridad] . "'," . fecha_db_almacenar($_REQUEST['fecha_tarea'], "Y-m-d") . ",'" . usuario_actual("funcionario_codigo") . "','" . $_REQUEST['iddoc'] . "'," . $_REQUEST["ruta_aprob"] . "," . $orden . "," . $accion_tareas . ")";
 	phpmkr_query($sql);
-	if (@$_REQUEST["ruta_aprob"] == -1) {
+	if (@$_REQUEST["ruta_aprob"] == -1 || $_REQUEST["refrescar"]==1) {
 	?>
 	<script>
 	  window.parent.hs.close();
@@ -60,13 +60,23 @@ if (@$_REQUEST["fecha"]) {
 }
 if ($_REQUEST["iddoc"]) {
 	if (!isset($_REQUEST["tarea_ruta_aprob"])) {
-		include_once ($ruta_db_superior . "pantallas/documento/menu_principal_documento.php");
-		menu_principal_documento($_REQUEST["iddoc"]);
+		if(!$_REQUEST['sin_menu'])
+		{
+			include_once ($ruta_db_superior . "pantallas/documento/menu_principal_documento.php");
+		
+			menu_principal_documento($_REQUEST["iddoc"]);
+		}
 		$ruta_aprob = 0;
 	} else {
 		$ruta_aprob = -1;
 		$fecha_tarea = date("Y-m-d");
 	}
+}
+if($_REQUEST["refrescar"]) {
+	$refrescar=$_REQUEST["refrescar"];
+}
+else {
+	$refrescar=0;
 }
 echo(librerias_arboles());
 echo(librerias_bootstrap());
@@ -136,6 +146,7 @@ label.error {
 					<label class="error" for="prioridad"></label>
 				</div>
 			</div>
+			<input type="hidden" name="refrescar" value="<?php echo $refrescar;?>">
 			<?php 
 			}
 			?>

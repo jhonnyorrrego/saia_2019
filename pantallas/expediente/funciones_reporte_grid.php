@@ -1,11 +1,9 @@
 <?php
 $max_salida = 10;
-// Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
 	if (is_file($ruta . "db.php")) {
 		$ruta_db_superior = $ruta;
-		//Preserva la ruta superior encontrada
 	}
 	$ruta .= "../";
 	$max_salida--;
@@ -37,12 +35,7 @@ function direcciona_nombre($idexpediente, $nombre) {
 
 	return ($nombre);
 }
-function print_cerok($dato){
-	if(usuario_actual("login")=="agomez"){
-		print_r($dato);
-		echo("<hr>");
-	}
-}
+
 function fecha_reten($idexpediente) {
 	global $conn, $ruta_db_superior;
 	$expediente = busca_filtro_tabla("estado_archivo,serie_idserie", "expediente a", "idexpediente=" . $idexpediente, "", $conn);
@@ -73,11 +66,10 @@ function fecha_reten($idexpediente) {
 		list($h, $m, $s) = explode(':', $cadena_horas);
 		$segundos = ($h * 3600) + ($m * 60) + $s;
 		$horas_minutos_segundos_parseados = ( conversor_segundos_hm(intval($segundos)));
-		$cadena_final = ''; 
-		if($interval_pos_neg){
+		$cadena_final = '';
+		if ($interval_pos_neg) {
 			$cadena_inicial = '<div class="alert alert-danger">Retrasado ';
-		}
-		else{
+		} else {
 			$cadena_inicial = '<div class="alert alert-success">Faltan ';
 		}
 
@@ -104,11 +96,10 @@ function fecha_reten($idexpediente) {
 		} else {
 			$cadena_final = $cadena_inicial . $cadena_final;
 		}
-		$cadena_final.='</div>';
+		$cadena_final .= '</div>';
 		return ($cadena_final);
-	}
-	else{
-		return('<div class="alert alert-warning">Expediente sin cerrar</div>');
+	} else {
+		return ('<div class="alert alert-warning">Expediente sin cerrar</div>');
 	}
 }
 
@@ -138,19 +129,16 @@ function tipo_expediente() {
 	} else {
 		return "";
 	}
-
 }
 
 function check_expedientes($idexp) {
-
-	return ('<input type="checkbox" name="idexp_' . $idexp . '" id="idexp_' . $idexp . '" class="seleccionar" value="'.$idexp.'">');
+	return ('<input type="checkbox" name="idexp_' . $idexp . '" id="idexp_' . $idexp . '" class="seleccionar" value="' . $idexp . '">');
 }
 
 function acciones_expediente() {
-$html='<ul class=\"nav pull-left\"><li><div class=\"btn-group\"><button class=\"btn dropdown-toggle btn-mini\" data-toggle=\"dropdown\">Acciones &nbsp;<span class=\"caret\"></span>&nbsp;</button><ul class=\"dropdown-menu pull-left\" id=\"listado_seleccionados\"><li class=\"pull-left\"><a href=\"#\" id=\"transferencia_documental\" titulo=\"Transferencia documental\">Transferencia documental</a></li><li><a href=\"#\" id=\"prestamo_documento\" titulo=\"Solicitud de prestamo de documentos\">Solicitud de prestamo de documentos</a></li></ul></div></li></ul><input type=\"hidden\" id=\"seleccionados\" value=\"\" name=\"seleccionados\"><input type=\"hidden\" id=\"seleccionados_expediente\" value=\"\" name=\"seleccionados_expediente\">';	
-//$html='<ul class=\"nav pull-left\"><li><div class=\"btn-group\"><button class=\"btn dropdown-toggle btn-mini\" data-toggle=\"dropdown\">Acciones &nbsp; <span class=\"caret\"> </span>&nbsp;</button><ul class=\"dropdown-menu\" id=\"listado_seleccionados\"><li><div style=\"color:black; \">Transferencia Documental</div></li></ul></div></li></ul>';
-//$html='<div class=\"input-append\"><div class=\"btn-group\"><button class=\"btn dropdown-toggle\" data-toggle=\"dropdown\">Action<span class=\"caret\"></span></button><ul class=\"dropdown-menu\">dato</ul></div></div>';
-return ($html);
+	$html = '<ul class=\"nav pull-left\"><li><div class=\"btn-group\"><button class=\"btn dropdown-toggle btn-mini\" data-toggle=\"dropdown\">Acciones &nbsp;<span class=\"caret\"></span>&nbsp;</button><ul class=\"dropdown-menu pull-left\" id=\"listado_seleccionados\"><li class=\"pull-left\"><a href=\"#\" id=\"transferencia_documental\" titulo=\"Transferencia documental\">Transferencia documental</a></li><li><a href=\"#\" id=\"prestamo_documento\" titulo=\"Solicitud de prestamo de documentos\">Solicitud de prestamo de documentos</a></li></ul></div></li></ul><input type=\"hidden\" id=\"seleccionados\" value=\"\" name=\"seleccionados\"><input type=\"hidden\" id=\"seleccionados_expediente\" value=\"\" name=\"seleccionados_expediente\">';
+	//$html='<ul class=\"nav pull-left\"><li><div class=\"btn-group\"><button class=\"btn dropdown-toggle btn-mini\" data-toggle=\"dropdown\">Acciones &nbsp; <span class=\"caret\"> </span>&nbsp;</button><ul class=\"dropdown-menu\" id=\"listado_seleccionados\"><li><div style=\"color:black; \">Transferencia Documental</div></li></ul></div></li></ul>';
+	//$html='<div class=\"input-append\"><div class=\"btn-group\"><button class=\"btn dropdown-toggle\" data-toggle=\"dropdown\">Action<span class=\"caret\"></span></button><ul class=\"dropdown-menu\">dato</ul></div></div>';
+	return ($html);
 }
 ?>
-
