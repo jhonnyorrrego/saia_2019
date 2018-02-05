@@ -459,7 +459,7 @@ function click_funcion(div){
             async:false,
             success:function(html){
             	var objetoa=jQuery.parseJSON(html);
-            	if(objetoa.records!='0'){
+            	if(objetoa && objetoa.records!='0'){
             			exis_reg=1;
 	                $.each(objetoa.rows,function(i,itema){
                   	$("#panel_relacionados_funcionario").append("<li>"+itema.info+"</li>");
@@ -477,7 +477,7 @@ function click_funcion(div){
             async:false,
             success:function(html){
             	var objetoa=jQuery.parseJSON(html)
-            	if(objetoa.records!='0'){
+            	if(objetoa && objetoa.records!='0'){
             			exis_reg=1;
 	                var objetoa=jQuery.parseJSON(html);
 	                $.each(objetoa.rows,function(i,itema){

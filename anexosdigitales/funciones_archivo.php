@@ -403,7 +403,11 @@ function listar_anexos_documento($iddocumento, $idformato = NULL, $idcampo = NUL
 		    }
 		}
 		if (in_array("ENCABEZADO", explode("|", $limita_accion)) && $arreglo_anexos) {
-		    $tabla .= '<table id="listado_anexos_' . $iddocumento . '_' . $idcampo . '">';
+		    $id_tabla = 'listado_anexos_' . $iddocumento;
+		    if(isset($idcampo)) {
+		        $id_tabla .= '_' . $idcampo;
+		    }
+		    $tabla .= '<table id="' . $id_tabla . '">';
 			$tabla .= '<tr><td class="encabezado_list" colspan="4">Anexos Digitales</td></tr>';
 			$tabla .= '<tr><td style="text-align:right">';
 			$tabla .= implode('</td></tr><tr><td style="text-align:right">', $arreglo_anexos);
@@ -935,6 +939,9 @@ if(isset($_REQUEST["ft_funcion"])&& trim($_REQUEST["ft_funcion"])<>""){
 if(isset($_REQUEST["listar_anexos"]) && isset($_REQUEST["iddocumento"]) && isset($_REQUEST["idformato"])) {
     echo listar_anexos_documento($_REQUEST["iddocumento"], $_REQUEST["idformato"], $_REQUEST["idcampo"]);
     exit();
+} else if(isset($_REQUEST["listar_anexos"]) && isset($_REQUEST["iddocumento"])) {
+    echo listar_anexos_documento($_REQUEST["iddocumento"]);
+    exit();
 }
 
 function listar_anexos_ver_descargar($idformato,$iddoc,$idcampo='',$tipo_mostrar='',$retorno=0){
@@ -972,7 +979,5 @@ function listar_anexos_ver_descargar($idformato,$iddoc,$idcampo='',$tipo_mostrar
 	    echo($tabla);
 	}
 }
-
-
 
 ?>
