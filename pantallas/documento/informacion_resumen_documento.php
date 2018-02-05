@@ -277,7 +277,7 @@ $(document).ready(function(){
   $("#adicionar_anexos").live('click',function(){
     window.open("<?php echo($ruta_db_superior); ?>anexosdigitales/anexos_documento.php?key="+documento_saia,"detalles");
   });
-  
+
 documento_saia=0;
 var item="<?php echo($nodoinicial);?>";
 open_tabs=1;
@@ -383,7 +383,7 @@ function click_funcion(div){
             }
           });
         }
-        console.log(componente);
+        //console.log(componente);
         if(componente === '<?php echo($notas_documento);?>'){
         	$("#panel_notas_pdf").html('');
             $.ajax({
@@ -409,7 +409,7 @@ function click_funcion(div){
             }
           });
         }
-        
+
         if(componente === '<?php echo($documentos_respuesta);?>'){
           $("#panel_respuesta1").html('');
           $.ajax({
@@ -429,7 +429,7 @@ function click_funcion(div){
             }
           });
         }
-        
+
         if(componente2 === '<?php echo($documentos_relacionados);?>'){
           $("#panel_asociado_a").html('');
           $.ajax({
@@ -468,7 +468,7 @@ function click_funcion(div){
             }
           });
         }
-       
+
         if(componente4 === '<?php echo($documentos_relacionados_dest);?>'){
           $.ajax({
             type: "POST",
@@ -486,7 +486,7 @@ function click_funcion(div){
                }
             }
           });
-        }       
+        }
         if(exis_reg==0){
         	$("#panel_relacionados_funcionario").append("<li class='alert' style='margin-bottom:3px;'>No hay documentos vinculados por funcionarios</li>");
         }
