@@ -3,18 +3,53 @@ $max_salida = 10;
 // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
-	if (is_file($ruta . "db.php")) {
-		$ruta_db_superior = $ruta;
-		//Preserva la ruta superior encontrada
-	}
-	$ruta .= "../";
-	$max_salida--;
+    if (is_file($ruta . "db.php")) {
+        $ruta_db_superior = $ruta;
+        //Preserva la ruta superior encontrada
+    }
+    $ruta .= "../";
+    $max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 echo(estilo_bootstrap());
 echo(librerias_jquery("1.7"));
 echo(librerias_datepicker_bootstrap());
+if($_POST['desde_formato']){
+    $recurrencia=array("fk_tareas_listado"=>$_POST['idtareas_listado']);
+    foreach ($_POST as $key => $value) {
+        if($key!='desde_formato' && $key!='idtareas_listado'){
+            if(@isset($recurrencia[$key])){
+                $recurrencia[$key].=",".$value;
+            }
+            else{
+                if($value!==''){
+                    $recurrencia[$key]=$value;
+                }
+            }
+        }
+    }
+    if($recurrencia["finaliza_el_fecha"]!=''){
+        $recurrencia["finaliza_el_fecha"]=fecha_db_almacenar($recurrencia["finaliza_el_fecha"],"Y-m-d");
+    }
+    $recurrencia["ejecuta_proxima"]=fecha_db_almacenar($recurrencia["ejecuta_proxima"],"Y-m-d");
+    $recurrencia["empieza_el"]=fecha_db_almacenar($recurrencia["empieza_el"],"Y-m-d");
+    $excluidos=array("finaliza_el_fecha","ejecuta_proxima","empieza_el");
+    foreach ($recurrencia as $key => $value) {
+        if(!in_array($key, $excluidos)){
+            $recurrencia[$key]="'".$value."'";
+        }
+    }
+    $sql_insert_recur="INSERT INTO tareas_listado_recur(".implode(", ", array_keys($recurrencia)).") VALUES(".implode(", ", array_values($recurrencia)).")";
+    phpmkr_query($sql_insert_recur);
+    ?>
+    <script>
+    	$(document).ready(function (){
+    		window.parent.hs.close();
+    	});
+    </script>
+    <?php 
+}else{
 $fecha_inicial=date("Y-m-d");
 if(@$_REQUEST["fecha_inicial"]){
   $fecha_inicial=$_REQUEST["fecha_inicial"];
@@ -23,10 +58,10 @@ $option='';
 for($i=1;$i<31;$i++){
 	$option.='<option value="'.$i.'">'.$i.'</option>';
 }
-
-
-
-
+    $desde_formato=$_REQUEST['desde_formato'];
+    if($desde_formato!=1){
+        $desde_formato=0;
+    }
 ?>
 <script src='<?php echo($ruta_db_superior);?>js/moment.min.js'></script>
 <script src='<?php echo($ruta_db_superior);?>js/moment-es.js'></script>
@@ -104,6 +139,8 @@ for($i=1;$i<31;$i++){
 			</tr>
 			<tr>
 				<td style="text-align: center;" colspan="2">
+    				  <input type="hidden" name="desde_formato" id="desde_formato" value="<?php echo($_REQUEST['desde_formato']); ?>">
+    				  <input type="hidden" name="idtareas_listado" id="idtareas_listado" value="<?php echo($_REQUEST['idtareas_listado']); ?>">
 				  <button id="boton_guardar" class="btn btn-mini btn-primary">Guardar</button> 
 				  <button id="boton_cancelar" class="btn btn-mini">Cancelar</button> 
 			  </td>
@@ -231,6 +268,7 @@ function info_resumen(){
 
 info_resumen();
 $(document).ready(function (){
+    	var desde_formato=<?php echo($desde_formato); ?>;
   $("[name=repetir_mes]").change(function(){
     info_resumen(); 
   });
@@ -244,20 +282,24 @@ $(document).ready(function (){
     info_resumen();
   });
   $(".highslide-move", window.parent.document).hide();
+    	  
 	$("#boton_guardar").click(function (){
+    		if(desde_formato!=1){
 		event.preventDefault();
 		var info_recurrencia=JSON.stringify($("#formulario_recurrencia").serializeArray());
 		window.parent.info_recurrencia.value=info_recurrencia;
 		window.parent.hs.close();
-		
+    		}
 	});
 	
 	$("#boton_cancelar").click(function (){
+    		if(desde_formato!=1){
 		event.preventDefault();
 		var info_recurrencia=JSON.stringify($("#formulario_recurrencia").serializeArray());
 		window.parent.info_recurrencia.value="";
 		window.location.reload();
 		window.parent.hs.close();
+    		}
 	});
 	
   $("#finaliza_el_repeticiones").keyup(function (){
@@ -363,5 +405,5 @@ if(@$_REQUEST['fk_tareas_listado'] || @$_REQUEST['idtareas_listado_recur']){
 	<?php
 	}
 }
-
+}
 ?>
