@@ -9,7 +9,7 @@ if(parent.window.hs) {
 }
 
 function recargar_centro(iddocumento) {
-	parent.location.reload();
+	//parent.location.reload();
 	if(parent.frames['arbol_formato']) {
 		parent.frames['arbol_formato'].postMessage({iddocumento: iddocumento}, "*");
 	} else if(parent.parent.frames['arbol_formato']) {

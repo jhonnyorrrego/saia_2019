@@ -71,7 +71,7 @@ Dropzone.options.reemplazoAnexo = {
 	uploadMultiple: false,
 	success: function(file, response) {
         window.parent.hs.close();
-        window.parent.location.reload();
+        //window.parent.location.reload();
 	},
 };
 </script>

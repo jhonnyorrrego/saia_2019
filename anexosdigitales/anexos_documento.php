@@ -26,12 +26,38 @@ if ((@$_REQUEST["iddoc"] || @$_REQUEST["key"]) && @$_REQUEST["no_menu"] != 1) {
 
 <script src="<?php echo $ruta_db_superior;?>dropzone/dist/dropzone.js"></script>
 
-<script type="text/javascript" src="highslide-4.0.10/highslide/highslide-with-html.js"></script>
+<script type="text/javascript" src="highslide-4.0.10/highslide/highslide-full.js"></script>
 <link rel="stylesheet" type="text/css" href="highslide-4.0.10/highslide/highslide.css" />
 
 <script type='text/javascript'>
     hs.graphicsDir = 'highslide-4.0.10/highslide/graphics/';
     hs.outlineType = 'rounded-white';
+    hs.Expander.prototype.onAfterClose = function(sender) {
+        //console.log(sender);
+        var elemento = document.getElementById("key");
+        if(elemento) {
+        	var idelemento = "listado_anexos_" + elemento.value;
+        	refrescar_lista_anexos(idelemento);
+        }
+   }
+
+    function refrescar_lista_anexos(idelemento) {
+        var elemento = document.getElementById(idelemento);
+
+        $.ajax({
+            url: "funciones_archivo.php",
+            data: { listar_anexos: "listar_anexos", iddocumento: iddocumento},
+            type: 'POST',
+            success: function (data) {
+                if(elemento) {
+                	elemento.outerHTML = data;
+                	//console.log(data);
+                } else {
+                    console.log("No se encontro " +  idelemento);
+                }
+            }
+    	});
+    }
 </script>
 
 <?php
@@ -135,21 +161,7 @@ $("#document").ready(function(){
 		params: {Adicionar: 5},
 		success: function(file, response) {
 	    	var idelemento = "listado_anexos_" + iddocumento;
-            elemento = document.getElementById(idelemento);
-
-            $.ajax({
-                url: "funciones_archivo.php",
-                data: { listar_anexos: "listar_anexos", iddocumento: iddocumento},
-                type: 'POST',
-                success: function (data) {
-                    if(elemento) {
-                    	elemento.outerHTML = data;
-                    	//console.log(data);
-                    } else {
-                        console.log("No se encontro " +  idelemento);
-                    }
-                }
-			});
+	    	refrescar_lista_anexos(idelemento);
 		},
 		complete: function(file) {
 			this.removeFile(file);
