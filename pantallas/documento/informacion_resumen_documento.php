@@ -249,28 +249,8 @@ function receiveMessage(event) {
   //var origin = event.origin || event.originalEvent.origin; // For Chrome, the origin property is in the event.originalEvent object.
   datos = event.data;
   if(datos.iddocumento) {
-	  refrescar_cantidades_documento(datos.iddocumento);
+	  cargar_cantidades_documento(datos.iddocumento);
   }
-}
-
-function refrescar_cantidades_documento(iddocumento) {
-	$.ajax({
-		type:'POST',
-		url: "<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php",
-		data: "librerias=pantallas/documento/librerias.php&funcion=contar_cantidad&parametros="+iddocumento+";<?php echo(usuario_actual("funcionario_codigo"));?>;todos&rand=<?php echo(rand());?>",
-		success: function(html) {
-			if(html) {
-				var objeto=jQuery.parseJSON(html);
-				$("#cantidad_anexos").html(objeto.adjuntos_documento);
-				$("#cantidad_paginas").html(objeto.ordenar_pag);
-				$("#cantidad_notas").html(objeto.ver_notas);
-				$("#cantidad_tareas").html(objeto.ver_tareas);
-				$("#cantidad_versiones").html(objeto.ver_versiones);
-				var cantidad_relacionados=parseInt(objeto.documentos_relacionados);
-				$("#cantidad_documentos_relacionados").html(cantidad_relacionados);
-			}
-		}
-	});
 }
 
 $(document).ready(function(){
