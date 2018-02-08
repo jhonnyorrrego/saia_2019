@@ -28,7 +28,7 @@ if (@$_REQUEST["accion"] && @$_REQUEST["accion"] == "eliminar_temporal") {
     header('Content-type: application/json');
     $configuracion = busca_filtro_tabla("valor,nombre", "configuracion", "nombre IN ('extensiones_upload', 'tamanio_maximo_upload', 'ruta_temporal')", "", $conn);
 
-    $extensiones = 'jpg';
+    $extensiones = 'jpg,png,jpeg';
     $max_tamanio = '';
     $usuario = usuario_actual("login");
     if ($configuracion['numcampos']) {
