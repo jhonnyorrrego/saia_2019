@@ -1,7 +1,7 @@
 <?php
 namespace Corley\Composer;
 
-use ComposerScriptEvent;
+use Composer\Script\Event;
 
 class MyHook
 {
