@@ -167,10 +167,9 @@ width:"350px"
     echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>PREVISUALIZAR</td><td><textarea name='preview' id='preview' class=''>" . stripslashes(codifica_encabezado(html_entity_decode(@$contenido[0]["preview"]))) . "</textarea></td></tr>";
     echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>IMAGEN</td><td>";
     if ($contenido[0]["imagen"] != "") {
-        echo "<a href='" . $ruta_db_superior . $contenido[0]["imagen"] . "' target='_blank'>Ver Imagen Actual</a><br />Borrar Imagen<input type='checkbox' value='1' name='borrar_imagen'><br />Subir nueva <input type='file' name='imagen' id='imagen' >";
-    } else {
-        echo '<div id="dz_carrusel"><div class="dz-message"><span>Arrastre aquí los archivos adjuntos</span></div></div>';
+        echo "<a href='" . $ruta_db_superior . $contenido[0]["imagen"] . "' target='_blank'>Ver Imagen Actual</a><br />Borrar Imagen<input type='checkbox' value='1' name='borrar_imagen'><br />Subir nueva";
     }
+    echo '<div id="dz_carrusel"><div class="dz-message"><span>Arrastre aquí los archivos adjuntos</span></div></div>';
     echo "</td></tr>";
     echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;' width=20%>ALINEACION DE LA IMAGEN</td><td>";
     $opciones = array(
