@@ -13,7 +13,7 @@
 	"class": "Corley\\Composer\\MyHook"
   },
   "autoload": {
-    "psr-0": { "": "instalador/" }
+    "psr-4": { "Corley\\Composer\\": "instalador/" }
   },
   "scripts": {
     "post-install-cmd": [
