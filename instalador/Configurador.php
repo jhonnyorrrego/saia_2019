@@ -13,9 +13,10 @@ class Configuracion extends Command {
         "dbengine" => "Motor",
         "dbuser" => "Usuario bdd",
         "dbpass" => "Clave bdd",
+        "dbhost" => "Servidor",
         "dbname" => "Instancia bdd", // INSTANCIA
-        "dbschema" => "Esquema (o bdd si es MySql", // ESQUEMA
-        "tablespace" => "Tablespace (o bdd si es MySql", // TABLESPACE
+        "dbschema" => "Esquema (o bdd si es MySql)", // ESQUEMA
+        "tablespace" => "Tablespace (o bdd si es MySql)", // TABLESPACE
         "dbport" => "Puerto"
     );
 
@@ -28,9 +29,9 @@ class Configuracion extends Command {
     protected function execute(InputInterface $input, OutputInterface $output) {
         $dialog = $this->getHelperSet()->get('dialog');
         $output->writeln('<info>Por favor ingrese los valores solicitados</info>');
-        foreach ($parametros as $key => $pregunta) {
+        foreach ($this->parametros as $key => $pregunta) {
             $un_valor = $dialog->ask($output, '<question>' . $pregunta . ': </question>');
-            $this->valores[$key] = $dialog->ask($output, '<question>' . $pregunta . ': </question>');
+            //$this->valores[$key] = $dialog->ask($output, '<question>' . $pregunta . ': </question>');
             if ($un_valor) {
                 $this->valores[$key] = $un_valor;
                 // $output->writeln(sprintf('<info>Package %s was succesfully registered</info>', $package));

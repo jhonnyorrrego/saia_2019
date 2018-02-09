@@ -2,6 +2,7 @@
 namespace Saia\Composer;
 
 require 'Installer.php';
+require 'Configurador.php';
 
 use Composer\Script\Event;
 use Symfony\Component\Console\Shell;
@@ -23,7 +24,7 @@ class PostInstall {
         $installPath = null;
         foreach ($packages as $package) {
             $installPath = $installationManager->getInstallPath($package);
-            if (strpos($installPath, "editor_codigo") === false) {
+            if (strpos($installPath, "editor_codigo") !== false) {
                 $installPath = null;
                 continue;
             }

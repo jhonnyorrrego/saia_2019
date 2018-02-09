@@ -25,10 +25,11 @@ class Install extends Command {
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
-        if ($this->createInstallationDirectory($output) && $this->generateDefine($output)) {
-            $output->writeln('<info>MISION CUMPLIDA</info>');
+        //if ($this->createInstallationDirectory($output) && $this->generateDefine($output)) {
+        if ($this->generateDefine($output)) {
+                $output->writeln('<info>FINALIZADO</info>');
         } else {
-            $output->writeln('<error>Nasty error happened :\'-(</error>');
+            $output->writeln('<error>Ocurrió un error :\'-(</error>');
 
             if ($this->failingProcess instanceof Process) {
                 $output->writeln('<error>%s</error>', $this->failingProcess->getErrorOutput());
@@ -79,15 +80,18 @@ class Install extends Command {
 
     protected function generateDefine(OutputInterface $output) {
         //TODO: se puede usar $this->installDir. Sino __DIR__ es el directorios saia/instalador (de momento)
+
+        if(empty($this->configuracion->get_valores()) ) {
+            $output->writeln('<info>Primero debe ejecutar la tarea "configurar"</info>');
+            return false;
+        }
+
         $skeleton = file_get_contents(__DIR__ . "/../_define.php");
         //$dependencies = implode(',', $this->dependenciesContainer->getDependencies());
 
-        foreach ($configuracion->get_valores() as $key => $value) {
-            $skeleton = str_replace("{{$key}}", $value, $skeleton);
+        foreach ($this->configuracion->get_valores() as $key => $value) {
+            $skeleton = str_replace('{{' . $key . '}}', $value, $skeleton);
         }
-        $skeleton = str_replace('{{dbhost}}', "", $skeleton);
-        $skeleton = str_replace('{{dbname}}', "", $skeleton);
-        $skeleton = str_replace('{{dbuser}}', "", $skeleton);
 
         if (file_put_contents(__DIR__ . "/../define.php", $skeleton)) {
             $output->writeln('<info>define.php ha sido generado</info>');
