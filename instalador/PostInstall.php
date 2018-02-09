@@ -11,7 +11,7 @@ use Symfony\Component\Console\Application;
 class PostInstall {
 
     public static function localConf(Event $event) {
-        $event->getIO()->write("Mostara despues del comando INSTALL/UPDATE");
+        $event->getIO()->write("Mostrar despues del comando INSTALL/UPDATE");
         require_once $event->getComposer()
             ->getConfig()
             ->get('vendor-dir') . '/autoload.php';

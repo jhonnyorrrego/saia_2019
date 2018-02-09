@@ -1,5 +1,6 @@
 <?php
 
+namespace Saia\Composer;
 //require_once '../vendor/autoload.php';
 
 use Symfony\Component\Console\Command\Command;
