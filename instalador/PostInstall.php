@@ -17,8 +17,8 @@ class PostInstall {
             ->get('vendor-dir') . '/autoload.php';
 
             $application            = new Application('Installer', '1.0.0-alpha');
-            $application->add($dependencyContainer);
-            $application->add(new Install($dependencyContainer));
+            //$application->add($dependencyContainer);
+            $application->add(new Install());
             $shell = new Shell($application);
 
             $shell->run();
