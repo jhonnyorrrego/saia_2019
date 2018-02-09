@@ -70,6 +70,10 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
             'Doctrine\\Bundle\\DoctrineCacheBundle\\' => 36,
             'Doctrine\\Bundle\\DoctrineBundle\\' => 31,
         ),
+        'C' => 
+        array (
+            'Corley\\Composer\\' => 16,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
@@ -225,6 +229,10 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         array (
             0 => __DIR__ . '/..' . '/doctrine/doctrine-bundle',
         ),
+        'Corley\\Composer\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/instalador',
+        ),
     );
 
     public static $prefixesPsr0 = array (
@@ -300,6 +308,7 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         'Analog\\Logger' => __DIR__ . '/..' . '/analog/analog/lib/Analog/Logger.php',
         'ArithmeticError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/ArithmeticError.php',
         'AssertionError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/AssertionError.php',
+        'Corley\\Composer\\MyHook' => __DIR__ . '/../..' . '/instalador/MyHook.php',
         'Datamatrix' => __DIR__ . '/..' . '/tecnickcom/tcpdf/include/barcodes/datamatrix.php',
         'DivisionByZeroError' => __DIR__ . '/..' . '/symfony/polyfill-php70/Resources/stubs/DivisionByZeroError.php',
         'Doctrine\\Bundle\\DoctrineBundle\\Command\\CreateDatabaseDoctrineCommand' => __DIR__ . '/..' . '/doctrine/doctrine-bundle/Command/CreateDatabaseDoctrineCommand.php',
