@@ -8,10 +8,10 @@ use Composer\Script\Event;
 use Symfony\Component\Console\Shell;
 use Symfony\Component\Console\Application;
 
-class MyHook {
+class PostInstall {
 
     public static function localConf(Event $event) {
-        $event->getIO()->write("Show me after INSTALL/UPDATE command");
+        $event->getIO()->write("Mostara despues del comando INSTALL/UPDATE");
         require_once $event->getComposer()
             ->getConfig()
             ->get('vendor-dir') . '/autoload.php';
