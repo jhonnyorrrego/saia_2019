@@ -12,6 +12,7 @@ class PostInstall {
 
     public static function localConf(Event $event) {
         $event->getIO()->write("Mostrar despues del comando INSTALL/UPDATE");
+        var_dump($event);die();
         $package = $event->getOperation()->getPackage();
         $installationManager = $event->getComposer()->getInstallationManager();
 
