@@ -4,7 +4,6 @@ namespace Saia\Composer;
 require 'Installer.php';
 
 use Composer\Script\Event;
-
 use Symfony\Component\Console\Shell;
 use Symfony\Component\Console\Application;
 
@@ -12,22 +11,35 @@ class PostInstall {
 
     public static function localConf(Event $event) {
         $event->getIO()->write("Mostrar despues del comando INSTALL/UPDATE");
-        var_dump($event);die();
-        $package = $event->getOperation()->getPackage();
+
+        $composer_config = $event->getComposer()->getConfig();
+
         $installationManager = $event->getComposer()->getInstallationManager();
+        $packages = $event->getComposer()
+            ->getRepositoryManager()
+            ->getLocalRepository()
+            ->getPackages();
 
-        $originDir = $installationManager->getInstallPath($package);
-
+        $installPath = null;
+        foreach ($packages as $package) {
+            $installPath = $installationManager->getInstallPath($package);
+            if (strpos($installPath, "editor_codigo") === false) {
+                $installPath = null;
+                continue;
+            }
+        }
         require_once $event->getComposer()
             ->getConfig()
             ->get('vendor-dir') . '/autoload.php';
 
-            $application            = new Application('Installer', '1.0.0-alpha');
-            //$application->add($dependencyContainer);
-            $application->add(new Install($originDir));
-            $shell = new Shell($application);
+        $application = new Application('Instalador SAIA', '1.0.0-alpha');
 
-            $shell->run();
+        $dependencyContainer    = new Configuracion();
+        $application->add($dependencyContainer);
+        $application->add(new Install($installPath, $dependencyContainer));
 
+        $shell = new Shell($application);
+
+        $shell->run();
     }
 }

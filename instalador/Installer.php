@@ -13,16 +13,19 @@ class Install extends Command {
 
     protected $originDir;
 
+    protected $configuracion;
+
     protected $failingProcess;
 
-    public function __construct($originDir) {
+    public function __construct($originDir, $config) {
         parent::__construct();
 
         $this->originDir = $originDir;
+        $this->configuracion = $config;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
-        if ($this->createInstallationDirectory($output) && $this->install($output)) {
+        if ($this->createInstallationDirectory($output) && $this->generateDefine($output)) {
             $output->writeln('<info>MISION CUMPLIDA</info>');
         } else {
             $output->writeln('<error>Nasty error happened :\'-(</error>');
@@ -42,11 +45,13 @@ class Install extends Command {
         $this->installDir = $this->originDir . DIRECTORY_SEPARATOR . $dialog->ask($output, '<question>Por favor especifique un directorio que no exista para empezar la instalacion: </question>');
 
         if (!is_dir($this->installDir)) {
-            $mkdir = new Process(sprintf('mkdir -p %s', $this->installDir));
+
+            $output->writeln(sprintf("<info>Se va a crear el directorio %s </info>", $this->installDir));
+            $mkdir = new Process(sprintf("mkdir -p %s", $this->installDir));
             $mkdir->run();
 
             if ($mkdir->isSuccessful()) {
-                $output->writeln(sprintf('<info>Directorio %s creado con exito</info>', $this->installDir));
+                $output->writeln(sprintf("<info>Directorio %s creado con exito</info>", $this->installDir));
 
                 return true;
             }
@@ -73,13 +78,18 @@ class Install extends Command {
     }
 
     protected function generateDefine(OutputInterface $output) {
+        //TODO: se puede usar $this->installDir. Sino __DIR__ es el directorios saia/instalador (de momento)
         $skeleton = file_get_contents(__DIR__ . "/../_define.php");
         //$dependencies = implode(',', $this->dependenciesContainer->getDependencies());
+
+        foreach ($configuracion->get_valores() as $key => $value) {
+            $skeleton = str_replace("{{$key}}", $value, $skeleton);
+        }
         $skeleton = str_replace('{{dbhost}}', "", $skeleton);
         $skeleton = str_replace('{{dbname}}', "", $skeleton);
         $skeleton = str_replace('{{dbuser}}', "", $skeleton);
 
-        if (file_put_contents($this->installDir . "/define.php", $skeleton)) {
+        if (file_put_contents(__DIR__ . "/../define.php", $skeleton)) {
             $output->writeln('<info>define.php ha sido generado</info>');
 
             return true;
