@@ -1,4 +1,5 @@
 <?php
+die();
 define("ewAllowAdd", 1, true);
 define("ewAllowDelete", 2, true);
 define("ewAllowEdit", 4, true);
@@ -12,21 +13,21 @@ if(!defined("HOST")) {
   //define("HOST", "35.185.11.75");
   //amazon cloud
   //define("HOST", "54.84.23.212");
-  define("HOST", "localhost");
+  define("HOST", "{{dbhost}}");
 }
 if(!defined("USER"))
-  define("USER", "saia");
+  define("USER", "{{dbuser}}");
 if(!defined("PASS"))
-  define("PASS", "cerok_saia");
+  define("PASS", "{{dbpass}}");
 if(!defined("DB"))
-  define("DB", "saia_release1");//INSTANCIA
-define("MOTOR","MySql");
+  define("DB", "{{dbname}}");//INSTANCIA
+define("MOTOR","{{dbengine}}");
 if(!defined("BASEDATOS"))
-  define("BASEDATOS","saia_release1");//BASE DE DATOS
+  define("BASEDATOS","{{dbschema}}");//ESQUEMA
 if(!defined("TABLESPACE"))
-  define("TABLESPACE","saia_release1");//TABLESPACE
+  define("TABLESPACE","{{tablespace}}");//TABLESPACE
 if(!defined("PORT")) {
-  define("PORT", 3306);
+    define("PORT", "{{dbport}}");
   //amazon cloud
   //define("PORT", 3308);
 }

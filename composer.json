@@ -8,6 +8,18 @@
 		"setasign/fpdi": "^2.0.0-beta2",
 		"setasign/fpdi-fpdf": "^2.0.0-beta2",
 		"setasign/fpdi-tcpdf": "^2.0.0-beta2",
-		"siriusphp/upload": "^2.1"
+		"siriusphp/upload": "^2.1",
+		"symfony/process": "~3.3|~4.0"
+	},
+	"extra": {
+		"class": "Corley\\Composer\\MyHook"
+	},
+	"autoload": {
+		"psr-4": {
+			"Corley\\Composer\\" : "instalador/"
+		}
+	},
+	"scripts": {
+		"post-install-cmd": "Corley\\Composer\\MyHook::localConf"
 	}
 }

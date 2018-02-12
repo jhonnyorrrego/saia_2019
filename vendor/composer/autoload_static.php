@@ -33,6 +33,7 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
             'Symfony\\Polyfill\\Apcu\\' => 22,
             'Symfony\\Component\\Yaml\\' => 23,
             'Symfony\\Component\\Routing\\' => 26,
+            'Symfony\\Component\\Process\\' => 26,
             'Symfony\\Component\\HttpKernel\\' => 29,
             'Symfony\\Component\\HttpFoundation\\' => 33,
             'Symfony\\Component\\Finder\\' => 25,
@@ -71,6 +72,10 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
             'Doctrine\\Bundle\\MigrationsBundle\\' => 33,
             'Doctrine\\Bundle\\DoctrineCacheBundle\\' => 36,
             'Doctrine\\Bundle\\DoctrineBundle\\' => 31,
+        ),
+        'C' => 
+        array (
+            'Corley\\Composer\\' => 16,
         ),
     );
 
@@ -118,6 +123,10 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         'Symfony\\Component\\Routing\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/routing',
+        ),
+        'Symfony\\Component\\Process\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/process',
         ),
         'Symfony\\Component\\HttpKernel\\' => 
         array (
@@ -234,6 +243,10 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         'Doctrine\\Bundle\\DoctrineBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/doctrine-bundle',
+        ),
+        'Corley\\Composer\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/instalador',
         ),
     );
 
