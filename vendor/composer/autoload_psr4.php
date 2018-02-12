@@ -38,7 +38,6 @@ return array(
     'PhpOffice\\PhpWord\\' => array($vendorDir . '/phpoffice/phpword/src/PhpWord'),
     'PhpOffice\\Common\\' => array($vendorDir . '/phpoffice/common/src/Common'),
     'Firebase\\JWT\\' => array($vendorDir . '/firebase/php-jwt/src'),
-    'Doctrine\\Instantiator\\' => array($vendorDir . '/doctrine/instantiator/src/Doctrine/Instantiator'),
     'Doctrine\\DBAL\\Migrations\\' => array($vendorDir . '/doctrine/migrations/lib/Doctrine/DBAL/Migrations'),
     'Doctrine\\Common\\Cache\\' => array($vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache'),
     'Doctrine\\Common\\Annotations\\' => array($vendorDir . '/doctrine/annotations/lib/Doctrine/Common/Annotations'),

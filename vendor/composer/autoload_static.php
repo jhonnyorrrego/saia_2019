@@ -63,7 +63,6 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         ),
         'D' => 
         array (
-            'Doctrine\\Instantiator\\' => 22,
             'Doctrine\\DBAL\\Migrations\\' => 25,
             'Doctrine\\Common\\Cache\\' => 22,
             'Doctrine\\Common\\Annotations\\' => 28,
@@ -207,10 +206,6 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
-        'Doctrine\\Instantiator\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/doctrine/instantiator/src/Doctrine/Instantiator',
-        ),
         'Doctrine\\DBAL\\Migrations\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/migrations/lib/Doctrine/DBAL/Migrations',
@@ -266,10 +261,6 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         ),
         'D' => 
         array (
-            'Doctrine\\ORM\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/doctrine/orm/lib',
-            ),
             'Doctrine\\DBAL\\' => 
             array (
                 0 => __DIR__ . '/..' . '/doctrine/dbal/lib',
