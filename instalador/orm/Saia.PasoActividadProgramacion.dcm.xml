@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\PasoActividadProgramacion" table="paso_actividad_programacion">
+    <id name="idpasoActividadProgramacion" type="integer" column="idpaso_actividad_programacion">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="inicio" type="datetime" column="inicio" nullable="false"/>
+    <field name="meses" type="string" column="meses" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="dias" type="string" column="dias" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="expirar" type="datetime" column="expirar" nullable="true"/>
+    <field name="estado" type="integer" column="estado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="actividadIdpasoActividad" type="integer" column="actividad_idpaso_actividad" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

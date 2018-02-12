@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtAnamnesisClinica" table="ft_anamnesis_clinica">
+    <indexes>
+      <index name="i_ft_anamnesis_clinica_doc" columns="documento_iddocumento"/>
+      <index name="i_anamnesis_clinica_clinica_or" columns="ft_clinica_ortodoncia"/>
+      <index name="i_anamnesis_clinica_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftAnamnesisClinica" type="integer" column="idft_anamnesis_clinica">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1004</option>
+      </options>
+    </field>
+    <field name="motivoConsulta" type="string" column="motivo_consulta" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="dependencia" type="integer" column="dependencia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="encabezado" type="integer" column="encabezado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="firma" type="integer" column="firma" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="enfermedadActual" type="text" column="enfermedad_actual" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="antecedentesMedicos" type="text" column="antecedentes_medicos" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ftClinicaOrtodoncia" type="integer" column="ft_clinica_ortodoncia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="antecedentesFamiliaresA" type="text" column="antecedentes_familiares_a" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="estadoDocumento" type="integer" column="estado_documento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

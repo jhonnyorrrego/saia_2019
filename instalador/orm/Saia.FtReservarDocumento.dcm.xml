@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtReservarDocumento" table="ft_reservar_documento">
+    <indexes>
+      <index name="i_reservar_documento_documento_" columns="documento_iddocumento"/>
+      <index name="i_reservar_documento_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftReservarDocumento" type="integer" column="idft_reservar_documento">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1108</option>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="dependencia" type="integer" column="dependencia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="encabezado" type="integer" column="encabezado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="firma" type="integer" column="firma" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="fechaSolicitud" type="date" column="fecha_solicitud" nullable="false"/>
+    <field name="desde" type="datetime" column="desde" nullable="false"/>
+    <field name="hasta" type="datetime" column="hasta" nullable="false"/>
+    <field name="solicitarA" type="integer" column="solicitar_a" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="observaciones" type="text" column="observaciones" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="docRelacionado" type="integer" column="doc_relacionado" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="fechaEntrega" type="datetime" column="fecha_entrega" nullable="true"/>
+    <field name="usuarioEntrega" type="integer" column="usuario_entrega" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="observacionEntrega" type="string" column="observacion_entrega" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="fechaDevolver" type="datetime" column="fecha_devolver" nullable="true"/>
+    <field name="usuarioDevolver" type="integer" column="usuario_devolver" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="observacionDevolver" type="string" column="observacion_devolver" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="estadoDoc" type="integer" column="estado_doc" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="estadoDocumento" type="integer" column="estado_documento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

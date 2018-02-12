@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\TareasListadoRecur" table="tareas_listado_recur">
+    <id name="idtareasListadoRecur" type="integer" column="idtareas_listado_recur">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="fkTareasListado" type="integer" column="fk_tareas_listado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="recurrencia" type="integer" column="recurrencia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="repetirCada" type="integer" column="repetir_cada" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="empiezaEl" type="date" column="empieza_el" nullable="false"/>
+    <field name="finalizaEl" type="integer" column="finaliza_el" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="finalizaElRepeticiones" type="integer" column="finaliza_el_repeticiones" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="finalizaElFecha" type="date" column="finaliza_el_fecha" nullable="true"/>
+    <field name="repeticionesEjecutada" type="integer" column="repeticiones_ejecutada" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="repetirMes" type="integer" column="repetir_mes" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="diasSemana" type="string" column="dias_semana" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ejecutaProxima" type="date" column="ejecuta_proxima" nullable="false"/>
+  </entity>
+</doctrine-mapping>

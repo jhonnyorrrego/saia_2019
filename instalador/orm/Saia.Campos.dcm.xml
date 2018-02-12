@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\Campos" table="campos">
+    <id name="idcampos" type="integer" column="idcampos">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="nombre" type="string" column="nombre" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default"/>
+      </options>
+    </field>
+    <field name="alias" type="string" column="alias" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default"/>
+      </options>
+    </field>
+    <field name="tabla" type="string" column="tabla" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default"/>
+      </options>
+    </field>
+    <field name="tipo" type="string" column="tipo" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default">TEXT</option>
+      </options>
+    </field>
+    <field name="valor" type="string" column="valor" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ayuda" type="string" column="ayuda" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="visible" type="integer" column="visible" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="seleccionado" type="string" column="seleccionado" length="1" nullable="false">
+      <options>
+        <option name="fixed">1</option>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="tipoDato" type="string" column="tipo_dato" length="20" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default">varchar</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

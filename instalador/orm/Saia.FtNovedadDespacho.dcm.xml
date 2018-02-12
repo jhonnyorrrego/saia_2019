@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtNovedadDespacho" table="ft_novedad_despacho">
+    <indexes>
+      <index name="i_ft_novedad_despacho_doc" columns="documento_iddocumento"/>
+      <index name="i_novedad_despacho_despacho_i" columns="ft_despacho_ingresados"/>
+      <index name="i_novedad_despacho_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftNovedadDespacho" type="integer" column="idft_novedad_despacho">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="firma" type="integer" column="firma" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="encabezado" type="integer" column="encabezado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="dependencia" type="integer" column="dependencia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1215</option>
+      </options>
+    </field>
+    <field name="estadoDocumento" type="string" column="estado_documento" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ftDespachoIngresados" type="integer" column="ft_despacho_ingresados" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="observaciones" type="text" column="observaciones" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="novedad" type="string" column="novedad" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="itemRadicacion" type="string" column="item_radicacion" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="fechaNovedad" type="datetime" column="fecha_novedad" nullable="false"/>
+    <field name="anexoSoporte" type="string" column="anexo_soporte" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

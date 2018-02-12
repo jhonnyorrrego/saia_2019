@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\Paso" table="paso">
+    <id name="idpaso" type="integer" column="idpaso">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="descripcion" type="text" column="descripcion" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="responsable" type="text" column="responsable" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="nombrePaso" type="string" column="nombre_paso" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="estado" type="integer" column="estado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Define si el paso esta o no activo 1 ctivo , 0  Inactivo</option>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="idfigura" type="string" column="idfigura" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="diagramIddiagram" type="integer" column="diagram_iddiagram" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="posicion" type="string" column="posicion" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="plazoPaso" type="string" column="plazo_paso" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

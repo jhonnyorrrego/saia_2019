@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtRadicacionEntrada" table="ft_radicacion_entrada">
+    <indexes>
+      <index name="i_radicacion_entrada_documento_" columns="documento_iddocumento"/>
+      <index name="i_radicacion_entrada_serie_idse" columns="serie_idserie"/>
+      <index name="i_radicacion_entrada_tipo_desti" columns="tipo_destino"/>
+    </indexes>
+    <id name="idftRadicacionEntrada" type="integer" column="idft_radicacion_entrada">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="numeroOficio" type="string" column="numero_oficio" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="personaNatural" type="string" column="persona_natural" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="descripcion" type="text" column="descripcion" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="descripcionAnexos" type="text" column="descripcion_anexos" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="anexosDigitales" type="string" column="anexos_digitales" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="destino" type="text" column="destino" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="copiaA" type="text" column="copia_a" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="dependencia" type="integer" column="dependencia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="encabezado" type="integer" column="encabezado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="firma" type="integer" column="firma" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="idflujo" type="string" column="idflujo" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1317</option>
+      </options>
+    </field>
+    <field name="fechaRadicacionEntrada" type="datetime" column="fecha_radicacion_entrada" nullable="false"/>
+    <field name="numeroRadicado" type="integer" column="numero_radicado" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="estadoRadicado" type="string" column="estado_radicado" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="fechaOficioEntrada" type="date" column="fecha_oficio_entrada" nullable="true"/>
+    <field name="estadoDocumento" type="integer" column="estado_documento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="tipoOrigen" type="integer" column="tipo_origen" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="areaResponsable" type="string" column="area_responsable" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tipoDestino" type="integer" column="tipo_destino" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">2</option>
+      </options>
+    </field>
+    <field name="personaNaturalDest" type="string" column="persona_natural_dest" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tipoMensajeria" type="integer" column="tipo_mensajeria" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="despachado" type="integer" column="despachado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="empresaTransportado" type="string" column="empresa_transportado" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="numeroGuia" type="string" column="numero_guia" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tiempoRespuesta" type="date" column="tiempo_respuesta" nullable="true"/>
+    <field name="descripcionGeneral" type="string" column="descripcion_general" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtVincularDocExpedie" table="ft_vincular_doc_expedie">
+    <indexes>
+      <index name="i_vincular_doc_expedie_documento_" columns="documento_iddocumento"/>
+      <index name="i_vincular_doc_expedie_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftVincularDocExpedie" type="integer" column="idft_vincular_doc_expedie">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="serieIdserie" type="string" column="serie_idserie" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default">7204</option>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="dependencia" type="integer" column="dependencia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="encabezado" type="integer" column="encabezado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="firma" type="integer" column="firma" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="anexos" type="string" column="anexos" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="asunto" type="string" column="asunto" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="fechaDocumento" type="date" column="fecha_documento" nullable="false"/>
+    <field name="fkIdexpediente" type="string" column="fk_idexpediente" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="observaciones" type="text" column="observaciones" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="estadoDocumento" type="integer" column="estado_documento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

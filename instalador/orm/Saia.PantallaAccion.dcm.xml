@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\PantallaAccion" table="pantalla_accion">
+    <indexes>
+      <index name="fk_pantalla_accion_pantalla1_idx" columns="fk_idpantalla"/>
+    </indexes>
+    <id name="idpantallaAccion" type="integer" column="idpantalla_accion">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="nombre" type="string" column="nombre" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="etiqueta" type="string" column="etiqueta" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tipoAccion" type="integer" column="tipo_accion" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Define el tipo de accion, 1-&gt;pantalla;2-&gt;formato</option>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="fkIdpantalla" type="integer" column="fk_idpantalla" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

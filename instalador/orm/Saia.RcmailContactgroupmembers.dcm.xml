@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\RcmailContactgroupmembers" table="rcmail_contactgroupmembers">
+    <indexes>
+      <index name="contactgroupmembers_contact_index" columns="contact_id"/>
+    </indexes>
+    <id name="contactgroupId" type="integer" column="contactgroup_id"/>
+    <id name="contactId" type="integer" column="contact_id"/>
+    <field name="created" type="datetime" column="created" nullable="false">
+      <options>
+        <option name="default">1000-01-01 00:00:00</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtHallazgo" table="ft_hallazgo">
+    <indexes>
+      <index name="i_ft_hallazgo_doc" columns="documento_iddocumento"/>
+      <index name="i_hallazgo_gestion_ca" columns="ft_gestion_calid"/>
+      <index name="i_hallazgo_plan_mejor" columns="ft_plan_mejoramiento"/>
+      <index name="i_hallazgo_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftHallazgo" type="integer" column="idft_hallazgo">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="notificaCump" type="integer" column="notifica_cump" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="notificaSeg" type="integer" column="notifica_seg" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="dependencia" type="integer" column="dependencia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="ftGestionCalid" type="integer" column="ft_gestion_calid" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="claseAccion" type="integer" column="clase_accion" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="radicadoPlan" type="string" column="radicado_plan" length="20" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="consecutivoHallazgo" type="string" column="consecutivo_hallazgo" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="procesosVinculados" type="string" column="procesos_vinculados" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="claseObservacion" type="integer" column="clase_observacion" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="deficiencia" type="text" column="deficiencia" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="correcionHallazgo" type="text" column="correcion_hallazgo" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="causas" type="text" column="causas" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="accionMejoramiento" type="text" column="accion_mejoramiento" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="estado" type="string" column="estado" length="50" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="secretarias" type="string" column="secretarias" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="responsables" type="string" column="responsables" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tiempoCumplimiento" type="date" column="tiempo_cumplimiento" nullable="false"/>
+    <field name="tiempoSeguimiento" type="date" column="tiempo_seguimiento" nullable="false"/>
+    <field name="responsableSeguimiento" type="string" column="responsable_seguimiento" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="indicadorCumplimiento" type="text" column="indicador_cumplimiento" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="observaciones" type="text" column="observaciones" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="mecanismoInterno" type="text" column="mecanismo_interno" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1055</option>
+      </options>
+    </field>
+    <field name="firma" type="integer" column="firma" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="encabezado" type="integer" column="encabezado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="ftPlanMejoramiento" type="integer" column="ft_plan_mejoramiento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="estadoDocumento" type="integer" column="estado_documento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

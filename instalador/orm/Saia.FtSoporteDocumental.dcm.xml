@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtSoporteDocumental" table="ft_soporte_documental">
+    <indexes>
+      <index name="i_soporte_documental_acopio" columns="ft_acopio"/>
+    </indexes>
+    <id name="idftSoporteDocumental" type="integer" column="idft_soporte_documental">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="ftAcopio" type="integer" column="ft_acopio" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="soportesDocumental" type="string" column="soportes_documental" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tipoSoporte" type="integer" column="tipo_soporte" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="observaciones" type="text" column="observaciones" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>
