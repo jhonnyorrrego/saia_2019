@@ -8,6 +8,9 @@ use Doctrine\Common\ClassLoader;
 
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Configuration;
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Setup;
 
 class ImportCommand extends Command {
 
@@ -35,16 +38,41 @@ class ImportCommand extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output) {
 
-        echo $this->vendor_dir . PHP_EOL;
+        //echo $this->vendor_dir . PHP_EOL;
+        echo __DIR__ . PHP_EOL;
         //require_once realpath(__DIR__ . '/../vendor/doctrine/common/lib/Doctrine/Common/ClassLoader.php');
         require_once (__DIR__  . '/../vendor/autoload.php');
         //require '../vendor/doctrine/common/lib/Doctrine/Common/ClassLoader.php';
         $config = new Configuration();
-        $connectionParams2 = array(
-            'url' => 'mysql://saia:cerok_saia@localhost/saia_aguas',
-        );
         $connectionParams = array(
             'dbname' => 'saia_release1',
+            'user' => 'saia',
+            'password' => 'cerok_saia',
+            'host' => 'localhost',
+            'driver' => 'pdo_mysql',
+        );
+
+        date_default_timezone_set("America/Bogota");
+
+        $this->crearBaseDeDatos($connectionParams);
+        //$databases = $sm->listDatabases();
+
+        //print_r($sm->listTableNames());
+
+
+        /*$sql = "SELECT login FROM funcionario";
+        $stmt = $conn->query($sql); // Simple, but has several drawbacks
+
+        while ($row = $stmt->fetch()) {
+            $output->writeln(sprintf('<info>Usuario: %s<info>',$row["login"]));
+        }*/
+
+    }
+
+    private function compararBasesDeDatos($connectionParams) {
+        $config = new Configuration();
+        $connectionParams2 = array(
+            'dbname' => 'saia_aguas',
             'user' => 'saia',
             'password' => 'cerok_saia',
             'host' => 'localhost',
@@ -56,40 +84,31 @@ class ImportCommand extends Command {
         $sm = $conn->getSchemaManager();
         $sm2 = $conn2->getSchemaManager();
 
-        //$databases = $sm->listDatabases();
+        $platf1 = $conn->getDatabasePlatform();
+        $platf2 = $conn->getDatabasePlatform();
+
+        $this->registrar_mapeo_enum($platf1);
+        $this->registrar_mapeo_enum($platf2);
+
         $fromSchema = $sm->createSchema();
         $toSchema = $sm2->createSchema();
+        //$toSchema = new Schema();
 
-        date_default_timezone_set("America/Bogota");
+        //$toSchema->dropTable('evento');
 
-        //$platf1 = $conn->getDatabasePlatform();
-        //$platf2 = $conn->getDatabasePlatform();
-        //$platf1->registerDoctrineTypeMapping('enum', 'string');
+        //$sql = $fromSchema->getMigrateToSql($toSchema, $platf1);
+        //$sql = $fromSchema->getMigrateFromSql($toSchema, $platf1);
 
-        $this->registrar_fucking_enum($conn->getDatabasePlatform());
-        $this->registrar_fucking_enum($conn2->getDatabasePlatform());
+        $comparator = new \Doctrine\DBAL\Schema\Comparator();
+        $schemaDiff = $comparator->compare($toSchema, $fromSchema);
 
+        $queries = $schemaDiff->toSql($platf1); // queries to get from one to another schema.
+        //$saveQueries = $schemaDiff->toSaveSql($myPlatform);
 
-        $platf1 = $conn->getDoctrineConnection()->getDatabasePlatform();
-        $platf2 = $conn2->getDoctrineConnection()->getDatabasePlatform();
-
-        $this->registrar_fucking_enum($platf1);
-        $this->registrar_fucking_enum($platf2);
-
-        $sql = $toSchema->getMigrateToSql($fromSchema, $platf1);
-
-        print_r($sql);
-
-        /*$sql = "SELECT login FROM funcionario";
-        $stmt = $conn->query($sql); // Simple, but has several drawbacks
-
-        while ($row = $stmt->fetch()) {
-            $output->writeln(sprintf('<info>Usuario: %s<info>',$row["login"]));
-        }*/
+        print_r($queries);
 
     }
-
-    private function registrar_fucking_enum(&$platform) {
+    private function registrar_mapeo_enum(&$platform) {
         $types = ['enum' => 'string'];
         foreach ($types as $type_key => $type_value) {
             if (!$platform->hasDoctrineTypeMappingFor($type_key)) {
@@ -101,7 +120,24 @@ class ImportCommand extends Command {
 
     protected function configure() {
         $this->setName('consultar');
-        ;
+    }
+
+    private function crearBaseDeDatos($dbParams) {
+        //$config = new Configuration();
+        $isDevMode = true;
+        //$config = Setup::createAnnotationMetadataConfiguration(array(__DIR__."/orm"), $isDevMode);
+        $config = Setup::createAnnotationMetadataConfiguration(array(__DIR__."/orm/Saia"), $isDevMode, null, null, false);
+        //$config->addEntityNamespace('', 'Saia\\');
+        //var_dump($config);die();
+        $entityManager = EntityManager::create($dbParams, $config);
+        $tool = new \Doctrine\ORM\Tools\SchemaTool($entityManager);
+        //$classes = $entityManager->getMetadataFactory()->getLoadedMetadata();
+        $classes = array(
+            $entityManager->getClassMetadata('Documento'),
+            /*$entityManager->getClassMetadata('Saia\Funcionario')*/
+        );
+        /*$tool->createSchema($classes);*/
+        var_dump($classes);
     }
 
 }
