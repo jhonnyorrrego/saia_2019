@@ -22,10 +22,6 @@ class Configuracion extends Command {
 
     private $valores = array();
 
-    public function getDependencies() {
-        return $this->dependencies;
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output) {
         $dialog = $this->getHelperSet()->get('dialog');
         $output->writeln('<info>Por favor ingrese los valores solicitados</info>');

@@ -3,6 +3,7 @@ namespace Saia\Composer;
 
 require 'Installer.php';
 require 'Configurador.php';
+require 'InstaladorBdd.php';
 
 use Composer\Script\Event;
 use Symfony\Component\Console\Shell;
@@ -38,6 +39,7 @@ class PostInstall {
         $dependencyContainer    = new Configuracion();
         $application->add($dependencyContainer);
         $application->add(new Install($installPath, $dependencyContainer));
+        $application->add(new ImportCommand($event->getComposer()->getConfig()->get('vendor-dir')));
 
         $shell = new Shell($application);
 
