@@ -26,8 +26,10 @@ class PostInstall {
         foreach ($packages as $package) {
             $installPath = $installationManager->getInstallPath($package);
             if (strpos($installPath, "editor_codigo") !== false) {
-                $installPath = null;
+                //$installPath = null;
                 continue;
+            } else {
+                break;
             }
         }
         require_once $event->getComposer()
@@ -36,10 +38,11 @@ class PostInstall {
 
         $application = new Application('Instalador SAIA', '1.0.0-alpha');
 
+        //echo "Ruta: $installPath" . PHP_EOL;
         $dependencyContainer    = new Configuracion();
         $application->add($dependencyContainer);
         $application->add(new Install($installPath, $dependencyContainer));
-        $application->add(new ImportCommand($event->getComposer()->getConfig()->get('vendor-dir')));
+        $application->add(new ImportCommand($installPath, $dependencyContainer));
 
         $shell = new Shell($application);
 

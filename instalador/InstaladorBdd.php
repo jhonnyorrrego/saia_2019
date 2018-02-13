@@ -29,27 +29,36 @@ class ImportCommand extends Command {
     sqlanywhere: A SAP Sybase SQL Anywhere driver that uses the sqlanywhere PHP extension.
     */
 
-    protected $vendor_dir;
+    protected $install_dir;
+    protected $configuracion;
 
-    public function __construct($vendor_dir) {
+    public function __construct($vendor_dir, $configuracion) {
         parent::__construct();
-        $this->vendor_dir = $vendor_dir;
+        $this->install_dir = $vendor_dir;
+        $this->configuracion = $configuracion;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output) {
 
+        //$output->writeln('<info>Directorio: ' . $this->install_dir . '</info>');
         //echo $this->vendor_dir . PHP_EOL;
-        echo __DIR__ . PHP_EOL;
+        if(empty($this->configuracion->get_valores()) ) {
+            $output->writeln('<info>Primero debe ejecutar la tarea "configurar"</info>');
+            return 1;
+        }
+
+        $valores = $this->configuracion->get_valores();
+        //echo __DIR__ . PHP_EOL;
         //require_once realpath(__DIR__ . '/../vendor/doctrine/common/lib/Doctrine/Common/ClassLoader.php');
         require_once (__DIR__  . '/../vendor/autoload.php');
         //require '../vendor/doctrine/common/lib/Doctrine/Common/ClassLoader.php';
         $config = new Configuration();
         $connectionParams = array(
-            'dbname' => 'saia_release2',
-            'user' => 'saia',
-            'password' => 'cerok_saia',
-            'host' => 'localhost',
-            'driver' => 'pdo_mysql',
+            'dbname' => $valores["dbname"],
+            'user' => $valores["dbuser"],
+            'password' => $valores["dbpass"],
+            'host' => $valores["dbhost"],
+            'driver' => $valores["dbengine"],
         );
 
         date_default_timezone_set("America/Bogota");
