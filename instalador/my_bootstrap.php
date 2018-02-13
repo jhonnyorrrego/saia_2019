@@ -14,7 +14,7 @@ $dbParams = array(
     'driver'   => 'pdo_mysql',
     'user'     => 'saia',
     'password' => 'cerok_saia',
-    'dbname'   => 'saia_release1',
+    'dbname'   => 'saia_release2',
 );
 
 //$config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);

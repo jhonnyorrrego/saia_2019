@@ -45,7 +45,7 @@ class ImportCommand extends Command {
         //require '../vendor/doctrine/common/lib/Doctrine/Common/ClassLoader.php';
         $config = new Configuration();
         $connectionParams = array(
-            'dbname' => 'saia_release1',
+            'dbname' => 'saia_release2',
             'user' => 'saia',
             'password' => 'cerok_saia',
             'host' => 'localhost',
@@ -131,13 +131,14 @@ class ImportCommand extends Command {
         //var_dump($config);die();
         $entityManager = EntityManager::create($dbParams, $config);
         $tool = new \Doctrine\ORM\Tools\SchemaTool($entityManager);
-        //$classes = $entityManager->getMetadataFactory()->getLoadedMetadata();
-        $classes = array(
-            $entityManager->getClassMetadata('Documento'),
-            /*$entityManager->getClassMetadata('Saia\Funcionario')*/
-        );
-        /*$tool->createSchema($classes);*/
-        var_dump($classes);
+        $classes = $entityManager->getMetadataFactory()->getAllMetadata();
+        /*$classes = array(
+            $entityManager->getClassMetadata('Saia\\Documento'),
+            $entityManager->getClassMetadata('Saia\Funcionario')
+        );*/
+        //$tool
+        $tool->createSchema($classes);
+        //var_dump($classes);
     }
 
 }
