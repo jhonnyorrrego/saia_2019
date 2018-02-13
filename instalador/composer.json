@@ -45,7 +45,9 @@
         },
 	"autoload":{
 		"psr-4":{
-			"Saia\\Composer\\": "saia_release/instalador"
+			"Saia\\": "saia_release/instalador/orm/Saia",
+			"Saia\\Composer\\": "saia_release/instalador",
+			"Doctrine\\DBAL\\": "saia_release/vendor"
 		}
 	}
 }
