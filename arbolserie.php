@@ -76,18 +76,18 @@ echo(librerias_arboles());
 			function onNodeSelect(nodeId){
 				console.log(nodeId);
     		if(nodeId=='3-categoria-Otras categorias'){
-          parent.serielist.location = "serieadd.php?otras_categorias=1"; 
+          parent.serielist.location = "serieadd.php?otras_categorias=1&idnodopadre="+nodeId; 
         }else if(nodeId=='series_sin_asignar'){
           parent.serielist.location ="vacio.php";
         }else if(validar_oc(nodeId)){
           var datos=nodeId.split("-");
-          parent.serielist.location = "serieview.php?key=" + datos[1]; 
+          parent.serielist.location = "serieview.php?key=" + datos[1] + "&idnodopadre="+nodeId; 
         }else if(validar_ssa(nodeId)){
           var datos=nodeId.split("-");
           if(datos[0]=='sin_asignar'){
-            parent.serielist.location = "serieview.php?sin_asignar=1&key=" + datos[1]; 
+            parent.serielist.location = "serieview.php?sin_asignar=1&key=" + datos[1] + "&idnodopadre="+nodeId; 
           }else if(datos[0]=='asignada'){
-            parent.serielist.location = "serieview.php?key=" + datos[1];
+            parent.serielist.location = "serieview.php?key=" + datos[1] + "&idnodopadre="+nodeId;
           }else{
             parent.serielist.location ="vacio.php";
           }
@@ -105,9 +105,9 @@ echo(librerias_arboles());
         	    if(es_tvd==-1){
         	     tvd='';
         	    }                
-              dependencia_serie="&dependencia_serie="+datos2[0];
+              dependencia_serie="&dependencia_serie="+datos2[0]+"&idnodopadre="+nodeId;
             }
-            parent.serielist.location = "serieview.php?key=" + datos3[0] + dependencia_serie+tvd; 
+            parent.serielist.location = "serieview.php?key=" + datos3[0] + dependencia_serie+tvd + "&idnodopadre="+nodeId; 
           }else{
             var datos=nodeId.split("d");
             var datos2=datos[1].split("_tv");
@@ -116,7 +116,7 @@ echo(librerias_arboles());
             if(es_tvd==-1){
               tvd='';
             }
-            parent.serielist.location = "asignarserie_entidad.php?tipo_entidad=2&llave_entidad=" + datos2[0]+'&from_dependencia=1&dependencia_serie=' + datos2[0] + tvd;                        
+            parent.serielist.location = "asignarserie_entidad.php?tipo_entidad=2&llave_entidad=" + datos2[0]+'&from_dependencia=1&dependencia_serie=' + datos2[0] + tvd + "&idnodopadre="+nodeId;
           }
         }
       }

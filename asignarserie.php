@@ -3,6 +3,9 @@ include_once("db.php");
 include_once("header.php");
 include_once("pantallas/expediente/librerias.php");
 
+include ("librerias_saia.php");
+echo(librerias_jquery('1.7'));
+
 function eliminar_permiso($idserie,$tipo_entidad,$entidad){
 	global $conn;
 
@@ -12,7 +15,9 @@ function eliminar_permiso($idserie,$tipo_entidad,$entidad){
 
 //si viene de la pantalla asignar_serie_entidad.php
 if(isset($_REQUEST["serie_entidad"]) && $_REQUEST["serie_entidad"])
-	{$tipo_entidad = $_REQUEST["tipo_entidad"];
+	{
+	 $arreglo_nodos_actualizar=array();//Desarrollo recarga arbol
+	 $tipo_entidad = $_REQUEST["tipo_entidad"];
 	 $entidades=explode(',',$_REQUEST["entidad_identidad"]);
 	 $series=explode(',',$_REQUEST["serie_idserie"]); 
 	 //validaci�n de ids
@@ -42,22 +47,54 @@ if(isset($_REQUEST["serie_entidad"]) && $_REQUEST["serie_entidad"])
 	  {$encontradas=busca_filtro_tabla("","entidad_serie","entidad_identidad='$tipo_entidad' and serie_idserie='".$series[$j]."' and llave_entidad in(".implode(",",$entidades).")","",$conn);  
 	   for($i=0;$i<$encontradas["numcampos"];$i++){
 	     eliminar_permiso($encontradas[$i]["serie_idserie"],$encontradas[$i]["entidad_identidad"],$encontradas[$i]["llave_entidad"]);
+       
+       if($tipo_entidad==2){//Desarrollo recarga arbol
+        $arreglo_nodos_actualizar[]=$encontradas[$i]["llave_entidad"];
+       }
 	   } 
 	  }
 	 else //si voy a adicionar el permiso
 	  {for($i=0;$i<count($entidades);$i++){
 	     insertar_permiso($series[$j],$tipo_entidad,$entidades[$i]);
+       
+       if($tipo_entidad==2){//Desarrollo recarga arbol
+          $arreglo_nodos_actualizar[]=$entidades[$i];
+       }
 	    }
 	  } 
 	 }
 	$ruta="asignarserie_entidad.php";
-	//print_r($_REQUEST);
+	
+  if($tipo_entidad==2){//Cuando la asignacion es a la dependencia
+    $arreglo_nodos_actualizar=array_unique($arreglo_nodos_actualizar);
+    $cant_nodos=count($arreglo_nodos_actualizar);
+    if($cant_nodos){
+      ?>
+      <script>
+      <?php
+      for($i=0;$i<$cant_nodos;$i++){
+        $adicional='';
+        if(@$_REQUEST["tvd"]){
+          $adicional="_tv";
+        }
+        ?>
+        window.parent.frames['arbol'].tree2.refreshItem('<?php echo('d'.$arreglo_nodos_actualizar[$i]).$adicional; ?>');
+        
+        <?php
+      }
+      ?>
+      </script>
+      <?php
+    }
+  }
 	
 	?>
-	<script>
+	<script>	
 	top.noty({text: 'Asignacion realizada',type: 'success',layout: 'topCenter',timeout:4000});
 	//parent.location.reload();
-  window.open("asignarserie_entidad.php?filtrar_serie=<?php echo(@$_REQUEST["serie_idserie"]); ?>","_self")
+  //window.open("asignarserie_entidad.php?filtrar_serie=<?php echo(@$_REQUEST["serie_idserie"]); ?>","_self")
+  
+  window.history.go(-1);//Desarrollo recarga arbol
 	</script>
 	<?php
 	die();
