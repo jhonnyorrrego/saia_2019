@@ -38,7 +38,7 @@ class Install extends Command {
     }
 
     protected function configure() {
-        $this->setName('instalar');
+        $this->setName('define')->setDescription("Construir define.php");
     }
 
     protected function createInstallationDirectory(OutputInterface $output) {

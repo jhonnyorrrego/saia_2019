@@ -128,7 +128,7 @@ class ImportCommand extends Command {
     }
 
     protected function configure() {
-        $this->setName('consultar');
+        $this->setName('crearbdd')->setDescription("Crear la base de datos destino");
     }
 
     private function crearBaseDeDatos($dbParams) {

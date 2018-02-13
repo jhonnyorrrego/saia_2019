@@ -46,7 +46,7 @@ class Configuracion extends Command {
                 $this->valores[$key] = $this->valores["dbname"];
                 continue;
             }
-            $un_valor = $dialog->ask($output, '<question>' . $pregunta . ': </question>');
+            $un_valor = $dialog->ask($input, '<question>' . $pregunta . ': </question>');
 
             if($key == "dbengine") {
                 if(in_array($un_valor, array_keys($this->motores))) {
