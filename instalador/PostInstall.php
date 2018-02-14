@@ -38,7 +38,7 @@ class PostInstall {
 
         $application = new Application('Instalador SAIA', '1.0.0-alpha');
 
-        //echo "Ruta: $installPath" . PHP_EOL;
+        echo "Ruta: $installPath" . PHP_EOL;
         $dependencyContainer    = new Configuracion();
         $application->add($dependencyContainer);
         $application->add(new Install($installPath, $dependencyContainer));

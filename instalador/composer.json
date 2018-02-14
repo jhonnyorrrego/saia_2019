@@ -1,6 +1,7 @@
 {
         "nombre_cliente":"Prueba",
         "require" : {
+		"php" : "^5.5.9",
                 "saia_release": "v18.0.2",
                 "saia_release/editor_codigo" : "v1.0.1"
         },

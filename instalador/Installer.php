@@ -11,7 +11,7 @@ class Install extends Command {
 
     protected $installDir;
 
-    protected $originDir;
+    protected $install_dir;
 
     protected $configuracion;
 
@@ -20,7 +20,7 @@ class Install extends Command {
     public function __construct($originDir, $config) {
         parent::__construct();
 
-        $this->originDir = $originDir;
+        $this->install_dir = $originDir;
         $this->configuracion = $config;
     }
 
@@ -43,7 +43,7 @@ class Install extends Command {
 
     protected function createInstallationDirectory(OutputInterface $output) {
         $dialog = $this->getHelperSet()->get('dialog');
-        $this->installDir = $this->originDir . DIRECTORY_SEPARATOR . $dialog->ask($output, '<question>Por favor especifique un directorio que no exista para empezar la instalacion: </question>');
+        $this->installDir = $this->install_dir . DIRECTORY_SEPARATOR . $dialog->ask($output, '<question>Por favor especifique un directorio que no exista para empezar la instalacion: </question>');
 
         if (!is_dir($this->installDir)) {
 
@@ -92,6 +92,13 @@ class Install extends Command {
         foreach ($this->configuracion->get_valores() as $key => $value) {
             $skeleton = str_replace('{{' . $key . '}}', $value, $skeleton);
         }
+
+        $ruta_saia = basename($this->install_dir);
+        if(empty($ruta_saia)) {
+            $ruta_saia = $this->install_dir;
+        }
+
+        $skeleton = str_replace('{{carpetasaia}}', $ruta_saia, $skeleton);
 
         if (file_put_contents(__DIR__ . "/../define.php", $skeleton)) {
             $output->writeln('<info>define.php ha sido generado</info>');
