@@ -76,7 +76,7 @@ if(@$_REQUEST["idformato"]){
   $x_formato2=$_REQUEST["idformato"];
   $idformato=$_REQUEST["idformato"];
   $formato=busca_filtro_tabla("*","formato A","A.idformato=".$x_formato2,"",$conn);
-  $sDbWhere ="formato LIKE '".$x_formato2."' OR formato LIKE '%,".$x_formato2.",%' OR formato LIKE '%,".$x_formato2."' OR formato LIKE '".$x_formato2.",%' AND " ;
+  $sDbWhere ="B.formato_idformato=".$idformato." AND " ;
 }
 if ($sDbWhereMaster != "") {
 	$sDbWhere .= "(" . $sDbWhereMaster . ") AND ";
@@ -89,10 +89,10 @@ if (strlen($sDbWhere) > 5) {
 }
 
 // Build SQL
-$sSql = "SELECT distinct funciones_formato.* FROM funciones_formato";
+$sSql = "SELECT distinct A.* FROM funciones_formato A, funciones_formato_enlace B";
 
 // Load Default Filter
-$sDefaultFilter = "";
+$sDefaultFilter = "A.idfunciones_formato=B.funciones_formato_fk";
 $sGroupBy = "";
 $sHaving = "";
 

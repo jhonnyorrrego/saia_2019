@@ -326,7 +326,7 @@ function DeleteData($sqlKey,$conn)
 function listado_funciones_formato(){
 global $conn;
 $idformato=@$_REQUEST["key"];
-$funciones=busca_filtro_tabla("*","funciones_formato A","A.formato LIKE '".$idformato."' OR A.formato LIKE '%,".$idformato.",%' OR A.formato LIKE '%,".$idformato."' OR A.formato LIKE '".$idformato.",%' AND A.acciones LIKE '%m%'","",$conn);
+$funciones=busca_filtro_tabla("A.*,C.nombre AS nombre_formato","funciones_formato A, funciones_formato_enlace B,formato C","A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=C.idformato AND B.formato_idformato=".$idformato." AND A.acciones LIKE '%m%'","",$conn);
 $lfunciones=array();
 if($funciones["numcampos"]){
   echo('<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
@@ -344,13 +344,9 @@ if($funciones["numcampos"]){
 		  $colorfila = " bgcolor=\"#F5F5F5\"";
 	 }
     echo('<tr '.$colorfila.'>');
-    if($funciones[$i]["formato"]!=""){
-      $listado_funciones=busca_filtro_tabla("nombre","formato","idformato IN('".implode("','",explode(",",$funciones[$i]["formato"]))."')","",$conn);  
-      if($listado_funciones["numcampos"])  
-        $lfunciones=extrae_campo($listado_funciones,"nombre","U");  
-    }
+    $lformatos=extrae_campo($funciones,"nombre_formato","U");  
     echo('<td><span class="phpmaker">'.$funciones[$i]["nombre_funcion"].'</span></td><td>'.listado($funciones[$i]["parametros"]).'</td>');
-    echo('<td>'.listado($lfunciones).'</td>');
+    echo('<td>'.listado($lformatos).'</td>');
     echo('<td><span class="phpmaker">'.$funciones[$i]["ruta"].'</span></td><td><span class="phpmaker">'.$funciones[$i]["descripcion"].'</span></td>');
     echo('</tr>');
   }

@@ -3778,6 +3778,7 @@ if($f){
   else {
     fclose($f);
   }
+  return($nombre);
 }
 else{
   alerta('No se puede crear el archivo: '.$nombre);
