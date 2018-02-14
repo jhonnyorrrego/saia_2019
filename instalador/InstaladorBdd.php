@@ -58,12 +58,13 @@ class ImportCommand extends Command {
             'user' => $valores["dbuser"],
             'password' => $valores["dbpass"],
             'host' => $valores["dbhost"],
-            'driver' => $valores["dbengine"],
+            'driver' => $valores["driver"],
         );
 
         date_default_timezone_set("America/Bogota");
 
         $this->crearBaseDeDatos($connectionParams);
+        $this->insertarValores($connectionParams);
         //$databases = $sm->listDatabases();
 
         //print_r($sm->listTableNames());
@@ -117,6 +118,7 @@ class ImportCommand extends Command {
         print_r($queries);
 
     }
+
     private function registrar_mapeo_enum(&$platform) {
         $types = ['enum' => 'string'];
         foreach ($types as $type_key => $type_value) {
@@ -148,6 +150,37 @@ class ImportCommand extends Command {
         //$tool
         $tool->createSchema($classes);
         //var_dump($classes);
+    }
+
+    private function insertarValores($dbParams) {
+        $config = new Configuration();
+
+        $conn = DriverManager::getConnection($dbParams, $config);
+
+        if($dbParams['driver'] == 'pdo_mysql') {
+            $platf1 = $conn->getDatabasePlatform();
+            $this->registrar_mapeo_enum($platf1);
+        }
+
+        //$conn->beginTransaction();
+        include_once('carga_datos.php');
+        $this->ejecutar_insert($conn, 'funcionario', $funcionario);
+        $this->ejecutar_insert($conn, 'dependencia', $busqueda_condicion);
+        $this->ejecutar_insert($conn, 'busqueda', $busqueda);
+        $this->ejecutar_insert($conn, 'busqueda_componente', $busqueda_componente);
+        $this->ejecutar_insert($conn, 'busqueda_condicion', $busqueda_condicion);
+        $this->ejecutar_insert($conn, 'cargo', $cargo);
+        $this->ejecutar_insert($conn, 'dependencia_cargo', $dependencia_cargo);
+        $this->ejecutar_insert($conn, 'formato', $formato);
+        $this->ejecutar_insert($conn, 'modulo', $modulo);
+        return true;
+    }
+
+    private function ejecutar_insert($conn, $tabla, $valores) {
+        foreach ($valores as $value) {
+            $conn->insert($tabla, $value);
+        }
+
     }
 
 }
