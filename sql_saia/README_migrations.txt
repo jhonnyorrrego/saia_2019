@@ -1,4 +1,4 @@
-En las carpetas migracioes_[my|ora|mssql|pg] Editar/Crear el archivo migrations.yml con los siguientes datos
+En las carpetas migraciones_[my|ora|mssql|pg] Editar/Crear el archivo migrations.yml con los siguientes datos
 
 name: Migrations
 migrations_namespace: Migrations

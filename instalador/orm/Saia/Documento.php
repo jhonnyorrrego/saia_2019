@@ -243,7 +243,7 @@ class Documento
      *
      * @ORM\Column(name="ventanilla_radicacion", type="integer", nullable=true)
      */
-    private $ventanillaRadicacion = '0';
+    private $ventanillaRadicacion;
 
 
 

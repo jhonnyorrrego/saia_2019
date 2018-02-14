@@ -64,6 +64,7 @@ class ImportCommand extends Command {
         date_default_timezone_set("America/Bogota");
 
         $this->crearBaseDeDatos($connectionParams);
+        $this->crearTablasAdicionales($connectionParams);
         $this->insertarValores($connectionParams);
         //$databases = $sm->listDatabases();
 
@@ -150,6 +151,42 @@ class ImportCommand extends Command {
         //$tool
         $tool->createSchema($classes);
         //var_dump($classes);
+    }
+
+    /**
+     * Para crear las tablas que no tienen PK
+     * @param array $dbParams
+     */
+    private function crearTablasAdicionales($dbParams) {
+
+        $config = new Configuration();
+
+        $conn = DriverManager::getConnection($dbParams, $config);
+
+
+        $sm = $conn->getSchemaManager();
+
+        $platf1 = $conn->getDatabasePlatform();
+        if($dbParams['driver'] == 'pdo_mysql') {
+            $this->registrar_mapeo_enum($platf1);
+        }
+
+        $schema = $sm->createSchema();
+
+        //$schema->dropTable('evento');
+
+        if (!$schema->hasTable("version_pivote_anexo")) {
+            $table = $schema->createTable("version_pivote_anexo");
+            $table->addColumn("iddocumento_version", "integer", [
+                "length" => 11,
+                "notnull" => false
+            ]);
+            $table->addColumn("idanexos_version", "integer", [
+                "length" => 11,
+                "notnull" => false
+            ]);
+        }
+
     }
 
     private function insertarValores($dbParams) {
