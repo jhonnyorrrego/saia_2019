@@ -79,7 +79,7 @@ if(isset($_REQUEST["serie_entidad"]) && $_REQUEST["serie_entidad"])
         }
         ?>
         window.parent.frames['arbol'].tree2.refreshItem('<?php echo('d'.$arreglo_nodos_actualizar[$i]).$adicional; ?>');
-        
+        window.parent.frames['arbol'].tree2.openAllItems('<?php echo('d'.$arreglo_nodos_actualizar[$i]).$adicional; ?>');
         <?php
       }
       ?>
