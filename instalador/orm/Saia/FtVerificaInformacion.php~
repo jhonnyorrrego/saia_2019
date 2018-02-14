@@ -1,0 +1,138 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtVerificaInformacion
+ *
+ * @ORM\Table(name="ft_verifica_informacion")
+ * @ORM\Entity
+ */
+class FtVerificaInformacion
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_verifica_informacion", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftVerificaInformacion;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ft_radica_doc_mercantil", type="integer", nullable=false)
+     */
+    private $ftRadicaDocMercantil;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie = '985';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="datos_remitente", type="string", length=255, nullable=true)
+     */
+    private $datosRemitente;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="numero_folios_verifi", type="integer", nullable=true)
+     */
+    private $numeroFoliosVerifi;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="fecha_inicial_verifi", type="string", length=255, nullable=true)
+     */
+    private $fechaInicialVerifi;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="observacion_verifica", type="text", length=65535, nullable=true)
+     */
+    private $observacionVerifica;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
+     */
+    private $encabezado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
+     */
+    private $firma = '1';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="identifica_afiliado", type="string", length=255, nullable=true)
+     */
+    private $identificaAfiliado;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="numero_folios_recibi", type="integer", nullable=true)
+     */
+    private $numeroFoliosRecibi;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="presenta_inconsisten", type="integer", nullable=false)
+     */
+    private $presentaInconsisten;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre_afiliado", type="string", length=255, nullable=true)
+     */
+    private $nombreAfiliado;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="fk_idexpediente", type="string", length=255, nullable=true)
+     */
+    private $fkIdexpediente;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="estado_documento", type="integer", nullable=false)
+     */
+    private $estadoDocumento = '1';
+
+
+}
+

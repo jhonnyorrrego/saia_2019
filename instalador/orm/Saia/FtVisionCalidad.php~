@@ -1,0 +1,61 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtVisionCalidad
+ *
+ * @ORM\Table(name="ft_vision_calidad")
+ * @ORM\Entity
+ */
+class FtVisionCalidad
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_vision_calidad", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftVisionCalidad;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
+     */
+    private $encabezado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
+     */
+    private $firma = '1';
+
+
+}
+

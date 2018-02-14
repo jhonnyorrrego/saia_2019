@@ -1,0 +1,103 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtDevoluFacturaRadica
+ *
+ * @ORM\Table(name="ft_devolu_factura_radica", indexes={@ORM\Index(name="i_ft_devolu_factura_radica_doc", columns={"documento_iddocumento"})})
+ * @ORM\Entity
+ */
+class FtDevoluFacturaRadica
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_devolu_factura_radica", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftDevoluFacturaRadica;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ft_radicacion_facturas", type="integer", nullable=false)
+     */
+    private $ftRadicacionFacturas;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie = '1031';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="adjuntar", type="string", length=255, nullable=true)
+     */
+    private $adjuntar;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="forma_envio", type="integer", nullable=false)
+     */
+    private $formaEnvio;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="observaciones", type="text", length=65535, nullable=false)
+     */
+    private $observaciones;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="proveedor_devolucion", type="string", length=255, nullable=false)
+     */
+    private $proveedorDevolucion;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
+     */
+    private $encabezado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
+     */
+    private $firma = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="estado_documento", type="integer", nullable=false)
+     */
+    private $estadoDocumento = '1';
+
+
+}
+

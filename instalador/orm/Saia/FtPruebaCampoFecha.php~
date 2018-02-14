@@ -1,0 +1,54 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtPruebaCampoFecha
+ *
+ * @ORM\Table(name="ft_prueba_campo_fecha")
+ * @ORM\Entity
+ */
+class FtPruebaCampoFecha
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_prueba_campo_fecha", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftPruebaCampoFecha;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=true)
+     */
+    private $serieIdserie;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=true)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="dependencia", type="string", length=255, nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="estado_formato", type="integer", nullable=false)
+     */
+    private $estadoFormato;
+
+
+}
+

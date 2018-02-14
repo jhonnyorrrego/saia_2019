@@ -1,0 +1,82 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtFlujosPadre
+ *
+ * @ORM\Table(name="ft_flujos_padre", indexes={@ORM\Index(name="i_ft_flujos_padre_doc", columns={"documento_iddocumento"})})
+ * @ORM\Entity
+ */
+class FtFlujosPadre
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_flujos_padre", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftFlujosPadre;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
+     */
+    private $firma = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
+     */
+    private $encabezado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="arbol_fun", type="integer", nullable=false)
+     */
+    private $arbolFun;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie = '1276';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="estado_documento", type="string", length=255, nullable=true)
+     */
+    private $estadoDocumento;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="campo_anexo", type="string", length=255, nullable=false)
+     */
+    private $campoAnexo;
+
+
+}
+

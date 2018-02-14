@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FtCierreTarea
  *
- * @ORM\Table(name="ft_cierre_tarea", indexes={@ORM\Index(name="i_ft_cierre_tarea_doc", columns={"documento_iddocumento"}), @ORM\Index(name="i_cierre_tarea_recordar_t", columns={"ft_recordar_tarea"}), @ORM\Index(name="i_cierre_tarea_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Table(name="ft_cierre_tarea", indexes={@ORM\Index(name="i_ft_cierre_tarea_doc", columns={"documento_iddocumento"})})
  * @ORM\Entity
  */
 class FtCierreTarea

@@ -1,0 +1,75 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtEvolucionTratamiento
+ *
+ * @ORM\Table(name="ft_evolucion_tratamiento")
+ * @ORM\Entity
+ */
+class FtEvolucionTratamiento
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_evolucion_tratamiento", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftEvolucionTratamiento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ft_diagnostico_tratamiento", type="integer", nullable=false)
+     */
+    private $ftDiagnosticoTratamiento;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_evolucion", type="datetime", nullable=false)
+     */
+    private $fechaEvolucion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="procedimiento_evolucion", type="text", length=65535, nullable=false)
+     */
+    private $procedimientoEvolucion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="firma_paciente", type="string", length=255, nullable=true)
+     */
+    private $firmaPaciente;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="firma_profesional", type="string", length=255, nullable=true)
+     */
+    private $firmaProfesional;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="abono_evoluciones", type="integer", nullable=true)
+     */
+    private $abonoEvoluciones;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie;
+
+
+}
+

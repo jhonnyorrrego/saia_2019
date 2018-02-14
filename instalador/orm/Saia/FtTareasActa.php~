@@ -1,0 +1,61 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtTareasActa
+ *
+ * @ORM\Table(name="ft_tareas_acta")
+ * @ORM\Entity
+ */
+class FtTareasActa
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_tareas_acta", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftTareasActa;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ft_acta", type="integer", nullable=false)
+     */
+    private $ftActa;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descripcion", type="text", length=65535, nullable=false)
+     */
+    private $descripcion;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha", type="date", nullable=false)
+     */
+    private $fecha;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="responsable", type="string", length=255, nullable=false)
+     */
+    private $responsable;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie;
+
+
+}
+

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FtProcedimiento
  *
- * @ORM\Table(name="ft_procedimiento", indexes={@ORM\Index(name="i_procedimiento_documento_", columns={"documento_iddocumento"}), @ORM\Index(name="i_procedimiento_proceso", columns={"ft_proceso"}), @ORM\Index(name="i_procedimiento_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Table(name="ft_procedimiento")
  * @ORM\Entity
  */
 class FtProcedimiento
@@ -52,7 +52,7 @@ class FtProcedimiento
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="fecha_nomina", type="date", nullable=true)
+     * @ORM\Column(name="fecha_nomina", type="date", nullable=false)
      */
     private $fechaNomina;
 

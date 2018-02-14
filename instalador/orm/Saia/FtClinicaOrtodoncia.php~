@@ -1,0 +1,299 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtClinicaOrtodoncia
+ *
+ * @ORM\Table(name="ft_clinica_ortodoncia", indexes={@ORM\Index(name="i_ft_clinica_ortodoncia_doc", columns={"documento_iddocumento"})})
+ * @ORM\Entity
+ */
+class FtClinicaOrtodoncia
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_clinica_ortodoncia", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftClinicaOrtodoncia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie = '1002';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre_usuario", type="string", length=255, nullable=false)
+     */
+    private $nombreUsuario;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="apellido_usuario", type="string", length=255, nullable=false)
+     */
+    private $apellidoUsuario;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="numero_doc", type="integer", nullable=false)
+     */
+    private $numeroDoc;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_nacimiento", type="date", nullable=false)
+     */
+    private $fechaNacimiento;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="depto", type="string", length=255, nullable=false)
+     */
+    private $depto;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="edad", type="integer", nullable=true)
+     */
+    private $edad;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="sexo", type="integer", nullable=false)
+     */
+    private $sexo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ocupacion", type="string", length=255, nullable=false)
+     */
+    private $ocupacion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="direccion", type="string", length=255, nullable=false)
+     */
+    private $direccion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cel", type="string", length=255, nullable=false)
+     */
+    private $cel;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="estado_civil", type="integer", nullable=false)
+     */
+    private $estadoCivil;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre_apellidos_conyugue", type="string", length=255, nullable=true)
+     */
+    private $nombreApellidosConyugue;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tel_conyugue", type="string", length=255, nullable=true)
+     */
+    private $telConyugue;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nucleo_familiar", type="string", length=255, nullable=true)
+     */
+    private $nucleoFamiliar;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="grado_escolar", type="string", length=11, nullable=true)
+     */
+    private $gradoEscolar;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="actividades_tiempo_libro", type="string", length=255, nullable=false)
+     */
+    private $actividadesTiempoLibro;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre_madre", type="string", length=255, nullable=true)
+     */
+    private $nombreMadre;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tel_madre", type="string", length=255, nullable=true)
+     */
+    private $telMadre;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ocupacion_madre", type="string", length=255, nullable=true)
+     */
+    private $ocupacionMadre;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tel_usuario", type="string", length=255, nullable=false)
+     */
+    private $telUsuario;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="tratamiento_previo", type="integer", nullable=false)
+     */
+    private $tratamientoPrevio;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre_padre", type="string", length=255, nullable=true)
+     */
+    private $nombrePadre;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tel_padre", type="string", length=255, nullable=true)
+     */
+    private $telPadre;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ocupacion_padre", type="string", length=255, nullable=true)
+     */
+    private $ocupacionPadre;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="donde_padre", type="string", length=255, nullable=true)
+     */
+    private $dondePadre;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cuanto_tiempo", type="string", length=255, nullable=true)
+     */
+    private $cuantoTiempo;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="como_se_entero", type="integer", nullable=false)
+     */
+    private $comoSeEntero;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="cedula_ciudadania", type="integer", nullable=false)
+     */
+    private $cedulaCiudadania;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="donde_madre", type="string", length=255, nullable=true)
+     */
+    private $dondeMadre;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="donde_usuario", type="string", length=255, nullable=false)
+     */
+    private $dondeUsuario;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
+     */
+    private $encabezado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
+     */
+    private $firma = '1';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="actividades_tiempo_libre", type="string", length=255, nullable=true)
+     */
+    private $actividadesTiempoLibre;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="tratamientos_previos", type="integer", nullable=false)
+     */
+    private $tratamientosPrevios;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="creacion_historia", type="date", nullable=true)
+     */
+    private $creacionHistoria;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="estado_documento", type="integer", nullable=false)
+     */
+    private $estadoDocumento = '1';
+
+
+}
+

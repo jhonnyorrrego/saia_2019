@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FtGuia
  *
- * @ORM\Table(name="ft_guia", indexes={@ORM\Index(name="i_ft_guia_doc", columns={"documento_iddocumento"}), @ORM\Index(name="i_guia_proceso", columns={"ft_proceso"}), @ORM\Index(name="i_guia_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Table(name="ft_guia", indexes={@ORM\Index(name="i_ft_guia_doc", columns={"documento_iddocumento"})})
  * @ORM\Entity
  */
 class FtGuia

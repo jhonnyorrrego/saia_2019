@@ -1,0 +1,180 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtOrdenTrabajoVehiculo
+ *
+ * @ORM\Table(name="ft_orden_trabajo_vehiculo", indexes={@ORM\Index(name="i_ft_orden_trabajo_vehiculo_doc", columns={"documento_iddocumento"})})
+ * @ORM\Entity
+ */
+class FtOrdenTrabajoVehiculo
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_orden_trabajo_vehiculo", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftOrdenTrabajoVehiculo;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ft_confir_negoci_vehiculo", type="integer", nullable=false)
+     */
+    private $ftConfirNegociVehiculo;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie = '951';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_orden_trabajo", type="date", nullable=false)
+     */
+    private $fechaOrdenTrabajo;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_compromiso", type="date", nullable=false)
+     */
+    private $fechaCompromiso;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="prioridad_servicio", type="integer", nullable=false)
+     */
+    private $prioridadServicio;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre_solicitante", type="string", length=255, nullable=false)
+     */
+    private $nombreSolicitante;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
+     */
+    private $encabezado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
+     */
+    private $firma = '1';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre_asegurador", type="string", length=255, nullable=false)
+     */
+    private $nombreAsegurador;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="motivo_servicio", type="text", length=65535, nullable=false)
+     */
+    private $motivoServicio;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="tipo_servicio", type="integer", nullable=false)
+     */
+    private $tipoServicio;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_solicitud_orden", type="date", nullable=false)
+     */
+    private $fechaSolicitudOrden;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="llamadas_requeridas", type="text", length=65535, nullable=true)
+     */
+    private $llamadasRequeridas;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="kilometros_vehiculo", type="integer", nullable=false)
+     */
+    private $kilometrosVehiculo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="campo_servicio", type="string", length=255, nullable=true)
+     */
+    private $campoServicio;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ctto_numero", type="string", length=255, nullable=true)
+     */
+    private $cttoNumero;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="funcionario_recibo", type="string", length=255, nullable=true)
+     */
+    private $funcionarioRecibo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="firma_externa_cliente", type="string", length=255, nullable=true)
+     */
+    private $firmaExternaCliente;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="firma_externa_satisfaccion", type="string", length=255, nullable=true)
+     */
+    private $firmaExternaSatisfaccion;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="estado_documento", type="integer", nullable=false)
+     */
+    private $estadoDocumento = '1';
+
+
+}
+

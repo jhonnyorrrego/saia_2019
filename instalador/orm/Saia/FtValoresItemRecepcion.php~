@@ -1,0 +1,54 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtValoresItemRecepcion
+ *
+ * @ORM\Table(name="ft_valores_item_recepcion")
+ * @ORM\Entity
+ */
+class FtValoresItemRecepcion
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_valores_item_recepcion", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftValoresItemRecepcion;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ft_recepcion_cotizacion", type="integer", nullable=false)
+     */
+    private $ftRecepcionCotizacion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="estado", type="string", length=255, nullable=true)
+     */
+    private $estado;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="fk_idft_item", type="string", length=255, nullable=true)
+     */
+    private $fkIdftItem;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="valor", type="string", length=255, nullable=true)
+     */
+    private $valor;
+
+
+}
+

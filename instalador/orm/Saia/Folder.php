@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Folder
  *
- * @ORM\Table(name="folder", indexes={@ORM\Index(name="i_folder_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Table(name="folder")
  * @ORM\Entity
  */
 class Folder

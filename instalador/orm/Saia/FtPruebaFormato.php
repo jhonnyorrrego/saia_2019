@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FtPruebaFormato
  *
- * @ORM\Table(name="ft_prueba_formato", indexes={@ORM\Index(name="i_prueba_formato_documento_", columns={"documento_iddocumento"}), @ORM\Index(name="i_prueba_formato_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Table(name="ft_prueba_formato")
  * @ORM\Entity
  */
 class FtPruebaFormato
@@ -62,20 +62,6 @@ class FtPruebaFormato
      * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
      */
     private $documentoIddocumento;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
-     */
-    private $nombre;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="fecha", type="date", nullable=true)
-     */
-    private $fecha;
 
 
 
@@ -231,53 +217,5 @@ class FtPruebaFormato
     public function getDocumentoIddocumento()
     {
         return $this->documentoIddocumento;
-    }
-
-    /**
-     * Set nombre
-     *
-     * @param string $nombre
-     *
-     * @return FtPruebaFormato
-     */
-    public function setNombre($nombre)
-    {
-        $this->nombre = $nombre;
-
-        return $this;
-    }
-
-    /**
-     * Get nombre
-     *
-     * @return string
-     */
-    public function getNombre()
-    {
-        return $this->nombre;
-    }
-
-    /**
-     * Set fecha
-     *
-     * @param \DateTime $fecha
-     *
-     * @return FtPruebaFormato
-     */
-    public function setFecha($fecha)
-    {
-        $this->fecha = $fecha;
-
-        return $this;
-    }
-
-    /**
-     * Get fecha
-     *
-     * @return \DateTime
-     */
-    public function getFecha()
-    {
-        return $this->fecha;
     }
 }

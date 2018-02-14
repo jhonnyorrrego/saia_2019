@@ -1,0 +1,68 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtVolumenDocumental
+ *
+ * @ORM\Table(name="ft_volumen_documental")
+ * @ORM\Entity
+ */
+class FtVolumenDocumental
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_volumen_documental", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftVolumenDocumental;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ft_readh", type="integer", nullable=false)
+     */
+    private $ftReadh;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="tipo_soporte", type="integer", nullable=false)
+     */
+    private $tipoSoporte;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="cantidad", type="integer", nullable=false)
+     */
+    private $cantidad;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="riesgos", type="string", length=255, nullable=false)
+     */
+    private $riesgos;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descripcion_volumen", type="text", length=65535, nullable=false)
+     */
+    private $descripcionVolumen;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="nivel_pertinencia", type="integer", nullable=true)
+     */
+    private $nivelPertinencia;
+
+
+}
+

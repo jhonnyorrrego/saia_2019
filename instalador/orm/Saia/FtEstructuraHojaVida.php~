@@ -1,0 +1,96 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtEstructuraHojaVida
+ *
+ * @ORM\Table(name="ft_estructura_hoja_vida", indexes={@ORM\Index(name="i_ft_estructura_hoja_vida_doc", columns={"documento_iddocumento"})})
+ * @ORM\Entity
+ */
+class FtEstructuraHojaVida
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_estructura_hoja_vida", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftEstructuraHojaVida;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie = '893';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="caracteristicas", type="text", length=65535, nullable=false)
+     */
+    private $caracteristicas;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
+     */
+    private $nombre;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="cod_padre", type="integer", nullable=true)
+     */
+    private $codPadre;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="obligatoriedad", type="integer", nullable=false)
+     */
+    private $obligatoriedad;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
+     */
+    private $encabezado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
+     */
+    private $firma = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="estado_documento", type="integer", nullable=false)
+     */
+    private $estadoDocumento = '1';
+
+
+}
+

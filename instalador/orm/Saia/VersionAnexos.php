@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * VersionAnexos
  *
- * @ORM\Table(name="version_anexos", indexes={@ORM\Index(name="i_version_anexos_documento_", columns={"documento_iddocumento"})})
+ * @ORM\Table(name="version_anexos")
  * @ORM\Entity
  */
 class VersionAnexos

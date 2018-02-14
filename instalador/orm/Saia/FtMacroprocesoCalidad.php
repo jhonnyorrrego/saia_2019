@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FtMacroprocesoCalidad
  *
- * @ORM\Table(name="ft_macroproceso_calidad", indexes={@ORM\Index(name="i_ft_macroproceso_calidad_doc", columns={"documento_iddocumento"}), @ORM\Index(name="i_macroproceso_calidad_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Table(name="ft_macroproceso_calidad", indexes={@ORM\Index(name="i_ft_macroproceso_calidad_doc", columns={"documento_iddocumento"})})
  * @ORM\Entity
  */
 class FtMacroprocesoCalidad

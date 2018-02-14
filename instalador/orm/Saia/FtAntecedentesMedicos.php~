@@ -1,0 +1,208 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtAntecedentesMedicos
+ *
+ * @ORM\Table(name="ft_antecedentes_medicos", indexes={@ORM\Index(name="i_ft_antecedentes_medicos_doc", columns={"documento_iddocumento"})})
+ * @ORM\Entity
+ */
+class FtAntecedentesMedicos
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_antecedentes_medicos", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftAntecedentesMedicos;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie = '999';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="padece_enfermedad", type="integer", nullable=false)
+     */
+    private $padeceEnfermedad;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cual_enfermedad", type="string", length=255, nullable=true)
+     */
+    private $cualEnfermedad;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="recibe_medicamento", type="integer", nullable=false)
+     */
+    private $recibeMedicamento;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cual_medicamento", type="string", length=255, nullable=true)
+     */
+    private $cualMedicamento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="enfermedades_cardiacas", type="integer", nullable=true)
+     */
+    private $enfermedadesCardiacas;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="hipertension_arterial", type="integer", nullable=true)
+     */
+    private $hipertensionArterial;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="enfermedad_renal", type="integer", nullable=true)
+     */
+    private $enfermedadRenal;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="diabetes", type="integer", nullable=true)
+     */
+    private $diabetes;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="hepatitis", type="integer", nullable=true)
+     */
+    private $hepatitis;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="trastorno_sanguineo", type="integer", nullable=true)
+     */
+    private $trastornoSanguineo;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="alergias", type="integer", nullable=true)
+     */
+    private $alergias;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="obstruccion_nasal", type="integer", nullable=true)
+     */
+    private $obstruccionNasal;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="cirujias", type="integer", nullable=true)
+     */
+    private $cirujias;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="edad_menstruacion", type="string", length=255, nullable=true)
+     */
+    private $edadMenstruacion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="observacion_ante", type="text", length=65535, nullable=true)
+     */
+    private $observacionAnte;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="enfer_respiratoria", type="integer", nullable=true)
+     */
+    private $enferRespiratoria;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="adenoides", type="integer", nullable=true)
+     */
+    private $adenoides;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="amigdalas", type="integer", nullable=true)
+     */
+    private $amigdalas;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="otro_antecedente", type="string", length=255, nullable=true)
+     */
+    private $otroAntecedente;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
+     */
+    private $encabezado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
+     */
+    private $firma = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="fiebre_reumatica", type="integer", nullable=true)
+     */
+    private $fiebreReumatica;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="estado_documento", type="integer", nullable=false)
+     */
+    private $estadoDocumento = '1';
+
+
+}
+

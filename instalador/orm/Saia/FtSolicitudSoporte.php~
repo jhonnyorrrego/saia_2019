@@ -1,0 +1,117 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtSolicitudSoporte
+ *
+ * @ORM\Table(name="ft_solicitud_soporte")
+ * @ORM\Entity
+ */
+class FtSolicitudSoporte
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_solicitud_soporte", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftSolicitudSoporte;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="anexos", type="string", length=255, nullable=true)
+     */
+    private $anexos;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tipo_solitud", type="string", length=255, nullable=true)
+     */
+    private $tipoSolitud = '884';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descripcion", type="text", length=65535, nullable=false)
+     */
+    private $descripcion;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_soporte", type="date", nullable=false)
+     */
+    private $fechaSoporte;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie = '884';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
+     */
+    private $encabezado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
+     */
+    private $firma = '1';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="hora_solicitud", type="time", nullable=false)
+     */
+    private $horaSolicitud;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="prioridad", type="integer", nullable=false)
+     */
+    private $prioridad;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="arbol_funs", type="integer", nullable=false)
+     */
+    private $arbolFuns;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="estado_documento", type="integer", nullable=false)
+     */
+    private $estadoDocumento = '1';
+
+
+}
+

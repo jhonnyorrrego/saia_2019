@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FtPruebaConfirApru
  *
- * @ORM\Table(name="ft_prueba_confir_apru", indexes={@ORM\Index(name="i_prueba_confir_apru_documento_", columns={"documento_iddocumento"}), @ORM\Index(name="i_prueba_confir_apru_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Table(name="ft_prueba_confir_apru", uniqueConstraints={@ORM\UniqueConstraint(name="item", columns={"item"})})
  * @ORM\Entity
  */
 class FtPruebaConfirApru
@@ -83,6 +83,13 @@ class FtPruebaConfirApru
      * @ORM\Column(name="item", type="string", length=255, nullable=true)
      */
     private $item;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="campo_unico", type="string", length=255, nullable=false)
+     */
+    private $campoUnico;
 
 
 
@@ -310,5 +317,29 @@ class FtPruebaConfirApru
     public function getItem()
     {
         return $this->item;
+    }
+
+    /**
+     * Set campoUnico
+     *
+     * @param string $campoUnico
+     *
+     * @return FtPruebaConfirApru
+     */
+    public function setCampoUnico($campoUnico)
+    {
+        $this->campoUnico = $campoUnico;
+
+        return $this;
+    }
+
+    /**
+     * Get campoUnico
+     *
+     * @return string
+     */
+    public function getCampoUnico()
+    {
+        return $this->campoUnico;
     }
 }

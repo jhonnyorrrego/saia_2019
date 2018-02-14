@@ -1,0 +1,103 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtSolicitudCita
+ *
+ * @ORM\Table(name="ft_solicitud_cita")
+ * @ORM\Entity
+ */
+class FtSolicitudCita
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_solicitud_cita", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftSolicitudCita;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ft_clinica_ortodoncia", type="integer", nullable=false)
+     */
+    private $ftClinicaOrtodoncia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie = '1010';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre_paciente", type="string", length=255, nullable=false)
+     */
+    private $nombrePaciente;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="motivo_consulta", type="integer", nullable=false)
+     */
+    private $motivoConsulta;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descripcion_cita", type="text", length=65535, nullable=true)
+     */
+    private $descripcionCita;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_hora_cita", type="datetime", nullable=false)
+     */
+    private $fechaHoraCita;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
+     */
+    private $encabezado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
+     */
+    private $firma = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="estado_documento", type="integer", nullable=false)
+     */
+    private $estadoDocumento = '1';
+
+
+}
+

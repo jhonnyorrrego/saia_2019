@@ -1,0 +1,103 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtDocumentacionLegal
+ *
+ * @ORM\Table(name="ft_documentacion_legal", indexes={@ORM\Index(name="i_ft_documentacion_legal_doc", columns={"documento_iddocumento"})})
+ * @ORM\Entity
+ */
+class FtDocumentacionLegal
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_documentacion_legal", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftDocumentacionLegal;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
+     */
+    private $encabezado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="observaciones", type="text", length=65535, nullable=true)
+     */
+    private $observaciones;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tipo_documento", type="string", length=255, nullable=true)
+     */
+    private $tipoDocumento;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha", type="date", nullable=true)
+     */
+    private $fecha;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie = '925';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ft_proyecto_registro_cliente", type="integer", nullable=false)
+     */
+    private $ftProyectoRegistroCliente;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="anexo_formato", type="string", length=255, nullable=true)
+     */
+    private $anexoFormato;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
+     */
+    private $firma = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="estado_documento", type="integer", nullable=false)
+     */
+    private $estadoDocumento = '1';
+
+
+}
+

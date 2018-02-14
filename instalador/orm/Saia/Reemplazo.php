@@ -40,7 +40,7 @@ class Reemplazo
      *
      * @ORM\Column(name="fecha_inicio", type="datetime", nullable=false)
      */
-    private $fechaInicio = 'CURRENT_TIMESTAMP';
+    private $fechaInicio;
 
     /**
      * @var \DateTime

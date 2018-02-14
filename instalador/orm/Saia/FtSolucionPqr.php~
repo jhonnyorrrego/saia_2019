@@ -1,0 +1,103 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtSolucionPqr
+ *
+ * @ORM\Table(name="ft_solucion_pqr")
+ * @ORM\Entity
+ */
+class FtSolucionPqr
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_solucion_pqr", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftSolucionPqr;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie = '853';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ft_pqr", type="integer", nullable=false)
+     */
+    private $ftPqr;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="estado_avance", type="string", length=255, nullable=false)
+     */
+    private $estadoAvance;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
+     */
+    private $encabezado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="anexo_formato", type="string", length=255, nullable=true)
+     */
+    private $anexoFormato;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
+     */
+    private $firma = '1';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descripcion", type="text", length=65535, nullable=true)
+     */
+    private $descripcion;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_solucion", type="datetime", nullable=false)
+     */
+    private $fechaSolucion;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="estado_documento", type="integer", nullable=false)
+     */
+    private $estadoDocumento = '1';
+
+
+}
+

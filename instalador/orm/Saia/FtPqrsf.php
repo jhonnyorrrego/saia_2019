@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FtPqrsf
  *
- * @ORM\Table(name="ft_pqrsf", indexes={@ORM\Index(name="i_pqrsf_documento_", columns={"documento_iddocumento"}), @ORM\Index(name="i_pqrsf_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Table(name="ft_pqrsf")
  * @ORM\Entity
  */
 class FtPqrsf
@@ -167,6 +167,13 @@ class FtPqrsf
      * @ORM\Column(name="estado_radicado", type="integer", nullable=true)
      */
     private $estadoRadicado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="remitente_origen", type="integer", nullable=true)
+     */
+    private $remitenteOrigen;
 
 
 
@@ -682,5 +689,29 @@ class FtPqrsf
     public function getEstadoRadicado()
     {
         return $this->estadoRadicado;
+    }
+
+    /**
+     * Set remitenteOrigen
+     *
+     * @param integer $remitenteOrigen
+     *
+     * @return FtPqrsf
+     */
+    public function setRemitenteOrigen($remitenteOrigen)
+    {
+        $this->remitenteOrigen = $remitenteOrigen;
+
+        return $this;
+    }
+
+    /**
+     * Get remitenteOrigen
+     *
+     * @return integer
+     */
+    public function getRemitenteOrigen()
+    {
+        return $this->remitenteOrigen;
     }
 }

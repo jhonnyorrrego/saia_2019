@@ -1,0 +1,75 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtTestFs
+ *
+ * @ORM\Table(name="ft_test_fs")
+ * @ORM\Entity
+ */
+class FtTestFs
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_test_fs", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftTestFs;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
+     */
+    private $encabezado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
+     */
+    private $firma = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="contenido", type="text", length=65535, nullable=false)
+     */
+    private $contenido;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="estado_documento", type="string", length=255, nullable=true)
+     */
+    private $estadoDocumento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie;
+
+
+}
+

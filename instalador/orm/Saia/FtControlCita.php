@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FtControlCita
  *
- * @ORM\Table(name="ft_control_cita", indexes={@ORM\Index(name="i_ft_control_cita_doc", columns={"documento_iddocumento"}), @ORM\Index(name="i_control_cita_solicitud_", columns={"ft_solicitud_cita"}), @ORM\Index(name="i_control_cita_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Table(name="ft_control_cita", indexes={@ORM\Index(name="i_ft_control_cita_doc", columns={"documento_iddocumento"})})
  * @ORM\Entity
  */
 class FtControlCita

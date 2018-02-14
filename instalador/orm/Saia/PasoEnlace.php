@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PasoEnlace
  *
- * @ORM\Table(name="paso_enlace", indexes={@ORM\Index(name="i_paso_enlace_destino", columns={"destino"}), @ORM\Index(name="i_paso_enlace_tipo_desti", columns={"tipo_destino"})})
+ * @ORM\Table(name="paso_enlace")
  * @ORM\Entity
  */
 class PasoEnlace

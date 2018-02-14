@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FtTransferenciaDoc
  *
- * @ORM\Table(name="ft_transferencia_doc", indexes={@ORM\Index(name="i_transferencia_doc_documento_", columns={"documento_iddocumento"}), @ORM\Index(name="i_transferencia_doc_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Table(name="ft_transferencia_doc")
  * @ORM\Entity
  */
 class FtTransferenciaDoc

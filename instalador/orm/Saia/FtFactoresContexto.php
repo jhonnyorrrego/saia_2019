@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FtFactoresContexto
  *
- * @ORM\Table(name="ft_factores_contexto", indexes={@ORM\Index(name="i_factores_contexto_contexto_e", columns={"ft_contexto_extrategico"}), @ORM\Index(name="i_factores_contexto_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Table(name="ft_factores_contexto")
  * @ORM\Entity
  */
 class FtFactoresContexto

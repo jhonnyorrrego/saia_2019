@@ -1,0 +1,117 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtInstructivos
+ *
+ * @ORM\Table(name="ft_instructivos", indexes={@ORM\Index(name="i_ft_instructivos_doc", columns={"documento_iddocumento"})})
+ * @ORM\Entity
+ */
+class FtInstructivos
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_instructivos", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftInstructivos;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ft_proceso", type="integer", nullable=false)
+     */
+    private $ftProceso;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie = '17';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="anexos", type="string", length=255, nullable=false)
+     */
+    private $anexos;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="codigo", type="string", length=255, nullable=false)
+     */
+    private $codigo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descripcion", type="text", length=65535, nullable=true)
+     */
+    private $descripcion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="estado", type="string", length=255, nullable=false)
+     */
+    private $estado = '0';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha", type="date", nullable=false)
+     */
+    private $fecha;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
+     */
+    private $nombre;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="version", type="string", length=255, nullable=false)
+     */
+    private $version = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
+     */
+    private $encabezado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
+     */
+    private $firma = '1';
+
+
+}
+

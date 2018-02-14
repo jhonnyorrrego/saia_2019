@@ -1,0 +1,117 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtEvaluacionProveedores
+ *
+ * @ORM\Table(name="ft_evaluacion_proveedores", indexes={@ORM\Index(name="i_ft_evaluacion_proveedores_doc", columns={"documento_iddocumento"})})
+ * @ORM\Entity
+ */
+class FtEvaluacionProveedores
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_evaluacion_proveedores", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftEvaluacionProveedores;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ft_justificacion_compra", type="integer", nullable=false)
+     */
+    private $ftJustificacionCompra;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie = '1018';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="atencion", type="string", length=255, nullable=false)
+     */
+    private $atencion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cumplimiento", type="string", length=255, nullable=false)
+     */
+    private $cumplimiento;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descripcion_almacenada", type="string", length=255, nullable=true)
+     */
+    private $descripcionAlmacenada;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="matriculado_camara", type="string", length=255, nullable=false)
+     */
+    private $matriculadoCamara;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="precio_cotizaciones", type="string", length=255, nullable=false)
+     */
+    private $precioCotizaciones;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
+     */
+    private $encabezado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
+     */
+    private $firma = '1';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ft_recepcion_cotizacion", type="string", length=255, nullable=false)
+     */
+    private $ftRecepcionCotizacion;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="estado_documento", type="integer", nullable=false)
+     */
+    private $estadoDocumento = '1';
+
+
+}
+

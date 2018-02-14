@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FtRespuestaPqrsf
  *
- * @ORM\Table(name="ft_respuesta_pqrsf", indexes={@ORM\Index(name="i_respuesta_pqrsf_documento_", columns={"documento_iddocumento"}), @ORM\Index(name="i_respuesta_pqrsf_pqrsf", columns={"ft_pqrsf"}), @ORM\Index(name="i_respuesta_pqrsf_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Table(name="ft_respuesta_pqrsf")
  * @ORM\Entity
  */
 class FtRespuestaPqrsf
@@ -90,6 +90,20 @@ class FtRespuestaPqrsf
      * @ORM\Column(name="estado_documento", type="integer", nullable=false)
      */
     private $estadoDocumento = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="requiere_recogida", type="integer", nullable=true)
+     */
+    private $requiereRecogida = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="tipo_mensajeria", type="integer", nullable=true)
+     */
+    private $tipoMensajeria = '1';
 
 
 
@@ -341,5 +355,53 @@ class FtRespuestaPqrsf
     public function getEstadoDocumento()
     {
         return $this->estadoDocumento;
+    }
+
+    /**
+     * Set requiereRecogida
+     *
+     * @param integer $requiereRecogida
+     *
+     * @return FtRespuestaPqrsf
+     */
+    public function setRequiereRecogida($requiereRecogida)
+    {
+        $this->requiereRecogida = $requiereRecogida;
+
+        return $this;
+    }
+
+    /**
+     * Get requiereRecogida
+     *
+     * @return integer
+     */
+    public function getRequiereRecogida()
+    {
+        return $this->requiereRecogida;
+    }
+
+    /**
+     * Set tipoMensajeria
+     *
+     * @param integer $tipoMensajeria
+     *
+     * @return FtRespuestaPqrsf
+     */
+    public function setTipoMensajeria($tipoMensajeria)
+    {
+        $this->tipoMensajeria = $tipoMensajeria;
+
+        return $this;
+    }
+
+    /**
+     * Get tipoMensajeria
+     *
+     * @return integer
+     */
+    public function getTipoMensajeria()
+    {
+        return $this->tipoMensajeria;
     }
 }

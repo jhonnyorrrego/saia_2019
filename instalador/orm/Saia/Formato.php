@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Formato
  *
- * @ORM\Table(name="formato", indexes={@ORM\Index(name="i_formato_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Table(name="formato")
  * @ORM\Entity
  */
 class Formato

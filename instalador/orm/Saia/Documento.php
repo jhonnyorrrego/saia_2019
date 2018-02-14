@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Documento
  *
- * @ORM\Table(name="documento", indexes={@ORM\Index(name="serie", columns={"serie", "fecha", "tipo_radicado", "estado"}), @ORM\Index(name="fecha", columns={"fecha"}), @ORM\Index(name="estado", columns={"estado"}), @ORM\Index(name="ejecutor", columns={"ejecutor"})})
+ * @ORM\Table(name="documento", indexes={@ORM\Index(name="serie", columns={"serie", "fecha", "tipo_radicado", "estado"}), @ORM\Index(name="fecha", columns={"fecha"}), @ORM\Index(name="estado", columns={"estado"}), @ORM\Index(name="ejecutor", columns={"ejecutor"}), @ORM\Index(name="pantalla_idpantalla", columns={"pantalla_idpantalla"})})
  * @ORM\Entity
  */
 class Documento
@@ -104,6 +104,13 @@ class Documento
      * @ORM\Column(name="tipo_ejecutor", type="string", length=255, nullable=true)
      */
     private $tipoEjecutor;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="pantalla_idpantalla", type="string", length=255, nullable=false)
+     */
+    private $pantallaIdpantalla;
 
     /**
      * @var integer
@@ -236,7 +243,7 @@ class Documento
      *
      * @ORM\Column(name="ventanilla_radicacion", type="integer", nullable=true)
      */
-    private $ventanillaRadicacion;
+    private $ventanillaRadicacion = '0';
 
 
 
@@ -536,6 +543,30 @@ class Documento
     public function getTipoEjecutor()
     {
         return $this->tipoEjecutor;
+    }
+
+    /**
+     * Set pantallaIdpantalla
+     *
+     * @param string $pantallaIdpantalla
+     *
+     * @return Documento
+     */
+    public function setPantallaIdpantalla($pantallaIdpantalla)
+    {
+        $this->pantallaIdpantalla = $pantallaIdpantalla;
+
+        return $this;
+    }
+
+    /**
+     * Get pantallaIdpantalla
+     *
+     * @return string
+     */
+    public function getPantallaIdpantalla()
+    {
+        return $this->pantallaIdpantalla;
     }
 
     /**

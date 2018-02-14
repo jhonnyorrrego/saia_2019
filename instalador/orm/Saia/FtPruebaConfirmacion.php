@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FtPruebaConfirmacion
  *
- * @ORM\Table(name="ft_prueba_confirmacion", indexes={@ORM\Index(name="i_prueba_confirmacion_documento_", columns={"documento_iddocumento"}), @ORM\Index(name="i_prueba_confirmacion_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Table(name="ft_prueba_confirmacion")
  * @ORM\Entity
  */
 class FtPruebaConfirmacion

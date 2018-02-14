@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FtInventarioRetirados
  *
- * @ORM\Table(name="ft_inventario_retirados", indexes={@ORM\Index(name="i_ft_inventario_retirados_doc", columns={"documento_iddocumento"}), @ORM\Index(name="i_inventario_retirados_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Table(name="ft_inventario_retirados", indexes={@ORM\Index(name="i_ft_inventario_retirados_doc", columns={"documento_iddocumento"})})
  * @ORM\Entity
  */
 class FtInventarioRetirados
@@ -59,7 +59,7 @@ class FtInventarioRetirados
     /**
      * @var string
      *
-     * @ORM\Column(name="observaciones", type="text", length=65535, nullable=true)
+     * @ORM\Column(name="observaciones", type="string", length=255, nullable=true)
      */
     private $observaciones;
 

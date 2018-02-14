@@ -1,0 +1,54 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtAusentesActa
+ *
+ * @ORM\Table(name="ft_ausentes_acta")
+ * @ORM\Entity
+ */
+class FtAusentesActa
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_ausentes_acta", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftAusentesActa;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ft_acta", type="integer", nullable=false)
+     */
+    private $ftActa;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="funcionario_ausente", type="string", length=255, nullable=false)
+     */
+    private $funcionarioAusente;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="justificada", type="integer", nullable=false)
+     */
+    private $justificada = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie;
+
+
+}
+

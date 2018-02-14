@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FtSolicConfigura
  *
- * @ORM\Table(name="ft_solic_configura", indexes={@ORM\Index(name="i_solic_configura_documento_", columns={"documento_iddocumento"}), @ORM\Index(name="i_solic_configura_clasif_sol", columns={"ft_clasif_solicitud"}), @ORM\Index(name="i_solic_configura_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Table(name="ft_solic_configura")
  * @ORM\Entity
  */
 class FtSolicConfigura

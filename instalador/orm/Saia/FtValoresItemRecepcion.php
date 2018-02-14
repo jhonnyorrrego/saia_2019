@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FtValoresItemRecepcion
  *
- * @ORM\Table(name="ft_valores_item_recepcion", indexes={@ORM\Index(name="i_valores_item_recepc_recepcion_", columns={"ft_recepcion_cotizacion"})})
+ * @ORM\Table(name="ft_valores_item_recepcion")
  * @ORM\Entity
  */
 class FtValoresItemRecepcion

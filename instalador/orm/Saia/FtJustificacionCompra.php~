@@ -1,0 +1,103 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtJustificacionCompra
+ *
+ * @ORM\Table(name="ft_justificacion_compra", indexes={@ORM\Index(name="i_ft_justificacion_compra_doc", columns={"documento_iddocumento"})})
+ * @ORM\Entity
+ */
+class FtJustificacionCompra
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_justificacion_compra", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftJustificacionCompra;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie = '1015';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descripcion_justificacion", type="text", length=65535, nullable=false)
+     */
+    private $descripcionJustificacion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre_solicitante", type="string", length=255, nullable=false)
+     */
+    private $nombreSolicitante;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="primera_aprobacion", type="string", length=255, nullable=false)
+     */
+    private $primeraAprobacion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="justificacion_compra", type="text", length=65535, nullable=false)
+     */
+    private $justificacionCompra;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_justificacion_compra", type="date", nullable=false)
+     */
+    private $fechaJustificacionCompra;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
+     */
+    private $encabezado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
+     */
+    private $firma = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="estado_documento", type="integer", nullable=false)
+     */
+    private $estadoDocumento = '1';
+
+
+}
+

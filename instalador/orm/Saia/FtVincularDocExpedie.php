@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FtVincularDocExpedie
  *
- * @ORM\Table(name="ft_vincular_doc_expedie", indexes={@ORM\Index(name="i_vincular_doc_expedie_documento_", columns={"documento_iddocumento"}), @ORM\Index(name="i_vincular_doc_expedie_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Table(name="ft_vincular_doc_expedie")
  * @ORM\Entity
  */
 class FtVincularDocExpedie

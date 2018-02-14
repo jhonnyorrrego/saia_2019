@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * BusquedaComponente
  *
- * @ORM\Table(name="busqueda_componente", uniqueConstraints={@ORM\UniqueConstraint(name="ui_busqueda_componente_nombre", columns={"nombre"})})
+ * @ORM\Table(name="busqueda_componente", uniqueConstraints={@ORM\UniqueConstraint(name="nombre", columns={"nombre"}), @ORM\UniqueConstraint(name="nombre_2", columns={"nombre"}), @ORM\UniqueConstraint(name="ui_busqueda_componente_nombre", columns={"nombre"})})
  * @ORM\Entity
  */
 class BusquedaComponente

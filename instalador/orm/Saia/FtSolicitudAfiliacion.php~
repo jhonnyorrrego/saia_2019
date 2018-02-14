@@ -1,0 +1,96 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtSolicitudAfiliacion
+ *
+ * @ORM\Table(name="ft_solicitud_afiliacion")
+ * @ORM\Entity
+ */
+class FtSolicitudAfiliacion
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_solicitud_afiliacion", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftSolicitudAfiliacion;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie = '987';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_solicitud", type="date", nullable=false)
+     */
+    private $fechaSolicitud;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="datos_solicitante", type="string", length=255, nullable=false)
+     */
+    private $datosSolicitante;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="numero_folios_afilia", type="integer", nullable=false)
+     */
+    private $numeroFoliosAfilia;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="adjuntar_documento", type="string", length=255, nullable=true)
+     */
+    private $adjuntarDocumento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
+     */
+    private $encabezado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
+     */
+    private $firma = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="estado_documento", type="integer", nullable=false)
+     */
+    private $estadoDocumento = '1';
+
+
+}
+

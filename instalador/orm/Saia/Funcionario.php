@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Funcionario
  *
- * @ORM\Table(name="funcionario")
+ * @ORM\Table(name="funcionario", uniqueConstraints={@ORM\UniqueConstraint(name="funcionario_codigo", columns={"funcionario_codigo"}), @ORM\UniqueConstraint(name="login", columns={"login"}), @ORM\UniqueConstraint(name="funcionario_codigo_2", columns={"funcionario_codigo"}), @ORM\UniqueConstraint(name="login_2", columns={"login"})})
  * @ORM\Entity
  */
 class Funcionario
@@ -202,6 +202,13 @@ class Funcionario
      * @ORM\Column(name="foto_cordenadas", type="string", length=255, nullable=true)
      */
     private $fotoCordenadas;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ventanilla_radicacion", type="integer", nullable=true)
+     */
+    private $ventanillaRadicacion;
 
 
 
@@ -837,5 +844,29 @@ class Funcionario
     public function getFotoCordenadas()
     {
         return $this->fotoCordenadas;
+    }
+
+    /**
+     * Set ventanillaRadicacion
+     *
+     * @param integer $ventanillaRadicacion
+     *
+     * @return Funcionario
+     */
+    public function setVentanillaRadicacion($ventanillaRadicacion)
+    {
+        $this->ventanillaRadicacion = $ventanillaRadicacion;
+
+        return $this;
+    }
+
+    /**
+     * Get ventanillaRadicacion
+     *
+     * @return integer
+     */
+    public function getVentanillaRadicacion()
+    {
+        return $this->ventanillaRadicacion;
     }
 }

@@ -1,0 +1,54 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtFactoresContexto
+ *
+ * @ORM\Table(name="ft_factores_contexto")
+ * @ORM\Entity
+ */
+class FtFactoresContexto
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_factores_contexto", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftFactoresContexto;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="factores_contexto", type="decimal", precision=11, scale=0, nullable=false)
+     */
+    private $factoresContexto;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descripcion", type="text", length=65535, nullable=false)
+     */
+    private $descripcion;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ft_contexto_extrategico", type="integer", nullable=false)
+     */
+    private $ftContextoExtrategico;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie;
+
+
+}
+

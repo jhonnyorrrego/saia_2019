@@ -1,0 +1,145 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtRequisicionCompra
+ *
+ * @ORM\Table(name="ft_requisicion_compra")
+ * @ORM\Entity
+ */
+class FtRequisicionCompra
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_requisicion_compra", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftRequisicionCompra;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie = '1050';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="phid", type="string", length=255, nullable=true)
+     */
+    private $phid;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="phord", type="string", length=255, nullable=true)
+     */
+    private $phord;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="phstat", type="string", length=255, nullable=true)
+     */
+    private $phstat;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="phcomp", type="string", length=255, nullable=true)
+     */
+    private $phcomp;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="phfac", type="string", length=255, nullable=true)
+     */
+    private $phfac;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="phship", type="string", length=255, nullable=true)
+     */
+    private $phship;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="phendt", type="date", nullable=true)
+     */
+    private $phendt;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="phcur", type="string", length=255, nullable=true)
+     */
+    private $phcur;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
+     */
+    private $encabezado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
+     */
+    private $firma = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="campo_phrqid", type="integer", nullable=true)
+     */
+    private $campoPhrqid;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="codigo_comprador", type="integer", nullable=true)
+     */
+    private $codigoComprador;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="codigo_proveedor", type="integer", nullable=true)
+     */
+    private $codigoProveedor;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="estado_documento", type="integer", nullable=false)
+     */
+    private $estadoDocumento = '1';
+
+
+}
+

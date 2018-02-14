@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Caja
  *
- * @ORM\Table(name="caja", indexes={@ORM\Index(name="i_caja_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Table(name="caja")
  * @ORM\Entity
  */
 class Caja
@@ -174,6 +174,20 @@ class Caja
      * @ORM\Column(name="dependencia_iddependencia", type="integer", nullable=false)
      */
     private $dependenciaIddependencia;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="codigo_serie", type="string", length=255, nullable=true)
+     */
+    private $codigoSerie;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="codigo_dependencia", type="string", length=255, nullable=true)
+     */
+    private $codigoDependencia;
 
 
 
@@ -713,5 +727,53 @@ class Caja
     public function getDependenciaIddependencia()
     {
         return $this->dependenciaIddependencia;
+    }
+
+    /**
+     * Set codigoSerie
+     *
+     * @param string $codigoSerie
+     *
+     * @return Caja
+     */
+    public function setCodigoSerie($codigoSerie)
+    {
+        $this->codigoSerie = $codigoSerie;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoSerie
+     *
+     * @return string
+     */
+    public function getCodigoSerie()
+    {
+        return $this->codigoSerie;
+    }
+
+    /**
+     * Set codigoDependencia
+     *
+     * @param string $codigoDependencia
+     *
+     * @return Caja
+     */
+    public function setCodigoDependencia($codigoDependencia)
+    {
+        $this->codigoDependencia = $codigoDependencia;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoDependencia
+     *
+     * @return string
+     */
+    public function getCodigoDependencia()
+    {
+        return $this->codigoDependencia;
     }
 }

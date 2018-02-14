@@ -1,0 +1,82 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtPruebaPermiso
+ *
+ * @ORM\Table(name="ft_prueba_permiso")
+ * @ORM\Entity
+ */
+class FtPruebaPermiso
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_prueba_permiso", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftPruebaPermiso;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=true)
+     */
+    private $serieIdserie;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=true)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="dependencia", type="string", length=255, nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="estado_formato", type="integer", nullable=false)
+     */
+    private $estadoFormato;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="arbol_radio_2090523243", type="string", length=255, nullable=false)
+     */
+    private $arbolRadio2090523243;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_1228833842", type="date", nullable=false)
+     */
+    private $date1228833842;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="textarea_tiny_275953781", type="text", length=65535, nullable=false)
+     */
+    private $textareaTiny275953781;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="campo_texto_1107024019", type="string", length=255, nullable=false)
+     */
+    private $campoTexto1107024019;
+
+
+}
+

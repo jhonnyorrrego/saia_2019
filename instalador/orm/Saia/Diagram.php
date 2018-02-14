@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Diagram
  *
- * @ORM\Table(name="diagram", uniqueConstraints={@ORM\UniqueConstraint(name="uniqueHash", columns={"hash"})})
+ * @ORM\Table(name="diagram", uniqueConstraints={@ORM\UniqueConstraint(name="uniqueHash", columns={"hash"})}, indexes={@ORM\Index(name="diagram_pk", columns={"id"})})
  * @ORM\Entity
  */
 class Diagram

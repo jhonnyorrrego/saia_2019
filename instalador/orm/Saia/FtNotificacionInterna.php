@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FtNotificacionInterna
  *
- * @ORM\Table(name="ft_notificacion_interna", indexes={@ORM\Index(name="i_ft_notificacion_interna_doc", columns={"documento_iddocumento"}), @ORM\Index(name="i_notificacion_interna_destino", columns={"destino"}), @ORM\Index(name="i_notificacion_interna_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Table(name="ft_notificacion_interna", indexes={@ORM\Index(name="i_ft_notificacion_interna_doc", columns={"documento_iddocumento"})})
  * @ORM\Entity
  */
 class FtNotificacionInterna

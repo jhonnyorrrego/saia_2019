@@ -1,0 +1,173 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtExperienciaLaboral
+ *
+ * @ORM\Table(name="ft_experiencia_laboral", indexes={@ORM\Index(name="i_ft_experiencia_laboral_doc", columns={"documento_iddocumento"})})
+ * @ORM\Entity
+ */
+class FtExperienciaLaboral
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_experiencia_laboral", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftExperienciaLaboral;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie = '891';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="adjuntar_documento", type="string", length=255, nullable=true)
+     */
+    private $adjuntarDocumento;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cargo_realizado", type="string", length=255, nullable=false)
+     */
+    private $cargoRealizado;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="direccion", type="string", length=255, nullable=true)
+     */
+    private $direccion;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_ingreso", type="date", nullable=false)
+     */
+    private $fechaIngreso;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_retiro", type="date", nullable=true)
+     */
+    private $fechaRetiro;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ft_hoja_vida", type="integer", nullable=false)
+     */
+    private $ftHojaVida;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="funciones_realizadas", type="text", length=65535, nullable=true)
+     */
+    private $funcionesRealizadas;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="jefe_inmediato", type="string", length=255, nullable=true)
+     */
+    private $jefeInmediato;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="motivo_retiro", type="text", length=65535, nullable=true)
+     */
+    private $motivoRetiro;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre", type="string", length=255, nullable=true)
+     */
+    private $nombre;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="salario_final", type="string", length=255, nullable=true)
+     */
+    private $salarioFinal;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="salario_inicial", type="string", length=100, nullable=true)
+     */
+    private $salarioInicial;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="telefonos", type="string", length=255, nullable=true)
+     */
+    private $telefonos;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
+     */
+    private $encabezado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
+     */
+    private $firma = '1';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre_empresa", type="string", length=255, nullable=false)
+     */
+    private $nombreEmpresa;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="verificado", type="integer", nullable=true)
+     */
+    private $verificado;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="estado_documento", type="integer", nullable=false)
+     */
+    private $estadoDocumento = '1';
+
+
+}
+

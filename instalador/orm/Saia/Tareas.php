@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Tareas
  *
- * @ORM\Table(name="tareas", indexes={@ORM\Index(name="i_tareas_documento_", columns={"documento_iddocumento"})})
+ * @ORM\Table(name="tareas")
  * @ORM\Entity
  */
 class Tareas
@@ -83,6 +83,27 @@ class Tareas
      * @ORM\Column(name="estado_tarea", type="integer", nullable=false)
      */
     private $estadoTarea = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="orden_tareas", type="integer", nullable=false)
+     */
+    private $ordenTareas = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="accion_tareas", type="integer", nullable=false)
+     */
+    private $accionTareas = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ruta_aprob", type="integer", nullable=false)
+     */
+    private $rutaAprob = '0';
 
 
 
@@ -310,5 +331,77 @@ class Tareas
     public function getEstadoTarea()
     {
         return $this->estadoTarea;
+    }
+
+    /**
+     * Set ordenTareas
+     *
+     * @param integer $ordenTareas
+     *
+     * @return Tareas
+     */
+    public function setOrdenTareas($ordenTareas)
+    {
+        $this->ordenTareas = $ordenTareas;
+
+        return $this;
+    }
+
+    /**
+     * Get ordenTareas
+     *
+     * @return integer
+     */
+    public function getOrdenTareas()
+    {
+        return $this->ordenTareas;
+    }
+
+    /**
+     * Set accionTareas
+     *
+     * @param integer $accionTareas
+     *
+     * @return Tareas
+     */
+    public function setAccionTareas($accionTareas)
+    {
+        $this->accionTareas = $accionTareas;
+
+        return $this;
+    }
+
+    /**
+     * Get accionTareas
+     *
+     * @return integer
+     */
+    public function getAccionTareas()
+    {
+        return $this->accionTareas;
+    }
+
+    /**
+     * Set rutaAprob
+     *
+     * @param integer $rutaAprob
+     *
+     * @return Tareas
+     */
+    public function setRutaAprob($rutaAprob)
+    {
+        $this->rutaAprob = $rutaAprob;
+
+        return $this;
+    }
+
+    /**
+     * Get rutaAprob
+     *
+     * @return integer
+     */
+    public function getRutaAprob()
+    {
+        return $this->rutaAprob;
     }
 }

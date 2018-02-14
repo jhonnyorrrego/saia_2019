@@ -1,0 +1,201 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtInventarioJubilados
+ *
+ * @ORM\Table(name="ft_inventario_jubilados", indexes={@ORM\Index(name="i_ft_inventario_jubilados_doc", columns={"documento_iddocumento"})})
+ * @ORM\Entity
+ */
+class FtInventarioJubilados
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_inventario_jubilados", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftInventarioJubilados;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
+     */
+    private $firma = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
+     */
+    private $encabezado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="observaciones", type="string", length=255, nullable=true)
+     */
+    private $observaciones;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_reconocimiento", type="date", nullable=true)
+     */
+    private $fechaReconocimiento;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="cedula_sustitucion", type="string", length=255, nullable=true)
+     */
+    private $cedulaSustitucion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="sustitucion_pensiona", type="string", length=255, nullable=true)
+     */
+    private $sustitucionPensiona;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="demandado", type="string", length=255, nullable=true)
+     */
+    private $demandado;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="estamento", type="string", length=255, nullable=true)
+     */
+    private $estamento;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ultimo_cargo", type="string", length=255, nullable=true)
+     */
+    private $ultimoCargo;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="folios", type="integer", nullable=false)
+     */
+    private $folios;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_extrema_final", type="date", nullable=false)
+     */
+    private $fechaExtremaFinal;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_extrema_inicia", type="date", nullable=false)
+     */
+    private $fechaExtremaInicia;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="num_identificacion", type="string", length=255, nullable=false)
+     */
+    private $numIdentificacion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre_completo", type="string", length=255, nullable=false)
+     */
+    private $nombreCompleto;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="segundo_apellido", type="integer", nullable=true)
+     */
+    private $segundoApellido;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="primer_apellido", type="string", length=255, nullable=false)
+     */
+    private $primerApellido;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="emanada_de", type="string", length=255, nullable=true)
+     */
+    private $emanadaDe;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="numero_resolucion", type="string", length=255, nullable=true)
+     */
+    private $numeroResolucion;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_jubilacion", type="date", nullable=false)
+     */
+    private $fechaJubilacion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="numero_caja", type="string", length=255, nullable=false)
+     */
+    private $numeroCaja;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ubicacion", type="string", length=255, nullable=false)
+     */
+    private $ubicacion;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie = '1293';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="estado_documento", type="string", length=255, nullable=true)
+     */
+    private $estadoDocumento;
+
+
+}
+

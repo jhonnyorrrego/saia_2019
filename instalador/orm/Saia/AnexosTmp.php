@@ -45,28 +45,21 @@ class AnexosTmp
     /**
      * @var string
      *
-     * @ORM\Column(name="tipo", type="string", length=20, nullable=true)
+     * @ORM\Column(name="tipo", type="string", length=255, nullable=true)
      */
     private $tipo;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="fecha_anexo", type="datetime", nullable=true)
-     */
-    private $fechaAnexo;
-
-    /**
      * @var integer
      *
-     * @ORM\Column(name="idformato", type="integer", nullable=true)
+     * @ORM\Column(name="idformato", type="integer", nullable=false)
      */
     private $idformato;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="idcampos_formato", type="integer", nullable=true)
+     * @ORM\Column(name="idcampos_formato", type="integer", nullable=false)
      */
     private $idcamposFormato;
 
@@ -76,6 +69,13 @@ class AnexosTmp
      * @ORM\Column(name="funcionario_idfuncionario", type="integer", nullable=false)
      */
     private $funcionarioIdfuncionario;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_anexo", type="datetime", nullable=true)
+     */
+    private $fechaAnexo;
 
 
 
@@ -186,30 +186,6 @@ class AnexosTmp
     }
 
     /**
-     * Set fechaAnexo
-     *
-     * @param \DateTime $fechaAnexo
-     *
-     * @return AnexosTmp
-     */
-    public function setFechaAnexo($fechaAnexo)
-    {
-        $this->fechaAnexo = $fechaAnexo;
-
-        return $this;
-    }
-
-    /**
-     * Get fechaAnexo
-     *
-     * @return \DateTime
-     */
-    public function getFechaAnexo()
-    {
-        return $this->fechaAnexo;
-    }
-
-    /**
      * Set idformato
      *
      * @param integer $idformato
@@ -279,5 +255,29 @@ class AnexosTmp
     public function getFuncionarioIdfuncionario()
     {
         return $this->funcionarioIdfuncionario;
+    }
+
+    /**
+     * Set fechaAnexo
+     *
+     * @param \DateTime $fechaAnexo
+     *
+     * @return AnexosTmp
+     */
+    public function setFechaAnexo($fechaAnexo)
+    {
+        $this->fechaAnexo = $fechaAnexo;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaAnexo
+     *
+     * @return \DateTime
+     */
+    public function getFechaAnexo()
+    {
+        return $this->fechaAnexo;
     }
 }

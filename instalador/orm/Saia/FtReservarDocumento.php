@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FtReservarDocumento
  *
- * @ORM\Table(name="ft_reservar_documento", indexes={@ORM\Index(name="i_reservar_documento_documento_", columns={"documento_iddocumento"}), @ORM\Index(name="i_reservar_documento_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Table(name="ft_reservar_documento")
  * @ORM\Entity
  */
 class FtReservarDocumento

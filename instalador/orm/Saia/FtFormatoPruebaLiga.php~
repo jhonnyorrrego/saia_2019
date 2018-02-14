@@ -1,0 +1,82 @@
+<?php
+
+namespace Saia;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * FtFormatoPruebaLiga
+ *
+ * @ORM\Table(name="ft_formato_prueba_liga", indexes={@ORM\Index(name="i_ft_formato_prueba_liga_doc", columns={"documento_iddocumento"})})
+ * @ORM\Entity
+ */
+class FtFormatoPruebaLiga
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="idft_formato_prueba_liga", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idftFormatoPruebaLiga;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="estado_documento", type="string", length=255, nullable=true)
+     */
+    private $estadoDocumento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie = '1274';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="radio_boton", type="integer", nullable=false)
+     */
+    private $radioBoton;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="campo_text", type="string", length=255, nullable=true)
+     */
+    private $campoText;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
+     */
+    private $documentoIddocumento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
+     */
+    private $dependencia;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
+     */
+    private $encabezado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
+     */
+    private $firma = '1';
+
+
+}
+
