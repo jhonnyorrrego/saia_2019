@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\BusquedaFiltroTemp" table="busqueda_filtro_temp">
+    <id name="idbusquedaFiltroTemp" type="integer" column="idbusqueda_filtro_temp">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="fkBusquedaComponente" type="integer" column="fk_busqueda_componente" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="funcionarioIdfuncionario" type="integer" column="funcionario_idfuncionario" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="fecha" type="date" column="fecha" nullable="true"/>
+    <field name="detalle" type="text" column="detalle" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

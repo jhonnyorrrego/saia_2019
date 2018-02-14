@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtPruebaComprasV10" table="ft_prueba_compras_v10">
+    <indexes>
+      <index name="i_prueba_compras_v10_documento_" columns="documento_iddocumento"/>
+      <index name="i_prueba_compras_v10_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftPruebaCompras" type="integer" column="idft_prueba_compras">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="dependencia" type="string" column="dependencia" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="estadoFormato" type="integer" column="estado_formato" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="arbolRadioFuncionario" type="string" column="arbol_radio_funcionario" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="date451910049" type="date" column="date_451910049" nullable="false"/>
+  </entity>
+</doctrine-mapping>

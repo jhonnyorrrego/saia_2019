@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtPlaneaOrdenTrabajo" table="ft_planea_orden_trabajo">
+    <indexes>
+      <index name="i_planea_orden_trabajo_orden_trab" columns="ft_orden_trabajo_vehiculo"/>
+      <index name="i_planea_orden_trabajo_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftPlaneaOrdenTrabajo" type="integer" column="idft_planea_orden_trabajo">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="ftOrdenTrabajoVehiculo" type="integer" column="ft_orden_trabajo_vehiculo" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="descripcionOrden" type="string" column="descripcion_orden" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="cantidadSolicitada" type="integer" column="cantidad_solicitada" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="costoTrabajo" type="integer" column="costo_trabajo" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="conceptoTrabajo" type="string" column="concepto_trabajo" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\Documento" table="documento">
+    <indexes>
+      <index name="serie" columns="serie,fecha,tipo_radicado,estado"/>
+      <index name="fecha" columns="fecha"/>
+      <index name="estado" columns="estado"/>
+      <index name="ejecutor" columns="ejecutor"/>
+    </indexes>
+    <id name="iddocumento" type="integer" column="iddocumento">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="numero" type="string" column="numero" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="serie" type="integer" column="serie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="fecha" type="datetime" column="fecha" nullable="false"/>
+    <field name="ejecutor" type="string" column="ejecutor" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="descripcion" type="text" column="descripcion" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tipoRadicado" type="integer" column="tipo_radicado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="estado" type="string" column="estado" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="dias" type="string" column="dias" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="plantilla" type="string" column="plantilla" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="activaAdmin" type="string" column="activa_admin" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="fechaCreacion" type="datetime" column="fecha_creacion" nullable="true"/>
+    <field name="tipoEjecutor" type="string" column="tipo_ejecutor" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="paginas" type="integer" column="paginas" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="municipioIdmunicipio" type="integer" column="municipio_idmunicipio" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="pdf" type="string" column="pdf" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="pdfHash" type="string" column="pdf_hash" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="fechaOficio" type="date" column="fecha_oficio" nullable="true"/>
+    <field name="oficio" type="string" column="oficio" length="20" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="anexo" type="string" column="anexo" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="descripcionAnexo" type="text" column="descripcion_anexo" length="16777215" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="almacenado" type="boolean" column="almacenado" nullable="false">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="responsable" type="integer" column="responsable" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="guia" type="string" column="guia" length="50" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="guiaEmpresa" type="integer" column="guia_empresa" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="tipoDespacho" type="string" column="tipo_despacho" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="formatoIdformato" type="integer" column="formato_idformato" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="documentoAntiguo" type="integer" column="documento_antiguo" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="fkIdversionDocumento" type="integer" column="fk_idversion_documento" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="version" type="integer" column="version" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="fechaLimite" type="date" column="fecha_limite" nullable="true"/>
+    <field name="ventanillaRadicacion" type="integer" column="ventanilla_radicacion" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

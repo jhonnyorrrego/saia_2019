@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtDistribucionFisica" table="ft_distribucion_fisica">
+    <indexes>
+      <index name="i_ft_distribucion_fisica_doc" columns="documento_iddocumento"/>
+      <index name="i_distribucion_fisica_destino" columns="destino"/>
+      <index name="i_distribucion_fisica_radicacion" columns="ft_radicacion_entrada"/>
+      <index name="i_distribucion_fisica_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftDistribucionFisica" type="integer" column="idft_distribucion_fisica">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">990</option>
+      </options>
+    </field>
+    <field name="fechaDocumento" type="date" column="fecha_documento" nullable="false"/>
+    <field name="nombreMensajero" type="string" column="nombre_mensajero" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="destino" type="string" column="destino" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="observaciones" type="text" column="observaciones" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="dependencia" type="integer" column="dependencia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="encabezado" type="integer" column="encabezado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="firma" type="integer" column="firma" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="ftRadicacionEntrada" type="integer" column="ft_radicacion_entrada" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="nivelUrgencia" type="string" column="nivel_urgencia" length="10" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="fechaRecibido" type="date" column="fecha_recibido" nullable="true"/>
+    <field name="usuarioRecibido" type="string" column="usuario_recibido" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="fechaEntregado" type="date" column="fecha_entregado" nullable="true"/>
+    <field name="usuarioEntregado" type="string" column="usuario_entregado" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="estadoDocumento" type="integer" column="estado_documento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

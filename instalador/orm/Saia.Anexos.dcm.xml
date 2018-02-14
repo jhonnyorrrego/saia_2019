@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\Anexos" table="anexos">
+    <indexes>
+      <index name="documento_iddocumento" columns="documento_iddocumento"/>
+    </indexes>
+    <id name="idanexos" type="integer" column="idanexos">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="ruta" type="string" column="ruta" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="etiqueta" type="string" column="etiqueta" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tipo" type="string" column="tipo" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+        <option name="default">BASE</option>
+      </options>
+    </field>
+    <field name="formato" type="string" column="formato" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="camposFormato" type="string" column="campos_formato" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="idbinario" type="integer" column="idbinario" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="fechaAnexo" type="datetime" column="fecha_anexo" nullable="true"/>
+    <field name="fecha" type="date" column="fecha" nullable="true"/>
+  </entity>
+</doctrine-mapping>

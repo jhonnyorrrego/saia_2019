@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\PasoInstTerminacion" table="paso_inst_terminacion">
+    <id name="idpasoInstTerminacion" type="integer" column="idpaso_inst_terminacion">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="documentoIdpasoDocumento" type="integer" column="documento_idpaso_documento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="instanciaIdpasoInstancia" type="integer" column="instancia_idpaso_instancia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="funcionarioCodigo" type="integer" column="funcionario_codigo" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="fechaJustificacion" type="datetime" column="fecha_justificacion" nullable="false"/>
+    <field name="observaciones" type="text" column="observaciones" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

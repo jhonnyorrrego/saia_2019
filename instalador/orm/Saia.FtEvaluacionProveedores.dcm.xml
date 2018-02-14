@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtEvaluacionProveedores" table="ft_evaluacion_proveedores">
+    <indexes>
+      <index name="i_ft_evaluacion_proveedores_doc" columns="documento_iddocumento"/>
+      <index name="i_evaluacion_proveedo_justificac" columns="ft_justificacion_compra"/>
+      <index name="i_evaluacion_proveedo_recepcion_" columns="ft_recepcion_cotizacion"/>
+      <index name="i_evaluacion_proveedo_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftEvaluacionProveedores" type="integer" column="idft_evaluacion_proveedores">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="ftJustificacionCompra" type="integer" column="ft_justificacion_compra" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1018</option>
+      </options>
+    </field>
+    <field name="atencion" type="string" column="atencion" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="cumplimiento" type="string" column="cumplimiento" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="descripcionAlmacenada" type="string" column="descripcion_almacenada" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="matriculadoCamara" type="string" column="matriculado_camara" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="precioCotizaciones" type="string" column="precio_cotizaciones" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="dependencia" type="integer" column="dependencia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="encabezado" type="integer" column="encabezado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="firma" type="integer" column="firma" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="ftRecepcionCotizacion" type="string" column="ft_recepcion_cotizacion" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="estadoDocumento" type="integer" column="estado_documento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

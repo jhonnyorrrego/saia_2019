@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\BusquedaCondicion" table="busqueda_condicion">
+    <id name="idbusquedaCondicion" type="integer" column="idbusqueda_condicion">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="busquedaIdbusqueda" type="integer" column="busqueda_idbusqueda" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="fkBusquedaComponente" type="integer" column="fk_busqueda_componente" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="codigoWhere" type="text" column="codigo_where" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="etiquetaCondicion" type="string" column="etiqueta_condicion" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

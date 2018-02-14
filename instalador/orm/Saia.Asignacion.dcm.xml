@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\Asignacion" table="asignacion">
+    <indexes>
+      <index name="i_asignacion_doc" columns="documento_iddocumento"/>
+      <index name="i_asignacion_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idasignacion" type="integer" column="idasignacion">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="tareaIdtarea" type="integer" column="tarea_idtarea" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="fechaInicial" type="datetime" column="fecha_inicial" nullable="true"/>
+    <field name="fechaFinal" type="datetime" column="fecha_final" nullable="true"/>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="estado" type="string" column="estado" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default">PENDIENTE</option>
+      </options>
+    </field>
+    <field name="entidadIdentidad" type="integer" column="entidad_identidad" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="llaveEntidad" type="integer" column="llave_entidad" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="reprograma" type="boolean" column="reprograma" nullable="true"/>
+    <field name="tipoReprograma" type="string" column="tipo_reprograma" length="10" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="descripcion" type="string" column="descripcion" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

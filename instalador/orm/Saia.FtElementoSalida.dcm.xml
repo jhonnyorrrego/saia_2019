@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtElementoSalida" table="ft_elemento_salida">
+    <indexes>
+      <index name="i_elemento_salida_salida_ele" columns="ft_salida_elementos"/>
+      <index name="i_elemento_salida_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftElementoSalida" type="integer" column="idft_elemento_salida">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="ftSalidaElementos" type="integer" column="ft_salida_elementos" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="itemSalida" type="integer" column="item_salida" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="observaciones" type="text" column="observaciones" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\BusquedaGraficoSerie" table="busqueda_grafico_serie">
+    <indexes>
+      <index name="busqueda_grafico_idbusqueda_grafico" columns="busqueda_grafico_idbusqueda_grafico"/>
+    </indexes>
+    <id name="idbusquedaGraficoSerie" type="integer" column="idbusqueda_grafico_serie">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="busquedaGraficoIdbusquedaGrafico" type="integer" column="busqueda_grafico_idbusqueda_grafico" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="tipo" type="integer" column="tipo" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="valor" type="string" column="valor" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="dato" type="string" column="dato" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="condicionAdicional" type="text" column="condicion_adicional" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="mascaraDato" type="string" column="mascara_dato" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="nombre" type="string" column="nombre" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

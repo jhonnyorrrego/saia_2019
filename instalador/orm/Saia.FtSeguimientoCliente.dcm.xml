@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtSeguimientoCliente" table="ft_seguimiento_cliente">
+    <indexes>
+      <index name="i_seguimiento_cliente_documento_" columns="documento_iddocumento"/>
+      <index name="i_seguimiento_cliente_registro_c" columns="ft_registro_cliente"/>
+      <index name="i_seguimiento_cliente_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftSeguimientoCliente" type="integer" column="idft_seguimiento_cliente">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="anexoFormato" type="string" column="anexo_formato" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ftRegistroCliente" type="integer" column="ft_registro_cliente" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">923</option>
+      </options>
+    </field>
+    <field name="empresaAsociada" type="string" column="empresa_asociada" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="envioPropuesta" type="decimal" column="envio_propuesta" precision="10" scale="0" nullable="true"/>
+    <field name="estadoCliente" type="decimal" column="estado_cliente" precision="10" scale="0" nullable="false"/>
+    <field name="fecha" type="date" column="fecha" nullable="false"/>
+    <field name="fechaSeguimiento" type="date" column="fecha_seguimiento" nullable="false"/>
+    <field name="formaContacto" type="integer" column="forma_contacto" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="nombreProductoServicio" type="string" column="nombre_producto_servicio" length="255" nullable="false">
+      <options>
+        <option name="fixed">1</option>
+      </options>
+    </field>
+    <field name="nombrePropuesta" type="string" column="nombre_propuesta" length="255" nullable="false">
+      <options>
+        <option name="fixed">1</option>
+      </options>
+    </field>
+    <field name="resultadoSeguimiento" type="string" column="resultado_seguimiento" length="255" nullable="false">
+      <options>
+        <option name="fixed">1</option>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="dependencia" type="integer" column="dependencia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="encabezado" type="integer" column="encabezado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="firma" type="integer" column="firma" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="estadoPropuesta" type="integer" column="estado_propuesta" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">2</option>
+      </options>
+    </field>
+    <field name="estadoDocumento" type="integer" column="estado_documento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

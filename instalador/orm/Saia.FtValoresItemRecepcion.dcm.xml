@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtValoresItemRecepcion" table="ft_valores_item_recepcion">
+    <indexes>
+      <index name="i_valores_item_recepc_recepcion_" columns="ft_recepcion_cotizacion"/>
+    </indexes>
+    <id name="idftValoresItemRecepcion" type="integer" column="idft_valores_item_recepcion">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="ftRecepcionCotizacion" type="integer" column="ft_recepcion_cotizacion" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="estado" type="string" column="estado" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="fkIdftItem" type="string" column="fk_idft_item" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="valor" type="string" column="valor" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

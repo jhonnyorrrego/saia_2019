@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtAusentesActa" table="ft_ausentes_acta">
+    <indexes>
+      <index name="i_ausentes_acta_acta" columns="ft_acta"/>
+      <index name="i_ausentes_acta_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftAusentesActa" type="integer" column="idft_ausentes_acta">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="ftActa" type="integer" column="ft_acta" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="funcionarioAusente" type="string" column="funcionario_ausente" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="justificada" type="integer" column="justificada" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

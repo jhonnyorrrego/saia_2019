@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtResumenPresupuestal" table="ft_resumen_presupuestal">
+    <indexes>
+      <index name="i_resumen_presupuestal_documento_" columns="documento_iddocumento"/>
+      <index name="i_resumen_presupuestal_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftResumenPresupuestal" type="integer" column="idft_resumen_presupuestal">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">845</option>
+      </options>
+    </field>
+    <field name="codPadre" type="integer" column="cod_padre" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="codigo" type="string" column="codigo" length="5" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="nombre" type="string" column="nombre" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="estado" type="decimal" column="estado" precision="10" scale="0" nullable="false">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="dependencia" type="integer" column="dependencia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="encabezado" type="integer" column="encabezado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="firma" type="integer" column="firma" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="centroCosto" type="decimal" column="centro_costo" precision="10" scale="0" nullable="true"/>
+    <field name="tipo" type="integer" column="tipo" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">1:Programa;2:Proyecto;3:Accion</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>
