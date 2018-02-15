@@ -12,7 +12,7 @@ use Symfony\Component\Console\Application;
 class PostInstall {
 
     public static function localConf(Event $event) {
-        $event->getIO()->write("Mostrar despues del comando INSTALL/UPDATE");
+        //$event->getIO()->write("Mostrar despues del comando INSTALL/UPDATE");
 
         $composer_config = $event->getComposer()->getConfig();
 
@@ -36,16 +36,16 @@ class PostInstall {
             ->getConfig()
             ->get('vendor-dir') . '/autoload.php';
 
-        $application = new Application('Instalador SAIA', '1.0.0-alpha');
+        $application = new Application('Instalador SAIA', '1.0.0-beta');
 
-        echo "Ruta: $installPath" . PHP_EOL;
+        //echo "Ruta: $installPath" . PHP_EOL;
         $configurador    = new ConfigCaptureCommand();
         $instalador = new ConfigGenCommand($installPath, $configurador);
         $generadordb = new ImportDbCommand($installPath, $configurador);
         $application->add($configurador);
         $application->add($instalador);
         $application->add($generadordb);
-        $application->setDefaultCommand("configurar");
+        $application->setDefaultCommand($configurador->getName());
 
         //$application->run();
         $shell = new Shell($application);
