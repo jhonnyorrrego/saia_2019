@@ -45,21 +45,28 @@ class AnexosTmp
     /**
      * @var string
      *
-     * @ORM\Column(name="tipo", type="string", length=255, nullable=true)
+     * @ORM\Column(name="tipo", type="string", length=20, nullable=true)
      */
     private $tipo;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_anexo", type="datetime", nullable=true)
+     */
+    private $fechaAnexo;
+
+    /**
      * @var integer
      *
-     * @ORM\Column(name="idformato", type="integer", nullable=false)
+     * @ORM\Column(name="idformato", type="integer", nullable=true)
      */
     private $idformato;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="idcampos_formato", type="integer", nullable=false)
+     * @ORM\Column(name="idcampos_formato", type="integer", nullable=true)
      */
     private $idcamposFormato;
 
@@ -69,13 +76,6 @@ class AnexosTmp
      * @ORM\Column(name="funcionario_idfuncionario", type="integer", nullable=false)
      */
     private $funcionarioIdfuncionario;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="fecha_anexo", type="datetime", nullable=true)
-     */
-    private $fechaAnexo;
 
 
 
