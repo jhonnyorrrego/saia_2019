@@ -32,9 +32,9 @@ Opcionalmente se puede pasar el parámetro --write-sql para generar un .sql de l
 
 Resumen:
 
-1. Use el command de consolo para generar la migraciion (/ruta_saia/vendor/bin/doctrine-migrations migrations:generate)
-2. Modifique la migracion para modificar la estructura de la base de datos (tablas, campos, etc).
-3. Use el metodo postUp para modificar los datos (insert, update)
+1. Use el command de consola para generar la migracion (/ruta_saia/vendor/bin/doctrine-migrations migrations:generate)
+2. Modifique la migración para cambiar la estructura de la base de datos (tablas, campos, etc).
+3. Use el metodo postUp para modificar los datos (insert, update, delete)
 4. Haga todos los drop al final del metodo postUp
 5. Si es posible ejecute consultas SQL simples para migrar los datos
    Si un simple SQL no puede hacer el trabajo, use PHP dentro del metodo postUp ejecutando consultas con Doctrine\DBAL\Connection ($this->connection)

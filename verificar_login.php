@@ -8,8 +8,9 @@ $retorno["mensaje"] = "<b>El nombre de usuario o contrase&ntilde;a introducidos 
 $retorno["ingresar"] = 0;
 if ($dias_sesion["numcampos"]) {
 	$dias_sess = $dias_sesion[0]["valor"];
-} else
+} else {
 	$dias_sess = 2;
+}
 $redirecciona = '#';
 $redirecciona_exito = 'index_' . $_REQUEST["INDEX"] . ".php";
 if (@$_REQUEST["userid"] <> "" && @$_REQUEST["passwd"] <> "") {
