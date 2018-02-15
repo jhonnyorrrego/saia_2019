@@ -9263,6 +9263,176 @@ $cargo = [
         "tipo_cargo" => 2
     ]
 ];
+$categoria_formato = [
+    [
+        "idcategoria_formato" => 1,
+        "nombre" => "Radicacion",
+        "cod_padre" => 0,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 2,
+        "nombre" => "Formatos",
+        "cod_padre" => 0,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 3,
+        "nombre" => "Salida",
+        "cod_padre" => 0,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 4,
+        "nombre" => "Justificacion de Compras",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 5,
+        "nombre" => "Comunicacion Externa",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 6,
+        "nombre" => "Autorizacion Salida de Planta",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 7,
+        "nombre" => "Pqrsf",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 8,
+        "nombre" => "Solicitud de Vacaciones",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 10,
+        "nombre" => "Comunicaci&oacute;n Interna",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 11,
+        "nombre" => "Categoria pruebas",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 12,
+        "nombre" => "Solicitud de Permisos",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 13,
+        "nombre" => "Sin categoria",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 14,
+        "nombre" => "Correspondencia de entrada",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 15,
+        "nombre" => "Proceso",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 16,
+        "nombre" => "Macroproceso",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 17,
+        "nombre" => "Bases de Calidad",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 18,
+        "nombre" => "Plan de Mejoramiento",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 19,
+        "nombre" => "Inactivos",
+        "cod_padre" => 0,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 20,
+        "nombre" => "Inventario de archivo",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 21,
+        "nombre" => "Solicitud de elaboraci&amp;oacute;n, modificaci&amp;oacute;n, eliminaci&amp;oacute;n de documentos",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 22,
+        "nombre" => "Rutas de Distribuci&oacute;n",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => "Rutas de Distribuci&oacute;n",
+        "fecha" => "2017-03-07"
+    ]
+];
 $dependencia = [
     [
         "iddependencia" => 1,
@@ -32579,3 +32749,4 @@ $campos_formato = [
 		"fila_visible" => 1
 	]
 ];
+

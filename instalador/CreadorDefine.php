@@ -7,7 +7,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Process\Process;
 
-class Install extends Command {
+class ConfigGenCommand extends Command {
 
     protected $installDir;
 

@@ -1,7 +1,7 @@
 <?php
 namespace Saia\Composer;
 
-require 'Installer.php';
+require 'CreadorDefine.php';
 require 'Configurador.php';
 require 'InstaladorBdd.php';
 
@@ -39,11 +39,15 @@ class PostInstall {
         $application = new Application('Instalador SAIA', '1.0.0-alpha');
 
         echo "Ruta: $installPath" . PHP_EOL;
-        $dependencyContainer    = new Configuracion();
-        $application->add($dependencyContainer);
-        $application->add(new Install($installPath, $dependencyContainer));
-        $application->add(new ImportCommand($installPath, $dependencyContainer));
+        $configurador    = new ConfigCaptureCommand();
+        $instalador = new ConfigGenCommand($installPath, $configurador);
+        $generadordb = new ImportDbCommand($installPath, $configurador);
+        $application->add($configurador);
+        $application->add($instalador);
+        $application->add($generadordb);
+        $application->setDefaultCommand("configurar");
 
+        //$application->run();
         $shell = new Shell($application);
 
         $shell->run();

@@ -12,7 +12,7 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 
-class ImportCommand extends Command {
+class ImportDbCommand extends Command {
 
     /*
     driver: The built-in driver implementation to use. The following drivers are currently available:
