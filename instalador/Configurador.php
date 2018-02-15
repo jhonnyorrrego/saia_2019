@@ -60,8 +60,8 @@ class ConfigCaptureCommand extends Command {
         $datos = $this->valores;
         $datos["dbpass"] = "******";
         $table = new Table($output);
-        $table ->setHeaders(array_keys($this->valores))
-        ->setRows(array(array_values($this->valores)));
+        $table ->setHeaders(array_keys($datos))
+        ->setRows(array(array_values($datos)));
         $table->render();
         $question = new ConfirmationQuestion('Por favor indique si los valores son correctos. De lo contrario vuelva a ejecutar el comando "configurar" (y/N)? ', false);
 
