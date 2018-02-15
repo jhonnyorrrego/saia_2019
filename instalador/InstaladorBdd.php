@@ -201,15 +201,39 @@ class ImportCommand extends Command {
 
         //$conn->beginTransaction();
         include_once('carga_datos.php');
+        $this->ejecutar_insert($conn, 'configuracion', $configuracion);
         $this->ejecutar_insert($conn, 'funcionario', $funcionario);
-        $this->ejecutar_insert($conn, 'dependencia', $busqueda_condicion);
+        $this->ejecutar_insert($conn, 'dependencia', $dependencia);
         $this->ejecutar_insert($conn, 'busqueda', $busqueda);
         $this->ejecutar_insert($conn, 'busqueda_componente', $busqueda_componente);
         $this->ejecutar_insert($conn, 'busqueda_condicion', $busqueda_condicion);
         $this->ejecutar_insert($conn, 'cargo', $cargo);
         $this->ejecutar_insert($conn, 'dependencia_cargo', $dependencia_cargo);
-        $this->ejecutar_insert($conn, 'formato', $formato);
         $this->ejecutar_insert($conn, 'modulo', $modulo);
+        $this->ejecutar_insert($conn, 'formato', $formato);
+        $this->ejecutar_insert($conn, 'campos_formato', $campos_formato);
+        $this->ejecutar_insert($conn, 'perfil', $perfil);
+        $this->ejecutar_insert($conn, 'permiso', $permiso);
+        $this->ejecutar_insert($conn, 'permiso_perfil', $permiso_perfil);
+
+        $valores = $this->configuracion->get_valores();
+        if(!empty($valores["urlsaia"])) {
+            $partes_url = parse_url($valores["urlsaia"]);
+            if(@$partes_url["host"]){
+                $valores = [
+                    [
+                        "idconfiguracion" => 1,
+                        "nombre" => "ruta_servidor",
+                        "valor" => $partes_url["host"],
+                        "tipo" => "ruta",
+                        "fecha" => "2018-01-01 00:00:00",
+                        "encrypt" => 0
+                    ]
+                ];
+                $this->ejecutar_insert($conn, 'configuracion', $valores);
+            }
+        }
+
         return true;
     }
 
