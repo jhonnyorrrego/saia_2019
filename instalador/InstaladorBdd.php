@@ -215,6 +215,7 @@ class ImportDbCommand extends Command {
         $this->ejecutar_insert($conn, 'perfil', $perfil);
         $this->ejecutar_insert($conn, 'permiso', $permiso);
         $this->ejecutar_insert($conn, 'permiso_perfil', $permiso_perfil);
+        $this->ejecutar_insert($conn, 'categoria_formato', $categoria_formato);
 
         $valores = $this->configuracion->get_valores();
         if(!empty($valores["urlsaia"])) {
