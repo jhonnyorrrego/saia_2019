@@ -41,6 +41,7 @@
                 "vendor-dir" : "./"
         },
         "scripts":{
+                "post-update-cmd":["Saia\\Composer\\PostInstall::localConf"],
                 "post-install-cmd": ["Saia\\Composer\\PostInstall::localConf"]
         },
 	"autoload":{
