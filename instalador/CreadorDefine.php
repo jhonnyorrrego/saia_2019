@@ -26,8 +26,10 @@ class ConfigGenCommand extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output) {
         //if ($this->createInstallationDirectory($output) && $this->generateDefine($output)) {
+        $output->writeln('<info>Creando archivo define.php</info>');
         if ($this->generateDefine($output)) {
-                $output->writeln('<info>FINALIZADO</info>');
+                $output->writeln('');
+                $output->writeln('');
         } else {
             $output->writeln('<error>Ocurrió un error :\'-(</error>');
 

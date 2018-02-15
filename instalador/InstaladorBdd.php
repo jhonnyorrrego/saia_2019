@@ -63,9 +63,18 @@ class ImportDbCommand extends Command {
 
         date_default_timezone_set("America/Bogota");
 
+        $output->writeln('<info>Creando las tablas en base de datos</info>');
         $this->crearBaseDeDatos($connectionParams);
+        $output->writeln('');
+
+        $output->writeln('<info>Creando tablas adicionales</info>');
         $this->crearTablasAdicionales($connectionParams);
+        $output->writeln('');
+
+        $output->writeln('<info>Ejecutando la configuración final</info>');
         $this->insertarValores($connectionParams);
+        $output->writeln('');
+        $output->writeln('<info>FIN DE LA INSTALACION</info>');
         //$databases = $sm->listDatabases();
 
         //print_r($sm->listTableNames());

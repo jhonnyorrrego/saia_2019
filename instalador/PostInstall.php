@@ -33,6 +33,12 @@ class PostInstall {
                 break;
             }
         }
+
+        if(is_file($installPath . "/define.php")) {
+            $event->getIO()->write("La configuración ya fue realizada con anterioridad");
+            return 1;
+        }
+
         require_once $event->getComposer()
             ->getConfig()
             ->get('vendor-dir') . '/autoload.php';
