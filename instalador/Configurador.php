@@ -63,7 +63,7 @@ class ConfigCaptureCommand extends Command {
         $table ->setHeaders(array_keys($datos))
         ->setRows(array(array_values($datos)));
         $table->render();
-        $question = new ConfirmationQuestion('Por favor indique si los valores son correctos. De lo contrario vuelva a ejecutar el comando "configurar" (y/N)? ', false);
+        $question = new ConfirmationQuestion('Por favor indique si los valores son correctos. De lo contrario vuelva a ejecutar el comando "configurar" (s/N)? ', false, '/^(y|s)/i');
 
         if (!$helper->ask($input, $output, $question)) {
             throw new \Exception('Configuración rechazada');
