@@ -8,9 +8,10 @@ while($max_salida>0){
   $ruta.="../";
   $max_salida--;
 }
-include_once('../define_exportar_importar.php');
+include_once($ruta_db_superior.'db.php');
 include_once($ruta_db_superior."librerias_saia.php");
 
+ini_set("display_errors",true);
 if(@$_REQUEST['idformato']){
 	?><br>
 		<div class="container">
@@ -22,36 +23,45 @@ if(@$_REQUEST['idformato']){
 <a href="<?php echo $ruta_db_superior; ?>formatos/formatoadd.php?x_cod_padre=<?php echo $_REQUEST["idformato"];?>">Adicionar hijo</a>&nbsp;&nbsp;
 <a href="<?php echo $ruta_db_superior; ?>formatos/transferencias_automaticas.php?idformato=<?php echo $_REQUEST["idformato"];?>">Transferencias automaticas</a>&nbsp;&nbsp;
 <a href="<?php echo $ruta_db_superior; ?>formatos/rutas_automaticas.php?idformato=<?php echo $_REQUEST["idformato"];?>">Rutas</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/formatoexport.php?key=<?php echo $_REQUEST["idformato"];?>">Exportar Formato</a>
-&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>webservice_saia/exportar_importar_formato/exportar_formato/exportar_formato.php?pre_exportar_formato=1&idformato=<?php echo $_REQUEST["idformato"];?>">Pasar a productivo</a>
+<!--a href="<?php echo $ruta_db_superior; ?>formatos/formatoexport.php?key=<?php echo $_REQUEST["idformato"];?>">Exportar Formato</a-->
+<a href="<?php echo $ruta_db_superior; ?>webservice_saia/exportar_importar_formato/exportar_formato/exportar_formato.php?pre_exportar_formato=1&idformato=<?php echo $_REQUEST["idformato"];?>">Exportar Formato</a>
 </div>
 	<?php
+}
+$base_configuracion=busca_filtro_tabla("","configuracion","tipo='exportar_formato'","",conn);
+for($i=0;$i<$base_configuracion["numcampos"];$i++){
+  if($base_configuracion[$i]["nombre"]=="servidor_exportar"){
+      $servidor_exportar=$base_configuracion[$i]["valor"];
+  }
+  else if($base_configuracion[$i]["nombre"]=="servidor_medio"){
+      $servidor_medio=$base_configuracion[$i]["valor"];
+  }
+  else if($base_configuracion[$i]["nombre"]=="servidor_importar"){
+      $servidor_importar=$base_configuracion[$i]["valor"];
+  }
+}
+$valida_exportar=1;
+if($servidor_exportar==''){
+	$valida_exportar=0;
+	$mensaje_error.='No es posible exportar el formato si no se tiene una ruta origen!.<br>';
+}
+if($servidor_medio==''){
+	$valida_exportar=0;
+	$mensaje_error.='No es posible exportar el formato si no se tiene una servidor intermedio!.<br>';
+}	
+if($servidor_importar==''){
+	$valida_exportar=0;
+	$mensaje_error.='No es posible exportar el formato si no se tiene una ruta destino!.<br>';
+}	
+if($valida_exportar){
+	$servidor_exportar_tmp=explode('webservice_saia',$servidor_exportar);
+	$servidor_medio_tmp=explode('webservice_saia',$servidor_medio);
+	$servidor_importar_tmp=explode('webservice_saia',$servidor_importar);
 }
 if(@$_REQUEST['pre_exportar_formato'] && @$_REQUEST['idformato']){
 	
 	echo( estilo_bootstrap() );	
-
-	$valida_exportar=1;
 	$mensaje_error='<center><b>ATENCI&Oacute;N</b></center><br>';
-	if(!defined("SERVIDOR_EXPORTAR") || SERVIDOR_EXPORTAR==''){
-		$valida_exportar=0;
-		$mensaje_error.='No es posible exportar el formato si no se tiene una ruta origen!.<br>';
-	}
-	if(!defined("SERVIDOR_MEDIO") || SERVIDOR_MEDIO==''){
-		$valida_exportar=0;
-		$mensaje_error.='No es posible exportar el formato si no se tiene una servidor intermedio!.<br>';
-	}	
-	if(!defined("SERVIDOR_IMPORTAR") || SERVIDOR_IMPORTAR==''){
-		$valida_exportar=0;
-		$mensaje_error.='No es posible exportar el formato si no se tiene una ruta destino!.<br>';
-	}	
-	if($valida_exportar){
-		$servidor_exportar=explode('webservice_saia',SERVIDOR_EXPORTAR);
-		$servidor_medio=explode('webservice_saia',SERVIDOR_MEDIO);
-		$servidor_importar=explode('webservice_saia',SERVIDOR_IMPORTAR);
-				
-	}
 	$etiqueta_formato=busca_filtro_tabla("etiqueta","formato","idformato=".@$_REQUEST['idformato'],"",$conn);	
 	?>
 	<br>
@@ -72,15 +82,15 @@ if(@$_REQUEST['pre_exportar_formato'] && @$_REQUEST['idformato']){
 		?>		
 		<tr>
 			<th>El formato saldr&aacute; de:</th>
-			<td><?php echo($servidor_exportar[0]); ?></td>
+			<td><?php echo($servidor_exportar_tmp[0]); ?></td>
 		</tr>	
 		<tr>
 			<th>El servidor intermediario es:</th>
-			<td><?php echo($servidor_medio[0]); ?></td>
+			<td><?php echo($servidor_medio_tmp[0]); ?></td>
 		</tr>
 		<tr>
 			<th>El formato ser&aacute; creado en:</th>
-			<td><?php echo($servidor_importar[0]); ?></td>
+			<td><?php echo($servidor_importar_tmp[0]); ?></td>
 		</tr>
 		<?php 
 		}else{
@@ -112,11 +122,11 @@ if(@$_REQUEST['pre_exportar_formato'] && @$_REQUEST['idformato']){
 	
 }
 
-if(@$_REQUEST['exportar_formato']){
+if(@$_REQUEST['exportar_formato'] && $valida_exportar){
 	
 	require_once('lib/nusoap.php');  
 
-	$cliente = new nusoap_client(SERVIDOR_EXPORTAR);
+	$cliente = new nusoap_client($servidor_exportar);
 
 	if(@$_REQUEST['nombre_formato']){
 		$nombre_formato = array();
@@ -139,6 +149,7 @@ if(@$_REQUEST['exportar_formato']){
 		$ridformato = json_decode($ridformato);
 	
 		if($ridformato->exito){
+		    $ridformato->servidor_importar=$servidor_importar;
 			$exportar=json_encode($ridformato);
 			
 			if(@$_REQUEST["imprimir_json"]){
@@ -146,9 +157,8 @@ if(@$_REQUEST['exportar_formato']){
 				die();
 			}
 			
-			$medio = new nusoap_client(SERVIDOR_MEDIO);
+			$medio = new nusoap_client($servidor_medio);
 			$respuesta_medio = $medio->call('conexion_exportar_importar', array($exportar));
-			
 			$respuesta_medio = json_decode($respuesta_medio,true);
 			echo( estilo_bootstrap() );	
 			$cadena_respuesta='<br>

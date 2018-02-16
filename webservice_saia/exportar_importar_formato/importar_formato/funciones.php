@@ -9,62 +9,8 @@ while($max_salida>0){
 	$max_salida--;
 }
 include_once($ruta_db_superior."define.php");
-if(!@$_SESSION["LOGIN".LLAVE_SAIA]){
-  @session_start();
-  $_SESSION["LOGIN".LLAVE_SAIA]=LOGIN_LOGIN;
-  $_SESSION["usuario_actual"]=FUNCIONARIO_CODIGO_LOGIN;
-  $_SESSION["conexion_remota"]=1; 
-}
 include_once($ruta_db_superior."db.php");
  
-function crear_modulo_formato_importar($idformato) {
-	global $conn;
-	$datos_formato = busca_filtro_tabla("nombre,etiqueta,cod_padre,nombre_tabla,ruta_mostrar,ruta_adicionar", "formato", "idformato=" . $idformato, "", $conn);
-	$modulo_formato = busca_filtro_tabla("", "modulo", "nombre = 'modulo_formatos'", "", $conn);
-	if(!$modulo_formato['numcampos']){
-		$modulo_formato = busca_filtro_tabla("", "modulo", "nombre = 'creacion_formatos'", "", $conn);
-	}
-	if($modulo_formato["numcampos"]) {
-		$submodulo_formato = busca_filtro_tabla("", "modulo", "nombre ='" . $datos_formato[0]["nombre"] . "'", "", $conn);
-		if(!$submodulo_formato["numcampos"]) {
-			$padre = busca_filtro_tabla("idmodulo", "formato A, modulo B", "idformato=" . $datos_formato[0]["cod_padre"] . " AND lower(A.nombre)=(B.nombre)", "", $conn);
-			if($padre["numcampos"] > 0) {
-				$papa = $padre[0]["idmodulo"];
-			} else {
-				$papa = $modulo_formato[0]["idmodulo"];
-			}
-			$sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda,busqueda) VALUES ('" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','" . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["ruta_mostrar"] . "','centro','" . $papa . "','1','Permite administrar el formato " . $datos_formato[0]["etiqueta"] . ".',1)";
-			
-			//guardar_traza($sql, $datos_formato[0]["nombre_tabla"]);
-			phpmkr_query($sql, $conn);
-			$modulo_id = phpmkr_insert_id();
-			$sql = "INSERT INTO permiso(funcionario_idfuncionario,modulo_idmodulo) VALUES('" . usuario_actual("id") . "'," . $modulo_id . ")";
-			//guardar_traza($sql, $datos_formato[0]["nombre_tabla"]);
-			phpmkr_query($sql, $conn);
-		} else {
-			$padre = busca_filtro_tabla("idmodulo", "formato A, modulo B", "idformato=" . $datos_formato[0]["cod_padre"] . " AND lower(A.nombre)=(B.nombre)", "", $conn);
-			if($padre["numcampos"] > 0) {
-				$papa = $padre[0]["idmodulo"];
-			} else {
-				$papa = $modulo_formato[0]["idmodulo"];
-			}
-			$sql = "update modulo set nombre='" . $datos_formato[0]["nombre"] . "',etiqueta='" . $datos_formato[0]["etiqueta"] . "',cod_padre='" . $papa . "' where idmodulo=" . $submodulo_formato[0]["idmodulo"];
-			//guardar_traza($sql, $datos_formato[0]["nombre_tabla"]);
-			phpmkr_query($sql, $conn);
-		}
-	}
-	$modulo_crear = busca_filtro_tabla("", "modulo", "nombre = 'creacion_formatos'", "", $conn);
-	if($modulo_crear["numcampos"]) {
-		$submodulo_formato = busca_filtro_tabla("", "modulo", "nombre = 'crear_" . $datos_formato[0]["nombre"] . "'", "", $conn);
-		if(!$submodulo_formato["numcampos"]) {
-			$sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES ('crear_" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','Crear " . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["ruta_adicionar"] . "','centro','" . $modulo_crear[0]["idmodulo"] . "','1','Permite crear " . $datos_formato[0]["etiqueta"] . ".')";
-			// /die($sql);
-			//guardar_traza($sql, $formato[0]["nombre_tabla"]);
-			phpmkr_query($sql, $conn);
-		}
-	}
-}
-
 function validar_contador($nombre_contador){
 	global $conn;
 	
@@ -249,7 +195,7 @@ function generar_importar($datos){
 			}
 		}
 		$keys_funciones_formato=array_values($keys_funciones_formato);		
-		$keys_funciones_formato[]='formato';
+		//$keys_funciones_formato[]='formato';
 		$keys_funciones_formato_insertar=listar_campos_tabla('funciones_formato');  //keys a insertar
 		$keys_funciones_formato_insertar=array_map('strtolower', $keys_funciones_formato_insertar);
 		$funciones_formato_no_encontrados=array_diff($keys_funciones_formato,$keys_funciones_formato_insertar);
@@ -391,7 +337,6 @@ function generar_importar($datos){
 				if(@$idformato){
 					$formato['exito']=1;
 					$formato['mensaje']="Formato Creado con Exito!";
-					crear_modulo_formato_importar($idformato);
 				}else{
 					$formato['exito']=0;
 					$formato['mensaje']="Inconvenientes al generar el insert del formato: ".$strsql;
@@ -446,11 +391,7 @@ function generar_importar($datos){
 					$existe_funcion=busca_filtro_tabla("idfunciones_formato,formato","funciones_formato","lower(nombre_funcion)='".strtolower($datos['funciones_formato'][$i]['nombre_funcion'])."'","",$conn);
 					
 					if($existe_funcion['numcampos']){
-						$vector_formatos_funcion=explode(',',$existe_funcion[0]['formato']);
-						$vector_formatos_funcion[]=$idformato;
-						$vector_formatos_funcion=array_unique($vector_formatos_funcion);
-						$cadena_formatos_funcion=implode(',',$vector_formatos_funcion);
-						$strsql="UPDATE funciones_formato SET formato='".$cadena_formatos_funcion."' WHERE idfunciones_formato=".$existe_funcion[0]['idfunciones_formato'];
+						$strsql="INSERT INTO funciones_formato_enlace(funciones_formato_fk,formato_idformato) VALUES(".$existe_funcion[0]["idfunciones_formato"].",".$idformato.")";
 						phpmkr_query($strsql);
 						$idfunciones_formato=$existe_funcion[0]['idfunciones_formato'];
 						
@@ -474,7 +415,9 @@ function generar_importar($datos){
 						$formato['funciones_formato_error']['funciones_formato_error_'.$contador_error]=$strsql;
 						$contador_error++;
 					}
-					
+					else{
+					    $strsql="INSERT INTO funciones_formato_enlace(funciones_formato_fk,formato_idformato) VALUES(".$idfunciones_formato.",".$idformato.")";
+					}
 					
 					
 					//FUNCIONES_FORMATO_ACCION

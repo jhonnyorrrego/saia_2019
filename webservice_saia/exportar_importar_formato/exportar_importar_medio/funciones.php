@@ -9,20 +9,16 @@ while($max_salida>0){
 	$max_salida--;
 }
 include_once($ruta_db_superior."define.php");
-if(!@$_SESSION["LOGIN".LLAVE_SAIA]){
-  @session_start();
-  $_SESSION["LOGIN".LLAVE_SAIA]=LOGIN_LOGIN;
-  $_SESSION["usuario_actual"]=FUNCIONARIO_CODIGO_LOGIN;
-  $_SESSION["conexion_remota"]=1; 
-}
 include_once($ruta_db_superior."db.php");
 
 function conexion_exportar_importar($datos){
 	global $conn; 
-
 	$datos = json_decode($datos);
 	$importar=json_encode($datos);
-	$destino = new nusoap_client(SERVIDOR_IMPORTAR);
+	if(@$datos["servidor_importar"]==''){
+	    return(json_encode(array("exito"=>0,"mensaje"=>"error en configuracion del servidor para importar")));
+	}
+	$destino = new nusoap_client($datos["servidor_importar"]);
 	$respuesta_destino = $destino->call('generar_importar', array($importar));	
 	$respuesta_destino = json_decode($respuesta_destino);
 	$respuesta_destino=json_encode($respuesta_destino);	
