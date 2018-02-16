@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * BusquedaGraficoSerie
  *
- * @ORM\Table(name="busqueda_grafico_serie", indexes={@ORM\Index(name="busqueda_grafico_idbusqueda_grafico", columns={"busqueda_grafico_idbusqueda_grafico"})})
+ * @ORM\Table(name="busqueda_grafico_serie", indexes={@ORM\Index(name="i_busqueda_gr_idbusqueda_gr", columns={"busqueda_gr_idbusqueda_grafico"})})
  * @ORM\Entity
  */
 class BusquedaGraficoSerie
@@ -24,7 +24,7 @@ class BusquedaGraficoSerie
     /**
      * @var integer
      *
-     * @ORM\Column(name="busqueda_grafico_idbusqueda_grafico", type="integer", nullable=false)
+     * @ORM\Column(name="busqueda_gr_idbusqueda_grafico", type="integer", nullable=false)
      */
     private $busquedaGraficoIdbusquedaGrafico;
 

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PantallaEncabezado
  *
- * @ORM\Table(name="pantalla_encabezado", indexes={@ORM\Index(name="fk_pantalla_encabezado_pantalla1_idx", columns={"fk_idpantalla"})})
+ * @ORM\Table(name="pantalla_encabezado", indexes={@ORM\Index(name="i_pantalla_encabezado_pant1", columns={"fk_idpantalla"})})
  * @ORM\Entity
  */
 class PantallaEncabezado

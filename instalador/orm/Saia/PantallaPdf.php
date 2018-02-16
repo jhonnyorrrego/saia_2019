@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PantallaPdf
  *
- * @ORM\Table(name="pantalla_pdf", indexes={@ORM\Index(name="fk_pantalla_pdf_pantalla1_idx", columns={"fk_idpantalla"})})
+ * @ORM\Table(name="pantalla_pdf", indexes={@ORM\Index(name="i_pantalla_pdf_pantalla1", columns={"fk_idpantalla"})})
  * @ORM\Entity
  */
 class PantallaPdf
