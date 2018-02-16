@@ -393,6 +393,7 @@ function generar_importar($datos){
 					if($existe_funcion['numcampos']){
 						$strsql="INSERT INTO funciones_formato_enlace(funciones_formato_fk,formato_idformato) VALUES(".$existe_funcion[0]["idfunciones_formato"].",".$idformato.")";
 						phpmkr_query($strsql);
+						$idfunciones_formato_enlace=phpmkr_insert_id();
 						$idfunciones_formato=$existe_funcion[0]['idfunciones_formato'];
 						
 					}else{
@@ -417,6 +418,10 @@ function generar_importar($datos){
 					}
 					else{
 					    $strsql="INSERT INTO funciones_formato_enlace(funciones_formato_fk,formato_idformato) VALUES(".$idfunciones_formato.",".$idformato.")";
+					    phpmkr_query($strsql);
+						$idfunciones_formato_enlace=phpmkr_insert_id();
+						$formato['exito']=0;
+					    $formato['mensaje'].=" <br>Inconvenientes al generar las idfunciones_formato_enlace: ".$strsql;
 					}
 					
 					
