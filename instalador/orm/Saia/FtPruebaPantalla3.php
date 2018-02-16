@@ -17,7 +17,7 @@ class FtPruebaPantalla3
      *
      * @ORM\Column(name="idft_prueba_pantalla3", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftPruebaPantalla3;
 

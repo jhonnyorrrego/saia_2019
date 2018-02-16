@@ -17,7 +17,7 @@ class FtMisionCalidad
      *
      * @ORM\Column(name="idft_mision_calidad", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftMisionCalidad;
 

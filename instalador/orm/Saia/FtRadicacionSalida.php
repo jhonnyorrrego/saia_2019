@@ -17,7 +17,7 @@ class FtRadicacionSalida
      *
      * @ORM\Column(name="idft_radicacion_salida", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftRadicacionSalida;
 

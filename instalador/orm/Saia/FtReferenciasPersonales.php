@@ -17,7 +17,7 @@ class FtReferenciasPersonales
      *
      * @ORM\Column(name="idft_referencias_personales", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftReferenciasPersonales;
 

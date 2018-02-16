@@ -17,7 +17,7 @@ class LogAccesoEditor
      *
      * @ORM\Column(name="idlog_acceso", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idlogAcceso;
 

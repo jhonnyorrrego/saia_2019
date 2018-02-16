@@ -17,7 +17,7 @@ class FtExperienciaLaboral
      *
      * @ORM\Column(name="idft_experiencia_laboral", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftExperienciaLaboral;
 

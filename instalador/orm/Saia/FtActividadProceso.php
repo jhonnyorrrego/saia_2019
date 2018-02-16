@@ -17,7 +17,7 @@ class FtActividadProceso
      *
      * @ORM\Column(name="idft_actividad_proceso", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftActividadProceso;
 

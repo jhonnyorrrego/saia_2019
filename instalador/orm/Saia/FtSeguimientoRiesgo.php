@@ -17,7 +17,7 @@ class FtSeguimientoRiesgo
      *
      * @ORM\Column(name="idft_seguimiento_riesgo", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftSeguimientoRiesgo;
 

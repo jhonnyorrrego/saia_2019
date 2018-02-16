@@ -17,7 +17,7 @@ class BusquedaGrafico
      *
      * @ORM\Column(name="idbusqueda_grafico", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idbusquedaGrafico;
 

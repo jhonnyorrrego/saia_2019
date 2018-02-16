@@ -17,7 +17,7 @@ class AnexosVersion
      *
      * @ORM\Column(name="idanexos_version", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idanexosVersion;
 

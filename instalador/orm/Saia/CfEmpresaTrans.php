@@ -17,7 +17,7 @@ class CfEmpresaTrans
      *
      * @ORM\Column(name="idcf_empresa_trans", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idcfEmpresaTrans;
 

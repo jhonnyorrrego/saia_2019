@@ -17,7 +17,7 @@ class FtObjetivosCalidad
      *
      * @ORM\Column(name="idft_objetivos_calidad", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftObjetivosCalidad;
 

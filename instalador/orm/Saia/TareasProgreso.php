@@ -17,7 +17,7 @@ class TareasProgreso
      *
      * @ORM\Column(name="idtareas_progreso", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idtareasProgreso;
 

@@ -17,7 +17,7 @@ class ReemplazoEquivalencia
      *
      * @ORM\Column(name="idreemplazo_equivalencia", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idreemplazoEquivalencia;
 

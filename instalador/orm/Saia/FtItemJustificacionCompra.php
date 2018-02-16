@@ -17,7 +17,7 @@ class FtItemJustificacionCompra
      *
      * @ORM\Column(name="idft_item_justificacion_compra", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftItemJustificacionCompra;
 

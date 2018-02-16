@@ -17,7 +17,7 @@ class FtFormacionAcademica
      *
      * @ORM\Column(name="idft_formacion_academica", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftFormacionAcademica;
 

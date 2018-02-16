@@ -17,7 +17,7 @@ class FormatoRuta
      *
      * @ORM\Column(name="idformato_ruta", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idformatoRuta;
 

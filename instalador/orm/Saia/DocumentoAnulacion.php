@@ -17,7 +17,7 @@ class DocumentoAnulacion
      *
      * @ORM\Column(name="iddocumento_anulacion", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $iddocumentoAnulacion;
 

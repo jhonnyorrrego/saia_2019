@@ -17,7 +17,7 @@ class FtSolicConfigura
      *
      * @ORM\Column(name="idft_solic_configura", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftSolicConfigura;
 

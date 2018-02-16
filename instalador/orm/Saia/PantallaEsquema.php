@@ -17,7 +17,7 @@ class PantallaEsquema
      *
      * @ORM\Column(name="idpantalla_esquema", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpantallaEsquema;
 

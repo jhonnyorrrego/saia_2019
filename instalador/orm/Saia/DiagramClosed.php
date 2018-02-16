@@ -17,7 +17,7 @@ class DiagramClosed
      *
      * @ORM\Column(name="iddiagram_closed", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $iddiagramClosed;
 

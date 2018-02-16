@@ -17,7 +17,7 @@ class FtMantenimientoLocativo
      *
      * @ORM\Column(name="idft_mantenimiento_locativo", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftMantenimientoLocativo;
 

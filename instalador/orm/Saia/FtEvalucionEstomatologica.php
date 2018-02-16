@@ -17,7 +17,7 @@ class FtEvalucionEstomatologica
      *
      * @ORM\Column(name="idft_evalucion_estomatologica", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftEvalucionEstomatologica;
 

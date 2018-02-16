@@ -17,7 +17,7 @@ class TareasListadoRecur
      *
      * @ORM\Column(name="idtareas_listado_recur", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idtareasListadoRecur;
 

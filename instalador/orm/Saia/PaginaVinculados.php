@@ -17,7 +17,7 @@ class PaginaVinculados
      *
      * @ORM\Column(name="idpagina_vinculados", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpaginaVinculados;
 

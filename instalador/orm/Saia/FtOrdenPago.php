@@ -17,7 +17,7 @@ class FtOrdenPago
      *
      * @ORM\Column(name="idft_orden_pago", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftOrdenPago;
 

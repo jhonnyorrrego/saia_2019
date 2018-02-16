@@ -17,7 +17,7 @@ class FtSolicitSoporte
      *
      * @ORM\Column(name="idft_solicit_soporte", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftSolicitSoporte;
 

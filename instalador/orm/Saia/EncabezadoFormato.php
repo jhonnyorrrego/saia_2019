@@ -17,7 +17,7 @@ class EncabezadoFormato
      *
      * @ORM\Column(name="idencabezado_formato", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idencabezadoFormato;
 

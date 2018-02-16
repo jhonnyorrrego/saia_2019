@@ -17,7 +17,7 @@ class FtAccesoriosVehiculo
      *
      * @ORM\Column(name="idft_accesorios_vehiculo", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftAccesoriosVehiculo;
 

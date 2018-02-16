@@ -17,7 +17,7 @@ class MunicipioExterior
      *
      * @ORM\Column(name="idmunicipio_exterior", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idmunicipioExterior;
 

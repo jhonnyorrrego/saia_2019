@@ -17,7 +17,7 @@ class Permiso
      *
      * @ORM\Column(name="idpermiso", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpermiso;
 

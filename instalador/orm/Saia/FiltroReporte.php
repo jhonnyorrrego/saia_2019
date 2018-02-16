@@ -17,7 +17,7 @@ class FiltroReporte
      *
      * @ORM\Column(name="idfiltro_reporte", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idfiltroReporte;
 

@@ -17,7 +17,7 @@ class FtControlCita
      *
      * @ORM\Column(name="idft_control_cita", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftControlCita;
 

@@ -17,7 +17,7 @@ class FtResumenPresupuestalTemp
      *
      * @ORM\Column(name="idft_resumen_presupuestal", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftResumenPresupuestal;
 

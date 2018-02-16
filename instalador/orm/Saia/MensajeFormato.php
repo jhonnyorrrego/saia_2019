@@ -17,7 +17,7 @@ class MensajeFormato
      *
      * @ORM\Column(name="idmensaje_formato", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idmensajeFormato;
 

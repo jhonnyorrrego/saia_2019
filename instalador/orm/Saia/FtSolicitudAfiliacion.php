@@ -17,7 +17,7 @@ class FtSolicitudAfiliacion
      *
      * @ORM\Column(name="idft_solicitud_afiliacion", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftSolicitudAfiliacion;
 

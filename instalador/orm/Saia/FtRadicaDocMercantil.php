@@ -17,7 +17,7 @@ class FtRadicaDocMercantil
      *
      * @ORM\Column(name="idft_radica_doc_mercantil", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftRadicaDocMercantil;
 

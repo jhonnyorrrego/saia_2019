@@ -17,7 +17,7 @@ class FtSolicitudVaciones
      *
      * @ORM\Column(name="idft_solicitud_vaciones", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftSolicitudVaciones;
 

@@ -17,7 +17,7 @@ class CfMaterial
      *
      * @ORM\Column(name="idcf_material", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idcfMaterial;
 

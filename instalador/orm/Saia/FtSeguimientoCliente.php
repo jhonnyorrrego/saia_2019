@@ -17,7 +17,7 @@ class FtSeguimientoCliente
      *
      * @ORM\Column(name="idft_seguimiento_cliente", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftSeguimientoCliente;
 

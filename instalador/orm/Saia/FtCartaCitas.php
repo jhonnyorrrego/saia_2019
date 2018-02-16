@@ -17,7 +17,7 @@ class FtCartaCitas
      *
      * @ORM\Column(name="idft_carta_citas", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftCartaCitas;
 

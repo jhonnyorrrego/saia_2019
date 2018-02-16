@@ -17,7 +17,7 @@ class PantallaFuncionExe
      *
      * @ORM\Column(name="idpantalla_funcion_exe", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpantallaFuncionExe;
 

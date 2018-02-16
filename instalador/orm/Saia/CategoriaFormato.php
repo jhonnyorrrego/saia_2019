@@ -17,7 +17,7 @@ class CategoriaFormato
      *
      * @ORM\Column(name="idcategoria_formato", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idcategoriaFormato;
 

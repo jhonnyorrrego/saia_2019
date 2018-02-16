@@ -17,7 +17,7 @@ class PantallaCampos
      *
      * @ORM\Column(name="idpantalla_campos", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpantallaCampos;
 

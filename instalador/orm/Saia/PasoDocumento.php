@@ -17,7 +17,7 @@ class PasoDocumento
      *
      * @ORM\Column(name="idpaso_documento", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpasoDocumento;
 

@@ -17,7 +17,7 @@ class BusquedaComponente
      *
      * @ORM\Column(name="idbusqueda_componente", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idbusquedaComponente;
 

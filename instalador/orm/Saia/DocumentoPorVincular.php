@@ -17,7 +17,7 @@ class DocumentoPorVincular
      *
      * @ORM\Column(name="iddocumento_por_vincular", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $iddocumentoPorVincular;
 

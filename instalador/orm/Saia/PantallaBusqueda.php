@@ -17,7 +17,7 @@ class PantallaBusqueda
      *
      * @ORM\Column(name="idpantalla_busqueda", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpantallaBusqueda;
 

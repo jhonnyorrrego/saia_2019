@@ -17,7 +17,7 @@ class FtDocumentosProyecto
      *
      * @ORM\Column(name="idft_documentos_proyecto", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftDocumentosProyecto;
 

@@ -17,7 +17,7 @@ class VersionDocumento
      *
      * @ORM\Column(name="idversion_documento", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idversionDocumento;
 

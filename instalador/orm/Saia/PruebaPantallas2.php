@@ -17,7 +17,7 @@ class PruebaPantallas2
      *
      * @ORM\Column(name="idprueba_pantallas2", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpruebaPantallas2;
 

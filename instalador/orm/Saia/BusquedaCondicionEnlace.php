@@ -17,7 +17,7 @@ class BusquedaCondicionEnlace
      *
      * @ORM\Column(name="idbusqueda_condicion_enlace", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idbusquedaCondicionEnlace;
 

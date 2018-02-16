@@ -17,7 +17,7 @@ class PantallaFuncParam
      *
      * @ORM\Column(name="idpantalla_func_param", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpantallaFuncParam;
 

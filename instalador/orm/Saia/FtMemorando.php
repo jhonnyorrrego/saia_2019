@@ -17,7 +17,7 @@ class FtMemorando
      *
      * @ORM\Column(name="idft_memorando", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftMemorando;
 

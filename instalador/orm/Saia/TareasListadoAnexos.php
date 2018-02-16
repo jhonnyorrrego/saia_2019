@@ -17,7 +17,7 @@ class TareasListadoAnexos
      *
      * @ORM\Column(name="idtareas_listado_anexos", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idtareasListadoAnexos;
 

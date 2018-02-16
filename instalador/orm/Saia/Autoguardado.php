@@ -17,7 +17,7 @@ class Autoguardado
      *
      * @ORM\Column(name="idautoguardado", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idautoguardado;
 

@@ -17,7 +17,7 @@ class FtFormaPagoVehiculo
      *
      * @ORM\Column(name="idft_forma_pago_vehiculo", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftFormaPagoVehiculo;
 

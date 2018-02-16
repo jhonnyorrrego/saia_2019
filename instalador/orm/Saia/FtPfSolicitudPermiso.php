@@ -17,7 +17,7 @@ class FtPfSolicitudPermiso
      *
      * @ORM\Column(name="idft_pf_solicitud_permiso", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftPfSolicitudPermiso;
 

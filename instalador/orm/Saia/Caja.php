@@ -17,7 +17,7 @@ class Caja
      *
      * @ORM\Column(name="idcaja", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idcaja;
 

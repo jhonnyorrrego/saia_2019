@@ -17,7 +17,7 @@ class FtConfirNegociVehiculo
      *
      * @ORM\Column(name="idft_confir_negoci_vehiculo", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftConfirNegociVehiculo;
 

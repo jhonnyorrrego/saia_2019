@@ -17,7 +17,7 @@ class DocumentoLimite
      *
      * @ORM\Column(name="iddocumento_limite", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $iddocumentoLimite;
 

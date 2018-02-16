@@ -17,7 +17,7 @@ class FtInventarioRetirados
      *
      * @ORM\Column(name="idft_inventario_retirados", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftInventarioRetirados;
 

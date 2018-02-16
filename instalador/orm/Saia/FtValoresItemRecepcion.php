@@ -17,7 +17,7 @@ class FtValoresItemRecepcion
      *
      * @ORM\Column(name="idft_valores_item_recepcion", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftValoresItemRecepcion;
 

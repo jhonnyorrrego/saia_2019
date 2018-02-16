@@ -17,7 +17,7 @@ class FuncionesFormatoAccion
      *
      * @ORM\Column(name="idfunciones_formato_accion", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idfuncionesFormatoAccion;
 

@@ -17,7 +17,7 @@ class FtSolicitudServicio
      *
      * @ORM\Column(name="idft_solicitud_servicio", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftSolicitudServicio;
 

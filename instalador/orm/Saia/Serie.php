@@ -17,7 +17,7 @@ class Serie
      *
      * @ORM\Column(name="idserie", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idserie;
 

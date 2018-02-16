@@ -17,7 +17,7 @@ class PrioridadDocumento
      *
      * @ORM\Column(name="idprioridad_documento", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idprioridadDocumento;
 

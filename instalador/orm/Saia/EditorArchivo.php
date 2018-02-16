@@ -17,7 +17,7 @@ class EditorArchivo
      *
      * @ORM\Column(name="ideditor_archivo", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $ideditorArchivo;
 

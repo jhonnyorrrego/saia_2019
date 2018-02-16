@@ -17,7 +17,7 @@ class PantallaRuta
      *
      * @ORM\Column(name="idpantalla_ruta", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpantallaRuta;
 

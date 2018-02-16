@@ -17,7 +17,7 @@ class DocumentoAccion
      *
      * @ORM\Column(name="iddocumento_accion", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $iddocumentoAccion;
 

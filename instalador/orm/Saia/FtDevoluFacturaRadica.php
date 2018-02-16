@@ -17,7 +17,7 @@ class FtDevoluFacturaRadica
      *
      * @ORM\Column(name="idft_devolu_factura_radica", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftDevoluFacturaRadica;
 

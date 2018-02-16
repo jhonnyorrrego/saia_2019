@@ -17,7 +17,7 @@ class BusquedaFiltro
      *
      * @ORM\Column(name="idbusqueda_filtro", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idbusquedaFiltro;
 

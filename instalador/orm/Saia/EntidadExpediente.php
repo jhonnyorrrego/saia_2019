@@ -17,7 +17,7 @@ class EntidadExpediente
      *
      * @ORM\Column(name="identidad_expediente", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $identidadExpediente;
 

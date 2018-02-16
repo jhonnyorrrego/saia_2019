@@ -17,7 +17,7 @@ class ReemplazoSaia
      *
      * @ORM\Column(name="idreemplazo_saia", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idreemplazoSaia;
 

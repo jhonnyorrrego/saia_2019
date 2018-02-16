@@ -17,7 +17,7 @@ class Departamento
      *
      * @ORM\Column(name="iddepartamento", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $iddepartamento;
 

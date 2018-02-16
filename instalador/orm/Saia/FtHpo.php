@@ -17,7 +17,7 @@ class FtHpo
      *
      * @ORM\Column(name="idft_hpo", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftHpo;
 

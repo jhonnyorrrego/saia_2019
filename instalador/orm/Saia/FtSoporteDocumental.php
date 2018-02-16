@@ -17,7 +17,7 @@ class FtSoporteDocumental
      *
      * @ORM\Column(name="idft_soporte_documental", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftSoporteDocumental;
 

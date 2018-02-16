@@ -17,7 +17,7 @@ class PasoInstanciaRastro
      *
      * @ORM\Column(name="idpaso_instancia_rastro", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpasoInstanciaRastro;
 

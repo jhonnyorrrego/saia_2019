@@ -17,7 +17,7 @@ class ListadoTareas
      *
      * @ORM\Column(name="idlistado_tareas", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idlistadoTareas;
 

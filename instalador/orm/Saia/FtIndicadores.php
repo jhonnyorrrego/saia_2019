@@ -17,7 +17,7 @@ class FtIndicadores
      *
      * @ORM\Column(name="idft_indicadores", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftIndicadores;
 

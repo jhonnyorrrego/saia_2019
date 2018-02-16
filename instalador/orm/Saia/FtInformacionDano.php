@@ -17,7 +17,7 @@ class FtInformacionDano
      *
      * @ORM\Column(name="idft_informacion_dano", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftInformacionDano;
 

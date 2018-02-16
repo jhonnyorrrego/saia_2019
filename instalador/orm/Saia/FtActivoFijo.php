@@ -17,7 +17,7 @@ class FtActivoFijo
      *
      * @ORM\Column(name="idft_activo_fijo", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftActivoFijo;
 

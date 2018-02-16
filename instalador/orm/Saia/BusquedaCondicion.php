@@ -17,7 +17,7 @@ class BusquedaCondicion
      *
      * @ORM\Column(name="idbusqueda_condicion", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idbusquedaCondicion;
 

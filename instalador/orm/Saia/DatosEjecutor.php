@@ -17,7 +17,7 @@ class DatosEjecutor
      *
      * @ORM\Column(name="iddatos_ejecutor", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $iddatosEjecutor;
 

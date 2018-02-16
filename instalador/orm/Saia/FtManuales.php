@@ -17,7 +17,7 @@ class FtManuales
      *
      * @ORM\Column(name="idft_manuales", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftManuales;
 

@@ -17,7 +17,7 @@ class FtTejidosPeriodontales
      *
      * @ORM\Column(name="idft_tejidos_periodontales", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftTejidosPeriodontales;
 

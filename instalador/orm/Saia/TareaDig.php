@@ -17,7 +17,7 @@ class TareaDig
      *
      * @ORM\Column(name="idtarea_dig", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idtareaDig;
 

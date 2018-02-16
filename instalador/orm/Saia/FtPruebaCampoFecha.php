@@ -17,7 +17,7 @@ class FtPruebaCampoFecha
      *
      * @ORM\Column(name="idft_prueba_campo_fecha", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftPruebaCampoFecha;
 

@@ -17,7 +17,7 @@ class PermisoAnexo
      *
      * @ORM\Column(name="idpermiso_anexo", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpermisoAnexo;
 

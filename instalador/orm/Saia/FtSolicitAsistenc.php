@@ -17,7 +17,7 @@ class FtSolicitAsistenc
      *
      * @ORM\Column(name="idft_solicit_asistenc", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftSolicitAsistenc;
 

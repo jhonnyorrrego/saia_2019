@@ -17,7 +17,7 @@ class SeguimientoPlanes
      *
      * @ORM\Column(name="idseguimiento_planes", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idseguimientoPlanes;
 

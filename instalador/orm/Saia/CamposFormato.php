@@ -17,7 +17,7 @@ class CamposFormato
      *
      * @ORM\Column(name="idcampos_formato", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idcamposFormato;
 

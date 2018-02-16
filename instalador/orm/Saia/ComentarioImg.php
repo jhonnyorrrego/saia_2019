@@ -17,7 +17,7 @@ class ComentarioImg
      *
      * @ORM\Column(name="idcomentario_img", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idcomentarioImg;
 

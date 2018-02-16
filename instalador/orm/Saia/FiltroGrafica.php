@@ -17,7 +17,7 @@ class FiltroGrafica
      *
      * @ORM\Column(name="idfiltro_grafica", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idfiltroGrafica;
 

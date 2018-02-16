@@ -17,7 +17,7 @@ class Configuracion
      *
      * @ORM\Column(name="idconfiguracion", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idconfiguracion;
 

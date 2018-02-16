@@ -17,7 +17,7 @@ class CalendarioSaia
      *
      * @ORM\Column(name="idcalendario_saia", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idcalendarioSaia;
 

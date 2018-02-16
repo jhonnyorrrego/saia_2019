@@ -17,7 +17,7 @@ class PermisoFormato
      *
      * @ORM\Column(name="idpermiso_formato", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpermisoFormato;
 

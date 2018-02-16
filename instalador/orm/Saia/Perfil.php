@@ -17,7 +17,7 @@ class Perfil
      *
      * @ORM\Column(name="idperfil", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idperfil;
 

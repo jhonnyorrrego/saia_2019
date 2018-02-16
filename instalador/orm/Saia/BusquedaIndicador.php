@@ -17,7 +17,7 @@ class BusquedaIndicador
      *
      * @ORM\Column(name="idbusqueda_indicador", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idbusquedaIndicador;
 

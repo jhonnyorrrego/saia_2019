@@ -17,7 +17,7 @@ class FtSeminarioCursos
      *
      * @ORM\Column(name="idft_seminario_cursos", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftSeminarioCursos;
 

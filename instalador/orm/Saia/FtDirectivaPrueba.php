@@ -17,7 +17,7 @@ class FtDirectivaPrueba
      *
      * @ORM\Column(name="idft_directiva_prueba", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftDirectivaPrueba;
 

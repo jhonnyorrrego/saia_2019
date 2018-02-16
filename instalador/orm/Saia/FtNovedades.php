@@ -17,7 +17,7 @@ class FtNovedades
      *
      * @ORM\Column(name="idft_novedades", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftNovedades;
 

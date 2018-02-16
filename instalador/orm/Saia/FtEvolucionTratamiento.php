@@ -17,7 +17,7 @@ class FtEvolucionTratamiento
      *
      * @ORM\Column(name="idft_evolucion_tratamiento", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftEvolucionTratamiento;
 

@@ -17,7 +17,7 @@ class PasoDevolucion
      *
      * @ORM\Column(name="idpaso_devolucion", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpasoDevolucion;
 

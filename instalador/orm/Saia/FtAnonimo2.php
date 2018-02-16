@@ -17,7 +17,7 @@ class FtAnonimo2
      *
      * @ORM\Column(name="idft_anonimo2", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftAnonimo2;
 

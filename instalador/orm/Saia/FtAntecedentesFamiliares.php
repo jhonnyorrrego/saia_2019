@@ -17,7 +17,7 @@ class FtAntecedentesFamiliares
      *
      * @ORM\Column(name="idft_antecedentes_familiares", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftAntecedentesFamiliares;
 

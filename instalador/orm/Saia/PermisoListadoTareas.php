@@ -17,7 +17,7 @@ class PermisoListadoTareas
      *
      * @ORM\Column(name="idpermiso_listado_tareas", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpermisoListadoTareas;
 

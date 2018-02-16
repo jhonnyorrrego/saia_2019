@@ -17,7 +17,7 @@ class FtActasDeReunion
      *
      * @ORM\Column(name="idft_actas_de_reunion", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftActasDeReunion;
 

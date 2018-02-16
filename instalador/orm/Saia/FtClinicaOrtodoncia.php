@@ -17,7 +17,7 @@ class FtClinicaOrtodoncia
      *
      * @ORM\Column(name="idft_clinica_ortodoncia", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftClinicaOrtodoncia;
 

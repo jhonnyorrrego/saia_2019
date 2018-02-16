@@ -17,7 +17,7 @@ class FtVerificaInformacion
      *
      * @ORM\Column(name="idft_verifica_informacion", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idftVerificaInformacion;
 
