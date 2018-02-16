@@ -181,7 +181,7 @@ class ImportDbCommand extends Command {
         $sm = $conn->getSchemaManager();
 
         $platf1 = $conn->getDatabasePlatform();
-        if ($dbParams['driver'] == 'pdo_mysql') {
+        if ($this->connectionParams['driver'] == 'pdo_mysql') {
             $this->registrar_mapeo_enum($platf1);
         }
 
