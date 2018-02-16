@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * EventoDespacho
  *
- * @ORM\Table(name="evento_despacho", indexes={@ORM\Index(name="documento_iddocumento", columns={"idft_destino_radicacion"})})
+ * @ORM\Table(name="evento_despacho", indexes={@ORM\Index(name="i_evt_desp_doc_iddocumento", columns={"idft_destino_radicacion"})})
  * @ORM\Entity
  */
 class EventoDespacho
