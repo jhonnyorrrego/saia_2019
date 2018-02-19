@@ -55,6 +55,8 @@ if ($_REQUEST['guardar'] == 1) {
 	die();
 }
 
+$ruta_aprob=0;
+
 if (@$_REQUEST["fecha"]) {
 	$fecha_tarea = date("Y-m-d", $_REQUEST["fecha"]);
 }

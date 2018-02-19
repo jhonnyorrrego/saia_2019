@@ -59,13 +59,20 @@ function ninguno_check(elemento,campo)
 </span></p>
 <?php 
 	$parametros_dependencia='';
+  
+  $tvd='';
+  if($_REQUEST['tvd']){
+    $tvd='&tvd=1';
+  }
+  if($_REQUEST['idnodopadre']){
+    $idnodopadre='&idnodopadre='.$_REQUEST['idnodopadre'];
+  }
+  
 	if(@$_REQUEST['from_dependencia']){
-		$tvd='';
-		if($_REQUEST['tvd']){
-			$tvd='&tvd=1';
-		}
-		$parametros_dependencia='?from_dependencia='.$_REQUEST['from_dependencia'].'&dependencia_serie='.$_REQUEST['dependencia_serie'].$tvd;
-	} 
+		$parametros_dependencia='?from_dependencia='.$_REQUEST['from_dependencia'].'&dependencia_serie='.$_REQUEST['dependencia_serie'].$tvd.$idnodopadre;
+	}else{
+	  $parametros_dependencia='?1=1'.$tvd.$idnodopadre;
+	}
 ?>
 <a href='serieadd.php<?php echo($parametros_dependencia); ?>' target='serielist'>Adicionar Nueva Serie</a>
 <form name="asignarserie_entidad" id="asignarserie_entidad" action="asignarserie.php" method="post" >
@@ -81,7 +88,14 @@ if(@$_REQUEST["filtrar_categoria"])
   echo "<input type='hidden' value='".$_REQUEST["filtrar_categoria"]."' name='filtrar_categoria' >";
 if(@$_REQUEST["pantalla"])
   echo "<input type='hidden' value='".$_REQUEST["pantalla"]."' name='pantalla' >";
-?><p>
+?>
+<?php if(@$_REQUEST['idnodopadre']){ ?>
+  <input type="hidden" name="idnodopadre_request" value="<?php echo($_REQUEST['idnodopadre']); ?>">
+<?php } ?>
+<?php if(@$_REQUEST['tvd']){ ?>
+  <input type="hidden" name="tvd" id="tvd" value="<?php echo($_REQUEST['tvd']); ?>">
+<?php } ?>   
+<p>
 <input type="hidden" name="serie_entidad" value="1">
 <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">	
  <tr>
@@ -90,13 +104,8 @@ if(@$_REQUEST["pantalla"])
     <div id="divserie"></div>        
 </td>
 </tr>
-<?php 
+<?php
 	if(@$_REQUEST['from_dependencia']){
-		$tvd='';
-		if($_REQUEST['tvd']){
-			$tvd='<input type="hidden" name="tvd" id="tvd" value="1">';
-		}
-		echo($tvd);		 
 	 ?>
 	 <input type="hidden" name="from_dependencia" id="from_dependencia" value="1">
 	  <input type="hidden" name="dependencia_serie" id="dependencia_serie" value="<?php echo(@$_REQUEST['dependencia_serie']); ?>">
@@ -104,6 +113,7 @@ if(@$_REQUEST["pantalla"])
 
 	 	<input type="hidden" class="required" name="entidad_identidad" id="entidad_identidad" value="<?php echo(@$_REQUEST['dependencia_serie']); ?>">
 	 	
+	 	<input type="hidden" name="idnodopadre_request" value="<?php echo(@$_REQUEST["idnodopadre"]); ?>">
 	 	
 		<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ACCION*</span></td>

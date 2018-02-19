@@ -74,8 +74,8 @@ if (@$_SESSION["LOGIN" . LLAVE_SAIA]) {
       }
     }
 	  
-		$tareas=busca_filtro_tabla("count(*) AS cant","tareas A","((".implode(" or ",$concat).")) and estado_tarea<>2 and ruta_aprob<>-1 and ((ruta_aprob>0 and estado_tarea in (3,4,5)) or(ruta_aprob>0 and estado_tarea<>-1))","",$conn);
-		$componente_tareas = busca_filtro_tabla("", "busqueda_componente A", "A.nombre='listado_tareas_pendientes'", "", $conn);
+		$tareas=busca_filtro_tabla("count(*) AS cant","tareas A","((".implode(" or ",$concat).")) and estado_tarea<>2 and ruta_aprob<>-1 and ((ruta_aprob>=0 and estado_tarea in (3,4,5)) or(ruta_aprob>=0 and estado_tarea<>-1))","",$conn);
+		$componente_tareas = busca_filtro_tabla("", "busqueda_componente A", "A.nombre='mis_tareas_pendientes'", "", $conn);
 	}
 
 	$per_mis_tareas_av = $permiso -> acceso_modulo_perfil("mis_tareas_avanzadas");
@@ -432,7 +432,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
             	?>
              <!-- TAREAS BASICAS -->
             
-            <li><i class="icon-tasks"></i><a href="pantallas/buscador_principal.php?nombre=listado_tareas&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_tareas[0]["idbusqueda_componente"]); ?>" nombre_componente="listado_tareas_pendientes">Mis Tareas <div class="pull-right"><span class="badge" id="listado_tareas_pendientes"><?php echo($tareas[0]["cant"]);?></span></div></a>
+            <li><i class="icon-tasks"></i><a href="pantallas/buscador_principal.php?nombre=listado_tareas&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_tareas[0]["idbusqueda_componente"]); ?>" nombre_componente="mis_tareas_pendientes">Mis Tareas <div class="pull-right"><span class="badge" id="mis_tareas_pendientes"><?php echo($tareas[0]["cant"]);?></span></div></a>
             </li>
 						<?php
             }
