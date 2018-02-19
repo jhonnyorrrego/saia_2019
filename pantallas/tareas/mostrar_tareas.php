@@ -33,7 +33,6 @@ switch ($tarea[0]['prioridad']) {
 }
 $busca_avances=busca_filtro_tabla("a.fecha,a.descripcion,a.estado,b.nombres,b.apellidos","tareas_avance a, vfuncionario_dc b","a.ejecutor=b.funcionario_codigo AND a.tareas_idtareas=".$_REQUEST['idtareas'],"GROUP BY a.fecha,a.descripcion,a.estado,b.nombres,b.apellidos ORDER BY fecha DESC",$conn);
 
-
 if((@$_REQUEST["iddoc"] || @$_REQUEST["key"])&& !@$_REQUEST["idpaso_documento"]){
 	if(!$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
 	include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
@@ -65,7 +64,7 @@ if((@$_REQUEST["iddoc"] || @$_REQUEST["key"])&& !@$_REQUEST["idpaso_documento"])
 		<div class="control-group">
 			<?php if(!isset($_REQUEST["idruta_aprob"])){
 				?>
-					<a class="previo_high" enlace="pantallas/tareas/adicionar_avance_tareas.php?idtareas=<?php echo($_REQUEST['idtareas']); ?>">Adicionar Avances</a>
+					<a class="previo_high" enlace="pantallas/tareas/adicionar_avance_tareas.php?iddoc=<?php echo ($_REQUEST['iddoc']); ?>&idtareas=<?php echo($_REQUEST['idtareas']); ?>">Adicionar Avances</a>
 				<?php
 			}
 				?>
@@ -128,7 +127,7 @@ if((@$_REQUEST["iddoc"] || @$_REQUEST["key"])&& !@$_REQUEST["idpaso_documento"])
 				top.hs.htmlExpand(this, { objectType: 'iframe',width: 350, height: 350,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
 			});
 			top.hs.Expander.prototype.onAfterClose = function() {
-				window.location = "pantallas/tareas/mostrar_tareas.php?idtareas=<?php echo($_REQUEST['idtareas']); ?>";
+				window.location = "pantallas/tareas/mostrar_tareas.php?iddoc=<?php echo ($_REQUEST['iddoc']); ?>&idtareas=<?php echo($_REQUEST['idtareas']); ?>";
 			}
 		});
 	</script>

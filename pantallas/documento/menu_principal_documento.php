@@ -352,8 +352,15 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
              &nbsp;<i class="icon-ok"></i>
                 <script type="text/javascript">
                   $(document).ready(function(){
+                  	var iddoc_ref=parseInt(<?php echo($iddoc); ?>);
+                  	if(window.parent.frames["arbol_formato"]!==undefined){
+											match_iddoc=window.parent.frames["arbol_formato"].location.href.match(/(iddoc)=([\d]+)/);
+											if(match_iddoc){
+												iddoc_ref=match_iddoc[2];
+											}
+                  	}
                     $("#aprobar_documento").click(function(){
-                      window.open("<?php echo($ruta_db_superior); ?>class_transferencia.php?iddoc=<?php echo($iddoc); ?>&funcion=aprobar","_self");
+                     window.open("<?php echo($ruta_db_superior); ?>class_transferencia.php?iddoc=<?php echo($iddoc); ?>&funcion=aprobar&anterior="+iddoc_ref,"_self");
                     });
                   });
                 </script>
@@ -587,10 +594,6 @@ function botones_administrativos_menu($iddoc){
 	include_once($ruta_db_superior."class_transferencia.php");
 	$texto=array();
 	$usuario_actual=$_SESSION["usuario_actual"];
-	$usuario_reemplazo=reemplazo($_SESSION["usuario_actual"],'reemplazo');
-	if($usuario_actual!=$usuario_reemplazo){
-		$usuario_actual=$usuario_reemplazo;
-	}
 
 	$responsable=busca_filtro_tabla("destino,estado,plantilla","buzon_entrada,documento","iddocumento=archivo_idarchivo and archivo_idarchivo=".$iddoc,"buzon_entrada.idtransferencia asc",$conn);
 

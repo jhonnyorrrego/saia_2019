@@ -41,6 +41,7 @@ if($_POST['desde_formato']){
         }
     }
     $sql_insert_recur="INSERT INTO tareas_listado_recur(".implode(", ", array_keys($recurrencia)).") VALUES(".implode(", ", array_values($recurrencia)).")";
+    
     phpmkr_query($sql_insert_recur);
     ?>
     <script>
