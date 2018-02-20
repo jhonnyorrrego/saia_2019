@@ -85,11 +85,11 @@ class Modulo
     private $codPadre;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="orden", type="boolean", nullable=false)
+     * @ORM\Column(name="orden", type="integer", nullable=false)
      */
-    private $orden = '1';
+    private $orden = 1;
 
     /**
      * @var string
@@ -364,7 +364,7 @@ class Modulo
     /**
      * Set orden
      *
-     * @param boolean $orden
+     * @param integer $orden
      *
      * @return Modulo
      */
@@ -378,7 +378,7 @@ class Modulo
     /**
      * Get orden
      *
-     * @return boolean
+     * @return integer
      */
     public function getOrden()
     {

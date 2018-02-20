@@ -24,7 +24,7 @@ class ConfigCaptureCommand extends Command {
      */
     protected $motores = array(
         "MySql" => "pdo_mysql",
-        "Oracle" => "pdo_oci",
+        "Oracle" => "oci8",
         "SqlServer" => "pdo_sqlsrv",
         "MSSql" => "pdo_sqlsrv",
         "Postgres" => "pdo_pgsql"

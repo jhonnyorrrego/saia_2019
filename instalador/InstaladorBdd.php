@@ -211,7 +211,7 @@ class ImportDbCommand extends Command {
             $this->registrar_mapeo_enum($platf1);
         }
 
-        if($this->connectionParams['driver'] == 'pdo_oci') {
+        if($this->connectionParams['driver'] == 'pdo_oci' || $this->connectionParams['driver'] == 'oci8') {
             $sth = $conn->prepare("ALTER SESSION SET NLS_TIME_FORMAT = 'HH24:MI:SS' NLS_DATE_FORMAT = 'YYYY-MM-DD HH24:MI:SS' NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS' NLS_TIMESTAMP_TZ_FORMAT = 'YYYY-MM-DD HH24:MI:SS TZH:TZM'");
             $sth->execute();
         }

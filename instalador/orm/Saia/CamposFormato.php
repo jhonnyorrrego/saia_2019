@@ -106,9 +106,9 @@ class CamposFormato
     private $etiquetaHtml = 'text';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="orden", type="boolean", nullable=false)
+     * @ORM\Column(name="orden", type="integer", nullable=false)
      */
     private $orden = '0';
 
@@ -443,7 +443,7 @@ class CamposFormato
     /**
      * Set orden
      *
-     * @param boolean $orden
+     * @param integer $orden
      *
      * @return CamposFormato
      */
@@ -457,7 +457,7 @@ class CamposFormato
     /**
      * Get orden
      *
-     * @return boolean
+     * @return integer
      */
     public function getOrden()
     {
