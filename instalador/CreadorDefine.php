@@ -27,8 +27,9 @@ class ConfigGenCommand extends Command {
     protected function execute(InputInterface $input, OutputInterface $output) {
         //if ($this->createInstallationDirectory($output) && $this->generateDefine($output)) {
         $output->writeln('<info>Creando archivo define.php</info>');
-        if ($this->generateDefine($output)) {
+        if ($this->generateDefine($output) && $this->renameInstallationDirectory($output)) {
                 $output->writeln('');
+                $output->writeln('<info>INSTALACION TERMINADA</info>');
                 $output->writeln('');
         } else {
             $output->writeln('<error>Ocurrió un error :\'-(</error>');
@@ -56,6 +57,23 @@ class ConfigGenCommand extends Command {
             if ($mkdir->isSuccessful()) {
                 $output->writeln(sprintf("<info>Directorio %s creado con exito</info>", $this->installDir));
 
+                return true;
+            }
+        }
+
+        $this->failingProcess = $mkdir;
+        return false;
+    }
+
+    protected function renameInstallationDirectory(OutputInterface $output) {
+        if (is_dir($this->installDir) && !is_dir("saia")) {
+
+            $output->writeln(sprintf("<info>Se renombrando el directorio %s </info>", $this->installDir));
+            $mkdir = new Process(sprintf("mv %s %s", $this->installDir, "saia"));
+            $mkdir->run();
+
+            if ($mkdir->isSuccessful()) {
+                $output->writeln(sprintf("<info>Directorio %s renombrado con exito</info>", $this->installDir));
                 return true;
             }
         }
@@ -95,7 +113,10 @@ class ConfigGenCommand extends Command {
             $skeleton = str_replace('{{' . $key . '}}', $value, $skeleton);
         }
 
-        $ruta_saia = basename($this->install_dir);
+        $ruta_saia = basename(basename($this->install_dir));
+        if(empty($ruta_saia)) {
+            $ruta_saia = basename($this->install_dir);
+        }
         if(empty($ruta_saia)) {
             $ruta_saia = $this->install_dir;
         }

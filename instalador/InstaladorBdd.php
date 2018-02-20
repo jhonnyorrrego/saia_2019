@@ -80,7 +80,7 @@ class ImportDbCommand extends Command {
         $this->crearVistas();
         $this->crearProcedimientos();
         $output->writeln('');
-        $output->writeln('<info>FIN DE LA INSTALACION</info>');
+        $output->writeln('<info>Configuración de bdd terminada</info>');
         $output->writeln('');
 
         // $databases = $sm->listDatabases();
@@ -208,6 +208,11 @@ class ImportDbCommand extends Command {
         if ($this->connectionParams['driver'] == 'pdo_mysql') {
             $platf1 = $conn->getDatabasePlatform();
             $this->registrar_mapeo_enum($platf1);
+        }
+
+        if($this->connectionParams['driver'] == 'pdo_oci') {
+            $sth = $conn->prepare("ALTER SESSION SET NLS_TIME_FORMAT = 'HH24:MI:SS' NLS_DATE_FORMAT = 'YYYY-MM-DD HH24:MI:SS' NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS' NLS_TIMESTAMP_TZ_FORMAT = 'YYYY-MM-DD HH24:MI:SS TZH:TZM'");
+            $sth->execute();
         }
 
         // $conn->beginTransaction();

@@ -59,12 +59,17 @@ class PostInstall {
             $event->getIO()->write("Error en la ejecución de " . $configurador->getName());
             return;
         }
+        $salida = self::ejecutar_comando($generadordb);
+        if($salida) {
+            $event->getIO()->write("Error en la ejecución de " . $generadordb->getName());
+            return;
+        }
+
         $salida = self::ejecutar_comando($instalador);
         if($salida) {
             $event->getIO()->write("Error en la ejecución de " . $instalador->getName());
             return;
         }
-        $salida = self::ejecutar_comando($generadordb);
 
         return $salida;
 
