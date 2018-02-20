@@ -66,6 +66,7 @@ class ImportDbCommand extends Command {
 
         date_default_timezone_set("America/Bogota");
 
+        /*$output->writeln('');
         $output->writeln('<info>Creando las tablas en base de datos</info>');
         $this->crearBaseDeDatos();
         $output->writeln('');
@@ -78,7 +79,7 @@ class ImportDbCommand extends Command {
 
         $output->writeln('<info>Creando vistas y procedimientos</info>');
         $this->crearVistas();
-        $this->crearProcedimientos();
+        $this->crearProcedimientos();*/
         $output->writeln('');
         $output->writeln('<info>Configuración de bdd terminada</info>');
         $output->writeln('');
