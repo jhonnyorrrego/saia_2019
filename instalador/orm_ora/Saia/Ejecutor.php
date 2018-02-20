@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Ejecutor
  *
- * @ORM\Table(name="EJECUTOR", indexes={@ORM\Index(name="ejecutor_nombre", columns={"NOMBRE"}), @ORM\Index(name="ejecutor_identificacion", columns={"IDENTIFICACION"})})
+ * @ORM\Table(name="ejecutor", indexes={@ORM\Index(name="i_ejecutor_identificaci", columns={"identificacion"}),@ORM\Index(name="nombre", columns={"nombre"})})
  * @ORM\Entity
  */
 class Ejecutor
@@ -15,33 +15,46 @@ class Ejecutor
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDEJECUTOR", type="integer", nullable=false)
+     * @ORM\Column(name="idejecutor", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="EJECUTOR_IDEJECUTOR_seq", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idejecutor;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="IDENTIFICACION", type="string", length=50, nullable=true)
-     */
-    private $identificacion;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="NOMBRE", type="string", length=255, nullable=true)
+     * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
     private $nombre;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="identificacion", type="string", length=50, nullable=true)
+     */
+    private $identificacion;
+
+    /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_INGRESO", type="date", nullable=true)
+     * @ORM\Column(name="fecha_ingreso", type="date", nullable=false)
      */
     private $fechaIngreso = 'SYSDATE';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="estado", type="integer", nullable=true)
+     */
+    private $estado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="tipo_ejecutor", type="integer", nullable=true)
+     */
+    private $tipoEjecutor = '1';
 
 
 }

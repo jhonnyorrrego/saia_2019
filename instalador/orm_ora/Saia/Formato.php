@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Formato
  *
- * @ORM\Table(name="FORMATO", indexes={@ORM\Index(name="formato_nombre", columns={"NOMBRE"})})
+ * @ORM\Table(name="formato")
  * @ORM\Entity
  */
 class Formato
@@ -15,278 +15,291 @@ class Formato
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDFORMATO", type="integer", nullable=false)
+     * @ORM\Column(name="idformato", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="FORMATO_IDFORMATO_seq", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idformato;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="NOMBRE", type="string", length=255, nullable=true)
+     * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
     private $nombre;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ETIQUETA", type="string", length=255, nullable=true)
+     * @ORM\Column(name="etiqueta", type="string", length=255, nullable=false)
      */
     private $etiqueta;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="COD_PADRE", type="integer", nullable=true)
+     * @ORM\Column(name="cod_padre", type="integer", nullable=false)
      */
-    private $codPadre = '0';
+    private $codPadre = 0;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="CONTADOR_IDCONTADOR", type="integer", nullable=true)
+     * @ORM\Column(name="contador_idcontador", type="integer", nullable=true)
      */
-    private $contadorIdcontador = '0';
+    private $contadorIdcontador = 0;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="NOMBRE_TABLA", type="string", length=255, nullable=true)
+     * @ORM\Column(name="nombre_tabla", type="string", length=255, nullable=false)
      */
     private $nombreTabla;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="RUTA_MOSTRAR", type="string", length=255, nullable=true)
+     * @ORM\Column(name="ruta_mostrar", type="string", length=255, nullable=false)
      */
     private $rutaMostrar;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="RUTA_EDITAR", type="string", length=255, nullable=true)
+     * @ORM\Column(name="ruta_editar", type="string", length=255, nullable=false)
      */
     private $rutaEditar;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="RUTA_ADICIONAR", type="string", length=255, nullable=true)
+     * @ORM\Column(name="ruta_adicionar", type="string", length=255, nullable=false)
      */
     private $rutaAdicionar;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="LIBRERIAS", type="string", length=255, nullable=true)
+     * @ORM\Column(name="librerias", type="string", length=255, nullable=true)
      */
-    private $librerias = 'null';
+    private $librerias;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ESTILOS", type="string", length=255, nullable=true)
+     * @ORM\Column(name="estilos", type="string", length=255, nullable=true)
      */
-    private $estilos = 'null';
+    private $estilos;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="JAVASCRIPT", type="string", length=255, nullable=true)
+     * @ORM\Column(name="javascript", type="string", length=255, nullable=true)
      */
-    private $javascript = 'null';
+    private $javascript;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ENCABEZADO", type="string", length=4000, nullable=true)
+     * @ORM\Column(name="encabezado", type="text", nullable=true)
      */
     private $encabezado;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="PIE_PAGINA", type="string", length=4000, nullable=true)
+     * @ORM\Column(name="cuerpo", type="text", nullable=true)
+     */
+    private $cuerpo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="pie_pagina", type="text", nullable=true)
      */
     private $piePagina;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="MARGENES", type="string", length=50, nullable=true)
+     * @ORM\Column(name="margenes", type="string", length=50, nullable=false)
      */
-    private $margenes = '30,30,30,30';
+    private $margenes;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ORIENTACION", type="string", length=50, nullable=true)
+     * @ORM\Column(name="orientacion", type="string", length=50, nullable=true)
      */
     private $orientacion;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="PAPEL", type="string", length=50, nullable=true)
+     * @ORM\Column(name="papel", type="string", length=50, nullable=true)
      */
-    private $papel = 'letter';
+    private $papel;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="EXPORTAR", type="string", length=255, nullable=true)
+     * @ORM\Column(name="exportar", type="string", length=255, nullable=true)
      */
-    private $exportar = 'pdf';
+    private $exportar;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FUNCIONARIO_IDFUNCIONARIO", type="integer", nullable=true)
+     * @ORM\Column(name="funcionario_idfuncionario", type="integer", nullable=false)
      */
-    private $funcionarioIdfuncionario = '0';
+    private $funcionarioIdfuncionario;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA", type="date", nullable=true)
+     * @ORM\Column(name="fecha", type="date", nullable=true)
      */
-    private $fecha = 'sysdate';
+    private $fecha = 'SYSDATE';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="MOSTRAR", type="string", length=1, nullable=true)
+     * @ORM\Column(name="mostrar", type="string", length=1, nullable=false)
      */
-    private $mostrar = '1';
+    private $mostrar;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="IMAGEN", type="string", length=1, nullable=true)
+     * @ORM\Column(name="imagen", type="string", length=255, nullable=true)
      */
     private $imagen;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="DETALLE", type="string", length=1, nullable=true)
+     * @ORM\Column(name="detalle", type="string", length=1, nullable=false)
      */
-    private $detalle = '0';
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="TIPO_EDICION", type="string", length=1, nullable=true)
-     */
-    private $tipoEdicion = '0';
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="ITEM", type="string", length=1, nullable=true)
-     */
-    private $item = '0';
+    private $detalle;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="SERIE_IDSERIE", type="integer", nullable=true)
+     * @ORM\Column(name="tipo_edicion", type="integer", nullable=false)
      */
-    private $serieIdserie = '0';
+    private $tipoEdicion;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="AYUDA", type="string", length=400, nullable=true)
+     * @ORM\Column(name="item", type="string", length=1, nullable=false)
+     */
+    private $item;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
+     */
+    private $serieIdserie;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ayuda", type="string", length=400, nullable=true)
      */
     private $ayuda;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="CUERPO", type="text", nullable=true)
+     * @ORM\Column(name="font_size", type="string", length=4, nullable=false)
      */
-    private $cuerpo = 'empty_clob()';
+    private $fontSize;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="FONT_SIZE", type="string", length=5, nullable=true)
-     */
-    private $fontSize = '12';
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="BANDERAS", type="string", length=255, nullable=true)
+     * @ORM\Column(name="banderas", type="string", length=255, nullable=false)
      */
     private $banderas = 'm';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="TIEMPO_AUTOGUARDADO", type="string", length=255, nullable=true)
+     * @ORM\Column(name="tiempo_autoguardado", type="string", length=20, nullable=false)
      */
-    private $tiempoAutoguardado = '300000';
+    private $tiempoAutoguardado;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="MOSTRAR_PDF", type="integer", nullable=true)
+     * @ORM\Column(name="mostrar_pdf", type="integer", nullable=false)
      */
-    private $mostrarPdf = '1';
+    private $mostrarPdf;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ORDEN", type="integer", nullable=true)
+     * @ORM\Column(name="orden", type="integer", nullable=true)
      */
-    private $orden = '0';
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="FK_CATEGORIA_FORMATO", type="string", length=255, nullable=true)
-     */
-    private $fkCategoriaFormato;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="FLUJO_IDFLUJO", type="string", length=255, nullable=true)
-     */
-    private $flujoIdflujo;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="FUNCION_PREDETERMINADA", type="string", length=255, nullable=true)
-     */
-    private $funcionPredeterminada;
+    private $orden;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ENTER2TAB", type="integer", nullable=true)
+     * @ORM\Column(name="enter2tab", type="integer", nullable=false)
      */
     private $enter2tab;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FIRMA_DIGITAL", type="integer", nullable=true)
+     * @ORM\Column(name="firma_digital", type="integer", nullable=false)
      */
     private $firmaDigital;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="fk_categoria_formato", type="string", length=255, nullable=true)
+     */
+    private $fkCategoriaFormato;
+
+    /**
      * @var integer
      *
-     * @ORM\Column(name="PERMITE_IMPRIMIR", type="integer", nullable=true)
+     * @ORM\Column(name="flujo_idflujo", type="integer", nullable=true)
      */
-    private $permiteImprimir = '0';
+    private $flujoIdflujo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="funcion_predeterminada", type="string", length=255, nullable=true)
+     */
+    private $funcionPredeterminada;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="paginar", type="string", length=1, nullable=true)
+     */
+    private $paginar = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="pertenece_nucleo", type="integer", nullable=true)
+     */
+    private $perteneceNucleo = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="permite_imprimir", type="integer", nullable=true)
+     */
+    private $permiteImprimir = '1';
 
 
 }

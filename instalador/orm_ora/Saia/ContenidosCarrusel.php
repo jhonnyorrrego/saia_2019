@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ContenidosCarrusel
  *
- * @ORM\Table(name="CONTENIDOS_CARRUSEL")
+ * @ORM\Table(name="contenidos_carrusel")
  * @ORM\Entity
  */
 class ContenidosCarrusel
@@ -15,75 +15,81 @@ class ContenidosCarrusel
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDCONTENIDOS_CARRUSEL", type="integer", nullable=false)
+     * @ORM\Column(name="idcontenidos_carrusel", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="CONTENIDOS_CARRUSEL_IDCONTENID", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idcontenidosCarrusel;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="CARRUSEL_IDCARRUSEL", type="integer", nullable=true)
+     * @ORM\Column(name="carrusel_idcarrusel", type="integer", nullable=false)
      */
     private $carruselIdcarrusel;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="CONTENIDO", type="text", nullable=true)
+     * @ORM\Column(name="contenido", type="text", nullable=true)
      */
-    private $contenido = 'empty_clob()';
+    private $contenido;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="NOMBRE", type="string", length=255, nullable=true)
+     * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
     private $nombre;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ORDEN", type="integer", nullable=true)
+     * @ORM\Column(name="orden", type="integer", nullable=false)
      */
     private $orden = '0';
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_INICIO", type="date", nullable=true)
+     * @ORM\Column(name="fecha_inicio", type="date", nullable=false)
      */
-    private $fechaInicio = 'sysdate';
+    private $fechaInicio;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_FIN", type="date", nullable=true)
+     * @ORM\Column(name="fecha_fin", type="date", nullable=false)
      */
-    private $fechaFin = 'sysdate';
+    private $fechaFin;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="PREVIEW", type="text", nullable=true)
+     * @ORM\Column(name="preview", type="text", nullable=true)
      */
     private $preview = 'empty_clob()';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ALIGN", type="string", length=50, nullable=true)
+     * @ORM\Column(name="imagen", type="string", length=255, nullable=true)
      */
-    private $align = 'left';
+    private $imagen;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="IMAGEN", type="text", nullable=true)
+     * @ORM\Column(name="miniatura", type="string", length=255, nullable=true)
      */
-    private $imagen = 'empty_clob()';
+    private $miniatura;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="align", type="string", length=20, nullable=true)
+     */
+    private $align = 'left';
 
 
 }

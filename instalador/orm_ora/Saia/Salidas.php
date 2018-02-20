@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Salidas
  *
- * @ORM\Table(name="SALIDAS")
+ * @ORM\Table(name="salidas", indexes={@ORM\Index(name="i_salidas_empresa", columns={"empresa"}), @ORM\Index(name="i_salidas_responsable", columns={"responsable"}), @ORM\Index(name="i_salidas_doc", columns={"documento_iddocumento"})})
  * @ORM\Entity
  */
 class Salidas
@@ -15,75 +15,81 @@ class Salidas
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDSALIDA", type="integer", nullable=false)
+     * @ORM\Column(name="idsalida", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="SALIDAS_IDSALIDA_seq", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idsalida;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="DOCUMENTO_IDDOCUMENTO", type="integer", nullable=true)
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
      */
     private $documentoIddocumento = '0';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="NUMERO_GUIA", type="string", length=50, nullable=true)
+     * @ORM\Column(name="numero_guia", type="string", length=255, nullable=true)
      */
     private $numeroGuia;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="EMPRESA", type="integer", nullable=true)
+     * @ORM\Column(name="empresa", type="integer", nullable=true)
      */
     private $empresa = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="RESPONSABLE", type="integer", nullable=true)
+     * @ORM\Column(name="responsable", type="integer", nullable=true)
      */
     private $responsable = '0';
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_DESPACHO", type="date", nullable=true)
-     */
-    private $fechaDespacho = 'SYSDATE';
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="TIPO_DESPACHO", type="string", length=255, nullable=true)
-     */
-    private $tipoDespacho;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="FECHA", type="date", nullable=true)
+     * @ORM\Column(name="fecha", type="date", nullable=true)
      */
     private $fecha;
 
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_despacho", type="date", nullable=true)
+     */
+    private $fechaDespacho;
+
+    /**
      * @var string
      *
-     * @ORM\Column(name="NOTAS", type="string", length=255, nullable=true)
+     * @ORM\Column(name="tipo_despacho", type="string", length=255, nullable=true)
+     */
+    private $tipoDespacho;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="notas", type="text", nullable=true)
      */
     private $notas;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="ESTADO", type="integer", nullable=true)
+     * @ORM\Column(name="estado", type="string", length=255, nullable=true)
      */
     private $estado = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="radicado_despacho", type="integer", nullable=true)
+     */
+    private $radicadoDespacho;
 
 
 }

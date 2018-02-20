@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Reemplazo
  *
- * @ORM\Table(name="REEMPLAZO")
+ * @ORM\Table(name="reemplazo", indexes={@ORM\Index(name="i_reemplazo_nuevo", columns={"nuevo"}), @ORM\Index(name="i_reemplazo_cargo_nuevo", columns={"cargo_nuevo"}), @ORM\Index(name="i_reemplazo_antiguo", columns={"antiguo"})})
  * @ORM\Entity
  */
 class Reemplazo
@@ -15,54 +15,81 @@ class Reemplazo
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDREEMPLAZO", type="integer", nullable=false)
+     * @ORM\Column(name="idreemplazo", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="REEMPLAZO_IDREEMPLAZO_seq", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idreemplazo;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ANTIGUO", type="integer", nullable=true)
+     * @ORM\Column(name="antiguo", type="integer", nullable=false)
      */
     private $antiguo = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="NUEVO", type="integer", nullable=true)
+     * @ORM\Column(name="nuevo", type="integer", nullable=false)
      */
     private $nuevo = '0';
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_INICIO", type="date", nullable=true)
+     * @ORM\Column(name="fecha_inicio", type="date", nullable=false)
      */
     private $fechaInicio = 'SYSDATE';
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_FIN", type="date", nullable=true)
+     * @ORM\Column(name="fecha_fin", type="date", nullable=true)
      */
     private $fechaFin;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="CARGO_NUEVO", type="integer", nullable=true)
+     * @ORM\Column(name="cargo_nuevo", type="integer", nullable=false)
      */
     private $cargoNuevo = '0';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ACTIVO", type="string", length=1, nullable=true)
+     * @ORM\Column(name="activo", type="string", length=1, nullable=false)
      */
     private $activo = '1';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="campos_texto", type="text", nullable=true)
+     */
+    private $camposTexto;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="campos_numero", type="text", nullable=true)
+     */
+    private $camposNumero;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tipo_ordenamiento", type="string", length=4, nullable=true)
+     */
+    private $tipoOrdenamiento;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="campo_ordenamiento", type="string", length=255, nullable=true)
+     */
+    private $campoOrdenamiento;
 
 
 }

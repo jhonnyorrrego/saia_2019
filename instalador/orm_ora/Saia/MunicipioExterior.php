@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * MunicipioExterior
  *
- * @ORM\Table(name="MUNICIPIO_EXTERIOR")
+ * @ORM\Table(name="municipio_exterior")
  * @ORM\Entity
  */
 class MunicipioExterior
@@ -15,26 +15,25 @@ class MunicipioExterior
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDMUNICIPIO_EXTERIOR", type="integer", nullable=false)
+     * @ORM\Column(name="idmunicipio_exterior", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="MUNICIPIO_EXTERIOR_IDMUNICIPIO", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idmunicipioExterior;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="NOMBRE", type="string", length=255, nullable=true)
+     * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
-    private $nombre = '';
+    private $nombre;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="DEPARTAMENTO_IDDEPARTAMENTO", type="integer", nullable=true)
+     * @ORM\Column(name="departamento_iddepartamento", type="integer", nullable=false)
      */
-    private $departamentoIddepartamento = '0';
+    private $departamentoIddepartamento;
 
 
 }

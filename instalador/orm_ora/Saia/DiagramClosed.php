@@ -2,74 +2,228 @@
 
 namespace Saia;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * DiagramClosed
- *
- * @ORM\Table(name="DIAGRAM_CLOSED")
- * @ORM\Entity
  */
 class DiagramClosed
 {
     /**
      * @var integer
-     *
-     * @ORM\Column(name="IDDIAGRAM_CLOSED", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="DIAGRAM_CLOSED_IDDIAGRAM_CLOSE", allocationSize=1, initialValue=1)
      */
     private $iddiagramClosed;
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="INSTANCE_IDDIAGRAM_INSTANCE", type="integer", nullable=true)
      */
-    private $instanceIddiagramInstance;
+    private $diagramIddiagramInstance;
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="DOCUMENTO_IDPASO_DOCUMENTO", type="integer", nullable=true)
      */
     private $documentoIdpasoDocumento;
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="FUNCIONARIO_CODIGO", type="integer", nullable=true)
      */
     private $funcionarioCodigo;
 
     /**
      * @var \DateTime
-     *
-     * @ORM\Column(name="FECHA", type="date", nullable=true)
      */
     private $fecha;
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="ESTADO_ORIGINAL", type="integer", nullable=true)
      */
     private $estadoOriginal;
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="ESTADO_FINAL", type="integer", nullable=true)
      */
     private $estadoFinal;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="OBSERVACIONES", type="text", nullable=true)
      */
     private $observaciones;
 
 
+    /**
+     * Get iddiagramClosed
+     *
+     * @return integer
+     */
+    public function getIddiagramClosed()
+    {
+        return $this->iddiagramClosed;
+    }
+
+    /**
+     * Set diagramIddiagramInstance
+     *
+     * @param integer $diagramIddiagramInstance
+     *
+     * @return DiagramClosed
+     */
+    public function setDiagramIddiagramInstance($diagramIddiagramInstance)
+    {
+        $this->diagramIddiagramInstance = $diagramIddiagramInstance;
+
+        return $this;
+    }
+
+    /**
+     * Get diagramIddiagramInstance
+     *
+     * @return integer
+     */
+    public function getDiagramIddiagramInstance()
+    {
+        return $this->diagramIddiagramInstance;
+    }
+
+    /**
+     * Set documentoIdpasoDocumento
+     *
+     * @param integer $documentoIdpasoDocumento
+     *
+     * @return DiagramClosed
+     */
+    public function setDocumentoIdpasoDocumento($documentoIdpasoDocumento)
+    {
+        $this->documentoIdpasoDocumento = $documentoIdpasoDocumento;
+
+        return $this;
+    }
+
+    /**
+     * Get documentoIdpasoDocumento
+     *
+     * @return integer
+     */
+    public function getDocumentoIdpasoDocumento()
+    {
+        return $this->documentoIdpasoDocumento;
+    }
+
+    /**
+     * Set funcionarioCodigo
+     *
+     * @param integer $funcionarioCodigo
+     *
+     * @return DiagramClosed
+     */
+    public function setFuncionarioCodigo($funcionarioCodigo)
+    {
+        $this->funcionarioCodigo = $funcionarioCodigo;
+
+        return $this;
+    }
+
+    /**
+     * Get funcionarioCodigo
+     *
+     * @return integer
+     */
+    public function getFuncionarioCodigo()
+    {
+        return $this->funcionarioCodigo;
+    }
+
+    /**
+     * Set fecha
+     *
+     * @param \DateTime $fecha
+     *
+     * @return DiagramClosed
+     */
+    public function setFecha($fecha)
+    {
+        $this->fecha = $fecha;
+
+        return $this;
+    }
+
+    /**
+     * Get fecha
+     *
+     * @return \DateTime
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * Set estadoOriginal
+     *
+     * @param integer $estadoOriginal
+     *
+     * @return DiagramClosed
+     */
+    public function setEstadoOriginal($estadoOriginal)
+    {
+        $this->estadoOriginal = $estadoOriginal;
+
+        return $this;
+    }
+
+    /**
+     * Get estadoOriginal
+     *
+     * @return integer
+     */
+    public function getEstadoOriginal()
+    {
+        return $this->estadoOriginal;
+    }
+
+    /**
+     * Set estadoFinal
+     *
+     * @param integer $estadoFinal
+     *
+     * @return DiagramClosed
+     */
+    public function setEstadoFinal($estadoFinal)
+    {
+        $this->estadoFinal = $estadoFinal;
+
+        return $this;
+    }
+
+    /**
+     * Get estadoFinal
+     *
+     * @return integer
+     */
+    public function getEstadoFinal()
+    {
+        return $this->estadoFinal;
+    }
+
+    /**
+     * Set observaciones
+     *
+     * @param string $observaciones
+     *
+     * @return DiagramClosed
+     */
+    public function setObservaciones($observaciones)
+    {
+        $this->observaciones = $observaciones;
+
+        return $this;
+    }
+
+    /**
+     * Get observaciones
+     *
+     * @return string
+     */
+    public function getObservaciones()
+    {
+        return $this->observaciones;
+    }
 }
+

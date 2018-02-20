@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * GraficoSerie
  *
- * @ORM\Table(name="GRAFICO_SERIE")
+ * @ORM\Table(name="grafico_serie")
  * @ORM\Entity
  */
 class GraficoSerie
@@ -15,38 +15,37 @@ class GraficoSerie
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDGRAFICO_SERIE", type="integer", nullable=false)
+     * @ORM\Column(name="idgrafico_serie", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="GRAFICO_SERIE_IDGRAFICO_SERIE_", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idgraficoSerie;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="CODIGO_SQL", type="string", length=4000, nullable=true)
+     * @ORM\Column(name="codigo_sql", type="text", nullable=false)
      */
     private $codigoSql;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="TIPO", type="string", length=255, nullable=true)
+     * @ORM\Column(name="tipo", type="string", length=255, nullable=false)
      */
     private $tipo;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="NOMBRE", type="string", length=255, nullable=true)
+     * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
     private $nombre;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="GRAFICO_IDGRAFICO", type="integer", nullable=true)
+     * @ORM\Column(name="grafico_idgrafico", type="integer", nullable=false)
      */
     private $graficoIdgrafico;
 

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * CaracteristicaP
  *
- * @ORM\Table(name="CARACTERISTICA_P")
+ * @ORM\Table(name="caracteristica_p")
  * @ORM\Entity
  */
 class CaracteristicaP
@@ -15,33 +15,34 @@ class CaracteristicaP
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDCARACTERISTICA_P", type="integer", nullable=false)
+     * @ORM\Column(name="idcaracteristica", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="CARACTERISTICA_P_IDCARACTERIST", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="NONE")
      */
-    private $idcaracteristicaP;
+    private $idcaracteristica;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="PANTALLA_IDPANTALLA", type="integer", nullable=true)
+     * @ORM\Column(name="pantalla_idpantalla", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
      */
     private $pantallaIdpantalla = '0';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="NOMBRE", type="string", length=30, nullable=true)
+     * @ORM\Column(name="nombre", type="string", length=30, nullable=false)
      */
-    private $nombre = ' ';
+    private $nombre;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="VALOR", type="string", length=200, nullable=true)
+     * @ORM\Column(name="valor", type="string", length=200, nullable=false)
      */
-    private $valor = ' ';
+    private $valor;
 
 
 }

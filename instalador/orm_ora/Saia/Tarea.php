@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Tarea
  *
- * @ORM\Table(name="TAREA")
+ * @ORM\Table(name="tarea")
  * @ORM\Entity
  */
 class Tarea
@@ -15,61 +15,53 @@ class Tarea
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDTAREA", type="integer", nullable=false)
+     * @ORM\Column(name="idtarea", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="TAREA_IDTAREA_seq", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idtarea;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="NOMBRE", type="string", length=250, nullable=true)
+     * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
     private $nombre;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA", type="date", nullable=true)
+     * @ORM\Column(name="fecha", type="date", nullable=true)
      */
-    private $fecha = 'SYSDATE';
+    private $fecha;
 
     /**
-     * @var \DateTime
+     * @var integer
      *
-     * @ORM\Column(name="RESPUESTA", type="date", nullable=true)
+     * @ORM\Column(name="tiempo_respuesta", type="integer", nullable=true)
      */
-    private $respuesta = 'TO_DATE(\'01-06-70 00:00:00\', \'dd-MM-yy hh24:mi:ss\')';
+    private $tiempoRespuesta = '0';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="DESCRIPCION", type="string", length=200, nullable=true)
+     * @ORM\Column(name="descripcion", type="string", length=300, nullable=true)
      */
     private $descripcion;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="REPROGRAMA", type="integer", nullable=true)
+     * @ORM\Column(name="reprograma", type="integer", nullable=true)
      */
     private $reprograma;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="TIPO_REPROGRAMA", type="string", length=30, nullable=true)
+     * @ORM\Column(name="tipo_reprograma", type="string", length=30, nullable=true)
      */
     private $tipoReprograma;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="TIEMPO_RESPUESTA", type="integer", nullable=true)
-     */
-    private $tiempoRespuesta;
 
 
 }

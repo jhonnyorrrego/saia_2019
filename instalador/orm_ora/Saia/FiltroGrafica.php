@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FiltroGrafica
  *
- * @ORM\Table(name="FILTRO_GRAFICA")
+ * @ORM\Table(name="filtro_grafica")
  * @ORM\Entity
  */
 class FiltroGrafica
@@ -15,52 +15,51 @@ class FiltroGrafica
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDFILTRO_GRAFICA", type="integer", nullable=false)
+     * @ORM\Column(name="idfiltro_grafica", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="FILTRO_GRAFICA_IDFILTRO_GRAFIC", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idfiltroGrafica;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="GRAFICA_IDGRAFICA", type="integer", nullable=true)
+     * @ORM\Column(name="grafica_idgrafica", type="integer", nullable=false)
      */
     private $graficaIdgrafica;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="CAMPO", type="string", length=255, nullable=true)
+     * @ORM\Column(name="campo", type="string", length=255, nullable=false)
      */
     private $campo;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ETIQUETA_HTML", type="string", length=255, nullable=true)
+     * @ORM\Column(name="etiqueta_html", type="string", length=255, nullable=false)
      */
     private $etiquetaHtml;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="CODIGO_SQL", type="string", length=2000, nullable=true)
+     * @ORM\Column(name="codigo_sql", type="text", nullable=true)
      */
     private $codigoSql;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ETIQUETA", type="string", length=255, nullable=true)
+     * @ORM\Column(name="etiqueta", type="string", length=255, nullable=false)
      */
     private $etiqueta;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="TIPO_DATO", type="string", length=255, nullable=true)
+     * @ORM\Column(name="tipo_dato", type="string", length=255, nullable=false)
      */
     private $tipoDato = 'varchar';
 

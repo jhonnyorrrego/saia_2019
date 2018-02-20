@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * EntidadExpediente
  *
- * @ORM\Table(name="ENTIDAD_EXPEDIENTE")
+ * @ORM\Table(name="entidad_expediente", indexes={@ORM\Index(name="i_expediente_idexpediente", columns={"expediente_idexpediente"}), @ORM\Index(name="i_ent_exp_llave_entidad", columns={"llave_entidad"})})
  * @ORM\Entity
  */
 class EntidadExpediente
@@ -15,52 +15,51 @@ class EntidadExpediente
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDENTIDAD_EXPEDIENTE", type="integer", nullable=false)
+     * @ORM\Column(name="identidad_expediente", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="ENTIDAD_EXPEDIENTE_IDENTIDAD_E", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $identidadExpediente;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ENTIDAD_IDENTIDAD", type="integer", nullable=true)
+     * @ORM\Column(name="entidad_identidad", type="integer", nullable=false)
      */
-    private $entidadIdentidad;
+    private $entidadIdentidad = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="EXPEDIENTE_IDEXPEDIENTE", type="integer", nullable=true)
+     * @ORM\Column(name="expediente_idexpediente", type="integer", nullable=false)
      */
-    private $expedienteIdexpediente;
+    private $expedienteIdexpediente = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="LLAVE_ENTIDAD", type="integer", nullable=true)
+     * @ORM\Column(name="llave_entidad", type="integer", nullable=false)
      */
-    private $llaveEntidad;
+    private $llaveEntidad = '0';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ESTADO", type="string", length=255, nullable=true)
+     * @ORM\Column(name="estado", type="string", length=255, nullable=false)
      */
-    private $estado;
+    private $estado = '1';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="PERMISO", type="string", length=255, nullable=true)
+     * @ORM\Column(name="permiso", type="string", length=255, nullable=true)
      */
     private $permiso;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA", type="date", nullable=true)
+     * @ORM\Column(name="fecha", type="date", nullable=true)
      */
     private $fecha;
 

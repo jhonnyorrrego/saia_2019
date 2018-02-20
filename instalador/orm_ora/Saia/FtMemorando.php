@@ -2,151 +2,547 @@
 
 namespace Saia;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * FtMemorando
- *
- * @ORM\Table(name="FT_MEMORANDO", indexes={@ORM\Index(name="i_memorando_fi", columns={"FIRMA"}), @ORM\Index(name="ft_memorando_doc", columns={"DOCUMENTO_IDDOCUMENTO"}), @ORM\Index(name="i_memorando_en", columns={"ENCABEZADO"})})
- * @ORM\Entity
  */
 class FtMemorando
 {
     /**
      * @var integer
-     *
-     * @ORM\Column(name="IDFT_MEMORANDO", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="FT_MEMORANDO_IDFT_MEMORANDO_se", allocationSize=1, initialValue=1)
      */
     private $idftMemorando;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="DOCUMENTO_IDDOCUMENTO", type="integer", nullable=false)
+     * @var \DateTime
      */
-    private $documentoIddocumento = '0';
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="ORIGEN", type="string", length=255, nullable=true)
-     */
-    private $origen = '0';
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="DESTINO", type="string", length=2000, nullable=false)
-     */
-    private $destino;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="ASUNTO", type="string", length=3999, nullable=false)
-     */
-    private $asunto;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="CONTENIDO", type="text", nullable=false)
-     */
-    private $contenido = 'empty_clob()';
+    private $fechaMemorando;
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="FIRMA", type="integer", nullable=false)
-     */
-    private $firma = '1';
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="ENCABEZADO", type="integer", nullable=false)
-     */
-    private $encabezado = '1';
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="DEPENDENCIA", type="integer", nullable=true)
      */
     private $dependencia;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="DESPEDIDA", type="string", length=255, nullable=true)
      */
-    private $despedida;
+    private $destino;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="INICIALES", type="string", length=255, nullable=true)
-     */
-    private $iniciales;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="COPIA", type="string", length=2000, nullable=true)
      */
     private $copia;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="ANEXOS_FISICOS", type="string", length=2000, nullable=true)
+     */
+    private $asunto;
+
+    /**
+     * @var string
+     */
+    private $contenido;
+
+    /**
+     * @var string
+     */
+    private $despedida;
+
+    /**
+     * @var string
+     */
+    private $iniciales;
+
+    /**
+     * @var string
      */
     private $anexosFisicos;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="FECHA_MEMORANDO", type="date", nullable=false)
+     * @var integer
      */
-    private $fechaMemorando = 'SYSDATE';
+    private $serieIdserie;
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="SERIE_IDSERIE", type="integer", nullable=true)
      */
-    private $serieIdserie = '441';
+    private $documentoIddocumento;
+
+    /**
+     * @var integer
+     */
+    private $encabezado;
+
+    /**
+     * @var integer
+     */
+    private $firma;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="ANEXOS", type="string", length=255, nullable=true)
      */
     private $anexos;
 
     /**
+     * @var string
+     */
+    private $origen;
+
+    /**
      * @var integer
-     *
-     * @ORM\Column(name="TIPO_ORIGEN", type="integer", nullable=true)
      */
-    private $tipoOrigen = '5';
+    private $estadoDocumento;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="TIPO_CODIGO", type="string", length=5, nullable=true)
      */
-    private $tipoCodigo = '2';
+    private $expedienteSerie;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="OTRO_ANEXO_FISICO", type="string", length=3999, nullable=true)
+     * @var integer
      */
-    private $otroAnexoFisico;
+    private $emailAprobar;
 
 
+    /**
+     * Get idftMemorando
+     *
+     * @return integer
+     */
+    public function getIdftMemorando()
+    {
+        return $this->idftMemorando;
+    }
+
+    /**
+     * Set fechaMemorando
+     *
+     * @param \DateTime $fechaMemorando
+     *
+     * @return FtMemorando
+     */
+    public function setFechaMemorando($fechaMemorando)
+    {
+        $this->fechaMemorando = $fechaMemorando;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaMemorando
+     *
+     * @return \DateTime
+     */
+    public function getFechaMemorando()
+    {
+        return $this->fechaMemorando;
+    }
+
+    /**
+     * Set dependencia
+     *
+     * @param integer $dependencia
+     *
+     * @return FtMemorando
+     */
+    public function setDependencia($dependencia)
+    {
+        $this->dependencia = $dependencia;
+
+        return $this;
+    }
+
+    /**
+     * Get dependencia
+     *
+     * @return integer
+     */
+    public function getDependencia()
+    {
+        return $this->dependencia;
+    }
+
+    /**
+     * Set destino
+     *
+     * @param string $destino
+     *
+     * @return FtMemorando
+     */
+    public function setDestino($destino)
+    {
+        $this->destino = $destino;
+
+        return $this;
+    }
+
+    /**
+     * Get destino
+     *
+     * @return string
+     */
+    public function getDestino()
+    {
+        return $this->destino;
+    }
+
+    /**
+     * Set copia
+     *
+     * @param string $copia
+     *
+     * @return FtMemorando
+     */
+    public function setCopia($copia)
+    {
+        $this->copia = $copia;
+
+        return $this;
+    }
+
+    /**
+     * Get copia
+     *
+     * @return string
+     */
+    public function getCopia()
+    {
+        return $this->copia;
+    }
+
+    /**
+     * Set asunto
+     *
+     * @param string $asunto
+     *
+     * @return FtMemorando
+     */
+    public function setAsunto($asunto)
+    {
+        $this->asunto = $asunto;
+
+        return $this;
+    }
+
+    /**
+     * Get asunto
+     *
+     * @return string
+     */
+    public function getAsunto()
+    {
+        return $this->asunto;
+    }
+
+    /**
+     * Set contenido
+     *
+     * @param string $contenido
+     *
+     * @return FtMemorando
+     */
+    public function setContenido($contenido)
+    {
+        $this->contenido = $contenido;
+
+        return $this;
+    }
+
+    /**
+     * Get contenido
+     *
+     * @return string
+     */
+    public function getContenido()
+    {
+        return $this->contenido;
+    }
+
+    /**
+     * Set despedida
+     *
+     * @param string $despedida
+     *
+     * @return FtMemorando
+     */
+    public function setDespedida($despedida)
+    {
+        $this->despedida = $despedida;
+
+        return $this;
+    }
+
+    /**
+     * Get despedida
+     *
+     * @return string
+     */
+    public function getDespedida()
+    {
+        return $this->despedida;
+    }
+
+    /**
+     * Set iniciales
+     *
+     * @param string $iniciales
+     *
+     * @return FtMemorando
+     */
+    public function setIniciales($iniciales)
+    {
+        $this->iniciales = $iniciales;
+
+        return $this;
+    }
+
+    /**
+     * Get iniciales
+     *
+     * @return string
+     */
+    public function getIniciales()
+    {
+        return $this->iniciales;
+    }
+
+    /**
+     * Set anexosFisicos
+     *
+     * @param string $anexosFisicos
+     *
+     * @return FtMemorando
+     */
+    public function setAnexosFisicos($anexosFisicos)
+    {
+        $this->anexosFisicos = $anexosFisicos;
+
+        return $this;
+    }
+
+    /**
+     * Get anexosFisicos
+     *
+     * @return string
+     */
+    public function getAnexosFisicos()
+    {
+        return $this->anexosFisicos;
+    }
+
+    /**
+     * Set serieIdserie
+     *
+     * @param integer $serieIdserie
+     *
+     * @return FtMemorando
+     */
+    public function setSerieIdserie($serieIdserie)
+    {
+        $this->serieIdserie = $serieIdserie;
+
+        return $this;
+    }
+
+    /**
+     * Get serieIdserie
+     *
+     * @return integer
+     */
+    public function getSerieIdserie()
+    {
+        return $this->serieIdserie;
+    }
+
+    /**
+     * Set documentoIddocumento
+     *
+     * @param integer $documentoIddocumento
+     *
+     * @return FtMemorando
+     */
+    public function setDocumentoIddocumento($documentoIddocumento)
+    {
+        $this->documentoIddocumento = $documentoIddocumento;
+
+        return $this;
+    }
+
+    /**
+     * Get documentoIddocumento
+     *
+     * @return integer
+     */
+    public function getDocumentoIddocumento()
+    {
+        return $this->documentoIddocumento;
+    }
+
+    /**
+     * Set encabezado
+     *
+     * @param integer $encabezado
+     *
+     * @return FtMemorando
+     */
+    public function setEncabezado($encabezado)
+    {
+        $this->encabezado = $encabezado;
+
+        return $this;
+    }
+
+    /**
+     * Get encabezado
+     *
+     * @return integer
+     */
+    public function getEncabezado()
+    {
+        return $this->encabezado;
+    }
+
+    /**
+     * Set firma
+     *
+     * @param integer $firma
+     *
+     * @return FtMemorando
+     */
+    public function setFirma($firma)
+    {
+        $this->firma = $firma;
+
+        return $this;
+    }
+
+    /**
+     * Get firma
+     *
+     * @return integer
+     */
+    public function getFirma()
+    {
+        return $this->firma;
+    }
+
+    /**
+     * Set anexos
+     *
+     * @param string $anexos
+     *
+     * @return FtMemorando
+     */
+    public function setAnexos($anexos)
+    {
+        $this->anexos = $anexos;
+
+        return $this;
+    }
+
+    /**
+     * Get anexos
+     *
+     * @return string
+     */
+    public function getAnexos()
+    {
+        return $this->anexos;
+    }
+
+    /**
+     * Set origen
+     *
+     * @param string $origen
+     *
+     * @return FtMemorando
+     */
+    public function setOrigen($origen)
+    {
+        $this->origen = $origen;
+
+        return $this;
+    }
+
+    /**
+     * Get origen
+     *
+     * @return string
+     */
+    public function getOrigen()
+    {
+        return $this->origen;
+    }
+
+    /**
+     * Set estadoDocumento
+     *
+     * @param integer $estadoDocumento
+     *
+     * @return FtMemorando
+     */
+    public function setEstadoDocumento($estadoDocumento)
+    {
+        $this->estadoDocumento = $estadoDocumento;
+
+        return $this;
+    }
+
+    /**
+     * Get estadoDocumento
+     *
+     * @return integer
+     */
+    public function getEstadoDocumento()
+    {
+        return $this->estadoDocumento;
+    }
+
+    /**
+     * Set expedienteSerie
+     *
+     * @param string $expedienteSerie
+     *
+     * @return FtMemorando
+     */
+    public function setExpedienteSerie($expedienteSerie)
+    {
+        $this->expedienteSerie = $expedienteSerie;
+
+        return $this;
+    }
+
+    /**
+     * Get expedienteSerie
+     *
+     * @return string
+     */
+    public function getExpedienteSerie()
+    {
+        return $this->expedienteSerie;
+    }
+
+    /**
+     * Set emailAprobar
+     *
+     * @param integer $emailAprobar
+     *
+     * @return FtMemorando
+     */
+    public function setEmailAprobar($emailAprobar)
+    {
+        $this->emailAprobar = $emailAprobar;
+
+        return $this;
+    }
+
+    /**
+     * Get emailAprobar
+     *
+     * @return integer
+     */
+    public function getEmailAprobar()
+    {
+        return $this->emailAprobar;
+    }
 }
+

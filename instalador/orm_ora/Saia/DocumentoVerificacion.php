@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * DocumentoVerificacion
  *
- * @ORM\Table(name="DOCUMENTO_VERIFICACION", indexes={@ORM\Index(name="documento_verificacion_fecha", columns={"FECHA"}), @ORM\Index(name="documento_verificacion_fun", columns={"FUNCIONARIO_IDFUNCIONARIO"}), @ORM\Index(name="documento_verificacion_doc", columns={"DOCUMENTO_IDDOCUMENTO"})})
+ * @ORM\Table(name="documento_verificacion", indexes={@ORM\Index(name="i_documento_verificacion_doc", columns={"documento_iddocumento"})})
  * @ORM\Entity
  */
 class DocumentoVerificacion
@@ -15,45 +15,44 @@ class DocumentoVerificacion
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDDOCUMENTO_VERIFICACION", type="integer", nullable=false)
+     * @ORM\Column(name="iddocumento_verificacion", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="DOCUMENTO_VERIFICACION_IDDOCUM", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $iddocumentoVerificacion;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="DOCUMENTO_IDDOCUMENTO", type="integer", nullable=false)
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=true)
      */
     private $documentoIddocumento;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FUNCIONARIO_IDFUNCIONARIO", type="integer", nullable=false)
+     * @ORM\Column(name="funcionario_idfuncionario", type="integer", nullable=true)
      */
     private $funcionarioIdfuncionario;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA", type="date", nullable=false)
+     * @ORM\Column(name="fecha", type="date", nullable=true)
      */
-    private $fecha;
+    private $fecha = 'SYSDATE';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="VERIFICACION", type="string", length=255, nullable=true)
+     * @ORM\Column(name="verificacion", type="string", length=255, nullable=true)
      */
     private $verificacion;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="RUTA_QR", type="string", length=255, nullable=false)
+     * @ORM\Column(name="ruta_qr", type="string", length=255, nullable=true)
      */
     private $rutaQr;
 

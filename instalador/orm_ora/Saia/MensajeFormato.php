@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * MensajeFormato
  *
- * @ORM\Table(name="MENSAJE_FORMATO")
+ * @ORM\Table(name="mensaje_formato")
  * @ORM\Entity
  */
 class MensajeFormato
@@ -15,31 +15,30 @@ class MensajeFormato
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDMENSAJE_FORMATO", type="integer", nullable=false)
+     * @ORM\Column(name="idmensaje_formato", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="MENSAJE_FORMATO_IDMENSAJE_FORM", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idmensajeFormato;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FORMATO_IDFORMATO", type="integer", nullable=true)
+     * @ORM\Column(name="formato_idformato", type="integer", nullable=false)
      */
     private $formatoIdformato;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="CAMPO_MENSAJE", type="string", length=255, nullable=true)
+     * @ORM\Column(name="campo_mensaje", type="string", length=255, nullable=false)
      */
     private $campoMensaje;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="CAMPO_FORMATO", type="string", length=255, nullable=true)
+     * @ORM\Column(name="campo_formato", type="string", length=255, nullable=false)
      */
     private $campoFormato;
 

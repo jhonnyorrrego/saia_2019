@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Expediente
  *
- * @ORM\Table(name="EXPEDIENTE")
+ * @ORM\Table(name="expediente", indexes={@ORM\Index(name="i_expediente_cod_padre", columns={"cod_padre"}), @ORM\Index(name="i_expediente_funcionario_", columns={"funcionario_cierre"}), @ORM\Index(name="i_expediente_fk_idcaja", columns={"fk_idcaja"}), @ORM\Index(name="i_exp_serie_idserie", columns={"serie_idserie"})})
  * @ORM\Entity
  */
 class Expediente
@@ -15,187 +15,242 @@ class Expediente
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDEXPEDIENTE", type="integer", nullable=false)
+     * @ORM\Column(name="idexpediente", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="EXPEDIENTE_IDEXPEDIENTE_seq", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idexpediente;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="NOMBRE", type="string", length=255, nullable=true)
+     * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
     private $nombre;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA", type="date", nullable=true)
+     * @ORM\Column(name="fecha", type="date", nullable=false)
      */
-    private $fecha;
+    private $fecha = 'SYSDATE';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="DESCRIPCION", type="text", nullable=true)
+     * @ORM\Column(name="descripcion", type="text", nullable=true)
      */
     private $descripcion = 'empty_clob()';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="CODIGO", type="string", length=255, nullable=true)
+     * @ORM\Column(name="codigo", type="string", length=255, nullable=true)
      */
     private $codigo;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="COD_PADRE", type="integer", nullable=true)
+     * @ORM\Column(name="cod_padre", type="integer", nullable=true)
      */
     private $codPadre;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="PROPIETARIO", type="string", length=255, nullable=true)
-     */
-    private $propietario;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="VER_TODOS", type="string", length=255, nullable=true)
-     */
-    private $verTodos;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="EDITAR_TODOS", type="string", length=255, nullable=true)
-     */
-    private $editarTodos;
-
-    /**
      * @var integer
      *
-     * @ORM\Column(name="FK_IDCAJA", type="integer", nullable=true)
+     * @ORM\Column(name="fk_idcaja", type="integer", nullable=true)
      */
     private $fkIdcaja = '0';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="SERIE_IDSERIE", type="string", length=255, nullable=true)
+     * @ORM\Column(name="propietario", type="string", length=255, nullable=true)
+     */
+    private $propietario;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="ver_todos", type="integer", nullable=true)
+     */
+    private $verTodos;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="editar_todos", type="integer", nullable=true)
+     */
+    private $editarTodos;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="serie_idserie", type="string", length=255, nullable=true)
      */
     private $serieIdserie;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="COD_ARBOL", type="string", length=255, nullable=true)
+     * @ORM\Column(name="cod_arbol", type="string", length=255, nullable=true)
      */
     private $codArbol;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="NO_TOMO", type="string", length=255, nullable=true)
-     */
-    private $noTomo;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="CODIGO_NUMERO", type="string", length=255, nullable=true)
+     * @ORM\Column(name="codigo_numero", type="string", length=255, nullable=true)
      */
     private $codigoNumero;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="FONDO", type="string", length=255, nullable=true)
+     * @ORM\Column(name="fondo", type="string", length=255, nullable=true)
      */
     private $fondo;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="PROCESO", type="string", length=255, nullable=true)
+     * @ORM\Column(name="proceso", type="string", length=255, nullable=true)
      */
     private $proceso;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_EXTREMA_I", type="date", nullable=true)
+     * @ORM\Column(name="fecha_extrema_i", type="date", nullable=true)
      */
     private $fechaExtremaI;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_EXTREMA_F", type="date", nullable=true)
+     * @ORM\Column(name="fecha_extrema_f", type="date", nullable=true)
      */
     private $fechaExtremaF;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="NO_UNIDAD_CONSERVACION", type="string", length=255, nullable=true)
+     * @ORM\Column(name="no_unidad_conservacion", type="string", length=255, nullable=true)
      */
     private $noUnidadConservacion;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="NO_FOLIOS", type="string", length=255, nullable=true)
+     * @ORM\Column(name="no_folios", type="string", length=255, nullable=true)
      */
     private $noFolios;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="NO_CARPETA", type="string", length=255, nullable=true)
+     * @ORM\Column(name="no_carpeta", type="string", length=255, nullable=true)
      */
     private $noCarpeta;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="SOPORTE", type="integer", nullable=true)
+     * @ORM\Column(name="soporte", type="integer", nullable=true)
      */
     private $soporte;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FRECUENCIA_CONSULTA", type="integer", nullable=true)
+     * @ORM\Column(name="frecuencia_consulta", type="integer", nullable=true)
      */
     private $frecuenciaConsulta;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="UBICACION", type="integer", nullable=true)
+     * @ORM\Column(name="ubicacion", type="integer", nullable=true)
      */
     private $ubicacion;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="UNIDAD_ADMIN", type="string", length=255, nullable=true)
+     * @ORM\Column(name="unidad_admin", type="string", length=255, nullable=true)
      */
     private $unidadAdmin;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="RUTA_QR", type="string", length=255, nullable=true)
+     * @ORM\Column(name="ruta_qr", type="string", length=255, nullable=true)
      */
     private $rutaQr;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="estado_archivo", type="integer", nullable=true)
+     */
+    private $estadoArchivo = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="estado_cierre", type="integer", nullable=true)
+     */
+    private $estadoCierre = '1';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_cierre", type="date", nullable=true)
+     */
+    private $fechaCierre;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="funcionario_cierre", type="integer", nullable=true)
+     */
+    private $funcionarioCierre;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="prox_estado_archivo", type="integer", nullable=true)
+     */
+    private $proxEstadoArchivo;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="tomo_padre", type="integer", nullable=true)
+     */
+    private $tomoPadre;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="tomo_no", type="integer", nullable=true)
+     */
+    private $tomoNo = '1';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="agrupador", type="integer", nullable=true)
+     */
+    private $agrupador = '0';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="notas_transf", type="text", nullable=true)
+     */
+    private $notasTransf = 'empty_clob()';
 
 
 }

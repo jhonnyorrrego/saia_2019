@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PasoEnlace
  *
- * @ORM\Table(name="PASO_ENLACE")
+ * @ORM\Table(name="paso_enlace", indexes={@ORM\Index(name="i_paso_enlace_idconector", columns={"idconector"})})
  * @ORM\Entity
  */
 class PasoEnlace
@@ -15,40 +15,53 @@ class PasoEnlace
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDPASO_ENLACE", type="integer", nullable=false)
+     * @ORM\Column(name="idpaso_enlace", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="PASO_ENLACE_IDPASO_ENLACE_seq", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpasoEnlace;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ORIGEN", type="string", length=255, nullable=true)
+     * @ORM\Column(name="origen", type="string", length=255, nullable=true)
      */
     private $origen;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="DESTINO", type="integer", nullable=true)
+     * @ORM\Column(name="destino", type="integer", nullable=true)
      */
     private $destino;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="DIAGRAM_IDDIAGRAM", type="integer", nullable=true)
+     * @ORM\Column(name="diagram_iddiagram", type="integer", nullable=false)
      */
     private $diagramIddiagram;
 
     /**
-     * @var integer
+     * @var string
      *
-     * @ORM\Column(name="IDCONECTOR", type="integer", nullable=true)
+     * @ORM\Column(name="idconector", type="string", length=255, nullable=false)
      */
     private $idconector;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tipo_origen", type="string", length=255, nullable=true)
+     */
+    private $tipoOrigen;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="tipo_destino", type="string", length=255, nullable=true)
+     */
+    private $tipoDestino;
 
 
 }

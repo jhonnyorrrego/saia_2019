@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PasoInstanciaRastro
  *
- * @ORM\Table(name="PASO_INSTANCIA_RASTRO")
+ * @ORM\Table(name="paso_instancia_rastro")
  * @ORM\Entity
  */
 class PasoInstanciaRastro
@@ -15,54 +15,67 @@ class PasoInstanciaRastro
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDPASO_INSTANCIA_RASTRO", type="integer", nullable=false)
+     * @ORM\Column(name="idpaso_instancia_rastro", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="PASO_INSTANCIA_RASTRO_IDPASO_I", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpasoInstanciaRastro;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="INSTANCIA_IDPASO_INSTANCIA", type="integer", nullable=true)
+     * @ORM\Column(name="instancia_idpaso_instancia", type="integer", nullable=false)
      */
     private $instanciaIdpasoInstancia;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FUNCIONARIO_CODIGO", type="integer", nullable=true)
+     * @ORM\Column(name="funcionario_codigo", type="integer", nullable=false)
      */
     private $funcionarioCodigo;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ESTADO_ORIGINAL", type="integer", nullable=true)
+     * @ORM\Column(name="estado_original", type="integer", nullable=false)
      */
     private $estadoOriginal;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ESTADO_FINAL", type="integer", nullable=true)
+     * @ORM\Column(name="estado_final", type="integer", nullable=false)
      */
     private $estadoFinal;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_CAMBIO", type="date", nullable=true)
+     * @ORM\Column(name="fecha_cambio", type="date", nullable=false)
      */
     private $fechaCambio;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="OBSERVACIONES", type="text", nullable=true)
+     * @ORM\Column(name="observaciones", type="text", nullable=true)
      */
     private $observaciones;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="documento_idpaso_documento", type="integer", nullable=true)
+     */
+    private $documentoIdpasoDocumento;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="inst_idpaso_inst", type="integer", nullable=true)
+     */
+    private $instIdpasoInst;
 
 
 }

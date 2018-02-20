@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * CamposFormato
  *
- * @ORM\Table(name="CAMPOS_FORMATO")
+ * @ORM\Table(name="campos_formato", uniqueConstraints={@ORM\UniqueConstraint(name="ix_campos_formato_formato", columns={"formato_idformato", "nombre"})}, indexes={@ORM\Index(name="i_campos_forma_formato_idfo", columns={"formato_idformato"})})
  * @ORM\Entity
  */
 class CamposFormato
@@ -15,166 +15,130 @@ class CamposFormato
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDCAMPOS_FORMATO", type="integer", nullable=false)
+     * @ORM\Column(name="idcampos_formato", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="CAMPOS_FORMATO_IDCAMPOS_FORMAT", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idcamposFormato;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FORMATO_IDFORMATO", type="integer", nullable=true)
+     * @ORM\Column(name="formato_idformato", type="integer", nullable=false)
      */
-    private $formatoIdformato;
+    private $formatoIdformato = '0';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="NOMBRE", type="string", length=255, nullable=true)
+     * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
-    private $nombre = '';
+    private $nombre;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ETIQUETA", type="string", length=255, nullable=true)
+     * @ORM\Column(name="etiqueta", type="string", length=255, nullable=false)
      */
-    private $etiqueta = '';
+    private $etiqueta;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="TIPO_DATO", type="string", length=255, nullable=true)
+     * @ORM\Column(name="tipo_dato", type="string", length=255, nullable=false)
      */
-    private $tipoDato = '';
+    private $tipoDato;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="LONGITUD", type="string", length=255, nullable=true)
+     * @ORM\Column(name="longitud", type="string", length=255, nullable=true)
      */
     private $longitud;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="OBLIGATORIEDAD", type="boolean", nullable=true)
+     * @ORM\Column(name="obligatoriedad", type="integer", nullable=false)
      */
     private $obligatoriedad = '0';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="VALOR", type="string", length=2000, nullable=true)
+     * @ORM\Column(name="valor", type="text", nullable=true)
      */
     private $valor;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ACCIONES", type="string", length=11, nullable=true)
+     * @ORM\Column(name="acciones", type="string", length=10, nullable=true)
      */
-    private $acciones = 'a,e';
+    private $acciones = 'a,e,b';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="AYUDA", type="string", length=1000, nullable=true)
+     * @ORM\Column(name="ayuda", type="text", nullable=true)
      */
     private $ayuda;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="PREDETERMINADO", type="string", length=255, nullable=true)
+     * @ORM\Column(name="predeterminado", type="string", length=255, nullable=true)
      */
     private $predeterminado;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="BANDERAS", type="string", length=50, nullable=true)
+     * @ORM\Column(name="banderas", type="string", length=50, nullable=true)
      */
     private $banderas;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="etiqueta_html", type="string", length=255, nullable=false)
+     */
+    private $etiquetaHtml = 'text';
+
+    /**
      * @var integer
      *
-     * @ORM\Column(name="ORDEN", type="integer", nullable=true)
+     * @ORM\Column(name="orden", type="integer", nullable=false)
      */
     private $orden = '0';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ETIQUETA_HTML", type="string", length=255, nullable=true)
-     */
-    private $etiquetaHtml = 'text';
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="MASCARA", type="string", length=255, nullable=true)
+     * @ORM\Column(name="mascara", type="string", length=255, nullable=true)
      */
     private $mascara;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ADICIONALES", type="string", length=255, nullable=true)
+     * @ORM\Column(name="adicionales", type="string", length=255, nullable=true)
      */
     private $adicionales;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="AUTOGUARDADO", type="boolean", nullable=true)
+     * @ORM\Column(name="autoguardado", type="integer", nullable=false)
      */
     private $autoguardado = '0';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="FILA_VISIBLE", type="boolean", nullable=true)
+     * @ORM\Column(name="fila_visible", type="integer", nullable=true)
      */
     private $filaVisible = '1';
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="ACTIVA_OTRO", type="integer", nullable=true)
-     */
-    private $activaOtro;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="VALOR_OTRO", type="string", length=255, nullable=true)
-     */
-    private $valorOtro;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="OTRO_CUAL", type="integer", nullable=false)
-     */
-    private $otroCual = '0';
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="PADRE_OTRO", type="integer", nullable=false)
-     */
-    private $padreOtro = '0';
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="HIJO_OTRO", type="integer", nullable=false)
-     */
-    private $hijoOtro = '0';
 
 
 }

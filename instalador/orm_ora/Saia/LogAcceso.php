@@ -2,88 +2,286 @@
 
 namespace Saia;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * LogAcceso
- *
- * @ORM\Table(name="LOG_ACCESO")
- * @ORM\Entity
  */
 class LogAcceso
 {
     /**
      * @var integer
-     *
-     * @ORM\Column(name="IDLOG_ACCESO", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="LOG_ACCESO_IDLOG_ACCESO_seq", allocationSize=1, initialValue=1)
      */
     private $idlogAcceso;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="LOGIN", type="string", length=100, nullable=true)
      */
-    private $login = '';
+    private $login;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="EXITO", type="integer", nullable=true)
+     * @var string
      */
-    private $exito = '0';
+    private $iplocal;
+
+    /**
+     * @var string
+     */
+    private $ipremota;
+
+    /**
+     * @var boolean
+     */
+    private $exito;
 
     /**
      * @var \DateTime
-     *
-     * @ORM\Column(name="FECHA", type="date", nullable=true)
      */
-    private $fecha = 'SYSDATE';
+    private $fecha;
+
+    /**
+     * @var \DateTime
+     */
+    private $fechaCierre;
 
     /**
      * @var integer
-     *
-     * @ORM\Column(name="FUNCIONARIO_IDFUNCIONARIO", type="integer", nullable=true)
      */
     private $funcionarioIdfuncionario;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="IDSESION_PHP", type="string", length=255, nullable=true)
      */
-    private $idsesionPhp = '';
+    private $idsesionPhp;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="SESION_PHP", type="string", length=2000, nullable=true)
      */
-    private $sesionPhp = '';
+    private $sesionPhp;
+
 
     /**
-     * @var string
+     * Get idlogAcceso
      *
-     * @ORM\Column(name="IPLOCAL", type="string", length=30, nullable=true)
+     * @return integer
      */
-    private $iplocal;
+    public function getIdlogAcceso()
+    {
+        return $this->idlogAcceso;
+    }
 
     /**
-     * @var \DateTime
+     * Set login
      *
-     * @ORM\Column(name="FECHA_CIERRE", type="date", nullable=true)
+     * @param string $login
+     *
+     * @return LogAcceso
      */
-    private $fechaCierre;
+    public function setLogin($login)
+    {
+        $this->login = $login;
+
+        return $this;
+    }
 
     /**
-     * @var string
+     * Get login
      *
-     * @ORM\Column(name="IPREMOTA", type="string", length=50, nullable=true)
+     * @return string
      */
-    private $ipremota;
+    public function getLogin()
+    {
+        return $this->login;
+    }
 
+    /**
+     * Set iplocal
+     *
+     * @param string $iplocal
+     *
+     * @return LogAcceso
+     */
+    public function setIplocal($iplocal)
+    {
+        $this->iplocal = $iplocal;
 
+        return $this;
+    }
+
+    /**
+     * Get iplocal
+     *
+     * @return string
+     */
+    public function getIplocal()
+    {
+        return $this->iplocal;
+    }
+
+    /**
+     * Set ipremota
+     *
+     * @param string $ipremota
+     *
+     * @return LogAcceso
+     */
+    public function setIpremota($ipremota)
+    {
+        $this->ipremota = $ipremota;
+
+        return $this;
+    }
+
+    /**
+     * Get ipremota
+     *
+     * @return string
+     */
+    public function getIpremota()
+    {
+        return $this->ipremota;
+    }
+
+    /**
+     * Set exito
+     *
+     * @param boolean $exito
+     *
+     * @return LogAcceso
+     */
+    public function setExito($exito)
+    {
+        $this->exito = $exito;
+
+        return $this;
+    }
+
+    /**
+     * Get exito
+     *
+     * @return boolean
+     */
+    public function getExito()
+    {
+        return $this->exito;
+    }
+
+    /**
+     * Set fecha
+     *
+     * @param \DateTime $fecha
+     *
+     * @return LogAcceso
+     */
+    public function setFecha($fecha)
+    {
+        $this->fecha = $fecha;
+
+        return $this;
+    }
+
+    /**
+     * Get fecha
+     *
+     * @return \DateTime
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * Set fechaCierre
+     *
+     * @param \DateTime $fechaCierre
+     *
+     * @return LogAcceso
+     */
+    public function setFechaCierre($fechaCierre)
+    {
+        $this->fechaCierre = $fechaCierre;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaCierre
+     *
+     * @return \DateTime
+     */
+    public function getFechaCierre()
+    {
+        return $this->fechaCierre;
+    }
+
+    /**
+     * Set funcionarioIdfuncionario
+     *
+     * @param integer $funcionarioIdfuncionario
+     *
+     * @return LogAcceso
+     */
+    public function setFuncionarioIdfuncionario($funcionarioIdfuncionario)
+    {
+        $this->funcionarioIdfuncionario = $funcionarioIdfuncionario;
+
+        return $this;
+    }
+
+    /**
+     * Get funcionarioIdfuncionario
+     *
+     * @return integer
+     */
+    public function getFuncionarioIdfuncionario()
+    {
+        return $this->funcionarioIdfuncionario;
+    }
+
+    /**
+     * Set idsesionPhp
+     *
+     * @param string $idsesionPhp
+     *
+     * @return LogAcceso
+     */
+    public function setIdsesionPhp($idsesionPhp)
+    {
+        $this->idsesionPhp = $idsesionPhp;
+
+        return $this;
+    }
+
+    /**
+     * Get idsesionPhp
+     *
+     * @return string
+     */
+    public function getIdsesionPhp()
+    {
+        return $this->idsesionPhp;
+    }
+
+    /**
+     * Set sesionPhp
+     *
+     * @param string $sesionPhp
+     *
+     * @return LogAcceso
+     */
+    public function setSesionPhp($sesionPhp)
+    {
+        $this->sesionPhp = $sesionPhp;
+
+        return $this;
+    }
+
+    /**
+     * Get sesionPhp
+     *
+     * @return string
+     */
+    public function getSesionPhp()
+    {
+        return $this->sesionPhp;
+    }
 }
+

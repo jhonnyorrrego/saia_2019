@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FuncionesBusqueda
  *
- * @ORM\Table(name="FUNCIONES_BUSQUEDA")
+ * @ORM\Table(name="funciones_busqueda")
  * @ORM\Entity
  */
 class FuncionesBusqueda
@@ -15,54 +15,53 @@ class FuncionesBusqueda
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDFUNCIONES_BUSQUEDA", type="integer", nullable=false)
+     * @ORM\Column(name="idfunciones_busqueda", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="FUNCIONES_BUSQUEDA_IDFUNCIONES", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idfuncionesBusqueda;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ETIQUETA", type="string", length=255, nullable=true)
+     * @ORM\Column(name="etiqueta", type="string", length=255, nullable=false)
      */
     private $etiqueta;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="BUSQUEDAS_IDBUSQUEDA", type="integer", nullable=true)
+     * @ORM\Column(name="busquedas_idbusqueda", type="integer", nullable=false)
      */
     private $busquedasIdbusqueda = '0';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="PAGINA", type="string", length=255, nullable=true)
+     * @ORM\Column(name="pagina", type="string", length=255, nullable=false)
      */
     private $pagina;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="PARAMETROS", type="string", length=255, nullable=true)
+     * @ORM\Column(name="parametros", type="string", length=255, nullable=true)
      */
     private $parametros;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="TIPO", type="string", length=255, nullable=true)
+     * @ORM\Column(name="tipo", type="string", length=255, nullable=false)
      */
     private $tipo = 'link';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ORDEN", type="integer", nullable=true)
+     * @ORM\Column(name="orden", type="integer", nullable=false)
      */
-    private $orden = '0';
+    private $orden;
 
 
 }

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Autoguardado
  *
- * @ORM\Table(name="AUTOGUARDADO")
+ * @ORM\Table(name="autoguardado", indexes={@ORM\Index(name="i_autoguardado_usuario", columns={"usuario"})})
  * @ORM\Entity
  */
 class Autoguardado
@@ -15,9 +15,9 @@ class Autoguardado
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDAUTOGUARDADO", type="integer", nullable=false)
+     * @ORM\Column(name="idautoguardado", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
+     * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\SequenceGenerator(sequenceName="AUTOGUARDADO_IDAUTOGUARDADO_se", allocationSize=1, initialValue=1)
      */
     private $idautoguardado;
@@ -25,28 +25,28 @@ class Autoguardado
     /**
      * @var string
      *
-     * @ORM\Column(name="CONTENIDO", type="text", nullable=true)
+     * @ORM\Column(name="contenido", type="text", nullable=true)
      */
-    private $contenido = 'empty_clob()';
+    private $contenido;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="FORMATO", type="string", length=255, nullable=true)
+     * @ORM\Column(name="formato", type="string", length=255, nullable=false)
      */
     private $formato;
 
     /**
-     * @var string
+     * @var integer
      *
-     * @ORM\Column(name="USUARIO", type="string", length=255, nullable=true)
+     * @ORM\Column(name="usuario", type="integer", nullable=false)
      */
     private $usuario;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="CAMPO", type="string", length=255, nullable=true)
+     * @ORM\Column(name="campo", type="string", length=255, nullable=true)
      */
     private $campo;
 

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Dependencia
  *
- * @ORM\Table(name="DEPENDENCIA")
+ * @ORM\Table(name="dependencia")
  * @ORM\Entity
  */
 class Dependencia
@@ -15,103 +15,88 @@ class Dependencia
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDDEPENDENCIA", type="integer", nullable=false)
+     * @ORM\Column(name="iddependencia", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="DEPENDENCIA_IDDEPENDENCIA_seq", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $iddependencia;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="CODIGO", type="string", length=50, nullable=true)
+     * @ORM\Column(name="codigo", type="string", length=50, nullable=true)
      */
     private $codigo;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="NOMBRE", type="string", length=255, nullable=true)
+     * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
     private $nombre;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_INGRESO", type="date", nullable=true)
+     * @ORM\Column(name="fecha_ingreso", type="date", nullable=false)
      */
     private $fechaIngreso = 'SYSDATE';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="COD_PADRE", type="integer", nullable=true)
+     * @ORM\Column(name="cod_padre", type="integer", nullable=true)
      */
     private $codPadre;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="TIPO", type="integer", nullable=true)
+     * @ORM\Column(name="tipo", type="integer", nullable=false)
      */
     private $tipo = '1';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ESTADO", type="integer", nullable=true)
+     * @ORM\Column(name="estado", type="integer", nullable=false)
      */
     private $estado = '1';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="CODIGO_TABLA", type="string", length=11, nullable=true)
+     * @ORM\Column(name="codigo_tabla", type="string", length=255, nullable=true)
      */
-    private $codigoTabla = '';
+    private $codigoTabla;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="LOGO", type="blob", nullable=true)
-     */
-    private $logo = 'EMPTY_BLOB()';
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="DIRECCION", type="string", length=255, nullable=true)
-     */
-    private $direccion;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="TELEFONO", type="string", length=255, nullable=true)
-     */
-    private $telefono;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="UBICACION_DEPENDENCIA", type="string", length=255, nullable=true)
-     */
-    private $ubicacionDependencia;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="EXTENSION", type="string", length=255, nullable=true)
+     * @ORM\Column(name="extension", type="string", length=20, nullable=true)
      */
     private $extension;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="CODIGO_ARBOL", type="string", length=255, nullable=true)
+     * @ORM\Column(name="ubicacion_dependencia", type="text", nullable=true)
      */
-    private $codigoArbol;
+    private $ubicacionDependencia;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="logo", type="blob", nullable=true)
+     */
+    private $logo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="orden", type="string", length=255, nullable=true)
+     */
+    private $orden;
 
 
 }

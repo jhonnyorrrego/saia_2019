@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PasoRastro
  *
- * @ORM\Table(name="PASO_RASTRO")
+ * @ORM\Table(name="paso_rastro")
  * @ORM\Entity
  */
 class PasoRastro
@@ -15,52 +15,51 @@ class PasoRastro
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDPASO_RASTRO", type="integer", nullable=false)
+     * @ORM\Column(name="idpaso_rastro", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="PASO_RASTRO_IDPASO_RASTRO_seq", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpasoRastro;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="DOCUMENTO_IDPASO_DOCUMENTO", type="integer", nullable=true)
+     * @ORM\Column(name="documento_idpaso_documento", type="integer", nullable=false)
      */
     private $documentoIdpasoDocumento;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FUNCIONARIO_CODIGO", type="integer", nullable=true)
+     * @ORM\Column(name="funcionario_codigo", type="integer", nullable=false)
      */
     private $funcionarioCodigo;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ESTADO_ORIGINAL", type="integer", nullable=true)
+     * @ORM\Column(name="estado_original", type="integer", nullable=false)
      */
     private $estadoOriginal;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ESTADO_FINAL", type="integer", nullable=true)
+     * @ORM\Column(name="estado_final", type="integer", nullable=false)
      */
     private $estadoFinal;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_CAMBIO", type="date", nullable=true)
+     * @ORM\Column(name="fecha_cambio", type="date", nullable=false)
      */
     private $fechaCambio;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="OBSERVACIONES", type="text", nullable=true)
+     * @ORM\Column(name="observaciones", type="text", nullable=true)
      */
     private $observaciones;
 

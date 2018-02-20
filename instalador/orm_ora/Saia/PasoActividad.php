@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PasoActividad
  *
- * @ORM\Table(name="PASO_ACTIVIDAD")
+ * @ORM\Table(name="paso_actividad", indexes={@ORM\Index(name="i_paso_activid_formato_ante", columns={"formato_anterior"}), @ORM\Index(name="i_paso_activid_paso_anterio", columns={"paso_anterior"})})
  * @ORM\Entity
  */
 class PasoActividad
@@ -15,103 +15,123 @@ class PasoActividad
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDPASO_ACTIVIDAD", type="integer", nullable=false)
+     * @ORM\Column(name="idpaso_actividad", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="PASO_ACTIVIDAD_IDPASO_ACTIVIDA", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpasoActividad;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="descripcion", type="text", nullable=false)
+     */
+    private $descripcion;
+
+    /**
      * @var integer
      *
-     * @ORM\Column(name="RESTRICTIVO", type="integer", nullable=true)
+     * @ORM\Column(name="restrictivo", type="integer", nullable=false)
      */
     private $restrictivo;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ESTADO", type="integer", nullable=true)
+     * @ORM\Column(name="estado", type="integer", nullable=false)
      */
     private $estado = '1';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="PASO_IDPASO", type="integer", nullable=true)
+     * @ORM\Column(name="paso_idpaso", type="integer", nullable=false)
      */
     private $pasoIdpaso;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ORDEN", type="integer", nullable=true)
+     * @ORM\Column(name="orden", type="integer", nullable=false)
      */
     private $orden;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="TIPO", type="integer", nullable=true)
+     * @ORM\Column(name="tipo", type="integer", nullable=false)
      */
     private $tipo = '1';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ENTIDAD_IDENTIDAD", type="integer", nullable=true)
+     * @ORM\Column(name="entidad_identidad", type="integer", nullable=false)
      */
     private $entidadIdentidad;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="LLAVE_ENTIDAD", type="string", length=255, nullable=true)
+     * @ORM\Column(name="llave_entidad", type="string", length=255, nullable=false)
      */
     private $llaveEntidad;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="PASO_OBJETO_IDPASO_OBJETO", type="integer", nullable=true)
+     * @ORM\Column(name="paso_objeto_idpaso_objeto", type="integer", nullable=true)
      */
     private $pasoObjetoIdpasoObjeto;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ACCION_IDACCION", type="integer", nullable=true)
+     * @ORM\Column(name="accion_idaccion", type="integer", nullable=true)
      */
     private $accionIdaccion;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="FORMATO_IDFORMATO", type="string", length=255, nullable=true)
+     * @ORM\Column(name="formato_idformato", type="string", length=255, nullable=true)
      */
     private $formatoIdformato;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="PLAZO", type="integer", nullable=true)
+     * @ORM\Column(name="plazo", type="integer", nullable=false)
      */
     private $plazo = '24';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="TIPO_PLAZO", type="string", length=30, nullable=true)
+     * @ORM\Column(name="tipo_plazo", type="string", length=30, nullable=false)
      */
     private $tipoPlazo = 'hour';
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="paso_anterior", type="integer", nullable=true)
+     */
+    private $pasoAnterior;
+
+    /**
      * @var string
      *
-     * @ORM\Column(name="DESCRIPCION", type="string", length=255, nullable=true)
+     * @ORM\Column(name="formato_anterior", type="string", length=255, nullable=true)
      */
-    private $descripcion;
+    private $formatoAnterior;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="fk_campos_formato", type="integer", nullable=true)
+     */
+    private $fkCamposFormato;
 
 
 }

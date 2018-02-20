@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * DependenciaCargo
  *
- * @ORM\Table(name="DEPENDENCIA_CARGO", indexes={@ORM\Index(name="dependencia_cargo_cargo", columns={"CARGO_IDCARGO"}), @ORM\Index(name="dependencia_cargo_dependencia", columns={"DEPENDENCIA_IDDEPENDENCIA"}), @ORM\Index(name="dependencia_cargo_funcionario", columns={"FUNCIONARIO_IDFUNCIONARIO"}), @ORM\Index(name="dependencia_cargo_fecha_f", columns={"FECHA_FINAL"}), @ORM\Index(name="dependencia_cargo_fecha_i", columns={"FECHA_INICIAL"})})
+ * @ORM\Table(name="dependencia_cargo", indexes={@ORM\Index(name="i_dependencia__dependencia_", columns={"dependencia_iddependencia"}), @ORM\Index(name="i_dependencia__funcionario_", columns={"funcionario_idfuncionario"}), @ORM\Index(name="i_dependencia__cargo_idcarg", columns={"cargo_idcargo"})})
  * @ORM\Entity
  */
 class DependenciaCargo
@@ -15,68 +15,67 @@ class DependenciaCargo
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDDEPENDENCIA_CARGO", type="integer", nullable=false)
+     * @ORM\Column(name="iddependencia_cargo", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="DEPENDENCIA_CARGO_IDDEPENDENCI", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $iddependenciaCargo;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FUNCIONARIO_IDFUNCIONARIO", type="integer", nullable=true)
+     * @ORM\Column(name="funcionario_idfuncionario", type="integer", nullable=false)
      */
     private $funcionarioIdfuncionario = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="DEPENDENCIA_IDDEPENDENCIA", type="integer", nullable=true)
+     * @ORM\Column(name="dependencia_iddependencia", type="integer", nullable=false)
      */
     private $dependenciaIddependencia = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="CARGO_IDCARGO", type="integer", nullable=true)
+     * @ORM\Column(name="cargo_idcargo", type="integer", nullable=false)
      */
     private $cargoIdcargo = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ESTADO", type="integer", nullable=true)
+     * @ORM\Column(name="estado", type="integer", nullable=false)
      */
     private $estado = '1';
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_INICIAL", type="date", nullable=true)
+     * @ORM\Column(name="fecha_inicial", type="date", nullable=false)
      */
     private $fechaInicial = 'SYSDATE';
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_FINAL", type="date", nullable=true)
+     * @ORM\Column(name="fecha_final", type="date", nullable=false)
      */
-    private $fechaFinal = 'TO_DATE(\'2009-01-01\',\'yyyy-mm-dd\')';
+    private $fechaFinal = 'SYSDATE';
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_INGRESO", type="date", nullable=true)
+     * @ORM\Column(name="fecha_ingreso", type="date", nullable=false)
      */
     private $fechaIngreso = 'SYSDATE';
 
     /**
-     * @var string
+     * @var integer
      *
-     * @ORM\Column(name="TIPO", type="string", length=1, nullable=true)
+     * @ORM\Column(name="tipo", type="integer", nullable=false)
      */
-    private $tipo = '0';
+    private $tipo = '1';
 
 
 }
