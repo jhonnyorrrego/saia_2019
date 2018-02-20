@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Caracteristica
  *
- * @ORM\Table(name="CARACTERISTICA", uniqueConstraints={@ORM\UniqueConstraint(name="caracteristica_pk", columns={"IDCARACTERISTICA", "PANTALLA_IDPANTALLA", "COMPONENTE_PANTALLA_IDPANTALLA", "COMPONENTE_IDCOMPONENTE"})})
+ * @ORM\Table(name="caracteristica", uniqueConstraints={@ORM\UniqueConstraint(name="caracteristica_pk", columns={"idcaracteristica", "pantalla_idpantalla", "componente_pantalla_idpantalla", "componente_idcomponente"})})
  * @ORM\Entity
  */
 class Caracteristica
@@ -15,9 +15,9 @@ class Caracteristica
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDCARACTERISTICA", type="integer", nullable=false)
+     * @ORM\Column(name="idcaracteristica", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
+     * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\SequenceGenerator(sequenceName="CARACTERISTICA_IDCARACTERISTIC", allocationSize=1, initialValue=1)
      */
     private $idcaracteristica;
@@ -25,42 +25,42 @@ class Caracteristica
     /**
      * @var integer
      *
-     * @ORM\Column(name="PANTALLA_IDPANTALLA", type="integer", nullable=false)
+     * @ORM\Column(name="pantalla_idpantalla", type="integer", nullable=false)
      */
     private $pantallaIdpantalla = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="COMPONENTE_PANTALLA_IDPANTALLA", type="integer", nullable=false)
+     * @ORM\Column(name="componente_pantalla_idpantalla", type="integer", nullable=false)
      */
     private $componentePantallaIdpantalla = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="COMPONENTE_IDCOMPONENTE", type="integer", nullable=false)
+     * @ORM\Column(name="componente_idcomponente", type="integer", nullable=false)
      */
     private $componenteIdcomponente = '0';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="NOMBRE", type="string", length=100, nullable=true)
+     * @ORM\Column(name="nombre", type="string", length=100, nullable=true)
      */
     private $nombre;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="VALOR", type="string", length=255, nullable=true)
+     * @ORM\Column(name="valor", type="string", length=255, nullable=true)
      */
     private $valor;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="CATEGORIA", type="string", length=255, nullable=true)
+     * @ORM\Column(name="categoria", type="string", length=255, nullable=true)
      */
     private $categoria;
 

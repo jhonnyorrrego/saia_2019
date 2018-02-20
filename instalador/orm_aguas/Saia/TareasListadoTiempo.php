@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * TareasListadoTiempo
  *
- * @ORM\Table(name="TAREAS_LISTADO_TIEMPO")
+ * @ORM\Table(name="tareas_listado_tiempo")
  * @ORM\Entity
  */
 class TareasListadoTiempo
@@ -15,73 +15,72 @@ class TareasListadoTiempo
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDTAREAS_LISTADO_TIEMPO", type="integer", nullable=false)
+     * @ORM\Column(name="idtareas_listado_tiempo", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="TAREAS_LISTADO_TIEMPO_IDTAREAS", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idtareasListadoTiempo;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FK_TAREAS_LISTADO", type="integer", nullable=false)
+     * @ORM\Column(name="fk_tareas_listado", type="integer", nullable=false)
      */
     private $fkTareasListado;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_REGISTRO", type="date", nullable=true)
+     * @ORM\Column(name="fecha_registro", type="date", nullable=true)
      */
     private $fechaRegistro = 'SYSDATE';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="TIEMPO_REGISTRADO", type="integer", nullable=false)
+     * @ORM\Column(name="tiempo_registrado", type="integer", nullable=false)
      */
     private $tiempoRegistrado;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FUNCIONARIO_IDFUNCIONARIO", type="integer", nullable=false)
+     * @ORM\Column(name="funcionario_idfuncionario", type="integer", nullable=false)
      */
     private $funcionarioIdfuncionario;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="COMENTARIO", type="text", nullable=true)
+     * @ORM\Column(name="comentario", type="text", nullable=true)
      */
     private $comentario;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_INICIO", type="date", nullable=false)
+     * @ORM\Column(name="fecha_inicio", type="date", nullable=false)
      */
     private $fechaInicio;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="HORA_INICIO", type="date", nullable=false)
+     * @ORM\Column(name="hora_inicio", type="date", nullable=false)
      */
     private $horaInicio;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="HORA_FINAL", type="date", nullable=false)
+     * @ORM\Column(name="hora_final", type="date", nullable=false)
      */
     private $horaFinal;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ESTADO_AVANCE", type="string", length=9, nullable=false)
+     * @ORM\Column(name="estado_avance", type="string", length=9, nullable=false)
      */
     private $estadoAvance;
 

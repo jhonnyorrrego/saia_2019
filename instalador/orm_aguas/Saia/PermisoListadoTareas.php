@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PermisoListadoTareas
  *
- * @ORM\Table(name="PERMISO_LISTADO_TAREAS")
+ * @ORM\Table(name="permiso_listado_tareas")
  * @ORM\Entity
  */
 class PermisoListadoTareas
@@ -15,45 +15,44 @@ class PermisoListadoTareas
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDPERMISO_LISTADO_TAREAS", type="integer", nullable=false)
+     * @ORM\Column(name="idpermiso_listado_tareas", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="PERMISO_LISTADO_TAREAS_IDPERMI", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpermisoListadoTareas;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ENTIDAD_IDENTIDAD", type="integer", nullable=false)
+     * @ORM\Column(name="entidad_identidad", type="integer", nullable=false)
      */
     private $entidadIdentidad = '1';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FK_LISTADO_TAREAS", type="integer", nullable=false)
+     * @ORM\Column(name="fk_listado_tareas", type="integer", nullable=false)
      */
     private $fkListadoTareas = '1';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="LLAVE_ENTIDAD", type="integer", nullable=false)
+     * @ORM\Column(name="llave_entidad", type="integer", nullable=false)
      */
     private $llaveEntidad = '0';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ESTADO", type="string", length=255, nullable=false)
+     * @ORM\Column(name="estado", type="string", length=255, nullable=false)
      */
     private $estado = '1';
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA", type="date", nullable=true)
+     * @ORM\Column(name="fecha", type="date", nullable=true)
      */
     private $fecha = 'SYSDATE';
 

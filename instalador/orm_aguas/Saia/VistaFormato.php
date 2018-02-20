@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * VistaFormato
  *
- * @ORM\Table(name="VISTA_FORMATO")
+ * @ORM\Table(name="vista_formato")
  * @ORM\Entity
  */
 class VistaFormato
@@ -15,9 +15,9 @@ class VistaFormato
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDVISTA_FORMATO", type="integer", nullable=false)
+     * @ORM\Column(name="idvista_formato", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
+     * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\SequenceGenerator(sequenceName="VISTA_FORMATO_IDVISTA_FORMATO_", allocationSize=1, initialValue=1)
      */
     private $idvistaFormato;
@@ -25,140 +25,140 @@ class VistaFormato
     /**
      * @var string
      *
-     * @ORM\Column(name="NOMBRE", type="string", length=255, nullable=false)
+     * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
     private $nombre;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ETIQUETA", type="string", length=255, nullable=false)
+     * @ORM\Column(name="etiqueta", type="string", length=255, nullable=false)
      */
     private $etiqueta;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FORMATO_PADRE", type="integer", nullable=false)
+     * @ORM\Column(name="formato_padre", type="integer", nullable=false)
      */
     private $formatoPadre;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="RUTA_MOSTRAR", type="string", length=255, nullable=false)
+     * @ORM\Column(name="ruta_mostrar", type="string", length=255, nullable=false)
      */
     private $rutaMostrar;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="LIBRERIAS", type="string", length=255, nullable=true)
+     * @ORM\Column(name="librerias", type="string", length=255, nullable=true)
      */
     private $librerias;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ESTILOS", type="string", length=255, nullable=true)
+     * @ORM\Column(name="estilos", type="string", length=255, nullable=true)
      */
     private $estilos;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="JAVASCRIPT", type="string", length=255, nullable=true)
+     * @ORM\Column(name="javascript", type="string", length=255, nullable=true)
      */
     private $javascript;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ENCABEZADO", type="text", nullable=true)
+     * @ORM\Column(name="encabezado", type="text", nullable=true)
      */
     private $encabezado;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="CUERPO", type="text", nullable=true)
+     * @ORM\Column(name="cuerpo", type="text", nullable=true)
      */
     private $cuerpo;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="PIE_PAGINA", type="text", nullable=true)
+     * @ORM\Column(name="pie_pagina", type="text", nullable=true)
      */
     private $piePagina;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="MARGENES", type="string", length=50, nullable=false)
+     * @ORM\Column(name="margenes", type="string", length=50, nullable=false)
      */
     private $margenes;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ORIENTACION", type="string", length=50, nullable=true)
+     * @ORM\Column(name="orientacion", type="string", length=50, nullable=true)
      */
     private $orientacion;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="PAPEL", type="string", length=50, nullable=true)
+     * @ORM\Column(name="papel", type="string", length=50, nullable=true)
      */
     private $papel;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="EXPORTAR", type="string", length=255, nullable=true)
+     * @ORM\Column(name="exportar", type="string", length=255, nullable=true)
      */
     private $exportar;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FUNCIONARIO_IDFUNCIONARIO", type="integer", nullable=false)
+     * @ORM\Column(name="funcionario_idfuncionario", type="integer", nullable=false)
      */
     private $funcionarioIdfuncionario;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA", type="date", nullable=false)
+     * @ORM\Column(name="fecha", type="date", nullable=false)
      */
     private $fecha;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="IMAGEN", type="string", length=255, nullable=true)
+     * @ORM\Column(name="imagen", type="string", length=255, nullable=true)
      */
     private $imagen;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="AYUDA", type="string", length=400, nullable=true)
+     * @ORM\Column(name="ayuda", type="string", length=400, nullable=true)
      */
     private $ayuda;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="FONT_SIZE", type="string", length=4, nullable=false)
+     * @ORM\Column(name="font_size", type="string", length=4, nullable=false)
      */
     private $fontSize;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="BANDERAS", type="string", length=255, nullable=false)
+     * @ORM\Column(name="banderas", type="string", length=255, nullable=false)
      */
     private $banderas;
 

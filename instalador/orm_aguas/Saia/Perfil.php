@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Perfil
  *
- * @ORM\Table(name="PERFIL")
+ * @ORM\Table(name="perfil")
  * @ORM\Entity
  */
 class Perfil
@@ -15,19 +15,18 @@ class Perfil
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDPERFIL", type="integer", nullable=false)
+     * @ORM\Column(name="idperfil", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="PERFIL_IDPERFIL_seq", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idperfil;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="NOMBRE", type="string", length=255, nullable=false)
+     * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
-    private $nombre;
+    private $nombre = 'GENERAL';
 
 
 }

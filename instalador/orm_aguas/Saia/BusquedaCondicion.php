@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * BusquedaCondicion
  *
- * @ORM\Table(name="BUSQUEDA_CONDICION")
+ * @ORM\Table(name="busqueda_condicion")
  * @ORM\Entity
  */
 class BusquedaCondicion
@@ -15,38 +15,37 @@ class BusquedaCondicion
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDBUSQUEDA_CONDICION", type="integer", nullable=false)
+     * @ORM\Column(name="idbusqueda_condicion", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="BUSQUEDA_CONDICION_IDBUSQUEDA_", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idbusquedaCondicion;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="BUSQUEDA_IDBUSQUEDA", type="integer", nullable=true)
+     * @ORM\Column(name="busqueda_idbusqueda", type="integer", nullable=true)
      */
     private $busquedaIdbusqueda;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FK_BUSQUEDA_COMPONENTE", type="integer", nullable=true)
+     * @ORM\Column(name="fk_busqueda_componente", type="integer", nullable=true)
      */
     private $fkBusquedaComponente;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="CODIGO_WHERE", type="text", nullable=true)
+     * @ORM\Column(name="codigo_where", type="text", nullable=true)
      */
     private $codigoWhere;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ETIQUETA_CONDICION", type="string", length=255, nullable=true)
+     * @ORM\Column(name="etiqueta_condicion", type="string", length=255, nullable=true)
      */
     private $etiquetaCondicion;
 

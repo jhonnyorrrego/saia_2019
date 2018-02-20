@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PrioridadDocumento
  *
- * @ORM\Table(name="PRIORIDAD_DOCUMENTO", indexes={@ORM\Index(name="i_prioridad_documento_doc", columns={"DOCUMENTO_IDDOCUMENTO"})})
+ * @ORM\Table(name="prioridad_documento", indexes={@ORM\Index(name="i_prioridad_documento_doc", columns={"documento_iddocumento"})})
  * @ORM\Entity
  */
 class PrioridadDocumento
@@ -15,38 +15,37 @@ class PrioridadDocumento
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDPRIORIDAD_DOCUMENTO", type="integer", nullable=false)
+     * @ORM\Column(name="idprioridad_documento", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="PRIORIDAD_DOCUMENTO_IDPRIORIDA", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idprioridadDocumento;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="DOCUMENTO_IDDOCUMENTO", type="integer", nullable=false)
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
      */
     private $documentoIddocumento;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FUNCIONARIO_IDFUNCIONARIO", type="integer", nullable=false)
+     * @ORM\Column(name="funcionario_idfuncionario", type="integer", nullable=false)
      */
     private $funcionarioIdfuncionario;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_ASIGNACION", type="date", nullable=false)
+     * @ORM\Column(name="fecha_asignacion", type="date", nullable=false)
      */
     private $fechaAsignacion;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="PRIORIDAD", type="integer", nullable=false)
+     * @ORM\Column(name="prioridad", type="integer", nullable=false)
      */
     private $prioridad;
 

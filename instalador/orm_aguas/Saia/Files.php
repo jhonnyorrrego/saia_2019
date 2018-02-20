@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Files
  *
- * @ORM\Table(name="FILES")
+ * @ORM\Table(name="files")
  * @ORM\Entity
  */
 class Files
@@ -15,9 +15,9 @@ class Files
     /**
      * @var integer
      *
-     * @ORM\Column(name="ID", type="integer", nullable=false)
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
+     * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\SequenceGenerator(sequenceName="FILES_ID_seq", allocationSize=1, initialValue=1)
      */
     private $id;
@@ -25,35 +25,35 @@ class Files
     /**
      * @var string
      *
-     * @ORM\Column(name="NAME", type="string", length=255, nullable=false)
+     * @ORM\Column(name="name", type="string", length=255, nullable=false)
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="TYPE", type="string", length=255, nullable=false)
+     * @ORM\Column(name="type", type="string", length=255, nullable=false)
      */
     private $type;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="PATH", type="string", length=255, nullable=false)
+     * @ORM\Column(name="path", type="string", length=255, nullable=false)
      */
     private $path;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="CREATED_AT", type="date", nullable=true)
+     * @ORM\Column(name="created_at", type="date", nullable=true)
      */
     private $createdAt;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="UPDATED_AT", type="date", nullable=true)
+     * @ORM\Column(name="updated_at", type="date", nullable=true)
      */
     private $updatedAt;
 

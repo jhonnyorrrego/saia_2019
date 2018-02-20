@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * BusquedaFiltro
  *
- * @ORM\Table(name="BUSQUEDA_FILTRO")
+ * @ORM\Table(name="busqueda_filtro")
  * @ORM\Entity
  */
 class BusquedaFiltro
@@ -15,38 +15,37 @@ class BusquedaFiltro
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDBUSQUEDA_FILTRO", type="integer", nullable=false)
+     * @ORM\Column(name="idbusqueda_filtro", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="BUSQUEDA_FILTRO_IDBUSQUEDA_FIL", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idbusquedaFiltro;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FK_BUSQUEDA_COMPONENTE", type="integer", nullable=false)
+     * @ORM\Column(name="fk_busqueda_componente", type="integer", nullable=false)
      */
     private $fkBusquedaComponente;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FUNCIONARIO_IDFUNCIONARIO", type="integer", nullable=false)
+     * @ORM\Column(name="funcionario_idfuncionario", type="integer", nullable=false)
      */
     private $funcionarioIdfuncionario;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="TABLA_ADICIONAL", type="string", length=255, nullable=false)
+     * @ORM\Column(name="tabla_adicional", type="string", length=255, nullable=false)
      */
     private $tablaAdicional;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="WHERE_ADICIONAL", type="string", length=255, nullable=false)
+     * @ORM\Column(name="where_adicional", type="string", length=255, nullable=false)
      */
     private $whereAdicional;
 

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Permiso
  *
- * @ORM\Table(name="PERMISO")
+ * @ORM\Table(name="permiso")
  * @ORM\Entity
  */
 class Permiso
@@ -15,59 +15,58 @@ class Permiso
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDPERMISO", type="integer", nullable=false)
+     * @ORM\Column(name="idpermiso", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="PERMISO_IDPERMISO_seq", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpermiso;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FUNCIONARIO_IDFUNCIONARIO", type="integer", nullable=false)
+     * @ORM\Column(name="funcionario_idfuncionario", type="integer", nullable=false)
      */
     private $funcionarioIdfuncionario = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ACCION", type="integer", nullable=true)
+     * @ORM\Column(name="accion", type="integer", nullable=true)
      */
     private $accion;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="MODULO_IDMODULO", type="integer", nullable=false)
+     * @ORM\Column(name="modulo_idmodulo", type="integer", nullable=false)
      */
     private $moduloIdmodulo = '0';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="CARACTERISTICA_PROPIO", type="string", length=15, nullable=true)
+     * @ORM\Column(name="caracteristica_propio", type="string", length=15, nullable=true)
      */
     private $caracteristicaPropio;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="CARACTERISTICA_GRUPO", type="string", length=15, nullable=true)
+     * @ORM\Column(name="caracteristica_grupo", type="string", length=15, nullable=true)
      */
     private $caracteristicaGrupo;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="CARACTERISTICA_TOTAL", type="string", length=15, nullable=true)
+     * @ORM\Column(name="caracteristica_total", type="string", length=15, nullable=true)
      */
     private $caracteristicaTotal;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="TIPO", type="integer", nullable=false)
+     * @ORM\Column(name="tipo", type="integer", nullable=false)
      */
     private $tipo = '1';
 

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Binario
  *
- * @ORM\Table(name="BINARIO")
+ * @ORM\Table(name="binario")
  * @ORM\Entity
  */
 class Binario
@@ -15,9 +15,9 @@ class Binario
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDBINARIO", type="integer", nullable=false)
+     * @ORM\Column(name="idbinario", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
+     * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\SequenceGenerator(sequenceName="BINARIO_IDBINARIO_seq", allocationSize=1, initialValue=1)
      */
     private $idbinario;
@@ -25,21 +25,21 @@ class Binario
     /**
      * @var string
      *
-     * @ORM\Column(name="NOMBRE_ORIGINAL", type="string", length=255, nullable=true)
+     * @ORM\Column(name="nombre_original", type="string", length=255, nullable=true)
      */
     private $nombreOriginal;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="DATOS", type="blob", nullable=true)
+     * @ORM\Column(name="datos", type="blob", nullable=true)
      */
     private $datos;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_CREACION", type="date", nullable=false)
+     * @ORM\Column(name="fecha_creacion", type="date", nullable=false)
      */
     private $fechaCreacion = 'SYSDATE';
 

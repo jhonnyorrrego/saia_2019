@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Carrusel
  *
- * @ORM\Table(name="CARRUSEL")
+ * @ORM\Table(name="carrusel")
  * @ORM\Entity
  */
 class Carrusel
@@ -15,59 +15,58 @@ class Carrusel
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDCARRUSEL", type="integer", nullable=false)
+     * @ORM\Column(name="idcarrusel", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="CARRUSEL_IDCARRUSEL_seq", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idcarrusel;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="NOMBRE", type="string", length=255, nullable=false)
+     * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
     private $nombre;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="AUTOPLAY", type="string", length=255, nullable=false)
+     * @ORM\Column(name="autoplay", type="string", length=255, nullable=false)
      */
     private $autoplay = '1';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="DELAY", type="string", length=255, nullable=false)
+     * @ORM\Column(name="delay", type="string", length=255, nullable=false)
      */
     private $delay = '3000';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ANIMATIONTIME", type="string", length=255, nullable=false)
+     * @ORM\Column(name="animationtime", type="string", length=255, nullable=false)
      */
     private $animationtime = '600';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="EASING", type="string", length=255, nullable=true)
+     * @ORM\Column(name="easing", type="string", length=255, nullable=true)
      */
     private $easing;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_INICIO", type="date", nullable=false)
+     * @ORM\Column(name="fecha_inicio", type="date", nullable=false)
      */
     private $fechaInicio;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_FIN", type="date", nullable=false)
+     * @ORM\Column(name="fecha_fin", type="date", nullable=false)
      */
     private $fechaFin;
 

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PasoDocumento
  *
- * @ORM\Table(name="PASO_DOCUMENTO", indexes={@ORM\Index(name="i_paso_documento_doc", columns={"DOCUMENTO_IDDOCUMENTO"})})
+ * @ORM\Table(name="paso_documento", indexes={@ORM\Index(name="i_paso_documento_doc", columns={"documento_iddocumento"})})
  * @ORM\Entity
  */
 class PasoDocumento
@@ -15,52 +15,51 @@ class PasoDocumento
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDPASO_DOCUMENTO", type="integer", nullable=false)
+     * @ORM\Column(name="idpaso_documento", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="PASO_DOCUMENTO_IDPASO_DOCUMENT", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpasoDocumento;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="PASO_IDPASO", type="integer", nullable=false)
+     * @ORM\Column(name="paso_idpaso", type="integer", nullable=false)
      */
     private $pasoIdpaso;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="DOCUMENTO_IDDOCUMENTO", type="integer", nullable=false)
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
      */
     private $documentoIddocumento;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_ASIGNACION", type="date", nullable=false)
+     * @ORM\Column(name="fecha_asignacion", type="date", nullable=false)
      */
     private $fechaAsignacion;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="DIAGRAM_IDDIAGRAM_INSTANCE", type="integer", nullable=false)
+     * @ORM\Column(name="diagram_iddiagram_instance", type="integer", nullable=false)
      */
     private $diagramIddiagramInstance;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ESTADO_PASO_DOCUMENTO", type="integer", nullable=false)
+     * @ORM\Column(name="estado_paso_documento", type="integer", nullable=false)
      */
     private $estadoPasoDocumento = '0';
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_LIMITE", type="date", nullable=true)
+     * @ORM\Column(name="fecha_limite", type="date", nullable=true)
      */
     private $fechaLimite;
 

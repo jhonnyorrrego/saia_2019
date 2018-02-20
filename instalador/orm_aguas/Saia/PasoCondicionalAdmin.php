@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PasoCondicionalAdmin
  *
- * @ORM\Table(name="PASO_CONDICIONAL_ADMIN")
+ * @ORM\Table(name="paso_condicional_admin")
  * @ORM\Entity
  */
 class PasoCondicionalAdmin
@@ -15,66 +15,65 @@ class PasoCondicionalAdmin
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDPASO_CONDICIONAL_ADMIN", type="integer", nullable=false)
+     * @ORM\Column(name="idpaso_condicional_admin", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="PASO_CONDICIONAL_ADMIN_IDPASO_", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpasoCondicionalAdmin;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FK_PASO_CONDICIONAL", type="integer", nullable=false)
+     * @ORM\Column(name="fk_paso_condicional", type="integer", nullable=false)
      */
     private $fkPasoCondicional;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FK_CAMPOS_FORMATO", type="integer", nullable=false)
+     * @ORM\Column(name="fk_campos_formato", type="integer", nullable=false)
      */
     private $fkCamposFormato;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="COMPARACION", type="string", length=255, nullable=false)
+     * @ORM\Column(name="comparacion", type="string", length=255, nullable=false)
      */
     private $comparacion;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="VALOR", type="string", length=255, nullable=false)
+     * @ORM\Column(name="valor", type="string", length=255, nullable=false)
      */
     private $valor;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="HABILITAR_PASOS_SI", type="string", length=255, nullable=false)
+     * @ORM\Column(name="habilitar_pasos_si", type="string", length=255, nullable=false)
      */
     private $habilitarPasosSi;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="HABILITAR_PASOS_NO", type="string", length=255, nullable=true)
+     * @ORM\Column(name="habilitar_pasos_no", type="string", length=255, nullable=true)
      */
     private $habilitarPasosNo;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ORDEN", type="integer", nullable=false)
+     * @ORM\Column(name="orden", type="integer", nullable=false)
      */
     private $orden = '0';
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ESTADO", type="integer", nullable=false)
+     * @ORM\Column(name="estado", type="integer", nullable=false)
      */
     private $estado;
 

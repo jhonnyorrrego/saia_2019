@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FuncionesPaso
  *
- * @ORM\Table(name="FUNCIONES_PASO")
+ * @ORM\Table(name="funciones_paso")
  * @ORM\Entity
  */
 class FuncionesPaso
@@ -15,31 +15,30 @@ class FuncionesPaso
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDFUNCIONES_PASO", type="integer", nullable=false)
+     * @ORM\Column(name="idfunciones_paso", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="FUNCIONES_PASO_IDFUNCIONES_PAS", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idfuncionesPaso;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="NOMBRE", type="string", length=255, nullable=false)
+     * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
     private $nombre;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="PARAMETROS", type="string", length=255, nullable=true)
+     * @ORM\Column(name="parametros", type="string", length=255, nullable=true)
      */
     private $parametros;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="LIBRERIA", type="string", length=255, nullable=false)
+     * @ORM\Column(name="libreria", type="string", length=255, nullable=false)
      */
     private $libreria;
 

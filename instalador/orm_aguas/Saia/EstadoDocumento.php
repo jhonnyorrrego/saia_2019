@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * EstadoDocumento
  *
- * @ORM\Table(name="ESTADO_DOCUMENTO")
+ * @ORM\Table(name="estado_documento", uniqueConstraints={@ORM\UniqueConstraint(name="u_estado_doc", columns={"estado"})})
  * @ORM\Entity
  */
 class EstadoDocumento
@@ -15,31 +15,30 @@ class EstadoDocumento
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDESTADO_DOCUMENTO", type="integer", nullable=false)
+     * @ORM\Column(name="idestado_documento", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="ESTADO_DOCUMENTO_IDESTADO_DOCU", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idestadoDocumento;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ESTADO", type="string", length=255, nullable=false)
+     * @ORM\Column(name="estado", type="string", length=255, nullable=false)
      */
     private $estado;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="EN_USO", type="integer", nullable=false)
+     * @ORM\Column(name="en_uso", type="integer", nullable=false)
      */
     private $enUso = '1';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="DESCRIPCION", type="string", length=255, nullable=true)
+     * @ORM\Column(name="descripcion", type="string", length=255, nullable=true)
      */
     private $descripcion;
 

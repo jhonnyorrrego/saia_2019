@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PermisoDocumento
  *
- * @ORM\Table(name="PERMISO_DOCUMENTO", indexes={@ORM\Index(name="i_permiso_documento_doc", columns={"DOCUMENTO_IDDOCUMENTO"}), @ORM\Index(name="i_permiso_docu_funcionario", columns={"FUNCIONARIO"})})
+ * @ORM\Table(name="permiso_documento", indexes={@ORM\Index(name="i_permiso_documento_doc", columns={"documento_iddocumento"}), @ORM\Index(name="i_permiso_docu_funcionario", columns={"funcionario"})})
  * @ORM\Entity
  */
 class PermisoDocumento
@@ -15,38 +15,37 @@ class PermisoDocumento
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDPERMISO_DOCUMENTO", type="integer", nullable=false)
+     * @ORM\Column(name="idpermiso_documento", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="PERMISO_DOCUMENTO_IDPERMISO_DO", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpermisoDocumento;
 
     /**
-     * @var string
+     * @var integer
      *
-     * @ORM\Column(name="FUNCIONARIO", type="string", length=255, nullable=false)
+     * @ORM\Column(name="funcionario", type="integer", nullable=false)
      */
-    private $funcionario;
+    private $funcionario = 0;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="DOCUMENTO_IDDOCUMENTO", type="integer", nullable=false)
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
      */
     private $documentoIddocumento;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="PERMISOS", type="string", length=15, nullable=true)
+     * @ORM\Column(name="permisos", type="string", length=15, nullable=true)
      */
     private $permisos;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA", type="date", nullable=false)
+     * @ORM\Column(name="fecha", type="date", nullable=false)
      */
     private $fecha = 'SYSDATE';
 

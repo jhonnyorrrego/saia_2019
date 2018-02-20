@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * CaracteristicaP
  *
- * @ORM\Table(name="CARACTERISTICA_P")
+ * @ORM\Table(name="caracteristica_p")
  * @ORM\Entity
  */
 class CaracteristicaP
@@ -15,7 +15,7 @@ class CaracteristicaP
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDCARACTERISTICA", type="integer", nullable=false)
+     * @ORM\Column(name="idcaracteristica", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */
@@ -24,7 +24,7 @@ class CaracteristicaP
     /**
      * @var integer
      *
-     * @ORM\Column(name="PANTALLA_IDPANTALLA", type="integer", nullable=false)
+     * @ORM\Column(name="pantalla_idpantalla", type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="NONE")
      */
@@ -33,14 +33,14 @@ class CaracteristicaP
     /**
      * @var string
      *
-     * @ORM\Column(name="NOMBRE", type="string", length=30, nullable=false)
+     * @ORM\Column(name="nombre", type="string", length=30, nullable=false)
      */
     private $nombre;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="VALOR", type="string", length=200, nullable=false)
+     * @ORM\Column(name="valor", type="string", length=200, nullable=false)
      */
     private $valor;
 

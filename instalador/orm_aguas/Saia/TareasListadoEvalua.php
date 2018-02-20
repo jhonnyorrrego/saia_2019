@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * TareasListadoEvalua
  *
- * @ORM\Table(name="TAREAS_LISTADO_EVALUA")
+ * @ORM\Table(name="tareas_listado_evalua")
  * @ORM\Entity
  */
 class TareasListadoEvalua
@@ -15,45 +15,44 @@ class TareasListadoEvalua
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDTAREAS_LISTADO_EVALUA", type="integer", nullable=false)
+     * @ORM\Column(name="idtareas_listado_evalua", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="TAREAS_LISTADO_EVALUA_IDTAREAS", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idtareasListadoEvalua;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FK_TAREAS_LISTADO", type="integer", nullable=false)
+     * @ORM\Column(name="fk_tareas_listado", type="integer", nullable=false)
      */
     private $fkTareasListado;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FUNCIONARIO_IDFUNCIONARIO", type="integer", nullable=false)
+     * @ORM\Column(name="funcionario_idfuncionario", type="integer", nullable=false)
      */
     private $funcionarioIdfuncionario;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="CALIFICACION", type="integer", nullable=false)
+     * @ORM\Column(name="calificacion", type="integer", nullable=false)
      */
     private $calificacion;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_HORA", type="date", nullable=false)
+     * @ORM\Column(name="fecha_hora", type="date", nullable=false)
      */
     private $fechaHora;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="OBSERVACIONES", type="text", nullable=true)
+     * @ORM\Column(name="observaciones", type="text", nullable=true)
      */
     private $observaciones;
 

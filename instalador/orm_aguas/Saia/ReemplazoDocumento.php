@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ReemplazoDocumento
  *
- * @ORM\Table(name="REEMPLAZO_DOCUMENTO", indexes={@ORM\Index(name="i_reemplazo_documento_doc", columns={"DOCUMENTO_IDDOCUMENTO"})})
+ * @ORM\Table(name="reemplazo_documento", indexes={@ORM\Index(name="i_reemplazo_documento_doc", columns={"documento_iddocumento"})})
  * @ORM\Entity
  */
 class ReemplazoDocumento
@@ -15,38 +15,37 @@ class ReemplazoDocumento
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDREEMPLAZO_DOCUMENTO", type="integer", nullable=false)
+     * @ORM\Column(name="idreemplazo_documento", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="REEMPLAZO_DOCUMENTO_IDREEMPLAZ", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idreemplazoDocumento;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="DOCUMENTO_IDDOCUMENTO", type="integer", nullable=false)
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
      */
     private $documentoIddocumento;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FK_IDREEMPLAZO_SAIA", type="integer", nullable=false)
+     * @ORM\Column(name="fk_idreemplazo_saia", type="integer", nullable=false)
      */
     private $fkIdreemplazoSaia;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ESTADO", type="integer", nullable=false)
+     * @ORM\Column(name="estado", type="integer", nullable=false)
      */
     private $estado;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="TIPO_REEMPLAZO_DOC", type="integer", nullable=false)
+     * @ORM\Column(name="tipo_reemplazo_doc", type="integer", nullable=false)
      */
     private $tipoReemplazoDoc;
 

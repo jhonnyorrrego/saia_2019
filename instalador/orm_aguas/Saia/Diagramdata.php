@@ -2,8 +2,13 @@
 
 namespace Saia;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Diagramdata
+ *
+ * @ORM\Table(name="diagramdata")
+ * @ORM\Entity
  */
 class Diagramdata
 {

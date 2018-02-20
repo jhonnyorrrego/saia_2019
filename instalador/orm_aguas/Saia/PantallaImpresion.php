@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PantallaImpresion
  *
- * @ORM\Table(name="PANTALLA_IMPRESION", indexes={@ORM\Index(name="i_pantalla_i_pdf_ctx", columns={"PDF"})})
+ * @ORM\Table(name="pantalla_impresion", indexes={@ORM\Index(name="i_pant_impr_fk_idpantalla", columns={"fk_idpantalla"})})
  * @ORM\Entity
  */
 class PantallaImpresion
@@ -15,31 +15,30 @@ class PantallaImpresion
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDPANTALLA_IMPRESION", type="integer", nullable=false)
+     * @ORM\Column(name="idpantalla_impresion", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="PANTALLA_IMPRESION_IDPANTALLA_", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpantallaImpresion;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="PDF", type="text", nullable=true)
+     * @ORM\Column(name="pdf", type="text", nullable=true)
      */
     private $pdf;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDREGISTRO", type="integer", nullable=false)
+     * @ORM\Column(name="idregistro", type="integer", nullable=false)
      */
     private $idregistro;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FK_IDPANTALLA", type="integer", nullable=false)
+     * @ORM\Column(name="fk_idpantalla", type="integer", nullable=false)
      */
     private $fkIdpantalla;
 

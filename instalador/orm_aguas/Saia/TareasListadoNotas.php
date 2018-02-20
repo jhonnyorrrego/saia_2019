@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * TareasListadoNotas
  *
- * @ORM\Table(name="TAREAS_LISTADO_NOTAS")
+ * @ORM\Table(name="tareas_listado_notas")
  * @ORM\Entity
  */
 class TareasListadoNotas
@@ -15,38 +15,37 @@ class TareasListadoNotas
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDTAREAS_LISTADO_NOTAS", type="integer", nullable=false)
+     * @ORM\Column(name="idtareas_listado_notas", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="TAREAS_LISTADO_NOTAS_IDTAREAS_", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idtareasListadoNotas;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FUNCIONARIO_IDFUNCIONARIO", type="integer", nullable=false)
+     * @ORM\Column(name="funcionario_idfuncionario", type="integer", nullable=false)
      */
     private $funcionarioIdfuncionario;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FK_TAREAS_LISTADO", type="integer", nullable=false)
+     * @ORM\Column(name="fk_tareas_listado", type="integer", nullable=false)
      */
     private $fkTareasListado;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="DESCRIPCION", type="text", nullable=false)
+     * @ORM\Column(name="descripcion", type="text", nullable=false)
      */
     private $descripcion;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA_CREACION", type="date", nullable=false)
+     * @ORM\Column(name="fecha_creacion", type="date", nullable=false)
      */
     private $fechaCreacion;
 

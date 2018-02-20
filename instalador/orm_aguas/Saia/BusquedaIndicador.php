@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * BusquedaIndicador
  *
- * @ORM\Table(name="BUSQUEDA_INDICADOR")
+ * @ORM\Table(name="busqueda_indicador")
  * @ORM\Entity
  */
 class BusquedaIndicador
@@ -15,59 +15,58 @@ class BusquedaIndicador
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDBUSQUEDA_INDICADOR", type="integer", nullable=false)
+     * @ORM\Column(name="idbusqueda_indicador", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="BUSQUEDA_INDICADOR_IDBUSQUEDA_", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idbusquedaIndicador;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="BUSQUEDA_IDBUSQUEDA_COMPONENTE", type="integer", nullable=false)
+     * @ORM\Column(name="busqueda_idbusqueda_componente", type="integer", nullable=false)
      */
     private $busquedaIdbusquedaComponente;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="INDICADOR_IDINDICADOR", type="integer", nullable=false)
+     * @ORM\Column(name="indicador_idindicador", type="integer", nullable=false)
      */
     private $indicadorIdindicador;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="NOMBRE", type="string", length=255, nullable=false)
+     * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
     private $nombre;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="DESCRIPCION", type="text", nullable=true)
+     * @ORM\Column(name="descripcion", type="text", nullable=true)
      */
     private $descripcion;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ETIQUETA", type="string", length=255, nullable=false)
+     * @ORM\Column(name="etiqueta", type="string", length=255, nullable=false)
      */
     private $etiqueta;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ANCHO", type="integer", nullable=false)
+     * @ORM\Column(name="ancho", type="integer", nullable=false)
      */
     private $ancho;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ALTO", type="integer", nullable=false)
+     * @ORM\Column(name="alto", type="integer", nullable=false)
      */
     private $alto;
 

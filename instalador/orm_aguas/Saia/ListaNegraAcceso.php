@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ListaNegraAcceso
  *
- * @ORM\Table(name="LISTA_NEGRA_ACCESO", indexes={@ORM\Index(name="i_lista_negra__login", columns={"LOGIN"})})
+ * @ORM\Table(name="lista_negra_acceso", indexes={@ORM\Index(name="i_lista_negra__login", columns={"login"})})
  * @ORM\Entity
  */
 class ListaNegraAcceso
@@ -15,45 +15,44 @@ class ListaNegraAcceso
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDLISTA_NEGRA_ACCESO", type="integer", nullable=false)
+     * @ORM\Column(name="idlista_negra_acceso", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="LISTA_NEGRA_ACCESO_IDLISTA_NEG", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idlistaNegraAcceso;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="LOGIN", type="string", length=255, nullable=true)
+     * @ORM\Column(name="login", type="string", length=255, nullable=true)
      */
     private $login;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="IPLOCAL", type="string", length=255, nullable=true)
+     * @ORM\Column(name="iplocal", type="string", length=255, nullable=true)
      */
     private $iplocal;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="IPREMOTA", type="string", length=255, nullable=true)
+     * @ORM\Column(name="ipremota", type="string", length=255, nullable=true)
      */
     private $ipremota;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="FECHA", type="date", nullable=true)
+     * @ORM\Column(name="fecha", type="date", nullable=true)
      */
     private $fecha;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="ESTADO", type="integer", nullable=true)
+     * @ORM\Column(name="estado", type="integer", nullable=true)
      */
     private $estado;
 

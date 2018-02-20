@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PantallaFuncion
  *
- * @ORM\Table(name="PANTALLA_FUNCION", indexes={@ORM\Index(name="i_pantalla_f_ayuda_ctx", columns={"AYUDA"})})
+ * @ORM\Table(name="pantalla_funcion")
  * @ORM\Entity
  */
 class PantallaFuncion
@@ -15,45 +15,44 @@ class PantallaFuncion
     /**
      * @var integer
      *
-     * @ORM\Column(name="IDPANTALLA_FUNCION", type="integer", nullable=false)
+     * @ORM\Column(name="idpantalla_funcion", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="SEQUENCE")
-     * @ORM\SequenceGenerator(sequenceName="PANTALLA_FUNCION_IDPANTALLA_FU", allocationSize=1, initialValue=1)
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $idpantallaFuncion;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="NOMBRE", type="string", length=255, nullable=false)
+     * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
     private $nombre;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="PARAMETROS", type="string", length=255, nullable=true)
+     * @ORM\Column(name="parametros", type="string", length=255, nullable=true)
      */
     private $parametros;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="FK_IDPANTALLA_LIBRERIA", type="integer", nullable=false)
+     * @ORM\Column(name="fk_idpantalla_libreria", type="integer", nullable=false)
      */
     private $fkIdpantallaLibreria;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="TIPO_FUNCION", type="string", length=50, nullable=false)
+     * @ORM\Column(name="tipo_funcion", type="string", length=50, nullable=false)
      */
     private $tipoFuncion;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="AYUDA", type="text", nullable=true)
+     * @ORM\Column(name="ayuda", type="text", nullable=true)
      */
     private $ayuda;
 
