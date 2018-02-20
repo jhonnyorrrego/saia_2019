@@ -11,6 +11,7 @@ use Doctrine\DBAL\Schema\Schema;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\DBAL\Schema\View;
+use Doctrine\DBAL\Schema\Table;
 
 class ImportDbCommand extends Command {
 
@@ -186,21 +187,20 @@ class ImportDbCommand extends Command {
             $this->registrar_mapeo_enum($platf1);
         }
 
-        $schema = $sm->createSchema();
+        //$schema = $sm->createSchema();
+        //$schema->dropTable('evento');
 
-        // $schema->dropTable('evento');
-
-        if (!$schema->hasTable("version_pivote_anexo")) {
-            $table = $schema->createTable("version_pivote_anexo");
-            $table->addColumn("iddocumento_version", "integer", [
+        $table = new Table("version_pivote_anexo");
+        $table->addColumn("iddocumento_version", "integer", [
                 "length" => 11,
                 "notnull" => false
             ]);
-            $table->addColumn("idanexos_version", "integer", [
+        $table->addColumn("idanexos_version", "integer", [
                 "length" => 11,
                 "notnull" => false
             ]);
-        }
+        $sm->createTable($table);
+
     }
 
     private function insertarValores() {
@@ -258,9 +258,14 @@ class ImportDbCommand extends Command {
     private function crearVistas() {
         $conn = $this->obtenerConexion();
 
+        $valores = $this->configuracion->get_valores();
+        $motor = strtolower($valores["dbengine"]);
+
         include ('vistas.php');
 
-        foreach ($vistas as $nombre => $sql) {
+        $procedures = $vistas[$motor];
+
+        foreach ($procedures as $nombre => $sql) {
             $this->crear_vista($conn, $nombre, $sql);
         }
     }
