@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FuncionesFormatoAccion
  *
- * @ORM\Table(name="funciones_formato_accion")
+ * @ORM\Table(name="funciones_formato_accion", indexes={@ORM\Index(name="i_funciones_fo_idfunciones_", columns={"idfunciones_formato"})})
  * @ORM\Entity
  */
 class FuncionesFormatoAccion

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PaginaVinculados
  *
- * @ORM\Table(name="pagina_vinculados")
+ * @ORM\Table(name="pagina_vinculados", indexes={@ORM\Index(name="i_pagina_vincu_pagina_desti", columns={"pagina_destino"}), @ORM\Index(name="i_pagina_vincu_pagina_orige", columns={"pagina_origen"}), @ORM\Index(name="i_pagina_vincu_funcionario_", columns={"funcionario_idfuncionario"})})
  * @ORM\Entity
  */
 class PaginaVinculados

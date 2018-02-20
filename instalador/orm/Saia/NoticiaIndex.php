@@ -24,7 +24,7 @@ class NoticiaIndex
     /**
      * @var string
      *
-     * @ORM\Column(name="noticia", type="text", length=65535, nullable=false)
+     * @ORM\Column(name="noticia", type="text", nullable=false)
      */
     private $noticia;
 

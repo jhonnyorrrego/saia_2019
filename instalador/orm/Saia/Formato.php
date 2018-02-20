@@ -26,35 +26,35 @@ class Formato
      *
      * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
-    private $nombre = '';
+    private $nombre;
 
     /**
      * @var string
      *
      * @ORM\Column(name="etiqueta", type="string", length=255, nullable=false)
      */
-    private $etiqueta = '';
+    private $etiqueta;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="cod_padre", type="integer", nullable=false)
      */
-    private $codPadre = '0';
+    private $codPadre = 0;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="contador_idcontador", type="integer", nullable=true)
      */
-    private $contadorIdcontador = '0';
+    private $contadorIdcontador = 0;
 
     /**
      * @var string
      *
      * @ORM\Column(name="nombre_tabla", type="string", length=255, nullable=false)
      */
-    private $nombreTabla = '';
+    private $nombreTabla;
 
     /**
      * @var string

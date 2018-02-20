@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PasoActividadAnexo
  *
- * @ORM\Table(name="paso_actividad_anexo")
+ * @ORM\Table(name="paso_actividad_anexo", indexes={@ORM\Index(name="i_paso_actividad_anexo_doc", columns={"documento_iddocumento"})})
  * @ORM\Entity
  */
 class PasoActividadAnexo

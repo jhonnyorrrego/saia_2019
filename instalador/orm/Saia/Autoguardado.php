@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Autoguardado
  *
- * @ORM\Table(name="autoguardado")
+ * @ORM\Table(name="autoguardado", indexes={@ORM\Index(name="i_autoguardado_usuario", columns={"usuario"})})
  * @ORM\Entity
  */
 class Autoguardado

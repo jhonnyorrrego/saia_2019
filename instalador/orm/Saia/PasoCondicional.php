@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PasoCondicional
  *
- * @ORM\Table(name="paso_condicional")
+ * @ORM\Table(name="paso_condicional", indexes={@ORM\Index(name="i_paso_condici_idcondiciona", columns={"idcondicional"})})
  * @ORM\Entity
  */
 class PasoCondicional

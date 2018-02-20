@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PermisoFuncionario
  *
- * @ORM\Table(name="permiso_funcionario")
+ * @ORM\Table(name="permiso_funcionario", indexes={@ORM\Index(name="i_permiso_func_asignado_por", columns={"asignado_por"}), @ORM\Index(name="i_permiso_func_entidad_comp", columns={"entidad_compartida"})})
  * @ORM\Entity
  */
 class PermisoFuncionario

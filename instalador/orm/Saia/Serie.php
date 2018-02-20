@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Serie
  *
- * @ORM\Table(name="serie", indexes={@ORM\Index(name="cod_padre", columns={"cod_padre"}), @ORM\Index(name="Indice_llave_entidad", columns={"llave_entidad"}), @ORM\Index(name="serie_idserie_PK", columns={"idserie"})})
+ * @ORM\Table(name="serie", indexes={@ORM\Index(name="i_serie_tipo_entidad", columns={"tipo_entidad"}), @ORM\Index(name="i_serie_cod_padre", columns={"cod_padre"}), @ORM\Index(name="i_serie_llave_entidad", columns={"llave_entidad"})})
  * @ORM\Entity
  */
 class Serie
@@ -26,7 +26,7 @@ class Serie
      *
      * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
-    private $nombre = '';
+    private $nombre;
 
     /**
      * @var integer
@@ -108,7 +108,7 @@ class Serie
     /**
      * @var string
      *
-     * @ORM\Column(name="procedimiento", type="text", length=65535, nullable=true)
+     * @ORM\Column(name="procedimiento", type="text", nullable=true)
      */
     private $procedimiento;
 

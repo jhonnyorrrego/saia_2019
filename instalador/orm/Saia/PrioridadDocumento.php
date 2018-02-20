@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PrioridadDocumento
  *
- * @ORM\Table(name="prioridad_documento")
+ * @ORM\Table(name="prioridad_documento", indexes={@ORM\Index(name="i_prioridad_documento_doc", columns={"documento_iddocumento"})})
  * @ORM\Entity
  */
 class PrioridadDocumento

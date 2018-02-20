@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PermisoAnexo
  *
- * @ORM\Table(name="permiso_anexo")
+ * @ORM\Table(name="permiso_anexo", indexes={@ORM\Index(name="i_permiso_anex_idpropietari", columns={"idpropietario"})})
  * @ORM\Entity
  */
 class PermisoAnexo

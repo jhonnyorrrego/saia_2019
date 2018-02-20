@@ -52,7 +52,7 @@ class BusquedaGraficoSerie
     /**
      * @var string
      *
-     * @ORM\Column(name="condicion_adicional", type="text", length=65535, nullable=true)
+     * @ORM\Column(name="condicion_adicional", type="text", nullable=true)
      */
     private $condicionAdicional;
 
@@ -85,13 +85,13 @@ class BusquedaGraficoSerie
     /**
      * Set busquedaGraficoIdbusquedaGrafico
      *
-     * @param integer $busquedaGraficoIdbusquedaGrafico
+     * @param integer $busquedaGraficoIdbusquedaGr
      *
      * @return BusquedaGraficoSerie
      */
-    public function setBusquedaGraficoIdbusquedaGrafico($busquedaGraficoIdbusquedaGrafico)
+    public function setBusquedaGraficoIdbusquedaGr($busquedaGraficoIdbusquedaGrafico)
     {
-        $this->busquedaGraficoIdbusquedaGrafico = $busquedaGraficoIdbusquedaGrafico;
+        $this->busquedaGraficoIdbusquedaGr = $busquedaGraficoIdbusquedaGrafico;
 
         return $this;
     }
@@ -101,9 +101,9 @@ class BusquedaGraficoSerie
      *
      * @return integer
      */
-    public function getBusquedaGraficoIdbusquedaGrafico()
+    public function getBusquedaGraficoIdbusquedaGr()
     {
-        return $this->busquedaGraficoIdbusquedaGrafico;
+        return $this->busquedaGraficoIdbusquedaGr;
     }
 
     /**

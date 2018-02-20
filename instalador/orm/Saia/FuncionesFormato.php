@@ -26,14 +26,14 @@ class FuncionesFormato
      *
      * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
-    private $nombre = '';
+    private $nombre;
 
     /**
      * @var string
      *
      * @ORM\Column(name="nombre_funcion", type="string", length=255, nullable=false)
      */
-    private $nombreFuncion = '';
+    private $nombreFuncion;
 
     /**
      * @var string
@@ -47,7 +47,7 @@ class FuncionesFormato
      *
      * @ORM\Column(name="etiqueta", type="string", length=255, nullable=false)
      */
-    private $etiqueta = '';
+    private $etiqueta;
 
     /**
      * @var string
@@ -61,7 +61,7 @@ class FuncionesFormato
      *
      * @ORM\Column(name="ruta", type="string", length=255, nullable=false)
      */
-    private $ruta = '';
+    private $ruta;
 
     /**
      * @var string

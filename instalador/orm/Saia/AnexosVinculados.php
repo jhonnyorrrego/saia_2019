@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * AnexosVinculados
  *
- * @ORM\Table(name="anexos_vinculados")
+ * @ORM\Table(name="anexos_vinculados", indexes={@ORM\Index(name="i_anexos_vincu_anexos_desti", columns={"anexos_destino"}), @ORM\Index(name="i_anexos_vincu_anexos_orige", columns={"anexos_origen"})})
  * @ORM\Entity
  */
 class AnexosVinculados

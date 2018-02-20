@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * BuzonSalida
  *
- * @ORM\Table(name="buzon_salida", indexes={@ORM\Index(name="destino", columns={"destino"}), @ORM\Index(name="archivo_idarchivo", columns={"archivo_idarchivo"}), @ORM\Index(name="origen", columns={"origen"})})
+ * @ORM\Table(name="buzon_salida", indexes={@ORM\Index(name="i_buzon_salida_destino", columns={"destino"}), @ORM\Index(name="i_buzon_salida_ruta_idruta", columns={"ruta_idruta"}), @ORM\Index(name="i_buzon_salida_origen", columns={"origen"}), @ORM\Index(name="i_buzon_salida_fecha", columns={"fecha"}), @ORM\Index(name="i_buzon_salida_archivo_idar", columns={"archivo_idarchivo"})})
  * @ORM\Entity
  */
 class BuzonSalida
@@ -31,14 +31,14 @@ class BuzonSalida
     /**
      * @var string
      *
-     * @ORM\Column(name="nombre", type="string", nullable=false)
+     * @ORM\Column(name="nombre", type="string", length=20, nullable=false)
      */
     private $nombre = 'RECEPCION';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="destino", type="string", length=20, nullable=true)
+     * @ORM\Column(name="destino", type="string", length=255, nullable=true)
      */
     private $destino;
 

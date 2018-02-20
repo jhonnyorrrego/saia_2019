@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PermisoFormato
  *
- * @ORM\Table(name="permiso_formato")
+ * @ORM\Table(name="permiso_formato", indexes={@ORM\Index(name="i_permiso_form_idpropietari", columns={"idpropietario"})})
  * @ORM\Entity
  */
 class PermisoFormato

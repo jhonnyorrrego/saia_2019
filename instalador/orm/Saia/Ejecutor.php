@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Ejecutor
  *
- * @ORM\Table(name="ejecutor", indexes={@ORM\Index(name="nombre", columns={"nombre"})})
+ * @ORM\Table(name="ejecutor", indexes={@ORM\Index(name="i_ejecutor_identificaci", columns={"identificacion"}),@ORM\Index(name="nombre", columns={"nombre"})})
  * @ORM\Entity
  */
 class Ejecutor

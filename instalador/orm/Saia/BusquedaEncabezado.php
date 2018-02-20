@@ -24,14 +24,14 @@ class BusquedaEncabezado
     /**
      * @var string
      *
-     * @ORM\Column(name="encabezado", type="text", length=65535, nullable=true)
+     * @ORM\Column(name="encabezado", type="text", nullable=true)
      */
     private $encabezado;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="pie", type="text", length=65535, nullable=true)
+     * @ORM\Column(name="pie", type="text", nullable=true)
      */
     private $pie;
 

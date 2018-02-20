@@ -26,7 +26,7 @@ class FuncionesBusqueda
      *
      * @ORM\Column(name="etiqueta", type="string", length=255, nullable=false)
      */
-    private $etiqueta = '';
+    private $etiqueta;
 
     /**
      * @var integer

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Asignacion
  *
- * @ORM\Table(name="asignacion", indexes={@ORM\Index(name="i_asignacion_doc", columns={"documento_iddocumento"})})
+ * @ORM\Table(name="asignacion", indexes={@ORM\Index(name="i_asignacion_llave_entida", columns={"llave_entidad"}), @ORM\Index(name="i_asignacion_fecha_inicia", columns={"fecha_inicial"}), @ORM\Index(name="i_asignacion_doc", columns={"documento_iddocumento"})})
  * @ORM\Entity
  */
 class Asignacion

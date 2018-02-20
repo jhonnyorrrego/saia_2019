@@ -31,7 +31,7 @@ class TareasBuzon
     /**
      * @var string
      *
-     * @ORM\Column(name="descripcion_estado", type="text", length=65535, nullable=false)
+     * @ORM\Column(name="descripcion_estado", type="text", nullable=false)
      */
     private $descripcionEstado;
 

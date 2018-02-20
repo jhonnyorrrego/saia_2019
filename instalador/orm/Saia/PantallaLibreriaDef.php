@@ -47,7 +47,7 @@ class PantallaLibreriaDef
      *
      * @ORM\Column(name="estado", type="integer", nullable=false)
      */
-    private $estado = '1';
+    private $estado = 1;
 
     /**
      * @var string
@@ -69,7 +69,6 @@ class PantallaLibreriaDef
      * @ORM\Column(name="orden", type="integer", nullable=false)
      */
     private $orden;
-
 
 
     /**

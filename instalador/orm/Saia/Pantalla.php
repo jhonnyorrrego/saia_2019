@@ -45,7 +45,7 @@ class Pantalla
     /**
      * @var string
      *
-     * @ORM\Column(name="librerias", type="text", length=65535, nullable=true)
+     * @ORM\Column(name="librerias", type="text", nullable=true)
      */
     private $librerias;
 

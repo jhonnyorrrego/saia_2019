@@ -24,7 +24,7 @@ class GraficoSerie
     /**
      * @var string
      *
-     * @ORM\Column(name="codigo_sql", type="text", length=16777215, nullable=false)
+     * @ORM\Column(name="codigo_sql", type="text", nullable=false)
      */
     private $codigoSql;
 

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PermisoDocumento
  *
- * @ORM\Table(name="permiso_documento", indexes={@ORM\Index(name="doc", columns={"documento_iddocumento"}), @ORM\Index(name="func", columns={"funcionario"})})
+ * @ORM\Table(name="permiso_documento", indexes={@ORM\Index(name="i_permiso_documento_doc", columns={"documento_iddocumento"}), @ORM\Index(name="i_permiso_docu_funcionario", columns={"funcionario"})})
  * @ORM\Entity
  */
 class PermisoDocumento
@@ -26,7 +26,7 @@ class PermisoDocumento
      *
      * @ORM\Column(name="funcionario", type="integer", nullable=false)
      */
-    private $funcionario = '0';
+    private $funcionario = 0;
 
     /**
      * @var integer

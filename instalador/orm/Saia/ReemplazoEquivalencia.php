@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ReemplazoEquivalencia
  *
- * @ORM\Table(name="reemplazo_equivalencia")
+ * @ORM\Table(name="reemplazo_equivalencia", indexes={@ORM\Index(name="i_reemplazo_eq_llave_entida", columns={"llave_entidad_origen"})})
  * @ORM\Entity
  */
 class ReemplazoEquivalencia

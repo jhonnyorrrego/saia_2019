@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PasoActividad
  *
- * @ORM\Table(name="paso_actividad")
+ * @ORM\Table(name="paso_actividad", indexes={@ORM\Index(name="i_paso_activid_formato_ante", columns={"formato_anterior"}), @ORM\Index(name="i_paso_activid_paso_anterio", columns={"paso_anterior"})})
  * @ORM\Entity
  */
 class PasoActividad

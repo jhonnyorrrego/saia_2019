@@ -26,7 +26,7 @@ class Configuracion
      *
      * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
-    private $nombre = '';
+    private $nombre;
 
     /**
      * @var string
@@ -40,7 +40,7 @@ class Configuracion
      *
      * @ORM\Column(name="tipo", type="string", length=255, nullable=true)
      */
-    private $tipo = '';
+    private $tipo;
 
     /**
      * @var \DateTime

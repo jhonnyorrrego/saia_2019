@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Funcionario
  *
- * @ORM\Table(name="funcionario", uniqueConstraints={@ORM\UniqueConstraint(name="funcionario_codigo", columns={"funcionario_codigo"}), @ORM\UniqueConstraint(name="login", columns={"login"}), @ORM\UniqueConstraint(name="funcionario_codigo_2", columns={"funcionario_codigo"}), @ORM\UniqueConstraint(name="login_2", columns={"login"})})
+ * @ORM\Table(name="funcionario", uniqueConstraints={@ORM\Index(name="i_funcionario_estado", columns={"estado"}), @ORM\UniqueConstraint(name="u_funcionario_codigo", columns={"funcionario_codigo"}), @ORM\UniqueConstraint(name="u_funcionario_login", columns={"login"})})
  * @ORM\Entity
  */
 class Funcionario
@@ -26,7 +26,7 @@ class Funcionario
      *
      * @ORM\Column(name="funcionario_codigo", type="integer", nullable=false)
      */
-    private $funcionarioCodigo = '0';
+    private $funcionarioCodigo;
 
     /**
      * @var string
@@ -52,7 +52,7 @@ class Funcionario
     /**
      * @var string
      *
-     * @ORM\Column(name="firma", type="blob", length=16777215, nullable=true)
+     * @ORM\Column(name="firma", type="blob", nullable=true)
      */
     private $firma;
 
@@ -75,7 +75,7 @@ class Funcionario
      *
      * @ORM\Column(name="estado", type="integer", nullable=false)
      */
-    private $estado = '1';
+    private $estado = 1;
 
     /**
      * @var \DateTime

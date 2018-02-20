@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ListaNegraAcceso
  *
- * @ORM\Table(name="lista_negra_acceso")
+ * @ORM\Table(name="lista_negra_acceso", indexes={@ORM\Index(name="i_lista_negra__login", columns={"login"})})
  * @ORM\Entity
  */
 class ListaNegraAcceso

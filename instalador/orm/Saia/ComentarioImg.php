@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ComentarioImg
  *
- * @ORM\Table(name="comentario_img", indexes={@ORM\Index(name="i_comentario_img_doc", columns={"documento_iddocumento"})})
+ * @ORM\Table(name="comentario_img", indexes={@ORM\Index(name="i_comentario_i_pagina", columns={"pagina"}), @ORM\Index(name="i_comentario_img_doc", columns={"documento_iddocumento"})})
  * @ORM\Entity
  */
 class ComentarioImg
@@ -31,7 +31,7 @@ class ComentarioImg
     /**
      * @var string
      *
-     * @ORM\Column(name="tipo", type="string", nullable=false)
+     * @ORM\Column(name="tipo", type="string", length=4000, nullable=false)
      */
     private $tipo = 'PAGINA';
 
@@ -45,7 +45,7 @@ class ComentarioImg
     /**
      * @var string
      *
-     * @ORM\Column(name="comentario", type="text", length=65535, nullable=false)
+     * @ORM\Column(name="comentario", type="text", nullable=false)
      */
     private $comentario;
 

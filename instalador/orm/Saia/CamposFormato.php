@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * CamposFormato
  *
- * @ORM\Table(name="campos_formato", uniqueConstraints={@ORM\UniqueConstraint(name="ix_campos_formato_formato", columns={"formato_idformato", "nombre"})}, indexes={@ORM\Index(name="formato_idformato", columns={"formato_idformato"})})
+ * @ORM\Table(name="campos_formato", uniqueConstraints={@ORM\UniqueConstraint(name="ix_campos_formato_formato", columns={"formato_idformato", "nombre"})}, indexes={@ORM\Index(name="i_campos_forma_formato_idfo", columns={"formato_idformato"})})
  * @ORM\Entity
  */
 class CamposFormato

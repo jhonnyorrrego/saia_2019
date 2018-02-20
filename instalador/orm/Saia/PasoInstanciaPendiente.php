@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PasoInstanciaPendiente
  *
- * @ORM\Table(name="paso_instancia_pendiente", indexes={@ORM\Index(name="i_paso_inst_doc_iddoc", columns={"documento_iddocumento"})})
+ * @ORM\Table(name="paso_instancia_pendiente", indexes={@ORM\Index(name="i_paso_instancia_pendiente_doc", columns={"documento_iddocumento"})})
  * @ORM\Entity
  */
 class PasoInstanciaPendiente
@@ -31,7 +31,7 @@ class PasoInstanciaPendiente
     /**
      * @var string
      *
-     * @ORM\Column(name="responsable", type="text", length=65535, nullable=false)
+     * @ORM\Column(name="responsable", type="text", nullable=false)
      */
     private $responsable;
 

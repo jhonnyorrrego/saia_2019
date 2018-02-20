@@ -31,7 +31,7 @@ class ContenidosCarrusel
     /**
      * @var string
      *
-     * @ORM\Column(name="contenido", type="text", length=65535, nullable=true)
+     * @ORM\Column(name="contenido", type="text", nullable=true)
      */
     private $contenido;
 
