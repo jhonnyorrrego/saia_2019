@@ -47,21 +47,23 @@ INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, esta
 END"
     ],
     "oracle" => [
-        "SP_ASIGNAR_RADICADO" => "CREATE OR REPLACE PROCEDURE SP_ASIGNAR_RADICADO (iddoc INT, tipo INT, functionario INT)
-is
-declare
-valor INT;
-sentencia_doc CLOB;
-sentencia_cont CLOB;
-BEGIN
-SELECT consecutivo INTO valor FROM contador WHERE idcontador=tipo;
-UPDATE documento SET numero=valor WHERE iddocumento=iddoc;
-UPDATE contador SET consecutivo=consecutivo+1 WHERE idcontador=tipo;
-sentencia_doc  := 'UPDATE documento SET numero=' || valor || ' WHERE iddocumento='  || iddoc;
-sentencia_cont := 'UPDATE contador  SET consecutivo=' || valor+1 || ' WHERE idcontador=' || tipo;
-INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado, codigo_sql) VALUES(funcionario, CURRENT_TIMESTAMP, 'MODIFICAR', 'documento', valor, 0, sentencia_doc);
-INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado, codigo_sql, detalle) VALUES(funcionario, CURRENT_TIMESTAMP, 'MODIFICAR', 'contador', valor+1, 0, sentencia_cont);
-END"
+        "SP_ASIGNAR_RADICADO" => "CREATE OR REPLACE PROCEDURE SP_ASIGNAR_RADICADO (iddoc INT, tipo INT, funcionario INT)
+  is
+  un_valor number(10);
+  un_numero number(10);
+  sentencia_doc CLOB;
+  sentencia_cont CLOB;
+  BEGIN
+  SELECT consecutivo INTO un_valor FROM contador WHERE idcontador=tipo;
+  UPDATE documento SET numero=un_valor WHERE iddocumento=iddoc;
+  un_numero := un_valor;
+  un_valor := un_valor+1;
+  UPDATE contador SET consecutivo=un_valor WHERE idcontador=tipo;
+  sentencia_doc  := 'UPDATE documento SET numero=' || un_numero || ' WHERE iddocumento='  || iddoc;
+  sentencia_cont := 'UPDATE contador  SET consecutivo=' || un_valor || ' WHERE idcontador=' || tipo;
+  INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado, codigo_sql) VALUES(to_char(funcionario), CURRENT_TIMESTAMP, 'MODIFICAR', 'documento', un_valor, 0, sentencia_doc);
+  INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado, codigo_sql) VALUES(to_char(funcionario), CURRENT_TIMESTAMP, 'MODIFICAR', 'contador', un_valor, 0, sentencia_cont);
+  END;"
     ],
     "sqlserver" => [
         "sp_asignar_radicado" => "CREATE PROCEDURE [dbo].[sp_asignar_radicado]
