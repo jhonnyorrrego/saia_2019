@@ -73,21 +73,21 @@ class BusquedaComponente
     /**
      * @var string
      *
-     * @ORM\Column(name="info", type="text", length=65535, nullable=true)
+     * @ORM\Column(name="info", type="text", nullable=true)
      */
     private $info;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="exportar", type="text", length=65535, nullable=true)
+     * @ORM\Column(name="exportar", type="text", nullable=true)
      */
     private $exportar;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="exportar_encabezado", type="text", length=65535, nullable=true)
+     * @ORM\Column(name="exportar_encabezado", type="text", nullable=true)
      */
     private $exportarEncabezado;
 

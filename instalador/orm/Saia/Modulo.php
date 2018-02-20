@@ -94,7 +94,7 @@ class Modulo
     /**
      * @var string
      *
-     * @ORM\Column(name="ayuda", type="text", length=65535, nullable=false)
+     * @ORM\Column(name="ayuda", type="text", nullable=true)
      */
     private $ayuda;
 
