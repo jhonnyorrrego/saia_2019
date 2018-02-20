@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Funcionario
  *
- * @ORM\Table(name="funcionario", uniqueConstraints={@ORM\Index(name="i_funcionario_estado", columns={"estado"}), @ORM\UniqueConstraint(name="u_funcionario_codigo", columns={"funcionario_codigo"}), @ORM\UniqueConstraint(name="u_funcionario_login", columns={"login"})})
+ * @ORM\Table(name="funcionario", indexes={@ORM\Index(name="i_funcionario_estado", columns={"estado"})}, uniqueConstraints={@ORM\UniqueConstraint(name="u_funcionario_codigo", columns={"funcionario_codigo"}), @ORM\UniqueConstraint(name="u_funcionario_login", columns={"login"})})
  * @ORM\Entity
  */
 class Funcionario
