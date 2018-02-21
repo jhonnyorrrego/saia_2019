@@ -78,40 +78,40 @@ define("RUTA_DISCO", "..");
 define("SO", "linux");
 define("CARPETA_SAIA", "{{carpetasaia}}");
 define("LLAVE_SAIA_CRYPTO", "cerok_saia421_5");
-define("RUTA_VERSIONES", "../almacenamiento/VERSIONES/");
-define("RUTA_ARCHIVOS", "../almacenamiento/");
-define("RUTA_PDFS", "../almacenamiento/");
-define("RUTA_IMAGENES", "../almacenamiento/");
-define("RUTA_QR", "../almacenamiento/");
+define("RUTA_VERSIONES", "{{almacenamientosaia}}/VERSIONES/");
+define("RUTA_ARCHIVOS", "{{almacenamientosaia}}/");
+define("RUTA_PDFS", "{{almacenamientosaia}}/");
+define("RUTA_IMAGENES", "{{almacenamientosaia}}/");
+define("RUTA_QR", "{{almacenamientosaia}}/");
 define("RUTA_INFO_QR", PROTOCOLO_CONEXION . "{{urlsaia}}/{{carpetasaia}}/info_doc.php");
 
-define("RUTA_BACKUP", "../almacenamiento/backup/");
+define("RUTA_BACKUP", "{{almacenamientosaia}}/backup/");
 define("RUTA_BACKUP_ELIMINADOS", RUTA_BACKUP . "eliminados/");
 define("RUTA_BACKUP_EVENTO", RUTA_BACKUP . "evento/");
 define("RUTA_BACKUP_SESION", RUTA_BACKUP . "sesiones/");
 
 /* NO SE TIENE EN CUENTA EN EL NUEVO ESQUEMA DE ALMACENAMIENTO */
-define("RUTA_EVENTO_FORMATO", "../almacenamiento/configuracion/evento_formato/");
+define("RUTA_EVENTO_FORMATO", "{{almacenamientosaia}}/configuracion/evento_formato/");
 
 /* NUEVA CONSTANTE PARA CONFIGURACION */
-define("RUTA_CONFIGURACION", "../almacenamiento/configuracion/");
+define("RUTA_CONFIGURACION", "{{almacenamientosaia}}/configuracion/");
 
 /* CONSTANTES QUE DEPENDEN DE LA CONSTANTE "RUTA_CONFIGURACION" */
-define("RUTA_ARCHIVOS_BPMN", "../almacenamiento/configuracion/archivos_bpmn/"); // Flujos saia
+define("RUTA_ARCHIVOS_BPMN", "{{almacenamientosaia}}/configuracion/archivos_bpmn/"); // Flujos saia
 
 /* CONSTANTES QUE DEPENDEN DE LA CONSTANTE "RUTA_ARCHIVOS" */
 define("RUTA_ANEXOS_TAREAS", "anexos_tareas/");
 
 /* CONSTANTES QUE DEPENDEN DE LA CONSTANTE "RUTA_IMAGENES" */
-define("RUTA_FOTOGRAFIA_FUNCIONARIO", "../almacenamiento/configuracion/adicionales_funcionario/fotografia/");
-define("RUTA_NOTICIA_IMAGENES", "../almacenamiento/configuracion/noticia_imagenes/"); // Imagenes cargadas en las noticias que se visualizan en el login
-define("RUTA_LOGO_SAIA", "../almacenamiento/configuracion/logo_saia/");
+define("RUTA_FOTOGRAFIA_FUNCIONARIO", "{{almacenamientosaia}}/configuracion/adicionales_funcionario/fotografia/");
+define("RUTA_NOTICIA_IMAGENES", "{{almacenamientosaia}}/configuracion/noticia_imagenes/"); // Imagenes cargadas en las noticias que se visualizan en el login
+define("RUTA_LOGO_SAIA", "{{almacenamientosaia}}/configuracion/logo_saia/");
 // No es posible modificar la carga de imagenes del tiny. Se usa la ruta local
-define("RUTA_TINY_IMAGENES", "../almacenamiento/configuracion/imagenes_areatexto/"); // Imagenes cargadas a travez del tiny
-define("RUTA_CARRUSEL_IMAGENES", "../almacenamiento/configuracion/imagenes_carrusel/"); // Carrusel saia
+define("RUTA_TINY_IMAGENES", "{{almacenamientosaia}}/configuracion/imagenes_areatexto/"); // Imagenes cargadas a travez del tiny
+define("RUTA_CARRUSEL_IMAGENES", "{{almacenamientosaia}}/configuracion/imagenes_carrusel/"); // Carrusel saia
 
-define("RUTA_ANEXOS_TAREAS", "../almacenamiento/anexos_tareas/");
-define("RUTA_ARCHIVOS_BPMN", "../almacenamiento/configuracion/archivos_bpmn/"); // Flujos saia
+define("RUTA_ANEXOS_TAREAS", "{{almacenamientosaia}}/anexos_tareas/");
+define("RUTA_ARCHIVOS_BPMN", "{{almacenamientosaia}}/configuracion/archivos_bpmn/"); // Flujos saia
 
 define("LLAVE_SAIA", "SAIA_RELEASE1");
 /* EVITA PROBLEMA DE CODIFICACION DE LOS FORMATOS, SE HABILITA O DESHABILITA SEGUN SE PRESENTE EL ERROR */

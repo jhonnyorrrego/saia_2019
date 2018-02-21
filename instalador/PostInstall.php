@@ -34,6 +34,14 @@ class PostInstall {
             }
         }
 
+        $ruta_actual = dirname($installPath);
+        $define1 = "$ruta_actual/saia/define.php";
+        if(is_dir("$ruta_actual/saia") && is_file($define1)) {
+            $msgs = array("La configuración ya fue realizada con anterioridad", "Se encontró el archivo $define1");
+            $event->getIO()->write($msgs, true);
+            //TODO: Se debe borrar el directorio $installPath
+            return 1;
+        }
         if(is_file($installPath . "/define.php")) {
             $event->getIO()->write("La configuración ya fue realizada con anterioridad");
             return 1;

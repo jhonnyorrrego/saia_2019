@@ -139,6 +139,14 @@ class ConfigCaptureCommand extends Command {
         $preguntaServidorWeb->setNormalizer($normalizer);
         $preguntaServidorWeb->setMaxAttempts(3);
         $this->parametros["urlsaia"] = $preguntaServidorWeb;
+
+        $normalizer_alm = function ($value) {
+            return rtrim($value, '/');
+        };
+
+        $preguntaAlmacenamiento = new Question("Ruta almacenamiento (por defecto '../almacenamiento'): ", '../almacenamiento');
+        $preguntaAlmacenamiento->setNormalizer($normalizer_alm);
+        $this->parametros["almacenamientosaia"] = $preguntaAlmacenamiento;
     }
 
     public function get_valores() {

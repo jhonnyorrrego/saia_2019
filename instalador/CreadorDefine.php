@@ -113,9 +113,11 @@ class ConfigGenCommand extends Command {
             $skeleton = str_replace('{{' . $key . '}}', $value, $skeleton);
         }
 
-        $ruta_saia = basename(basename($this->install_dir));
-        if(empty($ruta_saia)) {
+        $dir = dirname($this->install_dir);
+        if($dir == ".") {
             $ruta_saia = basename($this->install_dir);
+        } else {
+            $ruta_saia = basename($dir);
         }
         if(empty($ruta_saia)) {
             $ruta_saia = $this->install_dir;
