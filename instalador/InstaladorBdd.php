@@ -200,15 +200,19 @@ class ImportDbCommand extends Command {
             "length" => 10,
             "unsigned" => true,
             "notnull" => true
-        ])->addColumn("cache_key", "string", [
+        ]);
+        $rcmail_cache->addColumn("cache_key", "string", [
             "length" => 128,
             "notnull" => true
-        ])->addColumn("created", "datetime", [
+        ]);
+        $rcmail_cache->addColumn("created", "datetime", [
             "notnull" => true,
             "default" => '1000-01-01 00:00:00'
-        ])->addColumn("expires", "datetime", [
+        ]);
+        $rcmail_cache->addColumn("expires", "datetime", [
             "notnull" => false
-        ])->addColumn("data", "text", [
+        ]);
+        $rcmail_cache->addColumn("data", "text", [
             "notnull" => true
         ]);
         $rcmail_cache->addIndex([
@@ -222,12 +226,15 @@ class ImportDbCommand extends Command {
         $rcmail_cache_shared->addColumn("cache_key", "string", [
             "length" => 255,
             "notnull" => true
-        ])->addColumn("created", "datetime", [
+        ]);
+        $rcmail_cache_shared->addColumn("created", "datetime", [
             "notnull" => true,
             "default" => '1000-01-01 00:00:00'
-        ])->addColumn("expires", "datetime", [
+        ]);
+        $rcmail_cache_shared->addColumn("expires", "datetime", [
             "notnull" => false
-        ])->addColumn("data", "text", [
+        ]);
+        $rcmail_cache_shared->addColumn("data", "text", [
             "notnull" => true
         ]);
         $rcmail_cache_shared->addIndex([
@@ -241,10 +248,12 @@ class ImportDbCommand extends Command {
             "length" => 10,
             "unsigned" => true,
             "notnull" => false
-        ])->addColumn("language", "string", [
+        ]);
+        $rcmail_dictionary->addColumn("language", "string", [
             "length" => 5,
             "notnull" => true
-        ])->addColumn("data", "text", [
+        ]);
+        $rcmail_dictionary->addColumn("data", "text", [
             "notnull" => true
         ]);
         $rcmail_dictionary->addUniqueIndex([
