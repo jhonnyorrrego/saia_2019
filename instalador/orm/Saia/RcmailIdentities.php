@@ -73,7 +73,7 @@ class RcmailIdentities
     /**
      * @var string
      *
-     * @ORM\Column(name="reply-to", type="string", length=128, nullable=false)
+     * @ORM\Column(name="`reply-to`", type="string", length=128, nullable=false)
      */
     private $replyTo = '';
 
