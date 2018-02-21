@@ -13,15 +13,13 @@ include_once($ruta_db_superior."db.php");
 
 function conexion_exportar_importar($datos){
 	global $conn; 
-	$datos = json_decode($datos);
+	$datos = json_decode($datos,true);
 	$importar=json_encode($datos);
 	if(@$datos["servidor_importar"]==''){
 	    return(json_encode(array("exito"=>0,"mensaje"=>"error en configuracion del servidor para importar")));
 	}
 	$destino = new nusoap_client($datos["servidor_importar"]);
-	$respuesta_destino = $destino->call('generar_importar', array($importar));	
-	$respuesta_destino = json_decode($respuesta_destino);
-	$respuesta_destino=json_encode($respuesta_destino);	
+	$respuesta_destino = $destino->call('generar_importar', array($importar));
     return($respuesta_destino);
 }	
 ?>
