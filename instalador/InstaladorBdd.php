@@ -164,13 +164,7 @@ class ImportDbCommand extends Command {
         $entityManager = EntityManager::create($this->connectionParams, $config);
         $tool = new \Doctrine\ORM\Tools\SchemaTool($entityManager);
         $classes = $entityManager->getMetadataFactory()->getAllMetadata();
-        /*
-         * $classes = array(
-         * $entityManager->getClassMetadata('Saia\\Documento'),
-         * $entityManager->getClassMetadata('Saia\Funcionario')
-         * );
-         */
-        // $tool
+
         $tool->createSchema($classes);
         // var_dump($classes);
     }
@@ -187,20 +181,80 @@ class ImportDbCommand extends Command {
             $this->registrar_mapeo_enum($platf1);
         }
 
-        //$schema = $sm->createSchema();
-        //$schema->dropTable('evento');
+        // $schema = $sm->createSchema();
+        // $schema->dropTable('evento');
 
         $table = new Table("version_pivote_anexo");
         $table->addColumn("iddocumento_version", "integer", [
-                "length" => 11,
-                "notnull" => false
-            ]);
+            "length" => 11,
+            "notnull" => false
+        ]);
         $table->addColumn("idanexos_version", "integer", [
-                "length" => 11,
-                "notnull" => false
-            ]);
+            "length" => 11,
+            "notnull" => false
+        ]);
         $sm->createTable($table);
 
+        $rcmail_cache = new Table("rcmail_cache");
+        $rcmail_cache->addColumn("user_id", "integer", [
+            "length" => 10,
+            "unsigned" => true,
+            "notnull" => true
+        ])->addColumn("cache_key", "string", [
+            "length" => 128,
+            "notnull" => true
+        ])->addColumn("created", "datetime", [
+            "notnull" => true,
+            "default" => '1000-01-01 00:00:00'
+        ])->addColumn("expires", "datetime", [
+            "notnull" => false
+        ])->addColumn("data", "text", [
+            "notnull" => true
+        ]);
+        $rcmail_cache->addIndex([
+            "expires"
+        ], "expires_index");
+        $rcmail_cache->addIndex([
+            "user_id",
+            "cache_key"
+        ], "user_cache_index");
+        $rcmail_cache_shared = new Table("rcmail_cache_shared");
+        $rcmail_cache_shared->addColumn("cache_key", "string", [
+            "length" => 255,
+            "notnull" => true
+        ])->addColumn("created", "datetime", [
+            "notnull" => true,
+            "default" => '1000-01-01 00:00:00'
+        ])->addColumn("expires", "datetime", [
+            "notnull" => false
+        ])->addColumn("data", "text", [
+            "notnull" => true
+        ]);
+        $rcmail_cache_shared->addIndex([
+            "expires"
+        ], "expires_index");
+        $rcmail_cache_shared->addIndex([
+            "cache_key"
+        ], "cache_key_index");
+        $rcmail_dictionary = new Table("rcmail_dictionary");
+        $rcmail_dictionary->addColumn("user_id", "integer", [
+            "length" => 10,
+            "unsigned" => true,
+            "notnull" => false
+        ])->addColumn("language", "string", [
+            "length" => 5,
+            "notnull" => true
+        ])->addColumn("data", "text", [
+            "notnull" => true
+        ]);
+        $rcmail_dictionary->addUniqueIndex([
+            "user_id",
+            "language"
+        ], "uniqueness");
+
+        $sm->createTable($rcmail_cache);
+        $sm->createTable($rcmail_cache_shared);
+        $sm->createTable($rcmail_dictionary);
     }
 
     private function insertarValores() {
@@ -211,7 +265,7 @@ class ImportDbCommand extends Command {
             $this->registrar_mapeo_enum($platf1);
         }
 
-        if($this->connectionParams['driver'] == 'pdo_oci' || $this->connectionParams['driver'] == 'oci8') {
+        if ($this->connectionParams['driver'] == 'pdo_oci' || $this->connectionParams['driver'] == 'oci8') {
             $sth = $conn->prepare("ALTER SESSION SET NLS_TIME_FORMAT = 'HH24:MI:SS' NLS_DATE_FORMAT = 'YYYY-MM-DD HH24:MI:SS' NLS_TIMESTAMP_FORMAT = 'YYYY-MM-DD HH24:MI:SS' NLS_TIMESTAMP_TZ_FORMAT = 'YYYY-MM-DD HH24:MI:SS TZH:TZM'");
             $sth->execute();
         }
