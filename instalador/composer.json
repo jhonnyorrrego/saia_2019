@@ -27,7 +27,7 @@
                                 "source" : {
                                         "url" : "http://laboratorio.netsaia.com:82/cerok/saia_release.git",
                                         "type" : "git",
-                                        "reference" : "origin/master"
+                                        "reference" : "v18.0.2"
                                 }
                         }
                 }
