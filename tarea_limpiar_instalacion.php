@@ -170,11 +170,11 @@ $conn -> Ejecutar_Sql("truncate table entidad_expediente");
 $conn -> Ejecutar_Sql("truncate table caja");
 $conn -> Ejecutar_Sql("truncate table entidad_caja");
 
-//limpiar_formatos();
-//limpiar_busquedas();
-//limpiar_indicadores();
-//limpiar_funcionarios();
-//asignar_permisos_cerok();
+limpiar_formatos();
+limpiar_busquedas();
+limpiar_indicadores();
+limpiar_funcionarios();
+asignar_permisos_cerok();
 
 echo("Fin de la limpieza");
 
