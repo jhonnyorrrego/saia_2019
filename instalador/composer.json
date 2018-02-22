@@ -1,0 +1,54 @@
+{
+        "nombre_cliente":"Prueba",
+        "require" : {
+		"php" : "^5.5.9",
+                "saia_release": "v18.0.2",
+                "saia_release/editor_codigo" : "v1.0.1"
+        },
+        "repositories" : [{
+                        "packagist.org" : false,
+                        "type" : "package",
+                        "package" : {
+                                "name" : "saia_release/editor_codigo",
+                                "version" : "v1.0.1",
+                                "source" : {
+                                        "url" : "http://laboratorio.netsaia.com:82/usuario_saia/editor_codigo.git",
+                                        "type" : "git",
+                                        "reference" : "origin/v1.0.0"
+                                }
+                        }
+                },
+                {
+                        "packagist.org" : false,
+                        "type" : "package",
+                        "package" : {
+                                "name" : "saia_release",
+                                "version" : "v18.0.2",
+                                "source" : {
+                                        "url" : "http://laboratorio.netsaia.com:82/cerok/saia_release.git",
+                                        "type" : "git",
+                                        "reference" : "v18.0.2"
+                                }
+                        }
+                }
+        ],
+        "config" : {
+                "bin-dir" : "bin",
+                "secure-http" : false,
+                "gitlab-token" : {
+                        "gitlab.com" : "Dm9vcC1_vgvXuTL6Lwcq"
+                },
+                "vendor-dir" : "./"
+        },
+        "scripts":{
+                "post-update-cmd":["Saia\\Composer\\PostInstall::localConf"],
+                "post-install-cmd": ["Saia\\Composer\\PostInstall::localConf"]
+        },
+	"autoload":{
+		"psr-4":{
+			"Saia\\": "saia_release/instalador/orm/Saia",
+			"Saia\\Composer\\": "saia_release/instalador",
+			"Doctrine\\DBAL\\": "saia_release/vendor"
+		}
+	}
+}
