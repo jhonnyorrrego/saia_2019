@@ -17,7 +17,7 @@ class Version20180123193332 extends AbstractMigration
     {
         date_default_timezone_set("America/Bogota");
         $this->platform->registerDoctrineTypeMapping('enum', 'string');
-        
+
         // Por defecto notnull=true
         if (!$schema->hasTable("anexos_tmp")) {
             $table = $schema->createTable("anexos_tmp");
@@ -43,10 +43,10 @@ class Version20180123193332 extends AbstractMigration
                 "notnull" => false
             ]);
             $table->addColumn("idformato", "integer", [
-                "length" => 11
+                "length" => 11, "notnull" => false
             ]);
             $table->addColumn("idcampos_formato", "integer", [
-                "length" => 11
+                "length" => 11, "notnull" => false
             ]);
             $table->addColumn("funcionario_idfuncionario", "integer", [
                 "length" => 11
@@ -55,7 +55,7 @@ class Version20180123193332 extends AbstractMigration
                 "idanexos_tmp"
             ]);
         }
-        
+
     }
 
     /**
