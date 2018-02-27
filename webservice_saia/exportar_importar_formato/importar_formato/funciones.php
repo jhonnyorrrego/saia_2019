@@ -343,6 +343,7 @@ function generar_importar($datos){
 				}
 				
 				if(@$idformato){
+				    $formato["idformato"]=$idformato;
 					$formato['exito']=1;
 					$formato['mensaje']="Formato Creado con Exito!";
 				}else{

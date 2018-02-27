@@ -13,7 +13,7 @@ include_once($ruta_db_superior."db.php");
 
 function generar_idformato($datos){
 	global $conn; 
-	$datos = json_decode($datos);	
+	$datos = json_decode($datos);
 	$idformato=busca_filtro_tabla("idformato","formato","lower(nombre)='".$datos->nombre_formato."'","",$conn);
 	$retorno=array();
 	$retorno['exito']=0;
@@ -172,17 +172,18 @@ function generar_exportar($datos){
 }	
 function generar_lista_funciones($datos){
 	global $ruta_db_superior,$conn; 
-		
 	$datos = json_decode($datos);
 	$idformato=$datos->idformato;
+
 	$retorno_formato=array();
 	$formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $idformato, "", $conn);
 	$condicional="A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=".$idformato;
 	//Busco todas las funciones del formato las agrupo por el idfunciones_formato y se debe sacar la que tenga el primer idfunciones_formato_enlace
-	$funciones=busca_filtro_tabla("A.*,B.formato_idformato","funciones_formato A,funciones_formato_enlace B",$condicional,"GROUP BY idfunciones_formato HAVING min(idfunciones_formato_enlace)=idfunciones_formato_enlace",$conn);
+	$funciones=busca_filtro_tabla("A.*,B.formato_idformato","funciones_formato A,funciones_formato_enlace B",$condicional,"",$conn);
 	$includes='';
 	for($i=0;$i<$funciones['numcampos'];$i++){
-		$formato_orig = $funciones[$i]["formato_idformato"];
+	    $funciones_orig = busca_filtro_tabla("A.*,B.formato_idformato", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.funciones_formato_fk=".$funciones[$i]["idfunciones_formato"], " B.idfunciones_formato_enlace asc", $conn);
+		$formato_orig = $funciones_orig[0]["formato_idformato"];
 		if ($formato_orig != $idformato) { // busco el nombre del formato inicial
 				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
 				if ($dato_formato_orig["numcampos"] && ($dato_formato_orig[0]["nombre"] != $formato[0]["nombre"])) {
