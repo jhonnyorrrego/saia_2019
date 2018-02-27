@@ -11,7 +11,7 @@ while ($max_salida > 0) {
 
 include_once ($ruta_db_superior . "db.php");
 include_once($ruta_db_superior."librerias_saia.php");
-include_once($ruta_db_superior."pantallas/lib/librerias_notificaciones.php");
+
 
 function campo_area_responsable($idformato,$idcampo,$iddoc){
 global $conn,$ruta_db_superior;
@@ -29,13 +29,13 @@ if($_REQUEST["iddoc"]){
 <br />
 Buscar:
 <input  tabindex='6'  type="text" id="stext_secretarias" width="200px" size="25">
-<a href="javascript:void(0)" onclick="tree_secretarias.findItem((document.getElementById('stext_secretarias').value),1)"> 
+<a href="javascript:void(0)" onclick="tree_secretarias.findItem(htmlentities(document.getElementById('stext_secretarias').value),1)"> 
 	<img src="<?php echo $ruta_db_superior;?>botones/general/anterior.png"border="0px">
 </a>
-<a href="javascript:void(0)" onclick="tree_secretarias.findItem((document.getElementById('stext_secretarias').value),0,1)">
+<a href="javascript:void(0)" onclick="tree_secretarias.findItem(htmlentities(document.getElementById('stext_secretarias').value),0,1)">
 	<img src="<?php echo $ruta_db_superior;?>botones/general/buscar.png"border="0px">
 </a>
-<a href="javascript:void(0)" onclick="tree_secretarias.findItem((document.getElementById('stext_secretarias').value))"> 
+<a href="javascript:void(0)" onclick="tree_secretarias.findItem(htmlentities(document.getElementById('stext_secretarias').value))"> 
 	<img src="<?php echo $ruta_db_superior;?>botones/general/siguiente.png"border="0px">
 </a>
 <br />
@@ -162,15 +162,15 @@ function radicado_plan_padre($idformato,$idcampo,$iddoc=NULL){
   
 	if($_REQUEST["iddoc"]){
 		if($doc[0]["ejecutor"]!=usuario_actual("funcionario_codigo")){
-		alerta("El hallazgo solo puede ser editado por su creador");
-		redirecciona("mostrar_hallazgo.php?iddoc=".$iddoc."&idformato=".$idformato);
-		die();
-	}	
-	if($padre[0]["estado_plan_mejoramiento"]==2){
-		alerta("El plan de mejoramiento se encuentra en estado APROBADO");
-		redirecciona("mostrar_hallazgo.php?iddoc=".$iddoc."&idformato=".$idformato);
-		die();
-	}	
+			alerta("El hallazgo solo puede ser editado por su creador");
+			redirecciona("mostrar_hallazgo.php?iddoc=".$iddoc."&idformato=".$idformato);
+			die();
+		}	
+		if($padre[0]["estado_plan_mejoramiento"]==2){
+			alerta("El plan de mejoramiento se encuentra en estado APROBADO");
+			redirecciona("mostrar_hallazgo.php?iddoc=".$iddoc."&idformato=".$idformato);
+			die();
+		}	
 				
 		$clase_accion = busca_filtro_tabla("clase_accion","ft_hallazgo","documento_iddocumento=".$iddoc,"",$conn);
 	}  
@@ -181,41 +181,47 @@ function radicado_plan_padre($idformato,$idcampo,$iddoc=NULL){
 ?>
 <script type="text/javascript">
 	$(document).ready(function(){
-		$("#deficiencia").parent().parent().hide();
+		//$("#deficiencia").parent().parent().hide();
 		$("#causas").parent().parent().hide();
 		$("#secretarias").parent().parent().hide();				
 		$("#secretarias").removeClass("required");
 		$("#secretarias").parent().parent().children(".encabezado").html("AREA RESPONSABLE*");
-		$("#deficiencia").parent().parent().children(".encabezado").html("DEFICIENCIA*");
+		//$("#deficiencia").parent().parent().children(".encabezado").html("DEFICIENCIA*");
 		$("#causas").parent().parent().children(".encabezado").html("CAUSAS*");
 		
 		if(parseInt("<?php echo($clase_accion[0]["clase_accion"]); ?>") !== 3 && parseInt("<?php echo($clase_accion["numcampos"]); ?>") > 0){						
-			$("#deficiencia").parent().parent().show();
+			//$("#deficiencia").parent().parent().show();
 			$("#causas").parent().parent().show();
 			$("#secretarias").parent().parent().show();				
 			$("#secretarias").addClass("required");
 			$("#causas").addClass("required");
 			$("#deficiencia").addClass("required");
 		}else{
-			$('#clase_accion option[value="1"]').attr('selected','selected');
+			/*$('#clase_accion option[value="1"]').attr('selected','selected');
 			$("#deficiencia").parent().parent().show();
 			$("#causas").parent().parent().show();
 			$("#secretarias").parent().parent().show();				
 			$("#secretarias").addClass("required");
 			$("#deficiencia").addClass("required");
-			$("#causas").addClass("required");
+			$("#causas").addClass("required");*/
+			//$("#deficiencia").parent().parent().hide();
+			$("#causas").parent().parent().hide();
+			$("#secretarias").parent().parent().hide();				
+			$("#secretarias").removeClass("required");
+			$("#causas").removeClass("required");
+			$("#deficiencia").removeClass("required");
 		}		
 		
 		$("#clase_accion").change(function(){
 			if(parseInt($(this).val()) == 3){
-				$("#deficiencia").parent().parent().hide();
+				//$("#deficiencia").parent().parent().hide();
 				$("#causas").parent().parent().hide();
 				$("#secretarias").parent().parent().hide();				
 				$("#secretarias").removeClass("required");
 				$("#causas").removeClass("required");
 				$("#deficiencia").removeClass("required");
 			}else{
-				$("#deficiencia").parent().parent().show();
+				//$("#deficiencia").parent().parent().show();
 				$("#causas").parent().parent().show();
 				$("#secretarias").parent().parent().show();				
 				$("#secretarias").addClass("required");
@@ -299,15 +305,15 @@ function notificar_edicion($idformato,$iddoc){
   $papa=busca_filtro_tabla("","ft_plan_mejoramiento a,documento b,ft_hallazgo c,documento d","c.documento_iddocumento=$iddoc and a.documento_iddocumento=b.iddocumento and c.documento_iddocumento=d.iddocumento and ft_plan_mejoramiento=idft_plan_mejoramiento","",$conn);
 
   $mensaje="Se ha editado un Hallazgo perteneciente a un Plan de mejoramiento que Usted ha elaborado. Hallazgo No. ".$papa[0]["numero"].", Deficiencia: ".strip_tags(html_entity_decode($papa[0]["deficiencia"]));
-enviar_mensaje($_SESSION["usuario_actual"],$papa[0]["ejecutor"],$mensaje,"msg");
+enviar_mensaje("","codigo",$papa[0]["ejecutor"],"PRUEBA - Se ha editado un Hallazgo",$mensaje);
 
   $mensaje="Se ha editado un Hallazgo del cual Usted es responsable. Hallazgo No. ".$papa[0]["numero"].", Deficiencia: ".strip_tags(html_entity_decode($papa[0]["deficiencia"]));
-enviar_mensaje($_SESSION["usuario_actual"],explode(",",$papa[0]["responsables"]),$mensaje,"e-interno");
+enviar_mensaje("","codigo",explode(",",$papa[0]["responsables"]),"PRUEBA - Se ha editado un Hallazgo",$mensaje);
 }
 function detalles_padre($idformato,$iddoc){
-global $conn;
+global $conn,$ruta_db_superior;
 $texto="";
-
+include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 if(@$idformato&&@$iddoc){
   $formato=busca_filtro_tabla("B.*,A.nombre_tabla","formato A, campos_formato B","A.idformato=B.formato_idformato AND B.formato_idformato=".$idformato." AND B.etiqueta_html ='detalle'","B.orden ASC",$conn); 
   if($formato[0]["nombre"]){
@@ -338,7 +344,7 @@ function validar_entrada_hallazgo($idformato,$iddoc){
 	$dato=busca_filtro_tabla(fecha_db_obtener("fecha_revisado","Y-m-d H:i:s")." AS fecha_revisado,".fecha_db_obtener("fecha_aprobado","Y-m-d H:i:s")." AS fecha_aprobado","ft_plan_mejoramiento a","a.documento_iddocumento=".$_REQUEST["anterior"],"",$conn);
 	if($dato[0]["fecha_revisado"] && $dato[0]["fecha_revisado"]>'2010-01-01 00:00:00' && $dato[0]["fecha_aprobado"] && $dato[0]["fecha_aprobado"]>'2010-01-01 00:00:00'){
 		alerta("No se permite adicionar hallazgos, ya que el plan de mejoramiento se encuentra aprobado y cerrado. Cualquier inquietud comunicarse con Control Interno");
-		if(usuario_actual('login') != '0k'){
+		if(usuario_actual('login') != 'cerok'){
 			redirecciona("../../vacio.php");
 			die();	
 		}		
@@ -545,4 +551,148 @@ function mostrar_correcion($idformato, $iddoc){
 		
 	}
 }
+
+function adicionar_item_accion($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+	
+	$dato=busca_filtro_tabla("","ft_hallazgo A, documento B ","A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=".$iddoc,"",$conn);  //nombre tabla padre
+	if($_REQUEST['tipo']!=5 && $dato[0]['estado']!='APROBADO'){
+			
+		
+		echo '<a href="../accion_plan_mejoramiento/adicionar_accion_plan_mejoramiento.php?pantalla=padre&idpadre='.$iddoc.'&idformato='.$idformato.'&padre='.$dato[0]['idft_hallazgo'].'" target="_self">Adicionar Acción Correctiva/Preventiva y/o Mejora</a>';
+	}
+}
+
+function mostrar_item_accion($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+	
+	$tabla='';
+		
+		$dato=busca_filtro_tabla("","ft_hallazgo A, documento B ","A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=".$iddoc,"",$conn); 
+
+		if($dato['numcampos']!=0){
+								
+			$tabla.='
+						<table style="width:100%; border-collapse: collapse;" border="1">
+						<tbody>
+						<tr>
+							<td class="encabezado_list">ACCIÓN</td>
+							<td class="encabezado_list">RIESGO</td>
+							<td class="encabezado_list">COSTO</td>
+							<td class="encabezado_list">VOLUMEN</td>
+							<td class="encabezado_list">CALIFICACIÓN TOTAL</td>
+						</tr>
+			';
+				
+				$item=busca_filtro_tabla("","ft_accion_plan_mejoramiento A, ft_hallazgo B","idft_hallazgo=ft_hallazgo and A.ft_hallazgo=".$dato[0]['idft_hallazgo'],"calificacion_total DESC",$conn);					
+
+			if($item['numcampos']!=0){
+				
+						
+
+			for($j=$item['numcampos']-1;$j>=0;$j--){
+
+	
+							$tabla.='		
+									<tr>
+										<td>'.strip_tags(codifica_encabezado(html_entity_decode($item[$j]['accion_item']))).'</td>
+										<td>'.$item[$j]['riesgo_accion'].'</td>
+										<td>'.$item[$j]['costo_accion'].'</td>
+										<td>'.$item[$j]['volumen_accion'].'</td>
+										<td>'.$item[$j]['calificacion_total'].'</td>
+					
+							';
+							if($_REQUEST['tipo']!=5 && $dato[0]['estado']!='APROBADO'){
+								$tabla.='
+										<td id="registro_'.$item[$j]['idft_accion_plan_mejoramiento'].'" style="width:10px;"><center><img src="'.$ruta_db_superior.'imagenes/delete.gif" class="guardar_seleccionado" idregistro="'.$item[$j]['idft_accion_plan_mejoramiento'].'"  style="cursor:pointer"></center></td>
+									</tr>								
+								';		
+							}
+							else{
+								$tabla.='
+									</tr>
+								';										
+							}								
+
+	
+			
+			}  //fin ciclo items
+			
+			
+				$tabla.='	
+					</tbody>
+					</table>
+				';	
+				
+				$tabla.='
+					<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+					<script>
+					$(document).ready(function(){
+						$(".guardar_seleccionado").click(function(){
+							var idregistro=$(this).attr("idregistro");
+							
+							if(confirm("En realidad desea borrar este elemento?")){
+								$.ajax({
+			                        type:"POST",
+			                        url: "borrar_item.php",
+			                        data: {
+			                                        idft:idregistro,
+			                                        tabla:"ft_accion_plan_mejoramiento"
+			                        },
+			                        success: function(){
+										location.reload();
+			                        },
+			                        error:function(){
+			                        	alert("error consulta ajax");
+			                        }
+			                    }); 
+			                }	  			
+						});				
+					});
+					</script>						
+				';
+									
+				echo($tabla);	
+			}
+		} 
+}
+
+function mostrar_tiempo_cumplimiento($idformato,$iddoc){
+	global $conn, $ruta_db_superior; 
+	
+	$aprobado=busca_filtro_tabla("d.estado, a.tiempo_cumplimiento, d.iddocumento","documento d, ft_hallazgo a","documento_iddocumento=iddocumento AND iddocumento=$iddoc","",$conn);
+	
+	if($_REQUEST['tipo']!=5 && $aprobado[0]['estado']=="APROBADO" && $aprobado[0]['tiempo_cumplimiento']==''){
+		
+		$html="<button id='actualizar_programado'>Ingresar Tiempo Programado para Cumplimiento</button>"; 
+		echo $html;
+		echo(librerias_highslide());
+
+		?>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#actualizar_programado").click(function(){
+			var enlaces='<?php echo($ruta_db_superior)?>formatos/hallazgo/actualizar_tiempo_cumplimiento.php?iddoc=<?php echo $aprobado[0]['iddocumento'];?>';
+			hs.graphicsDir = '<?php echo($ruta_db_superior); ?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
+			hs.outlineType = 'rounded-white';
+			hs.htmlExpand( this, {
+				src: enlaces,
+				objectType: 'iframe',
+				outlineType: 'rounded-white',
+				wrapperClassName: 'highslide-wrapper drag-header',
+				preserveContent: false,
+				width: 309,
+				height: 242
+			});
+			hs.Expander.prototype.onAfterClose = function() {
+				window.location = "<?php echo($ruta_db_superior); ?>formatos/hallazgo/mostrar_hallazgo.php?iddoc=<?php echo($iddoc); ?>&idformato=<?php echo($idformato); ?>";
+			}
+		});
+	});
+</script>
+<?php
+		
+	}
+}
+
 ?>

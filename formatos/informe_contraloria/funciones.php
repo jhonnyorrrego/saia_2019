@@ -14,7 +14,6 @@ include_once ($ruta_db_superior . "formatos/plan_mejoramiento/funciones.php");
 include_once ($ruta_db_superior . "formatos/hallazgo/funciones.php");
 include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
-include_once ($ruta_db_superior . "pantallas/lib/librerias_notificaciones.php");
 
 
 function add_edit_informe_contraloria($idformato, $idcampo,$iddoc){
@@ -77,7 +76,7 @@ function porcentaje_plan($idformato, $idcampo, $iddoc = NULL, $informe = null) {
 
 
 function logo_contraloria() {
-	echo '<img src="'. PROTOCOLO_CONEXION . RUTA_PDF . '/imagenes/contraloria.jpg" alt="" />';
+	echo '<img src="http://' . RUTA_PDF . '/imagenes/contraloria.jpg" alt="" />';
 }
 
 function listar_hallazgo_informe($idformato, $iddoc, $condicion = "") {
@@ -90,7 +89,7 @@ function listar_hallazgo_informe($idformato, $iddoc, $condicion = "") {
 	
 	}
 	
-
+	$seguimiento=busca_filtro_tabla(fecha_db_obtener("b.fecha","Y-m-d H:i:s")." as fecha","ft_informe_contraloria a, documento b","a.documento_iddocumento=b.iddocumento and b.iddocumento=".$_REQUEST["iddoc"],"",$conn);
 	
 	if ($condicion == "" && $documento[0]["idft_plan_mejoramiento"]) {
 		$condicion = " A.ft_plan_mejoramiento= B.idft_plan_mejoramiento and A.documento_iddocumento= C.iddocumento and A.estado<>'INACTIVO' and C.estado<>'ELIMINADO' AND A.ft_plan_mejoramiento=B.idft_plan_mejoramiento AND A.estado<>'INACTIVO' AND A.documento_iddocumento=iddocumento and C.estado<>'ELIMINADO' AND A.ft_plan_mejoramiento=" . $documento[0]["idft_plan_mejoramiento"];
@@ -161,8 +160,11 @@ function listar_hallazgo_informe($idformato, $iddoc, $condicion = "") {
 			$ingresa = 0;
 			for ($i = 0, $j = 1; $i < $hallazgos["numcampos"]; $i++) {
 
-				$porcentajes = busca_filtro_tabla_limit("a.idft_seguimiento,a.porcentaje", "ft_seguimiento a, ft_hallazgo b, documento c", "a.documento_iddocumento=c.iddocumento and lower(c.estado) not in('eliminado','anulado') and b.idft_hallazgo =a.ft_hallazgo and b.idft_hallazgo=" . $hallazgos[$i]["idft_hallazgo"], " order by a.idft_seguimiento desc", intval(0), intval(1), $conn);
-
+				//$porcentajes = busca_filtro_tabla_limit("a.idft_seguimiento,a.porcentaje", "ft_seguimiento a, ft_hallazgo b, documento c", "a.documento_iddocumento=c.iddocumento and lower(c.estado) not in('eliminado','anulado') and b.idft_hallazgo =a.ft_hallazgo and b.idft_hallazgo=" . $hallazgos[$i]["idft_hallazgo"], " order by a.idft_seguimiento desc", intval(0), intval(1), $conn);
+				
+				$porcentajes = busca_filtro_tabla("a.idft_seguimiento,a.porcentaje", "ft_seguimiento a, ft_hallazgo b, documento c, documento e", "b.documento_iddocumento=e.iddocumento and ".fecha_db_obtener('e.fecha','Y-m-d H:i:s')."<='".$seguimiento[0]['fecha']."' AND a.documento_iddocumento=c.iddocumento and ".fecha_db_obtener('c.fecha','Y-m-d H:i:s')."<='".$seguimiento[0]['fecha']."' AND lower(c.estado) NOT IN('eliminado','anulado') AND b.idft_hallazgo=a.ft_hallazgo AND b.idft_hallazgo=".$hallazgos[$i]["idft_hallazgo"], " a.idft_seguimiento desc", $conn);
+				//print_r($porcentajes);die();
+				
 				$seguimientos = busca_filtro_tabla("logros_alcanzados,observaciones", "ft_seguimiento a,documento b", "documento_iddocumento=iddocumento and b.estado<>'ELIMINADO' and ft_hallazgo=" . $hallazgos[$i]["idft_hallazgo"], "", $conn);
 				$logros = array();
 				$observaciones = "";
@@ -323,12 +325,12 @@ function link_agregar_campos($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
 		if(@$_REQUEST["tipo"] != 5 ){
             ?>
-    		<script type="text/javascript" src="<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
+    		<!--script type="text/javascript" src="<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
     		 <link rel="stylesheet" type="text/css" href="<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
     		 <script type='text/javascript'>
     		   hs.graphicsDir = '<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
     		   hs.outlineType = 'rounded-white';
-    		</script>
+    		</script-->
     		<?php		    
 			$enlace = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 500, height: 260,preserveContent:false} )" href="'.$ruta_db_superior.'formatos/informe_contraloria/llenar_campos.php?iddoc=' . $iddoc . '&idformato=' . $idformato . '" >Agregar campos</a>';
 			echo $enlace;

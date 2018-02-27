@@ -129,32 +129,33 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
                    </a>
                     <?php }?>
                    <script>
-                   		$(document).ready(function(){
- 							$('.enlace_home_documento').live('click',function(){
- 								var iddoc='<?php echo($iddoc); ?>';
- 								console.log(iddoc);
- 								var cod_padre='<?php echo($formato[0]['cod_padre']); ?>';
- 								<?php if($_SESSION["tipo_dispositivo"]!="movil"){ ?>
- 								redirecciona_home_documento(iddoc,cod_padre);
- 								<?php } ?>
- 							});			
-                   		});
+										$(document).ready(function(){
+											$('.enlace_home_documento').live('click',function(){
+												var iddoc='<?php echo($iddoc); ?>';
+												var cod_padre='<?php echo($formato[0]['cod_padre']); ?>';
+												<?php if($_SESSION["tipo_dispositivo"]!="movil"){ ?>
+												redirecciona_home_documento(iddoc,cod_padre);
+												<?php } ?>
+											});	
+										});
+										
+										var item="<?php echo($llave_formato);?>";
+										function redirecciona_home_documento(iddoc,cod_padre){
+											if(cod_padre!='' && cod_padre!='0'){
+												direccion=new String(window.parent.frames[0].location);
+												vector=direccion.split('&');
+												vector_iddoc=vector[1].split('=');
+												if(window.parent.parent.frames[0].frameElement.name=='centro'){
+													window.parent.parent.frames[0].location="<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
+												}else if(window.parent.parent.frames[2].frameElement.name=='centro'){
+													window.parent.parent.frames[2].location="<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
+												}					  
+											}else{
+												window.open("<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+iddoc,"arbol_formato");				
+											}              			
+										}
                    		
-                   		var item="<?php echo($llave_formato);?>";
-                   		function redirecciona_home_documento(iddoc,cod_padre){
-                   			if(cod_padre!='' && cod_padre!='0'){
-	                   			direccion=new String(window.parent.frames[0].location);
-	             				vector=direccion.split('&');
-	             				vector_iddoc=vector[1].split('=');
-	             				if(window.parent.parent.frames[0].frameElement.name=='centro'){
-	             					window.parent.parent.frames[0].location="<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
-	             				}else if(window.parent.parent.frames[2].frameElement.name=='centro'){
-	             					window.parent.parent.frames[2].location="<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
-	             				}					  
-                   			}else{
-                   				window.open("<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+iddoc,"arbol_formato");				
-                   			}              			
-                   		}
+                   		
                    		<?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
                    		var browserType;
                    	  if (document.layers) {browserType = "nn4";}
@@ -241,7 +242,6 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
                    	                ?>
                    	                nodeId=tree2.getSelectedItemId();
                    	                llave=tree2.getParentId(nodeId);
-                   	                console.log(nodeId+'<--->'+llave+'<--->'+no_seleccionar);
                    	                onNodeSelect(nodeId);
                    	                <?php
                    	            }

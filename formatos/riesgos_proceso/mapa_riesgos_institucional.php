@@ -7,12 +7,14 @@ if(@$_REQUEST["excel"]){
 }
 $max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
-while($max_salida>0){	
-	if(is_file($ruta."db.php")){
-		$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-	}
-	$ruta.="../";
-	$max_salida--;
+while($max_salida>0)
+{
+if(is_file($ruta."db.php"))
+{
+$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+}
+$ruta.="../";
+$max_salida--;
 }
 
 include_once($ruta_db_superior.'db.php');
@@ -72,9 +74,12 @@ table thead td {
 </style>
 <?php
 
-$proceso=busca_filtro_tabla("","ft_proceso a, documento b","a.documento_iddocumento=b.iddocumento AND b.estado not in('ELIMINADO') AND a.estado!='INACTIVO'","",$conn);	
-
+$proceso=busca_filtro_tabla("","ft_proceso a, documento b","a.documento_iddocumento=b.iddocumento AND b.estado not in('ELIMINADO')","",$conn);	
+  	//print_r($proceso);
+	
 		if($_REQUEST["tipo"] != 5 && !@$_REQUEST["excel"]){
+			//$url = "http://".RUTA_PDF_LOCAL."/formatos/riesgos_proceso/mapa_riesgos_institucional.php?tipo=5";
+			//$ruta = $ruta_db_superior."class_impresion2.php?tipo=5&orientacion=1&url=".$url."&pdf=1&url_encabezado=";
 			$url="mapa_riesgos_institucional.php?excel=1";
 			$tabla = '
   					     <a target="_blank" href="'.$url.'">
@@ -86,11 +91,10 @@ $proceso=busca_filtro_tabla("","ft_proceso a, documento b","a.documento_iddocume
 		if(!@$_REQUEST["tipo"])$tabla.='<thead class="encabezado_table">';
 									$tabla.='
 									<tr>									
-										<td class="riesgo_encabezado titulo_riesgo" colspan="14">MAPA DE RIESGOS INSTITUCIONAL</td>
+										<td class="riesgo_encabezado titulo_riesgo" colspan="13">MAPA DE RIESGOS INSTITUCIONAL</td>
 									</tr>
 									<tr height="80px">
 										<td class="titulo_riesgo" rowspan="2"><p>PROCESO</p></td>
-										<td class="titulo_riesgo" rowspan="2"><p>FECHA DE CREACI&Oacute;N DEL RIESGO</p></td>
 										<td class="titulo_riesgo" rowspan="2"><p>RIESGO</p></td>
                     <td class="titulo_riesgo" colspan="2"><p>CALIFICACI&Oacute;N</p></td>
                     <td class="titulo_riesgo" rowspan="2"><p>EVALUACION RIESGO</p></td>
@@ -117,16 +121,14 @@ $proceso=busca_filtro_tabla("","ft_proceso a, documento b","a.documento_iddocume
 							
 echo($tabla);											
 function mostrar_riesgos($idproceso,$proceso){
-	$riesgos=busca_filtro_tabla(fecha_db_obtener('b.fecha','Y-m-d')." as x_fecha, a.*","ft_riesgos_proceso a, documento b","a.ft_proceso=".$idproceso." and a.estado<>'INACTIVO' and a.tipo_riesgo<>'Corrupcion' and a.documento_iddocumento=b.iddocumento","consecutivo",$conn);
-
+	$riesgos=busca_filtro_tabla("a.*","ft_riesgos_proceso a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in ('ELIMINADO','ANULADO') and a.ft_proceso=".$idproceso." and a.estado<>'INACTIVO' and a.tipo_riesgo<>'Corrupcion'","a.consecutivo",$conn);
 	for ($i=0;$i<$riesgos["numcampos"]; $i++){
 		if($riesgos[$i]["consecutivo"] == 1){
 		}
 		$tabla .='
 				<tr>
 					<td>'.$proceso.'</td>
-					<td>'.$riesgos[$i]["x_fecha"].'</td>
-					<td>'.$riesgos[$i]["consecutivo"].' - '.preg_replace("/(<p\b[^>]*>)(.*?)(<\/p>)/","$2",html_entity_decode($riesgos[$i]["riesgo"])).'</td>
+					<td>'.$riesgos[$i]["consecutivo"].' - '.preg_replace("/(<p\b[^>]*>)(.*?)(<\/p>)/","$2",codifica_encabezado(html_entity_decode($riesgos[$i]["riesgo"]))).'</td>
 					<td style="text-align: center;">'.probabilidad($riesgos[$i]["probabilidad"]).'</td>';
 					$tabla.='<td style="text-align: center;">'.impacto($riesgos[$i]["impacto"])."</td>";
 					if($riesgos[$i]["tipo_riesgo"]=="Corrupcion"){
@@ -157,6 +159,7 @@ function mostrar_riesgos($idproceso,$proceso){
 
 function obtener_evaluacion_riesgo($idft_riesgos_proceso, $probabilidad, $impacto){
 	global $conn;
+	
 	$evaluacion=tabla_evaluacion($probabilidad,$impacto);
 	$color_celda=color_evaluacion($evaluacion);
 	$valoraciones=valoraciones($idft_riesgos_proceso);				
@@ -222,7 +225,7 @@ function obtener_acciones_riesgo($idft_riesgos_proceso){
 	
 	$control_riesgos = busca_filtro_tabla("descripcion_control, idft_control_riesgos","ft_control_riesgos a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso=".$idft_riesgos_proceso,"",$conn);
 	if($control_riesgos['numcampos']){
-		//for ($i=0; $i < $control_riesgos["numcampos"]; $i++) { 
+		//for ($i=0; $i<$control_riesgos["numcampos"]; $i++) { 
 			$acciones .= acciones($idft_riesgos_proceso,"acciones_accion");
 		//}	
 	}
@@ -231,6 +234,7 @@ function obtener_acciones_riesgo($idft_riesgos_proceso){
 	}	
 	return($acciones);
 }
+
 
 function obtener_responsables_accion_riesgo($idft_riesgos_proceso){
 	global $conn;
@@ -273,15 +277,14 @@ function acciones($id,$campo){
 			
 			if($campo=="indicador"){	
 				$acciones=busca_filtro_tabla("indicador, iddocumento,acciones_accion","ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
-				//if(usuario_actual('login')=='0k')
-				//print_r($acciones);
+
 			}
 	}else	
 	$acciones=busca_filtro_tabla($campo.",ft_riesgos_proceso,iddocumento","ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and acciones_control='".$id."'","",$conn);
-	//if(usuario_actual('login')=='0k'){
 			
 		if($campo=="acciones_accion"){
 			$acciones=busca_filtro_tabla($campo.", iddocumento","ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
+			//echo $acciones["numcampos"];
 		}
 		if($campo=="responsables"){
 			$campo="reponsables";
@@ -289,11 +292,8 @@ function acciones($id,$campo){
 		}
 		if($campo=="indicador"){
 			$acciones=busca_filtro_tabla("indicador, iddocumento","ft_acciones_riesgo a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and ft_riesgos_proceso='".$id."'","",$conn);
-			if(usuario_actual('login')=='0k'){
-				//print_r($acciones);
-			}
 		}
-	//}
+	
 	
 	
 	$texto='';
@@ -302,20 +302,7 @@ function acciones($id,$campo){
 			$texto.=codifica_encabezado(html_entity_decode($acciones[$i][$campo]));
 		}
 		else{
-		    $responsable=busca_filtro_tabla("","funcionario","estado=1 AND funcionario_codigo in(".$acciones[$i][$campo].")","",$conn);
-		    
-		    
-		    for($j=0;$j<$responsable['numcampos'];$j++){
-		        if($j==0){
-		            $texto.='- ';
-		        }
-		        $texto.=$responsable[$j]['nombres'].' '.$responsable[$j]['apellidos'];
-		        if(($j+1)!=$responsable['numcampos']){
-		            $texto.=', ';
-		        }else{
-		            $texto.='<br>';
-		        }
-		    }
+			$texto.=mostrar_valor_campo($campo,332,$acciones[$i]["iddocumento"],1);
 		}		
 	}
 	return $texto;

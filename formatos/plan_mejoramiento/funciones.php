@@ -2,11 +2,11 @@
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
 while($max_salida>0){
-	if(is_file($ruta."db.php")){
-		$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-	}
-	$ruta.="../";
-	$max_salida--;
+  if(is_file($ruta."db.php")){
+    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+  }
+  $ruta.="../";
+  $max_salida--;
 }
 
 include_once($ruta_db_superior."db.php");
@@ -57,8 +57,8 @@ function elaborado_por($idformato,$iddoc){
   global $conn;
 
   if($_REQUEST["tipo"]!=5){
-  	$fun_cod=usuario_actual("funcionario_codigo");
-  	$fun_login=usuario_actual("login");
+    $fun_cod=usuario_actual("funcionario_codigo");
+    $fun_login=usuario_actual("login");
   }
   $dato=busca_filtro_tabla("elaborado,nombres,apellidos,funcionario_codigo,".fecha_db_obtener("fecha_elaborado","Y-m-d H:i:s")." AS fecha_elaborado","ft_plan_mejoramiento,documento,funcionario","documento_iddocumento=$iddoc and  iddocumento=documento_iddocumento and funcionario_codigo=ejecutor","",$conn);
    
@@ -66,7 +66,7 @@ function elaborado_por($idformato,$iddoc){
   if($pos)
     $dato[0][0]=substr($dato[0][0],0,$pos);
      
-		
+    
   if($dato[0][0]){
     $idformato_plan_mejoramiento=busca_filtro_tabla("idformato","formato","nombre='plan_mejoramiento'","",$conn);
     mostrar_valor_campo('elaborado',$idformato_plan_mejoramiento[0]['idformato'],$iddoc);   
@@ -74,15 +74,15 @@ function elaborado_por($idformato,$iddoc){
       echo("(".$dato[0]["fecha_elaborado"].")");
     }
     elseif($dato[0][0]==$fun_cod || $fun_login=="cerok"){
-  	  $datos=busca_filtro_tabla("","ft_plan_mejoramiento a, ft_hallazgo b, documento c","b.documento_iddocumento=c.iddocumento and c.estado not in('ELIMINADO', 'ANULADO', 'ACTIVO') and a.idft_plan_mejoramiento=b.ft_plan_mejoramiento and a.documento_iddocumento=".$iddoc,"",$conn);
-	  	if($datos["numcampos"]){
-				echo('<div id="estado_elaborado"  align="center"><a style="color:blue;cursor:pointer" onClick="actualizar_estado(1,\''.$iddoc.'\');">Confirmar</a></div>');
-    	}else{
-				echo ('<br><font style="color:red">No se ha realizado ningun hallazgo</font>');
-		}
-	}else{
-	    echo('(Pendiente por confirmar)');
-	}
+      $datos=busca_filtro_tabla("","ft_plan_mejoramiento a, ft_hallazgo b, documento c","b.documento_iddocumento=c.iddocumento and c.estado not in('ELIMINADO', 'ANULADO', 'ACTIVO') and a.idft_plan_mejoramiento=b.ft_plan_mejoramiento and a.documento_iddocumento=".$iddoc,"",$conn);
+      if($datos["numcampos"]){
+        echo('<div id="estado_elaborado"  align="center"><a style="color:blue;cursor:pointer" onClick="actualizar_estado(1,\''.$iddoc.'\');">Confirmar</a></div>');
+      }else{
+        echo ('<br><font style="color:red">No se ha realizado ningun hallazgo</font>');
+    }
+  }else{
+      echo('(Pendiente por confirmar)');
+  }
   }else{
       $dato[0][0]=$dato[0]["funcionario_codigo"];
       echo ucwords($dato[0]["nombres"]." ".$dato[0]["apellidos"]);
@@ -92,8 +92,8 @@ function revisado_por($idformato,$iddoc){
   global $conn;
 
   if($_REQUEST["tipo"]!=5){
-  	$fun_cod=usuario_actual("funcionario_codigo");
-  	$fun_login=usuario_actual("login");
+    $fun_cod=usuario_actual("funcionario_codigo");
+    $fun_login=usuario_actual("login");
   }
   $dato1=busca_filtro_tabla("revisado,fecha_elaborado,fecha_revisado","ft_plan_mejoramiento","documento_iddocumento=$iddoc","",$conn);
 
@@ -110,7 +110,7 @@ if($dato[0][0]){
     echo("(".$dato[0]["fecha_revisado"].")");
   }
   elseif(($dato[0]["fecha_elaborado"] && $dato[0]["fecha_elaborado"]>'2010-01-01 00:00:00') && ($dato[0][0]==$fun_cod || $fun_login=="cerok")){
-	  echo('<div id="estado_revisado" align="center"><a style="color:blue;cursor:pointer" onClick="actualizar_estado(2,\''.$iddoc.'\');">Confirmar</a></div>');
+    echo('<div id="estado_revisado" align="center"><a style="color:blue;cursor:pointer" onClick="actualizar_estado(2,\''.$iddoc.'\');">Confirmar</a></div>');
   } 
   else{
     echo('(Pendiente por confirmar)');
@@ -137,22 +137,22 @@ else{
 function aprobado_por($idformato,$iddoc){
   global $conn;
   if($_REQUEST["tipo"]!=5){
-  	$fun_cod=usuario_actual("funcionario_codigo");
-  	$fun_login=usuario_actual("login");
+    $fun_cod=usuario_actual("funcionario_codigo");
+    $fun_login=usuario_actual("login");
   }
   $dato=busca_filtro_tabla("aprobado,revisado," .fecha_db_obtener("fecha_revisado","Y-m-d H:i:s")." AS fecha_revisado,".fecha_db_obtener("fecha_aprobado","Y-m-d H:i:s")." AS fecha_aprobado","ft_plan_mejoramiento","documento_iddocumento=$iddoc","",$conn);
-		$pos=strpos($dato[0][0],"_");
-		if($pos)
-		$dato[0][0]=substr($dato[0][0],0,$pos);
-		if($dato[0][0]){
-		$idformato_plan_mejoramiento=busca_filtro_tabla("idformato","formato","nombre='plan_mejoramiento'","",$conn);
-		mostrar_valor_campo(
-	'aprobado',$idformato_plan_mejoramiento[0]['idformato'],$iddoc);   
+    $pos=strpos($dato[0][0],"_");
+    if($pos)
+    $dato[0][0]=substr($dato[0][0],0,$pos);
+    if($dato[0][0]){
+    $idformato_plan_mejoramiento=busca_filtro_tabla("idformato","formato","nombre='plan_mejoramiento'","",$conn);
+    mostrar_valor_campo(
+  'aprobado',$idformato_plan_mejoramiento[0]['idformato'],$iddoc);   
     if($dato[0]["fecha_revisado"] && $dato[0]["fecha_revisado"]>'2010-01-01 00:00:00' && $dato[0]["fecha_aprobado"] && $dato[0]["fecha_aprobado"]>'2010-01-01 00:00:00'){
       echo("(".$dato[0]["fecha_aprobado"].")");
     }
     elseif(($dato[0]["fecha_revisado"] && $dato[0]["fecha_revisado"]>'2010-01-01 00:00:00') && ($dato[0][0]==$fun_cod || $fun_login=="cerok")){
-	  echo('<div id="estado_aprobado" align="center"><a style="color:blue;cursor:pointer" onClick="actualizar_estado(3,\''.$iddoc.'\');">Confirmar</a></div>');
+    echo('<div id="estado_aprobado" align="center"><a style="color:blue;cursor:pointer" onClick="actualizar_estado(3,\''.$iddoc.'\');">Confirmar</a></div>');
     } 
     else{
       echo('(Pendiente por confirmar)');
@@ -171,19 +171,19 @@ function aprobado_por($idformato,$iddoc){
 
 
 function mostrar_adjuntos($idformato,$iddoc){
-	global $conn, $ruta_db_superior;
- 	if(!isset($_REQUEST["tipo_impresion"])){
- 		//mostrar_valor_campo('adjuntos',1,$iddoc);
- 		//if(usuario_actual('login')=='cerok'){
-		$campos=busca_filtro_tabla("idcampos_formato","campos_formato a","a.nombre='adjuntos' and formato_idformato=".$idformato,"",$conn);
- 		$anexos=busca_filtro_tabla("","anexos a","a.documento_iddocumento=".$iddoc." and campos_formato='".$campos[0]["idcampos_formato"]."'","",$conn);
-		$texto=array();
-		for($i=0;$i<$anexos["numcampos"];$i++){
-			$texto[]="<a href='".$ruta_db_superior."anexosdigitales/parsea_accion_archivo.php?idanexo=".$anexos[$i]["idanexos"]."&accion=descargar'>".ucfirst(strtolower($anexos[$i]["etiqueta"]))."</a>";
-		}
-		echo "<br>".implode("<br>",$texto);
- 		//}
- 	}
+  global $conn, $ruta_db_superior;
+  if(!isset($_REQUEST["tipo_impresion"])){
+    //mostrar_valor_campo('adjuntos',1,$iddoc);
+    //if(usuario_actual('login')=='cerok'){
+    $campos=busca_filtro_tabla("idcampos_formato","campos_formato a","a.nombre='adjuntos' and formato_idformato=".$idformato,"",$conn);
+    $anexos=busca_filtro_tabla("","anexos a","a.documento_iddocumento=".$iddoc." and campos_formato='".$campos[0]["idcampos_formato"]."'","",$conn);
+    $texto=array();
+    for($i=0;$i<$anexos["numcampos"];$i++){
+      $texto[]="<a href='".$ruta_db_superior."anexosdigitales/parsea_accion_archivo.php?idanexo=".$anexos[$i]["idanexos"]."&accion=descargar'>".ucfirst(strtolower($anexos[$i]["etiqueta"]))."</a>";
+    }
+    echo "<br>".implode("<br>",$texto);
+    //}
+  }
 }
 function relacionar_seguimiento_indicador($idformato,$iddoc){
   global $conn;
@@ -202,8 +202,8 @@ function editar_plan($idformato,$iddoc){
   global $conn;
 
   if($_REQUEST["tipo"]!=5){
-  	$fun_cod=usuario_actual("funcionario_codigo");
-  	$fun_login=usuario_actual("login");
+    $fun_cod=usuario_actual("funcionario_codigo");
+    $fun_login=usuario_actual("login");
   }
   $formato=busca_filtro_tabla("","formato A","A.idformato=".$idformato,"",$conn);
   $doc=busca_filtro_tabla("",$formato[0]["nombre_tabla"].",documento","documento_iddocumento=iddocumento and documento_iddocumento=".$iddoc,"",$conn);
@@ -213,7 +213,7 @@ function editar_plan($idformato,$iddoc){
     <script type="text/javascript" src="../../js/jquery.js"></script>
     <script>
     $().ready(function() {
-   	$('#link_editar').click(function(){
+    $('#link_editar').click(function(){
        window.location="<?php echo $formato[0]['ruta_editar'].'?idformato='.$idformato.'&iddoc='.$iddoc; ?>";
      })
     });
@@ -224,45 +224,45 @@ function editar_plan($idformato,$iddoc){
 }
 
 function estado_del_plan($idformato, $iddoc) {
-	global $conn;
-	if (@$_REQUEST["tipo"] != 5) {
-		$fun_cod = usuario_actual('funcionario_codigo');
-	}
-	if (!isset($_REQUEST["exportar"]) && !isset($_REQUEST["tipo_impresion"])) {
-		$estado = mostrar_valor_campo('estado_plan_mejoramiento', $idformato, $iddoc, 1);
-		if ($estado == '') {
-			$estado = 'Pendiente por Aprobar';
-		}
-		$cerrado = busca_filtro_tabla("estado_terminado, estado_plan_mejoramiento", "ft_plan_mejoramiento a", "a.documento_iddocumento=" . $iddoc, "", $conn);
-		if ($cerrado[0]["estado_terminado"] == 1) {
-			$estado = 'Terminado';
-		}
-		$seguimiento = busca_filtro_tabla("i.documento_iddocumento", "seguimiento_planes s,ft_seguimiento_indicador si,ft_indicadores_calidad i,ft_formula_indicador f", "plan_mejoramiento=$iddoc and s.idft_seguimiento_indicador=si.idft_seguimiento_indicador and idft_indicadores_calidad=ft_indicadores_calidad and ft_formula_indicador=idft_formula_indicador", "", $conn);
+  global $conn;
+  if (@$_REQUEST["tipo"] != 5) {
+    $fun_cod = usuario_actual('funcionario_codigo');
+  }
+  if (!isset($_REQUEST["exportar"]) && !isset($_REQUEST["tipo_impresion"])) {
+    $estado = mostrar_valor_campo('estado_plan_mejoramiento', $idformato, $iddoc, 1);
+    if ($estado == '') {
+      $estado = 'Pendiente por Aprobar';
+    }
+    $cerrado = busca_filtro_tabla("estado_terminado, estado_plan_mejoramiento", "ft_plan_mejoramiento a", "a.documento_iddocumento=" . $iddoc, "", $conn);
+    if ($cerrado[0]["estado_terminado"] == 1) {
+      $estado = 'Terminado';
+    }
+    $seguimiento = busca_filtro_tabla("i.documento_iddocumento", "seguimiento_planes s,ft_seguimiento_indicador si,ft_indicadores_calidad i,ft_formula_indicador f", "plan_mejoramiento=$iddoc and s.idft_seguimiento_indicador=si.idft_seguimiento_indicador and idft_indicadores_calidad=ft_indicadores_calidad and ft_formula_indicador=idft_formula_indicador", "", $conn);
 
-		echo '<table style="font-size:10pt;width:40%;border-collapse:collapse" border="0px">';
-		if ($cerrado[0]["estado_plan_mejoramiento"] == 2) {
-			$terminar_plan = "<tr><td><a style='cursor:pointer;color:blue' id='terminar_mejoramiento' onclick='aprobar_plan_mejora()'>Terminar plan de mejoramiento</a></td></tr>";
-			if ($_REQUEST["tipo"] != 5) {
-				echo "<script>
-				function aprobar_plan_mejora(){
-					var confirmacion=confirm('Seguro que desea terminar el plan de mejoramiento?');
-					if(confirmacion){
-						$.post('terminar_plan_mejoramiento.php',{iddoc:" . $iddoc . ", idformato:" . $idformato . "},function(){
-							$('#mostrar_estado').html('Terminado');
-						});
-					}
-				}
-				</script>";
-			}
-			echo $terminar_plan;
-		}
-		echo '<tr> <td class="encabezado" style="width:20%">Estado del plan:</td><td id="mostrar_estado" style="width:20%">' . $estado . '</td><td>';
-		editar_plan($idformato, $iddoc);
-		if ($seguimiento["numcampos"]){
-			echo "</td><td><a target='centro' href='../../ordenar.php?accion=mostrar&mostrar_formato=1&key=" . $seguimiento[0][0] . "'>Indicador que genera el Plan</a>";
-		}
-		echo "</td></tr></table>";
-	}
+    echo '<table style="font-size:10pt;width:40%;border-collapse:collapse" border="0px">';
+    if ($cerrado[0]["estado_plan_mejoramiento"] == 2) {
+      $terminar_plan = "<tr><td><a style='cursor:pointer;color:blue' id='terminar_mejoramiento' onclick='aprobar_plan_mejora()'>Terminar plan de mejoramiento</a></td></tr>";
+      if ($_REQUEST["tipo"] != 5) {
+        echo "<script>
+        function aprobar_plan_mejora(){
+          var confirmacion=confirm('Seguro que desea terminar el plan de mejoramiento?');
+          if(confirmacion){
+            $.post('terminar_plan_mejoramiento.php',{iddoc:" . $iddoc . ", idformato:" . $idformato . "},function(){
+              $('#mostrar_estado').html('Terminado');
+            });
+          }
+        }
+        </script>";
+      }
+      echo $terminar_plan;
+    }
+    echo '<tr> <td class="encabezado" style="width:20%">Estado del plan:</td><td id="mostrar_estado" style="width:20%">' . $estado . '</td><td>';
+    editar_plan($idformato, $iddoc);
+    if ($seguimiento["numcampos"]){
+      echo "</td><td><a target='centro' href='../../ordenar.php?accion=mostrar&mostrar_formato=1&key=" . $seguimiento[0][0] . "'>Indicador que genera el Plan</a>";
+    }
+    echo "</td></tr></table>";
+  }
 }
 
 
@@ -285,8 +285,8 @@ function listar_hallazgo_plan_mejoramiento($idformato,$iddoc,$condicion=""){
     for($i=0;$i<$campos_formato_hallazgo['numcampos'];$i++){
         $vector_campos_id[$campos_formato_hallazgo[$i]['nombre']]=$campos_formato_hallazgo[$i]['idcampos_formato'];
     }
-    $hallazgos=busca_filtro_tabla("a.*,b.*,a.documento_iddocumento as hallazgo_iddoc","ft_hallazgo a, ft_plan_mejoramiento b,documento c","a.ft_plan_mejoramiento= b.idft_plan_mejoramiento and a.documento_iddocumento= c.iddocumento and a.estado<>'INACTIVO' and c.estado<>'ELIMINADO' AND ".$condicion,"idft_hallazgo asc",$conn);	
-    //print_r($hallazgos);
+    $hallazgos=busca_filtro_tabla("a.*,b.*,a.documento_iddocumento as hallazgo_iddoc","ft_hallazgo a, ft_plan_mejoramiento b,documento c","a.ft_plan_mejoramiento= b.idft_plan_mejoramiento and a.documento_iddocumento= c.iddocumento and a.estado<>'INACTIVO' and c.estado<>'ELIMINADO' AND ".$condicion,"idft_hallazgo asc",$conn);  
+    //print_r($hallazgos);  
   if($hallazgos["numcampos"]){
     $texto.="";
     $estado_actual="Todos";
@@ -310,29 +310,29 @@ function listar_hallazgo_plan_mejoramiento($idformato,$iddoc,$condicion=""){
     $texto.='
     <pagebreak/><table border="1px" style="border-collapse:collapse;font-size:6pt" width="100%">';
     $texto.='<tr class="encabezado_list">
-<td rowspan="2" align="center">No<br />(A)</td>
+<td rowspan="2" align="center">No<br /></td>
 <td colspan="4" align="center">ALCANCE</td>';
-if(isset($_REQUEST["tipo_impresion"])&&$_REQUEST["tipo_impresion"]==1)	
+if(isset($_REQUEST["tipo_impresion"])&&$_REQUEST["tipo_impresion"]==1)  
 $texto.='<td rowspan="2">CAUSAS</td>';
-$texto.='<td rowspan="2" align="center">ACCIONES DE MEJORAMIENTO<br />(E)</td>
-<td rowspan="2" align="center">RESPONSABLE DE MEJORAMIENTO<br />(F)</td>
+$texto.='<td rowspan="2" align="center">ACCIONES DE MEJORAMIENTO<br /></td>
+<td rowspan="2" align="center">RESPONSABLE DE MEJORAMIENTO<br /></td>
 <td align="center">TIEMPO PROGRAMADO PARA EL CUMPLIMIENTO DE LAS ACCIONES DE MEJORAMIENTO</td>
-<td colspan="2" align="center">MECANISMO DE SEGUIMIENTO INTERNO ADOPTADO<br />(H)</td>
-<td rowspan="2" align="center">RESPONSABLE DEL SEGUIMIENTO<br />(I)
+<td colspan="2" align="center">MECANISMO DE SEGUIMIENTO INTERNO ADOPTADO<br /></td>
+<td rowspan="2" align="center">RESPONSABLE DEL SEGUIMIENTO<br />
 </td>
-<td rowspan="2" align="center">INDICADOR DE ACCI&Oacute;N DE CUMPLIMIENTO<br />(J)</td>
-<td rowspan="2" align="center">OBSERVACIONES<br />(K)</td>';
+<td rowspan="2" align="center">INDICADOR DE ACCI&Oacute;N DE CUMPLIMIENTO<br /></td>
+<td rowspan="2" align="center">OBSERVACIONES<br /></td>';
 if(isset($_REQUEST["tipo_impresion"])&&$_REQUEST["tipo_impresion"]==3)
   $texto.='<td rowspan="2">LOGROS ALCANZADOS</td>';
 $texto.='</tr>
 <tr class="encabezado_list">
-<td align="center">DESCRIPCI&Oacute;N OBSERVACI&Oacute;N Y/O HALLAZGO<br />(C)</td>
+<td align="center">DESCRIPCI&Oacute;N OBSERVACI&Oacute;N Y/O HALLAZGO<br /></td>
 <td>CAUSAS</td>
-<td align="center">CLASE DE OBSERVACI&Oacute;N<br />(B)</td>
-<td align="center">&Aacute;REAS,CICLOS O PROCESOS VINCULADOS<br />(D)</td>
-<td align="center">TIEMPO PROGRAMADO<br />(G)</td>
-<td align="center">ACTIVIDAD<br />(H<sub>1</sub>)</td>
-<td align="center">TIEMPO<br />(H<sub>2</sub>)</td>
+<td align="center">CLASE DE OBSERVACI&Oacute;N<br /></td>
+<td align="center">&Aacute;REAS,CICLOS O PROCESOS VINCULADOS<br /></td>
+<td align="center">TIEMPO PROGRAMADO<br /></td>
+<td align="center">ACTIVIDAD<br /></td>
+<td align="center">TIEMPO<br /></td>
 </tr>
 ';
 
@@ -358,15 +358,52 @@ $ingresa=0;
         $texto.='<td class="transparente" >'.mostrar_mensaje_accion($hallazgos[$i]["clase_accion"],$formato_hallazgo[0]["idformato"], $hallazgos[$i]["hallazgo_iddoc"]).'</td>';
         $texto.='<td class="transparente" >'.mostrar_valor_campo("causas",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1).'</td>'; 
         $texto.='<td class="transparente" >'.mostrar_valor_campo("clase_observacion",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1).'</td>'; 
-		
-						
+    
+            
         $texto.='<td class="transparente" ><b>Areas:</b> '.ucfirst(strtolower(strip_tags(mostrar_seleccionados($formato_hallazgo[0]["idformato"],$vector_campos_id['secretarias'],2,$hallazgos[$i]["hallazgo_iddoc"],1)))).'<br /><b>Procesos:</b> '.ucfirst(strtolower(strip_tags(procesos_vinculados_funcion2($formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"])))).'</td>';
         //condicion de encabezado 
 if(isset($_REQUEST["tipo_impresion"])&&$_REQUEST["tipo_impresion"]==1)
         {$texto.='<td class="transparente" >'.strip_tags(mostrar_valor_campo("causas",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1)).'</td>';
         }
         //fin condicion encabezado  
-        $texto.='<td class="transparente" >'.strip_tags(str_replace("&nbsp;"," ",mostrar_valor_campo("accion_mejoramiento",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1))).'</td>'; 
+        
+        $item=busca_filtro_tabla("","ft_accion_plan_mejoramiento A, ft_hallazgo B","idft_hallazgo=ft_hallazgo and B.documento_iddocumento=".$hallazgos[$i]["hallazgo_iddoc"],"CAST(A.calificacion_total AS unsigned) DESC",$conn);
+
+        if ($item['numcampos']) {
+            
+        	
+		$cadena_acciones='
+						<table border="1px" width="100%" style="border-collapse:collapse;font-size:6pt">
+						<tbody>
+						<tr>
+							<td class="encabezado_list">ACCIÓN</td>
+							<td class="encabezado_list">CALIFICACIÓN TOTAL</td>
+						</tr>
+			';
+		for ($l=0; $l <$item['numcampos'] ; $l++) { 
+			$cadena_acciones.='		
+									<tr>
+										<td>'.strip_tags(codifica_encabezado(html_entity_decode($item[$l]['accion_item']))).'</td>
+										
+										<td style="text-align: center;"><center>'.$item[$l]['calificacion_total'].'</center></td>
+									</tr>
+							';
+		}
+		$cadena_acciones.='
+								</tbody>
+								</table>
+					
+							';
+		}else{
+			$cadena_acciones="";
+		}
+        $texto.='<td class="transparente" >'.$cadena_acciones.'</td>';
+        
+        //$texto.='<td class="transparente" >'.strip_tags(str_replace("&nbsp;"," ",mostrar_valor_campo("accion_mejoramiento",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1))).'</td>'; 
+		
+		
+		
+		
         $texto.='<td class="transparente" >'.ucfirst(strtolower(mostrar_seleccionados($formato_hallazgo[0]["idformato"],$vector_campos_id['responsables'],0,$hallazgos[$i]["hallazgo_iddoc"],1))).'</td>'; 
         $texto.='<td class="transparente" align="center">'.mostrar_valor_campo("tiempo_cumplimiento",$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1).'</td>'; 
         $texto.='<td class="transparente" >'.strip_tags(mostrar_valor_campo('mecanismo_interno',$formato_hallazgo[0]["idformato"],$hallazgos[$i]["hallazgo_iddoc"],1)).'</td>'; 
@@ -424,21 +461,21 @@ $(document).ready(function(){
   $('#estado_plan_mejoramiento1').parent().hide(); 
   $('#estado_plan_mejoramiento0').parent().hide(); 
   $("#auditor").change(function(){
-  	if($(this).val()==8){
-  		$('#descripcion_otros').parent().parent().show();
-  	}
-  	else{
-  		$('#descripcion_otros').parent().parent().hide();
-  	}
+    if($(this).val()==14){
+      $('#descripcion_otros').parent().parent().show();
+    }
+    else{
+      $('#descripcion_otros').parent().parent().hide();
+    }
   });
 });
 </script>
 <?php
 } 
 if($_REQUEST["tipo"]!=5){
-	$fun_id=usuario_actual("id");
-	$fun_cod=usuario_actual("funcionario_codigo");
-	$fun_login=usuario_actual("login");
+  $fun_id=usuario_actual("id");
+  $fun_cod=usuario_actual("funcionario_codigo");
+  $fun_login=usuario_actual("login");
 }
 $dato=busca_filtro_tabla("destino","ruta","documento_iddocumento=$iddoc","",$conn);
 for($i=0,$j=1;$i<$dato["numcampos"];$i++){
@@ -454,49 +491,50 @@ $idfuncionario=busca_filtro_tabla("idfuncionario","funcionario","funcionario_cod
   }
 }
 function mostrar_link_reporte($idformato,$iddoc){
-	global $conn;
-	$mostrar='';
-	if($_REQUEST["tipo"]!=5){
-		//$mostrar.='<a href="reporte_hallazgos_cumplimiento.php?iddoc='.$iddoc.'&idformato='.$idformato.'" style="font-size:6pt" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 700, height: 400,preserveContent: false} )">VER REPORTE DE AVANCE PLAN DE MEJORAMIENTO</a>';
-		$mostrar.='<a href="reporte_hallazgos_cumplimiento.php?iddoc='.$iddoc.'&idformato='.$idformato.'" style="font-size:6pt" onclick="" target="_self">VER REPORTE DE AVANCE PLAN DE MEJORAMIENTO</a>';
-	}
-	echo $mostrar;
+  global $conn;
+  $mostrar='';
+  if($_REQUEST["tipo"]!=5){
+    //$mostrar.='<a href="reporte_hallazgos_cumplimiento.php?iddoc='.$iddoc.'&idformato='.$idformato.'" style="font-size:6pt" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 700, height: 400,preserveContent: false} )">VER REPORTE DE AVANCE PLAN DE MEJORAMIENTO</a>';
+    $mostrar.='<a href="reporte_hallazgos_cumplimiento.php?iddoc='.$iddoc.'&idformato='.$idformato.'" style="font-size:6pt" onclick="" target="_self">VER REPORTE DE AVANCE PLAN DE MEJORAMIENTO</a>';
+  }
+  echo $mostrar;
 }
 function procesos_vinculados_funcion2($idformato,$iddoc){
-	global $conn;
-	$datos=busca_filtro_tabla("procesos_vinculados","ft_hallazgo a","a.documento_iddocumento=".$iddoc,"",$conn);
-	$procesos=explode(",",$datos[0]["procesos_vinculados"]);
-	$cant=count($procesos);
-	$nombres=array();
-	for($i=0;$i<$cant;$i++){
-		if($procesos[$i]!=''){
-			if($procesos[$i][0]!='m'){
-				$proceso=busca_filtro_tabla("nombre","ft_proceso a","a.idft_proceso='".trim($procesos[$i])."'","",$conn);
-				$nombres[]=$proceso[0]["nombre"];
-			}
-			else{
-				$proceso=busca_filtro_tabla("nombre","ft_macroproceso_calidad a","a.idft_macroproceso_calidad='".str_replace("m","",trim($procesos[$i]))."'","",$conn);
-				$nombres[]=$proceso[0]["nombre"];
-			}
-		}
-	}
-	//$nombres=extrae_campo($proceso,"nombre");
-	return implode(", ",$nombres);
-	//return "";
+  global $conn;
+  $datos=busca_filtro_tabla("procesos_vinculados","ft_hallazgo a","a.documento_iddocumento=".$iddoc,"",$conn);
+  $procesos=explode(",",$datos[0]["procesos_vinculados"]);
+  $cant=count($procesos);
+  $nombres=array();
+  for($i=0;$i<$cant;$i++){
+    if($procesos[$i]!=''){
+      if($procesos[$i][0]!='m'){
+        $proceso=busca_filtro_tabla("nombre","ft_proceso a","a.idft_proceso='".trim($procesos[$i])."'","",$conn);
+        $nombres[]=$proceso[0]["nombre"];
+      }
+      else{
+        $proceso=busca_filtro_tabla("nombre","ft_macroproceso_calidad a","a.idft_macroproceso_calidad='".str_replace("m","",trim($procesos[$i]))."'","",$conn);
+        $nombres[]=$proceso[0]["nombre"];
+      }
+    }
+  }
+  //$nombres=extrae_campo($proceso,"nombre");
+  return implode(", ",$nombres);
+  //return "";
 }
 function obtener_fecha_actual($idformato,$iddoc){
-	
+  
 }
 function mostrar_mensaje_accion($clase_accion,$idformato,$hallazgo_iddoc){
-	global $conn;
-	
-	if($clase_accion == 3){		
-		$mensaje = "No Aplica porque es una acción de mejora";
-			
-	}else{
-		$mensaje= strip_tags(mostrar_valor_campo("deficiencia",$idformato,$hallazgo_iddoc,1));
-	}	
-	return($mensaje);	
+  global $conn;
+  
+  if($clase_accion == 3){   
+    $mensaje = "No Aplica porque es una acción de mejora";
+      
+  }else{
+    $mensaje= strip_tags(mostrar_valor_campo("deficiencia",$idformato,$hallazgo_iddoc,1));
+  } 
+  return($mensaje); 
 }
+
 
 ?>

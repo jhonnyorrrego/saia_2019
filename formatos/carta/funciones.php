@@ -739,10 +739,6 @@ function generar_correo_confirmacion($idformato,$iddoc){
 			enviar_mensaje('','codigo',array($funcionario[0]['funcionario_codigo']),'GESTION DE COMUNICACIONES EXTERNAS',$mensaje,$anexos);
 		}
 	}
-
-	if(!isset($_REQUEST['refrescar'])){
-		//mostrar_formato($idformato,$iddoc);
-	}
 }
 function parsear_arbol_expediente_serie_carta(){
     global $conn,$ruta_db_superior;

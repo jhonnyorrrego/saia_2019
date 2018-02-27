@@ -441,9 +441,5 @@ function generar_correo_confirmacion_memorando($idformato,$iddoc){
 			enviar_mensaje('','codigo',array($funcionario[0]['funcionario_codigo']),'GESTION DE COMUNICACIONES EXTERNAS',$mensaje,$anexos);
 		}
 	}
-
-	if(!isset($_REQUEST['refrescar'])){
-		//mostrar_formato($idformato,$iddoc);
-	}
 }
 ?>

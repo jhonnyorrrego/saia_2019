@@ -16,6 +16,7 @@ $ruta.="../";
 $max_salida--;
 }
 include_once($ruta_db_superior.'librerias_saia.php');
+include_once($ruta_db_superior.'formatos/riesgos_proceso/librerias_riesgos.php');
 
 echo(estilo_bootstrap());
 
@@ -188,7 +189,7 @@ for($i=0;$i<$riesgos["numcampos"];$i++){
 }
 
 
-function obtener_probabilidad_riesgo($idft_riesgos_proceso, $probabilidad){
+function obtener_probabilidad_riesgo_eliminar($idft_riesgos_proceso, $probabilidad){
 	global $conn;	
 	
 	$control_riesgos_probabilidad = busca_filtro_tabla("a.herramienta_ejercer, a.procedimiento_herramienta, a.herramienta_efectiva, a.responsables_ejecucion,  a.frecuencia_ejecucion","ft_control_riesgos a, documento b","a.tipo_control=1 and a.documento_iddocumento=b.iddocumento and lower(b.estado) not in('eliminado','anulado') and ft_riesgos_proceso=".$idft_riesgos_proceso,"a.idft_control_riesgos desc",$conn);
@@ -197,23 +198,23 @@ function obtener_probabilidad_riesgo($idft_riesgos_proceso, $probabilidad){
 	for ($i=0; $i < $control_riesgos_probabilidad["numcampos"]; $i++) {		
 		$mover_probabilidad = 0;
 		
-		if($control_riesgos_probabilidad[0]["herramienta_ejercer"] == 1){
+		if($control_riesgos_probabilidad[$i]["herramienta_ejercer"] == 1){
 			$mover_probabilidad += 15;
 		}
 		
-		if($control_riesgos_probabilidad[0]["procedimiento_herramienta"] == 1){
+		if($control_riesgos_probabilidad[$i]["procedimiento_herramienta"] == 1){
 			$mover_probabilidad += 15;
 		}
 		
-		if($control_riesgos_probabilidad[0]["herramienta_efectiva"] == 1){
+		if($control_riesgos_probabilidad[$i]["herramienta_efectiva"] == 1){
 			$mover_probabilidad += 30;
 		}
 		
-		if($control_riesgos_probabilidad[0]["responsables_ejecucion"] == 1){
+		if($control_riesgos_probabilidad[$i]["responsables_ejecucion"] == 1){
 			$mover_probabilidad += 15;
 		}
 		
-		if($control_riesgos_probabilidad[0]["frecuencia_ejecucion"] == 1){
+		if($control_riesgos_probabilidad[$i]["frecuencia_ejecucion"] == 1){
 			$mover_probabilidad += 25;
 		}		
 		
@@ -237,7 +238,7 @@ function obtener_probabilidad_riesgo($idft_riesgos_proceso, $probabilidad){
 	return($nueva_probabilidad);
 }
 
-function obtener_impacto_riesgo($idft_riesgos_proceso, $impacto){
+function obtener_impacto_riesgo_eliminar($idft_riesgos_proceso, $impacto){
 	global $conn;		
 	
 	$control_riesgos_impacto = busca_filtro_tabla("a.herramienta_ejercer, a.procedimiento_herramienta, a.herramienta_efectiva, a.responsables_ejecucion,  a.frecuencia_ejecucion","ft_control_riesgos a, documento b","a.tipo_control=2 and a.documento_iddocumento=b.iddocumento and lower(b.estado) not in('eliminado','anulado') and ft_riesgos_proceso=".$idft_riesgos_proceso,"a.idft_control_riesgos desc",$conn);
@@ -247,23 +248,23 @@ function obtener_impacto_riesgo($idft_riesgos_proceso, $impacto){
 		
 		$mover_impacto = 0;
 			
-		if($control_riesgos_impacto[0]["herramienta_ejercer"] == 1){
+		if($control_riesgos_impacto[$i]["herramienta_ejercer"] == 1){
 			$mover_impacto += 15;
 		}
 		
-		if($control_riesgos_impacto[0]["procedimiento_herramienta"] == 1){
+		if($control_riesgos_impacto[$i]["procedimiento_herramienta"] == 1){
 			$mover_impacto += 15;
 		}
 		
-		if($control_riesgos_impacto[0]["herramienta_efectiva"] == 1){
+		if($control_riesgos_impacto[$i]["herramienta_efectiva"] == 1){
 			$mover_impacto += 30;
 		}
 		
-		if($control_riesgos_impacto[0]["responsables_ejecucion"] == 1){
+		if($control_riesgos_impacto[$i]["responsables_ejecucion"] == 1){
 			$mover_impacto += 15;
 		}
 		
-		if($control_riesgos_impacto[0]["frecuencia_ejecucion"] == 1){
+		if($control_riesgos_impacto[$i]["frecuencia_ejecucion"] == 1){
 			$mover_impacto += 25;
 		}
 		

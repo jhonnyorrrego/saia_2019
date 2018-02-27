@@ -177,8 +177,7 @@ function color_evaluacion($resultado){
  */
 function valoraciones($id){
 	$conn;
-	$probabilidad=busca_filtro_tabla("","ft_control_riesgos a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and desplazamiento='1' and ft_riesgos_proceso=".$id,"",$conn);
-	
+	$probabilidad=busca_filtro_tabla("","ft_control_riesgos a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO', 'ACTIVO') and desplazamiento='1' and ft_riesgos_proceso=".$id,"",$conn);
 	$probabilidades=array();
 	$disminuir_prob=0;
 	for($i=0;$i<$probabilidad["numcampos"];$i++){
@@ -186,13 +185,13 @@ function valoraciones($id){
 		if($probabilidad[$i]["herramienta_ejercer"]==1){
 			$puntaje+=15;
 		}
-		if($probabilidad[$i]["procedimiento_herramienta"]==1){
+		if($probabilidad[$i]["procedimiento_herram"]==1){
 			$puntaje+=15;
 		}
 		if($probabilidad[$i]["herramienta_efectiva"]==1){
 			$puntaje+=30;
 		}
-		if($probabilidad[$i]["responsables_ejecucion"]==1){
+		if($probabilidad[$i]["responsables_ejecuci"]==1){
 			$puntaje+=15;
 		}
 		if($probabilidad[$i]["frecuencia_ejecucion"]==1){
@@ -213,7 +212,7 @@ function valoraciones($id){
 	
 	//$promedio_probabilidad=(array_sum($probabilidades)/count($probabilidades));
 	
-	$impacto=busca_filtro_tabla("","ft_control_riesgos a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO') and desplazamiento='2' and ft_riesgos_proceso=".$id,"",$conn);	
+	$impacto=busca_filtro_tabla("","ft_control_riesgos a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO', 'ACTIVO') and desplazamiento='2' and ft_riesgos_proceso=".$id,"",$conn);	
 	
 	$impactos=array();
 	$disminuir_imp=0;
@@ -222,13 +221,13 @@ function valoraciones($id){
 		if($impacto[$i]["herramienta_ejercer"]==1){
 			$puntaje+=15;
 		}
-		if($impacto[$i]["procedimiento_herramienta"]==1){
+		if($impacto[$i]["procedimiento_herram"]==1){
 			$puntaje+=15;
 		}
 		if($impacto[$i]["herramienta_efectiva"]==1){
 			$puntaje+=30;
 		}
-		if($impacto[$i]["responsables_ejecucion"]==1){
+		if($impacto[$i]["responsables_ejecuci"]==1){
 			$puntaje+=15;
 		}
 		if($impacto[$i]["frecuencia_ejecucion"]==1){
@@ -280,30 +279,30 @@ function nuevo_punto_matriz($punto,$disminuir){
  */
 function obtener_probabilidad_riesgo($idft_riesgos_proceso, $probabilidad){
 	global $conn;	
-	
-	$control_riesgos_probabilidad = busca_filtro_tabla("a.herramienta_ejercer, a.procedimiento_herramienta, a.herramienta_efectiva, a.responsables_ejecucion,  a.frecuencia_ejecucion","ft_control_riesgos a, documento b","a.tipo_control=1 and a.documento_iddocumento=b.iddocumento and lower(b.estado) not in('eliminado','anulado') and ft_riesgos_proceso=".$idft_riesgos_proceso,"a.idft_control_riesgos desc",$conn);	
-		
+	$control_riesgos_probabilidad = busca_filtro_tabla("a.herramienta_ejercer, a.procedimiento_herram, a.herramienta_efectiva, a.responsables_ejecuci,  a.frecuencia_ejecucion","ft_control_riesgos a, documento b","a.tipo_control=1 and a.documento_iddocumento=b.iddocumento and lower(b.estado) not in('eliminado','anulado') and ft_riesgos_proceso=".$idft_riesgos_proceso,"a.idft_control_riesgos desc",$conn);	
+	/*print_r($control_riesgos_probabilidad);
+	die();*/
 	$posiciones = 0;
 	for ($i=0; $i < $control_riesgos_probabilidad["numcampos"]; $i++) {		
 		$mover_probabilidad = 0;
 		
-		if($control_riesgos_probabilidad[0]["herramienta_ejercer"] == 1){
+		if($control_riesgos_probabilidad[$i]["herramienta_ejercer"] == 1){
 			$mover_probabilidad += 15;
 		}
 		
-		if($control_riesgos_probabilidad[0]["procedimiento_herramienta"] == 1){
+		if($control_riesgos_probabilidad[$i]["procedimiento_herram"] == 1){
 			$mover_probabilidad += 15;
 		}
 		
-		if($control_riesgos_probabilidad[0]["herramienta_efectiva"] == 1){
+		if($control_riesgos_probabilidad[$i]["herramienta_efectiva"] == 1){
 			$mover_probabilidad += 30;
 		}
 		
-		if($control_riesgos_probabilidad[0]["responsables_ejecucion"] == 1){
+		if($control_riesgos_probabilidad[$i]["responsables_ejecuci"] == 1){
 			$mover_probabilidad += 15;
 		}
 		
-		if($control_riesgos_probabilidad[0]["frecuencia_ejecucion"] == 1){
+		if($control_riesgos_probabilidad[$i]["frecuencia_ejecucion"] == 1){
 			$mover_probabilidad += 25;
 		}		
 		
@@ -340,30 +339,30 @@ function obtener_probabilidad_riesgo($idft_riesgos_proceso, $probabilidad){
 function obtener_impacto_riesgo($idft_riesgos_proceso, $impacto){
 	global $conn;		
 	
-	$control_riesgos_impacto = busca_filtro_tabla("a.herramienta_ejercer, a.procedimiento_herramienta, a.herramienta_efectiva, a.responsables_ejecucion,  a.frecuencia_ejecucion","ft_control_riesgos a, documento b","a.tipo_control=2 and a.documento_iddocumento=b.iddocumento and lower(b.estado) not in('eliminado','anulado') and ft_riesgos_proceso=".$idft_riesgos_proceso,"a.idft_control_riesgos desc",$conn);
+	$control_riesgos_impacto = busca_filtro_tabla("a.herramienta_ejercer, a.procedimiento_herram, a.herramienta_efectiva, a.responsables_ejecuci,  a.frecuencia_ejecucion","ft_control_riesgos a, documento b","a.tipo_control=2 and a.documento_iddocumento=b.iddocumento and lower(b.estado) not in('eliminado','anulado') and ft_riesgos_proceso=".$idft_riesgos_proceso,"a.idft_control_riesgos desc",$conn);
 	
 	$posiciones = 0;			
 	for ($i=0; $i < $control_riesgos_impacto["numcampos"]; $i++){		
 		
 		$mover_impacto = 0;
 			
-		if($control_riesgos_impacto[0]["herramienta_ejercer"] == 1){
+		if($control_riesgos_impacto[$i]["herramienta_ejercer"] == 1){
 			$mover_impacto += 15;
 		}
 		
-		if($control_riesgos_impacto[0]["procedimiento_herramienta"] == 1){
+		if($control_riesgos_impacto[$i]["procedimiento_herram"] == 1){
 			$mover_impacto += 15;
 		}
 		
-		if($control_riesgos_impacto[0]["herramienta_efectiva"] == 1){
+		if($control_riesgos_impacto[$i]["herramienta_efectiva"] == 1){
 			$mover_impacto += 30;
 		}
 		
-		if($control_riesgos_impacto[0]["responsables_ejecucion"] == 1){
+		if($control_riesgos_impacto[$i]["responsables_ejecuci"] == 1){
 			$mover_impacto += 15;
 		}
 		
-		if($control_riesgos_impacto[0]["frecuencia_ejecucion"] == 1){
+		if($control_riesgos_impacto[$i]["frecuencia_ejecucion"] == 1){
 			$mover_impacto += 25;
 		}
 		

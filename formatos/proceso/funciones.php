@@ -17,23 +17,23 @@ function link_cuadro_mando($idformato,$iddoc){
   $permiso = false;
   $permiso=$radicador->acceso_modulo_perfil("cuadro_control_indicadores");
   if($permiso)
-    echo "<a target='_blank' href='cuadro_mando_indicadores.php?proceso=$iddoc'>Cuadro de mando Indicadores</a>";
+    echo "<a target='_self' href='cuadro_mando_indicadores.php?proceso=$iddoc'>Cuadro de mando Indicadores</a>";
 }
 function icono_detalles($idformato,$iddoc){
   global $conn,$ruta_db_superior,$raiz_saia;
 	$raiz_saia=$ruta_db_superior;
   $funcionario=usuario_actual("funcionario_codigo");
   $responsable=busca_filtro_tabla("","documento A, ft_proceso B","(A.iddocumento=B.documento_iddocumento AND iddocumento=".$iddoc.") AND (A.ejecutor=".$funcionario." OR permisos_acceso like '%,$funcionario' or permisos_acceso like '$funcionario' or permisos_acceso like '%,$funcionario,%' or permisos_acceso like '$funcionario,%' OR lider_proceso like '%,$funcionario' or lider_proceso like '$funcionario' or lider_proceso like '%,$funcionario,%' or lider_proceso like '$funcionario,%' OR B.responsable like '%,$funcionario' or B.responsable like '$funcionario' or B.responsable like '%,$funcionario,%' or B.responsable like '$funcionario,%')","",$conn);
-  //print_r($responsable);
+  
   $ruta="../../ordenar.php?accion=mostrar&mostrar_formato=1&key=$iddoc";
   if(!isset($_REQUEST["tipo"])||$_REQUEST["tipo"]==1 ){
-    if($responsable["numcampos"]>0 || usuario_actual("login")=="catalina.camacho" ||usuario_actual("login")=="lina.alzate"||usuario_actual("login")=="0k"){
+    if($responsable["numcampos"]>0 ||usuario_actual("login")=="cerok"){
     	include_once($ruta_db_superior."librerias_saia.php");
 			echo(librerias_jquery());
-			echo(librerias_bootstrap());
-			//echo(librerias_acciones_kaiten()); //DESCOMENTAR SI AL PASAR A OTRO CLIENTE NO FUNCIONA EL ENLACE
+			echo(librerias_bootstrap()); 
+			echo(librerias_acciones_kaiten()); //DESCOMENTAR SI AL PASAR A OTRO CLIENTE NO FUNCIONA EL ENLACE
 			$nombre_proceso=busca_filtro_tabla("nombre","ft_proceso A","A.documento_iddocumento=".$iddoc,"",$conn);
-    	echo "<a class='kenlace_saia' conector='iframe' title='".$nombre_proceso[0]["nombre"]."' titulo='".$nombre_proceso[0]["nombre"]."' enlace='".$ruta_db_superior."ordenar.php?accion=mostrar&mostrar_formato=1&key=".$iddoc."' style='cursor:pointer'><img border=0 src='../../botones/comentarios/detalles.png' /></a>";
+    	echo "<a class='kenlace_saia' conector='iframe' title='".$nombre_proceso[0]["nombre"]."' titulo='".$nombre_proceso[0]["nombre"]."' enlace='ordenar.php?accion=mostrar&mostrar_formato=1&key=".$iddoc."' style='cursor:pointer'><img border=0 src='../../botones/comentarios/detalles.png' /></a>";
       //echo "<a href='$ruta' target='centro'><img border=0 src='../../botones/comentarios/detalles.png' /></a>";
     }
   } 
@@ -53,6 +53,31 @@ function asignar_permisos_indicadores($idformato,$iddoc){
     }
   }
 }
+function actividades_proceso($idformato,$iddoc){
+  global $conn;
+  
+  $texto="No existen Pasos Para este Procedimiento";
+  $formato=busca_filtro_tabla("","formato B","B.idformato=".$idformato,"",$conn);
+  
+  if($formato["numcampos"]){
+  		
+	  $proceso=busca_filtro_tabla("",$formato[0]["nombre_tabla"],"documento_iddocumento=".$iddoc,"",$conn);
+	  if($proceso["numcampos"]){
+	  	$campo_anexo=busca_filtro_tabla("idcampos_formato","campos_formato","nombre='descripcion_proceso' and formato_idformato=".$idformato,"","",$conn);
+	    $anexo=busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc." AND campos_formato=".$campo_anexo[0]["idcampos_formato"],"",$conn);
+	    if($anexo["numcampos"]){
+	    	
+	      $texto="Descripcion Completa del Proceso:<br />".mostrar_valor_campo('descripcion_proceso',$formato[0]["idformato"],$iddoc,1);
+	    }
+	    else{
+	      $campos=array("proveedor","entrada","nombre","punto_control","salida","cliente");
+	      $texto=listar_formato_hijo($campos,"ft_actividad_proceso","ft_proceso",$proceso[0]["id".$formato[0]["nombre_tabla"]],"",'left');
+	    }
+	  }
+  }
+  echo($texto);
+}
+
 /*function arbol_procedimientos($idformato,$idcampo,$iddoc=NULL)
 {global $conn;
  $valor="";
@@ -94,31 +119,27 @@ function mostrar_riesgos($idformato,$iddoc){
     echo "<ul>";
     if($fila<>""){
       $anexo=busca_filtro_tabla("","anexos","idanexos=".$fila,"",$conn);
-      echo "<li><a href='".PROTOCOLO_CONEXION.RUTA_PDF."/".$anexo[0]["ruta"]."'>".$anexo[0]["etiqueta"]."</a></li>";
+      echo "<li><a href='http://".RUTA_PDF."/".$anexo[0]["ruta"]."'>".$anexo[0]["etiqueta"]."</a></li>";
     }
     echo "</ul>";  
    }
 }
 function enlace_riesgos($idformato,$iddoc){
 global $conn,$ruta_db_superior;
-
-$formato_proceso=busca_filtro_tabla("idformato","formato","nombre='proceso'","",$conn);
-
-
 $id=busca_filtro_tabla("idft_proceso","ft_proceso","documento_iddocumento=$iddoc","",$conn);
 $texto="<a href='../riesgos_proceso/previo_mostrar_riesgos_proceso.php?llave=$idformato-idft_proceso-".$id[0][0]."&iddoc=$iddoc&no_menu=1'>Riesgos</a>";
 
-$texto="No existen Riesgos Para este Proceso";
+/*$texto="No existen Riesgos Para este Proceso";
 $formato=busca_filtro_tabla("","formato B","B.idformato=".$idformato,"",$conn);
 if($formato["numcampos"]){
   $proceso=busca_filtro_tabla("",$formato[0]["nombre_tabla"],"documento_iddocumento=".$iddoc,"nombre ASC",$conn);
   if($proceso["numcampos"]){
-    $texto='<a href="../riesgos_proceso/previo_mostrar_riesgos_proceso.php?llave='.$formato_proceso[0]['idformato'].'-idft_proceso-'.$proceso[0]["idft_proceso"].'&iddoc='.$iddoc.'&no_menu=1">Riegos del Proceso</a>';
+    $texto='<a href="../riesgos_proceso/previo_mostrar_riesgos_proceso.php?llave=9-idft_proceso-'.$proceso[0]["idft_proceso"].'&iddoc='.$iddoc.'&no_menu=1">Riegos del Proceso</a>';
     $campos=array("consecutivo","descripcion");
-   // $texto=listar_formato_hijo($campos,"ft_riesgos_proceso","ft_proceso",$proceso[0]["id".$formato[0]["nombre_tabla"]],"idft_riesgos_proceso ASC",'left');
+    $texto=listar_formato_hijo($campos,"ft_riesgos_proceso","ft_proceso",$proceso[0]["id".$formato[0]["nombre_tabla"]],"idft_riesgos_proceso ASC",'left');
   }
-}
-echo($texto);
+}*/
+//echo($texto);
 }
 
 function enlace_listado_maestro_documentos($idformato,$iddoc){
@@ -131,7 +152,19 @@ function enlace_listado_maestro_documentos($idformato,$iddoc){
     echo(listar_anexos($listadof[0]["idcampos_formato"],$listadof[0]["formato_idformato"],$listado[$i]["idft_listados_maestros"],1));
   }*/
 }
-
+function listar_control_proceso($idformato,$iddoc){
+  global $conn;
+  $texto="No existen Controles Para este Procedimiento";
+  $formato=busca_filtro_tabla("","formato B","B.idformato=".$idformato,"",$conn);
+  if($formato["numcampos"]){
+    $proceso=busca_filtro_tabla("",$formato[0]["nombre_tabla"],"documento_iddocumento=".$iddoc,"",$conn);
+    if($proceso["numcampos"]){
+      $campos=array("nombre","hoja_vida_indicador");
+     // $texto=listar_formato_hijo($campos,"ft_control_proceso","ft_proceso",$proceso[0]["id".$formato[0]["nombre_tabla"]],"",'left'," and a.estado<>'INACTIVO'");
+    }
+  }
+  echo($texto);
+}
 function listar_politicas_proceso($idformato,$iddoc){
   global $conn;
   $texto="No existen Politicas Para este Proceso";
@@ -158,6 +191,9 @@ if($formato["numcampos"]){
      $aprobado=busca_filtro_tabla("lower(nombres) as nombres,lower(apellidos) as apellidos,cargo.nombre,funcionario_codigo,firma","funcionario,cargo,dependencia_cargo","cargo_idcargo=idcargo and funcionario_idfuncionario=idfuncionario and iddependencia_cargo=".$proceso[0]["aprobado_por"],"",$conn);
 
      $revisado=busca_filtro_tabla("lower(nombres) as nombres,lower(apellidos) as apellidos,cargo.nombre,funcionario_codigo,firma","funcionario,cargo,dependencia_cargo","cargo_idcargo=idcargo and funcionario_idfuncionario=idfuncionario and iddependencia_cargo=".$proceso[0]["revisado_por"],"",$conn);
+	 
+	 $proyectado=busca_filtro_tabla("lower(nombres) as nombres,lower(apellidos) as apellidos,cargo.nombre,funcionario_codigo,firma","funcionario,cargo,dependencia_cargo","cargo_idcargo=idcargo and funcionario_idfuncionario=idfuncionario and iddependencia_cargo=".$proceso[0]["proyectado_por"],"",$conn);
+   		
     }
   else{
     $proceso=busca_filtro_tabla($formato[0]["nombre_tabla"].".*",$formato[0]["nombre_tabla"],"documento_iddocumento=".$iddoc,"nombre ASC",$conn);
@@ -187,21 +223,26 @@ if($formato["numcampos"]){
         else if($proceso[0]["aprobado_por"]||$proceso[0]["revisado_por"]) 
           { if($aprobado["numcampos"]||$revisado["numcampos"])
           {echo "<table width='100%'>
-                     <tr><td width='50%'>Revisado Por</td><td>Aprobado Por</td></tr>
-                     <tr><td>Nombre: ".ucwords(@$revisado[0]["nombres"]." ".@$revisado[0]["apellidos"])." </td>
+                     <tr><td width='33%'>Proyectado Por</td><td width='33%'>Revisado Por</td><td>Aprobado Por</td></tr>
+                     <tr><td>Nombre: ".ucwords(@$proyectado[0]["nombres"]." ".@$proyectado[0]["apellidos"])." </td>
+                     <td>Nombre: ".ucwords(@$revisado[0]["nombres"]." ".@$revisado[0]["apellidos"])." </td>
                      <td>Nombre: ".ucwords(@$aprobado[0]["nombres"]." ".@$aprobado[0]["apellidos"])."</td></tr>
-                     <tr><td>Cargo: ".ucwords(@$revisado[0]["nombre"])."</td><td>Cargo: ".ucwords(@$aprobado[0]["nombre"])."</td></tr>
-                     <tr><td>";
-          if(@$revisado[0]["firma"]<>"")
-            echo "<img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='".PROTOCOLO_CONEXION.RUTA_PDF."/formatos/librerias/mostrar_foto.php?codigo=".@$revisado[0]["funcionario_codigo"]."' />";
+                     <tr><td>Cargo: ".ucwords(@$proyectado[0]["nombre"])."</td><td>Cargo: ".ucwords(@$revisado[0]["nombre"])."</td><td>Cargo: ".ucwords(@$aprobado[0]["nombre"])."</td></tr>
+                     <tr><td>";//die();
+          if(@$proyectado[0]["firma"]<>"")
+            echo "<img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='http://".RUTA_PDF."/formatos/librerias/mostrar_foto.php?codigo=".@$proyectado[0]["funcionario_codigo"]."' />";
           else 
-            echo "<img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='".PROTOCOLO_CONEXION.RUTA_PDF."/firmas/blanco.jpg'/>";  
+            echo "<img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='http://".RUTA_PDF."/firmas/blanco.jpg'/>";
+		  if(@$revisado[0]["firma"]<>"")
+            echo "</td><td><img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='http://".RUTA_PDF."/formatos/librerias/mostrar_foto.php?codigo=".@$revisado[0]["funcionario_codigo"]."' />";
+          else 
+            echo "</td><td><img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='http://".RUTA_PDF."/firmas/blanco.jpg'/>";    
           if(@$aprobado[0]["firma"]<>"")
-            echo "</td><td><img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='".PROTOCOLO_CONEXION.RUTA_PDF."/formatos/librerias/mostrar_foto.php?codigo=".@$aprobado[0]["funcionario_codigo"]."' />";
+            echo "</td><td><img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='http://".RUTA_PDF."/formatos/librerias/mostrar_foto.php?codigo=".@$aprobado[0]["funcionario_codigo"]."' />";
           else 
-            echo "<img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='".PROTOCOLO_CONEXION.RUTA_PDF."/firmas/blanco.jpg'/>";
+            echo "</td><td><img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='http://".RUTA_PDF."/firmas/blanco.jpg'/>";
           echo "</td></tr>
-                     <tr><td>Fecha: ".@$proceso[0]["fecha_revision"]."</td><td>Fecha: ".@$proceso[0]["fecha_aprobacion"]."</td></tr>
+                     <tr><td></td><td>Fecha: ".@$proceso[0]["fecha_revision"]."</td><td>Fecha: ".@$proceso[0]["fecha_aprobacion"]."</td></tr>
                      </table>";
           }
           else
@@ -214,22 +255,27 @@ if($formato["numcampos"]){
     else if($proceso[0]["aprobado_por"]||$proceso[0]["revisado_por"]) {
       if($aprobado["numcampos"]||$revisado["numcampos"])
       {echo "<table width='100%'>
-                 <tr><td width='50%'>Revisado Por</td><td>Aprobado Por</td></tr>
-                 <tr><td>Nombre: ".ucwords(@$revisado[0]["nombres"]." ".@$revisado[0]["apellidos"])." </td>
-                 <td>Nombre: ".ucwords(@$aprobado[0]["nombres"]." ".@$aprobado[0]["apellidos"])."</td></tr>
-                 <tr><td>Cargo: ".ucwords(@$revisado[0]["nombre"])."</td><td>Cargo: ".ucwords(@$aprobado[0]["nombre"])."</td></tr>
-                 <tr><td>";
-      if(@$revisado[0]["firma"]<>"")
-        echo "<img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='".PROTOCOLO_CONEXION.RUTA_PDF."/formatos/librerias/mostrar_foto.php?codigo=".@$revisado[0]["funcionario_codigo"]."' />";
-      else 
-        echo "<img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='".PROTOCOLO_CONEXION.RUTA_PDF."/firmas/blanco.jpg'/>";  
-      if(@$aprobado[0]["firma"]<>"")
-        echo "</td><td><img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='".PROTOCOLO_CONEXION.RUTA_PDF."/formatos/librerias/mostrar_foto.php?codigo=".@$aprobado[0]["funcionario_codigo"]."' />";
-      else 
-        echo "<img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='".PROTOCOLO_CONEXION.RUTA_PDF."/firmas/blanco.jpg'/>";
-      echo "</td></tr>
-                 <tr><td>Fecha: ".@$proceso[0]["fecha_revision"]."</td><td>Fecha: ".@$proceso[0]["fecha_aprobacion"]."</td></tr>
-                 </table>";
+                     <tr><td width='33%'>Proyectado Por</td><td width='33%'>Revisado Por</td><td>Aprobado Por</td></tr>
+                     <tr><td>Nombre: ".ucwords(@$proyectado[0]["nombres"]." ".@$proyectado[0]["apellidos"])." </td>
+                     <td>Nombre: ".ucwords(@$revisado[0]["nombres"]." ".@$revisado[0]["apellidos"])." </td>
+                     <td>Nombre: ".ucwords(@$aprobado[0]["nombres"]." ".@$aprobado[0]["apellidos"])."</td></tr>
+                     <tr><td>Cargo: ".ucwords(@$proyectado[0]["nombre"])."</td><td>Cargo: ".ucwords(@$revisado[0]["nombre"])."</td><td>Cargo: ".ucwords(@$aprobado[0]["nombre"])."</td></tr>
+                     <tr><td>";//die();
+          if(@$proyectado[0]["firma"]<>"")
+            echo "<img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='http://".RUTA_PDF."/formatos/librerias/mostrar_foto.php?codigo=".@$proyectado[0]["funcionario_codigo"]."' />";
+          else 
+            echo "<img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='http://".RUTA_PDF."/firmas/blanco.jpg'/>";
+		  if(@$revisado[0]["firma"]<>"")
+            echo "</td><td><img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='http://".RUTA_PDF."/formatos/librerias/mostrar_foto.php?codigo=".@$revisado[0]["funcionario_codigo"]."' />";
+          else 
+            echo "</td><td><img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='http://".RUTA_PDF."/firmas/blanco.jpg'/>";    
+          if(@$aprobado[0]["firma"]<>"")
+            echo "</td><td><img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='http://".RUTA_PDF."/formatos/librerias/mostrar_foto.php?codigo=".@$aprobado[0]["funcionario_codigo"]."' />";
+          else 
+            echo "</td><td><img width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."' src='http://".RUTA_PDF."/firmas/blanco.jpg'/>";
+          echo "</td></tr>
+                     <tr><td></td><td>Fecha: ".@$proceso[0]["fecha_revision"]."</td><td>Fecha: ".@$proceso[0]["fecha_aprobacion"]."</td></tr>
+                     </table>";
       }
       else
        {echo ("Aprobado por<br />".$proceso[0]["aprobado_por"]);
@@ -346,10 +392,10 @@ function mostrar_anexos_anexos_proceso($idformato,$iddoc){
 		$tabla='<ul>';
 	    for($j=0;$j<$anexos['numcampos'];$j++){
 	        if($anexos[$j]['tipo']=='jpg' || $anexos[$j]['tipo']=='JPG' || $anexos[$j]['tipo']=='pdf' || $anexos[$j]['tipo']=='PDF' || $anexos[$j]['tipo']=='png'){
-	            $tabla.="<li><a href='".$ruta_db_superior.$anexos[$j]['ruta']."' target='_blank'>".$anexos[$j]['etiqueta']."</a></li>";
+	            $tabla.="<li><a href='".$ruta_db_superior.$anexos[$j]['ruta']."' target='_blank'>".html_entity_decode($anexos[$j]['etiqueta'])."</a></li>";
 	        }
 	        else{
-	            $tabla.='<li><a title="Descargar" href="'.$ruta_db_superior.'anexosdigitales/parsea_accion_archivo.php?idanexo='.$anexos[$j]['idanexos'].'&amp;accion=descargar" border="0px">'.$anexos[$j]['etiqueta'].'</a></li>';
+	            $tabla.='<li><a title="Descargar" href="'.$ruta_db_superior.'anexosdigitales/parsea_accion_archivo.php?idanexo='.$anexos[$j]['idanexos'].'&amp;accion=descargar" border="0px">'.html_entity_decode($anexos[$j]['etiqueta']).'</a></li>';
 	        }
 							
 	    }

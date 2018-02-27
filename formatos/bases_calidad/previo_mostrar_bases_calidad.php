@@ -56,9 +56,23 @@ if(@$_REQUEST['iddoc']){
         
         $tabla.='
             <tr>
-                <th class="encabezado_list">'.ucwords(strtolower(codifica_encabezado(html_entity_decode($serie_seleccionada[0]['nombre'])))).'</th>
-            </tr>
-            <tr>
+                <th class="encabezado_list">'.ucwords(strtolower(codifica_encabezado($serie_seleccionada[0]['nombre']))).'</th>
+            </tr>';
+
+    $nombre_mapa_proceso=busca_filtro_tabla("etiqueta","formato","lower(nombre)='proceso'","",$conn);
+
+    $tabla.='<tr><td colspan="2" style="text-align:center;">';
+ 
+    $iddoc_mapa_proceso=busca_filtro_tabla("a.descripcion_base,a.documento_iddocumento,a.tipo_base_calidad","ft_bases_calidad a, serie b,documento c","lower(c.estado)='aprobado' AND a.documento_iddocumento=c.iddocumento and a.documento_iddocumento = ".$_REQUEST['iddoc']." AND a.tipo_base_calidad=b.idserie","",$conn);
+		$consulta_serie_proceso = busca_filtro_tabla("nombre","serie","idserie=".$iddoc_mapa_proceso[0]['tipo_base_calidad'],"",$conn);
+    $mapa_proceso=busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc_mapa_proceso[0]['documento_iddocumento'],"",$conn);
+    
+		if($consulta_serie_proceso[0]['nombre']=='Mapa de Procesos'){
+
+    $tabla.='<img src='.$ruta_db_superior.$mapa_proceso[0]["ruta"].' id="cropbox" border="0" usemap="#Map" />';  
+									
+		}
+            $tabla.='<tr>
                 <td>'.$datos[$i]['descripcion_base'].'</td>
             </tr> 
             <tr>

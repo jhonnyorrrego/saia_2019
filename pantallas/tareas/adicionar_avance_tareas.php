@@ -12,7 +12,6 @@ include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "class_transferencia.php");
 include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
-include_once ($ruta_db_superior . "pantallas/lib/librerias_notificaciones.php");
 
 echo(librerias_jquery("1.7"));
 echo(librerias_arboles());

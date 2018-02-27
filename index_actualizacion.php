@@ -777,7 +777,6 @@ function menu_saia(){
 	  		idcomponente=$(this).attr("idcomponente");
 	  		div_actualizar=$(this).attr("nombre_componente");
 	  		actualizar_datos_index_saia2(idcomponente,div_actualizar);
-	  		console.log(div_actualizar);
 	  	});
 		}
     function actualizar_datos_index_saia2(idcomponente,div_actualizar){

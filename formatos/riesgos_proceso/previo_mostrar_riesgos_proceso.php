@@ -1,27 +1,33 @@
 <?php
 $max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
-while($max_salida>0)
-{
-if(is_file($ruta."db.php"))
-{
-$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-}
-$ruta.="../";
-$max_salida--;
+while($max_salida>0){
+	if(is_file($ruta."db.php")){
+		$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+	}
+	$ruta.="../";
+	$max_salida--;
 }
 include_once($ruta_db_superior.'librerias_saia.php');
 
 echo(estilo_bootstrap());
+//echo('<a href="http://saia.risaralda.gov.co/SAIA/saia/class_impresion.php?url=formatos/riesgos_proceso/previo_mostrar_riesgos_proceso2.php?llave=9-idft_proceso-161&iddoc=439252&enlace_adicionar_formato=1&padre=161&formato_padre=13&no_menu=1"><img src="../../enlaces/imprimir.gif" border="0"></a>');
+//echo('<a href="http://saia.risaralda.gov.co/SAIA/saia/class_impresion.php?url=formatos/riesgos_proceso/previo_mostrar_riesgos_proceso.php?llave=9-idft_proceso-161&iddoc=439252&enlace_adicionar_formato=1&padre=161&formato_padre=13&no_menu=1"><img src="../../enlaces/imprimir_pdf.png" border="0"></a>');
 
 $datos=busca_filtro_tabla("","documento","iddocumento=".$_REQUEST["iddoc"],"",$conn);
+//print_r($datos);
+/*include_once($ruta_db_superior."db.php");
+include_once('../librerias/estilo_formulario.php');
+include_once($ruta_db_superior.'formatos/librerias/funciones_generales.php');
+include_once($ruta_db_superior.'librerias_saia.php');
+include_once('librerias_riesgos.php');*/
 
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior.'formatos/librerias/estilo_formulario.php');
 include_once($ruta_db_superior.'formatos/librerias/funciones_generales.php');
 include_once($ruta_db_superior.'riesgos_proceso/librerias_riesgos.php');
 
-ini_set("display_errors",false);
+//ini_set("display_errors",false);
 
 $formato=busca_filtro_tabla("","formato","nombre_tabla LIKE 'ft_riesgos_proceso'","",$conn);
 $prob[0]="La materializaci&oacute;n del riesgo ocurre con frecuencia";
@@ -59,7 +65,6 @@ a:hover {
     hs.graphicsDir = '<?php echo($ruta_db_superior); ?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
     hs.outlineType = 'rounded-white';
 </script>
-
 <style type="text/css">	#dhtmlgoodies_tooltip{ 		background-color:#EEE; 		border:1px solid #000; 		position:absolute; 		display:none; 		z-index:30000; 		padding:2px; 		font-size:0.9em; 		-moz-border-radius:6px;	/* Rounded edges in Firefox */ 		font-family: "Trebuchet MS", "Lucida Sans Unicode", Arial, sans-serif; 	} 	#dhtmlgoodies_tooltipShadow{ 		position:absolute; 		background-color:#555; 		display:none; 		z-index:10000; 		opacity:0.7; 		filter:alpha(opacity=70); 		-khtml-opacity: 0.7; 		-moz-opacity: 0.7; 		-moz-border-radius:6px;	/* Rounded edges in Firefox */ 	} 	a{ 		color: #000000; 		text-decoration:none;		; 	} 	a:hover{ 		border-bottom:1px dotted #317082; 		color: #000000; 	} 	
 </style>
 <p><br />
@@ -67,8 +72,7 @@ a:hover {
    if(@$_REQUEST["enlace_adicionar_formato"] && @$_REQUEST["iddoc"]){
       $formato=busca_filtro_tabla("","formato","nombre_tabla LIKE 'ft_riesgos_proceso'","",$conn);
       if($formato["numcampos"]){
-        //agrega_boton("texto","../../botones/formatos/adicionar.gif","../../responder.php?idformato=".$formato[0]["idformato"]."&iddoc=".$_REQUEST["padre"],"","Adicionar ".$formato[0]["etiqueta"],$formato[0]["nombre_tabla"],"","",0);
-        agrega_boton("texto","../../botones/formatos/adicionar.gif","../../formatos/riesgos_proceso/adicionar_riesgos_proceso.php?idformato=".$formato[0]["idformato"]."&padre=".$_REQUEST["padre"]."&from_riesgos=1","","Adicionar ".$formato[0]["etiqueta"],$formato[0]["nombre_tabla"],"","",0);
+        agrega_boton("texto","../../botones/formatos/adicionar.gif","../../responder.php?idformato=".$formato[0]["idformato"]."&iddoc=".$_REQUEST["padre"],"","Adicionar ".$formato[0]["etiqueta"],$formato[0]["nombre_tabla"],"","",0);
         echo("<br /><br />");
         $alto_frame="94%";
       }
@@ -88,22 +92,19 @@ $datos=explode("-",$_REQUEST["llave"]);
 <?php
 	//}
 ?>
-        <!--td>
-        	<a href="previo_mostrar_riesgos_proceso.php?llave=<?php echo(@$_REQUEST["llave"]);?>">MOSTRAR COMO CUADRO DE MANDO</a>
-        </td-->
         <td>
         	<a href="GUIA_DE_RIESGOS_DAFP_2012_V2.pdf" target="_blank">GU&Iacute;A ADMINISTRACI&Oacute;N DE RIESGOS</a>
         </td>
-        <td>
-        	<a title="Los riesgos en los cuales <?php echo usuario_actual('nombres').' '.usuario_actual('apellidos'); ?> aparece como responsable en la administraci&oacute;n del riesgo" href="<?php echo 'previo_mostrar_riesgos_proceso2.php?llave='.$_REQUEST["llave"].'&responsable='.usuario_actual('funcionario_codigo');?>" target="_self">MIS RESPONSABILIDADES SOBRE LA ADMINISTRACI&Oacute;N DEL RIESGO</a>
-        </td>
+        <!--td->
+        	<a title="Los riesgos en los cuales <?php echo usuario_actual('nombres').' '.usuario_actual('apellidos'); ?> aparece como responsable en la administraci&oacute;n del riesgo" href="<?php echo 'previo_mostrar_riesgos_proceso.php?llave='.$_REQUEST["llave"].'&responsable='.usuario_actual('funcionario_codigo');?>" target="_self">MIS RESPONSABILIDADES SOBRE LA ADMINISTRACI&Oacute;N DEL RIESGO</a>
+        </td-->
     </tr>
     <tr>     	
 	<td> 
 			<?php
 				$idft_papa = busca_filtro_tabla("","ft_proceso","documento_iddocumento=".$_REQUEST['iddoc'],"",$conn);
 			?>
-        	<a  title="" href="<?php echo($ruta_db_superior);?>formatos/contexto_extrategico/adicionar_contexto_extrategico.php?anterior=<?php echo($_REQUEST['iddoc']);?>&padre=<?php echo($idft_papa[0]['idft_proceso']);?>&idformato=211" target="_self">CONTEXTO EXTRAT&Eacute;GICO</a>(<a class="highslide" onclick='return hs.htmlExpand(this, { objectType: "iframe",width: 500, height: 700,preserveContent:true} )' href="ayuda_contexto_estrategico_riesgos.php"><b>ayuda</b></a>)
+        	<a  title="" href="<?php echo($ruta_db_superior);?>formatos/contexto_extrategico/adicionar_contexto_extrategico.php?anterior=<?php echo($_REQUEST['iddoc']);?>&padre=<?php echo($idft_papa[0]['idft_proceso']);?>&idformato=211" target="_self">CONTEXTO EXTRAT&Eacute;GICO</a>
         	<?php
 				$t=1;
 				if($t==0){
@@ -147,14 +148,15 @@ $datos=explode("-",$_REQUEST["llave"]);
         	}
         	?>
         </td> 
-       
-        <td><a href="mostrar_riesgos_tipo_corrupcion.php" target="_self">MAPA DE RIESGOS DE CORRUPCI&Oacute;N INSTITUCIONAL</a></td> 
-        	<td><a href="mapa_riesgos_institucional.php" target="_self">MAPA DE RIESGOS INSTITUCIONAL</a></td>
+        <!--td><a  title="" href="../../ayuda/politicas_administracion_riesgo.docx" target="_self">POLITICAS DE ADMINISTRACI&Oacute;N DEL RIESGO</a></td-->
+        <td><a href="mostrar_riesgos_tipo_corrupcion.php" target="_self">MAPA DE RIESGOS DE CORRUPCI&Oacute;N INSTITUCIONAL</a></td>  
 	</tr>
 	<tr>
-		<td ><a href="matriz_riesgos_institucional.php" target="_self">MATRIZ DE RIESGOS INSTITUCIONAL</a></td>
+		<td><a href="mapa_riesgos_institucional.php" target="_self">MAPA DE RIESGOS INSTITUCIONAL</a></td>
+		<td><a href="matriz_riesgos_institucional.php" target="_self">MATRIZ DE RIESGOS INSTITUCIONAL</a></td>
 	</tr>	
   </table>
+ 
   <br /><br /><br />
 </p>
 <table border="1" width="100%" cellspacing="0" class="tabla_borde" style="border-collapse:collapse">
@@ -226,10 +228,19 @@ $datos=explode("-",$_REQUEST["llave"]);
 </p>
 <?php
 $proceso = busca_filtro_tabla("nombre,".fecha_db_obtener('fecha_revision_riesgo','d/m/Y H:i:s')." as fecha_revision,".fecha_db_obtener('fecha_aprobacion_riesgo','d/m/Y H:i:s')." as fecha_aprobacion,aprobado_por,revisado_por,lider_proceso,responsable,idft_proceso","ft_proceso","documento_iddocumento=".$_REQUEST['iddoc'],"",$conn);
+
+//print_r($proceso);
+//print_r($_REQUEST);
+//$proceso = busca_filtro_tabla("nombre,fecha_revision_riesgo as fecha_revision,".fecha_db_obtener('fecha_aprobacion_riesgo','Y-m H:i:s')." as fecha_aprobacion,aprobado_por,revisado_por,lider_proceso,responsable,idft_proceso","ft_proceso","documento_iddocumento=".$_REQUEST['iddoc'],"",$conn);
+
 $revisado = busca_filtro_tabla("b.nombres,b.apellidos,b.funcionario_codigo","dependencia_cargo a,funcionario b","a.funcionario_idfuncionario=b.idfuncionario AND iddependencia_cargo=".$proceso[0]['revisado_por'],"",$conn);
+
 $aprobado = busca_filtro_tabla("b.nombres,b.apellidos,b.funcionario_codigo","dependencia_cargo a,funcionario b","a.funcionario_idfuncionario=b.idfuncionario AND iddependencia_cargo=".$proceso[0]['aprobado_por'],"",$conn);
+
 $lider = busca_filtro_tabla("b.nombres,b.apellidos,b.funcionario_codigo","funcionario b","b.funcionario_codigo in(".$proceso[0]['lider_proceso'].")","",$conn);
+
 $responsable = busca_filtro_tabla("b.nombres,b.apellidos,b.funcionario_codigo","funcionario b","b.funcionario_codigo in(".$proceso[0]['responsable'].")","",$conn);
+
 $lider_proceso = explode(",", $proceso[0]['lider_proceso']);
 
 if(in_array(usuario_actual('funcionario_codigo'),$lider_proceso)){	
@@ -238,29 +249,22 @@ if(in_array(usuario_actual('funcionario_codigo'),$lider_proceso)){
 ?>
 <table style="border-collapse:collapse; margin-top: 4px;" border="1" id="tabla_revisado_por">
 <tr>
-  <td style="text-align: center;" colspan="2">Revisado por Lider del Proceso</td>
+<td style="text-align: center;" colspan="2">Revisado por Lider del Proceso</td>
 </tr>
-<?php 
-    $tr_lider="";
-    $hist_lider=busca_filtro_tabla("v.nombres,v.apellidos,".fecha_db_obtener('fecha_revision','d/m/Y H:i:s')." as fecha_revi,".fecha_db_obtener('fecha_cambio','d/m/Y H:i:s')." as fecha_cambio","cf_historial_proceso cf,funcionario v","v.funcionario_codigo=cf.lider_proceso and cf.documento_iddocumento=".$_REQUEST['iddoc'],"cf.idcf_historial_proceso asc",$conn);
-    if($hist_lider["numcampos"]){
-       for($i=0;$i<$hist_lider["numcampos"];$i++){
-         $tr_lider.="<tr>";
-           $tr_lider.="<td>".ucwords(strtolower($hist_lider[$i]['nombres'].' '.$hist_lider[$i]['apellidos']))."</td>"; 
-           $tr_lider.="<td>".$hist_lider[$i]["fecha_revi"]."</td>";   
-        $tr_lider.="</tr>";    
-       }  
-    }elseif($lider["numcampos"]){
-      $tr_lider.="<tr>";
-        $tr_lider.="<td>".ucwords(strtolower($lider[0]['nombres'].' '.$lider[0]['apellidos']))."</td>";  
-        $tr_lider.="<td id='fecha_revision'>".($proceso[0]['fecha_revision'])."</td>";  
-      $tr_lider.="</tr>";
-    }
-  echo $tr_lider;
-?>
+<tr>
+<td><?php 
+		for ($i=0; $i < $lider["numcampos"]; $i++) { 
+			$datos_lider [] = ucwords(strtolower($lider[0]['nombres'].' '.$lider[0]['apellidos'])); 
+		}
+		echo(implode('<br />', $datos_lider));
+	?>
+</td>
+<td id="fecha_revision"><?php echo($proceso[0]['fecha_revision']); ?></td>
+</tr>
 </table>
 <br />
 <?php
+	  
 $responsable_proceso = explode(",", $proceso[0]['responsable']);
 
 if(in_array(usuario_actual('funcionario_codigo'),$responsable_proceso)){	
@@ -269,41 +273,76 @@ if(in_array(usuario_actual('funcionario_codigo'),$responsable_proceso)){
 ?>
 <table style="border-collapse:collapse; margin-top: 4px;" border="1" id="tabla_aprobado_por">
 <tr>
-  <td style="text-align: center;" colspan="2">Aprobado por</td>
-</tr>
+<td style="text-align: center;" colspan="2">Aprobado por</td>
 <?php 
-    $tr_resp="";
-    $hist_respon=busca_filtro_tabla("v.nombres,v.apellidos,".fecha_db_obtener('fecha_aprobacion','d/m/Y H:i:s')." as fecha_aprob","cf_historial_proceso cf,funcionario v","v.funcionario_codigo=cf.responsable and cf.documento_iddocumento=".$_REQUEST['iddoc'],"cf.idcf_historial_proceso asc",$conn);
-    if($hist_respon["numcampos"]){
-     for($i=0;$i<$hist_respon["numcampos"];$i++){
-       $tr_resp.="<tr>";
-         $tr_resp.="<td>".ucwords(strtolower($hist_respon[$i]['nombres'].' '.$hist_respon[$i]['apellidos']))."</td>"; 
-         $tr_resp.="<td>".$hist_respon[$i]["fecha_aprob"]."</td>";    
-       $tr_resp.="</tr>";    
-     }  
-    }elseif($responsable["numcampos"]){
-      $tr_resp.="<tr>";
-        $tr_resp.="<td>".ucwords(strtolower($responsable[0]['nombres'].' '.$responsable[0]['apellidos']))."</td>";  
-        $tr_resp.="<td id='fecha_aprobacion'>".($proceso[0]['fecha_aprobacion'])."</td>";  
-      $tr_resp.="</tr>";
-    }
-  echo $tr_resp;
+
+$corrupcion=busca_filtro_tabla("a.tipo_riesgo","ft_riesgos_proceso a, ft_proceso b, documento d","a.documento_iddocumento=d.iddocumento and a.tipo_riesgo='Corrupcion' and a.estado not in ('INACTIVO') and  b.idft_proceso=a.ft_proceso and d.estado not in ('ACTIVO','ELIMINADO','ANULADO') and b.documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
+?>
+</tr>
+<tr>
+<td><?php
+			
+		for ($i=0; $i < $responsable["numcampos"] ; $i++) { 
+			$datos_responsables [] = ucwords(strtolower($responsable[0]['nombres'].' '.$responsable[0]['apellidos'])); 
+		} 
+		echo(implode("<br />", $datos_responsables));
 	?>
+</td>
+<td id="fecha_aprobacion"><?php echo($proceso[0]['fecha_aprobacion']); ?></td>
+</tr>
 </table>
 <?php
-$corrupcion=busca_filtro_tabla("a.tipo_riesgo","ft_riesgos_proceso a, ft_proceso b, documento d","a.documento_iddocumento=d.iddocumento and a.tipo_riesgo='Corrupcion' and a.estado not in ('INACTIVO') and  b.idft_proceso=a.ft_proceso and d.estado not in ('ACTIVO','ELIMINADO','ANULADO') and b.documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
+//print_r($_REQUEST);
 if($corrupcion["numcampos"]!=0){
 		echo ('<br/><br/><table style="border-collapse:collapse; margin-top: 4px;" border="0"><tr><td style="text-align: center; font-size:16px">MAPA DE RIESGOS DE CORRUPCIÓN</td></tr></table><br/>');
 	
 $url="mostrar_riesgos_tipo_corrupcion.php?excel=1";
+	//$ruta = $ruta_db_superior."class_impresion2.php?tipo=5&orientacion=1&url=".$url."&pdf=1";
 	$tabla = '
    <a target="_blank" href="'.$url.'">
     <img src="'.$ruta_db_superior.'enlaces/imprimir.gif" height="30" width="30" border="0">
    </a>';
    include_once($ruta_db_superior.'formatos/riesgos_proceso/mostrar_riesgos_tipo_corrupcion.php');
 }
-
+//include_once($ruta_db_superior.'formatos/riesgos_proceso/mostrar_riesgos_tipo_corrupcion.php');//se comentarea esta linea, se copia dentro de la condicion
 cuadrante();
+
+/*function cuadrante(){
+global $conn,$formato,$proceso;
+$texto="";
+$dato=explode("-",$_REQUEST["llave"]); 
+if(@$_REQUEST["responsable"]!=''){
+	$resp=$_REQUEST["responsable"];
+   	$adicionales=" and (b.reponsables like '$resp' or b.reponsables like '%,$resp' or b.reponsables like '$resp,%' or b.reponsables like '%,$resp,%')";
+	$riesgos=busca_filtro_tabla("a.impacto,a.probabilidad,a.descripcion AS nombre,a.idft_riesgos_proceso,a.consecutivo,a.documento_iddocumento","ft_riesgos_proceso a, ft_ft_acciones_riesgo b, documento c","a.estado<>'INACTIVO' $adicionales AND b.ft_riesgos_proceso=a.idft_riesgos_proceso AND b.documento_iddocumento=c.iddocumento and c.estado not in('ELIMINADO', 'ANULADO') AND a.ft_proceso=".$dato[2],"idft_riesgos_proceso asc",$conn);
+}
+else{
+	$riesgos=busca_filtro_tabla("impacto,probabilidad,descripcion AS nombre,idft_riesgos_proceso,consecutivo,documento_iddocumento ","ft_riesgos_proceso","estado<>'INACTIVO' $adicionales AND ft_proceso=".$dato[2],"idft_riesgos_proceso asc",$conn);
+}
+
+for($i=0;$i<$riesgos["numcampos"];$i++){
+	$estado_riesgo=busca_filtro_tabla("","ft_riesgos_proceso a, documento b","a.documento_iddocumento=b.iddocumento and a.idft_riesgos_proceso=".$riesgos[$i]["idft_riesgos_proceso"]." and b.estado not in('ELIMINADO', 'ANULADO')","",$conn);
+	if(!$estado_riesgo["numcampos"])continue;
+	$seguimientos=busca_filtro_tabla("","ft_seguimiento_riesgo,documento","ft_riesgos_proceso=".$riesgos[$i]["idft_riesgos_proceso"]." AND documento_iddocumento=iddocumento and estado<>'ELIMINADO'","iddocumento asc",$conn);
+	$texto='';
+
+	$texto .= '<a style="color:blue;" title="" href="mostrar_riesgos_proceso.php?idformato='.$formato[0]["idformato"].'&iddoc='.$riesgos[$i]["documento_iddocumento"].'" class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 550, height:400,preserveContent:false } )" style="text-decoration: underline; cursor:pointer;">Riesgo No.'.strip_tags($riesgos[$i]["consecutivo"]).'</a><br />';
+	
+	//$texto = implode("<br />", $texto);
+	
+	//$texto.='<a style="color:blue;" title="'.strip_tags(mostrar_valor_campo("descripcion",$formato[0]["idformato"],$riesgos[$i]["documento_iddocumento"],1)).'" href="mostrar_riesgos_proceso.php?idformato='.$formato[0]["idformato"].'&iddoc='.$riesgos[$i]["documento_iddocumento"].'" class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 550, height:400,preserveContent:false } )" style="text-decoration: underline; cursor:pointer;">Riesgo No.'.strip_tags($riesgos[$i]["consecutivo"]).'</a>&nbsp;';
+    if($seguimientos["numcampos"])    	
+     $texto.= "<br />";
+	 
+	 $disminuir=valoraciones($riesgos[$i]["idft_riesgos_proceso"]);	 
+	 $probabilidad_auto=nuevo_punto_matriz($riesgos[$i]["probabilidad"],$disminuir[0]);	 
+	 $impacto_auto=nuevo_punto_matriz($riesgos[$i]["impacto"],$disminuir[1]);	 
+   llenar_evaluaciones($impacto_auto,$probabilidad_auto,$texto);
+}
+
+return($texto);
+}*/
+
 function cuadrante(){
 global $conn,$formato,$proceso;
 $texto="";
@@ -315,7 +354,7 @@ for($i=0;$i<$riesgos["numcampos"];$i++){
 		
 	$probabilidad = obtener_probabilidad_riesgo($riesgos[$i]["idft_riesgos_proceso"], $riesgos[$i]["probabilidad"]);
 	$impacto      = obtener_impacto_riesgo($riesgos[$i]["idft_riesgos_proceso"], $riesgos[$i]["impacto"]);		
-	
+
 	$texto='';
 	$texto.='<a style="color:blue;" title="" href="mostrar_riesgos_proceso.php?idformato='.$formato[0]["idformato"].'&iddoc='.$riesgos[$i]["documento_iddocumento"].'" class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 550, height:400,preserveContent:false } )" style="text-decoration: underline; cursor:pointer;">Riesgo No.'.strip_tags($riesgos[$i]["consecutivo"]).'</a><br />';
 	
@@ -328,8 +367,8 @@ for($i=0;$i<$riesgos["numcampos"];$i++){
 function obtener_probabilidad_riesgo($idft_riesgos_proceso, $probabilidad){
 	global $conn;	
 	
-	$control_riesgos_probabilidad = busca_filtro_tabla("a.herramienta_ejercer, a.procedimiento_herramienta, a.herramienta_efectiva, a.responsables_ejecucion,  a.frecuencia_ejecucion","ft_control_riesgos a, documento b","a.tipo_control=1 and a.documento_iddocumento=b.iddocumento and lower(b.estado) not in('eliminado','anulado') and ft_riesgos_proceso=".$idft_riesgos_proceso,"a.idft_control_riesgos desc",$conn);
-	
+	$control_riesgos_probabilidad = busca_filtro_tabla("a.herramienta_ejercer, a.procedimiento_herram, a.herramienta_efectiva, a.responsables_ejecuci,  a.frecuencia_ejecucion","ft_control_riesgos a, documento b","a.tipo_control=1 and a.documento_iddocumento=b.iddocumento and lower(b.estado) not in('eliminado','anulado') and ft_riesgos_proceso=".$idft_riesgos_proceso,"a.idft_control_riesgos desc",$conn);
+
 	$posiciones = 0;
 	for ($i=0; $i < $control_riesgos_probabilidad["numcampos"]; $i++) {		
 		$mover_probabilidad = 0;
@@ -338,7 +377,7 @@ function obtener_probabilidad_riesgo($idft_riesgos_proceso, $probabilidad){
 			$mover_probabilidad += 15;
 		}
 		
-		if($control_riesgos_probabilidad[0]["procedimiento_herramienta"] == 1){
+		if($control_riesgos_probabilidad[0]["procedimiento_herram"] == 1){
 			$mover_probabilidad += 15;
 		}
 		
@@ -346,14 +385,14 @@ function obtener_probabilidad_riesgo($idft_riesgos_proceso, $probabilidad){
 			$mover_probabilidad += 30;
 		}
 		
-		if($control_riesgos_probabilidad[0]["responsables_ejecucion"] == 1){
+		if($control_riesgos_probabilidad[0]["responsables_ejecuci"] == 1){
 			$mover_probabilidad += 15;
 		}
 		
 		if($control_riesgos_probabilidad[0]["frecuencia_ejecucion"] == 1){
 			$mover_probabilidad += 25;
 		}		
-		
+
 		if($mover_probabilidad >= 0 && $mover_probabilidad <= 50){
 			$posiciones += 0;
 		}elseif($mover_probabilidad >= 51  && $mover_probabilidad <= 75){
@@ -377,7 +416,7 @@ function obtener_probabilidad_riesgo($idft_riesgos_proceso, $probabilidad){
 function obtener_impacto_riesgo($idft_riesgos_proceso, $impacto){
 	global $conn;		
 	
-	$control_riesgos_impacto = busca_filtro_tabla("a.herramienta_ejercer, a.procedimiento_herramienta, a.herramienta_efectiva, a.responsables_ejecucion,  a.frecuencia_ejecucion","ft_control_riesgos a, documento b","a.tipo_control=2 and a.documento_iddocumento=b.iddocumento and lower(b.estado) not in('eliminado','anulado') and ft_riesgos_proceso=".$idft_riesgos_proceso,"a.idft_control_riesgos desc",$conn);
+	$control_riesgos_impacto = busca_filtro_tabla("a.herramienta_ejercer, a.procedimiento_herram, a.herramienta_efectiva, a.responsables_ejecuci,  a.frecuencia_ejecucion","ft_control_riesgos a, documento b","a.tipo_control=2 and a.documento_iddocumento=b.iddocumento and lower(b.estado) not in('eliminado','anulado') and ft_riesgos_proceso=".$idft_riesgos_proceso,"a.idft_control_riesgos desc",$conn);
 	
 	$posiciones = 0;			
 	for ($i=0; $i < $control_riesgos_impacto["numcampos"]; $i++){		
@@ -388,7 +427,7 @@ function obtener_impacto_riesgo($idft_riesgos_proceso, $impacto){
 			$mover_impacto += 15;
 		}
 		
-		if($control_riesgos_impacto[0]["procedimiento_herramienta"] == 1){
+		if($control_riesgos_impacto[0]["procedimiento_herram"] == 1){
 			$mover_impacto += 15;
 		}
 		
@@ -396,7 +435,7 @@ function obtener_impacto_riesgo($idft_riesgos_proceso, $impacto){
 			$mover_impacto += 30;
 		}
 		
-		if($control_riesgos_impacto[0]["responsables_ejecucion"] == 1){
+		if($control_riesgos_impacto[0]["responsables_ejecuci"] == 1){
 			$mover_impacto += 15;
 		}
 		

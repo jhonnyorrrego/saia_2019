@@ -13,51 +13,18 @@ $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
 
-	$acciones=busca_filtro_tabla(fecha_db_obtener('d.fecha','Y-m-d')."as fecha, TO_DATE(TO_CHAR(a.fecha_cumplimiento,'YYYY-MM-DD'),'YYYY-MM-DD')-TO_DATE('".date('Y-m-d')."','YYYY-MM-DD') as resta, a.reponsables, d.numero, a.ft_riesgos_proceso,a.acciones_accion","ft_acciones_riesgo a, documento d","a.documento_iddocumento=d.iddocumento and d.estado not in ('ANULADO','ELIMINADO','ACTIVO')","",$conn);
-
-	if($acciones['numcampos']){
+	$acciones=busca_filtro_tabla(fecha_db_obtener('d.fecha','Y-m-d')."as fecha, TO_DATE(TO_CHAR(a.fecha_cumplimiento,'YYYY-MM-DD'),'YYYY-MM-DD')-TO_DATE('".date('Y-m-d')."','YYYY-MM-DD') as resta, a.reponsables, d.numero","ft_ft_acciones_riesgo a, documento d","a.documento_iddocumento=d.iddocumento and d.estado not in ('ANULADO','ELIMINADO','ACTIVO')","",$conn);
+	if($acciones){
 		
 		for ($i=0; $i < $acciones["numcampos"] ; $i++) {
-			$proceso=busca_filtro_tabla("a.nombre as nombreh,a.tipo_riesgo,b.numero,c.nombre as nombrep,c.macroproceso","ft_riesgos_proceso a,documento b, ft_proceso c","a.ft_proceso=c.idft_proceso and a.documento_iddocumento=b.iddocumento and a.idft_riesgos_proceso=".$acciones[$i]["ft_riesgos_proceso"],"",$conn);
-			$nom_macro='';
-			if($proceso[0]['macroproceso']){
-				$macro=busca_filtro_tabla("nombre","ft_macroproceso_calidad","idft_macroproceso_calidad=".$proceso[0]['macroproceso'],"",$conn);
-				$nom_macro=$macro[0]['nombre']." - ";
-			}
-			$responsables=explode(",", $acciones[$i]['reponsables']);
-			$funcionarios='';
-			foreach ($responsables as $value) {
-				if(strpos($value, '#')>0){
-					$value=str_replace('#', '', $value);
-					$funcionario=busca_filtro_tabla("(nombres || ' ' || apellidos) as nombres","vfuncionario_dc","estado=1 and estado_dc=1 and iddependencia=".$value,"",$conn);
-					$funcionarios.=implode('<br>', extrae_campo($funcionario,"nombres"));
-				}else{
-					$funcionario=busca_filtro_tabla("(nombres || ' ' || apellidos) as nombres","vfuncionario_dc","estado=1 and estado_dc=1 and funcionario_codigo=".$value,"",$conn);
-					$funcionarios.=$funcionario[0]['nombres']."<br>";
-				}
-			}
-
 			if($acciones[$i]["resta"]==15 || $acciones[$i]["resta"]==10 || $acciones[$i]["resta"]==5){
-				$contenido="Cordial saludo,<br/><br/>
-
-					Revisar la accion de riesgo que esta a punto de vencerse o ya fue vencido.<br/><br/>
-					
-					Nombre del Proceso y Subproceso: ".$nom_macro.$proceso[0]['nombrep']."<br><br>
-					
-					Nombre del riesgo: ".$proceso[0]['numero']."<br/><br/>
-					
-					Riesgo: ".$proceso[0]['tipo_riesgo']."<br/><br/>
-					 
-					Acciones:  ".str_replace('<p>', '', $acciones[$i]['acciones_accion'])."
-					
-					Responsable: ".str_replace('<p>', '', $funcionarios);
-
+				$contenido="Revisar la accion con radicado ".$acciones[$i]["numero"].", esta a punto de vencerse o ya fue vencido, por favor dar por cumplida la accion.";
 				$responsables=traer_correos($acciones[$i]["reponsables"]);
 				enviar_email_accion($responsables,$contenido);
 			}
 		}
 	}
-
+	
 function traer_correos($valor){
 	global $conn;
 	$emails=array();
@@ -161,4 +128,5 @@ $s = preg_replace('//e','chr(\\1)',$s);
 $s = strip_tags($s);
 return $s;
 }
+
 ?>
