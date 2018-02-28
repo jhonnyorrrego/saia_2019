@@ -220,8 +220,8 @@ necesarios en la radicacion; $archivos-cadena con la lista de los anexos del doc
 <Post-condiciones>
 */ 
 function radicar_documento_prueba($tipo_contador,$arreglo,$archivos=NULL,$idflujo=Null)
-{              
-  global $conn;     
+{ 
+  global $conn;
   //print_r($arreglo); 
   if($tipo_contador!=""&&$tipo_contador!=NULL);
   elseif(array_key_exists("serie",$arreglo))
@@ -412,7 +412,7 @@ $adicionales-otros datos referentes a la transferencia;
 function transferir_archivo_prueba($datos,$destino,$adicionales)
 {
  global $conn;
- sort($destino);  
+ sort($destino); 
  $idarchivo = $datos["archivo_idarchivo"]; 
  if(!@$datos["ruta_idruta"])
     $datos["ruta_idruta"]="";
@@ -430,14 +430,14 @@ function transferir_archivo_prueba($datos,$destino,$adicionales)
   llama_funcion_accion($idarchivo,$idformato,"transferir","ANTERIOR");
  //bloqueo los registros del mismo nodo de la ruta 
  if(array_key_exists("ruta_idruta",$datos) && $datos["nombre"]=="TRANSFERIDO")
-    {                                             
+    {
      $bloqueante=busca_filtro_tabla("A.orden,A.restrictivo,B.idtransferencia as trans","ruta A, buzon_entrada B","B.ruta_idruta=A.idruta and B.nombre='TRANSFERIDO' and B.origen=".$origen." and B.archivo_idarchivo=$idarchivo","B.idtransferencia desc", $conn);
      if(@$bloqueante[0]["restrictivo"]==1)
         {
          $where="A.archivo_idarchivo=$idarchivo and B.orden=".$bloqueante[0]["orden"]." and A.ruta_idruta=B.idruta and A.idtransferencia<>".$bloqueante[0]["trans"];
          $bloqueados=busca_filtro_tabla("A.idtransferencia","buzon_entrada A, ruta B",$where,"", $conn);
          if($bloqueados<>"")
-            {phpmkr_query("UPDATE buzon_entrada A, ruta B SET A.nombre='BLOQUEADO' WHERE ".$where, $conn);            
+            {phpmkr_query("UPDATE buzon_entrada A, ruta B SET A.nombre='BLOQUEADO' WHERE ".$where, $conn);
             }
         }
     }
@@ -452,13 +452,13 @@ function transferir_archivo_prueba($datos,$destino,$adicionales)
   {
     $otras_llaves="";
     $otros_valores="";
-  }    
+  }  
   if($destino<>"" && $origen<>"")   
-  {  
+  {
     $values_out="$idarchivo,'".$datos["nombre"]."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",";
     if($datos["tipo_destino"]=="1" || $datos["tipo_destino"]=="4" || $datos["tipo_destino"]=="5")
     { $tipo_destino=1;
-      $datos_origen=""; 
+      $datos_origen="";
       if($datos["tipo_destino"]=="4" && count($destino)==1)
          {          
           $dependencia=busca_filtro_tabla("d.dependencia_iddependencia as dep","dependencia_cargo d,funcionario f","d.funcionario_idfuncionario=f.idfuncionario and f.funcionario_codigo=$origen","", $conn);
@@ -473,7 +473,7 @@ function transferir_archivo_prueba($datos,$destino,$adicionales)
           if($datos_destino<>"")
              {$destino[0]=$datos_destino[0]["funcionario_codigo"];             
              }  
-         }                            
+         }         
          if($datos["ruta_idruta"]=="")
           {$datos["ruta_idruta"] = 0;          
           }   
@@ -489,7 +489,7 @@ function transferir_archivo_prueba($datos,$destino,$adicionales)
           phpmkr_query($sql, $conn);          
         }
         //buzon de entrada
-        $sql="INSERT INTO buzon_entrada(archivo_idarchivo,nombre,fecha,destino,tipo_origen,ruta_idruta,tipo_destino".$otras_llaves.",ver_notas,origen) values(".$values_in.",".$user.")";                  
+        $sql="INSERT INTO buzon_entrada(archivo_idarchivo,nombre,fecha,destino,tipo_origen,ruta_idruta,tipo_destino".$otras_llaves.",ver_notas,origen) values(".$values_in.",".$user.")";        
         phpmkr_query($sql, $conn);        
         procesar_estados($origen,$user,$datos["nombre"],$idarchivo);    
         //echo $sql."<br />"; die();      
@@ -546,7 +546,7 @@ return (TRUE);
 <Post-condiciones>cambia el estado del nodo de POR_APROBAR a APROBADO, si es el ultimo por aprobar
 cambia el estado del documento a APROBADO
 */
-function aprobar($iddoc=0,$url="")
+function aprobar($iddoc=0,$url="",$ejecuta_funcion=1)
   {//$con=new Conexion("radica_camara");
    //$buscar=new SQL($con->Obtener_Conexion(), "Oracle");
    global $conn;
@@ -559,7 +559,9 @@ function aprobar($iddoc=0,$url="")
    $formato=strtolower($tipo_radicado[0]["plantilla"]);
    $registro_actual=busca_filtro_tabla("A.*","buzon_entrada A","A.archivo_idarchivo=".$iddoc." and A.activo=1 and (A.nombre='POR_APROBAR') and A.destino=".$_SESSION["usuario_actual"],"A.idtransferencia",$conn);     
    /*Se adiciona esta linea para las ejecutar las acciones sobre los formatos*/
-   llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"confirmar","ANTERIOR");
+   if($ejecuta_funcion){
+   	llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"confirmar","ANTERIOR");
+   }
    if($registro_actual["numcampos"]>0)
       {$registro_anterior=busca_filtro_tabla("A.*","buzon_entrada A","A.nombre='POR_APROBAR' and A.activo=1 and A.idtransferencia<".$registro_actual[0]["idtransferencia"]." and A.archivo_idarchivo=".$iddoc." and origen=".$_SESSION["usuario_actual"],"A.idtransferencia desc",$conn);
        $terminado=busca_filtro_tabla("A.*","buzon_entrada A","A.archivo_idarchivo=".$iddoc." and A.nombre='POR_APROBAR' and A.activo=1","A.idtransferencia",$conn);
@@ -652,11 +654,14 @@ function aprobar($iddoc=0,$url="")
                 }
             }
           if(($terminado["numcampos"]==$registro_actual["numcampos"]) || ($terminado["numcampos"]==1 && $terminado[0]["destino"]==$_SESSION["usuario_actual"]))
-              {llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"aprobar","ANTERIOR");
+              {
+              	if($ejecuta_funcion){
+              		llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"aprobar","ANTERIOR");	
+              	}
 //               $tipo_radicado=busca_filtro_tabla("documento.*,contador.nombre,plantilla","documento,contador","idcontador=tipo_radicado and iddocumento=$iddoc","",$conn);
                if($tipo_radicado[0]["numero"]==0)
-                  {$numero=contador($tipo_radicado[0]["nombre"]);
-                   phpmkr_query("UPDATE documento SET estado='APROBADO',numero=".$numero[0]["consecutivo"].", fecha=".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s')." WHERE iddocumento=".$iddoc,$conn);
+                  {$numero=contador($iddoc,$tipo_radicado[0]["nombre"]);
+                   phpmkr_query("UPDATE documento SET estado='APROBADO', fecha=".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s')." WHERE iddocumento=".$iddoc,$conn);
                   }
                else
                    phpmkr_query("UPDATE documento SET estado='APROBADO',activa_admin=0, fecha=".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s')." WHERE iddocumento=".$iddoc,$conn);               
@@ -696,28 +701,22 @@ function aprobar($iddoc=0,$url="")
                    $destino_respuesta[0]=usuario_actual("funcionario_codigo");
                    transferir_archivo_prueba($datos,$destino_respuesta,"","");    
                   }
-               }                     			   
-			   llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"aprobar","POSTERIOR");	 
-               }				
+               }       
+               //para enviarla a los otros destinos si los tiene
+               $datos["archivo_idarchivo"]=$iddoc;
+               $datos["nombre"]="APROBADO";
+               $datos["tipo"]="";
+                 $destino=array();
+               }
               $array_banderas=explode(",",$nombre_tabla[0]["banderas"]);
             } 
         }
         else
          aprobar_reemplazo($iddoc);  
-  
-  llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"confirmar","POSTERIOR");
-
-
-/*if(strpos($_SERVER["PHP_SELF"],"meses")<=0)
-   {
-    if($url=="")
-      {
-       $url="formatos/$formato/mostrar_$formato.php?iddoc=".$iddoc;
-      }
-       abrir_url($url,$frame);
-   }*/
- /*Manejo de redireccion al aprobar */
-    //enrutar_documento();       
+  if($ejecuta_funcion){
+  	llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"confirmar","POSTERIOR");	
+  }
+      
   }
 
 /*<Clase>
@@ -1314,7 +1313,7 @@ function mostrar_estado_proceso($idformato,$iddoc)
                            $fila_abierta=1;
                            }      
                        if($fila["nombre"]=="POR_APROBAR")
-                          {echo '<td align=left><img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/firmas/faltante.jpg" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'">&nbsp;&nbsp;&nbsp;<br /></td>';        
+                          {echo '<td align=left><img src="http://'.RUTA_PDF.'/firmas/faltante.jpg" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'">&nbsp;&nbsp;&nbsp;<br /></td>';        
                           if($iniciales == ($fila["funcionario_codigo"]))
                             $firma_actual = true;     
                           }
@@ -1331,11 +1330,11 @@ function mostrar_estado_proceso($idformato,$iddoc)
                                else
                                 {$ruta="../librerias/";
                                 } 
-                              echo '<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/formatos/librerias/mostrar_foto.php?codigo='.$fila["funcionario_codigo"];
+                              echo '<img src="http://'.RUTA_PDF.'/formatos/librerias/mostrar_foto.php?codigo='.$fila["funcionario_codigo"];
                               echo '" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'"/><br />';
                              }
                            else
-                              echo '<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/firmas/blanco.jpg" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'" ><br />'; 
+                              echo '<img src="http://'.RUTA_PDF.'/firmas/blanco.jpg" width="'.$ancho_firma[0]["valor"].'" height="'.$alto_firma[0]["valor"].'" ><br />'; 
                            echo "<strong>".mayusculas($fila["nombres"]." ".$fila["apellidos"])."</strong>&nbsp;&nbsp;&nbsp;<br />";
                           if($cargos["numcampos"]) 
                             {for($h=0;$h<$cargos["numcampos"];$h++)
@@ -1346,7 +1345,7 @@ function mostrar_estado_proceso($idformato,$iddoc)
                            echo "</td>";                           
                           }
                        else   
-                          {echo "<font size='2'><td align='left'><img src=".PROTOCOLO_CONEXION.RUTA_PDF."/firmas/blanco.jpg width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."'>
+                          {echo "<font size='2'><td align='left'><img src=http://".RUTA_PDF."/firmas/blanco.jpg width='".$ancho_firma[0]["valor"]."' height='".$alto_firma[0]["valor"]."'>
                                  <br />".mayusculas($fila["nombres"]." ".$fila["apellidos"])."</b>&nbsp;&nbsp;&nbsp;<br />";
                            if($cargos["numcampos"])
                               {for($h=0;$h<$cargos["numcampos"];$h++)
@@ -1363,7 +1362,7 @@ function mostrar_estado_proceso($idformato,$iddoc)
                            if($fila["nombre"]=="POR_APROBAR")
      $revisados.="<tr><td><span class='phpmaker'>Reviso : ".mayusculas($fila["nombres"]." ".$fila["apellidos"])."-".formato_cargo($cargos[0]["nombre"])." (Pendiente)</span></td><td>&nbsp;</td></tr>";
 elseif($fila["nombre"]=="APROBADO"||$fila["nombre"]=="REVISADO")
-   $revisados.="<tr><td><span class='phpmaker'>Reviso : ".mayusculas($fila["nombres"]." ".$fila["apellidos"])."-".formato_cargo($cargos[0]["nombre"])."</span> <img src=".PROTOCOLO_CONEXION.RUTA_PDF."/images/check.jpg\">"." </td><td></td></tr>";
+   $revisados.="<tr><td><span class='phpmaker'>Reviso : ".mayusculas($fila["nombres"]." ".$fila["apellidos"])."-".formato_cargo($cargos[0]["nombre"])."</span> <img src=\"http://".RUTA_PDF."/images/check.jpg\">"." </td><td></td></tr>";
 
 
                          
@@ -1532,12 +1531,12 @@ function radicar_plantilla()
  	//busco los valores del formulario que van en la tabla documento
     $buscar = phpmkr_query("SELECT A.* FROM documento A WHERE 1=0",$conn);
     $lista_campos = array();
-    for($i=0;$i<phpmkr_num_fields($buscar);$i++)                         
+    for($i=0;$i<phpmkr_num_fields($buscar);$i++)
       array_push($lista_campos,strtolower(phpmkr_field_name($buscar,$i)));
     /////////////////////////////////////////////////////////////////////      	  
     $valores=array("fecha"=>fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s'));
     //print_r($_POST);
-    //echo("<br />-------<br />");            
+    //echo("<br />-------<br />");
     foreach($_POST as $key=>$valor){
       if(in_array($key,$lista_campos)&&$key<>"estado"){
         if($valor[0]!="'")
@@ -1545,7 +1544,7 @@ function radicar_plantilla()
         $valores[$key]=$valor;
 	   }
     }
-                                   
+        
     //si le env?o el tipo de radicado 
     if(isset($_POST["serie_idserie"]) && $_POST["serie_idserie"]){
       $valores["serie"]=$_POST["serie_idserie"];
@@ -1596,7 +1595,8 @@ function radicar_plantilla()
 
     llama_funcion_accion(NULL,$idformato,"radicar","ANTERIOR");
     
-    $_POST["iddoc"]=radicar_documento_prueba(trim($_POST["tipo_radicado"]),$valores,Null);	
+    $_POST["iddoc"]=radicar_documento_prueba(trim($_POST["tipo_radicado"]),$valores,Null);
+
     $iddoc=$_POST["iddoc"]; 
     if($plantilla=="" && !@$_SESSION["conexion_remota"]) 
     {include_once("anexosdigitales/funciones_archivo.php");  
@@ -1691,7 +1691,7 @@ if(!$idplantilla && !isset($_SESSION["conexion_remota"]))
     $datos["nombre"]="BORRADOR";
     $datos["tipo_destino"]=1;
     $datos["tipo"]="";
-    $aux_destino[0]=$_SESSION["usuario_actual"];  
+    $aux_destino[0]=$_SESSION["usuario_actual"];
     if(!isset($adicionales))
       $adicionales="";
     //realizo la primera transferencia del creador de la plantilla para el mismo,
@@ -1704,10 +1704,10 @@ if(!$idplantilla && !isset($_SESSION["conexion_remota"]))
     $adicionales["activo"]="1";
     $usuario_origen = busca_filtro_tabla("dependencia",$_POST["tabla"],"id".$_POST["tabla"]."=$idplantilla","",$conn);
     if( (!isset($_POST["firmado"]) || (isset($_POST["firmado"]) && $_POST["firmado"]=="una")))
-    {                                                                                                                       
+    {
       //lo transfiero al radicador de salida
       $radicador=busca_filtro_tabla("f.funcionario_codigo","configuracion c,funcionario f","c.nombre='radicador_salida' and f.login=c.valor","",$conn);
-      if($radicador["numcampos"]){        
+      if($radicador["numcampos"]){
         $aux_destino[0]=$radicador[0]["funcionario_codigo"];
         transferir_archivo_prueba($datos,$aux_destino,$adicionales);   
       }
@@ -1863,11 +1863,11 @@ function ejecutoradd($sKey)
  
  $condicion=($x_identificacion != "") ?  "identificacion='".$x_identificacion."'"  :  'identificacion is NULL';
      
-  $campo = busca_filtro_tabla("iddatos_ejecutor,idejecutor","ejecutor,datos_ejecutor","ejecutor_idejecutor=idejecutor and iddatos_ejecutor='$sKey' and nombre ='".(utf8_decode($x_nombre))."' and $condicion","iddatos_ejecutor desc",$conn);
+  $campo = busca_filtro_tabla("iddatos_ejecutor,idejecutor","ejecutor,datos_ejecutor","ejecutor_idejecutor=idejecutor and iddatos_ejecutor='$sKey' and nombre ='".htmlentities(utf8_decode($x_nombre))."' and $condicion","iddatos_ejecutor desc",$conn);
 
   if($campo["numcampos"]>0)
   {
-  $repetido = busca_filtro_tabla("iddatos_ejecutor","ejecutor,datos_ejecutor","idejecutor=ejecutor_idejecutor and iddatos_ejecutor=".$campo[0]["iddatos_ejecutor"]." and direccion='".(utf8_decode($x_direccion))."' and telefono='".(utf8_decode($x_telefono))."' and pais_idpais='$x_nacionalidad'   and email='".(utf8_decode($x_email))."' and celular='".(utf8_decode($x_celular))."'","",$conn);
+  $repetido = busca_filtro_tabla("iddatos_ejecutor","ejecutor,datos_ejecutor","idejecutor=ejecutor_idejecutor and iddatos_ejecutor=".$campo[0]["iddatos_ejecutor"]." and direccion='".htmlentities(utf8_decode($x_direccion))."' and telefono='".htmlentities(utf8_decode($x_telefono))."' and pais_idpais='$x_nacionalidad'   and email='".htmlentities(utf8_decode($x_email))."' and celular='".htmlentities(utf8_decode($x_celular))."'","",$conn);
 
   if($repetido["numcampos"]>0)
      return ($sKey);
@@ -1876,11 +1876,11 @@ function ejecutoradd($sKey)
     $pais=busca_filtro_tabla("idpais","pais","idpais='".$x_nacionalidad."'","",$conn);
    
     if(!$pais["numcampos"])    
-      {phpmkr_query("insert into pais(nombre) values('".(utf8_decode($x_nacionalidad))."')",$conn);
+      {phpmkr_query("insert into pais(nombre) values('".htmlentities(utf8_decode($x_nacionalidad))."')",$conn);
        $x_nacionalidad=phpmkr_insert_id();
       }
     //--------------------------------------------
-    phpmkr_query("INSERT INTO datos_ejecutor(ejecutor_idejecutor,telefono,fecha,celular,direccion,titulo,email,pais_idpais) VALUES(".$campo[0]["idejecutor"].",'".(utf8_decode($x_telefono))."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'".(utf8_decode($x_celular))."','".(utf8_decode($x_direccion))."','".(utf8_decode($x_titulo))."','".(utf8_decode($x_email))."','$x_nacionalidad')",$conn) or error("NO SE INSERTO REMITENTE");         
+    phpmkr_query("INSERT INTO datos_ejecutor(ejecutor_idejecutor,telefono,fecha,celular,direccion,titulo,email,pais_idpais) VALUES(".$campo[0]["idejecutor"].",'".htmlentities(utf8_decode($x_telefono))."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'".htmlentities(utf8_decode($x_celular))."','".htmlentities(utf8_decode($x_direccion))."','".htmlentities(utf8_decode($x_titulo))."','".htmlentities(utf8_decode($x_email))."','$x_nacionalidad')",$conn) or error("NO SE INSERTO REMITENTE");         
    return(phpmkr_insert_id());
    }
   }
@@ -1888,16 +1888,16 @@ function ejecutoradd($sKey)
   {  //comprobar si existe la nacionalidad   -----
     $pais=busca_filtro_tabla("idpais","pais","idpais='".$x_nacionalidad."'","",$conn);
     if(!$pais["numcampos"])    
-      {phpmkr_query("insert into pais(nombre) values('".(utf8_decode($x_nacionalidad))."')",$conn);
+      {phpmkr_query("insert into pais(nombre) values('".htmlentities(utf8_decode($x_nacionalidad))."')",$conn);
        $x_nacionalidad=phpmkr_insert_id();
       }
     //-------------------------------------------- 
-    phpmkr_query("INSERT INTO ejecutor(nombre,identificacion,fecha_ingreso) VALUES('".(utf8_decode($x_nombre))."','".$x_identificacion."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').")",$conn) or error("NO SE INSERTO REMITENTE");
+    phpmkr_query("INSERT INTO ejecutor(nombre,identificacion,fecha_ingreso) VALUES('".htmlentities(utf8_decode($x_nombre))."','".$x_identificacion."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').")",$conn) or error("NO SE INSERTO REMITENTE");
     $idejecutor=phpmkr_insert_id();
 
     if($idejecutor) 
       {
-       phpmkr_query("INSERT INTO datos_ejecutor(ejecutor_idejecutor,telefono,fecha,celular,direccion,titulo,email,pais_idpais) VALUES(".$idejecutor.",'".(utf8_decode($x_telefono))."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'".(utf8_decode($x_celular))."','".(utf8_decode($x_direccion))."','".(utf8_decode($x_titulo))."','".(utf8_decode($x_email))."','$x_nacionalidad')",$conn) or error("NO SE INSERTO REMITENTE"); 
+       phpmkr_query("INSERT INTO datos_ejecutor(ejecutor_idejecutor,telefono,fecha,celular,direccion,titulo,email,pais_idpais) VALUES(".$idejecutor.",'".htmlentities(utf8_decode($x_telefono))."',".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'".htmlentities(utf8_decode($x_celular))."','".htmlentities(utf8_decode($x_direccion))."','".htmlentities(utf8_decode($x_titulo))."','".htmlentities(utf8_decode($x_email))."','$x_nacionalidad')",$conn) or error("NO SE INSERTO REMITENTE"); 
       return(phpmkr_insert_id());    
       }
      } 
@@ -1917,7 +1917,7 @@ function ejecutoradd($sKey)
 */   
 
 function guardar_documento($iddoc,$tipo=0)
-{                 
+{ 
    global $conn,$ruta_db_superior;  
    $insertado=0;
    $lasignaciones=array();
@@ -2057,7 +2057,7 @@ function guardar_documento($iddoc,$tipo=0)
          if(is_array($_REQUEST[$lcampos[$j]["nombre"]]))
             array_push($valores,"'".implode(',',@$_REQUEST[$lcampos[$j]["nombre"]])."'");
          elseif(@$_REQUEST[$lcampos[$j]["nombre"]]<>'')
-            array_push($valores,"'".(utf8_decode(@$_REQUEST[$lcampos[$j]["nombre"]]))."'");
+            array_push($valores,"'".htmlentities(utf8_decode(@$_REQUEST[$lcampos[$j]["nombre"]]))."'");
          else 
           {  array_push($valores,"''");  
              
@@ -2619,7 +2619,7 @@ function formato_devolucion($iddoc=0)
   menu_ordenar($_REQUEST["iddoc"]);
 
   echo '<p><span style="font-family: Verdana; font-size: 9px; font-weight: bold;">
-      <img style="vertical-align:middle" src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/botones/comentarios/devolver_documento.png" border="0">&nbsp;&nbsp;DEVOLVER DOCUMENTOS&nbsp;&nbsp;&nbsp;&nbsp;
+      <img style="vertical-align:middle" src="http://'.RUTA_PDF.'/botones/comentarios/devolver_documento.png" border="0">&nbsp;&nbsp;DEVOLVER DOCUMENTOS&nbsp;&nbsp;&nbsp;&nbsp;
       <br><br></span></p>
       <form name="transferenciadev" id="transferenciadev" action="'.$ruta_db_superior.'class_transferencia.php" method="post">
       <p>
@@ -2802,7 +2802,7 @@ function arbol_serie()
 	<script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 	<script type="text/javascript" src="js/dhtmlXTree.js"></script>
 	<input type="hidden" name="serie" id="serie" obligatorio="obligatorio"  value="" >
-    <br />  Buscar: <input type="text" id="stext_serie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value),1)"><img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value),0,1)"><img src="botones/general/buscar.png" alt="Buscar" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value))"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
+    <br />  Buscar: <input type="text" id="stext_serie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById(\'stext_serie\').value),1)"><img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById(\'stext_serie\').value),0,1)"><img src="botones/general/buscar.png" alt="Buscar" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem(htmlentities(document.getElementById(\'stext_serie\').value))"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
     <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
 				<div id="treeboxbox_tree2"></div>
 	<script type="text/javascript">
