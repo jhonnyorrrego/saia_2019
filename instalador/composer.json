@@ -2,6 +2,17 @@
         "nombre_cliente":"Prueba",
         "require" : {
 		"php" : "^5.5.9",
+		"ext-curl": "*",
+		"ext-PDO": "*",
+		"ext-fileinfo": "*",
+		"ext-gd": "*",
+		"ext-imap": "*",
+		"ext-iconv": "*",
+		"ext-mcrypt": "*",
+		"ext-mbstring": "*",
+		"ext-Phar": "*",
+		"lib-curl": "*",
+		"lib-pcre": "*",
                 "saia_release": "v18.0.2",
                 "saia_release/editor_codigo" : "v1.0.1"
         },
@@ -12,7 +23,7 @@
                                 "name" : "saia_release/editor_codigo",
                                 "version" : "v1.0.1",
                                 "source" : {
-                                        "url" : "http://laboratorio.netsaia.com:82/usuario_saia/editor_codigo.git",
+                                        "url" : "https://laboratorio.netsaia.com:82/usuario_saia/editor_codigo.git",
                                         "type" : "git",
                                         "reference" : "origin/v1.0.0"
                                 }
@@ -25,7 +36,7 @@
                                 "name" : "saia_release",
                                 "version" : "v18.0.2",
                                 "source" : {
-                                        "url" : "http://laboratorio.netsaia.com:82/cerok/saia_release.git",
+                                        "url" : "https://laboratorio.netsaia.com:82/cerok/saia_release.git",
                                         "type" : "git",
                                         "reference" : "v18.0.2"
                                 }
