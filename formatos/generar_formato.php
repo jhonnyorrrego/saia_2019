@@ -1923,7 +1923,8 @@ function crear_formato_ae($idformato, $accion) {
 		$funciones = busca_filtro_tabla("A.*,B.formato_idformato", "funciones_formato A, funciones_formato_enlace B", $wheref, " A.idfunciones_formato asc", $conn);
 		for($i = 0; $i < $funciones["numcampos"]; $i++) {
 			$ruta_orig = "";
-			$formato_orig=$funciones[0]["formato_idformato"];
+			$funciones_orig = busca_filtro_tabla("A.*,B.formato_idformato", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.funciones_formato_fk=".$funciones[$i]["idfunciones_formato"], " B.idfunciones_formato_enlace asc", $conn);
+			$formato_orig=$funciones_orig[0]["formato_idformato"];
 			// si el formato actual es distinto del formato inicial
 			if ($formato_orig != $idformato) { // busco el nombre del formato inicial
 				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);

@@ -196,7 +196,10 @@ if (@$_SESSION["ewmsg"] <> "") {
 		</span></td>
 		<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
 	   Acciones
-		</span></td>		
+		</span></td>
+		<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">
+	   Ruta
+		</span></td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
@@ -218,6 +221,7 @@ $nRecCount = $nStartRec - 1;
 //	phpmkr_data_seek($rs, $nStartRec -1);
 //}
 $nRecActual = 0;
+$formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $idformato, "", $conn);
 while (($row = @phpmkr_fetch_array($rs)) && ($nRecCount < $nStopRec)) {
 	$nRecCount = $nRecCount + 1;
 	if ($nRecCount >= $nStartRec) {
@@ -235,6 +239,7 @@ while (($row = @phpmkr_fetch_array($rs)) && ($nRecCount < $nStopRec)) {
 		$sKey = $row["idfunciones_formato"];
 		$x_idfuncion_formato = $row["idfunciones_formato"];
 		$x_nombre = $row["nombre"];
+		$x_nombre_funcion = $row["nombre_funcion"];
 		$x_etiqueta = $row["etiqueta"];
 		$x_descripcion = $row["descripcion"];
 		$x_ruta = $row["ruta"];
@@ -290,6 +295,40 @@ $x_acciones = $sTmp;
 ?>
 <?php echo $x_acciones; ?>
 <?php $x_acciones = $ox_acciones; // Restore Original Value ?>
+</span></td>
+
+<td><span class="phpmaker">
+<?php 
+$funciones_orig = busca_filtro_tabla("A.*,B.formato_idformato", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.funciones_formato_fk=".$x_idfuncion_formato, " B.idfunciones_formato_enlace asc", $conn);
+$formato_orig = $funciones_orig[0]["formato_idformato"];
+if ($formato_orig != $idformato) { // busco el nombre del formato inicial
+	$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
+	if ($dato_formato_orig["numcampos"] && ($dato_formato_orig[0]["nombre"] != $formato[0]["nombre"])) {
+		// si el archivo existe dentro de la carpeta formatos
+		if (is_file($ruta_db_superior."formatos/".$dato_formato_orig[0]["nombre"] . "/" . $x_ruta)) {
+			$ruta_formato=realpath($_SERVER["DOCUMENT_ROOT"]."/".RUTA_SCRIPT."/formatos/".$dato_formato_orig[0]["nombre"] . "/" . $x_ruta);
+		} elseif (is_file($ruta_db_superior.$x_ruta) ) { 
+		    // si el archivo existe en la ruta especificada partiendo de la raiz
+			$ruta_formato=realpath($_SERVER["DOCUMENT_ROOT"]."/".RUTA_SCRIPT."/".$x_ruta);
+		}
+		else{
+		    $ruta_formato='Error en la ruta '.$x_ruta."| id=".$funciones[$i]["idfunciones_formato"];
+		}
+	}
+}else{
+    // si el archivo existe dentro de la carpeta formatos
+	if (is_file($ruta_db_superior."formatos/".$formato[0]["nombre"] . "/" . $x_ruta)) {
+		$ruta_formato=realpath($_SERVER["DOCUMENT_ROOT"]."/".RUTA_SCRIPT."/formatos/".$formato[0]["nombre"] . "/" . $x_ruta);
+	} elseif (is_file($ruta_db_superior.$x_ruta) ) { 
+	    // si el archivo existe en la ruta especificada partiendo de la raiz
+		$ruta_formato=realpath($_SERVER["DOCUMENT_ROOT"]."/".RUTA_SCRIPT."/".$x_ruta);
+	}
+	else{
+	    $ruta_formato='Error en la ruta '.$x_ruta."| id=".$x_ruta;
+	}				
+}
+echo $ruta_formato; 
+?>
 </span></td>
 <td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) { echo "funciones_formatoview.php?idformato=".$x_formato2."&key=" . urlencode($sKey); } else { echo "javascript:alert('Invalid Record! Key is null');";  } ?>">Ver</a></span></td>
 <td><span class="phpmaker"><a href="<?php if ((!is_null($sKey))) { echo "funciones_formatoedit.php?idformato=".$x_formato2."&key=" . urlencode($sKey); } else { echo "javascript:alert('Invalid Record! Key is null');"; } ?>">Editar</a></span></td>
