@@ -85,25 +85,29 @@ function validar_respuesta_medio($respuesta_medio,$tipo_conexion=0){
 			$rlista_funciones=generar_lista_funciones($vidformato);
 		}
 		$rlista_funciones = json_decode($rlista_funciones,true);
-		var_dump($tipo_conexion);
-		print_r($rlista_funciones);
-		if($rlista_funciones['lista_funciones']!=''){
-			$vector_lista_funciones=explode('|',$rlista_funciones['lista_funciones']);
+
+		if(count($rlista_funciones['lista_archivos'])){
+			$vector_lista_funciones=$rlista_funciones['lista_archivos'];
 			$cadena_lista_funciones='
 					<br>
 					<div class="container">
 					<table class="table table-bordered">
 					<tr>
 						<th style="text-align:center;">Archivos Relacionados con el formato</th>
+						<th style="text-align:center;">Acciones con el formato</th>
 					</tr>
 					';
-			$vector_lista_funciones=array_unique($vector_lista_funciones);
-			$vector_lista_funciones=array_values($vector_lista_funciones);
-			for($i=0;$i<count($vector_lista_funciones)-1;$i++){
+			$cant=count($rlista_funciones['lista_archivos']);		
+			for($i=0;$i<$cant;$i++){
 				$cadena_lista_funciones.='
 						<tr>
-							<td>'.$vector_lista_funciones[$i].'</td>
-						</tr>
+							<td>'.$rlista_funciones["lista_funciones"][$vector_lista_funciones[$i]][0]["ruta_real"].'</td>';
+				$cadena_lista_funciones.='<td><ul>';
+				foreach($rlista_funciones["lista_funciones"][$vector_lista_funciones[$i]] AS $key=>$value){
+				    $cadena_lista_funciones.='<li>'.$value["nombre_funcion"].'( '.$value["acciones"].' )</li>';
+				}
+				$cadena_lista_funciones.='</ul></td>';
+				$cadena_lista_funciones.='</tr>
 						';
 			}
 			$cadena_lista_funciones.='</table></div>';

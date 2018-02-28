@@ -180,34 +180,47 @@ function generar_lista_funciones($datos){
 	$condicional="A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=".$idformato;
 	//Busco todas las funciones del formato las agrupo por el idfunciones_formato y se debe sacar la que tenga el primer idfunciones_formato_enlace
 	$funciones=busca_filtro_tabla("A.*,B.formato_idformato","funciones_formato A,funciones_formato_enlace B",$condicional,"",$conn);
-	$includes='';
+	$includes=array();
+	$lfunciones=array();
 	for($i=0;$i<$funciones['numcampos'];$i++){
 	    $funciones_orig = busca_filtro_tabla("A.*,B.formato_idformato", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.funciones_formato_fk=".$funciones[$i]["idfunciones_formato"], " B.idfunciones_formato_enlace asc", $conn);
 		$formato_orig = $funciones_orig[0]["formato_idformato"];
 		if ($formato_orig != $idformato) { // busco el nombre del formato inicial
 				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
 				if ($dato_formato_orig["numcampos"] && ($dato_formato_orig[0]["nombre"] != $formato[0]["nombre"])) {
-					$eslibreria = strpos($funciones[$i]["ruta"], "../librerias/");
-					if ($eslibreria === false) {
-						$eslibreria = strpos($funciones[$i]["ruta"], "../class_transferencia");
+					// si el archivo existe dentro de la carpeta formatos
+					if (is_file($ruta_db_superior."formatos/".$dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+						array_push($includes,"formatos/".$dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+						$lfunciones["formatos/".$dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]][]=array("nombre_funcion"=>$funciones[$i]["nombre_funcion"],"acciones"=>$funciones[$i]["acciones"],"ruta_real"=>realpath($_SERVER["DOCUMENT_ROOT"]."/".RUTA_SCRIPT."/formatos/".$dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]));
+					} elseif (is_file($ruta_db_superior.$funciones[$i]["ruta"]) ) { 
+					    // si el archivo existe en la ruta especificada partiendo de la raiz
+						array_push($includes,$funciones[$i]["ruta"]);
+						$lfunciones[$funciones[$i]["ruta"]][]=array("nombre_funcion"=>$funciones[$i]["nombre_funcion"],"acciones"=>$funciones[$i]["acciones"],"ruta_real"=>realpath($_SERVER["DOCUMENT_ROOT"]."/".RUTA_SCRIPT."/".$funciones[$i]["ruta"]));
 					}
-					// si el archivo existe dentro de la carpeta del archivo inicial
-					if (is_file($ruta_db_superior.$dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]) && $eslibreria === false) {
-						$includes .= $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]."|";
-					} elseif (is_file($ruta_db_superior.$funciones[$i]["ruta"]) && $eslibreria === false) { // si el archivo existe en la ruta especificada partiendo de la raiz
-						$includes .= $funciones[$i]["ruta"]."|";
+					else{
+					    array_push($includes,'Error en la ruta '.$funciones[$i]["ruta"]."| id=".$funciones[$i]["idfunciones_formato"]);
+					    $lfunciones["error"][]=array("nombre_funcion"=>$funciones[$i]["nombre_funcion"],"acciones"=>$funciones[$i]["acciones"]);
 					}
 				}
 		}else{
-				if (is_file($ruta_db_superior.$formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
-					$includes .= $funciones[$i]["ruta"]."|";
-				} elseif (is_file($ruta_db_superior.$funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
-					$includes .= $funciones[$i]["ruta"]."|";
-				}			
+		    // si el archivo existe dentro de la carpeta formatos
+			if (is_file($ruta_db_superior."formatos/".$formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+				array_push($includes,"formatos/".$formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+				$lfunciones["formatos/".$formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]][]=array("nombre_funcion"=>$funciones[$i]["nombre_funcion"],"acciones"=>$funciones[$i]["acciones"],"ruta_real"=>realpath($_SERVER["DOCUMENT_ROOT"]."/".RUTA_SCRIPT."/formatos/".$formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]));
+			} elseif (is_file($ruta_db_superior.$funciones[$i]["ruta"]) ) { 
+			    // si el archivo existe en la ruta especificada partiendo de la raiz
+				array_push($includes,$funciones[$i]["ruta"]);
+				$lfunciones[$funciones[$i]["ruta"]][]=array("nombre_funcion"=>$funciones[$i]["nombre_funcion"],"acciones"=>$funciones[$i]["acciones"],"ruta_real"=>realpath($_SERVER["DOCUMENT_ROOT"]."/".RUTA_SCRIPT."/".$funciones[$i]["ruta"]));
+			}
+			else{
+			    array_push($includes,'Error en la ruta '.$funciones[$i]["ruta"]);
+			    $lfunciones["error"][]=array("nombre_funcion"=>$funciones[$i]["ruta"]."->".$funciones[$i]["nombre_funcion"],"acciones"=>$funciones[$i]["acciones"],"ruta_real"=>realpath($_SERVER["DOCUMENT_ROOT"]."/".RUTA_SCRIPT.$funciones[$i]["ruta"]));
+			}				
 		}		
 	} //fin for
-	$retorno_formato['lista_funciones']=$includes;
+	$includes = array_values(array_filter(array_unique($includes)));
+	$retorno_formato['lista_archivos']=$includes;
+	$retorno_formato['lista_funciones']=$lfunciones;
 	return(json_encode($retorno_formato));
-			
 }
 ?>
