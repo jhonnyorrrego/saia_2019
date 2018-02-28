@@ -9,12 +9,6 @@ while($max_salida>0){
 	$max_salida--;
 }
 include_once($ruta_db_superior."define.php");
-if(!@$_SESSION["LOGIN".LLAVE_SAIA]){
-  @session_start();
-  $_SESSION["LOGIN".LLAVE_SAIA]=LOGIN_LOGIN;
-  $_SESSION["usuario_actual"]=FUNCIONARIO_CODIGO_LOGIN;
-  $_SESSION["conexion_remota"]=1; 
-}
 include_once($ruta_db_superior."db.php");
 
 function generar_idformato($datos){
@@ -133,8 +127,8 @@ function generar_funciones_formato($idformato){
 
 		//FUNCIONES_FORMATO
 		$formato=array();
-		$condicional="formato LIKE'%,$idformato,%' OR formato LIKE '$idformato,%' OR formato LIKE'%,$idformato' OR formato='$idformato'";
-		$funciones_formato=busca_filtro_tabla("","funciones_formato",$condicional,"",$conn);
+		$condicional="A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=".$idformato;
+		$funciones_formato=busca_filtro_tabla("A.*","funciones_formato A,  funciones_formato_enlace B",$condicional,"",$conn);
 		
 		if($funciones_formato['numcampos']){
 			$keys_no = array('idfunciones_formato','formato'); //llaves no permitidas
@@ -183,13 +177,14 @@ function generar_lista_funciones($datos){
 	$idformato=$datos->idformato;
 	$retorno_formato=array();
 	$formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $idformato, "", $conn);
-	$condicional="formato LIKE'%,$idformato,%' OR formato LIKE '$idformato,%' OR formato LIKE'%,$idformato' OR formato='$idformato'";
-	$funciones=busca_filtro_tabla("","funciones_formato",$condicional,"",$conn);
+	$condicional="A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=".$idformato;
+	//Busco todas las funciones del formato las agrupo por el idfunciones_formato y se debe sacar la que tenga el primer idfunciones_formato_enlace
+	$funciones=busca_filtro_tabla("A.*,B.formato_idformato","funciones_formato A,funciones_formato_enlace B",$condicional,"GROUP BY idfunciones_formato HAVING min(idfunciones_formato_enlace)=idfunciones_formato_enlace",$conn);
 	$includes='';
 	for($i=0;$i<$funciones['numcampos'];$i++){
-		$formato_orig = explode(",", $funciones[$i]["formato"]);
-		if ($formato_orig[0] != $idformato) { // busco el nombre del formato inicial
-				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig[0], "", $conn);
+		$formato_orig = $funciones[$i]["formato_idformato"];
+		if ($formato_orig != $idformato) { // busco el nombre del formato inicial
+				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
 				if ($dato_formato_orig["numcampos"] && ($dato_formato_orig[0]["nombre"] != $formato[0]["nombre"])) {
 					$eslibreria = strpos($funciones[$i]["ruta"], "../librerias/");
 					if ($eslibreria === false) {
