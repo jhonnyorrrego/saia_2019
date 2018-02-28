@@ -16,7 +16,7 @@ for($it = $rutas->getIterator(); $it->valid(); $it->next()) {
 
 ini_set("display_errors", true);
 
-print_r($app_root);
+//print_r($app_root);
 echo "<br>";
 require_once $app_root . '/define.php';
 
