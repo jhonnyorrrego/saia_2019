@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\PasoActividad" table="paso_actividad">
+    <id name="idpasoActividad" type="integer" column="idpaso_actividad">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="descripcion" type="text" column="descripcion" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="restrictivo" type="integer" column="restrictivo" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="estado" type="integer" column="estado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Activo,inactivo</option>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="pasoIdpaso" type="integer" column="paso_idpaso" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="orden" type="integer" column="orden" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="tipo" type="integer" column="tipo" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Sistema,Manual</option>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="entidadIdentidad" type="integer" column="entidad_identidad" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="llaveEntidad" type="string" column="llave_entidad" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="pasoObjetoIdpasoObjeto" type="integer" column="paso_objeto_idpaso_objeto" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="accionIdaccion" type="integer" column="accion_idaccion" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="formatoIdformato" type="string" column="formato_idformato" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="plazo" type="integer" column="plazo" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">24</option>
+      </options>
+    </field>
+    <field name="tipoPlazo" type="string" column="tipo_plazo" length="30" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">Los tipos deben ser hour,minute,day,month,year</option>
+        <option name="default">hour</option>
+      </options>
+    </field>
+    <field name="pasoAnterior" type="integer" column="paso_anterior" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="formatoAnterior" type="string" column="formato_anterior" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="fkCamposFormato" type="integer" column="fk_campos_formato" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

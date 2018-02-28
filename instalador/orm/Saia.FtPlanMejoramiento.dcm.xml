@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtPlanMejoramiento" table="ft_plan_mejoramiento">
+    <indexes>
+      <index name="i_plan_mejoramiento_documento_" columns="documento_iddocumento"/>
+      <index name="i_plan_mejoramiento_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftPlanMejoramiento" type="integer" column="idft_plan_mejoramiento">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="encabezado" type="integer" column="encabezado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="estadoTerminado" type="string" column="estado_terminado" length="5" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="fechaElaborado" type="datetime" column="fecha_elaborado" nullable="true"/>
+    <field name="fechaAprobado" type="datetime" column="fecha_aprobado" nullable="true"/>
+    <field name="fechaRevisado" type="datetime" column="fecha_revisado" nullable="true"/>
+    <field name="dependencia" type="integer" column="dependencia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="tipoPlan" type="string" column="tipo_plan" length="10" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="fechaSuscripcion" type="date" column="fecha_suscripcion" nullable="false"/>
+    <field name="fechaInforme" type="date" column="fecha_informe" nullable="false"/>
+    <field name="adjuntos" type="string" column="adjuntos" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tipoAuditoria" type="string" column="tipo_auditoria" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default">2</option>
+      </options>
+    </field>
+    <field name="auditor" type="string" column="auditor" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="descripcionOtros" type="text" column="descripcion_otros" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="descripcionPlan" type="text" column="descripcion_plan" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="estadoPlanMejoramiento" type="string" column="estado_plan_mejoramiento" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="estado" type="string" column="estado" length="50" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="periodoEvaluado" type="string" column="periodo_evaluado" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="objetivo" type="text" column="objetivo" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="objetivosEspecificos" type="text" column="objetivos_especificos" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="observaciones" type="text" column="observaciones" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="elaborado" type="string" column="elaborado" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="revisado" type="string" column="revisado" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="aprobado" type="string" column="aprobado" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="firma" type="integer" column="firma" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1054</option>
+      </options>
+    </field>
+    <field name="version" type="integer" column="version" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">2</option>
+      </options>
+    </field>
+    <field name="estadoDocumento" type="integer" column="estado_documento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

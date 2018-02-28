@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\Caja" table="caja">
+    <indexes>
+      <index name="i_caja_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idcaja" type="integer" column="idcaja">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="fondo" type="string" column="fondo" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="seccion" type="string" column="seccion" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="subseccion" type="string" column="subseccion" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="division" type="string" column="division" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="codigo" type="string" column="codigo" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="noCarpetas" type="string" column="no_carpetas" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="noCajas" type="string" column="no_cajas" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="noConsecutivo" type="string" column="no_consecutivo" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="noCorrelativo" type="string" column="no_correlativo" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="fechaExtremaI" type="date" column="fecha_extrema_i" nullable="true"/>
+    <field name="fechaExtremaF" type="date" column="fecha_extrema_f" nullable="true"/>
+    <field name="estanteria" type="string" column="estanteria" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+        <option name="default"/>
+      </options>
+    </field>
+    <field name="panel" type="integer" column="panel" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="material" type="string" column="material" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+        <option name="default"/>
+      </options>
+    </field>
+    <field name="seguridad" type="string" column="seguridad" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">1:confidencial,2:publica,3:rutinario</option>
+      </options>
+    </field>
+    <field name="funcionarioIdfuncionario" type="integer" column="funcionario_idfuncionario" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="rutaQr" type="string" column="ruta_qr" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="estadoArchivo" type="integer" column="estado_archivo" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="modulo" type="string" column="modulo" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="nivel" type="string" column="nivel" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="dependenciaIddependencia" type="integer" column="dependencia_iddependencia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

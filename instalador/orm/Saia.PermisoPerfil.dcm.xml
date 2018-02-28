@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\PermisoPerfil" table="permiso_perfil">
+    <id name="idpermisoPerfil" type="integer" column="idpermiso_perfil">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="moduloIdmodulo" type="integer" column="modulo_idmodulo" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="perfilIdperfil" type="integer" column="perfil_idperfil" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="caracteristicaPropio" type="string" column="caracteristica_propio" length="15" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="caracteristicaGrupo" type="string" column="caracteristica_grupo" length="15" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="caracteristicaTotal" type="string" column="caracteristica_total" length="15" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

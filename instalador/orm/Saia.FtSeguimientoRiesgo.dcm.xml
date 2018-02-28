@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtSeguimientoRiesgo" table="ft_seguimiento_riesgo">
+    <indexes>
+      <index name="i_seguimiento_riesgo_documento_" columns="documento_iddocumento"/>
+      <index name="i_seguimiento_riesgo_riesgos_pr" columns="ft_riesgos_proceso"/>
+      <index name="i_seguimiento_riesgo_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftSeguimientoRiesgo" type="integer" column="idft_seguimiento_riesgo">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="minimiza" type="integer" column="minimiza" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="probabilidad" type="integer" column="probabilidad" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">2</option>
+      </options>
+    </field>
+    <field name="aplican" type="integer" column="aplican" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="seguimientoAntiguo" type="string" column="seguimiento_antiguo" length="5" nullable="true">
+      <options>
+        <option name="fixed"/>
+        <option name="default">2</option>
+      </options>
+    </field>
+    <field name="documentados" type="integer" column="documentados" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="impacto" type="integer" column="impacto" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">2</option>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1043</option>
+      </options>
+    </field>
+    <field name="dependencia" type="integer" column="dependencia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="encabezado" type="integer" column="encabezado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="ftRiesgosProceso" type="integer" column="ft_riesgos_proceso" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="fechaSeguimiento" type="date" column="fecha_seguimiento" nullable="false"/>
+    <field name="accionVinculacion" type="string" column="accion_vinculacion" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="logro" type="string" column="logro" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="observaciones" type="string" column="observaciones" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="evidenciaDocumental" type="string" column="evidencia_documental" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="firma" type="integer" column="firma" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="estadoDocumento" type="integer" column="estado_documento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

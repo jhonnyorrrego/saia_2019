@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtInformacionDano" table="ft_informacion_dano">
+    <indexes>
+      <index name="i_informacion_dano_orden_trab" columns="ft_orden_trabajo_vehiculo"/>
+      <index name="i_informacion_dano_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftInformacionDano" type="integer" column="idft_informacion_dano">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="problema" type="string" column="problema" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ftOrdenTrabajoVehiculo" type="integer" column="ft_orden_trabajo_vehiculo" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="x" type="string" column="x" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="y" type="string" column="y" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="x2" type="string" column="x2" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="y2" type="string" column="y2" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="w" type="string" column="w" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="h" type="string" column="h" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

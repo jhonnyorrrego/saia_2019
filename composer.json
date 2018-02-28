@@ -1,12 +1,25 @@
 {
-	"require" : {
-		"luracast/restler" : "*",
-		"doctrine/doctrine-migrations-bundle" : "*",
-		"firebase/php-jwt" : "^5.0",
-		"phpoffice/phpword" : "^0.13.0",
-		"greenlion/php-sql-parser" : "^4.1",
-         "setasign/fpdi": "^2.0.0-beta2",
-        "setasign/fpdi-fpdf": "^2.0.0-beta2",
-        "setasign/fpdi-tcpdf": "^2.0.0-beta2" 
+	"require": {
+		"luracast/restler": "*",
+		"doctrine/doctrine-migrations-bundle": "*",
+		"firebase/php-jwt": "^5.0",
+		"phpoffice/phpword": "^0.13.0",
+		"greenlion/php-sql-parser": "^4.1",
+		"setasign/fpdi": "^2.0.0-beta2",
+		"setasign/fpdi-fpdf": "^2.0.0-beta2",
+		"setasign/fpdi-tcpdf": "^2.0.0-beta2",
+		"symfony/process": "~3.3|~4.0",
+		"doctrine/orm": "^2.5"
+	},
+	"extra": {
+		"class": "Corley\\Composer\\MyHook"
+	},
+	"autoload": {
+		"psr-4": {
+			"Corley\\Composer\\" : "instalador/"
+		}
+	},
+	"scripts": {
+		"post-install-cmd": "Corley\\Composer\\MyHook::localConf"
 	}
 }

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\Ruta" table="ruta">
+    <indexes>
+      <index name="origen" columns="origen"/>
+      <index name="destino" columns="destino"/>
+      <index name="i_ruta_documento_" columns="documento_iddocumento"/>
+      <index name="i_ruta_tipo_desti" columns="tipo_destino"/>
+    </indexes>
+    <id name="idruta" type="integer" column="idruta">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="origen" type="integer" column="origen" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="tipo" type="string" column="tipo" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default">ACTIVO</option>
+      </options>
+    </field>
+    <field name="destino" type="integer" column="destino" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="idtipoDocumental" type="integer" column="idtipo_documental" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="condicionTransferencia" type="string" column="condicion_transferencia" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="fecha" type="datetime" column="fecha" nullable="true">
+      <options>
+        <option name="default">CURRENT_TIMESTAMP</option>
+      </options>
+    </field>
+    <field name="transferenciaIdtransferencia" type="integer" column="transferencia_idtransferencia" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="orden" type="integer" column="orden" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="tipoOrigen" type="integer" column="tipo_origen" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="tipoDestino" type="integer" column="tipo_destino" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="obligatorio" type="boolean" column="obligatorio" nullable="false">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="restrictivo" type="boolean" column="restrictivo" nullable="false">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="idenlaceNodo" type="integer" column="idenlace_nodo" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="clase" type="boolean" column="clase" nullable="false">
+      <options>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="firmaExterna" type="string" column="firma_externa" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+        <option name="comment">Guarda la ruta de la imagen cuando obligatorio es igual a 5</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

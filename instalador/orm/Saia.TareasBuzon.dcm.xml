@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\TareasBuzon" table="tareas_buzon">
+    <id name="idtareasBuzon" type="integer" column="idtareas_buzon">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="terminadoPor" type="integer" column="terminado_por" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="descripcionEstado" type="text" column="descripcion_estado" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="fechaEstado" type="datetime" column="fecha_estado" nullable="false"/>
+    <field name="tareasIdtareas" type="integer" column="tareas_idtareas" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="estado" type="integer" column="estado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">1,TERMINADA</option>
+        <option name="default">1</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

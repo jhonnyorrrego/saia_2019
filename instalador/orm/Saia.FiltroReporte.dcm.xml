@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FiltroReporte" table="filtro_reporte">
+    <id name="idfiltroReporte" type="integer" column="idfiltro_reporte">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="reporteIdreporte" type="integer" column="reporte_idreporte" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="campo" type="string" column="campo" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="etiquetaHtml" type="string" column="etiqueta_html" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="codigoSql" type="string" column="codigo_sql" length="2000" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="etiqueta" type="string" column="etiqueta" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tipoDato" type="string" column="tipo_dato" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default">varchar</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

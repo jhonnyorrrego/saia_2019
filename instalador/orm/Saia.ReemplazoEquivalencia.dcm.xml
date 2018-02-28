@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\ReemplazoEquivalencia" table="reemplazo_equivalencia">
+    <indexes>
+      <index name="i_reemplazo_equivalen_llave_enti" columns="llave_entidad_destino"/>
+    </indexes>
+    <id name="idreemplazoEquivalencia" type="integer" column="idreemplazo_equivalencia">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="entidadIdentidad" type="integer" column="entidad_identidad" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="llaveEntidadOrigen" type="integer" column="llave_entidad_origen" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="llaveEntidadDestino" type="integer" column="llave_entidad_destino" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="fkIdreemplazoSaia" type="integer" column="fk_idreemplazo_saia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

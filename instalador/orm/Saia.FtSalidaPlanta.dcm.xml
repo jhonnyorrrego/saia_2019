@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtSalidaPlanta" table="ft_salida_planta">
+    <indexes>
+      <index name="i_salida_planta_documento_" columns="documento_iddocumento"/>
+      <index name="i_salida_planta_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftSalidaPlanta" type="integer" column="idft_salida_planta">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1183</option>
+      </options>
+    </field>
+    <field name="controlInterno" type="string" column="control_interno" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="fechaControl" type="datetime" column="fecha_control" nullable="true"/>
+    <field name="turnoDatos" type="string" column="turno_datos" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="fechaSalida" type="date" column="fecha_salida" nullable="true"/>
+    <field name="horaSalida" type="time" column="hora_salida" nullable="false"/>
+    <field name="fechaEntrada" type="date" column="fecha_entrada" nullable="false"/>
+    <field name="horaEntrada" type="time" column="hora_entrada" nullable="false"/>
+    <field name="motivoSalida" type="string" column="motivo_salida" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="motivoPermiso" type="string" column="motivo_permiso" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="observaciones" type="text" column="observaciones" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="dependencia" type="integer" column="dependencia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="encabezado" type="integer" column="encabezado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="firma" type="integer" column="firma" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="estadoDocumento" type="integer" column="estado_documento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

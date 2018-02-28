@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtFactoresContexto" table="ft_factores_contexto">
+    <indexes>
+      <index name="i_factores_contexto_contexto_e" columns="ft_contexto_extrategico"/>
+      <index name="i_factores_contexto_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftFactoresContexto" type="integer" column="idft_factores_contexto">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="factoresContexto" type="decimal" column="factores_contexto" precision="11" scale="0" nullable="false"/>
+    <field name="descripcion" type="text" column="descripcion" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ftContextoExtrategico" type="integer" column="ft_contexto_extrategico" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\BusquedaFiltro" table="busqueda_filtro">
+    <id name="idbusquedaFiltro" type="integer" column="idbusqueda_filtro">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="fkBusquedaComponente" type="integer" column="fk_busqueda_componente" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="funcionarioIdfuncionario" type="integer" column="funcionario_idfuncionario" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="tablaAdicional" type="string" column="tabla_adicional" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="whereAdicional" type="string" column="where_adicional" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

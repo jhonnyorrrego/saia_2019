@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\PantallaAnexos" table="pantalla_anexos">
+    <indexes>
+      <index name="fk_pantalla_anexos_pantalla1_idx" columns="pantalla_idpantalla"/>
+      <index name="i_pantalla_anexos_documento_" columns="documento_iddocumento"/>
+    </indexes>
+    <id name="idpantallaAnexos" type="integer" column="idpantalla_anexos">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="anexo" type="string" column="anexo" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="descripcion" type="text" column="descripcion" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="string" column="documento_iddocumento" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="pantallaIdpantalla" type="integer" column="pantalla_idpantalla" nullable="false">
+      <options>
+        <option name="unsigned">1</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

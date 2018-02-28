@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\Pantalla" table="pantalla">
+    <id name="idpantalla" type="integer" column="idpantalla">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="nombre" type="string" column="nombre" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="codPadre" type="integer" column="cod_padre" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">idpantalla del padre</option>
+      </options>
+    </field>
+    <field name="tipoPantalla" type="integer" column="tipo_pantalla" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">1,sistema;2,formato;3,auxiliar;4,clase</option>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="librerias" type="text" column="librerias" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="etiqueta" type="string" column="etiqueta" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="funcionarioIdfuncionario" type="integer" column="funcionario_idfuncionario" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="ayuda" type="text" column="ayuda" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="banderas" type="string" column="banderas" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tiempoAutoguardado" type="integer" column="tiempo_autoguardado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">300000</option>
+      </options>
+    </field>
+    <field name="submitFormulario" type="integer" column="submit_formulario" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="version" type="integer" column="version" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="versionar" type="integer" column="versionar" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="rutaPantalla" type="string" column="ruta_pantalla" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+        <option name="default">pantallas</option>
+      </options>
+    </field>
+    <field name="rutaAlmacenamiento" type="string" column="ruta_almacenamiento" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+        <option name="default">{*fecha_ano*}/{*fecha_mes*}/{*idpantalla*}</option>
+      </options>
+    </field>
+    <field name="prefijo" type="string" column="prefijo" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tipoEdicion" type="integer" column="tipo_edicion" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="ordenPantalla" type="integer" column="orden_pantalla" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="enter2tab" type="integer" column="enter2tab" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="fkIdpantallaCategoria" type="string" column="fk_idpantalla_categoria" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="clase" type="integer" column="clase" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="aprobacionAutomatica" type="integer" column="aprobacion_automatica" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="afectaDocumento" type="integer" column="afecta_documento" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="comment">Define si es una pantalla que altera el documento o no, por ejemplo transferir, devolver, etc</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>
