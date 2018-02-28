@@ -116,7 +116,7 @@ if (@$_SESSION["LOGIN" . LLAVE_SAIA]) {
 		}
 		borrar_archivos_carpeta($configuracion_temporal[0]['valor'] . '_' . usuario_actual("login"), 0);
 	} else {
-		borrar_archivos_carpeta('temporal_' . usuario_actual("login"), 0);
+		notificaciones("Por favor defina la ruta de los temporales","warning",3500);
 	}
 }
 ?>

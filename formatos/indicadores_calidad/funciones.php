@@ -356,7 +356,12 @@ if ($formulas["numcampos"]) {
 			}else{ //fin if tipo 5
 
     			$idfuncionario=busca_filtro_tabla("","vfuncionario_dc","idfuncionario=".$_REQUEST["idfunc"],"",$conn);
-    			$ruta_grafico="temporal_".$idfuncionario[0]['login']."/".$iddoc."/";
+					
+					$configuracion_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal' AND tipo='ruta'", "", $conn);
+					if($configuracion_temporal["numcampos"]){
+						$ruta_temp=$configuracion_temporal[0]["valor"];
+					}
+    			$ruta_grafico=$ruta_temp."_".$idfuncionario[0]['login']."/".$iddoc."/";
     				
     			
     			if(file_exists($ruta_db_superior.$ruta_grafico)){

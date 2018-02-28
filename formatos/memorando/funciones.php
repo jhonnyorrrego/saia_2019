@@ -383,8 +383,13 @@ function generar_correo_confirmacion_memorando($idformato,$iddoc){
 	if($formato_carta[0]['email_aprobar']==1 && $formato_carta[0]['estado']=='ACTIVO'){
 		$resultado=busca_filtro_tabla("","ruta","documento_iddocumento=".$iddoc,"idruta",$conn);
 		if($resultado['numcampos']){
-			if(!is_dir($ruta_db_superior."temporal_".$_SESSION["LOGIN"])){
-        mkdir($ruta_db_superior."temporal_".$_SESSION["LOGIN"],0777);
+			
+			$configuracion_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal' AND tipo='ruta'", "", $conn);
+			if($configuracion_temporal["numcampos"]){
+				$ruta_temp=$configuracion_temporal[0]["valor"];
+			}
+			if(!is_dir($ruta_db_superior.$ruta_temp."_".$_SESSION["LOGIN"])){
+        mkdir($ruta_db_superior.$ruta_temp."_".$_SESSION["LOGIN"],0777);
       }
 			$borrar_pdf="UPDATE documento set pdf='' where iddocumento=".$iddoc;
 			phpmkr_query($borrar_pdf);
@@ -392,7 +397,6 @@ function generar_correo_confirmacion_memorando($idformato,$iddoc){
 			if($consulta[0]['pdf']!=""){
 	      $anexos[]=$ruta_db_superior.$consulta[0]['pdf'];
 	    }else{
-				//$nombre_archivo="temporal_".$_SESSION["LOGIN"]."/".$iddoc;
 				$ch = curl_init();
 		    //$fila = PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddoc."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&conexion_remota=1&usuario_actual=".$_SESSION["usuario_actual"]."&LLAVE_SAIA=".LLAVE_SAIA;
 		    $fila = PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/class_impresion.php?plantilla=".$formato[0]['nombre']."&iddoc=".$iddoc."&conexion_remota=1&conexio_usuario=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&LLAVE_SAIA=".LLAVE_SAIA;
