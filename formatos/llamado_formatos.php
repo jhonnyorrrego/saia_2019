@@ -1,9 +1,11 @@
 <?php
-$max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$max_salida = 6;
+// Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
-while($max_salida > 0) {
+while ($max_salida > 0) {
 	if (is_file($ruta . "db.php")) {
-		$ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
+		$ruta_db_superior = $ruta;
+		// Preserva la ruta superior encontrada
 	}
 	$ruta .= "../";
 	$max_salida--;
@@ -37,9 +39,9 @@ if (@$_REQUEST["accion"] == "generar") {
 			$redirecciona .= '&accion=' . $_REQUEST["accion"];
 		}
 		// $ch = curl_init();
-		for($i = 0; $i < $cant_acciones; $i++) {
+		for ($i = 0; $i < $cant_acciones; $i++) {
 			$generar = new GenerarFormato($formato["idformato"], $acciones[$i], '');
-			$redireccion = $generar->ejecutar_accion();
+			$redireccion = $generar -> ejecutar_accion();
 
 			if ($redireccion === false) {
 				alerta_formatos("No se puede generar el formato por favor verifique la generaci&oacute;n manual del formato");
@@ -49,7 +51,7 @@ if (@$_REQUEST["accion"] == "generar") {
 			// fwrite($abrir,"En la fecha ".date('Y-m-d H:i:s')." Termina el proceso ".$fila." => ".$contenido." \n \n");
 		}
 		// curl_close ($ch);
-		echo ($creados);
+		echo($creados);
 		// fclose($abrir);
 		if ($formatos["numcampos"] == 1) {
 			alerta_formatos("Formato " . $formatos[0]["nombre"] . " creado con exito");
