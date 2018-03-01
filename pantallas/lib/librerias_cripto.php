@@ -209,9 +209,7 @@ if ($submit) {
 
 function seguridad_externa($data){
 	global $ruta_db_superior;
-	
 	include_once($ruta_db_superior."db.php");
-	
 	$data=decrypt_blowfish($data,LLAVE_SAIA_CRIPTO);
 	$data=json_decode($data,1);
 	$radicador_web=busca_filtro_tabla("login,funcionario_codigo","funcionario","login='".$data['login_usuario']."' AND funcionario_codigo='".$data['funcionario_codigo']."'","",$conn);

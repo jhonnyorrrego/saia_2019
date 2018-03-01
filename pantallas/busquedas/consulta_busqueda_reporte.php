@@ -285,7 +285,6 @@ function exportar_funcion_excel_reporte(){
 	var busqueda_total=$("#busqueda_total_paginas").val();
 	if(parseInt(busqueda_total)!=0){
 
-
 	var ruta_file="<?php echo($ruta_temporal);?>/reporte_<?php echo($datos_busqueda[0]["nombre"].'_'.date('Ymd').'.xls'); ?>";
 	var url="exportar_saia.php?tipo_reporte=1&idbusqueda_componente=<?php echo $datos_busqueda[0]["idbusqueda_componente"]; ?>&page=1&exportar_saia=excel&ruta_exportar_saia="+ruta_file+"&rows="+$("#busqueda_registros").val()*4+"&actual_row=0&variable_busqueda="+$("#variable_busqueda").val()+"&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>";
 	window.open(url,"iframe_exportar_saia");
@@ -295,40 +294,6 @@ function exportar_funcion_excel_reporte(){
 }
 
 
-function exportar_funcion_excel_para_eliminar_ya_no_sirve(){
-	if(!isChrome&&!isIE){
-		$("#barra_exportar_ppal").html('<div class="progress progress-striped active"><div class="bar bar-success" id="barra_exportar" ></div>');
-		$("#barra_exportar").css("width","0%");
-	}
-	var inc=Math.ceil(100/parseInt($("#busqueda_total_paginas").val()));
-	var error=0;
-	var ruta_file="temporal_<?php echo(usuario_actual('login'));?>/reporte_<?php echo($datos_busqueda[0]["nombre"].'_'.date('Ymd').'.xls'); ?>";
-  for(var i=0;i<parseInt($("#busqueda_total_paginas").val());i++){
-  	$.ajax({
-      type:'POST',
-      async:false,
-      url:jQuery("#datos_busqueda").jqGrid('getGridParam', 'url')+"&page="+(i+1)+"&exportar_saia=excel&ruta_exportar_saia="+ruta_file+"&rows="+jQuery("#datos_busqueda").jqGrid('getGridParam', 'rowNum'),
-      success: function(html){
-        if(html){
-          var objeto=jQuery.parseJSON(html);
-          if(objeto.exito){
-	          var aumento=((i+1)*inc);
-	          $("#barra_exportar").css("width",aumento+"%");
-          }
-          else{
-          	notificacion_saia('Error:al exportar el archivo','error','',3500);
-          	error=1;
-          	$("#barra_exportar_ppal").html("");
-          }
-        }
-      }
-    });
-  }
-  if(!error){
-  	notificacion_saia('Archivo exportado de forma exitosa','success','',3500);
-  	$("#barra_exportar_ppal").html('<a href="<?php echo($ruta_db_superior);?>'+ruta_file+'">Descargar</a>');
-  }
-}
 </script>
 <?php
 

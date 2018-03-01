@@ -19,12 +19,8 @@ require_once('StorageUtils.php');
 require_once('filesystem/SaiaStorage.php');
 
 if(@$_REQUEST['texto_salir']){
-
-
 	echo(librerias_jquery("1.7"));
 	echo(librerias_notificaciones());
-
-
 	?>
 		<script>
 			var texto_salir='<?php echo(@$_REQUEST['texto_salir']); ?>';
@@ -150,107 +146,111 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 <table width="100%" border="0"  cellpadding="0" cellspacing="0" id="tabla_principal"  align="middle" >
     <?php
         if(@$_SESSION["tipo_dispositivo"]=="movil"){
-          echo('<tr><td valign="bottom" align="center"><img src="'.$ruta_db_superior.'asset/img/layout/logosaia.png"><br></td></tr>');
+            echo('<tr><td valign="bottom" align="center"><img src="'.$ruta_logo.'"><br></td></tr>');
+            $estilo_form="span5";
         }
     ?>
   <tr align="center">
-    <td colspan="3" align="center" valign="middle" id="LoginBkg">
-      <div id="loginForm">
-        <form method="post" name="loguin" id="formulario_login" action="login.php" class="form-horizontal">
-        <?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
-            <div class="control-group">
-                <label class="control-label blueTexts" for="inputEmail">Nombre de usuario:</label>
-                <div class="controls">
-                  <input type="text" name="userid" id="userid">
+    <td colspan="3" align="center" valign="middle" id="LoginBkg"> 
+      <div id="loginForm" class="row-fluid">
+      	<div id="contenedor_login" class="<?php echo($estilo_form); ?>">
+            <form method="post" name="loguin" id="formulario_login" action="login.php">
+            <?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>    
+                <div class="control-group">
+                    <label class="control-label blueTexts" for="inputEmail">Nombre de usuario:</label>
+                    <div class="controls">
+                      <input type="text" name="userid" id="userid">
+                    </div>
                 </div>
-            </div>
-            <div class="control-group">
-                <label class="control-label blueTexts" for="inputPassword">Clave de Acceso:</label>
-                <div class="controls">
-                  <input type="password" name="passwd" id="passwd">
+                <div class="control-group">
+                    <label class="control-label blueTexts" for="inputPassword">Clave de Acceso:</label>
+                    <div class="controls">
+                      <input type="password" name="passwd" id="passwd">
+                    </div>
                 </div>
-            </div>
-            <div class="control-group">
-                <div class="controls">
-                    <br />
-                  	<p>
-                  	<input type="hidden" name="boton_ui" value="Acceder">
-                    <button name="boton_ui" type="button" class="btn btn-primary" id="ingresar">Iniciar sesi&oacute;n</button>
-                    </p>
-                  	<p id="contenedor_recordar_contrasena">
-
-                  	<a href="recordar_contrasena.php" style="cursor:pointer"  class="highslide" onclick="return hs.htmlExpand(this,{objectType:'iframe',width: 550, height: 300, preserveContent:false})">¿No puedes acceder a tu cuenta?</a>
-                  	</p>
+                <div class="control-group">
+                    <div class="controls">
+                        <br />
+                      	<p>
+                      	<input type="hidden" name="boton_ui" value="Acceder">
+                        <button name="boton_ui" type="button" class="btn btn-primary" id="ingresar">Iniciar sesi&oacute;n</button>
+                        <img src="<?php echo($ruta_db_superior); ?>asset/img/layout/logosaia.png">
+                        </p>
+                      	<p id="contenedor_recordar_contrasena">
+                      	
+                      	<a href="recordar_contrasena.php" style="cursor:pointer"  class="highslide" onclick="return hs.htmlExpand(this,{objectType:'iframe',width: 550, height: 300, preserveContent:false})">¿No puedes acceder a tu cuenta?</a>
+                      	</p> 
+                    </div>
                 </div>
-            </div>
-        <?php }
-        else{
-          ?>
-        <table width="700" border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td height="25" colspan="5"><img class="pull-right" style="height: 30px;" src="asset/img/layout/logosaia.png"></td>
-          </tr>
-          <tr>
-            <td width="62" rowspan="2">&nbsp;</td>
-            <td width="125" rowspan="2" align="left" valign="top">
-              <div id="CustomerLogoContainer" align="center"><img src="<?php echo($ruta_logo);?>" style="max-height:100%;"></div>
-            </td>
-            <td width="18" rowspan="2" align="left" valign="top">&nbsp;</td>
-            <td width="102" height="50" nowrap class="blueTexts">Nombre de usuario:</td>
-            <td width="225">
-              <input type="text" name="userid" id="userid" style="width:200px; height:40px;">
-            </td>
-            <td width="168" rowspan="2">&nbsp;</td>
-          </tr>
-          <tr>
-            <td height="50" nowrap class="blueTexts">Clave de Acceso:</td>
-            <td height="50">
-              <input type="password" name="passwd" id="passwd" style="width:200px; height:40px;">
-            </td>
-          </tr>
-          <tr>
-            <td height="50" colspan="5" align="right" valign="bottom">
-              <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                  <!--td width="60%" align="right" valign="middle" nowrap>Recordar Usuario</td>
-                  <td width="4%" align="right" valign="middle" nowrap>
-                    <input name="rememberme" type="checkbox" id="rememberme" value="1" align="absmiddle">
-                  </td>
-                  <td width="14%" align="right" valign="middle" nowrap>&nbsp;&nbsp;Recordar Clave</td>
-                  <td width="4%" align="right" valign="middle" nowrap>
-                    <input name="rememberme_pwd" type="checkbox" id="rememberme_pwd" value="1" align="absmiddle">
-                  </td-->
-                  <td width="18%" colspan="6" align="right" valign="top" nowrap>
-                    <br />
-                  	<p>
-                  	<input type="hidden" name="boton_ui" value="Acceder">
-                    <button name="boton_ui" type="button" class="btn btn-primary" id="ingresar">Iniciar sesi&oacute;n</button>
-                    </p>
-                  	<p id="contenedor_recordar_contrasena">
-
-                  	<a href="recordar_contrasena.php" style="cursor:pointer" class="highslide"   onclick="return hs.htmlExpand(this,{objectType:'iframe',width: 550, height: 300, preserveContent:false})">¿No puedes acceder a tu cuenta?</a>
-                  	</p>
-
-
-                  </td>
-                </tr>
-                <tr>
-				<td align="left">
-					<br/>
-					<br/>
-				</td>
-                </tr>
-              </table>
-            </td>
-            <td>&nbsp;</td>
-          </tr>
-        </table>
-
-          <?php
-        }
-        ?>
-        <br>
-        </form>
+            <?php }
+            else{
+              ?>
+            <table width="700" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td height="25" colspan="5"><img class="pull-right" style="height: 30px;" src="asset/img/layout/logosaia.png"></td>
+              </tr> 
+              <tr>
+                <td width="62" rowspan="2">&nbsp;</td>
+                <td width="125" rowspan="2" align="left" valign="top">
+                  <div id="CustomerLogoContainer" align="center"><img src="<?php echo($ruta_logo);?>" style="max-height:100%;"></div>
+                </td>
+                <td width="18" rowspan="2" align="left" valign="top">&nbsp;</td>
+                <td width="102" height="50" nowrap class="blueTexts">Nombre de usuario:</td>
+                <td width="225">
+                  <input type="text" name="userid" id="userid" style="width:200px; height:40px;">
+                </td>
+                <td width="168" rowspan="2">&nbsp;</td>
+              </tr>
+              <tr>
+                <td height="50" nowrap class="blueTexts">Clave de Acceso:</td>
+                <td height="50">
+                  <input type="password" name="passwd" id="passwd" style="width:200px; height:40px;">
+                </td>
+              </tr>
+              <tr>
+                <td height="50" colspan="5" align="right" valign="bottom">
+                  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <!--td width="60%" align="right" valign="middle" nowrap>Recordar Usuario</td>
+                      <td width="4%" align="right" valign="middle" nowrap>
+                        <input name="rememberme" type="checkbox" id="rememberme" value="1" align="absmiddle">
+                      </td>
+                      <td width="14%" align="right" valign="middle" nowrap>&nbsp;&nbsp;Recordar Clave</td>
+                      <td width="4%" align="right" valign="middle" nowrap>
+                        <input name="rememberme_pwd" type="checkbox" id="rememberme_pwd" value="1" align="absmiddle">
+                      </td-->
+                      <td width="18%" colspan="6" align="right" valign="top" nowrap>
+                        <br />
+                      	<p>
+                      	<input type="hidden" name="boton_ui" value="Acceder">
+                        <button name="boton_ui" type="button" class="btn btn-primary" id="ingresar">Iniciar sesi&oacute;n</button>
+                        </p>
+                      	<p id="contenedor_recordar_contrasena">
+                      	
+                      	<a href="recordar_contrasena.php" style="cursor:pointer" class="highslide"   onclick="return hs.htmlExpand(this,{objectType:'iframe',width: 550, height: 300, preserveContent:false})">¿No puedes acceder a tu cuenta?</a>
+                      	</p>
+                      	
+                      	
+                      </td>
+                    </tr>
+                    <tr>
+    				<td align="left">
+    					<br/>
+    					<br/>
+    				</td>
+                    </tr>
+                  </table>
+                </td>
+                <td>&nbsp;</td>
+              </tr>
+            </table>
+              
+              <?php
+            }
+            ?>
+            <br>
+            </form>
+        </div>
       </div>
     </td>
   </tr>
@@ -286,12 +286,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 					echo $texto_tabla;
 				}
 			?>
-		</div>
-
-
-
-
-
+		</div>	
 </body>
 </html>
 <?php include_once("fin_cargando.php");
@@ -301,49 +296,60 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
   echo(librerias_notificaciones());
 ?>
 <script>
-var mensaje="<b>El nombre de usuario o contrase&ntilde;a introducidos no son correctos! </b> <br> intente de nuevo";
-var tiempo=3500;
-$("#tabla_principal").height($(window).height()-56);
-$("#ingresar").click(function(){
-  if($("#userid").val() && $("#passwd").val()){
-      $('#contenedor_recordar_contrasena').css('pointer-events','none');
-  	//$("#formulario_login").submit();
-    $.ajax({
-      type:'POST',
-      url: "verificar_login.php",
-      data: "userid="+$("#userid").val()+"&passwd="+$("#passwd").val()+"&INDEX=<?php echo(@$_REQUEST['INDEX']);?>",
-      success: function(html){
-        if(html){
-          var objeto=jQuery.parseJSON(html);
-          mensaje=objeto.mensaje;
-          if(objeto.ingresar==1){
-            noty({text: mensaje,type: 'success',layout: "topCenter",timeout:tiempo});
-             var ruta=objeto.ruta+'<?php  echo($parametro_tarea);?>';
-            setTimeout(function(){window.location=ruta},(tiempo+100));
-          }
-          else{
-            $('#contenedor_recordar_contrasena').css('pointer-events','auto');
-            mensaje='<span style="color:white;">'+mensaje+'</span>';
-            noty({text: mensaje,type: 'error',layout: "topCenter",timeout:tiempo});
-          }
-        }
-      },
-      error:function(){
-        alert("ERROR");
-      }
-    });
-  }
-  else{
-    noty({text: "<span style='color:white;'>Por favor ingrese un usuario y una clave v&aacute;lidos! <br> intente de nuevo</span>",type: 'error',layout: "topCenter",timeout:tiempo});
-  }
-});
-$(document).keypress(function(event) {
-    var keycode = (event.keyCode ? event.keyCode : event.which);
-    if(keycode == '13') {
-        $("#ingresar").click();
-    }
-});
-hs.graphicsDir = 'anexosdigitales/highslide-4.0.10/highslide/graphics/';
-hs.outlineType = 'rounded-white';
-
+	var mensaje = "<b>El nombre de usuario o contrase&ntilde;a introducidos no son correctos! </b> <br> intente de nuevo";
+	var tiempo = 3500;
+	$("#tabla_principal").height($(window).height() - 56);
+	$("#ingresar").click(function() {
+		if ($("#userid").val() && $("#passwd").val()) {
+			$('#contenedor_recordar_contrasena').css('pointer-events', 'none');
+			$.ajax({
+				type : 'POST',
+				url : "verificar_login.php",
+				data: {userid:$("#userid").val(),passwd:$("#passwd").val(),INDEX:'<?php echo(@$_REQUEST['INDEX']); ?>'},
+				dataType: 'json',
+				success : function(objeto) {
+					mensaje = objeto.mensaje;
+					if (objeto.ingresar == 1) {
+						noty({
+							text : mensaje,
+							type : 'success',
+							layout : "topCenter",
+							timeout : tiempo
+						});
+						var ruta=objeto.ruta+'<?php  echo($parametro_tarea);?>';
+						setTimeout(function() {
+							window.location = ruta
+						}, (tiempo + 100));
+					} else {
+						$('#contenedor_recordar_contrasena').css('pointer-events', 'auto');
+						mensaje = '<span style="color:white;">' + mensaje + '</span>';
+						noty({
+							text : mensaje,
+							type : 'error',
+							layout : "topCenter",
+							timeout : tiempo
+						});
+					}
+				},
+				error : function() {
+					alert("ERROR");
+				}
+			});
+		} else {
+			noty({
+				text : "<span style='color:white;'>Por favor ingrese un usuario y una clave v&aacute;lidos! <br> intente de nuevo</span>",
+				type : 'error',
+				layout : "topCenter",
+				timeout : tiempo
+			});
+		}
+	});
+	$(document).keypress(function(event) {
+		var keycode = (event.keyCode ? event.keyCode : event.which);
+		if (keycode == '13') {
+			$("#ingresar").click();
+		}
+	});
+	hs.graphicsDir = 'anexosdigitales/highslide-4.0.10/highslide/graphics/';
+	hs.outlineType = 'rounded-white';
 </script>

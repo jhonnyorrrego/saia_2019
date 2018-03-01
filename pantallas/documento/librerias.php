@@ -328,8 +328,9 @@ if($tipo=='ver_notas'||$tipo=='todos'){
   if(@$funcionario!=="funcionario"){
   	$where_notas=" AND (destino=".$funcionario." OR origen=".$funcionario." OR ver_notas<>0)";
   }
-  $notas_transferencia=busca_filtro_tabla("count(notas) AS notas","buzon_salida","archivo_idarchivo=".$doc." AND notas!='' AND notas IS NOT NULL AND (nombre LIKE 'TRANSFERIDO' OR nombre LIKE 'DEVOLUCION')".$where_notas,"",$conn);
-  $cantidades["ver_notas"]=intval($comentarios[0]["notas"]+$notas_transferencia[0]["notas"]);
+  $notas_transferencia=busca_filtro_tabla("count(notas) AS notas","buzon_salida","archivo_idarchivo=".$doc." AND notas!='' AND notas IS NOT NULL AND (lower(nombre) LIKE 'TRANSFERIDO' OR lower(nombre) LIKE 'DEVOLUCION')".$where_notas,"",$conn);
+  $notas_pdf=busca_filtro_tabla("count(*) AS notas","comentario_pdf","tipo_archivo='documento' and iddocumento=".$doc,"",$conn);
+  $cantidades["ver_notas"]=intval($comentarios[0]["notas"]+$notas_transferencia[0]["notas"]+$notas_pdf[0]["notas"]);
 }
 if($tipo=='ordenar_pag'||$tipo=='todos'){
   $paginas=busca_filtro_tabla("count(*) AS paginas","pagina","id_documento=".$doc,"",$conn);
@@ -427,8 +428,8 @@ for($i=0;$i<$cant;$i++){
 
 function fecha_creacion_documento($fecha0,$plantilla=Null,$doc=Null){
 global $conn;
-if($fecha0=='fecha_inicial'){
-	$asignacion=busca_filtro_tabla("","asignacion","documento_iddocumento=".$doc,"",$conn);
+if($fecha0=='fecha_inicial' || $fecha0=='fecha' || $fecha0==''){
+	$asignacion=busca_filtro_tabla(fecha_db_obtener("a.fecha_inicial","Y-m-d H:i:s")." as fecha_inicial, a.*","asignacion a","a.documento_iddocumento=".$doc,"",$conn);
 	$fecha0=$asignacion[0]["fecha_inicial"];
 }
 $fecha1=date_parse($fecha0);
@@ -446,9 +447,8 @@ if($fecha1["year"]==$fecha2["year"] && $fecha1["month"]==$fecha2["month"]){
 }
 
 $exito=0;
-$docu=busca_filtro_tabla("cod_padre","documento A, formato B","A.iddocumento=".$doc." AND lower(plantilla)=lower(B.nombre)","",$conn);
-if($docu[0]["cod_padre"]){
     $papa=buscar_papa_primero($doc);
+if($doc!=$papa){
     if($papa!=$doc){
       $doc_papa=busca_filtro_tabla("","documento","iddocumento=".$papa,"",$conn);
       if($doc_papa["numcampos"]){
@@ -464,7 +464,6 @@ if($exito){
 	$iddoc_papa=$doc;
 	$plantilla=nombre_plantilla($plantilla,$iddoc_papa);
 }
-
 $texto='<div class="pull-right">'.$fecha.'</div><br /><br /><div class="link kenlace_saia" enlace="ordenar.php?key='.$iddoc_papa.'&accion=mostrar&mostrar_formato=1" conector="iframe" titulo="Documento" style="float:right;" ><b>Ver: </b>'.$plantilla.'</div>';
 return($texto);
 }
@@ -872,5 +871,117 @@ function mostrar_nombre_etiquetas($iddoc){
 		}
 	}
 	return($nombre_etiquetas);
+}
+function origen_documento2($doc,$numero,$origen="",$tipo_radicado="",$estado="",$serie="",$tipo_ejecutor="",$ejecutor="",$plantilla=""){
+	$ruta="";
+	$plantilla=strtolower($plantilla);
+	$numero=intval($numero);
+	$dato_serie=serie_documento($serie);
+	if(in_array($estado,array("GESTION","CENTRAL","HISTORICO"))!==FALSE || $tipo_radicado==1 || $tipo_radicado==2){
+		$docu=busca_filtro_tabla("nombre_tabla","formato B","lower(B.nombre)=".$plantilla,"",$conn);
+		if($plantilla=='radicacion_entrada'||$plantilla=='radicacion_salida'||$plantilla=='radicacion_peticiones'){
+			$remitente=busca_filtro_tabla("",$docu[0]["nombre_tabla"]." A, datos_ejecutor B, ejecutor C","persona_natural=B.iddatos_ejecutor AND ejecutor_idejecutor=idejecutor AND A.documento_iddocumento=".$doc,"",$conn);
+			
+			$nombres=ucwords(strtolower($remitente[0]["nombre"]));
+			
+			if(!$nombres){
+				$remitente=busca_filtro_tabla("B.nombres, B.apellidos","funcionario B","B.funcionario_codigo=".$ejecutor,"",$conn);
+				$nombres=$remitente[0]["nombres"]." ".$remitente[0]["apellidos"];
+			}
+			
+			$texto=$nombres;
+		}
+		elseif($tipo_ejecutor==1&&$tipo_radicado==1){
+			$datos_ejecutor=busca_filtro_tabla("B.ejecutor_idejecutor,C.nombre","datos_ejecutor B,ejecutor C","B.ejecutor_idejecutor=C.idejecutor AND B.iddatos_ejecutor=".$ejecutor,"",$conn);
+			if($datos_ejecutor["numcampos"]&&$plantilla==""){
+				$ruta=$datos_ejecutor[0]["nombre"]."-".$dato_serie;
+			}
+			else{
+				$ruta="-Error al buscar remitente-".$dato_serie;
+			}
+		}
+		else{
+			$tipo=busca_filtro_tabla("origen,tipo_origen","ruta r","r.tipo='ACTIVO' and r.obligatorio=1 and r.documento_iddocumento=".$doc,"idruta desc",$conn);
+			/*if($_SESSION["LOGIN"]=="amvalencia"){
+			 print_r($tipo);
+			 
+			 } */
+			if($tipo[0]['tipo_origen']==1)
+				$remitente=busca_filtro_tabla("B.nombres, B.apellidos,funcionario_codigo","funcionario B","B.funcionario_codigo=".$tipo[0]['origen'],"idruta desc",$conn);
+				elseif($tipo[0]['tipo_origen']==5)
+				$remitente=busca_filtro_tabla("B.nombres, B.apellidos,funcionario_codigo","funcionario B,dependencia_cargo dc","dc.funcionario_idfuncionario=idfuncionario and dc.iddependencia_cargo=".$tipo[0]['origen'],"",$conn);
+				
+				$adicional="";
+				if($remitente["numcampos"])
+				{$confirmado=busca_filtro_tabla("","buzon_salida","nombre in('APROBADO','REVISADO') and archivo_idarchivo=$doc and origen=".$remitente[0]["funcionario_codigo"],"",$conn);
+				
+				if(!$confirmado["numcampos"])
+					$adicional="(Pendiente)";
+				}
+				else
+					$remitente=busca_filtro_tabla("B.nombres, B.apellidos","funcionario B","B.funcionario_codigo=".$ejecutor,"",$conn);
+					
+					$texto=$remitente[0]["nombres"]." ".$remitente[0]["apellidos"].$adicional;
+		}
+		if($remitente["numcampos"]){
+			$ruta=$texto."-".$dato_serie;
+		}
+		
+		$ver_estado='';
+		if($estado=='ANULADO'){
+			$ver_estado='<font color="red">-(ANULADO)</font>';
+		}
+		$pre_texto="<div class='link kenlace_saia pull-left' enlace='ordenar.php?key=".$doc."&accion=mostrar&mostrar_formato=1' conector='iframe' titulo='Documento No.".$numero."'><b>".$numero."-".$ruta.$ver_estado."</b></div>";
+		
+		return($pre_texto);
+		
+	}
+	else{
+		$ruta=busca_filtro_tabla("r.tipo_origen,r.idruta,r.origen","ruta r","r.tipo='ACTIVO' and r.obligatorio=1 and r.documento_iddocumento=".$doc,"idruta desc",$conn);
+		$adicional="";
+		if($ruta["numcampos"]){
+			switch($ruta[0]["tipo_origen"]){
+				case 5:
+					$campo="iddependencia_cargo";
+					break;
+				default:
+					$campo="funcionario_codigo";
+					break;
+			}
+			$remitente=busca_filtro_tabla("","vfuncionario_dc",$campo."=".$ruta[0]["origen"],"",$conn);
+			//return(implode("<br />",$remitente[0]));
+			$confirmado=busca_filtro_tabla("","buzon_salida","nombre in('APROBADO','REVISADO') and archivo_idarchivo=$doc and origen=".$remitente[0]["funcionario_codigo"],"",$conn);
+			
+			if(!$confirmado["numcampos"])
+				$adicional=" (Pendiente)";
+		}
+		else
+			$remitente=busca_filtro_tabla("B.nombres, B.apellidos","funcionario B","B.funcionario_codigo=".$ejecutor,"",$conn);
+			
+			$texto=$remitente[0]["nombres"]." ".$remitente[0]["apellidos"].$adicional;
+			if($remitente["numcampos"]){
+				$ruta=$texto."-".$dato_serie;
+			}
+	}
+	if(!$ruta){
+		if($tipo_ejecutor==1&&$tipo_radicado==1){
+			$datos_ejecutor=busca_filtro_tabla("B.ejecutor_idejecutor,C.nombre","datos_ejecutor B,ejecutor C","C.idejecutor=B.iddatos_ejecutor and B.iddatos_ejecutor=".$ejecutor,"",$conn);
+		}
+		if($datos_ejecutor["numcampos"]&&$plantilla==""){
+			$ruta=$datos_ejecutor[0]["nombre"]."-".$dato_serie;
+		}
+		else{
+			$ruta="-Error al buscar remitente-".$dato_serie;
+		}
+	}
+	$ruta=(stripslashes(str_replace('"'," ",str_replace("'"," ",$ruta))));
+	
+	$ver_estado='';
+	if($estado=='ANULADO'){
+		$ver_estado='<font color="red">-(ANULADO)</font>';
+	}
+	$pre_texto="<div class='link kenlace_saia pull-left' enlace='ordenar.php?key=".$doc."&accion=mostrar&mostrar_formato=1' conector='iframe' titulo='Documento No.".$numero."'><b>".$numero."-".$ruta.$ver_estado."</b></div>";
+	
+	return($pre_texto);
 }
 ?>

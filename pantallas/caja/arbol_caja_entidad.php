@@ -10,8 +10,12 @@ $entidad=@$_REQUEST["entidad"];
 $series=@$_REQUEST["series"];
 $campo="entidad_identidad";
 $xml=$ruta_db_superior;
+include($ruta_db_superior."db.php");
+$fun_asignados=busca_filtro_tabla("llave_entidad","entidad_caja","caja_idcaja=".$_REQUEST['idcaja'],"",$conn);
+$datos=implode(",", extrae_campo($fun_asignados,"llave_entidad"));
+
 if($entidad=="1"){
-  $xml.="test.php?sin_padre=1&series=$series&sin_rol=1";
+  $xml.="test.php?sin_padre=1&series=$series&sin_rol=1&seleccionado=".$datos;
 }
 elseif($entidad=="2"){
   $xml.="test_serie_entidad.php?tabla=dependencia&estado=1&series=$series";

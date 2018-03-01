@@ -832,11 +832,6 @@ UPDATE formato SET cuerpo='<table style="width: 100%; border-collapse: collapse;
 </td>
 </tr>
 <tr>
-<td colspan="3" width="100%">
-<p><br />{*mostrar_listado_distribucion_documento*}</p>
-</td>
-</tr>
-<tr>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
 <td>&nbsp;</td>
@@ -1096,7 +1091,7 @@ where idbusqueda_componente=320;
 -- FIN DESARROLLO NUEVO REPORTE EXPEDIENTES 20171005
 
 -- --------------------------------------------------------------------
--- REPORTE DE PRESTAMO ANIDADO AL REPORTE DE ARCHIVO(ESPEDIENTES)
+-- REPORTE DE PRESTAMO ANIDADO AL REPORTE DE ARCHIVO(EXPEDIENTES)
 
 INSERT INTO modulo (idmodulo, pertenece_nucleo, nombre, tipo, imagen, etiqueta, enlace, enlace_mobil, destino, cod_padre, orden, ayuda, parametros, busqueda_idbusqueda, permiso_admin, busqueda, enlace_pantalla) VALUES
 (1666, 0, 'modulo_reporte_expedientes_prestamo', 'secundario', 'botones/principal/defaut.png', 'Prestamo', 'pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=203', NULL, '_self', 0, 5, '', '', 0, 0, '1', 0);
@@ -1105,6 +1100,7 @@ INSERT INTO busqueda_componente (idbusqueda_componente, busqueda_idbusqueda, tip
 (324, 37, 4, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=203', 'Prestamo', 'enlace_reporte_prestamo', 6, '', NULL, NULL, '', 2, 320, 2, NULL, '', '', '', '', '', '', 1666, '', NULL, NULL);
 
 -- --------------------------------------------------------------------
+
 -- DESARROLLO USUARIOS RECURRENTES, ANDRES AGUDELO TRAIDO DE EDUP
 
 INSERT INTO configuracion (nombre, valor, tipo, fecha, encrypt) VALUES
@@ -1144,6 +1140,144 @@ UPDATE busqueda_grafico_serie SET valor = 'count(b.destino)' WHERE idbusqueda_gr
 
 UPDATE busqueda_grafico_serie SET valor = 'count(b.destino)' WHERE idbusqueda_grafico_serie = 30;
 
+-- INICIO MIGRACION Version20180118194327.php
+
+-- DESARROLLO EXPEDIENTES BY JHON SEBASTIAN 2017/11/01
+
+ALTER TABLE expediente add (
+indice_uno varchar(255),
+indice_dos varchar(255),
+indice_tres varchar(255)
+);
+
+ALTER TABLE caja add (
+modulo varchar(255),
+nivel varchar(255)
+);
+
+CREATE TABLE `cf_material` (
+ `idcf_material` int(11) NOT NULL,
+ `nombre` varchar(255) NOT NULL,
+ `valor` varchar(255) NOT NULL,
+ `cod_padre` varchar(255) DEFAULT NULL,
+ `descripcion` varchar(255) DEFAULT NULL,
+ `tipo` varchar(255) DEFAULT NULL,
+ `categoria` varchar(255) DEFAULT NULL,
+ `estado` int(11) NOT NULL
+);
+
+INSERT INTO `cf_material` (`idcf_material`, `nombre`, `valor`, `cod_padre`, `descripcion`, `tipo`, `categoria`, `estado`) VALUES
+(1, 'Carton', '1', NULL, NULL, NULL, NULL, 1),
+(2, 'Otro', '2', NULL, NULL, NULL, NULL, 1);
+
+UPDATE busqueda SET cantidad_registros = '100', etiqueta = 'Inventario Documental', campos = 'a.fecha,a.nombre,a.descripcion,a.cod_arbol,a.estado_cierre,a.nombre_serie,a.propietario,a.fecha_extrema_i,a.fecha_extrema_f,a.no_unidad_conservacion,a.no_folios,a.no_carpeta,a.soporte,a.notas_transf,a.tomo_no,a.indice_uno,a.indice_dos,a.indice_tres' 
+WHERE busqueda.nombre='reporte_expediente_grid'; --idbusqueda = 115;
+
+UPDATE busqueda_componente SET etiqueta = 'Inventario Documental', 
+info = 'CODIGO|{*cod_arbol*}|left|80|-|Nombre de la serie subserie o asuntos|{*descripcion*}|left|200|-|Fecha Extrema Inicial|{*fecha_extrema_i*}|left|150|-|Fecha Extrema Final|{*fecha_extrema_f*}|left|150|-|Unidad de conservacion|{*no_unidad_conservacion*}|left|180|-|Folios|{*no_folios*}|left|80|-|Soporte|{*soporte*}|left|80|-|Notas|{*notas_transf*}|left|180|' 
+WHERE busqueda_componente.nombre='reporte_expediente_grid_exp'; -- idbusqueda_componente = 320;
+
+UPDATE busqueda_condicion SET codigo_where = '1=1 and agrupador=0 {*filtro_cod_arbol*}' 
+WHERE busqueda_condicion.etiqueta_condicion='condicion_reporte_expediente_grid'; -- idbusqueda_condicion = 245;
+
+UPDATE busqueda_componente SET info = 'CODIGO|{*cod_arbol*}|left|80|-|Nombre expediente|{*nombre*}|left|200|-|Nombre de la serie subserie o asuntos|{*descripcion*}|left|200|-|Fecha Extrema Inicial|{*fecha_extrema_i*}|left|150|-|Fecha Extrema Final|{*fecha_extrema_f*}|left|150|-|Unidad de conservacion|{*no_unidad_conservacion*}|left|180|-|Folios|{*no_folios*}|left|80|-|Soporte|{*soporte*}|left|80|-|Notas|{*notas_transf*}|left|180|' 
+WHERE busqueda_componente.nombre='reporte_expediente_grid_exp'; -- idbusqueda_componente = 320;
+
+UPDATE busqueda_componente SET info = 'CODIGO|{*cod_arbol*}|left|80|-|Nombre expediente|{*direcciona_nombre@idexpediente,nombre*}|left|200|-|RETENCI&Oacute;N|{*fecha_reten@idexpediente*}|left|200|-|Nombre de la serie subserie o asuntos|{*descripcion*}|left|200|-|Fecha Extrema Inicial|{*fecha_extrema_i*}|left|150|-|Fecha Extrema Final|{*fecha_extrema_f*}|left|150|-|Unidad de conservacion|{*no_unidad_conservacion*}|left|180|-|Folios|{*no_folios*}|left|80|-|Soporte|{*soporte*}|left|80|-|Notas|{*notas_transf*}|left|180|' 
+WHERE busqueda_componente.nombre='reporte_expediente_grid_exp'; -- idbusqueda_componente = 320;
+
+UPDATE busqueda_componente SET info = '<div title=\"Cajas\" data-load=\'{\"kConnector\":\"iframe\",\"url\":\"../pantallas/busquedas/consulta_busqueda_caja.php?idbusqueda_componente=323\",\"kTitle\":\"Cajas\",\"kWidth\":\"320px\"}\' class=\"items navigable\">\r\n<div class=\"head\"></div>\r\n<div class=\"label\">Cajas</div>\r\n<div class=\"tail\"></div>\r\n</div>' 
+WHERE busqueda_componente.nombre = 'cajas'; -- idbusqueda_componente = 160;
+
+UPDATE busqueda_componente SET direccion = 'asc',ordenado_por='a.fecha' WHERE busqueda_componente.nombre='reporte_docs_expediente_grid_exp'; --idbusqueda_componente = 321;
+
+UPDATE busqueda_componente SET etiqueta = 'Indice de Expediente', info = 'expediente_idexpediente|{*expediente_idexpediente*}|left|200|-|documento_iddocumento|{*documento_iddocumento*}|left|200|-|fecha|{*fecha*}|left' 
+WHERE busqueda_componente.nombre='reporte_docs_expediente_grid_exp'; -- idbusqueda_componente = 321;
+
+UPDATE busqueda SET etiqueta = 'Indice de Expediente' WHERE busqueda.nombre='eporte_docs_expediente_grid'; -- idbusqueda = 116;
+
+UPDATE busqueda SET campos = 'a.nombre,a.codigo_numero,a.nombre_serie,a.fecha_extrema_i,a.fecha_extrema_f,a.indice_uno,a.indice_dos,a.indice_tres,a.no_folios,a.no_unidad_conservacion,a.soporte,a.notas_transf'
+WHERE busqueda.nombre='reporte_expediente_grid'; -- idbusqueda = 115;
+
+UPDATE busqueda_condicion SET codigo_where = '1=1 and agrupador=0 {*filtro_cod_arbol*}{*tipo_expediente*}' 
+WHERE busqueda_condicion.idbusqueda_condicion = 245;
+
+-- DESARROLLO EXPEDIENTES BY JOHN HARRISON RODRIGUEZ BOTERO <john.rodriguez@cerok.com> 2017/11/01
+
+ALTER TABLE expediente ADD indice_uno  VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER agrupador, 
+                       ADD indice_dos  VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER indice_uno, 
+                       ADD indice_tres VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER indice_dos;
+
+INSERT INTO busqueda_componente ( busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas) VALUES
+(48, 3, 2, 'pantallas/busquedas/consulta_busqueda_caja.php', 'Cajas', 'cajas1', 1, '<div id=\"resultado_pantalla_{*idcaja*}\" class=\"well\"><div class=\"btn btn-mini enlace_caja pull-right\" idregistro=\"{*idcaja*}\" title=\"{*no_consecutivo*}\"><i class=\"icon-info-sign\"></i></div>{*enlaces_adicionales_caja@idcaja,no_consecutivo*}<div class=\"btn btn-mini enlace_caja tooltip_saia pull-right\" idregistro=\"{*idcaja*}\" title=\"Asignar {*no_consecutivo*}\" enlace=\"pantallas/caja/asignar_caja.php?idcaja={*idcaja*}\"><i class=\"icon-lock\"></i></div><i class=\' icon-folder-open pull-left\'></i>{*enlace_caja@idcaja,no_consecutivo*}<br/><div class=\'descripcion_documento\'>{*obtener_descripcion_caja@fondo,seccion,subseccion,codigo*}</div></div>', NULL, NULL, NULL, 2, 320, 2, NULL, '', 'a.idcaja', 'desc', '', 'pantallas/caja/buscar_caja.php?idbusqueda_componente=161', NULL, NULL, 'barra_superior_busqueda', '', NULL);
+
+CREATE OR REPLACE VIEW vexpediente_serie AS select a.propietario AS propietario,c.nombre AS nombre_serie,a.fecha AS fecha,a.nombre AS nombre,a.codigo_numero AS codigo_numero,a.descripcion AS descripcion,a.cod_arbol AS cod_arbol,a.cod_padre AS cod_padre,a.estado_archivo AS estado_archivo,a.fk_idcaja AS fk_idcaja,a.estado_cierre AS estado_cierre,a.idexpediente AS idexpediente,b.entidad_identidad AS identidad_exp,b.llave_entidad AS llave_exp,d.entidad_identidad AS identidad_ser,d.llave_entidad AS llave_ser,d.estado AS estado_entidad_serie,a.prox_estado_archivo AS prox_estado_archivo,a.fecha_extrema_i AS fecha_extrema_i,a.fecha_extrema_f AS fecha_extrema_f,a.no_unidad_conservacion AS no_unidad_conservacion,a.no_folios AS no_folios,a.no_carpeta AS no_carpeta,a.soporte AS soporte,a.notas_transf AS notas_transf,a.tomo_no AS tomo_no,a.agrupador AS agrupador,a.indice_uno AS indice_uno,a.indice_dos AS indice_dos,a.indice_tres AS indice_tres from (((expediente a left join entidad_expediente b on((a.idexpediente = b.expediente_idexpediente))) left join serie c on((a.serie_idserie = c.idserie))) left join entidad_serie d on((c.idserie = d.serie_idserie)))
+
+UPDATE busqueda_componente SET info = 'CODIGO|{*codigo_numero*}|left|80|-|NOMBRE DEL EXPEDIENTE|{*direcciona_nombre@idexpediente,nombre*}|left|200|-|SERIE|{*nombre_serie*}|left|200|-|FECHA INICIAL|{*fecha_extrema_i*}|center|80|-|FECHA FINAL|{*fecha_extrema_f*}|center|80|-|INDICE 1|{*indice_uno*}|left|130|-|INDICE 2|{*indice_dos*}|left|130|-|INDICE 3|{*indice_tres*}|left|130|-|FOLIOS|{*no_folios*}|center|80|-|UNID CONSERV|{*no_unidad_conservacion*}|left|80|SOPORTE 3|{*soporte*}|left|80|-|NOTAS|{*notas_transf*}|left|200|' 
+WHERE busqueda_componente.idbusqueda_componente = 320;
+
+UPDATE busqueda_componente SET info = 'Radicado|{*radicado_exp_doc@documento_iddocumento*}|left|80|-|Tipo de documento|{*tipo_doc@documento_iddocumento*}|left|180|-|Descripcion|{*descripcion_doc@documento_iddocumento*}|left|220|-|Fecha|{*fecha*}|center' 
+WHERE busqueda_componente.idbusqueda_componente = 321;
+
+-- DESARROLLO EXPEDIENTES BY Hernando Trejos <hernando.trejos@cerok.com> 2017/11/01
+
+ALTER TABLE `expediente` ADD `dependencia_iddependencia` INT NOT NULL AFTER `serie_idserie`;
+
+ALTER TABLE `entidad_expediente` CHANGE `fecha` `fecha` DATETIME NULL DEFAULT NULL;
+
+ALTER TABLE `caja` ADD `dependencia_iddependencia` INT NOT NULL AFTER `serie_idserie`;
+
+UPDATE busqueda_componente SET campos_adicionales = 'b.documento_iddocumento, b.idft_solicitud_prestamo, b.serie_idserie, b.estado_documento, b.anexos, b.documento_archivo, b.observaciones, b.nombre_solicita, b.fecha, b.fecha_prestamo_rep, b.fecha_devolucion_rep, b.transferencia_presta,c.idft_item_prestamo_exp, c.fecha_prestamo, c.fecha_devolucion, c.estado_prestamo, c.funcionario_prestamo, c.observacion_prestamo,c.fecha_devolucion,c.observacion_devolver,c.funcionario_devoluci,c.fk_expediente'
+WHERE busqueda_componente.nombre='reporte_solicitud_prestamo'; -- idbusqueda_componente` = 203;
+
+-- FIN MIGRACION Version20180118194327.php
+
+-- INICIO MIGRACION Version20180118223002.php
+
+-- DESARROLLO EXPEDIENTES BY Ruben Pulgarin <ruben.pulgarin@cerok.com> 2017/11/01
+
+UPDATE campos_formato SET etiqueta_html = 'checkbox' WHERE campos_formato.idcampos_formato = 5205;	
+
+INSERT INTO formato (idformato, nombre, etiqueta, cod_padre, contador_idcontador, nombre_tabla, ruta_mostrar, ruta_editar, ruta_adicionar, librerias, estilos, javascript, encabezado, cuerpo, pie_pagina, margenes, orientacion, papel, exportar, funcionario_idfuncionario, fecha, mostrar, imagen, detalle, tipo_edicion, item, serie_idserie, ayuda, font_size, banderas, tiempo_autoguardado, mostrar_pdf, orden, enter2tab, firma_digital, fk_categoria_formato, flujo_idflujo, funcion_predeterminada, paginar, pertenece_nucleo, permite_imprimir, firma_crt, pos_firma_crt, logo_firma_crt, pos_logo_firma_crt) VALUES
+(422, 'item_prestamo_exp', 'item_prestamo_exp', 412, 235, 'ft_item_prestamo_exp', 'mostrar_item_prestamo_exp.php', 'editar_item_prestamo_exp.php', 'adicionar_item_prestamo_exp.php', NULL, NULL, NULL, '', '', '', '15,20,30,20', '0', 'A4', 'tcpdf', 1, '2017-10-20 21:54:19', '0', NULL, '0', 0, '1', 1347, NULL, '9', 'm', '300000', 1, NULL, 0, 0, '2,13', 0, '', '1', 0, 1, NULL, NULL, NULL, NULL);
+
+INSERT INTO campos_formato (idcampos_formato, formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, mascara, adicionales, autoguardado, fila_visible) VALUES
+(5207, 422, 'ft_solicitud_prestamo', 'item_prestamo_exp', 'INT', '11', 1, '412', 'a', 'item_prestamo_exp', NULL, 'fk', 'detalle', 0, NULL, NULL, 0, 1),
+(5208, 422, 'fk_expediente', 'fk_expediente', 'INT', '11', 1, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1),
+(5209, 422, 'idft_item_prestamo_exp', 'ITEM_PRESTAMO_EXP', 'INT', '11', 1, NULL, 'a,e', NULL, NULL, 'ai,pk', 'hidden', 0, NULL, NULL, 0, 1),
+(5214, 422, 'fecha_prestamo', 'fecha_prestamo', 'DATETIME', NULL, 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1),
+(5215, 422, 'fecha_devolucion', 'fecha_devolucion', 'DATETIME', NULL, 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1),
+(5216, 422, 'estado_prestamo', 'estado_prestamo', 'INT', '11', 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1),
+(5217, 422, 'observacion_prestamo', 'observacion_prestamo', 'VARCHAR', '255', 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1),
+(5218, 422, 'funcionario_prestamo', 'funcionario_prestamo', 'INT', '11', 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1),
+(5219, 422, 'funcionario_devoluci', 'funcionario_devoluci', 'INT', '11', 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1),
+(5220, 422, 'observacion_devolver', 'observacion_devolver', 'VARCHAR', '255', 0, NULL, 'a,e,b', NULL, NULL, NULL, 'hidden', 0, NULL, NULL, 0, 1); 
+
+INSERT INTO funciones_formato (idfunciones_formato, nombre, nombre_funcion, parametros, etiqueta, descripcion, ruta, formato, acciones) VALUES
+(958, '{*insertar_item_prestamo_exp*}', 'insertar_item_prestamo_exp', NULL, 'insertar_item_prestamo_exp', '', 'funciones.php', '412', '');
+
+INSERT INTO funciones_formato_accion (idfunciones_formato_accion, idfunciones_formato, accion_idaccion, formato_idformato, momento, estado, orden) VALUES
+(307, 958, 3, 412, 'POSTERIOR', 1, 1);
+
+UPDATE campos_formato SET etiqueta_html = 'checkbox' WHERE campos_formato.idcampos_formato = 3995;	
+
+INSERT INTO busqueda (idbusqueda, nombre, etiqueta, estado, ancho, campos, llave, tablas, ruta_libreria, ruta_libreria_pantalla, cantidad_registros, tiempo_refrescar, ruta_visualizacion, tipo_busqueda, badge_cantidades) VALUES
+(54, 'reporte_solicitud_prestamo', 'Prestamo', 1, 200, 'a.fecha,a.ejecutor', 'a.iddocumento', 'documento a', 'formatos/solicitud_prestamo/librerias.php', 'formatos/solicitud_prestamo/funciones_js.php', 30, 500, 'pantallas/busquedas/consulta_busqueda_reporte.php', 2, NULL);
+
+INSERT INTO busqueda_componente (idbusqueda_componente, busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas) VALUES
+(203, 54, 3, 2, 'pantallas/busquedas/consulta_busqueda_reporte.php', 'Prestamo', 'reporte_solicitud_prestamo', 2, 'Fecha de solicitud|{*parsear_fecha_reserva1@fecha*}|left|-|Solicitante|{*nombre_solicitante@ejecutor*}|left|-|Solicitud de Prestamo|{*enlace_documento_reservar@documento_iddocumento*}|left|-|Expediente|{*mostrar_informacion_expediente@fk_expediente*}|left|300|-|Desde|{*parsear_fecha_reserva2@fecha_prestamo_rep*}|left|-|Hasta|{*parsear_fecha_reserva3@fecha_devolucion_rep*}|left|-|Entrega|{*accion_entrega@idft_item_prestamo_exp,funcionario_prestamo,fecha_prestamo,observacion_prestamo,estado_prestamo*}|center|-|Devolucion|{*accion_devuelto@idft_item_prestamo_exp,funcionario_devoluci,fecha_devolucion,observacion_devolver,estado_prestamo*}|center|-|Tiempo transcurrido|{*tiempo_transcurrido_reserva@fecha_prestamo,fecha_devolucion*}|left', NULL, NULL, NULL, 2, 320, 2, 'b.documento_iddocumento, b.idft_solicitud_prestamo, b.serie_idserie, b.estado_documento, b.anexos, b.documento_archivo, b.observaciones, b.nombre_solicita, b.fecha, b.fecha_prestamo_rep, b.fecha_devolucion_rep, b.transferencia_presta,c.idft_item_prestamo_exp, c.fecha_prestamo, c.fecha_devolucion, c.estado_prestamo, c.funcionario_prestamo, c.observacion_prestamo,c.fecha_devolucion,c.observacion_devolver,c.funcionario_devoluci,c.fk_expediente', 'ft_solicitud_prestamo b, ft_item_prestamo_exp c', 'a.fecha', 'desc', NULL, NULL, 'funcion_entregar_devolver', NULL, NULL, NULL, NULL);
+
+INSERT INTO busqueda_condicion (idbusqueda_condicion, busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES
+(170, NULL, 203, 'b.idft_solicitud_prestamo=c.ft_solicitud_prestamo AND a.iddocumento=b.documento_iddocumento and lower(a.estado) not in(''eliminado'',''anulado'',''activo'')', 'condicion_reporte_reserva_documentos');
+
+UPDATE busqueda SET ruta_libreria = 'pantallas/expediente/funciones_reporte_grid.php,pantallas/expediente/librerias.php' WHERE busqueda.idbusqueda = 115;
+
+UPDATE busqueda_condicion SET codigo_where = '1=1 and agrupador=0 {*filtro_cod_arbol*}{*tipo_expediente*} AND {*expedientes_asignados*}' WHERE busqueda_condicion.idbusqueda_condicion = 245;
+
+INSERT INTO modulo (idmodulo, pertenece_nucleo, nombre, tipo, imagen, etiqueta, enlace, enlace_mobil, destino, cod_padre, orden, ayuda, parametros, busqueda_idbusqueda, permiso_admin, busqueda, enlace_pantalla) VALUES
+(1669, 0, 'permiso_admin_archivo', 'secundario', 'botones/principal/defaut.png', 'Administraci&oacute;n de Archivo', '#', NULL, '_self', 45, 2, '', '', 0, 0, '', 0);
+
+-- FIN MIGRACION Version20180118223002.php
 
 -- ------------------------------------------------------------------------
 -- DESARROLLO OPCIONES PRINCIPALES DE SAIA BAJO PERMISO <andres.agudelo>
@@ -1175,4 +1309,26 @@ INSERT INTO busqueda_condicion (idbusqueda_condicion, busqueda_idbusqueda, fk_bu
 (229, NULL, 291, 'F.documento_destino=A.iddocumento AND F.documento_origen={*obtener_iddocumento*} AND lower(A.estado) NOT IN(''eliminado'',''anulado'')', 'documentos vinculados por el funcionario'),
 (251, NULL, 328, 'F.documento_origen=A.iddocumento AND F.documento_destino={*obtener_iddocumento*} AND lower(A.estado) NOT IN(''eliminado'',''anulado'')', 'documentos vinculados por el funcionario (Destino)');
 -- ------------------------------------------------------------------------
+-- ------------------------------------------------------------------------
+-- ------------------------------------------------------------------------
+-- CORRECCION DESARROLLO REMITENTES, REPORTE
 
+CREATE OR REPLACE VIEW vejecutor  AS  select A.idejecutor AS idejecutor,A.identificacion AS identificacion,A.nombre AS nombre,A.fecha_ingreso AS fecha_ingreso,A.estado AS estado,B.iddatos_ejecutor AS iddatos_ejecutor,B.ejecutor_idejecutor AS ejecutor_idejecutor,B.direccion AS direccion,B.telefono AS telefono,B.cargo AS cargo,B.ciudad AS ciudad,B.titulo AS titulo,B.empresa AS empresa,B.fecha AS fecha,B.email AS email,B.codigo AS codigo,C.nombre AS ciudad_ejecutor,A.tipo_ejecutor from ((ejecutor A left join datos_ejecutor B on((A.idejecutor = B.ejecutor_idejecutor))) left join municipio C on((B.ciudad = C.idmunicipio))) ;
+
+UPDATE busqueda SET campos = 'a.nombre,a.identificacion,a.fecha_ingreso,a.tipo_ejecutor' WHERE idbusqueda = 101 AND nombre='ejecutor';
+
+UPDATE busqueda_componente SET info = '<div class="row"><div class="span5">{*mostrar_nombre@nombre,idejecutor,tipo_ejecutor*}<br/><b>Identificaci&oacute;n:</b> {*identificacion*}<br/><b>Fecha de ingreso:</b> {*fecha_ingreso*}</div><div class="span3"><b>Contacto:</b> {*empresa*}<br/><b>Cargo:</b> {*cargo*}<br/><b>Email:</b> {*email*}</div><div class="span4"><b>Direcci&oacute;n:</b> {*direccion*}<br/><b>Tel&eacute;fono:</b> {*telefono*}<br/><b>Ciudad:</b> {*ciudad_ejecutor*}</div></div>{*barra_inferior_remitente@idejecutor*}' WHERE idbusqueda_componente = 276 AND nombre='remitentes';
+-- ------------------------------------------------------------------------
+-- ------------------------------------------------------------------------
+-- ------------------------------------------------------------------------
+-- NUEVO BUZON DE PROCESO (ENVIADOS), TRAIDO DE AGUAS Y AGUAS ACTUALIZACION 2017 <ricardo.posada>
+update busqueda set campos='c.estado, MAX(c.fecha) AS fecha, c.descripcion, c.plantilla, c.numero, c.serie, c.tipo_ejecutor, c.tipo_radicado, c.fecha_limite, c.ejecutor',llave='c.iddocumento',tablas='documento c JOIN buzon_salida a ON c.iddocumento=a.archivo_idarchivo',ruta_visualizacion='pantallas/busquedas/consulta_busqueda_documento.php' where idbusqueda=5;
+
+update busqueda_componente set 	url='pantallas/busquedas/consulta_busqueda_documento.php',info='<div>{*origen_documento2@iddocumento,numero,ejecutor,tipo_radicado,estado,serie,tipo_ejecutor,ejecutor,plantilla*} {*fecha_creacion_documento@fecha,plantilla,iddocumento*}<br><br><div>{*descripcion*}</div><br><br>{*barra_inferior_documento@iddocumento,numero*}</div>', ordenado_por='fecha', agrupado_por='c.estado, c.descripcion, c.plantilla, c.numero, c.serie, c.tipo_ejecutor, c.tipo_radicado, c.fecha_limite,c.iddocumento, c.ejecutor' where idbusqueda_componente=14;
+
+update busqueda_condicion set codigo_where='(c.iddocumento NOT IN(SELECT documento_iddocumento FROM asignacion WHERE llave_entidad={*usuario_actual_buzon*}) AND a.origen ={*usuario_actual_buzon*} AND lower(a.nombre) NOT LIKE ''elimina%'' AND lower(a.nombre) NOT IN(''leido'') AND lower(c.estado) NOT IN(''eliminado'',''gestion'',''central'',''historico''))' where idbusqueda_condicion=19;
+-- ------------------------------------------------------------------------
+-- ------------------------------------------------------------------------
+-- ------------------------------------------------------------------------
+-- 20180116 Parametro para limitar el tamano de las imagenes cargadas por la digitalizacion
+INSERT INTO configuracion (idconfiguracion, nombre, valor, tipo, fecha, encrypt) VALUES (NULL, 'img_max_upload_size', '16777216', 'imagen', '2007-04-08 20:00:00', '0');

@@ -71,7 +71,7 @@ elseif($tabla=="serie")
 		   	$nocheck="nocheckbox=\"1\"";
 		   }
        	echo  "<item style=\"font-family:verdana; font-size:7pt;\" text=\"Produccion Documental\" id=\"2-categoria-Produccion Documental\" ".$nocheck.">\n"; 
-		$condicion_tvd=' AND tvd=0';
+		$condicion_tvd=' AND (tvd=0 OR tvd IS NULL)';
 		if(@$_REQUEST['tvd']){
 			$condicion_tvd=' AND tvd=1';
 		}

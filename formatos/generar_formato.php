@@ -92,7 +92,6 @@ class GenerarFormato {
 				$generar = new GenerarBuscar($this -> idformato, "buscar");
 				$generar -> crear_formato_buscar();
 				$redireccion = "funciones_formatolist.php?idformato=" . $this -> idformato;
-
 				break;
 			case "eliminar" :
 				$this -> crear_formato_mostrar("eliminar");
@@ -458,6 +457,7 @@ class GenerarFormato {
 				}/*
 				 * else
 
+
 					 if($campos[$i]["etiqueta_html"]=="detalle"){
 					 * $texto=str_replace("{*listado_detalles_".str_replace("id","",$campos[$i]["nombre"])."*}",arma_funcion("buscar_listado_formato","'".$formato[0]["nombre"]."',".$campos[$i]["valor"],"mostrar"),$texto);
 					 * }
@@ -494,10 +494,8 @@ class GenerarFormato {
 						if (is_file($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]) && $eslibreria === false) {
 							$includes .= $this -> incluir("../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
 						} elseif (is_file($funciones[$i]["ruta"]) && $eslibreria === false) {// si el archivo existe en la ruta especificada partiendo de la raiz
-
 							$includes .= $this -> incluir("../" . $funciones[$i]["ruta"], "librerias");
-						} else if ($eslibreria === false)// si no existe en ninguna de las dos
-						{
+						} else if ($eslibreria === false) {// si no existe en ninguna de las dos
 							// trato de crearlo dentro de la carpeta del formato actual
 							alerta_formatos("Las funciones del Formato " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"] . " son requeridas  no se han encontrado");
 							if (crear_archivo(FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
@@ -691,9 +689,9 @@ class GenerarFormato {
 				if (strpos($campos[$h]["valor"], "*}") > 0) {
 					$nombre_func = str_replace("{*", "", $campos[$h]["valor"]);
 					$nombre_func = str_replace("*}", "", $nombre_func);
-					$texto .= '<tr>
-                     <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this -> codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
-                     ';
+
+					$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
+                     <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this -> codifica($campos[$h]["etiqueta"]) . $obliga . '</td>';
 					$parametros = $this -> idformato . "," . $campos[$h]["idcampos_formato"];
 					$texto .= $this -> arma_funcion($nombre_func, $parametros, $accion) . "</tr>";
 					array_push($fun_campos, $nombre_func);
@@ -709,12 +707,12 @@ class GenerarFormato {
 					}
 					switch ($campos[$h]["etiqueta_html"]) {
 						case "etiqueta" :
-							$texto .= '<tr>
+							$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '" colspan="2" id="' . $campos[$h]["nombre"] . '">' . $campos[$h]["valor"] . '</td>
                     </tr>';
 							break;
 						case "password" :
-							$texto .= '<tr>
+							$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this -> codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                      <td bgcolor="#F5F5F5"><input ' . $tabindex . ' type="password" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . " $adicionales " . ' value="' . $valor . '"></td>
                     </tr>';
@@ -741,17 +739,18 @@ class GenerarFormato {
 							echo($valor);
 							if ($accion == "editar") {
 								$valor = "<?php echo(mostrar_valor_campo('" . $campos[$h]["nombre"] . "',$this->idformato,$" . "_REQUEST['iddoc'])); ? >";
-							} else if ($valor == "")
+							} else if ($valor == "") {
 								$valor = '<?php echo(validar_valor_campo(' . $campos[$h]["idcampos_formato"] . ')); ? >';
-							if ($nivel_barra == "")
+							}
+							if ($nivel_barra == "") {
 								$nivel_barra = "basico";
-							$texto .= '<tr>
+							}
+							$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this -> codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                      <td class="celda_transparente"><textarea ' . $tabindex . ' name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" cols="53" rows="3" class="tiny_' . $nivel_barra;
 							if ($campos[$h]["obligatoriedad"])
 								$texto .= ' required';
-							$texto .= '">' . $valor . '</textarea></td>
-                    </tr>';
+							$texto .= '">' . $valor . '</textarea></td></tr>';
 							$textareas++;
 							$indice_tabindex++;
 							break;
@@ -760,7 +759,7 @@ class GenerarFormato {
 							if ($campos[$h]["tipo_dato"] == "DATE") {
 								$adicionales = str_replace("required", "required dateISO", $adicionales);
 
-								$texto .= '<tr>
+								$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                        <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this -> codifica($campos[$h]["etiqueta"]) . $obliga . '</td><td colspan="2" bgcolor="#F5F5F5"><span class="phpmaker"><input ' . $tabindex . ' type="text" readonly="true" ' . $adicionales . ' name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" tipo="fecha" value="';
 								if ($accion == "adicionar") {
 									if ($campos[$h]["predeterminado"] == "now()")
@@ -775,7 +774,7 @@ class GenerarFormato {
 								$indice_tabindex++;
 							} else if ($campos[$h]["tipo_dato"] == "DATETIME") {
 								$adicionales = str_replace("required", "required dateISO", $adicionales);
-								$texto .= '<tr>
+								$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                     <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this -> codifica($campos[$h]["etiqueta"]) . $obliga . '</td><td colspan="2" bgcolor="#F5F5F5"><font size="1,5" face="Verdana, Arial, Helvetica, sans-serif"><span ><input ' . $tabindex . ' type="text" readonly="true" name="' . $campos[$h]["nombre"] . '" ' . $adicionales . ' id="' . $campos[$h]["nombre"] . '" value="';
 								if ($accion == "adicionar") {
 									if ($campos[$h]["predeterminado"] == "now()")
@@ -788,8 +787,10 @@ class GenerarFormato {
 								$fecha++;
 								$indice_tabindex++;
 							} else if ($campos[$h]["tipo_dato"] == "TIME") {
-								$texto .= '<tr>
+
+								$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                     <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this -> codifica($campos[$h]["etiqueta"]) . $obliga . '</td><td colspan="2" bgcolor="#F5F5F5"><font size="1,5" face="Verdana, Arial, Helvetica, sans-serif"><span ><input ' . $tabindex . ' type="text"  name="' . $campos[$h]["nombre"] . '" ' . $adicionales . ' id="' . $campos[$h]["nombre"] . '" value="';
+
 								if ($accion == "adicionar") {
 									$texto .= '"></span></font>';
 								} else {
@@ -843,7 +844,7 @@ class GenerarFormato {
 							$texto .= '<td bgcolor="#F5F5F5">' . $this -> arma_funcion("genera_campo_listados_editar", $this -> idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . '</td></tr>';
 							break;
 						case "link" :
-							$texto .= '<tr>
+							$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this -> codifica($campos[$h]["etiqueta"]) . $obliga . '</td>';
 							if (strpos($adicionales, "class") !== false)
 								$adicionales = str_replace("required", "required url", $adicionales);
@@ -857,13 +858,13 @@ class GenerarFormato {
 							$texto .= $valor . '</textarea></td></tr>';
 							break;
 						case "checkbox" :
-							$texto .= '<tr>
+							$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                   <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this -> codifica($campos[$h]["etiqueta"]) . $obliga . '</td>';
 							$texto .= '<td bgcolor="#F5F5F5">' . $this -> arma_funcion("genera_campo_listados_editar", $this -> idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . '</td></tr>';
 							$checkboxes++;
 							break;
 						case "select" :
-							$texto .= '<tr>
+							$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this -> codifica($campos[$h]["etiqueta"]) . $obliga . '</td>';
 							$texto .= '<td bgcolor="#F5F5F5">' . $this -> arma_funcion("genera_campo_listados_editar", $this -> idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . '</td></tr>';
 							break;
@@ -875,7 +876,7 @@ class GenerarFormato {
 							if (count($parametros) < 2)
 								alerta_formatos("Por favor verifique los parametros de configuracion de su select dependiente " . $campos[$h]["etiqueta"]);
 							else {
-								$texto .= '<tr>
+								$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this -> codifica($campos[$h]["etiqueta"]) . $obliga . '</td>';
 								$texto .= '<td bgcolor="#F5F5F5">' . $this -> arma_funcion("genera_campo_listados_editar", $this -> idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . '</td></tr>';
 								$dependientes++;
@@ -931,7 +932,7 @@ class GenerarFormato {
 									break;
 							}
 
-							$texto .= '<tr>
+							$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this -> codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                      <td class="celda_transparente">' . $funcion_adicional_archivo;
 
@@ -959,7 +960,7 @@ class GenerarFormato {
 							break;
 						case "tarea" :
 							// parametros:id de la tarea
-							$texto .= '<tr>
+							$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                   <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this -> codifica($campos[$h]["etiqueta"]) . $obliga . '</td><td colspan="2" bgcolor="#F5F5F5"><font size="1,5" face="Verdana, Arial, Helvetica, sans-serif"><span ><input type="hidden" name="tarea_' . $campos[$h]["nombre"] . '" value="' . $campos[$h]["valor"] . '"><input type="text" name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" value="';
 							if ($accion == "adicionar") {
 								if ($campos[$h]["predeterminado"] == "now()")
@@ -995,8 +996,9 @@ class GenerarFormato {
 							/* parametros: campos a mostrar separados por comas; campo a guardar en el hidden; tabla
 							 ej: nombres,apellidos;idfuncionario;funcionario
 							 */
-							$texto .= '<tr>
+							$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                    <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this -> codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
+
                    <td bgcolor="#F5F5F5">';
 							$texto .= '<input type="text" size="30" ' . $adicionales . ' value="" id="input' . $campos[$h]["idcampos_formato"] . '" onkeyup="lookup(this.value,' . $campos[$h]["idcampos_formato"] . ');" onblur="fill(this.value,' . $campos[$h]["idcampos_formato"] . ');" />
                 <div class="suggestionsBox" id="suggestions' . $campos[$h]["idcampos_formato"] . '" style="display: none;">
@@ -1008,7 +1010,7 @@ class GenerarFormato {
 							$autocompletar++;
 							break;
 						case "etiqueta" :
-							$texto .= '<tr>
+							$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                    <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this -> codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                    <td bgcolor="#F5F5F5"><label>' . $valor . '</label><input type="hidden" name="' . $campos[$h]["nombre"] . '" value="' . $valor . '"></td>
                   </tr>';
@@ -1019,15 +1021,27 @@ class GenerarFormato {
 							} else
 								$valor = $campos[$h]["predeterminado"];
 
-							$texto .= '<tr>
+							$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                    <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this -> codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
+
                    <td bgcolor="#F5F5F5">
                    <input type="hidden" ' . $adicionales . ' name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" value="' . $valor . '"><?php componente_ejecutor("' . $campos[$h]["idcampos_formato"] . '",@$_REQUEST["iddoc"]); ?' . '>';
 							$texto .= '</td>
                   </tr>';
 							break;
 						case "arbol" :
+							/*En campos valor se deben almacenar los siguientes datos:
+							 ../../test.php;1;0;1;1;0;0   ../arboles/test.xml;2;0;1;1;0;0  ../arboles/test_secretarias.xml;1;0;1;1;1;2
+							 arreglo[0]:ruta de el xml
+							 arreglo[1]=1=> checkbox;arreglo[1]=2=>radiobutton
+							 arreglo[2] Modo calcular numero de nodos hijo
+							 arreglo[3] Forma de carga 0=>autoloading; 1=>smartXML
+							 arreglo[4] Busqueda
+							 arreglo[5] Almacenar 0=>iddato 1=>valordato
+							 arreglo[6] Tipo de arbol 0=>funcionarios 1=>series 2=>dependencias 3=>Otro (se debe sacar el dato) 4=>Sale de la tabla enviada a test_serie.php?tabla=nombre_tabla
+							 */
 							$arreglo = explode(";", $campos[$h]["valor"]);
+
 							if (isset($arreglo) && $arreglo[0] != "") {
 								$ruta = "\"" . $arreglo[0] . "\"";
 							} else {
@@ -1037,7 +1051,8 @@ class GenerarFormato {
 								$arreglo[3] = 0;
 								$arreglo[4] = 1;
 							}
-							$texto .= '<tr>
+
+							$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                    <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this -> codifica($campos[$h]["etiqueta"]) . $obliga . '</td>';
 							$texto .= '<td bgcolor="#F5F5F5">';
 							$texto .= '<div id="seleccionados">' . $this -> arma_funcion("mostrar_seleccionados", $this -> idformato . "," . $campos[$h]["idcampos_formato"] . ",'" . $arreglo[6] . "'", "mostrar") . '</div>
@@ -1211,7 +1226,8 @@ class GenerarFormato {
 							}
 							if (is_array($aux2))
 								$adicionales .= implode(" ", $aux2);
-							$texto .= '<tr>
+
+							$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this -> codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                      <td bgcolor="#F5F5F5"><input ' . " $adicionales $tabindex" . ' type="input" id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . ' value="' . $valor . '"></td>
                     </tr>
@@ -2248,4 +2264,3 @@ detalles_mostrar_" . $formato[0]['nombre'] . ".php";
 
 }
 ?>
-
