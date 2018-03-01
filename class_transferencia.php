@@ -331,14 +331,16 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 	sort($destino);
 
 	$idarchivo = $datos["archivo_idarchivo"];
-	if (!isset($datos["ruta_idruta"]))
+	if (!isset($datos["ruta_idruta"])) {
 		$datos["ruta_idruta"] = "";
-	if (array_key_exists("origen", $datos))
+	}
+	if (array_key_exists("origen", $datos)) {
 		$origen = $datos["origen"];
-	else if (@$_SESSION["usuario_actual"])
+	} else if (@$_SESSION["usuario_actual"]) {
 		$origen = $_SESSION["usuario_actual"];
-	else
+	} else {
 		$origen = usuario_actual("funcionario_codigo");
+	}
 
 	$doc = busca_filtro_tabla("B.idformato", "documento A,formato B", "A.plantilla=B.nombre AND iddocumento=" . $idarchivo, "", $conn);
 	$idformato = @$doc[0]["idformato"];
@@ -346,8 +348,9 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 	if ($adicionales <> Null && $adicionales <> "" && is_array($adicionales)) {
 		$otras_llaves = "," . implode(",", array_keys($adicionales));
 		$otros_valores = "," . implode(",", array_values($adicionales));
-		if ($otros_valores == ",")
+		if ($otros_valores == ",") {
 			$otros_valores = ",";
+		}
 	} else {
 		$otras_llaves = "";
 		$otros_valores = "";
@@ -380,9 +383,12 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 					$sql = "INSERT INTO buzon_salida (archivo_idarchivo,nombre,fecha,origen,tipo_origen,tipo_destino" . $otras_llaves . ",ver_notas,destino) values (" . $values_out . "," . $user . ")";
 					phpmkr_query($sql, $conn);
 					$idtransferencia[] = phpmkr_insert_id();
-				}
-				if ($datos["nombre"] == "POR_APROBAR") {
-					$sql = "INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio) VALUES(" . $origen . ",'ACTIVO'," . $user . ",NULL,'POR_APROBAR'," . $idarchivo . ",1,1,1)";
+				} else if ($datos["nombre"] == "POR_APROBAR") {
+					if (isset($_REQUEST["dependencia"]) && $_REQUEST["dependencia"] != "" && $datos["ruta_creador_documento"] == 1) {
+						$sql = "INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio) VALUES(" . $_REQUEST["dependencia"] . ",'ACTIVO'," . $user . ",NULL,'POR_APROBAR'," . $idarchivo . ",5,1,1)";
+					} else {
+						$sql = "INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio) VALUES(" . $origen . ",'ACTIVO'," . $user . ",NULL,'POR_APROBAR'," . $idarchivo . ",1,1,1)";
+					}
 					phpmkr_query($sql, $conn) or error("No se puede Generar una Ruta");
 					$idruta = phpmkr_insert_id();
 					$datos["ruta_idruta"] = $idruta;

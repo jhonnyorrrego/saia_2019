@@ -122,7 +122,7 @@ if (@$_SESSION["LOGIN" . LLAVE_SAIA]) {
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>SAIA 2.0</title>
+<title>SAIA-SGDEA</title>
 <script src="asset/js/jquery.min.js"></script>
 <script src="asset/js/jquery-ui.min.js"></script>
 <script src="asset/js/main.js"></script>

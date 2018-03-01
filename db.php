@@ -3611,7 +3611,6 @@ function almacenar_sesion($exito, $login) {
 	if ($login == "") {
 		$login = usuario_actual("login");
 		$id = usuario_actual("idfuncionario");
-		$idfun_intentetos = $id;
 	} else {
 		$id = $_SESSION["idfuncionario"];
 	}
@@ -3647,7 +3646,7 @@ function almacenar_sesion($exito, $login) {
 		$sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,fecha) VALUES('$iplocal','$ipremoto','" . $login . "',0," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
 		$conn -> Ejecutar_Sql($sql);
 	} else {
-		$sql2 = "UPDATE funcionario SET intento_login=0 WHERE idfuncionario=" . $idfun_intentetos;
+		$sql2 = "UPDATE funcionario SET intento_login=0 WHERE idfuncionario=" . $id;
 		$conn -> Ejecutar_Sql($sql2);
 
 		$idsesion = ultima_sesion($login);

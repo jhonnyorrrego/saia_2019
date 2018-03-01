@@ -468,7 +468,7 @@ function permisos_modulo_menu_intermedio($iddoc, $modulo_padre,$lista,$target="_
   global $ruta_db_superior,$documento,$funcionario;
   $texto='';
   if($modulo_padre=="rapidos_menu_intermedio"){
-      $datos_modulos=array('devolucion','transferir','responder','seguimiento','terminar_documento','vista_previa');
+      $datos_modulos=array('devolucion','transferir','responder','seguimiento_rastro','terminar_documento','vista_previa');
   }
   else{
       $datos_modulos=  modulos_menu_intermedio($modulo_padre);
@@ -485,7 +485,7 @@ function permisos_modulo_menu_intermedio($iddoc, $modulo_padre,$lista,$target="_
                 $modulos_documentos_anulados=array('devolucion','transferir','expediente_menu','enviar_documento_correo');
                 break;
             case 'rapidos_menu_intermedio':
-                $modulos_documentos_anulados=array('transferir','seguimiento','devolucion','vista_previa');
+                $modulos_documentos_anulados=array('transferir','seguimiento_rastro','devolucion','vista_previa');
                 break;
             default:
                 break;
