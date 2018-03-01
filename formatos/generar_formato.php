@@ -1,11 +1,9 @@
 <?php
 $max_salida = 10;
-// Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
 	if (is_file($ruta . "db.php")) {
 		$ruta_db_superior = $ruta;
-		// Preserva la ruta superior encontrada
 	}
 	$ruta .= "../";
 	$max_salida--;
@@ -16,31 +14,7 @@ include_once ($ruta_db_superior . "formatos/librerias/funciones.php");
 include_once ($ruta_db_superior . "formatos/generar_formato_buscar.php");
 include_once ($ruta_db_superior . "pantallas/documento/class_documento_elastic.php");
 
-if (@$_REQUEST["sesion"] && !@$_SESSION["LOGIN" . LLAVE_SAIA]) {
-	$_SESSION["LOGIN" . LLAVE_SAIA] = $_REQUEST['sesion'];
-}
-if (@$_REQUEST["archivo"] != '') {
-	$archivo = $ruta_db_superior . str_replace("-", "/", $_REQUEST["archivo"]);
-}
-
-if (@$_REQUEST["genera"]) {
-	$accion = $_REQUEST["genera"];
-	if (@$_REQUEST["idformato"]) {
-		$idformato = $_REQUEST["idformato"];
-		$generar = new GenerarFormato($idformato, $accion, $archivo);
-		$redireccion = $generar -> ejecutar_accion();
-	} else {
-		alerta_formatos("por favor seleccione un Formato a Generar");
-		$redireccion = "formatolist.php";
-		if ($archivo != '') {
-			$redireccion = $archivo;
-		}
-	}
-	redirecciona($redireccion);
-}
-
 class GenerarFormato {
-
 	private $accion;
 	private $idformato;
 	private $archivo;
@@ -61,7 +35,6 @@ class GenerarFormato {
 		switch (@$this->accion) {
 			case "formato" :
 				$redireccion = $this -> generar_formato();
-				//$redireccion = "formatoview.php?idformato=" . $this->idformato;
 				break;
 			case "tabla" :
 				$this -> generar_tabla();
@@ -107,18 +80,6 @@ class GenerarFormato {
 		return ($redireccion);
 	}
 
-	/*
-	 * <Clase>
-	 * <Nombre>generar_tabla</Nombre>
-	 * <Parametros>$idformato:</Parametros>
-	 * <Responsabilidades>Crear automaticamente los campos predeterminados como la serie,documento_iddocumento, la llave primaria... etc, verifica si la tabla est� creada, crea o actualiza la tabla con todos los campos como se han definido previamente<Responsabilidades>
-	 * <Notas></Notas>
-	 * <Excepciones></Excepciones>
-	 * <Salida></Salida>
-	 * <Pre-condiciones><Pre-condiciones>
-	 * <Post-condiciones><Post-condiciones>
-	 * </Clase>
-	 */
 	function generar_tabla() {
 		global $sql, $conn;
 		$sql_tabla = "";
@@ -127,9 +88,6 @@ class GenerarFormato {
 		$iddocesta = 0;
 		$formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $this -> idformato, "", $conn);
 		if ($formato["numcampos"]) {
-			//$resp["estado"] = "KO";
-			//$resp["mensaje"] = "Problemas al Generar la tabla, No existen Campos";
-
 			$resp = $conn -> formato_generar_tabla($this -> idformato, $formato);
 			alerta_formatos($resp["mensaje"]);
 		} else {
@@ -138,66 +96,6 @@ class GenerarFormato {
 		}
 	}
 
-	/*
-	 * <Clase>
-	 * <Nombre>elimina_indices_tabla</Nombre>
-	 * <Parametros>$tabla</Parametros>
-	 * <Responsabilidades>Busca los indices creados para cierta tabla y llama la funci�n que los elimina<Responsabilidades>
-	 * <Notas></Notas>
-	 * <Excepciones></Excepciones>
-	 * <Salida></Salida>
-	 * <Pre-condiciones><Pre-condiciones>
-	 * <Post-condiciones><Post-condiciones>
-	 * </Clase>
-	 */
-	private function elimina_indices_tabla($tabla) {
-		global $conn, $sql;
-		$tabla = strtoupper($tabla);
-		if (MOTOR == "MySql") {
-			$indices = ejecuta_filtro_tabla("SHOW INDEX FROM " . strtolower($tabla), $conn);
-			for ($i = 0; $i < $indices["numcampos"]; $i++) {
-				$this -> elimina_indice($tabla, $indices[$i]);
-			}
-		} else if (MOTOR == "Oracle") {
-			$envio = array();
-			$sql2 = "select ai.index_name AS column_name, ai.uniqueness AS Key_name FROM all_indexes ai WHERE ai.TABLE_OWNER='" . DB . "' AND ai.table_name = '" . $tabla . "'";
-			$indices = ejecuta_filtro_tabla($sql2, $conn);
-			for ($i = 0; $i < $indices["numcampos"]; $i++) {
-				array_push($envio, array("Key_name" => $indices[$i]["key_name"], "Column_name" => $indices[$i]["column_name"]));
-			}
-			$sql2 = "SELECT cols.column_name AS Column_name, cons.constraint_type AS Key_name FROM all_constraints cons, all_cons_columns cols WHERE cons.constraint_type = 'P' AND cons.constraint_name = cols.constraint_name AND cons.owner = cols.owner AND cons.owner='" . DB . "' AND cols.table_name='" . $tabla . "' ORDER BY cols.table_name, cols.position";
-			$primaria = ejecuta_filtro_tabla($sql2, $conn);
-			for ($i = 0; $i < $primaria["numcampos"]; $i++) {
-				array_push($envio, array("Key_name" => "PRIMARY", "Column_name" => $primaria[$i]["Column_name"]));
-			}
-			$numero_indices = count($envio);
-
-			for ($i = 0; $i < $numero_indices; $i++) {
-				$this -> elimina_indice($tabla, $envio[$i]);
-			}
-		} else if (MOTOR == "SqlServer" || MOTOR == "MSSql") {
-			$sql2 = "SELECT name AS column_name FROM sys.objects WHERE type_desc LIKE '%CONSTRAINT' AND OBJECT_NAME(parent_object_id)='" . $tabla . "'";
-			$indices = ejecuta_filtro_tabla($sql2, $conn);
-			$numero_indices = count($indices);
-			for ($i = 0; $i < $numero_indices; $i++) {
-				$this -> elimina_indice($tabla, $envio[$i]);
-			}
-		}
-		return;
-	}
-
-	/*
-	 * <Clase>
-	 * <Nombre>es_indice</Nombre>
-	 * <Parametros>$campo:nombre del campo;$tabla:nombre de la tabla;$indice:vector donde se guarda la informacion consultada</Parametros>
-	 * <Responsabilidades>Verifca si en la tabla y el campo elegidos existe algun indice<Responsabilidades>
-	 * <Notas></Notas>
-	 * <Excepciones></Excepciones>
-	 * <Salida></Salida>
-	 * <Pre-condiciones><Pre-condiciones>
-	 * <Post-condiciones><Post-condiciones>
-	 * </Clase>
-	 */
 	private function es_indice($campo, $tabla, $indice) {
 		global $conn;
 		$indice = ejecuta_filtro_tabla("SHOW INDEX FROM " . strtolower($tabla) . " WHERE Column_name LIKE '" . $campo . "'", $conn);
@@ -207,18 +105,6 @@ class GenerarFormato {
 		return (true);
 	}
 
-	/*
-	 * <Clase>
-	 * <Nombre>maximo_valor</Nombre>
-	 * <Parametros>$valor:valor asignado por configuraci�n;$maximo:valor m�ximo aceptado por el tipo de dato</Parametros>
-	 * <Responsabilidades>Valida si el valor que se est� asignando al tipo de dato est� en el rango permitido, si no lo est� devuelve el m�ximo<Responsabilidades>
-	 * <Notas></Notas>
-	 * <Excepciones></Excepciones>
-	 * <Salida>devuelve el n�mero m�ximo permitido</Salida>
-	 * <Pre-condiciones><Pre-condiciones>
-	 * <Post-condiciones><Post-condiciones>
-	 * </Clase>
-	 */
 	private function maximo_valor($valor, $maximo) {
 		if ($valor > $maximo || $valor == "NULL")
 			return ($maximo);
@@ -226,18 +112,6 @@ class GenerarFormato {
 			return ($valor);
 	}
 
-	/*
-	 * <Clase>
-	 * <Nombre>crear_formato_mostrar</Nombre>
-	 * <Parametros>$idformato:id del formato</Parametros>
-	 * <Responsabilidades>Se encarga de crear el archivo con el mostrar del formato correspondiente basandose en la configuraciones realizadas<Responsabilidades>
-	 * <Notas></Notas>
-	 * <Excepciones></Excepciones>
-	 * <Salida></Salida>
-	 * <Pre-condiciones><Pre-condiciones>
-	 * <Post-condiciones><Post-condiciones>
-	 * </Clase>
-	 */
 	public function crear_formato_mostrar() {
 		global $sql, $conn;
 		$formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $this -> idformato, "", $conn);
@@ -245,12 +119,7 @@ class GenerarFormato {
 		$texto = '';
 		$enlace = "";
 		if ($formato["numcampos"]) {
-			// $datos=busca_filtro_tabla("","campos_formato","etiqueta_html LIKE 'detalle' AND valor=".$this->idformato,"",$conn);
-			// buscar si el formato tiene hijos
 			$hijos = busca_filtro_tabla("", "campos_formato", "etiqueta_html='detalle' and nombre like '" . $formato[0]["nombre_tabla"] . "'", "", $conn);
-
-			// if($hijos["numcampos"])
-			// $enlace='<a href="detalles_'.$formato[0]["ruta_mostrar"].'?idformato='.$this->idformato.'&iddoc=<?php echo($_REQUEST["iddoc"]); ?'.'>" target="centro"> Detalles</a>';
 			if (strpos($formato[0]["banderas"], "acordeon") !== false) {
 				$texto .= '<frameset cols="410,*" >';
 				$texto .= '<frame name="arbol_formato" id="arbol_formato" src="../../' . FORMATOS_SAIA . 'librerias/formato_detalles.php?idformato=' . $this -> idformato . '&iddoc=<?php echo($_REQUEST[' . "'" . "iddoc" . "'" . ']); ? >" marginwidth="0" marginheight="0" scrolling="no" >';
@@ -258,22 +127,14 @@ class GenerarFormato {
 				$texto .= '<frameset cols="250,*" >';
 				$texto .= '<frame name="arbol_formato" id="arbol_formato" src="../../' . FORMATOS_SAIA . 'arboles/arbolformato_documento.php?idformato=' . $this -> idformato . '&iddoc=<?php echo($_REQUEST[' . "'" . "iddoc" . "'" . ']); ? >" marginwidth="0" marginheight="0" scrolling="auto" >';
 			}
-			$texto .= '
-  <frame name="detalles" src="" border="0" marginwidth="20px" marginheight="10" scrolling="auto">
-</frameset>';
+			$texto .= '<frame name="detalles" src="" border="0" marginwidth="20px" marginheight="10" scrolling="auto"></frameset>';
 			$contenido_detalles = $texto;
 
 			if (!crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/detalles_" . $formato[0]["ruta_mostrar"], $contenido_detalles)) {
 				alerta_formatos("837 No es posible crear el Archivo de detalles");
 			}
 			$texto = '';
-			// FIN if($hijos["numcampos"])
-			/*
-			 * else
-			 * {if(is_file($formato[0]["nombre"]."/detalles_".$formato[0]["ruta_mostrar"]))
-			 * unlink($formato[0]["nombre"]."/detalles_".$formato[0]["ruta_mostrar"]);
-			 * }
-			 */
+
 			$texto .= '<tr><td>';
 			$archivos = 0;
 			$texto .= htmlspecialchars_decode($formato[0]["cuerpo"]);
@@ -355,25 +216,10 @@ class GenerarFormato {
 
 			$contenido = $includes . $texto . $enlace . $this -> incluir_libreria("footer_nuevo.php", "librerias");
 			$mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $contenido);
-			// Las siguientes lineas comentadas, estan pendientes por eliminar, todo el funcionamiento de la creacion de modulos y la creacion del permiso del formato se realiza en formatoaddp.php en la funcion crear_modulo_formato
-			if ($mostrar != "") {
-			}
 		} else
 			alerta_formatos("931 No es posible generar el Formato");
 	}
 
-	/*
-	 * <Clase>
-	 * <Nombre>generar_vista</Nombre>
-	 * <Parametros>$idformato:id de la vista</Parametros>
-	 * <Responsabilidades>Se encarga de revisar que todas las funciones y campos asociados a la vista se encuentren previamente configurados, antes de proceder a llamar la funci�n que genera el archivo con el mostrar de la vista<Responsabilidades>
-	 * <Notas></Notas>
-	 * <Excepciones></Excepciones>
-	 * <Salida></Salida>
-	 * <Pre-condiciones><Pre-condiciones>
-	 * <Post-condiciones><Post-condiciones>
-	 * </Clase>
-	 */
 	private function generar_vista() {
 		global $sql, $conn;
 		$vista = busca_filtro_tabla("*", "vista_formato A", "A.idvista_formato=" . $this -> idformato, "", $conn);
@@ -420,18 +266,6 @@ class GenerarFormato {
 		$this -> crear_vista_formato($l1tablas);
 	}
 
-	/*
-	 * <Clase>
-	 * <Nombre>crear_vista_formato</Nombre>
-	 * <Parametros>$idformato:id de la vista;$arreglo:contiene como llave los nombres de los campos y como valor el id del formato padre de la vista</Parametros>
-	 * <Responsabilidades>Se encarga de crear el archivo para mostrar en pantalla la vista seleccionada<Responsabilidades>
-	 * <Notas>si se necesita alguna funci�n, o un campo, �stos debe estar registrados como asociados al formato padre de la vista, de lo contrario no funciona</Notas>
-	 * <Excepciones></Excepciones>
-	 * <Salida></Salida>
-	 * <Pre-condiciones><Pre-condiciones>
-	 * <Post-condiciones><Post-condiciones>
-	 * </Clase>
-	 */
 	private function crear_vista_formato($arreglo) {
 		global $sql, $conn;
 		$vista = busca_filtro_tabla("*", "vista_formato A", "A.idvista_formato=" . $this -> idformato, "", $conn);
@@ -454,15 +288,7 @@ class GenerarFormato {
 				if ($campos[$i]["etiqueta_html"] == "autocompletar") {
 					$parametros = explode(";", $campos[$i]["valor"]);
 					$texto = str_replace("{*" . $campos[$i]["nombre"] . "*}", "<?php busca_campo(" . "'" . $parametros[0] . "','" . $parametros[1] . "','" . $parametros[2] . "',mostrar_valor_campo('" . $campos[$i]["nombre"] . "','" . $idformato_padre . "',$" . "_REQUEST['iddoc'],1)); ?" . ">", $texto);
-				}/*
-				 * else
-
-
-					 if($campos[$i]["etiqueta_html"]=="detalle"){
-					 * $texto=str_replace("{*listado_detalles_".str_replace("id","",$campos[$i]["nombre"])."*}",arma_funcion("buscar_listado_formato","'".$formato[0]["nombre"]."',".$campos[$i]["valor"],"mostrar"),$texto);
-					 * }
-					 */
-					else
+				} else
 					$texto = str_replace("{*" . $campos[$i]["nombre"] . "*}", $this -> arma_funcion("mostrar_valor_campo", "'" . $campos[$i]["nombre"] . "',$idformato_padre", "mostrar"), $texto);
 				if ($campos[$i]["etiqueta_html"] == "archivo") {
 					$archivos++;
@@ -542,7 +368,6 @@ class GenerarFormato {
 					$submodulo_formato = busca_filtro_tabla("", "modulo", "nombre LIKE '" . $vista[0]["nombre"] . "'", "", $conn);
 					if (!$submodulo_formato["numcampos"]) {
 						$sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES ('" . $vista[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','" . $vista[0]["etiqueta"] . "','" . FORMATOS_CLIENTE . $vista[0]["ruta_mostrar"] . "','centro','" . $modulo_formato[0]["idmodulo"] . "','1','Permite administrar el formato " . $vista[0]["etiqueta"] . ".')";
-						// /die($sql);
 						guardar_traza($sql, $fpadre[0]["nombre_tabla"]);
 						phpmkr_query($sql, $conn);
 					}
@@ -555,34 +380,10 @@ class GenerarFormato {
 			alerta_formatos("1122 No es posible generar el Formato");
 	}
 
-	/*
-	 * <Clase>
-	 * <Nombre>codifica</Nombre>
-	 * <Parametros>$texto:texto que se desea codificar</Parametros>
-	 * <Responsabilidades>llama la funci�n que pasa el texto a mayusculas y devuelve el nuevo texto modificado<Responsabilidades>
-	 * <Notas></Notas>
-	 * <Excepciones></Excepciones>
-	 * <Salida></Salida>
-	 * <Pre-condiciones><Pre-condiciones>
-	 * <Post-condiciones><Post-condiciones>
-	 * </Clase>
-	 */
-	private function codifica($texto) {// strtoupper(codifica_encabezado(html_entity_decode($campos[$h]["etiqueta"])))
+	private function codifica($texto) {
 		return mayusculas($texto);
 	}
 
-	/*
-	 * <Clase>
-	 * <Nombre>crear_formato_ae</Nombre>
-	 * <Parametros>$idformato:id del formato;$accion:adicionar o editar</Parametros>
-	 * <Responsabilidades>Crea el archivo en el adicionar o el editar del formato segun la configuraci�n realizada<Responsabilidades>
-	 * <Notas></Notas>
-	 * <Excepciones></Excepciones>
-	 * <Salida></Salida>
-	 * <Pre-condiciones><Pre-condiciones>
-	 * <Post-condiciones><Post-condiciones>
-	 * </Clase>
-	 */
 	public function crear_formato_ae($accion) {
 		global $sql, $conn;
 		$datos_detalles["numcampos"] = 0;
@@ -630,8 +431,7 @@ class GenerarFormato {
 			$listado_campos = array();
 			$unico = array();
 			$campos = busca_filtro_tabla("*", "campos_formato A", "A.acciones like '%" . $accion[0] . "%' and A.formato_idformato=" . $this -> idformato, "orden ASC", $conn);
-			// print_r($campos);die();
-			// funciones creadas para el formato, pero que corresponden a nombres de campos
+
 			$fun_campos = array();
 			for ($h = 0; $h < $campos["numcampos"]; $h++) {
 				if ($campos[$h]["etiqueta_html"] == "arbol")
@@ -646,9 +446,9 @@ class GenerarFormato {
 				$tabindex = " tabindex='$indice_tabindex' ";
 				if ($campos[$h]["autoguardado"])
 					$autoguardado[] = $campos[$h]["nombre"];
-				// ******************** validaciones *****************
+
 				$adicionales = "";
-				// echo $campos[$h]["nombre"]." ".$valor."<br />";
+
 				$longitud = busca_filtro_tabla("valor", "caracteristicas_campos", "tipo_caracteristica ='maxlength' and idcampos_formato=" . $campos[$h]["idcampos_formato"], "", $conn);
 				if ($longitud["numcampos"]) {
 					if ($longitud[0][0] > $campos[$h]["longitud"])
@@ -677,7 +477,6 @@ class GenerarFormato {
 				if ($otros["numcampos"])
 					$adicionales .= $otros[0]["valor"];
 
-				// ***************************************************
 				if ($campos[$h]["banderas"] != "") {
 					$bandera_unico = strpos("u", $campos[$h]["banderas"]);
 					if ($bandera_unico !== false) {
@@ -690,19 +489,14 @@ class GenerarFormato {
 					$nombre_func = str_replace("{*", "", $campos[$h]["valor"]);
 					$nombre_func = str_replace("*}", "", $nombre_func);
 
-					$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
-                     <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this -> codifica($campos[$h]["etiqueta"]) . $obliga . '</td>';
+					$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '"><td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this -> codifica($campos[$h]["etiqueta"]) . $obliga . '</td>';
 					$parametros = $this -> idformato . "," . $campos[$h]["idcampos_formato"];
 					$texto .= $this -> arma_funcion($nombre_func, $parametros, $accion) . "</tr>";
 					array_push($fun_campos, $nombre_func);
 				} else {
 					if ($accion == 'adicionar')
 						$valor = '<?php echo(validar_valor_campo(' . $campos[$h]["idcampos_formato"] . ')); ? >';
-					elseif ($accion == "editar") {/*
-						 * if($formato[0]["item"])
-						 * $valor="<?php echo(mostrar_valor_campo('".$campos[$h]["nombre"]."',$this->idformato,$"."_REQUEST['item'])); ? >";
-						 * else
-						 */
+					elseif ($accion == "editar") {
 						$valor = "<?php echo(mostrar_valor_campo('" . $campos[$h]["nombre"] . "',$this->idformato,$" . "_REQUEST['iddoc'])); ? >";
 					}
 					switch ($campos[$h]["etiqueta_html"]) {
@@ -869,9 +663,6 @@ class GenerarFormato {
 							$texto .= '<td bgcolor="#F5F5F5">' . $this -> arma_funcion("genera_campo_listados_editar", $this -> idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . '</td></tr>';
 							break;
 						case "dependientes" :
-							/*parametros:
-							 nombre del select padre; sql select padre| nombre del select hijo; sql select hijo....
-							 (ej: departamento;select iddepartamento as id,nombre from departamento order by nombre| municipio; select idmunicipio as id,nombre from municipio where departamento_iddepartamento=)*/
 							$parametros = explode("|", $campos[$h]["valor"]);
 							if (count($parametros) < 2)
 								alerta_formatos("Por favor verifique los parametros de configuracion de su select dependiente " . $campos[$h]["etiqueta"]);
@@ -1258,7 +1049,6 @@ class GenerarFormato {
 				}
 				array_push($listado_campos, "'" . $campos[$h]["nombre"] . "'");
 			}
-			// ******************************************************************************************
 			if ($formato[0]["item"] && $accion == "adicionar") {
 				$texto .= '<tr><td class="encabezado">ACCION A SEGUIR LUEGO DE GUARDAR</td><td ><input type="radio" name="opcion_item" id="opcion_item1" value="adicionar">Adicionar otro&nbsp;&nbsp;<input type="radio" id="opcion_item2" name="opcion_item" value="terminar" checked>Terminar</td></tr>';
 			}
@@ -1315,7 +1105,7 @@ class GenerarFormato {
 					$texto .= $this -> arma_funcion($funciones[$i]["nombre_funcion"], $parametros, $accion);
 				}
 			}
-			// ******************************************************************************************
+
 			$campo_descripcion = busca_filtro_tabla("", "campos_formato", "formato_idformato=" . $this -> idformato . " AND acciones LIKE '%p%'", "", $conn);
 			$valor1 = extrae_campo($campo_descripcion, "idcampos_formato", "U");
 			$valor = implode(",", $valor1);
@@ -1490,18 +1280,6 @@ $.ajax({url: '../librerias/validar_unico.php',
 		// die();
 	}
 
-	/*
-	 * <Clase>
-	 * <Nombre>crear_formato_buscar</Nombre>
-	 * <Parametros>$idformato:id del formato;$accion:buscar</Parametros>
-	 * <Responsabilidades>crear la interface para realizar las busquedas sobre los formatos<Responsabilidades>
-	 * <Notas></Notas>
-	 * <Excepciones></Excepciones>
-	 * <Salida></Salida>
-	 * <Pre-condiciones><Pre-condiciones>
-	 * <Post-condiciones><Post-condiciones>
-	 * </Clase>
-	 */
 	public function crear_formato_buscar($idformato, $accion) {
 		global $sql, $conn;
 		$datos_detalles["numcampos"] = 0;
@@ -1541,8 +1319,7 @@ $.ajax({url: '../librerias/validar_unico.php',
 			$obliga = "";
 			$adicionales = "";
 			$campos = busca_filtro_tabla("*", "campos_formato A", "A.acciones like '%" . $accion[0] . "%' and A.formato_idformato=" . $idformato, "orden ASC", $conn);
-			// funciones creadas para el formato, pero que corresponden a nombres de campos
-			// print_r($campos);die();
+
 			$fun_campos = array();
 			for ($h = 0; $h < $campos["numcampos"]; $h++) {
 				$saltar_campo = false;
@@ -1551,7 +1328,7 @@ $.ajax({url: '../librerias/validar_unico.php',
 				elseif ($campos[$h]["etiqueta_html"] == "textarea")
 					$textareas = 1;
 				$obliga = "";
-				// ******************** validaciones *****************
+
 				$adicionales = "";
 				$longitud = busca_filtro_tabla("valor", "caracteristicas_campos", "tipo_caracteristica ='maxlength' and idcampos_formato=" . $campos[$h]["idcampos_formato"], "", $conn);
 				if ($longitud["numcampos"]) {
@@ -1626,9 +1403,6 @@ $.ajax({url: '../librerias/validar_unico.php',
 							$texto .= '<td bgcolor="#F5F5F5">' . $this -> arma_funcion("genera_campo_listados_editar", $idformato . "," . $campos[$h]["idcampos_formato"], 'buscar') . '</td></tr>';
 							break;
 						case "dependientes" :
-							/*parametros:
-							 nombre del select padre; sql select padre| nombre del select hijo; sql select hijo....
-							 (ej: departamento;select iddepartamento as id,nombre from departamento order by nombre| municipio; select idmunicipio as id,nombre from municipio where departamento_iddepartamento=)*/
 							$parametros = explode("|", $campos[$h]["valor"]);
 							if (count($parametros) < 2)
 								alerta_formatos("Por favor verifique los parametros de configuracion de su select dependiente " . $campos[$h]["etiqueta"]);
@@ -1640,11 +1414,6 @@ $.ajax({url: '../librerias/validar_unico.php',
 							}
 							break;
 						case "autocompletar" :
-							/* parametros: campos a mostrar separados por comas; campo a guardar en el hidden; tabla
-							 ej: nombres,apellidos;idfuncionario;funcionario
-
-							 Queda pendiente La parte de la busqueda.
-							 */
 							$texto .= '<tr>
                    <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this -> codifica($campos[$h]["etiqueta"]) . $obliga . '</td>' . generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]) . '
                    <td bgcolor="#F5F5F5">';
@@ -1674,11 +1443,6 @@ $.ajax({url: '../librerias/validar_unico.php',
 							 arreglo[6] Tipo de arbol 0=>funcionarios 1=>series 2=>dependencias
 							 */
 							$arreglo = explode(";", $campos[$h]["valor"]);
-							// print_r($arreglo);
-							/*
-							 * print_r($campos[$h]);
-							 * die("<br />".$campos[$h]["nombre"]."<br />".$campos[$h]["valor"]);
-							 */
 							if (isset($arreglo) && $arreglo[0] != "") {
 								$ruta = "\"" . $arreglo[0] . "\"";
 							} else {
@@ -1836,17 +1600,10 @@ $.ajax({url: '../librerias/validar_unico.php',
 				}
 				array_push($listado_campos, "'" . $campos[$h]["nombre"] . "'");
 			}
-			// die();
-			// ******************************************************************************************
 			$wheref = "(A.formato LIKE '" . $idformato . "' OR A.formato LIKE '%," . $idformato . ",%' OR A.formato LIKE '%," . $idformato . "' OR A.formato LIKE '" . $idformato . ",%') AND A.acciones LIKE '%" . strtolower($accion[0]) . "%' ";
-			/*
-			 * if(count($listado_campos)){
-			 * $wheref.="AND nombre_funcion NOT IN(".implode(",",$listado_campos).")";
-			 * }
-			 */
+
 			$funciones = busca_filtro_tabla("*", "funciones_formato A", $wheref, " idfunciones_formato asc", $conn);
-			// print_r($funciones);
-			// die();
+
 			for ($i = 0; $i < $funciones["numcampos"]; $i++) {
 				$ruta_orig = "";
 				// saco el primer formato de la lista de la funcion (formato inicial)
@@ -1887,7 +1644,6 @@ $.ajax({url: '../librerias/validar_unico.php',
 					$texto .= $this -> arma_funcion($funciones[$i]["nombre_funcion"], $parametros, $accion);
 				}
 			}
-			// ******************************************************************************************
 			$campo_descripcion = busca_filtro_tabla("", "campos_formato", "formato_idformato=" . $idformato . " AND acciones LIKE '%p%'", "", $conn);
 			$valor1 = extrae_campo($campo_descripcion, "idcampos_formato", "U");
 			$valor = implode(",", $valor1);
@@ -1984,18 +1740,6 @@ $.ajax({url: '../librerias/validar_unico.php',
 		}
 	}
 
-	/*
-	 * <Clase>
-	 * <Nombre>generar_condicion</Nombre>
-	 * <Parametros>$nombre:nombre del campo</Parametros>
-	 * <Responsabilidades>Crea un select para que se pueda elegir si la condici�n sobre el campo especificado es de obligatorio cumplimiento en la busqueda o no<Responsabilidades>
-	 * <Notas>usado para la pantalla de busqueda del formato</Notas>
-	 * <Excepciones></Excepciones>
-	 * <Salida></Salida>
-	 * <Pre-condiciones><Pre-condiciones>
-	 * <Post-condiciones><Post-condiciones>
-	 * </Clase>
-	 */
 	function generar_condicion($nombre) {
 		$texto = '<td class="encabezado">&nbsp;';
 		$texto .= '<select name="condicion_' . $nombre . '" id="condicion_' . $nombre . '">';
@@ -2005,18 +1749,6 @@ $.ajax({url: '../librerias/validar_unico.php',
 		return ($texto);
 	}
 
-	/*
-	 * <Clase>
-	 * <Nombre>generar_comparacion</Nombre>
-	 * <Parametros>$tipo:tipo de campo sobre el que se va a hacer la comparacion;$nombre:nombre del campo</Parametros>
-	 * <Responsabilidades>genera un listado con las opciones de comparaci�n posibles seg�n el tipo de campo<Responsabilidades>
-	 * <Notas>usado para la pantalla de busqueda del formato</Notas>
-	 * <Excepciones></Excepciones>
-	 * <Salida></Salida>
-	 * <Pre-condiciones><Pre-condiciones>
-	 * <Post-condiciones><Post-condiciones>
-	 * </Clase>
-	 */
 	function generar_comparacion($tipo, $nombre) {
 		$listado_like = array("Similar" => "LIKE|%|%", "Inicia Con" => "LIKE|%|@", "Finaliza Con" => "LIKE|@|%");
 		$listado_compara = array("Igual" => "=|@|@", "Menor" => "-|@|@", "Mayor" => "+|@|@", "Diferente" => "!|@|@");
@@ -2047,20 +1779,6 @@ $.ajax({url: '../librerias/validar_unico.php',
 		return ($texto);
 	}
 
-	/*
-	 * <Clase>
-	 * <Nombre></Nombre>
-	 * <Parametros>cad:cadena con las rutas relativas de los archivos a incluir separadas por comas;
-	 * tipo:Tipo de libreria a incluir librerias->php, javascript->js,estilos->css;
-	 * eval:Si debe crear el archivo o no</Parametros>
-	 * <Responsabilidades>Genera la cadena que se necesita incluir los archivos especificados<Responsabilidades>
-	 * <Notas></Notas>
-	 * <Excepciones></Excepciones>
-	 * <Salida>Cadena de texto</Salida>
-	 * <Pre-condiciones><Pre-condiciones>
-	 * <Post-condiciones><Post-condiciones>
-	 * </Clase>
-	 */
 	private function incluir($cad, $tipo, $eval = 0) {
 		$includes = "";
 		$lib = explode(",", $cad);
@@ -2079,10 +1797,8 @@ $.ajax({url: '../librerias/validar_unico.php',
 				break;
 			default :
 				return ("");
-				// retorna un vacio si no existe el tipo
 				break;
 		}
-		// file_put_contents("debug.txt", "\nLibreria: $cad :: $tipo", FILE_APPEND);
 
 		for ($j = 0; $j < count($lib); $j++) {
 			$pos = array_search($texto1 . $lib[$j] . $texto2, $this -> incluidos);
@@ -2100,24 +1816,9 @@ $.ajax({url: '../librerias/validar_unico.php',
 				array_push($this -> incluidos, $texto1 . $lib[$j] . $texto2);
 			}
 		}
-		/*print_r($cad); echo "<br>";
-		 print_r($tipo); echo "<br>";
-		 print_r($includes);die("<---");*/
 		return ($includes);
 	}
 
-	/*
-	 * <Clase>
-	 * <Nombre>incluir_libreria</Nombre>
-	 * <Parametros>$nombre:nombre del archivo;$tipo:tipo de archivo php, js, css</Parametros>
-	 * <Responsabilidades>Crea la cadena necesaria para incluir un archivo que se encuentre en la carpeta formatos/librerias<Responsabilidades>
-	 * <Notas></Notas>
-	 * <Excepciones></Excepciones>
-	 * <Salida></Salida>
-	 * <Pre-condiciones><Pre-condiciones>
-	 * <Post-condiciones><Post-condiciones>
-	 * </Clase>
-	 */
 	private function incluir_libreria($nombre, $tipo) {
 		$includes = "";
 		if (!is_file(FORMATOS_SAIA . "librerias/" . $nombre)) {
@@ -2129,18 +1830,6 @@ $.ajax({url: '../librerias/validar_unico.php',
 		return ($includes);
 	}
 
-	/*
-	 * <Clase>
-	 * <Nombre>arma_funcion</Nombre>
-	 * <Parametros>$nombre:nombre de la funci�n;$parametros:parametros que se le deben pasar;$accion:formato al cual corresponde (adicionar,editar,buscar)</Parametros>
-	 * <Responsabilidades>Crea la cadena de texto necesaria para hacer el llamado a la funci�n especificada<Responsabilidades>
-	 * <Notas></Notas>
-	 * <Excepciones></Excepciones>
-	 * <Salida></Salida>
-	 * <Pre-condiciones><Pre-condiciones>
-	 * <Post-condiciones><Post-condiciones>
-	 * </Clase>
-	 */
 	private function arma_funcion($nombre, $parametros, $accion) {
 		if ($parametros != "" && $accion != "adicionar" && $accion != 'buscar')
 			$parametros .= ",";
@@ -2156,34 +1845,20 @@ $.ajax({url: '../librerias/validar_unico.php',
 		return ($texto);
 	}
 
-	/*
-	 * <Clase>
-	 * <Nombre>generar_formato</Nombre>
-	 * <Parametros>$idformato:id del formato</Parametros>
-	 * <Responsabilidades>Verifica que las funciones y campos usados en el formato se encuentren todos previamente definidos y configurados<Responsabilidades>
-	 * <Notas></Notas>
-	 * <Excepciones></Excepciones>
-	 * <Salida></Salida>
-	 * <Pre-condiciones><Pre-condiciones>
-	 * <Post-condiciones><Post-condiciones>
-	 * </Clase>
-	 */
 	private function generar_formato() {
-		global $sql, $conn, $ruta_db_superior;
+		global $conn;
 		$formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $this -> idformato, "", $conn);
 		$encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["encabezado"] . "'", "", $conn);
 
 		$data = "adicionar_" . $formato[0]['nombre'] . ".php
-editar_" . $formato[0]['nombre'] . ".php
-buscar_" . $formato[0]['nombre'] . ".php
-buscar_" . $formato[0]['nombre'] . "2.php
-mostrar_" . $formato[0]['nombre'] . ".php
-detalles_mostrar_" . $formato[0]['nombre'] . ".php";
+	editar_" . $formato[0]['nombre'] . ".php
+	buscar_" . $formato[0]['nombre'] . ".php
+	mostrar_" . $formato[0]['nombre'] . ".php
+	detalles_mostrar_" . $formato[0]['nombre'] . ".php";
+
 		if (intval($formato[0]["pertenece_nucleo"]) == 0) {
-			// Ignorar todo el contenido de la carpeta
 			$data = "*";
 		}
-		// file_put_contents($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/.gitignore", $data);
 		$fp = fopen(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/.gitignore", 'w+');
 		fwrite($fp, $data);
 		fclose($fp);
@@ -2195,10 +1870,12 @@ detalles_mostrar_" . $formato[0]['nombre'] . ".php";
 
 		if ($formato["numcampos"]) {
 			$texto = $formato[0]["cuerpo"];
-			if ($encabezado["numcampos"])
+			if ($encabezado["numcampos"]) {
 				$texto .= $encabezado[0][0];
-			if ($pie["numcampos"])
+			}
+			if ($pie["numcampos"]) {
 				$texto .= $pie[0][0];
+			}
 			$texto = str_replace("listado_detalles_", "id", $texto);
 			$resultado = preg_match_all('({\*([a-z]+[0-9]*[_]*[a-z]*[0-9]*)+\*})', $texto, $regs);
 			$campos = array_unique($regs[0]);
@@ -2218,9 +1895,7 @@ detalles_mostrar_" . $formato[0]['nombre'] . ".php";
 				sort($funciones);
 
 				$lcampos = busca_filtro_tabla("*", "funciones_formato A", "A.nombre IN('" . implode("','", $funciones) . "')", "", $conn);
-
 				for ($i = 0; $i < $lcampos["numcampos"]; $i++) {
-
 					array_push($campos_editar, $lcampos[$i]["idfunciones_formato"]);
 					$formatos = explode(",", $lcampos[$i]["formato"]);
 					$eval = in_array($this -> idformato, $formatos);
@@ -2240,8 +1915,9 @@ detalles_mostrar_" . $formato[0]['nombre'] . ".php";
 				}
 				$campos_adicionar = array_diff($campos, $campos_edit);
 				sort($campos_adicionar);
-			} else
+			} else {
 				alerta_formatos("El formato mostrar no posee Parametros si esta seguro continue con el Proceso de lo contrario haga Click en Listar Formato y Luego Editelo");
+			}
 		}
 		$tadd = "";
 		$ted = "";
@@ -2253,8 +1929,10 @@ detalles_mostrar_" . $formato[0]['nombre'] . ".php";
 			alerta_formatos("Existen otros Formatos Vinculados");
 		}
 		$adicionales = "";
-		if (@$_REQUEST["pantalla"] == "tiny")
+		if (@$_REQUEST["pantalla"] == "tiny") {
 			$adicionales = "&pantalla=tiny";
+		}
+
 		$redireccion = "formatoview.php?idformato=" . $this -> idformato . $adicionales;
 		if (usuario_actual('login') == 'cerok') {
 			$redireccion = "funciones_formatoadd.php?adicionar=" . $tadd . "&editar=" . $ted . "&idformato=" . $this -> idformato . $adicionales;

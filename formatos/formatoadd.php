@@ -1,7 +1,4 @@
-<?php session_start(); ?>
-<?php ob_start(); ?>
 <?php
-
 $max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
 while($max_salida > 0) {
@@ -11,6 +8,8 @@ while($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
+
+include_once ($ruta_db_superior . "db.php");
 
 // Initialize common variables
 $x_idformato = Null;
@@ -48,16 +47,14 @@ if(isset($_REQUEST["consultar_contador"])) {
 	consultar_contador();
 	die();
 }
-?>
-<?php
 
-include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "formatos/librerias/header_formato.php");
 include_once ($ruta_db_superior . "formatos/librerias/funciones.php");
 include_once ($ruta_db_superior . "phpmkrfn.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "librerias/funciones.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+
 $validar_enteros=array("idcontador","x_idformato");
 desencriptar_sqli('form_info'); 
 echo(librerias_jquery());
@@ -247,23 +244,7 @@ function actualizar_contador(valor)
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Formato
 					Padre</span></td>
 			<td bgcolor="#F5F5F5">
-				<!--span class="phpmaker">
-        <?php
-								$formatos = busca_filtro_tabla("idformato,nombre,etiqueta", "formato A", "idformato<>" . $x_idformato, "nombre DESC", $conn);
-								if($formatos["numcampos"]) {
-									$inicio = '<SELECT name="x_cod_padre"><OPTION value="0">---Pertenece a la ra&iacute;z---</OPTION>';
-									$fin = '</SELECT>';
-								}
-								for($i = 0; $i < $formatos["numcampos"]; $i++) {
-									$check = "";
-									if($formatos[$i]["idformato"] == $x_cod_padre) {
-										$check = "SELECTED";
-									}
-									$inicio .= '<OPTION value="' . $formatos[$i]["idformato"] . '" ' . $check . ' >' . $formatos[$i]["etiqueta"] . '</OPTION>';
-								}
-								echo ($inicio . $fin);
-								?>
-      </span-->
+
 				<div id="esperando_formato">
 					<img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"
 						alt="">
@@ -345,7 +326,7 @@ function actualizar_contador(valor)
 
 $x_contador_idcontadorList = "<select name=\"x_contador_idcontador\" id=\"x_contador_idcontador\" onchange=\"actualizar_contador(this.value)\">";
 $x_contador_idcontadorList .= "<option value='0'>Crear Contador</option>";
-$sSqlWrk = "SELECT DISTINCT idcontador, nombre FROM contador" . " ORDER BY nombre Asc";
+$sSqlWrk = "SELECT DISTINCT idcontador, nombre FROM contador ORDER BY nombre Asc";
 $rswrk = phpmkr_query($sSqlWrk, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSqlWrk);
 if($rswrk) {
 	$rowcntwrk = 0;
@@ -384,12 +365,7 @@ echo $x_contador_idcontadorList;
 								?>
       </span></td>
 		</tr>
-		<!--tr>
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Tabla en la Base de Datos</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="text" name="x_tabla" id="x_tabla" value="<?php echo htmlspecialchars(@$x_tabla) ?>">
-</span></td>
-	</tr-->
+
 		<tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">librer&iacute;as</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker"> <input type="text"
@@ -577,20 +553,8 @@ echo $x_contador_idcontadorList;
 
 	</p>
 </form>
-
-
-
-
-<?php include ("footer.php")?>
-<?php
-// //phpmkr_db_close($conn);
-?>
 <?php
 
-// -------------------------------------------------------------------------------
-// Function LoadData
-// - Load Data based on Key Value sKey
-// - Variables setup: field variables
 function LoadData($sKey, $conn) {
 	global $enter2tab, $x_autoguardado, $x_mostrar_pdf, $x_item, $x_idformato, $x_nombre, $x_etiqueta, $x_contador_idcontador, $x_ruta_mostrar, $x_ruta_editar, $x_ruta_adicionar, $x_librerias, $x_encabezado, $x_cuerpo, $x_pie_pagina, $x_margenes, $x_orientacion, $x_papel, $x_exportar, $x_tabla, $x_detalle, $x_cod_padre, $x_tipo_edicion, $x_serie_idserie, $x_banderas, $x_font_size, $x_firma_digital, $x_fk_categoria_formato, $x_flujo_idflujo, $x_funcion_predeterminada, $x_pertenece_nucleo;
 	$sKeyWrk = "" . addslashes($sKey) . "";
@@ -649,13 +613,7 @@ function LoadData($sKey, $conn) {
 	phpmkr_free_result($rs);
 	return $LoadData;
 }
-?>
-<?php
 
-// -------------------------------------------------------------------------------
-// Function AddData
-// - Add Data
-// - Variables used: field variables
 function AddData($conn) {
 	global $enter2tab, $x_autoguardado, $x_mostrar_pdf, $x_item, $x_idformato, $x_nombre, $x_etiqueta, $x_contador_idcontador, $x_ruta_mostrar, $x_ruta_editar, $x_ruta_adicionar, $x_librerias, $x_encabezado, $x_cuerpo, $x_pie_pagina, $x_margenes, $x_orientacion, $x_papel, $x_exportar, $x_tabla, $x_detalle, $x_cod_padre, $x_serie_idserie, $x_banderas, $x_font_size, $x_mostrar, $x_tipo_edicion, $x_firma_digital, $x_fk_categoria_formato, $x_flujo_idflujo, $x_funcion_predeterminada, $x_paginar, $x_pertenece_nucleo;
 
@@ -1029,46 +987,59 @@ function vincular_campo_anexo($idformato) {
 	phpmkr_query($campo);
 }
 
-function crear_modulo_formato($idformato) {
+function crear_modulo_formato($idformato) {//Esta funcion es la misma que en formatoedit.php =>actualizar_modulo_formato
 	global $conn;
-	$datos_formato = busca_filtro_tabla("nombre,etiqueta,cod_padre,nombre_tabla,ruta_mostrar", "formato", "idformato=" . $idformato, "", $conn);
+	$datos_formato = busca_filtro_tabla("nombre,etiqueta,cod_padre,nombre_tabla,ruta_mostrar,ruta_adicionar", "formato", "idformato=" . $idformato, "", $conn);
 	$modulo_formato = busca_filtro_tabla("", "modulo", "nombre = 'modulo_formatos'", "", $conn);
-	if($modulo_formato["numcampos"]) {
+	if ($modulo_formato["numcampos"]) {
 		$submodulo_formato = busca_filtro_tabla("", "modulo", "nombre ='" . $datos_formato[0]["nombre"] . "'", "", $conn);
-		if(!$submodulo_formato["numcampos"]) {
+		if (!$submodulo_formato["numcampos"]) {
 			$padre = busca_filtro_tabla("idmodulo", "formato A, modulo B", "idformato=" . $datos_formato[0]["cod_padre"] . " AND lower(A.nombre)=(B.nombre)", "", $conn);
-			if($padre["numcampos"] > 0) {
+			if ($padre["numcampos"] > 0) {
 				$papa = $padre[0]["idmodulo"];
 			} else {
 				$papa = $modulo_formato[0]["idmodulo"];
 			}
-			$sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda,busqueda) VALUES ('" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','" . $datos_formato[0]["etiqueta"] . "','" . FORMATOS_CLIENTE . $datos_formato[0]["ruta_mostrar"] . "','centro','" . $papa . "','1','Permite administrar el formato " . $datos_formato[0]["etiqueta"] . ".',1)";
-
+			$sql = "INSERT INTO modulo(permiso_admin,pertenece_nucleo,busqueda,nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES (0,0,'1','" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','" . $datos_formato[0]["etiqueta"] . "','".FORMATOS_CLIENTE.$datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "','centro','" . $papa . "','1','Permite administrar el formato " . $datos_formato[0]["etiqueta"] . ".')";
 			guardar_traza($sql, $datos_formato[0]["nombre_tabla"]);
 			phpmkr_query($sql, $conn);
 			$modulo_id = phpmkr_insert_id();
-			$sql = "INSERT INTO permiso(funcionario_idfuncionario,modulo_idmodulo) VALUES('" . usuario_actual("id") . "'," . $modulo_id . ")";
+			$sql = "INSERT INTO permiso(funcionario_idfuncionario,modulo_idmodulo) VALUES('" . $_SESSION["idfuncionario"] . "'," . $modulo_id . ")";
 			guardar_traza($sql, $datos_formato[0]["nombre_tabla"]);
 			phpmkr_query($sql, $conn);
 		} else {
 			$padre = busca_filtro_tabla("idmodulo", "formato A, modulo B", "idformato=" . $datos_formato[0]["cod_padre"] . " AND lower(A.nombre)=(B.nombre)", "", $conn);
-			if($padre["numcampos"] > 0) {
+			if ($padre["numcampos"] > 0) {
 				$papa = $padre[0]["idmodulo"];
 			} else {
 				$papa = $modulo_formato[0]["idmodulo"];
 			}
-			$sql = "update modulo set nombre='" . $datos_formato[0]["nombre"] . "',etiqueta='" . $datos_formato[0]["etiqueta"] . "',cod_padre='" . $papa . "' where idmodulo=" . $submodulo_formato[0]["idmodulo"];
+			$sql = "update modulo set tipo='secundario',nombre='" . $datos_formato[0]["nombre"] . "',etiqueta='" . $datos_formato[0]["etiqueta"] . "',cod_padre='" . $papa . "',enlace='". FORMATOS_CLIENTE. $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "' where idmodulo=" . $submodulo_formato[0]["idmodulo"];
 			guardar_traza($sql, $datos_formato[0]["nombre_tabla"]);
 			phpmkr_query($sql, $conn);
 		}
 	}
 	$modulo_crear = busca_filtro_tabla("", "modulo", "nombre = 'creacion_formatos'", "", $conn);
-	if($modulo_crear["numcampos"]) {
+	if ($modulo_crear["numcampos"]) {
 		$submodulo_formato = busca_filtro_tabla("", "modulo", "nombre = 'crear_" . $datos_formato[0]["nombre"] . "'", "", $conn);
-		if(!$submodulo_formato["numcampos"]) {
-			$sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES ('crear_" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','Crear " . $datos_formato[0]["etiqueta"] . "','" . FORMATOS_CLIENTE . $datos_formato[0]["ruta_adicionar"] . "','centro','" . $modulo_crear[0]["idmodulo"] . "','1','Permite crear " . $datos_formato[0]["etiqueta"] . ".')";
-			// /die($sql);
+		$padre = busca_filtro_tabla("idmodulo", "formato A, modulo B", "idformato=" . $datos_formato[0]["cod_padre"] . " AND lower(" . concatenar_cadena_sql(array("'crear_'", "A.nombre")) . ")=(B.nombre)", "", $conn);
+		if (!$submodulo_formato["numcampos"]) {
+			if ($padre["numcampos"] > 0) {
+				$papa = $padre[0]["idmodulo"];
+			} else {
+				$papa = $modulo_crear[0]["idmodulo"];
+			}
+			$sql = "INSERT INTO modulo(permiso_admin,pertenece_nucleo,busqueda,nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES (0,0,'1','crear_" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','Crear " . $datos_formato[0]["etiqueta"] . "','".FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_adicionar"] . "','centro','" . $modulo_crear[0]["idmodulo"] . "','1','Permite crear " . $datos_formato[0]["etiqueta"] . ".')";
 			guardar_traza($sql, $formato[0]["nombre_tabla"]);
+			phpmkr_query($sql, $conn);
+			$modulo_id = phpmkr_insert_id();
+		} else {
+			if ($padre["numcampos"] > 0) {
+				$papa = $padre[0]["idmodulo"];
+			} else {
+				$papa = $modulo_crear[0]["idmodulo"];
+			}
+			$sql = "update modulo set tipo='secundario',nombre='crear_" . $datos_formato[0]["nombre"] . "',etiqueta='Crear " . $datos_formato[0]["etiqueta"] . "',cod_padre='" . $papa . "',enlace='".FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_adicionar"] . "' where idmodulo=" . $submodulo_formato[0]["idmodulo"];
 			phpmkr_query($sql, $conn);
 		}
 	}
