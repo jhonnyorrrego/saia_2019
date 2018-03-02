@@ -1,6 +1,0 @@
-<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../librerias/funciones_formatos.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><body bgcolor="#F5F5F5"><form name="formulario_formato" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td class="encabezado_list" height="23" colspan="2">FORMATOS CALIDAD</td></tr><tr><td colspan='2'><?php submit_formato(40,$_REQUEST['iddoc']);?><input type="hidden" name="formato" value="40"></td></tr></table></form></body><script>
-  var alto=window.document.body.scrollWidth;
-parent.document.getElementById(window.name).width=alto+"px"; 
-var alto=window.document.body.scrollHeight+window.document.body.offsetHeight;
-parent.document.getElementById(window.name).height=alto+5+"px";                    
- </script>

@@ -13,11 +13,8 @@ include_once($ruta_db_superior."librerias_saia.php");
 
 function mostrar_valor_control($idformato,$iddoc){
 	global $conn;	
-	
 	$control_riesgos=busca_filtro_tabla("B.*","ft_acciones_riesgo A, ft_control_riesgos B","A.acciones_control=B.idft_control_riesgos AND A.documento_iddocumento=".$iddoc,"",$conn);
-	
-	echo(codifica_encabezado(html_entity_decode($control_riesgos[0]['descripcion_control'])));
-	
+	echo(html_entity_decode($control_riesgos[0]['descripcion_control']));
 }
 
 function fecha_acciones_riesgo($idformato,$iddoc){
@@ -35,7 +32,7 @@ function fecha_accion_cumplimiento($idformato,$iddoc){
 }
 
 function control_funcion($idformato,$iddoc){
-
+	global $conn;
 	if(@$_REQUEST["padre"]!=''){
 		$padre=$_REQUEST["padre"];
 	}
@@ -50,12 +47,8 @@ function control_funcion($idformato,$iddoc){
 	for($i=0;$i<$valoracion["numcampos"];$i++){
 		$selected='';
 		if($accion[0]["acciones_control"]==$valoracion[$i]["idft_control_riesgos"])$selected='selected';
-		$cadena_descripcion=ucfirst(strip_tags((html_entity_decode($valoracion[$i]["descripcion_control"]))));
-		if(strlen ( $cadena_descripcion )>70){
-		    $cadena_descripcion=substr( $cadena_descripcion , 0 , 70 ).'...';
-		}
-		$select.='<option value="'.$valoracion[$i]["idft_control_riesgos"].'" '.$selected.'>'.$cadena_descripcion.'</option>';
-	}//string substr ( string $string , int $start [, int $length ] )
+		$select.='<option value="'.$valoracion[$i]["idft_control_riesgos"].'" '.$selected.'>'.substr(ucfirst(strip_tags(decodifica_encabezado(html_entity_decode($valoracion[$i]["descripcion_control"])))),0,20).'</option>';
+	}
 	$select.='<option value="'.$valoracion[$i]["idft_control_riesgos"].'-1" '.$selected.'>Nuevo Control</option>';
 	$select.='</select>';
 	echo "<td>".$select."</td>";
@@ -65,7 +58,7 @@ function valor_control($idformato,$iddoc){
 	
 	$valor=busca_filtro_tabla("descripcion_control","ft_control_riesgos a","idft_control_riesgos=".$dato[0]["acciones_control"],"",$conn);
 	
-	echo strip_tags((html_entity_decode($valor[0]["descripcion_control"])));
+	echo strip_tags(decodifica_encabezado(html_entity_decode($valor[0]["descripcion_control"])));
 }
 function validar_entrada_acciones_riesgo($idformato,$iddoc){
 	global $conn, $ruta_db_superior;
@@ -167,8 +160,7 @@ $(document).ready(function(){
 function botones_acciones_riesgos($idformato, $iddoc){
   global $ruta_db_superior;
   
-  $riesgo = busca_filtro_tabla("a.documento_iddocumento","ft_riesgo_proceso a, ft_acciones_riesgo b","a.idft_riesgos_proceso=b.ft_riesgos_proceso AND b.documento_iddocumento=".$iddoc,"",$conn);  
-  
+  $riesgo = busca_filtro_tabla("a.documento_iddocumento","ft_riesgos_proceso a, ft_acciones_riesgo b","a.idft_riesgos_proceso=b.ft_riesgos_proceso AND b.documento_iddocumento=".$iddoc,"",$conn);  
   $ejecutor=busca_filtro_tabla("ejecutor","documento","iddocumento=".$iddoc,"",$conn);
   $area=busca_filtro_tabla("b.area_responsable","ft_acciones_riesgo a, ft_riesgos_proceso b","a.ft_riesgos_proceso=b.idft_riesgos_proceso and a.documento_iddocumento=".$iddoc,"",$conn);  
   $funcionario=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","iddependencia in (".$area[0]["area_responsable"].")","group by funcionario_codigo",$conn);
@@ -202,10 +194,7 @@ function botones_acciones_riesgos($idformato, $iddoc){
           iddocumento: '<?php echo($iddoc); ?>'      
         },
         success: function(){
-            
-            <?php $idformato_riesgos_proceso=busca_filtro_tabla("idformato","formato","nombre='riesgos_proceso'","",$conn);  ?>
-            
-         window.open("<?php echo($ruta_db_superior);?>/formatos/riesgos_proceso/mostrar_riesgos_proceso.php?iddoc=<?php echo($riesgo[0]["documento_iddocumento"]); ?>&idformato=<?php echo($idformato_riesgos_proceso[0]['idformato']); ?>","_self");
+         window.open("<?php echo($ruta_db_superior);?>/formatos/riesgos_proceso/mostrar_riesgos_proceso.php?iddoc=<?php echo($riesgo[0]["documento_iddocumento"]); ?>&idformato=327","_self");
          
           //redireccion: /formatos/riesgos_proceso/mostrar_riesgos_proceso.php?iddoc=116877&idformato=13
         }

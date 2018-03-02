@@ -1,2 +1,0 @@
-INSERT INTO documento(fecha,tipo_radicado,ejecutor,descripcion,serie,plantilla,numero,municipio_idmunicipio,estado,fecha_creacion) VALUES (DATE_FORMAT('2013-07-31 19:25:53','%Y-%m-%d %H:%i:%s'),37,'','Prueba 450',851,'PQR',0,544,'ACTIVO',DATE_FORMAT('2013-07-31 19:25:53','%Y-%m-%d %H:%i:%s'))    <br> -
-

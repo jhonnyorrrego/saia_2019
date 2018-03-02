@@ -207,7 +207,7 @@ $ok=@$_REQUEST["editar"];
     ?>
         
         
-    <img src="<?php echo($ruta_db_superior.$mapa_proceso[0]['ruta']); ?>" id="cropbox" border="0" usemap="#Map" />    
+    <!--<img src="<?php echo($ruta_db_superior.$mapa_proceso[0]['ruta']); ?>" id="cropbox" border="0" usemap="#Map" />-->    
     <!-- img src="mapa_proceso.jpg" id="cropbox" border="0" usemap="#Map" / -->
 		<map name="Map">
 		

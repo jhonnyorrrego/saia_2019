@@ -1,16 +1,19 @@
 <?php
 $max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
-while($max_salida>0){
-  if(is_file($ruta."db.php")){
-    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-  }
-  $ruta.="../";
-  $max_salida--;
+while($max_salida>0)
+{
+if(is_file($ruta."db.php"))
+{
+$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 }
+$ruta.="../";
+$max_salida--;
+}
+
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
-echo( librerias_jquery('1.7') );
+echo(librerias_notificaciones());
 
 
 function validar_formula_llenar(){
@@ -22,31 +25,31 @@ function validar_formula_llenar(){
   	if($('#nombre').val())
   	  validar_formula($('#nombre').val(),1);
   	else
-  	  alert("Por favor digite primero la formula.");
+  	  notificacion_saia('Por favor digite primero la formula.','error','',4000);
+  	  //alert("Por favor digite primero la formula.");
     });
     
+
     $("#nombre").blur(function(){	
     	var formula=$("#nombre").val();
 	    var pattern = /[A-Za-z]/;
 		if(pattern.test(formula)==false){
-			alert("La formula debe contener como minimo una variable");
+			notificacion_saia('La formula debe contener como minimo una variable','error','',4000);
+			//alert("La formula debe contener como minimo una variable");
 			$("#nombre").val("");
 		}
-    });    
+    });
     
   });
   </script>
 <?php
 }
 function validar_formula_mostrar($idformato,$iddocumento){
-    global $conn;
   $valor=busca_filtro_tabla("nombre","ft_formula_indicador","documento_iddocumento=$iddocumento","",$conn);
- // print_r($valor);die('<----aqui');
 ?>
   <div id='formula'></div>
-   
    <script>
-   $(document).ready(function() {
+   $().ready(function() {
   	validar_formula("<?php echo $valor[0][0];?>",2);
   });
 </script>
@@ -55,6 +58,7 @@ function validar_formula_mostrar($idformato,$iddocumento){
 ?>
 <script>
 function validar_formula(valor,opcion){
+	
   if(valor!=""){
     $.ajax({
     url: "probar_formulas.php",
@@ -64,9 +68,11 @@ function validar_formula(valor,opcion){
      {vector=retorno.split("|");
       if(opcion==1)
         {if(!isNaN(vector[1])&&vector[1]!="")
-    	     alert("La formula funciona correctamente.\nReemplazando todas las variables por 1: "+vector[2]+"="+vector[1]);
+        	notificacion_saia("La formula funciona correctamente.\nReemplazando todas las variables por 1: "+vector[2]+"="+vector[1],'success','',4000);
+    	     //alert("La formula funciona correctamente.\nReemplazando todas las variables por 1: "+vector[2]+"="+vector[1]);
     	   else
-           alert("Su formula tiene errores.\nReemplazando todas las variables por 1:  "+vector[2]+"="+vector[1]);  
+           		notificacion_saia("Su formula tiene errores.\nReemplazando todas las variables por 1:  "+vector[2]+"="+vector[1],'success','',4000);
+           //alert("Su formula tiene errores.\nReemplazando todas las variables por 1:  "+vector[2]+"="+vector[1]);  
         }
       else if(isNaN(vector[1])||vector[1]=="")  
         $("#formula").html("<font color='red'>Su f&oacute;rmula tiene errores</font>"+vector[1]);

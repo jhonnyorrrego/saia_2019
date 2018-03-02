@@ -47,10 +47,12 @@ if($formato["numcampos"] && @$_REQUEST["tipo"]!=5){
 }
 
 if(!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"]==1){
-  $codigo=usuario_actual("funcionario_codigo");
+  $codigo=$_SESSION["usuario_actual"];
   leido($codigo,$_REQUEST["iddoc"]);
-	include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
-	menu_principal_documento($_REQUEST["iddoc"],1);
+  if(!isset($_REQUEST["menu_principal_inactivo"])){
+		include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
+		menu_principal_documento($_REQUEST["iddoc"],1);
+  }
 }
 ?>
 <html>

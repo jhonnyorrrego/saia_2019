@@ -32,34 +32,37 @@ if($_REQUEST["iddoc"]){
           if($nom_col[$j]=="tiempo_seguimiento" || $nom_col[$j]=="tiempo_cumplimiento"){
             $valor=mostrar_valor_campo($nom_col[$j],$idformato_hallazgo_plan_mejoramiento[0]['idformato'],$datos[$i]["hallazgo_iddoc"],1);
             if($valor=='null'){
-              $valor='"ND"';
+              $valor='" "';
             }
             $texto1=str_replace('-','/',$valor);
           }  
           else if($nom_col[$j]=="secretarias"){
+          	
             $valor1=str_replace("&nbsp;","",htmlspecialchars_decode(str_replace(",",";",mostrar_valor_campo($nom_col[$j],$idformato_hallazgo_plan_mejoramiento[0]['idformato'],$datos[$i]["hallazgo_iddoc"],1))));
             $valor1=trim(strip_tags(html_entity_decode($valor1)));
             $valor1=str_replace("\n","",$valor1);
             $valor1=str_replace("'",'"',$valor1);
             $valor1=str_replace('"','""',$valor1);
             $j+=2;
-            $valor2=str_replace("&nbsp;","",htmlspecialchars_decode(str_replace(",",";",mostrar_valor_campo($nom_col[$j],$idformato_hallazgo_plan_mejoramiento[0]['idformato'],$datos[$i]["hallazgo_iddoc"],1))));
+            $valor2=str_replace("&nbsp;","",htmlspecialchars_decode(str_replace(",",";",procesos_vinculados_funcion2($datos[$i]["hallazgo_iddoc"]))));
             $valor2=trim(strip_tags(html_entity_decode($valor2)));
             $valor2=str_replace("\n","",$valor2);
             $valor2=str_replace("'",'"',$valor2);
             $valor2=str_replace('"','""',$valor2);
-            $texto1='"'.$valor1.",".$valor2.'"';
-          }
-          else{
+			//$valor2=ucfirst(strtolower(strip_tags(procesos_vinculados_funcion2($datos[$i]["hallazgo_iddoc"]))));
+            $texto1='"'.$valor1.", ".$valor2.'"';
+          }else{
+
             $texto1=str_replace("&nbsp;","",htmlspecialchars_decode(str_replace(",",";",mostrar_valor_campo($nom_col[$j],$idformato_hallazgo_plan_mejoramiento[0]['idformato'],$datos[$i]["hallazgo_iddoc"],1))));
-            $texto1=trim(strip_tags(html_entity_decode($texto1)));
+            $texto1=trim(strip_tags(decodifica_encabezado(html_entity_decode($texto1))));
             $texto1=str_replace("\n","",$texto1);
             $texto1=str_replace("'",'"',$texto1);
             $texto1=str_replace('"','""',$texto1);
             if($texto1=="" || $texto1=="null"){
-              $texto1="ND";           
+              $texto1=" ";           
             }
             $texto1='"'.$texto1.'"';
+			
           }
           if($j==1){
           	$consecutivo=busca_filtro_tabla("A.consecutivo_hallazgo","ft_hallazgo A,documento C","A.documento_iddocumento=C.iddocumento AND C.estado <>'ELIMINADO' AND C.estado<>'ANULADO' AND A.ft_plan_mejoramiento=".$plan[0]["idft_plan_mejoramiento"],"documento_iddocumento asc",$conn);
@@ -75,4 +78,28 @@ if($_REQUEST["iddoc"]){
   }
 }
 echo(trim(codifica_encabezado($texto)));
+
+
+function procesos_vinculados_funcion2($iddoc){
+  global $conn;
+  $datos=busca_filtro_tabla("procesos_vinculados","ft_hallazgo a","a.documento_iddocumento=".$iddoc,"",$conn);
+  $procesos=explode(",",$datos[0]["procesos_vinculados"]);
+  $cant=count($procesos);
+  $nombres=array();
+  for($i=0;$i<$cant;$i++){
+    if($procesos[$i]!=''){
+      if($procesos[$i][0]!='m'){
+        $proceso=busca_filtro_tabla("nombre","ft_proceso a","a.idft_proceso='".trim($procesos[$i])."'","",$conn);
+        $nombres[]=$proceso[0]["nombre"];
+      }
+      else{
+        $proceso=busca_filtro_tabla("nombre","ft_macroproceso_calidad a","a.idft_macroproceso_calidad='".str_replace("m","",trim($procesos[$i]))."'","",$conn);
+        $nombres[]=$proceso[0]["nombre"];
+      }
+    }
+  }
+  //$nombres=extrae_campo($proceso,"nombre");
+  return implode(", ",$nombres);
+  //return "";
+}
 ?>

@@ -1,6 +1,18 @@
 <?php
-include_once("../../db.php");
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0){
+	if(is_file($ruta."db.php")){
+		$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+	}
+	$ruta.="../";
+	$max_salida--;
+}
+include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_jquery("1.7"));
 include_once("../../header.php");
+
 
 $indicadores=busca_filtro_tabla("i.*, p.idft_proceso","ft_indicadores_calidad i,ft_proceso p","ft_proceso=idft_proceso and p.documento_iddocumento=".$_REQUEST["proceso"],"lower(i.nombre) asc",$conn);
 
@@ -23,24 +35,12 @@ $indicadores=busca_filtro_tabla("i.*, p.idft_proceso","ft_indicadores_calidad i,
 <br><br>
 <table width="100%" style="border-collapse:collapse" border="1">
 <tr class="encabezado_list">
-<td>Nombre del Indicador</td>
-<td>Fuente de Datos</td>
-<td>Planes Vinculados</td>
-<td>Periocidad</td>
-<td>Enero</td>
-<td>Febrero</td>
-<td>Marzo</td>
-<td>Abril</td>
-<td>Mayo</td>
-<td>Junio</td>
-<td>Julio</td>
-<td>Agosto</td>
-<td>Septiembre</td>
-<td>Octubre</td>
-<td>Noviembre</td>
-<td>Diciembre</td>
-<td>Gr&aacute;fico Cumplimiento</td>
-<td>Gr&aacute;fico Resultado</td>
+<td style="width:15%">Nombre del Indicador</td>
+<td style="width:15%">Fuente de Datos</td>
+<td style="width:15%">Periocidad</td>
+<td style="width:15%"><img id="anterior" class="cambiar_mes" style="cursor:pointer;" src="../../botones/general/anterior.png" border="0px"> <div id="mes">Enero</div> <img id="siguiente" class="cambiar_mes" style="cursor:pointer;" src="../../botones/general/siguiente.png" border="0px"></td>
+<td style="width:20%">Gr&aacute;fico Cumplimiento</td>
+<td style="width:20%">Gr&aacute;fico Resultado</td>
 </tr>
 <?php
 for($i=0;$i<$indicadores["numcampos"];$i++)
@@ -50,28 +50,14 @@ for($i=0;$i<$indicadores["numcampos"];$i++)
   
   echo "<tr>
 <td><a class='highslide' onclick='return hs.htmlExpand(this, { objectType: \"iframe\",width: 650, height:500,preserveContent:false } )' href='../indicadores_calidad/mostrar_indicadores_calidad.php?iddoc=".$indicadores[$i]["documento_iddocumento"]."'>".$indicadores[$i]["nombre"]."</a></td>
-<td>".html_entity_decode($indicadores[$i]["fuente_datos"])."</td>
-<td>";
-for($j=0;$j<$planes["numcampos"];$j++)
-  {echo "<a class='highslide' onclick='return hs.htmlExpand(this, { objectType: \"iframe\",width: 650, height:500,preserveContent:false } )' href='../plan_mejoramiento/mostrar_plan_mejoramiento.php?iddoc=".$planes[$j]["iddocumento"]."'>Plan ".$planes[$j]["numero"]."</a><br /><br />";
-  }
-echo "</td><td>";
+<td>".($indicadores[$i]["fuente_datos"])."</td>";
+
+echo "<td>";
 include_once("../librerias/funciones_generales.php");
 for($j=0;$j<$formulas["numcampos"];$j++)
   echo mostrar_valor_campo('periocidad',51,$formulas[$j]["documento_iddocumento"],1)." (".$formulas[$j]["nombre"].")<br /><br />";
 echo "</td>
-<td>".seguimientos_fecha("01",$indicadores[$i]["idft_indicadores_calidad"])."</td>
-<td>".seguimientos_fecha("02",$indicadores[$i]["idft_indicadores_calidad"])."</td>
-<td>".seguimientos_fecha("03",$indicadores[$i]["idft_indicadores_calidad"])."</td>
-<td>".seguimientos_fecha("04",$indicadores[$i]["idft_indicadores_calidad"])."</td>
-<td>".seguimientos_fecha("05",$indicadores[$i]["idft_indicadores_calidad"])."</td>
-<td>".seguimientos_fecha("06",$indicadores[$i]["idft_indicadores_calidad"])."</td>
-<td>".seguimientos_fecha("07",$indicadores[$i]["idft_indicadores_calidad"])."</td>
-<td>".seguimientos_fecha("08",$indicadores[$i]["idft_indicadores_calidad"])."</td>
-<td>".seguimientos_fecha("09",$indicadores[$i]["idft_indicadores_calidad"])."</td>
-<td>".seguimientos_fecha("10",$indicadores[$i]["idft_indicadores_calidad"])."</td>
-<td>".seguimientos_fecha("11",$indicadores[$i]["idft_indicadores_calidad"])."</td>
-<td>".seguimientos_fecha("12",$indicadores[$i]["idft_indicadores_calidad"])."</td>
+<td><div id='".$indicadores[$i]["idft_indicadores_calidad"]."'>".seguimientos_fecha("01",$indicadores[$i]["idft_indicadores_calidad"])."</div></td>
 <td>";
 $graficas=graficas_cumplimiento($formulas,$indicadores[$i]["documento_iddocumento"]);
 if($graficas<>"")
@@ -90,6 +76,62 @@ echo "</td>
   }
 ?>
 </table>
+<script>
+	
+	$(document).ready(function(){
+		var mes=1;
+		$(".cambiar_mes").click(function(){
+			
+			if($(this).attr("id")=="siguiente"){
+				if(mes==12){
+					mes=1;
+				}else{
+					mes++;
+				}
+				
+			}
+			if($(this).attr("id")=="anterior"){
+				if(mes==1){
+					mes=12;
+				}else{
+					mes--;
+				}
+			}
+
+				$.ajax({
+					async:false,
+					type:'POST',
+					url: "cambiar_mes_indicador.php",
+					dataType: "json",
+					data: {
+						tipo:$(this).attr("id"),
+						mes:mes,
+						proceso:"<?php echo($_REQUEST["proceso"]);?>",
+					},
+					success:function (data){					
+							$("#mes").html(data.mes);
+							
+							console.log(data);
+							$.each(data, function(i, item) {
+							    $("#"+i).html(item);
+							});
+							
+
+					}
+				});
+	
+			
+
+			
+			
+			
+			
+		});
+		
+	});
+	
+	
+</script>
 <?php
 include_once("../../footer.php");
 
@@ -120,7 +162,7 @@ function graficas_resultado($formulas,$indicador)
  $cadena="";
  for($i=0;$i<$formulas["numcampos"];$i++)
    {if(is_file("../indicadores_calidad/imagenes/resultado_".$indicador."_".$formulas[$i]["id"]."_2.png"))
-    $cadena.=$formulas[$i]["nombre"]."<br /><a class='highslide' onclick='return hs.htmlExpand(this, { objectType: \"iframe\",width: 650, height:400,preserveContent:false } )' href='".PROTOCOLO_CONEXION.RUTA_PDF."/formatos/indicadores_calidad/imagenes/resultado_".$indicador."_".$formulas[$i]["id"]."_2.png'><img src='".PROTOCOLO_CONEXION.RUTA_PDF."/formatos/indicadores_calidad/imagenes/resultado_".$indicador."_".$formulas[$i]["id"]."_2.png' width='300px' /></a><br />";
+    $cadena.=$formulas[$i]["nombre"]."<br /><a class='highslide' onclick='return hs.htmlExpand(this, { objectType: \"iframe\",width: 650, height:400,preserveContent:false } )' href='".PROTOCOLO_CONEXION.RUTA_PDF."/formatos/indicadores_calidad/imagenes/resultado_".$indicador."_".$formulas[$i]["id"]."_2.png'><img src='http://".RUTA_PDF."/formatos/indicadores_calidad/imagenes/resultado_".$indicador."_".$formulas[$i]["id"]."_2.png' width='300px' /></a><br />";
    }
  return($cadena);  
 }

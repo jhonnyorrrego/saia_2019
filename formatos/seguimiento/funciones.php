@@ -9,7 +9,7 @@ while ($max_salida > 0) {
   $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-ini_get('display_errors',true);
+
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 
 /*ADICIONAR*/
@@ -79,11 +79,11 @@ function notificar_seguimiento($idformato, $iddoc) {
   global $conn;
   $datos=busca_filtro_tabla("dp.numero,h.responsable_seguimiento,s.logros_alcanzados,s.porcentaje","ft_plan_mejoramiento p,documento dp,ft_hallazgo h,ft_seguimiento s","p.documento_iddocumento=dp.iddocumento and p.idft_plan_mejoramiento=h.ft_plan_mejoramiento and h.idft_hallazgo=s.ft_hallazgo and s.documento_iddocumento=".$iddoc,"",$conn);
   if($datos["numcampos"] && $datos[0]["responsable_seguimiento"]!=""){
-    $responsable=explode(",", $datos[0]["responsable"]);
+    $responsable=explode(",", $datos[0]["responsable_seguimiento"]);
     $mensaje="En la fecha ".date("d/m/Y")." se realizo el formato reporte de avance acciones del Radicado del Plan de Mejoramiento No. ".$datos[0]["numero"].", con la siguiente informacion:<br/><br/>
     <strong>AVANCE: </strong>".$datos[0]["porcentaje"]."<br/><br/>
-    <strong>LOGROS ALCANZADOS:</strong> ".html_entity_decode($datos[0]["logros_alcanzados"])."<br/><br/>";
-    enviar_mensaje("", $responsable, $mensaje, "e-interno", array(), "Notificacion Reporte de avance acciones");    
+    <strong>LOGROS ALCANZADOS:</strong> ".html_entity_decode($datos[0]["logros_alcanzados"])."<br/><br/>";     
+    enviar_mensaje("", "codigo",$responsable,"PRUEBA - Notificacion Reporte de avance acciones", $mensaje );    
   }
 }
 

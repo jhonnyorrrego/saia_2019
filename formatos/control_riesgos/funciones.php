@@ -12,6 +12,7 @@ $max_salida--;
 }
 
 include_once($ruta_db_superior."db.php");
+
 include_once($ruta_db_superior."librerias_saia.php");
 global $conn;
 
@@ -53,6 +54,54 @@ function llenar_orientacion($idformato,$iddoc){
 	global $conn, $ruta_db_superior;
 	?>
 	<script>
+	$(document).ready(function(){
+		$("#desc_herramienta").parent().parent().hide();
+		$('[name="anexar_herramienta[]"]').parent().parent().parent().hide();
+		$("#desc_documento").parent().parent().hide();
+		$('[name="anexar_documento[]"]').parent().parent().parent().hide();
+		$("#responsable_seg").parent().parent().hide();
+		$("#respon_seguimiento").parent().parent().hide();
+		$("#cual_frecuencia").parent().parent().hide();
+				
+		$('[name="herramienta_ejercer"]').change(function(){
+			if($(this).val()==1){
+				$("#desc_herramienta").parent().parent().show();
+				$('[name="anexar_herramienta[]"]').parent().parent().parent().show();
+			}else{
+				$("#desc_herramienta").parent().parent().hide();
+				$('[name="anexar_herramienta[]"]').parent().parent().parent().hide();
+			}
+		});
+		
+		$('[name="procedimiento_herram"]').change(function(){
+			if($(this).val()==1){
+				$("#desc_documento").parent().parent().show();
+				$('[name="anexar_documento[]"]').parent().parent().parent().show();
+			}else{
+				$("#desc_documento").parent().parent().hide();
+				$('[name="anexar_documento[]"]').parent().parent().parent().hide();
+			}
+		});
+		
+		$('[name="responsables_ejecuci"]').change(function(){
+			if($(this).val()==1){
+				$("#responsable_seg").parent().parent().show();
+				$("#respon_seguimiento").parent().parent().show();
+			}else{
+				$("#responsable_seg").parent().parent().hide();
+				$("#respon_seguimiento").parent().parent().hide();
+			}
+		});
+		
+		$('[name="frecuencia_ejecucion"]').change(function(){
+			if($(this).val()==1){
+				$("#cual_frecuencia").parent().parent().show();
+			}else{
+				$("#cual_frecuencia").parent().parent().hide();
+			}
+		});
+		
+	});
 	$('input[name$="tipo_control"]').click(function(){
 		
 		if($(this).val()=="1"){
@@ -139,17 +188,11 @@ function validar_tipo_riesgo($idformato, $iddoc){
 
 function botones_valoracion_riesgos($idformato, $iddoc){
   global $ruta_db_superior;
-
-  if(@$_REQUEST['tipo']!=5){
-   
+  if($_REQUEST['tipo']!=5){
   $control = busca_filtro_tabla("a.documento_iddocumento","ft_riesgo_proceso a, ft_control_riesgos b","a.idft_riesgos_proceso=b.ft_riesgos_proceso AND b.documento_iddocumento=".$iddoc,"",$conn);
   $ejecutor=busca_filtro_tabla("ejecutor","documento","iddocumento=".$iddoc,"",$conn);
  $area=busca_filtro_tabla("b.area_responsable","ft_control_riesgos a, ft_riesgos_proceso b","a.ft_riesgos_proceso=b.idft_riesgos_proceso and a.documento_iddocumento=".$iddoc,"",$conn);  
   $funcionario=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","iddependencia in (".$area[0]["area_responsable"].")","group by funcionario_codigo",$conn);
-	
-
-      
-  	
 		
 	if(usuario_actual("funcionario_codigo")==$ejecutor[0]["ejecutor"]){
 	  		$boton  = '<button type="button" id = "editar_valoracion_riesgo">Editar</button>';
@@ -181,17 +224,14 @@ function botones_valoracion_riesgos($idformato, $iddoc){
           iddocumento: '<?php echo($iddoc); ?>'      
         },
         success: function(result){
-        
-        <?php $idformato_riesgos_proceso=busca_filtro_tabla("idformato","formato","nombre='riesgos_proceso'","",$conn);  ?>    
-            
-        window.open("<?php echo($ruta_db_superior);?>/formatos/riesgos_proceso/mostrar_riesgos_proceso.php?iddoc=<?php echo($control[0]["documento_iddocumento"]); ?>&idformato=<?php echo($idformato_riesgos_proceso[0]['idformato']); ?>","_self");  
+        window.open("<?php echo($ruta_db_superior);?>/formatos/riesgos_proceso/mostrar_riesgos_proceso.php?iddoc=<?php echo($control[0]["documento_iddocumento"]); ?>&idformato=13","_self");  
         }
     });
   });
  });
 </script>
 <?php
-  }
+}
 }
 
 function registrar_edicion_documento($idformato, $iddoc){ 

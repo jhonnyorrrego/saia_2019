@@ -131,9 +131,17 @@ return true;
 <input type="text" name="x_tipo" id="x_tipo" size="30" maxlength="255" value="<?php echo htmlspecialchars(@$x_tipo) ?>">
 </span></td>
 	</tr>	
+	<tr>
+		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ENCRYPTAR VALOR</span></td>
+		<td bgcolor="#F5F5F5"><span class="phpmaker">
+			SI:<input type="radio" name="x_encrypt" id="x_encrypt1" value="1">
+			NO:<input type="radio" name="x_encrypt" id="x_encrypt2" value="0" checked="true"></span>
+		</td>
+		
+	</tr>
 </table>
 <p>
-<input type="text" name="x_encrypt" id="x_encrypt" value="<?php echo(@$x_encrypt); ?>">
+
 <input type="submit" name="Action" value="Editar">
 </form>
 <?php include ("footer.php") ?>

@@ -22,15 +22,22 @@ function editar_documento_responsable_direccion_control_interno($idformato,$iddo
 	
 		$enlace = '<a href="'.$ruta_db_superior.'formatos/monitoreo_revision/editar_monitoreo_revision.php?iddoc='.$iddoc.'&idformato='.$idformato.'" >Editar monitoreo y revision</a>';					
 					
-
+		/*if(usuario_actual("funcionario_codigo") == $direccion_control_interno[0]["funcionario_codigo"]){								echo($enlace);					
+		}*/
 		$ejecutor=busca_filtro_tabla("ejecutor","documento","iddocumento=".$iddoc,"",$conn);
 	
 	$area=busca_filtro_tabla("b.area_responsable","ft_monitoreo_revision a, ft_riesgos_proceso b","a.ft_riesgos_proceso=b.idft_riesgos_proceso and a.documento_iddocumento=".$iddoc,"",$conn);  
   $funcionario=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","iddependencia in (".$area[0]["area_responsable"].")","group by funcionario_codigo",$conn);
 	
-
+	if(usuario_actual("funcionario_codigo")==$ejecutor[0]["ejecutor"]){
 	  	echo($enlace);
-
+  	}else{
+		for ($i=0; $i <$funcionario["numcampos"] ; $i++) {
+			if(usuario_actual("funcionario_codigo")==$funcionario[$i]["funcionario_codigo"]){
+				echo($enlace);
+			}		
+	  	}
+	 }
 	}	
 }
 
@@ -46,7 +53,10 @@ function obtener_numero_riesgo($idformato, $iddoc){
 		
 		$direccion_control_interno = busca_filtro_tabla("nombres, apellidos, funcionario_codigo","vfuncionario_dc","lower(cargo) like'profesional%universitario%grado%22' and lower(dependencia) like'direccion%control%interno' and estado=1 and estado_dep=1 and estado_dc=1","",$conn);			
 		
-	
+		/*if(usuario_actual("funcionario_codigo") != $direccion_control_interno[0]["funcionario_codigo"] && $datos_documento["estado"] == "APROBADO"){		
+			alerta("El formato 'Monitoreo y Revisión' solo puede ser editado por ".$direccion_control_interno[0]["nombres"]." ".$direccion_control_interno[0]["apellidos"]);
+			volver(1);			
+		}*/		
 	}	
 	
 	echo("<td><input type='text' name='numero_riesgo' id='numero_riesgo' value='".$riesgo[0]["consecutivo"]."' readonly></td>");	
@@ -62,26 +72,23 @@ function obtener_nombre_riesgo($idformato, $iddoc){
 		$riesgo = busca_filtro_tabla("a.riesgo","ft_riesgos_proceso a, documento b, ft_monitoreo_revision c","a.documento_iddocumento=b.iddocumento and a.idft_riesgos_proceso=c.ft_riesgos_proceso and  c.documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
 	}	
 	echo("<td>
-			".strip_tags(html_entity_decode($riesgo[0]["riesgo"]))."
-			<input type='hidden' name='nombre_riesgo' id='nombre_riesgo' value='".strip_tags(html_entity_decode($riesgo[0]["riesgo"]))."' readonly>
+			".strip_tags(codifica_encabezado(html_entity_decode($riesgo[0]["riesgo"])))."
+			<input type='hidden' name='nombre_riesgo' id='nombre_riesgo' value='".strip_tags(codifica_encabezado(html_entity_decode($riesgo[0]["riesgo"])))."' readonly>
 		  </td>");	
-
 }
 
 function obtener_controles_existentes_riesgo($idformato, $iddoc){
 	global $conn;
 	
 	if($_REQUEST["anterior"]){
-		$control_riesgos = busca_filtro_tabla("c.idft_control_riesgos, c.descripcion_control","ft_riesgos_proceso a, documento b, ft_control_riesgos c, documento d","a.idft_riesgos_proceso=c.ft_riesgos_proceso and a.documento_iddocumento=b.iddocumento and c.documento_iddocumento=d.iddocumento and lower(d.estado) not in('eliminado','anulado') and a.documento_iddocumento=".$_REQUEST["anterior"],"",$conn);
-		
-		
-		
+		$control_riesgos = busca_filtro_tabla("c.idft_control_riesgos, c.descripcion_control","ft_riesgos_proceso a, documento b, ft_control_riesgos c, documento d","a.idft_riesgos_proceso=c.ft_riesgos_proceso and a.documento_iddocumento=b.iddocumento and c.documento_iddocumento=d.iddocumento and lower(d.estado) not in('eliminado','anulado') and a.documento_iddocumento=".$_REQUEST["anterior"],"substring(c.descripcion_control,50,1) desc",$conn);
+		//print_r($control_riesgos);
 	}elseif($_REQUEST["iddoc"]){
 		$calificacion_controles = busca_filtro_tabla("controles_existentes","ft_monitoreo_revision","documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);		
 			
 		$calificacion_controles = (array) json_decode(html_entity_decode($calificacion_controles[0]["controles_existentes"]));											
 	
-		$control_riesgos = busca_filtro_tabla("d.idft_control_riesgos, d.descripcion_control","ft_riesgos_proceso a, documento b, ft_monitoreo_revision c, ft_control_riesgos d, documento e","a.documento_iddocumento=b.iddocumento and a.idft_riesgos_proceso=c.ft_riesgos_proceso and a.idft_riesgos_proceso=d.ft_riesgos_proceso and d.documento_iddocumento=e.iddocumento and lower(e.estado) not in('eliminado','anulado') and c.documento_iddocumento=".$_REQUEST["iddoc"],"dbms_lob.substr(d.descripcion_control,50,1) desc",$conn);		
+		$control_riesgos = busca_filtro_tabla("d.idft_control_riesgos, d.descripcion_control","ft_riesgos_proceso a, documento b, ft_monitoreo_revision c, ft_control_riesgos d, documento e","a.documento_iddocumento=b.iddocumento and a.idft_riesgos_proceso=c.ft_riesgos_proceso and a.idft_riesgos_proceso=d.ft_riesgos_proceso and d.documento_iddocumento=e.iddocumento and lower(e.estado) not in('eliminado','anulado') and c.documento_iddocumento=".$_REQUEST["iddoc"],"substring(d.descripcion_control,50,1) desc",$conn);		
 	}
 	
 	$div ="<table class='controles_existentes' border='0' style='border-collapse:collapse; width: 100%;'>";
@@ -136,16 +143,13 @@ function obtener_controles_existentes_riesgo($idformato, $iddoc){
 
 function obtener_acciones_propuestas_riesgo($idformato, $iddoc){
 	global $conn;
-	
 	if($_REQUEST["anterior"]){
 		$acciones_riesgos = busca_filtro_tabla("c.idft_acciones_riesgo, c.acciones_accion","ft_riesgos_proceso a, documento b, ft_acciones_riesgo c, documento d","a.idft_riesgos_proceso=c.ft_riesgos_proceso and a.documento_iddocumento=b.iddocumento and c.documento_iddocumento=d.iddocumento and lower(d.estado) not in('eliminado','anulado') and a.documento_iddocumento=".$_REQUEST["anterior"],"c.acciones_accion desc",$conn);
 	}elseif($_REQUEST["iddoc"]){
 		$cumplimiento_acciones = busca_filtro_tabla("acciones_propuestas","ft_monitoreo_revision","documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);	
-		$cumplimiento_acciones = (array) json_decode(html_entity_decode($cumplimiento_acciones[0]["acciones_propuestas"]));	
-		
+		$cumplimiento_acciones = (array) json_decode(html_entity_decode($cumplimiento_acciones[0]["acciones_propuestas"]));		
 		$acciones_riesgos = busca_filtro_tabla("d.idft_acciones_riesgo, d.acciones_accion","ft_riesgos_proceso a, documento b, ft_monitoreo_revision c, ft_acciones_riesgo d, documento e","a.documento_iddocumento=b.iddocumento and a.idft_riesgos_proceso=c.ft_riesgos_proceso and a.idft_riesgos_proceso=d.ft_riesgos_proceso and d.documento_iddocumento=e.iddocumento and lower(e.estado) not in('eliminado','anulado') and c.documento_iddocumento=".$_REQUEST["iddoc"],"d.acciones_accion desc",$conn);
 	}
-
 	$div ="<table class='acciones_propuestas' border='0' style='border-collapse:collapse;'>";
 	for ($i=0; $i < $acciones_riesgos["numcampos"]; $i++) { 
 		$div .="
@@ -207,7 +211,7 @@ function mostrar_controles_existentes_riesgo($idformato, $iddoc){
 	
 	
 	
-	$tabla ="<table border='1' style='border-collapse:collapse; width:100%; border-style:solid;border-width:1px;'>";
+	$tabla ="<table border='1' style='border-collapse:collapse; width:100%;'>";
 	for ($i=0; $i < $control_riesgos["numcampos"]; $i++) { 
 		$tabla .= "
 					<tr>
@@ -241,7 +245,7 @@ function mostrar_acciones_propuestas_riesgo($idformato, $iddoc){
 	
 	$cumplimiento_acciones = json_decode(html_entity_decode($cumplimiento_acciones[0]["acciones_propuestas"]));	
 	
-	$acciones_riesgos = busca_filtro_tabla("d.idft_acciones_riesgo, d.acciones_accion","ft_riesgos_proceso a, documento b, ft_monitoreo_revision c, ft_acciones_riesgo d, documento e","a.documento_iddocumento=b.iddocumento and a.idft_riesgos_proceso=c.ft_riesgos_proceso and a.idft_riesgos_proceso=d.ft_riesgos_proceso and d.documento_iddocumento=e.iddocumento and lower(e.estado) not in('eliminado','anulado') and c.documento_iddocumento=".$iddoc,"",$conn);	
+	$acciones_riesgos = busca_filtro_tabla("d.idft_ft_acciones_riesgo, d.acciones_accion","ft_riesgos_proceso a, documento b, ft_monitoreo_revision c, ft_ft_acciones_riesgo d, documento e","a.documento_iddocumento=b.iddocumento and a.idft_riesgos_proceso=c.ft_riesgos_proceso and a.idft_riesgos_proceso=d.ft_riesgos_proceso and d.documento_iddocumento=e.iddocumento and lower(e.estado) not in('eliminado','anulado') and c.documento_iddocumento=".$iddoc,"",$conn);	
 	
 	$tabla ="<table border='1' style='border-collapse:collapse; width:100%;'>";
 	for ($i=0; $i < $acciones_riesgos["numcampos"]; $i++) { 
@@ -250,7 +254,7 @@ function mostrar_acciones_propuestas_riesgo($idformato, $iddoc){
 						<td style='width: 305px;'>".strip_tags(codifica_encabezado(html_entity_decode($acciones_riesgos[$i]["acciones_accion"])))."</td>
 						<td>
 				  ";
-				switch ($cumplimiento_acciones->$acciones_riesgos[$i]["idft_acciones_riesgo"]) {
+				switch ($cumplimiento_acciones->$acciones_riesgos[$i]["idft_ft_acciones_riesgo"]) {
 				  case 1:
 					 $tabla .= "Si"; 
 				  break;
@@ -273,46 +277,16 @@ function mostrar_acciones_propuestas_riesgo($idformato, $iddoc){
 function validar_tipo_seleccion_monitoreo($idformato, $iddoc){
 	global $conn;	
 	if($_REQUEST["iddoc"]){
-		$calificacion_controles = busca_filtro_tabla("cambio_identificacion,cambios_analisis,controles_nuevos","ft_monitoreo_revision","documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);	
+		$calificacion_controles = busca_filtro_tabla("cambio_identificacio,cambios_analisis,controles_nuevos","ft_monitoreo_revision","documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);	
 	}	
 ?>
 <script type="text/javascript">
 	$(document).ready(function(){
-		
-		if(parseInt("<?php echo($calificacion_controles[0]["cambio_identificacion"]);?>") !== 1){
-			$("#descripcion_cambio").parent().parent().hide();
-			$("#descripcion_cambio").removeClass("required");	
-		}
-		
-		if(parseInt("<?php echo($calificacion_controles[0]["cambios_analisis"]);?>") !== 1){
-			$("#descripcion_analisis").parent().parent().hide();
-			$("#descripcion_analisis").removeClass("required");	
-		}
-		
+
 		if(parseInt("<?php echo($calificacion_controles[0]["cambios_analisis"]);?>") !== 1){
 			$("#descripcion_ncontrol").parent().parent().hide();
 			$("#descripcion_ncontrol").removeClass("required");	
 		}		
-		
-		$("input[name='cambio_identificacion']").change(function(){			
-			if(parseInt($(this).val()) === 1){				
-				$("#descripcion_cambio").parent().parent().show();
-				$("#descripcion_cambio").addClass("required");				
-			}else{				
-				$("#descripcion_cambio").parent().parent().hide();
-				$("#descripcion_cambio").removeClass("required");
-			}
-		});
-		
-		$("input[name='cambios_analisis']").change(function(){			
-			if(parseInt($(this).val()) === 1){				
-				$("#descripcion_analisis").parent().parent().show();
-				$("#descripcion_analisis").addClass("required");				
-			}else{				
-				$("#descripcion_analisis").parent().parent().hide();
-				$("#descripcion_analisis").removeClass("required");
-			}
-		});
 		
 		$("input[name='controles_nuevos']").change(function(){			
 			if(parseInt($(this).val()) === 1){				

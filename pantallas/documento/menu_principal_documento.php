@@ -129,32 +129,33 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
                    </a>
                     <?php }?>
                    <script>
-                   		$(document).ready(function(){
- 							$('.enlace_home_documento').live('click',function(){
- 								var iddoc='<?php echo($iddoc); ?>';
- 								console.log(iddoc);
- 								var cod_padre='<?php echo($formato[0]['cod_padre']); ?>';
- 								<?php if($_SESSION["tipo_dispositivo"]!="movil"){ ?>
- 								redirecciona_home_documento(iddoc,cod_padre);
- 								<?php } ?>
- 							});			
-                   		});
+										$(document).ready(function(){
+											$('.enlace_home_documento').live('click',function(){
+												var iddoc='<?php echo($iddoc); ?>';
+												var cod_padre='<?php echo($formato[0]['cod_padre']); ?>';
+												<?php if($_SESSION["tipo_dispositivo"]!="movil"){ ?>
+												redirecciona_home_documento(iddoc,cod_padre);
+												<?php } ?>
+											});	
+										});
+										
+										var item="<?php echo($llave_formato);?>";
+										function redirecciona_home_documento(iddoc,cod_padre){
+											if(cod_padre!='' && cod_padre!='0'){
+												direccion=new String(window.parent.frames[0].location);
+												vector=direccion.split('&');
+												vector_iddoc=vector[1].split('=');
+												if(window.parent.parent.frames[0].frameElement.name=='centro'){
+													window.parent.parent.frames[0].location="<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
+												}else if(window.parent.parent.frames[2].frameElement.name=='centro'){
+													window.parent.parent.frames[2].location="<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
+												}					  
+											}else{
+												window.open("<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+iddoc,"arbol_formato");				
+											}              			
+										}
                    		
-                   		var item="<?php echo($llave_formato);?>";
-                   		function redirecciona_home_documento(iddoc,cod_padre){
-                   			if(cod_padre!='' && cod_padre!='0'){
-	                   			direccion=new String(window.parent.frames[0].location);
-	             				vector=direccion.split('&');
-	             				vector_iddoc=vector[1].split('=');
-	             				if(window.parent.parent.frames[0].frameElement.name=='centro'){
-	             					window.parent.parent.frames[0].location="<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
-	             				}else if(window.parent.parent.frames[2].frameElement.name=='centro'){
-	             					window.parent.parent.frames[2].location="<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
-	             				}					  
-                   			}else{
-                   				window.open("<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+iddoc,"arbol_formato");				
-                   			}              			
-                   		}
+                   		
                    		<?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
                    		var browserType;
                    	  if (document.layers) {browserType = "nn4";}
@@ -241,7 +242,6 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
                    	                ?>
                    	                nodeId=tree2.getSelectedItemId();
                    	                llave=tree2.getParentId(nodeId);
-                   	                console.log(nodeId+'<--->'+llave+'<--->'+no_seleccionar);
                    	                onNodeSelect(nodeId);
                    	                <?php
                    	            }
@@ -352,8 +352,15 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
              &nbsp;<i class="icon-ok"></i>
                 <script type="text/javascript">
                   $(document).ready(function(){
+                  	var iddoc_ref=parseInt(<?php echo($iddoc); ?>);
+                  	if(window.parent.frames["arbol_formato"]!==undefined){
+											match_iddoc=window.parent.frames["arbol_formato"].location.href.match(/(iddoc)=([\d]+)/);
+											if(match_iddoc){
+												iddoc_ref=match_iddoc[2];
+											}
+                  	}
                     $("#aprobar_documento").click(function(){
-                      window.open("<?php echo($ruta_db_superior); ?>class_transferencia.php?iddoc=<?php echo($iddoc); ?>&funcion=aprobar","_self");
+                     window.open("<?php echo($ruta_db_superior); ?>class_transferencia.php?iddoc=<?php echo($iddoc); ?>&funcion=aprobar&anterior="+iddoc_ref,"_self");
                     });
                   });
                 </script>
@@ -461,7 +468,7 @@ function permisos_modulo_menu_intermedio($iddoc, $modulo_padre,$lista,$target="_
   global $ruta_db_superior,$documento,$funcionario;
   $texto='';
   if($modulo_padre=="rapidos_menu_intermedio"){
-      $datos_modulos=array('devolucion','transferir','responder','seguimiento','terminar_documento','vista_previa');
+      $datos_modulos=array('devolucion','transferir','responder','seguimiento_rastro','terminar_documento','vista_previa');
   }
   else{
       $datos_modulos=  modulos_menu_intermedio($modulo_padre);
@@ -478,7 +485,7 @@ function permisos_modulo_menu_intermedio($iddoc, $modulo_padre,$lista,$target="_
                 $modulos_documentos_anulados=array('devolucion','transferir','expediente_menu','enviar_documento_correo');
                 break;
             case 'rapidos_menu_intermedio':
-                $modulos_documentos_anulados=array('transferir','seguimiento','devolucion','vista_previa');
+                $modulos_documentos_anulados=array('transferir','seguimiento_rastro','devolucion','vista_previa');
                 break;
             default:
                 break;
@@ -587,10 +594,6 @@ function botones_administrativos_menu($iddoc){
 	include_once($ruta_db_superior."class_transferencia.php");
 	$texto=array();
 	$usuario_actual=$_SESSION["usuario_actual"];
-	$usuario_reemplazo=reemplazo($_SESSION["usuario_actual"],'reemplazo');
-	if($usuario_actual!=$usuario_reemplazo){
-		$usuario_actual=$usuario_reemplazo;
-	}
 
 	$responsable=busca_filtro_tabla("destino,estado,plantilla","buzon_entrada,documento","iddocumento=archivo_idarchivo and archivo_idarchivo=".$iddoc,"buzon_entrada.idtransferencia asc",$conn);
 

@@ -1,47 +1,26 @@
-<?php 
-$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior=$ruta="";
-while($max_salida>0)
-{
-if(is_file($ruta."db.php"))
-{
-$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-}
-$ruta.="../";
-$max_salida--;
-}
-include_once($ruta_db_superior."db.php");
-
-function validar_campos_obligatorios_formato(){
-	global $conn;
-
-?>
-<script type="text/javascript">
-	$(document).ready(function(){
-		$('#secretarias').attr('maxlength',99999);		
-	});
-</script>
 <?php
-}
-
-function mostrar_anexos_soporte_formato($idformato,$iddoc){
-    global $conn, $ruta_db_superior;
-    
-    
-    $anexos=busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc,"",$conn);
-	if($anexos['numcampos']){
-		$tabla='<ul>';
-	    for($j=0;$j<$anexos['numcampos'];$j++){
-	        if($anexos[$j]['tipo']=='jpg' || $anexos[$j]['tipo']=='JPG' || $anexos[$j]['tipo']=='pdf' || $anexos[$j]['tipo']=='PDF' || $anexos[$j]['tipo']=='png'){
-	            $tabla.="<li><a href='".$ruta_db_superior.$anexos[$j]['ruta']."' target='_blank'>".$anexos[$j]['etiqueta']."</a></li>";
-	        }
-	        else{
-	            $tabla.='<li><a title="Descargar" href="'.$ruta_db_superior.'anexosdigitales/parsea_accion_archivo.php?idanexo='.$anexos[$j]['idanexos'].'&amp;accion=descargar" border="0px">'.$anexos[$j]['etiqueta'].'</a></li>';
-	        }
-							
-	    }
-		$tabla.='</ul>';
-		echo($tabla);
+$max_salida = 6;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
 	}
-    
+	$ruta .= "../";
+	$max_salida--;
 }
+include_once ($ruta_db_superior . "db.php");
+include_once ($ruta_db_superior . "librerias_saia.php");
+
+function no_permitir_adicion_formatos_acalidad($idformato, $iddoc) {
+	global $conn, $ruta_db_superior;
+	echo(librerias_notificaciones());
+	?>
+		<script>
+		$(document).ready(function(){
+		  notificacion_saia('Solo se puede realizar desde el formato SOLICITUD DE ELABORACI&Oacute;N, MODIFICACI&Oacute;N, ELIMINACI&Oacute;N DE DOCUMENTOS','dangerous','',4000);
+		  window.location="<?php echo($ruta_db_superior); ?>vacio.php";
+		});
+		</script>
+	<?php
+}
+?>

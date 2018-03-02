@@ -15,7 +15,12 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."class_transferencia.php");
 include_once($ruta_db_superior."header.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_archivo.php");
-ini_set('display_errors',true);
+
+$configuracion_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal' AND tipo='ruta'", "", $conn);
+if($configuracion_temporal["numcampos"]){
+	$ruta_temp=$configuracion_temporal[0]["valor"];
+}
+
 ?>
 <script> 
 /*
@@ -56,9 +61,8 @@ ini_set('display_errors',true);
 <Post-condiciones><Post-condiciones>
 </Clase>
 */
-function formato_email()
-{
- global $conn,$ruta_db_superior;
+function formato_email(){
+ global $conn,$ruta_db_superior,$ruta_temp;
    $datos=busca_filtro_tabla("numero,pdf,plantilla,ejecutor,descripcion,tipo_radicado,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha","documento","iddocumento=".$_REQUEST["iddoc"],"",$conn);
    //si es un radicado de entrada
    $contenido="Documento Número: ".$datos[0]["numero"]."\nFecha: ".$datos[0]["fecha"]."\nDescripción: ".strip_tags(str_replace("<br />"," ",$datos[0]["descripcion"]));
@@ -88,9 +92,9 @@ function formato_email()
    $direcciones=busca_filtro_tabla("email","funcionario","funcionario_codigo=".$_SESSION["usuario_actual"]." AND email IS NOT NULL and email<>''","",$conn);
  //print_r($direcciones);
  $login=busca_filtro_tabla("login","funcionario","funcionario_codigo=".$_SESSION["usuario_actual"],"",$conn);
- if(!is_dir("../temporal_".$login[0]["login"]))
-    {mkdir("../temporal_".$login[0]["login"],PERMISOS_CARPETAS);
-     chmod("../temporal_".$login[0]["login"],PERMISOS_CARPETAS);
+ if(!is_dir("../".$ruta_temp."_".$login[0]["login"]))
+    {mkdir("../".$ruta_temp."_".$login[0]["login"],PERMISOS_CARPETAS);
+     chmod("../".$ruta_temp."_".$login[0]["login"],PERMISOS_CARPETAS);
     }
     
    if($direcciones["numcampos"])
@@ -133,9 +137,9 @@ function formato_email()
 $paginas=busca_filtro_tabla("ruta","pagina","id_documento=".$_REQUEST["iddoc"],"",$conn);
 if($paginas["numcampos"])
   {$ruta=substr($paginas[0]["ruta"],0,strrpos($paginas[0]["ruta"],"/")+1);    
-   $pdf=dirToPdf("../temporal_".$login[0]["login"]."/paginas_documento".$datos[0]["numero"].".pdf", "../".$ruta);
+   $pdf=dirToPdf("../".$ruta_temp."_".$login[0]["login"]."/paginas_documento".$datos[0]["numero"].".pdf", "../".$ruta);
    if($pdf!==false)
-       $texto_pagina.='<input name="paginas" value="'."../temporal_".$login[0]["login"]."/paginas_documento".$datos[0]["numero"].".pdf".'" type="checkbox" checked><a href="'.$ruta_db_superior."../temporal_".$login[0]["login"]."/paginas_documento".$datos[0]["numero"].".pdf".'" target="_blank">'."paginas_documento".$datos[0]["numero"].".pdf".'</a><input type="hidden" name="nombre_paginas" value="'."paginas_documento".$datos[0]["numero"].".pdf".'"><br />';
+       $texto_pagina.='<input name="paginas" value="'."../".$ruta_temp."_".$login[0]["login"]."/paginas_documento".$datos[0]["numero"].".pdf".'" type="checkbox" checked><a href="'.$ruta_db_superior."../".$ruta_temp."_".$login[0]["login"]."/paginas_documento".$datos[0]["numero"].".pdf".'" target="_blank">'."paginas_documento".$datos[0]["numero"].".pdf".'</a><input type="hidden" name="nombre_paginas" value="'."paginas_documento".$datos[0]["numero"].".pdf".'"><br />';
   }    
  //si el documento es un formato se envio el pdf como adjunto
  if(strtolower($datos[0]["plantilla"])<>"" && $datos[0]["numero"]<>'0')

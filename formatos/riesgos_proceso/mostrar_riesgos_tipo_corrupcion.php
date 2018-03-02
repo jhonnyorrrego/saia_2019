@@ -22,6 +22,7 @@ include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 include_once($ruta_db_superior."formatos/mod_autocomisorio/funciones.php");
 include_once($ruta_db_superior."formatos/librerias/estilo_formulario.php");
+
 echo(estilo_bootstrap());
 ?>
 <style type="text/css">	
@@ -34,22 +35,22 @@ echo(estilo_bootstrap());
 	}
 </style>
 <?php
+
 if(isset($_REQUEST['idft_proceso'])){
 	$riesgos=obtener_riesgos_proceso($_REQUEST['idft_proceso']);
 }else{
-$riesgos=obtener_riesgos_proceso($proceso[0]['idft_proceso']);
+	$riesgos=obtener_riesgos_proceso($proceso[0]['idft_proceso']);
 }
 
 if(@$_REQUEST["tipo"] != 5 && !@$proceso[0]['idft_proceso'] && !@$_REQUEST["excel"]){
+	//$url = "http://".RUTA_PDF_LOCAL."/formatos/riesgos_proceso/mostrar_riesgos_tipo_corrupcion.php?tipo=5";
 	$url="mostrar_riesgos_tipo_corrupcion.php?excel=1";
+	//$ruta = $ruta_db_superior."class_impresion2.php?tipo=5&orientacion=1&url=".$url."&pdf=1";
 	$tabla = '
    <a target="_blank" href="'.$url.'">
     <img src="'.$ruta_db_superior.'enlaces/imprimir.gif" height="30" width="30" border="0">
    </a>';
 }
-$idformato_riesgos_proceso=busca_filtro_tabla("idformato","formato","nombre='riesgos_proceso'","",$conn);
-$idformato_control_riesgos=busca_filtro_tabla("idformato","formato","nombre='control_riesgos'","",$conn);
-$idformato_acciones_riesgo=busca_filtro_tabla("idformato","formato","nombre='acciones_riesgo'","",$conn);
 
 $tabla .='
 			<table style="border-collapse: collapse; width:150%; max-width:150%" border="1" cellspacing="15">				
@@ -98,7 +99,7 @@ $tabla .='
 							<td>'.strip_tags(codifica_encabezado(html_entity_decode($riesgos[$i]['fuente_causa']))).'</td>
 							<td>'.$riesgos[$i]['consecutivo'].'</td>
 							<td>'.codifica_encabezado(html_entity_decode($riesgos[$i]['riesgo'])).'</td>
-							<td>'.mostrar_valor_campo('probabilidad',$idformato_riesgos_proceso[0]['idformato'],$riesgos[$i]['documento_iddocumento'],1).'</td>
+							<td>'.mostrar_valor_campo('probabilidad',13,$riesgos[$i]['documento_iddocumento'],1).'</td>
 							<td style="text-align:left;">';
 							for($j=0;$j<$valoracion['numcampos'];$j++){
 								$tabla .= ''.strip_tags(html_entity_decode($valoracion[$j]['descripcion_control'])).'';
@@ -106,16 +107,15 @@ $tabla .='
 							$tabla.='</td>
 							<td style="text-align:left;" colspan="2">';
 							for($j=0;$j<$valoracion['numcampos'];$j++){
-								$tabla.='<b>1. Posee una herramienta para ejercer el control?</b>: '.mostrar_valor_campo('herramienta_ejercer',$idformato_control_riesgos[0]['idformato'],$valoracion[$j]['documento_iddocumento'],1).' 
-								<b>2. Existen manuales, instructivos o procedimientos para el manejo de la herramienta?</b>: '.mostrar_valor_campo('procedimiento_herramienta',$idformato_control_riesgos[0]['idformato'],$valoracion[$j]['documento_iddocumento'],1).' 
-								<b>3. En el tiempo que lleva la herramienta, ha demostrado ser efectiva?</b>: '.mostrar_valor_campo('herramienta_efectiva',$idformato_control_riesgos[0]['idformato'],$valoracion[$j]['documento_iddocumento'],1);
+								$tabla.='<b>1. Posee una herramienta para ejercer el control?</b>: '.mostrar_valor_campo('herramienta_ejercer',201,$valoracion[$j]['documento_iddocumento'],1).' 
+								<b>2. Existen manuales, instructivos o procedimientos para el manejo de la herramienta?</b>: '.mostrar_valor_campo('procedimiento_herramienta',201,$valoracion[$j]['documento_iddocumento'],1).' 
+								<b>3. En el tiempo que lleva la herramienta, ha demostrado ser efectiva?</b>: '.mostrar_valor_campo('herramienta_efectiva',201,$valoracion[$j]['documento_iddocumento'],1);
 							}
 							$tabla.='</td>
 							<td style="text-align:left;">';
 							for($j=0;$j<$acciones['numcampos'];$j++){
 								if($acciones[$j]['opcio_admin_riesgo']!=""){
-									$tabla.=mostrar_valor_campo('opcio_admin_riesgo',$idformato_acciones_riesgo[0]['idformato'],$acciones[$j]['documento_iddocumento'],1);
-									//$tabla.=$acciones[$j]['opcio_admin_riesgo'];
+									$tabla.=mostrar_valor_campo('opcio_admin_riesgo',174,$acciones[$j]['documento_iddocumento'],1);
 								}
 							}
 							$tabla.='</td>
@@ -171,7 +171,7 @@ function obtener_valoracion_riesgo($idft_riesgos_proceso){
 
 function obtener_acciones_riesgo($idft_riesgos_proceso){
 	global $conn;		
-	$datos = busca_filtro_tabla("","ft_riesgos_proceso A, ft_acciones_riesgo B, documento C","A.idft_riesgos_proceso=B.ft_riesgos_proceso AND B.documento_iddocumento=C.iddocumento AND C.estado NOT IN ('ELIMINADO, ANULADO') AND A.idft_riesgos_proceso=".$idft_riesgos_proceso,"",$conn);
+	$datos = busca_filtro_tabla("","ft_riesgos_proceso A, ft_ft_acciones_riesgo B, documento C","A.idft_riesgos_proceso=B.ft_riesgos_proceso AND B.documento_iddocumento=C.iddocumento AND C.estado NOT IN ('ELIMINADO, ANULADO') AND A.idft_riesgos_proceso=".$idft_riesgos_proceso,"",$conn);
 	return($datos);	
 }
 

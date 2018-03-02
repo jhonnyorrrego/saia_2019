@@ -37,11 +37,14 @@ echo(librerias_notificaciones());
 					data:{color:$("#colores").val()},
 					success:function(respuesta){
 						if(respuesta==1){
-							alert("Cambio de tema realizado");
+							top.noty({text:"Cambios realizados!!", type:"warning", layout:"topCenter", timeout:3500});
+							window.parent.parent.location.reload();
 						}else{
-							alert("Error al cambiar tema");
+							top.noty({text:"Error al actualizar los valores", type:"warning", layout:"topCenter", timeout:3500});
+							window.location.reload();
 						}
-						window.location.reload();
+					},error:function (){
+						top.noty({text:"Error al procesar la solicitud", type:"error", layout:"topCenter", timeout:3500});
 					}
 				});
 			}else{

@@ -16,15 +16,12 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 
-//if(usuario_actual("login") == "0k"){
-	ini_set("display_errors",true);
-//}
 
 function enlace_planes($idformato,$iddoc){
   global $conn;
   $seg=busca_filtro_tabla("idft_seguimiento_indicador","ft_seguimiento_indicador","documento_iddocumento=".$iddoc,"",$conn);  
-  if(!isset($_REQUEST["tipo"])||$_REQUEST["tipo"]==1)
-    echo"<a class='highslide' onclick='return hs.htmlExpand(this, { objectType: \"iframe\",width: 500, height:250,preserveContent:false } )'  href='../indicadores_calidad/planes_relacionados.php?tipo=seguimiento&seguimiento_indicador=".$seg[0]["idft_seguimiento_indicador"]."'>Ver Planes</a>";
+  //if(!isset($_REQUEST["tipo"])||$_REQUEST["tipo"]==1)
+   // echo"<a class='highslide' onclick='return hs.htmlExpand(this, { objectType: \"iframe\",width: 500, height:400,preserveContent:false } )'  href='../indicadores_calidad/planes_relacionados.php?tipo=seguimiento&seguimiento_indicador=".$seg[0]["idft_seguimiento_indicador"]."'>Ver Planes</a>";
 }
 function formulario_variables($idcampo,$idformato,$iddoc=NULL){
   global $conn;
@@ -36,8 +33,9 @@ function formulario_variables($idcampo,$idformato,$iddoc=NULL){
   } 
   preg_match_all("([A-Za-z_]+[0-9]*)",$formula[0]["nombre"],$resultados);
   $lista=implode(";",$resultados[0]);
-  $variables=busca_filtro_tabla("resultado","ft_seguimiento_indicador","documento_iddocumento=$iddoc","",$conn);
-  echo "<td><table width='100%'><input type='hidden' id='resultado' class='required' name='resultado' value='".@$variables[0][0]."'>";
+  $variables=busca_filtro_tabla("resultado","ft_seguimiento_indicador","documento_iddocumento=".$iddoc,"",$conn);
+
+  echo "<td><table width='100%'><input type='hidden' id='resultado' class='' name='resultado' value='".@$variables[0][0]."'>";
   if($iddoc<>NULL){
     $valores=array();
     $vector=explode(";",$variables[0][0]);
@@ -65,11 +63,45 @@ function mostrar_variables($idformato,$iddoc){
   }
   echo "</table>";      
 } 
+
+function direccionar_indicador($idformato,$iddoc){
+  global $conn,$ruta_db_superior;
+  
+	if($_REQUEST["regresar"]){
+		$idformato=busca_filtro_tabla("idformato","formato","nombre='indicadores_calidad'","",$conn);
+  		//redirecciona($ruta_db_superior.'formatos/indicadores_calidad/mostrar_indicadores_calidad.php?iddoc='.$_REQUEST["regresar"].'&idformato='.$idformato[0]["idformato"]);
+  }
+}
+
+
 function validar_fecha_seguimiento($idformato,$iddoc){
   global $conn;
   
+  $adicion=0;
+  if($_REQUEST["anterior"]){
+  	$formula=busca_filtro_tabla("rango_colores","ft_formula_indicador","documento_iddocumento=".$_REQUEST["anterior"],"",$conn);
+  	$adicion=1;
+  }
+  
+  $limite=explode(",",$formula[0]["rango_colores"]);
+  
 ?>
 	<script>
+	
+	$(document).ready(function(){
+		var adicion="<?php echo($adicion);?>";
+		
+		if(adicion==1){
+			$("#linea_base").val("<?php echo($limite[0])?>");
+			$("#meta_indicador_actual").val("<?php echo($limite[1])?>");
+		}
+		
+		$("#linea_base,#meta_indicador_actual").attr('readonly', true);
+		$("#linea_base").after('<input type="hidden" name="regresar" id="regresar" value="<?php echo($_REQUEST['regresar']);?>">');
+	
+	});
+	
+	
 		$('#formulario_formatos').validate({
         	submitHandler: function(form){
             	var fecha = $("#fecha_seguimiento").val().split(" ");
