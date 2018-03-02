@@ -168,7 +168,7 @@ if(!$_REQUEST["ruta"]){
 
     <a href="javascript://" id="opc_derecha" class="rotate-ccw" title="Rotate Counter Clockwise">⟲</a>
     <a href="javascript://" id="opc_izquierda" class="rotate-cw" title="Rotate Clockwise">⟳</a>
-    <a href="javascript://" id="cambio_visor" class="cambiar_visor" title="Cambiar visor"><button class="sello btn btn-inverse">CV</button></a>
+    <a href="javascript://" id="cambio_visor" class="cambiar_visor" title="Cambiar visor"><button class="sello btn btn-inverse">Ir a PDF Original</button></a>
 	<div class="spacer"></div>
 	
     <a href="javascript://" class="clear" title="Clear"><button id="borrar_todo" class="sello btn btn-inverse">X</button></a>

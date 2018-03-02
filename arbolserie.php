@@ -12,6 +12,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");		
 include_once("formatos/librerias/header_formato.php");		
 echo(librerias_jquery());
+echo(librerias_arboles());
 //echo(librerias_notificaciones());
 ?>
 <html>
@@ -21,6 +22,7 @@ echo(librerias_jquery());
   <meta http-equiv="Content-Type" content="text/html; charset= UTF-8 ">
 <script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 <script type="text/javascript" src="js/dhtmlXTree.js"></script>
+<script type="text/javascript" src="js/dhtmlxtree_xw.js"></script>
     <link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
 			  <!--span style="font-family: Verdana; font-size: 9px;">CLASIFICACI&Oacute;N DEL DOCUMENTO<br><br></span-->
 			  <span style="font-family: Verdana; font-size: 9px;">
@@ -36,6 +38,9 @@ echo(librerias_jquery());
 	<script type="text/javascript">
   <!--
       var browserType;
+      var result=[];
+      var punteroi=0;
+      var punteroj=0;
       if (document.layers) {browserType = "nn4"}
       if (document.all) {browserType = "ie"}
       if (window.navigator.userAgent.toLowerCase().match("gecko")) {
@@ -135,6 +140,7 @@ echo(librerias_jquery());
            document.poppedLayer =
               eval('document.layers["esperando_serie"]');
         document.poppedLayer.style.display = "none";
+
       }
 
       function cargando_serie() {
@@ -148,19 +154,11 @@ echo(librerias_jquery());
            document.poppedLayer =
                eval('document.layers["esperando_serie"]');
         document.poppedLayer.style.display = "";
+        
+        
       }
       
-      		   
-      
         function buscar_nodo(){
-        	var result;
-        	var delay = (function(){
-			var timer = 0;
-			 return function(callback, ms){
-			   clearTimeout (timer);
-			   timer = setTimeout(callback, ms);
-			 };
-			})();
 			
        	$.ajax({
        		type:'POST',
@@ -174,50 +172,14 @@ echo(librerias_jquery());
        		success: function(data){
            		//console.log(data.serie_base[0]);
            		result=data;
-
-           		/*$.each(data.serie_base, function(i, item) {          			
-           			$.each(item, function(j, value) {
-           				console.log(value);
-           			});
-           		});*/
-           		
-           		
-           		
-           		
-       			/*$.each(data, function(i, item) {
-console.log(typeof(item));
-       				$.each(item, function(j, value) {
-           				console.log(value);
-       					tree2.openItem(value);
-       					if(j==item.length-1){
-       						tree2.selectItem(value,true,true);
-       						//tree2.focusItem(value);
-       					}
-       				});
-       			});*/
+           		punteroj=0;
+           		punteroi=0;
+           		tree2.openItemsDynamic(data["datos"],true);
 			}
 		});
-		
-		delay(function(){
-		$.each(result.dependencias, function(i, item) {
-           		
-	           			$.each(item, function(j, value) {
-	           				console.log(value);
-	           				
-	           					console.log(value+"..");
-	           					tree2.openItem(value);
-	           				
-	           			});
-           
-         });
-         	},200 );
-		
-		
-		//tree2.findItem((document.getElementById('stext_serie_idserie').value));
+
        }
-        
-       
-       
+
 	--> 		
 	</script>
 	<script>

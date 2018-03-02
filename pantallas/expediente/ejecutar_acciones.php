@@ -317,57 +317,6 @@ function vincular_expediente_documento() {
 	return ($retorno);
 }
 
-/*
- function asignar_permiso_expediente(){
- $retorno=new stdClass;
- $retorno->exito=0;
- $retorno->mensaje="Error al asignar el expediente";
- if(@$_REQUEST["idexpediente"] && @$_REQUEST["tipo_entidad"]){
- //$llaves_entidad=busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo IN(".$_REQUEST["entidad_identidad"].")","",$conn);
- $llaves_entidad=busca_filtro_tabla("distinct (funcionario_idfuncionario) as idfuncionario","dependencia_cargo","iddependencia_cargo IN(".$_REQUEST["entidad_identidad"].")","",$conn);
- if($_REQUEST["tipo_entidad"]==5)$_REQUEST["tipo_entidad"]=1;
-
- $funcionarios_almacenados=extrae_campo($llaves_entidad,"idfuncionario");
-
- $datos=busca_filtro_tabla("A.llave_entidad","entidad_expediente A","A.expediente_idexpediente=".$_REQUEST["idexpediente"]." AND A.entidad_identidad=1","",$conn);
- $datos_array=extrae_campo($datos,"llave_entidad","U");
-
- $quitar=array_diff($datos_array,$funcionarios_almacenados);
- $quitar=array_merge($quitar);
-
- $adicionales=array_diff($funcionarios_almacenados,$datos_array);
- $adicionales=array_merge($adicionales);
-
- $cantidad_eliminar=count($quitar);
- $cantidad_adicionar=count($adicionales);
-
- if($cantidad_eliminar){
- $sql1="DELETE FROM entidad_expediente WHERE expediente_idexpediente=".$_REQUEST["idexpediente"]." AND entidad_identidad=1 AND llave_entidad IN(".implode(",",$quitar).")";
- phpmkr_query($sql1);
- }
-
- $exito=1;
- if($cantidad_adicionar){
- for($i=0;$i<$cantidad_adicionar;$i++){
- if(asignar_expediente($_REQUEST["idexpediente"], $_REQUEST["tipo_entidad"], $adicionales[$i])){
- }
- }
- }
- if($exito){
- $retorno->exito=1;
- $retorno->mensaje="Asignaciones al expediente realizadas con &eacute;xito";
- }
- else if($exito==0){
- $retorno->exito=0;
- $retorno->mensaje="No se realizan asignaciones al expediente";
- }
- else{
- $retorno->exito=0;
- $retorno->mensaje="Se realizan algunas asignaciones al expediente se presentan errores";
- }
- }
- return($retorno);
- }*/
 function asignar_permiso_expediente() {
 	global $conn;
 	$retorno = new stdClass;

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitd519995838db71c3b1d30a6ef56a6013
+class ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
@@ -40,6 +40,7 @@ class ComposerStaticInitd519995838db71c3b1d30a6ef56a6013
             'Symfony\\Polyfill\\Apcu\\' => 22,
             'Symfony\\Component\\Yaml\\' => 23,
             'Symfony\\Component\\Routing\\' => 26,
+            'Symfony\\Component\\Process\\' => 26,
             'Symfony\\Component\\HttpKernel\\' => 29,
             'Symfony\\Component\\HttpFoundation\\' => 33,
             'Symfony\\Component\\Finder\\' => 25,
@@ -91,6 +92,7 @@ class ComposerStaticInitd519995838db71c3b1d30a6ef56a6013
         ),
         'D' => 
         array (
+            'Doctrine\\Instantiator\\' => 22,
             'Doctrine\\DBAL\\Migrations\\' => 25,
             'Doctrine\\Common\\Cache\\' => 22,
             'Doctrine\\Common\\Annotations\\' => 28,
@@ -98,6 +100,10 @@ class ComposerStaticInitd519995838db71c3b1d30a6ef56a6013
             'Doctrine\\Bundle\\MigrationsBundle\\' => 33,
             'Doctrine\\Bundle\\DoctrineCacheBundle\\' => 36,
             'Doctrine\\Bundle\\DoctrineBundle\\' => 31,
+        ),
+        'C' => 
+        array (
+            'Corley\\Composer\\' => 16,
         ),
         'A' => 
         array (
@@ -149,6 +155,10 @@ class ComposerStaticInitd519995838db71c3b1d30a6ef56a6013
         'Symfony\\Component\\Routing\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/routing',
+        ),
+        'Symfony\\Component\\Process\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/process',
         ),
         'Symfony\\Component\\HttpKernel\\' => 
         array (
@@ -270,6 +280,10 @@ class ComposerStaticInitd519995838db71c3b1d30a6ef56a6013
         array (
             0 => __DIR__ . '/..' . '/elasticsearch/elasticsearch/src/Elasticsearch',
         ),
+        'Doctrine\\Instantiator\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/instantiator/src/Doctrine/Instantiator',
+        ),
         'Doctrine\\DBAL\\Migrations\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/migrations/lib/Doctrine/DBAL/Migrations',
@@ -297,6 +311,10 @@ class ComposerStaticInitd519995838db71c3b1d30a6ef56a6013
         'Doctrine\\Bundle\\DoctrineBundle\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/doctrine-bundle',
+        ),
+        'Corley\\Composer\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/instalador',
         ),
         'Aws\\' => 
         array (
@@ -339,6 +357,10 @@ class ComposerStaticInitd519995838db71c3b1d30a6ef56a6013
         ),
         'D' => 
         array (
+            'Doctrine\\ORM\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/doctrine/orm/lib',
+            ),
             'Doctrine\\DBAL\\' => 
             array (
                 0 => __DIR__ . '/..' . '/doctrine/dbal/lib',
@@ -395,10 +417,10 @@ class ComposerStaticInitd519995838db71c3b1d30a6ef56a6013
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitd519995838db71c3b1d30a6ef56a6013::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitd519995838db71c3b1d30a6ef56a6013::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitd519995838db71c3b1d30a6ef56a6013::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitd519995838db71c3b1d30a6ef56a6013::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2::$classMap;
 
         }, null, ClassLoader::class);
     }

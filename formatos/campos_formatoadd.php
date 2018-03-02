@@ -1,18 +1,22 @@
-<?php session_start(); ?>
-<?php ob_start(); ?>
 <?php
-$max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; }
+$max_salida = 6;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
+	} $ruta .= "../";
+	$max_salida--;
+}
+include ($ruta_db_superior . "db.php");
+include ($ruta_db_superior . "librerias_saia.php");
+include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
+include_once ("librerias/funciones.php");
+include ($ruta_db_superior . "header.php");
+include ($ruta_db_superior . "phpmkrfn.php");
 
-include ($ruta_db_superior."db.php");
-include ($ruta_db_superior."librerias_saia.php");
-
-include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
-$validar_enteros=array("x_idcampos_formato","x_formato_idformato","idformato");
+$validar_enteros = array("x_idcampos_formato", "x_formato_idformato", "idformato");
 desencriptar_sqli('form_info');
 
-include_once("librerias/funciones.php");
-
-// Initialize common variables
 $x_idcampos_formato = Null;
 $x_formato_idformato = Null;
 $x_nombre = Null;
@@ -26,12 +30,8 @@ $x_valor = Null;
 $x_predeterminado = Null;
 $x_ayuda = Null;
 $x_autoguardado = Null;
-$idformato=@$_REQUEST["idformato"];
-$x_banderas =array();
-?>
-
-<?php include ($ruta_db_superior."phpmkrfn.php") ?>
-<?php
+$idformato = @$_REQUEST["idformato"];
+$x_banderas = array();
 
 // Get action
 $sAction = @$_POST["a_add"];
@@ -39,17 +39,11 @@ if (($sAction == "") || ((is_null($sAction)))) {
 	$sKey = @$_GET["key"];
 	$sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
 	if ($sKey <> "") {
-		$sAction = "C"; // Copy record
+		$sAction = "C";
+	} else {
+		$sAction = "I";
 	}
-	else
-	{
-		$sAction = "I"; // Display blank record
-	}
-}
-else
-{
-
-	// Get fields from form
+} else {
 	$x_idcampos_formato = @$_POST["x_idcampos_formato"];
 	$x_formato_idformato = @$_POST["x_formato_idformato"];
 	$x_nombre = @$_POST["x_nombre"];
@@ -63,49 +57,203 @@ else
 	$x_predeterminado = @$_POST["x_predeterminado"];
 	$x_ayuda = @$_POST["x_ayuda"];
 	$x_banderas = @$_POST["x_banderas"];
-  $x_autoguardado = @$_POST["x_autoguardado"];
+	$x_autoguardado = @$_POST["x_autoguardado"];
 }
 
-switch ($sAction)
-{
-	case "C": // Get a record to display
-		if (!LoadData($sKey,$conn)) { // Load Record based on key
-      alerta("No se ha podido encontrar el campo original del formato");
-			redirecciona("campos_formatolist.php?idformato=".$idformato);
+switch ($sAction) {
+	case "C" :
+		if (!LoadData($sKey, $conn)) {// Load Record based on key
+			alerta("No se ha podido encontrar el campo original del formato");
+			redirecciona("campos_formatolist.php?idformato=" . $idformato);
 			exit();
 		}
 		break;
-	case "A": // Add
-		if (AddData($conn)) { // Add New Record
-      alerta("Adicion Exitosa");
-			redirecciona("campos_formatolist.php?idformato=".$idformato);
+	case "A" :
+		if (AddData($conn)) {// Add New Record
+			alerta("Adicion Exitosa");
+			redirecciona("campos_formatolist.php?idformato=" . $idformato);
 		}
 		break;
 }
-?>
-<?php
-echo(librerias_jquery("1.7"));
-include ($ruta_db_superior."header.php");
 
+function LoadData($sKey, $conn) {
+	$sKeyWrk = "" . addslashes($sKey) . "";
+	$sSql = "SELECT * FROM campos_formato";
+	$sSql .= " WHERE idcampos_formato = " . $sKeyWrk;
+	$sGroupBy = "";
+	$sHaving = "";
+	$sOrderBy = "";
+	if ($sGroupBy <> "") {
+		$sSql .= " GROUP BY " . $sGroupBy;
+	}
+	if ($sHaving <> "") {
+		$sSql .= " HAVING " . $sHaving;
+	}
+	if ($sOrderBy <> "") {
+		$sSql .= " ORDER BY " . $sOrderBy;
+	}
+	$rs = phpmkr_query($sSql, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
+	if (phpmkr_num_rows($rs) == 0) {
+		$LoadData = false;
+	} else {
+		$LoadData = true;
+		$row = phpmkr_fetch_array($rs);
+		global $x_idcampos_formato, $x_formato_idformato, $x_nombre, $x_etiqueta, $x_tipo_dato, $x_longitud, $x_obligatoriedad, $x_banderas, $x_acciones, $x_etiqueta_html, $x_valor, $x_predeterminado, $x_ayuda;
+
+		// Get the field contents
+		$x_idcampos_formato = $row["idcampos_formato"];
+		$x_formato_idformato = $row["formato_idformato"];
+		$x_nombre = $row["nombre"];
+		$x_etiqueta = $row["etiqueta"];
+		$x_tipo_dato = $row["tipo_dato"];
+		$x_longitud = $row["longitud"];
+		$x_obligatoriedad = $row["obligatoriedad"];
+		$x_acciones = $row["acciones"];
+		$x_etiqueta_html = $row["etiqueta_html"];
+		$x_valor = $row["valor"];
+		$x_predeterminado = $row["predeterminado"];
+		$x_ayuda = $row["ayuda"];
+		$x_autoguardado = $row["x_autoguardado"];
+		if ($row["banderas"])
+			$x_banderas = explode(",", $row["banderas"]);
+		else
+			$x_banderas = array();
+	}
+	phpmkr_free_result($rs);
+	return $LoadData;
+}
+
+function AddData($conn) {
+	global $x_autoguardado, $x_idcampos_formato, $x_formato_idformato, $x_nombre, $x_etiqueta, $x_tipo_dato, $x_longitud, $x_obligatoriedad, $x_banderas, $x_acciones, $x_etiqueta_html, $x_valor, $x_predeterminado, $x_ayuda;
+	$formato = busca_filtro_tabla("", "formato", "idformato=" . $_REQUEST["idformato"], "", $conn);
+	// Add New Record
+	$sSql = "SELECT * FROM campos_formato";
+	$sSql .= " WHERE 0 = 1";
+	$sGroupBy = "";
+	$sHaving = "";
+	$sOrderBy = "";
+	if ($sGroupBy <> "") {
+		$sSql .= " GROUP BY " . $sGroupBy;
+	}
+	if ($sHaving <> "") {
+		$sSql .= " HAVING " . $sHaving;
+	}
+	if ($sOrderBy <> "") {
+		$sSql .= " ORDER BY " . $sOrderBy;
+	}
+
+	// Field formato_idformato
+	$theValue = ($x_formato_idformato != "") ? intval($x_formato_idformato) : "NULL";
+	$fieldList["formato_idformato"] = $theValue;
+
+	// Field nombre
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_nombre) : $x_nombre;
+	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+	$fieldList["nombre"] = $theValue;
+
+	// Field etiqueta
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiqueta) : $x_etiqueta;
+	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+	$fieldList["etiqueta"] = $theValue;
+	// Field autoguardado
+	$fieldList["autoguardado"] = $x_autoguardado;
+	if ($fieldList["autoguardado"] <> 1)
+		$fieldList["autoguardado"] = 0;
+	// Field tipo_dato
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_tipo_dato) : $x_tipo_dato;
+	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+	$fieldList["tipo_dato"] = $theValue;
+
+	// Field longitud
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_longitud) : $x_longitud;
+	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+	$fieldList["longitud"] = $theValue;
+
+	// Field obligatoriedad
+	$theValue = ($x_obligatoriedad != "") ? intval($x_obligatoriedad) : "NULL";
+	$fieldList["obligatoriedad"] = $theValue;
+
+	// Field acciones
+	if (is_array($x_acciones))
+		$theValue = implode(",", $x_acciones);
+	else
+		$theValue = "";
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($theValue) : $theValue;
+	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+	$fieldList["acciones"] = $theValue;
+
+	// Field banderas
+	if (is_array($x_banderas))
+		$theValue = implode(",", @$x_banderas);
+	else
+		$theValue = "";
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($theValue) : $theValue;
+	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+	$fieldList["banderas"] = $theValue;
+
+	// Field etiqueta_html
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiqueta_html) : $x_etiqueta_html;
+	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+	$fieldList["etiqueta_html"] = $theValue;
+
+	// Field valor
+	$x_valor = parsear_comilla_sencilla_cadena($x_valor);
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_valor) : $x_valor;
+	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+	$fieldList["valor"] = $theValue;
+	if (strpos($GLOBALS["x_valor"], "*}") > 0) {
+		$existe = busca_filtro_tabla("", "funciones_formato", "nombre='" . $x_valor . "'", "", $conn);
+		if (!$existe["numcampos"])
+			$redirecciona = "funciones_formatoadd.php?adicionar=" . $x_valor . "&idformato=" . $x_formato_idformato;
+		else {
+			$formatos_func = busca_filtro_tabla("formato", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND A.idfunciones_formato=" . $existe[0]["idfunciones_formato"] . " AND B.formato_idformato=" . $x_formato_idformato, "", $conn);
+			if (!$formatos_func["numcampos"]) {
+				$sqlf = "INSERT INTO funciones_formato_enlace(funciones_formato_fk,formato_idformato)VALUES(" . $existe[0]["idfunciones_formato"] . "," . $x_formato_idformato . ")";
+				guardar_traza($sqlf, $formato[0]["nombre_tabla"]);
+				phpmkr_query($sqlf, $conn) or error("Falla Al Ejecutar " . $sqlf . " <br /> Al Generar el Formato.");
+			}
+		}
+	}
+	// Field predeterminado
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_predeterminado) : $x_predeterminado;
+	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+	$fieldList["predeterminado"] = $theValue;
+
+	// Field ayuda
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_ayuda) : $x_ayuda;
+	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+	$fieldList["ayuda"] = $theValue;
+
+	// insert into database
+	$strsql = "INSERT INTO campos_formato (";
+	$strsql .= implode(",", array_keys($fieldList));
+	$strsql .= ") VALUES (";
+	$strsql .= implode(",", array_values($fieldList));
+	$strsql .= ")";
+	guardar_traza($strsql, $formato[0]["nombre_tabla"]);
+	phpmkr_query($strsql, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $strsql);
+
+	if (!isset($_REQUEST["pantalla"])) {
+		$redirecciona = "../tinymce34/jscripts/tiny_mce/plugins/formatos/formatos.php?formato=" . $fieldList["formato_idformato"] . "&tipo=campos_formato";
+	}
+	if (isset($redirecciona)){
+		redirecciona($redirecciona);
+	}
+	return true;
+}
+
+echo(librerias_jquery("1.7"));
 echo(librerias_validar_formulario("1.11"));
 ?>
-<script type="text/javascript" src="<?php echo($ruta_db_superior);?>ew.js"></script>
-<!-- <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery.js"></script>  -->
-<!-- <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery.validate.js"></script> -->
-<script type="text/javascript">
-<!--
-EW_dateSep = "/"; // set date separator
-
-//-->
-</script>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
-<script type='text/javascript'>
+<script type="text/javascript" src="<?php echo($ruta_db_superior);?>ew.js"></script>
+<script type="text/javascript">
+		EW_dateSep = "/"; // set date separator
     hs.graphicsDir = '<?php echo($ruta_db_superior);?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
     hs.outlineType = 'rounded-white';
-</script>
-<script type="text/javascript">
- 	 $().ready(function() {
+
+ 	 $(document).ready(function() {
  	//Elimina espacios y convierte el texto en minuscula
  	$("#action").attr("disabled",true);
  	$("#x_nombre").keyup(function(){
@@ -189,7 +337,7 @@ EW_dateSep = "/"; // set date separator
 			  }
 	});
 	});
-<!--
+
 function EW_checkMyForm(EW_this) {
 	//PALABRAS RESERVADAS EN LOS CAMPOS
 var palabras_reservadas_saia=Array("select","insert","update","delete","input");
@@ -221,7 +369,6 @@ if (EW_this.x_acciones && !EW_hasValue(EW_this.x_acciones, "CHECKBOX" )) {
 return true;
 }
 
-//-->
 </script>
 <p><span class="phpmaker">Campos del Formato<br><br>
 <?php
@@ -513,189 +660,3 @@ if(!$datos_formato[0]["item"]){
 <p>
 <input type="submit" name="Action" value="ADICIONAR" id="action">
 </form>
-<?php include ("footer.php") ?>
-<?php
-//phpmkr_db_close($conn);
-?>
-<?php
-
-//-------------------------------------------------------------------------------
-// Function LoadData
-// - Load Data based on Key Value sKey
-// - Variables setup: field variables
-function LoadData($sKey,$conn)
-{
-	$sKeyWrk = "" . addslashes($sKey) . "";
-	$sSql = "SELECT * FROM campos_formato";
-	$sSql .= " WHERE idcampos_formato = " . $sKeyWrk;
-	$sGroupBy = "";
-	$sHaving = "";
-	$sOrderBy = "";
-	if ($sGroupBy <> "") {
-		$sSql .= " GROUP BY " . $sGroupBy;
-	}
-	if ($sHaving <> "") {
-		$sSql .= " HAVING " . $sHaving;
-	}
-	if ($sOrderBy <> "") {
-		$sSql .= " ORDER BY " . $sOrderBy;
-	}
-	$rs = phpmkr_query($sSql,$conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
-	if (phpmkr_num_rows($rs) == 0) {
-		$LoadData = false;
-	}else{
-		$LoadData = true;
-		$row = phpmkr_fetch_array($rs);
-  global $x_idcampos_formato, $x_formato_idformato, $x_nombre, $x_etiqueta, $x_tipo_dato, $x_longitud, $x_obligatoriedad, $x_banderas,
-  	$x_acciones, $x_etiqueta_html, $x_valor, $x_predeterminado, $x_ayuda;
-
-		// Get the field contents
-		$x_idcampos_formato = $row["idcampos_formato"];
-		$x_formato_idformato = $row["formato_idformato"];
-		$x_nombre = $row["nombre"];
-		$x_etiqueta = $row["etiqueta"];
-		$x_tipo_dato = $row["tipo_dato"];
-		$x_longitud = $row["longitud"];
-		$x_obligatoriedad = $row["obligatoriedad"];
-		$x_acciones = $row["acciones"];
-		$x_etiqueta_html = $row["etiqueta_html"];
-		$x_valor = $row["valor"];
-		$x_predeterminado = $row["predeterminado"];
-		$x_ayuda = $row["ayuda"];
-		$x_autoguardado = $row["x_autoguardado"];
-		if($row["banderas"])
-		  $x_banderas=explode(",",$row["banderas"]);
-		else $x_banderas=array();
-	}
-	phpmkr_free_result($rs);
-	return $LoadData;
-}
-?>
-<?php
-
-//-------------------------------------------------------------------------------
-// Function AddData
-// - Add Data
-// - Variables used: field variables
-
-function AddData($conn)
-{
-global $x_autoguardado,$x_idcampos_formato, $x_formato_idformato, $x_nombre, $x_etiqueta, $x_tipo_dato, $x_longitud, $x_obligatoriedad,$x_banderas,
-  	$x_acciones, $x_etiqueta_html, $x_valor, $x_predeterminado, $x_ayuda;
- 	$formato=busca_filtro_tabla("","formato","idformato=".$_REQUEST["idformato"],"",$conn);
-	// Add New Record
-	$sSql = "SELECT * FROM campos_formato";
-	$sSql .= " WHERE 0 = 1";
-	$sGroupBy = "";
-	$sHaving = "";
-	$sOrderBy = "";
-	if ($sGroupBy <> "") {
-		$sSql .= " GROUP BY " . $sGroupBy;
-	}
-	if ($sHaving <> "") {
-		$sSql .= " HAVING " . $sHaving;
-	}
-	if ($sOrderBy <> "") {
-		$sSql .= " ORDER BY " . $sOrderBy;
-	}
-
-	// Field formato_idformato
-	$theValue = ($x_formato_idformato != "") ? intval($x_formato_idformato) : "NULL";
-	$fieldList["formato_idformato"] = $theValue;
-
-	// Field nombre
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_nombre) : $x_nombre;
-	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-	$fieldList["nombre"] = $theValue;
-
-	// Field etiqueta
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiqueta) : $x_etiqueta;
-	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-	$fieldList["etiqueta"] = $theValue;
-  // Field autoguardado
-  $fieldList["autoguardado"] =$x_autoguardado ;
-    if($fieldList["autoguardado"]<>1)
-      $fieldList["autoguardado"]=0;
-	// Field tipo_dato
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_tipo_dato) : $x_tipo_dato;
-	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-	$fieldList["tipo_dato"] = $theValue;
-
-	// Field longitud
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_longitud) : $x_longitud;
-	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-	$fieldList["longitud"] = $theValue;
-
-	// Field obligatoriedad
-	$theValue = ($x_obligatoriedad != "") ? intval($x_obligatoriedad) : "NULL";
-	$fieldList["obligatoriedad"] = $theValue;
-
-	// Field acciones
-	if(is_array($x_acciones))
-	 $theValue = implode(",", $x_acciones);
-	else $theValue="";
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($theValue) : $theValue;
-	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-	$fieldList["acciones"] = $theValue;
-
-		// Field banderas
-	if(is_array($x_banderas))
-	 $theValue = implode(",",@$x_banderas);
-	else $theValue="";
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($theValue) : $theValue;
-	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-	$fieldList["banderas"] = $theValue;
-
-	// Field etiqueta_html
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiqueta_html) : $x_etiqueta_html;
-	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-	$fieldList["etiqueta_html"] = $theValue;
-
-	// Field valor
-	$x_valor=parsear_comilla_sencilla_cadena($x_valor);
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_valor) : $x_valor;
-	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-	$fieldList["valor"] = $theValue;
-  if(strpos($GLOBALS["x_valor"],"*}")>0)
-    {$existe=busca_filtro_tabla("","funciones_formato","nombre='".$x_valor."'","",$conn);
-     if(!$existe["numcampos"])
-        $redirecciona="funciones_formatoadd.php?adicionar=".$x_valor."&idformato=".$x_formato_idformato;
-     else
-        {
-         $formatos_func=busca_filtro_tabla("formato","funciones_formato","idfunciones_formato=".$existe[0]["idfunciones_formato"],"",$conn);
-         $vector_f=explode(",",$formatos_func[0][0]);
-         if(!in_array($x_formato_idformato,$vector_f))
-             {$vector_f[]=$x_formato_idformato;
-              $sqlf="UPDATE funciones_formato SET formato='".implode(",",$vector_f)."' WHERE idfunciones_formato=".$existe[0]["idfunciones_formato"];
-			  guardar_traza($sqlf,$formato[0]["nombre_tabla"]);
-              phpmkr_query($sqlf,$conn) or error("Falla Al Ejecutar ".$sqlf." <br /> Al Generar el Formato.");
-             }
-        }
-    }
-	// Field predeterminado
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_predeterminado) : $x_predeterminado;
-	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-	$fieldList["predeterminado"] = $theValue;
-
-	// Field ayuda
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_ayuda) : $x_ayuda;
-	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-	$fieldList["ayuda"] = $theValue;
-
-	// insert into database
-	$strsql = "INSERT INTO campos_formato (";
-	$strsql .= implode(",", array_keys($fieldList));
-	$strsql .= ") VALUES (";
-	$strsql .= implode(",", array_values($fieldList));
-	$strsql .= ")";
-	guardar_traza($strsql,$formato[0]["nombre_tabla"]);
-	phpmkr_query($strsql, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $strsql);
-
- if(!isset($_REQUEST["pantalla"]))
-  {$redirecciona="../tinymce34/jscripts/tiny_mce/plugins/formatos/formatos.php?formato=".$fieldList["formato_idformato"]."&tipo=campos_formato";
-  }
-  if(isset($redirecciona))
-	    redirecciona($redirecciona);
-	return true;
-}
-?>

@@ -11,6 +11,7 @@ return array(
     'Luracast\\Restler' => array($vendorDir . '/luracast/restler/vendor'),
     'Imagine' => array($vendorDir . '/imagine/imagine/lib'),
     'Gaufrette' => array($vendorDir . '/knplabs/gaufrette/src'),
+    'Doctrine\\ORM\\' => array($vendorDir . '/doctrine/orm/lib'),
     'Doctrine\\DBAL\\' => array($vendorDir . '/doctrine/dbal/lib'),
     'Doctrine\\Common\\Lexer\\' => array($vendorDir . '/doctrine/lexer/lib'),
     'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib'),

@@ -2,7 +2,6 @@
 die();
 include_once("db.php");
 
-
 echo "Ejecutando limpieza, espere un momento por favor<br />";
 //-----------------limpiar base de datos------------/
 
@@ -160,10 +159,10 @@ $conn->Ejecutar_Sql("truncate table tareas_listado_tiempo");
 $conn->Ejecutar_Sql("truncate table tareas_planeadas");
 $conn->Ejecutar_Sql("truncate table tareas_progreso");
 
-$conn->Ejecutar_Sql("truncate table dependencia_cargo");
+/*$conn->Ejecutar_Sql("truncate table dependencia_cargo");
 $conn->Ejecutar_Sql("truncate table serie");
 $conn->Ejecutar_Sql("truncate table entidad_serie");
-$conn->Ejecutar_Sql("truncate table contador");
+ $conn->Ejecutar_Sql("truncate table contador");*/
 
 //EXPEDIENTES
 $conn->Ejecutar_Sql("truncate table expediente");
@@ -174,12 +173,10 @@ $conn->Ejecutar_Sql("truncate table caja");
 $conn->Ejecutar_Sql("truncate table entidad_caja");
 
 limpiar_formatos();
-limpiar_busquedas();
-limpiar_indicadores();
-limpiar_funcionarios();
-
-asignar_permisos_cerok();
-
+//limpiar_busquedas();
+//limpiar_indicadores();
+//limpiar_funcionarios();
+//asignar_permisos_cerok();
 
 echo ("Fin de la limpieza");
 
@@ -195,8 +192,12 @@ function limpiar_formatos(){
         elimina_funciones_formato_accion($formatos_eliminar[$i]['idformato']);
         $elimina_formato="DELETE FROM formato WHERE idformato=".$formatos_eliminar[$i]['idformato'];
         phpmkr_query($elimina_formato);
+
+		$elimina_formato2 = "DROP TABLE " . $formatos_eliminar[$i]['nombre_tabla'];
+		phpmkr_query($elimina_formato2);
     }
 }
+
 function limpiar_busquedas(){
     $busquedas_eliminar=busca_filtro_tabla("idbusqueda","busqueda","pertenece_nucleo=0","",$conn);
     for ($i=0; $i < $busquedas_eliminar['numcampos']; $i++) { 
@@ -209,6 +210,7 @@ function limpiar_busquedas(){
         }
     }
 }
+
 function limpiar_indicadores(){
     $indicadores_eliminar=busca_filtro_tabla("idindicador","indicador","pertenece_nucleo=0","",$conn);
     for ($i=0; $i < $indicadores_eliminar['numcampos']; $i++) { 
@@ -225,6 +227,7 @@ function limpiar_indicadores(){
         phpmkr_query($elimina_indicador);
     }
 }
+
 function limpiar_funcionarios(){
     global $conn;
     $eliminar_funcionario="DELETE FROM funcionario WHERE pertenece_nucleo=0";
@@ -234,6 +237,7 @@ function limpiar_funcionarios(){
     $eliminar_dependencia="DELETE FROM dependencia WHERE pertenece_nucleo=0";
     phpmkr_query($eliminar_dependencia);
 }
+
 function eliminar_contador($idcontador){
     $busca_contador_formatos=busca_filtro_tabla("idformato","formato","contador_idcontador=".$idcontador,"",$conn);
     if(!$busca_contador_formatos['numcampos'] || $busca_contador_formatos['numcampos']==1){
@@ -241,6 +245,7 @@ function eliminar_contador($idcontador){
         phpmkr_query($elimina_contador);
     }
 }
+
 function eliminar_serie($idserie){
     $busca_serie_formatos=busca_filtro_tabla("idformato","formato","serie_idserie=".$idserie,"",$conn);
     if(!$busca_serie_formatos['numcampos'] || $busca_serie_formatos['numcampos']==1){
@@ -248,6 +253,7 @@ function eliminar_serie($idserie){
         phpmkr_query($elimina_serie);
     }
 }
+
 function eliminar_categoria($idcategoria){
     $busca_categoria_formatos=busca_filtro_tabla("idformato","formato","fk_categoria_formato=".$idcategoria,"",$conn);
     if(!$busca_categoria_formatos['numcampos'] || $busca_categoria_formatos['numcampos']==1){
@@ -255,12 +261,14 @@ function eliminar_categoria($idcategoria){
         phpmkr_query($elimina_categoria);
     }
 }
+
 function elimina_modulo($nombre){
     $elimina_modulo_permiso="DELETE FROM modulo WHERE nombre='".$nombre."'";
     phpmkr_query($elimina_modulo_permiso);
     $elimina_modulo_crear="DELETE FROM modulo WHERE nombre='crear_".$nombre."'";
     phpmkr_query($elimina_modulo_crear);
 }
+
 function elimina_campos_formato($idformato){
     $campos_formato=busca_filtro_tabla("idcampos_formato","campos_formato","formato_idformato=".$idformato,"",$conn);
     for ($i=0; $i < $campos_formato['numcampos']; $i++) { 
@@ -270,10 +278,12 @@ function elimina_campos_formato($idformato){
         phpmkr_query($elimina_campo);
     }
 }
+
 function elimina_funciones_formato($idformato){
     $elimina_funciones_formato="DELETE FROM funciones_formato WHERE formato_idformato=".$idformato;
     phpmkr_query($elimina_funciones_formato);
 }
+
 function elimina_funciones_formato_accion($idformato){
     $elimina_funciones_formato_accion="DELETE FROM funciones_formato_accion WHERE formato_idformato=".$idformato;
     phpmkr_query($elimina_funciones_formato_accion);
@@ -286,6 +296,3 @@ function asignar_permisos_cerok(){
 		phpmkr_query($sqlp);
 	}
 }
-
-
-?>

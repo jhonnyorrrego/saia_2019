@@ -1,7 +1,15 @@
 <?php session_start(); ?>
 <?php ob_start(); ?>
 <?php
-
+$max_salida = 10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
+	}
+	$ruta .= "../";
+	$max_salida--;
+}
 // Initialize common variables
 $x_idformato = Null;
 $x_nombre = Null;
@@ -20,8 +28,8 @@ $x_papel = Null;
 $x_exportar = Null;
 $_pertenece_nucleo = Null;
 ?>
-<?php include ("db.php") ?>
-<?php include ("phpmkrfn.php") ?>
+<?php include_once($ruta_db_superior."db.php") ?>
+<?php include_once($ruta_db_superior."phpmkrfn.php") ?>
 <?php
 $sKey = @$_GET["key"];
 if (($sKey == "") || ((is_null($sKey)))) {
@@ -54,9 +62,8 @@ switch ($sAction)
 		}
 }
 ?>
-<?php include ("header.php") ?>
-<p><br />
-<a href="<?php echo $ruta_db_superior?>formatos/formatoedit.php?key=<?php echo $sKey; ?>">Editar</a>&nbsp;
+<?php include_once($ruta_db_superior."header.php") ?>
+<p><br /><a href="<?php echo "formatoedit.php?key=" . urlencode($sKey); ?>">Editar</a>&nbsp;   
 <a href="<?php echo $ruta_db_superior; ?>formatos/<?php echo "formatoadd_paso2.php?key=" . urlencode($sKey); ?>">Editar cuerpo</a>&nbsp;
 <a href="<?php echo $ruta_db_superior; ?>formatos/campos_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Campos del Formato</a>&nbsp;&nbsp;
 <a href="<?php echo $ruta_db_superior; ?>formatos/funciones_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Funciones del Formato</a>&nbsp;&nbsp;
@@ -269,7 +276,7 @@ $x_exportar = $sTmp;
 </table>
 </form>
 <p>
-<?php include ("footer.php") ?>
+<?php include_once ($ruta_db_superior."footer.php") ?>
 <?php
 phpmkr_db_close($conn);
 ?>

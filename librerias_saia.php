@@ -149,6 +149,7 @@ function librerias_arboles($opciones=''){
 global $raiz_saia;
 $texto='<script type="text/javascript" src="'.$raiz_saia.'js/dhtmlXCommon.js"></script>
 	<script type="text/javascript" src="'.$raiz_saia.'js/dhtmlXTree.js"></script>
+<script type="text/javascript" src="'.$raiz_saia.'js/dhtmlxtree_xw.js"></script>
   <script type="text/javascript" src="'.$raiz_saia.'pantallas/lib/librerias_arboles.js"></script>
 	<link rel="STYLESHEET" type="text/css" href="'.$raiz_saia.'css/dhtmlXTree.css">';
 	if($opcion=='drag'){

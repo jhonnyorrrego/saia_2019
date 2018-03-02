@@ -139,7 +139,7 @@ return true;
 	</tr>	
 </table>
 <p>
-<input type="hidden" name="x_encrypt" id="x_encrypt" value="<?php echo(@$x_encrypt); ?>">
+<input type="text" name="x_encrypt" id="x_encrypt" value="<?php echo(@$x_encrypt); ?>">
 <input type="submit" name="Action" value="Editar">
 </form>
 <?php include ("footer.php") ?>

@@ -67,7 +67,7 @@ if(@$_REQUEST["idformato"]){
   $idformato=$_REQUEST["idformato"];
   $lacciones=busca_filtro_tabla("","accion","","",$conn);
 
-  $lfunciones=busca_filtro_tabla("","funciones_formato A","(A.formato LIKE '".$idformato."' OR A.formato LIKE '%,".$idformato.",%' OR A.formato LIKE '%,".$idformato."' OR A.formato LIKE '".$idformato.",%') and nombre_funcion<>'transferencia_automatica'","",$conn);
+  $lfunciones=busca_filtro_tabla("","funciones_formato A, funciones_formato_enlace B","A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=".$idformato." AND nombre_funcion<>'transferencia_automatica'","",$conn);
   $accion_formato=0;
   if(@$_REQUEST["accion_funcion"]){
     $accion_formato=$_REQUEST["accion_funcion"];
