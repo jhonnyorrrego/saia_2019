@@ -3,7 +3,7 @@ if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["doc"]){
 	$_REQUEST["iddoc"]=@$_REQUEST["doc"];
 	include_once("formatos/librerias/menu_principal_documento.php");
 	echo(menu_principal_documento(@$_REQUEST["iddoc"],@$_REQUEST["vista"]));
-} 
+}
 ?>
 <html>
 <head>
