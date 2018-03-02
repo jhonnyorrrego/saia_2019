@@ -10,13 +10,6 @@ while($max_salida>0){
 }
 
 include_once($ruta_db_superior."db.php");
-if(!@$_SESSION["LOGIN".LLAVE_SAIA]){
-  $_SESSION["LOGIN".LLAVE_SAIA]=LOGIN_LOGIN;
-  $_SESSION["usuario_actual"]=FUNCIONARIO_CODIGO_LOGIN;
-  $_SESSION["conexion_remota"]=1; 
-}
-
-
 function validar_contador($nombre_contador){
 	global $conn;
 
@@ -350,6 +343,7 @@ function generar_importar($datos){
 				}
 				
 				if(@$idformato){
+				    $formato["idformato"]=$idformato;
 					$formato['exito']=1;
 					$formato['mensaje']="Formato Creado con Exito!";
 				}else{
@@ -491,7 +485,3 @@ function generar_importar($datos){
 
 	return(json_encode($formato));
 }
-
-
-
-?>

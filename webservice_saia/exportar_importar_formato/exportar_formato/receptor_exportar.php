@@ -17,7 +17,11 @@ while($max_salida>0){
   $namespace = $URL . '?wsdl';
   $server = new nusoap_server();
   $server->configureWSDL('hellotesting', $namespace);
-  $server->register('generar_idformato');
+  $server->register('generar_idformato', array (
+  		"datos" => "xsd:string"
+  ), array (
+  		"return" => "xsd:string"
+  ), "urn:tools", "urn:tools#generar_idformato" );
   $server->register ( "generar_exportar", array (
         "datos" => "xsd:string" 
 ), array (

@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <?php
-
+$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0){
+	if(is_file($ruta."db.php")){
+		$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+	}
+	$ruta.="../";
+	$max_salida--;
+}
+include_once($ruta_db_superior.'db.php');
+include_once($ruta_db_superior."librerias_saia.php");
+echo( estilo_bootstrap() );
+echo( librerias_jquery('1.7') );
 include('../nusoap.php');
 
 require_once ("conexion.php");
@@ -25,7 +37,8 @@ if($_REQUEST["ejecutar"]) {
  <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
-	<form method="POST" class="user-form">
+<div class="container">
+	<form method="POST" class="form form-horizontal">
 		<div class="field">
 			<label for="sel_imp">Operaci&oacute;n</label>
 			<select name="sel_imp" id="sel_imp" required="required">
@@ -35,15 +48,16 @@ if($_REQUEST["ejecutar"]) {
 		</div>
 		<div class="field">
 			<label for="txt_url">URL Remota</label>
-			<input type="url" id="txt_url" name="url" required="required" size="80" title="http://saia.domini.com/saia_empresa/saia" placeholder="http://saia.domini.com/saia_empresa/saia"/>
+			<input type="url" id="txt_url" name="url" required="required" style="width:80%;" title="http://saia.domini.com/saia_empresa/saia" placeholder="http://saia.domini.com/saia_empresa/saia"/>
 		</div>
 		<div class="field">
 			<label for="txt_usr">Reporte</label>
 			<input type="text" id="txt_usr" name="reporte" required="required"/>
 		</div>
-		<input type="submit" value="Enviar">
+		<input type="submit" value="Enviar" class="btn btn-mini btn-primary">
 		<input type="hidden" id="ejecutar" name="ejecutar" value="1"/>
 	</form>
+</div>
 </body>
 <?php
 }
@@ -57,8 +71,7 @@ function importar($datos) {
 	$stmt->bindParam(':nombre', $nombre_reporte, PDO::PARAM_STR);
 	if ($stmt->execute()) {
 		if ($stmt->rowCount() >= 1) {
-			echo '<script>alert("Ya existe el reporte \"' . $nombre_reporte . '\"");</script>';
-			die();
+
 		}
 	}
 
