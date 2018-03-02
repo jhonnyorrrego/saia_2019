@@ -1,9 +1,0 @@
-.user-form { padding:20px; }
-
-.user-form .field { padding: 4px; margin:1px; background: #eee; }
-
-.user-form .field label { display:inline-block; width:150px; margin-left:5px; text-align: right; }
-
-.user-form .field input { display:inline-block; vertical-align: top;}
-
-.ui-input-text {width:auto !important;}
