@@ -32,6 +32,7 @@ body{
 }
 
 .table td,
+.table td p,
 .table tr,
 .table th,
 .table-bordered td, 

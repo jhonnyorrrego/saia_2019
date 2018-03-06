@@ -19,6 +19,16 @@ if (isset($_SESSION["LOGIN" . LLAVE_SAIA]) && $_SESSION["LOGIN" . LLAVE_SAIA]) {
 	$_SESSION["idfuncionario"] = usuario_actual("idfuncionario");
 }
 
+function logear_funcionario_webservice($login){
+global $usuactual;
+	$usuactual=$login;
+	$_SESSION["LOGIN" . LLAVE_SAIA]=$login;
+	$_SESSION["usuario_actual"] = usuario_actual("funcionario_codigo");
+	$_SESSION["idfuncionario"] = usuario_actual("idfuncionario");
+	$_SESSION["conexion_remota"] = 1;
+	return;
+}
+
 /*
 <Clase>
 <Nombre>registrar_accion_digitalizacion

@@ -29,16 +29,6 @@ function seleccionar_perfil($idperfil, $idfuncionario) {
 	return ($idperfil . " AND idfuncionario=" . $idfuncionario);
 }
 
-function prueba_accion() {
-	$texto = '<li><a href="#" id="accion2">Accion</a></li>';
-	$texto .= '<script>
-    $("#accion2").click(function(){
-      alert($("#seleccionados").val());
-    } );
-  </script>';
-	return $texto;
-}
-
 function nombre_perfil($perfil) {
 	$nombre_perfil = busca_filtro_tabla("", "perfil", "idperfil in(" . $perfil . ")", "", $conn);
 	$perfiles = extrae_campo($nombre_perfil, "nombre");
@@ -78,5 +68,15 @@ function fotografia_funcionario($idfuncionario) {
 	$html = '<a class="open_highslide" id="highslide_funcionario_' . $idfuncionario . '" style="cursor:pointer;" enlace="' . $href . '" identificador="' . $idfuncionario . '">' . $imagen . '</a>';
 	return ($html);
 
+}
+
+function where_funcionario() {
+	global $configuracion;
+	$configuracion = busca_filtro_tabla("A.valor", "configuracion A", "A.tipo='usuario' AND A.nombre='login_administrador'", "", $conn);
+	 $html = " and login<>'" . $configuracion[0]["valor"] . "'";
+	 if ($configuracion["numcampos"] && trim($configuracion[0]["valor"]) == trim($_SESSION["LOGIN" . LLAVE_SAIA])) {
+	 	$html = "";
+	 }
+	 return $html;
 }
 ?>

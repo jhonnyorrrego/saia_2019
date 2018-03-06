@@ -9,17 +9,12 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
-if (!@$_SESSION["LOGIN" . LLAVE_SAIA]) {
-	$_SESSION["LOGIN" . LLAVE_SAIA] = @$_REQUEST["LOGIN"];
-	$_SESSION["usuario_actual"] = $_REQUEST["usuario_actual"];
-	$_SESSION["conexion_remota"] = 1;
-	global $usuactual;
-	$usuactual = @$_REQUEST["LOGIN"];
+if (!$_SESSION["LOGIN" . LLAVE_SAIA] && isset($_REQUEST["LOGIN"]) && @$_REQUEST["conexion_remota"]) {
+	logear_funcionario_webservice($_REQUEST["LOGIN"]);
 }
 
 include_once ($ruta_db_superior . 'html2ps/public_html/fpdf/fpdf.php');
 include_once ($ruta_db_superior . 'manipular_pdf/fpdi.php');
-global $conn;
 
 if (!isset($_REQUEST['seleccionados'])) {// UTILIZADO PARA GENERAR PDF DESDE EL MENU INTERMEDIO
 	/*VERIFICACION DE EXISTENCIA PDF Y SI DAN CLICK EN ACTUALIZAR PDF*/
@@ -147,7 +142,7 @@ if (!empty($listado_pdf)) {
 	foreach ($listado_pdf as $i => $url) {
 		if ($url != '') {
 			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, PROTOCOLO_CONEXION . RUTA_PDF . "/" . $url . "&radicacion_remota=1&LOGIN=" . usuario_actual('login') . "&usuario_actual=" . usuario_actual('funcionario_codigo') . "&LLAVE_SAIA=" . LLAVE_SAIA);
+			curl_setopt($ch, CURLOPT_URL, PROTOCOLO_CONEXION . RUTA_PDF . "/" . $url . "&conexion_remota=1&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA]);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			fwrite($file, curl_exec($ch) . "\n");
 			curl_close($ch);

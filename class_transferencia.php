@@ -78,7 +78,8 @@ function dependencias($padre) {
  <Pre-condiciones><Pre-condiciones>
  <Post-condiciones><Post-condiciones>
  </Clase>  */
-function minusculas($texto) {$vocales = array('&AACUTE', '&EACUTE', '&IACUTE', '&OACUTE', '&UACUTE', '&NTILDE;');
+function minusculas($texto) {
+  $vocales = array('&AACUTE', '&EACUTE', '&IACUTE', '&OACUTE', '&UACUTE', '&NTILDE;');
 	$reemplazo = array('&aacute', '&eacute', '&iacute', '&oacute', '&uacute', '&ntilde;');
 	$texto_nuevo = strtolower($texto);
 	for ($i = 0; $i < count($vocales); $i++) {
@@ -357,16 +358,10 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 	}
 	if ($destino <> "" && $origen <> "") {
 		$values_out = "$idarchivo,'" . $datos["nombre"] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",";
-		if ($datos["tipo_destino"] == "1" || $datos["tipo_destino"] == "4" || $datos["tipo_destino"] == "5") {
+		if ($datos["tipo_destino"] == "1" || $datos["tipo_destino"] == "5") {
 			$tipo_destino = 1;
 			$datos_origen = "";
-			if ($datos["tipo_destino"] == "4" && count($destino) == 1) {
-				$dependencia = busca_filtro_tabla("d.dependencia_iddependencia as dep", "dependencia_cargo d,funcionario f", "d.funcionario_idfuncionario=f.idfuncionario and f.funcionario_codigo=$origen", "", $conn);
-				$datos_destino = busca_cargofuncionario(4, $destino[0], $dependencia[0]["dep"]);
-				if ($datos_destino <> "") {
-					$destino[0] = $datos_destino[0]["funcionario_codigo"];
-				}
-			} else if ($datos["tipo_destino"] == "5" && count($destino) == 1) {
+			if ($datos["tipo_destino"] == "5" && count($destino) == 1) {
 				$datos_destino = busca_cargofuncionario(5, $destino[0], "");
 				if ($datos_destino <> "") {
 					$destino[0] = $datos_destino[0]["funcionario_codigo"];
@@ -399,21 +394,6 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 				phpmkr_query($sql, $conn);
 				procesar_estados($origen, $user, $datos["nombre"], $idarchivo);
 			}
-		} else if ($datos["tipo_destino"] == "2") {
-			if ($datos["nombre"] != "POR_APROBAR")
-				$destinos = buscar_funcionarios(str_replace("#", "", $fila), $destino);
-			for ($i = 0; $i < count($destinos); $i++) {//buzon de entrada
-				$values = "$idarchivo,'" . $datos["nombre"] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",$origen," . $destinos[$i] . ",1,1" . $otros_valores . ",'" . @$datos["ver_notas"] . "'";
-				$values1 = "$idarchivo,'" . $datos["nombre"] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . "," . $destinos[$i] . ",$origen,1,1" . $otros_valores;
-
-				$enlace = busca_filtro_tabla("descripcion", "documento", "iddocumento=$idarchivo", "", $conn);
-				$enlace = $enlace[0]["descripcion"];
-				$sql = "INSERT INTO buzon_entrada(archivo_idarchivo,nombre,fecha,destino,origen,tipo_origen,tipo_destino" . $otras_llaves . ",ver_notas) values(" . $values . ")";
-				phpmkr_query($sql, $conn);
-
-				$sql = "INSERT INTO buzon_salida(archivo_idarchivo,nombre,fecha,origen,destino,tipo_origen,tipo_destino" . $otras_llaves . ") values(" . $values1 . ")";
-				phpmkr_query($sql, $conn);
-			}
 		} else {
 			$values = "$idarchivo,'" . $datos["nombre"] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",$origen,$destino,$tipo_origen,$tipo_destino" . $otros_valores . ",'" . @$datos["ver_notas"] . "'";
 			$sql = "insert into buzon_entrada(archivo_idarchivo,nombre,fecha,destino,origen,tipo_origen,tipo_destino" . $otras_llaves . ",ver_notas) values (" . $values . ")";
@@ -444,7 +424,6 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 
 function aprobar($iddoc = 0, $opcion = 0) {
 	global $ruta_db_superior, $conn;
-	$transferir = 1;
 	$aprobar_posterior = 0;
 	if (isset($_REQUEST["iddoc"]) && $_REQUEST["iddoc"]) {
 		$iddoc = $_REQUEST["iddoc"];
@@ -495,42 +474,19 @@ function aprobar($iddoc = 0, $opcion = 0) {
 			} else {
 				$valores .= "''";
 			}
-
-			if ($registro_actual[0]["ruta_idruta"] > 0) {
-				$restrictiva = busca_filtro_tabla("restrictivo", "ruta", "idruta=" . $registro_actual[0]["ruta_idruta"], "", $conn);
-				if ($restrictiva["numcampos"] && $restrictiva[0]["restrictivo"] == 1) {//busco cuantos faltan por aprobar si es restrictiva
-					$cuantos_faltan = busca_filtro_tabla("count(idtransferencia) as cuantos", "buzon_entrada", "nombre='POR_APROBAR' and activo=1 and ruta_idruta=" . $registro_actual[0]["ruta_idruta"] . " and archivo_idarchivo=" . $_REQUEST["iddoc"], "", $conn);
-					if ($cuantos_faltan[0]["cuantos"]) {
-						$valores = $iddoc . ",'VERIFICACION',$origen," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",$destino,'DOCUMENTO',1,1";
-						if ($registro_actual[$i]["ruta_idruta"] <> "") {
-							$valores .= "," . $registro_actual[$i]["ruta_idruta"];
-						} else {
-							$valores .= ",''";
-						}
-						phpmkr_query("INSERT INTO buzon_entrada(" . $campos . ") VALUES (" . $valores . ")", $conn);
-						$transferir = 0;
-					} else {
-						$update = "update buzon_entrada set nombre='TRANSFERIDO' where ruta_idruta=" . $registro_actual[0]["ruta_idruta"] . " and archivo_idarchivo=$iddoc and nombre='VERIFICACION'";
-						phpmkr_query($update, $conn);
-						$transferir = 1;
-					}
+			
+			for ($i = 0; $i < $registro_actual["numcampos"]; $i++) {
+				$registro_intermedio = busca_filtro_tabla("A.*", "buzon_entrada A", "A.archivo_idarchivo=" . $iddoc . " and A.activo=1 and (A.nombre='POR_APROBAR') and idtransferencia<" . $registro_actual[$i]["idtransferencia"], "A.idtransferencia", $conn);
+				if ($registro_intermedio["numcampos"])
+					break;
+				$valores = $iddoc . ",'$estado'," . $registro_actual[$i]["origen"] . "," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . "," . $registro_actual[$i]["destino"] . ",'DOCUMENTO',1,1,";
+				if ($registro_actual[$i]["ruta_idruta"] <> "") {
+					$valores .= $registro_actual[$i]["ruta_idruta"];
+				} else {
+					$valores .= "''";
 				}
-			}
-
-			if ($transferir == 1) {
-				for ($i = 0; $i < $registro_actual["numcampos"]; $i++) {
-					$registro_intermedio = busca_filtro_tabla("A.*", "buzon_entrada A", "A.archivo_idarchivo=" . $iddoc . " and A.activo=1 and (A.nombre='POR_APROBAR') and idtransferencia<" . $registro_actual[$i]["idtransferencia"], "A.idtransferencia", $conn);
-					if ($registro_intermedio["numcampos"])
-						break;
-					$valores = $iddoc . ",'$estado'," . $registro_actual[$i]["origen"] . "," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . "," . $registro_actual[$i]["destino"] . ",'DOCUMENTO',1,1,";
-					if ($registro_actual[$i]["ruta_idruta"] <> "") {
-						$valores .= $registro_actual[$i]["ruta_idruta"];
-					} else {
-						$valores .= "''";
-					}
-					phpmkr_query("INSERT INTO buzon_entrada(" . $campos . ") VALUES (" . $valores . ")", $conn);
-					procesar_estados($registro_actual[$i]["destino"], $registro_actual[$i]["origen"], $estado, $iddoc);
-				}
+				phpmkr_query("INSERT INTO buzon_entrada(" . $campos . ") VALUES (" . $valores . ")", $conn);
+				procesar_estados($registro_actual[$i]["destino"], $registro_actual[$i]["origen"], $estado, $iddoc);
 			}
 
 			if ($aprobar_posterior == 1) {
@@ -620,7 +576,7 @@ function aprobar($iddoc = 0, $opcion = 0) {
  </Clase>  */
 function crear_pdf($idformato, $iddoc) {
 	global $conn;
-	$url = "pantallas/documento/visor_documento.php?iddoc=" . $iddoc . "&actualizar_pdf=1";
+	$url = "pantallas/documento/visor_documento.php?iddoc=" . $iddoc . "&actualizar_pdf=1&rand=".rand(0, 1000);
 	abrir_url($url, "_self");
 }
 
@@ -900,32 +856,6 @@ function cargo_rol($iddoc) {
 
 /*
  <Clase>
- <Nombre>transferencias_pendientes
- <Parametros>serie-tipo documental al que pertenece el documento actual
- <Responsabilidades>se encarga de crear las transferencias en el estado por_aprobar (para las rutas)
- <Notas>
- <Excepciones>
- <Salida>
- <Pre-condiciones>
- <Post-condiciones>
- */
-function transferencias_pendientes($serie) {
-	global $conn;
-	$ruta = busca_filtro_tabla("", "ruta r", "tipo_documental_idtipo_documental=" . $serie, "orden", $conn);
-	for ($i = 1; $i <= count($ruta); $i++) {$campos = "activo,archivo_idarchivo,nombre,ruta_idruta,destino,origen,tipo,tipo_origen,tipo_destino";
-		if ($_POST["orden$i"] <> "") {
-			$valores = "1," . $_POST["iddoc"] . ",'POR_APROBAR'," . $ruta[$i]["idruta"] . ",";
-			$valores .= $_POST["origen$i"] . ",";
-			$valores .= $_POST["destino$i"] . ",'DOCUMENTO',1,1";
-			phpmkr_query("INSERT INTO buzon_entrada (" . $campos . ") VALUES (" . $valores . ")", $conn);
-		}
-	}
-	echo "<input type='hidden' name='iddoc' value='" . $_POST["iddoc"] . "'>";
-	echo "</form><script>form1.submit();</script>";
-}
-
-/*
- <Clase>
  <Nombre>radicar_plantilla
  <Parametros>
  <Responsabilidades>se encarga de radicar los documentos de tipo plantilla
@@ -1111,10 +1041,10 @@ function radicar_plantilla() {
 				return (json_encode($retorno));
 			}
 		}
+		
 		if (in_array("e", $banderas) || $_REQUEST["webservie_aprob_doc"] == 1) {
 			aprobar($_POST["iddoc"], 1);
 		}
-
 		enrutar_documento();
 		return $_POST["iddoc"];
 	}

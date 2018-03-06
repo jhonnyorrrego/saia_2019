@@ -515,10 +515,6 @@ function datos_documentos_vinculados($iddoc) {
 	return ($dato);
 }
 
-/*function permisos_documento($iddoc, $funcionario) {
-	return (1);
-}*/
-
 function filtro_funcionario($funcionario) {
 	if ($funcionario == 'funcionario') {
 		$retorno = " AND B.llave_entidad='" . usuario_actual("funcionario_codigo") . "'";

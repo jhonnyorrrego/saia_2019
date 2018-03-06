@@ -1003,7 +1003,7 @@ $x_tipo_envio=implode(",",$x_tipo_envio);
   }
   
   $parametros_pdf['idtransferencia']=implode(",",$transferencia);
-  $url="/class_impresion_pdfi.php?&conexion_remota=1&conexion_usuario=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&LLAVE_SAIA=".LLAVE_SAIA."&param=".urlencode(json_encode($parametros_pdf));
+  $url="/class_impresion_pdfi.php?&conexion_remota=1&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&param=".urlencode(json_encode($parametros_pdf));
   
   $ch = curl_init();
   $fila = PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.$url;

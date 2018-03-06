@@ -1,25 +1,13 @@
 <?php
 set_time_limit(0);
-
-
-
-
-if(!@$_SESSION["LOGIN" . $_REQUEST["LLAVE_SAIA"]] && $_REQUEST["conexion_remota"]) {
-    @session_start();
-    $_SESSION["LOGIN" . $_REQUEST["LLAVE_SAIA"]] = $_REQUEST["conexion_usuario"];
-    $_SESSION["usuario_actual"] = $_REQUEST["conexion_actual"];
-    $_SESSION["conexion_remota"] = 1;
-} else if(!@$_REQUEST["LOGIN"] && @$_REQUEST["usuario_actual"]) {
-    @session_start();
-    $_SESSION["LOGIN" . $_REQUEST["LLAVE_SAIA"]] = $_REQUEST["LOGIN"];
-    $_SESSION["usuario_actual"] = $_REQUEST["usuario_actual"];
-    $_SESSION["conexion_remota"] = 1;
-}
-
 use setasign\Fpdi;
 require_once('db.php');
+if (!$_SESSION["LOGIN" . LLAVE_SAIA] && isset($_REQUEST["LOGIN"]) && @$_REQUEST["conexion_remota"]) {
+	logear_funcionario_webservice($_REQUEST["LOGIN"]);
+}
 require_once('tcpdf/tcpdf.php');
 require_once('vendor/setasign/fpdi/src/autoload.php');
+
 
 /*
  * obtener orientazion

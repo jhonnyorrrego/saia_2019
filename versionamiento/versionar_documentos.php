@@ -11,16 +11,12 @@ while ($max_salida > 0) {
 }
 
 include_once ($ruta_db_superior . "db.php");
+if (!$_SESSION["LOGIN" . LLAVE_SAIA] && isset($_REQUEST["LOGIN"]) && @$_REQUEST["conexion_remota"]) {
+	logear_funcionario_webservice($_REQUEST["LOGIN"]);
+}
+
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
-
-if (!@$_SESSION["LOGIN" . LLAVE_SAIA] && isset($_REQUEST["LOGIN"])) {
-	$_SESSION["LOGIN" . LLAVE_SAIA] = @$_REQUEST["LOGIN"];
-	$_SESSION["usuario_actual"] = $_REQUEST["usuario_actual"];
-	$_SESSION["conexion_remota"] = 1;
-	global $usuactual;
-	$usuactual = @$_REQUEST["LOGIN"];
-}
 
 if (isset($_REQUEST["iddocumento"]) && $_REQUEST["iddocumento"] != "") {
 	$datos_documento = obtener_datos_documento($_REQUEST["iddocumento"]);

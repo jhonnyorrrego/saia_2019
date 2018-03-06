@@ -184,7 +184,7 @@ function generar_pdf($documento) {
 
 	
 	$ch = curl_init();
-	$fila = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . $export . "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&usuario_actual=" . $_SESSION["usuario_actual"] . "&LLAVE_SAIA=" . LLAVE_SAIA;
+	$fila = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . $export . "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&conexion_remota=1";
 	
 	curl_setopt($ch, CURLOPT_URL, $fila);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -224,7 +224,7 @@ function generar_pdf_vista($documento,$vista){
 	}
 	
 	$ch = curl_init();
-	$fila = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . $export . "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&usuario_actual=" . $_SESSION["usuario_actual"] . "&LLAVE_SAIA=" . LLAVE_SAIA . "&vista=" . $vista;
+	$fila = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . $export . "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&conexion_remota=1&vista=" . $vista;
 	
 	curl_setopt($ch, CURLOPT_URL, $fila);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

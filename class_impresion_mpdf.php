@@ -1,40 +1,23 @@
 <?php
 set_time_limit(0);
-
-if (!@$_SESSION["LOGIN" . $_REQUEST["llave_saia"]] && $_REQUEST["conexion_remota"]) {
-	@session_start();
-	$_SESSION["LOGIN" . $_REQUEST["llave_saia"]] = $_REQUEST["conexion_usuario"];
-	$_SESSION["usuario_actual"] = $_REQUEST["conexion_actual"];
-	$_SESSION["conexion_remota"] = 1;
-} else if (!@$_REQUEST["LOGIN"] && @$_REQUEST["usuario_actual"]) {
-	@session_start();
-	$_SESSION["LOGIN" . $_REQUEST["LLAVE_SAIA"]] = $_REQUEST["LOGIN"];
-	$_SESSION["usuario_actual"] = $_REQUEST["usuario_actual"];
-	$_SESSION["conexion_remota"] = 1;
-}
-
 $max_salida = 10;
-// Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
 	if (is_file($ruta . "db.php")) {
 		$ruta_db_superior = $ruta;
-		// Preserva la ruta superior encontrada
 	}
 	$ruta .= "../";
 	$max_salida--;
 }
 
 include_once ($ruta_db_superior . "db.php");
-if (!$_SESSION["LOGIN" . LLAVE_SAIA] && @$_REQUEST["LOGIN"] && @$_REQUEST["usuario_actual"]) {
-	$_SESSION["LOGIN" . LLAVE_SAIA] = $_REQUEST["LOGIN"];
-	$_SESSION["usuario_actual"] = $_REQUEST["usuario_actual"];
-	$_SESSION["conexion_remota"] = 1;
-	global $usuactual;
-	$usuactual = $_REQUEST["LOGIN"];
+if (!$_SESSION["LOGIN" . LLAVE_SAIA] && isset($_REQUEST["LOGIN"]) && @$_REQUEST["conexion_remota"]) {
+	logear_funcionario_webservice($_REQUEST["LOGIN"]);
 }
+
 include_once ($ruta_db_superior . 'mpdf5_7/mpdf.php');
 include_once ($ruta_db_superior . 'formatos/librerias/encabezado_pie_pagina.php');
+
 class Imprime_Pdf {
 	private $orientacion = 'P';
 	// P-vertical ,L-horizontal

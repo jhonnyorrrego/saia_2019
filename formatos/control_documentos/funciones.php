@@ -492,7 +492,7 @@ function aprobar_control_documentos($idformato, $iddoc) {
 		if ($proceso["numcampos"]) {
 			$errores = array();
 			$errores_version = array();
-			$datos_session = "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&usuario_actual=" . $_SESSION["usuario_actual"] . "&LLAVE_SAIA=" . LLAVE_SAIA;
+			$datos_session = "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&conexion_remota=1";
 			switch($control_documento[0]["tipo_solicitud"]) {
 				case 1 :
 					$item = busca_filtro_tabla("i.*", "ft_item_control_versio i,documento d", "d.iddocumento=i.documento_iddocumento and d.estado not in ('ELIMINADO','ANULADO','ACTIVO') and i.ft_control_documentos=" . $control_documento[0]["idft_control_documentos"], "", $conn);
