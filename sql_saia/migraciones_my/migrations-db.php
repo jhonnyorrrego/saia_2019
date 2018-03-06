@@ -1,6 +1,5 @@
 <?php
-
-require_once '../../define.php';
+require_once  __DIR__ . '/../../define.php';
 
 $motores = array(
     "MySql" => "pdo_mysql",
@@ -17,14 +16,3 @@ return [
     'host' => HOST,
     'driver' => $motores[MOTOR],
     'port' => PORT];
-
-/* por tunel ssh
- return [
- 'dbname' => 'saia_release1',
- 'user' => 'saia',
- 'password' => 'cerok_saia421_5',
- 'host' => '127.0.0.1',
- 'driver' => 'pdo_mysql',
- 'port' => '3307'
- ];
- */

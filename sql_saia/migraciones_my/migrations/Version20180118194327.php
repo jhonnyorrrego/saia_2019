@@ -83,7 +83,7 @@ class Version20180118194327 extends AbstractMigration {
         // this up() migration is auto-generated, please modify it to your needs
     }
 
-    public function postUp($schema) {
+    public function postUp(Schema $schema) {
         $conn = $this->connection;
         
         $conn->beginTransaction();
