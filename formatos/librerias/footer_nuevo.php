@@ -20,8 +20,7 @@ if((!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"]==1)&&!$formato[0]["item"]){
     </div>
   </div>
   </div>');
-  echo formulario_rechazar_aprobar($_REQUEST["iddoc"],"mostrar_".$formato[0]["nombre"]);
-  if(isset($_REQUEST["ver_notas"])){
+   if(isset($_REQUEST["ver_notas"])){
      if(!isset($_REQUEST["comentario"])){ 
        $comentario=busca_filtro_tabla("*","comentario_img","documento_iddocumento=".$_REQUEST["iddoc"]." AND tipo='PLANTILLA' AND pagina='".$_REQUEST["iddoc"]."'","",$conn);
       echo '<script type="text/javascript" src="../../js/bubble-tooltip.js"></script>

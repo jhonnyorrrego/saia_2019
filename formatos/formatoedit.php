@@ -468,8 +468,8 @@ echo $x_contador_idcontadorList;
     }?>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Orientaci&oacute;n</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="radio" name="x_orientacion" id="x_orientacion" value="0" <?php echo($checkedh);?>>Horizontal
-<input type="radio" name="x_orientacion" id="x_orientacion" value="1" <?php echo($checkedv);?>>Vertical
+<input type="radio" name="x_orientacion" id="x_orientacion" value="0" <?php echo($checkedh);?>>Vertical
+<input type="radio" name="x_orientacion" id="x_orientacion" value="1" <?php echo($checkedv);?>>Horizontal
 </span></td>
 	</tr>
 	<tr>

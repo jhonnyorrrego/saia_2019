@@ -190,10 +190,10 @@ else{
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <?php 
 	if($x_orientacion==0){
-		echo("Horizontal");
+		echo("Vertical");
 	} 
 	else {
-		echo("Vertical");
+		echo("Horizontal");
 	}
 ?>
 </span></td>

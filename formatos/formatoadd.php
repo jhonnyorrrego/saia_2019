@@ -406,13 +406,13 @@ echo $x_contador_idcontadorList;
 		</tr>
 		<tr></tr>
 		<tr>
-			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Tama&ntilde;o
-					de letra</span></td>
+			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Tama&ntilde;o	de letra</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker"> <select
 					name="x_font_size" id="x_font_size">
 				<?php
-				if(!$x_font_size)
-					$x_font_size = 9;
+				if(!$x_font_size){
+					$x_font_size = 11;
+				}
 				for($i = 7; $i < 31; $i++) {
 					echo ('<option value="' . $i . '"');
 					if($x_font_size == $i) {
@@ -452,12 +452,10 @@ echo $x_contador_idcontadorList;
 			}
 		}
 		?>
-		Izquierda <select name="x_mizq">
-		<?php combo("15"); ?>
-    </select> Derecha <select name="x_mder">
-		<?php combo("20"); ?>    </select> Superior <select name="x_msup">
-		<?php combo("30"); ?>    </select> Inferior <select name="x_minf">
-		<?php combo("20"); ?>    </select>
+		Izquierda <select name="x_mizq"><?php combo("15"); ?></select> 
+		Derecha <select name="x_mder">	<?php combo("20"); ?></select>
+		Superior <select name="x_msup">	<?php combo("15"); ?></select>
+		Inferior <select name="x_minf"><?php combo("30"); ?> </select>
 			</span></td>
 		</tr>
 		<tr>
@@ -497,9 +495,10 @@ echo $x_contador_idcontadorList;
 		</tr>
 		<tr>
 			<td class="encabezado">Mostrar</td>
-			<td bgcolor="#F5F5F5"><input type="radio" name="x_mostrar_pdf"
-				value="1" checked> PDF <input type="radio" name="x_mostrar_pdf"
-				value="0"> Html <input type="radio" name="x_mostrar_pdf" value="2">
+			<td bgcolor="#F5F5F5">
+				<input type="radio" name="x_mostrar_pdf" value="1"> PDF
+				<input type="radio" name="x_mostrar_pdf" value="0" checked> Html
+				<input type="radio" name="x_mostrar_pdf" value="2">
 				PDF Word</td>
 		</tr>
 		<tr>
