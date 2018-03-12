@@ -1784,9 +1784,7 @@ function submit_formato($formato, $iddoc = NULL) {
 		}
 		if($contador["numcampos"]) {
 			echo '<input type="hidden" name="tipo_radicado" value="' . $contador[0]["nombre"] . '">';
-		} 
-
-		else {
+		} else {
 			$sql2 = "INSERT INTO contador(consecutivo,nombre ) VALUE(1,'" . $contador[0]["nombre_tabla"] . "')";
 			phpmkr_query($sql2, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sql);
 			$idcontador=phpmkr_insert_id();
@@ -3574,9 +3572,11 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 		$url = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/class_impresion.php?iddoc=" . $datos_documento['iddocumento'];
 		$datos_session = "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&usuario_actual=" . $_SESSION["usuario_actual"] . "&llave_saia=" . LLAVE_SAIA;
 		$url = $url . $datos_session;
-        
+        if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	}		
 		curl_setopt($ch, CURLOPT_URL, $url);
-		
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 	
 		// Capturar la URL y pasarla al navegador

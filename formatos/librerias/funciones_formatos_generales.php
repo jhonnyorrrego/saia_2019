@@ -1,11 +1,9 @@
 <?php
 $max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
-while($max_salida>0)
-{
-if(is_file($ruta."db.php"))
-{
-$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+while($max_salida>0) {
+if(is_file($ruta."db.php")) {
+$ruta_db_superior = $ruta; //Preserva la ruta superior encontrada
 }
 $ruta.="../";
 $max_salida--;
@@ -14,6 +12,7 @@ $max_salida--;
 include_once($ruta_db_superior."db.php");
 include_once("funciones_generales.php");
 $alto_frame="100%";
+
 function listado_hijos_formato($idformato,$iddoc){
 global $conn,$alto_frame;
 if($idformato){
@@ -49,6 +48,7 @@ orden: campo por el que se debe ordenar
   }
 }
 }
+
 function listar_formato_hijo2($campos,$tabla,$campo_enlace,$llave,$orden){
 global $conn,$idformato,$alto_frame;
 $where="";
@@ -69,8 +69,7 @@ $hijo=busca_filtro_tabla("",$tabla." A, documento B","A.documento_iddocumento=B.
       for($j=0;$j<$lcampos["numcampos"];$j++){
         if($lcampos[$j]["nombre"]=="id".$tabla){
           $texto.='<td>&nbsp;</td>';
-        }
-        else
+        } else
           $texto.='<td>'.$lcampos[$j]["etiqueta"]."</td>";
       }
       $texto.='</tr></thead><tbody style="overflow:auto; ">';
@@ -82,8 +81,7 @@ $hijo=busca_filtro_tabla("",$tabla." A, documento B","A.documento_iddocumento=B.
             $avance = '%&nbsp;';
           if($lcampos[$j]["nombre"]=="id".$tabla){
             $texto.='<td><a href="../'.$lcampos[0]["nombre_formato"].'/'.$lcampos[0]["ruta_mostrar"].'?idformato='.$lcampos[0]["idformato"].'&iddoc='.$hijo[$i]["documento_iddocumento"].'">Ver</a></td>';
-          }
-          else
+          } else
             $texto.='<td align="center">'.mostrar_valor_campo($lcampos[$j]["nombre"],$lcampos[$j]["formato_idformato"],$hijo[$i]["documento_iddocumento"],1)."&nbsp;".$avance."</td>";
         }
         $texto.='</tr>';
@@ -162,12 +160,13 @@ global $conn;
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase> */
-function validar_digitalizacion_formato($idformato,$iddoc)
-{global $conn,$ruta_db_superior;
+function validar_digitalizacion_formato($idformato,$iddoc) {
+global $conn,$ruta_db_superior;
   if($_REQUEST["digitalizacion"]==1){
     redirecciona($ruta_db_superior."paginaadd.php?&key=".$iddoc."&x_enlace=mostrar");
   }
 }
+
 /*<Clase>
 <Nombre>digitalizacion_formato_radicacion</Nombre>
 <Parametros>$_REQUEST["digitalizacion"]:Debe aparecer la opcion desea digitalizar Si/No en el formato con el nombre digitalizacion;  $idformto:Llave del formato que se vincula ;$iddoc=documento que  debe vincular con la accion</Parametros>
@@ -178,24 +177,33 @@ function validar_digitalizacion_formato($idformato,$iddoc)
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase> */
-function digitalizar_formato($idformato,$iddoc)
-{global $conn;
+function digitalizar_formato($idformato,$iddoc) {
+  global $conn;
   echo "<tr><td class='encabezado'>DESEA DIGITALIZAR</td><td><input name='digitalizacion' type='radio' value='1'>Si  <input name='digitalizacion' type='radio' value='0' checked>No</td></tr>";
 }
-/*****/
+
 function diferenciaEntreFechas2($fecha_principal, $fecha_secundaria, $obtener = 'SEGUNDOS', $redondear = false){
    $f0 = strtotime($fecha_principal);
    $f1 = strtotime($fecha_secundaria);
-   //if ($f0 < $f1) { $tmp = $f1; $f1 = $f0; $f0 = $tmp; }
    $resultado = ($f0 - $f1);
    switch ($obtener) {
-       default: break;
-       case "MINUTOS"   :   $resultado = $resultado / 60;   break;
-       case "HORAS"     :   $resultado = $resultado / 60 / 60;   break;
-       case "DIAS"      :   $resultado = $resultado / 60 / 60 / 24;   break;
-       case "SEMANAS"   :   $resultado = $resultado / 60 / 60 / 24 / 7;   break;
+       default :
+ break;
+       case "MINUTOS" :
+   $resultado = $resultado / 60;
+   break;
+       case "HORAS" :
+   $resultado = $resultado / 60 / 60;
+   break;
+       case "DIAS" :
+   $resultado = $resultado / 60 / 60 / 24;
+   break;
+       case "SEMANAS" :
+   $resultado = $resultado / 60 / 60 / 24 / 7;
+   break;
    }
-   if($redondear) $resultado = round($resultado);
+   if($redondear)
+ $resultado = round($resultado);
    return $resultado;
 }
 ?>

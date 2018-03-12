@@ -207,11 +207,15 @@ function formulario_adicionar(){
 	$('input[name$="entidad"]').click(function(){
 		if(this.value==5){
 			treellave.deleteChildItems(0);
-			treellave.loadXML("<?php echo $ruta_db_superior; ?>test.php?sin_padre=1&rol=1");
+			treellave.setXMLAutoLoading("<?php echo $ruta_db_superior; ?>test_funcionario.php?sin_padre=1&rol=1");
+			treellave.loadXML("<?php echo $ruta_db_superior; ?>test_funcionario.php?sin_padre=1&rol=1");
 		}
     if(this.value==1){
 			treellave.deleteChildItems(0);
-			treellave.loadXML("<?php echo $ruta_db_superior; ?>test.php?sin_padre=1");
+			treellave.setXMLAutoLoading("<?php echo $ruta_db_superior; ?>test_funcionario.php?sin_padre=1");
+			treellave.loadXML("<?php echo $ruta_db_superior; ?>test_funcionario.php?sin_padre=1");
+			$("#id").attr("onclick","new_function_name()");
+			tree<?php echo $nombre; ?>.findItem(document.getElementById('stext').value,0,1)
 		}
 		if(this.value==2){
 			treellave.deleteChildItems(0);
@@ -355,11 +359,13 @@ function formulario_editar(){
 	$('input[name$="entidad"]').click(function(){
 		if(this.value==1){
 			treellave.deleteChildItems(0);
-			treellave.loadXML("<?php echo $ruta_db_superior; ?>test.php?sin_padre=1");
+			treellave.setXMLAutoLoading("<?php echo $ruta_db_superior; ?>test_funcionario.php?sin_padre=1");
+			treellave.loadXML("<?php echo $ruta_db_superior; ?>test_funcionario.php?sin_padre=1");
 		}
     if(this.value==5){
 			treellave.deleteChildItems(0);
-			treellave.loadXML("<?php echo $ruta_db_superior; ?>test.php?sin_padre=1&rol=1");
+			treellave.setXMLAutoLoading("<?php echo $ruta_db_superior; ?>test_funcionario.php?sin_padre=1&rol=1");
+			treellave.loadXML("<?php echo $ruta_db_superior; ?>test_funcionario.php?sin_padre=1&rol=1");
 		}
 		if(this.value==2){
 			treellave.deleteChildItems(0);
@@ -465,7 +471,7 @@ function eliminar(){
 function arbol($nombre,$seleccionado=Null,$entidad=Null,$archivo=Null){
 	global $ruta_db_superior;
 	if(!$archivo){
-		$archivo=$ruta_db_superior."test.php?sin_padre=1&seleccionado=".$seleccionado;
+		$archivo=$ruta_db_superior."test_funcionario.php?sin_padre=1&seleccionado=".$seleccionado;
 	}
 	if($seleccionado){
 		if($entidad==1){

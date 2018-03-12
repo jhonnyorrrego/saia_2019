@@ -169,7 +169,7 @@ if(@$_REQUEST["idformato"]){
 	<script type="text/javascript" src="../js/dhtmlXCommon.js"></script>
 	<script type="text/javascript" src="../js/dhtmlXTree.js"></script>';
   $texto.=$nombres_seleccionados.'Buscar:<br><input type="text" id="stext_3" width="200px" size="20" >      
-      <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById(\'stext_3\').value),1)">
+      <a href="javascript:void(0)" onclick="buscar_nodo()">
       <img src="../botones/general/anterior.png" border="0px" alt="Anterior"></a>
       <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById(\'stext_3\').value),0,1)">
       <img src="../botones/general/buscar.png" border="0px" alt="Buscar"></a>
@@ -192,7 +192,8 @@ if(@$_REQUEST["idformato"]){
 			tree3.enableCheckBoxes(1);
 			tree3.setOnLoadingStart(cargando_serie);
       tree3.setOnLoadingEnd(fin_cargando_serie);
-			tree3.loadXML("../test.php?rol=1&seleccionado='.str_replace("@",",",str_replace("#","d",$destinos)).'");
+            tree3.setXMLAutoLoading("../test_funcionario.php?rol=1&seleccionado='.str_replace("@",",",str_replace("#","d",$destinos)).'");
+			tree3.loadXML("../test_funcionario.php?rol=1&seleccionado='.str_replace("@",",",str_replace("#","d",$destinos)).'");
 			tree3.setOnCheckHandler(onNodeSelect_tree3);
       function onNodeSelect_tree3(nodeId)
       {seleccionados=tree3.getAllChecked();
@@ -222,6 +223,35 @@ if(@$_REQUEST["idformato"]){
            document.poppedLayer =
                eval(\'document.layers["esperando_serie"]\');
         document.poppedLayer.style.visibility = "visible";
+      }
+        function buscar_nodo() {
+				$.ajax({
+					type : "POST",
+					url : "../test_funcionario_buscar.php",
+					dataType : "json",
+					data : {
+						nombre : $("#stext_tree3").val(),
+						tabla : "dependencia"
+					},
+					success : function(data) {
+						if(data["error"]){
+							alert(data["mensaje"]);
+						}
+						else{
+							tree3.attachEvent("onOpenDynamicEnd", function(){
+								tree3.selectItem("1#",false,false);
+								tree3.clearSelection();
+								for(var i=0;i<data["numcampos_func"];i++){
+									tree3.selectItem(data["funcionarios"][i],false,true);
+								}
+								for(var i=0;i<data["numcampos_dep"];i++){
+									tree3.selectItem(data["dependencias"][i],false,true);
+								}
+							});
+							tree3.openItemsDynamic(data["datos"],true);
+						}
+					}
+				});
       }              
 	--> 		
 	</script>';
