@@ -18,3 +18,4 @@ if(array_key_exists('callback', $_GET)){
 
     echo $data;
 }
+?>
