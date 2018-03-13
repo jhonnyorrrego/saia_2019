@@ -11,6 +11,7 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 echo(estilo_bootstrap());
+
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
 	if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
 	include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
@@ -73,7 +74,7 @@ if ($documento["numcampos"]) {
 ?>
 <body>
 <div class="container">
-	<legend>Solicitu de aprobaci&oacute;n</legend>
+	<legend>Solicitud de aprobaci&oacute;n</legend>
 	<br>
 		<table align="center" style="width: 90%;" class="table table-bordered">
 			<tr>

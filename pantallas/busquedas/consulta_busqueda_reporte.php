@@ -281,9 +281,6 @@ function exportar_funcion_excel_reporte(){
     $cont_ruta .= '_'.usuario_actual("login");
     $ruta_temporal=$cont_ruta;
     crear_destino($ruta_db_superior . $cont_ruta);
-  } else {
-    $ruta_temporal="temporal/temporal_" . usuario_actual('login');
-    crear_destino($ruta_db_superior . "temporal/temporal_" . usuario_actual('login'));
   }
 	?>
 		

@@ -1,9 +1,0 @@
-<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato 3. Seguimiento</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><b>Accion<input type="hidden" name="bksaiacondicion_g@accion_vinculacion" id="bksaiacondicion_g@accion_vinculacion" value="like_total"></b><div class="controls"><input type="text" id="accion_vinculacion" name="bqsaia_g@accion_vinculacion"><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@accion_vinculacion',this.id)">
-		    Y
-		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_g@accion_vinculacion',this.id)">
-		    O
-		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_g@accion_vinculacion" id="bqsaiaenlace_g@accion_vinculacion" value="y" />
-		</div></div></div><div class="control-group"><b>observaciones (limitantes en el cumplimiento de la acci&oacute;n, dificultades)<input type="hidden" name="bksaiacondicion_g@observaciones" id="bksaiacondicion_g@observaciones" value="like_total"></b><div class="controls"><textarea  maxlength="3000"   id="observaciones" name="bqsaia_g@observaciones"  style="width:500px;height:100px"></textarea></div></div><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_seguimiento_riesgo g @ AND  g.documento_iddocumento=iddocumento "><input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?>"><input type="hidden" name="anterior" value="<?php echo $_REQUEST["anterior"]; ?>"></body>

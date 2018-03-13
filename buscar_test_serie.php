@@ -9,6 +9,7 @@ while($max_salida>0){
   $max_salida--;
 }    
 include_once($ruta_db_superior."db.php");
+include_once ($ruta_db_superior . "class.funcionarios.php");
 //Esta busqueda no se puede hacer generica, debido a que la consulta particular de las series en este caso deben hacerse sobre el compuesto de 2 tablas 
 /*if($_REQUEST['tabla']){
 	$tabla=$_REQUEST['tabla'];
@@ -41,7 +42,20 @@ function lista_papas($id,&$campos,$valor_arreglo){
 if($_REQUEST['tabla']){
 	$tabla=$_REQUEST['tabla'];
 	
-	$busca_papas=busca_filtro_tabla("id".$tabla.",nombre,categoria,cod_padre",$tabla,"lower(nombre) like(lower('%".$_REQUEST['nombre']."%'))","",$conn);
+	if($_REQUEST["valores_serie"]){
+		$idfuncionario = usuario_actual("idfuncionario");
+		$datos_admin_funcionario = busca_datos_administrativos_funcionario($idfuncionario);
+		print_r($datos_admin_funcionario["series_dependencia"]);
+		$lista_dependencias_total=array();
+		$lista_dependencias_total=array_merge((array)$datos_admin_funcionario["series_dependencia"],(array)$datos_admin_funcionario["series_funcionario"]);
+		$lista_dependencias_total=array_merge((array)$datos_admin_funcionario["series_cargo"],(array)$lista_dependencias_total);
+		$busca_papas=busca_filtro_tabla("id".$tabla.",nombre,categoria,cod_padre",$tabla,"id".$tabla." in (".implode(',',$lista_dependencias_total).")" ,"",$conn);
+
+	}else{
+		$busca_papas=busca_filtro_tabla("id".$tabla.",nombre,categoria,cod_padre",$tabla,"lower(nombre) like(lower('%".$_REQUEST['nombre']."%'))","",$conn);
+	}
+	
+	print_r($busca_papas);
 	
 	global $serie_base,$dependencia_base,$ind_dependencia,$puntero_array;
 	$puntero_array=0;

@@ -8,6 +8,6 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache"); // HTTP/1.0 
 ?>
 <frameset cols="40%,*">
-     <frame name="arbol" src="arbolserie.php" border="1" marginwidth="10" marginheight="50" height="10%" scrolling="no" noresize>
-     <frame name="serielist" src="" marginwidth="10" marginheight="10" >
+     <frame id="arbol" name="arbol" src="arbolserie.php" border="1" marginwidth="10" marginheight="50" height="10%" scrolling="no" noresize>
+     <frame id="serielist" name="serielist" src="" marginwidth="10" marginheight="10" >
 </frameset>   

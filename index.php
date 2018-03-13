@@ -62,7 +62,7 @@ $mayor_informacion = busca_filtro_tabla("valor", "configuracion", "nombre='mayor
 ?>
 <html>
 <head>
-<title>SAIA</title>
+<title>SAIA-SGDEA</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=9">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -103,7 +103,6 @@ if(@$_SESSION["tipo_dispositivo"]=="movil"){
     <tr class="footer_login_text">
       <td width="1%" height="25">&nbsp;</td>
       <td>©<?php echo date(Y);?> CEROK</td>
-      <!--<td><a href="">Términos de uso y servicio - SAIA</a><sup>®</sup></td>-->
       <td>Para mayor información: <?php echo($mayor_informacion[0]["valor"]); ?></td>
       <td>
       </td>
@@ -183,14 +182,6 @@ if(@$_SESSION["tipo_dispositivo"]=="movil"){
                 <td height="50" colspan="5" align="right" valign="bottom">
                   <table width="100%" border="0" cellspacing="0" cellpadding="0">
                     <tr>
-                      <!--td width="60%" align="right" valign="middle" nowrap>Recordar Usuario</td>
-                      <td width="4%" align="right" valign="middle" nowrap>
-                        <input name="rememberme" type="checkbox" id="rememberme" value="1" align="absmiddle">
-                      </td>
-                      <td width="14%" align="right" valign="middle" nowrap>&nbsp;&nbsp;Recordar Clave</td>
-                      <td width="4%" align="right" valign="middle" nowrap>
-                        <input name="rememberme_pwd" type="checkbox" id="rememberme_pwd" value="1" align="absmiddle">
-                      </td-->
                       <td width="18%" colspan="6" align="right" valign="top" nowrap>
                         <br />
                       	<p>
@@ -233,9 +224,9 @@ if(@$_SESSION["tipo_dispositivo"]=="movil"){
 $titulo_mostrar = busca_filtro_tabla('', 'configuracion', 'nombre="titulo_index"', '', $conn);
 $subtitulo_mostrar = busca_filtro_tabla('', 'configuracion', 'nombre="subtitulo_index"', '', $conn);
 
-$texto_tabla = "<p style='font-weight:bold;color: #4099D2;text-align:left;font-size:16px;'>" . $titulo_mostrar[0]['valor'] . "<p>";
+$texto_tabla = "<p style='font-weight:bold;color: #6A6E71;text-align:left;font-size:16px;'>" . $titulo_mostrar[0]['valor'] . "<p>";
 $texto_tabla .= "<hr>";
-$texto_tabla .= "<p style='color:#4099D2;text-align:left;font-size:15px'>" . $subtitulo_mostrar[0]['valor'] . "</p><br />";
+$texto_tabla .= "<p style='color:#666666;text-align:left;font-size:15px'>" . $subtitulo_mostrar[0]['valor'] . "</p><br />";
 $dato = busca_filtro_tabla("", "noticia_index", "estado=1 AND mostrar=1", "", $conn);
 if ($dato["numcampos"]) {
 	$texto_tabla .= "<table align='bottom' style='text-align:justify;'>";

@@ -1,2 +1,0 @@
-Fallo la busqueda SQL buzon_entrada:insert into buzon_entrada(archivo_idarchivo,nombre,fecha,origen,tipo_origen,destino,tipo_destino,tipo) values(,'LEIDO',DATE_FORMAT('2015-08-27 14:13:08','%Y-%m-%d %H:%i:%s'),1,1,1,1,'DOCUMENTO')
-

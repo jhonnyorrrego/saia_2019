@@ -23,8 +23,6 @@ include_once ($ruta_db_superior . 'manipular_pdf/fpdi.php');
 $configuracion_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal' AND tipo='ruta'", "", $conn);
 if ($configuracion_temporal['numcampos']) {
 	$ruta_temp=$configuracion_temporal[0]["valor"]."_".usuario_actual("login");
-}else{
-	$ruta_temp="temporal/temporal_" . usuario_actual("login");
 }
 crear_destino($ruta_temp);
 

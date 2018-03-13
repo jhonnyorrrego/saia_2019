@@ -818,6 +818,7 @@ detalles_mostrar_".$x_nombre.".php";
   	$idformato=$sKeyWrk;
   	//Se actualizan los campos padre
   	if($idformato!=''){
+  		actualizar_modulo_formato($idformato);
   		if($x_flujo_idflujo!=0){
 			generar_campo_flujo($idformato,$x_flujo_idflujo,$flujo[0]["title"]);
 		}	
@@ -1142,4 +1143,63 @@ function desvincular_campo_anexo($idformato){
 	guardar_traza($campo,$formato[0]["nombre_tabla"]);
 	phpmkr_query($campo);
 }
+
+function actualizar_modulo_formato($idformato) {//Esta funcion es la misma que en formatoadd.php =>crear_modulo_formato
+	global $conn;
+	$datos_formato = busca_filtro_tabla("nombre,etiqueta,cod_padre,nombre_tabla,ruta_mostrar,ruta_adicionar", "formato", "idformato=" . $idformato, "", $conn);
+	$modulo_formato = busca_filtro_tabla("", "modulo", "nombre = 'modulo_formatos'", "", $conn);
+	if ($modulo_formato["numcampos"]) {
+		$submodulo_formato = busca_filtro_tabla("", "modulo", "nombre ='" . $datos_formato[0]["nombre"] . "'", "", $conn);
+		if (!$submodulo_formato["numcampos"]) {
+			$padre = busca_filtro_tabla("idmodulo", "formato A, modulo B", "idformato=" . $datos_formato[0]["cod_padre"] . " AND lower(A.nombre)=(B.nombre)", "", $conn);
+			if ($padre["numcampos"] > 0) {
+				$papa = $padre[0]["idmodulo"];
+			} else {
+				$papa = $modulo_formato[0]["idmodulo"];
+			}
+			$sql = "INSERT INTO modulo(permiso_admin,pertenece_nucleo,busqueda,nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES (0,0,'1','" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','" . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "','centro','" . $papa . "','1','Permite administrar el formato " . $datos_formato[0]["etiqueta"] . ".')";
+			guardar_traza($sql, $datos_formato[0]["nombre_tabla"]);
+			phpmkr_query($sql, $conn);
+			$modulo_id = phpmkr_insert_id();
+			$sql = "INSERT INTO permiso(funcionario_idfuncionario,modulo_idmodulo) VALUES('" . $_SESSION["idfuncionario"] . "'," . $modulo_id . ")";
+			guardar_traza($sql, $datos_formato[0]["nombre_tabla"]);
+			phpmkr_query($sql, $conn);
+		} else {
+			$padre = busca_filtro_tabla("idmodulo", "formato A, modulo B", "idformato=" . $datos_formato[0]["cod_padre"] . " AND lower(A.nombre)=(B.nombre)", "", $conn);
+			if ($padre["numcampos"] > 0) {
+				$papa = $padre[0]["idmodulo"];
+			} else {
+				$papa = $modulo_formato[0]["idmodulo"];
+			}
+			$sql = "update modulo set tipo='secundario',nombre='" . $datos_formato[0]["nombre"] . "',etiqueta='" . $datos_formato[0]["etiqueta"] . "',cod_padre='" . $papa . "',enlace='formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "' where idmodulo=" . $submodulo_formato[0]["idmodulo"];
+			guardar_traza($sql, $datos_formato[0]["nombre_tabla"]);
+			phpmkr_query($sql, $conn);
+		}
+	}
+	$modulo_crear = busca_filtro_tabla("", "modulo", "nombre = 'creacion_formatos'", "", $conn);
+	if ($modulo_crear["numcampos"]) {
+		$submodulo_formato = busca_filtro_tabla("", "modulo", "nombre = 'crear_" . $datos_formato[0]["nombre"] . "'", "", $conn);
+		$padre = busca_filtro_tabla("idmodulo", "formato A, modulo B", "idformato=" . $datos_formato[0]["cod_padre"] . " AND lower(" . concatenar_cadena_sql(array("'crear_'", "A.nombre")) . ")=(B.nombre)", "", $conn);
+		if (!$submodulo_formato["numcampos"]) {
+			if ($padre["numcampos"] > 0) {
+				$papa = $padre[0]["idmodulo"];
+			} else {
+				$papa = $modulo_crear[0]["idmodulo"];
+			}
+			$sql = "INSERT INTO modulo(permiso_admin,pertenece_nucleo,busqueda,nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES (0,0,'1','crear_" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','Crear " . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_adicionar"] . "','centro','" . $modulo_crear[0]["idmodulo"] . "','1','Permite crear " . $datos_formato[0]["etiqueta"] . ".')";
+			guardar_traza($sql, $formato[0]["nombre_tabla"]);
+			phpmkr_query($sql, $conn);
+			$modulo_id = phpmkr_insert_id();
+		} else {
+			if ($padre["numcampos"] > 0) {
+				$papa = $padre[0]["idmodulo"];
+			} else {
+				$papa = $modulo_crear[0]["idmodulo"];
+			}
+			$sql = "update modulo set tipo='secundario',nombre='crear_" . $datos_formato[0]["nombre"] . "',etiqueta='Crear " . $datos_formato[0]["etiqueta"] . "',cod_padre='" . $papa . "',enlace='formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_adicionar"] . "' where idmodulo=" . $submodulo_formato[0]["idmodulo"];
+			phpmkr_query($sql, $conn);
+		}
+	}
+}
+
 ?>

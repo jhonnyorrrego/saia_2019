@@ -65,8 +65,17 @@ if (@$_SESSION["LOGIN" . LLAVE_SAIA]) {
 
 	$per_mis_tareas = $permiso -> acceso_modulo_perfil("mis_tareas");
 	if ($per_mis_tareas) {
-		$tareas = busca_filtro_tabla("count(*) AS cant", "tareas A", "((" . implode(" OR ", $concat) . ") OR ejecutor =" . $usuario . ") AND estado_tarea<>2", "", $conn);
-		$componente_tareas = busca_filtro_tabla("", "busqueda_componente A", "A.nombre='listado_tareas_pendientes'", "", $conn);
+	  $mis_roles=busca_filtro_tabla("","vfuncionario_dc","estado=1 and funcionario_codigo=".usuario_actual("funcionario_codigo"),"",$conn);
+    if($mis_roles["numcampos"]){
+      $roles=extrae_campo($mis_roles,"iddependencia_cargo");
+      $concat=array();
+      foreach ($roles AS $key=>$value){
+        array_push($concat,"CONCAT(',',responsable,',') LIKE('%,".$value.",%')");
+      }
+    }
+	  
+		$tareas=busca_filtro_tabla("count(*) AS cant","tareas A","((".implode(" or ",$concat).")) and estado_tarea<>2 and ruta_aprob<>-1 and ((ruta_aprob>=0 and estado_tarea in (3,4,5)) or(ruta_aprob>=0 and estado_tarea<>-1))","",$conn);
+		$componente_tareas = busca_filtro_tabla("", "busqueda_componente A", "A.nombre='mis_tareas_pendientes'", "", $conn);
 	}
 
 	$per_mis_tareas_av = $permiso -> acceso_modulo_perfil("mis_tareas_avanzadas");
@@ -107,13 +116,13 @@ if (@$_SESSION["LOGIN" . LLAVE_SAIA]) {
 		}
 		borrar_archivos_carpeta($configuracion_temporal[0]['valor'] . '_' . usuario_actual("login"), 0);
 	} else {
-		borrar_archivos_carpeta('temporal_' . usuario_actual("login"), 0);
+		notificaciones("Por favor defina la ruta de los temporales","warning",3500);
 	}
 }
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>SAIA(sistema de gesti&oacute;n documental y de procesos</title>
+<title>SAIA-SGDEA</title>
 <script src="asset/js/jquery.min.js"></script>
 <script src="asset/js/jquery-ui.min.js"></script>
 <script src="asset/js/main.js"></script>
@@ -423,7 +432,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
             	?>
              <!-- TAREAS BASICAS -->
             
-            <li><i class="icon-tasks"></i><a href="pantallas/buscador_principal.php?nombre=listado_tareas&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_tareas[0]["idbusqueda_componente"]); ?>" nombre_componente="listado_tareas_pendientes">Mis Tareas <div class="pull-right"><span class="badge" id="listado_tareas_pendientes"><?php echo($tareas[0]["cant"]);?></span></div></a>
+            <li><i class="icon-tasks"></i><a href="pantallas/buscador_principal.php?nombre=listado_tareas&cmd=resetall" target="centro" class="enlace_indicadores_index" idcomponente="<?php echo($componente_tareas[0]["idbusqueda_componente"]); ?>" nombre_componente="mis_tareas_pendientes">Mis Tareas <div class="pull-right"><span class="badge" id="mis_tareas_pendientes"><?php echo($tareas[0]["cant"]);?></span></div></a>
             </li>
 						<?php
             }
@@ -768,7 +777,6 @@ function menu_saia(){
 	  		idcomponente=$(this).attr("idcomponente");
 	  		div_actualizar=$(this).attr("nombre_componente");
 	  		actualizar_datos_index_saia2(idcomponente,div_actualizar);
-	  		console.log(div_actualizar);
 	  	});
 		}
     function actualizar_datos_index_saia2(idcomponente,div_actualizar){

@@ -397,8 +397,6 @@ if($result["numcampos"]){
 					$cont_ruta=$configuracion_temporal[0]['valor'];
 					$cont_ruta .= '_'.usuario_actual("login");
 					crear_destino($ruta_db_superior . $cont_ruta);
-				} else {
-					crear_destino($ruta_db_superior . "temporal/temporal_" . usuario_actual('login'));
 				}
         crear_log_busqueda_excel($ruta_db_superior."../backup/log_exportar.txt", "INICIO CREAR ARCHIVO ".$ruta_db_superior.$_REQUEST["ruta_exportar_saia"]." -------".date("Y-m-d H:i:s")."-----------\n");
 				if($_REQUEST["exportar_saia"]=="excel"){

@@ -10,7 +10,7 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version20170921185120 extends AbstractMigration {
 
-	public function preUp($schema) {
+    public function preUp(Schema $schema) {
 		date_default_timezone_set("America/Bogota");
 
 		$this->abortIf($this->connection->getDatabasePlatform()->getName() != "mysql", "La migration solo puede ser ejecutada con seguridad en 'mysql'.");
@@ -95,12 +95,12 @@ class Version20170921185120 extends AbstractMigration {
 		}
 
 		$result = $this->connection->fetchAssoc("SHOW PROCEDURE STATUS like '%" . $schema->getName() . ".sp_asignar_radicado'");
-		if(!$result) {
+		if($result) {
 			$this->addSql("DROP PROCEDURE " . $schema->getName() . ".sp_asignar_radicado");
 		}
 	}
 
-	public function postUp($schema) {
+	public function postUp(Schema $schema) {
 		$table = $schema->getTable('modulo');
 		if (!$table->hasIndex("ui_modulo_nombre")) {
 			$table->addUniqueIndex([

@@ -256,6 +256,9 @@ $(document).ready(function(){
 <?php if(@$_REQUEST['tvd']){ ?>
   <input type="hidden" name="tvd_request" value="<?php echo($_REQUEST['tvd']); ?>">
 <?php } ?>
+<?php if(@$_REQUEST['idnodopadre']){ ?>
+  <input type="hidden" name="idnodopadre_request" value="<?php echo($_REQUEST['idnodopadre']); ?>">
+<?php } ?>
 
 <p>
 <input type="hidden" name="a_add" value="A">
@@ -755,6 +758,7 @@ function AddData($conn)
 	if(@$_REQUEST['tvd']){
 		$fieldList["tvd"]=1;
 	}
+  
 	// insert into database
 	$strsql = "INSERT INTO serie (";
 	$strsql .= implode(",", array_keys($fieldList));
@@ -769,6 +773,13 @@ function AddData($conn)
 		phpmkr_query($sql_es);
 	}
 	
+  if($id && @$_REQUEST['idnodopadre_request']){
+    ?>
+    <script>
+    window.parent.frames['arbol'].tree2.refreshItem('<?php echo($_REQUEST['idnodopadre_request']); ?>');
+    </script>
+    <?php
+  }
 	
 	/*
 	$insertar_serie=busca_filtro_tabla("","serie","idserie=".$id,"",$conn);

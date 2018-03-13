@@ -10,7 +10,8 @@ while ($max_salida > 0) {
 }
 
 include_once ($ruta_db_superior . "db.php");
-include_once($ruta_db_superior."class_transferencia.php");
+include_once ($ruta_db_superior . "formatos/libreria/funciones_generales.php");
+
 $idfun_actual = usuario_actual("idfuncionario");
 if (isset($_REQUEST["ejecutar_funcion"])) {
 	$_REQUEST["ejecutar_funcion"]();
@@ -38,7 +39,7 @@ function eliminar_resp_tarea() {
 }
 
 function insertar_ruta_aprob() {
-	global $conn, $idfun_actual;
+	global $conn, $idfun_actual,$ruta_db_superior;
 	$retorno = array("exito" => 0, "msn" => "Error al guardar la informacion");
 	if (isset($_REQUEST["responsables"]) && $_REQUEST["iddoc"] != "") {
 		$asunto = htmlentities($_REQUEST["asunto"]);
@@ -48,17 +49,23 @@ function insertar_ruta_aprob() {
 		$iddoc_ruta = phpmkr_insert_id();
 		if ($iddoc_ruta) {
 			$retorno["msn"] = "Error al actualizar las tareas";
-			$update = "UPDATE tareas SET tarea='" . $asunto . "',fecha_tarea=" . fecha_db_almacenar($_REQUEST["fecha_vencimiento"], "Y-m-d") . ",ruta_aprob=" . $iddoc_ruta . " WHERE ruta_aprob=-1 and documento_iddocumento=" . $_REQUEST["iddoc"];
+			$update = "UPDATE tareas SET estado_tarea=-1, tarea='" . $asunto . "',fecha_tarea=" . fecha_db_almacenar($_REQUEST["fecha_vencimiento"], "Y-m-d") . ",ruta_aprob=" . $iddoc_ruta . " WHERE ruta_aprob=-1 and documento_iddocumento=" . $_REQUEST["iddoc"];
 			phpmkr_query($update) or die(json_encode($retorno));
 			$retorno["exito"] = 1;
 			$retorno["msn"] = "";
 			$tareas=busca_filtro_tabla("A.*,C.idformato","tareas A, documento B, formato C","A.documento_iddocumento=B.iddocumento AND lower(B.plantilla)=lower(C.nombre) AND A.ruta_aprob=".$iddoc_ruta,"orden_tareas ASC",$conn);
 			//Para aprobacion en serie =1
 			if($tareas["numcampos"]){
+				include_once($ruta_db_superior."class_transferencia.php");
 				if(@$_REQUEST["aprobacion_en"]==1){
+					$retorno["msn"]="Error al actualizar la tarea (Serie)";
+					$update="UPDATE tareas SET estado_tarea=0 WHERE idtareas=".$tareas[0]["idtareas"];
+					phpmkr_query($update) or die(json_encode($retorno));
 					transferencia_automatica($tareas[0]["idformato"],$tareas[0]["documento_iddocumento"],$tareas[0]["responsable"],1);
-				}
-				else{
+				}else{
+					$retorno["msn"]="Error al actualizar la tarea (Paralelo)";
+					$update="UPDATE tareas SET estado_tarea=0 WHERE ruta_aprob>0 and documento_iddocumento=".$tareas[0]["documento_iddocumento"];
+					phpmkr_query($update) or die(json_encode($retorno));
 					for($i=0;$i<$tareas["numcampos"];$i++){
 						transferencia_automatica($tareas[$i]["idformato"],$tareas[$i]["documento_iddocumento"],$tareas[$i]["responsable"],1);
 					}

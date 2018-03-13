@@ -59,27 +59,8 @@ $(document).ready(function(){
 	          var objeto2=jQuery.parseJSON(html2);
 	          if(objeto2.exito){
 	          	notificacion_saia(objeto2.mensaje,"success","",2500);
-				window.location.reload();
-                /*var idbusqueda_componente=<?php echo($_REQUEST["idbusqueda_componente"]);?>;
-                var data="idbusqueda_componente="+idbusqueda_componente+"&llave_unica="+objeto2.insertado;  
-                
-                  $.ajax({
-                    type:'GET',
-                    url: "../busquedas/servidor_busqueda.php",
-                    data:data,
-                    success: function(html){
-                      if(html){
-                        var objeto=jQuery.parseJSON(html);
-                        $.each(objeto.rows,function(i,item){
-                           
-                          $("#resultado_pantalla_"+idregistro).before(item.info);
-                          
-                        });  
-                      }
-                    }  //fin success
-                  }); //fin ajax
-					*/
-	          } //fin if objeto2.exito
+							window.location.reload();
+	          }
 	        }
 	      }
 	    });
@@ -133,30 +114,26 @@ $(document).ready(function(){
   
   
   
-   //usted no tiene autorizacion para acceder, favor solicitar 
-   $('.enlace_documento_bloqueado').live('click',function(){
-       
-       var iddoc=$(this).attr('iddoc');
-        $.ajax({
-            type:'POST',
-            dataType: 'json',
-            url: "<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
-            data: {
-                iddoc:iddoc,
-                ejecutar_expediente:'obtener_rastro_documento_expediente'
-            },
-            success: function(datos){
-                var alerta="<b>ATENCI&Oacute;N!<b><br><br>Usted no tiene autorizaci&oacute;n para acceder, favor solicitar el permiso a: "+datos.msn;
-                notificacion_saia(alerta,"warning","",6000);
-            }
-        });       
-       
-   });
-  $('.enlace_documento_bloqueado').parent().css("opacity","0.2");
-  
-  
-  
-  
-  
+ //usted no tiene autorizacion para acceder, favor solicitar 
+ $('.enlace_documento_bloqueado').live('click',function(){
+   
+   var iddoc=$(this).attr('iddoc');
+    $.ajax({
+        type:'POST',
+        dataType: 'json',
+        url: "<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
+        data: {
+            iddoc:iddoc,
+            ejecutar_expediente:'obtener_rastro_documento_expediente'
+        },
+        success: function(datos){
+            var alerta="<b>ATENCI&Oacute;N!<b><br><br>Usted no tiene autorizaci&oacute;n para acceder, favor solicitar el permiso a: "+datos.msn;
+            notificacion_saia(alerta,"warning","",6000);
+          }
+      });       
+     
+ });
+$('.enlace_documento_bloqueado').parent().css("opacity","0.2");
+
 });
 </script>
