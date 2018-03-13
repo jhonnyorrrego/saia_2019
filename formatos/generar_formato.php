@@ -1184,7 +1184,7 @@ function crear_vista_formato($idformato, $arreglo) {
 			$includes .= incluir($formato[0]["librerias"], "librerias", 1);
 		}
 		$includes .= incluir_libreria("funciones_generales.php", "librerias");
-		$includes .= incluir("../../js/jquery.js", "javascript");
+		$includes .= incluir("../../js/jquery-1.7.2.js", "javascript");
 		$includes .= incluir_libreria("header_nuevo.php", "librerias");
 		$includes .= incluir("../../class_transferencia.php", "librerias");
 
@@ -1654,16 +1654,20 @@ function crear_formato_ae($idformato, $accion) {
                 /* parametros: campos a mostrar separados por comas; campo a guardar en el hidden; tabla
                   ej: nombres,apellidos;idfuncionario;funcionario
                 */
-                        $parametros = explode(";", $campos[$h]['valor']);
-                        $tipo = $parametros[0];
-                        $url = "../../" . $parametros[1];
+                        $parametros = json_decode($campos[$h]['valor']);
+                        if(json_last_error() !== JSON_ERROR_NONE) {
+                            die("Autocompletar: El campo valor debe ser una cadena json");
+                        }
                         $texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                    <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                    <td bgcolor="#F5F5F5">';
+                        if ($obligatoriedad == 1) {
+                            $obligatorio = "required";
+                        }
 
-                        $texto .= crea_campo_autocompletar($campos[$h]["nombre"], $tipo, $url);
-                        $texto .= '<input type="text" id="' . $campos[$h]["nombre"] . '_busqueda" size="100" value="">';
-                        $texto .= '<input type="hidden" name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" value="" class="required"></td>';
+                        $texto .= '<input type="text" name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" value=""' . $obligatorio . '></td>';
+                        $texto .= crea_campo_autocompletar($campos[$h]["nombre"], $parametros);
+                        $autocompletar++;
 						break;
 					case "etiqueta" :
 						$texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
@@ -2025,8 +2029,8 @@ function crear_formato_ae($idformato, $accion) {
 			$includes .= incluir("../../calendario/calendario.php", "librerias");
 		}
 
-		$includes .= incluir("../../js/jquery.js", "javascript");
-		$includes .= incluir("../../js/jquery.validate.js", "javascript");
+		$includes .= incluir("../../js/jquery-1.7.2.js", "javascript");
+		$includes .= incluir("../../js/jquery.validate.1.13.1.js", "javascript");
 
 		$includes .= incluir("../../js/title2note.js", "javascript");
 		if ($arboles) {
@@ -2037,7 +2041,10 @@ function crear_formato_ae($idformato, $accion) {
 			$includes .= '<link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css">';
 		}
 		if ($autocompletar) {
-			$includes .= incluir("../librerias/autocompletar.js", "javascript");
+		    $includes .= incluir("../../css/selectize.css", "estilos");
+		    $includes .= incluir("../../js/jquery-1.7.2.js", "javascript");
+		    $includes .= incluir("../../js/selectize.js", "javascript");
+		    //$includes .= incluir("../librerias/autocompletar.js", "javascript");
 		}
 		if ($dependientes > 0) {
 			$includes .= incluir("../librerias/dependientes.js", "javascript");
@@ -2173,7 +2180,7 @@ function crear_formato_buscar($idformato, $accion) {
 		$includes .= incluir_libreria("funciones_generales.php", "librerias");
 		$includes .= incluir_libreria("estilo_formulario.php", "librerias");
 		$includes .= incluir_libreria("funciones_formatos.js", "javascript");
-		$includes .= incluir("../../js/jquery.js", "javascript");
+		$includes .= incluir("../../js/jquery-1.7.2.js", "javascript");
 		if ($formato[0]["estilos"] && $formato[0]["estilos"] != "") {
 			$includes .= incluir($formato[0]["estilos"], "estilos", 1);
 		}
@@ -2599,8 +2606,8 @@ function crear_formato_buscar($idformato, $accion) {
 		if ($textareas) {
 			$includes .= incluir_libreria("header_formato.php", "librerias");
 		}
-		$includes .= incluir("../../js/jquery.js", "javascript");
-		$includes .= incluir("../../js/jquery.validate.js", "javascript");
+		$includes .= incluir("../../js/jquery-1.7.2.js", "javascript");
+		$includes .= incluir("../../js/jquery.validate.1.13.1.js", "javascript");
 
 		$includes .= incluir("../../js/title2note.js", "javascript");
 		if ($arboles) {
@@ -2613,11 +2620,13 @@ function crear_formato_buscar($idformato, $accion) {
 			$includes .= incluir("../../css/style_fcbkcomplete.css", "estilos");
 		}
 		if ($autocompletar) {
-			$includes .= incluir("../../js/jquery.js", "javascript");
-			$includes .= incluir("../librerias/autocompletar.js", "javascript");
+			$includes .= incluir("../../js/jquery-1.7.2.js", "javascript");
+			$includes .= incluir("../../js/selectize.js", "javascript");
+			$includes .= incluir("../../css/selectize.css", "estilos");
+			//$includes .= incluir("../librerias/autocompletar.js", "javascript");
 		}
 		if ($dependientes > 0) {
-			$includes .= incluir("../../js/jquery.js", "javascript");
+			$includes .= incluir("../../js/jquery-1.7.2.js", "javascript");
 			$includes .= incluir("../librerias/dependientes.js", "javascript");
 		}
 		$contenido = "<html><title>.:" . strtoupper($accion . " " . $formato[0]["etiqueta"]) . ":.</title><head>" . $includes . $enmascarar . "</head>" . $texto . "</html>";
@@ -2951,88 +2960,60 @@ function busca_funcion_test($nombre_test, $ruta) {
     }
 }
 
-function crea_campo_autocompletar($nombre, $tipo, $url, $obligatoriedad) {
-    $obligatorio = "";
-    if ($obligatoriedad == 1) {
-        $obligatorio = "required";
+function crea_campo_autocompletar($nombre, $parametros) {
+
+    /*{"tipo":"multiple","url":"../../autocompletar.php","campoid":"funcionario_codigo","campotexto":["nombres","apellidos"],"tablas":["funcionario"],"condicion":"estado=1","orden":""}*/
+
+    if ($parametros->tipo == "simple") {
+        $tipo = "1";
+    } else {
+        $tipo = "null";
     }
+
+    $consulta = array(
+        "campoid" => $parametros->campoid,
+        "campotexto" => $parametros->campotexto,
+        "tablas" => $parametros->tablas,
+        "condicion" => $parametros->condicion,
+        "orden" => $parametros->orden
+        );
+
+    $consulta64 = base64_encode(json_encode($consulta));
+
+    $selector = "[name='$nombre']";
+
     $campo = '
     <script>
     $(document).ready(function(){
-        var delay = (function(){
-            var timer = 0;
-            return function(callback, ms){
-                clearTimeout (timer);
-                timer = setTimeout(callback, ms);
-            };
-        })();
-
-        $("#' . $nombre . '_busqueda").attr("autocomplete","off").after("<br/><div id=\'ul_completar_' . $nombre . '\' class=\'ac_results\'></div>");
-        $("#' . $nombre . '_busqueda").keyup(function() {
-            var x_valor=$(this).val();
-            delay(function(){
-            $("#ul_completar_' . $nombre . '").load( "' . $url . '", { valor: x_valor, campo: \'' . $nombre . '\'});
-        },500);
-        });
+			$("' . $selector . '").selectize({
+			    valueField: "value",
+			    labelField: "text",
+			    searchField: "text",
+				persist: false,
+				createOnBlur: true,
+				create: false,
+				maxItems: ' . $tipo . ',
+				load: function(query, callback) {
+			        if (!query.length) return callback();
+			        $.ajax({
+			            url: "' . $parametros->url . '",
+			            type: "POST",
+			            dataType: "json",
+			            data: {
+			                consulta: "' . $consulta64 . '",
+			                valor: query,
+			            },
+			            error: function() {
+			                callback();
+			            },
+			            success: function(res) {
+			                callback(res);
+			            }
+			        });
+			    }
+			});
     });';
-    if ($tipo == 1) {
-        $campo .= 'function cargar_datos_' . $nombre . '(id,descripcion,tipo){
-		$("#ul_completar_' . $nombre . '").empty();
-		$("#informacion_' . $nombre . '").remove();
-
-		$("#' . $nombre . '_busqueda").after("<table id=\'informacion_' . $nombre . '\'></table>");
-
-		$("#informacion_' . $nombre . '").append("<tr id=\'fila_"+id+"\'><td>"+descripcion+"</td><td><img style=\'cursor:pointer\' src=\'../../imagenes/eliminar_nota.gif\' registro=\'"+id+"\' onclick=\'eliminar_' . $nombre . '("+id+");\'></td></tr>");
-
-		$("#' . $nombre . '").val(id);
-		$("#' . $nombre . '_busqueda").val("");}';
-    } else if ($tipo == 2) {
-        $campo .= 'function cargar_datos_' . $nombre . '(id,descripcion,tipo,unico){
-                $("#ul_completar_' . $nombre . '").empty();
-
-                if(!$("#informacion_' . $nombre . '").length){
-                    $("#' . $nombre . '_busqueda").after("<table id=\'informacion_' . $nombre . '\'></table>");
-                }
-                if(unico==1){//NO permite eliminar el seleccionado
-                    $("#' . $nombre . '_busqueda").attr("disabled",true);
-                    $("#informacion_' . $nombre . '").append("<tr id=\'fila_"+id+"\'><td>"+descripcion+"</td><td>&nbsp;</td></tr>");
-                }else{
-                    $("#informacion_' . $nombre . '").append("<tr id=\'fila_"+id+"\'><td>"+descripcion+"</td><td><img style=\'cursor:pointer\' src=\'../../imagenes/eliminar_nota.gif\' registro=\'"+id+"\' onclick=\'eliminar_' . $nombre . '("+id+");\'></td></tr>");
-                }
-
-                if($("#' . $nombre . '").val()!=\'\'){
-                    $("#' . $nombre . '").val($("#' . $nombre . '").val()+","+id);
-                }
-                else{
-                    $("#' . $nombre . '").val(id);
-                }
-                $("#' . $nombre . '_busqueda").val("");
-
-            }';
-    }
-    $campo .= '
-    function eliminar_' . $nombre . '(id){
-        $("#fila_"+id).remove();
-
-        var datos=$("#' . $nombre . '").val().split(",");
-
-        var cantidad=datos.length;
-        var nuevos_datos=new Array();
-        var nuevos_datos2=new Array();
-        var a=0;
-        for(var i=0;i<cantidad;i++){
-            if(id!=datos[i]){
-                nuevos_datos[a]=datos[i];
-                nuevos_datos2[a]=datos2[i];
-                a++;
-            }
-        }
-        var datos_guardar=nuevos_datos.join(",");
-        var datos_guardar2=nuevos_datos2.join(",");
-        $("#' . $nombre . '").val(datos_guardar);
-    }
-    </script>
-    ';
+    $campo .= '</script>';
 
     return ($campo);
 }
