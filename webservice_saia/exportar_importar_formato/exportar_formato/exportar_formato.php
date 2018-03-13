@@ -122,7 +122,7 @@ function validar_respuesta_medio($respuesta_medio,$tipo_conexion=0){
 	</script>';
 	die($cadena_respuesta);
 }
-$base_configuracion=busca_filtro_tabla("","configuracion","tipo='exportar_formato' AND nombre='servidor_importar'","",conn);
+$base_configuracion=busca_filtro_tabla("","configuracion","tipo='exportar_importar' AND nombre='servidor_destino'","",conn);
 if($base_configuracion["numcampos"]){
 	$servidor_importar_tmp=$base_configuracion[0]["valor"];
 }else{
