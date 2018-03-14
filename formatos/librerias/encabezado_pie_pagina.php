@@ -393,4 +393,13 @@ function mostrar_num_pagina($idformato,$iddoc){
 		return('{PAGENO}');
 	}
 }
+function nombre_formato_gh($idformato,$iddoc,$tipo){
+	global $conn;
+	$formato=busca_filtro_tabla("etiqueta","formato","idformato=$idformato","",$conn);
+	if($tipo){
+		return(ucwords(substr($formato[0][0],2)));
+	}else{
+  		echo ucwords(substr($formato[0][0],2));
+	}
+}
 ?>

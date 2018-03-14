@@ -73,7 +73,7 @@ function enlaces_adicionales_caja($idcaja, $propietario) {
 	}
 	$texto .= '<div class="btn btn-mini link kenlace_saia tooltip_saia pull-right" title="Imprimir rotulo" titulo="Imprimir rotulo" enlace="pantallas/caja/rotulo.php?idcaja=' . $idcaja . '" conector="iframe" onclick=" "><i class="icon-print"></i></div>';
 	if ($p) {
-		$texto .= '<div class="btn btn-mini enlace_caja tooltip_saia pull-right" idregistro="' . $idcaja . '" title="Asignar" enlace="pantallas/caja/asignar_caja.php?idcaja='.$idcaja.'"><i class="icon-lock"></i></div>';
+		$texto .= '<div class="btn btn-mini enlace_caja tooltip_saia pull-right" idregistro="' . $idcaja . '" title="Asignar" enlace="pantallas/caja/asignar_caja.php?idcaja=' . $idcaja . '"><i class="icon-lock"></i></div>';
 	}
 	return ($texto);
 }
@@ -83,8 +83,6 @@ function enlace_caja($idcaja, $dependencia, $serie, $numero) {
 	$componente_exp = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente a", "a.nombre='expediente'", "", $conn);
 	return ("<div class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?idbusqueda_componente=" . $componente_exp[0]["idbusqueda_componente"] . "&idcaja=" . $idcaja . "&variable_busqueda=from_caja' conector='iframe' titulo='Caja No.  " . $dependencia . "-" . $serie . "-" . $numero . "'><b>" . $dependencia . "-" . $serie . "-" . $numero . "</b></div>");
 }
-
-
 
 function obtener_descripcion_caja($fondo, $seccion, $subseccion, $codigo) {
 	if ($fondo == 'fondo') {

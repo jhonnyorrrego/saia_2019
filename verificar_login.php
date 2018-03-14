@@ -143,7 +143,11 @@ if (@$_REQUEST["userid"] <> "" && @$_REQUEST["passwd"] <> "") {
 			setCookie("saia_userid", "", 0);
 		}
 		include_once ("tarea_limpiar_carpeta.php");
-		borrar_archivos_carpeta("temporal/temporal_" . $_POST["userid"], false);
+		$configuracion_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal' AND tipo='ruta'", "", $conn);
+		if ($configuracion_temporal["numcampos"]) {
+			$ruta_temp = $configuracion_temporal[0]["valor"];
+		}
+		borrar_archivos_carpeta($ruta_temp . "_" . $_POST["userid"], false);
 		$retorno["mensaje"] = "<b>Bienvenido</b> <br>has ingresado al sistema SAIA";
 		$retorno["ruta"] = $redirecciona_exito;
 		$retorno["ingresar"] = 1;

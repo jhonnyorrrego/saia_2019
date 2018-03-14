@@ -32,7 +32,7 @@ if (isset($_SESSION["LOGIN" . LLAVE_SAIA]) && $_SESSION["LOGIN" . LLAVE_SAIA]) {
 */
 function registrar_accion_digitalizacion($iddoc,$accion,$justificacion='')
 {global $conn;
- $usu=usuario_actual("funcionario_codigo");
+ $usu=$_SESSION["usuario_actual"];
  $fecha=fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s');
  $sql="insert into digitalizacion(funcionario,documento_iddocumento,accion,justificacion,fecha) values('$usu','$iddoc','$accion','$justificacion',$fecha)" ;
  phpmkr_query($sql,$conn);
@@ -305,7 +305,7 @@ function guardar_lob($campo,$tabla,$condicion,$contenido,$tipo,$conn,$log=1){
                 $llave=trim($resultados[1]);
 
                 if($log)
-                  {$sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado) VALUES('".usuario_actual("funcionario_codigo")."',to_date('".date('Y-m-d H:i:s')."','YYYY-MM-DD HH24:MI:SS') ,'MODIFICAR', '$tabla', $llave, '0')";
+                  {$sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado) VALUES('".$_SESSION["usuario_actual"]."',to_date('".date('Y-m-d H:i:s')."','YYYY-MM-DD HH24:MI:SS') ,'MODIFICAR', '$tabla', $llave, '0')";
 
                    $conn->Ejecutar_Sql($sqleve);
                    $registro=$conn->Ultimo_Insert();
@@ -337,7 +337,7 @@ COMMIT;
 END";
                    guardar_lob('codigo_sql','evento',"idevento=".$registro,$texto_sig,'texto',$conn,0);
                    guardar_lob('detalle','evento',"idevento=".$registro,$texto_ant,'texto',$conn,0);
-                   $archivo="$registro|||".usuario_actual("funcionario_codigo")."|||".date('Y-m-d H:i:s')."|||MODIFICAR|||$tabla|||0|||$texto_ant|||$llave|||$texto_sig";
+                   $archivo="$registro|||".$_SESSION["usuario_actual"]."|||".date('Y-m-d H:i:s')."|||MODIFICAR|||$tabla|||0|||$texto_ant|||$llave|||$texto_sig";
                    evento_archivo($archivo);
                    //*********************************
 
@@ -384,12 +384,12 @@ END";
              $anterior=busca_filtro_tabla($campo,$tabla,$condicion,"",$conn);
              $sql_anterior="update $tabla set $campo='".addslashes(stripslashes($anterior[0][0]))."' where $condicion";
 
-             $sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('".usuario_actual("funcionario_codigo")."','".date('Y-m-d H:i:s')."','MODIFICAR', '$tabla', $llave, '0','".addslashes($sql_anterior)."','".addslashes($sql)."')";
+             $sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('".$_SESSION["usuario_actual"]."','".date('Y-m-d H:i:s')."','MODIFICAR', '$tabla', $llave, '0','".addslashes($sql_anterior)."','".addslashes($sql)."')";
              $conn->Ejecutar_Sql($sqleve);
              $registro=$conn->Ultimo_Insert();
              if($registro)
                {
-                $archivo="$registro|||".usuario_actual("funcionario_codigo")."|||".date('Y-m-d H:i:s')."|||MODIFICAR|||$tabla|||0|||".addslashes($sql_anterior)."|||$llave|||".addslashes($sql);
+                $archivo="$registro|||".$_SESSION["usuario_actual"]."|||".date('Y-m-d H:i:s')."|||MODIFICAR|||$tabla|||0|||".addslashes($sql_anterior)."|||$llave|||".addslashes($sql);
                 evento_archivo($archivo);
                }
             }
@@ -419,11 +419,11 @@ END";
         $llave=trim($resultados[1]);
         $anterior=busca_filtro_tabla("$campo","$tabla","$condicion","",$conn);
         $sql_anterior="update $tabla set $campo='".str_replace("'",'"',stripslashes($anterior[0][0]))."' where $condicion";
-        $sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('".usuario_actual("funcionario_codigo")."','".date('Y-m-d H:i:s')."','MODIFICAR', '$tabla', $llave, '0','".addslashes($sql_anterior)."','".addslashes($sql)."')";
+        $sqleve="INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('".$_SESSION["usuario_actual"]."','".date('Y-m-d H:i:s')."','MODIFICAR', '$tabla', $llave, '0','".addslashes($sql_anterior)."','".addslashes($sql)."')";
         $conn->Ejecutar_Sql($sqleve);
         $registro=$conn->Ultimo_Insert();
         if($registro){
-          $archivo="$registro|||".usuario_actual("funcionario_codigo")."|||".date('Y-m-d H:i:s')."|||MODIFICAR|||$tabla|||0|||".addslashes($sql_anterior)."|||$llave|||".addslashes($sql);
+          $archivo="$registro|||".$_SESSION["usuario_actual"]."|||".date('Y-m-d H:i:s')."|||MODIFICAR|||$tabla|||0|||".addslashes($sql_anterior)."|||$llave|||".addslashes($sql);
           evento_archivo($archivo);
         }
       }
@@ -1083,7 +1083,7 @@ $accion = strtoupper(substr($sql,0,strpos($sql,' ')));
 $tabla = "";
 $llave=0; $string_detalle="";
 if ($accion<>"SELECT")
- $func = usuario_actual("funcionario_codigo");
+ $func = $_SESSION["usuario_actual"];
 $strsql=htmlspecialchars_decode((($strsql)));
 $rs = $conn->Ejecutar_Sql_Noresult($strsql);
 return $rs;
@@ -1703,7 +1703,7 @@ function vincular_anexo_documento($iddoc,$ruta_origen,$etiqueta=''){
 
 	$data_sql=array();
 	$data_sql['anexos_idanexos']=$idanexo;
-	$data_sql['idpropietario']=usuario_actual('idfuncionario');
+	$data_sql['idpropietario']=$_SESSION["idfuncionario"];
 	$data_sql['caracteristica_propio']='lem';
 	$data_sql['caracteristica_total']='1';
 
@@ -2047,11 +2047,11 @@ global $conn;
 	        $ejecutores=array($funcionario[0]["funcionario_codigo"]);
 	      }
 	      else {
-	        $ejecutores=array(usuario_actual("funcionario_codigo"));
+	        $ejecutores=array($_SESSION["usuario_actual"]);
 	      }
 	    }
 	    if(!count($ejecutores))
-	      $ejecutores=array(usuario_actual("funcionario_codigo"));
+	      $ejecutores=array($_SESSION["usuario_actual"]);
 
 			$otros["notas"]="'Documento enviado por e-mail por medio del correo: ".$mail->FromName;
 		  if(count($para)){
@@ -2084,7 +2084,7 @@ function contador($iddocumento,$cad){
 global $sql, $conn;
 	$contador=busca_filtro_tabla("","contador a","a.nombre='".$cad."'","",$conn);
 
-	$func = usuario_actual("funcionario_codigo");
+	$func = $_SESSION["usuario_actual"];
 
 	if(MOTOR=="MySql" || MOTOR=="Oracle"){
 		$strsql="CALL sp_asignar_radicado($iddocumento," . $contador[0]["idcontador"] . ", $func)";
@@ -3611,7 +3611,6 @@ function almacenar_sesion($exito, $login) {
 	if ($login == "") {
 		$login = usuario_actual("login");
 		$id = usuario_actual("idfuncionario");
-		$idfun_intentetos = $id;
 	} else {
 		$id = $_SESSION["idfuncionario"];
 	}
@@ -3647,7 +3646,7 @@ function almacenar_sesion($exito, $login) {
 		$sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,fecha) VALUES('$iplocal','$ipremoto','" . $login . "',0," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
 		$conn -> Ejecutar_Sql($sql);
 	} else {
-		$sql2 = "UPDATE funcionario SET intento_login=0 WHERE idfuncionario=" . $idfun_intentetos;
+		$sql2 = "UPDATE funcionario SET intento_login=0 WHERE idfuncionario=" . $id;
 		$conn -> Ejecutar_Sql($sql2);
 
 		$idsesion = ultima_sesion($login);
@@ -3778,6 +3777,7 @@ if($f){
   else {
     fclose($f);
   }
+  return($nombre);
 }
 else{
   alerta('No se puede crear el archivo: '.$nombre);
@@ -4270,6 +4270,16 @@ function generar_cadena_like_comas($campo,$value){
 		$cadena_like.=")";
 	}
 	return($cadena_like);
+}
+
+function notificaciones($mensaje, $tipo = 'alert', $tiempo = 3500,$ubicacion="topCenter") {
+	if ($mensaje != '') {
+	?>
+		<script type="text/javascript">
+			top.noty({text: '<?php echo($mensaje)?>',type: '<?php echo($tipo); ?>',layout: '<?php echo($ubicacion)?>',timeout:<?php echo($tiempo); ?>});
+		</script>
+	<?php
+	}
 }
 
 ?>

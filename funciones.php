@@ -396,15 +396,7 @@ function mostrar_estructura($key)
  echo "<td><a href='../ordenar.php?accion=mostrar&mostrar_formato=1&key=".$datos[0]["documento_iddocumento"]."'>Detalles</a></td>";
  
 }
-/*
-function mostrar_formato($key)
-{
- global $conn;
- $datos = busca_filtro_tabla("documento_iddocumento","ft_hoja_vida","idft_hoja_vida=".$key,"",$conn); 
- //echo "<td><a href='../formatos/hoja_vida/mostrar_hoja_vida.php?idformato=71&iddoc=".$datos[0]["documento_iddocumento"]."'>Detalles</a></td>";
- echo "<td><a href='../ordenar.php?accion=mostrar&mostrar_formato=1&key=".$datos[0]["documento_iddocumento"]."'>Detalles</a></td>";
-}  
-*/
+
 function dependencia($iddoc)
 {global $conn;
  $doc=busca_filtro_tabla("plantilla,responsable","documento","iddocumento=$iddoc","",$conn);

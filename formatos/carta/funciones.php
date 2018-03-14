@@ -684,8 +684,12 @@ function generar_correo_confirmacion($idformato,$iddoc){
 	if($formato_carta[0]['email_aprobar']==1 && $formato_carta[0]['estado']=='ACTIVO'){
 		$resultado=busca_filtro_tabla("","ruta","documento_iddocumento=".$iddoc,"idruta",$conn);
 		if($resultado['numcampos']){
-			if(!is_dir($ruta_db_superior."temporal_".$_SESSION["LOGIN"])){
-        mkdir($ruta_db_superior."temporal_".$_SESSION["LOGIN"],0777);
+			$configuracion_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal' AND tipo='ruta'", "", $conn);
+			if($configuracion_temporal["numcampos"]){
+				$ruta_temp=$configuracion_temporal[0]["valor"];
+			}
+			if(!is_dir($ruta_db_superior.$ruta_temp."_".$_SESSION["LOGIN"])){
+        mkdir($ruta_db_superior.$ruta_temp."_".$_SESSION["LOGIN"],0777);
       }
 			$borrar_pdf="UPDATE documento set pdf='' where iddocumento=".$iddoc;
 			phpmkr_query($borrar_pdf);
@@ -738,10 +742,6 @@ function generar_correo_confirmacion($idformato,$iddoc){
 
 			enviar_mensaje('','codigo',array($funcionario[0]['funcionario_codigo']),'GESTION DE COMUNICACIONES EXTERNAS',$mensaje,$anexos);
 		}
-	}
-
-	if(!isset($_REQUEST['refrescar'])){
-		//mostrar_formato($idformato,$iddoc);
 	}
 }
 function parsear_arbol_expediente_serie_carta(){

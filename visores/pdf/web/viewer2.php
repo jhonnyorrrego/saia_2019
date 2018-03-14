@@ -50,6 +50,7 @@ if(@$_REQUEST['iddocumento']){
   $dato=busca_filtro_tabla("","documento,formato","lower(plantilla)=lower(nombre) and iddocumento=".$_REQUEST["iddocumento"],"",$conn);
   if($dato["numcampos"] && $dato[0]["pdf"]!=""){
     $_REQUEST["file"]=$ruta_db_superior.$dato[0]["pdf"];
+    $ruta=$dato[0]["pdf"];
     $url=$_REQUEST["file"];
 	$print=$dato[0]['permite_imprimir'];
     //$_REQUEST['file']=base64_decode($_REQUEST['file']);

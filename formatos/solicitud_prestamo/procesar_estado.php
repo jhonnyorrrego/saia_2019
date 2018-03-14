@@ -25,6 +25,5 @@ if(@$_REQUEST["accion"]){
 	
 	phpmkr_query($sql1);
 	abrir_url($ruta_db_superior."pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=".$componente[0]["idbusqueda_componente"],"_self");
-	
 }
 ?>

@@ -44,9 +44,11 @@ function guardar_traza($sql,$nombre_formato,$sql_export){
 	global $conn,$ruta_db_superior;
 	$nombre=$ruta_db_superior.RUTA_EVENTO_FORMATO.strtolower($nombre_formato)."/".DB."_".date("Ymd").".txt";
 	if(!@is_file($nombre)){
-		crear_archivo($nombre);
+		if(crear_archivo($nombre)===false){
+		    die("No se puede crear el evento del formato ".$nombre);    
+		}
 	}
-	if(file_put_contents($nombre,$sql,FILE_APPEND)){
+	if(file_put_contents($nombre,$sql.";\n",FILE_APPEND)){
     	if($sql_export){
     	    if(!@is_file($nombre_export)){
         		crear_archivo($nombre_export);

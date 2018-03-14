@@ -36,6 +36,8 @@ if ($acceso[0] == 192 || $acceso[0] == 172) {
 } else {
     $ruta = "{{urlsaia}}";
 }
+define("RUTA_SAIA", "saia_elastic/saia/");
+//$_SERVER["DOCUMENT_ROOT"] no esta disponible como cgi. Usar la ruta del define.php
 if (!defined("RUTA_PDF")) {
     define("RUTA_PDF", $ruta . "/{{carpetasaia}}/saia");
 }
@@ -58,11 +60,10 @@ ini_set("display_errors", true);
 ini_set("safe_mode", false);
 /**************Soluciona limite de texto a mostrar con BD SQL SERVER*************/
 /*ini_set ( 'mssql.textlimit' , '65536' );
- ini_set ( 'mssql.textsize' , '65536' );*/
+ini_set ( 'mssql.textsize' , '65536' );*/
 //Solucion error pcre con cadenas grandes devuelve array vacio
 //100000  para PHP < 5.3.7
 //1000000 para PHP >= 5.3.7
-
 ini_set('pcre.backtrack_limit', '200000');
 // Por defecto 100000
 ini_set('pcre.recursion_limit = 200000');
@@ -100,7 +101,8 @@ define("RUTA_CONFIGURACION", "{{almacenamientosaia}}/configuracion/");
 define("RUTA_ARCHIVOS_BPMN", "{{almacenamientosaia}}/configuracion/archivos_bpmn/"); // Flujos saia
 
 /* CONSTANTES QUE DEPENDEN DE LA CONSTANTE "RUTA_ARCHIVOS" */
-define("RUTA_ANEXOS_TAREAS", "anexos_tareas/");
+//define("RUTA_ANEXOS_TAREAS", "anexos_tareas/");
+define("RUTA_ANEXOS_TAREAS", "{{almacenamientosaia}}/anexos_tareas/");
 
 /* CONSTANTES QUE DEPENDEN DE LA CONSTANTE "RUTA_IMAGENES" */
 define("RUTA_FOTOGRAFIA_FUNCIONARIO", "{{almacenamientosaia}}/configuracion/adicionales_funcionario/fotografia/");
@@ -110,13 +112,14 @@ define("RUTA_LOGO_SAIA", "{{almacenamientosaia}}/configuracion/logo_saia/");
 define("RUTA_TINY_IMAGENES", "{{almacenamientosaia}}/configuracion/imagenes_areatexto/"); // Imagenes cargadas a travez del tiny
 define("RUTA_CARRUSEL_IMAGENES", "{{almacenamientosaia}}/configuracion/imagenes_carrusel/"); // Carrusel saia
 
-define("RUTA_ANEXOS_TAREAS", "{{almacenamientosaia}}/anexos_tareas/");
-define("RUTA_ARCHIVOS_BPMN", "{{almacenamientosaia}}/configuracion/archivos_bpmn/"); // Flujos saia
 
 define("LLAVE_SAIA", "SAIA_RELEASE1");
 /* EVITA PROBLEMA DE CODIFICACION DE LOS FORMATOS, SE HABILITA O DESHABILITA SEGUN SE PRESENTE EL ERROR */
 define("CODIFICA_ENCABEZADO", false);
 
+if (!defined("INDEXA_ELASTICSEARCH")) {
+	define("INDEXA_ELASTICSEARCH",true);
+}
 /* CONFIGURAR EL CORREO ELECTRONICO PARA ROUNDCUBE */
 if (!defined("SERVIDOR_CORREO_SALIDA")) {
     define("SERVIDOR_CORREO_SALIDA", "ssl://smtp.gmail.com");
@@ -138,4 +141,13 @@ if (!defined("LLAVE_SAIA_EDITOR")) {
 // define("REMOTE_STORAGE", false);
 // define("STORAGE_TYPE", "LOCAL");
 // define("STORAGE_TYPE", "NETWORK");
+
+define('FORMATOS_SAIA', 'formatos/');
+define('FORMATOS_CLIENTE', 'formatos/');
+
+define("RUTA_BACKUPS","s3://almacenamiento2");
+define("KEY_AWS","AKIAJOOJ3XT673EOK6OQ");
+define("SECRET_AWS","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");
+define("REGION_AWS","us-east-1");
+
 ?>

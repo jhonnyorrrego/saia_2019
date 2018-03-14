@@ -166,7 +166,7 @@ class Version20180118223002 extends AbstractMigration
         
     }
 
-    public function postUp($schema) {
+    public function postUp(Schema $schema) {
         
     }
     

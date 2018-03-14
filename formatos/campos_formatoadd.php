@@ -428,7 +428,10 @@ echo $x_accionesChk;
 <?php echo "Boton de Selecci&oacute;n"; ?>
 <?php echo EditOptionSeparator(3); ?><br>
 <input type="radio" name="x_etiqueta_html"<?php if (@$x_etiqueta_html == "checkbox") { ?> checked<?php } ?> value="<?php echo htmlspecialchars("checkbox"); ?>">
-<?php echo "Cuadro de Chequeo"; ?> </td><td>
+<?php echo "Cuadro de Chequeo"; ?>
+<br>
+<input type="radio" name="x_etiqueta_html"<?php if (@$x_etiqueta_html == "autocompletar") { ?> checked<?php } ?> value="<?php echo htmlspecialchars("autocompletar"); ?>">
+<?php echo "Autocompletar"; ?> </td><td>
 <?php echo EditOptionSeparator(4); ?><br>
 <input type="radio" name="x_etiqueta_html"<?php if (@$x_etiqueta_html == "select") { ?> checked<?php } ?> value="<?php echo htmlspecialchars("select"); ?>">
 <?php echo "Lista Deplegable"; ?>
@@ -641,22 +644,19 @@ global $x_autoguardado,$x_idcampos_formato, $x_formato_idformato, $x_nombre, $x_
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_valor) : $x_valor; 
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["valor"] = $theValue;
-  if(strpos($GLOBALS["x_valor"],"*}")>0)
-    {$existe=busca_filtro_tabla("","funciones_formato","nombre='".$x_valor."'","",$conn);
+  if(strpos($GLOBALS["x_valor"],"*}")>0){
+     $existe=busca_filtro_tabla("","funciones_formato","nombre='".$x_valor."'","",$conn);
      if(!$existe["numcampos"])
         $redirecciona="funciones_formatoadd.php?adicionar=".$x_valor."&idformato=".$x_formato_idformato;
-     else
-        {
-         $formatos_func=busca_filtro_tabla("formato","funciones_formato","idfunciones_formato=".$existe[0]["idfunciones_formato"],"",$conn);
-         $vector_f=explode(",",$formatos_func[0][0]);
-         if(!in_array($x_formato_idformato,$vector_f))
-             {$vector_f[]=$x_formato_idformato;
-              $sqlf="UPDATE funciones_formato SET formato='".implode(",",$vector_f)."' WHERE idfunciones_formato=".$existe[0]["idfunciones_formato"];
-			  guardar_traza($sqlf,$formato[0]["nombre_tabla"]);
-              phpmkr_query($sqlf,$conn) or error("Falla Al Ejecutar ".$sqlf." <br /> Al Generar el Formato.");
-             } 
-        }    
-    }
+     else{
+         $formatos_func=busca_filtro_tabla("formato","funciones_formato A, funciones_formato_enlace B","A.idfunciones_formato=B.funciones_formato_fk AND A.idfunciones_formato=".$existe[0]["idfunciones_formato"]." AND B.formato_idformato=".$x_formato_idformato,"",$conn);
+        if(!$formatos_func["numcampos"]){
+             $sqlf="INSERT INTO funciones_formato_enlace(funciones_formato_fk,formato_idformato)VALUES(".$existe[0]["idfunciones_formato"].",".$x_formato_idformato.")";
+             guardar_traza($sqlf,$formato[0]["nombre_tabla"]);
+             phpmkr_query($sqlf,$conn) or error("Falla Al Ejecutar ".$sqlf." <br /> Al Generar el Formato.");
+        }
+    }    
+   }
 	// Field predeterminado
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_predeterminado) : $x_predeterminado; 
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";

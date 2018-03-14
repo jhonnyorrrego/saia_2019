@@ -9,7 +9,7 @@ while($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
-
+include_once ($ruta_db_superior . "class_transferencia.php");
 function retornar_seleccionados($valor) {
 	global $ruta_db_superior;
 	$vector = explode(",", str_replace("#", "d", $valor));
@@ -813,22 +813,21 @@ function mostrar_fecha($idformato, $iddoc, $tipo = NULL) {
  */
 function mostrar_anexos_memo($idformato, $iddoc = NULL) {
 	global $conn, $ruta_db_superior;
-	$datos = busca_filtro_tabla("nombre,nombre_tabla", "formato", "idformato=$idformato", "", $conn);
-	$inf_memorando = busca_filtro_tabla("anexos_fisicos", $datos[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "", $conn);
-	// print_r($inf_memorando);
-	$anexos = array();
-	if($inf_memorando[0]["anexos_fisicos"] != "") {
-		$anexos[] = $inf_memorando[0]["anexos_fisicos"];
+	$datos = busca_filtro_tabla("nombre,nombre_tabla", "formato", "idformato=" . $idformato, "", $conn);
+	$inf_memorando = busca_filtro_tabla("anexos_fisicos", $datos[0]["nombre_tabla"], "documento_iddocumento=" . $iddoc, "", $conn);
+	if ($inf_memorando["numcampos"]) {
+		$anexos = array();
+		if ($inf_memorando[0]["anexos_fisicos"] != "") {
+			$anexos[] = $inf_memorando[0]["anexos_fisicos"];
+			if (count($anexos) > 0) {
+				echo '<span><font size="2"><br />Anexos: ' . implode(", ", $anexos) . '</font></span>';
+			}
+		}
 	}
-	
-	if(count($anexos) > 0) {
-		echo '<span><font size=2><br />Anexos: ';
-		echo implode(", ", $anexos) . '</font></span>';
-	}
-	
 	include_once ($ruta_db_superior . "anexosdigitales/funciones_archivo.php");
 	echo listar_anexos_documento($iddoc, NULL, NULL, $_REQUEST["tipo"], "DESCARGAR|ENCABEZADO");
 }
+ 
 
 /*
  * <Clase>
@@ -1785,9 +1784,7 @@ function submit_formato($formato, $iddoc = NULL) {
 		}
 		if($contador["numcampos"]) {
 			echo '<input type="hidden" name="tipo_radicado" value="' . $contador[0]["nombre"] . '">';
-		} 
-
-		else {
+		} else {
 			$sql2 = "INSERT INTO contador(consecutivo,nombre ) VALUE(1,'" . $contador[0]["nombre_tabla"] . "')";
 			phpmkr_query($sql2, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sql);
 			$idcontador=phpmkr_insert_id();
@@ -3163,7 +3160,11 @@ function buscar_papa_formato($idformato, $iddoc, $nombre_tabla) {
 	}
 	return ($doc);
 }
-
+function estilo_bootstrap_formatos(){
+	/*global $conn,$ruta_db_superior;
+	include_once ($ruta_db_superior."librerias_saia.php");
+	echo(estilo_bootstrap());*/
+}
 /*
  * <Clase>
  * <Nombre>actualizar_dependencia</Nombre>
@@ -3400,14 +3401,12 @@ function insertar_ruta_aprobacion_documento($ruta, $iddoc) {
 
 function obtener_datos_documento($iddocumento) {
 	global $conn;
-	
-	// $documento = busca_filtro_tabla("A.iddocumento, A.numero ,A.estado, B.nombre, B.etiqueta, A.descripcion, B.nombre_tabla,B.idformato,A.pdf","documento A, formato B","LOWER(A.plantilla) LIKE(B.nombre) AND A.iddocumento=".$iddocumento,"",$conn);
 	$documento = busca_filtro_tabla(fecha_db_obtener("A.fecha", "Y-m-d") . " as fecha, A.numero, A.iddocumento, B.nombre, B.etiqueta, A.descripcion, B.nombre_tabla,B.idformato,A.estado", "documento A, formato B", "LOWER(A.plantilla) LIKE(B.nombre) AND A.iddocumento=" . $iddocumento, "", $conn);
 	
 	if($_REQUEST["funcionario_codigo"]) {
 		$funcionario_codigo = $_REQUEST["funcionario_codigo"];
 	} else {
-		$funcionario_codigo = usuario_actual("funcionario_codigo");
+		$funcionario_codigo = $_SESSION["usuario_actual"];
 	}
 	
 	if($documento['numcampos']) {
@@ -3573,9 +3572,11 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 		$url = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/class_impresion.php?iddoc=" . $datos_documento['iddocumento'];
 		$datos_session = "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&usuario_actual=" . $_SESSION["usuario_actual"] . "&llave_saia=" . LLAVE_SAIA;
 		$url = $url . $datos_session;
-        
+        if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	}		
 		curl_setopt($ch, CURLOPT_URL, $url);
-		
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 	
 		// Capturar la URL y pasarla al navegador
@@ -3635,6 +3636,101 @@ function obtener_funciones_anexo($idanexo, $tipo, $ruta, $etiqueta) {
 			      ';
 	}
 	return ($button);
+}
+//Funcion para convertir numeros a letras
+function numerotexto ($numero) {
+    // Primero tomamos el numero y le quitamos los caracteres especiales y extras
+    // Dejando solamente el punto "." que separa los decimales
+    // Si encuentra mas de un punto, devuelve error.
+    // NOTA: Para los paises en que el punto y la coma se usan de forma
+    // inversa, solo hay que cambiar la coma por punto en el array de "extras"
+    // y el punto por coma en el explode de $partes
+    
+    $extras= array("/[\$]/","/ /","/,/","/-/");
+    $limpio=preg_replace($extras,"",$numero);
+
+    $partes=explode(".",$limpio);
+
+    if (count($partes)>2) {
+        return "Error, el n&uacute;mero no es correcto";
+        exit();
+    }
+    
+    // Ahora explotamos la parte del numero en elementos de un array que
+    // llamaremos $digitos, y contamos los grupos de tres digitos
+    // resultantes
+    
+    $digitos_piezas=chunk_split ($partes[0],1,"#");
+    $digitos_piezas=substr($digitos_piezas,0,strlen($digitos_piezas)-1);
+    $digitos=explode("#",$digitos_piezas);
+    $todos=count($digitos);
+    $grupos=ceil (count($digitos)/3);
+    
+    // comenzamos a dar formato a cada grupo
+    
+    $unidad = array   ('un','dos','tres','cuatro','cinco','seis','siete','ocho','nueve');
+    $decenas = array ('diez','once','doce', 'trece','catorce','quince');
+    $decena = array   ('dieci','veinti','treinta','cuarenta','cincuenta','sesenta','setenta','ochenta','noventa');
+    $centena = array   ('ciento','doscientos','trescientos','cuatrocientos','quinientos','seiscientos','setecientos','ochocientos','novecientos');
+    $resto=$todos;
+    
+    for ($i=1; $i<=$grupos; $i++) {
+        
+        // Hacemos el grupo
+        if ($resto>=3) {
+            $corte=3; } else {
+            $corte=$resto;
+        }
+            $offset=(($i*3)-3)+$corte;
+            $offset=$offset*(-1);
+        
+        // la siguiente seccion es una adaptacion de la contribucion de cofyman y JavierB
+        
+        $num=implode("",array_slice ($digitos,$offset,$corte));
+        $resultado[$i] = "";
+        $cen = (int) ($num / 100);              //Cifra de las centenas
+        $doble = $num - ($cen*100);             //Cifras de las decenas y unidades
+        $dec = (int)($num / 10) - ($cen*10);    //Cifra de las decenas
+        $uni = $num - ($dec*10) - ($cen*100);   //Cifra de las unidades
+        if ($cen > 0) {
+           if ($num == 100) $resultado[$i] = "cien";
+           else $resultado[$i] = $centena[$cen-1].' ';
+        }//end if
+        if ($doble>0) {
+           if ($doble == 20) {
+              $resultado[$i] .= " veinte";
+           }elseif (($doble < 16) and ($doble>9)) {
+              $resultado[$i] .= $decenas[$doble-10];
+           }else {
+              $resultado[$i] .=' '. $decena[$dec-1];
+           }//end if
+           if ($dec>2 and $uni<>0) $resultado[$i] .=' y ';
+           if (($uni>0) and ($doble>15) or ($dec==0)) {
+              if ($i==1 && $uni == 1) $resultado[$i].="uno";
+              elseif ($i==2 && $num == 1) $resultado[$i].="";
+              else $resultado[$i].=$unidad[$uni-1];
+           }
+        }
+
+        // Le agregamos la terminacion del grupo
+            if($i%2==0){
+               $resultado[$i].= ($resultado[$i]=="") ? "" : " mil ";
+            }elseif($i%3==0){
+              $resultado[$i].= ($num==1) ? " millon " : " millones ";
+            }
+        $resto-=$corte;
+    }
+    
+    // Sacamos el resultado (primero invertimos el array)
+    $resultado_inv= array_reverse($resultado, TRUE);
+    $final="";
+    foreach ($resultado_inv as $parte){
+        $final.=$parte;
+    }
+    if($partes[1] && intval($partes[1])!=0){
+      $final.=" CON ".numerotexto(substr($partes[1], 0,2));
+    }
+    return strtoupper($final);
 }
 
 ?>

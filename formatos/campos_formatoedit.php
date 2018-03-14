@@ -470,7 +470,10 @@ $datos_formato=busca_filtro_tabla("item","formato","idformato=$idformato","",$co
 <?php echo "Boton de Selecci&oacute;n"; ?><br>
 <?php echo EditOptionSeparator(3); ?>
 <input type="radio" name="x_etiqueta_html"<?php if (@$x_etiqueta_html == "checkbox") { ?> checked<?php } ?> value="<?php echo htmlspecialchars("checkbox"); ?>">
-<?php echo "Cuadro de Chequeo"; ?> </td><td>   
+<?php echo "Cuadro de Chequeo"; ?>
+<br>
+<input type="radio" name="x_etiqueta_html"<?php if (@$x_etiqueta_html == "autocompletar") { ?> checked<?php } ?> value="<?php echo htmlspecialchars("autocompletar"); ?>">
+<?php echo "Autocompletar"; ?> </td><td>   
 <?php echo EditOptionSeparator(4); ?><br>
 <input type="radio" name="x_etiqueta_html"<?php if (@$x_etiqueta_html == "select") { ?> checked<?php } ?> value="<?php echo htmlspecialchars("select"); ?>">
 <?php echo "Lista Deplegable"; ?>

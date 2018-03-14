@@ -1,11 +1,9 @@
 <?php
 $max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
-while($max_salida>0)
-{
-if(is_file($ruta."db.php"))
-{
-$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+while($max_salida>0) {
+if(is_file($ruta."db.php")) {
+$ruta_db_superior = $ruta; //Preserva la ruta superior encontrada
 }
 $ruta.="../";
 $max_salida--;
@@ -14,6 +12,7 @@ $max_salida--;
 include_once($ruta_db_superior."db.php");
 include_once("funciones_generales.php");
 $alto_frame="100%";
+
 function listado_hijos_formato($idformato,$iddoc){
 global $conn,$alto_frame;
 if($idformato){
@@ -49,6 +48,7 @@ orden: campo por el que se debe ordenar
   }
 }
 }
+
 function listar_formato_hijo2($campos,$tabla,$campo_enlace,$llave,$orden){
 global $conn,$idformato,$alto_frame;
 $where="";
@@ -69,21 +69,19 @@ $hijo=busca_filtro_tabla("",$tabla." A, documento B","A.documento_iddocumento=B.
       for($j=0;$j<$lcampos["numcampos"];$j++){
         if($lcampos[$j]["nombre"]=="id".$tabla){
           $texto.='<td>&nbsp;</td>';
-        }
-        else
+        } else
           $texto.='<td>'.$lcampos[$j]["etiqueta"]."</td>";
       }
       $texto.='</tr></thead><tbody style="overflow:auto; ">';
       for($i=0;$i<$hijo["numcampos"];$i++){
         $texto.='<tr class="celda_transparente">';
         for($j=0;$j<$lcampos["numcampos"];$j++){
-        	$avance = '';
-        	if($lcampos[$j]["nombre"] == 'avance')
-        		$avance = '%&nbsp;';
+          $avance = '';
+          if($lcampos[$j]["nombre"] == 'avance')
+            $avance = '%&nbsp;';
           if($lcampos[$j]["nombre"]=="id".$tabla){
             $texto.='<td><a href="../'.$lcampos[0]["nombre_formato"].'/'.$lcampos[0]["ruta_mostrar"].'?idformato='.$lcampos[0]["idformato"].'&iddoc='.$hijo[$i]["documento_iddocumento"].'">Ver</a></td>';
-          }
-          else
+          } else
             $texto.='<td align="center">'.mostrar_valor_campo($lcampos[$j]["nombre"],$lcampos[$j]["formato_idformato"],$hijo[$i]["documento_iddocumento"],1)."&nbsp;".$avance."</td>";
         }
         $texto.='</tr>';
@@ -151,52 +149,6 @@ global $conn;
 }
 
 
- /*
-function insertar_ruta($ruta2,$iddoc,$firma1=1){
-global $conn;
-  $ruta=array();
-  array_push($ruta,array("funcionario"=>usuario_actual("funcionario_codigo"),"tipo_firma"=>$firma1,"tipo"=>1));
-  $ruta=array_merge($ruta,$ruta2);
-  if(count($ruta)>0){
-    $radicador=busca_filtro_tabla("f.funcionario_codigo","configuracion c,funcionario f","c.nombre='radicador_salida' and f.login=c.valor","",$conn);
-    array_push($ruta,array("funcionario"=>$radicador[0]["funcionario_codigo"],"tipo_firma"=>0,"tipo"=>1));
-    phpmkr_query("UPDATE buzon_entrada SET nombre=".concatenar_cadena_sql(array("'ELIMINA_'","nombre"))." where archivo_idarchivo='$iddoc' and (nombre='POR_APROBAR' OR nombre='REVISADO' OR nombre='APROBADO' OR nombre='VERIFICACION')");
-    phpmkr_query("UPDATE buzon_salida SET nombre=".concatenar_cadena_sql(array("'ELIMINA_'","nombre"))." WHERE archivo_idarchivo='$iddoc' and nombre IN('POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','TERMINADO')",$conn);
-    phpmkr_query("DELETE FROM ruta WHERE documento_iddocumento='$iddoc'");
-  }
-    
-  for($i=0;$i<count($ruta)-1;$i++){
-    if(!isset($ruta[$i]["tipo_firma"])){
-      $ruta[$i]["tipo_firma"]=1;
-    }
-    if(!isset($ruta[$i]["tipo"])){
-      $ruta[$i]["tipo"]=1;
-    }
-    if(!isset($ruta[$i+1]["tipo"])){
-      $ruta[$i+1]["tipo"]=1;
-    }    
-    
-    $sql="insert into ruta(destino,origen,documento_iddocumento,condicion_transferencia,tipo_origen,tipo_destino,orden,obligatorio) values('".$ruta[$i+1]["funcionario"]."','".$ruta[$i]["funcionario"]."','$iddoc','POR_APROBAR',".$ruta[$i]["tipo"].",".$ruta[$i+1]["tipo"].",$i,".$ruta[$i]["tipo_firma"].")" ;
-    phpmkr_query($sql);
-    $idruta=phpmkr_insert_id();
-    $fecha=fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s');
-    if($ruta[$i]["tipo"]==5){
-      $func_codigo1=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","iddependencia_cargo=".$ruta[$i]["funcionario"],"",$conn);
-      $funcionario1=$func_codigo1[0]['funcionario_codigo'];
-    }else{
-      $funcionario1=$ruta[$i]["funcionario"];
-    }
-    if($ruta[$i+1]["tipo"]==5){
-      $func_codigo2=busca_filtro_tabla("funcionario_codigo","vfuncionario_dc","iddependencia_cargo=".$ruta[$i+1]["funcionario"],"",$conn);
-      $funcionario2=$func_codigo2[0]['funcionario_codigo'];
-    }else{
-      $funcionario2=$ruta[$i+1]["funcionario"];
-    }
-    $sql="insert into buzon_entrada(origen,destino,archivo_idarchivo,activo,tipo_origen,tipo_destino,ruta_idruta,nombre,fecha) values('".$funcionario2."','".$funcionario1."','$iddoc',1,".$ruta[$i+1]["tipo"].",".$ruta[$i]["tipo"].",$idruta,'POR_APROBAR',".$fecha.")" ;
-    phpmkr_query($sql);
-  }
-}
-*/
 
 /*<Clase>
 <Nombre>validar_digitalizacion_formato_radicacion</Nombre>
@@ -208,12 +160,13 @@ global $conn;
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase> */
-function validar_digitalizacion_formato($idformato,$iddoc)
-{global $conn,$ruta_db_superior;
+function validar_digitalizacion_formato($idformato,$iddoc) {
+global $conn,$ruta_db_superior;
   if($_REQUEST["digitalizacion"]==1){
     redirecciona($ruta_db_superior."paginaadd.php?&key=".$iddoc."&x_enlace=mostrar");
   }
 }
+
 /*<Clase>
 <Nombre>digitalizacion_formato_radicacion</Nombre>
 <Parametros>$_REQUEST["digitalizacion"]:Debe aparecer la opcion desea digitalizar Si/No en el formato con el nombre digitalizacion;  $idformto:Llave del formato que se vincula ;$iddoc=documento que  debe vincular con la accion</Parametros>
@@ -224,24 +177,33 @@ function validar_digitalizacion_formato($idformato,$iddoc)
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase> */
-function digitalizar_formato($idformato,$iddoc)
-{global $conn;
+function digitalizar_formato($idformato,$iddoc) {
+  global $conn;
   echo "<tr><td class='encabezado'>DESEA DIGITALIZAR</td><td><input name='digitalizacion' type='radio' value='1'>Si  <input name='digitalizacion' type='radio' value='0' checked>No</td></tr>";
 }
-/*****/
+
 function diferenciaEntreFechas2($fecha_principal, $fecha_secundaria, $obtener = 'SEGUNDOS', $redondear = false){
    $f0 = strtotime($fecha_principal);
    $f1 = strtotime($fecha_secundaria);
-   //if ($f0 < $f1) { $tmp = $f1; $f1 = $f0; $f0 = $tmp; }
    $resultado = ($f0 - $f1);
    switch ($obtener) {
-       default: break;
-       case "MINUTOS"   :   $resultado = $resultado / 60;   break;
-       case "HORAS"     :   $resultado = $resultado / 60 / 60;   break;
-       case "DIAS"      :   $resultado = $resultado / 60 / 60 / 24;   break;
-       case "SEMANAS"   :   $resultado = $resultado / 60 / 60 / 24 / 7;   break;
+       default :
+ break;
+       case "MINUTOS" :
+   $resultado = $resultado / 60;
+   break;
+       case "HORAS" :
+   $resultado = $resultado / 60 / 60;
+   break;
+       case "DIAS" :
+   $resultado = $resultado / 60 / 60 / 24;
+   break;
+       case "SEMANAS" :
+   $resultado = $resultado / 60 / 60 / 24 / 7;
+   break;
    }
-   if($redondear) $resultado = round($resultado);
+   if($redondear)
+ $resultado = round($resultado);
    return $resultado;
 }
 ?>

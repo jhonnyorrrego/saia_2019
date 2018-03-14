@@ -1,4 +1,9 @@
 <?php include_once("db.php");
+
+$configuracion_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal' AND tipo='ruta'", "", $conn);
+if($configuracion_temporal["numcampos"]){
+	$ruta_temp=$configuracion_temporal[0]["valor"];
+}
 // Initialize common variables
 $x_consecutivo = Null;
 $x_id_documento = Null;
@@ -85,7 +90,7 @@ if(!is_dir($destino))
 if(!is_dir("$destino/".$_REQUEST["key"]))
   {mkdir("$destino/".$_REQUEST["key"],0777);
   }
-$dir="temporal_".usuario_actual("login");
+$dir=$ruta_temp."_".usuario_actual("login");
 $encontradas=0;  
 if($dh = @opendir($dir))
   {while (false !== ($obj = readdir($dh))) 

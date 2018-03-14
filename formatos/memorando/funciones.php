@@ -72,8 +72,8 @@ function jerarquia_destinos($lista,$fecha)
 function mostrar_origen($idformato,$iddoc=NULL){
 	global $conn;
  $formato=busca_filtro_tabla("nombre_tabla,nombre","formato","idformato=$idformato","",$conn);
- $resultado=busca_filtro_tabla("origen,".fecha_db_obtener("b.fecha","Y-m-d")." as fecha",$formato[0]["nombre_tabla"].",documento b","documento_iddocumento=iddocumento and documento_iddocumento=$iddoc","",$conn);  
- $origen = explode(',',$resultado[0]["origen"]);  
+ $resultado=busca_filtro_tabla("dependencia,".fecha_db_obtener("b.fecha","Y-m-d")." as fecha",$formato[0]["nombre_tabla"].",documento b","documento_iddocumento=iddocumento and documento_iddocumento=$iddoc","",$conn);  
+ $origen = explode(',',$resultado[0]["dependencia"]);  
  for($i=0; $i<count($origen); $i++){
  	$dependencia=busca_filtro_tabla("C.nombre,D.nombres,D.apellidos","dependencia_cargo A, cargo B, dependencia C,funcionario D","A.iddependencia_cargo=".$origen[$i]." AND D.idfuncionario=A.funcionario_idfuncionario AND B.idcargo=A.cargo_idcargo AND A.dependencia_iddependencia=C.iddependencia AND A.estado=1","",$conn);	 
      echo(''.$dependencia[0]["nombre"]."<br />");
@@ -198,23 +198,7 @@ else if($_REQUEST["iddoc"]){
 }
  return true;  
 }
-function seleccionar_origen($idformato,$idcampo,$iddoc)
-{global $conn;
- $actual=busca_filtro_tabla("origen,tipo_origen","ft_memorando","documento_iddocumento=$iddoc","",$conn);
- if($actual[0]["tipo_origen"]==1){//funcionario_codigo
- $ruta=busca_filtro_tabla("distinct funcionario_codigo as id,nombres,apellidos,'' nombre","buzon_entrada b,funcionario f","funcionario_codigo=destino and archivo_idarchivo='$iddoc' and b.nombre='POR_APROBAR'","",$conn);
- }
- else //rol
-   $ruta=busca_filtro_tabla("distinct iddependencia_cargo as id,nombres,apellidos,concat('-',c.nombre) nombre","buzon_entrada b,funcionario f,dependencia_cargo dc,cargo c","funcionario_idfuncionario=idfuncionario and cargo_idcargo=idcargo and funcionario_codigo=destino and archivo_idarchivo='$iddoc' and dc.estado=1 and b.nombre='POR_APROBAR'","",$conn);
- echo "<td><select name='origen'>";
- for($i=0;$i<$ruta["numcampos"];$i++)
-    {echo '<option value="'.$ruta[$i]["id"].'" ';
-     if($ruta[$i]["id"]==$actual[0]["origen"])
-       echo ' selected ';
-     echo '>'.$ruta[$i]["nombres"]." ".$ruta[$i]["apellidos"]." ".$ruta[$i]["nombre"].'</option>';
-    }
- echo "</select></td>";
-}
+
 //---------------------------------mostrar qr------------------------------//
 function mostrar_qr_interna($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
@@ -399,8 +383,13 @@ function generar_correo_confirmacion_memorando($idformato,$iddoc){
 	if($formato_carta[0]['email_aprobar']==1 && $formato_carta[0]['estado']=='ACTIVO'){
 		$resultado=busca_filtro_tabla("","ruta","documento_iddocumento=".$iddoc,"idruta",$conn);
 		if($resultado['numcampos']){
-			if(!is_dir($ruta_db_superior."temporal_".$_SESSION["LOGIN"])){
-        mkdir($ruta_db_superior."temporal_".$_SESSION["LOGIN"],0777);
+			
+			$configuracion_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal' AND tipo='ruta'", "", $conn);
+			if($configuracion_temporal["numcampos"]){
+				$ruta_temp=$configuracion_temporal[0]["valor"];
+			}
+			if(!is_dir($ruta_db_superior.$ruta_temp."_".$_SESSION["LOGIN"])){
+        mkdir($ruta_db_superior.$ruta_temp."_".$_SESSION["LOGIN"],0777);
       }
 			$borrar_pdf="UPDATE documento set pdf='' where iddocumento=".$iddoc;
 			phpmkr_query($borrar_pdf);
@@ -408,7 +397,6 @@ function generar_correo_confirmacion_memorando($idformato,$iddoc){
 			if($consulta[0]['pdf']!=""){
 	      $anexos[]=$ruta_db_superior.$consulta[0]['pdf'];
 	    }else{
-				//$nombre_archivo="temporal_".$_SESSION["LOGIN"]."/".$iddoc;
 				$ch = curl_init();
 		    //$fila = PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/class_impresion.php?iddoc=".$iddoc."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&conexion_remota=1&usuario_actual=".$_SESSION["usuario_actual"]."&LLAVE_SAIA=".LLAVE_SAIA;
 		    $fila = PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/class_impresion.php?plantilla=".$formato[0]['nombre']."&iddoc=".$iddoc."&conexion_remota=1&conexio_usuario=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&LLAVE_SAIA=".LLAVE_SAIA;
@@ -456,10 +444,6 @@ function generar_correo_confirmacion_memorando($idformato,$iddoc){
 
 			enviar_mensaje('','codigo',array($funcionario[0]['funcionario_codigo']),'GESTION DE COMUNICACIONES EXTERNAS',$mensaje,$anexos);
 		}
-	}
-
-	if(!isset($_REQUEST['refrescar'])){
-		//mostrar_formato($idformato,$iddoc);
 	}
 }
 ?>

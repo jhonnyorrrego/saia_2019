@@ -890,10 +890,8 @@ function crear_formato_mostrar($idformato) {
 		$texto .= htmlspecialchars_decode($formato[0]["cuerpo"]);
 		$texto .= '</td></tr>';
 		$librerias = array();
-		$funciones = busca_filtro_tabla("*", "funciones_formato A", "A.formato LIKE '" . $idformato . "' OR A.formato LIKE '%," . $idformato . ",%' OR A.formato LIKE '%," . $idformato . "' OR A.formato LIKE '" . $idformato . ",%' AND A.acciones LIKE '%m%'", "", $conn);
 		$campos = busca_filtro_tabla("*", "campos_formato A", "A.formato_idformato=" . $idformato, "", $conn);
 		$lcampos = extrae_campo($campos, "nombre", "U");
-
 		for($i = 0; $i < $campos["numcampos"]; $i++) {
 			if ($campos[$i]["etiqueta_html"] == "autocompletar") {
 				$parametros = explode(";", $campos[$i]["valor"]);
@@ -906,12 +904,13 @@ function crear_formato_mostrar($idformato) {
 				$archivos++;
 			}
 		}
-
+		$funciones = busca_filtro_tabla("A.*,B.formato_idformato", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=" . $idformato . " AND A.acciones LIKE '%m%'", "A.idfunciones_formato", $conn);
 		for($i = 0; $i < $funciones["numcampos"]; $i++) {
 			$ruta_orig = "";
-			$formato_orig = explode(",", $funciones[$i]["formato"]);
-			if ($formato_orig[0] != $idformato) { // busco el nombre del formato inicial
-				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig[0], "", $conn);
+			// saco el primer formato de la lista de la funcion (formato inicial)
+			$formato_orig = $funciones[0]["formato_idformato"];
+			if ($formato_orig != $idformato) { // busco el nombre del formato inicial
+				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
 				if ($dato_formato_orig["numcampos"] && ($dato_formato_orig[0]["nombre"] != $formato[0]["nombre"])) {
 					$eslibreria = strpos($funciones[$i]["ruta"], "../librerias/");
 					if ($eslibreria === false) {
@@ -921,7 +920,6 @@ function crear_formato_mostrar($idformato) {
 					if (is_file($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]) && $eslibreria === false) {
 						$includes .= incluir("../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
 					} elseif (is_file($funciones[$i]["ruta"]) && $eslibreria === false) { // si el archivo existe en la ruta especificada partiendo de la raiz
-
 						$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
 					} else if ($eslibreria === false) { // si no existe en ninguna de las dos
  // trato de crearlo dentro de la carpeta del formato actual
@@ -1057,7 +1055,7 @@ function crear_vista_formato($idformato, $arreglo) {
 		$librerias = array();
 		$idformato_padre = $vista[0]["formato_padre"];
 		$fpadre = busca_filtro_tabla("", "formato", "idformato=" . $idformato_padre, "", $conn);
-		$funciones = busca_filtro_tabla("*", "funciones_formato A", "A.formato LIKE '" . $idformato_padre . "' OR A.formato LIKE '%," . $idformato_padre . ",%' OR A.formato LIKE '%," . $idformato_padre . "' OR A.formato LIKE '" . $idformato_padre . ",%' AND A.acciones LIKE '%m%'", "", $conn);
+		$funciones = busca_filtro_tabla("A.*, B.formato_idformato", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=" . $idformato_padre . " AND A.acciones LIKE '%m%'", "A.idfunciones_formato", $conn);
 		$campos = busca_filtro_tabla("*", "campos_formato A", "A.formato_idformato=" . $idformato_padre, "", $conn);
 		$lcampos = extrae_campo($campos, "nombre", "U");
 		for($i = 0; $i < $campos["numcampos"]; $i++) {
@@ -1089,9 +1087,9 @@ function crear_vista_formato($idformato, $arreglo) {
 
 		for($i = 0; $i < $funciones["numcampos"]; $i++) {
 			$ruta_orig = "";
-			$formato_orig = explode(",", $funciones[$i]["formato"]);
+			$formato_orig = $funciones[0]["formato_idformato"];
 			if ($formato_orig[0] != $idformato_padre) { // busco el nombre del formato inicial
-				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig[0], "", $conn);
+				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
 				if ($dato_formato_orig["numcampos"] && ($dato_formato_orig[0]["nombre"] != $fpadre[0]["nombre"])) {
 					$eslibreria = strpos($funciones[$i]["ruta"], "../librerias/");
 					if ($eslibreria === false) {
@@ -1136,7 +1134,7 @@ function crear_vista_formato($idformato, $arreglo) {
 			$includes .= incluir($formato[0]["librerias"], "librerias", 1);
 		}
 		$includes .= incluir_libreria("funciones_generales.php", "librerias");
-		$includes .= incluir("../../js/jquery.js", "javascript");
+		$includes .= incluir("../../js/jquery-1.7.2.js", "javascript");
 		$includes .= incluir_libreria("header_nuevo.php", "librerias");
 		$includes .= incluir("../../class_transferencia.php", "librerias");
 
@@ -1235,7 +1233,6 @@ function crear_formato_ae($idformato, $accion) {
 		$listado_campos = array();
 		$unico = array();
 		$campos = busca_filtro_tabla("*", "campos_formato A", "A.acciones like '%" . $accion[0] . "%' and A.formato_idformato=" . $idformato, "orden ASC", $conn);
-		// print_r($campos);die();
 		// funciones creadas para el formato, pero que corresponden a nombres de campos
 		$fun_campos = array();
 		for($h = 0; $h < $campos["numcampos"]; $h++) {
@@ -1571,16 +1568,19 @@ function crear_formato_ae($idformato, $accion) {
                 /* parametros: campos a mostrar separados por comas; campo a guardar en el hidden; tabla
                   ej: nombres,apellidos;idfuncionario;funcionario
                 */
+                        $parametros = json_decode($campos[$h]['valor']);
+                        if(json_last_error() !== JSON_ERROR_NONE) {
+                            die("Autocompletar: El campo valor debe ser una cadena json");
+                        }
                 $texto .= '<tr id="tr_'.$campos[$h]["nombre"].'">
                    <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                    <td bgcolor="#F5F5F5">';
-						$texto .= '<input type="text" size="30" ' . $adicionales . ' value="" id="input' . $campos[$h]["idcampos_formato"] . '" onkeyup="lookup(this.value,' . $campos[$h]["idcampos_formato"] . ');" onblur="fill(this.value,' . $campos[$h]["idcampos_formato"] . ');" />
-                <div class="suggestionsBox" id="suggestions' . $campos[$h]["idcampos_formato"] . '" style="display: none;">
-				        <div class="suggestionList" id="list' . $campos[$h]["idcampos_formato"] . '" >&nbsp;
-        				</div>
-        			  </div>
-        			  <input ' . $obligatorio . ' type="text" name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '">
-                </td></tr>';
+                        if ($obligatoriedad == 1) {
+                            $obligatorio = "required";
+                        }
+
+                        $texto .= '<input type="text" name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" value=""' . $obligatorio . '></td>';
+                        $texto .= crea_campo_autocompletar($campos[$h]["nombre"], $parametros);
 						$autocompletar++;
 						break;
 					case "etiqueta" :
@@ -1630,8 +1630,16 @@ function crear_formato_ae($idformato, $accion) {
 						$texto .= '<div id="seleccionados">' . arma_funcion("mostrar_seleccionados", $idformato . "," . $campos[$h]["idcampos_formato"] . ",'" . $arreglo[6] . "'", "mostrar") . '</div>
                           <br />  ';
 						if ($arreglo[4]) {
+						    $busqueda="";
+						    if($arreglo[3]){
+						        $busqueda='tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value),1)';
+						    }else{
+						        $busqueda="buscar_nodo_".$campos[$h]["nombre"]."('tree_". $campos[$h]["nombre"]."')";
+						        $texto .=busca_funcion_test($campos[$h]["nombre"],str_replace('../', "", $arreglo[0]));
+
+						    }
 							$texto .= 'Buscar: <input ' . $tabindex . ' type="text" id="stext_' . $campos[$h]["nombre"] . '" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value),1)"> <img src="../../botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="'.$busqueda.'"><img src="../../botones/general/buscar.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
                           <br />';
 							$indice_tabindex++;
@@ -1832,19 +1840,19 @@ function crear_formato_ae($idformato, $accion) {
 		if ($formato[0]["item"] && $accion == "adicionar") {
 			$texto .= '<tr><td class="encabezado">ACCION A SEGUIR LUEGO DE GUARDAR</td><td ><input type="radio" name="opcion_item" id="opcion_item1" value="adicionar">Adicionar otro&nbsp;&nbsp;<input type="radio" id="opcion_item2" name="opcion_item" value="terminar" checked>Terminar</td></tr>';
 		}
-		$wheref = "(A.formato LIKE '" . $idformato . "' OR A.formato LIKE '%," . $idformato . ",%' OR A.formato LIKE '%," . $idformato . "' OR A.formato LIKE '" . $idformato . ",%') AND A.acciones LIKE '%" . strtolower($accion[0]) . "%' ";
+		$wheref = "A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=" . $idformato . " AND A.acciones LIKE '%" . strtolower($accion[0]) . "%' ";
 		if (count($listado_campos)) {
 			$wheref .= "AND nombre_funcion NOT IN(" . implode(",", $listado_campos) . ")";
 		}
 
-		$funciones = busca_filtro_tabla("*", "funciones_formato A", $wheref, " idfunciones_formato asc", $conn);
+		$funciones = busca_filtro_tabla("A.*,B.formato_idformato", "funciones_formato A, funciones_formato_enlace B", $wheref, " A.idfunciones_formato asc", $conn);
 		for($i = 0; $i < $funciones["numcampos"]; $i++) {
 			$ruta_orig = "";
-			// saco el primer formato de la lista de la funcion (formato inicial)
-			$formato_orig = explode(",", $funciones[$i]["formato"]);
+			$funciones_orig = busca_filtro_tabla("A.*,B.formato_idformato", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.funciones_formato_fk=".$funciones[$i]["idfunciones_formato"], " B.idfunciones_formato_enlace asc", $conn);
+			$formato_orig=$funciones_orig[0]["formato_idformato"];
 			// si el formato actual es distinto del formato inicial
-			if ($formato_orig[0] != $idformato) { // busco el nombre del formato inicial
-				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig[0], "", $conn);
+			if ($formato_orig != $idformato) { // busco el nombre del formato inicial
+				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
 				if ($dato_formato_orig["numcampos"]) {
 					// si el archivo existe dentro de la carpeta del archivo inicial
 					if (is_file($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
@@ -1936,18 +1944,22 @@ function crear_formato_ae($idformato, $accion) {
 			$includes .= incluir("../../calendario/calendario.php", "librerias");
 		}
 
-		$includes .= incluir("../../js/jquery.js", "javascript");
-		$includes .= incluir("../../js/jquery.validate.js", "javascript");
+		$includes .= incluir("../../js/jquery-1.7.2.js", "javascript");
+		$includes .= incluir("../../js/jquery.validate.1.13.1.js", "javascript");
 
 		$includes .= incluir("../../js/title2note.js", "javascript");
 		if ($arboles) {
 			$includes .= incluir("../../js/dhtmlXCommon.js", "javascript");
 			$includes .= incluir("../../js/dhtmlXTree.js", "javascript");
+			$includes .= incluir("../../js/dhtmlxtree_xw.js", "javascript");
 			$includes .= incluir_libreria("header_formato.php", "librerias");
 			$includes .= '<link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css">';
 		}
 		if ($autocompletar) {
-			$includes .= incluir("../librerias/autocompletar.js", "javascript");
+		    $includes .= incluir("../../css/selectize.css", "estilos");
+		    $includes .= incluir("../../js/jquery-1.7.2.js", "javascript");
+		    $includes .= incluir("../../js/selectize.js", "javascript");
+		    //$includes .= incluir("../librerias/autocompletar.js", "javascript");
 		}
 		if ($dependientes > 0) {
 			$includes .= incluir("../librerias/dependientes.js", "javascript");
@@ -2119,9 +2131,6 @@ $.ajax({url: '../librerias/validar_unico.php',
 });
 </script>" . $enmascarar . " $codigo_enter2tab</head>" . $texto . $js_archivos . "</html>";
 
-		if ($accion == "editar") {
-			$contenido .= '<?php include_once("../librerias/footer_plantilla.php");?' . '>';
-		}
 		$mostrar = crear_archivo($formato[0]["nombre"] . "/" . $formato[0]["ruta_" . $accion], $contenido);
 		if ($mostrar != "")
 			alerta("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar));
@@ -2159,7 +2168,7 @@ function crear_formato_buscar($idformato, $accion) {
 		$includes .= incluir_libreria("funciones_generales.php", "librerias");
 		$includes .= incluir_libreria("estilo_formulario.php", "librerias");
 		$includes .= incluir_libreria("funciones_formatos.js", "javascript");
-		$includes .= incluir("../../js/jquery.js", "javascript");
+		$includes .= incluir("../../js/jquery-1.7.2.js", "javascript");
 		if ($formato[0]["estilos"] && $formato[0]["estilos"] != "") {
 			$includes .= incluir($formato[0]["estilos"], "estilos", 1);
 		}
@@ -2478,22 +2487,16 @@ function crear_formato_buscar($idformato, $accion) {
 		}
 		// die();
 		// ******************************************************************************************
-		$wheref = "(A.formato LIKE '" . $idformato . "' OR A.formato LIKE '%," . $idformato . ",%' OR A.formato LIKE '%," . $idformato . "' OR A.formato LIKE '" . $idformato . ",%') AND A.acciones LIKE '%" . strtolower($accion[0]) . "%' ";
-		/*
-		 * if(count($listado_campos)){
-		 * $wheref.="AND nombre_funcion NOT IN(".implode(",",$listado_campos).")";
-		 * }
-		 */
-		$funciones = busca_filtro_tabla("*", "funciones_formato A", $wheref, " idfunciones_formato asc", $conn);
-		// print_r($funciones);
-		// die();
+	    $wheref = "A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=" . $idformato . " AND A.acciones LIKE '%" . strtolower($accion[0]) . "%' ";
+
+		$funciones = busca_filtro_tabla("A.*,B.formato_idformato", "funciones_formato A, funciones_formato_enlace B", $wheref, " A.idfunciones_formato asc", $conn);
 		for($i = 0; $i < $funciones["numcampos"]; $i++) {
 			$ruta_orig = "";
 			// saco el primer formato de la lista de la funcion (formato inicial)
-			$formato_orig = explode(",", $funciones[$i]["formato"]);
+			$formato_orig=$funciones[0]["formato_idformato"];
 			// si el formato actual es distinto del formato inicial
-			if ($formato_orig[0] != $idformato) { // busco el nombre del formato inicial
-				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig[0], "", $conn);
+			if ($formato_orig!= $idformato) { // busco el nombre del formato inicial
+				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
 				if ($dato_formato_orig["numcampos"]) {
 					// si el archivo existe dentro de la carpeta del archivo inicial
 					if (is_file($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
@@ -2592,8 +2595,8 @@ function crear_formato_buscar($idformato, $accion) {
 		if ($textareas) {
 			$includes .= incluir_libreria("header_formato.php", "librerias");
 		}
-		$includes .= incluir("../../js/jquery.js", "javascript");
-		$includes .= incluir("../../js/jquery.validate.js", "javascript");
+		$includes .= incluir("../../js/jquery-1.7.2.js", "javascript");
+		$includes .= incluir("../../js/jquery.validate.1.13.1.js", "javascript");
 
 		$includes .= incluir("../../js/title2note.js", "javascript");
 		if ($arboles) {
@@ -2606,11 +2609,13 @@ function crear_formato_buscar($idformato, $accion) {
 			$includes .= incluir("../../css/style_fcbkcomplete.css", "estilos");
 		}
 		if ($autocompletar) {
-			$includes .= incluir("../../js/jquery.js", "javascript");
-			$includes .= incluir("../librerias/autocompletar.js", "javascript");
+			$includes .= incluir("../../js/jquery-1.7.2.js", "javascript");
+			$includes .= incluir("../../js/selectize.js", "javascript");
+			$includes .= incluir("../../css/selectize.css", "estilos");
+			//$includes .= incluir("../librerias/autocompletar.js", "javascript");
 		}
 		if ($dependientes > 0) {
-			$includes .= incluir("../../js/jquery.js", "javascript");
+			$includes .= incluir("../../js/jquery-1.7.2.js", "javascript");
 			$includes .= incluir("../librerias/dependientes.js", "javascript");
 		}
 		$contenido = "<html><title>.:" . strtoupper($accion . " " . $formato[0]["etiqueta"]) . ":.</title><head>" . $includes . $enmascarar . "</head>" . $texto . "</html>";
@@ -2866,30 +2871,22 @@ detalles_mostrar_".$formato[0]['nombre'].".php";
 			}
 			$funciones = array_diff($campos, $campos_edit);
 			sort($funciones);
-
-			$lcampos = busca_filtro_tabla("*", "funciones_formato A", "A.nombre IN('" . implode("','", $funciones) . "')", "", $conn);
-
+			$lcampos = busca_filtro_tabla("A.*", "funciones_formato A", "A.nombre IN('" . implode("','", $funciones) . "')", "idfunciones_formato", $conn);
 			for($i = 0; $i < $lcampos["numcampos"]; $i++) {
-
 				array_push($campos_editar, $lcampos[$i]["idfunciones_formato"]);
-				$formatos = explode(",", $lcampos[$i]["formato"]);
-				$eval = in_array($idformato, $formatos);
+				$formatos_func = busca_filtro_tabla("formato_idformato", "funciones_formato_enlace", "funciones_formato_fk=" . $lcampos[$i]["idfunciones_formato"]." AND formato_idformato=".$idformato, "", $conn);
 
-				if ($eval === false) {
+				if (!$formatos_func["numcampos"]){
+					//Existe la funcion pero no esta vinculada al formato y se debe agregar
 					array_push($campos_otrosf, $lcampos[$i]["idfunciones_formato"]);
-					$formatos_func = busca_filtro_tabla("formato", "funciones_formato", "idfunciones_formato=" . $lcampos[$i]["idfunciones_formato"], "", $conn);
-					$vector_f = explode(",", $formatos_func[0][0]);
-					if (!in_array($idformato, $vector_f)) {
-						$vector_f[] = $idformato;
-						$sqlf = "UPDATE funciones_formato SET formato='" . implode(",", $vector_f) . "' WHERE idfunciones_formato=" . $lcampos[$i]["idfunciones_formato"];
+					$sqlf="INSERT INTO funciones_formato_enlace(funciones_formato_fk,formato_idformato) VALUES(".$lcampos[$i]["idfunciones_formato"].",".$idformato.")";
 						guardar_traza($sqlf, $formato[0]["nombre_tabla"]);
 						phpmkr_query($sqlf);
-					}
 				}
 				array_push($campos_edit, $lcampos[$i]["nombre"]);
 			}
 			$campos_adicionar = array_diff($campos, $campos_edit);
-			sort($campos_adicionar);
+			$campos_adicionar = array_unique($campos_adicionar);
 		} else
 			alerta("El formato mostrar no posee Parametros si esta seguro continue con el Proceso de lo contrario haga Click en Listar Formato y Luego Editelo");
 	}
@@ -2911,4 +2908,105 @@ detalles_mostrar_".$formato[0]['nombre'].".php";
 		redirecciona("formatoview.php?idformato=" . $idformato . $adicionales);
 	}
 }
+
+function busca_funcion_test($nombre_test, $ruta) {
+    global $ruta_db_superior;
+    $url = explode(".php?", $ruta);
+
+    switch ($url[0]) {
+        case 'test_funcionario':
+            return ("<script>
+
+                function buscar_nodo_" . $nombre_test . "() {
+                    $.ajax({
+                        type : 'POST',
+                        url : '../../test_funcionario_buscar.php',
+                        dataType : 'json',
+                        data : {
+                            nombre : $('#stext_" . $nombre_test . "').val(),
+                            tabla : 'dependencia'
+                        },
+                        success : function(data) {
+                            if(data['error']){
+                                alert(data['mensaje']);
+                            }
+                            else{
+                                tree_" . $nombre_test . ".attachEvent('onOpenDynamicEnd', function(){
+                                    tree_" . $nombre_test . ".selectItem('1#',false,false);
+                                    tree_" . $nombre_test . ".clearSelection();
+                                    for(var i=0;i<data['numcampos_func'];i++){
+                                        tree_" . $nombre_test . ".selectItem(data['funcionarios'][i],false,true);
+                                    }
+                                    for(var i=0;i<data['numcampos_dep'];i++){
+                                        tree_" . $nombre_test . ".selectItem(data['dependencias'][i],false,true);
+                                    }
+                                });
+                                tree_" . $nombre_test . ".openItemsDynamic(data['datos'],true);
+                            }
+                        }
+                    });
+                }
+                </script>");
+            break;
+    }
+}
+
+function crea_campo_autocompletar($nombre, $parametros) {
+
+    /*{"tipo":"multiple","url":"../../autocompletar.php","campoid":"funcionario_codigo","campotexto":["nombres","apellidos"],"tablas":["funcionario"],"condicion":"estado=1","orden":""}*/
+
+    if ($parametros->tipo == "simple") {
+        $tipo = "1";
+    } else {
+        $tipo = "null";
+    }
+
+    $consulta = array(
+        "campoid" => $parametros->campoid,
+        "campotexto" => $parametros->campotexto,
+        "tablas" => $parametros->tablas,
+        "condicion" => $parametros->condicion,
+        "orden" => $parametros->orden
+        );
+
+    $consulta64 = base64_encode(json_encode($consulta));
+
+    $selector = "[name='$nombre']";
+
+    $campo = '
+    <script>
+    $(document).ready(function(){
+			$("' . $selector . '").selectize({
+			    valueField: "value",
+			    labelField: "text",
+			    searchField: "text",
+				persist: false,
+				createOnBlur: true,
+				create: false,
+				maxItems: ' . $tipo . ',
+				load: function(query, callback) {
+			        if (!query.length) return callback();
+			        $.ajax({
+			            url: "' . $parametros->url . '",
+			            type: "POST",
+			            dataType: "json",
+			            data: {
+			                consulta: "' . $consulta64 . '",
+			                valor: query,
+			            },
+			            error: function() {
+			                callback();
+			            },
+			            success: function(res) {
+			                callback(res);
+			            }
+			        });
+			    }
+			});
+    });';
+    $campo .= '</script>';
+
+    return ($campo);
+}
+
 ?>
