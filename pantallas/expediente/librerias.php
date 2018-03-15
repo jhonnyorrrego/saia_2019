@@ -717,7 +717,7 @@ function transferencia_documental() {
 				dataType:"json",
 				success : function (response){
 					if(response.exito == 1){
-						enlace_katien_saia("formatos/transferencia_doc/adicionar_transferencia_doc.php?id="+seleccionados,"Transferencia documental","iframe","");
+						enlace_katien_saia("' . FORMATOS_CLIENTE . 'transferencia_doc/adicionar_transferencia_doc.php?id="+seleccionados,"Transferencia documental","iframe","");
 					}else{
 						alert(response.msn);
 					}
@@ -745,7 +745,7 @@ function adicionar_expediente() {
 			$cadena .= '
 		<li></li>
 		<li>
-		    <a id="adicionar_documento_exp" conector="iframe" titulo="Adicionar Documento" enlace="formatos/vincular_doc_expedie/adicionar_vincular_doc_expedie.php?idexpediente=' . @$_REQUEST["idexpediente"] . '">Adicionar Documento</a>
+		    <a id="adicionar_documento_exp" conector="iframe" titulo="Adicionar Documento" enlace="' . FORMATOS_CLIENTE . 'vincular_doc_expedie/adicionar_vincular_doc_expedie.php?idexpediente=' . @$_REQUEST["idexpediente"] . '">Adicionar Documento</a>
 		</li>';
 		}
 	}
@@ -772,7 +772,7 @@ function prestamo_documento() {
 			var seleccionados=$("#seleccionados_expediente").val();
 			var estado_archivo=' . $estado . ';
 			if(seleccionados){
-				enlace_katien_saia("formatos/solicitud_prestamo/adicionar_solicitud_prestamo.php?id="+seleccionados+"&estado_archivo="+estado_archivo,"Solicitud de prestamo","iframe","");
+				enlace_katien_saia("' . FORMATOS_CLIENTE . 'solicitud_prestamo/adicionar_solicitud_prestamo.php?id="+seleccionados+"&estado_archivo="+estado_archivo,"Solicitud de prestamo","iframe","");
 			}else{
 				alert("Seleccione por lo menos un expediente");
 			}

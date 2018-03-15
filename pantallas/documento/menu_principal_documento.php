@@ -511,7 +511,7 @@ function permisos_modulo_menu_intermedio($iddoc, $modulo_padre,$lista,$target="_
       	}
 				if($modulo[$i]["nombre"]=='ver_notas_posit'){
 					$datos_documento=busca_filtro_tabla("","documento A, formato B","lower(A.plantilla)=lower(B.nombre) AND A.iddocumento=".$iddoc,"",$conn);
-					$modulo[$i]["enlace"]="formatos/".$datos_documento[0]["nombre"]."/".$datos_documento[0]["ruta_mostrar"]."?iddoc=".$datos_documento[0]["iddocumento"]."&idformato=".$datos_documento[0]["idformato"]."&ver_notas=1";
+					$modulo[$i]["enlace"]= FORMATOS_CLIENTE . $datos_documento[0]["nombre"]."/".$datos_documento[0]["ruta_mostrar"]."?iddoc=".$datos_documento[0]["iddocumento"]."&idformato=".$datos_documento[0]["idformato"]."&ver_notas=1";
 				}
       	if($modulo[$i]["destino"] && $modulo[$i]["destino"]!="centro"){
       		$target=$modulo[$i]["destino"];

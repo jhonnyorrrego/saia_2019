@@ -33,7 +33,7 @@ if (!$_SESSION["LOGIN" . LLAVE_SAIA] && @$_REQUEST["LOGIN"] && @$_REQUEST["usuar
 	global $usuactual;
 	$usuactual = $_REQUEST["LOGIN"];
 }
-include_once ($ruta_db_superior . 'formatos/librerias/encabezado_pie_pagina.php');
+include_once ($ruta_db_superior . FORMATOS_SAIA . 'librerias/encabezado_pie_pagina.php');
 // require_once($ruta_db_superior . 'tcpdf/config/lang/spa.php');
 require_once ($ruta_db_superior . 'tcpdf/tcpdf.php');
 class Imprime_Pdf {
@@ -146,7 +146,6 @@ class Imprime_Pdf {
 					$this -> papel = @$_REQUEST["papel"];
 				$this -> formato = $formato;
 				$this -> pdfa = true;
-
 			}
 		} elseif ($iddocumento == "url") {
 			$this -> tipo_salida = "FI";
@@ -156,7 +155,6 @@ class Imprime_Pdf {
 				$this -> font_size = 8;
 			}
 		}
-
 	}
 
 	function configurar_encabezado() {
@@ -192,7 +190,6 @@ class Imprime_Pdf {
 	}
 
 	function imprimir() {
-
 		$this -> pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false, true);
 		$this -> pdf -> SetMargins($this -> margenes["izquierda"], $this -> margenes["superior"], $this -> margenes["derecha"], 1);
 		$this -> pdf -> AddFont($this -> font_family);
@@ -226,7 +223,7 @@ class Imprime_Pdf {
 
 		$campos_pdfa = busca_filtro_tabla("", "campos_formato", "(banderas like 'pdfa' or banderas like 'pdfa,%' or banderas like '%,pdfa' or banderas like '%,pdfa,%') AND formato_idformato=" . $this -> formato[0]['idformato'], "", $conn);
 		if ($campos_pdfa['numcampos']) {
-			include_once ("formatos/librerias/funciones_generales.php");
+			include_once (FORMATOS_SAIA . "librerias/funciones_generales.php");
 
 			for ($i = 0; $i < $campos_pdfa['numcampos']; $i++) {
 				$this -> pdf -> SetExtraMetadata($campos_pdfa[$i]['nombre'] . '(' . mostrar_valor_campo($campos_pdfa[$i]['nombre'], $this -> formato[0]['idformato'], $this -> documento[0]["iddocumento"], 1) . ')');
@@ -403,18 +400,17 @@ class Imprime_Pdf {
 
 				$datos_vista = busca_filtro_tabla("", "vista_formato", "idvista_formato=$vista", "", $conn);
 
-				$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_vista[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id");
+				$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_vista[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id");
 			} elseif ($datos_formato[0]["nombre"] == "carta") {
 
 				$destinos = explode(",", $datos_plantilla[0]["destinos"]);
 
 				foreach ($destinos as $fila) {
-					$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id") . "&destino=$fila";
+					$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id") . "&destino=$fila";
 				}
 			} else {
 				///REVISAR AQUI MUERE POR USUARIO ACTUAL
-				$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id");
-
+				$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id");
 			}
 		}
 		//print_r($direccion);die();
@@ -535,7 +531,6 @@ class Imprime_Pdf {
 	}
 
 	function configurar_pagina($datos) {
-
 		if (isset($datos["imprimir_paginas"]) && $datos["imprimir_paginas"]) {
 			$this -> imprimir_paginas = $datos["imprimir_paginas"];
 		}
@@ -612,7 +607,6 @@ class Imprime_Pdf {
 		if (isset($datos["margen_izquierda"]) && $datos["margen_izquierda"]) {
 			$this -> margenes["izquierda"] = $datos["margen_izquierda"];
 		}
-
 	}
 
 	function renombrar_pdf_actual() {
@@ -747,7 +741,6 @@ class MYPDF extends TCPDF {
 		$this -> encabezado = $texto;
 		$this -> marca_agua = $marca_agua;
 	}
-
 }
 
 if (@$_REQUEST["iddoc"]) {
@@ -778,7 +771,6 @@ if (@$_REQUEST["iddoc"]) {
 			$pdf -> formato[0]["encabezado"] = $encabezado_papa[0]["encabezado"];
 			$pdf -> formato[0]["idformato"] = $encabezado_papa[0]["idformato"];
 			$pdf -> mostrar_encabezado = 1;
-
 		}
 	}
 

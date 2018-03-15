@@ -31,7 +31,7 @@ $(document).ready(function(){
 				response = JSON.parse(response);
 				if(response.tipo == 1){
 					if(seleccionados){
-						enlace_katien_saia("formatos/transferencia_doc/adicionar_transferencia_doc.php?id="+seleccionados,"Transferencia documental","iframe","");
+						enlace_katien_saia("<?php echo FORMATOS_CLIENTE;?>transferencia_doc/adicionar_transferencia_doc.php?id="+seleccionados,"Transferencia documental","iframe","");
 					}
 					else{
 						alert("Seleccione por lo menos un expediente");
@@ -50,7 +50,7 @@ $(document).ready(function(){
 		var seleccionados=$("#seleccionados_expediente").val();
 		var estado_archivo=1;
 		if(seleccionados){
-			enlace_katien_saia("formatos/solicitud_prestamo/adicionar_solicitud_prestamo.php?id="+seleccionados+"&estado_archivo="+estado_archivo,"Solicitud de prestamo","iframe","");
+			enlace_katien_saia("<?php echo FORMATOS_CLIENTE;?>solicitud_prestamo/adicionar_solicitud_prestamo.php?id="+seleccionados+"&estado_archivo="+estado_archivo,"Solicitud de prestamo","iframe","");
 		}else{
 			alert("Seleccione por lo menos un expediente");
 		}

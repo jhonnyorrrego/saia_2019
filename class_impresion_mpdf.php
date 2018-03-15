@@ -34,7 +34,7 @@ if (!$_SESSION["LOGIN" . LLAVE_SAIA] && @$_REQUEST["LOGIN"] && @$_REQUEST["usuar
 	$usuactual = $_REQUEST["LOGIN"];
 }
 include_once ($ruta_db_superior . 'mpdf5_7/mpdf.php');
-include_once ($ruta_db_superior . 'formatos/librerias/encabezado_pie_pagina.php');
+include_once ($ruta_db_superior . FORMATOS_SAIA . 'librerias/encabezado_pie_pagina.php');
 class Imprime_Pdf {
 	private $orientacion = 'P';
 	// P-vertical ,L-horizontal
@@ -368,18 +368,17 @@ class Imprime_Pdf {
 
 				$datos_vista = busca_filtro_tabla("", "vista_formato", "idvista_formato=$vista", "", $conn);
 
-				$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_vista[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id");
+				$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_vista[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id");
 			} elseif ($datos_formato[0]["nombre"] == "carta") {
 
 				$destinos = explode(",", $datos_plantilla[0]["destinos"]);
 
 				foreach ($destinos as $fila) {
-					$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id") . "&destino=$fila";
+					$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id") . "&destino=$fila";
 				}
 			} else {
 				///REVISAR AQUI MUERE POR USUARIO ACTUAL
-				$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id");
-
+				$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&idfunc=" . usuario_actual("id");
 			}
 		}
 		//print_r($direccion);die();
@@ -503,7 +502,6 @@ class Imprime_Pdf {
 	}
 
 	function configurar_pagina($datos) {
-
 		if (isset($datos["imprimir_paginas"]) && $datos["imprimir_paginas"]) {
 			$this -> imprimir_paginas = $datos["imprimir_paginas"];
 		}

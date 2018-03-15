@@ -10,7 +10,7 @@ while ($max_salida > 0) {
 }
 
 include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "formatos/libreria/funciones_generales.php");
+include_once ($ruta_db_superior . FORMATOS_SAIA . "libreria/funciones_generales.php");
 
 $idfun_actual = usuario_actual("idfuncionario");
 if (isset($_REQUEST["ejecutar_funcion"])) {
