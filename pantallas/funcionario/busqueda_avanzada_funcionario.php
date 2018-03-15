@@ -1,18 +1,18 @@
 <?php
-$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior=$ruta="";
-while($max_salida>0){
-	if(is_file($ruta."db.php")){
-		$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+$max_salida = 10;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
 	}
-	$ruta.="../";
+	$ruta .= "../";
 	$max_salida--;
 }
-include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."librerias_saia.php");
+include_once ($ruta_db_superior . "db.php");
+include_once ($ruta_db_superior . "librerias_saia.php");
 echo(librerias_html5());
 echo(librerias_jquery("1.7"));
-echo(estilo_bootstrap()); 
+echo(estilo_bootstrap());
 ?>    
 <!DOCTYPE html>     
 <html>
@@ -100,22 +100,22 @@ echo(estilo_bootstrap());
 		<br>
         <div class="control-group">
           <label class="string required control-label" for="nombre">
-            Funcionario c&oacute;digo
-            <input type="hidden" name="bksaiacondicion_funcionario_codigo" id="bksaiacondicion_funcionario_codigo" value="=">
+            Nit
+            <input type="hidden" name="bksaiacondicion_nit" id="bksaiacondicion_nit" value="=">
           </label>
           <div class="controls">
-            <input id="bqsaia_funcionario_codigo" name="bqsaia_funcionario_codigo" size="50" type="text">
+            <input id="bqsaia_nit" name="bqsaia_nit" size="50" type="text">
           </div>
         </div>
         
         <div class="btn-group" data-toggle="buttons-radio" >
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_funcionario_codigo',this.id)">
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_nit',this.id)">
 		    Y
 		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_funcionario_codigo',this.id)">
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_nit',this.id)">
 		    O
 		  </button>
-		  <input type="hidden" name="bqsaiaenlace_funcionario_codigo" id="bqsaiaenlace_funcionario_codigo" value="" />
+		  <input type="hidden" name="bqsaiaenlace_nit" id="bqsaiaenlace_nit" value="" />
 		</div>
         <br>
         <div class="row">
@@ -147,40 +147,44 @@ echo(estilo_bootstrap());
         <div class="row">
           <div class="control-group radio_buttons span4">
             <label class="radio_buttons optional control-label">Perfil
-            <input type="hidden" name="bksaiacondicion_perfil" id="bksaiacondicion_perfil" value="like_total">
+            <input type="hidden" name="bksaiacondicion_idperfil" id="bksaiacondicion_idperfil" value="=">
             </label>
             <div class="controls">
-              	<select name="bqsaia_perfil" id="bqsaia_perfil">
+              	<select name="bqsaia_idperfil" id="bqsaia_idperfil">
               		<option value="">Seleccione...</option>
               		<?php
-              		$perfiles=busca_filtro_tabla("","perfil","","",$conn);
-					for($i=0;$i<$perfiles["numcampos"];$i++){
-						echo '<option value="'.$perfiles[$i]["idperfil"].'">'.$perfiles[$i]["nombre"].'</option>';
-					}
+									$configuracion = busca_filtro_tabla("A.valor", "configuracion A", "A.tipo='usuario' AND A.nombre='login_administrador'", "", $conn);
+									$parte = "lower(nombre)<>'administrador'";
+									if ($configuracion["numcampos"] && trim($configuracion[0]["valor"]) == trim($_SESSION["LOGIN" . LLAVE_SAIA])) {
+										$parte = "";
+									}
+									$cons_perfil = busca_filtro_tabla("A.idperfil, A.nombre ", "perfil A", $parte, "A.nombre ASC", $conn);
+									if ($cons_perfil["numcampos"]) {
+										for ($i = 0; $i < $cons_perfil["numcampos"]; $i++) {
+											$x_perfil_idperfilList .= '<option value="' . $cons_perfil[$i]["idperfil"] . '">' . $cons_perfil[$i]["nombre"] . '</option>';
+										}
+									}
+									echo $x_perfil_idperfilList;
               		?>
               	</select>
             </div>          
           </div> 
-        </div>
-        
-           
+        </div>           
           <input type="hidden" name="idbusqueda_componente" id="idbusqueda_componente" value="<?php echo @$_REQUEST["idbusqueda_componente"]; ?>">
           <input type="hidden" name="adicionar_consulta" id="adicionar_consulta" value="1">
-        
       </form>
     </div>  
   </body>
   <script type="text/javascript" src="<?php echo $ruta_db_superior; ?>pantallas/lib/validaciones_formulario.js"></script>
-  <?php 
-  //echo(librerias_validar_formulario());
-  echo(librerias_bootstrap());
+  <?php
+		echo(librerias_bootstrap());
   ?>
 </html>
 <script>
-$(document).keypress(function(event) {
-    var keycode = (event.keyCode ? event.keyCode : event.which);
-    if(keycode == '13') {
-        $("#ksubmit_saia").click();
-    }
-});
+	$(document).keypress(function(event) {
+		var keycode = (event.keyCode ? event.keyCode : event.which);
+		if (keycode == '13') {
+			$("#ksubmit_saia").click();
+		}
+	}); 
 </script>

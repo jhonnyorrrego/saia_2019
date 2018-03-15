@@ -328,10 +328,10 @@ return true;
       <span class="phpmaker">
         <?php
           $serie=busca_filtro_tabla("","serie A","tvd=0","lower(nombre) asc",$conn);
-          if($serie["numcampos"]){
-            $inicio2='<SELECT name="x_serie_idserie"><OPTION value="0">Sin Serie Documental</OPTION><OPTION value="" selected>Crear Serie Documental</OPTION>';
-            $fin2='</SELECT>';
-          }
+          
+        $inicio2='<SELECT name="x_serie_idserie"><OPTION value="0">Sin Serie Documental</OPTION><OPTION value="" selected>Crear Serie Documental</OPTION>';
+        $fin2='</SELECT>';
+          
           for($i=0;$i<$serie["numcampos"];$i++){
             $inicio2.='<OPTION value="'.$serie[$i]["idserie"].'"';
             if($serie[$i]["idserie"]==$x_serie_idserie){
@@ -496,35 +496,16 @@ echo $x_contador_idcontadorList;
 	<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">M&eacute;todo Exportar</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php 
-$ar_x_exportar = explode(",",@$x_exportar);
-$x_exportarChk = "";
-$x_exportarChk .= "<input type=\"checkbox\" name=\"x_exportar[]\" value=\"" . htmlspecialchars("pdf"). "\"";
-foreach ($ar_x_exportar as $cnt_x_exportar) {
-	if (trim($cnt_x_exportar) == "pdf") {
-		$x_exportarChk .= " checked";
-		break;
-	}
-}
-	$x_exportarChk .= ">" . "PDF" . EditOptionSeparator(0);
-/*$x_exportarChk .= "<input type=\"checkbox\" name=\"x_exportar[]\" value=\"" . htmlspecialchars("xls"). "\"";
-foreach ($ar_x_exportar as $cnt_x_exportar) {
-	if (trim($cnt_x_exportar) == "xls") {
-		$x_exportarChk .= " checked";
-		break;
-	}
-}
-	$x_exportarChk .= ">" . "Excel" . EditOptionSeparator(1);
-$x_exportarChk .= "<input type=\"checkbox\" name=\"x_exportar[]\" value=\"" . htmlspecialchars("word"). "\"";
-foreach ($ar_x_exportar as $cnt_x_exportar) {
-	if (trim($cnt_x_exportar) == "word") {
-		$x_exportarChk .= " checked";
-		break;
-	}
-}
-	$x_exportarChk .= ">" . "Word (RTF)" . EditOptionSeparator(2);*/
-echo $x_exportarChk;
-?>
+
+			<?php 
+				$array_check_exportar=array("tcpdf"=>"","html2ps"=>"","mpdf"=>"");
+				$array_check_exportar[$x_exportar] = "checked";
+				if (!(!is_null($x_exportar)) || ($x_exportar == "")) { $array_check_exportar["tcpdf"] = "checked";} // Set default value 
+			?>
+			<input type="radio" name="x_exportar[]" id="x_exportar_tcpdf" value="tcpdf" <?php echo($array_check_exportar["tcpdf"]); ?> >	TCPDF	
+			<input type="radio" name="x_exportar[]" id="x_exportar_html2ps" value="html2ps"  <?php echo($array_check_exportar["html2ps"]); ?> >	HTML2ps	
+			<input type="radio" name="x_exportar[]" id="x_exportar_mpdf" value="mpdf" <?php echo($array_check_exportar["mpdf"]); ?>  >	mPDF	
+
 </span></td>
 	</tr>
 	<tr>
@@ -837,6 +818,7 @@ detalles_mostrar_".$x_nombre.".php";
   	$idformato=$sKeyWrk;
   	//Se actualizan los campos padre
   	if($idformato!=''){
+  		actualizar_modulo_formato($idformato);
   		if($x_flujo_idflujo!=0){
 			generar_campo_flujo($idformato,$x_flujo_idflujo,$flujo[0]["title"]);
 		}	
@@ -1161,4 +1143,63 @@ function desvincular_campo_anexo($idformato){
 	guardar_traza($campo,$formato[0]["nombre_tabla"]);
 	phpmkr_query($campo);
 }
+
+function actualizar_modulo_formato($idformato) {//Esta funcion es la misma que en formatoadd.php =>crear_modulo_formato
+	global $conn;
+	$datos_formato = busca_filtro_tabla("nombre,etiqueta,cod_padre,nombre_tabla,ruta_mostrar,ruta_adicionar", "formato", "idformato=" . $idformato, "", $conn);
+	$modulo_formato = busca_filtro_tabla("", "modulo", "nombre = 'modulo_formatos'", "", $conn);
+	if ($modulo_formato["numcampos"]) {
+		$submodulo_formato = busca_filtro_tabla("", "modulo", "nombre ='" . $datos_formato[0]["nombre"] . "'", "", $conn);
+		if (!$submodulo_formato["numcampos"]) {
+			$padre = busca_filtro_tabla("idmodulo", "formato A, modulo B", "idformato=" . $datos_formato[0]["cod_padre"] . " AND lower(A.nombre)=(B.nombre)", "", $conn);
+			if ($padre["numcampos"] > 0) {
+				$papa = $padre[0]["idmodulo"];
+			} else {
+				$papa = $modulo_formato[0]["idmodulo"];
+			}
+			$sql = "INSERT INTO modulo(permiso_admin,pertenece_nucleo,busqueda,nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES (0,0,'1','" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','" . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "','centro','" . $papa . "','1','Permite administrar el formato " . $datos_formato[0]["etiqueta"] . ".')";
+			guardar_traza($sql, $datos_formato[0]["nombre_tabla"]);
+			phpmkr_query($sql, $conn);
+			$modulo_id = phpmkr_insert_id();
+			$sql = "INSERT INTO permiso(funcionario_idfuncionario,modulo_idmodulo) VALUES('" . $_SESSION["idfuncionario"] . "'," . $modulo_id . ")";
+			guardar_traza($sql, $datos_formato[0]["nombre_tabla"]);
+			phpmkr_query($sql, $conn);
+		} else {
+			$padre = busca_filtro_tabla("idmodulo", "formato A, modulo B", "idformato=" . $datos_formato[0]["cod_padre"] . " AND lower(A.nombre)=(B.nombre)", "", $conn);
+			if ($padre["numcampos"] > 0) {
+				$papa = $padre[0]["idmodulo"];
+			} else {
+				$papa = $modulo_formato[0]["idmodulo"];
+			}
+			$sql = "update modulo set tipo='secundario',nombre='" . $datos_formato[0]["nombre"] . "',etiqueta='" . $datos_formato[0]["etiqueta"] . "',cod_padre='" . $papa . "',enlace='formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "' where idmodulo=" . $submodulo_formato[0]["idmodulo"];
+			guardar_traza($sql, $datos_formato[0]["nombre_tabla"]);
+			phpmkr_query($sql, $conn);
+		}
+	}
+	$modulo_crear = busca_filtro_tabla("", "modulo", "nombre = 'creacion_formatos'", "", $conn);
+	if ($modulo_crear["numcampos"]) {
+		$submodulo_formato = busca_filtro_tabla("", "modulo", "nombre = 'crear_" . $datos_formato[0]["nombre"] . "'", "", $conn);
+		$padre = busca_filtro_tabla("idmodulo", "formato A, modulo B", "idformato=" . $datos_formato[0]["cod_padre"] . " AND lower(" . concatenar_cadena_sql(array("'crear_'", "A.nombre")) . ")=(B.nombre)", "", $conn);
+		if (!$submodulo_formato["numcampos"]) {
+			if ($padre["numcampos"] > 0) {
+				$papa = $padre[0]["idmodulo"];
+			} else {
+				$papa = $modulo_crear[0]["idmodulo"];
+			}
+			$sql = "INSERT INTO modulo(permiso_admin,pertenece_nucleo,busqueda,nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES (0,0,'1','crear_" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','Crear " . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_adicionar"] . "','centro','" . $modulo_crear[0]["idmodulo"] . "','1','Permite crear " . $datos_formato[0]["etiqueta"] . ".')";
+			guardar_traza($sql, $formato[0]["nombre_tabla"]);
+			phpmkr_query($sql, $conn);
+			$modulo_id = phpmkr_insert_id();
+		} else {
+			if ($padre["numcampos"] > 0) {
+				$papa = $padre[0]["idmodulo"];
+			} else {
+				$papa = $modulo_crear[0]["idmodulo"];
+			}
+			$sql = "update modulo set tipo='secundario',nombre='crear_" . $datos_formato[0]["nombre"] . "',etiqueta='Crear " . $datos_formato[0]["etiqueta"] . "',cod_padre='" . $papa . "',enlace='formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_adicionar"] . "' where idmodulo=" . $submodulo_formato[0]["idmodulo"];
+			phpmkr_query($sql, $conn);
+		}
+	}
+}
+
 ?>

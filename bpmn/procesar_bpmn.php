@@ -57,9 +57,16 @@ if(@$_REQUEST["idpaso_documento"]){
 <script type="text/javascript">
 	hs.graphicsDir = '<?php echo($ruta_db_superior); ?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
 	hs.outlineType = 'rounded-white';
+	$(document).ready(function(){
+		var alto_diagrama=$(document).height();
+		var ancho_diagrama=$(document).width();
+		var alto_info=$("#info_diagram").height()+10;
+		$("#diagram").height(alto_diagrama-alto_info);
+		$("#diagram").width(ancho_diagrama-40);
+	});
 </script>
 <div class="container-fluid ">
-	<div class="row-fluid">
+	<div class="row-fluid" id="info_diagram">
 	<div class="span6">
 		<i class="icon-info-sign"></i> <b>PROCESO: <?php echo($bpmn->bpmn[0]["title"]);?></b>
 		<?php if(!@$_REQUEST["vista_bpmn"]){ ?>
@@ -88,7 +95,7 @@ if(@$_REQUEST["idpaso_documento"]){
 		<?php } ?>		
 	</div>
 	</div>
-	<div class="row-fluid " id="diagram" style="height:100%; position:relative; overflow: auto;">
+	<div class="row-fluid " id="diagram" style="position:relative; overflow: auto;">
 	</div>
 	 
 </div>

@@ -39,7 +39,7 @@ if($formato["numcampos"] && @$_REQUEST["tipo"]!=5){
 		if($formato[0]["mostrar_pdf"] == 1) {
 			$ruta = $ruta_db_superior."pantallas/documento/visor_documento.php?iddoc=" . $formato[0]["iddocumento"] . "&actualizar_pdf=1";
 			redirecciona($ruta . "&rnd=" . rand(0, 100));
-		} else if($formato[0]["mostrar_pdf"] == 2) {
+		} else if($formato[0]["mostrar_pdf"] == 2 && !@$_REQUEST['error_pdf_word']) {
 			$ruta = $ruta_db_superior."pantallas/documento/visor_documento.php?pdf_word=1&iddoc=" . $formato[0]["iddocumento"];
 			redirecciona($ruta . "&rnd=" . rand(0, 100));
 		}
@@ -47,10 +47,12 @@ if($formato["numcampos"] && @$_REQUEST["tipo"]!=5){
 }
 
 if(!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"]==1){
-  $codigo=usuario_actual("funcionario_codigo");
+  $codigo=$_SESSION["usuario_actual"];
   leido($codigo,$_REQUEST["iddoc"]);
-	include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
-	menu_principal_documento($_REQUEST["iddoc"],1);
+  if(!isset($_REQUEST["menu_principal_inactivo"])){
+		include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
+		menu_principal_documento($_REQUEST["iddoc"],1);
+  }
 }
 ?>
 <html>

@@ -72,7 +72,7 @@ echo(librerias_bootstrap());
 				<label class="control-label" for="etiqueta">Padre:</label>
 				<div class="controls">
 					<?php
-						echo arbol("cod_padre","cod_padre","pantallas/configuracion/test_tabla_cf.php?tabla=".$_REQUEST['tabla'],0,0,1,1,'radio',$datos[0]['cod_padre']);
+						echo arbol("cod_padre","cod_padre","pantallas/admin_cf/test_tabla_cf.php?tabla=".$_REQUEST['tabla'],0,0,1,1,'radio',$datos[0]['cod_padre']);
 					?>
 				</div>
 			</div>
@@ -220,7 +220,6 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
 	global $ruta_db_superior;
 	$entidad=$nombre_arbol;
 	?>
-	<div><?php //echo $seleccionados; ?></div>
 	<input type="text" id="stext<?php echo $entidad; ?>" width="200px" size="25" placeholder="Buscar">
 <a href="javascript:void(0)" onclick="stext<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value),1)">
 <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a>
@@ -228,15 +227,14 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
 <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png" alt="Buscar" border="0px"></a>
 <a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value))">
 <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
-</span>
 
-<!--a href="javascript:seleccionar_todos<?php echo $entidad; ?>(1)"><img src="<?php echo $ruta_db_superior; ?>imgs/iconCheckAll.gif" alt="Seleccionar todos" title="Seleccionar todos"></a>
-	<a href="javascript:seleccionar_todos<?php echo $entidad; ?>(0)"><img src="<?php echo $ruta_db_superior; ?>imgs/iconUncheckAll.gif" alt="Quitar todos" title="Quitar todos"></a><br-->
-<div id="esperando<?php echo $entidad; ?>"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
+<div id="esperando<?php echo $entidad; ?>">
+    <img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif">
+</div>
 <div id="treeboxbox<?php echo $entidad; ?>"></div>
 <input type="hidden" value="<?php echo $seleccionado;?>" name="<?php echo $campo; ?>" id="<?php echo $entidad; ?>" >
 <script type="text/javascript">
-	$("document").ready(function(){
+	$(document).ready(function(){
       var browserType;
       if (document.layers) {browserType = "nn4"}
       if (document.all) {browserType = "ie"}
@@ -253,13 +251,8 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
       <?php }else if($tipo_etiqueta=='radio'){?>
       tree<?php echo $entidad; ?>.enableRadioButtons(true);
       tree<?php echo $entidad; ?>.enableCheckBoxes(1);
-      <?php } ?>
-      
-      <?php /*if($padresehijos){?>
-      tree<?php echo $entidad; ?>.enableThreeStateCheckboxes(true);
-      tree<?php echo $entidad; ?>.enableSmartXMLParsing(true);
-      <?php }*/?>
-      <?php if($entidad!='plantilla'&&$entidad!='serie'){ ?>
+      <?php }  
+      if($entidad!='plantilla'&&$entidad!='serie'){ ?>
       tree<?php echo $entidad; ?>.enableSmartXMLParsing(false);
       <?php } ?>
       <?php /*Esta condicion reemplaza a la que está comentada arriba, tomada de opav*/      
@@ -294,8 +287,7 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
 							$("#bksaiacondicion_<?php echo $adicionales[0];?>").val("<?php echo $adicionales[1];?>");
 							$("#bqsaia_<?php echo $adicionales[0];?>").val("<?php echo $adicionales[2];?>");
 						}
-					}
-					else{
+					}else{
 						$("#bksaiacondicion_<?php echo $adicionales[0];?>").val("");
 						$("#bqsaia_<?php echo $adicionales[0];?>").val("");
 					}
@@ -303,15 +295,14 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
 				
 				<?php if($tipo_etiqueta=='radio'){ ?>
 					valor_destino=document.getElementById("<?php echo $entidad; ?>");
-                       if(tree<?php echo $entidad; ?>.isItemChecked(nodeId))
-                         {if(valor_destino.value!=="")
+                       if(tree<?php echo $entidad; ?>.isItemChecked(nodeId)){
+          	 	  if(valor_destino.value!=="")
                           tree<?php echo $entidad; ?>.setCheck(valor_destino.value,false);
                           if(nodeId.indexOf("_")!=-1)
                              nodeId=nodeId.substr(0,nodeId.length);
                           	 valor_destino.value=nodeId;
-                         }
-                       else
-                         {valor_destino.value="";
+                         }else{
+        			valor_destino.value="";
                          }
                          var nuevo_valor=valor_destino.value.replace("'","");
                          nuevo_valor=nuevo_valor.replace("'","");
@@ -319,17 +310,8 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
                          var ruta_sup="<?php echo $ruta_db_superior; ?>";
                          var comp="<?php echo $idbusqueda_componente[0]["idbusqueda_componente"]; ?>";
                          if(formato!=''){
-                         	//$("#gestion_mostrar").hide();
-                         	<?php
-							$cantidad=count($nombre_arbol);
-							for($i=0;$i<$cantidad;$i++){
-								//echo 'seleccionar_todos'.$nombre_arbol[$i]."(0); ";
-							}
-							?>
                          	$("#filtro_adicional").remove();
-                         }
-                         else{
-                         	//$("#gestion_mostrar").show();
+                         }else{
                          	$("#filtro_adicional").val("buzon_salida z@ AND iddocumento=z.archivo_idarchivo");
                          }
                          llamado_formulario(formato,ruta_sup,comp);
@@ -350,7 +332,13 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
          document.poppedLayer =
             eval('document.layers["esperando<?php echo $entidad; ?>"]');
       document.poppedLayer.style.display = "none";
+			<?php
+				if($seleccionado!=""){
+					?>
       tree<?php echo $entidad; ?>.setCheck(<?php echo $seleccionado; ?>,true);
+					<?php
+				}
+			?>
       document.getElementById('<?php echo $entidad; ?>').value=tree<?php echo $entidad; ?>.getAllChecked();
       
       <?php
@@ -359,6 +347,7 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
       }
       ?>
     }
+		
     function cargando<?php echo $entidad; ?>() {
       if (browserType == "gecko" )
          document.poppedLayer =

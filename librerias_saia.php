@@ -20,8 +20,10 @@ if(@$_SESSION["generando_pantalla"]){
 else{
  $raiz_saia=$ruta_db_superior;
 }
+
 include_once($raiz_saia."css/index_estilos.php");
-function librerias_jquery($version="1.4.2"){
+
+function librerias_jquery($version = "1.7.2") {
 global $raiz_saia;
 $texto='';
 switch($version){
@@ -30,6 +32,9 @@ switch($version){
   break;
   case "1.7":
     $texto='<script src="'.$raiz_saia.'js/jquery-1.7.min.js" type="text/javascript"></script>';
+            break;
+        case "1.7.2":
+            $texto = '<script src="' . $raiz_saia . 'js/jquery-1.7.2.min.js" type="text/javascript"></script>';
   break;
   case "1.2.3":
     $texto='<script src="'.$raiz_saia.'js/jquery-1.2.3.min.js" type="text/javascript"></script>';
@@ -37,12 +42,16 @@ switch($version){
   case "sapi":
     $texto='<script type="text/javascript" src="http://www.google.com/jsapi"></script>
 <script type="text/javascript">
-        google.load("jquery", "1.7");
+        google.load("jquery", "1.7.2");
 </script>';
+            break;
+        default:
+            $texto = '<script src="' . $raiz_saia . 'js/jquery-' . $version . '.js" type="text/javascript"></script>';
   break;
 }
 return($texto);
 }
+
 function librerias_fechas($hora=0){
 global $raiz_saia;
 $texto='';
@@ -120,20 +129,28 @@ $texto='<script type="text/javascript" src="'.$raiz_saia.'js/bootstrap.js"></scr
 $texto.='<script type="text/javascript" src="'.$raiz_saia.'js/jasny-bootstrap.min.js"></script>';
 return($texto);
 }
-function librerias_validar_formulario($version=''){
+
+function librerias_validar_formulario($version='13'){
 global $raiz_saia;
 
-
-if($version==11){
+switch ($version) {
+    case "5":
+        $texto='<script type="text/javascript" src="'.$raiz_saia.'js/jquery.validate.js"></script>';
+        break;
+    case "11":
 	$texto='<script type="text/javascript" src="'.$raiz_saia.'js/jquery.validate_v1.11.js"></script>';
-}else{
-	$texto='<script type="text/javascript" src="'.$raiz_saia.'js/jquery.validate.js"></script>';
+        break;
+    case "13":
+        $texto='<script type="text/javascript" src="'.$raiz_saia.'js/jquery.validate.1.13.1.js"></script>';
+        break;
+    default:
+        $texto='<script type="text/javascript" src="'.$raiz_saia.'js/jquery.validate.1.13.1.js"></script>';
+        break;
 }
-
-
 $texto.='<style>label.valid {width: 24px; height: 24px; background: url('.$raiz_saia.'asset/img/layout/valid.png) center center no-repeat; display: inline-block;text-indent: -9999px;}label.error {font-weight: bold;color: red;padding: 2px 8px;margin-top: 2px;}</style>';
 return($texto);
 }
+
 function librerias_html5(){
 global $raiz_saia;
 $texto='<meta charset="utf-8">
@@ -148,6 +165,7 @@ function librerias_arboles($opciones=''){
 global $raiz_saia;
 $texto='<script type="text/javascript" src="'.$raiz_saia.'js/dhtmlXCommon.js"></script>
 	<script type="text/javascript" src="'.$raiz_saia.'js/dhtmlXTree.js"></script>
+<script type="text/javascript" src="'.$raiz_saia.'js/dhtmlxtree_xw.js"></script>
   <script type="text/javascript" src="'.$raiz_saia.'pantallas/lib/librerias_arboles.js"></script>
 	<link rel="STYLESHEET" type="text/css" href="'.$raiz_saia.'css/dhtmlXTree.css">';
 	if($opcion=='drag'){
@@ -258,14 +276,14 @@ return($texto);
 }
 
 function librerias_notificaciones(){
-	global $raiz_saia;
-	$texto = '';
-	$texto .= '<script src="' . $raiz_saia . 'js/noty/jquery.noty.js" type="text/javascript" charset="utf-8"></script>';
-	$texto .= '<script src="' . $raiz_saia . 'js/noty/layouts/topCenter.js" type="text/javascript" charset="utf-8"></script>';
-	$texto .= '<script src="' . $raiz_saia . 'js/noty/layouts/topRight.js" type="text/javascript" charset="utf-8"></script>';
-	$texto .= '<script src="' . $raiz_saia . 'js/noty/themes/default.js" type="text/javascript" charset="utf-8"></script>';
-	$texto .= '<script src="' . $raiz_saia . 'pantallas/lib/librerias_notificaciones.js" type="text/javascript" charset="utf-8"></script>';
-	return ($texto);
+global $raiz_saia;
+$texto='';
+$texto.='<script src="'.$raiz_saia.'js/noty/jquery.noty.js" type="text/javascript" charset="utf-8"></script>';
+$texto.='<script src="'.$raiz_saia.'js/noty/layouts/topCenter.js" type="text/javascript" charset="utf-8"></script>';
+$texto.='<script src="'.$raiz_saia.'js/noty/layouts/topRight.js" type="text/javascript" charset="utf-8"></script>';
+$texto.='<script src="'.$raiz_saia.'js/noty/themes/default.js" type="text/javascript" charset="utf-8"></script>';
+$texto.='<script src="'.$raiz_saia.'pantallas/lib/librerias_notificaciones.js" type="text/javascript" charset="utf-8"></script>';
+return($texto);
 }
 
 function librerias_datepicker_bootstrap(){

@@ -85,9 +85,6 @@ background-position: -192px -239px;
 .icon-terminar_documento {
 background-position: -456px -335px;
 }
-.icon-seguimiento {
-background-position: -432px -335px;
-}
 .icon-verificar_flujo_documento {
 background-position: -96px -335px;
 }
@@ -183,4 +180,13 @@ background-position: -192px -96px;
 }
 .icon-acciones_menu_mostrar {
 background-position: -0px -24px;
+}
+.icon-folder-close {
+background-position: -432px -192px;
+}
+.icon-ruta_aprobaciones {
+background-position: -408px -336px;
+}
+.icon-seguimiento_rastro {
+background-position: -432px -336px;
 }

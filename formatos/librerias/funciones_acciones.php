@@ -202,6 +202,7 @@ $encontrado=0;
 
 for($i=0;$i<count($ar_func);$i++){
   $datos_funcion=busca_filtro_tabla("","funciones_formato","idfunciones_formato=".$ar_func[$i],"",$conn);
+  $ruta = null;
   if($datos_funcion["numcampos"]){
     if(!function_exists($datos_funcion[0]["nombre_funcion"])){
       include_once($ruta_db_superior."class_transferencia.php");

@@ -105,6 +105,16 @@ class Digitalizacion {
 						case "alto_imagen" :
 							$params["alto"] = $configuracion[$i]["valor"];
 							break;
+						case 'tipo_ftp':
+							$params["ftp_type"] = $configuracion[$i]["valor"];
+							break;
+						case "img_max_upload_size" :
+							$img_max_size = 16777216;
+							if($configuracion[$i]["valor"]) {
+								$img_max_size = $configuracion[$i]["valor"];
+							}
+							$params["max_upload_size"] = $img_max_size;
+							break;
 					}
 				}
 				if ($params["dftp"]) {
@@ -114,8 +124,9 @@ class Digitalizacion {
 					$params["url"] .= "_" . $user_info[0]["login"];
 				}
 
-				// $params["ftp_type"] = "sftp";
-				$params["ftp_type"] = "ftp";
+				if(!$params["ftp_type"] || $params["ftp_type"]==''){
+					$params["ftp_type"] = "ftp";
+				}
 
 				$params["radica"] = $datos_dig[0]["iddocumento"];
 				$params["numero"] = $documento[0]["numero"];
@@ -251,6 +262,54 @@ class Digitalizacion {
 		 * "message" => "OK"
 		 * );
 		 */
+		return $resp;
+	}
+
+	/**
+	 * Manually routed method.
+	 * we can specify as many routes as we want
+	 *
+	 * @url POST cargar_archivo
+	 * @url POST cargar_archivo/{$id_tarea}{nombre}/{archivo}
+	 */
+	public function cargar_archivo($id_tarea, $nombre, $archivo) {
+		global $conn, $ruta_db_superior;
+
+		$resp = array(
+				"status" => 0,
+				"message" => "Error de ejecucion"
+		);
+
+		$datos_dig = busca_filtro_tabla("t.*", "tarea_dig t", "idtarea_dig='$id_tarea'", "", $conn);
+		if ($datos_dig["numcampos"]) {
+			$user_info = busca_filtro_tabla("f.login, f.funcionario_codigo", "funcionario f", "idfuncionario=" . $datos_dig[0]["idfuncionario"], "", $conn);
+			$configuracion = busca_filtro_tabla("A.*", "configuracion A", "nombre = 'ruta_temporal'", "", $conn);
+
+			if ($user_info["numcampos"]) {
+				$_SESSION["LOGIN" . LLAVE_SAIA] = $user_info[0]["login"];
+				$_SESSION["usuario_actual"] = $user_info[0]["funcionario_codigo"];
+				$data = base64_decode($archivo);
+				$nombre_archivo = base64_decode($nombre);
+				$ruta_superior = dirname(dirname(__FILE__));
+				$ruta_temporal =  $ruta_superior . "/" . $configuracion[0]['valor'] . '_' . $user_info[0]['login'];
+
+				if (!is_dir($ruta_temporal) or !is_writable($ruta_temporal)) {
+					$resp["status"] = 0;
+					$resp["message"] = "No se puede escribir el directorio $ruta_temporal";
+				} else {
+					$ruta_temporal .= '/' . $nombre_archivo;
+					$size = file_put_contents($ruta_temporal, $data);
+					$resp["status"] = 1;
+					//$resp["message"] = "OK. Recibido" . " $ruta_temporal: $size bytes";
+					$resp["message"] = "OK";
+				}
+
+
+			} else {
+				$resp["message"] = "No existe el funcionario";
+			}
+		}
+
 		return $resp;
 	}
 

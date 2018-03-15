@@ -7,6 +7,10 @@ if (@$_REQUEST["iddoc"] || @$_REQUEST["key"]) {
 	}
 	menu_principal_documento($_REQUEST["iddoc"]);
 }
+
+include_once("librerias_saia.php");
+echo(librerias_notificaciones());
+
 $x_consecutivo = Null;
 $x_id_documento = Null;
 $x_imagen = Null;
@@ -40,9 +44,9 @@ if (@$_REQUEST["enlace"]) {
 } else if ($_REQUEST["x_enlace"] == "") {
 	$documento = busca_filtro_tabla("", "documento", "iddocumento=" . $key, "");
 	if ($documento[0]["tipo_radicado"] != 1 && $documento[0]["tipo_radicado"] != 2) {
-		$x_enlace = "ordenar.php?key=" . $key . "&accion=mostrar";
+		$x_enlace = "ordenar.php?key=" . $key . "&accion=mostrar&mostrar_formato=1";
 	} else {
-		$x_enlace = "ordenar.php?key=" . $key;
+		$x_enlace = "ordenar.php?key=" . $key."&accion=mostrar&mostrar_formato=1";
 	}
 }
 if ($_REQUEST["defecto"]) {
@@ -102,7 +106,7 @@ switch ($sAction) {
 				$x_enlace = 'documentoaddsal.php';
 			}
 		}
-		abrir_url($x_enlace, "_self");
+		abrir_url_digitalizacion($key, $x_enlace, "_self");
 		exit();
 		break;
 }
@@ -110,43 +114,48 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 ?>
 
 <style type="text/css">
-	<!--INPUT, TEXTAREA, SELECT, body {
+<!--
+INPUT, TEXTAREA, SELECT, body {
 	font-family: Tahoma;
 	font-size: 10px;
-	}
-	.phpmaker {
+}
+
+.phpmaker {
 	font-family: Verdana;
 	font-size: 9px;
-	}
-	.encabezado {
+}
+
+.encabezado {
 	background-color: <?php echo($config[0]["valor"]); ?>;
-	color:white ;
-	padding:10px;
+	color: white;
+	padding: 10px;
 	text-align: left;
-	}
-	.encabezado_list {
+}
+
+.encabezado_list {
 	background-color: <?php echo($config[0]["valor"]); ?>;
-	color:white ;
-	vertical-align:middle;
+	color: white;
+	vertical-align: middle;
 	text-align: center;
 	font-weight: bold;
-	}
-	table thead td {
-	font-weight:bold;
-	cursor:pointer;
+}
+
+table thead td {
+	font-weight: bold;
+	cursor: pointer;
 	background-color: <?php echo($config[0]["valor"]); ?>;
 	text-align: center;
 	font-family: Verdana;
 	font-size: 9px;
-	text-transform:Uppercase;
-	vertical-align:middle;
-	}
-	table tbody td {
+	text-transform: Uppercase;
+	vertical-align: middle;
+}
+
+table tbody td {
 	font-family: Verdana;
 	font-size: 9px;
-	}
-
-	-->
+}
+-->
 </style>
 <script type="text/javascript">
 		<!--
@@ -165,14 +174,14 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 	}
 	}
 	--></script>
-<div  align="center">
+<div align="center">
 	<?php
-  menu_ordenar($key);
+	menu_ordenar($key);
 	?>
 </div>
 <br />
 <br />
-<span class="internos" style="display:none;font-family:verdana;font-size:10px">&nbsp;&nbsp;<b>ADICI&Oacute;N DE P&Aacute;GINAS AL DOCUMENTO</b></span>
+<span class="internos" style="display: none; font-family: verdana; font-size: 10px">&nbsp;&nbsp;<b>ADICI&Oacute;N DE P&Aacute;GINAS AL DOCUMENTO</b></span>
 <form name="paginaadd" id="paginaadd" action="paginaadd.php<?php echo("?key=".$key) ?>" method="POST" onSubmit="return EW_checkMyForm(this);">
 	<input type="hidden" name="a_add" value="A">
 	<?php
@@ -196,19 +205,22 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 				$temporal_usuario = $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
 				break;
 			case "puerto_ftp" :
-				$puerto_ftp = $configuracion[$i]["valor"];
+				$puerto_ftp = 21;
+				if(!empty($configuracion[$i]["valor"])) {
+					$puerto_ftp = $configuracion[$i]["valor"];
+				}
 				break;
 			case "clave_ftp" :
-				if($configuracion[$i]['encrypt']){
-					include_once('pantallas/lib/librerias_cripto.php');
-					$configuracion[$i]['valor']=decrypt_blowfish($configuracion[$i]['valor'],LLAVE_SAIA_CRYPTO);					
-				}				
+				if($configuracion[$i]['encrypt']) {
+					include_once ('pantallas/lib/librerias_cripto.php');
+					$configuracion[$i]['valor'] = decrypt_blowfish($configuracion[$i]['valor'], LLAVE_SAIA_CRYPTO);
+				}
 				$clave = $configuracion[$i]["valor"];
 				break;
 			case "usuario_ftp" :
 				$usuario = $configuracion[$i]["valor"];
 				break;
-			case "maximo_tamanio_upload" :
+			case "tamanio_maximo_upload" :
 				$peso = $configuracion[$i]["valor"];
 				break;
 			case "ancho_imagen" :
@@ -217,17 +229,31 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 			case "alto_imagen" :
 				$alto = $configuracion[$i]["valor"];
 				break;
+			case 'tipo_ftp' :
+				$ftp_type = $configuracion[$i]["valor"];
+				break;
+			case "img_max_upload_size" :
+				$img_max_size = 16777216;
+				if($configuracion[$i]["valor"]) {
+					$img_max_size = $configuracion[$i]["valor"];
+				}
+				break;
 		}
 	}
+
+	if(!$ftp_type || $ftp_type==''){
+		$ftp_type = "ftp";
+	}
+
 	?>
 
 	<input type="hidden" name="EW_Max_File_Size" value="<?php echo($peso); ?>">
 	<input type="hidden" name="x_enlace" value="<?php echo($x_enlace); ?>">
-	<table width="100%"  border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
+	<table width="100%" border="0" cellpadding="4" cellspacing="1" bgcolor="#CCCCCC">
 		<tr>
-			<td width="205" class="encabezado" ><span class="phpmaker" style="color: #FFFFFF;">DOCUMENTO
-				ASOCIADO</span></td>
-			<td width="335" bgcolor="#F5F5F5"><span class="phpmaker"> <?php
+			<td width="205" class="encabezado"> <span class="phpmaker" style="color: #FFFFFF;">DOCUMENTO ASOCIADO</span></td>
+			<td width="335" bgcolor="#F5F5F5"><span class="phpmaker">
+<?php
 			if ($key) {
 				$x_id_documento = $key;
 			} else {
@@ -241,8 +267,7 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 			}
 			chmod($temporal_usuario, PERMISOS_CARPETAS);
 			?>
-				<input type="hidden" name="x_id_documento" id="x_id_documento"
-					size="30" value="<?php echo htmlspecialchars(@$x_id_documento) ?>">
+				<input type="hidden" name="x_id_documento" id="x_id_documento" size="30" value="<?php echo htmlspecialchars(@$x_id_documento) ?>">
 					<?php
 					$tabla = "documento";
 					if (isset($_SESSION["tipo_doc"]) && $_SESSION["tipo_doc"] == 'registro') {
@@ -262,31 +287,13 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 			</span><div align="center"></div></td>
 		</tr>
 		<tr>
-			<td width="205" class="encabezado" ><span class="phpmaker" style="color: #FFFFFF;">ESCANEAR DE NUEVO</span></td>
+			<td width="205" class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ESCANEAR DE NUEVO</span></td>
 			<td width="335" bgcolor="#F5F5F5"><span class="phpmaker"> SI
-				<input type="radio" name="x_escaneo" value="1">
-				NO
+				<input type="radio" name="x_escaneo" value="1">NO
 				<input type="radio" name="x_escaneo" value="0" checked>
 			</span></td>
 		</tr>
-		
-		
-		<!--tr>
-			<td colspan="3">
-			<applet code="uk.co.mmscomputing.application.imageviewer.MainApp.class"  archive="visor.jar" width="100%" height="640" name="scaner">
-				<param name="url" value="<?php print($temporal_usuario); ?>">
-				<param name="radica" value="<?php print($key); ?>">
-				<param name="port" value="<?php print($puerto_ftp); ?>">
-				<param name="host" value="<?php print($dir); ?>">
-				<param name="usuario" value="<?php print($usuario); ?>">
-				<param name="dftp" value="<?php print($ruta_ftp); ?>">
-				<param name="clave" value="<?php print($clave); ?>">
-				<param name="verLog" value="true">
-				<param name="ancho" value="<?php print($ancho); ?>">
-				<param name="alto" value="<?php print($alto); ?>">
-				<param name="maxtabs" value="50">
-			</applet></td>
-		</tr-->
+
 	</table>
 	<div class="container" id="info_scanner"></div>
 
@@ -304,6 +311,36 @@ echo (librerias_notificaciones());
 $s_https = '';
 if (PROTOCOLO_CONEXION == 'https://') {
 	$s_https = 's';
+}
+
+function abrir_url_digitalizacion($iddocumento, $location, $target = "_blank") {
+	if (!@$_SESSION['radicacion_masiva']) {
+		if ($target) {
+			?>
+	<script language="javascript">
+		var iddoc = "<?php echo $iddocumento;?>";
+		//alert(iddoc);
+		//parent.getElementById('arbol_formato').cargar_cantidades_documento(iddoc);
+		if(parent.frames['arbol_formato']) {
+			parent.frames['arbol_formato'].postMessage({iddocumento: iddoc}, "*");
+		}
+    	window.open("<?php print($location);?>","<?php print($target);?>");
+    </script>
+<?php
+		} else {
+			?>
+	<script language="javascript">
+		var iddoc = "<?php echo $iddocumento;?>";
+		//alert(iddoc);
+		//parent.getElementById('arbol_formato').cargar_cantidades_documento(iddoc);
+		if(parent.frames['arbol_formato']) {
+			parent.frames['arbol_formato'].postMessage({iddocumento: iddoc}, "*");
+		}
+    	window.open("<?php print($location);?>","centro");
+    </script>
+<?php
+		}
+	}
 }
 ?>
 
@@ -405,14 +442,14 @@ if (PROTOCOLO_CONEXION == 'https://') {
             if(!websocket || websocket.readyState == 3) {
                 testWebSocket();
             }
-                <?php 
+                <?php
                     //parseo descripcion
                     $documento[0]["descripcion"]=codifica_encabezado(html_entity_decode($documento[0]["descripcion"]));
                     if($documento[0]["descripcion"]!=''){
                         if(strlen($documento[0]["descripcion"])>30){
                             $documento[0]["descripcion"]=substr( $documento[0]["descripcion"],0,30).'...';
                         }
-                    } 
+                    }
                 ?>
                 var data = {
                     "url": "<?php print($temporal_usuario); ?>",
@@ -428,7 +465,9 @@ if (PROTOCOLO_CONEXION == 'https://') {
                     "numero": "<?php print($documento[0]["numero"]); ?>",
                     "maxtabs": "50",
                     "fileFilter" : "jpg,png,pdf,tiff,tif,doc,docx",
-                    "descripcion":"<?php print(stripslashes($documento[0]["descripcion"])); ?>"
+                    "descripcion":"<?php print(stripslashes($documento[0]["descripcion"])); ?>",
+                    "ftp_type" : "<?php echo $ftp_type;?>",
+                    "max_upload_size" : "<?php echo $img_max_size;?>"
                 };
                 var msg = {
                     clientId: clientId,

@@ -29,9 +29,8 @@
     echo(librerias_acciones_kaiten());
 
 	$idcategoria_formato=$_REQUEST['idcategoria_formato'];
-	//$lista_formatos=busca_filtro_tabla("","formato","cod_padre=0 AND (fk_categoria_formato like'".$idcategoria_formato."' OR   fk_categoria_formato like'%,".$idcategoria_formato."'  OR   fk_categoria_formato like'".$idcategoria_formato.",%' OR   fk_categoria_formato like'%,".$idcategoria_formato.",%') ","etiqueta ASC",$conn);
-	$lista_formatos=busca_filtro_tabla("","formato","mostrar=1 AND (cod_padre IS NULL OR cod_padre=0) AND (fk_categoria_formato like'".$idcategoria_formato."' OR   fk_categoria_formato like'%,".$idcategoria_formato."'  OR   fk_categoria_formato like'".$idcategoria_formato.",%' OR   fk_categoria_formato like'%,".$idcategoria_formato.",%') AND (fk_categoria_formato like'2' OR   fk_categoria_formato like'%,2'  OR   fk_categoria_formato like'2,%' OR   fk_categoria_formato like'%,2,%')","etiqueta ASC",$conn);
-
+	$lista_formatos=busca_filtro_tabla("nombre,etiqueta,ruta_adicionar","formato","mostrar=1 AND (cod_padre IS NULL OR cod_padre=0) AND (fk_categoria_formato like'".$idcategoria_formato."' OR   fk_categoria_formato like'%,".$idcategoria_formato."'  OR   fk_categoria_formato like'".$idcategoria_formato.",%' OR   fk_categoria_formato like'%,".$idcategoria_formato.",%') AND (fk_categoria_formato like'2' OR   fk_categoria_formato like'%,2'  OR   fk_categoria_formato like'2,%' OR   fk_categoria_formato like'%,2,%')","etiqueta ASC",$conn);
+	
 	$proceso=busca_filtro_tabla('','categoria_formato','idcategoria_formato='.$idcategoria_formato,'',$conn);
 	$nombre_proceso=codifica_encabezado(html_entity_decode($proceso[0]['nombre']));
 	$nombre_proceso=strtolower($nombre_proceso);

@@ -1,11 +1,14 @@
 <?php
 include_once ($ruta_db_superior . "pantallas/lib/PhpWord/funciones_include.php");
-require_once ($ruta_db_superior . 'pantallas/lib/PhpWord/Autoloader.php');
 include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
+require_once ($ruta_db_superior . 'vendor/autoload.php');
+
+require_once 'SaiaTemplateProcessor.php';
+
 date_default_timezone_set('UTC');
 
-use PhpOffice\PhpWord\Autoloader;
 use PhpOffice\PhpWord\Settings;
+use PhpOffice\PhpWord\SaiaTemplateProcessor;
 
 error_reporting(E_ALL);
 
@@ -15,8 +18,6 @@ if (!defined('CLI')) {
 	define('SCRIPT_FILENAME', basename($_SERVER['SCRIPT_FILENAME'], '.php'));
 	define('IS_INDEX', SCRIPT_FILENAME == 'index');
 }
-Autoloader::register();
-Settings::loadConfig();
 
 // Return to the caller script when runs by CLI
 if (CLI) {
@@ -48,7 +49,7 @@ if (@$anexo['numcampos']) {
 }
 
 if (file_exists($ruta_docx . 'documento_word.docx')) {
-	$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_docx . 'documento_word.docx');
+	$templateProcessor = new SaiaTemplateProcessor($ruta_docx . 'documento_word.docx');
 	$campos_word = $templateProcessor -> getVariables();
 	if (@$_REQUEST["iddoc"] && count($campos_word)) {
 		$ruta = busca_filtro_tabla("tipo_origen,origen,idruta", "ruta", "obligatorio=1 AND condicion_transferencia='POR_APROBAR' AND tipo='ACTIVO' AND documento_iddocumento=" . $_REQUEST["iddoc"], "idruta asc", $conn);
@@ -104,7 +105,7 @@ if (file_exists($ruta_docx . 'documento_word.docx')) {
 						chmod($imagen_firma, 0777);
 						$src = $imagen_firma;
 						$img2 = array( array('img' => htmlspecialchars($src), 'size' => array(170, 100)));
-						$templateProcessor -> setImg($buscar_firma, $img2);
+						$templateProcessor->setImg($buscar_firma, $img2);
 						imagedestroy($im);
 					}
 

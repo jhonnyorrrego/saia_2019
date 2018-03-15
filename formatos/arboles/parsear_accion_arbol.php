@@ -24,7 +24,6 @@ if(@$_REQUEST["id"]) {
 		if($datos[1] && $datos[2]) {
 			$datos_formato = busca_filtro_tabla("", $formato[0]["nombre_tabla"] . ",documento", "documento_iddocumento=iddocumento and id" . $formato[0]["nombre_tabla"] . "=" . $datos[2], "", $conn);
 		}
-		// die($datos[3]);
 		switch($datos[3]) {
 			case "documento_por_vincular":
 				$documento = busca_filtro_tabla("", "documento A," . $formato[0]["nombre_tabla"] . " B", "A.iddocumento=B.documento_iddocumento AND B.id" . $formato[0]["nombre_tabla"] . "=" . $datos[2], "", $conn);
@@ -99,7 +98,9 @@ if(@$_REQUEST["id"]) {
 							"manual",
 							"plan_calidad",
 							"otros_calidad",
-							"prog_calidad"
+							"prog_calidad",
+							"procedimiento",
+							"politicas_proceso"
 					);
 					leido(usuario_actual("funcionario_codigo"), $datos_formato[0]["iddocumento"]);
 					if(in_array($formato[0]["nombre"], $descargable) && @$_REQUEST['pantalla'] == 'calidad') {
@@ -165,6 +166,9 @@ if(@$_REQUEST["id"]) {
 					$ruta = RUTA_SAIA . "vacio.php";
 				break;
 			case "adicionar":
+			    if($_SESSION["tipo_dispositivo"]=="movil"){
+			        volver(1);
+			    }
 				if(!$datos[2] && $_REQUEST["llave"] && $datos[0]) {
 
 					$datos_padre = parsea_idformato($_REQUEST["llave"]);
@@ -385,13 +389,15 @@ if(@$_REQUEST["id"]) {
 				break;
 			case "ventana_externa":
 				$descargable = array(
-						"instructivo",
-						"formato",
-						"guia",
-						"manual",
-						"plan_calidad",
-						"otros_calidad",
-						"prog_calidad"
+							"instructivo",
+							"formato",
+							"guia",
+							"manual",
+							"plan_calidad",
+							"otros_calidad",
+							"prog_calidad",
+							"procedimiento",
+							"politicas_proceso"
 				);
 				if(in_array($formato[0]["nombre"], $descargable)) {
 					if($datos_formato["numcampos"]) {

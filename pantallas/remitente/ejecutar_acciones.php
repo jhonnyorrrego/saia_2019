@@ -68,7 +68,7 @@ function insert_remitente(){
 	$retorno -> mensaje = "Error al Ingresar la Informacion";
 	$exito = 0;
 	if(trim($_REQUEST["nombre"])!="" && $_REQUEST["identificacion"]!=0 && trim($_REQUEST["identificacion"])!=""){
-		$inser="INSERT INTO ejecutor (nombre,identificacion) VALUES ('".($_REQUEST["nombre"])."','".$_REQUEST["identificacion"]."')";
+		$inser="INSERT INTO ejecutor (nombre,identificacion,tipo_ejecutor) VALUES ('".($_REQUEST["nombre"])."','".$_REQUEST["identificacion"]."',".@$_REQUEST["tipo_ejecutor"].")";
 		phpmkr_query($inser) or die($retorno);
 		$idejecutor = phpmkr_insert_id();
 		$retorno -> idejecutor = $idejecutor;

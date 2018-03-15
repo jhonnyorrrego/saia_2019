@@ -27,6 +27,7 @@ $x_clave = Null;
 $x_nombres = Null;
 $x_apellidos = Null;
 $x_email = Null;
+$x_ventanilla_radicacion = Null;
 $x_direccion = Null;
 $x_telefono = Null;
 $x_firma = Null;
@@ -65,6 +66,7 @@ if (($sAction == "") || ((is_null($sAction)))) {
 	$x_nombres = @$_POST["x_nombres"];
 	$x_apellidos = @$_POST["x_apellidos"];
 	$x_email = @$_POST["x_email"];
+	$x_ventanilla_radicacion = @$_POST['x_ventanilla_radicacion'];
   $x_direccion = @$_POST["x_direccion"];
   $x_telefono = @$_POST["x_telefono"];
 	$x_firma = @$_POST["x_firma"];
@@ -202,6 +204,28 @@ label.error{
 
 </td>
 	</tr>
+	
+<tr>
+	<td class="encabezado" title="Ventanilla de radicaci&oacute;n del funcionario en el sistema">
+		<span class="phpmaker" style="color: #FFFFFF;">VENTANILLA DE RADICACI&Oacute;N
+		</span>
+	</td>
+	<td bgcolor="#F5F5F5">
+		<span class="phpmaker">
+			<?php
+				$nombre_ventanilla='Sin ventanilla de radicaci&oacute;n asignada';
+				if($x_ventanilla_radicacion){
+					$cnombre_ventanilla=busca_filtro_tabla("nombre,valor","cf_ventanilla","estado=1	AND idcf_ventanilla=".$x_ventanilla_radicacion,"",$conn);
+					if($cnombre_ventanilla['numcampos']){
+						$nombre_ventanilla=$cnombre_ventanilla[0]['nombre'];
+					}
+				}
+				echo($nombre_ventanilla);
+			?>
+		</span>
+	</td>
+</tr>	
+	
 	<tr>
 		<td class="encabezado" title="Fecha de ingreso del funcionario"><span class="phpmaker" style="color: #FFFFFF;">FECHA DE INGRESO</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
@@ -301,6 +325,7 @@ function LoadData($sKey,$conn)
 		$GLOBALS["x_nombres"] = $row["nombres"];
 		$GLOBALS["x_apellidos"] = $row["apellidos"];
 		$GLOBALS["x_email"] = $row["email"];
+		$GLOBALS["x_ventanilla_radicacion"] = $row["ventanilla_radicacion"];
 		$GLOBALS["x_firma"] = $row["firma"];
 		$GLOBALS["x_estado"] = $row["estado"];
     $GLOBALS["x_direccion"] = $row["direccion"];

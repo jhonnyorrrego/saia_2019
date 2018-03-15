@@ -8,8 +8,12 @@ roundcubemail/logs/**
 errores.txt
 .project
 .settings/
-pruebas_ruben
+pruebas_*
 define.php
+define_*.php
 prueba_nuevo.php
 email_aprobacion/define_remoto.php
 phpqrcode/qr*.png-errors.txt
+paginaadd.php
+formatos_cliente/
+.DS_Store

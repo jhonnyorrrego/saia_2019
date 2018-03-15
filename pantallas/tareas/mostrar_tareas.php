@@ -33,7 +33,6 @@ switch ($tarea[0]['prioridad']) {
 }
 $busca_avances=busca_filtro_tabla("a.fecha,a.descripcion,a.estado,b.nombres,b.apellidos","tareas_avance a, vfuncionario_dc b","a.ejecutor=b.funcionario_codigo AND a.tareas_idtareas=".$_REQUEST['idtareas'],"GROUP BY a.fecha,a.descripcion,a.estado,b.nombres,b.apellidos ORDER BY fecha DESC",$conn);
 
-
 if((@$_REQUEST["iddoc"] || @$_REQUEST["key"])&& !@$_REQUEST["idpaso_documento"]){
 	if(!$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
 	include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
@@ -63,9 +62,12 @@ if((@$_REQUEST["iddoc"] || @$_REQUEST["key"])&& !@$_REQUEST["idpaso_documento"])
 			<span class="control-label" for="etiqueta"><b>Fecha tarea:</b> <?php echo($tarea[0]['fecha_tarea']); ?></span>
 		</div>
 		<div class="control-group">
-			<a class="previo_high" enlace="pantallas/tareas/adicionar_avance_tareas.php?idtareas=<?php echo($_REQUEST['idtareas']); ?>">
-				<!--img width="16px" border="0" src="<?php echo($ruta_db_superior); ?>botones/formatos/adicionar.gif"-->Adicionar Avances
-			</a>
+			<?php if(!isset($_REQUEST["idruta_aprob"])){
+				?>
+					<a class="previo_high" enlace="pantallas/tareas/adicionar_avance_tareas.php?iddoc=<?php echo ($_REQUEST['iddoc']); ?>&idtareas=<?php echo($_REQUEST['idtareas']); ?>">Adicionar Avances</a>
+				<?php
+			}
+				?>
 			<div class="table-responsive">
 				<table class="table">
 					<tbody>
@@ -90,6 +92,18 @@ if((@$_REQUEST["iddoc"] || @$_REQUEST["key"])&& !@$_REQUEST["idpaso_documento"])
 										$estado = "Terminada";
 										$color="green";
 									break;
+									case 3 :
+										$estado = "Aprobado";
+										$color="green";
+									break;
+									case 4 :
+										$estado = "Con visto bueno";
+										$color="green";
+									break;
+									case 5 :
+										$estado = "Rechazado";
+										$color="red";
+									break;
 							}
 								$campo.="<tr>
 											<td>".$busca_avances[$i]['fecha']."</td>
@@ -113,7 +127,7 @@ if((@$_REQUEST["iddoc"] || @$_REQUEST["key"])&& !@$_REQUEST["idpaso_documento"])
 				top.hs.htmlExpand(this, { objectType: 'iframe',width: 350, height: 350,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
 			});
 			top.hs.Expander.prototype.onAfterClose = function() {
-				window.location = "pantallas/tareas/mostrar_tareas.php?idtareas=<?php echo($_REQUEST['idtareas']); ?>";
+				window.location = "pantallas/tareas/mostrar_tareas.php?iddoc=<?php echo ($_REQUEST['iddoc']); ?>&idtareas=<?php echo($_REQUEST['idtareas']); ?>";
 			}
 		});
 	</script>

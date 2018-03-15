@@ -69,7 +69,6 @@ function eliminar_panel_kaiten(remover_hijos){
     }
 }
 function refrescar_panel_kaiten(){
-    alert('entra refresh');
     $('#contenedor_busqueda').kaiten("reload", obtener_panel_kaiten());
 }
 /*

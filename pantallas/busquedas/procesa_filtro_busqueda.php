@@ -747,7 +747,9 @@ function parsear_consulta($key, $valor, $req_condicion_llave) {
 			$str_quote1 = "(";
 			$str_quote2 = ")";
 			if (MOTOR == "MySql") {
-				$valor = ajustar_lista_valores($valor);
+				if($condicion_min=='in'){
+					$valor = ajustar_lista_valores($valor);
+				}
 				$valor_ = $valor;
 				$escaped_val = ((strtolower($valor)));
 				$valor = get_valor_condicion($key, $valor_, $escaped_val, $str_quote1, $str_quote2);

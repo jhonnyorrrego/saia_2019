@@ -1072,6 +1072,15 @@ html[dir='rtl'] .toolbarButton.pageDown::before {
   content: url(images/toolbarButton-pageDown-rtl.png);
 }
 
+.toolbarButton.cambiar_visor::before {
+  content: url(images/cambiar_visor.png);
+}
+
+.toolbarButton.transferir::before {
+  content: url(images/transferir.png);
+}
+
+
 .toolbarButton.zoomOut::before {
   content: url(images/toolbarButton-zoomOut.png);
 }

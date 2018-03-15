@@ -13,13 +13,13 @@ include_once($ruta_db_superior."librerias_saia.php");
 echo(librerias_html5());
 echo(librerias_jquery("1.7"));
 echo(estilo_bootstrap()); 
-echo(librerias_validar_formulario());
 ?>    
 <!DOCTYPE html>     
 <html>
   <head>    
   </head>
   <body>
+  	<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap-datetimepicker.min.css"/>
   	<div class="navbar navbar-fixed-top">
 	    <div class="navbar-inner">                           
 	      <ul class="nav pull-left">                                         
@@ -54,44 +54,82 @@ echo(librerias_validar_formulario());
         </div>
 
 
-        <?php
-            $campo_validar='nombre';
-            $etiquetas_permitidas=array('documento_central','expediente');
-            $etiqueta_reporte=busca_filtro_tabla($campo_validar,"busqueda_componente","lower(".$campo_validar.") IN('".implode("','",$etiquetas_permitidas)."')AND idbusqueda_componente=".@$_REQUEST["idbusqueda_componente"],"",$conn);
-            $mostrar=0;
-            if($etiqueta_reporte['numcampos']){
-                switch(strtolower($etiqueta_reporte[0][$campo_validar])){
-                    case 'expediente': //GESTION A CENTRAL
-                         $mostrar=1;
-                         $etiqueta='Central';
-                        break;
-                    case 'documento_central': //CENTRAL A HISTORICO
-                         $mostrar=2;
-                         $etiqueta='Historico';
-                        break;
-                }
-            }
-            
-            if($mostrar){
-        ?>
-
+		<div class="control-group ">
+		  <label class="string required control-label" for="bqsaia_fecha">Fecha de creaci&oacute;n
+		  </label>
+		  <div class="controls"> 
+				<div id="fecha" class="input-append date">
+					<input data-format="yyyy-MM-dd" type="text" name="bqsaia_fecha"  readonly />
+					<span class="add-on">
+						<i data-time-icon="icon-time" data-date-icon="icon-calendar">
+						</i>
+					</span>
+				</div>
+				<input type="hidden" name="bksaiacondicion_fecha" id="bksaiacondicion_fecha" value="=">
+		  </div>
+		</div>
+		
+		
         <div class="control-group">
-          <label class="string required control-label" for="prox_estado_archivo">
-		  	<b> Pendientes por pasar a <?php echo($etiqueta); ?>:	</b>
-			<input type="hidden" name="bksaiacondicion_prox_estado_archivo" id="bksaiacondicion_prox_estado_archivo" value="=">
+          <label class="string required control-label" for="bqsaia_descripcion">
+			<b>Descripci&oacute;n</b>
+			<input type="hidden" name="bksaiacondicion_descripcion" id="bksaiacondicion_descripcion" value="like_total">
           </label>
           <div class="controls">
-            <?php if($mostrar==1){ ?>  
-                <input id="bqsaia_prox_estado_archivo1" name="bqsaia_prox_estado_archivo"  type="checkbox" value="2">Si
-            <?php } ?>
-            
-            <?php if($mostrar==2){ ?>  
-                 <input id="bqsaia_prox_estado_archivo1" name="bqsaia_prox_estado_archivo"  type="checkbox" value="3">Si
-                
-            <?php } ?>            
+          	<textarea name="bqsaia_descripcion" id="bqsaia_descripcion"></textarea>
+          </div>
+        </div>		
+        
+        <div class="control-group">
+          <label class="string required control-label" for="bqsaia_indice_uno">
+			<b>Indice uno</b>
+			<input type="hidden" name="bksaiacondicion_indice_uno" id="bksaiacondicion_indice_uno" value="=">
+          </label>
+          <div class="controls">
+            <input id="bqsaia_indice_uno" name="bqsaia_indice_uno" size="50" type="text">
           </div>
         </div>
-        <?php } /*fin if mostrar_filtro*/ ?>
+        
+         <div class="control-group">
+          <label class="string required control-label" for="bqsaia_indice_dos">
+			<b>Indice Dos</b>
+			<input type="hidden" name="bksaiacondicion_indice_dos" id="bksaiacondicion_indice_dos" value="=">
+          </label>
+          <div class="controls">
+            <input id="bqsaia_indice_dos" name="bqsaia_indice_dos" size="50" type="text">
+          </div>
+        </div>
+               
+         <div class="control-group">
+          <label class="string required control-label" for="bqsaia_indice_tres">
+			<b>Indice Tres</b>
+			<input type="hidden" name="bksaiacondicion_indice_tres" id="bksaiacondicion_indice_tres" value="=">
+          </label>
+          <div class="controls">
+            <input id="bqsaia_indice_tres" name="bqsaia_indice_tres" size="50" type="text">
+          </div>
+        </div>
+               
+		<div class="control-group element">
+		  <label class="control-label" for="bqsaia_fk_idcaja">Caja
+		  </label>
+		  <div class="controls">
+		  	<input type="hidden" name="bksaiacondicion_fk_idcaja" id="bksaiacondicion_fk_idcaja" value="=">
+		  	<select name="bqsaia_fk_idcaja" id="bqsaia_fk_idcaja">
+		  		<option value="">Por favor seleccione...</option>
+		  		<?php
+		  		$cajas=busca_filtro_tabla("","caja A","","",$conn);
+					for($i=0;$i<$cajas["numcampos"];$i++){
+						$selected="";
+						if($datos[0]["fk_idcaja"]==$cajas[$i]["idcaja"])$selected="selected";
+						echo("<option value='".$cajas[$i]["idcaja"]."' ".$selected.">".$cajas[$i]["fondo"]."(".$cajas[$i]["codigo_dependencia"]."-".$cajas[$i]["codigo_serie"]."-".$cajas[$i]["consecutivo"].")</option>");
+					}
+		  		?>
+		  	</select>
+		  </div>
+		</div>
+        
+        
         
           <input type="hidden" name="idbusqueda_componente" id="idbusqueda_componente" value="<?php echo @$_REQUEST["idbusqueda_componente"]; ?>">
           <input type="hidden" name="adicionar_consulta" id="adicionar_consulta" value="1">
@@ -101,7 +139,16 @@ echo(librerias_validar_formulario());
   </body>
   <script type="text/javascript" src="<?php echo $ruta_db_superior; ?>pantallas/lib/validaciones_formulario.js"></script>
 </html>
+<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/bootstrap.js"></script>
+<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/bootstrap-datetimepicker.js"></script>
 <script>
+$(document).ready(function(){
+  $('#fecha').datetimepicker({
+    language: 'es',
+    pick12HourFormat: true,
+    pickTime: false      
+  });
+}); 
 $(document).keypress(function(event) {
     var keycode = (event.keyCode ? event.keyCode : event.which);
     if(keycode == '13') {

@@ -1,41 +1,39 @@
 <?php
-if (@$_REQUEST["iddoc"] || @$_REQUEST["key"]) {
-	if (!@$_REQUEST["iddoc"])
-		$_REQUEST["iddoc"] = @$_REQUEST["key"];
-	include_once ("pantallas/documento/menu_principal_documento.php");
-	menu_principal_documento($_REQUEST["iddoc"]);
+if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
+    if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
+    include_once("pantallas/documento/menu_principal_documento.php");
+    menu_principal_documento($_REQUEST["iddoc"]);
 }
-include_once ("db.php");
-include_once ("class_transferencia.php");
-include_once ("librerias_saia.php");
-echo (librerias_notificaciones());
-$accion_flujo = "";
-if (@$_REQUEST["idpaso_actividad"] != '') {
-	$accion_flujo = '&accion=1';
-	$paso = busca_filtro_tabla("B.destino,A.documento_iddocumento", "paso_documento A, paso_enlace B", "idpaso_documento=" . $_REQUEST["idpaso_documento"] . " and paso_idpaso=origen", "", $conn);
-
-	$actividad = busca_filtro_tabla("", "paso_actividad", "estado=1 AND orden=0 and paso_idpaso=" . $paso[0]["destino"], "", $conn);
-	if (!strpos($actividad[0]["llave_entidad"], ",")) {
-		if ($actividad[0]["entidad_identidad"] == 1) {
-			include_once ("formatos/librerias/funciones_generales.php");
-			$formato = busca_filtro_tabla("", "documento A, formato B", "iddocumento=" . $paso[0]["documento_iddocumento"] . " and lower(plantilla)=lower(B.nombre)", "", $conn);
-			echo ($formato[0]["idformato"] . ',' . $paso[0]["documento_iddocumento"] . ',' . $actividad[0]["llave_entidad"] . ',3');
-			transferencia_automatica($formato[0]["idformato"], $paso[0]["documento_iddocumento"], $actividad[0]["llave_entidad"], 3);
-			// alerta("El documento ya ha sido enviado a su destino");
-			abrir_url("workflow/mapeo_diagrama.php?idpaso_documento=" . $_REQUEST["idpaso_documento"], "centro");
-		}
-	}
-	if ($actividad[0]["entidad_identidad"] == 2) {
-		$dependencias = $actividad[0]["llave_entidad"];
-		$accion_flujo .= '&dependencias_flujo=' . $actividad[0]["llave_entidad"];
-	}
+include_once("db.php");
+include_once("class_transferencia.php");
+include_once("librerias_saia.php");
+echo( librerias_notificaciones() );
+$accion_flujo="";
+if(@$_REQUEST["idpaso_actividad"] != ''){
+    $accion_flujo = '&accion=1';
+    $paso = busca_filtro_tabla("B.destino,A.documento_iddocumento","paso_documento A, paso_enlace B","idpaso_documento=".$_REQUEST["idpaso_documento"]." and paso_idpaso=origen","",$conn);
+    
+    $actividad = busca_filtro_tabla("","paso_actividad","estado=1 AND orden=0 and paso_idpaso=".$paso[0]["destino"],"",$conn);
+    if(!strpos($actividad[0]["llave_entidad"],",")){
+        if($actividad[0]["entidad_identidad"] == 1){
+            include_once(FORMATOS_SAIA . "librerias/funciones_generales.php");
+            $formato = busca_filtro_tabla("","documento A, formato B","iddocumento=".$paso[0]["documento_iddocumento"]." and lower(plantilla)=lower(B.nombre)","",$conn);
+            echo ($formato[0]["idformato"].','.$paso[0]["documento_iddocumento"].','.$actividad[0]["llave_entidad"].',3');
+            transferencia_automatica($formato[0]["idformato"],$paso[0]["documento_iddocumento"],$actividad[0]["llave_entidad"],3);
+            //alerta("El documento ya ha sido enviado a su destino");
+            abrir_url("workflow/mapeo_diagrama.php?idpaso_documento=".$_REQUEST["idpaso_documento"],"centro");
+        }
+    }
+    if($actividad[0]["entidad_identidad"] == 2){
+        $dependencias = $actividad[0]["llave_entidad"];
+        $accion_flujo .=  '&dependencias_flujo='.$actividad[0]["llave_entidad"];
+    }
 }
-/*
- * header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
- * header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
- * header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
- * header("Cache-Control: post-check=0, pre-check=0", false);
- * header("Pragma: no-cache"); // HTTP/1.0
+/*header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
+ header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
+ header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
+ header("Cache-Control: post-check=0, pre-check=0", false);
+ header("Pragma: no-cache"); // HTTP/1.0
  */
 $ewCurSec = 0; // Initialise
 
@@ -64,124 +62,148 @@ $x_serie = Null;
 $x_copia = Null;
 $x_ver_nota = Null;
 $x_tipo_envio = Null;
+$x_pag_pdf =Null;
+$desea_tarea =Null;
+$fecha_tarea =Null;
+$tarea =Null;
+$descripcion =Null;
+$prioridad =Null;
+$ruta_pdf = Null;
 include ("phpmkrfn.php");
 // Get action
-if (@$_POST["a_add"] == "carta")
-	$sAction = "mostrar_carta2.php";
-else if (@$_POST["a_add"] == "memorando")
-	$sAction = "mostrar_memorando.php";
-else if (@$_POST["a_add"] == "certificado")
-	$sAction = "mostrar_certificado.php";
-else
-	$sAction = @$_POST["a_add"];
-
-if (($sAction == "") || (($sAction == NULL))) {
-	$sKey = @$_GET["key"];
-	$sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
-	if ($sKey != "") {
-		$sAction = "I"; // Copy record
-	} else {
-		$sAction = "I"; // Display blank record
-	}
-} else {
-	$x_transferir = @$_POST["x_transferir"];
-	$x_dep = @$_POST["x_dep"];
-	// Get fields from form
-	$x_idtransferencia = @$_POST["x_idtransferencia"];
-	$x_archivo_idarchivo = @$_POST["x_archivo_idarchivo"];
-	$formato_documento = busca_filtro_tabla("", "formato,documento", "lower(plantilla)=lower(nombre) and iddocumento=" . $x_archivo_idarchivo, "", $conn);
-	$nombre_formato = $formato_documento[0]["nombre"];
-	$x_nombre = @$_POST["x_nombre"];
-	if (isset($_POST["x_serie"]))
-		$x_serie = @$_POST["x_serie"];
-	else
-		$x_serie = Null;
-	if (isset($_POST["x_funcionario_destino1"]) && $_POST["x_funcionario_destino1"] != "") {
-		$x_funcionario_destino = @$_POST["x_funcionario_destino1"];
-		$x_tipo_destino = 1; // FUNCIONARIO
-	}
-	if (isset($_POST["x_funcionario_destino2"]) && $_POST["x_funcionario_destino2"] != "") {
-		$x_funcionario_destino = @$_POST["x_funcionario_destino2"];
-		$x_tipo_destino = 1; // "funcionario";
-	}
-	if (isset($_POST["x_funcionario_destino3"]) && $_POST["x_funcionario_destino3"] != "") {
-		$x_funcionario_destino = @$_POST["x_funcionario_destino3"];
-		$x_tipo_destino = 1; // "funcionario";
-	}
-	if (isset($_POST["x_dependencia_destino"]) && $_POST["x_dependencia_destino"] != "") {
-		$x_funcionario_destino = @$_POST["x_dependencia_destino"];
-		$x_tipo_destino = 2; // "dependencia";
-	}
-	// $x_dependencia_destino_dep = @$_POST["x_dependencia_destino"];
-	$x_funcionario_destino = @$_POST["x_funcionario_destino"];
-	$x_tipo_destino = 1; // "funcionario";
-	$x_ejecutor_destino = @$_POST["x_ejecutor_destino"];
-	$x_fecha = @$_POST["x_fecha"];
-	$x_respuesta = @$_POST["x_respuesta"];
-	$x_entregado = @$_POST["x_entregado"];
-	$x_recibido = @$_POST["x_recibido"];
-	$x_notas = @$_POST["x_notas"];
-	$x_ver_nota = @$_POST["x_ver_nota"];
-	$x_transferencia_descripcion = @$_POST["x_transferencia_descripcion"];
-	$x_tipo = @$_POST["x_tipo"];
-	$x_doc = @$_POST["arch"];
-	$idruta = @$_POST["idruta"];
-	$x_copia = @$_POST["x_copia"];
-	if (@$_POST["x_tipo_envio"] != '')
-		$x_tipo_envio = @$_POST["x_tipo_envio"];
-	else
-		$x_tipo_envio = array();
-}
-switch ($sAction) {
-	case "C" : // Get a record to display
-		if (!LoadData($sKey, $conn)) { // Load Record based on key
-			$_SESSION["ewmsg"] = "Registros no encontrados para la Llave = " . $sKey;
-			redirecciona("go(-1)");
-			exit();
-		}
-		break;
-	case "A" : // Add
-		if (AddData($conn)) { // Add New Record
-			$_SESSION["ewmsg"] = "Adici&oacute;n de nuevo Registro Exitoso";
-			if (@$_REQUEST["idpaso_documento"]) {
-				abrir_url("workflow/mapeo_diagrama.php?idpaso_documento=" . $_REQUEST["idpaso_documento"], "centro");
-			}
-			if ($x_transferir == "si") { // redirecciona("transferenciaadd.php?doc=".$x_archivo_idarchivo."&dep=".$x_dep);
-				redirecciona("ordenar.php?key=7077&accion=mostrar&mostrar_formato=1=$x_archivo_idarchivo");
-				exit();
-			}
-			$busca_transferencia = busca_filtro_tabla("A.*", "buzon_entrada A", "A.archivo_idarchivo=" . $x_archivo_idarchivo, "", $conn);
-			if ($busca_transferencia["numcampos"]) {
-				$digitalizadores = busca_filtro_tabla("nombre", "cargo, funcionario, dependencia_cargo", "idcargo=cargo_idcargo AND funcionario_idfuncionario=idfuncionario AND idfuncionario=" . usuario_actual("idfuncionario") . " AND (UPPER(nombre)='RADICADOR' OR UPPER(nombre)='DIGITALIZADOR')", "", $conn);
-				if (!isset($_POST["retorno"]) && $digitalizadores["numcampos"] > 0)
-					redirecciona("documentolist.php?cmd=resetall");
-				else
-					redirecciona(FORMATOS_CLIENTE . $nombre_formato . "/mostrar_" . $nombre_formato . ".php?iddoc=" . $x_archivo_idarchivo . "&idformato=" . $formato_documento[0]['idformato']);
-				exit();
-			} else {
-				alerta("No se le asign� una transferencia al documento");
-				// redirecciona("transferenciaadd.php?doc=".$x_archivo_idarchivo."&dep=".$x_dep);
-				redirecciona(FORMATOS_CLIENTE . $nombre_formato . "/mostrar_" . $nombre_formato . ".php?iddoc=" . $x_archivo_idarchivo . "&idformato=" . $formato_documento[0]['idformato']);
-			}
-		}
-		break;
-	case "P" : // Add
-		if (AddData($conn)) { // Add New Record
-			$_SESSION["ewmsg"] = "Adicion de nuevo Registro Exitoso";
-			exit();
-		}
-		break;
-}
-
-// include_once("formatos/librerias/estilo_formulario.php");
-if (!@$_REQUEST["idpaso_documento"]) {
-	include ("header.php");
-	$columnas = 45;
-} else {
-	$columnas = 32;
-	menu_pasos(0, @$_REQUEST["idpaso_documento"]);
-}
-?>
+if(@$_POST["a_add"]=="carta")
+    $sAction="mostrar_carta2.php";
+    else if(@$_POST["a_add"]=="memorando")
+        $sAction="mostrar_memorando.php";
+        else if(@$_POST["a_add"]=="certificado")
+            $sAction="mostrar_certificado.php";
+            else
+                $sAction = @$_POST["a_add"];
+                
+                if (($sAction == "") || (($sAction == NULL))) {
+                    $sKey = @$_GET["key"];
+                    $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
+                    if ($sKey <> "") {
+                        $sAction = "I"; // Copy record
+                    }
+                    else
+                    {
+                        $sAction = "I"; // Display blank record
+                    }
+                    
+                }
+                else
+                { $x_transferir =@$_POST["x_transferir"];
+                $x_dep = @$_POST["x_dep"];
+                // Get fields from form
+                $x_idtransferencia = @$_POST["x_idtransferencia"];
+                $x_archivo_idarchivo = @$_POST["x_archivo_idarchivo"];
+                $formato_documento=busca_filtro_tabla("","formato,documento","lower(plantilla)=lower(nombre) and iddocumento=".$x_archivo_idarchivo,"",$conn);
+                $nombre_formato=$formato_documento[0]["nombre"];
+                $x_nombre = @$_POST["x_nombre"];
+                if(isset($_POST["x_serie"]))
+                    $x_serie = @$_POST["x_serie"];
+                    else
+                        $x_serie = Null;
+                        if(isset($_POST["x_funcionario_destino1"]) && $_POST["x_funcionario_destino1"]<>""){
+                            $x_funcionario_destino = @$_POST["x_funcionario_destino1"];
+                            $x_tipo_destino=1; //FUNCIONARIO
+                        }
+                        if(isset($_POST["x_funcionario_destino2"]) && $_POST["x_funcionario_destino2"]<>""){
+                            $x_funcionario_destino = @$_POST["x_funcionario_destino2"];
+                            $x_tipo_destino=1; //"funcionario";
+                        }
+                        if(isset($_POST["x_funcionario_destino3"]) && $_POST["x_funcionario_destino3"]<>""){
+                            $x_funcionario_destino = @$_POST["x_funcionario_destino3"];
+                            $x_tipo_destino=1; //"funcionario";
+                        }
+                        if(isset($_POST["x_dependencia_destino"]) && $_POST["x_dependencia_destino"]<>""){
+                            $x_funcionario_destino = @$_POST["x_dependencia_destino"];
+                            $x_tipo_destino=2;//"dependencia";
+                        }
+                        //$x_dependencia_destino_dep = @$_POST["x_dependencia_destino"];
+                        $x_funcionario_destino = @$_POST["x_funcionario_destino"];
+                        $x_pag_pdf = @$_POST["x_pag_pdf"];
+                        $desea_tarea =@$_POST["desea_tarea"];
+                        $fecha_tarea =@$_POST["fecha_tarea"];
+                        $tarea =@$_POST["tarea"];
+                        $descripcion =@$_POST["descripcion"];
+                        $prioridad =@$_POST["prioridad"];
+                        $ruta_pdf = @$_POST["ruta_pdf"];
+                        $x_tipo_destino=1;//"funcionario";
+                        $x_ejecutor_destino = @$_POST["x_ejecutor_destino"];
+                        $x_fecha = @$_POST["x_fecha"];
+                        $x_respuesta = @$_POST["x_respuesta"];
+                        $x_entregado = @$_POST["x_entregado"];
+                        $x_recibido = @$_POST["x_recibido"];
+                        $x_notas = @$_POST["x_notas"];
+                        $x_ver_nota = @$_POST["x_ver_nota"];
+                        $x_transferencia_descripcion = @$_POST["x_transferencia_descripcion"];
+                        $x_tipo = @$_POST["x_tipo"];
+                        $x_doc=@$_POST["arch"];
+                        $idruta=@$_POST["idruta"];
+                        $x_copia=@$_POST["x_copia"];
+                        if(@$_POST["x_tipo_envio"]!='')
+                            $x_tipo_envio = @$_POST["x_tipo_envio"];
+                            else
+                                $x_tipo_envio =array();
+                                
+                }
+                switch ($sAction)
+                {
+                    case "C": // Get a record to display
+                        if (!LoadData($sKey,$conn)) { // Load Record based on key
+                            $_SESSION["ewmsg"] = "Registros no encontrados para la Llave = " . $sKey;
+                            redirecciona("go(-1)");
+                            exit();
+                        }
+                        break;
+                    case "A": // Add
+                        if (AddData($conn)) { // Add New Record
+                            $_SESSION["ewmsg"] = "Adici&oacute;n de nuevo Registro Exitoso";
+                            if(@$_REQUEST["idpaso_documento"]){
+                                abrir_url("workflow/mapeo_diagrama.php?idpaso_documento=".$_REQUEST["idpaso_documento"],"centro");
+                            }
+                            if($x_transferir == "si") { // redirecciona("transferenciaadd.php?doc=".$x_archivo_idarchivo."&dep=".$x_dep);
+                                redirecciona("ordenar.php?key=7077&accion=mostrar&mostrar_formato=1=$x_archivo_idarchivo");
+                                exit();
+                            }
+                            $busca_transferencia=busca_filtro_tabla("A.*","buzon_entrada A","A.archivo_idarchivo=".$x_archivo_idarchivo,"",$conn);
+                            if($busca_transferencia["numcampos"]){
+                                $digitalizadores = busca_filtro_tabla("nombre","cargo, funcionario, dependencia_cargo","idcargo=cargo_idcargo AND funcionario_idfuncionario=idfuncionario AND idfuncionario=".usuario_actual("idfuncionario")." AND (UPPER(nombre)='RADICADOR' OR UPPER(nombre)='DIGITALIZADOR')","",$conn);
+                                if(!isset($_POST["retorno"])&&$digitalizadores["numcampos"]>0)
+                                    redirecciona("documentolist.php?cmd=resetall");
+                                    else
+                                        redirecciona(FORMATOS_CLIENTE . $nombre_formato."/mostrar_".$nombre_formato.".php?iddoc=".$x_archivo_idarchivo."&idformato=".$formato_documento[0]['idformato']);
+                                        exit();
+                            } else {
+                                alerta("No se le asign� una transferencia al documento");
+                                //redirecciona("transferenciaadd.php?doc=".$x_archivo_idarchivo."&dep=".$x_dep);
+                                redirecciona(FORMATOS_CLIENTE . $nombre_formato."/mostrar_".$nombre_formato.".php?iddoc=".$x_archivo_idarchivo."&idformato=".$formato_documento[0]['idformato']);
+                            }
+                        }
+                        break;
+                    case "P": // Add
+                        if (AddData($conn)) { // Add New Record
+                            $_SESSION["ewmsg"] = "Adicion de nuevo Registro Exitoso";
+                            exit();
+                        }
+                        break;
+                        
+                }
+                
+                //include_once("formatos/librerias/estilo_formulario.php");
+                if(!@$_REQUEST["idpaso_documento"]){
+                    include ("header.php");
+                    $columnas=45;
+                } else {
+                    $columnas=32;
+                    menu_pasos(0,@$_REQUEST["idpaso_documento"]);
+                }
+                echo(estilo_bootstrap());
+                echo(librerias_jquery("1.7"));
+echo(librerias_datepicker_bootstrap());
+                ?>
 <script type="text/javascript" src="ew.js"></script>
 <script type="text/javascript">
 <!--
@@ -280,28 +302,19 @@ if (isset($_REQUEST["mostrar"])) {
 	menu_ordenar($_REQUEST["key"]);
 }
 ?>
-<br>
+
+<div style="height: 10%"></div>
 <?php if(!@$_REQUEST["idpaso_documento"]){ ?>
-<p>
-	<span class="internos">TRANSFERIR DOCUMENTOS&nbsp;&nbsp;&nbsp;&nbsp; </span>
-</p>
-<?php
-
-}
+<p><span class="internos">TRANSFERIR DOCUMENTOS&nbsp;&nbsp;&nbsp;&nbsp;
+</span></p>
+<?php }
 ?>
-<form name="transferenciaadd" id="transferenciaadd"
-	action="transferenciaadd.php" method="post"
-	onSubmit="return EW_checkMyForm(this);">
-	<p>
-
-
-	<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC"
-		width="80%">
+<form name="transferenciaadd" id="transferenciaadd" action="transferenciaadd.php" method="post" onSubmit="return EW_checkMyForm(this);" enctype="multipart/form-data">
+<p>
+<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC"  width="80%">
 		<tr>
 
-			<td style="width: 20%" class="encabezado"
-				title="Documento al cual le va a ser realizada la transferencia y cambiar su estado"><span
-				class="phpmaker" style="color: #FFFFFF;">DOCUMENTO</span></td>
+      <td style="width:20%" class="encabezado" title="Documento al cual le va a ser realizada la transferencia y cambiar su estado"><span class="phpmaker" style="color: #FFFFFF;">DOCUMENTO</span></td>
 			<td style="width: 60%" bgcolor="#F5F5F5"><span class="phpmaker">
 <?php
 
@@ -314,20 +327,14 @@ $fecha_doc = $arch[0]["fecha"];
 // Set default value ?>
 </span></td>
 		</tr>
-		<input type="hidden" name="x_archivo_idarchivo"
-			value="<?php echo $x_archivo_idarchivo; ?>">
+	<input type="hidden" name="x_archivo_idarchivo" value="<?php echo $x_archivo_idarchivo; ?>">
 		<tr>
-			<td class="encabezado"
-				title="Es la fecha del sistema, en la que se est&aacute; realizando la operaci&oacute;n"><span
-				class="phpmaker" style="color: #FFFFFF;">FECHA</span></td>
+		<td class="encabezado" title="Es la fecha del sistema, en la que se est&aacute; realizando la operaci&oacute;n"><span class="phpmaker" style="color: #FFFFFF;">FECHA</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker">
 <?php if (!($x_fecha != NULL) || ($x_fecha == "")) { $x_fecha = date("Y-m-d H:i:s");} // Set default value ?>
-<input type="hidden" name="x_fecha" id="x_fecha"
-					value="<?php echo $x_fecha; ?>"> <input type="hidden" name="x_doc"
-					id="x_doc" value="<?php echo $arch; ?>">
-<?php
-
-echo ($x_fecha);
+<input type="hidden" name="x_fecha" id="x_fecha" value="<?php echo $x_fecha; ?>">
+<input type="hidden" name="x_doc" id="x_doc" value="<?php echo $arch; ?>">
+<?php echo($x_fecha);
 if (isset($_POST['usu'])) {
 	$tmp = $_POST['usu'];
 } else if (isset($_GET['usu'])) {
@@ -341,41 +348,36 @@ if (isset($_GET['dep'])) {
 $x_entregado = $tmp;
 $x_recibido = $tmp;
 ?>
-<input type="hidden" name="x_dep" value="<?php echo $dep;?>"> <input
-					type="hidden" name="x_respuesta" id="x_respuesta"
-					value="<?php echo FormatDateTime(@$x_respuesta,5); ?>"> <input
-					type="hidden" name="x_entregado" id="x_entregado"
-					value="<?php echo htmlspecialchars(@$x_entregado); ?>"> <input
-					type="hidden" name="x_recibido" id="x_recibido"
-					value="<?php echo htmlspecialchars(@$x_recibido); ?>"> <input
-					type="hidden" name="x_funcionario_destino"
-					id="x_funcionario_destino"> <input type="hidden" name="x_copia"
-					id="x_copia" value="0"> <input type="hidden" name="idruta"
-					id="idruta"> <input type="hidden" name="idpaso_documento"
-					id="idpaso_documento"
-					value="<?php echo($_REQUEST["idpaso_documento"]);?>"> <input
-					type="hidden" name="retorno" id="retorno"
-					value="<?php echo @$_GET["retorno"]; ?>">
-			</span>
-				<link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css"> <script
-					type="text/javascript" src="js/dhtmlXCommon.js"></script> <script
-					type="text/javascript" src="js/dhtmlXTree.js"></script></td>
-		</tr>
+<input type="hidden" name="x_dep" value="<?php echo $dep;?>">
+<input type="hidden" name="x_respuesta" id="x_respuesta" value="<?php echo FormatDateTime(@$x_respuesta,5); ?>">
+<input type="hidden" name="x_entregado" id="x_entregado" value="<?php echo htmlspecialchars(@$x_entregado); ?>">
+<input type="hidden" name="x_recibido" id="x_recibido"  value="<?php echo htmlspecialchars(@$x_recibido); ?>">
+<input type="hidden" name="x_funcionario_destino" id="x_funcionario_destino">
+<input type="hidden" name="x_copia" id="x_copia" value="0">
+<input type="hidden" name="idruta" id="idruta">
+<input type="hidden" name="idpaso_documento" id="idpaso_documento" value="<?php echo($_REQUEST["idpaso_documento"]);?>">
+<input type="hidden" name="retorno" id="retorno" value="<?php echo @$_GET["retorno"]; ?>">
+</span>	<link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
+	<script type="text/javascript" src="js/dhtmlXCommon.js"></script>
+	<script type="text/javascript" src="js/dhtmlXTree.js"></script>
+</td>
+<tr>
+	<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Paginas del PDF. Separadas por comas " , ".</span></td>
+	<td bgcolor="#F5F5F5"><span class="phpmaker"><input name="x_pag_pdf" id="x_pag_pdf" value="<?php echo($_REQUEST['pag_pdf']); ?>"> <input type="hidden" value="<?php echo($_REQUEST['ruta_pdf']); ?>" name="ruta_pdf" id="ruta_pdf" /></td>
+</tr>
+	</tr>
 <?php if($x_serie==0) { ?>
 	<tr>
-			<td class="encabezado"
-				title="Seleccione el tipo de documento de acuerdo a los tipos documentales de la entidad"><font
-				size="1,5" face="Verdana, Arial, Helvetica, sans-serif"><span
-					style="color: #FFFFFF;">CLASIFICACION DEL DOCUMENTO</span></font></td>
-			<td bgcolor="#F5F5F5"><input type='hidden' name='x_serie'
-				id='x_serie' />
+        <td class="encabezado" title="Seleccione el tipo de documento de acuerdo a los tipos documentales de la entidad"><font size="1,5" face="Verdana, Arial, Helvetica, sans-serif"><span  style="color: #FFFFFF;">CLASIFICACION DEL DOCUMENTO</span></font></td>
+        <td  bgcolor="#F5F5F5">
+        <input type='hidden' name='x_serie' id='x_serie'/>
 				<meta http-equiv="Content-Type" content="text/html; charset= UTF-8 ">
-				<link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css"> <script
-					type="text/javascript" src="js/dhtmlXCommon.js"></script> <script
-					type="text/javascript" src="js/dhtmlXTree.js"></script>
-			<?php include_once("formatos/librerias/header_formato.php"); ?>
-	<input type="hidden" name="serie" id="serie" obligatorio="obligatorio"
-				value=""> <br />
+	<link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
+	<script type="text/javascript" src="js/dhtmlXCommon.js"></script>
+	<script type="text/javascript" src="js/dhtmlXTree.js"></script>
+			<?php include_once(FORMATOS_SAIA . "librerias/header_formato.php"); ?>
+	<input type="hidden" name="serie" id="serie" obligatorio="obligatorio"  value="" >
+    <br />
     <?php
 	if ($seleccionados != "") {
 		echo ("Seleccionados:<br />");
@@ -385,23 +387,17 @@ $x_recibido = $tmp;
 		}
 	}
 	?>
-      Buscar:<br>
-			<input type="text" id="stext_3" width="200px" size="20"> <a
-				href="javascript:void(0)"
-				onclick="tree3.findItem(document.getElementById('stext_3').value,1)">
-					<img src="botones/general/anterior.png" border="0px" alt="Anterior">
-			</a> <a href="javascript:void(0)"
-				onclick="tree3.findItem(document.getElementById('stext_3').value,0,1)">
-					<img src="botones/general/buscar.png" border="0px" alt="Buscar">
-			</a> <a href="javascript:void(0)"
-				onclick="tree3.findItem(document.getElementById('stext_3').value)">
-					<img src="botones/general/siguiente.png" border="0px"
-					alt="Siguiente">
-			</a> <br />
-			<div id="esperando_serie">
-					<img src="imagenes/cargando.gif">
-				</div>
-				<div id="treeboxbox_tree3"></div> <script type="text/javascript">
+      Buscar:<br><input type="text" id="stext_3" width="200px" size="20">
+      <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext_3').value,1)">
+      <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>
+      <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext_3').value,0,1)">
+      <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>
+      <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext_3').value)">
+      <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a>
+    <br /><div id="esperando_serie">
+    <img src="imagenes/cargando.gif"></div>
+    <div id="treeboxbox_tree3"></div>
+	<script type="text/javascript">
   <!--
       var browserType;
       if (document.layers) {browserType = "nn4"}
@@ -446,34 +442,27 @@ $x_recibido = $tmp;
 	-->
 	</script></td>
 		</tr>
-<?php
-
-}
+<?php }
 ?>
 <tr>
-			<td class="encabezado"
-				title="Seleccione a quien va a enviar el documento. Puede seleccionar toda la empresa, toda una dependencia o los funcionarios destino"><span
-				class="phpmaker" style="color: #FFFFFF;">DESTINO</span></td>
-			<td bgcolor="#F5F5F5"><link rel="STYLESHEET" type="text/css"
-					href="css/dhtmlXTree.css"> <script type="text/javascript"
-					src="js/dhtmlXCommon.js"></script> <script type="text/javascript"
-					src="js/dhtmlXTree.js"></script> <span class="phpmaker"> <br>
-				<input type="text" id="stext" width="200px" size="20"
-					placeholder="Buscar"> <a href="javascript:void(0)"
-					onclick="tree2.findItem(document.getElementById('stext').value,1)">
-						<img src="botones/general/anterior.png" border="0px"
-						alt="Anterior">
-				</a> <a href="javascript:void(0)"
-					onclick="tree2.findItem(document.getElementById('stext').value,0,1)">
-						<img src="botones/general/buscar.png" border="0px" alt="Buscar">
-				</a> <a href="javascript:void(0)"
-					onclick="tree2.findItem(document.getElementById('stext').value)"> <img
-						src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />
+<td class="encabezado" title="Seleccione a quien va a enviar el documento. Puede seleccionar toda la empresa, toda una dependencia o los funcionarios destino"><span class="phpmaker" style="color: #FFFFFF;">DESTINO</span></td>
+<td bgcolor="#F5F5F5"><link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
+	<script type="text/javascript" src="js/dhtmlXCommon.js"></script>
+	<script type="text/javascript" src="js/dhtmlXTree.js"></script>
+			<span class="phpmaker">
+
+			      <br><input type="text" id="stext" width="200px" size="20" placeholder="Buscar">
+      <a href="javascript:void(0)" onclick="tree2.findItem(document.getElementById('stext').value,1)">
+      <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>
+      <a href="javascript:void(0)" onclick="tree2.findItem(document.getElementById('stext').value,0,1)">
+      <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>
+      <a href="javascript:void(0)" onclick="tree2.findItem(document.getElementById('stext').value)">
+      <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />
 					<br />
 					<div id="esperando_func">
-						<img src="imagenes/cargando.gif">
-					</div>
-					<div id="treeboxbox_tree2"></div> <script type="text/javascript">
+    <img src="imagenes/cargando.gif"></div>
+				<div id="treeboxbox_tree2"></div>
+	<script type="text/javascript">
   <!--
   		var browserType;
       if (document.layers) {browserType = "nn4"}
@@ -517,31 +506,23 @@ $x_recibido = $tmp;
         document.poppedLayer.style.display = "";
       }
 	-->
-	</script></td>
-		</tr>
+	</script>
+	</td></tr>
 		<tr>
-			<td class="encabezado"
-				title="Selecciona un funcionarios, si desea hacer una copia del documento"><span
-				class="phpmaker" style="color: #FFFFFF;">COPIA A </span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker"> <br>
-				<input type="text" id="stext1" width="200px" size="20"
-					placeholder="Buscar"> <a href="javascript:void(0)"
-					onclick="tree_copia.findItem(document.getElementById('stext1').value,1)">
-						<img src="botones/general/anterior.png" border="0px"
-						alt="Anterior">
-				</a> <a href="javascript:void(0)"
-					onclick="tree_copia.findItem(document.getElementById('stext1').value,0,1)">
-						<img src="botones/general/buscar.png" border="0px" alt="Buscar">
-				</a> <a href="javascript:void(0)"
-					onclick="tree_copia.findItem(document.getElementById('stext1').value)">
-						<img src="botones/general/siguiente.png" border="0px"
-						alt="Siguiente">
-				</a><br /> <br />
+<td class="encabezado" title="Selecciona un funcionarios, si desea hacer una copia del documento"><span class="phpmaker" style="color: #FFFFFF;">COPIA A </span></td>
+	<td bgcolor="#F5F5F5"><span class="phpmaker">
+			<br><input type="text" id="stext1" width="200px" size="20" placeholder="Buscar">
+      <a href="javascript:void(0)" onclick="tree_copia.findItem(document.getElementById('stext1').value,1)">
+      <img src="botones/general/anterior.png" border="0px" alt="Anterior"></a>
+      <a href="javascript:void(0)" onclick="tree_copia.findItem(document.getElementById('stext1').value,0,1)">
+      <img src="botones/general/buscar.png" border="0px" alt="Buscar"></a>
+      <a href="javascript:void(0)" onclick="tree_copia.findItem(document.getElementById('stext1').value)">
+      <img src="botones/general/siguiente.png" border="0px" alt="Siguiente"></a><br />
+<br />
 					<div id="esperando_tree_copia">
-						<img src="imagenes/cargando.gif">
-					</div>
-					<div id="treeboxbox_tree_copia"></div> <script
-						type="text/javascript">
+    <img src="imagenes/cargando.gif"></div>
+				<div id="treeboxbox_tree_copia"></div>
+	<script type="text/javascript">
   <!--
   		var browserType;
       if (document.layers) {browserType = "nn4"}
@@ -584,25 +565,19 @@ $x_recibido = $tmp;
         document.poppedLayer.style.display = "";
       }
 	-->
-	</script></td>
-		</tr>
+	</script>
+	</td></tr>
       <?php
 						$x_nombre = "TRANSFERIDO";
 						?>
-      <input type="hidden" name="x_ruta"
-			value="<?php echo htmlspecialchars(@$x_ruta) ?>">
-		<input type="hidden" name="x_imprime"
-			value="<?php echo htmlspecialchars(@$x_imprime) ?>">
-		<input type="hidden" name="x_nombre"
-			value="<?php echo htmlspecialchars($x_nombre) ?>">
+      <input type="hidden" name="x_ruta" value="<?php echo htmlspecialchars(@$x_ruta) ?>">
+      <input type="hidden" name="x_imprime" value="<?php echo htmlspecialchars(@$x_imprime) ?>">
+      <input type="hidden" name="x_nombre" value="<?php echo htmlspecialchars($x_nombre) ?>">
 		</span>
 		<tr>
-			<td class="encabezado"
-				title="Espacio para escribir una nota en caso de que sea necesario hacer una aclaraci&oacute;n particular con la transferencia"><span
-				class="phpmaker" style="color: #FFFFFF;">OBSERVACIONES</span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker"> <textarea
-						cols="<?php echo($columnas);?>" rows="4" id="x_notas"
-						name="x_notas"><?php echo @$x_notas; ?></textarea>
+		<td class="encabezado" title="Espacio para escribir una nota en caso de que sea necesario hacer una aclaraci&oacute;n particular con la transferencia" ><span class="phpmaker" style="color: #FFFFFF;">OBSERVACIONES</span></td>
+		<td bgcolor="#F5F5F5"><span class="phpmaker">
+<textarea cols="<?php echo($columnas);?>" rows="4" id="x_notas" name="x_notas"><?php echo @$x_notas; ?></textarea>
 			</span></td>
 		</tr>
 		<!--tr>
@@ -613,38 +588,124 @@ $x_recibido = $tmp;
     </span>
     </td>
 	</tr-->
-		<tr>
-			<td class="encabezado" title=""><span class="phpmaker"
-				style="color: #FFFFFF;">OBSERVACIONES VISIBLES PARA TODOS?</span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker"> <input type=radio
-					name="x_ver_nota" value="1" id="si" checked>SI<br /> <input
-					type=radio name="x_ver_nota" value="0" id="no">NO
-			</span></td>
-		</tr>
-	</table>
-	<p>
+	<tr>
+		<td class="encabezado" title=""><span class="phpmaker" style="color: #FFFFFF;">OBSERVACIONES VISIBLES PARA TODOS?</span></td>
+		<td bgcolor="#F5F5F5"><span class="phpmaker">
+<input type=radio name="x_ver_nota" value="1" id="si" checked>SI<br />
+<input type=radio name="x_ver_nota" value="0" id="no">NO
+</span></td>
+	</tr>
+	<tr>
+		<td class="encabezado" title=""><span class="phpmaker" style="color: #FFFFFF;">Asignar tarea? *:</span></td>
+		<td bgcolor="#F5F5F5">
+			<span class="phpmaker">
+				<div class="controls">
+					<input type="radio" class="required" name="desea_tarea" id="desea_tarea" value="0" checked>No
+					<input type="radio" name="desea_tarea" id="desea_tarea0" value="1">Si
+				</div>
+			</span>
+		</td>
+	</tr>
+	<tr class="tarea_form">
+    	<td class="encabezado" title=""><span class="phpmaker" style="color: #FFFFFF;">Fecha tarea*:</span></td>
+    		<td bgcolor="#F5F5F5">
+    			<div class="input-append date" id="datepicker">
+						<input class="required" id="fecha_tarea" name="fecha_tarea" data-format="yyyy-MM-dd" value="<?php echo($fecha_tarea);?>">
+						<span class="add-on"><i class="icon-th"></i></span>
+						<label class="error" for="fecha_tarea"></label>
+					</div>
+    		</td>
+	</tr>
+	<tr class="tarea_form">
+		<td class="encabezado" title=""><span class="phpmaker" style="color: #FFFFFF;">Tarea a realizar*:</span></td>
+		<td bgcolor="#F5F5F5"><span class="phpmaker"><input type="text" class="required" name="tarea" id="etiqueta" placeholder="Tarea a realizar"></span></td>
+	</tr>
+	<tr class="tarea_form">
+		<td class="encabezado" title=""><span class="phpmaker" style="color: #FFFFFF;">Descripci&oacute;n tarea:</span></td>
+		<td bgcolor="#F5F5F5">
+			<span class="phpmaker">
+				<textarea cols="<?php echo($columnas);?>" rows="4" id="descripcion" name="descripcion"><?php echo @$x_notas; ?></textarea>
+			</span>
+		</td>
+	</tr>
+	<tr class="tarea_form">
+		<td class="encabezado" title=""><span class="phpmaker" style="color: #FFFFFF;">Prioridad* tarea:</span></td>
+		<td bgcolor="#F5F5F5">
+			<span class="phpmaker">
+				<div class="controls">
+					<input type="radio" class="required" name="prioridad" id="prioridad0" value="0">Baja
+					<input type="radio" name="prioridad" id="prioridad0" value="1">Media
+					<input type="radio" name="prioridad" id="prioridad0" value="2">Alta
+					<label class="error" for="prioridad"></label>
+				</div>
+			</span>
+		</td>
+	</tr>
+	
+	<!-- tr>
+		<td class="encabezado" width="20%" title="">ANEXO*</td>
+		<td width="80%">
+		<input type="file" id="file" name="file" required="true">
+		<input type="hidden" id="cargado" name="cargado" value="1">
+		</td>
+	</tr-->
+</table>
+<p>
 <?php
 if (@$x_imprime != 1) {
 	?>
-<input type="hidden" name="a_add" value="A"> <input type="button"
-			class="btn btn-mini btn-danger" value="Cancelar"
-			onclick="window.history.back(-1);"> <input type="submit"
-			name="Action" class="btn btn-mini btn-primary" value="Continuar">
-<?php
-
-} else {
+<input type="hidden" name="a_add" value="A">
+  <input type="button" class="btn btn-mini btn-danger" value="Cancelar" onclick="window.history.back(-1);">
+<input type="submit" name="Action" class="btn btn-mini btn-primary"value="Continuar">
+<?php }
+else {
 	// La P es de Print
 	?>
-<input type="hidden" name="a_add" value="P"> <input type="submit"
-			name="Action" value="IMPRIMIR">
+<input type="hidden" name="a_add" value="P">
+<input type="submit" name="Action" value="IMPRIMIR">
 <?php }?>
-
-
 </form>
-<br />
-<br />
-<br />
-<br />
+<br /><br /><br /><br />
+<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>js/jquery.validate.1.13.1.js"></script>
+	<style>
+	label.error {
+		font-weight: bold;
+		color: red;
+	}
+	</style>
+<script>
+		
+	$(document).ready(function(){
+		validar_tarea($("input[name=desea_tarea]").val());
+		$("input[name=desea_tarea]").change(function () {
+			validar_tarea($(this).val());
+		});
+		$('#datepicker').datetimepicker({
+			language: 'es',
+			pick12HourFormat: true,
+			pickTime: false
+		}).on('changeDate', function(e){
+			$(this).datetimepicker('hide');
+		});
+		$("#transferenciaadd").validate();
+
+		function validar_tarea(opcion){
+			if(opcion==0){
+				$(".tarea_form").hide();
+				$("#etiqueta").removeClass("required");
+				$("#descripcion").removeClass("required");
+				$("input[name=prioridad]").removeClass("required");
+				$("#fecha_tarea").removeClass("required");
+			}else{
+				$(".tarea_form").show();
+				$("#etiqueta").addClass("required");
+				$("#descripcion").addClass("required");
+				$("input[name=prioridad]").addClass("required");
+				$("#fecha_tarea").addClass("required");
+			}
+		}
+	});
+	</script>
 <?php
 if (!@$_REQUEST["idpaso_documento"])
 	include ("footer.php");
@@ -705,10 +766,10 @@ function LoadData($sKey, $conn) {
 // - Add Data
 // - Variables used: field variables
 function AddData($conn) {
-	global $_SESSION, $_POST, $_POST_FILES, $_ENV;
-	global $x_idtransferencia, $x_archivo_idarchivo, $x_nombre, $x_funcionario_destino, $x_dependencia_destino, $x_tipo_destino, $idruta, $x_copia, $x_serie;
-	global $x_ejecutor_destino, $x_fecha, $x_respuesta, $x_entregado, $x_recibido, $x_notas, $x_ver_nota, $x_transferencia_descripcion, $x_tipo, $x_tipo_envio; // Add New Record
-
+	global $_SESSION,$_POST,$_POST_FILES,$_ENV;
+  global $x_idtransferencia,$x_archivo_idarchivo,$x_nombre,$x_funcionario_destino,$x_dependencia_destino,$x_tipo_destino,$idruta,$x_copia,$x_serie;
+  global $x_ejecutor_destino,$x_fecha,$x_respuesta,$x_entregado,$x_recibido,$x_notas,$x_ver_nota,$x_transferencia_descripcion,$x_tipo,$x_tipo_envio,$x_pag_pdf,$file,$desea_tarea,$fecha_tarea,$tarea,$descripcion,$prioridad,$ruta_pdf;	// Add New Record
+  
 	$sSql = "SELECT * FROM buzon_entrada A";
 	$sSql .= " WHERE 0 = 1";
 	$sGroupBy = "";
@@ -740,12 +801,13 @@ function AddData($conn) {
 	// Field funcionario_destino
 	// echo $x_funcionario_destino; die();
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_funcionario_destino) : $x_funcionario_destino;
-	$theValue = ($theValue != "") ? $theValue : "NULL";
-	// $fieldList["funcionario_destino"] = $theValue;
-	// para sacar la lista de los funcionarios destinos en caso de que hayan dependencias
-	$destinos = array();
-	$destinos_aux = split(",", $x_funcionario_destino);
-	$dep = array();
+	$theValue = ($theValue != "") ?  $theValue : "NULL";
+	//$fieldList["funcionario_destino"] = $theValue;
+	//para sacar la lista de los funcionarios destinos en caso de que hayan dependencias
+  $destinos = array();
+  $destinos_aux=split(",",$x_funcionario_destino);
+  
+  $dep=array();
 	$num_destino = count($destinos_aux);
 	for($i = 0; $i < $num_destino; $i++) {
 		$filtro = strpos($destinos_aux[$i], '_');
@@ -873,17 +935,67 @@ function AddData($conn) {
     <input type="submit" disable value="Cargando...">
     </form>
     <script>confirmar.submit();</script>';
-		die();
-	}
-	if (transferir_archivo_prueba($fieldList, $destinos, $datos_adicionales, "documento_view.php?key=" . $fieldList["archivo_idarchivo"])) {
-		$funcionario[] = $x_funcionario_destino;
-	}
-	if ($destinos_copias) {
-		$fieldList["nombre"] = "COPIA";
-		if (transferir_archivo_prueba($fieldList, $destinos_copias, $datos_adicionales, "documento_view.php?key=" . $fieldList["archivo_idarchivo"])) {
-			$funcionario_copia[]=$x_copia;
+    die();
     }
+    
+    if($ruta_pdf){
+        $parametros_pdf['ruta']=urldecode($ruta_pdf);
+    }else{
+        $parametros_pdf['ruta']=$documento[0]['pdf'];
+    }
+    $parametros_pdf['iddocumento']=$documento[0]['iddocumento'];
+    
+    $parametros_pdf['x_pag_pdf']=$x_pag_pdf;
+    $parametros_pdf['retorno']="ruta";
+    
+    if($desea_tarea==1){
+        $sql="INSERT INTO tareas (fecha,tarea,responsable,descripcion,prioridad,ejecutor,fecha_tarea,documento_iddocumento) VALUES(".fecha_db_almacenar($fecha_tarea,"Y-m-d H:i:s").",'".$tarea."','".$destinos[0]."','".$descripcion."','".$prioridad."','".usuario_actual("funcionario_codigo")."',".fecha_db_almacenar($fecha_tarea,"Y-m-d H:i:s").",".$documento[0]['iddocumento'].")";
+        
+        phpmkr_query($sql);
+    }
+    
+    $transferencia=transferir_archivo_prueba($fieldList,$destinos,$datos_adicionales,1);
+  if($transferencia){
+      $funcionario[]=$x_funcionario_destino;
+   }
+   if($destinos_copias){ 
+       $fieldList["nombre"]="COPIA";
+       $transferencia_copia=transferir_archivo_prueba($fieldList,$destinos_copias,$datos_adicionales,1);
+       if($transferencia_copia){
+           $funcionario_copia[]=$x_copia;
+           $transferencia=(array_merge($transferencia,$transferencia_copia));
+       }
   }
+  
+  if ($_FILES["file"]["tmp_name"]) {
+      
+      $tmpfile = $_FILES["file"]["tmp_name"];
+      $filename = $_FILES["file"]["name"];
+      $handle = fopen($tmpfile, "r");
+      $contents = fread($handle, filesize($tmpfile));
+      fclose($handle);
+      $decodeContent = base64_encode($contents);
+      $array_anexos = array("filename" => $filename, 
+                            "content" => $decodeContent,
+                            "extencion" => $_FILES["file"]["type"],
+          "iddocumento" =>$parametros_pdf['iddocumento'],
+          
+                        );
+      $info_anexos = array();
+      $info_anexos["tipo_anexo"] = $array_anexos;
+      
+      $ruta_envio = cargar_anexos_documento_transferencia($array_anexos,$transferencia);
+  }
+  
+  $parametros_pdf['idtransferencia']=implode(",",$transferencia);
+  $url="/class_impresion_pdfi.php?&conexion_remota=1&conexion_usuario=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&LLAVE_SAIA=".LLAVE_SAIA."&param=".urlencode(json_encode($parametros_pdf));
+  
+  $ch = curl_init();
+  $fila = PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.$url;
+  curl_setopt($ch, CURLOPT_URL,$fila);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
+  $contenido=curl_exec($ch);
+  curl_close ($ch);
   $funcionarios_mensaje=array_merge((array)$funcionario,(array)$funcionario_copia,(array)$destinos);
   $funcionarios_mensaje=array_unique($funcionarios_mensaje);
 
@@ -891,5 +1003,42 @@ function AddData($conn) {
 
  //enviar_mensaje("origen",$funcionarios_mensaje,$mensaje,$x_tipo_envio);
  return true;
+}
+function cargar_anexos_documento_transferencia($anexos,$idtransferencia) {
+    global $conn, $ruta_db_superior;
+    include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
+    
+    //foreach ($anexos as $key => $value) {
+        
+        
+        $formato_ruta = aplicar_plantilla_ruta_documento($anexos['iddocumento']);
+        $datos_documento=busca_filtro_tabla("a.plantilla,a.numero,b.idformato,".fecha_db_obtener("a.fecha","Y-m-d")." AS fecha","documento a, formato b","lower(a.plantilla)=b.nombre AND a.iddocumento=".$anexos['iddocumento'],"",$conn);
+        
+        $ruta_archivos = ruta_almacenamiento("archivos");
+        $carpeta = $ruta_archivos . $formato_ruta . "/anexos_transferencia";
+                
+        crear_destino($carpeta);
+        chmod($carpeta,0777);
+
+        $extension = pathinfo($anexos['filename']);
+        $nombre_archivo = time().".".$extension['extension'];
+        
+        $destino = $carpeta . "/" . $nombre_archivo;
+        $archivo = fopen($ruta_db_superior . $destino, "w+");
+        fclose($archivo);
+        $contenido = base64_decode($anexos['content']);
+        file_put_contents($ruta_db_superior . $destino, $contenido);
+
+        if (file_exists($ruta_db_superior . $destino)) {
+            $cont=count($idtransferencia);
+            //print_r($buzon_salida);die();
+            for ($i = 0; $i < $cont; $i++) {
+                $insert_anexo = "insert into anexos_transferencia(documento_iddocumento, ruta, etiqueta, tipo, formato,idbuzon_salida) VALUES (".$anexos['iddocumento'].",'" . $destino . "','" . $extension['basename']. "','".$extension['extension']."',".$datos_documento[0]['idformato'].",".$idtransferencia[$i].")";
+                phpmkr_query($insert_anexo, $conn, usuario_actual('funcionario_codigo'));
+            }            
+        }
+    //}
+    $_REQUEST['ruta']=$ruta;
+    return ($ruta_db_superior . $ruta);
 }
 ?>

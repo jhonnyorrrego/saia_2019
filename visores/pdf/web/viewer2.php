@@ -50,6 +50,7 @@ if(@$_REQUEST['iddocumento']){
   $dato=busca_filtro_tabla("","documento,formato","lower(plantilla)=lower(nombre) and iddocumento=".$_REQUEST["iddocumento"],"",$conn);
   if($dato["numcampos"] && $dato[0]["pdf"]!=""){
     $_REQUEST["file"]=$ruta_db_superior.$dato[0]["pdf"];
+    $ruta=$dato[0]["pdf"];
     $url=$_REQUEST["file"];
 	$print=$dato[0]['permite_imprimir'];
     //$_REQUEST['file']=base64_decode($_REQUEST['file']);
@@ -57,10 +58,23 @@ if(@$_REQUEST['iddocumento']){
 }
 if(@$_REQUEST['files']){
 	$ruta=base64_decode($_REQUEST['files']);
-    $_REQUEST["file"]=$ruta;
+    $_REQUEST["file"]=$ruta_db_superior.$ruta;
     $url=$_REQUEST["file"];
 	$print=$_REQUEST['print'];
 }
+
+if(@$_REQUEST['anexo']){
+	$tipo_visor='anexo';
+	$id_archivo=$_REQUEST['anexo'];
+}else if(@$_REQUEST['anexo_trans']){
+	$tipo_visor='anexo_trans';
+	$id_archivo=$_REQUEST['anexo_trans'];
+}else{
+	$tipo_visor='documento';
+	$id_archivo=$_REQUEST['iddocumento'];
+}
+
+
 ?>
 <html dir="ltr" mozdisallowselectionprint moznomarginboxes>
   <head>
@@ -146,9 +160,9 @@ if(@$_REQUEST['files']){
               <span data-l10n-id="print_label">Print</span>
             </button>
 
-            <!--button id="secondaryDownload" class="secondaryToolbarButton download visibleMediumView" title="Download" tabindex="54" data-l10n-id="download">
+            <button id="secondaryDownload" class="secondaryToolbarButton download visibleMediumView" title="Download" tabindex="54" data-l10n-id="download">
               <span data-l10n-id="download_label">Download</span>
-            </button-->
+            </button>
 
             <a href="#" id="secondaryViewBookmark" class="secondaryToolbarButton bookmark visibleSmallView" title="Current view (copy or open in new window)" tabindex="55" data-l10n-id="bookmark">
               <span data-l10n-id="bookmark_label">Current View</span>
@@ -238,7 +252,16 @@ if(@$_REQUEST['files']){
               </div>
               <div class="outerCenter">
                 <div class="innerCenter" id="toolbarViewerMiddle">
+                	<button id="transferir" class="toolbarButton transferir" title="Transferir" tabindex="21" enlace="<?php echo($ruta_db_superior.'transferenciaadd.php?doc='.@$_REQUEST['iddocumento'].'&mostrar=1&key='.$_REQUEST['iddocumento'].'&ruta_pdf='.urlencode($ruta)); ?>" data-l10n-id="transferir">
+                      <span data-l10n-id="transferir_label">Transferir</span>
+                    </button>
+                    <div class="splitToolbarButtonSeparator"></div>
+                    <button id="cambio_visor" class="toolbarButton cambiar_visor" title="Cambiar Visor" tabindex="23"  iddocumento="<?php echo($id_archivo);?>" tipo="<?php echo($tipo_visor);?>" data-l10n-id="cambio_visor">
+                       <span data-l10n-id="zoom_out_label">CV</span>
+                    </button> 
                   <div class="splitToolbarButton">
+                  
+                    <div class="splitToolbarButtonSeparator"></div>
                     <button id="zoomOut" class="toolbarButton zoomOut" title="Zoom Out" tabindex="21" data-l10n-id="zoom_out">
                       <span data-l10n-id="zoom_out_label">Zoom Out</span>
                     </button>
@@ -489,11 +512,10 @@ if(@$_REQUEST['files']){
   	}else{
   		$("#print").show();	
   	}
-    $("#download").hide();
+    //$("#download").hide();
     $("#openFile").hide();
     $("#viewBookmark").hide();
   });
 </script>
   </body>
 </html>
-

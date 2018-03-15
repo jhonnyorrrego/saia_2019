@@ -366,6 +366,7 @@ echo $x_formato_idformatoList;
       <span class="phpmaker">
         <input type="checkbox" name="x_banderas[]"  <?php if(in_array("u",$x_banderas)){echo("CHECKED");} ?> value="u">&Uacute;inco
         <input type="checkbox" name="x_banderas[]"  <?php if(in_array("i",$x_banderas)){echo("CHECKED"); } ?> value="i"> Indice
+        <input type="checkbox" name="x_banderas[]"  <?php if(in_array("pdfa",$x_banderas)){echo("CHECKED"); } ?> value="pdfa"> PDF/A
         <!--input type="checkbox" name="x_banderas[]"  <?php if(in_array("pk",$x_banderas)){echo("CHECKED"); } ?> value="pk"> Llave Primaria
         <input type="checkbox" name="x_banderas[]"  <?php if(in_array("ai",$x_banderas)){echo("CHECKED"); } ?> value="ai"> Auto incremental -->                
       </span>
@@ -469,7 +470,10 @@ $datos_formato=busca_filtro_tabla("item","formato","idformato=$idformato","",$co
 <?php echo "Boton de Selecci&oacute;n"; ?><br>
 <?php echo EditOptionSeparator(3); ?>
 <input type="radio" name="x_etiqueta_html"<?php if (@$x_etiqueta_html == "checkbox") { ?> checked<?php } ?> value="<?php echo htmlspecialchars("checkbox"); ?>">
-<?php echo "Cuadro de Chequeo"; ?> </td><td>   
+<?php echo "Cuadro de Chequeo"; ?>
+<br>
+<input type="radio" name="x_etiqueta_html"<?php if (@$x_etiqueta_html == "autocompletar") { ?> checked<?php } ?> value="<?php echo htmlspecialchars("autocompletar"); ?>">
+<?php echo "Autocompletar"; ?> </td><td>   
 <?php echo EditOptionSeparator(4); ?><br>
 <input type="radio" name="x_etiqueta_html"<?php if (@$x_etiqueta_html == "select") { ?> checked<?php } ?> value="<?php echo htmlspecialchars("select"); ?>">
 <?php echo "Lista Deplegable"; ?>

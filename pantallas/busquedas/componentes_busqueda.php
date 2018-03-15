@@ -85,6 +85,28 @@ $ruta_db_superior="../";
 		          </div>'; 
             }
           break;
+			case 4:
+                $etiqueta=codifica_encabezado(html_entity_decode($componentes[$i]['etiqueta']));
+                $url=$ruta_db_superior.$componentes[$i]['url'];
+	            $conector='';
+	            switch($componentes[$i]["conector"]){
+	              case 1:$conector='html.page';
+	              break;
+	              case 2:$conector='iframe';
+	              break;
+	              case 3:$conector='html.string';
+	              break;
+	              case 4:$conector='html.dom';            
+	            }  
+					
+		        $texto.='<div title="'.$etiqueta.'" data-load=\'{"kConnector":"'.$conector.'", "url":"'.$url.'", "kTitle":"'.$etiqueta.'"}\' class="items navigable">';
+		        $texto.='<div class="head"></div>';              				            
+		        $texto.='<div class="label">'.$etiqueta.'</div>';
+		        $texto.='<div class="info"></div>'; 		
+		        $texto.='<div class="tail"></div>';
+				$texto.='</div>'; 				
+				
+			break;
           default:
             //sumary error, es un componente tipo div html tiene un label y un info con la descripcion del error en la secuencia de la base de datos.
             $texto.='<div class="summary" id="error_'.$componentes[$i]["nombre"].'">';

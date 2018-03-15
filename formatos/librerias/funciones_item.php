@@ -96,6 +96,13 @@ function guardar_item()
 	phpmkr_error();
    if($insertado>0)
      {//alerta("Registro insertado.");
+     	if(isset($_REQUEST["plantilla"]) && $_REQUEST["plantilla"]==1){
+	      	if($_REQUEST["contenido"]){
+	      		crear_pretexto_item($_REQUEST["asplantilla"],$_REQUEST["contenido"]);
+			}else if($_REQUEST["descripcion_inspeccion"]){
+				crear_pretexto_item($_REQUEST["asplantilla"],$_REQUEST["descripcion_inspeccion"]);
+			}
+	    } 
 		if ($_REQUEST["tabla"] == "ft_informacion_dano") {
 			include_once ("../informacion_dano/funciones.php");
 			redireccionar_papa($insertado);
@@ -127,5 +134,20 @@ function guardar_item()
 		if ($_REQUEST["opcion_item"] == "adicionar")
 			redirecciona("../" . $formato[0]["nombre"] . "/" . $formato[0]["ruta_adicionar"] . "?idpadre=" . $doc_padre[0][0] . "&idformato=" . $padre[0]["idformato"] . "&padre=" . $_REQUEST["padre"]);
 	}
+}
+function crear_pretexto_item($asunto,$contenido){
+global $conn,$ruta_db_superior;
+$campos="asunto";
+$valores="'".$asunto."'";
+$sql="INSERT INTO "."pretexto"."(".$campos.") VALUES (".$valores.")";
+phpmkr_query($sql);
+   $idpretexto=phpmkr_insert_id();
+   guardar_lob("contenido","pretexto","idpretexto=$idpretexto",$contenido,"texto",$conn);
+  // Guardo la relacion de la plantilla con el suaurio 
+ $idfuncionario =usuario_actual("idfuncionario");
+ $campos="pretexto_idpretexto,entidad_identidad,llave_entidad";
+ $valores="'".$idpretexto."','1',"."'".$idfuncionario."'";
+ $sql="INSERT INTO "."entidad_pretexto"."(".$campos.") VALUES (".$valores.") ";
+ phpmkr_query($sql);
 }
 ?>

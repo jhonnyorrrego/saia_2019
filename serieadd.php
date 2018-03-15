@@ -94,17 +94,38 @@ switch ($sAction)
 	case "A": // Add
 		$ok=AddData($conn);
         if($ok){ // Add New Record
-        	        abrir_url("arbolserie.php","arbol");
-        			$parametro_dependencia_serie='';
-        			if(@$_REQUEST['dependencia_serie']){
-        				$parametro_dependencia_serie="&dependencia_serie=".$_REQUEST['dependencia_serie'];
-        			}
-        			if(@$_REQUEST['x_cod_padre']){
-        			    $ok=$_REQUEST['x_cod_padre'];
-        			}
-        			
-					abrir_url("serieview.php?key=".$ok.$parametro_dependencia_serie,"_self");
-					exit();
+        
+        	    ?>
+              <script>
+              notificacion_saia('Serie adicionada con exito','success','',6000);
+              </script>
+              <?php
+                  //abrir_url("arbolserie.php","arbol"); --Se modifica de acuerdo a ticket 18702
+              $parametro_dependencia_serie='';
+              if(@$_REQUEST['dependencia_serie']){
+                $parametro_dependencia_serie="&dependencia_serie=".$_REQUEST['dependencia_serie'];
+              }
+              if(@$_REQUEST['x_cod_padre']){
+                  $ok=$_REQUEST['x_cod_padre'];
+              }
+              
+          //abrir_url("serieview.php?key=".$ok.$parametro_dependencia_serie,"_self"); --Se modifica de acuerdo a ticket 18702
+          $url=array();
+          if(@$_REQUEST['from_dependencia_request']){
+            $url[]="from_dependencia=".$_REQUEST['from_dependencia_request'];
+          }
+          if(@$_REQUEST['key_padre_request']){
+            $url[]="key_padre=".$_REQUEST['key_padre_request'];
+          }
+          if(@$_REQUEST['dependencia_serie_request']){
+            $url[]="dependencia_serie=".$_REQUEST['dependencia_serie_request'];
+          }
+          if(@$_REQUEST['tvd_request']){
+            $url[]="tvd=".$_REQUEST['tvd_request'];
+          }
+          abrir_url("serieadd.php?".implode("&",$url),"_self");
+          
+          exit();
 				}
 				break;
 }
@@ -222,6 +243,23 @@ $(document).ready(function(){
 
 <p><span class="internos">&nbsp;&nbsp;ADICIONAR SERIES DOCUMENTALES<br><br><!--a href="serielistdep.php">Regresar al listado</a--></span></p>
 <form name="serieadd" id="serieadd" action="serieadd.php" method="post" onSubmit="return EW_checkMyForm(this);">
+
+<?php if(@$_REQUEST['from_dependencia']){ ?>
+  <input type="hidden" name="from_dependencia_request" value="<?php echo($_REQUEST['from_dependencia']); ?>">
+<?php } ?>
+<?php if(@$_REQUEST['key_padre']){ ?>
+  <input type="hidden" name="key_padre_request" value="<?php echo($_REQUEST['key_padre']); ?>">
+<?php } ?>
+<?php if(@$_REQUEST['dependencia_serie']){ ?>
+  <input type="hidden" name="dependencia_serie_request" value="<?php echo($_REQUEST['dependencia_serie']); ?>">
+<?php } ?>
+<?php if(@$_REQUEST['tvd']){ ?>
+  <input type="hidden" name="tvd_request" value="<?php echo($_REQUEST['tvd']); ?>">
+<?php } ?>
+<?php if(@$_REQUEST['idnodopadre']){ ?>
+  <input type="hidden" name="idnodopadre_request" value="<?php echo($_REQUEST['idnodopadre']); ?>">
+<?php } ?>
+
 <p>
 <input type="hidden" name="a_add" value="A">
 <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
@@ -720,6 +758,7 @@ function AddData($conn)
 	if(@$_REQUEST['tvd']){
 		$fieldList["tvd"]=1;
 	}
+  
 	// insert into database
 	$strsql = "INSERT INTO serie (";
 	$strsql .= implode(",", array_keys($fieldList));
@@ -734,6 +773,13 @@ function AddData($conn)
 		phpmkr_query($sql_es);
 	}
 	
+  if($id && @$_REQUEST['idnodopadre_request']){
+    ?>
+    <script>
+    window.parent.frames['arbol'].tree2.refreshItem('<?php echo($_REQUEST['idnodopadre_request']); ?>');
+    </script>
+    <?php
+  }
 	
 	/*
 	$insertar_serie=busca_filtro_tabla("","serie","idserie=".$id,"",$conn);

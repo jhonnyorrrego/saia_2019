@@ -27,9 +27,13 @@ $request='';
 if((@$_REQUEST["actual_row"]<@$_REQUEST["cantidad_total"] )|| @$_REQUEST["page"]==1){
 	include_once($ruta_db_superior."pantallas/busquedas/servidor_busqueda.php");
 	if($response->exito){
+	  if(!$_REQUEST["cantidad_total"]){
 	    $_REQUEST["cantidad_total"]=$response->cantidad_total;
+	  }
+	    //$_REQUEST["cantidad_total"]=$response->cantidad_total;
 		$_REQUEST["actual_row"]=$response->actual_row;
 		$_REQUEST["page"]=$response->page;
+    
 		if(count($_REQUEST)){
 			$request.="?";
 			$i=0;

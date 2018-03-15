@@ -11,14 +11,11 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 
 if (isset($_REQUEST['valor']) && $_REQUEST['opt'] == 1) {
-	$parte="";
-	if(isset($_REQUEST["seleccionados"]) && $_REQUEST["seleccionados"]!=""){
-		$parte=" and idfuncionario not in (".$_REQUEST["seleccionados"].")";
+	$parte = "";
+	if (isset($_REQUEST["seleccionados"]) && $_REQUEST["seleccionados"] != "") {
+		$parte = " and idfuncionario not in (" . $_REQUEST["seleccionados"] . ")";
 	}
-	
-	$_REQUEST['valor']=$_REQUEST['valor'];
-
-	$datos = busca_filtro_tabla("idfuncionario as id," . concatenar_cadena_sql(array("nombres", "' '", "apellidos")) . " as descripcion", "funcionario f", "f.estado=1 and f.idfuncionario<>".$_REQUEST["propietario"].$parte." and (f.nombres like '%" . $_REQUEST["valor"] . "%' OR f.apellidos like '%" . $_REQUEST["valor"] . "%')", "", $conn);
+	$datos = busca_filtro_tabla("idfuncionario as id," . concatenar_cadena_sql(array("nombres", "' '", "apellidos", "' - '", "cargo")) . " as descripcion", "vfuncionario_dc f", "f.estado=1 and f.estado_dc=1 and f.idfuncionario<>" . $_REQUEST["propietario"] . $parte . " and (f.nombres like '%" . $_REQUEST["valor"] . "%' OR f.apellidos like '%" . $_REQUEST["valor"] . "%')", "", $conn);
 	$html = "<ul>";
 	if ($datos['numcampos']) {
 		for ($i = 0; $i < $datos['numcampos']; $i++) {
@@ -30,5 +27,4 @@ if (isset($_REQUEST['valor']) && $_REQUEST['opt'] == 1) {
 	$html .= "</ul>";
 	echo $html;
 }
-
 ?>

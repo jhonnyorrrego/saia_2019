@@ -7,7 +7,6 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap-responsive.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>pantallas/lib/librerias_css.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap_reescribir.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap-iconos-segundarios.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap-datetimepicker.min.css"/>
 <style>
 .clase_sin_capas{
@@ -20,6 +19,7 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
 <?php include_once($ruta_db_superior."db.php"); ?>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery-1.7.min.js"></script>
 <?php include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_notificaciones());
 $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["cod_padre"],"",$conn);
 ?>
 <form name="formulario_expediente" id="formulario_expediente">
@@ -36,11 +36,19 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 
 
 <div class="control-group element">
-  <label class="control-label" for="agrupador">Agrupador
+  <label class="control-label" for="agrupador">Seleccione *
   </label>
   <div class="controls"> 
-		<input type="radio" name="agrupador" id="agrupado0"  value="0" checked>No
-		<input type="radio" name="agrupador" id="agrupado1" value="1">Si
+		<input type="radio" name="agrupador" id="agrupado0"  value="0" checked>EXPEDIENTE &nbsp;
+		<input type="radio" name="agrupador" id="agrupado1" value="1">AGRUPADOR
+  </div>
+</div>
+
+<div class="control-group element">
+  <label class="control-label" for="nombre">Nombre *
+  </label>
+  <div class="controls"> 
+    <input type="text" name="nombre" id="nombre" >
   </div>
 </div>
 <script>
@@ -55,7 +63,7 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
                 $('#informacion_completa_expediente').show();
                 $('#serie_idserie').val('');
             }
-            
+           
         });
     });
 </script>
@@ -85,14 +93,6 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 		</div>
   </div>
 </div>
-<div class="control-group element">
-  <label class="control-label" for="nombre">Nombre *
-  </label>
-  <div class="controls"> 
-    <input type="text" name="nombre" id="nombre" >
-  </div>
-</div>
-
 <div id="informacion_completa_expediente">
     
 <div class="control-group element">
@@ -103,6 +103,50 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
   </div>
 </div>
 <div class="control-group element">
+  <label class="control-label" for="indice_uno">Indice uno
+  </label>
+  <div class="controls"> 
+    <input type="text" name="indice_uno" id="indice_uno">
+  </div>
+</div>
+<div class="control-group element">
+  <label class="control-label" for="indice_dos">Indice Dos
+  </label>
+  <div class="controls"> 
+    <input type="text" name="indice_dos" id="indice_dos">
+  </div>
+</div>
+<div class="control-group element">
+  <label class="control-label" for="indice_tres">Indice Tres
+  </label>
+  <div class="controls"> 
+    <input type="text" name="indice_tres" id="indice_tres">
+  </div>
+</div>
+<div class="control-group element">
+  <label class="control-label" for="seguridad">Caja
+  </label>
+  <div class="controls">
+  	<select name="fk_idcaja" id="fk_idcaja">
+  		<option value="">Por favor seleccione...</option>
+  		<?php
+  		$cajas=busca_filtro_tabla("","caja A","","",$conn);
+			for($i=0;$i<$cajas["numcampos"];$i++){
+				$selected="";
+				
+				if(@$_REQUEST["fk_idcaja"]==$cajas[$i]["idcaja"]){
+					$selected="selected";
+				}
+				if($datos[0]["fk_idcaja"]==$cajas[$i]["idcaja"]){
+					$selected="selected";
+				}
+				echo("<option value='".$cajas[$i]["idcaja"]."' ".$selected.">".$cajas[$i]["fondo"]."(".$cajas[$i]["codigo_dependencia"]."-".$cajas[$i]["codigo_serie"]."-".$cajas[$i]["consecutivo"].")</option>");
+			}
+  		?>
+  	</select>
+  </div>
+</div>
+<div class="control-group element">
   <label class="control-label" for="serie_idserie">Serie asociada *
   </label>
   <div class="controls">
@@ -110,7 +154,8 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
     			<input type="text" id="stext_serie" width="200px" size="20">          
           <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value),1)">
           <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>
-          <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value),0,1)">
+          <!--a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value),0,1)"-->
+          <a href="javascript:void(0)" id="buscar_arb">
           <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>
           <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value))">
           <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>      
@@ -118,7 +163,8 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
     			<div id="treeboxbox_tree3" class="arbol_saia"></div>
          
         </span>
-         <input style="display:none;" type="text" name="serie_idserie" id="serie_idserie">
+         <input type="hidden" name="serie_idserie" id="serie_idserie">
+         <input type="hidden" name="dependencia_iddependencia" id="dependencia_iddependencia">
   </div>
 </div>
 
@@ -135,7 +181,7 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 	    <?php  
 	        $dep_fun=busca_filtro_tabla("a.codigo","dependencia a,vfuncionario_dc b","a.estado=1 AND b.iddependencia=a.iddependencia AND b.estado_dc=1 AND b.estado_dep=1 AND b.login='".usuario_actual('login')."'","",$conn); 
 	    ?>
-	    <input name="codigo_numero_dependencia" id="codigo_numero_dependencia" value="<?php echo($dep_fun[0]['codigo']); ?>"  style="width:12%;" readonly> - 
+	    <input name="codigo_numero_dependencia" id="codigo_numero_dependencia"  style="width:12%;" readonly> - 
 	    <input name="codigo_numero_serie" id="codigo_numero_serie" style="width:12%;" readonly> - 
 	    <input name="codigo_numero_consecutivo" id="codigo_numero_consecutivo" style="width:10%;">
 	    <input name="codigo_numero" id="codigo_numero" type="hidden">
@@ -169,7 +215,7 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 	  <label class="control-label" for="fondo">Fondo
 	  </label>
 	  <div class="controls"> 
-	    <input name="fondo" id="fondo" value="<?php echo($datos[0]["fondo"]); ?>">
+	    <input name="fondo" id="fondo" value="<?php echo($datos[0]["fondo"]); ?>" readonly="readonly">
 	  </div>
 	</div>
 	
@@ -285,7 +331,6 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 	
 </div>
 <br />
-<input type="hidden" name="fk_idcaja" value="<?php echo(@$_REQUEST["fk_idcaja"]);?>">
 <input type="hidden" name="estado_archivo" value="1">
 <input type="hidden" name="key_formulario_saia" value="<?php echo(generar_llave_md5_saia());?>">
 <div>
@@ -309,9 +354,40 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 <?php
   echo(librerias_arboles());
   ?>
-  <script>
+  <script type="text/javascript">
   $(document).ready(function(){
-            
+		j=0;
+		$("#buscar_arb").click(function(){
+			notificacion_saia('Ejecutando busqueda... Espere un momento','warning','',2000);
+			var nombre=document.getElementById('stext_serie').value;
+			$.ajax({
+				async:false,
+				type:'POST',
+				url: "busqueda_test_series.php",
+				dataType: "json",
+				data: {
+					nombre:nombre,
+				},
+				success:function (opciones){
+					console.log(opciones);
+					if(opciones.num_dependencias>0){												
+						for(var i=0;i<opciones.num_dependencias;i++){
+							onNodeSelect_dependencia(opciones[i].dependencia);
+						}							
+					}
+					
+					/*if(opciones.numcampos){					
+						onNodeSelect2(opciones); 
+					}
+					if(opciones.numcampos==0){
+						notificacion_saia('No se encontraron resultados','warning','',2000);
+					}
+					* 
+					* */
+				}
+			});
+		});
+    
     var browserType;
     if (document.layers) {browserType = "nn4"}
     if (document.all) {browserType = "ie"}
@@ -328,33 +404,49 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
     tree3.enableSmartXMLParsing(true);
     //tree3.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?con_padres=1&pantalla=expediente");	
   	//tree3.loadXML("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?con_padres=1&pantalla=expediente");
-  	tree3.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?categoria=2&nivel=series,subseries&con_padres=1");	
-  	tree3.loadXML("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?categoria=2&nivel=series,subseries&con_padres=1");
+  	tree3.setXMLAutoLoading("../../test_dependencia_serie.php?tabla=dependencia&admin=1&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&funcionario=1&carga_partes_dependencia=1&carga_partes_series=1&no_grupos=1&no_tipos=1");	
+  	tree3.loadXML("../../test_dependencia_serie.php?tabla=dependencia&admin=1&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&funcionario=1&carga_partes_dependencia=1&carga_partes_series=1&no_grupos=1&no_tipos=1");
     tree3.setOnCheckHandler(onNodeSelect_serie);
-      
+	
+	
+	function onNodeSelect_dependencia(nodeId){
+    	tiempo=null;
+    	j=nodeId.length-1;
+    	tiempo=window.setInterval(abrir_dependencias,3000,nodeId);
+    }
+    function abrir_dependencias(dato){
+    	//console.log('d'+dato[j]);
+    	tree3.openItem('d'+dato[j]);
+    	j--;
+    	if (j<0){clearInterval(tiempo);};
+    }
+
   	function onNodeSelect_serie(nodeId){
-  		valor_destino=document.getElementById("serie_idserie");
-  		if(tree3.isItemChecked(nodeId)){
-  			if(valor_destino.value!=="")
-        	tree3.setCheck(valor_destino.value,false);
-        if(nodeId.indexOf("_")!=-1)
-        	nodeId=nodeId.substr(0,nodeId.indexOf("_"));
-        valor_destino.value=nodeId;
+  	  if(tree3.isItemChecked(nodeId)){
+  		var item_select=tree3.getAllChecked();
+  		console.log(nodeId+" -- "+item_select);
+  		if(item_select!=="undefined" && item_select!=nodeId){
+  	  		lista_items=item_select.split(",");
+  	  		for(i=0;i<lista_items.length;i++){
+  	  			tree3.setCheck(lista_items[i],0);
+  	  	  	}
+  	  	}
+  		tree3.setCheck(nodeId,1);
+        $("#serie_idserie").val(tree3.getUserData(nodeId,"idserie"));
+        $("#dependencia_iddependencia").val(tree3.getUserData(nodeId,"iddependencia"));
+        $("#codigo_numero_serie").val(tree3.getUserData(nodeId,"serie_codigo"));
+    	$("#codigo_numero_dependencia").val(tree3.getUserData(nodeId,"dependencia_codigo"));
+    	$("#fondo").val(tree3.getUserData(nodeId,"dependencia_nombre"));
+    	$("#codigo_numero_serie").trigger('keyup');
       }
       else{
-      	valor_destino.value="";
+    	$("#serie_idserie").val("");
+    	$("#dependencia_iddependencia").val("");
+    	$("#codigo_numero_serie").val('');
+  	  	$("#codigo_numero_dependencia").val('');
+  	    $("#fondo").val('');
+  	    $("#codigo_numero_serie").trigger('keyup');
       }
-      
-      var text = tree3.getItemText(nodeId);
-      var vector_text=text.split('(');
-      var codigo_serie=vector_text[vector_text.length-1].substring(0,vector_text[vector_text.length-1].length-2);
-      	if(tree3.isItemChecked(nodeId)){ //checkqueado
-      	    $('[name="codigo_numero_serie"]').val(codigo_serie);
-      	    $('[name="codigo_numero_serie"]').trigger('keyup');
-      	}else{ //unchecked
-      	    $('[name="codigo_numero_serie"]').val('');
-      	    $('[name="codigo_numero_serie"]').trigger('keyup');
-      	}
     }
     function fin_cargando_serie() {
       if (browserType == "gecko" )

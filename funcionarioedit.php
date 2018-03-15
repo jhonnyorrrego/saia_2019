@@ -33,6 +33,7 @@ $x_clave = Null;
 $x_nombres = Null;
 $x_apellidos = Null;
 $x_email = Null;
+$x_ventanilla_radicacion=Null;
 $x_direccion = Null;
 $x_telefono = Null;
 $x_firma = Null;
@@ -71,6 +72,7 @@ if (($sAction == "") || ((is_null($sAction)))) {
 	$x_nombres = @$_POST["x_nombres"];
 	$x_apellidos = @$_POST["x_apellidos"];
 	$x_email = @$_POST["x_email"];
+	$x_ventanilla_radicacion= @$_POST["x_ventanilla_radicacion"];
   $x_direccion = @$_POST["x_direccion"];
   $x_telefono = @$_POST["x_telefono"];
 	$x_firma = @$_POST["x_firma"];
@@ -198,13 +200,13 @@ label.error{
   <tr>
 		<td class="encabezado" title="Telefono."><span class="phpmaker" style="color: #FFFFFF;">TEL&Eacute;FONO</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="text" name="x_telefono" id="x_telefono" size="30" maxlength="255" value="<?php echo @$x_telefono ?>">
+<input type="text" name="x_telefono" id="x_telefono" class="number"  size="30" maxlength="255" value="<?php echo @$x_telefono ?>">
 </span></td>
 	</tr>
 	<tr>
 		<td class="encabezado" title="Correo electronico del funcionario."><span class="phpmaker" style="color: #FFFFFF;">Email</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="text" name="x_email" id="x_email" size="30" maxlength="255" value="<?php echo @$x_email ?>">
+<input type="text" name="x_email" id="x_email" size="30"  class="email"  maxlength="255" value="<?php echo @$x_email ?>">
 </span></td>
 	</tr>
 	
@@ -238,6 +240,28 @@ label.error{
 
 </td>
 	</tr>
+			<tr>
+				<td class="encabezado" title="Ventanilla de Radicaci6oacute;n del funcionario."><span class="phpmaker" style="color: #FFFFFF;">VENTANILLA DE RADICACI&Oacute;N</span></td>
+				<td bgcolor="#F5F5F5"><span class="phpmaker">					
+					<select name="x_ventanilla_radicacion" id="x_ventanilla_radicacion">
+						
+						<option value=''>Seleccione...</option>
+						<?php
+							$ventanilla_radicacion=busca_filtro_tabla("idcf_ventanilla,nombre","cf_ventanilla","estado=1","",$conn);
+							$options_ventanilla_radicacion='';
+							for($i=0;$i<$ventanilla_radicacion['numcampos'];$i++){
+								$selected='';
+								if($x_ventanilla_radicacion==$ventanilla_radicacion[$i]['idcf_ventanilla']){
+									$selected='selected';
+								}
+								$options_ventanilla_radicacion.='<option value="'.$ventanilla_radicacion[$i]['idcf_ventanilla'].'" '.$selected.'>'.$ventanilla_radicacion[$i]['nombre'].'</option>';
+							}
+							echo($options_ventanilla_radicacion);
+						?>
+					</select>
+					
+				</span></td>
+			</tr>		
 	<tr>
 		<td class="encabezado" title="Fecha de ingreso del funcionario"><span class="phpmaker" style="color: #FFFFFF;">FECHA DE INGRESO</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
@@ -353,6 +377,7 @@ function LoadData($sKey,$conn)
 		$GLOBALS["x_nombres"] = $row["nombres"];
 		$GLOBALS["x_apellidos"] = $row["apellidos"];
 		$GLOBALS["x_email"] = $row["email"];
+		$GLOBALS["x_ventanilla_radicacion"] = $row["ventanilla_radicacion"];
 		$GLOBALS["x_firma"] = $row["firma"];
 		$GLOBALS["x_estado"] = $row["estado"];
     $GLOBALS["x_direccion"] = $row["direccion"];
@@ -413,12 +438,7 @@ function EditData($sKey,$conn)
 		$theValue =(!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_nit"]) : $GLOBALS["x_nit"]; 
 		$fieldList["nit"] = "'".$theValue."'";			
 				
-		
-		
-		$theValue = ($GLOBALS["x_funcionario_codigo"] != "") ? intval($GLOBALS["x_funcionario_codigo"]) : "NULL";
-		$fieldList["funcionario_codigo"] = "'".$theValue."'";	
-
-   		$codigo = $theValue;			
+			
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_login"]) : $GLOBALS["x_login"]; 
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["login"] = $theValue;
@@ -446,6 +466,13 @@ function EditData($sKey,$conn)
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_email"]) : $GLOBALS["x_email"]; 
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["email"] = ($theValue);
+
+
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_ventanilla_radicacion"]) : $GLOBALS["x_ventanilla_radicacion"]; 
+		$theValue = ($theValue != "") ? " " . $theValue . "" : "NULL";
+		$fieldList["ventanilla_radicacion"] = ($theValue);		
+		
+		
 		if ($a_x_firma == "2") { // Remove
 			$fieldList["firma"] = "null";
 		} else if ($a_x_firma == "3") { // Update
@@ -463,26 +490,7 @@ function EditData($sKey,$conn)
 		
     $theValue = ($GLOBALS["x_estado"] != "") ? intval($GLOBALS["x_estado"]) : "NULL";
 		$fieldList["estado"] = "'".$theValue."'";
-    		
-		$reemplazo = busca_filtro_tabla("nuevo,antiguo,iddependencia_cargo as id","reemplazo,dependencia_cargo,funcionario","funcionario_idfuncionario=idfuncionario and funcionario_codigo = $codigo and (nuevo=iddependencia_cargo or antiguo=iddependencia_cargo) and reemplazo.activo=1","",$conn);
-		if($reemplazo["numcampos"]>0)
-		 for($i=0; $i<$reemplazo["numcampos"]; $i++)
-     {
-      if($theValue==0 && $reemplazo[$i]["id"]==$reemplazo[$i]["nuevo"])
-      {
-       $nombre_r=busca_filtro_tabla(concatenar_cadena_sql(array("nombres","' '","apellidos"))." as nombre","funcionario,dependencia_cargo","funcionario_idfuncionario=idfuncionario and iddependencia_cargo=".$reemplazo[$i]["antiguo"],"",$conn);
-       confirmacion("El funcionario no se puede desactivar porque esta reemplazando a ".$nombre_r[0]["nombre"].". Desea desactivar el reemplazo ?");
-       $theValue=1;
-       return false;
-      }
-      if($theValue==1 && $reemplazo[$i]["id"]==$reemplazo[$i]["antiguo"])
-      {
-       $nombre_r=busca_filtro_tabla(concatenar_cadena_sql(array("nombres","' '","apellidos"))." as nombre","funcionario,dependencia_cargo","funcionario_idfuncionario=idfuncionario and iddependencia_cargo=".$reemplazo[$i]["nuevo"],"",$conn);
-       confirmacion("No se puede activar porque el funcionario ".$nombre_r[0]["nombre"]." lo esta reemplazando. Desea desactivar el reemplazo ?");
-       $theValue=0; 
-       return false;      
-      }
-     }		
+    			
 		if($theValue==0)
 		{
      phpmkr_query("update dependencia_cargo set estado=0 where funcionario_idfuncionario=$sKeyWrk",$conn) or error("Fallo inactivar los roles del funcioanrio");
@@ -499,18 +507,7 @@ function EditData($sKey,$conn)
 				phpmkr_query($sql1);
 			}
 		}
-    //$theValue = ($GLOBALS["x_acceso_web"] != "") ? intval($GLOBALS["x_acceso_web"]) : "NULL";
-  	//$fieldList["acceso_web"] = $theValue;
-  	
-  	/*$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_acceso_web"]) : $GLOBALS["x_acceso_web"]; 
-  	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-  	$fieldList["acceso_web"] = ($theValue);*/
-    //verifica si existe un codigo repetido en los funcionarios.
-  $verificar = busca_filtro_tabla("*","funcionario A","A.funcionario_codigo=".$fieldList["funcionario_codigo"]." and A.idfuncionario<>$sKeyWrk","",$conn);    
-    if($verificar["numcampos"]>0)
-    { alerta("El codigo del funcionario ya se encuentra asignado");      
-      redirecciona("funcionarioedit.php?key=$sKeyWrk");
-    } 
+
     if ($_POST["x_estado"] == "1"){
 			
     $respuesta=validar_usuarios_activos_edit();		
@@ -583,7 +580,7 @@ function validar_usuarios_activos_edit(){
 	$reemplazos_activos=$reemplazos['numcampos'];
 	$cupos_usados=$funcionarios_activos+$reemplazos_activos;
 	
-	$funcionario_editar=busca_filtro_tabla("estado","funcionario a","a.funcionario_codigo=".$_POST["x_funcionario_codigo"]." AND a.estado=1","",$conn);
+	$funcionario_editar=busca_filtro_tabla("estado","funcionario a","a.nit=".$_POST["x_nit"]." AND a.estado=1","",$conn);
 	
 	//Consulta la cantidad de usuarios definidos en la configuracion y desencripta el valor
 	$consulta_usuarios=busca_filtro_tabla("valor","configuracion","nombre='numero_usuarios'","",$conn);

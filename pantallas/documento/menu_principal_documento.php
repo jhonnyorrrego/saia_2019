@@ -31,6 +31,7 @@ if($formato[0]['mostrar_pdf']==1){
 }
 
 echo(librerias_jquery("1.7"));
+echo(librerias_arboles());
 //if(usuario_actual('login')!='cerok' || !$tipo_visualizacion)return true;
 echo(estilo_bootstrap());
 echo(librerias_bootstrap());
@@ -48,6 +49,21 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
     }
     $documento=busca_filtro_tabla("","documento A","A.iddocumento=".$iddoc,"",$conn);
 	$formato=busca_filtro_tabla("","documento A, formato B","lower(A.plantilla)=lower(B.nombre) AND A.iddocumento=".$iddoc,"",$conn);
+	$descripcion=busca_filtro_tabla("","campos_formato","formato_idformato=".$formato[0]["idformato"]." AND acciones LIKE '%d%'","",$conn);
+	if($descripcion["numcampos"]){
+	    $campo_descripcion=$descripcion[0]["nombre"];
+	}else{
+	    $campo_descripcion="id".$formato[0]["nombre_tabla"];
+	}
+	$papas=busca_filtro_tabla("id".$formato[0]["nombre_tabla"]." AS llave, ".$campo_descripcion." AS etiqueta ,'".$formato[0]["nombre_tabla"]."' AS nombre_tabla",$formato[0]["nombre_tabla"],"documento_iddocumento=".$iddoc,"id".$formato[0]["nombre_tabla"]." ASC",$conn);
+	
+	if($papas["numcampos"]){
+	    $iddoc2=$formato[0]["idformato"]."-".$papas[0]["llave"]."-id".$formato[0]["nombre_tabla"];
+	    $llave_formato=$formato[0]["idformato"]."-id".$formato[0]["nombre_tabla"]."-".$papas[0]["llave"]."-".$iddocumento;
+	}else {
+	    $iddoc=0;
+	    $llave_formato=0;
+	}
     $mostrar_menu_acciones_rapidas=0;
     if($_SESSION["tipo_dispositivo"]!="movil"){
       $mostrar_menu_acciones_rapidas=1;
@@ -61,7 +77,7 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
 	$datos_admin=botones_administrativos_menu($iddoc);
     echo(librerias_acciones_kaiten());
         ?>
-    <style>
+    <style type="text/css">
         .navbar-inner{height: 50px;}
         body{ font-size:12px; line-height:100%; margin-top:70px}
         .navbar-fixed-top, .navbar-fixed-bottom{ position: fixed;}
@@ -85,6 +101,25 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
 
                     </button>
                    </a -->
+                   <?php
+                   if($_SESSION["tipo_dispositivo"]=="movil"){
+                   ?>
+                   <button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
+                      
+                        <i class="icon-acciones_menu_mostrar"></i>
+                      
+                    </button>
+                   
+                   <ul class="dropdown-menu">
+                        <li>
+                        	<div class="tab-pane active" id="arbol">
+                              <div id="esperando_arbol">
+                                <img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
+                              <div id="tree_box" class="arbol_saia"></div>
+                            </div>
+                        </li>
+                    </ul>
+                    <?php }else{?>
               		<a class="kenlace_saia_propio enlace_home_documento"  destino="_centro">
                     <button type="button" class="btn btn-mini">
 
@@ -92,28 +127,147 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
 
                     </button>
                    </a>
+                    <?php }?>
                    <script>
-                   		$(document).ready(function(){
- 							$('.enlace_home_documento').live('click',function(){
- 								var iddoc='<?php echo($iddoc); ?>';
- 								var cod_padre='<?php echo($formato[0]['cod_padre']); ?>';
- 								redirecciona_home_documento(iddoc,cod_padre);
- 							});
-                   		});
-                   		function redirecciona_home_documento(iddoc,cod_padre){
-                   			if(cod_padre!='' && cod_padre!='0'){
-	                   			direccion=new String(window.parent.frames[0].location);
-	             				vector=direccion.split('&');
-	             				vector_iddoc=vector[1].split('=');
-	             				if(window.parent.parent.frames[0].frameElement.name=='centro'){
-	             					window.parent.parent.frames[0].location="<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
-	             				}else if(window.parent.parent.frames[2].frameElement.name=='centro'){
-	             					window.parent.parent.frames[2].location="<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
-	             				}					  
-                   			}else{
-                   				window.open("<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+iddoc,"arbol_formato");				
-                   			}              			
+										$(document).ready(function(){
+											$('.enlace_home_documento').live('click',function(){
+												var iddoc='<?php echo($iddoc); ?>';
+												var cod_padre='<?php echo($formato[0]['cod_padre']); ?>';
+												<?php if($_SESSION["tipo_dispositivo"]!="movil"){ ?>
+												redirecciona_home_documento(iddoc,cod_padre);
+												<?php } ?>
+											});	
+										});
+										
+										var item="<?php echo($llave_formato);?>";
+										function redirecciona_home_documento(iddoc,cod_padre){
+											if(cod_padre!='' && cod_padre!='0'){
+												direccion=new String(window.parent.frames[0].location);
+												vector=direccion.split('&');
+												vector_iddoc=vector[1].split('=');
+												if(window.parent.parent.frames[0].frameElement.name=='centro'){
+													window.parent.parent.frames[0].location="<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
+												}else if(window.parent.parent.frames[2].frameElement.name=='centro'){
+													window.parent.parent.frames[2].location="<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
+												}					  
+											}else{
+												window.open("<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+iddoc,"arbol_formato");				
+											}              			
+										}
+                   		
+                   		
+                   		<?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
+                   		var browserType;
+                   	  if (document.layers) {browserType = "nn4";}
+                   	  if (document.all) {browserType = "ie";}
+                   	  if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+                   	     browserType= "gecko";
+                   	  }
+                   	  no_seleccionar=<?php echo((@$_REQUEST["no_seleccionar"]?"1":"0")); ?>;
+                   	  tree2=new dhtmlXTreeObject("tree_box","100%","<?php echo($alto_inicial);?>",0);
+                   	  tree2.enableAutoTooltips(1);
+                   	  tree2.enableTreeImages("false");
+                   	  tree2.enableTreeLines("true");
+                   	  tree2.enableTextSigns("true");
+                   	  tree2.setOnLoadingStart(cargando);
+                   	  tree2.setOnLoadingEnd(fin_cargando);
+                   	  tree2.setOnClickHandler(onNodeSelect);
+                   	  tree2.loadXML("<?php echo($ruta_db_superior);?>formatos/arboles/test_formatos_documento2.php?id=<?php echo($iddoc2);?>");
+                   	  function redireccion_ruta(iframe_destino,ruta_enlace){
+                   	    if(iframe_destino==''){
+                   	      window.location=ruta_enlace;
+                   	    }
+                   	    else if(window.parent.frames[iframe_destino]!=undefined){
+                   	      window.parent.frames[iframe_destino].location=ruta_enlace;
+                   	    }
+                   	    else if(window.frames[iframe_destino]!=undefined){
+                   	      window.frames[iframe_destino].location=ruta_enlace;
+                   	    }
+                   	    else{
+                   	      window.location=ruta_enlace;
+                   	    }
+                   	  }
+                   	  function onNodeSelect(nodeId){
+
+                   	  	var llave=0;
+                   	    llave=tree2.getParentId(nodeId);
+                   	    var datos=nodeId.split("-");
+                   	    if(datos[2][0]=="r"){
+                   	    	seleccion_accion('adicionar');
+                   	    }
+                   	    else{
+                   	    	documento_saia=datos[3];
+                   		    conexion="<?php echo($ruta_db_superior); ?>formatos/arboles/parsear_accion_arbol.php?id="+nodeId+"&accion=mostrar&llave="+llave+"&enlace_adicionar_formato=1";
+                   		    redireccion_detalles(conexion);
+                   	    }
                    		}
+                   		function seleccion_accion(accion,id){
+                   	    var nodeId=0;
+                   	    var llave=0;
+                   	    nodeId=tree2.getSelectedItemId();
+                   	    if(!nodeId){
+                   	      alert("Por Favor seleccione un documento del arbol");
+                   	      return;
+                   	    }
+                   	    llave=tree2.getParentId(nodeId);
+                   	    tree2.closeAllItems(tree2.getParentId(nodeId))
+                   	    tree2.openItem(nodeId);
+                   	    tree2.openItem(tree2.getParentId(nodeId));
+                   	    conexion="<?php echo($ruta_db_superior); ?>formatos/arboles/parsear_accion_arbol.php?id="+nodeId+"&accion="+accion+"&llave="+llave;
+                   	    redireccion_detalles(conexion);
+                   	    }
+                   	    function redireccion_detalles(conexion){
+                   	        if(!no_seleccionar){
+                   	            window.parent.open(conexion,"detalles");
+                   	        }
+                   	        else{
+                   	            no_seleccionar=0;
+                   	        }
+                   	    }
+                   	    function fin_cargando(){
+                   	        if (browserType == "gecko" )
+                   	           document.poppedLayer =
+                   	               eval('document.getElementById("esperando_arbol")');
+                   	        else if (browserType == "ie")
+                   	           document.poppedLayer =
+                   	              eval('document.getElementById("esperando_arbol")');
+                   	        else
+                   	           document.poppedLayer =
+                   	              eval('document.layers["esperando_arbol"]');
+                   	        document.poppedLayer.style.visibility = "hidden";
+                   	        tree2.selectItem(item,true,false);
+                   	        tree2.openAllItems(0); //esta linea permite que los arboles carguen abiertos totalmente
+                   	        <?php
+                   	            if(@$_REQUEST['click_mostrar']){
+                   	                ?>
+                   	                nodeId=tree2.getSelectedItemId();
+                   	                llave=tree2.getParentId(nodeId);
+                   	                onNodeSelect(nodeId);
+                   	                <?php
+                   	            }
+                   	        ?>
+                   	      }
+                   	    function cargando() {
+                   	      if (browserType == "gecko" )
+                   	         document.poppedLayer =
+                   	             eval('document.getElementById("esperando_arbol")');
+                   	      else if (browserType == "ie")
+                   	         document.poppedLayer =
+                   	            eval('document.getElementById("esperando_arbol")');
+                   	      else
+                   	         document.poppedLayer =
+                   	             eval('document.layers["esperando_arbol"]');
+                   	      document.poppedLayer.style.visibility = "visible";
+
+                   	    }
+                   	    function actualizar_papa(nodeId){
+                   	        var papa=tree2.getParentId(nodeId);
+                   	        tree2.closeItem(papa);
+                   	        tree2.deleteItem(nodeId,true);
+                   	        //tree2.refreshItem(nodeId);
+                   	        tree2.findItem(papa);
+                   	      }
+                   	 <?php } ?>
                    </script>
                 </div>
                 <div class="btn-group pull-left btn-under">
@@ -165,6 +319,20 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
                     <?php
                     echo(permisos_modulo_menu_intermedio($iddoc,"rapidos_menu_intermedio",array("nombre"=>"rapidos_menu_intermedio","tipo"=>1)));
                     ?>
+                    <script type="text/javascript">
+                      $(document).ready(function(){
+                        $("#transferir").click(function(){
+                            var pagactual=1;
+                        	$("#transferir").removeAttr("enlace");
+                            try{
+                        		pagactual=document.getElementById('detalles').contentDocument.getElementById('pageNumber').value;
+                            }catch(err){
+                            	pagactual=1;
+                            }
+                          window.open("<?php echo($ruta_db_superior); ?>transferenciaadd.php?doc=<?php echo($iddoc); ?>&&mostrar=1&key=<?php echo($iddoc); ?>&pag_pdf="+pagactual,"_self");
+                        });
+                      });
+                    </script>
                     <h6>Acciones r&aacute;pidas</h6>
                 </div>
               </li>
@@ -184,8 +352,15 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
              &nbsp;<i class="icon-ok"></i>
                 <script type="text/javascript">
                   $(document).ready(function(){
+                  	var iddoc_ref=parseInt(<?php echo($iddoc); ?>);
+                  	if(window.parent.frames["arbol_formato"]!==undefined){
+											match_iddoc=window.parent.frames["arbol_formato"].location.href.match(/(iddoc)=([\d]+)/);
+											if(match_iddoc){
+												iddoc_ref=match_iddoc[2];
+											}
+                  	}
                     $("#aprobar_documento").click(function(){
-                      window.open("<?php echo($ruta_db_superior); ?>class_transferencia.php?iddoc=<?php echo($iddoc); ?>&funcion=aprobar","_self");
+                     window.open("<?php echo($ruta_db_superior); ?>class_transferencia.php?iddoc=<?php echo($iddoc); ?>&funcion=aprobar&anterior="+iddoc_ref,"_self");
                     });
                   });
                 </script>
@@ -290,84 +465,68 @@ $lista=arreglo con nombre: nombre del modulo y tipo=1 botones con enlace, tipo=2
 $target=destino donde se debe abrir el enlace
 */
 function permisos_modulo_menu_intermedio($iddoc, $modulo_padre,$lista,$target="_self"){
-	global $ruta_db_superior, $documento, $funcionario;
-	$texto = '';
-	if ($modulo_padre == "rapidos_menu_intermedio") {
-		$datos_modulos = array(
-				'devolucion',
-				'transferir',
-				'responder',
-				'seguimiento',
-				'terminar_documento',
-				'vista_previa'
-		);
-	} else {
-		$datos_modulos = modulos_menu_intermedio($modulo_padre);
-	}
+  global $ruta_db_superior,$documento,$funcionario;
+  $texto='';
+  if($modulo_padre=="rapidos_menu_intermedio"){
+      $datos_modulos=array('devolucion','transferir','responder','seguimiento_rastro','terminar_documento','vista_previa');
+  }
+  else{
+      $datos_modulos=  modulos_menu_intermedio($modulo_padre);
+  }
 
-	$documento_anulado = busca_filtro_tabla("estado", "documento", "iddocumento=" . $iddoc, "", $conn);
-	if ($documento_anulado[0]['estado'] == 'ANULADO') {
-		$modulos_documentos_anulados = array();
-		switch (strtolower($modulo_padre)) {
-			case 'otros_menu_intermedio' :
-				$modulos_documentos_anulados = array(
-						'Almacenamiento'
-				);
-				break;
-			case 'acciones_menu_intermedio' :
-				$modulos_documentos_anulados = array(
-						'devolucion',
-						'transferir',
-						'expediente_menu',
-						'enviar_documento_correo'
-				);
-				break;
-			case 'rapidos_menu_intermedio' :
-				$modulos_documentos_anulados = array(
-						'transferir',
-						'seguimiento',
-						'devolucion',
-						'vista_previa'
-				);
-				break;
-			default :
-				break;
-		}
+    $documento_anulado=busca_filtro_tabla("estado","documento","iddocumento=".$iddoc,"",$conn);
+    if($documento_anulado[0]['estado']=='ANULADO'){
+        $modulos_documentos_anulados=array();
+        switch(strtolower($modulo_padre)){
+            case 'otros_menu_intermedio':
+                $modulos_documentos_anulados=array('Almacenamiento');
+                break;
+            case 'acciones_menu_intermedio':
+                $modulos_documentos_anulados=array('devolucion','transferir','expediente_menu','enviar_documento_correo');
+                break;
+            case 'rapidos_menu_intermedio':
+                $modulos_documentos_anulados=array('transferir','seguimiento_rastro','devolucion','vista_previa');
+                break;
+            default:
+                break;
+        }
+        
+        $datos_modulos=$modulos_documentos_anulados;
+    }
+    
+    $permiso=new PERMISO();
+    $modulo=  busca_filtro_tabla("", "modulo", "nombre IN ('".implode("','",$datos_modulos)."')", "orden", $conn);
+    
+    //$ok=1;
 
-		$datos_modulos = $modulos_documentos_anulados;
-	}
-
-	$permiso = new PERMISO();
-	$modulo = busca_filtro_tabla("", "modulo", "nombre IN ('" . implode("','", $datos_modulos) . "')", "orden", $conn);
-	// $ok=1;
-
-	// print_r($modulo);die();
-	for($i = 0; $i < $modulo["numcampos"]; $i++) {
-		$ok = $permiso->acceso_modulo_perfil($modulo[$i]["nombre"], 1);
-		if ($ok || usuario_actual('login') == 'cerok') {
-			if ($modulo[$i]["nombre"] == "eliminar_borrador" && ($documento[0]["estado"] != "ACTIVO" || $documento[0]["ejecutor"] != $funcionario)) {
-				continue;
-			}
-			if ($modulo[$i]["nombre"] == 'vista_previa' && @$_REQUEST["vista"]) {
-				$modulo[$i]["enlace"] .= "&vista=" . $_REQUEST["vista"];
-			}
-			if ($modulo[$i]["nombre"] == 'ver_notas_posit') {
-				$datos_documento = busca_filtro_tabla("", "documento A, formato B", "lower(A.plantilla)=lower(B.nombre) AND A.iddocumento=" . $iddoc, "", $conn);
-				$modulo[$i]["enlace"] = FORMATOS_CLIENTE . $datos_documento[0]["nombre"] . "/" . $datos_documento[0]["ruta_mostrar"] . "?iddoc=" . $datos_documento[0]["iddocumento"] . "&idformato=" . $datos_documento[0]["idformato"] . "&ver_notas=1";
-			}
-			if ($modulo[$i]["destino"] && $modulo[$i]["destino"] != "centro") {
-				$target = $modulo[$i]["destino"];
-			}
-			if (@$iddoc) {
-				$dir = str_replace('@key@', $iddoc, $modulo[$i]["enlace"]);
-			}
-			if ($lista["tipo"] == 2) {
-				// Menu listado
-				$texto .= '<li><a href="/' . RUTA_SAIA . $dir . '" class="kenlace_saia_propio" enlace="/' . RUTA_SAIA . $dir . '" destino="' . $target . '"><i class="icon-' . $modulo[$i]["nombre"] . '"></i> ' . $modulo[$i]["etiqueta"] . '</a></li>';
-			} else if ($lista["tipo"] == 1) {
-				// Menu rapido
-				$texto .= '<div class="btn btn-mini kenlace_saia_propio" titulo="' . $modulo[$i]["etiqueta"] . '" enlace="/' . RUTA_SAIA . $dir . '" title="' . $modulo[$i]["etiqueta"] . '" destino="' . $target . '">
-             &nbsp;<i class="icon-' . $modulo[$i]["nombre"] . '"></i> &nbsp;
+    //print_r($modulo);die();
+    for($i=0;$i<$modulo["numcampos"];$i++){
+      $ok=$permiso->acceso_modulo_perfil($modulo[$i]["nombre"],1);
+      if($ok || usuario_actual('login')=='cerok'){
+				if($modulo[$i]["nombre"]=="eliminar_borrador" && ($documento[0]["estado"]!="ACTIVO" || $documento[0]["ejecutor"]!=$funcionario)){
+					continue;
+				}
+      	if($modulo[$i]["nombre"]=='vista_previa' && @$_REQUEST["vista"]){
+      		$modulo[$i]["enlace"].="&vista=".$_REQUEST["vista"];
+      	}
+				if($modulo[$i]["nombre"]=='ver_notas_posit'){
+					$datos_documento=busca_filtro_tabla("","documento A, formato B","lower(A.plantilla)=lower(B.nombre) AND A.iddocumento=".$iddoc,"",$conn);
+					$modulo[$i]["enlace"]="formatos/".$datos_documento[0]["nombre"]."/".$datos_documento[0]["ruta_mostrar"]."?iddoc=".$datos_documento[0]["iddocumento"]."&idformato=".$datos_documento[0]["idformato"]."&ver_notas=1";
+				}
+      	if($modulo[$i]["destino"] && $modulo[$i]["destino"]!="centro"){
+      		$target=$modulo[$i]["destino"];
+      	}
+        if(@$iddoc){
+          $dir=str_replace('@key@',$iddoc,$modulo[$i]["enlace"]);
+        }
+        if($lista["tipo"]==2){
+          //Menu listado
+          $texto.='<li><a href="'.$ruta_db_superior.$dir.'" class="kenlace_saia_propio" enlace="'.$dir.'" destino="'.$target.'"><i class="icon-'.$modulo[$i]["nombre"].'"></i> '.$modulo[$i]["etiqueta"].'</a></li>';
+        }
+        else if($lista["tipo"]==1){
+          //Menu rapido
+           $texto.='<div class="btn btn-mini kenlace_saia_propio" titulo="'.$modulo[$i]["etiqueta"].'" enlace="'.$ruta_db_superior.$dir.'" title="'.$modulo[$i]["etiqueta"].'" destino="'.$target.'" id="'.$modulo[$i]["nombre"].'">
+             &nbsp;<i class="icon-'.$modulo[$i]["nombre"].'"></i> &nbsp;
             </div>';
 			} else {
 				$texto .= '<div class="btn btn-mini tooltip_saia_abajo ' . $modulo[$i]["nombre"] . '" title="' . $modulo[$i]["etiqueta"] . '">
@@ -402,11 +561,7 @@ function permisos_modulo_clase($iddoc, $modulo_padre,$lista,$target="_self"){
 		$ok = $permiso->acceso_modulo_perfil($modulo[$i]["nombre"], 1);
 		if ($ok) {
 			if (@$iddoc) {
-				$dir = str_replace(array(
-						'@key@',
-						'@iddoc@',
-						'@iddocumento@'
-				), $iddoc, $modulo[$i]["enlace"]);
+                $dir=str_replace(array('@key@','@iddoc@','@iddocumento@'),$iddoc,$modulo[$i]["enlace"]);
 				$dir = str_replace('@nombreformato@', strtolower($documento->documento[0]["plantilla"]), $dir);
 			}
 			if ($lista == 1) {
@@ -439,10 +594,6 @@ function botones_administrativos_menu($iddoc){
 	include_once($ruta_db_superior."class_transferencia.php");
 	$texto=array();
 	$usuario_actual=$_SESSION["usuario_actual"];
-	$usuario_reemplazo=reemplazo($_SESSION["usuario_actual"],'reemplazo');
-	if($usuario_actual!=$usuario_reemplazo){
-		$usuario_actual=$usuario_reemplazo;
-	}
 
 	$responsable=busca_filtro_tabla("destino,estado,plantilla","buzon_entrada,documento","iddocumento=archivo_idarchivo and archivo_idarchivo=".$iddoc,"buzon_entrada.idtransferencia asc",$conn);
 
