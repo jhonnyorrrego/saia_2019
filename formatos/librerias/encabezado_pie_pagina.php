@@ -58,12 +58,6 @@ function crear_encabezado_pie_pagina($texto, $iddoc, $idformato, $pagina = 1) {
 			include_once ($ruta_db_superior . "/" . $formato[0]["nombre"] . "/" . $formato[0]["librerias"]);
 		}
 	}
-	if ($pagina == 0) {
-		$texto = str_replace("Pagina ##PAGE## de ##PAGES##", "", $texto);
-		$texto = str_replace("##PAGE## DE ##PAGES##", "", $texto);
-	}
-	$fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", "", $conn);
-	//$texto.='<style>table,td {font-size:'.$formato[0]["font_size"].'pt; font-family:'.$fuente[0]["valor"].';}</style>';
 	return (codifica_encabezado(html_entity_decode(htmlspecialchars_decode($texto))));
 }
 
@@ -231,8 +225,9 @@ function logo_encabezado() {
 		} else {
 			return ('<div><img style="left:20px;top:35px" src="' . PROTOCOLO_CONEXION . RUTA_PDF . '/' . $logo[0]["valor"] . '" border="0"></div>');
 		}
-	} else
+	} else {
 		return ("");
+	}
 }
 
 function nombre_empresa() {
@@ -240,15 +235,6 @@ function nombre_empresa() {
 	$logo = busca_filtro_tabla("valor", "configuracion", "nombre='nombre'", "", $conn);
 	if ($logo["numcampos"]) {
 		return ($logo[0]["valor"]);
-	} else
-		return ("");
-}
-
-function nombre_empresa2() {
-	global $conn;
-	$logo = busca_filtro_tabla("valor", "configuracion", "nombre='nombre'", "", $conn);
-	if ($logo["numcampos"]) {
-		return (mayusculas($logo[0]["valor"]));
 	} else
 		return ("");
 }
@@ -310,21 +296,6 @@ function nombre_calidad($idformato, $iddoc, $tipo) {
 		echo $valor[0][0];
 }
 
-function encabezado_ruta_n($idformato, $iddoc) {
-	return ("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" . PROTOCOLO_CONEXION . RUTA_PDF . "/imagenes/encabezado_ruta_n.jpg' border='0' />");
-}
-
-function footer_rutan($idformato, $iddoc) {
-	return (" <img src=" . PROTOCOLO_CONEXION . RUTA_PDF . "/imagenes/footer_rutan.jpg' border='0'/>");
-}
-
-function encabezado_legalizacion($idformato, $iddoc) {
-	return '<img src= ' . PROTOCOLO_CONEXION . RUTA_PDF . '/imagenes/logo_legalizacion.png"  >';
-}
-
-function encabezado_orden($idformato, $iddoc) {
-	return '<img src= ' . PROTOCOLO_CONEXION . RUTA_PDF . '/imagenes/logo_demo.jpg" >';
-}
 
 function mostrar_datos_radicaion($idformato, $iddoc) {
 	global $conn;
@@ -389,7 +360,6 @@ function mensajero_entrega_interna($idformato, $iddoc) {
 }
 
 function mostrar_num_pagina($idformato, $iddoc) {
-
 	if ($_REQUEST['pagina'] == 1) {
 		return ('{PAGENO}');
 	}

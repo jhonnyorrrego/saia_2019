@@ -609,19 +609,6 @@ function mostrar_anexos_externa($idformato,$iddoc){
 		echo "Anexos: ".$fisicos." ".strip_tags($digitales, '<a>')."<br/><br/>";
 	}
 }
-function tamanio_texto_anexos_ext($idformato,$iddoc){
-	global $conn;
-	if(@$_REQUEST['tipo']!=5){
-	?>
-		<script type="text/javascript">
-			$(document).ready(function(){
-				//$("table tbody tr td a font").css("font-size","12pt");
-				$('*').css('font-family','arial');
-			});
-		</script>
-	<?php
-	}
-}
 
 
 function mostrar_copias_comunicacion_ext($idformato,$iddoc=NULL){

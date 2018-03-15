@@ -329,7 +329,7 @@ return true;
         <?php
           $serie=busca_filtro_tabla("","serie A","tvd=0","lower(nombre) asc",$conn);
           
-        $inicio2='<SELECT name="x_serie_idserie"><OPTION value="0">Sin Serie Documental</OPTION><OPTION value="" selected>Crear Serie Documental</OPTION>';
+        $inicio2='<SELECT name="x_serie_idserie"><OPTION value="0" selected>Sin Serie Documental</OPTION><OPTION value="">Crear Serie Documental</OPTION>';
         $fin2='</SELECT>';
           
           for($i=0;$i<$serie["numcampos"];$i++){
@@ -565,12 +565,7 @@ echo $x_contador_idcontadorList;
 <p>
 <input type="submit" name="Action" value="EDIT">
 </form>
-<?php include ("footer.php") ?>
 <?php
-////phpmkr_db_close($conn);
-?>
-<?php
-
 //-------------------------------------------------------------------------------
 // Function LoadData
 // - Load Data based on Key Value sKey
@@ -620,9 +615,6 @@ function LoadData($sKey,$conn){
 	  }
 	return $LoadData;
 }
-?>
-<?php
-
 //-------------------------------------------------------------------------------
 // Function EditData
 // - Edit Data based on Key Value sKey
@@ -681,20 +673,40 @@ function EditData($sKey,$conn)
      phpmkr_query($sql);  
     }
     //crear la serie con el nombre del formato
-  	if($x_serie_idserie==""){
-  	  $sql="insert into serie(nombre,categoria) values('".$x_etiqueta."',3)";
-  	  $sql_export=array("sql"=>$sql);
-	  guardar_traza($sql,$x_tabla,$sql_export);
-	  phpmkr_query($sql);
-	  $fieldList["serie_idserie"]=phpmkr_insert_id();
-	  $sql="update campos_formato set predeterminado=".$fieldList["serie_idserie"]."  where lower(nombre)='serie_idserie' and formato_idformato=".$sKeyWrk;
-	  $sql_export=array("sql"=>"update campos_formato set predeterminado=|-idserie-|  where lower(nombre)='serie_idserie' and formato_idformato=|-idformato-|","variables"=>array("idserie"=>"select idserie FROM serie WHERE nombre='".$x_etiqueta."' AND categoria=3","idformato"=>"select idformato FROM formato WHERE nombre='".$x_nombre."'"));
-	  guardar_traza($sql,$x_tabla,$sql_export);
-	  phpmkr_query($sql);
-   }
-	else{  //otra serie elegida o sin serie
-	$theValue = ($x_serie_idserie != 0) ? intval($x_serie_idserie) : 0;
-	$fieldList["serie_idserie"] = $theValue;
+	if ($x_serie_idserie == "") {
+		$nomb_serie_papa = busca_filtro_tabla("idserie", "serie", "lower(nombre) like 'administraci&n%formatos'", "", $conn);
+		if ($nomb_serie_papa["numcampos"]) {
+			$idserie_papa = $nomb_serie_papa[0]["idserie"];
+		} else {
+			$sql_serie_papa = "insert into serie(nombre,cod_padre,categoria) values('Administracion de Formatos',0,3)";
+			guardar_traza($sql_serie_papa, $x_tabla);
+			phpmkr_query($sql_serie_papa, $conn);
+			$idserie_papa = phpmkr_insert_id();
+		}
+	
+		$nomb_serie = busca_filtro_tabla("idserie,cod_padre", "serie", "nombre like '" . $x_etiqueta . "'", "", $conn);
+		if ($nomb_serie["numcampos"]) {
+			if ($nomb_serie[0]["cod_padre"] != $idserie_papa) {
+				$update = "UPDATE serie SET cod_padre=" . $idserie_papa . " WHERE idserie=" . $nomb_serie[0]["idserie"];
+				guardar_traza($update, $x_tabla);
+				phpmkr_query($update, $conn);
+				$fieldList["serie_idserie"] = $nomb_serie[0]["idserie"];
+			}
+		} else {
+			$sql_serie = "insert into serie(nombre,cod_padre,categoria) values('" . $x_etiqueta . "'," . $idserie_papa . ",3)";
+			$sql_export = array("sql" => $sql_serie);
+			guardar_traza($sql_serie, $x_tabla, $sql_export);
+			phpmkr_query($sql_serie);
+			$fieldList["serie_idserie"] = phpmkr_insert_id();
+		}
+	
+		$sql = "update campos_formato set predeterminado=" . $fieldList["serie_idserie"] . "  where lower(nombre)='serie_idserie' and formato_idformato=" . $sKeyWrk;
+		$sql_export = array("sql" => "update campos_formato set predeterminado=|-idserie-|  where lower(nombre)='serie_idserie' and formato_idformato=|-idformato-|", "variables" => array("idserie" => "select idserie FROM serie WHERE nombre='" . $x_etiqueta . "' AND categoria=3", "idformato" => "select idformato FROM formato WHERE nombre='" . $x_nombre . "'"));
+		guardar_traza($sql, $x_tabla, $sql_export);
+		phpmkr_query($sql);
+	}else{  //otra serie elegida o sin serie
+		$theValue = ($x_serie_idserie != 0) ? intval($x_serie_idserie) : 0;
+		$fieldList["serie_idserie"] = $theValue;
 	}
     $theValue = (!get_magic_quotes_gpc()) ? addslashes($x_ruta_mostrar) : $x_ruta_mostrar; 
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";

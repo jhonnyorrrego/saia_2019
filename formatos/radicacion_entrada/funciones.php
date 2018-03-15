@@ -15,24 +15,6 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 include_once($ruta_db_superior."formatos/librerias/encabezado_pie_pagina.php");
 
-//ini_set("display_errors",true);
-//ADICIONAR - EDITAR
-//******************
-function cargar_fecha_limite_respuesta($idformato,$iddoc){
-	global $conn;
-	$fecha_ochodias=date("Y-m-d",strtotime ('+8 day',strtotime(date("Y-m-d"))));
-	echo($fecha." ".$fecha2);
-?>
-	<script type="text/javascript">
-		$(document).ready(function(){
-		    //$("#descripcion").attr("maxlength",150);
-		    //$("#descripcion_general").attr("maxlength",150);
-			//var fecha_masocho_dias="<?php echo($fecha_ochodias);?>";
-			//$("#tiempo_respuesta").val(fecha_masocho_dias);			
-		});
-	</script>
-<?php
-}
 
 function mostrar_radicado_entrada($idformato,$iddoc){
 	global $conn;
@@ -44,105 +26,13 @@ function mostrar_radicado_entrada($idformato,$iddoc){
 	else
 		echo '<td id="numero_radicado">'.$fecha."-<b>".muestra_contador("radicacion_entrada").'</b>-E</td>';
 }
-function enviar_adicionar($idformato,$iddoc){
-	$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
-	$ruta_db_superior=$ruta="";
-	while($max_salida>0){
-	if(is_file($ruta."db.php"))
-	{
-	$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-	}
-	$ruta.="../";
-	$max_salida--;
-	}
-	$datos=busca_filtro_tabla("","ft_radicacion_entrada A","documento_iddocumento=".$iddoc,"",$conn);
-	if($datos[0]["estado_radicado"]==1){
-		if(@$_REQUEST["iddoc"]){
-			$enlace="paginaadd.php?key=".$_REQUEST["iddoc"]."&enlace2=formatos/radicacion_entrada/detalles_mostrar_radicacion_entrada.php?iddoc=".$_REQUEST["iddoc"];
 
-		}
-		else{
-			$enlace=$ruta_db_superior."formatos/radicacion_entrada/detalles_mostrar_radicacion_entrada.php?iddoc=".$iddoc."&idformato=".$idformato;
-		}
-		abrir_url($ruta_db_superior."colilla.php?target=_self&key=".$iddoc."&enlace=".$enlace,"_self");
-		
-	}
-	else{
-		$sql1="UPDATE documento SET estado='INICIADO' WHERE iddocumento=".$iddoc;
-		phpmkr_query($sql1);
-	}
-}
-function cambiar_estado($idformato,$iddoc){
-	global $conn;
-	$doc=busca_filtro_tabla("","documento A","iddocumento=".$iddoc,"",$conn);
-	if($doc[0]["estado"]=='INICIADO'){
-		$sql1="UPDATE documento SET estado='APROBADO' WHERE iddocumento=".$iddoc;
-		phpmkr_query($sql1);
-	}
-}
-function validar_digitalizacion_formato_radicacion($idformato,$iddoc){
-	global $conn,$ruta_db_superior;
-	
-	 $cidbusqueda_en_proceso=busca_filtro_tabla("idbusqueda","busqueda","nombre='en_proceso'","",$conn);
-     $idbusqueda_en_proceso=$cidbusqueda_en_proceso[0]['idbusqueda'];
-  if($_REQUEST["digitalizacion"]==1){
-  	if(@$_REQUEST["iddoc"]){
-  	   
-  		//$enlace="pantallas/buscador_principal.php?idbusqueda=".$idbusqueda_en_proceso;
-  		$enlace="ordenar.php?key=".$_REQUEST['iddoc']."&accion=mostrar&mostrar_formato=1";  		//abrir_url($ruta_db_superior."colilla.php?key=".$_REQUEST["iddoc"]."&enlace=paginaadd.php?key=".$_REQUEST["iddoc"]."&enlace2=".$enlace,'_self');
-  		abrir_url($ruta_db_superior."paginaadd.php?key=".$_REQUEST["iddoc"]."&enlace=".$enlace,'_self');
-  	}
-	else{
-		//$enlace="busqueda_categoria.php?idcategoria_formato=1&defecto=radicacion_entrada";
-		$enlace="ordenar.php?key=".$iddoc."&accion=mostrar&mostrar_formato=1";
-		abrir_url($ruta_db_superior."colilla.php?target=_self&key=".$iddoc."&enlace=paginaadd.php?key=".$iddoc."&enlace2=".$enlace,'_self');
-	}
-    //redirecciona($ruta_db_superior."paginaadd.php?&key=".$iddoc."&enlace=".$enlace);
-  }elseif($_REQUEST["digitalizacion"]==2 && $_REQUEST['no_sticker'] == 1){
-  	abrir_url($ruta_db_superior."formatos/radicacion_entrada/mostrar_radicacion_entrada.php?iddoc=".$iddoc."&idformato=".$idformato,'_self');
-  }else if($_REQUEST["digitalizacion"]==2){
-  	if(@$_REQUEST["iddoc"]){
-  	    $tipo=busca_filtro_tabla("tipo_radicado","documento","iddocumento=".$_REQUEST['iddoc'],"",$conn);
-        if($tipo[0]['tipo_radicado']==1){
-            //$enlace="pantallas/buscador_principal.php?idbusqueda=".$idbusqueda_en_proceso."|default_componente=en_proceso1"; 
-            $enlace="ordenar.php?key=".$_REQUEST['iddoc']."&accion=mostrar&mostrar_formato=1";  
-        }elseif($tipo[0]['tipo_radicado']==2){
-            //$enlace="pantallas/buscador_principal.php?idbusqueda=".$idbusqueda_en_proceso."|default_componente=tramitados";
-            $enlace="ordenar.php?key=".$_REQUEST['iddoc']."&accion=mostrar&mostrar_formato=1";  
-        }
-  		$iddoc=$_REQUEST["iddoc"];
-  		//$enlace="pantallas/buscador_principal.php?idbusqueda=9";
-  	}
-	else{
-		$enlace=$ruta_db_superior."formatos/radicacion_entrada/detalles_mostrar_radicacion_entrada.php?iddoc=".$iddoc."&idformato=".$idformato;
-	}
-  		abrir_url($ruta_db_superior."colilla.php?target=_self&key=".$iddoc."&enlace=".$enlace,'_self');
-  		//abrir_url($ruta_db_superior."colilla.php?key=".$iddoc,"_self");
-  }
-}
+
 function digitalizar_formato_radicacion($idformato,$iddoc){
 	global $conn;
   echo "<tr><td class='encabezado'>DESEA DIGITALIZAR</td><td><input name='digitalizacion' type='radio' value='1' checked>Si  <input name='digitalizacion' type='radio' value='2'>No</td></tr>";
 }
-function actualizar_campos_documento($idformato,$iddoc){
-	global $conn;
-	$datos=busca_filtro_tabla("","ft_radicacion_entrada A","A.documento_iddocumento=".$iddoc,"",$conn);
-	$campo_formato=busca_filtro_tabla("A.valor","campos_formato A","A.formato_idformato=".$idformato." AND A.nombre='anexos_fisicos'","",$conn);
-	$filas=explode(";",$campo_formato[0]["valor"]);
-	$cant1=count($filas);
-	$valores=array();
-	for($i=0;$i<$cant1;$i++){
-		$datos2=explode(",",$filas[$i]);
-		$valores[$datos2[0]]=$datos2[1];
-	}
-	$ejecutor=busca_filtro_tabla("","datos_ejecutor A, ejecutor B","A.ejecutor_idejecutor=B.idejecutor AND iddatos_ejecutor=".$datos[0]["persona_natural"],"",$conn);
-	$sql1="UPDATE documento SET oficio='".$datos[0]["numero_oficio"]."', anexo='".$valores[$datos[0]["anexos_fisicos"]]."', descripcion_anexo='".$datos[0]["descripcion_anexos"]."', fecha_oficio=".fecha_db_almacenar($datos[0]["fecha_oficio_entrada"],'Y-m-d H:i:s').", municipio_idmunicipio='".$ejecutor[0]["ciudad"]."' WHERE iddocumento=".$iddoc;
-	phpmkr_query($sql1);
-}
-function vincular_flujo($idformato,$iddoc){
-global $conn;
-actualizar_campos_documento($idformato,$iddoc);
-}
+
 function llenar_datos_funcion($idformato,$iddoc){
 	global $conn;
 	$dato=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn);
@@ -314,22 +204,8 @@ function obtener_informacion_proveedor($idformato,$iddoc){
 	
 	
 }
-function transferir_con_copia($idformato,$iddoc){
-	global $conn;
-	$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
-	$ruta_db_superior=$ruta="";
-	while($max_salida>0)
-	{
-	if(is_file($ruta."db.php"))
-	{
-	$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-	}
-	$ruta.="../";
-	$max_salida--;
-	}
-	include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
-	transferencia_automatica($idformato,$iddoc,"copia_a",2,'','COPIA');
-}
+
+
 
 function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
 	global $conn,$ruta_db_superior;
@@ -543,47 +419,7 @@ function buscar_dependencias_hijas_radicacion_correspondencia($iddependencia){
 	}
 	return($lista_hijas);
 }
-function ingresar_item_destino_radicacion($idformato,$iddoc){//posterior al adicionar - editar
-	global $conn,$ruta_db_superior;
-    
-	$datos=busca_filtro_tabla("a.tipo_origen,a.tipo_destino,a.tipo_mensajeria,a.requiere_recogida","ft_radicacion_entrada a, documento b"," lower(b.estado)<>'iniciado' AND a.documento_iddocumento=b.iddocumento AND  a.documento_iddocumento=".$iddoc,"",$conn);  
-	
-	//area_responsable --->  origen
-	//persona_natural ---> origen_externo
-	//destino ---> destino
-	//persona_natural_dest ---> destino_externo
-	if($datos['numcampos']){
-		include_once($ruta_db_superior."distribucion/funciones_distribucion.php");
-		
-		$estado_distribucion=1;
-		if($datos[0]['tipo_mensajeria']==3){
-			$estado_distribucion=3;
-		}
-		
-		if($datos[0]['tipo_origen']==2 && $datos[0]['tipo_destino']==2){  //INT - INT
-			if($datos[0]['tipo_mensajeria']!=3 && !$datos[0]['requiere_recogida']){ //no quiere recogida
-				pre_ingresar_distribucion($iddoc,'area_responsable',1,'destino',1,0,1);  //INT -INT
-			}else{
-				pre_ingresar_distribucion($iddoc,'area_responsable',1,'destino',1,$estado_distribucion);  //INT -INT
-			}	 
-		}
-	
-		if($datos[0]['tipo_origen']==2 && $datos[0]['tipo_destino']==1){  //INT - EXT
-			if($datos[0]['tipo_mensajeria']!=3 && !$datos[0]['requiere_recogida']){ //no quiere recogida
-				pre_ingresar_distribucion($iddoc,'area_responsable',1,'persona_natural_dest',2,0,1); //INT -EXT 
-			}else{
-				pre_ingresar_distribucion($iddoc,'area_responsable',1,'persona_natural_dest',2,$estado_distribucion); //INT -EXT 
-			}
-		}	
-		
-		if($datos[0]['tipo_origen']==1 && $datos[0]['tipo_destino']==2){  //EXT - INT
-			pre_ingresar_distribucion($iddoc,'persona_natural',2,'destino',1,$estado_distribucion); //EXT -INT 
-		}
 
-	} //fin if datos numcampos
-
-
-}
 
 function mostrar_item_destino_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
@@ -993,19 +829,118 @@ function serie_documental_radicacion($idformato,$iddoc){
     </script>
     <?php
 }
-function valida_tipo_destino_entrada($idformato,$iddoc){
-    global $conn;
-	
-    $padre=busca_filtro_tabla("a.idft_radicacion_entrada,a.tipo_destino,a.tipo_mensajeria","ft_radicacion_entrada a","a.documento_iddocumento=".$iddoc,"",$conn);
 
-    if($padre[0]['tipo_destino']==2){
-       	transferencia_automatica($idformato,$iddoc,"destino",2,"");
-    }
-    transferencia_automatica($idformato,$iddoc,"copia_a",2,'','COPIA');
-	
-    if($padre[0]['tipo_mensajeria']==3){
-        $update_radicacion="UPDATE ft_radicacion_entrada SET despachado=1 WHERE idft_radicacion_entrada=".$padre[0]['idft_radicacion_entrada'];
-        phpmkr_query($update_radicacion);    	     
-   }
+
+function cambiar_estado($idformato,$iddoc){
+	global $conn;
+	$doc=busca_filtro_tabla("estado","documento A","iddocumento=".$iddoc,"",$conn);
+	if($doc[0]["estado"]=='INICIADO'){
+		$sql1="UPDATE documento SET estado='APROBADO' WHERE iddocumento=".$iddoc;
+		phpmkr_query($sql1);
+	}
 }
+
+
+/*POSTERIOR APROBAR*/
+function vincular_flujo($idformato, $iddoc) {
+	global $conn;
+	actualizar_campos_documento($idformato, $iddoc);
+}
+
+function actualizar_campos_documento($idformato, $iddoc) {
+	global $conn;
+	$datos = busca_filtro_tabla("", "ft_radicacion_entrada A", "A.documento_iddocumento=" . $iddoc, "", $conn);
+	$campo_formato = busca_filtro_tabla("A.valor", "campos_formato A", "A.formato_idformato=" . $idformato . " AND A.nombre='anexos_fisicos'", "", $conn);
+	$filas = explode(";", $campo_formato[0]["valor"]);
+	$cant1 = count($filas);
+	$valores = array();
+	for ($i = 0; $i < $cant1; $i++) {
+		$datos2 = explode(",", $filas[$i]);
+		$valores[$datos2[0]] = $datos2[1];
+	}
+	$ejecutor = busca_filtro_tabla("", "datos_ejecutor A, ejecutor B", "A.ejecutor_idejecutor=B.idejecutor AND iddatos_ejecutor=" . $datos[0]["persona_natural"], "", $conn);
+	$sql1 = "UPDATE documento SET oficio='" . $datos[0]["numero_oficio"] . "', anexo='" . $valores[$datos[0]["anexos_fisicos"]] . "', descripcion_anexo='" . $datos[0]["descripcion_anexos"] . "', fecha_oficio=" . fecha_db_almacenar($datos[0]["fecha_oficio_entrada"], 'Y-m-d H:i:s') . ", municipio_idmunicipio='" . $ejecutor[0]["ciudad"] . "' WHERE iddocumento=" . $iddoc;
+	phpmkr_query($sql1);
+}
+
+function post_aprobar_rad_entrada($idformato, $iddoc) {
+	global $conn, $ruta_db_superior;
+	ingresar_item_destino_radicacion($idformato, $iddoc);
+	$datos = busca_filtro_tabla("d.estado,ft.tipo_mensajeria,ft.idft_radicacion_entrada,ft.destino,ft.tipo_origen,ft.tipo_destino,ft.descripcion", "ft_radicacion_entrada ft,documento d", "ft.documento_iddocumento=d.iddocumento and d.iddocumento=" . $iddoc, "", $conn);
+	if ($_REQUEST["radicacion_rapida"] == 1) {
+		$sql1 = "UPDATE documento SET estado='INICIADO' WHERE iddocumento=" . $iddoc;
+		phpmkr_query($sql1);
+	} else {
+		$descripcion = str_replace("'", "", $datos[0]["descripcion"]);
+		$sql = "UPDATE documento SET descripcion='" . $descripcion . "' WHERE iddocumento=" . $iddoc;
+		phpmkr_query($sql);
+
+		if ($datos[0]['tipo_origen'] == 1 || $datos[0]['tipo_destino'] == 2) {//INTERNO
+			transferencia_automatica($idformato, $iddoc, "destino", 2);
+		}
+		transferencia_automatica($idformato, $iddoc, "copia_a", 2, '', 'COPIA');
+		$sql1 = "UPDATE ft_radicacion_entrada SET despachado=1 WHERE documento_iddocumento=" . $iddoc;
+		phpmkr_query($sql1);
+
+		if ($datos[0]['tipo_mensajeria'] == 3) {// Entrega Personal/Medios Propios
+			$tipo_destino = busca_filtro_tabla("tipo_destino,destino", "distribucion", "documento_iddocumento=" . $iddoc, "", $conn);
+			for ($i = 0; $i < $tipo_destino['numcampos']; $i++) {
+				if ($tipo_destino[$i]['tipo_destino'] == 1) {
+					transferencia_automatica($idformato, $iddoc, $tipo_destino[$i]['destino'], 1);
+				}
+			}
+		}
+
+		if ($_REQUEST["digitalizacion"] == 1) {
+			$enlace = "paginaadd.php?key=" . $iddoc . "&enlace2=formatos/radicacion_entrada/detalles_mostrar_radicacion_entrada.php?iddoc=" . $iddoc;
+			abrir_url($ruta_db_superior . "colilla.php?target=_self&key=" . $iddoc . "&enlace=" . $enlace, "_self");
+			die();
+		} else if ($_REQUEST["digitalizacion"] == 2) {
+			$enlace = "ordenar.php?key=" . $iddoc . "&accion=mostrar&mostrar_formato=1";
+			abrir_url($ruta_db_superior . "colilla.php?target=_self&key=" . $iddoc . "&enlace=" . $enlace, '_self');
+			die();
+		}
+	}
+}
+
+function ingresar_item_destino_radicacion($idformato, $iddoc) {//posterior al adicionar - editar
+	global $conn, $ruta_db_superior;
+	$datos = busca_filtro_tabla("a.tipo_origen,a.tipo_destino,a.tipo_mensajeria,a.requiere_recogida", "ft_radicacion_entrada a, documento b", " lower(b.estado)<>'iniciado' AND a.documento_iddocumento=b.iddocumento AND  a.documento_iddocumento=" . $iddoc, "", $conn);
+	//area_responsable --->  origen
+	//persona_natural ---> origen_externo
+	//destino ---> destino
+	//persona_natural_dest ---> destino_externo
+	if ($datos['numcampos']) {
+		include_once ($ruta_db_superior . "distribucion/funciones_distribucion.php");
+		$estado_distribucion = 1;
+		if ($datos[0]['tipo_mensajeria'] == 3) {
+			$estado_distribucion = 3;
+		}
+
+		if ($datos[0]['tipo_origen'] == 2 && $datos[0]['tipo_destino'] == 2) {//INT - INT
+			if ($datos[0]['tipo_mensajeria'] != 3 && !$datos[0]['requiere_recogida']) {//no quiere recogida
+				pre_ingresar_distribucion($iddoc, 'area_responsable', 1, 'destino', 1, 0, 1);
+				//INT -INT
+			} else {
+				pre_ingresar_distribucion($iddoc, 'area_responsable', 1, 'destino', 1, $estado_distribucion);
+				//INT -INT
+			}
+		}
+
+		if ($datos[0]['tipo_origen'] == 2 && $datos[0]['tipo_destino'] == 1) {//INT - EXT
+			if ($datos[0]['tipo_mensajeria'] != 3 && !$datos[0]['requiere_recogida']) {//no quiere recogida
+				pre_ingresar_distribucion($iddoc, 'area_responsable', 1, 'persona_natural_dest', 2, 0, 1);
+				//INT -EXT
+			} else {
+				pre_ingresar_distribucion($iddoc, 'area_responsable', 1, 'persona_natural_dest', 2, $estado_distribucion);
+				//INT -EXT
+			}
+		}
+		if ($datos[0]['tipo_origen'] == 1 && $datos[0]['tipo_destino'] == 2) {//EXT - INT
+			pre_ingresar_distribucion($iddoc, 'persona_natural', 2, 'destino', 1, $estado_distribucion);
+		}
+	} //fin if datos numcampos
+}
+
+
 ?>

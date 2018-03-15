@@ -1,4 +1,5 @@
 <?php
+die("--borrar");
 $max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
@@ -11,12 +12,7 @@ while ($max_salida > 0) {
 include_once($ruta_db_superior . "db.php");
 include_once($ruta_db_superior . "librerias_saia.php");
 include_once($ruta_db_superior . "pantallas/documento/class_documento_informacion.php");
-//echo(estilo_bootstrap());
-/**
- * 
- * @param type $iddoc es el iddocumento
- * @param type $tipo_visualizacion es el tipo de visualizacion por defecto vacio que equivale a documento 
- */
+
 function menu_principal_documento($iddoc,$tipo_visualizacion){
 	return false;        
 global $ruta_db_superior;
@@ -176,6 +172,7 @@ function modulos_menu_intermedio($nombre_padre){
     $arreglo=  extrae_campo($lmodulos, "nombre","UL");
     return($arreglo);
 }
+
 echo(librerias_jquery("1.7"));
 echo(librerias_bootstrap());
 echo(librerias_tooltips());

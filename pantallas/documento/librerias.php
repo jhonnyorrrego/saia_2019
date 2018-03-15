@@ -442,6 +442,7 @@ function fecha_creacion_documento($fecha0, $plantilla = Null, $doc = Null) {
 	$fecha2 = date_parse(date("Y-m-d"));
 	if ($fecha1["year"] == $fecha2["year"] && $fecha1["month"] == $fecha2["month"]) {
 		if ($fecha1["day"] == $fecha2["day"]) {
+			$fecha1["minute"] = ($fecha1["minute"]<10) ? "0".$fecha1["minute"] : $fecha1["minute"] ;
 			$fecha = $fecha1["hour"] . ":" . $fecha1["minute"];
 		} elseif (($fecha1["day"] + 1) == ($fecha2["day"])) {
 			$fecha = 'ayer';

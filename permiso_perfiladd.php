@@ -37,7 +37,7 @@ echo(librerias_arboles());
 		   hs.graphicsDir = '<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
 		   hs.outlineType = 'rounded-white';
 		</script>   
-		<a style="display:none;" id="enlace_highslide" class="highslide" onclick="return hs.htmlExpand(this, { objectType: 'iframe',width: 300, height: 100,preserveContent:false} )" >I</a>
+		<a style="display:none;" id="enlace_highslide" class="highslide" onclick="return hs.htmlExpand(this, { objectType: 'iframe',width: 300, height: 150,preserveContent:false} )" >I</a>
 <div class="container">
 		<h5>ADICIONAR PERMISO PERFIL</h5>
 		<br/>
@@ -182,7 +182,6 @@ echo $x_perfil_idperfilList;
                             var enlace="<?php echo($ruta_db_superior); ?>pantallas/permisos/validar_permiso_perfil.php?valida_permiso_crear_formato=1&idmodulo="+nodeId+"&idperfil="+idperfil;
                             $('#enlace_highslide').attr('href',enlace);
                             $('#enlace_highslide').click();
-                           // hs.htmlExpand(this, { objectType: 'iframe',width: 500, height: 200,preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});	
                         }
                     }
                 });   

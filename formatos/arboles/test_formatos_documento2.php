@@ -23,8 +23,7 @@ if ($id and $id <> "") {
 	llena_formato($id);
 }
 echo("</tree>\n");
-?>
-<?php
+
 function llena_formato($formato, $estado = 0) {
 	global $conn, $imagenes;
 	$arreglo = explode("-", $formato);
@@ -47,7 +46,8 @@ function llena_formato($formato, $estado = 0) {
 		$idformato = $formato[0]["idformato"] . "-" . $arreglo[1] . "-" . $arreglo[2] . "-" . $arreglo[0];
 		
 		$imagenes = 'im0="' . strtolower($formato[0]["nombre"]) . '.gif" im1="' . strtolower($formato[0]["nombre"]) . '.gif" im2="' . strtolower($formato[0]["nombre"]) . '.gif" ';
-		if ($formato[0]["item"]) {$texto .= '<item style="font-family:verdana; font-size:7pt;" ' . $imagenes;
+		if ($formato[0]["item"]) {
+			$texto .= '<item style="font-family:verdana; font-size:7pt;" ' . $imagenes;
 			$texto .= 'text="' . decodifica(strip_tags(stripslashes($formato[0]["etiqueta"]))) . '" id="' . $formato[0]["idformato"] . "-" . $arreglo[1] . "-r" . rand() . '">';
 		} elseif ($estado) {
 			$texto .= '<item style="font-family:verdana; font-size:7pt;" ' . $imagenes;

@@ -15,6 +15,12 @@ include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 echo(estilo_bootstrap());
 echo(librerias_jquery("1.7"));
 
+if(isset($_REQUEST["idtemas"])){
+	$idtema=$_REQUEST["idtemas"];
+}else{
+	$idtema=0;
+}
+
 if ($_REQUEST['guardar'] == 1) {
 	$orden = 0;
 	$accion_tareas = 0;
@@ -23,7 +29,7 @@ if ($_REQUEST['guardar'] == 1) {
 		$orden = $tareas_ruta_aprob["numcampos"] + 1;
 		$accion_tareas = intval(@$_REQUEST["accion_tareas"]);
 	}
-	$sql = "INSERT INTO tareas (fecha,tarea,responsable,descripcion,prioridad,fecha_tarea,ejecutor,documento_iddocumento,ruta_aprob,orden_tareas,accion_tareas) VALUES(" . fecha_db_almacenar($_REQUEST['fecha'], "Y-m-d H:i:s") . ",'" . ($_REQUEST['tarea']) . "','" . $_REQUEST['responsable'] . "','" . ($_REQUEST[descripcion]) . "','" . $_REQUEST[prioridad] . "'," . fecha_db_almacenar($_REQUEST['fecha_tarea'], "Y-m-d") . ",'" . usuario_actual("funcionario_codigo") . "','" . $_REQUEST['iddoc'] . "'," . $_REQUEST["ruta_aprob"] . "," . $orden . "," . $accion_tareas . ")";
+	$sql = "INSERT INTO tareas (fecha,tarea,responsable,descripcion,prioridad,fecha_tarea,ejecutor,documento_iddocumento,ruta_aprob,orden_tareas,accion_tareas,idtema) VALUES(" . fecha_db_almacenar($_REQUEST['fecha'], "Y-m-d H:i:s") . ",'" . ($_REQUEST['tarea']) . "','" . $_REQUEST['responsable'] . "','" . ($_REQUEST[descripcion]) . "','" . $_REQUEST[prioridad] . "'," . fecha_db_almacenar($_REQUEST['fecha_tarea'], "Y-m-d") . ",'" . usuario_actual("funcionario_codigo") . "','" . $_REQUEST['iddoc'] . "'," . $_REQUEST["ruta_aprob"] . "," . $orden . "," . $accion_tareas . ",".$idtema.")";
 	phpmkr_query($sql);
 	if (@$_REQUEST["ruta_aprob"] == -1 || $_REQUEST["refrescar"]==1) {
 	?>
@@ -56,7 +62,6 @@ if ($_REQUEST['guardar'] == 1) {
 }
 
 $ruta_aprob=0;
-
 if (@$_REQUEST["fecha"]) {
 	$fecha_tarea = date("Y-m-d", $_REQUEST["fecha"]);
 }
@@ -116,7 +121,20 @@ label.error {
 					<input type="text" class="required" name="tarea" id="etiqueta" placeholder="Tarea a realizar">
 				</div>
 			</div>
-			
+			<?php
+			if($idtema){
+				?>
+				<div class="control-group">
+					<label class="control-label" for="etiqueta">Tema relacionado:</label>
+					<div class="controls">
+						<input type="text" name="tema" id="tema" placeholder="Tema relacionado" value="<?php echo($_REQUEST["texto_tarea"]);?>" readonly>
+						<input type="hidden" name="idtemas" id="idtemas" value="<?php echo($idtema);?>">
+					</div>
+				</div>
+				<?php
+			}
+			?>
+		
 			<div class="control-group">
 				<label class="control-label" for="etiqueta">Descripci&oacute;n:</label>
 				<div class="controls">

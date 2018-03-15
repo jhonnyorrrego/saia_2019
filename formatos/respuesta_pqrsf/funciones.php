@@ -177,7 +177,7 @@ function mostrar_informacion_pqrsf_padre($idformato,$iddoc){
 		<table style="border-collapse: collapse; width: 100%;" border="0">
 		<tbody>
 		<tr>
-		<td style=" border-left-width:1px;border-right-width:1px;border-right-style:solid;border-left-style:solid;border-top-style:solid; border-color:black; border-top-width:1px;font-size:10pt; border-bottom-style:solid; border-bottom-width:1px;" class="encabezado_list" colspan="2">INFORMACIÓN GENERAL PQRS	</td>
+		<td style=" border-left-width:1px;border-right-width:1px;border-right-style:solid;border-left-style:solid;border-top-style:solid; border-color:gray; border-top-width:1px;font-size:10pt; border-bottom-style:solid; border-bottom-width:1px; background-color: #3f91f2; color: #ffffff; text-align: center;" colspan="2"; >INFORMACIÓN GENERAL PQRS	</td>
 		</tr>
 		<tr>
 		<td style="border-left-style:solid;border-left-width:1px; "></td><td style="text-align:right; border-right-style:solid;border-right-width:1px;;"><b>Radicado PQRS:</b> '.$datos_padre[0]['numero'].'&nbsp;&nbsp;</td>
@@ -195,7 +195,7 @@ function mostrar_informacion_pqrsf_padre($idformato,$iddoc){
 			<td colspan="2" style="border-left-style:solid;border-left-width:1px; border-right-style:solid;border-right-width:1px;;">&nbsp;</td>
 		</tr>		
 		<tr>
-		<td style="border-left-style:solid;border-left-width:1px; "><b>&nbsp;&nbsp;Nombre Completo: </b> '.$datos_padre[0]['nombre'].'&nbsp;&nbsp;</td><td style="border-right-style:solid;border-right-width:1px;;"><b>Documento: </b>'.$datos_padre[0]['documento'].'</td>
+		<td style="border-left-style:solid;border-left-width:1px; "><b>Nombre Completo: </b> '.$datos_padre[0]['nombre'].'&nbsp;&nbsp;</td><td style="border-right-style:solid;border-right-width:1px;;"><b>Documento: </b>'.$datos_padre[0]['documento'].'</td>
 		</tr>
 		<tr>
 			<td colspan="2" style="border-left-style:solid;border-left-width:1px; border-right-style:solid;border-right-width:1px;;">&nbsp;</td>
@@ -229,7 +229,7 @@ function mostrar_informacion_pqrsf_padre($idformato,$iddoc){
 		<table style="border-collapse: collapse; width: 100%;" border="0">
 		<tbody>
 		<tr>
-		<td style=" border-left-width:1px;border-right-width:1px;border-right-style:solid;border-left-style:solid;border-top-style:solid; border-color:black; border-top-width:1px;font-size:10pt; border-bottom-style:solid; border-bottom-width:1px;" class="encabezado_list" colspan="2">RESPUESTA A PQRSF	</td>
+		<td style=" border-left-width:1px;border-right-width:1px;border-right-style:solid;border-left-style:solid;border-top-style:solid; border-color:gray; border-top-width:1px;font-size:10pt; border-bottom-style:solid; border-bottom-width:1px; background-color: #3f91f2; color: #ffffff; text-align: center;" colspan="2"; >RESPUESTA PQRS</td>
 		</tr>
 		<tr>
 		<td style="border-left-style:solid;border-left-width:1px; "></td><td style="text-align:right; border-right-style:solid;border-right-width:1px;;"><b>Radicado respuesta:</b> '.$datos_respuesta[0]['numero'].'</td>

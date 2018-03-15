@@ -1,21 +1,19 @@
 <?php
-$max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$max_salida = 6;
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
-    if (is_file($ruta . "db.php")) {
-        $ruta_db_superior = $ruta; //Preserva la ruta superior encontrada
-    }
-    $ruta.="../";
-    $max_salida--;
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
+	}
+	$ruta .= "../";
+	$max_salida--;
 }
-include_once($ruta_db_superior . "db.php");
+include_once ($ruta_db_superior . "db.php");
+
 include_once($ruta_db_superior . "librerias_saia.php");
 $documento='';
 $funcionario=usuario_actual("funcionario_codigo");
-/**
- * @param type $iddoc es el iddocumento
- * @param type $tipo_visualizacion es el tipo de visualizacion por defecto vacio que equivale a documento
-**/
+
 function menu_principal_documento($iddoc,$tipo_visualizacion="",$modulo_adicional=""){
 global  $documento,$conn,$ruta_db_superior,$funcionario;
 $formato=busca_filtro_tabla("","formato,documento","lower(plantilla)=lower(nombre) and iddocumento=".$iddoc,"",$conn);
@@ -23,16 +21,15 @@ $nombre=$formato[0]["nombre"];
 $_SESSION["pagina_actual"]=$iddoc;
 
 if($formato[0]['mostrar_pdf']==1){
-    $_SESSION["tipo_pagina"]="pantallas/documento/visor_documento.php?iddoc=".$iddoc."&rnd=".rand();
+    $_SESSION["tipo_pagina"]="pantallas/documento/visor_documento.php?iddoc=".$iddoc."&rnd=".rand(0,1000);
 }elseif($formato[0]['mostrar_pdf']==2){
-    $_SESSION["tipo_pagina"]="pantallas/documento/visor_documento.php?pdf_word=1&iddoc=".$iddoc;
+    $_SESSION["tipo_pagina"]="pantallas/documento/visor_documento.php?pdf_word=1&iddoc=".$iddoc."&rand=".rand(0,1000);
 }else{
-    $_SESSION["tipo_pagina"]="formatos/$nombre/mostrar_$nombre.php?iddoc=$iddoc";
+    $_SESSION["tipo_pagina"]="formatos/$nombre/mostrar_$nombre.php?iddoc=".$iddoc."&rand=".rand(0,1000);
 }
 
 echo(librerias_jquery("1.7"));
 echo(librerias_arboles());
-//if(usuario_actual('login')!='cerok' || !$tipo_visualizacion)return true;
 echo(estilo_bootstrap());
 echo(librerias_bootstrap());
 if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
@@ -469,8 +466,7 @@ function permisos_modulo_menu_intermedio($iddoc, $modulo_padre,$lista,$target="_
   $texto='';
   if($modulo_padre=="rapidos_menu_intermedio"){
       $datos_modulos=array('devolucion','transferir','responder','seguimiento_rastro','terminar_documento','vista_previa');
-  }
-  else{
+  }else{
       $datos_modulos=  modulos_menu_intermedio($modulo_padre);
   }
 
@@ -496,13 +492,12 @@ function permisos_modulo_menu_intermedio($iddoc, $modulo_padre,$lista,$target="_
     
     $permiso=new PERMISO();
     $modulo=  busca_filtro_tabla("", "modulo", "nombre IN ('".implode("','",$datos_modulos)."')", "orden", $conn);
-    
-    //$ok=1;
 
-    //print_r($modulo);die();
     for($i=0;$i<$modulo["numcampos"];$i++){
       $ok=$permiso->acceso_modulo_perfil($modulo[$i]["nombre"],1);
       if($ok || usuario_actual('login')=='cerok'){
+      	$modulo[$i]["enlace"]=str_replace('@rand@',rand(0,1000),$modulo[$i]["enlace"]);
+				
 				if($modulo[$i]["nombre"]=="eliminar_borrador" && ($documento[0]["estado"]!="ACTIVO" || $documento[0]["ejecutor"]!=$funcionario)){
 					continue;
 				}

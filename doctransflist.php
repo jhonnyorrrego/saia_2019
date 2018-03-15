@@ -16,31 +16,16 @@ else{
 <script type="text/javascript" src="js/tooltips_rastro.js"></script>
 <style type="text/css">
 	#dhtmlgoodies_tooltip{
-		background-color:#EEE;
-		border:1px solid #000;
-		position:absolute;
-		display:none;
 		z-index:30000;
-		padding:2px;
+		background-color:#EEE;
+		position:fixed;
 		font-size:0.9em;
-		-moz-border-radius:6px;	/* Rounded edges in Firefox */
+		-moz-border-radius:6px;
 		font-family: "Trebuchet MS", "Lucida Sans Unicode", Arial, sans-serif;
-
-	}
-	#dhtmlgoodies_tooltipShadow{
-		position:absolute;
-		background-color:#555;
-		display:none;
-		z-index:10000;
-		opacity:0.7;
-		filter:alpha(opacity=70);
-		-khtml-opacity: 0.7;
-		-moz-opacity: 0.7;
-		-moz-border-radius:6px;	/* Rounded edges in Firefox */
 	}
 	a{
 		color: #000000;
-		text-decoration:none;		;
+		text-decoration:none;
 	}
 	a:hover{
 		border-bottom:1px dotted #317082;
@@ -261,49 +246,33 @@ function mostrar_leido($x_doc,$fun,$fecha)
 <Post-condiciones><Post-condiciones>
 </Clase>
 */
-function recorrido($x_doc,$fun,$fecha,$tipo)
-{
- global $conn;
- $texto = "";
- switch($tipo)
- {
-  case "siguiente":
-   $buzon_sig = busca_filtro_tabla("origen,destino,nombre,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha","buzon_salida","archivo_idarchivo=$x_doc and origen=".$fun." and ".fecha_db_obtener("fecha","Y-m-d H:i:s")." >='$fecha' ","fecha DESC",$conn);
+function recorrido($x_doc, $fun, $fecha, $tipo) {
+	global $conn;
+	$texto = "";
+	switch($tipo) {
+		case "siguiente" :
+			$buzon_sig = busca_filtro_tabla("origen,destino,nombre," . fecha_db_obtener("fecha", "Y-m-d H:i:s") . " as fecha", "buzon_salida", "archivo_idarchivo=$x_doc and origen=" . $fun . " and " . fecha_db_obtener("fecha", "Y-m-d H:i:s") . " >='$fecha' ", "fecha DESC", $conn);
 
-   if($buzon_sig["numcampos"]>0)
-   {
-    $texto .= "<table border=1>";
-    for($j=0; $j<$buzon_sig["numcampos"]; $j++)
-    {if($buzon_sig[$j]["nombre"]=='BORRADOR')
-       $buzon_sig[$j]["nombre"]='LEIDO' ;
-     if($buzon_sig[$j]["nombre"]=='LEIDO')
-      $texto.= "<tr><td colspan = 4>".$buzon_sig[$j]["nombre"]." ".$buzon_sig[$j]["fecha"]."</td></tr>";
-     else
-      $texto.= "<tr><td>".$buzon_sig[$j]["nombre"]." </td><td> ".codifica_encabezado(busca_entidad_ruta(1,$buzon_sig[$j]["destino"]))." ".$buzon_sig[$j]["fecha"]."</td></tr>";
-    }
-    $texto .= "</table>";
-   }
-  break;
-  case "leido":
-   /*$transferencias = busca_filtro_tabla("destino,nombre,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha","buzon_salida","archivo_idarchivo=$x_doc and origen=".$fun." and nombre not in('LEIDO','BORRADOR')","",$conn);
-   if($transferencias["numcampos"]>0)
-   { $texto .= "<table border=1><tr><td align=center>Destino</td><td align=center>Fecha de leido</td></tr>";
-     for($i=0; $i<$transferencias["numcampos"]; $i++)
-     { $buzon_sig = busca_filtro_tabla("destino,nombre,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha","buzon_salida","archivo_idarchivo=$x_doc and nombre='LEIDO' AND origen=".$transferencias[$i]["destino"]." and ".fecha_db_obtener("fecha","Y-m-d H:i:s")." > '".$transferencias[$i]["fecha"]."'","",$conn);
-       if($buzon_sig["numcampos"]>0)
-         $texto .= "<tr><td> ".codifica_encabezado(busca_entidad_ruta(1,$buzon_sig[0]["destino"]))."</td><td>&nbsp;".$buzon_sig[0]["fecha"]."</tr>";
-       else
-         $texto .= "<tr><td>".codifica_encabezado(busca_entidad_ruta(1,$transferencias[$i]["destino"]))."</td><td>No se ha leido</tr>";
-     }
-   } */
-  break;
- }
- if($texto!="")
- {
-   $texto = 'onmouseout="hideTooltip()" onMouseOver=\'showTooltip(event,"'.$texto.'");return false\'';
- }
- return($texto);
+			if ($buzon_sig["numcampos"] > 0) {
+				$texto .= '<table border=1>';
+				for ($j = 0; $j < $buzon_sig["numcampos"]; $j++) {
+					if ($buzon_sig[$j]["nombre"] == 'BORRADOR')
+						$buzon_sig[$j]["nombre"] = 'LEIDO';
+					if ($buzon_sig[$j]["nombre"] == 'LEIDO')
+						$texto .= '<tr><td colspan=2>' . $buzon_sig[$j]["nombre"] . ' ' . $buzon_sig[$j]["fecha"] . '</td></tr>';
+					else
+						$texto .= '<tr><td>' . $buzon_sig[$j]["nombre"] . '</td><td>' . codifica_encabezado(busca_entidad_ruta(1, $buzon_sig[$j]["destino"])) . ' ' . $buzon_sig[$j]["fecha"] . '</td></tr>';
+				}
+				$texto .= '</table>';
+			}
+			break;
+	}
+	if ($texto != "") {
+		$texto = 'onmouseout="hideTooltip()" onMouseOver="showTooltip(event,\''.$texto.'\');return false"';
+	}
+	return ($texto);
 }
+
 /*
 <Clase>
 <Nombre>respuestas_documento</Nombre>
@@ -413,7 +382,7 @@ function mostrar_ruta_documento($iddoc){
 	if($ruta_actual["numcampos"]>0){
 		$tabla.='<br /><table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC" style="width:90%">
 		<tr class="encabezado_list">
-			<td colspan="5" style="text-align:center"><span class="phpmaker" style="color: #FFFFFF;">RUTA DEL DOCUMENTO</span></td>
+			<td colspan="6" style="text-align:center"><span class="phpmaker" style="color: #FFFFFF;">RUTA DEL DOCUMENTO</span></td>
 		</tr>
   	<tr class="encabezado_list">
   		<td><span class="phpmaker" style="color: #FFFFFF;">&nbsp;</span></td>
@@ -500,85 +469,81 @@ function rastro_documento($x_doc,$filtro){
   	<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Observaciones</span></td>
   	<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Anexos</span></td>
    </tr>
-    <?php
-    	if(!$filtro){
-      if($documento[0]['estado']=='ANULADO'){
-      	$anulacion=busca_filtro_tabla("b.nombres,b.apellidos,a.*,".fecha_db_obtener("fecha_solicitud","Y-m-d")." as fecha_solicitud,".fecha_db_obtener("fecha_anulacion","Y-m-d")." as fecha_anulacion,descripcion","documento_anulacion a,funcionario b","documento_iddocumento='$x_doc' and funcionario=funcionario_codigo","",$conn);
-	
-      	$cadena_anulado='
-      		<tr> 
-      			<td>'.$anulacion[0]["nombres"].' '.$anulacion[0]["apellidos"].'</td>
-      			<td>ANULADO</td>
-      			<td>'.$anulacion[0]["nombres"].' '.$anulacion[0]["apellidos"].'</td>
-      			<td>'.$anulacion[0]["fecha_anulacion"].'</td>
-      			<td>'.$anulacion[0]["descripcion"].'</td>
-      		</tr>';
-       		echo($cadena_anulado);
-      }	
+		<?php
+		if (!$filtro) {
+			if ($documento[0]['estado'] == 'ANULADO') {
+				$anulacion = busca_filtro_tabla("b.nombres,b.apellidos,a.*," . fecha_db_obtener("fecha_solicitud", "Y-m-d") . " as fecha_solicitud," . fecha_db_obtener("fecha_anulacion", "Y-m-d") . " as fecha_anulacion,descripcion", "documento_anulacion a,funcionario b", "documento_iddocumento='$x_doc' and funcionario=funcionario_codigo", "", $conn);
+				$cadena_anulado = '<tr>
+					<td>' . $anulacion[0]["nombres"] . ' ' . $anulacion[0]["apellidos"] . '</td>
+					<td>ANULADO</td>
+					<td>' . $anulacion[0]["nombres"] . ' ' . $anulacion[0]["apellidos"] . '</td>
+					<td>' . $anulacion[0]["fecha_anulacion"] . '</td>
+					<td>' . $anulacion[0]["descripcion"] . '</td>
+				</tr>';
+				echo($cadena_anulado);
+			}
 		}
 		
-      for($i=0;$i<$recorrido["numcampos"];$i++)
-      {
-      	$sItemRowClass = " bgcolor=\"#FFFFFF\"";
-      	if ($i % 2 <> 0)  // Display alternate color for rows
-      		$sItemRowClass = " bgcolor=\"#F5F5F5\"";
-        if($recorrido[$i]["nombre"]!='BORRADOR')
-          $leidos=recorrido($x_doc,$recorrido[$i]["origen"],$recorrido[$i]["fecha_format"],"leido");
-        echo('<tr'.$sItemRowClass.'><td><span class="phpmaker" ><a href="#" '.$leidos.'>'.codifica_encabezado(busca_entidad_ruta(1,$recorrido[$i]["origen"]))."</a></span></td>");
-
-				$accion=str_replace("COPIA","Transferido como copia",str_replace('TRANSFERIDO','Transferido',$recorrido[$i]["nombre"]));
-        echo('<td><span class="phpmaker" >'.$accion."</span></td>");
-
-        $sig="";
-        //if($recorrido[$i]["nombre"]!='BORRADOR')
-          $sig=recorrido($x_doc,$recorrido[$i]["destino"],$recorrido[$i]["fecha_format"],"siguiente");
-        $leido = mostrar_leido($x_doc,$recorrido[$i]["destino"],$recorrido[$i]["fecha_format"]);
-        if($recorrido[$i]["nombre"]=="DISTRIBUCION" && strpos($recorrido[$i]["notas"],"enviado por e-mail")===false)
-          {if($documento[0]["plantilla"]=="")
-             echo('<td><span class="phpmaker" ><a href="#" '.$sig.'>'.codifica_encabezado(busca_entidad_ruta(2,$recorrido[$i]["destino"])).'</a></span></td>');
-           elseif($documento[0]["plantilla"]=="CARTA")
-             {$destinos=busca_filtro_tabla("destinos","ft_carta","documento_iddocumento=$x_doc","",$conn);
-              $codigos=explode(",",$destinos[0]["destinos"]);
-              echo('<td><span class="phpmaker" >');
-              foreach($codigos as $filacod)
-                echo codifica_encabezado(busca_entidad_ruta(2,$filacod))."<br />";
-              echo ('</span></td>');
-             }
-           else
-             {echo('<td><span class="phpmaker" >');
-              echo codifica_encabezado(busca_entidad_ruta(1,$recorrido[$i]["destino"]))."<br />";
-              echo ('</span></td>');
-             }
-          }
-        else
-          echo('<td><span class="phpmaker" >'.$leido.'<a href="#" '.$sig.'>'.codifica_encabezado(busca_entidad_ruta(1,$recorrido[$i]["destino"])).'</a></span></td>');
-
-        echo('<td><span class="phpmaker" >'.$recorrido[$i]["fecha_format"]."</span></td>");
-        if($_SESSION["usuario_actual"]==$recorrido[$i]["origen"] || $_SESSION["usuario_actual"]==$recorrido[$i]["destino"] || $recorrido[$i]["ver_notas"]==1){
-            if($recorrido[$i]["nombre"]=="COPIA" && $recorrido[$i]["ver_notas"]==0){
-                $recorrido[$i]["notas"]='';
-            }
-             echo('<td><span class="phpmaker" >'.$recorrido[$i]["notas"]."</span></td>");
-        }else{
-             echo('<td><span class="phpmaker" >&nbsp;</span></td>');
-        }
-        
-        
-        echo '<td><ul>';
-        if($_SESSION["usuario_actual"]==$recorrido[$i]["origen"] || $_SESSION["usuario_actual"]==$recorrido[$i]["destino"] || $recorrido[$i]["ver_notas"]==1){
-            $anexos_transferencia=busca_filtro_tabla("ruta,etiqueta,idanexos_transferencia","anexos_transferencia","idbuzon_salida=".$recorrido[$i]['idtransferencia'],"",$conn);
-            for ($j = 0; $j < $anexos_transferencia['numcampos']; $j++) {
-                echo '<li><a href="visores/pdf/web/viewer2.php?anexo_trans='.$anexos_transferencia[$j]['idanexos_transferencia'].'&files='.base64_encode($anexos_transferencia[$j]['ruta']).'">'.$anexos_transferencia[$j]['etiqueta'].'</a></li>';
-            }
-        }else{
-            echo('<td><span class="phpmaker" >&nbsp;</span></td>');
-        }
-        echo '</ul></td>';
-      }
-	if($cantidad[0]["cant"]>$cantidad_maxima_rastro[0]["valor"] && !$filtro){
-		echo ('<tr '.$sItemRowClass.' id="fila_mostrar_mas"><td id="mostrar_mas" onclick="mostrar_mas_rastro();" colspan="6" style="cursor:pointer" inicio="'.$cantidad_maxima_rastro[0]["valor"].'"><button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">Ver mas...</button></td></tr>');
-	}
-    ?>
+		for ($i = 0; $i < $recorrido["numcampos"]; $i++) {
+			$sItemRowClass = " bgcolor=\"#FFFFFF\"";
+			if ($i % 2 <> 0){
+				$sItemRowClass = " bgcolor=\"#F5F5F5\"";
+			}
+			if ($recorrido[$i]["nombre"] != 'BORRADOR'){
+				$leidos = recorrido($x_doc, $recorrido[$i]["origen"], $recorrido[$i]["fecha_format"], "leido");
+			}
+			echo('<tr' . $sItemRowClass . '><td><span class="phpmaker" ><a href="#" ' . $leidos . '>' . codifica_encabezado(busca_entidad_ruta(1, $recorrido[$i]["origen"])) . "</a></span></td>");
+		
+			$accion = str_replace("COPIA", "Transferido como copia", str_replace('TRANSFERIDO', 'Transferido', $recorrido[$i]["nombre"]));
+			echo('<td><span class="phpmaker" >' . $accion . "</span></td>");
+		
+			$sig = "";
+		
+			$sig = recorrido($x_doc, $recorrido[$i]["destino"], $recorrido[$i]["fecha_format"], "siguiente");
+			$leido = mostrar_leido($x_doc, $recorrido[$i]["destino"], $recorrido[$i]["fecha_format"]);
+			if ($recorrido[$i]["nombre"] == "DISTRIBUCION" && strpos($recorrido[$i]["notas"], "enviado por e-mail") === false) {
+				if ($documento[0]["plantilla"] == "")
+					echo('<td><span class="phpmaker"><a href="#" ' . $sig . '>' . codifica_encabezado(busca_entidad_ruta(2, $recorrido[$i]["destino"])) . '</a></span></td>');
+				elseif ($documento[0]["plantilla"] == "CARTA") {
+					$destinos = busca_filtro_tabla("destinos", "ft_carta", "documento_iddocumento=$x_doc", "", $conn);
+					$codigos = explode(",", $destinos[0]["destinos"]);
+					echo('<td><span class="phpmaker" >');
+					foreach ($codigos as $filacod)
+						echo codifica_encabezado(busca_entidad_ruta(2, $filacod)) . "<br />";
+					echo('</span></td>');
+				} else {
+					echo('<td><span class="phpmaker" >');
+					echo codifica_encabezado(busca_entidad_ruta(1, $recorrido[$i]["destino"])) . "<br />";
+					echo('</span></td>');
+				}
+			} else{
+				echo('<td><span class="phpmaker" >' . $leido . '<a href="#" ' . $sig . '>' . codifica_encabezado(busca_entidad_ruta(1, $recorrido[$i]["destino"])) . '</a></span></td>');
+			}
+			echo('<td><span class="phpmaker" >' . $recorrido[$i]["fecha_format"] . "</span></td>");
+			if ($_SESSION["usuario_actual"] == $recorrido[$i]["origen"] || $_SESSION["usuario_actual"] == $recorrido[$i]["destino"] || $recorrido[$i]["ver_notas"] == 1) {
+				if ($recorrido[$i]["nombre"] == "COPIA" && $recorrido[$i]["ver_notas"] == 0) {
+					$recorrido[$i]["notas"] = '';
+				}
+				echo('<td><span class="phpmaker" >' . $recorrido[$i]["notas"] . "</span></td>");
+			} else {
+				echo('<td><span class="phpmaker" >&nbsp;</span></td>');
+			}
+		
+			echo '<td><ul>';
+			if ($_SESSION["usuario_actual"] == $recorrido[$i]["origen"] || $_SESSION["usuario_actual"] == $recorrido[$i]["destino"] || $recorrido[$i]["ver_notas"] == 1) {
+				$anexos_transferencia = busca_filtro_tabla("ruta,etiqueta,idanexos_transferencia", "anexos_transferencia", "idbuzon_salida=" . $recorrido[$i]['idtransferencia'], "", $conn);
+				for ($j = 0; $j < $anexos_transferencia['numcampos']; $j++) {
+					echo '<li><a href="visores/pdf/web/viewer2.php?anexo_trans=' . $anexos_transferencia[$j]['idanexos_transferencia'] . '&files=' . base64_encode($anexos_transferencia[$j]['ruta']) . '">' . $anexos_transferencia[$j]['etiqueta'] . '</a></li>';
+				}
+			} else {
+				echo('<td><span class="phpmaker" >&nbsp;</span></td>');
+			}
+			echo '</ul></td>';
+		}
+		if ($cantidad[0]["cant"] > $cantidad_maxima_rastro[0]["valor"] && !$filtro) {
+			echo('<tr ' . $sItemRowClass . ' id="fila_mostrar_mas"><td id="mostrar_mas" onclick="mostrar_mas_rastro();" colspan="6" style="cursor:pointer" inicio="' . $cantidad_maxima_rastro[0]["valor"] . '"><button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">Ver mas...</button></td></tr>');
+		}
+		?>
   </table>
 <?php }
 elseif($datos[0]["tipo_radicado"]==2 && ($datos[0]["plantilla"]=='' || $datos[0]["plantilla"]== "null"))

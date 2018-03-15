@@ -150,7 +150,7 @@ function preparasql($arreglo, $separador) {
  <Post-condiciones>
  */
 function radicar_documento_prueba($tipo_contador, $arreglo, $archivos = NULL, $idflujo = Null) {
-	global $conn;
+	global $conn,$ruta_db_superior;
 	if ($tipo_contador != "" && $tipo_contador != NULL)
 		;
 	elseif (array_key_exists("serie", $arreglo))
@@ -241,22 +241,17 @@ function radicar_documento_prueba($tipo_contador, $arreglo, $archivos = NULL, $i
 				$cont = fread($fcont, filesize('../anexos/temporal/' . $datos_anexo[0]));
 				if (guardar_lob("datos", "binario", "idbinario=$idbin", $cont, "archivo", $conn)) {
 					unlink('../anexos/temporal/' . $datos_anexo[0]);
-					// Se elimina el temporal .. el blob se almaceno correctamente
 					phpmkr_query("INSERT INTO anexos(ruta,documento_iddocumento,tipo,etiqueta) VALUES ('$idbin'," . $doc . ",'" . $datos_anexo[2] . "','" . $datos_anexo[1] . "')", $conn);
-					//echo "INSERT INTO anexos(ruta,documento_iddocumento,tipo,etiqueta) VALUES ('$idbin',".$doc.",'".$datos_anexo[2]."','".$datos_anexo[1]."')";
-				} else { alerta("<b>ATENCI&Oacute;N</b><br>No se Pudo Almacenar el Anexo en la Base de Datos", 'error');
-					//DESCIDIR QUE SE HACE CON EL ARCHIVO TEMPORAL
-					// POR EL MOMENTO SE MANTIENE PARA RECUPERACION DE ALGUN DOCUMENTO
+				} else {
+					alerta("<b>ATENCI&Oacute;N</b><br>No se Pudo Almacenar el Anexo en la Base de Datos", 'error');
 				}
 				fclose($fcont);
-			} // Fin foreach
-		}
-		// Fin almacenamiento db
-	}// Fin archi
-	global $ruta_db_superior;
-	if (!$idflujo && @$_REQUEST["idflujo"])
+			}
+		}		
+	}
+	if (!$idflujo && @$_REQUEST["idflujo"]){
 		$idflujo = $_REQUEST["idflujo"];
-	//Modificacion 01-06-2015 para que la validacion al iniciar flujo se realice dentro de la funcion
+	}
 	include_once ($ruta_db_superior . "workflow/libreria_paso.php");
 	iniciar_flujo($doc, $idflujo);
 	return ($doc);
@@ -1067,7 +1062,8 @@ function enrutar_documento($url = "", $target = "centro") {
 	if (!isset($_REQUEST["no_redirecciona"])) {
 		$iddoc = ($_POST["iddoc"]) ? $_POST["iddoc"] : $_REQUEST["iddoc"];
 		if ($iddoc && $url == "") {
-			if (isset($_REQUEST["anterior"]) && $_REQUEST["anterior"]) {
+			//$_REQUEST["omitir_formato_papa"] => utilizado para cuando un formato que es hijo (detalle) lo colocan en formatos (como si fuera un formato padre)
+			if (isset($_REQUEST["anterior"]) && $_REQUEST["anterior"] && !isset($_REQUEST["omitir_formato_papa"])) {
 				$formato_doc = busca_filtro_tabla("A.nombre,A.idformato,ruta_mostrar,nombre_tabla", "formato A, documento B", "B.iddocumento=" . $_REQUEST["anterior"] . " AND lower(A.nombre)=lower(B.plantilla)", "", $conn);
 				$formato_hijo = busca_filtro_tabla("A.*", "formato A, documento B", "B.iddocumento=" . $iddoc . " AND lower(A.nombre)=lower(B.plantilla)", "", $conn);
 
@@ -1087,20 +1083,15 @@ function enrutar_documento($url = "", $target = "centro") {
 					return $iddoc;
 				}
 			} else {
-				if (isset($_REQUEST["firmado"]) && $_REQUEST["firmado"] == "varias") {
-					abrir_url("formatos/librerias/rutaadd.php?doc=" . $iddoc . "&origen=" . $_SESSION["usuario_actual"], "centro");
-					return $iddoc;
-				} else {
-					$formato_doc = busca_filtro_tabla("A.nombre,A.idformato", "formato A, documento B", "B.iddocumento=" . $iddoc . " AND lower(A.nombre)=lower(B.plantilla)", "", $conn);
-					if ($formato_doc["numcampos"]) {
-						$nom_formato = $formato_doc[0]["nombre"];
-						if (@$_SESSION["tipo_dispositivo"] == 'movil') {
-							abrir_url("ordenar.php?key=" . $iddoc . "&accion=mostrar&mostrar_formato=1", "_self");
-						} else {
-							abrir_url("formatos/$nom_formato/detalles_mostrar_$nom_formato.php?idformato=" . $formato_doc[0]["idformato"] . "&iddoc=" . $iddoc, "_self");
-						}
-						return $iddoc;
+				$formato_doc = busca_filtro_tabla("A.nombre,A.idformato", "formato A, documento B", "B.iddocumento=" . $iddoc . " AND lower(A.nombre)=lower(B.plantilla)", "", $conn);
+				if ($formato_doc["numcampos"]) {
+					$nom_formato = $formato_doc[0]["nombre"];
+					if (@$_SESSION["tipo_dispositivo"] == 'movil') {
+						abrir_url("ordenar.php?key=" . $iddoc . "&accion=mostrar&mostrar_formato=1", "_self");
+					} else {
+						abrir_url("formatos/$nom_formato/detalles_mostrar_$nom_formato.php?idformato=" . $formato_doc[0]["idformato"] . "&iddoc=" . $iddoc, "_self");
 					}
+					return $iddoc;
 				}
 			}
 		}

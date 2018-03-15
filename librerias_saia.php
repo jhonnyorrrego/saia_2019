@@ -1,12 +1,10 @@
 <?php
 $max_salida = 10;
-// Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
 if (!@$ruta_actual) {
 	while ($max_salida > 0) {
 		if (is_file($ruta . "db.php")) {
 			$ruta_db_superior = $ruta;
-			//Preserva la ruta superior encontrada
 		}
 		$ruta .= "../";
 		$max_salida--;
@@ -15,11 +13,13 @@ if (!@$ruta_actual) {
 } else {
 	$ruta_db_superior = $ruta_actual . $ruta_db_superior;
 }
+
 if (@$_SESSION["generando_pantalla"]) {
 	$raiz_saia = '<?php echo($ruta_db_superior); ?' . '>';
 } else {
 	$raiz_saia = $ruta_db_superior;
 }
+
 include_once ($raiz_saia . "css/index_estilos.php");
 function librerias_jquery($version = "1.4.2") {
 	global $raiz_saia;

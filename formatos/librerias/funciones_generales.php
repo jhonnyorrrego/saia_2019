@@ -9,6 +9,7 @@ while($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
+include_once ($ruta_db_superior . "formatos/librerias/funciones_cliente.php");
 include_once ($ruta_db_superior . "class_transferencia.php");
 
 function retornar_seleccionados($valor) {
@@ -187,8 +188,6 @@ function ejecutores_fbcomplete() {
 	$ejecutores = busca_filtro_tabla("distinct nombre,identificacion,idejecutor", "ejecutor", "", "trim(lower(nombre))", $conn);
 	$texto = '';
 	if($ejecutores["numcampos"]) {
-		// $texto="<option value=''></option>";
-		// print_r($ejecutores);
 		for($i = 0; $i < $ejecutores["numcampos"]; $i++)
 			$texto .= "<option value='" . $ejecutores[$i]["idejecutor"] . "'>" . $ejecutores[$i]["nombre"] . " " . $ejecutores[$i]["identificacion"] . "</option>";
 	}
@@ -212,42 +211,6 @@ function mostrar_ultimo_upload($idformato, $campo, $iddoc) {
 	$campo = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre='$campo' and formato_idformato=$idformato", "", $conn);
 	include_once ("../../anexosdigitales/funciones_archivo.php");
 	echo listar_anexos_documento($iddoc, $idformato, $campo[0][0], $_REQUEST["tipo"], "DESCARGAR|ULTIMO");
-}
-
-/*
- * <Clase>
- * <Nombre>fecha_creacion</Nombre>
- * <Parametros>$idformato,$iddoc</Parametros>
- * <Responsabilidades>Muestra la fecha de creaci�n del documento<Responsabilidades>
- * <Notas></Notas>
- * <Excepciones></Excepciones>
- * <Salida></Salida>
- * <Pre-condiciones><Pre-condiciones>
- * <Post-condiciones><Post-condiciones>
- * </Clase>
- */
-function fecha_creacion($idformato, $iddoc) {
-	global $conn;
-	$fecha = busca_filtro_tabla(fecha_db_obtener("fecha_creacion", "Y-m-d H:i:s"), "documento", "iddocumento=$iddoc", "", $conn);
-	echo $fecha[0][0];
-}
-
-/*
- * <Clase>
- * <Nombre>fecha_aprobacion</Nombre>
- * <Parametros>$idformato,$iddoc</Parametros>
- * <Responsabilidades>Muestra la fecha de aprobaci�n del documento<Responsabilidades>
- * <Notas></Notas>
- * <Excepciones></Excepciones>
- * <Salida></Salida>
- * <Pre-condiciones><Pre-condiciones>
- * <Post-condiciones><Post-condiciones>
- * </Clase>
- */
-function fecha_aprobacion($idformato, $iddoc) {
-	global $conn;
-	$fecha = busca_filtro_tabla(fecha_db_obtener("fecha", "Y-m-d H:i:s"), "documento", "iddocumento=$iddoc", "", $conn);
-	echo $fecha[0][0];
 }
 
 /*
@@ -2334,16 +2297,8 @@ function buscar_papa_primero($iddoc) {
  */
 function generar_ruta_documento($idformato, $iddoc) {
 	global $conn;
-	
 	$diagram_instance = busca_filtro_tabla('', 'paso_documento A, diagram_instance B', 'A.diagram_iddiagram_instance=B.iddiagram_instance AND A.documento_iddocumento=' . $iddoc, '', conn);
 	$listado_pasos = busca_filtro_tabla("", "paso A, paso_actividad B, accion C", "B.estado=1 AND A.idpaso=B.paso_idpaso AND B.accion_idaccion=C.idaccion AND (C.nombre LIKE 'confirmar%' OR C.nombre LIKE 'aprobar%') AND A.diagram_iddiagram=" . $diagram_instance[0]["diagram_iddiagram"] . " AND B.paso_anterior=" . $diagram_instance[0]["paso_idpaso"], "", $conn);
-	
-	// print_r($listado_pasos);
-	/*
-	 * print_r($diagram_instance);
-	 * echo("<hr>");
-	 * print_r($listado_pasos);
-	 */
 	$ruta = array();
 	// pasos_ruta se debe almacenar por medio de acciones si se va a confirmar, confirmar y firmar, aprobar o aprobar y firmar, confirmar y responsable, aprobar y responsable o confirmar y firma manual o confirmar y firma manual validar si se hace por medio del paso_actividad o por medio de la accion intencionalidad por medio del paso_actividad
 	for($i = 0; $i < $listado_pasos["numcampos"]; $i++) {
@@ -2353,13 +2308,11 @@ function generar_ruta_documento($idformato, $iddoc) {
 				"paso_actividad" => $listado_pasos[$i]["idpaso_actividad"]
 		));
 	}
-	// print_r($ruta);
 	if(count($ruta)) {
 		insertar_ruta($ruta, $iddoc, 0);
 	} else {
 		generar_ruta_documento_fija_formato($idformato, $iddoc);
 	}
-	// echo("OPCION DE RUTA FUNCIONES GENERALES");
 }
 
 function generar_ruta_documento_fija_formato($idformato, $iddoc) {

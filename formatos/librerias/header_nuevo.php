@@ -10,9 +10,7 @@ while ($max_salida > 0) {
 }
 include_once ("../db.php");
 include_once ("encabezado_pie_pagina.php");
-if (isset($_REQUEST["export"])) {
-	$exportar = $_REQUEST["export"];
-}
+
 //Definir estilos para tipo de letra y color de encabezado
 $_REQUEST["iddoc"] = str_replace("'", "", stripslashes($_REQUEST["iddoc"]));
 if (isset($_REQUEST["idformato"])) {
@@ -46,154 +44,155 @@ if (!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] == 1) {
 		menu_principal_documento($_REQUEST["iddoc"], 1);
 	}
 }
-?>
-<html>
-<head>
-<?php
+
 $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "", $conn);
-if ($config["numcampos"]) {  $style = "
-     <style type=\"text/css\">
-      .phpmaker 
-       {
-       font-family: Verdana,Tahoma,arial;       
-       color:#000000;
-       /*text-transform:Uppercase;*/
-       } 
-       .encabezado 
-       {
-       background-color:" . $config[0]["valor"] . "; 
-       color:white ; 
-       padding:10px; 
-       text-align: left;	
-       } 
-       .encabezado_list 
-       { 
-       background-color:" . $config[0]["valor"] . "; 
-       color:white ; 
-       vertical-align:middle;
-       text-align: center;
-       font-weight: bold;	
-       }
-       </style>";
-	echo $style;
+$style="";
+if ($config["numcampos"]) {
+$style = "
+<style type=\"text/css\">
+	.phpmaker{
+	font-family: Verdana,Tahoma,arial;
+	color:#000000;
+	}
+	.encabezado{
+	background-color:" . $config[0]["valor"] . ";
+	color:white ;
+	padding:10px;
+	text-align: left;
+	}
+	.encabezado_list{
+	background-color:" . $config[0]["valor"] . ";
+	color:white ;
+	vertical-align:middle;
+	text-align: center;
+	font-weight: bold;
+	}
+</style>";
 }
-?>  
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<?php
+
+
 $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", "", $conn);
 $doc = $_REQUEST["iddoc"];
 $nombre = $formato[0]["nombre"];
 
-if (isset($_REQUEST["font_size"]) && $_REQUEST["font_size"])
+if (isset($_REQUEST["font_size"]) && $_REQUEST["font_size"]) {
 	$formato[0]["font_size"] = $_REQUEST["font_size"];
-if ($fuente["numcampos"])
-	echo "<style> body,table,tr,td,div,p,span { font-size:" . $formato[0]["font_size"] . "px; font-family:" . $fuente[0]["valor"] . "; }</style>";
-?>
-</head>
-<body bgcolor="<?php echo $fondo; ?>">
-<?php
+}
+
 $tam_pagina = array();
-$equivalencia = 3.7882;
+$equivalencia = 5;
 $margenes = explode(",", $formato[0]["margenes"]);
-$tam_pagina["A4"]["ancho"] = 797;
-$tam_pagina["A4"]["alto"] = 1123;
-$tam_pagina["A5"]["ancho"] = 797;
-$tam_pagina["A5"]["alto"] = 562;
-$tam_pagina["Letter"]["ancho"] = 819;
-$tam_pagina["Letter"]["alto"] = 1400;
-$tam_pagina["Legal"]["ancho"] = 819;
-$tam_pagina["Legal"]["alto"] = 1345;
+
+$tam_pagina["A4"]["ancho"] = 595;
+$tam_pagina["A4"]["alto"] = 842;
+
+$tam_pagina["A5"]["ancho"] = 595;
+$tam_pagina["A5"]["alto"] = 420;
+
+$tam_pagina["Letter"]["ancho"] = 850;
+$tam_pagina["Letter"]["alto"] = 1098;
+
+$tam_pagina["Legal"]["ancho"] = 793;
+$tam_pagina["Legal"]["alto"] = 1122;
+
 $tam_pagina["margen_derecha"] = $margenes[1] * $equivalencia;
-$tam_pagina["margen_izquierda"] = $margenes[0] * $equivalencia;
+$tam_pagina["margen_izquierda"] = $margenes[0]* $equivalencia;
 $tam_pagina["margen_superior"] = $margenes[2] * $equivalencia;
 $tam_pagina["margen_inferior"] = $margenes[3] * $equivalencia;
-if (!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] == 1) {
-	$fondo = "#f5f5f5";
-	if (!isset($_REQUEST["export"])) {
-		echo "<div id='div1'>";
+
+if ($formato[0]["orientacion"]) {
+	$alto_paginador = $tam_pagina[$formato[0]["papel"]]["ancho"];
+	$ancho_paginador = $tam_pagina[$formato[0]["papel"]]["alto"];
+} else {
+	$alto_paginador = $tam_pagina[$formato[0]["papel"]]["alto"];
+	$ancho_paginador = $tam_pagina[$formato[0]["papel"]]["ancho"];
+}
+
+?>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<?php
+			echo $style;
+			if ($fuente["numcampos"]){
+				if($_REQUEST["tipo"]!=5){
+					echo "<style> body,table,tr,td,div,p,span { font-size:" . $formato[0]["font_size"] . "px; font-family:" . $fuente[0]["valor"] . "; }</style>";
+				}else{
+					echo "<style> body,table,tr,td,div,p,span { font-size:" . $formato[0]["font_size"] . "pt; font-family:" . $fuente[0]["valor"] . "; }</style>";
+				}
+			}
+		?>
+	</head>
+	<body>
+	<?php
+	if (!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] == 1) {
 		if (!$formato[0]["item"]) {
-			$margenes = explode(",", $formato[0]["margenes"]);
 			if (isset($_REQUEST["vista"]) && $_REQUEST["vista"]) {
 				$vista = busca_filtro_tabla("encabezado", "vista_formato", "idvista_formato='" . $_REQUEST["vista"] . "'", "", $conn);
 				$encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $vista[0]["encabezado"] . "'", "", $conn);
-				$pie = busca_filtro_tabla("encabezado", $formato[0]["nombre_tabla"], "documento_iddocumento='" . $_REQUEST["iddoc"] . "'", "", $conn);
 			} else {
-				$encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["encabezado"] . "'", "", $conn);
-				$pie = busca_filtro_tabla("encabezado", $formato[0]["nombre_tabla"], "documento_iddocumento='" . $_REQUEST["iddoc"] . "'", "", $conn);
+				$encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["encabezado"] . "'", "", $conn);				
 			}
-			echo "</div>";
 		}
-	}
-	if ($formato[0]["orientacion"]) {
-		$alto_paginador = $tam_pagina[$formato[0]["papel"]]["ancho"];
-		$ancho_paginador = $tam_pagina[$formato[0]["papel"]]["alto"];
-
-	} else {
-		$alto_paginador = $tam_pagina[$formato[0]["papel"]]["alto"];
-		$ancho_paginador = $tam_pagina[$formato[0]["papel"]]["ancho"];
-	}
-	if ($formato[0]["paginar"] == '1') {
-		echo('<style type="text/css">
-.page_border { border: 1px solid #CACACA; margin-bottom: 8px; box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); }
-.paginador_docs { width: ' . $ancho_paginador . 'px; height:' . ($alto_paginador + 50) . 'px; margin: auto; padding-left: 0px; margin-bottom:10px; background-color:#FFF; overflow:hidden; box-shadow: 5px 5px 5px #888888;}
-.page_content { height: ' . ($alto_paginador - ($tam_pagina["margen_superior"] + $tam_pagina["margen_inferior"])) . 'px;  overflow:hidden; font-family:Verdana, Geneva, sans-serif; font-size:12px; margin-right: ' . $tam_pagina["margen_derecha"] . 'px; margin-left: ' . $tam_pagina["margen_izquierda"] . 'px; }
-.page_margin_top {margin-left:55px;margin-right:75px;margin-top:20px;margin-bottom:20px; height:' . ($tam_pagina["margen_superior"] + 20) . 'px; overflow: hidden; }
-.page_margin_bottom { height:' . $tam_pagina["margen_inferior"] . 'px; padding-top:30px; page-break-after:always; }
-</style>
-<script>
-	$(document).ready(function(){
-		var alto_papel=' . $alto_paginador . ';
-    var alto_encabezado=' . $tam_pagina["margen_superior"] . ';
-    var alto_pie_pagina=' . $tam_pagina["margen_inferior"] . ';
-		var altopagina = alto_papel-(alto_encabezado+alto_pie_pagina); 
-    var paginas=1;
-    var alto=0; 
-    var inicial=$("#documento").offset().top;
-    $(".page_break").each(function(){
-      pos=$(this).offset().top;
-	    paginas =Math.ceil(pos/altopagina);    
-      var nuevo_alto=(inicial+((altopagina)*paginas))-(pos)+(alto_encabezado);
-      $(this).height(nuevo_alto);   
-      
-    });  
-    alto = $("#page_overflow").height();
-	  paginas =Math.ceil(alto/altopagina);   
-		var contenido = $("#page_overflow").html();
-		var encabezado = $("#doc_header").html();
-		var piedepagina = $("#doc_footer").html();
-		
-		for(i=1;i<paginas;i++){             
-			var altoPaginActual = altopagina*i;
-			var pagina = \'<div class="paginador_docs page_border"><div class="page_margin_top">\'+encabezado+\'</div><div class="page_content" ><div style="margin-top:-\'+altoPaginActual+\'px">\'+contenido+\'</div></div><div class="page_margin_bottom">\'+piedepagina+\'</div></div>\';
-           
-			$("#documento").append(pagina);
-		}
-	});
-</script>');
-	} else {
-		echo('<style type="text/css">
-.page_border { border: 1px solid #CACACA; margin-bottom: 8px; box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); }
-.paginador_docs { width: ' . $ancho_paginador . 'px;  margin: auto; padding-left: 0px; margin-bottom:10px; background-color:#FFF; overflow:hidden; box-shadow: 5px 5px 5px #888888;}
-.page_content {   overflow:hidden; font-family:Verdana, Geneva, sans-serif; font-size:12px; margin-right: ' . $tam_pagina["margen_derecha"] . 'px; margin-left: ' . $tam_pagina["margen_izquierda"] . 'px; }
-.page_margin_top {margin-left:55px;margin-right:75px;margin-top:20px;margin-bottom:20px; overflow: hidden; }
-.page_margin_bottom {  padding-top:30px; page-break-after:always; }
-</style>');
-	}
-	echo('<body bgcolor="#f5f5f5">  
-<div id="documento">
-  <div class="paginador_docs page_border">
-    <div class="page_margin_top" id="doc_header">');
-
-	if ($pie[0][0] && $encabezado["numcampos"]) {
-		if (!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] == 1) {
-			$pagina = 0;
+		if ($formato[0]["paginar"] == '1') {
+			echo('<style type="text/css">
+			.page_border { border: 1px solid #CACACA; margin-bottom: 8px; box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); }
+			.paginador_docs { width: ' . $ancho_paginador . 'px; height:' . $alto_paginador . 'px; margin:30px auto 30px auto; box-shadow: 5px 5px 13px #0f0e0e;}
+			
+			.page_margin_top {height:' . ($tam_pagina["margen_superior"]) . 'px; margin:20px '.$tam_pagina["margen_izquierda"].'px 10px '.$tam_pagina["margen_derecha"].'px;overflow: hidden; }
+			.page_content {height: ' . ($alto_paginador - ($tam_pagina["margen_superior"] + $tam_pagina["margen_inferior"]+40)) . 'px; margin:0px '.$tam_pagina["margen_izquierda"].'px 0px '.$tam_pagina["margen_derecha"].'px;  overflow:hidden; }
+			.page_margin_bottom {height:' . ($tam_pagina["margen_inferior"]) . 'px; margin:10px '.$tam_pagina["margen_izquierda"].'px 10px '.$tam_pagina["margen_derecha"].'px;overflow: hidden; }
+			
+			</style>
+			<script>
+				$(document).ready(function(){
+					var alto_papel=' . ($alto_paginador) . ';
+			    var alto_encabezado=' . ($tam_pagina["margen_superior"]+30) . ';
+			    var alto_pie_pagina=' . ($tam_pagina["margen_inferior"]+20). ';
+					var altopagina = alto_papel-(alto_encabezado+alto_pie_pagina); 
+			    var paginas=1;
+			    var alto=0; 
+			    var inicial=$("#documento").offset().top;
+					
+			    alto = $("#page_overflow").height();
+				  paginas =Math.ceil(alto/altopagina);   
+					var contenido = $("#page_overflow").html();
+					var encabezado = $("#doc_header").html();
+					var piedepagina = $("#doc_footer").html();
+					
+					for(i=1;i<paginas;i++){
+						var altoPaginActual = altopagina*i;             
+						var pagina = \'<div id="pag-\'+i+\'" class="paginador_docs page_border"><div class="page_margin_top">\'+encabezado+\'</div><div id="pag_content-\'+i+\'" class="page_content"><div style="margin-top:-\'+altoPaginActual+\'px">\'+contenido+\'</div></div><div class="page_margin_bottom">\'+piedepagina+\'</div></div>\';
+						$("#documento").append(pagina);
+					}
+				});
+			</script>');
 		} else {
-			$pagina = 1;
+			echo('<style type="text/css">
+			.page_border { border: 1px solid #CACACA; margin-bottom: 8px; box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); }
+			.paginador_docs { width: ' . $ancho_paginador . 'px; margin:30px auto 30px auto; box-shadow: 5px 5px 13px #0f0e0e;}
+			
+			.page_margin_top {height:' . ($tam_pagina["margen_superior"]) . 'px; margin:20px '.$tam_pagina["margen_izquierda"].'px 10px '.$tam_pagina["margen_derecha"].'px;overflow: hidden; }
+			.page_content {margin:0px '.$tam_pagina["margen_izquierda"].'px 0px '.$tam_pagina["margen_derecha"].'px;  overflow:hidden; }
+			.page_margin_bottom {height:' . ($tam_pagina["margen_inferior"]) . 'px; margin:10px '.$tam_pagina["margen_izquierda"].'px 10px '.$tam_pagina["margen_derecha"].'px;overflow: hidden; }		
+			</style>');
 		}
-		echo crear_encabezado_pie_pagina(stripslashes($encabezado[0][0]), $_REQUEST["iddoc"], $formato[0]["idformato"], $pagina);
+		echo('<div id="documento">
+			<div id="pag-0" class="paginador_docs page_border">
+				<div class="page_margin_top" id="doc_header">');
+				if ($encabezado["numcampos"]) {
+					if (!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] == 1) {
+						$pagina = 0;
+					} else {
+						$pagina = 1;
+					}
+					echo crear_encabezado_pie_pagina(stripslashes($encabezado[0][0]), $_REQUEST["iddoc"], $formato[0]["idformato"], $pagina);
+				}
+			echo('</div>
+			
+		<div id="pag_content-0" class="page_content">
+			<div id="page_overflow"><table style="width:100%">');
+	} else {
+		echo '<table border="0" width="100%" cellpadding="0" cellspacing="0">';
 	}
-	echo('</div>  <div class="page_content">  <div id="page_overflow"><table style="width:100%">');
-} else {
-	echo '<table border="0" width="100%" cellpadding="0" cellspacing="0">';
-}
 ?>
