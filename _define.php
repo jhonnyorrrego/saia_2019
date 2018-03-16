@@ -36,8 +36,9 @@ if ($acceso[0] == 192 || $acceso[0] == 172) {
 } else {
     $ruta = "{{urlsaia}}";
 }
-define("RUTA_SAIA", "saia_elastic/saia/");
+define("RUTA_SAIA", "{{carpetasaia}}/saia/");
 //$_SERVER["DOCUMENT_ROOT"] no esta disponible como cgi. Usar la ruta del define.php
+define("RUTA_ABS_SAIA", __DIR__  . "/");
 if (!defined("RUTA_PDF")) {
     define("RUTA_PDF", $ruta . "/{{carpetasaia}}/saia");
 }
@@ -143,7 +144,7 @@ if (!defined("LLAVE_SAIA_EDITOR")) {
 // define("STORAGE_TYPE", "NETWORK");
 
 define('FORMATOS_SAIA', 'formatos/');
-define('FORMATOS_CLIENTE', 'formatos/');
+define('FORMATOS_CLIENTE', 'formatos_cliente/');
 
 define("RUTA_BACKUPS","s3://almacenamiento2");
 define("KEY_AWS","AKIAJOOJ3XT673EOK6OQ");
