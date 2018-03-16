@@ -1806,14 +1806,14 @@ global $conn;
  if(count(@$usuarios['copia'])){ //CON COPIA
 	 foreach($usuarios['copia'] as $fila){
 	 	$mail->AddCC($fila,$fila);
-	 } 	
+	 }
  }
  if(count(@$usuarios['copia_oculta'])){ //CON COPIA OCULTA
 	 foreach($usuarios['copia_oculta'] as $fila){
 	 	$mail->AddBCC($fila,$fila);
-	 } 	
- } 
- 
+	 }
+ }
+
   if(!empty($anexos)){
   	foreach($anexos as $fila){
   		$mail->AddAttachment($fila);

@@ -309,7 +309,7 @@ class SqlOracle extends SQL2 {
 		$func = $_SESSION["usuario_actual"];
 		$this->ultimo_insert = 0;
 		if (isset($_SESSION)) {
-			$fecha = fecha_db_almacenar(date("Y-m-d h:i:s"), "Y-m-d h:i:s");
+			$fecha = $this->fecha_db_almacenar(date("Y-m-d h:i:s"), "Y-m-d h:i:s");
 			if ($sqleve != "") {
 				$rs = @ OCIParse($this->Conn->conn, $sqleve);
 				if ($rs) {
@@ -492,11 +492,14 @@ class SqlOracle extends SQL2 {
 		// Fetch the SELECTed row
 		OCIFetchInto($stmt, $row, OCI_ASSOC);
 
-		if (!count($row)) { // soluciona el problema del size() & ya no se necesita el emty_clob() en bd en los campos clob
+		if (!count($row)) { // soluciona el problema del size() & ya no se necesita el emty_clob() en bd en los campos clob NULL, los campos obligatorios siguen dependendiendo de empty_clob() como valor predeterminado.
 			oci_rollback($this->Conn->conn);
 			oci_free_statement($stmt);
-
-			$up_clob = "UPDATE " . $tabla . " SET " . $campo . "=empty_clob() WHERE " . $condicion;
+			$clob_blob = 'clob';
+			if ($tipo == 'archivo') {
+				$clob_blob = 'blob';
+			}
+			$up_clob = "UPDATE " . $tabla . " SET " . $campo . "=empty_" . $clob_blob . "() WHERE " . $condicion;
 			$this->Ejecutar_Sql($up_clob);
 			$stmt = OCIParse($this->Conn->conn, $sql) or print_r(OCIError($stmt));
 			// Execute the statement using OCI_DEFAULT (begin a transaction)
@@ -590,5 +593,257 @@ class SqlOracle extends SQL2 {
 			$row[strtoupper($campo)]->free();
 		}
 		return ($resultado);
+	}
+
+	public function campo_formato_tipo_dato($tipo_dato, $longitud, $predeterminado, $banderas = null) {
+		switch (strtoupper(@$tipo_dato)) {
+			case "NUMBER" :
+				$campo .= " NUMBER ";
+				if ($longitud) {
+					$campo .= "(" . intval($longitud) . ") ";
+				} else {
+					$campo .= "(11) ";
+				}
+				if ($predeterminado) {
+					$campo .= " DEFAULT '" . intval($predeterminado) . "' ";
+				}
+				break;
+			case "DOUBLE" :
+				$campo .= " FLOAT";
+				if ($longitud) {
+					$campo .= "(" . intval($longitud) . ") ";
+				} else {
+					$campo .= "";
+				}
+				if ($predeterminado) {
+					$campo .= " DEFAULT '" . intval($predeterminado) . "' ";
+				}
+				break;
+			case "CHAR" :
+				$campo .= " char ";
+				if ($longitud) {
+					$campo .= "(" . $this->maximo_valor(intval($longitud), 255) . ") ";
+				} else {
+					$campo .= "(10) ";
+				}
+				if ($predeterminado) {
+					$campo .= " DEFAULT '" . $this->maximo_valor(intval($predeterminado), 255) . "' ";
+				}
+				break;
+			case "VARCHAR" :
+				$campo .= " VARCHAR2";
+				if ($longitud) {
+					$campo .= "(" . $this->maximo_valor(intval($longitud), 40000) . ") ";
+				} else {
+					$campo .= "(255) ";
+				}
+				if ($predeterminado) {
+					$campo .= " DEFAULT '" . intval($predeterminado) . "' ";
+				}
+				break;
+			case "TEXT" :
+				if ($longitud == "")
+					$longitud = 4000;
+				if ($longitud < 4000) {
+					$campo .= " VARCHAR2(" . intval($longitud) . ")";
+				} else {
+					$campo .= " CLOB ";
+					$campo .= " DEFAULT EMPTY_CLOB()";
+				}
+				break;
+			case "DATE" :
+				$campo .= " DATE ";
+				$campo .= " DEFAULT  SYSDATE";
+				break;
+			case "TIME" :
+				$campo .= " varchar2 DEFAULT to_char(sysdate,'hh24:mi:ss') ";
+				break;
+			case "DATETIME" :
+				$campo .= " DATE ";
+				$campo .= " DEFAULT  SYSDATE";
+				break;
+			case "BLOB" :
+				$campo .= " BLOB ";
+				$campo .= " DEFAULT EMPTY_BLOB()";
+				break;
+			default :
+				$campo .= " NUMBER";
+				if ($longitud) {
+					$campo .= "(" . intval($longitud) . ") ";
+				} else {
+					$campo .= "(11) ";
+				}
+				if ($predeterminado) {
+					$campo .= " DEFAULT '" . intval($predeterminado) . "' ";
+				}
+				break;
+		}
+	}
+
+	public function formato_crear_indice($bandera, $nombre_campo, $nombre_tabla) {
+		$nombre_tabla = strtoupper($nombre_tabla);
+		$nombre_campo = strtoupper($nombre_campo);
+		$banderas = explode(",", $todas_banderas);
+		if (strlen($nombre_tabla) > 26)
+			$aux = substr($nombre_tabla, 0, 26);
+		else
+			$aux = $nombre_tabla;
+		switch (strtolower($bandera)) {
+			case "pk" :
+				$sql2 = "SELECT LAST_NUMBER AS ULTIMO FROM all_sequences WHERE sequence_owner='" . DB . "' AND sequence_name='" . $aux . "_SEQ'";
+				$this->filas = 0;
+				$siguiente = $this->Ejecutar_Sql($sql2);
+
+				if ($this->filas) {
+					$inicio = $siguiente[0]["ultimo"];
+					$dato = "DROP SEQUENCE " . $aux . "_SEQ";
+					guardar_traza($dato, $nombre_tabla);
+					$this->Ejecutar_sql($dato);
+				} else
+					$inicio = 1;
+				$dato = "CREATE INDEX PK_" . $nombre_campo . " ON " . $nombre_tabla . "(" . $nombre_campo . ") LOGGING TABLESPACE " . TABLESPACE . " PCTFREE 10 INITRANS 2 MAXTRANS 255 STORAGE (INITIAL 128K MINEXTENTS 1 MAXEXTENTS 2147483645 PCTINCREASE 0 BUFFER_POOL DEFAULT) NOPARALLEL";
+				guardar_traza($dato, $nombre_tabla);
+				$this->Ejecutar_sql($dato);
+				$this->filas = 0;
+				if ($this->verificar_existencia($nombre_tabla)) {
+					$dato = "ALTER TABLE " . $nombre_tabla . " ADD CONSTRAINT PK_" . $nombre_campo . "  PRIMARY KEY (" . $nombre_campo . ")";
+					guardar_traza($dato, $nombre_tabla);
+					$this->Ejecutar_sql($dato);
+				}
+
+				$dato = "CREATE SEQUENCE " . $aux . "_SEQ START WITH " . $inicio . " MAXVALUE 999999999999999999999999 MINVALUE 1  NOCYCLE NOORDER";
+				guardar_traza($dato, $nombre_tabla);
+				$this->Ejecutar_sql($dato);
+				$dato = "CREATE OR REPLACE TRIGGER " . $aux . "_TRG BEFORE INSERT OR UPDATE ON " . $nombre_tabla . " FOR EACH ROW BEGIN IF INSERTING AND :NEW." . $nombre_campo . " IS NULL THEN SELECT " . $aux . "_SEQ.NEXTVAL INTO :NEW." . $nombre_campo . " FROM DUAL; END IF; END;";
+				guardar_traza($dato, $nombre_tabla);
+				$this->Ejecutar_sql($dato);
+				break;
+			case "u" :
+				$this->filas = 0;
+				if ($this->verificar_existencia($nombre_tabla)) {
+					$dato = "ALTER TABLE " . $nombre_tabla . " ADD CONSTRAINT U_" . $nombre_campo . " UNIQUE( " . $nombre_campo . " )";
+					guardar_traza($dato, $nombre_tabla);
+					$this->Ejecutar_sql($dato);
+				}
+				break;
+			case "i" :
+				$campo2 = $nombre_tabla . "_" . $nombre_campo;
+				if (strlen($campo2) > 15) {
+					$campo2 = str_replace("FT_", "", substr($campo2, 0, 15));
+				}
+				$dato = "CREATE INDEX I_" . $campo2 . " ON " . $nombre_tabla . " (" . $nombre_campo . ") LOGGING TABLESPACE " . TABLESPACE . " PCTFREE 10 INITRANS 2 MAXTRANS 255 STORAGE (INITIAL 128K MINEXTENTS 1 MAXEXTENTS 2147483645 PCTINCREASE 0 BUFFER_POOL DEFAULT) NOPARALLEL";
+				guardar_traza($dato, $nombre_tabla);
+				$this->Ejecutar_sql($dato);
+
+				break;
+		}
+	}
+
+	protected function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta) {
+		$lcampos = array();
+		for($i = 0; $i < $campos["numcampos"]; $i++) {
+			$datos_campo = ejecuta_filtro_tabla("SELECT decode(nullable,'Y',0,'N',1) as nulo FROM user_tab_columns WHERE table_name='" . strtoupper($formato[0]["nombre_tabla"]) . "' and lower(column_name)='{$campos[$i]["nombre"]}' ORDER BY column_name ASC", $conn);
+
+			if ($datos_campo[0]["nulo"] != $campos[$i]["obligatoriedad"]) {
+				if ($formato[0]["nombre_tabla"]) {
+					$sql = "alter table " . $formato[0]["nombre_tabla"] . " modify(" . $campos[$i]["nombre"];
+					if (!$campos[$i]["obligatoriedad"]) {
+						$sql .= " NULL)";
+					} else {
+						$sql .= " NOT NULL)";
+					}
+					guardar_traza($sql, $formato[0]["nombre_tabla"]);
+					$this->Ejecutar_Sql($sql);
+				}
+			}
+
+			$dato_campo = $this->crear_campo($campos[$i], $formato[0]["nombre_tabla"], $datos_campo);
+			if ($dato_campo && $dato_campo != "") {
+				if (!$tabla_esta) {
+					array_push($lcampos, $dato_campo);
+				} else {
+					$pos = array_search(strtolower($campos[$i]["nombre"]), $campos_tabla);
+					$dato = "";
+
+					if ($pos === false) {
+						if ($formato[0]["nombre_tabla"]) {
+							$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ADD " . $dato_campo;
+						}
+					} else {
+						if ($formato[0]["nombre_tabla"]) {
+							$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " MODIFY " . $dato_campo;
+						}
+					}
+					guardar_traza($dato, $formato[0]["nombre_tabla"]);
+					$this->Ejecutar_Sql($dato);
+				}
+			}
+		}
+		// die();
+		return $lcampos;
+	}
+
+	protected function formato_elimina_indices_tabla($tabla) {
+		global $conn, $sql;
+		$tabla = strtoupper($tabla);
+			$envio = array();
+			$sql2 = "select ai.index_name AS column_name, ai.uniqueness AS Key_name FROM all_indexes ai WHERE ai.TABLE_OWNER='" . DB . "' AND ai.table_name = '" . $tabla . "'";
+			$indices = $this->ejecuta_filtro_tabla($sql2);
+			for($i = 0; $i < $indices["numcampos"]; $i++) {
+				array_push($envio, array(
+						"Key_name" => $indices[$i]["key_name"],
+						"Column_name" => $indices[$i]["column_name"]
+				));
+			}
+			$sql2 = "SELECT cols.column_name AS Column_name, cons.constraint_type AS Key_name FROM all_constraints cons, all_cons_columns cols WHERE cons.constraint_type = 'P' AND cons.constraint_name = cols.constraint_name AND cons.owner = cols.owner AND cons.owner='" . DB . "' AND cols.table_name='" . $tabla . "' ORDER BY cols.table_name, cols.position";
+			$primaria = $this->ejecuta_filtro_tabla($sql2, $conn);
+			for($i = 0; $i < $primaria["numcampos"]; $i++) {
+				array_push($envio, array(
+						"Key_name" => "PRIMARY",
+						"Column_name" => $primaria[$i]["Column_name"]
+				));
+			}
+			$numero_indices = count($envio);
+
+			for($i = 0; $i < $numero_indices; $i++) {
+				$this->elimina_indice_campo($tabla, $envio[$i]);
+			}
+		return;
+	}
+
+	protected function elimina_indice_campo($tabla, $campo) {
+		if ($campo["Key_name"] == "PRIMARY") {
+			if ($this->verificar_existencia($tabla)) {
+				$sql = "ALTER TABLE " . strtolower($tabla) . " DROP PRIMARY KEY DROP INDEX ";
+				guardar_traza($sql, strtolower($tabla));
+				$this->Ejecutar_Sql($sql);
+				echo ($sql . "<br />");
+			}
+		}
+		if ($campo["Key_name"] == "UNIQUE") {
+			if ($this->verificar_existencia($tabla)) {
+				$sql = "ALTER TABLE " . strtolower($tabla) . " DROP CONSTRAINT " . $campo["Column_name"] . " DROP INDEX ";
+				guardar_traza($sql, strtolower($tabla));
+				$this->Ejecutar_Sql($sql);
+				echo ($sql . "<br />");
+			}
+		}
+		if ($campo["Key_name"] == "NONUNIQUE") {
+			$sql = "DROP INDEX " . $campo["Column_name"];
+			guardar_traza($sql, strtolower($tabla));
+			$this->Ejecutar_Sql($sql);
+			echo ($sql . "<br />");
+		}
+		return;
+	}
+
+	protected function verificar_existencia($tabla) {
+		$sql = "select tname from tab where tname = '$tabla' as existe";
+		$rs = $this->Ejecutar_sql($sql);
+		$fila = $this->sacar_fila($rs);
+		if ($fila) {
+			return ($fila["existe"] == 'true');
+		}
+		return false;
 	}
 }

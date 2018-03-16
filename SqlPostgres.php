@@ -1,7 +1,7 @@
 <?php
 include_once ("conexion.php");
 
-class SqlMysql extends SQL2 {
+class SqlPostgres extends SQL2 {
 
 	public function __construct($conn, $motorBd) {
 		parent::__construct($conn, $motorBd);
@@ -12,7 +12,7 @@ class SqlMysql extends SQL2 {
 	 * <Nombre>Buscar.
 	 * <Parametros>campos-las columnas a buscar; tablas-las tablas en las que se hará la búsqueda;
 	 * where-el filtro de la búsqueda; order_by-parametro para el orden.
-	 * <Responsabilidades>ejecutar consulta de selección para mysql
+	 * <Responsabilidades>ejecutar consulta de selección para postgres
 	 * <Notas>
 	 * <Excepciones>Cualquier problema que ocurra con la busqueda en la base de datos generará una excepcion
 	 * <Salida>una matriz con los resultados de la consulta
@@ -29,11 +29,11 @@ class SqlMysql extends SQL2 {
 		if ($order_by != "" && $order_by != null)
 			$this->consulta .= " ORDER BY " . $order_by;
 		// ejecucion de la consulta, a $this->res se le asigna el resource
-		$this->res = mysqli_query($this->Conn->conn, $this->consulta);
+		$this->res = pg_query($this->Conn->conn, $this->consulta);
 		// se le asignan a $resultado los valores obtenidos
 		if ($this->Numero_Filas() > 0) {
 			for($i = 0; $i < $this->Numero_Filas(); $i++)
-				$resultado[] = mysqli_fetch_array($this->res, MYSQLI_ASSOC);
+				$resultado[] = pg_fetch_array($this->res, null, PGSQL_ASSOC);
 			return $resultado;
 		} else { // se retorna la matriz
 			return (false);
@@ -44,12 +44,12 @@ class SqlMysql extends SQL2 {
 		if (!$rs) {
 			$rs = $this->res;
 		}
-		@mysqli_free_result($rs);
+		@pg_free_result($rs);
 	}
 
 	/*
 	 * <Clase>SQL
-	 * <Nombre>ejecutar_sql_MySql
+	 * <Nombre>ejecutar_sql_postgres
 	 * <Parametros>sql-cadena con el codigo a ejecutar
 	 * <Responsabilidades>ejecutar el comando recibido en la cadena sql
 	 * <Notas>Se utiliza generalmente para busquedas cuyos comandos se optienen de referencias que están en la base de datos,
@@ -72,14 +72,16 @@ class SqlMysql extends SQL2 {
 
 		$this->filas = 0;
 		if ($sql && $sql != "" && $this->Conn->conn) {
-			$this->res = mysqli_query($this->Conn->conn, $sql); // or die("ERROR SQL ".mysqli_error($this->Conn->conn)." en ".$_SERVER["PHP_SELF"]." ->".$sql);// or error//("Error al Ejecutar: $sql --- ".mysql_error());
+			// Quitar "from dual".
+			$sql = preg_replace("/from\s+dual\s*$/i", "", $sql);
+			$this->res = pg_query($this->Conn->conn, $sql); // or die("ERROR SQL " . pg_last_error($this->Conn->conn) . " en " . $_SERVER["PHP_SELF"] . " ->" . $sql); // or error//("Error al Ejecutar: $sql --- ".postgres_error());
 
 			if ($this->res) {
 				if (strpos(strtolower($sql), "insert") !== false)
 					$this->ultimo_insert = $this->Ultimo_Insert();
 				else if (strpos(strtolower($sql), "select") !== false) {
 					$this->ultimo_insert = 0;
-					$this->filas = $this->res->num_rows;
+					$this->filas = pg_num_rows($this->res);
 				} else {
 					$this->ultimo_insert = 0;
 				}
@@ -93,9 +95,12 @@ class SqlMysql extends SQL2 {
 	}
 
 	function sacar_fila($rs = Null) {
-		if ($rs)
+		if ($rs) {
 			$this->res = $rs;
-		if ($arreglo = @mysqli_fetch_array($this->res, MYSQLI_BOTH)) {
+		}
+		// $arreglo = @pg_fetch_array($this->res, null, PGSQL_BOTH) or die("ERROR PG_FETCH ".pg_last_error($rs)." en ".$_SERVER["PHP_SELF"]);
+
+		if ($arreglo = @pg_fetch_array($this->res, null, PGSQL_BOTH)) {
 			$this->filas++;
 			return ($arreglo);
 		} else {
@@ -106,7 +111,7 @@ class SqlMysql extends SQL2 {
 	function sacar_fila_vector($rs = Null) {
 		if ($rs == Null)
 			$rs = $this->res;
-		if ($arreglo = @mysqli_fetch_row($rs)) {
+		if ($arreglo = @pg_fetch_row($rs)) {
 			return ($arreglo);
 		} else
 			return (FALSE);
@@ -117,7 +122,7 @@ class SqlMysql extends SQL2 {
 	 * <Nombre>Insertar.
 	 * <Parametros>campos-los campos a insertar; tabla-nombre de la tabla donde se hará la inserción;
 	 * valores-los valores a insertar
-	 * <Responsabilidades>Ejecutar una consulta del tipo insert en una base de datos mysql
+	 * <Responsabilidades>Ejecutar una consulta del tipo insert en una base de datos postgres
 	 * <Notas>
 	 * <Excepciones>Cualquier problema con la ejecucion del INSERT generará una excepcion
 	 * <Salida>
@@ -129,7 +134,7 @@ class SqlMysql extends SQL2 {
 			$insert = "INSERT INTO " . $tabla . " VALUES (" . $valores . ")";
 		else
 			$insert = "INSERT INTO " . $tabla . "(" . $campos . ") VALUES (" . $valores . ")";
-		$this->res = mysqli_query($this->Conn->conn, $insert);
+		$this->res = pg_query($this->Conn->conn, $insert);
 		$this->Guardar_log($insert);
 	}
 
@@ -139,14 +144,14 @@ class SqlMysql extends SQL2 {
 	 * <Parametros>tabla-nombre de la tabla donde se hará la modificacion;
 	 * actualizaciones-Aquellos registros que serán modificados y sus nuevos valores;
 	 * where-filtro de los registros que serán modificados
-	 * <Responsabilidades>Ejecutar una sentencia de tipo UPDATE en una base de datos MySql
+	 * <Responsabilidades>Ejecutar una sentencia de tipo UPDATE en una base de datos postgres
 	 * <Notas>
 	 * <Excepciones>Cualquier problema con la ejecucion del UPDATE generará una excepcion
 	 * <Salida>
 	 * <Pre-condiciones>
 	 * <Post-condiciones>
 	 */
-	// función update para mysql
+	// función update para postgres
 	function Modificar($tabla, $actualizaciones, $where) {
 		$actualizaciones = html_entity_decode(htmlentities(utf8_decode($actualizaciones)));
 		if ($where != null && $where != "")
@@ -155,7 +160,7 @@ class SqlMysql extends SQL2 {
 			$update = "UPDATE " . $tabla . " SET " . $actualizaciones;
 		// ejecucion de la consulta
 		$this->Guardar_log($update);
-		$this->res = mysqli_query($this->Conn->conn, $update);
+		$this->res = pg_query($this->Conn->conn, $update);
 		//
 	}
 
@@ -173,9 +178,9 @@ class SqlMysql extends SQL2 {
 	function Ejecutar_Sql_Tipo($sql) {
 		$sql = html_entity_decode(htmlentities(utf8_decode($sql)));
 		$this->consulta = $sql;
-		$this->res = mysqli_query($this->Conn->conn, $this->consulta);
+		$this->res = pg_query($this->Conn->conn, $this->consulta);
 		$this->Guardar_log($sql);
-		while($fila = mysqli_fetch_row($this->res)) {
+		while($fila = pg_fetch_row($this->res)) {
 			foreach ( $fila as $valor )
 				$resultado[] = $valor;
 		}
@@ -186,7 +191,7 @@ class SqlMysql extends SQL2 {
 	 * <Clase>SQL
 	 * <Nombre>Eliminar.
 	 * <Parametros>tabla-nombre de la tabla donde se hará la eliminacion; where-cuales son los registros a eliminar
-	 * <Responsabilidades>Ejecutar una sentencia DELETE en una base de datos MySql
+	 * <Responsabilidades>Ejecutar una sentencia DELETE en una base de datos postgres
 	 * <Notas>
 	 * <Excepciones>Cualquier problema con la ejecucion del DELETE generará una excepcion
 	 * <Salida>
@@ -200,7 +205,7 @@ class SqlMysql extends SQL2 {
 			$delete = "DELETE FROM " . $tabla;
 		// ejecucion de la consulta
 		$this->Guardar_log($delete);
-		$this->res = mysqli_query($this->Conn->conn, $delete);
+		$this->res = pg_query($this->Conn->conn, $delete);
 		//
 	}
 
@@ -220,7 +225,7 @@ class SqlMysql extends SQL2 {
 		$resultado["numcampos"] = $this->Numero_Filas();
 		if ($this->Numero_Filas() > 0) {
 			for($i = 0; $i < $this->Numero_Filas(); $i++) {
-				$resultado[$i] = mysqli_fetch_array($this->res, MYSQLI_ASSOC);
+				$resultado[$i] = pg_fetch_array($this->res, null, PGSQL_ASSOC);
 				$j = 0;
 				foreach ( $resultado[$i] as $key => $valor ) {
 					$resultado[$i][$j] = $resultado[$i][$key];
@@ -248,8 +253,7 @@ class SqlMysql extends SQL2 {
 	 * <Post-condiciones>
 	 */
 	function Tipo_Campo($rs, $pos) {
-		$dato = mysqli_fetch_field_direct($rs, $pos);
-		return ($dato->type);
+		return pg_field_type($rs, $pos);
 	}
 
 	/*
@@ -264,8 +268,7 @@ class SqlMysql extends SQL2 {
 	 * <Post-condiciones>
 	 */
 	function Nombre_Campo($rs, $pos) {
-		$dato = mysqli_fetch_field_direct($rs, $pos);
-		return ($dato->name);
+		return pg_field_name($rs, $pos);
 	}
 
 	/*
@@ -280,8 +283,8 @@ class SqlMysql extends SQL2 {
 	 * <Post-condiciones>
 	 */
 	function Lista_Tabla($db) {
-		$this->res = mysqli_query($this->Conn->conn, "SHOW TABLES") or die("Error en la Ejecucución del Proceso SQL: " . mysqli_error($this->Conn->conn));
-		while($row = mysqli_fetch_row($this->res))
+		$this->res = pg_query($this->Conn->conn, "SHOW TABLES") or die("Error en la Ejecucución del Proceso SQL: " . pg_last_error($this->Conn->conn));
+		while($row = pg_fetch_row($this->res))
 			$resultado[] = $row[0];
 		return ($resultado);
 	}
@@ -298,8 +301,8 @@ class SqlMysql extends SQL2 {
 	 * <Post-condiciones>
 	 */
 	function Lista_Bd() {
-		$this->res = mysqli_query($this->Conn->conn, "SHOW DATABASES") or die("Error " . mysqli_error($this->Conn->conn));
-		while($row = mysqli_fetch_row($this->res))
+		$this->res = pg_query($this->Conn->conn, "SHOW DATABASES") or die("Error " . pg_last_error($this->Conn->conn));
+		while($row = pg_fetch_row($this->res))
 			$resultado[] = $row[0];
 		asort($resultado);
 		return ($resultado);
@@ -316,27 +319,32 @@ class SqlMysql extends SQL2 {
 	 * <Pre-condiciones>
 	 * <Post-condiciones>
 	 */
-	function Busca_tabla($tabla, $campo) {
+	function Busca_tabla($tabla, $campo = '') {
 		if (!$tabla && @$_REQUEST["tabla"])
 			$tabla = $_REQUEST["tabla"];
-		else if (!$tabla)
+		if (!$tabla)
 			return (false);
-		$this->consulta = "show columns from " . $tabla;
-		$this->res = mysqli_query($this->Conn->conn, $this->consulta);
+		$where_campo = '';
+		if ($campo != '') {
+			$where_campo = " AND column_name='" . $campo . "'";
+		}
+
+		$this->consulta = "select * from information_schema.columns where table_schema = 'public' AND table_name  = '$tabla'" . $where_campo;
+		$this->res = pg_query($this->Conn->conn, $this->consulta);
 		$resultado = array();
 		$i = 0;
-		while($row = mysqli_fetch_row($this->res)) {
-			if ($campo && $campo == $row[0]) {
-				array_push($resultado, $row[0]);
-				$i++;
-			} else if ($campo == '') {
-				array_push($resultado, $row[0]);
-				$i++;
-			}
+		$resultado = array();
+		for(; ($arreglo = $this->sacar_fila($this->res)); $i++) {
+			$arreglo = array_change_key_case($arreglo, CASE_LOWER);
+			array_push($resultado, $arreglo);
 		}
 		asort($resultado);
 		$resultado["numcampos"] = $i;
-		return ($resultado);
+		if ($i) {
+			return $resultado;
+		} else {
+			return (FALSE);
+		}
 	}
 
 	/*
@@ -345,22 +353,22 @@ class SqlMysql extends SQL2 {
 	 * <Parametros>$sql-consulta a ejecutar; $inicio-primer registro a buscar; $fin-ultimo registro a buscar;
 	 * $conn-objeto de tipo sql
 	 * <Responsabilidades>Realizar la busqueda de cierta cantidad de filas de una tabla
-	 * <Notas>Funciona igual que Buscar_MySql pero con el parametro limit, fue necesaria su creacion al no tener en cuenta este parametro con anterioridad
+	 * <Notas>Funciona igual que Buscar_postgres pero con el parametro limit, fue necesaria su creacion al no tener en cuenta este parametro con anterioridad
 	 * <Excepciones>Cualquier problema con la ejecucion del SELECT generará una excepcion
 	 * <Salida>una matriz con los "limit" resultados de la busqueda
 	 * <Pre-condiciones>
 	 * <Post-condiciones>
 	 */
-	// devuelve los registro en el rango $inicio:$fin de la consulta, para mysql
+	// devuelve los registro en el rango $inicio:$fin de la consulta, para postgres
 	function Ejecutar_Limit($sql, $inicio, $fin) {
 		$cuantos = $fin - $inicio + 1;
 		if ($inicio < 0)
 			$inicio = 0;
 
-		$consulta = "$sql LIMIT $inicio,$cuantos";
+		$consulta = "$sql LIMIT $cuantos OFFSET $inicio";
 		$consulta = str_replace("key", "'key'", $consulta);
 		// echo $consulta;
-		$res = mysqli_query($this->Conn->conn, $consulta); // or die("consulta fallida ".mysqli_error($conn->Conn->conn));
+		$res = pg_query($this->Conn->conn, $consulta); // or die("consulta fallida ".pg_last_error($conn->Conn->conn));
 		return ($res);
 	}
 
@@ -368,7 +376,7 @@ class SqlMysql extends SQL2 {
 	 * <Clase>SQL
 	 * <Nombre>total_registros_tabla.
 	 * <Parametros>tabla-nombre de la tabla a consultar
-	 * <Responsabilidades>consultar el número total de registros de una tabla para mysql
+	 * <Responsabilidades>consultar el número total de registros de una tabla para postgres
 	 * <Notas>
 	 * <Excepciones>Cualquier problema con la ejecucion del comando generará una excepcion
 	 * <Salida>devuelve un entero con el numero de filas de la tabla
@@ -377,8 +385,8 @@ class SqlMysql extends SQL2 {
 	 */
 	function Total_Registros_Tabla($tabla) {
 		$this->consulta = "SELECT COUNT( * ) AS TOTAL FROM " . $tabla;
-		$this->res = mysqli_query($this->Conn->conn, $this->consulta);
-		$total = mysqli_fetch_row($this->res);
+		$this->res = pg_query($this->Conn->conn, $this->consulta);
+		$total = pg_fetch_row($this->res);
 		return ($total[0]);
 	}
 
@@ -412,10 +420,13 @@ class SqlMysql extends SQL2 {
 	 * <Post-condiciones>
 	 */
 	function Ultimo_Insert() {
-		if($this->ultimo_insert) {
+		if ($this->ultimo_insert) {
 			return $this->ultimo_insert;
 		}
-		return @mysqli_insert_id($this->Conn->conn);
+		$insert_query = pg_query($this->Conn->conn, "SELECT lastval()");
+		$insert_row = pg_fetch_row($this->Conn->conn, $insert_query);
+		$insert_id = $insert_row[0];
+		return $insert_id;
 	}
 
 	function Guardar_log($strsql) {
@@ -434,9 +445,9 @@ class SqlMysql extends SQL2 {
 		if (isset($_SESSION)) {
 			$fecha = $this->fecha_db_almacenar(date("Y-m-d h:i:s"), "Y-m-d h:i:s");
 			if ($sqleve != "") {
-				$result = mysqli_query($this->Conn->conn, $sqleve);
+				$result = pg_query($this->Conn->conn, $sqleve);
 				if (!$result)
-					die(" Error en la consulta: " . mysqli_error($this->Conn->conn));
+					die(" Error en la consulta: " . pg_last_error($this->Conn->conn));
 				$registro = $this->Ultimo_Insert();
 			}
 		}
@@ -444,8 +455,9 @@ class SqlMysql extends SQL2 {
 
 	function resta_fechas($fecha1, $fecha2) {
 		if ($fecha2 == "")
-			$fecha2 = "CURDATE()";
-		return "DATEDIFF($fecha1,$fecha2)";
+			$fecha2 = "now()";
+		return "DATE_PART('day', $fecha1::date) - DATE_PART('day', $fecha2::date) ";
+		// return "$fecha1-$fecha2 ";
 	}
 
 	function fecha_db_almacenar($fecha, $formato = NULL) {
@@ -460,20 +472,20 @@ class SqlMysql extends SQL2 {
 			$formato = "Y-m-d"; // formato por defecto php
 
 		$mystring = $fecha;
-		$findme = 'DATE_FORMAT';
+		$findme = 'TO_DATE';
 		$pos = strpos($mystring, $findme);
 		if ($pos === false) {
 			$reemplazos = array(
-					'd' => '%d',
-					'm' => '%m',
-					'y' => '%y',
-					'Y' => '%Y',
-					'h' => '%H',
-					'H' => '%H',
-					'i' => '%i',
-					's' => '%s',
-					'M' => '%b',
-					'yyyy' => '%Y'
+					'M' => 'MON',
+					'H' => 'HH24',
+					'd' => 'DD',
+					'm' => 'MM',
+					'Y' => 'YYYY',
+					'y' => 'YY',
+					'h' => 'HH',
+					'i' => 'MI',
+					's' => 'SS',
+					'yyyy' => 'YYYY'
 			);
 			$resfecha = $formato;
 			foreach ( $reemplazos as $ph => $mot ) { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
@@ -487,7 +499,7 @@ class SqlMysql extends SQL2 {
 				 */
 			}
 
-			$fsql = "DATE_FORMAT('$fecha','$resfecha')";
+			$fsql = "TO_DATE('$fecha','$resfecha')";
 		} else {
 			$fsql = $fecha;
 		}
@@ -500,31 +512,23 @@ class SqlMysql extends SQL2 {
 			$formato = "Y-m-d"; // formato por defecto php
 
 		$reemplazos = array(
-				'd' => '%d',
-				'm' => '%m',
-				'y' => '%y',
-				'Y' => '%Y',
-				'h' => '%h',
-				'H' => '%H',
-				'i' => '%i',
-				's' => '%s',
-				'M' => '%b',
-				'yyyy' => '%Y'
+				'Y' => 'YYYY',
+				'yyyy' => 'YYYY',
+				'd' => 'DD',
+				'M' => 'MON',
+				'm' => 'MM',
+				'y' => 'YY',
+				'H' => 'HH24',
+				'h' => 'HH',
+				'i' => 'MI',
+				's' => 'SS'
 		);
 		$resfecha = $formato;
 		foreach ( $reemplazos as $ph => $mot ) { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
 			$resfecha = preg_replace('/' . $ph . '/', "$mot", $resfecha);
-			/*
-			 * $resfecha=preg_replace('/'.$ph.'/', "$mot", $resfecha);
-			 * $resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
-			 * $resfecha=ereg_replace("( )$ph([-/:])", "\\1$mot\\2", $resfecha);
-			 * $resfecha=ereg_replace("^$ph", "$mot", $resfecha);
-			 * $resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
-			 * $resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
-			 * $resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora
-			 */
+			// $resfecha=ereg_replace("$ph", "$mot", $resfecha);
 		}
-		$fsql = "DATE_FORMAT($campo,'$resfecha')";
+		$fsql = "TO_CHAR($campo,'$resfecha')";
 		return $fsql;
 	}
 
@@ -587,7 +591,7 @@ class SqlMysql extends SQL2 {
 		if (!strlen($fecha_control)) {
 			$fecha_control = date('Y-m-d');
 		}
-		$resultado = $this->ejecuta_filtro_tabla("SELECT " . $this->resta_fechas("'" . $fecha_control . "'", "'" . $fecha_inicial . "'") . " AS diff FROM dual");
+		$resultado = $this->ejecuta_filtro_tabla("SELECT " . $this->resta_fechas("'" . $fecha_control . "'", "'" . $fecha_inicial . "'") . " AS diff");
 		return ($resultado);
 	}
 
@@ -595,7 +599,7 @@ class SqlMysql extends SQL2 {
 		if ($tabla == NULL)
 			$tabla = $_REQUEST["tabla"];
 		$datos_tabla = $this->Ejecutar_Sql("DESCRIBE " . $tabla);
-		while($fila = $this->sacar_fila($datos_tabla)) { // print_r($fila);
+		while($fila = phpmkr_fetch_array($datos_tabla)) { // print_r($fila);
 			if ($tipo_retorno) {
 				$lista_campos[] = array_map(strtolower, $fila);
 			} else {
@@ -609,7 +613,7 @@ class SqlMysql extends SQL2 {
 		$resultado = TRUE;
 		if ($tipo == "archivo") {
 			$sql = "update $tabla set $campo='" . addslashes($contenido) . "' where $condicion";
-			mysqli_query($this->Conn->conn, $sql);
+			pg_query($this->Conn->conn, $sql);
 			// TODO verificar resultado de la insecion $resultado=FALSE;
 		} elseif ($tipo == "texto") {
 			$contenido = codifica_encabezado(limpia_tabla($contenido));
@@ -617,7 +621,7 @@ class SqlMysql extends SQL2 {
 			if ($log) {
 				preg_match("/.*=(.*)/", strtolower($condicion), $resultados);
 				$llave = trim($resultados[1]);
-				$anterior = busca_filtro_tabla($campo, $tabla, $condicion, "", $this);
+				$anterior = $this->ejecuta_filtro_tabla("select $campo from $tabla where $condicion");
 				$sql_anterior = "update $tabla set $campo='" . addslashes(stripslashes($anterior[0][0])) . "' where $condicion";
 
 				$sqleve = "INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('" . usuario_actual("funcionario_codigo") . "','" . date('Y-m-d H:i:s') . "','MODIFICAR', '$tabla', $llave, '0','" . addslashes($sql_anterior) . "','" . addslashes($sql) . "')";
@@ -628,7 +632,7 @@ class SqlMysql extends SQL2 {
 					evento_archivo($archivo);
 				}
 			}
-			mysqli_query($this->Conn->conn, $sql) or die(mysqli_error($this->Conn->conn));
+			pg_query($this->Conn->conn, $sql) or die(pg_last_error($this->Conn->conn));
 		}
 		return ($resultado);
 	}
@@ -636,7 +640,7 @@ class SqlMysql extends SQL2 {
 	public function campo_formato_tipo_dato($tipo_dato, $longitud, $predeterminado, $banderas = null) {
 		switch (strtoupper(@$tipo_dato)) {
 			case "NUMBER" :
-				$campo .= " decimal";
+				$campo .= " numeric";
 				if ($longitud) {
 					$campo .= "(" . intval($longitud) . ",0) ";
 				} else {
@@ -686,23 +690,25 @@ class SqlMysql extends SQL2 {
 				break;
 			case "DATE" :
 				$campo .= " date ";
+				// $campo .= " DEFAULT now()";
 				break;
 			case "TIME" :
 				$campo .= " time ";
 				break;
 			case "DATETIME" :
-				$campo .= " DATETIME ";
+				$campo .= " timestamp ";
+				$campo .= " DEFAULT  now()";
 				break;
 			case "BLOB" :
-				$campo .= " blob ";
+				$campo .= " bytea ";
 				break;
 			default :
-				$campo .= " int";
-				if ($longitud) {
-					$campo .= "(" . intval($longitud) . ") ";
-				} else {
-					$campo .= "(11) ";
+				$campo .= " integer ";
+				$pos = strpos($banderas, 'pk');
+				if ($pos !== false) {
+					$campo .= ' SERIAL ';
 				}
+
 				if ($predeterminado) {
 					$campo .= " DEFAULT '" . intval($predeterminado) . "' ";
 				}
@@ -711,10 +717,10 @@ class SqlMysql extends SQL2 {
 	}
 
 	public function formato_crear_indice($bandera, $nombre_campo, $nombre_tabla) {
-		$nombre_tabla = strtoupper($nombre_tabla);
-		$nombre_campo = strtoupper($nombre_campo);
-		$banderas = explode(",", $todas_banderas);
-		$traza = array();
+		$nombre_tabla = strtolower($nombre_tabla);
+		$nombre_campo = strtolower($nombre_campo);
+
+		$nombre_seq = $nombre_tabla . "_" . $nombre_campo . "_seq";
 		if (strlen($nombre_tabla) > 26) {
 			$aux = substr($nombre_tabla, 0, 26);
 		} else {
@@ -724,35 +730,87 @@ class SqlMysql extends SQL2 {
 
 		switch (strtolower($bandera)) {
 			case "pk" :
-				$dato = "ALTER TABLE " . strtolower($nombre_tabla) . " ADD PRIMARY KEY ( " . strtolower($nombre_campo) . ")";
-				guardar_traza($dato, $nombre_tabla);
-				$this->Ejecutar_sql($dato);
-				$dato = "ALTER TABLE " . strtolower($nombre_tabla) . " CHANGE " . strtolower($nombre_campo) . " " . strtolower($nombre_campo) . " INT(11) NOT NULL AUTO_INCREMENT ";
-				guardar_traza($dato, $nombre_tabla);
-				$this->Ejecutar_sql($dato);
 
+				$sql2 = $this->ejecuta_filtro_tabla("SELECT last_value AS ultimo from " . $nombre_seq);
+
+				if ($sql2["numcampos"]) {
+					$siguiente = $sql2[0]["ultimo"];
+
+					$inicio = $siguiente;
+					$dato = "DROP SEQUENCE " . $nombre_seq . " CASCADE";
+					guardar_traza($dato, $nombre_tabla);
+					$this->Ejecutar_sql($dato);
+				} else {
+					$inicio = 1;
+				}
+				// $dato = "CREATE INDEX PK_" . $nombre_campo . " ON " . $nombre_tabla . "(" . $nombre_campo . ") LOGGING TABLESPACE " . TABLESPACE . " PCTFREE 10 INITRANS 2 MAXTRANS 255 STORAGE (INITIAL 128K MINEXTENTS 1 MAXEXTENTS 2147483645 PCTINCREASE 0 BUFFER_POOL DEFAULT) NOPARALLEL";
+				// guardar_traza($dato, $nombre_tabla);
+				// $this->Ejecutar_sql($dato);
+				if ($this->verificar_existencia($nombre_tabla)) {
+					$dato = "CREATE SEQUENCE " . $nombre_seq . " INCREMENT 1 START " . $inicio . " MINVALUE 1 MAXVALUE 9223372036854775807 CACHE 1";
+					guardar_traza($dato, $nombre_tabla);
+					$this->Ejecutar_sql($dato);
+					$dato = "ALTER TABLE $nombre_tabla ALTER COLUMN $nombre_campo SET DEFAULT nextval('$nombre_seq')";
+					guardar_traza($dato, $nombre_tabla);
+					$this->Ejecutar_sql($dato);
+					$dato = "ALTER TABLE " . $nombre_tabla . " ADD CONSTRAINT PK_" . $nombre_campo . "  PRIMARY KEY (" . $nombre_campo . ")";
+					guardar_traza($dato, $nombre_tabla);
+					$this->Ejecutar_sql($dato);
+				}
+
+				// $dato = "CREATE OR REPLACE TRIGGER " . $aux . "_TRG BEFORE INSERT OR UPDATE ON " . $nombre_tabla . " FOR EACH ROW BEGIN IF INSERTING AND :NEW." . $nombre_campo . " IS NULL THEN SELECT " . $aux . "_SEQ.NEXTVAL INTO :NEW." . $nombre_campo . " FROM DUAL; END IF; END;";
+				// guardar_traza($dato, $nombre_tabla);
+				// $this->Ejecutar_sql($dato);
 				break;
 			case "u" :
 				if ($this->verificar_existencia($nombre_tabla)) {
-					$dato = "ALTER TABLE " . $nombre_tabla . " ADD UNIQUE( " . $nombre_campo . " )";
+					$dato = "ALTER TABLE " . $nombre_tabla . " ADD CONSTRAINT U_" . $nombre_campo . " UNIQUE( " . $nombre_campo . " )";
 					guardar_traza($dato, $nombre_tabla);
 					$this->Ejecutar_sql($dato);
 				}
 				break;
 			case "i" :
-				if ($this->verificar_existencia($nombre_tabla)) {
-					$dato = "ALTER TABLE " . $nombre_tabla . " ADD INDEX ( " . $nombre_campo . " )";
+				$campo2 = $nombre_tabla . "_" . $nombre_campo;
+				/*if (strlen($campo2) > 15) {
+					$campo2 = str_replace("FT_", "", substr($campo2, 0, 15));
+				}*/
+				$index_name = "i_" . $campo2;
+				$index_name = strtolower($index_name);
+				$existe = $this->ejecuta_filtro_tabla("select * from pg_indexes where indexname like '$index_name'");
+				if(!$existe["numcampos"]) {
+					$dato = "CREATE INDEX i_" . $campo2 . " ON " . $nombre_tabla . " (" . $nombre_campo . ") TABLESPACE " . TABLESPACE;
 					guardar_traza($dato, $nombre_tabla);
 					$this->Ejecutar_sql($dato);
 				}
+
 				break;
 		}
-		return $traza;
 	}
 
 	protected function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta) {
 		$lcampos = array();
+		if (!$tabla_esta) {
+			$sql_tabla = "CREATE TABLE " . strtolower($formato[0]["nombre_tabla"]) . "(";
+		} else {
+			$this->formato_elimina_indices_tabla($formato[0]["nombre_tabla"]);
+		}
 		for($i = 0; $i < $campos["numcampos"]; $i++) {
+			if (MOTOR == "Oracle") {
+				$datos_campo = ejecuta_filtro_tabla("SELECT CASE is_nullable WHEN 'YES' THEN 1 ELSE 0 END as nulo FROM information_schema.columns WHERE table_schema = 'public' AND table_name='" . $formato[0]["nombre_tabla"] . "' and column_name='{$campos[$i]["nombre"]}' ORDER BY column_name ASC", $conn);
+
+				if ($datos_campo[0]["nulo"] != $campos[$i]["obligatoriedad"]) {
+					if ($formato[0]["nombre_tabla"]) {
+						$sql = "ALTER TABLE " . $formato[0]["nombre_tabla"] . " ALTER COLUMN " . $campos[$i]["nombre"];
+						if (!$campos[$i]["obligatoriedad"]) {
+							$sql .= " DROP NOT NULL";
+						} else {
+							$sql .= " SET NOT NULL";
+						}
+						guardar_traza($sql, $formato[0]["nombre_tabla"]);
+						$this->Ejecutar_Sql($sql);
+					}
+				}
+			}
 
 			$dato_campo = $this->crear_campo($campos[$i], $formato[0]["nombre_tabla"], $datos_campo);
 			if ($dato_campo && $dato_campo != "") {
@@ -768,48 +826,74 @@ class SqlMysql extends SQL2 {
 						}
 					} else {
 						if ($formato[0]["nombre_tabla"]) {
-							$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " MODIFY " . $dato_campo;
+							$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " TYPE " . $dato_campo;
 						}
 					}
-					if ($dato != "") {
-						guardar_traza($dato, $formato[0]["nombre_tabla"]);
-						$this->Ejecutar_Sql($dato);
-					}
+					guardar_traza($dato, $formato[0]["nombre_tabla"]);
+					$this->Ejecutar_Sql($dato);
 				}
 			}
 		}
+		// die();
 		return $lcampos;
 	}
 
 	protected function formato_elimina_indices_tabla($tabla) {
+		global $conn, $sql;
 		$tabla = strtoupper($tabla);
-		$indices = $this->ejecuta_filtro_tabla("SHOW INDEX FROM " . strtolower($tabla), $conn);
+		$envio = array();
+		$sql2 = "select ai.index_name AS column_name, ai.uniqueness AS Key_name FROM all_indexes ai WHERE ai.TABLE_OWNER='" . DB . "' AND ai.table_name = '" . $tabla . "'";
+		$sql2 = "SELECT tc.constraint_name,
+				tc.constraint_type,
+				tc.table_name,
+				kcu.column_name,
+				tc.is_deferrable,
+				tc.initially_deferred
+				FROM information_schema.table_constraints tc
+				LEFT JOIN information_schema.key_column_usage kcu ON tc.constraint_catalog = kcu.constraint_catalog
+					AND tc.constraint_schema = kcu.constraint_schema
+					AND tc.constraint_name = kcu.constraint_name
+				LEFT JOIN information_schema.referential_constraints rc ON tc.constraint_catalog = rc.constraint_catalog
+					AND tc.constraint_schema = rc.constraint_schema
+					AND tc.constraint_name = rc.constraint_name
+				WHERE tc.table_schema = 'public'
+				and tc.table_catalog = '" . DB . "'
+				and kcu.column_name is not null
+				AND tc.table_name = '$tabla'";
+		$indices = ejecuta_filtro_tabla($sql2, $conn);
 		for($i = 0; $i < $indices["numcampos"]; $i++) {
-			$this->elimina_indice_campo($tabla, $indices[$i]);
+			array_push($envio, array(
+					"constraint_type" => $indices[$i]["constraint_type"],
+					"constraint_name" => $indices[$i]["constraint_name"],
+					"column_name" => $indices[$i]["column_name"]
+			));
+		}
+		$numero_indices = count($envio);
+
+		for($i = 0; $i < $numero_indices; $i++) {
+			$this->elimina_indice_campo($tabla, $envio[$i]);
 		}
 		return;
 	}
 
 	protected function elimina_indice_campo($tabla, $campo) {
-		if ($campo["Key_name"] == "PRIMARY") {
-			if ($this->verificar_existencia($tabla)) {
-				$sql = "ALTER TABLE " . strtolower($tabla) . " CHANGE " . $campo["Column_name"] . " " . $campo["Column_name"] . " INT( 11 ) NOT NULL";
-				guardar_traza($sql, strtolower($tabla));
-				phpmkr_query($sql, $conn);
-				$sql = "ALTER TABLE " . strtolower($tabla) . " DROP PRIMARY KEY";
-				guardar_traza($sql, strtolower($tabla));
-				phpmkr_query($sql, $conn);
-			}
-		} else {
-			$sql = "DROP INDEX " . $campo["Column_name"] . " ON " . $tabla;
+		global $conn;
+
+		if ($this->verificar_existencia($tabla)) {
+			$sql = "ALTER TABLE " . strtolower($tabla) . " DROP CONSTRAINT " . $campo["constraint_name"];
 			guardar_traza($sql, strtolower($tabla));
-			phpmkr_query($sql, $conn);
+			$this->Ejecutar_Sql($sql);
+			echo ($sql . "<br />");
 		}
 		return;
 	}
 
-	protected function verificar_existencia($table) {
-		$res = $this->Ejecutar_sql("SHOW TABLES LIKE '$table'");
-		return mysqli_num_rows($res) > 0;
+	protected function verificar_existencia($tabla) {
+		$sql = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = '$tabla') as existe";
+		$existe = $this->ejecuta_filtro_tabla($sql);
+		if ($existe["numcampos"]) {
+			return ($existe[0]["existe"] == 't');
+		}
+		return false;
 	}
 }
