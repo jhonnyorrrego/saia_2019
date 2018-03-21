@@ -336,19 +336,6 @@ function AddData($conn) {
 	// Add New Record
 	$sSql = "SELECT * FROM funcionario A";
 	$sSql .= " WHERE 0 = 1";
-	$sGroupBy = "";
-	$sHaving = "";
-	$sOrderBy = "";
-	if ($sGroupBy <> "") {
-		$sSql .= " GROUP BY " . $sGroupBy;
-	}
-	if ($sHaving <> "") {
-		$sSql .= " HAVING " . $sHaving;
-	}
-	if ($sOrderBy <> "") {
-		$sSql .= " ORDER BY " . $sOrderBy;
-	}
-
 	// check file size
 	$EW_MaxFileSize = @$_POST["EW_Max_File_Size"];
 	if (!empty($_FILES["x_firma"]["size"])) {

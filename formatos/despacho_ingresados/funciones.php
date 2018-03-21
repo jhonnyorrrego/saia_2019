@@ -95,7 +95,6 @@ function generar_pdf_entrega($idformato, $iddoc) {
 function reporte_entradas2($idformato, $iddoc) {
 	global $conn, $registros, $ruta_db_superior;
 
-	include_once ($ruta_db_superior . "pantallas/qr/librerias.php");
 	include_once ($ruta_db_superior . "distribucion/funciones_distribucion.php");
 
 	$documentos2 = busca_filtro_tabla("", "ft_despacho_ingresados", "documento_iddocumento=" . $iddoc, "", $conn);
@@ -134,18 +133,4 @@ function reporte_entradas2($idformato, $iddoc) {
 	return ($texto);
 }
 
-function generar_qr_despacho($idformato, $iddoc) {
-	global $conn;
-	$max_salida = 10;
-	$ruta_db_superior = $ruta = "";
-	while ($max_salida > 0) {
-		if (is_file($ruta . "db.php")) {
-			$ruta_db_superior = $ruta;
-		}
-		$ruta .= "../";
-		$max_salida--;
-	}
-	include_once ($ruta_db_superior . "pantallas/qr/librerias.php");
-	generar_codigo_qr($idformato, $iddoc);
-}
 ?>

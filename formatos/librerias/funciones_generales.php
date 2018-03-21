@@ -2789,13 +2789,7 @@ function obtener_anexos_paginas_documento($datos_documento) {
 function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 	global $conn, $ruta_db_superior;
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-	
-	
-
-	
-	$pdf = busca_filtro_tabla("pdf,iddocumento,estado,plantilla," . fecha_db_obtener('fecha', 'Y-m-d') . " as fecha," . fecha_db_obtener('fecha', 'Y-m') . " as fecha2, numero", "documento", "iddocumento=" . $datos_documento['iddocumento'], "", $conn);
-		
-	 
+	$pdf = busca_filtro_tabla("pdf,iddocumento,estado,plantilla," . fecha_db_obtener('fecha', 'Y-m-d') . " as fecha," . fecha_db_obtener('fecha', 'Y-m') . " as fecha2, numero", "documento", "iddocumento=" . $datos_documento['iddocumento'], "", $conn); 
 	$ruta = "";
 	
 	if($pdf[0]["pdf"]) {
@@ -2805,10 +2799,8 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 	}
 	
 	if(!file_exists($ruta_pdf)) {
-		
 		// inicializa el curl
 		$ch = curl_init();
-		
 		// Establecer URL y otras opciones apropiadas
 		$url = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/class_impresion.php?iddoc=" . $datos_documento['iddocumento'];
 		$datos_session = "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&conexion_remota=1";
@@ -2825,8 +2817,6 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 		curl_close($ch);
 		
 		$ruta_pdfs = ruta_almacenamiento("pdf",0);
-		
-		
 		$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento["iddocumento"]);
 	
 		$fecha = explode("-", $datos_documento["fecha"]);

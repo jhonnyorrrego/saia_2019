@@ -1,84 +1,18 @@
 <?php
-$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior=$ruta="";
-while($max_salida>0)
-{
-if(is_file($ruta."db.php"))
-{
-$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+$max_salida = 10;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
+	}
+	$ruta .= "../";
+	$max_salida--;
 }
-$ruta.="../";
-$max_salida--;
-}
-include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."formatos/librerias_funciones_generales.php");
-include_once($ruta_db_superior."librerias_saia.php");
+include_once ($ruta_db_superior . "db.php");
+include_once ($ruta_db_superior . "formatos/librerias_funciones_generales.php");
+include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-//***************
-function mostrar_qr_carta($idformato,$iddoc){
-	global $conn,$ruta_db_superior;
-	$estado_doc=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"", $conn);
-	if($estado_doc[0]['estado']=='APROBADO'){
-		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"iddocumento_verificacion DESC", $conn);
-		if($codigo_qr['numcampos']){
-			$extension=explode(".",$codigo_qr[0]['ruta_qr']);
-			$img='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'"  />';
-		}else{
-			generar_codigo_qr_carta($idformato,$iddoc);
-			$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"iddocumento_verificacion DESC", $conn);
-			$extension=explode(".",$codigo_qr[0]['ruta_qr']);
-			$img='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'"   />';
-		}
-		echo($img);
-	}
-}
 
-function generar_codigo_qr_carta($idformato,$iddoc){
-  global $conn,$ruta_db_superior;
-	include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
-  $codigo_qr=busca_filtro_tabla("ruta_qr, iddocumento_verificacion","documento_verificacion","documento_iddocumento=".$iddoc,"", $conn);
-  $datos=busca_filtro_tabla("A.fecha,A.estado, A.numero","documento A","A.iddocumento=".$iddoc,"",$conn);
-	$fecha=mostrar_fecha_saia($datos[0]['fecha']);
-	$datos_qr="Fecha: ".$fecha." \n";
-	$datos_qr.="Radicado No: ".$datos[0]["numero"]." <br/>";
-	$firmas=busca_filtro_tabla("CONCAT(B.nombres,CONCAT(' ',B.apellidos)) AS nombre","buzon_salida A, funcionario B","A.origen=B.funcionario_codigo AND (A.nombre LIKE 'APROBADO' OR A.nombre LIKE 'REVISADO')AND A.archivo_idarchivo=".$iddoc,"idtransferencia asc", $conn);
-	$datos_qr.="Firman: \n";
-	for($i=0; $i<$firmas['numcampos']; $i++){
-	  $datos_qr .= $firmas[$i]['nombre']." \n";
-	}
-	$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
-	$ruta=RUTA_QR.$formato_ruta . '/qr/';
-
-	$imagen=generar_qr_carta($ruta,$datos_qr);
-
-	if($imagen==false){
-	  alerta("Error al tratar de crear el codigo qr");
-	}else{
-	  $fun_qr=usuario_actual('idfuncionario');
-	  $sql_documento_qr="INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion) VALUES (".$iddoc.",".$fun_qr.",".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').",'".$imagen."','vacio')";
-	  phpmkr_query($sql_documento_qr);
-	}
-}
-
-function generar_qr_carta($filename,$datos,$matrixPointSize = 2,$errorCorrectionLevel = 'Q'){
-  global $ruta_db_superior;
-  include_once ($ruta_db_superior."phpqrcode/qrlib.php");
-
-  if ($datos) {
-        if (trim($datos) == ''){
-            return false;
-        }else{
-          crear_destino($ruta_db_superior.$filename);
-          $filename .= 'qr'.date('Y_m_d_H_m_s').'.jpg';
-
-          QRcode::png($datos,$ruta_db_superior.$filename, $errorCorrectionLevel, $matrixPointSize, 0);
-          return $filename;
-        }
-    }else{
-      return false;
-    }
-}
-//***************
 
 function link_editar_funcion($idformato,$iddoc){
 	global $conn;

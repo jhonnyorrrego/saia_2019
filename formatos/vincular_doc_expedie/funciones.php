@@ -87,24 +87,8 @@ function mostrar_informacion_qr($idformato,$iddoc){
 	
 	$estado_doc=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"", $conn);
 	if($estado_doc[0]['estado']=='APROBADO'){
-		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"iddocumento_verificacion DESC", $conn);
-		if($codigo_qr['numcampos']){
-		    if(file_exists($ruta_db_superior.$codigo_qr[0]['ruta_qr'])){
-			    $extension=explode(".",$codigo_qr[0]['ruta_qr']);
-			    $img='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'"  />';		        
-		    }else{
-    			generar_codigo_qr_carta($idformato,$iddoc);
-    			$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"iddocumento_verificacion DESC", $conn);
-    			$extension=explode(".",$codigo_qr[0]['ruta_qr']);
-    			$img='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'"   />';		        
-		    }
-
-		}else{
-			generar_codigo_qr_carta($idformato,$iddoc);
-			$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$iddoc,"iddocumento_verificacion DESC", $conn);
-			$extension=explode(".",$codigo_qr[0]['ruta_qr']);
-			$img='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$codigo_qr[0]['ruta_qr'].'"   />';
-		}
+		include_once ($ruta_db_superior . "pantallas/qr/librerias.php");
+		$img=mostrar_codigo_qr($idformato, $iddoc, 1);
 	}
 	
     $tabla='
