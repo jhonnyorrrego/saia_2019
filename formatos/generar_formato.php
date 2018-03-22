@@ -974,7 +974,11 @@ class GenerarFormato {
                                 $obligatorio = "required";
                             }
 
-                            $texto .= '<input type="text" name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" value=""' . $obligatorio . '></td>';
+                            $adicional = "";
+                            if ($accion == "editar") {
+                                $adicional = " data-data='<?php echo(mostrar_autocompletar('{$campos[$h]["nombre"]}', $this->idformato, $" . "_REQUEST['iddoc'])); ? >'";
+                            }
+                            $texto .= '<input type="text" name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" value=""' . $adicional . $obligatorio . '></td>';
                             $texto .= $this->crea_campo_autocompletar($campos[$h]["nombre"], $parametros);
                             $autocompletar++;
                             break;
