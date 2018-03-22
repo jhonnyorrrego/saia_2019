@@ -1219,7 +1219,6 @@ function ejecutoradd($sKey) {
 function guardar_documento($iddoc, $tipo = 0) {
 	global $conn, $ruta_db_superior;
 	$insertado = 0;
-	$lasignaciones = array();
 	$_POST["fecha"] = date("Y-m-d H:i:s");
 	$tabla = strtolower($_REQUEST["tabla"]);
 
@@ -1278,19 +1277,9 @@ function guardar_documento($iddoc, $tipo = 0) {
 								$_REQUEST[$lcampos[$j]["nombre"]] = $formato_detalle[0]["id" . $lcampos[$j]["nombre"]];
 						}
 						break;
-					case "tarea" :
-						if (@$_REQUEST["tarea_" . $lcampos[$j]["nombre"]]) {
-							array_push($ltareas, array("tarea" => $_REQUEST["tarea_" . $lcampos[$j]["nombre"]], "fecha" => $_REQUEST[$lcampos[$j]["nombre"]]));
-						}
-						break;
 					case "archivo" :
 						array_push($larchivos, $lcampos[$j]["idcampos_formato"]);
 						$_REQUEST[$lcampos[$j]["nombre"]] = 0;
-						break;
-					case "fecha" :
-						if (@$_REQUEST["asig_" . $lcampos[$j]["nombre"]] && $_REQUEST["asig_" . $lcampos[$j]["nombre"]] != "") {
-							array_push($lasignaciones, $_REQUEST["asig_" . $lcampos[$j]["nombre"]]);
-						}
 						break;
 				}
 				if (isset($_REQUEST[$lcampos[$j]["nombre"]])) {
@@ -1454,14 +1443,12 @@ function guardar_documento($iddoc, $tipo = 0) {
 
 	if (isset($_REQUEST["campo_descripcion"])) {
 		include_once ("formatos/librerias/funciones_generales.php");
-		$campo = busca_filtro_tabla("", "campos_formato", "idcampos_formato IN(" . $_REQUEST["campo_descripcion"] . ")", "orden", $conn);
+		$campo = busca_filtro_tabla("nombre,etiqueta", "campos_formato", "idcampos_formato IN(" . $_REQUEST["campo_descripcion"] . ")", "orden", $conn);
 		for ($i = 0; $i < $campo["numcampos"]; $i++) {
-			if (isset($_REQUEST[$campo[$i]["nombre"]])) {
-				if ($i == 0) {
-					$descripcion = mostrar_valor_campo($campo[$i]["nombre"], $idformato, $iddoc, 1);
-				} else {
-					$descripcion .= "<br />" . mostrar_valor_campo($campo[$i]["nombre"], $idformato, $iddoc, 1);
-				}
+			if ($i == 0) {
+				$descripcion ="<strong>".$campo[$i]["etiqueta"].": </strong>". mostrar_valor_campo($campo[$i]["nombre"], $idformato, $iddoc, 1);
+			} else {
+				$descripcion .= "<br/><strong>".$campo[$i]["etiqueta"].": </strong>" . mostrar_valor_campo($campo[$i]["nombre"], $idformato, $iddoc, 1);
 			}
 		}
 	} else if (!isset($_REQUEST["descripcion"]) && isset($_REQUEST["asunto"])) {
@@ -1477,10 +1464,6 @@ function guardar_documento($iddoc, $tipo = 0) {
 	if (count($ltareas)) {
 		include_once ("asignaciones/funciones.php");
 		asignar_tarea_a_documento($iddoc, $ltareas);
-	}
-	if (count($lasignaciones)) {
-		$sql = "UPDATE asignacion SET documento_iddocumento=" . $iddoc . " WHERE idasignacion IN(" . implode(",", $lasignaciones) . ")";
-		phpmkr_query($sql, $conn);
 	}
 	if (count($larchivos)) {
 		include_once ("anexosdigitales/funciones_archivo.php");

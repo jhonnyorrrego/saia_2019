@@ -1,13 +1,4 @@
 <?php
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-// date in the past
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-// always modified
-header("Cache-Control: no-store, no-cache, must-revalidate");
-// HTTP/1.1
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
-// HTTP/1.0 ISO-8859-1
 if (stristr($_SERVER["HTTP_ACCEPT"], "application/xhtml+xml")) {
 	header("Content-type: application/xhtml+xml");
 } else {
@@ -34,7 +25,7 @@ function llena_formato($formato, $estado = 0) {
 	$ok = $permiso -> permiso_usuario($formato[0]["nombre"], "");
 
 	if ($formato["numcampos"] && $ok) {
-		$descripcion = busca_filtro_tabla("", "campos_formato", "formato_idformato=" . $formato[0]["idformato"] . " AND acciones LIKE '%p%'", "orden ASC", $conn);
+		$descripcion = busca_filtro_tabla("", "campos_formato", "formato_idformato=" . $formato[0]["idformato"] . " AND acciones LIKE '%d%'", "orden ASC", $conn);
 
 		if ($descripcion["numcampos"]) {
 			for ($i = 0; $i < $descripcion["numcampos"]; $i++) {

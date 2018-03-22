@@ -14,7 +14,7 @@ function mostrar_codigo_qr_encabezado($idformato, $iddoc) {
 	return mostrar_codigo_qr($idformato, $iddoc, 1);
 }
 
-function mostrar_codigo_qr($idformato, $iddoc, $retorno = 0, $width = 60, $height = 60) {
+function mostrar_codigo_qr($idformato, $iddoc, $retorno = 0, $width = 80, $height = 80) {
 	global $conn, $ruta_db_superior;
 	if (isset($_REQUEST["height_qr"])) {
 		$height = $_REQUEST["height_qr"];

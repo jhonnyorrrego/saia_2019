@@ -1080,142 +1080,144 @@ function listar_item($campoenlace, $llave, $parametros, $edicion = 0) {
 function mostrar_valor_campo($campo, $idformato, $iddoc, $tipo = NULL) {
 	global $conn, $ruta_db_superior;
 	$datos = busca_filtro_tabla("nombre_tabla,detalle,etiqueta_html,valor,item,tipo_dato,autoguardado,A.nombre as formato,ruta_adicionar,ruta_editar,ruta_mostrar,tipo_edicion", "formato A,campos_formato B", "B.formato_idformato=A.idformato AND A.idformato=" . $idformato . " AND B.nombre LIKE '" . $campo . "'", "", $conn);
-	// print_r($datos);
-	if($datos[0]["item"]) {
+	if ($datos[0]["item"]) {
 		$llave = "id" . $datos[0]["nombre_tabla"];
-		if(@$_REQUEST["item"])
+		if (@$_REQUEST["item"]) {
 			$iddoc = $_REQUEST["item"];
-	} else
+		}
+	} else {
 		$llave = "documento_iddocumento";
+	}
 	$retorno = "";
-	if($datos["numcampos"]) {
-		if($datos[0]["etiqueta_html"] == "item") {
+	if ($datos["numcampos"]) {
+		if ($datos[0]["etiqueta_html"] == "item") {
 			$datos_detalle = busca_filtro_tabla("id" . $datos[0]["nombre_tabla"] . ",d.estado", $datos[0]["nombre_tabla"] . " f,documento d", "documento_iddocumento=iddocumento and documento_iddocumento=" . $iddoc, "", $conn);
-			
+
 			$editar = 0;
-			if(!isset($_REQUEST["tipo"]) || @$_REQUEST["tipo"] == 1) {
+			if (!isset($_REQUEST["tipo"]) || @$_REQUEST["tipo"] == 1) {
 				$permisos = busca_filtro_tabla("permisos", "permiso_documento", "funcionario='" . usuario_actual("funcionario_codigo") . "' and documento_iddocumento='" . $iddoc . "'", "", $conn);
 				$v_permisos = explode(",", @$permisos[0]["permisos"]);
 			}
-			if(($datos_detalle[0]["estado"] == "ACTIVO" || $datos[0]["tipo_edicion"] == "1") && in_array('m', $v_permisos))
+			if (($datos_detalle[0]["estado"] == "ACTIVO" || $datos[0]["tipo_edicion"] == "1") && in_array('m', $v_permisos)) {
 				$editar = 1;
+			}
 			listar_item($datos[0]["nombre_tabla"], $datos_detalle[0]["id" . $datos[0]["nombre_tabla"]], $datos[0]["valor"], $editar);
-		} elseif($datos[0]["etiqueta_html"] == "fecha") {
-			if($datos[0]["tipo_dato"] == "DATE")
+		} elseif ($datos[0]["etiqueta_html"] == "fecha") {
+			if ($datos[0]["tipo_dato"] == "DATE") {
 				$formato_fecha = "Y-m-d";
-			else if($datos[0]["tipo_dato"] == "TIME")
+			} else if ($datos[0]["tipo_dato"] == "TIME") {
 				$formato_fecha = "H:i";
-			else
+			} else {
 				$formato_fecha = "Y-m-d H:i";
-			if($datos[0]["tipo_dato"] == "TIME") {
+			}
+			if ($datos[0]["tipo_dato"] == "TIME") {
 				$campos = busca_filtro_tabla($campo, $datos[0]["nombre_tabla"], $llave . "=" . $iddoc, "", $conn);
 			} else {
 				$campos = busca_filtro_tabla(fecha_db_obtener($campo, $formato_fecha) . " as $campo", $datos[0]["nombre_tabla"], $llave . "=" . $iddoc, "", $conn);
 			}
-		} else
+		} else {
 			$campos = busca_filtro_tabla($campo, $datos[0]["nombre_tabla"], $llave . "=" . $iddoc, "", $conn);
-		
-		if($campos["numcampos"]) {
-			if($datos[0]["etiqueta_html"] == "arbol") {
+		}
+
+		if ($campos["numcampos"]) {
+			if ($datos[0]["etiqueta_html"] == "arbol") {
 				$tipo_arbol = explode(";", $datos[0]["valor"]);
-				$idcampo = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre like '$campo' and formato_idformato=$idformato", "", $conn);
+				$idcampo = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre like '$campo' and formato_idformato=" . $idformato, "", $conn);
 				$retorno = mostrar_seleccionados($idformato, $idcampo[0][0], $tipo_arbol[6], $iddoc, 1);
-			} elseif($datos[0]["etiqueta_html"] == "archivo") {
+			} elseif ($datos[0]["etiqueta_html"] == "archivo") {
 				include_once ("../../anexosdigitales/funciones_archivo.php");
-				$idcampo = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre like '$campo' and formato_idformato=$idformato", "", $conn);
-				$retorno = listar_anexos_ver_descargar($idformato,$iddoc, $idcampo[0][0], $_REQUEST["tipo"], 1);
-			} elseif($datos[0]["etiqueta_html"] == "autocompletar")
+				$idcampo = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre like '$campo' and formato_idformato=" . $idformato, "", $conn);
+				$retorno = listar_anexos_ver_descargar($idformato, $iddoc, $idcampo[0][0], $_REQUEST["tipo"], 1);
+			} elseif ($datos[0]["etiqueta_html"] == "autocompletar") {
 				$retorno = $campos[0][0];
-			elseif($datos[0]["etiqueta_html"] == "textarea") {
+			} elseif ($datos[0]["etiqueta_html"] == "textarea") {
 				$retorno = codifica_encabezado(html_entity_decode($campos[0][0]));
-			} elseif($datos[0]["etiqueta_html"] == "link" && basename($_SERVER["PHP_SELF"]) == basename($datos[0]["ruta_mostrar"])) {
+			} elseif ($datos[0]["etiqueta_html"] == "link" && basename($_SERVER["PHP_SELF"]) == basename($datos[0]["ruta_mostrar"])) {
 				$retorno = "<a target='_blank' href='" . $campos[0][0] . "'>" . $campos[0][0] . "</a>";
-			} elseif($datos[0]["etiqueta_html"] == "valor" && strpos($_SERVER["PHP_SELF"], "edit") === false) {
+			} elseif ($datos[0]["etiqueta_html"] == "valor" && strpos($_SERVER["PHP_SELF"], "edit") === false) {
 				$retorno = "$" . number_format($campos[0][$campo], 0, ",", ".");
-			} elseif($datos[0]["etiqueta_html"] == "ejecutor") {
-				
-				if(basename($_SERVER["PHP_SELF"]) != basename($datos[0]["ruta_adicionar"]) && basename($_SERVER["PHP_SELF"]) != basename($datos[0]["ruta_editar"])) {
-					if($datos[0]["valor"] == "") {
-						$parametros = array(
-								"multiple",
-								"nombre,identificacion",
-								""
-						);
-					} else
+			} elseif ($datos[0]["etiqueta_html"] == "ejecutor") {
+
+				if (basename($_SERVER["PHP_SELF"]) != basename($datos[0]["ruta_adicionar"]) && basename($_SERVER["PHP_SELF"]) != basename($datos[0]["ruta_editar"])) {
+					if ($datos[0]["valor"] == "") {
+						$parametros = array("multiple", "nombre,identificacion", "");
+					} else {
 						$parametros = explode("@", $datos[0]["valor"]);
+					}
 					$ejecutores = busca_filtro_tabla("", "ejecutor,datos_ejecutor", "ejecutor_idejecutor=idejecutor and iddatos_ejecutor in(" . $campos[0][$campo] . ")", "", $conn);
-					if($parametros[3] != "") {
+					if ($parametros[3] != "") {
 						include_once ($ruta_db_superior . "/formatos/librerias/funciones_ejecutor.php");
 						$retorno .= llamado_ejecutor($parametros[3], $campo, $idformato, $iddoc);
 					} else {
-						
-						$vector_mostrar = array(
-								"nombre"
-						);
-						foreach($vector_mostrar as $fila_e) {
-							for($h = 0; $h < $ejecutores["numcampos"]; $h++) {
-								if($fila_e == "ciudad") {
-									if($ejecutores[$h][$fila_e]) {
+						$vector_mostrar = array("nombre");
+						foreach ($vector_mostrar as $fila_e) {
+							for ($h = 0; $h < $ejecutores["numcampos"]; $h++) {
+								if ($fila_e == "ciudad") {
+									if ($ejecutores[$h][$fila_e]) {
 										$ciudad = busca_filtro_tabla("nombre", "municipio", "idmunicipio=" . $ejecutores[$h][$fila_e], "", $conn);
 										$datos_mostrar[$h][$fila_e] = $ciudad[0][0];
-									} else
+									} else {
 										$datos_mostrar[$h][$fila_e] = "&nbsp;";
-								} else
+									}
+								} else {
 									$datos_mostrar[$h][$fila_e] = $ejecutores[$h][$fila_e];
+								}
 							}
 						}
-						if($parametros[0] == "unico") {
-							if($parametros[4] == "1") {
+						if ($parametros[0] == "unico") {
+							if ($parametros[4] == "1") {
 								$retorno .= "<table>";
-								foreach($datos_mostrar[0] as $nombre => $fila) {
-									if($fila != "")
+								foreach ($datos_mostrar[0] as $nombre => $fila) {
+									if ($fila != "")
 										$retorno .= "<tr><td>" . ucfirst($nombre) . ":</td><td>" . $fila . "</td></tr>";
 								}
 								$retorno .= "</table>";
 							} else {
 								$retorno = implode(", ", array_values($datos_mostrar[0]));
 							}
-						} elseif($parametros[0] == "multiple") {
-							if($parametros[4] == "1") {
+						} elseif ($parametros[0] == "multiple") {
+							if ($parametros[4] == "1") {
 								$retorno .= "<table border='1' width=100% style='border-collapse:collapse'>";
 								$retorno .= "<tr align='center' bgcolor='lightgray' style='text-transform:capitalize'><td>" . implode("&nbsp;</td><td>", array_keys($datos_mostrar[0])) . "</td></tr><tr>";
-								for($h = 0; $h < count($datos_mostrar); $h++) {
+								for ($h = 0; $h < count($datos_mostrar); $h++) {
 									$retorno .= "<td>" . implode("&nbsp;</td><td>", array_values($datos_mostrar[$h])) . "</td>";
 									$retorno .= "</tr>";
 								}
 								$retorno .= "</table>";
 							} else {
-								for($h = 0; $h < count($datos_mostrar); $h++) {
+								for ($h = 0; $h < count($datos_mostrar); $h++) {
 									$retorno .= str_replace(", ,", "", implode(", ", array_values($datos_mostrar[$h])) . "<br />");
 								}
 							}
 						}
 					}
-				} else
+				} else {
 					$retorno = $campos[0][$campo];
+				}
 			} else {
 				$retorno = formatea_campo($campos[0][$campo], $datos[0]["etiqueta_html"], $datos[0]["valor"]);
 			}
 		}
-		if($datos[0]["etiqueta_html"] == "textarea") {
+		if ($datos[0]["etiqueta_html"] == "textarea") {
 			$retorno = stripslashes($retorno);
-		} else
+		} else {
 			$retorno = str_replace('"', "", stripslashes($retorno));
-		if($_REQUEST["tipo"] != 5 && basename($_SERVER["PHP_SELF"]) != basename($datos[0]["ruta_editar"])) {
+		}
+		if ($_REQUEST["tipo"] != 5 && basename($_SERVER["PHP_SELF"]) != basename($datos[0]["ruta_editar"])) {
 			$retorno = str_replace("<p><!-- pagebreak --></p>", "<!-- pagebreak -->", $retorno);
 			$retorno = str_replace("<!-- pagebreak -->", "<div class='page_break'></div>", $retorno);
-		} else if(basename($_SERVER["PHP_SELF"]) != basename($datos[0]["ruta_editar"])) {
+		} else if (basename($_SERVER["PHP_SELF"]) != basename($datos[0]["ruta_editar"])) {
 			$conf = busca_filtro_tabla("", "configuracion a", "a.nombre='exportar_pdf'", "", $conn);
-			if($conf[0]["valor"] == "html2ps") {
+			if ($conf[0]["valor"] == "html2ps") {
 				$retorno = str_replace("<!-- pagebreak -->", '<pagebreak/>', $retorno);
-			} else if($conf[0]["valor"] == "class_impresion") {
+			} else if ($conf[0]["valor"] == "class_impresion") {
 				$retorno = str_replace("<!-- pagebreak -->", '<br pagebreak="true"/>', $retorno);
 			} else {
 				$retorno = str_replace("<!-- pagebreak -->", '<pagebreak/>', $retorno);
 			}
 		}
-		if($tipo == NULL) {
-			echo (stripslashes($retorno));
+		if ($tipo == NULL) {
+			echo(stripslashes($retorno));
 			return;
 		}
 		return (stripslashes($retorno));
@@ -1239,13 +1241,13 @@ function formatea_campo($valor, $tipo, $llenado) {
 	$resultado = array();
 	$valores = explode(",", codifica_encabezado(html_entity_decode($valor)));
 	$select = array();
-	if($llenado && $llenado != "" && strpos($llenado, "*}") === false) {
-		if(strpos(strtoupper($llenado), "SELECT") !== false) {
-			if($tipo != "dependientes") {
+	if ($llenado != "" && strpos($llenado, "*}") === false) {
+		if (strpos(strtoupper($llenado), "SELECT") !== false) {
+			if ($tipo != "dependientes") {
 				$valor2 = ejecuta_filtro_tabla($llenado, $conn);
-				for($i = 0; $i < $valor2["numcampos"]; $i++) {
-					foreach($valores as $fila) {
-						if(codifica_encabezado(html_entity_decode($valor2[$i]["id"])) == $fila) {
+				for ($i = 0; $i < $valor2["numcampos"]; $i++) {
+					foreach ($valores as $fila) {
+						if (codifica_encabezado(html_entity_decode($valor2[$i]["id"])) == $fila) {
 							$resultado[] = $valor2[$i]["nombre"];
 						}
 					}
@@ -1254,49 +1256,43 @@ function formatea_campo($valor, $tipo, $llenado) {
 				$llenado = html_entity_decode($llenado);
 				$parametros = explode("|", $llenado);
 				$select = explode(";", $parametros[count($parametros) - 1]);
-				// preg_match("/(.+) where/", strtolower($select[1]), $cuerpo);
 				$cuerpo = substr($select[1], 0, strpos($select[1], "where"));
-				// print_r($cuerpo);
 				preg_match("/(\w+) as id/", strtolower($select[1]), $llave);
 				$sql_datos = $cuerpo . " where " . $llave[1] . " in(" . $valor . ")";
-				// echo($sql_datos."<br />");
 				$datos = ejecuta_filtro_tabla($sql_datos, $conn);
 				$valores = array();
-				for($j = 0; $j < $datos["numcampos"]; $j++)
+				for ($j = 0; $j < $datos["numcampos"]; $j++) {
 					$valores[] = codifica_encabezado($datos[$j]["nombre"]);
-				
-				if($datos["numcampos"])
+				}
+
+				if ($datos["numcampos"]) {
 					return (implode(", ", $valores));
-				else
+				} else {
 					return ("");
+				}
 			}
 		} else {
-			// echo($llenado);
-			if(strpos($llenado, ";") != false) {
+			if (strpos($llenado, ";") != false) {
 				$llenado = html_entity_decode($llenado);
 				$arreglo1 = explode(";", $llenado);
-			} else if(strpos($llenado, ",")) {
-				$arreglo1 = array(
-						$llenado
-				);
-			} else
+			} else if (strpos($llenado, ",")) {
+				$arreglo1 = array($llenado);
+			} else {
 				$resultado[0] = $valor;
-			for($i = 0; $i < count($arreglo1); $i++) {
+			}
+			for ($i = 0; $i < count($arreglo1); $i++) {
 				$arreglo2 = explode(",", $arreglo1[$i]);
-				
-				foreach($valores as $fila) {
-					if($arreglo2[0] == $fila) {
-						$resultado[] = ($arreglo2[1]);
+
+				foreach ($valores as $fila) {
+					if ($arreglo2[0] == $fila) {
+						$resultado[] = $arreglo2[1];
 					}
 				}
 			}
 		}
 		return (implode(", ", $resultado));
 	}
-	if($tipo = 'text')
-		return ((($valor)));
-	else
-		return (($valor));
+	return $valor;
 }
 
 /*
@@ -1720,81 +1716,135 @@ function cargar_seleccionados($idformato, $idcampo, $tipo = 1, $iddoc) {
  * <Post-condiciones><Post-condiciones>
  * </Clase>
  */
-function mostrar_seleccionados($idformato, $idcampo, $tipo_arbol, $iddoc, $tipo = 0) {
+
+ function mostrar_seleccionados($idformato, $idcampo, $tipo_arbol, $iddoc, $tipo = 0) {
 	global $conn;
-	$campo = busca_filtro_tabla("", "campos_formato", "idcampos_formato=$idcampo", "", $conn);
-	if($iddoc != NULL) {
-		$tabla = busca_filtro_tabla("nombre_tabla,item", "formato", "idformato=$idformato", "", $conn);
-		if($tabla[0]["item"])
-			$valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "id" . $tabla[0]['nombre_tabla'] . "=$iddoc", "", $conn);
-		else
-			$valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "documento_iddocumento=$iddoc", "", $conn);
+	$campo = busca_filtro_tabla("nombre,valor", "campos_formato", "idcampos_formato=" . $idcampo, "", $conn);
+	if ($iddoc != NULL) {
+		$tabla = busca_filtro_tabla("nombre_tabla,item", "formato", "idformato=" . $idformato, "", $conn);
+		if ($tabla[0]["item"]) {
+			$valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "id" . $tabla[0]['nombre_tabla'] . "=" . $iddoc, "", $conn);
+		} else {
+			$valor = busca_filtro_tabla($campo[0]["nombre"], $tabla[0]['nombre_tabla'], "documento_iddocumento=" . $iddoc, "", $conn);
+		}
+		$ok = 0;
+		if (preg_match("/.*nombre_campo=([^&]+)/", $campo[0]["valor"], $nom_campo)) {
+			$ok = 1;
+			$nombre_campo = $nom_campo[1];
+		}
 		$vector = explode(",", str_replace("#", "d", $valor[0][0]));
 		$vector = array_unique($vector);
 		sort($vector);
 		$nombres = array();
-		if($tipo_arbol == 3) { // valor almacenado
-			if($valor["numcampos"]) {
-				$nombres[] = $valor[0][$campo[0]["nombre"]];
-			}
-		}
-		
-		foreach($vector as $fila) {
-			if($tipo_arbol == 1) // arbol de series
-{
-				$datos = busca_filtro_tabla("nombre", "serie", "idserie=" . $fila, "", $conn);
-				$nombres[] = $datos[0]["nombre"];
-			} elseif($tipo_arbol == 0) // arbol de funcionarios
-{
-				if(strpos($fila, 'd') > 0) {
-					$datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . str_replace("d", "", $fila), "", $conn);
-					$nombres[] = $datos[0]["nombre"];
-				} else {
-					if($pos = strpos($fila, "_"))
-						$fila = substr($fila, 0, $pos);
-					$datos = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $fila, "", $conn);
-					
-					$nombres[] = ucwords($datos[0]["nombres"] . " " . $datos[0]["apellidos"]);
-				}
-			} elseif($tipo_arbol == 5) // arbol de roles
-{
-				if(strpos($fila, 'd') > 0) {
-					$datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . str_replace("d", "", $fila), "", $conn);
-					$nombres[] = $datos[0]["nombre"];
-				} else {
-					if($pos = strpos($fila, "_"))
-						$fila = substr($fila, 0, $pos);
-					$datos = busca_filtro_tabla("nombres,apellidos,cargo.nombre as cargo", "funcionario,dependencia_cargo,cargo", "funcionario_idfuncionario=idfuncionario and cargo_idcargo=idcargo and iddependencia_cargo='" . $fila . "'", "", $conn);
-					$nombres[] = ucwords($datos[0]["nombres"] . " " . $datos[0]["apellidos"] . " - " . $datos[0]["cargo"]);
-				}
-			} elseif($tipo_arbol == 2) // arbol de dependencias
-{
-				$datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . $fila, "", $conn);
-				$nombres[] = ucwords($datos[0]["nombre"]);
-			} elseif($tipo_arbol == 4) { // valor de tabla cuando se llama a test_serie.php el unico campo que se puede mostrar de la tabla es nombre
-				if($campo["numcampos"]) {
-					$arreglo = explode(";", $campo[0]["valor"]);
-					if(strpos($arreglo[0], "test_serie")) {
-						$pos_tabla = strpos($arreglo[0], "tabla");
-						$tabla1 = substr($arreglo[0], $pos_tabla);
-						$tabla2 = explode("=", $tabla1);
-						if($tabla2[1]) {
-							$valor_tabla = busca_filtro_tabla("", $tabla2[1], "id" . $tabla2[1] . " =" . $fila, "", $conn);
-							$nombres[] = $valor_tabla[0]["nombre"];
+		foreach ($vector as $fila) {
+			switch ($tipo_arbol) {
+				case 0 :
+					//Funcionarios
+					if (strpos($fila, 'd') > 0) {
+						$datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . str_replace("d", "", $fila), "", $conn);
+						if ($datos["numcampos"]) {
+							$nombres[] = $datos[0]["nombre"];
+						}
+					} else {
+						if ($pos = strpos($fila, "_")) {
+							$fila = substr($fila, 0, $pos);
+						}
+						if ($ok) {
+							$datos = busca_filtro_tabla($nombre_campo, "funcionario", "funcionario_codigo=" . $fila, "", $conn);
+							if ($datos["numcampos"]) {
+								$nombres[] = ucwords($datos[0][0]);
+							}
+						} else {
+							$datos = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $fila, "", $conn);
+							if ($datos["numcampos"]) {
+								$nombres[] = ucwords($datos[0]["nombres"] . " " . $datos[0]["apellidos"]);
+							}
+						}
+
+					}
+					break;
+				case 1 :
+					//Series
+					if ($ok) {
+						$datos = busca_filtro_tabla($nombre_campo, "serie", "idserie=" . $fila, "", $conn);
+					} else {
+						$datos = busca_filtro_tabla("nombre", "serie", "idserie=" . $fila, "", $conn);
+					}
+					if ($datos["numcampos"]) {
+						$nombres[] = ucwords($datos[0][0]);
+					}
+					break;
+				case 2 :
+					//Dependencia
+					if ($ok) {
+						$datos = busca_filtro_tabla($nombre_campo, "dependencia", "iddependencia=" . $fila, "", $conn);
+					} else {
+						$datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . $fila, "", $conn);
+					}
+					if ($datos["numcampos"]) {
+						$nombres[] = ucwords($datos[0][0]);
+					}
+					break;
+				case 3 :
+					// Otros
+					$nombres[] = $fila;
+					break;
+				case 4 :
+					// valor de tabla cuando se llama a test_serie.php el unico campo que se puede mostrar de la tabla es nombre
+					if ($campo["numcampos"]) {
+						if (preg_match("/.*tabla=([^&]+)/", $campo[0]["valor"], $info_tabla)) {
+							$tabla = $info_tabla[1];
+							if ($ok) {
+								$valor_tabla = busca_filtro_tabla($nombre_campo, $tabla, "id" . $tabla . " =" . $fila, "", $conn);
+							} else {
+								$valor_tabla = busca_filtro_tabla("nombre", $tabla, "id" . $tabla . " =" . $fila, "", $conn);
+							}
+							if ($valor_tabla["numcampos"]) {
+								$nombres[] = $valor_tabla[0][0];
+							}
 						}
 					}
-				}
+					break;
+
+				case 5 :
+				//roles
+				default :
+					if (strpos($fila, 'd') > 0) {
+						$datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . str_replace("d", "", $fila), "", $conn);
+						if ($datos["numcampos"]) {
+							$nombres[] = $datos[0]["nombre"];
+						}
+					} else {
+						if ($pos = strpos($fila, "_")) {
+							$fila = substr($fila, 0, $pos);
+						}
+						if ($ok) {
+							$datos = busca_filtro_tabla($nombre_campo, "vfuncionario_dc", "iddependencia_cargo='" . $fila . "'", "", $conn);
+							if ($datos["numcampos"]) {
+								$nombres[] = ucwords($datos[0][0]);
+							}
+						} else {
+							$datos = busca_filtro_tabla("nombres,apellidos,cargo", "vfuncionario_dc", "iddependencia_cargo='" . $fila . "'", "", $conn);
+							if ($datos["numcampos"]) {
+								$nombres[] = ucwords($datos[0]["nombres"] . " " . $datos[0]["apellidos"] . " - " . $datos[0]["cargo"]);
+							}
+						}
+					}
+					break;
 			}
 		}
+	}
+	if (count($nombres)) {
 		$nombres = implode(", ", $nombres);
 	} else {
 		$nombres = "";
 	}
-	if($tipo) {
+
+	if ($tipo) {
 		return ($nombres);
-	} else
-		echo ($nombres);
-	return;
+	} else {
+		echo($nombres);
+	}
 }
 
 if(isset($_REQUEST["accion"])) {
