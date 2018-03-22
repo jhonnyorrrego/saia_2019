@@ -7,6 +7,7 @@ roundcubemail/temp/**
 roundcubemail/logs/**
 errores.txt
 .project
+.buildpath
 .settings/
 pruebas_*
 define.php
