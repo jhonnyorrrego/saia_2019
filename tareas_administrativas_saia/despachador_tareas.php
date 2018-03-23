@@ -11,17 +11,16 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 @set_time_limit(0);
 $tarea = array();
-$tarea[0]["ruta_ejecucion"] = 'tareas_administrativas_saia/desactivar_reemplazos.php';
+$tarea[0]["ruta_ejecucion"] = 'pantallas/reemplazos/desactivar_reemplazos.php';
 $tarea[1]["ruta_ejecucion"] = 'tareas_administrativas_saia/activar_funcionario_inactivos.php';
 $tarea[2]["ruta_ejecucion"] = 'pantallas/funcionario/inactivar_roles_funcionario.php';
-//$tarea[1]["ruta_ejecucion"]='terminar_solicitudes.php';
-$tarea["numcampos"] = 3;
-if ($tarea["numcampos"]) {
-	//$mh = curl_multi_init();
+
+$cant = count($tarea);
+if ($cant) {
 	$ch = curl_init();
 	$abrir = fopen("log_despachador_tarea.txt", "a+");
 
-	for ($i = 0; $i < $tarea["numcampos"]; $i++) {
+	for ($i = 0; $i < $cant; $i++) {
 		if ($tarea[$i]["ruta_ejecucion"]) {
 			$fila = PROTOCOLO_CONEXION . RUTA_PDF . "/" . $tarea[$i]["ruta_ejecucion"];
 			fwrite($abrir, "En la fecha " . date('Y-m-d H:i:s') . " se ejecutaron las siguientes tareas " . $fila . " \n");

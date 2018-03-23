@@ -47,48 +47,65 @@ echo(librerias_jquery('1.7'));
 		//Acción - class= accion_distribucion - select id: opciones_acciones_distribucion
         $('#opciones_acciones_distribucion').live("change",function(){
         	
-        	var valor=$(this).val();
-        	if(valor=='boton_generar_planilla'){
-
-		    	/*Genera Planilla de Mensajeros*/
-		        var mensajero_temp="";
-		        var registros_seleccionados="";
-				var mensajero="";
-				var error=0;
-				$('.accion_distribucion').each(function(){
-					var checkbox = $(this);
-					if(checkbox.is(':checked')===true){
-						var iddistribucion=$(this).val();
-					    mensajero=$('#select_mensajeros_ditribucion_'+iddistribucion).val();
-					    if(!mensajero){
-					    	error=2;
-					    }    
-					    registros_seleccionados+=iddistribucion+",";
-					        
-					    if(mensajero_temp){
-					    	if(mensajero_temp!=mensajero){
-					        	error=1;
-					        }
-					    }
-					    mensajero_temp=mensajero;
-					}
-				});
+					var valor = $(this).val();
+					if (valor == 'boton_generar_planilla') {
+						/*Genera Planilla de Mensajeros*/
+						var mensajero_temp = "";
+						idruta_dist=new Array();
+						var registros_seleccionados = "";
+						var mensajero = "";
+						var error = 0;
+						$('.accion_distribucion').each(function() {
+							var checkbox = $(this);
+							if (checkbox.is(':checked') === true) {
+								var iddistribucion = $(this).val();
+								idruta = $('#idruta_dist_' + iddistribucion).val();
+								if($.inArray(idruta,idruta_dist)==-1){
+									idruta_dist.push(idruta);
+								}
+								mensajero = $('#select_mensajeros_ditribucion_' + iddistribucion).val();
+								if (!mensajero) {
+									error = 2;
+								}
+								registros_seleccionados += iddistribucion + ",";
 				
-				registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length-1);
-						
-				if(registros_seleccionados==""){
-					top.noty({text: '<b>ATENCI&Oacute;N</b><br>No ha seleccionado ningun campo',type: 'warning',layout: "topCenter",timeout:3500});
-				}else if(error==1){
-					top.noty({text: '<b>ATENCI&Oacute;N</b><br>No puede seleccionar diferentes mensajeros',type: 'warning',layout: "topCenter",timeout:3500});
-				}else if(error==2){
-					top.noty({text: '<b>ATENCI&Oacute;N</b><br>No es posible generar la planilla debido a que una &oacute; varias distribuciones no tienen mensajero asignado',type: 'warning',layout: "topCenter",timeout:4500});
-				}else{
-					
-					$("#opciones_acciones_distribucion").after("<div style='display:none;' id='ir_adicionar_documento' class='link kenlace_saia' enlace='formatos/despacho_ingresados/adicionar_despacho_ingresados.php?iddistribucion="+registros_seleccionados+"&mensajero="+mensajero+"' conector='iframe' titulo='Generar Planilla Mensajeros'>---</div>");
-					$("#ir_adicionar_documento").trigger("click");
-					$("#ir_adicionar_documento").remove();
-				}
-        	} //fin if boton_generar_planilla
+								if (mensajero_temp) {
+									if (mensajero_temp != mensajero) {
+										error = 1;
+									}
+								}
+								mensajero_temp = mensajero;
+							}
+						});				
+						registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length - 1);
+						if (registros_seleccionados == "") {
+							top.noty({
+								text : '<b>ATENCI&Oacute;N</b><br>No ha seleccionado ningun campo',
+								type : 'warning',
+								layout : "topCenter",
+								timeout : 3500
+							});
+						} else if (error == 1) {
+							top.noty({
+								text : '<b>ATENCI&Oacute;N</b><br>No puede seleccionar diferentes mensajeros',
+								type : 'warning',
+								layout : "topCenter",
+								timeout : 3500
+							});
+						} else if (error == 2) {
+							top.noty({
+								text : '<b>ATENCI&Oacute;N</b><br>No es posible generar la planilla debido a que una &oacute; varias distribuciones no tienen mensajero asignado',
+								type : 'warning',
+								layout : "topCenter",
+								timeout : 4500
+							});
+						} else {
+				
+							$("#opciones_acciones_distribucion").after("<div style='display:none;' id='ir_adicionar_documento' class='link kenlace_saia' enlace='formatos/despacho_ingresados/adicionar_despacho_ingresados.php?idruta_dist="+idruta_dist.join(",")+"&iddistribucion=" + registros_seleccionados + "&mensajero=" + mensajero + "' conector='iframe' titulo='Generar Planilla Mensajeros'>---</div>");
+							$("#ir_adicionar_documento").trigger("click");
+							$("#ir_adicionar_documento").remove();
+						}
+					} //fin if boton_generar_planilla
         	
         	if(valor=='boton_finalizar_entrega'){
         		

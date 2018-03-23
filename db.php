@@ -4153,24 +4153,24 @@ function concatenar_cadena_sql($arreglo_cadena){
   }
 }
 
-function obtener_reemplazo($fun_codigo=0,$tipo=0){
-  global $conn;
-  //$fun_codigo= funcionario_codigo del usuario a consultar
-  //$tipo=0 para validar contra antiguo y 1 para validar contra nuevo
-  $retorno=array();
-  $retorno['exito']=0;
-  if($tipo){
-    $reemplazo=busca_filtro_tabla("nuevo,idreemplazo_saia","reemplazo_saia","antiguo=".$fun_codigo." and estado=1","",$conn);
-  }else{
-    $reemplazo=busca_filtro_tabla("antiguo,idreemplazo_saia","reemplazo_saia","nuevo=".$fun_codigo." and estado=1","",$conn);
-  }
-  if($reemplazo['numcampos']){
-    $retorno['exito']=1;
-    $retorno['funcionario_codigo']=extrae_campo($reemplazo,0);
-    $retorno['idreemplazo']=extrae_campo($reemplazo,1);
-  }
-  return($retorno);
+function obtener_reemplazo($fun_codigo = 0, $tipo = 1) {
+	global $conn;
+	//$fun_codigo= funcionario_codigo del usuario a consultar
+	$retorno = array();
+	$retorno['exito'] = 0;
+	if ($tipo) {
+		$reemplazo = busca_filtro_tabla("nuevo,idreemplazo_saia", "reemplazo_saia", "antiguo=" . $fun_codigo . " and estado=1 and procesado=1", "fecha_reemplazo desc", $conn);
+	} else {
+		$reemplazo = busca_filtro_tabla("antiguo,idreemplazo_saia", "reemplazo_saia", "nuevo=" . $fun_codigo . " and estado=1 and procesado=1", "fecha_reemplazo desc", $conn);
+	}
+	if ($reemplazo['numcampos']) {
+		$retorno['exito'] = 1;
+		$retorno['funcionario_codigo'] = extrae_campo($reemplazo, 0);
+		$retorno['idreemplazo'] = extrae_campo($reemplazo, 1);
+	}
+	return ($retorno);
 }
+
 
 /*
  * Se crea esta funcion ya que en algunos servidores (Pavimentar nuevo) no funciona el rename cuando el destino existe(No realiza el reemplazo)
