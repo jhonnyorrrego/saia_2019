@@ -3274,20 +3274,20 @@ function crear_archivo($nombre,$texto=NULL,$modo='wb'){
 			return (false);
 		}
 	}
+
 	$f = fopen($nombre, $modo);
+	$resp = false;
 	if ($f) {
 		chmod($nombre, PERMISOS_ARCHIVOS);
 		$texto = str_replace("? >", "?" . ">", $texto);
-		if (fwrite($f, $texto, strlen($texto))) {
-			fclose($f);
-			return ($nombre);
-		} else {
-			fclose($f);
+		if (fwrite($f, $texto, strlen($texto)) !== false) {
+			$resp = $nombre;
 		}
 	} else {
 		alerta('No se puede crear el archivo: ' . $nombre);
 	}
-	return (false);
+	fclose($f);
+	return ($resp);
 }
 
 function crear_archivo_formato($nombre,$texto=NULL,$modo='wb'){
