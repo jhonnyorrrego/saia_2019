@@ -47,6 +47,8 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
             'Symfony\\Component\\Cache\\' => 24,
             'Symfony\\Bundle\\FrameworkBundle\\' => 31,
             'Symfony\\Bridge\\Doctrine\\' => 24,
+            'Sirius\\Validation\\' => 18,
+            'Sirius\\Upload\\' => 14,
         ),
         'P' => 
         array (
@@ -178,6 +180,14 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         'Symfony\\Bridge\\Doctrine\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/doctrine-bridge',
+        ),
+        'Sirius\\Validation\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/siriusphp/validation/src',
+        ),
+        'Sirius\\Upload\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/siriusphp/upload/src',
         ),
         'Psr\\SimpleCache\\' => 
         array (
