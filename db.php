@@ -2033,14 +2033,14 @@ global $conn;
  if(count(@$usuarios['copia'])){ //CON COPIA
 	 foreach($usuarios['copia'] as $fila){
 	 	$mail->AddCC($fila,$fila);
-	 } 	
+	 }
  }
  if(count(@$usuarios['copia_oculta'])){ //CON COPIA OCULTA
 	 foreach($usuarios['copia_oculta'] as $fila){
 	 	$mail->AddBCC($fila,$fila);
-	 } 	
- } 
- 
+	 }
+ }
+
   if(!empty($anexos)){
   	foreach($anexos as $fila){
   		$mail->AddAttachment($fila);
@@ -3749,50 +3749,47 @@ function datos_sesion() {
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>  */
-function crear_archivo($nombre,$texto=NULL,$modo='wb'){
-global $cont;
-$cont++;
-//echo("Creando Archivo ".$nombre);
-$path=pathinfo($nombre);
-$ruta_dir=explode("/",$path["dirname"]);
-$cont1=count($ruta_dir);
-if($cont1){
-  $ruta=$ruta_dir[0];
-  for($i=0;$i<$cont1;$i++){
-    if(!is_dir($ruta)){
-      if(mkdir($ruta,PERMISOS_CARPETAS)){
-        chmod($ruta,PERMISOS_CARPETAS);
-        if(isset($ruta_dir[$i+1]))
-          $ruta.="/".$ruta_dir[$i+1];
-      }
-      else{
-        alerta("Problemas al generar las carpetas");
-        return(false);
-      }
+function crear_archivo($nombre, $texto = NULL, $modo = 'wb') {
+    global $cont;
+    $cont++;
+    // echo("Creando Archivo ".$nombre);
+    $path = pathinfo($nombre);
+    $ruta_dir = explode("/", $path["dirname"]);
+    $cont1 = count($ruta_dir);
+    if ($cont1) {
+        $ruta = $ruta_dir[0];
+        for ($i = 0; $i < $cont1; $i++) {
+            if (!is_dir($ruta)) {
+                if (mkdir($ruta, PERMISOS_CARPETAS)) {
+                    chmod($ruta, PERMISOS_CARPETAS);
+                    if (isset($ruta_dir[$i + 1]))
+                        $ruta .= "/" . $ruta_dir[$i + 1];
+                } else {
+                    alerta("Problemas al generar las carpetas");
+                    return (false);
+                }
+            } else {
+                if (isset($ruta_dir[$i + 1]))
+                    $ruta .= "/" . $ruta_dir[$i + 1];
+            }
+        }
     }
-    else {
-      if(isset($ruta_dir[$i+1]))
-        $ruta.="/".$ruta_dir[$i+1];
+    $f = fopen($nombre, $modo);
+    if ($f) {
+        chmod($nombre, PERMISOS_ARCHIVOS);
+        $texto = str_replace("? >", "?" . ">", $texto);
+        if (fwrite($f, $texto, strlen($texto)) !== false) {
+            fclose($f);
+            return ($nombre);
+        } else {
+            fclose($f);
+        }
+    } else {
+        alerta('No se puede crear el archivo: ' . $nombre);
     }
-  }
+    return (false);
 }
-$f=fopen($nombre,$modo);
-if($f){
-  chmod($nombre,PERMISOS_ARCHIVOS);
-  $texto=str_replace("? >","?".">",$texto);
-  if(fwrite($f,$texto,strlen($texto))){
-    fclose($f);
-    return($nombre);
-  }
-  else {
-    fclose($f);
-  }
-}
-else{
-  alerta('No se puede crear el archivo: '.$nombre);
-}
-return(false);
-}
+
 /*<Clase>
 <Nombre>crear_destino</Nombre>
 <Parametros>$destino:estructura de carpetas a crear</Parametros>
