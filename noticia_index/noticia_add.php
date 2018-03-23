@@ -1,10 +1,8 @@
 <?php
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
-while($max_salida>0)
-{
-if(is_file($ruta."db.php"))
-{
+while ($max_salida > 0) {
+    if (is_file($ruta . "db.php")) {
 $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 }
 $ruta.="../";
@@ -13,15 +11,25 @@ $max_salida--;
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php"); 
 
-echo(librerias_jquery('1.7'));
-echo(estilo_bootstrap());
-echo(librerias_notificaciones());
-echo( librerias_validar_formulario('11') );
 ?>
 
 <!DOCTYPE html>
 <html>
 	<head>
+<?php
+echo (estilo_bootstrap());
+
+?>
+
+<link href="<?php echo $ruta_db_superior;?>dropzone/dist/dropzone.css" type="text/css" rel="stylesheet" />
+
+<?php
+echo (librerias_jquery('1.7'));
+echo (librerias_notificaciones());
+echo (librerias_validar_formulario('11'));
+?>
+
+<script src="<?php echo $ruta_db_superior;?>dropzone/dist/dropzone.js"></script>
 		
 	</head>	
 	<body>
@@ -44,7 +52,6 @@ echo( librerias_validar_formulario('11') );
 		<!-- Form Name -->
 		<legend>Adicionar noticia</legend>
 	
-
 		<!-- Text input-->
 		<div class="control-group">
 		  <label class="control-label" for="titulo">Titulo*</label>
@@ -74,7 +81,7 @@ echo( librerias_validar_formulario('11') );
 		<div class="control-group">
 		  <label class="control-label" for="filebutton">Imagen*</label>
 		  <div class="controls">
-		    <input id="imagen_modulo" name="imagen_modulo" class="input-file required" type="file" >
+		      <div id="dz_noticia"><div class="dz-message"><span>Arrastre aquí los archivos adjuntos</span></div></div>
 		  </div>
 		</div>
 
@@ -88,6 +95,8 @@ echo( librerias_validar_formulario('11') );
 		</div>
 		
 		</fieldset>
+		<input type='hidden' id='form_uuid' name='form_uuid' value='<?php  echo (uniqid() . "-" . uniqid()); ?>'>
+
 		</form>
 </div>				
 							
@@ -125,4 +134,56 @@ echo( librerias_validar_formulario('11') );
 							
 		});
 	});
+
+    var upload_url = '<?php echo $ruta_db_superior;?>/dropzone/cargar_archivos_anexos.php';
+	var form_uuid = $('#form_uuid').val();
+	var lista_archivos = [];
+    Dropzone.autoDiscover = false;
+	var dz = new Dropzone("#dz_noticia", {
+		url: upload_url,
+    	maxFiles : 1,
+		acceptedFiles: ".jpg, .png, .jpeg",
+		paramName: "imagen_modulo",
+   		addRemoveLinks: true,
+   		dictRemoveFile: 'Quitar archivo',
+   		dictMaxFilesExceeded : 'No puede subir mas archivos',
+   		dictResponseError : 'El servidor respondió con código {{statusCode}}',
+		uploadMultiple: false,
+		params: {Adicionar: 5, uuid: form_uuid, nombre_campo : "imagen_modulo",
+			},
+		success: function(file, response) {
+        	for (var key in response) {
+            	if(Array.isArray(response[key])) {
+                	for(var i=0; i < response[key].length; i++) {
+                		archivo=response[key][i];
+                    	if(archivo.original_name == file.upload.filename) {
+                    		lista_archivos[file.upload.uuid] = archivo.id;
+                    	}
+                	}
+            	} else {
+            		if(response[key].original_name == file.upload.filename) {
+                		lista_archivos[file.upload.uuid] = response[key].id;
+            		}
+            	}
+        	}
+		},
+        removedfile : function(file) {
+            if(lista_archivos && lista_archivos[file.upload.uuid]) {
+            	$.ajax({
+            		url: upload_url,
+            		type: 'POST',
+            		data: {
+                		accion:'eliminar_temporal',
+                		archivo: lista_archivos[file.upload.uuid]}
+            		});
+            }
+            if (file.previewElement != null && file.previewElement.parentNode != null) {
+                file.previewElement.parentNode.removeChild(file.previewElement);
+            }
+            return this._updateMaxFilesReachedClass();
+        },
+
+	});
+    $("#dz_noticia").addClass('dropzone');
+
 </script>

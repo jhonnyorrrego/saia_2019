@@ -8,6 +8,7 @@
 		"setasign/fpdi": "^2.0.0-beta2",
 		"setasign/fpdi-fpdf": "^2.0.0-beta2",
 		"setasign/fpdi-tcpdf": "^2.0.0-beta2",
+		"siriusphp/upload": "^2.1",
 		"symfony/process": "~3.3|~4.0",
 		"doctrine/orm": "^2.5"
 	},

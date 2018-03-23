@@ -1,5 +1,4 @@
 <?php
-
 $max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
@@ -9,20 +8,18 @@ while ($max_salida > 0) {
     $ruta.="../";
     $max_salida--;
 }
-include_once($ruta_db_superior . "db.php");; 
+include_once($ruta_db_superior . "db.php"); 
 include_once($ruta_db_superior . "librerias_saia.php");
 
 if(@$_REQUEST["accion"]=="generar"){
     if(!@$_REQUEST["condicion"]){
        $_REQUEST["condicion"]='';  
-    }
-    else{
+    } else {
         $_REQUEST["condicion"]=str_replace("@","=",$_REQUEST["condicion"]);
     } 
     if(!@$_REQUEST["registro"]){    
         $registro=0;
-    }
-    else{
+    } else {
         $registro=$_REQUEST["registro"];    
     }
     $formatos=  busca_filtro_tabla("", "formato", $_REQUEST["condicion"],"", $conn);
@@ -68,8 +65,7 @@ if(@$_REQUEST["accion"]=="generar"){
             redirecciona(PROTOCOLO_CONEXION.RUTA_PDF."/formatos/formatoview.php?key=".$formatos[0]["idformato"]);
         }        
         redirecciona($redirecciona);
-    }
-    else{
+    } else {
         if($registro>=$formatos["numcampos"]){
             alerta($formatos["numcampos"]." Formatos Creados con exito");
             die("<hr>PRUEBA");
@@ -77,6 +73,5 @@ if(@$_REQUEST["accion"]=="generar"){
         }
         alerta("No se puede realizar (".$cant_acciones.") en ".$formatos["numcampos"]." formatos " );
     }
-
 }
 ?>

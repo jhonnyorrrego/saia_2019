@@ -851,12 +851,15 @@ function maximo_valor($valor, $maximo) {
  */
 function crear_formato_mostrar($idformato) {
 	global $conn;
-	$include_formato='';
+	$formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $idformato, "", $conn);
 	$includes = '';
 	$texto = '';
 	$enlace = "";
-	$formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $idformato, "", $conn);
 	if ($formato["numcampos"]) {
+		// $datos=busca_filtro_tabla("","campos_formato","etiqueta_html LIKE 'detalle' AND valor=".$idformato,"",$conn);
+		// buscar si el formato tiene hijos
+		$hijos = busca_filtro_tabla("", "campos_formato", "etiqueta_html='detalle' and nombre like '" . $formato[0]["nombre_tabla"] . "'", "", $conn);
+
 		if (strpos($formato[0]["banderas"], "acordeon") !== false) {
 			$texto .= '<frameset cols="410,*" >';
 			$texto .= '<frame name="arbol_formato" id="arbol_formato" src="../librerias/formato_detalles.php?idformato=' . $idformato . '&iddoc=<?php echo($_REQUEST[' . "'" . "iddoc" . "'" . ']); ? >" marginwidth="0" marginheight="0" scrolling="no" >';
@@ -906,25 +909,29 @@ function crear_formato_mostrar($idformato) {
 					}
 					// si el archivo existe dentro de la carpeta del archivo inicial
 					if (is_file($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]) && $eslibreria === false) {
-						$include_formato .= incluir("../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
+						$includes .= incluir("../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
 					} elseif (is_file($funciones[$i]["ruta"]) && $eslibreria === false) {// si el archivo existe en la ruta especificada partiendo de la raiz
-						$include_formato .= incluir("../" . $funciones[$i]["ruta"], "librerias");
+
+						$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
 					} else if ($eslibreria === false) {// si no existe en ninguna de las dos
+ // trato de crearlo dentro de la carpeta del formato actual
 						alerta("Las funciones del Formato " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"] . " son requeridas  no se han encontrado");
-						if (crear_archivo($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {// trato de crearlo dentro de la carpeta del formato actual
-							$include_formato .= incluir($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
+						if (crear_archivo($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+							$includes .= incluir($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
 						} else
 							alerta("No es posible generar el archivo " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
 					}
 				}
 			} else {// $ruta_orig=$formato[0]["nombre"];
-				if (is_file($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {// si el archivo existe dentro de la carpeta del formato actual
-					$include_formato .= incluir($funciones[$i]["ruta"], "librerias");
+ // si el archivo existe dentro de la carpeta del formato actual
+				if (is_file($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+					$includes .= incluir($funciones[$i]["ruta"], "librerias");
 				} elseif (is_file($funciones[$i]["ruta"])) {// si el archivo existe en la ruta especificada partiendo de la raiz
-					$include_formato .= incluir("../" . $funciones[$i]["ruta"], "librerias");
+					$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
 				} else {// si no existe en ninguna de las dos
-					if (crear_archivo($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {// trato de crearlo dentro de la carpeta del formato actual
-						$include_formato .= incluir($funciones[$i]["ruta"], "librerias");
+ // trato de crearlo dentro de la carpeta del formato actual
+					if (crear_archivo($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+						$includes .= incluir($funciones[$i]["ruta"], "librerias");
 					} else
 						alerta("No es posible generar el archivo " . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
 				}
@@ -935,16 +942,15 @@ function crear_formato_mostrar($idformato) {
 				$parametros = $idformato;
 			$texto = str_replace($funciones[$i]["nombre"], arma_funcion($funciones[$i]["nombre_funcion"], $parametros, "mostrar"), $texto);
 		}
-
-		$includes .= incluir("../../librerias_saia.php", "librerias");
-		$includes .= "<?php echo(librerias_jquery('1.7')); ?>";
-		$includes .= incluir_libreria("funciones_generales.php", "librerias");
-		$includes .= incluir("../../class_transferencia.php", "librerias");
 		if ($formato[0]["librerias"] && $formato[0]["librerias"] != "") {
 			$includes .= incluir($formato[0]["librerias"], "librerias", 1);
 		}
-		$includes .=$include_formato;
+		$includes .= incluir_libreria("funciones_generales.php", "librerias");
+		$includes .= incluir("../../librerias_saia.php", "librerias");
+		$includes .= "<?php echo(librerias_jquery('1.7')); ?>";
 		$includes .= incluir_libreria("header_nuevo.php", "librerias");
+		$includes .= incluir("../../class_transferencia.php", "librerias");
+
 		$contenido = $includes . $texto . $enlace . incluir_libreria("footer_nuevo.php", "librerias");
 		$mostrar = crear_archivo($formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $contenido);
 
@@ -1086,8 +1092,8 @@ function crear_vista_formato($idformato, $arreglo) {
 					} elseif (is_file($funciones[$i]["ruta"]) && $eslibreria === false) { // si el archivo existe en la ruta especificada partiendo de la raiz
 						
 						$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
-					} else if ($eslibreria === false) // si no existe en ninguna de las dos
-{ // trato de crearlo dentro de la carpeta del formato actual
+					} else if ($eslibreria === false) { // si no existe en ninguna de las dos
+  // trato de crearlo dentro de la carpeta del formato actual
 						alerta("Las funciones del Formato " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"] . " son requeridas  no se han encontrado");
 						if (crear_archivo($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 							$includes .= incluir($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
@@ -1095,14 +1101,14 @@ function crear_vista_formato($idformato, $arreglo) {
 							alerta("No es posible generar el archivo " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
 					}
 				}
-			} else // $ruta_orig=$formato[0]["nombre"];
-{ // si el archivo existe dentro de la carpeta del formato actual
+			} else { // $ruta_orig=$formato[0]["nombre"];
+  // si el archivo existe dentro de la carpeta del formato actual
 				if (is_file($fpadre[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 					$includes .= incluir($funciones[$i]["ruta"], "librerias");
 				} elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
 					$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
-				} else // si no existe en ninguna de las dos
-{ // trato de crearlo dentro de la carpeta del formato actual
+				} else { // si no existe en ninguna de las dos
+  // trato de crearlo dentro de la carpeta del formato actual
 					if (crear_archivo($fpadre[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 						$includes .= incluir($funciones[$i]["ruta"], "librerias");
 					} else
@@ -1183,7 +1189,7 @@ function crear_formato_ae($idformato, $accion) {
 	if ($formato["numcampos"]) {
 		if ($formato[0]["item"]) {
 			$action = '../librerias/funciones_item.php';
-		} else{
+		} else {
 			$action = '../../class_transferencia.php';
 		}
 		$texto .= '<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");? ><form name="formulario_formatos" id="formulario_formatos" method="post" action="' . $action . '" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4">';
@@ -1195,7 +1201,6 @@ function crear_formato_ae($idformato, $accion) {
 		if ($formato[0]["librerias"] && $formato[0]["librerias"] != "") {
 			$includes .= incluir($formato[0]["librerias"], "librerias", 1);
 		}
-		$includes .= incluir("../../librerias_saia.php", "librerias");
 		
 		$includes .= incluir_libreria("funciones_formatos.js", "javascript");
 		//$includes .= incluir("../../js/cmxforms.js", "javascript");
@@ -1269,7 +1274,10 @@ function crear_formato_ae($idformato, $accion) {
 			if ($campos[$h]["banderas"] != "") {
 				$bandera_unico = strpos("u", $campos[$h]["banderas"]);
 				if ($bandera_unico !== false) {
-					array_push($unico, array($campos[$h]["nombre"], $campos[$h]["idcampos_formato"]));
+					array_push($unico, array(
+							$campos[$h]["nombre"],
+							$campos[$h]["idcampos_formato"]
+					));
 					$obligatorio = 'obligatorio="obligatorio"';
 					$obliga = "(*)";
 				}
@@ -1330,8 +1338,7 @@ function crear_formato_ae($idformato, $accion) {
                      <td class="celda_transparente"><textarea ' . $tabindex . ' name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" cols="53" rows="3" class="tiny_' . $nivel_barra;
 						if ($campos[$h]["obligatoriedad"])
 							$texto .= ' required';
-						$texto .= '">' . $valor . '</textarea></td>
-                    </tr>';
+						$texto .= '">' . $valor . '</textarea></td></tr>';
 						$textareas++;
 						$indice_tabindex++;
 						break;
@@ -1462,67 +1469,38 @@ function crear_formato_ae($idformato, $accion) {
 						}
 						break;
 					case "archivo" :
-						$tipo_input = 'unico';
+						$multiple='unico';
 						if ($campos[$h]["valor"] != '') {
 							$mystring = $campos[$h]["valor"];
 							$findme = '@';
 							$pos = strpos($mystring, $findme);
 							if ($pos !== false) {//fue encontrada
 								$vector_extensiones_tipo = explode($findme, $mystring);
-								$tipo_input = $vector_extensiones_tipo[1];
+								$multiple = $vector_extensiones_tipo[1];
 								$extensiones_fijas = $vector_extensiones_tipo[0];
 							}
 						}
 						$funcion_adicional_archivo = '';
-						$ul_adicional_archivo = '';
-						switch($tipo_input) {
-							case 'unico' :
-								if (strpos($adicionales, "class") !== false) {
-									$adicionales = str_replace("required", "required multi", $adicionales);
-								} else {
-									$adicionales .= " class='multi' ";
-								}
-								break;
-							case 'multiple' :
-								$adicionales .= " multiple='multiple' onchange='makeFileList_" . $campos[$h]["nombre"] . "();' ";
-								$ul_adicional_archivo = '<ul id="fileList_' . $campos[$h]["nombre"] . '"></ul>';
-								$funcion_adicional_archivo = '
-								<script>
-								function makeFileList_' . $campos[$h]["nombre"] . '() {
-									var input = document.getElementById("' . $campos[$h]["nombre"] . '");
-									var ul = document.getElementById("fileList_' . $campos[$h]["nombre"] . '");
-									
-									while (ul.hasChildNodes()) {
-										ul.removeChild(ul.firstChild);
-									}
-									for (var i = 0; i < input.files.length; i++) {
-										var li = document.createElement("li");
-										li.innerHTML = input.files[i].name;
-										ul.appendChild(li);
-									}
-									if(!ul.hasChildNodes()) {
-										var li = document.createElement("li");
-										li.innerHTML = "No se eligi&oacute; archivo";
-										ul.appendChild(li);
-									}
-								}								
-								</script>
-								';
-								break;
-						}
+						//$ul_adicional_archivo='';
 
 						$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                      <td class="celda_transparente">' . $funcion_adicional_archivo;
 
-						if ($extensiones_fijas != "")
+						if ($extensiones_fijas != "") {
+						    $new_ext = array_map('trim', explode('|', $extensiones_fijas));
+						    $extensiones_fijas = "." . implode(', .', $new_ext);
 							$extensiones = $extensiones_fijas;
-						else
+						} else {
 							$extensiones = '<?php echo $extensiones;?' . '>';
-
+						}
 						if ($accion == "adicionar") {
-							$texto .= '<input ' . $tabindex . ' type="file" ' . $adicionales . ' id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '[]" ' . 'accept="' . $extensiones . '"' . '>';
-							$texto .= $ul_adicional_archivo;
+						    //$campos[$h]["idcampos_formato"]
+						    $idelemento = "dz_campo_{$campos[$h]["idcampos_formato"]}";
+						    $texto .= '<div id="' . $idelemento . '" class="saia_dz" data-nombre-campo="' . $campos[$h]["nombre"] . '" data-idformato="' . $idformato . '" data-idcampo-formato="' . $campos[$h]["idcampos_formato"] . '" data-extensiones="' . $extensiones . '" data-multiple="'. $multiple . '">';
+						    $texto .= '<div class="dz-message"><span>Arrastre aqu&iacute; los archivos adjuntos</span></div></div>';
+							//$texto .= '<input ' . $tabindex . ' type="hidden" ' . $adicionales . ' id="'.$campos[$h]["nombre"].'" name="' . $campos[$h]["nombre"] . '" value="">';
+							//$texto.=$ul_adicional_archivo;
 						}
 						if ($accion == "editar") {
 
@@ -1606,7 +1584,6 @@ function crear_formato_ae($idformato, $accion) {
 						$texto .= '</td>
                   </tr>';
 						break;
-
 						case "arbol" :
 								/*En campos valor se deben almacenar los siguientes datos: ../../test.php;1;0;1;1;0;0
 								 arreglo[0] ruta de el xml
@@ -1661,7 +1638,9 @@ function crear_formato_ae($idformato, $accion) {
 								var browserType;
 								if (document.layers) {browserType = "nn4"}
 								if (document.all) {browserType = "ie"}
-								if (window.navigator.userAgent.toLowerCase().match("gecko")) {browserType= "gecko"}
+                      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+                         browserType= "gecko"
+                      }
 								tree_' . $campos[$h]["nombre"] . '=new dhtmlXTreeObject("treeboxbox_' . $campos[$h]["nombre"] . '","100%","100%",0);
 								tree_' . $campos[$h]["nombre"] . '.setImagePath("../../imgs/");
 								tree_' . $campos[$h]["nombre"] . '.enableIEImageFix(true);';
@@ -1719,7 +1698,7 @@ function crear_formato_ae($idformato, $accion) {
 									}';
 								} elseif ($arreglo[1] == 2) {
 									$texto .= 'tree_' . $campos[$h]["nombre"] . '.setOnCheckHandler(onNodeSelect_' . $campos[$h]["nombre"] . ');
-									function onNodeSelect_' . $campos[$h]["nombre"] . '(nodeId){
+									function onNodeSelect_' . $campos[$h]["nombre"] . '(nodeId) {
 										valor_destino=document.getElementById("' . $campos[$h]["nombre"] . '");
 										if(tree_' . $campos[$h]["nombre"] . '.isItemChecked(nodeId)){
 											if(valor_destino.value!=="")
@@ -1734,21 +1713,21 @@ function crear_formato_ae($idformato, $accion) {
 								}
 						
 								$texto .= "function fin_cargando_" . $campos[$h]["nombre"] . "() {
-									if (browserType == \"gecko\" ){
+									if (browserType == \"gecko\" ) {
 										document.poppedLayer = eval('document.getElementById(\"esperando_" . $campos[$h]["nombre"] . "\")');
-									}else if (browserType == \"ie\"){
+									} else if (browserType == \"ie\") {
 										document.poppedLayer = eval('document.getElementById(\"esperando_" . $campos[$h]["nombre"] . "\")');
-									}else{
+									} else {
 										document.poppedLayer = eval('document.layers[\"esperando_" . $campos[$h]["nombre"] . "\"]');	
 									}
 									document.poppedLayer.style.display = \"none\";
 								}
 								function cargando_" . $campos[$h]["nombre"] . "() {
-									if (browserType == \"gecko\" ){
+									if (browserType == \"gecko\" ) {
 										document.poppedLayer = eval('document.getElementById(\"esperando_" . $campos[$h]["nombre"] . "\")');
-									}else if (browserType == \"ie\"){
+									} else if (browserType == \"ie\") {
 										document.poppedLayer = eval('document.getElementById(\"esperando_" . $campos[$h]["nombre"] . "\")');
-									}else{
+									} else {
 										document.poppedLayer = eval('document.layers[\"esperando_" . $campos[$h]["nombre"] . "\"]');
 									}
 									document.poppedLayer.style.display = \"\";
@@ -1758,7 +1737,7 @@ function crear_formato_ae($idformato, $accion) {
 									$texto .= "function checkear_arbol(){
 										vector2=\"" . arma_funcion("cargar_seleccionados", $idformato . "," . $campos[$h]["idcampos_formato"] . ",1", "mostrar") . "\";
 										vector2=vector2.split(\",\");
-										for(m=0;m<vector2.length;m++){
+										for(m=0;m<vector2.length;m++) {
 											tree_" . $campos[$h]["nombre"] . ".setCheck(vector2[m],true);
 										}
 									}\n";
@@ -1766,8 +1745,6 @@ function crear_formato_ae($idformato, $accion) {
 								$texto .= '</script></td></tr>';
 								$arboles++;
 					break;
-
-
 					case "item" :
 						break;
 					case "detalle" :
@@ -1819,8 +1796,7 @@ function crear_formato_ae($idformato, $accion) {
 						$indice_tabindex++;
 						$spinner++;
 						break;
-					default :
-						// text
+					default : // text
 						$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                      <td bgcolor="#F5F5F5"><input ' . " $adicionales $tabindex" . ' type="text" size="100" id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . ' value="' . $valor . '"></td>
@@ -1858,8 +1834,7 @@ function crear_formato_ae($idformato, $accion) {
 						$includes .= incluir("../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
 					} elseif (is_file($funciones[$i]["ruta"])) {// si el archivo existe en la ruta especificada partiendo de la raiz
 						$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
-					} else// si no existe en ninguna de las dos
-					{
+					} else { // si no existe en ninguna de las dos
 						// trato de crearlo dentro de la carpeta del formato actual
 						if (crear_archivo($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 							$includes .= incluir($funciones[$i]["ruta"], "librerias");
@@ -1867,16 +1842,13 @@ function crear_formato_ae($idformato, $accion) {
 							alerta("No es posible generar el archivo " . $formato[0]["nombre_tabla"] . "/" . $funciones[$i]["ruta"]);
 					}
 				}
-			} else// $ruta_orig=$formato[0]["nombre"];
-			{
+			} else { // $ruta_orig=$formato[0]["nombre"];
 				// si el archivo existe dentro de la carpeta del formato actual
 				if (is_file($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 					$includes .= incluir($funciones[$i]["ruta"], "librerias");
 				} elseif (is_file($funciones[$i]["ruta"])) {// si el archivo existe en la ruta especificada partiendo de la raiz
-					// Modificacion realizada el 28-02-2009 porque buscaba la ruta en la raiz pero debia buscarla en la raiz del propio formato se quita el ../
 					$includes .= incluir($funciones[$i]["ruta"], "librerias");
-				} else// si no existe en ninguna de las dos
-				{
+				} else { // si no existe en ninguna de las dos
 					// trato de crearlo dentro de la carpeta del formato actual
 					if (crear_archivo($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 						$includes .= incluir($funciones[$i]["ruta"], "librerias");
@@ -1894,9 +1866,7 @@ function crear_formato_ae($idformato, $accion) {
 		$valor1 = extrae_campo($campo_descripcion, "idcampos_formato", "U");
 		$valor = implode(",", $valor1);
 		if ($campo_descripcion["numcampos"]) {
-			if ($accion == 'adicionar')
-				;
-			elseif ($accion == "editar") {
+			if ($accion == "editar") {
 				if ($formato[0]["detalle"]) {
 					$valor = "<?php echo('" . $valor . "'); ? >";
 				} else {
@@ -1904,10 +1874,12 @@ function crear_formato_ae($idformato, $accion) {
 				}
 			}
 			$texto .= '<input type="hidden" name="campo_descripcion" value="' . $valor . '">';
-		} else
+		} else {
 			alerta("Recuerde asignar el campo que sera almacenado como descripcion del documento");
-		if ($accion == "editar")
+		}
+		if ($accion == "editar") {
 			$texto .= '<input type="hidden" name="formato" value="' . $idformato . '">';
+		}
 		if ($formato[0]["detalle"]) {
 			$texto .= '<input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?' . '>">';
 			$texto .= '<input type="hidden" name="anterior" value="<?php echo $_REQUEST["anterior"]; ?' . '>">';
@@ -1929,19 +1901,17 @@ function crear_formato_ae($idformato, $accion) {
 				$texto .= '<input type="hidden" name="anterior" value="<?php echo $_' . 'REQUEST["campo"]; ?' . '>" >';
 			}
 		}
-		$texto .= "<tr>
-			<td colspan='2'>" . arma_funcion("submit_formato", $idformato, $accion);
-		$texto .= '</td>
-		</tr>
-		</table>';
-
+		$texto .= "<tr><td colspan='2'>" . arma_funcion("submit_formato", $idformato, $accion);
+		$texto .= '</td></tr></table>';
 		$includes .= incluir_libreria("funciones_generales.php", "librerias");
 		$includes .= incluir_libreria("funciones_acciones.php", "librerias");
 		$includes .= incluir_libreria("estilo_formulario.php", "librerias");
-		if ($archivo)
+		if ($archivo) {
 			$texto .= "<input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''>";
-		$texto .= '</form>
-		</body>';
+			$id_unico = '<?php echo (uniqid("' . $idformato . '-") . "-" . uniqid());?>';
+			$texto .= "<input type='hidden' name='form_uuid'       id='form_uuid'       value='$id_unico'>";
+		}
+		$texto .= '</form></body>';
 		if ($textareas) {
 			$includes .= incluir_libreria("header_formato.php", "librerias");
 		}
@@ -2036,34 +2006,105 @@ function crear_formato_ae($idformato, $accion) {
       </script>';
 		}
 
+		$js_archivos = "";
 		if ($archivo) {
-			$includes .= incluir("../../anexosdigitales/multiple-file-upload/jquery.MultiFile.js", "javascript");
+			//$includes .= incluir("../../anexosdigitales/multiple-file-upload/jquery.MultiFile.js", "javascript");
+		    $includes .= incluir("../../dropzone/dist/dropzone.js", "javascript");
 			$includes .= incluir("../../anexosdigitales/funciones_archivo.php", "librerias");
 			$includes .= incluir("../../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js", "javascript");
 			$includes .= '<link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-4.0.10/highslide/highslide.css" /></style>';
-			$includes .= "<script type='text/javascript'>
-		    hs.graphicsDir = '../../anexosdigitales/highslide-4.0.10/highslide/graphics/';
-		    hs.outlineType = 'rounded-white';
-	    </script>";
+			$includes .= '<link href="../../dropzone/dist/dropzone.css" type="text/css" rel="stylesheet" />';
+			$includes .= "<script type='text/javascript'> hs.graphicsDir = '../../anexosdigitales/highslide-4.0.10/highslide/graphics/'; hs.outlineType = 'rounded-white';</script>";
+			$js_archivos = "<script type='text/javascript'>
+                var upload_url = '../../dropzone/cargar_archivos_formato.php';
+                var mensaje = 'Arrastre aquí los archivos';
+                Dropzone.autoDiscover = false;
+                var lista_archivos = [];
+                $(document).ready(function () {
+                    Dropzone.autoDiscover = false;
+                    $('.saia_dz').each(function () {
+                        var idformato = $(this).attr('data-idformato');
+                    	var idcampo = $(this).attr('id');
+                    	var paramName = $(this).attr('data-nombre-campo');
+                    	var idcampoFormato = $(this).attr('data-idcampo-formato');
+                    	var extensiones = $(this).attr('data-extensiones');
+                    	var multiple_text = $(this).attr('data-multiple');
+                    	var multiple = false;
+                    	var form_uuid = $('#form_uuid').val();
+                    	var maxFiles = 1;
+                    	if(multiple_text == 'multiple') {
+                    		multiple = true;
+                    		maxFiles = 10;
 		}
-		$includes .= "<style>label.error{color:red}</style>";
-		$contenido = "<html>
-			<title>.:" . codifica($accion . " " . $formato[0]["etiqueta"]) . ":.</title>
-			<head>" . $includes . "
-				<script type='text/javascript'>
-			  $(document).ready(function(){
+                        var opciones = {
+                        	ignoreHiddenFiles : true,
+                        	maxFiles : maxFiles,
+                        	acceptedFiles: extensiones,
+                       		addRemoveLinks: true,
+                       		dictRemoveFile: 'Quitar archivo',
+                       		dictMaxFilesExceeded : 'No puede subir mas archivos',
+                       		dictResponseError : 'El servidor respondió con código {{statusCode}}',
+                    		uploadMultiple: multiple,
+                        	url: upload_url,
+                        	paramName : paramName,
+                        	params : {
+                            	idformato : idformato,
+                            	idcampo_formato : idcampoFormato,
+                            	nombre_campo : paramName,
+                            	uuid : form_uuid
+                            },
+                                removedfile : function(file) {
+                                    if(lista_archivos && lista_archivos[file.upload.uuid]) {
+                                    	$.ajax({
+                                    		url: upload_url,
+                                    		type: 'POST',
+                                    		data: {
+                                        		accion:'eliminar_temporal',
+                                            	idformato : idformato,
+                                            	idcampo_formato : idcampoFormato,
+                                        		archivo: lista_archivos[file.upload.uuid]}
+                                    		});
+                                    }
+                                    if (file.previewElement != null && file.previewElement.parentNode != null) {
+                                        file.previewElement.parentNode.removeChild(file.previewElement);
+                                    }
+                                    return this._updateMaxFilesReachedClass();
+                                },
+                                success : function(file, response) {
+                                	for (var key in response) {
+                                    	if(Array.isArray(response[key])) {
+                                        	for(var i=0; i < response[key].length; i++) {
+                                        		archivo=response[key][i];
+                                            	if(archivo.original_name == file.upload.filename) {
+                                            		lista_archivos[file.upload.uuid] = archivo.id;
+                                            	}
+                                        	}
+                                    	} else {
+                                    		if(response[key].original_name == file.upload.filename) {
+                                        		lista_archivos[file.upload.uuid] = response[key].id;
+                                    		}
+                                    	}
+                                	}
+                                }
+                        };
+                        $(this).dropzone(opciones);
+                        $(this).addClass('dropzone');
+                    });
+                });</script>";
+		}
+		$contenido = "<html><title>.:" . codifica($accion . " " . $formato[0]["etiqueta"]) . ":.</title><head>" . $includes . "<script type='text/javascript'>
+  $().ready(function() {
+	// validar los campos del formato
 			  		$('#formulario_formatos').validate();
+
 				});
-				</script>" . $enmascarar . " $codigo_enter2tab
-			</head>
-			" . $texto . "
-		</html>";
+</script>" . $enmascarar . " $codigo_enter2tab</head>" . $texto . $js_archivos . "</html>";
+
 		if ($accion == "editar"){
 			$contenido .= '<?php include_once("../librerias/footer_plantilla.php");?' . '>';
 		}
-
 		$mostrar = crear_archivo($formato[0]["nombre"] . "/" . $formato[0]["ruta_" . $accion], $contenido);
-		if ($mostrar != ""){
+		if ($mostrar != "") {
 			alerta("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar));
 		}
 	} else{
@@ -2450,18 +2491,19 @@ function crear_formato_buscar($idformato, $accion) {
 							alerta("No es posible generar el archivo " . $formato[0]["nombre_tabla"] . "/" . $funciones[$i]["ruta"]);
 					}
 				}
-			} else // $ruta_orig=$formato[0]["nombre"];
-{ // si el archivo existe dentro de la carpeta del formato actual
+			} else { // $ruta_orig=$formato[0]["nombre"];
+  // si el archivo existe dentro de la carpeta del formato actual
 				if (is_file($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 					$includes .= incluir($funciones[$i]["ruta"], "librerias");
 				} elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
 					$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
-				} else // si no existe en ninguna de las dos
-{ // trato de crearlo dentro de la carpeta del formato actual
+				} else { // si no existe en ninguna de las dos
+  // trato de crearlo dentro de la carpeta del formato actual
 					if (crear_archivo($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 						$includes .= incluir($funciones[$i]["ruta"], "librerias");
-					} else
+					} else {
 						alerta("No es posible generar el archivo " . $formato[0]["nombre_tabla"] . "/" . $funciones[$i]["ruta"]);
+					}
 				}
 			}
 			if (!in_array($funciones[$i]["nombre_funcion"], $fun_campos)) {
@@ -2474,9 +2516,7 @@ function crear_formato_buscar($idformato, $accion) {
 		$valor1 = extrae_campo($campo_descripcion, "idcampos_formato", "U");
 		$valor = implode(",", $valor1);
 		if ($campo_descripcion["numcampos"]) {
-			if ($accion == 'adicionar')
-				;
-			elseif ($accion == "editar") {
+			if ($accion == "editar") {
 				if ($formato[0]["detalle"]) {
 					$valor = "<?php echo('" . $valor . "'); ? >";
 				} else {
@@ -2484,10 +2524,12 @@ function crear_formato_buscar($idformato, $accion) {
 				}
 			}
 			$texto .= '<input type="hidden" name="campo_descripcion" value="' . $valor . '">';
-		} else
+		} else {
 			alerta("Recuerde asignar el campo que sera almacenado como descripcion del documento");
-		if ($accion == "editar")
+		}
+		if ($accion == "editar") {
 			$texto .= '<input type="hidden" name="formato" value="' . $idformato . '">';
+		}
 		if ($formato[0]["detalle"]) {
 			$texto .= '<input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?' . '>">';
 			$texto .= '<input type="hidden" name="anterior" value="<?php echo $_REQUEST["anterior"]; ?' . '>">';
@@ -2559,10 +2601,12 @@ function crear_formato_buscar($idformato, $accion) {
 			$contenido .= '<?php include_once("../librerias/footer_plantilla.php");?' . '>';
 		$mostrar = crear_archivo($formato[0]["nombre"] . "/buscar_" . $formato[0]["nombre"] . ".php", $contenido);
 
-		if ($mostrar != "")
+		if ($mostrar != "") {
 			alerta("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar));
-	} else
+		}
+	} else {
 		alerta("No es posible generar el Formato");
+	}
 }
 
 /*
@@ -2661,18 +2705,15 @@ function incluir($cad, $tipo, $eval = 0) {
 	switch ($tipo) {
 		case "librerias" :
 			$texto1 = '<?php include_once("';
-			$texto2 = '"); ? >
-			';
+			$texto2 = '"); ? >';
 			break;
 		case "javascript" :
 			$texto1 = '<script type="text/javascript" src="';
-			$texto2 = '"></script>
-			';
+			$texto2 = '"></script>';
 			break;
 		case "estilos" :
 			$texto1 = '<link rel="stylesheet" type="text/css" href="';
-			$texto2 = '"/>
-			';
+			$texto2 = '"/>';
 			break;
 		default :
 			return (""); // retorna un vacio si no existe el tipo

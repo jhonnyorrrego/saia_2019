@@ -248,8 +248,28 @@ window.addEventListener("message", receiveMessage, false);
 function receiveMessage(event) {
   datos = event.data;
   if(datos.iddocumento) {
-	  cargar_cantidades_documento(datos.iddocumento);
+	  refrescar_cantidades_documento(datos.iddocumento);
   }
+}
+
+function refrescar_cantidades_documento(iddocumento) {
+	$.ajax({
+		type:'POST',
+		url: "<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php",
+		data: "librerias=pantallas/documento/librerias.php&funcion=contar_cantidad&parametros="+iddocumento+";<?php echo(usuario_actual("funcionario_codigo"));?>;todos&rand=<?php echo(rand());?>",
+		success: function(html) {
+			if(html) {
+				var objeto=jQuery.parseJSON(html);
+				$("#cantidad_anexos").html(objeto.adjuntos_documento);
+				$("#cantidad_paginas").html(objeto.ordenar_pag);
+				$("#cantidad_notas").html(objeto.ver_notas);
+				$("#cantidad_tareas").html(objeto.ver_tareas);
+				$("#cantidad_versiones").html(objeto.ver_versiones);
+				var cantidad_relacionados=parseInt(objeto.documentos_relacionados);
+				$("#cantidad_documentos_relacionados").html(cantidad_relacionados);
+			}
+		}
+	});
 }
 
 $(document).ready(function(){
@@ -437,7 +457,7 @@ function click_funcion(div){
             async:false,
             success:function(html){
             	var objetoa=jQuery.parseJSON(html);
-            	if(objetoa.records!='0'){
+            	if(objetoa && objetoa.records!='0'){
             			exis_reg=1;
 	                $.each(objetoa.rows,function(i,itema){
                   	$("#panel_relacionados_funcionario").append("<li>"+itema.info+"</li>");
@@ -455,7 +475,7 @@ function click_funcion(div){
             async:false,
             success:function(html){
             	var objetoa=jQuery.parseJSON(html)
-            	if(objetoa.records!='0'){
+            	if(objetoa && objetoa.records!='0'){
             			exis_reg=1;
 	                var objetoa=jQuery.parseJSON(html);
 	                $.each(objetoa.rows,function(i,itema){
@@ -481,8 +501,9 @@ function click_funcion(div){
       type:'POST',
       url: "<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php",
       data: "librerias=pantallas/documento/librerias.php&funcion=contar_cantidad&parametros="+iddocumento+";<?php echo($_SESSION["usuario_actual"]);?>;todos&rand=<?php echo(rand());?>",
-      dataType:'json',
-      success: function(objeto){
+      success: function(html){
+        if(html){
+          var objeto=jQuery.parseJSON(html);
         $("#cantidad_anexos").html(objeto.adjuntos_documento);
         $("#cantidad_paginas").html(objeto.ordenar_pag);
         $("#cantidad_notas").html(objeto.ver_notas);
@@ -490,6 +511,7 @@ function click_funcion(div){
         $("#cantidad_versiones").html(objeto.ver_versiones);
         var cantidad_relacionados=parseInt(objeto.documentos_relacionados);
         $("#cantidad_documentos_relacionados").html(cantidad_relacionados);
+      }
       }
     });
   }

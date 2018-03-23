@@ -287,14 +287,11 @@ function contar_tareas_flujo($iddoc) {
 	$dia = busca_filtro_tabla(resta_fechas(fecha_db_almacenar($flujo["fecha_final_paso"], 'Y-m-d'), fecha_db_almacenar(date('Y-m-d'), 'Y-m-d')) . "as dias");
 	$dias = $dia[0]["dias"];
 	if ($dias > 1 || $terminados) {
-		$color = 'btn-success';
-		//verde
+		$color = 'btn-success'; //verde
 	} else if ($dias < 0) {
-		$color = 'btn-danger';
-		//rojo
+		$color = 'btn-danger'; //rojo
 	} else {
-		$color = 'btn-warning';
-		//amarillo
+		$color = 'btn-warning'; //amarillo
 	}
 
 	return ( array($color, $terminados, $actividades["numcampos"]));
@@ -514,6 +511,10 @@ function mostrar_documentos_vinculados($iddoc) {
 function datos_documentos_vinculados($iddoc) {
 	$dato = busca_filtro_tabla("", "documento_vinculados A,documento B", "A.documento_destino=B.iddocumento AND documento_origen=" . $iddoc, "", $conn);
 	return ($dato);
+}
+
+function permisos_documento($iddoc,$funcionario){
+	return(1);
 }
 
 function filtro_funcionario($funcionario) {
@@ -899,7 +900,8 @@ function origen_documento2($doc, $numero, $origen = "", $tipo_radicado = "", $es
 				$remitente = busca_filtro_tabla("B.nombres, B.apellidos,funcionario_codigo", "funcionario B,dependencia_cargo dc", "dc.funcionario_idfuncionario=idfuncionario and dc.iddependencia_cargo=" . $tipo[0]['origen'], "", $conn);
 
 			$adicional = "";
-			if ($remitente["numcampos"]) {$confirmado = busca_filtro_tabla("", "buzon_salida", "nombre in('APROBADO','REVISADO') and archivo_idarchivo=$doc and origen=" . $remitente[0]["funcionario_codigo"], "", $conn);
+			if ($remitente["numcampos"]) {
+				$confirmado = busca_filtro_tabla("", "buzon_salida", "nombre in('APROBADO','REVISADO') and archivo_idarchivo=$doc and origen=" . $remitente[0]["funcionario_codigo"], "", $conn);
 
 				if (!$confirmado["numcampos"])
 					$adicional = "(Pendiente)";

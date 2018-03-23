@@ -8,9 +8,17 @@ if(parent.window.hs) {
 	}
 }
 
-function recargar_centro()
-{
-  parent.location.reload();
+function recargar_centro(iddocumento) {
+	//parent.location.reload();
+	if(parent.frames['arbol_formato']) {
+		parent.frames['arbol_formato'].postMessage({iddocumento: iddocumento}, "*");
+	} else if(parent.parent.frames['arbol_formato']) {
+		parent.parent.frames['arbol_formato'].postMessage({iddocumento: iddocumento}, "*");
+	} else if(parent.parent.parent.frames['arbol_formato']) {
+		parent.parent.parent.frames['arbol_formato'].postMessage({iddocumento: iddocumento}, "*");
+	} else {
+		console.log("No existe el frame arbol_formato");
+	}
   
 }
 </script>
@@ -24,9 +32,10 @@ if(isset($_REQUEST["Eliminar"])&&isset($_REQUEST["idanexo"])) // Permisos a una 
   if($anexo["numcampos"]>0) 
      { 
        $idanexo=$_REQUEST["idanexo"];
+       $iddocumento = $anexo[0]["documento_iddocumento"];
        borrar($idanexo);
        echo "Anexo Eliminado";
-       echo "<script> cerrar(); recargar_centro();</script>";
+       echo "<script> cerrar(); recargar_centro($iddocumento);</script>";
      }
     else 
     {

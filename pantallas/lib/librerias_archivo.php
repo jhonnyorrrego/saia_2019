@@ -20,7 +20,12 @@ function buscar_archivos($dir, $palabra, $buscar_contenido = 0, $buscar_archivo 
 		}
 		if ($buscar_archivo) {
 			if (strpos($obj, $palabra) !== false) {
-				$resultado_buscar_archivo[$contador_archivos] = array("etiqueta" => str_replace("." . $extension, "", $obj), "nodeid" => $dir . '/' . $obj, "nombre_archivo" => str_replace("../", "", $dir . '/' . $obj), "extension" => $extension);
+				$resultado_buscar_archivo[$contador_archivos] = array(
+						"etiqueta" => str_replace("." . $extension, "", $obj),
+						"nodeid" => $dir . '/' . $obj,
+						"nombre_archivo" => str_replace("../", "", $dir . '/' . $obj),
+						"extension" => $extension
+				);
 			}
 		} else if ($buscar_contenido && $obj != "busca_infecciones.php" && filesize($dir . '/' . $obj) && $palabra) {
 			$ar = fopen($dir . '/' . $obj, "r");
@@ -36,7 +41,12 @@ function buscar_archivos($dir, $palabra, $buscar_contenido = 0, $buscar_archivo 
 						array_push($resultado_buscar_archivo, $dir . '/' . $obj);
 					}
 				}
-				$resultado_buscar_archivo[$contador_archivos] = array("etiqueta" => str_replace("." . $extension, "", $obj), "nodeid" => $dir . '/' . $obj, "nombre_archivo" => $nombre_archivo, "extension" => $extension);
+				$resultado_buscar_archivo[$contador_archivos] = array(
+						"etiqueta" => str_replace("." . $extension, "", $obj),
+						"nodeid" => $dir . '/' . $obj,
+						"nombre_archivo" => $nombre_archivo,
+						"extension" => $extension
+				);
 			}
 		}
 		buscar_archivos($dir . '/' . $obj, $palabra, $buscar_contenido, $buscar_archivo, $reemplazar, $palabra_reemplazar);
@@ -78,7 +88,13 @@ function aplicar_plantilla_ruta_documento($iddoc) {
 
 function crear_archivo_carpeta($nombre, $ruta, $extension, $tipo) {
 	global $ruta_db_superior;
-	$extensiones_permitidas_permitidas = array("php", "css", "js", "txt", "csv");
+	$extensiones_permitidas_permitidas = array(
+			"php",
+			"css",
+			"js",
+			"txt",
+			"csv"
+	);
 	$reultado = '';
 	if (strpos($ruta, ".") === 0 || strpos($ruta, "/") === 0) {
 		$ruta = substr($ruta, 1);
