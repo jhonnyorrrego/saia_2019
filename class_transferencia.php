@@ -268,9 +268,9 @@ function radicar_documento_prueba($tipo_contador, $arreglo, $archivos = NULL, $i
                     alerta("<b>ATENCI&Oacute;N</b><br>No se Pudo Almacenar el Anexo en la Base de Datos", 'error');
                 }
                 fclose($fcont);
-            } // Fin foreach
-        } // Fin almacenamiento db
-    } // Fin archi
+            }
+        }
+    }
     if (!$idflujo && @$_REQUEST["idflujo"]) {
         $idflujo = $_REQUEST["idflujo"];
     }
@@ -348,6 +348,16 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
     global $conn;
     $idtransferencia = array();
     sort($destino);
+
+    /* REEMPLAZOS NUEVOS */
+    $funcionarios = $destino;
+    foreach ($funcionarios as $key => $valor) {
+        $retorno = obtener_reemplazo($valor, 1);
+        if ($retorno['exito']) {
+            $destino[$key] = $retorno['funcionario_codigo'][0];
+        }
+    }
+    // TERMINA REEMPLAZOS
 
     $idarchivo = $datos["archivo_idarchivo"];
     if (!isset($datos["ruta_idruta"])) {
@@ -1086,6 +1096,7 @@ function radicar_plantilla() {
  */
 function enrutar_documento($url = "", $target = "centro") {
     global $conn;
+    // Utilizada para que enlos webservice no redireccione
     if (!isset($_REQUEST["no_redirecciona"])) {
         $iddoc = ($_POST["iddoc"]) ? $_POST["iddoc"] : $_REQUEST["iddoc"];
         if ($iddoc && $url == "") {
@@ -1738,8 +1749,7 @@ function buscar_ruta($serie, $ejecutor, $destino, $iddoc) {
  * <Pre-condiciones>
  * <Post-condiciones>si todo est� bien llama a transferir_archivo_prueba
  */
-function verificar_ruta($fila, $id_documento) {
-    // verifico que est�n bien los nodos
+function verificar_ruta($fila, $id_documento) { // verifico que est�n bien los nodos
     $error = 0;
     $mensaje = "";
 
@@ -1860,9 +1870,9 @@ function formato_devolucion($iddoc = 0) {
         $_REQUEST["iddoc"] = $iddoc;
     }
 
-    $x_recibido = usuarioactual("funcionario_codigo");
+    $x_recibido = $_SESSION["usuario_actual"];
     $reemplazo = 0;
-    $transferencias = busca_filtro_tabla("buzon_entrada.destino", "buzon_entrada", "archivo_idarchivo=" . $iddoc . " AND origen='" . $x_recibido . "' AND destino<>'" . $x_recibido . "' and nombre in('REVISADO','TRANSFERIDO','APROBADO','DEVOLUCION') ORDER BY fecha DESC", "", $conn);
+    $transferencias = busca_filtro_tabla("destino", "buzon_entrada", "archivo_idarchivo=" . $iddoc . " AND origen='" . $x_recibido . "' AND destino<>'" . $x_recibido . "' and nombre in('REVISADO','TRANSFERIDO','APROBADO','DEVOLUCION')", "fecha DESC", $conn);
 
     if ($transferencias["numcampos"]) {
         $retorno = obtener_reemplazo($transferencias[0]['destino'], 1);
@@ -1871,26 +1881,23 @@ function formato_devolucion($iddoc = 0) {
         }
     } else {
         alerta('<b>ATENCI&Oacute;N</b><br>No es posible devolver el documento, por favor transfieralo o terminelo.', 'warning', 4000);
-
-        $mostar_formato_devolver = busca_filtro_tabla('', 'documento a, formato b', 'b.nombre=lower(a.plantilla) AND a.iddocumento=' . $iddoc, '', $conn);
-
+        $mostar_formato_devolver = busca_filtro_tabla('b.nombre,b.idformato', 'documento a, formato b', 'b.nombre=lower(a.plantilla) AND a.iddocumento=' . $iddoc, '', $conn);
         redirecciona($ruta_db_superior . "formatos/" . $mostar_formato_devolver[0]['nombre'] . "/mostrar_" . $mostar_formato_devolver[0]['nombre'] . ".php?iddoc=" . $iddoc . "&idformato=" . $mostar_formato_devolver[0]['idformato']);
-        // redirecciona($ruta_db_superior."vacio.php");
+        return;
     }
-    // <img style="vertical-align:middle" src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/botones/comentarios/devolver_documento.png" border="0">
-    echo '<p><span style="font-family: Verdana; font-size: 9px; font-weight: bold;">
-&nbsp;&nbsp;DEVOLVER DOCUMENTOS&nbsp;&nbsp;&nbsp;&nbsp;
-<br><br></span></p>
+    echo '<p><span style="font-family: Verdana; font-size: 9px; font-weight: bold;">&nbsp;&nbsp;DEVOLVER DOCUMENTOS&nbsp;&nbsp;&nbsp;&nbsp;</span><br/><br/></p>
 <form name="transferenciadev" id="transferenciadev" action="' . PROTOCOLO_CONEXION . RUTA_PDF . '/class_transferencia.php" method="post">
 <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
 <tr>
-  <td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">
-    CAMBIANDO ESTADO AL DOCUMENTO:</span>
+			  <td class="encabezado">
+			  	<span class="phpmaker" style="color: #FFFFFF;">CAMBIANDO ESTADO AL DOCUMENTO:</span>
   </td>
-  <td bgcolor="#F5F5F5"><span class="phpmaker">';
-    $arch = busca_filtro_tabla("", "documento", "iddocumento=" . $iddoc, "", $conn);
+			  <td bgcolor="#F5F5F5">
+				  <span class="phpmaker">';
+    $arch = busca_filtro_tabla("numero,descripcion", "documento", "iddocumento=" . $iddoc, "", $conn);
     echo ($arch[0]["numero"] . "-" . $arch[0]['descripcion']);
-    echo '<input type="hidden" name="iddoc" value="' . $_REQUEST["iddoc"] . '"></span>
+    echo '<input type="hidden" name="iddoc" value="' . $iddoc . '">
+					</span>
   </td>
 </tr>
 
@@ -1903,12 +1910,13 @@ function formato_devolucion($iddoc = 0) {
     echo '<input type="hidden" name="x_fecha" id="x_fecha" value="' . $x_fecha . '">' . $x_fecha . '</span>
   </td>
 </tr>
+
 <tr>
-<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">
-  DEVUELTO A:</span>
+				<td class="encabezado">
+					<span class="phpmaker" style="color: #FFFFFF;"> DEVUELTO A:</span>
 </td>
 <td bgcolor="#F5F5F5"><span class="phpmaker">';
-    $transferencias = busca_filtro_tabla("buzon_entrada.destino,fecha,ruta_idruta", "buzon_entrada", " archivo_idarchivo='" . $_REQUEST["iddoc"] . "' AND origen='" . $x_recibido . "' AND nombre in('TRANSFERIDO','REVISADO') and destino<>'" . $x_recibido . "' ORDER BY fecha DESC", "", $conn);
+    $transferencias = busca_filtro_tabla("buzon_entrada.destino,fecha,ruta_idruta", "buzon_entrada", " archivo_idarchivo='" . $_REQUEST["iddoc"] . "' AND origen='" . $x_recibido . "' AND nombre in('TRANSFERIDO','REVISADO') and destino<>'" . $x_recibido . "'", "fecha DESC", $conn);
     if ($transferencias["numcampos"]) {
         $info_adicional = "";
         if ($reemplazo) {
@@ -1931,6 +1939,7 @@ function formato_devolucion($iddoc = 0) {
     echo '<input type="hidden" name="x_funcionario_destino" id="x_funcionario_destino" value="' . $funcionario_destino[0]["funcionario_codigo"] . '"></span>
 </td>
 </tr>
+
 <tr>
 <td class="encabezado">
   <span class="phpmaker" style="color: #FFFFFF;">ESTADO DE LA TRANSFERENCIA</span>
@@ -1939,45 +1948,39 @@ function formato_devolucion($iddoc = 0) {
   <span class="phpmaker"><input type="hidden" name="x_nombre" value="DEVOLUCION">DEVOLUCI&Oacute;N</span>
 </td>
 </tr>
+
 <tr>
 <td class="encabezado">
   <span class="phpmaker" style="color: #FFFFFF;">MOTIVOS DEVOLUCION</span>
 </td>
 <td bgcolor="#F5F5F5">
   <span class="phpmaker">
-  <input type="radio" name="motivo" value="Mal direccionamiento de Ventanilla Unica" onclick="document.getElementById(\'x_notas\').value=this.value">Mal direccionamiento de Ventanilla Unica<br/>
-  <input type="radio" name="motivo" value="Cambio de Funciones del Usuario" onclick="document.getElementById(\'x_notas\').value=this.value">Cambio de Funciones del Usuario<br/>
-  <input type="radio" name="motivo" value="Se Necesitan Cambios en el Documento" onclick="document.getElementById(\'x_notas\').value=this.value">Se Necesitan Cambios en el Documento<br/>
-  <input type="radio" name="motivo" value="Otras" onclick="document.getElementById(\'x_notas\').value=this.value">Otras
+					<input type="radio" name="motivo" value="Mal direccionamiento de Ventanilla Unica" onclick="document.getElementById(\'x_notas\').value=this.value">
+					Mal direccionamiento de Ventanilla Unica
+					<br/>
+					<input type="radio" name="motivo" value="Cambio de Funciones del Usuario" onclick="document.getElementById(\'x_notas\').value=this.value">
+					Cambio de Funciones del Usuario
+					<br/>
+					<input type="radio" name="motivo" value="Se Necesitan Cambios en el Documento" onclick="document.getElementById(\'x_notas\').value=this.value">
+					Se Necesitan Cambios en el Documento
+					<br/>
+					<input type="radio" name="motivo" value="Otras" onclick="document.getElementById(\'x_notas\').value=this.value">
+					Otras
   </span>
 </td>
 </tr>
+
 <tr>
-<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">
-  OBSERVACIONES DE LA DEVOLUCI&Oacute;N</span>
-</td>
-<td bgcolor="#F5F5F5"><span class="phpmaker">
-  <textarea cols="55" rows="5" id="x_notas" name="x_notas">' . @$x_notas . '</textarea></span>
-</td>
+			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;"> OBSERVACIONES DE LA DEVOLUCI&Oacute;N</span></td>
+			<td bgcolor="#F5F5F5"><span class="phpmaker"><textarea cols="55" rows="5" id="x_notas" name="x_notas">' . @$x_notas . '</textarea></span></td>
 </tr>
 </table>
 <input type="hidden" name="funcion" value="devolucion">
-<input type="hidden" name="ruta_idruta" id="ruta_idruta" value="0">';
-    echo '<input type="button" name="Action" value="DEVOLVER" onclick="if(form.x_notas.value==' . "''" . ') alert(' . "'Debe llenar las notas.'" . '); else form.submit(); ">
+		<input type="hidden" name="ruta_idruta" id="ruta_idruta" value="0">
+		<input type="button" name="Action" value="DEVOLVER" onclick="if(form.x_notas.value==' . "''" . ') alert(' . "'Debe llenar las notas.'" . '); else form.submit(); ">
 </form>';
 }
 
-/*
- * <Clase>
- * <Nombre>devolucion
- * <Parametros>
- * <Responsabilidades>se encarga de devolver el documento a quien corresponda
- * <Notas>
- * <Excepciones>
- * <Salida>
- * <Pre-condiciones>
- * <Post-condiciones>
- */
 function devolucion() {
     global $conn, $ruta_db_superior;
     $theValue = ($_REQUEST["iddoc"] != "") ? intval($_REQUEST["iddoc"]) : "NULL";

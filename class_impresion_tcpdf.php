@@ -17,6 +17,7 @@ if (!$_SESSION["LOGIN" . LLAVE_SAIA] && isset($_REQUEST["LOGIN"]) && @$_REQUEST[
 include_once ($ruta_db_superior . 'formatos/librerias/encabezado_pie_pagina.php');
 include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 require_once ($ruta_db_superior . 'tcpdf/tcpdf.php');
+include_once ($ruta_db_superior . 'pantallas/qr/librerias.php');
 
 class Imprime_Pdf {
 	private $orientacion = 'P';

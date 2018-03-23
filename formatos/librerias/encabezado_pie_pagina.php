@@ -22,7 +22,7 @@ function crear_encabezado_pie_pagina($texto, $iddoc, $idformato, $pagina = 1) {
 
 	$resultado1 = preg_match_all('({\*([a-z]+[0-9]*[_]*[a-z]*[0-9]*)+\*})', $texto, $regs1);
 	$campos1 = array_unique($regs1[0]);
-	$formato = busca_filtro_tabla("*", "formato A", "idformato=$idformato", "", $conn);
+	$formato = busca_filtro_tabla("*", "formato A", "idformato=" . $idformato, "", $conn);
 	if ($campos1) {
 		for ($i = 0; $i < count($campos1); $i++) {
 			$nombre = str_replace("*}", "", str_replace("{*", "", $campos1[$i]));
@@ -32,29 +32,28 @@ function crear_encabezado_pie_pagina($texto, $iddoc, $idformato, $pagina = 1) {
 			}
 		}
 		$funciones = busca_filtro_tabla("*", "funciones_formato A", "A.nombre IN('" . implode("','", $campos1) . "') and acciones like '%m%' and (formato like '$idformato' or formato like '%,$idformato' or  formato like '%,$idformato,%'  or  formato like '$idformato,%')", "", $conn);
-		$includes = "";
+
 		for ($i = 0; $i < $funciones["numcampos"]; $i++) {
 			$ruta_orig = "";
 			$formato_orig = explode(",", $funciones[$i]["formato"]);
 			$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig[0], "", $conn);
-
-			if (is_file($ruta_db_superior . "/formatos/" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]))
-				include_once ($ruta_db_superior . "/formatos/" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
-
-			if (is_file($ruta_db_superior . "/formatos/" . $funciones[$i]["ruta"]))
-				include_once ($ruta_db_superior . "/formatos/" . $funciones[$i]["ruta"]);
-			if (is_file($ruta_db_superior . "/" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]) && $dato_formato_orig["numcampos"])
-				include_once ($ruta_db_superior . "/" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
-			if ($funciones[$i]["parametros"] <> "")
+			if (is_file($ruta_db_superior . "formatos/" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+				include_once ($ruta_db_superior . "formatos/" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+			} else if (is_file($ruta_db_superior . "formatos/" . $funciones[$i]["ruta"])) {
+				include_once ($ruta_db_superior . "formatos/" . $funciones[$i]["ruta"]);
+			} else if (is_file($ruta_db_superior . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]) && $dato_formato_orig["numcampos"]) {
+				include_once ($ruta_db_superior . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+			}
+			if ($funciones[$i]["parametros"] <> "") {
 				$parametros = explode(",", $idformato . "," . $funciones[$i]["parametros"] . "," . $_REQUEST["iddoc"] . ",1");
-			else
+			} else {
 				$parametros = explode(",", $idformato . "," . $_REQUEST["iddoc"] . ",1");
+			}
 			$_REQUEST["pagina"] = $pagina;
 
 			$texto = str_replace($funciones[$i]["nombre"], call_user_func_array($funciones[$i]["nombre_funcion"], $parametros), $texto);
 		}
 		if ($formato[0]["librerias"] && $formato[0]["librerias"] <> "") {
-			$includes .=
 			include_once ($ruta_db_superior . "/" . $formato[0]["nombre"] . "/" . $formato[0]["librerias"]);
 		}
 	}
@@ -296,7 +295,6 @@ function nombre_calidad($idformato, $iddoc, $tipo) {
 		echo $valor[0][0];
 }
 
-
 function mostrar_datos_radicaion($idformato, $iddoc) {
 	global $conn;
 	//echo(estilo_bootstrap());
@@ -344,19 +342,6 @@ function fecha_planilla($idformato, $iddoc) {
 	global $conn;
 	$fecha_planilla = busca_filtro_tabla(fecha_db_obtener("fecha", "Y-m-d H:i:s") . " as fecha", "documento", "iddocumento=" . $iddoc, "", $conn);
 	return ($fecha_planilla[0]['fecha']);
-}
-
-function mensajero_entrega_interna($idformato, $iddoc) {
-	global $conn;
-	$documentos2 = busca_filtro_tabla("", "ft_despacho_ingresados", "documento_iddocumento=" . $iddoc, "", $conn);
-	if ($documentos2[0]['tipo_mensajero'] == 'e') {
-		$empresa_transportadora = busca_filtro_tabla("nombre", "cf_empresa_trans", "idcf_empresa_trans=" . $documentos2[0]['mensajero'], "", $conn);
-		$cadena_nombre = $empresa_transportadora[0]['nombre'];
-	} else {
-		$funcionario = busca_filtro_tabla("", "vfuncionario_dc", "iddependencia_cargo=" . $documentos2[0]['mensajero'], "", $conn);
-		$cadena_nombre = $funcionario[0]['nombres'] . ' ' . $funcionario[0]['apellidos'];
-	}
-	return (ucwords(strtolower($cadena_nombre)));
 }
 
 function mostrar_num_pagina($idformato, $iddoc) {

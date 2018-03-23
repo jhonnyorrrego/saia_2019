@@ -11,8 +11,7 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "pantallas/documento/librerias_tramitados.php");
-include_once ($ruta_db_superior . "formatos/librerias/encabezado_pie_pagina.php");
-echo(librerias_validar_formulario());
+
 echo(librerias_notificaciones());
 echo(librerias_jquery("1.7"));
 //------------------------------Adicionar------------------------------------//
@@ -31,6 +30,7 @@ function campos_ocultos_entrega($idformato,$iddoc){
 			if(valores=='' || valores==0 || mensajero=='' || mensajero==0){
 				alerta("Por favor seleccione documentos y mensajero");
 			}else{
+				$("input[name=idft_ruta_dist]").val('<?php echo $_REQUEST['idruta_dist'];?>');
 				$("input[name=iddestino_radicacion]").val('<?php echo $valores;?>');
 				$("input[name=mensajero]").val('<?php echo $mensajero;?>');
 				$("input[name=tipo_mensajero]").val('<?php echo $tipo_mensajero;?>');
@@ -53,13 +53,36 @@ function campos_ocultos_entrega($idformato,$iddoc){
 	<?php 
 }
 //----------------------------------Mostrar-------------------------------------//
+
+function mensajero_entrega_interna($idformato, $iddoc) {
+	global $conn;
+	$documentos2 = busca_filtro_tabla("", "ft_despacho_ingresados", "documento_iddocumento=" . $iddoc, "", $conn);
+	if ($documentos2[0]['tipo_mensajero'] == 'e') {
+		$empresa_transportadora = busca_filtro_tabla("nombre", "cf_empresa_trans", "idcf_empresa_trans=" . $documentos2[0]['mensajero'], "", $conn);
+		$cadena_nombre = $empresa_transportadora[0]['nombre'];
+	} else {
+		$funcionario = busca_filtro_tabla("", "vfuncionario_dc", "iddependencia_cargo=" . $documentos2[0]['mensajero'], "", $conn);
+		$cadena_nombre = $funcionario[0]['nombres'] . ' ' . $funcionario[0]['apellidos'];
+	}
+	return (ucwords(strtolower($cadena_nombre)));
+}
+
+function ruta_entrega_interna($idformato, $iddoc){
+	global $conn;
+	$datos=busca_filtro_tabla("idft_ruta_dist", "ft_despacho_ingresados", "documento_iddocumento=" . $iddoc, "", $conn);
+	if($datos["numcampos"] && $datos[0]["idft_ruta_dist"]!=""){
+		$ruta=busca_filtro_tabla("nombre_ruta","ft_ruta_distribucion","idft_ruta_distribucion in (".$datos[0]["idft_ruta_dist"].")","",$conn);
+		if($ruta["numcampos"]){
+			$nomb=extrae_campo($ruta,"nombre_ruta");
+			return("<br/>".implode(", ", $nomb));
+		}
+	}
+}
+
 function mostrar_seleccionados_entrega($idformato, $iddoc) {
 	global $conn, $ruta_db_superior, $registros;
-
 	$texto = '';
-
 	$items_seleccionados = busca_filtro_tabla("idft_despacho_ingresados", "ft_despacho_ingresados", "documento_iddocumento=" . $iddoc, "", $conn);
-
 	$items = busca_filtro_tabla("ft_destino_radicacio", "ft_item_despacho_ingres", "ft_despacho_ingresados=" . $items_seleccionados[0]['idft_despacho_ingresados'], "", $conn);
 	$cadena_items_seleccionados = '';
 	for ($i = 0; $i < $items['numcampos']; $i++) {
@@ -88,8 +111,6 @@ function generar_pdf_entrega($idformato, $iddoc) {
 		phpmkr_query($update);
 
 	}
-	abrir_url($ruta_db_superior . "class_impresion.php?iddoc=" . $iddoc, "_self");
-	die();
 }
 
 function reporte_entradas2($idformato, $iddoc) {
@@ -103,34 +124,33 @@ function reporte_entradas2($idformato, $iddoc) {
 	$logo = busca_filtro_tabla("valor", "configuracion", "nombre='logo'", "", $conn);
 
 	$texto .= '<br />';
-	$texto .= '<table class="bpmTopicC" style="border-collapse:collapse;width:100%" border="1px">';
-	$texto .= '<thead><tr style="height:70px">';
-	$texto .= '<td style="text-align:center; width:7%"><b>TRAMITE</b></td>';
-	$texto .= '<td style="text-align:center; width:3%"><b>TIPO</b></td>';
-	$texto .= '<td style="text-align:center; width:3%"><b>Rad. Item</b></td>';
-	$texto .= '<td style="text-align:center; width:5%"><b>FECHA DE RECIBO</b></td>';
-	$texto .= '<td style="text-align:center; width:10%"><b>ORIGEN</b></td>';
-	$texto .= '<td style="text-align:center; width:15%"><b>DESTINO</b></td>';
-	$texto .= '<td style="text-align:center; width:25%"><b>ASUNTO</b></td>';
-	$texto .= '<td style="text-align:center; width:15%"><b>FIRMA DE QUIEN RECIBE</b></td>';
-	$texto .= '<td style="text-align:center; width:17%"><b>OBSERVACIONES</b></td>';
+	$texto .= '<table style="border-collapse:collapse;width:100%" border="1">';
+	$texto .= '<thead><tr>';
+	$texto .= '<td style="text-align:center;"><b>TRAMITE</b></td>';
+	$texto .= '<td style="text-align:center;"><b>TIPO</b></td>';
+	$texto .= '<td style="text-align:center;"><b>RAD. ITEM</b></td>';
+	$texto .= '<td style="text-align:center;"><b>FECHA DE RECIBO</b></td>';
+	$texto .= '<td style="text-align:center;"><b>ORIGEN</b></td>';
+	$texto .= '<td style="text-align:center;"><b>DESTINO</b></td>';
+	$texto .= '<td style="text-align:center;"><b>ASUNTO</b></td>';
+	$texto .= '<td style="text-align:center;"><b>FIRMA DE QUIEN RECIBE</b></td>';
+	$texto .= '<td style="text-align:center;"><b>OBSERVACIONES</b></td>';
 	$texto .= '</tr></thead>';
 
 	for ($i = 0; $i < $registros["numcampos"]; $i++) {
 		$texto .= '<tr>';
-		$texto .= '<td style="text-align:center; width:7%">' . mostrar_diligencia_distribucion($registros[$i]["tipo_origen"], $registros[$i]["estado_recogida"]) . '</td>';
-		$texto .= '<td style="text-align:center; width:3%">' . mostrar_tipo_radicado_distribucion($registros[$i]["tipo_origen"]) . '</td>';
-		$texto .= '<td style="text-align:center; width:3%">' . $registros[$i]["numero_distribucion"] . '</td>';
-		$texto .= '<td style="text-align:center; width:5%">' . $registros[$i]["fecha_creacion"] . '</td>';
-		$texto .= '<td style="text-align:left; width:10%">' . retornar_origen_destino_distribucion($registros[$i]['tipo_origen'], $registros[$i]['origen']) . '<br>' . retornar_ubicacion_origen_destino_distribucion($registros[$i]['tipo_origen'], $registros[$i]['origen']) . '</td>';
-		$texto .= '<td style="text-align:left; width:15%">' . retornar_origen_destino_distribucion($registros[$i]['tipo_destino'], $registros[$i]['destino']) . '<br>' . retornar_ubicacion_origen_destino_distribucion($registros[$i]['tipo_destino'], $registros[$i]['destino']) . '</td>';
-		$texto .= '<td style="text-align:left; width:25%">' . $registros[$i]["descripcion"] . '</td>';
-		$texto .= '<td style="text-align:center; width:15%"></td>';
-		$texto .= '<td style="text-align:left; width:17%"></td>';
+		$texto .= '<td style="text-align:center;">' . mostrar_diligencia_distribucion($registros[$i]["tipo_origen"], $registros[$i]["estado_recogida"]) . '</td>';
+		$texto .= '<td style="text-align:center;">' . mostrar_tipo_radicado_distribucion($registros[$i]["tipo_origen"]) . '</td>';
+		$texto .= '<td style="text-align:center;">' . $registros[$i]["numero_distribucion"] . '</td>';
+		$texto .= '<td style="text-align:center;">' . $registros[$i]["fecha_creacion"] . '</td>';
+		$texto .= '<td style="text-align:left;">' . retornar_origen_destino_distribucion($registros[$i]['tipo_origen'], $registros[$i]['origen']) . '<br>' . retornar_ubicacion_origen_destino_distribucion($registros[$i]['tipo_origen'], $registros[$i]['origen']) . '</td>';
+		$texto .= '<td style="text-align:left;">' . retornar_origen_destino_distribucion($registros[$i]['tipo_destino'], $registros[$i]['destino']) . '<br>' . retornar_ubicacion_origen_destino_distribucion($registros[$i]['tipo_destino'], $registros[$i]['destino']) . '</td>';
+		$texto .= '<td style="text-align:left;">' . $registros[$i]["descripcion"] . '</td>';
+		$texto .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
+		$texto .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
 		$texto .= '</tr>';
 	}
 	$texto .= '</table>';
 	return ($texto);
 }
-
 ?>
