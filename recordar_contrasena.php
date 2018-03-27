@@ -16,6 +16,9 @@ echo(estilo_bootstrap());
 echo(librerias_jquery());
 echo(librerias_notificaciones());
 
+include_once("pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+
 if(isset($_REQUEST['login']) && $_REQUEST['login']==''){
 
 	?>
@@ -135,4 +138,5 @@ $_SESSION["LOGIN".LLAVE_SAIA]="";
 </form>
 <?php
 }
+encriptar_sqli("formulario_recordar_contrasena",1);
 ?>

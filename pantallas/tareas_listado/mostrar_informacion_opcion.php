@@ -37,7 +37,7 @@ switch ($opcion) {
 				<div class="control-group" nombre="etiqueta">
 					<legend>Listado de Tareas</legend>
 				</div>
-				<form id="formulario_tareas" class="form-horizontal">
+				<form id="formulario_tareas" name="formulario_tareas" class="form-horizontal" method="post">
 					<div class="control-group">
 						<label class="control-label" for="etiqueta">Nombre de la lista*:</label>
 						<div class="controls">

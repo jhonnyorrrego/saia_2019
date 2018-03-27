@@ -8,6 +8,13 @@ while ($max_salida > 0) {
 }
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "pantallas/listado_tareas/librerias.php");
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idlistado_tareas");
+include_once($ruta_db_superior."librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
 if (@$_REQUEST["ejecutar_accion"]) {
 	if (!@$_REQUEST["tipo_retorno"]) {
 		$_REQUEST["tipo_retorno"] = 1;

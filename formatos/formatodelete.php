@@ -2,6 +2,18 @@
 <?php ob_start(); ?>
 <?php
 
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0)
+{
+if(is_file($ruta."db.php"))
+{
+$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+}
+$ruta.="../";
+$max_salida--;
+}
+
 
 // Initialize common variables
 $x_idformato = Null;
@@ -22,6 +34,14 @@ $x_exportar = Null;
 ?>
 <?php 
 include ("db.php");
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("key");
+include_once($ruta_db_superior."librerias_saia.php");
+$validar_enteros=array("key");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
 include ("phpmkrfn.php");
 include_once("librerias/funciones.php"); 
 ?>
@@ -41,6 +61,7 @@ if (($sKey == "") || ((is_null($sKey)))) {
 	header("Location: formatolist.php");
 	exit(); 
 }
+
 	$sKey = (get_magic_quotes_gpc()) ? $sKey : addslashes($sKey);
 $sDbWhere .= "idformato=" . trim($sKey) . "";
 
@@ -56,7 +77,7 @@ switch ($sAction)
 		if (LoadRecordCount($sDbWhere,$conn) <= 0) {
 			//phpmkr_db_close($conn);
 			ob_end_clean();
-			header("Location: formatolist.php");
+			header("Location: formatolist.php"); 
 			exit();
 		}
 		break;
@@ -73,7 +94,7 @@ switch ($sAction)
 ?>
 <?php include ("header.php") ?>
 <p><span class="phpmaker"><img class="imagen_internos" src="../botones/configuracion/crear_documentos.png" border="0">Borrar Formatos<br><br><a href="formatolist.php">Ir al Listado</a></span></p>
-<form action="formatodelete.php" method="post">
+<form id="formatodelete" name="formatodelete" action="formatodelete.php" method="post">
 <p>
 <input type="hidden" name="a_delete" value="D">
 <?php $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey; ?>
@@ -204,7 +225,7 @@ Listado de Funciones de formatos y Fromatos vinculados con el Actual<br /><br />
 // Function LoadData
 // - Load Data based on Key Value sKey
 // - Variables setup: field variables
-
+encriptar_sqli("formatodelete",1,"form_info",$ruta_db_superior);
 function LoadData($sKey,$conn)
 {
 	$sKeyWrk = "" . addslashes($sKey) . "";

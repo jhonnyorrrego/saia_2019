@@ -44,7 +44,7 @@ $datos_categoria=busca_filtro_tabla("nombre,descripcion","categoria_formato","id
 </div>
 <?php  
 echo(librerias_jquery('1.7'));
-echo(librerias_validar_formulario('11'));
+echo(librerias_validar_formulario('11.16'));
 ?>
 <script>
     $(document).ready(function(){

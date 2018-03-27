@@ -428,7 +428,7 @@ class SqlSqlServer extends SQL2 {
 				$result = sqlsrv_query($this->Conn->conn, $sqleve);
 				if (!$result)
 					die(" Error en la consulta: " . sqlsrv_errors());
-					$registro = $this->Ultimo_Insert();
+				$registro = $this->Ultimo_Insert();
 			}
 		}
 	}
@@ -541,6 +541,11 @@ class SqlSqlServer extends SQL2 {
 		}
 		$resultado = $this->ejecuta_filtro_tabla("SELECT " . $this->resta_fechas("'" . $fecha_control . "'", "'" . $fecha_inicial . "'") . " AS diff");
 		return ($resultado);
+	}
+
+	function invocar_radicar_documento($iddocumento, $idcontador, $funcionario) {
+		$strsql="EXEC sp_asignar_radicado @iddoc=$iddocumento, @idcontador=$idcontador, @idfuncionario=$funcionario;";
+		$this->Ejecutar_Sql($strsql) or die($strsql);
 	}
 
 	function listar_campos_tabla($tabla = NULL, $tipo_retorno = 0) {

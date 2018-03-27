@@ -13,7 +13,7 @@ include_once($ruta_db_superior."librerias_saia.php");
 echo(librerias_html5());
 echo(librerias_jquery("1.7"));
 echo(estilo_bootstrap()); 
-echo(librerias_validar_formulario());
+echo(librerias_validar_formulario('1.16'));
 $modulos_padres=busca_filtro_tabla("","modulo","cod_padre=0 or cod_padre is null","",$conn);
 for($i=0;$i<$modulos_padres["numcampos"];$i++){
 	$opciones.='<option value="'.$modulos_padres[$i]["idmodulo"].'">'.$modulos_padres[$i]["etiqueta"].' ('.$modulos_padres[$i]["nombre"].')</option>';

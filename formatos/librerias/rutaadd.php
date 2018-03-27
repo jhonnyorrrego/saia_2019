@@ -981,14 +981,14 @@ function AddData($conn)
   	$iddoc=$fieldList["documento_iddocumento"];		
   	$ruta_db_superior='../../';		
 	$_REQUEST['from_externo']=1;
-  	include_once($ruta_db_superior.'pantallas/lib/PhpWord/exportar_word.php');		
-  }		
-  $target="_self";		
-  if(@$_SESSION['abrir_centro']){		
-  	$ruta="../ordenar.php?key=".$fieldList["documento_iddocumento"]."&accion=mostrar&mostrar_formato=1";		
-    $target="centro";		
-  	unset($_SESSION['abrir_centro']);		
-  }  
+  	include_once($ruta_db_superior.'pantallas/lib/PhpWord/exportar_word.php');
+  }
+  $target="_self";
+  if(@$_SESSION['abrir_centro']){
+  	$ruta="../ordenar.php?key=".$fieldList["documento_iddocumento"]."&accion=mostrar&mostrar_formato=1";
+    $target="centro";
+  	unset($_SESSION['abrir_centro']);
+  }
 
   if(@$_REQUEST['cargar'] || $_SESSION['tipo_dispositivo'] == 'movil'){
   	abrir_url("../../" . FORMATOS_CLIENTE . $plantilla[0]["plantilla"]."/mostrar_".$plantilla[0]["plantilla"].".php?iddoc=".$fieldList["documento_iddocumento"]."&idformato=".$plantilla[0]["idformato"],"_self");
@@ -1017,8 +1017,8 @@ function AddData($conn)
 </Clase>
 */
 function cambiar_ruta($iddoc){
-	global $conn;  
-  $temp=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn); 
+	 global $conn;  
+  	 $temp=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn); 
   
      $condicion_not_borrador=" AND A.nombre NOT LIKE('BORRADOR') ";
      $adiciona_in_borrador='';
@@ -1026,8 +1026,7 @@ function cambiar_ruta($iddoc){
         $condicion_not_borrador='';
         $adiciona_in_borrador="'BORRADOR',";
     }
-  
-  
+
 	if($temp[0]["estado"]=='ACTIVO'){
 	$sql="UPDATE ruta A SET A.tipo='INACTIVO' WHERE A.documento_iddocumento=".$temp[0]["iddocumento"];      
 	phpmkr_query($sql,$conn);
@@ -1037,7 +1036,6 @@ function cambiar_ruta($iddoc){
 	phpmkr_query($sql,$conn);
 	$sql1="DELETE FROM asignacion where tarea_idtarea=2 and documento_iddocumento=".$temp[0]["iddocumento"];
 	phpmkr_query($sql1,$conn);
-	
 
     if(@$_REQUEST['reset_borrador']){ //se recrea el borrador con un nuevo usuario
         $new_user_borrador=@$_REQUEST['new_user_borrador'];
@@ -1054,8 +1052,7 @@ function cambiar_ruta($iddoc){
         ";
         phpmkr_query($sqlbs,$conn);        
     }
-	
-	
+
 	if($temp[0]["plantilla"]=="")
 		$temp[0]["plantilla"]="Documento";  
 	}else if($temp[0]["estado"]!='ACTIVO'){ 

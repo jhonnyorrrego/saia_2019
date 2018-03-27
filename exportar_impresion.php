@@ -141,19 +141,23 @@ if (!empty($listado_paginas)) {
 $listado_pdf = array_diff($listado_pdf, array(''));
 $listado_final = array_diff($listado_final, array(''));
 
-if (!empty($listado_pdf)) {
-	$file = fopen($archivo, "ab");
-	$mh = curl_multi_init();
-	foreach ($listado_pdf as $i => $url) {
-		if ($url != '') {
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, PROTOCOLO_CONEXION . RUTA_PDF . "/" . $url . "&radicacion_remota=1&LOGIN=" . usuario_actual('login') . "&usuario_actual=" . usuario_actual('funcionario_codigo') . "&LLAVE_SAIA=" . LLAVE_SAIA);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			fwrite($file, curl_exec($ch) . "\n");
-			curl_close($ch);
-		}
+if(!empty($listado_pdf)){
+  $file=fopen($archivo,"ab");
+  $mh = curl_multi_init();	
+  foreach ($listado_pdf as $i => $url){  	  
+  	if($url!=''){
+  		$ch = curl_init();
+        if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {		
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 	}
-	fclose($file);
+   		curl_setopt($ch, CURLOPT_URL,PROTOCOLO_CONEXION.RUTA_PDF."/".$url."&radicacion_remota=1&LOGIN=".usuario_actual('login')."&usuario_actual=".usuario_actual('funcionario_codigo')."&LLAVE_SAIA=".LLAVE_SAIA); 
+   		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
+   		fwrite($file,curl_exec ($ch)."\n");
+   		curl_close ($ch);    
+  	}
+  }
+  fclose($file);
 }
 
 $ruta_almacenamiento = ruta_almacenamiento("pdf");

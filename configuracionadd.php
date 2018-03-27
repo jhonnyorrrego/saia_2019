@@ -22,7 +22,15 @@ $x_tipo = Null;
 ?>
 <?php include ("db.php") ?>
 <?php include ("phpmkrfn.php") ?>
-<?php include_once ("librerias_saia.php"); echo(librerias_notificaciones()); ?>
+<?php include_once ("librerias_saia.php"); 
+
+include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idconfiguracion");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
+
+echo(librerias_notificaciones()); ?>
 <?php
 
 // Get action
@@ -127,7 +135,7 @@ return true;
 // Function LoadData
 // - Load Data based on Key Value sKey
 // - Variables setup: field variables
-
+encriptar_sqli("configuracionadd",1);
 function LoadData($sKey,$conn)
 { global $x_idconfiguracion,$x_nombre,$x_valor,$x_tipo;
 	$sKeyWrk = "" . addslashes($sKey) . "";
@@ -220,4 +228,6 @@ global $x_fecha;
 	phpmkr_query($strsql, $conn) or error("Fall� la b�squeda" . phpmkr_error() . ' SQL:' . $sSql);
 	return true;
 }
+
+
 ?>

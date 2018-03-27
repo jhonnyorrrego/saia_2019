@@ -4,13 +4,20 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit718f03846feaff3d4705b9006384fb76
+class ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         '023d27dca8066ef29e6739335ea73bad' => __DIR__ . '/..' . '/symfony/polyfill-php70/bootstrap.php',
         '32dcc8afd4335739640db7d200c1971d' => __DIR__ . '/..' . '/symfony/polyfill-apcu/bootstrap.php',
+        'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
+        'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
+        'b067bc7112e384b61c701452d53a14a8' => __DIR__ . '/..' . '/mtdowling/jmespath.php/src/JmesPath.php',
+        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
+        '8a9dc1de0ca7e01f3e08231539562f61' => __DIR__ . '/..' . '/aws/aws-sdk-php/src/functions.php',
+        '65fec9ebcfbb3cbb4fd0d519687aea01' => __DIR__ . '/..' . '/danielstjules/stringy/src/Create.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -47,21 +54,43 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
             'Symfony\\Component\\Cache\\' => 24,
             'Symfony\\Bundle\\FrameworkBundle\\' => 31,
             'Symfony\\Bridge\\Doctrine\\' => 24,
+            'Stringy\\' => 8,
             'Sirius\\Validation\\' => 18,
             'Sirius\\Upload\\' => 14,
+        ),
+        'R' => 
+        array (
+            'React\\Promise\\' => 14,
         ),
         'P' => 
         array (
             'Psr\\SimpleCache\\' => 16,
             'Psr\\Log\\' => 8,
+            'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
             'Psr\\Cache\\' => 10,
             'PhpOffice\\PhpWord\\' => 18,
             'PhpOffice\\Common\\' => 17,
         ),
+        'J' => 
+        array (
+            'JmesPath\\' => 9,
+        ),
+        'G' => 
+        array (
+            'GuzzleHttp\\Stream\\' => 18,
+            'GuzzleHttp\\Ring\\' => 16,
+            'GuzzleHttp\\Psr7\\' => 16,
+            'GuzzleHttp\\Promise\\' => 19,
+            'GuzzleHttp\\' => 11,
+        ),
         'F' => 
         array (
             'Firebase\\JWT\\' => 13,
+        ),
+        'E' => 
+        array (
+            'Elasticsearch\\' => 14,
         ),
         'D' => 
         array (
@@ -77,6 +106,10 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         'C' => 
         array (
             'Corley\\Composer\\' => 16,
+        ),
+        'A' => 
+        array (
+            'Aws\\' => 4,
         ),
     );
 
@@ -181,6 +214,10 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         array (
             0 => __DIR__ . '/..' . '/symfony/doctrine-bridge',
         ),
+        'Stringy\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/danielstjules/stringy/src',
+        ),
         'Sirius\\Validation\\' => 
         array (
             0 => __DIR__ . '/..' . '/siriusphp/validation/src',
@@ -189,6 +226,10 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         array (
             0 => __DIR__ . '/..' . '/siriusphp/upload/src',
         ),
+        'React\\Promise\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/react/promise/src',
+        ),
         'Psr\\SimpleCache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/simple-cache/src',
@@ -196,6 +237,10 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
+        'Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Container\\' => 
         array (
@@ -213,9 +258,37 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         array (
             0 => __DIR__ . '/..' . '/phpoffice/common/src/Common',
         ),
+        'JmesPath\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mtdowling/jmespath.php/src',
+        ),
+        'GuzzleHttp\\Stream\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/streams/src',
+        ),
+        'GuzzleHttp\\Ring\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/ringphp/src',
+        ),
+        'GuzzleHttp\\Psr7\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
+        ),
+        'GuzzleHttp\\Promise\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
+        ),
+        'GuzzleHttp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
+        ),
         'Firebase\\JWT\\' => 
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
+        ),
+        'Elasticsearch\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/elasticsearch/elasticsearch/src/Elasticsearch',
         ),
         'Doctrine\\Instantiator\\' => 
         array (
@@ -253,6 +326,10 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         array (
             0 => __DIR__ . '/../..' . '/instalador',
         ),
+        'Aws\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/aws/aws-sdk-php/src',
+        ),
     );
 
     public static $prefixesPsr0 = array (
@@ -272,6 +349,20 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
             'Luracast\\Restler' => 
             array (
                 0 => __DIR__ . '/..' . '/luracast/restler/vendor',
+            ),
+        ),
+        'I' => 
+        array (
+            'Imagine' => 
+            array (
+                0 => __DIR__ . '/..' . '/imagine/imagine/lib',
+            ),
+        ),
+        'G' => 
+        array (
+            'Gaufrette' => 
+            array (
+                0 => __DIR__ . '/..' . '/knplabs/gaufrette/src',
             ),
         ),
         'D' => 
@@ -336,10 +427,10 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit718f03846feaff3d4705b9006384fb76::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit718f03846feaff3d4705b9006384fb76::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit718f03846feaff3d4705b9006384fb76::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit718f03846feaff3d4705b9006384fb76::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2::$classMap;
 
         }, null, ClassLoader::class);
     }

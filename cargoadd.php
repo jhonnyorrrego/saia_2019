@@ -23,6 +23,10 @@ $x_tipo_cargo = Null;
 <?php include ("librerias_saia.php") ?>
 <?php include ("phpmkrfn.php") ?>
 <?php
+include_once ("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idcargo");
+desencriptar_sqli("form_info");
+echo(librerias_jquery());
 include ("formatos/librerias/estilo_formulario.php");
 include ("formatos/librerias/header_formato.php");
 
@@ -65,7 +69,6 @@ switch ($sAction)
 		}
 		break;
 }
-echo(librerias_jquery());
 ?>
 <?php include ("header.php") ?>
 <link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
@@ -261,7 +264,7 @@ global $x_tipo_cargo;
 	
 	return true;
 }
-
+encriptar_sqli("cargoadd",1);
 function arbol_cargos($campo)
   {global $conn,$ruta_db_superior; 
    ?>

@@ -2,6 +2,7 @@
 $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; }
 include_once($ruta_db_superior."librerias_saia.php"); 
 include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $xml=$ruta_db_superior."test.php?sin_padre=1&tipo_id=idfuncionario";
 $campo="funcionarios";
 
@@ -38,10 +39,11 @@ if($seleccionados["numcampos"]){
 echo(librerias_arboles());
 echo(librerias_notificaciones());
 ?>
-<form name="formulario_asignar_permiso" id="formulario_asignar_permiso">
+<form name="formulario_asignar_permiso" id="formulario_asignar_permiso" method="post">
 <legend>Permiso de acceso a la lista de tareas</legend>
 <div class="control-group element">
 	<input type="hidden" name="idlistado_tareas" id="idlistado_tareas" value="<?php echo $_REQUEST["idlistado_tareas"]; ?>" />
+	<input type="hidden"  name="tipo_retorno" value="1"/>
   <div class="controls"> 
 		<div id="sub_entidad" class="arbol_saia">
 			Buscar: <input type="text" id="stext<?php echo $entidad; ?>" width="200px" size="25">
@@ -144,17 +146,20 @@ echo(librerias_notificaciones());
 $(document).ready(function(){ 
 
   $("#submit_formulario").click(function(){  
+  	
     $('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
 		$(this).attr('disabled', true);  
 		var func_selec=$("#funcionarios").val();
 		var idtarea=$("#idlistado_tareas").val();
     if(func_selec!="" && idtarea!=""){
+    	$("#formulario_asignar_permiso").append('<input type="hidden"  name="ejecutar_accion" value="asignar_permiso_listado_tarea"/>');
+    <?php encriptar_sqli("formulario_asignar_permiso",0,"form_info",$ruta_db_superior); ?>
       $.ajax({
         type:'POST',
         dataType: 'json',
         async:false,
         url: "<?php echo($ruta_db_superior);?>pantallas/listado_tareas/ejecutar_acciones.php",
-        data: "ejecutar_accion=asignar_permiso_listado_tarea&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+$("#formulario_asignar_permiso").serialize(),
+        data: "rand="+Math.round(Math.random()*100000)+"&"+$("#formulario_asignar_permiso").serialize(),
         success: function(objeto){               
           if(objeto.exito){              
             $('#cargando_enviar').html("Terminado ...");  
@@ -186,12 +191,14 @@ $(document).ready(function(){
 		var idtarea=$("#idlistado_tareas").val();
     if(func_selec!="" && idtarea!=""){
     	if(confirm('Esta seguro de QUITAR los permisos a los funcionarios seleccionados?')){
+    		$("#formulario_asignar_permiso").append('<input type="hidden"  name="ejecutar_accion" value="quitar_permiso_listado_tarea"/>');
+    		<?php encriptar_sqli("formulario_asignar_permiso",0,"form_info",$ruta_db_superior); ?>
 	      $.ajax({
 	        type:'POST',
 	        dataType: 'json',
 	        async:false,
 	        url: "<?php echo($ruta_db_superior);?>pantallas/listado_tareas/ejecutar_acciones.php",
-	        data: "ejecutar_accion=quitar_permiso_listado_tarea&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+$("#formulario_asignar_permiso").serialize(),
+	        data: "rand="+Math.round(Math.random()*100000)+"&"+$("#formulario_asignar_permiso").serialize(),
 	        success: function(objeto){               
 	          if(objeto.exito){              
 	            $('#cargando_enviar').html("Terminado ...");  

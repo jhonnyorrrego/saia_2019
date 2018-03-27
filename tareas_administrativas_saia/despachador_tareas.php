@@ -25,7 +25,10 @@ if($tarea["numcampos"]){
     if($tarea[$i]["ruta_ejecucion"]){
      $fila=PROTOCOLO_CONEXION.RUTA_PDF."/".$tarea[$i]["ruta_ejecucion"];
 		 fwrite($abrir,"En la fecha ".date('Y-m-d H:i:s')." se ejecutaron las siguientes tareas ".$fila." \n");
-			
+        if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {		
+	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	}		
      curl_setopt($ch, CURLOPT_URL,$fila); 
      curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
 		 

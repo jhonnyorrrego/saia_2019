@@ -1,4 +1,11 @@
-<?php
+<?php 
+include_once("db.php");
+include_once("librerias_saia.php");
+include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("iddoc","key","doc");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["doc"]){
 	$_REQUEST["iddoc"]=@$_REQUEST["doc"];
 	include_once("pantallas/documento/menu_principal_documento.php");
@@ -13,8 +20,7 @@ while($max_salida>0){
   $ruta.="../";
   $max_salida--;
 }
-include_once("db.php");
-include_once("librerias_saia.php");
+
 echo(estilo_bootstrap());
 echo(librerias_notificaciones());
 
@@ -114,8 +120,8 @@ menu_ordenar($x_id_documento);
 		 abrir_url($ruta_db_superior.FORMATOS_CLIENTE.$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$x_id_documento."&idformato=".$formato[0]["idformato"]."&random=".rand(),'_self');
     }
     ?>
-    <form action="documentoTerminar.php" method="post" onSubmit="return EW_checkMyForm(this);">
-    <?php if(isset($_REQUEST["ejecutor"]) && $_REQUEST["ejecutor"]!="")
+    <form id="documentoTerminar" name="documentoTerminar"  action="documentoTerminar.php" method="post" onSubmit="return EW_checkMyForm(this);">
+    <?php if(isset($_REQUEST["ejecutor"]) && $_REQUEST["ejecutor"]!="") 
       echo "<input type='hidden' name='ejecutor' value='".$_REQUEST["ejecutor"]."'>";
     ?>
     <p>
@@ -347,5 +353,7 @@ function DeleteData($llave,$conn)
   transferir_archivo_prueba($fieldList,$destinos,$datos_adicionales);
   return $llave;
 }
+
+encriptar_sqli("documentoTerminar",1);
 ?>
 

@@ -8,10 +8,14 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
-include_once ($ruta_db_superior . "class_transferencia.php");
-include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
+include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idtareas","iddoc");
+desencriptar_sqli('form_info');
+include_once($ruta_db_superior."class_transferencia.php");
+include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_notificaciones.php");
 
 echo(librerias_jquery("1.7"));
 echo(librerias_arboles());
@@ -122,18 +126,16 @@ $datos_tareas=busca_filtro_tabla("","tareas","idtareas=".$_REQUEST['idtareas'],"
 	}
 </style>
 <div class="container">
-	<div class="control-group" nombre="etiqueta">
-		<legend>
-			Asignar avance a la tarea
-		</legend>
-	</div>
-	<form id="formulario_tareas" class="form-horizontal">
-		<div class="control-group">
-			<label class="control-label" for="etiqueta">Fecha*:</label>
-			<div class="controls">
-				<input type="text" name="fecha" id="fecha" class="required" readonly="" value="<?php echo(date("Y-m-d H:i:s")); ?>">
-			</div>
+		<div class="control-group" nombre="etiqueta">
+			<legend>Asignar avance a la tarea</legend>
 		</div>
+		<form id="formulario_tareas" name="formulario_tareas" class="form-horizontal" method="post">
+			<div class="control-group">
+				<label class="control-label" for="etiqueta">Fecha*:</label>
+				<div class="controls">
+					<input type="text" name="fecha" id="fecha" class="required" readonly="" value="<?php echo(date("Y-m-d H:i:s"));?>">
+				</div>
+			</div>
 		<div class="control-group">
 			<label class="control-label" for="etiqueta">Descripci&oacute;n*:</label>
 			<div class="controls">
@@ -183,11 +185,23 @@ $datos_tareas=busca_filtro_tabla("","tareas","idtareas=".$_REQUEST['idtareas'],"
 				<input type="hidden" name="guardar" value="1">
 			</div>
 		</div>
-	</form>
-</div>
-<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>js/jquery.validate.1.13.1.js"></script>
-<script>
-	$(document).ready(function() {
-		$("#formulario_tareas").validate();
-	}); 
-</script>
+		</form>
+	</div>
+	<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>js/jquery.validate.1.13.1.js"></script>
+	<style>
+	label.error {
+		font-weight: bold;
+		color: red;
+	}
+	</style>
+	<script>
+	$(document).ready(function(){
+		$("#formulario_tareas").validate({
+			submitHandler: function(form) {
+				<?php encriptar_sqli("formulario_tareas",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			    
+			  }
+		});
+	});
+	</script>

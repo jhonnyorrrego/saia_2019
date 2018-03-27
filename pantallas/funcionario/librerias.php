@@ -58,6 +58,34 @@ function estado_funcionario($estado) {
 	return ($texto);
 }
 
+function fotografia_funcionario($idfuncionario){
+	global $conn,$ruta_db_superior;
+	
+	require_once($ruta_db_superior.'StorageUtils.php');
+	require_once($ruta_db_superior.'filesystem/SaiaStorage.php');
+
+	$href='pantallas/funcionario/fotografia/foto.php?idfuncionario='.$idfuncionario;
+	$id_contenedor='id="foto_funcionario_'.$idfuncionario.'"';
+	$foto_recorte=busca_filtro_tabla("foto_recorte","funcionario","idfuncionario=".$idfuncionario,"",$conn);
+	if($foto_recorte[0]['foto_recorte']!=''){
+		$tipo_almacenamiento = StorageUtils::resolver_ruta($foto_recorte[0]['foto_recorte']);
+		if(!$tipo_almacenamiento['error']){
+			if($tipo_almacenamiento['clase']->get_filesystem()->has($tipo_almacenamiento['ruta'])){
+				$archivo_binario=StorageUtils::get_binary_file($foto_recorte[0]['foto_recorte']);	
+				$imagen='<img src="'.$archivo_binario.'"	width="60" height="60" '.$id_contenedor.' />';
+			$href.='&recortar=1';
+			}else{
+				$imagen='<img src="'.$ruta_db_superior.'imagenes/funcionario_sin_foto.jpg"	width="60" height="60" '.$id_contenedor.' />';
+			}			
+		}else{
+			$imagen='<img src="'.$ruta_db_superior.'imagenes/funcionario_sin_foto.jpg"	width="60" height="60" '.$id_contenedor.' />';
+		}
+	}else{
+		$imagen='<img src="'.$ruta_db_superior.'imagenes/funcionario_sin_foto.jpg"	width="60" height="60" '.$id_contenedor.' />';
+	}
+	return ($texto);
+}
+
 function fotografia_funcionario($idfuncionario) {
 	global $conn, $ruta_db_superior;
 
@@ -77,6 +105,5 @@ function fotografia_funcionario($idfuncionario) {
 
 	$html = '<a class="open_highslide" id="highslide_funcionario_' . $idfuncionario . '" style="cursor:pointer;" enlace="' . $href . '" identificador="' . $idfuncionario . '">' . $imagen . '</a>';
 	return ($html);
-
 }
 ?>

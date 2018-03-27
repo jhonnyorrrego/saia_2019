@@ -9,6 +9,7 @@ while($max_salida>0){
 	$max_salida--;
 }
 include_once($ruta_db_superior."db.php");
+
 function validar_contador($nombre_contador){
 	global $conn;
 	
@@ -119,7 +120,7 @@ function validar_categorias($nombre_categorias){
 	$fk_categoria_formato=array();
 	$fk_categoria_formato['categorias_no_insertadas']=$vector_no_insertadas;
 	$fk_categoria_formato['fk_categoria_formato']=implode(',',$vector_fk_categoria_formato);
-	return($fk_categoria_formato);	
+	return($fk_categoria_formato);
 }
 
 function validar_cod_padre($nombre_padre){
@@ -152,7 +153,7 @@ function generar_importar($datos){
 			return(json_encode(array("exito"=>0,"msn"=>"No se encuentra el funcionario para crear la sesion y almacenar la informacion")));
 		}
 	}	
-	//VALIDA CAMPOS TALBA
+//VALIDA CAMPOS TABLA
 	$valida_campos_tabla=1;
 	$cadena_valida_campos="";
 	
@@ -200,7 +201,7 @@ function generar_importar($datos){
 				unset($keys_funciones_formato[$i]);
 			}
 		}
-		$keys_funciones_formato=array_values($keys_funciones_formato);		
+		$keys_funciones_formato=array_values($keys_funciones_formato);
 		//$keys_funciones_formato[]='formato';
 		$keys_funciones_formato_insertar=listar_campos_tabla('funciones_formato');  //keys a insertar
 		$keys_funciones_formato_insertar=array_map('strtolower', $keys_funciones_formato_insertar);
@@ -245,7 +246,7 @@ function generar_importar($datos){
 			//desarrollo cuando existe el formato
 			$ruta_formato=explode("webservice_saia",$datos["servidor_importar"]);
 			$formato['mensaje']="El formato ya existe en ".$ruta_formato[0]." idformato=".$existe_formato[0]["idformato"];
-			
+
 		}else{
 			//desarrollo cuando no existe el formato		
 	
@@ -334,7 +335,7 @@ function generar_importar($datos){
 				$strsql .= implode("','", array_values($datos['datos_formato']));			
 				$strsql .= "')";
 				phpmkr_query($strsql);
-				
+
 				$consulta_insert_formato=busca_filtro_tabla("idformato","formato","lower(nombre)='".strtolower($datos['datos_formato']['nombre'])."'","",$conn);
 				
 				if($consulta_insert_formato['numcampos']){
@@ -466,7 +467,6 @@ function generar_importar($datos){
 										$formato['funciones_formato_accion_error']['funciones_formato_accion_error_'.$contador_error]=$strsql;
 										$contador_error++;
 									}									
-									
 																
 								}
 							
@@ -485,8 +485,6 @@ function generar_importar($datos){
 	} //fin if valida campos
 		
 	return(json_encode($formato));
-}	
-
-
+}
 
 ?>

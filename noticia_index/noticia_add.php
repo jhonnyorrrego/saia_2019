@@ -1,16 +1,22 @@
 <?php
-$max_salida = 10; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior = $ruta = "";
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
 while ($max_salida > 0) {
     if (is_file($ruta . "db.php")) {
-        $ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
-    }
-    $ruta .= "../";
-    $max_salida--;
+$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 }
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
+$ruta.="../";
+$max_salida--;
+}
+include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."librerias_saia.php"); 
 
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+
+echo(librerias_jquery('1.7'));
+echo(estilo_bootstrap());
+echo(librerias_notificaciones());
+echo( librerias_validar_formulario('16') );
 ?>
 
 <!DOCTYPE html>
@@ -115,6 +121,7 @@ echo (librerias_validar_formulario('11'));
 			if( $('#titulo').val()=='' || $('#subtitulo').val()=='' || $('#noticia').val()=='' || $('#imagen_modulo').val()==''){
 				notificacion_saia('<b>Atenci&oacute;n</b><br>Todos los campos deben estar llenos','success','',3000);
 			}else{
+				<?php encriptar_sqli("formuploadajax",0,"form_info",$ruta_db_superior);?>
 				var formData = new FormData(document.getElementById("formuploadajax"));
 					$.ajax({
 				        type:"POST",

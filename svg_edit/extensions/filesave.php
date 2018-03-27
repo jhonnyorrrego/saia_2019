@@ -21,6 +21,10 @@ include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 
+require ($ruta_db_superior . 'vendor/autoload.php');
+require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
+include_once $ruta_db_superior . "StorageUtils.php";
+
 if(!isset($_POST['output_svg']) && !isset($_POST['output_png'])) {
 	die('post fail');
 }
@@ -46,17 +50,23 @@ if($suffix == '.svg') {
 	
 	$doc = busca_filtro_tabla(fecha_db_obtener('a.fecha', 'Y-m') . " as x_fecha, estado, iddocumento", "documento a", "a.iddocumento=" . $_REQUEST["iddoc"], "", $conn);
 	$formato_ruta = aplicar_plantilla_ruta_documento($doc[0]["iddocumento"]);
-	$ruta_archivos = ruta_almacenamiento("archivos");
+	//$ruta_archivos = ruta_almacenamiento("archivos");
+	$alm_archivos = new SaiaStorage("archivos");
 	// $ruta_guardar=RUTA_ARCHIVOS.$doc[0]["estado"]."/".$doc[0]["x_fecha"]."/".$doc[0]["iddocumento"]."/firma_externa/";
-	$ruta_guardar = $ruta_archivos . $formato_ruta . "/firma_externa/";
-	crear_destino($ruta_guardar);
+	$ruta_guardar = $formato_ruta . "/firma_externa/";
+	//crear_destino($ruta_guardar);
 	$aleatorio = rand(1, 5999);
 	$ruta_guardar2 = $ruta_guardar . $aleatorio . ".png";
 	
-	file_put_contents($ruta_guardar2, $contents);
+	$alm_archivos->almacenar_contenido($ruta_guardar2, $contents);
+	//file_put_contents($ruta_guardar2, $contents);
 	
-	$input_file = $ruta_guardar2;
-	$output_file = $ruta_guardar . $aleatorio . ".jpg";
+	$tmpfs = StorageUtils::get_memory_filesystem("imagen", "saia");
+	$tmpfs->write("firma_externa/" . $aleatorio . ".png", $contents); //se usa para crear directorio temporal
+	$ruta_temporal='saia://imagen/firma_externa/';
+
+	$input_file = $ruta_temporal . $aleatorio . ".png";
+	$output_file = $ruta_temporal . $aleatorio . ".jpg";
 	$input = imagecreatefrompng($input_file);
 	list($width, $height) = getimagesize($input_file);
 	$output = imagecreatetruecolor($width, $height);
@@ -66,7 +76,10 @@ if($suffix == '.svg') {
 	imagejpeg($output, $output_file);
 	
 	$contenido_archivo = file_get_contents($output_file);
-	file_put_contents($output_file, encrypt_blowfish($contenido_archivo, LLAVE_SAIA_CRYPTO));
+	//file_put_contents($output_file, encrypt_blowfish($contenido_archivo, LLAVE_SAIA_CRYPTO));
+
+	$output_file_final = $ruta_guardar . $aleatorio . ".jpg";
+	$alm_archivos->almacenar_contenido($output_file_final, encrypt_blowfish($contenido_archivo, LLAVE_SAIA_CRYPTO));
 	
 	unlink($input_file);
 	

@@ -10,19 +10,14 @@ while ($max_salida > 0) {
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."pantallas/anexos/librerias_anexos.php");
+include_once($ruta_db_superior."StorageUtils.php");
+include_once($ruta_db_superior.'filesystem/SaiaStorage.php');
 error_reporting(E_ALL | E_STRICT);
 $tipo =  explode('/', $_FILES['files']['type'][0]);
-if(@$_REQUEST["idtareas_listado"] || @$_REQUEST['listado_tareas_fk']){
+if(@$_REQUEST["idtareas_listado"] && @$_REQUEST['idlistado_tareas']){
 	
-	
-	if(@$_REQUEST["idtareas_listado"]){
-		$ruta = RUTA_ANEXOS_TAREAS.@$_REQUEST['listado_tareas_fk'].'/'.@$_REQUEST['idtareas_listado'].'/';
+	$ruta = RUTA_ANEXOS_TAREAS.@$_REQUEST['idlistado_tareas'].'/'.@$_REQUEST['idtareas_listado'].'/';
 		$idtareas_listado=@$_REQUEST['idtareas_listado'];
-	}else{
-		$ruta_temp = (rand());
-		$ruta = RUTA_ANEXOS_TAREAS.'temporal_tareas/'.@$_REQUEST['listado_tareas_fk'].'/t_'.@$ruta_temp.'/';
-		$idtareas_listado=$ruta_temp;
-	}
 	
 	$configuracion = busca_filtro_tabla("valor,nombre","configuracion","nombre LIKE 'extensiones_upload' OR nombre LIKE 'tamanio_maximo_upload'","",$conn);
 	
@@ -40,19 +35,21 @@ if(@$_REQUEST["idtareas_listado"] || @$_REQUEST['listado_tareas_fk']){
 			}
 		}		
 	}
-	$options = array('upload_dir'=> $ruta_db_superior.$ruta,
-			'upload_url'=> $ruta_db_superior.$ruta,
+	
+	$variable=StorageUtils::get_memory_filesystem('tareas','saia');
+	$variable->write('tareas_avanzadas/helloworld.txt','helloworld'); //se usa para crear directorio temporal
+	$ruta='saia://tareas/tareas_avanzadas/';	
+
+	$options = array('upload_dir'=> $ruta,
+			'upload_url'=> $ruta,
 			'accept_file_types' => '/\.('.$extenciones.')$/i',
 			'max_file_size' => $max_tamanio
 	);
-  	crear_destino($ruta_db_superior.$ruta);
+	
 	$upload_handler = new UploadHandler($options);
 	$files = $upload_handler->get_resultado_carga(1);
 	foreach ($files->files as $key => $value){
 		if(!isset($value->error)){
-			
-			
-			
 			$tipo =  explode('.', $_FILES['files']['name'][0]);
 			$cant=count($tipo);
 			if($cant)
@@ -62,16 +59,18 @@ if(@$_REQUEST["idtareas_listado"] || @$_REQUEST['listado_tareas_fk']){
 			}
 			$nombre = (rand());
 			
-			rename($ruta_db_superior.$ruta."/".$_FILES['files']['name'][0], $ruta_db_superior.$ruta."/".$nombre.'.'.$type);
-			chmod($ruta_db_superior.$ruta,0777);
-			chmod($ruta_db_superior.$ruta."/".$nombre.'.'.$type,0777);
-			
+			copy($ruta.$tipo[0].'.'.$type, $ruta.$nombre.'.'.$type);
+			$tipo_almacenamiento = new SaiaStorage("archivos");
+			$ruta_final = RUTA_ANEXOS_TAREAS.@$_REQUEST['idlistado_tareas'].'/'.@$_REQUEST['idtareas_listado'].'/';
+			$resultado=$tipo_almacenamiento->copiar_contenido_externo($ruta.$nombre.'.'.$type, $ruta_final.$nombre.'.'.$type);
+			$ruta_anexos = array("servidor" => $tipo_almacenamiento->get_ruta_servidor(), "ruta" =>$ruta_final.$nombre.'.'.$type);	
+			$ruta_anexos=json_encode($ruta_anexos);
 			$sql2 = "INSERT INTO tareas_listado_anexos
- (etiqueta,ruta,tipo,fk_tareas_listado,fecha_hora,funcionario_idfuncionario) values('".$_FILES['files']['name'][0]."','".$ruta.$nombre.'.'.$type."','".$type."','".$idtareas_listado."','".date('Y-m-d H:i:s')."','".usuario_actual('idfuncionario')."')";
+ (etiqueta,ruta,tipo,fk_tareas_listado,fecha_hora,funcionario_idfuncionario) values('".$_FILES['files']['name'][0]."','".$ruta_anexos."','".$type."','".$idtareas_listado."','".date('Y-m-d H:i:s')."','".usuario_actual('idfuncionario')."')";
 			phpmkr_query($sql2);
 			
-			if(file_exists($ruta_db_superior.$ruta."/".$nombre.'.'.$type)){
-                    $ruta_anexo=$ruta_db_superior.$ruta."/".$nombre.'.'.$type;
+			if(is_file($ruta.$nombre.'.'.$type)){
+                    $ruta_anexo=$ruta.$nombre.'.'.$type;
                     $fecha_actual=date("Y-m-d H:i");
         		    $responsable=busca_filtro_tabla("co_participantes,seguidores,responsable_tarea,nombre_tarea,evaluador","tareas_listado t","t.idtareas_listado=".$_REQUEST['idtareas_listado'],"",$conn);
         			if($responsable["numcampos"]){

@@ -1,3 +1,21 @@
+<?php
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0)
+{
+if(is_file($ruta."db.php"))
+{
+$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+}
+$ruta.="../";
+$max_salida--;
+}
+
+include_once($ruta_db_superior."librerias_saia.php");
+//echo(librerias_jquery());
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+?>
+
 <head>
 <script type="text/javascript" src="pantallas/mi_cuenta/js/pwd_meter.js"></script>
 <script>
@@ -20,7 +38,11 @@ $("#enviar_form").click(function(){
 			$("#nueva_pass").html('<span style="color:red">La contraseña debe ser buena u optima.</span>');
 			return false;
 		}
-		$("#cambio_pass").submit();
+
+		<?php encriptar_sqli("cambio_pass",0,"form_info",""); ?>		
+		if(salida_sqli){
+			$("#cambio_pass").submit();
+		}
 	});
 	
 });
@@ -145,7 +167,7 @@ $("#passwordPwd").blur(function(){
                 <div id="nSeqSymbolBonus" style="display:none"></div>
                 <div id="nSeqNumberBonus" style="display:none"></div>
                 <div id="nSeqAlphaBonus" style="display:none"></div>
-                <div id="nConsecAlphaLCBonus" style="display:none"></div>                               
+                <div id="nConsecAlphaLCBonus" style="display:none"></div>  
               </div>
             </div> 
             <div class="control-group">

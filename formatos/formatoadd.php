@@ -1,7 +1,4 @@
-<?php session_start(); ?>
-<?php ob_start(); ?>
 <?php
-
 $max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
 while($max_salida > 0) {
@@ -11,6 +8,8 @@ while($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
+
+include_once ($ruta_db_superior . "db.php");
 
 // Initialize common variables
 $x_idformato = Null;
@@ -48,16 +47,17 @@ if(isset($_REQUEST["consultar_contador"])) {
 	consultar_contador();
 	die();
 }
-?>
-<?php
 
-include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "formatos/librerias/header_formato.php");
 include_once ($ruta_db_superior . "formatos/librerias/funciones.php");
 include_once ($ruta_db_superior . "phpmkrfn.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "librerias/funciones.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 
+$validar_enteros=array("idcontador","x_idformato");
+desencriptar_sqli('form_info'); 
+echo(librerias_jquery());
 // Get action
 $sAction = @$_POST["a_add"];
 if(($sAction == "") || ((is_null($sAction)))) {
@@ -144,7 +144,6 @@ switch($sAction) {
 
 include ("header.php");
 ?>
-<script type="text/javascript" src="../js/jquery.js"></script>
 <script type="text/javascript" src="../js/jquery.validate.js"></script>
 <script type="text/javascript" src="../js/cmxforms.js"></script>
 <script type="text/javascript" src="../js/dhtmlXTree.js"></script>
@@ -168,7 +167,13 @@ EW_dateSep = "/"; // set date separator
  		}
  	});
 	// validar los campos del formato
-	$('#formatoadd').validate();
+	$('#formatoadd').validate({
+		submitHandler: function(form) {
+				<?php encriptar_sqli("formatoadd",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			    
+			  }
+	});
 	 	/*Valida que el nombre del campo no este repetido*/
  	$("#x_nombre").change(function(){
  		$.ajax({
@@ -239,23 +244,7 @@ function actualizar_contador(valor)
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Formato
 					Padre</span></td>
 			<td bgcolor="#F5F5F5">
-				<!--span class="phpmaker">
-        <?php
-								$formatos = busca_filtro_tabla("idformato,nombre,etiqueta", "formato A", "idformato<>" . $x_idformato, "nombre DESC", $conn);
-								if($formatos["numcampos"]) {
-									$inicio = '<SELECT name="x_cod_padre"><OPTION value="0">---Pertenece a la ra&iacute;z---</OPTION>';
-									$fin = '</SELECT>';
-								}
-								for($i = 0; $i < $formatos["numcampos"]; $i++) {
-									$check = "";
-									if($formatos[$i]["idformato"] == $x_cod_padre) {
-										$check = "SELECTED";
-									}
-									$inicio .= '<OPTION value="' . $formatos[$i]["idformato"] . '" ' . $check . ' >' . $formatos[$i]["etiqueta"] . '</OPTION>';
-								}
-								echo ($inicio . $fin);
-								?>
-      </span-->
+
 				<div id="esperando_formato">
 					<img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"
 						alt="">
@@ -337,7 +326,7 @@ function actualizar_contador(valor)
 
 $x_contador_idcontadorList = "<select name=\"x_contador_idcontador\" id=\"x_contador_idcontador\" onchange=\"actualizar_contador(this.value)\">";
 $x_contador_idcontadorList .= "<option value='0'>Crear Contador</option>";
-$sSqlWrk = "SELECT DISTINCT idcontador, nombre FROM contador" . " ORDER BY nombre Asc";
+$sSqlWrk = "SELECT DISTINCT idcontador, nombre FROM contador ORDER BY nombre Asc";
 $rswrk = phpmkr_query($sSqlWrk, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSqlWrk);
 if($rswrk) {
 	$rowcntwrk = 0;
@@ -376,12 +365,7 @@ echo $x_contador_idcontadorList;
 								?>
       </span></td>
 		</tr>
-		<!--tr>
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Tabla en la Base de Datos</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="text" name="x_tabla" id="x_tabla" value="<?php echo htmlspecialchars(@$x_tabla) ?>">
-</span></td>
-	</tr-->
+
 		<tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">librer&iacute;as</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker"> <input type="text"
@@ -572,12 +556,8 @@ echo $x_contador_idcontadorList;
 
 
 
-
-<?php include ("footer.php")?>
-<?php
-// //phpmkr_db_close($conn);
-?>
-<?php
+<?php 
+include ("footer.php");
 
 // -------------------------------------------------------------------------------
 // Function LoadData
@@ -641,8 +621,6 @@ function LoadData($sKey, $conn) {
 	phpmkr_free_result($rs);
 	return $LoadData;
 }
-?>
-<?php
 
 // -------------------------------------------------------------------------------
 // Function AddData
@@ -781,7 +759,7 @@ detalles_mostrar_".$x_nombre.".php";
 	$fieldList["ruta_adicionar"] = "'" . "adicionar_" . $x_nombre . ".php'";
 	$fieldList["funcionario_idfuncionario"] = usuario_actual("funcionario_codigo");
 	$fieldList["pertenece_nucleo"] = intval($x_pertenece_nucleo);
-	print_r($fieldList);
+	//print_r($fieldList);
 	// insert into database
 	$strsql = "INSERT INTO formato (";
 	$strsql .= implode(",", array_keys($fieldList));
@@ -920,18 +898,14 @@ Buscar:
 		eval('document.layers["esperando<?php echo $entidad; ?>"]');
 		document.poppedLayer.style.display = "";
 		}
-                    
-                    --></script>
-
-
-
+</script>
 <?php
 }
 
 function generar_campo_flujo($idformato, $idflujo) {
 	$buscar_campo = busca_filtro_tabla("", "campos_formato A", "formato_idformato=" . $idformato . " AND nombre='idflujo'", "", $conn);
-	
-	if($buscar_campo["numcampos"] == 0) {
+
+	if ($buscar_campo["numcampos"] == 0) {
 		$campo = "INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, acciones, predeterminado, etiqueta_html, orden, valor) VALUES(" . $idformato . ",'idflujo', 'idflujo', 'VARCHAR', '255', 0, 'a,e,b', '" . $idflujo . "', 'select', 0, 'Select id,title as nombre from diagram order by nombre')";
 		// Se deja el comentario para la modificacion de los flujos
 		// guardar_traza($campo);
@@ -947,26 +921,25 @@ function vincular_funcion_responsables($idformato) {
 	global $conn;
 	$formato = busca_filtro_tabla("", "formato", "idformato=" . $idformato, "", $conn);
 	$buscar_funcion = busca_filtro_tabla("", "funciones_formato A", "nombre_funcion='asignar_responsables'", "", $conn);
-	if(!$buscar_funcion["numcampos"] ) {
+	if (!$buscar_funcion["numcampos"]) {
 		$nueva_funcion = "INSERT INTO funciones_formato (nombre,nombre_funcion,etiqueta,descripcion, ruta, formato, acciones) VALUES ('{*asignar_responsables*}','asignar_responsables','asignar_responsables','asignar_responsables', 'funciones.php','" . $idformato . "','a')";
 		guardar_traza($nueva_funcion, $formato[0]["nombre_tabla"]);
 		phpmkr_query($nueva_funcion, $conn);
-		$idfuncion=phpmkr_insert_id();
+		$idfuncion = phpmkr_insert_id();
+	} else {
+		$idfuncion = $buscar_funcion[0]["idfunciones_formato"];
 	}
-	else{
-	    $idfuncion=$buscar_funcion[0]["idfunciones_formato"];
+	$buscar_funcion = busca_filtro_tabla("", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND nombre_funcion='asignar_responsables' AND B.formato_idformato=" . $idformato, "", $conn);
+	if (!$buscar_funcion["numcampos"] && $idfuncion) {
+		$sql = "INSERT INTO funciones_formato_enlace (formato_idformato,funciones_formato_fk) VALUES(" . $idformato . "," . $idfuncion . ")";
+		guardar_traza($sql, $formato[0]["nombre_tabla"]);
+		phpmkr_query($sql, $conn);
+		$idfunciones_formato_enlace = phpmkr_insert_id();
 	}
-	$buscar_funcion = busca_filtro_tabla("", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND nombre_funcion='asignar_responsables' AND B.formato_idformato=".$idformato, "", $conn);
-	if(!$buscar_funcion["numcampos"] && $idfuncion) {
-		$sql = "INSERT INTO funciones_formato_enlace (formato_idformato,funciones_formato_fk) VALUES(".$idformato."," . $idfuncion.")";
-    	guardar_traza($sql, $formato[0]["nombre_tabla"]);
-    	phpmkr_query($sql, $conn);
-    	$idfunciones_formato_enlace=phpmkr_insert_id();
+	if (@$idfuncion && $idfunciones_formato_enlace) {
+		return (true);
 	}
-	if(@$idfuncion && $idfunciones_formato_enlace){
-	    return(true);
-	}
-	return(false);
+	return (false);
 }
 
 function vincular_funcion_digitalizacion($idformato) {
@@ -974,70 +947,67 @@ function vincular_funcion_digitalizacion($idformato) {
 	$formato = busca_filtro_tabla("", "formato", "idformato=" . $idformato, "", $conn);
 	// --Vinculando funcion al adicionar de digitalizar
 	$buscar_funcion = busca_filtro_tabla("", "funciones_formato A", "nombre_funcion='digitalizar_formato'", "", $conn);
-	if(!$buscar_funcion["numcampos"]) {
+	if (!$buscar_funcion["numcampos"]) {
 		$nueva_funcion = "INSERT INTO funciones_formato (nombre,nombre_funcion,etiqueta,descripcion, ruta, formato, acciones) VALUES ('{*digitalizar_formato*}','digitalizar_formato','digitalizar_formato','digitalizar_formato', '../librerias/funciones_formatos_generales.php','" . $idformato . "','a,e')";
 		guardar_traza($nueva_funcion, $formato[0]["nombre_tabla"]);
 		phpmkr_query($nueva_funcion, $conn);
-		$idfuncion=phpmkr_insert_id();
+		$idfuncion = phpmkr_insert_id();
+	} else {
+		$idfuncion = $buscar_funcion[0]["idfunciones_formato"];
 	}
-	else{
-	    $idfuncion=$buscar_funcion[0]["idfunciones_formato"];
-	}
-	$buscar_funcion = busca_filtro_tabla("", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND nombre_funcion='digitalizar_formato' AND B.formato_idformato=".$idformato, "", $conn);
-	if(!$buscar_funcion["numcampos"] && $idfuncion) {
-		$sql = "INSERT INTO funciones_formato_enlace (formato_idformato,funciones_formato_fk) VALUES(".$idformato."," . $idfuncion.")";
-    	guardar_traza($sql, $formato[0]["nombre_tabla"]);
-    	phpmkr_query($sql, $conn);
-    	$idfunciones_formato_enlace=phpmkr_insert_id();
-	}
-	else if($buscar_funcion["numcampos"]){
-	    $idfunciones_formato_enlace=$buscar_funcion[0]["idfunciones_formato_enlace"];
+	$buscar_funcion = busca_filtro_tabla("", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND nombre_funcion='digitalizar_formato' AND B.formato_idformato=" . $idformato, "", $conn);
+	if (!$buscar_funcion["numcampos"] && $idfuncion) {
+		$sql = "INSERT INTO funciones_formato_enlace (formato_idformato,funciones_formato_fk) VALUES(" . $idformato . "," . $idfuncion . ")";
+		guardar_traza($sql, $formato[0]["nombre_tabla"]);
+		phpmkr_query($sql, $conn);
+		$idfunciones_formato_enlace = phpmkr_insert_id();
+	} else if ($buscar_funcion["numcampos"]) {
+		$idfunciones_formato_enlace = $buscar_funcion[0]["idfunciones_formato_enlace"];
 	}
 	// ---Vinculando funcion de validacion al digitalizar
-	
-	if($idfunciones_formato_enlace){
-    	$buscar_funcion = busca_filtro_tabla("", "funciones_formato A", "nombre_funcion='validar_digitalizacion_formato'", "", $conn);
-    	if(!$buscar_funcion["numcampos"]) {
-    		$nueva_funcion = "INSERT INTO funciones_formato (nombre,nombre_funcion,etiqueta,descripcion, ruta, formato, acciones) VALUES ('{*validar_digitalizacion_formato*}','validar_digitalizacion_formato','validar_digitalizacion_formato','validar_digitalizacion_formato', '../librerias/funciones_formatos_generales.php','" . $idformato . "','a,e')";
-    		guardar_traza($nueva_funcion, $formato[0]["nombre_tabla"]);
-    		phpmkr_query($nueva_funcion, $conn);
-    		$idfuncion_validar=phpmkr_insert_id();
-    	}
-    	else{
-    	    $idfuncion_validar=$buscar_funcion[0]["idfunciones_formato"];
-    	}
-    	$buscar_funcion = busca_filtro_tabla("", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND nombre_funcion='validar_digitalizacion_formato' AND B.formato_idformato=".$idformato, "", $conn);
-    	if(!$buscar_funcion["numcampos"] && $idfuncion_validar) {
-    		$sql = "INSERT INTO funciones_formato_enlace (formato_idformato,funciones_formato_fk) VALUES(".$idformato."," . $idfuncion_validar.")";
-        	guardar_traza($sql, $formato[0]["nombre_tabla"]);
-        	phpmkr_query($sql, $conn);
-        	$idfunciones_validar_enlace=phpmkr_insert_id();
-    	}
+
+	if ($idfunciones_formato_enlace) {
+		$buscar_funcion = busca_filtro_tabla("", "funciones_formato A", "nombre_funcion='validar_digitalizacion_formato'", "", $conn);
+		if (!$buscar_funcion["numcampos"]) {
+			$nueva_funcion = "INSERT INTO funciones_formato (nombre,nombre_funcion,etiqueta,descripcion, ruta, formato, acciones) VALUES ('{*validar_digitalizacion_formato*}','validar_digitalizacion_formato','validar_digitalizacion_formato','validar_digitalizacion_formato', '../librerias/funciones_formatos_generales.php','" . $idformato . "','a,e')";
+			guardar_traza($nueva_funcion, $formato[0]["nombre_tabla"]);
+			phpmkr_query($nueva_funcion, $conn);
+			$idfuncion_validar = phpmkr_insert_id();
+		} else {
+			$idfuncion_validar = $buscar_funcion[0]["idfunciones_formato"];
+		}
+		$buscar_funcion = busca_filtro_tabla("", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND nombre_funcion='validar_digitalizacion_formato' AND B.formato_idformato=" . $idformato, "", $conn);
+		if (!$buscar_funcion["numcampos"] && $idfuncion_validar) {
+			$sql = "INSERT INTO funciones_formato_enlace (formato_idformato,funciones_formato_fk) VALUES(" . $idformato . "," . $idfuncion_validar . ")";
+			guardar_traza($sql, $formato[0]["nombre_tabla"]);
+			phpmkr_query($sql, $conn);
+			$idfunciones_validar_enlace = phpmkr_insert_id();
+		}
 	}
 	
 	// Vinculando la accion de validar la digitalizar posterior a la accion correspondiente.
-	if(in_array("e", $x_banderas)) {
+	if (in_array("e", $x_banderas)) {
 		$accion = busca_filtro_tabla("", "accion", "nombre='aprobar'", "", $conn);
 	} else {
 		$accion = busca_filtro_tabla("", "accion", "nombre='adicionar'", "", $conn);
 	}
-	$buscar_funcion_accion = busca_filtro_tabla("", "funciones_formato_accion", "idfunciones_formato=" . $idfuncion_validar. " AND formato_idformato=" . $idformato, "", $conn);
-	if(!$buscar_funcion_accion["numcampos"]) {
+	$buscar_funcion_accion = busca_filtro_tabla("", "funciones_formato_accion", "idfunciones_formato=" . $idfuncion_validar . " AND formato_idformato=" . $idformato, "", $conn);
+	if (!$buscar_funcion_accion["numcampos"]) {
 		$accion_digita = "INSERT INTO funciones_formato_accion (idfunciones_formato, accion_idaccion, formato_idformato, momento, estado, orden) VALUES(" . $idfuncion_validar . "," . $accion[0]["idaccion"] . ", " . $idformato . ", 'POSTERIOR',1,1)";
 	} else {
 		$accion_digita = "UPDATE funciones_formato_accion SET idfunciones_formato=" . $idfuncion_validar . ", accion_idaccion=" . $accion[0]["idaccion"] . ", formato_idformato=" . $idformato . ", momento='POSTERIOR', estado=1, orden=1 WHERE idfunciones_formato_accion=" . $buscar_funcion_accion[0]["idfunciones_formato_accion"];
 	}
 	guardar_traza($accion_digita, $formato[0]["nombre_tabla"]);
 	phpmkr_query($accion_digita, $conn);
-	return(true);
+	return (true);
 }
 
 function vincular_campo_anexo($idformato) {
 	global $conn;
 	$formato = busca_filtro_tabla("", "formato", "idformato=" . $idformato, "", $conn);
 	$buscar_campo = busca_filtro_tabla("", "campos_formato A", "formato_idformato=" . $idformato . " AND nombre='anexo_formato'", "", $conn);
-	
-	if($buscar_campo["numcampos"] == 0) {
+
+	if ($buscar_campo["numcampos"] == 0) {
 		$campo = "INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, acciones, predeterminado, etiqueta_html, orden, valor) VALUES(" . $idformato . ",'anexo_formato', 'Anexos digitales', 'VARCHAR', '255', 0, 'a,e,b', '" . $idflujo . "', 'archivo', 0, '')";
 	} else {
 		$campo = "UPDATE campos_formato SET formato_idformato=" . $idformato . ", nombre='anexo_formato', etiqueta='Anexos digitales', tipo_dato='VARCHAR', longitud='255', obligatoriedad='0', acciones='a,e,b', predeterminado='" . $idflujo . "', etiqueta_html='archivo', valor='' WHERE idcampos_formato=" . $buscar_campo[0]["idcampos_formato"];
@@ -1059,7 +1029,7 @@ function crear_modulo_formato($idformato) {//Esta funcion es la misma que en for
 			} else {
 				$papa = $modulo_formato[0]["idmodulo"];
 			}
-			$sql = "INSERT INTO modulo(permiso_admin,pertenece_nucleo,busqueda,nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES (0,0,'1','" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','" . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "','centro','" . $papa . "','1','Permite administrar el formato " . $datos_formato[0]["etiqueta"] . ".')";
+			$sql = "INSERT INTO modulo(permiso_admin,pertenece_nucleo,busqueda,nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES (0,0,'1','" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','" . $datos_formato[0]["etiqueta"] . "','" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "','centro','" . $papa . "','1','Permite administrar el formato " . $datos_formato[0]["etiqueta"] . ".')";
 			guardar_traza($sql, $datos_formato[0]["nombre_tabla"]);
 			phpmkr_query($sql, $conn);
 			$modulo_id = phpmkr_insert_id();
@@ -1073,7 +1043,7 @@ function crear_modulo_formato($idformato) {//Esta funcion es la misma que en for
 			} else {
 				$papa = $modulo_formato[0]["idmodulo"];
 			}
-			$sql = "update modulo set tipo='secundario',nombre='" . $datos_formato[0]["nombre"] . "',etiqueta='" . $datos_formato[0]["etiqueta"] . "',cod_padre='" . $papa . "',enlace='formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "' where idmodulo=" . $submodulo_formato[0]["idmodulo"];
+			$sql = "update modulo set tipo='secundario',nombre='" . $datos_formato[0]["nombre"] . "',etiqueta='" . $datos_formato[0]["etiqueta"] . "',cod_padre='" . $papa . "',enlace='" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "' where idmodulo=" . $submodulo_formato[0]["idmodulo"];
 			guardar_traza($sql, $datos_formato[0]["nombre_tabla"]);
 			phpmkr_query($sql, $conn);
 		}
@@ -1088,7 +1058,7 @@ function crear_modulo_formato($idformato) {//Esta funcion es la misma que en for
 			} else {
 				$papa = $modulo_crear[0]["idmodulo"];
 			}
-			$sql = "INSERT INTO modulo(permiso_admin,pertenece_nucleo,busqueda,nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES (0,0,'1','crear_" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','Crear " . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_adicionar"] . "','centro','" . $modulo_crear[0]["idmodulo"] . "','1','Permite crear " . $datos_formato[0]["etiqueta"] . ".')";
+			$sql = "INSERT INTO modulo(permiso_admin,pertenece_nucleo,busqueda,nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES (0,0,'1','crear_" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','Crear " . $datos_formato[0]["etiqueta"] . "','" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_adicionar"] . "','centro','" . $modulo_crear[0]["idmodulo"] . "','1','Permite crear " . $datos_formato[0]["etiqueta"] . ".')";
 			guardar_traza($sql, $formato[0]["nombre_tabla"]);
 			phpmkr_query($sql, $conn);
 			$modulo_id = phpmkr_insert_id();
@@ -1098,7 +1068,7 @@ function crear_modulo_formato($idformato) {//Esta funcion es la misma que en for
 			} else {
 				$papa = $modulo_crear[0]["idmodulo"];
 			}
-			$sql = "update modulo set tipo='secundario',nombre='crear_" . $datos_formato[0]["nombre"] . "',etiqueta='Crear " . $datos_formato[0]["etiqueta"] . "',cod_padre='" . $papa . "',enlace='formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_adicionar"] . "' where idmodulo=" . $submodulo_formato[0]["idmodulo"];
+			$sql = "update modulo set tipo='secundario',nombre='crear_" . $datos_formato[0]["nombre"] . "',etiqueta='Crear " . $datos_formato[0]["etiqueta"] . "',cod_padre='" . $papa . "',enlace='" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_adicionar"] . "' where idmodulo=" . $submodulo_formato[0]["idmodulo"];
 			phpmkr_query($sql, $conn);
 		}
 	}

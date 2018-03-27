@@ -1,4 +1,10 @@
 <?php
+
+include_once("librerias_saia.php");
+echo(librerias_jquery());
+include_once("pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+
 $texto="";
 if(isset($_REQUEST["exportar"])&&$_REQUEST["exportar"]<>""){
   $sExport=$_REQUEST["exportar"];

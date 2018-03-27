@@ -1,7 +1,26 @@
 <?php
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0)
+{
+if(is_file($ruta."db.php"))
+{
+$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+}
+$ruta.="../";
+$max_salida--;
+}
+
+
 include_once("../header.php");
 include_once("../db.php");
 include_once("librerias/funciones.php");
+
+include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_jquery());
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idcampo","idformato");
+desencriptar_sqli('form_info');
 
 if(!isset($_REQUEST["enviado"]))
 {
@@ -82,7 +101,8 @@ for($i=0;$i<$campos["numcampos"];$i++)
 </tr>
 <tr>
 <td bgcolor="#F5F5F5" colspan=2 align=center>
-<input type=submit value="Aceptar" name="enviado"></td>
+<input type="hidden" value="Aceptar" name="enviado">
+<input type=submit value="Aceptar"></td>
 <input type=hidden value="<?php echo $_REQUEST["idformato"]; ?>" name="idformato">
 <input type=hidden value="<?php echo $_REQUEST["idcampo"]; ?>" name="idcampo">
 </tr>
@@ -91,6 +111,7 @@ for($i=0;$i<$campos["numcampos"];$i++)
   </body>
 </html>
 <?php
+encriptar_sqli("adicionales",1,"form_info",$ruta_db_superior);
 }
 else
 {

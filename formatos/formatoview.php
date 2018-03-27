@@ -64,7 +64,7 @@ switch ($sAction)
 ?>
 <?php include_once($ruta_db_superior."header.php") ?>
 <p><br /><a href="<?php echo "formatoedit.php?key=" . urlencode($sKey); ?>">Editar</a>&nbsp;   
-<a href="<?php echo $ruta_db_superior . FORMATOS_SAIA; ?>formatoadd_paso2.php?key="<?php echo urlencode($sKey); ?>">Editar cuerpo</a>&nbsp;
+<a href="<?php echo $ruta_db_superior . FORMATOS_SAIA; ?><?php echo "formatoadd_paso2.php?key=" . urlencode($sKey); ?>">Editar cuerpo</a>&nbsp;
 <a href="<?php echo $ruta_db_superior . FORMATOS_SAIA; ?>campos_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Campos del Formato</a>&nbsp;&nbsp;
 <a href="<?php echo $ruta_db_superior . FORMATOS_SAIA; ?>funciones_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Funciones del Formato</a>&nbsp;&nbsp;
 <a href="<?php echo $ruta_db_superior . FORMATOS_SAIA; ?>llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@<?php echo $_REQUEST["key"];?>">Generar el Formato</a>&nbsp;&nbsp;

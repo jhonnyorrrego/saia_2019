@@ -468,12 +468,17 @@ class SqlOracle extends SQL2 {
 		return ($resultado);
 	}
 
+	function invocar_radicar_documento($iddocumento, $idcontador, $funcionario) {
+		$strsql="CALL sp_asignar_radicado($iddocumento, $idcontador, $funcionario)";
+		$this->Ejecutar_Sql($strsql) or die($strsql);
+	}
+
 	function listar_campos_tabla($tabla = NULL, $tipo_retorno = 0) {
 		if ($tabla == NULL)
 			$tabla = $_REQUEST["tabla"];
 		$datos_tabla = $this->Ejecutar_Sql("SELECT column_name AS Field FROM user_tab_columns WHERE table_name='" . strtoupper($tabla) . "' ORDER BY column_name ASC");
 		$lista_campos = array();
-		while($fila = $this->sacar_fila($datos_tabla)) {
+		while ($fila = $this->sacar_fila($datos_tabla)) {
 			if ($tipo_retorno) {
 				$lista_campos[] = array_map(strtolower, $fila);
 			} else {

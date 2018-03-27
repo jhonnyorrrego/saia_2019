@@ -2,6 +2,10 @@
 <meta http-equiv="content-type" content="text/html; charset=utf-8">
 <?php
 include_once ("../../db.php");
+include_once("../../pantallas/lib/librerias_cripto.php");
+if (isset($_REQUEST["form_info"]) && $_REQUEST["form_info"]!="") {
+	desencriptar_sqli('form_info');
+}
 
 if(isset($_REQUEST["accion"]))
   {$_REQUEST["accion"]();
@@ -135,6 +139,7 @@ function guardar_item()
 			redirecciona("../" . $formato[0]["nombre"] . "/" . $formato[0]["ruta_adicionar"] . "?idpadre=" . $doc_padre[0][0] . "&idformato=" . $padre[0]["idformato"] . "&padre=" . $_REQUEST["padre"]);
 	}
 }
+
 function crear_pretexto_item($asunto,$contenido){
 global $conn,$ruta_db_superior;
 $campos="asunto";

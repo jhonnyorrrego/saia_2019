@@ -10,6 +10,11 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("listado_tareas_fk","responsable_tarea","evaluador","idtareas_listado","idtareas_listado_recur");
+desencriptar_sqli('form_info');
+
 include_once($ruta_db_superior."class_transferencia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 echo(estilo_bootstrap());
@@ -139,7 +144,7 @@ if($_REQUEST['guardar']==1){
 		<div class="control-group" nombre="etiqueta">
 			<legend><?php echo($titulo_pantalla); ?></legend>
 		</div>
-		<form id="formulario_tareas" class="form-horizontal">
+		<form id="formulario_tareas" name="formulario_tareas" class="form-horizontal" method="post">
 		
 		
 		<?php
@@ -452,7 +457,13 @@ if($_REQUEST['guardar']==1){
 	<script>
 		
 	$(document).ready(function(){
-		$("#formulario_tareas").validate();
+		$("#formulario_tareas").validate({
+			submitHandler: function(form) {
+				<?php encriptar_sqli("formulario_tareas",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			    
+			  }
+		});
    	cargar_seleccionados_responsable_tarea();
   	cargar_seleccionados_co_participantes();
   	cargar_seleccionados_seguidores();

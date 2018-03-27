@@ -412,7 +412,7 @@ class SqlMysql extends SQL2 {
 	 * <Post-condiciones>
 	 */
 	function Ultimo_Insert() {
-		if($this->ultimo_insert) {
+		if ($this->ultimo_insert) {
 			return $this->ultimo_insert;
 		}
 		return @mysqli_insert_id($this->Conn->conn);
@@ -591,6 +591,11 @@ class SqlMysql extends SQL2 {
 		return ($resultado);
 	}
 
+	function invocar_radicar_documento($iddocumento, $idcontador, $funcionario) {
+		$strsql="CALL sp_asignar_radicado($iddocumento, $idcontador, $funcionario)";
+		$this->Ejecutar_Sql($strsql) or die($strsql);
+	}
+
 	function listar_campos_tabla($tabla = NULL, $tipo_retorno = 0) {
 		if ($tabla == NULL)
 			$tabla = $_REQUEST["tabla"];
@@ -708,6 +713,7 @@ class SqlMysql extends SQL2 {
 				}
 				break;
 		}
+		return $campo;
 	}
 
 	public function formato_crear_indice($bandera, $nombre_campo, $nombre_tabla) {

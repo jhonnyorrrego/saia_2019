@@ -13,7 +13,7 @@ include_once($ruta_db_superior."librerias_saia.php");
 echo(librerias_html5());
 echo(librerias_jquery("1.7"));
 echo(estilo_bootstrap()); 
-echo(librerias_validar_formulario());
+echo(librerias_validar_formulario('1.16'));
 ?>    
 <!DOCTYPE html>     
 <html>

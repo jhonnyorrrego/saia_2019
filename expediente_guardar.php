@@ -1,6 +1,9 @@
 <?php
 include_once("db.php");
 include_once("pantallas/expediente/librerias.php");
+include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("iddoc","expediente_actual");
+desencriptar_sqli('form_info');
 
 if(@$_REQUEST["iddoc"])  //si estoy llenando desde la pantalla del menu intermedio del documento
 {

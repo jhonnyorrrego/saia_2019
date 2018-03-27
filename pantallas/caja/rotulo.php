@@ -11,14 +11,23 @@ $ruta.="../";
 $max_salida--;
 }
 include_once ($ruta_db_superior."db.php");
+include_once($ruta_db_superior."StorageUtils.php");
+require_once $ruta_db_superior.'filesystem/SaiaStorage.php';
+
 ?>
 <html lang="en">
 <?php
 clearstatcache();
 $no_cache = md5(time()); 
+$almacenamiento=new SaiaStorage(RUTA_LOGO_SAIA);
 
 $conf=busca_filtro_tabla("","configuracion a","nombre='logo'","",$conn);
+$logo=json_decode($conf[0]['valor']);
+if($almacenamiento->get_filesystem()->has($ruta_imagen->ruta) && $logo){
+	$logo=StorageUtils::get_binary_file($conf[0]['valor']);
+} else {
 $logo=$conf[0]["valor"];
+}
 
 if(@$_REQUEST["idcaja"]){
 	rotulo_caja($_REQUEST["idcaja"]);
@@ -71,6 +80,8 @@ function imprime(atras){
 
 function rotulo_caja($id){
 	global $logo, $ruta_db_superior;
+  $tipo_almacenamiento = new SaiaStorage(RUTA_QR);
+  
 	$datos=busca_filtro_tabla(fecha_db_obtener('fecha_extrema_i','Y-m-d H:i')." as fecha_i, ".fecha_db_obtener('fecha_extrema_f','Y-m-d H:i')." as fecha_f, a.*","caja a","a.idcaja=".$id,"",$conn);
 	$serie=busca_filtro_tabla("","serie a","a.idserie=".$datos[0]["serie_idserie"],"",$conn);
 	if($serie[0]["cod_padre"]){
@@ -78,25 +89,30 @@ function rotulo_caja($id){
 		
 	}	
 	$dep=busca_filtro_tabla("","dependencia a, dependencia_cargo b","a.iddependencia=b.dependencia_iddependencia and b.funcionario_idfuncionario=".$datos[0]["funcionario_idfuncionario"]." and b.estado=1","",$conn);
+  $ruta_imagen=json_decode($datos[0]["ruta_qr"]);
 	
-	if($datos[0]["ruta_qr"] && is_file($ruta_db_superior.$datos[0]["ruta_qr"])){
-		$ruta_qr=$ruta_db_superior.$datos[0]["ruta_qr"];
+	if($tipo_almacenamiento->get_filesystem()->has($ruta_imagen->ruta) && $ruta_imagen){    
+    $archivo_binario=StorageUtils::get_binary_file($datos[0]["ruta_qr"]);
+	  $ruta_qr=$archivo_binario;
 	}
 	else{
 		include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 		$cadena="idcaja=".$id;
 		$codificada=encrypt_blowfish($cadena,LLAVE_SAIA_CRYPTO);
 		$datos_qr=PROTOCOLO_CONEXION.RUTA_PDF."/pantallas/caja/info_caja_exp.php?key_cripto=".$codificada;
-		$ruta=RUTA_QR."caja/".$id."/";
+		$ruta="caja/".$id."/";
 		$imagen=generar_qr_datos($ruta,$datos_qr);
+    $imagen=json_encode($imagen);
 		$sql_documento_qr="UPDATE caja SET ruta_qr='".$imagen."' WHERE idcaja=".$id;	  	  
 	  phpmkr_query($sql_documento_qr);
-		$ruta_qr=$ruta_db_superior.$imagen;
+    $archivo_binario=StorageUtils::get_binary_file($imagen);
+    
+		$ruta_qr=$archivo_binario;
 	}	
 ?>
 <table style="border-collapse:collapse;font-family:arial;font-size:8pt; width:453px; height: 650px; margin: 15px 0px 0px 33px;" border="1px">
 	<tr>
-		<td colspan="3" style="text-align:center"><img src="<?php echo $ruta_db_superior.$logo; ?>" border="0px"><br /><img src="<?php echo($ruta_qr); ?>"></td>
+		<td colspan="3" style="text-align:center"><img src="<?php echo $logo; ?>" border="0px"><br /><img src="<?php echo($ruta_qr); ?>"></td>
 	</tr>
 	<tr>
 		<td><b>FONDO</b></td>
@@ -156,6 +172,8 @@ function rotulo_caja($id){
 }
 function rotulo_carpeta($id){
 	global $conn, $logo, $ruta_db_superior;
+  $tipo_almacenamiento = new SaiaStorage(RUTA_QR);
+      
 	$datos=busca_filtro_tabla(fecha_db_obtener('fecha_extrema_i','Y-m-d')." as fecha_i, ".fecha_db_obtener('fecha_extrema_f','Y-m-d')." as fecha_f, a.*","expediente a","a.idexpediente=".$id,"",$conn);
 	$caja=busca_filtro_tabla("","caja a","a.idcaja=".$datos[0]["fk_idcaja"],"",$conn);
 	$serie=busca_filtro_tabla("","serie a","a.idserie=".$datos[0]["serie_idserie"],"",$conn);
@@ -175,19 +193,24 @@ function rotulo_carpeta($id){
 	$subseccionii=busca_filtro_tabla("nombre","dependencia a","a.iddependencia=".$secciones[1],"",$conn);	
 	$seccion=busca_filtro_tabla("nombre","dependencia a","a.iddependencia=".$subseccioni[0]['cod_padre'],"",$conn);
 	
-	if($datos[0]["ruta_qr"] && is_file($ruta_db_superior.$datos[0]["ruta_qr"])){
-		$ruta_qr=$ruta_db_superior.$datos[0]["ruta_qr"];
+  $ruta_imagen=json_decode($datos[0]["ruta_qr"]);	  
+	
+	if($tipo_almacenamiento->get_filesystem()->has($ruta_imagen->ruta) && $ruta_imagen){
+    $archivo_binario=StorageUtils::get_binary_file($datos[0]['ruta_qr']);
+		$ruta_qr=$archivo_binario;
 	}
 	else{
 		include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 		$cadena="idexpediente=".$id;
 		$codificada=encrypt_blowfish($cadena,LLAVE_SAIA_CRYPTO);
 		$datos_qr=PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/pantallas/caja/info_caja_exp.php?key_cripto=".$codificada;
-		$ruta=RUTA_QR."expediente/".$id."/";
+		$ruta="expediente/".$id."/";
 		$imagen=generar_qr_datos($ruta,$datos_qr);
+    $imagen=json_encode($imagen);
 		$sql_documento_qr="UPDATE expediente SET ruta_qr='".$imagen."' WHERE idexpediente=".$id;	  	  
 	  phpmkr_query($sql_documento_qr);
-		$ruta_qr=$ruta_db_superior.$imagen;
+    $archivo_binario=StorageUtils::get_binary_file($imagen);
+		$ruta_qr=$archivo_binario;
 	}
 ?>
 <style>
@@ -271,7 +294,7 @@ filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 		<td style="text-align:center"><?php echo ($caja[0]["no_cajas"]); ?></td>
 	</tr>
 	<tr>
-		<td colspan="3" style="text-align:center"><img src="<?php echo $ruta_db_superior.$logo; ?>" border="0px">
+		<td colspan="3" style="text-align:center"><img src="<?php echo $logo; ?>" border="0px">
 			<br>
 			<img src="<?php echo $ruta_qr; ?>">
 		</td>
@@ -283,17 +306,25 @@ filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 function generar_qr_datos($filename,$datos,$matrixPointSize = 2,$errorCorrectionLevel = 'L'){      
 	global $ruta_db_superior;
 	include_once ($ruta_db_superior."phpqrcode/qrlib.php");    
+      
 	if ($datos){        
 		if(trim($datos) == ''){          
 			return false;
 		}
 		else{                              
-			crear_destino($ruta_db_superior.$filename);
 			$filename .= 'qr'.date('Y_m_d_H_m_s').'.png'; 
-			if(file_exists($ruta_db_superior.$filename)){
-			}
-			QRcode::png($datos,$ruta_db_superior.$filename, $errorCorrectionLevel, $matrixPointSize, 0);      
-			return $filename;
+      
+      ob_start(); 
+			QRcode::png($datos,false, $errorCorrectionLevel, $matrixPointSize, 0);
+      $imageString = ob_get_contents();
+			ob_end_clean();
+            
+			$almacenamiento = new SaiaStorage(RUTA_QR);
+      $almacenamiento->almacenar_contenido($filename, $imageString);
+      
+      $ruta_qr = array ("servidor" => $almacenamiento->get_ruta_servidor(), "ruta" => $filename);
+
+      return $ruta_qr;
 		}  
 	}
 	else{          

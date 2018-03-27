@@ -16,6 +16,15 @@ include_once ($ruta_db_superior . "asignacion.php");
 include_once ($ruta_db_superior . FORMATOS_SAIA . "librerias/funciones_acciones.php");
 include_once ($ruta_db_superior . "bpmn/librerias_formato.php");
 
+include_once($ruta_db_superior.'pantallas/documento/class_documento_elastic.php');
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+
+
+if (isset($_REQUEST["form_info"]) && $_REQUEST["form_info"]!="") {
+	desencriptar_sqli('form_info');
+}
+
 /*<Clase>
  <Nombre>buscar_funcionarios</Nombre>
  <Parametros>$dependencia:id de las dependencias a revisar;$arreglo:variable donde se va a guardar el resultado</Parametros>
@@ -311,20 +320,20 @@ function busca_cargofuncionario($tipo, $dato, $dependencia) {
 }
 
 /*
- <Clase>
- <Nombre>transferir_archivo_prueba
- <Parametros>$datos-vector con los datos del formulario necesarios para hacer la transferencia;
- $tipo-; $destino-lista de usuarios a quienes se enviar� el documento;
- $adicionales-otros datos referentes a la transferencia;
- $anexos indica si la transferencia tiene anexos relacionados
- <Responsabilidades>enviar el documento a los funcionarios destino
- <Notas>
- <Excepciones>
- <Salida>
- <Pre-condiciones>
- <Post-condiciones>
- */
-function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NULL) {
+<Clase>
+<Nombre>transferir_archivo_prueba
+<Parametros>$datos-vector con los datos del formulario necesarios para hacer la transferencia;
+$tipo-; $destino-lista de usuarios a quienes se enviar� el documento;
+$adicionales-otros datos referentes a la transferencia;
+$anexos indica si la transferencia tiene anexos relacionados
+<Responsabilidades>enviar el documento a los funcionarios destino
+<Notas>
+<Excepciones>
+<Salida>
+<Pre-condiciones>
+<Post-condiciones>
+*/
+function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos=NULL) {
 	global $conn;
 	$idtransferencia = array();
 	sort($destino);
@@ -429,18 +438,17 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 }
 
 /*
- <Clase>
- <Nombre>aprobar
- <Parametros>$iddoc-id del documento en proceso
- <Responsabilidades>para el proceso de recoleccion de firmas (aprobacion de la plantilla)
- <Notas>Dependiendo del formato que pertenece el documento se valida si al momento de aprobar el documento se deben enviar transferencia a otros destinos, por ejemplo el memorando que se envia a destinos y copias.
- <Excepciones>si el usuario no es el siguiente por aprobar muestra un mensaje de error
- <Salida>
- <Pre-condiciones>
- <Post-condiciones>cambia el estado del nodo de POR_APROBAR a APROBADO, si es el ultimo por aprobar
- cambia el estado del documento a APROBADO
- */
-
+<Clase>
+<Nombre>aprobar
+<Parametros>$iddoc-id del documento en proceso
+<Responsabilidades>para el proceso de recoleccion de firmas (aprobacion de la plantilla)
+<Notas>Dependiendo del formato que pertenece el documento se valida si al momento de aprobar el documento se deben enviar transferencia a otros destinos, por ejemplo el memorando que se envia a destinos y copias.
+<Excepciones>si el usuario no es el siguiente por aprobar muestra un mensaje de error
+<Salida>
+<Pre-condiciones>
+<Post-condiciones>cambia el estado del nodo de POR_APROBAR a APROBADO, si es el ultimo por aprobar
+cambia el estado del documento a APROBADO
+*/
 function aprobar($iddoc = 0, $opcion = 0) {
 	global $ruta_db_superior, $conn;
 	$transferir = 1;
@@ -500,7 +508,7 @@ function aprobar($iddoc = 0, $opcion = 0) {
 				if ($restrictiva["numcampos"] && $restrictiva[0]["restrictivo"] == 1) {//busco cuantos faltan por aprobar si es restrictiva
 					$cuantos_faltan = busca_filtro_tabla("count(idtransferencia) as cuantos", "buzon_entrada", "nombre='POR_APROBAR' and activo=1 and ruta_idruta=" . $registro_actual[0]["ruta_idruta"] . " and archivo_idarchivo=" . $_REQUEST["iddoc"], "", $conn);
 					if ($cuantos_faltan[0]["cuantos"]) {
-						$valores = $iddoc . ",'VERIFICACION',$origen," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",$destino,'DOCUMENTO',1,1";
+                        $valores = $iddoc . ",'VERIFICACION',$origen," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",$destino,'DOCUMENTO',1,1";
 						if ($registro_actual[$i]["ruta_idruta"] <> "") {
 							$valores .= "," . $registro_actual[$i]["ruta_idruta"];
 						} else {
@@ -552,7 +560,7 @@ function aprobar($iddoc = 0, $opcion = 0) {
 				}
 				$respuestas = busca_filtro_tabla("origen,estado", "respuesta,documento", "iddocumento=origen and destino='" . $iddoc . "' and estado in('TRAMITE','ACTIVO','APROBADO')", "", $conn);
 				if ($respuestas["numcampos"] > 0) {
-					$origen_respuesta = busca_filtro_tabla("origen", "buzon_salida", "archivo_idarchivo=$iddoc and nombre='BORRADOR'", "", $conn);
+                    $origen_respuesta = busca_filtro_tabla("origen", "buzon_salida", "archivo_idarchivo=$iddoc and nombre='BORRADOR'", "", $conn);
 					$datos["origen"] = $origen_respuesta[0]["origen"];
 					$datos["nombre"] = "RESPONDIDO";
 					$datos["tipo"] = "";
@@ -624,30 +632,30 @@ function crear_pdf($idformato, $iddoc) {
 }
 
 /*<Clase>
- <Nombre>mostrar_formato</Nombre>
- <Parametros>$idformato:id del formato;$iddoc: id del documento</Parametros>
- <Responsabilidades><Responsabilidades>
- <Notas></Notas>
- <Excepciones></Excepciones>
- <Salida></Salida>
- <Pre-condiciones><Pre-condiciones>
- <Post-condiciones><Post-condiciones>
- </Clase>  */
-function mostrar_formato($idformato, $iddoc) {
-	global $conn;
+<Nombre>mostrar_formato</Nombre>
+<Parametros>$idformato:id del formato;$iddoc: id del documento</Parametros>
+<Responsabilidades><Responsabilidades>
+<Notas></Notas>
+<Excepciones></Excepciones>
+<Salida></Salida>
+<Pre-condiciones><Pre-condiciones>
+<Post-condiciones><Post-condiciones>
+</Clase>  */
+function mostrar_formato($idformato,$iddoc) {
+ global $conn;
 	if (!isset($_REQUEST["no_redirecciona"])) {
-		$datos_formato = busca_filtro_tabla("ruta_mostrar,nombre,mostrar_pdf", "formato", "idformato=$idformato", "", $conn);
-		if ($datos_formato[0]["mostrar_pdf"] == 1) {
-			$url = $ruta_db_superior . "pantallas/documento/visor_documento.php?iddoc=" . $iddoc . "&idformato=$idformato&actualizar_pdf=1";
-		} else if ($datos_formato[0]["mostrar_pdf"] == 2) {
-			$url = $ruta_db_superior . "pantallas/documento/visor_documento.php?iddoc=" . $iddoc . "&pdf_word=1";
-		} else {
-		    $url = FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?iddoc=" . $iddoc . "&idformato=$idformato";
+ $datos_formato=busca_filtro_tabla("ruta_mostrar,nombre,mostrar_pdf","formato","idformato=$idformato","",$conn);
+ if($datos_formato[0]["mostrar_pdf"] == 1) {
+ 	$url=$ruta_db_superior."pantallas/documento/visor_documento.php?iddoc=".$iddoc."&idformato=$idformato&actualizar_pdf=1";
+ } else if($datos_formato[0]["mostrar_pdf"]==2) {
+ 	$url=$ruta_db_superior."pantallas/documento/visor_documento.php?iddoc=".$iddoc."&pdf_word=1";
+ } else {
+ 	$url= FORMATOS_CLIENTE . $datos_formato[0]["nombre"]."/".$datos_formato[0]["ruta_mostrar"]."?iddoc=".$iddoc."&idformato=$idformato";
+ }
+ if(!@$_REQUEST['aprobacion_externa']){
+    redirecciona($url);
 		}
-		if (!@$_REQUEST['aprobacion_externa']) {
-			redirecciona($url);
-		}
-	}
+ }
 }
 
 function mostrar_estado_proceso($idformato, $iddoc) {
@@ -748,34 +756,34 @@ function mostrar_estado_proceso($idformato, $iddoc) {
 							$fila_abierta = 1;
 						}
 
-						if ($fila["nombre"] == "POR_APROBAR") {
-							echo '<td align=left><img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/firmas/faltante.jpg" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '">&nbsp;&nbsp;&nbsp;<br /></td>';
-							if ($iniciales == ($fila["funcionario_codigo"]))
-								$firma_actual = true;
-						} else if ($mostrar_firmas == 1) {
-							$firma = busca_filtro_tabla("firma", "funcionario", "funcionario_codigo='" . $fila["funcionario_codigo"] . "'", "", $conn);
+						if($fila["nombre"]=="POR_APROBAR"){
+							echo '<td align=left><img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/firmas/faltante.jpg" style="width:'.$ancho_firma[0]["valor"].'px; height:'.$alto_firma[0]["valor"].'px;">&nbsp;&nbsp;&nbsp;<br /></td>';
+							if($iniciales == ($fila["funcionario_codigo"]))
+							$firma_actual = true;
+						}else if($mostrar_firmas==1){
+							$firma=busca_filtro_tabla("firma","funcionario","funcionario_codigo='".$fila["funcionario_codigo"]."'","",$conn);
 							echo '<td align="left">';
-							if ($firma[0]["firma"] <> "") {
-								$pagina_actual = $_SERVER["PHP_SELF"];
-								echo '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . FORMATOS_SAIA . 'librerias/mostrar_foto.php?codigo=' . $fila["funcionario_codigo"];
-								echo '" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '"/><br />';
-							} else
-								echo '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/firmas/blanco.jpg" width="100" height="' . $alto_firma[0]["valor"] . '" ><br />';
+							if($firma[0]["firma"]<>""){
+								$pagina_actual=$_SERVER["PHP_SELF"];
+								echo '<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL. FORMATOS_SAIA . 'librerias/mostrar_foto.php?codigo='.$fila["funcionario_codigo"];
+								echo '" style="width:'.$ancho_firma[0]["valor"].'px; height:'.$alto_firma[0]["valor"].'px;"/><br />';
+							}else
+								echo '<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/firmas/blanco.jpg" style="width:'.$ancho_firma[0]["valor"].'px; height:'.$alto_firma[0]["valor"].'px;" ><br />';
 
-							echo "<strong>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</strong>&nbsp;&nbsp;&nbsp;<br />";
-							if ($cargos["numcampos"]) {
-								for ($h = 0; $h < $cargos["numcampos"]; $h++)
-									echo formato_cargo($cargos[$h]["nombre"]) . "<br/>";
+							echo "<strong>".mayusculas($fila["nombres"]." ".$fila["apellidos"])."</strong>&nbsp;&nbsp;&nbsp;<br />";
+							if($cargos["numcampos"]){
+								for($h=0;$h<$cargos["numcampos"];$h++)
+								echo formato_cargo($cargos[$h]["nombre"])."<br/>";
 							}
 							if ($iniciales == ($fila["funcionario_codigo"]))
 								$firma_actual = true;
 							echo "</td>";
 						} else {
-							echo "<td align='left'><img src='" . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/firmas/blanco.jpg' width='" . $ancho_firma[0]["valor"] . "' height='" . $alto_firma[0]["valor"] . "'>
-							<br /><b>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</b>&nbsp;&nbsp;&nbsp;<br />";
-							if ($cargos["numcampos"]) {
-								for ($h = 0; $h < $cargos["numcampos"]; $h++)
-									echo formato_cargo($cargos[$h]["nombre"]) . "<br/>";
+							echo "<td align='left'><img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/firmas/blanco.jpg' style='width:".$ancho_firma[0]["valor"]."px; height:".$alto_firma[0]["valor"]."px;'>
+							<br /><b>".mayusculas($fila["nombres"]." ".$fila["apellidos"])."</b>&nbsp;&nbsp;&nbsp;<br />";
+							if($cargos["numcampos"]){
+								for($h=0;$h<$cargos["numcampos"];$h++)
+									echo formato_cargo($cargos[$h]["nombre"])."<br/>";
 							}
 							if ($iniciales == ($fila["funcionario_codigo"]))
 								$firma_actual = true;
@@ -1119,16 +1127,16 @@ function radicar_plantilla() {
 }
 
 /*
- <Clase>
- <Nombre> enrutar_documento
- <Parametros> pagina_siguiente si se desea una redireccion directa
- <Responsabilidades> Enrutar los documentos a sus respectivos proceso post aprobacion, radicacion etc.
- <Notas>
- <Excepciones>
- <Salida> alerta si el formato no coincide con un formato valido
- <Pre-condiciones> El documento debio haber sido creado de lo contrario envia a pendientelist.php
- <Post-condiciones> Pantalla que el usuario debe ver luego de haber realizado accion sobre el documento
- */
+<Clase>
+<Nombre> enrutar_documento
+<Parametros> pagina_siguiente si se desea una redireccion directa
+<Responsabilidades> Enrutar los documentos a sus respectivos proceso post aprobacion, radicacion etc.
+<Notas>
+<Excepciones>
+<Salida> alerta si el formato no coincide con un formato valido
+<Pre-condiciones> El documento debio haber sido creado de lo contrario envia a pendientelist.php
+<Post-condiciones> Pantalla que el usuario debe ver luego de haber realizado accion sobre el documento
+*/
 function enrutar_documento($url = "", $target = "centro") {
 	global $conn;
 	# Utilizada para que enlos webservice no redireccione
@@ -1161,7 +1169,7 @@ function enrutar_documento($url = "", $target = "centro") {
 				} else {
 					$formato_doc = busca_filtro_tabla("A.nombre,A.idformato", "formato A, documento B", "B.iddocumento=" . $iddoc . " AND lower(A.nombre)=lower(B.plantilla)", "", $conn);
 					if ($formato_doc["numcampos"]) {
-						$nom_formato = $formato_doc[0]["nombre"];
+                        $nom_formato = $formato_doc[0]["nombre"];
 						if (@$_SESSION["tipo_dispositivo"] == 'movil') {
 							abrir_url("ordenar.php?key=" . $iddoc . "&accion=mostrar&mostrar_formato=1", "_self");
 						} else {

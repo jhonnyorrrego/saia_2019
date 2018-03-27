@@ -1,4 +1,7 @@
-<?php include ("db.php") ?>
+<?php include ("db.php");
+include_once("pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+ ?>
 <?php
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
@@ -79,7 +82,12 @@ if (EW_this.x_nombre && !EW_hasValue(EW_this.x_nombre, "TEXT" )) {
 	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor escriba el nombre del perfil','warning','',4000);
 		return false;
 }
-return true;
+<?php encriptar_sqli("perfiladd"); ?>
+
+if(salida_sqli){
+	return true;
+}
+
 }
 
 //-->
@@ -120,7 +128,6 @@ return true;
 // Function LoadData
 // - Load Data based on Key Value sKey
 // - Variables setup: field variables
-
 function LoadData($sKey,$conn)
 {   global $x_idperfil;
     global $x_nombre;
@@ -195,4 +202,5 @@ function AddData($conn)
 	phpmkr_query($strsql, $conn) or error("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
 	return true;
 }
+
 ?>

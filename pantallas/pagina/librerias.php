@@ -10,18 +10,20 @@ while ($max_salida > 0) {
 }
 include_once($ruta_db_superior . "db.php");
 
-
-
+require_once($ruta_db_superior . 'StorageUtils.php');
+require_once($ruta_db_superior . 'filesystem/SaiaStorage.php');
+require($ruta_db_superior . 'vendor/autoload.php');
 
 if($_REQUEST['funcion'] == 'ordenar_paginas_documento'){
 	ordenar_paginas_documento($_REQUEST['iddocumento'],$_REQUEST['orden']);	
 }
 
-
 function imagen_pagina_documento($imagen){
     global $ruta_db_superior;
-    return($ruta_db_superior.$imagen);
+	return StorageUtils::get_binary_file($imagen);
+	//return ($ruta_db_superior . $imagen);
 }
+
 function ordenar_paginas_documento($iddocumento,$nuevo_orden = ''){
 global $conn;		
 	if($nuevo_orden!=''){
@@ -37,6 +39,7 @@ global $conn;
 		phpmkr_query($sql_updata);					
 	}			
 }
+
 function eliminar_paginas_documento($paginas){
 	global $conn;	
 	$idpaginas = explode(',',$paginas);

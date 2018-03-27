@@ -54,16 +54,23 @@ if($funcionario["numcampos"]){
     }      
   }
   if($eliminar){
+    include_once($ruta_db_superior."StorageUtils.php");
+    require_once $ruta_db_superior.'filesystem/SaiaStorage.php';
+    
     $roles=busca_filtro_tabla("","dependencia_cargo","funcionario_idfuncionario=".$idfuncionario,"",$conn);
     $texto_sql='';
     for($i=0;$i<$roles["numcampos"];$i++){
       $texto_sql.="INSERT INTO dependencia_cargo(funcionario_idfuncionario,dependencia_iddependencia,cargo_idcargo,estado,fecha_inicial,fecha_final,fecha_ingreso,tipo) VALUES(".$roles[$i]["funcionario_idfuncionario"].",".$roles[$i]["dependencia_iddependencia"].",".$roles[$i]["cargo_idcargo"].",".$roles[$i]["estado"].",'".$roles[$i]["fecha_inicial"]."','".$roles[$i]["fecha_final"]."','".$roles[$i]["fecha_ingreso"]."',".$roles[$i]["tipo"].")\n";
     }  
     $texto_sql.="INSERT INTO funcionario(funcionario_codigo, nombres, apellidos, login,estado,fecha_ingreso,clave,nit,perfil,debe_firmar, tipo, ultimo_pwd, mensajeria, email, sistema, email_contrasenia, direccion, telefono) VALUES ('".$funcionario[0]["funcionario_codigo"]."', '".$funcionario[0]["nombres"]."', '".$funcionario[0]["apellidos"]."', '".$funcionario[0]["login"]."','".$funcionario[0]["estado"]."','".$funcionario[0]["fecha_ingreso"]."','".$funcionario[0]["clave"]."','".$funcionario[0]["nit"]."','".$funcionario[0]["perfil"]."','".$funcionario[0]["debe_firmar"]."', '".$funcionario[0]["tipo"]."', '".$funcionario[0]["ultimo_pwd"]."', '".$funcionario[0]["mensajeria"]."', '".$funcionario[0]["email"]."', '".$funcionario[0]["email"]."', '".$funcionario[0]["email_contrasenia"]."', '".$funcionario[0]["direccion"]."', '".$funcionario[0]["telefono"]."')";
-    $ruta_eliminados=$ruta_db_superior.RUTA_BACKUP_ELIMINADOS."funcionarios/";
-    crear_destino($ruta_eliminados);
+    
+    $almacenamiento = new SaiaStorage(RUTA_BACKUP_ELIMINADOS);
+    $ruta_eliminados="funcionarios/";
     $archivo=$ruta_eliminados.$funcionario[0]["login"].".sql";  
-    file_put_contents($archivo,$texto_sql);
+    $almacenamiento = new SaiaStorage(RUTA_BACKUP_ELIMINADOS);
+    $almacenamiento->almacenar_contenido($archivo, $texto_sql); 
+     
+    //file_put_contents($archivo,$texto_sql);
     $sql2="DELETE FROM funcionario WHERE idfuncionario=".$idfuncionario;
     //phpmkr_query($sql2);
     $sql2="DELETE FROM dependencia_cargo WHERE funcionario_idfuncionario=".$idfuncionario;

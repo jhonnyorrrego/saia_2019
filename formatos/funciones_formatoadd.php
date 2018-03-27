@@ -276,18 +276,8 @@ echo $x_accionesChk;
 </form>
 <?php include_once ($ruta_db_superior."footer.php") ?>
 <?php
-//phpmkr_db_close($conn);
-?>
-<?php
-
-//-------------------------------------------------------------------------------
-// Function LoadData
-// - Load Data based on Key Value sKey
-// - Variables setup: field variables
-
-function LoadData($sKey,$conn)
-{
-  global $x_idfunciones_formato, $x_nombre, $x_etiqueta, $x_descripcion, $x_ruta, $x_formato,	$x_acciones;
+function LoadData($sKey, $conn) {
+	global $x_idfunciones_formato, $x_nombre, $x_etiqueta, $x_descripcion, $x_ruta, $x_formato, $x_acciones;
 	$sKeyWrk = "" . addslashes($sKey) . "";
 	$sSql = "SELECT * FROM funciones_formato";
 	$sSql .= " WHERE idfuncion_formato = " . $sKeyWrk;
@@ -303,10 +293,10 @@ function LoadData($sKey,$conn)
 	if ($sOrderBy <> "") {
 		$sSql .= " ORDER BY " . $sOrderBy;
 	}
-	$rs = phpmkr_query($sSql,$conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
+	$rs = phpmkr_query($sSql, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
 	if (phpmkr_num_rows($rs) == 0) {
 		$LoadData = false;
-	}else{
+	} else {
 		$LoadData = true;
 		$row = phpmkr_fetch_array($rs);
 
@@ -322,19 +312,11 @@ function LoadData($sKey,$conn)
 	phpmkr_free_result($rs);
 	return $LoadData;
 }
-?>
-<?php
 
-//-------------------------------------------------------------------------------
-// Function AddData
-// - Add Data
-// - Variables used: field variables
-
-function AddData($conn)
-{
-  global $x_idfunciones_formato, $x_nombre, $x_etiqueta, $x_descripcion, $x_ruta, $x_formato,	$x_acciones,$x_campodb;
+function AddData($conn) {
+	global $x_idfunciones_formato, $x_nombre, $x_etiqueta, $x_descripcion, $x_ruta, $x_formato, $x_acciones, $x_campodb;
 	// Add New Record
-	$formato=busca_filtro_tabla("","formato","idformato=".$_REQUEST["idformato"],"",$conn);
+	$formato = busca_filtro_tabla("", "formato", "idformato=" . $_REQUEST["idformato"], "", $conn);
 	$sSql = "SELECT * FROM funciones_formato";
 	$sSql .= " WHERE 0 = 1";
 	$sGroupBy = "";
@@ -354,21 +336,20 @@ function AddData($conn)
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_nombre) : $x_nombre; 
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["nombre"] = $theValue;
-  
-  // Field nombre_funcion
-  $theValue = (!get_magic_quotes_gpc()) ? addslashes($x_nombre) : $x_nombre; 
-	$theValue = ($theValue != "") ? " '" . str_replace("*}","",str_replace("{*","",$theValue)) . "'" : "NULL";
+
+	// Field nombre_funcion
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_nombre) : $x_nombre;
+	$theValue = ($theValue != "") ? " '" . str_replace("*}", "", str_replace("{*", "", $theValue)) . "'" : "NULL";
 	$fieldList["nombre_funcion"] = $theValue;
-	
-  
-  // Field etiqueta
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiqueta) : $x_etiqueta; 
+
+	// Field etiqueta
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiqueta) : $x_etiqueta;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["etiqueta"] = $theValue;
 
 	// Field descripcion
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_descripcion) : $x_descripcion; 
-	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "'"."'";
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_descripcion) : $x_descripcion;
+	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "'" . "'";
 	$fieldList["descripcion"] = $theValue;
 
 	// Field ruta
@@ -387,33 +368,33 @@ function AddData($conn)
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["acciones"] = $theValue;
 
-  //Si lo que se requeire en el formato es un campo entonces no es necesario almacenar los datos que se encuentran en funcion 
-  if($x_campodb==1){
-    $nombre=str_replace("{*","",$fieldList["nombre"]);
-    $nombre=str_replace("*}","",$nombre);
-    $strsql="INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,ayuda) VALUES(".$fieldList["formato"].",".$nombre.",".$fieldList["etiqueta"].",'VARCHAR',255,".$fieldList["descripcion"].")";
-	guardar_traza($strsql,$formato[0]["nombre_tabla"]);
-	phpmkr_query($strsql, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:<br />' . $strsql." <br />");
-	return true;
-  }
-  else{
-	// insert into database
-	$strsql = "INSERT INTO funciones_formato (";
-	$strsql .= implode(",", array_keys($fieldList));
-	$strsql .= ") VALUES (";
-	$strsql .= implode(",", array_values($fieldList));
-	$strsql .= ")";
-	guardar_traza($strsql,$formato[0]["nombre_tabla"]);
-	phpmkr_query($strsql, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:<br />' . $strsql." <br />");
-	$idfuncion=phpmkr_insert_id();
-	if($idfuncion){
-	    $strsql="INSERT INTO funciones_formato_enlace(funciones_formato_fk,formato_idformato) VALUES(".$idfuncion.",".$x_formato.")";
-	    guardar_traza($strsql,$formato[0]["nombre_tabla"]);
-	    phpmkr_query($strsql, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:<br />' . $strsql." <br />");
-	    $idfuncion_formato_enlace=phpmkr_insert_id();
-	    return $idfuncion_formato_enlace;
+	//Si lo que se requeire en el formato es un campo entonces no es necesario almacenar los datos que se encuentran en funcion
+	if ($x_campodb == 1) {
+		$nombre = str_replace("{*", "", $fieldList["nombre"]);
+		$nombre = str_replace("*}", "", $nombre);
+		$strsql = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,ayuda) VALUES(" . $fieldList["formato"] . "," . $nombre . "," . $fieldList["etiqueta"] . ",'VARCHAR',255," . $fieldList["descripcion"] . ")";
+		guardar_traza($strsql, $formato[0]["nombre_tabla"]);
+		phpmkr_query($strsql, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:<br />' . $strsql . " <br />");
+		return true;
+	} else {
+		// insert into database
+		$strsql = "INSERT INTO funciones_formato (";
+		$strsql .= implode(",", array_keys($fieldList));
+		$strsql .= ") VALUES (";
+		$strsql .= implode(",", array_values($fieldList));
+		$strsql .= ")";
+		guardar_traza($strsql, $formato[0]["nombre_tabla"]);
+		phpmkr_query($strsql, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:<br />' . $strsql . " <br />");
+
+		$idfuncion = phpmkr_insert_id();
+		if ($idfuncion) {
+			$strsql = "INSERT INTO funciones_formato_enlace(funciones_formato_fk,formato_idformato) VALUES(" . $idfuncion . "," . $x_formato . ")";
+			guardar_traza($strsql, $formato[0]["nombre_tabla"]);
+			phpmkr_query($strsql, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:<br />' . $strsql . " <br />");
+			$idfuncion_formato_enlace = phpmkr_insert_id();
+			return $idfuncion_formato_enlace;
+		}
 	}
-  }
-return(false);
+	return (false);
 }
 ?>

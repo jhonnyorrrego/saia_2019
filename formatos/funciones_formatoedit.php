@@ -22,7 +22,14 @@ $x_ruta = Null;
 $x_formato = Null;
 $x_acciones = Null;
 ?>
-<?php include ($ruta_db_superior."db.php") ?>
+<?php include ($ruta_db_superior."db.php");
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idformato");
+include_once($ruta_db_superior."librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+?>
 <?php
 include ("phpmkrfn.php");
 include_once("librerias/funciones.php");
@@ -241,7 +248,7 @@ echo $x_accionesChk;
 // Function LoadData
 // - Load Data based on Key Value sKey
 // - Variables setup: field variables
-
+encriptar_sqli("funciones_formatoedit",1,"form_info",$ruta_db_superior);
 function LoadData($sKey,$conn)
 {
   global $x_idfuncion_formato, $x_nombre,	$x_etiqueta, $x_descripcion, $x_ruta, $x_formato, $x_acciones;

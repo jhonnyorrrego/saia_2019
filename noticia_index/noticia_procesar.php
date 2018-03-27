@@ -9,10 +9,18 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
+include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
+$validar_enteros = array(
+    "idnoticia_index"
+);
+desencriptar_sqli('form_info');
 
 /* ------------------------- ADICIONAR ------------------------ */
 
 if (isset($_REQUEST['adicionar2'])) {
+
+    require_once $ruta_db_superior . 'StorageUtils.php';
+    require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
 
     $form_uuid = $_REQUEST["form_uuid"];
 
@@ -23,20 +31,25 @@ if (isset($_REQUEST['adicionar2'])) {
 
         if (file_exists($ruta_temporal)) {
             $datos_anexo = pathinfo($ruta_temporal);
+            $ruta = RUTA_NOTICIA_IMAGENES;
+            $tipo_almacenamiento = new SaiaStorage("archivos");
 
             $extension = $datos_anexo["extension"];
-            $temp_filename = uniqid() . "." . $extension;
-            $aux = RUTA_NOTICIA_IMAGENES;
-            $dir_anexos = $ruta_db_superior . $aux;
-            crear_destino($dir_anexos);
-            $imagen_reducida = $dir_anexos . $temp_filename;
-            if (copy($ruta_temporal, $imagen_reducida)) {
 
+            $ruta .= uniqid() . '.' . $extension;
+            $ruta_anexos = array(
+                "servidor" => $tipo_almacenamiento->get_ruta_servidor(),
+                "ruta" => $ruta
+            );
+            $ruta_anexos = json_encode($ruta_anexos);
+
+            // aqui movemos el archivo desde la ruta temporal a nuestra ruta
+            if ($tipo_almacenamiento->almacenar_recurso($ruta, $ruta_temporal)) {
                 $fecha = fecha_db_almacenar(date('Y-m-d'), 'Y-m-d');
                 $previo = substr($_REQUEST['noticia'], 0, 200);
-                $sql1 = "INSERT INTO noticia_index (noticia,previo,imagen,titulo,subtitulo,fecha) values ('" . $_REQUEST['noticia'] . "','" . $previo . "','" . $aux . $temp_filename . "','" . $_REQUEST['titulo'] . "','" . $_REQUEST['subtitulo'] . "'," . $fecha . ")";
+                $sql1 = "INSERT INTO noticia_index (noticia,previo,imagen,titulo,subtitulo,fecha) values ('" . $_REQUEST['noticia'] . "','" . $previo . "','" . $ruta_anexos . "','" . $_REQUEST['titulo'] . "','" . $_REQUEST['subtitulo'] . "'," . $fecha . ")";
                 phpmkr_query($sql1) or die($sql1);
-                echo "Noticia adicionada satisfactoriamente. $sql1";
+                echo "Noticia adicionada satisfactoriamente";
 
                 @unlink($ruta_temporal);
                 unlink("$ruta_temporal.lock");
@@ -113,8 +126,8 @@ if (isset($_REQUEST['actualizar_subtitulo'])) {
 function guardar_archivos($id, $form_uuid) {
     global $ruta_db_superior, $conn;
 
-    //$archivos = busca_filtro_tabla("", "anexos_tmp", "uuid = '$form_uuid' AND idformato=$idformato", "", $conn);
-    //$archivos = busca_filtro_tabla("", "anexos_tmp", "uuid = '$form_uuid' AND idformato=$idformato", "", $conn);
+    // $archivos = busca_filtro_tabla("", "anexos_tmp", "uuid = '$form_uuid' AND idformato=$idformato", "", $conn);
+    // $archivos = busca_filtro_tabla("", "anexos_tmp", "uuid = '$form_uuid' AND idformato=$idformato", "", $conn);
 }
 
 ?>

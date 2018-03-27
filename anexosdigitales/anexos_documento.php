@@ -1,24 +1,26 @@
 <?php
-$max_salida = 10; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior = $ruta = "";
-while ($max_salida > 0) {
-    if (is_file($ruta . "db.php")) {
-        $ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
-    }
-    $ruta .= "../";
-    $max_salida--;
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0) {
+if(is_file($ruta."db.php")) {
+$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+}
+$ruta.="../";
+$max_salida--;
 }
 
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
-include_once ("funciones_archivo.php");
-
-if ((@$_REQUEST["iddoc"] || @$_REQUEST["key"]) && @$_REQUEST["no_menu"] != 1) {
-    if (!@$_REQUEST["iddoc"]) {
-        $_REQUEST["iddoc"] = @$_REQUEST["key"];
+include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("iddoc","key");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+if((@$_REQUEST["iddoc"] || @$_REQUEST["key"]) && @$_REQUEST["no_menu"]!=1){
+	if(!@$_REQUEST["iddoc"]) {
+		$_REQUEST["iddoc"]=@$_REQUEST["key"];
     }
-    include_once ($ruta_db_superior . "pantallas/documento/menu_principal_documento.php");
-    menu_principal_documento($_REQUEST["iddoc"]);
+	include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
+	menu_principal_documento($_REQUEST["iddoc"]);
 }
 ?>
 
@@ -62,66 +64,64 @@ if ((@$_REQUEST["iddoc"] || @$_REQUEST["key"]) && @$_REQUEST["no_menu"] != 1) {
 
 <?php
 
-// echo(estilo_bootstrap());
+//echo(estilo_bootstrap());
 $tabla = null;
-if (!isset($_REQUEST["menu"]) || $_REQUEST["menu"] != "0") { // Si esta en menu_ordenar omite el header el footer y el menu
-    include_once ("../header.php");
-    menu_ordenar($_REQUEST["key"]);
-}
+if(!isset($_REQUEST["menu"])||$_REQUEST["menu"]!="0") { // Si esta en menu_ordenar omite el header el footer y el menu
+include_once("../header.php");
+menu_ordenar($_REQUEST["key"]);
+	} 
 echo "<br>";
-if (isset($_REQUEST["key"])) {
-    $iddocumento = $_REQUEST["key"];
+if(isset($_REQUEST["key"])) {
+   $iddocumento=$_REQUEST["key"];
     $tabla = listar_anexos_documento($iddocumento);
-} else {
-    echo "No se recibio la informacion del documento";
+	} else {
+  echo "No se recibio la informacion del documento";
     die();
-}
-
+	} 
+ 
 if(empty($tabla)) {
     $tabla = "<table id='listado_anexos_{$iddocumento}'><tr><td></td></tr></table>";
 }
 echo "<div class='row-fluid'><div align='center'>" . $tabla . "</div>";
 
-if (isset($_REQUEST["Adicionar"])) { // Se procesa el formulario
+if(isset($_REQUEST["Adicionar"])) { // Se procesa el formulario
 
-    $permisos = $_REQUEST["permisos_anexos"];
-    // procesar_anexos($iddocumento,$permisos);
-    cargar_archivo($iddocumento, $permisos);
-    if (!isset($_REQUEST["menu"]) || $_REQUEST["menu"] != "0") { // Si esta en menu_ordenar omite el header el footer y el menu
-        ?>
-<script>
-
+    $permisos=$_REQUEST["permisos_anexos"];
+    //procesar_anexos($iddocumento,$permisos);
+    cargar_archivo($iddocumento,$permisos);
+    if(!isset($_REQUEST["menu"])||$_REQUEST["menu"]!="0") { // Si esta en menu_ordenar omite el header el footer y el menu
+      ?>
+      <script>
+     
         if(parent.frames['arbol_formato']) {
 			parent.frames['arbol_formato'].postMessage({iddocumento: <?php echo($_REQUEST["key"]);?>}, "*");
 		}
-
+      
       </script>
-<?php
+      <?php
         //abrir_url("anexos_documento.php?key=" . $iddocumento . "&adicional=" . rand(), "_self");
-    } else {
+     } else  { 
         //abrir_url("../ordenar.php?accion=mostrar&key=" . $iddocumento, "centro");
-    }
+     }
     exit();
-}
+  }
 
 global $extensiones; // Extensiones por defecto inicializadas en funciones archivo
-if ($extensiones == '' || $extensiones == 'NULL') {
-    $extensiones = 'jpg|gif|doc|ppt|xls|txt|pdf|pps|crd|cad|xlsx|docx|pptx|ppsx|pps|ppsx|swf|flv';
-}
-//$new_ext = array_map('trim', explode('|', $extensiones));
-//$extensiones = "." . implode(', .', $new_ext);
-
+if($extensiones =='' || $extensiones =='NULL') {
+ $extensiones='jpg|gif|doc|ppt|xls|txt|pdf|pps|crd|cad|xlsx|docx|pptx|ppsx|pps|ppsx|swf|flv';
+ }
+     
 ?>
 <br>
 <div align="center">
 	<form id="formulario_anexos" action="anexos_documento.php" method="POST" class="dropzone" enctype="multipart/form-data">
-		<input type="hidden" value="" id="permisos_anexos" name="permisos_anexos" />
-		<input type="hidden" value="<?php echo $iddocumento; ?>" id="key" name="key" />
+<input type="hidden" value="" id="permisos_anexos" name="permisos_anexos"/>
+<input type="hidden" value="<?php echo $iddocumento; ?>" id="key" name="key"/>
 		<input type="hidden"
 				value="<?php echo (isset($_REQUEST["menu"]) ? $_REQUEST["menu"] : "1"); ?>"
 				id="menu" name="menu" />
 		<table style="width:255px; border:0; cellspacing:2; cellpadding:2">
-			<tr>
+<tr>
 				<td>
 					<div class="dz-message"><span>Adicionar Anexos</span></div>
 				<td>
@@ -130,21 +130,21 @@ if ($extensiones == '' || $extensiones == 'NULL') {
 				<td class="celda_transparente" align='center'>
 					<input type="file" name="anexos[]" class="multi" accept="<?php echo $extensiones;?>">
 				</td>
-			</tr>
+</tr>
 			<tr>
 				<td align='center'>
 					<button type="button" value="Adicionar" name="Adicionar" id="adicionar">Adicionar</button>
 				</td>
 			</tr>-->
-		</table>
-	</form>
+</table>
+</form>
 </div>
 
 <?php
 
-if (!isset($_REQUEST["menu"]) || $_REQUEST["menu"] != "0") { // Si esta en menu_ordenar omite el footer y el header
-    include_once ("../footer.php");
-}
+if(!isset($_REQUEST["menu"])||$_REQUEST["menu"]!="0") { // Si esta en menu_ordenar omite el footer y el header
+   include_once("../footer.php");
+ }
 
 ?>
 <script type="text/javascript">
@@ -171,8 +171,8 @@ $("#document").ready(function(){
 				parent.parent.frames['arbol_formato'].postMessage({iddocumento: iddocumento}, "*");
 			} else {
 				console.log("No existe el frame arbol_formato");
-			}
-		}
+}
+}
 	});
 });
 </script>

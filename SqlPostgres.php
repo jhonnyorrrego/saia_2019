@@ -595,6 +595,11 @@ class SqlPostgres extends SQL2 {
 		return ($resultado);
 	}
 
+	function invocar_radicar_documento($iddocumento, $idcontador, $funcionario) {
+		$strsql="select sp_asignar_radicado($iddocumento, $idcontador, $funcionario)";
+		$this->Ejecutar_Sql($strsql) or die($strsql);
+	}
+
 	function listar_campos_tabla($tabla = NULL, $tipo_retorno = 0) {
 		if ($tabla == NULL)
 			$tabla = $_REQUEST["tabla"];

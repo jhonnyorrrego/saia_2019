@@ -1,12 +1,20 @@
 <?php
+include_once("db.php");
+include_once("class_transferencia.php");
+include_once("librerias_saia.php");
+
+include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("iddoc","key","idpaso_actividad","idpaso_documento","doc");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
+
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
     if(!@$_REQUEST["iddoc"])$_REQUEST["iddoc"]=@$_REQUEST["key"];
     include_once("pantallas/documento/menu_principal_documento.php");
     menu_principal_documento($_REQUEST["iddoc"]);
 }
-include_once("db.php");
-include_once("class_transferencia.php");
-include_once("librerias_saia.php");
+
 echo( librerias_notificaciones() );
 $accion_flujo="";
 if(@$_REQUEST["idpaso_actividad"] != ''){
@@ -71,58 +79,54 @@ $prioridad =Null;
 $ruta_pdf = Null;
 include ("phpmkrfn.php");
 // Get action
-if(@$_POST["a_add"]=="carta")
-    $sAction="mostrar_carta2.php";
-    else if(@$_POST["a_add"]=="memorando")
-        $sAction="mostrar_memorando.php";
-        else if(@$_POST["a_add"]=="certificado")
-            $sAction="mostrar_certificado.php";
-            else
-                $sAction = @$_POST["a_add"];
-                
-                if (($sAction == "") || (($sAction == NULL))) {
-                    $sKey = @$_GET["key"];
-                    $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
-                    if ($sKey <> "") {
-                        $sAction = "I"; // Copy record
-                    }
-                    else
-                    {
-                        $sAction = "I"; // Display blank record
-                    }
-                    
-                }
-                else
-                { $x_transferir =@$_POST["x_transferir"];
-                $x_dep = @$_POST["x_dep"];
-                // Get fields from form
-                $x_idtransferencia = @$_POST["x_idtransferencia"];
-                $x_archivo_idarchivo = @$_POST["x_archivo_idarchivo"];
-                $formato_documento=busca_filtro_tabla("","formato,documento","lower(plantilla)=lower(nombre) and iddocumento=".$x_archivo_idarchivo,"",$conn);
-                $nombre_formato=$formato_documento[0]["nombre"];
-                $x_nombre = @$_POST["x_nombre"];
-                if(isset($_POST["x_serie"]))
-                    $x_serie = @$_POST["x_serie"];
-                    else
-                        $x_serie = Null;
-                        if(isset($_POST["x_funcionario_destino1"]) && $_POST["x_funcionario_destino1"]<>""){
-                            $x_funcionario_destino = @$_POST["x_funcionario_destino1"];
-                            $x_tipo_destino=1; //FUNCIONARIO
-                        }
-                        if(isset($_POST["x_funcionario_destino2"]) && $_POST["x_funcionario_destino2"]<>""){
-                            $x_funcionario_destino = @$_POST["x_funcionario_destino2"];
-                            $x_tipo_destino=1; //"funcionario";
-                        }
-                        if(isset($_POST["x_funcionario_destino3"]) && $_POST["x_funcionario_destino3"]<>""){
-                            $x_funcionario_destino = @$_POST["x_funcionario_destino3"];
-                            $x_tipo_destino=1; //"funcionario";
-                        }
-                        if(isset($_POST["x_dependencia_destino"]) && $_POST["x_dependencia_destino"]<>""){
-                            $x_funcionario_destino = @$_POST["x_dependencia_destino"];
-                            $x_tipo_destino=2;//"dependencia";
-                        }
-                        //$x_dependencia_destino_dep = @$_POST["x_dependencia_destino"];
-                        $x_funcionario_destino = @$_POST["x_funcionario_destino"];
+if (@$_POST["a_add"] == "carta")
+	$sAction = "mostrar_carta2.php";
+else if (@$_POST["a_add"] == "memorando")
+	$sAction = "mostrar_memorando.php";
+else if (@$_POST["a_add"] == "certificado")
+	$sAction = "mostrar_certificado.php";
+else
+	$sAction = @$_POST["a_add"];
+
+if (($sAction == "") || (($sAction == NULL))) {
+	$sKey = @$_GET["key"];
+	$sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
+	if ($sKey != "") {
+		$sAction = "I"; // Copy record
+	} else {
+		$sAction = "I"; // Display blank record
+	}
+} else {
+	$x_transferir = @$_POST["x_transferir"];
+	$x_dep = @$_POST["x_dep"];
+	// Get fields from form
+	$x_idtransferencia = @$_POST["x_idtransferencia"];
+	$x_archivo_idarchivo = @$_POST["x_archivo_idarchivo"];
+	$formato_documento = busca_filtro_tabla("", "formato,documento", "lower(plantilla)=lower(nombre) and iddocumento=" . $x_archivo_idarchivo, "", $conn);
+	$nombre_formato = $formato_documento[0]["nombre"];
+	$x_nombre = @$_POST["x_nombre"];
+	if (isset($_POST["x_serie"]))
+		$x_serie = @$_POST["x_serie"];
+	else
+		$x_serie = Null;
+	if (isset($_POST["x_funcionario_destino1"]) && $_POST["x_funcionario_destino1"] != "") {
+		$x_funcionario_destino = @$_POST["x_funcionario_destino1"];
+		$x_tipo_destino = 1; // FUNCIONARIO
+	}
+	if (isset($_POST["x_funcionario_destino2"]) && $_POST["x_funcionario_destino2"] != "") {
+		$x_funcionario_destino = @$_POST["x_funcionario_destino2"];
+		$x_tipo_destino = 1; // "funcionario";
+	}
+	if (isset($_POST["x_funcionario_destino3"]) && $_POST["x_funcionario_destino3"] != "") {
+		$x_funcionario_destino = @$_POST["x_funcionario_destino3"];
+		$x_tipo_destino = 1; // "funcionario";
+	}
+	if (isset($_POST["x_dependencia_destino"]) && $_POST["x_dependencia_destino"] != "") {
+		$x_funcionario_destino = @$_POST["x_dependencia_destino"];
+		$x_tipo_destino = 2; // "dependencia";
+	}
+	// $x_dependencia_destino_dep = @$_POST["x_dependencia_destino"];
+	$x_funcionario_destino = @$_POST["x_funcionario_destino"];
                         $x_pag_pdf = @$_POST["x_pag_pdf"];
                         $desea_tarea =@$_POST["desea_tarea"];
                         $fecha_tarea =@$_POST["fecha_tarea"];
@@ -130,80 +134,77 @@ if(@$_POST["a_add"]=="carta")
                         $descripcion =@$_POST["descripcion"];
                         $prioridad =@$_POST["prioridad"];
                         $ruta_pdf = @$_POST["ruta_pdf"];
-                        $x_tipo_destino=1;//"funcionario";
-                        $x_ejecutor_destino = @$_POST["x_ejecutor_destino"];
-                        $x_fecha = @$_POST["x_fecha"];
-                        $x_respuesta = @$_POST["x_respuesta"];
-                        $x_entregado = @$_POST["x_entregado"];
-                        $x_recibido = @$_POST["x_recibido"];
-                        $x_notas = @$_POST["x_notas"];
-                        $x_ver_nota = @$_POST["x_ver_nota"];
-                        $x_transferencia_descripcion = @$_POST["x_transferencia_descripcion"];
-                        $x_tipo = @$_POST["x_tipo"];
-                        $x_doc=@$_POST["arch"];
-                        $idruta=@$_POST["idruta"];
-                        $x_copia=@$_POST["x_copia"];
-                        if(@$_POST["x_tipo_envio"]!='')
-                            $x_tipo_envio = @$_POST["x_tipo_envio"];
-                            else
-                                $x_tipo_envio =array();
-                                
-                }
-                switch ($sAction)
-                {
-                    case "C": // Get a record to display
-                        if (!LoadData($sKey,$conn)) { // Load Record based on key
-                            $_SESSION["ewmsg"] = "Registros no encontrados para la Llave = " . $sKey;
-                            redirecciona("go(-1)");
-                            exit();
-                        }
-                        break;
-                    case "A": // Add
-                        if (AddData($conn)) { // Add New Record
-                            $_SESSION["ewmsg"] = "Adici&oacute;n de nuevo Registro Exitoso";
-                            if(@$_REQUEST["idpaso_documento"]){
-                                abrir_url("workflow/mapeo_diagrama.php?idpaso_documento=".$_REQUEST["idpaso_documento"],"centro");
-                            }
-                            if($x_transferir == "si") { // redirecciona("transferenciaadd.php?doc=".$x_archivo_idarchivo."&dep=".$x_dep);
-                                redirecciona("ordenar.php?key=7077&accion=mostrar&mostrar_formato=1=$x_archivo_idarchivo");
-                                exit();
-                            }
-                            $busca_transferencia=busca_filtro_tabla("A.*","buzon_entrada A","A.archivo_idarchivo=".$x_archivo_idarchivo,"",$conn);
-                            if($busca_transferencia["numcampos"]){
-                                $digitalizadores = busca_filtro_tabla("nombre","cargo, funcionario, dependencia_cargo","idcargo=cargo_idcargo AND funcionario_idfuncionario=idfuncionario AND idfuncionario=".usuario_actual("idfuncionario")." AND (UPPER(nombre)='RADICADOR' OR UPPER(nombre)='DIGITALIZADOR')","",$conn);
-                                if(!isset($_POST["retorno"])&&$digitalizadores["numcampos"]>0)
-                                    redirecciona("documentolist.php?cmd=resetall");
-                                    else
-                                        redirecciona(FORMATOS_CLIENTE . $nombre_formato."/mostrar_".$nombre_formato.".php?iddoc=".$x_archivo_idarchivo."&idformato=".$formato_documento[0]['idformato']);
-                                        exit();
-                            } else {
-                                alerta("No se le asign� una transferencia al documento");
-                                //redirecciona("transferenciaadd.php?doc=".$x_archivo_idarchivo."&dep=".$x_dep);
-                                redirecciona(FORMATOS_CLIENTE . $nombre_formato."/mostrar_".$nombre_formato.".php?iddoc=".$x_archivo_idarchivo."&idformato=".$formato_documento[0]['idformato']);
-                            }
-                        }
-                        break;
-                    case "P": // Add
-                        if (AddData($conn)) { // Add New Record
-                            $_SESSION["ewmsg"] = "Adicion de nuevo Registro Exitoso";
-                            exit();
-                        }
-                        break;
-                        
-                }
-                
-                //include_once("formatos/librerias/estilo_formulario.php");
-                if(!@$_REQUEST["idpaso_documento"]){
-                    include ("header.php");
-                    $columnas=45;
-                } else {
-                    $columnas=32;
-                    menu_pasos(0,@$_REQUEST["idpaso_documento"]);
-                }
+	$x_tipo_destino = 1; // "funcionario";
+	$x_ejecutor_destino = @$_POST["x_ejecutor_destino"];
+	$x_fecha = @$_POST["x_fecha"];
+	$x_respuesta = @$_POST["x_respuesta"];
+	$x_entregado = @$_POST["x_entregado"];
+	$x_recibido = @$_POST["x_recibido"];
+	$x_notas = @$_POST["x_notas"];
+	$x_ver_nota = @$_POST["x_ver_nota"];
+	$x_transferencia_descripcion = @$_POST["x_transferencia_descripcion"];
+	$x_tipo = @$_POST["x_tipo"];
+	$x_doc = @$_POST["arch"];
+	$idruta = @$_POST["idruta"];
+	$x_copia = @$_POST["x_copia"];
+	if (@$_POST["x_tipo_envio"] != '')
+		$x_tipo_envio = @$_POST["x_tipo_envio"];
+	else
+		$x_tipo_envio = array();
+}
+switch ($sAction) {
+	case "C" : // Get a record to display
+		if (!LoadData($sKey, $conn)) { // Load Record based on key
+			$_SESSION["ewmsg"] = "Registros no encontrados para la Llave = " . $sKey;
+			redirecciona("go(-1)");
+			exit();
+		}
+		break;
+	case "A" : // Add
+		if (AddData($conn)) { // Add New Record
+			$_SESSION["ewmsg"] = "Adici&oacute;n de nuevo Registro Exitoso";
+			if (@$_REQUEST["idpaso_documento"]) {
+				abrir_url("workflow/mapeo_diagrama.php?idpaso_documento=" . $_REQUEST["idpaso_documento"], "centro");
+			}
+			if ($x_transferir == "si") { // redirecciona("transferenciaadd.php?doc=".$x_archivo_idarchivo."&dep=".$x_dep);
+				redirecciona("ordenar.php?key=7077&accion=mostrar&mostrar_formato=1=$x_archivo_idarchivo");
+				exit();
+			}
+			$busca_transferencia = busca_filtro_tabla("A.*", "buzon_entrada A", "A.archivo_idarchivo=" . $x_archivo_idarchivo, "", $conn);
+			if ($busca_transferencia["numcampos"]) {
+				$digitalizadores = busca_filtro_tabla("nombre", "cargo, funcionario, dependencia_cargo", "idcargo=cargo_idcargo AND funcionario_idfuncionario=idfuncionario AND idfuncionario=" . usuario_actual("idfuncionario") . " AND (UPPER(nombre)='RADICADOR' OR UPPER(nombre)='DIGITALIZADOR')", "", $conn);
+				if (!isset($_POST["retorno"]) && $digitalizadores["numcampos"] > 0)
+					redirecciona("documentolist.php?cmd=resetall");
+				else
+					redirecciona(FORMATOS_CLIENTE . $nombre_formato . "/mostrar_" . $nombre_formato . ".php?iddoc=" . $x_archivo_idarchivo . "&idformato=" . $formato_documento[0]['idformato']);
+				exit();
+			} else {
+				alerta("No se le asign� una transferencia al documento");
+				// redirecciona("transferenciaadd.php?doc=".$x_archivo_idarchivo."&dep=".$x_dep);
+				redirecciona(FORMATOS_CLIENTE . $nombre_formato . "/mostrar_" . $nombre_formato . ".php?iddoc=" . $x_archivo_idarchivo . "&idformato=" . $formato_documento[0]['idformato']);
+			}
+		}
+		break;
+	case "P" : // Add
+		if (AddData($conn)) { // Add New Record
+			$_SESSION["ewmsg"] = "Adicion de nuevo Registro Exitoso";
+			exit();
+		}
+		break;
+}
+
+// include_once("formatos/librerias/estilo_formulario.php");
+if (!@$_REQUEST["idpaso_documento"]) {
+	include ("header.php");
+	$columnas = 45;
+} else {
+	$columnas = 32;
+	menu_pasos(0, @$_REQUEST["idpaso_documento"]);
+}
                 echo(estilo_bootstrap());
                 echo(librerias_jquery("1.7"));
 echo(librerias_datepicker_bootstrap());
-                ?>
+?>
 <script type="text/javascript" src="ew.js"></script>
 <script type="text/javascript">
 <!--

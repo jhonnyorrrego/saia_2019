@@ -42,7 +42,7 @@ foreach($lcampos AS $key=>$valor){
     if(trim($valor)){
         $val=explode(".",$valor);
         if(count($val)==1){
-            array_push($campos_limpios,$val[0]);
+            array_push($campos_limpios,$val[0]);    
         }
         else{
             array_push($campos_limpios,$val[1]);
@@ -124,7 +124,7 @@ if($datos_busqueda[0]["acciones_seleccionados"]!=''){
      $acciones=explode(",",$datos_busqueda[0]["acciones_seleccionados"]);		
      $cantidad=count($acciones);		
      for($i=0;$i<$cantidad;$i++){		
-	     $acciones_selecionados.=($acciones[$i]($datos_reporte));		
+	     $acciones_selecionados.=($acciones[$i]($datos_reporte));
      }              		
 }  
 
@@ -176,7 +176,7 @@ $(document).ready(function(){
 	rownumWidth: 40,
     rowList : [<?php echo($cantidad_mostrar_filtrar); ?>],
     jsonReader: {
-	    page: function (obj) { if(obj.exito){$("#busqueda_pagina").val(obj.page); return(obj.page);}else{ $("#busqueda_pagina").val(0); return(0); } },
+	  page: function (obj) { if(obj.exito){$("#busqueda_pagina").val(obj.page); return(obj.page);}else{ $("#busqueda_pagina").val(0); return(0); } },
 	    total: function (obj) {$("#busqueda_total_paginas").val(obj.total); return(obj.total);  }	   
 		},
         loadComplete: function () {

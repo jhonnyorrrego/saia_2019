@@ -248,7 +248,7 @@ class DatabaseDriver implements MappingDriver
                 }
 
                 $metadata->mapManyToMany($associationMapping);
-
+                
                 break;
             }
         }

@@ -26,7 +26,12 @@ $x_archivo_bpmn = Null;
 ?>
 <?php include($ruta_db_superior."db.php"); ?>
 <?php include($ruta_db_superior."phpmkrfn.php"); ?>
-<?php include($ruta_db_superior."librerias_saia.php"); ?>
+<?php include($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
+?>
 <?php
 include ($ruta_db_superior."formatos/librerias/estilo_formulario.php");
 include ($ruta_db_superior."formatos/librerias/header_formato.php");
@@ -61,7 +66,6 @@ switch ($sAction)
 }
 ?>
 <?php include ($ruta_db_superior."header.php");
-echo(librerias_jquery());
 echo(librerias_notificaciones());
 ?>
 <script type="text/javascript">
@@ -247,6 +251,8 @@ global $ruta_db_superior;
 	}
 	return $x_idbpmn;
 }
+
+encriptar_sqli("bpmnadd",1,"form_info",$ruta_db_superior);
 /*
  * generateRandom=Funcion traida del antiguo generador del diagram. Utilizado para generar el hash.
  */
