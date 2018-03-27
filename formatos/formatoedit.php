@@ -825,6 +825,7 @@ detalles_mostrar_".$x_nombre.".php";
   	$idformato=$sKeyWrk;
   	//Se actualizan los campos padre
   	if($idformato!=''){
+  		actualizar_modulo_formato($idformato);
   		if($x_flujo_idflujo!=0){
 			generar_campo_flujo($idformato,$x_flujo_idflujo,$flujo[0]["title"]);
 		}

@@ -20,11 +20,21 @@ $dat_orig = 0;
 $sql = "";
 $conn = NULL;
 $conn = phpmkr_db_connect();
-//Almacenar la variable del usuario actual
+
 $usuactual = @$_SESSION["LOGIN" . LLAVE_SAIA];
 if (isset($_SESSION["LOGIN" . LLAVE_SAIA]) && $_SESSION["LOGIN" . LLAVE_SAIA]) {
 	$_SESSION["usuario_actual"] = usuario_actual("funcionario_codigo");
 	$_SESSION["idfuncionario"] = usuario_actual("idfuncionario");
+}
+
+function logear_funcionario_webservice($login){
+global $usuactual;
+	$usuactual=$login;
+	$_SESSION["LOGIN" . LLAVE_SAIA]=$login;
+	$_SESSION["usuario_actual"] = usuario_actual("funcionario_codigo");
+	$_SESSION["idfuncionario"] = usuario_actual("idfuncionario");
+	$_SESSION["conexion_remota"] = 1;
+	return;
 }
 
 /*
@@ -40,7 +50,7 @@ if (isset($_SESSION["LOGIN" . LLAVE_SAIA]) && $_SESSION["LOGIN" . LLAVE_SAIA]) {
 */
 function registrar_accion_digitalizacion($iddoc,$accion,$justificacion='')
 {global $conn;
- $usu=usuario_actual("funcionario_codigo");
+ $usu=$_SESSION["usuario_actual"];
  $fecha=fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s');
  $sql="insert into digitalizacion(funcionario,documento_iddocumento,accion,justificacion,fecha) values('$usu','$iddoc','$accion','$justificacion',$fecha)" ;
  phpmkr_query($sql,$conn);
@@ -252,11 +262,6 @@ function evento_archivo($cadena) {
 		$ruta .= "../";
 		$max_salida--;
 	}
-	/*
-	 * $ruta_evento=busca_filtro_tabla("valor","configuracion","nombre like 'ruta_evento'","",$conn);
-	 *
-	 * $nombre=$ruta_db_superior."../".$ruta_evento[0]['valor']."/".DB."_log_".date("Y_m_d").".txt";
-	 */
 
 	//$ruta_resuelta = StorageUtils::parsear_ruta_servidor(RUTA_BACKUP_EVENTO);
 	$storage = new SaiaStorage(RUTA_BACKUP_EVENTO);
@@ -893,7 +898,7 @@ $accion = strtoupper(substr($sql,0,strpos($sql,' ')));
 $tabla = "";
 $llave=0; $string_detalle="";
 if ($accion<>"SELECT")
- $func = usuario_actual("funcionario_codigo");
+ $func = $_SESSION["usuario_actual"];
 $strsql=htmlspecialchars_decode((($strsql)));
 $rs = $conn->Ejecutar_Sql_Noresult($strsql);
 return $rs;
@@ -1113,18 +1118,7 @@ for($j=0;$j<$cont;$j++){
 return($retorno);
 }
 
-/*
- * <Clase>
- * <Nombre>sincronizar_carpetas
- * <Parametros>$conn: conexion activa con la base de datos
- * <Responsabilidades>Esta funcion genera una sincronizacion de la carpeta temporal, tomando las imagenes e indexandolas
- * de forma automatica si no logra encontrar el tipo documental lo envia a una carpeta sin indexacion
- * <Notas>
- * <Excepciones>
- * <Salida>
- * <Pre-condiciones>
- * <Post-condiciones>
-*/
+
 function sincronizar_carpetas($tipo, $conn) {
 	$idimagenes = array();
 	$max_salida = 6;
@@ -1325,6 +1319,7 @@ function sincronizar_carpetas($tipo, $conn) {
 			}
 			closedir($directorio);
 		} //Fin If directorio
+
 		//aqui desarrollo para subir digitalizacion de PDF,DOCX,ETC
 		if (is_dir($usr_tmp_dir)) {// ruta_temporal
 			$directorio = opendir("$usr_tmp_dir");
@@ -1377,6 +1372,7 @@ function sincronizar_carpetas($tipo, $conn) {
 				} //fin if file_exist
 			} //recorriendo directorio
 		} //fin if directorio
+
 	} elseif ($tipo_almacenamiento == "db") {// Se almacena en la base de datos
 		if (is_dir($usr_tmp_dir)) { // ruta_temporal
 			$directorio = opendir("$usr_tmp_dir");
@@ -1481,6 +1477,7 @@ function sincronizar_carpetas($tipo, $conn) {
 							$idpag = phpmkr_insert_id();
 							array_push($idimagenes, $idpag);
 							registrar_accion_digitalizacion($fieldList["id_documento"], 'ADICION PAGINA', "Identificador: $idpag, Nombre: " . basename($fieldList["imagen"]));
+
 						} else {
 							alerta("Error al almacenar el archivo Por favor verifique que el archivo sea accesible y este correctamente almacenado");
 						}
@@ -1553,7 +1550,7 @@ function vincular_anexo_documento($iddoc,$ruta_origen,$etiqueta=''){
 	$idanexo=phpmkr_insert_id();
 	$data_sql=array();
 	$data_sql['anexos_idanexos']=$idanexo;
-	$data_sql['idpropietario']=usuario_actual('idfuncionario');
+	$data_sql['idpropietario']=$_SESSION["idfuncionario"];
 	$data_sql['caracteristica_propio']='lem';
 	$data_sql['caracteristica_total']='1';
 
@@ -1906,11 +1903,11 @@ global $conn;
 	        $ejecutores=array($funcionario[0]["funcionario_codigo"]);
 	      }
 	      else {
-	        $ejecutores=array(usuario_actual("funcionario_codigo"));
+	        $ejecutores=array($_SESSION["usuario_actual"]);
 	      }
 	    }
 	    if(!count($ejecutores))
-	      $ejecutores=array(usuario_actual("funcionario_codigo"));
+	      $ejecutores=array($_SESSION["usuario_actual"]);
 
 			$otros["notas"]="'Documento enviado por e-mail por medio del correo: ".$mail->FromName;
 		  if(count($para)){
@@ -3200,7 +3197,6 @@ function almacenar_sesion($exito, $login) {
 	if ($login == "") {
 		$login = usuario_actual("login");
 		$id = usuario_actual("idfuncionario");
-		$idfun_intentetos = $id;
 	} else {
 		$id = $_SESSION["idfuncionario"];
 	}
@@ -3236,30 +3232,30 @@ function almacenar_sesion($exito, $login) {
 		$sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,fecha) VALUES('$iplocal','$ipremoto','" . $login . "',0," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
 		$conn -> Ejecutar_Sql($sql);
 	} else {
-		$sql2 = "UPDATE funcionario SET intento_login=0 WHERE idfuncionario=" . $idfun_intentetos;
-		$conn->Ejecutar_Sql($sql2);
+		$sql2 = "UPDATE funcionario SET intento_login=0 WHERE idfuncionario=" . $id;
+		$conn -> Ejecutar_Sql($sql2);
 
 		$idsesion = ultima_sesion($login);
-	$accion = "";
-	if ($idsesion == "") {
-		$accion = "INSERTA";
-	} else {
-		$accion = "ACTUALIZA";
-	}
-	$datos_sesion = datos_sesion();
-	switch ($accion) {
-		case "INSERTA" :
+		$accion = "";
+		if ($idsesion == "") {
+			$accion = "INSERTA";
+		} else {
+			$accion = "ACTUALIZA";
+		}
+		$datos_sesion = datos_sesion();
+		switch($accion) {
+			case "INSERTA" :
 				$sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,idsesion_php,sesion_php,fecha,funcionario_idfuncionario) VALUES('$iplocal','$ipremoto','" . $login . "'," . $exito . ",'" . session_id() . "','" . $datos_sesion["datos"] . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . "," . $id . ")";
-			break;
-		case "ACTUALIZA" :
+				break;
+			case "ACTUALIZA" :
 				$sql = "UPDATE log_acceso  SET sesion_php='" . $datos_sesion["ruta"] . "' WHERE idlog_acceso='" . $idsesion . "'";
-			break;
-	}
-	if ($sql != "") {
-		$conn->Ejecutar_Sql($sql);
-	} else {
-		if ($datos_sesion["ruta"] == "") {
-			alerta("Ruta de Sesion, no definida. Por favor comunicarle al Administrador del sistema");
+				break;
+		}
+		if ($sql != "") {
+			$conn -> Ejecutar_Sql($sql);
+		} else {
+			if ($datos_sesion["ruta"] == "") {
+				alerta("Ruta de Sesion, no definida. Por favor comunicarle al Administrador del sistema");
 			}
 		if ($datos_sesion["datos"] == "") {
 			alerta("Su sesion no fue encontrada. Por favor comunicarle al Administrador del sistema");
@@ -3846,6 +3842,16 @@ function generar_cadena_like_comas($campo,$value){
 		$cadena_like.=")";
 	}
 	return($cadena_like);
+}
+
+function notificaciones($mensaje, $tipo = 'alert', $tiempo = 3500,$ubicacion="topCenter") {
+	if ($mensaje != '') {
+	?>
+		<script type="text/javascript">
+			top.noty({text: '<?php echo($mensaje)?>',type: '<?php echo($tipo); ?>',layout: '<?php echo($ubicacion)?>',timeout:<?php echo($tiempo); ?>});
+		</script>
+	<?php
+	}
 }
 
 ?>

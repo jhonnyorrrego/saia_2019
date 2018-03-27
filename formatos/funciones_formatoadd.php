@@ -26,8 +26,7 @@ $x_campodb = Null;
 include_once ($ruta_db_superior."phpmkrfn.php");
 include_once("librerias/funciones.php");
 include_once($ruta_db_superior."librerias_saia.php");
-?>
-<?php
+
 
 // Get action
 $sAction = @$_POST["a_add"];
