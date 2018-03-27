@@ -20,11 +20,21 @@ $dat_orig = 0;
 $sql = "";
 $conn = NULL;
 $conn = phpmkr_db_connect();
-//Almacenar la variable del usuario actual
+
 $usuactual = @$_SESSION["LOGIN" . LLAVE_SAIA];
 if (isset($_SESSION["LOGIN" . LLAVE_SAIA]) && $_SESSION["LOGIN" . LLAVE_SAIA]) {
 	$_SESSION["usuario_actual"] = usuario_actual("funcionario_codigo");
 	$_SESSION["idfuncionario"] = usuario_actual("idfuncionario");
+}
+
+function logear_funcionario_webservice($login){
+global $usuactual;
+	$usuactual=$login;
+	$_SESSION["LOGIN" . LLAVE_SAIA]=$login;
+	$_SESSION["usuario_actual"] = usuario_actual("funcionario_codigo");
+	$_SESSION["idfuncionario"] = usuario_actual("idfuncionario");
+	$_SESSION["conexion_remota"] = 1;
+	return;
 }
 
 /*
@@ -279,10 +289,6 @@ function evento_archivo($cadena) {
 		$ruta .= "../";
 		$max_salida--;
 	}
-	/*
-	 * $ruta_evento=busca_filtro_tabla("valor","configuracion","nombre like 'ruta_evento'","",$conn);
-	 * $nombre=$ruta_db_superior."../".$ruta_evento[0]['valor']."/".DB."_log_".date("Y_m_d").".txt";
-	 */
 
 	//$ruta_resuelta = StorageUtils::parsear_ruta_servidor(RUTA_BACKUP_EVENTO);
 	$storage = new SaiaStorage(RUTA_BACKUP_EVENTO);
@@ -3253,26 +3259,26 @@ function almacenar_sesion($exito, $login) {
 		$conn->Ejecutar_Sql($sql2);
 
 		$idsesion = ultima_sesion($login);
-	$accion = "";
-	if ($idsesion == "") {
-		$accion = "INSERTA";
-	} else {
-		$accion = "ACTUALIZA";
-	}
-	$datos_sesion = datos_sesion();
-	switch ($accion) {
-		case "INSERTA" :
+		$accion = "";
+		if ($idsesion == "") {
+			$accion = "INSERTA";
+		} else {
+			$accion = "ACTUALIZA";
+		}
+		$datos_sesion = datos_sesion();
+		switch($accion) {
+			case "INSERTA" :
 				$sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,idsesion_php,sesion_php,fecha,funcionario_idfuncionario) VALUES('$iplocal','$ipremoto','" . $login . "'," . $exito . ",'" . session_id() . "','" . $datos_sesion["datos"] . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . "," . $id . ")";
-			break;
-		case "ACTUALIZA" :
+				break;
+			case "ACTUALIZA" :
 				$sql = "UPDATE log_acceso  SET sesion_php='" . $datos_sesion["ruta"] . "' WHERE idlog_acceso='" . $idsesion . "'";
-			break;
-	}
-	if ($sql != "") {
-		$conn->Ejecutar_Sql($sql);
-	} else {
-		if ($datos_sesion["ruta"] == "") {
-			alerta("Ruta de Sesion, no definida. Por favor comunicarle al Administrador del sistema");
+				break;
+		}
+		if ($sql != "") {
+			$conn -> Ejecutar_Sql($sql);
+		} else {
+			if ($datos_sesion["ruta"] == "") {
+				alerta("Ruta de Sesion, no definida. Por favor comunicarle al Administrador del sistema");
 			}
 		if ($datos_sesion["datos"] == "") {
 			alerta("Su sesion no fue encontrada. Por favor comunicarle al Administrador del sistema");

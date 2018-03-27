@@ -52,14 +52,8 @@ switch ($sAction) {
 		}
 		break;
 	case "A" : // Add
-		if (AddData($conn)) { // Add New Record
-		                      // alerta("Pantalla adicionada");
-			ob_end_clean();
-			if (usuario_actual('login') == 'cerok') {
-				header("Location: " . $ruta_db_superior . "formatos/generar_formato.php?pantalla=tiny&genera=formato&idformato=" . $_REQUEST["formato"]);
-			} else {
-				header("Location: " . $ruta_db_superior . "formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@" . $_REQUEST["formato"]);
-			}
+		if (AddData($conn)) {			
+			redirecciona("llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@" . $_REQUEST["formato"]);
 			exit();
 		}
 		break;
@@ -164,16 +158,13 @@ encriptar_sqli("formatoadd",1,"form_info",$ruta_db_superior);
 	return $LoadData;
 
 }
-?>
-<?php
 
 //-------------------------------------------------------------------------------
 // Function AddData
 // - Add Data
 // - Variables used: field variables
 
-function AddData($conn)
-{
+function AddData($conn){
   global $x_encabezado,	$x_cuerpo, $x_pie_pagina,$ruta_db_superior;
   $formato=busca_filtro_tabla("","formato","idformato=".$_REQUEST["formato"],"",$conn);
 	// Field encabezado
@@ -191,5 +182,4 @@ function AddData($conn)
 	phpmkr_query($strsql, $conn) or die("Falla al ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
   return true;
 }
-include_once("footer.php");
 ?>
