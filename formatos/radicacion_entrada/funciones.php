@@ -120,14 +120,17 @@ function validar_sticker($idformato, $iddoc){
 
 function imagenes_digitalizadas_funcion($idformato,$iddoc){
 	global $conn, $ruta_db_superior;
+	include_once $ruta_db_superior . "StorageUtils.php";
 	$paginas=busca_filtro_tabla("","pagina a","id_documento=".$iddoc,"consecutivo asc",$conn);
 	if($paginas["numcampos"]){
 		$tabla='';
 		$tabla.='<table>';
 		$tabla.='<tr>';
 		for($i=0;$i<$paginas["numcampos"];$i++){
-			$tabla.='<td><a class="previo_high" enlace="'.$paginas[$i]["consecutivo"].'" tipo="pagina"><img border="1px" style="border-collapse:collapse" src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$paginas[$i]["imagen"].'"></a></td>';
-			if(($i%4)==0&&$i<>0)$tabla.='</tr><tr>';
+			$datos_img = StorageUtils::get_binary_file($paginas[$i]["imagen"]);
+			$tabla .= '<td><a class="previo_high" enlace="' . $paginas[$i]["consecutivo"] . '" tipo="pagina"><img border="1px" style="border-collapse:collapse" src="' . $datos_img . '"></a></td>';
+			if (($i % 4) == 0 && $i != 0)
+				$tabla .= '</tr><tr>';
 		}
 		$tabla.='</tr>';
 		$tabla.='</table>';
@@ -140,10 +143,14 @@ function imagenes_digitalizadas_funcion($idformato,$iddoc){
 		$tabla.='<table>';
 		$tabla.='<tr>';
 		for($i=0;$i<$anexos["numcampos"];$i++){
-			if($_REQUEST['carga_highslide']){				
-			}else{
-				$tabla.='<td><a class="previo_high" enlace="'.$anexos[$i]["ruta"].'" tipo="anexo"><img border="1px" style="border-collapse:collapse" width="90px" height="80px" src="'.PROTOCOLO_CONEXION.RUTA_PDF.'/'.$anexos[$i]["ruta"].'"></a></td>';
-			if(($i%4)==0&&$i<>0)$tabla.='</tr><tr>';
+			if (!$_REQUEST['carga_highslide']) {
+				$datos_img = StorageUtils::get_binary_file($anexos[$i]["ruta"]);
+				$ruta64 = base64_encode($anexos[$i]["ruta"]);
+				$ruta_abrir = "filesystem/mostrar_binario.php?ruta=$ruta64";
+				$tabla .= '<td><a class="previo_high" enlace="' . $ruta_abrir . '" tipo="anexo"><img border="1px" style="border-collapse:collapse" width="90px" height="80px" src="' . $datos_img . '"></a></td>';
+			if(($i%4)==0 && $i != 0) {
+				$tabla.='</tr><tr>';
+			}
 			}
 			
 		}
@@ -177,6 +184,7 @@ function imagenes_digitalizadas_funcion($idformato,$iddoc){
 		<?php
 	}
 }
+
 function obtener_informacion_proveedor($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 	
@@ -511,6 +519,8 @@ function obtener_radicado_entrada($idformato,$iddoc){
 
 function mostrar_informacion_general_radicacion($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
+	include_once ($ruta_db_superior . "StorageUtils.php");
+	require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
 	$datos = busca_filtro_tabla("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio," . fecha_db_obtener("fecha_oficio_entrada", "Y-m-d") . " AS fecha_oficio_entrada," . fecha_db_obtener("fecha_radicacion_entrada", "Y-m-d") . " AS fecha_radicacion_entrada,numero_guia,empresa_transportado,requiere_recogida,tipo_mensajeria", "ft_radicacion_entrada", "documento_iddocumento=" . $iddoc, "", $conn);
 
 	$documento = busca_filtro_tabla("numero,tipo_radicado," . fecha_db_obtener("fecha", "Y-m-d") . " AS fecha", "documento", "iddocumento=" . $iddoc, "", $conn);
@@ -532,12 +542,10 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
 		}
 	}
 
-	$estado_doc = busca_filtro_tabla("", "documento", "iddocumento=" . $iddoc, "", $conn);
-	if ($estado_doc[0]['estado'] == 'APROBADO') {
-		$img = mostrar_codigo_qr($idformato, $iddoc, 1);
-	}
-
-	$tabla = '<table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
+	$img=mostrar_codigo_qr($idformato,$iddoc,true);
+	
+    $tabla='
+        <table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
   <tr>
     <td style="width: 23%;"><b>Fecha de radicaci&oacute;n:</b></td>
     <td style="width: 18%;">' . $fecha_radicacion . '</td>

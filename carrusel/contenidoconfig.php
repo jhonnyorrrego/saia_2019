@@ -167,7 +167,7 @@ width:"350px"
    echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>PREVISUALIZAR</td><td><textarea name='preview' id='preview' class=''>".stripslashes(codifica_encabezado(html_entity_decode(@$contenido[0]["preview"])))."</textarea></td></tr>";
    echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>IMAGEN</td><td>";
     if ($contenido[0]["imagen"] != "") {
-        echo "<a href='" . $ruta_db_superior . $contenido[0]["imagen"] . "' target='_blank'>Ver Imagen Actual</a><br />Borrar Imagen<input type='checkbox' value='1' name='borrar_imagen'><br />Subir nueva";
+        echo "<a href='" . $ruta_db_superior . 'filesystem/mostrar_binario.php?ruta='.base64_encode($contenido[0]["imagen"]) . "' target='_blank'>Ver Imagen Actual</a><br />Borrar Imagen<input type='checkbox' value='1' name='borrar_imagen'><br />Subir nueva";
     }
         echo '<div id="dz_carrusel"><div class="dz-message"><span>Arrastre aquí los archivos adjuntos</span></div></div>';
    echo "</td></tr>";
@@ -300,24 +300,32 @@ function guardar_editar($accion, $datos, $carrusel) {
 function guardar_archivos($id, $form_uuid) {
     global $ruta_db_superior, $conn;
 
-    //$archivos = busca_filtro_tabla("", "anexos_tmp", "uuid = '$form_uuid' AND idformato=$idformato", "", $conn);
-    //$archivos = busca_filtro_tabla("", "anexos_tmp", "uuid = '$form_uuid' AND idformato=$idformato", "", $conn);
     $archivos = busca_filtro_tabla("", "anexos_tmp", "uuid = '$form_uuid'", "", $conn);
     for ($j = 0; $j < $archivos["numcampos"]; $j++) {
         $ruta_temporal = $ruta_db_superior . $archivos[$j]["ruta"];
 
         if (file_exists($ruta_temporal)) {
-            $datos_anexo = pathinfo($ruta_temporal);
 
+            require_once $ruta_db_superior . 'StorageUtils.php';
+            require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
+
+            $datos_anexo = pathinfo($ruta_temporal);
             $extension = $datos_anexo["extension"];
-            $temp_filename = uniqid() . "." . $extension;
-	  $aux=RUTA_CARRUSEL_IMAGENES;
-            $dir_anexos = $ruta_db_superior . $aux;
-            crear_destino($dir_anexos);
-            $imagen_reducida = $dir_anexos . $temp_filename;
-            if (copy($ruta_temporal, $imagen_reducida)) {
-                $sql1 = "update contenidos_carrusel set imagen='" . $aux . $temp_filename . "' where idcontenidos_carrusel=" . $id;
+
+            $aleatorio = uniqid();
+            $tipo_almacenamiento = new SaiaStorage("imagenes");
+            $imagen_reducida = RUTA_CARRUSEL_IMAGENES . $aleatorio . "." . $extension;
+            $resultado = $tipo_almacenamiento->almacenar_recurso($imagen_reducida, $ruta_temporal, false);
+
+            $ruta_anexos = array(
+                "servidor" => $tipo_almacenamiento->get_ruta_servidor(),
+                "ruta" => $imagen_reducida
+            );
+            if ($tipo_almacenamiento->get_filesystem()->has($imagen_reducida)) {
+                $ruta_anexos = json_encode($ruta_anexos);
+                $sql1 = "update contenidos_carrusel set imagen='" . $ruta_anexos . "' where idcontenidos_carrusel=" . $id;
  			phpmkr_query($sql1,$conn);
+
                 @unlink($ruta_temporal);
                 unlink("$ruta_temporal.lock");
                 //Eliminar los pendientes de la tabla temporal
@@ -327,6 +335,5 @@ function guardar_archivos($id, $form_uuid) {
 }
 }
 }
-
 ?>
 </div>

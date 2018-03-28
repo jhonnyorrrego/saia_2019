@@ -139,7 +139,9 @@ function mostrar_anexos_pqrsf($idformato,$iddoc){
 	$anexos=busca_filtro_tabla("","anexos a","a.documento_iddocumento=".$iddoc,"",$conn);
 	$anexos_array=array();
 	for($i=0;$i<$anexos["numcampos"];$i++){
-		$anexos_array[]='<a class="previo_high" style="cursor:pointer" enlace="'.$anexos[$i]["ruta"].'">'.$anexos[$i]["etiqueta"].'</a>';
+		$ruta = $anexos[$i]["ruta"];
+		$ruta64 = base64_encode($ruta);
+		$anexos_array[] = '<a class="previo_high" style="cursor:pointer" enlace="' . "filesystem/mostrar_binario.php?ruta=$ruta64" . '">' . $anexos[$i]["etiqueta"] . '</a>';
 	}
 	echo(implode(", ",$anexos_array));
 	if($_REQUEST["tipo"]!=5){
