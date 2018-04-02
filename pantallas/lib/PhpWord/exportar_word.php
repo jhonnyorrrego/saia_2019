@@ -43,6 +43,9 @@ if (@$iddoc) {
 if (@$_REQUEST["iddoc"]) {
 	$anexo = busca_filtro_tabla("d.ruta,b.nombre", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $_REQUEST["iddoc"] . " AND d.documento_iddocumento=" . $_REQUEST["iddoc"], "", $conn);
 	if ($anexo['numcampos']) {
+		if (@$_REQUEST['from_externo']) {
+			include_once ($ruta_db_superior . 'formatos/' . $anexo[0]['nombre'] . '/funciones.php');
+		}
 		$ruta_procesar = $ruta_db_superior . $anexo[0]["ruta"];
 		$ruta_almacenar = explode('anexos', $anexo[0]["ruta"]);
 		$ruta_docx = $ruta_db_superior . $ruta_almacenar[0] . 'docx/';
@@ -108,7 +111,6 @@ if ($ruta_procesar != '') {
 			for ($i = 0; $i < count($funciones_ejecutar); $i++) {
 				$nombre = $funciones_ejecutar[$i];
 				if (in_array($nombre, $campos_word)) {
-
 					switch ($nombre) {
 						case 'elaborado_por' :
 							$doc_aprobado = busca_filtro_tabla("ejecutor", "documento", "iddocumento=" . $_REQUEST["iddoc"], "", $conn);
@@ -189,13 +191,14 @@ if ($ruta_procesar != '') {
 										} else {
 											$img = stripslashes(base64_decode($info_funcionario[0]["firma"]));
 										}
+
 										crear_destino($ruta_imagen);
 										chmod($ruta_imagen, 0777);
 
+										$imagen_firma = $ruta_imagen . '/firma_' . $funcionario_codigo . '.jpg';
 										if (file_exists($imagen_firma)) {
 											unlink($imagen_firma);
 										}
-
 										$im = imagecreatefromstring($img);
 										imagejpeg($im, $imagen_firma);
 										chmod($imagen_firma, 0777);
@@ -230,6 +233,7 @@ if ($ruta_procesar != '') {
 											$der++;
 										}
 										imagedestroy($im);
+
 									} else {
 										if ($espacio_firma == 0) {
 											$firma = '${f_' . $funcionario_codigo_encriptado . '}';
@@ -319,7 +323,7 @@ if ($ruta_procesar != '') {
 			} // fin for funciones_ejecutar
 		} // fin if ejecutar
 	}// fin if request iddoc y campos_word numcampos
-	
+
 	if ($ejecutar) {
 		$marca_agua = mostrar_estado_documento($_REQUEST['iddoc']);
 		$templateProcessor -> setTextWatermark($marca_agua);
