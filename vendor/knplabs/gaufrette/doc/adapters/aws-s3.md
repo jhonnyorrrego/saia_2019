@@ -1,13 +1,15 @@
-Amazon S3
-=========
+---
+currentMenu: aws-s3
+---
+
+# AWS S3
 
 First, you will need to install AWS SDK for PHP:
 ```bash
 composer require aws/aws-sdk-php
 ```
 
-Example
--------
+## Example
 
 ```php
 <?php
@@ -17,8 +19,10 @@ use Gaufrette\Adapter\AwsS3 as AwsS3Adapter;
 use Gaufrette\Filesystem;
 
 $s3client = S3Client::factory(array(
-    'key'     => 'your_key_here',
-    'secret'  => 'your_secret',
+    'credentials' => array(
+        'key'     => 'your_key_here',
+        'secret'  => 'your_secret',
+    ),
     'version' => 'latest',
     'region'  => 'eu-west-1',
 ));

@@ -25,7 +25,7 @@ if(@$_REQUEST['texto_salir']){
 			texto_salir='<b>ATENCION!</b><br>'+texto_salir;
 			notificacion_saia(texto_salir,'success','',4000);
 		</script>
-	<?php	
+	<?php
 }
 
 include_once ($ruta_db_superior . "pantallas/lib/mobile_detect.php");
@@ -89,14 +89,14 @@ if($_SESSION["tipo_dispositivo"]=="movil"){
 ?>
 }
 </style>
-<?php 
+<?php
 include_once("css/index_estilos.php");
 echo(estilo_bootstrap());
-if(@$_SESSION["tipo_dispositivo"]=="movil"){ 
+if(@$_SESSION["tipo_dispositivo"]=="movil"){
     echo(index_estilos('temas_movil'));
     echo(index_estilos('temas_bootstrap'));
 }else{
-    echo(index_estilos('temas_index'));    
+    echo(index_estilos('temas_index'));
     echo(index_estilos('temas_main'));
 }
 ?>
@@ -126,11 +126,11 @@ if(@$_SESSION["tipo_dispositivo"]=="movil"){
         }
     ?>
   <tr align="center">
-    <td colspan="3" align="center" valign="middle" id="LoginBkg"> 
+    <td colspan="3" align="center" valign="middle" id="LoginBkg">
       <div id="loginForm" class="row-fluid">
       	<div id="contenedor_login" class="<?php echo($estilo_form); ?>">
             <form method="post" name="loguin" id="formulario_login" action="login.php">
-            <?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>    
+            <?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
                 <div class="control-group">
                     <label class="control-label blueTexts" for="inputEmail">Nombre de usuario:</label>
                     <div class="controls">
@@ -152,16 +152,16 @@ if(@$_SESSION["tipo_dispositivo"]=="movil"){
                         <img src="<?php echo($ruta_db_superior); ?>asset/img/layout/logosaia.png">
                         </p>
                       	<p id="contenedor_recordar_contrasena">
-                      	
+
                       	<a href="recordar_contrasena.php" style="cursor:pointer"  class="highslide" onclick="return hs.htmlExpand(this,{objectType:'iframe',width: 550, height: 300, preserveContent:false})">¿No puedes acceder a tu cuenta?</a>
-                      	</p> 
+                      	</p>
                     </div>
                 </div>
             <?php } else { ?>
             <table width="700" border="0" cellspacing="0" cellpadding="0">
               <tr>
                 <td height="25" colspan="5"><img class="pull-right" style="height: 30px;" src="asset/img/layout/logosaia.png"></td>
-              </tr> 
+              </tr>
               <tr>
                 <td width="62" rowspan="2">&nbsp;</td>
                 <td width="125" rowspan="2" align="left" valign="top">
@@ -191,7 +191,7 @@ if(@$_SESSION["tipo_dispositivo"]=="movil"){
                         <button name="boton_ui" type="button" class="btn btn-primary" id="ingresar">Iniciar sesi&oacute;n</button>
                         </p>
                       	<p id="contenedor_recordar_contrasena">
-                      	
+
                       	<a href="recordar_contrasena.php" style="cursor:pointer" class="highslide"   onclick="return hs.htmlExpand(this,{objectType:'iframe',width: 550, height: 300, preserveContent:false})">¿No puedes acceder a tu cuenta?</a>
                       	</p></td>
                     </tr>
@@ -213,7 +213,7 @@ if(@$_SESSION["tipo_dispositivo"]=="movil"){
         </div>
       </div></td>
   </tr>
-	
+
 </table>
 
 <div id="div_noticias">
@@ -240,7 +240,7 @@ if ($dato["numcampos"]) {
 	echo $texto_tabla;
 }
 ?>
-</div>	
+</div>
 </body>
 </html>
 <?php

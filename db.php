@@ -509,7 +509,11 @@ function evento_archivo($cadena){
     $ruta.="../";
     $max_salida--;
   }
-  /*$ruta_evento=busca_filtro_tabla("valor","configuracion","nombre like 'ruta_evento'","",$conn);
+	/*
+	 * $ruta_evento=busca_filtro_tabla("valor","configuracion","nombre like 'ruta_evento'","",$conn);
+	 *
+	 * $nombre=$ruta_db_superior."../".$ruta_evento[0]['valor']."/".DB."_log_".date("Y_m_d").".txt";
+	 */
 
 	$storage = new SaiaStorage(RUTA_BACKUP_EVENTO);
 
