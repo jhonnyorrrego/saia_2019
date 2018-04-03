@@ -19,8 +19,6 @@ echo(librerias_jquery());
 echo(estilo_bootstrap());
 echo(librerias_notificaciones());
 
-
-
 $noticias=busca_filtro_tabla('','noticia_index','estado=1 and idnoticia_index='.$_REQUEST['idnoticia_index'],'',$conn);
 ?>
 
@@ -58,7 +56,6 @@ $noticias=busca_filtro_tabla('','noticia_index','estado=1 and idnoticia_index='.
 		}
 		
 		echo $cadena;
-		
 		
     ?>	
 

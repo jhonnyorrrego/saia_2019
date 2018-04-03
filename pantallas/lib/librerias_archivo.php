@@ -77,7 +77,6 @@ function aplicar_plantilla_ruta_documento($iddoc) {
 
 	$datos_doc = busca_filtro_tabla("estado,iddocumento,".fecha_db_obtener('fecha','Y-m-d')." as fecha,plantilla","documento","iddocumento=$iddoc","",$conn);
 	
-
 	foreach ($campos as $campo) {
 		if(!array_key_exists($campo, $datos_doc[0])) {
 			die("El campo $campo no se encuentra en la tabla documento");
@@ -87,7 +86,6 @@ function aplicar_plantilla_ruta_documento($iddoc) {
 	}
 	return $formato_ruta;
 }
-
 
 function crear_archivo_carpeta($nombre, $ruta, $extension, $tipo) {
 	global $ruta_db_superior;

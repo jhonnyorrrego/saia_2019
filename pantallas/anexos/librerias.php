@@ -107,11 +107,12 @@ function eliminar_anexos($idanexo,$tipo_retorno=1){
   $config = busca_filtro_tabla("valor","configuracion","nombre='tipo_almacenamiento'","",$conn);
 
   $anexo=busca_filtro_tabla("","anexos","idanexos=".$idanexo,"",$conn);
-  if($anexo["numcampos"]>0)
+  if($anexo["numcampos"]>0) {
    if(!empty($anexo[0]['idbinario'])) { // Evita errores si el binario no fue bien almacenado y no se asocio
        $sql1="DELETE FROM binario WHERE idbinario=".$anexo[0]['idbinario'];
         phpmkr_query($sql1,$conn);
      }
+  }
    $file=$ruta_db_superior.$anexo[0]["ruta"];
    $info=busca_filtro_tabla("","anexos","idanexos=".$idanexo,"",$conn);
    $carpeta_eliminados=RUTA_BACKUP_ELIMINADOS.$info[0]["documento_iddocumento"];

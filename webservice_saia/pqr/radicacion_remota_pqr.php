@@ -31,12 +31,13 @@ require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
 function consultar_iniciativa($datos){
 	global $conn;
 	$iniciativa=busca_filtro_tabla("a.idserie as id,a.nombre as nombre","serie a, serie b","a.estado=1 and a.cod_padre=b.idserie and b.nombre like 'Iniciativas publicas'","nombre",$conn);
-	$resultado="<option value=''>Seleccione</optcion>";
+	$resultado="<option value=''>Seleccione</option>";
 	for ($i=0; $i < $iniciativa['numcampos'] ; $i++) {
 		$resultado.="<option value='".$iniciativa[$i]['id']."'>".$iniciativa[$i]['nombre']."</optcion>";
 	}
 	return($resultado);
 }
+
 function consultar_sector($datos){
 	global $conn;
 	$sector=busca_filtro_tabla("a.idserie as id,a.nombre as nombre","serie a, serie b","a.estado=1 and a.cod_padre=b.idserie and b.nombre like 'Sector de la iniciativa'","nombre",$conn);
@@ -46,6 +47,7 @@ function consultar_sector($datos){
 	}
 	return($resultado);
 }
+
 function consultar_cluster($datos){
 	global $conn;
 	$cluster=busca_filtro_tabla("a.idserie as id,a.nombre as nombre","serie a, serie b","a.estado=1 and a.cod_padre=b.idserie and b.nombre like 'cluster'","nombre",$conn);
@@ -55,6 +57,7 @@ function consultar_cluster($datos){
 	}
 	return($resultado);
 }
+
 function consultar_region($datos){
 	global $conn;
 	$region=busca_filtro_tabla("a.idserie as id,a.nombre as nombre","serie a, serie b","a.estado=1 and a.cod_padre=b.idserie and b.nombre like 'Region'","nombre",$conn);
@@ -64,11 +67,13 @@ function consultar_region($datos){
 	}
 	return($resultado);
 }
+
 function consultar_numero_radicado($datos){
 	global $conn;
 	$contador=busca_filtro_tabla("b.consecutivo","formato a, contador b","a.contador_idcontador=b.idcontador AND a.idformato=305","",$conn);
 	return($contador[0]['consecutivo']);
 }
+
 function datos_select($idserie){
 	global $conn;
 	$serie=busca_filtro_tabla("idserie as id,nombre as nombre","serie","estado=1 and cod_padre=".$idserie,"nombre",$conn);
@@ -78,6 +83,7 @@ function datos_select($idserie){
 	}
 	return($resultado);
 }
+
 function ejecutar_consultas($datos){
 global $conn;
 $datos = json_decode($datos);
@@ -129,6 +135,9 @@ function radicar_documento_remoto($datos){
 	}
 
 	if($iddoc){
+		include_once ($ruta_db_superior . "pantallas/qr/librerias.php");
+		generar_codigo_qr($datos_formato[0]['idformato'], $iddoc, $_SESSION["usuario_actual"]);
+
 		$ch = curl_init();
 		// $fila = "".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/html2ps/public_html/demo/html2ps.php?plantilla=".strtolower($datos_formato[0]["nombre_formato"])."&iddoc=".$iddoc."&conexion_remota=1";
 		$fila = "".PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/class_impresion.php?iddoc=" . $iddoc . "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&usuario_actual=" . $_SESSION["usuario_actual"] . "&LLAVE_SAIA=" . LLAVE_SAIA;
@@ -159,6 +168,7 @@ function radicar_documento_remoto($datos){
 		  $ruta_db_superior=$raiz;
 		$ruta = $formato_ruta . "/pdf/";
 		  $ruta.=($datos_documento[0]["plantilla"])."_".$datos_documento[0]["numero"]."_".str_replace("-","_",$datos_documento[0]["x_fecha"]).".pdf";
+
 		if ($almacenamiento->get_filesystem()->has($ruta)) {
 			$data = $almacenamiento->get_filesystem()->read($ruta);
 			$retorno['pdf'] = base64_encode($data);
@@ -195,6 +205,7 @@ function enviar_correo_solicitante($datos){
 	}
 	return(json_encode(true));
 }
+
 function transferir_documento_encargado($datos){
 	global $conn, $ruta_db_superior;
 	include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
@@ -246,7 +257,6 @@ function radicar_plantilla2(){
  	//busco los valores del formulario que van en la tabla documento
   $buscar = phpmkr_query("SELECT A.* FROM documento A WHERE 1=0",$conn);
   $lista_campos = array();
-
 
   for($i=0;$i<phpmkr_num_fields($buscar);$i++)
   	array_push($lista_campos,strtolower(phpmkr_field_name($buscar,$i)));

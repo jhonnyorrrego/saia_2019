@@ -20,7 +20,7 @@ function mostrar_codigo_qr($idformato, $iddoc,$retorno=false) {
 
 	include_once($ruta_db_superior."StorageUtils.php");
 	require_once $ruta_db_superior.'filesystem/SaiaStorage.php';
-	$codigo_qr = busca_filtro_tabla("", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
+	$codigo_qr = busca_filtro_tabla("ruta_qr", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
 	$img='';
 	if($codigo_qr['numcampos']) {
 		$ruta_qr=json_decode($codigo_qr[0]['ruta_qr']);
@@ -32,7 +32,7 @@ function mostrar_codigo_qr($idformato, $iddoc,$retorno=false) {
 			}
 		}
 	}
-	if($img==''){
+	if($img=='') {
 		generar_codigo_qr($idformato,$iddoc);
 		$img=mostrar_codigo_qr($idformato,$iddoc,true);
 	}
@@ -61,7 +61,7 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
 	if(@$_REQUEST['tipo'] == 5) {
 		$idfun = $_REQUEST['idfunc'];
 	} else {
-		$idfun = usuario_actual('idfuncionario');
+		$idfun = $_SESSION["idfuncionario"];
 		if(!$idfun){
 		    $idfun=1;
 		}
@@ -85,12 +85,12 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
 	$filename = $ruta . 'qr' . date('Y_m_d_H_m_s') . '.png';
 
 	if($imagen == false) {
-		alerta("Error al tratar de crear el codigo qr");
+		alerta("Error al tratar de crear el codigo QR");
 	} else {
 		$almacenamiento->almacenar_contenido($filename, $imagen);
 		$ruta_qr = array ("servidor" => $almacenamiento->get_ruta_servidor(), "ruta" => $filename);
 		$sql_documento_qr = "INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion) VALUES (" . $iddoc . "," . $idfun . "," . fecha_db_almacenar(date("Y-m-d H:m:s"), 'Y-m-d H:i:S') . ",'" . json_encode($ruta_qr) . "','vacio')";
-		phpmkr_query($sql_documento_qr);
+		phpmkr_query($sql_documento_qr) or die("Error al insertar la ruta del QR");
 	}
 }
 
@@ -103,8 +103,6 @@ function generar_qr($filename, $datos, $matrixPointSize = 2, $errorCorrectionLev
 		} else {
 			crear_destino($ruta_db_superior . $filename);
 			$filename .= 'qr' . date('Y_m_d_H_m_s') . '.png';
-			if(file_exists($ruta_db_superior . $filename)) {
-			}
 			QRcode::png($datos, $ruta_db_superior . $filename, $errorCorrectionLevel, $matrixPointSize, 0);
 			return $filename;
 		}
@@ -112,6 +110,7 @@ function generar_qr($filename, $datos, $matrixPointSize = 2, $errorCorrectionLev
 		return false;
 	}
 }
+
 function generar_qr_bin($datos, $matrixPointSize = 2, $errorCorrectionLevel = 'L') {
 	global $ruta_db_superior;
 	include_once ($ruta_db_superior . "phpqrcode/qrlib.php");

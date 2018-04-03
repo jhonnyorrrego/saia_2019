@@ -66,7 +66,6 @@ if (isset($_REQUEST['adicionar2'])) {
             die();
         }
     }
-
 }
 
 /* ------------------------- CHECKBOX MOSTRAR O NO ------------------------ */

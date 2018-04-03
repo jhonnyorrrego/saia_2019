@@ -167,7 +167,7 @@ foreach ($arRecKey as $sRecKey) {
     	if (is_object($objeto)) {
     		$imagen = StorageUtils::get_binary_file($x_imagen);
     	?>
-    <img src="<?php echo $imagen; ?>" alt="P&aacute;gina No. <?php print($x_pagina)?>">
+    <img src="<?php echo $imagen; ?>" alt="Ruta <?php print($x_ruta)?>">
     <?php }
     } ?>
     </span></div>
@@ -321,7 +321,7 @@ function DeleteData($sqlKey, $llave, $conn) {
 		$sql_estampado = "DELETE FROM pagina_estampado WHERE pagina_idpagina=" . $pag;
 		phpmkr_query($sql_estampado, $conn);
 
-		$x_detalle = "Identificador: $pag ,Nombre: " . basename($inf_eliminado[0]["ruta"]) . " ,Justificaci&oacute;n: " . htmlentities($x_detalle) . " <a href=\"$nombre\" target=\"_blank\" >Imagen</a>";
+		$x_detalle = "Identificador: $pag ,Nombre: " . basename($inf_eliminado[0]["ruta"]) . " ,Justificaci&oacute;n: " . ($x_detalle) . " <a href=\"$nombre\" target=\"_blank\" >Imagen</a>";
 		registrar_accion_digitalizacion($rutaD, 'ELIMINACION PAGINA', $x_detalle);
 		//se eliminanan los comentarios de la pagina eliminada
 		$sql_eliminar_nota = "DELETE FROM comentario_img WHERE pagina=" . $pag;

@@ -316,9 +316,11 @@ $aux_formato = strtolower($detalle_doc[0]["plantilla"]);
   <?php
   $var = md5(time());   //para evitar la memoria cache
   if($enlace=="") {      //si es una pagina (imagen) del documento
+  	//print_r($ruta);die();
+  	$contenido_img = StorageUtils::get_binary_file($ruta);
   ?>
   <br />
-  <img id="prueba" src="<?php echo "$ruta?var=".$var; ?>"><br><br>
+  <img id="prueba" src="<?php echo $contenido_img; ?>"><br><br>
 </div>
   </div>
   <?php

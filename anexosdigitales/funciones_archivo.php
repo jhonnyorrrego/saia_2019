@@ -727,7 +727,7 @@ if($campo["numcampos"]){
 					$dir_anexos = selecciona_ruta_anexos2($iddoc, $tipo_almacenamiento);
        
 					if (is_file($ruta_temporal)) {
-						$resultado = $almacenamiento->copiar_contenido_externo(ruta_temporal, $dir_anexos . $temp_filename);
+						$resultado = $almacenamiento->copiar_contenido_externo($ruta_temporal, $dir_anexos . $temp_filename);
 					}
         if($resultado){
 							$dir_anexos_1 = array(

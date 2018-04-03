@@ -27,6 +27,16 @@ if (isset($_SESSION["LOGIN" . LLAVE_SAIA]) && $_SESSION["LOGIN" . LLAVE_SAIA]) {
 	$_SESSION["idfuncionario"] = usuario_actual("idfuncionario");
 }
 
+function logear_funcionario_webservice($login){
+global $usuactual;
+	$usuactual=$login;
+	$_SESSION["LOGIN" . LLAVE_SAIA]=$login;
+	$_SESSION["usuario_actual"] = usuario_actual("funcionario_codigo");
+	$_SESSION["idfuncionario"] = usuario_actual("idfuncionario");
+	$_SESSION["conexion_remota"] = 1;
+	return;
+}
+
 /*
 <Clase>
 <Nombre>registrar_accion_digitalizacion
@@ -1913,7 +1923,11 @@ global $conn;
 
   if(!empty($anexos)){
   	foreach($anexos as $fila){
-  		$mail->AddAttachment($fila);
+  		$parseo_ruta=json_decode($fila,true);
+		$etiqueta=explode("/", $parseo_ruta['ruta']);
+  		$contenido = StorageUtils::get_file_content($fila);
+		$mail->AddStringAttachment($contenido, end($etiqueta));
+  		//$mail->AddAttachment($fila);
   	}
    }
    if(!$mail->Send()){
@@ -2415,21 +2429,13 @@ function volver($back) {
 </Clase>
 */
 class PERMISO {
-
     var $login;
-
     var $conn;
-
     var $acceso_propio;
-
     var $acceso_grupo;
-
     var $acceso_total;
-
     var $idfuncionario;
-
     var $funcionario_codigo;
-
     var $perfil;
 
     /*
@@ -3399,7 +3405,6 @@ function crear_archivo_formato($nombre,$texto=NULL,$modo='wb'){
 	return (false);
 }
 
-
 /*<Clase>
 <Nombre>crear_destino</Nombre>
 <Parametros>$destino:estructura de carpetas a crear</Parametros>
@@ -3733,16 +3738,15 @@ function concatenar_cadena_sql($arreglo_cadena){
   }
 }
 
-function obtener_reemplazo($fun_codigo=0,$tipo=0){
+function obtener_reemplazo($fun_codigo = 0, $tipo = 1) {
   global $conn;
   //$fun_codigo= funcionario_codigo del usuario a consultar
-  //$tipo=0 para validar contra antiguo y 1 para validar contra nuevo
   $retorno=array();
   $retorno['exito']=0;
   if($tipo){
-    $reemplazo=busca_filtro_tabla("nuevo,idreemplazo_saia","reemplazo_saia","antiguo=".$fun_codigo." and estado=1","",$conn);
+		$reemplazo = busca_filtro_tabla("nuevo,idreemplazo_saia", "reemplazo_saia", "antiguo=" . $fun_codigo . " and estado=1 and procesado=1", "fecha_reemplazo desc", $conn);
   }else{
-    $reemplazo=busca_filtro_tabla("antiguo,idreemplazo_saia","reemplazo_saia","nuevo=".$fun_codigo." and estado=1","",$conn);
+		$reemplazo = busca_filtro_tabla("antiguo,idreemplazo_saia", "reemplazo_saia", "nuevo=" . $fun_codigo . " and estado=1 and procesado=1", "fecha_reemplazo desc", $conn);
   }
   if($reemplazo['numcampos']){
     $retorno['exito']=1;
