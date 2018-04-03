@@ -1,21 +1,17 @@
 <?php
-$max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$max_salida = 6;
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
-  if (is_file($ruta . "db.php")){
-    $ruta_db_superior = $ruta; //Preserva la ruta superior encontrada
-  }
-  $ruta.="../";
-  $max_salida--;
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
+	}
+	$ruta .= "../";
+	$max_salida--;
 }
 
-// POSTERIOR AL APROBAR, se debe definir la variable ruta_db_superior desde donde se hace el llamado.
 include_once ($ruta_db_superior . "pantallas/lib/PhpWord/funciones_include.php");
-// require_once($ruta_db_superior.'pantallas/lib/PHPWord/src/PhpWord/Autoloader.php');
 require_once ($ruta_db_superior . 'vendor/autoload.php');
-
 require_once 'SaiaTemplateProcessor.php';
-
 date_default_timezone_set('UTC');
 
 /**
@@ -26,11 +22,11 @@ use PhpOffice\PhpWord\SaiaTemplateProcessor;
 
 error_reporting(E_ALL);
 
-if (! defined('CLI')) {
-define('CLI', (PHP_SAPI == 'cli') ? true : false);
-define('EOL', CLI ? PHP_EOL : '<br />');
-define('SCRIPT_FILENAME', basename($_SERVER['SCRIPT_FILENAME'], '.php'));
-define('IS_INDEX', SCRIPT_FILENAME == 'index');
+if (!defined('CLI')) {
+	define('CLI', (PHP_SAPI == 'cli') ? true : false);
+	define('EOL', CLI ? PHP_EOL : '<br />');
+	define('SCRIPT_FILENAME', basename($_SERVER['SCRIPT_FILENAME'], '.php'));
+	define('IS_INDEX', SCRIPT_FILENAME == 'index');
 }
 
 class RadicadoWord {
@@ -70,11 +66,7 @@ class RadicadoWord {
 				$arr_ruta = StorageUtils::resolver_ruta($anexo[0]["ruta"]);
 				$this->temp_fs = StorageUtils::get_memory_filesystem("tmp_docx", "saia");
 				$this->ruta_docx = "saia://tmp_docx/docx/";
-				// $ruta_imagen = "saia://tmp_docx/firma_temp";
 
-				// $ruta_anexo = explode('anexos', $anexo[0]["ruta"]);
-				// $this->ruta_combinar = $this->ruta_db_superior . $ruta_anexo[0] . 'pdf_temp/';
-				// $this->ruta_docx = $this->ruta_db_superior . $ruta_anexo[0] . 'docx/';
 				$this->idformato = $anexo[0]["idformato"];
 			}
 			if(@$anexo_csv['numcampos']) {
@@ -141,9 +133,7 @@ class RadicadoWord {
 						);
 						$templateProcessor->setImg($this->campo_qr_word, $img2);
 					}
-
 					$archivo_out = 'documento_word';
-
 					$extension_doc = '.docx';
 
 					/*
@@ -153,8 +143,8 @@ class RadicadoWord {
 					 * }
 					 */
 					$marca_agua = mostrar_estado_documento($_REQUEST['iddoc']);
-					$templateProcessor->setTextWatermark($marca_agua);
-					$templateProcessor->saveAs($this->ruta_docx . $archivo_out . $extension_doc);
+					$templateProcessor -> setTextWatermark($marca_agua);
+					$templateProcessor -> saveAs($this -> ruta_docx . $archivo_out . $extension_doc);
 
 					$ruta_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal'", "", $conn);
 					$ruta_tmp_usr = $ruta_temporal[0]["valor"] . "_" . usuario_actual("login");
@@ -190,8 +180,8 @@ class RadicadoWord {
 		$marca_agua = mostrar_estado_documento($this->iddocumento);
 		$extension_doc = '.docx';
 
-		$datos = $this->cargar_csv($this->archivo_csv);
-		for($i = 0; $i < count($datos); $i++) {
+		$datos = $this -> cargar_csv($this -> archivo_csv);
+		for ($i = 0; $i < count($datos); $i++) {
 			// Cada elemento es un array campo => valor
 			$archivo_out = "documento_word_" . ($i + 1);
 			$archivo_copia = $this->ruta_combinar . "/$archivo_out" . $extension_doc;
@@ -225,20 +215,20 @@ class RadicadoWord {
 				$templateProcessor->setImg($this->campo_qr_word, $img2);
 			}
 
-			foreach($datos[$i] as $campo => $valor) {
-				if(in_array($campo, $campos_word)) {
-					$templateProcessor->setValue($campo, $valor);
+			foreach ($datos[$i] as $campo => $valor) {
+				if (in_array($campo, $campos_word)) {
+					$templateProcessor -> setValue($campo, $valor);
 				} else {
 					die("No se encontr&oacute; el campo $campo en la plantilla");
 				}
 			}
 
-			if(file_exists($archivo_copia)) {
+			if (file_exists($archivo_copia)) {
 				unlink($archivo_copia);
 			}
 
-			$templateProcessor->setTextWatermark($marca_agua);
-			$templateProcessor->saveAs($archivo_copia);
+			$templateProcessor -> setTextWatermark($marca_agua);
+			$templateProcessor -> saveAs($archivo_copia);
 			$templateProcessor = null;
 		}
 
@@ -264,21 +254,16 @@ class RadicadoWord {
 			//print_r($var2);echo "<br>";
 			// $comando2 = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . $directorio_out . ' ' . $directorio_out . "*" . $extension_doc;
 		}
-		//die();
 	}
 
 	private function obtener_codigo_qr() {
-		global $conn, $ruta_db_superior;
-		$codigo_qr = busca_filtro_tabla("", "documento_verificacion", "documento_iddocumento=" . $this->iddocumento, "", $conn);
-
-		if(!$codigo_qr['numcampos']) {
-			include_once ($this->ruta_db_superior . "pantallas/qr/librerias.php");
-			generar_codigo_qr($this->idformato, $this->iddocumento);
-
-			$codigo_qr = busca_filtro_tabla("", "documento_verificacion", "documento_iddocumento=" . $this->iddocumento, "", $conn);
+		include_once ($this -> ruta_db_superior . "pantallas/qr/librerias.php");
+		$ruta = generar_codigo_qr($this -> idformato, $this -> iddocumento);
+		if ($ruta["exito"]) {
+			return ($ruta["ruta_qr"]);
+		} else {
+			die("Error al retornar la ruta del QR");
 		}
-
-		return $codigo_qr[0]['ruta_qr'];
 	}
 
 	private function cargar_csv($inputFileName) {
@@ -286,24 +271,23 @@ class RadicadoWord {
 		$fila = 1;
 		$header = array();
 		$head_size = -1;
-		if(($gestor = fopen($inputFileName, "r")) !== FALSE) {
-			while(($datos = fgetcsv($gestor, 1000, ",")) !== FALSE) {
-				if($fila == 1) {
+		if (($gestor = fopen($inputFileName, "r")) !== FALSE) {
+			while (($datos = fgetcsv($gestor, 1000, ",")) !== FALSE) {
+				if ($fila == 1) {
 					$header = $datos;
 					$head_size = count($datos);
 					$fila++;
 					continue;
 				}
 				$numero = count($datos);
-				if($numero > $head_size) {
+				if ($numero > $head_size) {
 					$mensaje = "Cantidad de datos excede el número de campos ($numero > $head_size) en la línea $fila";
 					die($mensaje);
 				}
 				$fila++;
 				$campos_fila = array();
-				for($c = 0; $c < $numero; $c++) {
+				for ($c = 0; $c < $numero; $c++) {
 					$campos_fila[$header[$c]] = $datos[$c];
-					// echo "{$header[$c]} = {$datos[$c]}<br />\n";
 				}
 				$resp[] = $campos_fila;
 			}
@@ -311,5 +295,6 @@ class RadicadoWord {
 		}
 		return $resp;
 	}
+
 }
 ?>

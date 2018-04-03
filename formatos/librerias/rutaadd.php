@@ -431,10 +431,7 @@ function eliminarespacio(elemento)
    	redirecciona($ruta_db_superior."pantallas/documento/visor_documento.php?iddoc=".$_GET["doc"]."&actualizar_pdf=1");
 	 }else if($formato[0]["mostrar_pdf"]==2){		
 	  	$iddoc=$_GET["doc"];
-		$from_externo=1;		
 	  	$ruta_db_superior='../../';	
-		$_REQUEST['from_externo']=1;
-	  	include($ruta_db_superior.'pantallas/lib/PhpWord/exportar_word.php');  			
 	  	redirecciona($ruta_db_superior."pantallas/documento/visor_documento.php?iddoc=".$_GET["doc"]."&pdf_word=1");	 			
 	 }else{
 	 	redirecciona($ruta_db_superior."formatos/".$formato[0][0]."/mostrar_".$formato[0][0].".php?iddoc=".$_GET["doc"]);
@@ -977,12 +974,6 @@ function AddData($conn)
 		}
   }
   
-  if(@$_REQUEST['exportar_pdf_word'] && $plantilla[0]["mostrar_pdf"]==2){		
-  	$iddoc=$fieldList["documento_iddocumento"];		
-  	$ruta_db_superior='../../';		
-	$_REQUEST['from_externo']=1;
-  	include_once($ruta_db_superior.'pantallas/lib/PhpWord/exportar_word.php');		
-  }		
   $target="_self";		
   if(@$_SESSION['abrir_centro']){		
   	$ruta="../ordenar.php?key=".$fieldList["documento_iddocumento"]."&accion=mostrar&mostrar_formato=1";		

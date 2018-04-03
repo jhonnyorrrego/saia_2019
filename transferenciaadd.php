@@ -4,7 +4,6 @@ if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
     include_once("pantallas/documento/menu_principal_documento.php");
     menu_principal_documento($_REQUEST["iddoc"]);
 }
-include_once("db.php");
 include_once("class_transferencia.php");
 include_once("librerias_saia.php");
 echo( librerias_notificaciones() );
@@ -29,12 +28,7 @@ if(@$_REQUEST["idpaso_actividad"] != ''){
         $accion_flujo .=  '&dependencias_flujo='.$actividad[0]["llave_entidad"];
     }
 }
-/*header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
- header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
- header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
- header("Cache-Control: post-check=0, pre-check=0", false);
- header("Pragma: no-cache"); // HTTP/1.0
- */
+
 $ewCurSec = 0; // Initialise
 
 // Initialize common variables
@@ -75,6 +69,7 @@ if(@$_POST["a_add"]=="carta")
     $sAction="mostrar_carta2.php";
     else if(@$_POST["a_add"]=="memorando")
         $sAction="mostrar_memorando.php";
+		
         else if(@$_POST["a_add"]=="certificado")
             $sAction="mostrar_certificado.php";
             else
@@ -203,7 +198,6 @@ if(@$_POST["a_add"]=="carta")
                     $columnas=32;
                     menu_pasos(0,@$_REQUEST["idpaso_documento"]);
                 }
-                echo(estilo_bootstrap());
                 echo(librerias_jquery("1.7"));
 echo(librerias_datepicker_bootstrap());
                 ?>
@@ -274,19 +268,9 @@ function EW_checkMyForm(EW_this)
 return true;
 }
 
-function no_palitos(evt)
-  {
-   evt = (evt) ? evt : event;
-   var charCode = (evt.charCode) ? evt.charCode : ((evt.keyCode) ? evt.keyCode :
-       ((evt.which) ? evt.which : 0));
-   if (charCode == 124){
-      return false;
-   }
-   return true;
-  }
+
 //-->
 </script>
-<script type="text/javascript" src="popcalendar.js"></script>
 <?php
 
 if(isset($_REQUEST['doc']))
@@ -305,10 +289,7 @@ if(isset($_REQUEST["mostrar"]))
 {
 menu_ordenar($_REQUEST["key"]);
 }
-?>
-
-<div style="height: 10%"></div>
-<?php if(!@$_REQUEST["idpaso_documento"]){ ?>
+ if(!@$_REQUEST["idpaso_documento"]){ ?>
 <p><span class="internos">TRANSFERIR DOCUMENTOS&nbsp;&nbsp;&nbsp;&nbsp;
 </span></p>
 <?php }
@@ -366,10 +347,6 @@ $x_recibido=$tmp;
 	<script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 	<script type="text/javascript" src="js/dhtmlXTree.js"></script>
 </td>
-<tr>
-	<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Paginas del PDF. Separadas por comas " , ".</span></td>
-	<td bgcolor="#F5F5F5"><span class="phpmaker"><input name="x_pag_pdf" id="x_pag_pdf" value="<?php echo($_REQUEST['pag_pdf']); ?>"> <input type="hidden" value="<?php echo($_REQUEST['ruta_pdf']); ?>" name="ruta_pdf" id="ruta_pdf" /></td>
-</tr>
 	</tr>
 <?php if($x_serie==0) { ?>
 	<tr>
@@ -601,8 +578,26 @@ $x_recibido=$tmp;
 <input type=radio name="x_ver_nota" value="0" id="no">NO
 </span></td>
 	</tr>
+	
 	<tr>
-		<td class="encabezado" title=""><span class="phpmaker" style="color: #FFFFFF;">Asignar tarea? *:</span></td>
+		<td class="encabezado" title=""><span class="phpmaker" style="color: #FFFFFF;">PAGINAS ESPECIFICAS? *:</span></td>
+		<td bgcolor="#F5F5F5">
+			<span class="phpmaker">
+				<div class="controls">
+					<input type="radio" class="required" name="desea_pag_pdf" id="desea_pag_pdf" value="0" checked>No
+					<input type="radio" name="desea_pag_pdf" id="desea_pag_pdf0" value="1">Si
+				</div>
+			</span>
+		</td>
+	</tr>	
+	
+	<tr class="pdf_form">
+		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Paginas del PDF. Separadas por comas (,)</span></td>
+		<td bgcolor="#F5F5F5"><span class="phpmaker"><input name="x_pag_pdf" id="x_pag_pdf" value="<?php echo($_REQUEST['pag_pdf']); ?>"> <input type="hidden" value="<?php echo($_REQUEST['ruta_pdf']); ?>" name="ruta_pdf" id="ruta_pdf" /></td>
+	</tr>
+	
+	<tr>
+		<td class="encabezado" title=""><span class="phpmaker" style="color: #FFFFFF;">ASIGNAR TAREA? *:</span></td>
 		<td bgcolor="#F5F5F5">
 			<span class="phpmaker">
 				<div class="controls">
@@ -686,6 +681,17 @@ else {
 		$("input[name=desea_tarea]").change(function () {
 			validar_tarea($(this).val());
 		});
+		
+		$("[name='desea_pag_pdf']").change(function () {
+			if($(this).val()==1){
+				$(".pdf_form").show();
+			}else{
+				$(".pdf_form").hide();
+				$("#x_pag_pdf").val("");
+			}
+		});
+		$("[name='desea_pag_pdf']:checked").trigger("change");
+		
 		$('#datepicker').datetimepicker({
 			language: 'es',
 			pick12HourFormat: true,
