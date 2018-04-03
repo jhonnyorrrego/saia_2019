@@ -9,7 +9,6 @@
 <Salida>Muestra una tabla en pantalla con la informacion de la ruta del documento: origen, destino, obligatoriedad y con opcion de cambiar esto (si firma o no)</Salida>
 </Archivo>
 */
-session_start();
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["doc"]){
   $_REQUEST["iddoc"]=@$_REQUEST["doc"];
   include_once("pantallas/documento/menu_principal_documento.php");
@@ -70,37 +69,32 @@ $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'"
        </style>";
   echo $style;
   } 
-if(isset($_POST["editar_firma"])){ 
- // Se guardan los cambios en la tabla ruta campo obligatorio.
- $i=0;
- while(isset($_POST["obligatorio$i"])) {
- 	$sql1 = "UPDATE ruta SET obligatorio=".$_POST["obligatorio$i"]." WHERE idruta=".$_POST["idruta$i"];
-  phpmkr_query($sql1);
-  $i++;
- }
- $_POST["plantilla"]=strtolower($_POST["plantilla"]);
- if($_POST["plantilla"]=='memorando' || $_POST["plantilla"]=='circular'){
-     $busca_remitente = busca_filtro_tabla("origen","ruta","documento_iddocumento=".$_POST["editar_firma"]." and obligatorio=1 and tipo='ACTIVO'","idruta desc",$conn);
-     
-    $lista = $busca_remitente[0][0];
-    $sql2="update ".$_POST["plantilla"]." set origen='".$lista."' where documento_iddocumento=".$_POST["editar_firma"];
-    phpmkr_query($sql2,$conn);       
-  } 
-  $datos_formato=busca_filtro_tabla("","formato a","a.nombre='".$_POST["plantilla"]."'","",$conn);
-  if($datos_formato[0]["mostrar_pdf"]==1){
-  	redirecciona("pantallas/documento/visor_documento.php?iddoc=".$_POST["editar_firma"]."&actualizar_pdf=1");
-  	die();
-  }
-  if($datos_formato[0]["mostrar_pdf"]==2){		
-  	$iddoc=$_POST["editar_firma"];		
-  	$ruta_db_superior='';		
-	$_REQUEST['from_externo']=1;
-  	include_once($ruta_db_superior.'pantallas/lib/PhpWord/exportar_word.php');  			
-  	redirecciona("pantallas/documento/visor_documento.php?iddoc=".$_POST["editar_firma"]."&pdf_word=1");		
+if (isset($_POST["editar_firma"])) {
+	// Se guardan los cambios en la tabla ruta campo obligatorio.
+	$i = 0;
+	while (isset($_POST["obligatorio$i"])) {
+		$sql1 = "UPDATE ruta SET obligatorio=" . $_POST["obligatorio$i"] . " WHERE idruta=" . $_POST["idruta$i"];
+		phpmkr_query($sql1);
+		$i++;
+	}
+	$_POST["plantilla"] = strtolower($_POST["plantilla"]);
+	if ($_POST["plantilla"] == 'memorando' || $_POST["plantilla"] == 'circular') {
+		$busca_remitente = busca_filtro_tabla("origen", "ruta", "documento_iddocumento=" . $_POST["editar_firma"] . " and obligatorio=1 and tipo='ACTIVO'", "idruta desc", $conn);
+		$lista = $busca_remitente[0][0];
+		$sql2 = "update " . $_POST["plantilla"] . " set origen='" . $lista . "' where documento_iddocumento=" . $_POST["editar_firma"];
+		phpmkr_query($sql2, $conn);
+	}
+	$datos_formato = busca_filtro_tabla("", "formato a", "a.nombre='" . $_POST["plantilla"] . "'", "", $conn);
+	if ($datos_formato[0]["mostrar_pdf"] == 1) {
+		redirecciona("pantallas/documento/visor_documento.php?iddoc=" . $_POST["editar_firma"] . "&actualizar_pdf=1");
 		die();
-  }
- redirecciona("formatos/".$_POST["plantilla"]."/mostrar_".$_POST["plantilla"].".php?iddoc=".$_POST["editar_firma"]); 
-} 
+	}
+	if ($datos_formato[0]["mostrar_pdf"] == 2) {
+		redirecciona("pantallas/documento/visor_documento.php?iddoc=" . $_POST["editar_firma"] . "&pdf_word=1&rand=".rand(0, 10000));
+		die();
+	}
+	redirecciona("formatos/" . $_POST["plantilla"] . "/mostrar_" . $_POST["plantilla"] . ".php?iddoc=" . $_POST["editar_firma"]);
+}
  
 $tipo = @$_GET["tipo"];
 $iddoc = $_GET["doc"];
