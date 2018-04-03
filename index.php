@@ -12,6 +12,8 @@ date_default_timezone_set("America/Bogota");
 include_once ("db.php");
 include_once ("librerias_saia.php");
 include_once ("cargando.php");
+require_once('StorageUtils.php');
+require_once('filesystem/SaiaStorage.php');
 
 echo(librerias_jquery("1.7"));
 echo(librerias_notificaciones());
@@ -54,9 +56,11 @@ if (@$_SESSION["LOGIN" . LLAVE_SAIA]) {
 }
 
 $logo = busca_filtro_tabla("valor", "configuracion", "nombre='logo'", "", $conn);
-$ruta_logo = "imagenes/" . $logo[0]["valor"];
-if ($logo["numcampos"] && is_file($logo[0]["valor"])) {
-	$ruta_logo = $logo[0]["valor"];
+$ruta_logo=$logo[0]["valor"];
+$tipo_almacenamiento = new SaiaStorage("archivos");
+$ruta_imagen=json_decode($logo[0]["valor"]);
+if(is_object($ruta_imagen)){
+	$ruta_logo = StorageUtils::get_binary_file($ruta_logo);
 }
 $mayor_informacion = busca_filtro_tabla("valor", "configuracion", "nombre='mayor_informacion'", "", $conn);
 ?>
@@ -153,9 +157,7 @@ if(@$_SESSION["tipo_dispositivo"]=="movil"){
                       	</p> 
                     </div>
                 </div>
-            <?php }
-            else{
-              ?>
+            <?php } else { ?>
             <table width="700" border="0" cellspacing="0" cellpadding="0">
               <tr>
                 <td height="25" colspan="5"><img class="pull-right" style="height: 30px;" src="asset/img/layout/logosaia.png"></td>
@@ -191,10 +193,7 @@ if(@$_SESSION["tipo_dispositivo"]=="movil"){
                       	<p id="contenedor_recordar_contrasena">
                       	
                       	<a href="recordar_contrasena.php" style="cursor:pointer" class="highslide"   onclick="return hs.htmlExpand(this,{objectType:'iframe',width: 550, height: 300, preserveContent:false})">¿No puedes acceder a tu cuenta?</a>
-                      	</p>
-                      	
-                      	
-                      </td>
+                      	</p></td>
                     </tr>
                     <tr>
     				<td align="left">
@@ -202,8 +201,7 @@ if(@$_SESSION["tipo_dispositivo"]=="movil"){
     					<br/>
     				</td>
                     </tr>
-                  </table>
-                </td>
+                  </table></td>
                 <td>&nbsp;</td>
               </tr>
             </table>
@@ -213,8 +211,7 @@ if(@$_SESSION["tipo_dispositivo"]=="movil"){
             <br>
             </form>
         </div>
-      </div>
-    </td>
+      </div></td>
   </tr>
 	
 </table>

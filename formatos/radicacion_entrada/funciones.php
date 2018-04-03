@@ -214,8 +214,6 @@ function obtener_informacion_proveedor($idformato,$iddoc){
 	
 }
 
-
-
 function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
 	global $conn,$ruta_db_superior;
     $funcionario_codigo=usuario_actual('funcionario_codigo');
@@ -515,7 +513,6 @@ function obtener_radicado_entrada($idformato,$iddoc){
   $numero_radicado=$datos[0]['fecha_radicacion_entrada']."-".$documento[0]['numero']."-".$tipo;
   return($numero_radicado);
 }
-
 
 function mostrar_informacion_general_radicacion($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;

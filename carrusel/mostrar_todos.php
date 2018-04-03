@@ -27,9 +27,6 @@ if (isset($_REQUEST["idcontenido"]) && $_REQUEST["idcontenido"]) {
     echo stripslashes(codifica_encabezado(html_entity_decode($contenidos[0]["contenido"])));
     exit();
 } else if (isset($_REQUEST["idcarrusel"]) && $_REQUEST["idcarrusel"]) {
-    /**
-     * ******* para ver un solo carrusel **************
-     */
     $carrusel = busca_filtro_tabla("", "carrusel", "idcarrusel=" . $_REQUEST["idcarrusel"], "", $conn);
 } else {
     /**
@@ -80,8 +77,7 @@ if (isset($_REQUEST["idcontenido"]) && $_REQUEST["idcontenido"]) {
     ?>
     <script type="text/javascript" src="js/jquery.easing.1.2.js"></script>
 
-<script type="text/javascript" src="js/jquery.anythingslider.js"
-	charset="utf-8"></script>
+<script type="text/javascript" src="js/jquery.anythingslider.js" charset="utf-8"></script>
 </head>
 <body>
 <?php
@@ -146,10 +142,10 @@ if ($contenidos["numcampos"]) {
     ?>
             </ul>
 			</div>
-		</div>
-		<!-- END AnythingSlider -->
+		</div> <!-- END AnythingSlider -->
 	</div>
 <?php
+  
 }
 
 ?>

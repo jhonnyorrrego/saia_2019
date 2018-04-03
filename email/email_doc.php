@@ -68,10 +68,12 @@ function formato_email() {
     if ($datos[0]["tipo_radicado"] == 1) {
         $ejecutor = busca_filtro_tabla("nombre,cargo,empresa", "ejecutor,datos_ejecutor", "ejecutor_idejecutor=idejecutor and iddatos_ejecutor=" . $datos[0]["ejecutor"], "", $conn);
         $contenido .= "\nRemitente: " . $ejecutor[0]["nombre"];
-        if ($ejecutor[0]["cargo"] != "")
+        if ($ejecutor[0]["cargo"] != "") {
             $contenido .= ", Cargo: " . $ejecutor[0]["cargo"];
-        if ($ejecutor[0]["empresa"] != "")
+		}
+        if ($ejecutor[0]["empresa"] != "") {
             $contenido .= ", Empresa: " . $ejecutor[0]["empresa"];
+     }
     } elseif ($datos[0]["plantilla"] != "") {
         $ejecutor = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $datos[0]["ejecutor"], "", $conn);
         $contenido .= "\nCreador: " . $ejecutor[0]["nombres"] . " " . $ejecutor[0]["apellidos"];
@@ -94,11 +96,11 @@ function formato_email() {
         chmod("../" . $ruta_temp . "_" . $login[0]["login"], PERMISOS_CARPETAS);
     }
     
-    if ($direcciones["numcampos"])
+    if ($direcciones["numcampos"]) {
         $ldirecciones = explode(",", $direcciones[0]["email"]);
-    else
+    } else {
         $ldirecciones[0] = "info@cerok.com";
-    
+    }
     echo "<form  name='email' action='email_doc.php' method='post' onsubmit='return validar_campos(this)'>
        <table border=0 width=80%>
        <tr>
@@ -151,10 +153,7 @@ function formato_email() {
             unset($_REQUEST["url"]);
             include_once ($ruta_db_superior . "class_impresion_tcpdf.php");
             $pdf = new Imprime_Pdf($iddoc);
-            $datos = array(
-                "iddoc" => $iddoc
-            );
-
+            $datos = array("iddoc" => $iddoc);
             $pdf->configurar_pagina($datos);
             $pdf->imprimir(false);
             $_REQUEST["iddoc"] = $iddoc;
@@ -235,7 +234,6 @@ function enviar_email($doc = 0) {
     include_once ("class.phpmailer.php");
     $mail = new PHPMailer();
     $mail->ClearAttachments();
-    
     if ($email["numcampos"]) {
         if ($doc != 0) {
             $datos = busca_filtro_tabla("*", "ft_mensaje", "documento_iddocumento=$doc", "", $conn);
