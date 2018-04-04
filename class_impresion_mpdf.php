@@ -235,6 +235,7 @@ class Imprime_Pdf {
         }
 
         chmod($pdf_temp, 0777);
+        $paginas_pdf = 0;
         if($this->tipo_salida == "FI" && ($this->documento[0]["estado"] != 'ACTIVO' || $this->formato[0]["mostrar_pdf"] == 1)) {
             $actualizar_y_hash = true;
         } else if($this->tipo_salida == "I") {
