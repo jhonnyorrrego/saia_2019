@@ -91,7 +91,7 @@ if ($arr_ruta["ruta"] != '') {
 
 	$temp_fs->write(basename($archivo_plantilla->getName()), $archivo_plantilla->getContent(), true);
 
-	$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_procesar);
+	$templateProcessor = new SaiaTemplateProcessor($ruta_procesar);
 	$campos_word = $templateProcessor->getVariables();
 	if (@$_REQUEST["iddoc"] && count($campos_word)) {
 		// CAMPOS OBLIGATORIOS
@@ -196,9 +196,10 @@ if ($arr_ruta["ruta"] != '') {
 								} else {
 									$filas = ($ruta['numcampos'] + 1) / 2;
 								}
+
 								if ($espacio_firma == 0) {
 									$templateProcessor -> cloneRow('espacio_firma', $filas);
-								} else {
+								} else if(in_array('nombre_funcionario', $campos_word)) {
 									$templateProcessor -> cloneRow('nombre_funcionario', $filas);
 								}
 								for ($j = 0; $j < $ruta['numcampos']; $j++) {
@@ -224,8 +225,8 @@ if ($arr_ruta["ruta"] != '') {
 											$img = stripslashes(base64_decode($info_funcionario[0]["firma"]));
 										}
 
-										crear_destino($ruta_imagen);
-										chmod($ruta_imagen, 0777);
+										//crear_destino($ruta_imagen);
+										//chmod($ruta_imagen, 0777);
 
 										$imagen_firma = $ruta_imagen . '/firma_' . $funcionario_codigo . '.jpg';
 										if (file_exists($imagen_firma)) {
@@ -233,7 +234,7 @@ if ($arr_ruta["ruta"] != '') {
 										}
 										$im = imagecreatefromstring($img);
 										imagejpeg($im, $imagen_firma);
-										chmod($imagen_firma, 0777);
+										//chmod($imagen_firma, 0777);
 
 										$src = $imagen_firma;
 										$img2 = array( array('img' => htmlspecialchars($src), 'size' => array(170, 100)));
