@@ -3869,7 +3869,7 @@ function crear_archivo($nombre, $texto = NULL, $modo = 'wb') {
 function crear_destino($destino){
   $arreglo=explode("/",$destino);
 
-	if(!mkdir($arreglo[$i],PERMISOS_CARPETAS, true)){
+  if(!mkdir($destino,PERMISOS_CARPETAS, true)){
         alerta("no es posible crear la carpeta ".$destino);
         return("");
       }
