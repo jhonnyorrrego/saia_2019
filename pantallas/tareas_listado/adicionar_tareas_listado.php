@@ -140,7 +140,7 @@ if(@$_REQUEST['guardar']==1){
 			Fecha Limite: ".$_REQUEST["fecha_limite"]."<br/><br/>
 			Responsables: ".html_entity_decode($responsable[0]["nombres"]." ".$responsable[0]["apellidos"])."<br/>".$parte_msn."<br/><br/>".$link;
 			$fun_codes[]=$responsable[0]["funcionario_codigo"];
-			enviar_mensaje("","codigo",$fun_codes,"Nueva Tarea Asignada",$mensaje);
+			enviar_mensaje("",array("para"=>"funcionario_codigo"),array("para"=>$fun_codes),"Nueva Tarea Asignada",$mensaje);
 		}
 	}
 

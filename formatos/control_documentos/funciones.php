@@ -220,8 +220,10 @@ function confirmar_control_documentos($idformato, $iddoc) {
 	global $conn, $ruta_db_superior, $datos;
 	$html="";
 	if ($datos[0]["fecha_confirmacion"]) {
-		$html = "<br/><span style='font-size:12pt;'>FECHA DE TRAMITE Y VIGENCIA DEL DOCUMENTO : " . $datos[0]["fecha_confirmacion"] . "<br />";
-		$html .= "Solicitud procesada satisfactoriamente, por favor socializar con los involucrados en el proceso.</span>";
+		$resp=busca_filtro_tabla("nombres,apellidos","funcionario","idfuncionario=".$datos[0]["idfunc_fecha_confir"],"",$conn);
+		$html = "<br/><span style='color:red'>FECHA DE TRAMITE Y VIGENCIA DEL DOCUMENTO : " . $datos[0]["fecha_confirmacion"] . "<br />
+		Responsable : ".ucwords(strtolower($resp[0]["nombres"]." ".$resp[0]["apellidos"]))."<br/>
+		Solicitud procesada satisfactoriamente, por favor socializar con los involucrados en el proceso.</span>";
 	}else	if ($_REQUEST["tipo"] != 5) {
 		$funcionario = array();
 		$responsables = busca_filtro_tabla("destino", "buzon_entrada", "nombre ='POR_APROBAR' and archivo_idarchivo=" . $iddoc, "", $conn);
@@ -243,7 +245,7 @@ function confirmar_control_documentos($idformato, $iddoc) {
 		if (in_array($_SESSION["usuario_actual"], $funcionario) && $datos[0]["estado"] == "ACTIVO") {
 			$html = "<br/><button class='btn btn-small btn-info dropdown-toggle' id='btn_editar'>Editar</button>";
 		} else if ($datos[0]["estado"] == "APROBADO" && !$datos[0]["fecha_confirmacion"]) {
-			if ($_SESSION["usuario_actual"] == $cf_versionador_calidad[0]['funcionario_codigo']) {
+			if ($_SESSION["usuario_actual"] == $cf_versionador_calidad[0]['funcionario_codigo'] || $_SESSION["LOGIN".LLAVE_SAIA]) {
 				$html = "<br/><button class='btn btn-small btn-success' id='confirmar_cambios'>Aprobaci&oacute;n de la Solicitud</button>";
 			}
 		}
@@ -459,7 +461,7 @@ function generar_documentos_version($idformato, $iddoc){
 		}
 		$info_retorno=aprobar_control_documentos($_REQUEST["idformato"],$_REQUEST["iddoc"]);
 		if($info_retorno["exito"]){
-			$update="UPDATE ft_control_documentos SET fecha_confirmacion=".fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s")." WHERE documento_iddocumento=".$iddoc;
+			$update="UPDATE ft_control_documentos SET fecha_confirmacion=".fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s").",idfunc_fecha_confir=".$_SESSION["idfuncionario"]." WHERE documento_iddocumento=".$iddoc;
 			phpmkr_query($update);
 			
 			notificaciones("Datos actualizados con Exito!", "success", 8500);

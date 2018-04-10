@@ -109,7 +109,7 @@ if(@$_REQUEST["idtareas_listado"] || @$_REQUEST['listado_tareas_fk']){
         					$mensaje="Saludos,<br/><br/>Se ha adicionado un anexo a la tarea <strong>".$responsable[0]["nombre_tarea"]."</strong><br/><br/>
         					Fecha: ".$fecha_actual."<br/>
         					<br/>".$link;
-        					enviar_mensaje("","codigo",$funcionarios_enviar_vector,"Nuevo Anexo",$mensaje,array($ruta_anexo));
+        					enviar_mensaje("",array("para"=>"funcionario_codigo"),array("para"=>$funcionarios_enviar_vector),"Nuevo Anexo",$mensaje,array($ruta_anexo));
         				} //fin if funcionario numcampos        				
         				
         			}	//fin if responsable numcampos

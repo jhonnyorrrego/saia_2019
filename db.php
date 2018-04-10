@@ -1889,88 +1889,163 @@ function redirecciona($location){
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>*/
-function enviar_mensaje($correo="",$tipo_usuario='codigo',$usuarios,$asunto="",$mensaje,$anexos=array(),$copia_oculta=0, $iddoc=''){
-global $conn;
+function enviar_mensaje($correo = "", $tipo_usuario = array(), $usuarios = array(), $asunto, $mensaje, $anexos = array(), $iddoc = 0) {
+	global $conn;
+	$ok = 0;
+	$para = array();
+	$copia = array();
+	$copia_oculta = array();
 
-  $to = array();
-	if($tipo_usuario=='codigo'){
-		  for($i=0; isset($usuarios[$i])&&$usuarios[$i]; $i++){
-	   $funcionario=busca_filtro_tabla("login,email","funcionario","funcionario_codigo='".$usuarios[$i]."'","",$conn);
-	   if($funcionario["numcampos"]){
-	     if($funcionario[0]["email"]){
-	     	array_push($to,$funcionario[0]["email"]);
-	     }
-	   }
-	  }
-	}else{
-		$cant=count($usuarios);
-		for($i=0;$i<$cant;$i++){
-			array_push($to,$usuarios[$i]);
-		}
-	}
- if(count($to)){
-	include_once($ruta_db_superior."PHPMailer/PHPMailerAutoload.php");
-
-	$configuracion_correo=busca_filtro_tabla("valor,nombre,encrypt","configuracion","nombre in('servidor_correo','puerto_servidor_correo','puerto_correo_salida','servidor_correo_salida','correo_notificacion','clave_correo_notificacion','asunto_defecto_correo')","",$conn);
-	for($i=0;$i<$configuracion_correo['numcampos'];$i++){
-		switch ($configuracion_correo[$i]['nombre']) {
-			case 'servidor_correo':
-				$servidor_correo=$configuracion_correo[$i]['valor'];
-				break;
-			case 'puerto_servidor_correo':
-				$puerto_servidor_correo=$configuracion_correo[$i]['valor'];
-				break;
-			case 'puerto_correo_salida':
-				$puerto_correo_salida=$configuracion_correo[$i]['valor'];
-				break;
-			case 'servidor_correo_salida':
-
-				break;
-			case 'correo_notificacion':
-				$correo_notificacion=$configuracion_correo[$i]['valor'];
-				break;
-			case 'clave_correo_notificacion':
-				if($configuracion_correo[$i]['encrypt']){
-					include_once('pantallas/lib/librerias_cripto.php');
-					$configuracion_correo[$i]['valor']=decrypt_blowfish($configuracion_correo[$i]['valor'],LLAVE_SAIA_CRYPTO);
-				}
-				$clave_correo_notificacion=$configuracion_correo[$i]['valor'];
-				break;
-			case 'asunto_defecto_correo':
-				$asunto_defecto_correo=$configuracion_correo[$i]['valor'];
-				break;
-		}
-	}
-
-	switch ($correo) {
-		case 'personal':
-			$usuario_correo=usuario_actual("email");
-			$pass_correo=usuario_actual("email_contrasena");
+	switch ($tipo_usuario["para"]) {
+		case 'email' :
+			if (count($usuarios["para"])) {
+				$ok = 1;
+				$para = $usuarios["para"];
+			}
 			break;
-		default:
-			$usuario_correo=$correo_notificacion;
-			$pass_correo=$clave_correo_notificacion;
-		break;
-	}
- $mail = new PHPMailer ();
- $mail->IsSMTP();
- //$mail->SMTPDebug  = 2;
- $mail->Host = $servidor_correo; //secure.emailsrvr.com - mail.rackspace.com
- $mail->Port = $puerto_correo_salida;
- $mail->SMTPAuth = true;
- $mail->Username = $usuario_correo;
- $mail->Password = $pass_correo;
- $mail->FromName = $usuario_correo;
 
- if($asunto!=""){
-		$mail->Subject = $asunto;
-	}else{
-		$mail->Subject = $asunto_defecto_correo;
+		case 'iddependencia_cargo' :
+			foreach ($usuarios["para"] as $iddep_cargo) {
+				$funcionario = busca_filtro_tabla("email", "vfuncionario_dc", "email<>'' and email is not null and iddependencia_cargo='" . $iddep_cargo . "'", "", $conn);
+				if ($funcionario["numcampos"]) {
+					$ok = 1;
+					$para[] = $funcionario[0]["email"];
+				}
+			}
+			break;
+
+		default :
+			foreach ($usuarios["para"] as $func_codigo) {
+				$funcionario = busca_filtro_tabla("email", "funcionario", "email<>'' and email is not null and funcionario_codigo='" . $func_codigo . "'", "", $conn);
+				if ($funcionario["numcampos"]) {
+					$ok = 1;
+					$para[] = $funcionario[0]["email"];
+				}
+			}
+			break;
 	}
-  $config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn);
-  $admin_saia= busca_filtro_tabla("valor","configuracion","nombre='login_administrador'","",$conn);
-  $correo_admin=busca_filtro_tabla("email","funcionario","login='".$admin_saia[0]['valor']."'","",$conn);
-  $texto_pie="
+
+	switch ($tipo_usuario["copia"]) {
+		case 'email' :
+			if (count($usuarios["copia"])) {
+				$ok = 1;
+				$copia = $usuarios["copia"];
+			}
+			break;
+
+		case 'iddependencia_cargo' :
+			foreach ($usuarios["copia"] as $iddep_cargo) {
+				$funcionario = busca_filtro_tabla("email", "vfuncionario_dc", "email<>'' and email is not null and iddependencia_cargo='" . $iddep_cargo . "'", "", $conn);
+				if ($funcionario["numcampos"]) {
+					$ok = 1;
+					$copia[] = $funcionario[0]["email"];
+				}
+			}
+			break;
+
+		default :
+			foreach ($usuarios["copia"] as $func_codigo) {
+				$funcionario = busca_filtro_tabla("email", "funcionario", "email<>'' and email is not null and funcionario_codigo='" . $func_codigo . "'", "", $conn);
+				if ($funcionario["numcampos"]) {
+					$ok = 1;
+					$copia[] = $funcionario[0]["email"];
+				}
+			}
+			break;
+	}
+
+	switch ($tipo_usuario["copia_oculta"]) {
+		case 'email' :
+			if (count($usuarios["copia_oculta"])) {
+				$ok = 1;
+				$copia_oculta = $usuarios["copia_oculta"];
+			}
+			break;
+
+		case 'iddependencia_cargo' :
+			foreach ($usuarios["copia_oculta"] as $iddep_cargo) {
+				$funcionario = busca_filtro_tabla("email", "vfuncionario_dc", "email<>'' and email is not null and iddependencia_cargo='" . $iddep_cargo . "'", "", $conn);
+				if ($funcionario["numcampos"]) {
+					$ok = 1;
+					$copia_oculta[] = $funcionario[0]["email"];
+				}
+			}
+			break;
+
+		default :
+			foreach ($usuarios["copia_oculta"] as $func_codigo) {
+				$funcionario = busca_filtro_tabla("email", "funcionario", "email<>'' and email is not null and funcionario_codigo='" . $func_codigo . "'", "", $conn);
+				if ($funcionario["numcampos"]) {
+					$ok = 1;
+					$copia_oculta[] = $funcionario[0]["email"];
+				}
+			}
+			break;
+	}
+
+	if ($ok) {
+		include_once ($ruta_db_superior . "PHPMailer/PHPMailerAutoload.php");
+
+		$configuracion_correo = busca_filtro_tabla("valor,nombre,encrypt", "configuracion", "nombre in('servidor_correo','puerto_servidor_correo','puerto_correo_salida','servidor_correo_salida','correo_notificacion','clave_correo_notificacion','asunto_defecto_correo')", "", $conn);
+		for ($i = 0; $i < $configuracion_correo['numcampos']; $i++) {
+			switch ($configuracion_correo[$i]['nombre']) {
+				case 'servidor_correo' :
+					$servidor_correo = $configuracion_correo[$i]['valor'];
+					break;
+				case 'puerto_servidor_correo' :
+					$puerto_servidor_correo = $configuracion_correo[$i]['valor'];
+					break;
+				case 'puerto_correo_salida' :
+					$puerto_correo_salida = $configuracion_correo[$i]['valor'];
+					break;
+				case 'servidor_correo_salida' :
+					break;
+				case 'correo_notificacion' :
+					$correo_notificacion = $configuracion_correo[$i]['valor'];
+					break;
+				case 'clave_correo_notificacion' :
+					if ($configuracion_correo[$i]['encrypt']) {
+						include_once ('pantallas/lib/librerias_cripto.php');
+						$configuracion_correo[$i]['valor'] = decrypt_blowfish($configuracion_correo[$i]['valor'], LLAVE_SAIA_CRYPTO);
+					}
+					$clave_correo_notificacion = $configuracion_correo[$i]['valor'];
+					break;
+				case 'asunto_defecto_correo' :
+					$asunto_defecto_correo = $configuracion_correo[$i]['valor'];
+					break;
+			}
+		}
+
+		switch ($correo) {
+			case 'personal' :
+				$usuario_correo = usuario_actual("email");
+				$pass_correo = usuario_actual("email_contrasena");
+				break;
+			default :
+				$usuario_correo = $correo_notificacion;
+				$pass_correo = $clave_correo_notificacion;
+				break;
+		}
+		$mail = new PHPMailer();
+		$mail -> IsSMTP();
+		//$mail->SMTPDebug  = 2;
+		$mail -> Host = $servidor_correo;
+		//secure.emailsrvr.com - mail.rackspace.com
+		$mail -> Port = $puerto_correo_salida;
+		$mail -> SMTPAuth = true;
+		$mail -> Username = $usuario_correo;
+		$mail -> Password = $pass_correo;
+		$mail -> FromName = $usuario_correo;
+
+		if ($asunto != "") {
+			$mail -> Subject = $asunto;
+		} else {
+			$mail -> Subject = $asunto_defecto_correo;
+		}
+		$config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "", $conn);
+		$admin_saia = busca_filtro_tabla("valor", "configuracion", "nombre='login_administrador'", "", $conn);
+		$correo_admin = busca_filtro_tabla("email", "funcionario", "login='" . $admin_saia[0]['valor'] . "'", "", $conn);
+		$texto_pie = "
   	<table style='border:none; width:100%; font-size:11px;font-family:Roboto,Arial,Helvetica,sans-serif;color:#646464;vertical-align:middle;	padding: 10px;'>
 		<tr>
 			<td>
@@ -1980,103 +2055,91 @@ global $conn;
 				Por favor, NO responda a este mail.
 				<br>
 				<br>
-				Para obtener soporte o realizar preguntas, envié un correo electrónico a ".$correo_admin[0]['email']."
+				Para obtener soporte o realizar preguntas, envié un correo electrónico a " . $correo_admin[0]['email'] . "
 			</td>
 			<td style='text-align:right;'>
-				<img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/imagenes/saia_gray.png'>
+				<img src='" . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/imagenes/saia_gray.png'>
 			</td>
 		</tr>
-	</table>
-";
+	</table>";
 
-
-  $inicio_style='
+		$inicio_style = '
   <div id="fondo" style="   padding: 10px; 	background-color: #f5f5f5;	">
 
-  	<div id="encabezado" style="background-color:'.$config[0]["valor"].';color:white ;  vertical-align:middle;   text-align: left;    font-weight: bold;  border-top-left-radius:5px;   border-top-right-radius:5px;   padding: 10px;">
+  	<div id="encabezado" style="background-color:' . $config[0]["valor"] . ';color:white ;  vertical-align:middle;   text-align: left;    font-weight: bold;  border-top-left-radius:5px;   border-top-right-radius:5px;   padding: 10px;">
   		NOTIFICACIÓN - SAIA
   	</div>
 
   	<div id="cuerpo" style="padding: 10px;background-color:white;">
   		<br>
-  		<span style="font-weight:bold;color:'.$config[0]["valor"].';">'.$asunto.'</span>
+  		<span style="font-weight:bold;color:' . $config[0]["valor"] . ';">' . $asunto . '</span>
   		<hr>
   		<br>';
 
-  $fin_style='
+		$fin_style = '
   	</div>
   	<div  id="pie" style="font-size:11px;font-family:Roboto,Arial,Helvetica,sans-serif;color:#646464;vertical-align:middle;padding: 10px;">
-  		'.$texto_pie.'
+  		' . $texto_pie . '
   	</div>
   </div>';
 
- $mensaje=$inicio_style.$mensaje.$fin_style;
+		$mensaje = $inicio_style . $mensaje . $fin_style;
 
+		$mail -> Body = $mensaje;
+		$mail -> IsHTML(true);
 
+		$mail -> ClearAllRecipients();
+		$mail -> ClearAddresses();
 
- $mail->Body = $mensaje;
- $mail -> IsHTML (true);
-
- $mail->ClearAllRecipients();
- $mail->ClearAddresses();
- $para=array();
-
- foreach($to as $fila){
- 	if($copia_oculta==1){
- 		$mail->AddBCC($fila,$fila);
- 	}else{
- 		$mail->AddAddress($fila,$fila);
-		$para[]=$fila;
-	}
- }
-
- if(count(@$usuarios['copia'])){ //CON COPIA
-	 foreach($usuarios['copia'] as $fila){
-	 	$mail->AddCC($fila,$fila);
-	 }
- }
- if(count(@$usuarios['copia_oculta'])){ //CON COPIA OCULTA
-	 foreach($usuarios['copia_oculta'] as $fila){
-	 	$mail->AddBCC($fila,$fila);
-	 }
- }
-
-  if(!empty($anexos)){
-  	foreach($anexos as $fila){
-  		$mail->AddAttachment($fila);
-  	}
-   }
-   if(!$mail->Send()){
-   	return($mail->ErrorInfo);
-   }else{
-   	if($iddoc){
-	   	$radicador_salida=busca_filtro_tabla("","configuracion","nombre LIKE 'radicador_salida'","",$conn);
-	    if($radicador_salida["numcampos"]){
-	    	$funcionario=busca_filtro_tabla("","funcionario","login LIKE '".$radicador_salida[0]["valor"]."'","",$conn);
-	      if($funcionario["numcampos"]){
-	        $ejecutores=array($funcionario[0]["funcionario_codigo"]);
-	      }
-	      else {
-	        $ejecutores=array($_SESSION["usuario_actual"]);
-	      }
-	    }
-	    if(!count($ejecutores))
-	      $ejecutores=array($_SESSION["usuario_actual"]);
-
-			$otros["notas"]="'Documento enviado por e-mail por medio del correo: ".$mail->FromName;
-		  if(count($para)){
-		    $otros["notas"].= " Para :".implode(",",$para);
-		  }
-		  $otros["notas"].="'";
-		  $datos["archivo_idarchivo"]=@$iddoc;
-		  $datos["tipo_destino"]=1;
-		  $datos["tipo"]="";
-		  $datos["nombre"]="DISTRIBUCION";
-		  transferir_archivo_prueba($datos,$ejecutores,$otros);
+		foreach ($para as $fila) {
+			$mail -> AddAddress($fila, $fila);
 		}
-   	return (true);
-   }
-  }
+		foreach ($copia as $fila) {
+			$mail -> AddCC($fila, $fila);
+		}
+		foreach ($copia_oculta as $fila) {
+			$mail -> AddBCC($fila, $fila);
+		}
+
+		if (!empty($anexos)) {
+			foreach ($anexos as $fila) {
+				$mail -> AddAttachment($fila);
+			}
+		}
+		if (!$mail -> Send()) {
+			return ($mail -> ErrorInfo);
+		} else {
+			if ($iddoc) {
+				$radicador_salida = busca_filtro_tabla("valor", "configuracion", "nombre LIKE 'radicador_salida'", "", $conn);
+				if ($radicador_salida["numcampos"]) {
+					$funcionario = busca_filtro_tabla("", "funcionario", "login LIKE '" . $radicador_salida[0]["valor"] . "'", "", $conn);
+					if ($funcionario["numcampos"]) {
+						$ejecutores = array($funcionario[0]["funcionario_codigo"]);
+					}
+				}
+				if (!count($ejecutores)) {
+					$ejecutores = array($_SESSION["usuario_actual"]);
+				}
+
+				$otros["notas"] = "'Documento enviado por e-mail por medio del correo: " . $mail -> FromName;
+				if (count($para)) {
+					$otros["notas"] .= " Para :" . implode(",", $para);
+				}
+				if (count($copia)) {
+					$otros["notas"] .= " Copia :" . implode(",", $copia);
+				}
+				$otros["notas"] .= "'";
+				$datos["archivo_idarchivo"] = $iddoc;
+				$datos["tipo_destino"] = 1;
+				$datos["tipo"] = "";
+				$datos["nombre"] = "DISTRIBUCION";
+				transferir_archivo_prueba($datos, $ejecutores, $otros);
+			}
+			return (true);
+		}
+	} else {
+		return false;
+	}
 }
 
 /*
@@ -2309,38 +2372,35 @@ function ingresar_documento($doc,$tipo_contador,$arreglo,$destino,$archivos=NULL
 <Pre-condiciones>
 <Post-condiciones>
 */
-function genera_ruta($destino,$tipo,$doc){
-global $conn;
-$valores=array();
-$idruta=0;
-for($i=0;$i<count($destino)-1;$i++)
-{
-  if(isset($destino[$i+1]))
-  {
-    $sql="INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio) VALUES(".$destino[$i]['codigo'].",'ACTIVO',".$destino[$i+1]['codigo'].",".$tipo.",'".$destino[$i]["condicion"]."',".$doc.",".$destino[$i]['tipo'].",".$destino[$i+1]['tipo'].",".$destino[$i]['obligatorio'].")";
+function genera_ruta($destino, $tipo, $doc) {
+	global $conn;
+	$valores = array();
+	$idruta = 0;
+	for ($i = 0; $i < count($destino) - 1; $i++) {
+		if (isset($destino[$i + 1])) {
+			$sql = "INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio) VALUES(" . $destino[$i]['codigo'] . ",'ACTIVO'," . $destino[$i + 1]['codigo'] . "," . $tipo . ",'" . $destino[$i]["condicion"] . "'," . $doc . "," . $destino[$i]['tipo'] . "," . $destino[$i + 1]['tipo'] . "," . $destino[$i]['obligatorio'] . ")";
 
-    phpmkr_query($sql,$conn) or error("No se puede Generar una Ruta entre los funcionarios ".$destino[$i]['codigo']." y ".$destino[$i+1]['codigo']);
-    $idruta=phpmkr_insert_id();
-    if($idruta)
-    {
-      $valores["archivo_idarchivo"]=$doc;
-      $valores["nombre"]="'POR_APROBAR'";
-      $valores["destino"]="'".codigo_rol($destino[$i]["codigo"],$destino[$i]["tipo"])."'";
-      $valores["tipo_destino"]="'".$destino[$i]["tipo"]."'";
-      $valores["fecha"]=fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s');
-      $valores["origen"]="'".codigo_rol($destino[$i+1]["codigo"],$destino[$i+1]["tipo"])."'";
-      $valores["tipo_origen"]="'".$destino[$i+1]["tipo"]."'";
-      $valores["tipo"]="'DOCUMENTO'";
-      $valores["activo"]=1;
-      $valores["ruta_idruta"]=$idruta;
-      $campos=implode(",",array_keys($valores));
-      $values=implode(",",array_values($valores));
-      $sql = "INSERT INTO buzon_entrada($campos) VALUES($values)";
-      phpmkr_query($sql,$conn) or error("No se puede Generar una Ruta entre los funcionarios ".$destino[$i]['codigo']." y ".$destino[$i+1]['codigo']);
-    }
-  }
-}
-return TRUE;
+			phpmkr_query($sql, $conn) or error("No se puede Generar una Ruta entre los funcionarios " . $destino[$i]['codigo'] . " y " . $destino[$i + 1]['codigo']);
+			$idruta = phpmkr_insert_id();
+			if ($idruta) {
+				$valores["archivo_idarchivo"] = $doc;
+				$valores["nombre"] = "'POR_APROBAR'";
+				$valores["destino"] = "'" . codigo_rol($destino[$i]["codigo"], $destino[$i]["tipo"]) . "'";
+				$valores["tipo_destino"] = "'" . $destino[$i]["tipo"] . "'";
+				$valores["fecha"] = fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s');
+				$valores["origen"] = "'" . codigo_rol($destino[$i + 1]["codigo"], $destino[$i + 1]["tipo"]) . "'";
+				$valores["tipo_origen"] = "'" . $destino[$i + 1]["tipo"] . "'";
+				$valores["tipo"] = "'DOCUMENTO'";
+				$valores["activo"] = 1;
+				$valores["ruta_idruta"] = $idruta;
+				$campos = implode(",", array_keys($valores));
+				$values = implode(",", array_values($valores));
+				$sql = "INSERT INTO buzon_entrada($campos) VALUES($values)";
+				phpmkr_query($sql, $conn) or error("No se puede Generar una Ruta entre los funcionarios " . $destino[$i]['codigo'] . " y " . $destino[$i + 1]['codigo']);
+			}
+		}
+	}
+	return TRUE;
 }
 /*
 <Clase>

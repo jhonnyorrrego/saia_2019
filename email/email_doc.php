@@ -228,152 +228,101 @@ return $s;
 <Post-condiciones><Post-condiciones>
 </Clase>
 */  
-function enviar_email($doc=0){
+function enviar_email($doc = 0) {
 	global $conn;
-   
-   $copia = array();
-   $email=busca_filtro_tabla("valor","configuracion","nombre='servidor_correo'","",$conn);    
-   $puerto=busca_filtro_tabla("valor","configuracion","nombre='puerto_servidor_correo'","",$conn);
-   $vector_anexos=array();
-   
-   
-   if($email["numcampos"])
-    {
-     if($doc<>0) 
-     {$datos = busca_filtro_tabla("*","ft_mensaje","documento_iddocumento=$doc","",$conn);  
-     
-      if($datos["numcampos"]>0)
-      { 
-       $asunto = html_entity_decode($datos[0]["asunto"]); 
-       $destinos=$datos[0]["destinatario"];
-       $contenido=pc_html2ascii($datos[0]["contenido"]);
-       $from = $datos[0]["remitente_mensaje"];
-       if($datos[0]["copia"]!="")
-        $copia = explode(",",$datos[0]["copia"]);
-       
-       $archivo = busca_filtro_tabla("*","anexos","documento_iddocumento=".$doc,"",$conn);
-       if($archivo["numcampos"]>0){
-       		for($i=0; $i<$archivo["numcampos"]; $i++){
-        		$vector_anexos[]=$archivo[$i]["ruta"];
-        	}
-			
-        } 
-        
-        $pdf_documento=busca_filtro_tabla("pdf,numero","documento","iddocumento=".$doc,"",$conn);
-        if($pdf_documento['numcampos']){
-            $vector_anexos[]=$pdf_documento[0]["pdf"];
-        }
-                
-      }
-      $enlace="../documentoview.php?key=$doc";
-     }
-     else
-     {        
-      if(isset($_REQUEST["de"]))
-        $from = $_REQUEST["de"];
-      if(isset($_REQUEST["asunto"]))
-        $asunto = html_entity_decode($_REQUEST["asunto"]);
-       if(isset($_REQUEST["para"]))
-        $destinos = $_REQUEST["para"];        
-       if(isset($_REQUEST["contenido"]))
-         $contenido = ($_REQUEST["contenido"]);
-       $enlace="../documentoview.php?key=$doc";
-     } 
-        $copia_asunto=utf8_decode($asunto);
+	$vector_destinos = array();
+	$copia = array();
+	$email = busca_filtro_tabla("valor", "configuracion", "nombre='servidor_correo'", "", $conn);
+	$puerto = busca_filtro_tabla("valor", "configuracion", "nombre='puerto_servidor_correo'", "", $conn);
+	$vector_anexos = array();
 
-        $nombre=busca_filtro_tabla("nombres,apellidos","funcionario","funcionario_codigo=".$_SESSION["usuario_actual"],"",$conn);        
-        $vector_destinos=explode(",",$destinos);
+	if ($email["numcampos"]) {
+		if ($doc <> 0) {$datos = busca_filtro_tabla("*", "ft_mensaje", "documento_iddocumento=$doc", "", $conn);
 
-        if($_REQUEST["para_cc"]<>""){
-        	$vector_destinos_copia=explode(",",$_REQUEST["para_cc"]);
-			$vector_destinos['copia']=$vector_destinos_copia;
-        }
-         
-        if($_REQUEST["para_cco"]<>""){
-        	$vector_destinos_copia_oculta=explode(",",$_REQUEST["para_cco"]);
-			$vector_destinos['copia_oculta']=$vector_destinos_copia_oculta;
-        }     
-		
-  	$config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn);
-  	$admin_saia= busca_filtro_tabla("valor","configuracion","nombre='login_administrador'","",$conn);
-  	$correo_admin=busca_filtro_tabla("email","funcionario","login='".$admin_saia[0]['valor']."'","",$conn);
-  
-        $anexo=@$_REQUEST["anexos"];
-        if($anexo!=""){
-          $anexos=busca_filtro_tabla("ruta,etiqueta,idanexos","anexos","idanexos IN(".implode(",",$anexo).")","",$conn);
-          if($anexos["numcampos"]){
-            for($i=0;$i<$anexos["numcampos"];$i++){
-            	$vector_anexos[]=$anexos[$i]["ruta"];
-            }
-          }    
-        }
-        
-        if(@$_REQUEST["paginas"]!="" && @$_REQUEST["nombre_paginas"]){
-        	$vector_anexos[]=$_REQUEST["paginas"];
+			if ($datos["numcampos"] > 0) {
+				$asunto = html_entity_decode($datos[0]["asunto"]);
+				$destinos = $datos[0]["destinatario"];
+				$contenido = pc_html2ascii($datos[0]["contenido"]);
+				$from = $datos[0]["remitente_mensaje"];
+				if ($datos[0]["copia"] != "")
+					$copia = explode(",", $datos[0]["copia"]);
 
-        }  
-        if(@$_REQUEST["pdf"]!="" && @$_REQUEST["nombre_pdf"]){
-        	$vector_anexos[]=$_REQUEST["pdf"]; 
-        }    
-		$resultado_envio=enviar_mensaje("personal",'correo',$vector_destinos,$copia_asunto,$contenido,$vector_anexos);    
-        if( !$resultado_envio )
-        {
-          alerta("No fue enviado el mensaje, configure los datos de su correo electronico");
-        }
-        else{
-          $radicador_salida=busca_filtro_tabla("","configuracion","nombre LIKE 'radicador_salida'","",$conn);
-          if($radicador_salida["numcampos"]){
-            $funcionario=busca_filtro_tabla("","funcionario","login LIKE '".$radicador_salida[0]["valor"]."'","",$conn);
-            if($funcionario["numcampos"]){
-              $ejecutores=array($funcionario[0]["funcionario_codigo"]);
-            }
-            else {
-              $ejecutores=array(usuario_actual("funcionario_codigo"));
-            }
-          }
-          if(!count($ejecutores))
-            $ejecutores=array(usuario_actual("funcionario_codigo"));
-          $otros["notas"]="'Documento enviado por e-mail por medio del correo: ".$mail->FromName;
-          for($i=0;$i<count($mail->to);$i++){
-            if(!in_array($mail->to[$i][0],$para))
-              array_push($para,$mail->to[$i][0]);
-          }
-          for($i=0;$i<count($mail->cc);$i++){
-            if(!in_array($mail->cc[$i][0],$copia))
-              array_push($copia,$mail->cc[$i][0]);
-          }
-          for($i=0;$i<count($mail->bcc);$i++){
-            if(!in_array($mail->bcc[$i][0],$copio))
-              array_push($copiao,$mail->bcc[$i][0]);
-          }
-          if(count($para)){
-            $otros["notas"].= " Para :".implode(",",$para);
-          }
-          if(count($copia)){
-            $otros["notas"].= " Con copia a :".implode(",",$copia);
-          }
-          if(count($copiao)){
-            $otros["notas"].= " Con copia oculta a :".implode(",",$copiao);
-          }
-          $otros["notas"].="'";
-          $datos["archivo_idarchivo"]=@$_REQUEST["archivo_idarchivo"];
-          $datos["tipo_destino"]=1;
-          $datos["tipo"]="";
-          $datos["nombre"]="DISTRIBUCION";
-          if(transferir_archivo_prueba($datos,$ejecutores,$otros)){
-            alerta("Mensaje enviado");
-	  } else {
-		  alerta("Por favor confirme su transferencia es posible que existan problemas");
-	  }
-	  volver(2);
-	  die();
-        }
+				$archivo = busca_filtro_tabla("*", "anexos", "documento_iddocumento=" . $doc, "", $conn);
+				if ($archivo["numcampos"] > 0) {
+					for ($i = 0; $i < $archivo["numcampos"]; $i++) {
+						$vector_anexos[] = $archivo[$i]["ruta"];
+					}
 
-        abrir_url("email_doc.php?formato_enviar=true&no_menu=1&iddoc=".$_REQUEST["archivo_idarchivo"],"_self");
-   } else {
-    alerta("No se ha definido un servidor de Correo en la configuracion del sistema, por favor comuniquese con su administrador");
-    abrir_url("email_doc.php?formato_enviar=true&no_menu=1&iddoc=".$_REQUEST["archivo_idarchivo"],"_self");
-  }
+				}
+
+				$pdf_documento = busca_filtro_tabla("pdf,numero", "documento", "iddocumento=" . $doc, "", $conn);
+				if ($pdf_documento['numcampos']) {
+					$vector_anexos[] = $pdf_documento[0]["pdf"];
+				}
+
+			}
+			$enlace = "../documentoview.php?key=$doc";
+		} else {
+			if (isset($_REQUEST["de"]))
+				$from = $_REQUEST["de"];
+			if (isset($_REQUEST["asunto"]))
+				$asunto = html_entity_decode($_REQUEST["asunto"]);
+			if (isset($_REQUEST["para"]))
+				$destinos = $_REQUEST["para"];
+			if (isset($_REQUEST["contenido"]))
+				$contenido = ($_REQUEST["contenido"]);
+			$enlace = "../documentoview.php?key=$doc";
+		}
+		$copia_asunto = utf8_decode($asunto);
+
+		$nombre = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $_SESSION["usuario_actual"], "", $conn);
+		$vector_destinos["para"] = explode(",", $destinos);
+
+		if ($_REQUEST["para_cc"] <> "") {
+			$vector_destinos_copia = explode(",", $_REQUEST["para_cc"]);
+			$vector_destinos['copia'] = $vector_destinos_copia;
+		}
+
+		if ($_REQUEST["para_cco"] <> "") {
+			$vector_destinos_copia_oculta = explode(",", $_REQUEST["para_cco"]);
+			$vector_destinos['copia_oculta'] = $vector_destinos_copia_oculta;
+		}
+
+		$config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "", $conn);
+		$admin_saia = busca_filtro_tabla("valor", "configuracion", "nombre='login_administrador'", "", $conn);
+		$correo_admin = busca_filtro_tabla("email", "funcionario", "login='" . $admin_saia[0]['valor'] . "'", "", $conn);
+
+		$anexo = @$_REQUEST["anexos"];
+		if ($anexo != "") {
+			$anexos = busca_filtro_tabla("ruta,etiqueta,idanexos", "anexos", "idanexos IN(" . implode(",", $anexo) . ")", "", $conn);
+			if ($anexos["numcampos"]) {
+				for ($i = 0; $i < $anexos["numcampos"]; $i++) {
+					$vector_anexos[] = $anexos[$i]["ruta"];
+				}
+			}
+		}
+
+		if (@$_REQUEST["paginas"] != "" && @$_REQUEST["nombre_paginas"]) {
+			$vector_anexos[] = $_REQUEST["paginas"];
+
+		}
+		if (@$_REQUEST["pdf"] != "" && @$_REQUEST["nombre_pdf"]) {
+			$vector_anexos[] = $_REQUEST["pdf"];
+		}
+		$tipo_usuario = array("para" => "email", "copia" => "email", "copia_oculta" => "email");
+		$resultado_envio = enviar_mensaje("personal", $tipo_usuario, $vector_destinos, $copia_asunto, $contenido, $vector_anexos, $_REQUEST["archivo_idarchivo"]);
+		if ($resultado_envio === true) {
+			alerta("Mensaje enviado");
+		} else {
+			alerta("Por favor confirme el envio de correo y las transferencias, es posible que existan problemas");
+			volver(2);
+			die();
+		}
+		abrir_url("email_doc.php?formato_enviar=true&no_menu=1&iddoc=" . $_REQUEST["archivo_idarchivo"], "_self");
+	} else {
+		alerta("No se ha definido un servidor de Correo en la configuracion del sistema, por favor comuniquese con su administrador");
+		abrir_url("email_doc.php?formato_enviar=true&no_menu=1&iddoc=" . $_REQUEST["archivo_idarchivo"], "_self");
+	}
 }
 
 if(isset($_REQUEST["formato_enviar"]))

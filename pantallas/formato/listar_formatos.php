@@ -38,7 +38,7 @@ $lista_formatos = busca_filtro_tabla("nombre,etiqueta,ruta_adicionar", "formato"
 $proceso = busca_filtro_tabla('', 'categoria_formato', 'idcategoria_formato=' . $idcategoria_formato, '', $conn);
 $nombre_proceso = codifica_encabezado(html_entity_decode($proceso[0]['nombre']));
 $nombre_proceso = strtolower($nombre_proceso);
-$nombre_proceso = strtoupper($nombre_proceso);
+$nombre_proceso = mb_strtoupper($nombre_proceso);
 $nombre_proceso = $nombre_proceso;
 $texto = '
 		<style>

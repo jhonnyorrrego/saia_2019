@@ -1967,10 +1967,8 @@ function formato_devolucion($iddoc = 0) {
 function devolucion() {
 	global $conn, $ruta_db_superior;
 	$theValue = ($_REQUEST["iddoc"] != "") ? intval($_REQUEST["iddoc"]) : "NULL";
-	$datos["archivo_idarchivo"] = $theValue;
-	$datos["tipo_destino"] = 1;
-	$datos["tipo"] = "";
-	$datos["ruta_idruta"] = "";
+	$datos["archivo_idarchivo"] = $theValue;	
+	
 	if (isset($_REQUEST['campo_reemplazo']) && $_REQUEST['campo_reemplazo'] != 0 && isset($_REQUEST['campo_idruta']) && $_REQUEST['campo_idruta'] != 0) {
 		include_once ($ruta_db_superior . "pantallas/reemplazos/procesar_reemplazo.php");
 		actualiza_ruta_devolucion($_REQUEST['campo_reemplazo'], $datos["archivo_idarchivo"], $_REQUEST['campo_idruta']);
@@ -1978,19 +1976,9 @@ function devolucion() {
 	$idformato = busca_filtro_tabla("idformato", "formato f,documento d", "lower(f.nombre)=lower(d.plantilla) and iddocumento=" . $datos["archivo_idarchivo"], "", $conn);
 	llama_funcion_accion($datos["archivo_idarchivo"], $idformato[0]["idformato"], "devolver", "ANTERIOR");
 
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($_REQUEST["x_nombre"]) : $_REQUEST["x_nombre"];
-	$theValue = ($theValue != "") ? $theValue : "NULL";
-	$datos["nombre"] = $theValue;
-	$destino = explode(",", $_REQUEST["x_funcionario_destino"]);
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($_REQUEST["x_notas"]) : $_REQUEST["x_notas"];
-	$theValue = ($theValue != "") ? $theValue : NULL;
-	$adicionales["notas"] = "'" . $theValue . "'";
 	$documento = busca_filtro_tabla("", "documento", "iddocumento=" . $datos["archivo_idarchivo"], "", $conn);
 
 	// NUEVO DESARROLLO DEVOLVER
-
-	$sql1 = " UPDATE buzon_salida SET nombre='ELIMINA_REVISADO' WHERE archivo_idarchivo=" . $datos["archivo_idarchivo"] . " AND origen=" . $_REQUEST["x_funcionario_destino"] . " AND destino=" . $_SESSION["usuario_actual"] . " AND nombre='REVISADO'; ";
-	phpmkr_query($sql1);
 
 	$sql2 = " UPDATE buzon_entrada SET nombre='ELIMINA_REVISADO' WHERE archivo_idarchivo=" . $datos["archivo_idarchivo"] . " AND destino=" . $_REQUEST["x_funcionario_destino"] . " AND origen=" . $_SESSION["usuario_actual"] . "  AND nombre='REVISADO';";
 	phpmkr_query($sql2);
@@ -2020,7 +2008,7 @@ function devolucion() {
 	// FIN NUEVO DESARROLLO DEVOLVER
 
 	if ($_REQUEST["retornar"] == 1) {
-		return;
+		return true;
 	} else {
 		enrutar_documento("pantallas/buscador_principal.php?idbusqueda=3");
 	}

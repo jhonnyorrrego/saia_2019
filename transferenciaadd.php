@@ -1022,7 +1022,6 @@ $x_tipo_envio=implode(",",$x_tipo_envio);
 
 // Mensajeria
 
- //enviar_mensaje("origen",$funcionarios_mensaje,$mensaje,$x_tipo_envio);
  return true;
 }
 function cargar_anexos_documento_transferencia($anexos,$idtransferencia) {

@@ -52,6 +52,10 @@ switch (trim($_REQUEST["documento"])) {
 		//Otros Documentos
 		$formato = busca_filtro_tabla("idformato, nombre_tabla, etiqueta", "formato", "lower(nombre) like 'otros_calidad'", "", $conn);
 		break;
+	case 9 :
+		//Programas
+		$formato = busca_filtro_tabla("idformato, nombre_tabla, etiqueta", "formato", "lower(nombre) like 'prog_calidad'", "", $conn);
+		break;
 	case 10 :
 		//Formato
 		$formato = busca_filtro_tabla("idformato, nombre_tabla, etiqueta", "formato", "lower(nombre) like 'formato'", "", $conn);
@@ -86,7 +90,7 @@ function arbol_calidad_formatos(&$arbol, $idformato, $tabla, $etiqueta) {
 	}
 }
 
-function documentos_hijos_formato(&$arbol, $idformato, $tabla, $etiqueta,$origen_doc) {
+function documentos_hijos_formato(&$arbol, $idformato, $tabla, $etiqueta, $origen_doc) {
 	global $conn;
 	$cierre = 0;
 	$cierre += armar_ramas_arbol($arbol, 0, $etiqueta, $idformato . "|", 1);

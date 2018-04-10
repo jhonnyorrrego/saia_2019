@@ -237,36 +237,22 @@ function radicado_plan_padre($idformato,$idcampo,$iddoc=NULL){
 function editar_hallazgo($idformato, $iddoc) {
 	global $conn;
 	if ($_REQUEST["tipo"] != 5) {
-		$formato = busca_filtro_tabla("", "formato A", "A.idformato=" . $idformato, "", $conn);
-		$doc = busca_filtro_tabla("", $formato[0]["nombre_tabla"] . ",documento", "documento_iddocumento=iddocumento and documento_iddocumento=" . $iddoc, "", $conn);
+		$doc = busca_filtro_tabla("", "ft_hallazgo,documento", "documento_iddocumento=iddocumento and documento_iddocumento=" . $iddoc, "", $conn);
 		$responsables_seguimiento = explode(",", $doc[0]["responsable_seguimiento"]);
 		$responsables_hallazgo = explode(",", $doc[0]["responsables"]);
-		$padre = busca_filtro_tabla("", "ft_plan_mejoramiento", "idft_plan_mejoramiento=" . $doc[0]["ft_plan_mejoramiento"], "", $conn);
-		$usuario = 0;
+		$padre = busca_filtro_tabla("estado_plan_mejoramiento", "ft_plan_mejoramiento", "idft_plan_mejoramiento=" . $doc[0]["ft_plan_mejoramiento"], "", $conn);
 
-		if (usuario_actual("funcionario_codigo") == $doc[0]["ejecutor"]) {
-			$usuario = 1;
-		}
-
-		if ((!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] == 1) && $padre[0]["estado_plan_mejoramiento"] != 2) {
-			$perm = new PERMISO();
-			$ok = $perm -> acceso_modulo_perfil("editar_hallazgo");
-			if ($usuario)
-				echo '<a href="#" id="link_editar">Editar Hallazgo</a>&nbsp;&nbsp;';
-			$ok = $perm -> acceso_modulo_perfil("eliminar_hallazgo");
-			if ($ok) {
-				if ($doc[0]["ejecutor"] == usuario_actual("funcionario_codigo"))
-					echo '<a href="#" id="link_eliminar">Eliminar Hallazgo</a>&nbsp;&nbsp;';
-			}
-			$ok = $perm -> acceso_modulo_perfil("adicionar_seguimiento_plan");
-			if ($ok || $usuario)
-				echo '<a href="#" id="link_adicionar_seg">Adicionar Seguimiento</a>';
+		if ($padre[0]["estado_plan_mejoramiento"] != 2) {
+			if ($_SESSION["usuario_actual"] == $doc[0]["ejecutor"]) {
+				echo '<a class="btn btn-mini btn-warning" href="#" id="link_editar">Editar Hallazgo</a>&nbsp;&nbsp;';
+				echo '<a class="btn btn-mini btn-warning" href="#" id="link_eliminar">Eliminar Hallazgo</a>&nbsp;&nbsp;';
+				echo '<a class="btn btn-mini btn-warning" href="#" id="link_adicionar_seg">Adicionar Seguimiento</a>';
+			}			
 	    ?>
-	    <script type="text/javascript" src="../../js/jquery.js"></script>
 	    <script>
 	    $(document).ready(function() {
 		   	$('#link_editar').click(function(){
-		       window.location="<?php echo $formato[0]['ruta_editar'].'?idformato='.$idformato.'&iddoc='.$iddoc; ?>";
+		       window.location="editar_hallazgo.php?idformato=<?php echo $idformato;?>&iddoc=<?php echo $iddoc;?>";
 		     })
 		    $('#link_eliminar').click(function(){
 		       window.location="../../documento_borrar.php?iddoc=<?php echo $iddoc;?>";
@@ -305,10 +291,10 @@ function notificar_edicion($idformato,$iddoc){
   $papa=busca_filtro_tabla("","ft_plan_mejoramiento a,documento b,ft_hallazgo c,documento d","c.documento_iddocumento=$iddoc and a.documento_iddocumento=b.iddocumento and c.documento_iddocumento=d.iddocumento and ft_plan_mejoramiento=idft_plan_mejoramiento","",$conn);
 
   $mensaje="Se ha editado un Hallazgo perteneciente a un Plan de mejoramiento que Usted ha elaborado. Hallazgo No. ".$papa[0]["numero"].", Deficiencia: ".strip_tags(html_entity_decode($papa[0]["deficiencia"]));
-enviar_mensaje("","codigo",$papa[0]["ejecutor"],"PRUEBA - Se ha editado un Hallazgo",$mensaje);
+enviar_mensaje("",array("para"=>"funcionario_codigo"),array("para"=>array($papa[0]["ejecutor"])),"Se ha editado un Hallazgo",$mensaje);
 
   $mensaje="Se ha editado un Hallazgo del cual Usted es responsable. Hallazgo No. ".$papa[0]["numero"].", Deficiencia: ".strip_tags(html_entity_decode($papa[0]["deficiencia"]));
-enviar_mensaje("","codigo",explode(",",$papa[0]["responsables"]),"PRUEBA - Se ha editado un Hallazgo",$mensaje);
+enviar_mensaje("",array("para"=>"funcionario_codigo"),array("para"=>explode(",",$papa[0]["responsables"]))," Se ha editado un Hallazgo",$mensaje);
 }
 function detalles_padre($idformato,$iddoc){
 global $conn,$ruta_db_superior;

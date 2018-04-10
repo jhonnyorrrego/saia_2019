@@ -1,4 +1,5 @@
 <?php
+set_time_limit(0);
 $max_salida = 6;
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
@@ -9,13 +10,6 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
-
-@set_time_limit(0);
-if (!@$_SESSION["LOGIN"]) {
-	@session_start();
-	$_SESSION["LOGIN"] = "0k";
-	$_SESSION["usuario_actual"] = "1449";
-}
 include_once ($ruta_db_superior . "class_transferencia.php");
 
 hallazgos();
@@ -30,7 +24,6 @@ function hallazgos($padre = '') {
 	for ($i = 0; $i < $hallazgos["numcampos"]; $i++) {
 		$cumplimiento = busca_filtro_tabla("b.iddocumento", "ft_seguimiento a, documento b", "a.porcentaje>=100 and a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ANULADO', 'ACTIVO') and a.ft_hallazgo=" . $hallazgos[$i]["idft_hallazgo"], "", $conn);
 		if (!$cumplimiento["numcampos"]) {
-			//if ($hallazgos[$i]["resta"] >=0) {
 			if ($hallazgos[$i]["resta"] == 15 || $hallazgos[$i]["resta"] == 10 || $hallazgos[$i]["resta"] == 5) {
 				$contenido = "Saludos,<br/><br/>
         Por favor revisar el hallazgo con radicado No " . $hallazgos[$i]["numero"] . " del plan de mejoramiento No " . $hallazgos[$i]["numero_plan"] . ", esta a punto de vencerse o ya fue vencido, por favor dar cumplimiento a la accion de mejora propuesta.<br/><br/>
@@ -41,7 +34,7 @@ function hallazgos($padre = '') {
         <strong>Tiempo programado Seguimiento:</strong> " . $hallazgos[$i]["tiempo_seguimiento"] . "<br/>";
 				$responsables = traer_correos($hallazgos[$i]["responsables"]);
 				if (count($responsables)) {
-					enviar_mensaje("email", $responsables, $contenido, "e-interno", array(), "Vencimiento del hallazgo No " . $hallazgos[$i]["numero"], $hallazgos[$i]["iddocumento"]);
+					enviar_mensaje("", array("para" => "email"), array("para"=>$responsables), "Vencimiento del hallazgo No " . $hallazgos[$i]["numero"], $contenido, array(), $hallazgos[$i]["iddocumento"]);
 				}
 			}
 		}

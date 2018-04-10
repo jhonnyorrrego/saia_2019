@@ -1,9 +1,14 @@
-<?php include_once("../carta/funciones.php"); ?><?php include_once("../transferencia_doc/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../librerias_saia.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><p><?php enlace_planes(489,$_REQUEST['iddoc']);?></p>
-<table style="width: 100%;" border="0">
+<?php include_once("../../librerias_saia.php"); ?>
+			<?php echo(librerias_jquery('1.7')); ?><?php include_once("../librerias/funciones_generales.php"); ?>
+			<?php include_once("../../class_transferencia.php"); ?>
+			<?php include_once("../carta/funciones.php"); ?>
+			<?php include_once("funciones.php"); ?>
+			<?php include_once("../librerias/header_nuevo.php"); ?>
+			<tr><td><table class="table table-bordered" style="border-collapse: collapse; width: 100%;" border="1">
 <tbody>
 <tr>
-<td class="encabezado" style="width: 30%;">Fecha Seguimiento:</td>
-<td><?php mostrar_valor_campo('fecha_seguimiento',489,$_REQUEST['iddoc']);?></td>
+<td class="encabezado" style="width: 50%;">Fecha Seguimiento:</td>
+<td style="width: 50%;"><?php mostrar_valor_campo('fecha_seguimiento',489,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
 <td class="encabezado">Datos de&nbsp;la Formula:</td>
@@ -25,5 +30,5 @@
 </tr>
 </tbody>
 </table>
-<p>&nbsp;</p>
 <p><?php mostrar_estado_proceso(489,$_REQUEST['iddoc']);?></p></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>
+			

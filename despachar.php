@@ -193,7 +193,7 @@ global $conn,$campo_destino;
 			}
 			if ($notificacion) {
 				$mensaje = "Tiene un nuevo documento para su revision: Tipo: " . ucfirst($documento_mns[0]["plantilla"]) . " - Descripcion: " . $documento_mns[0]["descripcion"];
-				enviar_mensaje("",$tipo_usuario='codigo',array($documento_mns[0]["ejecutor"]),"Despacho ".ucfirst($documento_mns[0]["plantilla"])." No ".$documento_mns[0]["numero"],$mensaje,"e-interno");
+				enviar_mensaje("",array("para"=>"funcionario_codigo"),array("para"=>array($documento_mns[0]["ejecutor"])),"Despacho ".ucfirst($documento_mns[0]["plantilla"])." No ".$documento_mns[0]["numero"],$mensaje);
 			}
 		} else {
 			alerta("No se puede realizar el despacho para ".$responsable);
