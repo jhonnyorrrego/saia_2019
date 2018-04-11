@@ -361,6 +361,11 @@ class StorageUtils {
 	}
 
 	public static function get_app_root() {
+
+	    if (defined("RUTA_ABS_SAIA") && !empty(RUTA_ABS_SAIA)) {
+	        return RUTA_ABS_SAIA;
+	    }
+
 		$abspath = __DIR__;
 		$docRoot = rtrim($_SERVER['DOCUMENT_ROOT'], self::SEPARADOR);
 		$dir = substr($abspath, strlen($docRoot));
@@ -375,6 +380,10 @@ class StorageUtils {
 				break;
 			}
 		}
+		if (!defined("RUTA_ABS_SAIA")) {
+		    define("RUTA_ABS_SAIA", $app_root);
+		}
+
 		return $app_root;
 	}
 
