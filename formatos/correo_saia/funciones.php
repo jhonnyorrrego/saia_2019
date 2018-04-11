@@ -201,16 +201,6 @@ function despachar_documento($iddoc){
      // $otros["notas"]="'Documento despachado En $empresa ($responsable) con Guia: $guia Por $enviado'";  
 	  $otros["notas"]="Se despacho el documento por correo electronico";
       transferir_archivo_prueba($datos,$ejecutores,$otros);
-      //Envio de notificacion sobre el despacho de un documento al ejecutor
-      /*if($notificacion)
-      {
-      $documento_mns = busca_filtro_tabla("descripcion,plantilla","documento","iddocumento=".$destinos[$i],"",$conn);
-      $mensaje = "Tiene un nuevo documento para su revision: Tipo: ".ucfirst($documento_mns[0]["plantilla"])." - Descripcion: ".$documento_mns[0]["descripcion"];
-      $x_tipo_envio[] = 'msg';
-      $x_tipo_envio[] = 'e-interno';                         
-      $destino_mns[0] = $ejecutores;             
-      enviar_mensaje("origen",$destino_mns,$mensaje);
-     } */
     }
   }
   else {

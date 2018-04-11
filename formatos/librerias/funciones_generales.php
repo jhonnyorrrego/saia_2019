@@ -2020,6 +2020,7 @@ function listar_tareas($idformato, $iddoc) {
 
 function listar_formato_hijo($campos, $tabla, $campo_enlace, $llave, $orden, $alinear = 'center', $condicion = '') {
 	global $conn, $idformato;
+	$texto="";
 	$where = "";
 	if(count($campos)) {
 		$where .= " AND A.nombre IN('" . implode("','", $campos) . "')";
@@ -2816,11 +2817,8 @@ function obtener_mes_letra($mes) {
 
 function obtener_anexos_paginas_documento($datos_documento) {
 	global $ruta_db_superior;
-	
 	$documentos = array();
-	
 	$anexos = busca_filtro_tabla("ruta, etiqueta, tipo, idanexos", "anexos", "documento_iddocumento=" . $datos_documento["iddocumento"], "", $conn);
-	
 	for($i = 0; $i < $anexos['numcampos']; $i++) {
 		$documentos['anexos'][] = array(
 				"ruta" => $anexos[$i]['ruta'],
@@ -2831,7 +2829,6 @@ function obtener_anexos_paginas_documento($datos_documento) {
 	}
 	
 	$paginas = busca_filtro_tabla("ruta,pagina", "pagina", "id_documento=" . $datos_documento["iddocumento"], "", $conn);
-	
 	for($i = 0; $i < $paginas['numcampos']; $i++) {
 		$documentos['paginas'][] = array(
 				"ruta" => $paginas[$i]['ruta'],
@@ -2904,27 +2901,21 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 
 function obtener_funciones_anexo($idanexo, $tipo, $ruta, $etiqueta) {
 	global $ruta_db_superior;
-	
-	$array_tipos = array(
-			'jpg',
-			'png',
-			'pdf'
-	);
-	// <a class="btn btn-mini abrir_higslide" alto="620" ruta="'.$ruta.'">Ver</a>
-	if(in_array($tipo, $array_tipos) && filesize($ruta_db_superior . $ruta) <= 110000) {
+	$array_tipos = array('jpg', 'png', 'pdf');
+
+	if (in_array($tipo, $array_tipos)) {
 		$button = '<div class="btn-group">
-		<!--a class="btn btn-mini abrir_higslide" alto="620" ruta="' . $ruta . '">Ver</a-->
-		<a href="' . $ruta_db_superior . 'versionamiento/download_file.php?etiqueta=' . $etiqueta . '&ruta=' . $ruta . '" class="btn btn-mini btn-primary" >Descargar</a>						    
-				   </div>
-			      ';
+		<a class="btn btn-mini btn-primary" href="' . $ruta_db_superior.$ruta . '">Ver</a>
+		<!--a href="' . $ruta_db_superior . 'versionamiento/download_file.php?etiqueta=' . $etiqueta . '&ruta=' . $ruta . '" >Descargar</a-->
+		</div>';
 	} else {
-		$button = '<div class="btn-group">					
-					<a href="' . $ruta_db_superior . 'versionamiento/download_file.php?etiqueta=' . $etiqueta . '&ruta=' . $ruta . '" class="btn btn-mini btn-primary" >Descargar</a>						    
-				   </div>
-			      ';
+		$button = '<div class="btn-group">				
+		<a href="' . $ruta_db_superior . 'versionamiento/download_file.php?etiqueta=' . $etiqueta . '&ruta=' . $ruta . '" class="btn btn-mini btn-primary">Descargar</a>						    
+		</div>';
 	}
 	return ($button);
 }
+
 //Funcion para convertir numeros a letras
 function numerotexto ($numero) {
     // Primero tomamos el numero y le quitamos los caracteres especiales y extras
@@ -3019,6 +3010,64 @@ function numerotexto ($numero) {
       $final.=" CON ".numerotexto(substr($partes[1], 0,2));
     }
     return strtoupper($final);
+}
+
+function generar_correo_confirmacion($idformato, $iddoc, $nomb_campo = "email_aprobar") {
+	global $conn, $ruta_db_superior;
+	$formato = busca_filtro_tabla("nombre_tabla, nombre", "formato", "idformato=" . $idformato, "", $conn);
+	if ($formato["numcampos"]) {
+		$datos_formato = busca_filtro_tabla($nomb_campo . ",d.estado", $formato[0]['nombre_tabla'] . " ft,documento d", "ft.documento_iddocumento=d.iddocumento and d.iddocumento=" . $iddoc, "", $conn);
+		if ($datos_formato["numcampos"]) {
+			$usuario_confirma = busca_filtro_tabla("destino", "buzon_entrada", "nombre='POR_APROBAR' and activo=1 and archivo_idarchivo=" . $iddoc, "idtransferencia asc", $conn);
+			if ($datos_formato[0][$nomb_campo] == 1 && $usuario_confirma["numcampos"]) {
+				$funcionario = busca_filtro_tabla("login,nombres,apellidos,funcionario_codigo", "vfuncionario_dc", "estado=1 and funcionario_codigo=" . $usuario_confirma[0]['destino'], "", $conn);
+				if ($funcionario["numcampos"]) {
+					$ch = curl_init();
+					$fila = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/class_impresion.php?iddoc=" . $iddoc . "&conexion_remota=1&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA];
+					curl_setopt($ch, CURLOPT_URL, $fila);
+					curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+					$contenido = curl_exec($ch);
+					curl_close($ch);
+
+					$anexos = array();
+					$consulta = busca_filtro_tabla("pdf", "documento", "iddocumento=" . $iddoc, "", $conn);
+					if ($consulta[0]['pdf'] != "") {
+						if (file_exists($ruta_db_superior . $consulta[0]['pdf'])) {
+							$anexos[] = $ruta_db_superior . $consulta[0]['pdf'];
+						}
+					}
+
+					$adjuntos = busca_filtro_tabla("ruta", "anexos", "documento_iddocumento=" . $iddoc, "", $conn);
+					if ($adjuntos["numcampos"]) {
+						for ($k = 0; $k < $adjuntos["numcampos"]; $k++) {
+							if (file_exists($ruta_db_superior . $adjuntos[$k]['ruta'])) {
+								$anexos[] = $ruta_db_superior . $adjuntos[$k]["ruta"];
+							}
+						}
+					}
+
+					$info = 'iddoc-' . $iddoc . ',usuario-' . $funcionario[0]['login'];
+					$resultado = base64_encode($info);
+					$busca_configuracion_correo = busca_filtro_tabla("valor", "configuracion", "nombre='email_aprobacion'", "", $conn);
+					$enlaces = '<a href="' . $busca_configuracion_correo[0]['valor'] . 'index.php?info=' . $resultado . '" target="_blank">Gestionar documento</a><br />';
+
+					$mensaje = 'Saludos ' . $funcionario[0]['nombres'] . ' ' . $funcionario[0]['apellidos'] . ',<br /><br />
+		      Por medio de la presente se permite solicitar su aprobación o rechazo al documento adjunto donde se encuentra usted como responsable de aprobación, para hacer esto por favor siga estos dos pasos:
+		      <br /><br />
+		      1. Haga lectura del documento adjunto.
+		      <br /><br />
+		      2. Una vez tenga conocimiento del documento, acceda al siguiente link y decida si Aprobar o Rechazar.
+		      <br /><br />
+		      ' . $enlaces . '<br /><br />';
+					$funcionario[0]['funcionario_codigo']=1;
+					$ok = enviar_mensaje('', array("para" => "funcionario_codigo"), array("para" => array($funcionario[0]['funcionario_codigo'])), 'DOCUMENTO PARA APROBACION', $mensaje, $anexos, $iddoc);
+					if ($ok !== true && !isset($_REQUEST["no_redirecciona"])) {
+						notificaciones("Error! No se pudo enviar el correo de confirmaci&oacute;n", "error");
+					}
+				}
+			}
+		}
+	}
 }
 
 ?>

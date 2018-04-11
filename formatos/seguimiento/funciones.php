@@ -83,7 +83,7 @@ function notificar_seguimiento($idformato, $iddoc) {
     $mensaje="En la fecha ".date("d/m/Y")." se realizo el formato reporte de avance acciones del Radicado del Plan de Mejoramiento No. ".$datos[0]["numero"].", con la siguiente informacion:<br/><br/>
     <strong>AVANCE: </strong>".$datos[0]["porcentaje"]."<br/><br/>
     <strong>LOGROS ALCANZADOS:</strong> ".html_entity_decode($datos[0]["logros_alcanzados"])."<br/><br/>";     
-    enviar_mensaje("", "codigo",$responsable,"PRUEBA - Notificacion Reporte de avance acciones", $mensaje );    
+    enviar_mensaje("", array("para"=>"funcionario_codigo"),array("para"=>$responsable),"Notificacion Reporte de avance acciones", $mensaje );    
   }
 }
 

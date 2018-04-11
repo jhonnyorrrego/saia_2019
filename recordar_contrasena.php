@@ -58,7 +58,7 @@ if($_REQUEST['login']){
 			<br>
 		";
 		
-		$envio_correo=enviar_mensaje("",'email',array($usuario_administrador[0]['email']),"SAIA - RESTABLECER CLAVE DE ACCESO ".$_REQUEST['login'],$contenido,"",0);
+		$envio_correo=enviar_mensaje("",array("para"=>"email"),array("para"=>array($usuario_administrador[0]['email'])),"SAIA - RESTABLECER CLAVE DE ACCESO ".$_REQUEST['login'],$contenido,"",0);
 		if($envio_correo){
 			?>
 			<script>

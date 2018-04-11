@@ -22,10 +22,10 @@ if ($configuracion_temporal["numcampos"]) {
 }
 
 ?>
-<script> 
+<script>
 /*
 <Clase>
-<Nombre>validar_campos</Nombre> 
+<Nombre>validar_campos</Nombre>
 <Parametros>f: objeto formulario</Parametros>
 <Responsabilidades>Valida los campos obligatorios para el asunto y es destino<Responsabilidades>
 <Notas></Notas>
@@ -42,8 +42,8 @@ if ($configuracion_temporal["numcampos"]) {
   if(f.asunto.value=="")
   {  alert("Debe escribir el asunto del e-mail");
      return false;
-  }   
-  return true; 
+  }
+  return true;
  }
 </script>
 <?php
@@ -95,7 +95,7 @@ function formato_email() {
         mkdir("../" . $ruta_temp . "_" . $login[0]["login"], PERMISOS_CARPETAS);
         chmod("../" . $ruta_temp . "_" . $login[0]["login"], PERMISOS_CARPETAS);
     }
-    
+
     if ($direcciones["numcampos"]) {
         $ldirecciones = explode(",", $direcciones[0]["email"]);
     } else {
@@ -134,7 +134,7 @@ function formato_email() {
             $texto_anexo .= '<input name="anexos[]" value="' . $anexos[$i]['idanexos'] . '" type="checkbox" checked><a href="' . $mostrar . '" target="_blank">' . $anexos[$i]["etiqueta"] . '</a><br />';
         }
     }
-    
+
     // creo un pdf con las paginas del documento
     $paginas = busca_filtro_tabla("ruta", "pagina", "id_documento=" . $_REQUEST["iddoc"], "", $conn);
     if ($paginas["numcampos"]) {
@@ -159,7 +159,7 @@ function formato_email() {
             $_REQUEST["iddoc"] = $iddoc;
             $_REQUEST["url"] = $url;
             $datos = busca_filtro_tabla("numero,pdf,plantilla,ejecutor,descripcion,tipo_radicado," . fecha_db_obtener("fecha", "Y-m-d H:i:s") . " as fecha", "documento", "iddocumento=" . $_REQUEST["iddoc"], "", $conn);
-            
+
         }
         // print_r($datos[0]['pdf']);die();
         $datos64 = base64_encode($datos[0]['pdf']);
@@ -191,25 +191,25 @@ function formato_email() {
 function pc_html2ascii($s) {
     // convert links
     $s = preg_replace('/<a\s+.*?href="?([^\" >]*)"?[^>]*>(.*?)<\/a>/i', '$2 ($1)', $s);
-    
+
     // convert <br>, <hr>, <p>, <div> to line breaks
     $s = preg_replace('@<(b|h)r[^>]*>@i', "\n", $s);
     $s = preg_replace('@<p[^>]*>@i', "\n\n", $s);
     $s = preg_replace('@<div[^>]*>(.*)</div>@i', "\n" . '$1' . "\n", $s);
-    
+
     // convert bold and italic
     $s = preg_replace('@<b[^>]*>(.*?)</b>@i', '*$1*', $s);
     $s = preg_replace('@<i[^>]*>(.*?)</i>@i', '/$1/', $s);
-    
+
     // decode named entities
     $s = strtr($s, array_flip(get_html_translation_table(HTML_ENTITIES)));
-    
+
     // decode numbered entities
     $s = preg_replace('//e', 'chr(\\1)', $s);
-    
+
     // remove any remaining tags
     $s = strip_tags($s);
-    
+
     return $s;
 }
 
@@ -227,7 +227,7 @@ function pc_html2ascii($s) {
  */
 function enviar_email($doc = 0) {
     global $conn;
-    
+
     $copia = array();
     $email = busca_filtro_tabla("valor", "configuracion", "nombre='servidor_correo'", "", $conn);
     $puerto = busca_filtro_tabla("valor", "configuracion", "nombre='puerto_servidor_correo'", "", $conn);
@@ -237,7 +237,7 @@ function enviar_email($doc = 0) {
     if ($email["numcampos"]) {
         if ($doc != 0) {
             $datos = busca_filtro_tabla("*", "ft_mensaje", "documento_iddocumento=$doc", "", $conn);
-            
+
             if ($datos["numcampos"] > 0) {
                 $asunto = html_entity_decode($datos[0]["asunto"]);
                 $destinos = $datos[0]["destinatario"];
@@ -254,7 +254,7 @@ function enviar_email($doc = 0) {
                         $mail->AddStringAttachment($contenido, $archivo[$i]["etiqueta"]);
                     }
                 }
-                
+
                 $pdf_documento = busca_filtro_tabla("pdf,numero", "documento", "iddocumento=" . $doc, "", $conn);
                 if ($pdf_documento['numcampos']) {
                     // $mail->AddAttachment("../" . $pdf_documento[0]["pdf"], 'documento_' . $pdf_documento[0]['numero'] . '.pdf');
@@ -275,7 +275,7 @@ function enviar_email($doc = 0) {
             $enlace = "../documentoview.php?key=$doc";
         }
         $copia_asunto = utf8_decode($asunto);
-        
+
         $nombre = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $_SESSION["usuario_actual"], "", $conn);
         $mail->FromName = "Gestion Documental SAIA (" . utf8_decode(html_entity_decode($nombre[0]["nombres"] . " " . $nombre[0]["apellidos"])) . ")";
         $mail->Host = $email[0]["valor"];
@@ -287,7 +287,7 @@ function enviar_email($doc = 0) {
         $mail->ClearAddresses();
         $mail->ClearBCCs();
         $mail->ClearCCs();
-        
+
         $para = explode(",", $destinos);
         foreach ($para as $direccion) {
             $mail->AddAddress("$direccion", "$direccion");
@@ -298,18 +298,18 @@ function enviar_email($doc = 0) {
                 $mail->AddCC("$direccion", "$direccion");
             }
         }
-        
+
         if ($_REQUEST["para_cco"] != "") {
             $para = explode(",", $_REQUEST["para_cco"]);
             foreach ($para as $direccion) {
                 $mail->AddBCC("$direccion", "$direccion");
             }
         }
-        
+
         $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "", $conn);
         $admin_saia = busca_filtro_tabla("valor", "configuracion", "nombre='login_administrador'", "", $conn);
         $correo_admin = busca_filtro_tabla("email", "funcionario", "login='" . $admin_saia[0]['valor'] . "'", "", $conn);
-        
+
         $mail->Body = $contenido;
         $mail->IsHTML(true);
         $anexo = @$_REQUEST["anexos"];
@@ -323,7 +323,7 @@ function enviar_email($doc = 0) {
                 }
             }
         }
-        
+
         if (@$_REQUEST["paginas"] != "" && @$_REQUEST["nombre_paginas"]) {
             $mail->AddAttachment($_REQUEST["paginas"], $_REQUEST["nombre_paginas"]);
         }
@@ -388,7 +388,7 @@ function enviar_email($doc = 0) {
             volver(2);
             die();
         }
-        
+
         abrir_url("email_doc.php?formato_enviar=true&no_menu=1&iddoc=" . $_REQUEST["archivo_idarchivo"], "_self");
     } else {
         alerta("No se ha definido un servidor de Correo en la configuracion del sistema, por favor comuniquese con su administrador");
@@ -418,6 +418,6 @@ theme_advanced_toolbar_align : "left",
 height:"350px",
 width:"600px"
 });
-	
+
 </script-->
 <!--/head-->

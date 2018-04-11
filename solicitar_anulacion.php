@@ -106,13 +106,10 @@ elseif(@$_REQUEST["accion"]=="guardar_adicionar")
  $solicitante=busca_filtro_tabla("","funcionario","idfuncionario=".$_REQUEST["funcionario"],"",$conn);
  $revisores=busca_filtro_tabla("login","buzon_salida b,funcionario f","b.nombre in('REVISADO','APROBADO') and origen=funcionario_codigo and archivo_idarchivo='".$_REQUEST["documento_iddocumento"]."'","",$conn);
  $mensaje=$solicitante[0]["nombres"]." ".$solicitante[0]["apellidos"]." ha solicitado la ANULACION de un documento sobre el cual ud tiene responsabilidad. Radicado: ".$documento[0]["numero"].". Descripci�n:".$documento[0]["descripcion"].".  Motivo de la solicitud: ".$_REQUEST["descripcion"];
- /*for($i=0;$i<$revisores["numcampos"];$i++)
-   enviar_mensaje($revisores[$i]["login"],$mensaje,'msg');*/
  
  $anuladores=busca_filtro_tabla("login","funcionario","perfil in(select idperfil from perfil ,permiso_perfil where perfil_idperfil=idperfil and modulo_idmodulo='265') or idfuncionario in(select funcionario_idfuncionario from permiso where modulo_idmodulo='265' and accion=1)","",$conn);
  $mensaje=$solicitante[0]["nombres"]." ".$solicitante[0]["apellidos"]." ha solicitado la ANULACION del documento con Radicado:".$documento[0]["numero"].". Descripci�n:".$documento[0]["descripcion"].".  Motivo de la solicitud: ".$_REQUEST["descripcion"];
- /*for($i=0;$i<$anuladores["numcampos"];$i++)
-   enviar_mensaje($anuladores[$i]["login"],$mensaje,'msg');*/
+
  if($documento[0]["plantilla"]!=""){
  	$plantilla=busca_filtro_tabla("","formato a","lower(a.nombre)='".strtolower($documento[0]["plantilla"])."'","",$conn);
    abrir_url("formatos/".$plantilla[0]["nombre"]."/".$plantilla[0]["ruta_mostrar"]."?iddoc=".$documento[0]["iddocumento"]."&idformato=".$plantilla[0]["idformato"],"detalles");
@@ -150,7 +147,7 @@ elseif(@$_REQUEST["accion"]=="anular"){
  $revisores=busca_filtro_tabla("origen","buzon_salida","nombre in('REVISADO','APROBADO') and archivo_idarchivo='".$_REQUEST["key"]."'","",$conn);
  $mensaje="Ha sido ANULADO el documento con Radicado: ".$solicitante[0]["numero"]." y Descripci&oacute;n:".$solicitante[0]["descripcion"].".";
  for($i=0;$i<$revisores["numcampos"];$i++)
-   enviar_mensaje("",'codigo',array($revisores[$i]["origen"]),"Solicitud de Anulacion".$datos[0]['numero'],utf8_encode($mensaje));
+   enviar_mensaje("",array("para"=>"funcionario_codigo"),array("para"=>array($revisores[$i]["origen"])),"Solicitud de Anulacion".$datos[0]['numero'],utf8_encode($mensaje));
   
  	alerta("<b>ATENCI&Oacute;N</b><br>El documento ha sido ANULADO");
    $flujo = busca_filtro_tabla("","paso_documento","documento_iddocumento=".$_REQUEST["key"],"idpaso_documento desc",$conn);

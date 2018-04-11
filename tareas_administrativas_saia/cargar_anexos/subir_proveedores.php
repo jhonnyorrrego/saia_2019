@@ -481,15 +481,6 @@ function aprobar2($iddoc=0,$url="")
                    else
                     $valores.=",''"; 
                    phpmkr_query("INSERT INTO buzon_entrada(".$campos.") VALUES (".$valores.")",$conn);
-                   if($registro_actual[$i]["origen"] != $registro_actual[$i]["destino"])
-                 {  
-                   $documento_mns = busca_filtro_tabla("descripcion,plantilla","documento","iddocumento=$iddoc","",$conn);
-                   $mensaje = "Tiene un nuevo documento para su revision: Tipo: ".ucfirst($documento_mns[0]["plantilla"])." - Descripcion: ".$documento_mns[0]["descripcion"];
-                   $x_tipo_envio[] = 'msg';
-                   $x_tipo_envio[] = 'e-interno';                         
-                   $destino_mns[0] = $registro_actual[$i]["origen"];             
-                   //enviar_mensaje("origen",$destino_mns,$mensaje);
-                  }
                    $transferir=0;
                   }
                else
@@ -513,15 +504,7 @@ function aprobar2($iddoc=0,$url="")
                     $valores.="''";    
                  phpmkr_query("INSERT INTO buzon_entrada(".$campos.") VALUES (".$valores.")",$conn);
                  procesar_estados($registro_actual[$i]["destino"],$registro_actual[$i]["origen"],$estado,$iddoc);
-                 if($registro_actual[$i]["origen"] != $registro_actual[$i]["destino"])
-                 { 
-                  $documento_mns = busca_filtro_tabla("descripcion,plantilla","documento","iddocumento=$iddoc","",$conn);
-                  $mensaje = "Tiene un nuevo documento para su revision: Tipo: ".ucfirst($documento_mns[0]["plantilla"])." - Descripcion: ".$documento_mns[0]["descripcion"];
-                  $x_tipo_envio[] = 'msg';
-                  $x_tipo_envio[] = 'e-interno';      
-                  $destino_mns[0] = $registro_actual[$i]["origen"];                               
-                  //enviar_mensaje("origen",$destino_mns,$mensaje,$x_tipo_envio);   
-                 }
+
                 }
             }
           if(($terminado["numcampos"]==$registro_actual["numcampos"]) || ($terminado["numcampos"]==1 && $terminado[0]["destino"]==$_SESSION["usuario_actual"]))
@@ -624,7 +607,7 @@ function aprobar2($iddoc=0,$url="")
                   $x_tipo_envio[] = 'e-interno';
                   $list_destino = implode(',',$aux_destino);
                   $l_destino[] = $list_destino;
-                 // enviar_mensaje("origen",$l_destino,$mensaje,'msg');        
+      
                  }  */
                  llama_funcion_accion($iddoc,$tipo_radicado[0]["idformato"],"aprobar","POSTERIOR");
                 //$url="html2ps/public_html/demo/html2ps.php?plantilla=$formato&iddoc=".$iddoc;

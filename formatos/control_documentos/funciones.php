@@ -220,8 +220,10 @@ function confirmar_control_documentos($idformato, $iddoc) {
 	global $conn, $ruta_db_superior, $datos;
 	$html="";
 	if ($datos[0]["fecha_confirmacion"]) {
-		$html = "<br/><span style='font-size:12pt;'>FECHA DE TRAMITE Y VIGENCIA DEL DOCUMENTO : " . $datos[0]["fecha_confirmacion"] . "<br />";
-		$html .= "Solicitud procesada satisfactoriamente, por favor socializar con los involucrados en el proceso.</span>";
+		$resp=busca_filtro_tabla("nombres,apellidos","funcionario","idfuncionario=".$datos[0]["idfunc_fecha_confir"],"",$conn);
+		$html = "<br/><span style='color:red'>FECHA DE TRAMITE Y VIGENCIA DEL DOCUMENTO : " . $datos[0]["fecha_confirmacion"] . "<br />
+		Responsable : ".ucwords(strtolower($resp[0]["nombres"]." ".$resp[0]["apellidos"]))."<br/>
+		Solicitud procesada satisfactoriamente, por favor socializar con los involucrados en el proceso.</span>";
 	}else	if ($_REQUEST["tipo"] != 5) {
 		$funcionario = array();
 		$responsables = busca_filtro_tabla("destino", "buzon_entrada", "nombre ='POR_APROBAR' and archivo_idarchivo=" . $iddoc, "", $conn);
@@ -243,7 +245,7 @@ function confirmar_control_documentos($idformato, $iddoc) {
 		if (in_array($_SESSION["usuario_actual"], $funcionario) && $datos[0]["estado"] == "ACTIVO") {
 			$html = "<br/><button class='btn btn-small btn-info dropdown-toggle' id='btn_editar'>Editar</button>";
 		} else if ($datos[0]["estado"] == "APROBADO" && !$datos[0]["fecha_confirmacion"]) {
-			if ($_SESSION["usuario_actual"] == $cf_versionador_calidad[0]['funcionario_codigo']) {
+			if ($_SESSION["usuario_actual"] == $cf_versionador_calidad[0]['funcionario_codigo'] || $_SESSION["LOGIN".LLAVE_SAIA]) {
 				$html = "<br/><button class='btn btn-small btn-success' id='confirmar_cambios'>Aprobaci&oacute;n de la Solicitud</button>";
 			}
 		}
@@ -310,17 +312,7 @@ function mostrar_items_control_version($idformato, $iddoc) {
 				$html .= '<td>' . $origen[$item[$i]["origen_documento_i"]] . '</td>';
 				
 				if($datos[0]["tipo_solicitud"]==1){
-					if($item[$i]["iddocumento_calidad_i"]){
-						$exp=explode("|", $item[$i]["documento_calidad_i"]);
-						if($exp[0]){
-							$info_formato=busca_filtro_tabla("nombre","formato","idformato=".$exp[0],"",$conn);
-							$html .= "<td><a href='".$ruta_db_superior."formatos/".$info_formato[0]["nombre"]."/mostrar_".$info_formato[0]["nombre"].".php?menu_principal_inactivo=1&idformato=".$exp[0]."&iddoc=".$item[$i]["iddocumento_calidad_i"]."' class='highslide' onclick='return top.hs.htmlExpand(this, { objectType: \"iframe\",width:830, height:680,preserveContent:false } )' style='text-decoration: underline; cursor:pointer;'>Ver</a></td>";
-						}else{
-							$html .= "<td><a href='".$ruta_db_superior."ordenar.php?mostrar_formato=1&key=".$item[$i]["iddocumento_calidad_i"]."' class='highslide' onclick='return top.hs.htmlExpand(this, { objectType: \"iframe\",width:830, height:680,preserveContent:false } )' style='text-decoration: underline; cursor:pointer;'>Ver</a></td>";
-						}
-					}else{
-						$html .= '<td>PENDIENTE</td>';
-					}
+						$html .= "<td><a href='".$ruta_db_superior."formatos/item_control_versio/mostrar_item_control_versio.php?menu_principal_inactivo=1&iddoc=".$item[$i]["iddocumento"]."' class='highslide' onclick='return top.hs.htmlExpand(this, { objectType: \"iframe\",width:830, height:680,preserveContent:false } )' style='text-decoration: underline; cursor:pointer;'>Ver</a></td>";
 				}
 
 				if (@$_REQUEST["tipo"] != 5 && $datos[0]["estado"] == 'ACTIVO') {
@@ -459,10 +451,10 @@ function generar_documentos_version($idformato, $iddoc){
 		}
 		$info_retorno=aprobar_control_documentos($_REQUEST["idformato"],$_REQUEST["iddoc"]);
 		if($info_retorno["exito"]){
-			$update="UPDATE ft_control_documentos SET fecha_confirmacion=".fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s")." WHERE documento_iddocumento=".$iddoc;
+			$update="UPDATE ft_control_documentos SET fecha_confirmacion=".fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s").",idfunc_fecha_confir=".$_SESSION["idfuncionario"]." WHERE documento_iddocumento=".$iddoc;
 			phpmkr_query($update);
-			
 			notificaciones("Datos actualizados con Exito!", "success", 8500);
+			sleep(2);
 			redirecciona($ruta_db_superior."formatos/control_documentos/mostrar_control_documentos.php?iddoc=".$iddoc."&idformato=".$idformato);
 			die();
 		}else{
@@ -493,6 +485,7 @@ function aprobar_control_documentos($idformato, $iddoc) {
 			$errores = array();
 			$errores_version = array();
 			$datos_session = "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&conexion_remota=1";
+			$LOGIN=$_SESSION["LOGIN" . LLAVE_SAIA];
 			switch($control_documento[0]["tipo_solicitud"]) {
 				case 1 :
 					$item = busca_filtro_tabla("i.*", "ft_item_control_versio i,documento d", "d.iddocumento=i.documento_iddocumento and d.estado not in ('ELIMINADO','ANULADO','ACTIVO') and i.ft_control_documentos=" . $control_documento[0]["idft_control_documentos"], "", $conn);
@@ -629,6 +622,8 @@ function aprobar_control_documentos($idformato, $iddoc) {
 							curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 							$response = curl_exec($ch);
 							curl_close($ch);
+							logear_funcionario_webservice($LOGIN);
+							unset($_SESSION["conexion_remota"]);
 							$retorno = json_decode($response, true);
 							if ($retorno["exito"]) {
 								$update = "update ft_item_control_versio set estado_doc_calidad_i=1,fecha_confirmacion_i=" . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . " where documento_iddocumento=" . $item[$i]["documento_iddocumento"];
@@ -667,7 +662,6 @@ function aprobar_control_documentos($idformato, $iddoc) {
 						$errores_version[] = "<li>No se puede encontrar el documento a ser versionado y modificado. Favor comuniquese a sistemas</li>";
 					}
 					
-
 					if ($url) {
 						$ch = curl_init();
 						$url = $url . $datos_session;
@@ -676,10 +670,13 @@ function aprobar_control_documentos($idformato, $iddoc) {
 						curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 						$response = curl_exec($ch);
 						curl_close($ch);
+						logear_funcionario_webservice($LOGIN);
+						unset($_SESSION["conexion_remota"]);
+						
 						$retorno = json_decode($response, true);
 						
 						if ($retorno["exito"]) {
-							$update = "UPDATE ft_control_documentos SET estado_doc_calidad=1,fecha_confirmacion=" . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . " WHERE documento_iddocumento=" . $iddoc;
+							$update = "UPDATE ft_control_documentos SET estado_doc_calidad=1 WHERE documento_iddocumento=" . $iddoc;
 							phpmkr_query($update);
 
 							$update_it = "UPDATE ft_item_control_versio SET estado_doc_calidad_i=2 WHERE iddocumento_calidad_i=" . $control_documento[0]['iddocumento_calidad']." and estado_doc_calidad_i=1";
@@ -703,7 +700,6 @@ function aprobar_control_documentos($idformato, $iddoc) {
 					} else {
 						$datos_retorno["exito"] = 1;
 					}
-					die();
 					break;
 
 				case 3 :
@@ -724,6 +720,8 @@ function aprobar_control_documentos($idformato, $iddoc) {
 							curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 							$response = curl_exec($ch);
 							curl_close($ch);
+							logear_funcionario_webservice($LOGIN);
+							unset($_SESSION["conexion_remota"]);
 							$retorno = json_decode($response, true);
 							if ($retorno["exito"]) {
 								$update = "UPDATE ft_item_control_versio SET estado_doc_calidad=2,fecha_confirmacion_i=" . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . " WHERE documento_iddocumento=" . $item[$i]["documento_iddocumento"];

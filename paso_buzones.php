@@ -51,7 +51,7 @@ if($filtro_seguridad){  //pasa filtro de seguridad
 	            $usuario=array();
 	            $usuario[]=$pendientes[$i]['llave_entidad'];
 	            
-	            enviar_mensaje("","codigo",$usuario,"Documentos Pendientes",$mensaje,"e-interno");
+	            enviar_mensaje("",array("para"=>"funcionario_codigo"),array("para"=>$usuario),"Documentos Pendientes",$mensaje);
 	        }
 	    }     
 	}

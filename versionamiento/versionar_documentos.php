@@ -98,21 +98,19 @@ function versionar_documento_calidad($datos_documento) {
 					$retorno["msn"] = "Error al crear carpeta destino del PDF";
 					return $retorno;
 				} else {
+					modificar_etiqueta_documento($datos_documento, $_REQUEST["nombre_documento"]);
 					if (array_key_exists('iddocumento_anexo', $_REQUEST)) {
 						$anexo_nuevo = busca_filtro_tabla("", "anexos", "documento_iddocumento=" . $_REQUEST["iddocumento_anexo"], "", $conn);
 						if ($anexo_nuevo["numcampos"]) {
-							if (sizeof($documentos["anexos"])) {
-								modificar_etiqueta_documento($datos_documento, $_REQUEST["nombre_documento"]);
-								$documentos = obtener_anexos_paginas_documento($datos_documento);
-								if (count($documentos["anexos"])) {
-									$accion = reemplazar_anexo_antiguo($documentos["anexos"], $anexo_nuevo, $datos_documento);
-									if (!$accion["exito"]) {
-										$retorno["msn"] = $accion["msn"];
-										return $retorno;
-									}
+							$documentos = obtener_anexos_paginas_documento($datos_documento);
+							if (count($documentos["anexos"])) {
+								$accion = reemplazar_anexo_antiguo($documentos["anexos"], $anexo_nuevo, $datos_documento);
+								if (!$accion["exito"]) {
+									$retorno["msn"] = $accion["msn"];
+									return $retorno;
 								}
+
 							} else {
-								modificar_etiqueta_documento($datos_documento, $_REQUEST["nombre_documento"]);
 								$info_anexo = adicionar_registro_nuevo_anexo($datos_documento, $anexo_nuevo);
 								if (!$info_anexo["exito"]) {
 									$retorno["msn"] = $info_anexo["msn"];
@@ -121,7 +119,7 @@ function versionar_documento_calidad($datos_documento) {
 							}
 						}
 					}
-
+					
 					$datos_documento['pdf'] = crear_pdf_documento_tcpdf($datos_documento);
 					if (!$datos_documento['pdf']) {
 						$retorno["msn"] = "Error al generar el PDF";
@@ -443,8 +441,11 @@ function adicionar_registro_nuevo_anexo($datos_documento, $anexo) {
 
 function modificar_etiqueta_documento($datos_documento, $etiqueta) {
 	global $conn;
-	$update_documento = "UPDATE " . $datos_documento['tabla'] . " SET nombre='" . $etiqueta . "' where documento_iddocumento=" . $datos_documento['iddocumento'];
+	$update_documento = "UPDATE " . $datos_documento['tabla'] . " SET nombre='" . $etiqueta . "' WHERE documento_iddocumento=" . $datos_documento['iddocumento'];
 	phpmkr_query($update_documento);
+	
+	$upd_pdf = "UPDATE documento SET pdf=NULL WHERE documento_iddocumento=" . $datos_documento['iddocumento'];
+	phpmkr_query($upd_pdf);
 }
 
 function poner_documento_estado_eliminado($datos_documento) {

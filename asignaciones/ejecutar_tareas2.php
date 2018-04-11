@@ -25,10 +25,6 @@ else{
     // TODO CONTROL POR DEFECTO  
 }
 
-
-
-//enviar_mensaje("hernando.trejos@cerok.com","ftrujillo@superpack.com.co","Prueba de Tareas",array("e-interno"));
-
 function actualizar_tareas($idcontrol_tarea){
 global $conn;
 $lcontroles=busca_filtro_tabla("","control_tarea","idcontrol_tarea=".$idcontrol_tarea,"",$conn);

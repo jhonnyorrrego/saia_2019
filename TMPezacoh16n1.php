@@ -11,9 +11,6 @@ if(@$_SESSION["LOGIN".LLAVE_SAIA]){
      include_once("test4");
     }
   }
-  else if($JABBER->connected){
-      enviar_mensaje("saia","saia","Por Favor Actualizar los Funcionarios de Intranet".date("Y-m-d"));
-  }
   $fecha_actualiza=busca_filtro_tabla("valor,MAX(fecha)","configuracion","tipo='fecha' AND nombre='fecha_inicio_contador'","GROUP BY fecha",$conn);
   if($fecha_actualiza["numcampos"] && $fecha_actualiza[0]["valor"]<date("Y-m-d")){
    actualiza_contador($fecha_actualiza[0]["valor"]);

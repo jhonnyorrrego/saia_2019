@@ -437,23 +437,22 @@ function rastro_documento($x_doc,$filtro){
  if($filtro)$titulo="SEGUIMIENTO PERSONAL DEL DOCUMENTO";
  $cantidad_maxima_rastro=busca_filtro_tabla("","configuracion a","nombre='cantidad_maxima_rastro' and tipo='rastro'","",$conn);
 
- $cantidad=busca_filtro_tabla("count(*) as cant","buzon_salida","archivo_idarchivo=$x_doc and nombre not in ('LEIDO','ELIMINA_LEIDO','ELIMINA_APROBADO','ELIMINA_REVISADO','ELIMINA_TERMINADO','ELIMINA_TRANSFERIDO')","",$conn);
+ $cantidad=busca_filtro_tabla("count(*) as cant","buzon_salida","archivo_idarchivo=$x_doc and nombre not like 'ELIMINA_%' and nombre not in ('LEIDO')","",$conn);
 
  if($cantidad[0]["cant"]>$cantidad_maxima_rastro[0]["valor"] && !$filtro){
  	$start=0;
 	$limit=$cantidad_maxima_rastro[0]["valor"];
- 	$recorrido = busca_filtro_tabla_limit("buzon_salida.*,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha_format","buzon_salida","archivo_idarchivo=$x_doc and nombre not in ('LEIDO','ELIMINA_LEIDO','ELIMINA_APROBADO','ELIMINA_REVISADO','ELIMINA_TERMINADO','ELIMINA_TRANSFERIDO','ELIMINA_BORRADOR')","order by idtransferencia desc",$start,($limit-1),$conn);
+ 	$recorrido = busca_filtro_tabla_limit("buzon_salida.*,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha_format","buzon_salida","archivo_idarchivo=$x_doc and nombre not like 'ELIMINA_%' and nombre not in ('LEIDO')","order by idtransferencia desc",$start,($limit-1),$conn);
  }
  else if($filtro){
- 	$recorrido = busca_filtro_tabla("buzon_salida.*,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha_format","buzon_salida","archivo_idarchivo=$x_doc and nombre not in ('LEIDO','ELIMINA_LEIDO','ELIMINA_APROBADO','ELIMINA_REVISADO','ELIMINA_TERMINADO','ELIMINA_TRANSFERIDO','ELIMINA_BORRADOR') AND destino='".usuario_actual('funcionario_codigo')."'","idtransferencia DESC",$conn);
+ 	$recorrido = busca_filtro_tabla("buzon_salida.*,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha_format","buzon_salida","archivo_idarchivo=$x_doc and nombre not like 'ELIMINA_%' and nombre not in ('LEIDO') AND destino='".usuario_actual('funcionario_codigo')."'","idtransferencia DESC",$conn);
  }
  else{
- 	$recorrido = busca_filtro_tabla("buzon_salida.*,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha_format","buzon_salida","archivo_idarchivo=$x_doc and nombre not in ('LEIDO','ELIMINA_LEIDO','ELIMINA_APROBADO','ELIMINA_REVISADO','ELIMINA_TERMINADO','ELIMINA_TRANSFERIDO','ELIMINA_BORRADOR')","idtransferencia DESC",$conn);
+ 	$recorrido = busca_filtro_tabla("buzon_salida.*,".fecha_db_obtener("fecha","Y-m-d H:i:s")." as fecha_format","buzon_salida","archivo_idarchivo=$x_doc and nombre not like 'ELIMINA_%' and nombre not in ('LEIDO')","idtransferencia DESC",$conn);
  }
 
- $documento=busca_filtro_tabla("plantilla,estado","documento","iddocumento=$x_doc","",$conn);
- if($recorrido["numcampos"]>0)
- {
+ $documento=busca_filtro_tabla("plantilla,estado","documento","iddocumento=".$x_doc,"",$conn);
+ if($recorrido["numcampos"]>0){
  	$id_tabla="tabla_rastro";
  	if($filtro)$id_tabla="tabla_rastro_propio";
 ?>

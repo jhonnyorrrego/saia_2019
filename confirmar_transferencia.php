@@ -70,16 +70,7 @@ function transferir()
   $datos["ver_notas"]=$_REQUEST["ver_notas"];
   $datos["nombre"]="TRANSFERIDO";
   $otros["notas"]="'".$_REQUEST["notas"]."'";
-   if(transferir_archivo_prueba($datos,$destinos,$otros))
-  {
-    $msg=array();
-    if(@$_REQUEST["tipo_envio"])
-      $msg=explode(",",$_REQUEST["tipo_envio"]);
- 
-   enviar_mensaje("origen",$destinos,$_REQUEST["mensaje"],$msg);
-  
-   }
-
+  transferir_archivo_prueba($datos,$destinos,$otros);
   redirecciona("doctransflist.php?doc=".$_REQUEST["iddoc"]);
    die();
 }

@@ -69,84 +69,54 @@ function mostrar_anexos($idformato,$iddoc){
 		}
 }
 
-function asunto_carta($idformato,$idcampo,$iddoc){
+function mostrar_destinos($idformato, $iddoc) {
 	global $conn;
-	/*$formato=busca_filtro_tabla("plantilla, tipo_radicado, descripcion","documento","iddocumento=".$_REQUEST["anterior"],"",$conn);
-	if($formato[0]["tipo_radicado"]==1){
-		$texto.='<td>';
-		$texto.= '<input type="text" name="asunto" id="asunto" size="60" value="'.$formato[0]["descripcion"].'">';
-		$texto.='</td>';
-		echo ($texto);
-	}else{
-		$plantilla=busca_filtro_tabla("asunto","ft_".$formato[0]["plantilla"],"documento_iddocumento=".$_REQUEST["anterior"],"",$conn);
-		if($plantilla[0]["asunto"]||$plantilla[0]["asunto"]!=""||$plantilla[0]["asunto"]!=NULL){
-			//echo $plantilla[0]["asunto"];
-			$texto.='<td>';
-			$texto.='<input type="text" name="asunto" id="asunto" size="60" value="'.$plantilla[0]["asunto"].'">';
-			$texto.='</td>';
-			echo ($texto);
+	$tabla = busca_filtro_tabla("ruta_mostrar,nombre,nombre_tabla", "formato", "idformato=" . $idformato, "", $conn);
+	$resultado = busca_filtro_tabla("", $tabla[0]["nombre_tabla"], "documento_iddocumento=" . $iddoc, "", $conn);
+	if (isset($_REQUEST["destino"]) && $_REQUEST["destino"] <> "") {
+		$ejecutor = busca_filtro_tabla("nombre,titulo,telefono,direccion,ciudad,cargo,empresa", "datos_ejecutor,ejecutor", "idejecutor=ejecutor_idejecutor and iddatos_ejecutor=" . $_REQUEST["destino"], "", $conn);
+		$destinos = explode(",", $resultado[0]["destinos"]);
+	} elseif (strpos($resultado[0]["destinos"], ",") > 0) {
+		$destinos = explode(",", $resultado[0]["destinos"]);
+		$ejecutor = busca_filtro_tabla("nombre,titulo,telefono,direccion,ciudad,cargo,empresa", "datos_ejecutor,ejecutor", "idejecutor=ejecutor_idejecutor and iddatos_ejecutor=" . $destinos[0], "", $conn);
+	} else {
+		$ejecutor = busca_filtro_tabla("nombre,telefono,titulo,direccion,ciudad,cargo,empresa", "datos_ejecutor,ejecutor", "idejecutor=ejecutor_idejecutor and iddatos_ejecutor=" . $resultado[0]["destinos"], "", $conn);
+	}
 
+	$municipio = busca_filtro_tabla("nombre,departamento_iddepartamento", "municipio", "idmunicipio ='" . strtolower($ejecutor[0]["ciudad"]) . "'", "", $conn);
+	if ($ejecutor[0]["ciudad"] != 883) {
+		$departamento = busca_filtro_tabla("nombre,pais_idpais", "departamento", "iddepartamento=" . $municipio[0]["departamento_iddepartamento"], "", $conn);
+	}
+	$_pais = "";
+	if ($departamento[0]["pais_idpais"] > 1) {
+		$pais = busca_filtro_tabla("nombre", "pais", "idpais=" . $departamento[0]["pais_idpais"], "", $conn);
+		if ($pais[0]["nombre"] != $departamento[0]["nombre"])
+			$_pais = ", " . $pais[0]["nombre"];
+	}
+
+	if ($_REQUEST["tipo"] != 5 && isset($destinos)) {
+		$select_dest = '<div id="destinos">Destinos:&nbsp;<select name="s_destinos" id="s_destinos"  onchange="window.location=' . "'" . $tabla[0]["ruta_mostrar"] . "?tipo=1&destino='+this.value+'&iddoc=" . $iddoc . "'" . '">';
+		$lista = "'" . implode("','", explode(",", $resultado[0]["destinos"])) . "'";
+		$destinos = busca_filtro_tabla("nombre,titulo,telefono,direccion,ciudad,cargo,empresa,iddatos_ejecutor", "datos_ejecutor,ejecutor", "idejecutor=ejecutor_idejecutor and iddatos_ejecutor in(" . $lista . ")", "nombre", $conn);
+		$select_dest .= "<option value=''>Seleccionar...</option>";
+		for ($i = 0; $i < $destinos["numcampos"]; $i++) {
+			$select_dest .= "<option value=" . $destinos[$i]["iddatos_ejecutor"] . ">" . $destinos[$i]["nombre"] . "</option>";
 		}
-	}*/
+		$select_dest .= "</select></div><br />";
+		echo $select_dest;
+	}
 
-}
-function mostrar_destinos($idformato,$iddoc)
-{global $conn;
-
- $tabla=busca_filtro_tabla("ruta_mostrar,nombre,nombre_tabla",DB.".formato","idformato=".$idformato,"",$conn);
-
- $resultado=busca_filtro_tabla("",DB.".".$tabla[0]["nombre_tabla"],"documento_iddocumento=".$iddoc,"",$conn);
-
-  if(isset($_REQUEST["destino"]) && $_REQUEST["destino"]<>"" )
-     {$ejecutor=busca_filtro_tabla("nombre,titulo,telefono,direccion,ciudad,cargo,empresa",DB.".datos_ejecutor,ejecutor","idejecutor=ejecutor_idejecutor and iddatos_ejecutor=".$_REQUEST["destino"],"",$conn);
-    // print_r($ejecutor);
-      $destinos=explode(",",$resultado[0]["destinos"]);
-     }
-  elseif(strpos($resultado[0]["destinos"],",")>0)
-    {$destinos=explode(",",$resultado[0]["destinos"]);
-     $ejecutor=busca_filtro_tabla("nombre,titulo,telefono,direccion,ciudad,cargo,empresa",DB.".datos_ejecutor,ejecutor","idejecutor=ejecutor_idejecutor and iddatos_ejecutor=".$destinos[0],"",$conn);
-    }
-  else
-    $ejecutor=busca_filtro_tabla("nombre,telefono,titulo,direccion,ciudad,cargo,empresa",DB.".datos_ejecutor,ejecutor","idejecutor=ejecutor_idejecutor and iddatos_ejecutor=".$resultado[0]["destinos"],"",$conn);
-
-  $municipio=busca_filtro_tabla("nombre,departamento_iddepartamento","municipio","idmunicipio ='".strtolower($ejecutor[0]["ciudad"])."'","",$conn);
-  if($ejecutor[0]["ciudad"]!=883)
-   $departamento=busca_filtro_tabla("nombre,pais_idpais","departamento","iddepartamento=".$municipio[0]["departamento_iddepartamento"],"",$conn);
-  $_pais="";
-  if($departamento[0]["pais_idpais"]>1)
-  {  $pais = busca_filtro_tabla("nombre","pais","idpais=".$departamento[0]["pais_idpais"],"",$conn);
-    if($pais[0]["nombre"]!=$departamento[0]["nombre"])
-     $_pais = ", ".$pais[0]["nombre"];
-  }
-
- if((!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"]==1) && isset($destinos))
-     { ?>
-     <div id="destinos" ">
-
-     <?php
-     echo 'Destinos:&nbsp;<select name="s_destinos" id="s_destinos"  onchange="window.location='."'".$tabla[0]["ruta_mostrar"]."?tipo=1&destino='+this.value+'&iddoc=".$iddoc."'".'">';
-     $lista="'".implode("','",explode(",",$resultado[0]["destinos"]))."'";
-     $destinos=busca_filtro_tabla("nombre,titulo,telefono,direccion,ciudad,cargo,empresa,iddatos_ejecutor",DB.".datos_ejecutor,ejecutor","idejecutor=ejecutor_idejecutor and iddatos_ejecutor in(".$lista.")","nombre",$conn);
-     echo "<option value=''>Seleccionar...</option>";
-     for($i=0;$i<$destinos["numcampos"];$i++)
-        echo "<option value=".$destinos[$i]["iddatos_ejecutor"].">".$destinos[$i]["nombre"]."</option>";
-     ?>
-
-     </select>
-     </div><br />
-     <?php
-      }
-  echo  "".$ejecutor[0]["titulo"]."<br/>
-        ".mayusculas($ejecutor[0]["nombre"])."<br />";
-        if(ucwords($ejecutor[0]["cargo"])<>"")
-            echo ("".$ejecutor[0]["cargo"])."<br />";
-        if(ucwords($ejecutor[0]["empresa"])<>"")
-            echo ('<b>'.$ejecutor[0]["empresa"].'</b>')."<br/>";
-        if(ucwords($ejecutor[0]["direccion"])<>"")
-            echo ("".$ejecutor[0]["direccion"])."<br>";
-        if(ucwords($ejecutor[0]["telefono"])<>"")
-            echo ("".$ejecutor[0]["telefono"])."<br />";
-        echo "".$municipio[0]["nombre"].", ".ucwords(strtolower($departamento[0]["nombre"]))."$_pais.";
+	echo "" . $ejecutor[0]["titulo"] . "<br/>
+  " . mayusculas($ejecutor[0]["nombre"]) . "<br />";
+	if (ucwords($ejecutor[0]["cargo"]) <> "")
+		echo("" . $ejecutor[0]["cargo"]) . "<br />";
+	if (ucwords($ejecutor[0]["empresa"]) <> "")
+		echo('<b>' . $ejecutor[0]["empresa"] . '</b>') . "<br/>";
+	if (ucwords($ejecutor[0]["direccion"]) <> "")
+		echo("" . $ejecutor[0]["direccion"]) . "<br>";
+	if (ucwords($ejecutor[0]["telefono"]) <> "")
+		echo("" . $ejecutor[0]["telefono"]) . "<br />";
+	echo "" . $municipio[0]["nombre"] . ", " . ucwords(strtolower($departamento[0]["nombre"])) . "$_pais.";
 }
 
 function mostrar_destinos_carta($idformato,$iddoc){
@@ -535,158 +505,91 @@ function mostrar_datos_radicacion($idformato, $iddoc){
 	echo($datos);
 }
 
-function mostrar_anexos_externa($idformato,$iddoc){
-	$fisicos=mostrar_valor_campo('anexos_fisicos',$idformato,$iddoc,1);
-	$digitales=mostrar_valor_campo('anexos_digitales',$idformato,$iddoc,1);
-	if($fisicos!="" || $digitales!=""){
-		$digitales=preg_replace("%(<div.*?>)(.*?)(<\/div.*?>)%is","",$digitales);
-		echo "Anexos: ".$fisicos." ".strip_tags($digitales, '<a>')."<br/><br/>";
+function mostrar_anexos_externa($idformato, $iddoc) {
+	$fisicos = mostrar_valor_campo('anexos_fisicos', $idformato, $iddoc, 1);
+	$digitales = mostrar_valor_campo('anexos_digitales', $idformato, $iddoc, 1);
+	if ($fisicos != "" || $digitales != "") {
+		$digitales = preg_replace("%(<div.*?>)(.*?)(<\/div.*?>)%is", "", $digitales);
+		echo "Anexos: " . $fisicos . " " . strip_tags($digitales, '<a>') . "<br/><br/>";
 	}
 }
 
-
-function mostrar_copias_comunicacion_ext($idformato,$iddoc=NULL){
+function mostrar_copias_comunicacion_ext($idformato, $iddoc) {
 	global $conn;
-	$datos=busca_filtro_tabla("nombre,nombre_tabla","formato","idformato=$idformato","",$conn);
-	$inf_memorando=busca_filtro_tabla("copia,copiainterna,vercopiainterna",$datos[0]["nombre_tabla"],"documento_iddocumento=".$iddoc,"",$conn);
-	if($inf_memorando[0][0]<>""){
+	$datos = busca_filtro_tabla("nombre,nombre_tabla", "formato", "idformato=".$idformato, "", $conn);
+	$inf_memorando = busca_filtro_tabla("copia,copiainterna,vercopiainterna", $datos[0]["nombre_tabla"], "documento_iddocumento=" . $iddoc, "", $conn);
+	if ($inf_memorando[0][0] <> "") {
 		echo '<span>Copia: ';
-		$destinos=explode(",",$inf_memorando[0][0]);
-		$destinos=array_unique($destinos);
+		$destinos = explode(",", $inf_memorando[0][0]);
+		$destinos = array_unique($destinos);
 		sort($destinos);
-		$lista=array();
-		for($i=0;$i<count($destinos);$i++){
-			$ejecutores=busca_filtro_tabla("nombre,cargo","ejecutor e,datos_ejecutor de","de.ejecutor_idejecutor=e.idejecutor and iddatos_ejecutor=".$destinos[$i],"",$conn);
-			if($ejecutores[0][1]!=""){
-				$cargo=",".ucwords(strtolower($ejecutores[0][1]));
+		$lista = array();
+		for ($i = 0; $i < count($destinos); $i++) {
+			$ejecutores = busca_filtro_tabla("nombre,cargo", "ejecutor e,datos_ejecutor de", "de.ejecutor_idejecutor=e.idejecutor and iddatos_ejecutor=" . $destinos[$i], "", $conn);
+			if ($ejecutores[0][1] != "") {
+				$cargo = "," . ucwords(strtolower($ejecutores[0][1]));
 			}
-			$lista[]=ucwords(strtolower($ejecutores[0][0])).$cargo;
+			$lista[] = ucwords(strtolower($ejecutores[0][0])) . $cargo;
 		}
-		echo implode(", ",$lista);
-		if($inf_memorando[0]['vercopiainterna']==1 && $inf_memorando[0]['copiainterna']<>""){
-			$copiainterna=mostrar_cop_interna_externa($inf_memorando[0]['copiainterna']);
-			echo ",".implode(", ",$copiainterna);
+		echo implode(", ", $lista);
+		if ($inf_memorando[0]['vercopiainterna'] == 1 && $inf_memorando[0]['copiainterna'] <> "") {
+			$copiainterna = mostrar_cop_interna_externa($inf_memorando[0]['copiainterna']);
+			echo "," . implode(", ", $copiainterna);
 		}
 		echo '</span><br/><br/>';
-	}elseif($inf_memorando[0]['vercopiainterna']==1 && $inf_memorando[0]['copiainterna']<>""){
+	} elseif ($inf_memorando[0]['vercopiainterna'] == 1 && $inf_memorando[0]['copiainterna'] <> "") {
 		echo '<span>Copia: ';
-		$copiainterna=mostrar_cop_interna_externa($inf_memorando[0]['copiainterna']);
-		echo implode(", ",$copiainterna).'</span><br/><br/>';
+		$copiainterna = mostrar_cop_interna_externa($inf_memorando[0]['copiainterna']);
+		echo implode(", ", $copiainterna) . '</span><br/><br/>';
 	}
 }
-function mostrar_cop_interna_externa($copiainterna){
-global $conn;
- $destinos=explode(",",$copiainterna);
- $destinos=array_unique($destinos);
- sort($destinos);
- $lista=array();
- for($i=0;$i<count($destinos);$i++){//si el destino es una dependencia
-   if(strpos($destinos[$i],"#")>0){
-      	$resultado=busca_filtro_tabla("nombre","dependencia","iddependencia=".str_replace("#","",$destinos[$i]),"",$conn);
-			  $lista[]=ucwords(strtolower($resultado[0]["nombre"]));
-      }else{
-   		$resultado=busca_filtro_tabla("funcionario_codigo,nombres,idfuncionario,apellidos,c.nombre","funcionario,cargo c,dependencia_cargo dc","dc.cargo_idcargo=c.idcargo and dc.funcionario_idfuncionario=idfuncionario and iddependencia_cargo=".$destinos[$i],"",$conn);
-      $lista[]=ucwords(strtolower($resultado[0]["nombres"]." ".$resultado[0]["apellidos"]));
-			if($resultado[0]['nombre']<>""){
-				 $lista[]=ucwords(strtolower($resultado[0]["nombre"]));
+
+function mostrar_cop_interna_externa($copiainterna) {
+	global $conn;
+	$destinos = explode(",", $copiainterna);
+	$destinos = array_unique($destinos);
+	sort($destinos);
+	$lista = array();
+	for ($i = 0; $i < count($destinos); $i++) {//si el destino es una dependencia
+		if (strpos($destinos[$i], "#") > 0) {
+			$resultado = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . str_replace("#", "", $destinos[$i]), "", $conn);
+			$lista[] = ucwords(strtolower($resultado[0]["nombre"]));
+		} else {
+			$resultado = busca_filtro_tabla("funcionario_codigo,nombres,idfuncionario,apellidos,c.nombre", "funcionario,cargo c,dependencia_cargo dc", "dc.cargo_idcargo=c.idcargo and dc.funcionario_idfuncionario=idfuncionario and iddependencia_cargo=" . $destinos[$i], "", $conn);
+			$lista[] = ucwords(strtolower($resultado[0]["nombres"] . " " . $resultado[0]["apellidos"]));
+			if ($resultado[0]['nombre'] <> "") {
+				$lista[] = ucwords(strtolower($resultado[0]["nombre"]));
 			}
-   }
-  }
-return $lista;
-}
-function generar_correo_confirmacion($idformato,$iddoc){
-	global $conn,$ruta_db_superior;
-	
-	
-	$formato=busca_filtro_tabla("nombre_tabla, nombre","formato","idformato=".$idformato,"",$conn);
-	
-	$formato_carta=busca_filtro_tabla("",$formato[0]['nombre_tabla'].",documento","documento_iddocumento=iddocumento and documento_iddocumento=".$iddoc,"",$conn);
-	$usuario_confirma=busca_filtro_tabla("destino","buzon_entrada","nombre='POR_APROBAR' and activo=1 and archivo_idarchivo=".$iddoc,"idtransferencia asc",$conn);
-	if($formato_carta[0]['email_aprobar']==1 && $formato_carta[0]['estado']=='ACTIVO'){
-		$resultado=busca_filtro_tabla("","ruta","documento_iddocumento=".$iddoc,"idruta",$conn);
-		if($resultado['numcampos']){
-			$configuracion_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal' AND tipo='ruta'", "", $conn);
-			if($configuracion_temporal["numcampos"]){
-				$ruta_temp=$configuracion_temporal[0]["valor"];
-			}
-			if(!is_dir($ruta_db_superior.$ruta_temp."_".$_SESSION["LOGIN"])){
-        mkdir($ruta_db_superior.$ruta_temp."_".$_SESSION["LOGIN"],0777);
-      }
-			$borrar_pdf="UPDATE documento set pdf='' where iddocumento=".$iddoc;
-			phpmkr_query($borrar_pdf);
-			$consulta=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn);
-			if($consulta[0]['pdf']!=""){
-	      $anexos[]=$ruta_db_superior.$consulta[0]['pdf'];
-	    }else{
-				$ch = curl_init();
-		    $fila = PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/class_impresion.php?plantilla=".$formato[0]['nombre']."&iddoc=".$iddoc."&conexion_remota=1&conexio_usuario=".$_SESSION["LOGIN".LLAVE_SAIA]."&usuario_actual=".$_SESSION["usuario_actual"]."&LOGIN=".$_SESSION["LOGIN".LLAVE_SAIA]."&LLAVE_SAIA=".LLAVE_SAIA;
-		    curl_setopt($ch, CURLOPT_URL,$fila);
-		    curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-		    $contenido=curl_exec($ch);
-		    curl_close ($ch);
-	    }
-			$consulta=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn);
-			if($consulta[0]['pdf']!=""){
-	      $anexos[]=$ruta_db_superior.$consulta[0]['pdf'];
-	    }
-			$funcionario=busca_filtro_tabla("","vfuncionario_dc","estado_dc=1 and estado=1 and funcionario_codigo=".$usuario_confirma[0]['destino'],"",$conn);
-			$adjuntos=busca_filtro_tabla("ruta","anexos","documento_iddocumento=".$iddoc,"",$conn);
-	    if($adjuntos["numcampos"]){
-	      for($k=0;$k<$adjuntos["numcampos"];$k++){
-	        $anexos[]=$ruta_db_superior.$adjuntos[$k]["ruta"];
-	      }
-	    }
-
-			$info='iddoc-'.$iddoc.',usuario-'.$funcionario[0]['login'];
-	    $resultado=base64_encode($info);
-			$busca_configuracion_correo=busca_filtro_tabla("valor","configuracion","nombre='email_aprobacion'","",$conn);
-			$enlaces='<a href="'.$busca_configuracion_correo[0]['valor'].'index.php?info='.$resultado.'" target="_blank">Gestionar Documento</a><br />';
-
-
-			/*$mensaje='Saludos '.$funcionario[0]['nombres'].' '.$funcionario[0]['apellidos'].',<br /><br />
-	        A continuaci&oacute;n se adjunta en formato PDF el documento de la comunicacion externa donde se encuentra usted como responsable.<br /><br />
-	        Por favor dar click en los siguiente(s) enlace(s) y Aprobar o Rechazar el documento.<br/>'.$enlaces.'<br /><br />Antes de imprimir este mensaje, asegurese que es necesario. Proteger el medio ambiente tambien esta en nuestras manos.<br /><br />
-	        ESTE ES UN MENSAJE AUTOMATICO, FAVOR NO RESPONDER.';*/
-
-			$mensaje='
-
-			Saludos '.$funcionario[0]['nombres'].' '.$funcionario[0]['apellidos'].',<br /><br />
-                        Por medio de la presente se permite solicitar su aprobación o rechazo al documento adjunto donde se encuentra usted como responsable de aprobación, para hacer esto por favor siga estos dos pasos:
-                        <br /><br />
-                        1. Haga lectura del documento adjunto.
-                        <br /><br />
-                        2. Una vez tenga conocimiento del documento, acceda al siguiente link y decida si Aprobar o Rechazar.
-                        <br /><br />
-                        '.$enlaces.'
-                        <br /><br />
-                        ';
-
-			enviar_mensaje('','codigo',array($funcionario[0]['funcionario_codigo']),'GESTION DE COMUNICACIONES EXTERNAS',$mensaje,$anexos);
 		}
 	}
+	return $lista;
 }
+
+
+
 function parsear_arbol_expediente_serie_carta(){
     global $conn,$ruta_db_superior;
-    ?>
-    <script>
-        $(document).ready(function(){
-             tree_serie_idserie.setOnCheckHandler(parsear_expediente_serie);
-        });
-        function parsear_expediente_serie(nodeId){
-            var idexpediente_idserie = nodeId.split('sub');
-            $('[name="serie_idserie"]').val(idexpediente_idserie[1]);
-            $('[name="expediente_serie"]').val(idexpediente_idserie[0]);
-            var seleccionados=tree_serie_idserie.getAllChecked();
-            var vector_seleccionados=seleccionados.split(',');
-            for(i=0;i<vector_seleccionados.length;i++){
-            	if(vector_seleccionados[i]!=nodeId){
-            		tree_serie_idserie.setCheck(vector_seleccionados[i],0 );
-            	}
-            }
-        }
-    </script>
-    <?php
+?>
+<script>
+	$(document).ready(function() {
+		tree_serie_idserie.setOnCheckHandler(parsear_expediente_serie);
+	});
+	function parsear_expediente_serie(nodeId) {
+		var idexpediente_idserie = nodeId.split('sub');
+		$('[name="serie_idserie"]').val(idexpediente_idserie[1]);
+		$('[name="expediente_serie"]').val(idexpediente_idserie[0]);
+		var seleccionados = tree_serie_idserie.getAllChecked();
+		var vector_seleccionados = seleccionados.split(',');
+		for ( i = 0; i < vector_seleccionados.length; i++) {
+			if (vector_seleccionados[i] != nodeId) {
+				tree_serie_idserie.setCheck(vector_seleccionados[i], 0);
+			}
+		}
+	}
+</script>
+<?php
 }
+
 function vincular_expediente_serie_carta($idformato,$iddoc){ //POSTERIOR AL APROBAR
     global $conn,$ruta_db_superior;
     
@@ -699,78 +602,45 @@ function vincular_expediente_serie_carta($idformato,$iddoc){ //POSTERIOR AL APRO
         phpmkr_query($sql);
     }
 }
-function formato_radicado_enviada($idformato,$iddoc,$retorno=0){
+
+function formato_radicado_enviada($idformato, $iddoc, $retorno = 0) {
 	global $conn;
-	$formato=busca_filtro_tabla("","formato A","A.idformato=".$idformato,"",$conn);
-	$datos_documento=busca_filtro_tabla(fecha_db_obtener('A.fecha','Y-m-d')." as x_fecha, A.*, B.*","documento A, ".$formato[0]["nombre_tabla"]." B","A.iddocumento=B.documento_iddocumento AND A.iddocumento=".$iddoc,"",$conn);
-	$dep=busca_filtro_tabla("B.codigo,B.codigo_arbol","dependencia_cargo A, dependencia B","A.iddependencia_cargo=".$datos_documento[0]["dependencia"]." AND A.dependencia_iddependencia=B.iddependencia","",$conn);
-	
-	$fecha=$datos_documento[0]["x_fecha"];//año mes dia
-	$fecha_sin_guion=str_replace("-","",$fecha);
-	$cadena=$fecha_sin_guion;
-		
-	
-	$ruta=busca_filtro_tabla("","ruta","tipo<>'INACTIVO' and documento_iddocumento=".$iddoc,"",$conn);
-	if($ruta['numcampos']>0){
-					
-		$depcar=$ruta[$ruta['numcampos']-1]['origen'];
-		$dep2=busca_filtro_tabla("","vfuncionario_dc","iddependencia_cargo=".$depcar,"",$conn);
-		$cod=busca_filtro_tabla("","dependencia","iddependencia=".$dep2[0]['iddependencia'],"",$conn);
-		
-		$dep=busca_filtro_tabla("codigo_arbol","dependencia","iddependencia=".$dep2[0]['iddependencia'],"",$conn);
-        $tem=explode('.',$dep[0]['codigo_arbol']);
-
-		if(count($tem)==2){
-			$tercer=busca_filtro_tabla("","dependencia","iddependencia=".$tem[1],"",$conn);
+	$cadena = "";
+	$formato = busca_filtro_tabla("nombre_tabla", "formato A", "A.idformato=" . $idformato, "", $conn);
+	if ($formato["numcampos"]) {
+		$datos_documento = busca_filtro_tabla(fecha_db_obtener('A.fecha', 'Y-m-d') . " as x_fecha, A.*, B.*", "documento A, " . $formato[0]["nombre_tabla"] . " B", "A.iddocumento=B.documento_iddocumento AND A.iddocumento=" . $iddoc, "", $conn);
+		if ($datos_documento["numcampos"]) {
+			$cadena .= str_replace("-", "", $datos_documento[0]["x_fecha"]);
+			$ruta = busca_filtro_tabla("origen,tipo_origen", "ruta", "tipo='ACTIVO' and documento_iddocumento=" . $iddoc, "orden desc", $conn);
+			$ok = 0;
+			if ($ruta["numcampos"] > 1) {
+				if ($ruta[0]["tipo_origen"] == 5) {
+					$dep = busca_filtro_tabla("codigo", "vfuncionario_dc", "iddependencia_cargo=" . $ruta[0]["origen"], "", $conn);
+					if ($dep["numcampos"]) {
+						$ok = 1;
+					}
+				} else {
+					$dep = busca_filtro_tabla("codigo", "vfuncionario_dc", "tipo_cargo=1 and funcionario_codigo=" . $ruta[0]["origen"], "iddependencia_cargo asc", $conn);
+					if ($dep["numcampos"]) {
+						$ok = 1;
+					}
+				}
+			}
+			if (!$ok) {
+				$dep = busca_filtro_tabla("codigo", "vfuncionario_dc", "iddependencia_cargo=" . $datos_documento[0]["dependencia"], "", $conn);
+			}
+			$cadena .= str_pad("<b>" . $datos_documento[0]["numero"] . "</b>", 11, "0", STR_PAD_LEFT);
+			$cadena .= "-1";
 		}
-		else{
-			$tercer=busca_filtro_tabla("","dependencia","iddependencia=".$tem[2],"",$conn);
-		}
-
-		$cadena.=$tercer[0]['codigo']; // (muestra la direccion del ultimo en la ruta)
-		
-	}else{
-
-        $tem=explode('.',$dep[0]['codigo_arbol']);
-		
-		//Array ( [0] => 23 [1] => 1 [2] => 311 )
-		
-		if(count($tem)==2){
-			$tercer=busca_filtro_tabla("","dependencia","iddependencia=".$tem[1],"",$conn);
-		}
-		else{
-			$tercer=busca_filtro_tabla("","dependencia","iddependencia=".$tem[2],"",$conn);
-		}
-		$cadena.=$tercer[0]["codigo"]; // (muestra la direccion creador por que no tiene ruta)
-	}	
-	
-
-	//Dirección de Archivo de los Derechos Humanos 
-	//$cadena.=str_pad($datos_documento[0]["numero"],4,"0",STR_PAD_LEFT);
-	if($_REQUEST['destino']){
-		$dep=busca_filtro_tabla("","radicados_carta","documento_iddocumento=".$iddoc." and destino=".$_REQUEST['destino'],"",$conn);
-		if($dep['numcampos'])
-		$datos_documento[0]["numero"]=$dep[0]['radicado'];
 	}
-	if(strlen($datos_documento[0]["numero"])==1){
-		$cadena.='000<b>'.$datos_documento[0]["numero"].'</b>';
+	if ($retorno == 1) {
+		return ($cadena);
+	} else {
+		echo $cadena;
 	}
-	if(strlen($datos_documento[0]["numero"])==2){
-		$cadena.='00<b>'.$datos_documento[0]["numero"].'</b>';
-	}	
-	if(strlen($datos_documento[0]["numero"])==3){
-		$cadena.='0<b>'.$datos_documento[0]["numero"].'</b>';
-	}	
-	if(strlen($datos_documento[0]["numero"])>3){
-		$cadena.='<b>'.$datos_documento[0]["numero"].'</b>';
-	}
-		
-	$cadena.="-1"; //antes2
-	if($retorno==1){
-	  return($cadena);
-	}
-	echo($cadena);	
 }
+
+
 
 function vincular_distribucion_carta($idformato,$iddoc){  //POSTERIOR AL APROBAR
 	global $conn,$ruta_db_superior;

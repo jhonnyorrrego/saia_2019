@@ -36,7 +36,6 @@ if (count($request)) {
 
 			if ($cuantos_formatos['numcampos'] == 1) {
 				$url = $ruta_db_superior . 'formatos/' . $cuantos_formatos[0]['nombre'] . '/' . $cuantos_formatos[0]['ruta_adicionar'] . "?1=1";
-				$proceso = '';
 				$ok = $acceso -> acceso_modulo_perfil("crear_" . $cuantos_formatos[0]['nombre']);
 				if ($ok) {
 					$mostrar = 1;
@@ -46,7 +45,6 @@ if (count($request)) {
 					$ok = $acceso -> acceso_modulo_perfil("crear_" . $cuantos_formatos[$j]['nombre']);
 					if ($ok) {
 						$url = 'listar_formatos.php?idcategoria_formato=' . $consulta[$i]["idcategoria_formato"];
-						$proceso = 'Proceso';
 						$mostrar = 1;
 					}
 				}
@@ -54,7 +52,7 @@ if (count($request)) {
 
 			if ($mostrar) {
 				$etiqueta_formato = ucfirst(codifica_encabezado(html_entity_decode(strtolower($consulta[$i]["nombre"]))));
-				$texto .= '<div title="' . $etiqueta_formato . '" data-load=\'{"kConnector":"' . $conector . '", "url":"' . $url . $adicional . '", "kTitle":"' . $proceso . ' ' . $etiqueta_formato . '"}\' class="items navigable">';
+				$texto .= '<div title="' . $etiqueta_formato . '" data-load=\'{"kConnector":"' . $conector . '", "url":"' . $url . $adicional . '", "kTitle":"' . $etiqueta_formato . '"}\' class="items navigable">';
 				$texto .= '<div class="head"></div>';
 				$texto .= '<div class="label">' . $etiqueta_formato . '</div>';
 				$texto .= '<div class="info"></div>';
