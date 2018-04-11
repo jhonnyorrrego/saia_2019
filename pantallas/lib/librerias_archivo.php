@@ -1,4 +1,5 @@
 <?php
+
 function buscar_archivos($dir, $palabra, $buscar_contenido = 0, $buscar_archivo = 1, $reemplazar = 0, $palabra_reemplazar = '') {
 	global $contador_archivos, $a, $resultado_buscar_archivo;
 	if (!isset($resultado_buscar_archivo)) {

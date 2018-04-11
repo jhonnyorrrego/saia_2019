@@ -11,9 +11,20 @@ while ($max_salida > 0) {
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
+
+require_once($ruta_db_superior . 'StorageUtils.php');
+require_once($ruta_db_superior . 'filesystem/SaiaStorage.php');
+require($ruta_db_superior . 'vendor/autoload.php');
+
+use Imagine\Image\Box;
+use Imagine\Gd\Imagine;
+
 //echo(estilo_bootstrap());
 $modulo="ordenar_pag";
-echo(menu_principal_documento($_REQUEST["iddocumento"],1,array("nombre"=>$modulo,"tipo"=>0)));
+echo (menu_principal_documento($_REQUEST["iddocumento"], 1, array(
+		"nombre" => $modulo,
+		"tipo" => 0
+)));
 unset($_SESSION["pagina_actual"]);
 unset($_SESSION["tipo_pagina"]);
 $_SESSION["pagina_actual"]=$_REQUEST["idpagina"];
@@ -39,8 +50,16 @@ if($pagina[0]['pagina'] == $ultima_pagina[0]['pagina']){
 
 $paginas = busca_filtro_tabla("consecutivo,pagina","pagina","id_documento=".$_REQUEST['iddocumento'],"pagina ASC",$conn);
 if($pagina["numcampos"]){
-  list($width, $height) = getimagesize($ruta_db_superior.$pagina[0]["imagen"]);            
-  echo('<div><img src="'.$ruta_db_superior.$pagina[0]["ruta"].'" id="pagina_documento" idregistro="'.$pagina[0]["consecutivo"].'"></div>');    
+	$contenido_base64 = StorageUtils::get_binary_file($pagina[0]["ruta"]);
+	$contenido_bin = StorageUtils::get_file_content($pagina[0]["ruta"]);
+	$imagine = new Imagine();
+	$imagen = $imagine->load($contenido_bin);
+
+	//list ($width, $height) = getimagesize($ruta_db_superior . $pagina[0]["imagen"]);
+	$width = $imagen->getSize()->getWidth();
+	$height = $imagen->getSize()->getHeight();
+
+	echo ('<div><img src="' . $contenido_base64 . '" id="pagina_documento" idregistro="' . $pagina[0]["consecutivo"] . '"></div>');
   echo(librerias_acciones_kaiten());           
   echo(librerias_zoom());
   echo(librerias_rotate());

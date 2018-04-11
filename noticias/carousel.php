@@ -70,10 +70,18 @@ for($i=0;$i<$contenidos["numcampos"];$i++){
 		}				
 	}
     else{
-        $imagen=$contenidos[$i]["imagen"];
+		
+		$objeto=json_decode($contenidos[$i]["imagen"]);
+		if(is_object($objeto)){
+			$archivo_binario=StorageUtils::get_binary_file($contenidos[$i]["imagen"]);	
+			$imagen=$archivo_binario;			
+		}else{
+			$imagen="../".RUTA_BANCO_IMAGENES.'/undefined.jpg';	
+		}
+
     }	
 	$ruta="javascript:ventana_info(".$contenidos[$i]["idcontenidos_carrusel"].");";
-	$sliders.="{image : '".$ruta_db_superior.$imagen."', title : '".$contenidos[$i]["preview"]."', thumb : '".$ruta_db_superior.$imagen."', url : '".$ruta."',caption: '".$contenidos[$i]["nombre"]."'}";
+	$sliders.="{image : '".$imagen."', title : '".$contenidos[$i]["preview"]."', thumb : '".$imagen."', url : '".$ruta."',caption: '".$contenidos[$i]["nombre"]."'}";
     if(($i+1)<$contenidos["numcampos"]){
       $sliders.=',';  
     }	
