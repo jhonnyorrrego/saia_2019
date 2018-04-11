@@ -1511,17 +1511,17 @@ function validar_valor_campo($campo) {
       if($desc[0]["nombre"]=='radicacion_entrada'){
         include_once($ruta_db_superior."formatos/radicacion_entrada/funciones.php");
         $radicado=obtener_radicado_entrada($desc[0]["idformato"],$_REQUEST["anterior"]);
-        return ("Respondiendo a: " . str_replace("<br />", " ", $desc[0]["descripcion"]) . ". Radicado No." . $radicado);
+        return ("Respondiendo a: " . str_replace("<br />", " ", strip_tags($desc[0]["descripcion"])) . ". Radicado No." . $radicado);
       }else if($desc[0]["nombre"]=='memorando'){
         include_once($ruta_db_superior."formatos/memorando/funciones.php");
         $radicado=strip_tags(formato_radicado_interno($desc[0]["idformato"],$_REQUEST["anterior"],1));
-        return ("Respondiendo a: " . str_replace("<br />", " ", $desc[0]["descripcion"]) . ". Radicado No." . $radicado);
+        return ("Respondiendo a: " . str_replace("<br />", " ", strip_tags($desc[0]["descripcion"])) . ". Radicado No." . $radicado);
       }else if($desc[0]["nombre"]=='carta'){
         include_once($ruta_db_superior."formatos/carta/funciones.php");
         $radicado=strip_tags(formato_radicado_enviada($desc[0]["idformato"],$_REQUEST["anterior"],1));
-        return ("Respondiendo a: " . str_replace("<br />", " ", $desc[0]["descripcion"]) . ". Radicado No." . $radicado);
+        return ("Respondiendo a: " . str_replace("<br />", " ", strip_tags($desc[0]["descripcion"])) . ". Radicado No." . $radicado);
       }else{
-        return ("Respondiendo a: " . str_replace("<br />", " ", $desc[0]["descripcion"]) . ". Radicado No." . $desc[0]["numero"]);
+        return ("Respondiendo a: " . str_replace("<br />", " ", strip_tags($desc[0]["descripcion"])) . ". Radicado No." . $desc[0]["numero"]);
       }
     }
 	} elseif($campos["numcampos"]) {
