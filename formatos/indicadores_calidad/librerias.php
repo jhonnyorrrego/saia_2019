@@ -13,8 +13,8 @@ include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 function filtrar_procesos($nada) {
 	global $conn;
 	$cadena = "";
-	if (@$_REQUEST["variable_busqueda"]) {
-		$cadena = " AND idft_indicadores_calidad in(" . $_REQUEST["variable_busqueda"] . ")";
+	if ($_REQUEST["variable_busqueda"] == -1 || $_REQUEST["variable_busqueda"] != "") {
+		$cadena = " AND idft_proceso in(" . $_REQUEST["variable_busqueda"] . ")";
 	}
 	return ($cadena);
 }
@@ -34,7 +34,7 @@ function nombre_proceso_rojo_funcion($nombre, $idft_proceso) {
 	global $conn;
 	$idbus = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente", "nombre='listar_indicadores_calidad'", "", $conn);
 	$datos = contadores_colores($idft_proceso, 2);
-	$cadena = '<a class="link kenlace_saia" conector="iframe" titulo="' . $nombre . '" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=' . $idbus[0][0] . '&variable_busqueda=' . implode(",", $datos["rojo"]["idft_indicadores_calidad"]) . '"><span class="badge">' . $nombre . "</span></a>";
+	$cadena = '<a class="link kenlace_saia" conector="iframe" titulo="' . $nombre . '" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=' . $idbus[0][0] . '&variable_busqueda=' . implode(",", $datos["rojo"]["idft_proceso"]) . '"><span class="badge">' . $nombre . "</span></a>";
 	return ($cadena);
 }
 
@@ -42,7 +42,7 @@ function nombre_proceso_amarillo_funcion($nombre, $idft_proceso) {
 	global $conn;
 	$idbus = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente", "nombre='listar_indicadores_calidad'", "", $conn);
 	$datos = contadores_colores($idft_proceso, 2);
-	$cadena = '<a class="link kenlace_saia" conector="iframe" titulo="' . $nombre . '" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=' . $idbus[0][0] . '&variable_busqueda=' . implode(",", $datos["amarillo"]["idft_indicadores_calidad"]) . '"><span class="badge">' . $nombre . "</span></a>";
+	$cadena = '<a class="link kenlace_saia" conector="iframe" titulo="' . $nombre . '" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=' . $idbus[0][0] . '&variable_busqueda=' . implode(",", $datos["amarillo"]["idft_proceso"]) . '"><span class="badge">' . $nombre . "</span></a>";
 	return ($cadena);
 }
 
@@ -50,7 +50,7 @@ function nombre_proceso_verde_funcion($nombre, $idft_proceso) {
 	global $conn;
 	$idbus = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente", "nombre='listar_indicadores_calidad'", "", $conn);
 	$datos = contadores_colores($idft_proceso, 2);
-	$cadena = '<a class="link kenlace_saia" conector="iframe" titulo="' . $nombre . '" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=' . $idbus[0][0] . '&variable_busqueda=' . implode(",", $datos["verde"]["idft_indicadores_calidad"]) . '"><span class="badge">' . $nombre . "</span></a>";
+	$cadena = '<a class="link kenlace_saia" conector="iframe" titulo="' . $nombre . '" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=' . $idbus[0][0] . '&variable_busqueda=' . implode(",", $datos["verde"]["idft_proceso"]) . '"><span class="badge">' . $nombre . "</span></a>";
 	return ($cadena);
 }
 
@@ -171,7 +171,6 @@ function contadores_colores($idft = 0, $opcion = 0) {// utilizado en el index_in
 
 		//AMARILLO
 		$procesos_amarillo = array_unique($procesos_amarillo);
-		$retorno["amarillo"]["idft_proceso"] = $procesos_amarillo;
 		$indicadores_amarillo = array_unique($indicadores_amarillo);
 		$retorno["amarillo"]["idft_indicadores_calidad"] = $indicadores_amarillo;
 
@@ -179,11 +178,13 @@ function contadores_colores($idft = 0, $opcion = 0) {// utilizado en el index_in
 		$retorno["amarillo"]["cantidad"] = $amarillo;
 		if ($amarillo) {
 			$retorno["resultado_color"][2] = "Satisfactorio";
+		} else {
+			$procesos_amarillo[] = -1;
 		}
+		$retorno["amarillo"]["idft_proceso"] = $procesos_amarillo;
 
 		// ROJO
 		$procesos_rojo = array_unique($procesos_rojo);
-		$retorno["rojo"]["idft_proceso"] = $procesos_rojo;
 		$indicadores_rojo = array_unique($indicadores_rojo);
 		$retorno["rojo"]["idft_indicadores_calidad"] = $indicadores_rojo;
 
@@ -191,11 +192,14 @@ function contadores_colores($idft = 0, $opcion = 0) {// utilizado en el index_in
 		$retorno["rojo"]["cantidad"] = $rojo;
 		if ($rojo) {
 			$retorno["resultado_color"][2] = "Deficiente";
+		} else {
+			$procesos_rojo[] = -1;
 		}
+		$retorno["rojo"]["idft_proceso"] = $procesos_rojo;
 
 		//VERDE
 		$procesos_verde = array_unique($procesos_verde);
-		$retorno["verde"]["idft_proceso"] = $procesos_verde;
+
 		$indicadores_verde = array_unique($indicadores_verde);
 		$retorno["verde"]["idft_indicadores_calidad"] = $indicadores_verde;
 
@@ -203,8 +207,11 @@ function contadores_colores($idft = 0, $opcion = 0) {// utilizado en el index_in
 		$retorno["verde"]["cantidad"] = $verde;
 		if ($verde) {
 			$retorno["resultado_color"][2] = "Sobresaliente";
+		} else {
+			$procesos_verde[] = -1;
 		}
-
+		$retorno["verde"]["idft_proceso"] = $procesos_verde;
+		
 		$total = $rojo + $amarillo + $verde;
 		$retorno["total_indicadores"] = $total;
 

@@ -150,7 +150,7 @@ function resultados_indicador($idformato, $iddoc) {
 					if ($_REQUEST["tipo"] != 5) {
 						$html .= '<td style="text-align:center;"><a class="highslide" onclick="return top.hs.htmlExpand(this, { objectType: \'iframe\',width: 875, height:400,preserveContent:false } )"  href="' . $ruta_db_superior . 'formatos/seguimiento_indicador/mostrar_seguimiento_indicador.php?menu_principal_inactivo=1&iddoc=' . $seg[$j]["documento_iddocumento"] . '">Ver</a></td>';
 						$html .= '<td style="text-align:center;"><a target="detalles" href="../plan_mejoramiento/adicionar_plan_mejoramiento.php?seguimiento_indicador=' . $seg[$j]["idft_seguimiento_indicador"] . '">Adicionar Plan</a></td>
-            <td style="text-align:center;"><a class="highslide" onclick="return top.hs.htmlExpand(this, { objectType: \'iframe\',width: 500, height:400,preserveContent:false } )"  href="planes_relacionados.php?tipo=indicador&seguimiento_indicador=' . $seg[$j]["idft_seguimiento_indicador"] . '">Ver Planes</a></td>';
+            <td style="text-align:center;"><a class="highslide" onclick="return top.hs.htmlExpand(this, { objectType: \'iframe\',width: 500, height:400,preserveContent:false } )"  href="planes_relacionados.php?seguimiento_indicador=' . $seg[$j]["idft_seguimiento_indicador"] . '">Ver Planes</a></td>';
 					}
 					$html .= '</tr>';
 

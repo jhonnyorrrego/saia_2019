@@ -2811,11 +2811,8 @@ function obtener_mes_letra($mes) {
 
 function obtener_anexos_paginas_documento($datos_documento) {
 	global $ruta_db_superior;
-	
 	$documentos = array();
-	
 	$anexos = busca_filtro_tabla("ruta, etiqueta, tipo, idanexos", "anexos", "documento_iddocumento=" . $datos_documento["iddocumento"], "", $conn);
-	
 	for($i = 0; $i < $anexos['numcampos']; $i++) {
 		$documentos['anexos'][] = array(
 				"ruta" => $anexos[$i]['ruta'],
@@ -2826,7 +2823,6 @@ function obtener_anexos_paginas_documento($datos_documento) {
 	}
 	
 	$paginas = busca_filtro_tabla("ruta,pagina", "pagina", "id_documento=" . $datos_documento["iddocumento"], "", $conn);
-	
 	for($i = 0; $i < $paginas['numcampos']; $i++) {
 		$documentos['paginas'][] = array(
 				"ruta" => $paginas[$i]['ruta'],
@@ -2896,27 +2892,21 @@ function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
 
 function obtener_funciones_anexo($idanexo, $tipo, $ruta, $etiqueta) {
 	global $ruta_db_superior;
-	
-	$array_tipos = array(
-			'jpg',
-			'png',
-			'pdf'
-	);
-	// <a class="btn btn-mini abrir_higslide" alto="620" ruta="'.$ruta.'">Ver</a>
-	if(in_array($tipo, $array_tipos) && filesize($ruta_db_superior . $ruta) <= 110000) {
+	$array_tipos = array('jpg', 'png', 'pdf');
+
+	if (in_array($tipo, $array_tipos)) {
 		$button = '<div class="btn-group">
-		<!--a class="btn btn-mini abrir_higslide" alto="620" ruta="' . $ruta . '">Ver</a-->
-		<a href="' . $ruta_db_superior . 'versionamiento/download_file.php?etiqueta=' . $etiqueta . '&ruta=' . $ruta . '" class="btn btn-mini btn-primary" >Descargar</a>						    
-				   </div>
-			      ';
+		<a class="btn btn-mini btn-primary" href="' . $ruta_db_superior.$ruta . '">Ver</a>
+		<!--a href="' . $ruta_db_superior . 'versionamiento/download_file.php?etiqueta=' . $etiqueta . '&ruta=' . $ruta . '" >Descargar</a-->
+		</div>';
 	} else {
-		$button = '<div class="btn-group">					
-					<a href="' . $ruta_db_superior . 'versionamiento/download_file.php?etiqueta=' . $etiqueta . '&ruta=' . $ruta . '" class="btn btn-mini btn-primary" >Descargar</a>						    
-				   </div>
-			      ';
+		$button = '<div class="btn-group">				
+		<a href="' . $ruta_db_superior . 'versionamiento/download_file.php?etiqueta=' . $etiqueta . '&ruta=' . $ruta . '" class="btn btn-mini btn-primary">Descargar</a>						    
+		</div>';
 	}
 	return ($button);
 }
+
 //Funcion para convertir numeros a letras
 function numerotexto ($numero) {
     // Primero tomamos el numero y le quitamos los caracteres especiales y extras
