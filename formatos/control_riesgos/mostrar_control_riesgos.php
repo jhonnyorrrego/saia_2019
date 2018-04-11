@@ -1,4 +1,10 @@
-<?php include_once("../carta/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../librerias_saia.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><p><span style="font-family: arial, helvetica, sans-serif;"><?php botones_valoracion_riesgos(500,$_REQUEST['iddoc']);?></span></p>
+<?php include_once("../../librerias_saia.php"); ?>
+			<?php echo(librerias_jquery('1.7')); ?><?php include_once("../librerias/funciones_generales.php"); ?>
+			<?php include_once("../../class_transferencia.php"); ?>
+			<?php include_once("../carta/funciones.php"); ?>
+			<?php include_once("funciones.php"); ?>
+			<?php include_once("../librerias/header_nuevo.php"); ?>
+			<tr><td><p><span style="font-family: arial, helvetica, sans-serif;"><?php botones_valoracion_riesgos(500,$_REQUEST['iddoc']);?></span></p>
 <table style="border-collapse: collapse; width: 100%;" border="1">
 <tbody>
 <tr>
@@ -39,3 +45,4 @@
 </tbody>
 </table>
 <p><?php mostrar_estado_proceso(500,$_REQUEST['iddoc']);?></p></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>
+			

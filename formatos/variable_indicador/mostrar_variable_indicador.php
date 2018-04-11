@@ -1,4 +1,9 @@
-<?php include_once("../carta/funciones.php"); ?><?php include_once("../transferencia_doc/funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../librerias_saia.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><table style="width: 100%;" border="0">
+<?php include_once("../../librerias_saia.php"); ?>
+			<?php echo(librerias_jquery('1.7')); ?><?php include_once("../librerias/funciones_generales.php"); ?>
+			<?php include_once("../../class_transferencia.php"); ?>
+			<?php include_once("../carta/funciones.php"); ?>
+			<?php include_once("../librerias/header_nuevo.php"); ?>
+			<tr><td><table style="width: 100%;" border="0">
 <tbody>
 <tr>
 <td class="encabezado" valign="top">Nombre:</td>
@@ -10,3 +15,4 @@
 </tr>
 </tbody>
 </table></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>
+			

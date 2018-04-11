@@ -46,6 +46,14 @@ function add_edit_control_documentos($idformato, $iddoc){
 	    $("#version").keyup(function() {
 	        this.value = (this.value + '').replace(/[^0-9]/g, '');
 	    });
+	    tree_documento_calidad.setOnCheckHandler(cargar_nombre_modificacion);
+	    function cargar_nombre_modificacion(idnode){
+	    	if($("[name='tipo_solicitud']:checked").val()==2){
+	    		text=tree_documento_calidad.getItemText(idnode);
+	    		$("#nombre_documento").val(text);
+	    	}
+	    }
+	    
 			function cargar_arbol_calidad(){
 				if(opt){
 					documento_calidad="<?php echo($documento_calidad[0]["documento_calidad"]); ?>";
@@ -169,6 +177,15 @@ function obtener_numero_solicitud($idformato, $iddoc) {
 	echo($datos[0]['numero']);
 }
 
+function ver_nombre_documento($idformato, $iddoc){
+	global $conn,$datos;
+	$html="";
+	if($datos[0]["tipo_solicitud"]==2){
+		$html.='</td></tr> <tr><td><strong>Nombre del documento:</strong></td> <td>'.$datos[0]["nombre_documento"];
+	}
+	echo $html;
+}
+
 function obtener_nombre_solicitante($idformato, $iddoc) {
 	global $conn, $datos;
 	$html = "";
@@ -203,7 +220,13 @@ function ver_datos_control_doc($idformato, $iddoc) {
 				}
 			}
 		}
-		$version = "Pasa de la versi&oacute;n PENDIENTE a la versi&oacute;n PENDIENTE 2";
+		$version_actual=busca_filtro_tabla("numero_version","documento_version","iddocumento_version=".$datos[0]["iddocumento_version"],"",$conn);
+		if($version_actual["numcampos"]){
+			$version = "Pasa de la versi&oacute;n ".($version_actual[0]["numero_version"]-1)." a la versi&oacute;n ".$version_actual[0]["numero_version"];
+		}else{
+			$version = "Pasa de la versi&oacute;n PENDIENTE a la versi&oacute;n PENDIENTE";
+		}
+		
 		$html = "</td></tr>
 		<tr>
 			<td><strong>Documento de calidad Vinculado:</strong></td>

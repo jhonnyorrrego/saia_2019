@@ -1,4 +1,12 @@
-<?php include_once("../carta/funciones.php"); ?><?php include_once("../control_riesgos/funciones.php"); ?><?php include_once("../riesgos_proceso/funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../librerias_saia.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php include_once("../librerias/header_nuevo.php"); ?><?php include_once("../../class_transferencia.php"); ?><tr><td><p><span style="font-family: arial, helvetica, sans-serif;"><?php botones_acciones_riesgos(501,$_REQUEST['iddoc']);?></span></p>
+<?php include_once("../../librerias_saia.php"); ?>
+			<?php echo(librerias_jquery('1.7')); ?><?php include_once("../librerias/funciones_generales.php"); ?>
+			<?php include_once("../../class_transferencia.php"); ?>
+			<?php include_once("../carta/funciones.php"); ?>
+			<?php include_once("../control_riesgos/funciones.php"); ?>
+			<?php include_once("../riesgos_proceso/funciones.php"); ?>
+			<?php include_once("funciones.php"); ?>
+			<?php include_once("../librerias/header_nuevo.php"); ?>
+			<tr><td><p><span style="font-family: arial, helvetica, sans-serif;"><?php botones_acciones_riesgos(501,$_REQUEST['iddoc']);?></span></p>
 <table style="border-collapse: collapse; width: 100%;" border="1" cellspacing="0" cellpadding="0">
 <tbody>
 <tr>
@@ -36,3 +44,4 @@
 </tbody>
 </table>
 <p><span style="font-family: arial, helvetica, sans-serif;"><?php mostrar_estado_proceso(501,$_REQUEST['iddoc']);?></span></p></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>
+			

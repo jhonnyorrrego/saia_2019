@@ -1,10 +1,25 @@
-<html><title>.:ADICIONAR RIESGOS:.</title><head><script type="text/javascript" src="../librerias/funciones_formatos.js"></script><script type="text/javascript" src="../../js/cmxforms.js"></script><?php include_once("funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/funciones_acciones.php"); ?><?php include_once("../librerias/estilo_formulario.php"); ?><?php include_once("../librerias/header_formato.php"); ?><script type="text/javascript" src="../../js/jquery.js"></script><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/dhtmlXCommon.js"></script><script type="text/javascript" src="../../js/dhtmlXTree.js"></script><link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><script type='text/javascript'>
-  $().ready(function() {
-	// validar los campos del formato
-	$('#formulario_formatos').validate();
-	
-});
-</script> </head><body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">RIESGOS</td></tr><input type="hidden" name="riesgo_antiguo" value="<?php echo(validar_valor_campo(6356)); ?>"><tr id="tr_identificacion_riesg">
+<html>
+			<title>.:ADICIONAR RIESGOS:.</title>
+			<head><?php include_once("../../librerias_saia.php"); ?>
+			<script type="text/javascript" src="../librerias/funciones_formatos.js"></script>
+			<?php include_once("funciones.php"); ?>
+			<?php include_once("../librerias/funciones_generales.php"); ?>
+			<?php include_once("../librerias/funciones_acciones.php"); ?>
+			<?php include_once("../librerias/estilo_formulario.php"); ?>
+			<?php include_once("../librerias/header_formato.php"); ?>
+			<script type="text/javascript" src="../../js/jquery.js"></script>
+			<script type="text/javascript" src="../../js/jquery.validate.js"></script>
+			<script type="text/javascript" src="../../js/title2note.js"></script>
+			<script type="text/javascript" src="../../js/dhtmlXCommon.js"></script>
+			<script type="text/javascript" src="../../js/dhtmlXTree.js"></script>
+			<link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><style>label.error{color:red}</style>
+				<script type='text/javascript'>
+  $(document).ready(function() {
+			  		$('#formulario_formatos').validate();
+				});
+				</script> 
+			</head>
+			<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">RIESGOS</td></tr><input type="hidden" name="estado_documento" value="<?php echo(validar_valor_campo(6458)); ?>"><input type="hidden" name="riesgo_antiguo" value="<?php echo(validar_valor_campo(6356)); ?>"><tr id="tr_identificacion_riesg">
                      <td class="encabezado" width="20%" title="" colspan="2" id="identificacion_riesg"><h1><center><strong>IDENTIFICACI&Oacute;N DEL RIESGO</strong></center></h1></td>
                     </tr><tr id="tr_dependencia">
                      <td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td>
@@ -17,79 +32,76 @@
                      <td class="encabezado" width="20%" title="Actividad">ACTIVIDAD*</td>
                      <td class="celda_transparente"><textarea  tabindex='1'  name="nombre" id="nombre" cols="53" rows="3" class="tiny_basico required"><?php echo(validar_valor_campo(6363)); ?></textarea></td>
                     </tr><tr id="tr_area_responsable">
-                   <td class="encabezado" width="20%" title="Area responsable">AREA RESPONSABLE*</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(499,6364,'0',$_REQUEST['iddoc']);?></div>
-                          <br />  Buscar: <input  tabindex='2'  type="text" id="stext_area_responsable" width="200px" size="25"><a href="javascript:void(0)" onclick="tree_area_responsable.findItem((document.getElementById('stext_area_responsable').value),1)"> <img src="../../botones/general/anterior.png"border="0px"></a>
-                   <a href="javascript:void(0)" onclick="tree_area_responsable.findItem((document.getElementById('stext_area_responsable').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>                          
-                   <a href="javascript:void(0)" onclick="tree_area_responsable.findItem((document.getElementById('stext_area_responsable').value))"><img src="../../botones/general/siguiente.png"border="0px"></a> 
-                          <br /><div id="esperando_area_responsable"><img src="../../imagenes/cargando.gif"></div><div id="treeboxbox_area_responsable" height="90%"></div><input type="hidden" maxlength="255"  class="required"  name="area_responsable" id="area_responsable"   value="" ><label style="display:none" class="error" for="area_responsable">Campo obligatorio.</label><script type="text/javascript">
-                  <!--
-                      var browserType;
-                      if (document.layers) {browserType = "nn4"}
-                      if (document.all) {browserType = "ie"}
-                      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-                         browserType= "gecko"
-                      }
-                			tree_area_responsable=new dhtmlXTreeObject("treeboxbox_area_responsable","100%","100%",0);
-                			tree_area_responsable.setImagePath("../../imgs/");
-                			tree_area_responsable.enableIEImageFix(true);tree_area_responsable.enableCheckBoxes(1);
-                			tree_area_responsable.enableThreeStateCheckboxes(1);tree_area_responsable.setOnLoadingStart(cargando_area_responsable);
-                      tree_area_responsable.setOnLoadingEnd(fin_cargando_area_responsable);tree_area_responsable.enableSmartXMLParsing(true);tree_area_responsable.loadXML("../../test.php");
-                	        
-                      tree_area_responsable.setOnCheckHandler(onNodeSelect_area_responsable);
-                      function onNodeSelect_area_responsable(nodeId)
-                      {valor_destino=document.getElementById("area_responsable");
-                       destinos=tree_area_responsable.getAllChecked();
-                       nuevo=destinos.replace(/\,{2,}(d)*/gi,",");
-                       nuevo=nuevo.replace(/\,$/gi,"");
-                       vector=destinos.split(",");
-                       for(i=0;i<vector.length;i++)
-                          {if(vector[i].indexOf("_")!=-1)
-                             {vector[i]=vector[i].substr(0,vector[i].indexOf("_"));
-                             }
-                           nuevo=vector.join(",");  
-                           if(vector[i].indexOf("#")!=-1)
-                              {hijos=tree_area_responsable.getAllSubItems(vector[i]);
-                               hijos=hijos.replace(/\,{2,}(d)*/gi,",");
-                               hijos=hijos.replace(/\,$/gi,"");
-                               vectorh=hijos.split(",");
-                               
-                               for(h=0;h<vectorh.length;h++)
-                                  {if(vectorh[h].indexOf("_")!=-1)
-                                      vectorh[h]=vectorh[h].substr(0,vectorh[h].indexOf("_"));
-                                   nuevo=eliminarItem(nuevo,vectorh[h]);
-                                  } 
-                              }
-                          }
-                       nuevo=nuevo.replace(/\,{2,}(d)*/gi,",");
-                       nuevo=nuevo.replace(/\,$/gi,"");   
-                       valor_destino.value=nuevo;
-                      }
-                      function fin_cargando_area_responsable() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_area_responsable")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_area_responsable")');
-                        else
-                           document.poppedLayer =
-                              eval('document.layers["esperando_area_responsable"]');
-                        document.poppedLayer.style.display = "none";
-                      }
+								<td class="encabezado" width="20%" title="Area responsable">AREA RESPONSABLE*</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(499,6364,'0',$_REQUEST['iddoc']);?></div><br/>Buscar: <input  tabindex='2'  type="text" id="stext_area_responsable" width="200px" size="25">
+									<a href="javascript:void(0)" onclick="tree_area_responsable.findItem((document.getElementById('stext_area_responsable').value),1)">
+										<img src="../../botones/general/anterior.png"border="0px">
+									</a>
+								<a href="javascript:void(0)" onclick="tree_area_responsable.findItem((document.getElementById('stext_area_responsable').value),0,1)">
+									<img src="../../botones/general/buscar.png"border="0px">
+								</a>
+								<a href="javascript:void(0)" onclick="tree_area_responsable.findItem((document.getElementById('stext_area_responsable').value))">
+									<img src="../../botones/general/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="255"  class="required"  name="area_responsable" id="area_responsable"   value="" ><label style="display:none" class="error" for="area_responsable">Campo obligatorio.</label><div id="esperando_area_responsable">
+									<img src="../../imagenes/cargando.gif">
+								</div>
+								<div id="treeboxbox_area_responsable" height="90%"></div><script type="text/javascript">
+								var browserType;
+								if (document.layers) {browserType = "nn4"}
+								if (document.all) {browserType = "ie"}
+								if (window.navigator.userAgent.toLowerCase().match("gecko")) {browserType= "gecko"}
+								tree_area_responsable=new dhtmlXTreeObject("treeboxbox_area_responsable","100%","100%",0);
+								tree_area_responsable.setImagePath("../../imgs/");
+								tree_area_responsable.enableIEImageFix(true);tree_area_responsable.enableCheckBoxes(1);
+									tree_area_responsable.enableThreeStateCheckboxes(1);tree_area_responsable.setOnLoadingStart(cargando_area_responsable);
+								tree_area_responsable.setOnLoadingEnd(fin_cargando_area_responsable);tree_area_responsable.enableSmartXMLParsing(true);tree_area_responsable.loadXML("../../test.php");
+									tree_area_responsable.setOnCheckHandler(onNodeSelect_area_responsable);
 
-                      function cargando_area_responsable() {
-                        if (browserType == "gecko" )
-                           document.poppedLayer =
-                               eval('document.getElementById("esperando_area_responsable")');
-                        else if (browserType == "ie")
-                           document.poppedLayer =
-                              eval('document.getElementById("esperando_area_responsable")');
-                        else
-                           document.poppedLayer =
-                               eval('document.layers["esperando_area_responsable"]');
-                        document.poppedLayer.style.display = "";
-                      }
-                	--></script></td></tr><tr id="tr_riesgo">
+									function onNodeSelect_area_responsable(nodeId){
+										valor_destino=document.getElementById("area_responsable");
+										destinos=tree_area_responsable.getAllChecked();
+										nuevo=destinos.replace(/\,{2,}(d)*/gi,",");
+										nuevo=nuevo.replace(/\,$/gi,"");
+										vector=destinos.split(",");
+										for(i=0;i<vector.length;i++){
+											if(vector[i].indexOf("_")!=-1){
+												vector[i]=vector[i].substr(0,vector[i].indexOf("_"));
+											}
+											nuevo=vector.join(",");
+											if(vector[i].indexOf("#")!=-1){
+												hijos=tree_area_responsable.getAllSubItems(vector[i]);
+												hijos=hijos.replace(/\,{2,}(d)*/gi,",");
+												hijos=hijos.replace(/\,$/gi,"");
+												vectorh=hijos.split(",");
+
+												for(h=0;h<vectorh.length;h++){
+													if(vectorh[h].indexOf("_")!=-1)
+													vectorh[h]=vectorh[h].substr(0,vectorh[h].indexOf("_"));
+													nuevo=eliminarItem(nuevo,vectorh[h]);
+												}
+											}
+										}
+										nuevo=nuevo.replace(/\,{2,}(d)*/gi,",");
+										nuevo=nuevo.replace(/\,$/gi,"");
+										valor_destino.value=nuevo;
+									}function fin_cargando_area_responsable() {
+									if (browserType == "gecko" ) {
+										document.poppedLayer = eval('document.getElementById("esperando_area_responsable")');
+									} else if (browserType == "ie") {
+										document.poppedLayer = eval('document.getElementById("esperando_area_responsable")');
+									} else {
+										document.poppedLayer = eval('document.layers["esperando_area_responsable"]');
+									}
+									document.poppedLayer.style.display = "none";
+								}
+								function cargando_area_responsable() {
+									if (browserType == "gecko" ) {
+										document.poppedLayer = eval('document.getElementById("esperando_area_responsable")');
+									} else if (browserType == "ie") {
+										document.poppedLayer = eval('document.getElementById("esperando_area_responsable")');
+									} else {
+										document.poppedLayer = eval('document.layers["esperando_area_responsable"]');
+									}
+									document.poppedLayer.style.display = "";
+								}</script></td></tr><tr id="tr_riesgo">
                      <td class="encabezado" width="20%" title="Definici&oacute;n: Representa la posibilidad de ocurrencia de un evento que pueda entorpecer el normal desarrollo de las funciones de la entidad y afectar el logro de sus objetivos.">RIESGO*</td>
                      <td class="celda_transparente"><textarea  tabindex='3'  name="riesgo" id="riesgo" cols="53" rows="3" class="tiny_basico required"><?php echo(validar_valor_campo(6365)); ?></textarea></td>
                     </tr><input type="hidden" name="controles" value="<?php echo(validar_valor_campo(6366)); ?>"><tr id="tr_descripcion">
@@ -141,4 +153,9 @@ NIVEL 2 DESCRIPTOR	Improbable DESCRIPCION El evento puede ocurrir en cualquier m
 NIVEL 3 DESCRIPTOR	Posible DESCRIPCION El evento podria ocurrir en algun momento FRECUENCIA Al menos de una vez en los ultimos 2 a&ntilde;os.
 NIVEL 4 DESCRIPTOR	Probable DESCRIPCION El evento probablemente ocurrira en la mayoria de las circunstancias FRECUENCIA Al menos de una vez en el ultimo a&ntilde;o.
 NIVEL 5 DESCRIPTOR	Casi Seguro DESCRIPCION Se espera que el evento ocurra en la mayoria de las circunstancias	FRECUENCIA Mas de una vez al a&ntilde;o.
-">PROBABILIDAD*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(499,6379,$_REQUEST['iddoc']);?></td></tr><input type="hidden" name="idft_riesgos_proceso" value="<?php echo(validar_valor_campo(6380)); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(validar_valor_campo(6381)); ?>"><input type="hidden" name="encabezado" value="<?php echo(validar_valor_campo(6382)); ?>"><input type="hidden" name="firma" value="<?php echo(validar_valor_campo(6383)); ?>"><?php selecion_tipo_riesgo(499,NULL);?><input type="hidden" name="campo_descripcion" value="6365,6367"><input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?>"><input type="hidden" name="anterior" value="<?php echo $_REQUEST["anterior"]; ?>"><input type="hidden" name="accion" value="guardar_detalle" ><tr><td colspan='2'><?php submit_formato(499);?></td></tr></table></form></body></html>
+">PROBABILIDAD*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(499,6379,$_REQUEST['iddoc']);?></td></tr><input type="hidden" name="idft_riesgos_proceso" value="<?php echo(validar_valor_campo(6380)); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(validar_valor_campo(6381)); ?>"><input type="hidden" name="encabezado" value="<?php echo(validar_valor_campo(6382)); ?>"><input type="hidden" name="firma" value="<?php echo(validar_valor_campo(6383)); ?>"><?php selecion_tipo_riesgo(499,NULL);?><input type="hidden" name="campo_descripcion" value="6365,6367"><input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?>"><input type="hidden" name="anterior" value="<?php echo $_REQUEST["anterior"]; ?>"><input type="hidden" name="accion" value="guardar_detalle" ><tr>
+			<td colspan='2'><?php submit_formato(499);?></td>
+		</tr>
+		</table></form>
+</body>
+		</html>

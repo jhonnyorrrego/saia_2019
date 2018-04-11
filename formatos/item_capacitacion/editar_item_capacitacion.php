@@ -10,7 +10,7 @@
 			<script type="text/javascript" src="../../js/title2note.js"></script>
 			<style>label.error{color:red}</style>
 				<script type='text/javascript'>
-			  $(document).ready(function(){
+  $(document).ready(function() {
 			  		$('#formulario_formatos').validate();
 				});
 				</script> 
@@ -29,5 +29,5 @@
 			<td colspan='2'><?php submit_formato(445,$_REQUEST['iddoc']);?></td>
 		</tr>
 		</table></form>
-		</body>
+</body>
 		</html><?php include_once("../librerias/footer_plantilla.php");?>
