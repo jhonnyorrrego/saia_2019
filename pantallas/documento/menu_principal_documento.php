@@ -28,6 +28,11 @@ if($formato[0]['mostrar_pdf']==1){
     $_SESSION["tipo_pagina"]="formatos/$nombre/mostrar_$nombre.php?iddoc=".$iddoc."&rand=".rand(0,1000);
 }
 
+$ok_cal=0;
+if($_REQUEST["pantalla"]=="calidad"){
+	$ok_cal=1;
+}
+
 echo(librerias_jquery("1.7"));
 echo(librerias_arboles());
 echo(estilo_bootstrap());
@@ -350,6 +355,11 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
                 <script type="text/javascript">
                   $(document).ready(function(){
                   	var iddoc_ref=parseInt(<?php echo($iddoc); ?>);
+                  	var pant_calidad=parseInt(<?php echo ($ok_cal);?>);
+                  	parte_url="";
+                  	if(pant_calidad){
+                  		parte_url="&pantalla=calidad";
+                  	}
                   	if(window.parent.frames["arbol_formato"]!==undefined){
 											match_iddoc=window.parent.frames["arbol_formato"].location.href.match(/(iddoc)=([\d]+)/);
 											if(match_iddoc){
@@ -357,14 +367,14 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
 											}
                   	}
                     $("#aprobar_documento").click(function(){
-                     window.open("<?php echo($ruta_db_superior); ?>class_transferencia.php?iddoc=<?php echo($iddoc); ?>&funcion=aprobar&anterior="+iddoc_ref,"_self");
+                     window.open("<?php echo($ruta_db_superior); ?>class_transferencia.php?iddoc=<?php echo($iddoc); ?>&funcion=aprobar&anterior="+iddoc_ref+parte_url,"_self");
                     });
                   });
                 </script>
                 </div>
               <?php
 							}
-              if($datos_admin["editar"]){ // || usuario_actual('login')=='cerok'
+              if($datos_admin["editar"]){
               	$titulo=true;
               	$datos_pantalla=busca_filtro_tabla("ruta_pantalla,nombre","pantalla A","A.idpantalla=".$documento->documento[0]["pantalla_idpantalla"],"",$conn);
               ?>
