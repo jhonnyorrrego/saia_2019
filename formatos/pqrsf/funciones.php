@@ -1,9 +1,39 @@
 <?php
+<<<<<<< HEAD
+$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0){
+  if(is_file($ruta."db.php")){
+    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+  }
+  $ruta.="../";
+  $max_salida--;
+}    
+include_once($ruta_db_superior."db.php"); 
+include_once($ruta_db_superior."formatos/librerias/funciones_generales.php"); 
+include_once("../clasificacion_pqrsf/funciones.php");
+include_once($ruta_db_superior."pantallas/documento/librerias.php");
+	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
+include_once($ruta_db_superior."pantallas/qr/librerias.php");
+
+function validar_digitalizacion_formato_pqr($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+
+  if($_REQUEST["digitalizacion"]==1){
+  	if(@$_REQUEST["iddoc"]){
+  	    $iddoc=$_REQUEST["iddoc"];
+  		$enlace="ordenar.php?key=" . $iddoc."&accion=mostrar&mostrar_formato=1";
+  		abrir_url($ruta_db_superior."paginaadd.php?target=_self&key=".$iddoc."&enlace=".$enlace,'_self');
+  	}
+	else{
+		abrir_url($ruta_db_superior."colilla.php?target=_self&key=".$iddoc."&enlace=paginaadd.php?key=".$iddoc,'_self');
+=======
 $max_salida = 6;
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
 	if (is_file($ruta . "db.php")) {
 		$ruta_db_superior = $ruta;
+>>>>>>> saia_comercial
 	}
 	$ruta .= "../";
 	$max_salida--;
@@ -66,6 +96,16 @@ function ver_fecha_reporte($idformato, $iddoc) {
 	global $conn,$datos;
 	echo($datos[0]['fecha_reporte']);
 }
+<<<<<<< HEAD
+function mostrar_anexos_pqrsf($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+	$anexos=busca_filtro_tabla("","anexos a","a.documento_iddocumento=".$iddoc,"",$conn);
+	$anexos_array=array();
+	for($i=0;$i<$anexos["numcampos"];$i++){
+		$ruta = $anexos[$i]["ruta"];
+		$ruta64 = base64_encode($ruta);
+		$anexos_array[] = '<a class="previo_high" style="cursor:pointer" enlace="' . "filesystem/mostrar_binario.php?ruta=$ruta64" . '">' . $anexos[$i]["etiqueta"] . '</a>';
+=======
 
 function mostrar_anexos_pqrsf($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
@@ -73,6 +113,7 @@ function mostrar_anexos_pqrsf($idformato, $iddoc) {
 	$anexos_array = array();
 	for ($i = 0; $i < $anexos["numcampos"]; $i++) {
 		$anexos_array[] = '<a class="previo_high" style="cursor:pointer" enlace="' . $anexos[$i]["ruta"] . '">' . $anexos[$i]["etiqueta"] . '</a>';
+>>>>>>> saia_comercial
 	}
 	echo(implode(", ", $anexos_array));
 	if ($_REQUEST["tipo"] != 5) {
@@ -248,6 +289,13 @@ function vincular_distribucion_pqrsf($idformato, $iddoc) {//POSTERIOR AL APROBAR
 				$rol_destino = $vector_parametros[0];
 			}
 		
+<<<<<<< HEAD
+	} //fin if $iddatos_ejecutor && $rol_destino
+	
+	
+} // fin function vincular_distribucion_pqrsf
+?>
+=======
 			if ($iddatos_ejecutor && $rol_destino) {
 				include_once ($ruta_db_superior . "distribucion/funciones_distribucion.php");
 				//EXT -INT
@@ -263,3 +311,4 @@ function vincular_distribucion_pqrsf($idformato, $iddoc) {//POSTERIOR AL APROBAR
 	}
 }
 ?>
+>>>>>>> saia_comercial

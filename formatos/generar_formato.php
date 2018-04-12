@@ -135,12 +135,11 @@ function generar_tabla($idformato) {
 		}
 
 		$tabla_esta = $datos_tabla["numcampos"];
-		for ($i = 0; $i < $datos_tabla["numcampos"]; $i++)
+		for($i = 0; $i < $datos_tabla["numcampos"]; $i++)
 			$datos_tabla[$i] = array_change_key_case($datos_tabla[$i], CASE_LOWER);
 
 		if ($datos_tabla["numcampos"]) {
-			$campos_tabla = extrae_campo($datos_tabla, "field", "U,m");
-			// esto es para saber si existe el campo o no.
+			$campos_tabla = extrae_campo($datos_tabla, "field", "U,m"); // esto es para saber si existe el campo o no.
 		} else {
 			$campos_tabla = array();
 		}
@@ -190,7 +189,7 @@ function generar_tabla($idformato) {
 		} else
 			elimina_indices_tabla($formato[0]["nombre_tabla"]);
 
-		for ($i = 0; $i < $campos["numcampos"]; $i++) {
+		for($i = 0; $i < $campos["numcampos"]; $i++) {
 			if (MOTOR == "Oracle") {
 				$datos_campo = ejecuta_filtro_tabla("SELECT decode(nullable,'Y',0,'N',1) as nulo FROM user_tab_columns WHERE table_name='" . strtoupper($formato[0]["nombre_tabla"]) . "' and lower(column_name)='" . $campos[$i]["nombre"] . "' ORDER BY column_name ASC", $conn);
 
@@ -296,19 +295,19 @@ function elimina_indices_tabla($tabla) {
 	$tabla = strtoupper($tabla);
 	if (MOTOR == "MySql") {
 		$indices = ejecuta_filtro_tabla("SHOW INDEX FROM " . strtolower($tabla), $conn);
-		for ($i = 0; $i < $indices["numcampos"]; $i++) {
+		for($i = 0; $i < $indices["numcampos"]; $i++) {
 			elimina_indice($tabla, $indices[$i]);
 		}
 	} else if (MOTOR == "Oracle") {
 		$envio = array();
 		$sql2 = "select ai.index_name AS column_name, ai.uniqueness AS Key_name FROM all_indexes ai WHERE ai.TABLE_OWNER='" . DB . "' AND ai.table_name = '" . $tabla . "'";
 		$indices = ejecuta_filtro_tabla($sql2, $conn);
-		for ($i = 0; $i < $indices["numcampos"]; $i++) {
+		for($i = 0; $i < $indices["numcampos"]; $i++) {
 			array_push($envio, array("Key_name" => $indices[$i]["key_name"], "Column_name" => $indices[$i]["column_name"]));
 		}
 		$sql2 = "SELECT cols.column_name AS Column_name, cons.constraint_type AS Key_name FROM all_constraints cons, all_cons_columns cols WHERE cons.constraint_type = 'P' AND cons.constraint_name = cols.constraint_name AND cons.owner = cols.owner AND cons.owner='" . DB . "' AND cols.table_name='" . $tabla . "' ORDER BY cols.table_name, cols.position";
 		$primaria = ejecuta_filtro_tabla($sql2, $conn);
-		for ($i = 0; $i < $primaria["numcampos"]; $i++) {
+		for($i = 0; $i < $primaria["numcampos"]; $i++) {
 			array_push($envio, array("Key_name" => "PRIMARY", "Column_name" => $primaria[$i]["Column_name"]));
 		}
 		$numero_indices = count($envio);
@@ -387,7 +386,7 @@ function elimina_indice($tabla, $campo) {
 		}
 	} else if (MOTOR == "SqlServer" || MOTOR == "MSSql") {
 		$sql = "ALTER TABLE " . strtolower($tabla) . " DROP CONSTRAINT " . $campo["Column_name"];
-		$conn -> Ejecutar_sql($sql);
+		$conn->Ejecutar_sql($sql);
 	}
 	return;
 }
@@ -579,11 +578,11 @@ function crear_indice($todas_banderas, $nombre_campo, $nombre_tabla) {
 					break;
 				case "u" :
 					$dato = "ALTER TABLE " . $nombre_tabla . " ADD CONSTRAINT UQ_" . strtoupper($nombre_campo) . "_" . rand() . " UNIQUE( " . $nombre_campo . " )";
-					$conn -> Ejecutar_sql($dato);
+					$conn->Ejecutar_sql($dato);
 					break;
 				case "i" :
 					$dato = "CREATE UNIQUE NONCLUSTERED INDEX (I_" . strtoupper($nombre_campo) . "_" . rand() . ") ON " . $nombre_tabla . "( " . $nombre_campo . " )";
-					$conn -> Ejecutar_sql($dato);
+					$conn->Ejecutar_sql($dato);
 					break;
 			}
 		}
@@ -1778,8 +1777,7 @@ function crear_formato_ae($idformato, $accion) {
 						$indice_tabindex++;
 						$spinner++;
 						break;
-					default :
-						// text
+					default : // text
 						$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                      <td bgcolor="#F5F5F5"><input ' . " $adicionales $tabindex" . ' type="text" size="100" id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . ' value="' . $valor . '"></td>
@@ -1817,7 +1815,7 @@ function crear_formato_ae($idformato, $accion) {
 						$includes .= incluir("../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
 					} elseif (is_file($funciones[$i]["ruta"])) {// si el archivo existe en la ruta especificada partiendo de la raiz
 						$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
-					} else {// si no existe en ninguna de las dos
+					} else { // si no existe en ninguna de las dos
 						// trato de crearlo dentro de la carpeta del formato actual
 						if (crear_archivo($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 							$includes .= incluir($funciones[$i]["ruta"], "librerias");
@@ -1825,13 +1823,13 @@ function crear_formato_ae($idformato, $accion) {
 							alerta("No es posible generar el archivo " . $formato[0]["nombre_tabla"] . "/" . $funciones[$i]["ruta"]);
 					}
 				}
-			} else {// $ruta_orig=$formato[0]["nombre"];
+			} else { // $ruta_orig=$formato[0]["nombre"];
 				// si el archivo existe dentro de la carpeta del formato actual
 				if (is_file($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 					$includes .= incluir($funciones[$i]["ruta"], "librerias");
 				} elseif (is_file($funciones[$i]["ruta"])) {// si el archivo existe en la ruta especificada partiendo de la raiz
 					$includes .= incluir($funciones[$i]["ruta"], "librerias");
-				} else {// si no existe en ninguna de las dos
+				} else { // si no existe en ninguna de las dos
 					// trato de crearlo dentro de la carpeta del formato actual
 					if (crear_archivo($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 						$includes .= incluir($funciones[$i]["ruta"], "librerias");
@@ -1884,11 +1882,8 @@ function crear_formato_ae($idformato, $accion) {
 				$texto .= '<input type="hidden" name="anterior" value="<?php echo $_' . 'REQUEST["campo"]; ?' . '>" >';
 			}
 		}
-		$texto .= "<tr>
-			<td colspan='2'>" . arma_funcion("submit_formato", $idformato, $accion);
-		$texto .= '</td>
-		</tr>
-		</table>';
+		$texto .= "<tr><td colspan='2'>" . arma_funcion("submit_formato", $idformato, $accion);
+		$texto .= '</td></tr></table>';
 
 		$includes .= incluir_libreria("funciones_generales.php", "librerias");
 		$includes .= incluir_libreria("funciones_acciones.php", "librerias");
@@ -1898,8 +1893,7 @@ function crear_formato_ae($idformato, $accion) {
 			$id_unico = '<?php echo (uniqid("' . $idformato . '-") . "-" . uniqid());?>';
 			$texto .= "<input type='hidden' name='form_uuid'       id='form_uuid'       value='$id_unico'>";
 		}
-		$texto .= '</form>
-</body>';
+		$texto .= '</form></body>';
 		if ($textareas) {
 			$includes .= incluir_libreria("header_formato.php", "librerias");
 		}
@@ -2001,7 +1995,7 @@ function crear_formato_ae($idformato, $accion) {
 			$includes .= incluir("../../anexosdigitales/funciones_archivo.php", "librerias");
 			$includes .= incluir("../../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js", "javascript");
 			$includes .= '<link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-4.0.10/highslide/highslide.css" /></style>';
-			$includes .= '<link href="../../dropzone/dist/dropzone.css" type="text/css" rel="stylesheet" />';
+			$includes .= '<link href="../../dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" />';
 			$includes .= "<script type='text/javascript'> hs.graphicsDir = '../../anexosdigitales/highslide-4.0.10/highslide/graphics/'; hs.outlineType = 'rounded-white';</script>";
 			$js_archivos = "<script type='text/javascript'>
                 var upload_url = '../../dropzone/cargar_archivos_formato.php';
@@ -2082,8 +2076,7 @@ function crear_formato_ae($idformato, $accion) {
 		}
 		$includes .= "<style>label.error{color:red}</style>";
 
-		$contenido = "<html>
-			<title>.:" . codifica($accion . " " . $formato[0]["etiqueta"]) . ":.</title>
+		$contenido = "<html><title>.:" . codifica($accion . " " . $formato[0]["etiqueta"]) . ":.</title>
 			<head>" . $includes . "
 				<script type='text/javascript'>
   $(document).ready(function() {

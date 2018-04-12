@@ -24,7 +24,7 @@ $(document).ready(function(){
 			type: "POST",
 			success : function(data){
 				if(data.ruta!='' && data.ruta!=null){
-					$('#foto_funcionario_'+identificador).attr('src','<?php echo($ruta_db_superior); ?>'+data.ruta);
+					$('#foto_funcionario_'+identificador).attr('src',data.ruta);
 					$('#highslide_funcionario_'+identificador).attr('enlace','pantallas/funcionario/fotografia/foto.php?idfuncionario='+identificador+'&recortar=1');
 				}else{
 					$('#foto_funcionario_'+identificador).attr('src','<?php echo($ruta_db_superior); ?>imagenes/funcionario_sin_foto.jpg');

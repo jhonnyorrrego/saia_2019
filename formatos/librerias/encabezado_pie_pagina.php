@@ -1,17 +1,18 @@
 <?php
-$max_salida = 6;
-// Previene algun posible ciclo infinito limitando a 10 los ../
+$max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
 	if (is_file($ruta . "db.php")) {
-		$ruta_db_superior = $ruta;
-		//Preserva la ruta superior encontrada
+		$ruta_db_superior = $ruta; //Preserva la ruta superior encontrada
 	}
 	$ruta .= "../";
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
+require_once ($ruta_db_superior . 'StorageUtils.php');
+require_once ($ruta_db_superior . 'filesystem/SaiaStorage.php');
+
 $incluidos = array();
 function imagen_firma_faltante() {
 	echo PROTOCOLO_CONEXION . RUTA_PDF . "/firmas/faltante.jpg' />";
@@ -61,7 +62,7 @@ function crear_encabezado_pie_pagina($texto, $iddoc, $idformato, $pagina = 1) {
 }
 
 function arma_funcion($nombre, $parametros, $accion) {
-	if ($parametros <> "" && $accion <> "adicionar")
+	if ($parametros != "" && $accion != "adicionar")
 		$parametros .= ",";
 
 	if ($accion == "mostrar")
@@ -155,7 +156,6 @@ function dependencia_codigo($idformato, $doc, $tipo = 0) {
 		return (formato_dependencia($doc, "codigo"));
 	else
 		echo formato_dependencia($doc, "codigo");
-
 }
 
 function dependencia_nombre($idformato, $doc, $tipo = 0) {
@@ -163,7 +163,6 @@ function dependencia_nombre($idformato, $doc, $tipo = 0) {
 		return (formato_dependencia($doc, "nombre"));
 	else
 		echo formato_dependencia($doc, "nombre");
-
 }
 
 function dependencia_logo($idformato, $doc, $tipo = 0) {
@@ -171,7 +170,6 @@ function dependencia_logo($idformato, $doc, $tipo = 0) {
 		return (formato_dependencia($doc, "logo"));
 	else
 		echo formato_dependencia($doc, "logo");
-
 }
 
 function formato_dependencia($doc, $tipo) {
@@ -210,7 +208,16 @@ function logo_empresa() {
 	global $conn, $ruta_db_superior;
 	$logo = busca_filtro_tabla("valor", "configuracion", "nombre='logo'", "", $conn);
 	if ($logo["numcampos"]) {
-		return ('<img src="' . $ruta_db_superior . $logo[0][0] . '" width="109" />');
+ 		$tipo_almacenamiento = new SaiaStorage("archivos"); 		
+ 			// $tipo_almacenamiento = new SaiaStorage("archivos");
+			$ruta_imagen=json_decode($logo[0]["valor"]);
+			if( is_object ($ruta_imagen) ){
+				if($tipo_almacenamiento->get_filesystem()->has($ruta_imagen->ruta)){
+					$ruta_imagen=json_encode($ruta_imagen);				
+					$archivo_binario=StorageUtils::get_binary_file($ruta_imagen);
+					return ('<img src="' . $archivo_binario . '" width="109" />');
+	 			}
+			}
 	} else
 		return ("");
 }
@@ -323,14 +330,7 @@ function qr_entrega_interna($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
 	include_once ($ruta_db_superior . "pantallas/qr/librerias.php");
 
-	$codigo_qr = busca_filtro_tabla("", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
-	if ($codigo_qr['numcampos']) {
-		$qr = '<img src="' . $ruta_db_superior . $codigo_qr[0]['ruta_qr'] . '" width="80px" height="80px">';
-	} else {
-		generar_codigo_qr($idformato, $iddoc);
-		$codigo_qr = busca_filtro_tabla("", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
-		$qr = '<img src="' . $ruta_db_superior . $codigo_qr[0]['ruta_qr'] . '" width="80px" height="80px">';
-	}
+	$qr = mostrar_codigo_qr($idformato, $iddoc, true);
 	return ($qr . "<br/>Planilla No. " . formato_numero($idformato, $iddoc, 1));
 }
 
