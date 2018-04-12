@@ -91,4 +91,18 @@ function mostrar_anexos_anexos_proceso($idformato, $iddoc) {
 		echo($tabla);
 	}
 }
+
+/*POSTERIOR APROBAR*/
+function post_aprob_pant_calidad($idformato, $iddoc){
+	global $conn,$ruta_db_superior;
+	if($_REQUEST["pantalla"]=="calidad"){
+		$info_formato = busca_filtro_tabla("nombre,ruta_mostrar", "formato", "idformato=" . $idformato, "", $conn);
+		if($info_formato["numcampos"]){
+			$url=$ruta_db_superior."formatos/".$info_formato[0]["nombre"]."/".$info_formato[0]["ruta_mostrar"]."?iddoc=".$iddoc."&idformato=".$idformato."&pantalla=calidad";
+			abrir_url($url,"_self");
+			die();
+		}
+	}
+}
+
 ?>
