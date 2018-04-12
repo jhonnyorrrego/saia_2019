@@ -21,7 +21,7 @@ if (@$_REQUEST['iddoc']) {
 	$existe = false;
 	if ($tipo_exportacion['numcampos']) {
 		if (file_exists($ruta_db_superior . 'class_impresion_' . $tipo_exportacion[0]['exportar'] . '.php')) {
-			$_REQUEST['tipo_pdf']=$tipo_exportacion[0]['exportar'];
+			$_REQUEST['tipo_pdf'] = $tipo_exportacion[0]['exportar'];
 			$existe = true;
 			include_once ($ruta_db_superior . 'class_impresion_' . $tipo_exportacion[0]['exportar'] . '.php');
 		}

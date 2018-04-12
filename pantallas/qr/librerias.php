@@ -32,7 +32,7 @@ function mostrar_codigo_qr($idformato, $iddoc, $retorno = 0, $width = 80, $heigh
 			$tipo_almacenamiento = new SaiaStorage(RUTA_QR);
 			if($tipo_almacenamiento->get_filesystem()->has($ruta_qr->ruta)){
     			$archivo_binario=StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
-				$img = '<img src="' . $archivo_binario . '" width="' . $width . 'px" height="' . $height . 'px" >';
+				$img = '<img src="' . $archivo_binario .'" width="' . $width . 'px" height="' . $height . 'px" >';
 			}
 		}
 	}
@@ -85,7 +85,7 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
 		} else {
 		$almacenamiento->almacenar_contenido($filename, $imagen);
 		$ruta_qr = array ("servidor" => $almacenamiento->get_ruta_servidor(), "ruta" => $filename);
-			$sql_documento_qr = "INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion) VALUES (" . $iddoc . "," . $idfunc . "," . fecha_db_almacenar(date("Y-m-d"), 'Y-m-d') . ",'" . $imagen . "','vacio')";
+			$sql_documento_qr = "INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion) VALUES (" . $iddoc . "," . $idfunc . "," . fecha_db_almacenar(date("Y-m-d"), 'Y-m-d') . ",'" . json_encode($ruta_qr) . "','vacio')";
 			phpmkr_query($sql_documento_qr) or die("Error al insertar la ruta del QR");
 			$retorno["exito"] = 1;
 			$retorno["msn"] = "QR generado con exito";

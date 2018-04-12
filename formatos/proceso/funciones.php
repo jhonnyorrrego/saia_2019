@@ -67,30 +67,6 @@ function listar_politicas_proceso($idformato, $iddoc) {
 	echo($texto);
 }
 
-function mostrar_anexos_anexos_proceso($idformato, $iddoc) {
-	global $conn, $ruta_db_superior;
-	$anexos = busca_filtro_tabla("", "anexos", "documento_iddocumento=" . $iddoc, "", $conn);
-	if ($anexos['numcampos']) {
-		$extension = array("jpg", "png", "pdf");
-		$tabla = '<ul>';
-		for ($j = 0; $j < $anexos['numcampos']; $j++) {
-			$tabla .= "<li>";
-			if ($_REQUEST["tipo"] != 5) {
-				if (in_array(strtolower($anexos[$j]['tipo']), $extension)) {
-					$tabla .= "<a href='" . $ruta_db_superior . $anexos[$j]['ruta'] . "'>" . html_entity_decode($anexos[$j]['etiqueta']) . "</a>";
-				} else {
-					$tabla .= '<a title="Descargar" href="' . $ruta_db_superior . 'anexosdigitales/parsea_accion_archivo.php?idanexo=' . $anexos[$j]['idanexos'] . '&amp;accion=descargar" border="0px">' . html_entity_decode($anexos[$j]['etiqueta']) . '</a>';
-				}
-			}else{
-				$tabla .= html_entity_decode($anexos[$j]['etiqueta']);
-			}
-
-			$tabla .= "</li>";
-		}
-		$tabla .= '</ul>';
-		echo($tabla);
-	}
-}
 
 /*POSTERIOR APROBAR*/
 function post_aprob_pant_calidad($idformato, $iddoc){
