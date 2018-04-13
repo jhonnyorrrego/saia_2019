@@ -21,8 +21,14 @@ if ($resultado["exito"]) {
 			if ($pdf == "Sin Respuesta") {
 				$table .= '<li>' . $pdf . '</li>';
 			} else {
-				$search = array(":", " ");
-				$replace = array("_", "_");
+				$search = array(
+					":",
+					" "
+				);
+				$replace = array(
+					"_",
+					"_"
+				);
 				$name = str_replace($search, $replace, $fila["fecha"]) . ".pdf";
 				$ruta = 'temp_pdf/' . $name;
 				file_put_contents($ruta, base64_decode($pdf));
@@ -36,7 +42,7 @@ if ($resultado["exito"]) {
 	}
 } else {
 	$bgcolor = "#3f91f2";
-	$table .= '<tr><td colspan="2"><strong>' . $resultado["msn"] . '.</td></tr>';
+	$table .= '<tr><td colspan="2"><strong>' . $resultado["msn"] . '</td></tr>';
 }
 ?>
 <table class="table table-bordered" style="border-collapse: collapse; width: 70%;text-align: center" border="1" align="center">

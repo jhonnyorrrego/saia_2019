@@ -5,6 +5,7 @@ $_SESSION["idsession"] = session_id();
 if (isset($_SESSION["temp_pdf_".$_SESSION["idsession"]]) && count($_SESSION["temp_pdf_".$_SESSION["idsession"]])) {
 	foreach ($_SESSION["temp_pdf_".$_SESSION["idsession"]] as $url_pdf) {
 		unlink($url_pdf);
+		unset($_SESSION["temp_pdf_".$_SESSION["idsession"]]);
 	}
 }
 include_once ('define.php');

@@ -2123,7 +2123,8 @@ function enviar_mensaje($correo = "", $tipo_usuario = array(), $usuarios = array
 		$mail = new PHPMailer();
 		$mail -> IsSMTP();
 		//$mail->SMTPDebug  = 2;
-		$mail -> Host = $servidor_correo; //secure.emailsrvr.com - mail.rackspace.com
+		$mail -> Host = $servidor_correo;
+		//secure.emailsrvr.com - mail.rackspace.com
 		$mail -> Port = $puerto_correo_salida;
 		$mail -> SMTPAuth = true;
 		$mail -> Username = $usuario_correo;
@@ -2196,10 +2197,16 @@ function enviar_mensaje($correo = "", $tipo_usuario = array(), $usuarios = array
 
 		if (!empty($anexos)) {
 			foreach ($anexos as $fila) {
-  		$parseo_ruta=json_decode($fila,true);
-		$etiqueta=explode("/", $parseo_ruta['ruta']);
-  		$contenido = StorageUtils::get_file_content($fila);
-		$mail->AddStringAttachment($contenido, end($etiqueta));
+				$ruta_imagen = json_decode($fila);
+				if (is_object($ruta_imagen)) {
+					$etiqueta = explode("/", $ruta_imagen -> ruta);
+					$contenido = StorageUtils::get_file_content($fila);
+					if($contenido!==false){
+						$mail -> AddStringAttachment($contenido, end($etiqueta));
+					}
+				} else {
+					$mail -> AddAttachment($fila);
+				}
 			}
 		}
 		if (!$mail -> Send()) {
@@ -3928,13 +3935,11 @@ function crear_archivo($nombre, $texto = NULL, $modo = 'wb') {
 <Post-condiciones><Post-condiciones>
 </Clase>  */
 function crear_destino($destino){
-  $arreglo=explode("/",$destino);
-
-  if(!mkdir($destino,PERMISOS_CARPETAS, true)){
-        alerta("no es posible crear la carpeta ".$destino);
-        return("");
-      }
-
+	$arreglo=explode("/",$destino);
+	if(!mkdir($destino,PERMISOS_CARPETAS, true)){
+		alerta("no es posible crear la carpeta ".$destino);
+		return("");
+	}
  return($destino);
 }
 

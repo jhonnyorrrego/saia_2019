@@ -22,24 +22,25 @@ function mostrar_codigo_qr($idformato, $iddoc, $retorno = 0, $width = 80, $heigh
 	if (isset($_REQUEST["width_qr"])) {
 		$width = $_REQUEST["height_qr"];
 	}
-	include_once($ruta_db_superior."StorageUtils.php");
-	require_once $ruta_db_superior.'filesystem/SaiaStorage.php';
+	include_once ($ruta_db_superior . "StorageUtils.php");
+	require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
 	$codigo_qr = busca_filtro_tabla("ruta_qr", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
-	$img='';
+	$img = '';
 	if ($codigo_qr['numcampos']) {
-		$ruta_qr=json_decode($codigo_qr[0]['ruta_qr']);
-		if(is_object($ruta_qr)){
+		$ruta_qr = json_decode($codigo_qr[0]['ruta_qr']);
+		if (is_object($ruta_qr)) {
 			$tipo_almacenamiento = new SaiaStorage(RUTA_QR);
-			if($tipo_almacenamiento->get_filesystem()->has($ruta_qr->ruta)){
-    			$archivo_binario=StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
-				$img = '<img src="' . $archivo_binario .'" width="' . $width . 'px" height="' . $height . 'px" >';
+			if ($tipo_almacenamiento -> get_filesystem() -> has($ruta_qr -> ruta)) {
+				$archivo_binario = StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
+				$img = '<img src="' . $archivo_binario . '" width="' . $width . 'px" height="' . $height . 'px" >';
 			}
 		}
 	}
-    if($img=='') {
-		generar_codigo_qr($idformato,$iddoc);
-		$img=mostrar_codigo_qr($idformato,$iddoc,true, $width, $height);
+	if ($img == '') {
+		generar_codigo_qr($idformato, $iddoc);
+		$img = mostrar_codigo_qr($idformato, $iddoc, true, $width, $height);
 	}
+
 	if ($retorno) {
 		return $img;
 	} else {
@@ -54,7 +55,10 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 
-	$retorno = array("exito" => 0, "msn" => "");
+	$retorno = array(
+		"exito" => 0,
+		"msn" => ""
+	);
 	if ($idfunc == 0) {
 		$idfunc = $_SESSION["idfuncionario"];
 		if (!$idfunc && isset($_REQUEST["idfunc"])) {
@@ -68,23 +72,26 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
 		$retorno["msn"] = "El QR ya existe";
 		$retorno["ruta_qr"] = $codigo_qr[0]["ruta_qr"];
 	} else {
-	$fecha = date_parse($datos[0]['fecha']);
-	$datos_qr = "";
+		$fecha = date_parse($datos[0]['fecha']);
+		$datos_qr = "";
 		$cadena = "id=" . $iddoc;
 		$codificada = encrypt_blowfish($cadena, LLAVE_SAIA_CRYPTO);
 		$datos_qr = RUTA_INFO_QR . "?key_cripto=" . $codificada;
 		$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
-	$almacenamiento = new SaiaStorage(RUTA_QR);
+		$almacenamiento = new SaiaStorage(RUTA_QR);
 
-	$ruta = $formato_ruta . '/qr/';
-	$imagen = generar_qr_bin($datos_qr, 3);
+		$ruta = $formato_ruta . '/qr/';
+		$imagen = generar_qr_bin($datos_qr, 3);
 
-	$filename = $ruta . 'qr' . date('Y_m_d_H_m_s') . '.png';
-		if($imagen === false) {
+		$filename = $ruta . 'qr' . date('Y_m_d_H_m_s') . '.png';
+		if ($imagen === false) {
 			$retorno["msn"] = "Error al tratar de crear el codigo QR";
 		} else {
-		$almacenamiento->almacenar_contenido($filename, $imagen);
-		$ruta_qr = array ("servidor" => $almacenamiento->get_ruta_servidor(), "ruta" => $filename);
+			$almacenamiento -> almacenar_contenido($filename, $imagen);
+			$ruta_qr = array(
+				"servidor" => $almacenamiento -> get_ruta_servidor(),
+				"ruta" => $filename
+			);
 			$sql_documento_qr = "INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion) VALUES (" . $iddoc . "," . $idfunc . "," . fecha_db_almacenar(date("Y-m-d"), 'Y-m-d') . ",'" . json_encode($ruta_qr) . "','vacio')";
 			phpmkr_query($sql_documento_qr) or die("Error al insertar la ruta del QR");
 			$retorno["exito"] = 1;
@@ -115,8 +122,8 @@ function generar_qr($filename, $datos, $matrixPointSize = 2, $errorCorrectionLev
 function generar_qr_bin($datos, $matrixPointSize = 2, $errorCorrectionLevel = 'L') {
 	global $ruta_db_superior;
 	include_once ($ruta_db_superior . "phpqrcode/qrlib.php");
-	if($datos) {
-		if(trim($datos) == '') {
+	if ($datos) {
+		if (trim($datos) == '') {
 			return false;
 		} else {
 			$filename = StorageUtils::obtener_archivo_temporal("qr");

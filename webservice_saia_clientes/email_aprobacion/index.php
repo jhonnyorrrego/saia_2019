@@ -7,7 +7,6 @@ include_once ('define.php');
 $cliente = new nusoap_client(SERVIDOR_REMOTO);
 $retorno = $cliente -> call('color_logo_empresa', array());
 $array = json_decode($retorno, true);
-
 $ok = 1;
 $logo = '';
 $pie = '';

@@ -49,9 +49,8 @@ if ($_SESSION["verifica"] == 2) {
 } elseif ($_SESSION["verifica"] == 3) {
 	$resultado = $_SESSION["datos_documento"];
 }
-
 $logo='';
-if ($resultado["exito"]) {
+if ($resultado["exito"]==1) {
 	if ($resultado["logo"]) {
 		$logo = "<img src='" . $resultado["logo"] . "' />";
 	}

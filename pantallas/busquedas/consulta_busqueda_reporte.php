@@ -277,13 +277,10 @@ function exportar_funcion_excel_reporte(){
 	<?php
 	$configuracion_temporal=busca_filtro_tabla("valor","configuracion","nombre='ruta_temporal' AND tipo='ruta'","",$conn);
   if($configuracion_temporal['numcampos']){
-    $cont_ruta=$configuracion_temporal[0]['valor'];
-    $cont_ruta .= '_'.usuario_actual("login");
+    $cont_ruta=$configuracion_temporal[0]['valor'].'_'.$_SESSION["LOGIN".LLAVE_SAIA];
     $ruta_temporal=$cont_ruta;
-    crear_destino($ruta_db_superior . $cont_ruta);
   }
 	?>
-		
 	var ruta_file="<?php echo($ruta_temporal);?>/reporte_<?php echo($datos_busqueda[0]["nombre"].'_'.date('Ymd').'.xls'); ?>";
 	var url="exportar_saia.php?tipo_reporte=1&idbusqueda_componente=<?php echo $datos_busqueda[0]["idbusqueda_componente"]; ?>&page=1&exportar_saia=excel&ruta_exportar_saia="+ruta_file+"&rows="+$("#busqueda_registros").val()*4+"&actual_row=0&variable_busqueda="+$("#variable_busqueda").val()+"&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>";
 	window.open(url,"iframe_exportar_saia");
@@ -291,8 +288,6 @@ function exportar_funcion_excel_reporte(){
 		notificacion_saia('<b>ATENCI&Oacute;N</b><br>No hay registros para exportar','warning','',2000);
 	}
 }
-
-
 </script>
 <?php
 

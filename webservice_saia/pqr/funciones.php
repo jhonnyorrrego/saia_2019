@@ -59,16 +59,27 @@ function radicar_documento_remoto($datos) {
 			$retorno['exito'] = 2;
 		}
 		$datos_pdf = busca_filtro_tabla("d.pdf,d.numero", $datos['tabla'] . " ft,documento d", " ft.documento_iddocumento=d.iddocumento and d.iddocumento=" . $iddoc, "", $conn);
-		$ruta = $ruta_db_superior . $datos_pdf[0]["pdf"];
-		if (file_exists($ruta)) {
-			$data = file_get_contents($ruta);
-			$base64 = base64_encode($data);
-			$pdf = $base64;
+		$ruta_archivo = json_decode($datos_pdf[0]["pdf"]);
+		if (is_object($ruta_archivo)) {
+			$bin_pdf = StorageUtils::get_file_content($datos_pdf[0]["pdf"]);
+			if ($bin_pdf !== false) {
+				$archivo_pdf = base64_encode($bin_pdf);
+			} else {
+				$archivo_pdf = "";
+			}
 		} else {
-			$pdf = "";
+			$ruta = $ruta_db_superior . $datos_pdf[0]["pdf"];
+			if (file_exists($ruta)) {
+				$data = file_get_contents($ruta);
+				$base64 = base64_encode($data);
+				$archivo_pdf = $base64;
+			} else {
+				$archivo_pdf = "";
+			}
 		}
+
 		$retorno['numero'] = $datos_pdf[0]['numero'];
-		$retorno['pdf'] = $pdf;
+		$retorno['pdf'] = $archivo_pdf;
 	} else {
 		$update = "UPDATE documento SET estado='ELIMNADO' WHERE iddocumento=" . $iddoc;
 		phpmkr_query($update);
@@ -78,12 +89,20 @@ function radicar_documento_remoto($datos) {
 
 	$logo = busca_filtro_tabla("valor", "configuracion", "nombre='logo' and tipo='empresa'", "", $conn);
 	if ($logo["numcampos"]) {
-		$path = $ruta_db_superior . $logo[0]["valor"];
-		if (is_file($path)) {
-			$type = pathinfo($path, PATHINFO_EXTENSION);
-			$data = file_get_contents($path);
-			$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-			$retorno["logo"] = $base64;
+		$ruta_archivo = json_decode($logo[0]["valor"]);
+		if (is_object($ruta_archivo)) {
+			$logo = StorageUtils::get_binary_file($logo[0]["valor"], false);
+			if ($logo !== false) {
+				$retorno["logo"] = $logo;
+			}
+		} else {
+			$path = $ruta_db_superior . $logo[0]["valor"];
+			if (is_file($path)) {
+				$type = pathinfo($path, PATHINFO_EXTENSION);
+				$data = file_get_contents($path);
+				$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+				$retorno["logo"] = $base64;
+			}
 		}
 	}
 
@@ -104,7 +123,7 @@ function consultar_pqr($datos) {
 	$retorno['msn'] = '';
 	$datos = json_decode($datos, true);
 	if ($datos["identificacion"] != "" && $datos["numero_radicado"] != "") {
-		$documento = busca_filtro_tabla("b.numero, " . fecha_db_obtener("b.fecha", "Y-m-d H:i:s") . " as fecha, b.iddocumento", "ft_pqrsf a, documento b", "a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO','ANULADO','ACTIVO') and a.documento like '" . $datos["identificacion"] . "' /*and b.numero ='" . $datos["numero_radicado"] . "'*/", "fecha desc", $conn);
+		$documento = busca_filtro_tabla("b.numero, " . fecha_db_obtener("b.fecha", "Y-m-d H:i:s") . " as fecha, b.iddocumento", "ft_pqrsf a, documento b", "a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO','ANULADO','ACTIVO') and a.documento like '" . $datos["identificacion"] . "' and b.numero ='" . $datos["numero_radicado"] . "'", "fecha desc", $conn);
 		if ($documento["numcampos"]) {
 			$doc_respuesta = array();
 			for ($i = 0; $i < $documento["numcampos"]; $i++) {
@@ -116,12 +135,15 @@ function consultar_pqr($datos) {
 				$respuesta_pqr = busca_filtro_tabla("a.pdf,a.numero,a.iddocumento", "documento a, respuesta b", "a.iddocumento=b.destino and a.estado not in('ELIMINADO','ANULADO','ACTIVO') and lower(a.plantilla) not in('clasificacion_pqrsf') and b.origen=" . $documento[$i]["iddocumento"], "", $conn);
 				if ($respuesta_pqr["numcampos"]) {
 					for ($j = 0; $j < $respuesta_pqr["numcampos"]; $j++) {
-						$ruta = $ruta_db_superior . $respuesta_pqr[$j]["pdf"];
-						if (file_exists($ruta)) {
-							$data = file_get_contents($ruta);
-							$base64 = base64_encode($data);
-							$pdf = $base64;
-						} else {
+						$archivo_pdf = "";
+						$ruta_archivo = json_decode($respuesta_pqr[$j]["pdf"]);
+						if (is_object($ruta_archivo)) {
+							$bin_pdf = StorageUtils::get_file_content($respuesta_pqr[$j]["pdf"]);
+							if ($bin_pdf !== false) {
+								$archivo_pdf = base64_encode($bin_pdf);
+							}
+						}
+						if (!$archivo_pdf) {
 							$ch = curl_init();
 							$fila = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/class_impresion.php?conexion_remota=1&iddoc=" . $respuesta_pqr[$j]["iddocumento"] . "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&usuario_actual=" . $_SESSION["usuario_actual"];
 							curl_setopt($ch, CURLOPT_URL, $fila);
@@ -130,21 +152,23 @@ function consultar_pqr($datos) {
 							curl_close($ch);
 
 							$info_pdf = busca_filtro_tabla("pdf", "documento", "iddocumento=" . $respuesta_pqr[$j]["iddocumento"], "", $conn);
-							$ruta2 = $ruta_db_superior . $info_pdf[0]["pdf"];
-							if (file_exists($ruta2)) {
-								$data = file_get_contents($ruta2);
-								$base64 = base64_encode($data);
-								$pdf = $base64;
-							} else {
-								$pdf = "";
+							$ruta_archivo = json_decode($info_pdf[0]["pdf"]);
+							if (is_object($ruta_archivo)) {
+								$bin_pdf = StorageUtils::get_file_content($info_pdf[0]["pdf"]);
+								if ($bin_pdf !== false) {
+									$archivo_pdf = base64_encode($bin_pdf);
+								} else {
+									$archivo_pdf = "";
+								}
 							}
 						}
-						$doc_respuesta[$i]["respuesta"][] = $pdf;
+						$doc_respuesta[$i]["respuesta"][] = $archivo_pdf;
 					}
 				} else {
 					$doc_respuesta[$i]["respuesta"] = array(0 => "Sin Respuesta");
 				}
 			}
+
 			$retorno["info"] = $doc_respuesta;
 		} else {
 			$retorno['exito'] = 0;

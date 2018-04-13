@@ -65,29 +65,42 @@ function post_aprob_resp_pqrsf($idformato, $iddoc) {//es llamada desde el webser
 	$anexos_pqrsf = busca_filtro_tabla("ruta,etiqueta", "anexos", "documento_iddocumento=" . $iddoc, "", $conn);
 	if ($anexos_pqrsf["numcampos"]) {
 		for ($i = 0; $i < $anexos_pqrsf["numcampos"]; $i++) {
-			if (file_exists($ruta_db_superior . $anexos_pqrsf[$i]['ruta'])) {
-				$anexos[] = $ruta_db_superior . $anexos_pqrsf[$i]['ruta'];
+			$ruta_archivo = json_decode($anexos_pqrsf[$i]['ruta']);
+			if (is_object($ruta_archivo)) {
+				$anexos[] = $anexos_pqrsf[$i]['ruta'];
+			} else {
+				if (file_exists($ruta_db_superior . $anexos_pqrsf[$i]['ruta'])) {
+					$anexos[] = $ruta_db_superior . $anexos_pqrsf[$i]['ruta'];
+				}
 			}
 		}
 	}
 
 	$datos = busca_filtro_tabla("d.numero,d.pdf,ft.destinos,ft.copia", "ft_respuesta_pqrsf ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "", $conn);
 	if ($datos[0]["pdf"] != "") {
-		if (file_exists($ruta_db_superior . $datos[0]["pdf"])) {
-			$anexos[] = $ruta_db_superior . $datos[0]["pdf"];
+		$ruta_archivo = json_decode($datos[0]["pdf"]);
+		if (is_object($ruta_archivo)) {
+			$anexos[] = $datos[0]["pdf"];
+		} else {
+			if (file_exists($ruta_db_superior . $datos[0]["pdf"])) {
+				$anexos[] = $ruta_db_superior . $datos[0]["pdf"];
+			}
 		}
 	}
 	$email = array();
-	$tipo_email = array("para"=>"email","copia"=>"email");
+	$tipo_email = array(
+		"para" => "email",
+		"copia" => "email"
+	);
 	if ($datos[0]["destinos"] != "") {
 		$eje = busca_filtro_tabla("email", "vejecutor", "iddatos_ejecutor=" . $datos[0]["destinos"], "", $conn);
 		if ($eje["numcampos"] && $eje[0]["email"] != "") {
 			$email["para"][] = $eje[0]["email"];
 		}
 	}
-	
+
 	if ($datos[0]["copia"] != "") {
-		$eje = busca_filtro_tabla("email", "vejecutor", "iddatos_ejecutor in (" . $datos[0]["copia"].")", "", $conn);
+		$eje = busca_filtro_tabla("email", "vejecutor", "iddatos_ejecutor in (" . $datos[0]["copia"] . ")", "", $conn);
 		if ($eje["numcampos"] && $eje[0]["email"] != "") {
 			$email["copia"][] = $eje[0]["email"];
 		}
@@ -104,7 +117,6 @@ function post_aprob_resp_pqrsf($idformato, $iddoc) {//es llamada desde el webser
 		$update_estado = "UPDATE ft_pqrsf SET estado_reporte=3,funcionario_reporte=" . $_SESSION["idfuncionario"] . ",fecha_reporte=" . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . " WHERE documento_iddocumento=" . $iddoc_papa;
 		phpmkr_query($update_estado);
 	}
-
 }
 
 function distribucion_res_pqrsf($idformato, $iddoc) {

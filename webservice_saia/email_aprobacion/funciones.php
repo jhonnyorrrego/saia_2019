@@ -21,12 +21,20 @@ function color_logo_empresa() {
 	$retorno = array("exito" => 1);
 	$logo = busca_filtro_tabla("valor", "configuracion", "nombre='logo' and tipo='empresa'", "", $conn);
 	if ($logo["numcampos"]) {
-		$path = $ruta_db_superior . $logo[0]["valor"];
-		if (is_file($path)) {
-			$type = pathinfo($path, PATHINFO_EXTENSION);
-			$data = file_get_contents($path);
-			$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-			$retorno["logo"] = $base64;
+		$ruta_archivo = json_decode($logo[0]["valor"]);
+		if (is_object($ruta_archivo)) {
+			$logo = StorageUtils::get_binary_file($logo[0]["valor"],false);
+			if ($logo !== false) {
+				$retorno["logo"] = $logo;
+			}
+		} else {
+			$path = $ruta_db_superior . $logo[0]["valor"];
+			if (is_file($path)) {
+				$type = pathinfo($path, PATHINFO_EXTENSION);
+				$data = file_get_contents($path);
+				$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+				$retorno["logo"] = $base64;
+			}
 		}
 	}
 
@@ -42,7 +50,6 @@ function color_logo_empresa() {
 	if ($conf_color["numcampos"]) {
 		$retorno["color_saia"] = $conf_color[0]["valor"];
 	}
-	$retorno["ads"] = "adf";
 
 	ob_clean();
 	session_destroy();

@@ -2742,34 +2742,41 @@ function suma_fechasphp($fecha, $dias) {
 
 function cargar_anexos_documento_web($datos_documento, $anexos) {
 	global $conn, $ruta_db_superior;
+	$retorno=array("exito"=>0,"msn"=>"");
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 	$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento["iddocumento"]);
 	$tipo_almacenamiento = new SaiaStorage("archivos");
-	//$ruta_archivos = ruta_almacenamiento("archivos");
 	$funcionario = busca_filtro_tabla("idfuncionario", "funcionario", "funcionario_codigo=" . $datos_documento["funcionario_codigo"], "", $conn);
-	foreach($anexos as $key => $value) {
-		// $ruta = RUTA_ARCHIVOS.$datos_documento["estado"]."/".$datos_documento["fecha"]."/".$datos_documento["iddocumento"]."/anexos";
-		//$ruta = $ruta_archivos . $formato_ruta . "/anexos";
+	$cant=0;
+	$guar=0;
+	foreach ($anexos as $key => $value) {
+		$cant++;
 		$ruta = $formato_ruta . "/anexos";
-		//crear_destino($ruta);
 		$extension = pathinfo($value['filename']);
 		$ruta .= "/" . rand() . "." . $extension["extension"];
-		//$archivo = fopen($ruta, "w+"); // crea el archivo jpg
-		//fclose($archivo);
 		$contenido = base64_decode($value['content']);
-		$guardados = $tipo_almacenamiento->almacenar_contenido($ruta, $contenido);
-		//file_put_contents($ruta, $contenido);
-		
-		if($guardados) {
-			//$ruta_alm = substr($ruta, strlen($ruta_db_superior));
-			$ruta_alm = array("servidor" => $tipo_almacenamiento->get_ruta_servidor(), "ruta" => $ruta);
+		$guardados = $tipo_almacenamiento -> almacenar_contenido($ruta, $contenido);
+		if ($guardados) {
+			$ruta_alm = array(
+				"servidor" => $tipo_almacenamiento -> get_ruta_servidor(),
+				"ruta" => $ruta
+			);
 			$insert_anexo = "insert into anexos(documento_iddocumento, ruta, etiqueta, tipo, formato) VALUES (" . $datos_documento["iddocumento"] . ",'" . json_encode($ruta_alm) . "','" . $value['filename'] . "','" . $extencion["extension"] . "'," . $datos_documento["idformato"] . ")";
-			phpmkr_query($insert_anexo, $conn, $datos_documento["funcionario_codigo"]);
+			phpmkr_query($insert_anexo);
 			$idnexo = phpmkr_insert_id();
-			$insert_permiso = "insert into permiso_anexo (anexos_idanexos, idpropietario, caracteristica_propio, caracteristica_dependencia, caracteristica_cargo, caracteristica_total) VALUES (" . $idnexo . "," . $funcionario[0]["idfuncionario"] . ",'lem', '', '', 'l')";
-			phpmkr_query($insert_permiso, $conn, $datos_documento["funcionario_codigo"]);
+			if ($idnexo) {
+				$guar++;
+				$insert_permiso = "insert into permiso_anexo (anexos_idanexos, idpropietario, caracteristica_propio, caracteristica_dependencia, caracteristica_cargo, caracteristica_total) VALUES (" . $idnexo . "," . $funcionario[0]["idfuncionario"] . ",'lem', '', '', 'l')";
+				phpmkr_query($insert_permiso, $conn, $datos_documento["funcionario_codigo"]);
+			}
 		}
 	}
+	if($cant==$guar){
+		$retorno["exito"]=1;
+	}else{
+		$retorno["msn"]="Error, se guardaron solo ".$guar." anexos de ".$cant." anexos";
+	}
+	return($retorno);
 }
 
 function obtener_mes_letra($mes) {
@@ -3032,16 +3039,26 @@ function generar_correo_confirmacion($idformato, $iddoc, $nomb_campo = "email_ap
 					$anexos = array();
 					$consulta = busca_filtro_tabla("pdf", "documento", "iddocumento=" . $iddoc, "", $conn);
 					if ($consulta[0]['pdf'] != "") {
-						if (file_exists($ruta_db_superior . $consulta[0]['pdf'])) {
-							$anexos[] = $ruta_db_superior . $consulta[0]['pdf'];
+						$ruta_imagen = json_decode($consulta[0]['pdf']);
+						if (is_object($ruta_imagen)) {
+							$anexos[] = $consulta[0]['pdf'];
+						} else {
+							if (file_exists($ruta_db_superior . $consulta[0]['pdf'])) {
+								$anexos[] = $ruta_db_superior . $consulta[0]['pdf'];
+							}
 						}
 					}
 
 					$adjuntos = busca_filtro_tabla("ruta", "anexos", "documento_iddocumento=" . $iddoc, "", $conn);
 					if ($adjuntos["numcampos"]) {
 						for ($k = 0; $k < $adjuntos["numcampos"]; $k++) {
-							if (file_exists($ruta_db_superior . $adjuntos[$k]['ruta'])) {
-								$anexos[] = $ruta_db_superior . $adjuntos[$k]["ruta"];
+							$ruta_imagen = json_decode($adjuntos[$k]['ruta']);
+							if (is_object($ruta_imagen)) {
+								$anexos[] = $adjuntos[$k]['ruta'];
+							} else {
+								if (file_exists($ruta_db_superior . $adjuntos[$k]['ruta'])) {
+									$anexos[] = $ruta_db_superior . $adjuntos[$k]["ruta"];
+								}
 							}
 						}
 					}
@@ -3059,7 +3076,7 @@ function generar_correo_confirmacion($idformato, $iddoc, $nomb_campo = "email_ap
 		      2. Una vez tenga conocimiento del documento, acceda al siguiente link y decida si Aprobar o Rechazar.
 		      <br /><br />
 		      ' . $enlaces . '<br /><br />';
-					$funcionario[0]['funcionario_codigo']=1;
+					$funcionario[0]['funcionario_codigo'] = 1;
 					$ok = enviar_mensaje('', array("para" => "funcionario_codigo"), array("para" => array($funcionario[0]['funcionario_codigo'])), 'DOCUMENTO PARA APROBACION', $mensaje, $anexos, $iddoc);
 					if ($ok !== true && !isset($_REQUEST["no_redirecciona"])) {
 						notificaciones("Error! No se pudo enviar el correo de confirmaci&oacute;n", "error");
