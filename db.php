@@ -487,54 +487,69 @@ END";
  return($resultado);
 }
 
-/*
-<Clase>
-<Nombre>evento_archivo</Nombre>
-<Parametros>$cadena:cadena con los datos que se insertaron en la bd</Parametros>
-<Responsabilidades>Guarda en un archivo la copia de los eventos registrados en el log, cada vez que se inserta un registro<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida></Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>*/
-function evento_archivo($cadena){
-  global $conn;
-  $max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
-  $ruta_db_superior=$ruta="";
-  while($max_salida>0){
-    if(is_file($ruta."db.php")){
-      $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+    /*
+ * <Clase>
+ * <Nombre>evento_archivo</Nombre>
+ * <Parametros>$cadena:cadena con los datos que se insertaron en la bd</Parametros>
+ * <Responsabilidades>Guarda en un archivo la copia de los eventos registrados en el log, cada vez que se inserta un registro<Responsabilidades>
+ * <Notas></Notas>
+ * <Excepciones></Excepciones>
+ * <Salida></Salida>
+ * <Pre-condiciones><Pre-condiciones>
+ * <Post-condiciones><Post-condiciones>
+ * </Clase>
+ */
+function evento_archivo($cadena) {
+    global $conn;
+    $max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
+    $ruta_db_superior = $ruta = "";
+    while ($max_salida > 0) {
+        if (is_file($ruta . "db.php")) {
+            $ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
+        }
+        $ruta .= "../";
+        $max_salida--;
     }
-    $ruta.="../";
-    $max_salida--;
-  }
-	/*
-	 * $ruta_evento=busca_filtro_tabla("valor","configuracion","nombre like 'ruta_evento'","",$conn);
-	 *
-	 * $nombre=$ruta_db_superior."../".$ruta_evento[0]['valor']."/".DB."_log_".date("Y_m_d").".txt";
-	 */
+    /*
+     * $ruta_evento=busca_filtro_tabla("valor","configuracion","nombre like 'ruta_evento'","",$conn);
+     * $nombre=$ruta_db_superior."../".$ruta_evento[0]['valor']."/".DB."_log_".date("Y_m_d").".txt";
+     */
 
-	$storage = new SaiaStorage(RUTA_BACKUP_EVENTO);
+    $storage = new SaiaStorage(RUTA_BACKUP_EVENTO);
 
-	$nombre = DB . "_log_" . date("Y_m_d") . ".txt";
+    $nombre = DB . "_log_" . date("Y_m_d") . ".txt";
 
-	$filesystem = $storage->get_filesystem();
+    $filesystem = $storage->get_filesystem();
 
-  $contenido="";
-	if ($filesystem->has($nombre)) {
-		$mode = "ab";
-    $contenido=$cadena."*|*";
-  } else {
-		$mode = "wb";
-    $contenido="idevento|||funcionario_codigo|||fecha|||evento|||tabla_e|||estado|||detalle|||registro_id|||codigo_sql*|*".$cadena."*|*";
-  }
+    $contenido = "";
+    if ($filesystem->has($nombre)) {
+        $mode = "ab";
+        $contenido = $cadena . "*|*";
+    } else {
+        $mode = "wb";
+        $contenido = "idevento|||funcionario_codigo|||fecha|||evento|||tabla_e|||estado|||detalle|||registro_id|||codigo_sql*|*" . $cadena . "*|*";
+    }
 
-	$stream = $filesystem->createStream($nombre);
-	$stream->open(new StreamMode($mode));
+    $stream = $filesystem->createStream($nombre);
+    $stream->open(new StreamMode($mode));
 
 	$stream->write($contenido);
 	$stream->close();
+}
+
+function normalizePath($path) {
+    return array_reduce(explode('/', $path), create_function('$a, $b', '
+			if($a === 0)
+				$a = "/";
+
+			if($b === "" || $b === ".")
+				return $a;
+
+			if($b === "..")
+				return dirname($a);
+
+			return preg_replace("/\/+/", "/", "$a/$b");
+		'), 0);
 }
 
 /*
@@ -3887,42 +3902,45 @@ function datos_sesion() {
 	}
 	return ("");
 }
-/*<Clase>
-<Nombre>crear_archivo</Nombre>
-<Parametros>$nombre:nombre del archivo a crear;$texto: texto que se va a copiar dentro del archivo;$modo:modo de apertura del archivo</Parametros>
-<Responsabilidades>Crea un archivo con cierto texto dentro<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida></Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
+
+    /*
+ * <Clase>
+ * <Nombre>crear_archivo</Nombre>
+ * <Parametros>$nombre:nombre del archivo a crear;$texto: texto que se va a copiar dentro del archivo;$modo:modo de apertura del archivo</Parametros>
+ * <Responsabilidades>Crea un archivo con cierto texto dentro<Responsabilidades>
+ * <Notas></Notas>
+ * <Excepciones></Excepciones>
+ * <Salida></Salida>
+ * <Pre-condiciones><Pre-condiciones>
+ * <Post-condiciones><Post-condiciones>
+ * </Clase>
+ */
 function crear_archivo($nombre, $texto = NULL, $modo = 'wb') {
     $path = pathinfo($nombre);
-	$ruta = $path["dirname"];
-            if (!is_dir($ruta)) {
-		if (mkdir($ruta, PERMISOS_CARPETAS, true)) {
-                    chmod($ruta, PERMISOS_CARPETAS);
-                } else {
-			alerta("Problemas al generar la carpeta $ruta desde " . getcwd());
-                    return (false);
-		}
-	}
-
-	$f = fopen($nombre, $modo);
-	$resp = false;
-	if ($f) {
-		chmod($nombre, PERMISOS_ARCHIVOS);
-		$texto = str_replace("? >", "?" . ">", $texto);
-		if (fwrite($f, $texto, strlen($texto)) !== false) {
-			$resp = $nombre;
-                }
-            } else {
-		alerta('No se puede crear el archivo: ' . $nombre);
-            }
-	fclose($f);
-	return ($resp);
+    $ruta = $path["dirname"];
+    if (!is_dir($ruta)) {
+        if (mkdir($ruta, PERMISOS_CARPETAS, true)) {
+            chmod($ruta, PERMISOS_CARPETAS);
+        } else {
+            alerta("Problemas al generar la carpeta $ruta desde " . getcwd());
+            return (false);
         }
+    }
+
+    $f = fopen($nombre, $modo);
+    $resp = false;
+    if ($f) {
+        chmod($nombre, PERMISOS_ARCHIVOS);
+        $texto = str_replace("? >", "?" . ">", $texto);
+        if (fwrite($f, $texto, strlen($texto)) !== false) {
+            $resp = $nombre;
+        }
+    } else {
+        alerta('No se puede crear el archivo: ' . $nombre);
+    }
+    fclose($f);
+    return ($resp);
+}
 
 /*<Clase>
 <Nombre>crear_destino</Nombre>
