@@ -46,7 +46,7 @@ function guardar_traza($sql, $nombre_formato, $sql_export) {
     $alm = new SaiaStorage(RUTA_EVENTO_FORMATO);
     $nombre_export = strtolower($nombre_formato) . "/export_" . DB . "_" . date("Ymd") . ".txt";
 
-    if($alm->get_filesystem()->write($nombre, $sql, false)) {
+    if($alm->get_filesystem()->write($nombre, $sql)) {
         if ($sql_export) {
             if (!$alm->get_filesystem()->has($nombre_export)) {
                 $arreglo_export = array();
@@ -55,7 +55,7 @@ function guardar_traza($sql, $nombre_formato, $sql_export) {
                 $arreglo_export = json_decode($json_export);
             }
             array_push($arreglo_export, $sql_export);
-            $alm->get_filesystem()->write($nombre_export, json_encode($arreglo_export), false);
+            $alm->get_filesystem()->write($nombre_export, json_encode($arreglo_export));
         }
     }
 }
