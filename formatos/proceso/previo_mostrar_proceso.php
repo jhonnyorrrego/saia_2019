@@ -157,12 +157,21 @@ echo(estilo_bootstrap());
 	    <tr>
 	    	<td colspan="2" style="text-align:center;">
 			    <?php
-			    if(!$mapa_proceso['numcampos']){  
+			    if(!$mapa_proceso['numcampos']){
 				    echo('<hr/><div class="well alert-warning"><strong>ATENCI&Oacute;N</strong> <br/>A&uacute;n no s&eacute; ha creado el Mapa de Proceso</div><hr/></td></tr></table>');
 				    die();
 			    }
+					$ruta_archivo = json_decode($mapa_proceso[0]['ruta']);
+					if (is_object($ruta_archivo)) {
+						$bin_logo = StorageUtils::get_binary_file($mapa_proceso[0]['ruta'], false);
+						if ($bin_logo !== false) {
+							$logo=$bin_logo;
+						}
+					}else{
+						$logo=$ruta_db_superior.$mapa_proceso[0]['ruta'];
+					}
 			    ?>
-			    <img src="<?php echo($ruta_db_superior.$mapa_proceso[0]['ruta']); ?>" id="cropbox" border="0" usemap="#Map" />
+			    <img src="<?php echo $logo; ?>" id="cropbox" border="0" usemap="#Map" />
 					<map name="Map">
 					<?php	
 			      for($i=0;$i<$proceso["numcampos"];$i++){

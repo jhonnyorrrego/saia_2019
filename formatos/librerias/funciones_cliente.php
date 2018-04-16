@@ -42,23 +42,42 @@ function fecha_aprobacion($idformato, $iddoc) {
 
 function ver_anexos_documento($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
-	$array_tipos = array('jpg', 'png', 'pdf');
+	$tipo_almacenamiento = new SaiaStorage("archivos");
+	$array_tipos = array(
+		'jpg',
+		'jpeg',
+		'bmp',
+		'tif',
+		'tiff',
+		'pdf',
+		'png',
+		'gif'
+	);
 	$html = "";
-	$anexos = busca_filtro_tabla("ruta,etiqueta,tipo", "anexos", "documento_iddocumento=" . $iddoc, "", $conn);
+	$anexos = busca_filtro_tabla("idanexos,ruta,etiqueta,tipo", "anexos", "documento_iddocumento=" . $iddoc, "", $conn);
 	if ($anexos["numcampos"]) {
 		$fila = array();
 		for ($i = 0; $i < $anexos["numcampos"]; $i++) {
 			if ($_REQUEST["tipo"] != 5) {
 				$target = '';
 				if (in_array($anexos[$i]["tipo"], $array_tipos)) {
+					$ruta_imagen = json_decode($anexos[$i]['ruta']);
+					if (is_object($ruta_imagen)) {
+						if ($tipo_almacenamiento -> get_filesystem() -> has($ruta_imagen -> ruta)) {
+							$ruta64 = base64_encode($anexos[$i]["ruta"]);
+							$href = $ruta_db_superior . "filesystem/mostrar_binario.php?ruta=" . $ruta64;
+						}
+					}
 					$target = 'target="_self"';
+				}else{
+					$href = $ruta_db_superior . "anexosdigitales/parsea_accion_archivo.php?idanexo=" . $anexos[$i]['idanexos'] . "&accion=descargar";
 				}
-				$fila[] = '<a href="' . $ruta_db_superior . $anexos[$i]['ruta'] . '" ' . $target . '>' . $anexos[$i]['etiqueta'] . '</a>';
+				$fila[] = '<a href="' . $href . '" ' . $target . '>' . $anexos[$i]['etiqueta'] . '</a>';
 			} else {
 				$fila[] = $anexos[$i]['etiqueta'];
 			}
 		}
-		$html="<ul><li>".implode("</li><li>", $fila)."</li></ul>";
+		$html = "<ul><li>" . implode("</li><li>", $fila) . "</li></ul>";
 	}
 	echo $html;
 

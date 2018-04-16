@@ -91,26 +91,47 @@ if (@$_REQUEST["id"]) {
 				if ($formato[0]["item"]) {
 					$ruta = "../" . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"] . "?iddoc=" . $datos[2] . "&idformato=" . $formato[0]["idformato"];
 				} else {
-					$descargable = array("instructivo", "formato", "guia", "manual", "plan_calidad", "otros_calidad", "prog_calidad", "procedimiento", "politicas_proceso");
-					leido(usuario_actual("funcionario_codigo"), $datos_formato[0]["iddocumento"]);
+					$descargable = array(
+						"instructivo",
+						"formato",
+						"guia",
+						"manual",
+						"plan_calidad",
+						"otros_calidad",
+						"prog_calidad",
+						"procedimiento",
+						"politicas_proceso"
+					);
+					leido($_SESSION["usuario_actual"], $datos_formato[0]["iddocumento"]);
 					if (in_array($formato[0]["nombre"], $descargable) && @$_REQUEST['pantalla'] == 'calidad') {
+						$tipo_almacenamiento = new SaiaStorage("archivos");
 						if ($datos_formato["numcampos"]) {
-
-							$anexo = busca_filtro_tabla("", "anexos", "(formato=" . $formato[0]["idformato"] . " AND documento_iddocumento=" . $datos_formato[0]["iddocumento"] . ")", "idanexos desc", $conn);
-							if (is_file("../../" . $anexo[0]["ruta"])) {
-								$ruta = "../../" . $anexo[0]["ruta"];
-								redirecciona($ruta);
-								die();
+							$anexo = busca_filtro_tabla("ruta", "anexos", "(formato=" . $formato[0]["idformato"] . " AND documento_iddocumento=" . $datos_formato[0]["iddocumento"] . ")", "idanexos desc", $conn);
+							if ($anexo["numcampos"]) {
+								$ruta_imagen = json_decode($anexo[0]['ruta']);
+								if (is_object($ruta_imagen)) {
+									if ($tipo_almacenamiento -> get_filesystem() -> has($ruta_imagen -> ruta)) {
+										$ruta64 = base64_encode($anexo[0]['ruta']);
+										$ruta_abrir = $ruta_db_superior . "filesystem/mostrar_binario.php?ruta=" . $ruta64;
+										redirecciona($ruta_abrir);
+									}
+								} else {
+									if (is_file($ruta_db_superior . $anexo[0]["ruta"])) {
+										$ruta = $ruta_db_superior . $anexo[0]["ruta"];
+										redirecciona($ruta);
+										die();
+									}
+								}
 							} else {
 								alerta("No hay anexos relacionados.");
-								$ruta = "../../vacio.php";
+								$ruta = $ruta_db_superior . "vacio.php";
 							}
 						} else {
 							alerta("Problemas al encontrar el Documento");
 						}
 					} else {
 						$postit = busca_filtro_tabla("count(*)", "comentario_img", "documento_iddocumento=" . $datos_formato[0]["iddocumento"] . " AND tipo='PLANTILLA' AND pagina='" . $datos_formato[0]["iddocumento"] . "'", "", $conn);
-						$nota_trans = busca_filtro_tabla("notas", "buzon_salida,funcionario", "funcionario_codigo=origen and destino=" . usuario_actual("funcionario_codigo") . " and notas is not null and nombre in('TRANSFERIDO','DEVOLUCION') and archivo_idarchivo=" . $datos_formato[0]["iddocumento"], "fecha desc", $conn);
+						$nota_trans = busca_filtro_tabla("notas", "buzon_salida,funcionario", "funcionario_codigo=origen and destino=" . $_SESSION["usuario_actual"] . " and notas is not null and nombre in('TRANSFERIDO','DEVOLUCION') and archivo_idarchivo=" . $datos_formato[0]["iddocumento"], "fecha desc", $conn);
 
 						if ($datos_formato["numcampos"]) {
 							if ($datos_formato[0]["pdf"] && $formato[0]["mostrar_pdf"] == 1) {
@@ -369,7 +390,17 @@ if (@$_REQUEST["id"]) {
 				}
 				break;
 			case "ventana_externa" :
-				$descargable = array("instructivo", "formato", "guia", "manual", "plan_calidad", "otros_calidad", "prog_calidad", "procedimiento", "politicas_proceso");
+				$descargable = array(
+					"instructivo",
+					"formato",
+					"guia",
+					"manual",
+					"plan_calidad",
+					"otros_calidad",
+					"prog_calidad",
+					"procedimiento",
+					"politicas_proceso"
+				);
 				if (in_array($formato[0]["nombre"], $descargable)) {
 					if ($datos_formato["numcampos"]) {
 
@@ -427,7 +458,7 @@ if (@$_REQUEST["id"]) {
 							break;
 						case "i" :
 							$redirecciona = true;
-							$ruta = "../" . $plan_mejoramiento[0]["nombre"] . "/" . $plan_mejoramiento[0]["nombre"] . "_especifico.php?tipo=3&usuario=" . usuario_actual("funcionario_codigo") . "&estado=" . $arreglo_pm[2];
+							$ruta = "../" . $plan_mejoramiento[0]["nombre"] . "/" . $plan_mejoramiento[0]["nombre"] . "_especifico.php?tipo=3&usuario=" . $_SESSION["usuario_actual"] . "&estado=" . $arreglo_pm[2];
 							break;
 						default :
 							$redirecciona = true;

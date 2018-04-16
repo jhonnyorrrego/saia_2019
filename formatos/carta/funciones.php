@@ -345,67 +345,46 @@ global $ruta_db_superior,$conn;
         }
 
         }
-        //echo "<br>".$cargo[0]["nombre"]."<br>".$dep[0]["nombre"];
-        //echo $cargo[0]["nombre"]."<br>";
 
         if(!$repetido)
         echo $antiguo[0]["nombre"]."(Suplente)";
         }
 
 }
-function mostrar_imagenes_escaneadas($idformato)
-{
-  global $conn;
-  $formato = busca_filtro_tabla("","formato","idformato=".$idformato." and detalle=1","",$conn);
-  if(isset($_REQUEST["anterior"]) && $_REQUEST["anterior"]!="" && $formato["numcampos"] == 0)
-  {
-   $doc = $_REQUEST["anterior"];
-   $doc_anterior = busca_filtro_tabla("descripcion,numero","documento","iddocumento=$doc","",$conn);
-   echo "<b>Se est&aacute; dando respuesta al documento: </b>&nbsp;&nbsp;".$doc_anterior[0]["numero"]." ".$doc_anterior[0]["descripcion"]."<br /><br />";
-   //Si el documento tiene imagenes escaneadas las muestra antes del formato de respuesta
-   $imagenes=busca_filtro_tabla("consecutivo,imagen,ruta,pagina","pagina","id_documento=".$doc,"",$conn);
-    $codigo="";
-    if($imagenes<>"")
-       {
-        echo '<div id="mainContainer">
-              <div id="content">';
-         for($i=0; $i<$imagenes["numcampos"]; $i++)
-          { ?>
-          		<a href="#" onclick="displayImage('<?php echo "../../".$imagenes[$i]["ruta"]?>','P&aacute;gina <?php echo $imagenes[$i]["pagina"]?>.','');return false"><img src="<?php echo "../../".$imagenes[$i]["imagen"]?>" border="1"></a>&nbsp;&nbsp;&nbsp;&nbsp;
-            <?php
-           if($imagenes[$i]["pagina"]==(round($imagenes[$i]["pagina"]/8)*8))
-            echo "<br><br>";
-          }
-          echo "</div></div>";
-       }
-   echo "<HR>";
- }
-else if($_REQUEST["iddoc"]){
-	$doc = $_REQUEST["iddoc"];
-    $doc_anterior = busca_filtro_tabla("descripcion,numero","documento","iddocumento=$doc","",$conn);
 
-   //Si el documento tiene imagenes escaneadas las muestra antes del formato de respuesta
-    $imagenes=busca_filtro_tabla("consecutivo,imagen,ruta,pagina","pagina","id_documento=".$doc,"",$conn);
-    $codigo="";
-    if($imagenes["numcampos"] > 0)
-       {
-       	echo "<b>Documentos escaneados<br /><br />";
-        echo '<div id="mainContainer">
-              <div id="content">';
-         for($i=0; $i<$imagenes["numcampos"]; $i++)
-          { ?>
-          		<a href="#" onclick="displayImage('<?php echo "../../".$imagenes[$i]["ruta"]?>','P&aacute;gina <?php echo $imagenes[$i]["pagina"]?>.','');return false"><img src="<?php echo "../../".$imagenes[$i]["imagen"]?>" border="1"></a>&nbsp;&nbsp;&nbsp;&nbsp;
-            <?php
-           if($imagenes[$i]["pagina"]==(round($imagenes[$i]["pagina"]/8)*8))
-            echo "<br><br>";
-          }
-          echo "</div></div>";
-		  echo "<HR>";
-       }
 
+function mostrar_imagenes_escaneadas($idformato, $iddoc) {
+	global $conn;
+	$html = "";
+	$formato = busca_filtro_tabla("", "formato", "idformato=" . $idformato . " and detalle=1", "", $conn);
+	if (isset($_REQUEST["anterior"]) && $_REQUEST["anterior"] != "" && $formato["numcampos"] == 0) {
+		$doc = $_REQUEST["anterior"];
+		$opt = 0;
+	} else if ($_REQUEST["iddoc"]) {
+		$doc = $_REQUEST["iddoc"];
+		$opt = 1;
+	}
+
+	$doc_anterior = busca_filtro_tabla("descripcion,numero", "documento", "iddocumento=" . $doc, "", $conn);
+	if ($doc_anterior["numcampos"] && $opt == 0) {
+		$html .= "<strong>Se est&aacute; dando respuesta al documento: </strong>&nbsp;&nbsp;" . $doc_anterior[0]["numero"] . " " . $doc_anterior[0]["descripcion"] . "<br /><br />";
+	}
+	$imagenes = busca_filtro_tabla("consecutivo,imagen,ruta,pagina", "pagina", "id_documento=" . $doc, "", $conn);
+	if ($imagenes["numcampos"]) {
+		$html .= '<div id="mainContainer"><div id="content">';
+		for ($i = 0; $i < $imagenes["numcampos"]; $i++) {
+			$html .= '<a href="#" onclick="displayImage(\'' . $imagenes[$i]["ruta"] . '\',\'P&aacute;gina ' . $imagenes[$i]["pagina"] . '\',\'\');return false">
+				<img src="" border="1">
+			</a>';
+			if ($imagenes[$i]["pagina"] == (round($imagenes[$i]["pagina"] / 8) * 8))
+				$html .= "<br/><br/>";
+		}
+		$html .= "</div></div>";
+	}
+	$html .= "<hr/>";
+	echo $html;
 }
- return true;
-}
+
 
 function mostrar_dependencia_carta($idformato,$iddoc)
 {

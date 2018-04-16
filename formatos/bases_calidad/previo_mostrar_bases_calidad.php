@@ -58,7 +58,16 @@ if (@$_REQUEST['iddoc']) {
 			$mapa_proceso = busca_filtro_tabla("", "anexos", "documento_iddocumento=" . $iddoc_mapa_proceso[0]['documento_iddocumento'], "", $conn);
 
 			if (trim(strtolower($consulta_serie_proceso[0]['nombre'])) == 'mapa de procesos') {
-				$tabla .= '<img src=' . $ruta_db_superior . $mapa_proceso[0]["ruta"] . ' id="cropbox" border="0" usemap="#Map" />';
+				$ruta_archivo = json_decode($mapa_proceso[0]['ruta']);
+				if (is_object($ruta_archivo)) {
+					$bin_logo = StorageUtils::get_binary_file($mapa_proceso[0]['ruta'], false);
+					if ($bin_logo !== false) {
+						$logo = $bin_logo;
+					}
+				} else {
+					$logo = $ruta_db_superior . $mapa_proceso[0]['ruta'];
+				}
+				$tabla .= '<img src=' . $logo . ' id="cropbox" border="0" usemap="#Map" />';
 			}
 			$tabla .= '<tr>
         <td>' . $datos[$i]['descripcion_base'] . '</td>
