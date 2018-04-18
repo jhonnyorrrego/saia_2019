@@ -22,11 +22,31 @@ if (isset($_REQUEST["idfor"])) {
 	$idfor = $_REQUEST["formato"];
 }
 
-if (isset($_REQUEST["guardar"]) && $_REQUEST["guardar"] == 1 && $_REQUEST["formato"]) {
+if (isset($_REQUEST["guardar"]) && $_REQUEST["guardar"] == 1 && $idfor) {
 	$nombre = $_REQUEST["nombre"];
-	$acciones = implode(",", $_REQUEST["acciones"]);
-	$sql = "insert into funciones_formato(nombre,nombre_funcion,etiqueta,ruta,descripcion,acciones,formato) values('{*$nombre*}','$nombre','$nombre','" . $_REQUEST["ruta"] . "','" . $_REQUEST["descripcion"] . "','$acciones','" . $_REQUEST["formato"] . "')";
-	phpmkr_query($sql, $conn) or die("Error al crear la funcion");
+	$exist=busca_filtro_tabla("idfunciones_formato","funciones_formato","nombre_funcion like '".$nombre."'","",$conn);
+	if($exist["numcampos"]){
+	?>
+	<script>
+		alert("La funcion (<?php echo $nombre;?>) ya existe en la DB");
+	</script>
+	<?php
+	}else{
+		$acciones = implode(",", $_REQUEST["acciones"]);
+		$sql = "insert into funciones_formato(nombre,nombre_funcion,etiqueta,ruta,descripcion,acciones) values('{*$nombre*}','$nombre','$nombre','" . $_REQUEST["ruta"] . "','" . $_REQUEST["descripcion"] . "','$acciones')";
+		phpmkr_query($sql, $conn) or die("Error al crear la funcion");
+		$idfuncion=phpmkr_insert_id();
+		if($idfuncion){
+			$sql_enlace="INSERT INTO funciones_formato_enlace (funciones_formato_fk,formato_idformato) VALUES (".$idfuncion.",".$idfor.")";
+			phpmkr_query($sql_enlace);
+		}else{
+			?>
+			<script>
+				alert("Error al vincular el formato con la funcion");
+			</script>
+			<?php
+		}
+	}
 	redirecciona("funciones_formato.php?tipo=funciones_formato&formato=" . $_REQUEST["formato"]);
 	die();
 } 
@@ -52,11 +72,13 @@ if (isset($_REQUEST["guardar"]) && $_REQUEST["guardar"] == 1 && $_REQUEST["forma
 	</head>
 	<body>
 		<p style="text-align: center">
-			<strong>FUNCIONES DEL FORMATO</strong>
+			<strong>FUNCIONES <?php $cadena=($_REQUEST["tipo"]=="funciones_generales")?"GENERALES":"FORMATO"; echo($cadena);?></strong>
 			<br/>
 		</p>
 		<a href="formatos.php?tipo=campos_formato&formato=<?php echo $idfor; ?>">Campos del Formato</a>&nbsp;
 		<a href='funciones_formato.php?formato=<?php echo $idfor; ?>&adicionar=1'>Adicionar</a>
+		<a href='funciones_formato.php?tipo=funciones_formato&formato=<?php echo $idfor; ?>'>Funciones Formato</a>&nbsp;&nbsp;
+		<a href='funciones_formato.php?tipo=funciones_generales&idfor=<?php echo $idfor; ?>'>Funciones Generales</a>
 		<br/>
 		<br/>
 	<div id="div_adicionar_funcion" style="display:<?php echo $display_add;?>">
@@ -117,23 +139,28 @@ if (isset($_REQUEST["guardar"]) && $_REQUEST["guardar"] == 1 && $_REQUEST["forma
 					</td>
 				</tr>
 			</table>
-			<input type='hidden' id='formato' name='formato' value='<?php echo $_REQUEST["formato"];?>'>
+			<input type='hidden' id='formato' name='formato' value='<?php echo $idfor;?>'>
 			<input type='hidden' name='guardar' value='1'>
-			<input type='hidden' name='tipo' value='funciones_formato'>
+			<input type='hidden' name='tipo' value='<?php echo($_REQUEST["tipo"]);?>'>
 		</form>
 		</div>
-		
 		<div id="div_funcion" style="display:<?php echo $display_ver;?>">
 		<?php
 		$where = "";
 		$html = "";
 		$colspan = 2;
-		if (isset($_REQUEST["formato"]) && $_REQUEST["formato"]) {
-			$colspan = 4;
-			$formato = $_REQUEST["formato"];
-			$where = "formato like '$formato' or formato like '%,$formato' or formato like '$formato,%' or formato like '%,$formato,%'";
+		if(isset($idfor)) {
+			if($_REQUEST["tipo"]=="funciones_generales"){
+				$where=' and e.formato_idformato<>'.$idfor;
+				$order='GROUP BY f.idfunciones_formato ORDER BY nombre ASC';
+			}
+			else{
+				$colspan = 4;
+				$where = " and e.formato_idformato=".$idfor;
+				$order= "nombre asc";
+			}
 		}
-		$resultado = busca_filtro_tabla("", "funciones_formato", $where, "nombre asc", $conn);
+		$resultado = busca_filtro_tabla("f.*", "funciones_formato f, funciones_formato_enlace e", "f.idfunciones_formato=e.funciones_formato_fk".$where,$order, $conn);
 		if ($resultado["numcampos"]) {
 			$html .= "<table border='1' style='border-collapse:collapse;' align='center' class='productTable'>
          <tr align='center' bgcolor='lightgray'>
@@ -142,12 +169,12 @@ if (isset($_REQUEST["guardar"]) && $_REQUEST["guardar"] == 1 && $_REQUEST["forma
 			for ($i = 0; $i < $resultado["numcampos"]; $i++) {
 				$html .= "<tr>
 					<td>" . $resultado[$i]["etiqueta"] . "</td>
-					<td align='center' valign='center'>" . '<img onmouseover="ajax_showTooltip(window.event,\'detalles.php?tipo=funciones_formato&id=' . $resultado[$i]["idfunciones_formato"] . '\',this);return false" onmouseout="ajax_hideTooltip()" src="images/mostrar_nota.png"/>' . "</td>";
-				$html .= '<td align="center"><a title="' . $resultado[$i]["descripcion"] . '" href="javascript:FormatosDialog.insert(\'' . $resultado[$i]["nombre_funcion"] . '\');" >Insertar</a>
+					<td align='center' valign='center'>" . '<img onclick="ajax_showTooltip(window.event,\'detalles.php?tipo=funciones_formato&id=' . $resultado[$i]["idfunciones_formato"] . '\',this);return false"  src="images/mostrar_nota.png"/>' . "</td>";
+				$html .= '<td align="center"><a title="' . codifica_encabezado(html_entity_decode($resultado[$i]["descripcion"])) . '" href="javascript:FormatosDialog.insert(\'' . $resultado[$i]["nombre_funcion"] . '\');" >Insertar</a>
 				</td>';
-				if (isset($_REQUEST["formato"])) {
-					$html .= "<td  align='center'><a href='" . $ruta_db_superior . "formatos/funciones_formatoedit.php?idformato=" . $_REQUEST["formato"] . "&key=" . $resultado[$i]["idfunciones_formato"] . "&pantalla=tiny' >Editar</a></td>";
-					$html .= "<td align='center'><a  href='" . $ruta_db_superior . "formatos/funciones_formatodelete.php?idformato=" . $_REQUEST["formato"] . "&key=" . $resultado[$i]["idfunciones_formato"] . "&pantalla=tiny' >Eliminar</a></td>";
+				if ($_REQUEST["tipo"]!="funciones_generales") {
+					$html .= "<td  align='center'><a href='" . $ruta_db_superior . "formatos/funciones_formatoedit.php?idformato=" . $idfor . "&key=" . $resultado[$i]["idfunciones_formato"] . "&pantalla=tiny' >Editar</a></td>";
+					$html .= "<td align='center'><a  href='" . $ruta_db_superior . "formatos/funciones_formatodelete.php?idformato=" . $idfor . "&key=" . $resultado[$i]["idfunciones_formato"] . "&pantalla=tiny' >Eliminar</a></td>";
 				}
 			}
 			$html .= "</table><br/><br/>";

@@ -15,13 +15,10 @@ include_once ($ruta_db_superior . "sql.php");
 include_once ($ruta_db_superior . "asignacion.php");
 include_once ($ruta_db_superior . FORMATOS_SAIA . "librerias/funciones_acciones.php");
 include_once ($ruta_db_superior . "bpmn/librerias_formato.php");
+include_once ($ruta_db_superior . 'pantallas/documento/class_documento_elastic.php');
+include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 
-include_once($ruta_db_superior.'pantallas/documento/class_documento_elastic.php');
-
-include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
-
-
-if (isset($_REQUEST["form_info"]) && $_REQUEST["form_info"]!="") {
+if (isset($_REQUEST["form_info"]) && $_REQUEST["form_info"] != "") {
 	desencriptar_sqli('form_info');
 }
 
@@ -87,7 +84,8 @@ function dependencias($padre) {
  <Pre-condiciones><Pre-condiciones>
  <Post-condiciones><Post-condiciones>
  </Clase>  */
-function minusculas($texto) {$vocales = array('&AACUTE', '&EACUTE', '&IACUTE', '&OACUTE', '&UACUTE', '&NTILDE;');
+function minusculas($texto) {
+  $vocales = array('&AACUTE', '&EACUTE', '&IACUTE', '&OACUTE', '&UACUTE', '&NTILDE;');
 	$reemplazo = array('&aacute', '&eacute', '&iacute', '&oacute', '&uacute', '&ntilde;');
 	$texto_nuevo = strtolower($texto);
 	for ($i = 0; $i < count($vocales); $i++) {
@@ -146,45 +144,46 @@ function preparasql($arreglo, $separador) {
 }
 
 /*
-<Clase>
-<Nombre>radicar_documento_prueba
-<Parametros>tipo_contador-nombre del tipo de contador a usar; arreglo-matriz con los valores del formulario
-necesarios en la radicacion; $archivos-cadena con la lista de los anexos del documento
-<Responsabilidades>guarda en la bd los datos del nuevo documento
-<Notas>
-<Excepciones>
-<Salida>retorna el id del nuevo documento
-<Pre-condiciones>
-<Post-condiciones>
-*/
-function radicar_documento_prueba($tipo_contador,$arreglo,$archivos=NULL,$idflujo=Null){
-  global $conn;
-  if($tipo_contador!=""&&$tipo_contador!=NULL);
-  elseif(array_key_exists("serie",$arreglo))
-      $tipo_contador=$arreglo["serie"];
-  else
-      alerta("<b>ATENCI&Oacute;N</b><br>No es posible radicar el Documento. Error No existe clasificaci&oacute;n del documento",'warning');
+ <Clase>
+ <Nombre>radicar_documento_prueba
+ <Parametros>tipo_contador-nombre del tipo de contador a usar; arreglo-matriz con los valores del formulario
+ necesarios en la radicacion; $archivos-cadena con la lista de los anexos del documento
+ <Responsabilidades>guarda en la bd los datos del nuevo documento
+ <Notas>
+ <Excepciones>
+ <Salida>retorna el id del nuevo documento
+ <Pre-condiciones>
+ <Post-condiciones>
+ */
+function radicar_documento_prueba($tipo_contador, $arreglo, $archivos = NULL, $idflujo = Null) {
+	global $conn;
+	if ($tipo_contador != "" && $tipo_contador != NULL)
+		;
+	elseif (array_key_exists("serie", $arreglo))
+		$tipo_contador = $arreglo["serie"];
+	else
+		alerta("<b>ATENCI&Oacute;N</b><br>No es posible radicar el Documento. Error No existe clasificaci&oacute;n del documento", 'warning');
 
-  	if(!array_key_exists("numero",$arreglo) && $tipo_contador){
-       $arreglo["numero"] =0;
-      }
-    if(!@$arreglo["plantilla"]){
-      $arreglo["plantilla"]="''";
-    }else{
-        $idformato=busca_filtro_tabla("idformato","formato","lower(nombre)=".strtolower($arreglo["plantilla"])."","",$conn);
-        if($idformato['numcampos']){
-            $arreglo["formato_idformato"]=$idformato[0]['idformato'];
-        }
-    }
-    if(!isset($arreglo["tipo_radicado"]))
-       $arreglo["tipo_radicado"] = $contador[0]["idcontador"];
-    if($tipo_contador=="radicacion_salida" && !isset($arreglo["plantilla"]))
-      $arreglo["estado"] = "'APROBADO'";
-    elseif(@$arreglo["plantilla"]<>"")
-      $arreglo["estado"] = "'ACTIVO'";
-    elseif(!isset($arreglo["estado"]))
-      $arreglo["estado"] = "'ACTIVO'";
-    $arreglo["fecha_creacion"]=fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s");
+	if (!array_key_exists("numero", $arreglo) && $tipo_contador) {
+		$arreglo["numero"] = 0;
+	}
+	if (!@$arreglo["plantilla"]) {
+		$arreglo["plantilla"] = "''";
+	} else {
+		$idformato = busca_filtro_tabla("idformato", "formato", "lower(nombre)=" . strtolower($arreglo["plantilla"]) . "", "", $conn);
+		if ($idformato['numcampos']) {
+			$arreglo["formato_idformato"] = $idformato[0]['idformato'];
+		}
+	}
+	if (!isset($arreglo["tipo_radicado"]))
+		$arreglo["tipo_radicado"] = $contador[0]["idcontador"];
+	if ($tipo_contador == "radicacion_salida" && !isset($arreglo["plantilla"]))
+		$arreglo["estado"] = "'APROBADO'";
+	elseif (@$arreglo["plantilla"] <> "")
+		$arreglo["estado"] = "'ACTIVO'";
+	elseif (!isset($arreglo["estado"]))
+		$arreglo["estado"] = "'ACTIVO'";
+	$arreglo["fecha_creacion"] = fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s");
 
 	//VENTANILLA RADICACION
 	$ventanilla_radicacion = usuario_actual('ventanilla_radicacion');
@@ -320,20 +319,20 @@ function busca_cargofuncionario($tipo, $dato, $dependencia) {
 }
 
 /*
-<Clase>
-<Nombre>transferir_archivo_prueba
-<Parametros>$datos-vector con los datos del formulario necesarios para hacer la transferencia;
-$tipo-; $destino-lista de usuarios a quienes se enviar� el documento;
-$adicionales-otros datos referentes a la transferencia;
-$anexos indica si la transferencia tiene anexos relacionados
-<Responsabilidades>enviar el documento a los funcionarios destino
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-*/
-function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos=NULL) {
+ <Clase>
+ <Nombre>transferir_archivo_prueba
+ <Parametros>$datos-vector con los datos del formulario necesarios para hacer la transferencia;
+ $tipo-; $destino-lista de usuarios a quienes se enviar� el documento;
+ $adicionales-otros datos referentes a la transferencia;
+ $anexos indica si la transferencia tiene anexos relacionados
+ <Responsabilidades>enviar el documento a los funcionarios destino
+ <Notas>
+ <Excepciones>
+ <Salida>
+ <Pre-condiciones>
+ <Post-condiciones>
+ */
+function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NULL) {
 	global $conn;
 	$idtransferencia = array();
 	sort($destino);
@@ -391,11 +390,11 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos=NULL)
 					$sql = "INSERT INTO buzon_salida (archivo_idarchivo,nombre,fecha,origen,tipo_origen,tipo_destino" . $otras_llaves . ",ver_notas,destino) values (" . $values_out . "," . $user . ")";
 					phpmkr_query($sql, $conn);
 					$idtransferencia[] = phpmkr_insert_id();
-				} else if ($datos["nombre"] == "POR_APROBAR") {
+				}else if ($datos["nombre"] == "POR_APROBAR") {
 					if (isset($_REQUEST["dependencia"]) && $_REQUEST["dependencia"] != "" && $datos["ruta_creador_documento"] == 1) {
 						$sql = "INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio) VALUES(" . $_REQUEST["dependencia"] . ",'ACTIVO'," . $user . ",NULL,'POR_APROBAR'," . $idarchivo . ",5,1,1)";
 					} else {
-						$sql = "INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio) VALUES(" . $origen . ",'ACTIVO'," . $user . ",NULL,'POR_APROBAR'," . $idarchivo . ",1,1,1)";
+					$sql = "INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio) VALUES(" . $origen . ",'ACTIVO'," . $user . ",NULL,'POR_APROBAR'," . $idarchivo . ",1,1,1)";
 					}
 					phpmkr_query($sql, $conn) or error("No se puede Generar una Ruta");
 					$idruta = phpmkr_insert_id();
@@ -438,17 +437,17 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos=NULL)
 }
 
 /*
-<Clase>
-<Nombre>aprobar
-<Parametros>$iddoc-id del documento en proceso
-<Responsabilidades>para el proceso de recoleccion de firmas (aprobacion de la plantilla)
-<Notas>Dependiendo del formato que pertenece el documento se valida si al momento de aprobar el documento se deben enviar transferencia a otros destinos, por ejemplo el memorando que se envia a destinos y copias.
-<Excepciones>si el usuario no es el siguiente por aprobar muestra un mensaje de error
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>cambia el estado del nodo de POR_APROBAR a APROBADO, si es el ultimo por aprobar
-cambia el estado del documento a APROBADO
-*/
+ <Clase>
+ <Nombre>aprobar
+ <Parametros>$iddoc-id del documento en proceso
+ <Responsabilidades>para el proceso de recoleccion de firmas (aprobacion de la plantilla)
+ <Notas>Dependiendo del formato que pertenece el documento se valida si al momento de aprobar el documento se deben enviar transferencia a otros destinos, por ejemplo el memorando que se envia a destinos y copias.
+ <Excepciones>si el usuario no es el siguiente por aprobar muestra un mensaje de error
+ <Salida>
+ <Pre-condiciones>
+ <Post-condiciones>cambia el estado del nodo de POR_APROBAR a APROBADO, si es el ultimo por aprobar
+ cambia el estado del documento a APROBADO
+ */
 function aprobar($iddoc = 0, $opcion = 0) {
 	global $ruta_db_superior, $conn;
 	$transferir = 1;
@@ -525,18 +524,18 @@ function aprobar($iddoc = 0, $opcion = 0) {
 			}
 
 			if ($transferir == 1) {
-				for ($i = 0; $i < $registro_actual["numcampos"]; $i++) {
-					$registro_intermedio = busca_filtro_tabla("A.*", "buzon_entrada A", "A.archivo_idarchivo=" . $iddoc . " and A.activo=1 and (A.nombre='POR_APROBAR') and idtransferencia<" . $registro_actual[$i]["idtransferencia"], "A.idtransferencia", $conn);
-					if ($registro_intermedio["numcampos"])
-						break;
-					$valores = $iddoc . ",'$estado'," . $registro_actual[$i]["origen"] . "," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . "," . $registro_actual[$i]["destino"] . ",'DOCUMENTO',1,1,";
-					if ($registro_actual[$i]["ruta_idruta"] <> "") {
-						$valores .= $registro_actual[$i]["ruta_idruta"];
-					} else {
-						$valores .= "''";
-					}
-					phpmkr_query("INSERT INTO buzon_entrada(" . $campos . ") VALUES (" . $valores . ")", $conn);
-					procesar_estados($registro_actual[$i]["destino"], $registro_actual[$i]["origen"], $estado, $iddoc);
+			for ($i = 0; $i < $registro_actual["numcampos"]; $i++) {
+				$registro_intermedio = busca_filtro_tabla("A.*", "buzon_entrada A", "A.archivo_idarchivo=" . $iddoc . " and A.activo=1 and (A.nombre='POR_APROBAR') and idtransferencia<" . $registro_actual[$i]["idtransferencia"], "A.idtransferencia", $conn);
+				if ($registro_intermedio["numcampos"])
+					break;
+				$valores = $iddoc . ",'$estado'," . $registro_actual[$i]["origen"] . "," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . "," . $registro_actual[$i]["destino"] . ",'DOCUMENTO',1,1,";
+				if ($registro_actual[$i]["ruta_idruta"] <> "") {
+					$valores .= $registro_actual[$i]["ruta_idruta"];
+				} else {
+					$valores .= "''";
+				}
+				phpmkr_query("INSERT INTO buzon_entrada(" . $campos . ") VALUES (" . $valores . ")", $conn);
+				procesar_estados($registro_actual[$i]["destino"], $registro_actual[$i]["origen"], $estado, $iddoc);
 				}
 			}
 
@@ -560,7 +559,7 @@ function aprobar($iddoc = 0, $opcion = 0) {
 				}
 				$respuestas = busca_filtro_tabla("origen,estado", "respuesta,documento", "iddocumento=origen and destino='" . $iddoc . "' and estado in('TRAMITE','ACTIVO','APROBADO')", "", $conn);
 				if ($respuestas["numcampos"] > 0) {
-                    $origen_respuesta = busca_filtro_tabla("origen", "buzon_salida", "archivo_idarchivo=$iddoc and nombre='BORRADOR'", "", $conn);
+					$origen_respuesta = busca_filtro_tabla("origen", "buzon_salida", "archivo_idarchivo=$iddoc and nombre='BORRADOR'", "", $conn);
 					$datos["origen"] = $origen_respuesta[0]["origen"];
 					$datos["nombre"] = "RESPONDIDO";
 					$datos["tipo"] = "";
@@ -627,35 +626,35 @@ function aprobar($iddoc = 0, $opcion = 0) {
  </Clase>  */
 function crear_pdf($idformato, $iddoc) {
 	global $conn;
-	$url = "pantallas/documento/visor_documento.php?iddoc=" . $iddoc . "&actualizar_pdf=1";
+	$url = "pantallas/documento/visor_documento.php?iddoc=" . $iddoc . "&actualizar_pdf=1&rand=".rand(0, 1000);
 	abrir_url($url, "_self");
 }
 
 /*<Clase>
-<Nombre>mostrar_formato</Nombre>
-<Parametros>$idformato:id del formato;$iddoc: id del documento</Parametros>
-<Responsabilidades><Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida></Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
-function mostrar_formato($idformato,$iddoc) {
- global $conn;
+ <Nombre>mostrar_formato</Nombre>
+ <Parametros>$idformato:id del formato;$iddoc: id del documento</Parametros>
+ <Responsabilidades><Responsabilidades>
+ <Notas></Notas>
+ <Excepciones></Excepciones>
+ <Salida></Salida>
+ <Pre-condiciones><Pre-condiciones>
+ <Post-condiciones><Post-condiciones>
+ </Clase>  */
+function mostrar_formato($idformato, $iddoc) {
+	global $conn;
 	if (!isset($_REQUEST["no_redirecciona"])) {
- $datos_formato=busca_filtro_tabla("ruta_mostrar,nombre,mostrar_pdf","formato","idformato=$idformato","",$conn);
- if($datos_formato[0]["mostrar_pdf"] == 1) {
- 	$url=$ruta_db_superior."pantallas/documento/visor_documento.php?iddoc=".$iddoc."&idformato=$idformato&actualizar_pdf=1";
- } else if($datos_formato[0]["mostrar_pdf"]==2) {
- 	$url=$ruta_db_superior."pantallas/documento/visor_documento.php?iddoc=".$iddoc."&pdf_word=1";
- } else {
- 	$url= FORMATOS_CLIENTE . $datos_formato[0]["nombre"]."/".$datos_formato[0]["ruta_mostrar"]."?iddoc=".$iddoc."&idformato=$idformato";
- }
- if(!@$_REQUEST['aprobacion_externa']){
-    redirecciona($url);
+		$datos_formato = busca_filtro_tabla("ruta_mostrar,nombre,mostrar_pdf", "formato", "idformato=$idformato", "", $conn);
+		if ($datos_formato[0]["mostrar_pdf"] == 1) {
+			$url = $ruta_db_superior . "pantallas/documento/visor_documento.php?iddoc=" . $iddoc . "&idformato=$idformato&actualizar_pdf=1";
+		} else if ($datos_formato[0]["mostrar_pdf"] == 2) {
+			$url = $ruta_db_superior . "pantallas/documento/visor_documento.php?iddoc=" . $iddoc . "&pdf_word=1";
+		} else {
+			$url = FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?iddoc=" . $iddoc . "&idformato=$idformato";
 		}
- }
+		if (!@$_REQUEST['aprobacion_externa']) {
+			redirecciona($url);
+		}
+	}
 }
 
 function mostrar_estado_proceso($idformato, $iddoc) {
@@ -756,34 +755,34 @@ function mostrar_estado_proceso($idformato, $iddoc) {
 							$fila_abierta = 1;
 						}
 
-						if($fila["nombre"]=="POR_APROBAR"){
-							echo '<td align=left><img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/firmas/faltante.jpg" style="width:'.$ancho_firma[0]["valor"].'px; height:'.$alto_firma[0]["valor"].'px;">&nbsp;&nbsp;&nbsp;<br /></td>';
-							if($iniciales == ($fila["funcionario_codigo"]))
-							$firma_actual = true;
-						}else if($mostrar_firmas==1){
-							$firma=busca_filtro_tabla("firma","funcionario","funcionario_codigo='".$fila["funcionario_codigo"]."'","",$conn);
+						if ($fila["nombre"] == "POR_APROBAR") {
+							echo '<td align=left><img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/firmas/faltante.jpg" style="width:' . $ancho_firma[0]["valor"] . 'px; height:' . $alto_firma[0]["valor"] . 'px;">&nbsp;&nbsp;&nbsp;<br /></td>';
+							if ($iniciales == ($fila["funcionario_codigo"]))
+								$firma_actual = true;
+						} else if ($mostrar_firmas == 1) {
+							$firma = busca_filtro_tabla("firma", "funcionario", "funcionario_codigo='" . $fila["funcionario_codigo"] . "'", "", $conn);
 							echo '<td align="left">';
-							if($firma[0]["firma"]<>""){
-								$pagina_actual=$_SERVER["PHP_SELF"];
+							if ($firma[0]["firma"] <> "") {
+								$pagina_actual = $_SERVER["PHP_SELF"];
 								echo '<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL. FORMATOS_SAIA . 'librerias/mostrar_foto.php?codigo='.$fila["funcionario_codigo"];
-								echo '" style="width:'.$ancho_firma[0]["valor"].'px; height:'.$alto_firma[0]["valor"].'px;"/><br />';
-							}else
-								echo '<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/firmas/blanco.jpg" style="width:'.$ancho_firma[0]["valor"].'px; height:'.$alto_firma[0]["valor"].'px;" ><br />';
+								echo '" style="width:' . $ancho_firma[0]["valor"] . 'px; height:' . $alto_firma[0]["valor"] . 'px;"/><br />';
+							} else
+								echo '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/firmas/blanco.jpg" style="width:' . $ancho_firma[0]["valor"] . 'px; height:' . $alto_firma[0]["valor"] . 'px;" ><br />';
 
-							echo "<strong>".mayusculas($fila["nombres"]." ".$fila["apellidos"])."</strong>&nbsp;&nbsp;&nbsp;<br />";
-							if($cargos["numcampos"]){
-								for($h=0;$h<$cargos["numcampos"];$h++)
-								echo formato_cargo($cargos[$h]["nombre"])."<br/>";
+							echo "<strong>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</strong>&nbsp;&nbsp;&nbsp;<br />";
+							if ($cargos["numcampos"]) {
+								for ($h = 0; $h < $cargos["numcampos"]; $h++)
+									echo formato_cargo($cargos[$h]["nombre"]) . "<br/>";
 							}
 							if ($iniciales == ($fila["funcionario_codigo"]))
 								$firma_actual = true;
 							echo "</td>";
 						} else {
-							echo "<td align='left'><img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/firmas/blanco.jpg' style='width:".$ancho_firma[0]["valor"]."px; height:".$alto_firma[0]["valor"]."px;'>
-							<br /><b>".mayusculas($fila["nombres"]." ".$fila["apellidos"])."</b>&nbsp;&nbsp;&nbsp;<br />";
-							if($cargos["numcampos"]){
-								for($h=0;$h<$cargos["numcampos"];$h++)
-									echo formato_cargo($cargos[$h]["nombre"])."<br/>";
+							echo "<td align='left'><img src='" . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/firmas/blanco.jpg' style='width:" . $ancho_firma[0]["valor"] . "px; height:" . $alto_firma[0]["valor"] . "px;'>
+							<br /><b>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</b>&nbsp;&nbsp;&nbsp;<br />";
+							if ($cargos["numcampos"]) {
+								for ($h = 0; $h < $cargos["numcampos"]; $h++)
+									echo formato_cargo($cargos[$h]["nombre"]) . "<br/>";
 							}
 							if ($iniciales == ($fila["funcionario_codigo"]))
 								$firma_actual = true;
@@ -891,10 +890,10 @@ function cargo_rol($iddoc) {
 		$origenes[] = $tipo[$i]["origen"];
 		switch($tipo[$i]["tipo_origen"]) {
 			case 1 :
-				$fun = busca_filtro_tabla("nombres,apellidos,idfuncionario,funcionario_codigo", "funcionario", "funcionario_codigo=" . $tipo[$i]["origen"], "", $conn);
+					$fun = busca_filtro_tabla("nombres,apellidos,idfuncionario,funcionario_codigo", "funcionario", "funcionario_codigo=" . $tipo[$i]["origen"], "", $conn);
 				break;
 			case 5 :
-				$fun = busca_filtro_tabla("nombres,apellidos,idfuncionario,funcionario_codigo", "funcionario,dependencia_cargo", "idfuncionario=funcionario_idfuncionario and iddependencia_cargo=" . $tipo[$i]["origen"], "", $conn);
+					$fun = busca_filtro_tabla("nombres,apellidos,idfuncionario,funcionario_codigo", "funcionario,dependencia_cargo", "idfuncionario=funcionario_idfuncionario and iddependencia_cargo=" . $tipo[$i]["origen"], "", $conn);
 				break;
 		}
 		$tipo[$i]["nombres"] = $fun[0]["nombres"];
@@ -919,7 +918,8 @@ function cargo_rol($iddoc) {
 function transferencias_pendientes($serie) {
 	global $conn;
 	$ruta = busca_filtro_tabla("", "ruta r", "tipo_documental_idtipo_documental=" . $serie, "orden", $conn);
-	for ($i = 1; $i <= count($ruta); $i++) {$campos = "activo,archivo_idarchivo,nombre,ruta_idruta,destino,origen,tipo,tipo_origen,tipo_destino";
+	for ($i = 1; $i <= count($ruta); $i++) {
+		$campos = "activo,archivo_idarchivo,nombre,ruta_idruta,destino,origen,tipo,tipo_origen,tipo_destino";
 		if ($_POST["orden$i"] <> "") {
 			$valores = "1," . $_POST["iddoc"] . ",'POR_APROBAR'," . $ruta[$i]["idruta"] . ",";
 			$valores .= $_POST["origen$i"] . ",";
@@ -1080,6 +1080,16 @@ function radicar_plantilla() {
 			$banderas = explode(",", $formato[0]["banderas"]);
 		}
 
+		// Ejemplo de uso de la clase elasticsearch
+		if (defined("INDEXA_ELASTICSEARCH") && INDEXA_ELASTICSEARCH) {
+			$d2j = new DocumentoElastic($_POST["iddoc"]);
+			//$d2j->asignar_iddocumento();
+			$exportado = $d2j -> exportar_informacion();
+			if ($exportado) {
+				$d2j -> indexar_elasticsearch_completo();
+			}
+		}
+		// arreglo con los datos que necesita transferir archivo
 		$datos["archivo_idarchivo"] = $_POST["iddoc"];
 		$datos["nombre"] = "BORRADOR";
 		$datos["tipo_destino"] = 1;
@@ -1127,16 +1137,16 @@ function radicar_plantilla() {
 }
 
 /*
-<Clase>
-<Nombre> enrutar_documento
-<Parametros> pagina_siguiente si se desea una redireccion directa
-<Responsabilidades> Enrutar los documentos a sus respectivos proceso post aprobacion, radicacion etc.
-<Notas>
-<Excepciones>
-<Salida> alerta si el formato no coincide con un formato valido
-<Pre-condiciones> El documento debio haber sido creado de lo contrario envia a pendientelist.php
-<Post-condiciones> Pantalla que el usuario debe ver luego de haber realizado accion sobre el documento
-*/
+ <Clase>
+ <Nombre> enrutar_documento
+ <Parametros> pagina_siguiente si se desea una redireccion directa
+ <Responsabilidades> Enrutar los documentos a sus respectivos proceso post aprobacion, radicacion etc.
+ <Notas>
+ <Excepciones>
+ <Salida> alerta si el formato no coincide con un formato valido
+ <Pre-condiciones> El documento debio haber sido creado de lo contrario envia a pendientelist.php
+ <Post-condiciones> Pantalla que el usuario debe ver luego de haber realizado accion sobre el documento
+ */
 function enrutar_documento($url = "", $target = "centro") {
 	global $conn;
 	# Utilizada para que enlos webservice no redireccione
@@ -1169,11 +1179,11 @@ function enrutar_documento($url = "", $target = "centro") {
 				} else {
 					$formato_doc = busca_filtro_tabla("A.nombre,A.idformato", "formato A, documento B", "B.iddocumento=" . $iddoc . " AND lower(A.nombre)=lower(B.plantilla)", "", $conn);
 					if ($formato_doc["numcampos"]) {
-                        $nom_formato = $formato_doc[0]["nombre"];
+						$nom_formato = $formato_doc[0]["nombre"];
 						if (@$_SESSION["tipo_dispositivo"] == 'movil') {
 							abrir_url("ordenar.php?key=" . $iddoc . "&accion=mostrar&mostrar_formato=1", "_self");
 						} else {
-						    abrir_url(FORMATOS_CLIENTE . "$nom_formato/detalles_mostrar_$nom_formato.php?idformato=" . $formato_doc[0]["idformato"] . "&iddoc=" . $iddoc, "_self");
+							abrir_url(FORMATOS_CLIENTE . "$nom_formato/detalles_mostrar_$nom_formato.php?idformato=" . $formato_doc[0]["idformato"] . "&iddoc=" . $iddoc, "_self");
 						}
 						return $iddoc;
 					}
@@ -1318,7 +1328,7 @@ function guardar_documento($iddoc, $tipo = 0) {
 	$campos = array();
 	$lista_campos = array();
 
-$buscar = phpmkr_query("SELECT A.* FROM " . $tabla . " A WHERE 1=0", $conn);
+	$buscar = phpmkr_query("SELECT A.* FROM " . $tabla . " A WHERE 1=0", $conn);
 
 	$idformato = null;
 	$form_uuid = null;
@@ -1674,7 +1684,7 @@ function buscar_ruta($serie, $ejecutor, $destino, $iddoc) {
 		if ($encontrado == "-1") {//busco el usuario en la ruta por iddocumento
 			$encontrado = buscar_funcionario_ruta("documento", $iddoc, $destino);
 			if ($encontrado == "-1") {$enlace = '<div align=center>
-                <iframe src="' . FORMATOS_SAIA . 'librerias/rutaadd.php';
+                <iframe src="formatos/librerias/rutaadd.php';
 				if (isset($iddoc))
 					$enlace .= '?doc=' . $iddoc . "&origen=" . $_SESSION["usuario_actual"];
 				$enlace .= '" width="100%" height="100%" frameborder=0 scrolling="si" marginwidth=0>
@@ -1939,28 +1949,28 @@ function formato_devolucion($iddoc = 0) {
 <form name="transferenciadev" id="transferenciadev" action="' . PROTOCOLO_CONEXION . RUTA_PDF . '/class_transferencia.php" method="post">
 <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
 <tr>
-  <td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">
-    CAMBIANDO ESTADO AL DOCUMENTO:</span>
-  </td>
-  <td bgcolor="#F5F5F5"><span class="phpmaker">';
+<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">
+CAMBIANDO ESTADO AL DOCUMENTO:</span>
+</td>
+<td bgcolor="#F5F5F5"><span class="phpmaker">';
 	$arch = busca_filtro_tabla("", "documento", "iddocumento=" . $iddoc, "", $conn);
 	echo($arch[0]["numero"] . "-" . $arch[0]['descripcion']);
 	echo '<input type="hidden" name="iddoc" value="' . $_REQUEST["iddoc"] . '"></span>
-  </td>
+</td>
 </tr>
 
 <tr>
-  <td class="encabezado">
-    <span class="phpmaker" style="color: #FFFFFF;">FECHA</span>
-  </td>
-  <td bgcolor="#F5F5F5"><span class="phpmaker">';
+<td class="encabezado">
+<span class="phpmaker" style="color: #FFFFFF;">FECHA</span>
+</td>
+<td bgcolor="#F5F5F5"><span class="phpmaker">';
 	$x_fecha = date("Y-m-d H:i:s");
 	echo '<input type="hidden" name="x_fecha" id="x_fecha" value="' . $x_fecha . '">' . $x_fecha . '</span>
-  </td>
+</td>
 </tr>
 <tr>
 <td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">
-  DEVUELTO A:</span>
+DEVUELTO A:</span>
 </td>
 <td bgcolor="#F5F5F5"><span class="phpmaker">';
 	$transferencias = busca_filtro_tabla("buzon_entrada.destino,fecha,ruta_idruta", "buzon_entrada", " archivo_idarchivo='" . $_REQUEST["iddoc"] . "' AND origen='" . $x_recibido . "' AND nombre in('TRANSFERIDO','REVISADO') and destino<>'" . $x_recibido . "' ORDER BY fecha DESC", "", $conn);
@@ -1988,31 +1998,31 @@ function formato_devolucion($iddoc = 0) {
 </tr>
 <tr>
 <td class="encabezado">
-  <span class="phpmaker" style="color: #FFFFFF;">ESTADO DE LA TRANSFERENCIA</span>
+<span class="phpmaker" style="color: #FFFFFF;">ESTADO DE LA TRANSFERENCIA</span>
 </td>
 <td bgcolor="#F5F5F5">
-  <span class="phpmaker"><input type="hidden" name="x_nombre" value="DEVOLUCION">DEVOLUCI&Oacute;N</span>
+<span class="phpmaker"><input type="hidden" name="x_nombre" value="DEVOLUCION">DEVOLUCI&Oacute;N</span>
 </td>
 </tr>
 <tr>
 <td class="encabezado">
-  <span class="phpmaker" style="color: #FFFFFF;">MOTIVOS DEVOLUCION</span>
+<span class="phpmaker" style="color: #FFFFFF;">MOTIVOS DEVOLUCION</span>
 </td>
 <td bgcolor="#F5F5F5">
-  <span class="phpmaker">
-  <input type="radio" name="motivo" value="Mal direccionamiento de Ventanilla Unica" onclick="document.getElementById(\'x_notas\').value=this.value">Mal direccionamiento de Ventanilla Unica<br/>
-  <input type="radio" name="motivo" value="Cambio de Funciones del Usuario" onclick="document.getElementById(\'x_notas\').value=this.value">Cambio de Funciones del Usuario<br/>
-  <input type="radio" name="motivo" value="Se Necesitan Cambios en el Documento" onclick="document.getElementById(\'x_notas\').value=this.value">Se Necesitan Cambios en el Documento<br/>
-  <input type="radio" name="motivo" value="Otras" onclick="document.getElementById(\'x_notas\').value=this.value">Otras
-  </span>
+<span class="phpmaker">
+<input type="radio" name="motivo" value="Mal direccionamiento de Ventanilla Unica" onclick="document.getElementById(\'x_notas\').value=this.value">Mal direccionamiento de Ventanilla Unica<br/>
+<input type="radio" name="motivo" value="Cambio de Funciones del Usuario" onclick="document.getElementById(\'x_notas\').value=this.value">Cambio de Funciones del Usuario<br/>
+<input type="radio" name="motivo" value="Se Necesitan Cambios en el Documento" onclick="document.getElementById(\'x_notas\').value=this.value">Se Necesitan Cambios en el Documento<br/>
+<input type="radio" name="motivo" value="Otras" onclick="document.getElementById(\'x_notas\').value=this.value">Otras
+</span>
 </td>
 </tr>
 <tr>
 <td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">
-  OBSERVACIONES DE LA DEVOLUCI&Oacute;N</span>
+OBSERVACIONES DE LA DEVOLUCI&Oacute;N</span>
 </td>
 <td bgcolor="#F5F5F5"><span class="phpmaker">
-  <textarea cols="55" rows="5" id="x_notas" name="x_notas">' . @$x_notas . '</textarea></span>
+<textarea cols="55" rows="5" id="x_notas" name="x_notas">' . @$x_notas . '</textarea></span>
 </td>
 </tr>
 </table>
@@ -2034,7 +2044,7 @@ function formato_devolucion($iddoc = 0) {
  <Post-condiciones>
  */
 
- function devolucion() {
+function devolucion() {
 	global $conn, $ruta_db_superior;
 	$theValue = ($_REQUEST["iddoc"] != "") ? intval($_REQUEST["iddoc"]) : "NULL";
 	$datos["archivo_idarchivo"] = $theValue;
@@ -2092,8 +2102,8 @@ function formato_devolucion($iddoc = 0) {
 	if ($_REQUEST["retornar"] == 1) {
 		return;
 	} else {
-		enrutar_documento("pantallas/buscador_principal.php?idbusqueda=3");
-	}
+	enrutar_documento("pantallas/buscador_principal.php?idbusqueda=3");
+}
 }
 
 /*
@@ -2161,59 +2171,59 @@ function dependencias_asistentes($padre) {
 function arbol_serie($condicion_adicional = '') {
     include_once (FORMATOS_SAIA . "librerias/header_formato.php");
 	echo '<meta http-equiv="Content-Type" content="text/html; charset= UTF-8 ">
-	<link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
-	<script type="text/javascript" src="js/dhtmlXCommon.js"></script>
-	<script type="text/javascript" src="js/dhtmlXTree.js"></script>
-	<input type="hidden" name="serie" id="serie" obligatorio="obligatorio"  value="" >
-    <br />  Buscar: <input type="text" id="stext_serie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value),1)"><img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value),0,1)"><img src="botones/general/buscar.png" alt="Buscar" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value))"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
-    <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
-				<div id="treeboxbox_tree2"></div>
-	<script type="text/javascript">
-  <!--
-      var browserType;
-      if (document.layers) {browserType = "nn4"}
-      if (document.all) {browserType = "ie"}
-      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-         browserType= "gecko"
-      }
-			tree2=new dhtmlXTreeObject("treeboxbox_tree2","100%","100%",0);
-			tree2.setImagePath("imgs/");
-			tree2.enableIEImageFix(true);
-			tree2.enableCheckBoxes(1);
-			tree2.enableRadioButtons(true);
-			tree2.setOnLoadingStart(cargando_serie);
-      tree2.setOnLoadingEnd(fin_cargando_serie);
-			tree2.enableThreeStateCheckboxes(true);
-			tree2.enableThreeStateCheckboxes(true);
-			tree2.setXMLAutoLoading("test_serie_funcionario.php' . $condicion_adicional . '");
-			tree2.loadXML("test_serie_funcionario.php' . $condicion_adicional . '");
-			function fin_cargando_serie() {
-        if (browserType == "gecko" )
-           document.poppedLayer =
-               eval(\'document.getElementById("esperando_serie")\');
-        else if (browserType == "ie")
-           document.poppedLayer =
-              eval(\'document.getElementById("esperando_serie")\');
-        else
-           document.poppedLayer =
-              eval(\'document.layers["esperando_serie"]\');
-        document.poppedLayer.style.visibility = "hidden";
-      }
+<link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
+<script type="text/javascript" src="js/dhtmlXCommon.js"></script>
+<script type="text/javascript" src="js/dhtmlXTree.js"></script>
+<input type="hidden" name="serie" id="serie" obligatorio="obligatorio"  value="" >
+<br />  Buscar: <input type="text" id="stext_serie" width="200px" size="25"><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value),1)"><img src="botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value),0,1)"><img src="botones/general/buscar.png" alt="Buscar" border="0px"></a><a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById(\'stext_serie\').value))"><img src="botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
+<div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
+<div id="treeboxbox_tree2"></div>
+<script type="text/javascript">
+<!--
+var browserType;
+if (document.layers) {browserType = "nn4"}
+if (document.all) {browserType = "ie"}
+if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+browserType= "gecko"
+}
+tree2=new dhtmlXTreeObject("treeboxbox_tree2","100%","100%",0);
+tree2.setImagePath("imgs/");
+tree2.enableIEImageFix(true);
+tree2.enableCheckBoxes(1);
+tree2.enableRadioButtons(true);
+tree2.setOnLoadingStart(cargando_serie);
+tree2.setOnLoadingEnd(fin_cargando_serie);
+tree2.enableThreeStateCheckboxes(true);
+tree2.enableThreeStateCheckboxes(true);
+tree2.setXMLAutoLoading("test_serie_funcionario.php' . $condicion_adicional . '");
+tree2.loadXML("test_serie_funcionario.php' . $condicion_adicional . '");
+function fin_cargando_serie() {
+if (browserType == "gecko" )
+document.poppedLayer =
+eval(\'document.getElementById("esperando_serie")\');
+else if (browserType == "ie")
+document.poppedLayer =
+eval(\'document.getElementById("esperando_serie")\');
+else
+document.poppedLayer =
+eval(\'document.layers["esperando_serie"]\');
+document.poppedLayer.style.visibility = "hidden";
+}
 
-      function cargando_serie() {
-        if (browserType == "gecko" )
-           document.poppedLayer =
-               eval(\'document.getElementById("esperando_serie")\');
-        else if (browserType == "ie")
-           document.poppedLayer =
-              eval(\'document.getElementById("esperando_serie")\');
-        else
-           document.poppedLayer =
-               eval(\'document.layers["esperando_serie"]\');
-        document.poppedLayer.style.visibility = "visible";
-      }
-	-->
-	</script>';
+function cargando_serie() {
+if (browserType == "gecko" )
+document.poppedLayer =
+eval(\'document.getElementById("esperando_serie")\');
+else if (browserType == "ie")
+document.poppedLayer =
+eval(\'document.getElementById("esperando_serie")\');
+else
+document.poppedLayer =
+eval(\'document.layers["esperando_serie"]\');
+document.poppedLayer.style.visibility = "visible";
+}
+-->
+</script>';
 }
 
 if (isset($_REQUEST["funcion"]) && trim($_REQUEST["funcion"]) <> "") {

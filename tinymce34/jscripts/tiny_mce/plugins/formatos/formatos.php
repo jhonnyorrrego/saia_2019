@@ -38,7 +38,7 @@ include_once ($ruta_db_superior . "db.php");
 		<a href='<?php echo $ruta_db_superior; ?>formatos/campos_formatoadd.php?idformato=<?php echo $_REQUEST["formato"]; ?>&pantalla=tiny'>Adicionar</a>&nbsp;&nbsp;&nbsp;
 		<a href='<?php echo $ruta_db_superior; ?>formatos/campos_formato_ordenar.php?idformato=<?php echo $_REQUEST["formato"]; ?>&pantalla=tiny'>Ordenar</a>&nbsp;&nbsp;
 		<a href='funciones_formato.php?tipo=funciones_formato&formato=<?php echo $_REQUEST["formato"]; ?>'>Funciones Formato</a>&nbsp;&nbsp;
-		<a href='funciones_formato.php?tipo=funciones_formato&idfor=<?php echo $_REQUEST["formato"]; ?>'>Funciones Generales</a>
+		<a href='funciones_formato.php?tipo=funciones_generales&idfor=<?php echo $_REQUEST["formato"]; ?>'>Funciones Generales</a>
 		<br>
 		<br />
 		<?php
