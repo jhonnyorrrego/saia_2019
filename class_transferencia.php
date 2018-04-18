@@ -195,7 +195,7 @@ function radicar_documento_prueba($tipo_contador, $arreglo, $archivos = NULL, $i
 	$campos = implode(",", array_keys($arreglo));
 
 	$sql = "INSERT INTO documento(" . $campos . ")" . " VALUES (" . $valores . ")";
-	phpmkr_query($sql, $conn) or error($sql . "    <br> -" . phpmkr_error());
+	phpmkr_query($sql, $conn) or die($sql . "    <br> -" . phpmkr_error());
 	$doc = phpmkr_insert_id();
 
 	if ($doc && $arreglo["estado"] == "'APROBADO'") {
@@ -1287,7 +1287,7 @@ function guardar_documento($iddoc, $tipo = 0) {
 			if (is_array($_REQUEST[$lcampos[$j]["nombre"]]) && $lcampos[$j]["etiqueta_html"] != "archivo") {
 				array_push($valores, "'" . implode(',', @$_REQUEST[$lcampos[$j]["nombre"]]) . "'");
 				array_push($campos, $lcampos[$j]["nombre"]);
-			} elseif ($lcampos[$j]["valor"] == "{*form_ejecutor*}") {
+			} else if ($lcampos[$j]["valor"] == "{*form_ejecutor*}") {
 				array_push($campos, $lcampos[$j]["nombre"]);
 				$valor = ejecutoradd($_REQUEST[$lcampos[$j]["nombre"]]);
 				array_push($valores, $valor);
@@ -1305,6 +1305,7 @@ function guardar_documento($iddoc, $tipo = 0) {
 						if (@$_REQUEST["form_uuid"]) {
 							array_push($campos, $lcampos[$j]["nombre"]);
 							array_push($valores, "'$form_uuid'");
+							unset($_REQUEST[$lcampos[$j]["nombre"]]);
 						}
 						// $_REQUEST[$lcampos[$j]["nombre"]] = 0;
 						break;
@@ -1967,8 +1968,8 @@ function formato_devolucion($iddoc = 0) {
 function devolucion() {
 	global $conn, $ruta_db_superior;
 	$theValue = ($_REQUEST["iddoc"] != "") ? intval($_REQUEST["iddoc"]) : "NULL";
-	$datos["archivo_idarchivo"] = $theValue;	
-	
+	$datos["archivo_idarchivo"] = $theValue;
+
 	if (isset($_REQUEST['campo_reemplazo']) && $_REQUEST['campo_reemplazo'] != 0 && isset($_REQUEST['campo_idruta']) && $_REQUEST['campo_idruta'] != 0) {
 		include_once ($ruta_db_superior . "pantallas/reemplazos/procesar_reemplazo.php");
 		actualiza_ruta_devolucion($_REQUEST['campo_reemplazo'], $datos["archivo_idarchivo"], $_REQUEST['campo_idruta']);

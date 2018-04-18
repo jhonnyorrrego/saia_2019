@@ -207,7 +207,7 @@ function generar_tabla($idformato) {
 			}
 
 			$dato_campo = crear_campo($campos[$i], $formato[0]["nombre_tabla"], $datos_campo);
-			if ($dato_campo && $dato_campo != "") {
+			if (!empty($dato_campo)) {
 				if (!$tabla_esta) {
 					array_push($lcampos, $dato_campo);
 				} else {
@@ -226,7 +226,7 @@ function generar_tabla($idformato) {
 						}
 						if ($dato != "") {
 							guardar_traza($dato, $formato[0]["nombre_tabla"]);
-							phpmkr_query($dato);
+							phpmkr_query($dato) or die($dato);
 						}
 					} else if (MOTOR == "Oracle") {
 						if ($pos === false) {
@@ -798,7 +798,9 @@ function crear_campo($datos_campo, $tabla, $estructura_campo = null) {
 			break;
 	}
 
-	if ($estructura_campo["nulo"] != $datos_campo["obligatoriedad"] && MOTOR == "MySql") {
+	if($datos_campo["etiqueta_html"] == "archivo") {
+	    $campo .= " NULL ";
+	} else if ($estructura_campo["nulo"] != $datos_campo["obligatoriedad"] && MOTOR == "MySql") {
 		if (!$datos_campo["obligatoriedad"])
 			$campo .= " NULL ";
 		else
@@ -1317,8 +1319,9 @@ function crear_formato_ae($idformato, $accion) {
 						$texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                      <td class="celda_transparente"><textarea ' . $tabindex . ' name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" cols="53" rows="3" class="tiny_' . $nivel_barra;
-						if ($campos[$h]["obligatoriedad"])
+						if ($campos[$h]["obligatoriedad"]) {
 							$texto .= ' required';
+						}
 						$texto .= '">' . $valor . '</textarea></td>
                     </tr>';
 						$textareas++;
@@ -1480,8 +1483,11 @@ function crear_formato_ae($idformato, $accion) {
 							//$campos[$h]["idcampos_formato"]
 							$idelemento = "dz_campo_{$campos[$h]["idcampos_formato"]}";
 							$texto .= '<div id="' . $idelemento . '" class="saia_dz" data-nombre-campo="' . $campos[$h]["nombre"] . '" data-idformato="' . $idformato . '" data-idcampo-formato="' . $campos[$h]["idcampos_formato"] . '" data-extensiones="' . $extensiones . '" data-multiple="' . $multiple . '">';
-							$texto .= '<div class="dz-message"><span>Arrastre aqu&iacute; los archivos adjuntos</span></div></div>';
-							//$texto .= '<input ' . $tabindex . ' type="hidden" ' . $adicionales . ' id="'.$campos[$h]["nombre"].'" name="' . $campos[$h]["nombre"] . '" value="">';
+							$texto .= '<div class="dz-message"><span>Arrastre aqu&iacute; los archivos adjuntos</span></div>';
+							if ($campos[$h]["obligatoriedad"]) {
+							    $texto .= '<input type="hidden" class="required" id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" value="">';
+							}
+							$texto .= '</div>';
 							//$texto.=$ul_adicional_archivo;
 						}
 						if ($accion == "editar") {
@@ -1493,7 +1499,7 @@ function crear_formato_ae($idformato, $accion) {
 			outlineWhileAnimating: true, preserveContent: false, width: 400 } )">Administrar Anexos</a>
 			</div>\'; ?' . '>';
 						}
-						echo '</td></tr>';
+						$texto .= '</td></tr>';
 						$indice_tabindex++;
 						$archivo++;
 						break;
@@ -2001,7 +2007,7 @@ function crear_formato_ae($idformato, $accion) {
                 var upload_url = '../../dropzone/cargar_archivos_formato.php';
                 var mensaje = 'Arrastre aquí los archivos';
                 Dropzone.autoDiscover = false;
-                var lista_archivos = [];
+                var lista_archivos = new Object();
                 $(document).ready(function () {
                     Dropzone.autoDiscover = false;
                     $('.saia_dz').each(function () {
@@ -2017,7 +2023,7 @@ function crear_formato_ae($idformato, $accion) {
                     	if(multiple_text == 'multiple') {
                     		multiple = true;
                     		maxFiles = 10;
-		}
+                    	}
                         var opciones = {
                         	ignoreHiddenFiles : true,
                         	maxFiles : maxFiles,
@@ -2049,6 +2055,8 @@ function crear_formato_ae($idformato, $accion) {
                                     }
                                     if (file.previewElement != null && file.previewElement.parentNode != null) {
                                         file.previewElement.parentNode.removeChild(file.previewElement);
+                                    	delete lista_archivos[file.upload.uuid];
+                                    	$('#'+paramName).val(Object.values(lista_archivos).join());
                                     }
                                     return this._updateMaxFilesReachedClass();
                                 },
@@ -2067,6 +2075,10 @@ function crear_formato_ae($idformato, $accion) {
                                     		}
                                     	}
                                 	}
+                                	$('#'+paramName).val(Object.values(lista_archivos).join());
+                                    if($('#dz_campo_'+idcampoFormato).find('label.error').length) {
+                                        $('#dz_campo_'+idcampoFormato).find('label.error').remove()
+                                    }
                                 }
                         };
                         $(this).dropzone(opciones);

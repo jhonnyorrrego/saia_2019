@@ -3942,22 +3942,25 @@ function crear_archivo($nombre, $texto = NULL, $modo = 'wb') {
     return ($resp);
 }
 
-/*<Clase>
-<Nombre>crear_destino</Nombre>
-<Parametros>$destino:estructura de carpetas a crear</Parametros>
-<Responsabilidades>Crea un conjunto de carpetas con cierta jerarquia<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida></Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
-function crear_destino($destino){
-	$arreglo=explode("/",$destino);
-	if(!mkdir($destino,PERMISOS_CARPETAS, true)){
-		alerta("no es posible crear la carpeta ".$destino);
-		return("");
-	}
+    /*
+ * <Clase>
+ * <Nombre>crear_destino</Nombre>
+ * <Parametros>$destino:estructura de carpetas a crear</Parametros>
+ * <Responsabilidades>Crea un conjunto de carpetas con cierta jerarquia<Responsabilidades>
+ * <Notas></Notas>
+ * <Excepciones></Excepciones>
+ * <Salida></Salida>
+ * <Pre-condiciones><Pre-condiciones>
+ * <Post-condiciones><Post-condiciones>
+ * </Clase>
+ */
+function crear_destino($destino) {
+    if (!is_dir($destino)) {
+        if (!mkdir($destino, PERMISOS_CARPETAS, true)) {
+            alerta("no es posible crear la carpeta ".$destino);
+		  return("");
+	   }
+    }
  return($destino);
 }
 
