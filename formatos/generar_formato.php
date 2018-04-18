@@ -891,7 +891,7 @@ this.focus();
                             $texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
 <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                    <td bgcolor="#F5F5F5">';
-                            if ($obligatoriedad == 1) {
+                            if ($campos[$h]["obligatoriedad"] == 1) {
                                 $obligatorio = "required";
                             }
 
