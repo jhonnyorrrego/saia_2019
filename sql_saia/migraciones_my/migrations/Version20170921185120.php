@@ -10,6 +10,10 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version20170921185120 extends AbstractMigration {
 
+    public function getDescription() {
+        return 'Crear indices unicos en busqueda, busqueda_componente, modulo, campos_formato';
+    }
+
     public function preUp(Schema $schema) {
 		date_default_timezone_set("America/Bogota");
 
