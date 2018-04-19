@@ -36,16 +36,43 @@ class Version20180419154943 extends AbstractMigration {
         }
 
         $conn = $this->connection;
-        $result = $conn->fetchAll("select idconfiguracion, valor from configuracion where nombre = :nombre and tipo = :tipo ",
-            ["nombre" => "servidor_elasticsearch", "tipo" => "elasticsearch"]);
+        $result = $conn->fetchAll("select idconfiguracion, valor from configuracion where nombre = :nombre and tipo = :tipo ", [
+            "nombre" => "servidor_elasticsearch",
+            "tipo" => "elasticsearch"
+        ]);
+
+        $fecha = new \DateTime();
 
         if (empty($result)) {
             $conn->beginTransaction();
 
-            $fecha = new \DateTime();
             $datos = [
                 'nombre' => "servidor_elasticsearch",
                 'valor' => 'https://search-release-pruebas-wnlwspchbati7lb67ffz6zlr4e.us-east-1.es.amazonaws.com',
+                'tipo' => "elasticsearch",
+                'fecha' => $fecha->format('Y-m-d H:i:s')
+            ];
+            $resp = $conn->insert('configuracion', $datos);
+
+            if (empty($resp)) {
+                $conn->rollBack();
+                print_r($conn->errorInfo());
+                die("Fallo la creacion de la configuracion");
+            }
+            $idbusq = $conn->lastInsertId();
+            $conn->commit();
+        }
+
+        $result = $conn->fetchAll("select idconfiguracion, valor from configuracion where nombre = :nombre and tipo = :tipo ", [
+            "nombre" => "puerto_elasticsearch",
+            "tipo" => "elasticsearch"
+        ]);
+        if (empty($result)) {
+            $conn->beginTransaction();
+
+            $datos = [
+                'nombre' => "puerto_elasticsearch",
+                'valor' => '443',
                 'tipo' => "elasticsearch",
                 'fecha' => $fecha->format('Y-m-d H:i:s')
             ];
@@ -87,6 +114,21 @@ class Version20180419154943 extends AbstractMigration {
             ->where('nombre = ?')
             ->andWhere("tipo = ?")
             ->setParameter(0, "servidor_elasticsearch")
+            ->setParameter(1, "elasticsearch");
+
+        $result = $queryBuilder->execute()->fetchAll();
+        if (!empty($result)) {
+            $ident = [
+                'idconfiguracion' => $result[0]["idconfiguracion"]
+            ];
+            $resp = $conn->delete('configuracion', $ident);
+        }
+
+        $queryBuilder->select('idconfiguracion', 'valor')
+            ->from('configuracion')
+            ->where('nombre = ?')
+            ->andWhere("tipo = ?")
+            ->setParameter(0, "puerto_elasticsearch")
             ->setParameter(1, "elasticsearch");
 
         $result = $queryBuilder->execute()->fetchAll();
