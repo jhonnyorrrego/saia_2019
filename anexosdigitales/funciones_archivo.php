@@ -941,10 +941,7 @@ if (isset($_REQUEST["listar_anexos"]) && isset($_REQUEST["iddocumento"]) && isse
 
 function listar_anexos_ver_descargar($idformato, $iddoc, $idcampo = '', $tipo_mostrar = '', $retorno = 0) {
 	global $ruta_db_superior, $conn;
-	require_once ($ruta_db_superior . 'StorageUtils.php');
-	require_once ($ruta_db_superior . 'filesystem/SaiaStorage.php');
 	$tipo_almacenamiento = new SaiaStorage("archivos");
-
 	$condicion_icampo = '';
 	if ($idcampo != '') {
 		$condicion_icampo = " AND campos_formato='" . $idcampo . "'";
@@ -971,8 +968,7 @@ function listar_anexos_ver_descargar($idformato, $iddoc, $idcampo = '', $tipo_mo
 					if (is_object($ruta_imagen)) {
 						if ($tipo_almacenamiento -> get_filesystem() -> has($ruta_imagen -> ruta)) {
 							$ruta64 = base64_encode($anexos[$j]["ruta"]);
-							$ruta_abrir = $ruta_db_superior . "filesystem/mostrar_binario.php?ruta=" . $ruta64;
-							$href = $ruta_abrir;
+							$href = $ruta_db_superior . "filesystem/mostrar_binario.php?ruta=" . $ruta64;
 						}
 					}
 				}

@@ -50,7 +50,7 @@ if ($_SESSION["verifica"] == 2) {
 	$resultado = $_SESSION["datos_documento"];
 }
 $logo='';
-if ($resultado["exito"]==1) {
+if ($resultado["exito"]) {
 	if ($resultado["logo"]) {
 		$logo = "<img src='" . $resultado["logo"] . "' />";
 	}

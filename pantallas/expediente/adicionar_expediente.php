@@ -7,6 +7,7 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap-responsive.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>pantallas/lib/librerias_css.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap_reescribir.css"/>
+<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap-iconos-segundarios.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap-datetimepicker.min.css"/>
 <style>
 .clase_sin_capas{
@@ -130,7 +131,7 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
   	<select name="fk_idcaja" id="fk_idcaja">
   		<option value="">Por favor seleccione...</option>
   		<?php
-  		$cajas=busca_filtro_tabla("","caja A","","",$conn);
+  		$cajas=busca_filtro_tabla("","caja a,entidad_caja e","a.idcaja=e.caja_idcaja and e.estado=1 and ((e.entidad_identidad=1 and e.llave_entidad=".usuario_actual('idfuncionario').") or a.funcionario_idfuncionario=".usuario_actual('idfuncionario').")","",$conn);
 			for($i=0;$i<$cajas["numcampos"];$i++){
 				$selected="";
 				
@@ -140,7 +141,7 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 				if($datos[0]["fk_idcaja"]==$cajas[$i]["idcaja"]){
 					$selected="selected";
 				}
-				echo("<option value='".$cajas[$i]["idcaja"]."' ".$selected.">".$cajas[$i]["fondo"]."(".$cajas[$i]["codigo_dependencia"]."-".$cajas[$i]["codigo_serie"]."-".$cajas[$i]["consecutivo"].")</option>");
+				echo("<option value='".$cajas[$i]["idcaja"]."' ".$selected.">".$cajas[$i]["fondo"]."(".$cajas[$i]["codigo_dependencia"]."-".$cajas[$i]["codigo_serie"]."-".$cajas[$i]["no_consecutivo"].")</option>");
 			}
   		?>
   	</select>
@@ -362,28 +363,17 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 			var nombre=document.getElementById('stext_serie').value;
 			$.ajax({
 				async:false,
-				type:'POST',
-				url: "busqueda_test_series.php",
+				type:'GET',
+				url: "../../buscar_test_serie.php",
 				dataType: "json",
 				data: {
 					nombre:nombre,
+					tabla: "serie",
+					valores_serie:"1"
+					
 				},
 				success:function (opciones){
-					console.log(opciones);
-					if(opciones.num_dependencias>0){												
-						for(var i=0;i<opciones.num_dependencias;i++){
-							onNodeSelect_dependencia(opciones[i].dependencia);
-						}							
-					}
-					
-					/*if(opciones.numcampos){					
-						onNodeSelect2(opciones); 
-					}
-					if(opciones.numcampos==0){
-						notificacion_saia('No se encontraron resultados','warning','',2000);
-					}
-					* 
-					* */
+					tree2.openItemsDynamic(data["datos"],true);
 				}
 			});
 		});
@@ -402,11 +392,11 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
     tree3.setOnLoadingStart(cargando_serie);
     tree3.setOnLoadingEnd(fin_cargando_serie);
     tree3.enableSmartXMLParsing(true);
-    //tree3.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?con_padres=1&pantalla=expediente");	
-  	//tree3.loadXML("<?php echo($ruta_db_superior);?>test_serie_funcionario.php?con_padres=1&pantalla=expediente");
-  	tree3.setXMLAutoLoading("../../test_dependencia_serie.php?tabla=dependencia&admin=1&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&funcionario=1&carga_partes_dependencia=1&carga_partes_series=1&no_grupos=1&no_tipos=1");	
-  	tree3.loadXML("../../test_dependencia_serie.php?tabla=dependencia&admin=1&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&funcionario=1&carga_partes_dependencia=1&carga_partes_series=1&no_grupos=1&no_tipos=1");
     tree3.setOnCheckHandler(onNodeSelect_serie);
+    
+  	tree3.setXMLAutoLoading("../../test_dependencia_serie.php?tabla=dependencia&admin=1&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&funcionario=1&carga_partes_dependencia=1&carga_partes_serie=1");	
+  	tree3.loadXML("../../test_dependencia_serie.php?tabla=dependencia&admin=1&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&funcionario=1&carga_partes_dependencia=1&carga_partes_serie=1");
+
 	
 	
 	function onNodeSelect_dependencia(nodeId){
@@ -415,7 +405,6 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
     	tiempo=window.setInterval(abrir_dependencias,3000,nodeId);
     }
     function abrir_dependencias(dato){
-    	//console.log('d'+dato[j]);
     	tree3.openItem('d'+dato[j]);
     	j--;
     	if (j<0){clearInterval(tiempo);};
@@ -424,7 +413,7 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
   	function onNodeSelect_serie(nodeId){
   	  if(tree3.isItemChecked(nodeId)){
   		var item_select=tree3.getAllChecked();
-  		console.log(nodeId+" -- "+item_select);
+  		
   		if(item_select!=="undefined" && item_select!=nodeId){
   	  		lista_items=item_select.split(",");
   	  		for(i=0;i<lista_items.length;i++){

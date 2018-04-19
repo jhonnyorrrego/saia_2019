@@ -3076,7 +3076,6 @@ function generar_correo_confirmacion($idformato, $iddoc, $nomb_campo = "email_ap
 		      2. Una vez tenga conocimiento del documento, acceda al siguiente link y decida si Aprobar o Rechazar.
 		      <br /><br />
 		      ' . $enlaces . '<br /><br />';
-					$funcionario[0]['funcionario_codigo'] = 1;
 					$ok = enviar_mensaje('', array("para" => "funcionario_codigo"), array("para" => array($funcionario[0]['funcionario_codigo'])), 'DOCUMENTO PARA APROBACION', $mensaje, $anexos, $iddoc);
 					if ($ok !== true && !isset($_REQUEST["no_redirecciona"])) {
 						notificaciones("Error! No se pudo enviar el correo de confirmaci&oacute;n", "error");

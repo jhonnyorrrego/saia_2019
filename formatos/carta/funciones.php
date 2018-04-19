@@ -105,42 +105,54 @@ function mostrar_destinos($idformato, $iddoc) {
 		$select_dest .= "</select></div><br />";
 		echo $select_dest;
 	}
-
-	echo "" . $ejecutor[0]["titulo"] . "<br/>
-  " . mayusculas($ejecutor[0]["nombre"]) . "<br />";
-	if (ucwords($ejecutor[0]["cargo"]) <> "")
-		echo("" . $ejecutor[0]["cargo"]) . "<br />";
-	if (ucwords($ejecutor[0]["empresa"]) <> "")
-		echo('<b>' . $ejecutor[0]["empresa"] . '</b>') . "<br/>";
-	if (ucwords($ejecutor[0]["direccion"]) <> "")
-		echo("" . $ejecutor[0]["direccion"]) . "<br>";
-	if (ucwords($ejecutor[0]["telefono"]) <> "")
-		echo("" . $ejecutor[0]["telefono"]) . "<br />";
-	echo "" . $municipio[0]["nombre"] . ", " . ucwords(strtolower($departamento[0]["nombre"])) . "$_pais.";
+	$html = "";
+	if ($ejecutor[0]["titulo"] != "") {
+		$html .= $ejecutor[0]["titulo"] . "<br/>";
+	}
+	if ($ejecutor[0]["nombre"] != "") {
+		$html .= mayusculas($ejecutor[0]["nombre"]) . "<br />";
+	}
+	if ($ejecutor[0]["cargo"] <> "") {
+		$html .= $ejecutor[0]["cargo"] . "<br />";
+	}
+	if ($ejecutor[0]["empresa"] != "") {
+		$html .= '<strong>' . $ejecutor[0]["empresa"] . '</strong><br/>';
+	}
+	if ($ejecutor[0]["direccion"] <> "") {
+		$html .= $ejecutor[0]["direccion"] . "<br/>";
+	}
+	if ($ejecutor[0]["telefono"] != "") {
+		$html .= $ejecutor[0]["telefono"] . "<br />";
+	}
+	if ($municipio[0]["nombre"] != "") {
+		$html .= $municipio[0]["nombre"];
+	}
+	if ($departamento[0]["nombre"] != "") {
+		$html .= ", " . ucwords(strtolower($departamento[0]["nombre"])) . $_pais;
+	}
+	echo $html;
 }
 
-function mostrar_destinos_carta($idformato,$iddoc){
+function mostrar_destinos_carta($idformato, $iddoc) {
 	global $conn;
 
- $tabla=busca_filtro_tabla("ruta_mostrar,nombre,nombre_tabla",DB.".formato","idformato=".$idformato,"",$conn);
- $resultado=busca_filtro_tabla("",DB.".".$tabla[0]["nombre_tabla"],"documento_iddocumento=".$iddoc,"",$conn);
-  if(isset($_REQUEST["destino"]) && $_REQUEST["destino"]<>"" ){
-  	$ejecutor=busca_filtro_tabla("nombre,titulo,telefono,direccion,ciudad,cargo,empresa",DB.".datos_ejecutor,ejecutor","idejecutor=ejecutor_idejecutor and iddatos_ejecutor=".$_REQUEST["destino"],"",$conn);
-      $destinos=explode(",",$resultado[0]["destinos"]);
-     }
-  elseif(strpos($resultado[0]["destinos"],",")>0){
-  	$destinos=explode(",",$resultado[0]["destinos"]);
-    $ejecutor=busca_filtro_tabla("nombre,titulo,telefono,direccion,ciudad,cargo,empresa",DB.".datos_ejecutor,ejecutor","idejecutor=ejecutor_idejecutor and iddatos_ejecutor=".$destinos[0],"",$conn);
-    }
-  else
-    $ejecutor=busca_filtro_tabla("nombre,telefono,titulo,direccion,ciudad,cargo,empresa",DB.".datos_ejecutor,ejecutor","idejecutor=ejecutor_idejecutor and iddatos_ejecutor=".$resultado[0]["destinos"],"",$conn);
+	$tabla = busca_filtro_tabla("ruta_mostrar,nombre,nombre_tabla", "formato", "idformato=" . $idformato, "", $conn);
+	$resultado = busca_filtro_tabla("", $tabla[0]["nombre_tabla"], "documento_iddocumento=" . $iddoc, "", $conn);
+	if (isset($_REQUEST["destino"]) && $_REQUEST["destino"] <> "") {
+		$ejecutor = busca_filtro_tabla("nombre,titulo,telefono,direccion,ciudad,cargo,empresa", "datos_ejecutor,ejecutor", "idejecutor=ejecutor_idejecutor and iddatos_ejecutor=" . $_REQUEST["destino"], "", $conn);
+		$destinos = explode(",", $resultado[0]["destinos"]);
+	} elseif (strpos($resultado[0]["destinos"], ",") > 0) {
+		$destinos = explode(",", $resultado[0]["destinos"]);
+		$ejecutor = busca_filtro_tabla("nombre,titulo,telefono,direccion,ciudad,cargo,empresa", "datos_ejecutor,ejecutor", "idejecutor=ejecutor_idejecutor and iddatos_ejecutor=" . $destinos[0], "", $conn);
+	} else
+		$ejecutor = busca_filtro_tabla("nombre,telefono,titulo,direccion,ciudad,cargo,empresa", "datos_ejecutor,ejecutor", "idejecutor=ejecutor_idejecutor and iddatos_ejecutor=" . $resultado[0]["destinos"], "", $conn);
 
 	$nombres = '';
-	for($i=0; $i < $ejecutor['numcampos']; $i++){
-		$nombres .= $ejecutor[$i]['titulo'].' '.$ejecutor[$i]['nombre'].', ';
+	for ($i = 0; $i < $ejecutor['numcampos']; $i++) {
+		$nombres .= $ejecutor[$i]['titulo'] . ' ' . $ejecutor[$i]['nombre'] . ', ';
 	}
 
-	echo(ucwords(substr($nombres,0,-1)));
+	echo(ucwords(substr($nombres, 0, -1)));
 }
 
 function copias_carta($idformato,$idcampo,$iddoc=NULL)

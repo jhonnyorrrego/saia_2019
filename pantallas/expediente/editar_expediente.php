@@ -96,7 +96,7 @@ if($dato_padre["numcampos"]){
 			for($i=0;$i<$cajas["numcampos"];$i++){
 				$selected="";
 				if($datos[0]["fk_idcaja"]==$cajas[$i]["idcaja"])$selected="selected";
-				echo("<option value='".$cajas[$i]["idcaja"]."' ".$selected.">".$cajas[$i]["fondo"]."(".$cajas[$i]["codigo_dependencia"]."-".$cajas[$i]["codigo_serie"]."-".$cajas[$i]["consecutivo"].")</option>");
+				echo("<option value='".$cajas[$i]["idcaja"]."' ".$selected.">".$cajas[$i]["fondo"]."(".$cajas[$i]["codigo_dependencia"]."-".$cajas[$i]["codigo_serie"]."-".$cajas[$i]["no_consecutivo"].")</option>");
 			}
   		?>
   	</select>
@@ -415,8 +415,8 @@ if($dato_padre["numcampos"]){
     tree3.setOnLoadingStart(cargando_serie);
     tree3.setOnLoadingEnd(fin_cargando_serie);
     tree3.enableSmartXMLParsing(true);
-  	tree3.setXMLAutoLoading("../../test_dependencia_serie.php?tabla=dependencia&admin=1&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&funcionario=1&carga_partes_dependencia=1&carga_partes_series=1&no_grupos=1&no_tipos=1&seleccionado=<?php echo($datos[0]["serie_idserie"])?>&seleccionado_dep=<?php echo($datos[0]["dependencia_iddependencia"])?>");	
-  	tree3.loadXML("../../test_dependencia_serie.php?tabla=dependencia&admin=1&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&funcionario=1&carga_partes_dependencia=1&carga_partes_series=1&no_grupos=1&no_tipos=1&seleccionado=<?php echo($datos[0]["serie_idserie"])?>&seleccionado_dep=<?php echo($datos[0]["dependencia_iddependencia"])?>");
+  	tree3.setXMLAutoLoading("../../test_dependencia_serie.php?tabla=dependencia&admin=1&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&funcionario=1&carga_partes_dependencia=1&carga_partes_serie=1&seleccionado=<?php echo($datos[0]["serie_idserie"])?>&seleccionado_dep=<?php echo($datos[0]["dependencia_iddependencia"])?>");	
+  	tree3.loadXML("../../test_dependencia_serie.php?tabla=dependencia&admin=1&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&funcionario=1&carga_partes_dependencia=1&carga_partes_serie=1&seleccionado=<?php echo($datos[0]["serie_idserie"])?>&seleccionado_dep=<?php echo($datos[0]["dependencia_iddependencia"])?>");
     tree3.setOnCheckHandler(onNodeSelect_serie);
       
   	function onNodeSelect_serie(nodeId){

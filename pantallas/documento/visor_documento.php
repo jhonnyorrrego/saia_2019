@@ -16,8 +16,9 @@ require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
 
 $iddoc = @$_REQUEST["iddoc"];
 menu_principal_documento($iddoc, 1);
-$datos = busca_filtro_tabla("A.pdf,A.plantilla,B.mostrar_pdf", "documento A,formato B", "lower(A.plantilla)=B.nombre AND A.iddocumento=" . $iddoc, "", $conn);
-$es_pdf_word = @$_REQUEST['pdf_word'];
+$datos = busca_filtro_tabla("A.pdf,A.plantilla,B.mostrar_pdf,A.numero", "documento A,formato B", "lower(A.plantilla)=B.nombre AND A.iddocumento=" . $iddoc, "", $conn);
+$es_pdf_word = $_REQUEST['pdf_word'];
+
 if ($iddoc && !@$_REQUEST['pdf_word'] && $datos[0]['mostrar_pdf'] != 2) {
 	$exportar_pdf = busca_filtro_tabla("valor", "configuracion A", "A.nombre='exportar_pdf'", "", $conn);
 	$export = "";
@@ -45,9 +46,12 @@ if ($iddoc && !@$_REQUEST['pdf_word'] && $datos[0]['mostrar_pdf'] != 2) {
 	}
 } else {
 	$_REQUEST['from_externo'] = 1;
-	include_once ($ruta_db_superior . 'pantallas/lib/PhpWord/exportar_word.php');
+	if (intval($datos[0]["numero"]) != 0) {
+		include_once ($ruta_db_superior . 'pantallas/lib/PhpWord/numero_radicado_word.php');
+	} else {
+		include_once ($ruta_db_superior . 'pantallas/lib/PhpWord/exportar_word.php');
+	}
 	$anexos_documento_word = busca_filtro_tabla("d.ruta", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $iddoc . " AND d.documento_iddocumento=" . $iddoc, "", $conn);
-
 	$almacenamiento = null;
 	$ruta_pdf = null;
 	if ($anexos_documento_word['numcampos']) {

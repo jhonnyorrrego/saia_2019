@@ -1,20 +1,9 @@
 <?php
-header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-// date in the past
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-// always modified
-header("Cache-Control: no-store, no-cache, must-revalidate");
-// HTTP/1.1
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
-// HTTP/1.0
 $max_salida = 6;
-// Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
 	if (is_file($ruta . "db.php")) {
 		$ruta_db_superior = $ruta;
-		//Preserva la ruta superior encontrada
 	}
 	$ruta .= "../";
 	$max_salida--;
@@ -54,12 +43,21 @@ if (stristr($_SERVER["HTTP_ACCEPT"], "application/xhtml+xml")) {
 }
 echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?" . ">");
 
-$mostrar_nodos = array('dsa' => 1, 'dsatvd' => 1, 'ssa' => 1, 'soc' => 1);
+$mostrar_nodos = array(
+	'dsa' => 1,
+	'dsatvd' => 1,
+	'ssa' => 1,
+	'soc' => 1
+);
 //dsa: dependencia serie asignadas - dsatvd: ependencia serie asignadas TVD  - ssa: series sin asignar   - soc: series otras categorias
 if (@$_REQUEST['mostrar_nodos']) {
-	$mostrar_nodos = array('dsa' => 0, 'dsatvd' => 0, 'ssa' => 0, 'soc' => 0);
+	$mostrar_nodos = array(
+		'dsa' => 0,
+		'dsatvd' => 0,
+		'ssa' => 0,
+		'soc' => 0
+	);
 	$request_nodos = explode(',', $_REQUEST['mostrar_nodos']);
-
 	for ($i = 0; $i < count($request_nodos); $i++) {
 		$mostrar_nodos[$request_nodos[$i]] = 1;
 	}
@@ -108,14 +106,23 @@ if (@$_REQUEST['carga_partes_dependencia']) {
 			}
 		} else if (strpos($id, 'sub') !== false && $mostrar_nodos['dsa']) {//si es subserie o tipo documental
 			$ids = explode('sub', $id);
+
+			$dependencia = busca_filtro_tabla("", "dependencia", "iddependencia=" . $ids[0], "", "", $conn);
+			$nombre_serie = busca_filtro_tabla("nombre", "serie", "idserie=" . $ids[1], "");
+			$codigo_dep = array(
+				"codigo" => $dependencia[0]["codigo"],
+				"nombre" => codifica_encabezado(html_entity_decode($dependencia[0]["nombre"])),
+				"serie_asociada" => $nombre_serie[0]["nombre"]
+			);
+
 			$mystring = $ids[1];
 			$findme = '_tv';
 			$pos = strpos($mystring, $findme);
 			if ($pos !== false) {
 				$ids[1] = str_replace("_tv", "", $ids[1]);
-				llena_subseries_tipo_documental($ids[0], $ids[1], 1);
+				llena_subseries_tipo_documental($ids[0], $ids[1], 1, $codigo_dep);
 			} else {
-				llena_subseries_tipo_documental($ids[0], $ids[1]);
+				llena_subseries_tipo_documental($ids[0], $ids[1], 0, $codigo_dep);
 			}
 
 		} else if ((strpos($id, 'sin_asignar') !== false || strpos($id, 'asignada') !== false) && $mostrar_nodos['ssa']) {
@@ -142,14 +149,23 @@ if (@$_REQUEST['carga_partes_serie']) {
 		if (strpos($id, 'sub') !== false && $mostrar_nodos['dsa']) {
 			echo("<tree id=\"" . $id . "\">\n");
 			$ids = explode('sub', $id);
+
+			$dependencia = busca_filtro_tabla("", "dependencia", "iddependencia=" . $ids[0], "", "", $conn);
+			$nombre_serie = busca_filtro_tabla("nombre", "serie", "idserie=" . $ids[1], "");
+			$codigo_dep = array(
+				"codigo" => $dependencia[0]["codigo"],
+				"nombre" => codifica_encabezado(html_entity_decode($dependencia[0]["nombre"])),
+				"serie_asociada" => $nombre_serie[0]["nombre"]
+			);
+
 			$mystring = $ids[1];
 			$findme = '_tv';
 			$pos = strpos($mystring, $findme);
 			if ($pos !== false) {
 				$ids[1] = str_replace("_tv", "", $ids[1]);
-				llena_subseries_tipo_documental($ids[0], $ids[1], 1);
+				llena_subseries_tipo_documental($ids[0], $ids[1], 1, $codigo_dep);
 			} else {
-				llena_subseries_tipo_documental($ids[0], $ids[1]);
+				llena_subseries_tipo_documental($ids[0], $ids[1], 0, $codigo_dep);
 			}
 			echo("</tree>\n");
 			die();
@@ -296,7 +312,10 @@ function llena_dependencia($serie, $condicion = "", $tvd = 0, $codigo_dep = '') 
 			} else {
 				echo(" child=\"0\">\n");
 			}
-			$codigo_dep = array("codigo" => $papas[$i]["codigo"], "nombre" => codifica_encabezado(html_entity_decode($papas[$i]["nombre"])));
+			$codigo_dep = array(
+				"codigo" => $papas[$i]["codigo"],
+				"nombre" => codifica_encabezado(html_entity_decode($papas[$i]["nombre"]))
+			);
 			if (@$_REQUEST['carga_partes_dependencia']) {
 				if (@$_REQUEST['uid']) {
 					if (!$_REQUEST["id"]) {
@@ -350,7 +369,11 @@ function llena_dependencia($serie, $condicion = "", $tvd = 0, $codigo_dep = '') 
 			if ($hijos_entidad_serie['numcampos']) {
 				$dependencia = busca_filtro_tabla("", "dependencia", "iddependencia=" . $serie, "", "", $conn);
 				$nombre_serie = busca_filtro_tabla("nombre", "serie", "idserie=" . $_REQUEST['seleccionado'], "");
-				$codigo_dep = array("codigo" => $dependencia[0]["codigo"], "nombre" => codifica_encabezado(html_entity_decode($dependencia[0]["nombre"])), "serie_asociada" => $nombre_serie[0]["nombre"]);
+				$codigo_dep = array(
+					"codigo" => $dependencia[0]["codigo"],
+					"nombre" => codifica_encabezado(html_entity_decode($dependencia[0]["nombre"])),
+					"serie_asociada" => $nombre_serie[0]["nombre"]
+				);
 				llena_entidad_serie($serie, $lista_entidad_series_filtrar, $tvd, $codigo_dep);
 			}
 		}
@@ -384,15 +407,10 @@ function llena_entidad_serie($iddependencia, $series, $tvd = 0, $codigo_dep = ''
 		if (@$_REQUEST["no_tipos"]) {
 			$condicion_tvd .= " AND tipo<>3";
 		}
-		/*print_r($seleccionado_dep);
-		 print_r($iddependencia);
-		 print_r($seleccionado);
-		 print_r($serie[$i]["idserie"]);*/
 		if (in_array($series[$i]["idserie"], $seleccionado) !== false && in_array($iddependencia, $seleccionado_dep) !== false) {
 			echo " checked=\"1\" ";
 		}
 		$subseries_tipo_documental = busca_filtro_tabla("idserie", "serie", "categoria=2 AND tipo IN(2,3) AND cod_padre=" . $series[$i]['idserie'] . $activo . $condicion_subseries_tipo_documental . $condicion_tvd, "", $conn);
-		//print_r($subseries_tipo_documental);
 		if ($subseries_tipo_documental['numcampos']) {
 			echo(" child=\"1\">\n");
 		} else {
@@ -471,7 +489,7 @@ function llena_subseries_tipo_documental($iddependencia, $idserie, $tvd = 0, $co
 			echo('<userdata name="dependencia_nombre">' . $codigo_dep["nombre"] . '</userdata>');
 			echo('<userdata name="serie_seleccionada">' . $codigo_dep["serie_asociada"] . '</userdata>');
 			if (!@$_REQUEST['carga_partes_serie']) {
-				llena_subseries_tipo_documental($iddependencia, $papas[$i]["id$tabla_otra"], $tvd);
+				llena_subseries_tipo_documental($iddependencia, $papas[$i]["id$tabla_otra"], $tvd, $codigo_dep);
 			}
 			echo("</item>\n");
 		}

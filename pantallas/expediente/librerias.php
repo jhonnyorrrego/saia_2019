@@ -70,7 +70,12 @@ function enlace_expediente($idexpediente, $nombre) {
 		//tomos + el padre
 		$cadena_tomos = ("&nbsp;&nbsp;&nbsp;<i><b style='font-size:10px;'>Tomo: </b></i><i style='font-size:10px;'>" . $expediente_actual[0]['tomo_no'] . " de " . $cantidad_tomos . "</i>");
 	}
-	$data = array("idbusqueda_componente" => $_REQUEST["idbusqueda_componente"], "idexpediente" => $idexpediente, "variable_busqueda" => @$_REQUEST['variable_busqueda'], "cod_arbol" => $expediente_actual[0]["cod_arbol"]);
+	$data = array(
+		"idbusqueda_componente" => $_REQUEST["idbusqueda_componente"],
+		"idexpediente" => $idexpediente,
+		"variable_busqueda" => @$_REQUEST['variable_busqueda'],
+		"cod_arbol" => $expediente_actual[0]["cod_arbol"]
+	);
 	$req_parms = http_build_query($data);
 	return ("<div style='' class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?" . $req_parms . "' conector='iframe' titulo='" . $nombre . "'><table><tr><td style='font-size:12px;'> <i class=' icon-folder-open pull-left'></i>&nbsp;<b>" . $nombre . "</b>&nbsp;" . $cadena_tomos . "</td></tr></table></div>");
 }
@@ -342,60 +347,6 @@ function obtener_descripcion_expediente($descripcion) {
 	return ($descripcion);
 }
 
-function mostrar_contador_expediente($idexpediente, $cod_arbol) {
-	global $conn, $dependencia, $arreglo;
-	/*
-	 $expedientes=arreglo_expedientes_asignados();
-	 $arreglo=array();
-	 obtener_expedientes_padre($idexpediente,$expedientes);
-	 $arreglo=array_merge($arreglo,array($idexpediente));
-	 //return(implode(",",$arreglo));
-	 $documentos=busca_filtro_tabla("count(*) as cantidad","expediente_doc A, documento B","A.expediente_idexpediente in(".implode(",",$arreglo).") AND A.documento_iddocumento=B.iddocumento AND B.estado not in('ELIMINADO','ANULADO')","",$conn);
-	 //return($cantidad["sql"]);
-
-	 if(!$documentos["numcampos"])$documentos[0]["cantidad"]=0;
-
-	 return("<span class='pull-right badge' style='margin-top:3px' id='contador_docs_".$idexpediente."'>".$documentos[0]["cantidad"]."</span>");
-	 */
-}
-
-/*
- function mostrar_contador_expediente($idexpediente,$cod_arbol){
-
- global $conn, $dependencia,$arreglo;
- $_REQUEST["idbusqueda_componente"]=110;
- $expedientes=expedientes_asignados();
- $_REQUEST['idexpediente']=$idexpediente;
- $request_exp_padre=request_expediente_padre();
-
- $arreglo=array();
- //obtener_expedientes_padre($idexpediente,$expedientes);
-
- //$texto.=" AND a.idexpediente=".$_REQUEST["expediente_actual"];
-
- $arreglo=array_merge($arreglo,array($idexpediente));
- //return(implode(",",$arreglo));
- $documentos=busca_filtro_tabla("a.idexpediente","vexpediente_serie a","a.estado_archivo=1 and ".$expedientes." and (".$request_exp_padre.")  ","group by a.fecha,a.nombre,a.descripcion,a.cod_arbol,a.idexpediente",$conn);
-
- $documentos_expediente=busca_filtro_tabla("count(*) as cantidad","expediente_doc","expediente_idexpediente IN(".implode(',',extrae_campo($documentos,'idexpediente')).")","",$conn);
-
- if(!$documentos_expediente['numcampos']){
- $documentos=busca_filtro_tabla("count(*) as cantidad","expediente_doc A, documento B","A.expediente_idexpediente in(".implode(",",$arreglo).") AND A.documento_iddocumento=B.iddocumento AND B.estado not in('ELIMINADO')","",$conn);
- }
-
- //print_r($documentos);die();
-
- //print_r($documentos);
- //$documentos=busca_filtro_tabla("count(*) as cantidad","vexpediente_serie a,documento b,expediente_doc c ","a.idexpediente=c.expediente_idexpediente and b.iddocumento=c.documento_iddocumento and b.estado<>'eliminado' and b.estado<>'anulado' and c.expediente_idexpediente=".$idexpediente,"",$conn);
-
- //return($cantidad["sql"]);
-
- if(!$documentos["numcampos"])$documentos[0]["cantidad"]=0;
- //return("<span class='pull-right badge' style='margin-top:3px' id='contador_docs_".$idexpediente."'>".$documentos[0]["cantidad"]."</span>");
- return("<span class='pull-right badge' style='margin-top:3px' id='contador_docs_".$idexpediente."'>".$documentos["numcampos"]."</span>");
- }
-
- */
 function obtener_expedientes_padre($idexpediente, $expedientes) {
 	global $arreglo;
 	$expediente = busca_filtro_tabla("", "expediente A", "A.cod_padre=" . $idexpediente . " AND A.estado_archivo=" . $_REQUEST['variable_busqueda'], "", $conn);
@@ -433,42 +384,6 @@ function negar_expediente($idexp, $tipo_entidad, $llave_entidad, $permiso = "", 
 	phpmkr_query($sql1);
 }
 
-/*
- function enlaces_adicionales_expediente($idexpediente,$nombr,$estado_cierre){
- global $conn;
- $texto="";
- $permiso=new Permiso();
- $ok1=$permiso->acceso_modulo_perfil("eliminar_expediente");
- $ok2=$permiso->acceso_modulo_perfil("editar_expediente");
- $ok3=$permiso->acceso_modulo_perfil("asignar_expediente");
-
- if($ok1){
- $texto.='<div class=\'btn btn-mini eliminar_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Eliminar '.$nombre.'\'><i class=\'icon-remove\'></i></div>';
- }
-
- if($ok2){
- $texto.='<div class=\'btn btn-mini enlace_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Editar '.$nombre.'\' enlace=\'pantallas/expediente/editar_expediente.php?idexpediente='.$idexpediente.'\'><i class=\'icon-pencil\'></i></div>';
- }
-
- $texto.='<div class=\'btn btn-mini link kenlace_saia tooltip_saia pull-right\' title=\'Imprimir rotulo\' titulo=\'Imprimir rotulo\' enlace=\'pantallas/caja/rotulo.php?idexpediente='.$idexpediente.'\' conector=\'iframe\'><i class=\'icon-print\'></i></div>';
-
- $disabled_seleccionar="";
- $titulo='Seleccionar';
- if($estado_cierre==1){
- $disabled_seleccionar='style="pointer-events:none;"';
- $titulo='No es posible seleccionar hasta que no este cerrado el expediente';
- }
-
- $texto.='<div id="seleccionados_expediente_'.$idexpediente.'" idregistro=\''.$idexpediente.'\' titulo=\''.$titulo.'\' class=\'btn btn-mini tooltip_saia adicionar_seleccionados_expediente pull-right\' '.$disabled_seleccionar.'><i class=\'icon-uncheck\' ></i></div>';
-
- if($ok3){
- $texto.='<div class=\'btn btn-mini enlace_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Asignar '.$nombre.'\' enlace=\'pantallas/expediente/asignar_expediente.php?idexpediente='.$idexpediente.'\'><i class=\'icon-lock\'></i></div>';
- }
-
- $texto.='<div class=\'btn btn-mini crear_tomo_expediente tooltip_saia pull-right\' idregistro=\''.$idexpediente.'\' title=\'Crear Tomo '.$nombre.'\'><i class=\'icon-folder-open\'></i></div>';
-
- return($texto);
- }*/
 function enlaces_adicionales_expediente($idexpediente, $nombre, $estado_cierre, $propietario, $agrupador) {
 	global $conn;
 	if ($agrupador == "agrupador") {
@@ -524,7 +439,6 @@ function valida_from_caja() {
 	if (@$_REQUEST['variable_busqueda'] != 'from_caja') {
 		return ('a.estado_archivo=1 and');
 	}
-
 }
 
 function expedientes_asignados() {
@@ -549,9 +463,7 @@ function expedientes_asignados() {
 	$dependencias = extrae_campo($roles, "dependencia_iddependencia");
 	$cargos = extrae_campo($roles, "cargo_idcargo");
 	$cadena .= "";
-	// Se comenta la siguiente linea y se coloca una nueva para que no muestre los expedientes de la serie asignada.
-	//$cadena .= "(((a.identidad_exp=1 AND a.llave_exp='" . $idfunc_actual . "') or (a.identidad_exp=2 AND a.llave_exp in ('" . implode("','", $dependencias) . "')) or (a.identidad_exp=4 AND a.llave_exp in('" . implode("','", $cargos) . "'))) or ((a.identidad_ser=1 AND a.llave_ser='" . $idfunc_actual . "') or (a.identidad_ser=2 AND a.llave_ser in ('" . implode("','", $dependencias) . "')) or (a.identidad_ser=4 AND a.llave_ser in('" . implode("','", $cargos) . "')) and a.estado_entidad_serie not in(2)))";
-	$cadena .= "(((a.identidad_exp=1 AND a.llave_exp='" . $idfunc_actual . "') or (a.identidad_exp=2 AND a.llave_exp in ('" . implode("','", $dependencias) . "')) or (a.identidad_exp=4 AND a.llave_exp in('" . implode("','", $cargos) . "'))))";
+	$cadena .= "((a.identidad_exp=1 AND a.llave_exp='" . $idfunc_actual . "') or (a.identidad_exp=2 AND a.llave_exp in ('" . implode("','", $dependencias) . "')) or (a.identidad_exp=4 AND a.llave_exp in('" . implode("','", $cargos) . "')))";
 	return ($cadena);
 }
 
@@ -686,7 +598,12 @@ function fecha_creacion_documento_expediente($fecha0, $plantilla = Null, $doc = 
 function validar_relacion_documento_expediente($doc) {
 	global $conn;
 	$funcionario_codigo = usuario_actual('funcionario_codigo');
-	$estados_validar = array("'borrador'", "'transferido'", "'revisado'", "'aprobado'");
+	$estados_validar = array(
+		"'borrador'",
+		"'transferido'",
+		"'revisado'",
+		"'aprobado'"
+	);
 
 	$consulta = busca_filtro_tabla("archivo_idarchivo", "buzon_salida", "archivo_idarchivo=" . $doc . " AND tipo_destino=1 AND lower(nombre) IN(" . implode(',', $estados_validar) . ") AND destino=" . $funcionario_codigo, "", $conn);
 	return ($consulta);

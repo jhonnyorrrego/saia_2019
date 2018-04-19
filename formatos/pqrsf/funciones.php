@@ -67,29 +67,6 @@ function ver_fecha_reporte($idformato, $iddoc) {
 	echo($datos[0]['fecha_reporte']);
 }
 
-function mostrar_anexos_pqrsf($idformato, $iddoc) {
-	global $conn, $ruta_db_superior;
-	$anexos = busca_filtro_tabla("", "anexos a", "a.documento_iddocumento=" . $iddoc, "", $conn);
-	$anexos_array = array();
-	for ($i = 0; $i < $anexos["numcampos"]; $i++) {
-		$anexos_array[] = '<a class="previo_high" style="cursor:pointer" enlace="' . $anexos[$i]["ruta"] . '">' . $anexos[$i]["etiqueta"] . '</a>';
-	}
-	echo(implode(", ", $anexos_array));
-	if ($_REQUEST["tipo"] != 5) {
-		?>
-		<script>
-		$(document).ready(function(){
-			$(".previo_high").click(function(e){
-				var enlace=$(this).attr("enlace");
-				top.hs.htmlExpand(this, { objectType: 'iframe',width: 1000, height: 600,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
-				
-			});
-		});
-		</script>
-		<?php
-	}
-}
-
 function mostrar_datos_hijos($idformato, $iddoc) {
 	global $conn, $datos;
 	$clasificacion = busca_filtro_tabla("d.iddocumento,idft_clasificacion_pqrsf", "ft_clasificacion_pqrsf c,documento d", "c.documento_iddocumento=d.iddocumento and d.iddocumento not in ('ELIMINADO','ANULADO','ACTIVO') and c.ft_pqrsf=" . $datos[0]['idft_pqrsf'], "", $conn);

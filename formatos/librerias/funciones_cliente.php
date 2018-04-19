@@ -40,7 +40,7 @@ function fecha_aprobacion($idformato, $iddoc) {
 	echo $html;
 }
 
-function ver_anexos_documento($idformato, $iddoc) {
+function ver_anexos_documento($idformato, $iddoc, $retorno = 0) {
 	global $conn, $ruta_db_superior;
 	$tipo_almacenamiento = new SaiaStorage("archivos");
 	$array_tipos = array(
@@ -69,7 +69,7 @@ function ver_anexos_documento($idformato, $iddoc) {
 						}
 					}
 					$target = 'target="_self"';
-				}else{
+				} else {
 					$href = $ruta_db_superior . "anexosdigitales/parsea_accion_archivo.php?idanexo=" . $anexos[$i]['idanexos'] . "&accion=descargar";
 				}
 				$fila[] = '<a href="' . $href . '" ' . $target . '>' . $anexos[$i]['etiqueta'] . '</a>';
@@ -79,6 +79,9 @@ function ver_anexos_documento($idformato, $iddoc) {
 		}
 		$html = "<ul><li>" . implode("</li><li>", $fila) . "</li></ul>";
 	}
-	echo $html;
-
+	if ($retorno) {
+		return $html;
+	} else {
+		echo $html;
+	}
 }
