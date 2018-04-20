@@ -60,7 +60,7 @@ function estado_funcionario($estado) {
 
 function fotografia_funcionario($idfuncionario){
 	global $conn,$ruta_db_superior;
-	
+
 	require_once($ruta_db_superior.'StorageUtils.php');
 	require_once($ruta_db_superior.'filesystem/SaiaStorage.php');
 
@@ -71,12 +71,12 @@ function fotografia_funcionario($idfuncionario){
 		$tipo_almacenamiento = StorageUtils::resolver_ruta($foto_recorte[0]['foto_recorte']);
 		if(!$tipo_almacenamiento['error']){
 			if($tipo_almacenamiento['clase']->get_filesystem()->has($tipo_almacenamiento['ruta'])){
-				$archivo_binario=StorageUtils::get_binary_file($foto_recorte[0]['foto_recorte']);	
+				$archivo_binario=StorageUtils::get_binary_file($foto_recorte[0]['foto_recorte']);
 				$imagen='<img src="'.$archivo_binario.'"	width="60" height="60" '.$id_contenedor.' />';
 			$href.='&recortar=1';
 			}else{
 				$imagen='<img src="'.$ruta_db_superior.'imagenes/funcionario_sin_foto.jpg"	width="60" height="60" '.$id_contenedor.' />';
-			}			
+			}
 		}else{
 			$imagen='<img src="'.$ruta_db_superior.'imagenes/funcionario_sin_foto.jpg"	width="60" height="60" '.$id_contenedor.' />';
 		}
@@ -85,7 +85,7 @@ function fotografia_funcionario($idfuncionario){
 	}
 	return ($texto);
 }
-
+/*
 function fotografia_funcionario($idfuncionario) {
 	global $conn, $ruta_db_superior;
 
@@ -106,4 +106,5 @@ function fotografia_funcionario($idfuncionario) {
 	$html = '<a class="open_highslide" id="highslide_funcionario_' . $idfuncionario . '" style="cursor:pointer;" enlace="' . $href . '" identificador="' . $idfuncionario . '">' . $imagen . '</a>';
 	return ($html);
 }
+*/
 ?>
