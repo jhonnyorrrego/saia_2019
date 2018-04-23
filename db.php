@@ -3414,8 +3414,8 @@ function crear_archivo_formato($nombre,$texto=NULL,$modo='wb'){
 function crear_destino($destino){
   $arreglo=explode("/",$destino);
 
-	if(!mkdir($arreglo[$i],PERMISOS_CARPETAS, true)){
-        alerta("no es posible crear la carpeta ".$destino);
+  if(!file_exists ($destino) && !mkdir($arreglo[$i],PERMISOS_CARPETAS, true)){
+	    alerta("no es posible crear la carpeta ". realpath($destino));
         return("");
       }
 
