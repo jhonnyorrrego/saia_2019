@@ -27,8 +27,6 @@ if(@$_REQUEST['asignar_quitar_permiso_crear'] && @$_REQUEST['idmodulo'] && @$_RE
     die();
 }
 
-
-
 if(@$_REQUEST['valida_permiso_crear_formato'] && @$_REQUEST['idmodulo'] && @$_REQUEST['idperfil']){   //pantalla high slide para dar o quoitar permiso crear (formatos)
    
     $modulo=busca_filtro_tabla("","modulo","idmodulo=".$_REQUEST['idmodulo'],"",$conn);
@@ -81,11 +79,13 @@ if(@$_REQUEST['valida_permiso_crear_formato'] && @$_REQUEST['idmodulo'] && @$_RE
 }
 
 if(@$_REQUEST['valida_modulo_formato'] && @$_REQUEST['idmodulo']){  //valida si el modulo es un formato
-    $modulo_padre_formatos=busca_filtro_tabla("idmodulo","modulo","nombre='modulo_formatos'","",$conn);
-    $modulo_formato=busca_filtro_tabla("cod_padre","modulo","idmodulo=".$_REQUEST["idmodulo"],"",$conn);    
     $echo=0;
-    if($modulo_padre_formatos[0]['idmodulo']==$modulo_formato[0]['cod_padre']){ //es modulo de modulo_formatos
+	$modulo_formato = busca_filtro_tabla("nombre", "modulo", "idmodulo=" . $_REQUEST["idmodulo"], "", $conn);
+	if($modulo_formato["numcampos"]){
+		$es_formato=busca_filtro_tabla("idformato","formato","nombre like '".$modulo_formato[0]["nombre"]."'","",$conn);
+		if($es_formato["numcampos"]){
         $echo=1;
+		}
     }
     echo($echo);
     die();
@@ -127,14 +127,12 @@ if($_REQUEST["perfil"] && $_REQUEST["modulo"]){
             $retorno["mensaje"]="Error al eliminar el permiso ".@$_REQUEST["nombre_modulo"]." para el perfil ".@$_REQUEST["nombre_modulo"]."<br>".$sql2;
             $retorno["tipo_mensaje"]="error";
             $retorno["exito"]=0;
-        }
-        else{
+        } else {
             $retorno["mensaje"]="Permiso ".@$_REQUEST["nombre_modulo"]." para el perfil ".@$_REQUEST["nombre_modulo"]." eliminado correctamente".$mensaje_permiso_crear;
             $retorno["tipo_mensaje"]="warning";
             $retorno["exito"]=1;
         }
-    }
-    else{
+    } else {
         $mensaje_permiso_crear='';
         if($modulo_padre_formatos[0]['idmodulo']==$modulo_formato[0]['cod_padre']){ //es modulo de modulo_formatos
             $modulo_crear_formato=busca_filtro_tabla("","modulo","nombre='crear_".$modulo_formato[0]['nombre']."'","",$conn); 
@@ -150,14 +148,12 @@ if($_REQUEST["perfil"] && $_REQUEST["modulo"]){
             $retorno["mensaje"]="Permiso ".@$_REQUEST["nombre_modulo"]." para el perfil ".@$_REQUEST["nombre_modulo"]." adicionado correctamente".$mensaje_permiso_crear;
             $retorno["tipo_mensaje"]="success";
             $retorno["exito"]=1;
-        }
-        else{
+        } else {
             $retorno["mensaje"]="Error al adicionar el permiso ".@$_REQUEST["nombre_modulo"]." para el perfil ".@$_REQUEST["nombre_modulo"]."<br>".$sql2;
             $retorno["tipo_mensaje"]="error";
             $retorno["exito"]=0;
         }
     }
-    //$retorno["sql"]=$sql2;
     
 }
 
