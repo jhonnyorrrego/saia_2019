@@ -61,8 +61,7 @@ echo(librerias_notificaciones());
 ?>
 <script type="text/javascript">
 	<!--
-	EW_dateSep =
-	"/"; // set date separator
+	EW_dateSep ="/"; // set date separator
 
 	//-->
 	function validar_formulario() {
@@ -203,16 +202,16 @@ function AddData($conn) {
 		$ultimo = count($extension);
 		$formato = $extension[$ultimo - 1];
 		$aleatorio = uniqid();
-		$archivo =  $aleatorio . "." . $formato;
+		$archivo = $aleatorio . "." . $formato;
 		$almacenamiento = new SaiaStorage("bpmn");
-		$resultado = $almacenamiento -> copiar_contenido_externo($_FILES['imagen']['tmp_name' ], $archivo);
-			if ($resultado) {
+		$resultado = $almacenamiento -> copiar_contenido_externo($_FILES['imagen']['tmp_name'], $archivo);
+		if ($resultado) {
 			$dir_bpmn = array(
-			"servidor" => $almacenamiento -> get_ruta_servidor(),
-			"ruta" => $archivo
+				"servidor" => $almacenamiento -> get_ruta_servidor(),
+				"ruta" => $archivo
 			);
 
-			$fieldList2["fileName"] = "'" . json_encode($dir_bpmn). "'";
+			$fieldList2["fileName"] = "'" . json_encode($dir_bpmn) . "'";
 			$fieldList["tamano"] = $_FILES["imagen"]["size"];
 			$fieldList2["fileSize"] = $_FILES["imagen"]["size"];
 			$fieldList2["type"] = "'" . $formato . "'";

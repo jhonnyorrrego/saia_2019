@@ -1,12 +1,7 @@
 <?php
+include ("db.php");
 include ("librerias/header_formato.php");
 include_once("librerias/funciones.php");
-
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
-echo (estilo_bootstrap());
-
-
 $x_encabezado = Null;
 $x_cuerpo = Null;
 $x_pie_pagina = Null;
@@ -24,6 +19,8 @@ $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 $ruta.="../";
 $max_salida--;
 }
+include_once ($ruta_db_superior . "librerias_saia.php");
+echo (estilo_bootstrap());
 
 $sAction = @$_POST["a_add"];
 if (($sAction == "") || ((is_null($sAction)))) {
@@ -84,7 +81,6 @@ function ventanaSecundaria (URL){
    window.open(URL,"ventana1","width=700,height=500,scrollbars=YES,Resizable=yes");
 }
 </script>
-
 <script type="text/javascript" src="<?php echo $ruta_db_superior; ?>anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
 <link rel="stylesheet" type="text/css" href="<?php echo $ruta_db_superior; ?>anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
 <script type='text/javascript'>
@@ -100,7 +96,6 @@ function ventanaSecundaria (URL){
 
 <!--<a href="<?php echo $ruta_db_superior; ?>formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@<?php echo $_REQUEST["key"];?>">Generar el Formato</a>-->
 </span></p>
-
 <form name="formatoadd" id="formatoadd" action="formatoadd_paso2.php" method="post">
 <p>
 <input type="hidden" name="casilla" id="casilla" value="">
@@ -133,8 +128,7 @@ function ventanaSecundaria (URL){
 	</tr>  
 	</table>
 	</br>
-	<!--<input type="submit" name="Action" value="CONTINUAR">-->
-	<input type="submit" value="Continuar" class="btn btn-primary btn-mini">
+	<input type="submit" name="Action" value="Continuar" class="btn btn-primary btn-mini">
 	</form>
 <?php	
 	function LoadData($sKey,$conn)
@@ -142,18 +136,7 @@ function ventanaSecundaria (URL){
 	$sKeyWrk = "" . addslashes($sKey) . "";
 	$sSql = "SELECT * FROM formato";
 	$sSql .= " WHERE idformato = " . $sKeyWrk;
-	$sGroupBy = "";
-	$sHaving = "";
-	$sOrderBy = "";
-	if ($sGroupBy <> "") {
-		$sSql .= " GROUP BY " . $sGroupBy;
-	}
-	if ($sHaving <> "") {
-		$sSql .= " HAVING " . $sHaving;
-	}
-	if ($sOrderBy <> "") {
-		$sSql .= " ORDER BY " . $sOrderBy;
-	}
+
 	$rs = phpmkr_query($sSql,$conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
 	if (phpmkr_num_rows($rs)==0) {
 		$LoadData = false;
@@ -179,9 +162,6 @@ function ventanaSecundaria (URL){
 	return $LoadData;
 
 }
-?>
-<?php
-
 //-------------------------------------------------------------------------------
 // Function AddData
 // - Add Data

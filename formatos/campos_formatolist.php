@@ -182,7 +182,7 @@ SetUpStartRec(); // Set Up Start Record Position
 <a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/generar_formato.php?genera=tabla&idformato=<?php echo(@$_REQUEST["idformato"])?>">Crear Tabla</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 
-<a class="btn btn-mini btn-success" href="<?php echo $ruta_db_superior; ?>formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@<?php echo $_REQUEST["idformatoTR"];?>">Publicar Formato</a>&nbsp;&nbsp;
+<a class="btn btn-mini btn-success" href="<?php echo $ruta_db_superior; ?>formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@<?php echo $_REQUEST["idformato"];?>">Publicar Formato</a>&nbsp;&nbsp;
 
 
 
