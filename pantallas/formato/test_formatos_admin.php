@@ -29,7 +29,7 @@ if ($id and $id <> "") {
 			if (@$dato_papa[0]["codigo"]) {
 				$cadena_codigo = "(" . $dato_papa[0]["codigo"] . ")";
 			}
-			echo("text=\"" . htmlspecialchars($dato_papa[0]["nombre"]) . $cadena_codigo . " \" id=\"" . $dato_papa[0]["id" . $tabla] . "\">");
+			echo("text=\"" . htmlspecialchars($dato_papa[0]["etiqueta"]) . $cadena_codigo . " \" id=\"" . $dato_papa[0]["id" . $tabla] . "\">");
 			validar_vistas($dato_papa[0]["id" . $tabla]);
 		}
 	}
@@ -70,7 +70,7 @@ function llena_serie($serie, $condicion = "") {
 			if (@$papas[$i]["codigo"]) {
 				$cadena_codigo = "(" . $papas[$i]["codigo"] . ")";
 			}
-			echo("text=\"" . htmlspecialchars(($papas[$i]["nombre"])) . $cadena_codigo . " \" id=\"" . $papas[$i]["id$tabla"] . "\"");
+			echo("text=\"" . htmlspecialchars(($papas[$i]["etiqueta"])) . $cadena_codigo . " \" id=\"" . $papas[$i]["id$tabla"] . "\"");
 			if ($hijos[0]["cant"] != 0 && (@$_REQUEST["sin_padre"]))
 				echo(" nocheckbox=\"1\" ");
 			if ($hijos[0][0])

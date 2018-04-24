@@ -1,8 +1,18 @@
-<?php session_start(); ?>
-<?php ob_start(); ?>
 <?php
+$max_salida = 6;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
+	}
+	$ruta .= "../";
+	$max_salida--;
+}
+include_once ($ruta_db_superior . "db.php");
+include_once ($ruta_db_superior . "librerias_saia.php");
+echo (estilo_bootstrap());
 
-// Initialize common variables
+
 $x_idformato = Null;
 $x_nombre = Null;
 $x_etiqueta = Null;
@@ -20,7 +30,7 @@ $x_papel = Null;
 $x_exportar = Null;
 $_pertenece_nucleo = Null;
 ?>
-<?php include ("db.php") ?>
+
 <?php include ("phpmkrfn.php") ?>
 <?php
 $sKey = @$_GET["key"];
@@ -55,18 +65,32 @@ switch ($sAction)
 }
 ?>
 <?php include ("header.php") ?>
-<p><br /><a href="<?php echo "formatoedit.php?key=" . urlencode($sKey); ?>">Editar</a>&nbsp;   
-<a href="<?php echo $ruta_db_superior; ?>formatos/<?php echo "formatoadd_paso2.php?key=" . urlencode($sKey); ?>">Editar cuerpo</a>&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/campos_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Campos del Formato</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/funciones_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Funciones del Formato</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@<?php echo $_REQUEST["key"];?>">Generar el Formato</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/formatoadd.php?x_cod_padre=<?php echo $_REQUEST["key"];?>">Adicionar hijo</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/transferencias_automaticas.php?idformato=<?php echo $_REQUEST["key"];?>">Transferencias</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/rutas_automaticas.php?idformato=<?php echo $_REQUEST["key"];?>">Rutas</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/formatoexport.php?key=<?php echo $_REQUEST["key"];?>">Exportar Formato</a>
-&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>webservice_saia/exportar_importar_formato/exportar_formato/exportar_formato.php?pre_exportar_formato=1&idformato=<?php echo $_REQUEST["key"];?>">Pasar a productivo</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar">Reg.T</a>
+
+<legend></br>Información General del Formato</legend></br>
+
+<p><br /><a class="btn btn-mini btn-info" href="<?php echo "formatoedit.php?key=" . urlencode($sKey); ?>">Editar información</a>&nbsp;
+<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/campos_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Campos del Formato</a>&nbsp;
+
+<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/<?php echo "formatoadd_paso2.php?key=" . urlencode($sKey); ?>">Diseño del Formato</a>&nbsp;
+
+<!--<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/funciones_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Funciones del Formato</a>&nbsp;&nbsp;-->
+
+<!--<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/formatoadd.php?x_cod_padre=<?php echo $_REQUEST["key"];?>">Adicionar hijo</a>&nbsp;&nbsp;-->
+
+<!--<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/transferencias_automaticas.php?idformato=<?php echo $_REQUEST["key"];?>">Transferencias</a>&nbsp;&nbsp;-->
+
+<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/rutas_automaticas.php?idformato=<?php echo $_REQUEST["key"];?>">Ruta de Aprobación</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+<!--<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/formatoexport.php?key=<?php echo $_REQUEST["key"];?>">Exportar Formato</a>
+&nbsp;&nbsp;-->
+
+
+<!--<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>webservice_saia/exportar_importar_formato/exportar_formato/exportar_formato.php?pre_exportar_formato=1&idformato=<?php echo $_REQUEST["key"];?>">Pasar a productivo</a>&nbsp;&nbsp;-->
+
+
+<!--<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar">Reg.T</a>-->
+
+<a class="btn btn-mini btn-success" href="<?php echo $ruta_db_superior; ?>formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@<?php echo $_REQUEST["key"];?>">Publicar Formato</a>&nbsp;&nbsp;
 </span></p>
 </span></p>
 <p>

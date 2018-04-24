@@ -55,6 +55,9 @@ class SaiaStorage {
 			case 'backup':
 				$server_path = RUTA_BACKUPS;
 				break;
+			case 'bpmn':
+				$server_path = RUTA_ARCHIVOS_BPMN;
+				break;
 			default: //Usar el tipo. Ej. BACKUP
 				$server_path = $this->tipo;
 		}

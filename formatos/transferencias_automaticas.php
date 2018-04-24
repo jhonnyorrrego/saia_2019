@@ -1,9 +1,23 @@
-<?php 
-include_once("../db.php");
+<?php
+$max_salida = 6;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+    if (is_file($ruta . "db.php")) {
+        $ruta_db_superior = $ruta;
+    }
+    $ruta .= "../";
+    $max_salida--;
+}
+include_once ($ruta_db_superior . "db.php");
+
 include_once("../header.php");
 include_once("librerias/header_formato.php");
 include_once("librerias/funciones_acciones.php");
 include_once("librerias/funciones.php"); 
+
+include_once ($ruta_db_superior . "librerias_saia.php");
+echo (estilo_bootstrap());
+
 ?>
 <script type="text/javascript" src="../js/jquery.js"></script>
 <script type="text/javascript" src="../js/jquery.validate.js"></script>
@@ -78,22 +92,15 @@ else if(@$_REQUEST["eliminar"]==1 && @$_REQUEST["idformato"]){
 }
 
 if(@$_REQUEST["idformato"]){
-  $texto='<div align="center">';
-  if(@$_REQUEST["accion_ejecutar"]==1){
-    $texto.="<b>EDITANDO ASIGNACION ";
-  }
-  else if(@$_REQUEST["accion_ejecutar"]==2){
-    $texto.="<b>ELIMINANDO ASIGNACION";
-  }
-  else {
-    $texto.="<b>ASIGNANDO";
-  }
   $idformato=$_REQUEST["idformato"];
   $formato=busca_filtro_tabla("etiqueta","formato","idformato=$idformato","",$conn);
-  $texto.=' Transferencia Automatica ('.$formato[0]["etiqueta"].')<br /><br /></b></div><div><a href="formatoview.php?key='.$_REQUEST["idformato"].'">Regresar</a>
-  &nbsp;&nbsp;<a href="transferencias_automaticas.php?idformato='.$_REQUEST["idformato"].'">Asignar Transferencia</a>
-  &nbsp;&nbsp;<a href="funciones_formato_ordenar.php?idformato='.$_REQUEST["idformato"].'" class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 550, height:400,preserveContent:false } )" style="text-decoration: underline; cursor:pointer;">Ordenar Funciones</a>
-  <br /><form method="POST" name="asignar_funcion_formato" id="asignar_funcion_formato"><table style="border-collapse:collapse;" border="1px" width="100%">';
+  $texto.='<br/><legend>Transferencias Autom&aacute;ticas</legend><br/><div><a class="btn btn-mini btn-default" href="formatoview.php?key='.$_REQUEST["idformato"].'">Regresar</a>
+  
+  <a class="btn btn-mini btn-default" href="rutas_automaticas.php?idformato='.$_REQUEST["idformato"].'">Rutas de Aprobación</a>
+  
+  &nbsp;&nbsp;<a class="btn btn-mini btn-info" href="transferencias_automaticas.php?idformato='.$_REQUEST["idformato"].'">Asignar Transferencia</a>
+  &nbsp;&nbsp;<a class="btn btn-mini btn-info" href="funciones_formato_ordenar.php?idformato='.$_REQUEST["idformato"].'" class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 550, height:400,preserveContent:false } )" >Ordenar Funciones</a>
+  <br /><br /><form method="POST" name="asignar_funcion_formato" id="asignar_funcion_formato"><table style="border-collapse:collapse;" border="1px" width="100%">';
   
   $lacciones=busca_filtro_tabla("","accion","","",$conn);
 

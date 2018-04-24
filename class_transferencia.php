@@ -759,9 +759,9 @@ function mostrar_estado_proceso($idformato, $iddoc) {
 						$firmas++;
 					} elseif ($fila["obligatorio"] == 2) {// Revisado
 						if ($fila["nombre"] == "POR_APROBAR")
-							$revisados .= "<tr><td style=\"width:100%\"><span class='phpmaker'>Reviso : " . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "-" . formato_cargo($cargos[0]["nombre"]) . " (Pendiente)</span></td></tr>";
+							$revisados .= "<tr><td style=\"width:100%\"><br/><span class='phpmaker'>Revis&oacute; : " . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "-" . formato_cargo($cargos[0]["nombre"]) . " (Pendiente)</span></td></tr>";
 						elseif ($fila["nombre"] == "APROBADO" || $fila["nombre"] == "REVISADO")
-							$revisados .= "<tr><td style=\"width:100%\"><span class='phpmaker'>Reviso : " . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "-" . formato_cargo($cargos[0]["nombre"]) . "</span> <img src=\"" . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/images/check.jpg\">" . " </td></tr>";
+							$revisados .= "<tr><td style=\"width:100%\"><br/><span class='phpmaker'>Revis&oacute; : " . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "-" . formato_cargo($cargos[0]["nombre"]) . "</span> </td></tr>";
 					} elseif ($fila["obligatorio"] == 5) {// Firma externa
 						if ($firmas == 0) {
 							echo "<tr>";

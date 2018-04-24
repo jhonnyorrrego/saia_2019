@@ -13,6 +13,15 @@ include_once($ruta_db_superior."formatos/librerias/header_formato.php");
 include_once($ruta_db_superior."formatos/librerias/funciones.php");
 include_once($ruta_db_superior."phpmkrfn.php");
 include_once($ruta_db_superior."librerias_saia.php");
+echo (estilo_bootstrap());
+
+
+//-----------------
+
+
+
+
+
 
 // Initialize common variables
 $x_idformato = Null;
@@ -70,6 +79,7 @@ function actualizar_contador(valor)
  });
 }
 </script> 
+
 <?php
 $sKey = @$_GET["key"];
 if (($sKey == "") || (is_null($sKey))) { $sKey = @$_POST["key"]; }
@@ -204,11 +214,18 @@ return true;
 
 //-->
 </script>
+<legend></br>Editar información general del formato</br></legend><br/><br/>
 <!--p><span class="phpmaker"><img class="imagen_internos" src="../botones/configuracion/crear_documentos.png" border="0">Editar Formatos<br-->
 <!--<br><a href="formatolist.php">Ir al Listado</a> -->
+<!--
 <br><a href="formatoadd_paso2.php?key=<?php echo($_REQUEST["key"]);?>">Editar cuerpo</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@<?php echo $_REQUEST['key'];?>">Generar el Formato</a>
+-->
+<!--<a href="<?php echo $ruta_db_superior; ?>formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@<?php echo $_REQUEST['key'];?>">Generar el Formato</a>-->
 </span></p>
+
+<a class="btn btn-mini btn-default" href="<?php echo $ruta_db_superior; ?>formatos/formatoview.php?key=<?php echo(@$_REQUEST["key"])?>">Regresar</a></br>&nbsp;
+
+
 <form name="formatoedit" id="formatoedit" action="formatoedit.php" method="post" onSubmit="return EW_checkMyForm(this);">
 <p>
 <input type="hidden" name="a_edit" value="U">
@@ -441,11 +458,11 @@ echo $x_contador_idcontadorList;
 		Izquierda <select name="x_mizq">
 		<?php combo($margenes["0"]); ?>
     </select> 
-    Derecha <select name="x_mder">
+    </br>Derecha <select name="x_mder">
 		<?php combo($margenes["1"]); ?>    </select>
-    Superior <select name="x_msup">
+    </br>Superior <select name="x_msup">
 		<?php combo($margenes["2"]); ?>    </select>
-    Inferior <select name="x_minf">
+    </br>Inferior <select name="x_minf">
 		<?php combo($margenes["3"]); ?>    </select>
 </span></td>
 	</tr>
@@ -563,7 +580,8 @@ echo $x_contador_idcontadorList;
 	
 </table>
 <p>
-<input type="submit" name="Action" value="EDIT">
+<!--<input type="submit" name="Action" value="EDIT">-->
+<input type="submit" value="Continuar" class="btn btn-primary btn-mini">
 </form>
 <?php
 //-------------------------------------------------------------------------------

@@ -22,6 +22,7 @@ $x_banderas =array();
 <?php include ($ruta_db_superior."db.php");
 include ($ruta_db_superior."librerias_saia.php");
 include_once("librerias/funciones.php");
+echo (estilo_bootstrap());
 ?>
 <?php include ($ruta_db_superior."phpmkrfn.php") ?>
 <?php
@@ -207,12 +208,21 @@ return true;
 
 //-->
 </script>
-<p><span class="phpmaker">Campos del Formato<br><br>
+<legend></br>Crear campo del Formato</legend><br><br>
+
+<p><span class="phpmaker">
 <?php
 if(!isset($_REQUEST["pantalla"]))
 {
 ?>
-<a href="campos_formatolist.php?idformato=<?php echo(@$_REQUEST["idformato"]);?>">Listado de Campos</a></span>
+
+<a class="btn btn-mini btn-default" href="<?php echo $ruta_db_superior; ?>formatos/formatoview.php?key=<?php echo(@$_REQUEST["idformato"])?>">Regresar</a>&nbsp;
+
+
+
+
+
+<a class="btn btn-mini btn-info" href="campos_formatolist.php?idformato=<?php echo(@$_REQUEST["idformato"]);?>">Listado de Campos</a></span>
 <?php }
 else
   echo "<script>document.getElementById('header').style.display='none';</script>";
@@ -495,7 +505,8 @@ if(!$datos_formato[0]["item"]){
 	</tr>
 </table>
 <p>
-<input type="submit" name="Action" value="ADICIONAR" id="action"> 
+<!--<input type="submit" name="Action" value="ADICIONAR" id="action"> -->
+<input type="submit" value="Continuar" class="btn btn-primary btn-mini">
 </form>
 <?php include ("footer.php") ?>
 <?php

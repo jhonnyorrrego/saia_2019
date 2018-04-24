@@ -1,7 +1,12 @@
 <?php
-include ("db.php");
 include ("librerias/header_formato.php");
 include_once("librerias/funciones.php");
+
+include_once ($ruta_db_superior . "db.php");
+include_once ($ruta_db_superior . "librerias_saia.php");
+echo (estilo_bootstrap());
+
+
 $x_encabezado = Null;
 $x_cuerpo = Null;
 $x_pie_pagina = Null;
@@ -79,18 +84,23 @@ function ventanaSecundaria (URL){
    window.open(URL,"ventana1","width=700,height=500,scrollbars=YES,Resizable=yes");
 }
 </script>
+
 <script type="text/javascript" src="<?php echo $ruta_db_superior; ?>anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
 <link rel="stylesheet" type="text/css" href="<?php echo $ruta_db_superior; ?>anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
 <script type='text/javascript'>
     hs.graphicsDir = '<?php echo $ruta_db_superior; ?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
     hs.outlineType = 'rounded-white';
 </script>
+<legend></br>Diseño del Formato</legend>
 <p><span class="phpmaker"><br>   
-<a href="<?php echo $ruta_db_superior; ?>formatos/formatoedit.php?key=<?php echo $_REQUEST["key"];?>">Editar</a>&nbsp;&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/campos_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Listado de campos</a>&nbsp;&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/funciones_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Funciones del Formato</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@<?php echo $_REQUEST["key"];?>">Generar el Formato</a>
+<!--<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/formatoedit.php?key=<?php echo $_REQUEST["key"];?>">Editar información General</a>&nbsp;-->
+<a class="btn btn-mini btn-default" href="<?php echo $ruta_db_superior; ?>formatos/formatoview.php?key=<?php echo $_REQUEST["key"]; ?>">Regresar</a>
+<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/campos_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Listado de campos</a>&nbsp;
+<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/funciones_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Funciones del Formato</a>&nbsp;
+
+<!--<a href="<?php echo $ruta_db_superior; ?>formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@<?php echo $_REQUEST["key"];?>">Generar el Formato</a>-->
 </span></p>
+
 <form name="formatoadd" id="formatoadd" action="formatoadd_paso2.php" method="post">
 <p>
 <input type="hidden" name="casilla" id="casilla" value="">
@@ -101,9 +111,9 @@ function ventanaSecundaria (URL){
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Encabezado</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <input type="hidden" name="x_encabezado" id="x_encabezado" value="<?php echo @$x_encabezado; ?>">
-    <label id="x_encabezado_mostrar"><?php echo @$x_nombre_encabezado; ?></label>&nbsp;&nbsp;
-<a href="javascript:formatoadd.casilla.value='x_encabezado';ventanaSecundaria('encabezadoadd.php?listar=1')">ELEGIR</a>
-<label onclick="formatoadd.x_encabezado.value='';document.getElementById('x_encabezado_mostrar').innerHTML='Ninguno'" style="color:blue; text-decoration:underline; cursor:pointer">SIN ENCABEZADO</label>
+    <label id="x_encabezado_mostrar"><?php echo @$x_nombre_encabezado; ?></label>
+<a href="javascript:formatoadd.casilla.value='x_encabezado';ventanaSecundaria('encabezadoadd.php?listar=1')">Elegir Encabezado</a>
+<label onclick="formatoadd.x_encabezado.value='';document.getElementById('x_encabezado_mostrar').innerHTML='Ninguno'" style="color:blue; text-decoration:underline; cursor:pointer">Sin encabezado</label>
 </span></td>
 	</tr>
 	<tr>
@@ -116,13 +126,15 @@ function ventanaSecundaria (URL){
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Pie de P&aacute;gina</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
     <input type="hidden" name="x_pie_pagina" id="x_pie_pagina" value="<?php echo @$x_pie_pagina; ?>">
-    <label id="x_pie_pagina_mostrar"><?php echo @$x_nombre_pie; ?></label>&nbsp;&nbsp;
-<a href="javascript:formatoadd.casilla.value='x_pie_pagina';ventanaSecundaria('encabezadoadd.php?listar=1')">ELEGIR</a> 
-&nbsp;&nbsp;<label onclick="document.getElementById('x_pie_pagina').value='';document.getElementById('x_pie_pagina_mostrar').innerHTML='Ninguno'" style="color:blue; text-decoration:underline; cursor:pointer">SIN PIE DE PAGINA</label>
+    <label id="x_pie_pagina_mostrar"><?php echo @$x_nombre_pie; ?></label>
+<a href="javascript:formatoadd.casilla.value='x_pie_pagina';ventanaSecundaria('encabezadoadd.php?listar=1')">Elegir Pie de Página</a> 
+&nbsp;&nbsp;<label onclick="document.getElementById('x_pie_pagina').value='';document.getElementById('x_pie_pagina_mostrar').innerHTML='Ninguno'" style="color:blue; text-decoration:underline; cursor:pointer">Sin pie de página</label>
 </span></td>
 	</tr>  
 	</table>
-	<input type="submit" name="Action" value="CONTINUAR">
+	</br>
+	<!--<input type="submit" name="Action" value="CONTINUAR">-->
+	<input type="submit" value="Continuar" class="btn btn-primary btn-mini">
 	</form>
 <?php	
 	function LoadData($sKey,$conn)

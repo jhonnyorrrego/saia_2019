@@ -14,6 +14,10 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias/estilo_formulario.php");
 include_once($ruta_db_superior."formatos/librerias/header_formato.php");
 include_once($ruta_db_superior."formatos/librerias/funciones.php"); 
+include_once ($ruta_db_superior . "librerias_saia.php");
+echo (estilo_bootstrap());
+
+
 ?>
 <link rel="STYLESHEET" type="text/css" href="<?php echo $ruta_db_superior; ?>css/dhtmlXTree.css">
 <script type="text/javascript" src="<?php echo $ruta_db_superior; ?>js/dhtmlXCommon.js"></script>
@@ -26,9 +30,10 @@ body, table{
 	font-size: 9px;
 }
 </style>
+<legend></br>Ruta de aprobación del Formato</legend>
+
 <?php
 encabezado();
-
 if(@$_REQUEST["accion"]=='adicionar'){
 	formulario_adicionar();
 }
@@ -51,12 +56,14 @@ function encabezado(){
 	$idformato=$_REQUEST["idformato"];
 	$formato=busca_filtro_tabla("","formato","idformato=".$idformato,"",$conn);
 	?>
-	<form method="post" name="formulario_ruta" id="name="formulario_ruta">
-	<b><?php echo mayusculas($formato[0]["etiqueta"]); ?></b> (<?php echo ($formato[0]["nombre"]); ?>)<br><br>
-	<a href="formatoview.php?key=<?php echo $_REQUEST["idformato"]; ?>">Regresar</a>&nbsp;&nbsp;
-	<a href="rutas_automaticas.php?idformato=<?php echo $_REQUEST["idformato"]; ?>&accion=adicionar">Adicionar Ruta</a>
+	<br/><form method="post" name="formulario_ruta" id="name="formulario_ruta">
+	<a class="btn btn-mini btn-default" href="formatoview.php?key=<?php echo $_REQUEST["idformato"]; ?>">Regresar</a>
+	<a class="btn btn-mini btn-info" href="rutas_automaticas.php?idformato=<?php echo $_REQUEST["idformato"]; ?>&accion=adicionar">Adicionar Ruta</a>
+	
+	<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/transferencias_automaticas.php?idformato=<?php echo $_REQUEST["idformato"];?>">Transferencias</a>&nbsp;&nbsp;<br/><br/>
 	<?php
 }
+
 function formulario(){
 	global $conn,$ruta_db_superior;
 	$idformato=$_REQUEST["idformato"];

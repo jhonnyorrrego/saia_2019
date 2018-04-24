@@ -1,5 +1,3 @@
-<?php session_start(); ?>
-<?php ob_start(); ?>
 <?php
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
@@ -12,6 +10,13 @@ $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 $ruta.="../";
 $max_salida--;
 }
+
+include_once ($ruta_db_superior . "db.php");
+include_once ($ruta_db_superior . "librerias_saia.php");
+echo (estilo_bootstrap());
+
+
+
 // Initialize common variables
 $x_idcampos_formato = Null;
 $x_formato_idformato = Null;
@@ -158,24 +163,30 @@ if ($nDisplayRecs <= 0) { // Display All Records
 $nStartRec = 1;
 SetUpStartRec(); // Set Up Start Record Position
 ?>
-<p><span class="phpmaker"> Campos del Formato
-</span></p>
-<form action="campos_formatolist.php?idformato=<?php echo(@$_REQUEST["idformato"])?>">
-<table border="0" cellspacing="0" cellpadding="0">
-	<tr>
-		<td><span class="phpmaker">
-			<input type="text" name="psearch" size="20">
-			<input type="Submit" name="Submit" value="Buscar &nbsp;(*)">&nbsp;&nbsp;
-		</span></td>
-	</tr>
-</table>
-</form>
+<!--<p><span class="phpmaker"> Camposo del Formato
+</span></p>-->
+
+<legend></br>Campos del Formato</legend></br></br>
 <span class="phpmaker">
-<a href="<?php echo $ruta_db_superior; ?>formatos/funciones_formatolist.php?idformato=<?php echo(@$_REQUEST["idformato"])?>">Funciones formato</a>&nbsp;&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/campos_formatoadd.php?idformato=<?php echo(@$_REQUEST["idformato"])?>">Adicionar Campos al Formato</a>&nbsp;&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/campos_formato_ordenar.php?idformato=<?php echo(@$_REQUEST["idformato"])?>">Ordenar Campos</a>&nbsp;&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@<?php echo $_REQUEST["idformato"];?>">Generar el Formato</a>&nbsp;&nbsp;
-<a href="<?php echo $ruta_db_superior; ?>formatos/generar_formato.php?genera=tabla&idformato=<?php echo(@$_REQUEST["idformato"])?>">Crear Tabla</a></span>
+
+
+<a class="btn btn-mini btn-default" href="<?php echo $ruta_db_superior; ?>formatos/formatoview.php?key=<?php echo(@$_REQUEST["idformato"])?>">Regresar</a>&nbsp;
+<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/campos_formatoadd.php?idformato=<?php echo(@$_REQUEST["idformato"])?>">Adicionar Campo</a>&nbsp;
+
+<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/campos_formato_ordenar.php?idformato=<?php echo(@$_REQUEST["idformato"])?>">Ordenar Campos</a>&nbsp;
+
+
+<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/funciones_formatolist.php?idformato=<?php echo(@$_REQUEST["idformato"])?>">Funciones</a>&nbsp;
+
+
+<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/generar_formato.php?genera=tabla&idformato=<?php echo(@$_REQUEST["idformato"])?>">Crear Tabla</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+
+<a class="btn btn-mini btn-success" href="<?php echo $ruta_db_superior; ?>formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@<?php echo $_REQUEST["idformatoTR"];?>">Publicar Formato</a>&nbsp;&nbsp;
+
+
+
+</span>
 <p>
 <form method="post">
 <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
