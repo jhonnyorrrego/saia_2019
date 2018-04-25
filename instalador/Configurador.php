@@ -5,9 +5,11 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Helper\Table;
 
-class Configuracion extends Command {
+class ConfigCaptureCommand extends Command {
 
     protected $dependencies = array();
 
@@ -22,7 +24,7 @@ class Configuracion extends Command {
      */
     protected $motores = array(
         "MySql" => "pdo_mysql",
-        "Oracle" => "pdo_oci",
+        "Oracle" => "oci8",
         "SqlServer" => "pdo_sqlsrv",
         "MSSql" => "pdo_sqlsrv",
         "Postgres" => "pdo_pgsql"
@@ -55,7 +57,17 @@ class Configuracion extends Command {
                 $output->writeln(sprintf('<error>Debe ingresar un valor: %s</error>', $pregunta->getQuestion()));
             }
         }
-        var_dump($this->valores);
+        $datos = $this->valores;
+        $datos["dbpass"] = "******";
+        $table = new Table($output);
+        $table ->setHeaders(array_keys($datos))
+        ->setRows(array(array_values($datos)));
+        $table->render();
+        $question = new ConfirmationQuestion('Por favor indique si los valores son correctos. De lo contrario vuelva a ejecutar el comando "configurar" (s/N)? ', false, '/^(y|s)/i');
+
+        if (!$helper->ask($input, $output, $question)) {
+            throw new \Exception('Configuración rechazada');
+        }
     }
 
     protected function configure() {
@@ -127,6 +139,14 @@ class Configuracion extends Command {
         $preguntaServidorWeb->setNormalizer($normalizer);
         $preguntaServidorWeb->setMaxAttempts(3);
         $this->parametros["urlsaia"] = $preguntaServidorWeb;
+
+        $normalizer_alm = function ($value) {
+            return rtrim($value, '/');
+        };
+
+        $preguntaAlmacenamiento = new Question("Ruta almacenamiento (por defecto '../almacenamiento'): ", '../almacenamiento');
+        $preguntaAlmacenamiento->setNormalizer($normalizer_alm);
+        $this->parametros["almacenamientosaia"] = $preguntaAlmacenamiento;
     }
 
     public function get_valores() {
