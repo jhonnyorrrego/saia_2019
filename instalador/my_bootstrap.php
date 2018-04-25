@@ -13,16 +13,27 @@ $isDevMode = true;
 $dbParams = array(
     'driver'   => 'pdo_mysql',
     'user'     => 'saia',
-    'password' => 'cerok_saia421_5',
-    'dbname'   => 'saia_demo3',
-    'host' => "saia-comercial.ct00qljbq3lp.us-east-1.rds.amazonaws.com"
+    'password' => 'cerok_saia',
+    'dbname'   => 'saia_release1',
 );
 
 //$config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
 $config = Setup::createAnnotationMetadataConfiguration(array(__DIR__."/orm"), $isDevMode, null, null, false);
-//$config->setFilterSchemaAssetsExpression("/(?<!^)rcmail_/");
-$config->setFilterSchemaAssetsExpression("/^(?!rcmail_).+/");
+$reg = filtro_excluir_sin_pk();
+//$config->setFilterSchemaAssetsExpression("/^(?!rcmail_).+/");
+$config->setFilterSchemaAssetsExpression($reg);
 
 $entityManager = EntityManager::create($dbParams, $config);
 $entityManager->getConnection()->getDatabasePlatform()->registerDoctrineTypeMapping('enum', 'string');
 
+function filtro_excluir_sin_pk() {
+    $filter_exclude = [
+        // tables with no primary key generate exceptions
+        'rcmail_cache',
+        'rcmail_cache_shared',
+        'rcmail_dictionary',
+        'version_pivote_anexo'
+    ];
+    $exclude_reg = '/^(?!(?:' . implode('|', $filter_exclude) . ')$).*$/i';
+    return $exclude_reg;
+}

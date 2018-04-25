@@ -7,9 +7,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Process\Process;
 
-class Install extends Command {
-
-    protected $installDir;
+class ConfigGenCommand extends Command {
 
     protected $install_dir;
 
@@ -26,8 +24,11 @@ class Install extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output) {
         //if ($this->createInstallationDirectory($output) && $this->generateDefine($output)) {
-        if ($this->generateDefine($output)) {
-                $output->writeln('<info>FINALIZADO</info>');
+        $output->writeln('<info>Creando archivo define.php</info>');
+        if ($this->generateDefine($output) && $this->renameInstallationDirectory($output)) {
+                $output->writeln('');
+                $output->writeln('<info>INSTALACION TERMINADA</info>');
+                $output->writeln('');
         } else {
             $output->writeln('<error>Ocurrió un error :\'-(</error>');
 
@@ -43,16 +44,16 @@ class Install extends Command {
 
     protected function createInstallationDirectory(OutputInterface $output) {
         $dialog = $this->getHelperSet()->get('dialog');
-        $this->installDir = $this->install_dir . DIRECTORY_SEPARATOR . $dialog->ask($output, '<question>Por favor especifique un directorio que no exista para empezar la instalacion: </question>');
+        $this->install_dir = $this->install_dir . DIRECTORY_SEPARATOR . $dialog->ask($output, '<question>Por favor especifique un directorio que no exista para empezar la instalacion: </question>');
 
-        if (!is_dir($this->installDir)) {
+        if (!is_dir($this->install_dir)) {
 
-            $output->writeln(sprintf("<info>Se va a crear el directorio %s </info>", $this->installDir));
-            $mkdir = new Process(sprintf("mkdir -p %s", $this->installDir));
+            $output->writeln(sprintf("<info>Se va a crear el directorio %s </info>", $this->install_dir));
+            $mkdir = new Process(sprintf("mkdir -p %s", $this->install_dir));
             $mkdir->run();
 
             if ($mkdir->isSuccessful()) {
-                $output->writeln(sprintf("<info>Directorio %s creado con exito</info>", $this->installDir));
+                $output->writeln(sprintf("<info>Directorio %s creado con exito</info>", $this->install_dir));
 
                 return true;
             }
@@ -62,10 +63,29 @@ class Install extends Command {
         return false;
     }
 
+    protected function renameInstallationDirectory(OutputInterface $output) {
+        $mkdir = new Process(sprintf("mv %s %s", $this->install_dir, "saia"));
+        if (is_dir($this->install_dir) && !is_dir("saia")) {
+
+            $output->writeln(sprintf("<info>Renombrando el directorio %s </info>", $this->install_dir));
+            $mkdir->run();
+
+            if ($mkdir->isSuccessful()) {
+                $output->writeln(sprintf("<info>Directorio %s renombrado con exito</info>", $this->install_dir));
+                return true;
+            }
+        } else {
+            $output->writeln(sprintf("<error>No existe el directorio %s</error>", $this->install_dir));
+        }
+
+        $this->failingProcess = $mkdir;
+        return false;
+    }
+
     protected function install(OutputInterface $output) {
-        // $install = new Process(sprintf('cd %s && php composer.phar install', $this->installDir));
+        // $install = new Process(sprintf('cd %s && php composer.phar install', $this->install_dir));
         $output->writeln('<info>' . __DIR__ .'</info>');
-        $install = new Process(sprintf('cd %s && touch hola.txt', $this->installDir));
+        $install = new Process(sprintf('cd %s && touch hola.txt', $this->install_dir));
         $install->run();
 
         if ($install->isSuccessful()) {
@@ -79,7 +99,7 @@ class Install extends Command {
     }
 
     protected function generateDefine(OutputInterface $output) {
-        //TODO: se puede usar $this->installDir. Sino __DIR__ es el directorios saia/instalador (de momento)
+        //TODO: se puede usar $this->install_dir. Sino __DIR__ es el directorios saia/instalador (de momento)
 
         if(empty($this->configuracion->get_valores()) ) {
             $output->writeln('<info>Primero debe ejecutar la tarea "configurar"</info>');
@@ -93,7 +113,12 @@ class Install extends Command {
             $skeleton = str_replace('{{' . $key . '}}', $value, $skeleton);
         }
 
-        $ruta_saia = basename($this->install_dir);
+        $dir = dirname($this->install_dir);
+        if($dir == ".") {
+            $ruta_saia = basename($this->install_dir);
+        } else {
+            $ruta_saia = basename($dir);
+        }
         if(empty($ruta_saia)) {
             $ruta_saia = $this->install_dir;
         }

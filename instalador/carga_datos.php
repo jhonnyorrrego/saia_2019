@@ -5474,7 +5474,7 @@ $busqueda_componente = [
         "etiqueta" => "Tareas pendientes asignadas a mi",
         "nombre" => "mis_tareas_pendientes",
         "orden" => 4,
-        "info" => "<div>\n<div class=\"link kenlace_saia_tareas\" enlace=\"../tareas/mostrar_tareas.php?idtareas={*idtareas*}\" titulo=\"{*$tarea*}\"><b>{*tarea*}</b></div></br>\n<div class=\"pull-right\">{*fecha_tarea*}</div></br>\n<div class=\"pull-right\">{*estado_tarea_actual@estado_tarea*}</div>\n<b>Responsable: {*mostrar_funcionario@responsable*}</b></br>\n<b>Prioridad:</b> {*mostrar_prioridad@prioridad*}</br>\n<b>Descripci&oacute;:</b> {*descripcion*}</br>\n<b>Asignado por: </b> {*mostrar_funcionario_asignado_por@ejecutor*}</br>\n<div>\n{*informacion_tarea_documento@documento_iddocumento*}\n</div>\n</div>",
+        "info" => '<div>\n<div class=\"link kenlace_saia_tareas\" enlace=\"../tareas/mostrar_tareas.php?idtareas={*idtareas*}\" titulo=\"{*$tarea*}\"><b>{*tarea*}</b></div></br>\n<div class=\"pull-right\">{*fecha_tarea*}</div></br>\n<div class=\"pull-right\">{*estado_tarea_actual@estado_tarea*}</div>\n<b>Responsable: {*mostrar_funcionario@responsable*}</b></br>\n<b>Prioridad:</b> {*mostrar_prioridad@prioridad*}</br>\n<b>Descripci&oacute;:</b> {*descripcion*}</br>\n<b>Asignado por: </b> {*mostrar_funcionario_asignado_por@ejecutor*}</br>\n<div>\n{*informacion_tarea_documento@documento_iddocumento*}\n</div>\n</div>',
         "exportar" => null,
         "exportar_encabezado" => null,
         "encabezado_componente" => null,
@@ -5558,7 +5558,7 @@ $busqueda_componente = [
         "etiqueta" => "Tareas Pendientes",
         "nombre" => "listado_tareas_pendientes",
         "orden" => 1,
-        "info" => "<div>\n<div class=\"link kenlace_saia_tareas\" enlace=\"../tareas/mostrar_tareas.php?idtareas={*idtareas*}\" titulo=\"{*$tarea*}\"><b>{*tarea*}</b></div></br>\n<div class=\"pull-right\">{*fecha_tarea*}</div></br>\n<div class=\"pull-right\">{*estado_tarea_actual@estado_tarea*}</div>\n<b>Responsable: {*mostrar_funcionario@responsable*}</b></br>\n<b>Prioridad:</b> {*mostrar_prioridad@prioridad*}</br>\n<b>Descripci&oacute;:</b> {*descripcion*}</br>\n<b>Asignado por: </b> {*mostrar_funcionario_asignado_por@ejecutor*}</br>\n<div>\n{*informacion_tarea_documento@documento_iddocumento*}\n</div>\n</div>",
+        "info" => '<div>\n<div class=\"link kenlace_saia_tareas\" enlace=\"../tareas/mostrar_tareas.php?idtareas={*idtareas*}\" titulo=\"{*$tarea*}\"><b>{*tarea*}</b></div></br>\n<div class=\"pull-right\">{*fecha_tarea*}</div></br>\n<div class=\"pull-right\">{*estado_tarea_actual@estado_tarea*}</div>\n<b>Responsable: {*mostrar_funcionario@responsable*}</b></br>\n<b>Prioridad:</b> {*mostrar_prioridad@prioridad*}</br>\n<b>Descripci&oacute;:</b> {*descripcion*}</br>\n<b>Asignado por: </b> {*mostrar_funcionario_asignado_por@ejecutor*}</br>\n<div>\n{*informacion_tarea_documento@documento_iddocumento*}\n</div>\n</div>',
         "exportar" => null,
         "exportar_encabezado" => null,
         "encabezado_componente" => null,
@@ -7600,7 +7600,7 @@ $busqueda_componente = [
         "conector" => 2,
         "url" => "pantallas/busquedas/consulta_busqueda_reporte.php",
         "etiqueta" => "Inventario Documental",
-        "nombre" => "reporte_expediente_grid",
+        "nombre" => "reporte_expediente_grid_exp",
         "orden" => 2,
         "info" => "SELECCIONE|{*check_expedientes@idexpediente*}|center|80|-|CODIGO|{*codigo_numero*}|left|80|-|NOMBRE DEL EXPEDIENTE|{*direcciona_nombre@idexpediente,nombre*}|left|200|-|SERIE|{*nombre_serie*}|left|200|-|FECHA INICIAL|{*fecha_extrema_i*}|center|80|-|FECHA FINAL|{*fecha_extrema_f*}|center|80|-|INDICE 1|{*indice_uno*}|left|130|-|INDICE 2|{*indice_dos*}|left|130|-|INDICE 3|{*indice_tres*}|left|130|-|FOLIOS|{*no_folios*}|center|80|-|UNID CONSERV|{*no_unidad_conservacion*}|left|80|SOPORTE 3|{*soporte*}|left|80|-|NOTAS|{*notas_transf*}|left|200|-|Retenci&oacute;n|{*fecha_reten@idexpediente*}|left|200|",
         "exportar" => null,
@@ -7628,7 +7628,7 @@ $busqueda_componente = [
         "conector" => 2,
         "url" => "pantallas/busquedas/consulta_busqueda_reporte.php",
         "etiqueta" => "Indice de Expediente",
-        "nombre" => "reporte_docs_expediente_grid",
+        "nombre" => "reporte_docs_expediente_grid_exp",
         "orden" => 2,
         "info" => "Radicado|{*radicado_exp_doc@documento_iddocumento*}|left|80|-|Tipo de documento|{*tipo_doc@documento_iddocumento*}|left|180|-|Descripcion|{*descripcion_doc@documento_iddocumento*}|left|220|-|Fecha|{*fecha*}|center",
         "exportar" => null,
@@ -9242,8 +9242,7 @@ $cargo = [
         "estado" => 1,
         "codigo_cargo" => null,
         "tipo" => 1,
-        "tipo_cargo" => 1,
-        "pertenece_nucleo" => 1
+        "tipo_cargo" => 1
     ],
     [
         "idcargo" => 253,
@@ -9252,8 +9251,7 @@ $cargo = [
         "estado" => 1,
         "codigo_cargo" => null,
         "tipo" => 1,
-        "tipo_cargo" => 1,
-        "pertenece_nucleo" => 1
+        "tipo_cargo" => 1
     ],
     [
         "idcargo" => 254,
@@ -9262,8 +9260,177 @@ $cargo = [
         "estado" => 1,
         "codigo_cargo" => 0,
         "tipo" => 1,
-        "tipo_cargo" => 2,
-        "pertenece_nucleo" => 1
+        "tipo_cargo" => 2
+    ]
+];
+$categoria_formato = [
+    [
+        "idcategoria_formato" => 1,
+        "nombre" => "Radicacion",
+        "cod_padre" => 0,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 2,
+        "nombre" => "Formatos",
+        "cod_padre" => 0,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 3,
+        "nombre" => "Salida",
+        "cod_padre" => 0,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 4,
+        "nombre" => "Justificacion de Compras",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 5,
+        "nombre" => "Comunicacion Externa",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 6,
+        "nombre" => "Autorizacion Salida de Planta",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 7,
+        "nombre" => "Pqrsf",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 8,
+        "nombre" => "Solicitud de Vacaciones",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 10,
+        "nombre" => "Comunicaci&oacute;n Interna",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 11,
+        "nombre" => "Categoria pruebas",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 12,
+        "nombre" => "Solicitud de Permisos",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 13,
+        "nombre" => "Sin categoria",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 14,
+        "nombre" => "Correspondencia de entrada",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 15,
+        "nombre" => "Proceso",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 16,
+        "nombre" => "Macroproceso",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 17,
+        "nombre" => "Bases de Calidad",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 18,
+        "nombre" => "Plan de Mejoramiento",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 19,
+        "nombre" => "Inactivos",
+        "cod_padre" => 0,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 20,
+        "nombre" => "Inventario de archivo",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 21,
+        "nombre" => "Solicitud de elaboraci&amp;oacute;n, modificaci&amp;oacute;n, eliminaci&amp;oacute;n de documentos",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => null,
+        "fecha" => null
+    ],
+    [
+        "idcategoria_formato" => 22,
+        "nombre" => "Rutas de Distribuci&oacute;n",
+        "cod_padre" => 2,
+        "estado" => 1,
+        "descripcion" => "Rutas de Distribuci&oacute;n",
+        "fecha" => "2017-03-07"
     ]
 ];
 $dependencia = [
@@ -9271,7 +9438,7 @@ $dependencia = [
         "iddependencia" => 1,
         "codigo" => "1-00-00",
         "nombre" => "SU ORGANIZACION",
-        "fecha_ingreso" => "2018-01-25T21:42:03Z",
+        "fecha_ingreso" => "2018-01-25 21:42:03",
         "cod_padre" => null,
         "tipo" => 1,
         "estado" => 1,
@@ -9285,7 +9452,7 @@ $dependencia = [
         "iddependencia" => 2,
         "codigo" => "1-00-01",
         "nombre" => "Gerencias",
-        "fecha_ingreso" => "2018-01-26T13:00:40Z",
+        "fecha_ingreso" => "2018-01-26 13:00:40",
         "cod_padre" => 1,
         "tipo" => 1,
         "estado" => 1,
@@ -9299,7 +9466,7 @@ $dependencia = [
         "iddependencia" => 3,
         "codigo" => "1-00-02",
         "nombre" => "Direcciones",
-        "fecha_ingreso" => "2018-01-26T13:01:03Z",
+        "fecha_ingreso" => "2018-01-26 13:01:03",
         "cod_padre" => 1,
         "tipo" => 1,
         "estado" => 1,
@@ -9313,7 +9480,7 @@ $dependencia = [
         "iddependencia" => 4,
         "codigo" => "1-10-00",
         "nombre" => "Direccion General",
-        "fecha_ingreso" => "2018-01-31T16:45:17Z",
+        "fecha_ingreso" => "2018-01-31 16:45:17",
         "cod_padre" => 1,
         "tipo" => 1,
         "estado" => 1,
@@ -9346,7 +9513,7 @@ $formato = [
         "papel" => "Letter",
         "exportar" => "tcpdf",
         "funcionario_idfuncionario" => 1,
-        "fecha" => "2017-09-06T16:17:38Z",
+        "fecha" => "2017-09-06 16:17:38",
         "mostrar" => "1",
         "imagen" => "",
         "detalle" => "0",
@@ -9393,7 +9560,7 @@ $formato = [
         "papel" => "Letter",
         "exportar" => "tcpdf",
         "funcionario_idfuncionario" => 1,
-        "fecha" => "2018-01-26T20:25:12Z",
+        "fecha" => "2018-01-26 20:25:12",
         "mostrar" => "1",
         "imagen" => "",
         "detalle" => "0",
@@ -9440,7 +9607,7 @@ $formato = [
         "papel" => "A4",
         "exportar" => "tcpdf",
         "funcionario_idfuncionario" => 533,
-        "fecha" => "2017-07-26T19:59:16Z",
+        "fecha" => "2017-07-26 19:59:16",
         "mostrar" => "0",
         "imagen" => "",
         "detalle" => "0",
@@ -9487,7 +9654,7 @@ $formato = [
         "papel" => "Letter",
         "exportar" => "tcpdf",
         "funcionario_idfuncionario" => 1,
-        "fecha" => "2017-07-26T19:59:16Z",
+        "fecha" => "2017-07-26 19:59:16",
         "mostrar" => "1",
         "imagen" => null,
         "detalle" => "0",
@@ -9534,7 +9701,7 @@ $formato = [
         "papel" => "Letter",
         "exportar" => "tcpdf",
         "funcionario_idfuncionario" => 9,
-        "fecha" => "2017-07-26T19:59:16Z",
+        "fecha" => "2017-07-26 19:59:16",
         "mostrar" => "0",
         "imagen" => "",
         "detalle" => "0",
@@ -9572,13 +9739,13 @@ $funcionario = [
         "firma_temporal" => null,
         "firma_original" => null,
         "estado" => 1,
-        "fecha_ingreso" => "2009-11-25T00:00:00Z",
+        "fecha_ingreso" => "2009-11-25 00:00:00",
         "clave" => "e8b336e10397e380643afe28a98a8a44",
         "nit" => "1",
         "perfil" => "1",
         "debe_firmar" => 1,
         "tipo" => "0",
-        "ultimo_pwd" => "2010-01-19T14:23:44Z",
+        "ultimo_pwd" => "2010-01-19 14:23:44",
         "mensajeria" => "",
         "email" => "soporte@cerok.com",
         "sistema" => 0,
@@ -9590,8 +9757,7 @@ $funcionario = [
         "foto_original" => "",
         "foto_recorte" => "",
         "foto_cordenadas" => "",
-        "ventanilla_radicacion" => 1,
-        "pertenece_nucleo" => 1
+        "ventanilla_radicacion" => 1
     ],
     [
         "idfuncionario" => 19,
@@ -9603,7 +9769,7 @@ $funcionario = [
         "firma_temporal" => null,
         "firma_original" => null,
         "estado" => 1,
-        "fecha_ingreso" => "2009-11-25T00:00:00Z",
+        "fecha_ingreso" => "2009-11-25 00:00:00",
         "clave" => "9bc6e58d5e3b8aee85fa35f660c29721",
         "nit" => "18",
         "perfil" => "8",
@@ -9621,8 +9787,7 @@ $funcionario = [
         "foto_original" => null,
         "foto_recorte" => null,
         "foto_cordenadas" => "",
-        "ventanilla_radicacion" => 0,
-        "pertenece_nucleo" => 1
+        "ventanilla_radicacion" => 0
     ],
     [
         "idfuncionario" => 10094,
@@ -9634,7 +9799,7 @@ $funcionario = [
         "firma_temporal" => null,
         "firma_original" => null,
         "estado" => 1,
-        "fecha_ingreso" => "2015-01-20T14:33:41Z",
+        "fecha_ingreso" => "2015-01-20 14:33:41",
         "clave" => "e8b336e10397e380643afe28a98a8a44",
         "nit" => "111222333",
         "perfil" => "6",
@@ -9652,8 +9817,7 @@ $funcionario = [
         "foto_original" => null,
         "foto_recorte" => null,
         "foto_cordenadas" => "",
-        "ventanilla_radicacion" => 0,
-        "pertenece_nucleo" => 1
+        "ventanilla_radicacion" => 0
     ]
 ];
 $modulo = [
@@ -17227,10 +17391,15362 @@ $dependencia_cargo = [
         "dependencia_iddependencia" => 1,
         "cargo_idcargo" => 9,
         "estado" => 1,
-        "fecha_inicial" => "2015-12-04T00:00:00Z",
-        "fecha_final" => "2018-10-05T11:41:28Z",
-        "fecha_ingreso" => "2015-12-04T15:03:44Z",
+        "fecha_inicial" => "2015-12-04 00:00:00",
+        "fecha_final" => "2018-10-05 11:41:28",
+        "fecha_ingreso" => "2015-12-04 15:03:44",
         "tipo" => 1
     ]
+];
+$configuracion = [
+	[
+		"idconfiguracion" => 2,
+		"nombre" => "ruta_ftp",
+		"valor" => "/ftp_home/saia_release1/saia/temporal/temporal",
+		"tipo" => "ruta",
+		"fecha" => "2007-04-08 20:00:00",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 3,
+		"nombre" => "ruta_temporal",
+		"valor" => "temporal/temporal",
+		"tipo" => "ruta",
+		"fecha" => "2007-04-09 15:33:52",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 4,
+		"nombre" => "ruta_documentos",
+		"valor" => "documentos",
+		"tipo" => "ruta",
+		"fecha" => "2007-04-09 15:33:59",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 5,
+		"nombre" => "copia",
+		"valor" => "0",
+		"tipo" => "ruta",
+		"fecha" => "2007-04-09 15:34:07",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 6,
+		"nombre" => "genera_pdf",
+		"valor" => "0",
+		"tipo" => "ruta",
+		"fecha" => "2007-04-08 20:00:00",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 7,
+		"nombre" => "ancho_imagen",
+		"valor" => "935",
+		"tipo" => "imagen",
+		"fecha" => "2007-04-08 20:00:00",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 8,
+		"nombre" => "alto_imagen",
+		"valor" => "1125",
+		"tipo" => "imagen",
+		"fecha" => "2007-04-08 20:00:00",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 9,
+		"nombre" => "ancho_miniatura",
+		"valor" => "90",
+		"tipo" => "imagen",
+		"fecha" => "2007-04-09 15:34:28",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 10,
+		"nombre" => "alto_miniatura",
+		"valor" => "120",
+		"tipo" => "imagen",
+		"fecha" => "2007-04-09 15:34:34",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 11,
+		"nombre" => "clave_ftp",
+		"valor" => "69071b2706bf457d52e798bdc7f50735c1f11d262a65a296",
+		"tipo" => "clave",
+		"fecha" => "2007-06-21 12:13:08",
+		"encrypt" => 1
+	],
+	[
+		"idconfiguracion" => 12,
+		"nombre" => "usuario_ftp",
+		"valor" => "cerok",
+		"tipo" => "usuario",
+		"fecha" => "2007-04-08 20:00:00",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 13,
+		"nombre" => "fecha_creacion_funcionario",
+		"valor" => "2012-02-27",
+		"tipo" => "fecha",
+		"fecha" => "2007-05-15 20:00:00",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 14,
+		"nombre" => "login_administrador",
+		"valor" => "cerok",
+		"tipo" => "usuario",
+		"fecha" => "2007-04-04 20:00:00",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 15,
+		"nombre" => "clave_administrador",
+		"valor" => "3eb51b542e287f79d7cd30b3185ec467792c9fef044817a5",
+		"tipo" => "clave",
+		"fecha" => "2007-04-05 09:49:17",
+		"encrypt" => 1
+	],
+	[
+		"idconfiguracion" => 16,
+		"nombre" => "colilla",
+		"valor" => "1",
+		"tipo" => "impresion",
+		"fecha" => "2007-04-09 16:53:12",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 17,
+		"nombre" => "color_encabezado",
+		"valor" => "#57B0DE",
+		"tipo" => "color",
+		"fecha" => "2007-04-30 20:00:00",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 19,
+		"nombre" => "dias_retraso",
+		"valor" => "2",
+		"tipo" => "fecha",
+		"fecha" => "2007-05-17 06:04:38",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 20,
+		"nombre" => "color_leido",
+		"valor" => "#FFFF66",
+		"tipo" => "color",
+		"fecha" => "2007-05-17 06:04:38",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 21,
+		"nombre" => "color_aprobado",
+		"valor" => "#99FF66",
+		"tipo" => "color",
+		"fecha" => "2007-05-17 06:04:38",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 22,
+		"nombre" => "color_revisado",
+		"valor" => "#99FF66",
+		"tipo" => "color",
+		"fecha" => "2007-05-17 06:04:38",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 23,
+		"nombre" => "color_pendiente",
+		"valor" => "#FFFF66",
+		"tipo" => "color",
+		"fecha" => "2007-05-17 06:04:38",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 24,
+		"nombre" => "color_terminado",
+		"valor" => "#99FF66",
+		"tipo" => "color",
+		"fecha" => "2007-05-17 06:04:38",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 25,
+		"nombre" => "color_atrasado",
+		"valor" => "#FF3333",
+		"tipo" => "color",
+		"fecha" => "2007-05-17 06:04:38",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 26,
+		"nombre" => "color_urgente",
+		"valor" => "#FFFF66",
+		"tipo" => "color",
+		"fecha" => "2007-05-17 07:11:24",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 27,
+		"nombre" => "fecha_log",
+		"valor" => "2009-11-01",
+		"tipo" => "fecha",
+		"fecha" => "2007-05-22 20:00:00",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 28,
+		"nombre" => "ruta_script",
+		"valor" => "saia",
+		"tipo" => "ruta",
+		"fecha" => "2007-05-24 20:00:00",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 29,
+		"nombre" => "ruta_log",
+		"valor" => "cerok/backups",
+		"tipo" => "ruta",
+		"fecha" => "2007-05-24 20:00:00",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 30,
+		"nombre" => "nombre",
+		"valor" => "Su Organizaci&oacute;n",
+		"tipo" => "empresa",
+		"fecha" => "2007-06-06 10:49:46",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 31,
+		"nombre" => "logo",
+		"valor" => "../almacenamiento/configuracion/logo_saia/logo_639_2017-03-02.jpg",
+		"tipo" => "empresa",
+		"fecha" => "2007-06-06 10:49:46",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 32,
+		"nombre" => "dias_correo_pendientes",
+		"valor" => "7",
+		"tipo" => "pendientes",
+		"fecha" => "2007-06-10 20:00:00",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 33,
+		"nombre" => "fecha_correo_pendientes",
+		"valor" => "2009-07-14",
+		"tipo" => "pendientes",
+		"fecha" => "2007-06-10 20:00:00",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 34,
+		"nombre" => "enviar_correo_pendientes",
+		"valor" => "1",
+		"tipo" => "pendientes",
+		"fecha" => "2007-06-10 20:00:00",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 35,
+		"nombre" => "extensiones_upload",
+		"valor" => "jpg,png,gif,doc,ppt,xls,txt,pdf,docx,pptx,pps,xlsx,csv",
+		"tipo" => "archivo",
+		"fecha" => "2007-06-29 20:00:00",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 36,
+		"nombre" => "radicador_salida",
+		"valor" => "radicador_salida",
+		"tipo" => "persona",
+		"fecha" => "2007-07-09 20:00:00",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 37,
+		"nombre" => "fondo",
+		"valor" => "./imagenes/fondo_demo.jpg",
+		"tipo" => "empresa",
+		"fecha" => "2007-07-12 10:54:04",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 40,
+		"nombre" => "logo_plantilla",
+		"valor" => "./imagenes/logo_demo.jpg",
+		"tipo" => "imagen",
+		"fecha" => "2007-07-24 06:09:48",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 41,
+		"nombre" => "align_plantilla",
+		"valor" => "right",
+		"tipo" => "plantilla",
+		"fecha" => "2007-07-24 12:58:10",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 42,
+		"nombre" => "fecha_inicio_contador",
+		"valor" => "2009-12-31",
+		"tipo" => "fecha",
+		"fecha" => "2008-01-02 04:56:41",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 43,
+		"nombre" => "mensajeria",
+		"valor" => "1",
+		"tipo" => "comunicacion",
+		"fecha" => null,
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 44,
+		"nombre" => "max_transferencias",
+		"valor" => "10",
+		"tipo" => "comunicacion",
+		"fecha" => null,
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 45,
+		"nombre" => "departamento",
+		"valor" => "5",
+		"tipo" => "empresa",
+		"fecha" => null,
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 46,
+		"nombre" => "ciudad",
+		"valor" => "883",
+		"tipo" => "empresa",
+		"fecha" => null,
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 47,
+		"nombre" => "tipo_letra",
+		"valor" => "Arial",
+		"tipo" => "plantilla",
+		"fecha" => null,
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 48,
+		"nombre" => "servidor_correo",
+		"valor" => "ssl://smtp.gmail.com",
+		"tipo" => "servidor",
+		"fecha" => null,
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 49,
+		"nombre" => "tamanio_maximo_upload",
+		"valor" => "10000000000",
+		"tipo" => "peso",
+		"fecha" => null,
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 50,
+		"nombre" => "tipo_almacenamiento",
+		"valor" => "archivo",
+		"tipo" => "archivo",
+		"fecha" => null,
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 51,
+		"nombre" => "actualizacion_fin_anio",
+		"valor" => "2018-12-31",
+		"tipo" => "actualizacion",
+		"fecha" => "2009-12-30 14:33:31",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 54,
+		"nombre" => "inicio_actualizacion",
+		"valor" => "2018-01-31 16:17:18",
+		"tipo" => "",
+		"fecha" => "2011-01-01 09:04:10",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 55,
+		"nombre" => "fin_actualizacion",
+		"valor" => "2018-01-31 16:19:58",
+		"tipo" => "",
+		"fecha" => "2011-01-01 09:05:31",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 56,
+		"nombre" => "cambio_password",
+		"valor" => "1",
+		"tipo" => "empresa",
+		"fecha" => "2011-02-05 07:02:01",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 57,
+		"nombre" => "fecha_pendientes",
+		"valor" => "2011-01-01",
+		"tipo" => "notificaciones",
+		"fecha" => "2011-07-03 13:20:18",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 58,
+		"nombre" => "fecha_pendientes_totales",
+		"valor" => "2011-01-01",
+		"tipo" => "notificaciones",
+		"fecha" => "2011-07-03 13:20:18",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 59,
+		"nombre" => "puerto_servidor_correo",
+		"valor" => "993",
+		"tipo" => "correo",
+		"fecha" => "2011-07-19 07:30:56",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 60,
+		"nombre" => "puerto_correo_salida",
+		"valor" => "465",
+		"tipo" => "correo",
+		"fecha" => "2011-08-10 05:07:58",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 61,
+		"nombre" => "servidor_correo_salida",
+		"valor" => "ssl://smtp.gmail.com",
+		"tipo" => "correo",
+		"fecha" => "2011-08-10 06:31:03",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 62,
+		"nombre" => "fin_actualizacion",
+		"valor" => "2018-01-31 16:19:58",
+		"tipo" => "",
+		"fecha" => "2012-01-01 08:57:41",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 63,
+		"nombre" => "flujo",
+		"valor" => "imagemagick",
+		"tipo" => "export_imagen",
+		"fecha" => "2012-02-21 21:02:40",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 64,
+		"nombre" => "jefe predeterminado",
+		"valor" => "30325251",
+		"tipo" => "formatos",
+		"fecha" => "2012-03-12 20:39:32",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 65,
+		"nombre" => "pagina_inicio",
+		"valor" => "noticias/carousel.php",
+		"tipo" => "empresa",
+		"fecha" => "2010-03-15 05:21:54",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 66,
+		"nombre" => "fin_actualizacion",
+		"valor" => "2018-01-31 16:19:58",
+		"tipo" => "",
+		"fecha" => "2013-01-03 20:20:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 67,
+		"nombre" => "cantidad_maxima_rastro",
+		"valor" => "20",
+		"tipo" => "rastro",
+		"fecha" => "2013-05-30 20:40:31",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 68,
+		"nombre" => "tamano_letra",
+		"valor" => "10pt",
+		"tipo" => "fuente",
+		"fecha" => "2013-07-17 15:19:55",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 69,
+		"nombre" => "imprimir_colilla_automatico",
+		"valor" => "1",
+		"tipo" => "colilla",
+		"fecha" => "2013-11-09 17:54:37",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 71,
+		"nombre" => "cantidad_confirmacion",
+		"valor" => "40",
+		"tipo" => "radicacion",
+		"fecha" => "2013-11-13 22:18:20",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 72,
+		"nombre" => "fin_actualizacion",
+		"valor" => "2018-01-31 16:19:58",
+		"tipo" => "",
+		"fecha" => "2014-01-03 14:59:41",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 73,
+		"nombre" => "fin_actualizacion",
+		"valor" => "2018-01-31 16:19:58",
+		"tipo" => "",
+		"fecha" => "2014-01-03 15:00:04",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 74,
+		"nombre" => "puerto_ftp",
+		"valor" => "22",
+		"tipo" => "ftp",
+		"fecha" => "2014-04-10 14:44:20",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 76,
+		"nombre" => "logo_colilla",
+		"valor" => "imagenes/logo_colilla.jpg",
+		"tipo" => "empresa",
+		"fecha" => "2014-10-03 14:51:07",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 77,
+		"nombre" => "logo_comunicaciones",
+		"valor" => "./imagenes/encabezado_comunicaciones.jpg",
+		"tipo" => "imagen",
+		"fecha" => "2014-10-17 14:57:36",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 78,
+		"nombre" => "fin_actualizacion",
+		"valor" => "2018-01-31 16:19:58",
+		"tipo" => "",
+		"fecha" => "2015-01-05 16:29:28",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 79,
+		"nombre" => "fin_actualizacion",
+		"valor" => "2018-01-31 16:19:58",
+		"tipo" => "",
+		"fecha" => "2015-01-05 16:29:29",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 80,
+		"nombre" => "fin_actualizacion",
+		"valor" => "2018-01-31 16:19:58",
+		"tipo" => "",
+		"fecha" => "2015-01-05 16:29:29",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 81,
+		"nombre" => "fin_actualizacion",
+		"valor" => "2018-01-31 16:19:58",
+		"tipo" => "",
+		"fecha" => "2015-01-05 16:29:33",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 82,
+		"nombre" => "mayor_informacion",
+		"valor" => "<a href=\"http://www.cerok.com\" target=\"_blank\">www.cerok.com</a> - <a href=\"http://www.cerok.com/es/iformgenerator/verform/1/formulario_de_contacto/\" target=\"_blank\">info@cerok.com</a>",
+		"tipo" => "configuracion_saia",
+		"fecha" => "2015-01-14 16:30:27",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 83,
+		"nombre" => "correo_administrador",
+		"valor" => "jorge.ramirez@cerok.com",
+		"tipo" => "recordar_contrasena",
+		"fecha" => "2015-01-16 15:41:18",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 84,
+		"nombre" => "correo_notificacion",
+		"valor" => "soporte@cerok.com",
+		"tipo" => "correo",
+		"fecha" => "2015-01-16 22:27:10",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 85,
+		"nombre" => "clave_correo_notificacion",
+		"valor" => "73d99887c462a44a1e8c19045aeec1be7c18b4490d25002b",
+		"tipo" => "correo",
+		"fecha" => "2015-01-16 22:27:10",
+		"encrypt" => 1
+	],
+	[
+		"idconfiguracion" => 86,
+		"nombre" => "asunto_defecto_correo",
+		"valor" => "Notificaciones - SAIA",
+		"tipo" => "correo",
+		"fecha" => "2015-01-16 22:51:37",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 87,
+		"nombre" => "exportar_pdf",
+		"valor" => "class_impresion",
+		"tipo" => "documento",
+		"fecha" => "2015-02-18 19:59:53",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 89,
+		"nombre" => "servidor",
+		"valor" => "",
+		"tipo" => "LDAP",
+		"fecha" => "2015-03-30 20:40:34",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 90,
+		"nombre" => "identificacion",
+		"valor" => "",
+		"tipo" => "LDAP",
+		"fecha" => "2015-03-30 20:40:35",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 91,
+		"nombre" => "validar_acceso_ldap",
+		"valor" => "0",
+		"tipo" => "LDAP",
+		"fecha" => "2015-04-14 08:54:49",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 92,
+		"nombre" => "ruta_evento",
+		"valor" => "evento",
+		"tipo" => "evento",
+		"fecha" => "2015-06-22 19:00:04",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 93,
+		"nombre" => "intentos_login",
+		"valor" => "10",
+		"tipo" => "login",
+		"fecha" => "2015-09-21 19:08:16",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 94,
+		"nombre" => "impedir_eliminar",
+		"valor" => "1",
+		"tipo" => "anexos",
+		"fecha" => "2015-12-17 19:04:17",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 95,
+		"nombre" => "titulo_index",
+		"valor" => "Bienvenido a SAIA<sup>&reg;</sup>.",
+		"tipo" => "Noticias Index",
+		"fecha" => "2015-12-28 13:31:50",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 96,
+		"nombre" => "subtitulo_index",
+		"valor" => "Sistema de administraci&oacute;n integral de documentos y procesos.",
+		"tipo" => "Noticias Index",
+		"fecha" => "2015-12-28 13:32:14",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 97,
+		"nombre" => "fin_actualizacion",
+		"valor" => "2018-01-31 16:19:58",
+		"tipo" => "",
+		"fecha" => "2016-01-04 19:38:21",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 98,
+		"nombre" => "fin_actualizacion",
+		"valor" => "2018-01-31 16:19:58",
+		"tipo" => "",
+		"fecha" => "2016-01-04 19:38:23",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 99,
+		"nombre" => "fin_actualizacion",
+		"valor" => "2018-01-31 16:19:58",
+		"tipo" => "",
+		"fecha" => "2016-01-04 19:38:23",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 100,
+		"nombre" => "fin_actualizacion",
+		"valor" => "2018-01-31 16:19:58",
+		"tipo" => "",
+		"fecha" => "2016-01-04 19:38:24",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 114,
+		"nombre" => "color_encabezado_list",
+		"valor" => "#57B0DE",
+		"tipo" => "temas_bootstrap",
+		"fecha" => "2016-01-14 20:03:30",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 119,
+		"nombre" => "justificacion_terminar",
+		"valor" => "Ya fue le&iacute;do,Recibido en medio f&iacute;sico,Documento Informativo, No me corresponde, Transferido por Error",
+		"tipo" => "terminar_documentos",
+		"fecha" => "2016-01-15 19:46:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 120,
+		"nombre" => "formato_correo",
+		"valor" => "formatos/correo_saia/adicionar_correo_saia.php",
+		"tipo" => "correo",
+		"fecha" => "2016-03-11 15:12:04",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 121,
+		"nombre" => "servidor_correo_imap",
+		"valor" => "ssl://imap.gmail.com",
+		"tipo" => "correo",
+		"fecha" => "2011-08-10 06:31:03",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 122,
+		"nombre" => "email_aprobacion",
+		"valor" => "http://52.205.58.68/saia_release1/saia/email_aprobacion/",
+		"tipo" => "formato",
+		"fecha" => "2007-04-08 20:00:00",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 123,
+		"nombre" => "numero_usuarios",
+		"valor" => "a3171917621ac77ec05609d8207d0dfb",
+		"tipo" => "usuarios",
+		"fecha" => "2016-08-25 22:43:57",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 124,
+		"nombre" => "festivos_fijos",
+		"valor" => "1-1,5-1,7-20,8-7,12-8,12-8,12-25",
+		"tipo" => "festivos",
+		"fecha" => "2016-09-02 16:42:21",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 125,
+		"nombre" => "festivos_lunes",
+		"valor" => "1-6,3-19,6-29,8-15,10-12,11-1,11-11",
+		"tipo" => "festivos",
+		"fecha" => "2016-09-02 16:56:56",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 126,
+		"nombre" => "dias_no_habiles",
+		"valor" => "s,d",
+		"tipo" => "festivos",
+		"fecha" => "2016-09-02 21:04:29",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 127,
+		"nombre" => "formato_ruta_documentos",
+		"valor" => "{estado}/{fecha}/{iddocumento}",
+		"tipo" => "ruta",
+		"fecha" => "2007-04-09 15:33:59",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 128,
+		"nombre" => "ruta_plantilla_word",
+		"valor" => "pantallas/lib/PhpWord/",
+		"tipo" => "phpword",
+		"fecha" => "2016-09-19 22:23:00",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 129,
+		"nombre" => "filtro_documentos_activos",
+		"valor" => "Inactivos",
+		"tipo" => "documentos_activos",
+		"fecha" => "2016-11-10 20:00:00",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 130,
+		"nombre" => "novedad_despacho",
+		"valor" => "Direcci&oacute;n no encontrada,No se encontraba el destino,Soporte f&iacute;sico de entrega",
+		"tipo" => "tipo_novedad",
+		"fecha" => "2016-11-29 15:48:09",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 133,
+		"nombre" => "color_encabezado",
+		"valor" => "#57B0DE",
+		"tipo" => "temas_bootstrap",
+		"fecha" => "2017-03-01 20:16:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 134,
+		"nombre" => "boton_hover",
+		"valor" => "#0044cc",
+		"tipo" => "temas_bootstrap",
+		"fecha" => "2017-03-01 20:16:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 135,
+		"nombre" => "logo_saia_inicio",
+		"valor" => "loginbkg.png",
+		"tipo" => "temas_main",
+		"fecha" => "2017-03-01 20:16:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 136,
+		"nombre" => "logo_fondo_inicio",
+		"valor" => "mainbkg.png",
+		"tipo" => "temas_main",
+		"fecha" => "2017-03-01 20:16:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 137,
+		"nombre" => "barra_inferior",
+		"valor" => "#69B3E3",
+		"tipo" => "temas_main",
+		"fecha" => "2017-03-01 20:16:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 138,
+		"nombre" => "icono_saia",
+		"valor" => "logosaia.png",
+		"tipo" => "temas_main",
+		"fecha" => "2017-03-01 20:16:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 139,
+		"nombre" => "color_letra_ppal",
+		"valor" => "#0B7BB6",
+		"tipo" => "temas_main",
+		"fecha" => "2017-03-01 20:16:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 140,
+		"nombre" => "imagen_minimizar",
+		"valor" => "#69B3E3",
+		"tipo" => "temas_main",
+		"fecha" => "2017-03-01 20:16:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 141,
+		"nombre" => "letra_tabs",
+		"valor" => "#0B7BB6",
+		"tipo" => "temas_main",
+		"fecha" => "2017-03-01 20:16:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 142,
+		"nombre" => "fondo_tab",
+		"valor" => "#EDF9FF,#EDF9FF",
+		"tipo" => "temas_main",
+		"fecha" => "2017-03-01 20:16:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 143,
+		"nombre" => "enlace_hover",
+		"valor" => "#006699",
+		"tipo" => "temas_main",
+		"fecha" => "2017-03-01 20:16:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 144,
+		"nombre" => "icono_maximizar",
+		"valor" => "#69B3E3",
+		"tipo" => "temas_main",
+		"fecha" => "2017-03-01 20:16:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 145,
+		"nombre" => "barra_busqueda",
+		"valor" => "#6BA5DD,#196BBA",
+		"tipo" => "temas_kaiten",
+		"fecha" => "2017-03-01 20:16:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 146,
+		"nombre" => "letra_panel_kaiten",
+		"valor" => "#FFFFFF",
+		"tipo" => "temas_kaiten",
+		"fecha" => "2017-03-01 20:16:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 147,
+		"nombre" => "btn_primary",
+		"valor" => "#6BA5DD,#0044CC",
+		"tipo" => "temas_bootstrap",
+		"fecha" => "2017-03-01 20:16:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 148,
+		"nombre" => "logo_saia_inicio_principal",
+		"valor" => "",
+		"tipo" => "temas_main",
+		"fecha" => "2017-03-01 20:16:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 149,
+		"nombre" => "foco_input",
+		"valor" => "#CCCCCC",
+		"tipo" => "temas_bootstrap",
+		"fecha" => "2017-03-01 20:16:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 150,
+		"nombre" => "borde_input",
+		"valor" => "#CCCCCC",
+		"tipo" => "temas_bootstrap",
+		"fecha" => "2017-03-01 20:16:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 151,
+		"nombre" => "label_info",
+		"valor" => "#0B7BB6",
+		"tipo" => "temas_bootstrap",
+		"fecha" => "2017-03-01 20:16:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 152,
+		"nombre" => "letra_tabs_superior",
+		"valor" => "#0B7BB6",
+		"tipo" => "temas_main",
+		"fecha" => "2017-03-01 20:16:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 153,
+		"nombre" => "logo_fondo_inicio_principal",
+		"valor" => "",
+		"tipo" => "temas_main",
+		"fecha" => "2017-03-01 20:16:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 154,
+		"nombre" => "icono_saia_principal",
+		"valor" => "",
+		"tipo" => "temas_main",
+		"fecha" => "2017-03-01 20:16:44",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 155,
+		"nombre" => "logo_saia_anterior",
+		"valor" => "",
+		"tipo" => "temas_main",
+		"fecha" => "2017-03-02 16:04:38",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 156,
+		"nombre" => "tipo_ftp",
+		"valor" => "sftp",
+		"tipo" => "ftp",
+		"fecha" => "2017-06-06 14:27:36",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 159,
+		"nombre" => "ip_valida_ws",
+		"valor" => "52.205.58.68",
+		"tipo" => "empresa",
+		"fecha" => "2017-06-16 18:59:32",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 160,
+		"nombre" => "firma_crt",
+		"valor" => null,
+		"tipo" => "pdf",
+		"fecha" => "2017-07-12 03:22:55",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 161,
+		"nombre" => "ruta_archivos",
+		"valor" => "user_files/",
+		"tipo" => "filemanager",
+		"fecha" => "2017-12-20 15:25:57",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 162,
+		"nombre" => "ruta_conector",
+		"valor" => "filemanager/saia_filemanager.php",
+		"tipo" => "filemanager",
+		"fecha" => "2017-12-15 13:53:12",
+		"encrypt" => 0
+	],
+	[
+		"idconfiguracion" => 163,
+		"nombre" => "tam_limite_archivos",
+		"valor" => "16000000",
+		"tipo" => "filemanager",
+		"fecha" => "2017-12-15 13:53:12",
+		"encrypt" => 0
+	]
+];
+$permiso = [
+	[
+		"idpermiso" => 104,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1066,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 105,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1067,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 107,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1071,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 108,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1072,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 111,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1086,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 219,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1124,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 220,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1125,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 221,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1126,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 222,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1128,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 255,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1143,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 272,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1174,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 277,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1185,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 279,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1186,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 461,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1290,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 473,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1295,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 479,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1297,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 491,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1299,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 493,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1303,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 500,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1317,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 508,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1322,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 510,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1326,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 547,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1389,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 549,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1391,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 551,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1393,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 552,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1396,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 553,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1398,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 554,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1400,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 555,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 238,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 556,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 236,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 557,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 237,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 596,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1402,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 597,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1403,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 598,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1406,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 599,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1407,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 601,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1411,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 602,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1413,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 603,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1415,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 634,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1427,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 639,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1429,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 652,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1433,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 653,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1435,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 654,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1437,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 655,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1439,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 665,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1443,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 669,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1444,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 675,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1446,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 681,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1448,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 682,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1450,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 686,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1451,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 687,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1453,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 765,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1456,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 766,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1458,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 767,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1460,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 768,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1462,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 769,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1464,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 770,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1466,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 771,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1468,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 772,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1470,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 773,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1472,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 774,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1474,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 775,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1476,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 776,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1478,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 777,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1480,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 778,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1482,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 779,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1484,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 780,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1486,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 781,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1488,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 782,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1490,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 783,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1492,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 784,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1494,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 785,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1496,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 786,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1498,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 787,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1500,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 788,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1502,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 789,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1504,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 790,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1506,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 791,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1508,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 828,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1513,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 829,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1467,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 830,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1466,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 834,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1515,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 836,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1517,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 837,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1498,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 838,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1499,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 839,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1518,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 846,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1519,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 857,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1291,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 858,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1208,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 859,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 44,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 860,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1006,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 868,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1520,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 901,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1522,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 902,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 765,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 903,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1523,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 904,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1524,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 905,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1526,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 925,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1538,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 926,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1540,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 927,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1542,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 928,
+		"funcionario_idfuncionario" => 10094,
+		"accion" => null,
+		"modulo_idmodulo" => 1544,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 929,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1552,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 930,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1553,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 932,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1529,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 933,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1530,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 934,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1531,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 935,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1532,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 936,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1533,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 937,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1534,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 938,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1535,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 940,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1500,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 941,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1502,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 942,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1524,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 943,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1526,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1030,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1441,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1076,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1557,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1077,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1558,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1078,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1559,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1079,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1560,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1080,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1562,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1081,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1564,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1082,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1566,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1083,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1568,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1084,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1570,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1087,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1572,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1090,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1574,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1091,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1576,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1092,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1578,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1093,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1580,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1094,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1582,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1095,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1584,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1096,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1585,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1097,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1583,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1098,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1586,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1099,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1588,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1100,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1590,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1101,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1592,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1102,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1594,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1103,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1596,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1104,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1598,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1105,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1600,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1106,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1602,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1108,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1603,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1109,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1605,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1114,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1607,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1115,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1609,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1116,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1611,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1117,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1612,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1118,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1614,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1122,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1616,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1132,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1618,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1134,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1620,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1143,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1622,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1144,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1623,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1236,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1628,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1293,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1630,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1294,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1632,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1295,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1633,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1299,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1634,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1300,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1636,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1326,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1638,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1327,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1274,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1328,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1007,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1329,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1639,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1330,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1640,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1332,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1641,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1335,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1643,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1336,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 28,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1337,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1232,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1338,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1233,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1339,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 36,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1340,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1234,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1357,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1648,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1360,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1624,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1361,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1625,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1363,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1625,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1364,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1626,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1365,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1625,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1366,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1627,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1401,
+		"funcionario_idfuncionario" => 1,
+		"accion" => null,
+		"modulo_idmodulo" => 1650,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1402,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 1660,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1403,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 6741,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1407,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 6744,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	],
+	[
+		"idpermiso" => 1406,
+		"funcionario_idfuncionario" => 1,
+		"accion" => 1,
+		"modulo_idmodulo" => 6743,
+		"caracteristica_propio" => null,
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null,
+		"tipo" => 1
+	]
+];
+$permiso_perfil = [
+	[
+		"idpermiso_perfil" => 13,
+		"modulo_idmodulo" => 11,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => "l,e,m,a"
+	],
+	[
+		"idpermiso_perfil" => 18,
+		"modulo_idmodulo" => 8,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => "l,e,m,a"
+	],
+	[
+		"idpermiso_perfil" => 20,
+		"modulo_idmodulo" => 19,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => "l,e,m,a"
+	],
+	[
+		"idpermiso_perfil" => 24,
+		"modulo_idmodulo" => 37,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => "l,e,m,a"
+	],
+	[
+		"idpermiso_perfil" => 28,
+		"modulo_idmodulo" => 29,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => "l,e,m,a"
+	],
+	[
+		"idpermiso_perfil" => 29,
+		"modulo_idmodulo" => 27,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => "l,e,m,a"
+	],
+	[
+		"idpermiso_perfil" => 30,
+		"modulo_idmodulo" => 26,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => "l,e,m,a"
+	],
+	[
+		"idpermiso_perfil" => 32,
+		"modulo_idmodulo" => 39,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => "l,e,m,a"
+	],
+	[
+		"idpermiso_perfil" => 33,
+		"modulo_idmodulo" => 40,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => "l,e,m,a"
+	],
+	[
+		"idpermiso_perfil" => 36,
+		"modulo_idmodulo" => 8,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "l,a,m,e",
+		"caracteristica_total" => "l,a,m,e"
+	],
+	[
+		"idpermiso_perfil" => 37,
+		"modulo_idmodulo" => 29,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 38,
+		"modulo_idmodulo" => 39,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 42,
+		"modulo_idmodulo" => 7,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 57,
+		"modulo_idmodulo" => 23,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 58,
+		"modulo_idmodulo" => 8,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 59,
+		"modulo_idmodulo" => 18,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 60,
+		"modulo_idmodulo" => 25,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 61,
+		"modulo_idmodulo" => 31,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 62,
+		"modulo_idmodulo" => 37,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 63,
+		"modulo_idmodulo" => 29,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 64,
+		"modulo_idmodulo" => 39,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 65,
+		"modulo_idmodulo" => 40,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 66,
+		"modulo_idmodulo" => 33,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 67,
+		"modulo_idmodulo" => 34,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 68,
+		"modulo_idmodulo" => 19,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 69,
+		"modulo_idmodulo" => 27,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 71,
+		"modulo_idmodulo" => 23,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 72,
+		"modulo_idmodulo" => 8,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 73,
+		"modulo_idmodulo" => 18,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 75,
+		"modulo_idmodulo" => 31,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 76,
+		"modulo_idmodulo" => 37,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 77,
+		"modulo_idmodulo" => 29,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 78,
+		"modulo_idmodulo" => 39,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 79,
+		"modulo_idmodulo" => 40,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 80,
+		"modulo_idmodulo" => 33,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 81,
+		"modulo_idmodulo" => 34,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 82,
+		"modulo_idmodulo" => 19,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 83,
+		"modulo_idmodulo" => 27,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 85,
+		"modulo_idmodulo" => 23,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 86,
+		"modulo_idmodulo" => 8,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 87,
+		"modulo_idmodulo" => 18,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 88,
+		"modulo_idmodulo" => 25,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 89,
+		"modulo_idmodulo" => 31,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 90,
+		"modulo_idmodulo" => 37,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 91,
+		"modulo_idmodulo" => 29,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 92,
+		"modulo_idmodulo" => 39,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 93,
+		"modulo_idmodulo" => 40,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 94,
+		"modulo_idmodulo" => 33,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 95,
+		"modulo_idmodulo" => 34,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 96,
+		"modulo_idmodulo" => 19,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 97,
+		"modulo_idmodulo" => 27,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 103,
+		"modulo_idmodulo" => 9,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 133,
+		"modulo_idmodulo" => 46,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "l,a,m,e",
+		"caracteristica_total" => "l,a,m,e"
+	],
+	[
+		"idpermiso_perfil" => 135,
+		"modulo_idmodulo" => 47,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "l,a,m,e",
+		"caracteristica_total" => "l,a,m,e"
+	],
+	[
+		"idpermiso_perfil" => 151,
+		"modulo_idmodulo" => 37,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 211,
+		"modulo_idmodulo" => 39,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => "l,e,m,a",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 218,
+		"modulo_idmodulo" => 37,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 230,
+		"modulo_idmodulo" => 42,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 252,
+		"modulo_idmodulo" => 55,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 270,
+		"modulo_idmodulo" => 27,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 311,
+		"modulo_idmodulo" => 8,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 313,
+		"modulo_idmodulo" => 55,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 352,
+		"modulo_idmodulo" => 185,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 354,
+		"modulo_idmodulo" => 198,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 355,
+		"modulo_idmodulo" => 193,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 357,
+		"modulo_idmodulo" => 191,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 358,
+		"modulo_idmodulo" => 190,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 359,
+		"modulo_idmodulo" => 183,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 360,
+		"modulo_idmodulo" => 120,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 361,
+		"modulo_idmodulo" => 184,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 362,
+		"modulo_idmodulo" => 187,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 363,
+		"modulo_idmodulo" => 189,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 364,
+		"modulo_idmodulo" => 188,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 366,
+		"modulo_idmodulo" => 186,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 370,
+		"modulo_idmodulo" => 3,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 371,
+		"modulo_idmodulo" => 44,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 372,
+		"modulo_idmodulo" => 44,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 373,
+		"modulo_idmodulo" => 44,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 377,
+		"modulo_idmodulo" => 64,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 378,
+		"modulo_idmodulo" => 64,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 379,
+		"modulo_idmodulo" => 64,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 384,
+		"modulo_idmodulo" => 186,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 385,
+		"modulo_idmodulo" => 186,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 386,
+		"modulo_idmodulo" => 189,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 388,
+		"modulo_idmodulo" => 185,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 389,
+		"modulo_idmodulo" => 188,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 412,
+		"modulo_idmodulo" => 194,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 413,
+		"modulo_idmodulo" => 194,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 414,
+		"modulo_idmodulo" => 194,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 417,
+		"modulo_idmodulo" => 192,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 418,
+		"modulo_idmodulo" => 192,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 419,
+		"modulo_idmodulo" => 192,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 431,
+		"modulo_idmodulo" => 165,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 432,
+		"modulo_idmodulo" => 165,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 433,
+		"modulo_idmodulo" => 165,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 434,
+		"modulo_idmodulo" => 165,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 436,
+		"modulo_idmodulo" => 165,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 451,
+		"modulo_idmodulo" => 196,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 452,
+		"modulo_idmodulo" => 196,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 453,
+		"modulo_idmodulo" => 196,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 456,
+		"modulo_idmodulo" => 197,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 457,
+		"modulo_idmodulo" => 197,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 458,
+		"modulo_idmodulo" => 197,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 491,
+		"modulo_idmodulo" => 225,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 513,
+		"modulo_idmodulo" => 237,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 514,
+		"modulo_idmodulo" => 238,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 515,
+		"modulo_idmodulo" => 237,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 516,
+		"modulo_idmodulo" => 238,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 517,
+		"modulo_idmodulo" => 237,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 518,
+		"modulo_idmodulo" => 238,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 519,
+		"modulo_idmodulo" => 237,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 520,
+		"modulo_idmodulo" => 238,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 535,
+		"modulo_idmodulo" => 237,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "l,a,m,e",
+		"caracteristica_total" => "l,a,m,e"
+	],
+	[
+		"idpermiso_perfil" => 536,
+		"modulo_idmodulo" => 238,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "l,a,m,e",
+		"caracteristica_total" => "l,a,m,e"
+	],
+	[
+		"idpermiso_perfil" => 537,
+		"modulo_idmodulo" => 237,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "l,a,m,e",
+		"caracteristica_total" => "l,a,m,e"
+	],
+	[
+		"idpermiso_perfil" => 538,
+		"modulo_idmodulo" => 238,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "l,a,m,e",
+		"caracteristica_total" => "l,a,m,e"
+	],
+	[
+		"idpermiso_perfil" => 539,
+		"modulo_idmodulo" => 237,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "l,a,m,e",
+		"caracteristica_total" => "l,a,m,e"
+	],
+	[
+		"idpermiso_perfil" => 540,
+		"modulo_idmodulo" => 238,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "l,a,m,e",
+		"caracteristica_total" => "l,a,m,e"
+	],
+	[
+		"idpermiso_perfil" => 611,
+		"modulo_idmodulo" => 208,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 671,
+		"modulo_idmodulo" => 525,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 711,
+		"modulo_idmodulo" => 46,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 731,
+		"modulo_idmodulo" => 48,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 751,
+		"modulo_idmodulo" => 565,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "l,a,m,e",
+		"caracteristica_total" => "l,a,m,e"
+	],
+	[
+		"idpermiso_perfil" => 771,
+		"modulo_idmodulo" => 585,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "l,a,m,e",
+		"caracteristica_total" => "l,a,m,e"
+	],
+	[
+		"idpermiso_perfil" => 791,
+		"modulo_idmodulo" => 605,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 811,
+		"modulo_idmodulo" => 48,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 911,
+		"modulo_idmodulo" => 725,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 971,
+		"modulo_idmodulo" => 787,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 972,
+		"modulo_idmodulo" => 786,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 973,
+		"modulo_idmodulo" => 785,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 974,
+		"modulo_idmodulo" => 805,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 991,
+		"modulo_idmodulo" => 546,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 992,
+		"modulo_idmodulo" => 545,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1012,
+		"modulo_idmodulo" => 325,
+		"perfil_idperfil" => 16696,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1031,
+		"modulo_idmodulo" => 845,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1032,
+		"modulo_idmodulo" => 846,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1071,
+		"modulo_idmodulo" => 885,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1091,
+		"modulo_idmodulo" => 905,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1092,
+		"modulo_idmodulo" => 905,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1111,
+		"modulo_idmodulo" => 325,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1112,
+		"modulo_idmodulo" => 305,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1131,
+		"modulo_idmodulo" => 805,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1133,
+		"modulo_idmodulo" => 826,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1134,
+		"modulo_idmodulo" => 827,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1135,
+		"modulo_idmodulo" => 787,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1136,
+		"modulo_idmodulo" => 785,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1138,
+		"modulo_idmodulo" => 826,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1139,
+		"modulo_idmodulo" => 827,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1140,
+		"modulo_idmodulo" => 787,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1141,
+		"modulo_idmodulo" => 785,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1154,
+		"modulo_idmodulo" => 787,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1171,
+		"modulo_idmodulo" => 725,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1172,
+		"modulo_idmodulo" => 165,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1173,
+		"modulo_idmodulo" => 46,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1176,
+		"modulo_idmodulo" => 48,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1177,
+		"modulo_idmodulo" => 805,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1181,
+		"modulo_idmodulo" => 826,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1182,
+		"modulo_idmodulo" => 827,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1183,
+		"modulo_idmodulo" => 785,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1190,
+		"modulo_idmodulo" => 19,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1198,
+		"modulo_idmodulo" => 189,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1202,
+		"modulo_idmodulo" => 745,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1204,
+		"modulo_idmodulo" => 42,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1205,
+		"modulo_idmodulo" => 89,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1206,
+		"modulo_idmodulo" => 565,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1213,
+		"modulo_idmodulo" => 585,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1231,
+		"modulo_idmodulo" => 546,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1232,
+		"modulo_idmodulo" => 745,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1251,
+		"modulo_idmodulo" => 546,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1252,
+		"modulo_idmodulo" => 545,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1271,
+		"modulo_idmodulo" => 325,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1272,
+		"modulo_idmodulo" => 305,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1273,
+		"modulo_idmodulo" => 345,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1291,
+		"modulo_idmodulo" => 1825,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1292,
+		"modulo_idmodulo" => 905,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1293,
+		"modulo_idmodulo" => 206,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1294,
+		"modulo_idmodulo" => 142,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1295,
+		"modulo_idmodulo" => 14,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1311,
+		"modulo_idmodulo" => 725,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1312,
+		"modulo_idmodulo" => 165,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1313,
+		"modulo_idmodulo" => 202,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1314,
+		"modulo_idmodulo" => 46,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1315,
+		"modulo_idmodulo" => 44,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1316,
+		"modulo_idmodulo" => 45,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1317,
+		"modulo_idmodulo" => 48,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1318,
+		"modulo_idmodulo" => 885,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1319,
+		"modulo_idmodulo" => 33,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1320,
+		"modulo_idmodulo" => 34,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1321,
+		"modulo_idmodulo" => 805,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1323,
+		"modulo_idmodulo" => 645,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1324,
+		"modulo_idmodulo" => 38,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1325,
+		"modulo_idmodulo" => 213,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1326,
+		"modulo_idmodulo" => 36,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1327,
+		"modulo_idmodulo" => 825,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1328,
+		"modulo_idmodulo" => 826,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1329,
+		"modulo_idmodulo" => 827,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1330,
+		"modulo_idmodulo" => 785,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1331,
+		"modulo_idmodulo" => 787,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1332,
+		"modulo_idmodulo" => 197,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1333,
+		"modulo_idmodulo" => 30,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1334,
+		"modulo_idmodulo" => 242,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1335,
+		"modulo_idmodulo" => 135,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1336,
+		"modulo_idmodulo" => 194,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1337,
+		"modulo_idmodulo" => 240,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1338,
+		"modulo_idmodulo" => 192,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1339,
+		"modulo_idmodulo" => 19,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1340,
+		"modulo_idmodulo" => 196,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1341,
+		"modulo_idmodulo" => 209,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1342,
+		"modulo_idmodulo" => 193,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1343,
+		"modulo_idmodulo" => 28,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1344,
+		"modulo_idmodulo" => 31,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1345,
+		"modulo_idmodulo" => 219,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1346,
+		"modulo_idmodulo" => 195,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1347,
+		"modulo_idmodulo" => 189,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1348,
+		"modulo_idmodulo" => 231,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1349,
+		"modulo_idmodulo" => 237,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1350,
+		"modulo_idmodulo" => 325,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1351,
+		"modulo_idmodulo" => 238,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1352,
+		"modulo_idmodulo" => 305,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1353,
+		"modulo_idmodulo" => 546,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1354,
+		"modulo_idmodulo" => 345,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1355,
+		"modulo_idmodulo" => 545,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1356,
+		"modulo_idmodulo" => 12,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1357,
+		"modulo_idmodulo" => 16,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1358,
+		"modulo_idmodulo" => 200,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1359,
+		"modulo_idmodulo" => 15,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1360,
+		"modulo_idmodulo" => 5,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1361,
+		"modulo_idmodulo" => 13,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1362,
+		"modulo_idmodulo" => 266,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1371,
+		"modulo_idmodulo" => 405,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1372,
+		"modulo_idmodulo" => 405,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1373,
+		"modulo_idmodulo" => 405,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1374,
+		"modulo_idmodulo" => 405,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1375,
+		"modulo_idmodulo" => 405,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1391,
+		"modulo_idmodulo" => 1085,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1392,
+		"modulo_idmodulo" => 1085,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1393,
+		"modulo_idmodulo" => 1085,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1394,
+		"modulo_idmodulo" => 1085,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1411,
+		"modulo_idmodulo" => 1085,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1412,
+		"modulo_idmodulo" => 1085,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1451,
+		"modulo_idmodulo" => 202,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1452,
+		"modulo_idmodulo" => 202,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1453,
+		"modulo_idmodulo" => 202,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1454,
+		"modulo_idmodulo" => 202,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1471,
+		"modulo_idmodulo" => 52,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1472,
+		"modulo_idmodulo" => 52,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1473,
+		"modulo_idmodulo" => 52,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1474,
+		"modulo_idmodulo" => 52,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1475,
+		"modulo_idmodulo" => 52,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1476,
+		"modulo_idmodulo" => 52,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1551,
+		"modulo_idmodulo" => 1545,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1571,
+		"modulo_idmodulo" => 1545,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1572,
+		"modulo_idmodulo" => 1545,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1573,
+		"modulo_idmodulo" => 1545,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1574,
+		"modulo_idmodulo" => 1545,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1575,
+		"modulo_idmodulo" => 1545,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1591,
+		"modulo_idmodulo" => 1765,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1631,
+		"modulo_idmodulo" => 1785,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1651,
+		"modulo_idmodulo" => 1805,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1652,
+		"modulo_idmodulo" => 1825,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1653,
+		"modulo_idmodulo" => 1845,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1654,
+		"modulo_idmodulo" => 1805,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1655,
+		"modulo_idmodulo" => 1825,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1656,
+		"modulo_idmodulo" => 1845,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1657,
+		"modulo_idmodulo" => 1805,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1658,
+		"modulo_idmodulo" => 1825,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1659,
+		"modulo_idmodulo" => 1845,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1660,
+		"modulo_idmodulo" => 1805,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1661,
+		"modulo_idmodulo" => 1825,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1662,
+		"modulo_idmodulo" => 1845,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1663,
+		"modulo_idmodulo" => 1805,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1664,
+		"modulo_idmodulo" => 1825,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1665,
+		"modulo_idmodulo" => 1845,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1666,
+		"modulo_idmodulo" => 1805,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1667,
+		"modulo_idmodulo" => 1825,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1668,
+		"modulo_idmodulo" => 1845,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1669,
+		"modulo_idmodulo" => 1805,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1670,
+		"modulo_idmodulo" => 1825,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1671,
+		"modulo_idmodulo" => 1845,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1691,
+		"modulo_idmodulo" => 1885,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1711,
+		"modulo_idmodulo" => 1905,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1731,
+		"modulo_idmodulo" => 1945,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1732,
+		"modulo_idmodulo" => 1946,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1751,
+		"modulo_idmodulo" => 1805,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1752,
+		"modulo_idmodulo" => 1825,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1771,
+		"modulo_idmodulo" => 385,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1773,
+		"modulo_idmodulo" => 249,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1774,
+		"modulo_idmodulo" => 1685,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1775,
+		"modulo_idmodulo" => 425,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1776,
+		"modulo_idmodulo" => 1925,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1777,
+		"modulo_idmodulo" => 1645,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1778,
+		"modulo_idmodulo" => 1745,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1780,
+		"modulo_idmodulo" => 1705,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1781,
+		"modulo_idmodulo" => 545,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1783,
+		"modulo_idmodulo" => 485,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1784,
+		"modulo_idmodulo" => 1905,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1786,
+		"modulo_idmodulo" => 465,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1787,
+		"modulo_idmodulo" => 325,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1788,
+		"modulo_idmodulo" => 845,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1790,
+		"modulo_idmodulo" => 466,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1791,
+		"modulo_idmodulo" => 846,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1792,
+		"modulo_idmodulo" => 1525,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1793,
+		"modulo_idmodulo" => 467,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1795,
+		"modulo_idmodulo" => 1725,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1796,
+		"modulo_idmodulo" => 505,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1797,
+		"modulo_idmodulo" => 387,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1798,
+		"modulo_idmodulo" => 305,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1799,
+		"modulo_idmodulo" => 506,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1801,
+		"modulo_idmodulo" => 445,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1802,
+		"modulo_idmodulo" => 446,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1803,
+		"modulo_idmodulo" => 386,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1804,
+		"modulo_idmodulo" => 945,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1805,
+		"modulo_idmodulo" => 546,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1806,
+		"modulo_idmodulo" => 405,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1807,
+		"modulo_idmodulo" => 345,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1808,
+		"modulo_idmodulo" => 406,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1809,
+		"modulo_idmodulo" => 1805,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1810,
+		"modulo_idmodulo" => 1825,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1811,
+		"modulo_idmodulo" => 1845,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1812,
+		"modulo_idmodulo" => 1665,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1813,
+		"modulo_idmodulo" => 426,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1814,
+		"modulo_idmodulo" => 365,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1815,
+		"modulo_idmodulo" => 925,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1816,
+		"modulo_idmodulo" => 1625,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1817,
+		"modulo_idmodulo" => 965,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1832,
+		"modulo_idmodulo" => 233,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1851,
+		"modulo_idmodulo" => 2005,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1871,
+		"modulo_idmodulo" => 2125,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1911,
+		"modulo_idmodulo" => 135,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1912,
+		"modulo_idmodulo" => 135,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1914,
+		"modulo_idmodulo" => 135,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1931,
+		"modulo_idmodulo" => 2425,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1951,
+		"modulo_idmodulo" => 1945,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1952,
+		"modulo_idmodulo" => 1945,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1953,
+		"modulo_idmodulo" => 1945,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1954,
+		"modulo_idmodulo" => 1945,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1955,
+		"modulo_idmodulo" => 1945,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1956,
+		"modulo_idmodulo" => 1945,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1957,
+		"modulo_idmodulo" => 1945,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1958,
+		"modulo_idmodulo" => 1945,
+		"perfil_idperfil" => 5,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1971,
+		"modulo_idmodulo" => 825,
+		"perfil_idperfil" => 3,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1972,
+		"modulo_idmodulo" => 825,
+		"perfil_idperfil" => 2,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 1974,
+		"modulo_idmodulo" => 825,
+		"perfil_idperfil" => 4,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2011,
+		"modulo_idmodulo" => 2445,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2012,
+		"modulo_idmodulo" => 2445,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2031,
+		"modulo_idmodulo" => 2466,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2032,
+		"modulo_idmodulo" => 2465,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2051,
+		"modulo_idmodulo" => 2665,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2052,
+		"modulo_idmodulo" => 2666,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2071,
+		"modulo_idmodulo" => 2685,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2091,
+		"modulo_idmodulo" => 53,
+		"perfil_idperfil" => 27,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2092,
+		"modulo_idmodulo" => 23,
+		"perfil_idperfil" => 27,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2111,
+		"modulo_idmodulo" => 786,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2131,
+		"modulo_idmodulo" => 3385,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2151,
+		"modulo_idmodulo" => 3025,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2171,
+		"modulo_idmodulo" => 3405,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2191,
+		"modulo_idmodulo" => 1165,
+		"perfil_idperfil" => 47,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2192,
+		"modulo_idmodulo" => 1585,
+		"perfil_idperfil" => 47,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2193,
+		"modulo_idmodulo" => 825,
+		"perfil_idperfil" => 47,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2194,
+		"modulo_idmodulo" => 826,
+		"perfil_idperfil" => 47,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2195,
+		"modulo_idmodulo" => 827,
+		"perfil_idperfil" => 47,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2196,
+		"modulo_idmodulo" => 786,
+		"perfil_idperfil" => 47,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2197,
+		"modulo_idmodulo" => 1765,
+		"perfil_idperfil" => 47,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2198,
+		"modulo_idmodulo" => 785,
+		"perfil_idperfil" => 47,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2199,
+		"modulo_idmodulo" => 787,
+		"perfil_idperfil" => 47,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2200,
+		"modulo_idmodulo" => 1185,
+		"perfil_idperfil" => 47,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2201,
+		"modulo_idmodulo" => 805,
+		"perfil_idperfil" => 47,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2202,
+		"modulo_idmodulo" => 1085,
+		"perfil_idperfil" => 47,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2204,
+		"modulo_idmodulo" => 52,
+		"perfil_idperfil" => 47,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2211,
+		"modulo_idmodulo" => 3925,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2231,
+		"modulo_idmodulo" => 3965,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2251,
+		"modulo_idmodulo" => 3986,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2252,
+		"modulo_idmodulo" => 3985,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2271,
+		"modulo_idmodulo" => 4065,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2291,
+		"modulo_idmodulo" => 4105,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => "l,a,m,e"
+	],
+	[
+		"idpermiso_perfil" => 2311,
+		"modulo_idmodulo" => 4125,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2331,
+		"modulo_idmodulo" => 4225,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2371,
+		"modulo_idmodulo" => 34,
+		"perfil_idperfil" => 67,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "l,a,m,e",
+		"caracteristica_total" => "l,a,m,e"
+	],
+	[
+		"idpermiso_perfil" => 2372,
+		"modulo_idmodulo" => 9,
+		"perfil_idperfil" => 67,
+		"caracteristica_propio" => "",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2391,
+		"modulo_idmodulo" => 204,
+		"perfil_idperfil" => 67,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2411,
+		"modulo_idmodulo" => 17,
+		"perfil_idperfil" => 7,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2431,
+		"modulo_idmodulo" => 3945,
+		"perfil_idperfil" => 87,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2432,
+		"modulo_idmodulo" => 3886,
+		"perfil_idperfil" => 87,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2433,
+		"modulo_idmodulo" => 3905,
+		"perfil_idperfil" => 87,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2434,
+		"modulo_idmodulo" => 4705,
+		"perfil_idperfil" => 87,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2435,
+		"modulo_idmodulo" => 3865,
+		"perfil_idperfil" => 87,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2436,
+		"modulo_idmodulo" => 4685,
+		"perfil_idperfil" => 87,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2451,
+		"modulo_idmodulo" => 52,
+		"perfil_idperfil" => 87,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2471,
+		"modulo_idmodulo" => 3885,
+		"perfil_idperfil" => 87,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2472,
+		"modulo_idmodulo" => 2605,
+		"perfil_idperfil" => 87,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2475,
+		"modulo_idmodulo" => 4026,
+		"perfil_idperfil" => 87,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2491,
+		"modulo_idmodulo" => 4745,
+		"perfil_idperfil" => 87,
+		"caracteristica_propio" => "l,a,m,e",
+		"caracteristica_grupo" => "",
+		"caracteristica_total" => ""
+	],
+	[
+		"idpermiso_perfil" => 2503,
+		"modulo_idmodulo" => 823,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2521,
+		"modulo_idmodulo" => 625,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2522,
+		"modulo_idmodulo" => 626,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2523,
+		"modulo_idmodulo" => 627,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2524,
+		"modulo_idmodulo" => 628,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2556,
+		"modulo_idmodulo" => 189,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2560,
+		"modulo_idmodulo" => 42,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2577,
+		"modulo_idmodulo" => 205,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2578,
+		"modulo_idmodulo" => 206,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2579,
+		"modulo_idmodulo" => 204,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2626,
+		"modulo_idmodulo" => 817,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2627,
+		"modulo_idmodulo" => 645,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2629,
+		"modulo_idmodulo" => 223,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2630,
+		"modulo_idmodulo" => 859,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2653,
+		"modulo_idmodulo" => 1081,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2660,
+		"modulo_idmodulo" => 1066,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2662,
+		"modulo_idmodulo" => 1072,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2663,
+		"modulo_idmodulo" => 1071,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2676,
+		"modulo_idmodulo" => 1090,
+		"perfil_idperfil" => 0,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2683,
+		"modulo_idmodulo" => 1098,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2692,
+		"modulo_idmodulo" => 33,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2693,
+		"modulo_idmodulo" => 34,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2694,
+		"modulo_idmodulo" => 44,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2808,
+		"modulo_idmodulo" => 193,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2809,
+		"modulo_idmodulo" => 192,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2826,
+		"modulo_idmodulo" => 189,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2831,
+		"modulo_idmodulo" => 194,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2832,
+		"modulo_idmodulo" => 31,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2900,
+		"modulo_idmodulo" => 1149,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2910,
+		"modulo_idmodulo" => 237,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2916,
+		"modulo_idmodulo" => 1204,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2921,
+		"modulo_idmodulo" => 1149,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2942,
+		"modulo_idmodulo" => 1253,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2971,
+		"modulo_idmodulo" => 1,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2972,
+		"modulo_idmodulo" => 1073,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2973,
+		"modulo_idmodulo" => 24,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2976,
+		"modulo_idmodulo" => 6,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2978,
+		"modulo_idmodulo" => 30,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2979,
+		"modulo_idmodulo" => 192,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2980,
+		"modulo_idmodulo" => 218,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2981,
+		"modulo_idmodulo" => 1319,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2982,
+		"modulo_idmodulo" => 194,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2983,
+		"modulo_idmodulo" => 219,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2984,
+		"modulo_idmodulo" => 195,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2996,
+		"modulo_idmodulo" => 865,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2997,
+		"modulo_idmodulo" => 1213,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2998,
+		"modulo_idmodulo" => 33,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 2999,
+		"modulo_idmodulo" => 34,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3000,
+		"modulo_idmodulo" => 1149,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3001,
+		"modulo_idmodulo" => 1208,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3002,
+		"modulo_idmodulo" => 44,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3003,
+		"modulo_idmodulo" => 31,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3004,
+		"modulo_idmodulo" => 1008,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3017,
+		"modulo_idmodulo" => 1041,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3026,
+		"modulo_idmodulo" => 36,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3128,
+		"modulo_idmodulo" => 238,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3129,
+		"modulo_idmodulo" => 1040,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3133,
+		"modulo_idmodulo" => 21,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3135,
+		"modulo_idmodulo" => 237,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3136,
+		"modulo_idmodulo" => 238,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3137,
+		"modulo_idmodulo" => 1214,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3481,
+		"modulo_idmodulo" => 34,
+		"perfil_idperfil" => 11,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3493,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 0,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3494,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 0,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3495,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 0,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3496,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 0,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3497,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 0,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3498,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 0,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3499,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 0,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3500,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 0,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3501,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 0,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3502,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 0,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3503,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 0,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3504,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 0,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3505,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 0,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3506,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 0,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3507,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 0,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3508,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 0,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3511,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3512,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3513,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3514,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3515,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3516,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3517,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3518,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3519,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3520,
+		"modulo_idmodulo" => 0,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3529,
+		"modulo_idmodulo" => 1040,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3530,
+		"modulo_idmodulo" => 33,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3531,
+		"modulo_idmodulo" => 34,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3532,
+		"modulo_idmodulo" => 44,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3536,
+		"modulo_idmodulo" => 20,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3537,
+		"modulo_idmodulo" => 12,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3538,
+		"modulo_idmodulo" => 16,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3539,
+		"modulo_idmodulo" => 15,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3540,
+		"modulo_idmodulo" => 17,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3541,
+		"modulo_idmodulo" => 1043,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3542,
+		"modulo_idmodulo" => 30,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3543,
+		"modulo_idmodulo" => 192,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3544,
+		"modulo_idmodulo" => 213,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3545,
+		"modulo_idmodulo" => 194,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3546,
+		"modulo_idmodulo" => 219,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3547,
+		"modulo_idmodulo" => 1050,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3548,
+		"modulo_idmodulo" => 1292,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3549,
+		"modulo_idmodulo" => 209,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3550,
+		"modulo_idmodulo" => 237,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3551,
+		"modulo_idmodulo" => 1070,
+		"perfil_idperfil" => 38,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3552,
+		"modulo_idmodulo" => 1040,
+		"perfil_idperfil" => 38,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3553,
+		"modulo_idmodulo" => 142,
+		"perfil_idperfil" => 38,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3554,
+		"modulo_idmodulo" => 685,
+		"perfil_idperfil" => 38,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3555,
+		"modulo_idmodulo" => 1060,
+		"perfil_idperfil" => 38,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3556,
+		"modulo_idmodulo" => 10,
+		"perfil_idperfil" => 38,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3557,
+		"modulo_idmodulo" => 1205,
+		"perfil_idperfil" => 38,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3558,
+		"modulo_idmodulo" => 1027,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3559,
+		"modulo_idmodulo" => 1033,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3560,
+		"modulo_idmodulo" => 1029,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3561,
+		"modulo_idmodulo" => 1031,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3562,
+		"modulo_idmodulo" => 1035,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3563,
+		"modulo_idmodulo" => 1037,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3564,
+		"modulo_idmodulo" => 1025,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3571,
+		"modulo_idmodulo" => 1405,
+		"perfil_idperfil" => 39,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3572,
+		"modulo_idmodulo" => 2,
+		"perfil_idperfil" => 39,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3573,
+		"modulo_idmodulo" => 1013,
+		"perfil_idperfil" => 39,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3574,
+		"modulo_idmodulo" => 64,
+		"perfil_idperfil" => 39,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3575,
+		"modulo_idmodulo" => 1044,
+		"perfil_idperfil" => 39,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3576,
+		"modulo_idmodulo" => 860,
+		"perfil_idperfil" => 39,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3577,
+		"modulo_idmodulo" => 236,
+		"perfil_idperfil" => 39,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3578,
+		"modulo_idmodulo" => 1403,
+		"perfil_idperfil" => 39,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3579,
+		"modulo_idmodulo" => 1057,
+		"perfil_idperfil" => 39,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3596,
+		"modulo_idmodulo" => 4,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3600,
+		"modulo_idmodulo" => 4,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3601,
+		"modulo_idmodulo" => 44,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3602,
+		"modulo_idmodulo" => 1049,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3603,
+		"modulo_idmodulo" => 17,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3604,
+		"modulo_idmodulo" => 10,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3605,
+		"modulo_idmodulo" => 1205,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3606,
+		"modulo_idmodulo" => 665,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3608,
+		"modulo_idmodulo" => 1442,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3609,
+		"modulo_idmodulo" => 1049,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3611,
+		"modulo_idmodulo" => 1073,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3612,
+		"modulo_idmodulo" => 21,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3614,
+		"modulo_idmodulo" => 15,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3615,
+		"modulo_idmodulo" => 865,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3616,
+		"modulo_idmodulo" => 1213,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3617,
+		"modulo_idmodulo" => 1070,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3618,
+		"modulo_idmodulo" => 1040,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3619,
+		"modulo_idmodulo" => 202,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3620,
+		"modulo_idmodulo" => 1023,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3621,
+		"modulo_idmodulo" => 33,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3622,
+		"modulo_idmodulo" => 34,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3623,
+		"modulo_idmodulo" => 45,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3624,
+		"modulo_idmodulo" => 1208,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3625,
+		"modulo_idmodulo" => 1432,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3626,
+		"modulo_idmodulo" => 232,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3627,
+		"modulo_idmodulo" => 1431,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3628,
+		"modulo_idmodulo" => 1,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3630,
+		"modulo_idmodulo" => 1073,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3631,
+		"modulo_idmodulo" => 24,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3635,
+		"modulo_idmodulo" => 21,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3637,
+		"modulo_idmodulo" => 20,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3638,
+		"modulo_idmodulo" => 1027,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3639,
+		"modulo_idmodulo" => 1033,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3640,
+		"modulo_idmodulo" => 1029,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3641,
+		"modulo_idmodulo" => 1031,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3642,
+		"modulo_idmodulo" => 1035,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3643,
+		"modulo_idmodulo" => 1037,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3644,
+		"modulo_idmodulo" => 1025,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3645,
+		"modulo_idmodulo" => 6,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3647,
+		"modulo_idmodulo" => 291,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3648,
+		"modulo_idmodulo" => 12,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3649,
+		"modulo_idmodulo" => 16,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3650,
+		"modulo_idmodulo" => 13,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3651,
+		"modulo_idmodulo" => 200,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3652,
+		"modulo_idmodulo" => 5,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3653,
+		"modulo_idmodulo" => 216,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3654,
+		"modulo_idmodulo" => 63,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3655,
+		"modulo_idmodulo" => 14,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3656,
+		"modulo_idmodulo" => 2,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3657,
+		"modulo_idmodulo" => 142,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3658,
+		"modulo_idmodulo" => 685,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3659,
+		"modulo_idmodulo" => 1060,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3660,
+		"modulo_idmodulo" => 1013,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3661,
+		"modulo_idmodulo" => 35,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3662,
+		"modulo_idmodulo" => 1188,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3663,
+		"modulo_idmodulo" => 1402,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3664,
+		"modulo_idmodulo" => 821,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3665,
+		"modulo_idmodulo" => 64,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3666,
+		"modulo_idmodulo" => 1048,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3667,
+		"modulo_idmodulo" => 1043,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3668,
+		"modulo_idmodulo" => 197,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3669,
+		"modulo_idmodulo" => 820,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3670,
+		"modulo_idmodulo" => 30,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3671,
+		"modulo_idmodulo" => 1294,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3672,
+		"modulo_idmodulo" => 1054,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3673,
+		"modulo_idmodulo" => 192,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3674,
+		"modulo_idmodulo" => 1068,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3675,
+		"modulo_idmodulo" => 213,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3676,
+		"modulo_idmodulo" => 233,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3677,
+		"modulo_idmodulo" => 218,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3679,
+		"modulo_idmodulo" => 1232,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3680,
+		"modulo_idmodulo" => 1233,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3681,
+		"modulo_idmodulo" => 36,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3682,
+		"modulo_idmodulo" => 1234,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3683,
+		"modulo_idmodulo" => 1319,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3684,
+		"modulo_idmodulo" => 194,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3685,
+		"modulo_idmodulo" => 1056,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3686,
+		"modulo_idmodulo" => 219,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3687,
+		"modulo_idmodulo" => 195,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3688,
+		"modulo_idmodulo" => 1386,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3689,
+		"modulo_idmodulo" => 1293,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3690,
+		"modulo_idmodulo" => 127,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3691,
+		"modulo_idmodulo" => 126,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3692,
+		"modulo_idmodulo" => 1215,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3693,
+		"modulo_idmodulo" => 38,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3694,
+		"modulo_idmodulo" => 210,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3695,
+		"modulo_idmodulo" => 235,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3696,
+		"modulo_idmodulo" => 1044,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3697,
+		"modulo_idmodulo" => 1069,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3698,
+		"modulo_idmodulo" => 32,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3699,
+		"modulo_idmodulo" => 31,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3700,
+		"modulo_idmodulo" => 860,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3701,
+		"modulo_idmodulo" => 857,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3702,
+		"modulo_idmodulo" => 1051,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3703,
+		"modulo_idmodulo" => 1045,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3704,
+		"modulo_idmodulo" => 196,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3705,
+		"modulo_idmodulo" => 242,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3706,
+		"modulo_idmodulo" => 231,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3707,
+		"modulo_idmodulo" => 1235,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3708,
+		"modulo_idmodulo" => 1237,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3709,
+		"modulo_idmodulo" => 1239,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3710,
+		"modulo_idmodulo" => 1236,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3711,
+		"modulo_idmodulo" => 1240,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3712,
+		"modulo_idmodulo" => 1238,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3713,
+		"modulo_idmodulo" => 135,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3714,
+		"modulo_idmodulo" => 240,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3715,
+		"modulo_idmodulo" => 209,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3716,
+		"modulo_idmodulo" => 1053,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3717,
+		"modulo_idmodulo" => 1055,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3718,
+		"modulo_idmodulo" => 226,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3719,
+		"modulo_idmodulo" => 1328,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3720,
+		"modulo_idmodulo" => 227,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3721,
+		"modulo_idmodulo" => 1050,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3722,
+		"modulo_idmodulo" => 1292,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3723,
+		"modulo_idmodulo" => 1321,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3724,
+		"modulo_idmodulo" => 1388,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3725,
+		"modulo_idmodulo" => 852,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3726,
+		"modulo_idmodulo" => 236,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3727,
+		"modulo_idmodulo" => 1281,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3728,
+		"modulo_idmodulo" => 1285,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3729,
+		"modulo_idmodulo" => 1283,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3730,
+		"modulo_idmodulo" => 1118,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3731,
+		"modulo_idmodulo" => 1120,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3732,
+		"modulo_idmodulo" => 1224,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3733,
+		"modulo_idmodulo" => 1220,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3734,
+		"modulo_idmodulo" => 1216,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3735,
+		"modulo_idmodulo" => 237,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3736,
+		"modulo_idmodulo" => 1079,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3737,
+		"modulo_idmodulo" => 1189,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3738,
+		"modulo_idmodulo" => 1192,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3739,
+		"modulo_idmodulo" => 1218,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3740,
+		"modulo_idmodulo" => 1251,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3741,
+		"modulo_idmodulo" => 1243,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3742,
+		"modulo_idmodulo" => 1245,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3743,
+		"modulo_idmodulo" => 1247,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3744,
+		"modulo_idmodulo" => 1249,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3745,
+		"modulo_idmodulo" => 1241,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3746,
+		"modulo_idmodulo" => 1175,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3747,
+		"modulo_idmodulo" => 1177,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3748,
+		"modulo_idmodulo" => 1179,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3749,
+		"modulo_idmodulo" => 1181,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3750,
+		"modulo_idmodulo" => 1046,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3751,
+		"modulo_idmodulo" => 243,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3752,
+		"modulo_idmodulo" => 808,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3753,
+		"modulo_idmodulo" => 809,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3754,
+		"modulo_idmodulo" => 806,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3755,
+		"modulo_idmodulo" => 810,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3756,
+		"modulo_idmodulo" => 811,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3757,
+		"modulo_idmodulo" => 812,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3758,
+		"modulo_idmodulo" => 813,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3759,
+		"modulo_idmodulo" => 814,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3760,
+		"modulo_idmodulo" => 864,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3761,
+		"modulo_idmodulo" => 9,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3762,
+		"modulo_idmodulo" => 1173,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3763,
+		"modulo_idmodulo" => 1314,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3764,
+		"modulo_idmodulo" => 1282,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3765,
+		"modulo_idmodulo" => 1426,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3766,
+		"modulo_idmodulo" => 1119,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3767,
+		"modulo_idmodulo" => 1296,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3768,
+		"modulo_idmodulo" => 1225,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3769,
+		"modulo_idmodulo" => 1105,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3770,
+		"modulo_idmodulo" => 1221,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3771,
+		"modulo_idmodulo" => 1217,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3772,
+		"modulo_idmodulo" => 1286,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3773,
+		"modulo_idmodulo" => 1312,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3774,
+		"modulo_idmodulo" => 1137,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3775,
+		"modulo_idmodulo" => 1428,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3776,
+		"modulo_idmodulo" => 1024,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3777,
+		"modulo_idmodulo" => 1039,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3778,
+		"modulo_idmodulo" => 1193,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3779,
+		"modulo_idmodulo" => 1280,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3780,
+		"modulo_idmodulo" => 1080,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3781,
+		"modulo_idmodulo" => 1139,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3782,
+		"modulo_idmodulo" => 1190,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3783,
+		"modulo_idmodulo" => 1418,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3784,
+		"modulo_idmodulo" => 1410,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3785,
+		"modulo_idmodulo" => 1276,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3786,
+		"modulo_idmodulo" => 1219,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3787,
+		"modulo_idmodulo" => 1176,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3788,
+		"modulo_idmodulo" => 1308,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3789,
+		"modulo_idmodulo" => 1115,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3790,
+		"modulo_idmodulo" => 1163,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3791,
+		"modulo_idmodulo" => 1246,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3792,
+		"modulo_idmodulo" => 1169,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3793,
+		"modulo_idmodulo" => 1171,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3794,
+		"modulo_idmodulo" => 1272,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3795,
+		"modulo_idmodulo" => 1146,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3796,
+		"modulo_idmodulo" => 1248,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3797,
+		"modulo_idmodulo" => 1210,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3798,
+		"modulo_idmodulo" => 1161,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3799,
+		"modulo_idmodulo" => 1167,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3800,
+		"modulo_idmodulo" => 1325,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3801,
+		"modulo_idmodulo" => 1107,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3802,
+		"modulo_idmodulo" => 1262,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3803,
+		"modulo_idmodulo" => 1223,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3804,
+		"modulo_idmodulo" => 1250,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3805,
+		"modulo_idmodulo" => 1103,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3806,
+		"modulo_idmodulo" => 1129,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3807,
+		"modulo_idmodulo" => 1178,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3808,
+		"modulo_idmodulo" => 1097,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3809,
+		"modulo_idmodulo" => 1440,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3810,
+		"modulo_idmodulo" => 1028,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3811,
+		"modulo_idmodulo" => 1034,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3812,
+		"modulo_idmodulo" => 1095,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3813,
+		"modulo_idmodulo" => 1302,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3814,
+		"modulo_idmodulo" => 1030,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3815,
+		"modulo_idmodulo" => 1184,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3816,
+		"modulo_idmodulo" => 1131,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3817,
+		"modulo_idmodulo" => 1032,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3818,
+		"modulo_idmodulo" => 1298,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3819,
+		"modulo_idmodulo" => 1258,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3820,
+		"modulo_idmodulo" => 1256,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3821,
+		"modulo_idmodulo" => 1127,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3822,
+		"modulo_idmodulo" => 1229,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3823,
+		"modulo_idmodulo" => 1036,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3824,
+		"modulo_idmodulo" => 1042,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3825,
+		"modulo_idmodulo" => 1017,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3826,
+		"modulo_idmodulo" => 1144,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3827,
+		"modulo_idmodulo" => 1310,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3828,
+		"modulo_idmodulo" => 1201,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3829,
+		"modulo_idmodulo" => 1021,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3830,
+		"modulo_idmodulo" => 1266,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3831,
+		"modulo_idmodulo" => 1133,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3832,
+		"modulo_idmodulo" => 1270,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3833,
+		"modulo_idmodulo" => 1180,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3834,
+		"modulo_idmodulo" => 1416,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3835,
+		"modulo_idmodulo" => 1038,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3836,
+		"modulo_idmodulo" => 1252,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3837,
+		"modulo_idmodulo" => 1182,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3838,
+		"modulo_idmodulo" => 1019,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3839,
+		"modulo_idmodulo" => 1165,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3840,
+		"modulo_idmodulo" => 1076,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3841,
+		"modulo_idmodulo" => 1274,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3842,
+		"modulo_idmodulo" => 1026,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3843,
+		"modulo_idmodulo" => 1022,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3844,
+		"modulo_idmodulo" => 1159,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3845,
+		"modulo_idmodulo" => 1148,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3846,
+		"modulo_idmodulo" => 1399,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3847,
+		"modulo_idmodulo" => 1401,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3848,
+		"modulo_idmodulo" => 1438,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3849,
+		"modulo_idmodulo" => 1390,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3850,
+		"modulo_idmodulo" => 1412,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3851,
+		"modulo_idmodulo" => 1392,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3852,
+		"modulo_idmodulo" => 1397,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3853,
+		"modulo_idmodulo" => 1434,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3854,
+		"modulo_idmodulo" => 1436,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3855,
+		"modulo_idmodulo" => 1327,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3856,
+		"modulo_idmodulo" => 1197,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3857,
+		"modulo_idmodulo" => 1007,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3858,
+		"modulo_idmodulo" => 1268,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3859,
+		"modulo_idmodulo" => 1041,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3860,
+		"modulo_idmodulo" => 1304,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3861,
+		"modulo_idmodulo" => 1260,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3862,
+		"modulo_idmodulo" => 1135,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3863,
+		"modulo_idmodulo" => 1109,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3864,
+		"modulo_idmodulo" => 1113,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3865,
+		"modulo_idmodulo" => 1151,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3866,
+		"modulo_idmodulo" => 1117,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3867,
+		"modulo_idmodulo" => 1300,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3868,
+		"modulo_idmodulo" => 1318,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3869,
+		"modulo_idmodulo" => 1278,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3870,
+		"modulo_idmodulo" => 1323,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3871,
+		"modulo_idmodulo" => 1404,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3872,
+		"modulo_idmodulo" => 1157,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3873,
+		"modulo_idmodulo" => 1101,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3874,
+		"modulo_idmodulo" => 1420,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3875,
+		"modulo_idmodulo" => 1121,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3876,
+		"modulo_idmodulo" => 1414,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3877,
+		"modulo_idmodulo" => 1422,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3878,
+		"modulo_idmodulo" => 1408,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3879,
+		"modulo_idmodulo" => 1203,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3880,
+		"modulo_idmodulo" => 1244,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3881,
+		"modulo_idmodulo" => 1394,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3882,
+		"modulo_idmodulo" => 1087,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3883,
+		"modulo_idmodulo" => 1195,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3884,
+		"modulo_idmodulo" => 1093,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3885,
+		"modulo_idmodulo" => 1089,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3886,
+		"modulo_idmodulo" => 1424,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3887,
+		"modulo_idmodulo" => 1231,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3888,
+		"modulo_idmodulo" => 1078,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3889,
+		"modulo_idmodulo" => 1123,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3890,
+		"modulo_idmodulo" => 1316,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3891,
+		"modulo_idmodulo" => 1284,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3892,
+		"modulo_idmodulo" => 1242,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3893,
+		"modulo_idmodulo" => 1430,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3894,
+		"modulo_idmodulo" => 1264,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3895,
+		"modulo_idmodulo" => 1199,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3896,
+		"modulo_idmodulo" => 1291,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3897,
+		"modulo_idmodulo" => 1015,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3898,
+		"modulo_idmodulo" => 1306,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3899,
+		"modulo_idmodulo" => 18,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3900,
+		"modulo_idmodulo" => 41,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3901,
+		"modulo_idmodulo" => 214,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3902,
+		"modulo_idmodulo" => 224,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3903,
+		"modulo_idmodulo" => 825,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3904,
+		"modulo_idmodulo" => 1047,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3905,
+		"modulo_idmodulo" => 765,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3906,
+		"modulo_idmodulo" => 266,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3907,
+		"modulo_idmodulo" => 203,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3908,
+		"modulo_idmodulo" => 830,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3909,
+		"modulo_idmodulo" => 862,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3910,
+		"modulo_idmodulo" => 1168,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3911,
+		"modulo_idmodulo" => 1170,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3912,
+		"modulo_idmodulo" => 1172,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3913,
+		"modulo_idmodulo" => 1209,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3914,
+		"modulo_idmodulo" => 1106,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3915,
+		"modulo_idmodulo" => 1222,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3916,
+		"modulo_idmodulo" => 1128,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3917,
+		"modulo_idmodulo" => 1145,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3918,
+		"modulo_idmodulo" => 1130,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3919,
+		"modulo_idmodulo" => 1132,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3920,
+		"modulo_idmodulo" => 1439,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3921,
+		"modulo_idmodulo" => 1094,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3922,
+		"modulo_idmodulo" => 1104,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3923,
+		"modulo_idmodulo" => 1114,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3924,
+		"modulo_idmodulo" => 1102,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3925,
+		"modulo_idmodulo" => 1096,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3926,
+		"modulo_idmodulo" => 1108,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3927,
+		"modulo_idmodulo" => 1112,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3928,
+		"modulo_idmodulo" => 1100,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3929,
+		"modulo_idmodulo" => 1183,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3930,
+		"modulo_idmodulo" => 1255,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3931,
+		"modulo_idmodulo" => 1261,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3932,
+		"modulo_idmodulo" => 1265,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3933,
+		"modulo_idmodulo" => 1257,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3934,
+		"modulo_idmodulo" => 1259,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3935,
+		"modulo_idmodulo" => 1263,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3936,
+		"modulo_idmodulo" => 1126,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3937,
+		"modulo_idmodulo" => 1228,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3938,
+		"modulo_idmodulo" => 1230,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3939,
+		"modulo_idmodulo" => 238,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3940,
+		"modulo_idmodulo" => 1016,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3941,
+		"modulo_idmodulo" => 1143,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3942,
+		"modulo_idmodulo" => 1020,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3943,
+		"modulo_idmodulo" => 1415,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3944,
+		"modulo_idmodulo" => 1018,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3945,
+		"modulo_idmodulo" => 1075,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3946,
+		"modulo_idmodulo" => 1273,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3947,
+		"modulo_idmodulo" => 1295,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3948,
+		"modulo_idmodulo" => 1297,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3949,
+		"modulo_idmodulo" => 1279,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3950,
+		"modulo_idmodulo" => 1275,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3951,
+		"modulo_idmodulo" => 1277,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3952,
+		"modulo_idmodulo" => 1427,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3953,
+		"modulo_idmodulo" => 1398,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3954,
+		"modulo_idmodulo" => 1400,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3955,
+		"modulo_idmodulo" => 1437,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3956,
+		"modulo_idmodulo" => 1389,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3957,
+		"modulo_idmodulo" => 1391,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3958,
+		"modulo_idmodulo" => 1411,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3959,
+		"modulo_idmodulo" => 1396,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3960,
+		"modulo_idmodulo" => 1433,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3961,
+		"modulo_idmodulo" => 1435,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3962,
+		"modulo_idmodulo" => 1147,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3963,
+		"modulo_idmodulo" => 1326,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3964,
+		"modulo_idmodulo" => 1196,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3965,
+		"modulo_idmodulo" => 1198,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3966,
+		"modulo_idmodulo" => 1200,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3967,
+		"modulo_idmodulo" => 1008,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3968,
+		"modulo_idmodulo" => 1267,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3969,
+		"modulo_idmodulo" => 1271,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3970,
+		"modulo_idmodulo" => 1269,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3971,
+		"modulo_idmodulo" => 1214,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3972,
+		"modulo_idmodulo" => 1303,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3973,
+		"modulo_idmodulo" => 1313,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3974,
+		"modulo_idmodulo" => 1315,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3975,
+		"modulo_idmodulo" => 1307,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3976,
+		"modulo_idmodulo" => 1309,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3977,
+		"modulo_idmodulo" => 1311,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3978,
+		"modulo_idmodulo" => 1305,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3979,
+		"modulo_idmodulo" => 1134,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3980,
+		"modulo_idmodulo" => 1136,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3981,
+		"modulo_idmodulo" => 1138,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3982,
+		"modulo_idmodulo" => 1150,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3983,
+		"modulo_idmodulo" => 1158,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3984,
+		"modulo_idmodulo" => 1162,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3985,
+		"modulo_idmodulo" => 1160,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3986,
+		"modulo_idmodulo" => 1166,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3987,
+		"modulo_idmodulo" => 1164,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3988,
+		"modulo_idmodulo" => 1156,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3989,
+		"modulo_idmodulo" => 1299,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3990,
+		"modulo_idmodulo" => 1301,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3991,
+		"modulo_idmodulo" => 1317,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3992,
+		"modulo_idmodulo" => 1322,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3993,
+		"modulo_idmodulo" => 1324,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3994,
+		"modulo_idmodulo" => 1403,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3995,
+		"modulo_idmodulo" => 1413,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3996,
+		"modulo_idmodulo" => 1417,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3997,
+		"modulo_idmodulo" => 1425,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3998,
+		"modulo_idmodulo" => 1419,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 3999,
+		"modulo_idmodulo" => 1421,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4000,
+		"modulo_idmodulo" => 1423,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4001,
+		"modulo_idmodulo" => 1407,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4002,
+		"modulo_idmodulo" => 1409,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4003,
+		"modulo_idmodulo" => 1202,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4004,
+		"modulo_idmodulo" => 1393,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4005,
+		"modulo_idmodulo" => 1086,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4006,
+		"modulo_idmodulo" => 1194,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4007,
+		"modulo_idmodulo" => 1092,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4008,
+		"modulo_idmodulo" => 1116,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4009,
+		"modulo_idmodulo" => 1088,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4010,
+		"modulo_idmodulo" => 1077,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4011,
+		"modulo_idmodulo" => 1122,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4012,
+		"modulo_idmodulo" => 1429,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4013,
+		"modulo_idmodulo" => 1290,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4014,
+		"modulo_idmodulo" => 1014,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4015,
+		"modulo_idmodulo" => 1140,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4016,
+		"modulo_idmodulo" => 1141,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4017,
+		"modulo_idmodulo" => 1142,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4018,
+		"modulo_idmodulo" => 1057,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4019,
+		"modulo_idmodulo" => 1405,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4020,
+		"modulo_idmodulo" => 1067,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4021,
+		"modulo_idmodulo" => 1065,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4022,
+		"modulo_idmodulo" => 815,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4023,
+		"modulo_idmodulo" => 1206,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4024,
+		"modulo_idmodulo" => 1187,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4025,
+		"modulo_idmodulo" => 1254,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4026,
+		"modulo_idmodulo" => 705,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4027,
+		"modulo_idmodulo" => 265,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4028,
+		"modulo_idmodulo" => 1191,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4029,
+		"modulo_idmodulo" => 1174,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4030,
+		"modulo_idmodulo" => 1211,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4031,
+		"modulo_idmodulo" => 1212,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4032,
+		"modulo_idmodulo" => 1320,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4033,
+		"modulo_idmodulo" => 1186,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4034,
+		"modulo_idmodulo" => 1443,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4035,
+		"modulo_idmodulo" => 1049,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4036,
+		"modulo_idmodulo" => 45,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4037,
+		"modulo_idmodulo" => 1432,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4038,
+		"modulo_idmodulo" => 232,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4039,
+		"modulo_idmodulo" => 1431,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4041,
+		"modulo_idmodulo" => 20,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4042,
+		"modulo_idmodulo" => 213,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4043,
+		"modulo_idmodulo" => 233,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4044,
+		"modulo_idmodulo" => 1056,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4045,
+		"modulo_idmodulo" => 32,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4046,
+		"modulo_idmodulo" => 231,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4047,
+		"modulo_idmodulo" => 135,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4048,
+		"modulo_idmodulo" => 209,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4051,
+		"modulo_idmodulo" => 135,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4052,
+		"modulo_idmodulo" => 28,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4053,
+		"modulo_idmodulo" => 196,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4054,
+		"modulo_idmodulo" => 1328,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4058,
+		"modulo_idmodulo" => 64,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4059,
+		"modulo_idmodulo" => 1294,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4065,
+		"modulo_idmodulo" => 45,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4070,
+		"modulo_idmodulo" => 218,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4071,
+		"modulo_idmodulo" => 219,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4072,
+		"modulo_idmodulo" => 195,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4073,
+		"modulo_idmodulo" => 231,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4074,
+		"modulo_idmodulo" => 1235,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4075,
+		"modulo_idmodulo" => 1237,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4079,
+		"modulo_idmodulo" => 865,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4080,
+		"modulo_idmodulo" => 1273,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4082,
+		"modulo_idmodulo" => 1273,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4083,
+		"modulo_idmodulo" => 1051,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4085,
+		"modulo_idmodulo" => 1295,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4086,
+		"modulo_idmodulo" => 1297,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4087,
+		"modulo_idmodulo" => 1279,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4088,
+		"modulo_idmodulo" => 1275,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4089,
+		"modulo_idmodulo" => 1277,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4090,
+		"modulo_idmodulo" => 1427,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4091,
+		"modulo_idmodulo" => 240,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4092,
+		"modulo_idmodulo" => 13,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4093,
+		"modulo_idmodulo" => 226,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4095,
+		"modulo_idmodulo" => 1277,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4096,
+		"modulo_idmodulo" => 1049,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4098,
+		"modulo_idmodulo" => 1451,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4099,
+		"modulo_idmodulo" => 1453,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4100,
+		"modulo_idmodulo" => 1455,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4102,
+		"modulo_idmodulo" => 1086,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4103,
+		"modulo_idmodulo" => 1088,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4104,
+		"modulo_idmodulo" => 860,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4106,
+		"modulo_idmodulo" => 1429,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4107,
+		"modulo_idmodulo" => 14,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4108,
+		"modulo_idmodulo" => 4,
+		"perfil_idperfil" => 41,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4109,
+		"modulo_idmodulo" => 1,
+		"perfil_idperfil" => 41,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4110,
+		"modulo_idmodulo" => 291,
+		"perfil_idperfil" => 41,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4111,
+		"modulo_idmodulo" => 2,
+		"perfil_idperfil" => 41,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4112,
+		"modulo_idmodulo" => 64,
+		"perfil_idperfil" => 41,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4113,
+		"modulo_idmodulo" => 236,
+		"perfil_idperfil" => 41,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4114,
+		"modulo_idmodulo" => 865,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4115,
+		"modulo_idmodulo" => 1213,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4116,
+		"modulo_idmodulo" => 1070,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4117,
+		"modulo_idmodulo" => 1443,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4118,
+		"modulo_idmodulo" => 1441,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4119,
+		"modulo_idmodulo" => 24,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4121,
+		"modulo_idmodulo" => 1027,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4122,
+		"modulo_idmodulo" => 6,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4124,
+		"modulo_idmodulo" => 1,
+		"perfil_idperfil" => 42,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4125,
+		"modulo_idmodulo" => 1074,
+		"perfil_idperfil" => 42,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4126,
+		"modulo_idmodulo" => 1073,
+		"perfil_idperfil" => 42,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4127,
+		"modulo_idmodulo" => 24,
+		"perfil_idperfil" => 42,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4128,
+		"modulo_idmodulo" => 1058,
+		"perfil_idperfil" => 42,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4129,
+		"modulo_idmodulo" => 23,
+		"perfil_idperfil" => 42,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4130,
+		"modulo_idmodulo" => 50,
+		"perfil_idperfil" => 42,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4131,
+		"modulo_idmodulo" => 4,
+		"perfil_idperfil" => 43,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4132,
+		"modulo_idmodulo" => 1070,
+		"perfil_idperfil" => 43,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4133,
+		"modulo_idmodulo" => 1040,
+		"perfil_idperfil" => 43,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4134,
+		"modulo_idmodulo" => 1443,
+		"perfil_idperfil" => 43,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4135,
+		"modulo_idmodulo" => 1441,
+		"perfil_idperfil" => 43,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4136,
+		"modulo_idmodulo" => 33,
+		"perfil_idperfil" => 43,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4137,
+		"modulo_idmodulo" => 34,
+		"perfil_idperfil" => 43,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4138,
+		"modulo_idmodulo" => 142,
+		"perfil_idperfil" => 43,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4139,
+		"modulo_idmodulo" => 142,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4140,
+		"modulo_idmodulo" => 1060,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4141,
+		"modulo_idmodulo" => 1511,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4142,
+		"modulo_idmodulo" => 226,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4143,
+		"modulo_idmodulo" => 1051,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4144,
+		"modulo_idmodulo" => 1188,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4145,
+		"modulo_idmodulo" => 1402,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4146,
+		"modulo_idmodulo" => 821,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4147,
+		"modulo_idmodulo" => 1453,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4148,
+		"modulo_idmodulo" => 197,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4149,
+		"modulo_idmodulo" => 820,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4150,
+		"modulo_idmodulo" => 1054,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4151,
+		"modulo_idmodulo" => 233,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4152,
+		"modulo_idmodulo" => 218,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4153,
+		"modulo_idmodulo" => 28,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4154,
+		"modulo_idmodulo" => 1232,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4155,
+		"modulo_idmodulo" => 1233,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4156,
+		"modulo_idmodulo" => 36,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4157,
+		"modulo_idmodulo" => 1234,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4158,
+		"modulo_idmodulo" => 1056,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4159,
+		"modulo_idmodulo" => 195,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4160,
+		"modulo_idmodulo" => 1386,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4161,
+		"modulo_idmodulo" => 1510,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4162,
+		"modulo_idmodulo" => 1293,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4163,
+		"modulo_idmodulo" => 127,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4164,
+		"modulo_idmodulo" => 126,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4165,
+		"modulo_idmodulo" => 1215,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4166,
+		"modulo_idmodulo" => 38,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4167,
+		"modulo_idmodulo" => 210,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4168,
+		"modulo_idmodulo" => 235,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4169,
+		"modulo_idmodulo" => 1044,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4170,
+		"modulo_idmodulo" => 32,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4171,
+		"modulo_idmodulo" => 31,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4172,
+		"modulo_idmodulo" => 857,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4173,
+		"modulo_idmodulo" => 1051,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4174,
+		"modulo_idmodulo" => 4,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4175,
+		"modulo_idmodulo" => 865,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4176,
+		"modulo_idmodulo" => 1070,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4177,
+		"modulo_idmodulo" => 1040,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4178,
+		"modulo_idmodulo" => 1443,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4179,
+		"modulo_idmodulo" => 33,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4180,
+		"modulo_idmodulo" => 34,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4181,
+		"modulo_idmodulo" => 44,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4182,
+		"modulo_idmodulo" => 1,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4183,
+		"modulo_idmodulo" => 1073,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4184,
+		"modulo_idmodulo" => 24,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4185,
+		"modulo_idmodulo" => 1058,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4186,
+		"modulo_idmodulo" => 23,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4187,
+		"modulo_idmodulo" => 50,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4188,
+		"modulo_idmodulo" => 21,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4189,
+		"modulo_idmodulo" => 1059,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4190,
+		"modulo_idmodulo" => 20,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4191,
+		"modulo_idmodulo" => 6,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4192,
+		"modulo_idmodulo" => 7,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4193,
+		"modulo_idmodulo" => 1048,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4194,
+		"modulo_idmodulo" => 1043,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4195,
+		"modulo_idmodulo" => 197,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4196,
+		"modulo_idmodulo" => 820,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4197,
+		"modulo_idmodulo" => 30,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4198,
+		"modulo_idmodulo" => 1294,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4199,
+		"modulo_idmodulo" => 192,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4200,
+		"modulo_idmodulo" => 213,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4201,
+		"modulo_idmodulo" => 233,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4202,
+		"modulo_idmodulo" => 218,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4203,
+		"modulo_idmodulo" => 1056,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4204,
+		"modulo_idmodulo" => 219,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4205,
+		"modulo_idmodulo" => 195,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4206,
+		"modulo_idmodulo" => 1386,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4207,
+		"modulo_idmodulo" => 127,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4208,
+		"modulo_idmodulo" => 126,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4209,
+		"modulo_idmodulo" => 1215,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4210,
+		"modulo_idmodulo" => 1044,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4211,
+		"modulo_idmodulo" => 1069,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4212,
+		"modulo_idmodulo" => 32,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4213,
+		"modulo_idmodulo" => 31,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4214,
+		"modulo_idmodulo" => 1051,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4215,
+		"modulo_idmodulo" => 237,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4216,
+		"modulo_idmodulo" => 1079,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4217,
+		"modulo_idmodulo" => 1088,
+		"perfil_idperfil" => 44,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4218,
+		"modulo_idmodulo" => 200,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4219,
+		"modulo_idmodulo" => 216,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4220,
+		"modulo_idmodulo" => 291,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4221,
+		"modulo_idmodulo" => 1554,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4222,
+		"modulo_idmodulo" => 1567,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4223,
+		"modulo_idmodulo" => 1566,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4224,
+		"modulo_idmodulo" => 1568,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4225,
+		"modulo_idmodulo" => 1569,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4226,
+		"modulo_idmodulo" => 1570,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4227,
+		"modulo_idmodulo" => 1572,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4228,
+		"modulo_idmodulo" => 45,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4229,
+		"modulo_idmodulo" => 1208,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4230,
+		"modulo_idmodulo" => 1432,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4231,
+		"modulo_idmodulo" => 232,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4232,
+		"modulo_idmodulo" => 1431,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4233,
+		"modulo_idmodulo" => 135,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4234,
+		"modulo_idmodulo" => 1290,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4235,
+		"modulo_idmodulo" => 1208,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4236,
+		"modulo_idmodulo" => 1432,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4237,
+		"modulo_idmodulo" => 232,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4238,
+		"modulo_idmodulo" => 1431,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4239,
+		"modulo_idmodulo" => 1572,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4240,
+		"modulo_idmodulo" => 1522,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4241,
+		"modulo_idmodulo" => 765,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4242,
+		"modulo_idmodulo" => 1523,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4244,
+		"modulo_idmodulo" => 1529,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4245,
+		"modulo_idmodulo" => 1530,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4246,
+		"modulo_idmodulo" => 1531,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4247,
+		"modulo_idmodulo" => 1532,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4248,
+		"modulo_idmodulo" => 1533,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4249,
+		"modulo_idmodulo" => 1534,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4250,
+		"modulo_idmodulo" => 1535,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4252,
+		"modulo_idmodulo" => 1500,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4253,
+		"modulo_idmodulo" => 1502,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4254,
+		"modulo_idmodulo" => 1524,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4255,
+		"modulo_idmodulo" => 1526,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4256,
+		"modulo_idmodulo" => 865,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4257,
+		"modulo_idmodulo" => 1040,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4258,
+		"modulo_idmodulo" => 33,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4259,
+		"modulo_idmodulo" => 34,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4260,
+		"modulo_idmodulo" => 6,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4261,
+		"modulo_idmodulo" => 44,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4262,
+		"modulo_idmodulo" => 237,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4263,
+		"modulo_idmodulo" => 1008,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4264,
+		"modulo_idmodulo" => 233,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4265,
+		"modulo_idmodulo" => 1054,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4266,
+		"modulo_idmodulo" => 1443,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4267,
+		"modulo_idmodulo" => 1500,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4268,
+		"modulo_idmodulo" => 1502,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4269,
+		"modulo_idmodulo" => 1524,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4270,
+		"modulo_idmodulo" => 1526,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4271,
+		"modulo_idmodulo" => 1503,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4272,
+		"modulo_idmodulo" => 1527,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4273,
+		"modulo_idmodulo" => 1501,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4274,
+		"modulo_idmodulo" => 1525,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4275,
+		"modulo_idmodulo" => 1522,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4276,
+		"modulo_idmodulo" => 765,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4277,
+		"modulo_idmodulo" => 1523,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4278,
+		"modulo_idmodulo" => 1528,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4279,
+		"modulo_idmodulo" => 1529,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4280,
+		"modulo_idmodulo" => 1530,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4281,
+		"modulo_idmodulo" => 1531,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4282,
+		"modulo_idmodulo" => 1532,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4283,
+		"modulo_idmodulo" => 1533,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4284,
+		"modulo_idmodulo" => 1534,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4285,
+		"modulo_idmodulo" => 1535,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4286,
+		"modulo_idmodulo" => 1536,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4287,
+		"modulo_idmodulo" => 1610,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4288,
+		"modulo_idmodulo" => 1039,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4289,
+		"modulo_idmodulo" => 1042,
+		"perfil_idperfil" => 45,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4293,
+		"modulo_idmodulo" => 1505,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4294,
+		"modulo_idmodulo" => 1495,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4295,
+		"modulo_idmodulo" => 1509,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4296,
+		"modulo_idmodulo" => 1507,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4297,
+		"modulo_idmodulo" => 1512,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4298,
+		"modulo_idmodulo" => 1478,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4299,
+		"modulo_idmodulo" => 1486,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4300,
+		"modulo_idmodulo" => 1482,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4301,
+		"modulo_idmodulo" => 1488,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4302,
+		"modulo_idmodulo" => 1494,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4303,
+		"modulo_idmodulo" => 1504,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4304,
+		"modulo_idmodulo" => 1508,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4305,
+		"modulo_idmodulo" => 1506,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4306,
+		"modulo_idmodulo" => 1490,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4307,
+		"modulo_idmodulo" => 1472,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4308,
+		"modulo_idmodulo" => 1484,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4309,
+		"modulo_idmodulo" => 1474,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4310,
+		"modulo_idmodulo" => 1480,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4311,
+		"modulo_idmodulo" => 1470,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4312,
+		"modulo_idmodulo" => 1476,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4313,
+		"modulo_idmodulo" => 1632,
+		"perfil_idperfil" => 0,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4314,
+		"modulo_idmodulo" => 1632,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4315,
+		"modulo_idmodulo" => 1515,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4316,
+		"modulo_idmodulo" => 1552,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4317,
+		"modulo_idmodulo" => 1468,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4318,
+		"modulo_idmodulo" => 1540,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4319,
+		"modulo_idmodulo" => 1538,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4320,
+		"modulo_idmodulo" => 1542,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4321,
+		"modulo_idmodulo" => 238,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4322,
+		"modulo_idmodulo" => 1007,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4323,
+		"modulo_idmodulo" => 1268,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4324,
+		"modulo_idmodulo" => 1267,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4327,
+		"modulo_idmodulo" => 1006,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4328,
+		"modulo_idmodulo" => 1621,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4329,
+		"modulo_idmodulo" => 1607,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4330,
+		"modulo_idmodulo" => 1620,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4331,
+		"modulo_idmodulo" => 240,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4332,
+		"modulo_idmodulo" => 1039,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4333,
+		"modulo_idmodulo" => 1042,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "l,e,m,a",
+		"caracteristica_grupo" => null,
+		"caracteristica_total" => null
+	],
+	[
+		"idpermiso_perfil" => 4336,
+		"modulo_idmodulo" => 1450,
+		"perfil_idperfil" => 8,
+		"caracteristica_propio" => "lame",
+		"caracteristica_grupo" => "lame",
+		"caracteristica_total" => "lame"
+	],
+	[
+		"idpermiso_perfil" => 4337,
+		"modulo_idmodulo" => 28,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "lame",
+		"caracteristica_grupo" => "lame",
+		"caracteristica_total" => "lame"
+	],
+	[
+		"idpermiso_perfil" => 4345,
+		"modulo_idmodulo" => 1450,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "lame",
+		"caracteristica_grupo" => "lame",
+		"caracteristica_total" => "lame"
+	],
+	[
+		"idpermiso_perfil" => 4365,
+		"modulo_idmodulo" => 1597,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "lame",
+		"caracteristica_grupo" => "lame",
+		"caracteristica_total" => "lame"
+	],
+	[
+		"idpermiso_perfil" => 4366,
+		"modulo_idmodulo" => 1596,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "lame",
+		"caracteristica_grupo" => "lame",
+		"caracteristica_total" => "lame"
+	],
+	[
+		"idpermiso_perfil" => 4375,
+		"modulo_idmodulo" => 1642,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "lame",
+		"caracteristica_grupo" => "lame",
+		"caracteristica_total" => "lame"
+	],
+	[
+		"idpermiso_perfil" => 4376,
+		"modulo_idmodulo" => 1646,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "lame",
+		"caracteristica_grupo" => "lame",
+		"caracteristica_total" => "lame"
+	],
+	[
+		"idpermiso_perfil" => 4377,
+		"modulo_idmodulo" => 1644,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "lame",
+		"caracteristica_grupo" => "lame",
+		"caracteristica_total" => "lame"
+	],
+	[
+		"idpermiso_perfil" => 4384,
+		"modulo_idmodulo" => 1515,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "lame",
+		"caracteristica_grupo" => "lame",
+		"caracteristica_total" => "lame"
+	],
+	[
+		"idpermiso_perfil" => 4385,
+		"modulo_idmodulo" => 1516,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "lame",
+		"caracteristica_grupo" => "lame",
+		"caracteristica_total" => "lame"
+	],
+	[
+		"idpermiso_perfil" => 4386,
+		"modulo_idmodulo" => 1625,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "lame",
+		"caracteristica_grupo" => "lame",
+		"caracteristica_total" => "lame"
+	],
+	[
+		"idpermiso_perfil" => 4387,
+		"modulo_idmodulo" => 1624,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "lame",
+		"caracteristica_grupo" => "lame",
+		"caracteristica_total" => "lame"
+	],
+	[
+		"idpermiso_perfil" => 4390,
+		"modulo_idmodulo" => 1626,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "lame",
+		"caracteristica_grupo" => "lame",
+		"caracteristica_total" => "lame"
+	],
+	[
+		"idpermiso_perfil" => 4391,
+		"modulo_idmodulo" => 1627,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "lame",
+		"caracteristica_grupo" => "lame",
+		"caracteristica_total" => "lame"
+	],
+	[
+		"idpermiso_perfil" => 4392,
+		"modulo_idmodulo" => 1622,
+		"perfil_idperfil" => 1,
+		"caracteristica_propio" => "lame",
+		"caracteristica_grupo" => "lame",
+		"caracteristica_total" => "lame"
+	],
+	[
+		"idpermiso_perfil" => 4393,
+		"modulo_idmodulo" => 6,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "lame",
+		"caracteristica_grupo" => "lame",
+		"caracteristica_total" => "lame"
+	],
+	[
+		"idpermiso_perfil" => 4394,
+		"modulo_idmodulo" => 1,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "lame",
+		"caracteristica_grupo" => "lame",
+		"caracteristica_total" => "lame"
+	],
+	[
+		"idpermiso_perfil" => 4395,
+		"modulo_idmodulo" => 213,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "lame",
+		"caracteristica_grupo" => "lame",
+		"caracteristica_total" => "lame"
+	],
+	[
+		"idpermiso_perfil" => 4396,
+		"modulo_idmodulo" => 1590,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "lame",
+		"caracteristica_grupo" => "lame",
+		"caracteristica_total" => "lame"
+	],
+	[
+		"idpermiso_perfil" => 4399,
+		"modulo_idmodulo" => 1007,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "lame",
+		"caracteristica_grupo" => "lame",
+		"caracteristica_total" => "lame"
+	],
+	[
+		"idpermiso_perfil" => 4400,
+		"modulo_idmodulo" => 1008,
+		"perfil_idperfil" => 6,
+		"caracteristica_propio" => "lame",
+		"caracteristica_grupo" => "lame",
+		"caracteristica_total" => "lame"
+	],
+	[
+		"idpermiso_perfil" => 4401,
+		"modulo_idmodulo" => 1642,
+		"perfil_idperfil" => 10,
+		"caracteristica_propio" => "lame",
+		"caracteristica_grupo" => "lame",
+		"caracteristica_total" => "lame"
+	]
+];
+$perfil = [
+	[
+		"idperfil" => 1,
+		"nombre" => "ADMINISTRADOR"
+	],
+	[
+		"idperfil" => 2,
+		"nombre" => "DIRECTOR"
+	],
+	[
+		"idperfil" => 3,
+		"nombre" => "JEFE"
+	],
+	[
+		"idperfil" => 4,
+		"nombre" => "COORDINADOR"
+	],
+	[
+		"idperfil" => 5,
+		"nombre" => "AUXILIAR"
+	],
+	[
+		"idperfil" => 6,
+		"nombre" => "GENERAL"
+	],
+	[
+		"idperfil" => 8,
+		"nombre" => "ADMIN_INTERNO"
+	],
+	[
+		"idperfil" => 10,
+		"nombre" => "RADICADOR"
+	],
+	[
+		"idperfil" => 44,
+		"nombre" => "Cajero"
+	],
+	[
+		"idperfil" => 45,
+		"nombre" => "PRUEBA NOV"
+	]
+];
+$campos_formato = [
+	[
+		"idcampos_formato" => 1,
+		"formato_idformato" => 1,
+		"nombre" => "contenido",
+		"etiqueta" => "Contenido",
+		"tipo_dato" => "TEXT",
+		"longitud" => null,
+		"obligatoriedad" => 1,
+		"valor" => "avanzado",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "textarea",
+		"orden" => 13,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2,
+		"formato_idformato" => 1,
+		"nombre" => "copiainterna",
+		"etiqueta" => "Con Copia Interna A",
+		"tipo_dato" => "TEXT",
+		"longitud" => null,
+		"obligatoriedad" => 0,
+		"valor" => "../../test.php?rol=1;1;0;1;1;0;5",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "arbol",
+		"orden" => 15,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 3,
+		"formato_idformato" => 1,
+		"nombre" => "fecha_carta",
+		"etiqueta" => "Fecha de Creacion",
+		"tipo_dato" => "DATE",
+		"longitud" => null,
+		"obligatoriedad" => 1,
+		"valor" => "{*fecha_formato*}",
+		"acciones" => "a,e,b",
+		"ayuda" => "Fecha en la que fue Creada la Carta.",
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "text",
+		"orden" => 9,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4,
+		"formato_idformato" => 1,
+		"nombre" => "anexos_fisicos",
+		"etiqueta" => "Anexos fisicos",
+		"tipo_dato" => "TEXT",
+		"longitud" => "2000",
+		"obligatoriedad" => 0,
+		"valor" => "{*anexos_fisicos*}",
+		"acciones" => "a,e",
+		"ayuda" => "Listado con Los Anexos de la Carta",
+		"predeterminado" => "",
+		"banderas" => "",
+		"etiqueta_html" => "textarea",
+		"orden" => 18,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 5,
+		"formato_idformato" => 1,
+		"nombre" => "iniciales",
+		"etiqueta" => "Persona que Genera la Carta",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 1,
+		"valor" => "{*iniciales*}",
+		"acciones" => "a,e",
+		"ayuda" => "Persona que Genera la Carta ",
+		"predeterminado" => "",
+		"banderas" => "",
+		"etiqueta_html" => "hidden",
+		"orden" => 16,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 6,
+		"formato_idformato" => 1,
+		"nombre" => "copia",
+		"etiqueta" => "Con Copia A",
+		"tipo_dato" => "TEXT",
+		"longitud" => "2000",
+		"obligatoriedad" => 0,
+		"valor" => "multiple@nombre,identificacion@cargo,empresa,direccion,telefono,email,titulo,ciudad",
+		"acciones" => "a,e,b",
+		"ayuda" => "Personas a quienes se les Envia Copia de la Carta",
+		"predeterminado" => "",
+		"banderas" => "",
+		"etiqueta_html" => "ejecutor",
+		"orden" => 11,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 7,
+		"formato_idformato" => 1,
+		"nombre" => "despedida",
+		"etiqueta" => "Despedida",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => "{*despedida*}",
+		"acciones" => "a,e",
+		"ayuda" => "Despedida de la Carta, Atentamente, Cordialmente, ...",
+		"predeterminado" => "",
+		"banderas" => "",
+		"etiqueta_html" => "text",
+		"orden" => 14,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 8,
+		"formato_idformato" => 1,
+		"nombre" => "serie_idserie",
+		"etiqueta" => "Clasificar en expediente",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "../../test_expediente_serie.php?estado=1&carga_partes_serie=1&sin_padre_expediente=1;2;1;0;0;0;4",
+		"acciones" => "a,e",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => "i",
+		"etiqueta_html" => "arbol",
+		"orden" => 8,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 9,
+		"formato_idformato" => 1,
+		"nombre" => "destinos",
+		"etiqueta" => "Destinos",
+		"tipo_dato" => "TEXT",
+		"longitud" => "2000",
+		"obligatoriedad" => 1,
+		"valor" => "multiple@nombre,identificacion@cargo,empresa,direccion,telefono,email,titulo,ciudad",
+		"acciones" => "a,e,b",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "",
+		"etiqueta_html" => "ejecutor",
+		"orden" => 10,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 10,
+		"formato_idformato" => 1,
+		"nombre" => "asunto",
+		"etiqueta" => "Asunto",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 1,
+		"valor" => null,
+		"acciones" => "a,e,p,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "text",
+		"orden" => 12,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 11,
+		"formato_idformato" => 1,
+		"nombre" => "anexos_digitales",
+		"etiqueta" => "anexos digitales",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "2000",
+		"obligatoriedad" => 0,
+		"valor" => "xls|doc|pdf|jpg|zip|rar",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "archivo",
+		"orden" => 17,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 12,
+		"formato_idformato" => 1,
+		"nombre" => "vercopiainterna",
+		"etiqueta" => "visible la copia interna",
+		"tipo_dato" => "CHAR",
+		"longitud" => "1",
+		"obligatoriedad" => 1,
+		"valor" => "1,Si;0,No",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "1",
+		"banderas" => "",
+		"etiqueta_html" => "radio",
+		"orden" => 20,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 13,
+		"formato_idformato" => 1,
+		"nombre" => "dependencia",
+		"etiqueta" => "DEPENDENCIA",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "{*buscar_dependencia*}",
+		"acciones" => "a",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "i",
+		"etiqueta_html" => "hidden",
+		"orden" => 7,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 14,
+		"formato_idformato" => 1,
+		"nombre" => "encabezado",
+		"etiqueta" => "ENCABEZADO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "1",
+		"banderas" => "i",
+		"etiqueta_html" => "hidden",
+		"orden" => 6,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 15,
+		"formato_idformato" => 1,
+		"nombre" => "firma",
+		"etiqueta" => "FIRMAS DIGITALES",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "1",
+		"banderas" => "i",
+		"etiqueta_html" => "hidden",
+		"orden" => 5,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 16,
+		"formato_idformato" => 1,
+		"nombre" => "documento_iddocumento",
+		"etiqueta" => "DOCUMENTO ASOCIADO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "i",
+		"etiqueta_html" => "hidden",
+		"orden" => 4,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 17,
+		"formato_idformato" => 1,
+		"nombre" => "idft_carta",
+		"etiqueta" => "CARTA",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "ai,pk",
+		"etiqueta_html" => "hidden",
+		"orden" => 3,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 18,
+		"formato_idformato" => 1,
+		"nombre" => "varios_radicados",
+		"etiqueta" => "Asignar un n&Uacute;mero de radicado diferente para cada destino?",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "0,No;1,Si",
+		"acciones" => "a",
+		"ayuda" => "Asignar un n&uacute;mero de radicado diferente para cada destino?",
+		"predeterminado" => "0",
+		"banderas" => null,
+		"etiqueta_html" => "hidden",
+		"orden" => 19,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 19,
+		"formato_idformato" => 2,
+		"nombre" => "fecha_memorando",
+		"etiqueta" => "Fecha",
+		"tipo_dato" => "DATETIME",
+		"longitud" => "",
+		"obligatoriedad" => 1,
+		"valor" => "{*fecha_formato*}",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "",
+		"etiqueta_html" => "text",
+		"orden" => 8,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 20,
+		"formato_idformato" => 2,
+		"nombre" => "dependencia",
+		"etiqueta" => "Dependencia",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "{*buscar_dependencia*}",
+		"acciones" => "a",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "",
+		"etiqueta_html" => "text",
+		"orden" => 7,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 21,
+		"formato_idformato" => 2,
+		"nombre" => "destino",
+		"etiqueta" => "Destino",
+		"tipo_dato" => "TEXT",
+		"longitud" => "2000",
+		"obligatoriedad" => 1,
+		"valor" => "../../test.php?rol=1;1;0;1;1;0;5",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "arbol",
+		"orden" => 11,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 22,
+		"formato_idformato" => 2,
+		"nombre" => "copia",
+		"etiqueta" => "Con Copia A",
+		"tipo_dato" => "TEXT",
+		"longitud" => "2000",
+		"obligatoriedad" => 0,
+		"valor" => "../../test.php?rol=1;1;0;1;1;0;5",
+		"acciones" => "a,e",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "arbol",
+		"orden" => 12,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 23,
+		"formato_idformato" => 2,
+		"nombre" => "asunto",
+		"etiqueta" => "Asunto",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 1,
+		"valor" => "",
+		"acciones" => "a,e,p,b",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "",
+		"etiqueta_html" => "text",
+		"orden" => 13,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 24,
+		"formato_idformato" => 2,
+		"nombre" => "contenido",
+		"etiqueta" => "Contenido",
+		"tipo_dato" => "TEXT",
+		"longitud" => null,
+		"obligatoriedad" => 1,
+		"valor" => "avanzado",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "textarea",
+		"orden" => 14,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 25,
+		"formato_idformato" => 2,
+		"nombre" => "despedida",
+		"etiqueta" => "Despedida",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 1,
+		"valor" => "{*despedida*}",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "",
+		"etiqueta_html" => "text",
+		"orden" => 15,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 26,
+		"formato_idformato" => 2,
+		"nombre" => "iniciales",
+		"etiqueta" => "INICIALES DE QUIEN PREPARO EL MEMORANDO",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 1,
+		"valor" => "{*iniciales*}",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "",
+		"etiqueta_html" => "text",
+		"orden" => 16,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 27,
+		"formato_idformato" => 2,
+		"nombre" => "anexos_fisicos",
+		"etiqueta" => "ANEXOS FISICOS",
+		"tipo_dato" => "TEXT",
+		"longitud" => "2000",
+		"obligatoriedad" => 0,
+		"valor" => "{*anexos_fisicos*}",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "",
+		"etiqueta_html" => "text",
+		"orden" => 18,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 28,
+		"formato_idformato" => 2,
+		"nombre" => "serie_idserie",
+		"etiqueta" => "Clasificar en expediente",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 0,
+		"valor" => "../../test_expediente_serie.php?estado=1&carga_partes_serie=1&sin_padre_expediente=1;2;1;0;0;0;4",
+		"acciones" => "a,e",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "arbol",
+		"orden" => 9,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 29,
+		"formato_idformato" => 2,
+		"nombre" => "documento_iddocumento",
+		"etiqueta" => "DOCUMENTO ASOCIADO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "i",
+		"etiqueta_html" => "hidden",
+		"orden" => 6,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 30,
+		"formato_idformato" => 2,
+		"nombre" => "encabezado",
+		"etiqueta" => "ENCABEZADO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "1",
+		"banderas" => "i",
+		"etiqueta_html" => "hidden",
+		"orden" => 5,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 31,
+		"formato_idformato" => 2,
+		"nombre" => "firma",
+		"etiqueta" => "FIRMAS DIGITALES",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "1",
+		"banderas" => "i",
+		"etiqueta_html" => "hidden",
+		"orden" => 4,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 32,
+		"formato_idformato" => 2,
+		"nombre" => "anexos",
+		"etiqueta" => "anexos digitales",
+		"tipo_dato" => "TEXT",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => "",
+		"acciones" => "a,e,b",
+		"ayuda" => "Anexos digitales",
+		"predeterminado" => "",
+		"banderas" => "",
+		"etiqueta_html" => "archivo",
+		"orden" => 17,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 33,
+		"formato_idformato" => 2,
+		"nombre" => "idft_memorando",
+		"etiqueta" => "MEMORANDO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "ai,pk",
+		"etiqueta_html" => "hidden",
+		"orden" => 3,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 34,
+		"formato_idformato" => 2,
+		"nombre" => "origen",
+		"etiqueta" => "De",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => "{*seleccionar_origen*}",
+		"acciones" => null,
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "text",
+		"orden" => 10,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 36,
+		"formato_idformato" => 3,
+		"nombre" => "numero_oficio",
+		"etiqueta" => "N&Uacute;MERO DE DOCUMENTO",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "text",
+		"orden" => 9,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 37,
+		"formato_idformato" => 3,
+		"nombre" => "persona_natural",
+		"etiqueta" => "PERSONA NATURAL/JUR&Iacute;DICA*",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => "unico@nombre,identificacion@cargo,empresa,direccion,telefono,email,titulo,ciudad",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "ejecutor",
+		"orden" => 18,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 39,
+		"formato_idformato" => 3,
+		"nombre" => "descripcion",
+		"etiqueta" => "DESCRIPCI&Oacute;N O ASUNTO",
+		"tipo_dato" => "TEXT",
+		"longitud" => null,
+		"obligatoriedad" => 1,
+		"valor" => "sin_tiny",
+		"acciones" => "a,e,p,d,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "textarea",
+		"orden" => 10,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 41,
+		"formato_idformato" => 3,
+		"nombre" => "descripcion_anexos",
+		"etiqueta" => "ANEXOS FISICOS",
+		"tipo_dato" => "TEXT",
+		"longitud" => null,
+		"obligatoriedad" => 0,
+		"valor" => "sin_tiny",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "textarea",
+		"orden" => 13,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 42,
+		"formato_idformato" => 3,
+		"nombre" => "anexos_digitales",
+		"etiqueta" => "ANEXOS DIGITALES",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => "xls|doc|pdf|jpg|docx|xlsx|png",
+		"acciones" => "a,e,b",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "",
+		"etiqueta_html" => "archivo",
+		"orden" => 14,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 43,
+		"formato_idformato" => 3,
+		"nombre" => "destino",
+		"etiqueta" => "DESTINO*",
+		"tipo_dato" => "TEXT",
+		"longitud" => null,
+		"obligatoriedad" => 0,
+		"valor" => "../../test.php?rol=1;1;0;1;1;0;5\r\n",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "arbol",
+		"orden" => 22,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 44,
+		"formato_idformato" => 3,
+		"nombre" => "copia_a",
+		"etiqueta" => "COPIA ELECTR&Oacute;NICA A",
+		"tipo_dato" => "TEXT",
+		"longitud" => null,
+		"obligatoriedad" => 0,
+		"valor" => "../../test.php?rol=1;1;0;1;1;0;5",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "arbol",
+		"orden" => 24,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 46,
+		"formato_idformato" => 3,
+		"nombre" => "idft_radicacion_entrada",
+		"etiqueta" => "RADICACION_ENTRADA",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "ai,pk",
+		"etiqueta_html" => "hidden",
+		"orden" => 29,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 47,
+		"formato_idformato" => 3,
+		"nombre" => "documento_iddocumento",
+		"etiqueta" => "DOCUMENTO ASOCIADO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "i",
+		"etiqueta_html" => "hidden",
+		"orden" => 28,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 48,
+		"formato_idformato" => 3,
+		"nombre" => "dependencia",
+		"etiqueta" => "DEPENDENCIA DEL CREADOR DEL DOCUMENTO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "{*buscar_dependencia*}",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "i",
+		"etiqueta_html" => "hidden",
+		"orden" => 3,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 49,
+		"formato_idformato" => 3,
+		"nombre" => "encabezado",
+		"etiqueta" => "ENCABEZADO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "1",
+		"banderas" => "",
+		"etiqueta_html" => "hidden",
+		"orden" => 27,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 50,
+		"formato_idformato" => 3,
+		"nombre" => "firma",
+		"etiqueta" => "FIRMAS DIGITALES",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "1",
+		"banderas" => "",
+		"etiqueta_html" => "hidden",
+		"orden" => 32,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 51,
+		"formato_idformato" => 3,
+		"nombre" => "idflujo",
+		"etiqueta" => "idflujo",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => "Select id,title as nombre from diagram order by nombre",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => "1",
+		"banderas" => null,
+		"etiqueta_html" => "hidden",
+		"orden" => 30,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 52,
+		"formato_idformato" => 3,
+		"nombre" => "serie_idserie",
+		"etiqueta" => "TIPO DOCUMENTAL",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 0,
+		"valor" => "../../test_dependencia_serie.php?tabla=dependencia&admin=1&mostrar_nodos=dsa&sin_padre_dependencia=1&solo_dependencias=1&carga_partes_serie=1;2;1;0;1;1;1",
+		"acciones" => "a,e",
+		"ayuda" => "Radicacion entrada",
+		"predeterminado" => "1317",
+		"banderas" => null,
+		"etiqueta_html" => "arbol",
+		"orden" => 23,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 53,
+		"formato_idformato" => 3,
+		"nombre" => "fecha_radicacion_entrada",
+		"etiqueta" => "FECHA DE RADICACI&Oacute;N",
+		"tipo_dato" => "DATETIME",
+		"longitud" => null,
+		"obligatoriedad" => 1,
+		"valor" => "{*fecha_formato*}",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "fecha",
+		"orden" => 5,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 54,
+		"formato_idformato" => 3,
+		"nombre" => "numero_radicado",
+		"etiqueta" => "N&Uacute;MERO DE RADICADO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 0,
+		"valor" => "{*mostrar_radicado_entrada*}",
+		"acciones" => "a,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "hidden",
+		"orden" => 6,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 56,
+		"formato_idformato" => 3,
+		"nombre" => "estado_radicado",
+		"etiqueta" => "Estado documento",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => "a,e,b",
+		"ayuda" => "1:Aprobado\r\n2:Iniciado",
+		"predeterminado" => "1",
+		"banderas" => null,
+		"etiqueta_html" => "hidden",
+		"orden" => 31,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 1999,
+		"formato_idformato" => 194,
+		"nombre" => "serie_idserie",
+		"etiqueta" => "SERIE DOCUMENTAL",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => null,
+		"acciones" => "a",
+		"ayuda" => "6. MAPA DE PROCESOS",
+		"predeterminado" => "8",
+		"banderas" => "fk",
+		"etiqueta_html" => "hidden",
+		"orden" => 29,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2000,
+		"formato_idformato" => 194,
+		"nombre" => "lider_proceso",
+		"etiqueta" => "L&iacute;der del proceso",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 1,
+		"valor" => "../../test.php?rol=1&sin_padre=1;2;0;1;1;0;5",
+		"acciones" => "a,e,b",
+		"ayuda" => "Funcionario que queda encargado para liderar el proceso",
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "arbol",
+		"orden" => 11,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2001,
+		"formato_idformato" => 194,
+		"nombre" => "estado",
+		"etiqueta" => "estado",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 1,
+		"valor" => "ELABORACION,ELABORACION;REVISION,REVISION;APROBACION,APROBACION;DISTRIBUCION,DISTRIBUCION;INACTIVO,INACTIVO",
+		"acciones" => "a,e,b",
+		"ayuda" => "Estado Actual del Proceso :\r\nELABORACION,REVISION,APROBACION,DISTRIBUCION,INACTIVO ",
+		"predeterminado" => "ELABORACION",
+		"banderas" => null,
+		"etiqueta_html" => "radio",
+		"orden" => 8,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2002,
+		"formato_idformato" => 194,
+		"nombre" => "anexos",
+		"etiqueta" => "Anexos Digitales",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "archivo",
+		"orden" => 14,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2003,
+		"formato_idformato" => 194,
+		"nombre" => "codigo",
+		"etiqueta" => "C&oacute;digo",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => "a,e,p,b",
+		"ayuda" => "Hace referencia al Codigo del Proceso (Campos Alfa Numericos)",
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "text",
+		"orden" => 4,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2005,
+		"formato_idformato" => 194,
+		"nombre" => "fecha",
+		"etiqueta" => "Fecha",
+		"tipo_dato" => "DATE",
+		"longitud" => null,
+		"obligatoriedad" => 1,
+		"valor" => null,
+		"acciones" => null,
+		"ayuda" => null,
+		"predeterminado" => "now()",
+		"banderas" => null,
+		"etiqueta_html" => "fecha",
+		"orden" => 26,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2006,
+		"formato_idformato" => 194,
+		"nombre" => "nombre",
+		"etiqueta" => "Nombre",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 1,
+		"valor" => null,
+		"acciones" => "a,e,p,d,b",
+		"ayuda" => "Nombre del proceso",
+		"predeterminado" => null,
+		"banderas" => "oc",
+		"etiqueta_html" => "text",
+		"orden" => 5,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2007,
+		"formato_idformato" => 194,
+		"nombre" => "version",
+		"etiqueta" => "Versi&oacute;n",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => "a,e,b",
+		"ayuda" => "Version del Documento",
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "text",
+		"orden" => 6,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2008,
+		"formato_idformato" => 194,
+		"nombre" => "objetivo",
+		"etiqueta" => "objetivo",
+		"tipo_dato" => "TEXT",
+		"longitud" => "3000",
+		"obligatoriedad" => 1,
+		"valor" => null,
+		"acciones" => "a,e,b",
+		"ayuda" => "Objetivo Principal del Proceso",
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "textarea",
+		"orden" => 12,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2009,
+		"formato_idformato" => 194,
+		"nombre" => "politica_operacion",
+		"etiqueta" => "Politica de operacion",
+		"tipo_dato" => "TEXT",
+		"longitud" => null,
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => null,
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "textarea",
+		"orden" => 28,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2010,
+		"formato_idformato" => 194,
+		"nombre" => "idft_proceso",
+		"etiqueta" => "PROCESO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => null,
+		"acciones" => "a,e",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => "ai,pk",
+		"etiqueta_html" => "hidden",
+		"orden" => 15,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2011,
+		"formato_idformato" => 194,
+		"nombre" => "documento_iddocumento",
+		"etiqueta" => "DOCUMENTO ASOCIADO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => null,
+		"acciones" => "a,e",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => "i",
+		"etiqueta_html" => "hidden",
+		"orden" => 18,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2012,
+		"formato_idformato" => 194,
+		"nombre" => "dependencia",
+		"etiqueta" => "DEPENDENCIA DEL CREADOR DEL DOCUMENTO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "{*buscar_dependencia*}",
+		"acciones" => "a,e",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => "i",
+		"etiqueta_html" => "hidden",
+		"orden" => 3,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2013,
+		"formato_idformato" => 194,
+		"nombre" => "encabezado",
+		"etiqueta" => "ENCABEZADO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => null,
+		"acciones" => "a,e",
+		"ayuda" => null,
+		"predeterminado" => "1",
+		"banderas" => null,
+		"etiqueta_html" => "hidden",
+		"orden" => 16,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2014,
+		"formato_idformato" => 194,
+		"nombre" => "firma",
+		"etiqueta" => "FIRMAS DIGITALES",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => null,
+		"acciones" => "a,e",
+		"ayuda" => null,
+		"predeterminado" => "1",
+		"banderas" => "",
+		"etiqueta_html" => "hidden",
+		"orden" => 17,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2015,
+		"formato_idformato" => 194,
+		"nombre" => "coordenadas",
+		"etiqueta" => "Coordenadas",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => null,
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "text",
+		"orden" => 27,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2188,
+		"formato_idformato" => 207,
+		"nombre" => "serie_idserie",
+		"etiqueta" => "Tipo de documento",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "../../test_serie_funcionario.php;2;0;1;1;0;1",
+		"acciones" => "a",
+		"ayuda" => "Salida",
+		"predeterminado" => "1318",
+		"banderas" => null,
+		"etiqueta_html" => "arbol",
+		"orden" => 7,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2189,
+		"formato_idformato" => 207,
+		"nombre" => "anexos_fisicos",
+		"etiqueta" => "ANEXOS FISICOS",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 0,
+		"valor" => "1,CD-ROM;2,DISKETE;3,DVD;4,DOCUMENTO;5,FAX;6,REVISTA O LIBRO;7,VIDEO;8,OTROS ANEXOS",
+		"acciones" => "a,e,b",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "",
+		"etiqueta_html" => "select",
+		"orden" => 13,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2190,
+		"formato_idformato" => 207,
+		"nombre" => "persona_natural",
+		"etiqueta" => "Persona natural o jur&iacute;dica",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 1,
+		"valor" => "unico@nombre,identificacion@cargo,empresa,direccion,telefono,email,titulo,ciudad",
+		"acciones" => "a,e,b",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "",
+		"etiqueta_html" => "ejecutor",
+		"orden" => 10,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2191,
+		"formato_idformato" => 207,
+		"nombre" => "descripcion_salida",
+		"etiqueta" => "DESCRIPCION O ASUNTO",
+		"tipo_dato" => "TEXT",
+		"longitud" => "1000",
+		"obligatoriedad" => 1,
+		"valor" => "sin_tiny",
+		"acciones" => "a,e,p,d,b",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "",
+		"etiqueta_html" => "textarea",
+		"orden" => 11,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2192,
+		"formato_idformato" => 207,
+		"nombre" => "descripcion_anexos",
+		"etiqueta" => "DESCRIPCION ANEXOS FISICOS",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "1000",
+		"obligatoriedad" => 0,
+		"valor" => "sin_tiny",
+		"acciones" => "a,e,b",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "",
+		"etiqueta_html" => "textarea",
+		"orden" => 14,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2193,
+		"formato_idformato" => 207,
+		"nombre" => "estado_radicado",
+		"etiqueta" => "Estado de radicado",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => "",
+		"acciones" => "a,e,b",
+		"ayuda" => "1:Aprobado\r\n2:Iniciado",
+		"predeterminado" => "1",
+		"banderas" => "",
+		"etiqueta_html" => "hidden",
+		"orden" => 17,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2194,
+		"formato_idformato" => 207,
+		"nombre" => "fecha_radicacion_entrada",
+		"etiqueta" => "FECHA DE RADICACION",
+		"tipo_dato" => "DATETIME",
+		"longitud" => null,
+		"obligatoriedad" => 1,
+		"valor" => "{*fecha_formato*}",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "fecha",
+		"orden" => 2,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2195,
+		"formato_idformato" => 207,
+		"nombre" => "numero_radicado",
+		"etiqueta" => "NUMERO DE RADICADO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 0,
+		"valor" => "{*mostrar_radicado_salida*}",
+		"acciones" => "a,e,b",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "",
+		"etiqueta_html" => "text",
+		"orden" => 3,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2196,
+		"formato_idformato" => 207,
+		"nombre" => "area_responsable",
+		"etiqueta" => "Funcionario responsable",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 1,
+		"valor" => "../../test.php?rol=1;1;0;1;1;0;5",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "arbol",
+		"orden" => 6,
+		"mascara" => null,
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2197,
+		"formato_idformato" => 207,
+		"nombre" => "idft_radicacion_salida",
+		"etiqueta" => "RADICACION_SALIDA",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "ai,pk",
+		"etiqueta_html" => "hidden",
+		"orden" => 9,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2198,
+		"formato_idformato" => 207,
+		"nombre" => "documento_iddocumento",
+		"etiqueta" => "DOCUMENTO ASOCIADO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "i",
+		"etiqueta_html" => "hidden",
+		"orden" => 8,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2199,
+		"formato_idformato" => 207,
+		"nombre" => "dependencia",
+		"etiqueta" => "DEPENDENCIA DEL CREADOR DEL DOCUMENTO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "{*buscar_dependencia*}",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "",
+		"banderas" => "i",
+		"etiqueta_html" => "hidden",
+		"orden" => 1,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2200,
+		"formato_idformato" => 207,
+		"nombre" => "encabezado",
+		"etiqueta" => "ENCABEZADO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "1",
+		"banderas" => "",
+		"etiqueta_html" => "hidden",
+		"orden" => 4,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2201,
+		"formato_idformato" => 207,
+		"nombre" => "firma",
+		"etiqueta" => "FIRMAS DIGITALES",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "",
+		"acciones" => "a,e",
+		"ayuda" => "",
+		"predeterminado" => "1",
+		"banderas" => "",
+		"etiqueta_html" => "hidden",
+		"orden" => 5,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2202,
+		"formato_idformato" => 207,
+		"nombre" => "tipo_mensajeria",
+		"etiqueta" => "TIPO DE MENSAJERIA",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "1,Mensajeria externa;2,Mensajeria interna;3,Entrega personal",
+		"acciones" => "a,e,b",
+		"ayuda" => "",
+		"predeterminado" => "1",
+		"banderas" => "",
+		"etiqueta_html" => "radio",
+		"orden" => 15,
+		"mascara" => "",
+		"adicionales" => "",
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2203,
+		"formato_idformato" => 207,
+		"nombre" => "mensajeros",
+		"etiqueta" => "Mensajeros",
+		"tipo_dato" => "INT",
+		"longitud" => "15",
+		"obligatoriedad" => 0,
+		"valor" => "{*mostrar_mensajeros*}",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "text",
+		"orden" => 16,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2216,
+		"formato_idformato" => 1,
+		"nombre" => "idflujo",
+		"etiqueta" => "idflujo",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => "4",
+		"banderas" => null,
+		"etiqueta_html" => "hidden",
+		"orden" => 2,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2607,
+		"formato_idformato" => 194,
+		"nombre" => "responsable",
+		"etiqueta" => "Responsable",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 1,
+		"valor" => "../../test.php?rol=1&sin_padre=1;2;0;1;1;0;5",
+		"acciones" => "a,e,b",
+		"ayuda" => "Responsable o responsables del Proceso",
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "arbol",
+		"orden" => 10,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 2609,
+		"formato_idformato" => 194,
+		"nombre" => "macroproceso",
+		"etiqueta" => "Macroproceso",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 0,
+		"valor" => "select idft_macroproceso_calidad as id,nombre from ft_macroproceso_calidad m,documento d where documento_iddocumento=iddocumento and d.estado<>'ELIMINADO'",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "select",
+		"orden" => 28,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 3421,
+		"formato_idformato" => 1,
+		"nombre" => "tipo_copia_interna",
+		"etiqueta" => "tipo copia interna",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => null,
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => "2",
+		"banderas" => null,
+		"etiqueta_html" => "hidden",
+		"orden" => 1,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 3454,
+		"formato_idformato" => 3,
+		"nombre" => "fecha_oficio_entrada",
+		"etiqueta" => "FECHA DOCUMENTO ENTRADA",
+		"tipo_dato" => "DATE",
+		"longitud" => null,
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "fecha",
+		"orden" => 8,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4083,
+		"formato_idformato" => 207,
+		"nombre" => "num_folios",
+		"etiqueta" => "Numero de folios",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "0@1000@1@0",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "spin",
+		"orden" => 12,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4086,
+		"formato_idformato" => 1,
+		"nombre" => "email_aprobar",
+		"etiqueta" => "Aprobar fuera de SAIA",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "1,Si;2,No",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => "2",
+		"banderas" => null,
+		"etiqueta_html" => "radio",
+		"orden" => 21,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4118,
+		"formato_idformato" => 194,
+		"nombre" => "fecha_aprobacion_rie",
+		"etiqueta" => "Fecha aprobaci&oacute;n riesgo",
+		"tipo_dato" => "DATETIME",
+		"longitud" => null,
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "hidden",
+		"orden" => 1,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4119,
+		"formato_idformato" => 194,
+		"nombre" => "fecha_revision_riesg",
+		"etiqueta" => "Fecha revisi&oacute;n riesgo",
+		"tipo_dato" => "DATETIME",
+		"longitud" => null,
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "hidden",
+		"orden" => 2,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4120,
+		"formato_idformato" => 194,
+		"nombre" => "vigencia",
+		"etiqueta" => "vigencia",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => "a,e,b",
+		"ayuda" => "Vigencia del proceso",
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "text",
+		"orden" => 7,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4121,
+		"formato_idformato" => 194,
+		"nombre" => "descripcion_proceso",
+		"etiqueta" => "Descripcion",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => "a,e",
+		"ayuda" => "Por favor cargar la descripcion de las actividades del proceso y/o la caracterizacion del proceso",
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "archivo",
+		"orden" => 9,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4122,
+		"formato_idformato" => 194,
+		"nombre" => "alcance",
+		"etiqueta" => "Alcance",
+		"tipo_dato" => "TEXT",
+		"longitud" => null,
+		"obligatoriedad" => 1,
+		"valor" => null,
+		"acciones" => "a,e,b",
+		"ayuda" => "Este es el alcance del proceso la delimitacion",
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "textarea",
+		"orden" => 13,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4124,
+		"formato_idformato" => 194,
+		"nombre" => "listado_maestro_registros",
+		"etiqueta" => "Listado maestro Registros",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => "a,e",
+		"ayuda" => "Listado Maestro de Registros",
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "hidden",
+		"orden" => 20,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4125,
+		"formato_idformato" => 194,
+		"nombre" => "acta",
+		"etiqueta" => "Acta",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => "a,e",
+		"ayuda" => "Acta que se genera para aprobar el Proceso",
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "archivo",
+		"orden" => 21,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4126,
+		"formato_idformato" => 194,
+		"nombre" => "aprobado_por",
+		"etiqueta" => "Aprobado por",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => "../../test.php?rol=1&sin_padre=1;2;0;1;1;0;5\r\n",
+		"acciones" => "a,e",
+		"ayuda" => "Nombre y Cargo de quienes Aprueban el documento de Calidad",
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "arbol",
+		"orden" => 22,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4127,
+		"formato_idformato" => 194,
+		"nombre" => "fecha_aprobacion",
+		"etiqueta" => "Fecha en que se aprob&oacute;",
+		"tipo_dato" => "DATETIME",
+		"longitud" => null,
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => "a,e,b",
+		"ayuda" => "Fecha en que se aprob&oacute;",
+		"predeterminado" => "now()",
+		"banderas" => null,
+		"etiqueta_html" => "fecha",
+		"orden" => 23,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4128,
+		"formato_idformato" => 194,
+		"nombre" => "fecha_revision",
+		"etiqueta" => "Fecha en que se revis&oacute;",
+		"tipo_dato" => "DATETIME",
+		"longitud" => null,
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => "a,e,b",
+		"ayuda" => "Fecha en que se revis&oacute;",
+		"predeterminado" => "now()",
+		"banderas" => null,
+		"etiqueta_html" => "fecha",
+		"orden" => 25,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4129,
+		"formato_idformato" => 194,
+		"nombre" => "secretarias",
+		"etiqueta" => "Secretarias Vinculadas ",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => "../arboles/test_secretarias.xml;1;0;1;1;0;2",
+		"acciones" => null,
+		"ayuda" => "Secretarias Vinculadas ",
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "arbol",
+		"orden" => 25,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4130,
+		"formato_idformato" => 194,
+		"nombre" => "permisos_acceso",
+		"etiqueta" => "permisos de acceso",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => "../../test.php?ocultar_seleccion_dep=1;1;0;1;1;0;0",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "arbol",
+		"orden" => 26,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4131,
+		"formato_idformato" => 194,
+		"nombre" => "listado_maestro_documentos",
+		"etiqueta" => "listado maestro unificado de documentos y registros",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => "a,e",
+		"ayuda" => "Listado Maestro de documentos",
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "archivo",
+		"orden" => 19,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4574,
+		"formato_idformato" => 194,
+		"nombre" => "dependencias_partici",
+		"etiqueta" => "Dependencias Participantes",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 1,
+		"valor" => "../../test_serie.php?tabla=dependencia&estado=1;1;0;1;1;0;2",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "arbol",
+		"orden" => 27,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4621,
+		"formato_idformato" => 194,
+		"nombre" => "revisado_por",
+		"etiqueta" => "Revisado por",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => "../../test.php?rol=1&sin_padre=1;2;0;1;1;0;5",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "arbol",
+		"orden" => 24,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4793,
+		"formato_idformato" => 1,
+		"nombre" => "estado_documento",
+		"etiqueta" => "ESTADO DEL DOCUMENTO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => null,
+		"acciones" => "a,e",
+		"ayuda" => null,
+		"predeterminado" => "1",
+		"banderas" => "",
+		"etiqueta_html" => "hidden",
+		"orden" => 0,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4818,
+		"formato_idformato" => 2,
+		"nombre" => "estado_documento",
+		"etiqueta" => "ESTADO DEL DOCUMENTO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => null,
+		"acciones" => "a,e",
+		"ayuda" => null,
+		"predeterminado" => "1",
+		"banderas" => "",
+		"etiqueta_html" => "hidden",
+		"orden" => 2,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4824,
+		"formato_idformato" => 3,
+		"nombre" => "estado_documento",
+		"etiqueta" => "ESTADO DEL DOCUMENTO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => null,
+		"acciones" => "a,e",
+		"ayuda" => null,
+		"predeterminado" => "1",
+		"banderas" => "",
+		"etiqueta_html" => "hidden",
+		"orden" => 2,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4863,
+		"formato_idformato" => 194,
+		"nombre" => "estado_documento",
+		"etiqueta" => "ESTADO DEL DOCUMENTO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => null,
+		"acciones" => "a,e",
+		"ayuda" => null,
+		"predeterminado" => "1",
+		"banderas" => "",
+		"etiqueta_html" => "hidden",
+		"orden" => 0,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4921,
+		"formato_idformato" => 207,
+		"nombre" => "estado_documento",
+		"etiqueta" => "ESTADO DEL DOCUMENTO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => null,
+		"acciones" => "a,e",
+		"ayuda" => null,
+		"predeterminado" => "1",
+		"banderas" => "",
+		"etiqueta_html" => "hidden",
+		"orden" => 0,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4966,
+		"formato_idformato" => 3,
+		"nombre" => "tipo_origen",
+		"etiqueta" => "ORIGEN DEL DOCUMENTO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "1,EXTERNO;2,INTERNO",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => "1",
+		"banderas" => null,
+		"etiqueta_html" => "radio",
+		"orden" => 7,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4967,
+		"formato_idformato" => 3,
+		"nombre" => "area_responsable",
+		"etiqueta" => "Funcionario responsable*",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => "../../test.php?sin_padre=1&rol=1;2;0;1;1;0;5",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "arbol",
+		"orden" => 19,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4968,
+		"formato_idformato" => 3,
+		"nombre" => "tipo_destino",
+		"etiqueta" => "DESTINO DEL DOCUMENTO",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "1,EXTERNO;2,INTERNO",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => "2",
+		"banderas" => null,
+		"etiqueta_html" => "radio",
+		"orden" => 21,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4969,
+		"formato_idformato" => 3,
+		"nombre" => "persona_natural_dest",
+		"etiqueta" => "Persona natural o jur&iacute;dica*",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => "multiple@nombre,identificacion@cargo,empresa,direccion,telefono,email,titulo,ciudad",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "ejecutor",
+		"orden" => 25,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4970,
+		"formato_idformato" => 3,
+		"nombre" => "tipo_mensajeria",
+		"etiqueta" => "TIPO DE MENSAJER&Iacute;A*",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 0,
+		"valor" => "1,Servicio de Mensajeria;3,Entrega personal/Medios Propios del &Aacute;rea",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "radio",
+		"orden" => 26,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4977,
+		"formato_idformato" => 3,
+		"nombre" => "despachado",
+		"etiqueta" => "despachado",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => null,
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => "0",
+		"banderas" => null,
+		"etiqueta_html" => "hidden",
+		"orden" => 1,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4981,
+		"formato_idformato" => 3,
+		"nombre" => "etiqueta_origen",
+		"etiqueta" => "etiqueta_origen",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 1,
+		"valor" => "<center><strong>INFORMACI&Oacute;N ORIGEN</strong></center>",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "etiqueta",
+		"orden" => 17,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4982,
+		"formato_idformato" => 3,
+		"nombre" => "etiqueta_destino",
+		"etiqueta" => "etiqueta_destino",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 1,
+		"valor" => "<center><strong>INFORMACI&Oacute;N DESTINO</strong></center>",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "etiqueta",
+		"orden" => 20,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 4983,
+		"formato_idformato" => 3,
+		"nombre" => "etiqueta_datos_gener",
+		"etiqueta" => "etiqueta_datos_gener",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 1,
+		"valor" => "<center><strong>DATOS GENERALES</strong></center>",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "etiqueta",
+		"orden" => 4,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 5071,
+		"formato_idformato" => 1,
+		"nombre" => "expediente_serie",
+		"etiqueta" => "expediente_serie",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "hidden",
+		"orden" => 0,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 5072,
+		"formato_idformato" => 2,
+		"nombre" => "expediente_serie",
+		"etiqueta" => "expediente_serie",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "hidden",
+		"orden" => 1,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 5081,
+		"formato_idformato" => 3,
+		"nombre" => "tiempo_respuesta",
+		"etiqueta" => "FECHA L&Iacute;MITE DE RESPUESTA",
+		"tipo_dato" => "DATE",
+		"longitud" => null,
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => null,
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "fecha",
+		"orden" => 12,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 5082,
+		"formato_idformato" => 3,
+		"nombre" => "descripcion_general",
+		"etiqueta" => "Descripci&oacute;n general",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => null,
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "text",
+		"orden" => 11,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 5083,
+		"formato_idformato" => 3,
+		"nombre" => "numero_guia",
+		"etiqueta" => "N&Uacute;MERO DE GU&Iacute;A",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => null,
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "text",
+		"orden" => 15,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 5084,
+		"formato_idformato" => 3,
+		"nombre" => "empresa_transportado",
+		"etiqueta" => "EMPRESA TRANSPORTADORA",
+		"tipo_dato" => "VARCHAR",
+		"longitud" => "255",
+		"obligatoriedad" => 0,
+		"valor" => "SELECT idcf_empresa_trans as id, nombre as nombre FROM cf_empresa_trans WHERE estado=1",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => null,
+		"banderas" => null,
+		"etiqueta_html" => "select",
+		"orden" => 16,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	],
+	[
+		"idcampos_formato" => 5176,
+		"formato_idformato" => 2,
+		"nombre" => "email_aprobar",
+		"etiqueta" => "Aprobar fuera de SAIA",
+		"tipo_dato" => "INT",
+		"longitud" => "11",
+		"obligatoriedad" => 1,
+		"valor" => "1,Si;2,No",
+		"acciones" => "a,e,b",
+		"ayuda" => null,
+		"predeterminado" => "2",
+		"banderas" => null,
+		"etiqueta_html" => "radio",
+		"orden" => 19,
+		"mascara" => null,
+		"adicionales" => null,
+		"autoguardado" => 0,
+		"fila_visible" => 1
+	]
 ];
 
