@@ -50,7 +50,6 @@ class FtAccesoriosVehiculo
     private $serieIdserie;
 
 
-
     /**
      * Get idftAccesoriosVehiculo
      *
