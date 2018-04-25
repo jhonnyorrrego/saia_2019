@@ -9242,7 +9242,8 @@ $cargo = [
         "estado" => 1,
         "codigo_cargo" => null,
         "tipo" => 1,
-        "tipo_cargo" => 1
+        "tipo_cargo" => 1,
+        "pertenece_nucleo" => 1
     ],
     [
         "idcargo" => 253,
@@ -9251,7 +9252,8 @@ $cargo = [
         "estado" => 1,
         "codigo_cargo" => null,
         "tipo" => 1,
-        "tipo_cargo" => 1
+        "tipo_cargo" => 1,
+        "pertenece_nucleo" => 1
     ],
     [
         "idcargo" => 254,
@@ -9260,7 +9262,8 @@ $cargo = [
         "estado" => 1,
         "codigo_cargo" => 0,
         "tipo" => 1,
-        "tipo_cargo" => 2
+        "tipo_cargo" => 2,
+        "pertenece_nucleo" => 1
     ]
 ];
 $categoria_formato = [
