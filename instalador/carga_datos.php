@@ -9757,7 +9757,8 @@ $funcionario = [
         "foto_original" => "",
         "foto_recorte" => "",
         "foto_cordenadas" => "",
-        "ventanilla_radicacion" => 1
+        "ventanilla_radicacion" => 1,
+        "pertenece_nucleo" => 1
     ],
     [
         "idfuncionario" => 19,
@@ -9787,7 +9788,8 @@ $funcionario = [
         "foto_original" => null,
         "foto_recorte" => null,
         "foto_cordenadas" => "",
-        "ventanilla_radicacion" => 0
+        "ventanilla_radicacion" => 0,
+        "pertenece_nucleo" => 1
     ],
     [
         "idfuncionario" => 10094,
@@ -9817,7 +9819,8 @@ $funcionario = [
         "foto_original" => null,
         "foto_recorte" => null,
         "foto_cordenadas" => "",
-        "ventanilla_radicacion" => 0
+        "ventanilla_radicacion" => 0,
+        "pertenece_nucleo" => 1
     ]
 ];
 $modulo = [
