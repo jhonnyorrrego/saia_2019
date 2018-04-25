@@ -84,231 +84,33 @@ class Tareas
      */
     private $estadoTarea = '0';
 
-
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="orden_tareas", type="integer", nullable=false)
+     */
+    private $ordenTareas = '1';
 
     /**
-     * Get idtareas
+     * @var integer
      *
-     * @return integer
+     * @ORM\Column(name="ruta_aprob", type="integer", nullable=false)
      */
-    public function getIdtareas()
-    {
-        return $this->idtareas;
-    }
+    private $rutaAprob = '0';
 
     /**
-     * Set fecha
+     * @var integer
      *
-     * @param \DateTime $fecha
-     *
-     * @return Tareas
+     * @ORM\Column(name="accion_tareas", type="integer", nullable=false)
      */
-    public function setFecha($fecha)
-    {
-        $this->fecha = $fecha;
-
-        return $this;
-    }
+    private $accionTareas = '0';
 
     /**
-     * Get fecha
+     * @var integer
      *
-     * @return \DateTime
+     * @ORM\Column(name="idtema", type="integer", nullable=true)
      */
-    public function getFecha()
-    {
-        return $this->fecha;
-    }
+    private $idtema = '0';
 
-    /**
-     * Set tarea
-     *
-     * @param string $tarea
-     *
-     * @return Tareas
-     */
-    public function setTarea($tarea)
-    {
-        $this->tarea = $tarea;
 
-        return $this;
-    }
-
-    /**
-     * Get tarea
-     *
-     * @return string
-     */
-    public function getTarea()
-    {
-        return $this->tarea;
-    }
-
-    /**
-     * Set responsable
-     *
-     * @param string $responsable
-     *
-     * @return Tareas
-     */
-    public function setResponsable($responsable)
-    {
-        $this->responsable = $responsable;
-
-        return $this;
-    }
-
-    /**
-     * Get responsable
-     *
-     * @return string
-     */
-    public function getResponsable()
-    {
-        return $this->responsable;
-    }
-
-    /**
-     * Set descripcion
-     *
-     * @param string $descripcion
-     *
-     * @return Tareas
-     */
-    public function setDescripcion($descripcion)
-    {
-        $this->descripcion = $descripcion;
-
-        return $this;
-    }
-
-    /**
-     * Get descripcion
-     *
-     * @return string
-     */
-    public function getDescripcion()
-    {
-        return $this->descripcion;
-    }
-
-    /**
-     * Set prioridad
-     *
-     * @param string $prioridad
-     *
-     * @return Tareas
-     */
-    public function setPrioridad($prioridad)
-    {
-        $this->prioridad = $prioridad;
-
-        return $this;
-    }
-
-    /**
-     * Get prioridad
-     *
-     * @return string
-     */
-    public function getPrioridad()
-    {
-        return $this->prioridad;
-    }
-
-    /**
-     * Set fechaTarea
-     *
-     * @param \DateTime $fechaTarea
-     *
-     * @return Tareas
-     */
-    public function setFechaTarea($fechaTarea)
-    {
-        $this->fechaTarea = $fechaTarea;
-
-        return $this;
-    }
-
-    /**
-     * Get fechaTarea
-     *
-     * @return \DateTime
-     */
-    public function getFechaTarea()
-    {
-        return $this->fechaTarea;
-    }
-
-    /**
-     * Set ejecutor
-     *
-     * @param integer $ejecutor
-     *
-     * @return Tareas
-     */
-    public function setEjecutor($ejecutor)
-    {
-        $this->ejecutor = $ejecutor;
-
-        return $this;
-    }
-
-    /**
-     * Get ejecutor
-     *
-     * @return integer
-     */
-    public function getEjecutor()
-    {
-        return $this->ejecutor;
-    }
-
-    /**
-     * Set documentoIddocumento
-     *
-     * @param integer $documentoIddocumento
-     *
-     * @return Tareas
-     */
-    public function setDocumentoIddocumento($documentoIddocumento)
-    {
-        $this->documentoIddocumento = $documentoIddocumento;
-
-        return $this;
-    }
-
-    /**
-     * Get documentoIddocumento
-     *
-     * @return integer
-     */
-    public function getDocumentoIddocumento()
-    {
-        return $this->documentoIddocumento;
-    }
-
-    /**
-     * Set estadoTarea
-     *
-     * @param integer $estadoTarea
-     *
-     * @return Tareas
-     */
-    public function setEstadoTarea($estadoTarea)
-    {
-        $this->estadoTarea = $estadoTarea;
-
-        return $this;
-    }
-
-    /**
-     * Get estadoTarea
-     *
-     * @return integer
-     */
-    public function getEstadoTarea()
-    {
-        return $this->estadoTarea;
-    }
 }

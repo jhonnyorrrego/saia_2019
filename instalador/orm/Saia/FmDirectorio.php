@@ -64,7 +64,6 @@ class FmDirectorio
     private $propietario;
 
 
-
     /**
      * Get iddirectorio
      *

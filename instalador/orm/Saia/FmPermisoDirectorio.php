@@ -50,7 +50,6 @@ class FmPermisoDirectorio
     private $escritura;
 
 
-
     /**
      * Get idpermisoDirectorio
      *

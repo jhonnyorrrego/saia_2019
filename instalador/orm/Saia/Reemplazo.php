@@ -26,21 +26,21 @@ class Reemplazo
      *
      * @ORM\Column(name="antiguo", type="integer", nullable=false)
      */
-    private $antiguo = '0';
+    private $antiguo;
 
     /**
      * @var integer
      *
      * @ORM\Column(name="nuevo", type="integer", nullable=false)
      */
-    private $nuevo = '0';
+    private $nuevo;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(name="fecha_inicio", type="datetime", nullable=false)
      */
-    private $fechaInicio = 'CURRENT_TIMESTAMP';
+    private $fechaInicio;
 
     /**
      * @var \DateTime
@@ -54,15 +54,14 @@ class Reemplazo
      *
      * @ORM\Column(name="cargo_nuevo", type="integer", nullable=false)
      */
-    private $cargoNuevo = '0';
+    private $cargoNuevo;
 
     /**
      * @var string
      *
      * @ORM\Column(name="activo", type="string", length=1, nullable=false)
      */
-    private $activo = '1';
-
+    private $activo;
 
 
     /**

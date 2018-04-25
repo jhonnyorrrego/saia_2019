@@ -73,7 +73,7 @@ class ContenidosCarrusel
     /**
      * @var string
      *
-     * @ORM\Column(name="imagen", type="string", length=255, nullable=true)
+     * @ORM\Column(name="imagen", type="string", length=600, nullable=true)
      */
     private $imagen;
 

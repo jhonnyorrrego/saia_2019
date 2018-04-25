@@ -31,7 +31,7 @@ class TareasListadoAnexos
     /**
      * @var string
      *
-     * @ORM\Column(name="ruta", type="string", length=500, nullable=false)
+     * @ORM\Column(name="ruta", type="string", length=600, nullable=true)
      */
     private $ruta;
 

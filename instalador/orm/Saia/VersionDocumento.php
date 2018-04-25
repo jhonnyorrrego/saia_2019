@@ -52,7 +52,7 @@ class VersionDocumento
     /**
      * @var string
      *
-     * @ORM\Column(name="pdf", type="string", length=255, nullable=true)
+     * @ORM\Column(name="pdf", type="string", length=600, nullable=true)
      */
     private $pdf;
 

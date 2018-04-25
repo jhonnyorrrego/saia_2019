@@ -36,7 +36,6 @@ class FmRegional
     private $descripcion;
 
 
-
     /**
      * Get idregional
      *

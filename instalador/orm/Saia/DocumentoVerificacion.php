@@ -52,7 +52,7 @@ class DocumentoVerificacion
     /**
      * @var string
      *
-     * @ORM\Column(name="ruta_qr", type="string", length=255, nullable=false)
+     * @ORM\Column(name="ruta_qr", type="string", length=600, nullable=true)
      */
     private $rutaQr;
 

@@ -31,7 +31,7 @@ class Pagina
     /**
      * @var string
      *
-     * @ORM\Column(name="imagen", type="string", length=255, nullable=true)
+     * @ORM\Column(name="imagen", type="string", length=600, nullable=true)
      */
     private $imagen;
 
@@ -45,9 +45,9 @@ class Pagina
     /**
      * @var string
      *
-     * @ORM\Column(name="ruta", type="string", length=255, nullable=false)
+     * @ORM\Column(name="ruta", type="string", length=600, nullable=true)
      */
-    private $ruta = '';
+    private $ruta;
 
     /**
      * @var \DateTime

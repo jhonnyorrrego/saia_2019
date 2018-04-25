@@ -31,14 +31,14 @@ class VersionPagina
     /**
      * @var string
      *
-     * @ORM\Column(name="ruta", type="string", length=255, nullable=true)
+     * @ORM\Column(name="ruta", type="string", length=600, nullable=true)
      */
     private $ruta;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ruta_miniatura", type="string", length=255, nullable=true)
+     * @ORM\Column(name="ruta_miniatura", type="string", length=600, nullable=true)
      */
     private $rutaMiniatura;
 

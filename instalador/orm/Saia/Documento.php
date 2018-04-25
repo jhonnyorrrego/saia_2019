@@ -106,6 +106,13 @@ class Documento
     private $tipoEjecutor;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="pantalla_idpantalla", type="string", length=255, nullable=false)
+     */
+    private $pantallaIdpantalla;
+
+    /**
      * @var integer
      *
      * @ORM\Column(name="paginas", type="integer", nullable=true)
@@ -122,7 +129,7 @@ class Documento
     /**
      * @var string
      *
-     * @ORM\Column(name="pdf", type="string", length=255, nullable=true)
+     * @ORM\Column(name="pdf", type="string", length=600, nullable=true)
      */
     private $pdf;
 
@@ -236,7 +243,7 @@ class Documento
      *
      * @ORM\Column(name="ventanilla_radicacion", type="integer", nullable=true)
      */
-    private $ventanillaRadicacion;
+    private $ventanillaRadicacion = '0';
 
 
 
