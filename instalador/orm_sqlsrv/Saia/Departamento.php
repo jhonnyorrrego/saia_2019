@@ -36,4 +36,62 @@ class Departamento
     private $paisIdpais = '1';
 
 
+
+    /**
+     * Get iddepartamento
+     *
+     * @return integer
+     */
+    public function getIddepartamento()
+    {
+        return $this->iddepartamento;
+    }
+
+    /**
+     * Set nombre
+     *
+     * @param string $nombre
+     *
+     * @return Departamento
+     */
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    /**
+     * Get nombre
+     *
+     * @return string
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Set paisIdpais
+     *
+     * @param integer $paisIdpais
+     *
+     * @return Departamento
+     */
+    public function setPaisIdpais($paisIdpais)
+    {
+        $this->paisIdpais = $paisIdpais;
+
+        return $this;
+    }
+
+    /**
+     * Get paisIdpais
+     *
+     * @return integer
+     */
+    public function getPaisIdpais()
+    {
+        return $this->paisIdpais;
+    }
 }

@@ -50,4 +50,110 @@ class Autoguardado
     private $campo;
 
 
+
+    /**
+     * Get idautoguardado
+     *
+     * @return integer
+     */
+    public function getIdautoguardado()
+    {
+        return $this->idautoguardado;
+    }
+
+    /**
+     * Set contenido
+     *
+     * @param string $contenido
+     *
+     * @return Autoguardado
+     */
+    public function setContenido($contenido)
+    {
+        $this->contenido = $contenido;
+
+        return $this;
+    }
+
+    /**
+     * Get contenido
+     *
+     * @return string
+     */
+    public function getContenido()
+    {
+        return $this->contenido;
+    }
+
+    /**
+     * Set formato
+     *
+     * @param string $formato
+     *
+     * @return Autoguardado
+     */
+    public function setFormato($formato)
+    {
+        $this->formato = $formato;
+
+        return $this;
+    }
+
+    /**
+     * Get formato
+     *
+     * @return string
+     */
+    public function getFormato()
+    {
+        return $this->formato;
+    }
+
+    /**
+     * Set usuario
+     *
+     * @param integer $usuario
+     *
+     * @return Autoguardado
+     */
+    public function setUsuario($usuario)
+    {
+        $this->usuario = $usuario;
+
+        return $this;
+    }
+
+    /**
+     * Get usuario
+     *
+     * @return integer
+     */
+    public function getUsuario()
+    {
+        return $this->usuario;
+    }
+
+    /**
+     * Set campo
+     *
+     * @param string $campo
+     *
+     * @return Autoguardado
+     */
+    public function setCampo($campo)
+    {
+        $this->campo = $campo;
+
+        return $this;
+    }
+
+    /**
+     * Get campo
+     *
+     * @return string
+     */
+    public function getCampo()
+    {
+        return $this->campo;
+    }
 }

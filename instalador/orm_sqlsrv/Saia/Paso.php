@@ -78,4 +78,206 @@ class Paso
     private $plazoPaso;
 
 
+
+    /**
+     * Get idpaso
+     *
+     * @return integer
+     */
+    public function getIdpaso()
+    {
+        return $this->idpaso;
+    }
+
+    /**
+     * Set descripcion
+     *
+     * @param string $descripcion
+     *
+     * @return Paso
+     */
+    public function setDescripcion($descripcion)
+    {
+        $this->descripcion = $descripcion;
+
+        return $this;
+    }
+
+    /**
+     * Get descripcion
+     *
+     * @return string
+     */
+    public function getDescripcion()
+    {
+        return $this->descripcion;
+    }
+
+    /**
+     * Set responsable
+     *
+     * @param string $responsable
+     *
+     * @return Paso
+     */
+    public function setResponsable($responsable)
+    {
+        $this->responsable = $responsable;
+
+        return $this;
+    }
+
+    /**
+     * Get responsable
+     *
+     * @return string
+     */
+    public function getResponsable()
+    {
+        return $this->responsable;
+    }
+
+    /**
+     * Set nombrePaso
+     *
+     * @param string $nombrePaso
+     *
+     * @return Paso
+     */
+    public function setNombrePaso($nombrePaso)
+    {
+        $this->nombrePaso = $nombrePaso;
+
+        return $this;
+    }
+
+    /**
+     * Get nombrePaso
+     *
+     * @return string
+     */
+    public function getNombrePaso()
+    {
+        return $this->nombrePaso;
+    }
+
+    /**
+     * Set estado
+     *
+     * @param integer $estado
+     *
+     * @return Paso
+     */
+    public function setEstado($estado)
+    {
+        $this->estado = $estado;
+
+        return $this;
+    }
+
+    /**
+     * Get estado
+     *
+     * @return integer
+     */
+    public function getEstado()
+    {
+        return $this->estado;
+    }
+
+    /**
+     * Set idfigura
+     *
+     * @param string $idfigura
+     *
+     * @return Paso
+     */
+    public function setIdfigura($idfigura)
+    {
+        $this->idfigura = $idfigura;
+
+        return $this;
+    }
+
+    /**
+     * Get idfigura
+     *
+     * @return string
+     */
+    public function getIdfigura()
+    {
+        return $this->idfigura;
+    }
+
+    /**
+     * Set diagramIddiagram
+     *
+     * @param integer $diagramIddiagram
+     *
+     * @return Paso
+     */
+    public function setDiagramIddiagram($diagramIddiagram)
+    {
+        $this->diagramIddiagram = $diagramIddiagram;
+
+        return $this;
+    }
+
+    /**
+     * Get diagramIddiagram
+     *
+     * @return integer
+     */
+    public function getDiagramIddiagram()
+    {
+        return $this->diagramIddiagram;
+    }
+
+    /**
+     * Set posicion
+     *
+     * @param string $posicion
+     *
+     * @return Paso
+     */
+    public function setPosicion($posicion)
+    {
+        $this->posicion = $posicion;
+
+        return $this;
+    }
+
+    /**
+     * Get posicion
+     *
+     * @return string
+     */
+    public function getPosicion()
+    {
+        return $this->posicion;
+    }
+
+    /**
+     * Set plazoPaso
+     *
+     * @param string $plazoPaso
+     *
+     * @return Paso
+     */
+    public function setPlazoPaso($plazoPaso)
+    {
+        $this->plazoPaso = $plazoPaso;
+
+        return $this;
+    }
+
+    /**
+     * Get plazoPaso
+     *
+     * @return string
+     */
+    public function getPlazoPaso()
+    {
+        return $this->plazoPaso;
+    }
 }

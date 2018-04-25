@@ -43,4 +43,86 @@ class Etiqueta
     private $privadaSaia = '0';
 
 
+
+    /**
+     * Get idetiqueta
+     *
+     * @return integer
+     */
+    public function getIdetiqueta()
+    {
+        return $this->idetiqueta;
+    }
+
+    /**
+     * Set nombre
+     *
+     * @param string $nombre
+     *
+     * @return Etiqueta
+     */
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    /**
+     * Get nombre
+     *
+     * @return string
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Set funcionario
+     *
+     * @param string $funcionario
+     *
+     * @return Etiqueta
+     */
+    public function setFuncionario($funcionario)
+    {
+        $this->funcionario = $funcionario;
+
+        return $this;
+    }
+
+    /**
+     * Get funcionario
+     *
+     * @return string
+     */
+    public function getFuncionario()
+    {
+        return $this->funcionario;
+    }
+
+    /**
+     * Set privadaSaia
+     *
+     * @param integer $privadaSaia
+     *
+     * @return Etiqueta
+     */
+    public function setPrivadaSaia($privadaSaia)
+    {
+        $this->privadaSaia = $privadaSaia;
+
+        return $this;
+    }
+
+    /**
+     * Get privadaSaia
+     *
+     * @return integer
+     */
+    public function getPrivadaSaia()
+    {
+        return $this->privadaSaia;
+    }
 }

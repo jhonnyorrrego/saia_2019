@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * EntidadSerie
  *
- * @ORM\Table(name="entidad_serie")
+ * @ORM\Table(name="entidad_serie", indexes={@ORM\Index(name="i_entidad_serie_serie_idse", columns={"serie_idserie"})})
  * @ORM\Entity
  */
 class EntidadSerie
@@ -64,4 +64,158 @@ class EntidadSerie
     private $fecha;
 
 
+
+    /**
+     * Get identidadSerie
+     *
+     * @return integer
+     */
+    public function getIdentidadSerie()
+    {
+        return $this->identidadSerie;
+    }
+
+    /**
+     * Set entidadIdentidad
+     *
+     * @param integer $entidadIdentidad
+     *
+     * @return EntidadSerie
+     */
+    public function setEntidadIdentidad($entidadIdentidad)
+    {
+        $this->entidadIdentidad = $entidadIdentidad;
+
+        return $this;
+    }
+
+    /**
+     * Get entidadIdentidad
+     *
+     * @return integer
+     */
+    public function getEntidadIdentidad()
+    {
+        return $this->entidadIdentidad;
+    }
+
+    /**
+     * Set serieIdserie
+     *
+     * @param integer $serieIdserie
+     *
+     * @return EntidadSerie
+     */
+    public function setSerieIdserie($serieIdserie)
+    {
+        $this->serieIdserie = $serieIdserie;
+
+        return $this;
+    }
+
+    /**
+     * Get serieIdserie
+     *
+     * @return integer
+     */
+    public function getSerieIdserie()
+    {
+        return $this->serieIdserie;
+    }
+
+    /**
+     * Set llaveEntidad
+     *
+     * @param integer $llaveEntidad
+     *
+     * @return EntidadSerie
+     */
+    public function setLlaveEntidad($llaveEntidad)
+    {
+        $this->llaveEntidad = $llaveEntidad;
+
+        return $this;
+    }
+
+    /**
+     * Get llaveEntidad
+     *
+     * @return integer
+     */
+    public function getLlaveEntidad()
+    {
+        return $this->llaveEntidad;
+    }
+
+    /**
+     * Set estado
+     *
+     * @param string $estado
+     *
+     * @return EntidadSerie
+     */
+    public function setEstado($estado)
+    {
+        $this->estado = $estado;
+
+        return $this;
+    }
+
+    /**
+     * Get estado
+     *
+     * @return string
+     */
+    public function getEstado()
+    {
+        return $this->estado;
+    }
+
+    /**
+     * Set tipo
+     *
+     * @param string $tipo
+     *
+     * @return EntidadSerie
+     */
+    public function setTipo($tipo)
+    {
+        $this->tipo = $tipo;
+
+        return $this;
+    }
+
+    /**
+     * Get tipo
+     *
+     * @return string
+     */
+    public function getTipo()
+    {
+        return $this->tipo;
+    }
+
+    /**
+     * Set fecha
+     *
+     * @param \DateTime $fecha
+     *
+     * @return EntidadSerie
+     */
+    public function setFecha($fecha)
+    {
+        $this->fecha = $fecha;
+
+        return $this;
+    }
+
+    /**
+     * Get fecha
+     *
+     * @return \DateTime
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
 }

@@ -29,4 +29,38 @@ class Perfil
     private $nombre = 'GENERAL';
 
 
+
+    /**
+     * Get idperfil
+     *
+     * @return integer
+     */
+    public function getIdperfil()
+    {
+        return $this->idperfil;
+    }
+
+    /**
+     * Set nombre
+     *
+     * @param string $nombre
+     *
+     * @return Perfil
+     */
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    /**
+     * Get nombre
+     *
+     * @return string
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
 }

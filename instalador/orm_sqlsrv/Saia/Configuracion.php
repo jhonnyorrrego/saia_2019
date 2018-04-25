@@ -57,4 +57,134 @@ class Configuracion
     private $encrypt = '0';
 
 
+
+    /**
+     * Get idconfiguracion
+     *
+     * @return integer
+     */
+    public function getIdconfiguracion()
+    {
+        return $this->idconfiguracion;
+    }
+
+    /**
+     * Set nombre
+     *
+     * @param string $nombre
+     *
+     * @return Configuracion
+     */
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    /**
+     * Get nombre
+     *
+     * @return string
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Set valor
+     *
+     * @param string $valor
+     *
+     * @return Configuracion
+     */
+    public function setValor($valor)
+    {
+        $this->valor = $valor;
+
+        return $this;
+    }
+
+    /**
+     * Get valor
+     *
+     * @return string
+     */
+    public function getValor()
+    {
+        return $this->valor;
+    }
+
+    /**
+     * Set tipo
+     *
+     * @param string $tipo
+     *
+     * @return Configuracion
+     */
+    public function setTipo($tipo)
+    {
+        $this->tipo = $tipo;
+
+        return $this;
+    }
+
+    /**
+     * Get tipo
+     *
+     * @return string
+     */
+    public function getTipo()
+    {
+        return $this->tipo;
+    }
+
+    /**
+     * Set fecha
+     *
+     * @param \DateTime $fecha
+     *
+     * @return Configuracion
+     */
+    public function setFecha($fecha)
+    {
+        $this->fecha = $fecha;
+
+        return $this;
+    }
+
+    /**
+     * Get fecha
+     *
+     * @return \DateTime
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * Set encrypt
+     *
+     * @param integer $encrypt
+     *
+     * @return Configuracion
+     */
+    public function setEncrypt($encrypt)
+    {
+        $this->encrypt = $encrypt;
+
+        return $this;
+    }
+
+    /**
+     * Get encrypt
+     *
+     * @return integer
+     */
+    public function getEncrypt()
+    {
+        return $this->encrypt;
+    }
 }

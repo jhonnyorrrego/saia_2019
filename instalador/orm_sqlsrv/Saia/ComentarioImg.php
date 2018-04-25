@@ -78,4 +78,206 @@ class ComentarioImg
     private $fecha;
 
 
+
+    /**
+     * Get idcomentarioImg
+     *
+     * @return integer
+     */
+    public function getIdcomentarioImg()
+    {
+        return $this->idcomentarioImg;
+    }
+
+    /**
+     * Set documentoIddocumento
+     *
+     * @param integer $documentoIddocumento
+     *
+     * @return ComentarioImg
+     */
+    public function setDocumentoIddocumento($documentoIddocumento)
+    {
+        $this->documentoIddocumento = $documentoIddocumento;
+
+        return $this;
+    }
+
+    /**
+     * Get documentoIddocumento
+     *
+     * @return integer
+     */
+    public function getDocumentoIddocumento()
+    {
+        return $this->documentoIddocumento;
+    }
+
+    /**
+     * Set tipo
+     *
+     * @param string $tipo
+     *
+     * @return ComentarioImg
+     */
+    public function setTipo($tipo)
+    {
+        $this->tipo = $tipo;
+
+        return $this;
+    }
+
+    /**
+     * Get tipo
+     *
+     * @return string
+     */
+    public function getTipo()
+    {
+        return $this->tipo;
+    }
+
+    /**
+     * Set pagina
+     *
+     * @param integer $pagina
+     *
+     * @return ComentarioImg
+     */
+    public function setPagina($pagina)
+    {
+        $this->pagina = $pagina;
+
+        return $this;
+    }
+
+    /**
+     * Get pagina
+     *
+     * @return integer
+     */
+    public function getPagina()
+    {
+        return $this->pagina;
+    }
+
+    /**
+     * Set comentario
+     *
+     * @param string $comentario
+     *
+     * @return ComentarioImg
+     */
+    public function setComentario($comentario)
+    {
+        $this->comentario = $comentario;
+
+        return $this;
+    }
+
+    /**
+     * Get comentario
+     *
+     * @return string
+     */
+    public function getComentario()
+    {
+        return $this->comentario;
+    }
+
+    /**
+     * Set posx
+     *
+     * @param integer $posx
+     *
+     * @return ComentarioImg
+     */
+    public function setPosx($posx)
+    {
+        $this->posx = $posx;
+
+        return $this;
+    }
+
+    /**
+     * Get posx
+     *
+     * @return integer
+     */
+    public function getPosx()
+    {
+        return $this->posx;
+    }
+
+    /**
+     * Set posy
+     *
+     * @param integer $posy
+     *
+     * @return ComentarioImg
+     */
+    public function setPosy($posy)
+    {
+        $this->posy = $posy;
+
+        return $this;
+    }
+
+    /**
+     * Get posy
+     *
+     * @return integer
+     */
+    public function getPosy()
+    {
+        return $this->posy;
+    }
+
+    /**
+     * Set funcionario
+     *
+     * @param string $funcionario
+     *
+     * @return ComentarioImg
+     */
+    public function setFuncionario($funcionario)
+    {
+        $this->funcionario = $funcionario;
+
+        return $this;
+    }
+
+    /**
+     * Get funcionario
+     *
+     * @return string
+     */
+    public function getFuncionario()
+    {
+        return $this->funcionario;
+    }
+
+    /**
+     * Set fecha
+     *
+     * @param \DateTime $fecha
+     *
+     * @return ComentarioImg
+     */
+    public function setFecha($fecha)
+    {
+        $this->fecha = $fecha;
+
+        return $this;
+    }
+
+    /**
+     * Get fecha
+     *
+     * @return \DateTime
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
 }

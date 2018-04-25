@@ -43,4 +43,86 @@ class DocumentoPorVincular
     private $fecha;
 
 
+
+    /**
+     * Get iddocumentoPorVincular
+     *
+     * @return integer
+     */
+    public function getIddocumentoPorVincular()
+    {
+        return $this->iddocumentoPorVincular;
+    }
+
+    /**
+     * Set documentoIddocumento
+     *
+     * @param integer $documentoIddocumento
+     *
+     * @return DocumentoPorVincular
+     */
+    public function setDocumentoIddocumento($documentoIddocumento)
+    {
+        $this->documentoIddocumento = $documentoIddocumento;
+
+        return $this;
+    }
+
+    /**
+     * Get documentoIddocumento
+     *
+     * @return integer
+     */
+    public function getDocumentoIddocumento()
+    {
+        return $this->documentoIddocumento;
+    }
+
+    /**
+     * Set funcionarioIdfuncionario
+     *
+     * @param integer $funcionarioIdfuncionario
+     *
+     * @return DocumentoPorVincular
+     */
+    public function setFuncionarioIdfuncionario($funcionarioIdfuncionario)
+    {
+        $this->funcionarioIdfuncionario = $funcionarioIdfuncionario;
+
+        return $this;
+    }
+
+    /**
+     * Get funcionarioIdfuncionario
+     *
+     * @return integer
+     */
+    public function getFuncionarioIdfuncionario()
+    {
+        return $this->funcionarioIdfuncionario;
+    }
+
+    /**
+     * Set fecha
+     *
+     * @param \DateTime $fecha
+     *
+     * @return DocumentoPorVincular
+     */
+    public function setFecha($fecha)
+    {
+        $this->fecha = $fecha;
+
+        return $this;
+    }
+
+    /**
+     * Get fecha
+     *
+     * @return \DateTime
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
 }

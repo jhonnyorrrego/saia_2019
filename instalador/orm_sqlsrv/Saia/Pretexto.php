@@ -50,4 +50,110 @@ class Pretexto
     private $asunto;
 
 
+
+    /**
+     * Get idpretexto
+     *
+     * @return integer
+     */
+    public function getIdpretexto()
+    {
+        return $this->idpretexto;
+    }
+
+    /**
+     * Set contenido
+     *
+     * @param string $contenido
+     *
+     * @return Pretexto
+     */
+    public function setContenido($contenido)
+    {
+        $this->contenido = $contenido;
+
+        return $this;
+    }
+
+    /**
+     * Get contenido
+     *
+     * @return string
+     */
+    public function getContenido()
+    {
+        return $this->contenido;
+    }
+
+    /**
+     * Set ayuda
+     *
+     * @param string $ayuda
+     *
+     * @return Pretexto
+     */
+    public function setAyuda($ayuda)
+    {
+        $this->ayuda = $ayuda;
+
+        return $this;
+    }
+
+    /**
+     * Get ayuda
+     *
+     * @return string
+     */
+    public function getAyuda()
+    {
+        return $this->ayuda;
+    }
+
+    /**
+     * Set imagen
+     *
+     * @param string $imagen
+     *
+     * @return Pretexto
+     */
+    public function setImagen($imagen)
+    {
+        $this->imagen = $imagen;
+
+        return $this;
+    }
+
+    /**
+     * Get imagen
+     *
+     * @return string
+     */
+    public function getImagen()
+    {
+        return $this->imagen;
+    }
+
+    /**
+     * Set asunto
+     *
+     * @param string $asunto
+     *
+     * @return Pretexto
+     */
+    public function setAsunto($asunto)
+    {
+        $this->asunto = $asunto;
+
+        return $this;
+    }
+
+    /**
+     * Get asunto
+     *
+     * @return string
+     */
+    public function getAsunto()
+    {
+        return $this->asunto;
+    }
 }

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PasoActividadAnexo
  *
- * @ORM\Table(name="paso_actividad_anexo")
+ * @ORM\Table(name="paso_actividad_anexo", indexes={@ORM\Index(name="i_paso_actividad_anexo_documento_", columns={"documento_iddocumento"})})
  * @ORM\Entity
  */
 class PasoActividadAnexo
@@ -57,4 +57,134 @@ class PasoActividadAnexo
     private $actividadIdactividad;
 
 
+
+    /**
+     * Get idpasoActividadAnexo
+     *
+     * @return integer
+     */
+    public function getIdpasoActividadAnexo()
+    {
+        return $this->idpasoActividadAnexo;
+    }
+
+    /**
+     * Set documentoIddocumento
+     *
+     * @param integer $documentoIddocumento
+     *
+     * @return PasoActividadAnexo
+     */
+    public function setDocumentoIddocumento($documentoIddocumento)
+    {
+        $this->documentoIddocumento = $documentoIddocumento;
+
+        return $this;
+    }
+
+    /**
+     * Get documentoIddocumento
+     *
+     * @return integer
+     */
+    public function getDocumentoIddocumento()
+    {
+        return $this->documentoIddocumento;
+    }
+
+    /**
+     * Set etiqueta
+     *
+     * @param string $etiqueta
+     *
+     * @return PasoActividadAnexo
+     */
+    public function setEtiqueta($etiqueta)
+    {
+        $this->etiqueta = $etiqueta;
+
+        return $this;
+    }
+
+    /**
+     * Get etiqueta
+     *
+     * @return string
+     */
+    public function getEtiqueta()
+    {
+        return $this->etiqueta;
+    }
+
+    /**
+     * Set ruta
+     *
+     * @param string $ruta
+     *
+     * @return PasoActividadAnexo
+     */
+    public function setRuta($ruta)
+    {
+        $this->ruta = $ruta;
+
+        return $this;
+    }
+
+    /**
+     * Get ruta
+     *
+     * @return string
+     */
+    public function getRuta()
+    {
+        return $this->ruta;
+    }
+
+    /**
+     * Set tipo
+     *
+     * @param string $tipo
+     *
+     * @return PasoActividadAnexo
+     */
+    public function setTipo($tipo)
+    {
+        $this->tipo = $tipo;
+
+        return $this;
+    }
+
+    /**
+     * Get tipo
+     *
+     * @return string
+     */
+    public function getTipo()
+    {
+        return $this->tipo;
+    }
+
+    /**
+     * Set actividadIdactividad
+     *
+     * @param integer $actividadIdactividad
+     *
+     * @return PasoActividadAnexo
+     */
+    public function setActividadIdactividad($actividadIdactividad)
+    {
+        $this->actividadIdactividad = $actividadIdactividad;
+
+        return $this;
+    }
+
+    /**
+     * Get actividadIdactividad
+     *
+     * @return integer
+     */
+    public function getActividadIdactividad()
+    {
+        return $this->actividadIdactividad;
+    }
 }

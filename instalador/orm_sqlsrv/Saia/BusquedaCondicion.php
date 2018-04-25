@@ -50,4 +50,110 @@ class BusquedaCondicion
     private $etiquetaCondicion;
 
 
+
+    /**
+     * Get idbusquedaCondicion
+     *
+     * @return integer
+     */
+    public function getIdbusquedaCondicion()
+    {
+        return $this->idbusquedaCondicion;
+    }
+
+    /**
+     * Set busquedaIdbusqueda
+     *
+     * @param integer $busquedaIdbusqueda
+     *
+     * @return BusquedaCondicion
+     */
+    public function setBusquedaIdbusqueda($busquedaIdbusqueda)
+    {
+        $this->busquedaIdbusqueda = $busquedaIdbusqueda;
+
+        return $this;
+    }
+
+    /**
+     * Get busquedaIdbusqueda
+     *
+     * @return integer
+     */
+    public function getBusquedaIdbusqueda()
+    {
+        return $this->busquedaIdbusqueda;
+    }
+
+    /**
+     * Set fkBusquedaComponente
+     *
+     * @param integer $fkBusquedaComponente
+     *
+     * @return BusquedaCondicion
+     */
+    public function setFkBusquedaComponente($fkBusquedaComponente)
+    {
+        $this->fkBusquedaComponente = $fkBusquedaComponente;
+
+        return $this;
+    }
+
+    /**
+     * Get fkBusquedaComponente
+     *
+     * @return integer
+     */
+    public function getFkBusquedaComponente()
+    {
+        return $this->fkBusquedaComponente;
+    }
+
+    /**
+     * Set codigoWhere
+     *
+     * @param string $codigoWhere
+     *
+     * @return BusquedaCondicion
+     */
+    public function setCodigoWhere($codigoWhere)
+    {
+        $this->codigoWhere = $codigoWhere;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoWhere
+     *
+     * @return string
+     */
+    public function getCodigoWhere()
+    {
+        return $this->codigoWhere;
+    }
+
+    /**
+     * Set etiquetaCondicion
+     *
+     * @param string $etiquetaCondicion
+     *
+     * @return BusquedaCondicion
+     */
+    public function setEtiquetaCondicion($etiquetaCondicion)
+    {
+        $this->etiquetaCondicion = $etiquetaCondicion;
+
+        return $this;
+    }
+
+    /**
+     * Get etiquetaCondicion
+     *
+     * @return string
+     */
+    public function getEtiquetaCondicion()
+    {
+        return $this->etiquetaCondicion;
+    }
 }

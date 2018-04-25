@@ -36,4 +36,62 @@ class EncabezadoFormato
     private $etiqueta;
 
 
+
+    /**
+     * Get idencabezadoFormato
+     *
+     * @return integer
+     */
+    public function getIdencabezadoFormato()
+    {
+        return $this->idencabezadoFormato;
+    }
+
+    /**
+     * Set contenido
+     *
+     * @param string $contenido
+     *
+     * @return EncabezadoFormato
+     */
+    public function setContenido($contenido)
+    {
+        $this->contenido = $contenido;
+
+        return $this;
+    }
+
+    /**
+     * Get contenido
+     *
+     * @return string
+     */
+    public function getContenido()
+    {
+        return $this->contenido;
+    }
+
+    /**
+     * Set etiqueta
+     *
+     * @param string $etiqueta
+     *
+     * @return EncabezadoFormato
+     */
+    public function setEtiqueta($etiqueta)
+    {
+        $this->etiqueta = $etiqueta;
+
+        return $this;
+    }
+
+    /**
+     * Get etiqueta
+     *
+     * @return string
+     */
+    public function getEtiqueta()
+    {
+        return $this->etiqueta;
+    }
 }

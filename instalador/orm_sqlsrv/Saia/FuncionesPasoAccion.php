@@ -36,4 +36,62 @@ class FuncionesPasoAccion
     private $pasoIdfuncionesPaso;
 
 
+
+    /**
+     * Get idfuncionesPasoAccion
+     *
+     * @return integer
+     */
+    public function getIdfuncionesPasoAccion()
+    {
+        return $this->idfuncionesPasoAccion;
+    }
+
+    /**
+     * Set accionIdaccion
+     *
+     * @param integer $accionIdaccion
+     *
+     * @return FuncionesPasoAccion
+     */
+    public function setAccionIdaccion($accionIdaccion)
+    {
+        $this->accionIdaccion = $accionIdaccion;
+
+        return $this;
+    }
+
+    /**
+     * Get accionIdaccion
+     *
+     * @return integer
+     */
+    public function getAccionIdaccion()
+    {
+        return $this->accionIdaccion;
+    }
+
+    /**
+     * Set pasoIdfuncionesPaso
+     *
+     * @param integer $pasoIdfuncionesPaso
+     *
+     * @return FuncionesPasoAccion
+     */
+    public function setPasoIdfuncionesPaso($pasoIdfuncionesPaso)
+    {
+        $this->pasoIdfuncionesPaso = $pasoIdfuncionesPaso;
+
+        return $this;
+    }
+
+    /**
+     * Get pasoIdfuncionesPaso
+     *
+     * @return integer
+     */
+    public function getPasoIdfuncionesPaso()
+    {
+        return $this->pasoIdfuncionesPaso;
+    }
 }

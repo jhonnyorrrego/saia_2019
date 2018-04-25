@@ -2,78 +2,113 @@
 
 namespace Saia;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * FtActividadProceso
+ *
+ * @ORM\Table(name="ft_actividad_proceso", indexes={@ORM\Index(name="i_ft_actividad_proceso_doc", columns={"documento_iddocumento"}), @ORM\Index(name="i_actividad_proceso_proceso", columns={"ft_proceso"}), @ORM\Index(name="i_actividad_proceso_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Entity
  */
 class FtActividadProceso
 {
     /**
      * @var integer
+     *
+     * @ORM\Column(name="idft_actividad_proceso", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idftActividadProceso;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
      */
     private $serieIdserie;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
      */
     private $encabezado;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
      */
     private $dependencia;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
      */
     private $documentoIddocumento;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
      */
     private $firma;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="proveedor", type="text", length=65535, nullable=false)
      */
     private $proveedor;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="entrada", type="text", length=65535, nullable=false)
      */
     private $entrada;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="nombre", type="text", length=65535, nullable=false)
      */
     private $nombre;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="punto_control", type="text", length=65535, nullable=true)
      */
     private $puntoControl;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="salida", type="text", length=65535, nullable=false)
      */
     private $salida;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="cliente", type="text", length=65535, nullable=false)
      */
     private $cliente;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="ft_proceso", type="integer", nullable=false)
      */
     private $ftProceso;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="estado_documento", type="integer", nullable=false)
      */
     private $estadoDocumento;
 
@@ -400,4 +435,3 @@ class FtActividadProceso
         return $this->estadoDocumento;
     }
 }
-

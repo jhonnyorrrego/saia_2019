@@ -2,45 +2,67 @@
 
 namespace Saia;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * FmArchivo
+ *
+ * @ORM\Table(name="fm_archivo", indexes={@ORM\Index(name="fk_archivo_directorio1_idx", columns={"directorio_iddirectorio"}), @ORM\Index(name="fk_archivo_funcionario1_idx", columns={"funcionario_idfuncionario"}), @ORM\Index(name="archivo_nombre_idx", columns={"nombre"})})
+ * @ORM\Entity
  */
 class FmArchivo
 {
     /**
      * @var integer
+     *
+     * @ORM\Column(name="idarchivo", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idarchivo;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="directorio_iddirectorio", type="integer", nullable=false)
      */
     private $directorioIddirectorio;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="funcionario_idfuncionario", type="integer", nullable=false)
      */
     private $funcionarioIdfuncionario;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
     private $nombre;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="formato", type="string", length=50, nullable=false)
      */
     private $formato;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="peso", type="integer", nullable=false)
      */
     private $peso;
 
     /**
      * @var \DateTime
+     *
+     * @ORM\Column(name="fecha", type="datetime", nullable=false)
      */
     private $fecha;
+
 
 
     /**
@@ -197,4 +219,3 @@ class FmArchivo
         return $this->fecha;
     }
 }
-

@@ -57,4 +57,134 @@ class EntidadPretexto
     private $fecha;
 
 
+
+    /**
+     * Get identidadPretexto
+     *
+     * @return integer
+     */
+    public function getIdentidadPretexto()
+    {
+        return $this->identidadPretexto;
+    }
+
+    /**
+     * Set pretextoIdpretexto
+     *
+     * @param integer $pretextoIdpretexto
+     *
+     * @return EntidadPretexto
+     */
+    public function setPretextoIdpretexto($pretextoIdpretexto)
+    {
+        $this->pretextoIdpretexto = $pretextoIdpretexto;
+
+        return $this;
+    }
+
+    /**
+     * Get pretextoIdpretexto
+     *
+     * @return integer
+     */
+    public function getPretextoIdpretexto()
+    {
+        return $this->pretextoIdpretexto;
+    }
+
+    /**
+     * Set entidadIdentidad
+     *
+     * @param integer $entidadIdentidad
+     *
+     * @return EntidadPretexto
+     */
+    public function setEntidadIdentidad($entidadIdentidad)
+    {
+        $this->entidadIdentidad = $entidadIdentidad;
+
+        return $this;
+    }
+
+    /**
+     * Get entidadIdentidad
+     *
+     * @return integer
+     */
+    public function getEntidadIdentidad()
+    {
+        return $this->entidadIdentidad;
+    }
+
+    /**
+     * Set llaveEntidad
+     *
+     * @param integer $llaveEntidad
+     *
+     * @return EntidadPretexto
+     */
+    public function setLlaveEntidad($llaveEntidad)
+    {
+        $this->llaveEntidad = $llaveEntidad;
+
+        return $this;
+    }
+
+    /**
+     * Get llaveEntidad
+     *
+     * @return integer
+     */
+    public function getLlaveEntidad()
+    {
+        return $this->llaveEntidad;
+    }
+
+    /**
+     * Set estado
+     *
+     * @param integer $estado
+     *
+     * @return EntidadPretexto
+     */
+    public function setEstado($estado)
+    {
+        $this->estado = $estado;
+
+        return $this;
+    }
+
+    /**
+     * Get estado
+     *
+     * @return integer
+     */
+    public function getEstado()
+    {
+        return $this->estado;
+    }
+
+    /**
+     * Set fecha
+     *
+     * @param \DateTime $fecha
+     *
+     * @return EntidadPretexto
+     */
+    public function setFecha($fecha)
+    {
+        $this->fecha = $fecha;
+
+        return $this;
+    }
+
+    /**
+     * Get fecha
+     *
+     * @return \DateTime
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
 }

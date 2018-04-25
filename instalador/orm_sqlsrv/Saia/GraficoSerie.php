@@ -50,4 +50,110 @@ class GraficoSerie
     private $graficoIdgrafico;
 
 
+
+    /**
+     * Get idgraficoSerie
+     *
+     * @return integer
+     */
+    public function getIdgraficoSerie()
+    {
+        return $this->idgraficoSerie;
+    }
+
+    /**
+     * Set codigoSql
+     *
+     * @param string $codigoSql
+     *
+     * @return GraficoSerie
+     */
+    public function setCodigoSql($codigoSql)
+    {
+        $this->codigoSql = $codigoSql;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoSql
+     *
+     * @return string
+     */
+    public function getCodigoSql()
+    {
+        return $this->codigoSql;
+    }
+
+    /**
+     * Set tipo
+     *
+     * @param string $tipo
+     *
+     * @return GraficoSerie
+     */
+    public function setTipo($tipo)
+    {
+        $this->tipo = $tipo;
+
+        return $this;
+    }
+
+    /**
+     * Get tipo
+     *
+     * @return string
+     */
+    public function getTipo()
+    {
+        return $this->tipo;
+    }
+
+    /**
+     * Set nombre
+     *
+     * @param string $nombre
+     *
+     * @return GraficoSerie
+     */
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    /**
+     * Get nombre
+     *
+     * @return string
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Set graficoIdgrafico
+     *
+     * @param integer $graficoIdgrafico
+     *
+     * @return GraficoSerie
+     */
+    public function setGraficoIdgrafico($graficoIdgrafico)
+    {
+        $this->graficoIdgrafico = $graficoIdgrafico;
+
+        return $this;
+    }
+
+    /**
+     * Get graficoIdgrafico
+     *
+     * @return integer
+     */
+    public function getGraficoIdgrafico()
+    {
+        return $this->graficoIdgrafico;
+    }
 }

@@ -78,4 +78,206 @@ class Almacenamiento
     private $registroEntrada;
 
 
+
+    /**
+     * Get idalmacenamiento
+     *
+     * @return integer
+     */
+    public function getIdalmacenamiento()
+    {
+        return $this->idalmacenamiento;
+    }
+
+    /**
+     * Set documentoIddocumento
+     *
+     * @param integer $documentoIddocumento
+     *
+     * @return Almacenamiento
+     */
+    public function setDocumentoIddocumento($documentoIddocumento)
+    {
+        $this->documentoIddocumento = $documentoIddocumento;
+
+        return $this;
+    }
+
+    /**
+     * Get documentoIddocumento
+     *
+     * @return integer
+     */
+    public function getDocumentoIddocumento()
+    {
+        return $this->documentoIddocumento;
+    }
+
+    /**
+     * Set folderIdfolder
+     *
+     * @param integer $folderIdfolder
+     *
+     * @return Almacenamiento
+     */
+    public function setFolderIdfolder($folderIdfolder)
+    {
+        $this->folderIdfolder = $folderIdfolder;
+
+        return $this;
+    }
+
+    /**
+     * Get folderIdfolder
+     *
+     * @return integer
+     */
+    public function getFolderIdfolder()
+    {
+        return $this->folderIdfolder;
+    }
+
+    /**
+     * Set soporte
+     *
+     * @param string $soporte
+     *
+     * @return Almacenamiento
+     */
+    public function setSoporte($soporte)
+    {
+        $this->soporte = $soporte;
+
+        return $this;
+    }
+
+    /**
+     * Get soporte
+     *
+     * @return string
+     */
+    public function getSoporte()
+    {
+        return $this->soporte;
+    }
+
+    /**
+     * Set numFolios
+     *
+     * @param integer $numFolios
+     *
+     * @return Almacenamiento
+     */
+    public function setNumFolios($numFolios)
+    {
+        $this->numFolios = $numFolios;
+
+        return $this;
+    }
+
+    /**
+     * Get numFolios
+     *
+     * @return integer
+     */
+    public function getNumFolios()
+    {
+        return $this->numFolios;
+    }
+
+    /**
+     * Set anexos
+     *
+     * @param string $anexos
+     *
+     * @return Almacenamiento
+     */
+    public function setAnexos($anexos)
+    {
+        $this->anexos = $anexos;
+
+        return $this;
+    }
+
+    /**
+     * Get anexos
+     *
+     * @return string
+     */
+    public function getAnexos()
+    {
+        return $this->anexos;
+    }
+
+    /**
+     * Set deterioro
+     *
+     * @param string $deterioro
+     *
+     * @return Almacenamiento
+     */
+    public function setDeterioro($deterioro)
+    {
+        $this->deterioro = $deterioro;
+
+        return $this;
+    }
+
+    /**
+     * Get deterioro
+     *
+     * @return string
+     */
+    public function getDeterioro()
+    {
+        return $this->deterioro;
+    }
+
+    /**
+     * Set responsable
+     *
+     * @param integer $responsable
+     *
+     * @return Almacenamiento
+     */
+    public function setResponsable($responsable)
+    {
+        $this->responsable = $responsable;
+
+        return $this;
+    }
+
+    /**
+     * Get responsable
+     *
+     * @return integer
+     */
+    public function getResponsable()
+    {
+        return $this->responsable;
+    }
+
+    /**
+     * Set registroEntrada
+     *
+     * @param \DateTime $registroEntrada
+     *
+     * @return Almacenamiento
+     */
+    public function setRegistroEntrada($registroEntrada)
+    {
+        $this->registroEntrada = $registroEntrada;
+
+        return $this;
+    }
+
+    /**
+     * Get registroEntrada
+     *
+     * @return \DateTime
+     */
+    public function getRegistroEntrada()
+    {
+        return $this->registroEntrada;
+    }
 }

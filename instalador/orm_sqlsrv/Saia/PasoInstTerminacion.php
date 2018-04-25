@@ -57,4 +57,134 @@ class PasoInstTerminacion
     private $observaciones;
 
 
+
+    /**
+     * Get idpasoInstTerminacion
+     *
+     * @return integer
+     */
+    public function getIdpasoInstTerminacion()
+    {
+        return $this->idpasoInstTerminacion;
+    }
+
+    /**
+     * Set documentoIdpasoDocumento
+     *
+     * @param integer $documentoIdpasoDocumento
+     *
+     * @return PasoInstTerminacion
+     */
+    public function setDocumentoIdpasoDocumento($documentoIdpasoDocumento)
+    {
+        $this->documentoIdpasoDocumento = $documentoIdpasoDocumento;
+
+        return $this;
+    }
+
+    /**
+     * Get documentoIdpasoDocumento
+     *
+     * @return integer
+     */
+    public function getDocumentoIdpasoDocumento()
+    {
+        return $this->documentoIdpasoDocumento;
+    }
+
+    /**
+     * Set instanciaIdpasoInstancia
+     *
+     * @param integer $instanciaIdpasoInstancia
+     *
+     * @return PasoInstTerminacion
+     */
+    public function setInstanciaIdpasoInstancia($instanciaIdpasoInstancia)
+    {
+        $this->instanciaIdpasoInstancia = $instanciaIdpasoInstancia;
+
+        return $this;
+    }
+
+    /**
+     * Get instanciaIdpasoInstancia
+     *
+     * @return integer
+     */
+    public function getInstanciaIdpasoInstancia()
+    {
+        return $this->instanciaIdpasoInstancia;
+    }
+
+    /**
+     * Set funcionarioCodigo
+     *
+     * @param integer $funcionarioCodigo
+     *
+     * @return PasoInstTerminacion
+     */
+    public function setFuncionarioCodigo($funcionarioCodigo)
+    {
+        $this->funcionarioCodigo = $funcionarioCodigo;
+
+        return $this;
+    }
+
+    /**
+     * Get funcionarioCodigo
+     *
+     * @return integer
+     */
+    public function getFuncionarioCodigo()
+    {
+        return $this->funcionarioCodigo;
+    }
+
+    /**
+     * Set fechaJustificacion
+     *
+     * @param \DateTime $fechaJustificacion
+     *
+     * @return PasoInstTerminacion
+     */
+    public function setFechaJustificacion($fechaJustificacion)
+    {
+        $this->fechaJustificacion = $fechaJustificacion;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaJustificacion
+     *
+     * @return \DateTime
+     */
+    public function getFechaJustificacion()
+    {
+        return $this->fechaJustificacion;
+    }
+
+    /**
+     * Set observaciones
+     *
+     * @param string $observaciones
+     *
+     * @return PasoInstTerminacion
+     */
+    public function setObservaciones($observaciones)
+    {
+        $this->observaciones = $observaciones;
+
+        return $this;
+    }
+
+    /**
+     * Get observaciones
+     *
+     * @return string
+     */
+    public function getObservaciones()
+    {
+        return $this->observaciones;
+    }
 }

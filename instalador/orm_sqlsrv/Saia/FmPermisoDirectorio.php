@@ -2,33 +2,50 @@
 
 namespace Saia;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * FmPermisoDirectorio
+ *
+ * @ORM\Table(name="fm_permiso_directorio", indexes={@ORM\Index(name="fk_permiso_directorio_funcionario1_idx", columns={"funcionario_idfuncionario"}), @ORM\Index(name="fk_permiso_directorio_directorio1_idx", columns={"directorio_iddirectorio"})})
+ * @ORM\Entity
  */
 class FmPermisoDirectorio
 {
     /**
      * @var integer
+     *
+     * @ORM\Column(name="idpermiso_directorio", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idpermisoDirectorio;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="funcionario_idfuncionario", type="integer", nullable=false)
      */
     private $funcionarioIdfuncionario;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="directorio_iddirectorio", type="integer", nullable=false)
      */
     private $directorioIddirectorio;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="lectura", type="integer", nullable=false)
      */
     private $lectura;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="escritura", type="integer", nullable=false)
      */
     private $escritura;
 
@@ -139,4 +156,3 @@ class FmPermisoDirectorio
         return $this->escritura;
     }
 }
-

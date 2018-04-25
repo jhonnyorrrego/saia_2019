@@ -57,4 +57,134 @@ class AnexosVinculados
     private $observaciones;
 
 
+
+    /**
+     * Get idanexosVinculados
+     *
+     * @return integer
+     */
+    public function getIdanexosVinculados()
+    {
+        return $this->idanexosVinculados;
+    }
+
+    /**
+     * Set anexosOrigen
+     *
+     * @param integer $anexosOrigen
+     *
+     * @return AnexosVinculados
+     */
+    public function setAnexosOrigen($anexosOrigen)
+    {
+        $this->anexosOrigen = $anexosOrigen;
+
+        return $this;
+    }
+
+    /**
+     * Get anexosOrigen
+     *
+     * @return integer
+     */
+    public function getAnexosOrigen()
+    {
+        return $this->anexosOrigen;
+    }
+
+    /**
+     * Set anexosDestino
+     *
+     * @param integer $anexosDestino
+     *
+     * @return AnexosVinculados
+     */
+    public function setAnexosDestino($anexosDestino)
+    {
+        $this->anexosDestino = $anexosDestino;
+
+        return $this;
+    }
+
+    /**
+     * Get anexosDestino
+     *
+     * @return integer
+     */
+    public function getAnexosDestino()
+    {
+        return $this->anexosDestino;
+    }
+
+    /**
+     * Set fecha
+     *
+     * @param \DateTime $fecha
+     *
+     * @return AnexosVinculados
+     */
+    public function setFecha($fecha)
+    {
+        $this->fecha = $fecha;
+
+        return $this;
+    }
+
+    /**
+     * Get fecha
+     *
+     * @return \DateTime
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * Set funcionarioIdfuncionario
+     *
+     * @param integer $funcionarioIdfuncionario
+     *
+     * @return AnexosVinculados
+     */
+    public function setFuncionarioIdfuncionario($funcionarioIdfuncionario)
+    {
+        $this->funcionarioIdfuncionario = $funcionarioIdfuncionario;
+
+        return $this;
+    }
+
+    /**
+     * Get funcionarioIdfuncionario
+     *
+     * @return integer
+     */
+    public function getFuncionarioIdfuncionario()
+    {
+        return $this->funcionarioIdfuncionario;
+    }
+
+    /**
+     * Set observaciones
+     *
+     * @param string $observaciones
+     *
+     * @return AnexosVinculados
+     */
+    public function setObservaciones($observaciones)
+    {
+        $this->observaciones = $observaciones;
+
+        return $this;
+    }
+
+    /**
+     * Get observaciones
+     *
+     * @return string
+     */
+    public function getObservaciones()
+    {
+        return $this->observaciones;
+    }
 }

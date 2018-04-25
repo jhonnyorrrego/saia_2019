@@ -57,4 +57,134 @@ class TareasBuzon
     private $estado = '1';
 
 
+
+    /**
+     * Get idtareasBuzon
+     *
+     * @return integer
+     */
+    public function getIdtareasBuzon()
+    {
+        return $this->idtareasBuzon;
+    }
+
+    /**
+     * Set terminadoPor
+     *
+     * @param integer $terminadoPor
+     *
+     * @return TareasBuzon
+     */
+    public function setTerminadoPor($terminadoPor)
+    {
+        $this->terminadoPor = $terminadoPor;
+
+        return $this;
+    }
+
+    /**
+     * Get terminadoPor
+     *
+     * @return integer
+     */
+    public function getTerminadoPor()
+    {
+        return $this->terminadoPor;
+    }
+
+    /**
+     * Set descripcionEstado
+     *
+     * @param string $descripcionEstado
+     *
+     * @return TareasBuzon
+     */
+    public function setDescripcionEstado($descripcionEstado)
+    {
+        $this->descripcionEstado = $descripcionEstado;
+
+        return $this;
+    }
+
+    /**
+     * Get descripcionEstado
+     *
+     * @return string
+     */
+    public function getDescripcionEstado()
+    {
+        return $this->descripcionEstado;
+    }
+
+    /**
+     * Set fechaEstado
+     *
+     * @param \DateTime $fechaEstado
+     *
+     * @return TareasBuzon
+     */
+    public function setFechaEstado($fechaEstado)
+    {
+        $this->fechaEstado = $fechaEstado;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaEstado
+     *
+     * @return \DateTime
+     */
+    public function getFechaEstado()
+    {
+        return $this->fechaEstado;
+    }
+
+    /**
+     * Set tareasIdtareas
+     *
+     * @param integer $tareasIdtareas
+     *
+     * @return TareasBuzon
+     */
+    public function setTareasIdtareas($tareasIdtareas)
+    {
+        $this->tareasIdtareas = $tareasIdtareas;
+
+        return $this;
+    }
+
+    /**
+     * Get tareasIdtareas
+     *
+     * @return integer
+     */
+    public function getTareasIdtareas()
+    {
+        return $this->tareasIdtareas;
+    }
+
+    /**
+     * Set estado
+     *
+     * @param integer $estado
+     *
+     * @return TareasBuzon
+     */
+    public function setEstado($estado)
+    {
+        $this->estado = $estado;
+
+        return $this;
+    }
+
+    /**
+     * Get estado
+     *
+     * @return integer
+     */
+    public function getEstado()
+    {
+        return $this->estado;
+    }
 }

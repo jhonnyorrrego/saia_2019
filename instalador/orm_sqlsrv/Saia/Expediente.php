@@ -33,7 +33,7 @@ class Expediente
      *
      * @ORM\Column(name="fecha", type="datetime", nullable=false)
      */
-    private $fecha;
+    private $fecha = 'CURRENT_TIMESTAMP';
 
     /**
      * @var string

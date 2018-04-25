@@ -2,43 +2,64 @@
 
 namespace Saia;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Reemplazo
+ *
+ * @ORM\Table(name="reemplazo")
+ * @ORM\Entity
  */
 class Reemplazo
 {
     /**
      * @var integer
+     *
+     * @ORM\Column(name="idreemplazo", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idreemplazo;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="antiguo", type="integer", nullable=false)
      */
     private $antiguo;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="nuevo", type="integer", nullable=false)
      */
     private $nuevo;
 
     /**
      * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_inicio", type="datetime", nullable=false)
      */
     private $fechaInicio;
 
     /**
      * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_fin", type="datetime", nullable=true)
      */
     private $fechaFin;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="cargo_nuevo", type="integer", nullable=false)
      */
     private $cargoNuevo;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="activo", type="string", length=1, nullable=false)
      */
     private $activo;
 
@@ -197,4 +218,3 @@ class Reemplazo
         return $this->activo;
     }
 }
-

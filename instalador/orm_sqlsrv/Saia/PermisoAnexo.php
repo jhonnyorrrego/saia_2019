@@ -64,4 +64,158 @@ class PermisoAnexo
     private $caracteristicaTotal;
 
 
+
+    /**
+     * Get idpermisoAnexo
+     *
+     * @return integer
+     */
+    public function getIdpermisoAnexo()
+    {
+        return $this->idpermisoAnexo;
+    }
+
+    /**
+     * Set anexosIdanexos
+     *
+     * @param integer $anexosIdanexos
+     *
+     * @return PermisoAnexo
+     */
+    public function setAnexosIdanexos($anexosIdanexos)
+    {
+        $this->anexosIdanexos = $anexosIdanexos;
+
+        return $this;
+    }
+
+    /**
+     * Get anexosIdanexos
+     *
+     * @return integer
+     */
+    public function getAnexosIdanexos()
+    {
+        return $this->anexosIdanexos;
+    }
+
+    /**
+     * Set idpropietario
+     *
+     * @param integer $idpropietario
+     *
+     * @return PermisoAnexo
+     */
+    public function setIdpropietario($idpropietario)
+    {
+        $this->idpropietario = $idpropietario;
+
+        return $this;
+    }
+
+    /**
+     * Get idpropietario
+     *
+     * @return integer
+     */
+    public function getIdpropietario()
+    {
+        return $this->idpropietario;
+    }
+
+    /**
+     * Set caracteristicaPropio
+     *
+     * @param string $caracteristicaPropio
+     *
+     * @return PermisoAnexo
+     */
+    public function setCaracteristicaPropio($caracteristicaPropio)
+    {
+        $this->caracteristicaPropio = $caracteristicaPropio;
+
+        return $this;
+    }
+
+    /**
+     * Get caracteristicaPropio
+     *
+     * @return string
+     */
+    public function getCaracteristicaPropio()
+    {
+        return $this->caracteristicaPropio;
+    }
+
+    /**
+     * Set caracteristicaDependencia
+     *
+     * @param string $caracteristicaDependencia
+     *
+     * @return PermisoAnexo
+     */
+    public function setCaracteristicaDependencia($caracteristicaDependencia)
+    {
+        $this->caracteristicaDependencia = $caracteristicaDependencia;
+
+        return $this;
+    }
+
+    /**
+     * Get caracteristicaDependencia
+     *
+     * @return string
+     */
+    public function getCaracteristicaDependencia()
+    {
+        return $this->caracteristicaDependencia;
+    }
+
+    /**
+     * Set caracteristicaCargo
+     *
+     * @param string $caracteristicaCargo
+     *
+     * @return PermisoAnexo
+     */
+    public function setCaracteristicaCargo($caracteristicaCargo)
+    {
+        $this->caracteristicaCargo = $caracteristicaCargo;
+
+        return $this;
+    }
+
+    /**
+     * Get caracteristicaCargo
+     *
+     * @return string
+     */
+    public function getCaracteristicaCargo()
+    {
+        return $this->caracteristicaCargo;
+    }
+
+    /**
+     * Set caracteristicaTotal
+     *
+     * @param string $caracteristicaTotal
+     *
+     * @return PermisoAnexo
+     */
+    public function setCaracteristicaTotal($caracteristicaTotal)
+    {
+        $this->caracteristicaTotal = $caracteristicaTotal;
+
+        return $this;
+    }
+
+    /**
+     * Get caracteristicaTotal
+     *
+     * @return string
+     */
+    public function getCaracteristicaTotal()
+    {
+        return $this->caracteristicaTotal;
+    }
 }

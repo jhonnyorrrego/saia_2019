@@ -2,23 +2,36 @@
 
 namespace Saia;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * FmRegional
+ *
+ * @ORM\Table(name="fm_regional", indexes={@ORM\Index(name="i_reginal_nombre", columns={"nombre"})})
+ * @ORM\Entity
  */
 class FmRegional
 {
     /**
      * @var integer
+     *
+     * @ORM\Column(name="idregional", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idregional;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="nombre", type="string", length=50, nullable=false)
      */
     private $nombre;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="descripcion", type="string", length=255, nullable=true)
      */
     private $descripcion;
 
@@ -81,4 +94,3 @@ class FmRegional
         return $this->descripcion;
     }
 }
-

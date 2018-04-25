@@ -64,4 +64,158 @@ class FiltroReporte
     private $tipoDato = 'varchar';
 
 
+
+    /**
+     * Get idfiltroReporte
+     *
+     * @return integer
+     */
+    public function getIdfiltroReporte()
+    {
+        return $this->idfiltroReporte;
+    }
+
+    /**
+     * Set reporteIdreporte
+     *
+     * @param integer $reporteIdreporte
+     *
+     * @return FiltroReporte
+     */
+    public function setReporteIdreporte($reporteIdreporte)
+    {
+        $this->reporteIdreporte = $reporteIdreporte;
+
+        return $this;
+    }
+
+    /**
+     * Get reporteIdreporte
+     *
+     * @return integer
+     */
+    public function getReporteIdreporte()
+    {
+        return $this->reporteIdreporte;
+    }
+
+    /**
+     * Set campo
+     *
+     * @param string $campo
+     *
+     * @return FiltroReporte
+     */
+    public function setCampo($campo)
+    {
+        $this->campo = $campo;
+
+        return $this;
+    }
+
+    /**
+     * Get campo
+     *
+     * @return string
+     */
+    public function getCampo()
+    {
+        return $this->campo;
+    }
+
+    /**
+     * Set etiquetaHtml
+     *
+     * @param string $etiquetaHtml
+     *
+     * @return FiltroReporte
+     */
+    public function setEtiquetaHtml($etiquetaHtml)
+    {
+        $this->etiquetaHtml = $etiquetaHtml;
+
+        return $this;
+    }
+
+    /**
+     * Get etiquetaHtml
+     *
+     * @return string
+     */
+    public function getEtiquetaHtml()
+    {
+        return $this->etiquetaHtml;
+    }
+
+    /**
+     * Set codigoSql
+     *
+     * @param string $codigoSql
+     *
+     * @return FiltroReporte
+     */
+    public function setCodigoSql($codigoSql)
+    {
+        $this->codigoSql = $codigoSql;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoSql
+     *
+     * @return string
+     */
+    public function getCodigoSql()
+    {
+        return $this->codigoSql;
+    }
+
+    /**
+     * Set etiqueta
+     *
+     * @param string $etiqueta
+     *
+     * @return FiltroReporte
+     */
+    public function setEtiqueta($etiqueta)
+    {
+        $this->etiqueta = $etiqueta;
+
+        return $this;
+    }
+
+    /**
+     * Get etiqueta
+     *
+     * @return string
+     */
+    public function getEtiqueta()
+    {
+        return $this->etiqueta;
+    }
+
+    /**
+     * Set tipoDato
+     *
+     * @param string $tipoDato
+     *
+     * @return FiltroReporte
+     */
+    public function setTipoDato($tipoDato)
+    {
+        $this->tipoDato = $tipoDato;
+
+        return $this;
+    }
+
+    /**
+     * Get tipoDato
+     *
+     * @return string
+     */
+    public function getTipoDato()
+    {
+        return $this->tipoDato;
+    }
 }

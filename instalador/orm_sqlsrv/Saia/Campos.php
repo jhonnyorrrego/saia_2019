@@ -85,4 +85,230 @@ class Campos
     private $tipoDato = 'varchar';
 
 
+
+    /**
+     * Get idcampos
+     *
+     * @return integer
+     */
+    public function getIdcampos()
+    {
+        return $this->idcampos;
+    }
+
+    /**
+     * Set nombre
+     *
+     * @param string $nombre
+     *
+     * @return Campos
+     */
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    /**
+     * Get nombre
+     *
+     * @return string
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Set alias
+     *
+     * @param string $alias
+     *
+     * @return Campos
+     */
+    public function setAlias($alias)
+    {
+        $this->alias = $alias;
+
+        return $this;
+    }
+
+    /**
+     * Get alias
+     *
+     * @return string
+     */
+    public function getAlias()
+    {
+        return $this->alias;
+    }
+
+    /**
+     * Set tabla
+     *
+     * @param string $tabla
+     *
+     * @return Campos
+     */
+    public function setTabla($tabla)
+    {
+        $this->tabla = $tabla;
+
+        return $this;
+    }
+
+    /**
+     * Get tabla
+     *
+     * @return string
+     */
+    public function getTabla()
+    {
+        return $this->tabla;
+    }
+
+    /**
+     * Set tipo
+     *
+     * @param string $tipo
+     *
+     * @return Campos
+     */
+    public function setTipo($tipo)
+    {
+        $this->tipo = $tipo;
+
+        return $this;
+    }
+
+    /**
+     * Get tipo
+     *
+     * @return string
+     */
+    public function getTipo()
+    {
+        return $this->tipo;
+    }
+
+    /**
+     * Set valor
+     *
+     * @param string $valor
+     *
+     * @return Campos
+     */
+    public function setValor($valor)
+    {
+        $this->valor = $valor;
+
+        return $this;
+    }
+
+    /**
+     * Get valor
+     *
+     * @return string
+     */
+    public function getValor()
+    {
+        return $this->valor;
+    }
+
+    /**
+     * Set ayuda
+     *
+     * @param string $ayuda
+     *
+     * @return Campos
+     */
+    public function setAyuda($ayuda)
+    {
+        $this->ayuda = $ayuda;
+
+        return $this;
+    }
+
+    /**
+     * Get ayuda
+     *
+     * @return string
+     */
+    public function getAyuda()
+    {
+        return $this->ayuda;
+    }
+
+    /**
+     * Set visible
+     *
+     * @param integer $visible
+     *
+     * @return Campos
+     */
+    public function setVisible($visible)
+    {
+        $this->visible = $visible;
+
+        return $this;
+    }
+
+    /**
+     * Get visible
+     *
+     * @return integer
+     */
+    public function getVisible()
+    {
+        return $this->visible;
+    }
+
+    /**
+     * Set seleccionado
+     *
+     * @param string $seleccionado
+     *
+     * @return Campos
+     */
+    public function setSeleccionado($seleccionado)
+    {
+        $this->seleccionado = $seleccionado;
+
+        return $this;
+    }
+
+    /**
+     * Get seleccionado
+     *
+     * @return string
+     */
+    public function getSeleccionado()
+    {
+        return $this->seleccionado;
+    }
+
+    /**
+     * Set tipoDato
+     *
+     * @param string $tipoDato
+     *
+     * @return Campos
+     */
+    public function setTipoDato($tipoDato)
+    {
+        $this->tipoDato = $tipoDato;
+
+        return $this;
+    }
+
+    /**
+     * Get tipoDato
+     *
+     * @return string
+     */
+    public function getTipoDato()
+    {
+        return $this->tipoDato;
+    }
 }

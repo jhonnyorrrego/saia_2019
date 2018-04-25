@@ -64,4 +64,158 @@ class FiltroGrafica
     private $tipoDato = 'varchar';
 
 
+
+    /**
+     * Get idfiltroGrafica
+     *
+     * @return integer
+     */
+    public function getIdfiltroGrafica()
+    {
+        return $this->idfiltroGrafica;
+    }
+
+    /**
+     * Set graficaIdgrafica
+     *
+     * @param integer $graficaIdgrafica
+     *
+     * @return FiltroGrafica
+     */
+    public function setGraficaIdgrafica($graficaIdgrafica)
+    {
+        $this->graficaIdgrafica = $graficaIdgrafica;
+
+        return $this;
+    }
+
+    /**
+     * Get graficaIdgrafica
+     *
+     * @return integer
+     */
+    public function getGraficaIdgrafica()
+    {
+        return $this->graficaIdgrafica;
+    }
+
+    /**
+     * Set campo
+     *
+     * @param string $campo
+     *
+     * @return FiltroGrafica
+     */
+    public function setCampo($campo)
+    {
+        $this->campo = $campo;
+
+        return $this;
+    }
+
+    /**
+     * Get campo
+     *
+     * @return string
+     */
+    public function getCampo()
+    {
+        return $this->campo;
+    }
+
+    /**
+     * Set etiquetaHtml
+     *
+     * @param string $etiquetaHtml
+     *
+     * @return FiltroGrafica
+     */
+    public function setEtiquetaHtml($etiquetaHtml)
+    {
+        $this->etiquetaHtml = $etiquetaHtml;
+
+        return $this;
+    }
+
+    /**
+     * Get etiquetaHtml
+     *
+     * @return string
+     */
+    public function getEtiquetaHtml()
+    {
+        return $this->etiquetaHtml;
+    }
+
+    /**
+     * Set codigoSql
+     *
+     * @param string $codigoSql
+     *
+     * @return FiltroGrafica
+     */
+    public function setCodigoSql($codigoSql)
+    {
+        $this->codigoSql = $codigoSql;
+
+        return $this;
+    }
+
+    /**
+     * Get codigoSql
+     *
+     * @return string
+     */
+    public function getCodigoSql()
+    {
+        return $this->codigoSql;
+    }
+
+    /**
+     * Set etiqueta
+     *
+     * @param string $etiqueta
+     *
+     * @return FiltroGrafica
+     */
+    public function setEtiqueta($etiqueta)
+    {
+        $this->etiqueta = $etiqueta;
+
+        return $this;
+    }
+
+    /**
+     * Get etiqueta
+     *
+     * @return string
+     */
+    public function getEtiqueta()
+    {
+        return $this->etiqueta;
+    }
+
+    /**
+     * Set tipoDato
+     *
+     * @param string $tipoDato
+     *
+     * @return FiltroGrafica
+     */
+    public function setTipoDato($tipoDato)
+    {
+        $this->tipoDato = $tipoDato;
+
+        return $this;
+    }
+
+    /**
+     * Get tipoDato
+     *
+     * @return string
+     */
+    public function getTipoDato()
+    {
+        return $this->tipoDato;
+    }
 }

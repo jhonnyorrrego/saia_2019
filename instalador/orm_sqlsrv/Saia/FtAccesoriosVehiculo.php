@@ -2,33 +2,50 @@
 
 namespace Saia;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * FtAccesoriosVehiculo
+ *
+ * @ORM\Table(name="ft_accesorios_vehiculo", indexes={@ORM\Index(name="i_accesorios_vehiculo_datos_vehi", columns={"ft_datos_vehiculo"}), @ORM\Index(name="i_accesorios_vehiculo_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Entity
  */
 class FtAccesoriosVehiculo
 {
     /**
      * @var integer
+     *
+     * @ORM\Column(name="idft_accesorios_vehiculo", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idftAccesoriosVehiculo;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="ft_datos_vehiculo", type="integer", nullable=false)
      */
     private $ftDatosVehiculo;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="accesorio_vehiculo", type="string", length=255, nullable=false)
      */
     private $accesorioVehiculo;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="valor_accesorio", type="integer", nullable=false)
      */
     private $valorAccesorio;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
      */
     private $serieIdserie;
 
@@ -139,4 +156,3 @@ class FtAccesoriosVehiculo
         return $this->serieIdserie;
     }
 }
-

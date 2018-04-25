@@ -57,4 +57,134 @@ class Ejecutor
     private $tipoEjecutor = '1';
 
 
+
+    /**
+     * Get idejecutor
+     *
+     * @return integer
+     */
+    public function getIdejecutor()
+    {
+        return $this->idejecutor;
+    }
+
+    /**
+     * Set identificacion
+     *
+     * @param string $identificacion
+     *
+     * @return Ejecutor
+     */
+    public function setIdentificacion($identificacion)
+    {
+        $this->identificacion = $identificacion;
+
+        return $this;
+    }
+
+    /**
+     * Get identificacion
+     *
+     * @return string
+     */
+    public function getIdentificacion()
+    {
+        return $this->identificacion;
+    }
+
+    /**
+     * Set nombre
+     *
+     * @param string $nombre
+     *
+     * @return Ejecutor
+     */
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    /**
+     * Get nombre
+     *
+     * @return string
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Set fechaIngreso
+     *
+     * @param \DateTime $fechaIngreso
+     *
+     * @return Ejecutor
+     */
+    public function setFechaIngreso($fechaIngreso)
+    {
+        $this->fechaIngreso = $fechaIngreso;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaIngreso
+     *
+     * @return \DateTime
+     */
+    public function getFechaIngreso()
+    {
+        return $this->fechaIngreso;
+    }
+
+    /**
+     * Set estado
+     *
+     * @param integer $estado
+     *
+     * @return Ejecutor
+     */
+    public function setEstado($estado)
+    {
+        $this->estado = $estado;
+
+        return $this;
+    }
+
+    /**
+     * Get estado
+     *
+     * @return integer
+     */
+    public function getEstado()
+    {
+        return $this->estado;
+    }
+
+    /**
+     * Set tipoEjecutor
+     *
+     * @param integer $tipoEjecutor
+     *
+     * @return Ejecutor
+     */
+    public function setTipoEjecutor($tipoEjecutor)
+    {
+        $this->tipoEjecutor = $tipoEjecutor;
+
+        return $this;
+    }
+
+    /**
+     * Get tipoEjecutor
+     *
+     * @return integer
+     */
+    public function getTipoEjecutor()
+    {
+        return $this->tipoEjecutor;
+    }
 }

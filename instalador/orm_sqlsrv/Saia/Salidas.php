@@ -92,4 +92,254 @@ class Salidas
     private $radicadoDespacho;
 
 
+
+    /**
+     * Get idsalida
+     *
+     * @return integer
+     */
+    public function getIdsalida()
+    {
+        return $this->idsalida;
+    }
+
+    /**
+     * Set documentoIddocumento
+     *
+     * @param integer $documentoIddocumento
+     *
+     * @return Salidas
+     */
+    public function setDocumentoIddocumento($documentoIddocumento)
+    {
+        $this->documentoIddocumento = $documentoIddocumento;
+
+        return $this;
+    }
+
+    /**
+     * Get documentoIddocumento
+     *
+     * @return integer
+     */
+    public function getDocumentoIddocumento()
+    {
+        return $this->documentoIddocumento;
+    }
+
+    /**
+     * Set numeroGuia
+     *
+     * @param string $numeroGuia
+     *
+     * @return Salidas
+     */
+    public function setNumeroGuia($numeroGuia)
+    {
+        $this->numeroGuia = $numeroGuia;
+
+        return $this;
+    }
+
+    /**
+     * Get numeroGuia
+     *
+     * @return string
+     */
+    public function getNumeroGuia()
+    {
+        return $this->numeroGuia;
+    }
+
+    /**
+     * Set empresa
+     *
+     * @param integer $empresa
+     *
+     * @return Salidas
+     */
+    public function setEmpresa($empresa)
+    {
+        $this->empresa = $empresa;
+
+        return $this;
+    }
+
+    /**
+     * Get empresa
+     *
+     * @return integer
+     */
+    public function getEmpresa()
+    {
+        return $this->empresa;
+    }
+
+    /**
+     * Set responsable
+     *
+     * @param integer $responsable
+     *
+     * @return Salidas
+     */
+    public function setResponsable($responsable)
+    {
+        $this->responsable = $responsable;
+
+        return $this;
+    }
+
+    /**
+     * Get responsable
+     *
+     * @return integer
+     */
+    public function getResponsable()
+    {
+        return $this->responsable;
+    }
+
+    /**
+     * Set fecha
+     *
+     * @param \DateTime $fecha
+     *
+     * @return Salidas
+     */
+    public function setFecha($fecha)
+    {
+        $this->fecha = $fecha;
+
+        return $this;
+    }
+
+    /**
+     * Get fecha
+     *
+     * @return \DateTime
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * Set fechaDespacho
+     *
+     * @param \DateTime $fechaDespacho
+     *
+     * @return Salidas
+     */
+    public function setFechaDespacho($fechaDespacho)
+    {
+        $this->fechaDespacho = $fechaDespacho;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaDespacho
+     *
+     * @return \DateTime
+     */
+    public function getFechaDespacho()
+    {
+        return $this->fechaDespacho;
+    }
+
+    /**
+     * Set tipoDespacho
+     *
+     * @param string $tipoDespacho
+     *
+     * @return Salidas
+     */
+    public function setTipoDespacho($tipoDespacho)
+    {
+        $this->tipoDespacho = $tipoDespacho;
+
+        return $this;
+    }
+
+    /**
+     * Get tipoDespacho
+     *
+     * @return string
+     */
+    public function getTipoDespacho()
+    {
+        return $this->tipoDespacho;
+    }
+
+    /**
+     * Set notas
+     *
+     * @param string $notas
+     *
+     * @return Salidas
+     */
+    public function setNotas($notas)
+    {
+        $this->notas = $notas;
+
+        return $this;
+    }
+
+    /**
+     * Get notas
+     *
+     * @return string
+     */
+    public function getNotas()
+    {
+        return $this->notas;
+    }
+
+    /**
+     * Set estado
+     *
+     * @param string $estado
+     *
+     * @return Salidas
+     */
+    public function setEstado($estado)
+    {
+        $this->estado = $estado;
+
+        return $this;
+    }
+
+    /**
+     * Get estado
+     *
+     * @return string
+     */
+    public function getEstado()
+    {
+        return $this->estado;
+    }
+
+    /**
+     * Set radicadoDespacho
+     *
+     * @param integer $radicadoDespacho
+     *
+     * @return Salidas
+     */
+    public function setRadicadoDespacho($radicadoDespacho)
+    {
+        $this->radicadoDespacho = $radicadoDespacho;
+
+        return $this;
+    }
+
+    /**
+     * Get radicadoDespacho
+     *
+     * @return integer
+     */
+    public function getRadicadoDespacho()
+    {
+        return $this->radicadoDespacho;
+    }
 }

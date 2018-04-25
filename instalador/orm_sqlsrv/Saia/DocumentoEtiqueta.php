@@ -43,4 +43,86 @@ class DocumentoEtiqueta
     private $fecha = 'CURRENT_TIMESTAMP';
 
 
+
+    /**
+     * Get iddocumentoEtiqueta
+     *
+     * @return integer
+     */
+    public function getIddocumentoEtiqueta()
+    {
+        return $this->iddocumentoEtiqueta;
+    }
+
+    /**
+     * Set etiquetaIdetiqueta
+     *
+     * @param integer $etiquetaIdetiqueta
+     *
+     * @return DocumentoEtiqueta
+     */
+    public function setEtiquetaIdetiqueta($etiquetaIdetiqueta)
+    {
+        $this->etiquetaIdetiqueta = $etiquetaIdetiqueta;
+
+        return $this;
+    }
+
+    /**
+     * Get etiquetaIdetiqueta
+     *
+     * @return integer
+     */
+    public function getEtiquetaIdetiqueta()
+    {
+        return $this->etiquetaIdetiqueta;
+    }
+
+    /**
+     * Set documentoIddocumento
+     *
+     * @param integer $documentoIddocumento
+     *
+     * @return DocumentoEtiqueta
+     */
+    public function setDocumentoIddocumento($documentoIddocumento)
+    {
+        $this->documentoIddocumento = $documentoIddocumento;
+
+        return $this;
+    }
+
+    /**
+     * Get documentoIddocumento
+     *
+     * @return integer
+     */
+    public function getDocumentoIddocumento()
+    {
+        return $this->documentoIddocumento;
+    }
+
+    /**
+     * Set fecha
+     *
+     * @param \DateTime $fecha
+     *
+     * @return DocumentoEtiqueta
+     */
+    public function setFecha($fecha)
+    {
+        $this->fecha = $fecha;
+
+        return $this;
+    }
+
+    /**
+     * Get fecha
+     *
+     * @return \DateTime
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
 }

@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Contador
  *
- * @ORM\Table(name="contador", uniqueConstraints={@ORM\UniqueConstraint(name="nombre", columns={"nombre"})})
+ * @ORM\Table(name="contador", uniqueConstraints={@ORM\UniqueConstraint(name="ux_contador_nombre", columns={"nombre"})})
  * @ORM\Entity
  */
 class Contador
@@ -57,4 +57,134 @@ class Contador
     private $post;
 
 
+
+    /**
+     * Get idcontador
+     *
+     * @return integer
+     */
+    public function getIdcontador()
+    {
+        return $this->idcontador;
+    }
+
+    /**
+     * Set consecutivo
+     *
+     * @param integer $consecutivo
+     *
+     * @return Contador
+     */
+    public function setConsecutivo($consecutivo)
+    {
+        $this->consecutivo = $consecutivo;
+
+        return $this;
+    }
+
+    /**
+     * Get consecutivo
+     *
+     * @return integer
+     */
+    public function getConsecutivo()
+    {
+        return $this->consecutivo;
+    }
+
+    /**
+     * Set nombre
+     *
+     * @param string $nombre
+     *
+     * @return Contador
+     */
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    /**
+     * Get nombre
+     *
+     * @return string
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Set reiniciarCambioAnio
+     *
+     * @param integer $reiniciarCambioAnio
+     *
+     * @return Contador
+     */
+    public function setReiniciarCambioAnio($reiniciarCambioAnio)
+    {
+        $this->reiniciarCambioAnio = $reiniciarCambioAnio;
+
+        return $this;
+    }
+
+    /**
+     * Get reiniciarCambioAnio
+     *
+     * @return integer
+     */
+    public function getReiniciarCambioAnio()
+    {
+        return $this->reiniciarCambioAnio;
+    }
+
+    /**
+     * Set etiquetaContador
+     *
+     * @param string $etiquetaContador
+     *
+     * @return Contador
+     */
+    public function setEtiquetaContador($etiquetaContador)
+    {
+        $this->etiquetaContador = $etiquetaContador;
+
+        return $this;
+    }
+
+    /**
+     * Get etiquetaContador
+     *
+     * @return string
+     */
+    public function getEtiquetaContador()
+    {
+        return $this->etiquetaContador;
+    }
+
+    /**
+     * Set post
+     *
+     * @param string $post
+     *
+     * @return Contador
+     */
+    public function setPost($post)
+    {
+        $this->post = $post;
+
+        return $this;
+    }
+
+    /**
+     * Get post
+     *
+     * @return string
+     */
+    public function getPost()
+    {
+        return $this->post;
+    }
 }

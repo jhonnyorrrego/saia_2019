@@ -43,4 +43,86 @@ class Binario
     private $fechaCreacion = 'CURRENT_TIMESTAMP';
 
 
+
+    /**
+     * Get idbinario
+     *
+     * @return integer
+     */
+    public function getIdbinario()
+    {
+        return $this->idbinario;
+    }
+
+    /**
+     * Set nombreOriginal
+     *
+     * @param string $nombreOriginal
+     *
+     * @return Binario
+     */
+    public function setNombreOriginal($nombreOriginal)
+    {
+        $this->nombreOriginal = $nombreOriginal;
+
+        return $this;
+    }
+
+    /**
+     * Get nombreOriginal
+     *
+     * @return string
+     */
+    public function getNombreOriginal()
+    {
+        return $this->nombreOriginal;
+    }
+
+    /**
+     * Set datos
+     *
+     * @param string $datos
+     *
+     * @return Binario
+     */
+    public function setDatos($datos)
+    {
+        $this->datos = $datos;
+
+        return $this;
+    }
+
+    /**
+     * Get datos
+     *
+     * @return string
+     */
+    public function getDatos()
+    {
+        return $this->datos;
+    }
+
+    /**
+     * Set fechaCreacion
+     *
+     * @param \DateTime $fechaCreacion
+     *
+     * @return Binario
+     */
+    public function setFechaCreacion($fechaCreacion)
+    {
+        $this->fechaCreacion = $fechaCreacion;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaCreacion
+     *
+     * @return \DateTime
+     */
+    public function getFechaCreacion()
+    {
+        return $this->fechaCreacion;
+    }
 }

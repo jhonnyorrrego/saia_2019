@@ -29,4 +29,38 @@ class Entidad
     private $nombre = '';
 
 
+
+    /**
+     * Get identidad
+     *
+     * @return integer
+     */
+    public function getIdentidad()
+    {
+        return $this->identidad;
+    }
+
+    /**
+     * Set nombre
+     *
+     * @param string $nombre
+     *
+     * @return Entidad
+     */
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    /**
+     * Get nombre
+     *
+     * @return string
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
 }

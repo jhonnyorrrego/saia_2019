@@ -57,4 +57,134 @@ class PermisoPerfil
     private $caracteristicaTotal;
 
 
+
+    /**
+     * Get idpermisoPerfil
+     *
+     * @return integer
+     */
+    public function getIdpermisoPerfil()
+    {
+        return $this->idpermisoPerfil;
+    }
+
+    /**
+     * Set moduloIdmodulo
+     *
+     * @param integer $moduloIdmodulo
+     *
+     * @return PermisoPerfil
+     */
+    public function setModuloIdmodulo($moduloIdmodulo)
+    {
+        $this->moduloIdmodulo = $moduloIdmodulo;
+
+        return $this;
+    }
+
+    /**
+     * Get moduloIdmodulo
+     *
+     * @return integer
+     */
+    public function getModuloIdmodulo()
+    {
+        return $this->moduloIdmodulo;
+    }
+
+    /**
+     * Set perfilIdperfil
+     *
+     * @param integer $perfilIdperfil
+     *
+     * @return PermisoPerfil
+     */
+    public function setPerfilIdperfil($perfilIdperfil)
+    {
+        $this->perfilIdperfil = $perfilIdperfil;
+
+        return $this;
+    }
+
+    /**
+     * Get perfilIdperfil
+     *
+     * @return integer
+     */
+    public function getPerfilIdperfil()
+    {
+        return $this->perfilIdperfil;
+    }
+
+    /**
+     * Set caracteristicaPropio
+     *
+     * @param string $caracteristicaPropio
+     *
+     * @return PermisoPerfil
+     */
+    public function setCaracteristicaPropio($caracteristicaPropio)
+    {
+        $this->caracteristicaPropio = $caracteristicaPropio;
+
+        return $this;
+    }
+
+    /**
+     * Get caracteristicaPropio
+     *
+     * @return string
+     */
+    public function getCaracteristicaPropio()
+    {
+        return $this->caracteristicaPropio;
+    }
+
+    /**
+     * Set caracteristicaGrupo
+     *
+     * @param string $caracteristicaGrupo
+     *
+     * @return PermisoPerfil
+     */
+    public function setCaracteristicaGrupo($caracteristicaGrupo)
+    {
+        $this->caracteristicaGrupo = $caracteristicaGrupo;
+
+        return $this;
+    }
+
+    /**
+     * Get caracteristicaGrupo
+     *
+     * @return string
+     */
+    public function getCaracteristicaGrupo()
+    {
+        return $this->caracteristicaGrupo;
+    }
+
+    /**
+     * Set caracteristicaTotal
+     *
+     * @param string $caracteristicaTotal
+     *
+     * @return PermisoPerfil
+     */
+    public function setCaracteristicaTotal($caracteristicaTotal)
+    {
+        $this->caracteristicaTotal = $caracteristicaTotal;
+
+        return $this;
+    }
+
+    /**
+     * Get caracteristicaTotal
+     *
+     * @return string
+     */
+    public function getCaracteristicaTotal()
+    {
+        return $this->caracteristicaTotal;
+    }
 }

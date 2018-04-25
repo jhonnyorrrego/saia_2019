@@ -2,43 +2,64 @@
 
 namespace Saia;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * FtActasDeReunion
+ *
+ * @ORM\Table(name="ft_actas_de_reunion", indexes={@ORM\Index(name="i_ft_actas_de_reunion_doc", columns={"documento_iddocumento"}), @ORM\Index(name="i_actas_de_reunion_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Entity
  */
 class FtActasDeReunion
 {
     /**
      * @var integer
+     *
+     * @ORM\Column(name="idft_actas_de_reunion", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idftActasDeReunion;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
      */
     private $serieIdserie;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
      */
     private $documentoIddocumento;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
      */
     private $dependencia;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
      */
     private $encabezado;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
      */
     private $firma;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="estado_documento", type="integer", nullable=false)
      */
     private $estadoDocumento;
 
@@ -197,4 +218,3 @@ class FtActasDeReunion
         return $this->estadoDocumento;
     }
 }
-

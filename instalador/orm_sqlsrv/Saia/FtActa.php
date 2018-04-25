@@ -2,133 +2,190 @@
 
 namespace Saia;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * FtActa
+ *
+ * @ORM\Table(name="ft_acta", indexes={@ORM\Index(name="i_ft_acta_doc", columns={"documento_iddocumento"}), @ORM\Index(name="i_acta_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Entity
  */
 class FtActa
 {
     /**
      * @var integer
+     *
+     * @ORM\Column(name="idft_acta", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idftActa;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
      */
     private $serieIdserie;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="ajenda_reunion", type="text", length=65535, nullable=false)
      */
     private $ajendaReunion;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="anexo_formato", type="string", length=255, nullable=true)
      */
     private $anexoFormato;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="asistentes", type="string", length=255, nullable=false)
      */
     private $asistentes;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="caracter", type="integer", nullable=false)
      */
     private $caracter;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="codigo", type="string", length=255, nullable=true)
      */
     private $codigo;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="desarrollo_reunion", type="text", length=65535, nullable=false)
      */
     private $desarrolloReunion;
 
     /**
      * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_proxima_reunion", type="datetime", nullable=true)
      */
     private $fechaProximaReunion;
 
     /**
      * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_reunion", type="date", nullable=false)
      */
     private $fechaReunion;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="firma_presidente", type="string", length=255, nullable=false)
      */
     private $firmaPresidente;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="firma_secretaria", type="integer", nullable=false)
      */
     private $firmaSecretaria;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="grupo_reunido", type="string", length=255, nullable=false)
      */
     private $grupoReunido;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="hora", type="string", length=255, nullable=false)
      */
     private $hora;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="invitados", type="string", length=255, nullable=true)
      */
     private $invitados;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="lugar_proxima_reunion", type="string", length=255, nullable=true)
      */
     private $lugarProximaReunion;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="numero_acta", type="string", length=255, nullable=false)
      */
     private $numeroActa;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="objetivo_reunion", type="text", length=65535, nullable=false)
      */
     private $objetivoReunion;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="ausentes", type="string", length=255, nullable=true)
      */
     private $ausentes;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="tareas", type="integer", nullable=false)
      */
     private $tareas;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
      */
     private $documentoIddocumento;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
      */
     private $dependencia;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
      */
     private $encabezado;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
      */
     private $firma;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="estado_documento", type="integer", nullable=false)
      */
     private $estadoDocumento;
 
@@ -719,4 +776,3 @@ class FtActa
         return $this->estadoDocumento;
     }
 }
-

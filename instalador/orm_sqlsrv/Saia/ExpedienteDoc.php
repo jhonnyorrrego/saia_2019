@@ -40,7 +40,89 @@ class ExpedienteDoc
      *
      * @ORM\Column(name="fecha", type="datetime", nullable=false)
      */
-    private $fecha;
+    private $fecha = 'CURRENT_TIMESTAMP';
 
 
+
+    /**
+     * Get idexpedienteDoc
+     *
+     * @return integer
+     */
+    public function getIdexpedienteDoc()
+    {
+        return $this->idexpedienteDoc;
+    }
+
+    /**
+     * Set expedienteIdexpediente
+     *
+     * @param integer $expedienteIdexpediente
+     *
+     * @return ExpedienteDoc
+     */
+    public function setExpedienteIdexpediente($expedienteIdexpediente)
+    {
+        $this->expedienteIdexpediente = $expedienteIdexpediente;
+
+        return $this;
+    }
+
+    /**
+     * Get expedienteIdexpediente
+     *
+     * @return integer
+     */
+    public function getExpedienteIdexpediente()
+    {
+        return $this->expedienteIdexpediente;
+    }
+
+    /**
+     * Set documentoIddocumento
+     *
+     * @param integer $documentoIddocumento
+     *
+     * @return ExpedienteDoc
+     */
+    public function setDocumentoIddocumento($documentoIddocumento)
+    {
+        $this->documentoIddocumento = $documentoIddocumento;
+
+        return $this;
+    }
+
+    /**
+     * Get documentoIddocumento
+     *
+     * @return integer
+     */
+    public function getDocumentoIddocumento()
+    {
+        return $this->documentoIddocumento;
+    }
+
+    /**
+     * Set fecha
+     *
+     * @param \DateTime $fecha
+     *
+     * @return ExpedienteDoc
+     */
+    public function setFecha($fecha)
+    {
+        $this->fecha = $fecha;
+
+        return $this;
+    }
+
+    /**
+     * Get fecha
+     *
+     * @return \DateTime
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
 }

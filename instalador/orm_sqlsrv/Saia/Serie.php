@@ -169,4 +169,518 @@ class Serie
     private $tvd = '0';
 
 
+
+    /**
+     * Get idserie
+     *
+     * @return integer
+     */
+    public function getIdserie()
+    {
+        return $this->idserie;
+    }
+
+    /**
+     * Set nombre
+     *
+     * @param string $nombre
+     *
+     * @return Serie
+     */
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    /**
+     * Get nombre
+     *
+     * @return string
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Set codPadre
+     *
+     * @param integer $codPadre
+     *
+     * @return Serie
+     */
+    public function setCodPadre($codPadre)
+    {
+        $this->codPadre = $codPadre;
+
+        return $this;
+    }
+
+    /**
+     * Get codPadre
+     *
+     * @return integer
+     */
+    public function getCodPadre()
+    {
+        return $this->codPadre;
+    }
+
+    /**
+     * Set diasEntrega
+     *
+     * @param integer $diasEntrega
+     *
+     * @return Serie
+     */
+    public function setDiasEntrega($diasEntrega)
+    {
+        $this->diasEntrega = $diasEntrega;
+
+        return $this;
+    }
+
+    /**
+     * Get diasEntrega
+     *
+     * @return integer
+     */
+    public function getDiasEntrega()
+    {
+        return $this->diasEntrega;
+    }
+
+    /**
+     * Set codigo
+     *
+     * @param string $codigo
+     *
+     * @return Serie
+     */
+    public function setCodigo($codigo)
+    {
+        $this->codigo = $codigo;
+
+        return $this;
+    }
+
+    /**
+     * Get codigo
+     *
+     * @return string
+     */
+    public function getCodigo()
+    {
+        return $this->codigo;
+    }
+
+    /**
+     * Set tipoEntidad
+     *
+     * @param integer $tipoEntidad
+     *
+     * @return Serie
+     */
+    public function setTipoEntidad($tipoEntidad)
+    {
+        $this->tipoEntidad = $tipoEntidad;
+
+        return $this;
+    }
+
+    /**
+     * Get tipoEntidad
+     *
+     * @return integer
+     */
+    public function getTipoEntidad()
+    {
+        return $this->tipoEntidad;
+    }
+
+    /**
+     * Set llaveEntidad
+     *
+     * @param string $llaveEntidad
+     *
+     * @return Serie
+     */
+    public function setLlaveEntidad($llaveEntidad)
+    {
+        $this->llaveEntidad = $llaveEntidad;
+
+        return $this;
+    }
+
+    /**
+     * Get llaveEntidad
+     *
+     * @return string
+     */
+    public function getLlaveEntidad()
+    {
+        return $this->llaveEntidad;
+    }
+
+    /**
+     * Set retencionGestion
+     *
+     * @param boolean $retencionGestion
+     *
+     * @return Serie
+     */
+    public function setRetencionGestion($retencionGestion)
+    {
+        $this->retencionGestion = $retencionGestion;
+
+        return $this;
+    }
+
+    /**
+     * Get retencionGestion
+     *
+     * @return boolean
+     */
+    public function getRetencionGestion()
+    {
+        return $this->retencionGestion;
+    }
+
+    /**
+     * Set retencionCentral
+     *
+     * @param boolean $retencionCentral
+     *
+     * @return Serie
+     */
+    public function setRetencionCentral($retencionCentral)
+    {
+        $this->retencionCentral = $retencionCentral;
+
+        return $this;
+    }
+
+    /**
+     * Get retencionCentral
+     *
+     * @return boolean
+     */
+    public function getRetencionCentral()
+    {
+        return $this->retencionCentral;
+    }
+
+    /**
+     * Set conservacion
+     *
+     * @param string $conservacion
+     *
+     * @return Serie
+     */
+    public function setConservacion($conservacion)
+    {
+        $this->conservacion = $conservacion;
+
+        return $this;
+    }
+
+    /**
+     * Get conservacion
+     *
+     * @return string
+     */
+    public function getConservacion()
+    {
+        return $this->conservacion;
+    }
+
+    /**
+     * Set digitalizacion
+     *
+     * @param boolean $digitalizacion
+     *
+     * @return Serie
+     */
+    public function setDigitalizacion($digitalizacion)
+    {
+        $this->digitalizacion = $digitalizacion;
+
+        return $this;
+    }
+
+    /**
+     * Get digitalizacion
+     *
+     * @return boolean
+     */
+    public function getDigitalizacion()
+    {
+        return $this->digitalizacion;
+    }
+
+    /**
+     * Set seleccion
+     *
+     * @param boolean $seleccion
+     *
+     * @return Serie
+     */
+    public function setSeleccion($seleccion)
+    {
+        $this->seleccion = $seleccion;
+
+        return $this;
+    }
+
+    /**
+     * Get seleccion
+     *
+     * @return boolean
+     */
+    public function getSeleccion()
+    {
+        return $this->seleccion;
+    }
+
+    /**
+     * Set otro
+     *
+     * @param string $otro
+     *
+     * @return Serie
+     */
+    public function setOtro($otro)
+    {
+        $this->otro = $otro;
+
+        return $this;
+    }
+
+    /**
+     * Get otro
+     *
+     * @return string
+     */
+    public function getOtro()
+    {
+        return $this->otro;
+    }
+
+    /**
+     * Set procedimiento
+     *
+     * @param string $procedimiento
+     *
+     * @return Serie
+     */
+    public function setProcedimiento($procedimiento)
+    {
+        $this->procedimiento = $procedimiento;
+
+        return $this;
+    }
+
+    /**
+     * Get procedimiento
+     *
+     * @return string
+     */
+    public function getProcedimiento()
+    {
+        return $this->procedimiento;
+    }
+
+    /**
+     * Set copia
+     *
+     * @param boolean $copia
+     *
+     * @return Serie
+     */
+    public function setCopia($copia)
+    {
+        $this->copia = $copia;
+
+        return $this;
+    }
+
+    /**
+     * Get copia
+     *
+     * @return boolean
+     */
+    public function getCopia()
+    {
+        return $this->copia;
+    }
+
+    /**
+     * Set tipo
+     *
+     * @param boolean $tipo
+     *
+     * @return Serie
+     */
+    public function setTipo($tipo)
+    {
+        $this->tipo = $tipo;
+
+        return $this;
+    }
+
+    /**
+     * Get tipo
+     *
+     * @return boolean
+     */
+    public function getTipo()
+    {
+        return $this->tipo;
+    }
+
+    /**
+     * Set clase
+     *
+     * @param boolean $clase
+     *
+     * @return Serie
+     */
+    public function setClase($clase)
+    {
+        $this->clase = $clase;
+
+        return $this;
+    }
+
+    /**
+     * Get clase
+     *
+     * @return boolean
+     */
+    public function getClase()
+    {
+        return $this->clase;
+    }
+
+    /**
+     * Set estado
+     *
+     * @param boolean $estado
+     *
+     * @return Serie
+     */
+    public function setEstado($estado)
+    {
+        $this->estado = $estado;
+
+        return $this;
+    }
+
+    /**
+     * Get estado
+     *
+     * @return boolean
+     */
+    public function getEstado()
+    {
+        return $this->estado;
+    }
+
+    /**
+     * Set categoria
+     *
+     * @param integer $categoria
+     *
+     * @return Serie
+     */
+    public function setCategoria($categoria)
+    {
+        $this->categoria = $categoria;
+
+        return $this;
+    }
+
+    /**
+     * Get categoria
+     *
+     * @return integer
+     */
+    public function getCategoria()
+    {
+        return $this->categoria;
+    }
+
+    /**
+     * Set orden
+     *
+     * @param string $orden
+     *
+     * @return Serie
+     */
+    public function setOrden($orden)
+    {
+        $this->orden = $orden;
+
+        return $this;
+    }
+
+    /**
+     * Get orden
+     *
+     * @return string
+     */
+    public function getOrden()
+    {
+        return $this->orden;
+    }
+
+    /**
+     * Set tipoExpediente
+     *
+     * @param string $tipoExpediente
+     *
+     * @return Serie
+     */
+    public function setTipoExpediente($tipoExpediente)
+    {
+        $this->tipoExpediente = $tipoExpediente;
+
+        return $this;
+    }
+
+    /**
+     * Get tipoExpediente
+     *
+     * @return string
+     */
+    public function getTipoExpediente()
+    {
+        return $this->tipoExpediente;
+    }
+
+    /**
+     * Set tvd
+     *
+     * @param integer $tvd
+     *
+     * @return Serie
+     */
+    public function setTvd($tvd)
+    {
+        $this->tvd = $tvd;
+
+        return $this;
+    }
+
+    /**
+     * Get tvd
+     *
+     * @return integer
+     */
+    public function getTvd()
+    {
+        return $this->tvd;
+    }
 }

@@ -64,4 +64,158 @@ class Pagina
     private $hashFile;
 
 
+
+    /**
+     * Get consecutivo
+     *
+     * @return integer
+     */
+    public function getConsecutivo()
+    {
+        return $this->consecutivo;
+    }
+
+    /**
+     * Set idDocumento
+     *
+     * @param integer $idDocumento
+     *
+     * @return Pagina
+     */
+    public function setIdDocumento($idDocumento)
+    {
+        $this->idDocumento = $idDocumento;
+
+        return $this;
+    }
+
+    /**
+     * Get idDocumento
+     *
+     * @return integer
+     */
+    public function getIdDocumento()
+    {
+        return $this->idDocumento;
+    }
+
+    /**
+     * Set imagen
+     *
+     * @param string $imagen
+     *
+     * @return Pagina
+     */
+    public function setImagen($imagen)
+    {
+        $this->imagen = $imagen;
+
+        return $this;
+    }
+
+    /**
+     * Get imagen
+     *
+     * @return string
+     */
+    public function getImagen()
+    {
+        return $this->imagen;
+    }
+
+    /**
+     * Set pagina
+     *
+     * @param integer $pagina
+     *
+     * @return Pagina
+     */
+    public function setPagina($pagina)
+    {
+        $this->pagina = $pagina;
+
+        return $this;
+    }
+
+    /**
+     * Get pagina
+     *
+     * @return integer
+     */
+    public function getPagina()
+    {
+        return $this->pagina;
+    }
+
+    /**
+     * Set ruta
+     *
+     * @param string $ruta
+     *
+     * @return Pagina
+     */
+    public function setRuta($ruta)
+    {
+        $this->ruta = $ruta;
+
+        return $this;
+    }
+
+    /**
+     * Get ruta
+     *
+     * @return string
+     */
+    public function getRuta()
+    {
+        return $this->ruta;
+    }
+
+    /**
+     * Set fechaPagina
+     *
+     * @param \DateTime $fechaPagina
+     *
+     * @return Pagina
+     */
+    public function setFechaPagina($fechaPagina)
+    {
+        $this->fechaPagina = $fechaPagina;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaPagina
+     *
+     * @return \DateTime
+     */
+    public function getFechaPagina()
+    {
+        return $this->fechaPagina;
+    }
+
+    /**
+     * Set hashFile
+     *
+     * @param string $hashFile
+     *
+     * @return Pagina
+     */
+    public function setHashFile($hashFile)
+    {
+        $this->hashFile = $hashFile;
+
+        return $this;
+    }
+
+    /**
+     * Get hashFile
+     *
+     * @return string
+     */
+    public function getHashFile()
+    {
+        return $this->hashFile;
+    }
 }

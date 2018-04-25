@@ -64,4 +64,158 @@ class PasoActividadProgramacion
     private $actividadIdpasoActividad;
 
 
+
+    /**
+     * Get idpasoActividadProgramacion
+     *
+     * @return integer
+     */
+    public function getIdpasoActividadProgramacion()
+    {
+        return $this->idpasoActividadProgramacion;
+    }
+
+    /**
+     * Set inicio
+     *
+     * @param \DateTime $inicio
+     *
+     * @return PasoActividadProgramacion
+     */
+    public function setInicio($inicio)
+    {
+        $this->inicio = $inicio;
+
+        return $this;
+    }
+
+    /**
+     * Get inicio
+     *
+     * @return \DateTime
+     */
+    public function getInicio()
+    {
+        return $this->inicio;
+    }
+
+    /**
+     * Set meses
+     *
+     * @param string $meses
+     *
+     * @return PasoActividadProgramacion
+     */
+    public function setMeses($meses)
+    {
+        $this->meses = $meses;
+
+        return $this;
+    }
+
+    /**
+     * Get meses
+     *
+     * @return string
+     */
+    public function getMeses()
+    {
+        return $this->meses;
+    }
+
+    /**
+     * Set dias
+     *
+     * @param string $dias
+     *
+     * @return PasoActividadProgramacion
+     */
+    public function setDias($dias)
+    {
+        $this->dias = $dias;
+
+        return $this;
+    }
+
+    /**
+     * Get dias
+     *
+     * @return string
+     */
+    public function getDias()
+    {
+        return $this->dias;
+    }
+
+    /**
+     * Set expirar
+     *
+     * @param \DateTime $expirar
+     *
+     * @return PasoActividadProgramacion
+     */
+    public function setExpirar($expirar)
+    {
+        $this->expirar = $expirar;
+
+        return $this;
+    }
+
+    /**
+     * Get expirar
+     *
+     * @return \DateTime
+     */
+    public function getExpirar()
+    {
+        return $this->expirar;
+    }
+
+    /**
+     * Set estado
+     *
+     * @param integer $estado
+     *
+     * @return PasoActividadProgramacion
+     */
+    public function setEstado($estado)
+    {
+        $this->estado = $estado;
+
+        return $this;
+    }
+
+    /**
+     * Get estado
+     *
+     * @return integer
+     */
+    public function getEstado()
+    {
+        return $this->estado;
+    }
+
+    /**
+     * Set actividadIdpasoActividad
+     *
+     * @param integer $actividadIdpasoActividad
+     *
+     * @return PasoActividadProgramacion
+     */
+    public function setActividadIdpasoActividad($actividadIdpasoActividad)
+    {
+        $this->actividadIdpasoActividad = $actividadIdpasoActividad;
+
+        return $this;
+    }
+
+    /**
+     * Get actividadIdpasoActividad
+     *
+     * @return integer
+     */
+    public function getActividadIdpasoActividad()
+    {
+        return $this->actividadIdpasoActividad;
+    }
 }

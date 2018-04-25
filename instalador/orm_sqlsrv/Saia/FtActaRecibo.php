@@ -2,63 +2,92 @@
 
 namespace Saia;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * FtActaRecibo
+ *
+ * @ORM\Table(name="ft_acta_recibo", indexes={@ORM\Index(name="i_ft_acta_recibo_doc", columns={"documento_iddocumento"}), @ORM\Index(name="i_acta_recibo_clasif_sol", columns={"ft_clasif_solicitud"}), @ORM\Index(name="i_acta_recibo_serie_idse", columns={"serie_idserie"})})
+ * @ORM\Entity
  */
 class FtActaRecibo
 {
     /**
      * @var integer
+     *
+     * @ORM\Column(name="idft_acta_recibo", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idftActaRecibo;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="anexo_formato", type="string", length=255, nullable=true)
      */
     private $anexoFormato;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="ft_clasif_solicitud", type="integer", nullable=false)
      */
     private $ftClasifSolicitud;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="serie_idserie", type="integer", nullable=false)
      */
     private $serieIdserie;
 
     /**
      * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_cta", type="date", nullable=false)
      */
     private $fechaCta;
 
     /**
      * @var string
+     *
+     * @ORM\Column(name="entrega", type="text", length=65535, nullable=false)
      */
     private $entrega;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="documento_iddocumento", type="integer", nullable=false)
      */
     private $documentoIddocumento;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="dependencia", type="integer", nullable=false)
      */
     private $dependencia;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="encabezado", type="integer", nullable=false)
      */
     private $encabezado;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="firma", type="integer", nullable=false)
      */
     private $firma;
 
     /**
      * @var integer
+     *
+     * @ORM\Column(name="estado_documento", type="integer", nullable=false)
      */
     private $estadoDocumento;
 
@@ -313,4 +342,3 @@ class FtActaRecibo
         return $this->estadoDocumento;
     }
 }
-

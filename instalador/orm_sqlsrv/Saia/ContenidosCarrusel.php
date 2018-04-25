@@ -92,4 +92,254 @@ class ContenidosCarrusel
     private $align = 'left';
 
 
+
+    /**
+     * Get idcontenidosCarrusel
+     *
+     * @return integer
+     */
+    public function getIdcontenidosCarrusel()
+    {
+        return $this->idcontenidosCarrusel;
+    }
+
+    /**
+     * Set carruselIdcarrusel
+     *
+     * @param integer $carruselIdcarrusel
+     *
+     * @return ContenidosCarrusel
+     */
+    public function setCarruselIdcarrusel($carruselIdcarrusel)
+    {
+        $this->carruselIdcarrusel = $carruselIdcarrusel;
+
+        return $this;
+    }
+
+    /**
+     * Get carruselIdcarrusel
+     *
+     * @return integer
+     */
+    public function getCarruselIdcarrusel()
+    {
+        return $this->carruselIdcarrusel;
+    }
+
+    /**
+     * Set contenido
+     *
+     * @param string $contenido
+     *
+     * @return ContenidosCarrusel
+     */
+    public function setContenido($contenido)
+    {
+        $this->contenido = $contenido;
+
+        return $this;
+    }
+
+    /**
+     * Get contenido
+     *
+     * @return string
+     */
+    public function getContenido()
+    {
+        return $this->contenido;
+    }
+
+    /**
+     * Set nombre
+     *
+     * @param string $nombre
+     *
+     * @return ContenidosCarrusel
+     */
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    /**
+     * Get nombre
+     *
+     * @return string
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Set orden
+     *
+     * @param integer $orden
+     *
+     * @return ContenidosCarrusel
+     */
+    public function setOrden($orden)
+    {
+        $this->orden = $orden;
+
+        return $this;
+    }
+
+    /**
+     * Get orden
+     *
+     * @return integer
+     */
+    public function getOrden()
+    {
+        return $this->orden;
+    }
+
+    /**
+     * Set fechaInicio
+     *
+     * @param \DateTime $fechaInicio
+     *
+     * @return ContenidosCarrusel
+     */
+    public function setFechaInicio($fechaInicio)
+    {
+        $this->fechaInicio = $fechaInicio;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaInicio
+     *
+     * @return \DateTime
+     */
+    public function getFechaInicio()
+    {
+        return $this->fechaInicio;
+    }
+
+    /**
+     * Set fechaFin
+     *
+     * @param \DateTime $fechaFin
+     *
+     * @return ContenidosCarrusel
+     */
+    public function setFechaFin($fechaFin)
+    {
+        $this->fechaFin = $fechaFin;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaFin
+     *
+     * @return \DateTime
+     */
+    public function getFechaFin()
+    {
+        return $this->fechaFin;
+    }
+
+    /**
+     * Set preview
+     *
+     * @param string $preview
+     *
+     * @return ContenidosCarrusel
+     */
+    public function setPreview($preview)
+    {
+        $this->preview = $preview;
+
+        return $this;
+    }
+
+    /**
+     * Get preview
+     *
+     * @return string
+     */
+    public function getPreview()
+    {
+        return $this->preview;
+    }
+
+    /**
+     * Set imagen
+     *
+     * @param string $imagen
+     *
+     * @return ContenidosCarrusel
+     */
+    public function setImagen($imagen)
+    {
+        $this->imagen = $imagen;
+
+        return $this;
+    }
+
+    /**
+     * Get imagen
+     *
+     * @return string
+     */
+    public function getImagen()
+    {
+        return $this->imagen;
+    }
+
+    /**
+     * Set miniatura
+     *
+     * @param string $miniatura
+     *
+     * @return ContenidosCarrusel
+     */
+    public function setMiniatura($miniatura)
+    {
+        $this->miniatura = $miniatura;
+
+        return $this;
+    }
+
+    /**
+     * Get miniatura
+     *
+     * @return string
+     */
+    public function getMiniatura()
+    {
+        return $this->miniatura;
+    }
+
+    /**
+     * Set align
+     *
+     * @param string $align
+     *
+     * @return ContenidosCarrusel
+     */
+    public function setAlign($align)
+    {
+        $this->align = $align;
+
+        return $this;
+    }
+
+    /**
+     * Get align
+     *
+     * @return string
+     */
+    public function getAlign()
+    {
+        return $this->align;
+    }
 }

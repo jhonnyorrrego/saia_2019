@@ -64,4 +64,158 @@ class Tarea
     private $tipoReprograma;
 
 
+
+    /**
+     * Get idtarea
+     *
+     * @return integer
+     */
+    public function getIdtarea()
+    {
+        return $this->idtarea;
+    }
+
+    /**
+     * Set nombre
+     *
+     * @param string $nombre
+     *
+     * @return Tarea
+     */
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    /**
+     * Get nombre
+     *
+     * @return string
+     */
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
+
+    /**
+     * Set fecha
+     *
+     * @param \DateTime $fecha
+     *
+     * @return Tarea
+     */
+    public function setFecha($fecha)
+    {
+        $this->fecha = $fecha;
+
+        return $this;
+    }
+
+    /**
+     * Get fecha
+     *
+     * @return \DateTime
+     */
+    public function getFecha()
+    {
+        return $this->fecha;
+    }
+
+    /**
+     * Set tiempoRespuesta
+     *
+     * @param integer $tiempoRespuesta
+     *
+     * @return Tarea
+     */
+    public function setTiempoRespuesta($tiempoRespuesta)
+    {
+        $this->tiempoRespuesta = $tiempoRespuesta;
+
+        return $this;
+    }
+
+    /**
+     * Get tiempoRespuesta
+     *
+     * @return integer
+     */
+    public function getTiempoRespuesta()
+    {
+        return $this->tiempoRespuesta;
+    }
+
+    /**
+     * Set descripcion
+     *
+     * @param string $descripcion
+     *
+     * @return Tarea
+     */
+    public function setDescripcion($descripcion)
+    {
+        $this->descripcion = $descripcion;
+
+        return $this;
+    }
+
+    /**
+     * Get descripcion
+     *
+     * @return string
+     */
+    public function getDescripcion()
+    {
+        return $this->descripcion;
+    }
+
+    /**
+     * Set reprograma
+     *
+     * @param boolean $reprograma
+     *
+     * @return Tarea
+     */
+    public function setReprograma($reprograma)
+    {
+        $this->reprograma = $reprograma;
+
+        return $this;
+    }
+
+    /**
+     * Get reprograma
+     *
+     * @return boolean
+     */
+    public function getReprograma()
+    {
+        return $this->reprograma;
+    }
+
+    /**
+     * Set tipoReprograma
+     *
+     * @param string $tipoReprograma
+     *
+     * @return Tarea
+     */
+    public function setTipoReprograma($tipoReprograma)
+    {
+        $this->tipoReprograma = $tipoReprograma;
+
+        return $this;
+    }
+
+    /**
+     * Get tipoReprograma
+     *
+     * @return string
+     */
+    public function getTipoReprograma()
+    {
+        return $this->tipoReprograma;
+    }
 }
