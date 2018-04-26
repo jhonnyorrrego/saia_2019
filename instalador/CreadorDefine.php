@@ -6,6 +6,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 class ConfigGenCommand extends Command {
 
@@ -64,21 +66,26 @@ class ConfigGenCommand extends Command {
     }
 
     protected function renameInstallationDirectory(OutputInterface $output) {
-        $mkdir = new Process(sprintf("mv %s %s", $this->install_dir, "saia"));
-        if (is_dir($this->install_dir) && !is_dir("saia")) {
+        //$mkdir = new Process(sprintf("mv %s %s", $this->install_dir, "saia"));
+        $fs = new Filesystem();
+
+        if ($fs->exists($this->install_dir) && !$fs->exists("saia")) {
 
             $output->writeln(sprintf("<info>Renombrando el directorio %s </info>", $this->install_dir));
-            $mkdir->run();
-
-            if ($mkdir->isSuccessful()) {
+            //$mkdir->run();
+            try {
+                $fs->rename($this->install_dir, 'saia');
                 $output->writeln(sprintf("<info>Directorio %s renombrado con exito</info>", $this->install_dir));
                 return true;
+            } catch (IOException $ioe) {
+                $output->writeln(sprintf("<error>No se pudo renombrar el directorio %s</error>", $this->install_dir));
             }
+
         } else {
             $output->writeln(sprintf("<error>No existe el directorio %s</error>", $this->install_dir));
         }
 
-        $this->failingProcess = $mkdir;
+        //$this->failingProcess = $mkdir;
         return false;
     }
 
