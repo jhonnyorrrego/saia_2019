@@ -1,23 +1,63 @@
 <?php
+$max_salida = 10;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
+	}
+	$ruta .= "../";
+	$max_salida--;
+}
+include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
+
 if (stristr($_SERVER["HTTP_ACCEPT"], "application/xhtml+xml")) {
 	header("Content-type: application/xhtml+xml");
 } else {
 	header("Content-type: text/xml");
 }
 $imagenes = "";
-
 $texto = "<?xml version=\"1.0\" encoding=\"UTF-8\"?" . ">";
-include_once ("../librerias/funciones_generales.php");
-include_once ("../../db.php");
-global $conn;
-
-$perfil_usuario = busca_filtro_tabla("funcionario_codigo", "vfuncionario_dc", "perfil like '%447%' and funcionario_codigo=" . usuario_actual("funcionario_codigo"), "", $conn);
-$perfil = "";
-if ($perfil_usuario["numcampos"]) {
-	$perfil = "consulta";
-}
-
-$formatos_calidad = array('ft_proceso', 'ft_procedimiento', 'ft_instructivo', 'ft_manual', 'ft_guia', 'ft_plan_calidad', 'ft_otros_calidad', 'ft_formato', 'ft_listados_maestros', 'ft_plan_mejoramiento', 'ft_hallazgo', 'ft_seguimiento', 'ft_mision_calidad', 'ft_vision_calidad', 'ft_objetivos_calidad', 'ft_politicas', 'ft_riesgos_proceso', 'ft_macroproceso', 'ft_proceso_macroproceso', 'ft_subproceso', 'ft_politicas_macroproceso', 'ft_guia_educacion', 'ft_instructivo_educacion', 'ft_formato_educacion', 'ft_politicas_proceso', 'ft_norma_meci', 'ft_elemento_subproceso', 'ft_componente_subsistema', 'ft_documentos_meci', 'ft_norma', 'ft_documentos_consulta', 'ft_gestion_educativo', 'ft_docu_calidad_edu', 'ft_prog_calidad', 'ft_norma_proceso', 'ft_norma_procedimiento', 'ft_indicadores_calidad', 'ft_docu_calidad_edu_macro', 'ft_normograma');
+$formatos_calidad = array(
+	'ft_proceso',
+	'ft_procedimiento',
+	'ft_instructivo',
+	'ft_manual',
+	'ft_guia',
+	'ft_plan_calidad',
+	'ft_otros_calidad',
+	'ft_formato',
+	'ft_listados_maestros',
+	'ft_plan_mejoramiento',
+	'ft_hallazgo',
+	'ft_seguimiento',
+	'ft_mision_calidad',
+	'ft_vision_calidad',
+	'ft_objetivos_calidad',
+	'ft_politicas',
+	'ft_riesgos_proceso',
+	'ft_macroproceso',
+	'ft_proceso_macroproceso',
+	'ft_subproceso',
+	'ft_politicas_macroproceso',
+	'ft_guia_educacion',
+	'ft_instructivo_educacion',
+	'ft_formato_educacion',
+	'ft_politicas_proceso',
+	'ft_norma_meci',
+	'ft_elemento_subproceso',
+	'ft_componente_subsistema',
+	'ft_documentos_meci',
+	'ft_norma',
+	'ft_documentos_consulta',
+	'ft_gestion_educativo',
+	'ft_docu_calidad_edu',
+	'ft_prog_calidad',
+	'ft_norma_proceso',
+	'ft_norma_procedimiento',
+	'ft_indicadores_calidad',
+	'ft_docu_calidad_edu_macro',
+	'ft_normograma'
+);
 
 if (!@$_REQUEST["id"]) {
 	$validar_macro = 0;
@@ -32,9 +72,6 @@ if (!@$_REQUEST["id"]) {
 	$formato_utilizado = busca_filtro_tabla("", "formato A", "A.idformato=" . $datos[0], "", $conn);
 	if ($formato_utilizado[0]["nombre"] == 'proceso') {
 		$texto .= "<tree id=\"" . $_REQUEST["id"] . "\">\n";
-		if ($dato_proceso[0]["nombre"] == "EVALUACION INDEPENDIENTE") {
-			crear_dato_formato('ft_elemento_subproceso');
-		}
 		llena_hijos($datos[0], $datos[2], 'ft_proceso');
 		$texto .= "</tree>\n";
 	} else if ($formato_utilizado[0]["nombre"] == 'normograma') {
@@ -80,48 +117,33 @@ function crear_bases_calidad() {
 }
 
 function crear_dato_formato($nombre) {
-	global $texto, $conn, $imagenes, $formatos_calidad, $perfil;
+	global $texto, $conn, $imagenes, $formatos_calidad;
 	$formato = busca_filtro_tabla("A.idformato,A.nombre,A.nombre_tabla,A.etiqueta", "formato A", "A.nombre_tabla LIKE '" . $nombre . "'", "idformato DESC", $conn);
 	if ($formato["numcampos"]) {
-		if($formato[0]["nombre_tabla"]=="ft_proceso"){
-			$formato[0]["etiqueta"]="Mapa de Procesos";
+		if ($formato[0]["nombre_tabla"] == "ft_proceso") {
+			$formato[0]["etiqueta"] = "Mapa de Procesos";
 		}
 		$imagenes = ' im0="' . strtolower($formato[0]["nombre"]) . '.gif" im1="' . strtolower($formato[0]["nombre"]) . '.gif" im2="' . strtolower($formato[0]["nombre"]) . '.gif" ';
 		$iddoc = $formato[0]["idformato"] . "-" . $formato[0]["nombre"] . "-" . $formato[0]["nombre_tabla"];
 
-		if ($perfil != "consulta") {
-			$child = "";
-			$texto .= '<item style="font-family:verdana; font-size:7pt;" ' . $imagenes;
-			$texto .= strip_tags('text="' . decodifica($formato[0]["etiqueta"]) . '" id="' . $formato[0]["idformato"] . '" ' . $child . '>' . "\n");
+		$texto .= '<item style="font-family:verdana; font-size:7pt;" ' . $imagenes;
+		$texto .= strip_tags('text="' . decodifica($formato[0]["etiqueta"]) . '" id="' . $formato[0]["idformato"] . '" >' . "\n");
 
-			if ($formato[0]["nombre"] != 'normograma' && !@$_REQUEST["id"]) {
-				llenar_documentos($iddoc);
-			}
-			if ($nombre == "ft_proceso") {
-				crear_macroprocesos($formato);
-			}
-			$texto .= "</item>\n";
-		} else {
-			if ($nombre != "ft_elemento_subproceso" && $perfil == "consulta") {
-				$child = "";
-				$texto .= '<item style="font-family:verdana; font-size:7pt;" ' . $imagenes;
-				$texto .= strip_tags('text="1 ' . decodifica($formato[0]["etiqueta"]) . '" id="' . $formato[0]["idformato"] . '" ' . $child . '>' . "\n");
-				if ($formato[0]["nombre"] != 'normograma') {
-					llenar_documentos($iddoc);
-				}
-				if ($nombre == "ft_proceso") {
-					crear_macroprocesos($formato);
-				}
-				$texto .= "</item>\n";
-			}
+		if ($formato[0]["nombre"] != 'normograma' && !@$_REQUEST["id"]) {
+			llenar_documentos($iddoc);
 		}
+		if ($nombre == "ft_proceso") {
+			crear_macroprocesos($formato);
+		}
+		$texto .= "</item>\n";
+
 	}
 }
 
 function crear_macroprocesos($formato) {
-	global $texto, $conn, $imagenes, $formatos_calidad, $validar_macro, $perfil;
+	global $texto, $conn, $imagenes, $formatos_calidad, $validar_macro;
 	if ($formato["numcampos"]) {
-		$macros = busca_filtro_tabla("", "ft_macroproceso_calidad B, documento c", "B.documento_iddocumento=c.iddocumento and lower(c.estado)='aprobado'", "", $conn);
+		$macros = busca_filtro_tabla("", "ft_macroproceso_calidad B, documento c", "B.documento_iddocumento=c.iddocumento and c.estado NOT IN ('ELIMINADO','ANULADO','ACTIVO')", "", $conn);
 		$formato_macro = busca_filtro_tabla("", "formato", "lower(nombre)='macroproceso_calidad'", "", $conn);
 		for ($i = 0; $i < $macros["numcampos"]; $i++) {
 			$validar_macro = 1;
@@ -135,9 +157,9 @@ function crear_macroprocesos($formato) {
 			llena_hijos($formato_macro[0]["idformato"], $macros[$i]["idft_macroproceso_calidad"], $formato_macro[0]["nombre_tabla"]);
 			for ($j = 0; $j < $documentos["numcampos"]; $j++) {
 				$iddoc = $formato[0]["idformato"] . "-" . $formato[0]["nombre"] . "-" . $formato[0]["nombre_tabla"] . "-" . $documentos[$j]["documento_iddocumento"];
-				if ($perfil != "consulta") {
-					llenar_documentos($iddoc);
-				}
+
+				llenar_documentos($iddoc);
+
 			}
 			$texto .= "</item>\n";
 		}
@@ -148,26 +170,32 @@ function llenar_documentos($iddoc) {
 	global $conn, $texto;
 	$arreglo = explode("-", $iddoc);
 	$campo_ordenar = busca_filtro_tabla("c.nombre,nombre_tabla", "campos_formato c,formato f", "formato_idformato=idformato and (c.banderas like 'oc' or c.banderas like '%,oc' or c.banderas like 'oc,%' or c.banderas like '%,oc,%') and f.nombre='" . strtolower($arreglo[1]) . "'", "", $conn);
-	if ($campo_ordenar["numcampos"]) { $orden = "b." . $campo_ordenar[0]["nombre"] . " asc";
-	} else
+	if ($campo_ordenar["numcampos"]) {
+		$orden = "b." . $campo_ordenar[0]["nombre"] . " asc";
+	} else {
 		$orden = "iddocumento asc";
-	$imagen_nota = "";
-	$validacion_macroproceso = '';
+	}
+
+	$validacion_formato = '';
 	if (@$arreglo[3] && $arreglo[1] == "proceso") {
-		$validacion_macroproceso = " AND documento_iddocumento=" . $arreglo[3];
+		$validacion_formato = " AND documento_iddocumento=" . $arreglo[3];
+	}
+	if ($arreglo[1] == "indicadores_calidad") {
+		$validacion_formato = "b.estado='ACTIVO'";
 	}
 
 	if ($campo_ordenar["numcampos"]) {
-		$formato = busca_filtro_tabla("A.numero,A.descripcion ,A.iddocumento", "documento A," . $campo_ordenar[0]["nombre_tabla"] . " b", "documento_iddocumento=iddocumento AND A.estado<>'ELIMINADO'" . $validacion_macroproceso, $orden, $conn);
+		$formato = busca_filtro_tabla("A.numero,A.descripcion ,A.iddocumento", "documento A," . $campo_ordenar[0]["nombre_tabla"] . " b", "documento_iddocumento=iddocumento AND A.estado NOT IN ('ELIMINADO','ANULADO','ACTIVO')" . $validacion_formato, $orden, $conn);
 	} else {
-		$formato = busca_filtro_tabla("A.numero,A.descripcion ,A.iddocumento", "documento A", "lower(A.plantilla)='" . strtolower($arreglo[1]) . "' AND A.estado<>'ELIMINADO'" . $validacion_formato, "iddocumento asc", $conn);
+		$formato = busca_filtro_tabla("A.numero,A.descripcion ,A.iddocumento", "documento A", "lower(A.plantilla)='" . strtolower($arreglo[1]) . "' AND A.estado NOT IN ('ELIMINADO','ANULADO','ACTIVO') ", "iddocumento asc", $conn);
 	}
 	for ($i = 0; $i < $formato["numcampos"]; $i++) {
 		$papas = busca_filtro_tabla("id" . $arreglo[2] . " AS llave,'" . $arreglo[2] . "' AS nombre_tabla", $arreglo[2], "documento_iddocumento=" . $formato[$i]["iddocumento"], "", $conn);
-		if ($papas["numcampos"])
+		if ($papas["numcampos"]) {
 			$iddoc = $arreglo[0] . "-" . $papas[0]["llave"] . "-id" . $arreglo[2];
-		else
+		} else {
 			$iddoc = 0;
+		}
 		llena_datos_formato($iddoc, 0);
 	}
 }
@@ -185,7 +213,7 @@ function llena_datos_formato($formato, $estado = 0) {
 			$campo_descripcion = "id" . $formato[0]["nombre_tabla"];
 		}
 		$idformato = $formato[0]["idformato"] . "-" . $arreglo[1] . "-" . $arreglo[2] . "-" . $arreglo[0];
-		//echo($idformato."<br />");
+
 		$imagenes = 'im0="' . strtolower($formato[0]["nombre"]) . '.gif" im1="' . strtolower($formato[0]["nombre"]) . '.gif" im2="' . strtolower($formato[0]["nombre"]) . '.gif" ';
 		if ($estado) {
 			$texto .= '<item style="font-family:verdana; font-size:7pt;" ' . $imagenes;
@@ -231,7 +259,7 @@ function llena_datos($idformato, $tabla, $campo, $categoria) {//--
 		$dato = busca_filtro_tabla("a." . $campo . ",documento_iddocumento,id" . $tabla, $tabla . " a,documento b", $arreglo[2] . "=" . $arreglo[1] . " AND a.estado<>'INACTIVO' and b.estado<>'ELIMINADO' and documento_iddocumento=iddocumento" . $where_serie, $orden, $conn);
 	else
 		$dato = busca_filtro_tabla($campo . ",documento_iddocumento,id" . $tabla, $tabla . " a,documento b", $arreglo[2] . "=" . $arreglo[1] . " and b.estado<>'ELIMINADO' and documento_iddocumento=iddocumento" . $where_serie, $orden, $conn);
-	$imagen_nota = "";
+
 	if ($tabla == "ft_norma_proceso") {$nota = busca_filtro_tabla("", $tabla . " a", $arreglo[2] . "=" . $arreglo[1], $orden, $conn);
 	}
 	for ($i = 0; $i < $dato["numcampos"]; $i++) {
@@ -242,9 +270,6 @@ function llena_datos($idformato, $tabla, $campo, $categoria) {//--
 		$llave = $arreglo[0] . "-" . $arreglo[2] . "-" . $dato[$i]["id" . $tabla];
 
 		$texto .= strip_tags('text="' . decodifica(mostrar_valor_campo($campo, $arreglo[0], $dato[$i]["documento_iddocumento"], 1)) . '" id="' . $llave . '">');
-		if (@$dato[$i]["nombre"] == "EVALUACION INDEPENDIENTE" && $tabla == "ft_proceso" && isset($_REQUEST["id"])) {
-			crear_dato_formato('ft_elemento_subproceso');
-		}
 		if (isset($_REQUEST["id"]))
 			llena_hijos($arreglo[0], $dato[$i]["id" . $tabla], $tabla);
 		$texto .= "</item>\n";
@@ -255,10 +280,6 @@ function llena_datos($idformato, $tabla, $campo, $categoria) {//--
 function llena_hijos($idformato, $iddato, $tabla) {
 	global $conn, $texto, $formatos_calidad;
 	$formato = busca_filtro_tabla("", "formato", "cod_padre=" . $idformato . " AND nombre_tabla IN('" . implode("','", $formatos_calidad) . "')", "", $conn);
-
-	if ($idformato == 9 || $idformato == 68) {
-		$formato = ejecuta_filtro_tabla("select * from formato where nombre='gestion_educativo' union all select * from formato where cod_padre=" . $idformato . " and nombre_tabla IN('" . implode("','", $formatos_calidad) . "')", $conn);
-	}
 
 	for ($i = 0; $i < $formato["numcampos"]; $i++) {
 		$campo_formato = busca_filtro_tabla("", "campos_formato", "nombre LIKE '" . $tabla . "' AND formato_idformato=" . $formato[$i]["idformato"], "", $conn);
@@ -285,12 +306,23 @@ function planes_mejoramiento_funcional() {
 		if ($descripcion["numcampos"]) {
 			for ($i = 0, $num_campo = 0; $i < $descripcion["numcampos"]; $i++, $num_campo++) {
 				if ($descripcion[$i]["tipo_dato"] == "TEXT" && $descripcion[$i]["longitud"] >= 4000 && MOTOR == "Oracle")
-					array_push($campo_descripcion, array("nombre" => $descripcion[$i]["nombre"], "consulta" => "to_char(A." . $descripcion[$i]["nombre"] . ") as " . $descripcion[$i]["nombre"], "etiqueta" => $descripcion[$i]["etiqueta"]));
+					array_push($campo_descripcion, array(
+						"nombre" => $descripcion[$i]["nombre"],
+						"consulta" => "to_char(A." . $descripcion[$i]["nombre"] . ") as " . $descripcion[$i]["nombre"],
+						"etiqueta" => $descripcion[$i]["etiqueta"]
+					));
 				else
-					array_push($campo_descripcion, array("nombre" => $descripcion[$i]["nombre"], "consulta" => "A." . $descripcion[$i]["nombre"], "etiqueta" => $descripcion[$i]["etiqueta"]));
+					array_push($campo_descripcion, array(
+						"nombre" => $descripcion[$i]["nombre"],
+						"consulta" => "A." . $descripcion[$i]["nombre"],
+						"etiqueta" => $descripcion[$i]["etiqueta"]
+					));
 			}
 		} else {
-			array_push($campo_descripcion, array("nombre" => "id" . $formato[0]["nombre_tabla"], "etiqueta" => "ID"));
+			array_push($campo_descripcion, array(
+				"nombre" => "id" . $formato[0]["nombre_tabla"],
+				"etiqueta" => "ID"
+			));
 		}
 		$num_campo = count($campo_descripcion);
 		for ($i = 0; $i < $num_campo; $i++) {
@@ -344,12 +376,21 @@ function planes_mejoramiento_institucional() {
 		if ($descripcion["numcampos"]) {
 			for ($i = 0, $num_campo = 0; $i < $descripcion["numcampos"]; $i++, $num_campo++) {
 				if ($descripcion[$i]["tipo_dato"] == "TEXT" && $descripcion[$i]["longitud"] >= 4000 && MOTOR == "Oracle")
-					array_push($campo_descripcion, array("nombre" => "to_char(A." . $descripcion[$i]["nombre"] . ")", "etiqueta" => $descripcion[$i]["etiqueta"]));
+					array_push($campo_descripcion, array(
+						"nombre" => "to_char(A." . $descripcion[$i]["nombre"] . ")",
+						"etiqueta" => $descripcion[$i]["etiqueta"]
+					));
 				else
-					array_push($campo_descripcion, array("nombre" => "A." . $descripcion[$i]["nombre"], "etiqueta" => $descripcion[$i]["etiqueta"]));
+					array_push($campo_descripcion, array(
+						"nombre" => "A." . $descripcion[$i]["nombre"],
+						"etiqueta" => $descripcion[$i]["etiqueta"]
+					));
 			}
 		} else {
-			array_push($campo_descripcion, array("nombre" => "id" . $formato[0]["nombre_tabla"], "etiqueta" => "ID"));
+			array_push($campo_descripcion, array(
+				"nombre" => "id" . $formato[0]["nombre_tabla"],
+				"etiqueta" => "ID"
+			));
 		}
 		$num_campo = count($campo_descripcion);
 		for ($i = 0; $i < $num_campo; $i++) {
@@ -381,7 +422,7 @@ function planes_mejoramiento_institucional() {
 
 function llena_datos_formato2($formato, $estado = 0) {//--2
 
-	global $conn, $texto, $imagenes, $formatos_calidad, $perfil;
+	global $conn, $texto, $imagenes, $formatos_calidad;
 	$arreglo = explode("-", $formato);
 	$formato = busca_filtro_tabla("", "formato", "idformato='" . $arreglo[0] . "'", "", $conn);
 	if ($formato["numcampos"]) {
@@ -395,35 +436,34 @@ function llena_datos_formato2($formato, $estado = 0) {//--2
 		$idformato = $formato[0]["idformato"] . "-" . $arreglo[1] . "-" . $arreglo[2] . "-" . $arreglo[0];
 
 		$imagenes = 'im0="' . strtolower($formato[0]["nombre"]) . '.gif" im1="' . strtolower($formato[0]["nombre"]) . '.gif" im2="' . strtolower($formato[0]["nombre"]) . '.gif" ';
-		if ($perfil != "consulta") {
-			if ($estado) {
-				$texto .= '<item style="font-family:verdana; font-size:7pt;" ' . $imagenes;
-				$texto .= strip_tags('text="' . decodifica(codifica_encabezado(html_entity_decode(htmlspecialchars_decode($formato[0]["etiqueta"])))) . '" id="' . $formato[0]["idformato"] . "-" . $arreglo[2] . "-r" . rand() . '">' . "\n");
-			}
 
-			if ($formato[0]["nombre"] == "proceso")
-				llena_datos($idformato, $formato[0]["nombre_tabla"], $campo_descripcion);
-			else if (isset($_REQUEST["id"])) {
-				$nombre_categoria_papa = busca_filtro_tabla("idserie", "serie", "nombre='CATEGORIAS_CALIDAD'", "", $conn);
-
-				$nombre_categoria_hijo = busca_filtro_tabla("", "serie", "lower(nombre) = '" . strtolower($formato[0]["etiqueta"]) . "' and cod_padre=" . $nombre_categoria_papa[0]["idserie"], "", $conn);
-
-				$archivos_id = busca_filtro_tabla("idserie", "serie", "cod_padre=" . $nombre_categoria_hijo[0]["idserie"], "", $conn);
-
-				if ($nombre_categoria_hijo["numcampos"]) {
-					for ($i = 0; $i < $nombre_categoria_hijo["numcampos"]; $i++) {
-						categoria_calidad($nombre_categoria_hijo[$i], $idformato, $formato[0]["nombre_tabla"], $campo_descripcion, 0);
-					}
-					llena_datos($idformato, $formato[0]["nombre_tabla"], $campo_descripcion);
-				} else {
-					llena_datos($idformato, $formato[0]["nombre_tabla"], $campo_descripcion);
-				}
-
-			}
-			if ($estado)
-				$texto .= "</item>\n";
+		if ($estado) {
+			$texto .= '<item style="font-family:verdana; font-size:7pt;" ' . $imagenes;
+			$texto .= strip_tags('text="' . decodifica(codifica_encabezado(html_entity_decode(htmlspecialchars_decode($formato[0]["etiqueta"])))) . '" id="' . $formato[0]["idformato"] . "-" . $arreglo[2] . "-r" . rand() . '">' . "\n");
 		}
-		/*Aqui se deben adicionar los formatos o consideraciones adicionales para el arbol de calidad. Especificamente la parte de Planes de Mejoramiento para los procesos*/
+
+		if ($formato[0]["nombre"] == "proceso")
+			llena_datos($idformato, $formato[0]["nombre_tabla"], $campo_descripcion);
+		else if (isset($_REQUEST["id"])) {
+			$nombre_categoria_papa = busca_filtro_tabla("idserie", "serie", "nombre='CATEGORIAS_CALIDAD'", "", $conn);
+
+			$nombre_categoria_hijo = busca_filtro_tabla("", "serie", "lower(nombre) = '" . strtolower($formato[0]["etiqueta"]) . "' and cod_padre=" . $nombre_categoria_papa[0]["idserie"], "", $conn);
+
+			$archivos_id = busca_filtro_tabla("idserie", "serie", "cod_padre=" . $nombre_categoria_hijo[0]["idserie"], "", $conn);
+
+			if ($nombre_categoria_hijo["numcampos"]) {
+				for ($i = 0; $i < $nombre_categoria_hijo["numcampos"]; $i++) {
+					categoria_calidad($nombre_categoria_hijo[$i], $idformato, $formato[0]["nombre_tabla"], $campo_descripcion, 0);
+				}
+				llena_datos($idformato, $formato[0]["nombre_tabla"], $campo_descripcion);
+			} else {
+				llena_datos($idformato, $formato[0]["nombre_tabla"], $campo_descripcion);
+			}
+
+		}
+		if ($estado)
+			$texto .= "</item>\n";
+
 	}
 	return;
 }

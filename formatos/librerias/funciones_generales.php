@@ -2692,33 +2692,30 @@ function vincular_expediente_documento($idformato, $iddoc) {
 	return;
 }
 
-
 function obtener_datos_documento($iddocumento) {
 	global $conn;
 	$documento = busca_filtro_tabla(fecha_db_obtener("A.fecha", "Y-m-d") . " as fecha, A.numero, A.iddocumento, B.nombre, B.etiqueta, A.descripcion, B.nombre_tabla,B.idformato,A.estado", "documento A, formato B", "LOWER(A.plantilla) LIKE(B.nombre) AND A.iddocumento=" . $iddocumento, "", $conn);
-	
-	if($_REQUEST["funcionario_codigo"]) {
+	if ($_REQUEST["funcionario_codigo"]) {
 		$funcionario_codigo = $_REQUEST["funcionario_codigo"];
 	} else {
 		$funcionario_codigo = $_SESSION["usuario_actual"];
 	}
-	
-	if($documento['numcampos']) {
-		
+
+	if ($documento['numcampos']) {
 		$documento = array(
-				"iddocumento" => $documento[0]['iddocumento'],
-				"numero" => $documento[0]['numero'],
-				"idformato" => $documento[0]['idformato'],
-				"estado" => $documento[0]['estado'],
-				"version" => $documento[0]['version'] + 1,
-				"plantilla" => $documento[0]['nombre'],
-				"etiqueta" => $documento[0]['etiqueta'],
-				"descripcion" => $documento[0]['descripcion'],
-				"tabla" => $documento[0]['nombre_tabla'],
-				"fecha" => $documento[0]['fecha'],
-				"numero" => $documento[0]['numero'],
-				"pdf" => $documento[0]['pdf'],
-				"funcionario_codigo" => $funcionario_codigo
+			"iddocumento" => $documento[0]['iddocumento'],
+			"numero" => $documento[0]['numero'],
+			"idformato" => $documento[0]['idformato'],
+			"estado" => $documento[0]['estado'],
+			"version" => $documento[0]['version'] + 1,
+			"plantilla" => $documento[0]['nombre'],
+			"etiqueta" => $documento[0]['etiqueta'],
+			"descripcion" => $documento[0]['descripcion'],
+			"tabla" => $documento[0]['nombre_tabla'],
+			"fecha" => $documento[0]['fecha'],
+			"numero" => $documento[0]['numero'],
+			"pdf" => $documento[0]['pdf'],
+			"funcionario_codigo" => $funcionario_codigo
 		);
 	} else {
 		$documento = false;
@@ -2822,106 +2819,118 @@ function obtener_mes_letra($mes) {
 	return $mes;
 }
 
-function obtener_anexos_paginas_documento($datos_documento) {
+function obtener_anexos_paginas_documento($iddoc) {
 	global $ruta_db_superior;
 	$documentos = array();
-	$anexos = busca_filtro_tabla("ruta, etiqueta, tipo, idanexos", "anexos", "documento_iddocumento=" . $datos_documento["iddocumento"], "", $conn);
-	for($i = 0; $i < $anexos['numcampos']; $i++) {
-		$documentos['anexos'][] = array(
+	$anexos = busca_filtro_tabla("ruta, etiqueta, tipo, idanexos", "anexos", "documento_iddocumento=" . $iddoc, "", $conn);
+	if ($anexos["numcampos"]) {
+		for ($i = 0; $i < $anexos['numcampos']; $i++) {
+			$documentos['anexos'][] = array(
 				"ruta" => $anexos[$i]['ruta'],
 				"etiqueta" => $anexos[$i]['etiqueta'],
 				"tipo" => $anexos[$i]['tipo'],
 				"idanexo" => $anexos[$i]['idanexos']
-		);
+			);
+		}
 	}
-	
-	$paginas = busca_filtro_tabla("ruta,pagina", "pagina", "id_documento=" . $datos_documento["iddocumento"], "", $conn);
-	for($i = 0; $i < $paginas['numcampos']; $i++) {
-		$documentos['paginas'][] = array(
+
+	$paginas = busca_filtro_tabla("ruta,pagina", "pagina", "id_documento=" . $iddoc, "", $conn);
+	if ($paginas["numcampos"]) {
+		for ($i = 0; $i < $paginas['numcampos']; $i++) {
+			$documentos['paginas'][] = array(
 				"ruta" => $paginas[$i]['ruta'],
 				"pagina" => $paginas[$i]['pagina']
-		);
+			);
+		}
 	}
-	
 	return ($documentos);
 }
 
-function crear_pdf_documento_tcpdf($datos_documento, $datos_ejecutor = null) {
+function crear_pdf_documento_tcpdf($iddoc, $almacenar_temp = 0) {
 	global $conn, $ruta_db_superior;
-	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-	$pdf = busca_filtro_tabla("pdf,iddocumento,estado,plantilla," . fecha_db_obtener('fecha', 'Y-m-d') . " as fecha," . fecha_db_obtener('fecha', 'Y-m') . " as fecha2, numero", "documento", "iddocumento=" . $datos_documento['iddocumento'], "", $conn); 
-	$ruta = "";
-	
-	if($pdf[0]["pdf"]) {
-		$ruta_pdf = $pdf[0]["pdf"];
-	} else {
-		$ruta_pdf = "";
-	}
-	
-	if(!file_exists($ruta_pdf)) {
-		// inicializa el curl
-		$ch = curl_init();
-		// Establecer URL y otras opciones apropiadas
-		$url = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/class_impresion.php?iddoc=" . $datos_documento['iddocumento'];
-		$datos_session = "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&conexion_remota=1";
-		$url = $url . $datos_session;
-        if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false); 
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-	}		
-		curl_setopt($ch, CURLOPT_URL, $url);
-		
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	
-		// Capturar la URL y pasarla al navegador
-		$responce = curl_exec($ch);
+	$retono = array(
+		"exito" => 0,
+		"msn" => ""
+	);
+	$datos_pdf = busca_filtro_tabla("pdf", "documento", "iddocumento=" . $iddoc, "", $conn);
+	if ($datos_pdf["numcampos"]) {
+		$crear = 1;
+		if ($datos_pdf[0]["pdf"] != "") {
+			$ruta_archivo = json_decode($datos_pdf[0]["pdf"]);
+			if (is_object($ruta_archivo)) {
+				$bin_pdf = StorageUtils::get_file_content($datos_pdf[0]["pdf"]);
+				if ($bin_pdf !== false) {
+					$archivo_pdf = base64_encode($bin_pdf);
+					$crear = 0;
+					if ($almacenar_temp) {
+						$name = basename($ruta_archivo -> ruta);
+						$ruta_temp_pdf = $_SESSION["ruta_temp_funcionario"] . $name;
+						if(is_file($ruta_db_superior . $ruta_temp_pdf)){
+							unlink($ruta_db_superior . $ruta_temp_pdf);
+						}
+						file_put_contents($ruta_db_superior . $ruta_temp_pdf, base64_decode($archivo_pdf));
+						$retono["ruta_temp_pdf"] = $ruta_temp_pdf;
+					}else{
+						$retono["base64_pdf"] = $archivo_pdf;
+					}
+				}
+			}
+		}
+		if ($crear) {
+			$ch = curl_init();
+			$url = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/class_impresion.php?iddoc=" . $iddoc;
+			$datos_session = "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&conexion_remota=1";
+			$url = $url . $datos_session;
+			if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
+				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+			}
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			$responce = curl_exec($ch);
+			curl_close($ch);
 
-		// Cerrar el recurso cURL y liberar recursos del sistema
-		curl_close($ch);
-		
-		$ruta_pdfs = ruta_almacenamiento("pdf",0);
-		$formato_ruta = aplicar_plantilla_ruta_documento($datos_documento["iddocumento"]);
-	
-		$fecha = explode("-", $datos_documento["fecha"]);
-		$fecha_guion_bajo = $fecha[0] . '_' . $fecha[1] . '_' . $fecha[2];
-		// $ruta = RUTA_PDFS . $datos_documento["estado"] . "/" . $fecha[0] . "-" . $fecha[1] . "/" . $datos_documento["iddocumento"] . "/pdf/";
-		$ruta = $ruta_pdfs . $formato_ruta . "/pdf/";
-			
-		$ruta .= strtoupper($datos_documento["plantilla"] . "_" . $datos_documento["numero"] . "_" . $fecha_guion_bajo) . ".pdf";
-	
-	} else {
-		$ruta = $pdf[0]["pdf"];
-	}
-	
-	
-	if($ruta) {
-		if(file_exists($ruta_db_superior.$ruta)) {
-			return ($ruta);
+			$datos_pdf = busca_filtro_tabla("pdf", "documento", "iddocumento=" . $iddoc, "", $conn);
+			if ($datos_pdf["numcampos"]) {
+				$crear = 1;
+				if ($datos_pdf[0]["pdf"] != "") {
+					$ruta_archivo = json_decode($datos_pdf[0]["pdf"]);
+					if (is_object($ruta_archivo)) {
+						$bin_pdf = StorageUtils::get_file_content($datos_pdf[0]["pdf"]);
+						if ($bin_pdf !== false) {
+							$archivo_pdf = base64_encode($bin_pdf);
+							$crear = 0;
+							if ($almacenar_temp) {
+								$name = basename($ruta_archivo -> ruta);
+								$ruta_temp_pdf = $_SESSION["ruta_temp_funcionario"] . $name;
+								if(is_file($ruta_db_superior . $ruta_temp_pdf)){
+									unlink($ruta_db_superior . $ruta_temp_pdf);
+								}
+								file_put_contents($ruta_db_superior . $ruta_temp_pdf, base64_decode($archivo_pdf));
+								$retono["ruta_temp_pdf"] = $ruta_temp_pdf;
+							}else{
+								$retono["base64_pdf"] = $archivo_pdf;
+							}
+						}
+					}
+				}
+				if ($crear) {
+					$retono["msn"] = "NO fue posible generar el pdf";
+				} else {
+					$retono["exito"] = 1;
+					$retono["ruta_db"] = $datos_pdf[0]["pdf"];
+				}
+			}
 		} else {
-		    
-			return (false);
+			$retono["exito"] = 1;
+			$retono["ruta_db"] = $datos_pdf[0]["pdf"];
 		}
 	} else {
-		return (false);
+		$retono["msn"] = "Datos No encontrados";
 	}
+	return $retono;
 }
 
-function obtener_funciones_anexo($idanexo, $tipo, $ruta, $etiqueta) {
-	global $ruta_db_superior;
-	$array_tipos = array('jpg', 'png', 'pdf');
-
-	if (in_array($tipo, $array_tipos)) {
-		$button = '<div class="btn-group">
-		<a class="btn btn-mini btn-primary" href="' . $ruta_db_superior.$ruta . '">Ver</a>
-		<!--a href="' . $ruta_db_superior . 'versionamiento/download_file.php?etiqueta=' . $etiqueta . '&ruta=' . $ruta . '" >Descargar</a-->
-		</div>';
-	} else {
-		$button = '<div class="btn-group">				
-		<a href="' . $ruta_db_superior . 'versionamiento/download_file.php?etiqueta=' . $etiqueta . '&ruta=' . $ruta . '" class="btn btn-mini btn-primary">Descargar</a>						    
-		</div>';
-	}
-	return ($button);
-}
 
 //Funcion para convertir numeros a letras
 function numerotexto ($numero) {

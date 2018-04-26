@@ -22,19 +22,32 @@ $sql = "";
 $conn = NULL;
 $conn = phpmkr_db_connect();
 
+$cons_temp_func = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal' AND tipo='ruta'", "", $conn);
 $usuactual = @$_SESSION["LOGIN" . LLAVE_SAIA];
 if (isset($_SESSION["LOGIN" . LLAVE_SAIA]) && $_SESSION["LOGIN" . LLAVE_SAIA]) {
 	$_SESSION["usuario_actual"] = usuario_actual("funcionario_codigo");
 	$_SESSION["idfuncionario"] = usuario_actual("idfuncionario");
+	if ($cons_temp_func["numcampos"]) {
+		$ruta_temp_func = $cons_temp_func[0]["valor"];
+	}else{
+		$ruta_temp_func="temporal/temporal";
+	}
+	$_SESSION["ruta_temp_funcionario"] = $ruta_temp_func . "_" . $_SESSION["LOGIN" . LLAVE_SAIA]."/";
 }
 
 function logear_funcionario_webservice($login){
-global $usuactual;
+global $usuactual,$cons_temp_func;
 	$usuactual=$login;
 	$_SESSION["LOGIN" . LLAVE_SAIA]=$login;
 	$_SESSION["usuario_actual"] = usuario_actual("funcionario_codigo");
 	$_SESSION["idfuncionario"] = usuario_actual("idfuncionario");
 	$_SESSION["conexion_remota"] = 1;
+	if ($cons_temp_func["numcampos"]) {
+		$ruta_temp_func = $cons_temp_func[0]["valor"];
+	}else{
+		$ruta_temp_func="temporal/temporal";
+	}
+	$_SESSION["ruta_temp_funcionario"] = $ruta_temp_func . "_" . $_SESSION["LOGIN" . LLAVE_SAIA]."/";
 	return;
 }
 

@@ -174,9 +174,10 @@
   box-sizing: border-box; }
 
 .dropzone {
+  font-size: 11px;
   min-height: 150px;
-  width: 550px;
-  border: 1px solid rgba(12, 12, 12, 0.3);
+  width: 500px;
+  border: 0px solid rgba(12, 12, 12, 0.3);
   background: #EEEEEE;
   padding: 20px 20px; }
   .dropzone.dz-clickable {
@@ -194,7 +195,7 @@
   .dropzone .dz-message {
     text-align: center;
     margin: 2em 0;
-    color: #0088CC; }
+    color: gray; }
   .dropzone .dz-preview {
     position: relative;
     display: inline-block;
@@ -206,7 +207,7 @@
       .dropzone .dz-preview:hover .dz-details {
         opacity: 1; }
     .dropzone .dz-preview.dz-file-preview .dz-image {
-      border-radius: 20px;
+      border-radius: 8px;
       background: #999;
       background: linear-gradient(to bottom, #eee, #ddd); }
     .dropzone .dz-preview.dz-file-preview .dz-details {
@@ -220,11 +221,26 @@
         -o-transition: opacity 0.2s linear;
         transition: opacity 0.2s linear; }
     .dropzone .dz-preview .dz-remove {
-      font-size: 14px;
+     /* font-size: 10px;
       text-align: center;
       display: block;
       cursor: pointer;
-      border: none; }
+      border: none; */
+      
+    text-align: center;
+    background-color: #008CBA;
+    border: none;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 2px;
+    border: 1px solid #1FA0B7; 
+    text-decoration: none;
+    display: block;
+    font-size: 10px;
+    }
+      
+      
+      
       .dropzone .dz-preview .dz-remove:hover {
         text-decoration: underline; }
     .dropzone .dz-preview:hover .dz-details {
@@ -235,7 +251,7 @@
       top: 0;
       left: 0;
       opacity: 0;
-      font-size: 13px;
+      font-size: 10px;
       min-width: 80%;
       max-width: 100%;
       padding: 2em 1em;
@@ -243,8 +259,8 @@
       color: rgba(0, 0, 0, 0.9);
       line-height: 150%; }
       .dropzone .dz-preview .dz-details .dz-size {
-        margin-bottom: 1em;
-        font-size: 16px; }
+        margin-bottom: 1em;fil
+        font-size: 10px; }
       .dropzone .dz-preview .dz-details .dz-filename {
         white-space: nowrap; }
         .dropzone .dz-preview .dz-details .dz-filename:hover span {
@@ -258,7 +274,7 @@
       .dropzone .dz-preview .dz-details .dz-filename span, .dropzone .dz-preview .dz-details .dz-size span {
         background-color: rgba(255, 255, 255, 0.4);
         padding: 0 0.4em;
-        border-radius: 3px; }
+        border-radius: 2px; }
     .dropzone .dz-preview:hover .dz-image img {
       -webkit-transform: scale(1.05, 1.05);
       -moz-transform: scale(1.05, 1.05);
@@ -268,7 +284,7 @@
       -webkit-filter: blur(8px);
       filter: blur(8px); }
     .dropzone .dz-preview .dz-image {
-      border-radius: 20px;
+      border-radius: 2px;
       overflow: hidden;
       width: 120px;
       height: 120px;
@@ -329,9 +345,9 @@
       z-index: 1000;
       pointer-events: none;
       position: absolute;
-      height: 16px;
+      height: 10px;
       left: 50%;
-      top: 50%;
+      top: 70%;
       margin-top: -8px;
       width: 80px;
       margin-left: -40px;
@@ -370,7 +386,7 @@
       -o-transition: opacity 0.3s ease;
       transition: opacity 0.3s ease;
       border-radius: 8px;
-      font-size: 13px;
+      font-size: 11px;
       top: 130px;
       left: -10px;
       width: 140px;
@@ -388,3 +404,16 @@
         border-left: 6px solid transparent;
         border-right: 6px solid transparent;
         border-bottom: 6px solid #be2626; }
+        
+        .boton_upload{
+    background-color: #008CBA;
+    border: none;
+    color: white;
+    padding: 5px 40px;
+    border-radius: 2px;
+    text-align: center;
+    border: 2px solid #1FA0B7; 
+    text-decoration: none;
+    display: inline-block;
+    font-size: 13px;
+        }

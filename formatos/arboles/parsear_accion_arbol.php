@@ -369,9 +369,6 @@ if (@$_REQUEST["id"]) {
 					$ruta = "../../documentoview.php?key=" . $datos_formato[0]["documento_iddocumento"];
 				}
 				break;
-			case "actualiza_arbol" :
-				$ruta = "test_calidad.php";
-				break;
 			case "imprimir" :
 				if ($datos_formato["numcampos"] && array_key_exists("documento_iddocumento", $datos_formato[0])) {
 					$ruta = "../../seleccionar_impresion.php?doc=" . $datos_formato[0]["documento_iddocumento"];

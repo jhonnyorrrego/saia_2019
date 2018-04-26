@@ -156,14 +156,8 @@ for($i=0;$i<$dependencia["numcampos"];$i++){
             $('#ejecutar_evento_mapa_proceso').val(0);
          }
       }    
-      
-      
-      
     	</script>
     </td>
   </tr>
 </table>
 <input type="hidden" id="ejecutar_evento_mapa_proceso" value="1">
-<?php
-include_once("../../footer.php");
-?>

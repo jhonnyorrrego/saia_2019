@@ -557,8 +557,6 @@ echo $x_contador_idcontadorList;
 			<td bgcolor="#F5F5F5"><span class="phpmaker"> <input type="checkbox"
 					name="x_funcion_predeterminada[]" value="1">Varios responsables <input
 					type="checkbox" name="x_funcion_predeterminada[]" value="2">Digitalizaci&oacute;n
-					<input type="checkbox" name="x_funcion_predeterminada[]" value="3">Anexos
-
 			</span></td>
 		</tr>
 	</table>

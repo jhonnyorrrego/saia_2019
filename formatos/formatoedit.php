@@ -573,8 +573,7 @@ echo $x_contador_idcontadorList;
 		?>
 		<input type="checkbox" name="x_funcion_predeterminada[]" value="1" <?php echo $checked1; ?>>Varios responsables
 		<input type="checkbox" name="x_funcion_predeterminada[]" value="2" <?php echo $checked2; ?>>Digitalizaci&oacute;n
-		<input type="checkbox" name="x_funcion_predeterminada[]" value="3" <?php echo $checked3; ?>>Anexos
-			
+
 		</span></td>
 	</tr>
 	
