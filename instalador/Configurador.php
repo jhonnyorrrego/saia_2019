@@ -109,6 +109,7 @@ class ConfigCaptureCommand extends Command {
         $preguntaUsuario = new Question("Usuario bdd: ");
         $preguntaPw = new Question('Clave bdd: ');
         $preguntaPw->setHidden(true);
+        $preguntaPw->setHiddenFallback(true);
         // $preguntaPw->setValidator($validar_vacio);
         $preguntaServidorBdd = new Question("Servidor bdd: ");
         $preguntaServidorWeb = new Question("Dominio/IP instalación: ");
