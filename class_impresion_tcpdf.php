@@ -315,13 +315,8 @@ class Imprime_Pdf {
 		}
 
 		$fecha = explode("-", $this -> documento[0]["fecha"]);
-
 		include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-		$ruta_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal' AND tipo='ruta'", "", $conn);
-		if ($ruta_temporal["numcampos"]) {
-			$ruta_temp = $ruta_temporal[0]["valor"];
-		}
-		$ruta_tmp_usr = $ruta_temp . "_" . $_SESSION["LOGIN" . LLAVE_SAIA] . "/";
+		$ruta_tmp_usr =$_SESSION["ruta_temp_funcionario"];
 
 		if (!$_REQUEST['url']) {
 			$formato_ruta = aplicar_plantilla_ruta_documento($this -> documento[0]["iddocumento"]);

@@ -22,10 +22,10 @@ function buscar_archivos($dir, $palabra, $buscar_contenido = 0, $buscar_archivo 
 		if ($buscar_archivo) {
 			if (strpos($obj, $palabra) !== false) {
 				$resultado_buscar_archivo[$contador_archivos] = array(
-						"etiqueta" => str_replace("." . $extension, "", $obj),
-						"nodeid" => $dir . '/' . $obj,
-						"nombre_archivo" => str_replace("../", "", $dir . '/' . $obj),
-						"extension" => $extension
+					"etiqueta" => str_replace("." . $extension, "", $obj),
+					"nodeid" => $dir . '/' . $obj,
+					"nombre_archivo" => str_replace("../", "", $dir . '/' . $obj),
+					"extension" => $extension
 				);
 			}
 		} else if ($buscar_contenido && $obj != "busca_infecciones.php" && filesize($dir . '/' . $obj) && $palabra) {
@@ -43,10 +43,10 @@ function buscar_archivos($dir, $palabra, $buscar_contenido = 0, $buscar_archivo 
 					}
 				}
 				$resultado_buscar_archivo[$contador_archivos] = array(
-						"etiqueta" => str_replace("." . $extension, "", $obj),
-						"nodeid" => $dir . '/' . $obj,
-						"nombre_archivo" => $nombre_archivo,
-						"extension" => $extension
+					"etiqueta" => str_replace("." . $extension, "", $obj),
+					"nodeid" => $dir . '/' . $obj,
+					"nombre_archivo" => $nombre_archivo,
+					"extension" => $extension
 				);
 			}
 		}
@@ -90,11 +90,11 @@ function aplicar_plantilla_ruta_documento($iddoc) {
 function crear_archivo_carpeta($nombre, $ruta, $extension, $tipo) {
 	global $ruta_db_superior;
 	$extensiones_permitidas_permitidas = array(
-			"php",
-			"css",
-			"js",
-			"txt",
-			"csv"
+		"php",
+		"css",
+		"js",
+		"txt",
+		"csv"
 	);
 	$reultado = '';
 	if (strpos($ruta, ".") === 0 || strpos($ruta, "/") === 0) {

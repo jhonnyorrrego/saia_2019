@@ -84,11 +84,7 @@ switch ($sAction)
 <!--<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/formatoexport.php?key=<?php echo $_REQUEST["key"];?>">Exportar Formato</a>
 &nbsp;&nbsp;-->
 
-
 <!--<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>webservice_saia/exportar_importar_formato/exportar_formato/exportar_formato.php?pre_exportar_formato=1&idformato=<?php echo $_REQUEST["key"];?>">Pasar a productivo</a>&nbsp;&nbsp;-->
-
-
-<!--<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar">Reg.T</a>-->
 
 <a class="btn btn-mini btn-success" href="<?php echo $ruta_db_superior; ?>formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@<?php echo $_REQUEST["key"];?>">Publicar Formato</a>&nbsp;&nbsp;
 </span></p>

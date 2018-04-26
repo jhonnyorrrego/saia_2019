@@ -302,7 +302,7 @@ function mostrar_items_control_version($idformato, $iddoc) {
 		$html = "";
 		$parte_td="";
 		if (@$_REQUEST["tipo"] != 5 && $datos[0]["estado"] == 'ACTIVO') {
-			$html .= '<a href="' . $ruta_db_superior . 'formatos/' . $formato_hijo[0]["nombre"] . '/' . $formato_hijo[0]["ruta_adicionar"] . '?anterior=' . $iddoc . '&idformato=' . $formato_hijo[0]["idformato"] . '&padre=' . $datos[0]["idft_control_documentos"] . '">Adicionar Documentos</a>';
+			$html .= '<a class="btn btn-mini btn-info" href="' . $ruta_db_superior . 'formatos/' . $formato_hijo[0]["nombre"] . '/' . $formato_hijo[0]["ruta_adicionar"] . '?anterior=' . $iddoc . '&idformato=' . $formato_hijo[0]["idformato"] . '&padre=' . $datos[0]["idft_control_documentos"] . '">Adicionar Documentos</a><br/><br/>';
 			$parte_td = "<td>&nbsp;</td>";
 		}
 		if($datos[0]["tipo_solicitud"]==1){
@@ -310,7 +310,7 @@ function mostrar_items_control_version($idformato, $iddoc) {
 		}
 		$item = busca_filtro_tabla("documento_calidad_i,nombre_documento_i,origen_documento_i,iddocumento,iddocumento_calidad_i", $formato_hijo[0]["nombre_tabla"] . " ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.estado not in ('ELIMINADO','ANULADO','ACTIVO') and ft.ft_control_documentos=" . $datos[0]["idft_control_documentos"], "id" . $formato_hijo[0]["nombre_tabla"], $conn);
 		if ($item["numcampos"]) {
-			$html .= '<table style="width:100%;border-collapse:collapse" border="1">';
+			$html .= '<table style="width:100%;border-collapse:collapse;border-color: #b6b8b7" border="1">';
 			$html .= '<tr> <td style="font-weight:bold;text-align:center">NOMBRE</td> <td style="font-weight:bold;text-align:center">ORIGEN DOCUMENTO</td>' . $parte_td . ' </tr>';
 			$origen=array(1=>"Externo",2=>"Interno");
 			for ($i = 0; $i < $item["numcampos"]; $i++) {
@@ -335,7 +335,7 @@ function mostrar_items_control_version($idformato, $iddoc) {
 				$html .= '<td>' . $origen[$item[$i]["origen_documento_i"]] . '</td>';
 				
 				if($datos[0]["tipo_solicitud"]==1){
-						$html .= "<td><a href='".$ruta_db_superior."formatos/item_control_versio/mostrar_item_control_versio.php?menu_principal_inactivo=1&iddoc=".$item[$i]["iddocumento"]."' class='highslide' onclick='return top.hs.htmlExpand(this, { objectType: \"iframe\",width:830, height:680,preserveContent:false } )' style='text-decoration: underline; cursor:pointer;'>Ver</a></td>";
+						$html .= "<td style='text-align:center;'><a href='".$ruta_db_superior."formatos/item_control_versio/mostrar_item_control_versio.php?menu_principal_inactivo=1&iddoc=".$item[$i]["iddocumento"]."' class='highslide' onclick='return top.hs.htmlExpand(this, { objectType: \"iframe\",width:830, height:680,preserveContent:false } )' style='text-decoration: underline; cursor:pointer;'>Ver</a></td>";
 				}
 
 				if (@$_REQUEST["tipo"] != 5 && $datos[0]["estado"] == 'ACTIVO') {
@@ -508,7 +508,8 @@ function aprobar_control_documentos($idformato, $iddoc) {
 			$errores = array();
 			$errores_version = array();
 			$datos_session = "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&conexion_remota=1";
-			$LOGIN=$_SESSION["LOGIN" . LLAVE_SAIA];
+			$LOGIN = $_SESSION["LOGIN" . LLAVE_SAIA];
+			$almacenamiento = new SaiaStorage("archivos");
 			switch($control_documento[0]["tipo_solicitud"]) {
 				case 1 :
 					$item = busca_filtro_tabla("i.*", "ft_item_control_versio i,documento d", "d.iddocumento=i.documento_iddocumento and d.estado not in ('ELIMINADO','ANULADO','ACTIVO') and i.ft_control_documentos=" . $control_documento[0]["idft_control_documentos"], "", $conn);
@@ -559,58 +560,53 @@ function aprobar_control_documentos($idformato, $iddoc) {
 									} else {
 										$documento = busca_filtro_tabla("B.iddocumento", $info_formato[0]["tabla"] . " A,documento B", "A.documento_iddocumento=B.iddocumento AND A.documento_iddocumento=" . $iddocumento, "", $conn);
 										if ($documento["numcampos"]) {
-											$datos_documento = obtener_datos_documento($iddocumento);
-											crear_pdf_documento_tcpdf($datos_documento);
+											$pdf = crear_pdf_documento_tcpdf($iddocumento);
 
 											$update_documento_creado = "UPDATE ft_item_control_versio SET iddocumento_calidad_i=" . $iddocumento . " WHERE documento_iddocumento=" . $item[$i]["documento_iddocumento"];
 											phpmkr_query($update_documento_creado);
 
 											$formato_ruta = aplicar_plantilla_ruta_documento($iddocumento);
-											$ruta_archivos = ruta_almacenamiento("archivos");
-											$ruta_anexos = $ruta_archivos . $formato_ruta . "/anexos";
-											if (!is_dir($ruta_anexos)) {
-												if (!crear_destino($ruta_anexos)) {
-													$errores[] = "<li>Error al crear la carpeta del anexo (" . $item[$i]["nombre_documento_i"] . ")</li>";
-													$error = 1;
-												}
-											}
-
+											$ruta_anexos = $formato_ruta . "/anexos/";
 											$anexos = busca_filtro_tabla("ruta,tipo,etiqueta,idanexos", "anexos", "documento_iddocumento=" . $item[$i]["documento_iddocumento"], "", $conn);
 											if ($anexos["numcampos"]) {
 												$array_anexos = array();
 												for ($j = 0; $j < $anexos["numcampos"]; $j++) {
-													$nombre_anexo = explode("/", $anexos[$j]['ruta']);
-													$nombre_anexo = $nombre_anexo[count($nombre_anexo) - 1];
-
-													$ruta_origen = $ruta_db_superior . $anexos[$j]['ruta'];
-													$ruta_destino = $ruta_anexos . "/" . $nombre_anexo;
-
-													if (!copy($ruta_origen, $ruta_destino)) {
-														$errores[] = "<li>Error al pasar el anexo (" . $item[$i]["nombre_documento_i"] . ")</li>";
-														$error = 1;
-													} else {
-														$ruta_alm = substr($ruta_destino, strlen($ruta_db_superior));
-														$sql_anexo = "INSERT INTO anexos(documento_iddocumento, ruta, tipo, etiqueta, formato, fecha_anexo) VALUES(" . $iddocumento . ",'" . $ruta_alm . "','" . $anexos[$j]['tipo'] . "','" . $anexos[$j]['etiqueta'] . "'," . $exp[0] . "," . fecha_db_almacenar(date("Y-m-d"), "Y-m-d") . ")";
-														phpmkr_query($sql_anexo);
-														$idanexo = phpmkr_insert_id();
-														$array_anexos[] = $idanexo;
-
-														if (!$idanexo) {
-															$errores[] = "<li>Error al registrar el anexo (" . $item[$i]["nombre_documento_i"] . ")</li>";
+													$arr_origen = StorageUtils::resolver_ruta($anexos[$j]["ruta"]);
+													$alm_origen = $arr_origen["clase"];
+													if ($alm_origen -> get_filesystem() -> has($arr_origen["ruta"])) {
+														$nombre_archivo = basename($arr_origen["ruta"]);
+														$resultado = $alm_origen -> copiar_contenido($almacenamiento, $arr_origen["ruta"], $ruta_anexos . $nombre_archivo);
+														if (!$resultado) {
+															$errores[] = "<li>Error al pasar el anexo (" . $item[$i]["nombre_documento_i"] . ")</li>";
 															$error = 1;
 														} else {
-															$permiso_anexo = busca_filtro_tabla("", "permiso_anexo", "anexos_idanexos=" . $anexos[$j]["idanexos"], "", $conn);
-															if ($permiso_anexo["numcampos"]) {
-																$sql_permiso_anexo = "INSERT INTO permiso_anexo(anexos_idanexos, idpropietario, caracteristica_propio, caracteristica_dependencia, caracteristica_cargo, caracteristica_total) VALUES(" . $idanexo . ",'" . $permiso_anexo[0]['idpropietario'] . "','" . $permiso_anexo[0]['caracteristica_propio'] . "','" . $permiso_anexo[0]['caracteristica_dependencia'] . "','" . $permiso_anexo[0]['caracteristica_cargo'] . "','" . $permiso_anexo[0]["caracteristica_total"] . "')";
-																phpmkr_query($sql_permiso_anexo);
-																$idpermiso_anexo = phpmkr_insert_id();
+															$ruta_alm = array(
+																"servidor" => $almacenamiento -> get_ruta_servidor(),
+																"ruta" => $ruta_anexos . $nombre_archivo
+															);
+															$sql_anexo = "INSERT INTO anexos(documento_iddocumento, ruta, tipo, etiqueta, formato, fecha_anexo) VALUES(" . $iddocumento . ",'" . json_encode($ruta_alm) . "','" . $anexos[$j]['tipo'] . "','" . $anexos[$j]['etiqueta'] . "'," . $exp[0] . "," . fecha_db_almacenar(date("Y-m-d"), "Y-m-d") . ")";
+															phpmkr_query($sql_anexo);
+															$idanexo = phpmkr_insert_id();
+															$array_anexos[] = $idanexo;
 
-																if (!$idpermiso_anexo) {
-																	$errores[] = "<li>Error al registrar los permisos anexo (" . $item[$i]["nombre_documento_i"] . ")</li>";
-																	$error = 1;
+															if (!$idanexo) {
+																$errores[] = "<li>Error al registrar el anexo (" . $item[$i]["nombre_documento_i"] . ")</li>";
+																$error = 1;
+															} else {
+																$permiso_anexo = busca_filtro_tabla("", "permiso_anexo", "anexos_idanexos=" . $anexos[$j]["idanexos"], "", $conn);
+																if ($permiso_anexo["numcampos"]) {
+																	$sql_permiso_anexo = "INSERT INTO permiso_anexo(anexos_idanexos, idpropietario, caracteristica_propio, caracteristica_dependencia, caracteristica_cargo, caracteristica_total) VALUES(" . $idanexo . ",'" . $permiso_anexo[0]['idpropietario'] . "','" . $permiso_anexo[0]['caracteristica_propio'] . "','" . $permiso_anexo[0]['caracteristica_dependencia'] . "','" . $permiso_anexo[0]['caracteristica_cargo'] . "','" . $permiso_anexo[0]["caracteristica_total"] . "')";
+																	phpmkr_query($sql_permiso_anexo);
+																	$idpermiso_anexo = phpmkr_insert_id();
+
+																	if (!$idpermiso_anexo) {
+																		$errores[] = "<li>Error al registrar los permisos anexo (" . $item[$i]["nombre_documento_i"] . ")</li>";
+																		$error = 1;
+																	}
 																}
 															}
 														}
+
 													}
 												}
 												if (!count($array_anexos)) {
@@ -659,7 +655,7 @@ function aprobar_control_documentos($idformato, $iddoc) {
 								$errores_version[] = "<li>(" . $item[$i]["nombre_documento_i"] . "): " . $retorno["msn"] . "</li>";
 							}
 						}
-						
+
 					}
 
 					if (count($errores) || count($errores_version)) {
@@ -684,7 +680,7 @@ function aprobar_control_documentos($idformato, $iddoc) {
 					} else {
 						$errores_version[] = "<li>No se puede encontrar el documento a ser versionado y modificado. Favor comuniquese a sistemas</li>";
 					}
-					
+
 					if ($url) {
 						$ch = curl_init();
 						$url = $url . $datos_session;
@@ -695,17 +691,17 @@ function aprobar_control_documentos($idformato, $iddoc) {
 						curl_close($ch);
 						logear_funcionario_webservice($LOGIN);
 						unset($_SESSION["conexion_remota"]);
-						
+
 						$retorno = json_decode($response, true);
-						
+
 						if ($retorno["exito"]) {
 							$update = "UPDATE ft_control_documentos SET estado_doc_calidad=1 WHERE documento_iddocumento=" . $iddoc;
 							phpmkr_query($update);
 
-							$update_it = "UPDATE ft_item_control_versio SET estado_doc_calidad_i=2 WHERE iddocumento_calidad_i=" . $control_documento[0]['iddocumento_calidad']." and estado_doc_calidad_i=1";
+							$update_it = "UPDATE ft_item_control_versio SET estado_doc_calidad_i=2 WHERE iddocumento_calidad_i=" . $control_documento[0]['iddocumento_calidad'] . " and estado_doc_calidad_i=1";
 							phpmkr_query($update_it);
-							
-							$update_ft = "UPDATE ft_control_documentos SET estado_doc_calidad=2 WHERE iddocumento_calidad=" . $control_documento[0]['iddocumento_calidad']." and documento_iddocumento<>".$iddoc;
+
+							$update_ft = "UPDATE ft_control_documentos SET estado_doc_calidad=2 WHERE iddocumento_calidad=" . $control_documento[0]['iddocumento_calidad'] . " and documento_iddocumento<>" . $iddoc;
 							phpmkr_query($update_ft);
 
 							if ($retorno["exito"] == 2) {
@@ -750,10 +746,10 @@ function aprobar_control_documentos($idformato, $iddoc) {
 								$update = "UPDATE ft_item_control_versio SET estado_doc_calidad=2,fecha_confirmacion_i=" . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . " WHERE documento_iddocumento=" . $item[$i]["documento_iddocumento"];
 								phpmkr_query($update);
 
-								$update2 = "UPDATE ft_item_control_versio SET estado_doc_calidad=2 WHERE iddocumento_calidad_i=" . $item[$i]["iddocumento_calidad_i"]." and estado_doc_calidad_i=1";
+								$update2 = "UPDATE ft_item_control_versio SET estado_doc_calidad=2 WHERE iddocumento_calidad_i=" . $item[$i]["iddocumento_calidad_i"] . " and estado_doc_calidad_i=1";
 								phpmkr_query($update2);
-								
-								$update_ft = "UPDATE ft_control_documentos SET estado_doc_calidad=2 WHERE iddocumento_calidad=" . $item[$i]["iddocumento_calidad_i"]." and estado_doc_calidad=1";
+
+								$update_ft = "UPDATE ft_control_documentos SET estado_doc_calidad=2 WHERE iddocumento_calidad=" . $item[$i]["iddocumento_calidad_i"] . " and estado_doc_calidad=1";
 								phpmkr_query($update_ft);
 
 								if ($retorno["exito"] == 2) {

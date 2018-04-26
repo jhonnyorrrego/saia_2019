@@ -124,8 +124,12 @@ function incluir_librerias_busqueda($elemento,$indice){
       </li>
       <?php if(@$datos_busqueda[0]["enlace_adicionar"]){
       	?>
-      	<li class="divider-vertical"></li><li><div class="btn-group">                    
-          <button class="btn btn-mini kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar</button></div></li>
+      	<li class="divider-vertical"></li>
+      	<li>
+      		<div class="btn-group">                    
+          	<button class="btn btn-mini btn-info kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar</button>
+          </div>
+        </li>
       	<?php
       }
       ?>

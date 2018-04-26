@@ -58,7 +58,7 @@
                    <a href="javascript:void(0)" onclick="tree_responsable_analisis.findItem((document.getElementById('stext_responsable_analisis').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_responsable_analisis.findItem((document.getElementById('stext_responsable_analisis').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
                           <a href="javascript:void(0)" onclick="tree_responsable_analisis.findItem((document.getElementById('stext_responsable_analisis').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
-                          <br /><br /><div id="treeboxbox_responsable_analisis" height=""></div><input type="hidden" maxlength="2000"  name="g@responsable_analisis" id="responsable_analisis"   value="" ><label style="display:none" class="error" for="responsable_analisis">Campo obligatorio.</b></label><script type="text/javascript">
+                          <br /><br /><div id="treeboxbox_responsable_analisis" height=""></div><input type="hidden" maxlength="100"  name="g@responsable_analisis" id="responsable_analisis"   value="" ><label style="display:none" class="error" for="responsable_analisis">Campo obligatorio.</b></label><script type="text/javascript">
                   <!--
                       var browserType;
                       if (document.layers) {browserType = "nn4"}
@@ -69,8 +69,8 @@
                 			tree_responsable_analisis=new dhtmlXTreeObject("treeboxbox_responsable_analisis","","",0);
                 			tree_responsable_analisis.setImagePath("../../imgs/");
                 			tree_responsable_analisis.enableIEImageFix(true);tree_responsable_analisis.enableCheckBoxes(1);
-                			tree_responsable_analisis.enableThreeStateCheckboxes(1);tree_responsable_analisis.setOnLoadingStart(cargando_responsable_analisis);
-                      tree_responsable_analisis.setOnLoadingEnd(fin_cargando_responsable_analisis);tree_responsable_analisis.enableSmartXMLParsing(true);tree_responsable_analisis.loadXML("../../test.php");
+                    tree_responsable_analisis.enableRadioButtons(true);tree_responsable_analisis.setOnLoadingStart(cargando_responsable_analisis);
+                      tree_responsable_analisis.setOnLoadingEnd(fin_cargando_responsable_analisis);tree_responsable_analisis.enableSmartXMLParsing(true);tree_responsable_analisis.loadXML("../../test.php?rol=1&sin_padre=1");
                       tree_responsable_analisis.setOnCheckHandler(onNodeSelect_responsable_analisis);
                       function onNodeSelect_responsable_analisis(nodeId)
                       {valor_destino=document.getElementById("responsable_analisis");

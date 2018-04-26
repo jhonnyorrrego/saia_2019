@@ -79,6 +79,7 @@ echo($test_tree);
 function arbol_calidad_formatos(&$arbol, $idformato, $tabla, $etiqueta) {
 	global $conn;
 	if ($_REQUEST['tipo_solicitud'] == 1) {
+		$_REQUEST['seleccionado'] = $idformato . "|0";
 		armar_ramas_arbol($arbol, 1, $etiqueta, $idformato . "|0");
 	} else {
 		if (isset($_REQUEST["origen_documento"])) {
@@ -109,7 +110,6 @@ function armar_ramas_arbol(&$arbol, $cierre = 1, $etiqueta, $idrama, $nocheckbox
 	if ($_REQUEST['seleccionado']) {
 		$seleccionado = explode(',', $_REQUEST['seleccionado']);
 	}
-
 	if (in_array($idrama, $seleccionado)) {
 		$checked = " checked='1' ";
 	} else {
@@ -131,6 +131,48 @@ function armar_ramas_arbol(&$arbol, $cierre = 1, $etiqueta, $idrama, $nocheckbox
 }
 
 function codifica_caracteres($original) {
-	return preg_replace(array('/ä/', '/ö/', '/ü/', '/à/', '/è/', '/á/', '/é/', '/í/', '/ó/', '/ú/', '/Á/', '/É/', '/Í/', '/Ó/', '/Ú/', '/ñ/', '/Ñ/', '/°/', '/ACUTE;/', '/&NTILDE;/'), array('&auml;', '&ouml;', '&uuml;', '&agrave;', '&egrave;', '&aacute;', '&eacute;', '&iacute;', '&oacute;', '&uacute;', '&Aacute;', '&Eacute;', '&Iacute;', '&Oacute;', '&Uacute;', '&ntilde;', '&Ntilde;', '&deg;', 'acute;', '&Ntilde;'), $original);
+	return preg_replace(array(
+		'/ä/',
+		'/ö/',
+		'/ü/',
+		'/à/',
+		'/è/',
+		'/á/',
+		'/é/',
+		'/í/',
+		'/ó/',
+		'/ú/',
+		'/Á/',
+		'/É/',
+		'/Í/',
+		'/Ó/',
+		'/Ú/',
+		'/ñ/',
+		'/Ñ/',
+		'/°/',
+		'/ACUTE;/',
+		'/&NTILDE;/'
+	), array(
+		'&auml;',
+		'&ouml;',
+		'&uuml;',
+		'&agrave;',
+		'&egrave;',
+		'&aacute;',
+		'&eacute;',
+		'&iacute;',
+		'&oacute;',
+		'&uacute;',
+		'&Aacute;',
+		'&Eacute;',
+		'&Iacute;',
+		'&Oacute;',
+		'&Uacute;',
+		'&ntilde;',
+		'&Ntilde;',
+		'&deg;',
+		'acute;',
+		'&Ntilde;'
+	), $original);
 }
 ?>
