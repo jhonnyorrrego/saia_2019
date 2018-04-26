@@ -77,7 +77,7 @@ global $validar_enteros;
 
 if(isset($validar_enteros)){
   foreach($validar_enteros AS $key=>$valor){
-  	
+
     if(@$_REQUEST[$valor] && !preg_match("/^[0-9]+$/", @$_REQUEST[$valor])){
       return($valor);
     }
@@ -101,9 +101,9 @@ function desencriptar_sqli($campo_info){
 		alerta("Error de validacion del formulario por favor intente de nuevo (Posible Error: CSRF) ");
 		unset($_REQUEST["token_csrf"]);
 		unset($_SESSION["token_csrf"]);
-		return;		
+		return;
 	}
-	
+
     for($i = 0; $i < $cant; $i ++) {
 	  if(@$data[$i]["es_arreglo"]){
         $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = explode(",",decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO));
@@ -118,7 +118,7 @@ function desencriptar_sqli($campo_info){
         $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
       }
     }
-	
+
 	  $error=validar_enteros();
 	  if($error!==false){
 	  	unset($_REQUEST);
@@ -138,7 +138,7 @@ function encriptar_sqli($nombre_form,$submit=false,$campo_info="form_info",$ruta
 $texto='';
 if ($submit) {
 	$texto.='<script type="text/javascript">  <!-- ';
-	
+
 	$texto.=' $(document).ready(function(){ ';
 }
 
@@ -155,17 +155,17 @@ if ($submit) {
 
 	//correccion tiny no enviaba la info actualizada
 	$texto.='
-	
+
 	if($(".tiny_formatos").length){
-		
+
 		$.each( ".tiny_formatos", function() {
 			var id_textarea=$(this).attr("id");
-			var contenido_textarea=tinyMCE.get(id_textarea).getContent(); 
+			var contenido_textarea=tinyMCE.get(id_textarea).getContent();
 			$("#"+id_textarea).val(contenido_textarea);
 		});
-		
+
 	}
-	
+
 	';
 
 	$texto.='salida_sqli = false;
@@ -181,18 +181,19 @@ if ($submit) {
 		$texto.='
 			$("#'.$nombre_form.'").find("input:hidden,input:text, input:password, select, textarea").val("");
     		$("#'.$nombre_form.'").find("input:radio, input:checkbox").removeAttr("checked").removeAttr("selected");
-		';	
+		';
 	}
-	$texto.='			
+	$texto.='
           $("#'.$campo_info.'").val(data);
           salida_sqli = true;
         }
       });';
 if ($submit) {
-	$texto.='return salida_sqli;
-			event.preventDefault();
+	$texto.='
+      return salida_sqli;
+	  //event.preventDefault();
 	  });
-	
+
 	});
 		-->
 	 </script>';
@@ -214,7 +215,7 @@ function seguridad_externa($data){
 	$data=json_decode($data,1);
 	$radicador_web=busca_filtro_tabla("login,funcionario_codigo","funcionario","login='".$data['login_usuario']."' AND funcionario_codigo='".$data['funcionario_codigo']."'","",$conn);
 	$ip_ws=busca_filtro_tabla("valor","configuracion","nombre='ip_valida_ws' AND tipo='empresa'","",$conn);
-	
+
 	$iplocal=getRealIP();
 	$ipremoto=servidor_remoto();
 	if($iplocal=="" || $ipremoto==""){
@@ -225,7 +226,7 @@ function seguridad_externa($data){
 		}
 	}
 	if($radicador_web['numcampos'] && $ip_ws[0]['valor']==$iplocal){  //pasa filtro de seguridad
-		return(true);	
+		return(true);
 	}
 	return(false);
 }

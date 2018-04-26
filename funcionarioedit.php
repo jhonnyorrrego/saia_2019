@@ -6,7 +6,7 @@ desencriptar_sqli('form_info');
 
 
 ?>
-<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery-1.7.2.js"></script>
 <script type="text/javascript" src="js/jquery.validate.js"></script>
 
 <?php
@@ -16,7 +16,7 @@ echo(librerias_jquery());
 ?>
 
 <script type="text/javascript">(function($) {
-            	
+
           })(jQuery);
 $(document).ready(function(){
 	$("#funcionarioedit").validate();
@@ -24,7 +24,7 @@ $(document).ready(function(){
         </script>
 <?php
 $ewCurSec = 0; // Initialise
-				
+
 ?>
 <?php
 //print_r($_REQUEST);die();
@@ -85,13 +85,13 @@ if (($sAction == "") || ((is_null($sAction)))) {
 	$x_perfil = @$_POST["x_perfil"];
 	$x_sistema = @$_POST["x_sistema"];
   $x_acceso_web = implode(",",@$_POST["x_acceso_web"]);
-  
+
   if($x_estado==1){
   	$x_intento_login=0;
   }else{
   	$x_intento_login=@$_POST["x_intento_login"];;
   }
-  
+
 
 
 }
@@ -139,10 +139,10 @@ label.error{
                   //  alert('El campo codigo de funcionario debe Ser unico');
                     notificacion_saia('<B>ATENCI&Oacute;N!</B> <BR> El campo Identificaci&oacute;n debe Ser unico','warning','',4000);
 		   			 $('#x_nit').val(x_nits);
-                  }  
+                  }
                 }
               });
-              
+
             }
             })});
   })(jQuery);
@@ -212,7 +212,7 @@ label.error{
 <input type="text" name="x_email" id="x_email" size="30"  class="email"  maxlength="255" value="<?php echo @$x_email ?>">
 </span></td>
 	</tr>
-	
+
 	<tr>
 		<td class="encabezado" title="Firma digital del funcionario"><span class="phpmaker" style="color: #FFFFFF;">FIRMA</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
@@ -245,9 +245,9 @@ label.error{
 	</tr>
 			<tr>
 				<td class="encabezado" title="Ventanilla de Radicaci6oacute;n del funcionario."><span class="phpmaker" style="color: #FFFFFF;">VENTANILLA DE RADICACI&Oacute;N</span></td>
-				<td bgcolor="#F5F5F5"><span class="phpmaker">					
+				<td bgcolor="#F5F5F5"><span class="phpmaker">
 					<select name="x_ventanilla_radicacion" id="x_ventanilla_radicacion">
-						
+
 						<option value=''>Seleccione...</option>
 						<?php
 							$ventanilla_radicacion=busca_filtro_tabla("idcf_ventanilla,nombre","cf_ventanilla","estado=1","",$conn);
@@ -262,9 +262,9 @@ label.error{
 							echo($options_ventanilla_radicacion);
 						?>
 					</select>
-					
+
 				</span></td>
-			</tr>		
+			</tr>
 	<tr>
 		<td class="encabezado" title="Fecha de ingreso del funcionario"><span class="phpmaker" style="color: #FFFFFF;">FECHA DE INGRESO</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
@@ -293,7 +293,7 @@ label.error{
 				}
       }
 			echo $check;
-      ?>   
+      ?>
     </span></td>
 	</tr>
 		<!--tr>
@@ -315,7 +315,7 @@ label.error{
 	?>
 	<tr>
 		<td class="encabezado" title="Permite elefir el perfil de acceso al funcionario"><span class="phpmaker" style="color: #FFFFFF;">TIPO DE VALIDACI&Oacute;N</span></td>
-		
+
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 			<input type="checkbox" name="validaciones_funcionario[]" value="1" <?php if(in_array("1",$tipos)){ echo 'checked'; } ?> >Transferencias Masivas
 		</td>
@@ -323,7 +323,7 @@ label.error{
   <!--tr>
 		<td class="encabezado" title="Permite establecer si el usuario tiene acceso al sistema SAIA."><span class="phpmaker" style="color: #FFFFFF;">ACCESO WEB</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php $acceso=explode(",",$x_acceso_web); 
+<?php $acceso=explode(",",$x_acceso_web);
 //print_r($acceso[0]);//if (!(!is_null($x_acceso_web)) || ($x_acceso_web == "")) { $x_acceso_web = 1;} // Set default value ?>
 <input type="checkbox" name="x_acceso_web[]"<?php for($i=0;$i<count($acceso);$i++){if ($acceso[$i] == "1") { ?> checked<?php }} ?> value="<?php echo htmlspecialchars("1"); ?>">
 <?php echo "SAIA"; ?>
@@ -371,7 +371,7 @@ function LoadData($sKey,$conn)
 		$LoadData = false;
 	}else{
 		$LoadData = true;
-	  
+
 		// Get the field contents
 		$GLOBALS["x_idfuncionario"] = $row["idfuncionario"];
 		$GLOBALS["x_funcionario_codigo"] = $row["funcionario_codigo"];
@@ -423,7 +423,7 @@ function EditData($sKey,$conn)
 	}
 	$rs1=phpmkr_query($sSql,$conn);
 	$i=phpmkr_num_rows($rs1);
-	
+
 	if ($i== 0) {
 		$EditData = false; // Update Failed
 	}else{
@@ -436,46 +436,46 @@ function EditData($sKey,$conn)
 			}
 		}
 		$a_x_firma = @$_POST["a_x_firma"];
-		
 
-		$theValue =(!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_nit"]) : $GLOBALS["x_nit"]; 
-		$fieldList["nit"] = "'".$theValue."'";			
-				
-			
-		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_login"]) : $GLOBALS["x_login"]; 
+
+		$theValue =(!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_nit"]) : $GLOBALS["x_nit"];
+		$fieldList["nit"] = "'".$theValue."'";
+
+
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_login"]) : $GLOBALS["x_login"];
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["login"] = $theValue;
-		
+
 		if($GLOBALS["x_clave"]){
 			$theValue = " '" .encrypt_md5(trim($GLOBALS["x_clave"])). "'";
 			$fieldList["clave"] = $theValue;
 		}
-		
-		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_nombres"]) : $GLOBALS["x_nombres"]; 
+
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_nombres"]) : $GLOBALS["x_nombres"];
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["nombres"] = ($theValue);
-		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_apellidos"]) : $GLOBALS["x_apellidos"]; 
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_apellidos"]) : $GLOBALS["x_apellidos"];
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["apellidos"] = ($theValue);
 		  // Field direccion
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_direccion"]) : $GLOBALS["x_direccion"]; 
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_direccion"]) : $GLOBALS["x_direccion"];
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["direccion"] = ($theValue);
 	// Field telefono
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_telefono"]) : $GLOBALS["x_telefono"]; 
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_telefono"]) : $GLOBALS["x_telefono"];
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["telefono"] = ($theValue);
 
-		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_email"]) : $GLOBALS["x_email"]; 
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_email"]) : $GLOBALS["x_email"];
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["email"] = ($theValue);
 
 
-		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_ventanilla_radicacion"]) : $GLOBALS["x_ventanilla_radicacion"]; 
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_ventanilla_radicacion"]) : $GLOBALS["x_ventanilla_radicacion"];
 		$theValue = ($theValue != "") ? " " . $theValue . "" : "NULL";
-		$fieldList["ventanilla_radicacion"] = ($theValue);		
-		
-		
+		$fieldList["ventanilla_radicacion"] = ($theValue);
+
+
 		if ($a_x_firma == "2") { // Remove
 			$fieldList["firma"] = "null";
 		} else if ($a_x_firma == "3") { // Update
@@ -490,14 +490,14 @@ function EditData($sKey,$conn)
 		}
 		 $theValue = intval($GLOBALS["x_intento_login"]);
 		 $fieldList["intento_login"] = "'".$theValue."'";
-		
+
     $theValue = ($GLOBALS["x_estado"] != "") ? intval($GLOBALS["x_estado"]) : "NULL";
 		$fieldList["estado"] = "'".$theValue."'";
-    			
+
 		if($theValue==0)
 		{
      phpmkr_query("update dependencia_cargo set estado=0 where funcionario_idfuncionario=$sKeyWrk",$conn) or error("Fallo inactivar los roles del funcioanrio");
-    }    
+    }
 		$theValue = ($GLOBALS["x_fecha_ingreso"] != "") ?  ConvertDateToMysqlFormat($GLOBALS["x_fecha_ingreso"])  : "NULL";
 		$fieldList["fecha_ingreso"] = fecha_db_almacenar($theValue,'Y-m-d h:i:s');
 		$fieldList["perfil"] = "'".implode(",",$GLOBALS["x_perfil"])."'";
@@ -512,45 +512,45 @@ function EditData($sKey,$conn)
 		}
 
     if ($_POST["x_estado"] == "1"){
-			
-    $respuesta=validar_usuarios_activos_edit();		
-    	
-    }	
-    
+
+    $respuesta=validar_usuarios_activos_edit();
+
+    }
+
     if($respuesta=="1"){
-    	
-    	$EditData = false; // Update Error  
+
+    	$EditData = false; // Update Error
     	return $EditData;
     }
 
-    
-    
+
+
 		// update
 		$sSql = "UPDATE funcionario SET ";
 		$firma=NULL;
 		foreach ($fieldList as $key=>$temp) {
-			
+
 		 if(!strcmp($key, "firma"))
 		   {
-		     $firma=$temp; // Guardo la informacion  de la firma 
+		     $firma=$temp; // Guardo la informacion  de la firma
 		   }
-     else 
-       $sSql .= "$key = $temp, ";   
+     else
+       $sSql .= "$key = $temp, ";
 		}
-		
+
 		if (substr($sSql, -2) == ", ") {
 			$sSql = substr($sSql, 0, strlen($sSql)-2);
 		}
-		$sSql .= " WHERE idfuncionario ='". $sKeyWrk."'";    
-	
+		$sSql .= " WHERE idfuncionario ='". $sKeyWrk."'";
+
     	phpmkr_query($sSql);
-     /// ACTUALIZO LAS FIRMAS DIGITALES 
+     /// ACTUALIZO LAS FIRMAS DIGITALES
      //echo $fieldList["firma"];
      if($firma!=NULL)
      {guardar_lob("firma","funcionario","idfuncionario=".$sKeyWrk,$fieldList["firma"],"archivo",$conn);
      } // fin If */
     //die();
-   $EditData = true; // Update Successful  
+   $EditData = true; // Update Successful
 	//cargar_permisos_funcionario($sKeyWrk);
 	}
 	return $EditData;
@@ -562,29 +562,29 @@ function confirmacion($texto)
 <script type="text/javascript">
 <!--
 if(confirm("<?php echo $texto ;?>"))
- window.open("reemplazo.php?formato_revertir=1","centro"); 
+ window.open("reemplazo.php?formato_revertir=1","centro");
 //-->
 </script>
 <?php
 }
 
-function validar_usuarios_activos_edit(){	
-	global $conn;	
+function validar_usuarios_activos_edit(){
+	global $conn;
 	/*No se incluyen en la validacion los usuarios:
 	 * cerok 			 1
 	 * radicador_salida	 2
 	 * mensajero 		 9
 	 * radicador_web 	 111222333
-	 */		
-		
+	 */
+
 	$funcionarios=busca_filtro_tabla("","funcionario a","a.estado=1 AND lower(a.login) NOT IN ('cerok','radicador_salida','mensajero','radicador_web')","",$conn);
 	$reemplazos=busca_filtro_tabla("","reemplazo_saia b","b.estado=1","",$conn);
 	$funcionarios_activos=$funcionarios['numcampos'];
 	$reemplazos_activos=$reemplazos['numcampos'];
 	$cupos_usados=$funcionarios_activos+$reemplazos_activos;
-	
+
 	$funcionario_editar=busca_filtro_tabla("estado","funcionario a","a.nit=".$_POST["x_nit"]." AND a.estado=1","",$conn);
-	
+
 	//Consulta la cantidad de usuarios definidos en la configuracion y desencripta el valor
 	$consulta_usuarios=busca_filtro_tabla("valor","configuracion","nombre='numero_usuarios'","",$conn);
 	$numero_encript=$consulta_usuarios[0]['valor'];
@@ -593,12 +593,12 @@ function validar_usuarios_activos_edit(){
 	//Verifica si se alcanzó el número de usuarios y reemplazos activos
 	//y si el funcionario que se va a modificar se encuentra inactivo en base de datos
 	if($cupos_usados>=$numero_usuarios && !$funcionario_editar[0]['estado']){
-		
+
 		echo(librerias_notificaciones());
 		echo("<script>
 		notificacion_saia('<span style=\"color:white;\">No es posible activar el funcionario, actualmente se alcanzó el máximo de cupos. Se tienen ".$funcionarios_activos." Funcionarios activos y ".$reemplazos_activos." Reemplazo(s) activo(s)</span>','error','',7000);
 		</script>");
-		
+
 		return "1";
 	}
 }

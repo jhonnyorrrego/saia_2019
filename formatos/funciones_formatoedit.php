@@ -86,7 +86,7 @@ echo(librerias_jquery("1.7"));
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>ew.js"></script>
 <script type="text/javascript">
 <!--
-EW_dateSep = "/"; // set date separator	
+EW_dateSep = "/"; // set date separator
 
 function EW_checkMyForm(EW_this) {
 var lformatos='';
@@ -171,7 +171,7 @@ if(isset($_REQUEST["pantalla"])&&$_REQUEST["pantalla"]=="tiny")
 	<tr>
 		<td  class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Ubicada en Archivo</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php 
+<?php
 $formatos=busca_filtro_tabla("A.etiqueta,A.idformato,A.nombre,C.ruta,C.etiqueta AS etiqueta_funcion,B.funciones_formato_fk","formato A, funciones_formato_enlace B,funciones_formato C","A.idformato=B.formato_idformato AND B.funciones_formato_fk=C.idfunciones_formato AND funciones_formato_fk=".$sKey."","GROUP BY A.idformato HAVING min(B.funciones_formato_fk)=B.funciones_formato_fk ORDER BY B.idfunciones_formato_enlace ASC",$conn);
 // si el archivo existe dentro de la carpeta formatos
 $ruta_final=$formatos[0]["nombre"] . "/" . $formatos[0]["ruta"];
@@ -201,7 +201,7 @@ $x_formato=extrae_campo($formatos,"idformato","U");
 </div>
 <div id="treeboxbox_tree2"></div>
 <input type="hidden" name="x_formato" id="x_formato" value="<?php echo(implode(",",$x_formato))?>">
-<script type="text/javascript">		
+<script type="text/javascript">
 	var browserType;
 	if (document.layers) {browserType = "nn4"}
 	if (document.all) {browserType = "ie"}
@@ -216,11 +216,11 @@ $x_formato=extrae_campo($formatos,"idformato","U");
 	tree2.setOnLoadingStart(cargando_arbol);
     tree2.setOnLoadingEnd(fin_cargando_arbol);
 	tree2.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_formatos.php?seleccionados=<?php implode(",",$x_formato);?>");
-	tree2.loadXML("<?php echo($ruta_db_superior);?>test_formatos.php?seleccionados=<?php echo(implode(",",$x_formato)); ?>"); 	
+	tree2.loadXML("<?php echo($ruta_db_superior);?>test_formatos.php?seleccionados=<?php echo(implode(",",$x_formato)); ?>");
 	function onNodeSelect(nodeId){
 		console.log(tree2.getAllChecked());
-      $("#x_formato").val(tree2.getAllChecked());  
-    }	
+      $("#x_formato").val(tree2.getAllChecked());
+    }
 	function fin_cargando_arbol() {
         if (browserType == "gecko" )
            document.poppedLayer =
@@ -248,22 +248,22 @@ $x_formato=extrae_campo($formatos,"idformato","U");
       }
 
 
-     /* $(document).ready(function(){ 
+     /* $(document).ready(function(){
     		if(!$("#form_info").length){
     			$("#funciones_formatoedit").append('<input type="hidden" id="form_info" name="form_info">');
     		}
     	$("#funciones_formatoedit").submit(function(event){
-    		
+
     		if($(".tiny_formatos").length){
-    			
+
     			$.each( ".tiny_formatos", function() {
     				var id_textarea=$(this).attr("id");
-    				var contenido_textarea=tinyMCE.get(id_textarea).getContent(); 
+    				var contenido_textarea=tinyMCE.get(id_textarea).getContent();
     				$("#"+id_textarea).val(contenido_textarea);
     			});
-    			
+
     		}
-    		
+
     		salida_sqli = false;
     	      $.ajax({
     	        type:"POST",
@@ -272,17 +272,17 @@ $x_formato=extrae_campo($formatos,"idformato","U");
     	        data: {datos:JSON.stringify($("#funciones_formatoedit").serializeArray())},
     	        success: function(data) {
     						//$("#funciones_formatoedit")[0].reset();
-    		
+
     				$("#funciones_formatoedit").find("input:hidden,input:text, input:password, select, textarea").val("");
     	    		$("#funciones_formatoedit").find("input:radio, input:checkbox").removeAttr("checked").removeAttr("selected");
-    						
+
     	          $("#form_info").val(data);
     	          salida_sqli = true;
     	        }
     	      });return salida_sqli;
     				event.preventDefault();
     		  });
-    		
+
     		});*/
 </script>
 </span></td>
@@ -290,7 +290,7 @@ $x_formato=extrae_campo($formatos,"idformato","U");
 	<tr>
 		<td  class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">acciones</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php 
+<?php
 $ar_x_acciones = explode(",",@$x_acciones);
 $x_accionesChk = "";
 $x_accionesChk .= "<input type=\"checkbox\" name=\"x_acciones[]\" value=\"" . htmlspecialchars("a"). "\"";
@@ -341,7 +341,7 @@ function LoadData($sKey,$conn){
 		$x_descripcion = $row["descripcion"];
 		$x_ruta = $row["ruta"];
 		$x_acciones = $row["acciones"];
-		
+
 		$x_formato = array();
 		$idform_enlace=busca_filtro_tabla("formato_idformato","funciones_formato_enlace","funciones_formato_fk=".$sKey,"",$conn);
 		if($idform_enlace["numcampos"]){
@@ -391,7 +391,7 @@ function EditData($sKey, $conn) {
 			$delete="DELETE FROM funciones_formato_enlace WHERE funciones_formato_fk=".$sKey." AND formato_idformato not in (".$x_formato.")";
 			guardar_traza($delete, $formato[0]["nombre_tabla"]);
 			phpmkr_query($delete) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $delete);
-			
+
 			$funciones_enlace=busca_filtro_tabla("formato_idformato","funciones_formato_enlace","funciones_formato_fk=".$sKey,"",$conn);
 			if ($funciones_enlace["numcampos"]) {
 				$idform_enlace=extrae_campo($funciones_enlace,"formato_idformato");
@@ -408,7 +408,7 @@ function EditData($sKey, $conn) {
 			$delete="DELETE FROM funciones_formato_enlace WHERE funciones_formato_fk=".$sKey;
 			guardar_traza($delete, $formato[0]["nombre_tabla"]);
 			phpmkr_query($delete) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $delete);
-			
+
 			$delete_f="DELETE FROM funciones_formato WHERE idfunciones_formato=".$sKey;
 			guardar_traza($delete_f, $formato[0]["nombre_tabla"]);
 			phpmkr_query($delete_f) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $delete_f);
