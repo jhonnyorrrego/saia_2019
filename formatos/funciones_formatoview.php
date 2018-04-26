@@ -83,37 +83,15 @@ switch ($sAction)
 		<td  class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Listado de Formatos a los que pertenece la Funcion</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <?php
-$ar_x_formato = explode(",", @$x_formato);
-if ((!is_null($x_formato)) && ($x_formato <> "")) {
-	$sSqlWrk = "SELECT DISTINCT *  FROM formato";
-	$sWhereWrk = "";
-	foreach ($ar_x_formato as $cnt_x_formato) {
-		$sTmp = trim($cnt_x_formato);
-		$sTmp = addslashes($sTmp);
-		$sWhereWrk .= "idformato = " . $sTmp . " OR ";
+$formatos=busca_filtro_tabla('A.*','formato A, funciones_formato_enlace B',"A.idformato=B.formato_idformato  AND B.funciones_formato_fk=".$sKey,'GROUP BY B.formato_idformato ORDER BY etiqueta',conn);
+    if($formatos["numcampos"]){
+        echo("<ul>");
+    for($i=0;$i<$formatos["numcampos"];$i++){
+        	echo("<li>".html_entity_decode($formatos[$i]["etiqueta"])."</li>");
 	}
-	if (strlen($sWhereWrk) > 4) { $sWhereWrk = substr($sWhereWrk, 0, strlen($sWhereWrk)-4); }
-	if ($sWhereWrk <> "") {
-		$sSqlWrk .= " WHERE (" . $sWhereWrk . ")";
+    echo("</ul>");
 	}
-	$sTmp = "";
-	$rswrk = phpmkr_query($sSqlWrk,$conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSqlWrk);
-	$rowcntwrk = 0;
-	while ($rowwrk = phpmkr_fetch_array($rswrk)) {
-		$sTmp .= $rowwrk["etiqueta"];
-		$sTmp1 = ViewOptionSeparator($rowcntwrk); // Separate Options
-		$sTmp .= $sTmp1;
-		$rowcntwrk++;
-	}
-	if (strlen($sTmp) > 0) { $sTmp = substr($sTmp, 0, strlen($sTmp)-strlen($sTmp1)); }
-	@phpmkr_free_result($rswrk);
-} else {
-	$sTmp = "";
-}
-$ox_formato = $x_formato; // Backup Original Value
-$x_formato = $sTmp;
 ?>
-<?php echo $x_formato; ?>
 <?php $x_formato = $ox_formato; // Restore Original Value ?>
 </span></td>
 	</tr>

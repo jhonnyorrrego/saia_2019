@@ -48,8 +48,6 @@ if(isset($_REQUEST["consultar_contador"])) {
 	consultar_contador();
 	die();
 }
-?>
-<?php
 
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "formatos/librerias/header_formato.php");
@@ -337,7 +335,7 @@ function actualizar_contador(valor)
 
 $x_contador_idcontadorList = "<select name=\"x_contador_idcontador\" id=\"x_contador_idcontador\" onchange=\"actualizar_contador(this.value)\">";
 $x_contador_idcontadorList .= "<option value='0'>Crear Contador</option>";
-$sSqlWrk = "SELECT DISTINCT idcontador, nombre FROM contador" . " ORDER BY nombre Asc";
+$sSqlWrk = "SELECT DISTINCT idcontador, nombre FROM contador ORDER BY nombre Asc";
 $rswrk = phpmkr_query($sSqlWrk, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSqlWrk);
 if($rswrk) {
 	$rowcntwrk = 0;
@@ -568,12 +566,8 @@ echo $x_contador_idcontadorList;
 
 
 
-
-<?php include ("footer.php")?>
-<?php
-// //phpmkr_db_close($conn);
-?>
-<?php
+<?php 
+include ("footer.php");
 
 // -------------------------------------------------------------------------------
 // Function LoadData
@@ -637,8 +631,6 @@ function LoadData($sKey, $conn) {
 	phpmkr_free_result($rs);
 	return $LoadData;
 }
-?>
-<?php
 
 // -------------------------------------------------------------------------------
 // Function AddData
@@ -968,13 +960,21 @@ function vincular_funcion_responsables($idformato) {
 		$nueva_funcion = "INSERT INTO funciones_formato (nombre,nombre_funcion,etiqueta,descripcion, ruta, formato, acciones) VALUES ('{*asignar_responsables*}','asignar_responsables','asignar_responsables','asignar_responsables', 'funciones.php','" . $idformato . "','a')";
 		guardar_traza($nueva_funcion, $formato[0]["nombre_tabla"]);
 		phpmkr_query($nueva_funcion, $conn);
+		$idfuncion = phpmkr_insert_id();
+	} else {
+		$idfuncion = $buscar_funcion[0]["idfunciones_formato"];
 	}
-	$buscar_funcion = busca_filtro_tabla("", "funciones_formato A", "nombre_funcion='asignar_responsables'", "", $conn);
-	if(!in_array($idformato, explode(",", $buscar_funcion[0]["formato"]))) {
-		$sql = "UPDATE funciones_formato SET formato='" . $buscar_funcion[0]["formato"] . "," . $idformato . "' WHERE idfunciones_formato=" . $buscar_funcion[0]["idfunciones_formato"];
-	}
+	$buscar_funcion = busca_filtro_tabla("", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND nombre_funcion='asignar_responsables' AND B.formato_idformato=" . $idformato, "", $conn);
+	if (!$buscar_funcion["numcampos"] && $idfuncion) {
+		$sql = "INSERT INTO funciones_formato_enlace (formato_idformato,funciones_formato_fk) VALUES(" . $idformato . "," . $idfuncion . ")";
 	guardar_traza($sql, $formato[0]["nombre_tabla"]);
 	phpmkr_query($sql, $conn);
+		$idfunciones_formato_enlace = phpmkr_insert_id();
+	}
+	if (@$idfuncion && $idfunciones_formato_enlace) {
+		return (true);
+	}
+	return (false);
 }
 
 function vincular_funcion_digitalizacion($idformato) {
@@ -982,30 +982,42 @@ function vincular_funcion_digitalizacion($idformato) {
 	$formato = busca_filtro_tabla("", "formato", "idformato=" . $idformato, "", $conn);
 	// --Vinculando funcion al adicionar de digitalizar
 	$buscar_funcion = busca_filtro_tabla("", "funciones_formato A", "nombre_funcion='digitalizar_formato'", "", $conn);
-	if($buscar_funcion["numcampos"] == 0) {
+	if (!$buscar_funcion["numcampos"]) {
 		$nueva_funcion = "INSERT INTO funciones_formato (nombre,nombre_funcion,etiqueta,descripcion, ruta, formato, acciones) VALUES ('{*digitalizar_formato*}','digitalizar_formato','digitalizar_formato','digitalizar_formato', '../librerias/funciones_formatos_generales.php','" . $idformato . "','a,e')";
 		guardar_traza($nueva_funcion, $formato[0]["nombre_tabla"]);
 		phpmkr_query($nueva_funcion, $conn);
+		$idfuncion = phpmkr_insert_id();
+	} else {
+		$idfuncion = $buscar_funcion[0]["idfunciones_formato"];
 	}
-	$buscar_funcion = busca_filtro_tabla("", "funciones_formato A", "nombre_funcion='digitalizar_formato'", "", $conn);
-	if(!in_array($idformato, explode(",", $buscar_funcion[0]["formato"]))) {
-		$sql = "UPDATE funciones_formato SET formato='" . $buscar_funcion[0]["formato"] . "," . $idformato . "' WHERE idfunciones_formato=" . $buscar_funcion[0]["idfunciones_formato"];
-	}
+	$buscar_funcion = busca_filtro_tabla("", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND nombre_funcion='digitalizar_formato' AND B.formato_idformato=" . $idformato, "", $conn);
+	if (!$buscar_funcion["numcampos"] && $idfuncion) {
+		$sql = "INSERT INTO funciones_formato_enlace (formato_idformato,funciones_formato_fk) VALUES(" . $idformato . "," . $idfuncion . ")";
 	guardar_traza($sql, $formato[0]["nombre_tabla"]);
 	phpmkr_query($sql, $conn);
-	
+		$idfunciones_formato_enlace = phpmkr_insert_id();
+	} else if ($buscar_funcion["numcampos"]) {
+		$idfunciones_formato_enlace = $buscar_funcion[0]["idfunciones_formato_enlace"];
+	}
 	// ---Vinculando funcion de validacion al digitalizar
+	
+	if ($idfunciones_formato_enlace) {
 	$buscar_funcion = busca_filtro_tabla("", "funciones_formato A", "nombre_funcion='validar_digitalizacion_formato'", "", $conn);
-	if($buscar_funcion["numcampos"] == 0) {
-		$nueva_funcion = "INSERT INTO funciones_formato (nombre,nombre_funcion,etiqueta,descripcion, ruta, formato, acciones) VALUES ('{*validar_digitalizacion_formato*}', 'validar_digitalizacion_formato', 'validar_digitalizacion_formato', 'validar_digitalizacion_formato', '../librerias/funciones_formatos_generales.php', '" . $idformato . "','')";
+		if (!$buscar_funcion["numcampos"]) {
+			$nueva_funcion = "INSERT INTO funciones_formato (nombre,nombre_funcion,etiqueta,descripcion, ruta, formato, acciones) VALUES ('{*validar_digitalizacion_formato*}','validar_digitalizacion_formato','validar_digitalizacion_formato','validar_digitalizacion_formato', '../librerias/funciones_formatos_generales.php','" . $idformato . "','a,e')";
 		guardar_traza($nueva_funcion, $formato[0]["nombre_tabla"]);
 		phpmkr_query($nueva_funcion, $conn);
+			$idfuncion_validar = phpmkr_insert_id();
+		} else {
+			$idfuncion_validar = $buscar_funcion[0]["idfunciones_formato"];
 	}
-	$buscar_funcion = busca_filtro_tabla("", "funciones_formato A", "nombre_funcion='validar_digitalizacion_formato'", "", $conn);
-	if(!in_array($idformato, explode(",", $buscar_funcion[0]["formato"]))) {
-		$sql = "UPDATE funciones_formato SET formato='" . $buscar_funcion[0]["formato"] . "," . $idformato . "' WHERE idfunciones_formato=" . $buscar_funcion[0]["idfunciones_formato"];
+		$buscar_funcion = busca_filtro_tabla("", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND nombre_funcion='validar_digitalizacion_formato' AND B.formato_idformato=" . $idformato, "", $conn);
+		if (!$buscar_funcion["numcampos"] && $idfuncion_validar) {
+			$sql = "INSERT INTO funciones_formato_enlace (formato_idformato,funciones_formato_fk) VALUES(" . $idformato . "," . $idfuncion_validar . ")";
 		guardar_traza($sql, $formato[0]["nombre_tabla"]);
 		phpmkr_query($sql, $conn);
+			$idfunciones_validar_enlace = phpmkr_insert_id();
+		}
 	}
 	
 	// Vinculando la accion de validar la digitalizar posterior a la accion correspondiente.
@@ -1014,14 +1026,15 @@ function vincular_funcion_digitalizacion($idformato) {
 	} else {
 		$accion = busca_filtro_tabla("", "accion", "nombre='adicionar'", "", $conn);
 	}
-	$buscar_funcion_accion = busca_filtro_tabla("", "funciones_formato_accion", "idfunciones_formato=" . $buscar_funcion[0]["idfunciones_formato"] . " AND formato_idformato=" . $idformato, "", $conn);
-	if($buscar_funcion_accion["numcampos"] == 0) {
-		$accion_digita = "INSERT INTO funciones_formato_accion (idfunciones_formato, accion_idaccion, formato_idformato, momento, estado, orden) VALUES(" . $buscar_funcion[0]["idfunciones_formato"] . "," . $accion[0]["idaccion"] . ", " . $idformato . ", 'POSTERIOR',1,1)";
+	$buscar_funcion_accion = busca_filtro_tabla("", "funciones_formato_accion", "idfunciones_formato=" . $idfuncion_validar . " AND formato_idformato=" . $idformato, "", $conn);
+	if (!$buscar_funcion_accion["numcampos"]) {
+		$accion_digita = "INSERT INTO funciones_formato_accion (idfunciones_formato, accion_idaccion, formato_idformato, momento, estado, orden) VALUES(" . $idfuncion_validar . "," . $accion[0]["idaccion"] . ", " . $idformato . ", 'POSTERIOR',1,1)";
 	} else {
-		$accion_digita = "UPDATE funciones_formato_accion SET idfunciones_formato=" . $buscar_funcion[0]["idfunciones_formato"] . ", accion_idaccion=" . $accion[0]["idaccion"] . ", formato_idformato=" . $idformato . ", momento='POSTERIOR', estado=1, orden=1 WHERE idfunciones_formato_accion=" . $buscar_funcion_accion[0]["idfunciones_formato_accion"];
+		$accion_digita = "UPDATE funciones_formato_accion SET idfunciones_formato=" . $idfuncion_validar . ", accion_idaccion=" . $accion[0]["idaccion"] . ", formato_idformato=" . $idformato . ", momento='POSTERIOR', estado=1, orden=1 WHERE idfunciones_formato_accion=" . $buscar_funcion_accion[0]["idfunciones_formato_accion"];
 	}
 	guardar_traza($accion_digita, $formato[0]["nombre_tabla"]);
 	phpmkr_query($accion_digita, $conn);
+	return (true);
 }
 
 function vincular_campo_anexo($idformato) {
