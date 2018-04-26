@@ -1765,26 +1765,101 @@ function redirecciona($location){
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>*/
-function enviar_mensaje($correo="",$tipo_usuario='codigo',$usuarios,$asunto="",$mensaje,$anexos=array(),$copia_oculta=0, $iddoc=''){
+function enviar_mensaje($correo = "", $tipo_usuario = array(), $usuarios = array(), $asunto, $mensaje, $anexos = array(), $iddoc = 0) {
 global $conn;
+	$ok = 0;
+	$para = array();
+	$copia = array();
+	$copia_oculta = array();
 
-  $to = array();
-	if($tipo_usuario=='codigo'){
-		  for($i=0; isset($usuarios[$i])&&$usuarios[$i]; $i++){
-	   $funcionario=busca_filtro_tabla("login,email","funcionario","funcionario_codigo='".$usuarios[$i]."'","",$conn);
+	switch ($tipo_usuario["para"]) {
+		case 'email' :
+			if (count($usuarios["para"])) {
+				$ok = 1;
+				$para = $usuarios["para"];
+			}
+			break;
+
+		case 'iddependencia_cargo' :
+			foreach ($usuarios["para"] as $iddep_cargo) {
+				$funcionario = busca_filtro_tabla("email", "vfuncionario_dc", "email<>'' and email is not null and iddependencia_cargo='" . $iddep_cargo . "'", "", $conn);
 	   if($funcionario["numcampos"]){
-	     if($funcionario[0]["email"]){
-	     	array_push($to,$funcionario[0]["email"]);
+					$ok = 1;
+					$para[] = $funcionario[0]["email"];
 	     }
 	   }
+			break;
+
+		default :
+			foreach ($usuarios["para"] as $func_codigo) {
+				$funcionario = busca_filtro_tabla("email", "funcionario", "email<>'' and email is not null and funcionario_codigo='" . $func_codigo . "'", "", $conn);
+				if ($funcionario["numcampos"]) {
+					$ok = 1;
+					$para[] = $funcionario[0]["email"];
 	  }
-	}else{
-		$cant=count($usuarios);
-		for($i=0;$i<$cant;$i++){
-			array_push($to,$usuarios[$i]);
 		}
+			break;
 	}
- if(count($to)){
+
+	switch ($tipo_usuario["copia"]) {
+		case 'email' :
+			if (count($usuarios["copia"])) {
+				$ok = 1;
+				$copia = $usuarios["copia"];
+			}
+			break;
+
+		case 'iddependencia_cargo' :
+			foreach ($usuarios["copia"] as $iddep_cargo) {
+				$funcionario = busca_filtro_tabla("email", "vfuncionario_dc", "email<>'' and email is not null and iddependencia_cargo='" . $iddep_cargo . "'", "", $conn);
+				if ($funcionario["numcampos"]) {
+					$ok = 1;
+					$copia[] = $funcionario[0]["email"];
+				}
+			}
+			break;
+
+		default :
+			foreach ($usuarios["copia"] as $func_codigo) {
+				$funcionario = busca_filtro_tabla("email", "funcionario", "email<>'' and email is not null and funcionario_codigo='" . $func_codigo . "'", "", $conn);
+				if ($funcionario["numcampos"]) {
+					$ok = 1;
+					$copia[] = $funcionario[0]["email"];
+				}
+			}
+			break;
+	}
+
+	switch ($tipo_usuario["copia_oculta"]) {
+		case 'email' :
+			if (count($usuarios["copia_oculta"])) {
+				$ok = 1;
+				$copia_oculta = $usuarios["copia_oculta"];
+			}
+			break;
+
+		case 'iddependencia_cargo' :
+			foreach ($usuarios["copia_oculta"] as $iddep_cargo) {
+				$funcionario = busca_filtro_tabla("email", "vfuncionario_dc", "email<>'' and email is not null and iddependencia_cargo='" . $iddep_cargo . "'", "", $conn);
+				if ($funcionario["numcampos"]) {
+					$ok = 1;
+					$copia_oculta[] = $funcionario[0]["email"];
+				}
+			}
+			break;
+
+		default :
+			foreach ($usuarios["copia_oculta"] as $func_codigo) {
+				$funcionario = busca_filtro_tabla("email", "funcionario", "email<>'' and email is not null and funcionario_codigo='" . $func_codigo . "'", "", $conn);
+				if ($funcionario["numcampos"]) {
+					$ok = 1;
+					$copia_oculta[] = $funcionario[0]["email"];
+				}
+			}
+			break;
+	}
+
+	if ($ok) {
 	include_once($ruta_db_superior."PHPMailer/PHPMailerAutoload.php");
 
 	$configuracion_correo=busca_filtro_tabla("valor,nombre,encrypt","configuracion","nombre in('servidor_correo','puerto_servidor_correo','puerto_correo_salida','servidor_correo_salida','correo_notificacion','clave_correo_notificacion','asunto_defecto_correo')","",$conn);
@@ -1800,7 +1875,6 @@ global $conn;
 				$puerto_correo_salida=$configuracion_correo[$i]['valor'];
 				break;
 			case 'servidor_correo_salida':
-
 				break;
 			case 'correo_notificacion':
 				$correo_notificacion=$configuracion_correo[$i]['valor'];
@@ -1862,9 +1936,7 @@ global $conn;
 				<img src='".PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/imagenes/saia_gray.png'>
 			</td>
 		</tr>
-	</table>
-";
-
+	</table>";
 
   $inicio_style='
   <div id="fondo" style="   padding: 10px; 	background-color: #f5f5f5;	">
@@ -1888,67 +1960,60 @@ global $conn;
 
  $mensaje=$inicio_style.$mensaje.$fin_style;
 
-
-
  $mail->Body = $mensaje;
  $mail -> IsHTML (true);
 
  $mail->ClearAllRecipients();
  $mail->ClearAddresses();
- $para=array();
 
- foreach($to as $fila){
- 	if($copia_oculta==1){
- 		$mail->AddBCC($fila,$fila);
- 	}else{
+		foreach ($para as $fila) {
  		$mail->AddAddress($fila,$fila);
-		$para[]=$fila;
 	}
- }
-
- if(count(@$usuarios['copia'])){ //CON COPIA
-	 foreach($usuarios['copia'] as $fila){
+		foreach ($copia as $fila) {
 	 	$mail->AddCC($fila,$fila);
 	 }
- }
- if(count(@$usuarios['copia_oculta'])){ //CON COPIA OCULTA
-	 foreach($usuarios['copia_oculta'] as $fila){
+		foreach ($copia_oculta as $fila) {
 	 	$mail->AddBCC($fila,$fila);
-	 }
  }
 
   if(!empty($anexos)){
   	foreach($anexos as $fila){
-  		$parseo_ruta=json_decode($fila,true);
-		$etiqueta=explode("/", $parseo_ruta['ruta']);
+				$ruta_imagen = json_decode($fila);
+				if (is_object($ruta_imagen)) {
+					$etiqueta = explode("/", $ruta_imagen -> ruta);
   		$contenido = StorageUtils::get_file_content($fila);
+					if($contenido!==false){
 		$mail->AddStringAttachment($contenido, end($etiqueta));
-  		//$mail->AddAttachment($fila);
+					}
+				} else {
+					$mail -> AddAttachment($fila);
+				}
   	}
    }
    if(!$mail->Send()){
    	return($mail->ErrorInfo);
    }else{
    	if($iddoc){
-	   	$radicador_salida=busca_filtro_tabla("","configuracion","nombre LIKE 'radicador_salida'","",$conn);
+				$radicador_salida = busca_filtro_tabla("valor", "configuracion", "nombre LIKE 'radicador_salida'", "", $conn);
 	    if($radicador_salida["numcampos"]){
 	    	$funcionario=busca_filtro_tabla("","funcionario","login LIKE '".$radicador_salida[0]["valor"]."'","",$conn);
 	      if($funcionario["numcampos"]){
 	        $ejecutores=array($funcionario[0]["funcionario_codigo"]);
 	      }
-	      else {
-	        $ejecutores=array($_SESSION["usuario_actual"]);
 	      }
-	    }
-	    if(!count($ejecutores))
+				if (!count($ejecutores)) {
 	      $ejecutores=array($_SESSION["usuario_actual"]);
+				}
 
 			$otros["notas"]="'Documento enviado por e-mail por medio del correo: ".$mail->FromName;
 		  if(count($para)){
 		    $otros["notas"].= " Para :".implode(",",$para);
 		  }
+				if (count($copia)) {
+					$otros["notas"] .= " Copia :" . implode(",", $copia);
+				}
 		  $otros["notas"].="'";
-		  $datos["archivo_idarchivo"]=@$iddoc;
+				$datos["archivo_idarchivo"] = $iddoc;
 		  $datos["tipo_destino"]=1;
 		  $datos["tipo"]="";
 		  $datos["nombre"]="DISTRIBUCION";
@@ -1956,6 +2021,8 @@ global $conn;
 		}
    	return (true);
    }
+	} else {
+		return false;
   }
 }
 
@@ -3412,13 +3479,12 @@ function crear_archivo_formato($nombre,$texto=NULL,$modo='wb'){
 <Post-condiciones><Post-condiciones>
 </Clase>  */
 function crear_destino($destino){
-  $arreglo=explode("/",$destino);
-
-	if(!mkdir($arreglo[$i],PERMISOS_CARPETAS, true)){
+    if (!is_dir($destino)) {
+        if (!mkdir($destino, PERMISOS_CARPETAS, true)) {
         alerta("no es posible crear la carpeta ".$destino);
         return("");
       }
-
+    }
  return($destino);
 }
 

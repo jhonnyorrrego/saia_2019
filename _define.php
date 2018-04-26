@@ -67,7 +67,7 @@ ini_set ( 'mssql.textsize' , '65536' );*/
 //1000000 para PHP >= 5.3.7
 ini_set('pcre.backtrack_limit', '200000');
 // Por defecto 100000
-ini_set('pcre.recursion_limit = 200000');
+ini_set('pcre.recursion_limit', '200000');
 if (@$_SERVER["HTTPS"] == 'on') {
     define("PROTOCOLO_CONEXION", "https://"); // Sitio seguro
 } else {

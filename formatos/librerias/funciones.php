@@ -40,23 +40,20 @@ $consulta=busca_filtro_tabla("","ft_solicitud_gastos_caja_menor","documento_iddo
  */
 function guardar_traza($sql, $nombre_formato, $sql_export) {
 	global $conn, $ruta_db_superior;
-	$nombre = RUTA_ABS_SAIA . RUTA_EVENTO_FORMATO . strtolower($nombre_formato) . "/" . DB . "_" . date("Ymd") . ".txt";
-	$ruta_real = normalizePath($nombre);
-	if (!@is_file($ruta_real)) {
-		crear_archivo($ruta_real);
-	}
-	if (file_put_contents($ruta_real, $sql, FILE_APPEND)) {
+    $nombre = strtolower($nombre_formato) . "/" . DB . "_" . date("Ymd") . ".txt";
+    $alm = new SaiaStorage(RUTA_EVENTO_FORMATO);
+    $nombre_export = strtolower($nombre_formato) . "/export_" . DB . "_" . date("Ymd") . ".txt";
+
+    if($alm->get_filesystem()->write($nombre, $sql, true)) {
 		if ($sql_export) {
-			if (!@is_file($nombre_export)) {
-				crear_archivo($nombre_export);
+            if (!$alm->get_filesystem()->has($nombre_export)) {
 				$arreglo_export = array();
 			} else {
-				$json_export = file_get_contents($nombre_export);
+                $json_export = $alm->get_filesystem()->read($nombre_export);
 				$arreglo_export = json_decode($json_export);
 			}
 			array_push($arreglo_export, $sql_export);
-			$nombre_export = $ruta_db_superior . RUTA_EVENTO_FORMATO . strtolower($nombre_formato) . "/export_" . DB . "_" . date("Ymd") . ".txt";
-			file_put_contents($nombre_export, json_encode($arreglo_export), FILE_APPEND);
+            $alm->get_filesystem()->write($nombre_export, json_encode($arreglo_export), true);
 		}
 	}
 }
