@@ -50,7 +50,7 @@ class Busquedas
     private $tipo = '';
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="grafico", type="integer", nullable=false)
      */

@@ -106,7 +106,7 @@ class Funcionario
     private $perfil = '6';
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="debe_firmar", type="integer", nullable=false)
      */
@@ -141,7 +141,7 @@ class Funcionario
     private $email;
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="sistema", type="integer", nullable=false)
      */

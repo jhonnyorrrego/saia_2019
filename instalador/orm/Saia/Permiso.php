@@ -64,7 +64,7 @@ class Permiso
     private $caracteristicaTotal;
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="tipo", type="integer", nullable=false)
      */

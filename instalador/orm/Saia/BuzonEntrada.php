@@ -99,7 +99,7 @@ class BuzonEntrada
     private $tipo = 'ARCHIVO';
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="activo", type="integer", nullable=false)
      */

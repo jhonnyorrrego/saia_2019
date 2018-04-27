@@ -22,7 +22,7 @@ class PermisoFuncionario
     private $idpermisoFuncionario;
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="entidad_propietaria", type="integer", nullable=false)
      */
@@ -36,7 +36,7 @@ class PermisoFuncionario
     private $llavePropietaria;
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="entidad_compartida", type="integer", nullable=false)
      */

@@ -43,7 +43,7 @@ class DependenciaCargo
     private $cargoIdcargo = '0';
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="estado", type="integer", nullable=false)
      */
@@ -71,7 +71,7 @@ class DependenciaCargo
     private $fechaIngreso = 'CURRENT_TIMESTAMP';
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="tipo", type="integer", nullable=false)
      */

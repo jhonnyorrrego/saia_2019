@@ -85,7 +85,7 @@ class Modulo
     private $codPadre;
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="orden", type="integer", nullable=false)
      */
@@ -113,7 +113,7 @@ class Modulo
     private $busquedaIdbusqueda;
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="permiso_admin", type="integer", nullable=false)
      */

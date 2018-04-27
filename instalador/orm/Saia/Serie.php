@@ -64,14 +64,14 @@ class Serie
     private $llaveEntidad;
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="retencion_gestion", type="integer", nullable=false)
      */
     private $retencionGestion = '3';
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="retencion_central", type="integer", nullable=false)
      */
@@ -85,14 +85,14 @@ class Serie
     private $conservacion;
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="digitalizacion", type="integer", nullable=true)
      */
     private $digitalizacion;
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="seleccion", type="integer", nullable=true)
      */
@@ -113,28 +113,28 @@ class Serie
     private $procedimiento;
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="copia", type="integer", nullable=false)
      */
     private $copia = '0';
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="tipo", type="integer", nullable=false)
      */
     private $tipo = '0';
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="clase", type="integer", nullable=true)
      */
     private $clase = '1';
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="estado", type="integer", nullable=false)
      */

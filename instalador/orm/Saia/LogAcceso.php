@@ -43,7 +43,7 @@ class LogAcceso
     private $ipremota;
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="exito", type="integer", nullable=false)
      */

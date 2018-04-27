@@ -57,7 +57,7 @@ class CamposFormato
     private $longitud;
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="obligatoriedad", type="integer", nullable=false)
      */
@@ -106,7 +106,7 @@ class CamposFormato
     private $etiquetaHtml = 'text';
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="orden", type="integer", nullable=false)
      */

@@ -57,7 +57,7 @@ class Dependencia
     private $tipo = '1';
 
     /**
-     * @var boolean
+     * @var integer
      *
      * @ORM\Column(name="estado", type="integer", nullable=false)
      */
