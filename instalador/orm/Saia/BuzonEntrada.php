@@ -101,7 +101,7 @@ class BuzonEntrada
     /**
      * @var boolean
      *
-     * @ORM\Column(name="activo", type="boolean", nullable=false)
+     * @ORM\Column(name="activo", type="integer", nullable=false)
      */
     private $activo = '0';
 

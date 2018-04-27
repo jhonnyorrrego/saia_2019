@@ -52,7 +52,7 @@ class Busquedas
     /**
      * @var boolean
      *
-     * @ORM\Column(name="grafico", type="boolean", nullable=false)
+     * @ORM\Column(name="grafico", type="integer", nullable=false)
      */
     private $grafico = '0';
 

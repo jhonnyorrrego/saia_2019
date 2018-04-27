@@ -66,7 +66,7 @@ class Permiso
     /**
      * @var boolean
      *
-     * @ORM\Column(name="tipo", type="boolean", nullable=false)
+     * @ORM\Column(name="tipo", type="integer", nullable=false)
      */
     private $tipo = '1';
 

@@ -80,7 +80,7 @@ class Asignacion
     /**
      * @var boolean
      *
-     * @ORM\Column(name="reprograma", type="boolean", nullable=true)
+     * @ORM\Column(name="reprograma", type="integer", nullable=true)
      */
     private $reprograma;
 

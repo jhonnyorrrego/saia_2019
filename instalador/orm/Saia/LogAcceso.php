@@ -45,7 +45,7 @@ class LogAcceso
     /**
      * @var boolean
      *
-     * @ORM\Column(name="exito", type="boolean", nullable=false)
+     * @ORM\Column(name="exito", type="integer", nullable=false)
      */
     private $exito = '0';
 

@@ -171,7 +171,7 @@ class Documento
     /**
      * @var boolean
      *
-     * @ORM\Column(name="almacenado", type="boolean", nullable=false)
+     * @ORM\Column(name="almacenado", type="integer", nullable=false)
      */
     private $almacenado = '0';
 
