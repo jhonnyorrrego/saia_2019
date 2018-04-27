@@ -8,13 +8,10 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
+include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 
-include_once ($ruta_db_superior . "db.php");
-include_once ("funciones_generales.php");
-
-$alto_frame = "100%";
 function listado_hijos_formato($idformato, $iddoc) {
-	global $conn, $alto_frame;
+	global $conn;
 	if ($idformato) {
 		$formato = busca_filtro_tabla("", "formato", "idformato=" . $idformato, "", $conn);
 
@@ -41,7 +38,6 @@ function listado_hijos_formato($idformato, $iddoc) {
 			if (@$_REQUEST["iddoc"]) {
 				agrega_boton("texto", "../../botones/formatos/adicionar.gif", "../../responder.php?idformato=" . $idformato . "&iddoc=" . $_REQUEST["padre"], "", "Adicionar " . $formato[0]["etiqueta"], $formato[0]["nombre_tabla"], "", "", 0);
 				$enlace_adicionar .= "<br /><br />";
-				$alto_frame = "94%";
 			}
 			$texto .= $enlace_adicionar . listar_formato_hijo2($lcampos, $tabla, $campo_enlace, $id, $orden);
 			echo($texto);
@@ -50,7 +46,7 @@ function listado_hijos_formato($idformato, $iddoc) {
 }
 
 function listar_formato_hijo2($campos, $tabla, $campo_enlace, $llave, $orden) {
-	global $conn, $idformato, $alto_frame;
+	global $conn, $idformato;
 	$where = "";
 	$condicion = " AND B.estado<>'ELIMINADO'";
 	if (in_array("estado", $campos) && !@$_REQUEST["enlace_adicionar_formato"]) {
@@ -65,7 +61,7 @@ function listar_formato_hijo2($campos, $tabla, $campo_enlace, $llave, $orden) {
 	$hijo = busca_filtro_tabla("", $tabla . " A, documento B", "A.documento_iddocumento=B.iddocumento AND A." . $campo_enlace . "=" . $llave . $condicion, $orden, $conn);
 
 	if ($hijo["numcampos"] && $lcampos["numcampos"]) {
-		$texto .= '<div style="overflow:auto; border:1px solid; width:100%; height:' . $alto_frame . ';"><table border="1px" style="border-collapse:collapse;width:60%" ><thead><tr class="encabezado_list">';
+		$texto .= '<div style="overflow:auto; border:1px solid; width:100%; height:94$;"><table border="1px" style="border-collapse:collapse;width:60%" ><thead><tr class="encabezado_list">';
 		for ($j = 0; $j < $lcampos["numcampos"]; $j++) {
 			if ($lcampos[$j]["nombre"] == "id" . $tabla) {
 				$texto .= '<td>&nbsp;</td>';
@@ -105,13 +101,27 @@ function listar_formato_hijo2($campos, $tabla, $campo_enlace, $llave, $orden) {
 function insertar_ruta($ruta2, $iddoc, $firma1 = 1) {
 	global $conn;
 	$ruta = array();
-	array_push($ruta, array("funcionario" => $_SESSION["usuario_actual"], "tipo_firma" => $firma1, "tipo" => 1));
+	array_push($ruta, array(
+		"funcionario" => $_SESSION["usuario_actual"],
+		"tipo_firma" => $firma1,
+		"tipo" => 1
+	));
 	$ruta = array_merge($ruta, $ruta2);
 	if (count($ruta) > 0) {
 		$radicador = busca_filtro_tabla("f.funcionario_codigo", "configuracion c,funcionario f", "c.nombre='radicador_salida' and f.login=c.valor", "", $conn);
-		array_push($ruta, array("funcionario" => $radicador[0]["funcionario_codigo"], "tipo_firma" => 0, "tipo" => 1));
-		phpmkr_query("UPDATE buzon_entrada SET activo=0, nombre=" . concatenar_cadena_sql(array("'ELIMINA_'", "nombre")) . " where archivo_idarchivo='$iddoc' and (nombre='POR_APROBAR' OR nombre='REVISADO' OR nombre='APROBADO' OR nombre='VERIFICACION')");
-		phpmkr_query("UPDATE buzon_salida SET nombre=" . concatenar_cadena_sql(array("'ELIMINA_'", "nombre")) . " WHERE archivo_idarchivo='$iddoc' and nombre IN('POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','TERMINADO')", $conn);
+		array_push($ruta, array(
+			"funcionario" => $radicador[0]["funcionario_codigo"],
+			"tipo_firma" => 0,
+			"tipo" => 1
+		));
+		phpmkr_query("UPDATE buzon_entrada SET activo=0, nombre=" . concatenar_cadena_sql(array(
+			"'ELIMINA_'",
+			"nombre"
+		)) . " where archivo_idarchivo='".$iddoc."' and (nombre='POR_APROBAR' OR nombre='REVISADO' OR nombre='APROBADO' OR nombre='VERIFICACION')");
+		phpmkr_query("UPDATE buzon_salida SET nombre=" . concatenar_cadena_sql(array(
+			"'ELIMINA_'",
+			"nombre"
+		)) . " WHERE archivo_idarchivo='".$iddoc."' and nombre IN('POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','TERMINADO')", $conn);
 		phpmkr_query("delete from ruta where documento_iddocumento=" . $iddoc);
 	}
 

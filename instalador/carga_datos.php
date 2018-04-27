@@ -15604,25 +15604,6 @@ $modulo = [
         "enlace_pantalla" => 0
     ],
     [
-        "idmodulo" => 1510,
-        "pertenece_nucleo" => 0,
-        "nombre" => "actualizar_calidad",
-        "tipo" => "secundario",
-        "imagen" => "botones/principal/defaut.png",
-        "etiqueta" => "actualizar arbol calidad",
-        "enlace" => "formatos/arboles/test_calidad.php",
-        "enlace_mobil" => null,
-        "destino" => "centro",
-        "cod_padre" => 64,
-        "orden" => 1,
-        "ayuda" => "",
-        "parametros" => "",
-        "busqueda_idbusqueda" => 0,
-        "permiso_admin" => 0,
-        "busqueda" => "1",
-        "enlace_pantalla" => 0
-    ],
-    [
         "idmodulo" => 1511,
         "pertenece_nucleo" => 0,
         "nombre" => "administracion_calidad",

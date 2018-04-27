@@ -76,7 +76,7 @@ function generar_ingreso_formato($nombre_formato) {
 			$_REQUEST["ejecutor"] = $dependencia[0]["funcionario_codigo"];
 			$_REQUEST["serie_idserie"] = $formato[0]["serie_idserie"];
 			$_REQUEST["fecha_almacenar"] = date('Y-m-d');			
-			$_REQUEST["descripcion"] = (($_REQUEST["descripcion_general"]));
+			$_REQUEST["descripcion"] = ($_REQUEST["descripcion_general"]);
 
 			$_POST = $_REQUEST;
 			$_REQUEST["no_redirecciona"] = 1;
@@ -309,26 +309,10 @@ if ($doc <> FALSE) {
 		} else {
 			$target = "centro";
 		}
-
+		
+		$qr="";
 		if($datos[0]["numero"]){
-			$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
-			$qr='';
-			if($codigo_qr['numcampos']){
-			    if(file_exists(PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/".$codigo_qr[0]['ruta_qr'])){
-		            $qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" width="70px" height="70px">';		        
-			    }else{
-		    		include_once($ruta_db_superior."pantallas/qr/librerias.php");
-		    		generar_codigo_qr('',$doc);
-		    		$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
-		    		$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" width="70px" height="70px">';		        
-			    }
-			}
-			else{
-				include_once($ruta_db_superior."pantallas/qr/librerias.php");
-				generar_codigo_qr('',$doc);
-				$codigo_qr=busca_filtro_tabla("","documento_verificacion","documento_iddocumento=".$doc,"", $conn);	
-				$qr='<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/'.$codigo_qr[0]['ruta_qr'].'" width="70px" height="70px">';		        
-			}
+			$qr=mostrar_codigo_qr(0, $doc, 1, 70, 70);
 		}
 		
 		$validar_impresion = busca_filtro_tabla("valor", "configuracion", "lower(nombre) LIKE'imprimir_colilla_automatico'", "", $conn);

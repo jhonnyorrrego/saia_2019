@@ -1483,7 +1483,7 @@ function crear_formato_ae($idformato, $accion) {
 							//$campos[$h]["idcampos_formato"]
 							$idelemento = "dz_campo_{$campos[$h]["idcampos_formato"]}";
 							$texto .= '<div id="' . $idelemento . '" class="saia_dz" data-nombre-campo="' . $campos[$h]["nombre"] . '" data-idformato="' . $idformato . '" data-idcampo-formato="' . $campos[$h]["idcampos_formato"] . '" data-extensiones="' . $extensiones . '" data-multiple="' . $multiple . '">';
-							$texto .= '<div class="dz-message"><span>Arrastra el anexo hasta aqu&iacute;. </br> O si prefieres...</br></br> <button class="boton_upload">Elije un anexo para subir.</button> </span></div>';
+							$texto .= '<div class="dz-message"><span>Arrastra el anexo hasta aqu&iacute;. </br> O si prefieres...</br></br> <span class="boton_upload">Elije un anexo para subir.</span> </span></div>';
 							if ($campos[$h]["obligatoriedad"]) {
 							    $texto .= '<input type="hidden" class="required" id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" value="">';
 							}

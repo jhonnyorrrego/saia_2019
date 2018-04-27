@@ -644,181 +644,162 @@ function mostrar_estado_proceso($idformato, $iddoc) {
 		if (!array_key_exists("tipo", $_REQUEST)) {
 			$_REQUEST["tipo"] = 1;
 		}
-
-		if ($_REQUEST["tipo"] == 1 && $pagina == "base_factura") {
-			echo '<form name="form1" action="' . $pagina . '.php?mostrar=true" method="get" target="_blank"><span class="phpmaker">
-                <input type="hidden" name="iddoc" value="' . $iddoc . '">
-                <input type="hidden" name="tipo" id="tipo" value="">
-                <input type="hidden" name="idfactura" id="tipo" value="' . $idfactura . '">
-                <input type=button name="factura" value="Imprimir documento" onclick="document.getElementById(' . "'tipo'" . ').value=' . "'2'" . '; form1.submit();">
-                <input type=button name="factura" value="Imprimir Completo" onclick="document.getElementById(' . "'tipo'" . ').value=' . "'3'" . '; form1.submit();">
-                </span> ';
-			if ($estado_doc[0]["estado"] == "APROBADO") {
-				echo "<span class='phpmaker'>";
-				echo '<input type=button name="backup" value=' . "'Crear Plano' onclick='open(\"/saia/saia1.0/factura/backup.php\",\"crear_backup\",\"\")'>";
+		$resultado = cargo_rol($_REQUEST["iddoc"]);
+		if (!$resultado["numcampos"]) {
+			if (!$estado_doc[0]["documento_antiguo"]) {
+				$resultado = busca_filtro_tabla("distinct iddependencia_cargo as origen,idfuncionario,funcionario_codigo,nombres,apellidos,1 as activo,1 as obligatorio,nombre", "funcionario,dependencia_cargo,buzon_entrada", "archivo_idarchivo=" . $_REQUEST["iddoc"] . " and destino=funcionario_codigo and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and idfuncionario=funcionario_idfuncionario and iddependencia_cargo=" . $mostrar_firmas_doc[0]["dependencia"], "", $conn);
+				$resultado[0]["tipo_origen"] = 5;
+			} else {
+				$resultado = busca_filtro_tabla("distinct iddependencia_cargo as origen,idfuncionario,funcionario_codigo,nombres,apellidos,1 as activo,1 as obligatorio,nombre", "funcionario,dependencia_cargo,buzon_entrada", "archivo_idarchivo=" . $_REQUEST["iddoc"] . " and destino=funcionario_codigo and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and idfuncionario=funcionario_idfuncionario and dependencia_iddependencia=" . $mostrar_firmas_doc[0]["dependencia"], "", $conn);
+				if (!$resultado["numcampos"])
+					$resultado = busca_filtro_tabla("distinct iddependencia_cargo as origen,idfuncionario,funcionario_codigo,nombres,apellidos,1 as activo,1 as obligatorio,nombre", "funcionario,dependencia_cargo,buzon_entrada", "archivo_idarchivo=" . $_REQUEST["iddoc"] . " and destino=funcionario_codigo and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and idfuncionario=funcionario_idfuncionario", "", $conn);
+				$resultado[0]["tipo_origen"] = 5;
 			}
-			echo "</form>";
-		}
-		if (($_REQUEST["tipo"] == 2 || $_REQUEST["tipo"] == 3) && $pagina == "base_factura")
-			echo '<script>document.getElementById("header").style.display="none";</script>';
-
-		if ($estado_doc[0]["estado"] != "RECHAZADO") {
-			$resultado = cargo_rol($_REQUEST["iddoc"]);
 			if (!$resultado["numcampos"]) {
-				if (!$estado_doc[0]["documento_antiguo"]) {
-					$resultado = busca_filtro_tabla("distinct iddependencia_cargo as origen,idfuncionario,funcionario_codigo,nombres,apellidos,1 as activo,1 as obligatorio,nombre", "funcionario,dependencia_cargo,buzon_entrada", "archivo_idarchivo=" . $_REQUEST["iddoc"] . " and destino=funcionario_codigo and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and idfuncionario=funcionario_idfuncionario and iddependencia_cargo=" . $mostrar_firmas_doc[0]["dependencia"], "", $conn);
-					$resultado[0]["tipo_origen"] = 5;
-				} else {
-					$resultado = busca_filtro_tabla("distinct iddependencia_cargo as origen,idfuncionario,funcionario_codigo,nombres,apellidos,1 as activo,1 as obligatorio,nombre", "funcionario,dependencia_cargo,buzon_entrada", "archivo_idarchivo=" . $_REQUEST["iddoc"] . " and destino=funcionario_codigo and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and idfuncionario=funcionario_idfuncionario and dependencia_iddependencia=" . $mostrar_firmas_doc[0]["dependencia"], "", $conn);
-					if (!$resultado["numcampos"])
-						$resultado = busca_filtro_tabla("distinct iddependencia_cargo as origen,idfuncionario,funcionario_codigo,nombres,apellidos,1 as activo,1 as obligatorio,nombre", "funcionario,dependencia_cargo,buzon_entrada", "archivo_idarchivo=" . $_REQUEST["iddoc"] . " and destino=funcionario_codigo and (nombre in ('APROBADO','REVISADO') or(nombre='POR_APROBAR' AND activo=1)) and idfuncionario=funcionario_idfuncionario", "", $conn);
-					$resultado[0]["tipo_origen"] = 5;
-				}
-				if (!$resultado["numcampos"]) {
-					echo '<font color="red">El documento no tiene responsable(s) asignado(s).</font>';
-					return;
-				}
+				echo '<font color="red">El documento no tiene responsable(s) asignado(s).</font>';
+				return;
 			}
-
-			$num_cols = 2;
-			$i = 0;
-			$firmas = 0;
-			$fila_abierta = 0;
-			$ocultar_confirmar = 0;
-			if ($resultado["numcampos"]) {
-				array_unique($resultado);
-				$ancho_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='ancho_firma'", "", $conn);
-				if (!$ancho_firma["numcampos"]) {
-					$ancho_firma[0]["valor"] = 200;
-				}
-
-				$alto_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='alto_firma'", "", $conn);
-				if (!$alto_firma["numcampos"]) {
-					$alto_firma[0]["valor"] = 100;
-				}
-				$tamano_fuente = busca_filtro_tabla("valor", "configuracion A", "A.nombre='tamano_letra'", "", $conn);
-				if (!$tamano_fuente["numcampos"]) {
-					$tamano_fuente[0]["valor"] = '10pt';
-				}
-
-				echo "<table border=\"0\" cellpadding='0' cellspacing='0' align='left' width=\"100%\">";
-
-				for ($k = $resultado["numcampos"] - 1; $k >= 0; $k--) {
-					if (!$resultado[$k])
-						continue;
-					$fila = $resultado[$k];
-					if ($fila["tipo_origen"] == 5) {// rol
-						$cargos = busca_filtro_tabla("distinct cargo.nombre", "cargo,dependencia_cargo", "cargo_idcargo=idcargo AND tipo_cargo=1 and iddependencia_cargo=" . $fila["origen"], "", $conn);
-					} elseif ($fila["tipo_origen"] == 1) {// funcionario_codigo
-						$cargos = busca_filtro_tabla("distinct funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre", "cargo,dependencia_cargo,funcionario,dependencia", "dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND tipo_cargo=1 AND idfuncionario=funcionario_idfuncionario and fecha_inicial<='" . $fila["fecha"] . "' and fecha_final>='" . $fila["fecha"] . "' and funcionario_codigo='" . $fila["origen"] . "' AND dependencia_cargo.estado=1", "", $conn);
-						if (!$cargos["numcampos"])
-							$cargos = busca_filtro_tabla("funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre", "cargo,dependencia_cargo,funcionario,dependencia", "dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND tipo_cargo=1 AND idfuncionario=funcionario_idfuncionario and funcionario_codigo='" . $fila["origen"] . "'", "fecha desc", $conn);
-					}
-					if (!isset($fila["obligatorio"]))
-						$fila["obligatorio"] = 1;
-
-					if ($fila["obligatorio"] == 1) {
-						if ($firmas == 0) {
-							echo "<tr>";
-							$fila_abierta = 1;
-						}
-
-						if ($fila["nombre"] == "POR_APROBAR") {
-							echo '<td align="left" style="border:0"><img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/firmas/faltante.jpg" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '">&nbsp;&nbsp;&nbsp;<br /></td>';
-							if ($iniciales == ($fila["funcionario_codigo"]))
-								$firma_actual = true;
-						} else if ($mostrar_firmas == 1) {
-							$firma = busca_filtro_tabla("firma", "funcionario", "funcionario_codigo='" . $fila["funcionario_codigo"] . "'", "", $conn);
-							echo '<td align="left" style="border:0">';
-							if ($firma[0]["firma"] != "") {
-								$pagina_actual = $_SERVER["PHP_SELF"];
-								echo '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/formatos/librerias/mostrar_foto.php?codigo=' . $fila["funcionario_codigo"];
-								echo '" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '"/><br />';
-							} else
-								echo '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/firmas/blanco.jpg" width="100" height="' . $alto_firma[0]["valor"] . '" ><br />';
-
-							echo "<strong>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</strong>&nbsp;&nbsp;&nbsp;<br />";
-							if ($cargos["numcampos"]) {
-								for ($h = 0; $h < $cargos["numcampos"]; $h++)
-									echo formato_cargo($cargos[$h]["nombre"]) . "<br/>";
-							}
-							if ($iniciales == ($fila["funcionario_codigo"]))
-								$firma_actual = true;
-							echo "</td>";
-						} else {
-							echo "<td align='left' style='border:0'><img src='" . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/firmas/blanco.jpg' width='" . $ancho_firma[0]["valor"] . "' height='" . $alto_firma[0]["valor"] . "'>
-							<br /><b>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</b>&nbsp;&nbsp;&nbsp;<br />";
-							if ($cargos["numcampos"]) {
-								for ($h = 0; $h < $cargos["numcampos"]; $h++)
-									echo formato_cargo($cargos[$h]["nombre"]) . "<br/>";
-							}
-							if ($iniciales == ($fila["funcionario_codigo"]))
-								$firma_actual = true;
-							echo "</td>";
-						}
-						$firmas++;
-					} elseif ($fila["obligatorio"] == 2) {// Revisado
-						if ($fila["nombre"] == "POR_APROBAR")
-							$revisados .= "<tr><td style='width:100%;border:0'><br/><span class='phpmaker'>Revis&oacute; : " . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "-" . formato_cargo($cargos[0]["nombre"]) . " (Pendiente)</span></td></tr>";
-						elseif ($fila["nombre"] == "APROBADO" || $fila["nombre"] == "REVISADO")
-							$revisados .= "<tr><td style='width:100%;border:0'><br/><span class='phpmaker'>Revis&oacute; : " . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "-" . formato_cargo($cargos[0]["nombre"]) . "</span> </td></tr>";
-					} elseif ($fila["obligatorio"] == 5) {// Firma externa
-						if ($firmas == 0) {
-							echo "<tr>";
-							$fila_abierta = 1;
-						}
-						if ($fila["nombre"] == "POR_APROBAR" && $fila["firma_externa"] == '') {
-							$firmar = "&nbsp;&nbsp;";
-							if ($_SESSION['usuario_actual'] == $fila["funcionario_codigo"]) {
-								$firmar = firma_externa_funcion($idformato, $iddoc, "ruta", "firma_externa", "idruta", $fila["idruta"], "&confirmar=1", 1);
-								$ocultar_confirmar++;
-							}
-							echo "<td style='border:0'><br/><br/>" . $firmar . "<br/><br/><br/>_______________________________<br/><br/><br/></td>";
-						} else if ($fila["firma_externa"] != '') {
-							$_REQUEST["campo_seleccion"] = "firma_externa";
-							$_REQUEST["campo_tabla"] = "idruta";
-							$_REQUEST["llave_seleccion"] = firma_externa_funcion($idformato, $iddoc, "ruta", "firma_externa", "idruta", $fila["idruta"], "", 1);
-							$_REQUEST["tabla"] = "ruta";
-							$_REQUEST["firma"] = "1";
-							require_once ($ruta_db_superior . "formatos/librerias/mostrar_foto_manual.php");
-							$parte = '<td style="border:0"><img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/carpeta_temporal_firma/imagen_temporal' . $_REQUEST["llave_seleccion"] . '.jpg" width="200" height="100">';
-
-							$parte .= "<br /><strong>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</strong><br />";
-							if ($cargos["numcampos"]) {
-								for ($h = 0; $h < $cargos["numcampos"]; $h++)
-									$parte .= formato_cargo($cargos[$h]["nombre"]) . "<br/>";
-							}
-							echo($parte . "</td>");
-						}
-						$firmas++;
-					}
-					if ($firmas == $num_cols) {
-						$firmas = 0;
-						echo "</tr>";
-						$fila_abierta = 0;
-					}
-				}
-
-				if ($firmas < $num_cols && $fila_abierta == 1) {
-					while ($firmas < $num_cols) {
-						echo "<td style='border:0'>&nbsp;</td>";
-						$firmas++;
-					}
-					echo "</tr>";
-				}
-			}
-			if ($revisados != "") {
-				echo "<tr>";
-				echo "<td style='border:0' colspan=\"$num_cols\">";
-				echo "<table border=\"0\" width=\"100%\">";
-				echo $revisados;
-				echo "</table>";
-				echo "</td></tr>";
-			}
-			echo "</table><br/>";
 		}
-	} else {
-		echo "<span class='phpmaker'>El documento ha sido rechazado</span>";
+
+		$num_cols = 2;
+		$i = 0;
+		$firmas = 0;
+		$fila_abierta = 0;
+		$ocultar_confirmar = 0;
+		if ($resultado["numcampos"]) {
+			array_unique($resultado);
+			$ancho_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='ancho_firma'", "", $conn);
+			if (!$ancho_firma["numcampos"]) {
+				$ancho_firma[0]["valor"] = 200;
+			}
+
+			$alto_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='alto_firma'", "", $conn);
+			if (!$alto_firma["numcampos"]) {
+				$alto_firma[0]["valor"] = 100;
+			}
+			$tamano_fuente = busca_filtro_tabla("valor", "configuracion A", "A.nombre='tamano_letra'", "", $conn);
+			if (!$tamano_fuente["numcampos"]) {
+				$tamano_fuente[0]["valor"] = '10pt';
+			}
+
+			echo "<table border=\"0\" cellpadding='0' cellspacing='0' align='left' width=\"100%\">";
+
+			for ($k = $resultado["numcampos"] - 1; $k >= 0; $k--) {
+				if (!$resultado[$k])
+					continue;
+				$fila = $resultado[$k];
+				if ($fila["tipo_origen"] == 5) {// rol
+					$cargos = busca_filtro_tabla("distinct cargo.nombre", "cargo,dependencia_cargo", "cargo_idcargo=idcargo AND tipo_cargo=1 and iddependencia_cargo=" . $fila["origen"], "", $conn);
+				} elseif ($fila["tipo_origen"] == 1) {// funcionario_codigo
+					$cargos = busca_filtro_tabla("distinct funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre", "cargo,dependencia_cargo,funcionario,dependencia", "dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND tipo_cargo=1 AND idfuncionario=funcionario_idfuncionario and fecha_inicial<='" . $fila["fecha"] . "' and fecha_final>='" . $fila["fecha"] . "' and funcionario_codigo='" . $fila["origen"] . "' AND dependencia_cargo.estado=1", "", $conn);
+					if (!$cargos["numcampos"])
+						$cargos = busca_filtro_tabla("funcionario_codigo,nombres,idfuncionario,apellidos,cargo.nombre", "cargo,dependencia_cargo,funcionario,dependencia", "dependencia.iddependencia=dependencia_cargo.dependencia_iddependencia and cargo_idcargo=idcargo AND tipo_cargo=1 AND idfuncionario=funcionario_idfuncionario and funcionario_codigo='" . $fila["origen"] . "'", "fecha desc", $conn);
+				}
+				if (!isset($fila["obligatorio"]))
+					$fila["obligatorio"] = 1;
+
+				if ($fila["obligatorio"] == 1) {
+					if ($firmas == 0) {
+						echo "<tr>";
+						$fila_abierta = 1;
+					}
+
+					if ($fila["nombre"] == "POR_APROBAR") {
+						echo '<td align="left"><img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/firmas/faltante.jpg" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '">&nbsp;&nbsp;&nbsp;<br /></td>';
+						if ($iniciales == ($fila["funcionario_codigo"]))
+							$firma_actual = true;
+					} else if ($mostrar_firmas == 1) {
+						$firma = busca_filtro_tabla("firma", "funcionario", "funcionario_codigo='" . $fila["funcionario_codigo"] . "'", "", $conn);
+						echo '<td align="left">';
+						if ($firma[0]["firma"] != "") {
+							$pagina_actual = $_SERVER["PHP_SELF"];
+							echo '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/formatos/librerias/mostrar_foto.php?codigo=' . $fila["funcionario_codigo"];
+							echo '" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '"/><br />';
+						} else
+							echo '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/firmas/blanco.jpg" width="100" height="' . $alto_firma[0]["valor"] . '" ><br />';
+
+						echo "<strong>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</strong>&nbsp;&nbsp;&nbsp;<br />";
+						if ($cargos["numcampos"]) {
+							for ($h = 0; $h < $cargos["numcampos"]; $h++)
+								echo formato_cargo($cargos[$h]["nombre"]) . "<br/>";
+						}
+						if ($iniciales == ($fila["funcionario_codigo"]))
+							$firma_actual = true;
+						echo "</td>";
+					} else {
+						echo "<td align='left'><img src='" . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/firmas/blanco.jpg' width='" . $ancho_firma[0]["valor"] . "' height='" . $alto_firma[0]["valor"] . "'>
+							<br /><b>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</b>&nbsp;&nbsp;&nbsp;<br />";
+						if ($cargos["numcampos"]) {
+							for ($h = 0; $h < $cargos["numcampos"]; $h++)
+								echo formato_cargo($cargos[$h]["nombre"]) . "<br/>";
+						}
+						if ($iniciales == ($fila["funcionario_codigo"]))
+							$firma_actual = true;
+						echo "</td>";
+					}
+					$firmas++;
+				} elseif ($fila["obligatorio"] == 2) {// Revisado
+					if ($fila["nombre"] == "POR_APROBAR")
+						$revisados .= "<tr><td style='width:100%;'><br/><span class='phpmaker'>Revis&oacute; : " . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "-" . formato_cargo($cargos[0]["nombre"]) . " (Pendiente)</span></td></tr>";
+					elseif ($fila["nombre"] == "APROBADO" || $fila["nombre"] == "REVISADO")
+						$revisados .= "<tr><td style='width:100%;'><br/><span class='phpmaker'>Revis&oacute; : " . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "-" . formato_cargo($cargos[0]["nombre"]) . "</span> </td></tr>";
+				} elseif ($fila["obligatorio"] == 5) {// Firma externa
+					if ($firmas == 0) {
+						echo "<tr>";
+						$fila_abierta = 1;
+					}
+					if ($fila["nombre"] == "POR_APROBAR" && $fila["firma_externa"] == '') {
+						$firmar = "&nbsp;&nbsp;";
+						if ($_SESSION['usuario_actual'] == $fila["funcionario_codigo"]) {
+							$firmar = firma_externa_funcion($idformato, $iddoc, "ruta", "firma_externa", "idruta", $fila["idruta"], "&confirmar=1", 1);
+							$ocultar_confirmar++;
+						}
+						echo "<td><br/><br/>" . $firmar . "<br/><br/><br/>_______________________________<br/><br/><br/></td>";
+					} else if ($fila["firma_externa"] != '') {
+						$_REQUEST["campo_seleccion"] = "firma_externa";
+						$_REQUEST["campo_tabla"] = "idruta";
+						$_REQUEST["llave_seleccion"] = firma_externa_funcion($idformato, $iddoc, "ruta", "firma_externa", "idruta", $fila["idruta"], "", 1);
+						$_REQUEST["tabla"] = "ruta";
+						$_REQUEST["firma"] = "1";
+						require_once ($ruta_db_superior . "formatos/librerias/mostrar_foto_manual.php");
+						$parte = '<td><img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/carpeta_temporal_firma/imagen_temporal' . $_REQUEST["llave_seleccion"] . '.jpg" width="200" height="100">';
+
+						$parte .= "<br /><strong>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</strong><br />";
+						if ($cargos["numcampos"]) {
+							for ($h = 0; $h < $cargos["numcampos"]; $h++)
+								$parte .= formato_cargo($cargos[$h]["nombre"]) . "<br/>";
+						}
+						echo($parte . "</td>");
+					}
+					$firmas++;
+				}
+				if ($firmas == $num_cols) {
+					$firmas = 0;
+					echo "</tr>";
+					$fila_abierta = 0;
+				}
+			}
+		
+	
+
+			if ($firmas < $num_cols && $fila_abierta == 1) {
+				while ($firmas < $num_cols) {
+					echo "<td>&nbsp;</td>";
+					$firmas++;
+				}
+				echo "</tr>";
+			}
+		}
+		if ($revisados != "") {
+			echo "<tr>";
+			echo "<td colspan=\"$num_cols\">";
+			echo "<table border=\"0\" width=\"100%\">";
+			echo $revisados;
+			echo "</table>";
+			echo "</td></tr>";
+		}
+		echo "</table><br/>";
+
 	}
 
 	if ($_REQUEST["tipo"] == 1 && $ocultar_confirmar) {
@@ -833,6 +814,7 @@ function mostrar_estado_proceso($idformato, $iddoc) {
 	else
 		return (false);
 }
+
 
 /*
  * <Clase>
