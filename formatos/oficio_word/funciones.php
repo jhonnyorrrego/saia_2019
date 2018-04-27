@@ -24,13 +24,13 @@ function mostrar_enlace_plantilla($idformato, $iddoc) {// ADICIONAR
 	?>
 <script>
 		$(document).ready(function(){
-			$html='<div style="text-align:center; font-size:11pt;">';
-			$html+='<b>ATENCION!</b> <BR>Por favor descargue ';
-			$html+=' <a href="<?php echo($ruta_plantilla); ?>plantilla_nuevo_oficio.docx" target="_blank">ESTA PLANTILLA</a> ';
-			$html+=' para crear un nuevo oficio, &oacute; hacer caso omiso si ya dispone de ella.';
-			$html+='<br>Si desea ';
-			$html+='<a href="<?php echo($ruta_plantilla); ?>plantilla_nuevo_oficio_combinar.docx" target="_blank">COMBINAR</a>';
-			$html+=' correspondencia descargue la siguiente plantilla.</div>';
+			$html='<div style="text-align:left; font-size:8pt;">';
+			$html+='<b>Importante:</b> <BR><BR>Por favor descargue ';
+			$html+=' <a href="<?php echo($ruta_plantilla); ?>plantilla_nuevo_oficio.docx" target="_blank">Esta plantilla de WORD</a> ';
+			$html+=' para crear un nuevo oficio. <BR>';
+			/*$html+='<br>Si desea hacer combinación de correspondencia utilice ';
+			$html+='<a href="<?php echo($ruta_plantilla); ?>plantilla_nuevo_oficio_combinar.docx" target="_blank">Esta plantilla</a>';
+			$html+=' como ejemplo para cargar informaci&oacute;n</div>';*/
 			$('#enlace_plantilla').html($html);
 		});
 	</script>
