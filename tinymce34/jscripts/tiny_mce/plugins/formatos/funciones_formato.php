@@ -155,7 +155,6 @@ if (isset($_REQUEST["guardar"]) && $_REQUEST["guardar"] == 1 && $idfor) {
 				$order='GROUP BY f.idfunciones_formato ORDER BY nombre ASC';
 			}
 			else{
-			$colspan = 4;
 				$where = " and e.formato_idformato=".$idfor;
 				$order= "nombre asc";
 		}
@@ -164,7 +163,8 @@ if (isset($_REQUEST["guardar"]) && $_REQUEST["guardar"] == 1 && $idfor) {
 		if ($resultado["numcampos"]) {
 			$html .= "<table border='1' style='border-collapse:collapse;' align='center' class='productTable'>
          <tr align='center' bgcolor='lightgray'>
-         <td width='30%'>NOMBRE</td><td colspan='" . $colspan . "'>OPCIONES</td>
+         <td width='30%'>NOMBRE</td>
+         <td colspan='" . $colspan . "'>OPCIONES</td>
       </tr>";
 			for ($i = 0; $i < $resultado["numcampos"]; $i++) {
 				$html .= "<tr>
@@ -172,10 +172,6 @@ if (isset($_REQUEST["guardar"]) && $_REQUEST["guardar"] == 1 && $idfor) {
 					<td align='center' valign='center'>" . '<img onclick="ajax_showTooltip(window.event,\'detalles.php?tipo=funciones_formato&id=' . $resultado[$i]["idfunciones_formato"] . '\',this);return false"  src="images/mostrar_nota.png"/>' . "</td>";
 				$html .= '<td align="center"><a title="' . codifica_encabezado(html_entity_decode($resultado[$i]["descripcion"])) . '" href="javascript:FormatosDialog.insert(\'' . $resultado[$i]["nombre_funcion"] . '\');" >Insertar</a>
 				</td>';
-				if ($_REQUEST["tipo"]!="funciones_generales") {
-					$html .= "<td  align='center'><a href='" . $ruta_db_superior . "formatos/funciones_formatoedit.php?idformato=" . $idfor . "&key=" . $resultado[$i]["idfunciones_formato"] . "&pantalla=tiny' >Editar</a></td>";
-					$html .= "<td align='center'><a  href='" . $ruta_db_superior . "formatos/funciones_formatodelete.php?idformato=" . $idfor . "&key=" . $resultado[$i]["idfunciones_formato"] . "&pantalla=tiny' >Eliminar</a></td>";
-				}
 			}
 			$html .= "</table><br/><br/>";
 		}

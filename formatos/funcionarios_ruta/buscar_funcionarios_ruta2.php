@@ -1,0 +1,10 @@
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../calendario/calendario.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato Funcionarios de la ruta</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><label class="string control-label" style="font-size:9pt" for="fecha_mensajero"><b>Fecha<input type="hidden" name="bksaiacondicion_g@fecha_mensajero" id="bksaiacondicion_g@fecha_mensajero" value="date"></b></label><div class="controls">
+                   <input type="text" readonly="true" style="width: 100px;" name="bqsaia_g@fecha_mensajero" id="fecha_mensajero" tipo="fecha" value=""><?php selector_fecha("fecha_mensajero","kformulario_saia","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?></form><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@fecha_mensajero',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_g@fecha_mensajero',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_g@fecha_mensajero" id="bqsaiaenlace_g@fecha_mensajero" value="y" />
+		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="mensajero_ruta"><b>Mensajero<input type="hidden" name="bksaiacondicion_g@mensajero_ruta" id="bksaiacondicion_g@mensajero_ruta" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(406,5005,'',1,'buscar');?></div></div><input type="hidden" name="filtro_adicional" id="filtro_adicional" value=" ft_funcionarios_ruta g @ AND  g.documento_iddocumento=iddocumento "><input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?>"><input type="hidden" name="formato" value="funcionarios_ruta"></body><input type="hidden" name="bqtipodato_plantilla" id="bqtipodato_plantilla" value="date|">

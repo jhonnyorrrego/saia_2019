@@ -1,0 +1,1 @@
+<frameset cols="250,*" ><frame name="arbol_formato" id="arbol_formato" src="../arboles/arbolformato_documento.php?idformato=406&iddoc=<?php echo($_REQUEST['iddoc']); ?>" marginwidth="0" marginheight="0" scrolling="auto" ><frame name="detalles" src="" border="0" marginwidth="20px" marginheight="10" scrolling="auto"></frameset>

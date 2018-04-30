@@ -1,15 +1,20 @@
 <?php
-$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior=$ruta="";
-while($max_salida>0) {
-if(is_file($ruta."db.php")) {
-$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+$max_salida = 10;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
+	}
+	$ruta .= "../";
+	$max_salida--;
 }
-$ruta.="../";
-$max_salida--;
-}
-
-// Initialize common variables
+include_once ($ruta_db_superior . "db.php");
+include ($ruta_db_superior . "header.php");
+include ($ruta_db_superior . "phpmkrfn.php");
+//include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
+include_once ($ruta_db_superior . "librerias_saia.php");
+include_once ($ruta_db_superior . "formatos/librerias/funciones.php");
+echo(librerias_arboles());
 $x_idfuncion_formato = Null;
 $x_nombre = Null;
 $x_etiqueta = Null;
@@ -23,19 +28,17 @@ $x_acciones = Null;
 
 //TODO: Validar SQLi en estas pantallas
 $sKey = @$_GET["key"];
-$idformato=@$_REQUEST["idformato"];
+$idformato = @$_REQUEST["idformato"];
 if (($sKey == "") || (is_null($sKey))) {
 	$sKey = @$_POST["key"];
 }
 if (!empty($sKey))
 	$sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
 
-// Get action
 $sAction = @$_POST["a_edit"];
 if (($sAction == "") || ((is_null($sAction)))) {
-	$sAction = "I";	// Display with input box
+	$sAction = "I";
 } else {
-
 	// Get fields from form
 	$x_idfuncion_formato = @$_POST["x_idfunciones_formato"];
 	$x_nombre = @$_POST["x_nombre"];
@@ -46,34 +49,35 @@ if (($sAction == "") || ((is_null($sAction)))) {
 	$x_acciones = @$_POST["x_acciones"];
 }
 if (($sKey == "") || ((is_null($sKey)))) {
-  if($idformato)
-    redirecciona("funciones_formatolist.php?idformato=".$idformato);
-  redirecciona("funciones_formatolist.php");  
+	if ($idformato)
+		redirecciona("funciones_formatolist.php?idformato=" . $idformato);
+	redirecciona("funciones_formatolist.php");
 }
-//
+
 switch ($sAction) {
-	case "I": // Get a record to display
-		if (!LoadData($sKey,$conn)) { // Load Record based on key
+	case "I" :
+		// Get a record to display
+		if (!LoadData($sKey, $conn)) {// Load Record based on key
 			//phpmkr_db_close($conn);
-    if($idformato)
-      redirecciona("funciones_formatolist.php?idformato=".$idformato);
-    redirecciona("funciones_formatolist.php");  
+			if ($idformato)
+				redirecciona("funciones_formatolist.php?idformato=" . $idformato);
+			redirecciona("funciones_formatolist.php");
 		}
 		break;
-	case "U": // Update
-		if (EditData($sKey,$conn)) { // Update Record based on key
+	case "U" :
+		if (EditData($sKey, $conn)) {// Update Record based on key
 			alerta("Actualizacion exitosa");
-			////phpmkr_db_close($conn);
-    if(isset($_REQUEST["pantalla"])&&$_REQUEST["pantalla"]=="tiny")
-      redirecciona("../tinymce34/jscripts/tiny_mce/plugins/formatos/formatos.php?formato=".$idformato."&tipo=funciones_formato");
-    else if($idformato)
-      redirecciona("funciones_formatolist.php?idformato=".$idformato);
-    else  
-    redirecciona("funciones_formatolist.php");  
-  	}
+			if (isset($_REQUEST["pantalla"]) && $_REQUEST["pantalla"] == "tiny")
+				redirecciona("../tinymce34/jscripts/tiny_mce/plugins/formatos/formatos.php?formato=" . $idformato . "&tipo=funciones_formato");
+			else if ($idformato)
+				redirecciona("funciones_formatolist.php?idformato=" . $idformato);
+			else
+				redirecciona("funciones_formatolist.php");
+		}
 		break;
 }
 echo(librerias_jquery("1.7"));
+echo(estilo_bootstrap());
 ?>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>ew.js"></script>
 <script type="text/javascript">
@@ -126,12 +130,9 @@ return true;
 
 //-->
 </script>
-
-<p><span class="phpmaker">funciones formato<br><br>
-<?php if(!isset($_REQUEST["pantalla"])){ ?>
-<a href="funciones_formatolist.php<?php if($idformato)echo("?idformato=".$idformato);?>">Ir al Listado</a>
-<?php } ?>
-</span></p>
+<p><br />
+<a class="btn btn-mini btn-default" href="funciones_formatolist.php?idformato=<?php echo $idformato; ?>">Regresar</a>
+</p>
 <form name="funciones_formatoedit" id="funciones_formatoedit" action="funciones_formatoedit.php" method="post" onSubmit="return EW_checkMyForm(this);">
 <p>
 <?php
@@ -344,11 +345,6 @@ function LoadData($sKey,$conn){
 	phpmkr_free_result($rs);
 	return $LoadData;
 }
-
-//-------------------------------------------------------------------------------
-// Function EditData
-// - Edit Data based on Key Value sKey
-// - Variables used: field variables
 
 function EditData($sKey,$conn) {
   global $x_idfuncion_formato, $x_nombre,	$x_etiqueta, $x_descripcion, $x_ruta, $x_formato, $x_acciones;

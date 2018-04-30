@@ -89,12 +89,10 @@ function ventanaSecundaria (URL){
 </script>
 <legend></br>Diseño del Formato</legend>
 <p><span class="phpmaker"><br>   
-<!--<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/formatoedit.php?key=<?php echo $_REQUEST["key"];?>">Editar información General</a>&nbsp;-->
-<a class="btn btn-mini btn-default" href="<?php echo $ruta_db_superior; ?>formatos/formatoview.php?key=<?php echo $_REQUEST["key"]; ?>">Regresar</a>
-<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/campos_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Listado de campos</a>&nbsp;
-<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/funciones_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Funciones del Formato</a>&nbsp;
+<a class="btn btn-mini btn-default" href="formatoview.php?key=<?php echo $_REQUEST["key"]; ?>">Regresar</a>
+<a class="btn btn-mini btn-info" href="campos_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Listado de campos</a>&nbsp;
+<a class="btn btn-mini btn-info" href="funciones_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Funciones del Formato</a>&nbsp;
 
-<!--<a href="<?php echo $ruta_db_superior; ?>formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@<?php echo $_REQUEST["key"];?>">Generar el Formato</a>-->
 </span></p>
 <form name="formatoadd" id="formatoadd" action="formatoadd_paso2.php" method="post">
 <p>

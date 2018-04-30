@@ -887,7 +887,6 @@ function crear_formato_mostrar($idformato) {
         $funciones = busca_filtro_tabla("A.*,B.formato_idformato", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=" . $idformato . " AND A.acciones LIKE '%m%'", "A.idfunciones_formato", $conn);
 		for ($i = 0; $i < $funciones["numcampos"]; $i++) {
 			$ruta_orig = "";
-            // saco el primer formato de la lista de la funcion (formato inicial)
 			$formato_orig = $funciones[0]["formato_idformato"];
 			if ($formato_orig != $idformato) { // busco el nombre del formato inicial
 				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
@@ -901,7 +900,7 @@ function crear_formato_mostrar($idformato) {
 						$include_formato .= incluir("../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
 					} elseif (is_file($funciones[$i]["ruta"]) && $eslibreria === false) {// si el archivo existe en la ruta especificada partiendo de la raiz
 						$include_formato .= incluir("../" . $funciones[$i]["ruta"], "librerias");
-					} else if ($eslibreria === false) {// si no existe en ninguna de las dos
+					} else if ($eslibreria === false) {
 						alerta("Las funciones del Formato " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"] . " son requeridas  no se han encontrado");
 						if (crear_archivo($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {// trato de crearlo dentro de la carpeta del formato actual
 							$include_formato .= incluir($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
@@ -1031,20 +1030,14 @@ function crear_vista_formato($idformato, $arreglo) {
 		$librerias = array();
 		$idformato_padre = $vista[0]["formato_padre"];
 		$fpadre = busca_filtro_tabla("", "formato", "idformato=" . $idformato_padre, "", $conn);
-		$funciones = busca_filtro_tabla("*", "funciones_formato A", "A.formato LIKE '" . $idformato_padre . "' OR A.formato LIKE '%," . $idformato_padre . ",%' OR A.formato LIKE '%," . $idformato_padre . "' OR A.formato LIKE '" . $idformato_padre . ",%' AND A.acciones LIKE '%m%'", "", $conn);
+		$funciones = busca_filtro_tabla("A.*, B.formato_idformato", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=" . $idformato_padre . " AND A.acciones LIKE '%m%'", "A.idfunciones_formato", $conn);
 		$campos = busca_filtro_tabla("*", "campos_formato A", "A.formato_idformato=" . $idformato_padre, "", $conn);
 		$lcampos = extrae_campo($campos, "nombre", "U");
 		for ($i = 0; $i < $campos["numcampos"]; $i++) {
 			if ($campos[$i]["etiqueta_html"] == "autocompletar") {
 				$parametros = explode(";", $campos[$i]["valor"]);
 				$texto = str_replace("{*" . $campos[$i]["nombre"] . "*}", "<?php busca_campo(" . "'" . $parametros[0] . "','" . $parametros[1] . "','" . $parametros[2] . "',mostrar_valor_campo('" . $campos[$i]["nombre"] . "','" . $idformato_padre . "',$" . "_REQUEST['iddoc'],1)); ?" . ">", $texto);
-			}/*
-			 * else
-				 if($campos[$i]["etiqueta_html"]=="detalle"){
-				 * $texto=str_replace("{*listado_detalles_".str_replace("id","",$campos[$i]["nombre"])."*}",arma_funcion("buscar_listado_formato","'".$formato[0]["nombre"]."',".$campos[$i]["valor"],"mostrar"),$texto);
-				 * }
-				 */
-				else
+			} else
 				$texto = str_replace("{*" . $campos[$i]["nombre"] . "*}", arma_funcion("mostrar_valor_campo", "'" . $campos[$i]["nombre"] . "',$idformato_padre", "mostrar"), $texto);
 			if ($campos[$i]["etiqueta_html"] == "archivo") {
 				$archivos++;
@@ -1064,9 +1057,10 @@ function crear_vista_formato($idformato, $arreglo) {
 
 		for ($i = 0; $i < $funciones["numcampos"]; $i++) {
 			$ruta_orig = "";
-			$formato_orig = explode(",", $funciones[$i]["formato"]);
-			if ($formato_orig[0] != $idformato_padre) {// busco el nombre del formato inicial
-				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig[0], "", $conn);
+
+			$formato_orig = $funciones[0]["formato_idformato"];
+			if ($formato_orig[0] != $idformato_padre) {
+				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
 				if ($dato_formato_orig["numcampos"] && ($dato_formato_orig[0]["nombre"] != $fpadre[0]["nombre"])) {
 					$eslibreria = strpos($funciones[$i]["ruta"], "../librerias/");
 					if ($eslibreria === false) {
@@ -1123,7 +1117,6 @@ function crear_vista_formato($idformato, $arreglo) {
 				$submodulo_formato = busca_filtro_tabla("", "modulo", "nombre LIKE '" . $vista[0]["nombre"] . "'", "", $conn);
 				if (!$submodulo_formato["numcampos"]) {
 					$sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES ('" . $vista[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','" . $vista[0]["etiqueta"] . "','formatos/" . $vista[0]["ruta_mostrar"] . "','centro','" . $modulo_formato[0]["idmodulo"] . "','1','Permite administrar el formato " . $vista[0]["etiqueta"] . ".')";
-					// /die($sql);
 					guardar_traza($sql, $fpadre[0]["nombre_tabla"]);
 					phpmkr_query($sql, $conn);
 				}
@@ -1164,6 +1157,7 @@ function codifica($texto) {// strtoupper(codifica_encabezado(html_entity_decode(
  * <Post-condiciones><Post-condiciones>
  * </Clase>
  */
+
 function crear_formato_ae($idformato, $accion) {
 	global $sql, $conn;
 	$datos_detalles["numcampos"] = 0;
@@ -1803,19 +1797,19 @@ function crear_formato_ae($idformato, $accion) {
 		if ($formato[0]["item"] && $accion == "adicionar") {
 			$texto .= '<tr><td class="encabezado">ACCION A SEGUIR LUEGO DE GUARDAR</td><td ><input type="radio" name="opcion_item" id="opcion_item1" value="adicionar">Adicionar otro&nbsp;&nbsp;<input type="radio" id="opcion_item2" name="opcion_item" value="terminar" checked>Terminar</td></tr>';
 		}
-		$wheref = "(A.formato LIKE '" . $idformato . "' OR A.formato LIKE '%," . $idformato . ",%' OR A.formato LIKE '%," . $idformato . "' OR A.formato LIKE '" . $idformato . ",%') AND A.acciones LIKE '%" . strtolower($accion[0]) . "%' ";
+		$wheref = "A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=" . $idformato . " AND A.acciones LIKE '%" . strtolower($accion[0]) . "%' ";
 		if (count($listado_campos)) {
 			$wheref .= "AND nombre_funcion NOT IN(" . implode(",", $listado_campos) . ")";
 		}
 
-		$funciones = busca_filtro_tabla("*", "funciones_formato A", $wheref, " idfunciones_formato asc", $conn);
+		$funciones = busca_filtro_tabla("A.*,B.formato_idformato", "funciones_formato A, funciones_formato_enlace B", $wheref, " A.idfunciones_formato asc", $conn);
 		for ($i = 0; $i < $funciones["numcampos"]; $i++) {
 			$ruta_orig = "";
-			// saco el primer formato de la lista de la funcion (formato inicial)
-			$formato_orig = explode(",", $funciones[$i]["formato"]);
+			$funciones_orig = busca_filtro_tabla("A.*,B.formato_idformato", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.funciones_formato_fk=" . $funciones[$i]["idfunciones_formato"], " B.idfunciones_formato_enlace asc", $conn);
+			$formato_orig = $funciones_orig[0]["formato_idformato"];
 			// si el formato actual es distinto del formato inicial
-			if ($formato_orig[0] != $idformato) {// busco el nombre del formato inicial
-				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig[0], "", $conn);
+			if ($formato_orig != $idformato) {// busco el nombre del formato inicial
+				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
 				if ($dato_formato_orig["numcampos"]) {
 					// si el archivo existe dentro de la carpeta del archivo inicial
 					if (is_file($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
@@ -2799,16 +2793,14 @@ function generar_formato($idformato) {
 	$encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["encabezado"] . "'", "", $conn);
 
 	$data = "adicionar_" . $formato[0]['nombre'] . ".php
-editar_" . $formato[0]['nombre'] . ".php
-buscar_" . $formato[0]['nombre'] . ".php
-buscar_" . $formato[0]['nombre'] . "2.php
-mostrar_" . $formato[0]['nombre'] . ".php
-detalles_mostrar_" . $formato[0]['nombre'] . ".php";
+	editar_" . $formato[0]['nombre'] . ".php
+	buscar_" . $formato[0]['nombre'] . ".php
+	buscar_" . $formato[0]['nombre'] . "2.php
+	mostrar_" . $formato[0]['nombre'] . ".php
+	detalles_mostrar_" . $formato[0]['nombre'] . ".php";
 	if (intval($formato[0]["pertenece_nucleo"]) == 0) {
-		//Ignorar todo el contenido de la carpeta
 		$data = "*";
 	}
-	//file_put_contents($ruta_db_superior . "formatos/" . $formato[0]["nombre"] . "/.gitignore", $data);
 	$fp = fopen($ruta_db_superior . "formatos/" . $formato[0]["nombre"] . "/.gitignore", 'w+');
 	fwrite($fp, $data);
 	fclose($fp);
@@ -2820,10 +2812,12 @@ detalles_mostrar_" . $formato[0]['nombre'] . ".php";
 
 	if ($formato["numcampos"]) {
 		$texto = $formato[0]["cuerpo"];
-		if ($encabezado["numcampos"])
+		if ($encabezado["numcampos"]) {
 			$texto .= $encabezado[0][0];
-		if ($pie["numcampos"])
+		}
+		if ($pie["numcampos"]) {
 			$texto .= $pie[0][0];
+		}
 		$texto = str_replace("listado_detalles_", "id", $texto);
 		$resultado = preg_match_all('({\*([a-z]+[0-9]*[_]*[a-z]*[0-9]*)+\*})', $texto, $regs);
 		$campos = array_unique($regs[0]);
@@ -2841,32 +2835,25 @@ detalles_mostrar_" . $formato[0]['nombre'] . ".php";
 			}
 			$funciones = array_diff($campos, $campos_edit);
 			sort($funciones);
-
-			$lcampos = busca_filtro_tabla("*", "funciones_formato A", "A.nombre IN('" . implode("','", $funciones) . "')", "", $conn);
-
+			$lcampos = busca_filtro_tabla("A.*", "funciones_formato A", "A.nombre IN('" . implode("','", $funciones) . "')", "idfunciones_formato", $conn);
 			for ($i = 0; $i < $lcampos["numcampos"]; $i++) {
 
 				array_push($campos_editar, $lcampos[$i]["idfunciones_formato"]);
-				$formatos = explode(",", $lcampos[$i]["formato"]);
-				$eval = in_array($idformato, $formatos);
+				$formatos_func = busca_filtro_tabla("formato_idformato", "funciones_formato_enlace", "funciones_formato_fk=" . $lcampos[$i]["idfunciones_formato"] . " AND formato_idformato=" . $idformato, "", $conn);
 
-				if ($eval === false) {
+				if (!$formatos_func["numcampos"]) {
 					array_push($campos_otrosf, $lcampos[$i]["idfunciones_formato"]);
-					$formatos_func = busca_filtro_tabla("formato", "funciones_formato", "idfunciones_formato=" . $lcampos[$i]["idfunciones_formato"], "", $conn);
-					$vector_f = explode(",", $formatos_func[0][0]);
-					if (!in_array($idformato, $vector_f)) {
-						$vector_f[] = $idformato;
-						$sqlf = "UPDATE funciones_formato SET formato='" . implode(",", $vector_f) . "' WHERE idfunciones_formato=" . $lcampos[$i]["idfunciones_formato"];
-						guardar_traza($sqlf, $formato[0]["nombre_tabla"]);
-						phpmkr_query($sqlf);
-					}
+					$sqlf = "INSERT INTO funciones_formato_enlace(funciones_formato_fk,formato_idformato) VALUES(" . $lcampos[$i]["idfunciones_formato"] . "," . $idformato . ")";
+					guardar_traza($sqlf, $formato[0]["nombre_tabla"]);
+					phpmkr_query($sqlf);
 				}
 				array_push($campos_edit, $lcampos[$i]["nombre"]);
 			}
 			$campos_adicionar = array_diff($campos, $campos_edit);
-			sort($campos_adicionar);
-		} else
+			$campos_adicionar = array_unique($campos_adicionar);
+		} else {
 			alerta("El formato mostrar no posee Parametros si esta seguro continue con el Proceso de lo contrario haga Click en Listar Formato y Luego Editelo");
+		}
 	}
 	$tadd = "";
 	$ted = "";
@@ -2878,12 +2865,9 @@ detalles_mostrar_" . $formato[0]['nombre'] . ".php";
 		alerta("Existen otros Formatos Vinculados");
 	}
 	$adicionales = "";
-	if (@$_REQUEST["pantalla"] == "tiny")
+	if (@$_REQUEST["pantalla"] == "tiny") {
 		$adicionales = "&pantalla=tiny";
-	if (usuario_actual('login') == 'cerok') {
-		redirecciona("funciones_formatoadd.php?adicionar=" . $tadd . "&editar=" . $ted . "&idformato=" . $idformato . $adicionales);
-	} else {
-		redirecciona("formatoview.php?idformato=" . $idformato . $adicionales);
 	}
+	redirecciona("funciones_formatoadd.php?adicionar=" . $tadd . "&editar=" . $ted . "&idformato=" . $idformato . $adicionales);
 }
 ?>
