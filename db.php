@@ -1421,7 +1421,7 @@ function sincronizar_carpetas($tipo, $conn) {
 	for ($i = 0; $i < $configuracion["numcampos"]; $i++) {
 		switch($configuracion[$i]["nombre"]) {
 			case "ruta_temporal" :
-				$usr_tmp_dir = $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
+				$usr_tmp_dir = $_SESSION["ruta_temp_funcionario"];
 				break;
 			case "ruta_documentos" :
 				$dir2 = $configuracion[$i]["valor"];
@@ -1620,24 +1620,11 @@ function sincronizar_carpetas($tipo, $conn) {
 				}
 			}
 			natsort($archivos);
-			/*$archivos_anexos = array();
-			$extension_image = array(
-					'jpg',
-					'jpeg'
-			);
-			$cant=count($archivos);
-			for($i=0;$i<$cant;$i++){
-				$extension=explode('.',$archivos[$i]);
-				$extension=array_map('strtolower', $extension);
-				if( !in_array($extension[($cant-1)],$extension_image) ){
-					$archivos_anexos[]=$archivos[$i];
-					unset($archivos[$i]);
-				}
-			}*/
+
 			$archivos=array_values($archivos);
 			$archivos_anexos = array_unique($archivos);
-			$ruta_tem = busca_filtro_tabla("", "configuracion", "nombre='ruta_temporal'", "", $conn);
-			$ruta_temporal = $ruta_tem[0]['valor'] . '_' . usuario_actual('login');
+			
+			$ruta_temporal = $_SESSION["ruta_temp_funcionario"];
 			foreach ($archivos_anexos as $archivo) {
 				$ruta_archivo=$ruta_db_superior.$ruta_temporal.'/'.$archivo;
 				if(file_exists($ruta_archivo)){

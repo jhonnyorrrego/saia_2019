@@ -140,7 +140,7 @@ for($i=0;$i<$configuracion["numcampos"];$i++){
    break;
    case "ruta_ftp": $dir2=$configuracion[$i]["valor"]."_".$_SESSION["LOGIN".LLAVE_SAIA];
    break;
-   case "ruta_temporal": $dir3=$configuracion[$i]["valor"]."_".$_SESSION["LOGIN".LLAVE_SAIA];
+   case "ruta_temporal": $dir3=$_SESSION["ruta_temp_funcionario"];
    break;
    case "clave_ftp": 
 		if($configuracion[$i]['encrypt']){

@@ -1382,6 +1382,11 @@ function guardar_documento($iddoc, $tipo = 0) {
 			$sql1 = "insert into permiso_documento(funcionario,documento_iddocumento,permisos) values('" . $_SESSION["usuario_actual"] . "','" . $iddoc . "','e,m,r')";
 			phpmkr_query($sql1, $conn);
 
+			if (count($larchivos)) {
+				include_once ("anexosdigitales/funciones_archivo.php");
+				cargar_archivo_formato($larchivos, $idformato, $iddoc, $form_uuid);
+			}
+
 			llama_funcion_accion($iddoc, $idformato, "adicionar", "POSTERIOR");
 			generar_ruta_documento($idformato, $iddoc);
 
@@ -1473,11 +1478,6 @@ function guardar_documento($iddoc, $tipo = 0) {
 	if (count($ltareas)) {
 		include_once ("asignaciones/funciones.php");
 		asignar_tarea_a_documento($iddoc, $ltareas);
-	}
-	if (count($larchivos)) {
-		include_once ("anexosdigitales/funciones_archivo.php");
-		cargar_archivo_formato($larchivos, $idformato, $iddoc, $form_uuid);
-		// cargar_archivo_formato($larchivos, $idformato, $iddoc);
 	}
 	return ($insertado);
 }

@@ -1,4 +1,13 @@
 <?php
+$max_salida = 6;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
+	}
+	$ruta .= "../";
+	$max_salida--;
+}
 include_once ($ruta_db_superior . "pantallas/lib/PhpWord/funciones_include.php");
 include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
@@ -365,8 +374,7 @@ if ($arr_ruta["ruta"] != '') {
 		$extension_doc = '.docx';
 		$templateProcessor->saveAs($directorio_out . $archivo_out . $extension_doc);
 
-		$ruta_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal'", "", $conn);
-		$ruta_tmp_usr=$ruta_temporal[0]["valor"]. "_" . usuario_actual("login");
+		$ruta_tmp_usr=$_SESSION["ruta_temp_funcionario"];
 		$word_temp = StorageUtils::obtener_archivo_temporal($archivo_out, $ruta_tmp_usr);
 		copy($directorio_out . $archivo_out. $extension_doc, $word_temp . $extension_doc);
 

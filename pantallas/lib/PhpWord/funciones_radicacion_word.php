@@ -136,18 +136,11 @@ class RadicadoWord {
 					$archivo_out = 'documento_word';
 					$extension_doc = '.docx';
 
-					/*
-					 * if(is_file($this->ruta_docx . $archivo_out . $extension_doc)) {
-					 * unlink($this->ruta_docx . $archivo_out . $extension_doc);
-					 * unlink($this->ruta_docx . $archivo_out . '.pdf');
-					 * }
-					 */
 					$marca_agua = mostrar_estado_documento($_REQUEST['iddoc']);
 					$templateProcessor -> setTextWatermark($marca_agua);
 					$templateProcessor -> saveAs($this -> ruta_docx . $archivo_out . $extension_doc);
 
-					$ruta_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal'", "", $conn);
-					$ruta_tmp_usr = $ruta_temporal[0]["valor"] . "_" . usuario_actual("login");
+					$ruta_tmp_usr = $_SESSION["ruta_temp_funcionario"];
 					$word_temp = StorageUtils::obtener_archivo_temporal($archivo_out, $ruta_tmp_usr);
 					copy($this->ruta_docx . $archivo_out . $extension_doc, $word_temp);
 					rename($word_temp, $word_temp . $extension_doc);

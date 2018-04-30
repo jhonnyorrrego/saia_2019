@@ -64,12 +64,7 @@ function resultados_indicador($idformato, $iddoc) {
 	$html = "";
 	$formulas = busca_filtro_tabla("nombre,idft_formula_indicador as id,unidad,rango_colores,tipo_rango", "ft_formula_indicador f,documento d", "d.iddocumento=f.documento_iddocumento and d.estado not in ('ELIMINADO','ANULADO','ACTIVO') and f.ft_indicadores_calidad=" . $datos[0]["idft_indicadores_calidad"], "", $conn);
 	if ($formulas["numcampos"]) {
-		$configuracion_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal' AND tipo='ruta'", "", $conn);
-		if ($configuracion_temporal["numcampos"]) {
-			$ruta_temp = $configuracion_temporal[0]["valor"];
-		}
-		$ruta_grafico = $ruta_temp . "_" . $_SESSION['LOGIN' . LLAVE_SAIA] . "/" . $iddoc . "/";
-
+		$ruta_grafico = $_SESSION["ruta_temp_funcionario"] . "/" . $iddoc . "/";
 		$colspan = 5;
 		$td_html = "";
 		if ($_REQUEST["tipo"] != 5) {

@@ -71,7 +71,7 @@ if ($arr_ruta["ruta"] != '') {
 
 	$temp_fs->write(basename($archivo_plantilla->getName()), $archivo_plantilla->getContent(), true);
 
-	$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_procesar);
+	$templateProcessor = new \PhpOffice\PhpWord\SaiaTemplateProcessor($ruta_procesar);
 
 	$campos_word = $templateProcessor -> getVariables();
 
@@ -186,8 +186,7 @@ if ($arr_ruta["ruta"] != '') {
 		$templateProcessor -> setTextWatermark($marca_agua);
 		$templateProcessor -> saveAs($directorio_out . $archivo_out . $extension_doc);
 
-		$ruta_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal'", "", $conn);
-		$ruta_tmp_usr = $ruta_temporal[0]["valor"] . "_" . usuario_actual("login");
+		$ruta_tmp_usr = $_SESSION["ruta_temp_funcionario"];
 		$word_temp = StorageUtils::obtener_archivo_temporal($archivo_out, $ruta_tmp_usr);
 		copy($directorio_out . $archivo_out . $extension_doc, $word_temp . $extension_doc);
 

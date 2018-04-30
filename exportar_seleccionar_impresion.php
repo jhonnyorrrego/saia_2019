@@ -20,10 +20,7 @@ if ($exportar_pdf[0]["valor"] == 'html2ps') {
 }
 include_once ($ruta_db_superior . 'manipular_pdf/fpdi.php');
 
-$configuracion_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal' AND tipo='ruta'", "", $conn);
-if ($configuracion_temporal['numcampos']) {
-	$ruta_temp=$configuracion_temporal[0]["valor"]."_".usuario_actual("login");
-}
+$ruta_temp=$_SESSION["ruta_temp_funcionario"];
 crear_destino($ruta_temp);
 
 class concat_pdf extends FPDI {

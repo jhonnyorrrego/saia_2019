@@ -1,7 +1,16 @@
 <?php
+$max_salida = 6;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
+	}
+	$ruta .= "../";
+	$max_salida--;
+}
+
 include_once ($ruta_db_superior . "pantallas/lib/PhpWord/funciones_include.php");
 require_once ($ruta_db_superior . 'vendor/autoload.php');
-
 require_once $ruta_db_superior . 'StorageUtils.php';
 require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
 
@@ -10,10 +19,6 @@ require_once 'SaiaTemplateProcessor.php';
 use Stringy\StaticStringy as StringUtils;
 
 date_default_timezone_set('UTC');
-
-/**
- * Header file
- */
 use PhpOffice\PhpWord\Settings;
 
 error_reporting(E_ALL);
@@ -58,14 +63,9 @@ $ruta_combinar = null;
 
 if (@$anexo['numcampos']) {
 	$arr_ruta = StorageUtils::resolver_ruta($anexo[0]["ruta"]);
-
 	$temp_fs = StorageUtils::get_memory_filesystem("tmp_docx", "saia");
-
 	$ruta_docx = "saia://tmp_docx/docx";
 	$ruta_imagen = "saia://tmp_docx/firma_temp";
-	//$ruta_anexo = explode('anexos', $anexo[0]["ruta"]);
-	//$ruta_combinar = $ruta_db_superior . $ruta_anexo[0] . 'pdf_temp/';
-	//$ruta_docx = $ruta_db_superior . $ruta_anexo[0] . 'docx/';
 	$idformato = $anexo[0]["idformato"];
 }
 
@@ -78,18 +78,18 @@ if (@$anexo_csv['numcampos']) {
 	$combinar = true;
 }
 
-if($arr_ruta["ruta"] != '') {
+if ($arr_ruta["ruta"] != '') {
 	$ruta_plantilla = $arr_ruta["ruta"];
 	$alm_plantilla = $arr_ruta["clase"];
 	// copiar desde el almacen al temporal
-	$archivo_plantilla = $alm_plantilla->get_filesystem()->get($ruta_plantilla);
-	$ruta_procesar = "saia://tmp_docx/" . basename($archivo_plantilla->getName());
+	$archivo_plantilla = $alm_plantilla -> get_filesystem() -> get($ruta_plantilla);
+	$ruta_procesar = "saia://tmp_docx/" . basename($archivo_plantilla -> getName());
 
-	$temp_fs->write(basename($archivo_plantilla->getName()), $archivo_plantilla->getContent(), true);
+	$temp_fs -> write(basename($archivo_plantilla -> getName()), $archivo_plantilla -> getContent(), true);
 
-	$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_procesar);
+	$templateProcessor = new \PhpOffice\PhpWord\SaiaTemplateProcessor($ruta_procesar);
 
-	$campos_word = $templateProcessor->getVariables();
+	$campos_word = $templateProcessor -> getVariables();
 
 	if (@$_REQUEST["iddoc"] && count($campos_word)) {
 		if (!$combinar) {
@@ -101,19 +101,22 @@ if($arr_ruta["ruta"] != '') {
 				$src_qr = obtener_codigo_qr($idformato, $_REQUEST["iddoc"]);
 				$arr_alm_qr = StorageUtils::resolver_ruta($src_qr);
 				$alm_qr = $arr_alm_qr["clase"];
-				$archivo_qr = $alm_qr->get_filesystem()->get($arr_alm_qr["ruta"]);
+				$archivo_qr = $alm_qr -> get_filesystem() -> get($arr_alm_qr["ruta"]);
 
 				$ext_qr = "." . pathinfo($arr_alm_qr["ruta"], PATHINFO_EXTENSION);
 				$src = StorageUtils::obtener_archivo_temporal("qr_");
-				file_put_contents($src, $archivo_qr->getContent());
+				file_put_contents($src, $archivo_qr -> getContent());
 				rename($src, $src . $ext_qr);
 				$src .= $ext_qr;
-				//$temp_fs->write(basename($archivo_qr->getName()), $archivo_qr->getContent(), true);
-				//print_r($src);echo "<br>";
-				//print_r(is_file($src));die();
-				//$src = "../almacenamiento/APROBADO/2017-02-10/1242/qr/qr2017_02_10_21_02_30.png";
-				$img2 = array( array('img' => htmlspecialchars($src), 'size' => array(100, 100)));
-				$templateProcessor->setImg($campo_qr_word, $img2);
+
+				$img2 = array( array(
+						'img' => htmlspecialchars($src),
+						'size' => array(
+							100,
+							100
+						)
+					));
+				$templateProcessor -> setImg($campo_qr_word, $img2);
 			}
 
 			$directorio_out = $ruta_docx . "/";
@@ -121,48 +124,43 @@ if($arr_ruta["ruta"] != '') {
 			$archivo_out = 'documento_word';
 			$extension_doc = '.docx';
 
-			/*if(file_exists($directorio_out . $archivo_out . $extension_doc)) {
-				unlink($directorio_out . $archivo_out . $extension_doc);
-				unlink($directorio_out . $archivo_out . '.pdf');
-			}*/
 			$marca_agua = mostrar_estado_documento($_REQUEST['iddoc']);
 			$templateProcessor -> setTextWatermark($marca_agua);
 			$templateProcessor -> saveAs($directorio_out . $archivo_out . $extension_doc);
 
-			$ruta_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal'", "", $conn);
-			$ruta_tmp_usr=$ruta_temporal[0]["valor"]. "_" . usuario_actual("login");
+			$ruta_tmp_usr = $_SESSION["ruta_temp_funcionario"];
 			$word_temp = StorageUtils::obtener_archivo_temporal($archivo_out, $ruta_tmp_usr);
-			copy($directorio_out . $archivo_out. $extension_doc, $word_temp);
+			copy($directorio_out . $archivo_out . $extension_doc, $word_temp);
 			rename($word_temp, $word_temp . $extension_doc);
 
-			if(is_file($word_temp . $extension_doc)) {
+			if (is_file($word_temp . $extension_doc)) {
 				$comando = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . dirname($word_temp) . ' ' . $word_temp . $extension_doc;
 				$var = shell_exec($comando);
 				$pdf_name = "documento_word";
-				$dir_name = rtrim (dirname($ruta_plantilla), "anexos");
+				$dir_name = rtrim(dirname($ruta_plantilla), "anexos");
 				$dir_name .= "docx/";
-				$alm_plantilla->copiar_contenido_externo($word_temp . ".pdf", $dir_name . $pdf_name . ".pdf");
-				$alm_plantilla->copiar_contenido_externo($word_temp . $extension_doc, $ruta_plantilla);
-				$alm_plantilla->copiar_contenido_externo($word_temp . $extension_doc, $pdf_name . $extension_doc);
+				$alm_plantilla -> copiar_contenido_externo($word_temp . ".pdf", $dir_name . $pdf_name . ".pdf");
+				$alm_plantilla -> copiar_contenido_externo($word_temp . $extension_doc, $ruta_plantilla);
+				$alm_plantilla -> copiar_contenido_externo($word_temp . $extension_doc, $pdf_name . $extension_doc);
 			}
 		} else {
 			$ruta_combinar = StorageUtils::obtener_tempdir();
 			$tipo_alm_csv = $archivo_csv["clase"];
-			$csv_file = $tipo_alm_csv->get_filesystem()->get($archivo_csv["clase"]);
+			$csv_file = $tipo_alm_csv -> get_filesystem() -> get($archivo_csv["clase"]);
 			$archivo_csv = $ruta_combinar . "/tmp_csv.csv";
-			file_put_contents($archivo_csv, $csv_file->getContent());
+			file_put_contents($archivo_csv, $csv_file -> getContent());
 			combinar_documento($archivo_csv, $ruta_combinar, $ruta_docx, $idformato, $_REQUEST["iddoc"], $alm_plantilla, $ruta_plantilla);
 		}
 	} // fin si existe iddoc y el word tiene campos del formato
-} // fin si existe word
+}// fin si existe word
 
 function obtener_codigo_qr($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
 	include_once ($ruta_db_superior . "pantallas/qr/librerias.php");
-	$ruta=generar_codigo_qr($idformato, $iddoc);
-	if($ruta["exito"]){
-		return($ruta["ruta_qr"]);
-	}else{
+	$ruta = generar_codigo_qr($idformato, $iddoc);
+	if ($ruta["exito"]) {
+		return ($ruta["ruta_qr"]);
+	} else {
 		die("Error al retornar la ruta del QR");
 	}
 }
@@ -179,8 +177,8 @@ function combinar_documento($archivo_csv, $directorio_out, $ruta_docx, $idformat
 		// Cada elemento es un array campo => valor
 		$archivo_out = "documento_word_$i";
 
-	    $templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_docx . '/documento_word.docx');
-		$campos_word = $templateProcessor->getVariables();
+		$templateProcessor = new \PhpOffice\PhpWord\TemplateProcessor($ruta_docx . '/documento_word.docx');
+		$campos_word = $templateProcessor -> getVariables();
 
 		$templateProcessor -> setValue('formato_numero', $numero_radicado[0]['numero']);
 		if (in_array($campo_qr_word, $campos_word)) {
@@ -188,15 +186,21 @@ function combinar_documento($archivo_csv, $directorio_out, $ruta_docx, $idformat
 			$src_qr = obtener_codigo_qr($idformato, $iddoc);
 			$arr_alm_qr = StorageUtils::resolver_ruta($src_qr);
 			$alm_qr = $arr_alm_qr["clase"];
-			$archivo_qr = $alm_qr->get_filesystem()->get($arr_alm_qr["ruta"]);
+			$archivo_qr = $alm_qr -> get_filesystem() -> get($arr_alm_qr["ruta"]);
 
 			$ext_qr = "." . pathinfo($arr_alm_qr["ruta"], PATHINFO_EXTENSION);
 			$src = StorageUtils::obtener_archivo_temporal("qr_");
-			file_put_contents($src, $archivo_qr->getContent());
+			file_put_contents($src, $archivo_qr -> getContent());
 			rename($src, $src . $ext_qr);
 			$src .= $ext_qr;
 
-			$img2 = array( array('img' => htmlspecialchars($src), 'size' => array(100, 100)));
+			$img2 = array( array(
+					'img' => htmlspecialchars($src),
+					'size' => array(
+						100,
+						100
+					)
+				));
 			$templateProcessor -> setImg($campo_qr_word, $img2);
 		}
 
@@ -204,23 +208,23 @@ function combinar_documento($archivo_csv, $directorio_out, $ruta_docx, $idformat
 			if (in_array($campo, $campos_word)) {
 				$templateProcessor -> setValue($campo, $valor);
 
-				if(is_file($directorio_out . "/$archivo_out" . $extension_doc)) {
+				if (is_file($directorio_out . "/$archivo_out" . $extension_doc)) {
 					unlink($directorio_out . "/$archivo_out" . $extension_doc);
 				}
 			} else {
 				die("No se encontr&oacute; el campo $campo en la plantilla");
 			}
 		}
-		$templateProcessor->setTextWatermark($marca_agua);
-		$templateProcessor->saveAs($directorio_out . "/$archivo_out" . $extension_doc);
+		$templateProcessor -> setTextWatermark($marca_agua);
+		$templateProcessor -> saveAs($directorio_out . "/$archivo_out" . $extension_doc);
 		$templateProcessor = null;
 	}
 
 	if (is_dir($directorio_out)) {
 		$comando1 = 'export HOME=/tmp && libreoffice5.1 --headless -print-to-file --outdir ' . $directorio_out . ' ' . $directorio_out . "/*" . $extension_doc;
 		$var1 = shell_exec($comando1);
-		if(file_exists($directorio_out . "/documento_word.pdf")) {
-		    unlink($directorio_out . "/documento_word.pdf");
+		if (file_exists($directorio_out . "/documento_word.pdf")) {
+			unlink($directorio_out . "/documento_word.pdf");
 		}
 		$entrada_ps = $directorio_out . "/*.ps";
 		$salida_ps = $directorio_out . "/documento_word.pdf";
@@ -228,11 +232,9 @@ function combinar_documento($archivo_csv, $directorio_out, $ruta_docx, $idformat
 		$var2 = shell_exec($comando2);
 
 		$pdf_name = "documento_word";
-		$dir_name = rtrim (dirname($ruta_plantilla), "anexos");
+		$dir_name = rtrim(dirname($ruta_plantilla), "anexos");
 		$dir_name .= "docx/";
-		$alm_plantilla->copiar_contenido_externo($salida_ps, $dir_name . $pdf_name . ".pdf");
-		//$alm_plantilla->copiar_contenido_externo($word_temp . $extension_doc, $ruta_plantilla);
-		//$alm_plantilla->copiar_contenido_externo($word_temp . $extension_doc, $pdf_name . $extension_doc);
+		$alm_plantilla -> copiar_contenido_externo($salida_ps, $dir_name . $pdf_name . ".pdf");
 	}
 
 }

@@ -104,19 +104,8 @@ if (@$_SESSION["LOGIN" . LLAVE_SAIA]) {
 	//$actualizaciones = busca_filtro_tabla("count(*) AS cant", "documento_accion A,asignacion B", "A.documento_iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad=" . $usuario, "GROUP BY A.documento_iddocumento", $conn);
 
 	include_once ("tarea_limpiar_carpeta.php");
-	$configuracion_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal' AND tipo='ruta'", "", $conn);
-	if ($configuracion_temporal['numcampos']) {
-		$cont_ruta = $configuracion_temporal[0]['valor'];
-		if (!is_dir($cont_ruta)) {
-			mkdir($cont_ruta, 0777, true);
-			chmod($cont_ruta, 0777);
-		}
-		if (!is_dir($cont_ruta . '_' . usuario_actual("login"))) {
-			mkdir($cont_ruta . '_' . usuario_actual("login"), 0777, true);
-		}
-		borrar_archivos_carpeta($configuracion_temporal[0]['valor'] . '_' . usuario_actual("login"), 0);
-	} else {
-		notificaciones("Por favor defina la ruta de los temporales","warning",3500);
+	if (!is_dir($_SESSION["ruta_temp_funcionario"])) {
+		mkdir($_SESSION["ruta_temp_funcionario"], 0777, true);
 	}
 }
 ?>

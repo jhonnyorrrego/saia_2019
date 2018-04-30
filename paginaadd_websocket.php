@@ -202,7 +202,7 @@ table tbody td {
 				$ruta_ftp = $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
 				break;
 			case "ruta_temporal" :
-				$temporal_usuario = $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
+				$temporal_usuario = $_SESSION["ruta_temp_funcionario"];
 				break;
 			case "puerto_ftp" :
 				$puerto_ftp = 21;

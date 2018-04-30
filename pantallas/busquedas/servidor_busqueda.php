@@ -392,12 +392,7 @@ if($result["numcampos"]){
 				if($page==1 && file_exists($ruta_db_superior.$_REQUEST["ruta_exportar_saia"])){
 					unlink($ruta_db_superior.$_REQUEST["ruta_exportar_saia"]);
 				}
-				$configuracion_temporal=busca_filtro_tabla("valor","configuracion","nombre='ruta_temporal' AND tipo='ruta'","",$conn);
-				if($configuracion_temporal['numcampos']){
-					$cont_ruta=$configuracion_temporal[0]['valor'];
-					$cont_ruta .= '_'.usuario_actual("login");
-					crear_destino($ruta_db_superior . $cont_ruta);
-				}
+				crear_destino($ruta_db_superior . $_SESSION["ruta_temp_funcionario"]);
         crear_log_busqueda_excel($ruta_db_superior."../backup/log_exportar.txt", "INICIO CREAR ARCHIVO ".$ruta_db_superior.$_REQUEST["ruta_exportar_saia"]." -------".date("Y-m-d H:i:s")."-----------\n");
 				if($_REQUEST["exportar_saia"]=="excel"){
 					//AQUI SE CREA EL ARCHIVO SI NO EXISTE
