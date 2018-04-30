@@ -2,6 +2,17 @@
 <?php ob_start(); ?>
 <?php
 
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0)
+{
+if(is_file($ruta."db.php"))
+{
+$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+}
+$ruta.="../";
+$max_salida--;
+}
 // Initialize common variables
 $x_idfuncion_formato = Null;
 $x_nombre = Null;
@@ -11,7 +22,10 @@ $x_ruta = Null;
 $x_formato = Null;
 $x_acciones = Null;
 ?>
-<?php include ("db.php") ?>
+<?php include ("db.php");
+echo(librerias_jquery("1.7"));
+echo(estilo_bootstrap());
+?>
 <?php
 include ("phpmkrfn.php");
 include_once("librerias/funciones.php");
@@ -34,7 +48,7 @@ if (($sKey == "") || ((is_null($sKey)))) {
     redirecciona("funciones_formatolist.php");
 }
 	$sKey = (get_magic_quotes_gpc()) ? $sKey : addslashes($sKey);
-$sDbWhere .= "idfunciones_formato=" . trim($sKey) . "";
+$sDbWhere .= "funciones_formato_fk=" . trim($sKey) . " AND formato_idformato=".$_REQUEST["idformato"];
 
 // Get action
 $sAction = @$_POST["a_delete"];
@@ -71,11 +85,12 @@ switch ($sAction)
 <input type="hidden" name="idformato" value="<?php echo($idformato);?>">
 <?php $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey; ?>
 <input type="hidden" name="key_d" value="<?php echo  htmlspecialchars($sKey); ?>">
-<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
+<table border="0" cellspacing="1" cellpadding="4" class="table table-bordered">
 	<tr  class="encabezado_list">
 		<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Nombre</span></td>
 		<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Etiqueta</span></td>
 		<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">acciones</span></td>
+		<td valign="top"><span class="phpmaker" style="color: #FFFFFF;">Ubicada en Archivo</span></td>
 	</tr>
 <?php
 $nRecCount = 0;
@@ -132,16 +147,59 @@ $x_acciones = $sTmp;
 <?php echo $x_acciones; ?>
 <?php $x_acciones = $ox_acciones; // Restore Original Value ?>
 </span></td>
-	</tr>
 <?php
 	}
 }
 ?>
+		<td bgcolor="#F5F5F5"><span class="phpmaker">
+<?php 
+$formatos=busca_filtro_tabla("A.etiqueta,A.idformato,A.nombre,C.ruta,C.etiqueta AS etiqueta_funcion,B.funciones_formato_fk","formato A, funciones_formato_enlace B,funciones_formato C","A.idformato=B.formato_idformato AND B.funciones_formato_fk=C.idfunciones_formato AND funciones_formato_fk=".$sKey."","GROUP BY A.idformato HAVING min(B.funciones_formato_fk)=B.funciones_formato_fk ORDER BY B.idfunciones_formato_enlace ASC",$conn);
+// si el archivo existe dentro de la carpeta formatos
+$ruta_final=$formatos[0]["nombre"] . "/" . $formatos[0]["ruta"];
+if (is_file($ruta_db_superior . FORMATOS_CLIENTE . $formatos[0]["nombre"] . "/" . $formatos[0]["ruta"])) {
+	$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA . FORMATOS_CLIENTE . $formatos[0]["nombre"]. "/" . $formatos[0]["ruta"]);
+} elseif (is_file($ruta_db_superior . $formatos[0]["ruta"])) {
+	// si el archivo existe en la ruta especificada partiendo de la raiz
+	$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA . "/" . $formatos[0]["ruta"]);
+} else {
+	$ruta_formato = 'Error: ' . $formatos[0]["ruta"] . "|id=" . $formatos[0]["idfunciones_formato"];
+}
+echo($ruta_formato);
+?>
+</span></td>
+	</tr>
 </table>
 <p>
-<input type="submit" name="Action" value="CONFIRMAR BORRADO">
+<?php 
+$formato_enlace=busca_filtro_tabla("C.etiqueta,C.idformato,B.idfunciones_formato,C.nombre","formato C,funciones_formato_enlace A,funciones_formato B","A.formato_idformato=C.idformato AND A.funciones_formato_fk=B.idfunciones_formato AND B.idfunciones_formato=".$_REQUEST["key"],"A.funciones_formato_fk",$conn);
+if($formato_enlace["numcampos"]==1){
+	?>
+	<input type="hidden" name="eliminar_funcion" value="1" id="eliminar_funcion">
+	<input type="button" name="btn_elimina_funcion" id="btn_elimina_funcion" value="CONFIRMAR BORRADO" class="btn btn-mini btn-danger">
+	<?php 
+}
+else if($formato_enlace["numcampos"]){?>
+<input type="button" name="btn_elimina_enlace" id="btn_elimina_enlace" value="ELIMINAR ASIGNACION" class="btn btn-mini btn-info"> 
+<?php 
+	echo('<br><br><table class="table table-bordered"><tr><th class="encabezado_list" style="text-align:center" colspan="2">Formatos Vinculados</th></tr><tr><th>Etiqueta</th><th>Nombre</th></tr>');
+	for($i=0;$i<$formato_enlace["numcampos"];$i++){
+		echo('<tr><td><div class="link kenlace_saia" conector="iframe" enlace="formatos/detalle_formato.php?idformato='.$formato_enlace[$i]["idformato"].'" titulo="'.$formato_enlace[$i]["etiqueta"].'" title="'.$formato_enlace[$i]["etiqueta"].'">'.$formato_enlace[$i]["etiqueta"].'</div></td><td>'.$formato_enlace[$i]["nombre"].'</td></tr>');
+	}
+	echo('</table>');
+}
+?>
 </form>
-<?php include ("footer.php") ?>
+<script type="text/javascript">
+$("#btn_elimina_funcion").click(function(){
+	$("#funciones_formatodelete").submit();
+});
+$("#btn_elimina_enlace").click(function(){
+	$("#funciones_formatodelete").submit();
+});
+</script>
+<?php include ("footer.php");
+echo(librerias_acciones_kaiten());
+?>
 <?php
 phpmkr_db_close($conn);
 ?>
@@ -212,24 +270,16 @@ function LoadRecordCount($sqlKey,$conn)
 
 function DeleteData($sqlKey,$conn)
 {
-	$sSql = "Delete FROM funciones_formato";
+	$sSql = "Delete FROM funciones_formato_enlace";
 	$sSql .= " WHERE " . $sqlKey;
-	$sGroupBy = "";
-	$sHaving = "";
-	$sOrderBy = "";
-	if ($sGroupBy <> "") {
-		$sSql .= " GROUP BY " . $sGroupBy;
-	}
-	if ($sHaving <> "") {
-		$sSql .= " HAVING " . $sHaving;
-	}
-	if ($sOrderBy <> "") {
-		$sSql .= " ORDER BY " . $sOrderBy;
-	}
-	$sql1=$sSql;
 	$formato=busca_filtro_tabla("","formato A","A.idformato=".$_REQUEST["idformato"],"",$conn);
-	guardar_traza($sql1,$formato[0]["nombre_tabla"]);
+	guardar_traza($sSql,$formato[0]["nombre_tabla"]);
 	phpmkr_query($sSql,$conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
+	if(@$_REQUEST["elimina_funcion"]){
+		$sql1="DELETE FROM funciones_formato WHERE idfunciones_formato=".$_REQUEST["key"];
+		guardar_traza($sSql,$formato[0]["nombre_tabla"]);
+		phpmkr_query($sSql,$conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
+	}
 	return true;
 }
 ?>

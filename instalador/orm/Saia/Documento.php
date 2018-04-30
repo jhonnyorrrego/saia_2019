@@ -169,9 +169,9 @@ class Documento
     private $descripcionAnexo;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="almacenado", type="boolean", nullable=false)
+     * @ORM\Column(name="almacenado", type="integer", nullable=false)
      */
     private $almacenado = '0';
 

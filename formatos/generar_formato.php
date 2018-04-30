@@ -869,7 +869,6 @@ function crear_formato_mostrar($idformato) {
 		$texto .= htmlspecialchars_decode($formato[0]["cuerpo"]);
 		$texto .= '</td></tr>';
 		$librerias = array();
-		$funciones = busca_filtro_tabla("*", "funciones_formato A", "A.formato LIKE '" . $idformato . "' OR A.formato LIKE '%," . $idformato . ",%' OR A.formato LIKE '%," . $idformato . "' OR A.formato LIKE '" . $idformato . ",%' AND A.acciones LIKE '%m%'", "", $conn);
 		$campos = busca_filtro_tabla("*", "campos_formato A", "A.formato_idformato=" . $idformato, "", $conn);
 		$lcampos = extrae_campo($campos, "nombre", "U");
 
@@ -885,12 +884,13 @@ function crear_formato_mostrar($idformato) {
 				$archivos++;
 			}
 		}
-
+        $funciones = busca_filtro_tabla("A.*,B.formato_idformato", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=" . $idformato . " AND A.acciones LIKE '%m%'", "A.idfunciones_formato", $conn);
 		for ($i = 0; $i < $funciones["numcampos"]; $i++) {
 			$ruta_orig = "";
-			$formato_orig = explode(",", $funciones[$i]["formato"]);
-			if ($formato_orig[0] != $idformato) {// busco el nombre del formato inicial
-				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig[0], "", $conn);
+            // saco el primer formato de la lista de la funcion (formato inicial)
+			$formato_orig = $funciones[0]["formato_idformato"];
+			if ($formato_orig != $idformato) { // busco el nombre del formato inicial
+				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
 				if ($dato_formato_orig["numcampos"] && ($dato_formato_orig[0]["nombre"] != $formato[0]["nombre"])) {
 					$eslibreria = strpos($funciones[$i]["ruta"], "../librerias/");
 					if ($eslibreria === false) {
@@ -921,10 +921,11 @@ function crear_formato_mostrar($idformato) {
 						alerta("No es posible generar el archivo " . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
 				}
 			}
-			if ($funciones[$i]["parametros"] != "")
+			if ($funciones[$i]["parametros"] != "") {
 				$parametros = $idformato . "," . $funciones[$i]["parametros"];
-			else
+			} else {
 				$parametros = $idformato;
+            }
 			$texto = str_replace($funciones[$i]["nombre"], arma_funcion($funciones[$i]["nombre_funcion"], $parametros, "mostrar"), $texto);
 		}
 
@@ -958,7 +959,7 @@ function crear_formato_mostrar($idformato) {
  * </Clase>
  */
 function generar_vista($idformato) {
-	global $sql, $conn;
+	global $conn;
 	$vista = busca_filtro_tabla("*", "vista_formato A", "A.idvista_formato=" . $idformato, "", $conn);
 	if ($vista["numcampos"]) {
 		$encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $vista[0]["encabezado"] . "'", "", $conn);

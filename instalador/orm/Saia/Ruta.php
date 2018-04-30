@@ -99,16 +99,16 @@ class Ruta
     private $tipoDestino = '0';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="obligatorio", type="boolean", nullable=false)
+     * @ORM\Column(name="obligatorio", type="integer", nullable=false)
      */
     private $obligatorio = '1';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="restrictivo", type="boolean", nullable=false)
+     * @ORM\Column(name="restrictivo", type="integer", nullable=false)
      */
     private $restrictivo = '0';
 
@@ -120,9 +120,9 @@ class Ruta
     private $idenlaceNodo;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="clase", type="boolean", nullable=false)
+     * @ORM\Column(name="clase", type="integer", nullable=false)
      */
     private $clase = '1';
 

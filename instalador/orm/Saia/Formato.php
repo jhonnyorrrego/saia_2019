@@ -183,9 +183,9 @@ class Formato
     private $detalle = '0';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="tipo_edicion", type="boolean", nullable=false)
+     * @ORM\Column(name="tipo_edicion", type="integer", nullable=false)
      */
     private $tipoEdicion = '0';
 
@@ -246,9 +246,9 @@ class Formato
     private $orden;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="enter2tab", type="boolean", nullable=false)
+     * @ORM\Column(name="enter2tab", type="integer", nullable=false)
      */
     private $enter2tab = '0';
 

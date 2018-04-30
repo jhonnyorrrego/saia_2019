@@ -57,9 +57,9 @@ class PantallaCampos
     private $longitud;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="obligatoriedad", type="boolean", nullable=false)
+     * @ORM\Column(name="obligatoriedad", type="integer", nullable=false)
      */
     private $obligatoriedad = '0';
 
@@ -106,9 +106,9 @@ class PantallaCampos
     private $etiquetaHtml = 'text';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="orden", type="boolean", nullable=false)
+     * @ORM\Column(name="orden", type="integer", nullable=false)
      */
     private $orden = '0';
 

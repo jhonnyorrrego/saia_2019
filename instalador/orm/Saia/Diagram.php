@@ -43,9 +43,9 @@ class Diagram
     private $description;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="publico", type="boolean", nullable=true)
+     * @ORM\Column(name="publico", type="integer", nullable=true)
      */
     private $publico = '1';
 

@@ -85,9 +85,9 @@ class Modulo
     private $codPadre;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="orden", type="boolean", nullable=false)
+     * @ORM\Column(name="orden", type="integer", nullable=false)
      */
     private $orden = '1';
 
@@ -113,9 +113,9 @@ class Modulo
     private $busquedaIdbusqueda;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="permiso_admin", type="boolean", nullable=false)
+     * @ORM\Column(name="permiso_admin", type="integer", nullable=false)
      */
     private $permisoAdmin = '0';
 

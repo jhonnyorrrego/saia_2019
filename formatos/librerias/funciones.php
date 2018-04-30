@@ -2,10 +2,8 @@
 
 $max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
-while($max_salida>0)
-{
-if(is_file($ruta."db.php"))
-{
+while($max_salida>0) {
+if(is_file($ruta."db.php")) {
 $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 }
 $ruta.="../";
@@ -36,6 +34,7 @@ $consulta=busca_filtro_tabla("","ft_solicitud_gastos_caja_menor","documento_iddo
 //echo(cuenta_numero($consulta););
 
 }
+
 /*sql es el $sql que se ejecuta, $sql_export es el dato que se almacena para el export representado por un json con
 el sql y las variables estos 2 campos del json deben tener el sql a ejecutar y en variables cada una de las variables
 que se relacionan en el sql y nombre_formato siempre debe enviar el nombre de la tabla en la base de datos

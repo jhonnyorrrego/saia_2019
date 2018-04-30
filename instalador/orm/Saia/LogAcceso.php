@@ -43,9 +43,9 @@ class LogAcceso
     private $ipremota;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="exito", type="boolean", nullable=false)
+     * @ORM\Column(name="exito", type="integer", nullable=false)
      */
     private $exito = '0';
 

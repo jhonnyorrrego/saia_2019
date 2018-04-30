@@ -50,9 +50,9 @@ class Busquedas
     private $tipo = '';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="grafico", type="boolean", nullable=false)
+     * @ORM\Column(name="grafico", type="integer", nullable=false)
      */
     private $grafico = '0';
 

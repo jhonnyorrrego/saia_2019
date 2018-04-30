@@ -106,9 +106,9 @@ class Funcionario
     private $perfil = '6';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="debe_firmar", type="boolean", nullable=false)
+     * @ORM\Column(name="debe_firmar", type="integer", nullable=false)
      */
     private $debeFirmar = '1';
 
@@ -141,9 +141,9 @@ class Funcionario
     private $email;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="sistema", type="boolean", nullable=false)
+     * @ORM\Column(name="sistema", type="integer", nullable=false)
      */
     private $sistema = '1';
 

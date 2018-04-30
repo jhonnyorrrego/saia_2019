@@ -99,9 +99,9 @@ class BuzonEntrada
     private $tipo = 'ARCHIVO';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="activo", type="boolean", nullable=false)
+     * @ORM\Column(name="activo", type="integer", nullable=false)
      */
     private $activo = '0';
 

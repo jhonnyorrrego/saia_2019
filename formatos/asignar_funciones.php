@@ -47,7 +47,7 @@ if(@$_REQUEST["idformato"]){
   $idformato=$_REQUEST["idformato"];
   $lacciones=busca_filtro_tabla("","accion","","",$conn);
 
-  $lfunciones=busca_filtro_tabla("","funciones_formato A","(A.formato LIKE '".$idformato."' OR A.formato LIKE '%,".$idformato.",%' OR A.formato LIKE '%,".$idformato."' OR A.formato LIKE '".$idformato.",%') and nombre_funcion<>'transferencia_automatica'","",$conn);
+  $lfunciones=busca_filtro_tabla("","funciones_formato A, funciones_formato_enlace B","A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=".$idformato." AND nombre_funcion<>'transferencia_automatica'","",$conn);
   $accion_formato=0;
   if(@$_REQUEST["accion_funcion"]){
     $accion_formato=$_REQUEST["accion_funcion"];
@@ -55,7 +55,7 @@ if(@$_REQUEST["idformato"]){
   $accion_funcion=busca_filtro_tabla("","funciones_formato_accion","idfunciones_formato_accion=".$accion_formato,"",$conn);
   //print_r($lfunciones["numcampos"]."#".$lacciones["numcampos"]);die();
   if($lfunciones["numcampos"] && $lacciones["numcampos"]){
-    $texto.='<tr><td class="encabezado" title="Listado de funciones que se encuentran disponibles para el formato, si desea agregar una función debe adicionarla al formato directamente" >Funciones disponibles para el formato *: </td><td class="celda_normal"><select name="funciones" id="funciones">';
+    $texto.='<tr><td class="encabezado" title="Listado de funciones que se encuentran disponibles para el formato, si desea agregar una función debe adicionarla al formato directamente" >Funciones disponibles para el formato *: </td><td class="celda_normal"><select name="funciones" id="funciones"><option value="">Seleccione...</option>';
     for($i=0;$i<$lfunciones["numcampos"];$i++){
       $texto.='<option value="'.$lfunciones[$i]["idfunciones_formato"].'"';
       if($accion_funcion["numcampos"] && $accion_funcion[0]["idfunciones_formato"]== $lfunciones[$i]["idfunciones_formato"])
@@ -77,7 +77,7 @@ if(@$_REQUEST["idformato"]){
         $texto.=" SELECTED ";
       $texto.='>'.$lacciones[$i]["nombre"]." (".$lacciones[$i]["ruta"].')</option>';
     }
-    $texto.='<tr><td class="encabezado" title="Estado Actual de la asignacion que define si se debe realizar la accion o no">Estado: </td><td class="celda_normal"><input type="radio" name="estado" id="estado" value="1" ';
+    $texto.='</td></tr><tr><td class="encabezado" title="Estado Actual de la asignacion que define si se debe realizar la accion o no">Estado: </td><td class="celda_normal"><input type="radio" name="estado" id="estado" value="1" ';
     if($accion_funcion["numcampos"] && $accion_funcion[0]["estado"]== 1)
       $texto.=" CHECKED ";
     $texto.='> ACTIVO &nbsp;&nbsp;&nbsp;<input type="radio" name="estado" id="estado" value="0"';
@@ -92,7 +92,7 @@ if(@$_REQUEST["idformato"]){
     }
     else
       $texto.='</select><input type="hidden" name="adicionar" value="1"><input type="hidden" name="idformato" value="'.$_REQUEST["idformato"].'"></td></tr>';
-    $texto.='<tr align="center"><td class="celda_normal" colspan="2"><input type="submit" </td></tr>';
+    $texto.='<tr align="center"><td class="celda_normal" colspan="2"><input type="submit"> </td></tr>';
   }
   $texto.='</table></form><br />'."<div align='left'><a href='asignar_funciones.php?idformato=".$_REQUEST["idformato"]."'>ASIGNAR</a></div><br />";
 }

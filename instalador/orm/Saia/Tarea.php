@@ -50,9 +50,9 @@ class Tarea
     private $descripcion;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="reprograma", type="boolean", nullable=true)
+     * @ORM\Column(name="reprograma", type="integer", nullable=true)
      */
     private $reprograma;
 

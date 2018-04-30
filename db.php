@@ -2138,8 +2138,7 @@ function enviar_mensaje($correo = "", $tipo_usuario = array(), $usuarios = array
 		$mail = new PHPMailer();
 		$mail -> IsSMTP();
 		//$mail->SMTPDebug  = 2;
-		$mail -> Host = $servidor_correo;
-		//secure.emailsrvr.com - mail.rackspace.com
+		$mail -> Host = $servidor_correo; //secure.emailsrvr.com - mail.rackspace.com
 		$mail -> Port = $puerto_correo_salida;
 		$mail -> SMTPAuth = true;
 		$mail -> Username = $usuario_correo;
@@ -2658,6 +2657,21 @@ while($max_salida>0){
 	include_once('librerias_saia.php');
 	global $raiz_saia;
 	$raiz_saia=$ruta_superior_temporal;
+	echo(librerias_jquery('1.7'));
+	echo(librerias_notificaciones());
+
+	?>
+<script>
+notificacion_saia("<?php echo $mensaje ;?>","<?php echo($tipo); ?>",'',<?php echo($duraccion); ?>);
+</script>
+<?php
+}
+
+function alerta_formatos($mensaje,$tipo='success',$duraccion=3000){
+	require_once ('librerias_saia.php');
+	global $raiz_saia;
+	$raiz_saia = "/" . RUTA_SAIA . $ruta_superior_temporal;
+	echo(librerias_jquery('1.7'));
 	echo(librerias_notificaciones());
 
  ?>
@@ -3940,6 +3954,36 @@ function crear_archivo($nombre, $texto = NULL, $modo = 'wb') {
     }
     fclose($f);
     return ($resp);
+}
+
+function crear_archivo_formato($nombre,$texto=NULL,$modo='wb'){
+	global $cont;
+	$ruta_superior = __DIR__ . "/" . FORMATOS_CLIENTE;
+	$nombre = $ruta_superior . $nombre;
+	$path = pathinfo($nombre);
+	$ruta = $path["dirname"];
+	if (!is_dir($ruta)) {
+		if (mkdir($ruta, PERMISOS_CARPETAS, true)) {
+			chmod($ruta, PERMISOS_CARPETAS);
+		} else {
+			alerta("Problemas al generar las carpetas");
+			return (false);
+		}
+	}
+	$f = fopen($nombre, $modo);
+	if ($f) {
+		chmod($nombre, PERMISOS_ARCHIVOS);
+		$texto = str_replace("? >", "?" . ">", $texto);
+		if (fwrite($f, $texto, strlen($texto))) {
+			fclose($f);
+			return ($nombre);
+		} else {
+			fclose($f);
+		}
+	} else {
+		alerta('No se puede crear el archivo: ' . $nombre);
+	}
+	return (false);
 }
 
     /*

@@ -34,14 +34,10 @@ if (($sAction == "") || ((is_null($sAction)))) {
 	$sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
 	if ($sKey <> "") {
 		$sAction = "C"; // Copy record
-	}
-	else
-	{
+	} else {
 		$sAction = "I"; // Display blank record
 	}
-}
-else
-{
+} else {
 
 	// Get fields from form
 	$x_idcampos_formato = @$_POST["x_idcampos_formato"];
@@ -60,8 +56,7 @@ else
   $x_autoguardado = @$_POST["x_autoguardado"];
 }
 
-switch ($sAction)
-{
+switch ($sAction) {
 	case "C": // Get a record to display
 		if (!LoadData($sKey,$conn)) { // Load Record based on key
       alerta("No se ha podido encontrar el campo original del formato");
@@ -76,10 +71,10 @@ switch ($sAction)
 		}
 		break;
 }
-?>
-<?php 
-echo(librerias_jquery());
 include ($ruta_db_superior."header.php"); 
+
+
+echo(librerias_jquery());
 
 ?>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>ew.js"></script>
@@ -94,9 +89,8 @@ EW_dateSep = "/"; // set date separator
 <script type='text/javascript'>
     hs.graphicsDir = '<?php echo($ruta_db_superior);?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
     hs.outlineType = 'rounded-white';
-</script>
-<script type="text/javascript">
- 	 $().ready(function() {
+
+ 	 $(document).ready(function() {
  	//Elimina espacios y convierte el texto en minuscula
  	$("#action").attr("disabled",true);
  	$("#x_nombre").keyup(function(){
@@ -215,12 +209,7 @@ return true;
 if(!isset($_REQUEST["pantalla"]))
 {
 ?>
-
 <a class="btn btn-mini btn-default" href="<?php echo $ruta_db_superior; ?>formatos/formatoview.php?key=<?php echo(@$_REQUEST["idformato"])?>">Regresar</a>&nbsp;
-
-
-
-
 
 <a class="btn btn-mini btn-info" href="campos_formatolist.php?idformato=<?php echo(@$_REQUEST["idformato"]);?>">Listado de Campos</a></span>
 <?php }
@@ -508,19 +497,16 @@ if(!$datos_formato[0]["item"]){
 <!--<input type="submit" name="Action" value="ADICIONAR" id="action"> -->
 <input type="submit" value="Continuar" class="btn btn-primary btn-mini">
 </form>
-<?php include ("footer.php") ?>
-<?php
-//phpmkr_db_close($conn);
-?>
-<?php
+
+<?php 
+include ("footer.php");
 
 //-------------------------------------------------------------------------------
 // Function LoadData
 // - Load Data based on Key Value sKey
 // - Variables setup: field variables
 
-function LoadData($sKey,$conn)
-{
+function LoadData($sKey,$conn) {
 	$sKeyWrk = "" . addslashes($sKey) . "";
 	$sSql = "SELECT * FROM campos_formato";
 	$sSql .= " WHERE idcampos_formato = " . $sKeyWrk;
@@ -566,16 +552,12 @@ function LoadData($sKey,$conn)
 	phpmkr_free_result($rs);
 	return $LoadData;
 }
-?>
-<?php
 
 //-------------------------------------------------------------------------------
 // Function AddData
 // - Add Data
 // - Variables used: field variables
-
-function AddData($conn)
-{
+function AddData($conn) {
 global $x_autoguardado,$x_idcampos_formato, $x_formato_idformato, $x_nombre, $x_etiqueta, $x_tipo_dato, $x_longitud, $x_obligatoriedad,$x_banderas,
   	$x_acciones, $x_etiqueta_html, $x_valor, $x_predeterminado, $x_ayuda;
  	$formato=busca_filtro_tabla("","formato","idformato=".$_REQUEST["idformato"],"",$conn);
@@ -652,17 +634,14 @@ global $x_autoguardado,$x_idcampos_formato, $x_formato_idformato, $x_nombre, $x_
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_valor) : $x_valor; 
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["valor"] = $theValue;
-  if(strpos($GLOBALS["x_valor"],"*}")>0)
-    {$existe=busca_filtro_tabla("","funciones_formato","nombre='".$x_valor."'","",$conn);
+  if(strpos($GLOBALS["x_valor"],"*}")>0) {
+     $existe=busca_filtro_tabla("","funciones_formato","nombre='".$x_valor."'","",$conn);
      if(!$existe["numcampos"])
         $redirecciona="funciones_formatoadd.php?adicionar=".$x_valor."&idformato=".$x_formato_idformato;
-     else
-        {
-         $formatos_func=busca_filtro_tabla("formato","funciones_formato","idfunciones_formato=".$existe[0]["idfunciones_formato"],"",$conn);
-         $vector_f=explode(",",$formatos_func[0][0]);
-         if(!in_array($x_formato_idformato,$vector_f))
-             {$vector_f[]=$x_formato_idformato;
-              $sqlf="UPDATE funciones_formato SET formato='".implode(",",$vector_f)."' WHERE idfunciones_formato=".$existe[0]["idfunciones_formato"];
+     else {
+			$formatos_func = busca_filtro_tabla("formato", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND A.idfunciones_formato=" . $existe[0]["idfunciones_formato"] . " AND B.formato_idformato=" . $x_formato_idformato, "", $conn);
+			if (!$formatos_func["numcampos"]) {
+				$sqlf = "INSERT INTO funciones_formato_enlace(funciones_formato_fk,formato_idformato)VALUES(" . $existe[0]["idfunciones_formato"] . "," . $x_formato_idformato . ")";
 			  guardar_traza($sqlf,$formato[0]["nombre_tabla"]);
               phpmkr_query($sqlf,$conn) or error("Falla Al Ejecutar ".$sqlf." <br /> Al Generar el Formato.");
              } 
@@ -687,11 +666,12 @@ global $x_autoguardado,$x_idcampos_formato, $x_formato_idformato, $x_nombre, $x_
 	guardar_traza($strsql,$formato[0]["nombre_tabla"]);
 	phpmkr_query($strsql, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $strsql);
 
- if(!isset($_REQUEST["pantalla"]))
-  {$redirecciona="../tinymce34/jscripts/tiny_mce/plugins/formatos/formatos.php?formato=".$fieldList["formato_idformato"]."&tipo=campos_formato";
+ if(!isset($_REQUEST["pantalla"])) {
+   $redirecciona="../tinymce34/jscripts/tiny_mce/plugins/formatos/formatos.php?formato=".$fieldList["formato_idformato"]."&tipo=campos_formato";
   }
-  if(isset($redirecciona))
+  if(isset($redirecciona)) {
 	    redirecciona($redirecciona);
+	}
 	return true;
 }
 ?>
