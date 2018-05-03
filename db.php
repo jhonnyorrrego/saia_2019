@@ -5,15 +5,16 @@ require_once ("sql.php");
 require_once('StorageUtils.php');
 require_once('filesystem/SaiaStorage.php');
 require('vendor/autoload.php');
-use Gaufrette\Filesystem;
+date_default_timezone_set("America/Bogota");
 
+use Gaufrette\Filesystem;
 use Gaufrette\StreamMode;
 use Imagine\Image\Box;
 use Imagine\Gd\Imagine;
 
 if (!isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
-	@session_start();
-	@ob_start();
+	session_start();
+	ob_start();
 }
 
 $error = array();
@@ -34,6 +35,16 @@ if (isset($_SESSION["LOGIN" . LLAVE_SAIA]) && $_SESSION["LOGIN" . LLAVE_SAIA]) {
 	}
 	$_SESSION["ruta_temp_funcionario"] = $ruta_temp_func . "_" . $_SESSION["LOGIN" . LLAVE_SAIA]."/";
 }
+
+if ($_REQUEST['idfunc'] && !isset($_SESSION["LOGIN" . LLAVE_SAIA])) {//Utilizado para la generacion del PDF
+	include_once ('pantallas/lib/librerias_cripto.php');
+	$idfuncionario_crypto = decrypt_blowfish($_REQUEST["idfunc"], LLAVE_SAIA_CRYPTO);
+	$fun = busca_filtro_tabla("login,funcionario_codigo,idfuncionario", "funcionario", "estado=1 and idfuncionario=" . $idfuncionario_crypto, "", $conn);
+	if ($fun["numcampos"]) {
+		logear_funcionario_webservice($fun[0]["login"]);
+	}
+}
+
 
 function logear_funcionario_webservice($login){
 global $usuactual,$cons_temp_func;
@@ -668,7 +679,6 @@ function phpmkr_db_close($conn) {
 */
 function phpmkr_query($strsql){
 global $conn;
-
 	if(!get_magic_quotes_gpc()) // SI NO ESTAN ACTIVADAS LAS MAGIC QUOTES DE PHP ESCAPA LA SECUENCIA SQL
 		$strsql = stripslashes($strsql);
 	$rs = Null;
@@ -682,8 +692,7 @@ global $conn;
 		$tabla = "";
 		$string_detalle = "";
 		if($accion != "SELECT") {
-	        $func = usuario_actual("funcionario_codigo");
-
+	    $func = usuario_actual("funcionario_codigo");
 		} else {
 			$rs = $conn->Ejecutar_Sql($strsql);
 		}
@@ -1623,7 +1632,7 @@ function sincronizar_carpetas($tipo, $conn) {
 
 			$archivos=array_values($archivos);
 			$archivos_anexos = array_unique($archivos);
-			
+
 			$ruta_temporal = $_SESSION["ruta_temp_funcionario"];
 			foreach ($archivos_anexos as $archivo) {
 				$ruta_archivo=$ruta_db_superior.$ruta_temporal.'/'.$archivo;
@@ -2157,13 +2166,13 @@ function enviar_mensaje($correo = "", $tipo_usuario = array(), $usuarios = array
   	<table style='border:none; width:100%; font-size:11px;font-family:Roboto,Arial,Helvetica,sans-serif;color:#646464;vertical-align:middle;	padding: 10px;'>
 		<tr>
 			<td>
-				Este email ha sido enviado automáticamente desde SAIA (Sistema de Administración Integral de Documentos y Procesos).
+				Este email ha sido enviado autom&aacute;ticamente desde SAIA (Sistema de Administraci&oacute;n Integral de Documentos y Procesos).
 				<br>
 				<br>
 				Por favor, NO responda a este mail.
 				<br>
 				<br>
-				Para obtener soporte o realizar preguntas, envié un correo electrónico a " . $correo_admin[0]['email'] . "
+				Para obtener soporte o realizar preguntas, envi&eacute; un correo electr&oacute;nico a " . $correo_admin[0]['email'] . "
 			</td>
 			<td style='text-align:right;'>
 				<img src='" . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/imagenes/saia_gray.png'>
@@ -2175,7 +2184,7 @@ function enviar_mensaje($correo = "", $tipo_usuario = array(), $usuarios = array
   <div id="fondo" style="   padding: 10px; 	background-color: #f5f5f5;	">
 
   	<div id="encabezado" style="background-color:' . $config[0]["valor"] . ';color:white ;  vertical-align:middle;   text-align: left;    font-weight: bold;  border-top-left-radius:5px;   border-top-right-radius:5px;   padding: 10px;">
-  		NOTIFICACIÓN - SAIA
+  		NOTIFICACI&Oacute;N - SAIA
   	</div>
 
   	<div id="cuerpo" style="padding: 10px;background-color:white;">
@@ -2306,71 +2315,6 @@ else {
 error("NO EXISTE UN CONSECUTIVO LLAMADO ".$cad);
 return(0);
 }
-}
-
-/*
-<Clase>
-<Nombre>usuario_actual
-<Parametros>$campo: columna del usuario que se quiere obtener
-<Responsabilidades>Establece la informacion del usuario que tiene session actual
-<Notas>
-<Excepciones>No se encuentra el funcionario en el sistema, por favor comuniquese con el administrador
-             Si no existe session en el momento
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-*/
-function usuario_actual($campo) {
-	global $usuactual, $sql, $conn;
-	if (@$_REQUEST['idfunc'] && !isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
-		$fun = busca_filtro_tabla("login,funcionario_codigo,idfuncionario", "funcionario", "idfuncionario=" . $_REQUEST['idfunc'], "", $conn);
-		$_SESSION["LOGIN" . LLAVE_SAIA] = $fun[0]['login'];
-		$_SESSION["usuario_actual"] = $fun[0]['funcionario_codigo'];
-		$_SESSION["idfuncionario"]=$fun[0]['idfuncionario'];
-		$usuactual = $fun[0]['login'];
-	}
-
-	if (!isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
-		salir(decodifica_encabezado("Su sesi&oacute;n ha expirado, por favor ingrese de nuevo."));
-	}
-	if ($usuactual <> "") {
-		$dato = busca_filtro_tabla("A.*,A.idfuncionario AS id", "funcionario A", "A.login='" . $usuactual . "'", "", $conn);
-		if ($dato["numcampos"]) {
-			return ($dato[0][$campo]);
-		} else {
-			salir("No se encuentra el funcionario en el sistema, por favor comuniquese con el administrador");
-		}
-	}
-}
-
-/*
-<Clase>
-<Nombre>salir
-<Parametros>$texto: texto que saldr�en pantalla
-<Responsabilidades>Sacar la razon de la salida del sistema, redireccionando a la pagina de login
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-*/
-function salir($texto,$login) {
-	global $usuactual,$conn;
-	cerrar_sesion($login);
-	if($texto){
-		$usuactual="";
-		$conn->Conn->Desconecta();
-		@session_unset();
-		@session_destroy();
-		abrir_url(PROTOCOLO_CONEXION.RUTA_PDF."/index.php?texto_salir=".urlencode($texto),"_top");
-	}else{
-		$usuactual="";
-		$conn->Conn->Desconecta();
-		@session_unset();
-		@session_destroy();
-		abrir_url(PROTOCOLO_CONEXION.RUTA_PDF."/index.php","_top");
-	}
-	die();
 }
 
 
@@ -3792,8 +3736,10 @@ return $client_ip;
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>  */
+
 function almacenar_sesion($exito, $login) {
 	global $conn;
+	$_SESSION["idsesion_php"] = session_id();
 	$datos = array();
 	if ($login == "") {
 		$login = usuario_actual("login");
@@ -3822,99 +3768,124 @@ function almacenar_sesion($exito, $login) {
 			$conn -> Ejecutar_Sql($sql2);
 			$configuracion = busca_filtro_tabla("valor", "configuracion a", "a.nombre='intentos_login'", "", $conn);
 			if ($consecutivo >= $configuracion[0]["valor"]) {
-				$correo_admin = busca_filtro_tabla("valor", "configuracion a", "a.nombre='correo_administrador'", "", $conn);
-				$sql3 = "INSERT INTO lista_negra_acceso(login,iplocal,ipremota,fecha)VALUES('" . $login . "', '" . $iplocal . "', '" . $ipremoto . "', " . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
+				$correo_admin = busca_filtro_tabla("b.email", "configuracion a,funcionario b", "b.login=a.valor AND a.nombre ='login_administrador_interno'", "", $conn);
+				$sql3 = "INSERT INTO lista_negra_acceso(login,iplocal,ipremota,fecha) VALUES ('" . $login . "', '" . $iplocal . "', '" . $ipremoto . "', " . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
 				$conn -> Ejecutar_Sql($sql3);
 				$sql4 = "UPDATE funcionario SET estado='0' WHERE idfuncionario=" . $intentos[0]["idfuncionario"];
 				$conn -> Ejecutar_Sql($sql4);
-				$datos["mensaje"] = "Usuario inactivado por exceso de intentos. Favor comunicarse con el administrador " . $correo_admin[0]["valor"];
+				$datos["mensaje"] = "Usuario inactivado por exceso de intentos. Favor comunicarse con el administrador " . $correo_admin[0]["email"];
 			}
 		}
-		$sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,fecha) VALUES('$iplocal','$ipremoto','" . $login . "',0," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
+		$sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,fecha) VALUES('" . $iplocal . "','" . $ipremoto . "','" . $login . "',0," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
 		$conn -> Ejecutar_Sql($sql);
 	} else {
 		$sql2 = "UPDATE funcionario SET intento_login=0 WHERE idfuncionario=" . $id;
 		$conn -> Ejecutar_Sql($sql2);
 
 		$idsesion = ultima_sesion($login);
-		$accion = "";
 		if ($idsesion == "") {
-			$accion = "INSERTA";
+			session_regenerate_id();
+			$_SESSION["idsesion_php"] = session_id();
+			$sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,idsesion_php,fecha,funcionario_idfuncionario) VALUES('" . $iplocal . "','" . $ipremoto . "','" . $login . "'," . $exito . ",'" . $_SESSION["idsesion_php"] . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . "," . $id . ")";
+			$datos["mensaje"] = "Sesion creada";
 		} else {
-			$accion = "ACTUALIZA";
+			$datos["mensaje"] = "Sesion ya existe";
 		}
-		$datos_sesion = datos_sesion();
-		switch($accion) {
-			case "INSERTA" :
-				$sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,idsesion_php,sesion_php,fecha,funcionario_idfuncionario) VALUES('$iplocal','$ipremoto','" . $login . "'," . $exito . ",'" . session_id() . "','" . $datos_sesion["datos"] . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . "," . $id . ")";
-				break;
-			case "ACTUALIZA" :
-				$sql = "UPDATE log_acceso  SET sesion_php='" . $datos_sesion["ruta"] . "' WHERE idlog_acceso='" . $idsesion . "'";
-				break;
-		}
-		if ($sql != "") {
-			$conn -> Ejecutar_Sql($sql);
-		} else {
-			if ($datos_sesion["ruta"] == "") {
-				alerta("Ruta de Sesion, no definida. Por favor comunicarle al Administrador del sistema");
-			}
-			if ($datos_sesion["datos"] == "") {
-				alerta("Su sesion no fue encontrada. Por favor comunicarle al Administrador del sistema");
-			}
-		}
+		$conn -> Ejecutar_Sql($sql);
 	}
 	return ($datos);
 }
 
-/*<Clase>
-<Nombre>datos_sesion</Nombre>
-<Parametros></Parametros>
-<Responsabilidades>Crea una copia del archivo de sesion en la carpeta sesiones<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida></Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
-function datos_sesion() {
-	global $conn;
-	$datos = array();
-	$datos["ruta"] = "";
-	$datos["datos"] = "";
-	$path_sesion["numcampos"] = 1;
-	$max_salida = 6;
-	$ruta_db_superior = $ruta = "";
-	while ($max_salida > 0) {
-		if (is_file($ruta . "db.php")) {
-			$ruta_db_superior = $ruta;
-		}
-		$ruta .= "../";
-		$max_salida--;
-	}
-	$path_sesion[0] = session_save_path();
-	$archivo_sesion = "/sess_" . session_id();
-	$sess_file = $path_sesion[0] . $archivo_sesion;
-	$datos["ruta"] = $sess_file;
-	if (is_file($datos["ruta"])) {
-		$destino = crear_destino($ruta_db_superior . "../sesiones/" . date("Y-m-d") . "/");
-		$gestor = file_get_contents($datos["ruta"]);
-		$archivo_sesion2 = $archivo_sesion;
-		$i = 0;
-		while (is_file($destino . $archivo_sesion2 . ".0k")) {
-			$i++;
-			$archivo_sesion2 = $archivo_sesion . "_" . $i;
-		}
-		if (copy($datos["ruta"], $destino . $archivo_sesion2 . ".0k")) {
-			$datos["datos"] = $destino . $archivo_sesion2;
-			return ($datos);
+
+/*
+<Clase>
+<Nombre>usuario_actual
+<Parametros>$campo: columna del usuario que se quiere obtener
+<Responsabilidades>Establece la informacion del usuario que tiene session actual
+<Notas>
+<Excepciones>No se encuentra el funcionario en el sistema, por favor comuniquese con el administrador
+             Si no existe session en el momento
+<Salida>
+<Pre-condiciones>
+<Post-condiciones>
+*/
+function usuario_actual($campo) {
+	global $usuactual, $conn;
+	if (!isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
+		salir(decodifica_encabezado("Su sesi&oacute;n ha expirado, por favor ingrese de nuevo."));
+	} else if ($usuactual <> "") {
+		$dato = busca_filtro_tabla("A.*,A.idfuncionario AS id", "funcionario A", "A.login='" . $usuactual . "'", "", $conn);
+		if ($dato["numcampos"]) {
+			if ($dato[0]["estado"] == 1) {
+				return ($dato[0][$campo]);
+			} else {
+				salir("El funcionario se encuentra inactivo", $usuactual);
+			}
 		} else {
-			//alerta("No se puede guardar la sesion");
-			return ($datos);
+			salir("No se encuentra el funcionario en el sistema, por favor comuniquese con el administrador");
 		}
-	} else {
-		//alerta("No se encuentra el archivo de sesion");
+	}
+}
+
+
+function ultima_sesion($login) {
+	global $conn;
+	$iplocal = getRealIP();
+	$ipremoto = servidor_remoto();
+	$conexion = $conn -> Ejecutar_sql("Select idlog_acceso FROM log_acceso WHERE iplocal='" . $iplocal . "' AND ipremota='" . $ipremoto . "' AND fecha_cierre IS NULL AND exito=1 AND login='" . $login . "' and idsesion_php='" . $_SESSION["idsesion_php"] . "' ORDER BY fecha DESC");
+	if ($conexion -> num_rows) {
+		$dato = $conn -> sacar_fila();
+		return ($dato["idlog_acceso"]);
 	}
 	return ("");
+}
+
+/*
+<Clase>
+<Nombre>salir
+<Parametros>$texto: texto que saldr�en pantalla
+<Responsabilidades>Sacar la razon de la salida del sistema, redireccionando a la pagina de login
+<Notas>
+<Excepciones>
+<Salida>
+<Pre-condiciones>
+<Post-condiciones>
+*/
+function salir($texto, $login) {
+	global $usuactual, $conn;
+	if ($login != "") {
+		$iplocal = getRealIP();
+		$ipremoto = servidor_remoto();
+		if ($_SESSION["conexion_remota"] == 1) {
+			$conexion = $conn -> Ejecutar_sql("Select idsesion_php FROM log_acceso WHERE fecha_cierre IS NULL AND exito=1 AND login='" . $login . "' and idsesion_php='" . $_SESSION["idsesion_php"] . "' ORDER BY fecha DESC");
+			$sql = "UPDATE log_acceso SET fecha_cierre=" . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . " WHERE fecha_cierre IS NULL AND exito=1 and login='" . $login . "' and idsesion_php='" . $_SESSION["idsesion_php"] . "'";
+		} else {
+			$conexion = $conn -> Ejecutar_sql("Select idsesion_php FROM log_acceso WHERE fecha_cierre IS NULL AND exito=1 AND login='" . $login . "' ORDER BY fecha DESC");
+			$sql = "UPDATE log_acceso SET fecha_cierre=" . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . " WHERE fecha_cierre IS NULL AND exito=1 and login='" . $login . "'";
+		}
+		if ($conexion -> num_rows) {
+			$conn -> Ejecutar_sql($sql);
+
+			$temp = phpmkr_fetch_array($conexion);
+			for ($i = 0; $temp; $temp = phpmkr_fetch_array($conexion), $i++) {
+				session_id($temp["idsesion_php"]);
+				session_start();
+				session_destroy();
+				session_commit();
+			}
+		}
+	}
+	$usuactual = "";
+	$conn -> Conn -> Desconecta();
+	session_unset();
+	session_destroy();
+	unset($_COOKIE["PHPSESSID"]);
+	if ($texto) {
+		abrir_url(PROTOCOLO_CONEXION . RUTA_PDF . "/index.php?texto_salir=" . urlencode($texto), "_top");
+	} else {
+		abrir_url(PROTOCOLO_CONEXION . RUTA_PDF . "/index.php", "_top");
+	}
+	die();
 }
 
     /*
@@ -3999,96 +3970,15 @@ function crear_archivo_formato($nombre,$texto=NULL,$modo='wb'){
  * </Clase>
  */
 function crear_destino($destino) {
-    if (!is_dir($destino)) {
-        if (!mkdir($destino, PERMISOS_CARPETAS, true)) {
-            alerta("no es posible crear la carpeta ".$destino);
-		  return("");
-	   }
-    }
- return($destino);
-}
-
-/*<Clase>
-<Nombre>ultima_sesion</Nombre>
-<Parametros></Parametros>
-<Responsabilidades>Busca la ultima sesion sin cerrar hecha desde cierta ip<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida></Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
-function ultima_sesion($login) {
-	global $conn;
-	$iplocal = getRealIP();
-	$ipremoto = servidor_remoto();
-	$conexion = $conn -> Ejecutar_sql("Select idsesion_php FROM log_acceso WHERE iplocal='" . $iplocal . "' AND ipremota='" . $ipremoto . "' AND fecha_cierre IS NULL AND exito=1 AND login='" . $login . "' and idsesion_php='" . session_id() . "' ORDER BY fecha DESC");
-	if ($conexion -> num_rows) {
-		$dato = $conn -> sacar_fila();
-		return ($dato["idsesion_php"]);
-	}
-	return ("");
-}
-/*<Clase>
-<Nombre>cerrar_sesion</Nombre>
-<Parametros></Parametros>
-<Responsabilidades>Guarda la fecha de cierre del ultimo logue exitoso desde cierto equipo<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida></Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
-
-function cerrar_sesion($login) {
-	global $conn;
-	if ($login != "") {
-		$iplocal = getRealIP();
-		$ipremoto = servidor_remoto();
-		$conexion = $conn -> Ejecutar_sql("Select idsesion_php FROM log_acceso WHERE fecha_cierre IS NULL AND exito=1 AND login='" . $login . "' ORDER BY fecha DESC");
-		if ($conexion -> num_rows) {
-			$temp = phpmkr_fetch_array($conexion);
-			for ($i = 0; $temp; $temp = phpmkr_fetch_array($conexion), $i++) {
-				session_id($temp["idsesion_php"]);
-				session_start();
-				session_destroy();
-				session_commit();
-			}
-			$sql = "UPDATE log_acceso SET fecha_cierre=" . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . " WHERE fecha_cierre IS NULL AND exito=1 and login='" . $login . "'";
-			$conn -> Ejecutar_sql($sql);
+	if (!is_dir($destino)) {
+		if (!mkdir($destino, PERMISOS_CARPETAS, true)) {
+			alerta("no es posible crear la carpeta " . $destino);
+			return ("");
 		}
 	}
-	return;
-}
-/*<Clase>
-<Nombre>cerrar_sesiones_activas</Nombre>
-<Parametros>$login</Parametros>
-<Responsabilidades>Guarda la fecha de cierre del ultimo logueo<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida></Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
-function cerrar_sesiones_activas($login){
-global $conn;
-$sql="UPDATE log_acceso SET fecha_cierre=".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s")." WHERE fecha_cierre IS NULL AND exito=1 AND login='".$login."'";
-$conn->Ejecutar_sql($sql);
+	return ($destino);
 }
 
-/*<Clase>
-<Nombre>cargar_sesion</Nombre>
-<Parametros></Parametros>
-<Responsabilidades>Esta funcion debe recargar los datos de la sesion almacenados en la base de datos<Responsabilidades>
-<Notas>No se utiliza</Notas>
-<Excepciones></Excepciones>
-<Salida></Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
-function cargar_sesion(){
-return;
-}
 /*<Clase>
 <Nombre>servidor_remoto</Nombre>
 <Parametros></Parametros>
@@ -4099,15 +3989,10 @@ return;
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>  */
-function servidor_remoto(){
-$client_ip = "unknown";
-$client_ip =
-(!empty($_SERVER['REMOTE_ADDR']) ) ?
-  $_SERVER['REMOTE_ADDR']:
-  (( !empty($_ENV['REMOTE_ADDR']) ) ?
-    $_ENV['REMOTE_ADDR']:
-     "unknown" );
-return ($client_ip);
+function servidor_remoto() {
+	$client_ip = "unknown";
+	$client_ip = (!empty($_SERVER['REMOTE_ADDR'])) ? $_SERVER['REMOTE_ADDR'] : ((!empty($_ENV['REMOTE_ADDR'])) ? $_ENV['REMOTE_ADDR'] : "unknown");
+	return ($client_ip);
 }
 /*Fin de manejo de sesion*/
 /*

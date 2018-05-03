@@ -11,8 +11,6 @@ while($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "formatos/librerias/funciones_cliente.php");
 include_once ($ruta_db_superior . "class_transferencia.php");
-include_once($ruta_db_superior.'StorageUtils.php');
-include_once($ruta_db_superior.'filesystem/SaiaStorage.php');
 
 function retornar_seleccionados($valor) {
 	global $ruta_db_superior;

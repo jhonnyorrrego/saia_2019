@@ -1,9 +1,9 @@
 <?php
-$max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$max_salida = 6;
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
 	if (is_file($ruta . "db.php")) {
-		$ruta_db_superior = $ruta; //Preserva la ruta superior encontrada
+		$ruta_db_superior = $ruta;
 	}
 	$ruta .= "../";
 	$max_salida--;
@@ -20,7 +20,6 @@ function imagen_firma_faltante() {
 
 function crear_encabezado_pie_pagina($texto, $iddoc, $idformato, $pagina = 1) {
 	global $conn, $ruta_db_superior;
-
 	$resultado1 = preg_match_all('({\*([a-z]+[0-9]*[_]*[a-z]*[0-9]*)+\*})', $texto, $regs1);
 	$campos1 = array_unique($regs1[0]);
 	$formato = busca_filtro_tabla("*", "formato A", "idformato=" . $idformato, "", $conn);
@@ -32,8 +31,7 @@ function crear_encabezado_pie_pagina($texto, $iddoc, $idformato, $pagina = 1) {
 				$texto = str_replace($campos1[$i], mostrar_valor_campo($nombre, $idformato, $_REQUEST["iddoc"], 1), $texto);
 			}
 		}
-		$funciones = busca_filtro_tabla("*", "funciones_formato A", "A.nombre IN('" . implode("','", $campos1) . "') and acciones like '%m%' and (formato like '$idformato' or formato like '%,$idformato' or  formato like '%,$idformato,%'  or  formato like '$idformato,%')", "", $conn);
-
+		$funciones = busca_filtro_tabla("A.*", "funciones_formato A,funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk and A.nombre IN('" . implode("','", $campos1) . "') and acciones like '%m%' and B.formato_idformato=".$idformato, "", $conn);
 		for ($i = 0; $i < $funciones["numcampos"]; $i++) {
 			$ruta_orig = "";
 			$formato_orig = explode(",", $funciones[$i]["formato"]);
@@ -208,16 +206,16 @@ function logo_empresa() {
 	global $conn, $ruta_db_superior;
 	$logo = busca_filtro_tabla("valor", "configuracion", "nombre='logo'", "", $conn);
 	if ($logo["numcampos"]) {
- 		$tipo_almacenamiento = new SaiaStorage("archivos"); 		
- 			// $tipo_almacenamiento = new SaiaStorage("archivos");
-			$ruta_imagen=json_decode($logo[0]["valor"]);
-			if( is_object ($ruta_imagen) ){
-				if($tipo_almacenamiento->get_filesystem()->has($ruta_imagen->ruta)){
-					$ruta_imagen=json_encode($ruta_imagen);				
-					$archivo_binario=StorageUtils::get_binary_file($ruta_imagen);
-					return ('<img src="' . $archivo_binario . '" width="109" />');
-	 			}
+		$tipo_almacenamiento = new SaiaStorage("archivos");
+		// $tipo_almacenamiento = new SaiaStorage("archivos");
+		$ruta_imagen = json_decode($logo[0]["valor"]);
+		if (is_object($ruta_imagen)) {
+			if ($tipo_almacenamiento -> get_filesystem() -> has($ruta_imagen -> ruta)) {
+				$ruta_imagen = json_encode($ruta_imagen);
+				$archivo_binario = StorageUtils::get_binary_file($ruta_imagen);
+				return ('<img src="' . $archivo_binario . '" width="109" />');
 			}
+		}
 	} else
 		return ("");
 }

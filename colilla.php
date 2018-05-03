@@ -111,7 +111,8 @@ function validar_confirmacion_salida($consecutivo, $enlace, $enlace2) {
 	$enlace = str_replace("|", "&", $enlace);
 	?>
 	<script>
-		var ingreso=confirm("Esta seguro de generar un nuevo radicado?");
+		//var ingreso=confirm("Esta seguro de generar un nuevo radicado?");
+		ingreso=1;
 		if(ingreso){
 			window.open("colilla.php?consecutivo=<?php echo $consecutivo;?>&salidas=1&target=_self&enlace=<?php echo $enlace_redireccion;?>&descripcion_general=<?php echo $_REQUEST['descripcion_general'];?>","_self"); 
 		}else{

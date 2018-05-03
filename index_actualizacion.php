@@ -1,6 +1,5 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9">
 <?php
-date_default_timezone_set("America/Bogota");
 include_once ("db.php");
 include_once ("librerias_saia.php");
 
@@ -12,7 +11,7 @@ if (!isset($_GET['fin']) || !$_GET['fin']) {
 	echo(librerias_highslide());
 }
 
-if (@$_SESSION["LOGIN" . LLAVE_SAIA]) {
+if ($_SESSION["LOGIN" . LLAVE_SAIA]!="") {
 	almacenar_sesion(1, $_SESSION["LOGIN" . LLAVE_SAIA]);
 	$usuario =  $_SESSION["usuario_actual"];
 	$funcionario_idfuncionario = $_SESSION["idfuncionario"];

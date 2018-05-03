@@ -33,7 +33,7 @@ $_REQUEST["toc-location"] = "before";
 
 if (!isset($_REQUEST["URL"])) {
 
-	$_REQUEST["URL"] = PROTOCOLO_CONEXION . RUTA_PDF . "/formatos/" . $_REQUEST["plantilla"] . "/mostrar_" . $_REQUEST["plantilla"] . ".php?tipo=5&iddoc=" . $_REQUEST["iddoc"] . "&output=2&idfunc=" . usuario_actual("funcionario_codigo");
+	$_REQUEST["URL"] = PROTOCOLO_CONEXION . RUTA_PDF . "/formatos/" . $_REQUEST["plantilla"] . "/mostrar_" . $_REQUEST["plantilla"] . ".php?tipo=5&iddoc=" . $_REQUEST["iddoc"] . "&output=2&idfunc=" . $_SESSION["idfuncionario"];
 	if (isset($_REQUEST["font_size"])) {
 		$_REQUEST["URL"] .= "&font_size=" . $_REQUEST["font_size"];
 	}

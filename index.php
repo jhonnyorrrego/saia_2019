@@ -12,8 +12,6 @@ date_default_timezone_set("America/Bogota");
 include_once ("db.php");
 include_once ("librerias_saia.php");
 include_once ("cargando.php");
-require_once('StorageUtils.php');
-require_once('filesystem/SaiaStorage.php');
 
 echo(librerias_jquery("1.7"));
 echo(librerias_notificaciones());

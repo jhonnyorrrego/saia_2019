@@ -884,47 +884,40 @@ function crear_formato_mostrar($idformato) {
 				$archivos++;
 			}
 		}
-        $funciones = busca_filtro_tabla("A.*,B.formato_idformato", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=" . $idformato . " AND A.acciones LIKE '%m%'", "A.idfunciones_formato", $conn);
+    
+    $funciones = busca_filtro_tabla("A.*,B.funciones_formato_fk", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=" . $idformato . " AND A.acciones LIKE '%m%'", "A.idfunciones_formato asc", $conn);
 		for ($i = 0; $i < $funciones["numcampos"]; $i++) {
 			$ruta_orig = "";
-			$formato_orig = $funciones[0]["formato_idformato"];
-			if ($formato_orig != $idformato) { // busco el nombre del formato inicial
+			$form_origen=busca_filtro_tabla("formato_idformato","funciones_formato_enlace","funciones_formato_fk=".$funciones[$i]["funciones_formato_fk"],"idfunciones_formato_enlace asc",$conn);
+			if($form_origen["numcampos"]){
+				$formato_orig = $form_origen[0]["formato_idformato"];
+			}
+			if ($formato_orig != $idformato && $funciones[$i]["ruta"]=="funciones.php") { // busco el nombre del formato inicial
 				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
-				if ($dato_formato_orig["numcampos"] && ($dato_formato_orig[0]["nombre"] != $formato[0]["nombre"])) {
-					$eslibreria = strpos($funciones[$i]["ruta"], "../librerias/");
-					if ($eslibreria === false) {
-						$eslibreria = strpos($funciones[$i]["ruta"], "../class_transferencia");
-					}
+				if ($dato_formato_orig["numcampos"]) {
 					// si el archivo existe dentro de la carpeta del archivo inicial
-					if (is_file($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]) && $eslibreria === false) {
+					if (is_file($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 						$include_formato .= incluir("../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
-					} elseif (is_file($funciones[$i]["ruta"]) && $eslibreria === false) {// si el archivo existe en la ruta especificada partiendo de la raiz
+					} elseif (is_file($funciones[$i]["ruta"])) {// si el archivo existe en la ruta especificada partiendo de la raiz
 						$include_formato .= incluir("../" . $funciones[$i]["ruta"], "librerias");
-					} else if ($eslibreria === false) {
-						alerta("Las funciones del Formato " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"] . " son requeridas  no se han encontrado");
-						if (crear_archivo($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {// trato de crearlo dentro de la carpeta del formato actual
-							$include_formato .= incluir($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
-						} else
-							alerta("No es posible generar el archivo " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+					} else {
+						alerta("Hay funciones vinculadas al archivo (".$funciones[$i]["ruta"] . ") => ".$funciones[$i]["nombre_funcion"].", el archivo no se ha encontrado");
 					}
 				}
-			} else {// $ruta_orig=$formato[0]["nombre"];
+			} else {
 				if (is_file($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {// si el archivo existe dentro de la carpeta del formato actual
 					$include_formato .= incluir($funciones[$i]["ruta"], "librerias");
 				} elseif (is_file($funciones[$i]["ruta"])) {// si el archivo existe en la ruta especificada partiendo de la raiz
 					$include_formato .= incluir("../" . $funciones[$i]["ruta"], "librerias");
 				} else {// si no existe en ninguna de las dos
-					if (crear_archivo($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {// trato de crearlo dentro de la carpeta del formato actual
-						$include_formato .= incluir($funciones[$i]["ruta"], "librerias");
-					} else
-						alerta("No es posible generar el archivo " . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+					alerta("Hay funciones vinculadas al archivo (".$funciones[$i]["ruta"] . ") => ".$funciones[$i]["nombre_funcion"].", el archivo no se ha encontrado");
 				}
 			}
 			if ($funciones[$i]["parametros"] != "") {
 				$parametros = $idformato . "," . $funciones[$i]["parametros"];
 			} else {
 				$parametros = $idformato;
-            }
+      }
 			$texto = str_replace($funciones[$i]["nombre"], arma_funcion($funciones[$i]["nombre_funcion"], $parametros, "mostrar"), $texto);
 		}
 
@@ -1030,7 +1023,7 @@ function crear_vista_formato($idformato, $arreglo) {
 		$librerias = array();
 		$idformato_padre = $vista[0]["formato_padre"];
 		$fpadre = busca_filtro_tabla("", "formato", "idformato=" . $idformato_padre, "", $conn);
-		$funciones = busca_filtro_tabla("A.*, B.formato_idformato", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=" . $idformato_padre . " AND A.acciones LIKE '%m%'", "A.idfunciones_formato", $conn);
+		
 		$campos = busca_filtro_tabla("*", "campos_formato A", "A.formato_idformato=" . $idformato_padre, "", $conn);
 		$lcampos = extrae_campo($campos, "nombre", "U");
 		for ($i = 0; $i < $campos["numcampos"]; $i++) {
@@ -1055,52 +1048,43 @@ function crear_vista_formato($idformato, $arreglo) {
 </script>";
 		}
 
+		$funciones = busca_filtro_tabla("A.*, B.funciones_formato_fk", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=" . $idformato_padre . " AND A.acciones LIKE '%m%'", "A.idfunciones_formato", $conn);
 		for ($i = 0; $i < $funciones["numcampos"]; $i++) {
 			$ruta_orig = "";
-
-			$formato_orig = $funciones[0]["formato_idformato"];
-			if ($formato_orig[0] != $idformato_padre) {
+			$form_origen = busca_filtro_tabla("formato_idformato", "funciones_formato_enlace", "funciones_formato_fk=" . $funciones[$i]["funciones_formato_fk"], "idfunciones_formato_enlace asc", $conn);
+			if ($form_origen["numcampos"]) {
+				$formato_orig = $form_origen[0]["formato_idformato"];
+			}
+		
+			if ($formato_orig != $idformato_padre && $funciones[$i]["ruta"] == "funciones.php") {// busco el nombre del formato inicial
 				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
-				if ($dato_formato_orig["numcampos"] && ($dato_formato_orig[0]["nombre"] != $fpadre[0]["nombre"])) {
-					$eslibreria = strpos($funciones[$i]["ruta"], "../librerias/");
-					if ($eslibreria === false) {
-						$eslibreria = strpos($funciones[$i]["ruta"], "../class_transferencia");
-					}
+				if ($dato_formato_orig["numcampos"]) {
 					// si el archivo existe dentro de la carpeta del archivo inicial
-					if (is_file($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]) && $eslibreria === false) {
+					if (is_file($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 						$includes .= incluir("../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
-					} elseif (is_file($funciones[$i]["ruta"]) && $eslibreria === false) {// si el archivo existe en la ruta especificada partiendo de la raiz
-
+					} elseif (is_file($funciones[$i]["ruta"])) {// si el archivo existe en la ruta especificada partiendo de la raiz
 						$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
-					} else if ($eslibreria === false) {// si no existe en ninguna de las dos
-						// trato de crearlo dentro de la carpeta del formato actual
-						alerta("Las funciones del Formato " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"] . " son requeridas  no se han encontrado");
-						if (crear_archivo($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
-							$includes .= incluir($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
-						} else
-							alerta("No es posible generar el archivo " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+					} else {
+						alerta("Hay funciones vinculadas al archivo (" . $funciones[$i]["ruta"] . ") => " . $funciones[$i]["nombre_funcion"] . ", el archivo no se ha encontrado");
 					}
 				}
-			} else {// $ruta_orig=$formato[0]["nombre"];
-				// si el archivo existe dentro de la carpeta del formato actual
+			} else {
 				if (is_file($fpadre[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 					$includes .= incluir($funciones[$i]["ruta"], "librerias");
 				} elseif (is_file($funciones[$i]["ruta"])) {// si el archivo existe en la ruta especificada partiendo de la raiz
 					$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
 				} else {// si no existe en ninguna de las dos
-					// trato de crearlo dentro de la carpeta del formato actual
-					if (crear_archivo($fpadre[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
-						$includes .= incluir($funciones[$i]["ruta"], "librerias");
-					} else
-						alerta("No es posible generar el archivo " . $fpadre[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+					alerta("Hay funciones vinculadas al archivo (" . $funciones[$i]["ruta"] . ") => " . $funciones[$i]["nombre_funcion"] . ", el archivo no se ha encontrado");
 				}
 			}
-			if ($funciones[$i]["parametros"] != "")
+			if ($funciones[$i]["parametros"] != "") {
 				$parametros = $idformato_padre . "," . $funciones[$i]["parametros"];
-			else
+			} else {
 				$parametros = $idformato_padre;
+			}
 			$texto = str_replace($funciones[$i]["nombre"], arma_funcion($funciones[$i]["nombre_funcion"], $parametros, "mostrar"), $texto);
 		}
+
 		if ($formato[0]["librerias"] && $formato[0]["librerias"] != "") {
 			$includes .= incluir($formato[0]["librerias"], "librerias", 1);
 		}
@@ -1802,13 +1786,15 @@ function crear_formato_ae($idformato, $accion) {
 			$wheref .= "AND nombre_funcion NOT IN(" . implode(",", $listado_campos) . ")";
 		}
 
-		$funciones = busca_filtro_tabla("A.*,B.formato_idformato", "funciones_formato A, funciones_formato_enlace B", $wheref, " A.idfunciones_formato asc", $conn);
+		$funciones = busca_filtro_tabla("A.*,B.funciones_formato_fk", "funciones_formato A, funciones_formato_enlace B", $wheref, " A.idfunciones_formato asc", $conn);
 		for ($i = 0; $i < $funciones["numcampos"]; $i++) {
 			$ruta_orig = "";
-			$funciones_orig = busca_filtro_tabla("A.*,B.formato_idformato", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.funciones_formato_fk=" . $funciones[$i]["idfunciones_formato"], " B.idfunciones_formato_enlace asc", $conn);
-			$formato_orig = $funciones_orig[0]["formato_idformato"];
-			// si el formato actual es distinto del formato inicial
-			if ($formato_orig != $idformato) {// busco el nombre del formato inicial
+			$form_origen=busca_filtro_tabla("formato_idformato","funciones_formato_enlace","funciones_formato_fk=".$funciones[$i]["funciones_formato_fk"],"idfunciones_formato_enlace asc",$conn);
+			if($form_origen["numcampos"]){
+				$formato_orig = $form_origen[0]["formato_idformato"];
+			}
+
+			if ($formato_orig != $idformato && $funciones[$i]["ruta"]=="funciones.php") { // busco el nombre del formato inicial
 				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
 				if ($dato_formato_orig["numcampos"]) {
 					// si el archivo existe dentro de la carpeta del archivo inicial
@@ -1816,26 +1802,17 @@ function crear_formato_ae($idformato, $accion) {
 						$includes .= incluir("../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
 					} elseif (is_file($funciones[$i]["ruta"])) {// si el archivo existe en la ruta especificada partiendo de la raiz
 						$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
-					} else { // si no existe en ninguna de las dos
-						// trato de crearlo dentro de la carpeta del formato actual
-						if (crear_archivo($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
-							$includes .= incluir($funciones[$i]["ruta"], "librerias");
-						} else
-							alerta("No es posible generar el archivo " . $formato[0]["nombre_tabla"] . "/" . $funciones[$i]["ruta"]);
+					} else {
+						alerta("Hay funciones vinculadas al archivo (".$funciones[$i]["ruta"] . ") => ".$funciones[$i]["nombre_funcion"].", el archivo no se ha encontrado");
 					}
 				}
-			} else { // $ruta_orig=$formato[0]["nombre"];
-				// si el archivo existe dentro de la carpeta del formato actual
+			} else {
 				if (is_file($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
 					$includes .= incluir($funciones[$i]["ruta"], "librerias");
 				} elseif (is_file($funciones[$i]["ruta"])) {// si el archivo existe en la ruta especificada partiendo de la raiz
-					$includes .= incluir($funciones[$i]["ruta"], "librerias");
+					$includes .= incluir("../" . $funciones[$i]["ruta"], "librerias");
 				} else { // si no existe en ninguna de las dos
-					// trato de crearlo dentro de la carpeta del formato actual
-					if (crear_archivo($formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
-						$includes .= incluir($funciones[$i]["ruta"], "librerias");
-					} else
-						alerta("No es posible generar el archivo " . $formato[0]["nombre_tabla"] . "/" . $funciones[$i]["ruta"]);
+					alerta("Hay funciones vinculadas al archivo (".$funciones[$i]["ruta"] . ") => ".$funciones[$i]["nombre_funcion"].", el archivo no se ha encontrado");
 				}
 			}
 			if (!in_array($funciones[$i]["nombre_funcion"], $fun_campos)) {

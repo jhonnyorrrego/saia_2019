@@ -22,8 +22,6 @@ function mostrar_codigo_qr($idformato, $iddoc, $retorno = 0, $width = 80, $heigh
 	if (isset($_REQUEST["width_qr"])) {
 		$width = $_REQUEST["height_qr"];
 	}
-	include_once ($ruta_db_superior . "StorageUtils.php");
-	require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
 	$codigo_qr = busca_filtro_tabla("ruta_qr", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
 	$img = '';
 	if ($codigo_qr['numcampos']) {
@@ -61,9 +59,6 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
 	);
 	if ($idfunc == 0) {
 		$idfunc = $_SESSION["idfuncionario"];
-		if (!$idfunc && isset($_REQUEST["idfunc"])) {
-			$idfunc = $_REQUEST['idfunc'];
-		}
 	}
 
 	$codigo_qr = busca_filtro_tabla("ruta_qr, iddocumento_verificacion", "documento_verificacion", "documento_iddocumento=" . $iddoc, "", $conn);
@@ -93,10 +88,10 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
 				"ruta" => $filename
 			);
 			$sql_documento_qr = "INSERT INTO documento_verificacion(documento_iddocumento,funcionario_idfuncionario,fecha,ruta_qr,verificacion) VALUES (" . $iddoc . "," . $idfunc . "," . fecha_db_almacenar(date("Y-m-d"), 'Y-m-d') . ",'" . json_encode($ruta_qr) . "','vacio')";
-			phpmkr_query($sql_documento_qr) or die("Error al insertar la ruta del QR");
+			phpmkr_query($sql_documento_qr) or die("Error al insertar la ruta del QR ");
 			$retorno["exito"] = 1;
 			$retorno["msn"] = "QR generado con exito";
-			$retorno["ruta_qr"] = $imagen;
+			$retorno["ruta_qr"] = json_encode($ruta_qr);
 		}
 	}
 	return $retorno;
@@ -127,12 +122,7 @@ function generar_qr_bin($datos, $matrixPointSize = 2, $errorCorrectionLevel = 'L
 			return false;
 		} else {
 			$filename = StorageUtils::obtener_archivo_temporal("qr");
-			//ob_implicit_flush(false);
-			//ob_start('callback');
 			QRcode::png($datos, $filename, $errorCorrectionLevel, $matrixPointSize, 0);
-			//$imageString = base64_encode( ob_get_contents() );
-			//$imageString = ob_get_contents();
-			//ob_end_clean();
 			$imageString = file_get_contents($filename);
 			unlink($filename);
 			return $imageString;

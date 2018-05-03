@@ -20,6 +20,7 @@ include_once ($ruta_db_superior . 'formatos/librerias/encabezado_pie_pagina.php'
 include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 require_once ($ruta_db_superior . 'tcpdf/tcpdf.php');
 include_once ($ruta_db_superior . 'pantallas/qr/librerias.php');
+include_once ($ruta_db_superior . 'pantallas/lib/librerias_cripto.php');
 
 class Imprime_Pdf {
 	private $orientacion = 'P';
@@ -316,7 +317,7 @@ class Imprime_Pdf {
 
 		$fecha = explode("-", $this -> documento[0]["fecha"]);
 		include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-		$ruta_tmp_usr =$_SESSION["ruta_temp_funcionario"];
+		$ruta_tmp_usr = $_SESSION["ruta_temp_funcionario"];
 
 		if (!$_REQUEST['url']) {
 			$formato_ruta = aplicar_plantilla_ruta_documento($this -> documento[0]["iddocumento"]);
@@ -445,7 +446,7 @@ class Imprime_Pdf {
 		$mh = curl_multi_init();
 		$ch = curl_init();
 		$direccion = array();
-
+		$idfunc_crypto = encrypt_blowfish($_SESSION["idfuncionario"], LLAVE_SAIA_CRYPTO);
 		if ($_REQUEST["url"]) {
 			$request_url = str_replace('.php', '.php?1=1', $_REQUEST['url']);
 			$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . str_replace('|', '&', $request_url);
@@ -454,14 +455,14 @@ class Imprime_Pdf {
 			$datos_plantilla = busca_filtro_tabla("", $datos_formato[0]["nombre_tabla"], "documento_iddocumento=" . $iddocumento, "", $conn);
 			if ($vista > 0) {
 				$datos_vista = busca_filtro_tabla("", "vista_formato", "idvista_formato=" . $vista, "", $conn);
-				$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_vista[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&tipo_pdf=tcpdf&idfunc=" . $_SESSION["idfuncionario"];
+				$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_vista[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&tipo_pdf=tcpdf&idfunc=" . $idfunc_crypto;
 			} elseif ($datos_formato[0]["nombre"] == "carta") {
 				$destinos = explode(",", $datos_plantilla[0]["destinos"]);
 				foreach ($destinos as $fila) {
-					$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&tipo_pdf=tcpdf&idfunc=" . $_SESSION["idfuncionario"] . "&destino=$fila";
+					$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&tipo_pdf=tcpdf&idfunc=" . $idfunc_crypto . "&destino=$fila";
 				}
 			} else {
-				$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&tipo_pdf=tcpdf&idfunc=" . $_SESSION["idfuncionario"];
+				$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&tipo_pdf=tcpdf&idfunc=" . $idfunc_crypto;
 			}
 		}
 		//$this -> pdf -> startPageGroup();

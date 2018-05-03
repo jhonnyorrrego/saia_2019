@@ -11,17 +11,11 @@ while ($max_salida > 0) {
 
 include_once ($ruta_db_superior . "pantallas/lib/PhpWord/funciones_include.php");
 require_once ($ruta_db_superior . 'vendor/autoload.php');
-require_once $ruta_db_superior . 'StorageUtils.php';
-require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
-
 require_once 'SaiaTemplateProcessor.php';
+date_default_timezone_set('UTC');
 
 use Stringy\StaticStringy as StringUtils;
-
-date_default_timezone_set('UTC');
 use PhpOffice\PhpWord\Settings;
-
-error_reporting(E_ALL);
 
 if (!defined('CLI')) {
 	define('CLI', (PHP_SAPI == 'cli') ? true : false);
@@ -95,7 +89,6 @@ if ($arr_ruta["ruta"] != '') {
 		if (!$combinar) {
 			$numero_radicado = busca_filtro_tabla("", "documento", "iddocumento=" . $_REQUEST["iddoc"], "", $conn);
 			$templateProcessor -> setValue('formato_numero', $numero_radicado[0]['numero']);
-
 			$campo_qr_word = "codigo_qr";
 			if (in_array($campo_qr_word, $campos_word)) {
 				$src_qr = obtener_codigo_qr($idformato, $_REQUEST["iddoc"]);

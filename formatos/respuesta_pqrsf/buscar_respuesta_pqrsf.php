@@ -1,7 +1,7 @@
-<html><title>.:BUSCAR 2. RESPUESTA PQRSF:.</title><head><link rel="stylesheet" type="text/css" href="../../css/dhtmlXTree.css"/>
+<html><title>.:BUSCAR COMUNICACI&OACUTE;N EXTERNA:.</title><head><link rel="stylesheet" type="text/css" href="../../css/dhtmlXTree.css"/>
 			<script type="text/javascript" src="../../js/jquery.fcbkcomplete.js"></script>
 			<link rel="stylesheet" type="text/css" href="../../css/style_fcbkcomplete.css"/>
-			</head><body bgcolor="#F5F5F5"><form name="formulario_formatos" id="formulario_formatos" method="post" action="../librerias/funciones_buscador.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4" border="0"><tr><td colspan="4" class="encabezado_list">B&Uacute;SQUEDA 2. RESPUESTA PQRSF</td></tr><tr id="tr_expediente_serie"><td class="encabezado">&nbsp;<select name="condicion_expediente_serie" id="condicion_expediente_serie"><option value="AND">Y</option><option value="OR">O</option></td>
+			</head><body bgcolor="#F5F5F5"><form name="formulario_formatos" id="formulario_formatos" method="post" action="../librerias/funciones_buscador.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4" border="0"><tr><td colspan="4" class="encabezado_list">B&Uacute;SQUEDA COMUNICACI&Oacute;N EXTERNA</td></tr><tr id="tr_expediente_serie"><td class="encabezado">&nbsp;<select name="condicion_expediente_serie" id="condicion_expediente_serie"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="">EXPEDIENTE_SERIE</td><td class="encabezado">&nbsp;<select name="compara_expediente_serie" id="compara_expediente_serie"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
                      <td bgcolor="#F5F5F5"><select multiple id="expediente_serie" name="expediente_serie"></select><script>
                      $(document).ready(function()

@@ -23,15 +23,9 @@ function mostrar_radicado_entrada($idformato,$iddoc){
 	if($_REQUEST["iddoc"]){
 		$doc=busca_filtro_tabla("","documento a","iddocumento=".$_REQUEST["iddoc"],"",$conn);
 		echo '<td id="numero_radicado"><b>'.$doc[0]["numero"].'</b></td>'; 
-	}
-	else
+	}else{
 		echo '<td id="numero_radicado">'.$fecha."-<b>".muestra_contador("radicacion_entrada").'</b>-E</td>';
-}
-
-
-function digitalizar_formato_radicacion($idformato,$iddoc){
-	global $conn;
-  echo "<tr><td class='encabezado'>DESEA DIGITALIZAR</td><td><input name='digitalizacion' type='radio' value='1' checked>Si  <input name='digitalizacion' type='radio' value='2'>No</td></tr>";
+	}
 }
 
 function llenar_datos_funcion($idformato,$iddoc){
@@ -41,7 +35,6 @@ function llenar_datos_funcion($idformato,$iddoc){
 	    $sql="UPDATE ft_radicacion_entrada SET tipo_origen=".$dato[0]['tipo_radicado']." WHERE documento_iddocumento=".$iddoc;
 	    phpmkr_query($sql);
 		$texto='';
-		//$texto.='<br><br><a href="editar_radicacion_entrada.php?no_sticker=1&iddoc='.$iddoc.'&idformato='.$idformato.'">Llenar datos</a>';
 		$texto.='<br><br><button class="btn btn-mini btn-warning" onclick="window.location=\'editar_radicacion_entrada.php?no_sticker=1&iddoc='.$iddoc.'&idformato='.$idformato.'\';">Llenar datos</button>';
 		echo $texto;
 	}
@@ -75,8 +68,7 @@ function quitar_descripcion_entrada($idformato,$iddoc){
 					mes='0'+mes;
 				}
 				var fecha2=f.getFullYear() + "-" + mes + "-" + dia;
-				
-				//alert(fecha[0]+' > '+fecha2);
+			
 				if(fecha[0]>fecha2){
 					$("#fecha_oficio_entrada").after("<font color='red'>La fecha es mayor a la de hoy</font>");
 					$("#fecha_oficio_entrada").focus();
@@ -422,26 +414,12 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
         </script>
     <?php
 }
-function buscar_dependencias_hijas_radicacion_correspondencia($iddependencia){
-	global $conn;
-	$lista_hijas='';
-	$busca_hijas=busca_filtro_tabla("iddependencia","dependencia","cod_padre=".$iddependencia,"",$conn);
-	if($busca_hijas['numcampos']){
-		for($i=0;$i<$busca_hijas['numcampos'];$i++){
-			$lista_hijas.=$busca_hijas[$i]['iddependencia'].",";
-			$lista_hijas.=buscar_dependencias_hijas_radicacion_correspondencia($busca_hijas[$i]['iddependencia']);
-		}
-	}
-	return($lista_hijas);
-}
 
 
 function mostrar_item_destino_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-
 	include_once($ruta_db_superior."distribucion/funciones_distribucion.php");
-	echo(mostrar_listado_distribucion_documento($idformato,$iddoc));
-
+	echo mostrar_listado_distribucion_documento($idformato,$iddoc,1);
 }
 
 function mostrar_destino_radicacion($idformato,$iddoc){
@@ -488,17 +466,6 @@ function mostrar_destino_radicacion($idformato,$iddoc){
     return($nombres);
 }
 
-function campos_adicionales_radicacion($idformato,$iddoc){
-	global $conn,$ruta_db_superior;
-    
-    $datos=busca_filtro_tabla("","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
-    $tabla='<table class="table-bordered" style="width: 100%; border-collapse: collapse; font-size: 7pt;" border="1">';
-    
-    
-    $tabla.='</table>';
-    echo $tabla;
-}
-
 function obtener_radicado_entrada($idformato,$iddoc){
   global $conn;
   $datos=busca_filtro_tabla("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio,".fecha_db_obtener("fecha_oficio_entrada","Y-m-d")." AS fecha_oficio_entrada,".fecha_db_obtener("fecha_radicacion_entrada","Y-m-d")." AS fecha_radicacion_entrada,numero_guia,empresa_transportado","ft_radicacion_entrada","documento_iddocumento=".$iddoc,"",$conn);
@@ -542,7 +509,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
 	$img=mostrar_codigo_qr($idformato,$iddoc,true);
 	
     $tabla='
-        <table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
+        <table class="table table-bordered" style="width: 100%; text-align:left;" border="1">
   <tr>
     <td style="width: 23%;"><b>Fecha de radicaci&oacute;n:</b></td>
     <td style="width: 18%;">' . $fecha_radicacion . '</td>
@@ -596,50 +563,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
 	echo $tabla;
 }
 
-function mostrar_informacion_destino_radicacion($idformato, $iddoc) {
-	global $conn, $ruta_db_superior;
 
-	$tipo_destino = array(1 => "EXTERNO", 2 => "INTERNO");
-	$datos = busca_filtro_tabla("", "ft_radicacion_entrada", "documento_iddocumento=" . $iddoc, "", $conn);
-	$destino = mostrar_destino_radicacion($idformato, $iddoc);
-	$tabla = '<table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
-		  <tr>
-		    <td style="width:25%;"><b>Tipo de Destino:</b></td>
-		    <td style="width:75%;">' . $tipo_destino[intval($datos[0]['tipo_destino'])] . '</td>
-		  </tr>
-		  <tr><td><b>Destino:</b></td><td>' . $destino . '</td></tr>';
-	if ($datos[0]['tipo_destino'] == 2) {
-		$datos_copia = "";
-
-		$destinos = explode(",", $datos[0]['copia_a']);
-		$cont = count($destinos);
-		$cadena_buscada = "#";
-		for ($i = 0; $i < $cont; $i++) {
-			$posicion_coincidencia = strpos($destinos[$i], $cadena_buscada);
-			if ($posicion_coincidencia === false) {
-				$array_concat = array("nombres", "' '", "apellidos");
-				$cadena_concat = concatenar_cadena_sql($array_concat);
-				$busca_funcionarios = busca_filtro_tabla($cadena_concat . " AS nombre", "vfuncionario_dc", "tipo_cargo=1 AND iddependencia_cargo=" . $destinos[$i], "", $conn);
-				if ($busca_funcionarios['numcampos']) {
-					$datos_copia .= codifica_encabezado(html_entity_decode($busca_funcionarios[0]['nombre'])) . "<br/>";
-				}
-			} else {
-				$dependencia = str_replace("#", "", $destinos[$i]);
-				$array_concat = array("nombres", "' '", "apellidos");
-				$cadena_concat = concatenar_cadena_sql($array_concat);
-				$busca_funcionarios = busca_filtro_tabla($cadena_concat . " AS nombre", "vfuncionario_dc", "tipo_cargo=1 AND estado=1 AND estado_dc=1 AND estado_dep=1 AND iddependencia=" . $dependencia, "", $conn);
-				for ($k = 0; $k < $busca_funcionarios['numcampos']; $k++) {
-					$datos_copia .= codifica_encabezado(html_entity_decode($busca_funcionarios[$k]['nombre'])) . " <br/>";
-				}
-			}
-		}
-
-		$tabla .= '<tr><td><b>Copia Electr&oacute;nica a:</b></td><td>' . $datos_copia . '</td></tr>';
-	}
-
-	$tabla .= '</table>';
-	echo $tabla;
-}
 
 function datos_editar_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
@@ -891,7 +815,7 @@ function post_aprobar_rad_entrada($idformato, $iddoc) {
 			$enlace = "paginaadd.php?key=" . $iddoc . "&enlace2=formatos/radicacion_entrada/detalles_mostrar_radicacion_entrada.php?iddoc=" . $iddoc;
 			abrir_url($ruta_db_superior . "colilla.php?target=_self&key=" . $iddoc . "&enlace=" . $enlace, "_self");
 			die();
-		} else if ($_REQUEST["digitalizacion"] == 2) {
+		} else if ($_REQUEST["digitalizacion"] == 0) {
 			$enlace = "ordenar.php?key=" . $iddoc . "&accion=mostrar&mostrar_formato=1";
 			abrir_url($ruta_db_superior . "colilla.php?target=_self&key=" . $iddoc . "&enlace=" . $enlace, '_self');
 			die();
