@@ -11,7 +11,6 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
-include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."class_transferencia.php");	
 echo(librerias_notificaciones());
 
@@ -25,7 +24,7 @@ function recibir_datos($idformato, $iddoc){
   	$fecha= $datos_correo->fecha_oficio_entrada;
 	$anexos = $datos_correo->anexos;
 	
-	$lista_anexo=array_pop(explode("/",$anexos));
+	//$lista_anexo=array_pop(explode("/",$anexos));
 	
 	$tipo_radicado=$datos_correo->tipo_radicado;
 	if($tipo_radicado=="Sent"){

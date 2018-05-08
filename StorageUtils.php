@@ -50,14 +50,23 @@ class StorageUtils {
 			case 'versiones' :
 				$server_path = RUTA_VERSIONES;
 				break;
+			case 'configuracion' :
+				$server_path = RUTA_CONFIGURACION;
+				break;
 			case 'backup' :
 				$server_path = RUTA_BACKUPS;
 				break;
+			case 'bpmn' :
+				$server_path = RUTA_ARCHIVOS_BPMN;
+				break;
+			case 'ayuda' :
+				$server_path = RUTA_AYUDA;
+				break;
 			default :
-				// Usar el tipo. Ej. BACKUP
-				$server_path = $this -> tipo;
+				//Usar el tipo. Ej. BACKUP
+				$server_path = $tipo;
 		}
-
+		
 		$filesystem = static::ensure_dir_exists($server_path);
 		if ($cadena) {
 			return $filesystem -> getAdapter() -> getDirectory();

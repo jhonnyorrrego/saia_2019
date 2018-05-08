@@ -24,8 +24,48 @@ function set_expediente() {
 	$retorno -> exito = 0;
 	$retorno -> mensaje = "Error al guardar expediente";
 	$exito = 0;
-	$campos = array("nombre", "cod_padre", "codigo", "fecha", "serie_idserie", "dependencia_iddependencia", "codigo_numero", "fondo", "proceso", "fecha_extrema_i", "fecha_extrema_f", "no_unidad_conservacion", "no_folios", "no_carpeta", "soporte", "frecuencia_consulta", "ubicacion", "unidad_admin", "estado_archivo", "estado_cierre", "fk_idcaja", "agrupador", "propietario", "tomo_no", "indice_uno", "indice_dos", "indice_tres");
-	$array_vacios = array('cod_padre', 'serie_idserie', 'dependencia_iddependencia', 'soporte', 'frecuencia_consulta', 'ubicacion', 'estado_archivo', 'estado_cierre', 'estado_cierre', 'fk_idcaja', 'agrupador');
+	$campos = array(
+		"nombre",
+		"cod_padre",
+		"codigo",
+		"fecha",
+		"serie_idserie",
+		"dependencia_iddependencia",
+		"codigo_numero",
+		"fondo",
+		"proceso",
+		"fecha_extrema_i",
+		"fecha_extrema_f",
+		"no_unidad_conservacion",
+		"no_folios",
+		"no_carpeta",
+		"soporte",
+		"frecuencia_consulta",
+		"ubicacion",
+		"unidad_admin",
+		"estado_archivo",
+		"estado_cierre",
+		"fk_idcaja",
+		"agrupador",
+		"propietario",
+		"tomo_no",
+		"indice_uno",
+		"indice_dos",
+		"indice_tres"
+	);
+	$array_vacios = array(
+		'cod_padre',
+		'serie_idserie',
+		'dependencia_iddependencia',
+		'soporte',
+		'frecuencia_consulta',
+		'ubicacion',
+		'estado_archivo',
+		'estado_cierre',
+		'estado_cierre',
+		'fk_idcaja',
+		'agrupador'
+	);
 	for ($i = 0; $i < count($array_vacios); $i++) {
 		if (!@$_REQUEST[$array_vacios[$i]] || @$_REQUEST[$array_vacios[$i]] == '') {
 			$_REQUEST[$array_vacios[$i]] = 0;
@@ -95,7 +135,14 @@ function set_expediente_documento() {
 	$retorno -> exito = 0;
 	$retorno -> mensaje = "Error al guardar/vincular expediente";
 	$exito = 0;
-	$campos = array("nombre", "cod_padre", "codigo", "fecha", "propietario", "estado_archivo");
+	$campos = array(
+		"nombre",
+		"cod_padre",
+		"codigo",
+		"fecha",
+		"propietario",
+		"estado_archivo"
+	);
 	$array_vacios = array('cod_padre');
 	for ($i = 0; $i < count($array_vacios); $i++) {
 		if (!@$_REQUEST[$array_vacios[$i]] || @$_REQUEST[$array_vacios[$i]] == '') {
@@ -139,7 +186,18 @@ function update_expediente() {
 	$retorno -> exito = 0;
 	$retorno -> mensaje = "Error al guardar";
 	$exito = 0;
-	$array_vacios = array('cod_padre', 'serie_idserie', 'soporte', 'frecuencia_consulta', 'ubicacion', 'estado_archivo', 'estado_cierre', 'estado_cierre', 'fk_idcaja', 'agrupador');
+	$array_vacios = array(
+		'cod_padre',
+		'serie_idserie',
+		'soporte',
+		'frecuencia_consulta',
+		'ubicacion',
+		'estado_archivo',
+		'estado_cierre',
+		'estado_cierre',
+		'fk_idcaja',
+		'agrupador'
+	);
 	for ($i = 0; $i < count($array_vacios); $i++) {
 		if (!@$_REQUEST[$array_vacios[$i]] || @$_REQUEST[$array_vacios[$i]] == '') {
 			$_REQUEST[$array_vacios[$i]] = 0;
@@ -253,8 +311,7 @@ function crear_tomo_expediente() {
 	$tomo_siguiente = $cantidad_tomos + 1;
 	//tomo siguiente
 
-	$datos_padre = busca_filtro_tabla("nombre,serie_idserie,tomo_no,estado_archivo,descripcion,cod_padre", "expediente", "idexpediente=" . $tomo_padre, "", $conn);
-
+	$datos_padre = busca_filtro_tabla("nombre,serie_idserie,tomo_no,estado_archivo,descripcion,cod_padre,cod_arbol", "expediente", "idexpediente=" . $tomo_padre, "", $conn);
 	if (!$datos_padre[0]['tomo_no']) {
 		$up = "UPDATE expediente SET tomo_no=1 WHERE idexpediente=" . $tomo_padre;
 		phpmkr_query($up);
@@ -263,7 +320,7 @@ function crear_tomo_expediente() {
 	if (!is_numeric($expediente_actual[0]['serie_idserie'])) {
 		$expediente_actual[0]['serie_idserie'] = 0;
 	}
-	$sql = "INSERT INTO expediente (serie_idserie,nombre,fecha,propietario,ver_todos,editar_todos,tomo_padre,tomo_no,estado_archivo,descripcion,cod_padre, fk_idcaja, dependencia_iddependencia, codigo_numero, fondo, proceso, fecha_extrema_i, fecha_extrema_f,no_unidad_conservacion, no_folios, no_carpeta, soporte, frecuencia_consulta, ubicacion, notas_transf, indice_uno, indice_dos, indice_tres) VALUES (" . $expediente_actual[0]['serie_idserie'] . ",'" . $datos_padre[0]['nombre'] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . "," . usuario_actual('funcionario_codigo') . ",0,0," . $tomo_padre . "," . $tomo_siguiente . "," . $expediente_actual[0]['estado_archivo'] . ",'" . $datos_padre[0]['descripcion'] . "'," . $datos_padre[0]['cod_padre'] . "," . $expediente_actual[0]['fk_idcaja'] . "," . $expediente_actual[0]['dependencia_iddependencia'] . ",'" . $expediente_actual[0]['codigo_numero'] . "','" . $expediente_actual[0]['fondo'] . "','" . $expediente_actual[0]['proceso'] . "','" . $expediente_actual[0]['fecha_extrema_i'] . "','" . $expediente_actual[0]['fecha_extrema_f'] . "','" . $expediente_actual[0]['no_unidad_conservacion'] . "','" . $expediente_actual[0]['no_folios'] . "','" . $expediente_actual[0]['no_carpeta'] . "'," . $expediente_actual[0]['soporte'] . "," . $expediente_actual[0]['frecuencia_consulta'] . "," . $expediente_actual[0]['ubicacion'] . ",'" . $expediente_actual[0]['notas_transf'] . "','" . $expediente_actual[0]['indice_uno'] . "','" . $expediente_actual[0]['indice_dos'] . "','" . $expediente_actual[0]['indice_tres'] . "')";
+	$sql = "INSERT INTO expediente (serie_idserie,nombre,fecha,propietario,ver_todos,editar_todos,tomo_padre,tomo_no,estado_archivo,descripcion,cod_padre, fk_idcaja, dependencia_iddependencia, codigo_numero, fondo, proceso, fecha_extrema_i, fecha_extrema_f,no_unidad_conservacion, no_folios, no_carpeta, soporte, frecuencia_consulta, ubicacion, notas_transf, indice_uno, indice_dos, indice_tres,cod_arbol) VALUES (" . $expediente_actual[0]['serie_idserie'] . ",'" . $datos_padre[0]['nombre'] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . "," . usuario_actual('funcionario_codigo') . ",0,0," . $tomo_padre . "," . $tomo_siguiente . "," . $expediente_actual[0]['estado_archivo'] . ",'" . $datos_padre[0]['descripcion'] . "'," . $datos_padre[0]['cod_padre'] . "," . $expediente_actual[0]['fk_idcaja'] . "," . $expediente_actual[0]['dependencia_iddependencia'] . ",'" . $expediente_actual[0]['codigo_numero'] . "','" . $expediente_actual[0]['fondo'] . "','" . $expediente_actual[0]['proceso'] . "','" . $expediente_actual[0]['fecha_extrema_i'] . "','" . $expediente_actual[0]['fecha_extrema_f'] . "','" . $expediente_actual[0]['no_unidad_conservacion'] . "','" . $expediente_actual[0]['no_folios'] . "','" . $expediente_actual[0]['no_carpeta'] . "'," . $expediente_actual[0]['soporte'] . "," . $expediente_actual[0]['frecuencia_consulta'] . "," . $expediente_actual[0]['ubicacion'] . ",'" . $expediente_actual[0]['notas_transf'] . "','" . $expediente_actual[0]['indice_uno'] . "','" . $expediente_actual[0]['indice_dos'] . "','" . $expediente_actual[0]['indice_tres'] . "','".$datos_padre[0]['cod_arbol']."')";
 	phpmkr_query($sql);
 	$id_insertado = phpmkr_insert_id();
 	if ($id_insertado) {
@@ -414,7 +471,12 @@ function obtener_rastro_documento_expediente() {
 	global $conn;
 
 	$funcionario_radicador = busca_filtro_tabla("funcionario_codigo", "funcionario", "login='radicador_salida'", "", $conn);
-	$estados_validar = array("'borrador'", "'transferido'", "'revisado'", "'aprobado'");
+	$estados_validar = array(
+		"'borrador'",
+		"'transferido'",
+		"'revisado'",
+		"'aprobado'"
+	);
 	$consulta = busca_filtro_tabla("destino", "buzon_salida", "archivo_idarchivo=" . @$_REQUEST['iddoc'] . " AND tipo_destino=1 AND lower(nombre) IN(" . implode(',', $estados_validar) . ") AND destino NOT IN(" . $funcionario_radicador[0]['funcionario_codigo'] . ")", "", $conn);
 
 	$funs = busca_filtro_tabla("CONCAT(nombres,' ', apellidos)as nombre_funcionario", "funcionario", "funcionario_codigo IN(" . implode(',', extrae_campo($consulta, 'destino')) . ")", "", $conn);

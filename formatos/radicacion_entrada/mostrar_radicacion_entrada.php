@@ -1,7 +1,6 @@
 <?php include_once("../../librerias_saia.php"); ?>
 			<?php echo(librerias_jquery('1.7')); ?><?php include_once("../librerias/funciones_generales.php"); ?>
 			<?php include_once("../../class_transferencia.php"); ?>
-			<?php include_once("../carta/funciones.php"); ?>
 			<?php include_once("../librerias/encabezado_pie_pagina.php"); ?>
 			<?php include_once("funciones.php"); ?>
 			<?php include_once("../librerias/header_nuevo.php"); ?>
@@ -23,5 +22,6 @@
 </table>
 <p style="text-align: center;">&nbsp;</p>
 <p><?php mostrar_item_destino_radicacion(3,$_REQUEST['iddoc']);?></p>
+<p><?php mostrar_copia_electronica(3,$_REQUEST['iddoc']);?></p>
 <p><?php mostrar_estado_proceso(3,$_REQUEST['iddoc']);?></p></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>
 			

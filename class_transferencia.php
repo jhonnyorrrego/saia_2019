@@ -557,7 +557,7 @@ function aprobar($iddoc = 0, $opcion = 0) {
 	if ($aprobar_posterior == 1) {
 		llama_funcion_accion($iddoc, $tipo_radicado[0]["idformato"], "aprobar", "POSTERIOR");
 	}
-
+	actualizar_descripcion_documento($idformato,$iddoc);
 	if ($opcion == 0) {
 		if ($_REQUEST["anterior"] == $iddoc) {
 			enrutar_documento($ruta_db_superior . 'pantallas/documento/informacion_resumen_documento.php?iddoc=' . $iddoc, 'arbol_formato');
@@ -1454,10 +1454,23 @@ function guardar_documento($iddoc, $tipo = 0) {
 			$insertado = 0;
 		}
 	}
+	actualizar_descripcion_documento($idformato,$iddoc);
+	
+	if (count($ltareas)) {
+		include_once ("asignaciones/funciones.php");
+		asignar_tarea_a_documento($iddoc, $ltareas);
+	}
+	return ($insertado);
+}
 
+function actualizar_descripcion_documento($idformato, $iddoc) {
+	include_once ("formatos/librerias/funciones_generales.php");
 	if (isset($_REQUEST["campo_descripcion"])) {
-		include_once ("formatos/librerias/funciones_generales.php");
 		$campo = busca_filtro_tabla("nombre,etiqueta", "campos_formato", "idcampos_formato IN(" . $_REQUEST["campo_descripcion"] . ")", "orden", $conn);
+	} else if ($idformato) {
+		$campo = busca_filtro_tabla("idcampos_formato,nombre,etiqueta,formato_idformato", "campos_formato cf", "cf.formato_idformato='" . $idformato . "' AND (acciones like 'p' or acciones like '%,p' or acciones like 'p,%' or acciones like '%,p,%')", "orden", $conn);
+	}
+	if ($campo["numcampos"]) {
 		for ($i = 0; $i < $campo["numcampos"]; $i++) {
 			if ($i == 0) {
 				$descripcion = "<strong>" . $campo[$i]["etiqueta"] . ": </strong>" . mostrar_valor_campo($campo[$i]["nombre"], $idformato, $iddoc, 1);
@@ -1465,22 +1478,14 @@ function guardar_documento($iddoc, $tipo = 0) {
 				$descripcion .= "<br/><strong>" . $campo[$i]["etiqueta"] . ": </strong>" . mostrar_valor_campo($campo[$i]["nombre"], $idformato, $iddoc, 1);
 			}
 		}
-	} else if (!isset($_REQUEST["descripcion"]) && isset($_REQUEST["asunto"])) {
-		$descripcion = "'" . $_REQUEST["asunto"] . "'";
-	} else if ($_REQUEST["descripcion"]) {
-		$descripcion = "'" . $_REQUEST["descripcion"] . "'";
 	}
 
 	$descripcion = str_replace("'", "", $descripcion);
 	$sql = "UPDATE documento SET descripcion='" . $descripcion . "' WHERE iddocumento=" . $iddoc;
-	phpmkr_query($sql, $conn);
-
-	if (count($ltareas)) {
-		include_once ("asignaciones/funciones.php");
-		asignar_tarea_a_documento($iddoc, $ltareas);
-	}
-	return ($insertado);
+	phpmkr_query($sql);
+	return;
 }
+
 
 /*
  * <Clase>

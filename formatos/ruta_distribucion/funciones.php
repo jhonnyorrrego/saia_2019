@@ -12,6 +12,7 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "formatos/librerias_funciones_generales.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
+include_once ($ruta_db_superior . "distribucion/funciones_distribucion.php");
 
 
 /*ADICIONAR - EDITAR*/
@@ -77,91 +78,90 @@ function enlace_item_dependencias_ruta($idformato, $iddoc) {
 
 function mostrar_datos_dependencias_ruta($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
-	$select = "<select name='estado[]' style='width:100px;'>
-		<option value='1'>Activo</option>
-		<option value='2'>Inactivo</option>
-	</select>";
 	$tabla = '';
-	$dato = busca_filtro_tabla("", "ft_ruta_distribucion A, documento B ", "A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=" . $iddoc, "", $conn);
+	$dato = busca_filtro_tabla("idft_ruta_distribucion", "ft_ruta_distribucion A, documento B ", "A.documento_iddocumento=B.iddocumento AND B.estado not in ('ELIMINADO','ANULADO') AND B.iddocumento=" . $iddoc, "", $conn);
 	if ($dato['numcampos']) {
-		$tabla .= '<form id="item_prerequisitos" action="guardar_datos_dependencias.php">
-		<table style="width:100%; border-collapse: collapse;" border="1">
-		<tbody>
-		<tr class="encabezado_list">
-		    <td>Fecha</td>
-		    <td>Dependencia</td>
-		    <td>Descripción</td>
-		    <td>Estado</td>
-		</tr>';
-
 		$item = busca_filtro_tabla(fecha_db_obtener("fecha_item_dependenc", "Y-m-d H:i:s") . " AS fecha_item_dependenc,dependencia_asignada,descripcion_dependen,estado_dependencia", "ft_dependencias_ruta A, ft_ruta_distribucion B", "idft_ruta_distribucion=ft_ruta_distribucion and A.ft_ruta_distribucion=" . $dato[0]['idft_ruta_distribucion'], "", $conn);
+		if ($item["numcampos"]) {
+			$estado = array(
+				1 => "Activo",
+				2 => "Inactivo"
+			);
+			$tabla .= '<form id="item_prerequisitos" action="guardar_datos_dependencias.php">
+			<table style="width:100%; border-collapse: collapse;" border="1">
+			<tr class="encabezado_list">
+			    <td>Fecha</td>
+			    <td>Dependencia</td>
+			    <td>Descripci&oacute;n</td>
+			    <td>Estado</td>
+			</tr>';
 
-		if ($item['numcampos'] != 0) {
-			$estado = array(1 => "Activo", 2 => "Inactivo");
-			for ($j = $item['numcampos'] - 1; $j >= 0; $j--) {
+			for ($j = 0; $j < $item["numcampos"]; $j++) {
 				if ($item[$j]['estado_dependencia'] == 1) {//VINCULO RUTA DE DISTRIBUCION DE LAS DEPENDENCIAS ACTIVAS A LOS DOCUMENTOS
-					include_once ($ruta_db_superior . "distribucion/funciones_distribucion.php");
 					actualizar_dependencia_ruta_distribucion($dato[0]['idft_ruta_distribucion'], $item[$j]['dependencia_asignada'], 1);
 				}
-				$dependencia = busca_filtro_tabla('', 'dependencia', 'iddependencia=' . $item[$j]['dependencia_asignada'], '', conn);
-				$tabla .= '		
-									<tr>
-										<td>' . $item[$j]['fecha_item_dependenc'] . '</td>
-										
-										<input type="hidden" name="dependencia_asignada[]" value="' . $item[$j]['dependencia_asignada'] . '">
-										<td>' . $dependencia[0]['nombre'] . '</td>';
+				$dependencia = busca_filtro_tabla('nombre', 'dependencia', 'iddependencia=' . $item[$j]['dependencia_asignada'], '', $conn);
+				$tabla .= '<tr>
+					<td>' . $item[$j]['fecha_item_dependenc'] . '</td>
+					<td>' . $dependencia[0]['nombre'] . '<input type="hidden" name="dependencia_asignada[]" value="' . $item[$j]['dependencia_asignada'] . '"></td>';
 				if ($item[$j]['descripcion_dependen'] == '') {
 					$tabla .= '<td><input name="descripcion[]" type="text" style="width:200px;" value=""></td>';
 				} else {
-					$tabla .= '<td>' . $item[$j]['descripcion_dependen'] . '</td>
-							    <input type="hidden" name="descripcion[]" value="' . $item[$j]['descripcion_dependen'] . '"> 
-							    ';
+					$tabla .= '<td>' . $item[$j]['descripcion_dependen'] . '<input type="hidden" name="descripcion[]" value="' . $item[$j]['descripcion_dependen'] . '"></td>';
 				}
-				$seleccionar = array(1 => "", 2 => "");
+				$seleccionar = array(
+					1 => "",
+					2 => ""
+				);
 				$seleccionar[$item[$j]['estado_dependencia']] = 'selected';
-				$tabla .= '<td><select class="cambio_estado_dependencia" data-idft_ruta_distribucion=' . $dato[0]['idft_ruta_distribucion'] . ' data-idft=' . $item[$j]['dependencia_asignada'] . ' name="estado[]" style="width:100px;">
-					<option value="1" ' . $seleccionar[1] . '>Activo</option>
-					<option value="2" ' . $seleccionar[2] . '>Inactivo</option>
-				</select></td></tr>';
-
-			}//fin ciclo items
-
-			$tabla .= '	
-					</tbody>
-					</table><br>
-					<input class="btn btn-mini btn-primary" style="float:right;" type="submit" value="Guardar Cambios"/>
-					</form>
-					<script>
-					$(document).ready(function(){
-						$(".cambio_estado_dependencia").change(function(){
-							var estado=$(this).val();
-							var idft=$(this).attr("data-idft");
-							var idft_ruta_distribucion=$(this).attr("data-idft_ruta_distribucion");
-							$.ajax({
-								type:"POST",
-								dataType: "json",
-								url: "actualizar_estado_dependencias.php",
-								data: {
-									idft:idft,
-									estado:estado,
-									idft_ruta_distribucion:idft_ruta_distribucion
-								},
-								success: function(datos){
-									var color="success";
-									if(!datos.exito){
-										color="warning";
-									}
-									notificacion_saia(datos.mensaje,color,"",4000);
-									location.reload();
-								}
-							});
-						});				
-					});
-</script>';
-			echo($tabla);
+				$tabla .= '<td>
+					<select class="cambio_estado_dependencia" data-idft_ruta_distribucion=' . $dato[0]['idft_ruta_distribucion'] . ' data-idft=' . $item[$j]['dependencia_asignada'] . ' name="estado[]" style="width:100px;">
+						<option value="1" ' . $seleccionar[1] . '>Activo</option>
+						<option value="2" ' . $seleccionar[2] . '>Inactivo</option>
+					</select>
+					</td>
+				</tr>';
+			}
+			$tabla .= '</table><br/><input class="btn btn-mini btn-primary" style="float:right;" type="submit" value="Guardar Cambios"/></form>';
 		}
 	}
-
+	echo $tabla;
+	if($_REQUEST["tipo"]!=5){
+	?>
+		<script>
+			$(document).ready(function() {
+				$(".cambio_estado_dependencia").change(function() {
+					var estado = $(this).val();
+					var idft = $(this).attr("data-idft");
+					var idft_ruta_distribucion = $(this).attr("data-idft_ruta_distribucion");
+					$.ajax({
+						type : "POST",
+						dataType : "json",
+						url : "actualizar_estado_dependencias.php",
+						data : {
+							idft : idft,
+							estado : estado,
+							idft_ruta_distribucion : idft_ruta_distribucion
+						},
+						success : function(datos) {
+							var color = "success";
+							if (!datos.exito) {
+								color = "warning";
+							}
+							top.noty({
+								text : datos.mensaje,
+								type : color,
+								layout : 'topCenter',
+								timeout : 2500
+							});
+							location.reload();
+						}
+					});
+				});
+			}); 
+		</script>
+	<?php
+	}
 }
 
 function enlace_item_funcionarios_ruta($idformato, $iddoc) {
@@ -175,29 +175,32 @@ function enlace_item_funcionarios_ruta($idformato, $iddoc) {
 function mostrar_datos_funcionarios_ruta($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
 	$tabla = '';
-	$dato = busca_filtro_tabla("", "ft_ruta_distribucion A, documento B ", "A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=" . $iddoc, "", $conn);
-
+	$dato = busca_filtro_tabla("idft_ruta_distribucion", "ft_ruta_distribucion A, documento B ", "A.documento_iddocumento=B.iddocumento AND B.estado NOT IN ('ELIMINADO','ANULADO') AND B.iddocumento=" . $iddoc, "", $conn);
 	if ($dato['numcampos']) {
-		$tabla .= '<table style="width:100%; border-collapse: collapse; text-align:center;" border="1">
-		<tbody>
-		<tr class="encabezado_list">
+		$item = busca_filtro_tabla(fecha_db_obtener("fecha_mensajero", "Y-m-d H:i:s") . " AS fecha_mensajero,mensajero_ruta,estado_mensajero,idft_funcionarios_ruta", "ft_funcionarios_ruta A, ft_ruta_distribucion B", "idft_ruta_distribucion=ft_ruta_distribucion and A.ft_ruta_distribucion=" . $dato[0]['idft_ruta_distribucion'], "", $conn);
+
+		if ($item['numcampos']) {
+			$estado = array(
+				1 => "Activo",
+				2 => "Inactivo"
+			);
+
+			$tabla .= '<table style="width:100%; border-collapse: collapse; text-align:center;" border="1">
+			<tr class="encabezado_list">
 		    <td>Fecha</td>
 		    <td>Mensajero</td>
 		    <td>Estado</td>
 		    <td>Asignar Ruta</td>
-		</tr>';
+			</tr>';
 
-		$item = busca_filtro_tabla(fecha_db_obtener("fecha_mensajero", "Y-m-d H:i:s") . " AS fecha_mensajero,mensajero_ruta,estado_mensajero,idft_funcionarios_ruta", "ft_funcionarios_ruta A, ft_ruta_distribucion B", "idft_ruta_distribucion=ft_ruta_distribucion and A.ft_ruta_distribucion=" . $dato[0]['idft_ruta_distribucion'], "", $conn);
-
-		if ($item['numcampos'] != 0) {
-			$estado = array(1 => "Activo", 2 => "Inactivo");
-			for ($j = $item['numcampos'] - 1; $j >= 0; $j--) {
-				$array_concat = array("nombres", "' '", "apellidos");
+			for ($j = 0; $j < $item['numcampos']; $j++) {
+				$array_concat = array(
+					"nombres",
+					"' '",
+					"apellidos"
+				);
 				$cadena_concat = concatenar_cadena_sql($array_concat);
 				$mensajero = busca_filtro_tabla($cadena_concat . ' AS nombre', 'vfuncionario_dc', 'iddependencia_cargo=' . $item[$j]['mensajero_ruta'], '', $conn);
-
-				$seleccionar = array(1 => "", 2 => "");
-				$seleccionar[$item[$j]['estado_mensajero']] = 'selected';
 
 				$boton_asginar_ruta = '<button class="asignar_distribuciones" idft_ruta_distribucion="' . $dato[0]['idft_ruta_distribucion'] . '" mensajero_ruta="' . $item[$j]['mensajero_ruta'] . '" >
 					<i class="icon-ok"></i>
@@ -205,7 +208,11 @@ function mostrar_datos_funcionarios_ruta($idformato, $iddoc) {
 				if ($item[$j]['estado_mensajero'] == 2) {
 					$boton_asginar_ruta = '';
 				}
-
+				$seleccionar = array(
+					1 => "",
+					2 => ""
+				);
+				$seleccionar[$item[$j]['estado_mensajero']] = 'selected';
 				$tabla .= '<tr>
 					<td>' . $item[$j]['fecha_mensajero'] . '</td>
 					<td>' . $mensajero[0]['nombre'] . '</td>
@@ -217,56 +224,62 @@ function mostrar_datos_funcionarios_ruta($idformato, $iddoc) {
 					</td>
 					<td>' . $boton_asginar_ruta . '</td>
 				</tr>';
-
-			}//fin ciclo items
-
-			$tabla .= '</tbody>
-					</table><br>
-					
-					<script>
-					$(document).ready(function(){
-						$(".asignar_distribuciones").click(function(){
-							var idft_ruta_distribucion=$(this).attr("idft_ruta_distribucion");
-							var mensajero_ruta=$(this).attr("mensajero_ruta");
-							$.ajax({
-								type:"POST",
-								url: "actualizar_mensajero_distribuciones_inactivas.php",
-								data: {
-									idft_ruta_distribucion:idft_ruta_distribucion,
-									mensajero_ruta:mensajero_ruta
-								},
-								success: function(datos){
-									notificacion_saia("Se ha asignado este mensajero a las distribuciones inactivas de la ruta","success","",4000);
-								}
-							}); 	
-						});
-
-						$(".cambio_estado").change(function(){
-							var estado=$(this).val();
-							var idft=$(this).attr("data-idft");
-							var mensajero_ruta=$(this).attr("mensajero_ruta");
-							$.ajax({
-								type:"POST",
-								url: "actualizar_estado_mensajeros.php",
-								data: {
-									idft:idft,
-									estado:estado,
-									idft_ruta_distribucion:' . $dato[0]['idft_ruta_distribucion'] . ',
-									iddependencia_cargo_mensajero:mensajero_ruta
-								},
-								success: function(datos){
-									notificacion_saia("Estado del funcionario actualizado correctamente","success","",4000);
-									location.reload();
-								}
-							}); 	
-						});				
-					});
-					</script>';
-
-			echo($tabla);
+			}
+			$tabla .= '</table><br/>';
 		}
 	}
+echo $tabla;
+?>
+<script>
+	$(document).ready(function() {
+		$(".asignar_distribuciones").click(function() {
+			var idft_ruta_distribucion = $(this).attr("idft_ruta_distribucion");
+			var mensajero_ruta = $(this).attr("mensajero_ruta");
+			$.ajax({
+				type : "POST",
+				url : "actualizar_mensajero_distribuciones_inactivas.php",
+				data : {
+					idft_ruta_distribucion : idft_ruta_distribucion,
+					mensajero_ruta : mensajero_ruta
+				},
+				success : function(datos) {
+					top.noty({
+						text : "Se ha asignado este mensajero a las distribuciones inactivas de la ruta",
+						type : "success",
+						layout : 'topCenter',
+						timeout : 4000
+					});
+				}
+			});
+		});
 
+		$(".cambio_estado").change(function() {
+			var estado = $(this).val();
+			var idft = $(this).attr("data-idft");
+			var mensajero_ruta = $(this).attr("mensajero_ruta");
+			$.ajax({
+				type : "POST",
+				url : "actualizar_estado_mensajeros.php",
+				data : {
+					idft : idft,
+					estado : estado,
+					idft_ruta_distribucion:'<?php echo $dato[0]['idft_ruta_distribucion'];?>',
+					iddependencia_cargo_mensajero:mensajero_ruta
+				},
+				success : function(datos) {
+					top.noty({
+						text : "Estado del funcionario actualizado correctamente",
+						type : "success",
+						layout : 'topCenter',
+						timeout : 4000
+					});
+					location.reload();
+				}
+			});
+		});
+	}); 
+</script>
+<?php
 }
 
 function crear_items_ruta_distribucion($idformato, $iddoc) {

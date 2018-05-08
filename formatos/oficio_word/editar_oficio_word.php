@@ -1,4 +1,4 @@
-<html><title>.:EDITAR COMUNICACI&Oacute;N EXTERNA (WORD):.</title>
+<html><title>.:EDITAR DOCUMENTOS EN FORMATO (WORD):.</title>
 			<head><?php include_once("../../librerias_saia.php"); ?>
 			<script type="text/javascript" src="../librerias/funciones_formatos.js"></script>
 			<?php include_once("../librerias/funciones_generales.php"); ?>
@@ -17,10 +17,10 @@
 				});
 				</script> 
 			</head>
-			<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">COMUNICACIÓN EXTERNA (WORD)</td></tr><tr id="tr_dependencia">
+			<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">DOCUMENTOS EN FORMATO (WORD)</td></tr><tr id="tr_dependencia">
                      <td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td>
                      <?php buscar_dependencia(400,4802,$_REQUEST['iddoc']);?></tr><tr id="tr_anexo_word">
-                     <td class="encabezado" width="20%" title="">CARGAR ARCHIVO DE WORD*</td>
+                     <td class="encabezado" width="20%" title="Por favor elija la plantilla recomendada y una vez diligenciada debe cargarla en esta opci&oacute;n">CARGAR ARCHIVO DE WORD*</td>
                      <td class="celda_transparente"><?php echo '<div class="textwrapper">
 			<a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=400&idcampo=4797" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
 			objectType: \'iframe\', outlineType: \'rounded-white\', wrapperClassName: \'highslide-wrapper drag-header\',

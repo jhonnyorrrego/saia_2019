@@ -236,17 +236,17 @@ function buscar_dependencias_hijas_distribucion($iddependencia) {
 	return ($lista_hijas);
 }
 
-function mostrar_listado_distribucion_documento($idformato, $iddoc,$retorno=0) {
+function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0) {
 	global $conn, $ruta_db_superior;
 	$distribuciones = busca_filtro_tabla("numero_distribucion,tipo_origen,origen,tipo_destino,destino,estado_distribucion,iddistribucion", "distribucion", "documento_iddocumento=" . $iddoc, "", $conn);
 	$tabla = '';
 	if ($distribuciones['numcampos']) {
-		$tabla = '<table class="table table-bordered adicionar_campo" style="width: 100%; text-align:left;" border="1">
+		$tabla = '<table class="table table-bordered" style="width: 100%; text-align:left;" border="1">
 	    	<tr>
-	    		<th style="text-align:center;" colspan="4">INFORMACI&Oacute;N DESTINO</th>
+	    		<th style="text-align:center;" colspan="4"><p>INFORMACI&Oacute;N DESTINO</p></th>
 	    	</tr>
 	    	<tr>
-	    		<th style="text-align:center;">Estado</th>
+	    		<th style="text-align:center;">Entrega F&iacute;sica</th>
 	        	<th style="text-align:center;">No. Item</th>
 	        	<th style="text-align:center;">Nombre origen</th>
 	        	<th style="text-align:center;">Nombre destino</th>
@@ -274,9 +274,9 @@ function mostrar_listado_distribucion_documento($idformato, $iddoc,$retorno=0) {
 		$tabla .= '</table>';
 		$tabla .= generar_enlace_finalizar_distribucion(0, 1);
 	}
-	if($retorno){
+	if ($retorno) {
 		return $tabla;
-	}else{
+	} else {
 		echo($tabla);
 	}
 }
@@ -308,7 +308,7 @@ function generar_enlace_finalizar_distribucion($iddistribucion, $js = 0) {
 				        	}
 				    	});	 //fin ajax
 			    	} //fin if confirm						
-				}); //fin if finalizar_item_usuario_actual
+				});
 				
 			});	//fin if document.ready
 		</script>';
@@ -317,7 +317,7 @@ function generar_enlace_finalizar_distribucion($iddistribucion, $js = 0) {
 	if (!$js && $iddistribucion) {
 
 		//ROLES USUARIO _ACTUAL
-		$funcionario_codigo_usuario_actual = usuario_actual('funcionario_codigo');
+		$funcionario_codigo_usuario_actual = $_SESSION["usuario_actual"];
 		$busca_roles_usuario_actual = busca_filtro_tabla("iddependencia_cargo", "vfuncionario_dc", "estado_dc=1 AND funcionario_codigo=" . $funcionario_codigo_usuario_actual, "", $conn);
 		$vector_roles_usuario_actual = extrae_campo($busca_roles_usuario_actual, 'iddependencia_cargo', "U");
 
@@ -339,7 +339,7 @@ function generar_enlace_finalizar_distribucion($iddistribucion, $js = 0) {
 		}
 
 		if ($retornar_enlace && $distribucion[0]['estado_distribucion'] != 3) {
-			$html = '<br><a style="cursor:pointer;" class="finalizar_item_usuario_actual" iddistribucion=' . $iddistribucion . '>Finalizar</a>';
+			$html = '<br><a style="cursor:pointer;" class="finalizar_item_usuario_actual btn btn-mini btn-info" iddistribucion=' . $iddistribucion . '>Confirmar</a>';
 		}
 
 	}//fin if js
@@ -376,7 +376,7 @@ function ver_estado_distribucion($estado_distribucion) {//Estado
 		0 => 'Pendiente',
 		1 => 'Pendiente por distribuir',
 		2 => 'En distribuci&oacute;n',
-		3 => 'Finalizado'
+		3 => 'Confirmado'
 	);
 	return ($array_estado_distribucion[$estado_distribucion]);
 }
@@ -628,7 +628,7 @@ function retornar_ubicacion_origen_destino_distribucion($tipo, $valor) {
 		$ubicacion = '<b>Dependencia:</b> ' . $datos[0]['dependencia'] . '<br><b>Cargo: </b> ' . $datos[0]['cargo'] . '';
 	} else {//iddatos_ejecutor
 		$datos = busca_filtro_tabla("direccion,cargo", "ejecutor a, datos_ejecutor b", "a.idejecutor=b.ejecutor_idejecutor AND b.iddatos_ejecutor=" . $valor, "", $conn);
-		$ubicacion = '<b>Direcci&oacute;n:</b> ' . $datos[0]['direccion'] . '<br><b>Cargo: </b> ' . $datos[0]['cargo'] . '';
+		$ubicacion = '<b>Direcci&oacute;n:</b> ' . $datos[0]['direccion'] . '<br/><b>Cargo: </b> ' . $datos[0]['cargo'];
 	}
 	return ($ubicacion);
 }

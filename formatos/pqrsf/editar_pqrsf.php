@@ -1,7 +1,7 @@
 <html><title>.:EDITAR PETICIONES QUEJAS RECLAMOS SOLICITUDES FELICITACIONES:.</title>
 			<head><?php include_once("../../librerias_saia.php"); ?>
 			<script type="text/javascript" src="../librerias/funciones_formatos.js"></script>
-			<?php include_once("../radicacion_entrada/funciones.php"); ?>
+			<?php include_once("../librerias/funciones_formatos_generales.php"); ?>
 			<?php include_once("funciones.php"); ?>
 			<?php include_once("../librerias/funciones_generales.php"); ?>
 			<?php include_once("../librerias/funciones_acciones.php"); ?>
@@ -45,7 +45,7 @@
 			<a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=305&idcampo=3563" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
 			objectType: \'iframe\', outlineType: \'rounded-white\', wrapperClassName: \'highslide-wrapper drag-header\',
 			outlineWhileAnimating: true, preserveContent: false, width: 400 } )">Administrar Anexos</a>
-			</div>'; ?></td></tr><input type="hidden" name="fecha_reporte" value="<?php echo(mostrar_valor_campo('fecha_reporte',305,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_pqrsf" value="<?php echo(mostrar_valor_campo('idft_pqrsf',305,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',305,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',305,$_REQUEST['iddoc'])); ?>"><?php digitalizar_formato_radicacion(305,NULL,$_REQUEST['iddoc']);?><?php add_edit_pqrsf(305,NULL,$_REQUEST['iddoc']);?><input type="hidden" name="campo_descripcion" value="<?php echo('3572'); ?>"><input type="hidden" name="formato" value="305"><tr><td colspan='2'><?php submit_formato(305,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("305-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
+			</div>'; ?></td></tr><input type="hidden" name="fecha_reporte" value="<?php echo(mostrar_valor_campo('fecha_reporte',305,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_pqrsf" value="<?php echo(mostrar_valor_campo('idft_pqrsf',305,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',305,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',305,$_REQUEST['iddoc'])); ?>"><?php digitalizar_formato(305,NULL,$_REQUEST['iddoc']);?><?php add_edit_pqrsf(305,NULL,$_REQUEST['iddoc']);?><input type="hidden" name="campo_descripcion" value="<?php echo('3564,3567,3572,3573,3575'); ?>"><input type="hidden" name="formato" value="305"><tr><td colspan='2'><?php submit_formato(305,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("305-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
                 var upload_url = '../../dropzone/cargar_archivos_formato.php';
                 var mensaje = 'Arrastre aquí los archivos';
                 Dropzone.autoDiscover = false;
