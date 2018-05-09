@@ -1,8 +1,8 @@
 <?php include_once("../../librerias_saia.php"); ?>
-			<?php echo(librerias_jquery('1.7')); ?><?php include_once("../librerias/funciones_generales.php"); ?>
-			<?php include_once("../../class_transferencia.php"); ?>
-			<?php include_once("funciones.php"); ?>
+			<?php echo(librerias_jquery('1.7')); ?><?php include_once("../../class_transferencia.php"); ?>
+			<?php include_once("../librerias/funciones_generales.php"); ?>
 			<?php include_once("../librerias/encabezado_pie_pagina.php"); ?>
+			<?php include_once("funciones.php"); ?>
 			<?php include_once("../librerias/header_nuevo.php"); ?>
 			<tr><td><table class="table table-bordered" style="border-collapse: collapse; width: 100%;" border="0">
 <tbody>
@@ -30,8 +30,8 @@
 <tr>
 <td class="encabezado">Tipo Indicador</td>
 <td style="text-align: left;"><?php mostrar_valor_campo('tipo_indicador',487,$_REQUEST['iddoc']);?></td>
-<td>&nbsp;</td>
-<td style="text-align: left;">&nbsp;</td>
+<td class="encabezado">&nbsp;Estado Indicador:</td>
+<td style="text-align: left;">&nbsp;<?php estado_indicador(487,$_REQUEST['iddoc']);?></td>
 </tr>
 <tr>
 <td colspan="4">&nbsp;</td>

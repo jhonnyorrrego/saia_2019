@@ -38,7 +38,7 @@ echo(librerias_jquery());
 if (@$_REQUEST['iddocumento']) {
 	$dato = busca_filtro_tabla("pdf,permite_imprimir", "documento,formato", "lower(plantilla)=lower(nombre) and iddocumento=" . $_REQUEST["iddocumento"], "", $conn);
 	if ($dato["numcampos"] && $dato[0]["pdf"] != "") {
-		if(is_object($dato[0]["pdf"])){
+		if(is_object(json_decode($dato[0]["pdf"]))){
 			$ruta64 = base64_encode($dato[0]["pdf"]);
 			$_REQUEST["file"] = $ruta_db_superior . "filesystem/mostrar_binario.php?ruta=".$ruta64;
 		}

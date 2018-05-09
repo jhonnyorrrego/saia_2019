@@ -71,7 +71,7 @@ function generar_codigo_qr($idformato, $iddoc, $idfunc = 0) {
 		$datos_qr = "";
 		$cadena = "id=" . $iddoc;
 		$codificada = encrypt_blowfish($cadena, LLAVE_SAIA_CRYPTO);
-		$datos_qr = RUTA_INFO_QR . "?key_cripto=" . $codificada;
+		$datos_qr = RUTA_INFO_QR . "info_qr.php?key_cripto=" . $codificada;
 		$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
 		$almacenamiento = new SaiaStorage(RUTA_QR);
 

@@ -10,9 +10,6 @@ while ($max_salida > 0) {
 }
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
-require_once ($ruta_db_superior . 'StorageUtils.php');
-require_once ($ruta_db_superior . 'filesystem/SaiaStorage.php');
-
 $incluidos = array();
 function imagen_firma_faltante() {
 	echo PROTOCOLO_CONEXION . RUTA_PDF . "/firmas/faltante.jpg' />";
@@ -31,15 +28,17 @@ function crear_encabezado_pie_pagina($texto, $iddoc, $idformato, $pagina = 1) {
 				$texto = str_replace($campos1[$i], mostrar_valor_campo($nombre, $idformato, $_REQUEST["iddoc"], 1), $texto);
 			}
 		}
-		$funciones = busca_filtro_tabla("A.*", "funciones_formato A,funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk and A.nombre IN('" . implode("','", $campos1) . "') and acciones like '%m%' and B.formato_idformato=".$idformato, "", $conn);
+		$funciones = busca_filtro_tabla("A.*,B.funciones_formato_fk", "funciones_formato A,funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk and A.nombre IN('" . implode("','", $campos1) . "') and acciones like '%m%' and B.formato_idformato=".$idformato, "", $conn);
 		for ($i = 0; $i < $funciones["numcampos"]; $i++) {
-			$ruta_orig = "";
-			$formato_orig = explode(",", $funciones[$i]["formato"]);
-			$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig[0], "", $conn);
-			if (is_file($ruta_db_superior . "formatos/" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
-				include_once ($ruta_db_superior . "formatos/" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
-			} else if (is_file($ruta_db_superior . "formatos/" . $funciones[$i]["ruta"])) {
-				include_once ($ruta_db_superior . "formatos/" . $funciones[$i]["ruta"]);
+			$form_origen=busca_filtro_tabla("formato_idformato","funciones_formato_enlace","funciones_formato_fk=".$funciones[$i]["funciones_formato_fk"],"idfunciones_formato_enlace asc",$conn);
+			if($form_origen["numcampos"]){
+				$formato_orig = $form_origen[0]["formato_idformato"];
+			}
+			$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
+			if (is_file($ruta_db_superior . FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+				include_once ($ruta_db_superior . FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+			} else if (is_file($ruta_db_superior . FORMATOS_CLIENTE . $funciones[$i]["ruta"])) {
+				include_once ($ruta_db_superior . FORMATOS_CLIENTE . $funciones[$i]["ruta"]);
 			} else if (is_file($ruta_db_superior . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]) && $dato_formato_orig["numcampos"]) {
 				include_once ($ruta_db_superior . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
 			}

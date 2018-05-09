@@ -1054,56 +1054,61 @@ else if($conn->motor=="Oracle"){
 <Pre-condiciones>
 <Post-condiciones>
 */
-function busca_filtro_tabla($campos,$tabla,$filtro,$orden,$conn){
-global $sql,$conn;
-if(!$conn){
-  $conn=phpmkr_db_connect();
-}
-$retorno=array();
-$temp=array();
-$retorno["tabla"]=$tabla;
-switch ($tabla){
-  case ("dependencia2"):
-    $tabla = "dependencia";
-  break;
-  case ("cargo2"):
-    $tabla="cargo";
-  break;
-  case ("cargo3"):
-    $tabla="dependencia_cargo";
-  break;
-  case ("funcionario2"):
-    $tabla="funcionario";
-  break;
-}
-$sql="Select ";
-if($campos)
-  $sql.=$campos;
-else
-  $sql.="*";
-if($tabla)
-  $sql.=" FROM ".$tabla;
-if($filtro)
-  $sql.=" WHERE ".str_replace('"',"'",$filtro);
-if($orden){
-  if(substr(strtolower($orden),0,5)=="group")
-    $sql.=" ".$orden;
-  else
-    $sql.=" ORDER BY ".$orden;
-}
-$sql=htmlspecialchars_decode((($sql)));
-$rs=$conn->Ejecutar_Sql($sql);
-$temp=phpmkr_fetch_array($rs);
-$retorno["sql"]=$sql;
-	for($i = 0; $temp; $temp = phpmkr_fetch_array($rs), $i++) {
-  array_push($retorno,$temp);
+function busca_filtro_tabla($campos, $tabla, $filtro, $orden, $conn) {
+	global $sql, $conn;
+	if (!$conn) {
+		$conn = phpmkr_db_connect();
 	}
-$retorno["numcampos"]=$i;
-phpmkr_free_result($rs);
-if(DEBUGEAR_FLUJOS && strpos($tabla,'funcionario')===FALSE && strpos($tabla,'evento')===FALSE){
-  error(print_r($retorno,true));
-}
-return($retorno);
+	$retorno = array();
+	$temp = array();
+	$retorno["tabla"] = $tabla;
+	switch ($tabla) {
+		case ("dependencia2") :
+			$tabla = "dependencia";
+			break;
+		case ("cargo2") :
+			$tabla = "cargo";
+			break;
+		case ("cargo3") :
+			$tabla = "dependencia_cargo";
+			break;
+		case ("funcionario2") :
+			$tabla = "funcionario";
+			break;
+	}
+	$sql = "Select ";
+	if ($campos) {
+		$sql .= $campos;
+	} else {
+		$sql .= "*";
+	}
+	if ($tabla) {
+		$sql .= " FROM " . $tabla;
+	}
+	if ($filtro) {
+		$sql .= " WHERE " . $filtro;
+	}
+	if ($orden) {
+		if (substr(strtolower($orden), 0, 5) == "group") {
+			$sql .= " " . $orden;
+		} else {
+			$sql .= " ORDER BY " . $orden;
+		}
+	}
+	$sql = htmlspecialchars_decode($sql);
+	$rs = $conn -> Ejecutar_Sql($sql);
+	$temp = phpmkr_fetch_array($rs);
+	$retorno["sql"] = $sql;
+	
+	for ($i = 0; $temp; $temp = phpmkr_fetch_array($rs), $i++) {
+		array_push($retorno, $temp);
+	}
+	$retorno["numcampos"] = $i;
+	phpmkr_free_result($rs);
+	if (DEBUGEAR_FLUJOS && strpos($tabla, 'funcionario') === FALSE && strpos($tabla, 'evento') === FALSE) {
+		error(print_r($retorno, true));
+	}
+	return ($retorno);
 }
 /*
 <Clase>

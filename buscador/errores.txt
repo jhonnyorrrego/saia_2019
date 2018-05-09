@@ -1,2 +1,0 @@
-<label style='font-family:verdana;font-size:10'>No hay registros que cumplan las condiciones dadas.<br /></label>
-

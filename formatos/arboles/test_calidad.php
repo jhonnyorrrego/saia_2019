@@ -180,8 +180,10 @@ function llenar_documentos($iddoc) {
 	if (@$arreglo[3] && $arreglo[1] == "proceso") {
 		$validacion_formato = " AND documento_iddocumento=" . $arreglo[3];
 	}
+	$ok = 0;
 	if ($arreglo[1] == "indicadores_calidad") {
 		$validacion_formato = "b.estado='ACTIVO'";
+		$ok = 1;
 	}
 
 	if ($campo_ordenar["numcampos"]) {
@@ -189,21 +191,26 @@ function llenar_documentos($iddoc) {
 	} else {
 		$formato = busca_filtro_tabla("A.numero,A.descripcion ,A.iddocumento", "documento A", "lower(A.plantilla)='" . strtolower($arreglo[1]) . "' AND A.estado NOT IN ('ELIMINADO','ANULADO','ACTIVO') ", "iddocumento asc", $conn);
 	}
-	for ($i = 0; $i < $formato["numcampos"]; $i++) {
-		$papas = busca_filtro_tabla("id" . $arreglo[2] . " AS llave,'" . $arreglo[2] . "' AS nombre_tabla", $arreglo[2], "documento_iddocumento=" . $formato[$i]["iddocumento"], "", $conn);
-		if ($papas["numcampos"]) {
-			$iddoc = $arreglo[0] . "-" . $papas[0]["llave"] . "-id" . $arreglo[2];
-		} else {
-			$iddoc = 0;
+
+	if ($formato["numcampos"]) {
+		for ($i = 0; $i < $formato["numcampos"]; $i++) {
+			$papas = busca_filtro_tabla("id" . $arreglo[2] . " AS llave,'" . $arreglo[2] . "' AS nombre_tabla", $arreglo[2], "documento_iddocumento=" . $formato[$i]["iddocumento"], "", $conn);
+			if ($papas["numcampos"]) {
+				$iddoc = $arreglo[0] . "-" . $papas[0]["llave"] . "-id" . $arreglo[2];
+			} else {
+				$iddoc = 0;
+			}
+			llena_datos_formato($iddoc, 0);
 		}
-		llena_datos_formato($iddoc, 0);
 	}
+
 }
 
 function llena_datos_formato($formato, $estado = 0) {
 	global $conn, $texto, $imagenes, $formatos_calidad;
 	$arreglo = explode("-", $formato);
 	$formato = busca_filtro_tabla("", "formato", "idformato='" . $arreglo[0] . "'", "", $conn);
+
 	if ($formato["numcampos"]) {
 		$descripcion = busca_filtro_tabla("", "campos_formato", "formato_idformato=" . $formato[0]["idformato"] . " AND acciones LIKE '%d%'", "", $conn);
 
@@ -421,7 +428,6 @@ function planes_mejoramiento_institucional() {
 }
 
 function llena_datos_formato2($formato, $estado = 0) {//--2
-
 	global $conn, $texto, $imagenes, $formatos_calidad;
 	$arreglo = explode("-", $formato);
 	$formato = busca_filtro_tabla("", "formato", "idformato='" . $arreglo[0] . "'", "", $conn);
@@ -442,9 +448,9 @@ function llena_datos_formato2($formato, $estado = 0) {//--2
 			$texto .= strip_tags('text="' . decodifica(codifica_encabezado(html_entity_decode(htmlspecialchars_decode($formato[0]["etiqueta"])))) . '" id="' . $formato[0]["idformato"] . "-" . $arreglo[2] . "-r" . rand() . '">' . "\n");
 		}
 
-		if ($formato[0]["nombre"] == "proceso")
+		if ($formato[0]["nombre"] == "proceso") {
 			llena_datos($idformato, $formato[0]["nombre_tabla"], $campo_descripcion);
-		else if (isset($_REQUEST["id"])) {
+		} else if (isset($_REQUEST["id"])) {
 			$nombre_categoria_papa = busca_filtro_tabla("idserie", "serie", "nombre='CATEGORIAS_CALIDAD'", "", $conn);
 
 			$nombre_categoria_hijo = busca_filtro_tabla("", "serie", "lower(nombre) = '" . strtolower($formato[0]["etiqueta"]) . "' and cod_padre=" . $nombre_categoria_papa[0]["idserie"], "", $conn);

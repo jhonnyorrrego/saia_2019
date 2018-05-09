@@ -320,7 +320,7 @@
                       });
                       });
                      </script></td>
-                    </tr><input type="hidden" name="campo_descripcion" value="39"><?php submit_formato(3);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
+                    </tr><input type="hidden" name="campo_descripcion" value="37,39,4969,4970,5083,5199"><?php submit_formato(3);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
                 <input type="hidden" name="campo__retorno" value="<?php echo($_REQUEST["campo__retorno"]); ?>">
               <?php }
                if(@$_REQUEST["formulario__retorno"]){ ?>

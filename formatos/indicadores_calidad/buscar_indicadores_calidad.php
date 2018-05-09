@@ -2,7 +2,17 @@
 			<script type="text/javascript" src="../../js/jquery.fcbkcomplete.js"></script>
 			<link rel="stylesheet" type="text/css" href="../../css/style_fcbkcomplete.css"/>
 			</head><body bgcolor="#F5F5F5"><form name="formulario_formatos" id="formulario_formatos" method="post" action="../librerias/funciones_buscador.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4" border="0"><tr><td colspan="4" class="encabezado_list">B&Uacute;SQUEDA INDICADOR(ES) DE CALIDAD</td></tr><tr id="tr_estado"><td class="encabezado">&nbsp;<select name="condicion_estado" id="condicion_estado"><option value="AND">Y</option><option value="OR">O</option></td>
-                     <td class="encabezado" width="20%" title="">ESTADO</td><td class="encabezado">&nbsp;<select name="compara_estado" id="compara_estado"> <option value="LIKE|%|%">Similar</option><option value="LIKE|%|@">Inicia Con</option><option value="LIKE|@|%">Finaliza Con</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(487,6182,'',1);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_dependencia_indicador" id="condicion_dependencia_indicador"><option value="AND">Y</option><option value="OR">O</option></td>
+                     <td class="encabezado" width="20%" title="">ESTADO</td><td class="encabezado">&nbsp;<select name="compara_estado" id="compara_estado"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
+                     <td bgcolor="#F5F5F5"><select multiple id="estado" name="estado"></select><script>
+                     $(document).ready(function()
+                      {
+                      $("#estado").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
+                    </tr><tr><td class="encabezado">&nbsp;<select name="condicion_dependencia_indicador" id="condicion_dependencia_indicador"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="Listado de dependencias de la entidad">DEPENDENCIA</td><td class="encabezado">&nbsp;<select name="compara_dependencia_indicador" id="compara_dependencia_indicador"> <option value="LIKE|%|%">Similar</option><option value="LIKE|%|@">Inicia Con</option><option value="LIKE|@|%">Finaliza Con</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(487,6183,'',1);?></td></tr><tr id="tr_nombre"><td class="encabezado">&nbsp;<select name="condicion_nombre" id="condicion_nombre"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="Nombre del indicador">NOMBRE DEL INDICADOR</td><td class="encabezado">&nbsp;<select name="compara_nombre" id="compara_nombre"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
                      <td bgcolor="#F5F5F5"><select multiple id="nombre" name="nombre"></select><script>
@@ -39,13 +49,13 @@
                     </tr><tr id="tr_tipo_grafico"><td class="encabezado">&nbsp;<select name="condicion_tipo_grafico" id="condicion_tipo_grafico"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="">TIPO DE GR&Aacute;FICO</td><td class="encabezado">&nbsp;<select name="compara_tipo_grafico" id="compara_tipo_grafico"> <option value="LIKE|%|%">Similar</option><option value="LIKE|%|@">Inicia Con</option><option value="LIKE|@|%">Finaliza Con</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(487,6187,'',1);?></td></tr><tr id="tr_tipo_indicador"><td class="encabezado">&nbsp;<select name="condicion_tipo_indicador" id="condicion_tipo_indicador"><option value="AND">Y</option><option value="OR">O</option></td>
                      <td class="encabezado" width="20%" title="">TIPO DE INDICADOR</td><td class="encabezado">&nbsp;<select name="compara_tipo_indicador" id="compara_tipo_indicador"> <option value="LIKE|%|%">Similar</option><option value="LIKE|%|@">Inicia Con</option><option value="LIKE|@|%">Finaliza Con</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(487,6188,'',1);?></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_responsable_analisis" id="condicion_responsable_analisis"><option value="AND">Y</option><option value="OR">O</option></td>
-                   <td class="encabezado" width="20%" title="Responsable del an&aacute;lisis">RESPONSABLE DEL AN&AACUTE;LISIS</td><td class="encabezado">&nbsp;<select name="compara_responsable_analisis" id="compara_responsable_analisis"> <option value="or">Alguno</option><option value="and">Todos</option></select></td><td bgcolor="#F5F5F5"><div id="esperando_responsable_analisis"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(487,6189,'0',$_REQUEST['iddoc']);?></div>
+                   <td class="encabezado" width="20%" title="Responsable del an&aacute;lisis">RESPONSABLE DEL AN&AACUTE;LISIS</td><td class="encabezado">&nbsp;<select name="compara_responsable_analisis" id="compara_responsable_analisis"> <option value="or">Alguno</option><option value="and">Todos</option></select></td><td bgcolor="#F5F5F5"><div id="esperando_responsable_analisis"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(487,6189,'5',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_responsable_analisis" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_responsable_analisis.findItem((document.getElementById('stext_responsable_analisis').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_responsable_analisis.findItem((document.getElementById('stext_responsable_analisis').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
                           <a href="javascript:void(0)" onclick="tree_responsable_analisis.findItem((document.getElementById('stext_responsable_analisis').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
                           <br /><br />
-                <div id="treeboxbox_responsable_analisis" height="90%"></div><input type="hidden" maxlength="2000"  name="responsable_analisis" id="responsable_analisis"   value="" ><label style="display:none" class="error" for="responsable_analisis">Campo obligatorio.</label><script type="text/javascript">
+                <div id="treeboxbox_responsable_analisis" height="90%"></div><input type="hidden" maxlength="100"  name="responsable_analisis" id="responsable_analisis"   value="" ><label style="display:none" class="error" for="responsable_analisis">Campo obligatorio.</label><script type="text/javascript">
                   <!--
                       var browserType;
                       if (document.layers) {browserType = "nn4"}
@@ -56,8 +66,8 @@
                 			tree_responsable_analisis=new dhtmlXTreeObject("treeboxbox_responsable_analisis","100%","100%",0);
                 			tree_responsable_analisis.setImagePath("../../imgs/");
                 			tree_responsable_analisis.enableIEImageFix(true);tree_responsable_analisis.enableCheckBoxes(1);
-                			tree_responsable_analisis.enableThreeStateCheckboxes(1);tree_responsable_analisis.setOnLoadingStart(cargando_responsable_analisis);
-                      tree_responsable_analisis.setOnLoadingEnd(fin_cargando_responsable_analisis);tree_responsable_analisis.enableSmartXMLParsing(true);tree_responsable_analisis.loadXML("../../test.php");
+                    tree_responsable_analisis.enableRadioButtons(true);tree_responsable_analisis.setOnLoadingStart(cargando_responsable_analisis);
+                      tree_responsable_analisis.setOnLoadingEnd(fin_cargando_responsable_analisis);tree_responsable_analisis.enableSmartXMLParsing(true);tree_responsable_analisis.loadXML("../../test.php?rol=1&sin_padre=1");
                       tree_responsable_analisis.setOnCheckHandler(onNodeSelect_responsable_analisis);
                       function onNodeSelect_responsable_analisis(nodeId)
                       {valor_destino=document.getElementById("responsable_analisis");

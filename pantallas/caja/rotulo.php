@@ -92,7 +92,7 @@ function rotulo_caja($id){
 	}else{
 		$cadena="idcaja=".$id;
 		$codificada=encrypt_blowfish($cadena,LLAVE_SAIA_CRYPTO);
-		$datos_qr=PROTOCOLO_CONEXION.RUTA_PDF."/pantallas/caja/info_caja_exp.php?key_cripto=".$codificada;
+		$datos_qr = RUTA_INFO_QR . "info_qr_expediente.php?key_cripto=" . $codificada;
 		$ruta="caja/".$id."/";
 		$info_qr=generar_qr_datos($ruta,$datos_qr);
 		if($info_qr!==false){
@@ -194,7 +194,7 @@ function rotulo_carpeta($id){
 	}else{
 		$cadena="idexpediente=".$id;
 		$codificada=encrypt_blowfish($cadena,LLAVE_SAIA_CRYPTO);
-		$datos_qr=PROTOCOLO_CONEXION.RUTA_PDF_LOCAL."/pantallas/caja/info_caja_exp.php?key_cripto=".$codificada;
+		$datos_qr = RUTA_INFO_QR . "info_qr_expediente.php?key_cripto=" . $codificada;
 		$ruta="expediente/".$id."/";
 		$info_qr=generar_qr_datos($ruta,$datos_qr);
 		if($info_qr!==false){

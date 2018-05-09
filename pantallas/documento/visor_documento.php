@@ -10,9 +10,6 @@ while ($max_salida > 0) {
 }
 
 include_once ($ruta_db_superior . "pantallas/documento/menu_principal_documento.php");
-require_once ($ruta_db_superior . 'vendor/autoload.php');
-require_once $ruta_db_superior . 'StorageUtils.php';
-require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
 
 $iddoc = @$_REQUEST["iddoc"];
 menu_principal_documento($iddoc, 1);
@@ -22,27 +19,20 @@ $es_pdf_word = $_REQUEST['pdf_word'];
 if ($iddoc && !@$_REQUEST['pdf_word'] && $datos[0]['mostrar_pdf'] != 2) {
 	$exportar_pdf = busca_filtro_tabla("valor", "configuracion A", "A.nombre='exportar_pdf'", "", $conn);
 	$export = "";
-	$ruta_visor = "visores/pdf/web/viewer2.php?iddocumento=" . $iddoc;
-	if ($exportar_pdf[0]["valor"] == 'html2ps') {
-		$export = "exportar_impresion.php?iddoc=" . $iddoc . "&plantilla=" . strtolower($datos[0]["plantilla"]) . "&rand=" . rand(1, 100000);
-	} else if ($exportar_pdf[0]["valor"] == 'class_impresion') {
-		$export = "class_impresion.php?iddoc=" . $iddoc . "&rand=" . rand(1, 100000);
+	if ($datos[0]["pdf"] != "" && !isset($_REQUEST["actualizar_pdf"])) {
+		$export = "visores/pdf/web/viewer2.php?iddocumento=" . $iddoc;
 	} else {
-		$export = "exportar_impresion.php?iddoc=" . $iddoc . "&plantilla=" . strtolower($datos[0]["plantilla"]) . "&rand=" . rand(1, 100000);
+		if ($exportar_pdf[0]["valor"] == 'html2ps') {
+			$export = "exportar_impresion.php?iddoc=" . $iddoc . "&plantilla=" . strtolower($datos[0]["plantilla"]) . "&rand=" . rand(1, 100000);
+		} else if ($exportar_pdf[0]["valor"] == 'class_impresion') {
+			$export = "class_impresion.php?iddoc=" . $iddoc . "&rand=" . rand(1, 100000);
+		} else {
+			$export = "exportar_impresion.php?iddoc=" . $iddoc . "&plantilla=" . strtolower($datos[0]["plantilla"]) . "&rand=" . rand(1, 100000);
+		}
 	}
-
-	if (@$_REQUEST["actualizar_pdf"] == 1) {
-		$sql1 = "UPDATE documento SET pdf=null WHERE iddocumento=" . $iddoc;
-		phpmkr_query($sql1);
-		$datos[0]["pdf"] = "";
-	}
-
 	$pdf = $ruta_db_superior . $export;
 	if (@$_REQUEST["vista"]) {
 		$pdf .= "&vista=" . $_REQUEST["vista"];
-	}
-	if ($datos[0]["pdf"] && is_file($ruta_db_superior . $datos[0]["pdf"]) && !@$_REQUEST["vista"]) {
-		$pdf = $ruta_db_superior . $ruta_visor;
 	}
 } else {
 	$_REQUEST['from_externo'] = 1;
