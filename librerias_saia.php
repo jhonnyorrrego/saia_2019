@@ -32,6 +32,9 @@ function librerias_jquery($version = "1.7.2") {
         case "1.7":
             $version = "1.7.2";
             break;
+        case "1.8":
+            $version = "1.8.3";
+            break;
         case "1.2.3":
             $texto = '<script src="' . $raiz_saia . 'js/jquery-1.2.3.min.js" type="text/javascript"></script>';
             return $texto;
@@ -140,11 +143,16 @@ function estilo_bootstrap($version = "saia") {
     return ($texto);
 }
 
-function librerias_bootstrap() {
+function librerias_bootstrap($version = "saia") {
     global $raiz_saia;
-    $texto  = '<script type="text/javascript" src="' . $raiz_saia . 'js/bootstrap/saia/bootstrap.js"></script>';
-    $texto .= '<script type="text/javascript" src="' . $raiz_saia . 'js/bootstrap/saia/jasny-bootstrap.min.js"></script>';
-    return ($texto);
+    switch ($version) {
+        case "saia":
+            $texto  = '<script type="text/javascript" src="' . $raiz_saia . 'js/bootstrap/saia/bootstrap.js"></script>';
+            $texto .= '<script type="text/javascript" src="' . $raiz_saia . 'js/bootstrap/saia/jasny-bootstrap.min.js"></script>';
+            return ($texto);
+    }
+    $texto  = '<script type="text/javascript" src="' . $raiz_saia . 'js/bootstrap/' . $version . '/bootstrap.js"></script>';
+    return $texto;
 }
 
 function librerias_validar_formulario($version = '13') {

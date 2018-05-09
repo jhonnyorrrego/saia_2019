@@ -18,17 +18,17 @@ include_once($ruta_db_superior."db.php");
 <?php
 ini_set("display_errors",true);
 include_once($ruta_db_superior."librerias_saia.php");
-include_once($ruta_db_superior."pantallas/documento/librerias.php"); 
+include_once($ruta_db_superior."pantallas/documento/librerias.php");
 echo(librerias_html5());
-echo(estilo_bootstrap());
+echo(estilo_bootstrap("3.2.0"));
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior)?>pantallas/busquedas/tablas/bootstrap-table.css">
 <?php
 $funciones=array();
 $datos_componente=$_REQUEST["idbusqueda_componente"];
 $datos_busqueda=busca_filtro_tabla("","busqueda A,busqueda_componente B","A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=".$datos_componente,"",$conn);
-echo(librerias_jquery("1.7"));
-echo(librerias_bootstrap());
+echo(librerias_jquery("1.8"));
+echo(librerias_bootstrap("3.2.0"));
 echo(librerias_notificaciones());
 if($datos_busqueda[0]["ruta_libreria"]){
   $librerias=array_unique(explode(",",$datos_busqueda[0]["ruta_libreria"]));
@@ -58,29 +58,29 @@ function incluir_librerias_busqueda($elemento,$indice){
   </div>
   <div id="div_resultados">
    <div class="btn-group" id="menu_buscador">
-      <?php 
+      <?php
         if($datos_busqueda[0]["busqueda_avanzada"]!=''){
           if(strpos($datos_busqueda[0]["busqueda_avanzada"],"?"))
             $datos_busqueda[0]["busqueda_avanzada"].="&";
-          else 
-            $datos_busqueda[0]["busqueda_avanzada"].="?";  
-         $datos_busqueda[0]["busqueda_avanzada"].='idbusqueda_componente='.$datos_busqueda[0]["idbusqueda_componente"]; 
-      ?>            
+          else
+            $datos_busqueda[0]["busqueda_avanzada"].="?";
+         $datos_busqueda[0]["busqueda_avanzada"].='idbusqueda_componente='.$datos_busqueda[0]["idbusqueda_componente"];
+      ?>
         <button class="btn kenlace_saia" titulo="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>" title="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>" conector="iframe" enlace="<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>">B&uacute;squeda &nbsp;</button>
       <?php
         }
-      ?>          
+      ?>
       <button class="btn dropdown-toggle" data-toggle="dropdown">Seleccionados &nbsp;
         <span class="caret">
         </span>&nbsp;
-      </button>            
-      <ul class="dropdown-menu" id='listado_seleccionados'>              
+      </button>
+      <ul class="dropdown-menu" id='listado_seleccionados'>
         <li>
         <a href="#">
           <div id="filtrar_seleccionados">Alert seleccionados
           </div></a>
-        </li>              
-        <?php 
+        </li>
+        <?php
           if($datos_busqueda[0]["acciones_seleccionados"]!=''){
             echo('<li class="nav-header">Acciones</li>');
           $acciones=explode(",",$datos_busqueda[0]["acciones_seleccionados"]);
@@ -88,12 +88,12 @@ function incluir_librerias_busqueda($elemento,$indice){
           for($i=0;$i<$cantidad;$i++){
               echo($acciones[$i]());
           }
-            
-          }              
-        ?>                                
-      </ul>             
+
+          }
+        ?>
+      </ul>
     <?php /*if(@$datos_busqueda[0]["enlace_adicionar"]){
-      ?>               
+      ?>
         <button class="btn kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar</button></div></li>
       <?php
     }*/
@@ -108,7 +108,7 @@ function incluir_librerias_busqueda($elemento,$indice){
        <div class="pull-right" valign="middle"><iframe name="iframe_exportar_saia" id="iframe_exportar_saia" allowtransparency="1" frameborder="0" framespacing="2px" scrolling="no" width="100%" src=""  hspace="0" vspace="0" height="32px"></iframe></div>
       <?php
       }
-      
+
       if(strpos($datos_busqueda[0]["llave"],".")){
         $valor_campos=explode(".", $datos_busqueda[0]["llave"]);
         array_push($llave,trim($valor_campos[count($valor_campos)-1]));
@@ -116,14 +116,14 @@ function incluir_librerias_busqueda($elemento,$indice){
       else{
         array_push($llave,trim($datos_busqueda[0]["llave"]));
       }
-      
-    ?> 
-  </div>           
+
+    ?>
+  </div>
   <table id="tabla_resultados" data-height="" data-pagination="true" data-toolbar="#menu_buscador" data-show-refresh="true" data-show-toggle="true">
     <thead>
       <tr>
         <th data-field="<?php echo($llave); ?>" data-checkbox="true"></th>
-        <?php 
+        <?php
         $lcampos1=$datos_busqueda[0]["campos"];
         if($datos_busqueda[0]["campos_adicionales"]){
           $lcampos1.=','.$datos_busqueda[0]["campos_adicionales"];
@@ -140,7 +140,7 @@ function incluir_librerias_busqueda($elemento,$indice){
           }
         }
         $info=explode("|-|",$datos_busqueda[0]["info"]);
-        $can_info=count($info);        
+        $can_info=count($info);
         for($i=0;$i<$can_info;$i++){
           $detalle_info=explode("|",$info[$i]);
           $dato_campo=str_replace(array("{*","*}"),"",$detalle_info[1]);
@@ -148,16 +148,16 @@ function incluir_librerias_busqueda($elemento,$indice){
             $funcion=explode("@",$dato_campo);
             $dato_campo=$funcion[0];
           }
-          echo('<th data-field="'.$dato_campo.'" data-align="'.$detalle_info[2].'" >'.$detalle_info[0].'</th>');          
-          
+          echo('<th data-field="'.$dato_campo.'" data-align="'.$detalle_info[2].'" >'.$detalle_info[0].'</th>');
+
         }
         ?>
       </tr>
     </thead>
   </table>
 </div>
-  
-<div class="cargando"></div>  
+
+<div class="cargando"></div>
 </body>
 </html>
 <script>
@@ -165,7 +165,7 @@ $body = $("body");
 
 $(document).on({
     ajaxStart: function() { $body.addClass("loading");    },
-    ajaxStop: function() { $body.removeClass("loading"); }    
+    ajaxStop: function() { $body.removeClass("loading"); }
 });
   function jsonConcat(o1, o2) {
    for (var key in o2) {
@@ -191,7 +191,7 @@ $.fn.serializeObject = function(){
 $(document).ready(function(){
   var alto=$(document).height()-80;
   $('#tabla_resultados').bootstrapTable({
-        method: 'get',                
+        method: 'get',
         cache: false,
         height: alto,
         striped: false,
@@ -256,7 +256,7 @@ $(document).ready(function() {
 });
 
 </script>
-<?php 
+<?php
 echo(librerias_tooltips());
 echo(librerias_acciones_kaiten());
 
@@ -267,5 +267,5 @@ if($datos_busqueda[0]["ruta_libreria_pantalla"]){
   }
 }
 ?>
-<script type="text/javascript" src="<?php echo($ruta_db_superior."pantallas/lib/main.js");?>"></script> 
+<script type="text/javascript" src="<?php echo($ruta_db_superior."pantallas/lib/main.js");?>"></script>
 <script type="text/javascript" src="<?php echo($ruta_db_superior."pantallas/lib/librerias_ventana_modal.js");?>"></script>
