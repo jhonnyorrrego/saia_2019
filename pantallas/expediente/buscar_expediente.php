@@ -19,7 +19,7 @@ echo(estilo_bootstrap());
   <head>    
   </head>
   <body>
-  	<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap/saia/bootstrap-datetimepicker.min.css"/>
+  	<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap/saia/css/bootstrap-datetimepicker.min.css"/>
   	<div class="navbar navbar-fixed-top">
 	    <div class="navbar-inner">                           
 	      <ul class="nav pull-left">                                         

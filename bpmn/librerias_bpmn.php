@@ -81,13 +81,13 @@ $texto='';
 //echo(estilo_bootstrap());
 
 
-$texto .= '<link rel="stylesheet" type="text/css" href="' . $ruta_db_superior . 'css/bootstrap/saia/bootstrap.css">';
-$texto .= '<link rel="stylesheet" type="text/css" href="' . $ruta_db_superior . 'css/bootstrap/saia/bootstrap-responsive.css">';
-$texto .= '<link rel="stylesheet" type="text/css" href="' . $ruta_db_superior . 'css/bootstrap/saia/jasny-bootstrap.min.css">';
-$texto .= '<link rel="stylesheet" type="text/css" href="' . $ruta_db_superior . 'css/bootstrap/saia/jasny-bootstrap-responsive.min.css">';
-$texto .= '<link rel="stylesheet" type="text/css" href="' . $ruta_db_superior . 'css/bootstrap/saia/bootstrap_reescribir.css">';
+$texto .= '<link rel="stylesheet" type="text/css" href="' . $ruta_db_superior . 'css/bootstrap/saia/css/bootstrap.css">';
+$texto .= '<link rel="stylesheet" type="text/css" href="' . $ruta_db_superior . 'css/bootstrap/saia/css/bootstrap-responsive.css">';
+$texto .= '<link rel="stylesheet" type="text/css" href="' . $ruta_db_superior . 'css/bootstrap/saia/css/jasny-bootstrap.min.css">';
+$texto .= '<link rel="stylesheet" type="text/css" href="' . $ruta_db_superior . 'css/bootstrap/saia/css/jasny-bootstrap-responsive.min.css">';
+$texto .= '<link rel="stylesheet" type="text/css" href="' . $ruta_db_superior . 'css/bootstrap/saia/css/bootstrap_reescribir.css">';
 $texto .= '<link rel="stylesheet" type="text/css" href="' . $ruta_db_superior . 'pantallas/lib/librerias_css.css">';
-$texto .= '<link rel="stylesheet" type="text/css" href="' . $ruta_db_superior . 'css/bootstrap/saia/bootstrap_iconos_segundarios.css">';
+$texto .= '<link rel="stylesheet" type="text/css" href="' . $ruta_db_superior . 'css/bootstrap/saia/css/bootstrap_iconos_segundarios.css">';
 $texto .= '<script type="text/javascript" src="' . $ruta_db_superior . 'js/bootstrap/saia/bootstrap.js"></script>';
 $texto .= '<script type="text/javascript" src="' . $ruta_db_superior . 'js/bootstrap/saia/jasny-bootstrap.min.js"></script>';
 

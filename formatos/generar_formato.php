@@ -884,7 +884,7 @@ function crear_formato_mostrar($idformato) {
 				$archivos++;
 			}
 		}
-    
+
     $funciones = busca_filtro_tabla("A.*,B.funciones_formato_fk", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=" . $idformato . " AND A.acciones LIKE '%m%'", "A.idfunciones_formato asc", $conn);
 		for ($i = 0; $i < $funciones["numcampos"]; $i++) {
 			$ruta_orig = "";
@@ -1023,7 +1023,7 @@ function crear_vista_formato($idformato, $arreglo) {
 		$librerias = array();
 		$idformato_padre = $vista[0]["formato_padre"];
 		$fpadre = busca_filtro_tabla("", "formato", "idformato=" . $idformato_padre, "", $conn);
-		
+
 		$campos = busca_filtro_tabla("*", "campos_formato A", "A.formato_idformato=" . $idformato_padre, "", $conn);
 		$lcampos = extrae_campo($campos, "nombre", "U");
 		for ($i = 0; $i < $campos["numcampos"]; $i++) {
@@ -1055,7 +1055,7 @@ function crear_vista_formato($idformato, $arreglo) {
 			if ($form_origen["numcampos"]) {
 				$formato_orig = $form_origen[0]["formato_idformato"];
 			}
-		
+
 			if ($formato_orig != $idformato_padre && $funciones[$i]["ruta"] == "funciones.php") {// busco el nombre del formato inicial
 				$dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
 				if ($dato_formato_orig["numcampos"]) {
@@ -1089,7 +1089,8 @@ function crear_vista_formato($idformato, $arreglo) {
 			$includes .= incluir($formato[0]["librerias"], "librerias", 1);
 		}
 		$includes .= incluir_libreria("funciones_generales.php", "librerias");
-		$includes .= incluir("../../js/jquery.js", "javascript");
+		$includes .= "<?php echo(librerias_jquery('1.7')); ?>";
+		//$includes .= incluir("../../js/jquery.js", "javascript");
 		$includes .= incluir_libreria("header_nuevo.php", "librerias");
 		$includes .= incluir("../../class_transferencia.php", "librerias");
 
@@ -1879,7 +1880,8 @@ function crear_formato_ae($idformato, $accion) {
 			$includes .= incluir("../../calendario/calendario.php", "librerias");
 		}
 
-		$includes .= incluir("../../js/jquery.js", "javascript");
+		//$includes .= incluir("../../js/jquery.js", "javascript");
+		$includes .= "<?php echo(librerias_jquery('1.7')); ?>";
 		$includes .= incluir("../../js/jquery.validate.js", "javascript");
 
 		$includes .= incluir("../../js/title2note.js", "javascript");
@@ -2112,7 +2114,8 @@ function crear_formato_buscar($idformato, $accion) {
 		$includes .= incluir_libreria("funciones_generales.php", "librerias");
 		$includes .= incluir_libreria("estilo_formulario.php", "librerias");
 		$includes .= incluir_libreria("funciones_formatos.js", "javascript");
-		$includes .= incluir("../../js/jquery.js", "javascript");
+		//$includes .= incluir("../../js/jquery.js", "javascript");
+		$includes .= "<?php echo(librerias_jquery('1.7')); ?>";
 		if ($formato[0]["estilos"] && $formato[0]["estilos"] != "") {
 			$includes .= incluir($formato[0]["estilos"], "estilos", 1);
 		}
@@ -2546,7 +2549,8 @@ function crear_formato_buscar($idformato, $accion) {
 		if ($textareas) {
 			$includes .= incluir_libreria("header_formato.php", "librerias");
 		}
-		$includes .= incluir("../../js/jquery.js", "javascript");
+		//$includes .= incluir("../../js/jquery.js", "javascript");
+		$includes .= "<?php echo(librerias_jquery('1.7')); ?>";
 		$includes .= incluir("../../js/jquery.validate.js", "javascript");
 
 		$includes .= incluir("../../js/title2note.js", "javascript");
@@ -2560,11 +2564,13 @@ function crear_formato_buscar($idformato, $accion) {
 			$includes .= incluir("../../css/style_fcbkcomplete.css", "estilos");
 		}
 		if ($autocompletar) {
-			$includes .= incluir("../../js/jquery.js", "javascript");
+			//$includes .= incluir("../../js/jquery.js", "javascript");
+		    $includes .= "<?php echo(librerias_jquery('1.7')); ?>";
 			$includes .= incluir("../librerias/autocompletar.js", "javascript");
 		}
 		if ($dependientes > 0) {
-			$includes .= incluir("../../js/jquery.js", "javascript");
+			//$includes .= incluir("../../js/jquery.js", "javascript");
+		    $includes .= "<?php echo(librerias_jquery('1.7')); ?>";
 			$includes .= incluir("../librerias/dependientes.js", "javascript");
 		}
 		$contenido = "<html><title>.:" . strtoupper($accion . " " . $formato[0]["etiqueta"]) . ":.</title><head>" . $includes . $enmascarar . "</head>" . $texto . "</html>";

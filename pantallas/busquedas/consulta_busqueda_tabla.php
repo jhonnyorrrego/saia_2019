@@ -20,7 +20,7 @@ ini_set("display_errors",true);
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/documento/librerias.php");
 echo(librerias_html5());
-echo(estilo_bootstrap("3.2.0"));
+echo(estilo_bootstrap("3.2"));
 ?>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior)?>pantallas/busquedas/tablas/bootstrap-table.css">
 <?php
@@ -28,7 +28,7 @@ $funciones=array();
 $datos_componente=$_REQUEST["idbusqueda_componente"];
 $datos_busqueda=busca_filtro_tabla("","busqueda A,busqueda_componente B","A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=".$datos_componente,"",$conn);
 echo(librerias_jquery("1.8"));
-echo(librerias_bootstrap("3.2.0"));
+echo(librerias_bootstrap("3.2"));
 echo(librerias_notificaciones());
 if($datos_busqueda[0]["ruta_libreria"]){
   $librerias=array_unique(explode(",",$datos_busqueda[0]["ruta_libreria"]));
@@ -188,54 +188,62 @@ $.fn.serializeObject = function(){
     });
     return o;
 };
-$(document).ready(function(){
-  var alto=$(document).height()-80;
-  $('#tabla_resultados').bootstrapTable({
+
+$(document).ready(function() {
+    var alto=$(document).height()-80;
+    $('#tabla_resultados').bootstrapTable({
         method: 'get',
         cache: false,
         height: alto,
-        striped: false,
+        striped: true,
         pagination: true,
         minimumCountColumns: 1,
         clickToSelect: true,
         sidePagination: 'server',
         pageSize: $("#rows").val(),
-        search: false,
+        search: true,
         cardView:false,
         pageList:'All',
-        paginationVAlign:'top'
-      });
+        paginationVAlign:'top',
+        showColumns: true,
+        icons : {
+            refresh: 'glyphicon-refresh icon-refresh',
+            toggle:  'glyphicon-list-alt icon-list-alt',
+            columns: 'glyphicon-th icon-th'
+        }
+    });
 });
-  function procesamiento_buscar(externo){
-      var data = $('#kformulario_saia').serializeObject();
-      $('#tabla_resultados').bootstrapTable('refreshOptions', {
+
+function procesamiento_buscar(externo) {
+    var data = $('#kformulario_saia').serializeObject();
+    $('#tabla_resultados').bootstrapTable('refreshOptions', {
         url: 'servidor_busqueda.php',
         queryParams: function (params) {
-        var pagina=1;
-        if($("#rows").val()!=0){
-          pagina=(params.offset/$("#rows").val())+1
-        }
-        console.log(params);
-          var q = {
-            "rows": $("#rows").val(),
-            "numfilas":$("#rows").val(),
-            "actual_row": params.offset,
-          "pagina":pagina,
-            "search": params.search,
-            "sort": params.sort,
-            "order": params.order,
-            "cantidad_total":$("#cantidad_total").val()
-          };
-          $.extend( data, q);
-        console.log(q);
-          return data;
+            var pagina=1;
+            if($("#rows").val()!=0) {
+                pagina=(params.offset/$("#rows").val())+1
+            }
+            console.log(params);
+            var q = {
+                "rows": $("#rows").val(),
+                "numfilas":$("#rows").val(),
+                "actual_row": params.offset,
+                "pagina":pagina,
+                "search": params.search,
+                "sort": params.sort,
+                "order": params.order,
+                "cantidad_total":$("#cantidad_total").val()
+            };
+            $.extend( data, q);
+            console.log(q);
+            return data;
         },
         onLoadSuccess: function(data){
           $("#cantidad_total").val(data.total);
         }
-      });
-            return false;
-  }
+    });
+    return false;
+}
 
 $(document).keypress(function(event) {
     var keycode = (event.keyCode ? event.keyCode : event.which);
@@ -260,7 +268,7 @@ $(document).ready(function() {
 echo(librerias_tooltips());
 echo(librerias_acciones_kaiten());
 
-if($datos_busqueda[0]["ruta_libreria_pantalla"]){
+if($datos_busqueda[0]["ruta_libreria_pantalla"]) {
   $librerias=explode(",",$datos_busqueda[0]["ruta_libreria_pantalla"]);
   foreach($librerias AS $key=>$valor){
     include_once($ruta_db_superior.$valor);

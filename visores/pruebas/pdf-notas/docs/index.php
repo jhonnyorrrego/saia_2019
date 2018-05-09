@@ -42,7 +42,7 @@ if(!$_REQUEST["ruta"]){
   <title>PDFJSAnnotate</title>
   <script src="<?php echo $ruta_db_superior;?>js/jquery-1.7.min.js" type="text/javascript"></script>
   <link rel="stylesheet" type="text/css" href="shared/toolbar.css"/>
-  <link rel="stylesheet" type="text/css" href="<?php echo $ruta_db_superior;?>css/bootstrap/saia/bootstrap.css"/>
+  <link rel="stylesheet" type="text/css" href="<?php echo $ruta_db_superior;?>css/bootstrap/saia/css/bootstrap.css"/>
   <link rel="stylesheet" type="text/css" href="shared/pdf_viewer.css"/>
   <style type="text/css">
     body {

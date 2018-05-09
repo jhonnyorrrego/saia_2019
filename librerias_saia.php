@@ -124,28 +124,40 @@ function estilo_principal($estilo = "estilo_lightness") {
 function estilo_bootstrap($version = "saia") {
     global $raiz_saia;
     switch ($version) {
-
+        case "2.1":
+            $version = "2.1.1";
+            break;
+        case "2.3":
+            $version = "2.3.2";
+            break;
+        case "3.2":
+            $version = "3.2.0";
+            break;
         case "saia":
             $texto = "";
-            $texto = '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/bootstrap.css">';
-            $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/bootstrap-responsive.css">';
-            $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/jasny-bootstrap.min.css">';
-            $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/jasny-bootstrap-responsive.min.css">';
-            $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/bootstrap_reescribir.css">';
+            $texto = '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/css/bootstrap.css">';
+            $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/css/bootstrap-responsive.css">';
+            $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/css/jasny-bootstrap.min.css">';
+            $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/css/jasny-bootstrap-responsive.min.css">';
+            $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/css/bootstrap_reescribir.css">';
             $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'pantallas/lib/librerias_css.css">';
-            $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/bootstrap_iconos_segundarios.css">';
+            $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/css/bootstrap_iconos_segundarios.css">';
             $texto .= index_estilos('temas_bootstrap');
-            break;
-        default:
-            $texto = "";
-            $texto = '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/' . $version . '/bootstrap.css">';
+            return $texto;
     }
+    $texto = '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/' . $version . '/css/bootstrap.css">';
     return ($texto);
 }
 
 function librerias_bootstrap($version = "saia") {
     global $raiz_saia;
     switch ($version) {
+        case "2.3":
+            $version = "2.3.2";
+            break;
+        case "3.2":
+            $version = "3.2.0";
+            break;
         case "saia":
             $texto  = '<script type="text/javascript" src="' . $raiz_saia . 'js/bootstrap/saia/bootstrap.js"></script>';
             $texto .= '<script type="text/javascript" src="' . $raiz_saia . 'js/bootstrap/saia/jasny-bootstrap.min.js"></script>';
@@ -327,7 +339,7 @@ function librerias_datepicker_bootstrap() {
     $texto = '';
     $texto .= '<script src="' . $raiz_saia . 'js/bootstrap/saia/bootstrap-datetimepicker.js" type="text/javascript" charset="utf-8"></script>';
     $texto .= '<script src="' . $raiz_saia . 'js/bootstrap/saia/bootstrap-datetimepicker.es.js" type="text/javascript" charset="utf-8"></script>';
-    $texto .= '<link rel="stylesheet" href="' . $raiz_saia . 'css/bootstrap/saia/bootstrap-datetimepicker.min.css" type="text/css" />';
+    $texto .= '<link rel="stylesheet" href="' . $raiz_saia . 'css/bootstrap/saia/css/bootstrap-datetimepicker.min.css" type="text/css" />';
     return ($texto);
 }
 
