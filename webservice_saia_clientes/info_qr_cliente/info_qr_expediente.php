@@ -2,27 +2,12 @@
 include_once ('lib/nusoap.php');
 include_once ('define.php');
 
-$cliente = new nusoap_client(SERVIDOR_INFO_QR);
-$retorno = $cliente -> call('generar_html_info_qr', array(json_encode($_REQUEST["key_cripto"])));
+$cliente = new nusoap_client(SERVIDOR_INFO_QR_EXP);
+$retorno = $cliente -> call('cargar_datos_qr_exp_caja', array(json_encode($_REQUEST["key_cripto"])));
 $array = json_decode($retorno, true);
 $table = '';
 $logo = '';
-$tabla2 = '';
 if ($array["exito"]) {
-	if ($array["nombre_formato"] == "despacho_ingresados") {//Entrega Interna
-		if ($array["iddoc"] && $array["idformato"]) {
-			$request = array(
-				"iddoc" => $array["iddoc"],
-				"idformato" => $array["idformato"]
-			);
-			$info_adicional = $cliente -> call('items_novedad_despacho', array(json_encode($request)));
-			if ($info_adicional["exito"]) {
-				$tabla2 = '<table class="table table-bordered" style="border-collapse: collapse; width: 100%;" border="1">';
-
-				$tabla2 = '</table>';
-			}
-		}
-	}
 	foreach ($array["info_tabla"] as $key => $value) {
 		$table .= '<tr><th>' . str_replace("_", " ", $key) . '</th> <td>' . $value . '</td></tr>';
 	}
@@ -69,7 +54,6 @@ if ($array["exito"]) {
 					<?php echo $table; ?>
 				</tbody>
 			</table>
-			<?php echo $tabla2;?>
 		</div>
 		<script src="js/bootstrap.min.js"></script>
 	</body>

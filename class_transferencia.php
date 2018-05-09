@@ -1443,7 +1443,7 @@ function guardar_documento($iddoc, $tipo = 0) {
 			// TODO: Se valida si cambio la dependencia del creador para actualizar la ruta (Firma SVG)
 			if ($valid_ruta["numcampos"] == 1 && $valid_ruta[0]["tipo_origen"] == 5 && $valid_ruta[0]["origen"] != $_REQUEST["dependencia"]) {
 				$update_ruta = "UPDATE ruta SET origen=" . $_REQUEST["dependencia"] . " WHERE idruta=" . $valid_ruta[0]["idruta"];
-				phpmkr_query($update_ruta, $conn);
+				phpmkr_query($update_ruta);
 			}
 		}
 		llama_funcion_accion($iddoc, $idformato, "editar", "POSTERIOR");

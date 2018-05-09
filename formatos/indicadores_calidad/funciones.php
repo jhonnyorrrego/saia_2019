@@ -18,7 +18,7 @@ echo(librerias_graficos());
 
 function cargar_info_indicador($idformato, $iddoc) {
 	global $conn, $datos;
-	$datos = busca_filtro_tabla("p.nombre,d.estado,ic.fuente_datos,ic.idft_indicadores_calidad,tipo_grafico", "ft_proceso p,ft_indicadores_calidad ic, documento d", "p.idft_proceso=ic.ft_proceso and ic.documento_iddocumento=d.iddocumento and d.iddocumento=" . $iddoc, "", $conn);
+	$datos = busca_filtro_tabla("p.nombre,d.estado,ic.fuente_datos,ic.idft_indicadores_calidad,tipo_grafico,ic.estado as estado_indicador,ic.idfunc_estado,".fecha_db_obtener("ic.fecha_estado","Y-m-d")." as fecha_estado", "ft_proceso p,ft_indicadores_calidad ic, documento d", "p.idft_proceso=ic.ft_proceso and ic.documento_iddocumento=d.iddocumento and d.iddocumento=" . $iddoc, "", $conn);
 }
 
 function nombre_padre($idformato, $iddoc, $tipo = NULL) {
@@ -26,11 +26,68 @@ function nombre_padre($idformato, $iddoc, $tipo = NULL) {
 	echo $datos[0]["nombre"];
 }
 
+function estado_indicador($idformato, $iddoc) {
+	global $conn, $datos;
+	$html = $datos[0]["estado_indicador"];
+	$hijos=busca_filtro_tabla("d.iddocumento","ft_formula_indicador ft,documento d","d.iddocumento=ft.documento_iddocumento and d.estado not in ('ELIMINADO','ANULADO','ACTIVO') and ft_indicadores_calidad=".$datos[0]["idft_indicadores_calidad"],"",$conn);
+	if ($_REQUEST["tipo"] != 5) {
+		if ($datos[0]["estado_indicador"] == 'ACTIVO') {
+			$html = '<span class="btn btn-info btn-mini accion" data-accion="INACTIVO">INACTIVAR</span>';
+		} else {
+			if($hijos["numcampos"]){
+				$html = '<span class="btn btn-info btn-mini accion" data-accion="ACTIVO">PUBLICAR</span>';
+			}
+		}
+		if ($datos[0]["idfunc_estado"]) {
+			$func = busca_filtro_tabla("nombres,apellidos", "funcionario", "idfuncionario=" . $datos[0]["idfunc_estado"], "", $conn);
+			if ($func["numcampos"]) {
+				$html .= '<br/>' . $func[0]["nombres"] . ' ' . $func[0]["apellidos"];
+			}
+			if ($datos[0]["fecha_estado"]) {
+				$html .= '<br/>' . $datos[0]["fecha_estado"];
+			}
+		}
+		?>
+		<script>
+			$(document).ready(function (){
+				$(".accion").click(function (){
+					accion=$(this).attr("data-accion");
+					etiqueta=$(this).text();
+					if(confirm("Esta seguro de "+etiqueta+" ?")===true){
+				    $.ajax({
+				    	url : 'ajax_indicador.php',
+				    	data:{accion:accion,iddoc:'<?php echo $iddoc;?>',opt:1},
+				    	type : 'post',
+				    	dataType:'json',
+				    	success : function(data) {
+				    		if(data.exito==1){
+				    			top.noty({text:"Estado actualizado!", type:"success", layout:"topCenter", timeout:3500});
+				    			window.location.reload();
+				    		}else{
+				    			top.noty({text:data.msn, type:"error", layout:"topCenter", timeout:3500});
+				    		}
+				    	},error:function (){
+				    		top.noty({text:'Error al procesar la peticion', type:"error", layout:"topCenter", timeout:3500});
+				    	}
+				    });
+					}			    
+				});
+			});
+		</script>
+		<?php
+	}
+	echo $html;
+}
+
+
+
 function formula_calculo($idformato, $iddoc) {
 	global $conn, $ruta_db_superior, $datos;
 	$html = "";
 	$formula = busca_filtro_tabla("f.idft_formula_indicador,f.observacion,f.nombre,f.unidad,d.iddocumento", "ft_formula_indicador f,documento d", "d.iddocumento=f.documento_iddocumento and d.estado not in ('ELIMINADO','ANULADO','ACTIVO') and f.ft_indicadores_calidad=" . $datos[0]["idft_indicadores_calidad"], "", $conn);
 	if ($formula["numcampos"]) {
+		$perm=new PERMISO();
+  	$ok_seg=$perm->acceso_modulo_perfil("crear_seguimiento_indicador");
 		$idfor_segui = busca_filtro_tabla("idformato", "formato", "nombre='seguimiento_indicador'", "", $conn);
 		$idfor_indicador = busca_filtro_tabla("idformato", "formato", "nombre='formula_indicador'", "", $conn);
 
@@ -40,9 +97,11 @@ function formula_calculo($idformato, $iddoc) {
 		  <td style="text-align:center;">Unidad</td>
 		  <td style="text-align:center;">Naturaleza</td>
 		  <td style="text-align:center;">Periodicidad</td>
-		  <td style="text-align:center;">Descripci&oacute;n de variables</td>
-		  <td style="text-align:center;">Seguimiento</td>
-	  </tr>';
+		  <td style="text-align:center;">Descripci&oacute;n de variables</td>';
+		  if($ok_seg){
+		  	$html .= '<td style="text-align:center;">Seguimiento</td>';
+		  }
+	  $html .= '</tr>';
 
 		for ($i = 0; $i < $formula["numcampos"]; $i++) {
 			$html .= '<tr>
@@ -50,9 +109,11 @@ function formula_calculo($idformato, $iddoc) {
 			<td>' . $formula[$i]["unidad"] . '</td>
 			<td>' . mostrar_valor_campo('naturaleza', $idfor_indicador[0]['idformato'], $formula[$i]["iddocumento"], 1) . '</td>
 			<td>' . mostrar_valor_campo('periocidad', $idfor_indicador[0]['idformato'], $formula[$i]["iddocumento"], 1) . '</td>
-			<td>' . $formula[$i]["observacion"] . '</td>
-			<td><a href="' . $ruta_db_superior . 'formatos/seguimiento_indicador/adicionar_seguimiento_indicador.php?anterior=' . $formula[$i]["iddocumento"] . '&padre=' . $formula[$i]["idft_formula_indicador"] . '&idformato=' . $idfor_segui[0]["idformato"] . '&regresar=' . $iddoc . '">Registrar seguimiento indicador</a></td>
-			</tr>';
+			<td>' . $formula[$i]["observacion"] . '</td>';
+			if($ok_seg){
+				$html .= '<td><a class="kenlace_saia" conector="iframe" title="Registrar seguimiento indicador" titulo="Registrar seguimiento indicador" style="cursor:pointer" enlace="' .FORMATOS_CLIENTE . 'seguimiento_indicador/adicionar_seguimiento_indicador.php?anterior=' . $formula[$i]["iddocumento"] . '&padre=' . $formula[$i]["idft_formula_indicador"] . '&idformato=' . $idfor_segui[0]["idformato"] . '&regresar=' . $iddoc . '">Registrar seguimiento indicador</a></td>';
+			}
+			$html .= '</tr>';
 		}
 		$html .= '</table>';
 	}
@@ -64,12 +125,19 @@ function resultados_indicador($idformato, $iddoc) {
 	$html = "";
 	$formulas = busca_filtro_tabla("nombre,idft_formula_indicador as id,unidad,rango_colores,tipo_rango", "ft_formula_indicador f,documento d", "d.iddocumento=f.documento_iddocumento and d.estado not in ('ELIMINADO','ANULADO','ACTIVO') and f.ft_indicadores_calidad=" . $datos[0]["idft_indicadores_calidad"], "", $conn);
 	if ($formulas["numcampos"]) {
+		$perm=new PERMISO();
+  	$ok_plan=$perm->acceso_modulo_perfil("crear_plan_mejoramiento");
 		$ruta_grafico = $_SESSION["ruta_temp_funcionario"] . "/" . $iddoc . "/";
 		$colspan = 5;
 		$td_html = "";
+		
 		if ($_REQUEST["tipo"] != 5) {
-			$td_html .= '<td style="text-align:center;">Seguimiento Indicador</td>
-			<td colspan="2" style="text-align:center;">Planes de Mejoramiento</td>';
+			$td_html .= '<td style="text-align:center;">Seguimiento Indicador</td>';
+			if($ok_plan){
+				$td_html .= '<td colspan="2" style="text-align:center;">Planes de Mejoramiento</td>';
+			}else{
+				$td_html .= '<td style="text-align:center;">Planes de Mejoramiento</td>';
+			}
 			$colspan = 8;
 		}
 
@@ -86,7 +154,7 @@ function resultados_indicador($idformato, $iddoc) {
 				<td style="text-align:center;">Meta</td>
 				<td style="text-align:center;">Resultado</td>
 				<td style="text-align:center;">Cumplimiento</td>
-				<td style="text-align:center;">Analisis de Datos</td>';
+				<td style="text-align:center;">An&aacute;lisis de Datos</td>';
 			$html .= $td_html . '</tr>';
 
 			$rango = explode(",", $formulas[$i]["rango_colores"]);
@@ -143,9 +211,11 @@ function resultados_indicador($idformato, $iddoc) {
 					<td>' . $seg[$j]["observaciones"] . '</td>';
 
 					if ($_REQUEST["tipo"] != 5) {
-						$html .= '<td style="text-align:center;"><a class="highslide" onclick="return top.hs.htmlExpand(this, { objectType: \'iframe\',width: 875, height:400,preserveContent:false } )"  href="' . $ruta_db_superior . 'formatos/seguimiento_indicador/mostrar_seguimiento_indicador.php?menu_principal_inactivo=1&iddoc=' . $seg[$j]["documento_iddocumento"] . '">Ver</a></td>';
-						$html .= '<td style="text-align:center;"><a target="detalles" href="../plan_mejoramiento/adicionar_plan_mejoramiento.php?seguimiento_indicador=' . $seg[$j]["idft_seguimiento_indicador"] . '">Adicionar Plan</a></td>
-            <td style="text-align:center;"><a class="highslide" onclick="return top.hs.htmlExpand(this, { objectType: \'iframe\',width: 500, height:400,preserveContent:false } )"  href="planes_relacionados.php?seguimiento_indicador=' . $seg[$j]["idft_seguimiento_indicador"] . '">Ver Planes</a></td>';
+						$html .= '<td style="text-align:center;"><a class="highslide" onclick="return top.hs.htmlExpand(this, { objectType: \'iframe\',width: 875, height:400,preserveContent:false } )"  href="' . $ruta_db_superior .FORMATOS_CLIENTE. 'seguimiento_indicador/mostrar_seguimiento_indicador.php?menu_principal_inactivo=1&iddoc=' . $seg[$j]["documento_iddocumento"] . '">Ver</a></td>';
+						if($ok_plan){
+							$html .= '<td style="text-align:center;"><a class="kenlace_saia" conector="iframe" title="Adicionar Plan" titulo="Adicionar Plan" style="cursor:pointer" enlace="'.FORMATOS_CLIENTE.'plan_mejoramiento/adicionar_plan_mejoramiento.php?seguimiento_indicador=' . $seg[$j]["idft_seguimiento_indicador"] . '">Adicionar Plan</a></td>';
+						}
+            $html .= '<td style="text-align:center;"><a class="highslide" onclick="return top.hs.htmlExpand(this, { objectType: \'iframe\',width: 500, height:400,preserveContent:false } )"  href="planes_relacionados.php?seguimiento_indicador=' . $seg[$j]["idft_seguimiento_indicador"] . '">Ver Planes</a></td>';
 					}
 					$html .= '</tr>';
 

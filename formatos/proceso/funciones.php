@@ -33,7 +33,7 @@ function post_add_edit_ruta_proceso($idformato, $iddoc) {
 function icono_detalles($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
 	if ($_REQUEST["tipo"] != 5) {
-		$funcionario = usuario_actual("funcionario_codigo");
+		$funcionario = $_SESSION["usuario_actual"];
 		$responsable = busca_filtro_tabla("", "documento A, ft_proceso B", "(A.iddocumento=B.documento_iddocumento AND iddocumento=" . $iddoc . ") AND (A.ejecutor=" . $funcionario . " OR permisos_acceso like '%,$funcionario' or permisos_acceso like '$funcionario' or permisos_acceso like '%,$funcionario,%' or permisos_acceso like '$funcionario,%' OR lider_proceso like '%,$funcionario' or lider_proceso like '$funcionario' or lider_proceso like '%,$funcionario,%' or lider_proceso like '$funcionario,%' OR B.responsable like '%,$funcionario' or B.responsable like '$funcionario' or B.responsable like '%,$funcionario,%' or B.responsable like '$funcionario,%')", "", $conn);
 
 		if ($responsable["numcampos"] > 0 || $_SESSION["LOGIN" . LLAVE_SAIA] == "cerok") {

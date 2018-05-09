@@ -14,8 +14,6 @@ include_once ($ruta_db_superior . "db.php");
 if (!$_SESSION["LOGIN" . LLAVE_SAIA] && isset($_REQUEST["LOGIN"]) && @$_REQUEST["conexion_remota"]) {
 	logear_funcionario_webservice($_REQUEST["LOGIN"]);
 }
-require_once $ruta_db_superior . 'StorageUtils.php';
-require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
 include_once ($ruta_db_superior . 'formatos/librerias/encabezado_pie_pagina.php');
 include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 require_once ($ruta_db_superior . 'tcpdf/tcpdf.php');
@@ -649,24 +647,6 @@ if (@$_REQUEST["iddoc"]) {
 } elseif ($_REQUEST["url"]) {
 	$pdf = new Imprime_Pdf("url");
 	$pdf -> configurar_pagina($_REQUEST);
-	if (@$_REQUEST["encabezado_papa"]) {
-		$arreglo1 = explode("|", $_REQUEST["url"]);
-		$arreglo2 = explode("=", $arreglo1[1]);
-		$doc_papa = $arreglo2[1];
-		$encabezado_papa = busca_filtro_tabla("", "documento A,formato B", "lower(A.plantilla)=lower(B.nombre) AND A.iddocumento=" . $doc_papa, "", $conn);
-		if (@$_REQUEST["tercero"]) {
-			$encabezado_papa = busca_filtro_tabla("", "documento A,formato B", "lower(A.plantilla)=lower(B.nombre) AND A.iddocumento=1721872", "", $conn);
-		}
-		if (@$_REQUEST["seguridad"]) {
-			$encabezado_papa = busca_filtro_tabla("", "documento A,formato B", "lower(A.plantilla)=lower(B.nombre) AND A.iddocumento=1721474", "", $conn);
-		}
-
-		if ($encabezado_papa["numcampos"]) {
-			$pdf -> formato[0]["encabezado"] = $encabezado_papa[0]["encabezado"];
-			$pdf -> formato[0]["idformato"] = $encabezado_papa[0]["idformato"];
-			$pdf -> mostrar_encabezado = 1;
-		}
-	}
 	$pdf -> imprimir();
 }
 ?>

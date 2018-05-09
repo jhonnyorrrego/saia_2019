@@ -1,12 +1,4 @@
-<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato Indicador(es) de Calidad</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><label class="string control-label" style="font-size:9pt" for="estado"><b>Estado<input type="hidden" name="bksaiacondicion_g@estado" id="bksaiacondicion_g@estado" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(487,6182,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_g@estado',this.id)">
-		    Y
-		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_g@estado',this.id)">
-		    O
-		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_g@estado" id="bqsaiaenlace_g@estado" value="y" />
-		</div></div></div><div class="control-group"><label class="string control-label" style="font-size:9pt" for="dependencia_indicador"><b>Dependencia<input type="hidden" name="bksaiacondicion_g@dependencia_indicador" id="bksaiacondicion_g@dependencia_indicador" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(487,6183,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
+<?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/header_formato.php"); ?><legend id="label_formato" class="legend">B&uacute;squeda en formato Indicador(es) de Calidad</legend><br /><br /><?php include_once("../librerias/funciones_generales.php"); ?><div class="control-group"><label class="string control-label" style="font-size:9pt" for="dependencia_indicador"><b>Dependencia<input type="hidden" name="bksaiacondicion_g@dependencia_indicador" id="bksaiacondicion_g@dependencia_indicador" value="like_total"></b></label><div class="controls"><?php genera_campo_listados_editar(487,6183,'',1,'buscar');?><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_dependencia_indicador',this.id)">
 		    Y
 		  </button>
