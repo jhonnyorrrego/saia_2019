@@ -29,7 +29,7 @@ if(!$_REQUEST["ruta"]){
 		$tipo='documento';
 		$idarchivo=$_REQUEST['iddocumento'];
 	}
-	
+
 }else{
 	$ruta_pdf=$_REQUEST["ruta"];
 }
@@ -40,9 +40,9 @@ if(!$_REQUEST["ruta"]){
 <head>
   <meta charset="utf-8"/>
   <title>PDFJSAnnotate</title>
-  <script src="../../../../js/jquery-1.7.min.js" type="text/javascript"></script>
+  <script src="<?php echo $ruta_db_superior;?>js/jquery-1.7.min.js" type="text/javascript"></script>
   <link rel="stylesheet" type="text/css" href="shared/toolbar.css"/>
-  <link rel="stylesheet" type="text/css" href="../../../../css/bootstrap.css"/>
+  <link rel="stylesheet" type="text/css" href="<?php echo $ruta_db_superior;?>css/bootstrap/saia/bootstrap.css"/>
   <link rel="stylesheet" type="text/css" href="shared/pdf_viewer.css"/>
   <style type="text/css">
     body {
@@ -133,11 +133,11 @@ if(!$_REQUEST["ruta"]){
     <button class="cursor btn btn-inverse" type="button" title="Cursor" data-tooltype="cursor">➚</button>
 
     <div class="spacer"></div>
-         
+
     <button  "background-color: #f5f900" class="rectangle btn btn-inverse" type="button" id="boton_area" title="Rectangle" data-tooltype="area">&nbsp;</button>
     <!--div class="spacer"></div-->
     <button id="opc_highlight" class="highlight" type="button" title="Highlight" data-tooltype="highlight">&nbsp;</button>
-    
+
     <!--button class="strikeout" type="button" title="Strikeout" data-tooltype="strikeout">&nbsp;</button-->
 	<button class="sello btn btn-inverse" id="opc_sello" type="button" title="Sello"  imagen="sello.jpg"  data-tooltype="sello">Sello</button>
     <!--div class="spacer"></div-->
@@ -170,7 +170,7 @@ if(!$_REQUEST["ruta"]){
     <a href="javascript://" id="opc_izquierda" class="rotate-cw" title="Rotate Clockwise">⟳</a>
     <a href="javascript://" id="cambio_visor" class="cambiar_visor" title="Cambiar visor"><button class="sello btn btn-inverse">Ir a PDF Original</button></a>
 	<div class="spacer"></div>
-	
+
     <a href="javascript://" class="clear" title="Clear"><button id="borrar_todo" class="sello btn btn-inverse">X</button></a>
   </div>
   <div id="content-wrapper">
@@ -194,7 +194,7 @@ if(!$_REQUEST["ruta"]){
 </html>
 <script>
 function activar_over(ft_notas_pdf,elemento,idelemento,comentario){
-	
+
 	if(elemento=='area'){
 		$('#'+ft_notas_pdf).attr('stroke','#f00');
 		$('#'+ft_notas_pdf).attr('fill','none');
@@ -210,9 +210,9 @@ function activar_over(ft_notas_pdf,elemento,idelemento,comentario){
 }
 
 function desactivar_over(ft_notas_pdf,elemento,idelemento,comentario){
-	
+
 	if(elemento=='area'){
-		
+
 		$('#'+ft_notas_pdf).attr('stroke','yellow');
 		$('#'+ft_notas_pdf).attr('fill','yellow');
 		$('#'+ft_notas_pdf).attr('fill-opacity','0.2');
@@ -221,30 +221,30 @@ function desactivar_over(ft_notas_pdf,elemento,idelemento,comentario){
 		$('#'+ft_notas_pdf).attr('stroke','yellow');
 		$('#'+ft_notas_pdf).attr('fill','yellow');
 	}
-	
+
 	if(comentario=='comentario'){
 		var eliminar=document.getElementById('elimina-comentario-'+idelemento);
 		eliminar.style.display='none';
 	}
-	
+
 }
 
 function ubicar_elemento(idelemento,elemento){
 
 	var eliminar=document.getElementById('elimina-'+elemento+'-'+idelemento);
-	eliminar.style.display=''; 
+	eliminar.style.display='';
 
 }
 
 function salir_elemento(idelemento,elemento){
 	var eliminar=document.getElementById('elimina-'+elemento+'-'+idelemento);
-	eliminar.style.display='none'; 
+	eliminar.style.display='none';
 }
 
 function eliminar_elemento(idelemento,iddoc,elemento){
-	
+
 	$("#div-"+elemento+"-"+idelemento).remove();
-	
+
 	$.ajax({
 			type:'POST',
 			url: "cargar_notas_pdf.php",
@@ -253,7 +253,7 @@ function eliminar_elemento(idelemento,iddoc,elemento){
 				iddoc:iddoc,
 				tipo_archivo:document.getElementById('tipo').getAttribute("value"),
 				eliminar:1,
-				idft_notas_pdf:idelemento				
+				idft_notas_pdf:idelemento
 			}
 		});
 }
@@ -267,10 +267,10 @@ function eliminar_comentario(idcomentario,iddoc,ft_notas_pdf,elemento){
 				iddoc:iddoc,
 				tipo_archivo:document.getElementById('tipo').getAttribute("value"),
 				eliminar:1,
-				idcomentario_pdf:idcomentario				
+				idcomentario_pdf:idcomentario
 			}
 		});
-		
+
 		$("#div-comentario-"+idcomentario).remove();
 		$('#'+ft_notas_pdf).attr('stroke','#f00');
 		$('#'+ft_notas_pdf).attr('fill','none');

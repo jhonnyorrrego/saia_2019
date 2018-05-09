@@ -28,27 +28,24 @@ function librerias_jquery($version = "1.7.2") {
     switch ($version) {
         case "1.4.2":
             $texto = '<script src="' . $raiz_saia . 'js/jquery-1.4.2.js" type="text/javascript"></script>';
-            break;
+            return $texto;
         case "1.7":
-        case "1.7.2":
-            $texto = '<script src="' . $raiz_saia . 'js/jquery-1.7.2.min.js" type="text/javascript"></script>';
+            $version = "1.7.2";
             break;
         case "1.2.3":
             $texto = '<script src="' . $raiz_saia . 'js/jquery-1.2.3.min.js" type="text/javascript"></script>';
             break;
         case "1.12":
-            $texto = '<script src="' . $raiz_saia . 'js/jquery-1.12.4.js" type="text/javascript"></script>';
+            $version = "1.12.4";
             break;
         case "sapi":
             $texto = '<script type="text/javascript" src="http://www.google.com/jsapi"></script>
 <script type="text/javascript">
         google.load("jquery", "1.7.2");
 </script>';
-            break;
-        default:
-            $texto = '<script src="' . $raiz_saia . 'js/jquery-' . $version . '.js" type="text/javascript"></script>';
-            break;
+            return $texto;
     }
+    $texto = '<script src="' . $raiz_saia . 'js/jquery/' . $version . '/jquery.js" type="text/javascript"></script>';
     return ($texto);
 }
 
@@ -121,23 +118,32 @@ function estilo_principal($estilo = "estilo_lightness") {
     return ($texto);
 }
 
-function estilo_bootstrap() {
+function estilo_bootstrap($version = "saia") {
     global $raiz_saia;
-    $texto = '<link rel="stylesheet" type="text/css" href="' . $raiz_saia .  'css/bootstrap/saia/bootstrap.css">';
-    $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/bootstrap-responsive.css">';
-    $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/jasny-bootstrap.min.css">';
-    $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/jasny-bootstrap-responsive.min.css">';
-    $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/bootstrap_reescribir.css">';
-    $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'pantallas/lib/librerias_css.css">';
-    $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/bootstrap_iconos_segundarios.css">';
-    $texto .= index_estilos('temas_bootstrap');
+    switch ($version) {
+
+        case "saia":
+            $texto = "";
+            $texto = '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/bootstrap.css">';
+            $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/bootstrap-responsive.css">';
+            $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/jasny-bootstrap.min.css">';
+            $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/jasny-bootstrap-responsive.min.css">';
+            $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/bootstrap_reescribir.css">';
+            $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'pantallas/lib/librerias_css.css">';
+            $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/bootstrap_iconos_segundarios.css">';
+            $texto .= index_estilos('temas_bootstrap');
+            break;
+        default:
+            $texto = "";
+            $texto = '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/' . $version . '/bootstrap.css">';
+    }
     return ($texto);
 }
 
 function librerias_bootstrap() {
     global $raiz_saia;
-    $texto = '<script type="text/javascript" src="' . $raiz_saia . 'js/bootstrap.js"></script>';
-    $texto .= '<script type="text/javascript" src="' . $raiz_saia . 'js/jasny-bootstrap.min.js"></script>';
+    $texto  = '<script type="text/javascript" src="' . $raiz_saia . 'js/bootstrap/saia/bootstrap.js"></script>';
+    $texto .= '<script type="text/javascript" src="' . $raiz_saia . 'js/bootstrap/saia/jasny-bootstrap.min.js"></script>';
     return ($texto);
 }
 
