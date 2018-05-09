@@ -14,7 +14,7 @@ include_once($ruta_db_superior . "db.php");
 if (isset($_POST['nombre_nuevo'])) {
     $Nombreicon = busca_filtro_tabla("nombre", "modulo", "idmodulo=" . $_POST['nombre_nuevo'], "", $conn);
     if ($Nombreicon['numcampos'] > 0) {
-        $archivo = file($ruta_db_superior . "/css/bootstrap_iconos_segundarios.css", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $archivo = file($ruta_db_superior . "/css/bootstrap/saia/bootstrap_iconos_segundarios.css", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         $clave = (array_search("background-position: -" . $_POST['coord_izquierda'] . "px -" . $_POST['coord_superior'] . "px;", $archivo)-1);
 		$nombre_duplicado = array_search(".icon-".$Nombreicon[0]['nombre']." {", $archivo);
 		
@@ -24,7 +24,7 @@ if (isset($_POST['nombre_nuevo'])) {
 
 			if ($clave>=0) {
             $archivo[$clave] = ".icon-" . $Nombreicon[0]['nombre'] . " {";
-            $nuevo_archivo = fopen($ruta_db_superior . "/css/bootstrap_iconos_segundarios.css", "w+b");
+            $nuevo_archivo = fopen($ruta_db_superior . "/css/bootstrap/saia/bootstrap_iconos_segundarios.css", "w+b");
             foreach ($archivo as $linea) {
                 fwrite($nuevo_archivo, $linea . "\n");
             }
@@ -32,7 +32,7 @@ if (isset($_POST['nombre_nuevo'])) {
            	 echo "<script>alert('Modificacion con Exito');location.reload();</script>";
        		 } else {
  				array_push($archivo, ".icon-" . $Nombreicon[0]['nombre'] . " {", "background-position: -" . $_POST['coord_izquierda'] . "px -" . $_POST['coord_superior'] . "px;", "}");	
-	            $nuevo_archivo = fopen($ruta_db_superior . "/css/bootstrap_iconos_segundarios.css", "w+b");
+	            $nuevo_archivo = fopen($ruta_db_superior . "/css/bootstrap/saia/bootstrap_iconos_segundarios.css", "w+b");
 	            foreach ($archivo as $linea) {
 	                fwrite($nuevo_archivo, $linea . "\n");
 	            }
@@ -48,13 +48,13 @@ if (isset($_POST['nombre_nuevo'])) {
 if (isset($_POST['borrar_icono'])) {
 	 $Nombreicon = busca_filtro_tabla("nombre", "modulo", "idmodulo=" . $_POST['borrar_icono'], "", $conn);
 	if ($Nombreicon['numcampos'] > 0) {
-		$archivo = file($ruta_db_superior . "/css/bootstrap_iconos_segundarios.css", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+		$archivo = file($ruta_db_superior . "/css/bootstrap/saia/bootstrap_iconos_segundarios.css", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         $clave = array_search(".icon-" . $Nombreicon[0]['nombre'] . " {", $archivo);
 
 		 	unset ($archivo[$clave]);
 			unset ($archivo[$clave+1]);
 			unset ($archivo[$clave+2]);
-            $nuevo_archivo = fopen($ruta_db_superior . "/css/bootstrap_iconos_segundarios.css", "w+b");
+            $nuevo_archivo = fopen($ruta_db_superior . "/css/bootstrap/saia/bootstrap_iconos_segundarios.css", "w+b");
             foreach ($archivo as $linea) {
                 fwrite($nuevo_archivo, $linea . "\n");
             }

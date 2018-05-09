@@ -9,11 +9,11 @@ include_once($ruta_db_superior."pantallas/documento/librerias_flujo.php");
 include_once($ruta_db_superior."pantallas/ejecutor/librerias.php");
 include_once($ruta_db_superior."pantallas/expediente/librerias.php");
 ?>
-<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap-responsive.css"/>
+<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap/saia/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap/saia/bootstrap-responsive.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>pantallas/lib/librerias_css.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap_reescribir.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap-datetimepicker.min.css"/>
+<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap/saia/bootstrap_reescribir.css"/>
+<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap/saia/bootstrap-datetimepicker.min.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/datetimepicker.css" />
 <?php include_once($ruta_db_superior."db.php"); ?>

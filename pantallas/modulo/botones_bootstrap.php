@@ -27,7 +27,7 @@ $columnas = round(($ancho_img / $ancho_fila), 0, PHP_ROUND_HALF_DOWN);
 
 function nombre_icon($pos_izq, $pos_sup) {
     global $ruta_db_superior;
-    $archivo = file($ruta_db_superior . "css/bootstrap_iconos_segundarios.css", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    $archivo = file($ruta_db_superior . "css/bootstrap/saia/bootstrap_iconos_segundarios.css", FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     $clave = array_search("background-position: -" . $pos_izq . "px -" . $pos_sup . "px;", $archivo);
     if ($clave !==false) {
         echo substr($archivo[($clave-1)], 6, -2);
