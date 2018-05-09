@@ -61,7 +61,7 @@ $datosimagen=busca_filtro_tabla("","anexos","idanexos=".$pagina,"",$conn);
 
 <html>
 <head>
-<script type="text/javascript" src="js/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/jquery/1.4.2/jquery.js"></script>
 <script type="text/javascript" src="js/jQueryRotate.2.1.js"></script>
 <script type="text/javascript" src="js/jquery.gzoom.js"></script>
 <script type="text/javascript" src="js/ui.core.js"></script>

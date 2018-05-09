@@ -49,7 +49,7 @@ else if(!$defecto){
 		    }
 }
 ?>
-<script type="text/javascript" src="js/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/jquery/1.4.2/jquery.js"></script>
 <style>
 .column{float: left;}
 </style>

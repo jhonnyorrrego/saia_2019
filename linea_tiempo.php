@@ -90,7 +90,7 @@ if($datos == null){
 }
 
 ?>
-<script type="text/javascript" src="js/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/jquery/1.4.2/jquery.js"></script>
 <script type="text/javascript" src="js/jquery.corner.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){     

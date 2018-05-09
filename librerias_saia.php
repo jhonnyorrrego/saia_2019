@@ -26,15 +26,15 @@ function librerias_jquery($version = "1.7.2") {
     global $raiz_saia;
     $texto = '';
     switch ($version) {
-        case "1.4.2":
-            $texto = '<script src="' . $raiz_saia . 'js/jquery-1.4.2.js" type="text/javascript"></script>';
-            return $texto;
+        case "1.4":
+            $version = "1.4.2";
+            break;
         case "1.7":
             $version = "1.7.2";
             break;
         case "1.2.3":
             $texto = '<script src="' . $raiz_saia . 'js/jquery-1.2.3.min.js" type="text/javascript"></script>';
-            break;
+            return $texto;
         case "1.12":
             $version = "1.12.4";
             break;
