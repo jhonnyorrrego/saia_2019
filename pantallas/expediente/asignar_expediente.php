@@ -240,7 +240,7 @@ $table.="</table>";
 </div>
 </form>
 
-<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/bootstrap.js"></script>
+<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/bootstrap/saia/bootstrap.js"></script>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery.validate_v1.js"></script>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/idiomas/jquery.validates.es.js"></script>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/noty/jquery.noty.js"></script>
@@ -248,7 +248,7 @@ $table.="</table>";
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/noty/themes/default.js"></script>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>pantallas/lib/librerias_notificaciones.js"></script>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>pantallas/lib/librerias_codificacion.js"></script>
-<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/bootstrap/saia/bootstrap-datetimepicker.js"></script>
 <style >
 .ac_results {
 	padding: 0px;

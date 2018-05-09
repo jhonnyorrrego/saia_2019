@@ -107,7 +107,7 @@ echo(librerias_arboles());
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/noty/layouts/topCenter.js"></script>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/noty/themes/default.js"></script>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>pantallas/lib/librerias_notificaciones.js"></script>
-<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/bootstrap/saia/bootstrap-datetimepicker.js"></script>
 <script type="text/javascript" src="<?php echo $ruta_db_superior; ?>pantallas/lib/librerias_codificacion.js"></script>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>anexosdigitales/highslide-4.0.10/highslide/highslide-full.js"></script>
 <script type="text/javascript">
