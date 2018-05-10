@@ -59,7 +59,7 @@ function incluir_librerias_busqueda($elemento,$indice){
 
   <div class="row">
 
-  <table id="tabla_resultados" data-toggle="tabla_resultados"
+  <table id="tabla_resultados" data-advanced-search="true" data-id-table="advancedTable" data-toggle="tabla_resultados"
   data-url="servidor_busqueda.php"
   data-side-pagination="server"
   data-height="100%" data-pagination="true" data-toolbar="#menu_buscador" data-show-refresh="true" data-show-toggle="true"
@@ -136,7 +136,6 @@ $.fn.serializeObject = function(){
             o[this.name] = this.value || '';
         }
     });
-    console.log(o);
     return o;
 };
 
@@ -152,12 +151,18 @@ $(document).ready(function() {
         search: true,
         cardView:false,
         showColumns: true,
+        pageList:[5, 10, 25, 50, 100],
         pageSize: 5,
         icons : {
             refresh: 'glyphicon-refresh icon-refresh',
             toggle:  'glyphicon-list-alt icon-list-alt',
-            columns: 'glyphicon-th icon-th'
-        }
+            columns: 'glyphicon-th icon-th',
+            advancedSearchIcon: 'glyphicon-chevron-down'
+        },
+        formatAdvancedSearch: function() {
+            return 'Busqueda avanzada';
+        },
+
     });
 });
 
