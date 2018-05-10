@@ -149,6 +149,46 @@ function estilo_bootstrap($version = "saia") {
     return ($texto);
 }
 
+function estilo_tabla_bootstrap($version = "1.11") {
+    global $raiz_saia;
+    switch ($version) {
+        case "1.12":
+            $version = "1.12.1";
+            break;
+        case "1.11":
+            $version = "1.11.1";
+            break;
+        case "1.10":
+            $version = "1.10.1";
+            break;
+    }
+    $texto = '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap_table/' . $version . '/bootstrap-table.css">';
+    return $texto;
+}
+
+function librerias_tabla_bootstrap($version = "1.11", $export = false) {
+    global $raiz_saia;
+    switch ($version) {
+        case "1.12":
+            $version = "1.12.1";
+            break;
+        case "1.11":
+            $version = "1.11.1";
+            break;
+        case "1.10":
+            $version = "1.10.1";
+            break;
+    }
+    $texto  = '<script type="text/javascript" src="' . $raiz_saia . 'css/bootstrap_table/' . $version . '/bootstrap-table.js"></script>';
+
+    $texto .= '<script src="' . $raiz_saia . 'css/bootstrap_table/' . $version . '/locale/bootstrap-table-es-ES.js"></script>';
+    if($export) {
+        $texto .= '<script src="' . $raiz_saia . 'css/bootstrap_table/' . $version . '/extensions/export/bootstrap-table-export.js"></script>';
+    }
+
+    return $texto;
+}
+
 function librerias_bootstrap($version = "saia") {
     global $raiz_saia;
     switch ($version) {
@@ -157,6 +197,9 @@ function librerias_bootstrap($version = "saia") {
             break;
         case "3.2":
             $version = "3.2.0";
+            break;
+        case "3.3":
+            $version = "3.3.7";
             break;
         case "saia":
             $texto  = '<script type="text/javascript" src="' . $raiz_saia . 'js/bootstrap/saia/bootstrap.js"></script>';

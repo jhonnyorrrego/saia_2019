@@ -21,9 +21,8 @@ include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/documento/librerias.php");
 echo(librerias_html5());
 echo(estilo_bootstrap("3.2"));
-?>
-<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior)?>pantallas/busquedas/tablas/bootstrap-table.css">
-<?php
+echo estilo_tabla_bootstrap("1.11");
+
 $funciones=array();
 $datos_componente=$_REQUEST["idbusqueda_componente"];
 $datos_busqueda=busca_filtro_tabla("","busqueda A,busqueda_componente B","A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=".$datos_componente,"",$conn);
@@ -38,11 +37,11 @@ function incluir_librerias_busqueda($elemento,$indice){
   global $ruta_db_superior;
   include_once($ruta_db_superior.$elemento);
 }
+
+echo librerias_tabla_bootstrap("1.11");
+
 ?>
-<script src="<?php echo($ruta_db_superior)?>pantallas/busquedas/tablas/bootstrap-table.js"></script>
-<script src="<?php echo($ruta_db_superior)?>pantallas/busquedas/tablas/locale/bootstrap-table-es-ES.js"></script>
-<!--script src="<?php echo($ruta_db_superior)?>pantallas/busquedas/tablas/extensions/export/bootstrap-table-export.js"></script>
-<script src="//rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script-->
+
 </head>
 <body>
   <div class="container">
@@ -75,11 +74,7 @@ function incluir_librerias_busqueda($elemento,$indice){
         </span>&nbsp;
       </button>
       <ul class="dropdown-menu" id='listado_seleccionados'>
-        <li>
-        <a href="#">
-          <div id="filtrar_seleccionados">Alert seleccionados
-          </div></a>
-        </li>
+        <li><a href="#"><div id="filtrar_seleccionados">Alert seleccionados</div></a></li>
         <?php
           if($datos_busqueda[0]["acciones_seleccionados"]!=''){
             echo('<li class="nav-header">Acciones</li>');
