@@ -258,7 +258,7 @@ function librerias_arboles($opciones = '') {
 function librerias_tiny() {
     global $raiz_saia;
     $texto = '';
-    $texto = '<script language="javascript" type="text/javascript" src="' . $raiz_saia . 'tinymce35/jquery.tinymce.js"></script>';
+    $texto = '<script language="javascript" type="text/javascript" src="' . $raiz_saia . 'tinymce/jquery.tinymce.min.js"></script>';
     return ($texto);
 }
 
