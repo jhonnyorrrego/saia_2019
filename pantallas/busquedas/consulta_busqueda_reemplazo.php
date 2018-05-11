@@ -94,7 +94,7 @@ $datos_reemplazo=busca_filtro_tabla("B.nombres AS nombres_origen,B.apellidos AS 
 		</div>
 </div>
 <script>
-  var alto_inicial=($(document).height());
+  var alto_inicial=($(window).height());
   var carga_final=false;
   var forma_cargar=<?php echo($datos_busqueda[0]["cargar"]);?>;
   $("#panel_body").height(alto_inicial);

@@ -47,7 +47,7 @@ $cadena = "";
 				if (window.navigator.userAgent.toLowerCase().match("gecko")) {
 					browserType = "gecko"
 				}
-				tree_calidad = new dhtmlXTreeObject("treeboxbox_tree_calidad", "340px", $(document).height(), 0);
+				tree_calidad = new dhtmlXTreeObject("treeboxbox_tree_calidad", "340px", $(window).height(), 0);
 				tree_calidad.setImagePath("../../botones/formatos/");
 				tree_calidad.enableIEImageFix(true);
 				tree_calidad.setXMLAutoLoadingBehaviour("id");

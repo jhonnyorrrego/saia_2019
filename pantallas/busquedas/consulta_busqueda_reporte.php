@@ -154,7 +154,7 @@ var isIE="";
 $(document).ready(function(){
 	window.parent.$(".block-iframe").attr("style","margin-top:0px; width: 100%; border:0px solid; overflow:auto; -webkit-overflow-scrolling:touch;");
 	
-	var alto_document=($(document).height()-130);
+	var alto_document=($(window).height()-130);
     var emptyMsgDiv = $("<div class='alert alert-warning' style='font-size:24px;'><center>No se encontraron resultados</center></div>");
 	var $grid = $("#datos_busqueda");
     $grid.jqGrid({

@@ -40,11 +40,11 @@ echo(librerias_jquery('1.7'));
 $(document).ready(function(){
 	var alto_menu=$("#menu_principal_documento").height();
 	if(parseInt(alto_menu)>=0){
-		var alto=($(document).height());
+		var alto=($(window).height());
 		$("#detalles").height((alto-alto_menu)-20);
 	}
 	else{
-		var alto=($(document).height());
+		var alto=($(window).height());
 		$("#detalles").height(alto-20);
 	}
 });

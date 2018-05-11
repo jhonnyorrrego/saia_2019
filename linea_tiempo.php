@@ -95,7 +95,7 @@ if($datos == null){
 <script type="text/javascript">
 $(document).ready(function(){     
   $('.div_borde').corner("7px");   
-  $("#aparecer").height(($(document).height())-150);
+  $("#aparecer").height(($(window).height())-150);
 });
 function carga_archivo(id){
 

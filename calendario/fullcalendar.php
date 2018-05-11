@@ -358,7 +358,7 @@ if($datos_busqueda["numcampos"]){
 <script type="text/javascript">
   var forma_cargar=<?php echo($datos_busqueda[0]["cargar"]);?>;
   var espacio_menu=$(".nav").height()+$(".fc-toolbar").height();
-  var alto_inicial=($(document).height()-espacio_menu-200); 
+  var alto_inicial=($(window).height()-espacio_menu-200); 
   $(document).ready(function(){
     $("#panel_body").height(alto_inicial);
     cargar_datos_scroll();

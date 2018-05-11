@@ -33,7 +33,7 @@ $formato=busca_filtro_tabla("","formato","idformato=".$_REQUEST["idformato"],"",
 echo(librerias_jquery("1.7"));
 ?>
 <script type="text/javascript">
-var alto=($(document).height()-8); 
+var alto=($(window).height()-8); 
 function llamado_pantalla(ruta,datos,destino,nombre){				
   if(datos!==''){
     ruta+="?"+datos;

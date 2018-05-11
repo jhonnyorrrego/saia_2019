@@ -16,7 +16,7 @@ include_once($ruta_db_superior."db.php");
 <meta charset="UTF-8">
 <title>Consulta de informaci&oacute;n</title>
 <?php
-ini_set("display_errors",true);
+
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/documento/librerias.php");
 echo(librerias_html5());
@@ -185,7 +185,7 @@ $.fn.serializeObject = function(){
 };
 
 $(document).ready(function() {
-    var alto=$(document).height()-80;
+    var alto=$(window).height()-80;
     $('#tabla_resultados').bootstrapTable({
         method: 'get',
         cache: false,
@@ -218,7 +218,6 @@ function procesamiento_buscar(externo) {
             if($("#rows").val()!=0) {
                 pagina=(params.offset/$("#rows").val())+1
             }
-            console.log(params);
             var q = {
                 "rows": $("#rows").val(),
                 "numfilas":$("#rows").val(),
@@ -230,11 +229,9 @@ function procesamiento_buscar(externo) {
                 "cantidad_total":$("#cantidad_total").val()
             };
             $.extend( data, q);
-            console.log(q);
             return data;
         },
         responseHandler: function(res) {
-            //console.log(res);
             var total = res.cantidad_total;
             res.total = total;
             return res;

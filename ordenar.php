@@ -89,7 +89,7 @@ echo(librerias_principal());
 echo(librerias_highslide());
 ?>
 <script type="text/javascript">
-var alto=($(document).height()-8); 
+var alto=($(window).height()-8); 
 function llamado_pantalla(ruta,datos,destino,nombre){				
   if(datos!==''){
     ruta+="?"+datos;
