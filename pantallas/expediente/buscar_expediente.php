@@ -19,7 +19,7 @@ echo(estilo_bootstrap());
   <head>    
   </head>
   <body>
-  	<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap-datetimepicker.min.css"/>
+  	<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap/saia/css/bootstrap-datetimepicker.min.css"/>
   	<div class="navbar navbar-fixed-top">
 	    <div class="navbar-inner">                           
 	      <ul class="nav pull-left">                                         
@@ -139,8 +139,8 @@ echo(estilo_bootstrap());
   </body>
   <script type="text/javascript" src="<?php echo $ruta_db_superior; ?>pantallas/lib/validaciones_formulario.js"></script>
 </html>
-<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/bootstrap.js"></script>
-<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/bootstrap/saia/bootstrap.js"></script>
+<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/bootstrap/saia/bootstrap-datetimepicker.js"></script>
 <script>
 $(document).ready(function(){
   $('#fecha').datetimepicker({

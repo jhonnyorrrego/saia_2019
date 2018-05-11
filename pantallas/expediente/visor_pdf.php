@@ -13,7 +13,7 @@ include_once($ruta_db_superior."db.php");
 ?>
 
 <iframe id="detalles_pdf" width="100%" height="100%" frameborder="0" name="detalles_pdf" src="<?php echo((@$_REQUEST["ruta"])); ?>"></iframe>
-<script type="text/javascript" src="<?php echo $ruta_db_superior; ?>js/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="<?php echo $ruta_db_superior; ?>js/jquery/1.4.2/jquery.js"></script>
 <script>
 $(document).ready(function(){
  var alto=($(document).height());

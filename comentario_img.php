@@ -140,7 +140,7 @@ function zoom(type,imgx,sz,pag)
 		font-family: Verdana;
 	 }
 </style>
-<script type="text/javascript" src="js/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="js/jquery/1.4.2/jquery.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
   $('#iframe_documento').load(function() {

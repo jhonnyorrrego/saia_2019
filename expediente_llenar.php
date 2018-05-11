@@ -19,11 +19,11 @@ $nombres_exp=array_unique(extrae_campo($expedientes_documento,"nombre"));
 ?>
 <link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
 
-<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap-responsive.css"/>
+<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap/saia/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap/saia/css/bootstrap-responsive.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>pantallas/lib/librerias_css.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap_reescribir.css"/>
-<?php 
+<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap/saia/css/bootstrap_reescribir.css"/>
+<?php
     echo(menu_principal_documento($doc_menu,1));
     echo(librerias_jquery('1.7'));
     echo( librerias_validar_formulario(11) );
@@ -58,7 +58,7 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
       if (window.navigator.userAgent.toLowerCase().match("gecko")) {
          browserType= "gecko"
       }
-  		
+
 			tree2=new dhtmlXTreeObject("treeboxbox_tree2","100%","",0);
 			tree2.setImagePath("imgs/");
 			tree2.enableIEImageFix(true);
@@ -66,10 +66,10 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
       //tree2.enableSmartXMLParsing(true);
       tree2.setOnLoadingStart(cargando_expediente);
       tree2.setOnLoadingEnd(fin_cargando_expediente);
-      
+
 			tree2.setXMLAutoLoading("test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1&estado_cierre=1&estado_archivo=1");
 			tree2.loadXML("test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1&estado_cierre=1&estado_archivo=1");
-			
+
 			function fin_cargando_expediente() {
         if (browserType == "gecko" )
            document.poppedLayer =
@@ -112,7 +112,7 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
       <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
 			<div id="treeboxbox_tree3"></div>
 	</div>
-</div>      
+</div>
 				<script type="text/javascript">
   		var browserType;
       if (document.layers) {browserType = "nn4"}
@@ -120,7 +120,7 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
       if (window.navigator.userAgent.toLowerCase().match("gecko")) {
          browserType= "gecko"
       }
-  		
+
 			tree3=new dhtmlXTreeObject("treeboxbox_tree3","100%","",0);
 			tree3.setImagePath("imgs/");
 			tree3.enableIEImageFix(true);
@@ -128,10 +128,10 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
       //tree2.enableSmartXMLParsing(true);
       tree3.setOnLoadingStart(cargando_serie);
       tree3.setOnLoadingEnd(fin_cargando_serie);
-      
+
 			tree3.setXMLAutoLoading("test_serie_funcionario.php?categoria=2");
 			tree3.loadXML("test_serie_funcionario.php?categoria=2");
-			
+
 		function fin_cargando_serie() {
         if (browserType == "gecko" )
            document.poppedLayer =
@@ -160,7 +160,7 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
         document.poppedLayer.style.display = "";
       }
 
-      </scrip t -->      
+      </scrip t -->
 <?php if($doc["numcampos"]>1){ ?>
  <!--tr>
   <td  class="encabezado">ACCI&Oacute;N A REALIZAR: </td>
@@ -175,14 +175,14 @@ else{ ?>
 <?php } ?>
 
 
-<?php 
+<?php
 if(count($nombres_exp)){
 ?>
 <div class="control-group element">
 	<label class="control-label" for="nombre"><?php echo("El documento se encuentra almacenado en:<br> <b>".ucwords(strtolower(implode("</b><br><b>",$nombres_exp)))); ?></b>
   </label>
 </div>
-<?php    
+<?php
 }
 ?>
 <div>
@@ -199,8 +199,8 @@ if(count($nombres_exp)){
 	seleccionados_series=tree3.getAllChecked();
     if(seleccionados_series!="")
       {$('#serie_idserie').val(seleccionados_series);
-       
-      }	  
+
+      }
 	    */
     seleccionados=tree2.getAllChecked();
     if(seleccionados!="")

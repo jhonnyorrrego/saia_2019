@@ -28,7 +28,7 @@ else if(!$defecto){
   //$defecto="formatos/radicacion_entrada/adicionar_radicacion_entrada.php";
 }
 ?>
-<script type="text/javascript" src="<?php echo $ruta_db_superior; ?>js/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="<?php echo $ruta_db_superior; ?>js/jquery/1.4.2/jquery.js"></script>
 <style>
 .column{float: left;}
 </style>
