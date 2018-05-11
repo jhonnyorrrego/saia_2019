@@ -118,8 +118,7 @@ function radicado_exp_doc($iddoc) {
 }
 
 function tipo_doc($iddoc) {
-	$formato = busca_filtro_tabla("nombre_tabla", "documento d,formato f", "lower(d.plantilla)=f.nombre and d.iddocumento=" . $iddoc, "", $conn);
-	$tipo_docu = busca_filtro_tabla("b.nombre", $formato[0]['nombre_tabla'] . " a,serie b", "a.serie_idserie=b.idserie and documento_iddocumento=" . $iddoc, "", $conn);
+	$tipo_docu = busca_filtro_tabla("b.nombre", "documento a,serie b", "a.serie=b.idserie and iddocumento=" . $iddoc, "", $conn);
 	return ($tipo_docu[0]['nombre']);
 }
 

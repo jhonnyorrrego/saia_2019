@@ -59,8 +59,11 @@ class StorageUtils {
 			case 'bpmn' :
 				$server_path = RUTA_ARCHIVOS_BPMN;
 				break;
-			case 'ayuda' :
-				$server_path = RUTA_AYUDA;
+			case 'manual' :
+				$server_path = RUTA_MANUAL;
+				break;
+			case 'plantilla_word' :
+				$server_path = RUTA_PLANTILLA_WORD;
 				break;
 			default :
 				//Usar el tipo. Ej. BACKUP

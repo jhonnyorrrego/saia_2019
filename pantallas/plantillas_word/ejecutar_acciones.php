@@ -9,38 +9,34 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "pantallas/manuales/librerias.php");
 
-function add_manual() {
+function add_plantilla_word() {
 	global $ruta_db_superior;
 	$retorno = array(
 		"exito" => 0,
 		"msn" => ""
 	);
 	$ok = 1;
-	if ($_REQUEST["agrupador"] == 0 && is_uploaded_file($_FILES["anexo"]["tmp_name"])) {
+	if (is_uploaded_file($_FILES["anexo"]["tmp_name"])) {
 		$nombre = basename($_FILES["anexo"]["name"]);
 		$archivo = uniqid() . "_" . $nombre;
-		$almacenamiento = new SaiaStorage("manual");
+		$almacenamiento = new SaiaStorage("plantilla_word");
 		$resultado = $almacenamiento -> copiar_contenido_externo($_FILES['anexo']['tmp_name'], $archivo);
 		@unlink($_FILES["anexo"]["tmp_name"]);
 		if ($resultado) {
-			$dir_ayuda = array(
+			$dir_anexo = array(
 				"servidor" => $almacenamiento -> get_ruta_servidor(),
 				"ruta" => $archivo
 			);
-			$ruta_anexo = json_encode($dir_ayuda);
+			$ruta_anexo = json_encode($dir_anexo);
 		} else {
 			$ok = 0;
 			$retorno["msn"] = "No es posible procesar el archivo " . $_FILES["anexo"]["tmp_name"] . " posible error al tratar de guardar: " . $nombre;
 		}
-	} else if ($_REQUEST["agrupador"] == 1) {
-		$_REQUEST["descripcion"] = "-";
-		$ruta_anexo = "";
 	}
 	if ($ok) {
-		$retorno["msn"] = "Error al guardar el manual";
-		$insert = "INSERT INTO manual (etiqueta,descripcion,agrupador,ruta_anexo,cod_padre,funcionario_idfuncionario,estado)	VALUES ('" . htmlentities($_REQUEST["nombre"]) . "','" . htmlentities($_REQUEST["descripcion"]) . "'," . $_REQUEST["agrupador"] . ",'" . $ruta_anexo . "'," . $_REQUEST["cod_padre"] . "," . $_SESSION["idfuncionario"] . ",".$_REQUEST["estado"].")";
+		$retorno["msn"] = "Error al guardar la plantilla";
+		$insert = "INSERT INTO plantilla_word (nombre,descripcion,ruta_anexo,funcionario_idfuncionario,estado)	VALUES ('" . htmlentities($_REQUEST["nombre"]) . "','" . htmlentities($_REQUEST["descripcion"]) . "','" . $ruta_anexo . "'," . $_SESSION["idfuncionario"] . "," . $_REQUEST["estado"] . ")";
 		phpmkr_query($insert) or die(json_encode($retorno));
 		$retorno["exito"] = 1;
 		$retorno["msn"] = "";
@@ -48,27 +44,27 @@ function add_manual() {
 			echo json_encode($retorno);
 		} else {
 			notificaciones("Datos Guardados!", "success", 4000);
-			abrir_url($ruta_db_superior . "pantallas/manuales/", "_self");
+			abrir_url($ruta_db_superior . "pantallas/plantillas_word/", "_self");
 		}
 	} else {
 		if ($_REQUEST["retorno"]) {
 			echo json_encode($retorno);
 		} else {
 			notificaciones($retorno["msn"], "error", 4000);
-			abrir_url($ruta_db_superior . "pantallas/manuales/", "_self");
+			abrir_url($ruta_db_superior . "pantallas/plantillas_word/", "_self");
 		}
 	}
 
 }
 
-function edit_manual() {
+function edit_plantilla_word() {
 	global $ruta_db_superior;
 	$retorno = array(
 		"exito" => 0,
 		"msn" => ""
 	);
-	if ($_REQUEST["idmanual"]) {
-		$almacenamiento = new SaiaStorage("manual");
+	if ($_REQUEST["id"]) {
+		$almacenamiento = new SaiaStorage("plantilla_word");
 		$ruta_anexo = base64_decode($_REQUEST["ruta_anexo"]);
 		if (is_uploaded_file($_FILES["anexo"]["tmp_name"])) {
 			$nombre = basename($_FILES["anexo"]["name"]);
@@ -81,11 +77,11 @@ function edit_manual() {
 					$delete = $almacenamiento -> eliminar($archivo_del["ruta"]);
 				}
 
-				$dir_ayuda = array(
+				$dir_anexo = array(
 					"servidor" => $almacenamiento -> get_ruta_servidor(),
 					"ruta" => $archivo
 				);
-				$ruta_anexo = json_encode($dir_ayuda);
+				$ruta_anexo = json_encode($dir_anexo);
 			}
 		}
 		if ($_REQUEST["agrupador"] == 1) {
@@ -110,6 +106,6 @@ function edit_manual() {
 	}
 }
 
-if (isset($_REQUEST["accion_manual"])) {
-	$_REQUEST["accion_manual"]();
+if (isset($_REQUEST["accion"])) {
+	$_REQUEST["accion"]();
 }

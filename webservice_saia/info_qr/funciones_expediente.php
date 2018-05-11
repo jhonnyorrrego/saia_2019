@@ -70,6 +70,22 @@ function cargar_datos_qr_exp_caja($datos) {
 				} else {
 					$retorno["info_tabla"]["Estado_expediente"] = "Cerrado";
 				}
+				$exp_doc = busca_filtro_tabla("d.descripcion,d.serie,d.numero," . fecha_db_obtener("d.fecha", "Y-m-d") . " as fecha", "expediente_doc e,documento d", "d.iddocumento=e.documento_iddocumento and d.estado not in ('ELIMINADO','ANULADO','ACTIVO') and e.expediente_idexpediente=" . $id, "", $conn);
+				$retorno["exito_indice"] = $exp_doc["numcampos"];
+				if ($exp_doc["numcampos"]) {
+					for ($i = 0; $i < $exp_doc["numcampos"]; $i++) {
+						$retorno["info_tabla_indice"][$i]["numero"] = $exp_doc[$i]["numero"];
+						$retorno["info_tabla_indice"][$i]["fecha"] = $exp_doc[$i]["fecha"];
+						$retorno["info_tabla_indice"][$i]["serie"] = "";
+						if ($exp_doc[$i]["serie"]) {
+							$serie = busca_filtro_tabla("nombre", "serie", "idserie=" . $exp_doc[$i]["serie"], "", $conn);
+							if ($serie["numcampos"]) {
+								$retorno["info_tabla_indice"][$i]["serie"] = $serie[0]["nombre"];
+							}
+						}
+						$retorno["info_tabla_indice"][$i]["descripcion"] = $exp_doc[$i]["descripcion"];
+					}
+				}
 
 			} else {
 				$retorno["msn"] = "No se encontraron datos del expediente";

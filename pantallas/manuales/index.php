@@ -75,7 +75,7 @@ echo librerias_arboles();
 							<input type="text" name="nombre" id="nombre" placeholder="Nombre" value="<?php echo $nombre;?>" >
 							</td>
 						</tr>
-						<tr class="tr_hidden" style="display: none">
+						<tr class="tr_hidden">
 							<td><strong>DESCRIPCI&Oacute;N</strong></td>
 							<td><textarea name="descripcion" id="descripcion" style="width: 500px; height: 150px;"><?php echo $descrip;?></textarea></td>
 						</tr>
@@ -90,7 +90,7 @@ echo librerias_arboles();
 								<img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif">
 							</div><div id="treeboxbox_cod_padre" class="arbol_saia" height="90%"></div></td>
 						</tr>
-						<tr class="tr_hidden" style="display: none">
+						<tr class="tr_hidden">
 							<td><strong>ANEXO</strong></td>
 							<td>
 							<input type="file" id="anexo" name="anexo">
@@ -116,7 +116,7 @@ echo librerias_arboles();
 				</table>
 			</form>
 		</div>
-		<script src="additional-methods.min.js"></script>
+		<script src="<?php echo $ruta_db_superior; ?>js/additional-methods.min.js"></script>
 		<script type="text/javascript">
 		var browserType;
 			if (document.layers) {
@@ -211,7 +211,7 @@ echo librerias_arboles();
 							$("#cod_padre").rules("remove");
 						}
 				});
-				$("[name='agrupador']").trigger("change");
+				$("[name='agrupador']:checked").trigger("change");
 								
 			});
 
