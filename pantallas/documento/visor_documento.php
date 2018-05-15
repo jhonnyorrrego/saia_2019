@@ -16,15 +16,14 @@ menu_principal_documento($iddoc, 1);
 $datos = busca_filtro_tabla("A.pdf,A.plantilla,B.mostrar_pdf,A.numero,B.idformato", "documento A,formato B", "lower(A.plantilla)=B.nombre AND A.iddocumento=" . $iddoc, "", $conn);
 $es_pdf_word = $_REQUEST['pdf_word'];
 if ($_REQUEST['pdf_word']) {
-	
 	if ($datos[0]["pdf"] != "" && !isset($_REQUEST["actualizar_pdf"])) {
 		$export = "visores/pdf/web/viewer2.php?iddocumento=" . $iddoc;
 	} else {
-		print_r($_REQUEST);
-		die("andres");
-		include_once ($ruta_db_superior . FORMATOS_CLIENTE . "oficio_word/funciones.php");
-		post_add_edit_oficio_word($datos[0]["idformato"], $iddoc);
-		$export = "visores/pdf/web/viewer2.php?iddocumento=" . $iddoc;
+		if (!isset($_REQUEST["error_pdf_word"])) {
+			include_once ($ruta_db_superior . FORMATOS_CLIENTE . "oficio_word/funciones.php");
+			generar_documento_word($datos[0]["idformato"], $iddoc);
+			$export = "visores/pdf/web/viewer2.php?iddocumento=" . $iddoc;
+		}
 	}
 } else {
 	if ($iddoc && $datos[0]['mostrar_pdf'] != 2) {

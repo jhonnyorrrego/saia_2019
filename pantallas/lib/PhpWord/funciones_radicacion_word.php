@@ -9,7 +9,6 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 
-//include_once ($ruta_db_superior . "pantallas/lib/PhpWord/funciones_include.php");
 require_once ($ruta_db_superior . 'vendor/autoload.php');
 require_once 'SaiaTemplateProcessor.php';
 date_default_timezone_set('UTC');
@@ -44,7 +43,6 @@ class RadicadoWord {
 	private $alm_csv;
 	private $alm_servidor;
 	private $ruta_procesar;
-	private $campo_qr_word = "codigo_qr";
 	private $ruta_combinar;
 
 	private $ruta_plantilla;
@@ -67,6 +65,7 @@ class RadicadoWord {
 		$this -> ruta_imagen = '';
 		$this -> combinar = false;
 		$this -> archivo_csv = null;
+
 		$this -> alm_csv = null;
 		$this -> alm_servidor = null;
 		$this -> ruta_procesar = null;
@@ -74,6 +73,8 @@ class RadicadoWord {
 
 	public function prepare() {
 		if ($this -> iddocumento || $this -> idformato) {
+			$update = "UPDATE documento SET pdf=NULL,pdf_hash=NULL WHERE iddocumento=" . $this -> iddocumento;
+			phpmkr_query($update) or die("Error al actualizar");
 			$idcampo_anexo_word = busca_filtro_tabla("idcampos_formato", "campos_formato", "formato_idformato=" . $this -> idformato . " and nombre='" . $this -> campo_word . "'", "", $this -> conn);
 			if ($idcampo_anexo_word["numcampos"]) {
 				$word = busca_filtro_tabla("ruta", "anexos", "documento_iddocumento=" . $this -> iddocumento . " and campos_formato=" . $idcampo_anexo_word[0]["idcampos_formato"], "", $this -> conn);
@@ -83,8 +84,11 @@ class RadicadoWord {
 						$csv = busca_filtro_tabla("ruta", "anexos", "documento_iddocumento=" . $this -> iddocumento . " and campos_formato=" . $idcampo_anexo_csv[0]["idcampos_formato"], "", $this -> conn);
 						$ok = 1;
 						if ($csv['numcampos'] == 1) {
-							$this -> alm_csv = StorageUtils::resolver_ruta($csv[0]["ruta"]);
 							$this -> ruta_combinar = StorageUtils::obtener_tempdir();
+							$this -> alm_csv = StorageUtils::resolver_ruta($csv[0]["ruta"]);
+							$csv_file = $this -> alm_csv["clase"] -> get_filesystem() -> get($this -> alm_csv["ruta"]);
+							$this -> archivo_csv = $this -> ruta_combinar . "/tmp_csv.csv";
+							file_put_contents($this -> archivo_csv, $csv_file -> getContent());
 							$this -> combinar = true;
 						} else if ($csv['numcampos'] > 1) {
 							$ok = 0;
@@ -93,23 +97,24 @@ class RadicadoWord {
 							$arr_ruta_w = StorageUtils::resolver_ruta($word[0]["ruta"]);
 							$this -> temp_fs = StorageUtils::get_memory_filesystem("tmp_docx", "saia");
 							$this -> ruta_docx = "saia://tmp_docx/docx/";
-							$this -> ruta_imagen = "saia://tmp_docx/firma_temp";
+							$this -> ruta_imagen = "saia://tmp_docx/firma_temp/";
 
 							if (!$arr_ruta_w["error"]) {
 								$this -> ruta_plantilla = $arr_ruta_w["ruta"];
 								$this -> alm_plantilla = $arr_ruta_w["clase"];
 								$this -> alm_servidor = $arr_ruta_w["servidor"];
+
 								$archivo_plantilla = $this -> alm_plantilla -> get_filesystem() -> get($this -> ruta_plantilla);
 								$this -> ruta_procesar = $this -> ruta_docx . basename($archivo_plantilla -> getName());
+
 								if (!$this -> temp_fs -> write("docx/" . basename($archivo_plantilla -> getName()), $archivo_plantilla -> getContent(), true)) {
 									$this -> retorno["msn"] = "No se pudo copiar el archivo: " . basename($archivo_plantilla -> getName());
 								} else {
-									$this -> retorno["exito"] = 0;
+									$this -> retorno["exito"] = 1;
 								}
 							} else {
 								$this -> retorno["msn"] = $arr_ruta_w["mensaje"];
 							}
-
 						} else {
 							$this -> retorno["msn"] = "Existen varios archivos csv cargados";
 						}
@@ -130,9 +135,11 @@ class RadicadoWord {
 		}
 	}
 
-	public function cambiar_variables_word_add_edit() {
+	public function generar_pdf_word() {
+		require_once ($this -> ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 		$this -> retorno["exito"] = 0;
 		$templateProcessor = new SaiaTemplateProcessor($this -> ruta_procesar);
+		$this -> templateProcessor = $templateProcessor;
 		$campos_word = $templateProcessor -> getVariables();
 		if (count($campos_word)) {
 			$funciones_ejecutar = array(
@@ -141,11 +148,17 @@ class RadicadoWord {
 				'ciudad_fecha',
 				'nombre_formato',
 				'formato_numero',
-				'elaborado_por'
+				'elaborado_por',
+				'codigo_qr'
 			);
 			$estado_marca_agua = array(
 				"ACTIVO",
 				"ANULADO"
+			);
+			$estados_aprob = array(
+				"APROBADO",
+				"GESTION",
+				"HISTORICO"
 			);
 			$espacio_firma = 0;
 			if (!in_array("espacio_firma", $campos_word)) {
@@ -166,18 +179,7 @@ class RadicadoWord {
 							}
 							$templateProcessor -> setValue('elaborado_por', $elaborador_por);
 							break;
-						case 'formato_numero' :
-							$estados_aprob = array(
-								"APROBADO",
-								"GESTION",
-								"HISTORICO"
-							);
-							if (in_array($datos_doc[0]["estado"], $estados_aprob)) {
-								$templateProcessor -> setValue('formato_numero', $datos_doc[0]['numero']);
-							} else {
-								$templateProcessor -> setValue('formato_numero', "0");
-							}
-							break;
+
 						case 'logo_empresa' :
 							$logo_empresa = busca_filtro_tabla("valor", "configuracion", "nombre='logo'", "", $this -> conn);
 							$ruta_logo = $ruta_db_superior . $logo_empresa[0]['valor'];
@@ -250,7 +252,7 @@ class RadicadoWord {
 											$img = stripslashes(base64_decode($info_funcionario[0]["firma"]));
 										}
 
-										$imagen_firma = $this -> ruta_imagen . '/firma_' . $funcionario_codigo . '.jpg';
+										$imagen_firma = $this -> ruta_imagen . 'firma_' . $funcionario_codigo . '.jpg';
 										if (file_exists($imagen_firma)) {
 											unlink($imagen_firma);
 										}
@@ -337,6 +339,7 @@ class RadicadoWord {
 									$templateProcessor -> setValue('espacio_firma', '');
 									$templateProcessor -> setValue('espacio_firma1', '');
 								}
+
 								$templateProcessor -> setValue('nombre_funcionario', '');
 								$templateProcessor -> setValue('nombre_funcionario1', '');
 								$templateProcessor -> setValue('cargo', '');
@@ -346,7 +349,7 @@ class RadicadoWord {
 							}
 							//DESAROLLO REVISADO
 							if ($ruta_revisado['numcampos']) {
-								$revisado = "Revis&oacute;: ";
+								$revisado = "Revisó: ";
 								for ($j = 0; $j < $ruta_revisado['numcampos']; $j++) {
 									if ($ruta[$j]['tipo_origen'] != 1) {
 										$info_funcionario = busca_filtro_tabla("funcionario_codigo,firma,nombres,apellidos,cargo,dependencia", "vfuncionario_dc", "iddependencia_cargo=" . $ruta_revisado[$j]['origen'], "", $this -> conn);
@@ -377,6 +380,34 @@ class RadicadoWord {
 								$templateProcessor -> setValue('nombre_revisado', '');
 							}
 							break;
+						case 'formato_numero' :
+							if (in_array($datos_doc[0]["estado"], $estados_aprob) && $datos_doc[0]['numero']) {
+								$templateProcessor -> setValue('formato_numero', $datos_doc[0]['numero']);
+							}
+							break;
+						case 'codigo_qr' :
+							if (in_array($datos_doc[0]["estado"], $estados_aprob) && $datos_doc[0]['numero']) {
+								$src_qr = $this -> obtener_codigo_qr($this -> idformato, $this -> iddocumento);
+								$arr_alm_qr = StorageUtils::resolver_ruta($src_qr);
+								$alm_qr = $arr_alm_qr["clase"];
+								$archivo_qr = $alm_qr -> get_filesystem() -> get($arr_alm_qr["ruta"]);
+
+								$ext_qr = "." . pathinfo($arr_alm_qr["ruta"], PATHINFO_EXTENSION);
+								$src = StorageUtils::obtener_archivo_temporal("qr_");
+								file_put_contents($src, $archivo_qr -> getContent());
+								rename($src, $src . $ext_qr);
+								$src .= $ext_qr;
+
+								$img2 = array( array(
+										'img' => htmlspecialchars($src),
+										'size' => array(
+											100,
+											100
+										)
+									));
+								$templateProcessor -> setImg("codigo_qr", $img2);
+							}
+							break;
 					}
 				}
 			}
@@ -384,27 +415,22 @@ class RadicadoWord {
 			if (in_array($datos_doc[0]["estado"], $estado_marca_agua)) {
 				$templateProcessor -> setTextWatermark($datos_doc[0]["estado"]);
 			}
-			if ($datos_doc[0]["estado"] == "APROBADO" && $datos_doc[0]["numero"] == 0) {
-				//$ok_rad=$this->asignar_radicado($this->iddocumento);
-			}
 
-			$directorio_out = $this -> ruta_docx . "/";
-			$archivo_out = 'documento_word';
+			$directorio_out = $this -> ruta_docx;
+			$archivo_out = 'documento_word2';
 			$extension_doc = '.docx';
 			$templateProcessor -> saveAs($directorio_out . $archivo_out . $extension_doc);
 			$word_temp = StorageUtils::obtener_archivo_temporal($archivo_out, $_SESSION["ruta_temp_funcionario"]);
-			chmod($word_temp . $extension_doc, 0777);
-			
+
 			if (copy($directorio_out . $archivo_out . $extension_doc, $word_temp . $extension_doc)) {
 				if (file_exists($word_temp . $extension_doc)) {
 					$comando = 'export HOME=/tmp && libreoffice5.1 --headless --norestore --invisible --convert-to pdf:writer_pdf_Export --outdir ' . dirname($word_temp) . ' ' . $word_temp . $extension_doc;
 					$var = shell_exec($comando);
-					$pdf_name = "documento_word";
+					$pdf_name = "documento_word2";
 					$dir_name = rtrim(dirname($this -> ruta_plantilla), "anexos") . "docx/";
 					$pdf = $dir_name . $pdf_name . '.pdf';
 
 					$this -> alm_plantilla -> copiar_contenido_externo($word_temp . ".pdf", $pdf);
-					$this -> alm_plantilla -> copiar_contenido_externo($word_temp . $extension_doc, $this -> ruta_plantilla);
 					$arr_ruta_pdf = array(
 						"servidor" => $this -> alm_servidor,
 						"ruta" => $pdf
@@ -412,8 +438,12 @@ class RadicadoWord {
 
 					$update = "UPDATE documento SET pdf='" . json_encode($arr_ruta_pdf) . "' WHERE iddocumento=" . $this -> iddocumento;
 					phpmkr_query($update) or die("Error al actualizar ruta del PDF");
-					$this -> retorno["exito"] = 1;
 
+					if ($this -> combinar) {
+						$this -> ruta_procesar=$directorio_out . $archivo_out . $extension_doc;
+						$this -> combinar_documento();
+					}
+					$this -> retorno["exito"] = 1;
 				} else {
 					$this -> retorno["msn"] = "El archivo procesado NO existe";
 				}
@@ -422,67 +452,6 @@ class RadicadoWord {
 			}
 		} else {
 			$this -> retorno["msn"] = "No se encuentra el archivo a procesar";
-		}
-	}
-
-	public function asignar_radicado() {
-		if (is_file($this -> ruta_procesar)) {
-			$templateProcessor = new SaiaTemplateProcessor($this -> ruta_procesar);
-			$campos_word = $templateProcessor -> getVariables();
-			if (@$this -> iddocumento && count($campos_word)) {
-				$numero_radicado = busca_filtro_tabla("", "documento", "iddocumento=" . $this -> iddocumento, "", $this -> conn);
-				$radicado = $numero_radicado[0]['numero'];
-				if (!$this -> combinar) {
-					$templateProcessor -> setValue('formato_numero', $radicado);
-
-					if (in_array($this -> campo_qr_word, $campos_word)) {
-						$src_qr = $this -> obtener_codigo_qr($idformato, $this -> iddocumento);
-						$arr_alm_qr = StorageUtils::resolver_ruta($src_qr);
-						$alm_qr = $arr_alm_qr["clase"];
-						$archivo_qr = $alm_qr -> get_filesystem() -> get($arr_alm_qr["ruta"]);
-
-						$ext_qr = "." . pathinfo($arr_alm_qr["ruta"], PATHINFO_EXTENSION);
-						$src = StorageUtils::obtener_archivo_temporal("qr_");
-						file_put_contents($src, $archivo_qr -> getContent());
-						rename($src, $src . $ext_qr);
-						$src .= $ext_qr;
-
-						$img2 = array( array(
-								'img' => htmlspecialchars($src),
-								'size' => array(
-									100,
-									100
-								)
-							));
-						$templateProcessor -> setImg($this -> campo_qr_word, $img2);
-					}
-					$archivo_out = 'documento_word';
-					$extension_doc = '.docx';
-
-					$marca_agua = mostrar_estado_documento($_REQUEST['iddoc']);
-					$templateProcessor -> setTextWatermark($marca_agua);
-					$templateProcessor -> saveAs($this -> ruta_docx . $archivo_out . $extension_doc);
-
-					$ruta_tmp_usr = $_SESSION["ruta_temp_funcionario"];
-					$word_temp = StorageUtils::obtener_archivo_temporal($archivo_out, $ruta_tmp_usr);
-					copy($this -> ruta_docx . $archivo_out . $extension_doc, $word_temp);
-					rename($word_temp, $word_temp . $extension_doc);
-
-					if (is_file($word_temp . $extension_doc)) {
-						$comando = 'export HOME=/tmp && libreoffice5.1 --headless --convert-to pdf:writer_pdf_Export --outdir ' . dirname($word_temp) . ' ' . $word_temp . $extension_doc;
-						$var = shell_exec($comando);
-					}
-				} else {
-					$this -> ruta_combinar = StorageUtils::obtener_tempdir();
-					$tipo_alm_csv = $this -> alm_csv["clase"];
-					$csv_file = $tipo_alm_csv -> get_filesystem() -> get($this -> alm_csv["ruta"]);
-					$this -> archivo_csv = $this -> ruta_combinar . "/tmp_csv.csv";
-					file_put_contents($this -> archivo_csv, $csv_file -> getContent());
-					$this -> combinar_documento($radicado);
-				}
-			}
-		} else {
-			die("No existe la plantilla" . $this -> ruta_procesar);
 		}
 	}
 
@@ -496,77 +465,45 @@ class RadicadoWord {
 		}
 	}
 
-	protected function combinar_documento($numero_radicado) {
+	protected function combinar_documento() {
+		$datos = $this -> cargar_csv($this -> archivo_csv);
 		$archivo_original = $this -> ruta_procesar;
-		$marca_agua = mostrar_estado_documento($this -> iddocumento);
 		$extension_doc = '.docx';
 
-		$datos = $this -> cargar_csv($this -> archivo_csv);
 		for ($i = 0; $i < count($datos); $i++) {
-
 			$archivo_out = "documento_word_" . ($i + 1);
-			$archivo_copia = $this -> ruta_combinar . "/$archivo_out" . $extension_doc;
-			copy($archivo_original, $archivo_copia);
-			$templateProcessor = new SaiaTemplateProcessor($archivo_copia);
-			$campos_word = $templateProcessor -> getVariables();
-			$templateProcessor -> setValue('formato_numero', $numero_radicado);
-			if (in_array($this -> campo_qr_word, $campos_word)) {
-
-				$src_qr = $this -> obtener_codigo_qr($this -> idformato, $this -> iddocumento);
-				$arr_alm_qr = StorageUtils::resolver_ruta($src_qr);
-				$alm_qr = $arr_alm_qr["clase"];
-				$archivo_qr = $alm_qr -> get_filesystem() -> get($arr_alm_qr["ruta"]);
-
-				$ext_qr = "." . pathinfo($arr_alm_qr["ruta"], PATHINFO_EXTENSION);
-				$src = StorageUtils::obtener_archivo_temporal("qr_");
-				file_put_contents($src, $archivo_qr -> getContent());
-				rename($src, $src . $ext_qr);
-				$src .= $ext_qr;
-
-				$img2 = array( array(
-						'img' => htmlspecialchars($src),
-						'size' => array(
-							100,
-							100
-						)
-					));
-				$templateProcessor -> setImg($this -> campo_qr_word, $img2);
-			}
-
-			foreach ($datos[$i] as $campo => $valor) {
-				if (in_array($campo, $campos_word)) {
-					$templateProcessor -> setValue($campo, $valor);
-				} else {
-					die("No se encontr&oacute; el campo $campo en la plantilla");
-				}
-			}
-
+			$archivo_copia = $this -> ruta_combinar . "/" . $archivo_out . $extension_doc;
 			if (file_exists($archivo_copia)) {
 				unlink($archivo_copia);
 			}
-
-			$templateProcessor -> setTextWatermark($marca_agua);
-			$templateProcessor -> saveAs($archivo_copia);
-			$templateProcessor = null;
+			if (copy($archivo_original, $archivo_copia)) {
+				$templateProcessor = new SaiaTemplateProcessor($archivo_copia);
+				$campos_word = $templateProcessor -> getVariables();
+				foreach ($datos[$i] as $campo => $valor) {
+					if (in_array($campo, $campos_word)) {
+						$templateProcessor -> setValue($campo, $valor);
+					}
+				}
+				$templateProcessor -> saveAs($archivo_copia);
+				$templateProcessor = null;
+			}
 		}
 
 		if (is_dir($this -> ruta_combinar)) {
 			$comando1 = 'export HOME=/tmp && libreoffice5.1 --headless -print-to-file --outdir ' . $this -> ruta_combinar . ' ' . $this -> ruta_combinar . "/*" . $extension_doc;
 			$var1 = shell_exec($comando1);
-			if (file_exists($this -> ruta_combinar . "/documento_word.pdf")) {
-				unlink($this -> ruta_combinar . "/documento_word.pdf");
+			if (file_exists($this -> ruta_combinar . "/documento_word2.pdf")) {
+				unlink($this -> ruta_combinar . "/documento_word2.pdf");
 			}
 			$entrada_ps = $this -> ruta_combinar . "/*.ps";
-			$salida_ps = $this -> ruta_combinar . "/documento_word.pdf";
+			$salida_ps = $this -> ruta_combinar . "/documento_word2.pdf";
 			$comando2 = "gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER -sOutputFile=" . $salida_ps . " " . $entrada_ps;
 			$var2 = shell_exec($comando2);
 
-			$pdf_name = "documento_word";
 			$dir_name = rtrim(dirname($this -> ruta_plantilla), "anexos");
 			$dir_name .= "docx/";
-
-			$this -> alm_plantilla -> copiar_contenido_externo($salida_ps, $dir_name . $pdf_name . ".pdf");
-
+			$this -> alm_plantilla -> copiar_contenido_externo($salida_ps, $dir_name . "documento_word2.pdf");
+			return true;
 		}
 	}
 
@@ -585,7 +522,7 @@ class RadicadoWord {
 				}
 				$numero = count($datos);
 				if ($numero > $head_size) {
-					$mensaje = "Cantidad de datos excede el número de campos ($numero > $head_size) en la línea $fila";
+					$mensaje = "CSV: Cantidad de datos excede el n&uacute;mero de campos (" . $numero . " > " . $head_size . ") en la línea " . $fila;
 					die($mensaje);
 				}
 				$fila++;

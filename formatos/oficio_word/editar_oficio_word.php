@@ -1,7 +1,6 @@
 <html><title>.:EDITAR DOCUMENTOS EN FORMATO (WORD):.</title>
 			<head><?php include_once("../../librerias_saia.php"); ?>
 			<script type="text/javascript" src="../librerias/funciones_formatos.js"></script>
-			<?php include_once("funciones.php"); ?>
 			<?php include_once("../librerias/funciones_generales.php"); ?>
 			<?php include_once("../librerias/funciones_acciones.php"); ?>
 			<?php include_once("../librerias/estilo_formulario.php"); ?>
@@ -11,8 +10,8 @@
 			<?php include_once("../librerias/header_formato.php"); ?>
 			<link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><script type="text/javascript" src="../../dropzone/dist/dropzone.js"></script>
 			<?php include_once("../../anexosdigitales/funciones_archivo.php"); ?>
-			<script type="text/javascript" src="../../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
-			<link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-4.0.10/highslide/highslide.css" /></style><link href="../../dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" /><script type='text/javascript'> hs.graphicsDir = '../../anexosdigitales/highslide-4.0.10/highslide/graphics/'; hs.outlineType = 'rounded-white';</script><style>label.error{color:red}</style>
+			<script type="text/javascript" src="../../anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script>
+			<link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link href="../../dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" /><script type='text/javascript'> hs.graphicsDir = '../../anexosdigitales/highslide-5.0.0/highslide/graphics/'; hs.outlineType = 'rounded-white';</script><style>label.error{color:red}</style>
 				<script type='text/javascript'>
   $(document).ready(function() {
 			  		$('#formulario_formatos').validate();
@@ -99,7 +98,7 @@ Consideraciones:<br/>
 			<a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=400&idcampo=4944" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
 			objectType: \'iframe\', outlineType: \'rounded-white\', wrapperClassName: \'highslide-wrapper drag-header\',
 			outlineWhileAnimating: true, preserveContent: false, width: 400 } )">Administrar Anexos</a>
-			</div>'; ?></td></tr><input type="hidden" name="idft_oficio_word" value="<?php echo(mostrar_valor_campo('idft_oficio_word',400,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',400,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',400,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',400,$_REQUEST['iddoc'])); ?>"><?php add_edit_oficio_word(400,NULL,$_REQUEST['iddoc']);?><input type="hidden" name="campo_descripcion" value="<?php echo('6698'); ?>"><input type="hidden" name="formato" value="400"><tr><td colspan='2'><?php submit_formato(400,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("400-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
+			</div>'; ?></td></tr><input type="hidden" name="idft_oficio_word" value="<?php echo(mostrar_valor_campo('idft_oficio_word',400,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',400,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',400,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',400,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="campo_descripcion" value="<?php echo('6698'); ?>"><input type="hidden" name="formato" value="400"><tr><td colspan='2'><?php submit_formato(400,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("400-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
                 var upload_url = '../../dropzone/cargar_archivos_formato.php';
                 var mensaje = 'Arrastre aquí los archivos';
                 Dropzone.autoDiscover = false;
