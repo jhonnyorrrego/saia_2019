@@ -5,9 +5,7 @@
 			<?php include_once("../librerias/funciones_generales.php"); ?>
 			<?php include_once("../librerias/funciones_acciones.php"); ?>
 			<?php include_once("../librerias/estilo_formulario.php"); ?>
-			<script type="text/javascript" src="../../js/jquery.js"></script>
-			<script type="text/javascript" src="../../js/jquery.validate.js"></script>
-			<script type="text/javascript" src="../../js/title2note.js"></script>
+			<?php echo(librerias_jquery('1.7')); ?><?php echo(librerias_validar_formulario()); ?><script type="text/javascript" src="../../js/title2note.js"></script>
 			<script type="text/javascript" src="../../dropzone/dist/dropzone.js"></script>
 			<?php include_once("../../anexosdigitales/funciones_archivo.php"); ?>
 			<script type="text/javascript" src="../../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>

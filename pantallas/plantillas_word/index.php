@@ -30,7 +30,8 @@ if (isset($_REQUEST["idplantilla_word"])) {
 			$id = $datos[0]["idplantilla_word"];
 			$nombre = $datos[0]["nombre"];
 			$descrip = $datos[0]["descripcion"];
-			$ruta_anexo = base64_encode($datos[0]["ruta_anexo"]);
+			$ruta = $ruta_anexo = base64_encode($datos[0]["ruta_anexo"]);
+			$etiqueta_ruta = end(explode("/",  json_decode($datos[0]["ruta_anexo"]) -> ruta));
 			$estado = $datos[0]["estado"];
 		}
 	}
@@ -78,7 +79,11 @@ echo librerias_validar_formulario("11");
 							<td><strong>PLANTILLA</strong></td>
 							<td>
 							<input type="file" id="anexo" name="anexo">
-							</td>
+							<?php
+							if ($ruta_anexo) {
+								echo '<br/><span><strong>Archivo Actual:</strong> <span style="color:blue">' . $etiqueta_ruta . '</span></span>';
+							}
+							?></td>
 						</tr>
 						<tr>
 							<td><strong>ESTADO</strong></td>
@@ -107,10 +112,6 @@ echo librerias_validar_formulario("11");
 					rules : {
 						nombre : {
 							required : true
-						},
-						anexo : {
-							required : true,
-							extension : "xls|xlsx|doc|docx"
 						}
 					},
 					messages : {
@@ -121,6 +122,14 @@ echo librerias_validar_formulario("11");
 						}
 					}
 				});
+				var ruta_anexo = $("#ruta_anexo").val();
+				if (ruta_anexo == "") {
+					$("#anexo").rules("add", {
+						required : true,
+						extension : "xls|xlsx|doc|docx"
+					});
+				}
+
 			});
 		</script>
 	</body>

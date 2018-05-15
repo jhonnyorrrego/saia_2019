@@ -1,19 +1,16 @@
 <?php
 $max_salida = 6;
-// Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
 	if (is_file($ruta . "db.php")) {
 		$ruta_db_superior = $ruta;
-		//Preserva la ruta superior encontrada
 	}
 	$ruta .= "../";
 	$max_salida--;
 }
-$estilo = '   style="font-size:10px; font-family: Verdana,Tahoma,arial;" ';
-
 require_once ($ruta_db_superior . "db.php");
 require_once ($ruta_db_superior . "class.funcionarios.php");
+
 $extensiones = busca_filtro_tabla("valor", "configuracion", "nombre='extensiones_upload'", "", $conn);
 if ($extensiones["numcampos"] > 0) {
 	$new_ext = array_map('trim', explode(',', $extensiones[0]["valor"]));
@@ -23,10 +20,9 @@ if ($extensiones["numcampos"] > 0) {
 	$new_ext = array_map('trim', explode('|', $extensiones));
 	$extensiones = "." . implode(', .', $new_ext);
 }
-//include_once("funciones_binario.php");
 
-function suma_permiso($per1, $per2)// "Suma" permisos retornando el permiso consolidado considerando valores repetidos  o parciales
-{
+function suma_permiso($per1, $per2) {// "Suma" permisos retornando el permiso consolidado considerando valores repetidos  o parciales
+
 	$arper1 = str_split($per1);
 	$arper2 = str_split($per2);
 	$perm = array_merge($arper1, $arper2);
@@ -411,54 +407,75 @@ function listar_anexos_documento($iddocumento, $idformato = NULL, $idcampo = NUL
  * @param int $id
  * @param string $tipo_al
  */
-function descargar_archivo($id, $tipo_al = NULL) {
+function descargar_archivo($id, $tipo_al = NULL, $ruta_json = NULL) {
 	global $conn;
-
-	if (!$tipo_al) {// Si no se solicita directamente el origen (BD O ARCHIVO ) se busca en configuracion cual se va a descargar
-		$config = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_almacenamiento'", "", $conn);
-		if ($config["numcampos"])
-			$tipo_al = $config[0]['valor'];
-		else
-			$tipo_al = "archivo";
-		// Si no encuentra el registro en configuracion almacena en archivo
-	}
-
-	if ($tipo_al == "archivo") {
-		$datos = busca_filtro_tabla("", "anexos", "idanexos=" . $id, "", $conn);
-
-		if (!$datos["numcampos"]) {
-			alerta('problema con el archivo anexo', 'error', 4000);
-		} else {
-			$file = $datos[0]["ruta"];
+	if ($ruta_json) {
+		$arr_alm = StorageUtils::resolver_ruta($ruta_json);
+		if (is_object(json_decode($ruta_json))) {
+			$almacenamiento = $arr_alm["clase"];
+			$fs = $almacenamiento -> get_filesystem();
+			if (!$fs -> has($arr_alm["ruta"])) {
+				return;
+			}
+			$etiqueta = end(explode("/", $arr_alm["ruta"]));
+			$archivo = $fs -> get($arr_alm["ruta"]);
+			header("Content-Type: application/octet-stream");
+			header("Content-Size: " . $archivo -> getSize());
+			header("Content-Disposition: attachment; filename=\"" . $etiqueta . "\"");
+			header("Content-Length: " . $archivo -> getSize());
+			header("Content-transfer-encoding: binary");
+			echo $archivo -> getContent();
+			exit();
 		}
 
-		$arr_alm = StorageUtils::resolver_ruta($file);
-		$almacenamiento = $arr_alm["clase"];
-		$fs = $almacenamiento -> get_filesystem();
+	} else {
 
-		if (!$fs -> has($arr_alm["ruta"])) {
-			return;
+		if (!$tipo_al) {// Si no se solicita directamente el origen (BD O ARCHIVO ) se busca en configuracion cual se va a descargar
+			$config = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_almacenamiento'", "", $conn);
+			if ($config["numcampos"]) {
+				$tipo_al = $config[0]['valor'];
+			} else {
+				$tipo_al = "archivo";
+			}
+			// Si no encuentra el registro en configuracion almacena en archivo
 		}
 
-		$archivo = $fs -> get($arr_alm["ruta"]);
-		header("Content-Type: application/octet-stream");
-		header("Content-Size: " . $archivo -> getSize());
-		header("Content-Disposition: attachment; filename=\"" . html_entity_decode($datos[0]["etiqueta"]) . "\"");
-		header("Content-Length: " . $archivo -> getSize());
-		header("Content-transfer-encoding: binary");
-		echo $archivo -> getContent();
-		exit();
-	} elseif ($tipo_al == "db") {// almacenamiento binario
-		$anexo = busca_filtro_tabla("ruta", "anexos", "idanexos='$id'", "", $conn);
-		$archivo = busca_filtro_tabla("nombre_original,datos", "binario", "idbinario=" . $anexo[0]["ruta"], "", $conn);
+		if ($tipo_al == "archivo") {
+			$datos = busca_filtro_tabla("", "anexos", "idanexos=" . $id, "", $conn);
+			if (!$datos["numcampos"]) {
+				alerta('problema con el archivo anexo', 'error', 4000);
+			} else {
+				$file = $datos[0]["ruta"];
+			}
 
-		$nomb_limpio = ereg_replace("[^A-Za-z0-9._]", "", $archivo[0]['nombre_original']);
-		header("Content-Type: application/force-download");
-		header("Content-Type: application/octet-stream");
-		header("Content-Type: application/download");
-		header("Content-Disposition: attachment; filename=" . $nomb_limpio);
-		echo $archivo[0]['datos'];
-		exit();
+			$arr_alm = StorageUtils::resolver_ruta($file);
+			$almacenamiento = $arr_alm["clase"];
+			$fs = $almacenamiento -> get_filesystem();
+
+			if (!$fs -> has($arr_alm["ruta"])) {
+				return;
+			}
+
+			$archivo = $fs -> get($arr_alm["ruta"]);
+			header("Content-Type: application/octet-stream");
+			header("Content-Size: " . $archivo -> getSize());
+			header("Content-Disposition: attachment; filename=\"" . html_entity_decode($datos[0]["etiqueta"]) . "\"");
+			header("Content-Length: " . $archivo -> getSize());
+			header("Content-transfer-encoding: binary");
+			echo $archivo -> getContent();
+			exit();
+		} elseif ($tipo_al == "db") {// almacenamiento binario
+			$anexo = busca_filtro_tabla("ruta", "anexos", "idanexos='$id'", "", $conn);
+			$archivo = busca_filtro_tabla("nombre_original,datos", "binario", "idbinario=" . $anexo[0]["ruta"], "", $conn);
+
+			$nomb_limpio = ereg_replace("[^A-Za-z0-9._]", "", $archivo[0]['nombre_original']);
+			header("Content-Type: application/force-download");
+			header("Content-Type: application/octet-stream");
+			header("Content-Type: application/download");
+			header("Content-Disposition: attachment; filename=" . $nomb_limpio);
+			echo $archivo[0]['datos'];
+			exit();
+		}
 	}
 }
 

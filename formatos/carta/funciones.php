@@ -400,7 +400,7 @@ function mostrar_imagenes_escaneadas($idformato, $iddoc) {
 
 function mostrar_dependencia_carta($idformato,$iddoc)
 {
-global $conn;
+    global $conn,$ruta_db_superior;
  $formato=busca_filtro_tabla("dependencia,firma_dependencia","ft_carta","documento_iddocumento=$iddoc","",$conn);
  if($formato[0]["firma_dependencia"]==1){
 $dependencia=busca_filtro_tabla("dependencia_iddependencia","dependencia_cargo","  iddependencia_cargo =".$formato[0]["dependencia"],"",$conn);
@@ -413,8 +413,8 @@ echo($nombre_dependencia[0]["nombre"]);
 if(@$_REQUEST["tipo"]!=5){
 	echo(librerias_jquery('1.7'));
 ?>
-<link rel="stylesheet" href="../css/image-enlarger.css" media="screen" type="text/css" />
-<script type="text/javascript" src="../../js/dhtml-suite-for-applications.js"></script>
+<link rel="stylesheet" href="<?php echo ($ruta_db_superior); ?>css/image-enlarger.css" media="screen" type="text/css" />
+<script type="text/javascript" src="<?php echo ($ruta_db_superior); ?>js/dhtml-suite-for-applications.js"></script>
 <script>
 function displayImage(imagePath,title,description)
 {

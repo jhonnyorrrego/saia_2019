@@ -5,9 +5,7 @@
 			<?php include_once("../librerias/funciones_acciones.php"); ?>
 			<?php include_once("../librerias/estilo_formulario.php"); ?>
 			<?php include_once("../../calendario/calendario.php"); ?>
-			<script type="text/javascript" src="../../js/jquery.js"></script>
-			<script type="text/javascript" src="../../js/jquery.validate.js"></script>
-			<script type="text/javascript" src="../../js/title2note.js"></script>
+			<?php echo(librerias_jquery('1.7')); ?><?php echo(librerias_validar_formulario()); ?><script type="text/javascript" src="../../js/title2note.js"></script>
 			<script type="text/javascript" src="../../js/dhtmlXCommon.js"></script>
 			<script type="text/javascript" src="../../js/dhtmlXTree.js"></script>
 			<?php include_once("../librerias/header_formato.php"); ?>

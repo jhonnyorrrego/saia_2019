@@ -19,6 +19,8 @@ function add_plantilla_word() {
 	$ok = 1;
 	if (is_uploaded_file($_FILES["anexo"]["tmp_name"])) {
 		$nombre = basename($_FILES["anexo"]["name"]);
+		$info_archivo = new SplFileInfo($nombre);
+		$extension = $info_archivo -> getExtension();
 		$archivo = uniqid() . "_" . $nombre;
 		$almacenamiento = new SaiaStorage("plantilla_word");
 		$resultado = $almacenamiento -> copiar_contenido_externo($_FILES['anexo']['tmp_name'], $archivo);
@@ -36,7 +38,7 @@ function add_plantilla_word() {
 	}
 	if ($ok) {
 		$retorno["msn"] = "Error al guardar la plantilla";
-		$insert = "INSERT INTO plantilla_word (nombre,descripcion,ruta_anexo,funcionario_idfuncionario,estado)	VALUES ('" . htmlentities($_REQUEST["nombre"]) . "','" . htmlentities($_REQUEST["descripcion"]) . "','" . $ruta_anexo . "'," . $_SESSION["idfuncionario"] . "," . $_REQUEST["estado"] . ")";
+		$insert = "INSERT INTO plantilla_word (nombre,descripcion,ruta_anexo,funcionario_idfuncionario,estado,extension)	VALUES ('" . htmlentities($_REQUEST["nombre"]) . "','" . htmlentities($_REQUEST["descripcion"]) . "','" . $ruta_anexo . "'," . $_SESSION["idfuncionario"] . "," . $_REQUEST["estado"] . ",'" . $extension . "')";
 		phpmkr_query($insert) or die(json_encode($retorno));
 		$retorno["exito"] = 1;
 		$retorno["msn"] = "";
@@ -66,15 +68,19 @@ function edit_plantilla_word() {
 	if ($_REQUEST["id"]) {
 		$almacenamiento = new SaiaStorage("plantilla_word");
 		$ruta_anexo = base64_decode($_REQUEST["ruta_anexo"]);
+
+		$array_ruta = json_decode($ruta_anexo, true);
+		$info_archivo = new SplFileInfo(end(explode("/", $array_ruta["ruta"])));
+		$extension = $info_archivo -> getExtension();
+
 		if (is_uploaded_file($_FILES["anexo"]["tmp_name"])) {
 			$nombre = basename($_FILES["anexo"]["name"]);
 			$archivo = uniqid() . "_" . $nombre;
 			$resultado = $almacenamiento -> copiar_contenido_externo($_FILES['anexo']['tmp_name'], $archivo);
 			@unlink($_FILES["anexo"]["tmp_name"]);
 			if ($resultado) {
-				$archivo_del = json_decode($ruta_anexo, true);
-				if ($archivo_del["ruta"] != "") {
-					$delete = $almacenamiento -> eliminar($archivo_del["ruta"]);
+				if ($array_ruta["ruta"] != "") {
+					$delete = $almacenamiento -> eliminar($array_ruta["ruta"]);
 				}
 
 				$dir_anexo = array(
@@ -82,18 +88,13 @@ function edit_plantilla_word() {
 					"ruta" => $archivo
 				);
 				$ruta_anexo = json_encode($dir_anexo);
+				$info_archivo = new SplFileInfo($nombre);
+				$extension = $info_archivo -> getExtension();
 			}
 		}
-		if ($_REQUEST["agrupador"] == 1) {
-			$_REQUEST["descripcion"] = "-";
-			$archivo_del = json_decode($ruta_anexo, true);
-			if ($archivo_del["ruta"] != "") {
-				$delete = $almacenamiento -> eliminar($archivo_del["ruta"]);
-			}
-			$ruta_anexo = "";
-		}
-		$retorno["msn"] = "Error al actualizar el manual";
-		$update = "UPDATE manual SET etiqueta='" . htmlentities($_REQUEST["nombre"]) . "',descripcion='" . htmlentities($_REQUEST["descripcion"]) . "',agrupador=" . $_REQUEST["agrupador"] . ",ruta_anexo='" . $ruta_anexo . "',cod_padre=" . $_REQUEST["cod_padre"] . ",estado=" . $_REQUEST["estado"] . " WHERE idmanual=" . $_REQUEST["idmanual"];
+
+		$retorno["msn"] = "Error al actualizar la plantilla";
+		$update = "UPDATE plantilla_word SET nombre='" . htmlentities($_REQUEST["nombre"]) . "',descripcion='" . htmlentities($_REQUEST["descripcion"]) . "',ruta_anexo='" . $ruta_anexo . "',estado=" . $_REQUEST["estado"] . ",extension='" . $extension . "' WHERE idplantilla_word=" . $_REQUEST["id"];
 		phpmkr_query($update) or die(json_encode($retorno));
 		$retorno["exito"] = 1;
 		$retorno["msn"] = "";

@@ -9,70 +9,87 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
+include_once ($ruta_db_superior . 'pantallas/lib/PhpWord/funciones_radicacion_word.php');
 
-
-/*ADICIONAR*/
-function mostrar_enlace_plantilla($idformato, $iddoc) {// ADICIONAR
+function add_edit_oficio_word($idformato, $iddoc) {
 	global $ruta_db_superior, $conn;
-	$configuracion = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_plantilla_word'", "", $conn);
-	if(!$configuracion["numcampos"] || $configuracion[0]["valor"]==""){
-		notificaciones("No se ha definido la ruta de la plantilla Word");
-		redirecciona($ruta_db_superior."vacio.php");
+	if ($_REQUEST["iddoc"]) {
+		$opt = 1;
+		$datos = busca_filtro_tabla("numero", "documento", "iddocumento=" . $_REQUEST["iddoc"], "", $conn);
+		if ($datos["numcampos"] && $datos[0]["numero"] != 0) {
+			notificaciones("El documento ya cuenta con un radicado, NO se puede editar el documento");
+			redirecciona($ruta_db_superior . "vacio.php");
+			die();
+		}
+	} else {
+		$opt = 0;
 	}
-	$ruta_plantilla = $ruta_db_superior . $configuracion[0]['valor'];
-	?>
+?>
 <script>
-		$(document).ready(function(){
-			$html='<div style="text-align:left; font-size:8pt;">';
-			$html+='<b>Importante:</b> <BR><BR>Por favor descargue ';
-			$html+=' <a href="<?php echo($ruta_plantilla); ?>plantilla_nuevo_oficio.docx" target="_blank">Esta plantilla de WORD</a> ';
-			$html+=' para crear un nuevo oficio. <BR>';
-			/*$html+='<br>Si desea hacer combinación de correspondencia utilice ';
-			$html+='<a href="<?php echo($ruta_plantilla); ?>plantilla_nuevo_oficio_combinar.docx" target="_blank">Esta plantilla</a>';
-			$html+=' como ejemplo para cargar informaci&oacute;n</div>';*/
-			$('#enlace_plantilla').html($html);
-		});
-	</script>
+	$(document).ready(function() {
+		tree_clasifica_expediente.setOnCheckHandler(actualiza_serie_expediente);
+	});
+	function actualiza_serie_expediente(nodeId) {
+		idexp_serie = nodeId.split('sub');
+		$('[name="serie_idserie"]').val(idexp_serie[1]);
+		$('[name="fk_idexpediente"]').val(idexp_serie[0]);
+	}
+</script>
 <?php
 }
 
 /*POSTERIOR ADICIONAR-EDITAR*/
-function generar_exportar_word($idformato, $iddoc) {// POSTERIOR AL ADICIONAR Y EDITAR
-	global $ruta_db_superior, $conn;
-	include_once ($ruta_db_superior . 'pantallas/lib/PhpWord/exportar_word.php');
-}
-
-/*MOSTRAR*/
-function mostrar_mensaje_error_pdf($idformato, $iddoc) {
+function post_add_edit_oficio_word($idformato, $iddoc) {// POSTERIOR AL ADICIONAR Y EDITAR
 	global $conn, $ruta_db_superior;
-	$anexos_documento_word = busca_filtro_tabla("d.ruta", "documento a, formato b, campos_formato c, anexos d", "lower(a.plantilla)=b.nombre AND b.idformato=c.formato_idformato AND c.nombre='anexo_word' AND c.idcampos_formato=d.campos_formato AND a.iddocumento=" . $iddoc . " AND d.documento_iddocumento=" . $iddoc, "", $conn);
-	$ruta_almacenar = explode('anexos', $anexos_documento_word[0]["ruta"]);
-	$pdf = $ruta_db_superior . $ruta_almacenar[0] . 'docx/documento_word.pdf';
-	if (!file_exists($pdf)) {
-		$cadena = '<div class="well alert-danger">No Fue posible generar el PDF, por favor intente subir nuevamente el archivo .docx<br>' . $html . '</div>';
-		echo($cadena);
+	$word = new RadicadoWord($idformato, $iddoc, "anexo_word", "anexo_csv");
+	$word -> prepare();
+	if ($word -> retorno["exito"]) {
+		$word -> cambiar_variables_word_add_edit();
+		if (!$word -> retorno["exito"]) {
+			redirecciona($ruta_db_superior . "pantallas/documento/visor_documento.php?pdf_word=1&iddoc=" . $iddoc . "&error_oficio=1&rand=" . rand(0, 10000));
+			die();
+		}
+	} else {
+		redirecciona($ruta_db_superior . "pantallas/documento/visor_documento.php?pdf_word=1&iddoc=" . $iddoc . "&error_oficio=1&rand=" . rand(0, 10000));
+		die();
 	}
 }
 
+function mostrar_error_pdf($idformato, $iddoc) {
+	$html = "";
+	if ($_REQUEST["error_oficio"]) {
+		$html = '<h3 style="color:red;text-align:center">NO SE PUDO GENERAR EL DOCUMENTO</h3>';
+	}
+	echo $html;
+}
 
 /*POSTERIOR CONFIRMAR*/
 function generar_firma_word($idformato, $iddoc) {
 	global $ruta_db_superior, $conn;
-	include_once ($ruta_db_superior . 'pantallas/lib/PhpWord/firmar_word.php');	
+	//include_once ($ruta_db_superior . 'pantallas/lib/PhpWord/firmar_word.php');
 }
 
 /*POSTERIOR APROBAR*/
-function generar_radicado_word($idformato, $iddoc) {// POSTERIOR AL APROBAR
-	global $ruta_db_superior, $conn;
-	$busca_masivo = busca_filtro_tabla("", "anexos a, campos_formato b", "b.nombre='anexo_csv' AND a.campos_formato=b.idcampos_formato AND a.documento_iddocumento=" . $iddoc, "", $conn);
-	if ($busca_masivo['numcampos']) {
-		include_once ($ruta_db_superior . 'pantallas/lib/PhpWord/funciones_radicacion_word.php');
-		$radicar_word = new RadicadoWord($iddoc);
-		$radicar_word -> asignar_radicado();
-	} else {
-		include_once ($ruta_db_superior . 'pantallas/lib/PhpWord/numero_radicado_word.php');
-	}
+function post_aprob_oficio_word($idformato, $iddoc) {
+	global $ruta_db_superior;
+	/*$datos = busca_filtro_tabla("fk_idexpediente", "ft_oficio_word", "documento_iddocumento=" . $iddoc, "", $conn);
+	 if ($datos["numcampos"]) {
+	 if ($datos[0]["fk_idexpediente"]) {
+	 include_once ($ruta_db_superior . "pantallas/expediente/librerias.php");
+	 vincular_documento_expediente($datos[0]["fk_idexpediente"], $iddoc);
+	 }
+	 }*/
 }
 
+function generar_radicado_word($idformato, $iddoc) {// POSTERIOR AL APROBAR
+	/*global $ruta_db_superior, $conn;
+	 $busca_masivo = busca_filtro_tabla("", "anexos a, campos_formato b", "b.nombre='anexo_csv' AND a.campos_formato=b.idcampos_formato AND a.documento_iddocumento=" . $iddoc, "", $conn);
+	 if ($busca_masivo['numcampos']) {
+
+	 $radicar_word = new RadicadoWord($idformato,$iddoc,$idanexo);
+	 $radicar_word -> asignar_radicado();
+	 } else {
+	 include_once ($ruta_db_superior . 'pantallas/lib/PhpWord/numero_radicado_word.php');
+	 }*/
+}
 ?>

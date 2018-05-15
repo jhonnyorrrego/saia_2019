@@ -41,7 +41,7 @@ function listar_manuales($idmanual, $agrupador, $ruta, $etiqueta, $estado, $desc
 			}
 		}
 		if($estado==1){
-			$botones .= '<a class="btn btn-mini tooltip_saia pull-right" title="Ver" href="' . $ruta_db_superior . $href . '"><i class="icon-folder-open"></i></a>';
+			$botones .= '<a class="btn btn-mini tooltip_saia pull-right" title="Ver" href="' . $ruta_db_superior . $href . '"><i class="icon-leido"></i></a>';
 		}
 		$html = '<table style="width:100%">
 			<tr>			

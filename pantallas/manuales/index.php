@@ -38,6 +38,7 @@ if (isset($_REQUEST["idmanual"])) {
 			$descrip = $datos[0]["descripcion"];
 			$cod_padre = $datos[0]["cod_padre"];
 			$ruta_anexo = base64_encode($datos[0]["ruta_anexo"]);
+			$etiqueta_ruta = end(explode("/",  json_decode($datos[0]["ruta_anexo"]) -> ruta));
 			$estado = $datos[0]["estado"];
 		}
 	}
@@ -94,6 +95,11 @@ echo librerias_arboles();
 							<td><strong>ANEXO</strong></td>
 							<td>
 							<input type="file" id="anexo" name="anexo">
+							<?php
+							if ($ruta_anexo) {
+								echo '<br/><span><strong>Archivo Actual:</strong> <span style="color:blue">' . $etiqueta_ruta . '</span></span>';
+							}
+							?>
 							</td>
 						</tr>
 						<tr>

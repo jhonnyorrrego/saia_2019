@@ -1880,9 +1880,8 @@ function crear_formato_ae($idformato, $accion) {
 			$includes .= incluir("../../calendario/calendario.php", "librerias");
 		}
 
-		//$includes .= incluir("../../js/jquery.js", "javascript");
 		$includes .= "<?php echo(librerias_jquery('1.7')); ?>";
-		$includes .= incluir("../../js/jquery.validate.js", "javascript");
+		$includes .= "<?php echo(librerias_validar_formulario()); ?>";
 
 		$includes .= incluir("../../js/title2note.js", "javascript");
 		if ($arboles) {
@@ -2550,7 +2549,7 @@ function crear_formato_buscar($idformato, $accion) {
 			$includes .= incluir_libreria("header_formato.php", "librerias");
 		}
 		//$includes .= incluir("../../js/jquery.js", "javascript");
-		$includes .= "<?php echo(librerias_jquery('1.7')); ?>";
+		$includes .= "<?php echo(librerias_jquery('1.8')); ?>";
 		$includes .= incluir("../../js/jquery.validate.js", "javascript");
 
 		$includes .= incluir("../../js/title2note.js", "javascript");
