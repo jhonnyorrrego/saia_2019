@@ -1988,13 +1988,13 @@ function devolucion() {
 	$sql5 = $strsql;
 	phpmkr_query($sql5);
 
-	$strsql = "INSERT INTO buzon_entrada (archivo_idarchivo,nombre,destino,tipo_destino,fecha,origen,tipo_origen,notas,tipo,activo,ruta_idruta)";
-	$strsql .= "VALUES (" . $datos["archivo_idarchivo"] . ",'DEVOLUCION','" . $_SESSION["usuario_actual"] . "',1,'" . date('Y-m-d H:i:s') . "','" . $_REQUEST["x_funcionario_destino"] . "',1,'" . $_REQUEST["x_notas"] . "','ARCHIVO',0,0)";
+	$strsql = "INSERT INTO buzon_entrada (archivo_idarchivo,nombre,destino,tipo_destino,fecha,origen,tipo_origen,notas,tipo,activo,ruta_idruta,ver_notas)";
+	$strsql .= "VALUES (" . $datos["archivo_idarchivo"] . ",'DEVOLUCION','" . $_SESSION["usuario_actual"] . "',1,'" . date('Y-m-d H:i:s') . "','" . $_REQUEST["x_funcionario_destino"] . "',1,'" . $_REQUEST["x_notas"] . "','ARCHIVO',0,0,1)";
 	$sql6 = $strsql;
 	phpmkr_query($sql6);
 
-	$strsql = "INSERT INTO buzon_salida (archivo_idarchivo,nombre,destino,tipo_destino,fecha,origen,tipo_origen,notas,tipo,ruta_idruta)";
-	$strsql .= "VALUES (" . $datos["archivo_idarchivo"] . ",'DEVOLUCION','" . $_REQUEST["x_funcionario_destino"] . "',1,'" . date('Y-m-d H:i:s') . "','" . $_SESSION["usuario_actual"] . "',1,'" . $_REQUEST["x_notas"] . "','ARCHIVO',0)";
+	$strsql = "INSERT INTO buzon_salida (archivo_idarchivo,nombre,destino,tipo_destino,fecha,origen,tipo_origen,notas,tipo,ruta_idruta,ver_notas)";
+	$strsql .= "VALUES (" . $datos["archivo_idarchivo"] . ",'DEVOLUCION','" . $_REQUEST["x_funcionario_destino"] . "',1,'" . date('Y-m-d H:i:s') . "','" . $_SESSION["usuario_actual"] . "',1,'" . $_REQUEST["x_notas"] . "','ARCHIVO',0,1)";
 	$sql7 = $strsql;
 	phpmkr_query($sql7);
 

@@ -10,6 +10,9 @@ while ($max_salida > 0) {
 }
 
 include_once ($ruta_db_superior . "db.php");
+if (!$_SESSION["LOGIN" . LLAVE_SAIA] && isset($_REQUEST["LOGIN"]) && @$_REQUEST["conexion_remota"]) {
+	logear_funcionario_webservice($_REQUEST["LOGIN"]);
+}
 include_once ($ruta_db_superior . "formatos/librerias/funciones.php");
 
 if (@$_REQUEST["archivo"] != '') {
@@ -81,7 +84,7 @@ switch (@$_REQUEST["crea"]) {
 		break;
 	case "buscar" :
 		$ch = curl_init();
-		$url = PROTOCOLO_CONEXION . RUTA_PDF . '/formatos/generar_formato_buscar.php?crea=buscar&idformato=' . $idformato . '&sesion=' . $_SESSION["LOGIN" . LLAVE_SAIA];
+		$url = PROTOCOLO_CONEXION . RUTA_PDF . '/formatos/generar_formato_buscar.php?crea=buscar&idformato=' . $idformato . '&conexion_remota=1&LOGIN=' . $_SESSION["LOGIN" . LLAVE_SAIA];
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		$contenido = curl_exec($ch);
@@ -932,9 +935,13 @@ function crear_formato_mostrar($idformato) {
 		$includes .= incluir_libreria("header_nuevo.php", "librerias");
 		$contenido = $includes . $texto . $enlace . incluir_libreria("footer_nuevo.php", "librerias");
 		$mostrar = crear_archivo($formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $contenido);
-
+		if ($mostrar !==false) {
+		  notificaciones("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar),"success",2000);			
+		}else{
+		  notificaciones("Error al crear el archivo " . dirname($mostrar),"error",5000);
+		}
 	} else {
-		alerta("No es posible generar el Formato");
+		notificaciones("Formato NO encontrado ","error",5000);
 	}
 }
 
@@ -2076,11 +2083,13 @@ function crear_formato_ae($idformato, $accion) {
 		}
 
 		$mostrar = crear_archivo($formato[0]["nombre"] . "/" . $formato[0]["ruta_" . $accion], $contenido);
-		if ($mostrar != "") {
-			alerta("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar));
+		if ($mostrar !==false) {
+			notificaciones("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar),"success",2000);			
+		}else{
+			notificaciones("Error al crear el archivo " . dirname($mostrar),"error",5000);
 		}
 	} else {
-		alerta("No es posible generar el Formato");
+		notificaciones("Formato NO encontrado ","error",5000);
 	}
 }
 
@@ -2834,7 +2843,7 @@ function generar_formato($idformato) {
 			$campos_adicionar = array_diff($campos, $campos_edit);
 			$campos_adicionar = array_unique($campos_adicionar);
 		} else {
-			alerta("El formato mostrar no posee Parametros si esta seguro continue con el Proceso de lo contrario haga Click en Listar Formato y Luego Editelo");
+			notificaciones("El formato mostrar no posee Parametros si esta seguro continue con el Proceso de lo contrario haga Click en Listar Formato y Luego Editelo");
 		}
 	}
 	$tadd = "";
@@ -2844,7 +2853,7 @@ function generar_formato($idformato) {
 	$ted .= implode(",", $campos_editar);
 	$tod .= implode(",", $campos_otrosf);
 	if ($campos_otrosf != "") {
-		alerta("Existen otros Formatos Vinculados");
+		notificaciones("Existen otros Formatos Vinculados");
 	}
 	$adicionales = "";
 	if (@$_REQUEST["pantalla"] == "tiny") {

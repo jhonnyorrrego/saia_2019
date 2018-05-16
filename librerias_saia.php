@@ -393,11 +393,17 @@ function librerias_highslide() {
 	 * $texto.='<link rel="stylesheet" href="'.$raiz_saia.'anexosdigitales/highslide-4.0.10/highslide/highslide.css" type="text/css" />';
 	 * return($texto);
 	 */
-	global $raiz_saia;
+	/*global $raiz_saia;
 	$texto = '';
 	$texto .= '<script src="' . $raiz_saia . 'anexosdigitales/highslide-4.0.10/highslide/highslide-full.js" type="text/javascript" charset="utf-8"></script>';
 	$texto .= '<link rel="stylesheet" href="' . $raiz_saia . 'anexosdigitales/highslide-4.0.10/highslide/highslide.css" type="text/css" />';
+	return ($texto);*/
+	global $raiz_saia;
+	$texto = '';
+	$texto .= '<script src="' . $raiz_saia . 'anexosdigitales/highslide-5.0.0/highslide/highslide-full.js" type="text/javascript" charset="utf-8"></script>';
+	$texto .= '<link rel="stylesheet" href="' . $raiz_saia . 'anexosdigitales/highslide-5.0.0/highslide/highslide.css" type="text/css" />';
 	return ($texto);
+	
 }
 
 function librerias_zoom() {

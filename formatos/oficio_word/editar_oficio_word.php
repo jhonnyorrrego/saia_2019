@@ -1,6 +1,7 @@
 <html><title>.:EDITAR DOCUMENTOS EN FORMATO (WORD):.</title>
 			<head><?php include_once("../../librerias_saia.php"); ?>
 			<script type="text/javascript" src="../librerias/funciones_formatos.js"></script>
+			<?php include_once("funciones.php"); ?>
 			<?php include_once("../librerias/funciones_generales.php"); ?>
 			<?php include_once("../librerias/funciones_acciones.php"); ?>
 			<?php include_once("../librerias/estilo_formulario.php"); ?>
@@ -25,7 +26,7 @@
                      <td bgcolor="#F5F5F5"><input  maxlength="255"  class="required"   tabindex='1'  type="text" size="100" id="asunto_word" name="asunto_word"  value="<?php echo(mostrar_valor_campo('asunto_word',400,$_REQUEST['iddoc'])); ?>"></td>
                     </tr><tr id="tr_tipo_radicado">
                      <td class="encabezado" width="20%" title="">CONTADOR*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(400,6696,$_REQUEST['iddoc']);?></td></tr><tr id="tr_clasifica_expediente">
-								<td class="encabezado" width="20%" title="">CLASIFICAR EN EXPEDIENTE</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(400,6700,'4',$_REQUEST['iddoc']);?></div><br/><input type="hidden" maxlength="255"  name="clasifica_expediente" id="clasifica_expediente"   value="<?php cargar_seleccionados(400,6700,1,$_REQUEST['iddoc']);?>" ><div id="esperando_clasifica_expediente">
+								<td class="encabezado" width="20%" title="">CLASIFICAR EN EXPEDIENTE*</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(400,6700,'4',$_REQUEST['iddoc']);?></div><br/><input type="hidden" maxlength="255"  class="required"  name="clasifica_expediente" id="clasifica_expediente"   value="<?php cargar_seleccionados(400,6700,1,$_REQUEST['iddoc']);?>" ><div id="esperando_clasifica_expediente">
 									<img src="../../imagenes/cargando.gif">
 								</div>
 								<div id="treeboxbox_clasifica_expediente" height="90%"></div><script type="text/javascript">
@@ -91,14 +92,14 @@ Consideraciones:<br/>
 
 3. El t&iacute;tulo de cada columna debe ser escrito <b>exactamente</b> igual a como aparece en la plantilla de WORD, ya que esto permitir&aacute; hacer la relaci&oacute;n entre los datos y el WORD. <br/>
 
-4. EL archivo debe subirse en formato <b>CSV</b> export&aacute;ndolo desde EXCEL. <br/>
+4. EL archivo debe subirse en formato <b>CSV o XLSX</b><br/>
 
-5. Recuerde que en la plantilla de WORD  deben aparecer los textos que escribi&oacute; como encabezado de las columnas pero adicionando los s&iacute;mbolos <b>$</b> y <b>{ }</b> al inicio y final.  Ejemplo:  <b>${Nombre del Destino}</b>,  <b>${Direccion}</b>, <b>${Telefono}</b>, etc.">CARGAR ARCHIVO EN FORMATO CSV CON LOS DATOS</td>
+5. Recuerde que en la plantilla de WORD  deben aparecer los textos que escribi&oacute; como encabezado de las columnas pero adicionando los s&iacute;mbolos <b>$</b> y <b>{ }</b> al inicio y final.  Ejemplo:  <b>${Nombre del Destino}</b>,  <b>${Direccion}</b>, <b>${Telefono}</b>, etc.">CARGAR ARCHIVO EN FORMATO CSV/XLSX CON LOS DATOS</td>
                      <td class="celda_transparente"><?php echo '<div class="textwrapper">
 			<a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=400&idcampo=4944" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
 			objectType: \'iframe\', outlineType: \'rounded-white\', wrapperClassName: \'highslide-wrapper drag-header\',
 			outlineWhileAnimating: true, preserveContent: false, width: 400 } )">Administrar Anexos</a>
-			</div>'; ?></td></tr><input type="hidden" name="idft_oficio_word" value="<?php echo(mostrar_valor_campo('idft_oficio_word',400,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',400,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',400,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',400,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="campo_descripcion" value="<?php echo('6698'); ?>"><input type="hidden" name="formato" value="400"><tr><td colspan='2'><?php submit_formato(400,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("400-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
+			</div>'; ?></td></tr><input type="hidden" name="idft_oficio_word" value="<?php echo(mostrar_valor_campo('idft_oficio_word',400,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',400,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',400,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',400,$_REQUEST['iddoc'])); ?>"><?php add_edit_oficio_word(400,NULL,$_REQUEST['iddoc']);?><input type="hidden" name="campo_descripcion" value="<?php echo('6698'); ?>"><input type="hidden" name="formato" value="400"><tr><td colspan='2'><?php submit_formato(400,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("400-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
                 var upload_url = '../../dropzone/cargar_archivos_formato.php';
                 var mensaje = 'Arrastre aquí los archivos';
                 Dropzone.autoDiscover = false;

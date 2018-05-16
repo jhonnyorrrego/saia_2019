@@ -3905,34 +3905,34 @@ function salir($texto, $login) {
  * <Post-condiciones><Post-condiciones>
  * </Clase>
  */
-function crear_archivo($nombre, $texto = NULL, $modo = 'wb') {
-    $path = pathinfo($nombre);
-    $ruta = $path["dirname"];
-    if (!is_dir($ruta)) {
-        if (mkdir($ruta, PERMISOS_CARPETAS, true)) {
-            chmod($ruta, PERMISOS_CARPETAS);
-        } else {
-            alerta("Problemas al generar la carpeta $ruta desde " . getcwd());
-            return (false);
-        }
-    }
 
-    $f = fopen($nombre, $modo);
-    $resp = false;
-    if ($f) {
-        chmod($nombre, PERMISOS_ARCHIVOS);
-        $texto = str_replace("? >", "?" . ">", $texto);
-        if (fwrite($f, $texto, strlen($texto)) !== false) {
-            $resp = $nombre;
-        }
-    } else {
-        alerta('No se puede crear el archivo: ' . $nombre);
-    }
-    fclose($f);
-    return ($resp);
+function crear_archivo($nombre, $texto = NULL, $modo = 'wb') {
+	$path = pathinfo($nombre);
+	$ruta = $path["dirname"];
+	if (!is_dir($ruta)) {
+		if (mkdir($ruta, PERMISOS_CARPETAS, true)) {
+			chmod($ruta, PERMISOS_CARPETAS);
+		} else {			
+			return (false);
+		}
+	}
+	if(is_file($nombre)){
+		unlink($nombre);
+	}
+	$f = fopen($nombre, $modo);
+	$resp = false;
+	if ($f) {
+		chmod($nombre, PERMISOS_ARCHIVOS);
+		$texto = str_replace("? >", "?" . ">", $texto);
+		if (fwrite($f, $texto, strlen($texto)) !== false) {
+			$resp = $nombre;
+		}
+	}
+	fclose($f);
+	return ($resp);
 }
 
-function crear_archivo_formato($nombre,$texto=NULL,$modo='wb'){
+function crear_archivo_formato($nombre, $texto = NULL, $modo = 'wb') {
 	global $cont;
 	$ruta_superior = __DIR__ . "/" . FORMATOS_CLIENTE;
 	$nombre = $ruta_superior . $nombre;
@@ -3941,10 +3941,12 @@ function crear_archivo_formato($nombre,$texto=NULL,$modo='wb'){
 	if (!is_dir($ruta)) {
 		if (mkdir($ruta, PERMISOS_CARPETAS, true)) {
 			chmod($ruta, PERMISOS_CARPETAS);
-		} else {
-			alerta("Problemas al generar las carpetas");
+		} else {			
 			return (false);
 		}
+	}
+	if(is_file($nombre)){
+		unlink($nombre);
 	}
 	$f = fopen($nombre, $modo);
 	if ($f) {
@@ -3956,11 +3958,10 @@ function crear_archivo_formato($nombre,$texto=NULL,$modo='wb'){
 		} else {
 			fclose($f);
 		}
-	} else {
-		alerta('No se puede crear el archivo: ' . $nombre);
 	}
 	return (false);
 }
+
 
     /*
  * <Clase>

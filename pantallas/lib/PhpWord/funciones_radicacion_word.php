@@ -32,23 +32,24 @@ class RadicadoWord {
 	private $iddocumento;
 	private $idformato;
 	private $campo_word;
-	private $campo_csv;
+	private $campo_combinar;
 	public $retorno;
 	private $ruta_docx;
 	private $ruta_imagen;
 	private $temp_fs;
 
 	private $combinar;
-	private $archivo_csv;
-	private $alm_csv;
+	private $archivo_combinar;
+	private $alm_comb;
 	private $alm_servidor;
 	private $ruta_procesar;
 	private $ruta_combinar;
 
 	private $ruta_plantilla;
 	private $alm_plantilla;
+	private $extension;
 
-	public function __construct($idformato, $iddoc, $nom_campo_word, $nom_campo_csv) {
+	public function __construct($idformato, $iddoc, $nom_campo_word, $nom_campo_combinar) {
 		global $ruta_db_superior, $conn;
 
 		$this -> ruta_db_superior = $ruta_db_superior;
@@ -56,7 +57,7 @@ class RadicadoWord {
 		$this -> iddocumento = $iddoc;
 		$this -> idformato = $idformato;
 		$this -> campo_word = $nom_campo_word;
-		$this -> campo_csv = $nom_campo_csv;
+		$this -> campo_combinar = $nom_campo_combinar;
 		$this -> retorno = array(
 			"exito" => 0,
 			"msn" => ""
@@ -64,11 +65,12 @@ class RadicadoWord {
 		$this -> ruta_docx = '';
 		$this -> ruta_imagen = '';
 		$this -> combinar = false;
-		$this -> archivo_csv = null;
+		$this -> archivo_combinar = null;
 
-		$this -> alm_csv = null;
+		$this -> alm_comb = null;
 		$this -> alm_servidor = null;
 		$this -> ruta_procesar = null;
+		$this -> extension = null;
 	}
 
 	public function prepare() {
@@ -79,18 +81,19 @@ class RadicadoWord {
 			if ($idcampo_anexo_word["numcampos"]) {
 				$word = busca_filtro_tabla("ruta", "anexos", "documento_iddocumento=" . $this -> iddocumento . " and campos_formato=" . $idcampo_anexo_word[0]["idcampos_formato"], "", $this -> conn);
 				if ($word["numcampos"] == 1) {
-					$idcampo_anexo_csv = busca_filtro_tabla("idcampos_formato", "campos_formato", "formato_idformato=" . $this -> idformato . " and nombre='" . $this -> campo_csv . "'", "", $this -> conn);
-					if ($idcampo_anexo_csv["numcampos"]) {
-						$csv = busca_filtro_tabla("ruta", "anexos", "documento_iddocumento=" . $this -> iddocumento . " and campos_formato=" . $idcampo_anexo_csv[0]["idcampos_formato"], "", $this -> conn);
+					$idcampo_anexo_comb = busca_filtro_tabla("idcampos_formato", "campos_formato", "formato_idformato=" . $this -> idformato . " and nombre='" . $this -> campo_combinar . "'", "", $this -> conn);
+					if ($idcampo_anexo_comb["numcampos"]) {
+						$arch_comb = busca_filtro_tabla("ruta", "anexos", "documento_iddocumento=" . $this -> iddocumento . " and campos_formato=" . $idcampo_anexo_comb[0]["idcampos_formato"], "", $this -> conn);
 						$ok = 1;
-						if ($csv['numcampos'] == 1) {
+						if ($arch_comb['numcampos'] == 1) {
 							$this -> ruta_combinar = StorageUtils::obtener_tempdir();
-							$this -> alm_csv = StorageUtils::resolver_ruta($csv[0]["ruta"]);
-							$csv_file = $this -> alm_csv["clase"] -> get_filesystem() -> get($this -> alm_csv["ruta"]);
-							$this -> archivo_csv = $this -> ruta_combinar . "/tmp_csv.csv";
-							file_put_contents($this -> archivo_csv, $csv_file -> getContent());
+							$this -> alm_comb = StorageUtils::resolver_ruta($arch_comb[0]["ruta"]);
+							$combinar_file = $this -> alm_comb["clase"] -> get_filesystem() -> get($this -> alm_comb["ruta"]);
+							$this -> extension = strtolower(pathinfo($this -> alm_comb["ruta"], PATHINFO_EXTENSION));
+							$this -> archivo_combinar = $this -> ruta_combinar . "/tmp_archivo." . $this -> extension;
+							file_put_contents($this -> archivo_combinar, $combinar_file -> getContent());
 							$this -> combinar = true;
-						} else if ($csv['numcampos'] > 1) {
+						} else if ($arch_comb['numcampos'] > 1) {
 							$ok = 0;
 						}
 						if ($ok) {
@@ -116,10 +119,10 @@ class RadicadoWord {
 								$this -> retorno["msn"] = $arr_ruta_w["mensaje"];
 							}
 						} else {
-							$this -> retorno["msn"] = "Existen varios archivos csv cargados";
+							$this -> retorno["msn"] = "Existen varios archivos " . $this -> extension . " cargados";
 						}
 					} else {
-						$this -> retorno["msn"] = "No existe el idcampo " . $this -> campo_csv;
+						$this -> retorno["msn"] = "No existe el idcampo " . $this -> campo_combinar;
 					}
 				} else if ($word["numcampos"] > 1) {
 					$this -> retorno["msn"] = "Existen varios archivos word cargados";
@@ -440,7 +443,7 @@ class RadicadoWord {
 					phpmkr_query($update) or die("Error al actualizar ruta del PDF");
 
 					if ($this -> combinar) {
-						$this -> ruta_procesar=$directorio_out . $archivo_out . $extension_doc;
+						$this -> ruta_procesar = $directorio_out . $archivo_out . $extension_doc;
 						$this -> combinar_documento();
 					}
 					$this -> retorno["exito"] = 1;
@@ -466,11 +469,21 @@ class RadicadoWord {
 	}
 
 	protected function combinar_documento() {
-		$datos = $this -> cargar_csv($this -> archivo_csv);
+		$haystack = array(
+			"xls",
+			"xlsx"
+		);
+		if (in_array($this -> extension, $haystack)) {
+			$datos = $this -> cargar_excel($this -> archivo_combinar);
+		} else {
+			$datos = $this -> cargar_csv($this -> archivo_combinar);
+		}
+
 		$archivo_original = $this -> ruta_procesar;
 		$extension_doc = '.docx';
 
-		for ($i = 0; $i < count($datos); $i++) {
+		$i = 0;
+		foreach ($datos as $registro) {
 			$archivo_out = "documento_word_" . ($i + 1);
 			$archivo_copia = $this -> ruta_combinar . "/" . $archivo_out . $extension_doc;
 			if (file_exists($archivo_copia)) {
@@ -479,7 +492,7 @@ class RadicadoWord {
 			if (copy($archivo_original, $archivo_copia)) {
 				$templateProcessor = new SaiaTemplateProcessor($archivo_copia);
 				$campos_word = $templateProcessor -> getVariables();
-				foreach ($datos[$i] as $campo => $valor) {
+				foreach ($registro as $campo => $valor) {
 					if (in_array($campo, $campos_word)) {
 						$templateProcessor -> setValue($campo, $valor);
 					}
@@ -487,6 +500,7 @@ class RadicadoWord {
 				$templateProcessor -> saveAs($archivo_copia);
 				$templateProcessor = null;
 			}
+			$i++;
 		}
 
 		if (is_dir($this -> ruta_combinar)) {
@@ -535,6 +549,13 @@ class RadicadoWord {
 			fclose($gestor);
 		}
 		return $resp;
+	}
+
+	private function cargar_excel($inputFileName) {
+		include_once ($this -> ruta_db_superior . "pantallas/busquedas/PHPExcel/funciones_excelphp.php");
+		$array = Excelphp::leer_archivo_excel($inputFileName, array(3));
+		unset($array[1]);
+		return $array;
 	}
 
 }

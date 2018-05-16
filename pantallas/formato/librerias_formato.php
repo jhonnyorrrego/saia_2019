@@ -1,7 +1,8 @@
 <?php
 function menu_principal_formatos($idformato) {
 	global $ruta_db_superior;
-	$texto = '<li class="divider-vertical"></li> <li><button class="btn btn-mini btn-info" href="' . $ruta_db_superior . 'formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&amp;accion=generar">Publicar Todos</button></li>';
+	$href='formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar';
+	$texto = '<li class="divider-vertical"></li> <li><button class="btn btn-mini btn-info kenlace_saia" titulo="Generar Formatos" conector="iframe" enlace="'.$href.'" >Publicar Todos</button></li>';
 	return ($texto);
 }
 ?>

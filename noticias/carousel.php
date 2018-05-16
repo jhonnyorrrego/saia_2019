@@ -18,8 +18,8 @@ include_once($ruta_db_superior."librerias_saia.php");
 		}
 		</style>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />		
-		<script type="text/javascript" src="<?php echo($ruta_db_superior);?>anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
-		<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
+		<script type="text/javascript" src="<?php echo($ruta_db_superior);?>anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script>
+		<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>anexosdigitales/highslide-5.0.0/highslide/highslide.css" />
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />		
 <?php
 echo(librerias_jquery('1.7'));
@@ -107,7 +107,7 @@ $sliders.=']';
 	    
 		</script>		
 		<script type='text/javascript'>
-		    hs.graphicsDir = '<?php echo($ruta_db_superior);?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
+		    hs.graphicsDir = '<?php echo($ruta_db_superior);?>anexosdigitales/highslide-5.0.0/highslide/graphics/';
 		    hs.outlineType = 'rounded-white';
 		    //hs.marginLeft = 610;
 		    hs.targetX = 'descriptor -265px';

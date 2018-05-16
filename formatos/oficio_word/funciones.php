@@ -24,10 +24,23 @@ function add_edit_oficio_word($idformato, $iddoc) {
 	} else {
 		$opt = 0;
 	}
+	$plantilla=busca_filtro_tabla("ruta_anexo,nombre,extension","plantilla_word","estado=1","",$conn);
+	$option='<select id="plantilla_word" name="plantilla_word"><option value="">Seleccione</option>';
+	if($plantilla["numcampos"]){
+		for ($i=0; $i <$plantilla["numcampos"] ; $i++) { 
+			$option.='<option value="'.base64_encode($plantilla[$i]["ruta_anexo"]).'">'.$plantilla[$i]["nombre"].' ('.$plantilla[$i]["extension"].')</option>';
+		}
+	}
+	$option.='</select>';
 ?>
 <script>
 	$(document).ready(function() {
 		tree_clasifica_expediente.setOnCheckHandler(actualiza_serie_expediente);
+		
+		$("#tr_asunto_word").after('<tr id="tr_plantillas_word"><td class="encabezado">PLANTILLA</td> <td><?php echo $option;?> <span id="descargar_plantilla">-</span></td></tr>');
+		$("#plantilla_word").change(function (){
+			$("#descargar_plantilla").empty().html('<a href="<?php echo $ruta_db_superior;?>anexosdigitales/parsea_accion_archivo.php?accion=descargar_ruta_json&ruta='+$(this).val()+'">Descargar</a>');
+		});
 	});
 	function actualiza_serie_expediente(nodeId) {
 		idexp_serie = nodeId.split('sub');
