@@ -41,7 +41,7 @@ function incluir_librerias_busqueda($elemento,$indice){
 echo librerias_tabla_bootstrap("1.11");
 
 ?>
-
+<script src="//cdn.jsdelivr.net/lodash/3.8.0/lodash.min.js"></script>
 </head>
 <body>
   <div class="container">
@@ -104,20 +104,27 @@ echo librerias_tabla_bootstrap("1.11");
       <?php
       }
 
-      if(strpos($datos_busqueda[0]["llave"],".")){
-        $valor_campos=explode(".", $datos_busqueda[0]["llave"]);
-        array_push($llave,trim($valor_campos[count($valor_campos)-1]));
-      }
-      else{
-        array_push($llave,trim($datos_busqueda[0]["llave"]));
+      $llave = null;
+      preg_match("/(\w*)\.(\w*)/", $datos_busqueda[0]["llave"], $valor_campos);
+      if(!empty($valor_campos)) {
+          $llave = $valor_campos[2];
+      } else {
+        $llave = trim($datos_busqueda[0]["llave"]);
       }
 
     ?>
   </div>
-  <table id="tabla_resultados" data-height="" data-pagination="true" data-toolbar="#menu_buscador" data-show-refresh="true" data-show-toggle="true">
+  <table id="tabla_resultados"
+  data-height=""
+  data-pagination="true"
+  data-toolbar="#menu_buscador"
+  data-show-refresh="true"
+  data-show-toggle="true"
+  data-maintain-selected="true"
+  >
     <thead>
       <tr>
-        <th data-field="<?php echo($llave); ?>" data-checkbox="true"></th>
+        <th data-field="state" data-checkbox="true"></th>
         <?php
         $lcampos1=$datos_busqueda[0]["campos"];
         if($datos_busqueda[0]["campos_adicionales"]){
@@ -156,6 +163,11 @@ echo librerias_tabla_bootstrap("1.11");
 </body>
 </html>
 <script>
+
+var $table = $('#tabla_resultados');
+var llave = "<?php echo($llave); ?>";
+var selections = [];
+
 $body = $("body");
 
 $(document).on({
@@ -185,11 +197,11 @@ $.fn.serializeObject = function(){
 };
 
 $(document).ready(function() {
-    var alto=$(window).height()-80;
-    $('#tabla_resultados').bootstrapTable({
+    //var alto=$(window).height()-80;
+    $table.bootstrapTable({
         method: 'get',
         cache: false,
-        height: alto,
+        height: getHeight(),
         striped: true,
         pagination: true,
         minimumCountColumns: 1,
@@ -201,13 +213,36 @@ $(document).ready(function() {
         pageList:[5, 10, 25, 50, 100],
         paginationVAlign:'top',
         showColumns: true,
+        maintainSelected: true,
+        idField: llave,
+        responseHandler: "responseHandler",
         icons : {
             refresh: 'glyphicon-refresh icon-refresh',
             toggle:  'glyphicon-list-alt icon-list-alt',
             columns: 'glyphicon-th icon-th'
-        }
+        },
+        rowStyle: function rowStyle(row, index) {
+        	  return {
+        	    classes: 'text-nowrap another-class',
+        	    css: {"font-size": "10px"}
+        	  };
+        	}
+    });
+
+    $table.on('check.bs.table uncheck.bs.table ' +
+            'check-all.bs.table uncheck-all.bs.table', function () {
+        //$remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
+        // save your data, here just save the current page
+        selections = getIdSelections();
+        // push or splice the selections if you want to save all data selections
     });
 });
+
+function getIdSelections() {
+    return $.map($table.bootstrapTable('getSelections'), function (row) {
+        return row[llave];
+    });
+}
 
 function procesamiento_buscar(externo) {
     var data = $('#kformulario_saia').serializeObject();
@@ -229,18 +264,28 @@ function procesamiento_buscar(externo) {
                 "cantidad_total":$("#cantidad_total").val()
             };
             $.extend( data, q);
+            console.log(data);
             return data;
-        },
-        responseHandler: function(res) {
-            var total = res.cantidad_total;
-            res.total = total;
-            return res;
         },
         onLoadSuccess: function(data){
           $("#cantidad_total").val(data.total);
         }
     });
     return false;
+}
+
+function responseHandler(res) {
+    var total = res.records;
+    res.total = total;
+    $.each(res.rows, function (i, row) {
+        row.state = $.inArray(row[llave], selections) !== -1;
+    });
+    console.log(selections);
+    return res;
+}
+
+function getHeight() {
+    return $(window).height() - $('h1').outerHeight(true);
 }
 
 $(document).keypress(function(event) {
