@@ -1,39 +1,39 @@
 <?php
-$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior=$ruta="";
-while($max_salida>0){
-  if(is_file($ruta."db.php")){
-    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-  }
-  $ruta.="../";
-  $max_salida--;
+$max_salida = 10;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
+	}
+	$ruta .= "../";
+	$max_salida--;
 }
-include_once($ruta_db_superior."db.php");
+include_once ($ruta_db_superior . "db.php");
 
 //$_REQUEST['iddocumento'] puede ser iddocumento,idanexo o  idanexos_transferencia dependiendo del tipo
 //$_REQUEST["tipo"] puede ser documento ,anexo o anexos_transferencia
-if(!$_REQUEST["ruta"]){
-	if($_REQUEST["tipo"]=='anexo'){
-		$pdf=busca_filtro_tabla("","anexos","idanexos=".$_REQUEST['iddocumento'],"",$conn);
-		$ruta_pdf=$pdf[0]['ruta'];
-		$tipo=$_REQUEST["tipo"];
-		$idarchivo=$pdf[0]['documento_iddocumento'];
-	}else if($_REQUEST["tipo"]=='anexo_trans'){
-		$pdf=busca_filtro_tabla("","anexos_transferencia","idanexos_transferencia=".$_REQUEST['iddocumento'],"",$conn);
-		$ruta_pdf=$pdf[0]['ruta'];
-		$tipo=$_REQUEST["tipo"];
-		$idarchivo=$pdf[0]['documento_iddocumento'];
-	}else{
-		$pdf=busca_filtro_tabla("","documento","iddocumento=".$_REQUEST['iddocumento'],"",$conn);
-		$ruta_pdf=$pdf[0]['pdf'];
-		$tipo='documento';
-		$idarchivo=$_REQUEST['iddocumento'];
+if (!$_REQUEST["ruta"]) {
+	if ($_REQUEST["tipo"] == 'anexo') {
+		$pdf = busca_filtro_tabla("", "anexos", "idanexos=" . $_REQUEST['iddocumento'], "", $conn);
+		$ruta_pdf = $pdf[0]['ruta'];
+		$tipo = $_REQUEST["tipo"];
+		$idarchivo = $pdf[0]['documento_iddocumento'];
+	} else if ($_REQUEST["tipo"] == 'anexo_trans') {
+		$pdf = busca_filtro_tabla("", "anexos_transferencia", "idanexos_transferencia=" . $_REQUEST['iddocumento'], "", $conn);
+		$ruta_pdf = $pdf[0]['ruta'];
+		$tipo = $_REQUEST["tipo"];
+		$idarchivo = $pdf[0]['documento_iddocumento'];
+	} else {
+		$pdf = busca_filtro_tabla("", "documento", "iddocumento=" . $_REQUEST['iddocumento'], "", $conn);
+		$ruta_pdf = $pdf[0]['pdf'];
+		$tipo = 'documento';
+		$idarchivo = $_REQUEST['iddocumento'];
 	}
-
-}else{
-	$ruta_pdf=$_REQUEST["ruta"];
+} else {
+	$ruta_pdf = $_REQUEST["ruta"];
 }
-
+$base64=base64_encode($ruta_pdf);
+$ruta_pdf="filesystem/mostrar_binario.php?ruta=".$base64;
 ?>
 <!DOCTYPE html>
 <html>
@@ -126,8 +126,9 @@ if(!$_REQUEST["ruta"]){
 </head>
 <body >
   <div class="toolbar">
-  	<input type="hidden" id="documento_iddocumento" value="<?php echo($_REQUEST['iddocumento']);?>" iddoc_padre="<?php echo($idarchivo);?>" ruta="<?php echo($ruta_db_superior.$pdf[0]['pdf']);?>">
-  	<input type="hidden" id="ruta" value="<?php echo($ruta_db_superior.$ruta_pdf);?>" codificada="<?php echo(base64_encode($ruta_pdf));?>">
+  	<input type="hidden" id="documento_iddocumento" value="<?php echo($_REQUEST['iddocumento']);?>" iddoc_padre="<?php echo($idarchivo);?>">
+  	<!--input type="hidden" id="documento_iddocumento" value="<?php echo($_REQUEST['iddocumento']);?>" iddoc_padre="<?php echo($idarchivo);?>" ruta="<?php echo($ruta_db_superior.$pdf[0]['pdf']);?>"-->
+  	<input type="hidden" id="ruta" value="<?php echo($ruta_db_superior.$ruta_pdf);?>" codificada="<?php echo($base64);?>">
   	<input type="hidden" id="tipo" value="<?php echo($tipo);?>">
   	<div class="spacer"></div>
     <button class="cursor btn btn-inverse" type="button" title="Cursor" data-tooltype="cursor">➚</button>
