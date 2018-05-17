@@ -88,8 +88,8 @@ function mostrar_datos_dependencias_ruta($idformato, $iddoc) {
 				2 => "Inactivo"
 			);
 			$tabla .= '<form id="item_prerequisitos" action="guardar_datos_dependencias.php">
-			<table style="width:100%; border-collapse: collapse;" border="1">
-			<tr class="encabezado_list">
+			<table class="table table-bordered" style="border-collapse: collapse;text-align:center; width: 100%;" border="1">
+			<tr style="font-weight:bold">
 			    <td>Fecha</td>
 			    <td>Dependencia</td>
 			    <td>Descripci&oacute;n</td>
