@@ -38,13 +38,17 @@ function incluir_librerias_busqueda($elemento,$indice){
   include_once($ruta_db_superior.$elemento);
 }
 
-echo librerias_tabla_bootstrap("1.11");
+//echo librerias_tabla_bootstrap("1.11", false, true);
+//echo librerias_tabla_bootstrap("1.11");
+$exportar = !empty($datos_busqueda[0]["exportar"]);
+
+echo librerias_tabla_bootstrap("1.11", false, false);
 
 ?>
-<script src="//cdn.jsdelivr.net/lodash/3.8.0/lodash.min.js"></script>
+
 </head>
 <body>
-  <div class="container">
+  <div class="container" style="width:auto;">
   <div class="row">
     <form class="formulario_busqueda" accept-charset="UTF-8" action="" id="kformulario_saia" name="kformulario_saia" method="post" style="padding:0px;margin:0px;">
       <input type="hidden" name="sord" id="sord" value="desc">
@@ -69,7 +73,7 @@ echo librerias_tabla_bootstrap("1.11");
       <?php
         }
       ?>
-      <button class="btn dropdown-toggle" data-toggle="dropdown">Seleccionados &nbsp;
+      <!-- <button class="btn dropdown-toggle" data-toggle="dropdown">Seleccionados &nbsp;
         <span class="caret">
         </span>&nbsp;
       </button>
@@ -86,7 +90,7 @@ echo librerias_tabla_bootstrap("1.11");
 
           }
         ?>
-      </ul>
+      </ul> -->
     <?php /*if(@$datos_busqueda[0]["enlace_adicionar"]){
       ?>
         <button class="btn kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar</button></div></li>
@@ -97,12 +101,10 @@ echo librerias_tabla_bootstrap("1.11");
         $funcion_menu=explode("@",$datos_busqueda[0]["menu_busqueda_superior"]);
         echo($funcion_menu[0](@$funcion_menu[1]));
     }*/
-      if(@$datos_busqueda[0]["exportar"]){
        ?>
        <button class="btn btn-primary exportar_listado_saia" enlace="pantallas/documento/busqueda_avanzada_documento.php" title="Exportar reporte" id="boton_exportar_excel" style="">Exportar a excel</button>
        <div class="pull-right" valign="middle"><iframe name="iframe_exportar_saia" id="iframe_exportar_saia" allowtransparency="1" frameborder="0" framespacing="2px" scrolling="no" width="100%" src=""  hspace="0" vspace="0" height="32px"></iframe></div>
       <?php
-      }
 
       $llave = null;
       preg_match("/(\w*)\.(\w*)/", $datos_busqueda[0]["llave"], $valor_campos);
@@ -166,7 +168,9 @@ echo librerias_tabla_bootstrap("1.11");
 
 var $table = $('#tabla_resultados');
 var llave = "<?php echo($llave); ?>";
-var selections = [];
+//var selections = [];
+var selections=[[0,-1]];
+var paginaActual = 1;
 
 $body = $("body");
 
@@ -208,7 +212,7 @@ $(document).ready(function() {
         clickToSelect: true,
         sidePagination: 'server',
         pageSize: $("#rows").val(),
-        search: true,
+        search: false,
         cardView:false,
         pageList:[5, 10, 25, 50, 100],
         paginationVAlign:'top',
@@ -219,7 +223,8 @@ $(document).ready(function() {
         icons : {
             refresh: 'glyphicon-refresh icon-refresh',
             toggle:  'glyphicon-list-alt icon-list-alt',
-            columns: 'glyphicon-th icon-th'
+            columns: 'glyphicon-th icon-th',
+            advancedSearchIcon: 'glyphicon-chevron-down'
         },
         rowStyle: function rowStyle(row, index) {
         	  return {
@@ -231,15 +236,35 @@ $(document).ready(function() {
 
     $table.on('check.bs.table uncheck.bs.table ' +
             'check-all.bs.table uncheck-all.bs.table', function () {
-        //$remove.prop('disabled', !$table.bootstrapTable('getSelections').length);
-        // save your data, here just save the current page
-        selections = getIdSelections();
+
+    	// save your data, here just save the current page
+        selections[paginaActual] = getIdSelections();
         // push or splice the selections if you want to save all data selections
     });
 });
 
+function responseHandler(res) {
+
+	console.log(res);
+	var options = $table.bootstrapTable('getOptions');
+
+    //Get the page number
+    paginaActual = options.pageNumber;
+
+    var total = res.records;
+    res.total = total;
+    $.each(res.rows, function (i, row) {
+        row.state = $.inArray(row[llave], selections[paginaActual]) !== -1;
+    });
+    //console.log(selections[paginaActual]);
+    return res;
+}
+
 function getIdSelections() {
+	//console.log($table.bootstrapTable('getSelections'));
+
     return $.map($table.bootstrapTable('getSelections'), function (row) {
+        //console.log(row[llave]);
         return row[llave];
     });
 }
@@ -264,7 +289,7 @@ function procesamiento_buscar(externo) {
                 "cantidad_total":$("#cantidad_total").val()
             };
             $.extend( data, q);
-            console.log(data);
+            console.log(params);
             return data;
         },
         onLoadSuccess: function(data){
@@ -272,16 +297,6 @@ function procesamiento_buscar(externo) {
         }
     });
     return false;
-}
-
-function responseHandler(res) {
-    var total = res.records;
-    res.total = total;
-    $.each(res.rows, function (i, row) {
-        row.state = $.inArray(row[llave], selections) !== -1;
-    });
-    console.log(selections);
-    return res;
 }
 
 function getHeight() {

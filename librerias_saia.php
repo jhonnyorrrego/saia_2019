@@ -166,7 +166,7 @@ function estilo_tabla_bootstrap($version = "1.11") {
 	return $texto;
 }
 
-function librerias_tabla_bootstrap($version = "1.11", $export = false) {
+function librerias_tabla_bootstrap($version = "1.11", $export = false, $avanzado = false) {
 	global $raiz_saia;
 	switch ($version) {
 		case "1.12" :
@@ -184,6 +184,9 @@ function librerias_tabla_bootstrap($version = "1.11", $export = false) {
 	$texto .= '<script src="' . $raiz_saia . 'css/bootstrap_table/' . $version . '/locale/bootstrap-table-es-ES.js"></script>';
 	if ($export) {
 		$texto .= '<script src="' . $raiz_saia . 'css/bootstrap_table/' . $version . '/extensions/export/bootstrap-table-export.js"></script>';
+	}
+	if($avanzado) {
+	    $texto .= '<script src="' . $raiz_saia . 'css/bootstrap_table/' . $version . '/extensions/toolbar/bootstrap-table-toolbar.js"></script>';
 	}
 
 	return $texto;
@@ -403,7 +406,7 @@ function librerias_highslide() {
 	$texto .= '<script src="' . $raiz_saia . 'anexosdigitales/highslide-5.0.0/highslide/highslide-full.js" type="text/javascript" charset="utf-8"></script>';
 	$texto .= '<link rel="stylesheet" href="' . $raiz_saia . 'anexosdigitales/highslide-5.0.0/highslide/highslide.css" type="text/css" />';
 	return ($texto);
-	
+
 }
 
 function librerias_zoom() {
