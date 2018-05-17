@@ -10,124 +10,220 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
-if($_REQUEST['idpantalla']){
-	$pantalla = busca_filtro_tabla("","pantalla","idpantalla=".$_REQUEST['idpantalla'],"",$conn);
-	$pantalla[0]["etiqueta"]=utf8_encode(html_entity_decode($pantalla[0]["etiqueta"]));
-	$pantalla[0]["ayuda"]=utf8_encode(html_entity_decode($pantalla[0]["ayuda"]));
-	$cod_padre=$pantalla[0]["cod_padre"];
-	$clase=$pantalla[0]["clase"];
-	$pantalla = json_encode($pantalla);
+if($_REQUEST['idformato']){
+	$formato = busca_filtro_tabla("","formato","idformato=".$_REQUEST['idformato'],"",$conn);
+	$formato[0]["etiqueta"]=codifica_encabezado(html_entity_decode($formato[0]["etiqueta"]));
+	$formato[0]["ayuda"]=codifica_encabezado(html_entity_decode($formato[0]["ayuda"]));
+	$cod_padre=$formato[0]["cod_padre"];
+	$categoria=$formato[0]["fk_categoria_formato"];
+	$formato = json_encode($formato);
 
 	if($cod_padre){
-		$nombre_cod_padre=busca_filtro_tabla("","pantalla a","a.idpantalla=".$cod_padre,"",$conn);
+		$nombre_cod_padre=busca_filtro_tabla("","formato a","a.idformato=".$cod_padre,"",$conn);
 		$adicional_cod_padre="&seleccionado=".$cod_padre;
 	}
-	if($clase){
-		$nombre_clase=busca_filtro_tabla("","pantalla a","a.idpantalla=".$clase,"",$conn);
-		$adicional_clase="&seleccionado=".$clase;
+	if($categoria){
+		$nombre_categoria=busca_filtro_tabla("","categoria_formato a","a.idcategoria_formato=".$categoria,"",$conn);
+		$adicional_categoria="&seleccionado=".$categoria;
 	}
 }
 ?>
-<form class="form-horizontal" name="datos_pantalla" id="datos_pantalla">
+<style type="text/css">
+.containerTableStyle {overflow:hidden;}
+</style>
+<form class="form-horizontal" name="datos_formato" id="datos_formato">
   <fieldset id="content_form_name">
   </fieldset>
   <div class="control-group">
     <label class="control-label" for="nombre">Nombre*</label>
     <div class="controls">
-      <input type="text" name="nombre" id="nombre_pantalla" placeholder="Nombre" value="" required>
+      <input type="text" name="nombre" id="nombre_formato" placeholder="Nombre" value="" required>
     </div>
   </div>
   <div class="control-group">
     <label class="control-label" for="etiqueta">Etiqueta*</label>
     <div class="controls">
-      <input type="text" name="etiqueta" id="etiqueta_pantalla" placeholder="Etiqueta" value="" required>
-    </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label" for="ruta_pantalla">Ruta</label>
-    <div class="controls">
-      <input type="text" name="ruta_pantalla" id="ruta_pantalla" placeholder="Ruta almacenamiento" value="pantallas">
-    </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label" for="ayuda">Ayuda</label>
-    <div class="controls">
-      <textarea name="ayuda" id="ayuda_pantalla" placeholder="Ayuda"></textarea>
-    </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label" for="tipo_pantalla">Tipo de pantalla</label>
-    <div class="controls">
-      Sistema<input type="radio" name="tipo_pantalla" id="tipo_pantalla_1" value="1" checked="checked">
-      Formato<input type="radio" name="tipo_pantalla" id="tipo_pantalla_2" value="2">
-      Auxiliar<input type="radio" name="tipo_pantalla" id="tipo_pantalla_3" value="3">
-      Clase<input type="radio" name="tipo_pantalla" id="tipo_pantalla_4" value="4">
-    </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label" for="pertenece_nucleo">Versionar</label>
-    <div class="controls">
-      Si<input type="radio" name="versionar" id="versionar_1" value="1">
-      No<input type="radio" name="versionar" id="versionar_0" value="0" checked="checked">
-    </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label" for="accion_eliminar">Acci&oacute;n al eliminar</label>
-    <div class="controls">
-      Eliminar<input type="radio" name="accion_eliminar" id="accion_eliminar_1" value="1">
-      Inactivar<input type="radio" name="accion_eliminar" id="accion_eliminar_2" value="2" checked="checked">
-    </div>
-  </div>
-  <div id="campos_formato" style="display:none">
-  	<div class="control-group">
-	    <label class="control-label" for="tipo_pantalla">Aprobacion automatica</label>
-	    <div class="controls">
-	      Si<input type="radio" name="aprobacion_automatica" id="aprobacion_automatica_1" value="1">
-	      No<input type="radio" name="aprobacion_automatica" id="aprobacion_automatica_0" value="0" checked="checked">
-	    </div>
-	  </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label" for="tiempo">Tiempo autoguardado</label>
-    <div class="controls">
-      <input id="tiempo_pantalla" type="number" name="tiempo" min="0" max="" step="1" value="6" style="width:50px;">Minutos
+      <input type="text" name="etiqueta" id="etiqueta_formato" placeholder="Etiqueta" value="" required>
     </div>
   </div>
   <div class="control-group">
     <label class="control-label" for="codigo_padre">Padre</label>
     <div class="controls">
-    	<div id="esperando_codigo_padre_pantalla"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
+    	<div id="esperando_codigo_padre_formato"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
     	<?php echo($nombre_cod_padre[0]["nombre"]);?>
-      <div id="treebox_codigo_padre_pantalla" class="arbol_saia"></div>
-      <input id="codigo_padre_pantalla" type="hidden" name="cod_padre" value="<?php echo($cod_padre);?>">
-      <?php crear_arbol("codigo_padre_pantalla",$ruta_db_superior."pantallas/generador/arbol_pantallas.php?excluido=".$_REQUEST['idpantalla'].$adicional_cod_padre);?>
+      <div id="treebox_codigo_padre_formato" class="arbol_saia"></div>
+      <input id="codigo_padre_formato" type="hidden" name="cod_padre" value="<?php echo($cod_padre);?>">
+      <?php crear_arbol("codigo_padre_formato",$ruta_db_superior."test_serie.php?tabla=formato&excluido=".$_REQUEST['idformato'].$adicional_cod_padre);?>
     </div>
   </div>
   <div class="control-group">
-    <label class="control-label" for="clase">Heredar funcionalidad de</label>
+    <label class="control-label" for="serie_idserie">Serie documental</label>
     <div class="controls">
-    	<div id="esperando_clase_pantalla"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
-    	<?php echo($nombre_clase[0]["nombre"]);?>
-      <div id="treebox_clase_pantalla" class="arbol_saia"></div>
-      <input id="clase_pantalla" type="hidden" name="clase" value="<?php echo($clase);?>">
-      <?php crear_arbol("clase_pantalla",$ruta_db_superior."pantallas/generador/arbol_pantallas.php?tipo_pantalla=4&excluido=".$_REQUEST['idpantalla'].$adicional_clase);?>
+    	<div id="esperando_serie_idserie"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
+    	<?php echo($serie[0]["nombre"]);?>
+      <div id="treebox_serie_idserie" class="arbol_saia"></div>
+      <input id="serie_idserie" type="hidden" name="serie_idserie" value="<?php echo($serie_idserie);?>">
+      <?php crear_arbol("serie_idserie",$ruta_db_superior."test_serie.php?tabla=serie");?>
     </div>
   </div>
   <div class="control-group">
-    <label class="control-label" for="librerias_clase">Importar funciones a la clase desde</label>
+    <label class="control-label" for="contador">Contador</label>
     <div class="controls">
-      <input type="text" name="librerias" id="librerias_pantalla" placeholder="Archivo con funciones de la clase" value="">
+      <select name="contador_idcontador" id="contador_idcontador">
+      	<option value="">Crear contador</option>
+      	<?php 
+      	$contadores=busca_filtro_tabla("","contador","nombre<>''","nombre",$conn);
+      	for($i=0;$i<$contadores["numcampos"];$i++){
+      		echo('<option value="'.$contadores[$i]["idcontador"].'">'.$contadores[$i]["nombre"].'</option>');
+      	}
+      	?>
+      </select> <span id="reinicio_contador"> </span><input type="checkbox" name="reiniciar_contador" id="reiniciar_contador" value="1">Reiniciar contador con el cambio de a&ntilde;o</span>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="banderas">Banderas del formato</label>
+    <div class="controls">
+      <input type="checkbox" name="item" id="item" value="1">Item 
+      <input type="checkbox" name="tipo_edicion" id="tipo_edicion" value="1">Edicion Continua 
+      <input type="checkbox" name="banderas[]" id="banderas" value="e">Aprobacion Automatica 
+      <input type="checkbox" name="mostrar" id="mostrar" value="1" checked>Mostrar
+      <input type="checkbox" name="paginar" id="paginar" value="1" checked>Paginar al mostrar 
+      <input type="checkbox" name="banderas[]"	id="banderas" value="r">Tomar el asunto del padre al responder
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="font_size">Tama&ntilde;o de Letra</label>
+    <div class="controls">
+      <select name="font_size" id="font_size">
+      	<?php 
+      	for($i=7;$i<31;$i++){
+      		echo('<option value="'.$i.'"');
+      		if($i==11)
+      			echo(' selected="selected"');
+      		echo('>'.$i.'</option>');
+      	}
+      	?>
+      </select>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="margenes">Margenes</label>
+    <div class="controls">
+      Izquierda<select class="input-mini" name="mizq" id="mizq">
+      	<?php 
+      	for($i=0;$i<11;$i++){
+      		echo('<option value="'.($i*5).'"');
+      		if(($i*5)==15)
+      			echo(' selected="selected"');
+      		echo('>'.($i*5).'</option>');
+      	}
+      	?>
+      </select>
+      Derecha<select class="input-mini" name="mder" id="mder">
+      	<?php 
+      	for($i=0;$i<11;$i++){
+      		echo('<option value="'.($i*5).'"');
+      		if(($i*5)==20)
+      			echo(' selected="selected"');
+      		echo('>'.($i*5).'</option>');
+      	}
+      	?>
+      </select>
+      Superior<select class="input-mini" name="msup" id="msup">
+      	<?php 
+      	for($i=0;$i<11;$i++){
+      		echo('<option value="'.($i*5).'"');
+      		if(($i*5)==15)
+      			echo(' selected="selected"');
+      		echo('>'.($i*5).'</option>');
+      	}
+      	?>
+      </select>
+      Inferior<select class="input-mini" name="minf" id="minf">
+      	<?php 
+      	for($i=0;$i<11;$i++){
+      		echo('<option value="'.($i*5).'"');
+      		if(($i*5)==30)
+      			echo(' selected="selected"');
+      		echo('>'.($i*5).'</option>');
+      	}
+      	?>
+      </select>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="orientacion">Orientaci&oacute;n</label>
+    <div class="controls">
+      Horizontal<input type="radio" name="orientacion" id="orientacion_1" value="1">
+      Vertical<input type="radio" name="orientacion" id="orientacion_0" value="0" checked="checked">
+    </div>
+  </div>
+    <div class="control-group">
+    <label class="control-label" for="papel">Tama&ntilde;o papel</label>
+    <div class="controls">
+      <select name="papel" id="papel">
+      	<option value="A4">A4</option>
+      	<option value="A5">Media Carta</option>
+      	<option value="letter">Carta</option>
+      	<option value="legal">Oficio</option>
+      </select>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="mostrar_pdf">Mostrar PDF</label>
+    <div class="controls">
+      HTML<input type="radio" name="mostrar_pdf" id="mostrar_pdf_1" value="1">
+      PDF<input type="radio" name="mostrar_pdf" id="mostrar_pdf_0" value="0" checked="checked">
+      PDF Word<input type="radio" name="mostrar_pdf" id="mostrar_pdf_2" value="2">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="exportar">M&eacute;todo exportar</label>
+    <div class="controls">
+      HTML2PS<input type="radio" name="exportar" id="exportar_1" value="html2ps">
+      TCPDF<input type="radio" name="exportar" id="exportar_0" value="tcpdf" checked="checked">
+      mPDF<input type="radio" name="exportar" id="exportar_2" value="mpdf">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="pertenece_nucleo">Formato Pertenece a n&uacute;cleo</label>
+    <div class="controls">
+      Si<input type="radio" name="pertenece_nucleo" id="pertenece_nucleo_1" value="1">
+      No<input type="radio" name="pertenece_nucleo" id="pertenece_nucleo_0" value="0" checked="checked">
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="tiempo_autoguardado">Tiempo autoguardado</label>
+    <div class="controls">
+      <input id="tiempo_formato" type="number" name="tiempo_autoguardado" min="0" max="3600" step="1" value="6" style="width:50px;">Minutos
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="fk_categoria_formato">Categoria del formato</label>
+    <div class="controls">
+    	<div id="esperando_fk_categoria_formato"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
+    	<?php echo($categoria_formato[0]["nombre"]);?>
+      <div id="treebox_fk_categoria_formato" class="arbol_saia"></div>
+      <input id="fk_categoria_formato" type="hidden" name="fk_categoria_formato" value="<?php echo($fk_categoria_formato);?>">
+      <?php crear_arbol("fk_categoria_formato",$ruta_db_superior."test_categoria.php?tipo=1");?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="funcion_predeterminada">Funciones predeterminadas</label>
+    <div class="controls">
+      Varios responsables<input type="checkbox" name="funcion_predeterminada[]" id="funcion_predeterminada_1" value="1">
+      Digitalizaci&oacute;n<input type="checkbox" name="funcion_predeterminada[]" id="funcion_predeterminada_2" value="2">
     </div>
   </div>
   <div class="form-actions">
-  	<input type="hidden" name="ruta_almacenamiento" id="ruta_almacenamiento_pantalla" value="{*fecha_ano*}/{*fecha_mes*}/{*idpantalla*}">
-  	<input type="hidden" name="prefijo" id="prefijo_pantalla" value="">
+  	<input type="hidden" name="ruta_almacenamiento" id="ruta_almacenamiento_formato" value="{*fecha_ano*}/{*fecha_mes*}/{*idformato*}">
+  	<input type="hidden" name="prefijo" id="prefijo_formato" value="">
   	<input type="hidden" name="idfuncionario" id="idfuncionario" value="<?php echo(usuario_actual("idfuncionario")); ?>">
-  	<input type="hidden" name="banderas_pantalla" id="banderas" value="">
-  	<input type="hidden" name="idpantalla" id="idpantalla" value="">
-    <button type="button" name="adicionar" class="btn btn-primary" id="enviar_datos_pantalla" value="adicionar_datos_pantalla">Aceptar</button>
+  	<input type="hidden" name="banderas_formato" id="banderas" value="">
+  	<input type="hidden" name="idformato" id="idformato" value="">
+    <button type="button" name="adicionar" class="btn btn-primary" id="enviar_datos_formato" value="adicionar_datos_formato">Aceptar</button>
     <button type="reset" name="cancelar" class="btn" id="cancelar_formulario_saia" value="cancelar">Cancel</button>
-    <button type="button" name="eliminar" class="btn btn-danger kenlace_saia_propio" id="eliminar_formulario_saia" enlace="../pantallas/generador/eliminar_pantalla.php?idpantalla=<?php echo($_REQUEST['idpantalla']);?>" titulo="Eliminar pantalla" eliminar_hijos="0" value="eliminar">Eliminar</button>
+    <button type="button" name="eliminar" class="btn btn-danger kenlace_saia_propio" id="eliminar_formulario_saia" enlace="../formatos/generador/eliminar_formato.php?idformato=<?php echo($_REQUEST['idformato']);?>" titulo="Eliminar formato" eliminar_hijos="0" value="eliminar">Eliminar</button>
     <div class="pull-right" id="cargando_enviar"></div>
   </div>
 </form>
@@ -139,27 +235,12 @@ echo(librerias_acciones_kaiten());
 ?>
 <script type="text/javascript">
 $("document").ready(function(){
-  $("input:radio[name='tipo_pantalla']").change(function(){
-    //1=Sistema;2=formato;3=Auxiliar;4=clase
-    if($(this).val()==2){
-    	$("#campos_formato").show();
-    }
-    else{
-    	$("#campos_formato").hide();
-    }
-    if($(this).val()==1 || $(this).val()==2 || $(this).val()==3){
-      alert("Pendiente mostrar todas las tabs");
-    }
-    else if($(this).val()==4){
-      alert("Pendiente ocultar los tabs de mostrar y listar");
-    }
-  });
-	var formulario = $("#datos_pantalla");
-	$("#enviar_datos_pantalla").click(function(){
+	var formulario = $("#datos_formato");
+	$("#enviar_datos_formato").click(function(){
 		if(formulario.valid()){
 			$('#cargando_enviar').html("Procesando <i id='icon-cargando'>&nbsp;</i>");
 			var buttonAcep = $(this);
-			buttonAcep.attr('disabled', 'disabled');
+			//buttonAcep.attr('disabled', 'disabled');
 			parsear_items();
 			$.ajax({
         type:'POST',
@@ -170,27 +251,9 @@ $("document").ready(function(){
             var objeto=jQuery.parseJSON(html);
             if(objeto.exito){
               $('#cargando_enviar').html("Terminado ...");
-              buttonAcep.attr('value','editar_datos_pantalla');
+              buttonAcep.attr('value','editar_datos_formato');
               buttonAcep.removeAttr('disabled');
-              $('#idpantalla').attr('value',objeto.idpantalla);
-              var tipo_pantallas=$("input:radio[name='tipo_pantalla']:checked").val();
-              if(tipo_pantallas==3){
-                $(".check_genera").prop("checked",false);
-                $("#generar_version_pantalla").prev().children(":checkbox").prop("checked",true);
-                $("#generar_pantalla_libreria").prev().children(":checkbox").prop("checked",true);
-                $("#generar_clase").prev().children(":checkbox").prop("checked",true);
-                $("#generar_adicionar").prev().children(":checkbox").prop("checked",true);
-              }
-              else if(tipo_pantallas==4){
-                $(".check_genera").prop("checked",false);
-                $("#generar_version_pantalla").prev().children(":checkbox").prop("checked",true);
-                $("#generar_clase").prev().children(":checkbox").prop("checked",true);
-               }
-
-              else{
-                //Para el tipo auxiliar se debe quitar la opcion de generar tabla
-                $(".check_genera").prop("checked",true);
-              }
+              $('#idformato').attr('value',objeto.idformato);
               notificacion_saia('El registro se a insertado exitosamente','success','topCenter',3000);
               $('#cargando_enviar').html("");
               $('#tabs_formulario a[href="#formulario-tab"]').tab('show');
@@ -209,27 +272,27 @@ $("document").ready(function(){
 			$(".error").first().focus();
 		}
 	});
-	var pantalla=jQuery.parseJSON('<?php echo($pantalla);?>');
-	if(pantalla!==null && pantalla.numcampos){
-    $('#nombre_pantalla').attr('value',pantalla[0].nombre);
-    //$('#tabla_pantalla').attr('value',pantalla[0].tabla);
-    $('#librerias_pantalla').attr('value',pantalla[0].librerias);
-    $('#etiqueta_pantalla').attr('value',pantalla[0].etiqueta);
-    $('#ruta_pantalla').attr('value',pantalla[0].ruta_pantalla);
-    $('#ayuda_pantalla').attr('value',pantalla[0].ayuda);
-    $('#tiempo_pantalla').attr('value',pantalla[0].tiempo_autoguardado);
-    $('#banderas_pantalla').attr('value',pantalla[0].banderas);
-    $('#prefijo_pantalla').attr('value',pantalla[0].prefijo);
-    $('#ruta_almacenamiento_pantalla').attr('value',pantalla[0].ruta_almacenamiento);
-    $('#idpantalla').attr('value',pantalla[0].idpantalla);
-    $('#tipo_pantalla_'+pantalla[0].tipo_pantalla).attr('checked',"checked");
-    $('#versionar_'+pantalla[0].versionar).attr('checked',"checked");
-    $('#accion_eliminar_'+pantalla[0].accion_eliminar).attr('checked',"checked");
-    if(pantalla[0].tipo_pantalla==2){
+	var formato=jQuery.parseJSON('<?php echo($formato);?>');
+	if(formato!==null && formato.numcampos){
+    $('#nombre_formato').attr('value',formato[0].nombre);
+    //$('#tabla_formato').attr('value',formato[0].tabla);
+    $('#librerias_formato').attr('value',formato[0].librerias);
+    $('#etiqueta_formato').attr('value',formato[0].etiqueta);
+    $('#ruta_formato').attr('value',formato[0].ruta_formato);
+    $('#ayuda_formato').attr('value',formato[0].ayuda);
+    $('#tiempo_formato').attr('value',formato[0].tiempo_autoguardado);
+    $('#banderas_formato').attr('value',formato[0].banderas);
+    $('#prefijo_formato').attr('value',formato[0].prefijo);
+    $('#ruta_almacenamiento_formato').attr('value',formato[0].ruta_almacenamiento);
+    $('#idformato').attr('value',formato[0].idformato);
+    $('#tipo_formato_'+formato[0].tipo_formato).attr('checked',"checked");
+    $('#versionar_'+formato[0].versionar).attr('checked',"checked");
+    $('#accion_eliminar_'+formato[0].accion_eliminar).attr('checked',"checked");
+    if(formato[0].tipo_formato==2){
     	$("#campos_formato").show();
     }
-    $('#aprobacion_automatica_'+pantalla[0].aprobacion_automatica).attr('checked',"checked");
-    $('#enviar_datos_pantalla').attr('value','editar_datos_pantalla');
+    $('#aprobacion_automatica_'+formato[0].aprobacion_automatica).attr('checked',"checked");
+    $('#enviar_datos_formato').attr('value','editar_datos_formato');
   	$('#tabs_formulario a[href="#formulario-tab"]').tab('show');
   	$('.nav li').removeClass('disabled');
 	}
@@ -241,16 +304,16 @@ $("document").ready(function(){
 	}
 });
 function parsear_items(){
-	var tipo=$("input:radio[name='tipo_pantalla']:checked").val();
+	var tipo=$("input:radio[name='tipo_formato']:checked").val();
 	if(tipo==2){//Tipo formato
-		var nombre_pantalla=$("#nombre_pantalla").val();
-		if(nombre_pantalla.indexOf("ft_")=="-1"){
-			$("#nombre_pantalla").val("ft_"+nombre_pantalla);
+		var nombre_formato=$("#nombre_formato").val();
+		if(nombre_formato.indexOf("ft_")=="-1"){
+			$("#nombre_formato").val("ft_"+nombre_formato);
 		}
-		$("#prefijo_pantalla").val("ft_");
+		$("#prefijo_formato").val("ft_");
 	}
 	else{
-		$("#prefijo_pantalla").val("");
+		$("#prefijo_formato").val("");
 	}
 }
 </script>

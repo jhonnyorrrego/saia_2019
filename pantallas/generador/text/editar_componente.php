@@ -71,7 +71,7 @@ else{
   <fieldset id="content_form_name">
     <legend>Editar Campos</legend>
   </fieldset>
-  <div class="control-group">
+  <!-- div class="control-group">
     <label class="control-label" for="tabla">Tabla</label>
     <div class="controls">
       <?php 
@@ -90,7 +90,7 @@ else{
         ?>        
     <input type="text" data-provide="typeahead" data-items="4" name="fs_tabla" id="tabla" data-source='[<?php echo('"'.implode('","',$tablas)).'"';?>]' value="<?php echo($pantalla_campos[0]['tabla']);?>">                   
     </div>
-  </div>
+  </div-->
   <div class="control-group">
     <label class="control-label" for="nombre">Nombre *</label>
     <div class="controls">

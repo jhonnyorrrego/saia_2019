@@ -73,10 +73,10 @@ echo(estilo_bootstrap());
 								<li id="generar_formulario_pantalla">
 									<a href="#formulario-tab" data-toggle="tab">2-Formularios</a>
 								</li>
-                <li>
+                				<li>
 									<a href="#librerias_formulario-tab" data-toggle="tab">3-Librerias</a>
 								</li>
-                <li>
+                				<li>
 									<a href="#pantalla_mostrar-tab" data-toggle="tab">4-Mostrar</a>
 								</li>
                                 <!-- li>
@@ -415,7 +415,7 @@ $.ajax({
   type:'POST',
   url: "<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php",
   async:false,
-  data: "librerias=pantallas/generador/librerias_pantalla.php&funcion=load_componentes&parametros=1&idpantalla="+$("#idpantalla").val()+"&rand="+Math.round(Math.random()*100000),
+  data: "librerias=pantallas/generador/librerias_pantalla.php&funcion=load_componentes&parametros=1&idpantalla="+$("#idformato").val()+"&rand="+Math.round(Math.random()*100000),
   success: function(html){
     if(html){
       var objeto=jQuery.parseJSON(html);
@@ -431,7 +431,7 @@ $("#seleccionar_archivo").click(function(){
     $.ajax({
       type:'POST',
       url: '<?php echo($ruta_db_superior);?>pantallas/generador/librerias.php?ejecutar_pantalla_campo=incluir_librerias_pantalla',
-      data:'ruta='+ruta_archivo+"&idpantalla_campos="+$("#idpantalla").val()+"&tipo_retorno=1&tipo_libreria=1",
+      data:'ruta='+ruta_archivo+"&idpantalla_campos="+$("#idformato").val()+"&tipo_retorno=1&tipo_libreria=1",
       success: function(html){
         if(html){
         	var objeto=jQuery.parseJSON(html);
@@ -463,7 +463,7 @@ var form_builder = {
         $.ajax({
           type:'POST',
           url: "<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php",
-          data: "librerias=pantallas/generador/librerias.php&funcion=adicionar_pantalla_campos&parametros="+$("#idpantalla").val()+";"+component.attr("idpantalla_componente")+";1&rand="+Math.round(Math.random()*100000),
+          data: "librerias=pantallas/generador/librerias.php&funcion=adicionar_pantalla_campos&parametros="+$("#idformato").val()+";"+component.attr("idpantalla_componente")+";1&rand="+Math.round(Math.random()*100000),
           success: function(html){
             if(html){
               var objeto=jQuery.parseJSON(html);
@@ -602,7 +602,7 @@ function cargar_editor(nodeId){
     $.ajax({
       type:'POST',
       url: 'configurar_pantalla_libreria.php',
-      data:'ruta='+ruta_archivo+'&pantalla_idpantalla='+$("#idpantalla").val()+"&rand="+Math.round(Math.random()*100000),
+      data:'ruta='+ruta_archivo+'&idformato='+$("#idformato").val()+"&rand="+Math.round(Math.random()*100000),
       success: function(html){
         if(html){
           $("#ruta_archivo_actual").val(ruta_archivo);
@@ -647,7 +647,7 @@ $('a[data-toggle="tab"]').on('show', function (e) {
   	$.ajax({
       type:'POST',
       url: '<?php echo($ruta_db_superior);?>pantallas/generador/librerias_pantalla.php?ejecutar_libreria_pantalla=echo_load_pantalla',
-      data:'idpantalla='+$("#idpantalla").val(),
+      data:'idformato='+$("#idformato").val(),
       success: function(html){
 				//alert(html);
         if(html){
@@ -665,7 +665,7 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
     case 'archivos-tab':
       $('#tabs_formulario a[href="#librerias_formulario-tab"]').tab('show');
     	tree3.deleteChildItems(0);
-        tree3.loadXML("<?php echo($ruta_db_superior);?>pantallas/lib/test_archivos_carpetas.php?carpeta_inicial=pantallas,formatos,bpmn&extensiones_permitidas=php");
+        tree3.loadXML("<?php echo($ruta_db_superior);?>pantallas/lib/test_archivos_carpetas.php?carpeta_inicial=formatos&extensiones_permitidas=php");
     break;
     case 'acciones-tab':
       if(tab_acciones==false){
@@ -673,7 +673,7 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
     	}
       tree4.deleteChildItems(0);
       tree4.enableSmartXMLParsing(true);
-	    tree4.loadXML("<?php echo($ruta_db_superior);?>pantallas/generador/arbol_funciones_campos.php?pantalla_idpantalla="+$("#idpantalla").val()+"&extensiones_permitidas=php");
+	    tree4.loadXML("<?php echo($ruta_db_superior);?>pantallas/generador/arbol_funciones_campos.php?pantalla_idpantalla="+$("#idformato").val()+"&extensiones_permitidas=php");
     break;
     case 'pantalla_mostrar-tab':
       tab_acciones=true;
@@ -684,7 +684,7 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
       $('#tabs_opciones a[href="#acciones-tab"]').tab('show');
       tree4.deleteChildItems(0);
 	    tree4.enableSmartXMLParsing(true);
-	    tree4.loadXML("<?php echo($ruta_db_superior);?>pantallas/generador/arbol_funciones_campos.php?pantalla_idpantalla="+$("#idpantalla").val()+"&extensiones_permitidas=php");
+	    tree4.loadXML("<?php echo($ruta_db_superior);?>pantallas/generador/arbol_funciones_campos.php?pantalla_idpantalla="+$("#idformato").val()+"&extensiones_permitidas=php");
 	    <?php
 	    $listado_busqueda=busca_filtro_tabla("","busqueda a","lower(nombre) like 'pantalla_".strtolower($pantalla_temp[0]["nombre"])."'","",$conn);
 			if($listado_busqueda["numcampos"]){?>
@@ -711,7 +711,7 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
 				$.ajax({
 	        type:'POST',
 	        url: '<?php echo($ruta_db_superior);?>pantallas/generador/librerias.php?ejecutar_pantalla_campo=listado_archivos_incluidos',
-	        data:'idpantalla_campos='+$("#idpantalla").val(),
+	        data:'idformato='+$("#idformato").val(),
 	        success: function(html){
 	          if(html){
 	          	var objeto=jQuery.parseJSON(html);
@@ -731,7 +731,7 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
       /*$.ajax({
         type:'POST',
         url: '<?php echo($ruta_db_superior);?>pantallas/generador/librerias.php?ejecutar_pantalla_campo=listado_archivos_incluidos',
-        data:'idpantalla_campos='+$("#idpantalla").val(),
+        data:'idpantalla_campos='+$("#idformato").val(),
         success: function(html){
           if(html){
           	var objeto=jQuery.parseJSON(html);
@@ -745,31 +745,8 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
     break;
   }
 });
-$(".enlace_archivo").live("click",function(){
-  var archivo="<?php echo($ruta_db_superior);?>"+$(this).attr("ruta_archivo");
-  $.ajax({
-    type:'POST',
-    url: '<?php echo($ruta_db_superior);?>pantallas/generador/configurar_pantalla_libreria.php',
-    data:'idpantalla_libreria='+$(this).attr("idpantalla_libreria")+'&ruta='+archivo+'&pantalla_idpantalla='+$(this).attr("idpantalla")+'&heredado='+$(this).attr("heredado")+"&pantalla_actual=<?php echo($_REQUEST['idpantalla'])?>",
-    success: function(html){
-      if(html){
-      	$("#configurar_libreria_pantalla").html(html);
-      }
-    }
-  });
-
-  /*hs.htmlExpand( null, {
-    src: "configurar_pantalla_libreria.php?idpantalla_libreria="+$(this).attr("idpantalla_libreria")+"&ruta="+archivo,
-    objectType: 'iframe',
-    outlineType: 'rounded-white',
-    wrapperClassName: 'highslide-wrapper drag-header',
-    preserveContent: true,
-    width: 497,
-    height: 300
-  });*/
-});
 $(".eliminar_libreria").live("click",function(){
-  var include=$(this).attr("idpantalla_include");
+  var include=$(this).attr("idformato_libreria");
   $(this).addClass("cargando");
   $(this).removeClass(".eliminar_libreria");
   /*$(this).removeClass(".eliminar_adjunto_menu");
@@ -777,12 +754,12 @@ $(".eliminar_libreria").live("click",function(){
   $.ajax({
     type:'POST',
     url: '<?php echo($ruta_db_superior);?>pantallas/generador/librerias.php?ejecutar_pantalla_campo=eliminar_archivo_incluido',
-    data:'idpantalla_campos='+include+"&tipo_retorno=1",
+    data:'idformato='+include+"&tipo_retorno=1",
     success: function(html){
       if(html){
       	var objeto=jQuery.parseJSON(html);
         if(objeto.exito){
-          $("#libreria"+objeto.idpantalla_libreria).remove();
+          $("#libreria"+objeto.idformato).remove();
           notificacion_saia(objeto.mensaje,"success","",3000);
 
           if(objeto.exito_funciones){
@@ -848,55 +825,26 @@ function insertar_mostrar(nodeId){
   var tipo=nodeId.split("_");
 
   if(tipo[0]==="func"){
-
-    var ruta_libreria=tree4.getItemText(tree4.getParentId(nodeId));
-    var funcion=tree4.getItemText(nodeId);
-    hs.htmlExpand( null, {
-      src: "detalle_pantalla_funcion.php?funcion_mostrar=1&funcion="+funcion+"&idpantalla=<?php echo($_REQUEST['idpantalla'])?>&ruta_libreria="+ruta_libreria,
-      objectType: 'iframe',
-      outlineType: 'rounded-white',
-      wrapperClassName: 'highslide-wrapper drag-header',
-      preserveContent: false,
-      width: 610,
-      height: 300
-    });
-  }
-  else if(tipo[0]==="funcuso"){
-
-    var idpantalla_funcion_exe=tipo[1];
-    var nombre_funcion_insertar=tree4.getUserData(nodeId,"myfuncuso");
-    nombre_funcion_insertar='{*'+nombre_funcion_insertar+'@'+idpantalla_funcion_exe+'*}';
-
-
-  	if($('#pantalla_listar-tab').hasClass("active")){
-  		if($("#tipo_pantalla_busqueda").val()==1){
-  			tinymce.activeEditor.execCommand('mceInsertContent', false, nombre_funcion_insertar);
-  		}
-  		else if($("#tipo_pantalla_busqueda").val()==2){
-  			valor=nombre_funcion_insertar;
-  			var campo_interno_reporte=$("#"+campo_id_foco).val($("#"+campo_id_foco).val()+valor);
-  			$("#"+campo_id_foco).focus();
-  		}
-  	}
-  	else{
-   		tinymce.activeEditor.execCommand('mceInsertContent', false, nombre_funcion_insertar);
-   	}
-
+	    tinymce.activeEditor.execCommand('mceInsertContent', false, tree4.getUserData(nodeId,"myfunc"));
+	    $.ajax({
+	    	  type:'POST',
+	    	  url: "<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php",
+	    	  data: "librerias=pantallas/generador/librerias_formato.php&funcion=vincular_funciones_formato&parametros="+tree4.getUserData(nodeId,"mylib_id")+";"+tree4.getUserData(nodeId,"myfunc")+"&idformato="+$("#idformato").val()+"&rand="+Math.round(Math.random()*100000),
+	    	  success: function(html){
+	    	    if(html){
+	    	      var objeto=jQuery.parseJSON(html);
+	    	      if(objeto.exito){
+	    	    	  notificacion_saia(objeto.mensaje,"success","",3500);
+	    	      }
+	    	      else{
+	    	    	  notificacion_saia(objeto.mensaje,"error","",3500);
+	    	  	  }
+	    	  	}
+	    	  }
+	    	});
   }
   else if(tipo[0]==="campo"){
-  	if($('#pantalla_listar-tab').hasClass("active")){
-  		if($("#tipo_pantalla_busqueda").val()==1){
-  			tinymce.activeEditor.execCommand('mceInsertContent', false, tree4.getUserData(nodeId,"mycampo"));
-  		}
-  		else if($("#tipo_pantalla_busqueda").val()==2){
-  			valor=tree4.getUserData(nodeId,"mycampo");
-  			var campo_interno_reporte=$("#"+campo_id_foco).val($("#"+campo_id_foco).val()+valor);
-  			$("#"+campo_id_foco).focus();
-  		}
-  	}
-  	else{
     	tinymce.activeEditor.execCommand('mceInsertContent', false, tree4.getUserData(nodeId,"mycampo"));
-    }
   }
   else if(tipo[0]==="esquema"){
 		notificacion_saia("Cargando","alert","",3000);
@@ -971,7 +919,7 @@ function generar_archivos_ignorados(){
   $.ajax({
     type:'POST',
     url: '<?php echo($ruta_db_superior);?>pantallas/generador/librerias_pantalla.php',
-    data:'ejecutar_libreria_pantalla=generar_archivos_ignorados&idpantalla='+$("#idpantalla").val()+"&rand="+Math.round(Math.random()*100000)
+    data:'ejecutar_libreria_pantalla=generar_archivos_ignorados&idpantalla='+$("#idformato").val()+"&rand="+Math.round(Math.random()*100000)
 	});
 }
 function generar_pantalla(nombre_accion){
@@ -985,7 +933,7 @@ function generar_pantalla(nombre_accion){
   $.ajax({
     type:'POST',
     url: '<?php echo($ruta_db_superior);?>pantallas/generador/librerias_pantalla.php',
-    data:'ejecutar_libreria_pantalla='+nombre_accion+'&idpantalla='+$("#idpantalla").val()+"&rand="+Math.round(Math.random()*100000)+adicionales_mostrar,
+    data:'ejecutar_libreria_pantalla='+nombre_accion+'&idpantalla='+$("#idformato").val()+"&rand="+Math.round(Math.random()*100000)+adicionales_mostrar,
     //async:false,
     success: function(html){
       if(html){

@@ -14,13 +14,14 @@ include_once ($ruta_db_superior . "pantallas/generador/librerias.php");
 include_once ($ruta_db_superior . "pantallas/generador/librerias_formato.php");
 include_once ($ruta_db_superior . "pantallas/generador/librerias_bpmni.php");
 include_once ($ruta_db_superior . "pantallas/modulo/librerias.php");
+include_once ($ruta_db_superior . "formatos/librerias/funciones.php");
 $librerias_incluidas = array();
 
 if (@$_REQUEST["ejecutar_libreria_pantalla"]) {
 	if (!@$_REQUEST["tipo_retorno"]) {
 		$_REQUEST["tipo_retorno"] = 1;
 	}
-	$_REQUEST["ejecutar_libreria_pantalla"]($_REQUEST["idpantalla"], $_REQUEST["tipo_retorno"]);
+	$_REQUEST["ejecutar_libreria_pantalla"]($_REQUEST["idformato"], $_REQUEST["tipo_retorno"]);
 }
 if (@$_REQUEST["ejecutar_datos_pantalla"]) {
 	if (!@$_REQUEST["tipo_retorno"]) {
@@ -30,10 +31,10 @@ if (@$_REQUEST["ejecutar_datos_pantalla"]) {
 }
 
 function load_pantalla($idpantalla, $generar_archivo = "", $accion = '') {
-	$pantalla = busca_filtro_tabla("", "pantalla A,pantalla_campos B", "A.idpantalla=B.pantalla_idpantalla AND A.idpantalla=" . $idpantalla, "orden", $conn); 
+	$pantalla = busca_filtro_tabla("", "formato A,campos_formato B", "A.idformato=B.formato_idformato AND A.idformato=" . $idpantalla, "B.orden", $conn);
 	$texto = '';
 	for($i = 0; $i < $pantalla["numcampos"]; $i++) {
-		$cadena = load_pantalla_campos($pantalla[$i]["idpantalla_campos"], 0, $generar_archivo, $accion, $pantalla[$i]);
+		$cadena = load_pantalla_campos($pantalla[$i]["idcampos_formato"], 0, $generar_archivo, $accion, $pantalla[$i]);
 		$texto .= $cadena["codigo_html"];
 	}
 	$texto = str_replace("? >", "?" . ">", $texto);
@@ -56,50 +57,215 @@ function ordenar_pantalla_campos($nuevo_orden) {
 	}
 }
 
-function adicionar_datos_pantalla($datos, $tipo_retorno = 1) {
-	global $conn;
-	$exito = 0;
-	$sql_datos_pantalla = "INSERT INTO pantalla(nombre,librerias,etiqueta,funcionario_idfuncionario,ayuda,banderas,tiempo_autoguardado,tipo_pantalla,ruta_pantalla,cod_padre,clase,prefijo,ruta_almacenamiento,aprobacion_automatica, fk_idpantalla_categoria,versionar,accion_eliminar) VALUES('" . $datos['nombre'] . "','" . $datos['librerias'] . "','" . $datos['etiqueta'] . "','" . usuario_actual('idfuncionario') . "','" . $datos['ayuda'] . "','" . $datos['banderas'] . "','" . $datos['tiempo'] . "','" . $datos["tipo_pantalla"] . "','" . $datos["ruta_pantalla"] . "','" . $datos["cod_padre"] . "','" . $datos["clase"] . "','" . $datos["prefijo"] . "','" . $datos["ruta_almacenamiento"] . "','" . $datos["aprobacion_automatica"] . "','".$datos["fk_categoria_formato"]."','".$datos["versionar"]."','".$datos["accion_eliminar"]."')";
-	phpmkr_query($sql_datos_pantalla);
-	$idpantalla = phpmkr_insert_id();
-	$retorno["sql1"]=$sql_datos_pantalla;
-	if ($idpantalla) {
-		/*
-		 * crear_campo_padre($idpantalla,$datos["cod_padre"]);
-		 * crear_campo_bpmni($idpantalla);
-		 */
-		$pantalla_campos = busca_filtro_tabla("", "pantalla_campos A", "A.pantalla_idpantalla=" . $idpantalla . " AND nombre='id" . $datos["nombre"] . "'", "", $conn);
-		if (!$pantalla_campos["numcampos"]) {
-			$sql2 = "INSERT INTO pantalla_campos(pantalla_idpantalla, tabla, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(" . $idpantalla . ",'" . $datos["nombre"] . "','id" . $datos["nombre"] . "','Identificador " . $datos["etiqueta"] . "','int','11',1,'','a','Identificador " . $datos["etiqueta"] . "','','pk','hidden',0,0,'id" . $datos["nombre"] . "')";
-			phpmkr_query($sql2) or die($sql2);
-			$retorno['sql2'] = $sql2;
+function adicionar_datos_formato($datos, $tipo_retorno = 1) {
+	global $ruta_db_superior;
+	$retorno = array(
+			"mensaje" => "Error al tratar de generar el adicionar de la pantalla",
+			"exito" => 0
+	);
+	$datos["nombre"]=trim($datos["nombre"]);
+	// Field Banderas
+	if(is_array($datos["banderas"]))
+		$fieldList["banderas"] = "'" . implode(",", $datos["banderas"]) . "'";
+		
+		$fieldList["mostrar_pdf"] = $datos["mostrar_pdf"];
+		
+		// Field nombre
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($datos["nombre"]) : $datos["nombre"];
+		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+		$fieldList["nombre"] = $theValue;
+		
+		// Field firma_digital
+		$theValue = ($datos["firma_digital"] != "") ? intval($datos["firma_digital"]) : 0;
+		$fieldList["firma_digital"] = $theValue;
+		
+		// Field etiqueta
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($datos["etiqueta"]) : $datos["etiqueta"];
+		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+		$fieldList["etiqueta"] = ($theValue);
+		
+		// Field contador_idcontador
+		$theValue = ($datos["contador_idcontador"] != 0) ? intval($datos["contador_idcontador"]) : crear_contador($datos["nombre"]);
+		$fieldList["contador_idcontador"] = $theValue;
+		// reinicio del contador
+		if($fieldList["contador_idcontador"]) {
+			$reinicio = 0;
+			if($datos["reiniciar_contador"])
+				$reinicio = 1;
+				$sql = "update contador set reiniciar_cambio_anio=$reinicio where idcontador=" . $fieldList["contador_idcontador"];
+				
+				guardar_traza($sql, "ft_" . $datos["nombre"]);
+				phpmkr_query($sql, $conn);
 		}
-		if ($datos["tipo_pantalla"] == 2) {
-			adicionar_pantalla_campos_formato($idpantalla, $datos);
-			// AQUI van los campos que se deben adicionar para los formatos
+		
+		// Field Serie_idserie
+		if($datos["serie_idserie"] == "") { // crear la serie con el nombre del formato
+			$nomb_serie_papa = busca_filtro_tabla("idserie", "serie", "lower(nombre) like 'administraci&n%formatos'", "", $conn);
+			if ($nomb_serie_papa["numcampos"]) {
+				$idserie_papa = $nomb_serie_papa[0]["idserie"];
+			} else {
+				$sql_serie_papa = "insert into serie(nombre,cod_padre,categoria) values('Administracion de Formatos',0,3)";
+				guardar_traza($sql_serie_papa, $datos["nombre"]);
+				phpmkr_query($sql_serie_papa, $conn);
+				$idserie_papa = phpmkr_insert_id();
+			}
+			
+			$nomb_serie = busca_filtro_tabla("idserie,cod_padre", "serie", "nombre like '" . $datos["etiqueta"] . "'", "", $conn);
+			if ($nomb_serie["numcampos"]) {
+				if ($nomb_serie[0]["cod_padre"] != $idserie_papa) {
+					$update = "UPDATE serie SET cod_padre=" . $idserie_papa . " WHERE idserie=" . $nomb_serie[0]["idserie"];
+					guardar_traza($update, $datos["nombre"]);
+					phpmkr_query($update, $conn);
+					$fieldList["serie_idserie"] = $nomb_serie[0]["idserie"];
+				}
+			} else {
+				$sql_serie = "insert into serie(nombre,cod_padre,categoria) values('" . $datos["etiqueta"] . "'," . $idserie_papa . ",3)";
+				$sql_export = array("sql" => $sql_serie);
+				guardar_traza($sql_serie, $datos["nombre"]);
+				phpmkr_query($sql_serie);
+				$fieldList["serie_idserie"] = phpmkr_insert_id();
+			}
+		} else { // otra serie elegida o sin serie
+			$theValue = ($datos["serie_idserie"] != 0) ? intval($datos["serie_idserie"]) : 0;
+			$fieldList["serie_idserie"] = $theValue;
 		}
-		if ($datos["clase"]) {
-			verificar_datos_clase_padre($idpantalla, $datos["clase"]);
+		$fieldList["tiempo_autoguardado"] = $datos["tiempo_autoguardado"];
+		
+		$x_tabla = "ft_" . $datos["nombre"];
+		$fieldList["nombre_tabla"] = "'" . $x_tabla . "'";
+		
+		// Field librerias
+		$fieldList["librerias"] = "''";
+		
+		// Field margenes
+		$fieldList["margenes"] = "'".$datos["mizq"].",".$datos["mder"].",".$datos["msup"].",".$datos["minf"]."'";
+		// font_size
+		$fieldList["font_size"] = $datos["font_size"];
+		$fieldList["enter2tab"] = 0;
+		
+		// Field orientacion
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($datos["orientacion"]) : $datos["orientacion"];
+		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+		$fieldList["orientacion"] = $theValue;
+		
+		// Field papel
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($datos["papel"]) : $datos["papel"];
+		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+		$fieldList["papel"] = $theValue;
+		
+		// Field exportar
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($datos["exportar"]) : $datos["exportar"];
+		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+		$fieldList["exportar"] = $theValue;
+		if(!is_dir($ruta_db_superior."formatos/".$datos["nombre"] )) {
+			mkdir($ruta_db_superior."formatos/".$datos["nombre"] , 0777);
+			$data ="adicionar_".$datos["nombre"].".php
+editar_".$datos["nombre"].".php
+buscar_".$datos["nombre"].".php
+buscar_".$datos["nombre"]."2.php
+mostrar_".$datos["nombre"].".php
+detalles_mostrar_".$datos["nombre"].".php";
+			if(!intval($datos["pertenece_nucleo"])) {
+				$data = '*';
+			}
+			
+			
+			file_put_contents($ruta_db_superior."formatos/".$datos["nombre"] . "/.gitignore", $data);
+			chmod($ruta_db_superior."formatos/".$datos["nombre"] ."/.gitignore",PERMISOS_ARCHIVOS);
+			/*
+			 if(!file_put_contents($x_nombre . "/.gitignore", $data)) {
+			 alerta("No se crea el archivo .gitignore para versionamiento");
+			 }*/
 		}
-		$idmodulo=crear_modulo_formato($idpantalla);
-		if($idmodulo){
-		    $retorno["mensaje"]="EL m&oacute;dulo se inserta con &eacute;xito";
-		    $retorno["idmodulo"]=$modulo;
+		
+		// Field cod_padre
+		$theValue = ($datos["cod_padre"] != 0) ? intval($datos["cod_padre"]) : 0;
+		$fieldList["cod_padre"] = $theValue;
+		
+		// Field Tipo Edicion continua
+		$theValue = ($datos["tipo_edicion"] != 0) ? intval($datos["tipo_edicion"]) : 0;
+		$fieldList["tipo_edicion"] = $theValue;
+		
+		$fieldList["mostrar"] = 1;
+		
+		// paginar en el mostrar
+		$theValue = ($datos["paginar"] != 0) ? intval($datos["paginar"]) : 0;
+		$fieldList["paginar"] = $theValue;
+		
+		// tipo detalle
+		$theValue = ($datos["detalle"] != "") ? intval($datos["detalle"]) : 0;
+		$fieldList["detalle"] = $theValue;
+		// tipo item
+		$fieldList["item"] = intval($datos["item"]);
+		
+		$fieldList["fk_categoria_formato"] = "'" . $datos["fk_categoria_formato"] . "'";
+		///Aqui se cambia si se quiere que se cargue desde el formulario, sin embargo la vinculacion real se hace por medio de la interfaz bpmn
+		$fieldList["flujo_idflujo"] = 0;
+		$fieldList["funcion_predeterminada"] = "'" . implode(",", $datos["funcion_predeterminada"]) . "'";
+		
+		$fieldList["ruta_mostrar"] = "'" . "mostrar_" . $datos["nombre"] . ".php'";
+		$fieldList["ruta_editar"] = "'" . "editar_" . $datos["nombre"] . ".php'";
+		$fieldList["ruta_adicionar"] = "'" . "adicionar_" . $datos["nombre"] . ".php'";
+		$fieldList["funcionario_idfuncionario"] = usuario_actual("funcionario_codigo");
+		$fieldList["pertenece_nucleo"] = intval($datos["pertenece_nucleo"]);
+		
+		// insert into database
+		$strsql = "INSERT INTO formato (";
+		$strsql .= implode(",", array_keys($fieldList));
+		$strsql .= ") VALUES (";
+		$strsql .= implode(",", array_values($fieldList));
+		$strsql .= ")";
+		guardar_traza($strsql, "ft_" . $datos["nombre"]);
+		phpmkr_query($strsql, $conn) or die("Falla al ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
+		
+		$idformato = phpmkr_insert_id();
+		if($idformato != '') {
+			if($x_flujo_idflujo != 0) {
+				generar_campo_flujo($idformato, $x_flujo_idflujo);
+			}
+			if(in_array("1", $datos["funcion_predeterminada"])) {
+				vincular_funcion_responsables($idformato);
+			}
+			if(in_array("2", $datos["funcion_predeterminada"])) {
+				vincular_funcion_digitalizacion($idformato);
+			}
+			if(in_array("3", $datos["funcion_predeterminada"])) {
+				vincular_campo_anexo($idformato);
+			}
+			crear_modulo_formato($idformato);
+		}
+		
+		if($fieldList["cod_padre"] && $idformato) {
+			
+			$formato_padre = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $fieldList["cod_padre"], "", $conn);
+			$strsql = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html) VALUES (" . $idformato . ",'" . $formato_padre[0]["nombre_tabla"] . "', " . $fieldList["nombre"] . ", 'INT', 11, 1," . $fieldList["cod_padre"] . ", 'a'," . $fieldList["etiqueta"] . ", 'fk', 'detalle')";
+			guardar_traza($strsql, "ft_" . $datos["nombre"]);
+			phpmkr_query($strsql, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
+		}
+		if($idformato && !$fieldList["item"]) {
+			$sqlcd = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html) VALUES (" . $idformato . ",'estado_documento', 'ESTADO DEL DOCUMENTO', 'VARCHAR', 255, 0,'', 'a','', '', 'hidden')";
+			phpmkr_query($sqlcd, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
+			
+			$strsql = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html) VALUES (" . $idformato . ",'serie_idserie', 'SERIE DOCUMENTAL', 'INT', 11, 1," . $fieldList["serie_idserie"] . ", 'a'," . $fieldList["etiqueta"] . ", 'fk', 'hidden')";
+			guardar_traza($strsql, "ft_" . $datos["nombre"]);
+			phpmkr_query($strsql, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
+		}
+		
+		if($idformato){
+			$retorno["mensaje"]="EL m&oacute;dulo se inserta con &eacute;xito";
+			$retorno["idformato"]=$idformato;
+			$retorno['exito'] = 1;
 		}
 		else{
-		    $retorno["error"]="Error al insertar el m&oacute;dulo";
+			$retorno["error"]="Error al insertar el Formato";;
 		}
-		$retorno['exito'] = 1;
-	}
-	else{
-		$retorno['error'] = 'Error al ejecutar la inserci&oacute;n del formulario';
-	}
-	$retorno['idpantalla'] = $idpantalla;
-	if ($tipo_retorno == 1) {
-		echo (json_encode($retorno));
-	} else {
-		return ($retorno);
-	}
+		
+		if ($tipo_retorno == 1) {
+			echo (json_encode($retorno));
+		} else {
+			return ($retorno);
+		}
+		
 }
 
 function crear_campo_bpmni($idpantalla) {
@@ -2229,18 +2395,15 @@ function vincular_libreria_pantalla($datos,$tipo_retorno){
 
 
 	//INSERT pantalla_libreria
-    $existe_libreria=busca_filtro_tabla("idpantalla_libreria","pantalla_libreria","ruta LIKE '".$datos['ruta_libreria']."'","",$conn);
+    $existe_libreria=busca_filtro_tabla("idformato_libreria","formato_libreria","ruta LIKE '".$datos['ruta_libreria']."' AND formato_idformato=".$datos["idformato"],"",$conn);
     if(!$existe_libreria['numcampos']){
 
     	$fieldList=array();
+    	$fieldList["formato_idformato"] = $datos['idformato'];
     	$fieldList["ruta"] = $datos['ruta_libreria'];
     	$fieldList["funcionario_idfuncionario"] = usuario_actual('idfuncionario');
     	$fieldList["orden"] = 1;
-    	$extencion_libreria=explode('.',$datos['ruta_libreria']);
-    	$fieldList["tipo_archivo"] = $extencion_libreria[ (count($extencion_libreria)-1) ];
-        $fieldList["tipo_libreria"] = 1;
-
-    	$tabla="pantalla_libreria";
+    	$tabla="formato_libreria";
     	$strsql = "INSERT INTO ".$tabla." (fecha,";
     	$strsql .= implode(",", array_keys($fieldList));
     	$strsql .= ") VALUES (".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'";
@@ -2248,37 +2411,15 @@ function vincular_libreria_pantalla($datos,$tipo_retorno){
     	$strsql .= "')";
         phpmkr_query($strsql);
         $idpantalla_libreria=phpmkr_insert_id();
-        $retorno['exito_libreria']=1;
+        if($idpantalla_libreria){
+        	$retorno['exito_libreria']=1;
+        }
+        
     }else{
-        $idpantalla_libreria=$existe_libreria[0]['idpantalla_libreria'];
-    }
-    $retorno['idpantalla_libreria']=$idpantalla_libreria;
-
-
-    //INSERT pantalla_include
-    $existe_include=busca_filtro_tabla("","pantalla_include","pantalla_idpantalla=".$datos['idpantalla']." AND fk_idpantalla_libreria=".$idpantalla_libreria,"",$conn);
-
-    if(!$existe_include['numcampos']){
-    	$fieldList=array();
-    	$fieldList["orden"] = 0;
-    	$fieldList["acciones_include"] = 'a,e,b,m';
-    	$fieldList["pantalla_idpantalla"] = $datos['idpantalla'];
-    	$fieldList["fk_idpantalla_libreria"] = $idpantalla_libreria;
-
-
-    	$tabla="pantalla_include";
-    	$strsql = "INSERT INTO ".$tabla." (";
-    	$strsql .= implode(",", array_keys($fieldList));
-    	$strsql .= ") VALUES ('";
-    	$strsql .= implode("','", array_values($fieldList));
-    	$strsql .= "')";
-        phpmkr_query($strsql);
-        $retorno['exito_include']=1;
-    }else{
+        $idpantalla_libreria=$existe_libreria[0]['idformato_libreria'];
         $retorno['existe_include']=1;
     }
-
-
+    $retorno['idpantalla_libreria']=$idpantalla_libreria;
     echo (json_encode($retorno));
 }
 function crear_modulo_formato($idformato) {

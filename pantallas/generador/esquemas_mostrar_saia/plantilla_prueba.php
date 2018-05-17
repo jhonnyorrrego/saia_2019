@@ -9,7 +9,7 @@ while($max_salida>0){
 	$max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-if(@$_REQUEST["idpantalla"]){
+if(@$_REQUEST["idformato"]){
   print_r($_REQUEST);
 }
 ?>

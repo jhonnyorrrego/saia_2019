@@ -29,7 +29,13 @@ class Version20180510201917 extends AbstractMigration {
             "notnull" => true,
             "default" => 2
         ]);
-        
+        $table2 = $schema->getTable('campos_formato');
+        $table2->addColumn("placeholder", "string", [
+            'length'  => '255',
+            'collate' => 'utf8_unicode_ci',
+            'charset' => 'utf8',
+            'notnull' => false
+        ]);
         $conn = $this->connection;
 
         $conn->beginTransaction();
@@ -116,9 +122,83 @@ class Version20180510201917 extends AbstractMigration {
             'idmodulo' => $idmodulo
         ];
         $resp = $conn->update('modulo', $datos_mod, $ident_mod);
-        
-        
+
         $conn->commit();
+        $conn->beginTransaction();
+        if (!$schema->hasTable("formato_libreria")){
+            $table = $schema->createTable("formato_libreria");
+            $table->addColumn("idformato_libreria", "integer", [
+                "length" => 11,
+                "notnull" => false,
+                'autoincrement' => true
+            ]);
+            $table->addColumn("fecha", "datetime", [
+                "notnull" => false
+            ]);
+            $table->addColumn("formato_idformato", "integer", [
+                "length" => 11,
+                "notnull" => false
+            ]);
+            $table->addColumn("funcionario_idfuncionario", "integer", [
+                "length" => 11,
+                "notnull" => false
+            ]);
+            $table->addColumn("ruta", "string", [
+                "length" => 255,
+                "notnull" => false
+            ]);
+            $table->addColumn("orden", "integer", [
+                "length" => 11,
+                "default" => 1,
+                "notnull" => false
+            ]);
+            $table->setPrimaryKey([
+                "idformato_libreria"
+            ]);
+        }
+        $conn->commit();
+        
+        
+        
+        
+        /**
+         *
+         *UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"campo_texto\",\"etiqueta\":\"Campo de texto\",\"tipo_dato\":\"varchar\",\"longitud\":255,\"obligatoriedad\":1,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"text\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1,\"placeholder\":\"campo texto\"}' WHERE idpantalla_componente=1;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"radio\",\"etiqueta\":\"Boton de Seleccion Tipo 1\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":1,\"valor\":\"1,1;2,2;3,3;4,4\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"radio\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1,\"placeholder\":\"Campo texto\"}' WHERE idpantalla_componente=2;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"arbol_checkbox\",\"etiqueta\":\"Arbol de funcionario checkbox\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":1,\"valor\":\"pantallas/lib/arbol_funcionarios.php?rol=1|1|0|1|1|0|5\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"arbol_checkbox\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1}' WHERE idpantalla_componente=3;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"checkbox\",\"etiqueta\":\"Checkbox\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":1,\"valor\":\"1,1;2,2;3,3;4,4\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"a\",\"etiqueta_html\":\"checkbox\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1}' WHERE idpantalla_componente=4;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"password\",\"etiqueta\":\"Password\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":1,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"password\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1,\"placeholder\":\"Campo texto\"}' WHERE idpantalla_componente=5;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"textarea\",\"etiqueta\":\"Textarea\",\"tipo_dato\":\"text\",\"longitud\":\"\",\"obligatoriedad\":1,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"textarea\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1,\"placeholder\":\"Area de texto\"}' WHERE idpantalla_componente=6;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"select\",\"etiqueta\":\"Select\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":1,\"valor\":\"1,1;2,2;3,3;4,4\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"select\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1,\"placeholder\":\"seleccionar..\"}' WHERE idpantalla_componente=7;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"hidden\",\"etiqueta\":\"Campo Hidden\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":1,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"hidden\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1,\"placeholder\":\"Campo hidden\"}' WHERE idpantalla_componente=8;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"link\",\"etiqueta\":\"Link\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":1,\"valor\":\"#;_blank\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"link\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1,\"placeholder\":\"Campo hidden\"}' WHERE idpantalla_componente=9;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"arbol_radio\",\"etiqueta\":\"Arbol de funcionario radio\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":1,\"valor\":\"pantallas/lib/arbol_funcionarios.php?rol=1|1|0|1|1|0|5\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"arbol_radio\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1}' WHERE idpantalla_componente=10;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"datetime\",	\"etiqueta\":\"Fecha y Hora\",\"tipo_dato\":\"datetime\",\"longitud\":\"\",\"obligatoriedad\":1,\"valor\":\"yyyy-MM-dd hh:mm:ss\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"datetime\",\"orden\":1,\"mascara\":\"\",	\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1,	\"placeholder\":\"0000-00-00\"}' WHERE idpantalla_componente=11;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"daterange\",\"etiqueta\":\"Rango fechas\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":1,\"valor\":\"0000-00-00\",	\"acciones\":\"a,e,b\",	\"ayuda\":\"\",	\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"daterange\",\"orden\":1,\"mascara\":\"\",	\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1}' WHERE idpantalla_componente=12;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"highslide\",\"etiqueta\":\"Highslide\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":1,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"highslide\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1,\"placeholder\":\"Highslide\"}' WHERE idpantalla_componente=13;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"date\",	\"etiqueta\":\"Fecha \",\"tipo_dato\":\"date\",	\"longitud\":\"\",\"obligatoriedad\":1,\"valor\":\"yyyy-MM-dd\",\"acciones\":\"a,e,b\",	\"ayuda\":\"\",	\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"date\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",	\"autoguardado\":1,	\"fila_visible\":1,	\"placeholder\":\"0000-00-00\"}' WHERE idpantalla_componente=14;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"textarea_tiny\",\"etiqueta\":\"Area de texto\",\"tipo_dato\":\"text\",\"longitud\":\"\",\"obligatoriedad\":1,\"valor\":\"avanzado\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"textarea_tiny\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1,\"placeholder\":\"Area de texto\"}' WHERE idpantalla_componente=15;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"accion_pantalla\",\"etiqueta\":\"Accion pantalla\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":0,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"Acciones sobre las pantallas\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"acciones_pantalla\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":0,\"fila_visible\":0,\"placeholder\":\"Acciones pantalla\"}' WHERE idpantalla_componente=16;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"file\",\"etiqueta\":\"Anexos\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":0,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"a\",\"etiqueta_html\":\"file\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1}' WHERE idpantalla_componente=17;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"etiqueta\",\"etiqueta\":\"Etiqueta\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":0,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"a\",\"etiqueta_html\":\"etiqueta\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1}' WHERE idpantalla_componente=18;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"accion_pantalla_js\",\"etiqueta\":\"Accion pantalla JS\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":0,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"Acciones sobre las pantallas para bloques Javascript\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"acciones_pantalla_js\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":0,\"fila_visible\":0,\"placeholder\":\"Acciones pantalla Javascript\"}' WHERE idpantalla_componente=19;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"acciones_envio_correo\",\"etiqueta\":\"Envio Correo\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":0,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"Acciones Necesarias para enviar un correo\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"acciones_envio_correo\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":0,\"fila_visible\":0,\"placeholder\":\"Enviar correo\"}' WHERE idpantalla_componente=20;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"acciones_transferir\",\"etiqueta\":\"Transferencia\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":0,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"Acciones Necesarias para transferir un documento\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"acciones_transferir\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":0,\"fila_visible\":0,\"placeholder\":\"Enviar correo\"}' WHERE idpantalla_componente=21;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"conector_hidden\",\"etiqueta\":\"Conector hidden\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":0,\"valor\":\"\",\"acciones\":\"a\",\"ayuda\":\"Conector de un registro con otro\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"conector_hidden\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":0,\"fila_visible\":0,\"placeholder\":\"\"}' WHERE idpantalla_componente=22;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"conector_highslide\",\"etiqueta\":\"Conector hidden\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":0,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"Conector de un registro con otro highslide\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"conector_highslide\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":0,\"fila_visible\":0,\"placeholder\":\"\"}' WHERE idpantalla_componente=23;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"campo_heredado\",\"etiqueta\":\"Campo heredado\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":0,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"Campo heredado\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"campo_heredado\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":0,\"fila_visible\":0,\"placeholder\":\"\"}' WHERE idpantalla_componente=24;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"acciones_confirmar_documento\",\"etiqueta\":\"Confirmar documento\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":0,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"Accion necesaria para confirmar documento\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"acciones_confirmar_documento\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":0,\"fila_visible\":0,\"placeholder\":\"Confirmar documento\"}' WHERE idpantalla_componente=25;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"acciones_redireccionar\",\"etiqueta\":\"Redireccionar\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":0,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"Accion necesaria para redireccionar despues de guardar\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"acciones_redireccionar\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":0,\"fila_visible\":0,\"placeholder\":\"Redireccionar\"}' WHERE idpantalla_componente=26;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"seguimiento_documento\",\"etiqueta\":\"Hacer seguimiento documento\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":0,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"Acciones Necesarias para hacer el seguimiento a un documento\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"seguimiento_documento\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":0,\"fila_visible\":0,\"placeholder\":\"Hacer seguimiento de documento\"}' WHERE idpantalla_componente=27;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"contador\",\"etiqueta\":\"Contador\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":0,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"contador\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1,\"placeholder\":\"\"}' WHERE idpantalla_componente=28;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"usuario_actual\",\"etiqueta\":\"Usuario actual\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":1,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"usuario_actual\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1,\"placeholder\":\"Usuario actual\"}' WHERE idpantalla_componente=29;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"ruta_documento\",\"etiqueta\":\"Ruta del documento\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":1,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"ruta_documento\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1,\"placeholder\":\"Ruta del documento\"}' WHERE idpantalla_componente=30;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"ruta_documento\",\"etiqueta\":\"Ruta fija del documento\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":1,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"ruta_fija_documento\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1,\"placeholder\":\"Ruta fija del documento\"}' WHERE idpantalla_componente=31;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"acciones_tarea_bpmni\",\"etiqueta\":\"Tarea BPMN\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":0,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"Acciones Necesarias para generar tarea instancia BPM\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"acciones_tarea_bpmni\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":0,\"fila_visible\":0,\"placeholder\":\"Tarea instancia BPMN\"}' WHERE idpantalla_componente=32;
+UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"remitente\",\"etiqueta\":\"Remitente\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":1,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"remitente\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1,\"placeholder\":\"\"}' WHERE idpantalla_componente=33;
+         *
+         **/
+         
 
     }
 
@@ -136,6 +216,9 @@ class Version20180510201917 extends AbstractMigration {
         $table = $schema->getTable('pantalla');
         $table->dropColumn("cuerpo_pantalla");
         $table->dropColumn("accion_eliminar");
+        $schema->dropTable('formato_libreria');
+        $table = $schema->getTable('campos_formato');
+        $table->dropColumn("placeholder");
     }
     private function guardar_busqueda($datos) {
         if (empty($datos)) {
