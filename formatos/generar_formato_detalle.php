@@ -12,7 +12,7 @@ $max_salida--;
 }
 
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."formatos/librerias/header_formato.php");
+include_once($ruta_db_superior. FORMATOS_SAIA . "librerias/header_formato.php");
 if(@$_REQUEST["almacenar"]=="true" && $_REQUEST["ruta"]!="" && @$_REQUEST["formato"]){
 $enlace_adicion="";
   if(!crear_archivo($_REQUEST["ruta"],"<?php include_once('../librerias/estilo_formulario.php'); include_once('../librerias/funciones_formatos_generales.php');?".">".limpia_tabla($_REQUEST["archivo"])."<?php listado_hijos_formato(".$_REQUEST["formato"].',$_REQUEST["iddoc"]); ?'.">")){
@@ -23,7 +23,7 @@ if(@$_REQUEST["idformato"]){
   $formato=busca_filtro_tabla("","formato","idformato=".$_REQUEST["idformato"],"",$conn);
   if($formato["numcampos"]){
     if($formato[0]["nombre"]=="proceso"){
-      redirecciona($ruta_db_superior."formatos/".$formato[0]["nombre"]."/previo_".$formato[0]["ruta_mostrar"]."?editar=1");
+        redirecciona($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]["nombre"]."/previo_".$formato[0]["ruta_mostrar"]."?editar=1");
     }
     $ruta=$formato[0]["nombre"]."/previo_".$formato[0]["ruta_mostrar"];
     if(is_file($ruta)){
