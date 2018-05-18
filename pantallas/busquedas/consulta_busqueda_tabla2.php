@@ -28,7 +28,8 @@ $datos_componente=$_REQUEST["idbusqueda_componente"];
 $datos_busqueda=busca_filtro_tabla("","busqueda A,busqueda_componente B","A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=".$datos_componente,"",$conn);
 echo(librerias_jquery("1.8"));
 echo(librerias_bootstrap("3.2"));
-echo librerias_tabla_bootstrap("1.11");
+
+echo librerias_tabla_bootstrap("1.11", false, true);
 
 if($datos_busqueda[0]["ruta_libreria"]){
   $librerias=array_unique(explode(",",$datos_busqueda[0]["ruta_libreria"]));
@@ -59,7 +60,7 @@ function incluir_librerias_busqueda($elemento,$indice){
 
   <div class="row">
 
-  <table id="tabla_resultados" data-toggle="tabla_resultados"
+  <table id="tabla_resultados" data-advanced-search="true" data-id-table="advancedTable" data-toggle="tabla_resultados"
   data-url="servidor_busqueda.php"
   data-side-pagination="server"
   data-height="100%" data-pagination="true" data-toolbar="#menu_buscador" data-show-refresh="true" data-show-toggle="true"
@@ -136,7 +137,6 @@ $.fn.serializeObject = function(){
             o[this.name] = this.value || '';
         }
     });
-    console.log(o);
     return o;
 };
 
@@ -152,12 +152,18 @@ $(document).ready(function() {
         search: true,
         cardView:false,
         showColumns: true,
+        pageList:[5, 10, 25, 50, 100],
         pageSize: 5,
         icons : {
             refresh: 'glyphicon-refresh icon-refresh',
             toggle:  'glyphicon-list-alt icon-list-alt',
-            columns: 'glyphicon-th icon-th'
-        }
+            columns: 'glyphicon-th icon-th',
+            advancedSearchIcon: 'glyphicon-chevron-down'
+        },
+        formatAdvancedSearch: function() {
+            return 'Busqueda avanzada';
+        },
+
     });
 });
 

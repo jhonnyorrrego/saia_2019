@@ -1401,84 +1401,69 @@ function mostrar_imagenes($idformato, $campo, $iddoc = NULL) {
  * </Clase>
  */
 function submit_formato($formato, $iddoc = NULL) {
-	global $conn,$ruta_db_superior;
-	$datos_f = busca_filtro_tabla("item", "formato", "idformato=" . $formato, "", $conn);
-	if($iddoc == NULL || $datos_f[0][0]) {
-		$contador = busca_filtro_tabla("A.nombre,B.nombre_tabla,B.nombre as formato", "contador A,formato B", "A.idcontador=B.contador_idcontador AND B.idformato=" . $formato, "", $conn);
-		echo '<tr><td colspan="4" align="center">';
-		if(array_key_exists("anterior", $_REQUEST)) {
-			echo '<input type="hidden" name="anterior" value="' . $_REQUEST["anterior"] . '">';
+	global $conn, $ruta_db_superior;
+	if (@$_REQUEST["idpaso_documento"]) {
+		echo '<input type="hidden" name="idpaso_documento" value="' . $_REQUEST["idpaso_documento"] . '">';
+	}
+	if (isset($_REQUEST["anterior"])) {
+		echo '<input type="hidden" name="anterior" value="' . $_REQUEST["anterior"] . '">';
+	}
+	$datos_f = busca_filtro_tabla("item,nombre,nombre_tabla,contador_idcontador", "formato", "idformato=" . $formato, "", $conn);
+	if ($iddoc == NULL || $datos_f[0]["item"]) {
+		echo '<tr><td colspan="4" align="center">
+		<input type="hidden" name="funcion" value="radicar_plantilla">
+    <input type="hidden" name="tabla" value="' . $datos_f[0]["nombre_tabla"] . '">
+    <input type="hidden" name="formato" value="' . $datos_f[0]["nombre"] . '">';
+		$contador = busca_filtro_tabla("nombre", "contador", "idcontador=" . $datos_f[0]["contador_idcontador"], "", $conn);
+		if ($contador["numcampos"] && $datos_f[0]["nombre"] != "oficio_word") {//Oficio word tiene seleccion de contador
+			echo '<input type="hidden" id="tipo_radicado" name="tipo_radicado" value="' . $contador[0]["nombre"] . '">';
 		}
-		if($contador["numcampos"]) {
-			echo '<input type="hidden" name="tipo_radicado" value="' . $contador[0]["nombre"] . '">';
-		} 
 
-		else {
-			$sql2 = "INSERT INTO contador(consecutivo,nombre ) VALUE(1,'" . $contador[0]["nombre_tabla"] . "')";
-			phpmkr_query($sql2, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sql);
-			$idcontador=phpmkr_insert_id();
-			echo '<input type="hidden" name="tipo_radicado" value="' . $contador[0]["nombre_tabla"] . '">';
-			$sql2="UPDATE formato SET contador_idcontador=".$idcontador." WHERE idformato=".$formato;
-			phpmkr_query($sql2);
+		$codigo_js = 'history.go(-1);';
+		if ($datos_f["numcampos"] && $datos_f[0]["item"]) {
+			if ($_REQUEST["pantalla"] == 'padre') {
+				if ($_REQUEST["padre"]) {
+					$datos_padre = busca_filtro_tabla("nombre,idformato", "formato", "idformato=" . $_REQUEST["idformato"], "", $conn);
+					if ($datos_padre["numcampos"]) {
+						$cadena = $ruta_db_superior . 'formatos/' . $datos_padre[0]["nombre"] . '/mostrar_' . $datos_padre[0]["nombre"] . '.php?iddoc=' . $_REQUEST["idpadre"] . '&idformato=' . $datos_padre[0]["idformato"];
+						$codigo_js = '<script type="text/javascript">function redirecciona_padre(){window.open("' . $cadena . '","_self");}</script>';
+						echo($codigo_js);
+					}
+				}
+			}
+			echo('<button class="cancel" onClick="javascript:redirecciona_padre(); return false;" id="cancel" value="Cancelar" style="margin-right:6px;">Cancelar</button>');
 		}
-		if(@$_REQUEST["idpaso_documento"])
-			echo '<input type="hidden" name="idpaso_documento" value="' . $_REQUEST["idpaso_documento"] . '">';
-		
-		echo('<input type="hidden" name="funcion" value="radicar_plantilla">
-              <input type="hidden" name="tabla" value="' . $contador[0]["nombre_tabla"] . '">
-              <input type="hidden" name="formato" value="' . $contador[0]["formato"] . '">
-              <input type="hidden" name="continuar" value="Solicitar Radicado" >');
-        $codigo_js='history.go(-1);';
-        if($datos_f["numcampos"] && $datos_f[0][0] ){
-            if($_REQUEST["pantalla"]=='padre'){
-                if($_REQUEST["padre"]){
-                    $datos_padre=busca_filtro_tabla("","formato","idformato=".$_REQUEST["idformato"],"",$conn);
-                    if($datos_padre["numcampos"]){
-                        $cadena=$ruta_db_superior.'formatos/'.$datos_padre[0]["nombre"].'/mostrar_'.$datos_padre[0]["nombre"].'.php?iddoc='.$_REQUEST["idpadre"].'&idformato='.$datos_padre[0]["idformato"];
-                        $codigo_js='<script type="text/javascript">function redirecciona_padre(){window.open("'.$cadena.'","_self");}</script>';    
-                        echo($codigo_js);
-                    }
-                }
-            }
-            echo('<button class="cancel" onClick="javascript:redirecciona_padre(); return false;" id="cancel" value="Cancelar" style="margin-right:6px;">Cancelar</button>');
-
-        }
-        echo('<button class="submit" type="submit" id="continuar" value="Continuar">Continuar</button>');
-        echo('</td></tr>');
+		echo('<button class="submit" type="submit" id="continuar" value="Continuar">Continuar</button>');
+		echo('</td></tr>');
 	} else {
-		$contador = busca_filtro_tabla("A.nombre,B.nombre_tabla", "contador A,formato B", "A.idcontador=B.contador_idcontador AND B.idformato=" . $formato, "", $conn);
-		
-		if(isset($_REQUEST["anterior"]))
-			echo '<input type="hidden" name="anterior" value="' . $_REQUEST["anterior"] . '">';
-		if(@$_REQUEST["idpaso_documento"])
-			echo '<input type="hidden" name="idpaso_documento" value="' . $_REQUEST["idpaso_documento"] . '">';
-		
-		echo '<tr><td colspan="2" align="center"><input type="hidden" name="iddoc" value="' . $iddoc . '">
-          <input type="hidden" name="tabla" value="' . $contador[0]["nombre_tabla"] . '">
-          <script>formulario_formatos.action="../librerias/modificar_plantilla.php";</script>
-          <input class="submit" type="submit" id="continuar" value="Continuar"></td></tr>';
+
+		echo '<tr><td colspan="2" align="center">
+		<input type="hidden" name="iddoc" value="' . $iddoc . '">
+    <input type="hidden" name="tabla" value="' . $datos_f[0]["nombre_tabla"] . '">
+    <script>formulario_formatos.action="../librerias/modificar_plantilla.php";</script>
+    <input class="submit" type="submit" id="continuar" value="Continuar"></td></tr>';
 	}
 	?>
-<script>
-  $("#continuar").click(function(){
-  	
-  	var elementos = $('[class^="tiny_"]:not(.tiny_sin_tiny)');
-	var size = elementos.size();
-	
-	if(size){
-		$.each( elementos, function(i, val){
-			var contenido_textarea=tinyMCE.get($(val).attr('id')).getContent();
-			$("#"+$(val).attr('id')).val(contenido_textarea);
-		});
-	}
-	
-    if($('#formulario_formatos').valid()){
-  		$("#continuar").hide();
-  		$("#continuar").after('<input type="button" disabled="true" value="Enviando..." id="boton_enviando">');
-     } 
-  });  
-  </script>
-<?php
+	<script>
+	$(document).ready(function (){
+		$("#continuar").click(function(){
+		  var elementos = $('[class^="tiny_"]:not(.tiny_sin_tiny)');
+			var size = elementos.size();
+			if(size){
+				$.each( elementos, function(i, val){
+					var contenido_textarea=tinyMCE.get($(val).attr('id')).getContent();
+					$("#"+$(val).attr('id')).val(contenido_textarea);
+				});
+			}
+			
+		  if($('#formulario_formatos').valid()){
+				$("#continuar").hide();
+				$("#continuar").after('<input type="button" disabled="true" value="Enviando..." id="boton_enviando">');
+		   } 
+		}); 
+	});
+	</script>
+	<?php
 }
 
 /*

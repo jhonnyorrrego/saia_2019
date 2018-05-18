@@ -64,8 +64,8 @@ if (!@$_REQUEST["vista_bpmn"]) {
 		hs.graphicsDir = '<?php echo($ruta_db_superior); ?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
 	hs.outlineType = 'rounded-white';
 	$(document).ready(function(){
-		var alto_diagrama=$(document).height();
-		var ancho_diagrama=$(document).width();
+		var alto_diagrama=$(window).height();
+		var ancho_diagrama=$(window).width();
 		var alto_info=$("#info_diagram").height()+10;
 		$("#diagram").height(alto_diagrama-alto_info);
 		$("#diagram").width(ancho_diagrama-40);

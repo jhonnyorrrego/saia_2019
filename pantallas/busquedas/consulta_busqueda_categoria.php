@@ -134,7 +134,7 @@ $(document).ready(function(){
 });
 
   var espacio_menu=$("#menu_buscador").height()+18;
-  var alto_inicial=($(document).height()-espacio_menu); 
+  var alto_inicial=($(window).height()-espacio_menu); 
   var carga_final=false;
   var contador=1;
   var forma_cargar=<?php echo($datos_busqueda[0]["cargar"]);?>;

@@ -1,21 +1,20 @@
 <html><title>.:EDITAR RADICACI&Oacute;N DE FACTURAS:.</title>
 			<head><?php include_once("../../librerias_saia.php"); ?>
 			<script type="text/javascript" src="../librerias/funciones_formatos.js"></script>
+			<?php include_once("../librerias/funciones_formatos_generales.php"); ?>
 			<?php include_once("funciones.php"); ?>
 			<?php include_once("../librerias/funciones_generales.php"); ?>
 			<?php include_once("../librerias/funciones_acciones.php"); ?>
 			<?php include_once("../librerias/estilo_formulario.php"); ?>
 			<?php include_once("../librerias/header_formato.php"); ?>
 			<?php include_once("../../calendario/calendario.php"); ?>
-			<script type="text/javascript" src="../../js/jquery.js"></script>
-			<script type="text/javascript" src="../../js/jquery.validate.js"></script>
-			<script type="text/javascript" src="../../js/title2note.js"></script>
+			<?php echo(librerias_jquery('1.7')); ?><?php echo(librerias_validar_formulario()); ?><script type="text/javascript" src="../../js/title2note.js"></script>
 			<script type="text/javascript" src="../../js/dhtmlXCommon.js"></script>
 			<script type="text/javascript" src="../../js/dhtmlXTree.js"></script>
 			<link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><script type="text/javascript" src="../../dropzone/dist/dropzone.js"></script>
 			<?php include_once("../../anexosdigitales/funciones_archivo.php"); ?>
-			<script type="text/javascript" src="../../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
-			<link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-4.0.10/highslide/highslide.css" /></style><link href="../../dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" /><script type='text/javascript'> hs.graphicsDir = '../../anexosdigitales/highslide-4.0.10/highslide/graphics/'; hs.outlineType = 'rounded-white';</script><style>label.error{color:red}</style>
+			<script type="text/javascript" src="../../anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script>
+			<link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link href="../../dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" /><script type='text/javascript'> hs.graphicsDir = '../../anexosdigitales/highslide-5.0.0/highslide/graphics/'; hs.outlineType = 'rounded-white';</script><style>label.error{color:red}</style>
 				<script type='text/javascript'>
   $(document).ready(function() {
 			  		$('#formulario_formatos').validate();
@@ -129,7 +128,7 @@
 											tree_copia_electronica.setCheck(vector2[m],true);
 										}
 									}
-</script></td></tr><input type="hidden" name="campo_descripcion" value="<?php echo('5965'); ?>"><input type="hidden" name="formato" value="473"><tr><td colspan='2'><?php submit_formato(473,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("473-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
+</script></td></tr><?php digitalizar_formato(473,NULL,$_REQUEST['iddoc']);?><input type="hidden" name="campo_descripcion" value="<?php echo('5965'); ?>"><input type="hidden" name="formato" value="473"><tr><td colspan='2'><?php submit_formato(473,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("473-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
                 var upload_url = '../../dropzone/cargar_archivos_formato.php';
                 var mensaje = 'Arrastre aquí los archivos';
                 Dropzone.autoDiscover = false;

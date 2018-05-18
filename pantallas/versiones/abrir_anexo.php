@@ -41,7 +41,7 @@ $ruta_mostrar = $ruta_db_superior . "filesystem/mostrar_binario.php?ruta=" . $ru
 $(document).ready(function(){
 	var alto_menu=$("#menu_principal_documento").height();
 	if(parseInt(alto_menu)>=0){
-		var alto=($(document).height());
+		var alto=($(window).height());
 		$("#detalles").height((alto-alto_menu)-20);
 	}
 	else{

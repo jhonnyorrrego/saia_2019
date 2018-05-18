@@ -84,12 +84,40 @@ function generar_html_info_qr($datos) {
 
 function items_novedad_despacho($datos) {
 	global $conn, $ruta_db_superior;
+	include_once ($ruta_db_superior . "distribucion/funciones_distribucion.php");
 	$retorno = array();
 	$retorno['exito'] = 0;
 	$datos = json_decode($datos, true);
-	
-	
-	
+
+	$items_sel = busca_filtro_tabla("idft_despacho_ingresados", "ft_despacho_ingresados", "documento_iddocumento=" . $datos["iddoc"], "", $conn);
+	if ($items_sel["numcampos"]) {
+		$items = busca_filtro_tabla("ft_destino_radicacio", "ft_item_despacho_ingres", "ft_despacho_ingresados=" . $items_sel[0]['idft_despacho_ingresados'], "", $conn);
+		if ($items["numcampos"]) {
+			$iditems = extrae_campo($items, "ft_destino_radicacio");
+			$registros = busca_filtro_tabla(fecha_db_obtener("a.fecha_creacion", "Y-m-d") . " as fecha_creacion,b.descripcion,a.tipo_origen,a.estado_recogida,a.numero_distribucion,a.origen,a.tipo_origen,a.destino,a.tipo_destino,a.iddistribucion", "distribucion a,documento b", "a.documento_iddocumento=b.iddocumento and b.estado not in ('ELIMINADO','ANULADO','ACTIVO') AND a.iddistribucion in(" . implode(",", $iditems) . ")", "", $conn);
+			if ($registros["numcampos"]) {
+				$retorno['exito'] = 1;
+				$retorno['cant_item'] = $registros["numcampos"];
+				$info_tabla = array();
+				for ($i = 0; $i < $registros["numcampos"]; $i++) {
+					$info_tabla[$i]["tramite"] = mostrar_diligencia_distribucion($registros[$i]["tipo_origen"], $registros[$i]["estado_recogida"]);
+					$info_tabla[$i]["tipo"] = mostrar_tipo_radicado_distribucion($registros[$i]["tipo_origen"]);
+					$info_tabla[$i]["rad_item"] = $registros[$i]["numero_distribucion"];
+					$info_tabla[$i]["fecha_recibo"] = $registros[$i]["fecha_creacion"];
+					$info_tabla[$i]["origen"] = retornar_origen_destino_distribucion($registros[$i]['tipo_origen'], $registros[$i]['origen']) . '<br>' . retornar_ubicacion_origen_destino_distribucion($registros[$i]['tipo_origen'], $registros[$i]['origen']);
+					$info_tabla[$i]["destino"] = retornar_origen_destino_distribucion($registros[$i]['tipo_destino'], $registros[$i]['destino']) . '<br>' . retornar_ubicacion_origen_destino_distribucion($registros[$i]['tipo_destino'], $registros[$i]['destino']);
+					$info_tabla[$i]["asunto"] = $registros[$i]["descripcion"];
+					$novedad = busca_filtro_tabla("ft.novedad", "ft_novedad_despacho ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.estado not in ('ELIMINADO','ANULADO','ACTIVO') and ft_despacho_ingresados=" . $items_sel[0]["idft_despacho_ingresados"] . " and (ft.item_radicacion like '" . $registros[$i]["iddistribucion"] . "' or ft.item_radicacion like '%," . $registros[$i]["iddistribucion"] . ",%' or ft.item_radicacion like '" . $registros[$i]["iddistribucion"] . ",%' or ft.item_radicacion like '%," . $registros[$i]["iddistribucion"] . "')", "", $conn);
+					$info_tabla[$i]["novedad"] = "";
+					if ($novedad["numcampos"]) {
+						$desc = array_unique(extrae_campo($novedad, "novedad"));
+						$info_tabla[$i]["novedad"] = "-" . implode("<br/>-", $desc);
+					}
+				}
+				$retorno["info_tabla"] = $info_tabla;
+			}
+		}
+	}
 	session_destroy();
 	return (json_encode($retorno));
 }

@@ -557,7 +557,7 @@ function aprobar($iddoc = 0, $opcion = 0) {
 	if ($aprobar_posterior == 1) {
 		llama_funcion_accion($iddoc, $tipo_radicado[0]["idformato"], "aprobar", "POSTERIOR");
 	}
-	actualizar_descripcion_documento($idformato,$iddoc);
+	actualizar_datos_documento($idformato,$iddoc);
 	if ($opcion == 0) {
 		if ($_REQUEST["anterior"] == $iddoc) {
 			enrutar_documento($ruta_db_superior . 'pantallas/documento/informacion_resumen_documento.php?iddoc=' . $iddoc, 'arbol_formato');
@@ -931,7 +931,7 @@ function radicar_plantilla() {
 		}
 	}
 	if (isset($formato) && $formato["numcampos"] && $valores["tipo_radicado"]) {
-		$tipo_rad = busca_filtro_tabla("", "contador", "idcontador=" . $valores["tipo_radicado"], "", $conn);
+		$tipo_rad = busca_filtro_tabla("nombre", "contador", "idcontador=" . $valores["tipo_radicado"], "", $conn);
 		if ($tipo_rad["numcampos"]) {
 			$_POST["tipo_radicado"] = $tipo_rad[0]["nombre"];
 		}
@@ -1430,14 +1430,7 @@ function guardar_documento($iddoc, $tipo = 0) {
 		llama_funcion_accion($iddoc, $idformato, "editar", "ANTERIOR");
 		$sql = "UPDATE " . $tabla . " SET " . implode(",", $update) . " WHERE documento_iddocumento=" . $iddoc;
 		phpmkr_query($sql, $conn);
-		$pos = array_search("serie_idserie", $campos);
-		if ($pos !== false) {
-			if ($valores[$pos] == "''") {
-				$valores[$pos] = "'0'";
-			}
-			$sql = "UPDATE documento SET serie=" . $valores[$pos] . " WHERE iddocumento=" . $iddoc;
-			phpmkr_query($sql, $conn);
-		}
+
 		if (isset($_REQUEST["dependencia"]) && $_REQUEST["dependencia"] != "") {
 			$valid_ruta = busca_filtro_tabla("idruta,origen,tipo_origen", "ruta", "tipo='ACTIVO' and documento_iddocumento=" . $iddoc, "idruta asc", $conn);
 			// TODO: Se valida si cambio la dependencia del creador para actualizar la ruta (Firma SVG)
@@ -1454,7 +1447,7 @@ function guardar_documento($iddoc, $tipo = 0) {
 			$insertado = 0;
 		}
 	}
-	actualizar_descripcion_documento($idformato,$iddoc);
+	actualizar_datos_documento($idformato,$iddoc);
 	
 	if (count($ltareas)) {
 		include_once ("asignaciones/funciones.php");
@@ -1463,7 +1456,7 @@ function guardar_documento($iddoc, $tipo = 0) {
 	return ($insertado);
 }
 
-function actualizar_descripcion_documento($idformato, $iddoc) {
+function actualizar_datos_documento($idformato, $iddoc) {
 	include_once ("formatos/librerias/funciones_generales.php");
 	if (isset($_REQUEST["campo_descripcion"])) {
 		$campo = busca_filtro_tabla("nombre,etiqueta", "campos_formato", "idcampos_formato IN(" . $_REQUEST["campo_descripcion"] . ")", "orden", $conn);
@@ -1479,9 +1472,22 @@ function actualizar_descripcion_documento($idformato, $iddoc) {
 			}
 		}
 	}
-
+	$idserie=0;
+	if($idformato){
+		$info_formato=busca_filtro_tabla("nombre_tabla,serie_idserie","formato","idformato=".$idformato,"",$conn);
+		if($info_formato["numcampos"]){
+			if($info_formato[0]["serie_idserie"]){
+				$idserie=$info_formato[0]["serie_idserie"];
+			}
+			$doc_serie=busca_filtro_tabla("serie_idserie",$info_formato[0]["nombre_tabla"],"documento_iddocumento=".$iddoc,"",$conn);
+			if($doc_serie["numcampos"] && $doc_serie[0]["serie_idserie"]){
+				$idserie=$doc_serie[0]["serie_idserie"];
+			}
+		}
+	}
+	
 	$descripcion = str_replace("'", "", $descripcion);
-	$sql = "UPDATE documento SET descripcion='" . $descripcion . "' WHERE iddocumento=" . $iddoc;
+	$sql = "UPDATE documento SET descripcion='" . $descripcion . "',serie=".$idserie." WHERE iddocumento=" . $iddoc;
 	phpmkr_query($sql);
 	return;
 }
@@ -1982,13 +1988,13 @@ function devolucion() {
 	$sql5 = $strsql;
 	phpmkr_query($sql5);
 
-	$strsql = "INSERT INTO buzon_entrada (archivo_idarchivo,nombre,destino,tipo_destino,fecha,origen,tipo_origen,notas,tipo,activo,ruta_idruta)";
-	$strsql .= "VALUES (" . $datos["archivo_idarchivo"] . ",'DEVOLUCION','" . $_SESSION["usuario_actual"] . "',1,'" . date('Y-m-d H:i:s') . "','" . $_REQUEST["x_funcionario_destino"] . "',1,'" . $_REQUEST["x_notas"] . "','ARCHIVO',0,0)";
+	$strsql = "INSERT INTO buzon_entrada (archivo_idarchivo,nombre,destino,tipo_destino,fecha,origen,tipo_origen,notas,tipo,activo,ruta_idruta,ver_notas)";
+	$strsql .= "VALUES (" . $datos["archivo_idarchivo"] . ",'DEVOLUCION','" . $_SESSION["usuario_actual"] . "',1,'" . date('Y-m-d H:i:s') . "','" . $_REQUEST["x_funcionario_destino"] . "',1,'" . $_REQUEST["x_notas"] . "','ARCHIVO',0,0,1)";
 	$sql6 = $strsql;
 	phpmkr_query($sql6);
 
-	$strsql = "INSERT INTO buzon_salida (archivo_idarchivo,nombre,destino,tipo_destino,fecha,origen,tipo_origen,notas,tipo,ruta_idruta)";
-	$strsql .= "VALUES (" . $datos["archivo_idarchivo"] . ",'DEVOLUCION','" . $_REQUEST["x_funcionario_destino"] . "',1,'" . date('Y-m-d H:i:s') . "','" . $_SESSION["usuario_actual"] . "',1,'" . $_REQUEST["x_notas"] . "','ARCHIVO',0)";
+	$strsql = "INSERT INTO buzon_salida (archivo_idarchivo,nombre,destino,tipo_destino,fecha,origen,tipo_origen,notas,tipo,ruta_idruta,ver_notas)";
+	$strsql .= "VALUES (" . $datos["archivo_idarchivo"] . ",'DEVOLUCION','" . $_REQUEST["x_funcionario_destino"] . "',1,'" . date('Y-m-d H:i:s') . "','" . $_SESSION["usuario_actual"] . "',1,'" . $_REQUEST["x_notas"] . "','ARCHIVO',0,1)";
 	$sql7 = $strsql;
 	phpmkr_query($sql7);
 

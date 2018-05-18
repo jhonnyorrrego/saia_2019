@@ -129,62 +129,6 @@ function incluir_librerias_busqueda($elemento,$indice){
       <!-- /btn-group -->
       </li>
 
-
-
-
-      <?php
-      /*
-      $sin_proceso=array('pendientes_ingresar','pendiente_salida','tramitados');
-	  if(!in_array(@$datos_busqueda[0]["nombre"], $sin_proceso)){
-      ?>
-
-      <!-- LISTA DE PROCESO -->
-      <li class="divider-vertical"></li>
-      <li>
-      <div class="btn-group">
-         <button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">Procesos &nbsp;
-          <span class="caret">
-          </span>&nbsp;
-        </button>
-         <ul class="dropdown-menu" id='listado_procesos'>
-
-	          <li>
-	          <a href="#">
-	            <div name="filtro_categoria" valor=""><b>Restaurar Listado</b>
-	            </div></a>
-	          </li>
-
-			<?php
-				$categoria_formato=busca_filtro_tabla('','categoria_formato','cod_padre=2 AND estado=1','',$conn);
-				for($j=0;$j<$categoria_formato['numcampos'];$j++){
-					echo'
-						<li>
-							<a href="#">
-						    	<div name="filtro_categoria" valor="'.$categoria_formato[$j]['idcategoria_formato'].'">'.$categoria_formato[$j]['nombre'].'
-						        </div>
-						    </a>
-						</li>
-					';
-				}
-			?>
-        </ul>
-        <script>
-        	$(document).ready(function(){
-        		$('[name="filtro_categoria"]').click(function(){
-
-        			var valor=$(this).attr('valor');
-        			window.location='consulta_busqueda_documento.php?idbusqueda_componente=<?php echo($datos_busqueda[0]['idbusqueda_componente']); ?>&filtro_categoria='+valor+'';
-        		});
-        	});
-        </script>
-      </div>
-      </li>
-
-      <?php
-      	  }*/
-      ?>
-
-
 	<?php
 		if(@$datos_busqueda[0]["nombre"]=='documentos_importantes'){
 	?>
@@ -306,7 +250,7 @@ function incluir_librerias_busqueda($elemento,$indice){
 
 <script>
   var espacio_menu=$("#menu_buscador").height()+18;
-  var alto_inicial=($(document).height()-espacio_menu);
+  var alto_inicial=($(window).height()-espacio_menu);
   var carga_final=false;
   var contador=1;
 

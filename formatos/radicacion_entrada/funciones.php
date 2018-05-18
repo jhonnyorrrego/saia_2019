@@ -655,7 +655,7 @@ function post_aprobar_rad_entrada($idformato, $iddoc) {
 	} else {
 		ingresar_item_destino_radicacion($idformato, $iddoc);
 		actualizar_campos_documento($idformato, $iddoc);
-		actualizar_descripcion_documento($idformato, $iddoc);
+		actualizar_datos_documento($idformato, $iddoc);
 
 		$datos = busca_filtro_tabla("d.estado,ft.tipo_mensajeria,ft.idft_radicacion_entrada,ft.destino,ft.tipo_origen,ft.tipo_destino,ft.descripcion", "ft_radicacion_entrada ft,documento d", "ft.documento_iddocumento=d.iddocumento and d.iddocumento=" . $iddoc, "", $conn);
 		if ($datos[0]['tipo_destino'] == 2) {//INTERNO

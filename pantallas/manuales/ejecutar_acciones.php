@@ -21,7 +21,7 @@ function add_manual() {
 	if ($_REQUEST["agrupador"] == 0 && is_uploaded_file($_FILES["anexo"]["tmp_name"])) {
 		$nombre = basename($_FILES["anexo"]["name"]);
 		$archivo = uniqid() . "_" . $nombre;
-		$almacenamiento = new SaiaStorage("ayuda");
+		$almacenamiento = new SaiaStorage("manual");
 		$resultado = $almacenamiento -> copiar_contenido_externo($_FILES['anexo']['tmp_name'], $archivo);
 		@unlink($_FILES["anexo"]["tmp_name"]);
 		if ($resultado) {
@@ -40,7 +40,7 @@ function add_manual() {
 	}
 	if ($ok) {
 		$retorno["msn"] = "Error al guardar el manual";
-		$insert = "INSERT INTO manual (etiqueta,descripcion,agrupador,ruta_anexo,cod_padre,funcionario_idfuncionario,estado)	VALUES ('" . htmlentities($_REQUEST["nombre"]) . "','" . htmlentities($_REQUEST["descripcion"]) . "'," . $_REQUEST["agrupador"] . ",'" . $ruta_anexo . "'," . $_REQUEST["cod_padre"] . "," . $_SESSION["idfuncionario"] . ",1)";
+		$insert = "INSERT INTO manual (etiqueta,descripcion,agrupador,ruta_anexo,cod_padre,funcionario_idfuncionario,estado)	VALUES ('" . htmlentities($_REQUEST["nombre"]) . "','" . htmlentities($_REQUEST["descripcion"]) . "'," . $_REQUEST["agrupador"] . ",'" . $ruta_anexo . "'," . $_REQUEST["cod_padre"] . "," . $_SESSION["idfuncionario"] . ",".$_REQUEST["estado"].")";
 		phpmkr_query($insert) or die(json_encode($retorno));
 		$retorno["exito"] = 1;
 		$retorno["msn"] = "";
@@ -68,7 +68,7 @@ function edit_manual() {
 		"msn" => ""
 	);
 	if ($_REQUEST["idmanual"]) {
-		$almacenamiento = new SaiaStorage("ayuda");
+		$almacenamiento = new SaiaStorage("manual");
 		$ruta_anexo = base64_decode($_REQUEST["ruta_anexo"]);
 		if (is_uploaded_file($_FILES["anexo"]["tmp_name"])) {
 			$nombre = basename($_FILES["anexo"]["name"]);

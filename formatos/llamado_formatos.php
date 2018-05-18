@@ -35,7 +35,7 @@ if (@$_REQUEST["accion"] == "generar") {
 		}
 		$ch = curl_init();
 		for ($i = 0; $i < $cant_acciones; $i++) {
-			$url = PROTOCOLO_CONEXION . RUTA_PDF . '/formatos/generar_formato.php?crea=' . $acciones[$i] . '&idformato=' . $formato["idformato"] . '&sesion=' . $_SESSION["LOGIN" . LLAVE_SAIA];
+			$url = PROTOCOLO_CONEXION . RUTA_PDF . '/formatos/generar_formato.php?crea=' . $acciones[$i] . '&idformato=' . $formato["idformato"] . '&conexion_remota=1&LOGIN=' . $_SESSION["LOGIN" . LLAVE_SAIA];
 			if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
 				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -47,7 +47,7 @@ if (@$_REQUEST["accion"] == "generar") {
 			if ($contenido === false) {
 				alerta("No se puede generar el formato por favor verifique la generaci&oacute;n manual del formato");
 			} else {
-				$creados .= 'Fomato ' . $acciones[$i] . " " . $formato["nombre"] . " <br>";
+				$creados .= 'Fomato ' . $acciones[$i] . " " . $formato["nombre"] . " <br/>";
 			}
 		}
 		curl_close($ch);

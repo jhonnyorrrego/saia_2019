@@ -20,7 +20,7 @@ if (isset($_REQUEST["variable_busqueda"])) {
 
 function listar_manuales($idmanual, $agrupador, $ruta, $etiqueta, $estado, $descripcion, $idcomp) {
 	global $ruta_db_superior;
-	$botones = '<a class="btn btn-mini tooltip_saia pull-right" title="Editar ' . $nombre . '" href="' . $ruta_db_superior . 'pantallas/manuales/?idmanual=' . $idmanual . '"><i class="icon-pencil"></i></a>';
+	$botones = '<a class="btn btn-mini tooltip_saia pull-right" title="Editar ' . $etiqueta . '" href="' . $ruta_db_superior . 'pantallas/manuales/?idmanual=' . $idmanual . '"><i class="icon-pencil"></i></a>';
 	if ($agrupador == 1) {
 		if($estado==1){
 			$etiqueta = '<div class="link kenlace_saia" enlace="pantallas/busquedas/consulta_busqueda.php?idbusqueda_componente=' . $idcomp . '&amp;variable_busqueda=idmanual-' . $idmanual . '" conector="iframe" titulo="' . $etiqueta . '">' . $etiqueta . '</div>';
@@ -34,14 +34,14 @@ function listar_manuales($idmanual, $agrupador, $ruta, $etiqueta, $estado, $desc
 	} else {
 		$ruta_pdf = json_decode($ruta);
 		if (is_object($ruta_pdf)) {
-			$tipo_almacenamiento = new SaiaStorage("ayuda");
+			$tipo_almacenamiento = new SaiaStorage("manual");
 			if ($tipo_almacenamiento -> get_filesystem() -> has($ruta_pdf -> ruta)) {
 				$ruta64 = base64_encode($ruta);
 				$href = "filesystem/mostrar_binario.php?ruta=" . $ruta64;
 			}
 		}
 		if($estado==1){
-			$botones .= '<a class="btn btn-mini tooltip_saia pull-right" title="Editar ' . $nombre . '" href="' . $ruta_db_superior . $href . '"><i class="icon-folder-open"></i></a>';
+			$botones .= '<a class="btn btn-mini tooltip_saia pull-right" title="Ver" href="' . $ruta_db_superior . $href . '"><i class="icon-leido"></i></a>';
 		}
 		$html = '<table style="width:100%">
 			<tr>			

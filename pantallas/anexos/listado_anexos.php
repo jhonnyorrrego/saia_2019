@@ -10,6 +10,7 @@ while($max_salida>0){
   $max_salida--;
 }    
 include_once($ruta_db_superior."db.php"); 
+die("---------");
 include_once($ruta_db_superior."librerias_saia.php");
 $datos_componente=$_REQUEST["idbusqueda_componente"];
 $datos_busqueda=busca_filtro_tabla("","busqueda A,busqueda_componente B","A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=".$datos_componente,"",$conn);
@@ -175,7 +176,7 @@ function incluir_librerias_busqueda($elemento){
     <input type="hidden" value="1" name="complementos_busqueda" id="complementos_busqueda">  
 <script>  
   <!--               
-  var alto_inicial=$(document).height(); 
+  var alto_inicial=$(window).height(); 
   var carga_final=false;
   var contador=1;
   var forma_cargar=<?php echo($datos_busqueda[0]["cargar"]);?>;

@@ -887,7 +887,7 @@ function menu_saia(){
 </script>
 <script>
 $(document).ready(function(){
-	hs.graphicsDir = '<?php echo($ruta_db_superior);?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
+	hs.graphicsDir = '<?php echo($ruta_db_superior);?>anexosdigitales/highslide-5.0.0/highslide/graphics/';
 	hs.outlineType = 'rounded-white';
 	$("#resize_centro").click(function(){
 	    var nuevo_alto=$(top).height()-($(".footer_login").height()+$(".user-menu-top div").height()<?php if($_SESSION["tipo_dispositivo"]!="movil") echo("+20");?>);

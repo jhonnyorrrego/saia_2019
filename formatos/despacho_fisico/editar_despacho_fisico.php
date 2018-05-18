@@ -4,9 +4,7 @@
 			<?php include_once("../librerias/funciones_generales.php"); ?>
 			<?php include_once("../librerias/funciones_acciones.php"); ?>
 			<?php include_once("../librerias/estilo_formulario.php"); ?>
-			<script type="text/javascript" src="../../js/jquery.js"></script>
-			<script type="text/javascript" src="../../js/jquery.validate.js"></script>
-			<script type="text/javascript" src="../../js/title2note.js"></script>
+			<?php echo(librerias_jquery('1.7')); ?><?php echo(librerias_validar_formulario()); ?><script type="text/javascript" src="../../js/title2note.js"></script>
 			<style>label.error{color:red}</style>
 				<script type='text/javascript'>
   $(document).ready(function() {

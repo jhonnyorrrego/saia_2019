@@ -16,7 +16,7 @@ include_once($ruta_db_superior."db.php");
 <script type="text/javascript" src="<?php echo $ruta_db_superior; ?>js/jquery/1.4.2/jquery.js"></script>
 <script>
 $(document).ready(function(){
- var alto=($(document).height());
+ var alto=($(window).height());
  $("#detalles_pdf").height(alto+450);
 });
 </script>

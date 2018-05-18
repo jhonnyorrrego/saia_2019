@@ -16,7 +16,7 @@ include_once($ruta_db_superior."db.php");
 <meta charset="UTF-8">
 <title>Consulta de informaci&oacute;n</title>
 <?php
-ini_set("display_errors",true);
+
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/documento/librerias.php");
 echo(librerias_html5());
@@ -38,13 +38,17 @@ function incluir_librerias_busqueda($elemento,$indice){
   include_once($ruta_db_superior.$elemento);
 }
 
-echo librerias_tabla_bootstrap("1.11");
+//echo librerias_tabla_bootstrap("1.11", false, true);
+//echo librerias_tabla_bootstrap("1.11");
+$exportar = !empty($datos_busqueda[0]["exportar"]);
+
+echo librerias_tabla_bootstrap("1.11", false, false);
 
 ?>
 
 </head>
 <body>
-  <div class="container">
+  <div class="container" style="width:auto;">
   <div class="row">
     <form class="formulario_busqueda" accept-charset="UTF-8" action="" id="kformulario_saia" name="kformulario_saia" method="post" style="padding:0px;margin:0px;">
       <input type="hidden" name="sord" id="sord" value="desc">
@@ -69,7 +73,7 @@ echo librerias_tabla_bootstrap("1.11");
       <?php
         }
       ?>
-      <button class="btn dropdown-toggle" data-toggle="dropdown">Seleccionados &nbsp;
+      <!-- <button class="btn dropdown-toggle" data-toggle="dropdown">Seleccionados &nbsp;
         <span class="caret">
         </span>&nbsp;
       </button>
@@ -86,7 +90,7 @@ echo librerias_tabla_bootstrap("1.11");
 
           }
         ?>
-      </ul>
+      </ul> -->
     <?php /*if(@$datos_busqueda[0]["enlace_adicionar"]){
       ?>
         <button class="btn kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar</button></div></li>
@@ -97,27 +101,32 @@ echo librerias_tabla_bootstrap("1.11");
         $funcion_menu=explode("@",$datos_busqueda[0]["menu_busqueda_superior"]);
         echo($funcion_menu[0](@$funcion_menu[1]));
     }*/
-      if(@$datos_busqueda[0]["exportar"]){
        ?>
        <button class="btn btn-primary exportar_listado_saia" enlace="pantallas/documento/busqueda_avanzada_documento.php" title="Exportar reporte" id="boton_exportar_excel" style="">Exportar a excel</button>
        <div class="pull-right" valign="middle"><iframe name="iframe_exportar_saia" id="iframe_exportar_saia" allowtransparency="1" frameborder="0" framespacing="2px" scrolling="no" width="100%" src=""  hspace="0" vspace="0" height="32px"></iframe></div>
       <?php
-      }
 
-      if(strpos($datos_busqueda[0]["llave"],".")){
-        $valor_campos=explode(".", $datos_busqueda[0]["llave"]);
-        array_push($llave,trim($valor_campos[count($valor_campos)-1]));
-      }
-      else{
-        array_push($llave,trim($datos_busqueda[0]["llave"]));
+      $llave = null;
+      preg_match("/(\w*)\.(\w*)/", $datos_busqueda[0]["llave"], $valor_campos);
+      if(!empty($valor_campos)) {
+          $llave = $valor_campos[2];
+      } else {
+        $llave = trim($datos_busqueda[0]["llave"]);
       }
 
     ?>
   </div>
-  <table id="tabla_resultados" data-height="" data-pagination="true" data-toolbar="#menu_buscador" data-show-refresh="true" data-show-toggle="true">
+  <table id="tabla_resultados"
+  data-height=""
+  data-pagination="true"
+  data-toolbar="#menu_buscador"
+  data-show-refresh="true"
+  data-show-toggle="true"
+  data-maintain-selected="true"
+  >
     <thead>
       <tr>
-        <th data-field="<?php echo($llave); ?>" data-checkbox="true"></th>
+        <th data-field="state" data-checkbox="true"></th>
         <?php
         $lcampos1=$datos_busqueda[0]["campos"];
         if($datos_busqueda[0]["campos_adicionales"]){
@@ -156,6 +165,13 @@ echo librerias_tabla_bootstrap("1.11");
 </body>
 </html>
 <script>
+
+var $table = $('#tabla_resultados');
+var llave = "<?php echo($llave); ?>";
+//var selections = [];
+var selections=[[0,-1]];
+var paginaActual = 1;
+
 $body = $("body");
 
 $(document).on({
@@ -185,29 +201,73 @@ $.fn.serializeObject = function(){
 };
 
 $(document).ready(function() {
-    var alto=$(document).height()-80;
-    $('#tabla_resultados').bootstrapTable({
+    //var alto=$(window).height()-80;
+    $table.bootstrapTable({
         method: 'get',
         cache: false,
-        height: alto,
+        height: getHeight(),
         striped: true,
         pagination: true,
         minimumCountColumns: 1,
         clickToSelect: true,
         sidePagination: 'server',
         pageSize: $("#rows").val(),
-        search: true,
+        search: false,
         cardView:false,
         pageList:[5, 10, 25, 50, 100],
         paginationVAlign:'top',
         showColumns: true,
+        maintainSelected: true,
+        idField: llave,
+        responseHandler: "responseHandler",
         icons : {
             refresh: 'glyphicon-refresh icon-refresh',
             toggle:  'glyphicon-list-alt icon-list-alt',
-            columns: 'glyphicon-th icon-th'
-        }
+            columns: 'glyphicon-th icon-th',
+            advancedSearchIcon: 'glyphicon-chevron-down'
+        },
+        rowStyle: function rowStyle(row, index) {
+        	  return {
+        	    classes: 'text-nowrap another-class',
+        	    css: {"font-size": "10px"}
+        	  };
+        	}
+    });
+
+    $table.on('check.bs.table uncheck.bs.table ' +
+            'check-all.bs.table uncheck-all.bs.table', function () {
+
+    	// save your data, here just save the current page
+        selections[paginaActual] = getIdSelections();
+        // push or splice the selections if you want to save all data selections
     });
 });
+
+function responseHandler(res) {
+
+	console.log(res);
+	var options = $table.bootstrapTable('getOptions');
+
+    //Get the page number
+    paginaActual = options.pageNumber;
+
+    var total = res.records;
+    res.total = total;
+    $.each(res.rows, function (i, row) {
+        row.state = $.inArray(row[llave], selections[paginaActual]) !== -1;
+    });
+    //console.log(selections[paginaActual]);
+    return res;
+}
+
+function getIdSelections() {
+	//console.log($table.bootstrapTable('getSelections'));
+
+    return $.map($table.bootstrapTable('getSelections'), function (row) {
+        //console.log(row[llave]);
+        return row[llave];
+    });
+}
 
 function procesamiento_buscar(externo) {
     var data = $('#kformulario_saia').serializeObject();
@@ -218,7 +278,6 @@ function procesamiento_buscar(externo) {
             if($("#rows").val()!=0) {
                 pagina=(params.offset/$("#rows").val())+1
             }
-            console.log(params);
             var q = {
                 "rows": $("#rows").val(),
                 "numfilas":$("#rows").val(),
@@ -230,20 +289,18 @@ function procesamiento_buscar(externo) {
                 "cantidad_total":$("#cantidad_total").val()
             };
             $.extend( data, q);
-            console.log(q);
+            console.log(params);
             return data;
-        },
-        responseHandler: function(res) {
-            //console.log(res);
-            var total = res.cantidad_total;
-            res.total = total;
-            return res;
         },
         onLoadSuccess: function(data){
           $("#cantidad_total").val(data.total);
         }
     });
     return false;
+}
+
+function getHeight() {
+    return $(window).height() - $('h1').outerHeight(true);
 }
 
 $(document).keypress(function(event) {

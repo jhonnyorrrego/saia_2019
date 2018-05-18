@@ -6,6 +6,7 @@ $cliente = new nusoap_client(SERVIDOR_INFO_QR_EXP);
 $retorno = $cliente -> call('cargar_datos_qr_exp_caja', array(json_encode($_REQUEST["key_cripto"])));
 $array = json_decode($retorno, true);
 $table = '';
+$table2 = '';
 $logo = '';
 if ($array["exito"]) {
 	foreach ($array["info_tabla"] as $key => $value) {
@@ -17,6 +18,22 @@ if ($array["exito"]) {
 	if ($array["color_saia"]) {
 		$bgcolor = $array["color_saia"];
 	}
+	if($array["exito_indice"]){
+		$table2='<table class="table table-bordered" style="border-collapse: collapse; width: 100%;" border="1">';
+		$datos_indice=$array["info_tabla_indice"];
+		$table2.='<tr style="background-color:'.$bgcolor.';color: #fff;text-align: center"><th>N&uacute;mero Radicado</th> <th>Fecha</th> <th>Serie</th> <th>Descripci&oacute;n</th></tr>';
+		for ($i=0; $i <$array["exito_indice"] ; $i++) { 
+			$table2.='<tr>';
+				$table2.='<td>'.$datos_indice[$i]["numero"].'</td>';
+				$table2.='<td>'.$datos_indice[$i]["fecha"].'</td>';
+				$table2.='<td>'.$datos_indice[$i]["serie"].'</td>';
+				$table2.='<td>'.$datos_indice[$i]["descripcion"].'</td>';
+			$table2.='</tr>';
+		}
+		$table2.='</table>';
+	}
+
+	
 } else {
 	$bgcolor = "#3f91f2";
 	$array["title"] = "EL CONTENIDO NO EST&Aacute; DISPONIBLE";
@@ -54,6 +71,7 @@ if ($array["exito"]) {
 					<?php echo $table; ?>
 				</tbody>
 			</table>
+			<?php echo $table2;?>
 		</div>
 		<script src="js/bootstrap.min.js"></script>
 	</body>
