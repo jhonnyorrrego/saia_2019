@@ -245,7 +245,7 @@ $(document).ready(function() {
 
 function responseHandler(res) {
 
-	console.log(res);
+	//console.log(res);
 	var options = $table.bootstrapTable('getOptions');
 
     //Get the page number
@@ -253,9 +253,11 @@ function responseHandler(res) {
 
     var total = res.records;
     res.total = total;
+    if(res.rows) {
     $.each(res.rows, function (i, row) {
         row.state = $.inArray(row[llave], selections[paginaActual]) !== -1;
     });
+    }
     //console.log(selections[paginaActual]);
     return res;
 }
@@ -289,7 +291,7 @@ function procesamiento_buscar(externo) {
                 "cantidad_total":$("#cantidad_total").val()
             };
             $.extend( data, q);
-            console.log(params);
+            //console.log(params);
             return data;
         },
         onLoadSuccess: function(data){
