@@ -1,165 +1,169 @@
 <?php
-$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior=$ruta="";
-while($max_salida>0){
-  if(is_file($ruta."db.php")) {
-    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-  }
-  $ruta.="../";
-  $max_salida--;
+$max_salida = 6;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
+	}
+	$ruta .= "../";
+	$max_salida--;
 }
-include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."pantallas/documento/librerias.php");
+include_once ($ruta_db_superior . "db.php");
+include_once ($ruta_db_superior . "pantallas/documento/librerias.php");
 
-function obtener_informacion_documento($iddocumento,$fecha,$comentario,$funcionario){
+function obtener_informacion_documento($iddocumento, $fecha, $comentario, $funcionario) {
 	global $conn;
-        
-        if(is_numeric ($funcionario)){
-            $nombre = busca_filtro_tabla("CONCAT(nombres, CONCAT(' ', apellidos)) AS funcionario","funcionario","funcionario_codigo=".$funcionario,"",$conn);
-            $funcionario = $nombre[0]['funcionario'];            
-        }        
-	$texto ="<div class='row'>
-                    <div class='span4 pull-left'>".$funcionario."</div>
-                    <div class='span4 pull-left'>".$comentario."</div>
-                    <div class='span4 pull-right'>".menu_informacion_documento($iddocumento)."</div>
-                 </div>";
-	
-return($texto);
+	if (is_numeric($funcionario)) {
+		$nombre = busca_filtro_tabla("CONCAT(nombres, CONCAT(' ', apellidos)) AS funcionario", "funcionario", "funcionario_codigo=" . $funcionario, "", $conn);
+		$funcionario = $nombre[0]['funcionario'];
+	}
+	$texto = "<div class='row'>
+    <div class='span4 pull-left'>" . $funcionario . "</div>
+    <div class='span4 pull-left'>" . $comentario . "</div>
+    <div class='span4 pull-right'>" . menu_informacion_documento($iddocumento) . "</div>
+ </div>";
+
+	return ($texto);
 }
 
-function mostrar_anexos_documento($iddoc,$ruta,$etiqueta){
-	$texto ="
-				<div class='row'>
-					<div class='span4 pull-left'>
-						<a href='../../".$ruta."'>".$etiqueta."</a>
-					</div>
-					<div class='span4'>
-						Descripción
-					</div>
-					<div class='span4 pull-right'>
-						".menu_informacion_documento($iddoc)."
-					</div>
-				</div>
-			";
-			
-	return($texto);
+function mostrar_anexos_documento($iddoc, $ruta, $etiqueta) {
+	$texto = "<div class='row'>
+			<div class='span4 pull-left'>
+				<a href='../../" . $ruta . "'>" . $etiqueta . "</a>
+			</div>
+			<div class='span4'>
+				Descripción
+			</div>
+			<div class='span4 pull-right'>
+				" . menu_informacion_documento($iddoc) . "
+			</div>
+		</div>";
+	return ($texto);
 }
 
-function menu_informacion_documento($iddocumento,$idanexos,$ruta,$etiqueta,$extension){
-	global $conn,$ruta_db_superior;
-	$modulo_anexos = busca_filtro_tabla("idmodulo","modulo","nombre LIKE 'adjuntos_documento'","",$conn);		
-	if($modulo_anexos['numcampos']){
-		$modulo_hijos = busca_filtro_tabla("A.*","modulo A","A.cod_padre=".$modulo_anexos[0]['idmodulo'],"orden ASC",$conn);		
-		if($modulo_hijos['numcampos']){
-			$texto='<div class="pull-right">';
-			$permiso=new PERMISO();
-			for($i=0; $i< $modulo_hijos['numcampos']; $i++){
-				//$ok=$permiso->permiso_usuario($modulo_hijos[$i]['nombre'],1);
-				//if($ok){					
-					switch ($modulo_hijos[$i]['nombre']) {
-						case 'descargar_anexo':
-							$texto.=redirecciona_visores($iddocumento,$idanexos,$ruta,$etiqueta,$extension);	
-							$texto.='<a href="'.$ruta_db_superior.'pantallas/anexos/librerias.php?idanexo='.$idanexos.'&ejecutar_anexos=descargar_anexo"><i class="'.$modulo_hijos[$i]['imagen'].' tooltip_saia_izquierda" title="'.$modulo_hijos[$i]['ayuda'].'"></i></a>';
-							break;						
-						case 'informacion_anexos':
-							//$texto.='<a href="#" style="border-width:0px; cursor:auto;" class="abrir_highslide" enlace="pantallas/anexos/informacion_anexos.php?idanexo='.$idanexos.'&iddocumento='.$iddocumento.'" id="adjuntos_documento"><i class="'.$modulo_hijos[$i]['imagen'].' tooltip_saia_izquierda" title="'.$modulo_hijos[$i]['ayuda'].'"></i></a>';							
-							break;
-						case 'permisos_anexo':							
-							/*$permiso_anexo=busca_filtro_tabla("","permiso_anexo","anexos_idanexos=".$idanexos,"",$conn);
-								$texto.='<a href="'.$ruta_db_superior.'anexosdigitales/anexos_permiso_add.php?idanexo='.$idanexos.'" class="highslide" onclick="return hs.htmlExpand( this, {objectType: \'iframe\', outlineWhileAnimating: true, width: 200 } )" style="border-width:0px; cursor:auto;"><i class="'.$modulo_hijos[$i]['imagen'].' tooltip_saia_derecha" title="'.$modulo_hijos[$i]['ayuda'].'"></i></a>';	
-							if($permiso_anexo['numcampos']){
-							}*/							
-							break;
-						case 'eliminar_anexo':
-							/*$permiso_anexo=busca_filtro_tabla("","permiso_anexo","idpropietario=".usuario_actual("idfuncionario")." AND anexos_idanexos=".$idanexos,"",$conn);
-							$documento_aprobado = busca_filtro_tabla("","documento A, anexos B","A.iddocumento=B.documento_iddocumento AND B.idanexos=".$idanexos,"",$conn);														
-							if($permiso_anexo['numcampos']){
-                $estado=strtolower($documento_aprobado[0]["estado"]);
-								if($documento_aprobado['numcampos'] && (($estado=='activo' || $estado=='iniciado') || $documento_aprobado[0]["formato"]=="")){
-									$texto.='<a href="#" style="border-width:0px; cursor:auto;" class="abrir_highslide" enlace="anexosdigitales/borrar_anexos.php?idanexo='.$idanexos.'&iddocumento='.$iddocumento.'" id="adjuntos_documento"><i class="'.$modulo_hijos[$i]['imagen'].' tooltip_saia_izquierda" title="'.$modulo_hijos[$i]['ayuda'].'"></i></a>'; 
-								}	
-							}	*/						
-							break;																				
-						default:
-							$texto.='<a href="'.$modulo_hijos[$i]['enlace'].'"><i class="'.$modulo_hijos[$i]['imagen'].' tooltip_saia_derecha" title="'.$modulo_hijos[$i]['ayuda'].'"></i></a>';
-							break;
-					}
-				//}				
+function menu_informacion_documento($iddocumento, $idanexos, $ruta, $etiqueta, $extension) {
+	global $conn, $ruta_db_superior;
+	$modulo_anexos = busca_filtro_tabla("idmodulo", "modulo", "nombre LIKE 'adjuntos_documento'", "", $conn);
+	if ($modulo_anexos['numcampos']) {
+		$modulo_hijos = busca_filtro_tabla("A.*", "modulo A", "A.cod_padre=" . $modulo_anexos[0]['idmodulo'], "orden ASC", $conn);
+		if ($modulo_hijos['numcampos']) {
+			$texto = '<div class="pull-right">';
+			for ($i = 0; $i < $modulo_hijos['numcampos']; $i++) {
+				switch ($modulo_hijos[$i]['nombre']) {
+					case 'descargar_anexo' :
+						$texto .= redirecciona_visores($iddocumento, $idanexos, $ruta, $etiqueta, $extension);
+						$texto .= '<a href="' . $ruta_db_superior . 'pantallas/anexos/librerias.php?idanexo=' . $idanexos . '&ejecutar_anexos=descargar_anexo"><i class="' . $modulo_hijos[$i]['imagen'] . ' tooltip_saia_izquierda" title="' . $modulo_hijos[$i]['ayuda'] . '"></i></a>';
+						break;
+					case 'informacion_anexos' :
+						//$texto.='<a href="#" style="border-width:0px; cursor:auto;" class="abrir_highslide" enlace="pantallas/anexos/informacion_anexos.php?idanexo='.$idanexos.'&iddocumento='.$iddocumento.'" id="adjuntos_documento"><i class="'.$modulo_hijos[$i]['imagen'].' tooltip_saia_izquierda" title="'.$modulo_hijos[$i]['ayuda'].'"></i></a>';
+						break;
+					case 'permisos_anexo' :
+						/*$permiso_anexo=busca_filtro_tabla("","permiso_anexo","anexos_idanexos=".$idanexos,"",$conn);
+						 $texto.='<a href="'.$ruta_db_superior.'anexosdigitales/anexos_permiso_add.php?idanexo='.$idanexos.'" class="highslide" onclick="return hs.htmlExpand( this, {objectType: \'iframe\', outlineWhileAnimating: true, width: 200 } )" style="border-width:0px; cursor:auto;"><i class="'.$modulo_hijos[$i]['imagen'].' tooltip_saia_derecha" title="'.$modulo_hijos[$i]['ayuda'].'"></i></a>';
+						 if($permiso_anexo['numcampos']){
+						 }*/
+						break;
+					case 'eliminar_anexo' :
+						/*$permiso_anexo=busca_filtro_tabla("","permiso_anexo","idpropietario=".usuario_actual("idfuncionario")." AND anexos_idanexos=".$idanexos,"",$conn);
+						 $documento_aprobado = busca_filtro_tabla("","documento A, anexos B","A.iddocumento=B.documento_iddocumento AND B.idanexos=".$idanexos,"",$conn);
+						 if($permiso_anexo['numcampos']){
+						 $estado=strtolower($documento_aprobado[0]["estado"]);
+						 if($documento_aprobado['numcampos'] && (($estado=='activo' || $estado=='iniciado') || $documento_aprobado[0]["formato"]=="")){
+						 $texto.='<a href="#" style="border-width:0px; cursor:auto;" class="abrir_highslide" enlace="anexosdigitales/borrar_anexos.php?idanexo='.$idanexos.'&iddocumento='.$iddocumento.'" id="adjuntos_documento"><i class="'.$modulo_hijos[$i]['imagen'].' tooltip_saia_izquierda" title="'.$modulo_hijos[$i]['ayuda'].'"></i></a>';
+						 }
+						 }	*/
+						break;
+					default :
+						$texto .= '<a href="' . $modulo_hijos[$i]['enlace'] . '"><i class="' . $modulo_hijos[$i]['imagen'] . ' tooltip_saia_derecha" title="' . $modulo_hijos[$i]['ayuda'] . '"></i></a>';
+						break;
+				}
+
 			}
 			$texto .= '</div>';
 		}
-	}	
-	return($texto);
-}
-
-function redirecciona_visores($iddocumento,$idanexos,$ruta,$etiqueta,$extension){
-global $conn,$ruta_db_superior;
-	$html='';
-	$array = array(
-			/*"pdf",*/
-			"jpg",
-			"png"
-	);
-	if(in_array(strtolower($extension), $array)){
-		$ruta64 = base64_encode($ruta);
-		$html = '<a href="' . $ruta_db_superior . "filesystem/mostrar_binario.php?ruta=" . $ruta64 . '" target="detalles"><i class="icon-ver_pag_documento" tooltip_saia_izquierda" title=""></i></a>';
-    } else {
-	        $info_anexo=busca_filtro_tabla("tipo,ruta","anexos","idanexos=".$idanexos,"",$conn);
-	        $ruta_mostrar="visores/pdf/web/viewer2.php?anexo=".$idanexos."&iddocumento=".$iddocumento."&files=".base64_encode($info_anexo[0]['ruta']);
-		$html='<a href="'.$ruta_db_superior.$ruta_mostrar.'" target="detalles"><i class="icon-ver_pag_documento" tooltip_saia_izquierda" title=""></i></a>';
 	}
-  if($extension=="eml"){
-    $ruta=$ruta_db_superior."pantallas/visores_saia/visor_eml.php?filename=".$ruta_db_superior.$ruta;
-    $html='<a href="'.$ruta.'" target="detalles"><i class="icon-ver_pag_documento" tooltip_saia_izquierda" title=""></i></a>';
-  }
-	return($html);
+	return ($texto);
 }
 
-function funcionario($funcionario_codigo){
-    $nombre = busca_filtro_tabla("nombres, apellidos","funcionario","funcionario_codigo=".$funcionario_codigo,"",$conn);     
-    return($nombre[0]['nombres']." ".$nombre[0]["apellidos"]);
+function redirecciona_visores($iddocumento, $idanexos, $ruta, $etiqueta, $extension) {
+	global $conn, $ruta_db_superior;
+	$html = '';
+	$ruta_mostrar = '';
+	$array = array(
+		"jpg",
+		"png"
+	);
+	if (in_array(strtolower($extension), $array) && $ruta != "") {
+		$ruta_mostrar = "filesystem/mostrar_binario.php?ruta=" . base64_encode($ruta);
+	} else {
+		$ruta_mostrar = "visores/pdf.js-view/web/viewer2.php?tipo_visor=2&iddocumento=" . $iddocumento;
+		if ($idanexos) {
+			$ruta_mostrar .= "&idanexo=" . $idanexos;
+		}
+		if (strtolower($extension) == "pdf" && $ruta != "") {
+			$ruta_mostrar .= "&ruta=" . base64_encode($ruta);
+		} else if (strtolower($extension) == "eml" && $ruta != "") {
+			$ruta_mostrar = "pantallas/visores_saia/visor_eml.php?ruta=" . base64_encode($ruta);
+		} else {
+			$info_anexo = busca_filtro_tabla("tipo,ruta", "anexos", "idanexos=" . $idanexos, "", $conn);
+			if ($info_anexo["numcampos"]) {
+				if (in_array(strtolower($info_anexo[0]["tipo"]), $array)) {
+					$ruta_mostrar = "filesystem/mostrar_binario.php?ruta=" . base64_encode($ruta);
+				} else if (strtolower($info_anexo[0]["tipo"]) == "pdf") {
+					$ruta_mostrar .= "&ruta=" . base64_encode($info_anexo[0]["ruta"]);
+				}
+			}
+		}
+		$html = '<a href="' . $ruta_db_superior . $ruta_mostrar . '" target="detalles"><i class="icon-ver_pag_documento" tooltip_saia_izquierda" title=""></i></a>';
+	}
+	return ($html);
 }
 
-function ruta_anexo_documento($ruta,$etiqueta){
-    global $ruta_db_superior;
-    $texto = "<a href='".$ruta_db_superior.$ruta."'>".$etiqueta."</a>";
-    return($texto);
-} 
-
-function funcionario_actual(){
-	return(usuario_actual('funcionario_codigo'));
+function funcionario($funcionario_codigo) {
+	$nombre = busca_filtro_tabla("nombres, apellidos", "funcionario", "funcionario_codigo=" . $funcionario_codigo, "", $conn);
+	return ($nombre[0]['nombres'] . " " . $nombre[0]["apellidos"]);
 }
 
-function mostrar_etiqueta($etiqueta, $tipo=null){
-	$etiqueta2=str_replace(".".$tipo,"",codifica_encabezado(html_entity_decode($etiqueta)));	
-	return(delimita($etiqueta2,14));
-}                           
-
-function obtener_descripcion_informacion($descripcion){
-    return (delimita(strip_tags($descripcion), 20));    
+function ruta_anexo_documento($ruta, $etiqueta) {
+	global $ruta_db_superior;
+	$texto = "<a href='" . $ruta_db_superior . $ruta . "'>" . $etiqueta . "</a>";
+	return ($texto);
 }
 
-function obtener_color_clase($origen, $destino){
+function funcionario_actual() {
+	return (usuario_actual('funcionario_codigo'));
+}
+
+function mostrar_etiqueta($etiqueta, $tipo = null) {
+	$etiqueta2 = str_replace("." . $tipo, "", codifica_encabezado(html_entity_decode($etiqueta)));
+	return (delimita($etiqueta2, 14));
+}
+
+function obtener_descripcion_informacion($descripcion) {
+	return (delimita(strip_tags($descripcion), 20));
+}
+
+function obtener_color_clase($origen, $destino) {
 	$funcionario = usuario_actual('funcionario_codigo');
-	
-	if($funcionario == $origen){
-		return('class="alert-info"');
-	}elseif($funcionario == $destino){
-		return(' class="alert"');
-	}else{
-		return('');
-	}		
+
+	if ($funcionario == $origen) {
+		return ('class="alert-info"');
+	} elseif ($funcionario == $destino) {
+		return (' class="alert"');
+	} else {
+		return ('');
+	}
 }
 
-function opcion_eliminar_anexos($idanexos,$iddocumento){
-global $conn;
-$permiso_anexo=busca_filtro_tabla("","permiso_anexo","idpropietario=".usuario_actual("idfuncionario")." AND anexos_idanexos=".$idanexos,"",$conn);
-$documento_aprobado = busca_filtro_tabla("","documento A, anexos B","A.iddocumento=B.documento_iddocumento AND B.idanexos=".$idanexos,"",$conn);														
-if($permiso_anexo['numcampos']){
-  $estado=strtolower($documento_aprobado[0]["estado"]);
-	if($documento_aprobado['numcampos'] && (($estado=='activo' || $estado=='iniciado') || $documento_aprobado[0]["formato"]=="")){     
-    return('<input type="checkbox" name="anexos[]" class="cb_anexos" value="'.trim($idanexos).'">');
-  }
-}  
+function opcion_eliminar_anexos($idanexos, $iddocumento) {
+	global $conn;
+	$permiso_anexo = busca_filtro_tabla("", "permiso_anexo", "idpropietario=" . usuario_actual("idfuncionario") . " AND anexos_idanexos=" . $idanexos, "", $conn);
+	$documento_aprobado = busca_filtro_tabla("", "documento A, anexos B", "A.iddocumento=B.documento_iddocumento AND B.idanexos=" . $idanexos, "", $conn);
+	if ($permiso_anexo['numcampos']) {
+		$estado = strtolower($documento_aprobado[0]["estado"]);
+		if ($documento_aprobado['numcampos'] && (($estado == 'activo' || $estado == 'iniciado') || $documento_aprobado[0]["formato"] == "")) {
+			return ('<input type="checkbox" name="anexos[]" class="cb_anexos" value="' . trim($idanexos) . '">');
+		}
+	}
 }
 ?>
