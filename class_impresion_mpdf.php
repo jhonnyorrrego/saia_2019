@@ -32,7 +32,7 @@ class Imprime_Pdf {
 	// tama�o de la letra
 	private $font_family = "verdana";
 	// tipo de letra
-	private $tipo_salida = "I";
+	private $tipo_salida = "F";
 	// I para mostrar en pantalla, FI para guardar en el servidor y mostrar en pantalla
 	private $mostrar_encabezado = 0;
 	// define si se muestra o no el encabezado y el pie de pagina
@@ -76,17 +76,6 @@ class Imprime_Pdf {
 			$this -> formato = $formato;
 
 			if ($formato["numcampos"]) {
-				if ($this -> documento[0]["pdf"] != "" && !isset($_REQUEST["seleccion"])) {
-					if (is_file($this -> documento[0]["pdf"])) {
-						$this -> tipo_salida = "I";
-					} else {// la ruta del pdf esta guardada pero el archivo fisico no fue encontrado
-						$this -> tipo_salida = "FI";
-					}
-				}
-				if ($formato[0]["mostrar_pdf"] == 1 || ($this -> documento[0]["pdf"] == "" && $this -> documento[0]["estado"] != "ACTIVO")) {
-					$this -> tipo_salida = "FI";
-				}
-
 				$plantilla = busca_filtro_tabla("", $formato[0]["nombre_tabla"], "documento_iddocumento=" . $iddocumento, "", $conn);
 				$this -> mostrar_encabezado = $plantilla[0]["encabezado"];
 				$this -> info_ft = $plantilla;
@@ -242,7 +231,7 @@ class Imprime_Pdf {
 		$this -> idhijos = implode(",", $documentos);
 	}
 
-	public function imprimir($mostrar = true) {
+	public function imprimir() {
 		$this -> pdf = new mPDF('', "$papel_orientacion", '', '', $this -> margenes["izquierda"], $this -> margenes["derecha"], $this -> margenes["superior"], $this -> margenes["inferior"], 5, $this -> margenes["inferior"]);
 		$this -> pdf -> setAutoTopMargin = "stretch";
 		$this -> pdf -> setAutoBottomMargin = "stretch";
@@ -303,7 +292,6 @@ class Imprime_Pdf {
 			$tipo_almacenamiento = new SaiaStorage("versiones");
 			$path_to_file = $formato_ruta . "/version" . $this -> version;
 			$nombre_pdf = $path_to_file . "/doc" . $this -> documento[0]["iddocumento"] . ".pdf";
-			$this -> tipo_salida = "F";
 		} else if ($this -> formato["numcampos"]) {
 			$tipo_almacenamiento = new SaiaStorage("pdf");
 			$carpeta = $formato_ruta . "/pdf";
@@ -320,30 +308,22 @@ class Imprime_Pdf {
 
 		chmod($pdf_temp, 0777);
 		$paginas_pdf = 0;
-		if ($this -> tipo_salida == "FI" && ($this -> documento[0]["estado"] != 'ACTIVO' || $this -> formato[0]["mostrar_pdf"] == 1)) {
+		if ($this -> documento[0]["estado"] != 'ACTIVO' || $this -> formato[0]["mostrar_pdf"] == 1) {
 			$actualizar_y_hash = true;
-		} else if ($this -> tipo_salida == "I") {
-			if ($this -> imprimir_vistas) {
-				$this -> tipo_salida = "FI";
-			} else {
-				$nombre_pdf = basename($nombre_pdf);
-			}
 		}
 
 		$ruta_pdf = array(
 			"servidor" => $tipo_almacenamiento -> get_ruta_servidor(),
 			"ruta" => $nombre_pdf
 		);
-		$this -> pdf -> Output($pdf_temp, 'F');
+		$this -> pdf -> Output($pdf_temp, $this -> tipo_salida);
 		$codigo_hash = $tipo_almacenamiento -> almacenar_recurso($nombre_pdf, $pdf_temp, $actualizar_y_hash);
 		if ($actualizar_y_hash) {
 			$sqlu = "update documento set paginas='" . $paginas_pdf . "',pdf='" . json_encode($ruta_pdf) . "',pdf_hash='" . $codigo_hash . "' where iddocumento=" . $this -> documento[0]["iddocumento"];
 			phpmkr_query($sqlu) or die($sqlu);
 		}
-		if ($mostrar) {
-			$this -> pdf -> Output($pdf_temp, 'I');
-			redirecciona("visores/pdf/web/viewer2.php?iddocumento=" . $this -> documento[0]["iddocumento"]);
-		}
+		redirecciona("visores/pdf.js-view/web/viewer2.php?tipo_visor=1&iddocumento=" . $this -> documento[0]["iddocumento"] . "&ruta=" . base64_encode(json_encode($ruta_pdf)));
+		die();
 	}
 
 	public function configurar_encabezado() {

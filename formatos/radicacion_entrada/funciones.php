@@ -504,7 +504,7 @@ function llenar_datos_funcion($idformato, $iddoc) {
 
 function mostrar_informacion_general_radicacion($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
-	$datos = busca_filtro_tabla("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio," . fecha_db_obtener("fecha_oficio_entrada", "Y-m-d") . " AS fecha_oficio_entrada," . fecha_db_obtener("fecha_radicacion_entrada", "Y-m-d") . " AS fecha_radicacion_entrada,numero_guia,empresa_transportado,requiere_recogida,tipo_mensajeria", "ft_radicacion_entrada", "documento_iddocumento=" . $iddoc, "", $conn);
+	/*$datos = busca_filtro_tabla("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio," . fecha_db_obtener("fecha_oficio_entrada", "Y-m-d") . " AS fecha_oficio_entrada," . fecha_db_obtener("fecha_radicacion_entrada", "Y-m-d") . " AS fecha_radicacion_entrada,numero_guia,empresa_transportado,requiere_recogida,tipo_mensajeria", "ft_radicacion_entrada", "documento_iddocumento=" . $iddoc, "", $conn);
 
 	$documento = busca_filtro_tabla("numero,tipo_radicado," . fecha_db_obtener("fecha", "Y-m-d") . " AS fecha", "documento", "iddocumento=" . $iddoc, "", $conn);
 	$tipo_documento = busca_filtro_tabla("nombre", "serie", "idserie=" . $datos[0]["serie_idserie"], "", $conn);
@@ -579,7 +579,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
 	    <td colspan="2">' . $datos[0]["descripcion_anexos"] . '</td>
 	  </tr>';
 	$tabla .= '</table>';
-	echo $tabla;
+	echo $tabla;*/
 }
 
 function obtener_informacion_proveedor($idformato, $iddoc) {

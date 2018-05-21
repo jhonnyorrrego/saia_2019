@@ -1,26 +1,11 @@
-//var ruta_pdf='../../../../almacenamiento/ACTIVO/2017-08-09/1706/pdf/MEMORANDO_0_2017_08_09.pdf';
-//var ruta_pdf='plano_1_h.pdf';
-//var ruta_pdf='pruebac.pdf';
-var documento = document.getElementById('documento_iddocumento');
-var iddoc =documento.getAttribute('value');
+var url=document.getElementById('ruta').value;
+var iddoc = document.getElementById('documento_iddocumento').value;
+var tipo = document.getElementById('tipo').value;
+var idtipo = document.getElementById('idtipo').value;
 
-var ruta = document.getElementById('ruta');
-var ruta_pdf =ruta.getAttribute('value');
 var pagina_cargada = [];
 var info_cargada = [];
 var idhojas = 0;
-
-$("#opc_text").hide();
-$("#opc_text-size").hide();
-$("#opc_comment").hide();
-$("#opc_text-color").hide();
-$("#opc_escala").hide();
-$("#opc_derecha").hide();
-$("#opc_izquierda").hide();
-$("#opc_highlight").hide();
-$("#opc_sello").hide();
-
-
 
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -87,11 +72,7 @@ $("#opc_sello").hide();
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var UI = _2.default.UI;
-
-	//var documentId = 'plano_1.pdf';
-	var documentId=ruta_pdf;
-	iddoc=iddoc;
-	//var documentId = 'pruebac.pdf';
+	var documentId=url;
 	var PAGE_HEIGHT = void 0;
 	var RENDER_OPTIONS = {
 	  documentId: documentId,
@@ -111,12 +92,6 @@ $("#opc_sello").hide();
 	  var entero=Math.trunc(total);
 	  var resultado=total-entero;
 	  
-	  
-	  /*console.log(visiblePageNum);
-	  console.log(e.target.scrollTop);
-	  console.log(PAGE_HEIGHT);
-	  console.log(total);
-	  console.log(resultado);*/
 	  var visiblePage = document.querySelector('.page[data-page-number="' + visiblePageNum + '"][data-loaded="false"]');
 	 
 	  if (visiblePage && resultado>='0.90') {
@@ -275,10 +250,9 @@ $("#opc_sello").hide();
 	    setPen(e.target.value, penColor);
 	  }
 	 
-		//Se comento para evitar error por ocultar la herramienta lapiz
-	  //document.querySelector('.toolbar .pen-size').addEventListener('change', handlePenSizeChange);
+	  document.querySelector('.toolbar .pen-size').addEventListener('change', handlePenSizeChange);
 
-	  //initPen();
+	  initPen();
 	})();
 
 	// Toolbar buttons
@@ -387,22 +361,12 @@ $("#opc_sello").hide();
 	  function handleRotateCCWClick() {
 	    setScaleRotate(RENDER_OPTIONS.scale, RENDER_OPTIONS.rotate - 90);
 	  }
-	  function handlecambiarvisorClick(iddoc) {
-	  	if(document.getElementById('tipo').getAttribute("value")=='anexo'){
-	  		 window.location="../../../pdf/web/viewer2.php?anexo="+documento.getAttribute('value')+"&iddocumento="+document.getElementById('documento_iddocumento').getAttribute("iddoc_padre")+"&files="+document.getElementById('ruta').getAttribute("codificada");
-	  	}else if(document.getElementById('tipo').getAttribute("value")=='anexo_trans'){
-	  		window.location="../../../pdf/web/viewer2.php?anexo_trans="+documento.getAttribute('value')+"&files="+document.getElementById('ruta').getAttribute("codificada");
-	  	}else{
-	  		 window.location="../../../pdf/web/viewer2.php?iddocumento="+documento.getAttribute('value');
-	  	}
-	   
-	  }
 
 	  document.querySelector('.toolbar select.scale').value = RENDER_OPTIONS.scale;
 	  document.querySelector('.toolbar select.scale').addEventListener('change', handleScaleChange);
 	  document.querySelector('.toolbar .rotate-ccw').addEventListener('click', handleRotateCCWClick);
 	  document.querySelector('.toolbar .rotate-cw').addEventListener('click', handleRotateCWClick);
-	  document.querySelector('.toolbar .cambiar_visor').addEventListener('click', handlecambiarvisorClick);
+	  
 	})();
 
 	// Clear toolbar button
@@ -419,8 +383,9 @@ $("#opc_sello").hide();
 				url: "cargar_notas_pdf.php",
 				dataType: "json",
 				data: {
-					iddoc:documento.getAttribute('value'),
-					tipo_archivo:document.getElementById('tipo').getAttribute("value"),
+					iddoc:iddoc,
+					tipo_archivo:tipo,
+					idtipo:idtipo,
 					eliminar_todo:1
 				}
 			});	
@@ -456,8 +421,7 @@ $("#opc_sello").hide();
 	    
 	    
 	    if(idcomentario!=" " && idcomentario!="undefined" && idcomentario!== undefined){
-	    
-		    var eliminar=document.createElement("a");
+	    var eliminar=document.createElement("a");
 		
 			eliminar.setAttribute('href','#');
 			eliminar.style.background="rgb(255, 255, 255)";
@@ -484,8 +448,9 @@ $("#opc_sello").hide();
 				url: "almacenar_comentarios_pdf.php",
 				dataType: "json",
 				data: {
-					iddoc:documento.getAttribute('value'),
-					tipo_archivo:document.getElementById('tipo').getAttribute("value"),
+					iddoc:iddoc,
+					tipo_archivo:tipo,
+					idtipo:idtipo,
 					cargar_todo:1
 				},success:function (data){
 					$(".comment-list-container").empty();
@@ -515,8 +480,9 @@ $("#opc_sello").hide();
 						url: "almacenar_comentarios_pdf.php",
 						dataType: "json",
 						data: {
-							iddoc:documento.getAttribute('value'),
-							tipo_archivo:document.getElementById('tipo').getAttribute("value"),
+							iddoc:iddoc,
+							tipo_archivo:tipo,
+							idtipo:idtipo,
 							cargar:1,
 							ft_notas_pdf:idft_notas_pdf
 						},success:function (data){
@@ -544,8 +510,9 @@ $("#opc_sello").hide();
 								dataType: "json",
 								data: {
 									iddoc:iddoc,
+									tipo_archivo:tipo,
+									idtipo:idtipo,
 									guardar:1,
-									tipo_archivo:document.getElementById('tipo').getAttribute("value"),
 									ft_notas_pdf:target.getAttribute('idft_notas_pdf'),
 									comentario:commentText.value.trim()
 								},success:function (data){
@@ -2445,21 +2412,21 @@ $("#opc_sello").hide();
 		 		n.parentNode.removeChild(n);
 		 	});
 		 	$.ajax({
-						type:'POST',
-						url: "cargar_notas_pdf.php",
-						dataType: "html",
-						data: {
-							iddoc:iddoc,
-							tipo_archivo:document.getElementById('tipo').getAttribute("value"),
-							eliminar:1,
-							idft_notas_pdf:idft_notas_pdf
-							
-						},
-						success:function (data){
-							_PDFJSAnnotate2.default.getStoreAdapter().deleteAnnotation(documentId,annotationId);
-		 					destroyEditOverlay();								
-						}
-					});
+				type:'POST',
+				url: "cargar_notas_pdf.php",
+				dataType: "html",
+				data: {
+					iddoc:iddoc,
+					tipo_archivo:tipo,
+					idtipo:idtipo,
+					eliminar:1,
+					idft_notas_pdf:idft_notas_pdf
+				},
+				success:function (data){
+					_PDFJSAnnotate2.default.getStoreAdapter().deleteAnnotation(documentId,annotationId);
+ 					destroyEditOverlay();								
+				}
+			});
 		 	
 		 }/**
 		 * Handle document.click event
@@ -2743,8 +2710,9 @@ if(flag==0){
 				data: {
 					tipo:'sello',
 					iddoc:iddoc,
+					tipo_archivo:tipo,
+					idtipo:idtipo,	
 					guardar:1,
-					tipo_archivo:document.getElementById('tipo').getAttribute("value"),
 					x:x_sello-x_pagina,
 					y:y_sello-y_pagina,
 					width:ancho_final,
@@ -2799,78 +2767,25 @@ function saveRect(type,rects,color){
 	//guardar seleccionado
 	//-----------------------------------------------------------	
 	$.ajax({
-						type:'POST',
-						url: "cargar_notas_pdf.php",
-						dataType: "html",
-						data: {
-							tipo:type,
-							iddoc:iddoc,
-							guardar:1,
-							tipo_archivo:document.getElementById('tipo').getAttribute("value"),
-							pageNumber:pageNumber,
-							valores:annotation
-							
-						},
-						success:function (data){
-							annotation.idft_notas_pdf=data;
-							_PDFJSAnnotate2.default.getStoreAdapter().addAnnotation(documentId,pageNumber,annotation).then(function(annotation){(0,_appendChild2.default)(svg,annotation);});
-							
-						}
-					});	
-	//----------------------------	
-	//carga los ya creados
-	//------------------------------------------------
-	/*$.ajax({
-				type:'POST',
-				url: "cargar_notas_pdf.php",
-				dataType: "json",
-				data: {
-					iddoc:iddoc,
-					cargar:1
-				},
-				success:function (data){	
-						for(var i=0;i<data.numcampos;i++){							
-							documentId=data[i].iddocumento;
-							pageNumber=data[i].page;
-							if(data[i].type=='area'){							
-								_PDFJSAnnotate2.default.getStoreAdapter().addAnnotation(data[i].iddocumento.toString(),parseInt(data[i].page),{type: data[i].type,idft_notas_pdf:data[i].idft_notas_pdf,width: data[i].width,height: data[i].height,x: data[i].x,y: data[i].y}).then(function(annotation){(0,_appendChild2.default)(svg,annotation);});
-
-							}else if(data[i].type=='highlight'){
-
-								var opciones = new Array();
-								for(var j=0;j<data[i].x.length;j++){
-									opciones[j]={x:data[i].x[j],y:data[i].y[j],height:data[i].height[j],width:data[i].width[j]};
-									
-								}
-								
-								_PDFJSAnnotate2.default.getStoreAdapter().addAnnotation(data[i].iddocumento.toString(),parseInt(pageNumber),{idft_notas_pdf:data[i].idft_notas_pdf,'class':"Annotation",type:data[i].type,color:data[i].color,uuid:data[i].ui,page:data[i].page,"rectangles": opciones}).then(function(annotation){(0,_appendChild2.default)(svg,annotation);});
-							
-							}else if(data[i].type=='sello'){
-								
-								
-								var pagina=document.getElementById(pageNumber);
-								var posicion = pagina.getBoundingClientRect();
-								
-							 	div=document.createElement("div");
-								div.style.position="absolute";
-								div.style.left=data[i].x+"px";
-								div.style.top=data[i].y+"px";
-								div.style.width=(data[i].width)+"px";
-								div.style.height=(data[i].height)+"px";
-								//div.style.backgroundColor="#000";									
-								pagina.appendChild(div);
-								img=document.createElement("img");
-								img.setAttribute('src','sello.jpg');
-								div.appendChild(img);
-								img.setAttribute('id','img-'+data[i].idft_notas_pdf);
-								div.setAttribute('id','div-'+data[i].idft_notas_pdf);
-							}									
-						}	
-				}
-			});*/
-					
-
-	//-----------------------------------------------------
+			type:'POST',
+			url: "cargar_notas_pdf.php",
+			dataType: "html",
+			data: {
+				tipo:type,
+				iddoc:iddoc,
+				tipo_archivo:tipo,
+				idtipo:idtipo,
+				guardar:1,
+				pageNumber:pageNumber,
+				valores:annotation
+				
+			},
+			success:function (data){
+				annotation.idft_notas_pdf=data;
+				_PDFJSAnnotate2.default.getStoreAdapter().addAnnotation(documentId,pageNumber,annotation).then(function(annotation){(0,_appendChild2.default)(svg,annotation);});
+				
+			}
+		});	
 	}
 	
 	/**
@@ -2964,7 +2879,8 @@ function saveRect(type,rects,color){
 					dataType: "json",
 					data: {
 						iddoc:iddoc,
-						tipo_archivo:document.getElementById('tipo').getAttribute("value"),
+						tipo_archivo:tipo,
+						idtipo:idtipo,
 						cargar:1,
 						pagina:pageNumber
 					},

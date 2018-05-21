@@ -87,11 +87,8 @@ $("#opc_sello").hide();
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var UI = _2.default.UI;
-
-	//var documentId = 'plano_1.pdf';
 	var documentId=ruta_pdf;
 	iddoc=iddoc;
-	//var documentId = 'pruebac.pdf';
 	var PAGE_HEIGHT = void 0;
 	var RENDER_OPTIONS = {
 	  documentId: documentId,
@@ -111,12 +108,6 @@ $("#opc_sello").hide();
 	  var entero=Math.trunc(total);
 	  var resultado=total-entero;
 	  
-	  
-	  /*console.log(visiblePageNum);
-	  console.log(e.target.scrollTop);
-	  console.log(PAGE_HEIGHT);
-	  console.log(total);
-	  console.log(resultado);*/
 	  var visiblePage = document.querySelector('.page[data-page-number="' + visiblePageNum + '"][data-loaded="false"]');
 	 
 	  if (visiblePage && resultado>='0.90') {

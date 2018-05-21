@@ -557,7 +557,7 @@ function aprobar($iddoc = 0, $opcion = 0) {
 	if ($aprobar_posterior == 1) {
 		llama_funcion_accion($iddoc, $tipo_radicado[0]["idformato"], "aprobar", "POSTERIOR");
 	}
-	actualizar_datos_documento($idformato,$iddoc);
+	actualizar_datos_documento($tipo_radicado[0]["idformato"],$iddoc);
 	if ($opcion == 0) {
 		if ($_REQUEST["anterior"] == $iddoc) {
 			enrutar_documento($ruta_db_superior . 'pantallas/documento/informacion_resumen_documento.php?iddoc=' . $iddoc, 'arbol_formato');
