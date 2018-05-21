@@ -282,12 +282,13 @@ function procesamiento_buscar(externo) {
         url: 'servidor_busqueda.php',
         queryParams: function (params) {
             var pagina=1;
-            if($("#rows").val()!=0) {
+            var filas = params.limit;
+            if(filas > 0) {
                 pagina=(params.offset/$("#rows").val())+1
             }
             var q = {
-                "rows": $("#rows").val(),
-                "numfilas":$("#rows").val(),
+                "rows": filas,
+                "numfilas":filas,
                 "actual_row": params.offset,
                 "pagina":pagina,
                 "search": params.search,
