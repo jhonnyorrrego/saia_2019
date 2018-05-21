@@ -713,7 +713,7 @@ function mostrar_estado_proceso($idformato, $iddoc) {
 						echo '<td align="left">';
 						if ($firma[0]["firma"] != "") {
 							$pagina_actual = $_SERVER["PHP_SELF"];
-							echo '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . FORMATOS_SAIA . 'librerias/mostrar_foto.php?codigo=' . $fila["funcionario_codigo"];
+							echo '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL.'/'. FORMATOS_SAIA . 'librerias/mostrar_foto.php?codigo=' . $fila["funcionario_codigo"];
 							echo '" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '"/><br />';
 						} else
 							echo '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/firmas/blanco.jpg" width="100" height="' . $alto_firma[0]["valor"] . '" ><br />';

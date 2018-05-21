@@ -6,7 +6,7 @@
 			<?php include_once("../librerias/header_nuevo.php"); ?>
 			<tr><td><p><?php llenar_datos_funcion(3,$_REQUEST['iddoc']);?></p>
 <p style="text-align: center;"><strong>INFORMACI&Oacute;N GENERAL</strong></p>
-<p style="text-align: center;">{mostrar_informacion_general_radicacion}</p>
+<p style="text-align: center;"><?php mostrar_informacion_general_radicacion(3,$_REQUEST['iddoc']);?></p>
 <p style="text-align: center;"><strong>INFORMACI&Oacute;N ORIGEN</strong></p>
 <table class="table table-bordered" style="width: 100%;" border="1">
 <tbody>
