@@ -9,6 +9,7 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
+include ("phpmkrfn.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 echo (estilo_bootstrap());
 
@@ -29,10 +30,7 @@ $x_orientacion = Null;
 $x_papel = Null;
 $x_exportar = Null;
 $_pertenece_nucleo = Null;
-?>
 
-<?php include ("phpmkrfn.php") ?>
-<?php
 $sKey = @$_GET["key"];
 if (($sKey == "") || ((is_null($sKey)))) {
 	$sKey = @$_GET["key"]; 
@@ -70,22 +68,9 @@ switch ($sAction)
 
 <p><br /><a class="btn btn-mini btn-info" href="<?php echo "formatoedit.php?key=" . urlencode($sKey); ?>">Editar informaci&oacute;n</a>&nbsp;
 <a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/campos_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Campos del Formato</a>&nbsp;
-
+<a class="btn btn-mini btn-info" href="funciones_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Funciones del Formato</a>&nbsp;
 <a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/<?php echo "formatoadd_paso2.php?key=" . urlencode($sKey); ?>">Dise&ntilde;o del Formato</a>&nbsp;
-
-<!--<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/funciones_formatolist.php?idformato=<?php echo $_REQUEST["key"];?>">Funciones del Formato</a>&nbsp;&nbsp;-->
-
-<!--<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/formatoadd.php?x_cod_padre=<?php echo $_REQUEST["key"];?>">Adicionar hijo</a>&nbsp;&nbsp;-->
-
-<!--<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/transferencias_automaticas.php?idformato=<?php echo $_REQUEST["key"];?>">Transferencias</a>&nbsp;&nbsp;-->
-
 <a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/rutas_automaticas.php?idformato=<?php echo $_REQUEST["key"];?>">Ruta de Aprobaci&oacute;n</a>
-
-<!--<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>formatos/formatoexport.php?key=<?php echo $_REQUEST["key"];?>">Exportar Formato</a>
-&nbsp;&nbsp;-->
-
-<!--<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior; ?>webservice_saia/exportar_importar_formato/exportar_formato/exportar_formato.php?pre_exportar_formato=1&idformato=<?php echo $_REQUEST["key"];?>">Pasar a productivo</a>-->
-
 <a class="btn btn-mini btn-success" href="<?php echo $ruta_db_superior; ?>formatos/llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@<?php echo $_REQUEST["key"];?>">Publicar Formato</a>&nbsp;&nbsp;
 </span></p>
 </span></p>
@@ -129,29 +114,11 @@ if ((!is_null($x_contador_idcontador)) && ($x_contador_idcontador <> "")) {
 }
 $ox_contador_idcontador = $x_contador_idcontador; // Backup Original Value
 $x_contador_idcontador = $sTmp;
-?>
-<?php echo $x_contador_idcontador; ?>
+ echo $x_contador_idcontador; ?>
 <?php $x_contador_idcontador = $ox_contador_idcontador; // Restore Original Value ?>
 </span></td>
 	</tr>
-	<!--tr>
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Ruta (Mostrar)</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php echo $x_ruta_mostrar; ?>
-</span></td>
-	</tr>
-	<tr>
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Ruta (Editar)</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php echo $x_ruta_editar; ?>
-</span></td>
-	</tr>
-	<tr>
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Ruta (Adicionar)</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php echo $x_ruta_adicionar; ?>
-</span></td>
-	</tr-->
+
 	<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">librerias</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
@@ -289,34 +256,14 @@ $x_exportar = $sTmp;
 </table>
 </form>
 <p>
-<?php include ("footer.php") ?>
 <?php
 phpmkr_db_close($conn);
-?>
-<?php
-
-//-------------------------------------------------------------------------------
-// Function LoadData
-// - Load Data based on Key Value sKey
-// - Variables setup: field variables
 
 function LoadData($sKey,$conn)
 {
 	$sKeyWrk = "" . addslashes($sKey) . "";
 	$sSql = "SELECT * FROM formato";
 	$sSql .= " WHERE idformato = " . $sKeyWrk;
-	$sGroupBy = "";
-	$sHaving = "";
-	$sOrderBy = "";
-	if ($sGroupBy <> "") {
-		$sSql .= " GROUP BY " . $sGroupBy;
-	}
-	if ($sHaving <> "") {
-		$sSql .= " HAVING " . $sHaving;
-	}
-	if ($sOrderBy <> "") {
-		$sSql .= " ORDER BY " . $sOrderBy;
-	}
 	$rs = phpmkr_query($sSql,$conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
 	if (phpmkr_num_rows($rs) == 0) {
 		$LoadData = false;
