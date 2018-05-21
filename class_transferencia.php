@@ -557,7 +557,7 @@ function aprobar($iddoc = 0, $opcion = 0) {
 	if ($aprobar_posterior == 1) {
 		llama_funcion_accion($iddoc, $tipo_radicado[0]["idformato"], "aprobar", "POSTERIOR");
 	}
-	actualizar_datos_documento($idformato,$iddoc);
+	actualizar_datos_documento($tipo_radicado[0]["idformato"],$iddoc);
 	if ($opcion == 0) {
 		if ($_REQUEST["anterior"] == $iddoc) {
 			enrutar_documento($ruta_db_superior . 'pantallas/documento/informacion_resumen_documento.php?iddoc=' . $iddoc, 'arbol_formato');
@@ -713,7 +713,7 @@ function mostrar_estado_proceso($idformato, $iddoc) {
 						echo '<td align="left">';
 						if ($firma[0]["firma"] != "") {
 							$pagina_actual = $_SERVER["PHP_SELF"];
-							echo '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . FORMATOS_SAIA . 'librerias/mostrar_foto.php?codigo=' . $fila["funcionario_codigo"];
+							echo '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL.'/'. FORMATOS_SAIA . 'librerias/mostrar_foto.php?codigo=' . $fila["funcionario_codigo"];
 							echo '" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '"/><br />';
 						} else
 							echo '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/firmas/blanco.jpg" width="100" height="' . $alto_firma[0]["valor"] . '" ><br />';

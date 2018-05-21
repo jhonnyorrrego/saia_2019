@@ -1492,8 +1492,7 @@ function validar_valor_campo($campo) {
 		if(isset($_REQUEST["anterior"]) && $padre[0][0] == "0") {
       $desc = busca_filtro_tabla("a.descripcion,a.numero,b.nombre,b.idformato", "documento a, formato b", "a.iddocumento=" . $_REQUEST["anterior"]." and lower(a.plantilla)=b.nombre", "", $conn);
       if($desc[0]["nombre"]=='radicacion_entrada'){
-        include_once($ruta_db_superior."formatos/radicacion_entrada/funciones.php");
-        $radicado=obtener_radicado_entrada($desc[0]["idformato"],$_REQUEST["anterior"]);
+        $radicado=$desc[0]["numero"];
         return ("Respondiendo a: " . str_replace("<br />", " ", strip_tags($desc[0]["descripcion"])) . ". Radicado No." . $radicado);
       }else if($desc[0]["nombre"]=='memorando'){
         include_once($ruta_db_superior."formatos/memorando/funciones.php");
@@ -1510,10 +1509,6 @@ function validar_valor_campo($campo) {
 	} elseif($campos["numcampos"]) {
 		if($campos[0]["predeterminado"] != "")
 			return ($campos[0]["predeterminado"]);
-		/*
-		 * elseif($campos[0]["etiqueta_html"]<>"textarea")
-		 * return($campos[0]["valor"]);
-		 */
 	} else
 		return ("");
 }
