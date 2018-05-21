@@ -50,8 +50,8 @@ if(isset($_REQUEST["consultar_contador"])) {
 }
 
 include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "formatos/librerias/header_formato.php");
-include_once ($ruta_db_superior . "formatos/librerias/funciones.php");
+include_once ($ruta_db_superior . FORMATOS_SAIA . "librerias/header_formato.php");
+include_once ($ruta_db_superior . FORMATOS_SAIA . "librerias/funciones.php");
 include_once ($ruta_db_superior . "phpmkrfn.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "librerias/funciones.php");
@@ -150,7 +150,7 @@ include ("header.php");
 <script type="text/javascript" src="../js/dhtmlXCommon.js"></script>
 <script type="text/javascript">
 <!--
-EW_dateSep = "/"; // set date separator	
+EW_dateSep = "/"; // set date separator
 
 //-->
 </script>
@@ -182,15 +182,15 @@ EW_dateSep = "/"; // set date separator
            }
        	});
  	});
-  
+
 });
 function actualizar_contador(valor)
 {$.ajax({
-  url: 'formatoadd.php', 
+  url: 'formatoadd.php',
   data:'consultar_contador=1&idcontador='+valor,
   success: function(data) {
     if(data==1)
-      $("#reiniciar_contador").attr("checked",true); 
+      $("#reiniciar_contador").attr("checked",true);
     else
       $("#reiniciar_contador").attr("checked",false);
   }
@@ -311,7 +311,7 @@ function actualizar_contador(valor)
               eval('document.layers["esperando_formato"]');
         document.poppedLayer.style.visibility = "hidden";
       }
-      
+
       function cargando_serie() {
         if (browserType == "gecko" )
            document.poppedLayer =
@@ -323,7 +323,7 @@ function actualizar_contador(valor)
            document.poppedLayer =
                eval('document.layers["esperando_formato"]');
         document.poppedLayer.style.visibility = "visible";
-      }              
+      }
     </script>
 			</td>
 		</tr>
@@ -363,10 +363,10 @@ echo $x_contador_idcontadorList;
 			<td bgcolor="#F5F5F5"><span class="phpmaker">
         <?php
 								$formatos = busca_filtro_tabla("", "serie A", "tvd=0", "nombre DESC", $conn);
-								
+
 								$inicio = '<SELECT name="x_serie_idserie"><OPTION value="0" selected>Sin Serie Documental</OPTION><OPTION value="">Crear Serie Documental</OPTION>';
 								$fin = '</SELECT>';
-								
+
 								for($i = 0; $i < $formatos["numcampos"]; $i++) {
 									$inicio .= '<OPTION value="' . $formatos[$i]["idserie"] . '">' . $formatos[$i]["nombre"] . "-e" . $formatos[$i]["codigo"] . '</OPTION>';
 								}
@@ -450,7 +450,7 @@ echo $x_contador_idcontadorList;
 			}
 		}
 		?>
-		Izquierda <select name="x_mizq"><?php combo("15"); ?></select> 
+		Izquierda <select name="x_mizq"><?php combo("15"); ?></select>
 		Derecha <select name="x_mder">	<?php combo("20"); ?></select>
 		Superior <select name="x_msup">	<?php combo("15"); ?></select>
 		Inferior <select name="x_minf"><?php combo("30"); ?> </select>
@@ -508,15 +508,15 @@ echo $x_contador_idcontadorList;
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">M&eacute;todo
 					Exportar</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker">
-			<?php 
+			<?php
 				$array_check_exportar=array("tcpdf"=>"","html2ps"=>"","mpdf"=>"");
 				$array_check_exportar[$x_exportar] = "checked";
-				if (!(!is_null($x_exportar)) || ($x_exportar == "")) { $array_check_exportar["tcpdf"] = "checked";} // Set default value 
+				if (!(!is_null($x_exportar)) || ($x_exportar == "")) { $array_check_exportar["tcpdf"] = "checked";} // Set default value
 			?>
-			<input type="radio" name="x_exportar[]" id="x_exportar_tcpdf" value="tcpdf" <?php echo($array_check_exportar["tcpdf"]); ?> >	TCPDF	
-			<input type="radio" name="x_exportar[]" id="x_exportar_html2ps" value="html2ps"  <?php echo($array_check_exportar["html2ps"]); ?> >	HTML2ps	
-			<input type="radio" name="x_exportar[]" id="x_exportar_mpdf" value="mpdf" <?php echo($array_check_exportar["mpdf"]); ?>  >	mPDF	  
-</span></td> 
+			<input type="radio" name="x_exportar[]" id="x_exportar_tcpdf" value="tcpdf" <?php echo($array_check_exportar["tcpdf"]); ?> >	TCPDF
+			<input type="radio" name="x_exportar[]" id="x_exportar_html2ps" value="html2ps"  <?php echo($array_check_exportar["html2ps"]); ?> >	HTML2ps
+			<input type="radio" name="x_exportar[]" id="x_exportar_mpdf" value="mpdf" <?php echo($array_check_exportar["mpdf"]); ?>  >	mPDF
+</span></td>
 		</tr>
 		<tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">El
@@ -566,7 +566,7 @@ echo $x_contador_idcontadorList;
 
 
 
-<?php 
+<?php
 include ("footer.php");
 
 // -------------------------------------------------------------------------------
@@ -596,7 +596,7 @@ function LoadData($sKey, $conn) {
 	} else {
 		$LoadData = true;
 		$row = phpmkr_fetch_array($rs);
-		
+
 		// Get the field contents
 		$x_idformato = $row["idformato"];
 		$x_nombre = $row["nombre"];
@@ -638,27 +638,27 @@ function LoadData($sKey, $conn) {
 // - Variables used: field variables
 function AddData($conn) {
 	global $enter2tab, $x_autoguardado, $x_mostrar_pdf, $x_item, $x_idformato, $x_nombre, $x_etiqueta, $x_contador_idcontador, $x_ruta_mostrar, $x_ruta_editar, $x_ruta_adicionar, $x_librerias, $x_encabezado, $x_cuerpo, $x_pie_pagina, $x_margenes, $x_orientacion, $x_papel, $x_exportar, $x_tabla, $x_detalle, $x_cod_padre, $x_serie_idserie, $x_banderas, $x_font_size, $x_mostrar, $x_tipo_edicion, $x_firma_digital, $x_fk_categoria_formato, $x_flujo_idflujo, $x_funcion_predeterminada, $x_paginar, $x_pertenece_nucleo;
-	
+
 	// Field Banderas
 	if(is_array($x_banderas))
 		$fieldList["banderas"] = "'" . implode(",", $x_banderas) . "'";
-	
+
 	$fieldList["mostrar_pdf"] = $x_mostrar_pdf;
-	
+
 	// Field nombre
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_nombre) : $x_nombre;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["nombre"] = $theValue;
-	
+
 	// Field firma_digital
 	$theValue = ($x_firma_digital != "") ? intval($x_firma_digital) : 0;
 	$fieldList["firma_digital"] = $theValue;
-	
+
 	// Field etiqueta
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiqueta) : $x_etiqueta;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["etiqueta"] = ($theValue);
-	
+
 	// Field contador_idcontador
 	$theValue = ($x_contador_idcontador != 0) ? intval($x_contador_idcontador) : crear_contador($x_nombre);
 	$fieldList["contador_idcontador"] = $theValue;
@@ -668,11 +668,11 @@ function AddData($conn) {
 		if($_REQUEST["reiniciar_contador"] && $_REQUEST["reiniciar_contador"])
 			$reinicio = 1;
 		$sql = "update contador set reiniciar_cambio_anio=$reinicio where idcontador=" . $fieldList["contador_idcontador"];
-		
+
 		guardar_traza($sql, "ft_" . $x_nombre);
 		phpmkr_query($sql, $conn);
 	}
-	
+
 	// Field Serie_idserie
 	if($x_serie_idserie == "") { // crear la serie con el nombre del formato
 		$nomb_serie_papa = busca_filtro_tabla("idserie", "serie", "lower(nombre) like 'administraci&n%formatos'", "", $conn);
@@ -684,7 +684,7 @@ function AddData($conn) {
 			phpmkr_query($sql_serie_papa, $conn);
 			$idserie_papa = phpmkr_insert_id();
 		}
-		
+
 		$nomb_serie = busca_filtro_tabla("idserie,cod_padre", "serie", "nombre like '" . $x_etiqueta . "'", "", $conn);
 		if ($nomb_serie["numcampos"]) {
 			if ($nomb_serie[0]["cod_padre"] != $idserie_papa) {
@@ -699,21 +699,21 @@ function AddData($conn) {
 			guardar_traza($sql_serie, $x_nombre);
 			phpmkr_query($sql_serie);
 			$fieldList["serie_idserie"] = phpmkr_insert_id();
-		}		
+		}
 	} else { // otra serie elegida o sin serie
 		$theValue = ($x_serie_idserie != 0) ? intval($x_serie_idserie) : 0;
 		$fieldList["serie_idserie"] = $theValue;
 	}
 	$fieldList["tiempo_autoguardado"] = $x_autoguardado;
-	
+
 	$x_tabla = "ft_" . $x_nombre;
 	$fieldList["nombre_tabla"] = "'" . $x_tabla . "'";
-	
+
 	// Field librerias
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_librerias) : $x_librerias;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["librerias"] = $theValue;
-	
+
 	// Field margenes
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_margenes) : $x_margenes;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
@@ -721,17 +721,17 @@ function AddData($conn) {
 	// font_size
 	$fieldList["font_size"] = $x_font_size;
 	$fieldList["enter2tab"] = $enter2tab;
-	
+
 	// Field orientacion
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_orientacion) : $x_orientacion;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["orientacion"] = $theValue;
-	
+
 	// Field papel
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_papel) : $x_papel;
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["papel"] = $theValue;
-	
+
 	// Field exportar
 	$theValue = implode(",", $x_exportar);
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($theValue) : $theValue;
@@ -748,49 +748,49 @@ detalles_mostrar_".$x_nombre.".php";
 		if(intval($x_pertenece_nucleo) == 0) {
 			$data = '*';
 		}
-    		
-		
+
+
 	$fp = fopen($x_nombre . "/.gitignore", 'w+');
     fwrite($fp,$data);
     fclose($fp);
-	chmod($x_nombre . "/.gitignore",PERMISOS_ARCHIVOS);		
+	chmod($x_nombre . "/.gitignore",PERMISOS_ARCHIVOS);
 		/*
 		if(!file_put_contents($x_nombre . "/.gitignore", $data)) {
 			alerta("No se crea el archivo .gitignore para versionamiento");
 		}*/
 	}
-	
+
 	// Field cod_padre
 	$theValue = ($x_cod_padre != 0) ? intval($x_cod_padre) : 0;
 	$fieldList["cod_padre"] = $theValue;
-	
+
 	// Field Tipo Edicion continua
 	$theValue = ($x_tipo_edicion != 0) ? intval($x_tipo_edicion) : 0;
 	$fieldList["tipo_edicion"] = $theValue;
-	
+
 	$theValue = ($x_mostrar != 0) ? intval($x_mostrar) : 0;
 	$fieldList["mostrar"] = $theValue;
-	
+
 	// paginar en el mostrar
 	$theValue = ($x_paginar != 0) ? intval($x_paginar) : 0;
 	$fieldList["paginar"] = $theValue;
-	
+
 	// tipo detalle
 	$theValue = ($x_detalle != "") ? intval($x_detalle) : 0;
 	$fieldList["detalle"] = $theValue;
 	// tipo item
 	$fieldList["item"] = $x_item;
-	
+
 	$fieldList["fk_categoria_formato"] = "'" . $x_fk_categoria_formato . "'";
 	$fieldList["flujo_idflujo"] = $x_flujo_idflujo;
 	$fieldList["funcion_predeterminada"] = "'" . implode(",", $x_funcion_predeterminada) . "'";
-	
+
 	$fieldList["ruta_mostrar"] = "'" . "mostrar_" . $x_nombre . ".php'";
 	$fieldList["ruta_editar"] = "'" . "editar_" . $x_nombre . ".php'";
 	$fieldList["ruta_adicionar"] = "'" . "adicionar_" . $x_nombre . ".php'";
 	$fieldList["funcionario_idfuncionario"] = usuario_actual("funcionario_codigo");
 	$fieldList["pertenece_nucleo"] = intval($x_pertenece_nucleo);
-	
+
 	// insert into database
 	$strsql = "INSERT INTO formato (";
 	$strsql .= implode(",", array_keys($fieldList));
@@ -799,7 +799,7 @@ detalles_mostrar_".$x_nombre.".php";
 	$strsql .= ")";
 	guardar_traza($strsql, "ft_" . $x_nombre);
 	phpmkr_query($strsql, $conn) or die("Falla al ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
-	
+
 	$idformato = phpmkr_insert_id();
 	if($idformato != '') {
 		if($x_flujo_idflujo != 0) {
@@ -816,9 +816,9 @@ detalles_mostrar_".$x_nombre.".php";
 		}
 		crear_modulo_formato($idformato);
 	}
-	
+
 	if($fieldList["cod_padre"] && $idformato) {
-		
+
 		$formato_padre = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $fieldList["cod_padre"], "", $conn);
 		$strsql = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html) VALUES (" . $idformato . ",'" . $formato_padre[0]["nombre_tabla"] . "', " . $fieldList["nombre"] . ", 'INT', 11, 1," . $fieldList["cod_padre"] . ", 'a'," . $fieldList["etiqueta"] . ", 'fk', 'detalle')";
 		guardar_traza($strsql, "ft_" . $x_nombre);
@@ -827,18 +827,18 @@ detalles_mostrar_".$x_nombre.".php";
 	if($idformato && !$fieldList["item"]) {
 		$sqlcd = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html) VALUES (" . $idformato . ",'estado_documento', 'ESTADO DEL DOCUMENTO', 'VARCHAR', 255, 0,'', 'a','', '', 'hidden')";
 		phpmkr_query($sqlcd, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
-		
+
 		$strsql = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html) VALUES (" . $idformato . ",'serie_idserie', 'SERIE DOCUMENTAL', 'INT', 11, 1," . $fieldList["serie_idserie"] . ", 'a'," . $fieldList["etiqueta"] . ", 'fk', 'hidden')";
 		guardar_traza($strsql, "ft_" . $x_nombre);
 		phpmkr_query($strsql, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
 	}
-	
+
 	return $idformato;
 }
 
 function crear_contador($contador) {
 	global $conn;
-	
+
 	$cont = busca_filtro_tabla("*", "contador", "nombre LIKE '" . $contador . "'", "", $conn);
 	if(!$cont["numcampos"]) {
 		$sql = "INSERT INTO contador(consecutivo, nombre) VALUES(1,'" . $contador . "')";
@@ -929,7 +929,7 @@ Buscar:
 		eval('document.layers["esperando<?php echo $entidad; ?>"]');
 		document.poppedLayer.style.display = "";
 		}
-                    
+
                     --></script>
 
 
@@ -939,7 +939,7 @@ Buscar:
 
 function generar_campo_flujo($idformato, $idflujo) {
 	$buscar_campo = busca_filtro_tabla("", "campos_formato A", "formato_idformato=" . $idformato . " AND nombre='idflujo'", "", $conn);
-	
+
 	if($buscar_campo["numcampos"] == 0) {
 		$campo = "INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, acciones, predeterminado, etiqueta_html, orden, valor) VALUES(" . $idformato . ",'idflujo', 'idflujo', 'VARCHAR', '255', 0, 'a,e,b', '" . $idflujo . "', 'select', 0, 'Select id,title as nombre from diagram order by nombre')";
 		// Se deja el comentario para la modificacion de los flujos
@@ -1000,7 +1000,7 @@ function vincular_funcion_digitalizacion($idformato) {
 		$idfunciones_formato_enlace = $buscar_funcion[0]["idfunciones_formato_enlace"];
 	}
 	// ---Vinculando funcion de validacion al digitalizar
-	
+
 	if ($idfunciones_formato_enlace) {
 	$buscar_funcion = busca_filtro_tabla("", "funciones_formato A", "nombre_funcion='validar_digitalizacion_formato'", "", $conn);
 		if (!$buscar_funcion["numcampos"]) {
@@ -1019,7 +1019,7 @@ function vincular_funcion_digitalizacion($idformato) {
 			$idfunciones_validar_enlace = phpmkr_insert_id();
 		}
 	}
-	
+
 	// Vinculando la accion de validar la digitalizar posterior a la accion correspondiente.
 	if(in_array("e", $x_banderas)) {
 		$accion = busca_filtro_tabla("", "accion", "nombre='aprobar'", "", $conn);
@@ -1041,7 +1041,7 @@ function vincular_campo_anexo($idformato) {
 	global $conn;
 	$formato = busca_filtro_tabla("", "formato", "idformato=" . $idformato, "", $conn);
 	$buscar_campo = busca_filtro_tabla("", "campos_formato A", "formato_idformato=" . $idformato . " AND nombre='anexo_formato'", "", $conn);
-	
+
 	if($buscar_campo["numcampos"] == 0) {
 		$campo = "INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, acciones, predeterminado, etiqueta_html, orden, valor) VALUES(" . $idformato . ",'anexo_formato', 'Anexos digitales', 'VARCHAR', '255', 0, 'a,e,b', '" . $idflujo . "', 'archivo', 0, '')";
 	} else {
@@ -1064,7 +1064,7 @@ function crear_modulo_formato($idformato) {//Esta funcion es la misma que en for
 			} else {
 				$papa = $modulo_formato[0]["idmodulo"];
 			}
-			$sql = "INSERT INTO modulo(permiso_admin,pertenece_nucleo,busqueda,nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES (0,0,'1','" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','" . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "','centro','" . $papa . "','1','Permite administrar el formato " . $datos_formato[0]["etiqueta"] . ".')";
+			$sql = "INSERT INTO modulo(permiso_admin,pertenece_nucleo,busqueda,nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES (0,0,'1','" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','" . $datos_formato[0]["etiqueta"] . "','" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "','centro','" . $papa . "','1','Permite administrar el formato " . $datos_formato[0]["etiqueta"] . ".')";
 			guardar_traza($sql, $datos_formato[0]["nombre_tabla"]);
 			phpmkr_query($sql, $conn);
 			$modulo_id = phpmkr_insert_id();
@@ -1078,7 +1078,7 @@ function crear_modulo_formato($idformato) {//Esta funcion es la misma que en for
 			} else {
 				$papa = $modulo_formato[0]["idmodulo"];
 			}
-			$sql = "update modulo set tipo='secundario',nombre='" . $datos_formato[0]["nombre"] . "',etiqueta='" . $datos_formato[0]["etiqueta"] . "',cod_padre='" . $papa . "',enlace='formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "' where idmodulo=" . $submodulo_formato[0]["idmodulo"];
+			$sql = "update modulo set tipo='secundario',nombre='" . $datos_formato[0]["nombre"] . "',etiqueta='" . $datos_formato[0]["etiqueta"] . "',cod_padre='" . $papa . "',enlace='" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "' where idmodulo=" . $submodulo_formato[0]["idmodulo"];
 			guardar_traza($sql, $datos_formato[0]["nombre_tabla"]);
 			phpmkr_query($sql, $conn);
 		}
@@ -1093,7 +1093,7 @@ function crear_modulo_formato($idformato) {//Esta funcion es la misma que en for
 			} else {
 				$papa = $modulo_crear[0]["idmodulo"];
 			}
-			$sql = "INSERT INTO modulo(permiso_admin,pertenece_nucleo,busqueda,nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES (0,0,'1','crear_" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','Crear " . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_adicionar"] . "','centro','" . $modulo_crear[0]["idmodulo"] . "','1','Permite crear " . $datos_formato[0]["etiqueta"] . ".')";
+			$sql = "INSERT INTO modulo(permiso_admin,pertenece_nucleo,busqueda,nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES (0,0,'1','crear_" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','Crear " . $datos_formato[0]["etiqueta"] . "','" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_adicionar"] . "','centro','" . $modulo_crear[0]["idmodulo"] . "','1','Permite crear " . $datos_formato[0]["etiqueta"] . ".')";
 			guardar_traza($sql, $formato[0]["nombre_tabla"]);
 			phpmkr_query($sql, $conn);
 			$modulo_id = phpmkr_insert_id();
@@ -1103,7 +1103,7 @@ function crear_modulo_formato($idformato) {//Esta funcion es la misma que en for
 			} else {
 				$papa = $modulo_crear[0]["idmodulo"];
 			}
-			$sql = "update modulo set tipo='secundario',nombre='crear_" . $datos_formato[0]["nombre"] . "',etiqueta='Crear " . $datos_formato[0]["etiqueta"] . "',cod_padre='" . $papa . "',enlace='formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_adicionar"] . "' where idmodulo=" . $submodulo_formato[0]["idmodulo"];
+			$sql = "update modulo set tipo='secundario',nombre='crear_" . $datos_formato[0]["nombre"] . "',etiqueta='Crear " . $datos_formato[0]["etiqueta"] . "',cod_padre='" . $papa . "',enlace='" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_adicionar"] . "' where idmodulo=" . $submodulo_formato[0]["idmodulo"];
 			phpmkr_query($sql, $conn);
 		}
 	}

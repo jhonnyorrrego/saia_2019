@@ -14,8 +14,8 @@ include_once ($ruta_db_superior . "db.php");
 if (!$_SESSION["LOGIN" . LLAVE_SAIA] && isset($_REQUEST["LOGIN"]) && @$_REQUEST["conexion_remota"]) {
 	logear_funcionario_webservice($_REQUEST["LOGIN"]);
 }
-include_once ($ruta_db_superior . 'formatos/librerias/encabezado_pie_pagina.php');
-include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
+include_once ($ruta_db_superior . FORMATOS_SAIA . "librerias/encabezado_pie_pagina.php");
+include_once ($ruta_db_superior . FORMATOS_SAIA . "librerias/funciones_generales.php");
 require_once ($ruta_db_superior . 'tcpdf/tcpdf.php');
 include_once ($ruta_db_superior . 'pantallas/qr/librerias.php');
 include_once ($ruta_db_superior . 'pantallas/lib/librerias_cripto.php');
@@ -430,14 +430,14 @@ class Imprime_Pdf {
 			$datos_plantilla = busca_filtro_tabla("", $datos_formato[0]["nombre_tabla"], "documento_iddocumento=" . $iddocumento, "", $conn);
 			if ($vista > 0) {
 				$datos_vista = busca_filtro_tabla("", "vista_formato", "idvista_formato=" . $vista, "", $conn);
-				$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_vista[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&tipo_pdf=tcpdf&idfunc=" . $idfunc_crypto;
+				$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_vista[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&tipo_pdf=tcpdf&idfunc=" . $idfunc_crypto;
 			} elseif ($datos_formato[0]["nombre"] == "carta") {
 				$destinos = explode(",", $datos_plantilla[0]["destinos"]);
 				foreach ($destinos as $fila) {
-					$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&tipo_pdf=tcpdf&idfunc=" . $idfunc_crypto . "&destino=$fila";
+				    $direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&tipo_pdf=tcpdf&idfunc=" . $idfunc_crypto . "&destino=$fila";
 				}
 			} else {
-				$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/formatos/" . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&tipo_pdf=tcpdf&idfunc=" . $idfunc_crypto;
+			    $direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&tipo_pdf=tcpdf&idfunc=" . $idfunc_crypto;
 			}
 		}
 		//$this -> pdf -> startPageGroup();

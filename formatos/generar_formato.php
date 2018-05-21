@@ -13,7 +13,7 @@ include_once ($ruta_db_superior . "db.php");
 if (!$_SESSION["LOGIN" . LLAVE_SAIA] && isset($_REQUEST["LOGIN"]) && @$_REQUEST["conexion_remota"]) {
 	logear_funcionario_webservice($_REQUEST["LOGIN"]);
 }
-include_once ($ruta_db_superior . "formatos/librerias/funciones.php");
+include_once ($ruta_db_superior . FORMATOS_SAIA . "librerias/funciones.php");
 
 if (@$_REQUEST["archivo"] != '') {
 	$archivo = $ruta_db_superior . str_replace("-", "/", $_REQUEST["archivo"]);
@@ -84,7 +84,7 @@ switch (@$_REQUEST["crea"]) {
 		break;
 	case "buscar" :
 		$ch = curl_init();
-		$url = PROTOCOLO_CONEXION . RUTA_PDF . '/formatos/generar_formato_buscar.php?crea=buscar&idformato=' . $idformato . '&conexion_remota=1&LOGIN=' . $_SESSION["LOGIN" . LLAVE_SAIA];
+		$url = PROTOCOLO_CONEXION . RUTA_PDF . FORMATOS_SAIA . 'generar_formato_buscar.php?crea=buscar&idformato=' . $idformato . '&conexion_remota=1&LOGIN=' . $_SESSION["LOGIN" . LLAVE_SAIA];
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		$contenido = curl_exec($ch);
@@ -936,7 +936,7 @@ function crear_formato_mostrar($idformato) {
 		$contenido = $includes . $texto . $enlace . incluir_libreria("footer_nuevo.php", "librerias");
 		$mostrar = crear_archivo($formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $contenido);
 		if ($mostrar !==false) {
-		  notificaciones("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar),"success",2000);			
+		  notificaciones("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar),"success",2000);
 		}else{
 		  notificaciones("Error al crear el archivo " . dirname($mostrar),"error",5000);
 		}
@@ -1108,7 +1108,7 @@ function crear_vista_formato($idformato, $arreglo) {
 			if ($modulo_formato["numcampos"]) {
 				$submodulo_formato = busca_filtro_tabla("", "modulo", "nombre LIKE '" . $vista[0]["nombre"] . "'", "", $conn);
 				if (!$submodulo_formato["numcampos"]) {
-					$sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES ('" . $vista[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','" . $vista[0]["etiqueta"] . "','formatos/" . $vista[0]["ruta_mostrar"] . "','centro','" . $modulo_formato[0]["idmodulo"] . "','1','Permite administrar el formato " . $vista[0]["etiqueta"] . ".')";
+				    $sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES ('" . $vista[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','" . $vista[0]["etiqueta"] . "','" . FORMATOS_CLIENTE . $vista[0]["ruta_mostrar"] . "','centro','" . $modulo_formato[0]["idmodulo"] . "','1','Permite administrar el formato " . $vista[0]["etiqueta"] . ".')";
 					guardar_traza($sql, $fpadre[0]["nombre_tabla"]);
 					phpmkr_query($sql, $conn);
 				}
@@ -2084,7 +2084,7 @@ function crear_formato_ae($idformato, $accion) {
 
 		$mostrar = crear_archivo($formato[0]["nombre"] . "/" . $formato[0]["ruta_" . $accion], $contenido);
 		if ($mostrar !==false) {
-			notificaciones("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar),"success",2000);			
+			notificaciones("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar),"success",2000);
 		}else{
 			notificaciones("Error al crear el archivo " . dirname($mostrar),"error",5000);
 		}
@@ -2792,10 +2792,10 @@ function generar_formato($idformato) {
 	if (intval($formato[0]["pertenece_nucleo"]) == 0) {
 		$data = "*";
 	}
-	$fp = fopen($ruta_db_superior . "formatos/" . $formato[0]["nombre"] . "/.gitignore", 'w+');
+	$fp = fopen($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/.gitignore", 'w+');
 	fwrite($fp, $data);
 	fclose($fp);
-	chmod($ruta_db_superior . "formatos/" . $formato[0]["nombre"] . "/.gitignore", PERMISOS_ARCHIVOS);
+	chmod($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/.gitignore", PERMISOS_ARCHIVOS);
 	$pie = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["pie_pagina"] . "'", "", $conn);
 	$lcampos = "";
 	$regs = array();
