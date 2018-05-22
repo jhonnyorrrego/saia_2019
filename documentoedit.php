@@ -765,7 +765,7 @@ function LoadData($sKey,$conn)
 		if($row["plantilla"]!="" && !$row["numero"]){
       $formato=busca_filtro_tabla("","formato","nombre LIKE '".$row["plantilla"]."'","",$conn);
       if($formato["numcampos"]){
-        redirecciona("formatos/".$formato[0]["nombre"]."/".$formato[0]["ruta_editar"]."?iddoc=".$sKeyWrk);
+        redirecciona(FORMATOS_CLIENTE.$formato[0]["nombre"]."/".$formato[0]["ruta_editar"]."?iddoc=".$sKeyWrk);
       }
     }
     else if($row["plantilla"]!="" && $row["numero"]){

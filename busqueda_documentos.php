@@ -872,8 +872,8 @@ echo $x_serieList;*/
         <td bgcolor="#F5F5F5"><span class="phpmaker">COMO</span></td>
       <td bgcolor="#F5F5F5"><span class="phpmaker"> 
         <?php $plantillas = busca_filtro_tabla("nombre,etiqueta","formato","mostrar=1","etiqueta",$conn);        
-              if($plantillas["numcampos"]>0)
-              { echo "<select name='plantilla' onchange='formato=this.options[selectedIndex].title; link_buscador.href=\"formatos/\"+formato+\"/buscar_\"+formato+\".php?campo__retorno=campos_formato\"'><option value='' >Seleccionar...</option>";
+              if($plantillas["numcampos"]>0) {
+                echo "<select name='plantilla' onchange='formato=this.options[selectedIndex].title; link_buscador.href=\"" . FORMATOS_CLIENTE . "\"+formato+\"/buscar_\"+formato+\".php?campo__retorno=campos_formato\"'><option value='' >Seleccionar...</option>";
                 for($i=0; $i<$plantillas["numcampos"]; $i++)
                  echo "<option value='".strtoupper($plantillas[$i]["nombre"])."' title=\"".$plantillas[$i]["nombre"]."\">".$plantillas[$i]["etiqueta"]."</option>";               
                echo "</select>";

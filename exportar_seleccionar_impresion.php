@@ -69,9 +69,10 @@ for ($i = 0; $i < count($arreglo_dato); $i++) {
 			$hijos = busca_filtro_tabla("count(idformato) as cuantos", "formato", "cod_padre=" . $dato["0"], "", $conn);
 			if ($formato["numcampos"]) {
 				if ($hijos[0]["cuantos"] > 0) {
-					$ruta = "formatos/" . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"];
+					$ruta = FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"];
 					$busca_doc = busca_filtro_tabla("documento_iddocumento", $formato[0]["nombre_tabla"], "id" . $formato[0]["nombre_tabla"] . "=" . $dato[2], "", $conn);
-					if ($i == 0) {$iddocpadre = $busca_doc[0][0];
+					if ($i == 0) {
+						$iddocpadre = $busca_doc[0][0];
 						$plantilla = $formato[0]["nombre"];
 					}
 					array_push($listado_pdf, $ruta . "?idformato=" . $dato[0] . "&tipo=5&iddoc=" . $busca_doc[0][0] . "&font_size=" . $_REQUEST["font_size"] . "&ocultar_firmas=" . $_REQUEST["ocultar_firmas"]);

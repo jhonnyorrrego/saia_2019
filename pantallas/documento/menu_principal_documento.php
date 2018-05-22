@@ -24,7 +24,7 @@ if($formato[0]['mostrar_pdf']==1){
 }elseif($formato[0]['mostrar_pdf']==2){
     $_SESSION["tipo_pagina"]="pantallas/documento/visor_documento.php?pdf_word=1&iddoc=".$iddoc."&rand=".rand(0,1000);
 }else{
-    $_SESSION["tipo_pagina"]="formatos/$nombre/mostrar_$nombre.php?iddoc=".$iddoc."&rand=".rand(0,1000);
+    $_SESSION["tipo_pagina"] = FORMATOS_CLIENTE . "$nombre/mostrar_$nombre.php?iddoc=".$iddoc."&rand=".rand(0,1000);
 }
 
 $ok_cal=0;
@@ -382,7 +382,7 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
              		<script type="text/javascript">
                   $(document).ready(function(){
                     $("#editar_documento").click(function(){
-                      window.open("<?php echo($ruta_db_superior);?>formatos/<?php echo($formato[0]["nombre"]); ?>/<?php echo($formato[0]["ruta_editar"]); ?>?iddoc=<?php echo($iddoc); ?>&idformato=<?php echo($formato[0]["idformato"]); ?>","_self");
+                      window.open("<?php echo($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]["nombre"]); ?>/<?php echo($formato[0]["ruta_editar"]); ?>?iddoc=<?php echo($iddoc); ?>&idformato=<?php echo($formato[0]["idformato"]); ?>","_self");
                     });
                   });
                 </script>
@@ -515,7 +515,7 @@ function permisos_modulo_menu_intermedio($iddoc, $modulo_padre,$lista,$target="_
       	}
 				if($modulo[$i]["nombre"]=='ver_notas_posit'){
 					$datos_documento=busca_filtro_tabla("","documento A, formato B","lower(A.plantilla)=lower(B.nombre) AND A.iddocumento=".$iddoc,"",$conn);
-					$modulo[$i]["enlace"]="formatos/".$datos_documento[0]["nombre"]."/".$datos_documento[0]["ruta_mostrar"]."?iddoc=".$datos_documento[0]["iddocumento"]."&idformato=".$datos_documento[0]["idformato"]."&ver_notas=1";
+					$modulo[$i]["enlace"] = FORMATOS_CLIENTE . $datos_documento[0]["nombre"]."/".$datos_documento[0]["ruta_mostrar"]."?iddoc=".$datos_documento[0]["iddocumento"]."&idformato=".$datos_documento[0]["idformato"]."&ver_notas=1";
 				}
       	if($modulo[$i]["destino"] && $modulo[$i]["destino"]!="centro"){
       		$target=$modulo[$i]["destino"];
