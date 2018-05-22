@@ -46,16 +46,21 @@ echo librerias_tabla_bootstrap("1.11", false, false);
 
 ?>
 
+<style>
+#barra_exportar_ppal{ margin-right:50px;}
+.progress{margin-bottom: 0px;}
+</style>
 </head>
 <body>
   <div class="container" style="width:auto;">
   <div class="row">
     <form class="formulario_busqueda" accept-charset="UTF-8" action="" id="kformulario_saia" name="kformulario_saia" method="post" style="padding:0px;margin:0px;">
+			<input type="hidden" value="<?php echo($datos_busqueda[0]['cantidad_registros']);?>" name="busqueda_total_registros" id="busqueda_registros">
       <input type="hidden" name="sord" id="sord" value="desc">
       <input type="hidden" name="idbusqueda_componente" id="idbusqueda_componente" value="<?php echo(@$_REQUEST["idbusqueda_componente"]);?>">
       <input type="hidden" name="adicionar_consulta" id="adicionar_consulta" value="1">
       <input type="hidden" name="idbusqueda_filtro_temp" id="idbusqueda_filtro_temp" value="<?php echo(@$_REQUEST["idbusqueda_filtro_temp"]);?>">
-      <input type="hidden" name="cantidad_total" id="cantidad_total" value="">
+      <input type="hidden" name="busqueda_total_paginas" id="busqueda_total_paginas" value="">
       <input type="hidden" name="rows" id="rows" value="20">
     </form>
   </div>
@@ -102,7 +107,7 @@ echo librerias_tabla_bootstrap("1.11", false, false);
         echo($funcion_menu[0](@$funcion_menu[1]));
     }*/
        ?>
-       <button class="btn btn-primary exportar_listado_saia" enlace="pantallas/documento/busqueda_avanzada_documento.php" title="Exportar reporte" id="boton_exportar_excel" style="">Exportar a excel</button>
+       <button class="btn btn-primary exportar_reporte_saia" enlace="pantallas/documento/busqueda_avanzada_documento.php" title="Exportar reporte" id="boton_exportar_excel" style="">Exportar</button>
        <div class="pull-right" valign="middle"><iframe name="iframe_exportar_saia" id="iframe_exportar_saia" allowtransparency="1" frameborder="0" framespacing="2px" scrolling="no" width="100%" src=""  hspace="0" vspace="0" height="32px"></iframe></div>
       <?php
 
@@ -245,7 +250,7 @@ $(document).ready(function() {
 
 function responseHandler(res) {
 
-	console.log(res);
+	//console.log(res);
 	var options = $table.bootstrapTable('getOptions');
 
     //Get the page number
@@ -253,9 +258,11 @@ function responseHandler(res) {
 
     var total = res.records;
     res.total = total;
+    if(res.rows) {
     $.each(res.rows, function (i, row) {
         row.state = $.inArray(row[llave], selections[paginaActual]) !== -1;
     });
+    }
     //console.log(selections[paginaActual]);
     return res;
 }
@@ -286,14 +293,14 @@ function procesamiento_buscar(externo) {
                 "search": params.search,
                 "sort": params.sort,
                 "order": params.order,
-                "cantidad_total":$("#cantidad_total").val()
+                "cantidad_total":$("#busqueda_total_paginas").val()
             };
             $.extend( data, q);
-            console.log(params);
+            //console.log(params);
             return data;
         },
         onLoadSuccess: function(data){
-          $("#cantidad_total").val(data.total);
+          $("#busqueda_total_paginas").val(data.total);
         }
     });
     return false;
@@ -319,6 +326,37 @@ $(document).ready(function() {
       procesamiento_buscar();
       return true;
   });
+
+  $(".exportar_reporte_saia").click(function(obj){
+		isOpera = !!window.opera || navigator.userAgent.indexOf(' OPR/') >= 0;
+	    // Opera 8.0+ (UA detection to detect Blink/v8-powered Opera)
+		isFirefox = typeof InstallTrigger !== 'undefined';   // Firefox 1.0+
+		isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
+		    // At least Safari 3+: "[object HTMLElementConstructor]"
+		isChrome = !!window.chrome && !isOpera;              // Chrome 1+
+		isIE = /*@cc_on!@*/false || !!document.documentMode;   // At least IE6
+		if(isChrome||isIE){
+			var busqueda_total=$("#busqueda_total_paginas").val();
+			if(parseInt(busqueda_total)!=0){
+				notificacion_saia('Espere un momento por favor, hasta que se habilite el enlace de descarga','success','',9500);
+			}
+		}
+	  exportar_funcion_excel_reporte();
+	});
+
+  function exportar_funcion_excel_reporte(){
+		var busqueda_total=$("#busqueda_total_paginas").val();
+		if(parseInt(busqueda_total)!=0){
+		<?php
+		$ruta_temporal=$_SESSION["ruta_temp_funcionario"];
+		?>
+		var ruta_file="<?php echo($ruta_temporal);?>/reporte_<?php echo($datos_busqueda[0]["nombre"].'_'.date('Ymd').'.xls'); ?>";
+		var url="exportar_saia.php?tipo_reporte=1&idbusqueda_componente=<?php echo $datos_busqueda[0]["idbusqueda_componente"]; ?>&page=1&exportar_saia=excel&ruta_exportar_saia="+ruta_file+"&rows="+$("#busqueda_registros").val()*4+"&actual_row=0&variable_busqueda="+$("#variable_busqueda").val()+"&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>";
+		window.open(url,"iframe_exportar_saia");
+		}else{
+			notificacion_saia('<b>ATENCI&Oacute;N</b><br>No hay registros para exportar','warning','',2000);
+		}
+	}
 });
 
 </script>

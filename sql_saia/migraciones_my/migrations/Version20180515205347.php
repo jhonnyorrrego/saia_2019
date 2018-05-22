@@ -20,14 +20,6 @@ class Version20180515205347 extends AbstractMigration {
             $this->platform->registerDoctrineTypeMapping('enum', 'string');
         }
 
-        $tabla_comp = $schema->getTable('busqueda_componente');
-        $this->abortIf($tabla_comp->hasColumn("llave"), 'Ya ha configurado este SAIA para bootstrap table');
-
-        $tabla_comp->addColumn("llave", "string", [
-            "length" => 255,
-            "default" => "iddocumento"
-        ]);
-
     }
 
     /**
@@ -35,7 +27,15 @@ class Version20180515205347 extends AbstractMigration {
      * @param Schema $schema
      */
     public function up(Schema $schema) {
-        $conn = $this->connection;
+    	$tabla_comp = $schema->getTable('busqueda_componente');
+    	$this->abortIf($tabla_comp->hasColumn("llave"), 'Ya ha configurado este SAIA para bootstrap table');
+
+    	$tabla_comp->addColumn("llave", "string", [
+    			"length" => 255,
+    			"default" => "iddocumento"
+    	]);
+
+    	$conn = $this->connection;
 
         $queryBuilder = $conn->createQueryBuilder();
         $queryBuilder->select('distinct idbusqueda, llave')->from('busqueda');
@@ -72,6 +72,16 @@ class Version20180515205347 extends AbstractMigration {
         $conn = $this->connection;
         $sql = "update busqueda_componente set url = replace(url, 'consulta_busqueda_reporte', 'consulta_busqueda_tabla') where url like '%consulta_busqueda_reporte%'";
         $conn->executeQuery($sql);
+        $sql = "update busqueda set ruta_visualizacion = replace(ruta_visualizacion, 'consulta_busqueda_reporte', 'consulta_busqueda_tabla') where ruta_visualizacion like '%consulta_busqueda_reporte%'";
+        $conn->executeQuery($sql);
+    }
+
+    public function preDown(Schema $schema) {
+    	date_default_timezone_set("America/Bogota");
+
+    	if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
+    		$this->platform->registerDoctrineTypeMapping('enum', 'string');
+    	}
     }
 
     /**
@@ -123,6 +133,8 @@ class Version20180515205347 extends AbstractMigration {
     function postDown($schema) {
         $conn = $this->connection;
         $sql = "update busqueda_componente set url = replace(url, 'consulta_busqueda_tabla', 'consulta_busqueda_reporte') where url like '%consulta_busqueda_tabla%'";
+        $conn->executeQuery($sql);
+        $sql = "update busqueda set ruta_visualizacion = replace(ruta_visualizacion, 'consulta_busqueda_tabla', 'consulta_busqueda_reporte') where ruta_visualizacion like '%consulta_busqueda_tabla%'";
         $conn->executeQuery($sql);
     }
 }
