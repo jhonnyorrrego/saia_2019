@@ -237,7 +237,7 @@ global $conn;
       $("#div_actualizar_info_index",top.document).click();
   </script>
   <?php
-  abrir_url("formatos/".$formato[0]['nombre']."/".$formato[0]['ruta_mostrar']."?iddoc=".$_REQUEST["key"]."&idformato=".$formato[0]['idformato'],"_self");
+  abrir_url(FORMATOS_CLIENTE.$formato[0]['nombre']."/".$formato[0]['ruta_mostrar']."?iddoc=".$_REQUEST["key"]."&idformato=".$formato[0]['idformato'],"_self");
 }
 include_once("footer.php");
 ?>
