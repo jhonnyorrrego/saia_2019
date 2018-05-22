@@ -9,6 +9,8 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
+include_once ($ruta_db_superior . "librerias_saia.php");
+include_once ($ruta_db_superior . "formatos/generar_formato.php");
 
 if (@$_REQUEST["accion"] == "generar") {
 	if (!@$_REQUEST["condicion"]) {
@@ -26,6 +28,7 @@ if (@$_REQUEST["accion"] == "generar") {
 	$acciones = explode(",", $_REQUEST["acciones_formato"]);
 	$cant_acciones = count($acciones);
 	if ($formatos["numcampos"] && $cant_acciones && $registro < $formatos["numcampos"]) {
+		// $abrir=fopen($ruta_db_superior."../log_creacion_formatos3.txt","a+");
 		$redirecciona = PROTOCOLO_CONEXION . RUTA_PDF . '/formatos/llamado_formatos.php?acciones_formato=' . $_REQUEST["acciones_formato"] . '&registro=' . ($registro + 1);
 		if (@$_REQUEST["condicion"]) {
 			$redirecciona .= '&condicion=' . str_replace("=", "@", $_REQUEST["condicion"]);
@@ -33,36 +36,29 @@ if (@$_REQUEST["accion"] == "generar") {
 		if ($_REQUEST["accion"] == "generar") {
 			$redirecciona .= '&accion=' . $_REQUEST["accion"];
 		}
-		$ch = curl_init();
 		for ($i = 0; $i < $cant_acciones; $i++) {
-			$url = PROTOCOLO_CONEXION . RUTA_PDF . '/formatos/generar_formato.php?crea=' . $acciones[$i] . '&idformato=' . $formato["idformato"] . '&conexion_remota=1&LOGIN=' . $_SESSION["LOGIN" . LLAVE_SAIA];
-			if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
-				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-				curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-			}
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_VERBOSE, true);
-			$contenido = curl_exec($ch);
-			if ($contenido === false) {
-				alerta("No se puede generar el formato por favor verifique la generaci&oacute;n manual del formato");
+			$generar = new GenerarFormato($formato["idformato"], $acciones[$i], '');
+			$redireccion = $generar -> ejecutar_accion();
+
+			if ($redireccion === false) {
+				alerta_formatos("No se puede generar el formato por favor verifique la generaci&oacute;n manual del formato");
 			} else {
-				$creados .= 'Fomato ' . $acciones[$i] . " " . $formato["nombre"] . " <br/>";
+				$creados .= 'Formato ' . $acciones[$i] . " " . $formato["nombre"] . " <br>";
 			}
+			// fwrite($abrir,"En la fecha ".date('Y-m-d H:i:s')." Termina el proceso ".$fila." => ".$contenido." \n \n");
 		}
-		curl_close($ch);
 		echo($creados);
 		if ($formatos["numcampos"] == 1) {
-			alerta("Formato " . $formatos[0]["nombre"] . " creado con exito");
+			alerta_formatos("Formato " . $formatos[0]["nombre"] . " creado con exito");
 			redirecciona(PROTOCOLO_CONEXION . RUTA_PDF . "/formatos/formatoview.php?key=" . $formatos[0]["idformato"]);
 		}
 		redirecciona($redirecciona);
 	} else {
 		if ($registro >= $formatos["numcampos"]) {
-			alerta($formatos["numcampos"] . " Formatos Creados con exito");
+			alerta_formatos($formatos["numcampos"] . " Formatos Creados con exito");
 			redirecciona(PROTOCOLO_CONEXION . RUTA_PDF . "/formatos/formatoview.php?key=" . $formatos[0]["idformato"]);
 		}
-		alerta("No se puede realizar (" . $cant_acciones . ") en " . $formatos["numcampos"] . " formatos ");
+		alerta_formatos("No se puede realizar (" . $cant_acciones . ") en " . $formatos["numcampos"] . " formatos ");
 	}
 }
 ?>
