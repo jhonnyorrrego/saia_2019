@@ -1,4 +1,5 @@
-<html><title>.:BUSCAR RADICACI&OACUTE;N DE CORRESPONDENCIA:.</title><head><link rel="stylesheet" type="text/css" href="../../css/dhtmlXTree.css"/>
+<html><title>.:BUSCAR RADICACI&OACUTE;N DE CORRESPONDENCIA:.</title><head><?php echo(librerias_jquery('1.7')); ?><?php echo(librerias_jquery('1.8')); ?><script type="text/javascript" src="../../js/jquery.validate.js"></script>
+			<link rel="stylesheet" type="text/css" href="../../css/dhtmlXTree.css"/>
 			<script type="text/javascript" src="../../js/jquery.fcbkcomplete.js"></script>
 			<link rel="stylesheet" type="text/css" href="../../css/style_fcbkcomplete.css"/>
 			</head><body bgcolor="#F5F5F5"><form name="formulario_formatos" id="formulario_formatos" method="post" action="../librerias/funciones_buscador.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4" border="0"><tr><td colspan="4" class="encabezado_list">B&Uacute;SQUEDA RADICACI&Oacute;N DE CORRESPONDENCIA</td></tr><tr id="tr_despachado"><td class="encabezado">&nbsp;<select name="condicion_despachado" id="condicion_despachado"><option value="AND">Y</option><option value="OR">O</option></td>
@@ -320,7 +321,7 @@
                       });
                       });
                      </script></td>
-                    </tr><input type="hidden" name="campo_descripcion" value="37,39,4969,4970,5083,5199"><?php submit_formato(3);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
+                    </tr><input type="hidden" name="campo_descripcion" value="39,4970,5083,5199"><?php submit_formato(3);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
                 <input type="hidden" name="campo__retorno" value="<?php echo($_REQUEST["campo__retorno"]); ?>">
               <?php }
                if(@$_REQUEST["formulario__retorno"]){ ?>

@@ -17,12 +17,15 @@ $datos = busca_filtro_tabla("A.pdf,A.plantilla,B.mostrar_pdf,A.numero,B.idformat
 $es_pdf_word = $_REQUEST['pdf_word'];
 if ($_REQUEST['pdf_word']) {
 	if ($datos[0]["pdf"] != "" && !isset($_REQUEST["actualizar_pdf"])) {
-		$export = "visores/pdf/web/viewer2.php?iddocumento=" . $iddoc;
+		$export = "visores/pdf.js-view/web/viewer2.php?tipo_visor=1&iddocumento=" . $iddoc . "&ruta=" . base64_encode($datos[0]["pdf"]);
 	} else {
 		if (!isset($_REQUEST["error_pdf_word"])) {
 			include_once ($ruta_db_superior . FORMATOS_CLIENTE . "oficio_word/funciones.php");
 			generar_documento_word($datos[0]["idformato"], $iddoc);
-			$export = "visores/pdf/web/viewer2.php?iddocumento=" . $iddoc;
+			$datos_word = busca_filtro_tabla("pdf", "documento", "iddocumento=" . $iddoc, "", $conn);
+			if ($datos_word[0]["pdf"] != "") {
+				$export = "visores/pdf.js-view/web/viewer2.php?tipo_visor=1&iddocumento=" . $iddoc . "&ruta=" . base64_encode($datos_word[0]["pdf"]);
+			}
 		}
 	}
 } else {
@@ -30,7 +33,7 @@ if ($_REQUEST['pdf_word']) {
 		$exportar_pdf = busca_filtro_tabla("valor", "configuracion A", "A.nombre='exportar_pdf'", "", $conn);
 		$export = "";
 		if ($datos[0]["pdf"] != "" && !isset($_REQUEST["actualizar_pdf"])) {
-			$export = "visores/pdf/web/viewer2.php?iddocumento=" . $iddoc;
+			$export = "visores/pdf.js-view/web/viewer2.php?tipo_visor=1&iddocumento=" . $iddoc . "&ruta=" . base64_encode($datos[0]["pdf"]);
 		} else {
 			if ($exportar_pdf[0]["valor"] == 'html2ps') {
 				$export = "exportar_impresion.php?iddoc=" . $iddoc . "&plantilla=" . strtolower($datos[0]["plantilla"]) . "&rand=" . rand(1, 100000);

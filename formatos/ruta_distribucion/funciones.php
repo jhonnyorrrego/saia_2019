@@ -72,7 +72,7 @@ function enlace_item_dependencias_ruta($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
 	$dato = busca_filtro_tabla("", "ft_ruta_distribucion A, documento B ", "A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=" . $iddoc, "", $conn);
 	if ($_REQUEST['tipo'] != 5) {
-		echo '<a href="../dependencias_ruta/adicionar_dependencias_ruta.php?pantalla=padre&amp;idpadre=' . $iddoc . '&amp;idformato=' . $idformato . '&amp;padre=' . $dato[0]['idft_ruta_distribucion'] . '" target="_self">Dependencias de la Ruta</a>';
+		echo '<a class="btn btn-mini btn-info"  href="../dependencias_ruta/adicionar_dependencias_ruta.php?pantalla=padre&amp;idpadre=' . $iddoc . '&amp;idformato=' . $idformato . '&amp;padre=' . $dato[0]['idft_ruta_distribucion'] . '" target="_self">Adicionar dependencias a la Ruta</a>';
 	}
 }
 
@@ -88,12 +88,12 @@ function mostrar_datos_dependencias_ruta($idformato, $iddoc) {
 				2 => "Inactivo"
 			);
 			$tabla .= '<form id="item_prerequisitos" action="guardar_datos_dependencias.php">
-			<table class="table table-bordered" style="border-collapse: collapse;text-align:center; width: 100%;" border="1">
+			<table class="table table-bordered" style="border-collapse: collapse;width: 100%;" border="1">
 			<tr style="font-weight:bold">
-			    <td>Fecha</td>
-			    <td>Dependencia</td>
-			    <td>Descripci&oacute;n</td>
-			    <td>Estado</td>
+			    <td><center> Fecha</center></td>
+			    <td><center>Dependencia</center></td>
+			    <td><center>Descripci&oacute;n</center></td>
+			    <td><center>Estado</center></td>
 			</tr>';
 
 			for ($j = 0; $j < $item["numcampos"]; $j++) {
@@ -122,7 +122,7 @@ function mostrar_datos_dependencias_ruta($idformato, $iddoc) {
 					</td>
 				</tr>';
 			}
-			$tabla .= '</table><br/><input class="btn btn-mini btn-primary" style="float:right;" type="submit" value="Guardar Cambios"/></form>';
+			$tabla .= '</table><input class="btn btn-mini btn-primary" style="float:right;" type="submit" value="Guardar Cambios"/></form>';
 		}
 	}
 	echo $tabla;
@@ -168,7 +168,7 @@ function enlace_item_funcionarios_ruta($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
 	$dato = busca_filtro_tabla("", "ft_ruta_distribucion A, documento B ", "A.documento_iddocumento=B.iddocumento AND B.estado<>'ELIMINADO' AND B.iddocumento=" . $iddoc, "", $conn);
 	if ($_REQUEST['tipo'] != 5) {
-		echo '<a href="../funcionarios_ruta/adicionar_funcionarios_ruta.php?pantalla=padre&amp;idpadre=' . $iddoc . '&amp;idformato=' . $idformato . '&amp;padre=' . $dato[0]['idft_ruta_distribucion'] . '" target="_self">Mensajeros de la Ruta</a>';
+		echo '<a class="btn btn-mini btn-info" href="../funcionarios_ruta/adicionar_funcionarios_ruta.php?pantalla=padre&amp;idpadre=' . $iddoc . '&amp;idformato=' . $idformato . '&amp;padre=' . $dato[0]['idft_ruta_distribucion'] . '" target="_self">Adicionar mensajeros a la Ruta</a>';
 	}
 }
 
@@ -177,7 +177,7 @@ function mostrar_datos_funcionarios_ruta($idformato, $iddoc) {
 	$tabla = '';
 	$dato = busca_filtro_tabla("idft_ruta_distribucion", "ft_ruta_distribucion A, documento B ", "A.documento_iddocumento=B.iddocumento AND B.estado NOT IN ('ELIMINADO','ANULADO') AND B.iddocumento=" . $iddoc, "", $conn);
 	if ($dato['numcampos']) {
-		$item = busca_filtro_tabla(fecha_db_obtener("fecha_mensajero", "Y-m-d H:i:s") . " AS fecha_mensajero,mensajero_ruta,estado_mensajero,idft_funcionarios_ruta", "ft_funcionarios_ruta A, ft_ruta_distribucion B", "idft_ruta_distribucion=ft_ruta_distribucion and A.ft_ruta_distribucion=" . $dato[0]['idft_ruta_distribucion'], "", $conn);
+		$item = busca_filtro_tabla(fecha_db_obtener("fecha_mensajero", "Y-m-d") . " AS fecha_mensajero,mensajero_ruta,estado_mensajero,idft_funcionarios_ruta", "ft_funcionarios_ruta A, ft_ruta_distribucion B", "idft_ruta_distribucion=ft_ruta_distribucion and A.ft_ruta_distribucion=" . $dato[0]['idft_ruta_distribucion'], "", $conn);
 
 		if ($item['numcampos']) {
 			$estado = array(
@@ -185,12 +185,12 @@ function mostrar_datos_funcionarios_ruta($idformato, $iddoc) {
 				2 => "Inactivo"
 			);
 
-			$tabla .= '<table style="width:100%; border-collapse: collapse; text-align:center;" border="1">
-			<tr class="encabezado_list">
-		    <td>Fecha</td>
-		    <td>Mensajero</td>
-		    <td>Estado</td>
-		    <td>Asignar Ruta</td>
+			$tabla .= '<table class="table table-bordered" style="border-collapse: collapse; width: 100%;" border="1">
+			<tr>
+		    <td style="text-align:center;">Fecha</td>
+		    <td style="text-align:center;">Mensajero</td>
+		    <td style="text-align:center;">Estado</td>
+		    <td style="text-align:center;">Asignar Ruta</td>
 			</tr>';
 
 			for ($j = 0; $j < $item['numcampos']; $j++) {
@@ -222,7 +222,7 @@ function mostrar_datos_funcionarios_ruta($idformato, $iddoc) {
 							<option value="2" ' . $seleccionar[2] . '>Inactivo</option>
 						</select>
 					</td>
-					<td>' . $boton_asginar_ruta . '</td>
+					<td style="text-align:center;">' . $boton_asginar_ruta . '</td>
 				</tr>';
 			}
 			$tabla .= '</table><br/>';
@@ -244,7 +244,7 @@ echo $tabla;
 				},
 				success : function(datos) {
 					top.noty({
-						text : "Se ha asignado este mensajero a las distribuciones inactivas de la ruta",
+						text : "Se ha asignado este mensajero exitosamente",
 						type : "success",
 						layout : 'topCenter',
 						timeout : 4000
