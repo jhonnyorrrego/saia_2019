@@ -1,125 +1,53 @@
-<?php include_once ("db.php");  ?>
-<html>
-<head>
-<title>..::ADMINISTRADOR DE ARCHIVO::.. </title>
 <?php
- //include_once("cargando.php");
-/*if(!isset($_SESSION["LOGIN".LLAVE_SAIA])){
-  redirecciona("login.php?fin=1");
-}   */
-$config = busca_filtro_tabla("valor","configuracion","nombre='color_encabezado'","",$conn);
- if($config["numcampos"])
- {  $style = "
-     <style type=\"text/css\">
-     <!--INPUT, TEXTAREA, SELECT
-     {
-        font-family: Verdana,Tahoma,arial;
-        font-size: 10px;
-        /*text-transform:Uppercase;*/
-       }
-       .phpmaker
-       {
-       font-family: Verdana,Tahoma,arial;
-       font-size: 9px;
-       color:#000000;
-       /*text-transform:Uppercase;*/
-       }
-       .encabezado
-       {
-       background-color:".$config[0]["valor"].";
-       color:white ;
-       padding:10px;
-       text-align: left;
-       }
-       .encabezado_list
-       {
-       background-color:".$config[0]["valor"].";
-       color:white ;
-       vertical-align:middle;
-       text-align: center;
-       font-weight: bold;
-       }
-       table thead td
-       {
-		    font-weight:bold;
-    		cursor:pointer;
-    		background-color:".$config[0]["valor"].";
-    		text-align: center;
-        font-family: Verdana,Tahoma,arial;
-        font-size: 9px;
-        /*text-transform:Uppercase;*/
-        vertical-align:middle;
-    	 }
-    	 table tbody td
-       {
-    		font-family: Verdana,Tahoma,arial;
-        font-size: 9px;
-    	 }
-       -->
-       </style>";
-  echo $style;
-  }
-?>
-<style type="text/css" media="screen">
-
-	@import "css/title2note.css";
-
-	/* DEMO CSS */
-	.nota
-  {
-	  TEXT-DECORATION: none;
-		color:#FFFFFF;
-	}
-	</style>
-<script type="text/javascript" src="js/ordenar_list.js"></script>
-<link rel="stylesheet" href="css/bubble-tooltip.css" media="screen">
-<script type="text/javascript" src="js/bubble-tooltip.js"></script>
-
-<style type="text/css">
-.imagen_internos {vertical-align:middle}
-.internos {font-family: Verdana; font-size: 9px; font-weight: bold;}
-/* If you wish to highlight current sortable column, add layout effects below */
-.highlightedColumn{background-color:#CCC;}
-</style>
-<meta http-equiv="Content-Type" content="text/html; charset= UTF-8 ">
-	<script type="text/javascript">
-	function findDOM(objectId)
-  {  //funciones para el zoom de las imagenes
-    if (document.getElementById)
-      {
-       return (document.getElementById(objectId));
-      }
-    if (document.all)
-      {
-       return (document.all[objectId]);
-      }
-  }
-function zoom(type,imgx,sz,pag)
-{ //Aleja y Acerca las paginas del documento
-  imgd = findDOM(imgx);
-  imgd.width = 750;
-  imgd.height = 900;
-  if(sz < 100)
-    type = "-";
-  else if(sz > 100)
-    type="+";
-  else
-  {
-    window.location='comentario_mostrar.php?pagina=pagina&key=<?php echo $_SESSION["iddoc"];?>&pag='+pag;
-    return;
-  }
-  if (type=="+" && imgd.width < 1900)
-  {
-    imgd.width = (sz*imgd.width/100);
-    imgd.height = (sz*imgd.height/100);//(30*sz);
-  }
-  if (type=="-" && imgd.width > 200)
-  {
-    imgd.width = (sz*imgd.width/100);//30;
-    imgd.height = (sz*imgd.height/100);//(30*sz);
-  }
+include_once ("header.php");
+$x_comentario = Null;
+$accion = "";
+$enlace = "";
+if (isset($_REQUEST["key"]) && $_REQUEST["key"] <> ""){
+	$llave = $_REQUEST["key"];
+}else{
+	$llave = $_REQUEST["iddoc"];
 }
-</script>
+$frame = "centro";
+$plantilla = busca_filtro_tabla("plantilla", "documento", "iddocumento=".$llave, "", $conn);
+if ($plantilla[0][0] <> ""){
+	$frame = "detalles";
+}
+
+// Se inserta un nuevo comentario a la imagen en la base de datos
+if (isset($_POST["adicion"]) && $_POST["adicion"]) {
+	$x_comentario = $_POST["x_comentario"];
+	$add = "INSERT INTO comentario_img (documento_iddocumento,comentario,tipo,pagina,posx,posy,funcionario,fecha) VALUES (" . $_POST["key"] . ",'" . $x_comentario . "','" . $_POST["tipo"] . "'," . $_POST["pag"] . ",0,0,'" . $usuactual . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
+	phpmkr_query($add, $conn) or error("Fall� al Ejecutar la adicion" . phpmkr_error() . ' SQL:' . $add);
+	redirecciona("comentario_img.php?key=" . $_POST["key"] . "&pag=" . $_POST["pag"] . "&accion=mostrar");
+}
+
+// Se modifica un comentario de la imagen en la base de datos
+if (isset($_GET["editar"]) && $_GET["editar"]) {
+	$x_comentario = $_GET["x_comentario"];
+	$editar = "UPDATE comentario_img SET comentario='" . $x_comentario . "' WHERE idcomentario_img=" . $_GET["id"];
+	phpmkr_query($editar, $conn) or error("Fall� al Ejecutar la actualizacion " . phpmkr_error() . ' SQL:' . $editar);
+	redirecciona("comentario_img.php?key=" . $llave . "&pag=" . $_SESSION["pagina_actual"] . "&accion=mostrar");
+}
+
+// Se Elimina un comentario de la imagen en la base de datos
+if (isset($_GET["eliminar"]) && $_GET["eliminar"]) {
+	$datos = busca_filtro_tabla("", "comentario_img", "idcomentario_img=" . $_GET["id"], "", $conn);
+	$eliminar = "DELETE FROM comentario_img WHERE idcomentario_img=" . $_GET["id"];
+	phpmkr_query($eliminar, $conn);
+	if (is_object($datos[0]["fecha"]))
+		$datos[0]["fecha"] = $datos[0]["fecha"] -> format('Y-m-d');
+	$detalle = "comentario creado por:" . $datos[0]["funcionario"] . ", el: " . $datos[0]["fecha"] . ", texto: " . $datos[0]["comentario"];
+	registrar_accion_digitalizacion($datos[0]["documento_iddocumento"], 'ELIMINACION COMENTARIO', $detalle);
+	redirecciona("comentario_img.php?key=" . $llave . "&pag=" . $_SESSION["pagina_actual"] . "&accion=mostrar");
+	if ($_SESSION["tipo_pagina"] != "pagina") {
+		$ruta = strtolower($_REQUEST["plantilla"]) . "/mostrar_" . strtolower($_REQUEST["plantilla"]) . ".php?tipo=1&iddoc=$llave";
+		redirecciona("comentario_mostrar.php?enlace=" . FORMATOS_CLIENTE . "$ruta&id=$llave");
+	} else{
+		redirecciona("comentario_mostrar.php?key=" . $llave . "&pag=" . $_SESSION["pagina_actual"] . "&accion=mostrar");
+	}
+}
+?>
 <style type="text/css">
 .estilotextarea
    {
@@ -142,321 +70,170 @@ function zoom(type,imgx,sz,pag)
 </style>
 <script type="text/javascript" src="js/jquery/1.4.2/jquery.js"></script>
 <script type="text/javascript">
-$(document).ready(function(){
-  $('#iframe_documento').load(function() {
-    var alto=$('#iframe_documento').contents().find("body").height();
-    $("#iframe_documento").height(parseInt(alto)+80);
+	$(document).ready(function() {
+		$('#iframe_documento').load(function() {
+			var alto = $('#iframe_documento').contents().find("body").height();
+			$("#iframe_documento").height(parseInt(alto) + 80);
+		});
 	});
-});
 
-//funcion de ajax para actualizar la posicion del comentario en la imagen.
-/*
-<Clase>
-<Nombre>
-<Parametros>
-<Responsabilidades>
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-*/
-  function posicion(x,y,id,doc,pag)
-  {
-   var param="x="+x+'&y='+y+'&id='+id+'&doc='+doc+'&pag='+pag+'&op=cambiar_pos';
-   llamado("posicion.php","otro",param,doc,pag);
-  }
-/*
-<Clase>
-<Nombre>
-<Parametros>
-<Responsabilidades>
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-*/
-  function llamado(url, id_contenedor,parametros,doc,pag)
-  {
-   var pagina_requerida = false
-   if (window.XMLHttpRequest)
-  	{// Si es Mozilla, Safari etc
-  	 pagina_requerida = new XMLHttpRequest();
-  	}
-   else if (window.ActiveXObject)
-  	{ // pero si es IE
-  	 try
-  		{pagina_requerida = new ActiveXObject("Msxml2.XMLHTTP");
-  		}
-  	 catch (e)
-  		{ // en caso que sea una versi�n antigua
-  		 try
-  			{pagina_requerida = new ActiveXObject("Microsoft.XMLHTTP");
-  			}
-  		 catch (e){}
-  		}
-   	}
-   else
-  	return false
-   pagina_requerida.onreadystatechange=function(){ // funci�n de respuesta
-   if(pagina_requerida.readyState==4)
-   {
-  	if(pagina_requerida.status==200)
-        {
-  			 cargarpagina(pagina_requerida, id_contenedor,doc,pag);
-  		  }
-     else if(pagina_requerida.status==404)
-        {
-  		   document.write("La p�gina no existe");
-  	    }
-    }
-   }
-   pagina_requerida.open('POST', url, true); // asignamos los m�todos open y send
-   pagina_requerida.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-   pagina_requerida.send(parametros);
-  }
-/*
-<Clase>
-<Nombre>
-<Parametros>
-<Responsabilidades>
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-*/
-function cargarpagina(pagina_requerida, id_contenedor,doc,pag)
-  {
-   if (pagina_requerida.readyState == 4 && (pagina_requerida.status==200 || window.location.href.indexOf("http")==-1))
-      document.getElementById(id_contenedor).innerHTML=pagina_requerida.responseText;
-  }
- /*
-<Clase>
-<Nombre>
-<Parametros>
-<Responsabilidades>
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-*/
-function no_enter(evt)
-  {
-   evt = (evt) ? evt : event;
-   var charCode = (evt.charCode) ? evt.charCode : ((evt.keyCode) ? evt.keyCode :
-       ((evt.which) ? evt.which : 0));
-   if (charCode == 13){
-      return false;
-   }
-   return true;
-  }
-/*
-<Clase>
-<Nombre>
-<Parametros>
-<Responsabilidades>
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-*/
-function enlace(id,doc)
-{
- var param=document.getElementById("x_comentario"+id).value;
-  //alert(param);
- if(confirm('Desea guardar los cambios del comentario?'))
-  window.open("comentario_img.php?key="+doc+"&id="+id+"&editar=m&x_comentario="+param,"_self");
- return false;
-}
-/*
-<Clase>
-<Nombre>
-<Parametros>
-<Responsabilidades>
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-*/
- function pagina(doc,pag)
- {
-  if(pag=='0')
-   return;
-  window.open("comentario_mostrar.php?pagina=pagina&pag="+pag,"_self");
- }
-/*
-<Clase>
-<Nombre>
-<Parametros>
-<Responsabilidades>
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-*/
-function imprimir(enlace)
- {
-   document.getElementById("tool").style.display="none";
-   document.getElementById("header").style.display="none";
-   window.print();
-   document.getElementById("header").style.display="block";
-   document.getElementById("tool").style.display="block";
- }
-/*
-<Clase>
-<Nombre>
-<Parametros>
-<Responsabilidades>
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-*/
-function imprimir_sin(enlace)
-{
-   document.getElementById("tool").style.display="none";
-   document.getElementById("header").style.display="none";
-   document.getElementById("notas").style.display="none";
-   window.print();
-   document.getElementById("header").style.display="block";
-   document.getElementById("tool").style.display="block";
-   document.getElementById("notas").style.display="block";
-}
-/*
-<Clase>
-<Nombre>
-<Parametros>
-<Responsabilidades>
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-*/
-function ocultar_enlaces()
-{
-  // window.frames[0].document.getElementById("div1").style.display="none";
-   window.frames[0].document.getElementById("header").style.display="none";
-}
+	function posicion(x, y, id, doc, pag) {
+		var param = "x=" + x + '&y=' + y + '&id=' + id + '&doc=' + doc + '&pag=' + pag + '&op=cambiar_pos';
+		llamado("posicion.php", "otro", param, doc, pag);
+	}
 
+	function llamado(url, id_contenedor, parametros, doc, pag) {
+		var pagina_requerida = false
+		if (window.XMLHttpRequest) {// Si es Mozilla, Safari etc
+			pagina_requerida = new XMLHttpRequest();
+		} else if (window.ActiveXObject) {// pero si es IE
+			try {
+				pagina_requerida = new ActiveXObject("Msxml2.XMLHTTP");
+			} catch (e) {// en caso que sea una versi�n antigua
+				try {
+					pagina_requerida = new ActiveXObject("Microsoft.XMLHTTP");
+				} catch (e) {
+				}
+			}
+		} else
+			return false
+		pagina_requerida.onreadystatechange = function() {// funci�n de respuesta
+			if (pagina_requerida.readyState == 4) {
+				if (pagina_requerida.status == 200) {
+					cargarpagina(pagina_requerida, id_contenedor, doc, pag);
+				} else if (pagina_requerida.status == 404) {
+					document.write("La p�gina no existe");
+				}
+			}
+		}
+		pagina_requerida.open('POST', url, true);
+		pagina_requerida.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+		pagina_requerida.send(parametros);
+	}
+
+	function cargarpagina(pagina_requerida, id_contenedor, doc, pag) {
+		if (pagina_requerida.readyState == 4 && (pagina_requerida.status == 200 || window.location.href.indexOf("http") == -1))
+			document.getElementById(id_contenedor).innerHTML = pagina_requerida.responseText;
+	}
+
+	function no_enter(evt) {
+		evt = (evt) ? evt : event;
+		var charCode = (evt.charCode) ? evt.charCode : ((evt.keyCode) ? evt.keyCode : ((evt.which) ? evt.which : 0));
+		if (charCode == 13) {
+			return false;
+		}
+		return true;
+	}
+
+	function enlace(id, doc) {
+		var param = document.getElementById("x_comentario" + id).value;
+		if (confirm('Desea guardar los cambios del comentario?'))
+			window.open("comentario_img.php?key=" + doc + "&id=" + id + "&editar=m&x_comentario=" + param, "_self");
+		return false;
+	}
+
+	function pagina(doc, pag) {
+		if (pag == '0')
+			return;
+		window.open("comentario_mostrar.php?pagina=pagina&pag=" + pag, "_self");
+	}
+
+	function imprimir(enlace) {
+		document.getElementById("tool").style.display = "none";
+		document.getElementById("header").style.display = "none";
+		window.print();
+		document.getElementById("header").style.display = "block";
+		document.getElementById("tool").style.display = "block";
+	}
+
+	function imprimir_sin(enlace) {
+		document.getElementById("tool").style.display = "none";
+		document.getElementById("header").style.display = "none";
+		document.getElementById("notas").style.display = "none";
+		window.print();
+		document.getElementById("header").style.display = "block";
+		document.getElementById("tool").style.display = "block";
+		document.getElementById("notas").style.display = "block";
+	}
+
+	function ocultar_enlaces() {
+		window.frames[0].document.getElementById("header").style.display = "none";
+	}
+
+	function findDOM(objectId) {//funciones para el zoom de las imagenes
+		if (document.getElementById) {
+			return (document.getElementById(objectId));
+		}
+		if (document.all) {
+			return (document.all[objectId]);
+		}
+	}
+
+	function zoom(type, imgx, sz, pag) {//Aleja y Acerca las paginas del documento
+		imgd = findDOM(imgx);
+		imgd.width = 750;
+		imgd.height = 900;
+		if (sz < 100)
+			type = "-";
+		else if (sz > 100)
+			type = "+";
+		else {
+			window.location='comentario_mostrar.php?pagina=pagina&key=<?php echo $_SESSION["iddoc"];?>&pag='+pag;
+			return;
+		}
+		if (type == "+" && imgd.width < 1900) {
+			imgd.width = (sz * imgd.width / 100);
+			imgd.height = (sz * imgd.height / 100);
+			//(30*sz);
+		}
+		if (type == "-" && imgd.width > 200) {
+			imgd.width = (sz * imgd.width / 100);
+			//30;
+			imgd.height = (sz * imgd.height / 100);
+			//(30*sz);
+		}
+	}
 </script>
-</head>
-<body style="background-color: transparent; position:absolute;width:99%"  marginheight="0" topmargin="0" vspace="0"
-marginwidth="0" leftmargin="0" hspace="0" style="margin:0; padding:0">
-<div id="div_contenido">
+
+<body style="background-color: transparent; position:absolute;width:99%"  marginheight="0" topmargin="0" vspace="0" marginwidth="0" leftmargin="0" hspace="0" style="margin:0; padding:0">
 <?php
-if (@$sExport == "")
-{
-?><table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
-<tr>
-<!-- right column -->
-<td width="100%" valign="top" >
-<?php
-}
-menu_ordenar($_REQUEST['key']);
-?>
-</div>
-<?php
-echo "</br></br>";
-$x_comentario = Null;
-$accion="";
-$enlace = "";
-if(isset($_REQUEST["key"]) && $_REQUEST["key"]<>"")
-$llave=$_REQUEST["key"];
-else
-$llave=$_REQUEST["iddoc"];
-
-$frame="centro";
-$plantilla=busca_filtro_tabla("plantilla","documento","iddocumento=$llave","",$conn);
-if($plantilla[0][0]<>"")
- $frame="detalles";
-
-if(isset($_SESSION["pagina_actual"]))       //identificador de la pagina
- {
-   if(isset($_SESSION["tipo_pagina"]) && strstr($_SESSION["tipo_pagina"],".php"))
-    {$enlace = $_SESSION["tipo_pagina"]."&comentario=1";
-     $pag=$_SESSION["pagina_actual"];
-     $tipo_pag = "PLANTILLA";
-    }
-   else
-   { $tipo_pag = "PAGINA";
-     $pag=$_SESSION["pagina_actual"];
-     $valida_pag = busca_filtro_tabla("*","pagina","id_documento=$llave AND consecutivo=$pag","",$conn);
-     if(!($valida_pag["numcampos"]) && !(isset($_POST["adicion"])))
-       echo codifica_encabezado("<script type='text/javascript'>alert('Debe seleccionar una p�gina del documento'); window.open('ordenar.php?key=".$llave."&accion=mostrar','_self');</script>");
-   }
- }
-else
- {
-  echo codifica_encabezado("<script type='text/javascript'>alert('Debe seleccionar una p�gina del documento'); window.open('ordenar.php?key=".$llave."&accion=mostrar','_self');</script>");
- }
-
-// Se inserta un nuevo comentario a la imagen en la base de datos
-if(isset($_POST["adicion"]) && $_POST["adicion"])
-{ $x_comentario = $_POST["x_comentario"];
-  $add = "INSERT INTO comentario_img (documento_iddocumento,comentario,tipo,pagina,posx,posy,funcionario,fecha) VALUES (".$_POST["key"].",'".$x_comentario."','".$_POST["tipo"]."',".$_POST["pag"].",0,0,'".$usuactual."',".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").")";
-  phpmkr_query($add, $conn) or error("Fall� al Ejecutar la adicion" . phpmkr_error() . ' SQL:' . $add);
-  redirecciona("comentario_img.php?key=".$_POST["key"]."&pag=".$_POST["pag"]."&accion=mostrar");
-}
-
-// Se modifica un comentario de la imagen en la base de datos
-if(isset($_GET["editar"]) && $_GET["editar"])
-{ $x_comentario = $_GET["x_comentario"];
-  $editar = "UPDATE comentario_img SET comentario='".$x_comentario."' WHERE idcomentario_img=".$_GET["id"];
-  phpmkr_query($editar, $conn) or error("Fall� al Ejecutar la actualizacion " . phpmkr_error() . ' SQL:' . $editar);
-  redirecciona("comentario_img.php?key=".$llave."&pag=".$_SESSION["pagina_actual"]."&accion=mostrar");
-}
-
-// Se Elimina un comentario de la imagen en la base de datos
-if(isset($_GET["eliminar"]) && $_GET["eliminar"])
-{ $datos=busca_filtro_tabla("","comentario_img","idcomentario_img=".$_GET["id"],"",$conn);
-  $eliminar = "DELETE FROM comentario_img WHERE idcomentario_img=".$_GET["id"];
-   phpmkr_query($eliminar, $conn);
-	 if(is_object($datos[0]["fecha"]))$datos[0]["fecha"]=$datos[0]["fecha"]->format('Y-m-d');
-   $detalle="comentario creado por:".$datos[0]["funcionario"].", el: ".$datos[0]["fecha"].", texto: ".$datos[0]["comentario"];
-   registrar_accion_digitalizacion($datos[0]["documento_iddocumento"],'ELIMINACION COMENTARIO',$detalle);
-   redirecciona("comentario_img.php?key=".$llave."&pag=".$_SESSION["pagina_actual"]."&accion=mostrar");
-   if($_SESSION["tipo_pagina"]!="pagina") {
-    $ruta=strtolower($_REQUEST["plantilla"])."/mostrar_".strtolower($_REQUEST["plantilla"]).".php?tipo=1&iddoc=$llave";
-    redirecciona("comentario_mostrar.php?enlace=" . FORMATOS_CLIENTE . "$ruta&id=$llave");
-  }
-   else
-     redirecciona("comentario_mostrar.php?key=".$llave."&pag=".$_SESSION["pagina_actual"]."&accion=mostrar");
+if (isset($_SESSION["pagina_actual"])) {//identificador de la pagina
+	if (isset($_SESSION["tipo_pagina"]) && strstr($_SESSION["tipo_pagina"], ".php")) {
+		$enlace = $_SESSION["tipo_pagina"] . "&comentario=1";
+		$pag = $_SESSION["pagina_actual"];
+		$tipo_pag = "PLANTILLA";
+	} else {
+		$tipo_pag = "PAGINA";
+		$pag = $_SESSION["pagina_actual"];
+		$valida_pag = busca_filtro_tabla("*", "pagina", "id_documento=$llave AND consecutivo=$pag", "", $conn);
+		if (!($valida_pag["numcampos"]) && !(isset($_POST["adicion"]))){
+			echo codifica_encabezado("<script type='text/javascript'>alert('Debe seleccionar una pagina del documento'); window.open('ordenar.php?key=" . $llave . "&accion=mostrar','_self');</script>");
+		}
+	}
+} else {
+	echo codifica_encabezado("<script type='text/javascript'>alert('Debe seleccionar una pagina del documento'); window.open('ordenar.php?key=" . $llave . "&accion=mostrar','_self');</script>");
 }
 
 //se muestra el div con el formulario para adicionar un nuevo comentario a la pagina.
-if (isset($_GET["accion"]) && $_GET["accion"]=="adicionar")
-{
- if($pag=="" OR $pag==Null)
- {
-  echo "<script language=\"javascript\">";
-  echo "alert(\"El documento no tiene paginas para adicionar un comentario, Por favor adicione una pagina\");";
-	echo "window.open('ordenar.php?key=".$llave."&accion=mostrar','_self');";
-  echo "</script>";
- }
- else
- { $doc = busca_filtro_tabla("*", "pagina","id_documento=".$llave,"",$conn);
-   $accion = "add";
-   $permisos =true;
-   if($doc["numcampos"]>0 OR $tipo_pag=="PLANTILLA")
-   {
-     if($tipo_pag =="PAGINA")
-      $pag=$_SESSION["pagina_actual"];
+if (isset($_GET["accion"]) && $_GET["accion"] == "adicionar") {
+	if ($pag == "" OR $pag == Null) {
+		notificaciones("El documento no tiene paginas para adicionar un comentario, Por favor adicione una pagina", "warning");
+		abrir_url('pantallas/documento/visor_documento.php?iddoc=' . $llave, '_self');
+		die();
+	} else {
+		$doc = busca_filtro_tabla("*", "pagina", "id_documento=" . $llave, "", $conn);
+		$accion = "add";
+		$permisos = true;
+		if ($doc["numcampos"] > 0 OR $tipo_pag == "PLANTILLA") {
+			if ($tipo_pag == "PAGINA")
+				$pag = $_SESSION["pagina_actual"];
 
-	 $recuadro_postit='
-	    <div id="adicionar">
+			$recuadro_postit = '<div id="adicionar">
 	    <form action="comentario_img.php" method="post" name="adicionar_nota" id="adicionar_nota">
 	    <input type="hidden" name="adicion" value="A">
-	    <input type="hidden" name="key" value='.$llave.'>
-	    <input type="hidden" name="tipo" value='.$tipo_pag.'>
-	    <input type="hidden" name="pag" value='.$pag.'>
+	    <input type="hidden" name="key" value=' . $llave . '>
+	    <input type="hidden" name="tipo" value=' . $tipo_pag . '>
+	    <input type="hidden" name="pag" value=' . $pag . '>
 	    <textarea  class="estilotextarea" id="x_comentario" name="x_comentario" onkeypress="return no_enter(event)"></textarea><br />
 	    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="submit"  value="Adicionar">
 	    </form>
@@ -464,30 +241,20 @@ if (isset($_GET["accion"]) && $_GET["accion"]=="adicionar")
 		<script>
 			$( "#adicionar" ).hide();
 			$( "#adicionar_nota" ).submit();
-		</script>
-	 ';
+		</script>';
 
-
-	 $valida_formato_pdf=busca_filtro_tabla("", "documento a, formato b","lower(a.plantilla)=b.nombre  and a.iddocumento=".$llave,"",$conn);
-
-
-	 if($valida_formato_pdf[0]['mostrar_pdf']==1){
-		include_once("librerias_saia.php");
-		echo(librerias_notificaciones());
-		?>
-		<script>
-		notificacion_saia('No es posible adicionar Notas a documentos en PDF','warning','',4000);
-		</script>
-		<?php
-		abrir_url('pantallas/documento/visor_documento.php?iddoc='.$llave,'_self');
-		die();
-	 }else{
-	 	echo($recuadro_postit);
-	 }
-
-   }
- }
+			$valida_formato_pdf = busca_filtro_tabla("", "documento a, formato b", "lower(a.plantilla)=b.nombre  and a.iddocumento=" . $llave, "", $conn);
+			if ($valida_formato_pdf[0]['mostrar_pdf'] == 1) {
+				notificaciones("No es posible adicionar Notas a documentos en PDF", "warning");
+				abrir_url('pantallas/documento/visor_documento.php?iddoc=' . $llave, '_self');
+				die();
+			} else {
+				echo($recuadro_postit);
+			}
+		}
+	}
 }
+
 ?>
 <script type="text/javascript" src="js/wz_dragdrop.js"></script>
 <?php $detalle_doc = busca_filtro_tabla("numero,descripcion,plantilla","documento","iddocumento=$llave","",$conn);
@@ -547,7 +314,7 @@ $plantilla = $detalle_doc[0]["plantilla"];
 <?php
 
 if($enlace!="")  //si no se trata de una pagina sino de un formato se crea un frame con el formato
-{ //error($enlace);
+{ 
  ?>
  <iframe name="formato" style="position:relative; left:10px; top:-10;" id="iframe_documento" name="iframe_documento" height="1200" width="100%" scrolling="no" frameborder="no" src="<?php echo $enlace; ?>" allowtransparency="yes" onload="ocultar_enlaces();" class="alto_frame"></iframe>
  <?php
@@ -562,15 +329,14 @@ if($listado["numcampos"]>0 || $tipo_pag != "PAGINA")  //Se muestarn la pagna o e
 {
   if($tipo_pag=="PAGINA")
   {
-    $ruta=$listado[0]["ruta"];
+    $ruta="filesystem/mostrar_binario.php?ruta=".base64_encode($listado[0]["ruta"]);
     ?>
     <div class="ppal"><br><br>
     <div align="center" ><img src="<?php echo $ruta; ?>"><div id='otro'> </div></div><br><br>
     <?php
   }
   $componentes="";
-  if($accion!="add")
-  {
+  if($accion!="add"){
     $comentario=busca_filtro_tabla("A.*","comentario_img A","documento_iddocumento=".$llave." AND tipo='$tipo_pag' AND pagina=".$pag,"",$conn);
     if($comentario["numcampos"]>0)
     {echo '<div id="notas" style="display:block;">';
@@ -639,12 +405,9 @@ if($listado["numcampos"]>0 || $tipo_pag != "PAGINA")  //Se muestarn la pagna o e
  else
   echo "<span class='phpmaker'><center>El documento no tiene p&aacute;gina</center></span>";
 
-if($permisos == false && @$_REQUEST["accion"] !='mostrar')
- {
+if($permisos == false && @$_REQUEST["accion"] !='mostrar'){
   alerta("<b>ATENCI&Oacute;N</b><br>No tiene permisos para editar los comentarios, pero puede adicionar uno nuevo","warning");
  }
 ?>
 </div>
-<?php include("footer.php");?>
-
 </html>

@@ -2,21 +2,16 @@
 $max_salida = 6;
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
-	if (is_file($ruta . "db.php")) { $ruta_db_superior = $ruta;
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
 	} $ruta .= "../";
 	$max_salida--;
 }
-?>
-<?php
+
 include_once ($ruta_db_superior . "db.php");
-?>
-<?php
 include_once ($ruta_db_superior . "bpmn/bpmni/class_bpmni.php");
-?>
-<?php
-include_once ($ruta_db_superior . "formatos/librerias/funciones_formatos_generales.php");
-?>
-<?php
+include_once ($ruta_db_superior . FORMATOS_SAIA."librerias/funciones_formatos_generales.php");
+
 class bpmn {
 	var $bpmn;
 	var $idbpmn;
@@ -83,8 +78,9 @@ class bpmn {
 		global $ruta_db_superior;
 		$objeto = json_decode($this -> bpmn[0]["fileName"]);
 		if (is_object($objeto)) {
+			$nombre = basename($objeto -> ruta);
+			$ruta = $_SESSION["ruta_temp_funcionario"] . date("Y_m_d") . $nombre;
 			$xml = StorageUtils::get_file_content($this -> bpmn[0]["fileName"]);
-			$ruta = "bpmn/bpmn/temp_bpmn/" . uniqid() . ".bpmn";
 			file_put_contents($ruta_db_superior . $ruta, $xml);
 			$archivo[0]["ruta"] = $ruta;
 		} else {
@@ -105,7 +101,6 @@ class bpmn {
 			//Se cambia para que busque la tarea inicial con idpaso_evento=-1
 			$inicio[0]["idpaso_evento"] = -1;
 			$this -> tarea_siguiente($inicio[0], "bpmn_evento", "paso_evento");
-			//$this->texto_estados.='$("#'.$this->tareas_siguientes[0]["idsvg"].'").addClassSVG("habilitado");';
 			if (@$this -> tareas_siguientes[0]["idsvg"]) {
 				$this -> texto_estados .= 'bpmn.annotation("' . $this -> tareas_siguientes[0]["idsvg"] . '").addClasses(["habilitado","task"]);';
 			}
@@ -268,16 +263,6 @@ class bpmn {
 			$this -> texto_estados .= 'bpmn.annotation("' . $tarea["idfigura"] . '").addClasses(["habilitado"]);';
 			$exito = 1;
 		}
-		/*if($exito && !$this->bpmni->finalizado_bpmni()){
-		 $this->tarea_siguiente($tarea,"bpmn_tarea");
-		 if($this->tareas_siguientes["numcampos"]){
-		 for($i=0;$i<$this->tareas_siguientes["numcampos"];$i++){
-		 if(!in_array($this->tareas_siguientes[$i]["idbpmn_tarea"],$this->tareas_activas)){
-		 $this->texto_estados.='bpmn.annotation("'.$this->tareas_siguientes[$i]["idsvg"].'").addClasses(["habilitado","task"]);';
-		 }
-		 }
-		 }
-		 }*/
 	}
 
 	public function imprimir_estados_tarea() {
@@ -389,9 +374,6 @@ class bpmn {
 	public function dibuja_enlaces() {
 		$archivo = $this -> load_file_bpmn("archivo_bpmn");
 		$this -> archivo = $archivo[0]["ruta"];
-		/*for($i=0;$i<$this->enlaces["numcampos"];$i++){
-		 $this->adicionar_texto_SVG($this->enlaces[$i]["texto_svg"]);
-		 }*/
 	}
 
 	public function cargar_bpmn_saia() {
@@ -516,7 +498,6 @@ class bpmn {
 		global $ruta_db_superior;
 		include_once ($ruta_db_superior . "pantallas/lib/svg/class_cuadro_texto.php");
 		include_once ($ruta_db_superior . "pantallas/lib/svg/class_imagen.php");
-		//echo("Elemento:".$elemento."-->".$id);
 		$tarea = new svgTextBox($texto, floatval($ancho), floatval($alto));
 		$tarea -> setX(floatval($x));
 		$tarea -> setY(floatval($y));
@@ -525,7 +506,6 @@ class bpmn {
 		$tarea -> box -> addClass("tarea");
 		$tarea -> box -> addId($id);
 		$tarea -> box -> roundBorder(10, 10);
-		//$tarea->xml='<g onmousedown="mouseDown(evt)" onmousemove="move(evt)" onmouseup="endMove(evt)" onmouseout="endMove(evt)">'.$tarea->getXML().$this->imagen_svg($x+10,$y+10,$id,$elemento)."</g>";
 		$tarea -> xml = '<g>' . $tarea -> getXML() . $this -> imagen_svg($x + 10, $y + 10, $id, $elemento) . "</g>";
 		$this -> asignar_tarea_proceso($id, $elemento, $tarea);
 		$tarea -> box -> addClass("habilitado");

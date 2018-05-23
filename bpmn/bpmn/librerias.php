@@ -1,4 +1,28 @@
 <?php
+$max_salida = 10;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
+	}
+	$ruta .= "../";
+	$max_salida--;
+}
+include_once ($ruta_db_superior . "db.php");
+
+/*
+ * generateRandom=Funcion traida del antiguo generador del diagram. Utilizado para generar el hash.
+ */
+function generateRandom($length = 10, $vals = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabchefghjkmnpqrstuvwxyz0123456789-') {
+	$s = "";
+	while (strlen($s) < $length) {
+		mt_getrandmax();
+		$num = rand() % strlen($vals);
+		$s .= substr($vals, $num + 4, 1);
+	}
+	return $s;
+}
+
 function menu_bpmn($idbpmn, $nombre) {
 	$texto = '<div class="btn-group barra_superior">
 <button type="button" class="btn btn-mini btn-info kenlace_saia tooltip_saia" enlace="bpmn/procesar_bpmn.php?vista_bpmn=1&idbpmn=' . $idbpmn . '" title="Administrar ' . $nombre . '" titulo="Administrar ' . $nombre . '" conector="iframe"><i class="icon-signal"></i></button>';
@@ -24,12 +48,6 @@ function barra_superior_diagramas($id) {
 <button type="button" class="btn btn-mini kenlace_saia tooltip_saia" titulo="Editar BPMN" enlace="bpmn/bpmn/editar_bpmn.php?idbpmn=' . $id . '" conector="iframe"><i class="icon-edit"></i></button>
 <button type="button" class="btn btn-mini tooltip_saia kenlace_saia" titulo="Procesar BPMN" id="' . $id . '" enlace="bpmn/procesar_bpmn.php?idbpmn=' . $id . '&vista_bpmn=1" conector="iframe"><i class="icon-wrench"></i></button>
 </div>';
-	return (($texto));
-	/*
-	 <button type="button" class="btn btn-mini tooltip_saia kenlace_saia" titulo="Verificar idpaso_documento 54---solo para id 19" id="'.$id.'" enlace="bpmn/procesar_bpmn.php?idbpmn='.$id.'&idbpmni=1&idpaso_documento=1" conector="iframe"><i class="icon-inbox"></i></button>
-
-	 *	SE RETIRA ESTE BOTON TEMPORALMENTE POR ORDEN DE HERNANDO, VA AL FINAL DE LOS DEMAS
-
-	 */
+	return ($texto);
 }
 ?>
