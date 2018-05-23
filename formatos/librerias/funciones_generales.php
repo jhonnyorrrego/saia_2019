@@ -1425,7 +1425,7 @@ function submit_formato($formato, $iddoc = NULL) {
 				if ($_REQUEST["padre"]) {
 					$datos_padre = busca_filtro_tabla("nombre,idformato", "formato", "idformato=" . $_REQUEST["idformato"], "", $conn);
 					if ($datos_padre["numcampos"]) {
-						$cadena = $ruta_db_superior . 'formatos/' . $datos_padre[0]["nombre"] . '/mostrar_' . $datos_padre[0]["nombre"] . '.php?iddoc=' . $_REQUEST["idpadre"] . '&idformato=' . $datos_padre[0]["idformato"];
+						$cadena = $ruta_db_superior . FORMATOS_CLIENTE . $datos_padre[0]["nombre"] . '/mostrar_' . $datos_padre[0]["nombre"] . '.php?iddoc=' . $_REQUEST["idpadre"] . '&idformato=' . $datos_padre[0]["idformato"];
 						$codigo_js = '<script type="text/javascript">function redirecciona_padre(){window.open("' . $cadena . '","_self");}</script>';
 						echo($codigo_js);
 					}
@@ -1495,11 +1495,11 @@ function validar_valor_campo($campo) {
         $radicado=$desc[0]["numero"];
         return ("Respondiendo a: " . str_replace("<br />", " ", strip_tags($desc[0]["descripcion"])) . ". Radicado No." . $radicado);
       }else if($desc[0]["nombre"]=='memorando'){
-        include_once($ruta_db_superior."formatos/memorando/funciones.php");
+        include_once($ruta_db_superior. FORMATOS_CLIENTE . "memorando/funciones.php");
         $radicado=strip_tags(formato_radicado_interno($desc[0]["idformato"],$_REQUEST["anterior"],1));
         return ("Respondiendo a: " . str_replace("<br />", " ", strip_tags($desc[0]["descripcion"])) . ". Radicado No." . $radicado);
       }else if($desc[0]["nombre"]=='carta'){
-        include_once($ruta_db_superior."formatos/carta/funciones.php");
+        include_once($ruta_db_superior. FORMATOS_CLIENTE . "carta/funciones.php");
         $radicado=strip_tags(formato_radicado_enviada($desc[0]["idformato"],$_REQUEST["anterior"],1));
         return ("Respondiendo a: " . str_replace("<br />", " ", strip_tags($desc[0]["descripcion"])) . ". Radicado No." . $radicado);
       }else{

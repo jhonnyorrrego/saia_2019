@@ -489,7 +489,7 @@ function aprobar2($iddoc=0,$url="")
    {
     if($url=="")
       {
-       $url="formatos/$formato/mostrar_$formato.php?iddoc=".$iddoc;
+       $url= FORMATOS_CLIENTE . "$formato/mostrar_$formato.php?iddoc=".$iddoc;
       }
        abrir_url($url,$frame);
    }*/

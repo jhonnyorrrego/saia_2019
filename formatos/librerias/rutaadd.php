@@ -434,7 +434,7 @@ function eliminarespacio(elemento)
 	  	$ruta_db_superior='../../';	
 	  	redirecciona($ruta_db_superior."pantallas/documento/visor_documento.php?iddoc=".$_GET["doc"]."&pdf_word=1");	 			
 	 }else{
-	 	redirecciona($ruta_db_superior."formatos/".$formato[0][0]."/mostrar_".$formato[0][0].".php?iddoc=".$_GET["doc"]);
+	 	redirecciona($ruta_db_superior. FORMATOS_CLIENTE . $formato[0][0]."/mostrar_".$formato[0][0].".php?iddoc=".$_GET["doc"]);
 	 }
   }   
 // Get action
@@ -982,10 +982,10 @@ function AddData($conn)
   }  
 
   if(@$_REQUEST['cargar'] || $_SESSION['tipo_dispositivo'] == 'movil'){
-  	abrir_url("../../formatos/".$plantilla[0]["plantilla"]."/mostrar_".$plantilla[0]["plantilla"].".php?iddoc=".$fieldList["documento_iddocumento"]."&idformato=".$plantilla[0]["idformato"],"_self");
+  	abrir_url("../../" . FORMATOS_CLIENTE . $plantilla[0]["plantilla"]."/mostrar_".$plantilla[0]["plantilla"].".php?iddoc=".$fieldList["documento_iddocumento"]."&idformato=".$plantilla[0]["idformato"],"_self");
       	
   }else{
-  	abrir_url("../../formatos/".$plantilla[0]["plantilla"]."/detalles_mostrar_".$plantilla[0]["plantilla"].".php?iddoc=".$fieldList["documento_iddocumento"]."&idformato=".$plantilla[0]["idformato"]."&key=".$fieldList["documento_iddocumento"],"_self");  	
+  	abrir_url("../../" . FORMATOS_CLIENTE . $plantilla[0]["plantilla"]."/detalles_mostrar_".$plantilla[0]["plantilla"].".php?iddoc=".$fieldList["documento_iddocumento"]."&idformato=".$plantilla[0]["idformato"]."&key=".$fieldList["documento_iddocumento"],"_self");  	
   }
 
   

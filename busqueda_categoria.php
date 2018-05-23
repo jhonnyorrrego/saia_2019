@@ -17,7 +17,7 @@ if(@$_REQUEST["idcategoria_formato"]){
             	    $ok=acceso_modulo($modulo_formato[0]['idmodulo']);	
             	}
             	if($ok){
-            	    $defecto="formatos/".$formatos[$i]["nombre"]."/adicionar_".$formatos[$i]["nombre"].".php"; 
+            	    $defecto=FORMATOS_CLIENTE.$formatos[$i]["nombre"]."/adicionar_".$formatos[$i]["nombre"].".php"; 
             	}
 				break;
 			}
@@ -34,7 +34,7 @@ if(@$_REQUEST["defecto"]){
         $ok=acceso_modulo($modulo_formato[0]['idmodulo']);	
     }
     if($ok){    
-        $defecto="formatos/".$_REQUEST["defecto"]."/adicionar_".$_REQUEST["defecto"].".php";
+        $defecto=FORMATOS_CLIENTE.$_REQUEST["defecto"]."/adicionar_".$_REQUEST["defecto"].".php";
     }
 }
 else if(!$defecto){
@@ -45,7 +45,7 @@ else if(!$defecto){
         	}                
             
 		    if($ok){    
-                 $defecto="formatos/radicacion_entrada/adicionar_radicacion_entrada.php";
+                 $defecto= FORMATOS_CLIENTE . "radicacion_entrada/adicionar_radicacion_entrada.php";
 		    }
 }
 ?>

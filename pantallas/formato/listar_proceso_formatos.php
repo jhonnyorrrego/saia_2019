@@ -35,7 +35,7 @@ if (count($request)) {
 			$cuantos_formatos = busca_filtro_tabla("nombre,ruta_adicionar", "formato", "mostrar=1 AND (fk_categoria_formato like'" . $idcategoria_formato . "' OR   fk_categoria_formato like'%," . $idcategoria_formato . "'  OR   fk_categoria_formato like'" . $idcategoria_formato . ",%' OR   fk_categoria_formato like'%," . $idcategoria_formato . ",%') AND (fk_categoria_formato like'2' OR   fk_categoria_formato like '%,2'  OR   fk_categoria_formato like'2,%' OR   fk_categoria_formato like'%,2,%') ", "etiqueta ASC", $conn);
 
 			if ($cuantos_formatos['numcampos'] == 1) {
-				$url = $ruta_db_superior . 'formatos/' . $cuantos_formatos[0]['nombre'] . '/' . $cuantos_formatos[0]['ruta_adicionar'] . "?1=1";
+				$url = $ruta_db_superior . FORMATOS_CLIENTE . $cuantos_formatos[0]['nombre'] . '/' . $cuantos_formatos[0]['ruta_adicionar'] . "?1=1";
 				$ok = $acceso -> acceso_modulo_perfil("crear_" . $cuantos_formatos[0]['nombre']);
 				if ($ok) {
 					$mostrar = 1;

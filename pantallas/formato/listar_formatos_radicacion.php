@@ -34,7 +34,7 @@ if(count($request)){
 				$cuantos_formatos=busca_filtro_tabla("nombre,ruta_adicionar,etiqueta","formato","(cod_padre IS NULL OR cod_padre=0) AND (".concatenar_cadena_sql($concatenar)." like'%,".$idcategoria_formato.",%')","etiqueta ASC",$conn);
 				for($i=0;$i<$cuantos_formatos['numcampos'];$i++){
 					$mostrar=0;
-					$url=$ruta_db_superior.'formatos/'.$cuantos_formatos[$i]['nombre'].'/'.$cuantos_formatos[$i]['ruta_adicionar']."?1=1";
+					$url=$ruta_db_superior . FORMATOS_CLIENTE . $cuantos_formatos[$i]['nombre'].'/'.$cuantos_formatos[$i]['ruta_adicionar']."?1=1";
 					$proceso='';
 					
 					$modulo_formato=busca_filtro_tabla('idmodulo','modulo','nombre="crear_'.$cuantos_formatos[$i]['nombre'].'"','',$conn);

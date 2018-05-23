@@ -21,7 +21,7 @@ if(@$_REQUEST["accion"]=="adicionar" && $_REQUEST["key"]){
 		?>
 		<script>
 		notificacion_saia('<b>ATENCI&Oacute;N</b><br>Usted no es el creador del documento','warning','',4000);
-		window.open("formatos/<?php echo($ruta_formato[0]["nombre"]); ?>/<?php echo($ruta_formato[0]["ruta_mostrar"]); ?>?iddoc=<?php echo($_REQUEST["key"]); ?>&idformato=<?php echo($ruta_formato[0]["idformato"]); ?>","_self");
+		window.open("<?php echo(FORMATOS_CLIENTE . $ruta_formato[0]["nombre"]); ?>/<?php echo($ruta_formato[0]["ruta_mostrar"]); ?>?iddoc=<?php echo($_REQUEST["key"]); ?>&idformato=<?php echo($ruta_formato[0]["idformato"]); ?>","_self");
 		</script>
 		<?php
 		die();
@@ -112,7 +112,7 @@ elseif(@$_REQUEST["accion"]=="guardar_adicionar")
 
  if($documento[0]["plantilla"]!=""){
  	$plantilla=busca_filtro_tabla("","formato a","lower(a.nombre)='".strtolower($documento[0]["plantilla"])."'","",$conn);
-   abrir_url("formatos/".$plantilla[0]["nombre"]."/".$plantilla[0]["ruta_mostrar"]."?iddoc=".$documento[0]["iddocumento"]."&idformato=".$plantilla[0]["idformato"],"detalles");
+   abrir_url(FORMATOS_CLIENTE.$plantilla[0]["nombre"]."/".$plantilla[0]["ruta_mostrar"]."?iddoc=".$documento[0]["iddocumento"]."&idformato=".$plantilla[0]["idformato"],"detalles");
  }
 }
 elseif(@$_REQUEST["accion"]=="rechazar")

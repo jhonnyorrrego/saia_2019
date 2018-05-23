@@ -10,7 +10,7 @@ while ($max_salida > 0) {
 }
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "class_transferencia.php");
-include_once ($ruta_db_superior . "formatos/librerias/funciones_formatos_generales.php");
+include_once ($ruta_db_superior . FORMATOS_SAIA . "/librerias/funciones_formatos_generales.php");
 include_once ($ruta_db_superior . "pantallas/qr/librerias.php");
 
 function generar_ingreso_formato($nombre_formato) {
@@ -193,7 +193,7 @@ if (@$_REQUEST["enlace"]) {
 } else {
 	if ($datos[0]["plantilla"]) {
 		$plantilla = busca_filtro_tabla("B.*", "documento A,formato B", "'" . strtolower($datos[0]["plantilla"]) . "'=lower(B.nombre) AND A.iddocumento=" . $doc . " AND lower(A.plantilla)=lower(B.nombre)", "", $conn);
-		$enlace = $ruta_db_superior . "formatos/" . $plantilla[0]["nombre"] . "/mostrar_" . $plantilla[0]["nombre"] . ".php?iddoc=$doc&idformato=" . $plantilla[0]["idformato"];
+		$enlace = $ruta_db_superior . FORMATOS_CLIENTE . $plantilla[0]["nombre"] . "/mostrar_" . $plantilla[0]["nombre"] . ".php?iddoc=$doc&idformato=" . $plantilla[0]["idformato"];
 	} else if (isset($_REQUEST["pagina"])) {
 		$atras = 2;
 	} else {
