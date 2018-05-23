@@ -17,25 +17,26 @@ include_once($ruta_db_superior."db.php");
 <title>Consulta de informaci&oacute;n</title>
 <?php
 
-include_once($ruta_db_superior."librerias_saia.php");
-include_once($ruta_db_superior."pantallas/documento/librerias.php");
-echo(librerias_html5());
-echo(estilo_bootstrap("3.2"));
+include_once ($ruta_db_superior . "librerias_saia.php");
+include_once ($ruta_db_superior . "pantallas/documento/librerias.php");
+echo (librerias_html5());
+echo (estilo_bootstrap("3.2"));
 echo estilo_tabla_bootstrap("1.11");
 
-$funciones=array();
-$datos_componente=$_REQUEST["idbusqueda_componente"];
-$datos_busqueda=busca_filtro_tabla("","busqueda A,busqueda_componente B","A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=".$datos_componente,"",$conn);
-echo(librerias_jquery("1.8"));
-echo(librerias_bootstrap("3.2"));
-echo(librerias_notificaciones());
-if($datos_busqueda[0]["ruta_libreria"]){
-  $librerias=array_unique(explode(",",$datos_busqueda[0]["ruta_libreria"]));
-  array_walk($librerias,"incluir_librerias_busqueda");
+$funciones = array();
+$datos_componente = $_REQUEST["idbusqueda_componente"];
+$datos_busqueda = busca_filtro_tabla("", "busqueda A,busqueda_componente B", "A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=" . $datos_componente, "", $conn);
+echo (librerias_jquery("1.8"));
+echo (librerias_bootstrap("3.2"));
+echo (librerias_notificaciones());
+if ($datos_busqueda[0]["ruta_libreria"]) {
+    $librerias = array_unique(explode(",", $datos_busqueda[0]["ruta_libreria"]));
+    array_walk($librerias, "incluir_librerias_busqueda");
 }
-function incluir_librerias_busqueda($elemento,$indice){
-  global $ruta_db_superior;
-  include_once($ruta_db_superior.$elemento);
+
+function incluir_librerias_busqueda($elemento, $indice) {
+    global $ruta_db_superior;
+    include_once ($ruta_db_superior . $elemento);
 }
 
 //echo librerias_tabla_bootstrap("1.11", false, true);
@@ -67,13 +68,14 @@ echo librerias_tabla_bootstrap("1.11", false, false);
   <div id="div_resultados">
    <div class="btn-group" id="menu_buscador">
       <?php
-        if($datos_busqueda[0]["busqueda_avanzada"]!=''){
-          if(strpos($datos_busqueda[0]["busqueda_avanzada"],"?"))
-            $datos_busqueda[0]["busqueda_avanzada"].="&";
-          else
-            $datos_busqueda[0]["busqueda_avanzada"].="?";
-         $datos_busqueda[0]["busqueda_avanzada"].='idbusqueda_componente='.$datos_busqueda[0]["idbusqueda_componente"];
-      ?>
+    if ($datos_busqueda[0]["busqueda_avanzada"] != '') {
+        if (strpos($datos_busqueda[0]["busqueda_avanzada"], "?")) {
+            $datos_busqueda[0]["busqueda_avanzada"] .= "&";
+        } else {
+            $datos_busqueda[0]["busqueda_avanzada"] .= "?";
+        }
+        $datos_busqueda[0]["busqueda_avanzada"] .= 'idbusqueda_componente=' . $datos_busqueda[0]["idbusqueda_componente"];
+        ?>
         <button class="btn kenlace_saia" titulo="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>" title="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>" conector="iframe" enlace="<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>">B&uacute;squeda &nbsp;</button>
       <?php
         }
@@ -117,6 +119,10 @@ echo librerias_tabla_bootstrap("1.11", false, false);
           $llave = $valor_campos[2];
       } else {
         $llave = trim($datos_busqueda[0]["llave"]);
+      }
+      if(empty($llave)) {
+          $campos = explode(",",$datos_busqueda[0]["campos"]);
+          $llave=trim($campos[0]);
       }
 
     ?>

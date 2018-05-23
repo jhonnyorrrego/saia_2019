@@ -48,12 +48,17 @@ class Version20180515205347 extends AbstractMigration {
                 \PDO::PARAM_INT
             );
             foreach ($result as $row) {
-                if(empty($llave)) {
-                    continue;
+                $nueva_llave = $row["llave"];
+                if(empty($nueva_llave)) {
+                    $campos = explode(",",$datos_busqueda[0]["campos"]);
+                    $nueva_llave=trim($campos[0]);
                 }
 
+                $campos = explode(",",$datos_busqueda[0]["campos"]);
+                $llave=trim($campos[0]);
+
                 $data = [
-                    'llave' => $row["llave"]
+                    'llave' => $nueva_llave
                 ];
                 $ident = [
                     'busqueda_idbusqueda' => $row["idbusqueda"]
