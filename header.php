@@ -13,41 +13,41 @@ $style="";
 if ($config["numcampos"]) {
 	$style = "
      <style type=\"text/css\">
-       .phpmaker 
+       .phpmaker
        {
-       font-family: Verdana,Tahoma,arial; 
-       font-size: 9px; 
+       font-family: Verdana,Tahoma,arial;
+       font-size: 9px;
        color:#000000;
        /*text-transform:Uppercase;*/
-       } 
-       .encabezado 
+       }
+       .encabezado
        {
-       background-color:" . $config[0]["valor"] . "; 
-       color:white ; 
-       padding:10px; 
-       text-align: left;	
-       } 
-       .encabezado_list 
-       { 
-       background-color:" . $config[0]["valor"] . "; 
-       color:white ; 
+       background-color:" . $config[0]["valor"] . ";
+       color:white ;
+       padding:10px;
+       text-align: left;
+       }
+       .encabezado_list
+       {
+       background-color:" . $config[0]["valor"] . ";
+       color:white ;
        vertical-align:middle;
        text-align: center;
-       font-weight: bold;	
+       font-weight: bold;
        }
-       table thead td 
+       table thead td
        {
 		    font-weight:bold;
     		cursor:pointer;
     		background-color:" . $config[0]["valor"] . ";
     		text-align: center;
-        font-family: Verdana,Tahoma,arial; 
+        font-family: Verdana,Tahoma,arial;
         font-size: 9px;
-        vertical-align:middle;    
+        vertical-align:middle;
     	 }
-    	 table tbody td 
-       {	
-    		font-family: Verdana,Tahoma,arial; 
+    	 table tbody td
+       {
+    		font-family: Verdana,Tahoma,arial;
         font-size: 9px;
     	 }
        </style>";
@@ -127,3 +127,14 @@ if ($config["numcampos"]) {
 	}
 </script>
 </head>
+<body style="background-color: transparent; position:absolute"  marginheight="0" topmargin="0" vspace="0" marginwidth="0" leftmargin="0" hspace="0" style="margin:0; padding:0">
+<div id="div_contenido">
+<?php
+if (@$sExport == "")  {
+?><table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<!-- right column -->
+<td width="99%" valign="top" >
+<?php
+}
+?>
