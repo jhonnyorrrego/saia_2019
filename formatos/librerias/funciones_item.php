@@ -29,7 +29,7 @@ function editar()
 	$padre = busca_filtro_tabla("", "formato", "idformato='" . $formato[0]["cod_padre"] . "'", "", $conn);
 	$doc_padre = busca_filtro_tabla("documento_iddocumento", $formato[0]["nombre_tabla"] . "," . $padre[0]["nombre_tabla"], "id" . $padre[0]["nombre_tabla"] . "=" . $padre[0]["nombre_tabla"] . " and id" . $formato[0]["nombre_tabla"] . "=" . $_REQUEST["item"], "", $conn);
 
-	redirecciona("../" . $padre[0]["nombre"] . "/" . $padre[0]["ruta_mostrar"] . "?idformato=" . $padre[0]["idformato"] . "&iddoc=" . $doc_padre[0][0]);
+	redirecciona("../../" . FORMATOS_CLIENTE . $padre[0]["nombre"] . "/" . $padre[0]["ruta_mostrar"] . "?idformato=" . $padre[0]["idformato"] . "&iddoc=" . $doc_padre[0][0]);
 }
 function eliminar_item()
   {global $conn;
@@ -119,7 +119,7 @@ function guardar_item()
              param=direccion.split('&');
              direccion=param[0]+'&'+param[1]+'&seleccionar=" . $padre[0]["idformato"] . "-" . $superior[0][0] . "-" . $padre[0]["nombre_tabla"] . "-" . $doc_padre[0][0] . "';
              //window.parent.frames[0].location=direccion;
-             window.location='../".$padre[0]["nombre"]."/".$padre[0]["ruta_mostrar"]."?idformato=".$padre[0]["idformato"]."&iddoc=".$doc_padre[0]["documento_iddocumento"]."';  //correccion para que los items no recargen el arbol
+             window.location='../../" . FORMATOS_CLIENTE . $padre[0]["nombre"]."/".$padre[0]["ruta_mostrar"]."?idformato=".$padre[0]["idformato"]."&iddoc=".$doc_padre[0]["documento_iddocumento"]."';  //correccion para que los items no recargen el arbol
              </script>";
 			else
 				echo "<script>
@@ -135,6 +135,7 @@ function guardar_item()
 			redirecciona("../" . $formato[0]["nombre"] . "/" . $formato[0]["ruta_adicionar"] . "?idpadre=" . $doc_padre[0][0] . "&idformato=" . $padre[0]["idformato"] . "&padre=" . $_REQUEST["padre"]);
 	}
 }
+
 function crear_pretexto_item($asunto,$contenido){
 global $conn,$ruta_db_superior;
 $campos="asunto";

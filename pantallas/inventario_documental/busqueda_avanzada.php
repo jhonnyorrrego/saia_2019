@@ -49,7 +49,7 @@ $busqueda=busca_filtro_tabla("","busqueda_componente a","a.nombre='listado_docum
 if($ok&&@$busqueda["numcampos"]){
 	?>
 				<li>
-					<button type="button" class="btn btn-primary btn-mini link kenlace_saia" enlace="formatos/inventario_retirados/busqueda_avanzada.php?idbusqueda_componente=276" conector="iframe" titulo="Busqueda por series" title="Busqueda por series">
+					<button type="button" class="btn btn-primary btn-mini link kenlace_saia" enlace="<?php echo FORMATOS_CLIENTE;?>inventario_retirados/busqueda_avanzada.php?idbusqueda_componente=276" conector="iframe" titulo="Busqueda por series" title="Busqueda por series">
   	        	Buscar por series
   	      </button>
 				</li>

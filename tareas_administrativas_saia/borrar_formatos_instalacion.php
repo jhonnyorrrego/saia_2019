@@ -28,7 +28,7 @@ for ($i = 0; $i < $busca_formatos_eliminar['numcampos']; $i++) {
 		echo($busca_funciones_formato[$j]['nombre_funcion'] . " " . $busca_funciones_formato[$j]['idfunciones_formato']);
 		echo("<br />");
 		if ($busca_funciones_formato[$j]['ruta'] == 'funciones.php') {
-			echo("RUTA: " . $ruta_db_superior . "formatos/" . $busca_formatos_eliminar[$i]["nombre"] . "/funciones.php");
+			echo("RUTA: " . $ruta_db_superior . FORMATOS_CLIENTE . $busca_formatos_eliminar[$i]["nombre"] . "/funciones.php");
 		} else {
 			echo("RUTA: " . $ruta_db_superior . "/" . $busca_formatos_eliminar[$i]["nombre"]);
 		}

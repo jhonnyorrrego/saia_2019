@@ -77,7 +77,7 @@ $llave = $_REQUEST["iddoc"];
   		notificacion_saia('Este documento no es un borrador','alert','',3500);
   		</script>
   		<?php
-  		abrir_url("formatos/".$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?idformato=".$formato[0]["idformato"]."&iddoc=".$x_id_documento,"_self");
+  		abrir_url(FORMATOS_CLIENTE . $formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?idformato=".$formato[0]["idformato"]."&iddoc=".$x_id_documento,"_self");
 			die();
   	}
     ?>

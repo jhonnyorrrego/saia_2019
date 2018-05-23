@@ -61,7 +61,7 @@ for ($i = 0; $i < $lista_formatos['numcampos']; $i++) {
 		$etiqueta = strtolower($etiqueta);
 		$etiqueta = ucwords($etiqueta);
 
-		$enlace_adicionar = 'formatos/' . $lista_formatos[$i]['nombre'] . '/' . $lista_formatos[$i]['ruta_adicionar'];
+		$enlace_adicionar = FORMATOS_CLIENTE . $lista_formatos[$i]['nombre'] . '/' . $lista_formatos[$i]['ruta_adicionar'];
 
 		$texto .= '
 				<tr>

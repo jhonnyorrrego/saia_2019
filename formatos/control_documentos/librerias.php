@@ -14,7 +14,7 @@ function obtener_enlace_documento($iddocumento, $numero) {
 	if ($numero == "numero") {
 		$numero = 0;
 	}
-	return ('<div class="link kenlace_saia" enlace="ordenar.php?key=' . $iddocumento . '&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado ' . $numero . '"><span class="badge">' . $numero . '</span></div>');
+	return ('<div class="link kenlace_saia" enlace="ordenar.php?key=' . $iddocumento . '&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado ' . $numero . '" style="cursor:pointer;"><span class="badge">' . $numero . '</span></div>');
 }
 
 function obtener_almacenamiento($almacenamiento) {
@@ -49,7 +49,7 @@ function obtener_version_documento($iddoc_version) {
 	$version = "";
 	$documento_version = busca_filtro_tabla("iddocumento_version,documento_iddocumento,numero_version", "documento_version", "iddocumento_version=" . $iddoc_version, "", $conn);
 	if ($documento_version["numcampos"]) {
-		$version = ('<div class="link kenlace_saia" enlace="versionamiento/listar_versiones.php?iddocumento_version=' . $documento_version[0]["iddocumento_version"] . '&iddocumento=' . $documento_version[0]["documento_iddocumento"] . '" conector="iframe" titulo="Version No ' . $documento_version[0]["numero_version"] . '"><span class="badge">' . $documento_version[0]["numero_version"] . '</span></div>');
+		$version = ('<div class="link kenlace_saia" enlace="versionamiento/listar_versiones.php?iddocumento_version=' . $documento_version[0]["iddocumento_version"] . '&iddocumento=' . $documento_version[0]["documento_iddocumento"] . '" conector="iframe" titulo="Version No ' . $documento_version[0]["numero_version"] . '" style="cursor:pointer;"><span class="badge">' . $documento_version[0]["numero_version"] . '</span></div>');
 	}
 	return ($version);
 }

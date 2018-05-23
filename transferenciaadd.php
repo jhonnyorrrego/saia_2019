@@ -15,7 +15,7 @@ if(@$_REQUEST["idpaso_actividad"] != ''){
     $actividad = busca_filtro_tabla("","paso_actividad","estado=1 AND orden=0 and paso_idpaso=".$paso[0]["destino"],"",$conn);
     if(!strpos($actividad[0]["llave_entidad"],",")){
         if($actividad[0]["entidad_identidad"] == 1){
-            include_once("formatos/librerias/funciones_generales.php");
+            include_once(FORMATOS_SAIA . "librerias/funciones_generales.php");
             $formato = busca_filtro_tabla("","documento A, formato B","iddocumento=".$paso[0]["documento_iddocumento"]." and lower(plantilla)=lower(B.nombre)","",$conn);
             echo ($formato[0]["idformato"].','.$paso[0]["documento_iddocumento"].','.$actividad[0]["llave_entidad"].',3');
             transferencia_automatica($formato[0]["idformato"],$paso[0]["documento_iddocumento"],$actividad[0]["llave_entidad"],3);
@@ -78,17 +78,14 @@ if(@$_POST["a_add"]=="carta")
                 if (($sAction == "") || (($sAction == NULL))) {
                     $sKey = @$_GET["key"];
                     $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
-                    if ($sKey <> "") {
+                    if ($sKey != "") {
                         $sAction = "I"; // Copy record
-                    }
-                    else
-                    {
+                    } else {
                         $sAction = "I"; // Display blank record
                     }
                     
-                }
-                else
-                { $x_transferir =@$_POST["x_transferir"];
+                } else {
+                $x_transferir =@$_POST["x_transferir"];
                 $x_dep = @$_POST["x_dep"];
                 // Get fields from form
                 $x_idtransferencia = @$_POST["x_idtransferencia"];
@@ -100,19 +97,19 @@ if(@$_POST["a_add"]=="carta")
                     $x_serie = @$_POST["x_serie"];
                     else
                         $x_serie = Null;
-                        if(isset($_POST["x_funcionario_destino1"]) && $_POST["x_funcionario_destino1"]<>""){
+                        if(isset($_POST["x_funcionario_destino1"]) && $_POST["x_funcionario_destino1"] != ""){
                             $x_funcionario_destino = @$_POST["x_funcionario_destino1"];
                             $x_tipo_destino=1; //FUNCIONARIO
                         }
-                        if(isset($_POST["x_funcionario_destino2"]) && $_POST["x_funcionario_destino2"]<>""){
+                        if(isset($_POST["x_funcionario_destino2"]) && $_POST["x_funcionario_destino2"] != ""){
                             $x_funcionario_destino = @$_POST["x_funcionario_destino2"];
                             $x_tipo_destino=1; //"funcionario";
                         }
-                        if(isset($_POST["x_funcionario_destino3"]) && $_POST["x_funcionario_destino3"]<>""){
+                        if(isset($_POST["x_funcionario_destino3"]) && $_POST["x_funcionario_destino3"] != ""){
                             $x_funcionario_destino = @$_POST["x_funcionario_destino3"];
                             $x_tipo_destino=1; //"funcionario";
                         }
-                        if(isset($_POST["x_dependencia_destino"]) && $_POST["x_dependencia_destino"]<>""){
+                        if(isset($_POST["x_dependencia_destino"]) && $_POST["x_dependencia_destino"] != ""){
                             $x_funcionario_destino = @$_POST["x_dependencia_destino"];
                             $x_tipo_destino=2;//"dependencia";
                         }
@@ -144,8 +141,7 @@ if(@$_POST["a_add"]=="carta")
                                 $x_tipo_envio =array();
                                 
                 }
-                switch ($sAction)
-                {
+                switch ($sAction) {
                     case "C": // Get a record to display
                         if (!LoadData($sKey,$conn)) { // Load Record based on key
                             $_SESSION["ewmsg"] = "Registros no encontrados para la Llave = " . $sKey;
@@ -159,8 +155,7 @@ if(@$_POST["a_add"]=="carta")
                             if(@$_REQUEST["idpaso_documento"]){
                                 abrir_url("workflow/mapeo_diagrama.php?idpaso_documento=".$_REQUEST["idpaso_documento"],"centro");
                             }
-                            if($x_transferir == "si")
-                            { // redirecciona("transferenciaadd.php?doc=".$x_archivo_idarchivo."&dep=".$x_dep);
+                            if($x_transferir == "si") { // redirecciona("transferenciaadd.php?doc=".$x_archivo_idarchivo."&dep=".$x_dep);
                                 redirecciona("ordenar.php?key=7077&accion=mostrar&mostrar_formato=1=$x_archivo_idarchivo");
                                 exit();
                             }
@@ -170,13 +165,12 @@ if(@$_POST["a_add"]=="carta")
                                 if(!isset($_POST["retorno"])&&$digitalizadores["numcampos"]>0)
                                     redirecciona("documentolist.php?cmd=resetall");
                                     else
-                                        redirecciona("formatos/".$nombre_formato."/mostrar_".$nombre_formato.".php?iddoc=".$x_archivo_idarchivo."&idformato=".$formato_documento[0]['idformato']);
+                                        redirecciona(FORMATOS_CLIENTE . $nombre_formato."/mostrar_".$nombre_formato.".php?iddoc=".$x_archivo_idarchivo."&idformato=".$formato_documento[0]['idformato']);
                                         exit();
-                            }
-                            else {
+                            } else {
                                 alerta("No se le asign� una transferencia al documento");
                                 //redirecciona("transferenciaadd.php?doc=".$x_archivo_idarchivo."&dep=".$x_dep);
-                                redirecciona("formatos/".$nombre_formato."/mostrar_".$nombre_formato.".php?iddoc=".$x_archivo_idarchivo."&idformato=".$formato_documento[0]['idformato']);
+                                redirecciona(FORMATOS_CLIENTE . $nombre_formato."/mostrar_".$nombre_formato.".php?iddoc=".$x_archivo_idarchivo."&idformato=".$formato_documento[0]['idformato']);
                             }
                         }
                         break;
@@ -186,15 +180,13 @@ if(@$_POST["a_add"]=="carta")
                             exit();
                         }
                         break;
-                        
                 }
                 
                 //include_once("formatos/librerias/estilo_formulario.php");
                 if(!@$_REQUEST["idpaso_documento"]){
                     include ("header.php");
                     $columnas=45;
-                }
-                else {
+                } else {
                     $columnas=32;
                     menu_pasos(0,@$_REQUEST["idpaso_documento"]);
                 }
@@ -285,8 +277,7 @@ $seleccionados="";
 if(@$_REQUEST["seleccionado"]){
   $seleccionados=$_REQUEST["seleccionado"];
 }
-if(isset($_REQUEST["mostrar"]))
-{
+if(isset($_REQUEST["mostrar"])) {
 menu_ordenar($_REQUEST["key"]);
 }
  if(!@$_REQUEST["idpaso_documento"]){ ?>
@@ -357,7 +348,7 @@ $x_recibido=$tmp;
 	<link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
 	<script type="text/javascript" src="js/dhtmlXCommon.js"></script>
 	<script type="text/javascript" src="js/dhtmlXTree.js"></script>
-			<?php include_once("formatos/librerias/header_formato.php"); ?>
+			<?php include_once(FORMATOS_SAIA . "librerias/header_formato.php"); ?>
 	<input type="hidden" name="serie" id="serie" obligatorio="obligatorio"  value="" >
     <br />
     <?php
@@ -737,13 +728,13 @@ function LoadData($sKey,$conn)
 	$sGroupBy = "";
 	$sHaving = "";
 	$sOrderBy = "";
-	if ($sGroupBy <> "") {
+	if ($sGroupBy != "") {
 		$sSql .= " GROUP BY " . $sGroupBy;
 	}
-	if ($sHaving <> "") {
+	if ($sHaving != "") {
 		$sSql .= " HAVING " . $sHaving;
 	}
-	if ($sOrderBy <> "") {
+	if ($sOrderBy != "") {
 		$sSql .= " ORDER BY " . $sOrderBy;
 	}
 	$rs = phpmkr_query($sSql,$conn) or error("Fall  al Ejecutar la B�squeda" . phpmkr_error() . ' SQL:' . $sSql);
@@ -779,9 +770,7 @@ function LoadData($sKey,$conn)
 // Function AddData
 // - Add Data
 // - Variables used: field variables
-
-function AddData($conn)
-{
+function AddData($conn) {
 	global $_SESSION,$_POST,$_POST_FILES,$_ENV;
   global $x_idtransferencia,$x_archivo_idarchivo,$x_nombre,$x_funcionario_destino,$x_dependencia_destino,$x_tipo_destino,$idruta,$x_copia,$x_serie;
   global $x_ejecutor_destino,$x_fecha,$x_respuesta,$x_entregado,$x_recibido,$x_notas,$x_ver_nota,$x_transferencia_descripcion,$x_tipo,$x_tipo_envio,$x_pag_pdf,$file,$desea_tarea,$fecha_tarea,$tarea,$descripcion,$prioridad,$ruta_pdf;	// Add New Record
@@ -791,18 +780,17 @@ function AddData($conn)
 	$sGroupBy = "";
 	$sHaving = "";
 	$sOrderBy = "";
-	if ($sGroupBy <> "") {
+	if ($sGroupBy != "") {
 		$sSql .= " GROUP BY " . $sGroupBy;
 	}
-	if ($sHaving <> "") {
+	if ($sHaving != "") {
 		$sSql .= " HAVING " . $sHaving;
 	}
-	if ($sOrderBy <> "") {
+	if ($sOrderBy != "") {
 		$sSql .= " ORDER BY " . $sOrderBy;
 	}
   //validacion de la serie del documento, si es diferente de Null se debe modifcar el documento, colocandole la serie documental y la persona quien se lo asigno (Responsable).
-  if($x_serie!=Null OR $x_serie!="")
-  {
+  if($x_serie!=Null OR $x_serie!="") {
     $sql_up = "update documento set serie=$x_serie, responsable='".usuario_actual("idfuncionario")."' where iddocumento=$x_archivo_idarchivo";
    phpmkr_query($sql_up, $conn) or error("Failed to execute query" . phpmkr_error() . ' SQL:' . $sql_up);
   }
@@ -826,30 +814,26 @@ function AddData($conn)
   
   $dep=array();
 	$num_destino = count($destinos_aux);
-	for($i=0; $i<$num_destino; $i++)
-	{
+	for($i=0; $i<$num_destino; $i++) {
    $filtro = strpos($destinos_aux[$i],'_');
    if($filtro)
       $destinos_aux[$i]=substr($destinos_aux[$i],0,$filtro);
    $dependencia = strpos($destinos_aux[$i],'#');
-   if($dependencia)
-      {$dep = buscar_funcionarios(substr($destinos_aux[$i],0,strlen($destinos_aux[$i])-1), $dep);
-      }
-   else
+   if($dependencia) {
+      $dep = buscar_funcionarios(substr($destinos_aux[$i],0,strlen($destinos_aux[$i])-1), $dep);
+      } else
       array_push($destinos,$destinos_aux[$i]);
    $destinos=array_merge($destinos,$dep);
   }
 
   $destinos = array_unique($destinos);
   //para sacar la lista de los funcionarios con copias en caso de que hayan dependencias
-  if($x_copia!="")
-  {
+  if($x_copia!="") {
   $destinos_copias = array();
   $dep_copias=array();
   $destinos_aux=explode(",",$x_copia);
 	$num_destino = count($destinos_aux);
-	for($i=0; $i<$num_destino; $i++)
-	{
+	for($i=0; $i<$num_destino; $i++) {
    $filtro = strpos($destinos_aux[$i],'_');
    if($filtro)
       $destinos_aux[$i]=substr($destinos_aux[$i],0,$filtro);
@@ -905,8 +889,8 @@ function AddData($conn)
 
 	$documento = busca_filtro_tabla("","documento","iddocumento=".$fieldList["archivo_idarchivo"],"",$conn);
 	$temp="";
-	if($documento["numcampos"])
-	{ $temp=$documento[0]["serie"];
+	if($documento["numcampos"]) {
+	  $temp=$documento[0]["serie"];
 	  $mensaje = "Acaba de Recibir el Documento: ".$documento[0]["numero"]." Descripcion: ".$documento[0]["descripcion"];
 	}
 	$datos_adicionales=array();
