@@ -49,6 +49,15 @@ echo librerias_tabla_bootstrap("1.11", false, false);
 <style>
 #barra_exportar_ppal{ margin-right:50px;}
 .progress{margin-bottom: 0px;}
+
+.pagination-detail {
+font-size: 10px;
+}
+
+.page-size {
+font-size: 10px;
+}
+
 </style>
 </head>
 <body>
@@ -78,12 +87,12 @@ echo librerias_tabla_bootstrap("1.11", false, false);
       <?php
         }
       ?>
-      <!-- <button class="btn dropdown-toggle" data-toggle="dropdown">Seleccionados &nbsp;
+      <button class="btn dropdown-toggle" data-toggle="dropdown">Seleccionados &nbsp;
         <span class="caret">
         </span>&nbsp;
       </button>
       <ul class="dropdown-menu" id='listado_seleccionados'>
-        <li><a href="#"><div id="filtrar_seleccionados">Alert seleccionados</div></a></li>
+        <!-- <li><a href="#"><div id="filtrar_seleccionados">Alert seleccionados</div></a></li>  -->
         <?php
           if($datos_busqueda[0]["acciones_seleccionados"]!=''){
             echo('<li class="nav-header">Acciones</li>');
@@ -95,7 +104,7 @@ echo librerias_tabla_bootstrap("1.11", false, false);
 
           }
         ?>
-      </ul> -->
+      </ul>
     <?php /*if(@$datos_busqueda[0]["enlace_adicionar"]){
       ?>
         <button class="btn kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar</button></div></li>
@@ -129,36 +138,40 @@ echo librerias_tabla_bootstrap("1.11", false, false);
   data-show-toggle="true"
   data-maintain-selected="true"
   >
-    <thead>
+    <thead style="font-size: 12px;">
       <tr>
         <th data-field="state" data-checkbox="true"></th>
         <?php
-        $lcampos1=$datos_busqueda[0]["campos"];
-        if($datos_busqueda[0]["campos_adicionales"]){
-          $lcampos1.=','.$datos_busqueda[0]["campos_adicionales"];
+        $lcampos1 = $datos_busqueda[0]["campos"];
+        if ($datos_busqueda[0]["campos_adicionales"]) {
+            $lcampos1 .= ',' . $datos_busqueda[0]["campos_adicionales"];
         }
-        $lcampos2=explode(",",$lcampos1);
-        $lcampos=array();
-        foreach($lcampos2 AS $key=>$valor){
-          if(strpos($valor,".")){
-            $valor_campos=explode(".", $valor);
-            array_push($lcampos,trim($valor_campos[count($valor_campos)-1]));
-          }
-          else{
-            array_push($lcampos,trim($valor));
-          }
+        $lcampos2 = explode(",", $lcampos1);
+        $lcampos = array();
+        foreach ($lcampos2 as $key => $valor) {
+            if (strpos($valor, ".")) {
+                $valor_campos = explode(".", $valor);
+                array_push($lcampos, trim($valor_campos[count($valor_campos) - 1]));
+            } else {
+                array_push($lcampos, trim($valor));
+            }
         }
-        $info=explode("|-|",$datos_busqueda[0]["info"]);
-        $can_info=count($info);
-        for($i=0;$i<$can_info;$i++){
-          $detalle_info=explode("|",$info[$i]);
-          $dato_campo=str_replace(array("{*","*}"),"",$detalle_info[1]);
-          if(!in_array($dato_campo,$lcampos)){
-            $funcion=explode("@",$dato_campo);
-            $dato_campo=$funcion[0];
-          }
-          echo('<th data-field="'.$dato_campo.'" data-align="'.$detalle_info[2].'" >'.$detalle_info[0].'</th>');
-
+        $info = explode("|-|", $datos_busqueda[0]["info"]);
+        $can_info = count($info);
+        for ($i = 0; $i < $can_info; $i++) {
+            $ordenable = "";
+            $detalle_info = explode("|", $info[$i]);
+            $dato_campo = str_replace(array(
+                "{*",
+                "*}"
+            ), "", $detalle_info[1]);
+            if (!in_array($dato_campo, $lcampos)) {
+                $funcion = explode("@", $dato_campo);
+                $dato_campo = $funcion[0];
+            } else {
+                $ordenable = 'data-sortable="true"';
+            }
+            echo ('<th data-field="' . $dato_campo . '" data-align="' . $detalle_info[2] . '" ' . $ordenable . '>' . $detalle_info[0] . '</th>');
         }
         ?>
       </tr>
@@ -224,6 +237,7 @@ $(document).ready(function() {
         showColumns: true,
         maintainSelected: true,
         idField: llave,
+        sortable: true,
         responseHandler: "responseHandler",
         icons : {
             refresh: 'glyphicon-refresh icon-refresh',
@@ -236,7 +250,8 @@ $(document).ready(function() {
         	    classes: 'text-nowrap another-class',
         	    css: {"font-size": "10px"}
         	  };
-        	}
+        	},
+
     });
 
     $table.on('check.bs.table uncheck.bs.table ' +
@@ -294,10 +309,12 @@ function procesamiento_buscar(externo) {
                 "search": params.search,
                 "sort": params.sort,
                 "order": params.order,
-                "cantidad_total":$("#busqueda_total_paginas").val()
+                "cantidad_total":$("#busqueda_total_paginas").val(),
+                "sidx": params.sort,
+                "sord": params.order
             };
             $.extend( data, q);
-            //console.log(params);
+            console.log(data);
             return data;
         },
         onLoadSuccess: function(data){
