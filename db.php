@@ -309,7 +309,7 @@ function listar_campos_tabla($tabla=NULL,$tipo_retorno=0) {
 /*
 <Clase>
 <Nombre>guardar_lob</Nombre>
-<Parametros>$campo:nombre del campo;$tabla:nombre de la tabla;$condicion:condicion de actualizaciÃ³n;$contenido:texto a insertar o actualizar;$tipo:puede ser 'texto' o 'archivo';$conn:objeto de conexion;$log:si se debe guardar lo hecho en el log, puede ser 0 o 1</Parametros>
+<Parametros>$campo:nombre del campo;$tabla:nombre de la tabla;$condicion:condicion de actualización;$contenido:texto a insertar o actualizar;$tipo:puede ser 'texto' o 'archivo';$conn:objeto de conexion;$log:si se debe guardar lo hecho en el log, puede ser 0 o 1</Parametros>
 <Responsabilidades>Se encarga de insertar y actualizar los campos de tipo CLOB<Responsabilidades>
 <Notas></Notas>
 <Excepciones></Excepciones>
@@ -581,7 +581,7 @@ function normalizePath($path) {
 <Nombre>formato_cargo</Nombre>
 <Parametros>$nombre_cargo:texto que corresponde al nombre de un cargo</Parametros>
 <Responsabilidades>Formatea con ciertas caracteristicas el texto recibido<Responsabilidades>
-<Notas>valida que los nÃºmeros romanos queden en mayuscula sostenida, pero los articulos no, las demÃ¡s palabras con mayÃºscula inicial</Notas>
+<Notas>valida que los números romanos queden en mayuscula sostenida, pero los articulos no, las demás palabras con mayúscula inicial</Notas>
 <Excepciones></Excepciones>
 <Salida></Salida>
 <Pre-condiciones><Pre-condiciones>
@@ -600,8 +600,8 @@ else if($pal[$i]=="ii" || $pal[$i]=="iii" || $pal[$i]=="iv" || $pal[$i]=="vi" ||
 $cargo.=strtoupper($pal[$i])." ";
 else
 {
-$tilde = array("Ã�","Ã‰","Ã�","Ã“","Ãš","Ã‘");
-$reemplazo = array("{Ã¡", "Ã©", "Ã­","Ã³","Ãº","Ã±");
+$tilde = array("Á","É","Í","Ó","Ú","Ñ");
+$reemplazo = array("{á", "é", "í","ó","ú","ñ");
 $pal[$i]= str_replace($tilde, $reemplazo, $pal[$i]);
 $cargo.= ucwords($pal[$i])." ";
 }
@@ -614,14 +614,14 @@ return ($cargo);
 <Clase>
 <Nombre>phpmkr_db_connect
 <Parametros>$HOST: Equipo en el que se encuentra la base de datos
-            $USER: nombre del usuario con el cual se realizarï¿½la conexiï¿½
-            $PASS: contraseÃ±a del usuario
+            $USER: nombre del usuario con el cual se realizará la conexión
+            $PASS: contraseña del usuario
             $DB: Nombre de la base de datos, o del esquema
             $MOTOR: Motor con el que se realiza la conexion, Oracle o MySql
-<Responsabilidades> Establecer una conexiÃ³n entre la base de datos y la aplicacion
+<Responsabilidades> Establecer una conexión entre la base de datos y la aplicacion
 <Notas> Hace uso de las clases SQL y conexion, retornando el objeto SQL inicializado,
         con el cual se pueden ejecutar los queries en la base de datos.
-<Excepciones>Error al conectarse con la Base de datos, se debe a que no se encuentra disponible o existe algun error en los parï¿½etros
+<Excepciones>Error al conectarse con la Base de datos, se debe a que no se encuentra disponible o existe algun error en los parámetros
 <Salida>
 <Pre-condiciones>
 <Post-condiciones>
@@ -653,7 +653,7 @@ global $conn;
 <Clase>
 <Nombre>phpmkr_db_close
 <Parametros>$conn: objeto que contiene la conexion a la base de datos
-<Responsabilidades>Cerrar la conexiï¿½ actual
+<Responsabilidades>Cerrar la conexión actual
 <Notas>Examina que la conexion exista y si es asi se encarga de cerrarla
 <Excepciones>Error al cerrar la base de datos. Si la conexion que se quiere cerrar no existe
 <Salida>
@@ -1166,7 +1166,7 @@ function busca_filtro_tabla_limit($campos,$tabla,$filtro,$orden,$inicio,$registr
 <Nombre>evento
 <Parametros>$tabla: Tabla sobre la que se realiza el evento
             $accion: Tipo de evento que se realiza
-            $sql: sentencia que se ejecutï¿½
+            $sql: sentencia que se ejecutó
             $llave: llave primaria del registro sobre el que se realiza la accion
 <Responsabilidades>llevar a cabo la accion y registrar el evento en el log
 <Notas>
@@ -1215,7 +1215,7 @@ phpmkr_free_result();
 /*
 <Clase>
 <Nombre>ejecuta_filtro
-<Parametros>$sql: sentencia que se ejecuta, $con: conexion sobre la que se ejecutarï¿½la sentencia
+<Parametros>$sql: sentencia que se ejecuta, $con: conexion sobre la que se ejecutar�la sentencia
 <Responsabilidades>Ejecuta una sentencia insert y retorna la llave de lo que acaba de insertar
 <Notas>
 <Excepciones>
@@ -1356,7 +1356,7 @@ return($retorno);
 /*
 <Clase>
 <Nombre>extrae_campo</Nombre>
-<Parametros>$arreglo:es el arreglo origen, generalmente devuelto por busca_filtro_tabla;$campo: campo a buscar; bandera:parÃ¡metro adicionarl U=unico, M=mayusculas, m=minusculas, D=ordenado Descendente</Parametros>
+<Parametros>$arreglo:es el arreglo origen, generalmente devuelto por busca_filtro_tabla;$campo: campo a buscar; bandera:parámetro adicionarl U=unico, M=mayusculas, m=minusculas, D=ordenado Descendente</Parametros>
 <Responsabilidades>Retorna un arreglo ordenado ascendentemente extrayendo el campo de una matriz que debe tener 2 niveles sacando 1 el campo del segundo nivel esto se utiliza principalmente para retornos tipo BD <Responsabilidades>
 <Notas></Notas>
 <Excepciones></Excepciones>
@@ -1854,7 +1854,7 @@ function vincular_anexo_documento($iddoc,$ruta_origen,$etiqueta=''){
             $nwidth: ancho del a nueva imagen
             $nheight: alto de la nueva imagen
             $tipo:
-<Responsabilidades>cambiar el tamaï¿½ de la imagen, generando una nueva de las dimensiones deseadas
+<Responsabilidades>cambiar el tamaño de la imagen, generando una nueva de las dimensiones deseadas
 <Notas>
 <Excepciones>
 <Salida>
@@ -2004,8 +2004,8 @@ function redirecciona($location){
 /*
 <Clase>
 <Nombre>enviar_mensaje</Nombre>
-<Parametros>$origen:codigo del funcionario que envÃ­a el mensaje;$usuarios:codigos de los funcinarios destinos del mensaje;$mensaje:texto del mensaje;$tipo_envio:'msg'(mensajeria instantanea) o 'e-interno' (correo electrÃ³nico)</Parametros>
-<Responsabilidades>EnvÃ­a un mensaje instantÃ¡neo o de correo electrÃ³nico<Responsabilidades>
+<Parametros>$origen:codigo del funcionario que envía el mensaje;$usuarios:codigos de los funcinarios destinos del mensaje;$mensaje:texto del mensaje;$tipo_envio:'msg'(mensajeria instantanea) o 'e-interno' (correo electrónico)</Parametros>
+<Responsabilidades>Envía un mensaje instantáneo o de correo electrónico<Responsabilidades>
 <Notas></Notas>
 <Excepciones></Excepciones>
 <Salida></Salida>
@@ -2279,7 +2279,7 @@ function enviar_mensaje($correo = "", $tipo_usuario = array(), $usuarios = array
 <Parametros>$cad: tipo de contador
 <Responsabilidades>Buscar el contador correpondiente y hacer la debida actualizacion
 <Notas>
-<Excepciones>NO EXISTE UN CONSECUTIVO LLAMADO. Cuando el contador que llega como parï¿½etro no existe
+<Excepciones>NO EXISTE UN CONSECUTIVO LLAMADO. Cuando el contador que llega como parámetro no existe
 <Salida>
 <Pre-condiciones>
 <Post-condiciones>
@@ -2529,7 +2529,7 @@ else if($tipo=="cargo" || $tipo==4){
 $datorig=busca_filtro_tabla("A.iddependencia_cargo","dependencia_cargo A","A.cargo_idcargo=$dato AND A.dependencia_iddependencia=".$dependencia,"A.estado",$conn);
 if($datorig["numcampos"])
   $datorig=busca_cargo_funcionario(5,$datorig[0]["iddependencia_cargo"],"");
-else alerta(codifica_encabezado("No existe nadie en Ã©sta dependencia con el cargo especificado"));
+else alerta(codifica_encabezado("No existe nadie en ésta dependencia con el cargo especificado"));
 }
 else if($tipo=='iddependencia_cargo' || $tipo==5){
   $datorig=busca_filtro_tabla("*,f.estado as estado_f,d.estado as estado_d","dependencia_cargo d,funcionario f,cargo c","dependencia_cargo d,funcionario f,cargo","c.idcargo=d.cargo_idcargo AND f.idfuncionario=d.funcionario_idfuncionario AND d.iddependencia_cargo=".$dato,"f.estado",$conn);
@@ -2962,7 +2962,7 @@ else {
 <Responsabilidades>Permite el acceso en el sistema de un modulo dependiendo si tiene los permisos<Responsabilidades>
 <Notas></Notas>
 <Excepciones></Excpciones>
-<Salida>Muestra el enlace o boton para acceder el mÃ³dulo</Salida>
+<Salida>Muestra el enlace o boton para acceder el módulo</Salida>
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>
@@ -3055,7 +3055,7 @@ echo '</td><td align="center">';
 <Clase>
 <Nombre>prepara_sql
 <Parametros>$arreglo: arreglo con las valores
-            $separador: caracter que separarï¿½los datos
+            $separador: caracter que separara los datos
 <Responsabilidades>prepara la cadena de los values para el INSERT
 <Notas>
 <Excepciones>
@@ -3605,7 +3605,7 @@ elseif($conn->motor=="SqlServer" || $conn->motor=="MSSql")
    return "CONVERT(CHAR(10),CURRENT_TIMESTAMP,20)";
 }
 
-///Recibe la fecha inicial y la fecha que se debe controlar o fecha de referencia, si tiempo =1 es que la fecha iniicial esta por encima ese tiempo de la fecha de control ejemplo si fecha_inicial=2010-11-11 y fecha_control=2011-12-11 quiere decir que ha pasado 1 aÃ±o , 1 mes y 0 dias desde la fecha inicial a la de control
+///Recibe la fecha inicial y la fecha que se debe controlar o fecha de referencia, si tiempo =1 es que la fecha iniicial esta por encima ese tiempo de la fecha de control ejemplo si fecha_inicial=2010-11-11 y fecha_control=2011-12-11 quiere decir que ha pasado 1 año , 1 mes y 0 dias desde la fecha inicial a la de control
 function compara_fechas($fecha_control,$fecha_inicial){
 global $conn;
 if(!strlen($fecha_control)){
@@ -3621,10 +3621,10 @@ if(!strlen($fecha_control)){
  // separamos en partes las fechas
  $array_inicial = date_parse($fecha_inicial );
  $array_actual = date_parse($fecha_control);
- $anos =  $array_actual["year"] - $array_inicial["year"]; // calculamos aÃ±os
+ $anos =  $array_actual["year"] - $array_inicial["year"]; // calculamos años
  $meses = $array_actual["month"] - $array_inicial["month"]; // calculamos meses
- $dias =  $array_actual["day"] - $array_inicial["day"]; // calculamos dÃ­as
- //ajuste de posible negativo en $dÃ­as
+ $dias =  $array_actual["day"] - $array_inicial["day"]; // calculamos días
+ //ajuste de posible negativo en $días
 if ($dias<0){
   --$meses;
   if($meses<0){
@@ -3665,7 +3665,7 @@ if($listado["numcampos"]){
   //Coordenadas X, Y iniciales en las que se ubicar la imagen
   define("X0",0.5);
   define("Y0",0.3);
-  //Ancho y alto de la imagen (ajustada a una hoja de tamaÃ±o  carta)
+  //Ancho y alto de la imagen (ajustada a una hoja de tamaño  carta)
   define("W",215);
   define("H",278.4);
   $pag=0;
@@ -3704,10 +3704,10 @@ return(FALSE);
 function getRealIP(){
 if( @$_SERVER['HTTP_X_FORWARDED_FOR'] != '' ){
   $client_ip=servidor_remoto();
-  // los proxys van aÃ±adiendo al final de esta cabecera
+  // los proxys van añadiendo al final de esta cabecera
   // las direcciones ip que van "ocultando". Para localizar la ip real
   // del usuario se comienza a mirar por el principio hasta encontrar
-  // una direcciÃ³n ip que no sea del rango privado. En caso de no
+  // una dirección ip que no sea del rango privado. En caso de no
   // encontrarse ninguna se toma como valor el REMOTE_ADDR
   $entries = preg_split('[, ]', $_SERVER['HTTP_X_FORWARDED_FOR']);
   reset($entries);
@@ -3851,7 +3851,7 @@ function ultima_sesion($login) {
 /*
 <Clase>
 <Nombre>salir
-<Parametros>$texto: texto que saldrï¿½en pantalla
+<Parametros>$texto: texto que saldr�en pantalla
 <Responsabilidades>Sacar la razon de la salida del sistema, redireccionando a la pagina de login
 <Notas>
 <Excepciones>
@@ -4103,10 +4103,10 @@ else{
 </Clase>  */
 function dirToPdf($nameFile, $dir){
 require_once('html2ps/public_html/fpdf/fpdf.php');
-//Coordenadas X, Y iniciales en las que se ubicarÃ¡ la imagen
+//Coordenadas X, Y iniciales en las que se ubicará la imagen
 define("X0",0.5);
 define("Y0",0.3);
-//Ancho y alto de la imagen (ajustada a una hoja de tamaÃ±o carta)
+//Ancho y alto de la imagen (ajustada a una hoja de tamaño carta)
 define("W",215);
 define("H",278.4);
 if(is_dir($dir)) {
