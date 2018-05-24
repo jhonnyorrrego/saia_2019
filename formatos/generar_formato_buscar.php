@@ -11,6 +11,7 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 $ruta_actual='../';
 include_once($ruta_db_superior."librerias_saia.php");
+$retorno=array("exito"=>0,"mensaje"=>"Por favor valide la opci&oacute;n correcta");
 if(@$_REQUEST["idformato"])
   $idformato=$_REQUEST["idformato"];
 else {
@@ -22,12 +23,18 @@ else {
   redirecciona($redireccion);
 } 
 if(@$_REQUEST["crea"]){
-  crear_formato_buscar($idformato,"buscar");
+	$formato_base=busca_filtro_tabla("","formato","idformato=".$idformato,"",$conn);
+	$retorno["exito"]=crear_formato_buscar($idformato,"buscar");
+	$retorno["mensaje"]="archivo buscar para el formato ".$formato_base[0]["etiqueta"]." generado con &eacute;xito.";
   $redireccion="funciones_formatolist.php?idformato=".$idformato;
 	if($archivo!=''){
 	$redireccion=$archivo;
 	}
   redirecciona($redireccion);
+  
+}
+if($_REQUEST["llamado_ajax"]){
+	echo(json_encode($retorno));
 }
 /*<Clase>
 <Nombre>crear_formato_buscar</Nombre>
@@ -591,11 +598,14 @@ if($tablas_adicionales){
     $contenido=$includes.$enmascarar.$texto;
     $mostrar=crear_archivo($formato[0]["nombre"]."/buscar_".$formato[0]["nombre"]."2.php",$contenido);
 
-    if($mostrar<>"")
+    if($mostrar<>""){
       alerta("Formato Creado con exito por favor verificar la carpeta ".dirname($mostrar));
+      return(true);
+    }
   }
   else 
     alerta("No es posible generar el Formato");
+  return(false);
 }
 /*<Clase>
 <Nombre>generar_condicion</Nombre>

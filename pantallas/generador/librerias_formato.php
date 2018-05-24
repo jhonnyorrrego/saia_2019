@@ -190,21 +190,39 @@ function vincular_funciones_formato($libreria,$funcion){
 }
 
 function adicionar_pantalla_campos_formato($idpantalla,$datos){
-  $campo_serie=busca_filtro_tabla("","pantalla_campos","nombre='serie_idserie' AND pantalla_idpantalla=".$idpantalla,"",$conn);
+	$retorno=array();
+  $campo_serie=busca_filtro_tabla("","campos_formato","nombre='serie_idserie' AND formato_idformato=".$idpantalla,"",$conn);
+  /*
+   * Se garantiza que la serie ya existe y que siempre llega un valor para serie_idserie en datos
+   * */
   if(!$campo_serie["numcampos"]){
-    $sql2="INSERT INTO pantalla_campos(pantalla_idpantalla, tabla, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(".$idpantalla.",'".$datos["nombre"]."','serie_idserie','Tipo de documento','int','11',0,'','a,e','Tipo de documento','','','hidden',0,1,'Tipo documental')";  
+    $sql2="INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(".$idpantalla.",'serie_idserie','Tipo de documento','int','11',0,'','a,e','Tipo de documento','".$datos["serie_idserie"]."','','hidden',0,1,'Tipo documental')";  
     phpmkr_query($sql2);
+    $retorno["serie_idserie"]=phpmkr_insert_id();
+    $retorno["serie_idserie_sql"]=$sql2;
   }
-  $campo_documento=busca_filtro_tabla("","pantalla_campos","nombre='documento_iddocumento' AND pantalla_idpantalla=".$idpantalla,"",$conn);
+  $campo_documento=busca_filtro_tabla("","campos_formato","nombre='documento_iddocumento' AND formato_idformato=".$idpantalla,"",$conn);
   if(!$campo_documento["numcampos"]){
-    $sql2="INSERT INTO pantalla_campos(pantalla_idpantalla, tabla, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(".$idpantalla.",'".$datos["nombre"]."','documento_iddocumento','Documento asociado','int','11',0,'','a','Documento asociado','','','hidden',0,0,'Documento')";
+    $sql2="INSERT INTO campos_formato(formato_idformato,  nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(".$idpantalla.",'documento_iddocumento','Documento asociado','int','11',0,'','a','Documento asociado','','','hidden',0,0,'Documento')";
     phpmkr_query($sql2);
+    $retorno["documento"]=phpmkr_insert_id();
+    $retorno["documento_sql"]=$sql2;
   }
-	$campo_dependencia=busca_filtro_tabla("","pantalla_campos","nombre='dependencia' AND pantalla_idpantalla=".$idpantalla,"",$conn);
+	$campo_dependencia=busca_filtro_tabla("","campos_formato","nombre='dependencia' AND formato_idformato=".$idpantalla,"",$conn);
 	if(!$campo_dependencia["numcampos"]){
-		$sql2="INSERT INTO pantalla_campos(pantalla_idpantalla, tabla, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(".$idpantalla.",'".$datos["nombre"]."','dependencia','Seleccione rol','varchar','255',1,'select iddependencia_cargo as id, concat(dependencia,concat('' - '',cargo)) as nombre from vfuncionario_dc where idfuncionario={*idfuncionario*} and estado_dc=1','a','Seleccione el rol a utilizar','','','select',0,1,'Seleccionar')";
+		$sql2="INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(".$idpantalla.",'dependencia','Seleccione rol','varchar','255',1,'select iddependencia_cargo as id, concat(dependencia,concat('' - '',cargo)) as nombre from vfuncionario_dc where idfuncionario={*idfuncionario*} and estado_dc=1','a','Seleccione el rol a utilizar','','','select',0,1,'Seleccionar')";
     phpmkr_query($sql2);
+    $retorno["dependencia"]=phpmkr_insert_id();
+    $retorno["dependencia_sql"]=$sql2;
 	}
+	$campo_formato=busca_filtro_tabla("","campos_formato","nombre='idft_".$datos["nombre_tabla"]."' AND formato_idformato=".$idpantalla,"",$conn);
+	if(!$campo_formato["numcampos"]){
+		$sql2="INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(".$idpantalla.",'id".$datos["nombre_tabla"]."','Identificador de formato','int','11',0,'','a','Identificador unico del formato (llave primaria)','','ai,pk','hidden',0,0,'id".$datos["nombre_tabla"]."')";
+		phpmkr_query($sql2);
+		$retorno["idformato"]=phpmkr_insert_id();
+		$retorno["idformato_sql"]=$sql2;
+	}
+	return($retorno);
 }	
 function eliminar_pantalla_campos_formato($idpantalla){
   $campo_serie=busca_filtro_tabla("","pantalla_campos","nombre='serie_idserie' AND pantalla_idpantalla=".$idpantalla,"",$conn);
@@ -219,5 +237,72 @@ function eliminar_pantalla_campos_formato($idpantalla){
       phpmkr_query($sql2);    
     }
   }   
+}
+function actualizar_encabezado_pie($idformato,$tipo,$valor){
+	$retorno=array("exito"=>0);
+	if($tipo=="encabezado"){
+		$sql="UPDATE formato set encabezado=".$valor." WHERE idformato=".$idformato;
+		phpmkr_query($sql);
+		$retorno["exito"]=1;
+	}
+	else if($tipo=="pie"){
+		$sql="UPDATE formato set pie_pagina=".$valor." WHERE idformato=".$idformato;
+		phpmkr_query($sql);
+		$retorno["exito"]=1;
+	}
+	$retorno["sql"]=$sql;
+	return($retorno);
+}
+function actualizar_cuerpo_formato($idformato,$tipo_retorno){
+	$retorno=array("exito"=>0);
+	$retorno["mensaje"]="Existe un error al actualizar el cuerpo del formato";
+	if(@$_REQUEST["contenido"]){	
+		$sql="UPDATE formato set cuerpo='".$_REQUEST["contenido"]."' WHERE idformato=".$idformato;
+		phpmkr_query($sql);
+		$retorno["exito"]=1;
+		$retorno["sql"]=$sql;
+		$retorno["mensaje"]="El contenido para generar el dise&ntilde;o del formato se almacena de forma correcta";
+	}
+	if ($tipo_retorno == 1)
+		echo (json_encode($retorno));
+	else {
+		return ($retorno);
+	}
+}
+function verificar_nombre_formato($nombre,$tipo_retorno){
+	$retorno=array("exito"=>0,"mensaje"=>"El nombre del formato no es v&aacute;lido");
+	$formato=busca_filtro_tabla("","formato","nombre='".$nombre."'","",$conn);
+	$max_long_nombre=26;
+	$min_long_nombre=3;
+	/*Validacion que tenga entre 3 y 20 caracteres y que solo tenga numeros letras y _*/
+	if (ereg("^[a-zA-Z0-9\_]{".$min_long_nombre.",".$max_long_nombre."}$", $nombre)) {
+		$retorno["exito"]=1;
+		$retorno["mensaje"]="El nombre del formato es correcto";
+	} 
+	else{
+		$retorno["exito"]=0;
+		$retorno["mensaje"]="En el nombre del formato solo son permitidos n&uacute;meros, letras y el gui&oacute;n bajo";
+	}
+	if($formato["numcampos"]){
+		$retorno["exito"]=0;
+		$retorno["mensaje"]="El nombre del formato ya existe";
+	}
+	else if(strlen($nombre)>$max_long_nombre || strlen($nombre)<$min_long_nombre){
+		$retorno["exito"]=0;
+		$retorno["mensaje"]="El nombre del formato debe tener m&aacute;s de ".$min_long_nombre." y menos de ".$max_long_nombre." caracteres.";
+	}
+	
+	if ($tipo_retorno == 1)
+		echo (json_encode($retorno));
+	else {
+		return ($retorno);
+	}
+		
+}
+if (@$_REQUEST["ejecutar_libreria_formato"]) {
+	if (!@$_REQUEST["tipo_retorno"]) {
+		$_REQUEST["tipo_retorno"] = 1;
+	}
+	$_REQUEST["ejecutar_libreria_formato"]($_REQUEST["idformato"], $_REQUEST["tipo_retorno"]);
 }
 ?>

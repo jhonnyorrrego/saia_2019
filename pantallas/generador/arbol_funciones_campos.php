@@ -89,7 +89,7 @@ global $conn;
 $campos=busca_filtro_tabla("","campos_formato A","A.formato_idformato=".$pantalla_idpantalla." and etiqueta_html<>'campo_heredado'","A.nombre",$conn);
 if($campos["numcampos"]){ 
   for($i=0; $i<$campos["numcampos"]; $i++){    
-    echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"".htmlspecialchars($campos[$i]["nombre"])."\" id=\"campo_".$campos[$i]["idpantalla_campos"]."\" tooltip=\"".utf8_encode(htmlspecialchars($campos[$i]["etiqueta"]))."\" >");
+    echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"".htmlspecialchars($campos[$i]["nombre"])."\" id=\"campo_".$campos[$i]["idcampos_formato"]."\" tooltip=\"".utf8_encode(htmlspecialchars($campos[$i]["etiqueta"]))."\" >");
       echo("<userdata name='mycampo'>{*".$campos[$i]["nombre"]);      
       echo("*}</userdata>\n");
     echo("</item>\n");

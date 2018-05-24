@@ -12,8 +12,9 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/generador/librerias_pantalla.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_componentes.php");
-if($_REQUEST["idpantalla"]){
-  $idpantalla=$_REQUEST["idpantalla"];
+if($_REQUEST["idformato"]){
+  $idpantalla=$_REQUEST["idformato"];
+  $datos_formato=busca_filtro_tabla("","formato","idformato=".$idpantalla,"",$conn);
 }
 echo(librerias_jquery());
 echo(librerias_html5());
@@ -106,11 +107,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
                   <form name="formulario_editor_mostrar" id="formulario_editor_mostrar" action="">
                   <textarea name="editor_mostrar" id="editor_mostrar" class="editor_tiny">
                   <?php
-                    $pantalla_temp=json_decode($pantalla,true);
-                    $ruta_archivo=$ruta_db_superior.$pantalla_temp[0]["ruta_pantalla"]."/".$pantalla_temp[0]["nombre"]."/dato_mostrar_".$pantalla_temp[0]["nombre"].".php";
-                    if(file_exists($ruta_archivo)){
-                      echo(file_get_contents($ruta_archivo));
-                    }
+                    echo($datos_formato[0]["cuerpo"]);
                   ?>
                   </textarea>
                   </form>
@@ -138,23 +135,43 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 									<div id="librerias_en_uso"></div>
 								</div>
 								<div class="tab-pane" id="encabezado_pie-tab">
-									<?php
-									$encabezado_pie=busca_filtro_tabla("","pantalla_encabezado a","fk_idpantalla=".$_REQUEST["idpantalla"],"",$conn);
-									?>
 									<br>
 									<legend>Encabezado</legend>
 									<br>
-									<textarea name="editor_encabezado" id="editor_encabezado" class="editor_tiny"><?php echo($encabezado_pie[0]["encabezado"]); ?>
-									</textarea>
-									<hr>
+									<select name="encabezado" id="encabezado"> 
+									<option value="0">Por favor Seleccione</option>
+									<?php 
+									$encabezados=busca_filtro_tabla("","encabezado_formato","1=1","etiqueta",$conn);
+									for($i=0;$i<$encabezados["numcampos"];$i++){
+										echo("<option value='".$encabezados[$i]["idencabezado_formato"]."'");
+										if($encabezados[$i]["idencabezado_formato"]==$datos_formato[0]["encabezado"]){
+											echo(' selected="selected" ');
+										}									
+										echo(">".$encabezados[$i]["etiqueta"]."</option>");
+									}
+									?>
+									</select>
+									<div class="btn btn-mini btn-info" id="adicionar_encabezado">Adicionar</div>
 									<legend>Pie</legend>
 									<br>
-									<textarea name="editor_pie" id="editor_pie" class="editor_tiny"><?php echo($encabezado_pie[0]["pie"]); ?>
-									</textarea>
+									<select name="pie" id="pie_pagina"> 
+									<option value="0">Por favor Seleccione</option>
+									<?php 
+									$pie_pagina=busca_filtro_tabla("","encabezado_formato","1=1","etiqueta",$conn);
+									for($i=0;$i<$pie_pagina["numcampos"];$i++){
+										echo("<option value='".$pie_pagina[$i]["idencabezado_formato"]."'");
+										if($pie_pagina[$i]["idencabezado_formato"]==$datos_formato[0]["pie_pagina"]){
+											echo(' selected="selected" ');
+										}
+										echo(">".$pie_pagina[$i]["etiqueta"]."</option>");
+									}
+									?>
+									</select>
+									<div class="btn btn-mini btn-info" id="adicionar_encabezado">Adicionar</div>
 								</div>
 								<div class="tab-pane" id="generar_formulario-tab">
 									<div class="accordion" id="acordion_generar">
-								  	<div class="accordion-group">
+								  	<!-- div class="accordion-group">
 									    <div class="accordion-heading">
                         <input type="checkbox" checked="true"class="pull-left check_genera" value="version">
 									      <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_version_pantalla">
@@ -166,8 +183,8 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 
 									      </div>
 									    </div>
-										</div>
-										<div class="accordion-group">
+										</div-->
+										<!-- div class="accordion-group">
 									    <div class="accordion-heading">
                         <input type="checkbox" checked="true"class="pull-left check_genera"  value="clase">
 									      <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_clase">
@@ -179,21 +196,21 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 
 									      </div>
 									    </div>
-										</div>
+										</div-->
 										<div class="accordion-group">
 									    <div class="accordion-heading">
 									      <input type="checkbox" checked="true"class="pull-left check_genera" value="tabla">
-                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_tablas">
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_tabla">
 									      	Crear /actualizar tablas
 									      </a>
 									    </div>
-									    <div id="generar_tablas" class="accordion-body collapse generador_pantalla">
+									    <div id="generar_tabla" class="accordion-body collapse generador_pantalla">
 									      <div class="accordion-inner">
 
 									      </div>
 									    </div>
 										</div>
-										<div class="accordion-group">
+										<!-- div class="accordion-group">
 									    <div class="accordion-heading">
                         <input type="checkbox" checked="true"class="pull-left check_genera" value="librerias">
 									      <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_pantalla_libreria">
@@ -205,7 +222,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 
 									      </div>
 									    </div>
-										</div>
+										</div-->
 										<div class="accordion-group">
 									    <div class="accordion-heading">
 									      <input type="checkbox" checked="true"class="pull-left check_genera" value="adicionar">
@@ -231,7 +248,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 									      </div>
 									    </div>
 										</div>
-										<div class="accordion-group">
+										<!--  div class="accordion-group">
 									    <div class="accordion-heading">
 									      <input type="checkbox" checked="true"class="pull-left check_genera" value="eliminar">
                         <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_eliminar">
@@ -243,7 +260,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 
 									      </div>
 									    </div>
-										</div>
+										</div-->
 										<div class="accordion-group">
 									    <div class="accordion-heading">
 									      <input type="checkbox" checked="true"class="pull-left check_genera" value="mostrar">
@@ -283,7 +300,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 									      </div>
 									    </div>
 										</div -->
-                    <div class="accordion-group">
+                    					<!-- div class="accordion-group">
 									    <div class="accordion-heading">
 									      <input type="checkbox" checked="true"class="pull-left check_genera" value="modulo">
                         <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_modulo">
@@ -295,7 +312,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 									        Generar el m&oacute;dulo vinculado con la pantalla que direcciona a la b&uacute;squeda
 									      </div>
 									    </div>
-										</div>
+										</div-->
 								  </div>
                   <div >
                     <button id="generar_pantalla" class="btn btn-primary">Generar</button>
@@ -347,7 +364,8 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
                   <div id="esperando_acciones">
     								<img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif">
     							</div>
-                  <div id="treeboxbox_tree4" class="arbol_saia"></div>
+                  <div id="actualizar_cuerpo_formato" class="btn btn-mini btn-success">Actualizar</div>
+                  <div id="treeboxbox_tree4" style="height:90%;"></div>
 								</div>
 							</div>
 						</div>
@@ -365,7 +383,7 @@ echo(librerias_notificaciones());
 echo(librerias_validar_formulario());
 echo(librerias_arboles());
 echo(librerias_tooltips());
-echo(librerias_tiny());
+//echo(librerias_tiny());
 $cant_js=count($librerias_js);
 for($i=0;$i<$cant_js;$i++){
 	if($librerias_js[$i])
@@ -391,6 +409,37 @@ $(".nav li").click(function(){
     return false;
   }
 });
+$("#encabezado").change(function(){
+	 $.ajax({
+         type:'POST',
+         url: "<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php",
+         data: "librerias=pantallas/generador/librerias_formato.php&funcion=actualizar_encabezado_pie&parametros="+$("#idformato").val()+";encabezado;"+$(this).val()+";1&rand="+Math.round(Math.random()*100000),
+         success: function(html){
+           if(html){
+             var objeto=jQuery.parseJSON(html);
+             if(objeto.exito){
+            	 notificacion_saia("Encabezado actualizado","success","",3000);
+             }
+         	}
+         }
+     	});
+});
+$("#pie_pagina").change(function(){
+	 $.ajax({
+        type:'POST',
+        url: "<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php",
+        data: "librerias=pantallas/generador/librerias_formato.php&funcion=actualizar_encabezado_pie&parametros="+$("#idformato").val()+";pie;"+$(this).val()+";1&rand="+Math.round(Math.random()*100000),
+        success: function(html){
+          if(html){
+            var objeto=jQuery.parseJSON(html);
+            if(objeto.exito){
+            	notificacion_saia("Pie pagina actualizado","success","",3000);
+            }
+        	}
+        }
+    	});
+});
+
 $("#frame_tipo_listado").height(alto-125);
 $(".tab-pane").height(alto-50);
 $(".tab-content").height(alto-40);
@@ -409,7 +458,15 @@ tinymce.init({
   		"filemanager" : "<?php echo(PROTOCOLO_CONEXION.RUTA_PDF);?>/tinymce/filemanager/plugin.min.js"
   },
   content_css : "<?php echo($ruta_db_superior);?>css/bootstrap/saia/css/bootstrap.css",
-  extended_valid_elements :"div[*]"
+  extended_valid_elements :"div[*]",
+  setup: function (ed) {
+      ed.on('keyup', function (e) {
+          cambios_editor(ed);
+      });
+      ed.on('change', function(e) {
+          cambios_editor(ed);
+      });
+  }
 });
 $.ajax({
   type:'POST',
@@ -425,6 +482,7 @@ $.ajax({
   	}
   }
 });
+
 $("#seleccionar_archivo").click(function(){
 	ruta_archivo=$("#ruta_archivo_actual").val();
 	if(ruta_archivo!=''){
@@ -894,7 +952,7 @@ $("#generar_pantalla").live("click",function(){
   $(".generador_pantalla").find(".accordion-inner").html("");
   $(".generador_pantalla").removeClass("alert-success");
   $(".generador_pantalla").removeClass("alert-error");
-  generar_archivos_ignorados();
+  //generar_archivos_ignorados();
   $(".generador_pantalla").each(function(index,val){
     if($(this).prev().children(":checkbox").is(':checked')){
       generar_pantalla(this.id);
@@ -907,57 +965,78 @@ $(".eliminar_campos_tabla_pantalla").live("click",function(){
 $("#tipo_pantalla_busqueda").change(function(){
 	$("#frame_tipo_listado").html("<img src='<?php echo($ruta_db_superior); ?>imagenes/cargando.gif'>");
 	if($(this).val()!=0){
-  	$("#frame_tipo_listado").load("<?php echo($ruta_db_superior); ?>pantallas/generador/esquemas_busqueda_saia/"+$("#tipo_pantalla_busqueda option:selected").attr("nombre")+".php","tipo_busqueda="+$(this).val()+"&idpantalla=<?php echo($_REQUEST['idpantalla']);?>");
+  	$("#frame_tipo_listado").load("<?php echo($ruta_db_superior); ?>pantallas/generador/esquemas_busqueda_saia/"+$("#tipo_pantalla_busqueda option:selected").attr("nombre")+".php","tipo_busqueda="+$(this).val()+"&idpantalla=<?php echo($_REQUEST['idformato']);?>");
  	}
  	else{
  		$("#frame_tipo_listado").html("");
  	}
 });
-
+function cambios_editor(){
+	$("#actualizar_cuerpo_formato").removeClass("btn-success");
+	$("#actualizar_cuerpo_formato").addClass("btn-info");
+}
+$(document).on("click","#actualizar_cuerpo_formato",function(){
+	 $.ajax({
+   	  type:'POST',
+   	  url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias_formato.php",
+   	  data: "ejecutar_libreria_formato=actualizar_cuerpo_formato&contenido="+tinyMCE.editors["editor_mostrar"].getContent()+"&idformato="+$("#idformato").val()+"&rand="+Math.round(Math.random()*100000),
+   	  success: function(html){
+   	   	  console.log(html);
+   	    if(html){
+   	      var objeto=jQuery.parseJSON(html);
+   	      if(objeto.exito){
+   	    	  notificacion_saia(objeto.mensaje,"success","",3500);
+   	      }
+   	      else{
+   	    	  notificacion_saia(objeto.mensaje,"error","",3500);
+   	  	  }
+   	  	}
+   	  }
+   	});	
+});
+function generar_pantalla(nombre_accion){
+	var ruta_generar='formatos/generar_formato.php';
+	accion=nombre_accion.replace("generar_","");
+	if(nombre_accion==="generar_buscar"){
+		ruta_generar='formatos/generar_formato_buscar.php';
+	}
+	  $.ajax({
+	    type:'POST',
+	    url: '<?php echo($ruta_db_superior);?>'+ruta_generar,
+	    data:'idformato='+$("#idformato").val()+"&rand="+Math.round(Math.random()*100000)+'&crea='+accion+"&llamado_ajax=1",
+	    success: function(html){
+	      if(html){
+	      	var objeto=jQuery.parseJSON(html);
+	        if(objeto.exito==1){
+	          $("#"+nombre_accion).prev().removeClass("alert-error");
+	          $("#"+nombre_accion).prev().addClass("alert-success");
+	          $("#"+nombre_accion).html("");
+	          notificacion_saia(objeto.mensaje,"success","",3500);
+	          if(typeof(objeto.descripcion_error)!=="undefined"){
+	        		$("#"+nombre_accion).html(objeto.descripcion_error);
+	        		$("#"+nombre_accion).collapse('show');
+	        	}
+	        }
+	        else{
+	        	$("#"+nombre_accion).prev().addClass("alert-error");
+	        	notificacion_saia(objeto.mensaje,"error","",9500);
+	        	if(typeof(objeto.descripcion_error)!=="undefined"){
+	        		$("#"+nombre_accion).html(objeto.descripcion_error);
+	        		$("#"+nombre_accion).collapse('show');
+	        	}
+	        }
+	    	}
+	    }
+		});
+	}
 });//Fin Document ready
+/*
 function generar_archivos_ignorados(){
   $.ajax({
     type:'POST',
     url: '<?php echo($ruta_db_superior);?>pantallas/generador/librerias_pantalla.php',
     data:'ejecutar_libreria_pantalla=generar_archivos_ignorados&idpantalla='+$("#idformato").val()+"&rand="+Math.round(Math.random()*100000)
 	});
-}
-function generar_pantalla(nombre_accion){
-  var adicionales_mostrar='';
-  if(nombre_accion=="generar_mostrar"){
-    adicionales_mostrar="&mostrar_codificado="+escape(tinymce.get('editor_mostrar').getContent())+"&encabezado="+escape(tinymce.get('editor_encabezado').getContent())+"&pie="+escape(tinymce.get('editor_pie').getContent());
-  }
-  if(nombre_accion=="generar_listar"){
-    adicionales_mostrar="&mostrar_codificado="+escape($("#campo_pantalla_busqueda").val());
-  }
-  $.ajax({
-    type:'POST',
-    url: '<?php echo($ruta_db_superior);?>pantallas/generador/librerias_pantalla.php',
-    data:'ejecutar_libreria_pantalla='+nombre_accion+'&idpantalla='+$("#idformato").val()+"&rand="+Math.round(Math.random()*100000)+adicionales_mostrar,
-    //async:false,
-    success: function(html){
-      if(html){
-      	var objeto=jQuery.parseJSON(html);
-        if(objeto.exito==1){
-          $("#"+nombre_accion).prev().removeClass("alert-error");
-          $("#"+nombre_accion).prev().addClass("alert-success");
-          $("#"+nombre_accion).html("");
-          notificacion_saia(objeto.mensaje,"success","",3500);
-          if(typeof(objeto.descripcion_error)!=="undefined"){
-        		$("#"+nombre_accion).html(objeto.descripcion_error);
-        		$("#"+nombre_accion).collapse('show');
-        	}
-        }
-        else{
-        	$("#"+nombre_accion).prev().addClass("alert-error");
-        	notificacion_saia(objeto.mensaje,"error","",9500);
-        	if(typeof(objeto.descripcion_error)!=="undefined"){
-        		$("#"+nombre_accion).html(objeto.descripcion_error);
-        		$("#"+nombre_accion).collapse('show');
-        	}
-        }
-    	}
-    }
-	});
-}
+}*/
+
 </script>

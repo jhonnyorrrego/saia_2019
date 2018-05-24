@@ -14,7 +14,7 @@ if (!$_SESSION["LOGIN" . LLAVE_SAIA] && isset($_REQUEST["LOGIN"]) && @$_REQUEST[
 	logear_funcionario_webservice($_REQUEST["LOGIN"]);
 }
 include_once ($ruta_db_superior . FORMATOS_SAIA . "librerias/funciones.php");
-
+$retorno=array("exito"=>0,"mensaje"=>"Por favor valide la opci&oacute;n correcta");
 if (@$_REQUEST["archivo"] != '') {
 	$archivo = $ruta_db_superior . str_replace("-", "/", $_REQUEST["archivo"]);
 }
@@ -23,7 +23,7 @@ $incluidos = array();
 if (@$_REQUEST["idformato"])
 	$idformato = $_REQUEST["idformato"];
 else {
-	alerta("por favor seleccione un Formato a Generar");
+	$retorno["mensaje"]=alerta("por favor seleccione un Formato a Generar");
 	$redireccion = "formatolist.php";
 	if ($archivo != '') {
 		$redireccion = $archivo;
@@ -35,7 +35,7 @@ if (@$_REQUEST["genera"]) {
 }
 switch (@$_REQUEST["crea"]) {
 	case "formato" :
-		generar_formato($idformato);
+		$retorno["exito"]=generar_formato($idformato);
 		$redireccion = "formatoview.php?idformato=" . $idformato;
 		if ($archivo != '') {
 			$redireccion = $archivo;
@@ -43,7 +43,8 @@ switch (@$_REQUEST["crea"]) {
 		redireacciona($redireccion);
 		break;
 	case "tabla" :
-		generar_tabla($idformato);
+		$retorno["exito"]=generar_tabla($idformato);
+		$retorno["mensaje"]="Tabla para el formato ".$formato_base[0]["etiqueta"]." generado con &eacute;xito.";
 		$redireccion = "campos_formatolist.php?idformato=" . $idformato;
 		if ($archivo != '') {
 			$redireccion = $archivo;
@@ -51,7 +52,8 @@ switch (@$_REQUEST["crea"]) {
 		redirecciona($redireccion);
 		break;
 	case "vista" :
-		generar_vista($idformato);
+		$retorno["exito"]=generar_vista($idformato);
+		$retorno["mensaje"]="vista para el formato ".$formato_base[0]["etiqueta"]." generado con &eacute;xito.";
 		$redireccion = "vista_formatoedit.php?key=" . $_REQUEST["idformato"];
 		if ($archivo != '') {
 			$redireccion = $archivo;
@@ -59,7 +61,8 @@ switch (@$_REQUEST["crea"]) {
 		redirecciona($redireccion);
 		break;
 	case "mostrar" :
-		crear_formato_mostrar($idformato);
+		$retorno["exito"]=crear_formato_mostrar($idformato);
+		$retorno["mensaje"]="archivo mostrar para el formato ".$formato_base[0]["etiqueta"]." generado con &eacute;xito.";
 		$redireccion = "funciones_formatolist.php?idformato=" . $idformato;
 		if ($archivo != '') {
 			$redireccion = $archivo;
@@ -67,7 +70,8 @@ switch (@$_REQUEST["crea"]) {
 		redirecciona($redireccion);
 		break;
 	case "adicionar" :
-		crear_formato_ae($idformato, "adicionar");
+		$retorno["exito"]=crear_formato_ae($idformato, "adicionar");
+		$retorno["mensaje"]="archivo adicionar para el formato ".$formato_base[0]["etiqueta"]." generado con &eacute;xito.";
 		$redireccion = "funciones_formatolist.php?idformato=" . $idformato;
 		if ($archivo != '') {
 			$redireccion = $archivo;
@@ -75,7 +79,8 @@ switch (@$_REQUEST["crea"]) {
 		redirecciona($redireccion);
 		break;
 	case "editar" :
-		crear_formato_ae($idformato, "editar");
+		$retorno["exito"]=crear_formato_ae($idformato, "editar");
+		$retorno["mensaje"]="archivo editar para el formato ".$formato_base[0]["etiqueta"]." generado con &eacute;xito.";
 		$redireccion = "funciones_formatolist.php?idformato=" . $idformato;
 		if ($archivo != '') {
 			$redireccion = $archivo;
@@ -98,7 +103,8 @@ switch (@$_REQUEST["crea"]) {
 		redirecciona($redireccion);
 		break;
 	case "eliminar" :
-		crear_formato_mostrar($idformato, "eliminar");
+		$retorno["exito"]=crear_formato_mostrar($idformato, "eliminar");
+		$retorno["mensaje"]="archivo eliminar para el formato ".$formato_base[0]["etiqueta"]." generado con &eacute;xito.";
 		$redireccion = "funciones_formatolist.php?idformato=" . $idformato;
 		if ($archivo != '') {
 			$redireccion = $archivo;
@@ -106,7 +112,9 @@ switch (@$_REQUEST["crea"]) {
 		redirecciona($redireccion);
 		break;
 }
-
+if($_REQUEST["llamado_ajax"]){
+	echo(json_encode($retorno));
+}
 /*
  * <Clase>
  * <Nombre>generar_tabla</Nombre>
@@ -265,7 +273,7 @@ function generar_tabla($idformato) {
 			guardar_traza($sql_tabla, $formato[0]["nombre_tabla"]);
 
 			if (phpmkr_query($sql_tabla, $conn)) {
-				alerta("Tabla " . $formato[0]["nombre_tabla"] . " Generada con Exito");
+				$retorno["mensaje"]=alerta("Tabla " . $formato[0]["nombre_tabla"] . " Generada con Exito");
 				crear_indices_tabla($formato[0]["idformato"]);
 			} else {
 				die("No es posible Generar la tabla en el Formato " . $sql_tabla . "<br />" . phpmkr_error());
@@ -274,11 +282,11 @@ function generar_tabla($idformato) {
 		} else {
 			crear_indices_tabla($formato[0]["idformato"]);
 		}
-		return (false);
 	} else {
 		alerta("No es posible Generar la tabla en el Formato");
 		return (false);
 	}
+return(true);
 }
 
 /*
@@ -936,13 +944,15 @@ function crear_formato_mostrar($idformato) {
 		$contenido = $includes . $texto . $enlace . incluir_libreria("footer_nuevo.php", "librerias");
 		$mostrar = crear_archivo($formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $contenido);
 		if ($mostrar !==false) {
-		  notificaciones("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar),"success",2000);
+		  alerta("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar),"success",2000);
+		  return(true);
 		}else{
-		  notificaciones("Error al crear el archivo " . dirname($mostrar),"error",5000);
+		  alerta("Error al crear el archivo " . dirname($mostrar),"error",5000);
 		}
 	} else {
-		notificaciones("Formato NO encontrado ","error",5000);
+		alerta("Formato NO encontrado ","error",5000);
 	}
+	return(false);
 }
 
 /*
@@ -2084,12 +2094,15 @@ function crear_formato_ae($idformato, $accion) {
 
 		$mostrar = crear_archivo($formato[0]["nombre"] . "/" . $formato[0]["ruta_" . $accion], $contenido);
 		if ($mostrar !==false) {
-			notificaciones("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar),"success",2000);
+			alerta("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar),"success",2000);
+			return(true);
 		}else{
-			notificaciones("Error al crear el archivo " . dirname($mostrar),"error",5000);
+			alerta("Error al crear el archivo " . dirname($mostrar),"error",5000);
+			return(false);
 		}
 	} else {
-		notificaciones("Formato NO encontrado ","error",5000);
+		alerta("Formato NO encontrado ","error",5000);
+		return(false);
 	}
 }
 
@@ -2588,9 +2601,11 @@ function crear_formato_buscar($idformato, $accion) {
 
 		if ($mostrar != "") {
 			alerta("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar));
+			return(true);
 		}
 	} else {
 		alerta("No es posible generar el Formato");
+		return(false);
 	}
 }
 
@@ -2843,7 +2858,7 @@ function generar_formato($idformato) {
 			$campos_adicionar = array_diff($campos, $campos_edit);
 			$campos_adicionar = array_unique($campos_adicionar);
 		} else {
-			notificaciones("El formato mostrar no posee Parametros si esta seguro continue con el Proceso de lo contrario haga Click en Listar Formato y Luego Editelo");
+			alerta("El formato mostrar no posee Parametros si esta seguro continue con el Proceso de lo contrario haga Click en Listar Formato y Luego Editelo");
 		}
 	}
 	$tadd = "";
@@ -2853,7 +2868,7 @@ function generar_formato($idformato) {
 	$ted .= implode(",", $campos_editar);
 	$tod .= implode(",", $campos_otrosf);
 	if ($campos_otrosf != "") {
-		notificaciones("Existen otros Formatos Vinculados");
+		alerta("Existen otros Formatos Vinculados");
 	}
 	$adicionales = "";
 	if (@$_REQUEST["pantalla"] == "tiny") {

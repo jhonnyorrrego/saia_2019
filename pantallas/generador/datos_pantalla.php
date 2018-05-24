@@ -12,12 +12,10 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 if($_REQUEST['idformato']){
 	$formato = busca_filtro_tabla("","formato","idformato=".$_REQUEST['idformato'],"",$conn);
-	$formato[0]["etiqueta"]=codifica_encabezado(html_entity_decode($formato[0]["etiqueta"]));
-	$formato[0]["ayuda"]=codifica_encabezado(html_entity_decode($formato[0]["ayuda"]));
+	$formato=procesar_cadena_json($formato,array("cuerpo","ayuda","etiqueta"));
 	$cod_padre=$formato[0]["cod_padre"];
 	$categoria=$formato[0]["fk_categoria_formato"];
 	$formato = json_encode($formato);
-
 	if($cod_padre){
 		$nombre_cod_padre=busca_filtro_tabla("","formato a","a.idformato=".$cod_padre,"",$conn);
 		$adicional_cod_padre="&seleccionado=".$cod_padre;
@@ -26,6 +24,27 @@ if($_REQUEST['idformato']){
 		$nombre_categoria=busca_filtro_tabla("","categoria_formato a","a.idcategoria_formato=".$categoria,"",$conn);
 		$adicional_categoria="&seleccionado=".$categoria;
 	}
+}
+/**
+ * Esta funcion puede servir para 
+ */
+function procesar_cadena_json($resultado,$lista_valores){
+	for($i=0;$i<$resultado["numcampos"];$i++){
+		$busqueda=$resultado[$i];
+		foreach($busqueda AS $key=>$valor){
+			if(is_numeric($key)){
+				unset($busqueda[$key]);
+			}
+			else if(in_array($key,$lista_valores)){
+				$busqueda[$key]=str_replace("\n","",$busqueda[$key]);
+				$busqueda[$key]=str_replace("\r","",$busqueda[$key]);
+				$busqueda[$key]=codifica_encabezado($busqueda[$key]);
+				$busqueda[$key]=addslashes($busqueda[$key]);
+			}
+		}
+		$resultado[$i]=$busqueda;
+	}
+return($resultado);	
 }
 ?>
 <style type="text/css">
@@ -37,7 +56,7 @@ if($_REQUEST['idformato']){
   <div class="control-group">
     <label class="control-label" for="nombre">Nombre*</label>
     <div class="controls">
-      <input type="text" name="nombre" id="nombre_formato" placeholder="Nombre" value="" required>
+      <input type="text" name="nombre" id="nombre_formato" placeholder="Nombre" value="" required  <?php if($_REQUEST["idformato"]) echo("disabled");?>>
     </div>
   </div>
   <div class="control-group">
@@ -222,8 +241,10 @@ if($_REQUEST['idformato']){
   	<input type="hidden" name="banderas_formato" id="banderas" value="">
   	<input type="hidden" name="idformato" id="idformato" value="">
     <button type="button" name="adicionar" class="btn btn-primary" id="enviar_datos_formato" value="adicionar_datos_formato">Aceptar</button>
-    <button type="reset" name="cancelar" class="btn" id="cancelar_formulario_saia" value="cancelar">Cancel</button>
-    <button type="button" name="eliminar" class="btn btn-danger kenlace_saia_propio" id="eliminar_formulario_saia" enlace="../formatos/generador/eliminar_formato.php?idformato=<?php echo($_REQUEST['idformato']);?>" titulo="Eliminar formato" eliminar_hijos="0" value="eliminar">Eliminar</button>
+    <!-- button type="reset" name="cancelar" class="btn" id="cancelar_formulario_saia" value="cancelar">Cancel</button-->
+    <?php if($_REQUEST["idformato"]){?>
+    <!-- button type="button" name="eliminar" class="btn btn-danger kenlace_saia_propio" id="eliminar_formulario_saia" enlace="../formatos/generador/eliminar_formato.php?idformato=<?php echo($_REQUEST['idformato']);?>" titulo="Eliminar formato" eliminar_hijos="0" value="eliminar">Eliminar</button-->
+    <?php } ?>
     <div class="pull-right" id="cargando_enviar"></div>
   </div>
 </form>
@@ -235,6 +256,26 @@ echo(librerias_acciones_kaiten());
 ?>
 <script type="text/javascript">
 $("document").ready(function(){
+	$("#nombre_formato").blur(function(){
+		$.ajax({
+		  type:'POST',
+		  url: "<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php",
+		  async:false,
+		  data: "librerias=pantallas/generador/librerias_formato.php&funcion=verificar_nombre_formato&parametros="+$("#nombre_formato").val()+"&rand="+Math.round(Math.random()*100000),
+		  success: function(html){
+		    if(html){
+		      var objeto=jQuery.parseJSON(html);
+		      if(objeto.exito){
+		    	  notificacion_saia(objeto.mensaje,'success','topCenter',3000);
+		      }
+		      else{
+		    	  notificacion_saia(objeto.mensaje,'error','topCenter',3000);
+		    	  $("#nombre_formato").focus();
+		      }
+		  	}
+		  }
+		});
+	});
 	var formulario = $("#datos_formato");
 	$("#enviar_datos_formato").click(function(){
 		if(formulario.valid()){
@@ -251,14 +292,13 @@ $("document").ready(function(){
             var objeto=jQuery.parseJSON(html);
             if(objeto.exito){
               $('#cargando_enviar').html("Terminado ...");
-              buttonAcep.attr('value','editar_datos_formato');
-              buttonAcep.removeAttr('disabled');
-              $('#idformato').attr('value',objeto.idformato);
+              var ruta_iframe=$(".k-focus",window.parent.document).find("iframe").attr("src");
+              ruta_iframe=ruta_iframe.substr(0,ruta_iframe.indexOf("generador_pantalla"));
+              var data_iframe= { url:ruta_iframe+"generador_pantalla.php?idformato="+objeto.idformato,  kTitle:"Formato "+$("#etiqueta_formato").val()};
+              var kaiten_actual=obtener_panel_kaiten();
+              parent.Kaiten.reload(kaiten_actual,data_iframe);
               notificacion_saia('El registro se a insertado exitosamente','success','topCenter',3000);
-              $('#cargando_enviar').html("");
-              $('#tabs_formulario a[href="#formulario-tab"]').tab('show');
-    					$('.nav li').removeClass('disabled');
-    					$("#contenidos_componentes").show();
+         
             }else{
             	notificacion_saia(objeto.error,'error','topCenter',3000);
             	buttonAcep.removeAttr('disabled');

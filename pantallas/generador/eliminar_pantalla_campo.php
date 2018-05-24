@@ -75,7 +75,7 @@ $(document).ready(function(){
 			$.ajax({
         type:'POST',
         url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias.php",
-        data: "ejecutar_pantalla_campo=delete_pantalla_campos&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario.serialize(),
+        data: "ejecutar_campos_formato=delete_pantalla_campos&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario.serialize(),
         success: function(html){                
           if(html){          
             var objeto=jQuery.parseJSON(html);                  

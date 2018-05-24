@@ -125,7 +125,7 @@ legend {
 #icon-cargando {
 	width: 16px;
 	height: 16px;
-	background-image: url('../images/loader-ajax.gif');
+	background-image: url('../../../../images/loader-ajax.gif');
 }
 .navbar .divider-vertical {
 	margin-left: 2.5px;

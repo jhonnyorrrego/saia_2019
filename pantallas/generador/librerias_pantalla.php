@@ -100,7 +100,7 @@ function adicionar_datos_formato($datos, $tipo_retorno = 1) {
 		
 		// Field Serie_idserie
 		if($datos["serie_idserie"] == "") { // crear la serie con el nombre del formato
-			$nomb_serie_papa = busca_filtro_tabla("idserie", "serie", "lower(nombre) like 'administraci&n%formatos'", "", $conn);
+			$nomb_serie_papa = busca_filtro_tabla("idserie", "serie", "lower(nombre) like 'administracion%formatos'", "", $conn);
 			if ($nomb_serie_papa["numcampos"]) {
 				$idserie_papa = $nomb_serie_papa[0]["idserie"];
 			} else {
@@ -128,6 +128,12 @@ function adicionar_datos_formato($datos, $tipo_retorno = 1) {
 		} else { // otra serie elegida o sin serie
 			$theValue = ($datos["serie_idserie"] != 0) ? intval($datos["serie_idserie"]) : 0;
 			$fieldList["serie_idserie"] = $theValue;
+		}
+		/*
+		 * Se valida que si el tiempo que llega es menor de 3000 milisegundos se multiplica el valor por 60000 ya que se esta ingresando en minutos
+		 * */
+		if($datos["tiempo_autoguardado"]<3000){
+			$datos["tiempo_autoguardado"]=$datos["tiempo_autoguardado"]*60000;
 		}
 		$fieldList["tiempo_autoguardado"] = $datos["tiempo_autoguardado"];
 		
@@ -238,7 +244,7 @@ detalles_mostrar_".$datos["nombre"].".php";
 		if($fieldList["cod_padre"] && $idformato) {
 			
 			$formato_padre = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $fieldList["cod_padre"], "", $conn);
-			$strsql = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html) VALUES (" . $idformato . ",'" . $formato_padre[0]["nombre_tabla"] . "', " . $fieldList["nombre"] . ", 'INT', 11, 1," . $fieldList["cod_padre"] . ", 'a'," . $fieldList["etiqueta"] . ", 'fk', 'detalle')";
+			$strsql = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html,placeholder) VALUES (" . $idformato . ",'" . $formato_padre[0]["nombre_tabla"] . "', " . $fieldList["nombre"] . ", 'INT', 11, 1," . $fieldList["cod_padre"] . ", 'a','" . str_replace("'","",$fieldList["etiqueta"]) . "(Formato padre)', 'fk', 'detalle','Formato padre')";
 			guardar_traza($strsql, "ft_" . $datos["nombre"]);
 			phpmkr_query($strsql, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
 		}
@@ -250,8 +256,12 @@ detalles_mostrar_".$datos["nombre"].".php";
 			guardar_traza($strsql, "ft_" . $datos["nombre"]);
 			phpmkr_query($strsql, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
 		}
+		/*
+		 * Se validan y adicionan los campos adicionales al formato como iddocumento, serie_idserie, idft , etc
+		 * */
 		
 		if($idformato){
+			$retorno["adicionales"]=adicionar_pantalla_campos_formato($idformato,$fieldList);
 			$retorno["mensaje"]="EL m&oacute;dulo se inserta con &eacute;xito";
 			$retorno["idformato"]=$idformato;
 			$retorno['exito'] = 1;

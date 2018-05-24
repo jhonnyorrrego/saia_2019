@@ -485,4 +485,10 @@ if (@$_REQUEST["ejecutar_pantalla_campo"]) {
 	}
 	$_REQUEST["ejecutar_pantalla_campo"]($_REQUEST["idformato"], $_REQUEST["tipo_retorno"]);
 }
+if (@$_REQUEST["ejecutar_campos_formato"]) {
+	if (!@$_REQUEST["tipo_retorno"]) {
+		$_REQUEST["tipo_retorno"] = 1;
+	}
+	$_REQUEST["ejecutar_campos_formato"]($_REQUEST["idpantalla_campos"], $_REQUEST["tipo_retorno"]);
+}
 ?>
