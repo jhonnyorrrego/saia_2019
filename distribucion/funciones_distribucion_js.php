@@ -12,13 +12,13 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 
-echo(librerias_jquery('1.7'));
+//echo(librerias_jquery('1.7'));
 
 ?>
 
 <script>
 $(document).ready(function(){
-	
+
 	//Mensajero - class= select_mensajeros_ditribucion
 	$('.select_mensajeros_ditribucion').live('change', function() {
 		var mensajero = $(this).val();
@@ -41,13 +41,13 @@ $(document).ready(function(){
 				}
 			}
 		});
-	}); 
-		
-		
-		
+	});
+
+
+
 		//Acción - class= accion_distribucion - select id: opciones_acciones_distribucion
         $('#opciones_acciones_distribucion').live("change",function(){
-        	
+
 					var valor = $(this).val();
 					if (valor == 'boton_generar_planilla') {
 						/*Genera Planilla de Mensajeros*/
@@ -69,7 +69,7 @@ $(document).ready(function(){
 									error = 2;
 								}
 								registros_seleccionados += iddistribucion + ",";
-				
+
 								if (mensajero_temp) {
 									if (mensajero_temp != mensajero) {
 										error = 1;
@@ -77,7 +77,7 @@ $(document).ready(function(){
 								}
 								mensajero_temp = mensajero;
 							}
-						});				
+						});
 						registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length - 1);
 						if (registros_seleccionados == "") {
 							top.noty({
@@ -101,15 +101,15 @@ $(document).ready(function(){
 								timeout : 4500
 							});
 						} else {
-				
+
 							$("#opciones_acciones_distribucion").after("<div style='display:none;' id='ir_adicionar_documento' class='link kenlace_saia' enlace='formatos/despacho_ingresados/adicionar_despacho_ingresados.php?idruta_dist="+idruta_dist.join(",")+"&iddistribucion=" + registros_seleccionados + "&mensajero=" + mensajero + "' conector='iframe' titulo='Generar Planilla Mensajeros'>---</div>");
 							$("#ir_adicionar_documento").trigger("click");
 							$("#ir_adicionar_documento").remove();
 						}
 					} //fin if boton_generar_planilla
-        	
+
         	if(valor=='boton_finalizar_entrega'){
-        		
+
         		var registros_seleccionados="";
 				$('.accion_distribucion').each(function(){
 					var checkbox = $(this);
@@ -118,8 +118,8 @@ $(document).ready(function(){
 					    registros_seleccionados+=iddistribucion+",";
 					}
 				});
-				
-				registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length-1);        		
+
+				registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length-1);
         		if(registros_seleccionados==""){
 					top.noty({text: 'No ha seleccionado ninguna distribuci&oacute;n',type: 'warning',layout: "topCenter",timeout:3500});
 				}else{
@@ -135,10 +135,10 @@ $(document).ready(function(){
 			            	top.noty({text: 'Distribuciones finalizadas satisfactoriamente!',type: 'success',layout: "topCenter",timeout:3500});
 			                window.location.reload();
 			        	}
-			    	});					
+			    	});
 				}
         	} //fin if boton_finalizar_entrega
-        	
+
         	if(valor=='boton_confirmar_recepcion_distribucion'){
 
         		var registros_seleccionados="";
@@ -149,8 +149,8 @@ $(document).ready(function(){
 					    registros_seleccionados+=iddistribucion+",";
 					}
 				});
-				
-				registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length-1);        		
+
+				registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length-1);
         		if(registros_seleccionados==""){
 					top.noty({text: 'No ha seleccionado ninguna distribuci&oacute;n',type: 'warning',layout: "topCenter",timeout:3500});
 				}else{
@@ -166,13 +166,13 @@ $(document).ready(function(){
 			            	top.noty({text: 'Distribuciones confirmadas satisfactoriamente!',type: 'success',layout: "topCenter",timeout:3500});
 			                window.location.reload();
 			        	}
-			    	});					
+			    	});
 				}
-        		
+
         	}//fin if boton_confirmar_recepcion_distribucion
-        	
+
         	if( valor=='boton_finalizar_entrega_personal' ){
-        		
+
         		var registros_seleccionados="";
 				$('.accion_distribucion').each(function(){
 					var checkbox = $(this);
@@ -181,8 +181,8 @@ $(document).ready(function(){
 					    registros_seleccionados+=iddistribucion+",";
 					}
 				});
-				
-				registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length-1);        		
+
+				registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length-1);
         		if(registros_seleccionados==""){
 					top.noty({text: 'No ha seleccionado ninguna distribuci&oacute;n',type: 'warning',layout: "topCenter",timeout:3500});
 				}else{
@@ -198,70 +198,70 @@ $(document).ready(function(){
 			            	top.noty({text: 'Distribuciones Finalizadas satisfactoriamente!',type: 'success',layout: "topCenter",timeout:3500});
 			                window.location.reload();
 			        	}
-			    	});					
-				}				
-        			
+			    	});
+				}
+
         	}
-        	
+
         	if( valor=='seleccionar_todos_accion_distribucion' ){
          		$('.accion_distribucion').attr('checked',true);
         	}
         	if( valor=='quitar_seleccionados_accion_distribucion' ){
         		$('.accion_distribucion').attr('checked',false);
         	}
-        	
+
         	//FILTRO TIPO ORIGEN DEL DOCUMENTO
         	if( valor=='filtrar_tipo_origen_externo' ){ //Entrada
-	        	var tipo_origen='filtro_tipo_origen|2';	
+	        	var tipo_origen='filtro_tipo_origen|2';
 				<?php $componente=$_REQUEST['idbusqueda_componente']; ?>
 	            var componente='<?php echo($componente); ?>';
-	            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente="+componente+"&variable_busqueda="+tipo_origen;    
-        		
-        	}   
+	            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_tabla.php?idbusqueda_componente="+componente+"&variable_busqueda="+tipo_origen;
+
+        	}
         	if( valor=='filtrar_tipo_origen_interno' ){  //Salida a externo
-	        	var tipo_origen='filtro_tipo_origen|1';	
+	        	var tipo_origen='filtro_tipo_origen|1';
 				<?php $componente=$_REQUEST['idbusqueda_componente']; ?>
 	            var componente='<?php echo($componente); ?>';
-	            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente="+componente+"&variable_busqueda="+tipo_origen;          		
-        	}  
+	            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_tabla.php?idbusqueda_componente="+componente+"&variable_busqueda="+tipo_origen;
+        	}
         	if( valor=='filtrar_tipo_origen_todos' ){ //Mostrar Todos
-	        	var tipo_origen='filtro_tipo_origen|3';	
+	        	var tipo_origen='filtro_tipo_origen|3';
 				<?php $componente=$_REQUEST['idbusqueda_componente']; ?>
 	            var componente='<?php echo($componente); ?>';
-	            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente="+componente+"&variable_busqueda="+tipo_origen;             		
-        	}          	        	     	
+	            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_tabla.php?idbusqueda_componente="+componente+"&variable_busqueda="+tipo_origen;
+        	}
         	//FIN FILTRO TIPO ORIGEN DEL DOCUMENTO
-        	
-        	
-       		$(this).val(''); 	
+
+
+       		$(this).val('');
       });  //FIN IF opciones_acciones_distribucion
-		
-		
-		//Filtro por mensajero - class= filtro_mensajero_distribucion 
+
+
+		//Filtro por mensajero - class= filtro_mensajero_distribucion
         $('#filtro_mensajero_distribucion').live("change",function(){
-        	var mensajero='filtro_mensajero_distribucion|'+$(this).val();	
-			<?php                 
+        	var mensajero='filtro_mensajero_distribucion|'+$(this).val();
+			<?php
             	$componente=$_REQUEST['idbusqueda_componente'];
             ?>
             var componente='<?php echo($componente); ?>';
-            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente="+componente+"&variable_busqueda="+mensajero;      	
+            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_tabla.php?idbusqueda_componente="+componente+"&variable_busqueda="+mensajero;
 
-        });	//FIN IF filtro_mensajero_distribucion		
+        });	//FIN IF filtro_mensajero_distribucion
 
-		//Filtro por ventanilla - class= filtro_ventanilla_radicacion 
+		//Filtro por ventanilla - class= filtro_ventanilla_radicacion
         $('#filtro_ventanilla_radicacion').live("change",function(){
-        	var ventanilla='filtro_ventanilla_radicacion|'+$(this).val();	
-			<?php                 
+        	var ventanilla='filtro_ventanilla_radicacion|'+$(this).val();
+			<?php
             	$componente=$_REQUEST['idbusqueda_componente'];
             ?>
             var componente='<?php echo($componente); ?>';
-            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente="+componente+"&variable_busqueda="+ventanilla;      	
+            window.location.href = "<?php echo $ruta_db_superior;?>pantallas/busquedas/consulta_busqueda_tabla.php?idbusqueda_componente="+componente+"&variable_busqueda="+ventanilla;
 
-        });	//FIN IF filtro_ventanilla_radicacion		
-				
-		
-		
-				
+        });	//FIN IF filtro_ventanilla_radicacion
+
+
+
+
 	});  //FIN IF documento.ready
 
 </script>
