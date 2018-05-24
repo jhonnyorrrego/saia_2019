@@ -39,7 +39,7 @@ if (!isset($_REQUEST["ruta"]) || !$_REQUEST["ruta"]) {
 		$nombre_pdf = date("Y_m_d") . basename($ruta_json -> ruta);
 		$temp_relativo=$_SESSION["ruta_temp_funcionario"] . $nombre_pdf;
 		$temp_pdf = $ruta_db_superior . $temp_relativo;
-		if (is_file($temp_pdf)) {
+		if (is_file($temp_pdf) && !isset($_REQUEST["actualizar_pdf"])) {
 			$url_pdf ="file=".$temp_pdf;
 		} else {
 			$arr_almacen = StorageUtils::get_file_content($ruta_string);

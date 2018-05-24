@@ -229,6 +229,7 @@ function vincular_documento_expediente($idexp, $iddoc) {
 		$sql2 = "insert into expediente_doc(expediente_idexpediente,documento_iddocumento) values('" . $idexp . "','" . $iddoc . "')";
 		phpmkr_query($sql2);
 	}
+	return;
 }
 
 function asignar_expediente($idexp, $tipo_entidad, $llave_entidad, $permiso = "", $indice = 1) {
