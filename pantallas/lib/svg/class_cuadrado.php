@@ -1,18 +1,24 @@
 <?php
-  $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; } ?>
-<?php 
-include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."pantallas/lib/svg/class_rectangulo.php");
+$max_salida = 6;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
+	} $ruta .= "../";
+	$max_salida--;
+}
 
-	class svgSquare extends svgRectangle{
-		public function __construct($width){
-			parent::__construct($width, $width);
-		}
+include_once ($ruta_db_superior . "db.php");
+include_once ($ruta_db_superior . "pantallas/lib/svg/class_rectangulo.php");
 
-		public function info(){
-			printf("Square. Size: %s, X: %d, Y: %d\n", $this->height, $this->x, $this->y);
-		}
-
+class svgSquare extends svgRectangle {
+	public function __construct($width) {
+		parent::__construct($width, $width);
 	}
 
+	public function info() {
+		printf("Square. Size: %s, X: %d, Y: %d\n", $this -> height, $this -> x, $this -> y);
+	}
+
+}
 ?>

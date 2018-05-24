@@ -58,6 +58,8 @@ $x_flujo_idflujo = Null;
 $x_funcion_predeterminada = Null;
 $x_pertenece_nucleo= Null;
   echo(librerias_jquery("1.7"));
+  echo librerias_bootstrap();
+  echo(librerias_validar_formulario(11));
   echo(librerias_arboles());
 ?>
 <?php session_start(); ?>
@@ -193,8 +195,8 @@ if (EW_this.x_etiqueta && !EW_hasValue(EW_this.x_etiqueta, "TEXT" )) {
 	if (!EW_onError(EW_this, EW_this.x_etiqueta, "TEXT", "Por favor seleccione una etiqueta para los Formatos"))
 		return false;
 }
-if (EW_this.x_ruta_mostrar && !EW_hasValue(EW_this.x_ruta_mostrar, "TEXT" )) {
-/*	if (!EW_onError(EW_this, EW_this.x_ruta_mostrar, "TEXT", "Por favor ingrese - Ruta (Mostrar)"))
+/*if (EW_this.x_ruta_mostrar && !EW_hasValue(EW_this.x_ruta_mostrar, "TEXT" )) {
+	if (!EW_onError(EW_this, EW_this.x_ruta_mostrar, "TEXT", "Por favor ingrese - Ruta (Mostrar)"))
 		return false;
 }
 if (EW_this.x_ruta_editar && !EW_hasValue(EW_this.x_ruta_editar, "TEXT" )) {

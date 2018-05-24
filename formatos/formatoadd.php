@@ -44,12 +44,13 @@ $x_fk_categoria_formato = Null;
 $x_funcion_predeterminada = Null;
 $x_pertenece_nucleo = Null;
 
+include_once ($ruta_db_superior . "db.php");
+
 if(isset($_REQUEST["consultar_contador"])) {
 	consultar_contador();
 	die();
 }
 
-include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . FORMATOS_SAIA . "librerias/header_formato.php");
 include_once ($ruta_db_superior . FORMATOS_SAIA . "librerias/funciones.php");
 include_once ($ruta_db_superior . "phpmkrfn.php");
