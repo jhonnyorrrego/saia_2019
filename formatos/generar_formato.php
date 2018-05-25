@@ -1292,7 +1292,7 @@ class GenerarFormato {
             }
             if ($autocompletar) {
                 $includes .= $this->incluir("../../css/selectize.css", "estilos");
-                $includes .= $this->incluir("../../js/jquery-1.7.2.js", "javascript");
+                // $includes .= $this->incluir("../../js/jquery-1.7.2.js", "javascript");
                 $includes .= $this->incluir("../../js/selectize.js", "javascript");
                 // $includes .= incluir("../librerias/autocompletar.js", "javascript");
             }
