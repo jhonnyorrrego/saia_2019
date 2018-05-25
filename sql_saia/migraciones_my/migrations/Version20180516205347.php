@@ -39,7 +39,7 @@ class Version20180510201917 extends AbstractMigration {
         $conn = $this->connection;
 
         $conn->beginTransaction();
-                 
+
         $modulo = [
             'pertenece_nucleo' => 1,
             'nombre' => 'pantallas',
@@ -59,13 +59,12 @@ class Version20180510201917 extends AbstractMigration {
         ];
 
         $idmodulo = $this->guardar_modulo($modulo);
-        
+
         $busqueda = [
           'nombre' => 'pantallas',
           'etiqueta' => 'Pantallas',
           'estado' => '1',
           'campos' => '',
-          'llave' => 'A.idpantalla',
           'tablas' => '',
           'ruta_libreria' => 'pantallas/pantallas/librerias.php',
           'ruta_libreria_pantalla' => '',
@@ -100,7 +99,8 @@ class Version20180510201917 extends AbstractMigration {
           'acciones_seleccionados' => '',
           'modulo_idmodulo' => $idmodulo,
           'menu_busqueda_superior' => 'menu_superior_adicionar@'.$idbusq,
-          'enlace_adicionar' => NULL
+          'enlace_adicionar' => NULL,
+          'llave' => 'A.idpantalla'
         ];
 
         $idcmp1 = $this->guardar_componente($componente1);
@@ -112,9 +112,9 @@ class Version20180510201917 extends AbstractMigration {
         ];
 
         $resp1 = $this->guardar_condicion($cond1);
-        
+
         $enlace_modulo = 'pantallas/buscador_principal.php?idbusqueda='.$idbusq.'&cmd=resetall';
-        
+
         $datos_mod = [
             'enlace' => $enlace_modulo
         ];
@@ -157,10 +157,10 @@ class Version20180510201917 extends AbstractMigration {
             ]);
         }
         $conn->commit();
-        
-        
-        
-        
+
+
+
+
         /**
          *
          *UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"campo_texto\",\"etiqueta\":\"Campo de texto\",\"tipo_dato\":\"varchar\",\"longitud\":255,\"obligatoriedad\":1,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"text\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1,\"placeholder\":\"campo texto\"}' WHERE idpantalla_componente=1;
@@ -198,12 +198,12 @@ UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"acciones_tarea_bpmni\",\
 UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"remitente\",\"etiqueta\":\"Remitente\",\"tipo_dato\":\"varchar\",\"longitud\":\"255\",\"obligatoriedad\":1,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"remitente\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1,\"placeholder\":\"\"}' WHERE idpantalla_componente=33;
          *
          **/
-         
+
 
     }
 
     public function postUp(Schema $schema) {
-        
+
     }
 
     /**
@@ -300,7 +300,7 @@ UPDATE pantalla_componente2 SET opciones='{\"nombre\":\"remitente\",\"etiqueta\"
         }
         return $idbusq;
     }
-    
+
     private function guardar_modulo($datos) {
         if (empty($datos)) {
             return false;
