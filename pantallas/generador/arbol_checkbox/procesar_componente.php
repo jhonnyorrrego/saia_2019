@@ -18,7 +18,7 @@ function padre_independiente_arbol_checkbox($idcampo='',$seleccionado='',$accion
     return("<div class='alert alert-error'>No existe campo para procesar</div>");
   }
 	if($campo==''){
-		$dato=busca_filtro_tabla("","pantalla_campos","idpantalla_campos=".$idcampo,"",$conn);
+		$dato=busca_filtro_tabla("","campos_formato","idcampos_formato=".$idcampo,"",$conn);
 		$campo=$dato[0];
 	}
 	$parametros=explode("|", $campo["valor"]);
@@ -41,7 +41,7 @@ function busca_componente_arbol_checkbox($idcampo='',$seleccionado='',$accion=''
     return("<div class='alert alert-error'>No existe campo para procesar</div>");
   }
 	if($campo==''){
-		$dato=busca_filtro_tabla("","pantalla_campos","idpantalla_campos=".$idcampo,"",$conn);
+		$dato=busca_filtro_tabla("","campos_formato","idcampos_formato=".$idcampo,"",$conn);
 		$campo=$dato[0];
 	}	
 	$parametros=explode("|", $campo["valor"]);
@@ -63,7 +63,7 @@ global $conn,$ruta_db_superior;
     return("<div class='alert alert-error'>No existe campo para procesar</div>");
   }
 	if($campo==''){
-		$dato=busca_filtro_tabla("","pantalla_campos","idpantalla_campos=".$idcampo,"",$conn);
+		$dato=busca_filtro_tabla("","campos_formato","idcampos_formato=".$idcampo,"",$conn);
 		$campo=$dato[0];
 	}	
 	$parametros=explode("|", $campo["valor"]);
@@ -111,7 +111,7 @@ if($idcampo==''){
   return("<div class='alert alert-error'>No existe campo para procesar</div>");
 }
 if($campo==''){
-	$dato=busca_filtro_tabla("","pantalla_campos","idpantalla_campos=".$idcampo,"",$conn);
+	$dato=busca_filtro_tabla("","campos_formato","idcampos_formato=".$idcampo,"",$conn);
 	$campo=$dato[0];
 }
 if($seleccionado==''){
@@ -144,7 +144,7 @@ function mostrar_arbol_checkbox($idcampo='',$seleccionado='',$accion='',$campo='
     return("<div class='alert alert-error'>No existe campo para procesar</div>");
   }
 	if($campo==''){
-		$dato=busca_filtro_tabla("","pantalla_campos","idpantalla_campos=".$idcampo,"",$conn);
+		$dato=busca_filtro_tabla("","campos_formato","idcampos_formato=".$idcampo,"",$conn);
 		$campo=$dato[0];
 	}
 	$arbol=explode("|",$campo["valor"]);

@@ -18,7 +18,7 @@ global $conn;
     return("<div class='alert alert-error'>No existe campo para procesar</div>");
   }
   if($campo==''){
-    $dato=busca_filtro_tabla("A.*, B.idpantalla_componente,B.nombre AS nombre_componente","pantalla_campos A,pantalla_componente B","A.etiqueta_html=B.nombre AND A.idpantalla_campos=".$idcampo,"",$conn);      
+    $dato=busca_filtro_tabla("A.*, B.idpantalla_componente,B.nombre AS nombre_componente","campos_formato A,pantalla_componente B","A.etiqueta_html=B.nombre AND A.idcampos_formato=".$idcampo,"",$conn);      
     //$campo=$dato[0];  
   }	
   $texto='';
@@ -38,8 +38,8 @@ global $conn;
     $pie_accion_pantalla='</div></div>';
     $texto.=$encabezado_accion_pantalla.'<input "'.$adicionales_accion_pantalla.'" name="'.$campo["nombre"].'" id="'.$campo["nombre"].'" value="'.$seleccionado.'">'.$pie_accion_pantalla;
   }
-  if($dato[0]["pantalla_idpantalla"]){
-    $_REQUEST["idpantalla"]=$dato[0]["pantalla_idpantalla"];
+  if($dato[0]["formato_idformato"]){
+    $_REQUEST["idpantalla"]=$dato[0]["formato_idformato"];
     $_REQUEST["accion_seguimiento"]=$accion;
   }       
 	return($texto);

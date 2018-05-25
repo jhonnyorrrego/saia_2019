@@ -12,7 +12,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/generador/librerias.php");
 echo(estilo_bootstrap());
-$pantalla=busca_filtro_tabla("","pantalla_campos","idpantalla_campos=".$_REQUEST["idpantalla_campos"],"",$conn);
+$pantalla=busca_filtro_tabla("","campos_formato","idcampos_formato=".$_REQUEST["idpantalla_campos"],"",$conn);
 if($pantalla["numcampos"]){
   redirecciona($ruta_db_superior."pantallas/ruta_temporal/adicionar_ruta_temporal.php?almacenar_en=pantalla_ruta&pantalla_idpantalla=".$pantalla[0]["pantalla_idpantalla"]);
 }

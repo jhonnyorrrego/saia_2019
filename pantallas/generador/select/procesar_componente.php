@@ -15,7 +15,7 @@ function procesar_select($idcampo='',$seleccionado='',$accion='',$campo=''){
     return("<div class='alert alert-error'>No existe campo para procesar</div>");
   }
 	if($campo==''){
-		$dato=busca_filtro_tabla("A.*","pantalla_campos A,pantalla B","A.pantalla_idpantalla=B.idpantalla AND A.idpantalla_campos=".$idcampo,"",$conn);
+		$dato=busca_filtro_tabla("A.*","campos_formato A,pantalla B","A.pantalla_idpantalla=B.idpantalla AND A.idcampos_formato=".$idcampo,"",$conn);
 		$campo=$dato[0];
 	}	
 	if($seleccionado!=''){
@@ -74,7 +74,7 @@ function mostrar_select($idcampo='',$seleccionado='',$accion='',$campo=''){
     return("<div class='alert alert-error'>No existe campo para procesar</div>");
   }
 	if($campo==''){
-		$dato=busca_filtro_tabla("","pantalla_campos A","A.idpantalla_campos=".$idcampo,"",$conn);
+		$dato=busca_filtro_tabla("","campos_formato A","A.idcampos_formato=".$idcampo,"",$conn);
 		$campo=$dato[0];
 	}	
 	if($seleccionado!=''){

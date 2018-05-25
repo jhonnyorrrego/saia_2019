@@ -43,12 +43,12 @@ if(@$_REQUEST["idpantalla_campos"]){
 else{
   alerta("No es posible Editar el Campo");
 }
-$idpantalla=busca_filtro_tabla("","pantalla_campos a","a.idpantalla_campos=".$_REQUEST["idpantalla_campos"],"",$conn);
-$lcampos=busca_filtro_tabla("","pantalla_campos","pantalla_idpantalla=".$idpantalla[0]["pantalla_idpantalla"],"",$conn);
+$idpantalla=busca_filtro_tabla("","campos_formato a","a.idcampos_formato=".$_REQUEST["idpantalla_campos"],"",$conn);
+$lcampos=busca_filtro_tabla("","campos_formato","formato_idformato=".$idpantalla[0]["formato_idformato"],"",$conn);
 $listado_campos_formulario='<select name="lparametros" class="lparametros">';      
 if($lcampos["numcampos"]){              
   for($i=0;$i<$lcampos["numcampos"];$i++){
-    $listado_campos_formulario.='<option value="'.$lcampos[$i]["idpantalla_campos"].'">'.$lcampos[$i]["etiqueta"].'</option>';
+    $listado_campos_formulario.='<option value="'.$lcampos[$i]["idcampos_formato"].'">'.$lcampos[$i]["etiqueta"].'</option>';
     array_push($campos,$lcampos[$i]["nombre"]);
   }
 }               
@@ -156,7 +156,7 @@ $(document).ready(function(){
         $.ajax({
           type:'POST',
           url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias.php",
-          data: "ejecutar_pantalla_campo=guardar_configurar_pantalla_libreria&tipo_retorno=1&ruta="+ruta+"&pantalla_idpantalla=<?php echo $idpantalla[0]["pantalla_idpantalla"].$adicional_exe; ?>&rand="+Math.round(Math.random()*100000)+"&"+formulario.serialize(),
+          data: "ejecutar_campos_formato=guardar_configurar_pantalla_libreria&tipo_retorno=1&ruta="+ruta+"&pantalla_idpantalla=<?php echo $idpantalla[0]["pantalla_idpantalla"].$adicional_exe; ?>&rand="+Math.round(Math.random()*100000)+"&"+formulario.serialize(),
           beforeSend: function(){ formulario.data('locked', true);},
           success: function(html){                
             if(html){                                        
@@ -188,7 +188,7 @@ function guardar_componente(id,formulario){
     $.ajax({
       type:'POST',
       url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias.php",
-      data: "ejecutar_pantalla_campo=set_pantalla_campos&fs_valor="+id+"&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario.serialize(),
+      data: "ejecutar_campos_formato=set_pantalla_campos&fs_valor="+id+"&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario.serialize(),
       success: function(html){                
         if(html){          
           var objeto=jQuery.parseJSON(html);                  

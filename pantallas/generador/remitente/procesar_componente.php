@@ -16,7 +16,7 @@ if($idcampo==''){
   return("<div class='alert alert-error'>No existe campo para procesar</div>");
 }
 if($campo==''){
-	$dato=busca_filtro_tabla("","pantalla_campos","idpantalla_campos=".$idcampo,"",$conn);
+	$dato=busca_filtro_tabla("","campos_formato","idcampos_formato=".$idcampo,"",$conn);
 	$campo=$dato[0];
 }	
 if($accion!=''){
@@ -54,7 +54,7 @@ function mostrar_remitente($idcampo='',$seleccionado='',$accion='',$campo=''){
     return("<div class='alert alert-error'>No existe campo para procesar</div>");
   }
 	if($campo==''){
-		$dato=busca_filtro_tabla("","pantalla_campos A","A.idpantalla_campos=".$idcampo,"",$conn);
+		$dato=busca_filtro_tabla("","campos_formato A","A.idcampos_formato=".$idcampo,"",$conn);
 		$campo=$dato[0];
 	}	
 	if($seleccionado!=''){

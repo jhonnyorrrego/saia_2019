@@ -13,30 +13,6 @@ include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/generador/librerias.php");
 echo(estilo_bootstrap());
 $campos=busca_filtro_tabla("","pantalla_componente B","idpantalla_componente=".$_REQUEST["idpantalla_componente"],"",$conn);
-/*for($i=0;$i<$campos["numcampos"];$i++){
-	$librerias=explode(",",$campos[$i]["librerias"]);
-	foreach($librerias AS $key=>$libreria){
-		$extension=explode(".",$libreria);
-		$cant=count($extension);
-    if($extension[$cant-1]!==''){            	
-  		switch($extension[($cant-1)]){
-  	    case "php":           
-  	      include_once($ruta_db_superior.$libreria);
-  	    break;
-  	    case "js":
-  	      $texto='<script type="text/javascript" src="'.$ruta_db_superior.$libreria.'"></script>';
-  	    break;
-  	    case "css": 
-  	      $texto='<link rel="stylesheet" type="text/css" href="'.$ruta_db_superior.$libreria.'"/>';    
-  	    break;
-  	    default:
-  	      $texto=""; //retorna un vacio si no existe el tipo
-  	    break;
-  	  }
-  		echo($texto);    
-  	}
-  }
-}*/
 $accionesa="checked";
 $accionese="checked";
 $accionesb="checked";
@@ -95,7 +71,6 @@ else{
   <fieldset id="content_form_name">
     <legend>Editar Campos</legend>
   </fieldset>
-  <input type="hidden" name="fs_tabla" id="tabla" value="">
   <div class="control-group">
     <label class="control-label" for="nombre">Nombre *</label>
     <div class="controls">
@@ -199,7 +174,7 @@ $(document).ready(function(){
 			$.ajax({
         type:'POST',
         url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias.php",
-        data: "ejecutar_pantalla_campo=set_pantalla_campos&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario.serialize(),
+        data: "ejecutar_campos_formato=set_pantalla_campos&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario.serialize(),
         success: function(html){                
           if(html){          
             var objeto=jQuery.parseJSON(html);                  

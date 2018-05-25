@@ -18,11 +18,11 @@ if($idcampo==''){
   return("<div class='alert alert-error'>No existe campo para procesar</div>");
 }
 if($campo==''){
-	$dato=busca_filtro_tabla("","pantalla_campos","idpantalla_campos=".$idcampo,"",$conn);
+	$dato=busca_filtro_tabla("","campos_formato","idcampos_formato=".$idcampo,"",$conn);
 	$campo=$dato[0];
 }	                          
 $_REQUEST["almacenar_en"]="pantalla_ruta";
-$_REQUEST["pantalla_idpantalla"]=$campo["pantalla_idpantalla"];
+$_REQUEST["pantalla_idpantalla"]=$campo["formato_idformato"];
 $_REQUEST["encabezado_campo"]=true;
 $valor=explode(";",$campo["valor"]);  
 $texto.=informacion_ruta(1); 

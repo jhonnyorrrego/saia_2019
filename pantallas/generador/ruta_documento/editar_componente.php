@@ -91,7 +91,6 @@ else{
   <fieldset id="content_form_name">
     <legend>Editar Campos</legend>
   </fieldset>
-  <input type="hidden" name="fs_tabla" id="tabla" value="">
   <div class="control-group">
     <label class="control-label" for="etiqueta">Etiqueta *</label>
     <div class="controls">
@@ -193,7 +192,7 @@ $(document).ready(function(){
 			$.ajax({
         type:'POST',
         url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias.php",
-        data: "ejecutar_pantalla_campo=set_pantalla_campos&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario.serialize(),
+        data: "ejecutar_campos_formato=set_pantalla_campos&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario.serialize(),
         success: function(html){                
           if(html){          
             var objeto=jQuery.parseJSON(html);                  

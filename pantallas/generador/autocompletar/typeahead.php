@@ -73,20 +73,20 @@ $('#campo1').typeahead({
 });
 function htmlentities(txt){
 pares = new Array();
-pares[0] = new Array("<?php echo utf8_encode('á'); ?>", "&aacute;");
-pares[1] = new Array("<?php echo utf8_encode('é'); ?>", "&eacute;");
-pares[2] = new Array("<?php echo utf8_encode('í'); ?>", "&iacute;");
-pares[3] = new Array("<?php echo utf8_encode('ó'); ?>", "&oacute;");
-pares[4] = new Array("<?php echo utf8_encode('ú'); ?>", "&uacute;");
-pares[5] = new Array("<?php echo utf8_encode('Á'); ?>", "&Aacute;");
-pares[6] = new Array("<?php echo utf8_encode('É'); ?>", "&Eacute;");
-pares[7] = new Array("<?php echo utf8_encode('Í'); ?>", "&Iacute;");
-pares[8] = new Array("<?php echo utf8_encode('Ó'); ?>", "&Oacute;");
-pares[9] = new Array("<?php echo utf8_encode('Ú'); ?>", "&Uacute;");
-pares[10] = new Array("<?php echo utf8_encode('ñ'); ?>", "&ntilde;");
-pares[11] = new Array("<?php echo utf8_encode('ñ'); ?>", "&Ntilde;");
-pares[12] = new Array("<?php echo utf8_encode('ü'); ?>", "&uuml;");
-pares[13] = new Array("<?php echo utf8_encode('Ü'); ?>", "&Uuml;");
+pares[0] = new Array("<?php echo utf8_encode(html_entity_decode("&aacute;")); ?>", "&aacute;");
+pares[1] = new Array("<?php echo utf8_encode(html_entity_decode("&eacute;")); ?>", "&eacute;");
+pares[2] = new Array("<?php echo utf8_encode(html_entity_decode("&iacute;")); ?>", "&iacute;");
+pares[3] = new Array("<?php echo utf8_encode(html_entity_decode("&oacute;")); ?>", "&oacute;");
+pares[4] = new Array("<?php echo utf8_encode(html_entity_decode("&uacute;")); ?>", "&uacute;");
+pares[5] = new Array("<?php echo utf8_encode(html_entity_decode("&Acute;")); ?>", "&Aacute;");
+pares[6] = new Array("<?php echo utf8_encode(html_entity_decode("&Eacute;")); ?>", "&Eacute;");
+pares[7] = new Array("<?php echo utf8_encode(html_entity_decode("&Iacute;")); ?>", "&Iacute;");
+pares[8] = new Array("<?php echo utf8_encode(html_entity_decode("&Oacute;")); ?>", "&Oacute;");
+pares[9] = new Array("<?php echo utf8_encode(html_entity_decode("&Uacute;")); ?>", "&Uacute;");
+pares[10] = new Array("<?php echo utf8_encode(html_entity_decode("&ntilde;")); ?>", "&ntilde;");
+pares[11] = new Array("<?php echo utf8_encode(html_entity_decode("&Ntilde;")); ?>", "&Ntilde;");
+pares[12] = new Array("<?php echo utf8_encode(html_entity_decode("&uuml;")); ?>", "&uuml;");
+pares[13] = new Array("<?php echo utf8_encode(html_entity_decode("&Uuml;")); ?>", "&Uuml;");
 for (var i = 0; i < 14; i ++){
 	txt = txt.replace(pares[i][0], pares[i][1]);
 }
@@ -94,20 +94,20 @@ return txt;
 }
 function htmlentities_decode(txt){
 pares = new Array();
-pares[0] = new Array("<?php echo utf8_encode('á'); ?>", "&aacute;");
-pares[1] = new Array("<?php echo utf8_encode('é'); ?>", "&eacute;");
-pares[2] = new Array("<?php echo utf8_encode('í'); ?>", "&iacute;");
-pares[3] = new Array("<?php echo utf8_encode('ó'); ?>", "&oacute;");
-pares[4] = new Array("<?php echo utf8_encode('ú'); ?>", "&uacute;");
-pares[5] = new Array("<?php echo utf8_encode('Á'); ?>", "&Aacute;");
-pares[6] = new Array("<?php echo utf8_encode('É'); ?>", "&Eacute;");
-pares[7] = new Array("<?php echo utf8_encode('Í'); ?>", "&Iacute;");
-pares[8] = new Array("<?php echo utf8_encode('Ó'); ?>", "&Oacute;");
-pares[9] = new Array("<?php echo utf8_encode('Ú'); ?>", "&Uacute;");
-pares[10] = new Array("<?php echo utf8_encode('ñ'); ?>", "&ntilde;");
-pares[11] = new Array("<?php echo utf8_encode('ñ'); ?>", "&Ntilde;");
-pares[12] = new Array("<?php echo utf8_encode('ü'); ?>", "&uuml;");
-pares[13] = new Array("<?php echo utf8_encode('Ü'); ?>", "&Uuml;");
+pares[0] = new Array("<?php echo utf8_encode(html_entity_decode("&aacute;")); ?>", "&aacute;");
+pares[1] = new Array("<?php echo utf8_encode(html_entity_decode("&eacute;")); ?>", "&eacute;");
+pares[2] = new Array("<?php echo utf8_encode(html_entity_decode("&iacute;")); ?>", "&iacute;");
+pares[3] = new Array("<?php echo utf8_encode(html_entity_decode("&oacute;")); ?>", "&oacute;");
+pares[4] = new Array("<?php echo utf8_encode(html_entity_decode("&uacute;")); ?>", "&uacute;");
+pares[5] = new Array("<?php echo utf8_encode(html_entity_decode("&Aacute;")); ?>", "&Aacute;");
+pares[6] = new Array("<?php echo utf8_encode(html_entity_decode("&Eacute;")); ?>", "&Eacute;");
+pares[7] = new Array("<?php echo utf8_encode(html_entity_decode("&Iacute;")); ?>", "&Iacute;");
+pares[8] = new Array("<?php echo utf8_encode(html_entity_decode("&Oacute;")); ?>", "&Oacute;");
+pares[9] = new Array("<?php echo utf8_encode(html_entity_decode("&Uacute;")); ?>", "&Uacute;");
+pares[10] = new Array("<?php echo utf8_encode(html_entity_decode("&ntilde;")); ?>", "&ntilde;");
+pares[11] = new Array("<?php echo utf8_encode(html_entity_decode("&Ntilde;")); ?>", "&Ntilde;");
+pares[12] = new Array("<?php echo utf8_encode(html_entity_decode("&uuml;")); ?>", "&uuml;");
+pares[13] = new Array("<?php echo utf8_encode(html_entity_decode("&Uuml;")); ?>", "&Uuml;");
 for (var i = 0; i < 14; i ++){
 	txt = txt.replace(pares[i][1], pares[i][0]);
 }

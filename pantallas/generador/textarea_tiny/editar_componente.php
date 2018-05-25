@@ -78,26 +78,6 @@ else{
     <legend>Editar Campos</legend>
   </fieldset>
   <div class="control-group">
-    <label class="control-label" for="tabla">Tabla</label>
-    <div class="controls">
-      <?php 
-          $tablas=array();
-          $ltablas=$conn->Lista_Tabla();          
-          foreach($ltablas AS $key=>$valor){          
-            if($valor[0]!=''){  
-              array_push($tablas,$valor[0]);              
-            }            
-          }
-          $tablas_campos=  busca_filtro_tabla("tabla", "pantalla_campos", "tabla<>''", "GROUP BY tabla", $conn);
-          for($i=0;$i<$tablas_campos["numcampos"];$i++){
-            array_push($tablas,$tablas_campos[$i]["tabla"]);
-          }
-          $tablas=array_unique($tablas);
-        ?>        
-    <input type="text" data-provide="typeahead" data-items="4" name="fs_tabla" id="tabla" data-source='[<?php echo('"'.implode('","',$tablas)).'"';?>]' value="<?php echo($pantalla_campos[0]['tabla']);?>">                   
-    </div>
-  </div>
-  <div class="control-group">
     <label class="control-label" for="nombre">Nombre *</label>
     <div class="controls">
       <input type="text" name="fs_nombre" id="nombre" placeholder="Nombre" value="<?php echo(@$pantalla_campos[0]["nombre"]);?>" required>
@@ -202,7 +182,7 @@ $(document).ready(function(){
 			$.ajax({
         type:'POST',
         url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias.php",
-        data: "ejecutar_pantalla_campo=set_pantalla_campos&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario.serialize(),
+        data: "ejecutar_campos_formato=set_pantalla_campos&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario.serialize(),
         success: function(html){                
           if(html){          
             var objeto=jQuery.parseJSON(html);                  
