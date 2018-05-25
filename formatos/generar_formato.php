@@ -208,7 +208,7 @@ class GenerarFormato {
             $contenido_detalles = $texto;
 
             if (!crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/detalles_" . $formato[0]["ruta_mostrar"], $contenido_detalles)) {
-                alerta_formatos("837 No es posible crear el Archivo de detalles");
+                alerta_formatos("No es posible crear el Archivo de detalles");
             }
             $texto = '';
 
@@ -257,7 +257,7 @@ class GenerarFormato {
                             if (crear_archivo(FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
                                 $include_formato .= $this->incluir($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
                             } else {
-                                alerta_formatos("892 No es posible generar el archivo " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+                                alerta_formatos("No es posible generar el archivo " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
                             }
                         }
                     }
@@ -297,12 +297,14 @@ class GenerarFormato {
             $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $contenido);
             if ($mostrar !== false) {
                 notificaciones("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar), "success", 2000);
+		  return(true);
             } else {
                 notificaciones("Error al crear el archivo " . dirname($mostrar), "error", 5000);
             }
         } else {
             notificaciones("Formato NO encontrado ", "error", 5000);
         }
+	return(false);
     }
 
     /*
@@ -352,9 +354,7 @@ class GenerarFormato {
                     if (array_key_exists($valor[0], $l1tablas)) {
                         array_push($l1tablas[$valor[0]], $valor[1]);
                     } else {
-                        $l1tablas[$valor[0]] = array(
-                            $valor[1]
-                        );
+                        $l1tablas[$valor[0]] = array($valor[1]);
                     }
                 }
             } else
@@ -488,7 +488,7 @@ class GenerarFormato {
                 return (TRUE);
             }
         } else {
-            alerta_formatos("1122 No es posible generar el Formato");
+            alerta_formatos("No es posible generar el Formato");
         }
     }
 
@@ -617,10 +617,7 @@ class GenerarFormato {
                 if ($campos[$h]["banderas"] != "") {
                     $bandera_unico = strpos("u", $campos[$h]["banderas"]);
                     if ($bandera_unico !== false) {
-                        array_push($unico, array(
-                            $campos[$h]["nombre"],
-                            $campos[$h]["idcampos_formato"]
-                        ));
+                        array_push($unico, array($campos[$h]["nombre"], $campos[$h]["idcampos_formato"]));
                         $obligatorio = 'obligatorio="obligatorio"';
                         $obliga = "(*)";
                     }
@@ -1195,7 +1192,7 @@ class GenerarFormato {
                             if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
                                 $includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
                             } else {
-                                alerta_formatos("1843 No es posible generar el archivo " . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+                                alerta_formatos("No es posible generar el archivo " . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
                             }
                         }
                     }
@@ -1484,11 +1481,14 @@ class GenerarFormato {
             $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_" . $accion], $contenido);
             if ($mostrar !== false) {
                 notificaciones("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar), "success", 2000);
+			return(true);
             } else {
                 notificaciones("Error al crear el archivo " . dirname($mostrar), "error", 5000);
+			return(false);
             }
         } else {
             notificaciones("Formato NO encontrado ", "error", 5000);
+			return(false);
         }
     }
 
@@ -1888,7 +1888,7 @@ class GenerarFormato {
                         if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
                             $includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
                         } else
-                            alerta_formatos("2412 No es posible generar el archivo " . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+                            alerta_formatos("No es posible generar el archivo " . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
                     }
                 }
             } else { // $ruta_orig=$formato[0]["nombre"];
@@ -1902,7 +1902,7 @@ class GenerarFormato {
                     if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
                         $includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
                     } else {
-                        alerta_formatos("2426 No es posible generar el archivo " . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+                        alerta_formatos("No es posible generar el archivo " . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
                     }
                 }
             }
@@ -2004,6 +2004,7 @@ class GenerarFormato {
         $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/buscar_" . $formato[0]["nombre"] . ".php", $contenido);
         if ($mostrar != "") {
             alerta_formatos("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar));
+			return(true);
         }
     }
 
@@ -2041,21 +2042,9 @@ class GenerarFormato {
      * </Clase>
      */
     public function generar_comparacion($tipo, $nombre) {
-        $listado_like = array(
-            "Similar" => "LIKE|%|%",
-            "Inicia Con" => "LIKE|%|@",
-            "Finaliza Con" => "LIKE|@|%"
-        );
-        $listado_compara = array(
-            "Igual" => "=|@|@",
-            "Menor" => "-|@|@",
-            "Mayor" => "+|@|@",
-            "Diferente" => "!|@|@"
-        );
-        $listado_arbol = array(
-            "Alguno" => "or",
-            "Todos" => "and"
-        );
+        $listado_like = array("Similar" => "LIKE|%|%", "Inicia Con" => "LIKE|%|@", "Finaliza Con" => "LIKE|@|%");
+        $listado_compara = array("Igual" => "=|@|@", "Menor" => "-|@|@", "Mayor" => "+|@|@", "Diferente" => "!|@|@");
+        $listado_arbol = array("Alguno" => "or", "Todos" => "and");
         echo $tipo . " " . $nombre . "<br />";
         $texto = '<td class="encabezado">&nbsp;';
         $listado = array();
@@ -2124,7 +2113,7 @@ class GenerarFormato {
                     if (crear_archivo($lib[$j])) {
                         $includes .= $texto1 . $lib[$j] . $texto2;
                     } else {
-                        alerta_formatos("2650 Problemas al generar el Formato en " . $lib[$j]);
+                        alerta_formatos("Problemas al generar el Formato en " . $lib[$j]);
                         return ("");
                     }
                 } else {
@@ -2152,7 +2141,7 @@ class GenerarFormato {
         $includes = "";
         if (!is_file(FORMATOS_SAIA . "librerias/" . $nombre)) {
             if (!crear_archivo(FORMATOS_SAIA . "librerias/" . $nombre)) {
-                alerta_formatos("2677 No es posible generar el archivo " . $nombre);
+                alerta_formatos("No es posible generar el archivo " . $nombre);
             }
         }
         $includes .= $this->incluir("../../" . FORMATOS_SAIA . "librerias/" . $nombre, $tipo);
