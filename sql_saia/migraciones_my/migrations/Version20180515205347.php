@@ -73,7 +73,7 @@ class Version20180515205347 extends AbstractMigration {
         }
     }
 
-    public function postUp($schema) {
+    public function postUp(Schema $schema) {
         $conn = $this->connection;
         $sql = "update busqueda_componente set url = replace(url, 'consulta_busqueda_reporte', 'consulta_busqueda_tabla') where url like '%consulta_busqueda_reporte%'";
         $conn->executeQuery($sql);
@@ -135,7 +135,7 @@ class Version20180515205347 extends AbstractMigration {
         }
     }
 
-    function postDown($schema) {
+    function postDown(Schema $schema) {
         $conn = $this->connection;
         $sql = "update busqueda_componente set url = replace(url, 'consulta_busqueda_tabla', 'consulta_busqueda_reporte') where url like '%consulta_busqueda_tabla%'";
         $conn->executeQuery($sql);
