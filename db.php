@@ -390,14 +390,14 @@ return ($cargo);
 <Clase>
 <Nombre>phpmkr_db_connect
 <Parametros>$HOST: Equipo en el que se encuentra la base de datos
-            $USER: nombre del usuario con el cual se realizar�la conexi�
+            $USER: nombre del usuario con el cual se realizará la conexión
             $PASS: contraseña del usuario
             $DB: Nombre de la base de datos, o del esquema
             $MOTOR: Motor con el que se realiza la conexion, Oracle o MySql
 <Responsabilidades> Establecer una conexión entre la base de datos y la aplicacion
 <Notas> Hace uso de las clases SQL y conexion, retornando el objeto SQL inicializado,
         con el cual se pueden ejecutar los queries en la base de datos.
-<Excepciones>Error al conectarse con la Base de datos, se debe a que no se encuentra disponible o existe algun error en los par�etros
+<Excepciones>Error al conectarse con la Base de datos, se debe a que no se encuentra disponible o existe algun error en los parámetros
 <Salida>
 <Pre-condiciones>
 <Post-condiciones>
@@ -429,7 +429,7 @@ global $conn;
 <Clase>
 <Nombre>phpmkr_db_close
 <Parametros>$conn: objeto que contiene la conexion a la base de datos
-<Responsabilidades>Cerrar la conexi� actual
+<Responsabilidades>Cerrar la conexión actual
 <Notas>Examina que la conexion exista y si es asi se encarga de cerrarla
 <Excepciones>Error al cerrar la base de datos. Si la conexion que se quiere cerrar no existe
 <Salida>
@@ -927,7 +927,7 @@ function busca_filtro_tabla_limit($campos,$tabla,$filtro,$orden,$inicio,$registr
 <Nombre>evento
 <Parametros>$tabla: Tabla sobre la que se realiza el evento
             $accion: Tipo de evento que se realiza
-            $sql: sentencia que se ejecut�
+            $sql: sentencia que se ejecutó
             $llave: llave primaria del registro sobre el que se realiza la accion
 <Responsabilidades>llevar a cabo la accion y registrar el evento en el log
 <Notas>
@@ -1615,7 +1615,7 @@ function vincular_anexo_documento($iddoc,$ruta_origen,$etiqueta=''){
             $nwidth: ancho del a nueva imagen
             $nheight: alto de la nueva imagen
             $tipo:
-<Responsabilidades>cambiar el tama� de la imagen, generando una nueva de las dimensiones deseadas
+<Responsabilidades>cambiar el tamaño de la imagen, generando una nueva de las dimensiones deseadas
 <Notas>
 <Excepciones>
 <Salida>
@@ -1752,7 +1752,7 @@ function abrir_url($location,$target="_blank") {
 <Post-condiciones>
 */
 function redirecciona($location){
-    if(!@$_SESSION['radicacion_masiva']){
+    if(!@$_SESSION['radicacion_masiva'] && !$_REQUEST["llamado_ajax"]){
         ?>
         <script language="javascript">
         	window.location="<?php print($location);?>";
@@ -2040,7 +2040,7 @@ function enviar_mensaje($correo = "", $tipo_usuario = array(), $usuarios = array
 <Parametros>$cad: tipo de contador
 <Responsabilidades>Buscar el contador correpondiente y hacer la debida actualizacion
 <Notas>
-<Excepciones>NO EXISTE UN CONSECUTIVO LLAMADO. Cuando el contador que llega como par�etro no existe
+<Excepciones>NO EXISTE UN CONSECUTIVO LLAMADO. Cuando el contador que llega como parámetro no existe
 <Salida>
 <Pre-condiciones>
 <Post-condiciones>
@@ -2348,6 +2348,9 @@ alert("<?php echo($mensaje);?>");
 }
 
 function alerta($mensaje,$tipo='success',$duraccion=3000){
+	if($_REQUEST["llamado_ajax"]){
+		return($mensaje);
+	}
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_superior_temporal=$ruta="";
 while($max_salida>0){
@@ -2806,7 +2809,7 @@ echo '</td><td align="center">';
 <Clase>
 <Nombre>prepara_sql
 <Parametros>$arreglo: arreglo con las valores
-            $separador: caracter que separar�los datos
+            $separador: caracter que separara los datos
 <Responsabilidades>prepara la cadena de los values para el INSERT
 <Notas>
 <Excepciones>

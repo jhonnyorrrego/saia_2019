@@ -23,3 +23,11 @@ $(".enlace_ventana_modal").live('click',function(){
    top.$("#ventana_modal >.modal-body").html('<iframe src="'+enlace+'" width="100%" height="100%" frameborder="0" scrolling="auto"></ifame>');
    top.$("#ventana_modal").modal('show');
 });
+function cerrar_ventana_highslide(){
+    if(typeof(parent.hs)!=='undefined'){
+        parent.hs.close();
+    }
+    else if(typeof(hs)!=='undefined'){
+        hs.close();
+    }
+}

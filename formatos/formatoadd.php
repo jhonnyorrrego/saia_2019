@@ -335,8 +335,8 @@ function actualizar_contador(valor)
 <?php
 
 $x_contador_idcontadorList = "<select name=\"x_contador_idcontador\" id=\"x_contador_idcontador\" onchange=\"actualizar_contador(this.value)\">";
-$x_contador_idcontadorList .= "<option value='0'>Crear Contador</option>";
-$sSqlWrk = "SELECT DISTINCT idcontador, nombre FROM contador ORDER BY nombre Asc";
+//$x_contador_idcontadorList .= "<option value='0'>Crear Contador</option>";
+$sSqlWrk = "SELECT DISTINCT idcontador,etiqueta_contador FROM contador ORDER BY nombre Asc";
 $rswrk = phpmkr_query($sSqlWrk, $conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSqlWrk);
 if($rswrk) {
 	$rowcntwrk = 0;
@@ -345,7 +345,7 @@ if($rswrk) {
 		if($datawrk["idcontador"] == @$x_contador_idcontador) {
 			$x_contador_idcontadorList .= "' selected";
 		}
-		$x_contador_idcontadorList .= ">" . $datawrk["nombre"] . "</option>";
+		$x_contador_idcontadorList .= ">" . $datawrk["etiqueta_contador"] . "</option>";
 		$rowcntwrk++;
 	}
 }

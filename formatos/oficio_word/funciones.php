@@ -51,8 +51,19 @@ function add_edit_oficio_word($idformato, $iddoc) {
 <?php
 }
 
-/*POSTERIOR ADICIONAR-EDITAR*/
-function generar_documento_word($idformato, $iddoc) {// POSTERIOR AL ADICIONAR Y EDITAR
+/*POSTERIOR ADICIONAR*/
+function post_add_documento_word($idformato, $iddoc){
+	global $ruta_db_superior,$conn;
+	$datos=busca_filtro_tabla("fk_idexpediente","ft_oficio_word","documento_iddocumento=".$iddoc,"",$conn);
+	if($datos["numcampos"]){
+		include_once ($ruta_db_superior . "pantallas/expediente/librerias.php");
+		vincular_documento_expediente($datos[0]["fk_idexpediente"], $iddoc);
+	}
+	return;
+}
+
+/*POSTERIOR*/
+function generar_documento_word($idformato, $iddoc) {// POSTERIOR AL ADICIONAR,EDITAR,CONFIRMAR,APROBAR
 	global $conn, $ruta_db_superior;
 	$word = new RadicadoWord($idformato, $iddoc, "anexo_word", "anexo_csv");
 	$word -> prepare();
