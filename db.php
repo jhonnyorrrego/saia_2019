@@ -2374,6 +2374,9 @@ notificacion_saia("<?php echo $mensaje ;?>","<?php echo($tipo); ?>",'',<?php ech
 }
 
 function alerta_formatos($mensaje,$tipo='success',$duraccion=3000){
+if(@$_REQUEST["llamado_ajax"]){
+	return($mensaje);
+}
 	require_once ('librerias_saia.php');
 	global $raiz_saia;
 	$raiz_saia = "/" . RUTA_SAIA . $ruta_superior_temporal;
@@ -3810,6 +3813,9 @@ function generar_cadena_like_comas($campo,$value){
 }
 
 function notificaciones($mensaje, $tipo = 'alert', $tiempo = 3500,$ubicacion="topCenter") {
+	if($_REQUEST["llamado_ajax"]){
+		return($mensaje);
+	}
 	if ($mensaje != '') {
 	?>
 		<script type="text/javascript">

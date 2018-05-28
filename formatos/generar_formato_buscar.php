@@ -18,10 +18,16 @@ class GenerarBuscar {
     private $accion;
 
     private $incluidos;
+    
+    public $exito;
+    
+    public $mensaje;
 
     public function __construct($idformato, $accion) {
         $this->idformato = $idformato;
         $this->accion = $accion;
+        $this->exito=0;
+        $this->mensaje="Error al generar el formato con id ".$idformato;
     }
 
     /*
@@ -516,9 +522,13 @@ class GenerarBuscar {
                 $contenido .= '<?php include_once("../librerias/footer_plantilla.php");?' . '>';
             $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/buscar_" . $formato[0]["nombre"] . ".php", $contenido);
             if ($mostrar != "") {
-                alerta_formatos("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar));
+            	$this->exito=1;
+            	$this->mensaje="Formato buscar Creado con exito por favor verificar la carpeta " . dirname($mostrar);
+                alerta_formatos("Formato Buscar  Creado con exito por favor verificar la carpeta " . dirname($mostrar));
             }
         } else {
+        	$this->exito=0;
+        	$this->mensaje="No es posible generar el Formato";
             alerta_formatos("No es posible generar el Formato");
         }
     }

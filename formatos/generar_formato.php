@@ -21,7 +21,9 @@ include_once ($ruta_db_superior . "pantallas/documento/class_documento_elastic.p
 if (@$_REQUEST["archivo"] != '') {
     $archivo = $ruta_db_superior . str_replace("-", "/", $_REQUEST["archivo"]);
 }
-
+if(@$_REQUEST["crea"]){
+	$_REQUEST["genera"]=$_REQUEST["crea"];
+}
 if (@$_REQUEST["genera"]) {
     $accion = $_REQUEST["genera"];
     if (@$_REQUEST["idformato"]) {
@@ -35,6 +37,9 @@ if (@$_REQUEST["genera"]) {
             $redireccion = $archivo;
         }
     }
+    if($_REQUEST["llamado_ajax"] && $accion!="buscar"){
+    	echo(json_encode(array("exito"=>$generar->exito,"mensaje"=>$generar->mensaje)));
+    }
     redirecciona($redireccion);
 }
 
@@ -47,12 +52,18 @@ class GenerarFormato {
     private $archivo;
 
     private $incluidos;
+    
+    public $exito;
+    
+    public $mensaje; 
 
     public function __construct($idformato, $accion, $archivo = '') {
         $this->idformato = $idformato;
         $this->accion = $accion;
         $this->archivo = $archivo;
         $this->incluidos = array();
+        $this->exito =0;
+        $this->mensaje="Existe un error al generar el formato ".$accion." con id ".$idformato;
     }
 
     public function ejecutar_accion() {
@@ -93,7 +104,9 @@ class GenerarFormato {
                 $generar = new GenerarBuscar($this->idformato, "buscar");
                 $generar->crear_formato_buscar();
                 $redireccion = "funciones_formatolist.php?idformato=" . $this->idformato;
-
+                if($_REQUEST["llamado_ajax"]){
+                	echo(json_encode(array("exito"=>$generar->exito,"mensaje"=>$generar->mensaje)));
+                }
                 break;
             case "eliminar":
                 $this->crear_formato_mostrar("eliminar");
@@ -130,6 +143,13 @@ class GenerarFormato {
         $formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $this->idformato, "", $conn);
         if ($formato["numcampos"]) {
             $resp = $conn->formato_generar_tabla($this->idformato, $formato);
+            if($resp["estado"]=="OK"){
+            	$this->exito=1;
+            }
+            else{
+            	$this->exito=0;
+            }
+            $this->mensaje=$resp["mensaje"];
             alerta_formatos($resp["mensaje"]);
         } else {
             alerta_formatos("No es posible Generar la tabla para el Formato");
@@ -296,13 +316,19 @@ class GenerarFormato {
             $contenido = $includes . $texto . $enlace . $this->incluir_libreria("footer_nuevo.php", "librerias");
             $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $contenido);
             if ($mostrar !== false) {
-                notificaciones("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar), "success", 2000);
-		  return(true);
+                notificaciones("Formato mostrar Creado con exito por favor verificar la carpeta " . dirname($mostrar), "success", 2000);
+                $this->exito=1;
+                $this->mensaje="Formato mostrar Creado con exito por favor verificar la carpeta " . dirname($mostrar);
+		  		return(true);
             } else {
                 notificaciones("Error al crear el archivo " . dirname($mostrar), "error", 5000);
+                $this->exito=0;
+                $this->mensaje="Error al crear el archivo";
             }
         } else {
             notificaciones("Formato NO encontrado ", "error", 5000);
+            $this->exito=0;
+            $this->mensaje="Formato no encontrado";
         }
 	return(false);
     }
@@ -485,10 +511,14 @@ class GenerarFormato {
                 } else
                     alerta_formatos("El modulo Formatos No existe por favor insertarlo a la tabla modulos");
                 alerta_formatos("Vista Creada con exito por favor verificar la carpeta " . dirname($mostrar));
+                $this->exito=1;
+                $this->mensaje="Vista Creada con exito por favor verificar la carpeta " . dirname($mostrar);
                 return (TRUE);
             }
         } else {
             alerta_formatos("No es posible generar el Formato");
+            $this->exito=0;
+            $this->mensaje="No es posible generar la Vista del formato";
         }
     }
 
@@ -1481,12 +1511,18 @@ class GenerarFormato {
             $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_" . $accion], $contenido);
             if ($mostrar !== false) {
                 notificaciones("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar), "success", 2000);
-			return(true);
+                $this->exito=1;
+                $this->mensaje="Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar);
+				return(true);
             } else {
                 notificaciones("Error al crear el archivo " . dirname($mostrar), "error", 5000);
+                $this->exito=0;
+                $this->mensaje="Error al crear el archivo " . dirname($mostrar);
 			return(false);
             }
         } else {
+        	$this->exito=0;
+        	$this->mensaje="Formato No encontrado";
             notificaciones("Formato NO encontrado ", "error", 5000);
 			return(false);
         }
@@ -2004,6 +2040,8 @@ class GenerarFormato {
         $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/buscar_" . $formato[0]["nombre"] . ".php", $contenido);
         if ($mostrar != "") {
             alerta_formatos("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar));
+            $this->exito=1;
+            $this->mensaje="Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar);
 			return(true);
         }
     }

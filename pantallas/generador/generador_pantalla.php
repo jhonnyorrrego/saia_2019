@@ -315,7 +315,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 										</div-->
 								  </div>
                   <div >
-                    <button id="generar_pantalla" class="btn btn-primary">Generar</button>
+                    <button id="generar_pantalla" class="btn btn-primary">Generar<span id="cargando_generar_pantalla"></span></button>
                   </div>
 								</div>
 							</div>
@@ -995,11 +995,9 @@ $(document).on("click","#actualizar_cuerpo_formato",function(){
    	});	
 });
 function generar_pantalla(nombre_accion){
+	$("#cargando_generar_pantalla").html("<img src='<?php echo($ruta_db_superior); ?>imagenes/cargando.gif' class='pull-left'>");
 	var ruta_generar='formatos/generar_formato.php';
 	accion=nombre_accion.replace("generar_","");
-	if(nombre_accion==="generar_buscar"){
-		ruta_generar='formatos/generar_formato_buscar.php';
-	}
 	  $.ajax({
 	    type:'POST',
 	    url: '<?php echo($ruta_db_superior);?>'+ruta_generar,
@@ -1026,6 +1024,7 @@ function generar_pantalla(nombre_accion){
 	        	}
 	        }
 	    	}
+	    	$("#cargando_generar_pantalla").html("");
 	    }
 		});
 	}
