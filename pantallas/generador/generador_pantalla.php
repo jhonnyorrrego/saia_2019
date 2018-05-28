@@ -383,7 +383,7 @@ echo(librerias_notificaciones());
 echo(librerias_validar_formulario());
 echo(librerias_arboles());
 echo(librerias_tooltips());
-echo(librerias_tiny());
+//echo(librerias_tiny());
 $cant_js=count($librerias_js);
 for($i=0;$i<$cant_js;$i++){
 	if($librerias_js[$i])
