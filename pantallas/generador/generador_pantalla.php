@@ -123,54 +123,91 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 							for($i=0;$i<$tipo_listado["numcampos"];$i++) {
 								echo('<option value="'.$tipo_listado[$i]["idpantalla_busqueda"].'" nombre="'.$tipo_listado[$i]["nombre"].'">'.$tipo_listado[$i]["etiqueta"].'</option>');
 							}
-?>                    </select>
+					  ?>
+                    </select>
                       <?php if($tipo_listado["numcampos"]){ ?>
                       <div width="100%" id="frame_tipo_listado"></div>
                       <?php } ?>
                     </div>
                   </form>
-								</div>
-								<div class="tab-pane" id="librerias_formulario-tab">
-									<div id="configurar_libreria_pantalla"></div>
-									<div id="librerias_en_uso"></div>
-								</div>
-								<div class="tab-pane" id="encabezado_pie-tab">
-									<br>
-									<legend>Encabezado</legend>
-									<br>
-									<select name="encabezado" id="encabezado"> 
-									<option value="0">Por favor Seleccione</option>
-									<?php 
-									$encabezados=busca_filtro_tabla("","encabezado_formato","1=1","etiqueta",$conn);
-									for($i=0;$i<$encabezados["numcampos"];$i++){
-										echo("<option value='".$encabezados[$i]["idencabezado_formato"]."'");
-										if($encabezados[$i]["idencabezado_formato"]==$datos_formato[0]["encabezado"]){
-											echo(' selected="selected" ');
-										}									
-										echo(">".$encabezados[$i]["etiqueta"]."</option>");
-									}
-									?>
-									</select>
-									<div class="btn btn-mini btn-info" id="adicionar_encabezado">Adicionar</div>
-									<legend>Pie</legend>
-									<br>
-									<select name="pie" id="pie_pagina"> 
-									<option value="0">Por favor Seleccione</option>
-									<?php 
-									$pie_pagina=busca_filtro_tabla("","encabezado_formato","1=1","etiqueta",$conn);
-									for($i=0;$i<$pie_pagina["numcampos"];$i++){
-										echo("<option value='".$pie_pagina[$i]["idencabezado_formato"]."'");
-										if($pie_pagina[$i]["idencabezado_formato"]==$datos_formato[0]["pie_pagina"]){
-											echo(' selected="selected" ');
-										}
-										echo(">".$pie_pagina[$i]["etiqueta"]."</option>");
-									}
-									?>
-									</select>
-									<div class="btn btn-mini btn-info" id="adicionar_encabezado">Adicionar</div>
-								</div>
-								<div class="tab-pane" id="generar_formulario-tab">
-									<div class="accordion" id="acordion_generar">
+				</div>
+				<div class="tab-pane" id="librerias_formulario-tab">
+					<div id="configurar_libreria_pantalla"></div>
+					<div id="librerias_en_uso"></div>
+				</div>
+				<div class="tab-pane" id="encabezado_pie-tab">
+					<br>
+					<legend>Encabezado</legend><br>
+					<select name="encabezado" id="encabezado" onchange="actualizar_seleccion_encabezado(this)">
+						<option value="0">Por favor Seleccione</option>
+						<?php
+							$encabezados=busca_filtro_tabla("","encabezado_formato","1=1","etiqueta",$conn);
+							$contenido_enc = array();
+							$idencabezado = 0;
+							for($i=0;$i<$encabezados["numcampos"];$i++) {
+							    $contenido_enc[$encabezados[$i]["idencabezado_formato"]] = $encabezados[$i]["contenido"];
+								echo("<option value='".$encabezados[$i]["idencabezado_formato"]."'");
+								if($encabezados[$i]["idencabezado_formato"] == $datos_formato[0]["encabezado"]) {
+								    $idencabezado = $encabezados[$i]["idencabezado_formato"];
+									echo(' selected="selected" ');
+								}
+								echo(">".$encabezados[$i]["etiqueta"]."</option>");
+							}
+						?>
+					</select>
+					<div class="btn btn-mini btn-info adicionar_encabezado_pie" id="adicionar_encabezado" enlace="formatos/encabezadoadd.php?adicionar=1">Adicionar</div>
+
+					<script type="text/javascript">
+						var encabezados = <?php echo json_encode($contenido_enc); ?>;
+						var idencabezado = <?php echo $idencabezado;?>;
+						if(idencabezado > 0) {
+							//actualizar_editor_encabezado_pie("encabezado", seleccionado);
+						}
+					</script>
+                  <form name="formulario_editor_encabezado" id="formulario_editor_encabezado" action="">
+                  <textarea name="editor_encabezado" id="editor_encabezado" class="editor_tiny"> <?php
+                  if($idencabezado) {
+                    echo $contenido_enc[$idencabezado];
+                  }
+                  ?>
+                  </textarea>
+                  </form>
+                  <script type="text/javascript">
+                  	function actualizar_seleccion_encabezado(selectObject) {
+                      	var seleccionado = selectObject.value;
+                      	actualizar_editor_encabezado_pie("encabezado", seleccionado);
+                  	}
+                  	function actualizar_editor_encabezado_pie(editor, seleccionado) {
+                      	var editor = tinymce.get('editor_' + editor);
+                      	//var content = editor.getContent();
+                      	//content = content.replace(/{\$baseurl}/g, 'http://mydomain.com');
+                      	editor.setContent(encabezados[seleccionado]);
+                      	//console.log(encabezados[seleccionado]);
+                  	}
+                  	$(".adicionar_encabezado_pie").click(function(e){
+                  		var enlace=$(this).attr("enlace");
+                  		top.hs.htmlExpand(this, { objectType: 'iframe',width: 600, height: 450,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
+                  		});
+                  </script>
+
+					<legend>Pie</legend><br>
+					<select name="pie" id="pie_pagina">
+						<option value="0">Por favor Seleccione</option>
+						<?php
+							$pie_pagina=busca_filtro_tabla("","encabezado_formato","1=1","etiqueta",$conn);
+							for($i=0;$i<$pie_pagina["numcampos"];$i++) {
+								echo("<option value='".$pie_pagina[$i]["idencabezado_formato"]."'");
+								if($pie_pagina[$i]["idencabezado_formato"]==$datos_formato[0]["pie_pagina"]) {
+									echo(' selected="selected" ');
+								}
+								echo(">".$pie_pagina[$i]["etiqueta"]."</option>");
+							}
+						?>
+					</select>
+					<div class="btn btn-mini btn-info adicionar_encabezado_pie" id="adicionar_pie">Adicionar</div>
+				</div>
+				<div class="tab-pane" id="generar_formulario-tab">
+					<div class="accordion" id="acordion_generar">
 								  	<!-- div class="accordion-group">
 									    <div class="accordion-heading">
                         <input type="checkbox" checked="true"class="pull-left check_genera" value="version">
@@ -992,7 +1029,7 @@ $(document).on("click","#actualizar_cuerpo_formato",function(){
    	  	  }
    	  	}
    	  }
-   	});	
+   	});
 });
 function generar_pantalla(nombre_accion){
 	$("#cargando_generar_pantalla").html("<img src='<?php echo($ruta_db_superior); ?>imagenes/cargando.gif' class='pull-left'>");
