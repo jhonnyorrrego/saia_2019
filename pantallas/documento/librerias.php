@@ -432,8 +432,8 @@ function deseleccionar_documento($ldocs) {
 function fecha_creacion_documento($fecha0, $plantilla = Null, $doc = Null) {
 	global $conn;
 	if ($fecha0 == 'fecha_inicial' || $fecha0 == 'fecha' || $fecha0 == '') {
-		$asignacion = busca_filtro_tabla(fecha_db_obtener("a.fecha_inicial", "Y-m-d H:i:s") . " as fecha_inicial, a.*", "asignacion a", "a.documento_iddocumento=" . $doc, "", $conn);
-		$fecha0 = $asignacion[0]["fecha_inicial"];
+		$asignacion = busca_filtro_tabla(fecha_db_obtener("a.fecha_inicial", "Y-m-d H:i:s") . " as fecha_asig, a.*", "asignacion a", "a.documento_iddocumento=" . $doc, "", $conn);
+		$fecha0 = $asignacion[0]["fecha_asig"];
 	}
 	$fecha1 = date_parse($fecha0);
 	$fecha2 = date_parse(date("Y-m-d"));

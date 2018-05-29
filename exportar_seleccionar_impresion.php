@@ -11,16 +11,14 @@ while ($max_salida > 0) {
 
 include_once ($ruta_db_superior . "db.php");
 $exportar_pdf = busca_filtro_tabla("valor", "configuracion A", "A.nombre='exportar_pdf'", "", $conn);
-if ($exportar_pdf[0]["valor"] == 'html2ps') {
-	include_once ($ruta_db_superior . 'html2ps/public_html/fpdf/fpdf.php');
-} else if ($exportar_pdf[0]["valor"] == 'class_impresion') {
-	include_once ($ruta_db_superior . 'fpdf.php');
+if ($exportar_pdf[0]["valor"] == 'class_impresion') {
+	//include_once ($ruta_db_superior . 'fpdf.php');
 } else {
 	include_once ($ruta_db_superior . 'html2ps/public_html/fpdf/fpdf.php');
 }
 include_once ($ruta_db_superior . 'manipular_pdf/fpdi.php');
 
-$ruta_temp=$_SESSION["ruta_temp_funcionario"];
+$ruta_temp = $_SESSION["ruta_temp_funcionario"];
 crear_destino($ruta_temp);
 
 class concat_pdf extends FPDI {
@@ -28,6 +26,7 @@ class concat_pdf extends FPDI {
 	function setFiles($files) {
 		$this -> files = $files;
 	}
+
 	function concat() {
 		foreach ($this->files AS $file) {
 			$pagecount = $this -> setSourceFile($file);
@@ -39,7 +38,10 @@ class concat_pdf extends FPDI {
 				else
 					$orientacion = "P";
 
-				$this -> AddPage($orientacion, array($s['w'], $s['h']));
+				$this -> AddPage($orientacion, array(
+					$s['w'],
+					$s['h']
+				));
 				$this -> useTemplate($tplidx);
 			}
 		}
@@ -81,7 +83,7 @@ for ($i = 0; $i < count($arreglo_dato); $i++) {
 					$iddocpadre = $busca_doc[0][0];
 					$plantilla = $formato[0]["nombre"];
 					$nombre_archivo = $ruta_temp . "/" . date("Y_m_d_H_i_s") . $i . ".pdf";
-					
+
 					if (!isset($_REQUEST["nombre_archivo"])) {
 						if ($exportar_pdf[0]["valor"] == 'html2ps') {
 							redirecciona("html2ps/public_html/demo/html2ps.php?background=2&nombre_archivo=$nombre_archivo&seleccion=" . $_REQUEST["seleccion"] . "&margenes=" . $_REQUEST["margenes"] . "&font_size=" . $_REQUEST["font_size"] . "&orientacion=" . $_REQUEST["orientacion"] . "&plantilla=$plantilla&iddoc=$iddocpadre&papel=" . $_REQUEST["papel"] . "&ocultar_firmas=" . $_REQUEST["ocultar_firmas"]);
@@ -108,7 +110,7 @@ $listado_final = array();
 if (!empty($listado_paginas)) {
 	if (!is_dir($ruta_temp))
 		mkdir($ruta_temp, 0777);
-	$nombre_archivo = $ruta_temp. "/" . date("Y_m_d_H_i_s") . $i . ".pdf";
+	$nombre_archivo = $ruta_temp . "/" . date("Y_m_d_H_i_s") . $i . ".pdf";
 	if (crear_pdf_imagenes($nombre_archivo, $listado_paginas)) {
 		array_push($listado_final, $nombre_archivo);
 	}

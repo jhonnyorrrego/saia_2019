@@ -65,7 +65,7 @@ function guardar_expedientes_add($idformato,$iddoc){
 	$ids=@$_REQUEST["id"];
 	$texto="";
 	if($ids){
-		$expedientes=busca_filtro_tabla("nombre,idexpediente,fecha,indice_uno,indice_dos,indice_tres,fk_idcaja,serie_idserie","expediente A","A.idexpediente in(".$ids.")","",$conn);
+		$expedientes=busca_filtro_tabla("nombre,idexpediente,".fecha_db_obtener("fecha","Y-m-d")." AS fecha,indice_uno,indice_dos,indice_tres,fk_idcaja,serie_idserie","expediente A","A.idexpediente in(".$ids.")","",$conn);
 		$etiquetas=extrae_campo($expedientes,"nombre","");
 		$texto.="<td><ul><li>".implode("</li><li>",$etiquetas)."</li></ul>
 		<input type='hidden' name='expediente_vinculado' id='expediente_vinculado' value='".$ids."'>

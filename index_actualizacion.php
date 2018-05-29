@@ -52,7 +52,7 @@ if ($_SESSION["LOGIN" . LLAVE_SAIA]!="") {
 	if ($per_pendientes) {
 		$etiquetados = busca_filtro_tabla("c.nombre", "documento a, documento_etiqueta b, etiqueta c", "LOWER(a.estado) NOT IN ('eliminado') AND a.iddocumento=b.documento_iddocumento AND b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='" . $usuario . "' GROUP BY a.iddocumento", "", $conn);
 		$pendientes = busca_filtro_tabla("count(*) AS cant", "documento A,asignacion B,formato c ", "LOWER(A.estado)<>'eliminado' AND A.iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad=" . $usuario . " and lower(A.plantilla)=c.nombre ", "GROUP BY A.iddocumento", $conn);
-		$con_indicador = busca_filtro_tabla("", "documento a, prioridad_documento b,formato c ", "b.documento_iddocumento=a.iddocumento AND b.prioridad in (1,2,3,4,5) AND lower(a.estado) not in('ELIMINADO') AND lower(a.plantilla)=c.nombre AND b.funcionario_idfuncionario=" . usuario_actual("idfuncionario"), "group by a.iddocumento order by a.fecha  desc", $conn);
+		$con_indicador = busca_filtro_tabla("", "documento a, prioridad_documento b,formato c ", "b.documento_iddocumento=a.iddocumento AND b.prioridad in (1,2,3,4,5) AND lower(a.estado) not in('ELIMINADO') AND lower(a.plantilla)=c.nombre AND b.funcionario_idfuncionario=" . $_SESSION["idfuncionario"], "group by a.iddocumento order by a.fecha  desc", $conn);
 		$borradores = busca_filtro_tabla("count(*) AS cant", "documento A, formato c ", "ejecutor=" . $usuario . " AND A.estado='ACTIVO' AND A.numero='0' and lower(A.plantilla)=c.nombre", "", $conn);
 
 		$componente_etiquetados = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='documentos_etiquetados'", "", $conn);
@@ -64,12 +64,13 @@ if ($_SESSION["LOGIN" . LLAVE_SAIA]!="") {
 
 	$per_mis_tareas = $permiso -> acceso_modulo_perfil("mis_tareas");
 	if ($per_mis_tareas) {
-	  $mis_roles=busca_filtro_tabla("","vfuncionario_dc","estado=1 and funcionario_codigo=".usuario_actual("funcionario_codigo"),"",$conn);
+	$mis_roles=busca_filtro_tabla("","vfuncionario_dc","estado=1 and funcionario_codigo=".$_SESSION["usuario_actual"],"",$conn);
     if($mis_roles["numcampos"]){
       $roles=extrae_campo($mis_roles,"iddependencia_cargo");
       $concat=array();
+	  $res_concat=concatenar_cadena_sql(array("','","responsable","','"));
       foreach ($roles AS $key=>$value){
-        array_push($concat,"CONCAT(',',responsable,',') LIKE('%,".$value.",%')");
+        array_push($concat,$res_concat." LIKE('%,".$value.",%')");
       }
     }
 	  
@@ -79,12 +80,12 @@ if ($_SESSION["LOGIN" . LLAVE_SAIA]!="") {
 
 	$per_mis_tareas_av = $permiso -> acceso_modulo_perfil("mis_tareas_avanzadas");
 	if ($per_mis_tareas_av) {
-		$tareas_responsable = busca_filtro_tabla("count(*) AS cant", "tareas_listado A", "A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.responsable_tarea =" . usuario_actual("idfuncionario"), "", $conn);
+		$tareas_responsable = busca_filtro_tabla("count(*) AS cant", "tareas_listado A", "A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.responsable_tarea =" . $_SESSION["idfuncionario"], "", $conn);
 		$condicion_coparticipantes_unico = " AND ( a.co_participantes LIKE '%," . $funcionario_idfuncionario . ",%' OR a.co_participantes LIKE '%," . $funcionario_idfuncionario . "' OR a.co_participantes LIKE '" . $funcionario_idfuncionario . ",%' OR  a.co_participantes='" . $funcionario_idfuncionario . "' )";
 		$tareas_coparticipante = busca_filtro_tabla("count(*) AS cant", "tareas_listado a", "a.generica=0 AND a.estado_tarea<>'TERMINADO'  AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 " . $condicion_coparticipantes_unico, "", $conn);
 		$condicion_seguidores_unico = " AND ( a.seguidores LIKE '%," . $funcionario_idfuncionario . ",%' OR a.seguidores LIKE '%," . $funcionario_idfuncionario . "' OR a.seguidores LIKE '" . $funcionario_idfuncionario . ",%' OR  a.seguidores='" . $funcionario_idfuncionario . "' )";
 		$tareas_seguidor = busca_filtro_tabla("count(*) AS cant", "tareas_listado a", "a.generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 " . $condicion_seguidores_unico, "", $conn);
-		$tareas_evaluador = busca_filtro_tabla("count(*) AS cant", "tareas_listado A", "A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.evaluador =" . usuario_actual("idfuncionario"), "", $conn);
+		$tareas_evaluador = busca_filtro_tabla("count(*) AS cant", "tareas_listado A", "A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.evaluador =" . $_SESSION["idfuncionario"], "", $conn);
 
 		$condicion_coparticipantes = " OR ( a.co_participantes LIKE '%," . $funcionario_idfuncionario . ",%' OR a.co_participantes LIKE '%," . $funcionario_idfuncionario . "' OR a.co_participantes LIKE '" . $funcionario_idfuncionario . ",%' OR  a.co_participantes='" . $funcionario_idfuncionario . "' )";
 		$condicion_seguidores = " OR ( a.seguidores LIKE '%," . $funcionario_idfuncionario . ",%' OR a.seguidores LIKE '%," . $funcionario_idfuncionario . "' OR a.seguidores LIKE '" . $funcionario_idfuncionario . ",%' OR  a.seguidores='" . $funcionario_idfuncionario . "' )";
@@ -572,8 +573,9 @@ echo(librerias_notificaciones());
 function mostrar_iconos($modulo_actual,$orden=NULL){
   global $conn;
   $cols=4;
-  $usuario_actual=usuario_actual("funcionario_codigo");
-      $idfuncionario_actual=usuario_actual("idfuncionario");
+  $usuario_actual=$_SESSION["usuario_actual"];
+  $idfuncionario_actual=$_SESSION["idfuncionario"];
+	
   $modulo=busca_filtro_tabla("A.idmodulo","modulo A","A.idmodulo=".$modulo_actual,"",$conn);
   if($modulo["numcampos"]){
     $condicion="A.modulo_idmodulo=B.idmodulo AND B.cod_padre=".$modulo[0]["idmodulo"]." AND A.funcionario_idfuncionario=".$idfuncionario_actual;
@@ -721,27 +723,18 @@ function menu_saia(){
 	        type:'POST',
 	        url: "pantallas/busquedas/servidor_busqueda.php",
 	        data: "idbusqueda_componente=7&page=0&rows=1&actual_row=0",
-	        success: function(html){
-	          if(html){
-	            var valor=$("#documentos_pendientes").html();
-	            var objeto=jQuery.parseJSON(html);
-	            if(valor!=objeto.records){
-	              $("#documentos_pendientes").html(objeto.records);
-	              $("#documentos_pendientes").removeClass("label-success");
-	              $("#documentos_pendientes").addClass("label-important");
-	              //clearInterval(refreshInterval_SAIA);
-	            }
-	            if(objeto.records==0){
-	              $("#documentos_pendientes").removeClass("label-important");
-	              $("#documentos_pendientes").addClass("label-success");
-	            }
-	            //else alert("0k");
-	          }
-	          else{
-	            $("#documentos_pendientes").html(0);
-	            $("#documentos_pendientes").removeClass("label-important");
-	            $("#documentos_pendientes").addClass("label-success");
-	          }
+	        dataType: "json",
+	        success: function(objeto){
+            var valor=$("#documentos_pendientes").html();
+            if(valor!=objeto.records){
+              $("#documentos_pendientes").html(objeto.records);
+              $("#documentos_pendientes").removeClass("label-success");
+              $("#documentos_pendientes").addClass("label-important");
+            }
+            if(objeto.records==0){
+              $("#documentos_pendientes").removeClass("label-important");
+              $("#documentos_pendientes").addClass("label-success");
+            }	        
 	        }
 	      });
 	    }, <?php echo($intervalo_recarga_informacion);?>);
@@ -772,27 +765,19 @@ function menu_saia(){
         type:'POST',
         url: "pantallas/busquedas/servidor_busqueda.php",
         data: "idbusqueda_componente="+idcomponente+"&page=0&rows=1&actual_row=0",
-        success: function(html){
-          if(html){
-		        var valor=$("#"+div_actualizar).html();
-		        var objeto=jQuery.parseJSON(html);
-
-		        if(valor!=objeto.records){
-		          $("#"+div_actualizar).html(objeto.records);
-		          $("#"+div_actualizar).removeClass("label-success");
-		          $("#"+div_actualizar).addClass("label-important");
-		        }
-		        if(objeto.records==0){
-							$("#"+div_actualizar).html(0);
-		          $("#"+div_actualizar).removeClass("label-important");
-		          //$("#"+div_actualizar).addClass("label-success");
-		        }
-		      }
-		      else{
-		        $("#"+div_actualizar).html(0);
-		        $("#"+div_actualizar).removeClass("label-important");
-		        $("#"+div_actualizar).addClass("label-success");
-		      }
+        dataType: "json",
+        success: function(objeto){
+	        var valor=$("#"+div_actualizar).html();
+	        if(valor!=objeto.records){
+	          $("#"+div_actualizar).html(objeto.records);
+	          $("#"+div_actualizar).removeClass("label-success");
+	          $("#"+div_actualizar).addClass("label-important");
+	        }
+	        if(objeto.records==0){
+						$("#"+div_actualizar).html(0);
+	          $("#"+div_actualizar).removeClass("label-important");
+	          //$("#"+div_actualizar).addClass("label-success");
+	        }
         }
       });
 

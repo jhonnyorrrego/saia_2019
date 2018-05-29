@@ -64,6 +64,9 @@ class SaiaStorage {
 			case 'plantilla_word' :
 				$server_path = RUTA_PLANTILLA_WORD;
 				break;
+			case 'planos' :
+				$server_path = RUTA_PLANOS;
+				break;
 			default :
 				//Usar el tipo. Ej. BACKUP
 				$server_path = $this -> tipo;

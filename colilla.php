@@ -374,14 +374,13 @@ if ($doc <> FALSE) {
 					<b>Fecha: <?php echo $datos_fecha; ?></b><br/> 
 					
 					<?php if((($datos[0]["tipo_radicado"]==1 || $datos[0]["tipo_radicado"]==2) && $datos[0]['plantilla']=='radicacion_entrada') || $datos[0]['plantilla']=='pqrsf' ){?>
-					<b>Asunto:
-					<?php
+					<b><?php
 					if(@$_REQUEST['descripcion_general']){
 						$suspensivos='';	$cadena=codifica_encabezado(html_entity_decode(@$_REQUEST["descripcion_general"]));
-						if(strlen($cadena) > 30){$suspensivos='...';}	echo  substr($cadena,0,30).$suspensivos;
+						if(strlen($cadena) > 30){$suspensivos='...';}	echo  "Asunto: ".substr($cadena,0,30).$suspensivos;
 					}else{
 						$suspensivos=''; $cadena=codifica_encabezado(html_entity_decode(@$datos[0]["descripcion"]));
-						if(strlen($cadena) > 30){ $suspensivos='...';} echo substr($cadena,0,30).$suspensivos; 
+						if(strlen($cadena) > 30){ $suspensivos='...';} echo substr($cadena,0,60).$suspensivos; 
 					}?></b><br/>
 					<?php }
 					

@@ -50,7 +50,7 @@ echo (librerias_notificaciones());
 			<tbody>
     	
     <?php
-    $noticias = busca_filtro_tabla('', 'noticia_index', 'estado=1', '', $conn);
+    $noticias = busca_filtro_tabla("idnoticia_index,noticia,imagen,titulo,subtitulo,".fecha_db_obtener("fecha","Y-m-d")." as fecha", "noticia_index", "estado=1", "", $conn);
     $cadena = '';
     for ($i = 0; $i < $noticias['numcampos']; $i++) {
 			$archivo_binario=StorageUtils::get_binary_file($noticias[$i]['imagen']);

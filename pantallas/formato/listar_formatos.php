@@ -34,10 +34,8 @@ if (!$idcategoria_formato) {
 	$idcategoria_formato = 2;
 }
 $lista_formatos = busca_filtro_tabla("nombre,etiqueta,ruta_adicionar", "formato", "mostrar=1 AND (fk_categoria_formato like '" . $idcategoria_formato . "' OR   fk_categoria_formato like '%," . $idcategoria_formato . "'  OR   fk_categoria_formato like '" . $idcategoria_formato . ",%' OR   fk_categoria_formato like '%," . $idcategoria_formato . ",%') AND (fk_categoria_formato like '2' OR fk_categoria_formato like '%,2'  OR fk_categoria_formato like '2,%' OR fk_categoria_formato like '%,2,%')", "etiqueta ASC", $conn);
-
 $proceso = busca_filtro_tabla('', 'categoria_formato', 'idcategoria_formato=' . $idcategoria_formato, '', $conn);
 $nombre_proceso = codifica_encabezado(html_entity_decode($proceso[0]['nombre']));
-$nombre_proceso = strtolower($nombre_proceso);
 $nombre_proceso = mb_strtoupper($nombre_proceso);
 $nombre_proceso = $nombre_proceso;
 $texto = '
