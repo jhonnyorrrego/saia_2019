@@ -160,9 +160,6 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 					<script type="text/javascript">
 						var encabezados = <?php echo json_encode($contenido_enc); ?>;
 						var idencabezado = <?php echo $idencabezado;?>;
-						if(idencabezado > 0) {
-							//actualizar_editor_encabezado_pie("encabezado", seleccionado);
-						}
 					</script>
                   <form name="formulario_editor_encabezado" id="formulario_editor_encabezado" action="">
                   <textarea name="editor_encabezado" id="editor_encabezado" class="editor_tiny"> <?php
@@ -172,10 +169,41 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
                   ?>
                   </textarea>
                   </form>
+					<legend>Pie</legend><br>
+					<select name="pie" id="pie_pagina" onchange="actualizar_seleccion_pie(this)">
+						<option value="0">Por favor Seleccione</option>
+						<?php
+						    $idpie = 0;
+
+							$pie_pagina=busca_filtro_tabla("","encabezado_formato","1=1","etiqueta",$conn);
+							for($i=0; $i<$pie_pagina["numcampos"]; $i++) {
+								echo("<option value='" . $pie_pagina[$i]["idencabezado_formato"] . "'");
+								if($pie_pagina[$i]["idencabezado_formato"]==$datos_formato[0]["pie_pagina"]) {
+								    $idpie = $pie_pagina[$i]["idencabezado_formato"];
+								    echo(' selected="selected" ');
+								}
+								echo(">".$pie_pagina[$i]["etiqueta"]."</option>");
+							}
+						?>
+					</select>
+					<div class="btn btn-mini btn-info adicionar_encabezado_pie" id="adicionar_pie" enlace="formatos/encabezadoadd.php?adicionar=1">Adicionar</div>
+
+                  <form name="formulario_editor_pie" id="formulario_editor_pie" action="">
+                  <textarea name="editor_pie" id="editor_pie" class="editor_tiny"> <?php
+                  if($idpie) {
+                      echo $contenido_enc[$idpie];
+                  }
+                  ?>
+                  </textarea>
+                  </form>
                   <script type="text/javascript">
                   	function actualizar_seleccion_encabezado(selectObject) {
                       	var seleccionado = selectObject.value;
                       	actualizar_editor_encabezado_pie("encabezado", seleccionado);
+                  	}
+                  	function actualizar_seleccion_pie(selectObject) {
+                      	var seleccionado = selectObject.value;
+                      	actualizar_editor_encabezado_pie("pie", seleccionado);
                   	}
                   	function actualizar_editor_encabezado_pie(editor, seleccionado) {
                       	var editor = tinymce.get('editor_' + editor);
@@ -190,21 +218,6 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
                   		});
                   </script>
 
-					<legend>Pie</legend><br>
-					<select name="pie" id="pie_pagina">
-						<option value="0">Por favor Seleccione</option>
-						<?php
-							$pie_pagina=busca_filtro_tabla("","encabezado_formato","1=1","etiqueta",$conn);
-							for($i=0;$i<$pie_pagina["numcampos"];$i++) {
-								echo("<option value='".$pie_pagina[$i]["idencabezado_formato"]."'");
-								if($pie_pagina[$i]["idencabezado_formato"]==$datos_formato[0]["pie_pagina"]) {
-									echo(' selected="selected" ');
-								}
-								echo(">".$pie_pagina[$i]["etiqueta"]."</option>");
-							}
-						?>
-					</select>
-					<div class="btn btn-mini btn-info adicionar_encabezado_pie" id="adicionar_pie">Adicionar</div>
 				</div>
 				<div class="tab-pane" id="generar_formulario-tab">
 					<div class="accordion" id="acordion_generar">
