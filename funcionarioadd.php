@@ -449,11 +449,9 @@ function AddData($conn) {
 		$fileHandle = fopen($_FILES["x_firma"]["tmp_name"], "rb");
 		$fileContent = fread($fileHandle, $_FILES["x_firma"]["size"]);
 		fclose($fileHandle);
-		$theValue = $fileContent;
-		// addslashes($fileContent);
+		
 		@unlink($_FILES["x_firma"]["tmp_name"]);
-		guardar_lob("firma", "funcionario", "idfuncionario=" . $sKeyWrk, $theValue, "archivo", $conn);
-
+		guardar_lob("firma", "funcionario", "idfuncionario=" . $sKeyWrk, $fileContent, "archivo", $conn);
 	}
 	foreach ($_REQUEST["validaciones_funcionario"] as $valor) {
 		if ($valor) {

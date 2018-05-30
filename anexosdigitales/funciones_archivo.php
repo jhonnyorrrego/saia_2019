@@ -70,7 +70,6 @@ function asignar_permiso_formato($idformato, $tipo, $permiso = NULL, $idpropieta
 			//Asigna un permiso inicial  normalmente $tipo="CARACTERISTICA_PROPIO" por que es quien lo crea
 
 			$sql = "INSERT INTO permiso_formato(formato_idformato,idpropietario,$tipo) VALUES ($idformato,$idpropietario,'$permiso')";
-			echo $sql;
 			phpmkr_query($sql, $conn);
 		} else {
 			alerta("El primer Permiso debe asignar el propietario del formato, ", 'error');
@@ -712,7 +711,7 @@ function cargar_archivo_formato($idcampo, $idformato, $iddoc, $form_uuid = null)
 				$form_uuid = $adjuntos[0]["uuid"];
 			}
 
-			$archivos = busca_filtro_tabla("", "anexos_tmp", "uuid = '$form_uuid' AND idcampos_formato = {$campo[$i]["idcampos_formato"]} AND idformato=$idformato", "", $conn);
+			$archivos = busca_filtro_tabla("", "anexos_tmp", "uuid = '$form_uuid' AND idcampos_formato = {$campo[$i]["idcampos_formato"]} AND idformato=" . $idformato, "", $conn);
 
 			for ($j = 0; $j < $archivos["numcampos"]; $j++) {
 				$ruta_temporal = $ruta_db_superior . $archivos[$j]["ruta"];
@@ -744,10 +743,8 @@ function cargar_archivo_formato($idcampo, $idformato, $iddoc, $form_uuid = null)
 
 						if ($tipo_almacenamiento == "archivos") {// Los anexos estan guardados en archivos
 							$sql2 = "INSERT INTO anexos(" . implode(", ", array_keys($campos)) . ") values (" . implode(", ", array_values($campos)) . ")";
-							//die($sql);
 							phpmkr_query($sql2, $conn) or alerta("No se puede Adicionar el Anexo " . $ruta_temporal, 'error', 4000);
 							$idanexo = phpmkr_insert_id();
-							//echo("<br />SQL:".$sql."<br />");
 						} elseif ($tipo_almacenamiento == "db") {
 							phpmkr_query("INSERT INTO binario(nombre_original) VALUES ('$nombre')", $conn);
 							$idbin = phpmkr_insert_id();
@@ -816,7 +813,6 @@ function selecciona_ruta_anexos($formato, $iddoc, $almacenamiento, $ruta = "") {
 	$ruta_anexos = ruta_almacenamiento("archivos");
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 	$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
-	//$dir=$ruta_anexos.$datos_doc[0]["estado"]."/".$datos_doc[0]["fecha"]."/".$iddoc."/anexos";
 	$dir = $ruta_anexos . $formato_ruta . "/anexos";
 
 	if ($almacenamiento == "archivo") {
@@ -834,12 +830,9 @@ function selecciona_ruta_anexos($formato, $iddoc, $almacenamiento, $ruta = "") {
 }
 
 function selecciona_ruta_anexos2($iddoc, $almacenamiento, $ruta = "") {
-	global $conn;
-	global $ruta_db_superior;
-	// $ruta_anexos=ruta_almacenamiento("archivos");
+	global $conn, $ruta_db_superior;
 	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 	$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
-	// $dir=$ruta_anexos.$datos_doc[0]["estado"]."/".$datos_doc[0]["fecha"]."/".$iddoc."/anexos";
 	$dir = $formato_ruta . "/anexos";
 
 	if ($almacenamiento == "archivos") {
@@ -855,7 +848,6 @@ function selecciona_ruta_anexos2($iddoc, $almacenamiento, $ruta = "") {
 }
 
 function verifica_ruta($ruta) {
-	//$ruta = RUTA_DISCO."/".$ruta;
 	if (!is_dir($ruta)) {
 		if (!mkdir($ruta, 0777, true)) {
 			alerta("La carpeta " . $ruta . " No se ha podido Crear.", 'error', 4000);
@@ -878,11 +870,7 @@ function borrar($idanexo) {
 			$sql1 = "DELETE FROM binario WHERE idbinario=" . $anexo[0]['idbinario'];
 			phpmkr_query($sql1, $conn);
 		}
-	/*$pos=substr_count($_SERVER["PHP_SELF"],"/"); // Se busca la posicion relatia respecto a la RAIZ
-	 $relativo_raiz='';
-	 for($i=0;$i<$pos-2;$i++)
-	 $relativo_raiz.='../';
-	 $file=$relativo_raiz.$anexo[0]["ruta"];*/
+
 	$arr_origen = StorageUtils::resolver_ruta($anexo[0]["ruta"]);
 	//hago copia del archivo en la carpeta backup/eliminados
 	$info = busca_filtro_tabla("", "anexos", "idanexos=" . $idanexo, "", $conn);
@@ -894,8 +882,6 @@ function borrar($idanexo) {
 	$alm_origen = $arr_origen["clase"];
 
 	if ($alm_origen -> get_filesystem() -> has($arr_origen["ruta"])) {
-		//rename($file, $ruta_db_superior . $nombre);
-		//$nombre_anexo=basename($arr_origen["ruta"]);
 		$resultado = $alm_origen -> copiar_contenido($alm_eliminados, $arr_origen["ruta"], $nombre);
 		$alm_origen -> get_filesystem() -> delete($arr_origen["ruta"]);
 	}
@@ -916,8 +902,6 @@ function eliminar_archivo($idanexo, $idcampo, $idformato, $iddoc) {
 			$arreglo1 = extrae_campo($anexos, "idanexos", "U");
 			$arreglo2 = explode(",", $idanexo);
 			$actualizados = array_diff($arreglo1, $arreglo2);
-			//$anexos=
-			// print_r($arreglo2);
 			if (count($arreglo2)) {
 				for ($i = 0; $i < count($arreglo2); $i++) {
 					$sql = "DELETE FROM anexos WHERE idanexos =" . $idanexo;
@@ -929,7 +913,6 @@ function eliminar_archivo($idanexo, $idcampo, $idformato, $iddoc) {
 					echo $sql;
 				}
 				$sql = "UPDATE " . $formato[0]["nombre_tabla"] . " SET " . $formato[0]["nombre"] . "='" . implode("','", $actualizados) . "' WHERE id" . $formato[0]["nombre_tabla"] . "=" . $iddoc;
-				//echo $sql; die();
 				phpmkr_query($sql, $conn);
 			}
 		}

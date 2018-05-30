@@ -51,7 +51,7 @@ function fecha_reten($idexpediente) {
 		2 => 'central'
 	);
 	$datos_serie = busca_filtro_tabla("retencion_" . $vector_estado_expediente[$estado_expediente], "serie", "idserie=" . $serie_idserie, "", $conn);
-	$datos_cierre = busca_filtro_tabla("fecha_cierre,estado_cierre", "expediente_abce", "expediente_idexpediente=" . $idexpediente, "idexpediente_abce DESC", $conn);
+	$datos_cierre = busca_filtro_tabla(fecha_db_obtener("fecha_cierre","Y-m-d")." as fecha_cierre,estado_cierre", "expediente_abce", "expediente_idexpediente=" . $idexpediente, "idexpediente_abce DESC", $conn);
 	$fecha_cierre = $datos_cierre[0]['fecha_cierre'];
 	if ($datos_cierre[0]['estado_cierre'] == 2) {
 

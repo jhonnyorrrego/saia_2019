@@ -359,6 +359,17 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 	$doc = busca_filtro_tabla("B.idformato", "documento A,formato B", "A.plantilla=B.nombre AND iddocumento=" . $idarchivo, "", $conn);
 	$idformato = @$doc[0]["idformato"];
 	llama_funcion_accion($idarchivo, $idformato, "transferir", "ANTERIOR");
+	
+	//Cuando ingresan demasiado texto en las notas
+	$texto_notas="";
+	if(in_array("notas", array_keys($adicionales))){
+		$cant_texto=strlen($adicionales["notas"]);
+		if($cant_texto>3000){
+			$texto_notas=$adicionales["notas"];
+			unset($adicionales["notas"]);
+		}
+	}
+	
 	if ($adicionales != Null && $adicionales != "" && is_array($adicionales)) {
 		$otras_llaves = "," . implode(",", array_keys($adicionales));
 		$otros_valores = "," . implode(",", array_values($adicionales));
@@ -369,6 +380,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 		$otras_llaves = "";
 		$otros_valores = "";
 	}
+	
 	if ($destino != "" && $origen != "") {
 		$values_out = "$idarchivo,'" . $datos["nombre"] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",";
 		if ($datos["tipo_destino"] == "1" || $datos["tipo_destino"] == "5") {
@@ -390,7 +402,13 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 				if ($datos["nombre"] != "POR_APROBAR") {
 					$sql = "INSERT INTO buzon_salida (archivo_idarchivo,nombre,fecha,origen,tipo_origen,tipo_destino" . $otras_llaves . ",ver_notas,destino) values (" . $values_out . "," . $user . ")";
 					phpmkr_query($sql, $conn);
-					$idtransferencia[] = phpmkr_insert_id();
+					$idbuzon_s=phpmkr_insert_id();
+					$idtransferencia[] =$idbuzon_s;
+					
+					if($texto_notas!=""){
+				  	guardar_lob('notas','buzon_salida',"idtransferencia=".$idbuzon_s,$texto_notas,'texto',$conn,0);
+					}	
+					
 				} else if ($datos["nombre"] == "POR_APROBAR") {
 					if (isset($_REQUEST["dependencia"]) && $_REQUEST["dependencia"] != "" && $datos["ruta_creador_documento"] == 1) {
 						$sql = "INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio) VALUES(" . $_REQUEST["dependencia"] . ",'ACTIVO'," . $user . ",NULL,'POR_APROBAR'," . $idarchivo . ",5,1,1)";
@@ -403,14 +421,21 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 				}
 				$values_in = "$idarchivo,'" . $datos["nombre"] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'$origen',1," . $datos["ruta_idruta"] . ",$tipo_destino" . $otros_valores . ",'" . @$datos["ver_notas"] . "'";
 				$sql = "INSERT INTO buzon_entrada(archivo_idarchivo,nombre,fecha,destino,tipo_origen,ruta_idruta,tipo_destino" . $otras_llaves . ",ver_notas,origen) values(" . $values_in . "," . $user . ")";
-
 				phpmkr_query($sql, $conn);
+				if($texto_notas!=""){
+					$idbuzon_e=phpmkr_insert_id();
+			  	guardar_lob('notas','buzon_entrada',"idtransferencia=".$idbuzon_e,$texto_notas,'texto',$conn,0);
+				}	
 				procesar_estados($origen, $user, $datos["nombre"], $idarchivo);
 			}
 		} else {
 			$values = "$idarchivo,'" . $datos["nombre"] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",$origen,$destino,$tipo_origen,$tipo_destino" . $otros_valores . ",'" . @$datos["ver_notas"] . "'";
 			$sql = "insert into buzon_entrada(archivo_idarchivo,nombre,fecha,destino,origen,tipo_origen,tipo_destino" . $otras_llaves . ",ver_notas) values (" . $values . ")";
 			phpmkr_query($sql, $conn);
+			if($texto_notas!=""){
+				$idbuzon_e=phpmkr_insert_id();
+		  	guardar_lob('notas','buzon_entrada',"idtransferencia=".$idbuzon_e,$texto_notas,'texto',$conn,0);
+			}	
 		}
 	}
 

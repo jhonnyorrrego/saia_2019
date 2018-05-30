@@ -61,6 +61,7 @@ if (@$_REQUEST["idbusqueda_componente"]) {
 		$cadena = implode("", $arreglo);
 		if ($cadena_adicional == '')
 			$cadena = limpiar_cadena($cadena);
+		
 		if (count($arreglo) || count($arreglo_sub)) {
 			$cadena = str_replace("@", ".", $cadena);
 			$cadena_adicional = str_replace("@", ".", $cadena_adicional);
@@ -72,12 +73,12 @@ if (@$_REQUEST["idbusqueda_componente"]) {
 				$consulta_adicional = " and " . $consulta_adicional;
 			}
 			if (MOTOR == "Oracle") {
-				$sql2 = "INSERT INTO busqueda_filtro_temp(fk_busqueda_componente,funcionario_idfuncionario,fecha) VALUES(" . $_REQUEST["idbusqueda_componente"] . "," . usuario_actual("idfuncionario") . "," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
+				$sql2 = "INSERT INTO busqueda_filtro_temp(fk_busqueda_componente,funcionario_idfuncionario,fecha) VALUES(" . $_REQUEST["idbusqueda_componente"] . "," . $_SESSION["idfuncionario"] . "," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
 				$conn->Ejecutar_Sql($sql2);
 				$idbusqueda_temp = $conn->Ultimo_Insert();
 				guardar_lob2('detalle', 'busqueda_filtro_temp', 'idbusqueda_filtro_temp=' . $idbusqueda_temp, str_replace("''", "'", $cadena . $consulta_adicional . $cadena_adicional), "texto", $conn);
 			} else {
-				$sql2 = "INSERT INTO busqueda_filtro_temp(fk_busqueda_componente,funcionario_idfuncionario,detalle,fecha) VALUES(" . $_REQUEST["idbusqueda_componente"] . "," . usuario_actual("idfuncionario") . ",'" . $cadena . $consulta_adicional . $cadena_adicional . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
+				$sql2 = "INSERT INTO busqueda_filtro_temp(fk_busqueda_componente,funcionario_idfuncionario,detalle,fecha) VALUES(" . $_REQUEST["idbusqueda_componente"] . "," . $_SESSION["idfuncionario"] . ",'" . $cadena . $consulta_adicional . $cadena_adicional . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
 				$conn->Ejecutar_Sql($sql2);
 				$idbusqueda_temp = $conn->Ultimo_Insert();
 			}
@@ -212,13 +213,13 @@ function valor_dato($campo, $valor) {
 	} else if (MOTOR == "Oracle") {
 		$retorno = ($retorno_);
 	} else if (MOTOR == "SqlServer") {
-		$retorno = ($retorno_);
+		$retorno =str_replace("\'","''",addslashes($retorno_));
 	} else {
 		$retorno = ($retorno_);
 	}
 	
 	if ($retorno_ != '')
-		return (($retorno));
+		return ($retorno);
 	else {
 		return false;
 	}
@@ -229,7 +230,7 @@ function filtros_adicionales() {
 	if (@$_REQUEST["filtro_adicional"]) {
 		$datos = $_REQUEST["filtro_adicional"];
 		$idbusqueda_componente = $_REQUEST["idbusqueda_componente"];
-		$usuario = usuario_actual("idfuncionario");
+		$usuario = $_SESSION["idfuncionario"];
 		$fecha = fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s");
 		$valores = explode("@", $datos);
 		if (MOTOR == "MySql") {
