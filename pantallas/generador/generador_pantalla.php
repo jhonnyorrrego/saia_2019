@@ -16,8 +16,16 @@ if($_REQUEST["idformato"]){
   $idpantalla=$_REQUEST["idformato"];
   $datos_formato=busca_filtro_tabla("","formato","idformato=".$idpantalla,"",$conn);
 }
+?>
+<html>
+<head>
+<title>Generador Pantallas SAIA</title>
+
+<?php
+echo(estilo_bootstrap());
 echo(librerias_jquery());
 echo(librerias_html5());
+
 $campos=busca_filtro_tabla("","pantalla_componente B","1=1","",$conn);
 $librerias_js=array();
 for($i=0;$i<$campos["numcampos"];$i++){
@@ -48,18 +56,16 @@ for($i=0;$i<$campos["numcampos"];$i++){
   	}
   }
 }
-echo(estilo_bootstrap());
+
 ?>
-<html>
-	<head>
-		<title>Generador Pantallas SAIA</title>
-		<link href="<?php echo($ruta_db_superior);?>pantallas/generador/css/generador_pantalla.css" rel="stylesheet">
-    <style>
+		<link href="<?php echo($ruta_db_superior);?>pantallas/generador/css/generador_pantalla.css" rel="stylesheet"><style>
     .well{ margin-bottom: 3px; min-height: 11px; padding: 4px;}
     .progress{margin-bottom: 0px;}
     #tabs_formulario, #tabs_opciones{margin-bottom: 0px;}
     .tab-content {padding-top:0px;}
     </style>
+    <script src="<?php echo $ruta_db_superior;?>js/jquery-migrate-1.4.1.js"></script>
+
 	</head>
 	<body>
 		<div class="row-fluid">
@@ -138,7 +144,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 				<div class="tab-pane" id="encabezado_pie-tab">
 					<br>
 					<legend>Encabezado</legend><br>
-					<select name="encabezado" id="encabezado" onchange="actualizar_seleccion_encabezado(this)">
+					<select name="encabezado" id="encabezado">
 						<option value="0">Por favor Seleccione</option>
 						<?php
 							$encabezados=busca_filtro_tabla("","encabezado_formato","1=1","etiqueta",$conn);
@@ -157,11 +163,12 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 					</select>
 					<div class="btn btn-mini btn-info adicionar_encabezado_pie" id="adicionar_encabezado" enlace="formatos/encabezadoadd.php?adicionar=1">Adicionar</div>
 
-					<script type="text/javascript">
-						var encabezados = <?php echo json_encode($contenido_enc); ?>;
-						var idencabezado = <?php echo $idencabezado;?>;
-					</script>
                   <form name="formulario_editor_encabezado" id="formulario_editor_encabezado" action="">
+                  <input type="hidden" name="idencabezado" value="idencabezado" value=""></input>
+                  <div style="display: none;" id="div_etiqueta_encabezado">
+                    <label for="etiqueta_encabezado">Etiqueta: </label>
+                  	<input type="text" id="etiqueta_encabezado" name="etiqueta_encabezado"></input>
+                  </div>
                   <textarea name="editor_encabezado" id="editor_encabezado" class="editor_tiny"> <?php
                   if($idencabezado) {
                     echo $contenido_enc[$idencabezado];
@@ -170,7 +177,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
                   </textarea>
                   </form>
 					<legend>Pie</legend><br>
-					<select name="pie" id="pie_pagina" onchange="actualizar_seleccion_pie(this)">
+					<select name="pie" id="pie_pagina">
 						<option value="0">Por favor Seleccione</option>
 						<?php
 						    $idpie = 0;
@@ -189,6 +196,10 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 					<div class="btn btn-mini btn-info adicionar_encabezado_pie" id="adicionar_pie" enlace="formatos/encabezadoadd.php?adicionar=1">Adicionar</div>
 
                   <form name="formulario_editor_pie" id="formulario_editor_pie" action="">
+                  <div style="display: none;" id="div_etiqueta_pie">
+                    <label for="etiqueta_epie">Etiqueta: </label>
+                  	<input type="text" id="etiqueta_epie" name="etiqueta_epie"></input>
+                  </div>
                   <textarea name="editor_pie" id="editor_pie" class="editor_tiny"> <?php
                   if($idpie) {
                       echo $contenido_enc[$idpie];
@@ -197,24 +208,30 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
                   </textarea>
                   </form>
                   <script type="text/javascript">
-                  	function actualizar_seleccion_encabezado(selectObject) {
-                      	var seleccionado = selectObject.value;
-                      	actualizar_editor_encabezado_pie("encabezado", seleccionado);
-                  	}
-                  	function actualizar_seleccion_pie(selectObject) {
-                      	var seleccionado = selectObject.value;
-                      	actualizar_editor_encabezado_pie("pie", seleccionado);
-                  	}
-                  	function actualizar_editor_encabezado_pie(editor, seleccionado) {
-                      	var editor = tinymce.get('editor_' + editor);
-                      	//var content = editor.getContent();
-                      	//content = content.replace(/{\$baseurl}/g, 'http://mydomain.com');
-                      	editor.setContent(encabezados[seleccionado]);
-                      	//console.log(encabezados[seleccionado]);
-                  	}
-                  	$(".adicionar_encabezado_pie").click(function(e){
+					var encabezados = <?php echo json_encode($contenido_enc); ?>;
+					var idencabezado = <?php echo $idencabezado;?>;
+
+                  	$("#adicionar_encabezado").click(function(e){
                   		var enlace=$(this).attr("enlace");
-                  		top.hs.htmlExpand(this, { objectType: 'iframe',width: 600, height: 450,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
+                  		$("#div_etiqueta_encabezado").toggle();
+                  		//$("#target").val($("#target option:first").val());
+                  		/*top.hs.htmlExpand(this, { objectType: 'iframe',width: 600, height: 450,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
+                  		top.hs.Expander.prototype.onAfterClose = function(obj) {
+                      		console.log(obj);
+                  		    alert("Hola");
+                  		};*/
+
+                  		});
+                  	$("#adicionar_pie").click(function(e){
+                  		var enlace=$(this).attr("enlace");
+                  		$("#div_etiqueta_pie").toggle();
+                  		//$("#target").val($("#target option:first").val());
+                  		/*top.hs.htmlExpand(this, { objectType: 'iframe',width: 600, height: 450,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
+                  		top.hs.Expander.prototype.onAfterClose = function(obj) {
+                      		console.log(obj);
+                  		    alert("Hola");
+                  		};*/
+
                   		});
                   </script>
 
@@ -460,10 +477,14 @@ $(".nav li").click(function(){
   }
 });
 $("#encabezado").change(function(){
+  	var seleccionado = this.value;
+  	var editor = tinymce.get('editor_encabezado');
+  	editor.setContent(encabezados[seleccionado]);
+
 	 $.ajax({
          type:'POST',
          url: "<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php",
-         data: "librerias=pantallas/generador/librerias_formato.php&funcion=actualizar_encabezado_pie&parametros="+$("#idformato").val()+";encabezado;"+$(this).val()+";1&rand="+Math.round(Math.random()*100000),
+         data: "librerias=pantallas/generador/librerias_formato.php&funcion=actualizar_encabezado_pie&parametros="+$("#idformato").val()+";encabezado;"+seleccionado+";1&rand="+Math.round(Math.random()*100000),
          success: function(html){
            if(html){
              var objeto=jQuery.parseJSON(html);
@@ -475,10 +496,14 @@ $("#encabezado").change(function(){
      	});
 });
 $("#pie_pagina").change(function(){
+  	var seleccionado = this.value;
+  	var editor = tinymce.get('editor_pie');
+  	editor.setContent(encabezados[seleccionado]);
+
 	 $.ajax({
         type:'POST',
         url: "<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php",
-        data: "librerias=pantallas/generador/librerias_formato.php&funcion=actualizar_encabezado_pie&parametros="+$("#idformato").val()+";pie;"+$(this).val()+";1&rand="+Math.round(Math.random()*100000),
+        data: "librerias=pantallas/generador/librerias_formato.php&funcion=actualizar_encabezado_pie&parametros="+$("#idformato").val()+";pie;"+seleccionado+";1&rand="+Math.round(Math.random()*100000),
         success: function(html){
           if(html){
             var objeto=jQuery.parseJSON(html);
