@@ -476,7 +476,7 @@ $(".nav li").click(function(){
     return false;
   }
 });
-$("#encabezado").change(function(){
+$(document).on("change","#encabezado",function(){
   	var seleccionado = this.value;
   	var editor = tinymce.get('editor_encabezado');
   	editor.setContent(encabezados[seleccionado]);
@@ -495,7 +495,7 @@ $("#encabezado").change(function(){
          }
      	});
 });
-$("#pie_pagina").change(function(){
+$(document).on("change","#pie_pagina",function(){
   	var seleccionado = this.value;
   	var editor = tinymce.get('editor_pie');
   	editor.setContent(encabezados[seleccionado]);
