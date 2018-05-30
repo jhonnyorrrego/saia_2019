@@ -15,6 +15,9 @@ if($_REQUEST['idformato']){
 	$formato=procesar_cadena_json($formato,array("cuerpo","ayuda","etiqueta"));
 	$cod_padre=$formato[0]["cod_padre"];
 	$categoria=$formato[0]["fk_categoria_formato"];
+	if($formato[0]["tiempo_autoguardado"]>3000){
+		$formato[0]["tiempo_autoguardado"]=$formato[0]["tiempo_autoguardado"]/60000;
+	}
 	$formato = json_encode($formato);
 	if($cod_padre){
 		$nombre_cod_padre=busca_filtro_tabla("","formato a","a.idformato=".$cod_padre,"",$conn);
@@ -277,6 +280,7 @@ $("document").ready(function(){
 		});
 	});
 	var formulario = $("#datos_formato");
+	var formato=jQuery.parseJSON('<?php echo($formato);?>');
 	$("#enviar_datos_formato").click(function(){
 		if(formulario.valid()){
 			$('#cargando_enviar').html("Procesando <i id='icon-cargando'>&nbsp;</i>");
@@ -286,7 +290,7 @@ $("document").ready(function(){
 			$.ajax({
         type:'POST',
         url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias_pantalla.php",
-        data: "ejecutar_datos_pantalla="+buttonAcep.attr('value')+"&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+'&'+formulario.serialize(),
+        data: "ejecutar_datos_pantalla="+buttonAcep.attr('value')+"&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+'&'+formulario.serialize()+"&nombre="+formato[0].nombre,
         success: function(html){
           if(html){
             var objeto=jQuery.parseJSON(html);
@@ -312,7 +316,6 @@ $("document").ready(function(){
 			$(".error").first().focus();
 		}
 	});
-	var formato=jQuery.parseJSON('<?php echo($formato);?>');
 	if(formato!==null && formato.numcampos){
     $('#nombre_formato').attr('value',formato[0].nombre);
     //$('#tabla_formato').attr('value',formato[0].tabla);

@@ -158,8 +158,9 @@ function load_pantalla_campos($idpantalla_campos, $tipo_retorno = 1, $generar_ar
 				unset($regs[0][$i]);
 			}
 		}
-		$ruta_componente = "pantallas/generador/" . $pantalla_campos[0]["etiqueta_html"] . "/procesar_componente.php";
+		$ruta_componente = "pantallas/generador/" . $pantalla_campos[0]["nombre_componente"] . "/procesar_componente.php";
 		if ($accion != '' && $accion != 'retorno_campo') {
+			
 			$texto = str_replace("{*clase_eliminar_pantalla_componente*}", "", $texto);
 			if (file_exists($ruta_db_superior . $ruta_componente)) {
 				foreach ($regs[0] as $key => $value) {
@@ -195,7 +196,7 @@ function load_pantalla_campos($idpantalla_campos, $tipo_retorno = 1, $generar_ar
 }
 
 function get_pantalla_campos($idpantalla_campos, $tipo_retorno = 1) {
-	$pantalla_campos = busca_filtro_tabla("A.*,B.nombre AS nombre_componente,B.etiqueta AS etiqueta_componente,B.componente,B.opciones,B.categoria,B.procesar,B.estado AS componente_estado,B.idpantalla_componente, B.eliminar, C.nombre AS pantalla,A.idcampos_formato AS idpantalla_campos", "campos_formato A,pantalla_componente B, formato C", "A.formato_idformato=C.idformato AND A.idcampos_formato=" . $idpantalla_campos . " AND A.etiqueta_html=B.nombre", "", $conn);
+	$pantalla_campos = busca_filtro_tabla("A.*,B.nombre AS nombre_componente,B.etiqueta AS etiqueta_componente,B.componente,B.opciones,B.categoria,B.procesar,B.estado AS componente_estado,B.idpantalla_componente, B.eliminar, C.nombre AS pantalla,A.idcampos_formato AS idpantalla_campos,B.etiqueta_html AS etiqueta_html_componente", "campos_formato A,pantalla_componente B, formato C", "A.formato_idformato=C.idformato AND A.idcampos_formato=" . $idpantalla_campos . " AND A.etiqueta_html=B.etiqueta_html", "", $conn);
 	$pantalla_campos["exito"] = 0;
 	if ($pantalla_campos["numcampos"]) {
 		$pantalla_campos["exito"] = 1;

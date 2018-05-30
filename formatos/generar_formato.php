@@ -716,7 +716,7 @@ class GenerarFormato {
                             break;
                         case "fecha":
                             // si la fecha es obligatoria, que valide que no se vaya con solo ceros
-                            if ($campos[$h]["tipo_dato"] == "DATE") {
+                            if (strtoupper($campos[$h]["tipo_dato"]) == "DATE") {
                                 $adicionales = str_replace("required", "required dateISO", $adicionales);
 
                                 $texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
@@ -732,7 +732,7 @@ class GenerarFormato {
 
                                 $fecha++;
                                 $indice_tabindex++;
-                            } else if ($campos[$h]["tipo_dato"] == "DATETIME") {
+                            } else if (strtoupper($campos[$h]["tipo_dato"]) == "DATETIME") {
                                 $adicionales = str_replace("required", "required dateISO", $adicionales);
                                 $texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                     <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td><td colspan="2" bgcolor="#F5F5F5"><font size="1,5" face="Verdana, Arial, Helvetica, sans-serif"><span ><input ' . $tabindex . ' type="text" readonly="true" name="' . $campos[$h]["nombre"] . '" ' . $adicionales . ' id="' . $campos[$h]["nombre"] . '" value="';
@@ -746,7 +746,7 @@ class GenerarFormato {
                                 $texto .= '"><?php selector_fecha("' . $campos[$h]["nombre"] . '","formulario_formatos","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?' . '></span></font>';
                                 $fecha++;
                                 $indice_tabindex++;
-                            } else if ($campos[$h]["tipo_dato"] == "TIME") {
+                            } else if (strtoupper($campos[$h]["tipo_dato"]) == "TIME") {
                                 $texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                     <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td><td colspan="2" bgcolor="#F5F5F5"><font size="1,5" face="Verdana, Arial, Helvetica, sans-serif"><span ><input ' . $tabindex . ' type="text"  name="' . $campos[$h]["nombre"] . '" ' . $adicionales . ' id="' . $campos[$h]["nombre"] . '" value="';
                                 if ($accion == "adicionar") {

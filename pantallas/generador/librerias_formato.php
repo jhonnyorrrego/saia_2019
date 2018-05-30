@@ -208,13 +208,6 @@ function adicionar_pantalla_campos_formato($idpantalla,$datos){
     $retorno["documento"]=phpmkr_insert_id();
     $retorno["documento_sql"]=$sql2;
   }
-	$campo_dependencia=busca_filtro_tabla("","campos_formato","nombre='dependencia' AND formato_idformato=".$idpantalla,"",$conn);
-	if(!$campo_dependencia["numcampos"]){
-		$sql2="INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(".$idpantalla.",'dependencia','Seleccione rol','varchar','255',1,'select iddependencia_cargo as id, concat(dependencia,concat('' - '',cargo)) as nombre from vfuncionario_dc where idfuncionario={*idfuncionario*} and estado_dc=1','a','Seleccione el rol a utilizar','','','select',0,1,'Seleccionar')";
-    phpmkr_query($sql2);
-    $retorno["dependencia"]=phpmkr_insert_id();
-    $retorno["dependencia_sql"]=$sql2;
-	}
 	$campo_formato=busca_filtro_tabla("","campos_formato","nombre='idft_".$datos["nombre_tabla"]."' AND formato_idformato=".$idpantalla,"",$conn);
 	if(!$campo_formato["numcampos"]){
 		$sql2="INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(".$idpantalla.",'id".$datos["nombre_tabla"]."','Identificador de formato','int','11',0,'','a','Identificador unico del formato (llave primaria)','','ai,pk','hidden',0,0,'id".$datos["nombre_tabla"]."')";
