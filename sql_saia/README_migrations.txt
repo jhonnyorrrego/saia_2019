@@ -29,6 +29,10 @@ Una vez modificada la clase que se genera, se debe ejecutar
 
 Opcionalmente se puede pasar el parámetro --write-sql para generar un .sql de las sentencias ejecutadas.
 
+DEVOLVER UNA MIGRACION
+
+../../vendor/bin/doctrine-migrations migrations:execute YYYYMMDDHHMMSS --down
+
 
 Resumen:
 
