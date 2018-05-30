@@ -21,8 +21,8 @@ include_once ($ruta_db_superior . "pantallas/documento/class_documento_elastic.p
 if (@$_REQUEST["archivo"] != '') {
     $archivo = $ruta_db_superior . str_replace("-", "/", $_REQUEST["archivo"]);
 }
-if(@$_REQUEST["crea"]){
-	$_REQUEST["genera"]=$_REQUEST["crea"];
+if (@$_REQUEST["crea"]) {
+    $_REQUEST["genera"] = $_REQUEST["crea"];
 }
 if (@$_REQUEST["genera"]) {
     $accion = $_REQUEST["genera"];
@@ -37,8 +37,11 @@ if (@$_REQUEST["genera"]) {
             $redireccion = $archivo;
         }
     }
-    if($_REQUEST["llamado_ajax"] && $accion!="buscar"){
-    	echo(json_encode(array("exito"=>$generar->exito,"mensaje"=>$generar->mensaje)));
+    if ($_REQUEST["llamado_ajax"] && $accion != "buscar") {
+        echo (json_encode(array(
+            "exito" => $generar->exito,
+            "mensaje" => $generar->mensaje
+        )));
     }
     redirecciona($redireccion);
 }
@@ -52,18 +55,18 @@ class GenerarFormato {
     private $archivo;
 
     private $incluidos;
-    
+
     public $exito;
-    
-    public $mensaje; 
+
+    public $mensaje;
 
     public function __construct($idformato, $accion, $archivo = '') {
         $this->idformato = $idformato;
         $this->accion = $accion;
         $this->archivo = $archivo;
         $this->incluidos = array();
-        $this->exito =0;
-        $this->mensaje="Existe un error al generar el formato ".$accion." con id ".$idformato;
+        $this->exito = 0;
+        $this->mensaje = "Existe un error al generar el formato " . $accion . " con id " . $idformato;
     }
 
     public function ejecutar_accion() {
@@ -104,8 +107,11 @@ class GenerarFormato {
                 $generar = new GenerarBuscar($this->idformato, "buscar");
                 $generar->crear_formato_buscar();
                 $redireccion = "funciones_formatolist.php?idformato=" . $this->idformato;
-                if($_REQUEST["llamado_ajax"]){
-                	echo(json_encode(array("exito"=>$generar->exito,"mensaje"=>$generar->mensaje)));
+                if ($_REQUEST["llamado_ajax"]) {
+                    echo (json_encode(array(
+                        "exito" => $generar->exito,
+                        "mensaje" => $generar->mensaje
+                    )));
                 }
                 break;
             case "eliminar":
@@ -143,13 +149,12 @@ class GenerarFormato {
         $formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $this->idformato, "", $conn);
         if ($formato["numcampos"]) {
             $resp = $conn->formato_generar_tabla($this->idformato, $formato);
-            if($resp["estado"]=="OK"){
-            	$this->exito=1;
+            if ($resp["estado"] == "OK") {
+                $this->exito = 1;
+            } else {
+                $this->exito = 0;
             }
-            else{
-            	$this->exito=0;
-            }
-            $this->mensaje=$resp["mensaje"];
+            $this->mensaje = $resp["mensaje"];
             alerta_formatos($resp["mensaje"]);
         } else {
             alerta_formatos("No es posible Generar la tabla para el Formato");
@@ -258,28 +263,48 @@ class GenerarFormato {
             for ($i = 0; $i < $funciones["numcampos"]; $i++) {
                 $ruta_orig = "";
                 // saco el primer formato de la lista de la funcion (formato inicial)
-                $formato_orig = $funciones[0]["formato_idformato"];
-                if ($formato_orig != $this->idformato) { // busco el nombre del formato inicial
+                $form_origen = busca_filtro_tabla("formato_idformato", "funciones_formato_enlace", "funciones_formato_fk=" . $funciones[$i]["funciones_formato_fk"], "idfunciones_formato_enlace asc", $conn);
+                if ($form_origen["numcampos"]) {
+                    $formato_orig = $form_origen[0]["formato_idformato"];
+                }
+
+                if ($formato_orig != $this->idformato && $funciones[$i]["ruta"] == "funciones.php") { // busco el nombre del formato inicial
+                    $dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
+                    if ($dato_formato_orig["numcampos"]) {
+                        // si el archivo existe dentro de la carpeta del archivo inicial
+                        if (is_file($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+                            $include_formato .= incluir("../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
+                        } elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
+                            $include_formato .= incluir("../" . $funciones[$i]["ruta"], "librerias");
+                        } else {
+                            alerta("Hay funciones vinculadas al archivo (" . $funciones[$i]["ruta"] . ") => " . $funciones[$i]["nombre_funcion"] . ", el archivo no se ha encontrado");
+                        }
+                    }
+                } else if ($formato_orig != $this->idformato) { // busco el nombre del formato inicial
                     $dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
                     if ($dato_formato_orig["numcampos"] && ($dato_formato_orig[0]["nombre"] != $formato[0]["nombre"])) {
                         $eslibreria = strpos($funciones[$i]["ruta"], "../librerias/");
                         if ($eslibreria === false) {
                             $eslibreria = strpos($funciones[$i]["ruta"], "../class_transferencia");
                         }
-                        // si el archivo existe dentro de la carpeta del archivo inicial
-                        if (is_file(FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]) && $eslibreria === false) {
-                            $include_formato .= $this->incluir("../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
-                        } elseif (is_file(FORMATOS_CLIENTE . $funciones[$i]["ruta"]) && $eslibreria === false) { // si el archivo existe en la ruta especificada partiendo de la raiz
-                            $include_formato .= $this->incluir("../" . $funciones[$i]["ruta"], "librerias");
-                        } else if ($eslibreria === false) { // si no existe en ninguna de las dos
-                                                            // trato de crearlo dentro de la carpeta del formato actual
-                            alerta_formatos("Las funciones del Formato " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"] . " son requeridas  no se han encontrado");
-                            if (crear_archivo(FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
-                                $include_formato .= $this->incluir($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
-                            } else {
-                                alerta_formatos("No es posible generar el archivo " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+
+                        if (!$eslibreria) {
+                            if (is_file(FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+                                $include_formato .= $this->incluir("../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
+                            } elseif (is_file(FORMATOS_CLIENTE . $funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
+                                $include_formato .= $this->incluir("../" . $funciones[$i]["ruta"], "librerias");
+                            } else { // si no existe en ninguna de las dos
+                                     // trato de crearlo dentro de la carpeta del formato actual
+                                alerta_formatos("Las funciones del Formato " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"] . " son requeridas  no se han encontrado");
+                                if (crear_archivo(FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
+                                    $include_formato .= $this->incluir($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
+                                } else {
+                                    alerta_formatos("No es posible generar el archivo " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+                                }
                             }
                         }
+
+                        // si el archivo existe dentro de la carpeta del archivo inicial
                     }
                 } else { // $ruta_orig=$formato[0]["nombre"];
                          // si el archivo existe dentro de la carpeta del formato actual
@@ -317,20 +342,20 @@ class GenerarFormato {
             $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $contenido);
             if ($mostrar !== false) {
                 notificaciones("Formato mostrar Creado con exito por favor verificar la carpeta " . dirname($mostrar), "success", 2000);
-                $this->exito=1;
-                $this->mensaje="Formato mostrar Creado con exito por favor verificar la carpeta " . dirname($mostrar);
-		  		return(true);
+                $this->exito = 1;
+                $this->mensaje = "Formato mostrar Creado con exito por favor verificar la carpeta " . dirname($mostrar);
+                return (true);
             } else {
                 notificaciones("Error al crear el archivo " . dirname($mostrar), "error", 5000);
-                $this->exito=0;
-                $this->mensaje="Error al crear el archivo";
+                $this->exito = 0;
+                $this->mensaje = "Error al crear el archivo";
             }
         } else {
             notificaciones("Formato NO encontrado ", "error", 5000);
-            $this->exito=0;
-            $this->mensaje="Formato no encontrado";
+            $this->exito = 0;
+            $this->mensaje = "Formato no encontrado";
         }
-	return(false);
+        return (false);
     }
 
     /*
@@ -380,7 +405,9 @@ class GenerarFormato {
                     if (array_key_exists($valor[0], $l1tablas)) {
                         array_push($l1tablas[$valor[0]], $valor[1]);
                     } else {
-                        $l1tablas[$valor[0]] = array($valor[1]);
+                        $l1tablas[$valor[0]] = array(
+                            $valor[1]
+                        );
                     }
                 }
             } else
@@ -511,14 +538,14 @@ class GenerarFormato {
                 } else
                     alerta_formatos("El modulo Formatos No existe por favor insertarlo a la tabla modulos");
                 alerta_formatos("Vista Creada con exito por favor verificar la carpeta " . dirname($mostrar));
-                $this->exito=1;
-                $this->mensaje="Vista Creada con exito por favor verificar la carpeta " . dirname($mostrar);
+                $this->exito = 1;
+                $this->mensaje = "Vista Creada con exito por favor verificar la carpeta " . dirname($mostrar);
                 return (TRUE);
             }
         } else {
             alerta_formatos("No es posible generar el Formato");
-            $this->exito=0;
-            $this->mensaje="No es posible generar la Vista del formato";
+            $this->exito = 0;
+            $this->mensaje = "No es posible generar la Vista del formato";
         }
     }
 
@@ -647,7 +674,10 @@ class GenerarFormato {
                 if ($campos[$h]["banderas"] != "") {
                     $bandera_unico = strpos("u", $campos[$h]["banderas"]);
                     if ($bandera_unico !== false) {
-                        array_push($unico, array($campos[$h]["nombre"], $campos[$h]["idcampos_formato"]));
+                        array_push($unico, array(
+                            $campos[$h]["nombre"],
+                            $campos[$h]["idcampos_formato"]
+                        ));
                         $obligatorio = 'obligatorio="obligatorio"';
                         $obliga = "(*)";
                     }
@@ -1511,20 +1541,20 @@ class GenerarFormato {
             $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_" . $accion], $contenido);
             if ($mostrar !== false) {
                 notificaciones("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar), "success", 2000);
-                $this->exito=1;
-                $this->mensaje="Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar);
-				return(true);
+                $this->exito = 1;
+                $this->mensaje = "Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar);
+                return (true);
             } else {
                 notificaciones("Error al crear el archivo " . dirname($mostrar), "error", 5000);
-                $this->exito=0;
-                $this->mensaje="Error al crear el archivo " . dirname($mostrar);
-			return(false);
+                $this->exito = 0;
+                $this->mensaje = "Error al crear el archivo " . dirname($mostrar);
+                return (false);
             }
         } else {
-        	$this->exito=0;
-        	$this->mensaje="Formato No encontrado";
+            $this->exito = 0;
+            $this->mensaje = "Formato No encontrado";
             notificaciones("Formato NO encontrado ", "error", 5000);
-			return(false);
+            return (false);
         }
     }
 
@@ -2040,9 +2070,9 @@ class GenerarFormato {
         $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/buscar_" . $formato[0]["nombre"] . ".php", $contenido);
         if ($mostrar != "") {
             alerta_formatos("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar));
-            $this->exito=1;
-            $this->mensaje="Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar);
-			return(true);
+            $this->exito = 1;
+            $this->mensaje = "Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar);
+            return (true);
         }
     }
 
@@ -2080,9 +2110,21 @@ class GenerarFormato {
      * </Clase>
      */
     public function generar_comparacion($tipo, $nombre) {
-        $listado_like = array("Similar" => "LIKE|%|%", "Inicia Con" => "LIKE|%|@", "Finaliza Con" => "LIKE|@|%");
-        $listado_compara = array("Igual" => "=|@|@", "Menor" => "-|@|@", "Mayor" => "+|@|@", "Diferente" => "!|@|@");
-        $listado_arbol = array("Alguno" => "or", "Todos" => "and");
+        $listado_like = array(
+            "Similar" => "LIKE|%|%",
+            "Inicia Con" => "LIKE|%|@",
+            "Finaliza Con" => "LIKE|@|%"
+        );
+        $listado_compara = array(
+            "Igual" => "=|@|@",
+            "Menor" => "-|@|@",
+            "Mayor" => "+|@|@",
+            "Diferente" => "!|@|@"
+        );
+        $listado_arbol = array(
+            "Alguno" => "or",
+            "Todos" => "and"
+        );
         echo $tipo . " " . $nombre . "<br />";
         $texto = '<td class="encabezado">&nbsp;';
         $listado = array();
