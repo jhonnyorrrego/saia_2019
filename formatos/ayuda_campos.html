@@ -12,19 +12,13 @@
 			3=>Otro (se debe sacar el dato) 4=>Sale de la tabla enviada a
 			test_serie.php?tabla=nombre_tabla 5=>rol)</li>
 	</ul>
-	Ej:
-	<a href="JavaScript:retornar_valor('../../test_funcionario.php?rol=1;1;0;1;1;0;0')">Arbol
-		de funcionarios(rol)</a>
-	<a href="JavaScript:retornar_valor('../../test_serie.php?tabla=dependencia&estado=1;1;0;1;1;0;2')">Arbol
-		de dependencias</a>
+	Ej: <a href="JavaScript:retornar_valor('../../test_funcionario.php?rol=1;1;0;1;1;0;0')">Arbol de funcionarios(rol)</a>
+	<a href="JavaScript:retornar_valor('../../test_serie.php?tabla=dependencia&estado=1;1;0;1;1;0;2')">Arbol de dependencias</a>
 	<br>
 	<h3>Boton de Selecci&oacute;n, Cuadro de Chequeo, Lista Deplegable</h3>
 	<ul>
-		<li>Est&aacute;tico: Lista de valores
-			(guardar,mostrar;guardar2,mostrar2...) 0,No;1,Si</li>
-		<li>Din&aacute;mico: Consulta sql (Select col1 as id,col2 as
-			nombre from tabla1 order by nombre) se guarda el id y se muestra el
-			nombre</li>
+		<li>Est&aacute;tico: Lista de valores (guardar,mostrar;guardar2,mostrar2...) 0,No;1,Si</li>
+		<li>Din&aacute;mico: Consulta sql (Select col1 as id,col2 as nombre from tabla1 order by nombre) se guarda el id y se muestra el nombre</li>
 	</ul>
 	<h3>Select Dependiente</h3>
 	<ul>
@@ -36,8 +30,7 @@
 	</ul>
 	<h3>Area de Texto</h3>
 	<ul>
-		<li>Tipo de componente: avanzado, basico, formatos, noeditor,
-			buscador</li>
+		<li>Tipo de componente: avanzado, basico, formatos, noeditor, buscador</li>
 	</ul>
 	<h3>Autocompletar</h3>
 	El valor debe ser una cadena json con los par&aacute;metros:
@@ -70,11 +63,8 @@
 	<ul>
 		<li>Tipo de componente: unico o mutiple</li>
 		<li>Campos con autocompletar: nombre,identificacion</li>
-		<li>Campos normales:
-			identificacion,cargo,empresa,direccion,telefono,email,titulo,ciudad</li>
-		<li>Funci&oacute;n que se va a usar para mostrar los datos en
-			pantalla: no es obligatorio, si se llena la funci&oacute;n debe
-			existir en el archivo formatos/librerias/funciones_ejecutor.php</li>
+		<li>Campos normales: identificacion,cargo,empresa,direccion,telefono,email,titulo,ciudad</li>
+		<li>Funci&oacute;n que se va a usar para mostrar los datos en pantalla: no es obligatorio, si se llena la funci&oacute;n debe existir en el archivo formatos/librerias/funciones_ejecutor.php</li>
 	</ul>
 	Si se deja vacio los valores por defecto son los usados por la carta:
 	multiple@nombre,identificacion@cargo,empresa,direccion,telefono,email,titulo,ciudad
@@ -85,9 +75,9 @@
 	</ul>
 	<h3>Archivo</h3>
 	<ul>
-		<li>Extensiones aceptadas: extensiones separadas por pipe "|" Ej:
-			xls|doc|pdf|jpg</li> Si no se llena se toman las establecidas en la
-		configuraci&oacute;n
+<li>Extensiones aceptadas: extensiones separadas por pipe "|" Ej: xls|doc|pdf|jpg</li>
+<li>Tipo: "unico" o "multiple" Ej: xls|doc|pdf|jpg@unico</li>
+Si no se llena se toman las establecidas en la configuraci&oacute;n
 	</ul>
 	<h3>Lista Num&eacute;rica</h3>
 	<ul>
