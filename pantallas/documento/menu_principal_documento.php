@@ -57,7 +57,7 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
 	    $campo_descripcion="id".$formato[0]["nombre_tabla"];
 	}
 	$papas=busca_filtro_tabla("id".$formato[0]["nombre_tabla"]." AS llave, ".$campo_descripcion." AS etiqueta ,'".$formato[0]["nombre_tabla"]."' AS nombre_tabla",$formato[0]["nombre_tabla"],"documento_iddocumento=".$iddoc,"id".$formato[0]["nombre_tabla"]." ASC",$conn);
-	
+
 	if($papas["numcampos"]){
 	    $iddoc2=$formato[0]["idformato"]."-".$papas[0]["llave"]."-id".$formato[0]["nombre_tabla"];
 	    $llave_formato=$formato[0]["idformato"]."-id".$formato[0]["nombre_tabla"]."-".$papas[0]["llave"]."-".$iddocumento;
@@ -73,7 +73,7 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
     }
     else{
       $tipo_pagina="pantallas/documento/informacion_resumen_documento.php?iddoc=".$iddoc."&no_seleccionar=1";
-      $dropdown_menu=' position: fixed; top: 35; left: 0px; ';  
+      $dropdown_menu=' position: fixed; top: 35; left: 0px; ';
     }
 	$datos_admin=botones_administrativos_menu($iddoc);
     echo(librerias_acciones_kaiten());
@@ -97,20 +97,20 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
               	<div class="btn-group pull-left btn-under">
               		<!-- a href="<?php echo($ruta_db_superior.$tipo_pagina); ?>" class="kenlace_saia_propio" enlace="<?php echo($tipo_pagina); ?>" destino="_centro">
                     <button type="button" class="btn btn-mini">
-                      
+
                         <i class="icon-acciones_menu_mostrar"></i>
-                      
+
                     </button>
                    </a -->
                    <?php
                    if($_SESSION["tipo_dispositivo"]=="movil"){
                    ?>
                    <button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
-                      
+
                         <i class="icon-acciones_menu_mostrar"></i>
-                      
+
                     </button>
-                   
+
                    <ul class="dropdown-menu">
                         <li>
                         	<div class="tab-pane active" id="arbol">
@@ -123,9 +123,9 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
                     <?php }else{?>
               		<a class="kenlace_saia_propio enlace_home_documento"  destino="_centro">
                     <button type="button" class="btn btn-mini">
-                      
+
                         <i class="icon-acciones_menu_mostrar"></i>
-                      
+
                     </button>
                    </a>
                     <?php }?>
@@ -137,9 +137,9 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
 												<?php if($_SESSION["tipo_dispositivo"]!="movil"){ ?>
 												redirecciona_home_documento(iddoc,cod_padre);
 												<?php } ?>
-											});	
+											});
 										});
-										
+
 										var item="<?php echo($llave_formato);?>";
 										function redirecciona_home_documento(iddoc,cod_padre){
 											if(cod_padre!='' && cod_padre!='0'){
@@ -150,13 +150,13 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
 													window.parent.parent.frames[0].location="<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
 												}else if(window.parent.parent.frames[2].frameElement.name=='centro'){
 													window.parent.parent.frames[2].location="<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
-												}					  
+												}
 											}else{
-												window.open("<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+iddoc,"arbol_formato");				
-											}              			
+												window.open("<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+iddoc,"arbol_formato");
+											}
 										}
-                   		
-                   		
+
+
                    		<?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
                    		var browserType;
                    	  if (document.layers) {browserType = "nn4";}
@@ -269,7 +269,7 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
                    	        tree2.findItem(papa);
                    	      }
                    	 <?php } ?>
-                   </script>               
+                   </script>
                 </div>
                 <div class="btn-group pull-left btn-under">
                     <button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
@@ -495,10 +495,10 @@ function permisos_modulo_menu_intermedio($iddoc, $modulo_padre,$lista,$target="_
             default:
                 break;
         }
-        
+
         $datos_modulos=$modulos_documentos_anulados;
     }
-    
+
     $permiso=new PERMISO();
     $modulo=  busca_filtro_tabla("", "modulo", "nombre IN ('".implode("','",$datos_modulos)."')", "orden", $conn);
 
@@ -506,7 +506,7 @@ function permisos_modulo_menu_intermedio($iddoc, $modulo_padre,$lista,$target="_
       $ok=$permiso->acceso_modulo_perfil($modulo[$i]["nombre"],1);
       if($ok || usuario_actual('login')=='cerok'){
       	$modulo[$i]["enlace"]=str_replace('@rand@',rand(0,1000),$modulo[$i]["enlace"]);
-				
+
 				if($modulo[$i]["nombre"]=="eliminar_borrador" && ($documento[0]["estado"]!="ACTIVO" || $documento[0]["ejecutor"]!=$funcionario)){
 					continue;
 				}
@@ -525,7 +525,8 @@ function permisos_modulo_menu_intermedio($iddoc, $modulo_padre,$lista,$target="_
         }
         if($lista["tipo"]==2){
           //Menu listado
-          $texto.='<li><a href="'.$ruta_db_superior.$dir.'" class="kenlace_saia_propio" enlace="'.$dir.'" destino="'.$target.'"><i class="icon-'.$modulo[$i]["nombre"].'"></i> '.$modulo[$i]["etiqueta"].'</a></li>';
+          //$texto.='<li><a href="'.$ruta_db_superior.$dir.'" class="kenlace_saia_propio" enlace="'.$dir.'" destino="'.$target.'"><i class="icon-'.$modulo[$i]["nombre"].'"></i> '.$modulo[$i]["etiqueta"].'</a></li>';
+          $texto.='<li><a href="'.$ruta_db_superior.$dir.'" class="" enlace="'.$dir.'" destino="'.$target.'"><i class="icon-'.$modulo[$i]["nombre"].'"></i> '.$modulo[$i]["etiqueta"].'</a></li>';
         }
         else if($lista["tipo"]==1){
           //Menu rapido
