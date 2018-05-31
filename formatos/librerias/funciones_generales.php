@@ -1946,22 +1946,18 @@ function validar_valor_campo($campo) {
       }else if($desc[0]["nombre"]=='memorando'){
       	include_once($ruta_db_superior.FORMATOS_CLIENTE."memorando/funciones.php");
         $radicado=strip_tags(formato_radicado_interno($desc[0]["idformato"],$_REQUEST["anterior"],1));
-        return ("Respondiendo a: " . str_replace("<br />", " ", $desc[0]["descripcion"]) . ". Radicado No." . $radicado);
+        return ("Respondiendo a: " . str_replace("<br />", " ", strip_tags($desc[0]["descripcion"])) . ". Radicado No." . $radicado);
       }else if($desc[0]["nombre"]=='carta'){
       	include_once($ruta_db_superior.FORMATOS_CLIENTE."carta/funciones.php");
         $radicado=strip_tags(formato_radicado_enviada($desc[0]["idformato"],$_REQUEST["anterior"],1));
-        return ("Respondiendo a: " . str_replace("<br />", " ", $desc[0]["descripcion"]) . ". Radicado No." . $radicado);
+        return ("Respondiendo a: " . str_replace("<br />", " ", strip_tags($desc[0]["descripcion"])) . ". Radicado No." . $radicado);
       }else{
-        return ("Respondiendo a: " . str_replace("<br />", " ", $desc[0]["descripcion"]) . ". Radicado No." . $desc[0]["numero"]);
+        return ("Respondiendo a: " . str_replace("<br />", " ", strip_tags($desc[0]["descripcion"])) . ". Radicado No." . $desc[0]["numero"]);
       }
     }
 	} elseif($campos["numcampos"]) {
 		if($campos[0]["predeterminado"] != "")
 			return ($campos[0]["predeterminado"]);
-		/*
-		 * elseif($campos[0]["etiqueta_html"]<>"textarea")
-		 * return($campos[0]["valor"]);
-		 */
 	} else
 		return ("");
 }

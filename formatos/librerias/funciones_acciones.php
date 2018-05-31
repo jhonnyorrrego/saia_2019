@@ -97,17 +97,16 @@ if(!$datos_funcion_accion["numcampos"] && $datos_accion["numcampos"]>0&&$datos_f
   $sql="INSERT INTO funciones_formato_accion(accion_idaccion,formato_idformato,idfunciones_formato,momento) VALUES(";
   $sql.=$idaccion.",".$idformato.",".$idfunciones_formato.",'".$momento."')";
   $res=phpmkr_query($sql,$conn);
-}
-else if($datos_funcion_accion["numcampos"]){
+} else if($datos_funcion_accion["numcampos"]){
   alerta("La Funcion ya se encuentra asiganda al formato");
   return(false);
-}
-else{
+} else{
   alerta("Los parametros para asignar la asignacion son incorrectos");
   return(false);
 }
 return(true);
 }
+
 /*<Clase>
 <Nombre>modificar_funciones_accion</Nombre>
 <Parametros>$idaccion:id de la accion;$idformato:id del formato;$idfunciones_formato:id de la funci�n;$momento:nombre del momento;$estado:activo o inactivo;$accion_funcion:id de registro a modificar</Parametros>
@@ -136,11 +135,11 @@ if($accion_funcion){
     phpmkr_query($sql,$conn);
     return(true);
   }
-}
-else{
+} else{
   return(false);
 }
 }
+
 /*<Clase>
 <Nombre>eliminar_funciones_accion</Nombre>
 <Parametros>$idaccion:id de la accion;$idformato:id del formato;$idfunciones_formato:id de la funci�n;$momento:nombre del momento;$estado:activo o inactivo;$accion_funcion:id de registro a modificar</Parametros>
@@ -157,12 +156,12 @@ if($accion_funcion){
     $sql="DELETE FROM funciones_formato_accion WHERE idfunciones_formato_accion=".$accion_funcion;
     phpmkr_query($sql,$conn);
     return(true);
-}
-else{
+} else{
   alerta("No ha sido posible eliminar la asignacion");
   return(false);
 }
 }
+
 /*<Clase>
 <Nombre>ejecutar_funcion</Nombre>
 <Parametros>$nombre_funcion:nombre de la funci�n a ejecutar;$ubicacion:ruta del archivo que la contiene;$parametros:parametros que se le deben pasar</Parametros>
@@ -182,6 +181,7 @@ function ejecutar_funcion($nombre_funcion,$ubicacion=NULL,$parametros=NULL){
   }
 return(false);
 }
+
 /*<Clase>
 <Nombre>ejecutar_acciones_formato</Nombre>
 <Parametros>$iddoc:id del documento;$idformato:id del formato;$listado_func:nombres de las funciones separadas por (|);$lista_parametros:lista de parametros separados por (,)</Parametros>
@@ -195,20 +195,20 @@ return(false);
 
 function ejecutar_acciones_formato($iddoc=NULL,$idformato=NULL,$listado_func=NULL,$lista_parametros=NULL){
 global $conn,$ruta_db_superior;
-if(!$listado_func)
+if(!$listado_func) {
   return FALSE;
+	}
 $ar_func=explode("|",$listado_func);
 $encontrado=0;
 
 	$ruta = null;
 for($i=0;$i<count($ar_func);$i++){
-  $datos_funcion=busca_filtro_tabla("","funciones_formato","idfunciones_formato=".$ar_func[$i],"",$conn);
+		$datos_funcion = busca_filtro_tabla("", "funciones_formato A", "idfunciones_formato=" . $ar_func[$i], "", $conn);
   $ruta = null;
   if($datos_funcion["numcampos"]){
     if(!function_exists($datos_funcion[0]["nombre_funcion"])){
       include_once($ruta_db_superior."class_transferencia.php");
-      $datos_formato=busca_filtro_tabla("","formato","idformato IN(".$datos_funcion[0]["formato"].")","",$conn);
-
+				$datos_formato = busca_filtro_tabla("f.nombre", "formato f,funciones_formato_enlace e", "f.idformato=e.formato_idformato and e.funciones_formato_fk=" . $ar_func[$i], "", $conn);
       for($j=0;$j<$datos_formato["numcampos"];$j++){
       	$ruta=$ruta_db_superior.FORMATOS_CLIENTE.$datos_formato[$j]["nombre"]."/".$datos_funcion[0]["ruta"];
         if(is_file($ruta)){
@@ -224,7 +224,6 @@ for($i=0;$i<count($ar_func);$i++){
     }
 
     if($encontrado){
-
       if($datos_funcion[0]["parametros"]==""){
         $datos_funcion[0]["parametros"]=$idformato.','.$iddoc;
 	  } else {
@@ -234,7 +233,9 @@ for($i=0;$i<count($ar_func);$i++){
     }
 	}
 }
+	return;
 }
+
 /*<Clase>
 <Nombre>llama_funcion_accion</Nombre>
 <Parametros>$iddoc:id del documento;$idformato:id del formato;$accion:acci�n relacionada;$momento:momento de ejecucion(anterior,posterior)</Parametros>
