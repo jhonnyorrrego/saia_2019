@@ -309,7 +309,8 @@ class GenerarFormato {
                         }
                     }
 
-                } else { // $ruta_orig=$formato[0]["nombre"];
+                }
+                 else { // $ruta_orig=$formato[0]["nombre"];
                          // si el archivo existe dentro de la carpeta del formato actual
                     if (is_file(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
                         $include_formato .= $this->incluir($funciones[$i]["ruta"], "librerias");
@@ -713,7 +714,6 @@ class GenerarFormato {
                             break;
                         case "textarea":
                             $valor = $campos[$h]["valor"];
-                            //$texto .= $valor;
                             $valor2 = explode("|", $campos[$h]["valor"]);
                             $nivel_barra = "";
                             if (count($valor2)) {
@@ -729,7 +729,6 @@ class GenerarFormato {
                                     $valor = "";
                                 }
                             }
-                            //$texto .= $valor;
                             if ($accion == "editar") {
                                 $valor = "<?php echo(mostrar_valor_campo('" . $campos[$h]["nombre"] . "',$this->idformato,$" . "_REQUEST['iddoc'])); ? >";
                             } else if ($valor == "") {
@@ -1069,7 +1068,6 @@ class GenerarFormato {
                                 $texto .= 'tree_' . $campos[$h]["nombre"] . '.enableCheckBoxes(1);
 									tree_' . $campos[$h]["nombre"] . '.enableRadioButtons(true);';
                             }
-
                             $texto .= 'tree_' . $campos[$h]["nombre"] . '.setOnLoadingStart(cargando_' . $campos[$h]["nombre"] . ');
 								tree_' . $campos[$h]["nombre"] . '.setOnLoadingEnd(fin_cargando_' . $campos[$h]["nombre"] . ');';
 
@@ -1158,10 +1156,10 @@ class GenerarFormato {
 										vector2=vector2.split(\",\");
 										for(m=0;m<vector2.length;m++) {
 											tree_" . $campos[$h]["nombre"] . ".setCheck(vector2[m],true);
-										}}\n";
+										}
+									}\n";
                             }
-                            $texto .= "--></script>";
-                            $texto .= '</td></tr>';
+                            $texto .= '</script></td></tr>';
                             $arboles++;
                             break;
                         case "item":
@@ -1242,11 +1240,11 @@ class GenerarFormato {
             $funciones = busca_filtro_tabla("A.*,B.funciones_formato_fk", "funciones_formato A, funciones_formato_enlace B", $wheref, " A.idfunciones_formato asc", $conn);
             for ($i = 0; $i < $funciones["numcampos"]; $i++) {
                 $ruta_orig = "";
-                $form_origen = busca_filtro_tabla("A.*,B.formato_idformato", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.funciones_formato_fk=" . $funciones[$i]["funciones_formato_fk"], "B.idfunciones_formato_enlace asc", $conn);
+                $form_origen = busca_filtro_tabla("formato_idformato", "funciones_formato_enlace", "funciones_formato_fk=" . $funciones[$i]["funciones_formato_fk"], "idfunciones_formato_enlace asc", $conn);
                 if ($form_origen["numcampos"]) {
                     $formato_orig = $form_origen[0]["formato_idformato"];
                 }
-                // si el formato actual es distinto del formato inicial
+
                 if ($formato_orig != $this->idformato && $funciones[$i]["ruta"] == "funciones.php") { // busco el nombre del formato inicial
                     $dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
                     if ($dato_formato_orig["numcampos"]) {
@@ -1400,7 +1398,8 @@ class GenerarFormato {
             if ($mascaras) {
                 $includes .= $this->incluir("../../js/jquery.maskedinput.js", "javascript");
                 $enmascarar .= '
-      <script type="text/javascript">jQuery.noConflict();(function($) {
+      <script type="text/javascript">
+      jQuery.noConflict();(function($) {
         $(function() {' . $lista_enmascarados . '});
        })(jQuery);
       </script>';
