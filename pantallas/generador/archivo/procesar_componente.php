@@ -29,32 +29,4 @@ function procesar_archivo($idcampo = '', $seleccionado = '', $accion = '', $camp
     return ($texto);
 }
 
-function procesar_opcion_buscar($idcampo = '', $seleccionado = '', $accion = '', $campo = '') {
-    global $conn;
-    $campo = '';
-    if ($idcampo == '') {
-        return ("<div class='alert alert-error'>No existe campo para procesar</div>");
-    }
-    if ($campo == '') {
-        $dato = busca_filtro_tabla("A.*", "campos_formato A", "A.idcampos_formato=" . $idcampo, "", $conn);
-        $campo = $dato[0];
-    }
-    if ($accion == "eliminar") {
-        return ($seleccionado);
-    }
-    if ($accion == "buscar") {
-        return (' <select style="width:90px;height:27px" name="bqsaiacondicion_' . $campo["nombre"] . '" id="bqsaiacondicion_' . $campo["nombre"] . '">
-    <option value="=">=</option>
-    <option value="in">in</option>
-    <option value="like">like</option>
-    <option value="like_total">like total</option>
-    </select>
-    <input type="hidden" name="bqsaiaenlace_' . $campo["nombre"] . '" id="bqsaiaenlace_' . $campo["nombre"] . '" value="+"/>
-    ');
-    }
-    // print_r($idcampo);
-    // print_r($seleccionado);
-    // print_r($accion);
-    // print_r($campo);
-}
 ?>
