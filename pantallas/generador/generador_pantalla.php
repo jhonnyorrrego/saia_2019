@@ -164,7 +164,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 					<div class="btn btn-mini btn-info adicionar_encabezado_pie" id="adicionar_encabezado" enlace="formatos/encabezadoadd.php?adicionar=1">Adicionar</div>
 
                   <form name="formulario_editor_encabezado" id="formulario_editor_encabezado" action="">
-                  <input type="hidden" name="idencabezado" value="idencabezado" value=""></input>
+                  <input type="hidden" name="idencabezado" id="idencabezado" value="<?php echo $idencabezado;?>"></input>
                   <div style="display: none;" id="div_etiqueta_encabezado">
                     <label for="etiqueta_encabezado">Etiqueta: </label>
                   	<input type="text" id="etiqueta_encabezado" name="etiqueta_encabezado"></input>
@@ -196,9 +196,11 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 					<div class="btn btn-mini btn-info adicionar_encabezado_pie" id="adicionar_pie" enlace="formatos/encabezadoadd.php?adicionar=1">Adicionar</div>
 
                   <form name="formulario_editor_pie" id="formulario_editor_pie" action="">
+                  <input type="hidden" name="idpie" id="idpie" value="<?php echo $idpie;?>"></input>
+
                   <div style="display: none;" id="div_etiqueta_pie">
-                    <label for="etiqueta_epie">Etiqueta: </label>
-                  	<input type="text" id="etiqueta_epie" name="etiqueta_epie"></input>
+                    <label for="etiqueta_pie">Etiqueta: </label>
+                  	<input type="text" id="etiqueta_pie" name="etiqueta_pie"></input>
                   </div>
                   <textarea name="editor_pie" id="editor_pie" class="editor_tiny"> <?php
                   if($idpie) {
@@ -211,28 +213,6 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 					var encabezados = <?php echo json_encode($contenido_enc); ?>;
 					var idencabezado = <?php echo $idencabezado;?>;
 
-                  	$("#adicionar_encabezado").click(function(e){
-                  		var enlace=$(this).attr("enlace");
-                  		$("#div_etiqueta_encabezado").toggle();
-                  		//$("#target").val($("#target option:first").val());
-                  		/*top.hs.htmlExpand(this, { objectType: 'iframe',width: 600, height: 450,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
-                  		top.hs.Expander.prototype.onAfterClose = function(obj) {
-                      		console.log(obj);
-                  		    alert("Hola");
-                  		};*/
-
-                  		});
-                  	$("#adicionar_pie").click(function(e){
-                  		var enlace=$(this).attr("enlace");
-                  		$("#div_etiqueta_pie").toggle();
-                  		//$("#target").val($("#target option:first").val());
-                  		/*top.hs.htmlExpand(this, { objectType: 'iframe',width: 600, height: 450,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
-                  		top.hs.Expander.prototype.onAfterClose = function(obj) {
-                      		console.log(obj);
-                  		    alert("Hola");
-                  		};*/
-
-                  		});
                   </script>
 
 				</div>
@@ -514,6 +494,38 @@ $(document).on("change","#pie_pagina",function(){
         }
     	});
 });
+
+	$("#adicionar_encabezado").click(function(e){
+  		var enlace=$(this).attr("enlace");
+  		$("#div_etiqueta_encabezado").toggle();
+  		$("#encabezado option[selected]").removeAttr("selected");
+        $("#idencabezado").val();
+
+
+  		//$("#encabezado").val();
+  		//$("#encabezado").prop('selectedIndex', -1);
+
+  	  	var editor = tinymce.get('editor_encabezado');
+  	  	editor.setContent("");
+
+  		/*top.hs.htmlExpand(this, { objectType: 'iframe',width: 600, height: 450,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
+  		top.hs.Expander.prototype.onAfterClose = function(obj) {
+      		console.log(obj);
+  		    alert("Hola");
+  		};*/
+
+  		});
+  	$("#adicionar_pie").click(function(e){
+  		var enlace=$(this).attr("enlace");
+  		$("#div_etiqueta_pie").toggle();
+  		//$("#target").val($("#target option:first").val());
+  		/*top.hs.htmlExpand(this, { objectType: 'iframe',width: 600, height: 450,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
+  		top.hs.Expander.prototype.onAfterClose = function(obj) {
+      		console.log(obj);
+  		    alert("Hola");
+  		};*/
+
+  		});
 
 $("#frame_tipo_listado").height(alto-125);
 $(".tab-pane").height(alto-50);

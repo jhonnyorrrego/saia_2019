@@ -13,7 +13,7 @@ include_once($ruta_db_superior."librerias_saia.php");
 
 function crear_contador($contador) {
 	global $conn;
-	
+
 	$cont = busca_filtro_tabla("*", "contador", "nombre LIKE '" . $contador . "'", "", $conn);
 	if(!$cont["numcampos"]) {
 		$sql = "INSERT INTO contador(consecutivo, nombre) VALUES(1,'" . $contador . "')";
@@ -26,7 +26,7 @@ function crear_contador($contador) {
 
 function generar_campo_flujo($idformato, $idflujo) {
 	$buscar_campo = busca_filtro_tabla("", "campos_formato A", "formato_idformato=" . $idformato . " AND nombre='idflujo'", "", $conn);
-	
+
 	if($buscar_campo["numcampos"] == 0) {
 		$campo = "INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, acciones, predeterminado, etiqueta_html, orden, valor) VALUES(" . $idformato . ",'idflujo', 'idflujo', 'VARCHAR', '255', 0, 'a,e,b', '" . $idflujo . "', 'select', 0, 'Select id,title as nombre from diagram order by nombre')";
 		// Se deja el comentario para la modificacion de los flujos
@@ -87,7 +87,7 @@ function vincular_funcion_digitalizacion($idformato) {
 		$idfunciones_formato_enlace = $buscar_funcion[0]["idfunciones_formato_enlace"];
 	}
 	// ---Vinculando funcion de validacion al digitalizar
-	
+
 	if ($idfunciones_formato_enlace) {
 		$buscar_funcion = busca_filtro_tabla("", "funciones_formato A", "nombre_funcion='validar_digitalizacion_formato'", "", $conn);
 		if (!$buscar_funcion["numcampos"]) {
@@ -106,7 +106,7 @@ function vincular_funcion_digitalizacion($idformato) {
 			$idfunciones_validar_enlace = phpmkr_insert_id();
 		}
 	}
-	
+
 	// Vinculando la accion de validar la digitalizar posterior a la accion correspondiente.
 	if(in_array("e", $x_banderas)) {
 		$accion = busca_filtro_tabla("", "accion", "nombre='aprobar'", "", $conn);
@@ -128,7 +128,7 @@ function vincular_campo_anexo($idformato) {
 	global $conn;
 	$formato = busca_filtro_tabla("", "formato", "idformato=" . $idformato, "", $conn);
 	$buscar_campo = busca_filtro_tabla("", "campos_formato A", "formato_idformato=" . $idformato . " AND nombre='anexo_formato'", "", $conn);
-	
+
 	if($buscar_campo["numcampos"] == 0) {
 		$campo = "INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, acciones, predeterminado, etiqueta_html, orden, valor) VALUES(" . $idformato . ",'anexo_formato', 'Anexos digitales', 'VARCHAR', '255', 0, 'a,e,b', '" . $idflujo . "', 'archivo', 0, '')";
 	} else {
@@ -168,7 +168,7 @@ function vincular_funciones_formato($libreria,$funcion){
 			}
 			else{
 				$retorno["mensaje"]="Error al vincular la funcion ".$nombre." al formato ".$sql2;
-				
+
 			}
 		}
 		else{
@@ -176,7 +176,7 @@ function vincular_funciones_formato($libreria,$funcion){
 				$sql3="UPDATE acciones='m,".$existe[0]["acciones"]."' WHERE idfunciones_formato=".$existe[0]["idfunciones_formato"];
 				phpmkr_query($sql3);
 				/*
-				 * TODO: Validar que las acciones queden vinculadas al mostrar 
+				 * TODO: Validar que las acciones queden vinculadas al mostrar
 				 * */
 				$retorno["exito"]=1;
 				$retorno["mensaje"]="Funcion vinculada con &eacute;xito";
@@ -196,7 +196,7 @@ function adicionar_pantalla_campos_formato($idpantalla,$datos){
    * Se garantiza que la serie ya existe y que siempre llega un valor para serie_idserie en datos
    * */
   if(!$campo_serie["numcampos"]){
-    $sql2="INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(".$idpantalla.",'serie_idserie','Tipo de documento','int','11',0,'','a,e','Tipo de documento','".$datos["serie_idserie"]."','','hidden',0,1,'Tipo documental')";  
+    $sql2="INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(".$idpantalla.",'serie_idserie','Tipo de documento','int','11',0,'','a,e','Tipo de documento','".$datos["serie_idserie"]."','','hidden',0,1,'Tipo documental')";
     phpmkr_query($sql2);
     $retorno["serie_idserie"]=phpmkr_insert_id();
     $retorno["serie_idserie_sql"]=$sql2;
@@ -216,20 +216,20 @@ function adicionar_pantalla_campos_formato($idpantalla,$datos){
 		$retorno["idformato_sql"]=$sql2;
 	}
 	return($retorno);
-}	
+}
 function eliminar_pantalla_campos_formato($idpantalla){
   $campo_serie=busca_filtro_tabla("","pantalla_campos","nombre='serie_idserie' AND pantalla_idpantalla=".$idpantalla,"",$conn);
   if($idpantalla){
     if($campo_serie["numcampos"]){
       $sql2="DELETE FROM pantalla_campos WHERE idpantalla=".$idpantalla." AND nombre='serie_idserie'";
-      phpmkr_query($sql2);    
+      phpmkr_query($sql2);
     }
     $campo_documento=busca_filtro_tabla("","pantalla_campos","nombre='documento_iddocumento' AND pantalla_idpantalla=".$idpantalla,"",$conn);
-    if($campo_documento["numcampos"]){ 
+    if($campo_documento["numcampos"]){
       $sql2="DELETE FROM pantalla_campos WHERE idpantalla=".$idpantalla." AND nombre='documento_iddocumento'";
-      phpmkr_query($sql2);    
+      phpmkr_query($sql2);
     }
-  }   
+  }
 }
 function actualizar_encabezado_pie($idformato,$tipo,$valor){
 	$retorno=array("exito"=>0);
@@ -249,7 +249,7 @@ function actualizar_encabezado_pie($idformato,$tipo,$valor){
 function actualizar_cuerpo_formato($idformato,$tipo_retorno){
 	$retorno=array("exito"=>0);
 	$retorno["mensaje"]="Existe un error al actualizar el cuerpo del formato";
-	if(@$_REQUEST["contenido"]){	
+	if(@$_REQUEST["contenido"]){
 		$sql="UPDATE formato set cuerpo='".$_REQUEST["contenido"]."' WHERE idformato=".$idformato;
 		phpmkr_query($sql);
 		$retorno["exito"]=1;
@@ -271,7 +271,7 @@ function verificar_nombre_formato($nombre,$tipo_retorno){
 	if (ereg("^[a-zA-Z0-9\_]{".$min_long_nombre.",".$max_long_nombre."}$", $nombre)) {
 		$retorno["exito"]=1;
 		$retorno["mensaje"]="El nombre del formato es correcto";
-	} 
+	}
 	else{
 		$retorno["exito"]=0;
 		$retorno["mensaje"]="En el nombre del formato solo son permitidos n&uacute;meros, letras y el gui&oacute;n bajo";
@@ -284,13 +284,13 @@ function verificar_nombre_formato($nombre,$tipo_retorno){
 		$retorno["exito"]=0;
 		$retorno["mensaje"]="El nombre del formato debe tener m&aacute;s de ".$min_long_nombre." y menos de ".$max_long_nombre." caracteres.";
 	}
-	
+
 	if ($tipo_retorno == 1)
 		echo (json_encode($retorno));
 	else {
 		return ($retorno);
 	}
-		
+
 }
 if (@$_REQUEST["ejecutar_libreria_formato"]) {
 	if (!@$_REQUEST["tipo_retorno"]) {
