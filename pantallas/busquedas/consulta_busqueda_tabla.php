@@ -88,26 +88,27 @@ font-size: 10px;
         <button class="btn kenlace_saia" titulo="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>" title="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>" conector="iframe" enlace="<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>">B&uacute;squeda &nbsp;</button>
       <?php
         }
+        $tiene_acciones = !empty($datos_busqueda[0]["acciones_seleccionados"]);
+        if($tiene_acciones) {
       ?>
-      <button class="btn dropdown-toggle" data-toggle="dropdown">Seleccionados &nbsp;
-        <span class="caret">
-        </span>&nbsp;
+      <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="acciones_sel">Seleccionados &nbsp;
+        <span class="caret"></span>
       </button>
-      <ul class="dropdown-menu" id='listado_seleccionados'>
+      <ul class="dropdown-menu" id='listado_seleccionados' aria-labelledby="acciones_sel">
         <!-- <li><a href="#"><div id="filtrar_seleccionados">Alert seleccionados</div></a></li>  -->
         <?php
-          if($datos_busqueda[0]["acciones_seleccionados"]!=''){
-            echo('<li class="nav-header">Acciones</li>');
+            //echo('<li class="nav-header">Acciones</li>');
           $acciones=explode(",",$datos_busqueda[0]["acciones_seleccionados"]);
           $cantidad=count($acciones);
           for($i=0;$i<$cantidad;$i++){
               echo($acciones[$i]());
           }
 
-          }
         ?>
       </ul>
-    <?php /*if(@$datos_busqueda[0]["enlace_adicionar"]){
+    <?php
+        }
+    /*if(@$datos_busqueda[0]["enlace_adicionar"]){
       ?>
         <button class="btn kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar</button></div></li>
       <?php

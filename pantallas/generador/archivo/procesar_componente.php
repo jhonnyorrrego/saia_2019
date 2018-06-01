@@ -26,6 +26,17 @@ function procesar_archivo($idcampo = '', $seleccionado = '', $accion = '', $camp
     } else {
         $texto = $campo["predeterminado"];
     }
+    $extensiones = ".jpg,.png";
+    $obligatoriedad = 0;
+    $multiple = "true";
+    $idelemento = "dz_campo_$idcampo";
+    $texto .= '<div id="' . $idelemento . '" class="saia_dz" data-nombre-campo="' . $campo["nombre"] . '" data-idcampo-formato="' . $idcampo . '" data-extensiones="' . $extensiones . '" data-multiple="' . $multiple . '">';
+    $texto .= '<div class="dz-message"><span>Arrastra el anexo hasta aqu&iacute;. </br> O si prefieres...</br></br> <span class="boton_upload">Elije un anexo para subir.</span> </span></div>';
+    if ($obligatoriedad) {
+        $texto .= '<input type="hidden" class="required" id="' . $campo["nombre"] . '" name="' . $campo["nombre"] . '" value="">';
+    }
+    $texto .= '</div>';
+
     return ($texto);
 }
 
