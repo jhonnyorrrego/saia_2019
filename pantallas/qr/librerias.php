@@ -135,4 +135,34 @@ function generar_qr_bin($datos, $matrixPointSize = 2, $errorCorrectionLevel = 'L
 		return false;
 	}
 }
+
+function generar_qr_datos($filename, $datos, $matrixPointSize = 2, $errorCorrectionLevel = 'L') {//utilizado en expediente y cajas => rotulos
+	global $ruta_db_superior;
+	$retorno = array(
+		"exito" => 0,
+		"msn" => ""
+	);
+	include_once ($ruta_db_superior . "phpqrcode/qrlib.php");
+	if (trim($datos)) {
+		$almacenamiento = new SaiaStorage(RUTA_QR);
+		$filename .= 'qr' . date('Y_m_d_H_m_s') . '.png';
+
+		$imagen = generar_qr_bin($datos, 3);
+		if ($imagen === false) {
+			$retorno["msn"] = "Error al intentar generar el QR";
+		} else {
+			$almacenamiento -> almacenar_contenido($filename, $imagen);
+			$ruta_qr = array(
+				"servidor" => $almacenamiento -> get_ruta_servidor(),
+				"ruta" => $filename
+			);
+			$retorno["ruta_qr"] = json_encode($ruta_qr);
+			$retorno["exito"] = 1;
+		}
+
+	} else {
+		$retorno["msn"] = "Falta los datos del QR";
+	}
+	return $retorno;
+}
 ?>

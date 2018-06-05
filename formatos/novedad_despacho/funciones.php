@@ -28,7 +28,7 @@ function cargar_items_radicacion($idformato,$iddoc){
 		}
 	}
 	
-	$registros=busca_filtro_tabla("b.descripcion,a.tipo_origen,a.estado_recogida,a.numero_distribucion,a.fecha_creacion,a.origen,a.tipo_origen,a.destino,a.tipo_destino,a.iddistribucion","distribucion a,documento b","a.documento_iddocumento=b.iddocumento AND a.iddistribucion in(".$cadena_items_seleccionados.")","",$conn);
+	$registros=busca_filtro_tabla("b.descripcion,a.tipo_origen,a.estado_recogida,a.numero_distribucion,".fecha_db_obtener("a.fecha_creacion","Y-m-d")." as fecha_creacion,a.origen,a.tipo_origen,a.destino,a.tipo_destino,a.iddistribucion","distribucion a,documento b","a.documento_iddocumento=b.iddocumento AND a.iddistribucion in(".$cadena_items_seleccionados.")","",$conn);
 	
 	$html="<td>
 		<table style='width:100%;border-collapse:collapse;border-color:#cac8c8;border-style:solid;border-width:1px;'  border='1'>
