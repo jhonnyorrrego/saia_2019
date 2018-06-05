@@ -1,16 +1,13 @@
 temporal*/**
-bpmn/bpmn/temp_bpmn/**
 html2ps/**/cache
 tcpdf/**/cache
-html2ps_release/**/cache
 phpqrcode/**/cache
 roundcubemail/temp/**
 roundcubemail/logs/**
 errores.txt
 .project
 .settings/
-pruebas_ruben
-pruebas_*
+prueba_*
 define.php
 define_*.php
 paginaadd.php

@@ -10,6 +10,7 @@ while ($max_salida > 0) {
 }
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
+include_once ($ruta_db_superior . "pantallas/qr/librerias.php");
 
 $cons_logo = busca_filtro_tabla("valor", "configuracion", "nombre='logo' and tipo='empresa'", "", $conn);
 if ($cons_logo["numcampos"]) {
@@ -31,32 +32,6 @@ if (@$_REQUEST["idcaja"]) {
 }
 if (@$_REQUEST["no_redireccionar"] == 1) {
 	$enlace = '';
-}
-
-function generar_qr_datos($filename, $datos, $matrixPointSize = 2, $errorCorrectionLevel = 'L') {
-	global $ruta_db_superior;
-	include_once ($ruta_db_superior . "phpqrcode/qrlib.php");
-	if ($datos) {
-		if (trim($datos) == '') {
-			return false;
-		} else {
-			$filename .= 'qr' . date('Y_m_d_H_m_s') . '.png';
-			ob_start();
-			QRcode::png($datos, false, $errorCorrectionLevel, $matrixPointSize, 0);
-			$imageString = ob_get_contents();
-			ob_end_clean();
-
-			$almacenamiento = new SaiaStorage(RUTA_QR);
-			$almacenamiento -> almacenar_contenido($filename, $imageString);
-			$ruta_qr = array(
-				"servidor" => $almacenamiento -> get_ruta_servidor(),
-				"ruta" => $filename
-			);
-			return $ruta_qr;
-		}
-	} else {
-		return false;
-	}
 }
 
 function obntener_niveles_dependencia_rotulo(&$array_dependencias, $iddependencia) {
@@ -95,13 +70,15 @@ function rotulo_caja($id){
 		$datos_qr = RUTA_INFO_QR . "info_qr_expediente.php?key_cripto=" . $codificada;
 		$ruta="caja/".$id."/";
 		$info_qr=generar_qr_datos($ruta,$datos_qr);
-		if($info_qr!==false){
-			$sql_documento_qr="UPDATE caja SET ruta_qr='".json_encode($info_qr)."' WHERE idcaja=".$id;
+		if($info_qr["exito"]){
+			$sql_documento_qr="UPDATE caja SET ruta_qr='".$info_qr["ruta_qr"]."' WHERE idcaja=".$id;
 			phpmkr_query($sql_documento_qr);
-			$qr_bin = StorageUtils::get_binary_file(json_encode($info_qr), false);
+			$qr_bin = StorageUtils::get_binary_file($info_qr["ruta_qr"], false);
 			if ($qr_bin !== false) {
 				$ruta_qr=$qr_bin;
 			}
+		}else{
+			notificaciones($info_qr["msn"],"error");
 		}
 	}	
 ?>
@@ -197,13 +174,15 @@ function rotulo_carpeta($id){
 		$datos_qr = RUTA_INFO_QR . "info_qr_expediente.php?key_cripto=" . $codificada;
 		$ruta="expediente/".$id."/";
 		$info_qr=generar_qr_datos($ruta,$datos_qr);
-		if($info_qr!==false){
-			$sql_documento_qr="UPDATE expediente SET ruta_qr='".json_encode($info_qr)."' WHERE idexpediente=".$id;
+		if($info_qr["exito"]){
+			$sql_documento_qr="UPDATE expediente SET ruta_qr='".$info_qr["ruta_qr"]."' WHERE idexpediente=".$id;
 			phpmkr_query($sql_documento_qr);
-			$qr_bin = StorageUtils::get_binary_file(json_encode($info_qr), false);
+			$qr_bin = StorageUtils::get_binary_file($info_qr["ruta_qr"], false);
 			if ($qr_bin !== false) {
 				$ruta_qr=$qr_bin;
 			}
+		}else{
+			notificaciones($info_qr["msn"],"error");
 		}
 	}
 ?>

@@ -72,7 +72,7 @@ function guardar_expedientes_add($idformato,$iddoc){
 		</td>";
 	}else if(@$_REQUEST['id_caja']){
 	    $ids_caja=$_REQUEST['id_caja'];
-        $expedientes=busca_filtro_tabla("A.nombre,A.idexpediente,fecha,indice_uno,indice_dos,indice_tres,fk_idcaja,serie_idserie","expediente A","A.fk_idcaja in(".$ids_caja.")","",$conn);
+        $expedientes=busca_filtro_tabla("A.nombre,A.idexpediente,".fecha_db_obtener("fecha","Y-m-d")." as fecha,indice_uno,indice_dos,indice_tres,fk_idcaja,serie_idserie","expediente A","A.fk_idcaja in(".$ids_caja.")","",$conn);
         $etiquetas=extrae_campo($expedientes,"nombre","");
         $idexpedientes=implode(',',extrae_campo($expedientes,"idexpediente","U"));
         $texto.="<td><ul><li>".implode("</li><li>",$etiquetas)."</li></ul>
@@ -81,7 +81,7 @@ function guardar_expedientes_add($idformato,$iddoc){
 	}else if(@$_REQUEST['iddoc']){
 	    $datos=busca_filtro_tabla("expediente_vinculado","ft_transferencia_doc","documento_iddocumento=".$_REQUEST['iddoc'],"",$conn);
 	    $ids=$datos[0]['expediente_vinculado'];
-	    $expedientes=busca_filtro_tabla("idexpediente,nombre,fecha,indice_uno,indice_dos,indice_tres,fk_idcaja,serie_idserie","expediente A","A.idexpediente in(".$ids.")","",$conn);
+	    $expedientes=busca_filtro_tabla("idexpediente,nombre,".fecha_db_obtener("fecha","Y-m-d")." as fecha,indice_uno,indice_dos,indice_tres,fk_idcaja,serie_idserie","expediente A","A.idexpediente in(".$ids.")","",$conn);
 		$etiquetas=extrae_campo($expedientes,"nombre","");
 		$texto.="<td><ul><li>".implode("</li><li>",$etiquetas)."</li></ul>
 		<input type='hidden' name='expediente_vinculado' id='expediente_vinculado' value='".$ids."'>
@@ -173,7 +173,7 @@ function expedientes_vinculados_funcion($idformato,$iddoc){
           	<td colspan="2" style="border:hidden">
           		OFICINA PRODUCTORA
           	</td>
-          	<td colspan="9" style="border-top:hidden;border-top:bottom;"></td>
+          	<td colspan="9" style="border-top:hidden;border-top:bottom;">'.mostrar_valor_campo('oficina_productora',$idformato,$iddoc,1).'</td>
           	<td>AÑO</td>
           	<td>MES</td>
           	<td>DIA</td>
