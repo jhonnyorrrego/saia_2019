@@ -53,7 +53,7 @@ function post_edit_pqrsf($idformato, $iddoc) {
 function enlace_llenar_datos_radicacion_rapida_pqrsf($idformato, $iddoc) {
 	global $conn,$datos;
 	$html="";
-	$datos = busca_filtro_tabla("idft_pqrsf,d.estado,".fecha_db_obtener("Y-m-d", "fecha_reporte")." as fecha_reporte", "ft_pqrsf ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "", $conn);
+	$datos = busca_filtro_tabla("idft_pqrsf,d.estado,".fecha_db_obtener("fecha_reporte","Y-m-d")." as fecha_reporte", "ft_pqrsf ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "", $conn);	
 	if($datos["numcampos"]){
 		if ($datos[0]['estado'] == 'INICIADO' && $_REQUEST["tipo"]!=5) {
 			$html = '<br><br><button class="btn btn-mini btn-warning" onclick="window.location=\'editar_pqrsf.php?no_sticker=1&iddoc=' . $iddoc . '&idformato=' . $idformato . '\';">Llenar datos</button>';
@@ -133,19 +133,9 @@ function validar_digitalizacion_formato_pqr($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
 	if(!isset($_REQUEST["no_redirecciona"])){
 		if ($_REQUEST["digitalizacion"] == 1) {
-			if (@$_REQUEST["iddoc"]) {
-				$iddoc = $_REQUEST["iddoc"];
-				$enlace = "ordenar.php?key=" . $iddoc . "&accion=mostrar&mostrar_formato=1";
-				abrir_url($ruta_db_superior . "paginaadd.php?target=_self&key=" . $iddoc . "&enlace=" . $enlace, '_self');
-			} else {
-				abrir_url($ruta_db_superior . "colilla.php?target=_self&key=" . $iddoc . "&enlace=paginaadd.php?key=" . $iddoc, '_self');
-			}
-		} elseif ($_REQUEST["digitalizacion"] == 2 && $_REQUEST['no_sticker'] == 1) {
-			abrir_url($ruta_db_superior . "formatos/radicacion_entrada/mostrar_radicacion_entrada.php?iddoc=" . $iddoc . "&idformato=" . $idformato, '_self');
-		} else if ($_REQUEST["digitalizacion"] == 2) {
-			if (@$_REQUEST["iddoc"]) {
-				$iddoc = $_REQUEST["iddoc"];
-			}
+			$enlace = "ordenar.php?key=" . $iddoc . "&accion=mostrar&mostrar_formato=1";
+			abrir_url($ruta_db_superior . "paginaadd.php?target=_self&key=" . $iddoc . "&enlace=" . $enlace, '_self');
+		}else if ($_REQUEST["digitalizacion"] == 0) {
 			$enlace = "ordenar.php?key=" . $iddoc . "&accion=mostrar&mostrar_formato=1";
 			abrir_url($ruta_db_superior . "colilla.php?target=_self&key=" . $iddoc . "&enlace=" . $enlace, '_self');
 		}
@@ -157,49 +147,47 @@ function validar_digitalizacion_formato_pqr($idformato, $iddoc) {
 function post_aprobar_pqrsf($idformato, $iddoc) {//es llamada desde el webservice
 	global $conn, $ruta_db_superior;
 	$ok = false;
+	vincular_distribucion_pqrsf($idformato, $iddoc);
 	if (!isset($_REQUEST["no_redirecciona"])) {
-		vincular_distribucion_pqrsf($idformato, $iddoc);
-		if (!isset($_REQUEST["radicacion_rapida"])) {
-			$anexos = array();
-			$anexos_pqrsf = busca_filtro_tabla("ruta,etiqueta", "anexos", "documento_iddocumento=" . $iddoc, "", $conn);
-			if ($anexos_pqrsf["numcampos"]) {
-				for ($i = 0; $i < $anexos_pqrsf["numcampos"]; $i++) {
-					$ruta_archivo = json_decode($anexos_pqrsf[$i]['ruta']);
-					if (is_object($ruta_archivo)) {
+		$anexos = array();
+		$anexos_pqrsf = busca_filtro_tabla("ruta,etiqueta", "anexos", "documento_iddocumento=" . $iddoc, "", $conn);
+		if ($anexos_pqrsf["numcampos"]) {
+			for ($i = 0; $i < $anexos_pqrsf["numcampos"]; $i++) {
+				$ruta_archivo = json_decode($anexos_pqrsf[$i]['ruta']);
+				if (is_object($ruta_archivo)) {
+					$anexos[] = $anexos_pqrsf[$i]['ruta'];
+				} else {
+					if (file_exists($ruta_db_superior . $anexos_pqrsf[$i]['ruta'])) {
 						$anexos[] = $anexos_pqrsf[$i]['ruta'];
-					} else {
-						if (file_exists($ruta_db_superior . $anexos_pqrsf[$i]['ruta'])) {
-							$anexos[] = $anexos_pqrsf[$i]['ruta'];
-						}
 					}
 				}
 			}
+		}
 
-			$ch = curl_init();
-			$fila = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/class_impresion.php?conexion_remota=1&iddoc=" . $iddoc . "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&usuario_actual=" . $_SESSION["usuario_actual"];
-			curl_setopt($ch, CURLOPT_URL, $fila);
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-			$contenido = curl_exec($ch);
-			curl_close($ch);
+		$ch = curl_init();
+		$fila = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/class_impresion.php?conexion_remota=1&iddoc=" . $iddoc . "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&usuario_actual=" . $_SESSION["usuario_actual"];
+		curl_setopt($ch, CURLOPT_URL, $fila);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		$contenido = curl_exec($ch);
+		curl_close($ch);
 
-			$datos = busca_filtro_tabla("d.numero,d.pdf,ft.email", "ft_pqrsf ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "", $conn);
-			if ($datos[0]["email"] != "") {
-				if ($datos[0]["pdf"] != "") {
-					$ruta_archivo = json_decode($datos[0]["pdf"]);
-					if (is_object($ruta_archivo)) {
-						$anexos[] = $datos[0]["pdf"];
-					} else {
-						if (file_exists($ruta_db_superior . $datos[0]["pdf"])) {
-							$anexos[] = $ruta_db_superior . $datos[0]["pdf"];
-						}
+		$datos = busca_filtro_tabla("d.numero,d.pdf,ft.email", "ft_pqrsf ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "", $conn);
+		if ($datos[0]["email"] != "") {
+			if ($datos[0]["pdf"] != "") {
+				$ruta_archivo = json_decode($datos[0]["pdf"]);
+				if (is_object($ruta_archivo)) {
+					$anexos[] = $datos[0]["pdf"];
+				} else {
+					if (file_exists($ruta_db_superior . $datos[0]["pdf"])) {
+						$anexos[] = $ruta_db_superior . $datos[0]["pdf"];
 					}
 				}
-				$mensaje = "Cordial Saludo,<br/>
-				Se adjunta copia de la solicitud PQRSF No " . $datos[0]['numero'] . " diligenciada el dia de hoy.<br/><br/>
-				Antes de imprimir este mensaje, asegurese que es necesario. Proteger el medio ambiente tambien esta en nuestras manos.<br/>
-				ESTE ES UN MENSAJE AUTOMATICO, FAVOR NO RESPONDER";
-				$ok = enviar_mensaje("", array("para" => "email"), array("para" => array($datos[0]['email'])), "SOLICITUD PQR NO " . $datos[0]['numero'], $mensaje, $anexos, $iddoc);
 			}
+			$mensaje = "Cordial Saludo,<br/>
+			Se adjunta copia de la solicitud PQRSF No " . $datos[0]['numero'] . " diligenciada el dia de hoy.<br/><br/>
+			Antes de imprimir este mensaje, asegurese que es necesario. Proteger el medio ambiente tambien esta en nuestras manos.<br/>
+			ESTE ES UN MENSAJE AUTOMATICO, FAVOR NO RESPONDER";
+			$ok = enviar_mensaje("", array("para" => "email"), array("para" => array($datos[0]['email'])), "SOLICITUD PQR NO " . $datos[0]['numero'], $mensaje, $anexos, $iddoc);
 		}
 	}
 	return $ok;
@@ -212,7 +200,7 @@ function vincular_distribucion_pqrsf($idformato, $iddoc) {//POSTERIOR AL APROBAR
 		phpmkr_query($update);
 	}else{
 		$datos = busca_filtro_tabla("a.nombre,a.documento,a.email,a.telefono", "ft_pqrsf a,documento b", "a.documento_iddocumento=b.iddocumento AND a.documento_iddocumento=" . $iddoc, "", $conn);
-		if($datos["numcampos"]){
+		if($datos["numcampos"] && trim($datos[0]["nombre"])!="-"){
 			//INGRESAMOS EL ORIGEN COMO UN REMITENTE
 			$ie = " INSERT INTO ejecutor (identificacion,nombre,fecha_ingreso,estado,tipo_ejecutor) VALUES ('" . $datos[0]['documento'] . "',	'" . $datos[0]['nombre'] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",1,1)";
 			phpmkr_query($ie);

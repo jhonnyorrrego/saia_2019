@@ -1,11 +1,4 @@
-<?php include_once("../../librerias_saia.php"); ?>
-			<?php echo(librerias_jquery('1.7')); ?><?php include_once("funciones.php"); ?>
-			<?php include_once("../../class_transferencia.php"); ?>
-			<?php include_once("../librerias/funciones_generales.php"); ?>
-			<?php include_once("../librerias/encabezado_pie_pagina.php"); ?>
-			<?php include_once("../../pantallas/qr/librerias.php"); ?>
-			<?php include_once("../librerias/header_nuevo.php"); ?>
-			<tr><td><table style="width: 100%; border-collapse: collapse;" border="0">
+<?php include_once("../../librerias_saia.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../../pantallas/qr/librerias.php"); ?><?php include_once("../../formatos/librerias/header_nuevo.php"); ?><tr><td><table style="width: 100%; border-collapse: collapse;" border="0">
 <tbody>
 <tr>
 <td colspan="2"><span style="font-family: verdana, geneva;"><?php ciudad(1,$_REQUEST['iddoc']);?>, <?php mostrar_fecha(1,$_REQUEST['iddoc']);?></span></td>
@@ -56,5 +49,4 @@
 </tr>
 </tbody>
 </table>
-<p>&nbsp;</p></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>
-			
+<p>&nbsp;</p></td></tr><?php include_once("../../formatos/librerias/footer_nuevo.php"); ?>
