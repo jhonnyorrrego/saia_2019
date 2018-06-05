@@ -72,7 +72,7 @@ if(strpos(strtoupper($pantalla_campos[0]["valor"]),"SELECT")!==false){
 }
 else{
 	$valor_llenado2=$pantalla_campos[0]["valor"];
-	$filas=explode("|",$valor_llenado2);
+	$filas=explode(";",$valor_llenado2);
 	$cant=count($filas);
 	$items=true;
 }
@@ -96,9 +96,9 @@ $forma_carga='1';
 $busqueda='1';
 
 if($pantalla_campos[0]["valor"]){
-	$valores=explode("|",$pantalla_campos[0]["valor"]);
+	$valores=explode(";",$pantalla_campos[0]["valor"]);
 	$ruta_xml=$valores[0];//Ruta del test
-	//$tipo_control=$valores[1];//1=checkbox, 2=Radio
+	$tipo_control=$valores[1];//1=checkbox, 2=Radio
 	//$modo_calcular_nodos=$valores[2];//Modo de calcular numero de nodos. defecto=0
 	//$forma_carga=$valores[3];//0=Autoloading, 1=smartxml. defecto=1
 	//$busqueda=$valores[4];//0=No, 1=si. defecto=1
@@ -122,6 +122,9 @@ if($pantalla_campos[0]["valor"]){
 	if($tipo_arbol==3)$tipo_arbol3='checked';
 	if($tipo_arbol==4)$tipo_arbol4='checked';
 	if($tipo_arbol==5)$tipo_arbol5='checked';
+	
+	if($tipo_control==1)$tipo_control1='checked';
+	if($tipo_control==2)$tipo_control2='checked';
 }
 ?>
 <form method="POST" action="" class="form-horizontal" name="editar_pantalla_campo" id="editar_pantalla_campo">
@@ -138,6 +141,19 @@ if($pantalla_campos[0]["valor"]){
     <label class="control-label" for="etiqueta">Etiqueta *</label>
     <div class="controls">
       <input type="text" name="fs_etiqueta" id="etiqueta" placeholder="Etiqueta" value="<?php echo(@$pantalla_campos[0]["etiqueta"]);?>" required>
+    </div>
+  </div>
+   <div class="control-group">
+    <label class="control-label" for="tipo_control">Tipo de &aacute;rbol</label>
+    <div class="controls">
+      <label class="control-label" for="tipo_arbol">
+        <input type="radio" name="tipo_control" id="tipo_control1" value="1" <?php echo($tipo_control1);?> required>
+        Checkbox
+      </label>
+      <label class="control-label" for="tipo_control">
+        <input type="radio" name="tipo_control" id="tipo_control2" value="2" <?php echo($tipo_control2);?>>
+        Radio
+      </label>
     </div>
   </div>
   <div class="control-group">
@@ -179,9 +195,8 @@ if($pantalla_campos[0]["valor"]){
     </div>
   </div>
   
-  <input type="hidden" name="fs_valor" id="valor" value="<?php echo(@$pantalla_campos[0]["valor"]);?>" required>
+  <input type="text" name="fs_valor" id="valor" value="<?php echo(@$pantalla_campos[0]["valor"]);?>" required>
 
-  <input type="hidden" id="tipo_control" value="<?php echo(@$tipo_control);?>">
   <input type="hidden" id="modo_calcular_nodos" value="<?php echo(@$modo_calcular_nodos);?>">
   <input type="hidden" id="forma_carga" value="<?php echo(@$forma_carga);?>">
   <input type="hidden" id="busqueda" value="<?php echo(@$busqueda);?>">
@@ -235,7 +250,7 @@ if($pantalla_campos[0]["valor"]){
       </label>
       <label class="radio inline" for="tipo_arbol">        
         <input type="radio" name="tipo_arbol" id="tipo_arbol_4" value="4" <?php echo $tipo_arbol4; ?>>
-        Sale de la tabla enviada (pantallas/lib/arbol_pantallas.php?tabla=nombre_tabla)
+        Sale de la tabla enviada (../../test.php?tabla=nombre_tabla)
       </label>
       <label class="radio inline" for="tipo_arbol">        
         <input type="radio" name="tipo_arbol" id="tipo_arbol_5" value="5" <?php echo $tipo_arbol5; ?>>
@@ -314,10 +329,10 @@ $(document).ready(function(){
           if(html){          
             var objeto=jQuery.parseJSON(html);                  
             if(objeto.exito){
-              var tree=window.parent.tree_<?php echo $campos[0]["nombre"]; ?>;
+              var tree2=window.parent.tree_<?php echo(@$pantalla_campos[0]["nombre"]);?>;
               $('#cargando_enviar').html("Terminado ...");
-              tree.deleteChildItems(0);
-              tree.loadXML("<?php echo($ruta_db_superior);?>saia/"+$("#ruta_xml").val());
+              tree2.deleteChildItems(0);
+              tree2.loadXML($("#ruta_xml").val());
               window.parent.hs.close();
             }                  
         	}
@@ -335,13 +350,13 @@ $(document).ready(function(){
 	$('input[name$="tipo_arbol"]').click(function(){
 		var valor=$(this).val();
 		if(valor==0){
-			$("#ruta_xml").val("pantallas/lib/arbol_funcionarios.php");
+			$("#ruta_xml").val("../../pantallas/lib/arbol_funcionarios.php");
 		}
 		if(valor==1){
-			$("#ruta_xml").val("pantallas/lib/arbol_serie_funcionario.php");
+			$("#ruta_xml").val("../../pantallas/lib/arbol_serie_funcionario.php");
 		}
 		if(valor==2){
-			$("#ruta_xml").val("pantallas/lib/arbol_pantallas.php?tabla=dependencia&estado=1");
+			$("#ruta_xml").val("../../pantallas/lib/arbol_pantallas.php?tabla=dependencia&estado=1");
 		}
 		if(valor==3){
 			$("#ruta_xml").val("");
@@ -350,13 +365,13 @@ $(document).ready(function(){
 			$("#ruta_xml").val("");
 		}
 		if(valor==5){
-			$("#ruta_xml").val("pantallas/lib/arbol_funcionarios.php?rol=1");
+			$("#ruta_xml").val("../../pantallas/lib/arbol_funcionarios.php?rol=1");
 		}
 	});
 });	
 function parsear_valor_arbol(){
 	var ruta_xml=$("#ruta_xml").val();
-	var tipo_control=$("#tipo_control").val();
+	var tipo_control=$("input[name='tipo_control']:checked").val();
 	var modo_calcular_nodos=$("#modo_calcular_nodos").val();
 	var forma_carga=$("#forma_carga").val();
 	var busqueda=$("#busqueda").val();
@@ -364,7 +379,7 @@ function parsear_valor_arbol(){
 	var tipo_arbol=$("input[name='tipo_arbol']:checked").val();
 	var parametros=$("#parametros").val();
 	var padre_independiente=$("input[name='padre_independiente']:checked").val();
-	var cadena=ruta_xml+"|"+tipo_control+"|"+modo_calcular_nodos+"|"+forma_carga+"|"+busqueda+"|"+almacenar+"|"+tipo_arbol+"|"+parametros+"|"+padre_independiente;
+	var cadena=ruta_xml+";"+tipo_control+";"+modo_calcular_nodos+";"+forma_carga+";"+busqueda+";"+almacenar+";"+tipo_arbol+";"+parametros+";"+padre_independiente;
 	$("#valor").val(cadena);
 }
 </script>

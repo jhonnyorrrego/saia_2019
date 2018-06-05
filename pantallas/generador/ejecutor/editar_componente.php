@@ -119,11 +119,100 @@ else{
       </label>
     </div>
   </div>
-  <?php
-  $busqueda_remitentes=busca_filtro_tabla("","busqueda A","A.nombre like 'pantalla_remitente'","",$conn);
-  ?>
-  <input type="hidden" name="fs_valor" id="fs_valor" value="<?php echo($busqueda_remitentes[0]["idbusqueda"]); ?>">
-  
+  <?php 
+  $parametros1=explode("@",$pantalla_campos[0]["valor"]);
+  if($parametros1[0]=="unico"){
+  	$cantidad1=' checked="checked" ';
+  }
+  else{
+  	$cantidad2=' checked="checked" ';
+  }
+  if($parametros1[1]=="" || (strpos("identificacion",$parametros1[1])===false && strpos("nombre",$parametros1[1])===false)){
+  	$identificacion=' checked="checked" ';
+  }
+  if(strpos("nombre",$parametros1[1])!==false){
+  	$nombre_remitente=' checked="checked" ';
+  }
+  $parametros2=explode(",",$parametros1[2]);
+  foreach($parametros2 AS $key=>$valor){
+  	if($valor=="cargo"){
+  		$cargo=' checked="checked" ';
+  	}
+  	if($valor=="empresa"){
+  		$empresa=' checked="checked" ';
+  	}
+  	if($valor=="direccion"){
+  		$direccion=' checked="checked" ';
+  	}
+  	if($valor=="telefono"){
+  		$telefono=' checked="checked" ';
+  	}
+  	if($valor=="email"){
+  		$email=' checked="checked" ';
+  	}
+  	if($valor=="titulo"){
+  		$titulo=' checked="checked" ';
+  	}
+  	if($valor=="ciudad"){
+  		$ciudad=' checked="checked" ';
+  	}
+  }
+  ?> 
+  <div class="control-group">
+    <label class="control-label" for="cantidad">Cantidad</label>
+    <div class="controls">
+      <label class="control-label" for="cantidad">
+        <input type="radio" name="cantidad" id="unico" value="unico" <?php echo($cantidad1);?> required>
+        &Uacute;nico
+      </label>
+      <label class="control-label" for="cantidad">
+        <input type="radio" name="cantidad" id="multiple" value="multiple" <?php echo($cantidad2);?>>
+        Multiple
+      </label>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label">Datos Remitente</label>
+    <div class="controls">
+      <label class="checkbox inline" for="identificacion">
+        <input type="checkbox" class="principales" name="identificacion" id="identificacion" value="identificacion" <?php echo($identificacion); ?>>
+        Identificaci&oacute;n
+      </label>
+      <label class="checkbox inline" for="nombre_remitente">
+        <input type="checkbox"  class="principales" name="nombre_remitente" id="nombre_remitente" value="nombre" <?php echo($nombre_remitente); ?>>
+        Nombre
+      </label>
+      <label class="checkbox inline" for="cargo">
+        <input type="checkbox" class="adicionales" name="cargo" id="cargo" value="cargo" <?php echo($cargo); ?>>
+        Cargo
+      </label>
+      <label class="checkbox inline" for="empresa">
+        <input type="checkbox" class="adicionales" name="empresa" id="empresa" value="empresa" <?php echo($empresa); ?>>
+        Empresa
+      </label>
+      <label class="checkbox inline" for="direccion">
+        <input type="checkbox" class="adicionales" name="direccion" id="direccion" value="direccion" <?php echo($direccion); ?>>
+        Direcci&oacute;n
+      </label>
+	  <label class="checkbox inline" for="telefono">
+        <input type="checkbox" class="adicionales" name="telefono" id="telefono" value="telefono" <?php echo($telefono); ?>>
+        Tel&eacute;fono
+      </label>
+      <label class="checkbox inline" for="email">
+        <input type="checkbox" class="adicionales" name="email" id="email" value="email" <?php echo($email); ?>>
+        Correo electr&oacute;nico
+      </label>
+      <label class="checkbox inline" for="titulo">
+        <input type="checkbox" class="adicionales" name="titulo" id="titulo" value="titulo" <?php echo($titulo); ?>>
+        T&iacute;tulo
+      </label>
+      <label class="checkbox inline" for="ciudad">
+        <input type="checkbox" class="adicionales" name="ciudad" id="ciudad" value="ciudad" <?php echo($ciudad); ?>>
+        Ciudad
+      </label>
+    </div>
+  </div>
+  <input type="hidden" name="fs_valor" id="fs_valor" value="<?php echo($pantalla_campos[0]["valor"]); ?>">
   <div class="control-group">
     <label class="control-label" for="ayuda">Ayuda *</label>
     <div class="controls">
@@ -141,7 +230,6 @@ else{
 echo(librerias_jquery("1.7"));
 echo(librerias_bootstrap());
 echo(librerias_validar_formulario());
-echo(librerias_notificaciones());
 ?>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -155,29 +243,36 @@ $(document).ready(function(){
     }
   });
 	$("#enviar_formulario_saia").click(function(){    
-    var idpantalla_campo=$("#idpantalla_campos").val();
+		var valor_adicionales = $(".adicionales").map(function(){
+	        return this.value;
+	    }).get().join(",");
+		var valor_principales = $(".principales").map(function(){
+	        return this.value;
+	    }).get().join(",");
+	    $("#fs_valor").val($("input:radio[name='cantidad']:checked").val()+"@"+valor_principales+"@"+valor_adicionales);
+    	var idpantalla_campo=$("#idpantalla_campos").val();
 		if(formulario.valid()){
 			$('#cargando_enviar').html("Procesando <i id='icon-cargando'>&nbsp;</i>");
 			$(this).attr('disabled', 'disabled');
 			$.ajax({
-        type:'POST',
-        url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias.php",
-        data: "ejecutar_campos_formato=set_pantalla_campos&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario.serialize(),
-        success: function(html){                
-          if(html){          
-            var objeto=jQuery.parseJSON(html);                  
-            if(objeto.exito){
-              $('#cargando_enviar').html("Terminado ...");
-              //$("#content").append(objeto.etiqueta_html);
-              //setTimeout(notificacion_saia("Actualizaci&oacute;n realizada con &eacute;xito.","success","",2500),5000);  
-              //$("#pc_"+idpantalla_campo,parent.document).find(".control-label").html(objeto.etiqueta);             
-              $("#pc_"+idpantalla_campo,parent.document).replaceWith(objeto.codigo_html);              
-              //$("#pc_"+idpantalla_campo,parent.document).find(".elemento_formulario").attr("placeholder",objeto.placeholder);        
-              parent.hs.close();                                    	
-            }                  
-        	}
-        }
-    	});		
+		        type:'POST',
+		        url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias.php",
+		        data: "ejecutar_campos_formato=set_pantalla_campos&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario.serialize(),
+		        success: function(html){                
+		          if(html){          
+		            var objeto=jQuery.parseJSON(html);                  
+		            if(objeto.exito){
+		              $('#cargando_enviar').html("Terminado ...");
+		              //$("#content").append(objeto.etiqueta_html);
+		              //setTimeout(notificacion_saia("Actualizaci&oacute;n realizada con &eacute;xito.","success","",2500),5000);  
+		              //$("#pc_"+idpantalla_campo,parent.document).find(".control-label").html(objeto.etiqueta);             
+		              $("#pc_"+idpantalla_campo,parent.document).replaceWith(objeto.codigo_html);              
+		              //$("#pc_"+idpantalla_campo,parent.document).find(".elemento_formulario").attr("placeholder",objeto.placeholder);        
+		              parent.hs.close();                                    	
+		            }                  
+		          }
+		        }
+    		});
 		}
 		else{			
 			$(".error").first().focus();			

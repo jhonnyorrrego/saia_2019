@@ -72,7 +72,7 @@ if(strpos(strtoupper($pantalla_campos[0]["valor"]),"SELECT")!==false){
 }
 else{
 	$valor_llenado2=$pantalla_campos[0]["valor"];
-	$filas=explode("|",$valor_llenado2);
+	$filas=explode(";",$valor_llenado2);
 	$cant=count($filas);
 	$items=true;
 }
@@ -93,7 +93,7 @@ $forma_carga='1';
 $busqueda='1';
 
 if($pantalla_campos[0]["valor"]){
-	$valores=explode("|",$pantalla_campos[0]["valor"]);
+	$valores=explode(";",$pantalla_campos[0]["valor"]);
 	$ruta_xml=$valores[0];//Ruta del test
 	//$tipo_control=$valores[1];//1=checkbox, 2=Radio
 	//$modo_calcular_nodos=$valores[2];//Modo de calcular numero de nodos. defecto=0
@@ -292,10 +292,10 @@ $(document).ready(function(){
           if(html){          
             var objeto=jQuery.parseJSON(html);                  
             if(objeto.exito){
-            	var tree=window.parent.tree_<?php echo $campos[0]["nombre"]; ?>;
+            	var tree=window.parent.tree_<?php echo(@$pantalla_campos[0]["nombre"]);?>;
               $('#cargando_enviar').html("Terminado ...");
               tree.deleteChildItems(0);
-              tree.loadXML("<?php echo($ruta_db_superior);?>saia/"+$("#ruta_xml").val());
+              tree.loadXML($("#ruta_xml").val());
               window.parent.hs.close();
             }
         	}
@@ -312,13 +312,13 @@ $(document).ready(function(){
 	$('input[name$="tipo_arbol"]').click(function(){
 		var valor=$(this).val();
 		if(valor==0){
-			$("#ruta_xml").val("pantallas/lib/arbol_funcionarios.php");
+			$("#ruta_xml").val("../../pantallas/lib/arbol_funcionarios.php");
 		}
 		if(valor==1){
-			$("#ruta_xml").val("pantallas/lib/arbol_serie_funcionario.php");
+			$("#ruta_xml").val("../../pantallas/lib/arbol_serie_funcionario.php");
 		}
 		if(valor==2){
-			$("#ruta_xml").val("pantallas/lib/arbol_pantallas.php?tabla=dependencia&estado=1");
+			$("#ruta_xml").val("../../pantallas/lib/arbol_pantallas.php?tabla=dependencia&estado=1");
 		}
 		if(valor==3){
 			$("#ruta_xml").val("");
@@ -327,7 +327,7 @@ $(document).ready(function(){
 			$("#ruta_xml").val("");
 		}
 		if(valor==5){
-			$("#ruta_xml").val("pantallas/lib/arbol_funcionarios.php?rol=1");
+			$("#ruta_xml").val("../../pantallas/lib/arbol_funcionarios.php?rol=1");
 		}
 	});
 });	
@@ -340,7 +340,7 @@ function parsear_valor_arbol(){
 	var almacenar=$("input[name='almacenar']:checked").val();
 	var tipo_arbol=$("input[name='tipo_arbol']:checked").val();
 	var parametros=$("#parametros").val();
-	var cadena=ruta_xml+"|"+tipo_control+"|"+modo_calcular_nodos+"|"+forma_carga+"|"+busqueda+"|"+almacenar+"|"+tipo_arbol+"|"+parametros;
+	var cadena=ruta_xml+";"+tipo_control+";"+modo_calcular_nodos+";"+forma_carga+";"+busqueda+";"+almacenar+";"+tipo_arbol+";"+parametros;
 	$("#valor").val(cadena);
 }
 </script>

@@ -21,7 +21,7 @@ function padre_independiente_arbol_checkbox($idcampo='',$seleccionado='',$accion
 		$dato=busca_filtro_tabla("","campos_formato","idcampos_formato=".$idcampo,"",$conn);
 		$campo=$dato[0];
 	}
-	$parametros=explode("|", $campo["valor"]);
+	$parametros=explode(";", $campo["valor"]);
 	if(@$parametros[8]){
 		if($parametros[8]==1){
 			$texto="tree_".$campo["nombre"].".enableThreeStateCheckboxes(true);";
@@ -32,6 +32,9 @@ function padre_independiente_arbol_checkbox($idcampo='',$seleccionado='',$accion
 	}
 	else{
 		$texto="tree_".$campo["nombre"].".enableThreeStateCheckboxes(true);";
+	}
+	if(@$parametros[1]==2){
+		$texto.="tree_".$campo["nombre"].".enableRadioButtons(true);";
 	}
 	return($texto);
 }
@@ -44,7 +47,7 @@ function busca_componente_arbol_checkbox($idcampo='',$seleccionado='',$accion=''
 		$dato=busca_filtro_tabla("","campos_formato","idcampos_formato=".$idcampo,"",$conn);
 		$campo=$dato[0];
 	}	
-	$parametros=explode("|", $campo["valor"]);
+	$parametros=explode(";", $campo["valor"]);
 	if(@$parametros[4]){
 		$texto='<div id="arbol_buscar_'.$campo["nombre"].'">
 <input type="text" id="stext_'.$campo["nombre"].'" width="200px" size="25" placeholder="Buscar">
@@ -66,7 +69,7 @@ global $conn,$ruta_db_superior;
 		$dato=busca_filtro_tabla("","campos_formato","idcampos_formato=".$idcampo,"",$conn);
 		$campo=$dato[0];
 	}	
-	$parametros=explode("|", $campo["valor"]);
+	$parametros=explode(";", $campo["valor"]);
   if($parametros[0]!=''){
   	$adicional="";
   	if($parametros[7]){
@@ -89,8 +92,7 @@ global $conn,$ruta_db_superior;
 				$adicional="&".implode("&",$envio);
 			}
   	}
-    //$cadena.='tree_'.$campo["nombre"].'.enableThreeStateCheckboxes(1);'."\n";
-    $cadena.='tree_'.$campo["nombre"].'.loadXML("'.$ruta_db_superior.$parametros[0].$adicional;
+    $cadena.='tree_'.$campo["nombre"].'.loadXML("'.$parametros[0].$adicional;
       if($seleccionado!=''){
         if(strpos($cadena,"?")===false){
           $cadena.='?';
@@ -119,7 +121,7 @@ if($seleccionado==''){
     $seleccionado=$campo["predeterminado"];
   }
 }
-$parametros=explode("|", $campo["valor"]);
+$parametros=explode(";", $campo["valor"]);
 if(@$parametros[7]!==''){
   $librerias=explode("-",$parametros[7]);
   if(@$librerias[0]&&@$librerias[1]){
@@ -127,7 +129,7 @@ if(@$parametros[7]!==''){
     $texto.=call_user_func_array($librerias[1],array($campo,$seleccionado));       
   }
 }
-$arbol=explode("|",$campo["valor"]);
+$arbol=explode(";",$campo["valor"]);
 $valores=mostrar_seleccionados_arbol_checkbox($seleccionado,$arbol[6],$campo["valor"]);
 
 $adicional="";
@@ -147,7 +149,7 @@ function mostrar_arbol_checkbox($idcampo='',$seleccionado='',$accion='',$campo='
 		$dato=busca_filtro_tabla("","campos_formato","idcampos_formato=".$idcampo,"",$conn);
 		$campo=$dato[0];
 	}
-	$arbol=explode("|",$campo["valor"]);
+	$arbol=explode(";",$campo["valor"]);
 	$valores=mostrar_seleccionados_arbol_checkbox($seleccionado,$arbol[6],$campo["valor"]);
 	return($valores);
 }
@@ -197,7 +199,7 @@ function mostrar_seleccionados_arbol_checkbox($seleccionado,$tipo_arbol,$dato_co
 	      $nombres[]=ucwords($datos[0]["nombre"]);
 	     }    
 	    elseif($tipo_arbol==4){ //valor de tabla cuando se llama a test_serie.php el unico campo que se puede mostrar de la tabla es nombre
-        $arreglo=explode("|",$dato_completo);
+        $arreglo=explode(";",$dato_completo);
         if(strpos($arreglo[0],"est_serie")){
           $pos_tabla=strpos($arreglo[0],"tabla");
           $tabla1=substr($arreglo[0],$pos_tabla);
