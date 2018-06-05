@@ -1,6 +1,6 @@
 <?php 
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
-	include_once("formatos/librerias/menu_principal_documento.php");
+	include_once("pantallas/documento/menu_principal_documento.php");
 	echo(menu_principal_documento($_REQUEST["iddoc"],@$_REQUEST["vista"]));
 }
 include_once("db.php");

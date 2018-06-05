@@ -25,8 +25,6 @@ if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
     $iddoc=$_REQUEST["iddoc"];
   if(@$_REQUEST["key"])  
     $iddoc=$_REQUEST["key"];
-  //include_once($ruta_db_superior."formatos/librerias/menu_principal_documento.php");
-  //echo(menu_principal_documento($iddoc,@$_REQUEST["vista"]));
   $documento=busca_filtro_tabla("*,".fecha_db_obtener("fecha","Y-m-d")." AS fecha","documento","iddocumento=".$iddoc,"",$conn);
 }
 echo(librerias_arboles());

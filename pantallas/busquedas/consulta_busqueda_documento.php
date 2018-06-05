@@ -286,14 +286,12 @@ $(document).ready(function(){
     $.ajax({
       type:'POST',
       url: "servidor_busqueda.php",
+      dataType:'json',
       data: "idbusqueda_componente=<?php echo($datos_componente);?>&page="+$("#busqueda_pagina").val()+"&rows="+$("#busqueda_registros").val()+"&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>&actual_row="+$("#fila_actual").val()+"&variable_busqueda="+$("#variable_busqueda").val()+"&cantidad_total="+$("#cantidad_total").val()+"<?php if(@$_REQUEST['filtro_categoria']){ echo('&filtro_categoria='.$_REQUEST['filtro_categoria']); } ?>"+"<?php if(@$_REQUEST['filtro_indicadores']){ echo('&filtro_indicadores='.$_REQUEST['filtro_indicadores']); } ?>",
-      success: function(html){
-        if(html){
-          var objeto=jQuery.parseJSON(html);
+      success: function(objeto){
           if(objeto.exito){
 	          $("#busqueda_pagina").val(objeto.page);
 	          $("#busqueda_total_paginas").val(objeto.total);
-	          //$("#busqueda_sql").html(objeto.sql);
 	          $("#fila_actual").val(objeto.actual_row);
 	          $.each(objeto.rows,function(index,item){
 	            if(objeto.page===2 && index===0){
@@ -312,10 +310,6 @@ $(document).ready(function(){
 	          });
 	          $(".kenlace_saia").attr("onclick"," ");
 	          iniciar_tooltip();
-	          if($("#resultado_busqueda_principal<?php echo($datos_componente);?>").height()<alto_inicial){
-	          	//$('#loadmoreajaxloader').html("Cargando ( ...");
-	            //cargar_datos_scroll();
-	          }
 	          if(objeto.actual_row>=objeto.records){
 	            finalizar_carga_datos(objeto.records);
 	          }
@@ -327,10 +321,7 @@ $(document).ready(function(){
           	$("#cantidad_total_copia").val("0");
           	finalizar_carga_datos(0);
           }
-        }else{
-          $("#cantidad_total_copia").val("0");
-          	finalizar_carga_datos(0);
-        }
+  
       }
     });
   }
@@ -359,19 +350,17 @@ $(document).ready(function(){
   		type:'POST',
 	    url: "servidor_busqueda.php",
 	    rsync:false,
+	    dataType:'json',
 	    data: "idbusqueda_componente="+idcomponente+"&page=0&rows="+$("#busqueda_registros").val()+"&actual_row=0&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>&variable_busqueda="+$("#variable_busqueda").val()+"<?php if(@$_REQUEST['filtro_categoria']){ echo('&filtro_categoria='.$_REQUEST['filtro_categoria']); } ?>"+"<?php if(@$_REQUEST['filtro_indicadores']){ echo('&filtro_indicadores='.$_REQUEST['filtro_indicadores']); } ?>",
-	    success: function(html){
-	    	if(html){
-	      	var objeto=jQuery.parseJSON(html);
-	      	$("#busqueda_total_paginas").val(objeto.total);
-	      	if(objeto.total)$("#boton_exportar_excel").show();
-					$("#"+capa).html(objeto.records+")");
-					$("#cantidad_total").val(objeto.records);
-					$("#cantidad_total_copia").val(objeto.records);
-					if(parseInt($("#fila_actual").val())>=parseInt(objeto.records)){
-						$('#loadmoreajaxloader_parent').addClass("disabled");
-					}
-	      }
+	    success: function(objeto){
+      	$("#busqueda_total_paginas").val(objeto.total);
+      	if(objeto.total)$("#boton_exportar_excel").show();
+				$("#"+capa).html(objeto.records+")");
+				$("#cantidad_total").val(objeto.records);
+				$("#cantidad_total_copia").val(objeto.records);
+				if(parseInt($("#fila_actual").val())>=parseInt(objeto.records)){
+					$('#loadmoreajaxloader_parent').addClass("disabled");
+				}
 	    }
 	  });
   }
