@@ -21,7 +21,7 @@ function busca_componente_arbol_radio($idcampo='',$seleccionado='',$accion='',$c
 		$dato=busca_filtro_tabla("","campos_formato","idcampos_formato=".$idcampo,"",$conn);
 		$campo=$dato[0];
 	}
-	$parametros=explode("|", $campo["valor"]);
+	$parametros=explode(";", $campo["valor"]);
 	if(@$parametros[4]){
 		/*$texto='<div id="arbol_buscar_'.$campo["nombre"].'">
  Buscar:
@@ -74,7 +74,7 @@ global $conn,$ruta_db_superior;
 		$dato=busca_filtro_tabla("","campos_formato","idcampos_formato=".$idcampo,"",$conn);
 		$campo=$dato[0];
 	}
-	$parametros=explode("|", $campo["valor"]);
+	$parametros=explode(";", $campo["valor"]);
   if($parametros[0]!=''){
   	$adicional="";
   	if($parametros[7]){
@@ -145,7 +145,7 @@ if($seleccionado==''){
     $seleccionado=$campo["predeterminado"];
   }
 }
-$parametros=explode("|", $campo["valor"]);
+$parametros=explode(";", $campo["valor"]);
 if(@$parametros[7]!==''){
   $librerias=explode("-",$parametros[7]);
   if(@$librerias[0]&&@$librerias[1]){
@@ -153,7 +153,7 @@ if(@$parametros[7]!==''){
     $texto.=call_user_func_array($librerias[1],array($campo,$seleccionado));
   }
 }
-$arbol=explode("|",$campo["valor"]);
+$arbol=explode(";",$campo["valor"]);
 $valores=mostrar_seleccionados_arbol_radio($seleccionado,$arbol[6],$campo["valor"]);
 
 $adicional="";
@@ -173,7 +173,7 @@ function mostrar_arbol_radio($idcampo='',$seleccionado='',$accion='',$campo=''){
 		$dato=busca_filtro_tabla("","campos_formato","idcampos_formato=".$idcampo,"",$conn);
 		$campo=$dato[0];
 	}
-	$arbol=explode("|",$campo["valor"]);
+	$arbol=explode(";",$campo["valor"]);
 	$valores=mostrar_seleccionados_arbol_radio($seleccionado,$arbol[6],$campo["valor"]);
 	return($valores);
 }
@@ -223,7 +223,7 @@ function mostrar_seleccionados_arbol_radio($seleccionado,$tipo_arbol,$dato_compl
 	      $nombres[]=ucwords($datos[0]["nombre"]);
 	     }
 	    elseif($tipo_arbol==4){ //valor de tabla cuando se llama a test_serie.php el unico campo que se puede mostrar de la tabla es nombre
-        $arreglo=explode("|",$dato_completo);
+        $arreglo=explode(";",$dato_completo);
         if(strpos($arreglo[0],"est_serie")){
           $pos_tabla=strpos($arreglo[0],"tabla");
           $tabla1=substr($arreglo[0],$pos_tabla);
