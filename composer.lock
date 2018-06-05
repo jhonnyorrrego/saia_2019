@@ -2111,16 +2111,16 @@
         },
         {
             "name": "siriusphp/validation",
-            "version": "2.2.1",
+            "version": "2.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/siriusphp/validation.git",
-                "reference": "ef12ccb4e0ca3bae6927c2b8e04222665b1af309"
+                "reference": "f8d5fd657dfd5f9e33bfafab2439ea6e19f3240c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/siriusphp/validation/zipball/ef12ccb4e0ca3bae6927c2b8e04222665b1af309",
-                "reference": "ef12ccb4e0ca3bae6927c2b8e04222665b1af309",
+                "url": "https://api.github.com/repos/siriusphp/validation/zipball/f8d5fd657dfd5f9e33bfafab2439ea6e19f3240c",
+                "reference": "f8d5fd657dfd5f9e33bfafab2439ea6e19f3240c",
                 "shasum": ""
             },
             "require": {
@@ -2153,7 +2153,7 @@
                 "security",
                 "validation"
             ],
-            "time": "2018-02-10T05:43:13+00:00"
+            "time": "2018-06-01T11:55:44+00:00"
         },
         {
             "name": "symfony/cache",
