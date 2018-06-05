@@ -46,27 +46,58 @@ if (@$_REQUEST["idpantalla_campos"]) {
     $pantalla_campos = get_pantalla_campos($_REQUEST["idpantalla_campos"], 0);
     $obligatoriedad_si = '';
     $obligatoriedad_no = '';
-    if ($pantalla_campos[0]["obligatoriedad"])
+    if ($pantalla_campos[0]["obligatoriedad"]) {
         $obligatoriedad_si = ' checked="checked"';
-    else
+    } else {
         $obligatoriedad_no = ' checked="checked"';
-
+    }
     $accionesa = "";
     $accionese = "";
     $accionesb = "";
     $acciones1 = "";
     $accionesp = "";
     $acciones_guardadas = explode(",", $pantalla_campos[0]["acciones"]);
-    if (in_array("a", $acciones_guardadas))
+    if (in_array("a", $acciones_guardadas)) {
         $accionesa = "checked";
-    if (in_array("e", $acciones_guardadas))
+    }
+    if (in_array("e", $acciones_guardadas)) {
         $accionese = "checked";
-    if (in_array("b", $acciones_guardadas))
+    }
+    if (in_array("b", $acciones_guardadas)) {
         $accionesb = "checked";
-    if (in_array("1", $acciones_guardadas))
+    }
+    if (in_array("1", $acciones_guardadas)) {
         $acciones1 = "checked";
-    if (in_array("p", $acciones_guardadas))
+    }
+    if (in_array("p", $acciones_guardadas)) {
         $accionesp = "checked";
+    }
+
+    // Parsear el valor tipo1|tipo2|tipo3@multiple
+    $tipo_carga = "unico";
+    $extensiones = "";
+    $valor = trim($pantalla_campos[0]["valor"]);
+    if(!empty($valor)) {
+        $findme = '@';
+        $pos = strpos($valor, $findme);
+        if ($pos !== false) { // fue encontrada
+            $vector_extensiones_tipo = explode($findme, $pantalla_campos[0]["valor"]);
+            $tipo_carga = $vector_extensiones_tipo[1];
+            $extensiones_fijas = $vector_extensiones_tipo[0];
+        } else {
+            $extensiones_fijas = $valor;
+        }
+
+        if (!empty($extensiones_fijas)) {
+            $new_ext = array_map('trim', explode('|', $extensiones_fijas));
+            $extensiones_fijas = implode('|', $new_ext);
+            $extensiones = $extensiones_fijas;
+        }
+
+        $tipo_unico = ($tipo_carga == "unico" ? ' checked="checked"' : "");
+        $tipo_multiple = ($tipo_carga == "multiple" ? ' checked="checked"' : "");
+    }
+
 } else {
     alerta("No es posible Editar el Campo");
 }
@@ -94,10 +125,11 @@ if (@$_REQUEST["idpantalla_campos"]) {
 	<div class="control-group">
 		<label class="control-label" for="obligatoriedad">Obligatoriedad</label>
 		<div class="controls">
-			<label class="control-label" for="obligatorio"> <input type="radio"
-				name="fs_obligatoriedad" id="obligatorio" value="1"
+			<label class="control-label" for="obligatorio">
+			<input type="radio" name="fs_obligatoriedad" id="obligatorio" value="1"
 				<?php echo($obligatoriedad_si);?> required> Obligatorio
-			</label> <label class="control-label" for="radios-1"> <input
+			</label>
+			<label class="control-label" for="radios-1"> <input
 				type="radio" name="fs_obligatoriedad" id="opcional" value="0"
 				<?php echo($obligatoriedad_no);?>> Opcional
 			</label>
@@ -106,38 +138,40 @@ if (@$_REQUEST["idpantalla_campos"]) {
 	<div class="control-group">
 		<label class="control-label">Formularios *</label>
 		<div class="controls">
-			<label class="checkbox inline" for="acciones_0"> <input
-				type="checkbox" name="fs_acciones[]" id="acciones_0" value="a"
+			<label class="checkbox inline" for="acciones_0">
+			<input type="checkbox" name="fs_acciones[]" id="acciones_0" value="a"
 				<?php echo($accionesa); ?>> Adicionar
-			</label> <label class="checkbox inline" for="acciones_1"> <input
-				type="checkbox" name="fs_acciones[]" id="acciones_1" value="e"
+			</label>
+			<label class="checkbox inline" for="acciones_1">
+			<input type="checkbox" name="fs_acciones[]" id="acciones_1" value="e"
 				<?php echo($accionese); ?>> Editar
-			</label> <label class="checkbox inline" for="acciones_2"> <input
-				type="checkbox" name="fs_acciones[]" id="acciones_2" value="b"
-				<?php echo($accionesb); ?>> Buscar
-			</label> <label class="checkbox inline" for="acciones_5"> <input
-				type="checkbox" name="fs_acciones[]" id="acciones_5" value="1"
-				<?php echo($acciones1); ?>> Autoguardado
-			</label> <label class="checkbox inline" for="acciones_6"> <input
-				type="checkbox" name="fs_acciones[]" id="acciones_6" value="p"
+			</label>
+			<label class="checkbox inline" for="acciones_6">
+			<input type="checkbox" name="fs_acciones[]" id="acciones_6" value="p"
 				<?php echo($accionesp); ?>> Descripci&oacute;n
 			</label>
 		</div>
 	</div>
-	<!--div class="control-group">
-    <label class="control-label" for="valor">Valor de llenado</label>
-    <div class="controls">
-      <textarea name="fs_valor" id="valor" placeholder="valor de llenado"><?php echo(@$pantalla_campos[0]["valor"]);?></textarea>
-    </div>
-  </div-->
 	<div class="control-group">
-		<label class="control-label" for="predeterminado">Valor predeterminado</label>
+    <label class="control-label" for="valor">Extensiones aceptadas</label>
+    <div class="controls">
+      <textarea name="fs_valor" id="valor" placeholder="Extensiones"><?php echo $extensiones;?></textarea>
+    </div>
+  </div>
+	<div class="control-group">
+		<label class="control-label" for="uno_solo">Tipo</label>
 		<div class="controls">
-			<input type="text" name="fs_predeterminado" id="predeterminado"
-				placeholder="Valor predeterminado"
-				value="<?php echo(@$pantalla_campos[0]["predeterminado"]);?>">
+			<label class="control-label" for="uno_solo1">
+			<input type="radio" name="uno_solo" id="uno_solo1" value="unico"
+			<?php echo $tipo_unico;?>> Unico
+			</label>
+			<label class="control-label" for="uno_solo2">
+			<input type="radio" name="uno_solo" id="uno_solo2" value="multiple"
+				<?php echo $tipo_multiple;?>> M&uacute;ltiple
+			</label>
 		</div>
 	</div>
+
 	<div class="control-group">
 		<label class="control-label" for="ayuda">Ayuda *</label>
 		<div class="controls">
@@ -182,26 +216,35 @@ $(document).ready(function(){
     var idpantalla_campo=$("#idpantalla_campos").val();
 		if(formulario.valid()){
 			$('#cargando_enviar').html("Procesando <i id='icon-cargando'>&nbsp;</i>");
+
+			var tipo = $('input[name="uno_solo"]:checked').val();
+			var valor = $('#valor').val();
+			//console.log(valor);
+			valor = valor + "@" + tipo;
+
+			$("#valor").val(valor);
+
+			var datos = formulario.serialize();
 			$(this).attr('disabled', 'disabled');
 			$.ajax({
-        type:'POST',
-        url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias.php",
-        data: "ejecutar_campos_formato=set_pantalla_campos&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario.serialize(),
-        success: function(html){
-          if(html){
-            var objeto=jQuery.parseJSON(html);
-            if(objeto.exito){
-              $('#cargando_enviar').html("Terminado ...");
-              //$("#content").append(objeto.etiqueta_html);
-              //setTimeout(notificacion_saia("Actualizaci&oacute;n realizada con &eacute;xito.","success","",2500),5000);
-              //$("#pc_"+idpantalla_campo,parent.document).find(".control-label").html(objeto.etiqueta);
-              $("#pc_"+idpantalla_campo,parent.document).replaceWith(objeto.codigo_html);
-              //$("#pc_"+idpantalla_campo,parent.document).find(".elemento_formulario").attr("placeholder",objeto.placeholder);
-              parent.hs.close();
-            }
-        	}
-        }
-    	});
+                type:'POST',
+                url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias.php",
+                data: "ejecutar_campos_formato=set_pantalla_campos&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+datos,
+                success: function(html){
+                  if(html){
+                    var objeto=jQuery.parseJSON(html);
+                    if(objeto.exito){
+                      $('#cargando_enviar').html("Terminado ...");
+                      //$("#content").append(objeto.etiqueta_html);
+                      //setTimeout(notificacion_saia("Actualizaci&oacute;n realizada con &eacute;xito.","success","",2500),5000);
+                      //$("#pc_"+idpantalla_campo,parent.document).find(".control-label").html(objeto.etiqueta);
+                      $("#pc_"+idpantalla_campo,parent.document).replaceWith(objeto.codigo_html);
+                      //$("#pc_"+idpantalla_campo,parent.document).find(".elemento_formulario").attr("placeholder",objeto.placeholder);
+                      parent.hs.close();
+                    }
+                	}
+                }
+            });
 		}
 		else{
 			$(".error").first().focus();

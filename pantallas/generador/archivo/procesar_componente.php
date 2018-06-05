@@ -35,6 +35,9 @@ function procesar_archivo($idcampo = '', $seleccionado = '', $accion = '', $camp
     if ($obligatoriedad) {
         $texto .= '<input type="hidden" class="required" id="' . $campo["nombre"] . '" name="' . $campo["nombre"] . '" value="">';
     }
+    $uuid = uniqid("$idcampo-") . "-" . uniqid();
+    $texto .= '<input type="hidden" id="form_uuid" name="form_uuid" value="' . $uuid . '">';
+
     $texto .= '</div>';
 
     return ($texto);
