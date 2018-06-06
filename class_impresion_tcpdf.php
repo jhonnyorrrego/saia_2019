@@ -14,9 +14,8 @@ include_once ($ruta_db_superior . "db.php");
 if (!$_SESSION["LOGIN" . LLAVE_SAIA] && isset($_REQUEST["LOGIN"]) && @$_REQUEST["conexion_remota"]) {
 	logear_funcionario_webservice($_REQUEST["LOGIN"]);
 }
-include_once ($ruta_db_superior . FORMATOS_SAIA . "librerias/encabezado_pie_pagina.php");
-include_once ($ruta_db_superior . FORMATOS_SAIA . "librerias/funciones_generales.php");
 require_once ($ruta_db_superior . 'tcpdf/tcpdf.php');
+include_once ($ruta_db_superior . FORMATOS_SAIA . 'librerias/encabezado_pie_pagina.php');
 include_once ($ruta_db_superior . 'pantallas/qr/librerias.php');
 include_once ($ruta_db_superior . 'pantallas/lib/librerias_cripto.php');
 
@@ -57,7 +56,7 @@ class Imprime_Pdf {
 	// variable que indica si se est� creando una nueva version
 	private $version = 0;
 	// variable que indica si se est� creando una nueva version en que numero va
-	private $papel = "LETTER";
+	private $papel = "Letter";
 	// tipo de papel a usar para la impresion LETTER.LEGAL,A4
 	private $imprimir_vistas = 0;
 	// variable que indica si vienen seleccionadas vistas para imprimir
@@ -71,7 +70,7 @@ class Imprime_Pdf {
 	function __construct($iddocumento) {
 		global $conn;
 		if ($iddocumento != "url") {
-			$this -> documento = busca_filtro_tabla("d.*," . fecha_db_obtener("fecha", "Y-m-d") . " as fecha", "documento d", "iddocumento=" . $iddocumento, "", $conn);
+			$this -> documento = busca_filtro_tabla("d.*," . fecha_db_obtener("fecha", "Y-m-d") . " as fecha1", "documento d", "iddocumento=" . $iddocumento, "", $conn);
 			if (!$this -> documento["numcampos"]) {
 				die("documento no encontrado.");
 			}
@@ -79,7 +78,6 @@ class Imprime_Pdf {
 			$this -> formato = $formato;
 
 			if ($formato["numcampos"]) {
-
 				$plantilla = busca_filtro_tabla("", $formato[0]["nombre_tabla"], "documento_iddocumento=" . $iddocumento, "", $conn);
 				$this -> mostrar_encabezado = $plantilla[0]["encabezado"];
 				$this -> info_ft = $plantilla;
@@ -110,9 +108,6 @@ class Imprime_Pdf {
 			$this -> tipo_salida = "FI";
 			$this -> imprimir_plantilla = 1;
 			$this -> documento[0]["iddocumento"] = "url";
-			if ($_REQUEST["encabezado_papa"]) {
-				$this -> font_size = 8;
-			}
 		}
 	}
 
@@ -194,7 +189,7 @@ class Imprime_Pdf {
 		}
 	}
 
-	function configurar_seleccion_impresion($seleccionados) {
+	public function configurar_seleccion_impresion($seleccionados) {
 		$vector = explode(",", $seleccionados);
 		$paginas = array();
 		$vistas = array();
@@ -246,31 +241,32 @@ class Imprime_Pdf {
 		$this -> pdf -> SetFont($this -> font_family, '', $this -> font_size);
 		$this -> pdf -> setImageScale(PDF_IMAGE_SCALE_RATIO);
 		$this -> pdf -> SetAutoPageBreak(TRUE, $this -> margenes["inferior"]);
+
+		//
 		$this -> pdf -> SetCreator('SAIA');
-		$this -> pdf -> SetTitle($this -> documento[0]["plantilla"] . "_" . $this -> documento[0]["numero"] . "_" . $this -> documento[0]["fecha"]);
+		$this -> pdf -> SetTitle($this -> documento[0]["plantilla"] . "_" . $this -> documento[0]["numero"] . "_" . $this -> documento[0]["fecha1"]);
 		$autor = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $this -> documento[0]["ejecutor"], "", $conn);
 		if ($autor["numcampos"]) {
 			$this -> pdf -> SetAuthor($autor[0]["nombres"] . " " . $autor[0]["apellidos"]);
-
 		}
-		$etiquetas = busca_filtro_tabla("A.nombre", "etiqueta A,documento_etiqueta B", "A.idetiqueta=B.etiqueta_idetiqueta AND B.documento_iddocumento=" . $this -> documento[0]["iddocumento"], "", $conn);
-		$letiquetas = extrae_campo($etiquetas, "nombre");
 		$cad_etiquetas = '';
 		if ($this -> pdf -> getPDFa_mode() !== false) {
 			$cad_etiquetas .= ',PDF/a-1b';
 		}
-		if (count($letiquetas)) {
+		$etiquetas = busca_filtro_tabla("A.nombre", "etiqueta A,documento_etiqueta B", "A.idetiqueta=B.etiqueta_idetiqueta AND B.documento_iddocumento=" . $this -> documento[0]["iddocumento"], "", $conn);
+		if ($etiquetas["numcampos"]) {
+			$letiquetas = extrae_campo($etiquetas, "nombre");
 			$cad_etiquetas .= ',' . implode(",", $letiquetas);
 		}
 		$this -> pdf -> SetKeywords("SAIA" . $cad_etiquetas);
-		$this -> pdf -> SetSubject(codifica_encabezado(html_entity_decode($this -> documento[0]["descripcion"])));
-
+		$this -> pdf -> SetSubject(codifica_encabezado(strip_tags($this -> documento[0]["descripcion"])));
 		$campos_pdfa = busca_filtro_tabla("", "campos_formato", "(banderas like 'pdfa' or banderas like 'pdfa,%' or banderas like '%,pdfa' or banderas like '%,pdfa,%') AND formato_idformato=" . $this -> formato[0]['idformato'], "", $conn);
 		if ($campos_pdfa['numcampos']) {
 			for ($i = 0; $i < $campos_pdfa['numcampos']; $i++) {
 				$this -> pdf -> SetExtraMetadata($campos_pdfa[$i]['nombre'] . '(' . mostrar_valor_campo($campos_pdfa[$i]['nombre'], $this -> formato[0]['idformato'], $this -> documento[0]["iddocumento"], 1) . ')');
 			}
 		}
+		//
 		if ($this -> mostrar_encabezado) {
 			$this -> configurar_encabezado();
 		} else {
@@ -302,7 +298,6 @@ class Imprime_Pdf {
 			$this -> imprimir_hijos();
 		}
 
-		$fecha = explode("-", $this -> documento[0]["fecha"]);
 		include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 		$ruta_tmp_usr = $_SESSION["ruta_temp_funcionario"];
 
@@ -327,10 +322,10 @@ class Imprime_Pdf {
 				$adicional = "_vista" . @$_REQUEST["vista"];
 			}
 
-			$nombre_pdf = $carpeta . "/" . strtoupper($this -> formato[0]["nombre"]) . "_" . $this -> documento[0]["numero"] . "_" . str_replace("-", "_", $this -> documento[0]["fecha"]) . $adicional . ".pdf";
+			$nombre_pdf = $carpeta . "/" . strtoupper($this -> formato[0]["nombre"]) . "_" . $this -> documento[0]["numero"] . "_" . str_replace("-", "_", $this -> documento[0]["fecha1"]) . $adicional . ".pdf";
 		} else {
 			$tipo_almacenamiento = new SaiaStorage("archivos");
-			$nombre_pdf = $this -> documento[0]["numero"] . "_" . str_replace("-", "_", $this -> documento[0]["fecha"]) . ".pdf";
+			$nombre_pdf = $this -> documento[0]["numero"] . "_" . str_replace("-", "_", $this -> documento[0]["fecha1"]) . ".pdf";
 		}
 		chmod($pdf_temp, 0777);
 		$paginas_pdf = 0;
@@ -348,7 +343,13 @@ class Imprime_Pdf {
 			$sqlu = "update documento set paginas='" . $paginas_pdf . "',pdf='" . json_encode($ruta_pdf) . "',pdf_hash='" . $codigo_hash . "' where iddocumento=" . $this -> documento[0]["iddocumento"];
 			phpmkr_query($sqlu) or die($sqlu);
 		}
-		redirecciona("visores/pdf.js-view/web/viewer2.php?actualizar_pdf=1&tipo_visor=1&iddocumento=" . $this -> documento[0]["iddocumento"] . "&ruta=" . base64_encode(json_encode($ruta_pdf)));
+		if ($this -> tipo_salida == "F") {
+			$parteUrl = "";
+			if ($_REQUEST["actualizar_pdf"] == 1) {
+				$parteUrl = "&actualizar_pdf=1";
+			}
+			redirecciona("visores/pdf.js-view/web/viewer2.php?actualizar_pdf=1&tipo_visor=1&iddocumento=" . $this -> documento[0]["iddocumento"] . "&ruta=" . base64_encode(json_encode($ruta_pdf))) . $parteUrl;
+		}
 		die();
 	}
 
@@ -360,7 +361,6 @@ class Imprime_Pdf {
 		}
 		if ($this -> formato[0]["encabezado"]) {
 			$encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato=" . $this -> formato[0]["encabezado"], "", $conn);
-			$_REQUEST["tipo"] = 5;
 			if ($encabezado["numcampos"]) {
 				$this -> pdf -> encabezado = crear_encabezado_pie_pagina($encabezado[0]["contenido"], $this -> documento[0]["iddocumento"], $this -> formato[0]["idformato"], 1);
 			}
@@ -368,7 +368,6 @@ class Imprime_Pdf {
 
 		if ($this -> formato[0]["pie_pagina"]) {
 			$pie_pag = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato=" . $this -> formato[0]["pie_pagina"], "", $conn);
-			$_REQUEST["tipo"] = 5;
 			if ($pie_pag["numcampos"]) {
 				$this -> pdf -> pie_pagina = crear_encabezado_pie_pagina($pie_pag[0]["contenido"], $this -> documento[0]["iddocumento"], $this -> formato[0]["idformato"], 1);
 			}
@@ -384,7 +383,7 @@ class Imprime_Pdf {
 			'',
 			$this -> font_size
 		));
-		//$this->pdf->setExtraXMP(genera_xmp_saia());
+		$this->pdf->setExtraXMP(genera_xmp_saia());
 	}
 
 	public function imprimir_paginas() {
@@ -466,7 +465,6 @@ class Imprime_Pdf {
 				$datos_formato[0]["orientacion"] = "P";
 			}
 			$this -> pdf -> AddPage($datos_formato[0]["orientacion"], $datos_formato[0]["papel"]);
-
 			$this -> pdf -> writeHTML(stripslashes($contenido), true, false, false, false, '');
 		}
 		curl_close($ch);

@@ -506,6 +506,8 @@ function permisos_modulo_menu_intermedio($iddoc, $modulo_padre, $lista, $target 
 
 			if ($modulo[$i]["destino"] && $modulo[$i]["destino"] != "centro") {
 				$target = $modulo[$i]["destino"];
+			}else{
+				$target="_self";
 			}
 			$dir = $ruta_db_superior . $modulo[$i]["enlace"];
 
@@ -528,45 +530,6 @@ function modulos_menu_intermedio($nombre_padre) {
 	return ($arreglo);
 }
 
-/* //FUNCION NO ES ENCONTRADA CON BUSCAR INFECCIONES AL PARECER NO SE USA
-function permisos_modulo_clase($iddoc, $modulo_padre, $lista, $target = "_self") {
-	global $ruta_db_superior, $documento;
-	$texto = '';
-	$datos_modulos = modulos_menu_intermedio($modulo_padre);
-	$permiso = new PERMISO();
-	$modulo = busca_filtro_tabla("", "modulo", "nombre IN ('" . implode("','", $datos_modulos) . "')", "orden", $conn);
-	for ($i = 0; $i < $modulo["numcampos"]; $i++) {
-		$clase = $modulo[$i]["nombre"];
-		$ok = $permiso -> acceso_modulo_perfil($modulo[$i]["nombre"], 1);
-		if ($ok) {
-			$search = array(
-				'@key@',
-				'@iddoc@',
-				'@iddocumento@',
-				'@rand@',
-				'@nombreformato@'
-			);
-			$replace = array(
-				$iddoc,
-				$iddoc,
-				$iddoc,
-				rand(0, 1000),
-				strtolower($documento[0]["plantilla"])
-			);
-			$modulo[$i]["enlace"] = str_replace($search, $replace, $modulo[$i]["enlace"]);
-			$dir = $ruta_db_superior . $modulo[$i]["enlace"];
-
-			if ($lista == 1) {
-				$texto .= '<li><a href="' . $dir . '" target="' . $target . '"><i class="icon-' . $modulo[$i]["nombre"] . '"></i></a></li>';
-			} elseif ($lista == 2) {
-				$texto .= '<a href="' . $dir . '" target="' . $target . '" id="' . $modulo_padre . '">	<i class="icon-' . $modulo[$i]["nombre"] . '"></i></a>';
-			} else {
-				$texto .= '<button type="button" class="btn btn-mini tooltip_saia_abajo enlace' . $clase . '" title="' . html_entity_decode($modulo[$i]["etiqueta"]) . '" enlace="' . $dir . '" destino="' . $target . '">&nbsp; <i class="icon-' . $modulo[$i]["nombre"] . '"></i></button>';
-			}
-		}
-	}
-	return ($texto);
-}*/
 
 function botones_administrativos_menu($iddoc) {
 	global $conn, $ruta_db_superior;

@@ -1879,7 +1879,7 @@ class TCPDF {
      * @protected
      * @since 5.9.121 (2011-09-27)
      */
-    protected $pdfa_mode = false;
+    protected $pdfa_mode = true;
     
     /**
      * Document creation date-time

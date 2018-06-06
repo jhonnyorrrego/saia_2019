@@ -1,27 +1,12 @@
 <html><title>.:EDITAR COMUNICACI&Oacute;N INTERNA:.</title>
-			<head><?php include_once("../../librerias_saia.php"); ?>
-			<script type="text/javascript" src="../librerias/funciones_formatos.js"></script>
-			<?php include_once("../carta/funciones.php"); ?>
-			<?php include_once("../librerias/funciones_generales.php"); ?>
-			<?php include_once("../librerias/funciones_acciones.php"); ?>
-			<?php include_once("../librerias/estilo_formulario.php"); ?>
-			<?php include_once("../librerias/header_formato.php"); ?>
-			<?php echo(librerias_jquery('1.7')); ?><?php echo(librerias_validar_formulario()); ?><script type="text/javascript" src="../../js/title2note.js"></script>
-			<script type="text/javascript" src="../../js/dhtmlXCommon.js"></script>
-			<script type="text/javascript" src="../../js/dhtmlXTree.js"></script>
-			<link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><script type="text/javascript" src="../../dropzone/dist/dropzone.js"></script>
-			<?php include_once("../../anexosdigitales/funciones_archivo.php"); ?>
-			<script type="text/javascript" src="../../anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script>
-			<link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link href="../../dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" /><script type='text/javascript'> hs.graphicsDir = '../../anexosdigitales/highslide-5.0.0/highslide/graphics/'; hs.outlineType = 'rounded-white';</script><style>label.error{color:red}</style>
+			<head><?php include_once("../../librerias_saia.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php include_once("../carta/funciones.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/funciones_acciones.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><?php include_once("../../formatos/librerias/header_formato.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php echo(librerias_validar_formulario()); ?><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/dhtmlXCommon.js"></script><script type="text/javascript" src="../../js/dhtmlXTree.js"></script><link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><script type="text/javascript" src="../../dropzone/dist/dropzone.js"></script><?php include_once("../../anexosdigitales/funciones_archivo.php"); ?><script type="text/javascript" src="../../anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link href="../../dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" /><script type='text/javascript'> hs.graphicsDir = '../../anexosdigitales/highslide-5.0.0/highslide/graphics/'; hs.outlineType = 'rounded-white';</script><style>label.error{color:red}</style>
 				<script type='text/javascript'>
   $(document).ready(function() {
 			  		$('#formulario_formatos').validate();
 				});
 				</script> 
 			</head>
-			<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">COMUNICACIÓN INTERNA</td></tr><input type="hidden" name="expediente_serie" value="<?php echo(mostrar_valor_campo('expediente_serie',2,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="estado_documento" value="<?php echo(mostrar_valor_campo('estado_documento',2,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_memorando" value="<?php echo(mostrar_valor_campo('idft_memorando',2,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',2,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',2,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',2,$_REQUEST['iddoc'])); ?>"><tr id="tr_fecha_memorando">
-                     <td class="encabezado" width="20%" title="">FECHA*</td>
-                     <?php fecha_formato(2,19,$_REQUEST['iddoc']);?></tr><tr id="tr_serie_idserie">
+			<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">COMUNICACIÓN INTERNA</td></tr><input type="hidden" name="expediente_serie" value="<?php echo(mostrar_valor_campo('expediente_serie',2,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="estado_documento" value="<?php echo(mostrar_valor_campo('estado_documento',2,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_memorando" value="<?php echo(mostrar_valor_campo('idft_memorando',2,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',2,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',2,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',2,$_REQUEST['iddoc'])); ?>"><tr id="tr_fecha_memorando"><td class="encabezado" width="20%" title="">FECHA*</td><?php fecha_formato(2,19,$_REQUEST['iddoc']);?></tr><tr id="tr_serie_idserie">
 								<td class="encabezado" width="20%" title="">CLASIFICAR EN EXPEDIENTE</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(2,28,'4',$_REQUEST['iddoc']);?></div><br/><input type="hidden" maxlength="11"  name="serie_idserie" id="serie_idserie"   value="<?php cargar_seleccionados(2,28,1,$_REQUEST['iddoc']);?>" ><div id="esperando_serie_idserie">
 									<img src="../../imagenes/cargando.gif">
 								</div>
@@ -29,7 +14,9 @@
 								var browserType;
 								if (document.layers) {browserType = "nn4"}
 								if (document.all) {browserType = "ie"}
-								if (window.navigator.userAgent.toLowerCase().match("gecko")) {browserType= "gecko"}
+								if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+									browserType= "gecko"
+								}
 								tree_serie_idserie=new dhtmlXTreeObject("treeboxbox_serie_idserie","100%","100%",0);
 								tree_serie_idserie.setImagePath("../../imgs/");
 								tree_serie_idserie.enableIEImageFix(true);tree_serie_idserie.enableCheckBoxes(1);
@@ -56,6 +43,7 @@
 									}
 									document.poppedLayer.style.display = "none";
 								}
+
 								function cargando_serie_idserie() {
 									if (browserType == "gecko" ) {
 										document.poppedLayer = eval('document.getElementById("esperando_serie_idserie")');
@@ -88,7 +76,9 @@
 								var browserType;
 								if (document.layers) {browserType = "nn4"}
 								if (document.all) {browserType = "ie"}
-								if (window.navigator.userAgent.toLowerCase().match("gecko")) {browserType= "gecko"}
+								if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+									browserType= "gecko"
+								}
 								tree_destino=new dhtmlXTreeObject("treeboxbox_destino","100%","100%",0);
 								tree_destino.setImagePath("../../imgs/");
 								tree_destino.enableIEImageFix(true);tree_destino.enableCheckBoxes(1);
@@ -133,6 +123,7 @@
 									}
 									document.poppedLayer.style.display = "none";
 								}
+
 								function cargando_destino() {
 									if (browserType == "gecko" ) {
 										document.poppedLayer = eval('document.getElementById("esperando_destino")');
@@ -165,7 +156,9 @@
 								var browserType;
 								if (document.layers) {browserType = "nn4"}
 								if (document.all) {browserType = "ie"}
-								if (window.navigator.userAgent.toLowerCase().match("gecko")) {browserType= "gecko"}
+								if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+									browserType= "gecko"
+								}
 								tree_copia=new dhtmlXTreeObject("treeboxbox_copia","100%","100%",0);
 								tree_copia.setImagePath("../../imgs/");
 								tree_copia.enableIEImageFix(true);tree_copia.enableCheckBoxes(1);
@@ -210,6 +203,7 @@
 									}
 									document.poppedLayer.style.display = "none";
 								}
+
 								function cargando_copia() {
 									if (browserType == "gecko" ) {
 										document.poppedLayer = eval('document.getElementById("esperando_copia")');
@@ -231,21 +225,14 @@
                      <td bgcolor="#F5F5F5"><input  maxlength="255"  class="required"   tabindex='3'  type="text" size="100" id="asunto" name="asunto"  value="<?php echo(mostrar_valor_campo('asunto',2,$_REQUEST['iddoc'])); ?>"></td>
                     </tr><tr id="tr_contenido">
                      <td class="encabezado" width="20%" title="">CONTENIDO*</td>
-                     <td class="celda_transparente"><textarea  tabindex='4'  name="contenido" id="contenido" cols="53" rows="3" class="tiny_avanzado required"><?php echo(mostrar_valor_campo('contenido',2,$_REQUEST['iddoc'])); ?></textarea></td>
-                    </tr><tr id="tr_despedida">
-                     <td class="encabezado" width="20%" title="">DESPEDIDA*</td>
-                     <?php despedida(2,25,$_REQUEST['iddoc']);?></tr><tr id="tr_iniciales">
-                     <td class="encabezado" width="20%" title="">INICIALES DE QUIEN PREPARO EL MEMORANDO*</td>
-                     <?php iniciales(2,26,$_REQUEST['iddoc']);?></tr><tr id="tr_anexos">
+                     <td class="celda_transparente"><textarea  tabindex='4'  name="contenido" id="contenido" cols="53" rows="3" class="tiny_avanzado required"><?php echo(mostrar_valor_campo('contenido',2,$_REQUEST['iddoc'])); ?></textarea></td></tr><tr id="tr_despedida"><td class="encabezado" width="20%" title="">DESPEDIDA*</td><?php despedida(2,25,$_REQUEST['iddoc']);?></tr><tr id="tr_iniciales"><td class="encabezado" width="20%" title="">INICIALES DE QUIEN PREPARO EL MEMORANDO*</td><?php iniciales(2,26,$_REQUEST['iddoc']);?></tr><tr id="tr_anexos">
                      <td class="encabezado" width="20%" title="Anexos digitales">ANEXOS DIGITALES</td>
                      <td class="celda_transparente"><?php echo '<div class="textwrapper">
 			<a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=2&idcampo=32" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
 			objectType: \'iframe\', outlineType: \'rounded-white\', wrapperClassName: \'highslide-wrapper drag-header\',
 			outlineWhileAnimating: true, preserveContent: false, width: 400 } )">Administrar Anexos</a>
-			</div>'; ?></td></tr><tr id="tr_anexos_fisicos">
-                     <td class="encabezado" width="20%" title="">ANEXOS FISICOS</td>
-                     <?php anexos_fisicos(2,27,$_REQUEST['iddoc']);?></tr><tr id="tr_email_aprobar" >
-                     <td class="encabezado" width="20%" title="">APROBAR FUERA DE SAIA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(2,5176,$_REQUEST['iddoc']);?></td></tr><?php mostrar_imagenes(2,NULL,$_REQUEST['iddoc']);?><input type="hidden" name="campo_descripcion" value="<?php echo('23'); ?>"><input type="hidden" name="formato" value="2"><tr><td colspan='2'><?php submit_formato(2,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("2-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
+			</div>'; ?></td></tr><tr id="tr_anexos_fisicos"><td class="encabezado" width="20%" title="">ANEXOS FISICOS</td><?php anexos_fisicos(2,27,$_REQUEST['iddoc']);?></tr><tr id="tr_email_aprobar" >
+                     <td class="encabezado" width="20%" title="">APROBAR FUERA DE SAIA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(2,5176,$_REQUEST['iddoc']);?></td></tr><?php mostrar_imagenes(2,NULL,$_REQUEST['iddoc']);?><input type="hidden" name="campo_descripcion" value="<?php echo('23'); ?>"><input type="hidden" name="formato" value="2"><tr><td colspan='2'><?php submit_formato(2,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
                 var upload_url = '../../dropzone/cargar_archivos_formato.php';
                 var mensaje = 'Arrastre aquí los archivos';
                 Dropzone.autoDiscover = false;
@@ -327,4 +314,4 @@
                         $(this).addClass('dropzone');
                     });
                 });</script>
-		</html><?php include_once("../librerias/footer_plantilla.php");?>
+		</html><?php include_once("../../" . FORMATOS_SAIA . "librerias/footer_plantilla.php");?>

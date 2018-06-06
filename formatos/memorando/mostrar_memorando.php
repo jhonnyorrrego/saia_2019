@@ -1,12 +1,4 @@
-<?php include_once("../../librerias_saia.php"); ?>
-			<?php echo(librerias_jquery('1.7')); ?><?php include_once("../carta/funciones.php"); ?>
-			<?php include_once("../../class_transferencia.php"); ?>
-			<?php include_once("../librerias/funciones_generales.php"); ?>
-			<?php include_once("../librerias/encabezado_pie_pagina.php"); ?>
-			<?php include_once("funciones.php"); ?>
-			<?php include_once("../../pantallas/qr/librerias.php"); ?>
-			<?php include_once("../librerias/header_nuevo.php"); ?>
-			<tr><td><table style="width: 100%; border-collapse: collapse;" border="0">
+<?php include_once("../../librerias_saia.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../funciones.php"); ?><?php include_once("../carta/../librerias/funciones_generales.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../carta/../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/funciones_generales.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../carta/../../pantallas/qr/librerias.php"); ?><?php include_once("../../formatos/librerias/header_nuevo.php"); ?><tr><td><table style="width: 100%; border-collapse: collapse;" border="0">
 <tbody>
 <tr>
 <td width="15%">&nbsp;</td>
@@ -65,5 +57,4 @@
 <td colspan="3"><?php mostrar_anexos(2,$_REQUEST['iddoc']);?><br /><?php mostrar_copias_memo(2,$_REQUEST['iddoc']);?><br />Proyect&oacute;: <?php mostrar_iniciales(2,$_REQUEST['iddoc']);?></td>
 </tr>
 </tbody>
-</table></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>
-			
+</table></td></tr><?php include_once("../../formatos/librerias/footer_nuevo.php"); ?>
