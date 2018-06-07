@@ -262,12 +262,11 @@ $("document").ready(function(){
 	$("#nombre_formato").blur(function(){
 		$.ajax({
 		  type:'POST',
+		  dataType:'json',
 		  url: "<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php",
 		  async:false,
 		  data: "librerias=pantallas/generador/librerias_formato.php&funcion=verificar_nombre_formato&parametros="+$("#nombre_formato").val()+"&rand="+Math.round(Math.random()*100000),
-		  success: function(html){
-		    if(html){
-		      var objeto=jQuery.parseJSON(html);
+		  success: function(objeto){
 		      if(objeto.exito){
 		    	  notificacion_saia(objeto.mensaje,'success','topCenter',3000);
 		      }
@@ -275,7 +274,7 @@ $("document").ready(function(){
 		    	  notificacion_saia(objeto.mensaje,'error','topCenter',3000);
 		    	  $("#nombre_formato").focus();
 		      }
-		  	}
+		  	
 		  }
 		});
 	});
@@ -289,11 +288,10 @@ $("document").ready(function(){
 			parsear_items();
 			$.ajax({
         type:'POST',
+        dataType:'json',
         url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias_pantalla.php",
         data: "ejecutar_datos_pantalla="+buttonAcep.attr('value')+"&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+'&'+formulario.serialize()+"&nombre="+formato[0].nombre,
-        success: function(html){
-          if(html){
-            var objeto=jQuery.parseJSON(html);
+        success: function(objeto){
             if(objeto.exito){
               $('#cargando_enviar').html("Terminado ...");
               var ruta_iframe=$(".k-focus",window.parent.document).find("iframe").attr("src");
@@ -307,7 +305,7 @@ $("document").ready(function(){
             	notificacion_saia(objeto.error,'error','topCenter',3000);
             	buttonAcep.removeAttr('disabled');
             }
-        	}
+        	
         }
     	});
 		}
