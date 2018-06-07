@@ -101,13 +101,13 @@ class Version20180515205347 extends AbstractMigration {
         $this->abortIf(!$tabla_comp->hasColumn("llave"), 'campo busqueda_componente.llave no existe');
 
         $tabla_busq = $schema->getTable('busqueda');
-        $this->abortIf($tabla_busq->hasColumn("llave"), 'campo busqueda.llave ya existe');
 
-        $tabla_busq->addColumn("llave", "string", [
-            "length" => 255,
-            "default" => "iddocumento"
-        ]);
-
+        if(!$tabla_busq->hasColumn("llave")) {
+            $tabla_busq->addColumn("llave", "string", [
+                "length" => 255,
+                "default" => "iddocumento"
+            ]);
+        }
         $conn = $this->connection;
 
         $queryBuilder = $conn->createQueryBuilder();

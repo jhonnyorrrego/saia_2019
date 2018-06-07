@@ -144,30 +144,39 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 				<div class="tab-pane" id="encabezado_pie-tab">
 					<br>
 					<legend>Encabezado</legend><br>
-					<select name="encabezado" id="encabezado">
+					<select name="sel_encabezado" id="sel_encabezado">
 						<option value="0">Por favor Seleccione</option>
 						<?php
 							$encabezados=busca_filtro_tabla("","encabezado_formato","1=1","etiqueta",$conn);
 							$contenido_enc = array();
+							$etiqueta_enc = array();
 							$idencabezado = 0;
+							$etiqueta_encabezado = "";
 							for($i=0;$i<$encabezados["numcampos"];$i++) {
 							    $contenido_enc[$encabezados[$i]["idencabezado_formato"]] = $encabezados[$i]["contenido"];
-								echo("<option value='".$encabezados[$i]["idencabezado_formato"]."'");
+							    $etiqueta_enc[$encabezados[$i]["idencabezado_formato"]] = $encabezados[$i]["etiqueta"];
+							    echo("<option value='".$encabezados[$i]["idencabezado_formato"]."'");
 								if($encabezados[$i]["idencabezado_formato"] == $datos_formato[0]["encabezado"]) {
 								    $idencabezado = $encabezados[$i]["idencabezado_formato"];
+								    $etiqueta_encabezado = $encabezados[$i]["etiqueta"];
 									echo(' selected="selected" ');
 								}
 								echo(">".$encabezados[$i]["etiqueta"]."</option>");
 							}
 						?>
 					</select>
-					<div class="btn btn-mini btn-info adicionar_encabezado_pie" id="adicionar_encabezado" enlace="formatos/encabezadoadd.php?adicionar=1">Adicionar</div>
+					<div class="btn btn-mini" id="limpiar_encabezado" title="Limpiar"><i class="icon-refresh"></i></div>
+					<div class="btn btn-mini btn-primary disabled" id="adicionar_encabezado">Adicionar</div>
+					<div class="btn btn-mini btn-success disabled" id="modificar_encabezado">Modificar</div>
+					<div class="btn btn-mini btn-danger <?php echo ($idencabezado ? "" : "disabled"); ?>" id="eliminar_encabezado">Eliminar</div>
 
                   <form name="formulario_editor_encabezado" id="formulario_editor_encabezado" action="">
                   <input type="hidden" name="idencabezado" id="idencabezado" value="<?php echo $idencabezado;?>"></input>
-                  <div style="display: none;" id="div_etiqueta_encabezado">
-                    <label for="etiqueta_encabezado">Etiqueta: </label>
-                  	<input type="text" id="etiqueta_encabezado" name="etiqueta_encabezado"></input>
+                  <input type="hidden" name="accion_encabezado" id="accion_encabezado" value="1"></input>
+                  <div id="div_etiqueta_encabezado">
+                    <label for="etiqueta_encabezado">Etiqueta:
+                  		<input type="text" id="etiqueta_encabezado" name="etiqueta_encabezado" value="<?php echo $etiqueta_encabezado;?>"></input>
+					</label>
                   </div>
                   <textarea name="editor_encabezado" id="editor_encabezado" class="editor_tiny"> <?php
                   if($idencabezado) {
@@ -177,30 +186,36 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
                   </textarea>
                   </form>
 					<legend>Pie</legend><br>
-					<select name="pie" id="pie_pagina">
+					<select name="sel_pie_pagina" id="sel_pie_pagina">
 						<option value="0">Por favor Seleccione</option>
 						<?php
 						    $idpie = 0;
-
-							$pie_pagina=busca_filtro_tabla("","encabezado_formato","1=1","etiqueta",$conn);
+						    $etiqueta_pie = "";
+						    $pie_pagina=$encabezados; // No volver a consultar
 							for($i=0; $i<$pie_pagina["numcampos"]; $i++) {
 								echo("<option value='" . $pie_pagina[$i]["idencabezado_formato"] . "'");
 								if($pie_pagina[$i]["idencabezado_formato"]==$datos_formato[0]["pie_pagina"]) {
 								    $idpie = $pie_pagina[$i]["idencabezado_formato"];
+								    $etiqueta_pie = $pie_pagina[$i]["etiqueta"];
 								    echo(' selected="selected" ');
 								}
 								echo(">".$pie_pagina[$i]["etiqueta"]."</option>");
 							}
 						?>
 					</select>
-					<div class="btn btn-mini btn-info adicionar_encabezado_pie" id="adicionar_pie" enlace="formatos/encabezadoadd.php?adicionar=1">Adicionar</div>
+
+					<div class="btn btn-mini" id="limpiar_pie" title="Limpiar"><i class="icon-refresh"></i></div>
+					<div class="btn btn-mini btn-primary disabled" id="adicionar_pie">Adicionar</div>
+					<div class="btn btn-mini btn-success disabled" id="modificar_pie">Modificar</div>
+					<div class="btn btn-mini btn-danger <?php echo ($idpie ? "" : "disabled"); ?>" id="eliminar_pie">Eliminar</div>
+
 
                   <form name="formulario_editor_pie" id="formulario_editor_pie" action="">
                   <input type="hidden" name="idpie" id="idpie" value="<?php echo $idpie;?>"></input>
 
-                  <div style="display: none;" id="div_etiqueta_pie">
+                  <div id="div_etiqueta_pie">
                     <label for="etiqueta_pie">Etiqueta: </label>
-                  	<input type="text" id="etiqueta_pie" name="etiqueta_pie"></input>
+                  	<input type="text" id="etiqueta_pie" name="etiqueta_pie" value="<?php echo $etiqueta_pie;?>"></input>
                   </div>
                   <textarea name="editor_pie" id="editor_pie" class="editor_tiny"> <?php
                   if($idpie) {
@@ -212,7 +227,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
                   <script type="text/javascript">
 					var encabezados = <?php echo json_encode($contenido_enc); ?>;
 					var idencabezado = <?php echo $idencabezado;?>;
-
+					var etiquetas = <?php echo json_encode($etiqueta_enc);?>;
                   </script>
 
 				</div>
@@ -440,26 +455,65 @@ for($i=0;$i<$cant_js;$i++){
 <!--script src="<?php echo($ruta_db_superior)?>pantallas/generador/editor/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?php echo($ruta_db_superior)?>pantallas/generador/editor/ext-language_tools.js"></script-->
 <script type="text/javascript">
-$(document).ready(function(){
-campo_id_foco="";
-var alto=$(window).height();
-var browserType;
-var tab_acciones=false;
-iniciar_tooltip();
-if (document.layers) {browserType = "nn4"}
-if (document.all) {browserType = "ie"}
-if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-   browserType= "gecko"
-}
-$(".nav li").click(function(){
-  if ($(this).hasClass('disabled')){
-    return false;
-  }
-});
-$(document).on("change","#encabezado",function(){
+$(document).ready(function() {
+    campo_id_foco="";
+    var alto=$(window).height();
+    var browserType;
+    var tab_acciones=false;
+    iniciar_tooltip();
+    if (document.layers) {browserType = "nn4"}
+    if (document.all) {browserType = "ie"}
+    if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+       browserType= "gecko"
+    }
+    $(".nav li").click(function(){
+      if ($(this).hasClass('disabled')){
+        return false;
+      }
+    });
+
+	var formulario_encabezado = $("#formulario_editor_encabezado");
+	formulario_encabezado.validate({
+        rules: {
+          "etiqueta_encabezado": {
+              required: true,
+              minlength:1
+          },
+          "editor_encabezado": {
+              required: true,
+              minlength:1
+          }
+        }
+	});
+	var formulario_pie = $("#formulario_editor_pie");
+	formulario_pie.validate({
+        rules: {
+          "etiqueta_pie": {
+              required: true,
+              minlength:1
+          },
+          "editor_pie": {
+              required: true,
+              minlength:1
+          }
+        }
+  });
+
+$(document).on("change","#sel_encabezado",function(){
   	var seleccionado = this.value;
   	var editor = tinymce.get('editor_encabezado');
-  	editor.setContent(encabezados[seleccionado]);
+
+  	$("#idencabezado").val(seleccionado);
+  	if(seleccionado > 0) {
+        $("#eliminar_encabezado").addClass('enabled');
+
+      	editor.setContent(encabezados[seleccionado]);
+      	$("#etiqueta_encabezado").val(etiquetas[seleccionado]);
+  	} else {
+        $("#eliminar_encabezado").addClass('enabled');
+      	editor.setContent("");
+      	$("#etiqueta_encabezado").val("");
+  	}
 
 	 $.ajax({
          type:'POST',
@@ -474,58 +528,142 @@ $(document).on("change","#encabezado",function(){
          	}
          }
      	});
+
 });
-$(document).on("change","#pie_pagina",function(){
+
+$(document).on("change","#sel_pie_pagina",function() {
   	var seleccionado = this.value;
   	var editor = tinymce.get('editor_pie');
-  	editor.setContent(encabezados[seleccionado]);
+
+  	if(seleccionado > 0) {
+        $("#eliminar_pie").addClass('enabled');
+      	editor.setContent(encabezados[seleccionado]);
+      	$("#etiqueta_pie").val(etiquetas[seleccionado]);
+  	} else {
+        $("#eliminar_pie").addClass('enabled');
+      	editor.setContent("");
+      	$("#etiqueta_pie").val(etiquetas[seleccionado]);
+  	}
 
 	 $.ajax({
         type:'POST',
         url: "<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php",
         data: "librerias=pantallas/generador/librerias_formato.php&funcion=actualizar_encabezado_pie&parametros="+$("#idformato").val()+";pie;"+seleccionado+";1&rand="+Math.round(Math.random()*100000),
-        success: function(html){
-          if(html){
-            var objeto=jQuery.parseJSON(html);
-            if(objeto.exito){
-            	notificacion_saia("Pie pagina actualizado","success","",3000);
-            }
+        success: function(html) {
+        	if(html) {
+            	var objeto=jQuery.parseJSON(html);
+            	if(objeto.exito) {
+            		notificacion_saia("Pie pagina actualizado","success","",3000);
+            	}
         	}
         }
-    	});
+    });
 });
 
-	$("#adicionar_encabezado").click(function(e){
-  		var enlace=$(this).attr("enlace");
-  		$("#div_etiqueta_encabezado").toggle();
-  		$("#encabezado option[selected]").removeAttr("selected");
-        $("#idencabezado").val();
+$(document).on("click", "#adicionar_encabezado", function(e) {
+	if(formulario_encabezado.valid()){
+
+	  	var editor = tinymce.get('editor_encabezado');
+		var etiqueta = $("#etiqueta_encabezado").val();
+		var contenido = editor.getContent();
+
+		var datos = {
+			ejecutar_libreria_encabezado: "actualizar_contenido_encabezado",
+			idencabezado : 0,
+			rand: Math.round(Math.random()*100000),
+			etiqueta : etiqueta,
+			contenido : contenido,
+			tipo_retorno : 1
+		};
+		$.ajax({
+            type:'POST',
+            dataType: "json",
+            url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias_formato.php",
+            data: datos,
+            success: function(data) {
+                //console.log(data);
+            	if(data.exito == 1) {
+            		$("#sel_encabezado").empty();
+            		encabezados = [];
+            		$("#sel_encabezado").append('<option value="0">Por favor seleccione</option>');
+            	    $.each(data.datos, function() {
+            	    	encabezados[this.idencabezado] = this.contenido;
+            	    	etiquetas[this.idencabezado] = this.etiqueta;
+            	        $("#sel_encabezado").append('<option value="'+ this.idencabezado +'">'+ this.etiqueta +'</option>');
+            	    });
+            	    $("#adicionar_encabezado").addClass("disabled");
+            		notificacion_saia("Encabezado pagina guardado","success","",3000);
+            	}
+            }
+        });
+	}
+
+});
+
+$(document).on("click", "#limpiar_encabezado", function(e) {
+	//$("#div_etiqueta_encabezado").show();
+	$("#sel_encabezado option[selected]").removeAttr("selected");
+    $("#idencabezado").val("0");
+    $("#eliminar_encabezado").addClass('disabled');
+    $("#etiqueta_encabezado").val("");
+
+  	var editor = tinymce.get('editor_encabezado');
+  	editor.setContent("");
+
+});
+
+$(document).on("click", "#adicionar_pie", function(e) {
+	if(formulario_pie.valid()){
+
+	  	var editor = tinymce.get('editor_pie');
+		var etiqueta = $("#etiqueta_pie").val();
+		var contenido = editor.getContent();
+
+		var datos = {
+			ejecutar_libreria_encabezado: "actualizar_contenido_encabezado",
+			idencabezado : 0,
+			rand: Math.round(Math.random()*100000),
+			etiqueta : etiqueta,
+			contenido : contenido,
+			tipo_retorno : 1
+		};
+		$.ajax({
+            type:'POST',
+            dataType: "json",
+            url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias_formato.php",
+            data: datos,
+            success: function(data) {
+                //console.log(data);
+            	if(data.exito == 1) {
+            		$("#sel_pie_pagina").empty();
+            		encabezados = [];
+            		$("#sel_pie_pagina").append('<option value="0">Por favor seleccione</option>');
+            	    $.each(data.datos, function() {
+            	    	encabezados[this.idencabezado] = this.contenido;
+            	    	etiquetas[this.idencabezado] = this.etiqueta;
+            	        $("#sel_pie_pagina").append('<option value="'+ this.idencabezado +'">'+ this.etiqueta +'</option>');
+            	    });
+            	    $("#adicionar_pie").addClass("disabled");
+            		notificacion_saia("Pie pagina guardado","success","",3000);
+            	}
+            }
+        });
+	}
 
 
-  		//$("#encabezado").val();
-  		//$("#encabezado").prop('selectedIndex', -1);
+});
 
-  	  	var editor = tinymce.get('editor_encabezado');
-  	  	editor.setContent("");
+$(document).on("click", "#limpiar_pie", function(e) {
+	//$("#div_etiqueta_pie").show();
+	$("#sel_pie_pagina option[selected]").removeAttr("selected");
+    $("#idpie").val("0");
+    $("#etiqueta_pie").val("");
+    $("#eliminar_pie").addClass('disabled');
 
-  		/*top.hs.htmlExpand(this, { objectType: 'iframe',width: 600, height: 450,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
-  		top.hs.Expander.prototype.onAfterClose = function(obj) {
-      		console.log(obj);
-  		    alert("Hola");
-  		};*/
+  	var editor = tinymce.get('editor_pie');
+  	editor.setContent("");
 
-  		});
-  	$("#adicionar_pie").click(function(e){
-  		var enlace=$(this).attr("enlace");
-  		$("#div_etiqueta_pie").toggle();
-  		//$("#target").val($("#target option:first").val());
-  		/*top.hs.htmlExpand(this, { objectType: 'iframe',width: 600, height: 450,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
-  		top.hs.Expander.prototype.onAfterClose = function(obj) {
-      		console.log(obj);
-  		    alert("Hola");
-  		};*/
-
-  		});
+});
 
 $("#frame_tipo_listado").height(alto-125);
 $(".tab-pane").height(alto-50);
@@ -1058,10 +1196,29 @@ $("#tipo_pantalla_busqueda").change(function(){
  		$("#frame_tipo_listado").html("");
  	}
 });
-function cambios_editor(){
-	$("#actualizar_cuerpo_formato").removeClass("btn-success");
-	$("#actualizar_cuerpo_formato").addClass("btn-info");
+
+function cambios_editor(editor){
+	//console.log(editor);
+	if(editor.id == "editor_encabezado") {
+		var modo = $("#idencabezado").val();
+		if(modo == "" || modo == "0") {
+    		$("#adicionar_encabezado").removeClass("disabled");
+		} else {
+    		$("#modificar_encabezado").removeClass("disabled");
+		}
+	} else if(editor.id == "editor_pie") {
+		var modo = $("#idpie").val();
+		if(modo == "" || modo == "0") {
+    		$("#adicionar_pie").removeClass("disabled");
+		} else {
+    		$("#modificar_pie").removeClass("disabled");
+		}
+	} else {
+    	$("#actualizar_cuerpo_formato").removeClass("btn-success");
+    	$("#actualizar_cuerpo_formato").addClass("btn-info");
+	}
 }
+
 $(document).on("click","#actualizar_cuerpo_formato",function(){
 	 $.ajax({
    	  type:'POST',
