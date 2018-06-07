@@ -334,6 +334,42 @@ function actualizar_contenido_encabezado($idencabezado, $etiqueta, $contenido, $
     }
 }
 
+function eliminar_contenido_encabezado($idencabezado, $etiqueta, $contenido, $tipo_retorno = 1) {
+    global $conn;
+    $retorno = array(
+        "exito" => 0
+    );
+    $sql = "";
+    if (!empty($idencabezado)) {
+        $sql = "DELETE FROM encabezado_formato WHERE idencabezado_formato=" . $idencabezado;
+        phpmkr_query($sql);
+        $retorno["exito"] = 1;
+        $retorno["sql"] = $sql;
+    }
+
+    $encabezados = busca_filtro_tabla("", "encabezado_formato", "1=1", "etiqueta", $conn);
+    $datos = array();
+    for ($i = 0; $i < $encabezados["numcampos"]; $i++) {
+        $fila = array(
+            "idencabezado" => $encabezados[$i]["idencabezado_formato"],
+            "etiqueta" => $encabezados[$i]["etiqueta"],
+            "contenido" => $encabezados[$i]["contenido"]
+        );
+        $datos[] = $fila;
+    }
+
+    if (!empty($datos)) {
+        $retorno["datos"] = $datos;
+    }
+
+    if ($tipo_retorno == 1) {
+        echo (json_encode($retorno));
+    } else {
+        return ($retorno);
+    }
+}
+
+
 if (@$_REQUEST["ejecutar_libreria_formato"]) {
     if (!@$_REQUEST["tipo_retorno"]) {
         $_REQUEST["tipo_retorno"] = 1;
