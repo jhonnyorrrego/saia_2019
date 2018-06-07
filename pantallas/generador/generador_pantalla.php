@@ -144,19 +144,21 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 				<div class="tab-pane" id="encabezado_pie-tab">
 					<br>
 					<legend>Encabezado</legend><br>
-					<select name="encabezado" id="encabezado">
+					<select name="sel_encabezado" id="sel_encabezado">
 						<option value="0">Por favor Seleccione</option>
 						<?php
 							$encabezados=busca_filtro_tabla("","encabezado_formato","1=1","etiqueta",$conn);
 							$contenido_enc = array();
 							$etiqueta_enc = array();
 							$idencabezado = 0;
+							$etiqueta_encabezado = "";
 							for($i=0;$i<$encabezados["numcampos"];$i++) {
 							    $contenido_enc[$encabezados[$i]["idencabezado_formato"]] = $encabezados[$i]["contenido"];
 							    $etiqueta_enc[$encabezados[$i]["idencabezado_formato"]] = $encabezados[$i]["etiqueta"];
 							    echo("<option value='".$encabezados[$i]["idencabezado_formato"]."'");
 								if($encabezados[$i]["idencabezado_formato"] == $datos_formato[0]["encabezado"]) {
 								    $idencabezado = $encabezados[$i]["idencabezado_formato"];
+								    $etiqueta_encabezado = $encabezados[$i]["etiqueta"];
 									echo(' selected="selected" ');
 								}
 								echo(">".$encabezados[$i]["etiqueta"]."</option>");
@@ -173,7 +175,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
                   <input type="hidden" name="accion_encabezado" id="accion_encabezado" value="1"></input>
                   <div id="div_etiqueta_encabezado">
                     <label for="etiqueta_encabezado">Etiqueta:
-                  		<input type="text" id="etiqueta_encabezado" name="etiqueta_encabezado"></input>
+                  		<input type="text" id="etiqueta_encabezado" name="etiqueta_encabezado" value="<?php echo $etiqueta_encabezado;?>"></input>
 					</label>
                   </div>
                   <textarea name="editor_encabezado" id="editor_encabezado" class="editor_tiny"> <?php
@@ -184,16 +186,17 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
                   </textarea>
                   </form>
 					<legend>Pie</legend><br>
-					<select name="pie" id="pie_pagina">
+					<select name="sel_pie_pagina" id="sel_pie_pagina">
 						<option value="0">Por favor Seleccione</option>
 						<?php
 						    $idpie = 0;
-
+						    $etiqueta_pie = "";
 						    $pie_pagina=$encabezados; // No volver a consultar
 							for($i=0; $i<$pie_pagina["numcampos"]; $i++) {
 								echo("<option value='" . $pie_pagina[$i]["idencabezado_formato"] . "'");
 								if($pie_pagina[$i]["idencabezado_formato"]==$datos_formato[0]["pie_pagina"]) {
 								    $idpie = $pie_pagina[$i]["idencabezado_formato"];
+								    $etiqueta_pie = $pie_pagina[$i]["etiqueta"];
 								    echo(' selected="selected" ');
 								}
 								echo(">".$pie_pagina[$i]["etiqueta"]."</option>");
@@ -212,7 +215,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 
                   <div id="div_etiqueta_pie">
                     <label for="etiqueta_pie">Etiqueta: </label>
-                  	<input type="text" id="etiqueta_pie" name="etiqueta_pie"></input>
+                  	<input type="text" id="etiqueta_pie" name="etiqueta_pie" value="<?php echo $etiqueta_pie;?>"></input>
                   </div>
                   <textarea name="editor_pie" id="editor_pie" class="editor_tiny"> <?php
                   if($idpie) {
@@ -224,7 +227,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
                   <script type="text/javascript">
 					var encabezados = <?php echo json_encode($contenido_enc); ?>;
 					var idencabezado = <?php echo $idencabezado;?>;
-
+					var etiquetas = <?php echo json_encode($etiqueta_enc);?>;
                   </script>
 
 				</div>
@@ -496,7 +499,7 @@ $(document).ready(function() {
         }
   });
 
-$(document).on("change","#encabezado",function(){
+$(document).on("change","#sel_encabezado",function(){
   	var seleccionado = this.value;
   	var editor = tinymce.get('editor_encabezado');
 
@@ -505,10 +508,11 @@ $(document).on("change","#encabezado",function(){
         $("#eliminar_encabezado").addClass('enabled');
 
       	editor.setContent(encabezados[seleccionado]);
-
+      	$("#etiqueta_encabezado").val(etiquetas[seleccionado]);
   	} else {
         $("#eliminar_encabezado").addClass('enabled');
       	editor.setContent("");
+      	$("#etiqueta_encabezado").val("");
   	}
 
 	 $.ajax({
@@ -527,16 +531,18 @@ $(document).on("change","#encabezado",function(){
 
 });
 
-$(document).on("change","#pie_pagina",function() {
+$(document).on("change","#sel_pie_pagina",function() {
   	var seleccionado = this.value;
   	var editor = tinymce.get('editor_pie');
 
   	if(seleccionado > 0) {
         $("#eliminar_pie").addClass('enabled');
       	editor.setContent(encabezados[seleccionado]);
+      	$("#etiqueta_pie").val(etiquetas[seleccionado]);
   	} else {
         $("#eliminar_pie").addClass('enabled');
       	editor.setContent("");
+      	$("#etiqueta_pie").val(etiquetas[seleccionado]);
   	}
 
 	 $.ajax({
@@ -557,10 +563,9 @@ $(document).on("change","#pie_pagina",function() {
 $(document).on("click", "#adicionar_encabezado", function(e) {
 	if(formulario_encabezado.valid()){
 
-		var datosf = formulario_encabezado.serialize();
-
-		var etiqueta = datosf["etiqueta_encabezado"];
-		var contenido = datosf["editor_encabezado"];
+	  	var editor = tinymce.get('editor_encabezado');
+		var etiqueta = $("#etiqueta_encabezado").val();
+		var contenido = editor.getContent();
 
 		var datos = {
 			ejecutar_libreria_encabezado: "actualizar_contenido_encabezado",
@@ -576,14 +581,18 @@ $(document).on("click", "#adicionar_encabezado", function(e) {
             url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias_formato.php",
             data: datos,
             success: function(data) {
-                console.log(data);
+                //console.log(data);
             	if(data.exito == 1) {
-            		$("#encabezado").remove();
-        	        $("#encabezado").append('<option value="0">Por favor seleccione</option>');
+            		$("#sel_encabezado").empty();
+            		encabezados = [];
+            		$("#sel_encabezado").append('<option value="0">Por favor seleccione</option>');
             	    $.each(data.datos, function() {
-            	        $("#encabezado").append('<option value="'+ this.idencabezado +'">'+ this.etiqueta +'</option>');
+            	    	encabezados[this.idencabezado] = this.contenido;
+            	    	etiquetas[this.idencabezado] = this.etiqueta;
+            	        $("#sel_encabezado").append('<option value="'+ this.idencabezado +'">'+ this.etiqueta +'</option>');
             	    });
-                	//console.log(html);
+            	    $("#adicionar_encabezado").addClass("disabled");
+            		notificacion_saia("Encabezado pagina guardado","success","",3000);
             	}
             }
         });
@@ -593,9 +602,10 @@ $(document).on("click", "#adicionar_encabezado", function(e) {
 
 $(document).on("click", "#limpiar_encabezado", function(e) {
 	//$("#div_etiqueta_encabezado").show();
-	$("#encabezado option[selected]").removeAttr("selected");
-    $("#idencabezado").val("");
+	$("#sel_encabezado option[selected]").removeAttr("selected");
+    $("#idencabezado").val("0");
     $("#eliminar_encabezado").addClass('disabled');
+    $("#etiqueta_encabezado").val("");
 
   	var editor = tinymce.get('editor_encabezado');
   	editor.setContent("");
@@ -605,10 +615,9 @@ $(document).on("click", "#limpiar_encabezado", function(e) {
 $(document).on("click", "#adicionar_pie", function(e) {
 	if(formulario_pie.valid()){
 
-		var datosf = formulario_pie.serialize();
-
-		var etiqueta = datosf["etiqueta_pie"];
-		var contenido = datosf["editor_pie"];
+	  	var editor = tinymce.get('editor_pie');
+		var etiqueta = $("#etiqueta_pie").val();
+		var contenido = editor.getContent();
 
 		var datos = {
 			ejecutar_libreria_encabezado: "actualizar_contenido_encabezado",
@@ -623,9 +632,19 @@ $(document).on("click", "#adicionar_pie", function(e) {
             dataType: "json",
             url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias_formato.php",
             data: datos,
-            success: function(html) {
-            	if(html) {
-                	console.log(html);
+            success: function(data) {
+                //console.log(data);
+            	if(data.exito == 1) {
+            		$("#sel_pie_pagina").empty();
+            		encabezados = [];
+            		$("#sel_pie_pagina").append('<option value="0">Por favor seleccione</option>');
+            	    $.each(data.datos, function() {
+            	    	encabezados[this.idencabezado] = this.contenido;
+            	    	etiquetas[this.idencabezado] = this.etiqueta;
+            	        $("#sel_pie_pagina").append('<option value="'+ this.idencabezado +'">'+ this.etiqueta +'</option>');
+            	    });
+            	    $("#adicionar_pie").addClass("disabled");
+            		notificacion_saia("Pie pagina guardado","success","",3000);
             	}
             }
         });
@@ -636,8 +655,9 @@ $(document).on("click", "#adicionar_pie", function(e) {
 
 $(document).on("click", "#limpiar_pie", function(e) {
 	//$("#div_etiqueta_pie").show();
-	$("#pie_pagina option[selected]").removeAttr("selected");
-    $("#idpie").val("");
+	$("#sel_pie_pagina option[selected]").removeAttr("selected");
+    $("#idpie").val("0");
+    $("#etiqueta_pie").val("");
     $("#eliminar_pie").addClass('disabled');
 
   	var editor = tinymce.get('editor_pie');

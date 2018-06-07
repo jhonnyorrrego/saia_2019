@@ -302,11 +302,11 @@ function actualizar_contenido_encabezado($idencabezado, $etiqueta, $contenido, $
     $sql = "";
     $contenido = addslashes(stripslashes($contenido));
     if (empty($idencabezado)) {
-        $sql = "INSERT INTO encabezado_fomato(etiqueta, contenido) VALUES ('$etiqueta', '$contenido')";
+        $sql = "INSERT INTO encabezado_formato(etiqueta, contenido) VALUES ('$etiqueta', '$contenido')";
         phpmkr_query($sql);
         $retorno["exito"] = 1;
     } else {
-        $sql = "UPDATE encabezado_fomato set etiqueta='$etiqueta', contenido='$contenido' WHERE idencabezado_formato=" . $idencabezado;
+        $sql = "UPDATE encabezado_formato set etiqueta='$etiqueta', contenido='$contenido' WHERE idencabezado_formato=" . $idencabezado;
         phpmkr_query($sql);
         $retorno["exito"] = 1;
     }
@@ -314,18 +314,16 @@ function actualizar_contenido_encabezado($idencabezado, $etiqueta, $contenido, $
 
     $encabezados = busca_filtro_tabla("", "encabezado_formato", "1=1", "etiqueta", $conn);
     $datos = array();
-    if ($encabezados["numcampos"]) {
-        for ($i = 0; $i < $encabezados["numcampos"]; $i++) {
-            $fila = array(
-                "idencabezado" => $encabezados[$i]["idencabezado_formato"],
-                "etiqueta" => $encabezados[$i]["etiqueta"],
-                "contenido" => $encabezados[$i]["contenido"]
-            );
-            $datos[] = $fila;
-        }
+    for ($i = 0; $i < $encabezados["numcampos"]; $i++) {
+        $fila = array(
+            "idencabezado" => $encabezados[$i]["idencabezado_formato"],
+            "etiqueta" => $encabezados[$i]["etiqueta"],
+            "contenido" => $encabezados[$i]["contenido"]
+        );
+        $datos[] = $fila;
     }
 
-    if(!empty($datos)) {
+    if (!empty($datos)) {
         $retorno["datos"] = $datos;
     }
 
