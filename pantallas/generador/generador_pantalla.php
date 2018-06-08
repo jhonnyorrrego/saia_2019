@@ -93,7 +93,10 @@ for($i=0;$i<$campos["numcampos"];$i++){
 									<a href="#encabezado_pie-tab" data-toggle="tab">5-Encabezado pie</a>
 								</li>
 								<li>
-									<a href="#generar_formulario-tab" data-toggle="tab">6-Generar</a>
+									<a href="#asignar_funciones-tab" data-toggle="tab">6-Asignar funciones</a>
+								</li>
+								<li>
+									<a href="#generar_formulario-tab" data-toggle="tab">7-Generar</a>
 								</li>
 							</ul>
 							<div class="tab-content">
@@ -117,7 +120,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
                   ?>
                   </textarea>
                   </form>
-								</div>
+				</div>
                 <div class="tab-pane" id="pantalla_listar-tab">
                   <form name="formulario_editor_listar" id="formulario_editor_listar" action="">    <br />
                     <div id="tipo_listar">
@@ -141,6 +144,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 					<div id="configurar_libreria_pantalla"></div>
 					<div id="librerias_en_uso"></div>
 				</div>
+
 				<div class="tab-pane" id="encabezado_pie-tab">
 					<br>
 					<legend>Encabezado</legend><br>
@@ -230,6 +234,13 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
                   </script>
 
 				</div>
+
+
+				<div class="tab-pane" id="asignar_funciones-tab">
+					<?php include_once "asignar_funciones.php";?>
+				</div>
+
+
 				<div class="tab-pane" id="generar_formulario-tab">
 					<div class="accordion" id="acordion_generar">
 								  	<!-- div class="accordion-group">
