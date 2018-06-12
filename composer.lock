@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "e74ef41f884e75e26a701bbdac160c44",
+    "content-hash": "e59882a891ddd49295a4b6b44e2a891d",
     "packages": [
         {
             "name": "analog/analog",
@@ -1455,16 +1455,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v2.0.12",
+            "version": "v2.0.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "258c89a6b97de7dfaf5b8c7607d0478e236b04fb"
+                "reference": "10bcb46e8f3d365170f6de9d05245aa066b81f09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/258c89a6b97de7dfaf5b8c7607d0478e236b04fb",
-                "reference": "258c89a6b97de7dfaf5b8c7607d0478e236b04fb",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/10bcb46e8f3d365170f6de9d05245aa066b81f09",
+                "reference": "10bcb46e8f3d365170f6de9d05245aa066b81f09",
                 "shasum": ""
             },
             "require": {
@@ -1496,10 +1496,11 @@
             "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
             "keywords": [
                 "csprng",
+                "polyfill",
                 "pseudorandom",
                 "random"
             ],
-            "time": "2018-04-04T21:24:14+00:00"
+            "time": "2018-06-08T15:26:40+00:00"
         },
         {
             "name": "pclzip/pclzip",
@@ -3842,9 +3843,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "setasign/fpdi": 10,
-        "setasign/fpdi-fpdf": 10,
-        "setasign/fpdi-tcpdf": 10
+        "setasign/fpdi-fpdf": 5,
+        "setasign/fpdi-tcpdf": 5
     },
     "prefer-stable": false,
     "prefer-lowest": false,
