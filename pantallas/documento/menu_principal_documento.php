@@ -79,19 +79,17 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
     echo(librerias_acciones_kaiten());
         ?>
     <style type="text/css">
+        .container{height: 60px;}
         .navbar-inner{height: 50px;}
-        body{ font-size:12px; line-height:100%; margin-top:70px}
-        .navbar-fixed-top, .navbar-fixed-bottom{ position: fixed;}
-        .navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top{margin-right: 0px; margin-left: 0px;}
         .texto-azul{ color:#3176c8}
         .btn-under {text-align: center;vertical-align: top;}
         .btn-under ul{text-align: left;}
         .btn-under h6{margin-top: 0px; font-size: 11; font-weight:normal;font-family: arial;}
         .btn-under > .dropdown-menu{ <?php echo($dropdown_menu);?>}
     </style>
-    <div class="navbar navbar-fixed-top pull-center" id="menu_principal_documento">
-      <div class="navbar-inner">
-          <div class="container">
+    <div class="container">
+    		<div class="navbar navbar-fixed-top pull-center" id="menu_principal_documento">
+    		<div class="navbar-inner">
             <ul class="nav">
               <li>
               	<div class="btn-group pull-left btn-under">
