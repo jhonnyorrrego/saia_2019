@@ -5,7 +5,7 @@ require_once ('db.php');
 if (!$_SESSION["LOGIN" . LLAVE_SAIA] && isset($_REQUEST["LOGIN"]) && @$_REQUEST["conexion_remota"]) {
   logear_funcionario_webservice($_REQUEST["LOGIN"]);
 }
-require_once ('tcpdf/tcpdf.php');
+require_once ('vendor/tecnickcom/tcpdf/tcpdf.php');
 require_once ('vendor/setasign/fpdi/src/autoload.php');
 
 

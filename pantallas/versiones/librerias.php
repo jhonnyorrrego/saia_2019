@@ -1,316 +1,156 @@
 <?php
 $max_salida = 6;
-// Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
 	if (is_file($ruta . "db.php")) {
 		$ruta_db_superior = $ruta;
-		//Preserva la ruta superior encontrada
 	}
 	$ruta .= "../";
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "StorageUtils.php");
-
-require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
-include_once ($ruta_db_superior . "librerias_saia.php");
-echo(librerias_jquery("1.7"));
-echo(librerias_notificaciones());
+include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
+$idfuc_actual = usuario_actual('idfuncionario');
 
 $iddoc = @$_REQUEST["iddoc"];
-$documento = busca_filtro_tabla(fecha_db_obtener('a.fecha', 'Y-m-d') . " as x_fecha, a.*", "documento a", "a.iddocumento=" . $iddoc, "", $conn);
-$formato = busca_filtro_tabla("", "formato a", "lower(a.nombre)='" . strtolower($documento[0]["plantilla"]) . "'", "", $conn);
-$ruta_documento = $ruta_db_superior . "pantallas/documento/informacion_resumen_documento.php?idformato=" . $formato[0]['idformato'] . "&iddoc=" . $iddoc;
+if ($iddoc) {
+	$documento = busca_filtro_tabla(fecha_db_obtener('a.fecha', 'Y-m-d') . " as x_fecha, a.*", "documento a", "a.iddocumento=" . $iddoc, "", $conn);
+	$version = version_documento($documento);
+	if ($version["exito"]) {
+		$ok = actualizar_documento($documento, $version);
+		if ($ok === true) {
+			$mensaje = array();
 
-$version = version_documento($documento);
-version_vista($documento, $version);
-version_anexos($documento, $version);
-version_pagina($documento, $version);
-actualizar_documento($documento, $version);
-?>
-<script>
-	$(document).ready(function() {
-		notificacion_saia('Version creada con exito', 'success', '', 3000);
-		parent.location.reload();
-	}); 
-</script>
-<?php
+			$vista = version_vista($documento, $version);
+			$mensaje[] = $vista["msn"];
+
+			$anexos = version_anexos($documento, $version);
+			$mensaje[] = $anexos["msn"];
+
+			$pagina = version_pagina($documento, $version);
+			$mensaje[] = $pagina["msn"];
+
+			$msn = "<ul><li>" . implode("</li><li>", $mensaje) . "</li></ul>";
+			notificaciones("Version creada: " . $msn, "success", 10000);
+		} else {
+			$alm_dest = new SaiaStorage("versiones");
+			$delete = $almacenamiento -> eliminar($version["ruta_pdf"]["ruta"]);
+			$delete = "DELETE FROM version_documento WHERE idversion_documento=" . $version["idversion_documento"];
+			phpmkr_query($delete);
+			notificaciones("Error al crear la version: " . $version["msn"], "error", 10000);
+		}
+	} else {
+		notificaciones("Error al crear la version: " . $version["msn"], "error", 10000);
+	}
+	echo "<script>parent.location.reload()</script>";
+}
 
 function version_documento($documento) {
-	global $conn, $ruta_db_superior;
-	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-	$formato_ruta = aplicar_plantilla_ruta_documento($documento[0]["iddocumento"]);
-	$ruta = generar_pdf($documento);
-	$busqueda = busca_filtro_tabla("max(a.version) as maximo", "version_documento a", "a.documento_iddocumento=" . $documento[0]["iddocumento"], "", $conn);
-	$consecutivo = 0;
-	if ($busqueda["numcampos"]) {
-		$consecutivo = $busqueda[0]["maximo"] + 1;
-	}
-	$origen = $ruta;
-
-	//$ruta_pdfs = ruta_almacenamiento("versiones");
-	$destino = $formato_ruta . "/version" . $consecutivo . "/pdf/";
-	//$destino = RUTA_PDFS . $documento[0]["estado"] . "/" . $arreglo_fecha[0] . "-" . $arreglo_fecha[1] . "/" . $documento[0]["iddocumento"] . "/versiones/version" . $consecutivo . "/pdf/";
-	//crear_destino($destino);
-	generar_version_json($documento[0]["iddocumento"]);
-	$nombre_archivo = basename($origen);
-	//copy($origen, $destino . $nombre_archivo);
-
-	$almacenamiento = new SaiaStorage("pdf");
-	$alm_dest = new SaiaStorage("versiones");
-	$almacenamiento -> copiar_contenido($alm_dest, $origen, $destino . $nombre_archivo);
-
-	//Quitar el prefijo de ruta_db_superior para guardar en bdd
-	$ruta_alm = array(
-		"servidor" => $alm_dest -> get_ruta_servidor(),
-		"ruta" => $destino . $nombre_archivo
+	global $conn, $ruta_db_superior, $idfuc_actual;
+	$retorno = array(
+		"exito" => 0,
+		"msn" => ""
 	);
-	$sql1 = "insert into version_documento(documento_iddocumento,fecha,funcionario_idfuncionario,version,pdf) values ('" . $documento[0]["iddocumento"] . "', " . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ", '" . usuario_actual('idfuncionario') . "', '" . $consecutivo . "', '" . json_encode($ruta_alm) . "')";
-	phpmkr_query($sql1);
-	$id = phpmkr_insert_id();
-	return ($id);
-}
-
-function version_vista($documento, $id) {
-	global $conn, $ruta_db_superior, $formato;
-	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-	$formato_ruta = aplicar_plantilla_ruta_documento($documento[0]["iddocumento"]);
-
-	$busqueda = busca_filtro_tabla("max(a.version) as maximo", "version_documento a", "a.documento_iddocumento=" . $documento[0]["iddocumento"], "", $conn);
-
-	//$arreglo_fecha = explode("-", $documento[0]["x_fecha"]);
-	$consecutivo = $busqueda[0]["maximo"];
-
-	//$ruta_pdfs = ruta_almacenamiento("versiones");
-	$destino = $formato_ruta . "/version" . $consecutivo . "/vistas/";
-
-	$vistas = busca_filtro_tabla("", "vista_formato a", "a.formato_padre=" . $formato[0]["idformato"], "", $conn);
-	/*if($vistas["numcampos"]) {
-	 crear_destino($destino);
-	 }*/
-
-	for ($i = 0; $i < $vistas["numcampos"]; $i++) {
-		$ruta = generar_pdf_vista($documento, $vistas[$i]["idvista_formato"]);
-		$origen = $ruta;
-
-		$nombre_archivo = basename($origen);
-
-		$almacenamiento = new SaiaStorage("pdf");
-		$alm_destino = new SaiaStorage("versiones");
-		$almacenamiento -> copiar_contenido($alm_destino, $origen, $destino);
-
-		//copy($origen, $destino . $nombre_archivo);
-		$ruta_alm = array(
-			"servidor" => $alm_dest -> get_ruta_servidor(),
-			"ruta" => $destino . $nombre_archivo
-		);
-
-		$sql1 = "insert into version_vista(documento_iddocumento,pdf,fk_idversion_documento)values('" . $documento[0]["iddocumento"] . "', '" . json_encode($ruta_alm) . "', '" . $id . "')";
-
-		phpmkr_query($sql1);
-	}
-}
-
-function version_anexos($documento, $id) {
-	global $conn, $ruta_db_superior;
-	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-	$formato_ruta = aplicar_plantilla_ruta_documento($documento[0]["iddocumento"]);
-	$busqueda = busca_filtro_tabla("max(a.version) as maximo", "version_documento a", "a.documento_iddocumento=" . $documento[0]["iddocumento"], "", $conn);
-
-	//$arreglo_fecha = explode("-", $documento[0]["x_fecha"]);
-	$consecutivo = $busqueda[0]["maximo"];
-	//$ruta_pdfs = ruta_almacenamiento("versiones");
-	//$destino = RUTA_PDFS . $documento[0]["estado"] . "/" . $arreglo_fecha[0] . "-" . $arreglo_fecha[1] . "/" . $documento[0]["iddocumento"] . "/versiones/version" . $consecutivo . "/anexos/";
-	$destino = $formato_ruta . "/version" . $consecutivo . "/anexos/";
-
-	$anexos = busca_filtro_tabla("", "anexos a", "a.documento_iddocumento=" . $documento[0]["iddocumento"], "", $conn);
-
-	for ($i = 0; $i < $anexos["numcampos"]; $i++) {
-		$ruta = $anexos[$i]["ruta"];
-
-		$array_storage = StorageUtils::resolver_ruta($ruta);
-		//$array_storage["servidor"];
-		$origen = $array_storage["ruta"];
-		//$array_storage["error"];
-		//$array_storage["clase"];
-
+	$origen = generar_pdf($documento, 1, $documento[0]["iddocumento"]);
+	if ($ruta !== false) {
+		$array_storage = StorageUtils::resolver_ruta($origen);
 		if ($array_storage["error"]) {
-			die($array_storage["mensaje"]);
+			$retorno["msn"] = $array_storage["mensaje"];
+		} else {
+			$busqueda = busca_filtro_tabla("max(a.version) as maximo", "version_documento a", "a.documento_iddocumento=" . $documento[0]["iddocumento"], "", $conn);
+			$consecutivo = 0;
+			if ($busqueda["numcampos"]) {
+				$consecutivo = $busqueda[0]["maximo"] + 1;
+			}
+			$formato_ruta = aplicar_plantilla_ruta_documento($documento[0]["iddocumento"]);
+			$destino = $formato_ruta . "/version" . $consecutivo . "/pdf/";
+			$nombre_archivo = basename($array_storage["ruta"]);
+
+			$alm_destino = new SaiaStorage("versiones");
+			$array_storage["clase"] -> copiar_contenido($alm_destino, $array_storage["ruta"], $destino . $nombre_archivo);
+
+			//Quitar el prefijo de ruta_db_superior para guardar en bdd
+			$ruta_alm = array(
+				"servidor" => $alm_destino -> get_ruta_servidor(),
+				"ruta" => $destino . $nombre_archivo
+			);
+
+			$sql1 = "insert into version_documento(documento_iddocumento,fecha,funcionario_idfuncionario,version,pdf) values ('" . $documento[0]["iddocumento"] . "', " . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ", '" . $idfuc_actual . "', '" . $consecutivo . "', '" . json_encode($ruta_alm) . "')";
+			phpmkr_query($sql1) or die("Error al registrar la version");
+			$id = phpmkr_insert_id();
+
+			$retorno["idversion_documento"] = $id;
+			$retorno["consecutivo"] = $consecutivo;
+			$retorno["formato_ruta"] = $formato_ruta;
+			$retorno["ruta_pdf"] = $ruta_alm;
+
+			$json = generar_version_json($documento[0]["iddocumento"], $consecutivo);
+			if ($json["exito"]) {
+				$retorno["exito"] = 1;
+			}
 		}
-		$alm_origen = $array_storage["clase"];
 
-		$nombre_archivo = basename($origen);
+	} else {
+		$retorno["msn"] = "NO se pudo generar el PDF del documento";
+	}
+	return $retorno;
+}
 
-		$alm_destino = new SaiaStorage("versiones");
-
-		$alm_origen -> copiar_contenido($alm_destino, $origen, $destino . $nombre_archivo);
-
-		//copy($ruta_db_superior . $origen, $destino . $nombre_archivo);
-
-		$ruta_alm = array(
-			"servidor" => $alm_destino -> get_ruta_servidor(),
-			"ruta" => $destino . $nombre_archivo
-		);
-		$sql1 = "insert into version_anexos(documento_iddocumento,ruta,fk_idversion_documento,anexos_idanexos)values('" . $documento[0]["iddocumento"] . "', '" . json_encode($ruta_alm) . "', '" . $id . "', '" . $anexos[$i]["idanexos"] . "')";
+/*@param $documento datos del documento
+ *@param $tipo 1=>documento, 2=>vista
+ *@param $id idvista o iddocumento segun @tipo
+ */
+function generar_pdf($documento, $tipo, $id) {
+	global $ruta_db_superior;
+	unset($_REQUEST);
+	$iddoc = $documento[0]["iddocumento"];
+	if ($tipo == 1) {
+		$sql1 = "update documento set pdf=null,pdf_hash=null where iddocumento=" . $iddoc;
 		phpmkr_query($sql1);
 	}
-}
 
-function version_pagina($documento, $id) {
-	global $conn, $ruta_db_superior;
-	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-	$formato_ruta = aplicar_plantilla_ruta_documento($documento[0]["iddocumento"]);
-	$busqueda = busca_filtro_tabla("max(a.version) as maximo", "version_documento a", "a.documento_iddocumento=" . $documento[0]["iddocumento"], "", $conn);
+	require_once ($ruta_db_superior . "class_impresion_tcpdf.php");
+	$_REQUEST["no_redirecciona"] = 1;
+	if ($tipo == 1) {
 
-	//$arreglo_fecha = explode("-", $documento[0]["x_fecha"]);
-	$consecutivo = $busqueda[0]["maximo"];
-	//$ruta_pdfs = ruta_almacenamiento("versiones");
-	// $destino1=RUTA_PDFS.$documento[0]["estado"]."/".$arreglo_fecha[0]."-".$arreglo_fecha[1]."/".$documento[0]["iddocumento"]."/versiones/version".$consecutivo."/documentos/";
-	// $destino2=RUTA_PDFS.$documento[0]["estado"]."/".$arreglo_fecha[0]."-".$arreglo_fecha[1]."/".$documento[0]["iddocumento"]."/versiones/version".$consecutivo."/miniaturas/";
-	$destino1 = $formato_ruta . "/version" . $consecutivo . "/documentos/";
-	$destino2 = $formato_ruta . "/version" . $consecutivo . "/miniaturas/";
+		$pdf_form = new Imprime_Pdf($iddoc);
+		$pdf_form -> imprimir();
 
-	$pagina = busca_filtro_tabla("", "pagina a", "a.id_documento=" . $documento[0]["iddocumento"], "", $conn);
-
-	for ($i = 0; $i < $pagina["numcampos"]; $i++) {
-		$ruta1 = $pagina[$i]["ruta"];
-		$ruta2 = $pagina[$i]["imagen"];
-
-		$array_storage1 = StorageUtils::resolver_ruta($ruta1);
-		$array_storage2 = StorageUtils::resolver_ruta($ruta2);
-
-		if ($array_storage1["error"]) {
-			die($array_storage1["mensaje"]);
+		$datos_documento = busca_filtro_tabla("pdf", "documento A", "A.iddocumento=" . $iddoc, "", $conn);
+		if ($datos_documento["numcampos"] && $datos_documento[0]["pdf"] != "") {
+			return ($datos_documento[0]["pdf"]);
+		} else {
+			return false;
 		}
-		if ($array_storage2["error"]) {
-			die($array_storage2["mensaje"]);
+	} else {
+		$_REQUEST["nombre_archivo"] = $_SESSION["ruta_temp_funcionario"] . date("Y_m_d_H_i_s") . "_vista" . ".pdf";
+		$_REQUEST["vista"] = $id;
+		$_REQUEST["iddoc"] = $iddoc;
+		$pdf_form = new Imprime_Pdf("");
+		$pdf_form -> configurar_pagina($_REQUEST);
+		$pdf_form -> imprimir();
+		if (is_file($ruta_db_superior . $_REQUEST["nombre_archivo"])) {
+			return $_REQUEST["nombre_archivo"];
+		} else {
+			return false;
 		}
-		$alm_origen1 = $array_storage1["clase"];
-		$alm_origen2 = $array_storage2["clase"];
-
-		$origen1 = $array_storage1["ruta"];
-		$origen2 = $array_storage2["ruta"];
-
-		$nombre_imagen = basename($origen1);
-		$mombre_miniatura = basename($origen2);
-
-		$alm_destino = new SaiaStorage("versiones");
-
-		$alm_origen1 -> copiar_contenido($alm_destino, $origen1, $destino1 . $nombre_imagen);
-		$alm_origen2 -> copiar_contenido($alm_destino, $origen2, $destino2 . $mombre_miniatura);
-
-		$ruta_alm1 = array(
-			"servidor" => $alm_destino -> get_ruta_servidor(),
-			"ruta" => $destino1 . $nombre_imagen
-		);
-		$ruta_alm2 = array(
-			"servidor" => $alm_destino -> get_ruta_servidor(),
-			"ruta" => $destino2 . $mombre_miniatura
-		);
-		$sql1 = "insert into version_pagina(documento_iddocumento,ruta,ruta_miniatura,fk_idversion_documento, pagina_idpagina)values('" . $documento[0]["iddocumento"] . "', '" . json_encode($ruta_alm1) . "', '" . json_encode($ruta_alm2) . "','" . $id . "', '" . $pagina[$i]["consecutivo"] . "')";
-		phpmkr_query($sql1);
 	}
-}
-
-function actualizar_documento($documento, $id) {
-	global $conn;
-	$sql1 = "update documento set fk_idversion_documento='" . $id . "' where iddocumento=" . $documento[0]["iddocumento"];
-	phpmkr_query($sql1);
-}
-
-function generar_pdf($documento) {
-	global $ruta_db_superior;
-	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-	$iddoc = $documento[0]["iddocumento"];
-	$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
-
-	$exportar_pdf = busca_filtro_tabla("valor", "configuracion A", "A.nombre='exportar_pdf'", "", $conn);
-	if ($exportar_pdf[0]["valor"] == 'html2ps') {
-		$export = "exportar_impresion.php?iddoc=" . $iddoc . "&plantilla=" . strtolower($documento[0]["plantilla"]);
-	} else if ($exportar_pdf[0]["valor"] == 'class_impresion') {
-		$export = "class_impresion.php?iddoc=" . $iddoc;
-	} else {
-		$export = "exportar_impresion.php?iddoc=" . $iddoc . "&plantilla=" . strtolower($documento[0]["plantilla"]);
-	}
-	$sql1 = "update documento set pdf=null where iddocumento=" . $iddoc;
-	phpmkr_query($sql1);
-
-	$ch = curl_init();
-	$fila = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . $export . "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&conexion_remota=1";
-	if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-	}
-	curl_setopt($ch, CURLOPT_URL, $fila);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-	curl_setopt($ch, CURLOPT_VERBOSE, true);
-	curl_setopt($ch, CURLOPT_STDERR, $abrir);
-
-	$contenido = curl_exec($ch);
-
-	curl_close($ch);
-
-	$datos_documento = busca_filtro_tabla(fecha_db_obtener('A.fecha', 'Y-m-d') . " as x_fecha, A.*", "documento A", "A.iddocumento=" . $iddoc, "", $conn);
-
-	$ruta_pdfs = ruta_almacenamiento("pdf");
-	$ruta = $formato_ruta . "/pdf/";
-
-	$ruta .= ($datos_documento[0]["plantilla"]) . "_" . $datos_documento[0]["numero"] . "_" . str_replace("-", "_", $datos_documento[0]["x_fecha"]) . ".pdf";
-
-	return ($ruta);
 
 }
 
-function generar_pdf_vista($documento, $vista) {
-	global $ruta_db_superior;
-	include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
-	$iddoc = $documento[0]["iddocumento"];
-	$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
-
-	$exportar_pdf = busca_filtro_tabla("valor", "configuracion A", "A.nombre='exportar_pdf'", "", $conn);
-	if ($exportar_pdf[0]["valor"] == 'html2ps') {
-		$export = "exportar_impresion.php?iddoc=" . $iddoc . "&plantilla=" . strtolower($documento[0]["plantilla"]);
-	} else if ($exportar_pdf[0]["valor"] == 'class_impresion') {
-		$export = "class_impresion.php?iddoc=" . $iddoc;
-	} else {
-		$export = "exportar_impresion.php?iddoc=" . $iddoc . "&plantilla=" . strtolower($documento[0]["plantilla"]);
-	}
-
-	$ch = curl_init();
-	$fila = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . $export . "&LOGIN=" . $_SESSION["LOGIN" . LLAVE_SAIA] . "&conexion_remota=1&vista=" . $vista;
-	if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
-		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-	}
-	curl_setopt($ch, CURLOPT_URL, $fila);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-	curl_setopt($ch, CURLOPT_VERBOSE, true);
-	curl_setopt($ch, CURLOPT_STDERR, $abrir);
-
-	$contenido = curl_exec($ch);
-
-	curl_close($ch);
-
-	$datos_documento = busca_filtro_tabla(fecha_db_obtener('A.fecha', 'Y-m-d') . " as x_fecha, A.*", "documento A", "A.iddocumento=" . $iddoc, "", $conn);
-
-	$ruta_pdfs = ruta_almacenamiento("pdf");
-	//$fecha = explode("-", $datos_documento[0]["x_fecha"]);
-	//$ruta = RUTA_PDFS . $datos_documento[0]["estado"] . "/" . $fecha[0] . "-" . $fecha[1] . "/" . $datos_documento[0]["iddocumento"] . "/pdf/";
-	$ruta = $formato_ruta . "/pdf/";
-	$ruta .= ($datos_documento[0]["plantilla"]) . "_" . $datos_documento[0]["numero"] . "_" . str_replace("-", "_", $datos_documento[0]["x_fecha"]) . "_vista" . $vista . ".pdf";
-	return ($ruta);
-}
-
-function generar_version_json($iddoc) {
+function generar_version_json($iddoc, $consecutivo = 0) {
 	global $conn, $ruta_db_superior;
-
-	$formato = busca_filtro_tabla('', 'formato a, documento b', 'lower(b.plantilla)=lower(a.nombre) AND iddocumento=' . $iddoc, '', $conn);
+	$retorno = array(
+		"exito" => 0,
+		"msn" => ""
+	);
+	$formato = busca_filtro_tabla("a.nombre_tabla", "formato a, documento b", "lower(b.plantilla)=lower(a.nombre) AND iddocumento=" . $iddoc, "", $conn);
 
 	$json_final = array();
-	$json_final[$formato[0]['nombre_tabla']] = obtener_info_version($iddoc, $formato[0]['nombre_tabla'], 'documento_iddocumento');
-	//ft
+	if ($formato["numcampos"]) {
+		$json_final[$formato[0]['nombre_tabla']] = obtener_info_version($iddoc, $formato[0]['nombre_tabla'], 'documento_iddocumento');
+		//ft
+	}
 	$json_final['documento'] = obtener_info_version($iddoc, 'documento', 'iddocumento');
 	//documento
 	$json_final['ruta'] = obtener_info_version($iddoc, 'ruta', 'documento_iddocumento');
@@ -362,46 +202,22 @@ function generar_version_json($iddoc) {
 	$json_final['version_anexos'] = obtener_info_version($iddoc, 'version_anexos', 'documento_iddocumento');
 	//version_anexos
 
-	/*
-	 TABLAS PENDIENTES POR PARAMETRIZAR, HABLAR CON HERNANDO
-	 - anexos_vinculados
-	 - documento_vinculados
-	 - pagina_vinculados
-	 - paso_instancia_rastro
-	 - permiso_anexo
-	 - respuesta
-	 - tarea
-	 - tareas
-
-	 FALTA CREAR ARCHIVO *.json Y ALMACENAR EN LA RUTA DE VERSIONES
-	 */
-
-	$documento = busca_filtro_tabla(fecha_db_obtener('a.fecha', 'Y-m-d') . " as x_fecha, a.*", "documento a", "a.iddocumento=" . $iddoc, "", $conn);
-	$busqueda = busca_filtro_tabla("max(a.version) as maximo", "version_documento a", "a.documento_iddocumento=" . $documento[0]["iddocumento"], "", $conn);
-	$consecutivo = 0;
-	if ($busqueda["numcampos"])
-		$consecutivo = $busqueda[0]["maximo"] + 1;
-	$arreglo_fecha = explode("-", $documento[0]["x_fecha"]);
 	$ruta_temp = $ruta_db_superior;
 	$formato_ruta = aplicar_plantilla_ruta_documento($iddoc);
-	//$ruta_pdfs = ruta_almacenamiento("versiones");
-	$ruta_json = $formato_ruta . "/version" . $consecutivo . "/json";
+	$ruta_json = $formato_ruta . "/version" . $consecutivo . "/json/json.json";
 	$ruta_db_superior = $ruta_temp;
-	//crear_destino($ruta_json);
-	$ruta_json .= '/json.json';
 
-	//$archivo_json = fopen($ruta_json, "a");
-	//fwrite($archivo_json, json_encode($json_final));
-	//fclose($archivo_json);
 	$almacenamiento = new SaiaStorage("versiones");
 	$almacenamiento -> almacenar_contenido($ruta_json, json_encode($json_final));
+	$retorno["exito"] = 1;
+	$retorno["ruta_json"] = $ruta_json;
+	return $retorno;
 }
 
 function obtener_info_version($iddoc, $nombre_tabla, $llave) {
 	global $conn;
-
 	$campos_tabla = listar_campos_tabla($nombre_tabla);
-	$select = busca_filtro_tabla('', $nombre_tabla, $llave . '=' . $iddoc, '', $conn);
+	$select = busca_filtro_tabla("", $nombre_tabla, $llave . "=" . $iddoc, "", $conn);
 	$json = array();
 	for ($i = 0; $i < $select['numcampos']; $i++) {
 		for ($j = 0; $j < count($campos_tabla); $j++) {
@@ -409,5 +225,174 @@ function obtener_info_version($iddoc, $nombre_tabla, $llave) {
 		}
 	}
 	return ($json);
+}
+
+function version_vista($documento, $datos_version) {
+	global $conn, $ruta_db_superior;
+	$retorno = array(
+		"exito" => 0,
+		"msn" => ""
+	);
+	$formato = busca_filtro_tabla("idformato", "formato a", "lower(a.nombre)='" . strtolower($documento[0]["plantilla"]) . "'", "", $conn);
+	if ($formato["numcampos"]) {
+		$vistas = busca_filtro_tabla("idvista_formato", "vista_formato a", "a.formato_padre=" . $formato[0]["idformato"], "", $conn);
+		if ($vistas["numcampos"]) {
+			$consecutivo = $datos_version["consecutivo"];
+			$formato_ruta = $datos_version["formato_ruta"];
+			$destino = $formato_ruta . "/version" . $consecutivo . "/vistas/";
+			$ok = 1;
+			for ($i = 0; $i < $vistas["numcampos"]; $i++) {
+				$ruta = generar_pdf($documento, 2, $vistas[$i]["idvista_formato"]);
+				if ($ruta !== false) {
+					$nombre_archivo = basename($ruta);
+					$alm_destino = new SaiaStorage("versiones");
+					$alm_destino -> copiar_contenido_externo($ruta_db_superior . $ruta, $destino . $nombre_archivo);
+
+					$ruta_alm = array(
+						"servidor" => $alm_destino -> get_ruta_servidor(),
+						"ruta" => $destino . $nombre_archivo
+					);
+
+					$sql1 = "insert into version_vista(documento_iddocumento,pdf,fk_idversion_documento)values('" . $documento[0]["iddocumento"] . "', '" . json_encode($ruta_alm) . "', '" . $datos_version["idversion_documento"] . "')";
+					phpmkr_query($sql1) or die("Error al insertar version de vistas");
+				} else {
+					$ok = 0;
+					$retorno["msn"] = "Error al generar el PDF de la vista";
+				}
+			}
+			if ($ok) {
+				$retorno["exito"] = 1;
+				$retorno["msn"] = "Se han generado las vistas";
+			}
+		} else {
+			$retorno["exito"] = 2;
+			$retorno["msn"] = "No existen vistas para el formato";
+		}
+	} else {
+		$retorno["msn"] = "Informacion del formato NO encontrado";
+	}
+	return $retorno;
+}
+
+function version_anexos($documento, $datos_version) {
+	global $conn, $ruta_db_superior;
+	$retorno = array(
+		"exito" => 0,
+		"msn" => ""
+	);
+
+	$anexos = busca_filtro_tabla("idanexos,ruta", "anexos a", "a.documento_iddocumento=" . $documento[0]["iddocumento"], "", $conn);
+	if ($anexos["numcampos"]) {
+		$ok = 1;
+		$formato_ruta = $datos_version["formato_ruta"];
+		$consecutivo = $datos_version["consecutivo"];
+		$destino = $formato_ruta . "/version" . $consecutivo . "/anexos/";
+		$alm_destino = new SaiaStorage("versiones");
+
+		for ($i = 0; $i < $anexos["numcampos"]; $i++) {
+			$ruta = $anexos[$i]["ruta"];
+			$array_storage = StorageUtils::resolver_ruta($ruta);
+			$origen = $array_storage["ruta"];
+			if ($array_storage["error"]) {
+				$retorno["msn"] .= $array_storage["mensaje"];
+				$ok = 0;
+				continue;
+			}
+			$alm_origen = $array_storage["clase"];
+			$nombre_archivo = basename($origen);
+			$alm_origen -> copiar_contenido($alm_destino, $origen, $destino . $nombre_archivo);
+			$ruta_alm = array(
+				"servidor" => $alm_destino -> get_ruta_servidor(),
+				"ruta" => $destino . $nombre_archivo
+			);
+			$sql1 = "insert into version_anexos(documento_iddocumento,ruta,fk_idversion_documento,anexos_idanexos) values('" . $documento[0]["iddocumento"] . "', '" . json_encode($ruta_alm) . "', '" . $datos_version["idversion_documento"] . "', '" . $anexos[$i]["idanexos"] . "')";
+			phpmkr_query($sql1) or die("Error al insertar version anexos");
+		}
+		if ($ok) {
+			$retorno["exito"] = 1;
+			$retorno["msn"] = "Anexos versionados";
+		} else {
+			$retorno["msn"] = "Se presentaron errores al insertar los anexos: " . $retorno["msn"];
+		}
+	} else {
+		$retorno["exito"] = 1;
+		$retorno["msn"] = "NO existen anexos";
+	}
+	return $retorno;
+}
+
+function version_pagina($documento, $datos_version) {
+	global $conn, $ruta_db_superior;
+	$retorno = array(
+		"exito" => 0,
+		"msn" => ""
+	);
+	$pagina = busca_filtro_tabla("", "pagina a", "a.id_documento=" . $documento[0]["iddocumento"], "", $conn);
+	if ($pagina["numcampos"]) {
+		$ok = 1;
+		$formato_ruta = $datos_version["formato_ruta"];
+		$consecutivo = $datos_version["consecutivo"];
+		$alm_destino = new SaiaStorage("versiones");
+
+		$destino1 = $formato_ruta . "/version" . $consecutivo . "/documentos/";
+		$destino2 = $formato_ruta . "/version" . $consecutivo . "/miniaturas/";
+		for ($i = 0; $i < $pagina["numcampos"]; $i++) {
+			$ruta1 = $pagina[$i]["ruta"];
+			$ruta2 = $pagina[$i]["imagen"];
+
+			$array_storage1 = StorageUtils::resolver_ruta($ruta1);
+			$array_storage2 = StorageUtils::resolver_ruta($ruta2);
+
+			if ($array_storage1["error"]) {
+				$ok = 0;
+				$retorno["msn"] .= $array_storage1["mensaje"];
+				continue;
+			}
+			if ($array_storage2["error"]) {
+				$ok = 0;
+				$retorno["msn"] .= $array_storage2["mensaje"];
+				continue;
+			}
+			$alm_origen1 = $array_storage1["clase"];
+			$alm_origen2 = $array_storage2["clase"];
+
+			$origen1 = $array_storage1["ruta"];
+			$origen2 = $array_storage2["ruta"];
+
+			$nombre_imagen = basename($origen1);
+			$mombre_miniatura = basename($origen2);
+
+			$alm_origen1 -> copiar_contenido($alm_destino, $origen1, $destino1 . $nombre_imagen);
+			$alm_origen2 -> copiar_contenido($alm_destino, $origen2, $destino2 . $mombre_miniatura);
+
+			$ruta_alm1 = array(
+				"servidor" => $alm_destino -> get_ruta_servidor(),
+				"ruta" => $destino1 . $nombre_imagen
+			);
+			$ruta_alm2 = array(
+				"servidor" => $alm_destino -> get_ruta_servidor(),
+				"ruta" => $destino2 . $mombre_miniatura
+			);
+			$sql1 = "insert into version_pagina(documento_iddocumento,ruta,ruta_miniatura,fk_idversion_documento, pagina_idpagina) values('" . $documento[0]["iddocumento"] . "', '" . json_encode($ruta_alm1) . "', '" . json_encode($ruta_alm2) . "','" . $datos_version["idversion_documento"] . "', '" . $pagina[$i]["consecutivo"] . "')";
+			phpmkr_query($sql1) or die("Error al insertar en version pagina");
+		}
+		if ($ok) {
+			$retorno["exito"] = 1;
+			$retorno["msn"] = "Paginas versionadas";
+		} else {
+			$retorno["msn"] = "Se presentaron errores al insertar las paginas: " . $retorno["msn"];
+		}
+	} else {
+		$retorno["exito"] = 1;
+		$retorno["msn"] = "NO existen paginas";
+	}
+	return $retorno;
+}
+
+function actualizar_documento($documento, $datos_version) {
+	global $conn;
+	$sql1 = "update documento set fk_idversion_documento='" . $datos_version["idversion_documento"] . "' where iddocumento=" . $documento[0]["iddocumento"];
+	phpmkr_query($sql1) or die("Error al actualizar en documento, la version");
+	return true;
 }
 ?>

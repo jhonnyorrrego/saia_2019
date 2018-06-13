@@ -14,7 +14,7 @@ include_once ($ruta_db_superior . "db.php");
 if (!$_SESSION["LOGIN" . LLAVE_SAIA] && isset($_REQUEST["LOGIN"]) && @$_REQUEST["conexion_remota"]) {
 	logear_funcionario_webservice($_REQUEST["LOGIN"]);
 }
-require_once ($ruta_db_superior . 'tcpdf/tcpdf.php');
+require_once ($ruta_db_superior . 'vendor/tecnickcom/tcpdf/tcpdf.php');
 include_once ($ruta_db_superior . FORMATOS_SAIA . 'librerias/encabezado_pie_pagina.php');
 include_once ($ruta_db_superior . 'pantallas/qr/librerias.php');
 include_once ($ruta_db_superior . 'pantallas/lib/librerias_cripto.php');
@@ -228,7 +228,7 @@ class Imprime_Pdf {
 	}
 
 	public function imprimir() {
-		$this -> pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false, true);
+		$this -> pdf = new MYPDF($this->orientacion, PDF_UNIT, strtoupper($this->papel), true, 'UTF-8', false, true);
 
 		$this -> pdf -> margenes = $this -> margenes;
 		$this -> pdf -> documento = $this -> documento;
@@ -310,7 +310,7 @@ class Imprime_Pdf {
 		}
 
 		if ($this -> nombre_archivo !== false) {
-			$this -> pdf -> Output($ruta_db_superior . $this -> nombre_archivo, $this -> tipo_salida);
+			$this -> pdf -> Output(__DIR__."/" . $this -> nombre_archivo, $this -> tipo_salida);
 		} else {
 			$pdf_temp = StorageUtils::obtener_archivo_temporal("impresion_", $ruta_tmp_usr);
 			chmod($pdf_temp, 0777);
@@ -354,9 +354,10 @@ class Imprime_Pdf {
 				if ($_REQUEST["actualizar_pdf"] == 1) {
 					$parteUrl = "&actualizar_pdf=1";
 				}
-				redirecciona("visores/pdf.js-view/web/viewer2.php?actualizar_pdf=1&tipo_visor=1&iddocumento=" . $this -> documento[0]["iddocumento"] . "&ruta=" . base64_encode(json_encode($ruta_pdf))) . $parteUrl;
+				if (!isset($_REQUEST["no_redirecciona"])) {
+					redirecciona("visores/pdf.js-view/web/viewer2.php?actualizar_pdf=1&tipo_visor=1&iddocumento=" . $this -> documento[0]["iddocumento"] . "&ruta=" . base64_encode(json_encode($ruta_pdf))) . $parteUrl;
+				}
 			}
-			die();
 		}
 	}
 
@@ -569,19 +570,19 @@ class MYPDF extends TCPDF {
 
 		if ($this -> papel == "Letter") {
 			if ($this -> orientacion == "L") {
-				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 200, stripslashes($texto), 0, 2, 0, false, '', true);
+				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 195, stripslashes($texto), 0, 2, 0, false, '', true);
 			} else {
-				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 260, stripslashes($texto), 0, 2, 0, false, '', true);
+				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 280, stripslashes($texto), 0, 2, 0, false, '', true);
 			}
 		} else if ($this -> papel == "A4") {
 			if ($this -> orientacion == "L") {
 				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 190, stripslashes($texto), 0, 2, 0, false, '', true);
 			} else {
-				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 270, stripslashes($texto), 0, 2, 0, false, '', true);
+				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 280, stripslashes($texto), 0, 2, 0, false, '', true);
 			}
 		} else if ($this -> papel == "A5") {
 			if ($this -> orientacion == "L") {
-				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 125, stripslashes($texto), 0, 2, 0, false, '', true);
+				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 130, stripslashes($texto), 0, 2, 0, false, '', true);
 			} else {
 				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 185, stripslashes($texto), 0, 2, 0, false, '', true);
 			}
@@ -589,7 +590,7 @@ class MYPDF extends TCPDF {
 			if ($this -> orientacion == "L") {
 				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 195, stripslashes($texto), 0, 2, 0, false, '', true);
 			} else {
-				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 330, stripslashes($texto), 0, 2, 0, false, '', true);
+				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 280, stripslashes($texto), 0, 2, 0, false, '', true);
 			}
 		}
 	}

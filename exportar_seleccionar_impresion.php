@@ -9,10 +9,10 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 
-$iddoc=$_REQUEST["iddoc"];
+$iddoc = $_REQUEST["iddoc"];
 unset($_REQUEST["iddoc"]);
-if($iddoc){
-	include_once("pantallas/documento/menu_principal_documento.php");
+if ($iddoc) {
+	include_once ("pantallas/documento/menu_principal_documento.php");
 	echo(menu_principal_documento($iddoc));
 }
 
@@ -63,7 +63,7 @@ function parsea_idformato($id = 0) {
 
 $ruta_temp = $_SESSION["ruta_temp_funcionario"];
 $listado_pdf = array();
-$listado_paginas = array();
+$pag = array();
 
 $arreglo_dato = array_filter(explode(",", @$_REQUEST["seleccion"]));
 unset($_REQUEST["seleccion"]);
@@ -95,48 +95,53 @@ if ($cant_sel) {
 			} else if ($dato[0] == "p" && $dato[1]) {
 				$pagina = busca_filtro_tabla("id_documento", "pagina", "consecutivo=" . $dato[1], "", $conn);
 				if ($pagina["numcampos"]) {
-					$nombre_archivo = $ruta_temp . date("Y_m_d_H_i_s") . "_pg_" . $i . ".pdf";
-					$_REQUEST["tipo_salida"] = "F";
-					$_REQUEST["iddoc_pag"] = $pagina[0]["id_documento"];
-					$_REQUEST["nombre_archivo"] = $nombre_archivo;
-
-					$pdf_form = new Imprime_Pdf("");
-					$pdf_form -> configurar_pagina($_REQUEST);
-					if ($_REQUEST["config"] == 0) {
-						$pdf_form -> set_variable("margenes", array());
-					}
-					$pdf_form -> set_variable("imprimir_paginas", 1);
-					$pdf_form -> set_variable("idpaginas", $dato[1]);
-					$pdf_form -> imprimir();
-					if (is_file($nombre_archivo)) {
-						array_push($listado_paginas, $nombre_archivo);
-					} else {
-						notificaciones("No se pudo generar la pagina ");
-					}
+					$iddoc_pag = $pagina[0]["id_documento"];
+					$pag[] = $dato[1];
 				} else {
 					notificaciones("El identificador de la pagina NO existe");
 				}
 			}
 		}
 	}
+	
+	$listado_final = $listado_pdf;
+	if (count($pag)) {
+		$nombre_archivo = $ruta_temp . date("Y_m_d_H_i_s") . "_pg". ".pdf";
+		$_REQUEST["tipo_salida"] = "F";
+		$_REQUEST["iddoc_pag"] = $iddoc_pag;
+		$_REQUEST["nombre_archivo"] = $nombre_archivo;
 
-	$listado_final = array_merge($listado_pdf, $listado_paginas);
+		$pdf_form = new Imprime_Pdf("");
+		$pdf_form -> configurar_pagina($_REQUEST);
+		if ($_REQUEST["config"] == 0) {
+			$pdf_form -> set_variable("margenes", array());
+		}
+		$pdf_form -> set_variable("imprimir_paginas", 1);
+		$pdf_form -> set_variable("idpaginas", implode(",", $pag));
+		$pdf_form -> imprimir();
+		if (is_file($nombre_archivo)) {
+			array_push($listado_final, $nombre_archivo);
+		} else {
+			notificaciones("No se pudo generar las paginas");
+		}
+	}
+
 	if (count($listado_final) == 1) {
 		if (is_file($listado_final[0])) {
-			$url=$listado_final[0];
+			$url = $listado_final[0];
 		}
 	} else {
 		$nombre_archivo = $ruta_temp . date("Y_m_d_H_i_s") . ".pdf";
 		$pdf_concat = new ConcatPdf();
 		$pdf_concat -> setFiles($listado_final);
 		$pdf_concat -> concat();
-		$pdf_concat -> Output('F',$nombre_archivo);
+		$pdf_concat -> Output('F', $nombre_archivo);
 		foreach ($listado_final as $file) {
 			unlink($file);
 		}
-		$url="vacio.php";
+		$url = "vacio.php";
 		if (is_file($nombre_archivo)) {
-			$url=$nombre_archivo;
+			$url = $nombre_archivo;
 		}
 	}
 }
