@@ -3124,48 +3124,6 @@ global $conn;
 }
 
 /*<Clase>
-<Nombre>dbToPdf</Nombre>
-<Parametros>$nameFile:nombre del archivo a crear;$tabla:nombre de la tabla;$campo:nombre del campo;$idcampo:valor del campo;$conn:objeto de conexion</Parametros>
-<Responsabilidades>Crea un pdf con las paginas escaneadas de un documento<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida>Si tiene paginas devuelve true de lo contrario false</Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
-function dbToPdf($nameFile, $tabla,$campo,$idcampo,$conn){
-require('fpdf.php');
-$listado=busca_filtro_tabla(" * ",$tabla,"$campo=$idcampo","pagina",$conn);
-if($listado["numcampos"]){
-  //Coordenadas X, Y iniciales en las que se ubicar la imagen
-  define("X0",0.5);
-  define("Y0",0.3);
-  //Ancho y alto de la imagen (ajustada a una hoja de tamaño  carta)
-  define("W",215);
-  define("H",278.4);
-  $pag=0;
-  for($i=0;isset($listado[$i]);$i++){
-    $path=pathinfo($listado[$i]["ruta"]);
-    if($path && is_dir($path["dirname"])){
-      if(is_file($path["dirname"]."/".$path["basename"])){
-        if($path["extension"]=="jpg"){
-        if($pag==0)
-          $pdf=new FPDF("P","mm","Letter");
-        $pag++;
-        $pdf->AddPage();
-        $pdf->Image($listado[$i]["ruta"],X0,Y0,W,H);
-        }
-      }
-    }
-  }
-  if($pag>0){
-    $pdf->Output($nameFile);
-    return(TRUE);
-  }
-}
-return(FALSE);
-}
-/*<Clase>
 <Nombre>getRealIP</Nombre>
 <Parametros></Parametros>
 <Responsabilidades>Busca la ip real de la maquina cliente<Responsabilidades>

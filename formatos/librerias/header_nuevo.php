@@ -24,7 +24,11 @@ if (isset($_REQUEST["idformato"])) {
 //Redirecciona en caso de que el documento sea visible en PDF.
 if ($formato["numcampos"] && @$_REQUEST["tipo"] != 5) {
 	if ($formato[0]["pdf"] && $formato[0]["mostrar_pdf"] == 1) {
-		$ruta = $ruta_db_superior . "pantallas/documento/visor_documento.php?iddoc=" . $formato[0]["iddocumento"];
+		$parte_url="";
+		if(isset($_REQUEST["menu_principal_inactivo"])){
+			$parte_url="&menu_principal_inactivo=1";
+		}
+		$ruta = $ruta_db_superior . "pantallas/documento/visor_documento.php?iddoc=" . $formato[0]["iddocumento"].$parte_url;
 		redirecciona($ruta . "&rnd=" . rand(0, 100));
 	} else {
 		if ($formato[0]["mostrar_pdf"] == 1) {

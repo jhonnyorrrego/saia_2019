@@ -10,9 +10,13 @@ while ($max_salida > 0) {
 }
 
 include_once ($ruta_db_superior . "pantallas/documento/menu_principal_documento.php");
-
 $iddoc = @$_REQUEST["iddoc"];
-menu_principal_documento($iddoc, 1);
+if(!isset($_REQUEST["menu_principal_inactivo"])){//utilizado en parsear_accion_arbol_impresion (imprimir documento)
+	menu_principal_documento($iddoc, 1);
+}else{
+	include_once("librerias_saia.php");
+	echo librerias_jquery("1.8");
+}
 $datos = busca_filtro_tabla("A.pdf,A.plantilla,B.mostrar_pdf,A.numero,B.idformato", "documento A,formato B", "lower(A.plantilla)=B.nombre AND A.iddocumento=" . $iddoc, "", $conn);
 $es_pdf_word = $_REQUEST['pdf_word'];
 if ($_REQUEST['pdf_word']) {
@@ -62,4 +66,4 @@ if (@$_REQUEST["vista"]) {
 		}
 	}); 
 </script>
-<iframe id="detalles" width="100%" frameborder="0" name="detalles" src="<?php echo($pdf); ?>"></iframe>
+<iframe id="detalles" width="100%" height="100%" frameborder="0" name="detalles" src="<?php echo($pdf); ?>"></iframe>
