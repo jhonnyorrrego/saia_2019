@@ -103,10 +103,10 @@ if ($cant_sel) {
 			}
 		}
 	}
-	
+
 	$listado_final = $listado_pdf;
 	if (count($pag)) {
-		$nombre_archivo = $ruta_temp . date("Y_m_d_H_i_s") . "_pg". ".pdf";
+		$nombre_archivo = $ruta_temp . date("Y_m_d_H_i_s") . "_pg" . ".pdf";
 		$_REQUEST["tipo_salida"] = "F";
 		$_REQUEST["iddoc_pag"] = $iddoc_pag;
 		$_REQUEST["nombre_archivo"] = $nombre_archivo;
@@ -127,9 +127,7 @@ if ($cant_sel) {
 	}
 
 	if (count($listado_final) == 1) {
-		if (is_file($listado_final[0])) {
-			$url = $listado_final[0];
-		}
+		$url_archivo = $listado_final[0];
 	} else {
 		$nombre_archivo = $ruta_temp . date("Y_m_d_H_i_s") . ".pdf";
 		$pdf_concat = new ConcatPdf();
@@ -139,10 +137,24 @@ if ($cant_sel) {
 		foreach ($listado_final as $file) {
 			unlink($file);
 		}
-		$url = "vacio.php";
-		if (is_file($nombre_archivo)) {
-			$url = $nombre_archivo;
-		}
+		$url_archivo = $nombre_archivo;
+	}
+
+	$url = "vacio.php";
+	if (is_file($url_archivo)) {
+		$url = $url_archivo;
+		$nombre_archivo = basename($url);
+		$destino = $iddoc . "/" . date("Y-m-d") . "/";
+
+		$alm_destino = new SaiaStorage("historial_impresion");
+		$alm_destino -> copiar_contenido_externo($url, $destino . $nombre_archivo);
+		$ruta_alm = array(
+			"servidor" => $alm_destino -> get_ruta_servidor(),
+			"ruta" => $destino . $nombre_archivo
+		);
+		$ipremoto = servidor_remoto();
+		$insert = "INSERT INTO historial_impresion (fecha,funcionario_idfuncionario,ip,ruta_pdf) VALUES (" . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . "," . $_SESSION["idfuncionario"] . ",'" . $ipremoto . "','" . json_encode($ruta_alm) . "')";
+		phpmkr_query($insert) or die("Error al guardar el registro en la DB");
 	}
 }
 ?>

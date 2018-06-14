@@ -52,10 +52,10 @@ echo '<table style="border-collapse:collapse" border="1" align="center">
     	// si el archivo existe dentro de la carpeta formatos
     	$ruta_final=$formatos[0]["nombre"] . "/" . $formatos[0]["ruta"];
     	if (is_file($ruta_db_superior . FORMATOS_CLIENTE . $formatos[0]["nombre"] . "/" . $formatos[0]["ruta"])) {
-    		$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA . FORMATOS_CLIENTE . $formatos[0]["nombre"] . "/" . $formatos[0]["ruta"]);
+    		$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA ."/". FORMATOS_CLIENTE . $formatos[0]["nombre"] . "/" . $formatos[0]["ruta"]);
     	} elseif (is_file($ruta_db_superior . $formatos[0]["ruta"])) {
     		// si el archivo existe en la ruta especificada partiendo de la raiz
-    		$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA . $formatos[0]["ruta"]);
+    		$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA ."/". $formatos[0]["ruta"]);
     	} else {
     		$ruta_formato = 'Error: ' . $formatos[0]["ruta"] . "|id=" . $formatos[0]["idfunciones_formato"];
     	}

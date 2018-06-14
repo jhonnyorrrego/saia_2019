@@ -2379,7 +2379,7 @@ if(@$_REQUEST["llamado_ajax"]){
 }
 	require_once ('librerias_saia.php');
 	global $raiz_saia;
-	$raiz_saia = "/" . RUTA_SAIA . $ruta_superior_temporal;
+	$raiz_saia = "/" . RUTA_SAIA ."/". $ruta_superior_temporal;
 	echo(librerias_jquery('1.7'));
 	echo(librerias_notificaciones());
 
@@ -2389,23 +2389,6 @@ notificacion_saia("<?php echo $mensaje ;?>","<?php echo($tipo); ?>",'',<?php ech
 </script>
 <?php
 }
-
-
-/*
-
-function alerta($mensaje)
-{
- ?>
-<script type="text/javascript">
-<!--
-alert("<?php echo $mensaje ;?>");
-//-->
-</script>
-<?php
-}
-
- * /
-
 
 /*
 <Clase>
