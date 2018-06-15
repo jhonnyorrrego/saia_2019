@@ -41,10 +41,8 @@ if ($_REQUEST['pdf_word']) {
 		} else {
 			if ($exportar_pdf[0]["valor"] == 'html2ps') {
 				$export = "exportar_impresion.php?iddoc=" . $iddoc . "&plantilla=" . strtolower($datos[0]["plantilla"]) . "&rand=" . rand(1, 100000);
-			} else if ($exportar_pdf[0]["valor"] == 'class_impresion') {
+			} else{
 				$export = "class_impresion.php?iddoc=" . $iddoc . "&rand=" . rand(1, 100000);
-			} else {
-				$export = "exportar_impresion.php?iddoc=" . $iddoc . "&plantilla=" . strtolower($datos[0]["plantilla"]) . "&rand=" . rand(1, 100000);
 			}
 		}
 	}

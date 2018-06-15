@@ -413,25 +413,32 @@ function enlaces_adicionales_expediente($idexpediente, $nombre, $estado_cierre, 
 		}
 	}
 
-	$texto = "";
+	if ($_SESSION["tipo_dispositivo"] == "movil") {
+		$clase_info = "kenlace_saia";
+		$texto = '<div class="btn btn-mini kenlace_saia pull-right" idregistro="' . $idexpediente . '" titulo="' . $nombre . '" conector="iframe" enlace="pantallas/expediente/detalles_expediente.php?idexpediente=' . $idexpediente . '&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '" ><i class="icon-info-sign"></i></div>';
+	} else {
+		$clase_info = "enlace_expediente";
+		$texto = '<div class="btn btn-mini enlace_expediente pull-right" idregistro="' . $idexpediente . '" title="' . $nombre . '"><i class="icon-info-sign"></i></div>';
+	}
+
 	if ($e) {
-		$texto .= '<div class=\'btn btn-mini eliminar_expediente tooltip_saia pull-right\' idregistro=\'' . $idexpediente . '\' title=\'Eliminar ' . $nombre . '\'><i class=\'icon-remove\'></i></div>';
+		$texto .= '<div class="btn btn-mini eliminar_expediente tooltip_saia pull-right" idregistro="' . $idexpediente . '" title="Eliminar ' . $nombre . '"><i class="icon-remove"></i></div>';
 	}
 	if ($m) {
-		$texto .= '<div class=\'btn btn-mini enlace_expediente tooltip_saia pull-right\' idregistro=\'' . $idexpediente . '\' title=\'Editar ' . $nombre . '\' enlace=\'pantallas/expediente/editar_expediente.php?idexpediente=' . $idexpediente . '&idbusqueda_componente=' . @$_REQUEST['idbusqueda_componente'] . '&div_actualiza=resultado_pantalla_' . $idexpediente . '\'><i class=\'icon-pencil\'></i></div>';
+		$texto .= '<div class="btn btn-mini '.$clase_info.' tooltip_saia pull-right" idregistro="' . $idexpediente . '" conector="iframe" titulo="Editar ' . $nombre . '" enlace="pantallas/expediente/editar_expediente.php?idexpediente=' . $idexpediente . '&idbusqueda_componente=' . @$_REQUEST['idbusqueda_componente'] . '&div_actualiza=resultado_pantalla_' . $idexpediente . '"><i class="icon-pencil"></i></div>';
 	}
 	if (!$agrupador) {
-		$texto .= '<div class=\'btn btn-mini link kenlace_saia tooltip_saia pull-right\' title=\'Imprimir rotulo\' titulo=\'Imprimir rotulo\' enlace=\'pantallas/caja/rotulo.php?idexpediente=' . $idexpediente . '\' conector=\'iframe\'><i class=\'icon-print\'></i></div>';
+		$texto .= '<div class="btn btn-mini link kenlace_saia tooltip_saia pull-right" title="Imprimir rotulo" titulo="Imprimir rotulo" enlace="pantallas/caja/rotulo.php?idexpediente=' . $idexpediente . '" conector="iframe"><i class="icon-print"></i></div>';
 	}
 	if ($p) {
-		$texto .= '<div class=\'btn btn-mini enlace_expediente tooltip_saia pull-right\' idregistro=\'' . $idexpediente . '\' title=\'Asignar ' . $nombre . '\' enlace=\'pantallas/expediente/asignar_expediente.php?idexpediente=' . $idexpediente . '\'><i class=\'icon-lock\'></i></div>';
+		$texto .= '<div class="btn btn-mini '.$clase_info.' tooltip_saia pull-right" idregistro="' . $idexpediente . '" conector="iframe"  titulo="Asignar ' . $nombre . '" enlace="pantallas/expediente/asignar_expediente.php?idexpediente=' . $idexpediente . '"><i class="icon-lock"></i></div>';
 	}
 
 	if ($propietario == $_SESSION["usuario_actual"] && !$agrupador) {
-		$texto .= '<div class=\'btn btn-mini crear_tomo_expediente tooltip_saia pull-right\' idregistro=\'' . $idexpediente . '\' title=\'Crear Tomo ' . $nombre . '\'><i class=\'icon-folder-open\'></i></div>';
+		$texto .= '<div class="btn btn-mini crear_tomo_expediente tooltip_saia pull-right" idregistro="' . $idexpediente . '" title="Crear Tomo ' . $nombre . '"><i class="icon-folder-open"></i></div>';
 	}
 	if (!$agrupador) {
-		$texto .= '<div id="seleccionados_expediente_' . $idexpediente . '" idregistro=\'' . $idexpediente . '\' titulo=\'Seleccionar\' class=\'btn btn-mini tooltip_saia adicionar_seleccionados_expediente pull-right\'><i class=\'icon-uncheck\' ></i></div>';
+		$texto .= '<div id="seleccionados_expediente_' . $idexpediente . '" idregistro="' . $idexpediente . '" titulo="Seleccionar" class="btn btn-mini tooltip_saia adicionar_seleccionados_expediente pull-right"><i class="icon-uncheck" ></i></div>';
 	}
 	return ($texto);
 }

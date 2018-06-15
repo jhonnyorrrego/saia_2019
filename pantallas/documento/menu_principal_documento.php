@@ -32,10 +32,11 @@ if($_REQUEST["pantalla"]=="calidad"){
 	$ok_cal=1;
 }
 
-echo(librerias_jquery("1.7"));
+echo(librerias_jquery("1.8"));
 echo(librerias_arboles());
 echo(estilo_bootstrap());
 echo(librerias_bootstrap());
+
 if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
     if(!@$iddoc){
         if(@$_REQUEST['iddocumento']){
@@ -87,145 +88,21 @@ if(@$_REQUEST["tipo"]!==5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]){
         .btn-under h6{margin-top: 0px; font-size: 11; font-weight:normal;font-family: arial;}
         .btn-under > .dropdown-menu{ <?php echo($dropdown_menu);?>}
     </style>
+    <?php if($_SESSION["tipo_dispositivo"]=="movil"){?>
+		<script>//Utilizado por que el menu del dropdown aparece y se oculta y no deja seleccionar
+			$(document).ready(function($) {
+				$("li button").click(function(e) {
+					$(this).next('ul.dropdown-menu').css("display", "block");
+					e.stopPropagation();
+				});
+			}); 
+		</script>
+    <?php }?>
     <div class="container">
     		<div class="navbar navbar-fixed-top pull-center" id="menu_principal_documento">
     		<div class="navbar-inner">
             <ul class="nav">
               <li>
-              	<div class="btn-group pull-left btn-under">
-                   <?php
-                   if($_SESSION["tipo_dispositivo"]=="movil"){
-                   ?>
-                   <button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
-                        <i class="icon-acciones_menu_mostrar"></i>
-                    </button>
-                   <ul class="dropdown-menu">
-                        <li>
-                        	<div class="tab-pane active" id="arbol">
-                              <div id="esperando_arbol">
-                                <img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
-                              <div id="tree_box" class="arbol_saia"></div>
-                            </div>
-                        </li>
-                    </ul>
-                    <?php }?>
-
-                   <script>
-										var item="<?php echo($llave_formato);?>";
-                   		<?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
-                   		var browserType;
-                   	  if (document.layers) {browserType = "nn4";}
-                   	  if (document.all) {browserType = "ie";}
-                   	  if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-                   	     browserType= "gecko";
-                   	  }
-                   	  no_seleccionar=<?php echo((@$_REQUEST["no_seleccionar"]?"1":"0")); ?>;
-                   	  tree2=new dhtmlXTreeObject("tree_box","100%","<?php echo($alto_inicial);?>",0);
-                   	  tree2.enableAutoTooltips(1);
-                   	  tree2.enableTreeImages("false");
-                   	  tree2.enableTreeLines("true");
-                   	  tree2.enableTextSigns("true");
-                   	  tree2.setOnLoadingStart(cargando);
-                   	  tree2.setOnLoadingEnd(fin_cargando);
-                   	  tree2.setOnClickHandler(onNodeSelect);
-                   	  tree2.loadXML("<?php echo($ruta_db_superior);?>formatos/arboles/test_formatos_documento.php?id=<?php echo($iddoc2);?>");
-                   	  function redireccion_ruta(iframe_destino,ruta_enlace){
-                   	    if(iframe_destino==''){
-                   	      window.location=ruta_enlace;
-                   	    }
-                   	    else if(window.parent.frames[iframe_destino]!=undefined){
-                   	      window.parent.frames[iframe_destino].location=ruta_enlace;
-                   	    }
-                   	    else if(window.frames[iframe_destino]!=undefined){
-                   	      window.frames[iframe_destino].location=ruta_enlace;
-                   	    }
-                   	    else{
-                   	      window.location=ruta_enlace;
-                   	    }
-                   	  }
-                   	  function onNodeSelect(nodeId){
-
-                   	  	var llave=0;
-                   	    llave=tree2.getParentId(nodeId);
-                   	    var datos=nodeId.split("-");
-                   	    if(datos[2][0]=="r"){
-                   	    	seleccion_accion('adicionar');
-                   	    }
-                   	    else{
-                   	    	documento_saia=datos[3];
-                   		    conexion="<?php echo($ruta_db_superior); ?>formatos/arboles/parsear_accion_arbol.php?id="+nodeId+"&accion=mostrar&llave="+llave+"&enlace_adicionar_formato=1";
-                   		    redireccion_detalles(conexion);
-                   	    }
-                   		}
-                   		function seleccion_accion(accion,id){
-                   	    var nodeId=0;
-                   	    var llave=0;
-                   	    nodeId=tree2.getSelectedItemId();
-                   	    if(!nodeId){
-                   	      alert("Por Favor seleccione un documento del arbol");
-                   	      return;
-                   	    }
-                   	    llave=tree2.getParentId(nodeId);
-                   	    tree2.closeAllItems(tree2.getParentId(nodeId))
-                   	    tree2.openItem(nodeId);
-                   	    tree2.openItem(tree2.getParentId(nodeId));
-                   	    conexion="<?php echo($ruta_db_superior); ?>formatos/arboles/parsear_accion_arbol.php?id="+nodeId+"&accion="+accion+"&llave="+llave;
-                   	    redireccion_detalles(conexion);
-                   	    }
-                   	    function redireccion_detalles(conexion){
-                   	        if(!no_seleccionar){
-                   	            window.parent.open(conexion,"detalles");
-                   	        }
-                   	        else{
-                   	            no_seleccionar=0;
-                   	        }
-                   	    }
-                   	    function fin_cargando(){
-                   	        if (browserType == "gecko" )
-                   	           document.poppedLayer =
-                   	               eval('document.getElementById("esperando_arbol")');
-                   	        else if (browserType == "ie")
-                   	           document.poppedLayer =
-                   	              eval('document.getElementById("esperando_arbol")');
-                   	        else
-                   	           document.poppedLayer =
-                   	              eval('document.layers["esperando_arbol"]');
-                   	        document.poppedLayer.style.visibility = "hidden";
-                   	        tree2.selectItem(item,true,false);
-                   	        tree2.openAllItems(0); //esta linea permite que los arboles carguen abiertos totalmente
-                   	        <?php
-                   	            if(@$_REQUEST['click_mostrar']){
-                   	                ?>
-                   	                nodeId=tree2.getSelectedItemId();
-                   	                llave=tree2.getParentId(nodeId);
-                   	                onNodeSelect(nodeId);
-                   	                <?php
-                   	            }
-                   	        ?>
-                   	      }
-                   	    function cargando() {
-                   	      if (browserType == "gecko" )
-                   	         document.poppedLayer =
-                   	             eval('document.getElementById("esperando_arbol")');
-                   	      else if (browserType == "ie")
-                   	         document.poppedLayer =
-                   	            eval('document.getElementById("esperando_arbol")');
-                   	      else
-                   	         document.poppedLayer =
-                   	             eval('document.layers["esperando_arbol"]');
-                   	      document.poppedLayer.style.visibility = "visible";
-
-                   	    }
-                   	    function actualizar_papa(nodeId){
-                   	        var papa=tree2.getParentId(nodeId);
-                   	        tree2.closeItem(papa);
-                   	        tree2.deleteItem(nodeId,true);
-                   	        //tree2.refreshItem(nodeId);
-                   	        tree2.findItem(papa);
-                   	      }
-                   	 <?php } ?>
-                   </script>
-                </div>
                 <div class="btn-group pull-left btn-under">
                     <button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
                         <i class="icon-acciones_menu_intermedio"></i>

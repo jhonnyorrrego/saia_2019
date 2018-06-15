@@ -48,19 +48,20 @@ $est_check[$estado] = 'checked';
 
 include_once ($ruta_db_superior . "librerias_saia.php");
 echo estilo_bootstrap();
-echo librerias_jquery("1.7");
+echo librerias_jquery("1.8");
 echo librerias_validar_formulario("11");
 echo librerias_arboles();
 ?>
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+
 	</head>
 	<body>
 		<div class="container">
 			<form id="formulario" name="formulario" method="post" action="ejecutar_acciones.php" enctype="multipart/form-data">
-				<table class="table table-bordered" style="margin: 20px;">
+				<table class="table table-bordered" style="margin-top: 10px">
 					<tbody>
 						<tr>
 							<td><strong>AGRUPADOR</strong></td>
@@ -78,12 +79,12 @@ echo librerias_arboles();
 						</tr>
 						<tr class="tr_hidden">
 							<td><strong>DESCRIPCI&Oacute;N</strong></td>
-							<td><textarea name="descripcion" id="descripcion" style="width: 500px; height: 150px;"><?php echo $descrip;?></textarea></td>
+							<td><textarea name="descripcion" id="descripcion"><?php echo $descrip;?></textarea></td>
 						</tr>
 						<tr>
 							<td><strong>VINCULADO A</strong></td>
 							<td>
-							<input  tabindex='2'  type="text" id="stext_cod_padre" width="200px" size="25">
+							<input  tabindex='2'  type="text" id="stext_cod_padre">
 							<a href="javascript:void(0)" onclick="tree.findItem((document.getElementById('stext_cod_padre').value),1)"> <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"> </a><a href="javascript:void(0)" onclick="tree.findItem((document.getElementById('stext_cod_padre').value),0,1)"> <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"> </a><a href="javascript:void(0)" onclick="tree.findItem((document.getElementById('stext_cod_padre').value))"> <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>
 							<br/>
 							<input type="hidden" name="cod_padre" id="cod_padre" value="<?php echo $cod_padre;?>">
@@ -94,7 +95,7 @@ echo librerias_arboles();
 						<tr class="tr_hidden">
 							<td><strong>ANEXO</strong></td>
 							<td>
-							<input type="file" id="anexo" name="anexo">
+							<input type="file" id="anexo" name="anexo" class="form-control-file" >
 							<?php
 							if ($ruta_anexo) {
 								echo '<br/><span><strong>Archivo Actual:</strong> <span style="color:blue">' . $etiqueta_ruta . '</span></span>';

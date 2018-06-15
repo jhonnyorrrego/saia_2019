@@ -47,11 +47,11 @@ function barra_inferior_documento($iddoc, $numero) {
 		$clase_info = "kenlace_saia";
 	}
 	$texto .= '<div class="pull"><div class="btn-group pull-left" >
-	<button type="button" class="btn btn-mini  tooltip_saia_derecha documento_leido" onClick=" " enlace="pantallas/documento/detalles_documento.php?iddoc=' . $iddoc . '&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '" titulo="Detalle Doc No.' . $numero . '" conector="iframe" idregistro="' . $iddoc . '"ancho_columna="470" eliminar_hijos_kaiten="1">
+	<button type="button" class="btn btn-mini  tooltip_saia_derecha documento_leido" enlace="pantallas/documento/detalles_documento.php?iddoc=' . $iddoc . '&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '" titulo="Detalle Doc No.' . $numero . '" conector="iframe" idregistro="' . $iddoc . '"ancho_columna="470" eliminar_hijos_kaiten="1">
     <i class="' . $dato_leido[1] . '"></i>
   </button>
 
-  <button type="button" class="btn btn-mini ' . $clase_info . ' tooltip_saia" conector="iframe" onClick=" " enlace="pantallas/documento/detalles_documento.php?iddoc=' . $iddoc . '" titulo="No.' . $numero . '" idregistro="' . $iddoc . '"><i class="icon-info-sign"></i></button>
+  <button type="button" class="btn btn-mini ' . $clase_info . ' tooltip_saia" conector="iframe" enlace="pantallas/documento/detalles_documento.php?iddoc=' . $iddoc . '" titulo="No.' . $numero . '" idregistro="' . $iddoc . '"><i class="icon-info-sign"></i></button>
   <button type="button" class="btn btn-mini tooltip_saia adicionar_seleccionados" title="Seleccionar" idregistro="' . $iddoc . '">
     <i class="icon-uncheck"></i>
   </button>

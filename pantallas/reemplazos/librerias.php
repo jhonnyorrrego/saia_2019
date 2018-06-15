@@ -33,7 +33,6 @@ function barra_acciones_reemplazos($idreemplazo, $estado, $tipo, $procesado) {
 		return ("componente No encontrado");
 		die();
 	}
-	$texto .= '<div class="btn-group" >';
 	if ($idreemplazo) {
 		if ($procesado == 1 && $estado == 1 && $tipo == 1) {
 			$texto .= '<button type="button" class="btn btn-mini tooltip_saia" title="Inactivar Reemplazo" onclick="window.open(\'../reemplazos/procesar_reemplazo.php?idreemplazo_saia=' . $idreemplazo . '&accion=inactivar_reemplazo&idbusqueda_componente=' . $_REQUEST['idbusqueda_componente'] . '\',\'_self\')"><i class="icon-refresh"></i></button>';
@@ -44,7 +43,6 @@ function barra_acciones_reemplazos($idreemplazo, $estado, $tipo, $procesado) {
 			$texto .= '<button type="button" class="btn btn-mini tooltip_saia kenlace_saia" conector="iframe" title="Informaci&oacute;n reemplazo" titulo="Informaci&oacute;n reemplazo" enlace="pantallas/busquedas/consulta_busqueda_reemplazo.php?idbusqueda_componente=' . $idbusqueda_componente . "&idreemplazo=" . $idreemplazo . '"><i class="icon-info-sign"></i></button>';
 		}
 	}
-	$texto .= '</div>';
 	return ($texto);
 }
 

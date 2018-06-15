@@ -14,8 +14,8 @@ echo(librerias_bootstrap());
 $sKey = @$_GET["idejecutor"];
 $remitente=busca_filtro_tabla("nombre,identificacion,".fecha_db_obtener('fecha_ingreso','Y-m-d')." AS fecha_ingreso,tipo_ejecutor","ejecutor","idejecutor=".$sKey,"",$conn);
 ?>
+<div class="container">
 	<table class="table table-bordered" style="width:50%;margin: 20px">
-		
 		<tr>
 			<td class="prettyprint"><b>Tipo:</b></td>
 			<td >
@@ -96,4 +96,5 @@ $remitente=busca_filtro_tabla("nombre,identificacion,".fecha_db_obtener('fecha_i
 	  </tr>';
 	}
 	?>	
-</table>
+	</table>
+</div>

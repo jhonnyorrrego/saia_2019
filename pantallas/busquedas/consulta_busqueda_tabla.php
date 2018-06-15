@@ -39,14 +39,11 @@ function incluir_librerias_busqueda($elemento, $indice) {
     include_once ($ruta_db_superior . $elemento);
 }
 
-//echo librerias_tabla_bootstrap("1.11", false, true);
-//echo librerias_tabla_bootstrap("1.11");
 $exportar = !empty($datos_busqueda[0]["exportar"]);
 
 echo librerias_tabla_bootstrap("1.11", false, false);
 
 ?>
-
 <style>
 #barra_exportar_ppal{ margin-right:50px;}
 .progress{margin-bottom: 0px;}
@@ -95,24 +92,21 @@ font-size: 10px;
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" id='listado_seleccionados' aria-labelledby="acciones_sel">
-        <!-- <li><a href="#"><div id="filtrar_seleccionados">Alert seleccionados</div></a></li>  -->
         <?php
-            //echo('<li class="nav-header">Acciones</li>');
           $acciones=explode(",",$datos_busqueda[0]["acciones_seleccionados"]);
           $cantidad=count($acciones);
           for($i=0;$i<$cantidad;$i++){
               echo($acciones[$i]());
           }
-
         ?>
       </ul>
     <?php
         }
-    /*if(@$datos_busqueda[0]["enlace_adicionar"]){
+    if(@$datos_busqueda[0]["enlace_adicionar"]){
       ?>
         <button class="btn kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar</button></div></li>
       <?php
-    }*/
+    }
     ?>
     <?php /*if(@$datos_busqueda[0]["menu_busqueda_superior"]){
         $funcion_menu=explode("@",$datos_busqueda[0]["menu_busqueda_superior"]);
@@ -134,7 +128,6 @@ font-size: 10px;
           $campos = explode(",",$datos_busqueda[0]["campos"]);
           $llave=trim($campos[0]);
       }
-
     ?>
   </div>
   <table id="tabla_resultados"
@@ -189,8 +182,18 @@ font-size: 10px;
 <div class="cargando"></div>
 </body>
 </html>
-<script>
 
+<?php if($_SESSION["tipo_dispositivo"]=="movil"){?>
+<script>//Utilizado por que el menu del dropdown aparece y se oculta y no deja seleccionar
+	$(document).ready(function($) {
+		$("#acciones_sel").click(function(e) {
+			$(this).next('ul.dropdown-menu').css("display", "block");
+		});
+	}); 
+</script>
+<?php }?>
+
+<script>
 var $table = $('#tabla_resultados');
 var llave = "<?php echo($llave); ?>";
 //var selections = [];
@@ -271,8 +274,6 @@ $(document).ready(function() {
 });
 
 function responseHandler(res) {
-
-	//console.log(res);
 	var options = $table.bootstrapTable('getOptions');
 
     //Get the page number
@@ -285,15 +286,11 @@ function responseHandler(res) {
         row.state = $.inArray(row[llave], selections[paginaActual]) !== -1;
     });
     }
-    //console.log(selections[paginaActual]);
     return res;
 }
 
 function getIdSelections() {
-	//console.log($table.bootstrapTable('getSelections'));
-
     return $.map($table.bootstrapTable('getSelections'), function (row) {
-        //console.log(row[llave]);
         return row[llave];
     });
 }
@@ -321,7 +318,6 @@ function procesamiento_buscar(externo) {
                 "sord": params.order
             };
             $.extend( data, q);
-            console.log(data);
             return data;
         },
         onLoadSuccess: function(data){

@@ -41,7 +41,7 @@ if ($formato["numcampos"] && @$_REQUEST["tipo"] != 5) {
 	}
 }
 
-if (!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] == 1) {
+if ($_REQUEST["tipo"] != 5) {
 	leido($_SESSION["usuario_actual"], $_REQUEST["iddoc"]);
 	if (!isset($_REQUEST["menu_principal_inactivo"])) {
 		include_once ($ruta_db_superior . "pantallas/documento/menu_principal_documento.php");
@@ -130,7 +130,7 @@ if ($formato[0]["orientacion"]) {
 	</head>
 	<body>
 	<?php
-	if (!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] == 1) {
+	if ($_REQUEST["tipo"] != 5) {
 		if (!$formato[0]["item"]) {
 			if (isset($_REQUEST["vista"]) && $_REQUEST["vista"]) {
 				$vista = busca_filtro_tabla("encabezado", "vista_formato", "idvista_formato='" . $_REQUEST["vista"] . "'", "", $conn);
@@ -182,7 +182,11 @@ if ($formato[0]["orientacion"]) {
 			.page_margin_bottom {height:' . ($tam_pagina["margen_inferior"]) . 'px; margin:10px '.$tam_pagina["margen_izquierda"].'px 10px '.$tam_pagina["margen_derecha"].'px;overflow: hidden; }		
 			</style>');
 		}
-		echo('<div id="documento">
+		$style="";
+		if($_SESSION["tipo_dispositivo"]=="movil"){
+			$style='style="width:'.($ancho_paginador+50).'px;"';
+		}
+		echo('<div id="documento" '.$style.'>
 			<div id="pag-0" class="paginador_docs page_border">
 				<div class="page_margin_top" id="doc_header">');
 				if ($encabezado["numcampos"]) {
