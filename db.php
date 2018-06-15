@@ -2379,7 +2379,7 @@ if(@$_REQUEST["llamado_ajax"]){
 }
 	require_once ('librerias_saia.php');
 	global $raiz_saia;
-	$raiz_saia = "/" . RUTA_SAIA . $ruta_superior_temporal;
+	$raiz_saia = "/" . RUTA_SAIA ."/". $ruta_superior_temporal;
 	echo(librerias_jquery('1.7'));
 	echo(librerias_notificaciones());
 
@@ -2389,23 +2389,6 @@ notificacion_saia("<?php echo $mensaje ;?>","<?php echo($tipo); ?>",'',<?php ech
 </script>
 <?php
 }
-
-
-/*
-
-function alerta($mensaje)
-{
- ?>
-<script type="text/javascript">
-<!--
-alert("<?php echo $mensaje ;?>");
-//-->
-</script>
-<?php
-}
-
- * /
-
 
 /*
 <Clase>
@@ -3123,48 +3106,6 @@ global $conn;
 	return $conn->compara_fechas($fecha_control, $fecha_inicial);
 }
 
-/*<Clase>
-<Nombre>dbToPdf</Nombre>
-<Parametros>$nameFile:nombre del archivo a crear;$tabla:nombre de la tabla;$campo:nombre del campo;$idcampo:valor del campo;$conn:objeto de conexion</Parametros>
-<Responsabilidades>Crea un pdf con las paginas escaneadas de un documento<Responsabilidades>
-<Notas></Notas>
-<Excepciones></Excepciones>
-<Salida>Si tiene paginas devuelve true de lo contrario false</Salida>
-<Pre-condiciones><Pre-condiciones>
-<Post-condiciones><Post-condiciones>
-</Clase>  */
-function dbToPdf($nameFile, $tabla,$campo,$idcampo,$conn){
-require('fpdf.php');
-$listado=busca_filtro_tabla(" * ",$tabla,"$campo=$idcampo","pagina",$conn);
-if($listado["numcampos"]){
-  //Coordenadas X, Y iniciales en las que se ubicar la imagen
-  define("X0",0.5);
-  define("Y0",0.3);
-  //Ancho y alto de la imagen (ajustada a una hoja de tamaño  carta)
-  define("W",215);
-  define("H",278.4);
-  $pag=0;
-  for($i=0;isset($listado[$i]);$i++){
-    $path=pathinfo($listado[$i]["ruta"]);
-    if($path && is_dir($path["dirname"])){
-      if(is_file($path["dirname"]."/".$path["basename"])){
-        if($path["extension"]=="jpg"){
-        if($pag==0)
-          $pdf=new FPDF("P","mm","Letter");
-        $pag++;
-        $pdf->AddPage();
-        $pdf->Image($listado[$i]["ruta"],X0,Y0,W,H);
-        }
-      }
-    }
-  }
-  if($pag>0){
-    $pdf->Output($nameFile);
-    return(TRUE);
-  }
-}
-return(FALSE);
-}
 /*<Clase>
 <Nombre>getRealIP</Nombre>
 <Parametros></Parametros>

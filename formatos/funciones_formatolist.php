@@ -28,10 +28,10 @@ if ($formato["numcampos"]) {
 			if ($dato_formato_orig["numcampos"]) {
 				// si el archivo existe dentro de la carpeta formatos
 				if (is_file($ruta_db_superior . FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $formato[$i]["ruta"])) {
-					$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA . FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $formato[$i]["ruta"]);
+					$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA ."/". FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $formato[$i]["ruta"]);
 				} elseif (is_file($ruta_db_superior . $formato[$i]["ruta"])) {
 					// si el archivo existe en la ruta especificada partiendo de la raiz
-					$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA . $formato[$i]["ruta"]);
+					$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA ."/". $formato[$i]["ruta"]);
 				} else {
 					$ruta_formato = 'Error: ' . $x_ruta . "|id=" . $formato[$i]["idfunciones_formato"];
 				}
@@ -39,10 +39,10 @@ if ($formato["numcampos"]) {
 		} else {
 			// si el archivo existe dentro de la carpeta formatos
 			if (is_file($ruta_db_superior . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $formato[$i]["ruta"])) {
-				$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $formato[$i]["ruta"]);
+				$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA ."/". FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $formato[$i]["ruta"]);
 			} elseif (is_file($ruta_db_superior . $formato[$i]["ruta"])) {
 				// si el archivo existe en la ruta especificada partiendo de la raiz
-				$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA . $formato[$i]["ruta"]);
+				$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA ."/". $formato[$i]["ruta"]);
 			} else {
 				$ruta_formato = 'Error: ' . $formato[$i]["ruta"] . "|id=" . $formato[$i]["idfunciones_formato"];
 			}

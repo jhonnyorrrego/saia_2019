@@ -127,13 +127,13 @@ if ($config["numcampos"]) {
 </script>
 </head>
 
-<body style="background-color: transparent; position:absolute"  marginheight="0" topmargin="0" vspace="0" marginwidth="0" leftmargin="0" hspace="0" style="margin:0; padding:0">
+<body style="background-color: transparent; position:absolute;margin:0; padding:0"  marginheight="0" topmargin="0" vspace="0" marginwidth="0" leftmargin="0" hspace="0">
 <div id="div_contenido">
 <?php
 if (@$sExport == "")  {
 ?><table width="100%" height="100%" border="0" cellspacing="0" cellpadding="0">
 <tr>
-<td width="99%" valign="top" >
+<td width="99%" valign="top">
 <?php
 }
 ?>

@@ -68,6 +68,9 @@ class StorageUtils {
 			case 'planos' :
 				$server_path = RUTA_PLANOS;
 				break;
+			case 'historial_impresion' :
+				$server_path = RUTA_HISTORIAL_IMPRESION;
+				break;
 			default :
 				//Usar el tipo. Ej. BACKUP
 				$server_path = $tipo;

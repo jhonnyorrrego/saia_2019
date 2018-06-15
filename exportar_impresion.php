@@ -9,12 +9,12 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
+
+die("--se quito fpd y fpdi-");
+
 if (!$_SESSION["LOGIN" . LLAVE_SAIA] && isset($_REQUEST["LOGIN"]) && @$_REQUEST["conexion_remota"]) {
 	logear_funcionario_webservice($_REQUEST["LOGIN"]);
 }
-
-include_once ($ruta_db_superior . 'html2ps/public_html/fpdf/fpdf.php');
-include_once ($ruta_db_superior . 'manipular_pdf/fpdi.php');
 
 if (!isset($_REQUEST['seleccionados'])) {// UTILIZADO PARA GENERAR PDF DESDE EL MENU INTERMEDIO
 	/*VERIFICACION DE EXISTENCIA PDF Y SI DAN CLICK EN ACTUALIZAR PDF*/

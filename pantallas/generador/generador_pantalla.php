@@ -20,41 +20,44 @@ if($_REQUEST["idformato"]){
 <html>
 <head>
 <title>Generador Pantallas SAIA</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="<?php echo $ruta_db_superior;?>css/bootstrap/2.3.2/css/bootstrap-responsive.css" rel="stylesheet">
 <?php
-echo(estilo_bootstrap());
-echo(librerias_jquery());
-echo(librerias_html5());
+echo (estilo_bootstrap("2.3"));
+echo (librerias_jquery("1.8"));
+// echo(librerias_html5());
 
-$campos=busca_filtro_tabla("","pantalla_componente B","1=1","",$conn);
-$librerias_js=array();
-for($i=0;$i<$campos["numcampos"];$i++){
-	$librerias=explode(",",$campos[$i]["librerias"]);
-	foreach($librerias AS $key=>$libreria){
-		$extension=explode(".",$libreria);
-		$cant=count($extension);
-    if($extension[$cant-1]!==''){
-  		switch($extension[($cant-1)]){
-  	    case "php":
-  	      include_once($ruta_db_superior.$libreria);
-  	    break;
-  	    case "js":
-					array_push($librerias_js,$libreria);
-  	    break;
-  	    case "js@h":
-					$header=explode("@",$libreria);
-					echo('<script type="text/javascript" src="'.$ruta_db_superior.$header[0].'"></script>');
-  	    break;
-  	    case "css":
-  	      $texto='<link rel="stylesheet" type="text/css" href="'.$ruta_db_superior.$libreria.'"/>';
-  	    break;
-  	    default:
-  	      $texto=""; //retorna un vacio si no existe el tipo
-  	    break;
-  	  }
-  		echo($texto);
-  	}
-  }
+$es_movil = ($_SESSION["tipo_dispositivo"]) == "movil";
+
+$campos = busca_filtro_tabla("", "pantalla_componente B", "1=1", "", $conn);
+$librerias_js = array();
+for ($i = 0; $i < $campos["numcampos"]; $i++) {
+    $librerias = explode(",", $campos[$i]["librerias"]);
+    foreach ($librerias as $key => $libreria) {
+        $extension = explode(".", $libreria);
+        $cant = count($extension);
+        if ($extension[$cant - 1] !== '') {
+            switch ($extension[($cant - 1)]) {
+                case "php":
+                    include_once ($ruta_db_superior . $libreria);
+                    break;
+                case "js":
+                    array_push($librerias_js, $libreria);
+                    break;
+                case "js@h":
+                    $header = explode("@", $libreria);
+                    echo ('<script type="text/javascript" src="' . $ruta_db_superior . $header[0] . '"></script>');
+                    break;
+                case "css":
+                    $texto = '<link rel="stylesheet" type="text/css" href="' . $ruta_db_superior . $libreria . '"/>';
+                    break;
+                default:
+                    $texto = ""; // retorna un vacio si no existe el tipo
+                    break;
+            }
+            echo ($texto);
+        }
+    }
 }
 
 ?>
@@ -68,8 +71,8 @@ for($i=0;$i<$campos["numcampos"];$i++){
 
 	</head>
 	<body>
-		<div class="row-fluid">
-			<div class="span12">
+
+			<div class="container-fluid">
 				<div class="row-fluid">
 					<div class="span9">
 						<div class="tabbable">
@@ -81,10 +84,10 @@ for($i=0;$i<$campos["numcampos"];$i++){
 									<a href="#formulario-tab" data-toggle="tab">2-Formularios</a>
 								</li>
                 				<li>
-									<a href="#librerias_formulario-tab" data-toggle="tab">3-Librerias</a>
+                				<a href="#librerias_formulario-tab" data-toggle="tab">3-Librerias</a>
 								</li>
                 				<li>
-									<a href="#pantalla_mostrar-tab" data-toggle="tab">4-Mostrar</a>
+                				<a href="#pantalla_mostrar-tab" data-toggle="tab">4-Mostrar</a>
 								</li>
                                 <!-- li>
 									<a href="#pantalla_listar-tab" data-toggle="tab">5-listar</a>
@@ -93,7 +96,10 @@ for($i=0;$i<$campos["numcampos"];$i++){
 									<a href="#encabezado_pie-tab" data-toggle="tab">5-Encabezado pie</a>
 								</li>
 								<li>
-									<a href="#generar_formulario-tab" data-toggle="tab">6-Generar</a>
+									<a href="#asignar_funciones-tab" data-toggle="tab">6-Asignar funciones</a>
+								</li>
+								<li>
+									<a href="#generar_formulario-tab" data-toggle="tab">7-Generar</a>
 								</li>
 							</ul>
 							<div class="tab-content">
@@ -117,21 +123,22 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
                   ?>
                   </textarea>
                   </form>
-								</div>
+				</div>
                 <div class="tab-pane" id="pantalla_listar-tab">
                   <form name="formulario_editor_listar" id="formulario_editor_listar" action="">    <br />
                     <div id="tipo_listar">
                       Por favor seleccione un tipo de visualizaci&oacute;n:
-                      <select name="tipo_pantalla_busqueda" id="tipo_pantalla_busqueda">
-                      <option value="0">Por favor seleccione</option>
+									<select name="tipo_pantalla_busqueda"
+										id="tipo_pantalla_busqueda">
+										<option value="0">Por favor seleccione</option>
                       <?php
-							$tipo_listado=busca_filtro_tabla("","pantalla_busqueda a","estado=1","etiqueta asc",$conn);
-							for($i=0;$i<$tipo_listado["numcampos"];$i++) {
-								echo('<option value="'.$tipo_listado[$i]["idpantalla_busqueda"].'" nombre="'.$tipo_listado[$i]["nombre"].'">'.$tipo_listado[$i]["etiqueta"].'</option>');
+                    $tipo_listado = busca_filtro_tabla("", "pantalla_busqueda a", "estado=1", "etiqueta asc", $conn);
+                    for ($i = 0; $i < $tipo_listado["numcampos"]; $i++) {
+                        echo ('<option value="' . $tipo_listado[$i]["idpantalla_busqueda"] . '" nombre="' . $tipo_listado[$i]["nombre"] . '">' . $tipo_listado[$i]["etiqueta"].'</option>');
 							}
 					  ?>
                     </select>
-                      <?php if($tipo_listado["numcampos"]){ ?>
+									<?php if($tipo_listado["numcampos"]){ ?>
                       <div width="100%" id="frame_tipo_listado"></div>
                       <?php } ?>
                     </div>
@@ -141,6 +148,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 					<div id="configurar_libreria_pantalla"></div>
 					<div id="librerias_en_uso"></div>
 				</div>
+
 				<div class="tab-pane" id="encabezado_pie-tab">
 					<br>
 					<legend>Encabezado</legend><br>
@@ -230,6 +238,13 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
                   </script>
 
 				</div>
+
+
+				<div class="tab-pane" id="asignar_funciones-tab">
+					<?php include_once "asignar_funciones.php";?>
+				</div>
+
+
 				<div class="tab-pane" id="generar_formulario-tab">
 					<div class="accordion" id="acordion_generar">
 								  	<!-- div class="accordion-group">
@@ -433,7 +448,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 					</div>
 				</div>
 			</div>
-		</div>
+
 	</body>
 </html>
 <?php
@@ -457,6 +472,10 @@ for($i=0;$i<$cant_js;$i++){
 $(document).ready(function() {
     campo_id_foco="";
     var alto=$(window).height();
+    var ancho=$(window).width();
+    if(ancho < 600) {
+    	top.noty({text: 'Por favor rote el dispositivo',type: 'warning',layout: 'topCenter',timeout:8000});
+    }
     var browserType;
     var tab_acciones=false;
     iniciar_tooltip();

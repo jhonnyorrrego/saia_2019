@@ -14,7 +14,7 @@ include_once ($ruta_db_superior . "db.php");
 if (!$_SESSION["LOGIN" . LLAVE_SAIA] && isset($_REQUEST["LOGIN"]) && @$_REQUEST["conexion_remota"]) {
 	logear_funcionario_webservice($_REQUEST["LOGIN"]);
 }
-require_once ($ruta_db_superior . 'tcpdf/tcpdf.php');
+require_once ($ruta_db_superior . 'vendor/tecnickcom/tcpdf/tcpdf.php');
 include_once ($ruta_db_superior . FORMATOS_SAIA . 'librerias/encabezado_pie_pagina.php');
 include_once ($ruta_db_superior . 'pantallas/qr/librerias.php');
 include_once ($ruta_db_superior . 'pantallas/lib/librerias_cripto.php');
@@ -66,10 +66,15 @@ class Imprime_Pdf {
 	private $info_ft = array();
 	// todos los datos de la ft
 	private $pmargen = 2;
+	public $nombre_archivo = false;
 
 	function __construct($iddocumento) {
 		global $conn;
-		if ($iddocumento != "url") {
+		if ($iddocumento == "url") {
+			$this -> tipo_salida = "FI";
+			$this -> imprimir_plantilla = 1;
+			$this -> documento[0]["iddocumento"] = "url";
+		} else if ($iddocumento) {
 			$this -> documento = busca_filtro_tabla("d.*," . fecha_db_obtener("fecha", "Y-m-d") . " as fecha1", "documento d", "iddocumento=" . $iddocumento, "", $conn);
 			if (!$this -> documento["numcampos"]) {
 				die("documento no encontrado.");
@@ -102,12 +107,7 @@ class Imprime_Pdf {
 				}
 				$this -> font_size = $formato[0]["font_size"];
 				$this -> papel = $formato[0]["papel"];
-
 			}
-		} elseif ($iddocumento == "url") {
-			$this -> tipo_salida = "FI";
-			$this -> imprimir_plantilla = 1;
-			$this -> documento[0]["iddocumento"] = "url";
 		}
 	}
 
@@ -115,14 +115,14 @@ class Imprime_Pdf {
 		if (isset($datos["imprimir_paginas"]) && $datos["imprimir_paginas"]) {
 			$this -> imprimir_paginas = $datos["imprimir_paginas"];
 		}
+		if (isset($datos["nombre_archivo"]) && $datos["nombre_archivo"] != "") {
+			$this -> nombre_archivo = $datos["nombre_archivo"];
+		}
 
 		if (isset($datos["vincular_anexos"]) && $datos["vincular_anexos"]) {
 			$this -> vincular_anexos = $datos["vincular_anexos"];
 		}
 
-		if (isset($datos["tipo_salida"]) && $datos["tipo_salida"]) {
-			$this -> tipo_salida = $datos["tipo_salida"];
-		}
 		if (isset($datos["seleccion"])) {
 			$this -> configurar_seleccion_impresion($datos["seleccion"]);
 		}
@@ -172,20 +172,18 @@ class Imprime_Pdf {
 			$this -> font_size = $datos["font_size"];
 		}
 
-		if (isset($datos["margen_superior"]) && $datos["margen_superior"]) {
-			$this -> margenes["superior"] = ($datos["margen_superior"] * $this -> pmargen);
+		if (isset($datos["margenes"]) && $datos["margenes"]) {
+			$vmargen = explode(",", $datos["margenes"]);
+			$this -> margenes = array(
+				"izquierda" => $vmargen[0],
+				"derecha" => $vmargen[1],
+				"superior" => $vmargen[2],
+				"inferior" => $vmargen[3]
+			);
 		}
 
-		if (isset($datos["margen_inferior"]) && $datos["margen_inferior"]) {
-			$this -> margenes["inferior"] = ($datos["margen_inferior"] * $this -> pmargen);
-		}
-
-		if (isset($datos["margen_derecha"]) && $datos["margen_derecha"]) {
-			$this -> margenes["derecha"] = ($datos["margen_derecha"] * $this -> pmargen);
-		}
-
-		if (isset($datos["margen_izquierda"]) && $datos["margen_izquierda"]) {
-			$this -> margenes["izquierda"] = ($datos["margen_izquierda"] * $this -> pmargen);
+		if (isset($datos["tipo_salida"]) && $datos["tipo_salida"]) {
+			$this -> tipo_salida = $datos["tipo_salida"];
 		}
 	}
 
@@ -230,7 +228,7 @@ class Imprime_Pdf {
 	}
 
 	public function imprimir() {
-		$this -> pdf = new MYPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false, true);
+		$this -> pdf = new MYPDF($this->orientacion, PDF_UNIT, strtoupper($this->papel), true, 'UTF-8', false, true);
 
 		$this -> pdf -> margenes = $this -> margenes;
 		$this -> pdf -> documento = $this -> documento;
@@ -242,6 +240,10 @@ class Imprime_Pdf {
 		$this -> pdf -> setImageScale(PDF_IMAGE_SCALE_RATIO);
 		$this -> pdf -> SetAutoPageBreak(TRUE, $this -> margenes["inferior"]);
 
+		if (!$this -> documento && $_REQUEST["iddoc_pag"]) {
+			$this -> documento = busca_filtro_tabla("d.*," . fecha_db_obtener("fecha", "Y-m-d") . " as fecha1", "documento d", "iddocumento=" . $_REQUEST["iddoc_pag"], "", $conn);
+		}
+
 		//
 		$this -> pdf -> SetCreator('SAIA');
 		$this -> pdf -> SetTitle($this -> documento[0]["plantilla"] . "_" . $this -> documento[0]["numero"] . "_" . $this -> documento[0]["fecha1"]);
@@ -249,10 +251,8 @@ class Imprime_Pdf {
 		if ($autor["numcampos"]) {
 			$this -> pdf -> SetAuthor($autor[0]["nombres"] . " " . $autor[0]["apellidos"]);
 		}
-		$cad_etiquetas = '';
-		if ($this -> pdf -> getPDFa_mode() !== false) {
-			$cad_etiquetas .= ',PDF/a-1b';
-		}
+		$cad_etiquetas = ',PDF/a-1b';
+		
 		$etiquetas = busca_filtro_tabla("A.nombre", "etiqueta A,documento_etiqueta B", "A.idetiqueta=B.etiqueta_idetiqueta AND B.documento_iddocumento=" . $this -> documento[0]["iddocumento"], "", $conn);
 		if ($etiquetas["numcampos"]) {
 			$letiquetas = extrae_campo($etiquetas, "nombre");
@@ -302,55 +302,63 @@ class Imprime_Pdf {
 		$ruta_tmp_usr = $_SESSION["ruta_temp_funcionario"];
 
 		if (!$_REQUEST['url']) {
-			$formato_ruta = aplicar_plantilla_ruta_documento($this -> documento[0]["iddocumento"]);
+			if ($this -> documento[0]["iddocumento"]) {
+				$formato_ruta = aplicar_plantilla_ruta_documento($this -> documento[0]["iddocumento"]);
+			}
 		} else {
 			$formato_ruta = $ruta_db_superior . $ruta_tmp_usr;
 		}
 
-		$pdf_temp = StorageUtils::obtener_archivo_temporal("impresion_", $ruta_tmp_usr);
-		$tipo_almacenamiento = null;
-		if ($this -> versionamiento) {
-			$tipo_almacenamiento = new SaiaStorage("versiones");
-			$path_to_file = $formato_ruta . "/version" . $this -> version;
-			$nombre_pdf = $path_to_file . "/doc" . $this -> documento[0]["iddocumento"] . ".pdf";
-		} else if ($this -> formato["numcampos"]) {
-			$tipo_almacenamiento = new SaiaStorage("pdf");
-			$carpeta = $formato_ruta . "/pdf";
-
-			$adicional = "";
-			if ($this -> imprimir_vistas) {
-				$adicional = "_vista" . @$_REQUEST["vista"];
-			}
-
-			$nombre_pdf = $carpeta . "/" . strtoupper($this -> formato[0]["nombre"]) . "_" . $this -> documento[0]["numero"] . "_" . str_replace("-", "_", $this -> documento[0]["fecha1"]) . $adicional . ".pdf";
+		if ($this -> nombre_archivo !== false) {
+			$this -> pdf -> Output(__DIR__."/" . $this -> nombre_archivo, $this -> tipo_salida);
 		} else {
-			$tipo_almacenamiento = new SaiaStorage("archivos");
-			$nombre_pdf = $this -> documento[0]["numero"] . "_" . str_replace("-", "_", $this -> documento[0]["fecha1"]) . ".pdf";
-		}
-		chmod($pdf_temp, 0777);
-		$paginas_pdf = 0;
-		if ($this -> documento[0]["estado"] != 'ACTIVO' || $this -> formato[0]["mostrar_pdf"] == 1) {
-			$actualizar_y_hash = true;
-			$paginas_pdf = $this -> pdf -> getNumPages();
-		}
-		$ruta_pdf = array(
-			"servidor" => $tipo_almacenamiento -> get_ruta_servidor(),
-			"ruta" => $nombre_pdf
-		);
-		$this -> pdf -> Output($pdf_temp, $this -> tipo_salida);
-		$codigo_hash = $tipo_almacenamiento -> almacenar_recurso($nombre_pdf, $pdf_temp, $actualizar_y_hash);
-		if ($actualizar_y_hash) {
-			$sqlu = "update documento set paginas='" . $paginas_pdf . "',pdf='" . json_encode($ruta_pdf) . "',pdf_hash='" . $codigo_hash . "' where iddocumento=" . $this -> documento[0]["iddocumento"];
-			phpmkr_query($sqlu) or die($sqlu);
-		}
-		if ($this -> tipo_salida == "F") {
-			$parteUrl = "";
-			if ($_REQUEST["actualizar_pdf"] == 1) {
-				$parteUrl = "&actualizar_pdf=1";
+			$pdf_temp = StorageUtils::obtener_archivo_temporal("impresion_", $ruta_tmp_usr);
+			chmod($pdf_temp, 0777);
+			$tipo_almacenamiento = null;
+			if ($this -> versionamiento) {
+				$tipo_almacenamiento = new SaiaStorage("versiones");
+				$path_to_file = $formato_ruta . "/version" . $this -> version;
+				$nombre_pdf = $path_to_file . "/doc" . $this -> documento[0]["iddocumento"] . ".pdf";
+			} else if ($this -> formato["numcampos"]) {
+				$tipo_almacenamiento = new SaiaStorage("pdf");
+				$carpeta = $formato_ruta . "/pdf";
+
+				$adicional = "";
+				if ($this -> imprimir_vistas) {
+					$adicional = "_vista" . @$_REQUEST["vista"];
+				}
+
+				$nombre_pdf = $carpeta . "/" . strtoupper($this -> formato[0]["nombre"]) . "_" . $this -> documento[0]["numero"] . "_" . str_replace("-", "_", $this -> documento[0]["fecha1"]) . $adicional . ".pdf";
+			} else {
+				$tipo_almacenamiento = new SaiaStorage("archivos");
+				$nombre_pdf = $this -> documento[0]["numero"] . "_" . str_replace("-", "_", $this -> documento[0]["fecha1"]) . ".pdf";
 			}
-			redirecciona("visores/pdf.js-view/web/viewer2.php?actualizar_pdf=1&tipo_visor=1&iddocumento=" . $this -> documento[0]["iddocumento"] . "&ruta=" . base64_encode(json_encode($ruta_pdf))) . $parteUrl;
+			$paginas_pdf = 0;
+			if ($this -> documento[0]["estado"] != 'ACTIVO' || $this -> formato[0]["mostrar_pdf"] == 1) {
+				$actualizar_y_hash = true;
+				$paginas_pdf = $this -> pdf -> getNumPages();
+			}
+			$ruta_pdf = array(
+				"servidor" => $tipo_almacenamiento -> get_ruta_servidor(),
+				"ruta" => $nombre_pdf
+			);
+			$this -> pdf -> Output($pdf_temp, $this -> tipo_salida);
+			$codigo_hash = $tipo_almacenamiento -> almacenar_recurso($nombre_pdf, $pdf_temp, $actualizar_y_hash);
+			if ($actualizar_y_hash) {
+				$sqlu = "update documento set paginas='" . $paginas_pdf . "',pdf='" . json_encode($ruta_pdf) . "',pdf_hash='" . $codigo_hash . "' where iddocumento=" . $this -> documento[0]["iddocumento"];
+				phpmkr_query($sqlu) or die($sqlu);
+			}
+
+			if ($this -> tipo_salida == "F") {
+				$parteUrl = "";
+				if ($_REQUEST["actualizar_pdf"] == 1) {
+					$parteUrl = "&actualizar_pdf=1";
+				}
+				if (!isset($_REQUEST["no_redirecciona"])) {
+					redirecciona("visores/pdf.js-view/web/viewer2.php?actualizar_pdf=1&tipo_visor=1&iddocumento=" . $this -> documento[0]["iddocumento"] . "&ruta=" . base64_encode(json_encode($ruta_pdf))) . $parteUrl;
+				}
+			}
 		}
-		die();
 	}
 
 	public function configurar_encabezado() {
@@ -383,7 +391,6 @@ class Imprime_Pdf {
 			'',
 			$this -> font_size
 		));
-		$this->pdf->setExtraXMP(genera_xmp_saia());
 	}
 
 	public function imprimir_paginas() {
@@ -404,6 +411,11 @@ class Imprime_Pdf {
 				if (is_object($ruta_pag)) {
 					if ($tipo_almacenamiento -> get_filesystem() -> has($ruta_pag -> ruta)) {
 						$archivo_binario = ltrim(StorageUtils::get_binary_file($paginas[$i]["ruta"]), "@");
+						$pos = strpos($archivo_binario, ";base64,");
+						if ($pos !== false) {
+							$pos = intval($pos) + 8;
+							$archivo_binario = substr($archivo_binario, $pos);
+						}
 						$imgdata = base64_decode($archivo_binario);
 						$this -> pdf -> Image('@' . $imgdata, $this -> margenes["izquierda"], $this -> margenes["superior"], 0, 0, 'JPG', '', '', false, 300, '', false, false, 0, false, false, true);
 					}
@@ -509,23 +521,9 @@ class Imprime_Pdf {
 		}
 	}
 
-}
-
-function genera_xmp_saia() {
-	return ('<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-      <rdf:Description rdf:about=""
-            xmlns:xmp="http://ns.adobe.com/xap/1.0/"
-            xmlns:pdfx="http://ns.adobe.com/pdfx/1.3/"
-            xmlns:pdf="http://ns.adobe.com/pdf/1.3/"
-            xmlns:dc="http://purl.org/dc/elements/1.1/">
-         <pdfx:CustomData>my custom data</pdfx:CustomData>
-         <dc:creator>
-            <rdf:Seq>
-               <rdf:li>Me!</rdf:li>
-            </rdf:Seq>
-         </dc:creator>
-      </rdf:Description>
-   </rdf:RDF>');
+	public function set_variable($campo, $valor) {
+		$this -> $campo = $valor;
+	}
 }
 
 class MYPDF extends TCPDF {
@@ -572,19 +570,19 @@ class MYPDF extends TCPDF {
 
 		if ($this -> papel == "Letter") {
 			if ($this -> orientacion == "L") {
-				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 200, stripslashes($texto), 0, 2, 0, false, '', true);
+				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 195, stripslashes($texto), 0, 2, 0, false, '', true);
 			} else {
-				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 260, stripslashes($texto), 0, 2, 0, false, '', true);
+				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 280, stripslashes($texto), 0, 2, 0, false, '', true);
 			}
 		} else if ($this -> papel == "A4") {
 			if ($this -> orientacion == "L") {
 				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 190, stripslashes($texto), 0, 2, 0, false, '', true);
 			} else {
-				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 270, stripslashes($texto), 0, 2, 0, false, '', true);
+				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 280, stripslashes($texto), 0, 2, 0, false, '', true);
 			}
 		} else if ($this -> papel == "A5") {
 			if ($this -> orientacion == "L") {
-				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 125, stripslashes($texto), 0, 2, 0, false, '', true);
+				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 130, stripslashes($texto), 0, 2, 0, false, '', true);
 			} else {
 				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 185, stripslashes($texto), 0, 2, 0, false, '', true);
 			}
@@ -592,7 +590,7 @@ class MYPDF extends TCPDF {
 			if ($this -> orientacion == "L") {
 				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 195, stripslashes($texto), 0, 2, 0, false, '', true);
 			} else {
-				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 330, stripslashes($texto), 0, 2, 0, false, '', true);
+				$this -> writeHTMLCell(0, 0, $this -> margenes["izquierda"], 280, stripslashes($texto), 0, 2, 0, false, '', true);
 			}
 		}
 	}
