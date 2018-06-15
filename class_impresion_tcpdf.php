@@ -252,7 +252,7 @@ class Imprime_Pdf {
 			$this -> pdf -> SetAuthor($autor[0]["nombres"] . " " . $autor[0]["apellidos"]);
 		}
 		$cad_etiquetas = ',PDF/a-1b';
-		
+
 		$etiquetas = busca_filtro_tabla("A.nombre", "etiqueta A,documento_etiqueta B", "A.idetiqueta=B.etiqueta_idetiqueta AND B.documento_iddocumento=" . $this -> documento[0]["iddocumento"], "", $conn);
 		if ($etiquetas["numcampos"]) {
 			$letiquetas = extrae_campo($etiquetas, "nombre");
@@ -260,12 +260,13 @@ class Imprime_Pdf {
 		}
 		$this -> pdf -> SetKeywords("SAIA" . $cad_etiquetas);
 		$this -> pdf -> SetSubject(codifica_encabezado(strip_tags($this -> documento[0]["descripcion"])));
-		$campos_pdfa = busca_filtro_tabla("", "campos_formato", "(banderas like 'pdfa' or banderas like 'pdfa,%' or banderas like '%,pdfa' or banderas like '%,pdfa,%') AND formato_idformato=" . $this -> formato[0]['idformato'], "", $conn);
+		// Esto es para restaurar metadatos adicionales usados en camara de valledupar
+		/*$campos_pdfa = busca_filtro_tabla("", "campos_formato", "(banderas like 'pdfa' or banderas like 'pdfa,%' or banderas like '%,pdfa' or banderas like '%,pdfa,%') AND formato_idformato=" . $this -> formato[0]['idformato'], "", $conn);
 		if ($campos_pdfa['numcampos']) {
 			for ($i = 0; $i < $campos_pdfa['numcampos']; $i++) {
 				$this -> pdf -> SetExtraMetadata($campos_pdfa[$i]['nombre'] . '(' . mostrar_valor_campo($campos_pdfa[$i]['nombre'], $this -> formato[0]['idformato'], $this -> documento[0]["iddocumento"], 1) . ')');
 			}
-		}
+		}*/
 		//
 		if ($this -> mostrar_encabezado) {
 			$this -> configurar_encabezado();
@@ -534,6 +535,7 @@ class MYPDF extends TCPDF {
 	public $documento = array();
 	public $papel = "";
 	public $orientacion;
+	protected $extra_metadata = '';
 
 	public function Header() {
 		$texto = str_replace("##PAGES##", "    " . $this -> total_paginas(), $this -> encabezado);
@@ -609,6 +611,10 @@ class MYPDF extends TCPDF {
 		} else {
 			return (trim($this -> getPageGroupAlias()));
 		}
+	}
+
+	public function SetExtraMetadata($metadata) {
+	    $this->extra_metadata.='/'.$metadata;
 	}
 
 }
