@@ -1,92 +1,98 @@
 <?php
+$max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+    if (is_file($ruta . "db.php")) {
+        $ruta_db_superior = $ruta; //Preserva la ruta superior encontrada
+    }
+    $ruta .= "../";
+    $max_salida--;
+}
+
 $ewCurSec = 0; // Initialise
-			
-?>
-<?php
 
 // Initialize common variables
-$x_idgrafico = Null;
-$x_nombre = Null;
-$x_etiqueta= Null;
-$x_etiquetax = Null;
-$x_etiquetay = Null;
-$x_sql_grafico = Null;
-$x_tipo_grafico = Null;
-$x_ancho = Null;
-$x_alto = Null;
-$x_mascaras = Null;
-$x_precision = Null;
-$x_prefijo = Null;
-$x_estado = Null;
-$x_modulo_idmodulo = Null;
-$palabras_restringidas = array("delete","update","truncate","drop","alter"); 
-$x_direccion_titulo= Null;
-?>
-<?php include ("../db.php") ?>
-<?php include ("../phpmkrfn.php") ?>
-<?php
+$x_idgrafico = null;
+$x_nombre = null;
+$x_etiqueta = null;
+$x_etiquetax = null;
+$x_etiquetay = null;
+$x_sql_grafico = null;
+$x_tipo_grafico = null;
+$x_ancho = null;
+$x_alto = null;
+$x_mascaras = null;
+$x_precision = null;
+$x_prefijo = null;
+$x_estado = null;
+$x_modulo_idmodulo = null;
+$palabras_restringidas = array("delete", "update", "truncate", "drop", "alter");
+$x_direccion_titulo = null;
+
+include_once($ruta_db_superior."librerias_saia.php"); 
+include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+include "../phpmkrfn.php";
 
 // Get action
 $sAction = @$_POST["a_add"];
 if (($sAction == "") || ((is_null($sAction)))) {
-	$sKey = @$_GET["key"];
-	$sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
-	if ($sKey <> "") {
-		$sAction = "C"; // Copy record
-	}
-	else
-	{
-		$sAction = "I"; // Display blank record
-	}
-}
-else
-{
-
-	// Get fields from form
-	$x_idgrafico = @$_POST["x_idgrafico"];
-	$x_nombre = @$_POST["x_nombre"];
-	$x_etiqueta= @$_POST["x_etiqueta"];
-  $x_etiquetax = @$_POST["x_etiquetax"];
-  $x_etiquetay = @$_POST["x_etiquetay"];
-  $x_sql_grafico = @$_POST["x_sql_grafico"];
-  $x_tipo_grafico = @$_POST["x_tipo_grafico"];
-  $x_ancho = @$_POST["x_ancho"];
-  $x_alto = @$_POST["x_alto"];
-  $x_mascaras = @$_POST["x_mascaras"];
-  $x_precision = @$_POST["x_precsion"];
-  $x_prefijo = @$_POST["x_prefijo"];
-  $x_estado = @$_POST["x_estado"];
-  $x_modulo_idmodulo = @$_POST["x_modulo_idmodulo"];
-  $texto_sql=@$_REQUEST["x_sql_grafico"];
-  $x_direccion_titulo=@$_REQUEST["x_direccion_titulo"];
-  $texto2=strtolower(str_replace(" ","",$texto));
-  for($i=0;$i<count($palabras_restringidas);$i++){
-    if(strpos($texto2,@$palabras_restringidas[$i])){
-      alerta("Acaba de ingresar una palabra restringida por favor ingrese de nuevo los datos sin las palabras ".explode("<br>",$palabras_restringidas));
-      volver(1);
+    $sKey = @$_GET["key"];
+    $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
+    if ($sKey != "") {
+        $sAction = "C"; // Copy record
+    } else {
+        $sAction = "I"; // Display blank record
     }
-  }
-  
+} else {
+
+    // Get fields from form
+    $x_idgrafico = @$_POST["x_idgrafico"];
+    $x_nombre = @$_POST["x_nombre"];
+    $x_etiqueta = @$_POST["x_etiqueta"];
+    $x_etiquetax = @$_POST["x_etiquetax"];
+    $x_etiquetay = @$_POST["x_etiquetay"];
+    $x_sql_grafico = @$_POST["x_sql_grafico"];
+    $x_tipo_grafico = @$_POST["x_tipo_grafico"];
+    $x_ancho = @$_POST["x_ancho"];
+    $x_alto = @$_POST["x_alto"];
+    $x_mascaras = @$_POST["x_mascaras"];
+    $x_precision = @$_POST["x_precsion"];
+    $x_prefijo = @$_POST["x_prefijo"];
+    $x_estado = @$_POST["x_estado"];
+    $x_modulo_idmodulo = @$_POST["x_modulo_idmodulo"];
+    $texto_sql = @$_REQUEST["x_sql_grafico"];
+    $x_direccion_titulo = @$_REQUEST["x_direccion_titulo"];
+    $texto2 = strtolower(str_replace(" ", "", $texto));
+    for ($i = 0; $i < count($palabras_restringidas); $i++) {
+        if (strpos($texto2, @$palabras_restringidas[$i])) {
+            alerta("Acaba de ingresar una palabra restringida por favor ingrese de nuevo los datos sin las palabras " . explode("<br>", $palabras_restringidas));
+            volver(1);
+        }
+    }
+
 }
-switch ($sAction)
-{
-	case "C": // Get a record to display
-		if (!LoadData($sKey,$conn)) { // Load Record based on key
-			$_SESSION["ewmsg"] = "Registro no encontrado" . $sKey;
-			redirecciona("elegir_filtro.php?accion=listar");
-			exit();
-		}
-		break;
-	case "A": // Add
-		if (AddData($conn)) { // Add New Record
-			alerta("Adición exitosa del registro");
-			redirecciona("elegir_filtro.php?accion=listar");
-			exit();
-		}
-		break;
+switch ($sAction) {
+    case "C": // Get a record to display
+        if (!LoadData($sKey, $conn)) { // Load Record based on key
+            $_SESSION["ewmsg"] = "Registro no encontrado" . $sKey;
+            redirecciona("elegir_filtro.php?accion=listar");
+            exit();
+        }
+        break;
+    case "A": // Add
+        if (AddData($conn)) { // Add New Record
+            alerta("Adiciï¿½n exitosa del registro");
+            redirecciona("elegir_filtro.php?accion=listar");
+            exit();
+        }
+        break;
 }
+
+include ("../header.php") 
 ?>
-<?php include ("../header.php") ?>
 <script type="text/javascript" src="../ew.js"></script>
 <script type="text/javascript">
 <!--
@@ -102,6 +108,7 @@ if (EW_this.x_nombre && !EW_hasValue(EW_this.x_nombre, "TEXT" )) {
 		return false;
 }
 return true;
+
 }
 
 //-->
@@ -185,7 +192,7 @@ Debe poseer una mascara valor y un llamada dato en cada uno de los campos qeu se
     </td>
 	</tr>
 	<tr>
-		<td class="encabezado" title="Mascaras que se adaptan a tomar valores por defecto reemplazados en los valores del grafico asi: nombre_campo(resultado_sql_grafico)|valor_a_buscar@valor_a_reemplazar ejemplo: sql grafico->SELECT sexo FROM funcionario WHERE 1=1 el filtro queda: sexo|1@masculino!2@femenino asi cuando encuentre un 1 en el resultado de sexo lo cambiará por un masculino y cuando encuentre un 2 lo cambiara por femenino."><span class="phpmaker" style="color: #FFFFFF;">MASCARAS</span></td>
+		<td class="encabezado" title="Mascaras que se adaptan a tomar valores por defecto reemplazados en los valores del grafico asi: nombre_campo(resultado_sql_grafico)|valor_a_buscar@valor_a_reemplazar ejemplo: sql grafico->SELECT sexo FROM funcionario WHERE 1=1 el filtro queda: sexo|1@masculino!2@femenino asi cuando encuentre un 1 en el resultado de sexo lo cambiarï¿½ por un masculino y cuando encuentre un 2 lo cambiara por femenino."><span class="phpmaker" style="color: #FFFFFF;">MASCARAS</span></td>
 		<td bgcolor="#F5F5F5">
       <span class="phpmaker">
         <textarea id="x_mascaras" name="x_mascaras" cols="35" rows="10"></textarea>
@@ -235,6 +242,7 @@ Debe poseer una mascara valor y un llamada dato en cada uno de los campos qeu se
 	</tr>
 </table>
 <p>
+<input type="hidden" name="Action" value="Adicionar">
 <input type="submit" name="Action" value="Adicionar">
 </form>
 <?php include ("../footer.php") ?>
@@ -251,6 +259,7 @@ Debe poseer una mascara valor y un llamada dato en cada uno de los campos qeu se
 <Pre-condiciones>
 <Post-condiciones>
 */
+encriptar_sqli("graficoadd",1,"form_info",$ruta_db_superior);
 function LoadData($sKey,$conn)
 {
 global $x_nombre ,$x_etiqueta ,$x_etiquetax ,$x_etiquetay ,$x_sql_grafico ,$x_tipo_grafico ,$x_ancho ,$x_alto ,$x_mascaras ,$x_precision ,$x_prefijo ,$x_estado ,$x_modulo_idmodulo,$x_direccion_titulo;
@@ -288,84 +297,82 @@ return(FALSE);
 <Pre-condiciones>
 <Post-condiciones>
 */
-function AddData($conn)
-{
-global $x_nombre ,$x_etiqueta ,$x_etiquetax ,$x_etiquetay ,$x_sql_grafico ,$x_tipo_grafico ,$x_ancho ,$x_alto ,$x_mascaras ,$x_precision ,$x_prefijo ,$x_estado ,$x_modulo_idmodulo, $x_direccion_titulo;
-	// Field nombre
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_nombre) : $x_nombre; 
-	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-	$fieldList["nombre"] = $theValue;
+function AddData($conn){
+    global $x_nombre, $x_etiqueta, $x_etiquetax, $x_etiquetay, $x_sql_grafico, $x_tipo_grafico, $x_ancho, $x_alto, $x_mascaras, $x_precision, $x_prefijo, $x_estado, $x_modulo_idmodulo, $x_direccion_titulo;
+    // Field nombre
+    $theValue = (!get_magic_quotes_gpc()) ? addslashes($x_nombre) : $x_nombre;
+    $theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+    $fieldList["nombre"] = $theValue;
 
-  $theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiqueta) : $x_etiqueta; 
-	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-	$fieldList["etiqueta"] = $theValue;
-	
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiquetax) : $x_etiquetax; 
-	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-	$fieldList["etiquetax"] = $theValue;
-	
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiquetay) : $x_etiquetay; 
-	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-	$fieldList["etiquetay"] = $theValue;
-	
-  $theValue = str_replace("'","''",stripslashes($x_sql_grafico));
-	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-	$fieldList["sql_grafico"] = $theValue;
-	
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_tipo_grafico) : $x_tipo_grafico; 
-	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-	$fieldList["tipo_grafico"] = $theValue;
-	
-	$theValue = ($x_ancho != "") ? intval($x_ancho) : 200;
-	$fieldList["ancho"] = $theValue;
+    $theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiqueta) : $x_etiqueta;
+    $theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+    $fieldList["etiqueta"] = $theValue;
 
-	$theValue = ($x_alto != "") ? intval($x_alto) : 200;
-	$fieldList["alto"] = $theValue;
-	
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_mascaras) : $x_mascaras; 
-	$theValue = ($theValue != "") ?  " '" .$theValue." '"   : "NULL";
-	$fieldList["mascaras"] = $theValue;
-	
-	$theValue = ($x_precision != "") ? intval($x_precision) : 0;
-	$fieldList["presicion_dato"] = $theValue;
-	
-  $theValue = ($x_prefijo != "") ? intval($x_prefijo) : 0;
-	$fieldList["prefijo"] = $theValue;
+    $theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiquetax) : $x_etiquetax;
+    $theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+    $fieldList["etiquetax"] = $theValue;
 
-  $theValue = ($x_estado != "") ? intval($x_estado) : 1;
-	$fieldList["estado"] = $theValue;
-  
-  $theValue = ($x_direccion_titulo != "") ? intval($x_direccion_titulo) : 1;
-	$fieldList["direccion_titulo"] = $theValue;
-	
-	if($x_modulo_idmodulo==0){
-	  $modulo_padre_gr=285; ///Pilas aqui va el modulo papa que en la base de datos de desarrollo es la 285 el modulo se llama graficos_y_reportes y se debe crear como tipo primario
-    $sql="INSERT INTO modulo(nombre,etiqueta,enlace,cod_padre,ayuda) VALUES('grafico_".$x_nombre."','".$x_etiqueta."','#',".$modulo_padre_gr.",' Grafico ".$x_etiqueta.": ".$x_etiquetax." Vs. ".$x_etiquetay."')";
-    
-    $x_modulo_idmodulo=ejecuta_sql($sql);
-    
-    if($x_modulo_idmodulo){
-      $sql2="INSERT INTO permiso(funcionario_idfuncionario,accion,modulo_idmodulo,caracteristica_propio,tipo) VALUES(".usuario_actual("idfuncionario").",1,".$x_modulo_idmodulo.",'l,a,m,e',1)";
+    $theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiquetay) : $x_etiquetay;
+    $theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+    $fieldList["etiquetay"] = $theValue;
 
-      if(!ejecuta_sql($sql2)){
-        alerta("No ha sido posible asignar el modulo al funcionario");
-      } 
+    $theValue = str_replace("'", "''", stripslashes($x_sql_grafico));
+    $theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+    $fieldList["sql_grafico"] = $theValue;
+
+    $theValue = (!get_magic_quotes_gpc()) ? addslashes($x_tipo_grafico) : $x_tipo_grafico;
+    $theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+    $fieldList["tipo_grafico"] = $theValue;
+
+    $theValue = ($x_ancho != "") ? intval($x_ancho) : 200;
+    $fieldList["ancho"] = $theValue;
+
+    $theValue = ($x_alto != "") ? intval($x_alto) : 200;
+    $fieldList["alto"] = $theValue;
+
+    $theValue = (!get_magic_quotes_gpc()) ? addslashes($x_mascaras) : $x_mascaras;
+    $theValue = ($theValue != "") ? " '" . $theValue . " '" : "NULL";
+    $fieldList["mascaras"] = $theValue;
+
+    $theValue = ($x_precision != "") ? intval($x_precision) : 0;
+    $fieldList["presicion_dato"] = $theValue;
+
+    $theValue = ($x_prefijo != "") ? intval($x_prefijo) : 0;
+    $fieldList["prefijo"] = $theValue;
+
+    $theValue = ($x_estado != "") ? intval($x_estado) : 1;
+    $fieldList["estado"] = $theValue;
+
+    $theValue = ($x_direccion_titulo != "") ? intval($x_direccion_titulo) : 1;
+    $fieldList["direccion_titulo"] = $theValue;
+
+    if ($x_modulo_idmodulo == 0) {
+        $modulo_padre_gr = 285; ///Pilas aqui va el modulo papa que en la base de datos de desarrollo es la 285 el modulo se llama graficos_y_reportes y se debe crear como tipo primario
+        $sql = "INSERT INTO modulo(nombre,etiqueta,enlace,cod_padre,ayuda) VALUES('grafico_" . $x_nombre . "','" . $x_etiqueta . "','#'," . $modulo_padre_gr . ",' Grafico " . $x_etiqueta . ": " . $x_etiquetax . " Vs. " . $x_etiquetay . "')";
+
+        $x_modulo_idmodulo = ejecuta_sql($sql);
+
+        if ($x_modulo_idmodulo) {
+            $sql2 = "INSERT INTO permiso(funcionario_idfuncionario,accion,modulo_idmodulo,caracteristica_propio,tipo) VALUES(" . usuario_actual("idfuncionario") . ",1," . $x_modulo_idmodulo . ",'l,a,m,e',1)";
+
+            if (!ejecuta_sql($sql2)) {
+                alerta("No ha sido posible asignar el modulo al funcionario");
+            }
+        } else {
+            alerta("No es posible Asignar el modulo por favor verifique con su administrador");
+        }
     }
-    else{
-      alerta("No es posible Asignar el modulo por favor verifique con su administrador");
-    }
-  }
-  $theValue = ($x_modulo_idmodulo != "") ? intval($x_modulo_idmodulo) : 0;
-	$fieldList["modulo_idmodulo"] = $theValue;
+    $theValue = ($x_modulo_idmodulo != "") ? intval($x_modulo_idmodulo) : 0;
+    $fieldList["modulo_idmodulo"] = $theValue;
 
-	// insert into database
-	$strsql = "INSERT INTO grafico (";
-	$strsql .= implode(",", array_keys($fieldList));
-	$strsql .= ") VALUES (";
-	$strsql .= implode(",", array_values($fieldList));
-	$strsql .= ")";
-	//die($strsql);
-	phpmkr_query($strsql, $conn) or error("Falló la búsqueda" . phpmkr_error() . ' SQL:' . $sSql);
-	return true;
+    // insert into database
+    $strsql = "INSERT INTO grafico (";
+    $strsql .= implode(",", array_keys($fieldList));
+    $strsql .= ") VALUES (";
+    $strsql .= implode(",", array_values($fieldList));
+    $strsql .= ")";
+    //die($strsql);
+    phpmkr_query($strsql, $conn) or error("Fallï¿½ la bï¿½squeda" . phpmkr_error() . ' SQL:' . $sSql);
+    return true;
 }
 ?>

@@ -10,6 +10,10 @@ while ($max_salida > 0) {
 }
 include_once($ruta_db_superior . "db.php");
 include_once($ruta_db_superior . "librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("iddocumento","paginas");
+desencriptar_sqli('form_info');
+
 include_once($ruta_db_superior."pantallas/pagina/librerias.php");
 echo(estilo_bootstrap());
 echo(librerias_notificaciones());
@@ -48,7 +52,6 @@ if($_REQUEST['evento'] == 'Aceptar'){
   </div>
 </form>
 <?php	
-
 	function eliminar_paginas_documento2($paginas,$iddocumento,$justificacion){
 		global $conn,$ruta_db_superior;		
 		$idpaginas = explode(',',$paginas);				
@@ -89,6 +92,12 @@ echo(librerias_validar_formulario());
 ?>
 <script type="text/javascript">
 $(document).ready(function(){
-	$('#eliminar_pagina').validate();	
+	$('#eliminar_pagina').validate({
+		submitHandler: function(form) {
+				<?php encriptar_sqli("eliminar_pagina",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			    
+			  }
+	});	
 });
 </script>

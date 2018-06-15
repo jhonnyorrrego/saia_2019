@@ -15,6 +15,7 @@ $_REQUEST["tipo_entidad"]=5;
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/dhtmlXTree.js"></script>
 <?php 
 include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $propietario=busca_filtro_tabla("idfuncionario","expediente e,funcionario f","f.funcionario_codigo=e.propietario and idexpediente IN(".$_REQUEST["idexpediente"].")","",$conn);
 
 $array_propietarios=extrae_campo($propietario,'idfuncionario');
@@ -53,7 +54,7 @@ for($i=0;$i<$seleccionados["numcampos"];$i++){
 $table.="</table>";
 	
 ?>
-<form name="formulario_asignar_expediente" id="formulario_asignar_expediente">
+<form name="formulario_asignar_expediente" id="formulario_asignar_expediente" method="post">
 <input type="hidden" name="idexpediente" id="idexpediente" value="<?php echo($_REQUEST["idexpediente"]);?>">
 <input type="hidden" id="cerrar_higslide" value="<?php echo(@$_REQUEST["cerrar_higslide"]);?>">
 <legend>Asignar acceso expediente(s) <?php $expediente=busca_filtro_tabla("","expediente","idexpediente IN(".$_REQUEST["idexpediente"].")","",$conn); echo(implode(", ", extrae_campo($expediente,'nombre','U')));?></legend>
@@ -234,6 +235,8 @@ $table.="</table>";
 <?php 
 }?>
 <input type="hidden" name="key_formulario_saia" value="<?php echo(generar_llave_md5_saia());?>">
+<input type="hidden" name="ejecutar_expediente" value="asignar_permiso_expediente">
+<input type="hidden" name="tipo_retorno" value="1">
 <div class="form-actions" style="display:none;">
 <button class="btn btn-primary" id="submit_formulario_asignar_expediente">Aceptar</button>
 <div id="cargando_enviar" class="pull-right"></div>
@@ -367,11 +370,13 @@ $("#submit_formulario_asignar_expediente").click(function(){
 	var formulario_asignar_expediente=$("#formulario_asignar_expediente");
   $('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
 	$(this).attr('disabled', 'disabled');  
+	
+	<?php encriptar_sqli("formulario_asignar_expediente",0,"form_info",$ruta_db_superior,false,false); ?>
   $.ajax({
-    type:'GET',
+    type:'POST',
     async:false,
     url: "<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
-    data: "ejecutar_expediente=asignar_permiso_expediente&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario_asignar_expediente.serialize(),
+    data: "rand="+Math.round(Math.random()*100000)+"&"+formulario_asignar_expediente.serialize(),
     success: function(html){               
       if(html){                   
         var objeto=jQuery.parseJSON(html);                  

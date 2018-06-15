@@ -10,11 +10,15 @@ while ($max_salida > 0) {
 }
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("responsable");
+desencriptar_sqli('form_info');
+
 include_once ($ruta_db_superior . "class_transferencia.php");
 include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 echo(estilo_bootstrap());
 echo(librerias_jquery("1.7"));
-
+echo(librerias_validar_formulario('11'));
 if(isset($_REQUEST["idtemas"])){
 	$idtema=$_REQUEST["idtemas"];
 }else{
@@ -99,7 +103,7 @@ label.error {
 		<div class="control-group" nombre="etiqueta">
 			<legend>Asignar tarea al documento</legend>
 		</div>
-		<form id="formulario_tareas" class="form-horizontal">
+		<form id="formulario_tareas" class="form-horizontal" method="post">
 			<div class="control-group">
 				<label class="control-label" for="etiqueta">Fecha*:</label>
 				<div class="controls">
@@ -191,7 +195,7 @@ label.error {
 			</div>
 		</form>
 	</div>
-	<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>js/jquery.validate.1.13.1.js"></script>
+	
 	<script>
 	$(document).ready(function(){
 		var opcion=parseInt("<?php echo $_REQUEST["tarea_ruta_aprob"];?>");
@@ -206,7 +210,12 @@ label.error {
 		}).on('changeDate', function(e){
 			$(this).datetimepicker('hide');
 		});
-		$("#formulario_tareas").validate();
+		$("#formulario_tareas").validate({
+			submitHandler: function(form) {
+				<?php encriptar_sqli("formulario_tareas",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			  }
+		});
 	});
 	</script>
 

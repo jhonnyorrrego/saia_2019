@@ -13,6 +13,10 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ("phpmkrfn.php");
 include_once ("librerias/funciones.php");
 
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("key_d","key","idformato");
+desencriptar_sqli('form_info');
+
 $x_idfuncion_formato = Null;
 $x_nombre = Null;
 $x_etiqueta = Null;
@@ -149,6 +153,7 @@ else if($formato_enlace["numcampos"]){
 }
 ?>
 </form>
+<?php encriptar_sqli("funciones_formatodelete",1,"form_info",$ruta_db_superior);?>
 <script type="text/javascript">
 $("#btn_elimina_funcion,#btn_elimina_enlace").click(function(){
 	$("#funciones_formatodelete").submit();

@@ -9,6 +9,8 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . 'db.php');
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
 
 if (@$_REQUEST['asignar_quitar_permiso_crear'] && @$_REQUEST['idmodulo'] && @$_REQUEST['idperfil']) {//asigno o quito el permiso crear
 	$accion = @$_REQUEST['accion'];
@@ -94,41 +96,41 @@ if (@$_REQUEST['valida_modulo_formato'] && @$_REQUEST['idmodulo']) {//valida si 
 $retorno["mensaje"] = '';
 $retorno["tipo_mensaje"] = 'error';
 $retorno["exito"] = 0;
-if (!@$_REQUEST["perfil"]) {
+if (!@$_REQUEST["x_perfil_idperfil"]) {
 	$retorno["mensaje"] = "Debe seleccionar un perfil";
 	die(json_encode($retorno, JSON_FORCE_OBJECT));
 }
-if (!@$_REQUEST["modulo"]) {
+if (!@$_REQUEST["x_modulo_idmodulo"]) {
 	$retorno["mensaje"] = "Debe seleccionar un modulo";
 	die(json_encode($retorno, JSON_FORCE_OBJECT));
 }
 
-if ($_REQUEST["perfil"] && $_REQUEST["modulo"]) {
+if ($_REQUEST["x_perfil_idperfil"] && $_REQUEST["x_modulo_idmodulo"]) {
 	$modulo_padre_formatos = busca_filtro_tabla("idmodulo", "modulo", "nombre='modulo_formatos'", "", $conn);
-	$modulo_formato = busca_filtro_tabla("cod_padre,nombre", "modulo", "idmodulo=" . $_REQUEST["modulo"], "", $conn);
+	$modulo_formato = busca_filtro_tabla("cod_padre,nombre", "modulo", "idmodulo=" . $_REQUEST["x_modulo_idmodulo"], "", $conn);
 
-	$existe = busca_filtro_tabla("", "permiso_perfil", "modulo_idmodulo=" . $_REQUEST["modulo"] . " AND perfil_idperfil=" . $_REQUEST["perfil"], "", $conn);
+	$existe = busca_filtro_tabla("", "permiso_perfil", "modulo_idmodulo=" . $_REQUEST["x_modulo_idmodulo"] . " AND perfil_idperfil=" . $_REQUEST["x_perfil_idperfil"], "", $conn);
 	if ($existe["numcampos"]) {
 		$mensaje_permiso_crear = '';
 		if ($modulo_padre_formatos[0]['idmodulo'] == $modulo_formato[0]['cod_padre']) {//es modulo de modulo_formatos
 			$modulo_crear_formato = busca_filtro_tabla("", "modulo", "nombre='crear_" . $modulo_formato[0]['nombre'] . "'", "", $conn);
-			$existe_permiso_crear = busca_filtro_tabla("idpermiso_perfil", "permiso_perfil", "modulo_idmodulo=" . $modulo_crear_formato[0]['idmodulo'] . " AND perfil_idperfil=" . $_REQUEST["perfil"], "", $conn);
+			$existe_permiso_crear = busca_filtro_tabla("idpermiso_perfil", "permiso_perfil", "modulo_idmodulo=" . $modulo_crear_formato[0]['idmodulo'] . " AND perfil_idperfil=" . $_REQUEST["x_perfil_idperfil"], "", $conn);
 			if ($existe_permiso_crear['numcampos']) {
-				$sqlc = "DELETE FROM permiso_perfil WHERE modulo_idmodulo=" . $modulo_crear_formato[0]['idmodulo'] . " AND perfil_idperfil=" . $_REQUEST["perfil"];
+				$sqlc = "DELETE FROM permiso_perfil WHERE modulo_idmodulo=" . $modulo_crear_formato[0]['idmodulo'] . " AND perfil_idperfil=" . $_REQUEST["x_perfil_idperfil"];
 				phpmkr_query($sqlc, $conn);
 				$mensaje_permiso_crear = "<br> Tambien se elimina el permiso para crear el formato.";
 			}
 		}
 
-		$sql2 = "DELETE FROM permiso_perfil WHERE modulo_idmodulo=" . $_REQUEST["modulo"] . " AND perfil_idperfil=" . $_REQUEST["perfil"];
+		$sql2 = "DELETE FROM permiso_perfil WHERE modulo_idmodulo=" . $_REQUEST["x_modulo_idmodulo"] . " AND perfil_idperfil=" . $_REQUEST["x_perfil_idperfil"];
 		phpmkr_query($sql2, $conn);
-		$valida_existe = busca_filtro_tabla("", "permiso_perfil", "modulo_idmodulo=" . $_REQUEST["modulo"] . " AND perfil_idperfil=" . $_REQUEST["perfil"], "", $conn);
+		$valida_existe = busca_filtro_tabla("", "permiso_perfil", "modulo_idmodulo=" . $_REQUEST["x_modulo_idmodulo"] . " AND perfil_idperfil=" . $_REQUEST["x_perfil_idperfil"], "", $conn);
 		if ($valida_existe["numcampos"]) {
-			$retorno["mensaje"] = "Error al eliminar el permiso " . @$_REQUEST["nombre_modulo"] . " para el perfil " . @$_REQUEST["nombre_modulo"] . "<br>" . $sql2;
+			$retorno["mensaje"] = "Error al eliminar el permiso " . @$_REQUEST["nombre_modulo"] . " para el perfil " . @$_REQUEST["nombre_perfil"] . "<br>" . $sql2;
 			$retorno["tipo_mensaje"] = "error";
 			$retorno["exito"] = 0;
 		} else {
-			$retorno["mensaje"] = "Permiso " . @$_REQUEST["nombre_modulo"] . " para el perfil " . @$_REQUEST["nombre_modulo"] . " eliminado correctamente" . $mensaje_permiso_crear;
+			$retorno["mensaje"] = "Permiso " . @$_REQUEST["nombre_modulo"] . " para el perfil " . @$_REQUEST["nombre_perfil"] . " eliminado correctamente" . $mensaje_permiso_crear;
 			$retorno["tipo_mensaje"] = "warning";
 			$retorno["exito"] = 1;
 		}
@@ -136,20 +138,20 @@ if ($_REQUEST["perfil"] && $_REQUEST["modulo"]) {
 		$mensaje_permiso_crear = '';
 		if ($modulo_padre_formatos[0]['idmodulo'] == $modulo_formato[0]['cod_padre']) {//es modulo de modulo_formatos
 			$modulo_crear_formato = busca_filtro_tabla("", "modulo", "nombre='crear_" . $modulo_formato[0]['nombre'] . "'", "", $conn);
-			$sqlc = "INSERT INTO permiso_perfil(modulo_idmodulo,perfil_idperfil,caracteristica_propio,caracteristica_grupo,caracteristica_total) VALUES (" . $modulo_crear_formato[0]['idmodulo'] . "," . $_REQUEST["perfil"] . ",'lame','lame','lame')";
+			$sqlc = "INSERT INTO permiso_perfil(modulo_idmodulo,perfil_idperfil,caracteristica_propio,caracteristica_grupo,caracteristica_total) VALUES (" . $modulo_crear_formato[0]['idmodulo'] . "," . $_REQUEST["x_perfil_idperfil"] . ",'lame','lame','lame')";
 			phpmkr_query($sqlc, $conn);
 			$mensaje_permiso_crear = "<br> Tambien se adiciona el permiso para crear el formato.";
 		}
 
-		$sql2 = "INSERT INTO permiso_perfil(modulo_idmodulo,perfil_idperfil,caracteristica_propio,caracteristica_grupo,caracteristica_total) VALUES (" . $_REQUEST["modulo"] . "," . $_REQUEST["perfil"] . ",'lame','lame','lame')";
+		$sql2 = "INSERT INTO permiso_perfil(modulo_idmodulo,perfil_idperfil,caracteristica_propio,caracteristica_grupo,caracteristica_total) VALUES (" . $_REQUEST["x_modulo_idmodulo"] . "," . $_REQUEST["x_perfil_idperfil"] . ",'lame','lame','lame')";
 		phpmkr_query($sql2, $conn);
-		$valida_existe = busca_filtro_tabla("", "permiso_perfil", "modulo_idmodulo=" . $_REQUEST["modulo"] . " AND perfil_idperfil=" . $_REQUEST["perfil"], "", $conn);
+		$valida_existe = busca_filtro_tabla("", "permiso_perfil", "modulo_idmodulo=" . $_REQUEST["x_modulo_idmodulo"] . " AND perfil_idperfil=" . $_REQUEST["x_perfil_idperfil"], "", $conn);
 		if ($valida_existe["numcampos"]) {
-			$retorno["mensaje"] = "Permiso " . @$_REQUEST["nombre_modulo"] . " para el perfil " . @$_REQUEST["nombre_modulo"] . " adicionado correctamente" . $mensaje_permiso_crear;
+			$retorno["mensaje"] = "Permiso " . @$_REQUEST["nombre_modulo"] . " para el perfil " . @$_REQUEST["nombre_perfil"] . " adicionado correctamente" . $mensaje_permiso_crear;
 			$retorno["tipo_mensaje"] = "success";
 			$retorno["exito"] = 1;
 		} else {
-			$retorno["mensaje"] = "Error al adicionar el permiso " . @$_REQUEST["nombre_modulo"] . " para el perfil " . @$_REQUEST["nombre_modulo"] . "<br>" . $sql2;
+			$retorno["mensaje"] = "Error al adicionar el permiso " . @$_REQUEST["nombre_modulo"] . " para el perfil " . @$_REQUEST["nombre_perfil"] . "<br>" . $sql2;
 			$retorno["tipo_mensaje"] = "error";
 			$retorno["exito"] = 0;
 		}

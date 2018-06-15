@@ -1,4 +1,12 @@
-<?php
+<?php 
+include_once("db.php");
+include_once("librerias_saia.php");
+
+include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("iddoc","key","doc");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["doc"]){
 	$_REQUEST["iddoc"]=@$_REQUEST["doc"];
 	include_once("pantallas/documento/menu_principal_documento.php");
@@ -13,8 +21,6 @@ while($max_salida>0){
   $ruta.="../";
   $max_salida--;
 }
-include_once("db.php");
-include_once("librerias_saia.php");
 echo(estilo_bootstrap());
 echo(librerias_notificaciones());
 
@@ -89,7 +95,6 @@ switch ($sAction)
   {
 menu_ordenar($x_id_documento);
     $pendiente = busca_filtro_tabla("idasignacion","asignacion","documento_iddocumento=$x_id_documento and entidad_identidad=1 and llave_entidad=".$_SESSION["usuario_actual"],"",$conn);
-
     $formato=busca_filtro_tabla("B.ruta_mostrar,B.idformato,B.nombre","documento A, formato B","lower(A.plantilla)=lower(B.nombre) AND A.iddocumento=".$x_id_documento,"",$conn);
     if(!$pendiente["numcampos"])
     {
@@ -113,9 +118,24 @@ menu_ordenar($x_id_documento);
 		 <?php
 		 abrir_url($ruta_db_superior. FORMATOS_CLIENTE .$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$x_id_documento."&idformato=".$formato[0]["idformato"]."&random=".rand(),'_self');
     }
+	
+	// Desarrollo para que el encargado de aprobar el documento no lo pueda terminar. 
+	
+	$pendiente_aprobar=busca_filtro_tabla("destino","buzon_entrada","nombre='POR_APROBAR' AND activo=1 AND archivo_idarchivo=".$x_id_documento,"ruta_idruta ASC",$conn);
+	if($_SESSION["usuario_actual"]==$pendiente_aprobar[0]['destino']) 
+    {
+     //alerta("El documento no se puede terminar porque no esta en su buzon de documentos pendientes.");
+		 ?>
+		 <script>
+				notificacion_saia('El documento no se puede terminar porque esta pendiente de su aprobación.','error','',3500);
+		 </script>
+		 <?php
+     abrir_url($ruta_db_superior."formatos/".$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$x_id_documento."&idformato=".$formato[0]["idformato"]."&random=".rand(),'_self');        
+    }  
+
     ?>
-    <form action="documentoTerminar.php" method="post" onSubmit="return EW_checkMyForm(this);">
-    <?php if(isset($_REQUEST["ejecutor"]) && $_REQUEST["ejecutor"]!="")
+    <form id="documentoTerminar" name="documentoTerminar"  action="documentoTerminar.php" method="post" onSubmit="return EW_checkMyForm(this);">
+    <?php if(isset($_REQUEST["ejecutor"]) && $_REQUEST["ejecutor"]!="") 
       echo "<input type='hidden' name='ejecutor' value='".$_REQUEST["ejecutor"]."'>";
     ?>
     <p>
@@ -165,7 +185,6 @@ menu_ordenar($x_id_documento);
     <tr class="encabezado">
     <td width="131" valign="top"><span class="phpmaker" style="color: #FFFFFF; text-aling:justify; font-family: Verdana;font-size: 9px;">JUSTIFICACI&Oacute;N</span></td>
     <td valign="top" bgcolor="#F5F5F5" colspan="3"><span class="phpmaker"><font color="#000000">
-
     <?php
     	$justificaciones_configuracion=busca_filtro_tabla('','configuracion','nombre="justificacion_terminar"','',$conn);
 		$justificaciones=explode(',',$justificaciones_configuracion[0]['valor']);
@@ -318,10 +337,11 @@ function DeleteData($llave,$conn)
   global $x_detalle;
   $estado=busca_filtro_tabla("estado","documento","iddocumento=".$llave,"",$conn);
 
-  if($estado[0]["estado"]=="ACTIVO")
+	// SE COMENTA YA QUE SE PUEDEN TERMINAR DOCUMENTOS QUE NO ESTAN APROBADOS
+  /*if($estado[0]["estado"]=="ACTIVO")
    { $actualice = "UPDATE documento SET estado = 'APROBADO' WHERE iddocumento=".$llave;
     phpmkr_query($actualice,$conn);
-    }
+    }*/
 
   //$radicadores = busca_filtro_tabla("distinct funcionario_codigo","funcionario A,cargo B,dependencia_cargo C","C.estado=1 AND A.estado=1 AND C.funcionario_idfuncionario=A.idfuncionario AND C.cargo_idcargo=B.idcargo AND B.nombre='radicador'","",$conn);
   $destinos = array();
@@ -347,5 +367,6 @@ function DeleteData($llave,$conn)
   transferir_archivo_prueba($fieldList,$destinos,$datos_adicionales);
   return $llave;
 }
-?>
 
+encriptar_sqli("documentoTerminar",1);
+?>

@@ -19,7 +19,14 @@ $x_nombre = Null;
 $x_valor = Null;
 $x_tipo = Null;
 ?>
-<?php include ("db.php") ?>
+<?php include ("db.php");
+include_once("pantallas/lib/librerias_cripto.php");
+include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
+$validar_enteros=array("key_d");
+echo(librerias_jquery());
+
+?>
 <?php include ("phpmkrfn.php") ?>
 <?php
 
@@ -66,7 +73,7 @@ switch ($sAction)
 }
 ?>
 <?php include ("header.php") ?>
-<form action="configuraciondelete.php" method="post">
+<form id="configuraciondelete" name="configuraciondelete" action="configuraciondelete.php" method="post">
 <p>
 <input type="hidden" name="a_delete" value="D">
 <?php $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey; ?>
@@ -119,7 +126,7 @@ foreach ($arRecKey as $sRecKey) {
 // Function LoadData
 // - Load Data based on Key Value sKey
 // - Variables setup: field variables
-
+encriptar_sqli("configuraciondelete",1);
 function LoadData($sKey,$conn)
 { global $x_idconfiguracion,$x_nombre,$x_valor,$x_tipo;
 	$sKeyWrk = "" . addslashes($sKey) . "";

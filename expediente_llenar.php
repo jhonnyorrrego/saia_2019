@@ -3,7 +3,10 @@
 $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; }
 
 include_once("db.php");
+include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("iddoc");
 include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
 include_once("pantallas/expediente/librerias.php");
 $iddoc = $_REQUEST["iddoc"];
 $doc_menu=@$_REQUEST["iddoc"];
@@ -205,12 +208,18 @@ if(count($nombres_exp)){
     seleccionados=tree2.getAllChecked();
     if(seleccionados!="")
       {$('#expedientes').val(seleccionados);
-       return(true);
+	    <?php encriptar_sqli("form1",0); ?>		
+		if(salida_sqli){
+			return true;
+		}
       }
     else
       {$('#expedientes').val('');
        //alert("Debe seleccionar al menos un expediente");
-       return(true);
+        <?php encriptar_sqli("form1",0); ?>
+        if(salida_sqli){
+       		return(true);
+       	}
       }
     return(false);
   });

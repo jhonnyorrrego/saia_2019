@@ -11,6 +11,8 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+
 ?>
 
 <!DOCTYPE html>
@@ -47,8 +49,7 @@ echo (librerias_validar_formulario('11'));
 		<br />
 
 
-		<form class="form-horizontal" action="noticia_procesar.php"
-			method="post" enctype="multipart/form-data" id="formuploadajax">
+		<form class="form-horizontal" action="noticia_procesar.php"	method="post" enctype="multipart/form-data" id="formuploadajax">
 			<fieldset>
 
 				<!-- Form Name -->
@@ -125,6 +126,7 @@ echo (librerias_validar_formulario('11'));
 			if( $('#titulo').val()=='' || $('#subtitulo').val()=='' || $('#noticia').val()=='' || $('#imagen_modulo').val()==''){
 				notificacion_saia('<b>Atenci&oacute;n</b><br>Todos los campos deben estar llenos','success','',3000);
 			}else{
+				<?php encriptar_sqli("formuploadajax",0,"form_info",$ruta_db_superior);?>
 				var formData = new FormData(document.getElementById("formuploadajax"));
 					$.ajax({
 				        type:"POST",

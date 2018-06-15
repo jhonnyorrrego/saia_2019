@@ -2,7 +2,10 @@
 include_once ("db.php");
 include_once ("header.php");
 include_once ("librerias_saia.php");
+include_once("pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
 echo(librerias_jquery("1.7"));
+echo librerias_validar_formulario();
 
 $configuracion = busca_filtro_tabla("A.valor", "configuracion A", "A.tipo='usuario' AND A.nombre='login_administrador'", "", $conn);
 $admin = 0;
@@ -103,10 +106,14 @@ function formato_adicionar($idmodulo=NULL,$ver=0){
 		$modulo[0]["destino"] = "_self";
 	}
 ?>
-<script type="text/javascript" src="js/jquery.validate.js"></script>
 <script type='text/javascript'>
 $(document).ready(function() {
-	$('#form1').validate();
+	$('#form1').validate({
+		submitHandler: function(form) {
+				<?php encriptar_sqli("form1");?>
+			    form.submit();
+		}
+	});
 	var ver=parseInt(<?php echo $ver; ?>);
 	if (ver == 1) {
 		$("input").attr("readonly", "true");
@@ -216,5 +223,4 @@ $(document).ready(function() {
 </form>
 <?php
 }
-
 ?>

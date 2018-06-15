@@ -2,6 +2,12 @@
 include_once("header.php");
 include_once("db.php");
 include_once("librerias_saia.php");
+
+include_once("pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
+
 echo(estilo_bootstrap() );
 echo(librerias_jquery("1.7"));
 if(@$_REQUEST["key"] && @$_REQUEST["accion"]=='seleccionar_etiqueta'){
@@ -81,7 +87,7 @@ elseif($_REQUEST["accion"]=="adicionar"||$_REQUEST["accion"]=="editar")
    $dato=busca_filtro_tabla("","etiqueta","idetiqueta=".$_REQUEST["key"],"",$conn); 
  echo "<br /><br /><p><span class='internos'>".strtoupper($_REQUEST["accion"]." Etiqueta")."</p></span><br /><br />";
  ?>
- <form name="form1" method="post">
+ <form name="form1" id="form1" method="post">
  <table>
  <tr>
  <td class="encabezado">NOMBRE*</td>
@@ -91,7 +97,7 @@ elseif($_REQUEST["accion"]=="adicionar"||$_REQUEST["accion"]=="editar")
  	<br/>
  	
  	<input type="button" class="btn btn-mini btn-danger" value="Cancelar" onclick="window.parent.hs.close();">
- <input type="button" value="Guardar"  class="btn btn-mini btn-primary" onclick="if(form1.nombre.value!='')form1.submit(); else alert('Debe llenar el campo nombre');">
+ <input type="button" value="Guardar"  class="btn btn-mini btn-primary" onclick="validar_nombre()">
  <input type="hidden" name="accion" value="guardar_<?php echo $_REQUEST["accion"]; ?>">
  <input type="hidden" name="key" value="<?php echo $_REQUEST["key"]; ?>">
  </td>
@@ -99,6 +105,15 @@ elseif($_REQUEST["accion"]=="adicionar"||$_REQUEST["accion"]=="editar")
  </table>
  </form>
  <script>
+ function validar_nombre(){
+ 	if(form1.nombre.value!=''){
+ 		<?php encriptar_sqli("form1"); ?>		
+		if(salida_sqli){
+			form1.submit();
+		} 
+ 	}else alert('Debe llenar el campo nombre');
+ }
+ 
  document.getElementById("header").style.display="none";
  document.getElementById("ocultar").style.display="none";
  </script>
@@ -150,7 +165,7 @@ elseif($_REQUEST["accion"]=="seleccionar_etiqueta")
     hs.graphicsDir = 'anexosdigitales/highslide-4.0.10/highslide/graphics/';
     hs.outlineType = 'rounded-white';
 </script>
- <br /><br /><p><span class="internos">ETIQUETAR DOCUMENTO</span></p><br /><br /><form name='form1' method='post'>
+ <br /><br /><p><span class="internos">ETIQUETAR DOCUMENTO</span></p><br /><br /><form id="form1" name='form1' method='post'>
 
 		<ul class="nav nav-tabs">
 		 <li ><a href='etiqueta.php?accion=adicionar' onclick='return hs.htmlExpand(this, { objectType: "iframe",width: 400, height:200,preserveContent:false } )'>Adicionar Etiqueta</a ></li>
@@ -197,7 +212,7 @@ elseif($_REQUEST["accion"]=="seleccionar_etiqueta")
  </td></tr>
  <tr><td colspan=2>
 	<br/>
- <input type='hidden' name='documento' value='<?php echo $_REQUEST["key"]; ?>'>
+ <input type='hidden' name='key' value='<?php echo $_REQUEST["key"]; ?>'>
  <input type='hidden' name='accion' value='etiquetar_documento'>
  </table>
  <?php 
@@ -221,6 +236,7 @@ elseif($_REQUEST["accion"]=="seleccionar_etiqueta")
 // document.getElementById("ocultar").style.display="none";
  </script>
  <?php
+	encriptar_sqli("form1",1); 
 }
 elseif($_REQUEST["accion"]=="etiquetar_documento"){
 global $conn;

@@ -8,10 +8,17 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
+include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
+echo(librerias_jquery());
 include_once ("librerias/header_formato.php");
 include_once ("librerias/funciones.php");
 include ("header.php");
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("formato","key");
+desencriptar_sqli('form_info');
+
 
 $x_encabezado = Null;
 $x_cuerpo = Null;
@@ -175,3 +182,5 @@ function ventanaSecundaria (URL){
 <input type="hidden" name="a_add" value="A">
 <input type="submit" name="Action" value="Continuar" class="btn btn-primary btn-mini">
 </form>
+<?php encriptar_sqli("formatoadd",1,"form_info",$ruta_db_superior);	
+include ("footer.php");?>

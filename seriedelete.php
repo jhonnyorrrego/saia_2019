@@ -11,7 +11,12 @@ $ewCurSec = 0; // Initialise
 		
 ?>
 <?php
-
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idserie");
+desencriptar_sqli('form_info');
+include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_jquery()); 
+echo(librerias_notificaciones());
 // Initialize common variables
 $x_idserie = Null;
 $x_nombre = Null;
@@ -64,7 +69,7 @@ switch ($sAction)
 		break;
 	case "D": // Delete
 		if (DeleteData($sDbWhere,$conn)) {
-			$HTTP_SESSION_VARS["ewmsg"] = "Edición Exitosa" . stripslashes($sKey);			
+			$HTTP_SESSION_VARS["ewmsg"] = "Ediciï¿½n Exitosa" . stripslashes($sKey);			
 			ob_end_clean();
 			echo "<script>parent.location='serielist.php';</script>";
 			exit();
@@ -75,7 +80,7 @@ switch ($sAction)
 <?php include ("header.php") ?>
 <p><span class="internos">
 <img class="imagen_internos" src="botones/configuracion/serie.png" border="0">&nbsp;&nbsp;Desactivar Series Documentales<br><br></span></p>
-<form action="seriedelete.php" method="post">
+<form action="seriedelete.php" method="post" name="seriedelete" id="seriedelete">
 <p>
 <input type="hidden" name="a_delete" value="D">
 <?php $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey; ?>
@@ -121,7 +126,7 @@ if (($x_cod_padre != NULL) && ($x_cod_padre <> "")) {
 	$sTmp = addslashes($sTmp);
 	$sSqlWrk .= " WHERE (A.idserie = " . $sTmp . ")";
 
-	$rswrk = phpmkr_query($sSqlWrk,$conn) or error("Falló la búsqueda" . phpmkr_error() . ' SQL:' . $sSqlWrk);
+	$rswrk = phpmkr_query($sSqlWrk,$conn) or error("Fallï¿½ la bï¿½squeda" . phpmkr_error() . ' SQL:' . $sSqlWrk);
 	if ($rswrk && $rowwrk = phpmkr_fetch_array($rswrk)) {
 		$sTmp = $rowwrk["codigo"];
 		$sTmp .= ValueSeparator(0) . $rowwrk["nombre"];
@@ -221,7 +226,7 @@ $x_seleccion = $sTmp;
 // Function LoadData
 // - Load Data based on Key Value sKey
 // - Variables setup: field variables
-
+encriptar_sqli("seriedelete",1);
 function LoadData($sKey,$conn)
 {
 	global $HTTP_SESSION_VARS;
@@ -240,7 +245,7 @@ function LoadData($sKey,$conn)
 	if ($sOrderBy <> "") {
 		$sSql .= " ORDER BY " . $sOrderBy;
 	}
-	$rs = phpmkr_query($sSql,$conn) or error("Falló la búsqueda" . phpmkr_error() . ' SQL:' . $sSql);
+	$rs = phpmkr_query($sSql,$conn) or error("Fallï¿½ la bï¿½squeda" . phpmkr_error() . ' SQL:' . $sSql);
 	$row = phpmkr_fetch_array($rs);
 	if (!$row) {
 		$LoadData = false;
@@ -309,7 +314,7 @@ function DeleteData($sqlKey,$conn)
 {
 	global $HTTP_SESSION_VARS;
 	$sSql = "update serie set estado=0 where $sqlKey";
-	phpmkr_query($sSql,$conn) or error("Falló la búsqueda" . phpmkr_error() . ' SQL:' . $sSql);
+	phpmkr_query($sSql,$conn) or error("Fallï¿½ la bï¿½squeda" . phpmkr_error() . ' SQL:' . $sSql);
 	phpmkr_query("update serie set estado=0 where cod_padre=".$_REQUEST["key_d"]);
 	return true;
 }

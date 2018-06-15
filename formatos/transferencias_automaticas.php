@@ -9,18 +9,19 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
-
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idformato");
+include_once($ruta_db_superior."librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery('1.7'));
 include_once("../header.php");
 include_once("librerias/header_formato.php");
 include_once("librerias/funciones_acciones.php");
 include_once("librerias/funciones.php"); 
-
-include_once ($ruta_db_superior . "librerias_saia.php");
 echo (estilo_bootstrap());
-
+echo (librerias_validar_formulario('11'));
 ?>
-<script type="text/javascript" src="../js/jquery.js"></script>
-<script type="text/javascript" src="../js/jquery.validate.js"></script>
+
 <script type="text/javascript" src="../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
 <link rel="stylesheet" type="text/css" href="../anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
 <script type='text/javascript'>
@@ -30,6 +31,11 @@ echo (estilo_bootstrap());
 <script type='text/javascript'>
   $().ready(function() {
 	$("#asignar_funcion_formato").validate({
+		submitHandler: function(form) {
+			<?php encriptar_sqli("asignar_funcion_formato",0,"form_info",$ruta_db_superior);?>
+			form.submit();
+			    
+		},		
   rules: {
     entidad1: {
       required: "#tipo1:checked"
@@ -235,10 +241,10 @@ if(@$_REQUEST["idformato"]){
     $texto.='</td></tr>';  
     $texto.='<input type="hidden"  class="required"  name="estado" id="estado" value="1" >';
     if(@$_REQUEST["accion_ejecutar"]==1){
-      $texto.='</select><input type="hidden" name="editar" value="1"><input type="hidden" name="idformato" value="'.$_REQUEST["idformato"].'"><input type="hidden" name="idaccion_funcion" value="'.$_REQUEST["accion_funcion"].'"></td></tr>';
+      $texto.='</select><input type="hidden" name="accion_ejecutar" value="1"><input type="hidden" name="editar" value="1"><input type="hidden" name="idformato" value="'.$_REQUEST["idformato"].'"><input type="hidden" name="idaccion_funcion" value="'.$_REQUEST["accion_funcion"].'"><input type="hidden" name="accion_funcion" value="'.$_REQUEST["accion_funcion"].'"></td></tr>';
     }
     else if(@$_REQUEST["accion_ejecutar"]==2){
-      $texto.='</select><input type="hidden" name="eliminar" value="1"><input type="hidden" name="idformato" value="'.$_REQUEST["idformato"].'"><input type="hidden" name="idaccion_funcion" value="'.$_REQUEST["accion_funcion"].'"></td></tr>';
+      $texto.='</select><input type="hidden" name="accion_ejecutar" value="2"><input type="hidden" name="eliminar" value="1"><input type="hidden" name="idformato" value="'.$_REQUEST["idformato"].'"><input type="hidden" name="idaccion_funcion" value="'.$_REQUEST["accion_funcion"].'"><input type="hidden" name="accion_funcion" value="'.$_REQUEST["accion_funcion"].'"></td></tr>';
     }
     else
       $texto.='</select><input type="hidden" name="adicionar" value="1"><input type="hidden" name="idformato" value="'.$_REQUEST["idformato"].'"></td></tr>';

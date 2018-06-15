@@ -1,3 +1,23 @@
+<?php 
+$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+
+while($max_salida>0)
+{
+if(is_file($ruta."db.php"))
+{
+$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+}
+$ruta.="../";
+$max_salida--;
+}
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+include_once($ruta_db_superior."librerias_saia.php");
+$validar_enteros=array("idanexo");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+?>
 <script>
 function cerrar(){
 if(parent.window.hs) {
@@ -76,7 +96,8 @@ font-size:12px; font-family: Verdana,Tahoma,arial;
 <tr><td>Archivo : <b> <?php echo $anexo[0]["etiqueta"];?> </b> </td></tr>
 <tr><td><input type="hidden" name="idanexo" value="<?php echo $_REQUEST["idanexo"];?>"></td></tr>
 <tr><td></td></tr>
-<tr><td><input type="submit" name="Eliminar" value="Eliminar"></td><td></td>
+<tr><td><input type="hidden" name="Eliminar" value="Eliminar"><input type="submit" value="Eliminar"></td><td></td>
 </table>
 </form>
 </html>
+<?php encriptar_sqli("borraranexo",1,"form_info",$ruta_db_superior); ?>

@@ -1453,7 +1453,12 @@ class GenerarFormato {
 			<head>" . $includes . "
 				<script type='text/javascript'>
   $(document).ready(function() {
-			  		$('#formulario_formatos').validate();
+			  		$('#formulario_formatos').validate({	
+						submitHandler: function(form) {
+							<?php encriptar_sqli('formulario_formatos',0,'form_info','../../');?>
+							form.submit();
+						}
+					});
 				});
 				</script>" . $enmascarar . " $codigo_enter2tab
 			</head>

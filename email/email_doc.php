@@ -10,7 +10,12 @@ while ($max_salida > 0) {
 }
 
 include_once ($ruta_db_superior . "db.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
 include_once ($ruta_db_superior . "class_transferencia.php");
+include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_jquery("1.7"));
+
 include_once ($ruta_db_superior . "header.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_archivo.php");
 include_once ($ruta_db_superior . "StorageUtils.php");
@@ -101,7 +106,7 @@ function formato_email() {
     } else {
         $ldirecciones[0] = "info@cerok.com";
     }
-    echo "<form  name='email' action='email_doc.php' method='post' onsubmit='return validar_campos(this)'>
+    echo "<form  id='email' name='email' action='email_doc.php' method='post' onsubmit='return validar_campos(this)'>
        <table border=0 width=80%>
        <tr>
        <td class='encabezado_list' colspan=2 height='20px' >ENVIAR DOCUMENTO POR E-MAIL</td></tr>
@@ -169,10 +174,11 @@ function formato_email() {
     echo "<tr><td class='encabezado'>ARCHIVOS ADJUNTOS</td><td bgcolor='#F5F5F5'><br />" . $texto_anexo . $texto_pagina . $texto_pdf;
     echo "<input type='hidden' name='archivo_idarchivo' value='" . $_REQUEST["iddoc"] . "' >";
     echo "<tr>
-       <td colspan=2 align=center><input type=submit value='Enviar'>
+       <td colspan=2 align=center><input type='hidden' value='Enviar' name='Enviar'><input type='submit' value='Enviar'>
        </td></tr></table>
        <input name='enviar' value='1' type='hidden'>
        </form>";
+	encriptar_sqli("email",1,"form_info",$ruta_db_superior,false,true);
     include_once ($ruta_db_superior . "footer.php");
 }
 

@@ -9,6 +9,10 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idactividad_paso","paso_idpaso","x_accion_idaccion","fk_campos_formato");
+desencriptar_sqli('form_info');
+
 include ($ruta_db_superior . "workflow/libreria_paso.php");
 include ($ruta_db_superior . FORMATOS_SAIA."librerias/estilo_formulario.php");
 
@@ -114,7 +118,7 @@ function AddData($conn) {
 include_once ($ruta_db_superior . "librerias_saia.php");
 echo(estilo_bootstrap());
 echo(librerias_jquery("1.7"));
-echo(librerias_validar_formulario(11));
+echo(librerias_validar_formulario('11'));
 echo(librerias_arboles());
 echo(librerias_notificaciones());
 
@@ -449,3 +453,4 @@ $paso = busca_filtro_tabla("", "paso", "idpaso=" . $_REQUEST["idpaso"], "", $con
 		}
 	}); 
 </script>
+<?php encriptar_sqli("adicionar_actividad_paso",1,"form_info",$ruta_db_superior)?>

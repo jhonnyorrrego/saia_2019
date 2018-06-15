@@ -12,8 +12,10 @@ echo(estilo_bootstrap());
 echo(librerias_bootstrap());
 echo(librerias_notificaciones());
 echo (librerias_jquery("1.7"));
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+
 ?>
-<form name="formulario_datos_ejecutor" id="formulario_datos_ejecutor">
+<form name="formulario_datos_ejecutor" id="formulario_datos_ejecutor" method="post">
 	<table class="table table-bordered" style="width:70%;margin: 20px;margin-left: auto;margin-right: auto;">
 		<tr>
 			<td style="width:30%;" class="prettyprint"><b>Tipo</b></td>
@@ -35,6 +37,8 @@ echo (librerias_jquery("1.7"));
 			</td>
 		</tr>
 		<tr>
+			<input type="hidden" name="ejecutar_remitente" value="insert_remitente"/>
+			<input type="hidden" name="tipo_retorno" value="1"/>
 			<td colspan="2" style="text-align: center">
 			<button class="btn btn-primary btn-mini" id="submit_formulario_ejecutor">
 				Guardar
@@ -98,12 +102,13 @@ echo (librerias_jquery("1.7"));
 	  	var identificacion=$("#identificacion").val();
 			if(nombre.trim()!="" && identificacion.trim()!="" && identificacion!=0){
 				if(confirm("Esta Seguro de Guardar?")){
+					<?php encriptar_sqli("formulario_datos_ejecutor",0,"form_info",$ruta_db_superior); ?>
 					$.ajax({
 						type : 'POST',
 						async : false,
 						dataType: 'json',
 						url: "<?php echo($ruta_db_superior); ?>pantallas/remitente/ejecutar_acciones.php",
-						data : "ejecutar_remitente=insert_remitente&tipo_retorno=1&rand=" + Math.round(Math.random() * 100000) + "&" + $("#formulario_datos_ejecutor").serialize(),
+						data : "rand=" + Math.round(Math.random() * 100000) + "&" + $("#formulario_datos_ejecutor").serialize(),
 						success : function(objeto) {
 							if (objeto.exito) {
 								notificacion_saia(objeto.mensaje, "success", "", 2500);
@@ -119,4 +124,3 @@ echo (librerias_jquery("1.7"));
 		});
 	}); 
 </script>
-

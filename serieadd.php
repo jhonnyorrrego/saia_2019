@@ -10,10 +10,9 @@ while ($max_salida > 0) {
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."pantallas/expediente/librerias.php");
-
-
-
-
+include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idserie");
+desencriptar_sqli('form_info');
 
 // Initialize common variables
 $x_idserie = Null;
@@ -34,13 +33,10 @@ $x_tipo = Null;
 $x_tipo_expediente = Null;
 //$x_formato =  Null;
 
-
-
-
 ?>
 <?php include ("phpmkrfn.php") ;
 
-	include ("librerias_saia.php");		
+include ("librerias_saia.php");		
 echo(librerias_jquery('1.7')); 
 echo(librerias_notificaciones());
 ?>
@@ -758,7 +754,6 @@ function AddData($conn)
 	if(@$_REQUEST['tvd']){
 		$fieldList["tvd"]=1;
 	}
-  
 	// insert into database
 	$strsql = "INSERT INTO serie (";
 	$strsql .= implode(",", array_keys($fieldList));
@@ -803,6 +798,7 @@ function AddData($conn)
 	}	
 	return $id;
 }
+encriptar_sqli("serieadd",1);
 ?>
 <script>
 $(document).ready(function(){

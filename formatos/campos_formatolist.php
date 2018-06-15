@@ -15,8 +15,6 @@ include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 echo (estilo_bootstrap());
 
-
-
 // Initialize common variables
 $x_idcampos_formato = Null;
 $x_formato_idformato = Null;
@@ -30,8 +28,13 @@ $x_etiqueta_html = Null;
 $x_valor = Null;
 $x_predeterminado = Null;
 $x_ayuda = Null;
+
+echo(librerias_jquery());
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idformato");
+desencriptar_sqli('form_info');
+
 ?>
-<?php include ("db.php") ?>
 <?php include ("phpmkrfn.php") ?>
 <?php
 $nStartRec = 0;
@@ -447,7 +450,7 @@ if ($nTotalRecs > 0) {
 // Function SetUpAdvancedSearch
 // - Set up Advanced Search parameter based on querystring parameters from Advanced Search Page
 // - Variables setup: sSrchAdvanced
-
+encriptar_sqli("campos_formatolist",1,"form_info",$ruta_db_superior);
 function SetUpAdvancedSearch()
 {
 	global $sSrchAdvanced;

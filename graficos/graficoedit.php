@@ -1,8 +1,14 @@
 <?php
+$max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+    if (is_file($ruta . "db.php")) {
+        $ruta_db_superior = $ruta; //Preserva la ruta superior encontrada
+    }
+    $ruta .= "../";
+    $max_salida--;
+}
 $ewCurSec = 0; // Initialise
-			
-?>
-<?php
 
 // Initialize common variables
 $x_idgrafico = Null;
@@ -21,10 +27,14 @@ $x_estado = Null;
 $x_modulo_idmodulo = Null;
 $palabras_restringidas = array("delete","update","truncate","drop","alter"); 
 $x_direccion_titulo =Null;
-?>
-<?php include ("../db.php") ?>
-<?php include ("../phpmkrfn.php") ?>
-<?php
+
+include_once($ruta_db_superior."librerias_saia.php"); 
+include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
+include ("../phpmkrfn.php");
 
 // Get action
 $sAction = @$_POST["a_add"];
@@ -250,6 +260,7 @@ Debe poseer una mascara valor y un llamada dato en cada uno de los campos qeu se
 <Pre-condiciones>
 <Post-condiciones>
 */
+encriptar_sqli("graficoadd",1,"form_info",$ruta_db_superior);
 function LoadData($sKey,$conn)
 {
 global $x_nombre ,$x_etiqueta ,$x_etiquetax ,$x_etiquetay ,$x_sql_grafico ,$x_tipo_grafico ,$x_ancho ,$x_alto ,$x_mascaras ,$x_precision ,$x_prefijo ,$x_estado ,$x_modulo_idmodulo,$x_direccion_titulo;

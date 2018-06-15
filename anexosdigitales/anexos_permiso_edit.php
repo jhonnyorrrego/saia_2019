@@ -60,7 +60,7 @@ $info=busca_filtro_tabla("","anexos","idanexos=".$_REQUEST["idanexo"],"",$conn);
 <script src="<?php echo $ruta_db_superior;?>dropzone/dist/dropzone.js"></script>
 
 <b>Editar Anexo</b><br /><br />
-<form id="reemplazo_anexo" name="form1" action="anexos_permiso_edit.php" method="POST" class="dropzone" enctype="multipart/form-data">
+<form id="reemplazo_anexo" name="reemplazo_anexo" action="anexos_permiso_edit.php" method="POST" class="dropzone" enctype="multipart/form-data">
 <!-- <input type="file" name="anexo"> -->
 <input type="hidden" name="idanexo" value="<?php echo $_REQUEST["idanexo"]?>">
 <!-- <input type="submit" value="Reemplazar archivo">  -->

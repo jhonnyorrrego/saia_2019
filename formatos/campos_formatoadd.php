@@ -2,6 +2,12 @@
 <?php ob_start(); ?>
 <?php
 $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; } 
+include ($ruta_db_superior."db.php");
+include ($ruta_db_superior."librerias_saia.php");
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idcampos_formato","x_formato_idformato","idformato");
+desencriptar_sqli('form_info');
 // Initialize common variables
 $x_idcampos_formato = Null;
 $x_formato_idformato = Null;
@@ -19,8 +25,7 @@ $x_autoguardado = Null;
 $idformato=@$_REQUEST["idformato"];
 $x_banderas =array();
 ?>
-<?php include ($ruta_db_superior."db.php");
-include ($ruta_db_superior."librerias_saia.php");
+<?php 
 include_once("librerias/funciones.php");
 echo (estilo_bootstrap());
 ?>
@@ -75,7 +80,7 @@ include ($ruta_db_superior."header.php");
 
 
 echo(librerias_jquery());
-
+echo (librerias_validar_formulario('11'));
 ?>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>ew.js"></script>
 <script type="text/javascript">
@@ -166,7 +171,13 @@ EW_dateSep = "/"; // set date separator
  		}
  	});
 	// validar los campos del formato
-	$('#formatoadd').validate();
+	$('#campos_formatoadd').validate({
+		submitHandler: function(form) {
+				<?php encriptar_sqli("campos_formatoadd",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			    
+			  }
+	});
 	});
 <!--
 function EW_checkMyForm(EW_this) {

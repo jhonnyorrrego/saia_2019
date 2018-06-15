@@ -10,6 +10,8 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
 include_once($ruta_db_superior."class_transferencia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 echo(estilo_bootstrap());
@@ -35,7 +37,7 @@ if($_REQUEST['guardar']==1){
 		<div class="control-group" nombre="etiqueta">
 			<legend>Listado de Tareas</legend>
 		</div>
-		<form id="formulario_tareas" class="form-horizontal">
+		<form id="formulario_tareas" name="formulario_tareas" method="post" class="form-horizontal">
 			<div class="control-group">
 				<label class="control-label" for="etiqueta">Nombre de la lista*:</label>
 				<div class="controls">
@@ -132,7 +134,12 @@ if($_REQUEST['guardar']==1){
 	</style>
 	<script>
 	$(document).ready(function(){
-		$("#formulario_tareas").validate();
+		$("#formulario_tareas").validate({
+			submitHandler: function(form) {
+				<?php encriptar_sqli("formulario_tareas",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			  }
+		});
 		
 	//---------------- AUTOCOMPLETAR---------------------//	
 	var delay = (function(){

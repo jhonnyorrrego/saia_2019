@@ -10,6 +10,12 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
+include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_jquery());
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("formato");
+desencriptar_sqli('form_info');
+
 $display_add='none;';
 $display_ver='block;';
 if($_REQUEST["adicionar"]==1){
@@ -92,7 +98,10 @@ if (isset($_REQUEST["guardar"]) && $_REQUEST["guardar"] == 1 && $idfor) {
 			});
 			function validar() {
 				if (form1.nombre.value != '' && form1.ruta.value != '') {
-					form1.submit();
+					<?php encriptar_sqli('form1',0,'form_info',$ruta_db_superior);?>
+	                if(salida_sqli){
+						$('#form1').submit();
+					}
 				} else {
 					alert('Debe llenar los campos obligatorios');
 				}

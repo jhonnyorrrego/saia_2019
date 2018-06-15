@@ -2,6 +2,11 @@
 $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idpaso_documento","idactividad","idpaso","documento");
+desencriptar_sqli('form_info');
+
 $paso_documento=busca_filtro_tabla("","paso_documento","idpaso_documento=".@$_REQUEST["idpaso_documento"],"",$conn);
 if($paso_documento["numcampos"]){
 	$idpaso = $paso_documento[0]["paso_idpaso"];
@@ -78,7 +83,13 @@ $(document).ready(function(){
   var error=0;
   var data2;
   redireccion=1;
-  formulario.validate();
+  formulario.validate({
+  	submitHandler: function(form) {
+				<?php encriptar_sqli("terminar_actividad_paso",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			    
+			  }
+  });
   $('.eliminar_file').on('click',function(){        
     $(this).closest("tr").remove();
   });

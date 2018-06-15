@@ -10,6 +10,7 @@ $max_salida--;
 }
 include_once($ruta_db_superior."librerias_saia.php"); 
 include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 usuario_actual();
 ?>
 <html>
@@ -50,6 +51,7 @@ if(isset($_REQUEST["pantalla"]))
   echo '<input type="hidden" name="pantalla" value="'.$_REQUEST["pantalla"].'">';
 ?>
 <p>
+<form name="permiso_perfiladd" id="permiso_perfiladd" method="post">
 <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC" style="width:100%;">
     <tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">PERFIL</span></td>
@@ -82,6 +84,12 @@ echo $x_perfil_idperfilList;
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">MODULO*</span></td>
 		<td bgcolor="#F5F5F5">
     <input type="hidden" class="required" name="x_modulo_idmodulo" id="x_modulo_idmodulo"  value="" >
+    	
+    	
+    	<input type="hidden" class="required" name="nombre_modulo" id="nombre_modulo"  value="" >
+    	<input type="hidden" class="required" name="nombre_perfil" id="nombre_perfil"  value="" >
+    	
+    	
         <br />
           Buscar:<br><input type="text" id="stext_3" width="200px" size="20">
           <a href="javascript:void(0)" onclick="tree3.findItem(document.getElementById('stext_3').value,1)">
@@ -135,10 +143,15 @@ echo $x_perfil_idperfilList;
             
           }
           function onNodeSelect(nodeId){
+          	
+          	$("#x_modulo_idmodulo").val(nodeId);
+          	$("#nombre_perfil").val($('#x_perfil_idperfil :selected').text());
+          	$("#nombre_modulo").val(tree3.getItemText(nodeId));	
+          	<?php encriptar_sqli("permiso_perfiladd",0,"form_info",$ruta_db_superior,false,false); ?>
         	$.ajax({
         	    url: '<?php echo($ruta_db_superior);?>pantallas/permisos/validar_permiso_perfil.php', 
                 type:'POST',
-                data:'perfil='+$('#x_perfil_idperfil :selected').val()+"&modulo="+nodeId+"&nombre_perfil="+$('#x_perfil_idperfil :selected').text()+"&nombre_modulo="+tree3.getItemText(nodeId),
+                data:$("#permiso_perfiladd").serialize(),
                 success: function(retorno){
                     var datos=jQuery.parseJSON(retorno); 
                     if(datos["exito"]==0){
@@ -149,7 +162,10 @@ echo $x_perfil_idperfilList;
                             tree3.setCheck(nodeId, false);
                         }
                     }
-                    notificacion_saia(datos["mensaje"],datos["tipo_mensaje"],"topRight",3000);
+                    notificacion_saia(datos["mensaje"],datos["tipo_mensaje"],"topRight",3000); 
+					if($("#form_info").length){
+						$("#form_info").remove();
+					}                    
                 }
         	});
           }
@@ -202,5 +218,6 @@ echo $x_perfil_idperfilList;
   </td>
 </tr>
 </table>
+</form>
 </body>
 </html>

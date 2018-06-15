@@ -20,7 +20,12 @@ $x_tipo_cargo = Null;
 ?>
 <?php include ("db.php") ?>
 <?php include ("phpmkrfn.php") ?>
+<?php include ("librerias_saia.php") ?>
 <?php
+include_once ("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idcargo");
+desencriptar_sqli("form_info");
+echo(librerias_jquery());
 $sKey = @$_GET["key"];
 if (($sKey == "") || (is_null($sKey))) { $sKey = @$_POST["key"]; }
 if (!empty($sKey)) $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
@@ -242,7 +247,7 @@ global $x_tipo_cargo;
 	}
 	return $EditData;
 }
-
+encriptar_sqli("cargoedit",1);
 function arbol_cargos($campo,$seleccionados)
   {global $conn,$ruta_db_superior; 
    ?>

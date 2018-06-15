@@ -57,6 +57,11 @@ include_once ($ruta_db_superior . "phpmkrfn.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "librerias/funciones.php");
 
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idcontador","x_idformato");
+desencriptar_sqli('form_info'); 
+echo(librerias_jquery());
+
 // Get action
 $sAction = @$_POST["a_add"];
 if(($sAction == "") || ((is_null($sAction)))) {
@@ -167,7 +172,12 @@ EW_dateSep = "/"; // set date separator
  		}
  	});
 	// validar los campos del formato
-	$('#formatoadd').validate();
+	$('#formatoadd').validate({
+		submitHandler: function(form) {
+			<?php encriptar_sqli("formatoadd",0,"form_info",$ruta_db_superior);?>
+		    form.submit();
+		}
+	});
 	 	/*Valida que el nombre del campo no este repetido*/
  	$("#x_nombre").change(function(){
  		$.ajax({

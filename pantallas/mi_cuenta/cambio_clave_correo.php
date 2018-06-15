@@ -1,7 +1,5 @@
 <?php
 $ruta_db_superior='';
-if(@$_REQUEST['from_correo']){
-
 	$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
 	$ruta_db_superior=$ruta="";
 	while($max_salida>0){
@@ -12,10 +10,12 @@ if(@$_REQUEST['from_correo']){
 	  $max_salida--;
 	}
 	include_once($ruta_db_superior."db.php");
+	include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 	include_once($ruta_db_superior."librerias_saia.php");
 	echo(librerias_jquery('1.7'));
 	echo(estilo_bootstrap());
 	
+if(@$_REQUEST['from_correo']){
 	$correo_funcionario=busca_filtro_tabla("email","funcionario","idfuncionario=".usuario_actual('idfuncionario'),"",$conn);
 
 	?>
@@ -35,7 +35,10 @@ $(document).ready(function(){
 				alert('Debe ingresar una contraseña valida');
 				return false;			
 			}	
-			$("#cambio_pass").submit();
+			<?php encriptar_sqli("cambio_pass",0,"form_info",""); ?>		
+			if(salida_sqli){
+				$("#cambio_pass").submit();
+			}
 	});
 });
 </script>
@@ -75,6 +78,7 @@ $(document).ready(function(){
 	<?php	
 	die();
 }
+
 ?>
 
 
@@ -91,7 +95,10 @@ $("#enviar_form").click(function(){
 			$("#confirmacion_pass").html('<span style="color:red">Las contraseñas no coinciden.</span>');
 			return false;
 		}		
-		$("#cambio_pass").submit();
+		<?php encriptar_sqli("cambio_pass",0,"form_info",""); ?>		
+		if(salida_sqli){
+			$("#cambio_pass").submit();
+		}
 	
 });
 $("#passwordTxt").blur(function(){
@@ -108,7 +115,7 @@ $("#passwordTxt").blur(function(){
 <!--link rel="STYLESHEET" type="text/css" href="pantallas/mi_cuenta/css/password.css"-->
 </head>
 <div class="container">
-<form class="form-vertical" method="post" action="<?php echo($ruta_db_superior); ?>pantallas/mi_cuenta/guardar_pass_correo.php" id="cambio_pass">  
+<form class="form-vertical" method="post" action="pantallas/mi_cuenta/guardar_pass_correo.php" id="cambio_pass">  
  
             <div class="control-group">
                 <label class="control-label" for="new_password"><b>Nueva Contrase&ntilde;a</b></label>
@@ -204,5 +211,4 @@ $("#passwordTxt").blur(function(){
     </li>
  </ul>
 </div>
-</div>    
-
+</div>

@@ -10,6 +10,11 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("iddoc","id","funcionario");
+desencriptar_sqli('form_info');
+
 $usuario_actual=usuario_actual("funcionario_codigo");
 echo (librerias_jquery("1.7"));
 echo (estilo_bootstrap());
@@ -64,7 +69,7 @@ function funcionarios_permiso_documento($iddoc){
 			$edit_r = (in_array("r", $perm)) ? "X" : ""; 
 			
 			$parte_tabla.='<tr>';
-			$parte_tabla.='<td>'.ucwords(strtolower($permisos[$i]["nombres"].''.$permisos[$i]["apellidos"])).'</td>';
+			$parte_tabla.='<td>'.ucwords(strtolower($permisos[$i]["nombres"].' '.$permisos[$i]["apellidos"])).'</td>';
 			$parte_tabla.='<td style="text-align:center">'.$mod.'</td> <td style="text-align:center">'.$eli.'</td> <td style="text-align:center">'.$edit_r.'</td>';
 			if(intval($permisos[$i]["funcionario"])==intval($permisos[$i]["ejecutor"])){
 					$parte_tabla.='<td style="text-align:center">Creador Documento</td>';
@@ -115,7 +120,7 @@ function add_permiso_documento($iddoc){
 	?>
 	<h6 style="text-align: center">ADICIONAR PERMISOS SOBRE EL DOCUMENTO</h6>
 	<hr />
-	<form name="permiso_documento" id="permiso_documento">
+	<form name="permiso_documento" id="permiso_documento" method="post">
 		<table class="table table-bordered" style="width:70%;margin: 20px;margin-left: auto;margin-right: auto;">
 			<tr>
 				<td style="width:30%;background-color: #57B0DE;"><b>Funcionario</b></td>
@@ -164,7 +169,12 @@ function add_permiso_documento($iddoc){
 					}
 				});
 			  if(funcionario!="" && permiso===true){
-			  	$("#permiso_documento").submit();
+			  	
+			  	<?php encriptar_sqli("permiso_documento"); ?>		
+				if(salida_sqli){
+					$("#permiso_documento").submit();
+				}
+			  	
 			  }else{
 			  	//alert("Todos los campos son obligatorios");
 			  	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Todos los campos son obligatorios','warning','',4000);
@@ -190,7 +200,7 @@ function edit_permiso_documento($iddoc,$idpermiso){
 	?>
 	<h6 style="text-align: center">EDITAR PERMISOS SOBRE EL DOCUMENTO</h6>
 	<hr />
-	<form name="edit_permiso_documento" id="edit_permiso_documento">
+	<form name="edit_permiso_documento" id="edit_permiso_documento" method="post">
 		<table class="table table-bordered" style="width:70%;margin: 20px;margin-left: auto;margin-right: auto;">
 			<tr>
 				<td style="width:30%;background-color: #57B0DE;"><b>Funcionario</b></td>
@@ -238,7 +248,12 @@ function edit_permiso_documento($iddoc,$idpermiso){
 					}
 				});
 			  if(permiso===true){
-			  	$("#edit_permiso_documento").submit();
+			  	
+			  	<?php encriptar_sqli("edit_permiso_documento"); ?>		
+				if(salida_sqli){
+					$("#edit_permiso_documento").submit();
+				}
+			  	
 			  }else{
 			  	//alert("Ingrese al menos un permiso");
 			  	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Ingrese al menos un permiso','warning','',4000);

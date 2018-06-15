@@ -33,7 +33,9 @@ $x_fecha_ingreso = Null;
 <?php include ("phpmkrfn.php") ?>
 <?php include_once ("librerias_saia.php"); echo(librerias_notificaciones()); ?>
 <?php
-
+include_once ("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_iddependencia_cargo","x_funcionario_idfuncionario","x_dependencia_iddependencia","x_cargo_idcargo");
+desencriptar_sqli('form_info');
 // Get action
 $sAction = @$_POST["a_add"];
 if (($sAction == "") || ((is_null($sAction)))) {
@@ -154,6 +156,7 @@ echo(ucwords(strtolower($funcionario[0]["nombres"]." ".$funcionario[0]["apellido
 			?>
 			<td bgcolor="#F5F5F5"><span class="phpmaker">
 			<select name="x_funcionario_idfuncionario" id="x_funcionario_idfuncionario">
+				<option value="">Seleccione...</option>
 			<?php for($i=0;$i<$funcionarios["numcampos"];$i++){
 				echo('<option value="'.$funcionarios[$i]["idfuncionario"].'">'.ucwords(strtolower($funcionarios[$i]["nombres"].' '.$funcionarios[$i]["apellidos"])).'</option>');
 			} ?>
@@ -387,7 +390,7 @@ function LoadData($sKey,$conn)
 // Function AddData
 // - Add Data
 // - Variables used: field variables
-
+encriptar_sqli("dependencia_cargoadd",1);
 function AddData($conn)
 {
 	global $x_iddependencia_cargo, $x_funcionario_idfuncionario, $x_dependencia_iddependencia, $x_cargo_idcargo, $x_estado,

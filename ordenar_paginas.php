@@ -4,6 +4,11 @@
   include_once("db.php");
   include_once("librerias_saia.php");
 
+  include_once("pantallas/lib/librerias_cripto.php");
+  $validar_enteros=array("iddoc","key","doc");
+  desencriptar_sqli('form_info');
+  echo(librerias_jquery());
+
   require_once('StorageUtils.php');
   require_once('filesystem/SaiaStorage.php');
   require('vendor/autoload.php');
@@ -810,7 +815,7 @@ else
   $_SESSION["ldocs"]="";//alerta("Su sesion ha Expirado");
 return(array($siguiente,$anterior));  
 }
-
+encriptar_sqli("ordenar",1);
 ?>  
 </body>
 </html>

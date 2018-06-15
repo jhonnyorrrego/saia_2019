@@ -16,13 +16,15 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
   border: 0px solid #E3E3E3;
 }
 </style>
-<?php include_once($ruta_db_superior."db.php"); ?>
+<?php include_once($ruta_db_superior."db.php"); 
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+?>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery-1.7.min.js"></script>
 <?php include_once($ruta_db_superior."librerias_saia.php");
 $datos=busca_filtro_tabla(fecha_db_obtener('a.fecha','Y-m-d')." as x_fecha, ".fecha_db_obtener('a.fecha_extrema_i','Y-m-d')." as x_fecha_extrema_i, ".fecha_db_obtener('a.fecha_extrema_f','Y-m-d')." x_fecha_extrema_f,a.*","expediente a","a.idexpediente=".$_REQUEST["idexpediente"],"",$conn);
 $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$datos[0]["cod_padre"],"",$conn);
 ?>
-<form name="formulario_expediente" id="formulario_expediente">
+<form name="formulario_expediente" id="formulario_expediente" method="post">
 <input type="hidden" name="idexpediente" id="idexpediente" value="<?php echo($datos[0]["idexpediente"]);?>">
 <input type="hidden" name="iddocumento" id="iddocumento" value="<?php echo($_REQUEST["iddocumento"]);?>">
 <input type="hidden" id="cerrar_higslide" value="<?php echo(@$_REQUEST["cerrar_higslide"]);?>">
@@ -55,8 +57,6 @@ if($dato_padre["numcampos"]){
 		</div>
   </div>
 </div>
-
-
 <div class="control-group element">
   <label class="control-label" for="nombre">Descripci&oacute;n
   </label>
@@ -311,6 +311,8 @@ if($dato_padre["numcampos"]){
 </div>
 <br />
 <input type="hidden" name="key_formulario_saia" value="<?php echo(generar_llave_md5_saia());?>">
+<input type="hidden"  name="ejecutar_expediente" value="update_expediente"/>
+<input type="hidden"  name="tipo_retorno" value="1"/>
 <div>
 <button class="btn btn-primary btn-mini" id="submit_formulario_expediente">Aceptar</button>
 <button class="btn btn-mini" id="cancel_formulario_expediente">Cancelar</button>
@@ -368,7 +370,6 @@ if($dato_padre["numcampos"]){
     tree2.setOnCheckHandler(onNodeSelect_expediente);
       
   	function onNodeSelect_expediente(nodeId){
-
   		valor_destino=document.getElementById("cod_padre");
   		if(tree2.isItemChecked(nodeId)){
   			if(valor_destino.value!=="")
@@ -401,12 +402,6 @@ if($dato_padre["numcampos"]){
       document.poppedLayer.style.display = "";
     }  
     
-    var browserType;
-    if (document.layers) {browserType = "nn4"}
-    if (document.all) {browserType = "ie"}
-    if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-       browserType= "gecko"
-    }    
     tree3=new dhtmlXTreeObject("treeboxbox_tree3","","",0);
   	tree3.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
   	tree3.enableIEImageFix(true);
@@ -517,14 +512,14 @@ $(document).ready(function(){
     if(formulario_expediente.valid()){
     	$('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
 			$(this).attr('disabled', 'disabled');
-			
+			<?php encriptar_sqli("formulario_expediente",0,"form_info",$ruta_db_superior); ?>
       $.ajax({
         type:'POST',
         async:false,
         url: "<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
-        data: "ejecutar_expediente=update_expediente&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario_expediente.serialize(),
+        data: "rand="+Math.round(Math.random()*100000)+"&"+formulario_expediente.serialize(),
         dataType: 'json',
-        success: function(objeto){              
+        success: function(objeto){
             if(objeto.exito){
               $.ajax({
                 type:'POST',

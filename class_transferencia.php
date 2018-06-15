@@ -15,7 +15,10 @@ include_once ($ruta_db_superior . "sql.php");
 include_once ($ruta_db_superior . "asignacion.php");
 include_once ($ruta_db_superior . FORMATOS_SAIA . "librerias/funciones_acciones.php");
 include_once ($ruta_db_superior . "bpmn/librerias_formato.php");
-
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+if (isset($_REQUEST["form_info"]) && $_REQUEST["form_info"]!="") {
+	desencriptar_sqli('form_info');
+}
 /*
  * <Clase>
  * <Nombre>buscar_funcionarios</Nombre>

@@ -10,6 +10,7 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 ?>
 <!DOCTYPE html>     
 <?php               
@@ -218,64 +219,68 @@ $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS f
   <?php
   $cadena_cierre=array();
   if(is_object($expediente[0]["fecha_cierre"]))$expediente[0]["fecha_cierre"]=$expediente[0]["fecha_cierre"]->format('Y-m-d');
-	$usuario_cierre=busca_filtro_tabla("","vfuncionario_dc a","a.idfuncionario=".$expediente[0]["funcionario_cierre"],"",$conn);
-	$estado_cierre="";
-	$enlace_abrir='<a style="cursor:pointer" class="accion_abrir_cierre" accion="1">Abrir</a>';
-	$permiso_abrir_expediente=new Permiso();
-	$ok=$permiso_abrir_expediente->acceso_modulo_perfil("permiso_abrir_expediente");
-	if(!$ok){
-	    $enlace_abrir='';
-	}
-	
-	$vector_abrir_cerrar=array(2=>'abrir',1=>'cerrar');
-	$enlace_cerrar='<a style="cursor:pointer" class="accion_abrir_cierre" accion="2">Cerrar</a>';
-	$observaciones_abrir_cerrar='
-	    <td style="text-align:center" colspan="2">
-            <textarea id="observaciones_abrir_cerrar" placeholder="Observaci&oacute;n para '.$vector_abrir_cerrar[$expediente[0]["estado_cierre"]].' expediente..."></textarea>
-		</td>
-	';
-	if($expediente[0]["estado_cierre"]==1){
-		$estado_cierre="Abierto";
-		$enlace_abrir='';
-	}else if($expediente[0]["estado_cierre"]==2){
-		$estado_cierre="Cerrado";
-		$enlace_cerrar='';
-	}else{
+  $usuario_cierre=busca_filtro_tabla("","vfuncionario_dc a","a.idfuncionario=".$expediente[0]["funcionario_cierre"],"",$conn);
+  $estado_cierre="";
+  $enlace_abrir='<a style="cursor:pointer" class="accion_abrir_cierre" accion="1">Abrir</a><input type="hidden" name="accion" value="1" />';
+  $permiso_abrir_expediente=new Permiso();
+  $ok=$permiso_abrir_expediente->acceso_modulo_perfil("permiso_abrir_expediente");
+  if(!$ok){
+      $enlace_abrir='';
+  }
+  
+  $vector_abrir_cerrar=array(2=>'abrir',1=>'cerrar');
+  $enlace_cerrar='<a style="cursor:pointer" class="accion_abrir_cierre" accion="2">Cerrar</a><input type="hidden" name="accion" value="2" />';
+  $observaciones_abrir_cerrar='
+      <td style="text-align:center" colspan="2">
+            <textarea id="observaciones_abrir_cerrar" name="observaciones" placeholder="Observaci&oacute;n para '.$vector_abrir_cerrar[$expediente[0]["estado_cierre"]].' expediente..."></textarea>
+    </td>
+  ';
+  if($expediente[0]["estado_cierre"]==1){
+    $estado_cierre="Abierto";
+    $enlace_abrir='';
+  }else if($expediente[0]["estado_cierre"]==2){
+    $estado_cierre="Cerrado";
+    $enlace_cerrar='';
+  }else{
 		$estado_cierre="Abierto";
 		$enlace_abrir='';		
 	}
-	
-	$cadena_cierre[]="<b>Estado:</b> ".$estado_cierre;
-	$cadena_cierre[]=$expediente[0]["fecha_cierre"];
-	$cadena_cierre[]=ucwords(strtolower($usuario_cierre[0]["nombres"]." ".$usuario_cierre[0]["apellidos"]));
+  
+  $cadena_cierre[]="<b>Estado:</b> ".$estado_cierre;
+  $cadena_cierre[]=$expediente[0]["fecha_cierre"];
+  $cadena_cierre[]=ucwords(strtolower($usuario_cierre[0]["nombres"]." ".$usuario_cierre[0]["apellidos"]));
   ?>
   <tr>
-  	<td class="prettyprint">    	
+    <td class="prettyprint">      
       <?php echo(implode("<br/>",$cadena_cierre)); ?>
     </td>
-    <td>
-    	<table class="table table-bordered">
-    		<tr>
-    		    <?php echo($observaciones_abrir_cerrar); ?>
-    			<td style="text-align:center;" >
-    			     <br>
-    			    <?php echo($enlace_abrir); ?><?php echo($enlace_cerrar); ?>
-    			    <br>
-    			    <br>
-                      <button class='btn btn-mini btn-default historial_abrir_cerrar'>
-  		                <i class='icon-info-sign' title='Ver Historial de Cambio'></i>
-  		              </button>    	
-              		    <script>
-              		        $(document).ready(function(){
-              		            $('.historial_abrir_cerrar').click(function(){
+    <td><form name="form_abrir_cerrar" id="form_abrir_cerrar">
+      <table class="table table-bordered">
+        <tr>
+            <?php echo($observaciones_abrir_cerrar); ?>
+          <td style="text-align:center;" >
+               <br>
+              <?php echo($enlace_abrir); ?><?php echo($enlace_cerrar); ?>
+              <input type="hidden" name="ejecutar_expediente" value="abrir_cerrar_expediente" />
+              <input type="hidden" name="tipo_retorno" value="1" />
+              <input type="hidden" name="idexpediente" value="<?php echo($expediente[0]["idexpediente"]); ?>" />
+              <br>
+              <br>
+                    <button class='btn btn-mini btn-default historial_abrir_cerrar' type="button" id="button_historial">
+                      <i class='icon-info-sign ' title='Ver Historial de Cambio'></i>
+                    </button>     
+                      <script>
+                          $(document).ready(function(){
+                              $('.historial_abrir_cerrar').click(function(){
                                      var enlace='<?php echo($ruta_db_superior); ?>pantallas/expediente/historial_abrir_cerrar.php?idexpediente=<?php echo($idexpediente); ?>';
-                                    hs.htmlExpand(this, { objectType: 'iframe',width: 400, height: 200,contentId:'cuerpo_paso', 		preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
-              		            });
-              		        });
-              		    </script>  		              
-    			</td>
-    		</tr>	
-    	</table>
+                                    hs.htmlExpand(this, { objectType: 'iframe',width: 400, height: 200,contentId:'cuerpo_paso',     preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
+                              });
+                          });
+                      </script>                   
+          </td>
+        </tr> 
+      </table>
+      </form>
     </td>
   </tr>
   
@@ -349,7 +354,7 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
 
     ?>
       <tr>
-      	<td class="prettyprint">    	
+        <td class="prettyprint">      
           <b>Alerta de Retenci&oacute;n:</b>
         </td>
         <td>
@@ -368,46 +373,47 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         $('.obligatorio_observaciones_expediente').remove();
     });      
       
-  	$(".accion_abrir_cierre").click(function(){
-  	    $('.obligatorio_observaciones_expediente').remove();
-  	    var ejecutar_ajax=1;
-  	    var x_accion=$(this).attr("accion");
-  	    var observaciones='';
-  	    observaciones=$('#observaciones_abrir_cerrar').val();
-  	    if(x_accion==1){
-  	        
-      	    if(observaciones==''){
-      	        ejecutar_ajax=0;
-      	        $('#observaciones_abrir_cerrar').after("<span class='obligatorio_observaciones_expediente' style='color:red;'><br>Debe ingresar la observaci&oacute;n</span>");
-      	    }
-  	    }
-  	    
-  	    if(ejecutar_ajax){
-      		if(confirm('Esta seguro de realizar esta accion?')){
-      			if(ejecutar_ajax){
-          			$.ajax({
-          				url:"<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
-          				data:{ejecutar_expediente: 'abrir_cerrar_expediente', tipo_retorno: 1, accion: x_accion, idexpediente: '<?php echo($expediente[0]["idexpediente"]); ?>',observaciones:observaciones},
-          				type:"POST",
-          				success: function(html){
-          					if(html){
-          						var objeto=jQuery.parseJSON(html);
-          						if(objeto.exito){
-          							notificacion_saia(objeto.mensaje,"success","",2500);
-          							if(x_accion==1){
-          							    window.parent.$('#seleccionados_expediente_<?php echo(@$_REQUEST["idexpediente"]); ?>').attr('style','display:none;');
-          							}else{
-          							    window.parent.$('#seleccionados_expediente_<?php echo(@$_REQUEST["idexpediente"]); ?>').attr('style','display:block;');
-          							}
-          							window.open("detalles_expediente.php?idexpediente=<?php echo(@$_REQUEST["idexpediente"]); ?>&idbusqueda_componente=<?php echo(@$_REQUEST["idbusqueda_componente"]); ?>","_self");
-          						}
-          					}
-          				}
-          			});
-      			}	//fin if ejecutar ajax
-      		} //fin esta seguro
-  	    } //fin ejecutar ajax
-  	});
+    $(".accion_abrir_cierre").click(function(){
+        $('.obligatorio_observaciones_expediente').remove();
+        var ejecutar_ajax=1;
+        var x_accion=$(this).attr("accion");
+        var observaciones='';
+        observaciones=$('#observaciones_abrir_cerrar').val();
+        if(x_accion==1){
+            
+            if(observaciones==''){
+                ejecutar_ajax=0;
+                $('#observaciones_abrir_cerrar').after("<span class='obligatorio_observaciones_expediente' style='color:red;'><br>Debe ingresar la observaci&oacute;n</span>");
+            }
+        }
+        
+        if(ejecutar_ajax){
+          if(confirm('Esta seguro de realizar esta accion?')){
+            if(ejecutar_ajax){
+              <?php encriptar_sqli("form_abrir_cerrar",0,"form_info",$ruta_db_superior); ?>
+                $.ajax({
+                  url:"<?php echo($ruta_db_superior);?>pantallas/expediente/ejecutar_acciones.php",
+                  data:$("#form_abrir_cerrar").serialize(),
+                  type:"POST",
+                  success: function(html){
+                    if(html){
+                      var objeto=jQuery.parseJSON(html);
+                      if(objeto.exito){
+                        notificacion_saia(objeto.mensaje,"success","",2500);
+                        if(x_accion==1){
+                            window.parent.$('#seleccionados_expediente_<?php echo(@$_REQUEST["idexpediente"]); ?>').attr('style','display:none;');
+                        }else{
+                            window.parent.$('#seleccionados_expediente_<?php echo(@$_REQUEST["idexpediente"]); ?>').attr('style','display:block;');
+                        }
+                        window.open("detalles_expediente.php?idexpediente=<?php echo(@$_REQUEST["idexpediente"]); ?>&idbusqueda_componente=<?php echo(@$_REQUEST["idbusqueda_componente"]); ?>","_self");
+                      }
+                    }
+                  }
+                });
+            } //fin if ejecutar ajax
+          } //fin esta seguro
+        } //fin ejecutar ajax
+    });
   });
  	</script>
   <?php
@@ -617,7 +623,3 @@ $(document).ready(function(){
 });
 </script>
 </body>
-
-
-
-

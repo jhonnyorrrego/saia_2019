@@ -17,7 +17,10 @@ include_once($ruta_db_superior. FORMATOS_SAIA . "librerias/funciones.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 echo (estilo_bootstrap());
 
-
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idformato");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
 ?>
 <link rel="STYLESHEET" type="text/css" href="<?php echo $ruta_db_superior; ?>css/dhtmlXTree.css">
 <script type="text/javascript" src="<?php echo $ruta_db_superior; ?>js/dhtmlXCommon.js"></script>
@@ -56,20 +59,19 @@ function encabezado(){
 	$idformato=$_REQUEST["idformato"];
 	$formato=busca_filtro_tabla("","formato","idformato=".$idformato,"",$conn);
 	?>
-	<br/><form method="post" name="formulario_ruta" id="name="formulario_ruta">
+	<br/><form method="post" name="formulario_ruta_encabezado" id="formulario_ruta_encabezado">
 	<a class="btn btn-mini btn-default" href="formatoview.php?key=<?php echo $_REQUEST["idformato"]; ?>">Regresar</a>
 	<a class="btn btn-mini btn-info" href="rutas_automaticas.php?idformato=<?php echo $_REQUEST["idformato"]; ?>&accion=adicionar">Adicionar Ruta</a>
 
 	<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior . FORMATOS_SAIA; ?>transferencias_automaticas.php?idformato=<?php echo $_REQUEST["idformato"];?>">Transferencias</a>&nbsp;&nbsp;<br/><br/>
 	<?php
 }
-
 function formulario(){
 	global $conn,$ruta_db_superior;
 	$idformato=$_REQUEST["idformato"];
 	$formato=busca_filtro_tabla("","formato","idformato=".$idformato,"",$conn);
 	?>
-	<form method="post" name="formulario_ruta" id="name="formulario_ruta">
+	<form method="post" name="formulario_ruta_mostrar" id="formulario_ruta_mostrar">
 	<table name="tabla_ruta" id="name="tabla_ruta" cellspacing="1" cellpadding="4" border="0" bgcolor="#CCCCCC" style="width:600px;font-family:arial">
 		<tr class="encabezado_list">
 			<td>TIPO DE CAMPO</td>
@@ -153,7 +155,7 @@ function formulario_adicionar(){
 	$checked2='';
 	$checked3='';
 	?>
-	<form method="post" name="formulario_ruta" id="name="formulario_ruta" action="rutas_automaticas.php">
+	<form method="post" name="formulario_ruta_adicionar" id="formulario_ruta_adicionar" action="rutas_automaticas.php">
 	<table name="tabla_ruta" id="tabla_ruta" cellspacing="1" cellpadding="4" border="0" bgcolor="#CCCCCC" style="width:600px;font-family:arial">
 		<tr>
 			<td class="encabezado" width="30%">Tipo de campo</td>
@@ -209,7 +211,13 @@ function formulario_adicionar(){
 	</form>
 	<script>
 	$().ready(function(){
-		$('#tabla_ruta').validate();
+		$('#formulario_ruta_encabezado').validate({
+			submitHandler: function(form) {
+				<?php encriptar_sqli("formulario_ruta_encabezado",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			    
+			  }
+		});
 	});
 	$('input[name$="entidad"]').click(function(){
 		if(this.value==5){
@@ -303,7 +311,7 @@ function formulario_editar(){
 		$tipo_campo3='checked';
 	}
 	?>
-	<form method="post" name="formulario_ruta" id="name="formulario_ruta" action="rutas_automaticas.php">
+	<form method="post" name="formulario_ruta_editar" id="formulario_ruta_editar" action="rutas_automaticas.php">
 	<table name="tabla_ruta" id="name="tabla_ruta" cellspacing="1" cellpadding="4" border="0" bgcolor="#CCCCCC" style="width:600px;font-family:arial">
 		<tr>
 			<td class="encabezado" width="30%">Tipo de campo</td>
@@ -424,6 +432,7 @@ function formulario_editar(){
 	<?php } ?>
 	</script>
 	<?php
+	encriptar_sqli("formulario_ruta_encabezado",1,"form_info",$ruta_db_superior);
 }
 function registrar_adicionar(){
 	global $ruta_db_superior;

@@ -1,11 +1,13 @@
 <?php
 include_once("db.php");
-include_once("pantallas/lib/librerias_cripto.php");
 include_once("librerias_saia.php");
+include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idfuncionario");
+desencriptar_sqli('form_info');
+echo(librerias_jquery('1.7'));
+echo( librerias_validar_formulario(11) );
 echo(librerias_notificaciones());
 ?>
-<script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/jquery.validate.js"></script>
 <script type="text/javascript">
 	(function($) {
 		$(function() {
@@ -34,26 +36,35 @@ echo(librerias_notificaciones());
 				this.value = (this.value + '').replace(/([^a-zA-Z0-9_.])+/, '');
 			});
 			$('#x_login').blur(function() {
-				this.value = (this.value + '').replace(/([^a-zA-Z0-9_.])+/, '');
-				$.ajax({
-					type : 'POST',
-					url : 'formatos/librerias/validar_unico.php',
-					data : 'nombre=login&valor=' + $('#x_login').val() + '&tabla=funcionario',
-					success : function(datos, exito) {
-						if (datos == 0) {
-							notificacion_saia('<B>ATENCI&Oacute;N!</B> <BR> El campo login de funcionario debe Ser unico', 'warning', '', 4000);
-
-							$('#x_login').val("");
+				if ($(this).val!='') {
+					this.value = (this.value + '').replace(/([^a-zA-Z0-9_.])+/, '');
+					$.ajax({
+						type : 'POST',
+						url : 'formatos/librerias/validar_unico.php',
+						data : 'nombre=login&valor=' + $('#x_login').val() + '&tabla=funcionario',
+						success : function(datos, exito) {
+							if (datos == 0) {
+								notificacion_saia('<B>ATENCI&Oacute;N!</B> <BR> El campo login de funcionario debe Ser unico', 'warning', '', 4000);
+	
+								$('#x_login').val("");
+							}
 						}
-					}
-				});
+					});
+				};
+				
 			})
 		});
 
 	})(jQuery);
 
 	$(document).ready(function() {
-		$("#funcionarioadd").validate();
+		$("#funcionarioadd").validate({
+			submitHandler: function(form) {
+				<?php encriptar_sqli("funcionarioadd");?>
+			    form.submit();
+			    
+			  }
+		});
 	}); 
 </script>
 <?php
@@ -284,9 +295,8 @@ switch ($sAction) {
 				$(this).attr('disabled',true);
 				$('#funcionarioadd').submit();
 		    }	
-		});		
-		
-    });
+		});
+	});
 </script>
 <?php
 function LoadData($sKey, $conn) {

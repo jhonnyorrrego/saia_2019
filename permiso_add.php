@@ -1,5 +1,11 @@
 <?php
 include_once("permisos_tabla.php");
+include_once("db.php");
+include_once("pantallas/lib/librerias_cripto.php");
+include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
 $tabla=@$_REQUEST["tabla"];
 if(!$tabla){
   $tabla="expediente";
@@ -95,3 +101,4 @@ else{ // Carga los permisos si estan definidos*/
   </table>
 </form>
 </html>
+<?php encriptar_sqli("asigpermiso",1);?>

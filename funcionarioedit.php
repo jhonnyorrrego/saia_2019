@@ -12,6 +12,8 @@ include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "phpmkrfn.php");
 include_once ($ruta_db_superior . FORMATOS_SAIA."librerias/estilo_formulario.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idfuncionario");
+desencriptar_sqli('form_info');
 
 $sKey = @$_REQUEST["key"];
 $sAction = @$_POST["a_edit"];
@@ -421,6 +423,10 @@ echo librerias_validar_formulario("11");
 				x_fecha_ingreso:{
 					required : true
 				}
+			},
+			submitHandler: function(form) {
+				<?php encriptar_sqli("funcionarioedit");?>
+			    form.submit();
 			}
 		});
 	}); 

@@ -10,6 +10,12 @@ while ($max_salida > 0) {
 }
 include_once ($ruta_db_superior . "bpmn/bpmn/librerias.php");
 
+include($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_idbpmn");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
 $x_idbpmn = Null;
 $x_nombre = Null;
 $x_descripcion = Null;
@@ -91,7 +97,7 @@ function AddData($conn) {
 
 include_once ($ruta_db_superior . "header.php");
 include_once ($ruta_db_superior . FORMATOS_SAIA."librerias/header_formato.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
+
 echo estilo_bootstrap();
 echo librerias_jquery("1.8");
 echo librerias_validar_formulario("11");
@@ -150,3 +156,4 @@ echo librerias_validar_formulario("11");
 		});
 	}); 
 </script>
+<?php encriptar_sqli("bpmnadd",1,"form_info",$ruta_db_superior);?>

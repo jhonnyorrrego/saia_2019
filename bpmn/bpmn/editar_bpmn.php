@@ -9,6 +9,10 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "bpmn/bpmn/librerias.php");
+include($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
 
 $sAction = @$_POST["a_edit"];
 $id = intval($_REQUEST["idbpmn"]);
@@ -110,7 +114,6 @@ function EditData() {
 
 include_once ($ruta_db_superior . "header.php");
 include_once ($ruta_db_superior . FORMATOS_SAIA . "librerias/header_formato.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
 echo estilo_bootstrap();
 echo librerias_jquery("1.8");
 echo librerias_validar_formulario("11");
@@ -179,3 +182,4 @@ echo librerias_validar_formulario("11");
 
 	});
 </script>
+<?php encriptar_sqli("bpmnedit",1,"form_info",$ruta_db_superior);?>

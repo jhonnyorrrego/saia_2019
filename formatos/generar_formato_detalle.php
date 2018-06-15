@@ -12,6 +12,14 @@ $max_salida--;
 }
 
 include_once($ruta_db_superior."db.php");
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("formato","iddoc","idformato");
+include_once($ruta_db_superior."librerias_saia.php");
+$validar_enteros=array("idformato");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
+
 include_once($ruta_db_superior. FORMATOS_SAIA . "librerias/header_formato.php");
 if(@$_REQUEST["almacenar"]=="true" && $_REQUEST["ruta"]!="" && @$_REQUEST["formato"]){
 $enlace_adicion="";
@@ -35,7 +43,7 @@ if(@$_REQUEST["idformato"]){
     }
   }
 ?>
-<form name="crear_archivo" action="" method="post" >
+<form name="crear_archivo" id="crear_archivo" action="" method="post" >
 <!--select name="idformato">
 <?php
 $formatos=busca_filtro_tabla("","formato","1=1","",$conn);
@@ -51,9 +59,10 @@ for($i=0;$i<$formatos["numcampos"];$i++){
 <textarea name="archivo" class="tiny_avanzado"><?php echo($bufer);?></textarea><br />
 Ruta:<input type="text" size="50"  name="ruta" value="<?php echo($ruta);?>" readonly="true">
 <input type="hidden" name="almacenar" value="true">
-<input type="hidden" name="formato" value="<?php echo($_REQUEST["idformato"]); ?>">
+<input type="hidden" name="idformato" value="<?php echo($_REQUEST["idformato"]); ?>">
 <br /><input type="submit" value="Crear">
 </form>
 <?php
 }
+encriptar_sqli("crear_archivo",1,"form_info",$ruta_db_superior);
 ?>

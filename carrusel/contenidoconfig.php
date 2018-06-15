@@ -12,6 +12,9 @@ $max_salida--;
 include_once("../db.php");
 include_once("../header.php");
 include_once($ruta_db_superior . "librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("id","carrusel_idcarrusel");
+desencriptar_sqli('form_info');
 echo(estilo_bootstrap());
 ?>
 
@@ -109,7 +112,13 @@ width:"350px"
 </script>
     <script type='text/javascript'>
       $().ready(function() {
-    	$('#form1').validate();
+    	$('#form1').validate({
+    		submitHandler: function(form) {
+				<?php encriptar_sqli("form1",0,"form_info",$ruta_db_superior);?>
+			    form.submit();
+			    
+			  }
+    	});
     	$.spin.imageBasePath = '../images/';
     	$('#orden').spin({min: 1});
 

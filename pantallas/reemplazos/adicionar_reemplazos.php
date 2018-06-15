@@ -8,8 +8,11 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
+include_once($ruta_db_superior."db.php");
+include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idbusqueda_componente");
+desencriptar_sqli('form_info');
 echo(estilo_bootstrap());
 echo(librerias_jquery("1.7"));
 echo(librerias_bootstrap());
@@ -220,6 +223,14 @@ if (@$_REQUEST["adicionar"] == 1) {
 				document.poppedLayer = eval('document.layers["esperando_nuevo"]');
 			document.poppedLayer.style.display = "none";
 		}
+		var formulario_reemplazo=$("#formulario_reemplazo");
+	formulario_reemplazo.validate({
+  		submitHandler: function(form) {
+			<?php encriptar_sqli("formulario_reemplazo",0,"form_info",$ruta_db_superior);?>
+			form.submit();
+			    
+		} 
+  });
 
 		function cargando_nuevo() {
 			if (browserType == "gecko")

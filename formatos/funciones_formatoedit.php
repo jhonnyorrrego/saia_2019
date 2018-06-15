@@ -15,6 +15,11 @@ include ($ruta_db_superior . "phpmkrfn.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "formatos/librerias/funciones.php");
 echo(librerias_arboles());
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idformato");
+desencriptar_sqli('form_info');
+
 $x_idfuncion_formato = Null;
 $x_nombre = Null;
 $x_etiqueta = Null;
@@ -319,7 +324,7 @@ echo $x_accionesChk;
 <input type="submit" name="Action" value="EDITAR">
 </form>
 <?php
-//encriptar_sqli("funciones_formatoedit",1,"form_info",$ruta_db_superior);
+encriptar_sqli("funciones_formatoedit",1,"form_info",$ruta_db_superior);
 function LoadData($sKey,$conn){
   global $x_idfuncion_formato, $x_nombre,	$x_etiqueta, $x_descripcion, $x_ruta, $x_formato, $x_acciones;
 	$sSql = "SELECT * FROM funciones_formato WHERE idfunciones_formato = " . $sKey;
