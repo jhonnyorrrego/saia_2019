@@ -1,4 +1,4 @@
-<?php include_once("../../librerias_saia.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../../formatos/librerias/header_nuevo.php"); ?><tr><td><table style="width: 100%; border-collapse: collapse;" border="0">
+<?php include_once("../../librerias_saia.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../funciones.php"); ?><?php include_once("../carta/../librerias/funciones_generales.php"); ?><?php include_once("../carta/../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../carta/../../pantallas/qr/librerias.php"); ?><?php include_once("../../formatos/librerias/header_nuevo.php"); ?><tr><td><table style="width: 100%; border-collapse: collapse;" border="0">
 <tbody>
 <tr>
 <td colspan="2"><span style="font-family: verdana, geneva;"><?php ciudad(307,$_REQUEST['iddoc']);?>, <?php mostrar_fecha(307,$_REQUEST['iddoc']);?></span></td>

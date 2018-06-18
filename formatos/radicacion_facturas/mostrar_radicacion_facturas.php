@@ -1,10 +1,4 @@
-<?php include_once("../../librerias_saia.php"); ?>
-			<?php echo(librerias_jquery('1.7')); ?><?php include_once("../librerias/funciones_generales.php"); ?>
-			<?php include_once("../../class_transferencia.php"); ?>
-			<?php include_once("../librerias/encabezado_pie_pagina.php"); ?>
-			<?php include_once("funciones.php"); ?>
-			<?php include_once("../librerias/header_nuevo.php"); ?>
-			<tr><td><table class="table table-bordered" style="width: 100%;" border="1">
+<?php include_once("../../librerias_saia.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../carta/../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../../formatos/librerias/header_nuevo.php"); ?><tr><td><table class="table table-bordered" style="width: 100%;" border="1">
 <tbody>
 <tr>
 <td style="width: 25%; text-align: center; background-color: #319ecd;" colspan="2"><span style="color: #ffffff;"><strong>INFORMACI&Oacute;N GENERAL</strong></span></td>
@@ -51,5 +45,4 @@
 <p>&nbsp;</p>
 <p><?php item_factura(473,$_REQUEST['iddoc']);?></p>
 <p>&nbsp;</p>
-<p><?php mostrar_estado_proceso(473,$_REQUEST['iddoc']);?></p></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>
-			
+<p><?php mostrar_estado_proceso(473,$_REQUEST['iddoc']);?></p></td></tr><?php include_once("../../formatos/librerias/footer_nuevo.php"); ?>

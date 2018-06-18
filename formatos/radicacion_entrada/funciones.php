@@ -527,8 +527,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
 
 	$img = mostrar_codigo_qr($idformato, $iddoc, true);
 
-	$tabla = '
-        <table class="table table-bordered" style="width: 100%; text-align:left;" border="1">
+	$tabla = '<table class="table table-bordered" style="width: 100%; text-align:left;" border="1">
   <tr>
     <td style="width: 23%;"><b>Fecha de radicaci&oacute;n:</b></td>
     <td style="width: 18%;">' . $fecha_radicacion . '</td>

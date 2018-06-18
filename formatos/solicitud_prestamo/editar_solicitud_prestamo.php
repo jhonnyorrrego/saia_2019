@@ -1,33 +1,19 @@
 <html><title>.:EDITAR SOLICITUD DE PRESTAMO:.</title>
-			<head><?php include_once("../../librerias_saia.php"); ?>
-			<script type="text/javascript" src="../librerias/funciones_formatos.js"></script>
-			<?php include_once("../carta/funciones.php"); ?>
-			<?php include_once("../librerias/funciones_generales.php"); ?>
-			<?php include_once("../librerias/funciones_acciones.php"); ?>
-			<?php include_once("../librerias/estilo_formulario.php"); ?>
-			<?php include_once("../librerias/header_formato.php"); ?>
-			<?php include_once("../../calendario/calendario.php"); ?>
-			<?php echo(librerias_jquery('1.7')); ?><?php echo(librerias_validar_formulario()); ?><script type="text/javascript" src="../../js/title2note.js"></script>
-			<script type="text/javascript" src="../../dropzone/dist/dropzone.js"></script>
-			<?php include_once("../../anexosdigitales/funciones_archivo.php"); ?>
-			<script type="text/javascript" src="../../anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script>
-			<link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link href="../../dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" /><script type='text/javascript'> hs.graphicsDir = '../../anexosdigitales/highslide-5.0.0/highslide/graphics/'; hs.outlineType = 'rounded-white';</script><style>label.error{color:red}</style>
+			<head><?php include_once("../../librerias_saia.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php include_once("../carta/funciones.php"); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/funciones_acciones.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><?php include_once("../../formatos/librerias/header_formato.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php echo(librerias_validar_formulario()); ?><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../dropzone/dist/dropzone.js"></script><?php include_once("../../anexosdigitales/funciones_archivo.php"); ?><script type="text/javascript" src="../../anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link href="../../dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" /><script type='text/javascript'> hs.graphicsDir = '../../anexosdigitales/highslide-5.0.0/highslide/graphics/'; hs.outlineType = 'rounded-white';</script><style>label.error{color:red}</style>
 				<script type='text/javascript'>
   $(document).ready(function() {
-			  		$('#formulario_formatos').validate();
+			  		$('#formulario_formatos').validate({	
+						submitHandler: function(form) {
+							<?php encriptar_sqli('formulario_formatos',0,'form_info','../../');?>
+							form.submit();
+						}
+					});
 				});
 				</script> 
 			</head>
-			<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">SOLICITUD DE PRESTAMO</td></tr><tr id="tr_dependencia">
-                     <td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td>
-                     <?php buscar_dependencia(412,5104,$_REQUEST['iddoc']);?></tr><tr id="tr_fecha">
-                     <td class="encabezado" width="20%" title="">FECHA DE SOLICITUD</td>
-                     <?php fecha_formato(412,5111,$_REQUEST['iddoc']);?></tr><tr id="tr_transferencia_presta">
-                     <td class="encabezado" width="20%" title="">EXPEDIENTE VINCULADO*</td>
-                     <?php guardar_expedientes_prestamos(412,5205,$_REQUEST['iddoc']);?></tr><tr id="tr_observaciones">
+			<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">SOLICITUD DE PRESTAMO</td></tr><tr id="tr_dependencia"><td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td><?php buscar_dependencia(412,5104,$_REQUEST['iddoc']);?></tr><tr id="tr_fecha"><td class="encabezado" width="20%" title="">FECHA DE SOLICITUD</td><?php fecha_formato(412,5111,$_REQUEST['iddoc']);?></tr><tr id="tr_transferencia_presta"><td class="encabezado" width="20%" title="">EXPEDIENTE VINCULADO*</td><?php guardar_expedientes_prestamos(412,5205,$_REQUEST['iddoc']);?></tr><tr id="tr_observaciones">
                      <td class="encabezado" width="20%" title="">OBSERVACIONES*</td>
-                     <td class="celda_transparente"><textarea  tabindex='1'  name="observaciones" id="observaciones" cols="53" rows="3" class="tiny_basico required"><?php echo(mostrar_valor_campo('observaciones',412,$_REQUEST['iddoc'])); ?></textarea></td>
-                    </tr><tr id="tr_documento_archivo" >
+                     <td class="celda_transparente"><textarea  tabindex='1'  name="observaciones" id="observaciones" cols="53" rows="3" class="tiny_basico required"><?php echo(mostrar_valor_campo('observaciones',412,$_REQUEST['iddoc'])); ?></textarea></td></tr><tr id="tr_documento_archivo" >
                      <td class="encabezado" width="20%" title="">UBICACI&Oacute;N DEL DOCUMENTO*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(412,5114,$_REQUEST['iddoc']);?></td></tr><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',412,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',412,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',412,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_solicitud_prestamo" value="<?php echo(mostrar_valor_campo('idft_solicitud_prestamo',412,$_REQUEST['iddoc'])); ?>"><tr id="tr_fecha_prestamo_rep">
                        <td class="encabezado" width="20%" title="">FECHA REQUERIDA PARA PRESTAMO</td><td colspan="2" bgcolor="#F5F5F5"><span class="phpmaker"><input  tabindex='2'  type="text" readonly="true"  name="fecha_prestamo_rep" id="fecha_prestamo_rep" tipo="fecha" value="<?php mostrar_valor_campo('fecha_prestamo_rep',412,$_REQUEST['iddoc']); ?>"><?php selector_fecha("fecha_prestamo_rep","formulario_formatos","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR","VENTANA",FALSE,FALSE); ?></span></font></td><tr id="tr_fecha_devolucion_rep">
                        <td class="encabezado" width="20%" title="">FECHA DE DEVOLUCI&Oacute;N ESTIMADA</td><td colspan="2" bgcolor="#F5F5F5"><span class="phpmaker"><input  tabindex='3'  type="text" readonly="true"  name="fecha_devolucion_rep" id="fecha_devolucion_rep" tipo="fecha" value="<?php mostrar_valor_campo('fecha_devolucion_rep',412,$_REQUEST['iddoc']); ?>"><?php selector_fecha("fecha_devolucion_rep","formulario_formatos","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR","VENTANA",FALSE,FALSE); ?></span></font></td><tr id="tr_anexos">
@@ -36,7 +22,7 @@
 			<a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=412&idcampo=5116" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
 			objectType: \'iframe\', outlineType: \'rounded-white\', wrapperClassName: \'highslide-wrapper drag-header\',
 			outlineWhileAnimating: true, preserveContent: false, width: 400 } )">Administrar Anexos</a>
-			</div>'; ?></td></tr><input type="hidden" name="campo_descripcion" value="<?php echo('5113'); ?>"><input type="hidden" name="formato" value="412"><tr><td colspan='2'><?php submit_formato(412,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("412-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
+			</div>'; ?></td></tr><input type="hidden" name="campo_descripcion" value="<?php echo('5113'); ?>"><input type="hidden" name="formato" value="412"><tr><td colspan='2'><?php submit_formato(412,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
                 var upload_url = '../../dropzone/cargar_archivos_formato.php';
                 var mensaje = 'Arrastre aquí los archivos';
                 Dropzone.autoDiscover = false;
@@ -118,4 +104,4 @@
                         $(this).addClass('dropzone');
                     });
                 });</script>
-		</html><?php include_once("../librerias/footer_plantilla.php");?>
+		</html><?php include_once("../../" . FORMATOS_SAIA . "librerias/footer_plantilla.php");?>

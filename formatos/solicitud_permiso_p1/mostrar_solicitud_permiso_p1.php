@@ -1,10 +1,4 @@
-<?php include_once("../../librerias_saia.php"); ?>
-			<?php echo(librerias_jquery('1.7')); ?><?php include_once("../librerias/funciones_generales.php"); ?>
-			<?php include_once("../../class_transferencia.php"); ?>
-			<?php include_once("../librerias/encabezado_pie_pagina.php"); ?>
-			<?php include_once("../../pantallas/qr/librerias.php"); ?>
-			<?php include_once("../librerias/header_nuevo.php"); ?>
-			<tr><td><table style="border-collapse: collapse; width: 100%;" border="0">
+<?php include_once("../../librerias_saia.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../carta/../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../carta/../../pantallas/qr/librerias.php"); ?><?php include_once("../../formatos/librerias/header_nuevo.php"); ?><tr><td><table style="border-collapse: collapse; width: 100%;" border="0">
 <tbody>
 <tr>
 <td style="text-align: center; background-color: #3f91f2;" colspan="4" align="center" valign="middle"><span style="color: #ffffff;"><strong>Solicitud de Permisos Laborales</strong></span><strong></strong></td>
@@ -101,5 +95,4 @@
 </tr>
 </tbody>
 </table>
-<p><?php mostrar_estado_proceso(512,$_REQUEST['iddoc']);?></p></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>
-			
+<p><?php mostrar_estado_proceso(512,$_REQUEST['iddoc']);?></p></td></tr><?php include_once("../../formatos/librerias/footer_nuevo.php"); ?>

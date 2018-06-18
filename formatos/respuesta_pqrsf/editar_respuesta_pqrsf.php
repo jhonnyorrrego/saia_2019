@@ -2,12 +2,16 @@
 			<head><?php include_once("../../librerias_saia.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/funciones_acciones.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><?php include_once("../../formatos/librerias/header_formato.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php echo(librerias_validar_formulario()); ?><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/dhtmlXCommon.js"></script><script type="text/javascript" src="../../js/dhtmlXTree.js"></script><link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><script type="text/javascript" src="../../dropzone/dist/dropzone.js"></script><?php include_once("../../anexosdigitales/funciones_archivo.php"); ?><script type="text/javascript" src="../../anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link href="../../dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" /><script type='text/javascript'> hs.graphicsDir = '../../anexosdigitales/highslide-5.0.0/highslide/graphics/'; hs.outlineType = 'rounded-white';</script><style>label.error{color:red}</style>
 				<script type='text/javascript'>
   $(document).ready(function() {
-			  		$('#formulario_formatos').validate();
+			  		$('#formulario_formatos').validate({	
+						submitHandler: function(form) {
+							<?php encriptar_sqli('formulario_formatos',0,'form_info','../../');?>
+							form.submit();
+						}
+					});
 				});
 				</script> 
 			</head>
-			<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">COMUNICACIÓN EXTERNA</td></tr><input type="hidden" name="expediente_serie" value="<?php echo(mostrar_valor_campo('expediente_serie',307,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="estado_documento" value="<?php echo(mostrar_valor_campo('estado_documento',307,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',307,$_REQUEST['iddoc'])); ?>"><tr id="tr_dependencia">
-                     <td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td><?php buscar_dependencia(307,3599,$_REQUEST['iddoc']);?></tr><input type="hidden" name="idft_respuesta_pqrsf" value="<?php echo(mostrar_valor_campo('idft_respuesta_pqrsf',307,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',307,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',307,$_REQUEST['iddoc'])); ?>"><tr id="tr_serie_idserie">
+			<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">COMUNICACIÓN EXTERNA</td></tr><input type="hidden" name="expediente_serie" value="<?php echo(mostrar_valor_campo('expediente_serie',307,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="estado_documento" value="<?php echo(mostrar_valor_campo('estado_documento',307,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',307,$_REQUEST['iddoc'])); ?>"><tr id="tr_dependencia"><td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td><?php buscar_dependencia(307,3599,$_REQUEST['iddoc']);?></tr><input type="hidden" name="idft_respuesta_pqrsf" value="<?php echo(mostrar_valor_campo('idft_respuesta_pqrsf',307,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',307,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',307,$_REQUEST['iddoc'])); ?>"><tr id="tr_serie_idserie">
 								<td class="encabezado" width="20%" title="">CLASIFICAR EN EXPEDIENTE*</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(307,6625,'4',$_REQUEST['iddoc']);?></div><br/><input type="hidden" maxlength="11"  class="required"  name="serie_idserie" id="serie_idserie"   value="<?php cargar_seleccionados(307,6625,1,$_REQUEST['iddoc']);?>" ><div id="esperando_serie_idserie">
 									<img src="../../imagenes/cargando.gif">
 								</div>
@@ -15,7 +19,9 @@
 								var browserType;
 								if (document.layers) {browserType = "nn4"}
 								if (document.all) {browserType = "ie"}
-								if (window.navigator.userAgent.toLowerCase().match("gecko")) {browserType= "gecko"}
+								if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+									browserType= "gecko"
+								}
 								tree_serie_idserie=new dhtmlXTreeObject("treeboxbox_serie_idserie","100%","100%",0);
 								tree_serie_idserie.setImagePath("../../imgs/");
 								tree_serie_idserie.enableIEImageFix(true);tree_serie_idserie.enableCheckBoxes(1);
@@ -42,6 +48,7 @@
 									}
 									document.poppedLayer.style.display = "none";
 								}
+
 								function cargando_serie_idserie() {
 									if (browserType == "gecko" ) {
 										document.poppedLayer = eval('document.getElementById("esperando_serie_idserie")');
@@ -73,8 +80,7 @@
                      <td bgcolor="#F5F5F5"><input  maxlength="255"  class="required"   tabindex='1'  type="text" size="100" id="asunto" name="asunto"  value="<?php echo(mostrar_valor_campo('asunto',307,$_REQUEST['iddoc'])); ?>"></td>
                     </tr><tr id="tr_contenido">
                      <td class="encabezado" width="20%" title="">CONTENIDO*</td>
-                     <td class="celda_transparente"><textarea  tabindex='2'  name="contenido" id="contenido" cols="53" rows="3" class="tiny_avanzado required"><?php echo(mostrar_valor_campo('contenido',307,$_REQUEST['iddoc'])); ?></textarea></td></tr><tr id="tr_despedida">
-                     <td class="encabezado" width="20%" title="Despedida de la Carta, Atentamente, Cordialmente, ...">DESPEDIDA</td><?php despedida(307,6632,$_REQUEST['iddoc']);?></tr><tr id="tr_copiainterna">
+                     <td class="celda_transparente"><textarea  tabindex='2'  name="contenido" id="contenido" cols="53" rows="3" class="tiny_avanzado required"><?php echo(mostrar_valor_campo('contenido',307,$_REQUEST['iddoc'])); ?></textarea></td></tr><tr id="tr_despedida"><td class="encabezado" width="20%" title="Despedida de la Carta, Atentamente, Cordialmente, ...">DESPEDIDA</td><?php despedida(307,6632,$_REQUEST['iddoc']);?></tr><tr id="tr_copiainterna">
 								<td class="encabezado" width="20%" title="">CON COPIA INTERNA A</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(307,6633,'5',$_REQUEST['iddoc']);?></div><br/>Buscar: <input  tabindex='3'  type="text" id="stext_copiainterna" width="200px" size="25">
 									<a href="javascript:void(0)" onclick="tree_copiainterna.findItem((document.getElementById('stext_copiainterna').value),1)">
 										<img src="../../botones/general/anterior.png"border="0px">
@@ -90,7 +96,9 @@
 								var browserType;
 								if (document.layers) {browserType = "nn4"}
 								if (document.all) {browserType = "ie"}
-								if (window.navigator.userAgent.toLowerCase().match("gecko")) {browserType= "gecko"}
+								if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+									browserType= "gecko"
+								}
 								tree_copiainterna=new dhtmlXTreeObject("treeboxbox_copiainterna","100%","100%",0);
 								tree_copiainterna.setImagePath("../../imgs/");
 								tree_copiainterna.enableIEImageFix(true);tree_copiainterna.enableCheckBoxes(1);
@@ -135,6 +143,7 @@
 									}
 									document.poppedLayer.style.display = "none";
 								}
+
 								function cargando_copiainterna() {
 									if (browserType == "gecko" ) {
 										document.poppedLayer = eval('document.getElementById("esperando_copiainterna")');
@@ -152,15 +161,13 @@
 										}
 									}
 </script></td></tr><tr id="tr_vercopiainterna" >
-                     <td class="encabezado" width="20%" title="">VISIBLE LA COPIA INTERNA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(307,6637,$_REQUEST['iddoc']);?></td></tr><tr id="tr_iniciales">
-                     <td class="encabezado" width="20%" title="Persona que Genera la Carta ">PERSONA QUE GENERA LA CARTA*</td><?php iniciales(307,6634,$_REQUEST['iddoc']);?></tr><tr id="tr_anexos_digitales">
+                     <td class="encabezado" width="20%" title="">VISIBLE LA COPIA INTERNA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(307,6637,$_REQUEST['iddoc']);?></td></tr><tr id="tr_iniciales"><td class="encabezado" width="20%" title="Persona que Genera la Carta ">PERSONA QUE GENERA LA CARTA*</td><?php iniciales(307,6634,$_REQUEST['iddoc']);?></tr><tr id="tr_anexos_digitales">
                      <td class="encabezado" width="20%" title="">ANEXOS DIGITALES</td>
                      <td class="celda_transparente"><?php echo '<div class="textwrapper">
 			<a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=307&idcampo=6635" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
 			objectType: \'iframe\', outlineType: \'rounded-white\', wrapperClassName: \'highslide-wrapper drag-header\',
 			outlineWhileAnimating: true, preserveContent: false, width: 400 } )">Administrar Anexos</a>
-			</div>'; ?></td></tr><tr id="tr_anexos_fisicos">
-                     <td class="encabezado" width="20%" title="Listado con Los Anexos">ANEXOS FISICOS</td><?php anexos_fisicos(307,6636,$_REQUEST['iddoc']);?></tr><input type="hidden" name="campo_descripcion" value="<?php echo('6630'); ?>"><input type="hidden" name="formato" value="307"><input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?>"><input type="hidden" name="anterior" value="<?php echo $_REQUEST["anterior"]; ?>"><input type="hidden" name="accion" value="editar" ><input type="hidden" name="item" value="<?php echo $_REQUEST["item"]; ?>" ><input type="hidden" name="anterior" value="<?php echo $_REQUEST["campo"]; ?>" ><tr><td colspan='2'><?php submit_formato(307,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
+			</div>'; ?></td></tr><tr id="tr_anexos_fisicos"><td class="encabezado" width="20%" title="Listado con Los Anexos">ANEXOS FISICOS</td><?php anexos_fisicos(307,6636,$_REQUEST['iddoc']);?></tr><input type="hidden" name="campo_descripcion" value="<?php echo('6630'); ?>"><input type="hidden" name="formato" value="307"><input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?>"><input type="hidden" name="anterior" value="<?php echo $_REQUEST["anterior"]; ?>"><input type="hidden" name="accion" value="editar" ><input type="hidden" name="item" value="<?php echo $_REQUEST["item"]; ?>" ><input type="hidden" name="anterior" value="<?php echo $_REQUEST["campo"]; ?>" ><tr><td colspan='2'><?php submit_formato(307,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
                 var upload_url = '../../dropzone/cargar_archivos_formato.php';
                 var mensaje = 'Arrastre aquí los archivos';
                 Dropzone.autoDiscover = false;

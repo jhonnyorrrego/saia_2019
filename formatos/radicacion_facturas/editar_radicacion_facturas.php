@@ -1,34 +1,20 @@
 <html><title>.:EDITAR RADICACI&Oacute;N DE FACTURAS:.</title>
-			<head><?php include_once("../../librerias_saia.php"); ?>
-			<script type="text/javascript" src="../librerias/funciones_formatos.js"></script>
-			<?php include_once("../librerias/funciones_formatos_generales.php"); ?>
-			<?php include_once("funciones.php"); ?>
-			<?php include_once("../librerias/funciones_generales.php"); ?>
-			<?php include_once("../librerias/funciones_acciones.php"); ?>
-			<?php include_once("../librerias/estilo_formulario.php"); ?>
-			<?php include_once("../librerias/header_formato.php"); ?>
-			<?php include_once("../../calendario/calendario.php"); ?>
-			<?php echo(librerias_jquery('1.7')); ?><?php echo(librerias_validar_formulario()); ?><script type="text/javascript" src="../../js/title2note.js"></script>
-			<script type="text/javascript" src="../../js/dhtmlXCommon.js"></script>
-			<script type="text/javascript" src="../../js/dhtmlXTree.js"></script>
-			<link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><script type="text/javascript" src="../../dropzone/dist/dropzone.js"></script>
-			<?php include_once("../../anexosdigitales/funciones_archivo.php"); ?>
-			<script type="text/javascript" src="../../anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script>
-			<link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link href="../../dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" /><script type='text/javascript'> hs.graphicsDir = '../../anexosdigitales/highslide-5.0.0/highslide/graphics/'; hs.outlineType = 'rounded-white';</script><style>label.error{color:red}</style>
+			<head><?php include_once("../../librerias_saia.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php include_once("../librerias/funciones_formatos_generales.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/funciones_acciones.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><?php include_once("../../formatos/librerias/header_formato.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php echo(librerias_validar_formulario()); ?><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/dhtmlXCommon.js"></script><script type="text/javascript" src="../../js/dhtmlXTree.js"></script><link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><script type="text/javascript" src="../../dropzone/dist/dropzone.js"></script><?php include_once("../../anexosdigitales/funciones_archivo.php"); ?><script type="text/javascript" src="../../anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link href="../../dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" /><script type='text/javascript'> hs.graphicsDir = '../../anexosdigitales/highslide-5.0.0/highslide/graphics/'; hs.outlineType = 'rounded-white';</script><style>label.error{color:red}</style>
 				<script type='text/javascript'>
   $(document).ready(function() {
-			  		$('#formulario_formatos').validate();
+			  		$('#formulario_formatos').validate({	
+						submitHandler: function(form) {
+							<?php encriptar_sqli('formulario_formatos',0,'form_info','../../');?>
+							form.submit();
+						}
+					});
 				});
 				</script> 
 			</head>
-			<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">RADICACIÓN DE FACTURAS</td></tr><input type="hidden" name="fecha_pago" value="<?php echo(mostrar_valor_campo('fecha_pago',473,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="observaciones_check" value="<?php echo(mostrar_valor_campo('observaciones_check',473,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="estado_documento" value="<?php echo(mostrar_valor_campo('estado_documento',473,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_radicacion_facturas" value="<?php echo(mostrar_valor_campo('idft_radicacion_facturas',473,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',473,$_REQUEST['iddoc'])); ?>"><tr id="tr_dependencia">
-                     <td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td>
-                     <?php buscar_dependencia(473,5960,$_REQUEST['iddoc']);?></tr><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',473,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',473,$_REQUEST['iddoc'])); ?>"><tr id="tr_fecha_radicado">
+			<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">RADICACIÓN DE FACTURAS</td></tr><input type="hidden" name="fecha_pago" value="<?php echo(mostrar_valor_campo('fecha_pago',473,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="observaciones_check" value="<?php echo(mostrar_valor_campo('observaciones_check',473,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="estado_documento" value="<?php echo(mostrar_valor_campo('estado_documento',473,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_radicacion_facturas" value="<?php echo(mostrar_valor_campo('idft_radicacion_facturas',473,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',473,$_REQUEST['iddoc'])); ?>"><tr id="tr_dependencia"><td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td><?php buscar_dependencia(473,5960,$_REQUEST['iddoc']);?></tr><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',473,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',473,$_REQUEST['iddoc'])); ?>"><tr id="tr_fecha_radicado">
                      <td class="encabezado" width="20%" title="">FECHA DE RADICACI&Oacute;N*</td>
                      <td bgcolor="#F5F5F5"><input   class="required"   tabindex='1'  type="text" size="100" id="fecha_radicado" name="fecha_radicado"  value="<?php echo(mostrar_valor_campo('fecha_radicado',473,$_REQUEST['iddoc'])); ?>"></td>
-                    </tr><tr id="tr_numero_radicado">
-                     <td class="encabezado" width="20%" title="">N&Uacute;MERO DE RADICADO*</td>
-                     <?php mostrar_radicado_factura(473,5964,$_REQUEST['iddoc']);?></tr><tr id="tr_natural_juridica">
+                    </tr><tr id="tr_numero_radicado"><td class="encabezado" width="20%" title="">N&Uacute;MERO DE RADICADO*</td><?php mostrar_radicado_factura(473,5964,$_REQUEST['iddoc']);?></tr><tr id="tr_natural_juridica">
                    <td class="encabezado" width="20%" title="">PROVEEDOR*</td>
                    <td bgcolor="#F5F5F5">
                    <input type="hidden" maxlength="255"  class="required"  name="natural_juridica" id="natural_juridica" value="<?php echo(mostrar_valor_campo('natural_juridica',473,$_REQUEST['iddoc'])); ?>"><?php componente_ejecutor("5965",@$_REQUEST["iddoc"]); ?></td>
@@ -38,14 +24,12 @@
                      <td bgcolor="#F5F5F5"><input  maxlength="255"   tabindex='3'  type="text" size="100" id="num_factura" name="num_factura"  value="<?php echo(mostrar_valor_campo('num_factura',473,$_REQUEST['iddoc'])); ?>"></td>
                     </tr><tr id="tr_descripcion">
                      <td class="encabezado" width="20%" title="">DESCRIPCI&Oacute;N SERVICIO O PRODUCTO*</td>
-                     <td class="celda_transparente"><textarea  tabindex='4'  name="descripcion" id="descripcion" cols="53" rows="3" class="tiny_sin_tiny required"><?php echo(mostrar_valor_campo('descripcion',473,$_REQUEST['iddoc'])); ?></textarea></td>
-                    </tr><tr id="tr_num_folios">
+                     <td class="celda_transparente"><textarea  tabindex='4'  name="descripcion" id="descripcion" cols="53" rows="3" class="tiny_sin_tiny required"><?php echo(mostrar_valor_campo('descripcion',473,$_REQUEST['iddoc'])); ?></textarea></td></tr><tr id="tr_num_folios">
                      <td class="encabezado" width="20%" title="">N&Uacute;MERO DE FOLIOS</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="255"   tabindex='5'  type="text" size="100" id="num_folios" name="num_folios"  value="<?php echo(mostrar_valor_campo('num_folios',473,$_REQUEST['iddoc'])); ?>"></td>
                     </tr><tr id="tr_anexos_fisicos">
                      <td class="encabezado" width="20%" title="">ANEXOS F&Iacute;SICOS</td>
-                     <td class="celda_transparente"><textarea  tabindex='6'  name="anexos_fisicos" id="anexos_fisicos" cols="53" rows="3" class="tiny_sin_tiny"><?php echo(mostrar_valor_campo('anexos_fisicos',473,$_REQUEST['iddoc'])); ?></textarea></td>
-                    </tr><tr id="tr_anexos_digitales">
+                     <td class="celda_transparente"><textarea  tabindex='6'  name="anexos_fisicos" id="anexos_fisicos" cols="53" rows="3" class="tiny_sin_tiny"><?php echo(mostrar_valor_campo('anexos_fisicos',473,$_REQUEST['iddoc'])); ?></textarea></td></tr><tr id="tr_anexos_digitales">
                      <td class="encabezado" width="20%" title="">ANEXOS DIGITALES</td>
                      <td class="celda_transparente"><?php echo '<div class="textwrapper">
 			<a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=473&idcampo=5972" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
@@ -67,7 +51,9 @@
 								var browserType;
 								if (document.layers) {browserType = "nn4"}
 								if (document.all) {browserType = "ie"}
-								if (window.navigator.userAgent.toLowerCase().match("gecko")) {browserType= "gecko"}
+								if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+									browserType= "gecko"
+								}
 								tree_copia_electronica=new dhtmlXTreeObject("treeboxbox_copia_electronica","100%","100%",0);
 								tree_copia_electronica.setImagePath("../../imgs/");
 								tree_copia_electronica.enableIEImageFix(true);tree_copia_electronica.enableCheckBoxes(1);
@@ -112,6 +98,7 @@
 									}
 									document.poppedLayer.style.display = "none";
 								}
+
 								function cargando_copia_electronica() {
 									if (browserType == "gecko" ) {
 										document.poppedLayer = eval('document.getElementById("esperando_copia_electronica")');
@@ -128,7 +115,7 @@
 											tree_copia_electronica.setCheck(vector2[m],true);
 										}
 									}
-</script></td></tr><?php digitalizar_formato(473,NULL,$_REQUEST['iddoc']);?><input type="hidden" name="campo_descripcion" value="<?php echo('5965'); ?>"><input type="hidden" name="formato" value="473"><tr><td colspan='2'><?php submit_formato(473,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("473-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
+</script></td></tr><?php digitalizar_formato(473,NULL,$_REQUEST['iddoc']);?><input type="hidden" name="campo_descripcion" value="<?php echo('5965'); ?>"><input type="hidden" name="formato" value="473"><tr><td colspan='2'><?php submit_formato(473,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
                 var upload_url = '../../dropzone/cargar_archivos_formato.php';
                 var mensaje = 'Arrastre aquí los archivos';
                 Dropzone.autoDiscover = false;
@@ -210,4 +197,4 @@
                         $(this).addClass('dropzone');
                     });
                 });</script>
-		</html><?php include_once("../librerias/footer_plantilla.php");?>
+		</html><?php include_once("../../" . FORMATOS_SAIA . "librerias/footer_plantilla.php");?>

@@ -29,7 +29,7 @@ class Imprime_Pdf {
 		"derecha" => "10"
 	);
 	private $font_size = "12";
-	// tama�o de la letra
+	// tamaño de la letra
 	private $font_family = "verdana";
 	// tipo de letra
 	private $tipo_salida = "F";
@@ -228,7 +228,7 @@ class Imprime_Pdf {
 	}
 
 	public function imprimir() {
-		$this -> pdf = new MYPDF($this->orientacion, PDF_UNIT, strtoupper($this->papel), true, 'UTF-8', false, true);
+		$this -> pdf = new MYPDF($this -> orientacion, PDF_UNIT, strtoupper($this -> papel), true, 'UTF-8', false, true);
 
 		$this -> pdf -> margenes = $this -> margenes;
 		$this -> pdf -> documento = $this -> documento;
@@ -260,13 +260,13 @@ class Imprime_Pdf {
 		}
 		$this -> pdf -> SetKeywords("SAIA" . $cad_etiquetas);
 		$this -> pdf -> SetSubject(codifica_encabezado(strip_tags($this -> documento[0]["descripcion"])));
-		// Esto es para restaurar metadatos adicionales usados en camara de valledupar
-		/*$campos_pdfa = busca_filtro_tabla("", "campos_formato", "(banderas like 'pdfa' or banderas like 'pdfa,%' or banderas like '%,pdfa' or banderas like '%,pdfa,%') AND formato_idformato=" . $this -> formato[0]['idformato'], "", $conn);
+
+		$campos_pdfa = busca_filtro_tabla("nombre,etiqueta", "campos_formato", "(banderas like 'pdfa' or banderas like 'pdfa,%' or banderas like '%,pdfa' or banderas like '%,pdfa,%') AND formato_idformato=" . $this -> formato[0]['idformato'], "", $conn);
 		if ($campos_pdfa['numcampos']) {
 			for ($i = 0; $i < $campos_pdfa['numcampos']; $i++) {
-				$this -> pdf -> SetExtraMetadata($campos_pdfa[$i]['nombre'] . '(' . mostrar_valor_campo($campos_pdfa[$i]['nombre'], $this -> formato[0]['idformato'], $this -> documento[0]["iddocumento"], 1) . ')');
+				$this -> pdf -> SetExtraMetadata($campos_pdfa[$i]['etiqueta'], mostrar_valor_campo($campos_pdfa[$i]['nombre'], $this -> formato[0]['idformato'], $this -> documento[0]["iddocumento"], 1));
 			}
-		}*/
+		}
 		//
 		if ($this -> mostrar_encabezado) {
 			$this -> configurar_encabezado();
@@ -311,7 +311,7 @@ class Imprime_Pdf {
 		}
 
 		if ($this -> nombre_archivo !== false) {
-			$this -> pdf -> Output(__DIR__."/" . $this -> nombre_archivo, $this -> tipo_salida);
+			$this -> pdf -> Output(__DIR__ . "/" . $this -> nombre_archivo, $this -> tipo_salida);
 		} else {
 			$pdf_temp = StorageUtils::obtener_archivo_temporal("impresion_", $ruta_tmp_usr);
 			chmod($pdf_temp, 0777);
@@ -525,6 +525,7 @@ class Imprime_Pdf {
 	public function set_variable($campo, $valor) {
 		$this -> $campo = $valor;
 	}
+
 }
 
 class MYPDF extends TCPDF {
@@ -535,7 +536,7 @@ class MYPDF extends TCPDF {
 	public $documento = array();
 	public $papel = "";
 	public $orientacion;
-	protected $extra_metadata = '';
+	public $extra_metadata = array();
 
 	public function Header() {
 		$texto = str_replace("##PAGES##", "    " . $this -> total_paginas(), $this -> encabezado);
@@ -613,8 +614,59 @@ class MYPDF extends TCPDF {
 		}
 	}
 
-	public function SetExtraMetadata($metadata) {
-	    $this->extra_metadata.='/'.$metadata;
+	public function SetExtraMetadata($campo, $valor) {
+		$this -> extra_metadata[$campo] = $valor;
+	}
+
+	protected function _putinfo() {
+		$oid = $this -> _newobj();
+		$out = '<<';
+		// store current isunicode value
+		$prev_isunicode = $this -> isunicode;
+		if ($this -> docinfounicode) {
+			$this -> isunicode = true;
+		}
+
+		if (!TCPDF_STATIC::empty_string($this -> title)) {
+			// The document's title.
+			$out .= ' /Title ' . $this -> _textstring($this -> title, $oid);
+		}
+		if (!TCPDF_STATIC::empty_string($this -> author)) {
+			// The name of the person who created the document.
+			$out .= ' /Author ' . $this -> _textstring($this -> author, $oid);
+		}
+		if (!TCPDF_STATIC::empty_string($this -> subject)) {
+			// The subject of the document.
+			$out .= ' /Subject ' . $this -> _textstring($this -> subject, $oid);
+		}
+		if (!TCPDF_STATIC::empty_string($this -> keywords)) {
+			// Keywords associated with the document.
+			$out .= ' /Keywords ' . $this -> _textstring($this -> keywords, $oid);
+		}
+		if (!TCPDF_STATIC::empty_string($this -> creator)) {
+			// If the document was converted to PDF from another format, the name of the conforming product that created the original document from which it was converted.
+			$out .= ' /Creator ' . $this -> _textstring($this -> creator, $oid);
+		}
+		if (count($this -> extra_metadata)) {
+			foreach ($this -> extra_metadata as $key => $value) {
+				$out .= ' /' . str_replace(" ", "_", html_entity_decode($key)) . ' ' . $this -> _textstring($value, $oid);
+			}
+		}
+
+		// restore previous isunicode value
+		$this -> isunicode = $prev_isunicode;
+		// default producer
+		$out .= ' /Producer ' . $this -> _textstring(TCPDF_STATIC::getTCPDFProducer(), $oid);
+		// The date and time the document was created, in human-readable form
+		$out .= ' /CreationDate ' . $this -> _datestring(0, $this -> doc_creation_timestamp);
+		// The date and time the document was most recently modified, in human-readable form
+		$out .= ' /ModDate ' . $this -> _datestring(0, $this -> doc_modification_timestamp);
+		// A name object indicating whether the document has been modified to include trapping information
+		$out .= ' /Trapped /False';
+		$out .= ' >>';
+		$out .= "\n" . 'endobj';
+		$this -> _out($out);
+		return $oid;
 	}
 
 }

@@ -1,25 +1,17 @@
 <html><title>.:EDITAR HALLAZGO PLAN DE MEJORAMIENTO:.</title>
-			<head><?php include_once("../../librerias_saia.php"); ?>
-			<script type="text/javascript" src="../librerias/funciones_formatos.js"></script>
-			<?php include_once("funciones.php"); ?>
-			<?php include_once("../librerias/funciones_generales.php"); ?>
-			<?php include_once("../librerias/funciones_acciones.php"); ?>
-			<?php include_once("../librerias/estilo_formulario.php"); ?>
-			<?php include_once("../librerias/header_formato.php"); ?>
-			<?php include_once("../../calendario/calendario.php"); ?>
-			<?php echo(librerias_jquery('1.7')); ?><?php echo(librerias_validar_formulario()); ?><script type="text/javascript" src="../../js/title2note.js"></script>
-			<script type="text/javascript" src="../../js/dhtmlXCommon.js"></script>
-			<script type="text/javascript" src="../../js/dhtmlXTree.js"></script>
-			<link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><style>label.error{color:red}</style>
+			<head><?php include_once("../../librerias_saia.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php include_once("funciones.php"); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/funciones_acciones.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><?php include_once("../../formatos/librerias/header_formato.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php echo(librerias_validar_formulario()); ?><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/dhtmlXCommon.js"></script><script type="text/javascript" src="../../js/dhtmlXTree.js"></script><link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><style>label.error{color:red}</style>
 				<script type='text/javascript'>
   $(document).ready(function() {
-			  		$('#formulario_formatos').validate();
+			  		$('#formulario_formatos').validate({	
+						submitHandler: function(form) {
+							<?php encriptar_sqli('formulario_formatos',0,'form_info','../../');?>
+							form.submit();
+						}
+					});
 				});
 				</script> 
 			</head>
-			<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">HALLAZGO PLAN DE MEJORAMIENTO</td></tr><input type="hidden" name="estado_documento" value="<?php echo(mostrar_valor_campo('estado_documento',481,$_REQUEST['iddoc'])); ?>"><tr id="tr_dependencia">
-                     <td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td>
-                     <?php buscar_dependencia(481,6092,$_REQUEST['iddoc']);?></tr><tr id="tr_clase_accion">
+			<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">HALLAZGO PLAN DE MEJORAMIENTO</td></tr><input type="hidden" name="estado_documento" value="<?php echo(mostrar_valor_campo('estado_documento',481,$_REQUEST['iddoc'])); ?>"><tr id="tr_dependencia"><td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td><?php buscar_dependencia(481,6092,$_REQUEST['iddoc']);?></tr><tr id="tr_clase_accion">
                      <td class="encabezado" width="20%" title="">CLASE ACCION*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(481,6094,$_REQUEST['iddoc']);?></td></tr><tr id="tr_radicado_plan">
                      <td class="encabezado" width="20%" title="">RADICADO DEL PLAN VINCULADO</td>
                      <td bgcolor="#F5F5F5"><input  maxlength="20"   tabindex='1'  type="text" size="100" id="radicado_plan" name="radicado_plan"  value="<?php echo(mostrar_valor_campo('radicado_plan',481,$_REQUEST['iddoc'])); ?>"></td>
@@ -42,7 +34,9 @@
 								var browserType;
 								if (document.layers) {browserType = "nn4"}
 								if (document.all) {browserType = "ie"}
-								if (window.navigator.userAgent.toLowerCase().match("gecko")) {browserType= "gecko"}
+								if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+									browserType= "gecko"
+								}
 								tree_procesos_vinculados=new dhtmlXTreeObject("treeboxbox_procesos_vinculados","100%","100%",0);
 								tree_procesos_vinculados.setImagePath("../../imgs/");
 								tree_procesos_vinculados.enableIEImageFix(true);tree_procesos_vinculados.enableCheckBoxes(1);
@@ -87,6 +81,7 @@
 									}
 									document.poppedLayer.style.display = "none";
 								}
+
 								function cargando_procesos_vinculados() {
 									if (browserType == "gecko" ) {
 										document.poppedLayer = eval('document.getElementById("esperando_procesos_vinculados")');
@@ -106,11 +101,9 @@
 </script></td></tr><tr id="tr_clase_observacion">
                      <td class="encabezado" width="20%" title="">CLASE DE OBSERVACI&Oacute;N*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(481,6098,$_REQUEST['iddoc']);?></td></tr><tr id="tr_deficiencia">
                      <td class="encabezado" width="20%" title="">HALLAZGO*</td>
-                     <td class="celda_transparente"><textarea  tabindex='4'  name="deficiencia" id="deficiencia" cols="53" rows="3" class="tiny_basico required"><?php echo(mostrar_valor_campo('deficiencia',481,$_REQUEST['iddoc'])); ?></textarea></td>
-                    </tr><input type="hidden" name="correcion_hallazgo" value="<?php echo(mostrar_valor_campo('correcion_hallazgo',481,$_REQUEST['iddoc'])); ?>"><tr id="tr_causas">
+                     <td class="celda_transparente"><textarea  tabindex='4'  name="deficiencia" id="deficiencia" cols="53" rows="3" class="tiny_basico required"><?php echo(mostrar_valor_campo('deficiencia',481,$_REQUEST['iddoc'])); ?></textarea></td></tr><input type="hidden" name="correcion_hallazgo" value="<?php echo(mostrar_valor_campo('correcion_hallazgo',481,$_REQUEST['iddoc'])); ?>"><tr id="tr_causas">
                      <td class="encabezado" width="20%" title="">CAUSAS</td>
-                     <td class="celda_transparente"><textarea  tabindex='5'  name="causas" id="causas" cols="53" rows="3" class="tiny_basico"><?php echo(mostrar_valor_campo('causas',481,$_REQUEST['iddoc'])); ?></textarea></td>
-                    </tr><input type="hidden" name="accion_mejoramiento" value="<?php echo(mostrar_valor_campo('accion_mejoramiento',481,$_REQUEST['iddoc'])); ?>"><tr id="tr_secretarias">
+                     <td class="celda_transparente"><textarea  tabindex='5'  name="causas" id="causas" cols="53" rows="3" class="tiny_basico"><?php echo(mostrar_valor_campo('causas',481,$_REQUEST['iddoc'])); ?></textarea></td></tr><input type="hidden" name="accion_mejoramiento" value="<?php echo(mostrar_valor_campo('accion_mejoramiento',481,$_REQUEST['iddoc'])); ?>"><tr id="tr_secretarias">
 								<td class="encabezado" width="20%" title="">AREA RESPONSABLE</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(481,6104,'2',$_REQUEST['iddoc']);?></div><br/>Buscar: <input  tabindex='6'  type="text" id="stext_secretarias" width="200px" size="25">
 									<a href="javascript:void(0)" onclick="tree_secretarias.findItem((document.getElementById('stext_secretarias').value),1)">
 										<img src="../../botones/general/anterior.png"border="0px">
@@ -126,7 +119,9 @@
 								var browserType;
 								if (document.layers) {browserType = "nn4"}
 								if (document.all) {browserType = "ie"}
-								if (window.navigator.userAgent.toLowerCase().match("gecko")) {browserType= "gecko"}
+								if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+									browserType= "gecko"
+								}
 								tree_secretarias=new dhtmlXTreeObject("treeboxbox_secretarias","100%","100%",0);
 								tree_secretarias.setImagePath("../../imgs/");
 								tree_secretarias.enableIEImageFix(true);tree_secretarias.enableCheckBoxes(1);
@@ -171,6 +166,7 @@
 									}
 									document.poppedLayer.style.display = "none";
 								}
+
 								function cargando_secretarias() {
 									if (browserType == "gecko" ) {
 										document.poppedLayer = eval('document.getElementById("esperando_secretarias")');
@@ -203,7 +199,9 @@
 								var browserType;
 								if (document.layers) {browserType = "nn4"}
 								if (document.all) {browserType = "ie"}
-								if (window.navigator.userAgent.toLowerCase().match("gecko")) {browserType= "gecko"}
+								if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+									browserType= "gecko"
+								}
 								tree_responsables=new dhtmlXTreeObject("treeboxbox_responsables","100%","100%",0);
 								tree_responsables.setImagePath("../../imgs/");
 								tree_responsables.enableIEImageFix(true);tree_responsables.enableCheckBoxes(1);
@@ -248,6 +246,7 @@
 									}
 									document.poppedLayer.style.display = "none";
 								}
+
 								function cargando_responsables() {
 									if (browserType == "gecko" ) {
 										document.poppedLayer = eval('document.getElementById("esperando_responsables")');
@@ -281,7 +280,9 @@
 								var browserType;
 								if (document.layers) {browserType = "nn4"}
 								if (document.all) {browserType = "ie"}
-								if (window.navigator.userAgent.toLowerCase().match("gecko")) {browserType= "gecko"}
+								if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+									browserType= "gecko"
+								}
 								tree_responsable_seguimiento=new dhtmlXTreeObject("treeboxbox_responsable_seguimiento","100%","100%",0);
 								tree_responsable_seguimiento.setImagePath("../../imgs/");
 								tree_responsable_seguimiento.enableIEImageFix(true);tree_responsable_seguimiento.enableCheckBoxes(1);
@@ -326,6 +327,7 @@
 									}
 									document.poppedLayer.style.display = "none";
 								}
+
 								function cargando_responsable_seguimiento() {
 									if (browserType == "gecko" ) {
 										document.poppedLayer = eval('document.getElementById("esperando_responsable_seguimiento")');
@@ -344,12 +346,9 @@
 									}
 </script></td></tr><tr id="tr_indicador_cumplimiento">
                      <td class="encabezado" width="20%" title="">INDICADOR DE ACCI&Oacute;N DE CUMPLIMIENTO*</td>
-                     <td class="celda_transparente"><textarea  tabindex='10'  name="indicador_cumplimiento" id="indicador_cumplimiento" cols="53" rows="3" class="tiny_basico required"><?php echo(mostrar_valor_campo('indicador_cumplimiento',481,$_REQUEST['iddoc'])); ?></textarea></td>
-                    </tr><tr id="tr_observaciones">
+                     <td class="celda_transparente"><textarea  tabindex='10'  name="indicador_cumplimiento" id="indicador_cumplimiento" cols="53" rows="3" class="tiny_basico required"><?php echo(mostrar_valor_campo('indicador_cumplimiento',481,$_REQUEST['iddoc'])); ?></textarea></td></tr><tr id="tr_observaciones">
                      <td class="encabezado" width="20%" title="">OBSERVACIONES</td>
-                     <td class="celda_transparente"><textarea  tabindex='11'  name="observaciones" id="observaciones" cols="53" rows="3" class="tiny_basico"><?php echo(mostrar_valor_campo('observaciones',481,$_REQUEST['iddoc'])); ?></textarea></td>
-                    </tr><tr id="tr_mecanismo_interno">
+                     <td class="celda_transparente"><textarea  tabindex='11'  name="observaciones" id="observaciones" cols="53" rows="3" class="tiny_basico"><?php echo(mostrar_valor_campo('observaciones',481,$_REQUEST['iddoc'])); ?></textarea></td></tr><tr id="tr_mecanismo_interno">
                      <td class="encabezado" width="20%" title="mecanismo_interno">MECANISMO DE SEGUIMIENTO INTERNO*</td>
-                     <td class="celda_transparente"><textarea  tabindex='12'  name="mecanismo_interno" id="mecanismo_interno" cols="53" rows="3" class="tiny_basico required"><?php echo(mostrar_valor_campo('mecanismo_interno',481,$_REQUEST['iddoc'])); ?></textarea></td>
-                    </tr><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',481,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',481,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_hallazgo" value="<?php echo(mostrar_valor_campo('idft_hallazgo',481,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',481,$_REQUEST['iddoc'])); ?>"><?php add_edit_hallazgo(481,NULL,$_REQUEST['iddoc']);?><input type="hidden" name="campo_descripcion" value="<?php echo('6095,6096,6099'); ?>"><input type="hidden" name="formato" value="481"><tr><td colspan='2'><?php submit_formato(481,$_REQUEST['iddoc']);?></td></tr></table></form></body>
-		</html><?php include_once("../librerias/footer_plantilla.php");?>
+                     <td class="celda_transparente"><textarea  tabindex='12'  name="mecanismo_interno" id="mecanismo_interno" cols="53" rows="3" class="tiny_basico required"><?php echo(mostrar_valor_campo('mecanismo_interno',481,$_REQUEST['iddoc'])); ?></textarea></td></tr><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',481,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',481,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_hallazgo" value="<?php echo(mostrar_valor_campo('idft_hallazgo',481,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',481,$_REQUEST['iddoc'])); ?>"><?php add_edit_hallazgo(481,NULL,$_REQUEST['iddoc']);?><input type="hidden" name="campo_descripcion" value="<?php echo('6095,6096,6099'); ?>"><input type="hidden" name="formato" value="481"><tr><td colspan='2'><?php submit_formato(481,$_REQUEST['iddoc']);?></td></tr></table></form></body>
+		</html><?php include_once("../../" . FORMATOS_SAIA . "librerias/footer_plantilla.php");?>

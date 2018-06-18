@@ -1,22 +1,160 @@
-<html><title>.:BUSCAR TRANSFERENCIA DOCUMENTAL:.</title><head><link rel="stylesheet" type="text/css" href="../../css/dhtmlXTree.css"/><script type="text/javascript" src="../../js/jquery.fcbkcomplete.js"></script><link rel="stylesheet" type="text/css" href="../../css/style_fcbkcomplete.css"/></head><body bgcolor="#F5F5F5"><form name="formulario_formatos" id="formulario_formatos" method="post" action="../librerias/funciones_buscador.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4" border="0"><tr><td colspan="4" class="encabezado_list">B&Uacute;SQUEDA TRANSFERENCIA DOCUMENTAL</td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_expediente_vinculado" id="condicion_expediente_vinculado"><option value="AND">Y</option><option value="OR">O</option></td>
-                     <td class="encabezado" width="20%" title="">TRANSFERENCIA VINCULADA</td><td class="encabezado">&nbsp;<select name="compara_expediente_vinculado" id="compara_expediente_vinculado"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
-                     <td bgcolor="#F5F5F5"><select multiple id="expediente_vinculado" name="expediente_vinculado"></select><script>
-                     $(document).ready(function() 
+<html><title>.: TRANSFERENCIA DOCUMENTAL:.</title><head><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php echo(librerias_jquery('1.7')); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../../formatos/librerias/header_formato.php"); ?><?php echo(librerias_jquery('1.8')); ?><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/dhtmlXCommon.js"></script><script type="text/javascript" src="../../js/dhtmlXTree.js"></script><link rel="stylesheet" type="text/css" href="../../css/dhtmlXTree.css"/><script type="text/javascript" src="../../js/jquery.fcbkcomplete.js"></script><link rel="stylesheet" type="text/css" href="../../css/style_fcbkcomplete.css"/></head><body bgcolor="#F5F5F5"><form name="formulario_formatos" id="formulario_formatos" method="post" action="../librerias/funciones_buscador.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4" border="0"><tr><td colspan="4" class="encabezado_list">B&Uacute;SQUEDA TRANSFERENCIA DOCUMENTAL</td></tr><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php echo(librerias_jquery('1.7')); ?><tr id="tr_estado_documento"><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_estado_documento',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_estado_documento',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_estado_documento" id="bqsaiaenlace_estado_documento" value="y" />
+		</div>
+                     <td class="encabezado" width="20%" title="">ESTADO DEL DOCUMENTO</td><input type="hidden" name="bksaiacondicion_estado_documento" id="bksaiacondicion_estado_documento" value="like">
+                     <td bgcolor="#F5F5F5"><select multiple id="estado_documento" name="estado_documento"></select><script>
+                     $(document).ready(function()
                       {
-                      $("#expediente_vinculado").fcbkcomplete({
+                      $("#estado_documento").fcbkcomplete({
                         complete_text:"Presione enter para agregar una palabra.",
                         newel: true
                       });
                       });
                      </script></td>
-                    </tr><tr><td class="encabezado">&nbsp;<select name="condicion_oficina_productora" id="condicion_oficina_productora"><option value="AND">Y</option><option value="OR">O</option></td>
-                   <td class="encabezado" width="20%" title="">OFICINA PRODUCTORA</td><td class="encabezado">&nbsp;<select name="compara_oficina_productora" id="compara_oficina_productora"> <option value="or">Alguno</option><option value="and">Todos</option></select></td><td bgcolor="#F5F5F5"><div id="esperando_oficina_productora"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(343,3997,'2',$_REQUEST['iddoc']);?></div>
+                    </tr><tr id="tr_idft_transferencia_doc"><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_idft_transferencia_doc',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_idft_transferencia_doc',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_idft_transferencia_doc" id="bqsaiaenlace_idft_transferencia_doc" value="y" />
+		</div>
+                     <td class="encabezado" width="20%" title="">TRANSFERENCIA_DOC</td><input type="hidden" name="bksaiacondicion_idft_transferencia_doc" id="bksaiacondicion_idft_transferencia_doc" value="like">
+                     <td bgcolor="#F5F5F5"><select multiple id="idft_transferencia_doc" name="idft_transferencia_doc"></select><script>
+                     $(document).ready(function()
+                      {
+                      $("#idft_transferencia_doc").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
+                    </tr><tr id="tr_documento_iddocumento"><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_documento_iddocumento',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_documento_iddocumento',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_documento_iddocumento" id="bqsaiaenlace_documento_iddocumento" value="y" />
+		</div>
+                     <td class="encabezado" width="20%" title="">DOCUMENTO ASOCIADO</td><input type="hidden" name="bksaiacondicion_documento_iddocumento" id="bksaiacondicion_documento_iddocumento" value="like">
+                     <td bgcolor="#F5F5F5"><select multiple id="documento_iddocumento" name="documento_iddocumento"></select><script>
+                     $(document).ready(function()
+                      {
+                      $("#documento_iddocumento").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
+                    </tr><tr id="tr_encabezado"><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_encabezado',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_encabezado',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_encabezado" id="bqsaiaenlace_encabezado" value="y" />
+		</div>
+                     <td class="encabezado" width="20%" title="">ENCABEZADO</td><input type="hidden" name="bksaiacondicion_encabezado" id="bksaiacondicion_encabezado" value="like">
+                     <td bgcolor="#F5F5F5"><select multiple id="encabezado" name="encabezado"></select><script>
+                     $(document).ready(function()
+                      {
+                      $("#encabezado").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
+                    </tr><tr id="tr_firma"><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_firma',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_firma',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_firma" id="bqsaiaenlace_firma" value="y" />
+		</div>
+                     <td class="encabezado" width="20%" title="">FIRMAS DIGITALES</td><input type="hidden" name="bksaiacondicion_firma" id="bksaiacondicion_firma" value="like">
+                     <td bgcolor="#F5F5F5"><select multiple id="firma" name="firma"></select><script>
+                     $(document).ready(function()
+                      {
+                      $("#firma").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
+                    </tr><tr id="tr_dependencia"><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_dependencia',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_dependencia',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_dependencia" id="bqsaiaenlace_dependencia" value="y" />
+		</div>
+                     <td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO</td><input type="hidden" name="bksaiacondicion_dependencia" id="bksaiacondicion_dependencia" value="like">
+                     <td bgcolor="#F5F5F5"><select multiple id="dependencia" name="dependencia"></select><script>
+                     $(document).ready(function()
+                      {
+                      $("#dependencia").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
+                    </tr><tr><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_expediente_vinculado',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_expediente_vinculado',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_expediente_vinculado" id="bqsaiaenlace_expediente_vinculado" value="y" />
+		</div>
+                  <td class="encabezado" width="20%" title="">TRANSFERENCIA VINCULADA</td><input type="hidden" name="bksaiacondicion_expediente_vinculado" id="bksaiacondicion_expediente_vinculado" value="like"><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(,3995,'',1,'buscar');?></td></tr><tr id="tr_serie_idserie"><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_serie_idserie',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_serie_idserie',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_serie_idserie" id="bqsaiaenlace_serie_idserie" value="y" />
+		</div>
+                     <td class="encabezado" width="20%" title="Transferencia documental">SERIE DOCUMENTAL</td><input type="hidden" name="bksaiacondicion_serie_idserie" id="bksaiacondicion_serie_idserie" value="like">
+                     <td bgcolor="#F5F5F5"><select multiple id="serie_idserie" name="serie_idserie"></select><script>
+                     $(document).ready(function()
+                      {
+                      $("#serie_idserie").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
+                    </tr><tr><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_oficina_productora',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_oficina_productora',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_oficina_productora" id="bqsaiaenlace_oficina_productora" value="y" />
+		</div>
+                   <td class="encabezado" width="20%" title="">OFICINA PRODUCTORA</td><input type="hidden" name="bksaiacondicion_oficina_productora" id="bksaiacondicion_oficina_productora" value="like"><td bgcolor="#F5F5F5"><div id="esperando_oficina_productora"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(,3997,'2',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_oficina_productora" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_oficina_productora.findItem((document.getElementById('stext_oficina_productora').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_oficina_productora.findItem((document.getElementById('stext_oficina_productora').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
                           <a href="javascript:void(0)" onclick="tree_oficina_productora.findItem((document.getElementById('stext_oficina_productora').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
-                          <br /><br />
-                <div id="treeboxbox_oficina_productora" height="90%"></div><input type="hidden" maxlength="255"  name="oficina_productora" id="oficina_productora"   value="" ><label style="display:none" class="error" for="oficina_productora">Campo obligatorio.</label><script type="text/javascript">
+                          <br /><br /><div id="treeboxbox_oficina_productora" height="90%"></div><input type="hidden" maxlength="255"  name="oficina_productora" id="oficina_productora"   value="" ><label style="display:none" class="error" for="oficina_productora">Campo obligatorio.</label><script type="text/javascript">
                   <!--
                       var browserType;
                       if (document.layers) {browserType = "nn4"}
@@ -36,16 +174,16 @@
                        nuevo=destinos.replace(/\,{2,}(d)*/gi,",");
                        nuevo=nuevo.replace(/\,$/gi,"");
                        vector=destinos.split(",");
-                       for(i=0;i<vector.length;i++)
-                          {if(vector[i].indexOf("#")!=-1)
-                              {hijos=tree_oficina_productora.getAllSubItems(vector[i]);
+                       for(i=0;i<vector.length;i++) {
+                           if(vector[i].indexOf("#")!=-1) {
+                               hijos=tree_oficina_productora.getAllSubItems(vector[i]);
                                hijos=hijos.replace(/\,{2,}(d)*/gi,",");
                                hijos=hijos.replace(/\,$/gi,"");
                                vectorh=hijos.split(",");
                                for(h=0;h<vectorh.length;h++)
                                   nuevo=eliminarItem(nuevo,vectorh[h]);
-                              }
-                          }
+								}
+						}
                        valor_destino.value=nuevo;
                       }
                       function fin_cargando_oficina_productora() {
@@ -72,10 +210,18 @@
                                eval('document.layers["esperando_oficina_productora"]');
                         document.poppedLayer.style.visibility = "visible";
                       }
-                	--></script></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_observaciones" id="condicion_observaciones"><option value="AND">Y</option><option value="OR">O</option></td>
-                     <td class="encabezado" width="20%" title="">OBSERVACIONES</td><td class="encabezado">&nbsp;<select name="compara_observaciones" id="compara_observaciones"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
+                	--></script></td></tr><tr id="tr_observaciones"><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_observaciones',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_observaciones',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_observaciones" id="bqsaiaenlace_observaciones" value="y" />
+		</div>
+                     <td class="encabezado" width="20%" title="">OBSERVACIONES</td><input type="hidden" name="bksaiacondicion_observaciones" id="bksaiacondicion_observaciones" value="like">
                      <td bgcolor="#F5F5F5"><select multiple id="observaciones" name="observaciones"></select><script>
-                     $(document).ready(function() 
+                     $(document).ready(function()
                       {
                       $("#observaciones").fcbkcomplete({
                         complete_text:"Presione enter para agregar una palabra.",
@@ -83,10 +229,18 @@
                       });
                       });
                      </script></td>
-                    </tr><tr><td class="encabezado">&nbsp;<select name="condicion_anexos" id="condicion_anexos"><option value="AND">Y</option><option value="OR">O</option></td>
-                     <td class="encabezado" width="20%" title="">ANEXOS</td><td class="encabezado">&nbsp;<select name="compara_anexos" id="compara_anexos"> <option value="or">Alguno</option><option value="and">Todos</option></select></td>
+                    </tr><tr id="tr_anexos"><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_anexos',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_anexos',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_anexos" id="bqsaiaenlace_anexos" value="y" />
+		</div>
+                     <td class="encabezado" width="20%" title="">ANEXOS</td><input type="hidden" name="bksaiacondicion_anexos" id="bksaiacondicion_anexos" value="like">
                      <td bgcolor="#F5F5F5"><select multiple id="anexos" name="anexos"></select><script>
-                     $(document).ready(function() 
+                     $(document).ready(function()
                       {
                       $("#anexos").fcbkcomplete({
                         complete_text:"Presione enter para agregar una palabra.",
@@ -94,14 +248,21 @@
                       });
                       });
                      </script></td>
-                    </tr><tr><td class="encabezado">&nbsp;<select name="condicion_entregado_por" id="condicion_entregado_por"><option value="AND">Y</option><option value="OR">O</option></td>
-                   <td class="encabezado" width="20%" title="">ENTREGADO POR</td><td class="encabezado">&nbsp;<select name="compara_entregado_por" id="compara_entregado_por"> <option value="or">Alguno</option><option value="and">Todos</option></select></td><td bgcolor="#F5F5F5"><div id="esperando_entregado_por"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(343,4000,'5',$_REQUEST['iddoc']);?></div>
+                    </tr><tr><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_entregado_por',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_entregado_por',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_entregado_por" id="bqsaiaenlace_entregado_por" value="y" />
+		</div>
+                   <td class="encabezado" width="20%" title="">ENTREGADO POR</td><input type="hidden" name="bksaiacondicion_entregado_por" id="bksaiacondicion_entregado_por" value="like"><td bgcolor="#F5F5F5"><div id="esperando_entregado_por"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(,4000,'5',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_entregado_por" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_entregado_por.findItem((document.getElementById('stext_entregado_por').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_entregado_por.findItem((document.getElementById('stext_entregado_por').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
                           <a href="javascript:void(0)" onclick="tree_entregado_por.findItem((document.getElementById('stext_entregado_por').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
-                          <br /><br />
-                <div id="treeboxbox_entregado_por" height="90%"></div><input type="hidden" maxlength="255"  name="entregado_por" id="entregado_por"   value="" ><label style="display:none" class="error" for="entregado_por">Campo obligatorio.</label><script type="text/javascript">
+                          <br /><br /><div id="treeboxbox_entregado_por" height="90%"></div><input type="hidden" maxlength="255"  name="entregado_por" id="entregado_por"   value="" ><label style="display:none" class="error" for="entregado_por">Campo obligatorio.</label><script type="text/javascript">
                   <!--
                       var browserType;
                       if (document.layers) {browserType = "nn4"}
@@ -121,16 +282,16 @@
                        nuevo=destinos.replace(/\,{2,}(d)*/gi,",");
                        nuevo=nuevo.replace(/\,$/gi,"");
                        vector=destinos.split(",");
-                       for(i=0;i<vector.length;i++)
-                          {if(vector[i].indexOf("#")!=-1)
-                              {hijos=tree_entregado_por.getAllSubItems(vector[i]);
+                       for(i=0;i<vector.length;i++) {
+                           if(vector[i].indexOf("#")!=-1) {
+                               hijos=tree_entregado_por.getAllSubItems(vector[i]);
                                hijos=hijos.replace(/\,{2,}(d)*/gi,",");
                                hijos=hijos.replace(/\,$/gi,"");
                                vectorh=hijos.split(",");
                                for(h=0;h<vectorh.length;h++)
                                   nuevo=eliminarItem(nuevo,vectorh[h]);
-                              }
-                          }
+								}
+						}
                        valor_destino.value=nuevo;
                       }
                       function fin_cargando_entregado_por() {
@@ -157,14 +318,21 @@
                                eval('document.layers["esperando_entregado_por"]');
                         document.poppedLayer.style.visibility = "visible";
                       }
-                	--></script></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_recibido_por" id="condicion_recibido_por"><option value="AND">Y</option><option value="OR">O</option></td>
-                   <td class="encabezado" width="20%" title="">RECIBIDO POR</td><td class="encabezado">&nbsp;<select name="compara_recibido_por" id="compara_recibido_por"> <option value="or">Alguno</option><option value="and">Todos</option></select></td><td bgcolor="#F5F5F5"><div id="esperando_recibido_por"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(343,4001,'5',$_REQUEST['iddoc']);?></div>
+                	--></script></td></tr><tr><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_recibido_por',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_recibido_por',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_recibido_por" id="bqsaiaenlace_recibido_por" value="y" />
+		</div>
+                   <td class="encabezado" width="20%" title="">RECIBIDO POR</td><input type="hidden" name="bksaiacondicion_recibido_por" id="bksaiacondicion_recibido_por" value="like"><td bgcolor="#F5F5F5"><div id="esperando_recibido_por"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(,4001,'5',$_REQUEST['iddoc']);?></div>
                           <br />  Buscar: <input type="text" id="stext_recibido_por" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_recibido_por.findItem((document.getElementById('stext_recibido_por').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_recibido_por.findItem((document.getElementById('stext_recibido_por').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
                           <a href="javascript:void(0)" onclick="tree_recibido_por.findItem((document.getElementById('stext_recibido_por').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
-                          <br /><br />
-                <div id="treeboxbox_recibido_por" height="90%"></div><input type="hidden" maxlength="255"  name="recibido_por" id="recibido_por"   value="" ><label style="display:none" class="error" for="recibido_por">Campo obligatorio.</label><script type="text/javascript">
+                          <br /><br /><div id="treeboxbox_recibido_por" height="90%"></div><input type="hidden" maxlength="255"  name="recibido_por" id="recibido_por"   value="" ><label style="display:none" class="error" for="recibido_por">Campo obligatorio.</label><script type="text/javascript">
                   <!--
                       var browserType;
                       if (document.layers) {browserType = "nn4"}
@@ -184,16 +352,16 @@
                        nuevo=destinos.replace(/\,{2,}(d)*/gi,",");
                        nuevo=nuevo.replace(/\,$/gi,"");
                        vector=destinos.split(",");
-                       for(i=0;i<vector.length;i++)
-                          {if(vector[i].indexOf("#")!=-1)
-                              {hijos=tree_recibido_por.getAllSubItems(vector[i]);
+                       for(i=0;i<vector.length;i++) {
+                           if(vector[i].indexOf("#")!=-1) {
+                               hijos=tree_recibido_por.getAllSubItems(vector[i]);
                                hijos=hijos.replace(/\,{2,}(d)*/gi,",");
                                hijos=hijos.replace(/\,$/gi,"");
                                vectorh=hijos.split(",");
                                for(h=0;h<vectorh.length;h++)
                                   nuevo=eliminarItem(nuevo,vectorh[h]);
-                              }
-                          }
+								}
+						}
                        valor_destino.value=nuevo;
                       }
                       function fin_cargando_recibido_por() {
@@ -220,8 +388,16 @@
                                eval('document.layers["esperando_recibido_por"]');
                         document.poppedLayer.style.visibility = "visible";
                       }
-                	--></script></td></tr><tr><td class="encabezado">&nbsp;<select name="condicion_transferir_a" id="condicion_transferir_a"><option value="AND">Y</option><option value="OR">O</option></td>
-                     <td class="encabezado" width="20%" title="">TRANSFERIR A</td><td class="encabezado">&nbsp;<select name="compara_transferir_a" id="compara_transferir_a"> <option value="=|@|@">Igual</option><option value="-|@|@">Menor</option><option value="+|@|@">Mayor</option><option value="!|@|@">Diferente</option></select></td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(343,4002,'',1);?></td></tr><input type="hidden" name="campo_descripcion" value="3997"><?php submit_formato(343);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
+                	--></script></td></tr><tr><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_transferir_a',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_transferir_a',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_transferir_a" id="bqsaiaenlace_transferir_a" value="y" />
+		</div>
+                     <td class="encabezado" width="20%" title="">TRANSFERIR A</td><input type="hidden" name="bksaiacondicion_transferir_a" id="bksaiacondicion_transferir_a" value="="><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(,4002,'',1,'buscar');?></td></tr><input type="hidden" name="campo_descripcion" value="3997"><?php submit_formato();?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
                 <input type="hidden" name="campo__retorno" value="<?php echo($_REQUEST["campo__retorno"]); ?>">
               <?php }
                if(@$_REQUEST["formulario__retorno"]){ ?>

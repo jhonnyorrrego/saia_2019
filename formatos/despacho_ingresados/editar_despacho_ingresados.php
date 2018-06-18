@@ -1,17 +1,13 @@
 <html><title>.:EDITAR ENTREGA INTERNA:.</title>
-			<head><?php include_once("../../librerias_saia.php"); ?>
-			<script type="text/javascript" src="../librerias/funciones_formatos.js"></script>
-			<?php include_once("../librerias/funciones_generales.php"); ?>
-			<?php include_once("../librerias/funciones_acciones.php"); ?>
-			<?php include_once("../librerias/estilo_formulario.php"); ?>
-			<?php echo(librerias_jquery('1.7')); ?><?php echo(librerias_validar_formulario()); ?><script type="text/javascript" src="../../js/title2note.js"></script>
-			<script type="text/javascript" src="../../dropzone/dist/dropzone.js"></script>
-			<?php include_once("../../anexosdigitales/funciones_archivo.php"); ?>
-			<script type="text/javascript" src="../../anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script>
-			<link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link href="../../dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" /><script type='text/javascript'> hs.graphicsDir = '../../anexosdigitales/highslide-5.0.0/highslide/graphics/'; hs.outlineType = 'rounded-white';</script><style>label.error{color:red}</style>
+			<head><?php include_once("../../librerias_saia.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/funciones_acciones.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php echo(librerias_validar_formulario()); ?><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../dropzone/dist/dropzone.js"></script><?php include_once("../../anexosdigitales/funciones_archivo.php"); ?><script type="text/javascript" src="../../anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link href="../../dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" /><script type='text/javascript'> hs.graphicsDir = '../../anexosdigitales/highslide-5.0.0/highslide/graphics/'; hs.outlineType = 'rounded-white';</script><style>label.error{color:red}</style>
 				<script type='text/javascript'>
   $(document).ready(function() {
-			  		$('#formulario_formatos').validate();
+			  		$('#formulario_formatos').validate({	
+						submitHandler: function(form) {
+							<?php encriptar_sqli('formulario_formatos',0,'form_info','../../');?>
+							form.submit();
+						}
+					});
 				});
 				</script> 
 			</head>
@@ -21,10 +17,8 @@
 			<a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=353&idcampo=5018" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
 			objectType: \'iframe\', outlineType: \'rounded-white\', wrapperClassName: \'highslide-wrapper drag-header\',
 			outlineWhileAnimating: true, preserveContent: false, width: 400 } )">Administrar Anexos</a>
-			</div>'; ?></td></tr><input type="hidden" name="iddestino_radicacion" value="<?php echo(mostrar_valor_campo('iddestino_radicacion',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="estado_documento" value="<?php echo(mostrar_valor_campo('estado_documento',353,$_REQUEST['iddoc'])); ?>"><tr id="tr_dependencia">
-                     <td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td>
-                     <?php buscar_dependencia(353,4077,$_REQUEST['iddoc']);?></tr><tr id="tr_tipo_recorrido" >
-                     <td class="encabezado" width="20%" title="">RECORRIDO DEL DIA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(353,5087,$_REQUEST['iddoc']);?></td></tr><input type="hidden" name="docs_seleccionados" value="<?php echo(mostrar_valor_campo('docs_seleccionados',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="mensajero" value="<?php echo(mostrar_valor_campo('mensajero',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_despacho_ingresados" value="<?php echo(mostrar_valor_campo('idft_despacho_ingresados',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="fecha_entrega" value="<?php echo(mostrar_valor_campo('fecha_entrega',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="campo_descripcion" value="<?php echo('4080'); ?>"><input type="hidden" name="formato" value="353"><tr><td colspan='2'><?php submit_formato(353,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("353-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
+			</div>'; ?></td></tr><input type="hidden" name="iddestino_radicacion" value="<?php echo(mostrar_valor_campo('iddestino_radicacion',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="estado_documento" value="<?php echo(mostrar_valor_campo('estado_documento',353,$_REQUEST['iddoc'])); ?>"><tr id="tr_dependencia"><td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td><?php buscar_dependencia(353,4077,$_REQUEST['iddoc']);?></tr><tr id="tr_tipo_recorrido" >
+                     <td class="encabezado" width="20%" title="">RECORRIDO DEL DIA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(353,5087,$_REQUEST['iddoc']);?></td></tr><input type="hidden" name="docs_seleccionados" value="<?php echo(mostrar_valor_campo('docs_seleccionados',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="mensajero" value="<?php echo(mostrar_valor_campo('mensajero',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_despacho_ingresados" value="<?php echo(mostrar_valor_campo('idft_despacho_ingresados',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="fecha_entrega" value="<?php echo(mostrar_valor_campo('fecha_entrega',353,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="campo_descripcion" value="<?php echo('4080'); ?>"><input type="hidden" name="formato" value="353"><tr><td colspan='2'><?php submit_formato(353,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
                 var upload_url = '../../dropzone/cargar_archivos_formato.php';
                 var mensaje = 'Arrastre aquí los archivos';
                 Dropzone.autoDiscover = false;
@@ -106,4 +100,4 @@
                         $(this).addClass('dropzone');
                     });
                 });</script>
-		</html><?php include_once("../librerias/footer_plantilla.php");?>
+		</html><?php include_once("../../" . FORMATOS_SAIA . "librerias/footer_plantilla.php");?>

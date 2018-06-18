@@ -1,10 +1,4 @@
-<?php include_once("../../librerias_saia.php"); ?>
-			<?php echo(librerias_jquery('1.7')); ?><?php include_once("../librerias/funciones_generales.php"); ?>
-			<?php include_once("../../class_transferencia.php"); ?>
-			<?php include_once("../librerias/encabezado_pie_pagina.php"); ?>
-			<?php include_once("funciones.php"); ?>
-			<?php include_once("../librerias/header_nuevo.php"); ?>
-			<tr><td><p>&nbsp;<?php mostrar_ft_gestion_calid_funcion(481,$_REQUEST['iddoc']);?></p>
+<?php include_once("../../librerias_saia.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../carta/../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../../formatos/librerias/header_nuevo.php"); ?><tr><td><p>&nbsp;<?php mostrar_ft_gestion_calid_funcion(481,$_REQUEST['iddoc']);?></p>
 <table style="width: 100%;" border="1">
 <tbody>
 <tr>
@@ -77,5 +71,4 @@
 </table>
 <p><?php adicionar_item_accion(481,$_REQUEST['iddoc']);?></p>
 <p><?php mostrar_item_accion(481,$_REQUEST['iddoc']);?></p>
-<p><?php mostrar_estado_proceso(481,$_REQUEST['iddoc']);?></p></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>
-			
+<p><?php mostrar_estado_proceso(481,$_REQUEST['iddoc']);?></p></td></tr><?php include_once("../../formatos/librerias/footer_nuevo.php"); ?>

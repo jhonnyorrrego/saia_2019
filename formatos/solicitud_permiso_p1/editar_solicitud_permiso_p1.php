@@ -1,28 +1,18 @@
 <html><title>.:EDITAR SOLICITUD PERMISO P1:.</title>
-			<head><?php include_once("../../librerias_saia.php"); ?>
-			<script type="text/javascript" src="../librerias/funciones_formatos.js"></script>
-			<?php include_once("../librerias/funciones_generales.php"); ?>
-			<?php include_once("../librerias/funciones_acciones.php"); ?>
-			<?php include_once("../librerias/estilo_formulario.php"); ?>
-			<?php include_once("../librerias/header_formato.php"); ?>
-			<?php include_once("../../calendario/calendario.php"); ?>
-			<?php echo(librerias_jquery('1.7')); ?><?php echo(librerias_validar_formulario()); ?><script type="text/javascript" src="../../js/title2note.js"></script>
-			<script type="text/javascript" src="../../js/dhtmlXCommon.js"></script>
-			<script type="text/javascript" src="../../js/dhtmlXTree.js"></script>
-			<link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><script type="text/javascript" src="../../dropzone/dist/dropzone.js"></script>
-			<?php include_once("../../anexosdigitales/funciones_archivo.php"); ?>
-			<script type="text/javascript" src="../../anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script>
-			<link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link href="../../dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" /><script type='text/javascript'> hs.graphicsDir = '../../anexosdigitales/highslide-5.0.0/highslide/graphics/'; hs.outlineType = 'rounded-white';</script><style>label.error{color:red}</style>
+			<head><?php include_once("../../librerias_saia.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/funciones_acciones.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><?php include_once("../../formatos/librerias/header_formato.php"); ?><?php include_once("../../calendario/calendario.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php echo(librerias_validar_formulario()); ?><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/dhtmlXCommon.js"></script><script type="text/javascript" src="../../js/dhtmlXTree.js"></script><link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><script type="text/javascript" src="../../dropzone/dist/dropzone.js"></script><?php include_once("../../anexosdigitales/funciones_archivo.php"); ?><script type="text/javascript" src="../../anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link href="../../dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" /><script type='text/javascript'> hs.graphicsDir = '../../anexosdigitales/highslide-5.0.0/highslide/graphics/'; hs.outlineType = 'rounded-white';</script><style>label.error{color:red}</style>
 				<script type='text/javascript'>
   $(document).ready(function() {
-			  		$('#formulario_formatos').validate();
+			  		$('#formulario_formatos').validate({	
+						submitHandler: function(form) {
+							<?php encriptar_sqli('formulario_formatos',0,'form_info','../../');?>
+							form.submit();
+						}
+					});
 				});
 				</script> 
 			</head>
 			<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">SOLICITUD PERMISO P1</td></tr><tr id="tr_clase_permiso" >
-                     <td class="encabezado" width="20%" title="">CLASE DE PERMISO*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(512,6680,$_REQUEST['iddoc']);?></td></tr><input type="hidden" name="idft_solicitud_permiso_p1" value="<?php echo(mostrar_valor_campo('idft_solicitud_permiso_p1',512,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',512,$_REQUEST['iddoc'])); ?>"><tr id="tr_dependencia">
-                     <td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td>
-                     <?php buscar_dependencia(512,6660,$_REQUEST['iddoc']);?></tr><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',512,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',512,$_REQUEST['iddoc'])); ?>"><tr id="tr_fecha_solicitud">
+                     <td class="encabezado" width="20%" title="">CLASE DE PERMISO*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(512,6680,$_REQUEST['iddoc']);?></td></tr><input type="hidden" name="idft_solicitud_permiso_p1" value="<?php echo(mostrar_valor_campo('idft_solicitud_permiso_p1',512,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',512,$_REQUEST['iddoc'])); ?>"><tr id="tr_dependencia"><td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td><?php buscar_dependencia(512,6660,$_REQUEST['iddoc']);?></tr><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',512,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',512,$_REQUEST['iddoc'])); ?>"><tr id="tr_fecha_solicitud">
                     <td class="encabezado" width="20%" title="">FECHA DE SOLICITUD*</td><td colspan="2" bgcolor="#F5F5F5"><font size="1,5" face="Verdana, Arial, Helvetica, sans-serif"><span ><input  tabindex='1'  type="text" readonly="true" name="fecha_solicitud"  class="required dateISO"  id="fecha_solicitud" value="<?php mostrar_valor_campo('fecha_solicitud',512,$_REQUEST['iddoc']); ?>"><?php selector_fecha("fecha_solicitud","formulario_formatos","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?></span></font></td><tr id="tr_funcionario">
 								<td class="encabezado" width="20%" title="">FUNCIONARIO*</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(512,6663,'5
 ',$_REQUEST['iddoc']);?></div><br/>Buscar: <input  tabindex='2'  type="text" id="stext_funcionario" width="200px" size="25">
@@ -40,7 +30,9 @@
 								var browserType;
 								if (document.layers) {browserType = "nn4"}
 								if (document.all) {browserType = "ie"}
-								if (window.navigator.userAgent.toLowerCase().match("gecko")) {browserType= "gecko"}
+								if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+									browserType= "gecko"
+								}
 								tree_funcionario=new dhtmlXTreeObject("treeboxbox_funcionario","100%","100%",0);
 								tree_funcionario.setImagePath("../../imgs/");
 								tree_funcionario.enableIEImageFix(true);tree_funcionario.enableCheckBoxes(1);
@@ -67,6 +59,7 @@
 									}
 									document.poppedLayer.style.display = "none";
 								}
+
 								function cargando_funcionario() {
 									if (browserType == "gecko" ) {
 										document.poppedLayer = eval('document.getElementById("esperando_funcionario")');
@@ -89,14 +82,13 @@
                      <td class="encabezado" width="20%" title="">PORTERIA DE SALIDA*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(512,6665,$_REQUEST['iddoc']);?></td></tr><tr id="tr_compensacion" >
                      <td class="encabezado" width="20%" title="">COMPENSACI&Oacute;N DEL PERMISO*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(512,6666,$_REQUEST['iddoc']);?></td></tr><tr id="tr_descripcion">
                      <td class="encabezado" width="20%" title="">DESCRIBA EL PERMISO*</td>
-                     <td class="celda_transparente"><textarea  tabindex='4'  name="descripcion" id="descripcion" cols="53" rows="3" class="tiny_basico required"><?php echo(mostrar_valor_campo('descripcion',512,$_REQUEST['iddoc'])); ?></textarea></td>
-                    </tr><tr id="tr_anexo_formato">
+                     <td class="celda_transparente"><textarea  tabindex='4'  name="descripcion" id="descripcion" cols="53" rows="3" class="tiny_basico required"><?php echo(mostrar_valor_campo('descripcion',512,$_REQUEST['iddoc'])); ?></textarea></td></tr><tr id="tr_anexo_formato">
                      <td class="encabezado" width="20%" title="">ANEXOS DIGITALES</td>
                      <td class="celda_transparente"><?php echo '<div class="textwrapper">
 			<a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=512&idcampo=6652" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
 			objectType: \'iframe\', outlineType: \'rounded-white\', wrapperClassName: \'highslide-wrapper drag-header\',
 			outlineWhileAnimating: true, preserveContent: false, width: 400 } )">Administrar Anexos</a>
-			</div>'; ?></td></tr><input type="hidden" name="campo_descripcion" value="<?php echo('6656,6663,6680'); ?>"><input type="hidden" name="formato" value="512"><tr><td colspan='2'><?php submit_formato(512,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("512-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
+			</div>'; ?></td></tr><input type="hidden" name="campo_descripcion" value="<?php echo('6656,6663,6680'); ?>"><input type="hidden" name="formato" value="512"><tr><td colspan='2'><?php submit_formato(512,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
                 var upload_url = '../../dropzone/cargar_archivos_formato.php';
                 var mensaje = 'Arrastre aquí los archivos';
                 Dropzone.autoDiscover = false;
@@ -178,4 +170,4 @@
                         $(this).addClass('dropzone');
                     });
                 });</script>
-		</html><?php include_once("../librerias/footer_plantilla.php");?>
+		</html><?php include_once("../../" . FORMATOS_SAIA . "librerias/footer_plantilla.php");?>

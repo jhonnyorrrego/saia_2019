@@ -1,10 +1,4 @@
-<?php include_once("../../librerias_saia.php"); ?>
-			<?php echo(librerias_jquery('1.7')); ?><?php include_once("../librerias/funciones_generales.php"); ?>
-			<?php include_once("../../class_transferencia.php"); ?>
-			<?php include_once("../librerias/encabezado_pie_pagina.php"); ?>
-			<?php include_once("funciones.php"); ?>
-			<?php include_once("../librerias/header_nuevo.php"); ?>
-			<tr><td><table class="table table-bordered" style="border-collapse: collapse; width: 100%;" border="1">
+<?php include_once("../../librerias_saia.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../carta/../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../../formatos/librerias/header_nuevo.php"); ?><tr><td><table class="table table-bordered" style="border-collapse: collapse; width: 100%;" border="1">
 <tbody>
 <tr>
 <td style="border: 1px solid #b6b8b7; text-align: center; background-color: #3f91f2;" colspan="2"><span style="color: #ffffff;"><strong>RUTA DE DISTRIBUCI&Oacute;N</strong></span></td>
@@ -28,5 +22,4 @@
 <p>&nbsp;</p>
 <p><?php enlace_item_funcionarios_ruta(404,$_REQUEST['iddoc']);?></p>
 <p><?php mostrar_datos_funcionarios_ruta(404,$_REQUEST['iddoc']);?></p>
-<p><?php mostrar_estado_proceso(404,$_REQUEST['iddoc']);?></p></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>
-			
+<p><?php mostrar_estado_proceso(404,$_REQUEST['iddoc']);?></p></td></tr><?php include_once("../../formatos/librerias/footer_nuevo.php"); ?>

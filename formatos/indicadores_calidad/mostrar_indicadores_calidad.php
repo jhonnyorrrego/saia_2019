@@ -1,10 +1,4 @@
-<?php include_once("../../librerias_saia.php"); ?>
-			<?php echo(librerias_jquery('1.7')); ?><?php include_once("../../class_transferencia.php"); ?>
-			<?php include_once("../librerias/funciones_generales.php"); ?>
-			<?php include_once("../librerias/encabezado_pie_pagina.php"); ?>
-			<?php include_once("funciones.php"); ?>
-			<?php include_once("../librerias/header_nuevo.php"); ?>
-			<tr><td><table class="table table-bordered" style="border-collapse: collapse; width: 100%;" border="0">
+<?php include_once("../../librerias_saia.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../carta/../librerias/funciones_generales.php"); ?><?php include_once("../carta/../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../../formatos/librerias/header_nuevo.php"); ?><tr><td><table class="table table-bordered" style="border-collapse: collapse; width: 100%;" border="0">
 <tbody>
 <tr>
 <td style="text-align: left;" colspan="4"><span>Fecha de creaci&oacute;n: <?php mostrar_fecha(487,$_REQUEST['iddoc']);?><?php cargar_info_indicador(487,$_REQUEST['iddoc']);?></span></td>
@@ -46,5 +40,4 @@
 <td style="text-align: center;" colspan="4"><?php resultados_indicador(487,$_REQUEST['iddoc']);?></td>
 </tr>
 </tbody>
-</table></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>
-			
+</table></td></tr><?php include_once("../../formatos/librerias/footer_nuevo.php"); ?>

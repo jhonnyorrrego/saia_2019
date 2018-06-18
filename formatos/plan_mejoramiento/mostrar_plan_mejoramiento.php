@@ -1,10 +1,4 @@
-<?php include_once("../../librerias_saia.php"); ?>
-			<?php echo(librerias_jquery('1.7')); ?><?php include_once("../librerias/funciones_generales.php"); ?>
-			<?php include_once("../../class_transferencia.php"); ?>
-			<?php include_once("../librerias/encabezado_pie_pagina.php"); ?>
-			<?php include_once("funciones.php"); ?>
-			<?php include_once("../librerias/header_nuevo.php"); ?>
-			<tr><td><table class="table table-bordered" style="border-collapse: collapse; width: 100%;" border="1" cellspacing="0">
+<?php include_once("../../librerias_saia.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../carta/../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../../formatos/librerias/header_nuevo.php"); ?><tr><td><table class="table table-bordered" style="border-collapse: collapse; width: 100%;" border="1" cellspacing="0">
 <tbody>
 <tr>
 <td class="encabezado" style="text-align: center;" colspan="4"><strong>PLAN DE MEJORAMIENTO&nbsp; <?php mostrar_valor_campo('tipo_plan',480,$_REQUEST['iddoc']);?>&nbsp;<span>No. <?php formato_numero(480,$_REQUEST['iddoc']);?></span></strong></td>
@@ -50,5 +44,4 @@
 <p><?php mostrar_estado_proceso(480,$_REQUEST['iddoc']);?></p>
 <p>&nbsp;</p>
 <p><?php mostrar_link_reporte(480,$_REQUEST['iddoc']);?></p>
-<p><?php listar_hallazgo_plan_mejoramiento(480,$_REQUEST['iddoc']);?></p></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>
-			
+<p><?php listar_hallazgo_plan_mejoramiento(480,$_REQUEST['iddoc']);?></p></td></tr><?php include_once("../../formatos/librerias/footer_nuevo.php"); ?>

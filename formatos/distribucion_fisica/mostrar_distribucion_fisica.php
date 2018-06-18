@@ -1,9 +1,4 @@
-<?php include_once("../../librerias_saia.php"); ?>
-			<?php echo(librerias_jquery('1.7')); ?><?php include_once("../librerias/funciones_generales.php"); ?>
-			<?php include_once("../../class_transferencia.php"); ?>
-			<?php include_once("../librerias/encabezado_pie_pagina.php"); ?>
-			<?php include_once("../librerias/header_nuevo.php"); ?>
-			<tr><td><table style="border-collapse: collapse; width: 100%;" border="1">
+<?php include_once("../../librerias_saia.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../carta/../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../../formatos/librerias/header_nuevo.php"); ?><tr><td><table style="border-collapse: collapse; width: 100%;" border="1">
 <tbody>
 <tr>
 <td class="encabezado_list" style="text-align: left; width: 30%;">Fecha</td>
@@ -27,5 +22,4 @@
 </tr>
 </tbody>
 </table>
-<p><?php mostrar_estado_proceso(272,$_REQUEST['iddoc']);?></p></td></tr><?php include_once("../librerias/footer_nuevo.php"); ?>
-			
+<p><?php mostrar_estado_proceso(272,$_REQUEST['iddoc']);?></p></td></tr><?php include_once("../../formatos/librerias/footer_nuevo.php"); ?>

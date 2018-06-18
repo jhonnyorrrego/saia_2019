@@ -4,7 +4,7 @@
 		"firebase/php-jwt": "^5.0",
 		"phpoffice/phpword": "^0.13.0",
 		"greenlion/php-sql-parser": "^4.1",
-		"setasign/fpdi": "2.0.3",
+		"setasign/fpdi": "2.0.3 as 1.6.2",
 		"setasign/fpdi-fpdf": "^2.0.0-rc1",
 		"setasign/fpdi-tcpdf": "^2.0.0-rc1",
 		"siriusphp/upload": "^2.1",
@@ -15,7 +15,8 @@
 		"imagine/imagine": "~0.5.0",
 		"doctrine/doctrine-migrations-bundle": "^1.3",
 		"smalot/pdfparser": "^0.12.0",
-		"tecnickcom/tcpdf": "^6.2"
+		"tecnickcom/tcpdf": "^6.2",
+		"mpdf/mpdf": "^7.1"
 	},
 	"extra": {
 		"class": "Corley\\Composer\\MyHook"

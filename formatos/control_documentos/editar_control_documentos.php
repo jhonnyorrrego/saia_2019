@@ -1,27 +1,17 @@
 <html><title>.:EDITAR SOLICITUD DE ELABORACI&Oacute;N, MODIFICACI&Oacute;N, ELIMINACI&Oacute;N DE DOCUMENTOS:.</title>
-			<head><?php include_once("../../librerias_saia.php"); ?>
-			<script type="text/javascript" src="../librerias/funciones_formatos.js"></script>
-			<?php include_once("funciones.php"); ?>
-			<?php include_once("../librerias/funciones_generales.php"); ?>
-			<?php include_once("../librerias/funciones_acciones.php"); ?>
-			<?php include_once("../librerias/estilo_formulario.php"); ?>
-			<?php include_once("../librerias/header_formato.php"); ?>
-			<?php echo(librerias_jquery('1.7')); ?><?php echo(librerias_validar_formulario()); ?><script type="text/javascript" src="../../js/title2note.js"></script>
-			<script type="text/javascript" src="../../js/dhtmlXCommon.js"></script>
-			<script type="text/javascript" src="../../js/dhtmlXTree.js"></script>
-			<link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><script type="text/javascript" src="../../dropzone/dist/dropzone.js"></script>
-			<?php include_once("../../anexosdigitales/funciones_archivo.php"); ?>
-			<script type="text/javascript" src="../../anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script>
-			<link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link href="../../dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" /><script type='text/javascript'> hs.graphicsDir = '../../anexosdigitales/highslide-5.0.0/highslide/graphics/'; hs.outlineType = 'rounded-white';</script><style>label.error{color:red}</style>
+			<head><?php include_once("../../librerias_saia.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php include_once("funciones.php"); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/funciones_acciones.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><?php include_once("../../formatos/librerias/header_formato.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php echo(librerias_validar_formulario()); ?><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/dhtmlXCommon.js"></script><script type="text/javascript" src="../../js/dhtmlXTree.js"></script><link rel="STYLESHEET" type="text/css" href="../../css/dhtmlXTree.css"><script type="text/javascript" src="../../dropzone/dist/dropzone.js"></script><?php include_once("../../anexosdigitales/funciones_archivo.php"); ?><script type="text/javascript" src="../../anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link href="../../dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" /><script type='text/javascript'> hs.graphicsDir = '../../anexosdigitales/highslide-5.0.0/highslide/graphics/'; hs.outlineType = 'rounded-white';</script><style>label.error{color:red}</style>
 				<script type='text/javascript'>
   $(document).ready(function() {
-			  		$('#formulario_formatos').validate();
+			  		$('#formulario_formatos').validate({	
+						submitHandler: function(form) {
+							<?php encriptar_sqli('formulario_formatos',0,'form_info','../../');?>
+							form.submit();
+						}
+					});
 				});
 				</script> 
 			</head>
-			<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">SOLICITUD DE ELABORACIÓN, MODIFICACIÓN, ELIMINACIÓN DE DOCUMENTOS</td></tr><input type="hidden" name="estado_documento" value="<?php echo(mostrar_valor_campo('estado_documento',498,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idformato_calidad" value="<?php echo(mostrar_valor_campo('idformato_calidad',498,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="iddocumento_calidad" value="<?php echo(mostrar_valor_campo('iddocumento_calidad',498,$_REQUEST['iddoc'])); ?>"><tr id="tr_dependencia">
-                     <td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td>
-                     <?php buscar_dependencia(498,6330,$_REQUEST['iddoc']);?></tr><tr id="tr_tipo_solicitud" >
+			<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">SOLICITUD DE ELABORACIÓN, MODIFICACIÓN, ELIMINACIÓN DE DOCUMENTOS</td></tr><input type="hidden" name="estado_documento" value="<?php echo(mostrar_valor_campo('estado_documento',498,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idformato_calidad" value="<?php echo(mostrar_valor_campo('idformato_calidad',498,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="iddocumento_calidad" value="<?php echo(mostrar_valor_campo('iddocumento_calidad',498,$_REQUEST['iddoc'])); ?>"><tr id="tr_dependencia"><td class="encabezado" width="20%" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</td><?php buscar_dependencia(498,6330,$_REQUEST['iddoc']);?></tr><tr id="tr_tipo_solicitud" >
                      <td class="encabezado" width="20%" title="">TIPO SOLICITUD*</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(498,6332,$_REQUEST['iddoc']);?></td></tr><tr id="tr_secretaria">
 								<td class="encabezado" width="20%" title="">DEPENDENCIAS PARTICIPANTES</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(498,6333,'2',$_REQUEST['iddoc']);?></div><br/>Buscar: <input  tabindex='1'  type="text" id="stext_secretaria" width="200px" size="25">
 									<a href="javascript:void(0)" onclick="tree_secretaria.findItem((document.getElementById('stext_secretaria').value),1)">
@@ -38,7 +28,9 @@
 								var browserType;
 								if (document.layers) {browserType = "nn4"}
 								if (document.all) {browserType = "ie"}
-								if (window.navigator.userAgent.toLowerCase().match("gecko")) {browserType= "gecko"}
+								if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+									browserType= "gecko"
+								}
 								tree_secretaria=new dhtmlXTreeObject("treeboxbox_secretaria","100%","100%",0);
 								tree_secretaria.setImagePath("../../imgs/");
 								tree_secretaria.enableIEImageFix(true);tree_secretaria.enableCheckBoxes(1);
@@ -83,6 +75,7 @@
 									}
 									document.poppedLayer.style.display = "none";
 								}
+
 								function cargando_secretaria() {
 									if (browserType == "gecko" ) {
 										document.poppedLayer = eval('document.getElementById("esperando_secretaria")');
@@ -117,7 +110,9 @@
 								var browserType;
 								if (document.layers) {browserType = "nn4"}
 								if (document.all) {browserType = "ie"}
-								if (window.navigator.userAgent.toLowerCase().match("gecko")) {browserType= "gecko"}
+								if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+									browserType= "gecko"
+								}
 								tree_serie_doc_control=new dhtmlXTreeObject("treeboxbox_serie_doc_control","100%","100%",0);
 								tree_serie_doc_control.setImagePath("../../imgs/");
 								tree_serie_doc_control.enableIEImageFix(true);tree_serie_doc_control.enableCheckBoxes(1);
@@ -144,6 +139,7 @@
 									}
 									document.poppedLayer.style.display = "none";
 								}
+
 								function cargando_serie_doc_control() {
 									if (browserType == "gecko" ) {
 										document.poppedLayer = eval('document.getElementById("esperando_serie_doc_control")');
@@ -181,7 +177,9 @@
 								var browserType;
 								if (document.layers) {browserType = "nn4"}
 								if (document.all) {browserType = "ie"}
-								if (window.navigator.userAgent.toLowerCase().match("gecko")) {browserType= "gecko"}
+								if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+									browserType= "gecko"
+								}
 								tree_documento_calidad=new dhtmlXTreeObject("treeboxbox_documento_calidad","100%","100%",0);
 								tree_documento_calidad.setImagePath("../../imgs/");
 								tree_documento_calidad.enableIEImageFix(true);tree_documento_calidad.enableCheckBoxes(1);
@@ -208,6 +206,7 @@
 									}
 									document.poppedLayer.style.display = "none";
 								}
+
 								function cargando_documento_calidad() {
 									if (browserType == "gecko" ) {
 										document.poppedLayer = eval('document.getElementById("esperando_documento_calidad")');
@@ -226,11 +225,9 @@
 									}
 </script></td></tr><tr id="tr_justificacion">
                      <td class="encabezado" width="20%" title="">JUSTIFICACION*</td>
-                     <td class="celda_transparente"><textarea  tabindex='5'  name="justificacion" id="justificacion" cols="53" rows="3" class="tiny_basico required"><?php echo(mostrar_valor_campo('justificacion',498,$_REQUEST['iddoc'])); ?></textarea></td>
-                    </tr><tr id="tr_propuesta">
+                     <td class="celda_transparente"><textarea  tabindex='5'  name="justificacion" id="justificacion" cols="53" rows="3" class="tiny_basico required"><?php echo(mostrar_valor_campo('justificacion',498,$_REQUEST['iddoc'])); ?></textarea></td></tr><tr id="tr_propuesta">
                      <td class="encabezado" width="20%" title="">PROPUESTA</td>
-                     <td class="celda_transparente"><textarea  tabindex='6'  name="propuesta" id="propuesta" cols="53" rows="3" class="tiny_basico"><?php echo(mostrar_valor_campo('propuesta',498,$_REQUEST['iddoc'])); ?></textarea></td>
-                    </tr><tr id="tr_anexo_formato">
+                     <td class="celda_transparente"><textarea  tabindex='6'  name="propuesta" id="propuesta" cols="53" rows="3" class="tiny_basico"><?php echo(mostrar_valor_campo('propuesta',498,$_REQUEST['iddoc'])); ?></textarea></td></tr><tr id="tr_anexo_formato">
                      <td class="encabezado" width="20%" title="">ANEXO FORMATO</td>
                      <td class="celda_transparente"><?php echo '<div class="textwrapper">
 			<a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=498&idcampo=6346" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
@@ -252,7 +249,9 @@
 								var browserType;
 								if (document.layers) {browserType = "nn4"}
 								if (document.all) {browserType = "ie"}
-								if (window.navigator.userAgent.toLowerCase().match("gecko")) {browserType= "gecko"}
+								if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+									browserType= "gecko"
+								}
 								tree_revisado=new dhtmlXTreeObject("treeboxbox_revisado","100%","100%",0);
 								tree_revisado.setImagePath("../../imgs/");
 								tree_revisado.enableIEImageFix(true);tree_revisado.enableCheckBoxes(1);
@@ -279,6 +278,7 @@
 									}
 									document.poppedLayer.style.display = "none";
 								}
+
 								function cargando_revisado() {
 									if (browserType == "gecko" ) {
 										document.poppedLayer = eval('document.getElementById("esperando_revisado")');
@@ -311,7 +311,9 @@
 								var browserType;
 								if (document.layers) {browserType = "nn4"}
 								if (document.all) {browserType = "ie"}
-								if (window.navigator.userAgent.toLowerCase().match("gecko")) {browserType= "gecko"}
+								if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+									browserType= "gecko"
+								}
 								tree_aprobado=new dhtmlXTreeObject("treeboxbox_aprobado","100%","100%",0);
 								tree_aprobado.setImagePath("../../imgs/");
 								tree_aprobado.enableIEImageFix(true);tree_aprobado.enableCheckBoxes(1);
@@ -338,6 +340,7 @@
 									}
 									document.poppedLayer.style.display = "none";
 								}
+
 								function cargando_aprobado() {
 									if (browserType == "gecko" ) {
 										document.poppedLayer = eval('document.getElementById("esperando_aprobado")');
@@ -354,7 +357,7 @@
 											tree_aprobado.setCheck(vector2[m],true);
 										}
 									}
-</script></td></tr><input type="hidden" name="idft_control_documentos" value="<?php echo(mostrar_valor_campo('idft_control_documentos',498,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',498,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',498,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',498,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="fecha_confirmacion" value="<?php echo(mostrar_valor_campo('fecha_confirmacion',498,$_REQUEST['iddoc'])); ?>"><?php add_edit_control_documentos(498,NULL,$_REQUEST['iddoc']);?><input type="hidden" name="campo_descripcion" value="<?php echo('6332'); ?>"><input type="hidden" name="formato" value="498"><tr><td colspan='2'><?php submit_formato(498,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("498-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
+</script></td></tr><input type="hidden" name="idft_control_documentos" value="<?php echo(mostrar_valor_campo('idft_control_documentos',498,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',498,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',498,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',498,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="fecha_confirmacion" value="<?php echo(mostrar_valor_campo('fecha_confirmacion',498,$_REQUEST['iddoc'])); ?>"><?php add_edit_control_documentos(498,NULL,$_REQUEST['iddoc']);?><input type="hidden" name="campo_descripcion" value="<?php echo('6332'); ?>"><input type="hidden" name="formato" value="498"><tr><td colspan='2'><?php submit_formato(498,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
                 var upload_url = '../../dropzone/cargar_archivos_formato.php';
                 var mensaje = 'Arrastre aquí los archivos';
                 Dropzone.autoDiscover = false;
@@ -436,4 +439,4 @@
                         $(this).addClass('dropzone');
                     });
                 });</script>
-		</html><?php include_once("../librerias/footer_plantilla.php");?>
+		</html><?php include_once("../../" . FORMATOS_SAIA . "librerias/footer_plantilla.php");?>
