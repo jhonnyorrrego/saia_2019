@@ -54,11 +54,21 @@ $editar = @$_REQUEST["editar"];
 if ($adicionar == "" && $sAction != "A") {
 	if (@$_REQUEST["pantalla"] == "tiny") {
 		include_once ("generar_formato.php");
-		generar_tabla($x_formato);
-		crear_formato_ae($x_formato, "adicionar");
-		crear_formato_ae($x_formato, "editar");
-		crear_formato_mostrar($x_formato);
-		crear_formato_buscar($x_formato, "buscar");
+		$generar=new GenerarFormato($x_formato,"tabla");
+		$generar -> ejecutar_accion();
+		
+		$generar=new GenerarFormato($x_formato,"adicionar");
+		$generar -> ejecutar_accion();
+		
+		$generar=new GenerarFormato($x_formato,"editar");
+		$generar -> ejecutar_accion();
+		
+		$generar=new GenerarFormato($x_formato,"mostrar");
+		$generar -> ejecutar_accion();
+		
+		$generar=new GenerarFormato($x_formato,"buscar");
+		$generar -> ejecutar_accion();
+
 	}
 	redirecciona("formatoview.php?key=" . $x_formato);
 }
