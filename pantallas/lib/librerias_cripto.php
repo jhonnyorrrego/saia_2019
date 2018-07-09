@@ -114,13 +114,21 @@ function desencriptar_sqli($campo_info){
     if (strpos("script", $_SERVER["PHP_SELF"]) !== false) {
         die("Se encuentra una posible infecci&oacute;n en su c&oacute;digo, a trav&eacute;s DOM-based cross site scripting, por favor contacte a su administrador");
     }
-	
+    
+    if(TESTING) {
+        unset($_REQUEST["token_csrf"]);
+        unset($_SESSION["token_csrf"]);
+    }
+
     if (array_key_exists($campo_info, $_POST)) {
         $data = json_decode(@$_POST[$campo_info], true);
         unset($_REQUEST);
         unset($_POST);
-        $cant = count($data);
-        if ($_SESSION["token_csrf"] !== $data["token_csrf"]) {
+        if(TESTING) {
+            unset($data["token_csrf"]);
+        }
+            $cant = count($data);
+        if (!TESTING && $_SESSION["token_csrf"] !== $data["token_csrf"]) {
             alerta("Error de validacion del formulario por favor intente de nuevo (Posible Error: CSRF) ");
             unset($_REQUEST["token_csrf"]);
             unset($_SESSION["token_csrf"]);
@@ -130,12 +138,9 @@ function desencriptar_sqli($campo_info){
         for ($i = 0; $i < $cant; $i++) {
             if (@$data[$i]["es_arreglo"]) {
                 $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = explode(",", decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO));
-            } else {
-                $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
-            }
-            if (@$data[$i]["es_arreglo"]) {
                 $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = explode(",", decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO));
             } else {
+                $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
                 $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
             }
         }
