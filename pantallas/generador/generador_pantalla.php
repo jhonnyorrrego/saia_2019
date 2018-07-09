@@ -21,11 +21,10 @@ if($_REQUEST["idformato"]){
 <head>
 <title>Generador Pantallas SAIA</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="<?php echo $ruta_db_superior;?>css/bootstrap/2.3.2/css/bootstrap-responsive.css" rel="stylesheet">
 <?php
-echo (estilo_bootstrap("2.3"));
-echo (librerias_jquery("1.8"));
-// echo(librerias_html5());
+echo (estilo_bootstrap());
+echo (librerias_jquery("1.8.3"));
+echo(librerias_html5());
 
 $es_movil = ($_SESSION["tipo_dispositivo"]) == "movil";
 
@@ -78,7 +77,7 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 						<div class="tabbable">
 							<ul class="nav nav-tabs" id="tabs_formulario">
 								<li class="active">
-									<a href="#datos_formulario-tab" data-toggle="tab">1-Datos Formulario</a>
+									<a href="#datos_formulario-tab" data-toggle="tab">1-Datos</a>
 								</li>
 								<li id="generar_formulario_pantalla">
 									<a href="#formulario-tab" data-toggle="tab">2-Formularios</a>
@@ -180,7 +179,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 
                   <form name="formulario_editor_encabezado" id="formulario_editor_encabezado" action="">
                   <input type="hidden" name="idencabezado" id="idencabezado" value="<?php echo $idencabezado;?>"></input>
-                  <input type="hidden" name="accion_encabezado" id="accion_encabezado" value="1"></input>
+                  <input type="hidden" name="accion_encab" id="accion_encabezado" value="1"></input>
                   <div id="div_etiqueta_encabezado">
                     <label for="etiqueta_encabezado">Etiqueta:
                   		<input type="text" id="etiqueta_encabezado" name="etiqueta_encabezado" value="<?php echo $etiqueta_encabezado;?>"></input>

@@ -349,6 +349,7 @@ function librerias_kaiten() {
 	$texto .= '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">';
 	$texto .= '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />';
 	$texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/kaiten.min.css" />';
+	$texto .= '<script type="text/javascript" src="' . $raiz_saia . 'pantallas/anexos/js/jquery.ui.widget.js" ></script>';
 	$texto .= '<script type="text/javascript" src="' . $raiz_saia . 'js/kaiten.js"></script>';
 	$texto .= '<script type="text/javascript" src="' . $raiz_saia . 'js/jquery.ba-resize.min.js"></script>';
 	$texto .= index_estilos('temas_kaiten');

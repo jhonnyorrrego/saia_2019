@@ -32,10 +32,14 @@ if($predeterminado){
 	$datos=busca_filtro_tabla("","ejecutor A, datos_ejecutor B","A.idejecutor=B.ejecutor_idejecutor AND B.iddatos_ejecutor in(".$predeterminado.")","",$conn);
 	
 	$guardados=array();
-	for($i=0;$i<$datos["numcampos"];$i++){
-		$guardados[]='<div id="remitente_'.$datos[$i]["iddatos_ejecutor"].'"><br><b>Nombre:</b> '.$datos[$i]["nombre"].' <br><b>Identificacion:</b> '.$datos[$i]["identificacion"].' <br><b>Empresa:</b>'.$datos[$i]["empresa"].' <br><b>Direccion:</b> '.$datos[$i]["direccion"].'<br><b>Tel&eacute;fono:</b>'.$datos[$i]["telefono"].' <br><b>Correo electr&oacute;nico:</b>'.$datos[$i]["email"].' <br><b>T&iacute;tulo:</b>'.$datos[$i]["titulo"].' <br><b>Ciudad:</b>'.$datos[$i]["ciudad"].' <br></div>';
+	if($datos["numcampos"]){
+		for($i=0;$i<$datos["numcampos"];$i++){
+			$guardados[]='<div id="remitente_'.$datos[$i]["iddatos_ejecutor"].'"><br><b>Nombre:</b> '.$datos[$i]["nombre"].' <br><b>Identificacion:</b> '.$datos[$i]["identificacion"].' <br><b>Empresa:</b>'.$datos[$i]["empresa"].' <br><b>Direccion:</b> '.$datos[$i]["direccion"].'<br><b>Tel&eacute;fono:</b>'.$datos[$i]["telefono"].' <br><b>Correo electr&oacute;nico:</b>'.$datos[$i]["email"].' <br><b>T&iacute;tulo:</b>'.$datos[$i]["titulo"].' <br><b>Ciudad:</b>'.$datos[$i]["ciudad"].' <br></div>';
+		}
 	}
-	
+	else{
+		$guardados[]='<div id="remitente_'.$datos[$i]["iddatos_ejecutor"].'">No existen registros para mostrar</div>';
+	}
 	$texto='<div id="remitentes_'.$campo["nombre"].'">'.implode("",$guardados).'</div>';
 }
 else{

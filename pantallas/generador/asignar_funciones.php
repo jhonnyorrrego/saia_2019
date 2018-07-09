@@ -156,7 +156,7 @@ echo ($texto . "</div>");
 ?>
 
 <script type="text/javascript">
-var idpantalla = <?php echo $idpantalla;?>;
+var idpantalla = <?php echo intval($idpantalla);?>;
 
 (function ($) {
     $.fn.serializeFormJSON = function () {
