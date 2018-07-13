@@ -1,20 +1,22 @@
 <?php
-$max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$max_salida = 6;
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
-    if (is_file($ruta . "db.php")) {
-        $ruta_db_superior = $ruta; //Preserva la ruta superior encontrada
-    }
-    $ruta.="../";
-    $max_salida--;
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
+	}
+	$ruta .= "../";
+	$max_salida--;
 }
-include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."pantallas/expediente/librerias.php");
-include_once("pantallas/lib/librerias_cripto.php");
-$validar_enteros=array("x_idserie");
+include_once ($ruta_db_superior . "db.php");
+include ("header.php");
+include ("phpmkrfn.php");
+include_once ($ruta_db_superior . "pantallas/expediente/librerias.php");
+
+include_once ("pantallas/lib/librerias_cripto.php");
+$validar_enteros = array("x_idserie");
 desencriptar_sqli('form_info');
 
-// Initialize common variables
 $x_idserie = Null;
 $x_nombre = Null;
 $x_cod_padre = Null;
@@ -31,34 +33,17 @@ $x_copia = Null;
 $x_categoria = Null;
 $x_tipo = Null;
 $x_tipo_expediente = Null;
-//$x_formato =  Null;
 
-?>
-<?php include ("phpmkrfn.php") ;
-
-include ("librerias_saia.php");		
-echo(librerias_jquery('1.7')); 
-echo(librerias_notificaciones());
-?>
-<?php
-
-// Get action
 $sAction = @$_POST["a_add"];
 if (($sAction == "") || ((is_null($sAction)))) {
 	$sKey = @$_GET["key"];
 	$sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
 	if ($sKey <> "") {
-		$sAction = "C"; // Copy record
+		$sAction = "C";
+	} else {
+		$sAction = "I";
 	}
-	else
-	{
-		$sAction = "I"; // Display blank record
-	}
-}
-else
-{
-
-	// Get fields from form
+} else {
 	$x_idserie = @$_POST["x_idserie"];
 	$x_nombre = @$_POST["x_nombre"];
 	$x_cod_padre = @$_POST["x_cod_padre"];
@@ -72,129 +57,58 @@ else
 	$x_procedimiento = @$_POST["x_procedimiento"];
 	$x_digitalizacion = @$_POST["x_digitalizacion"];
 	$x_copia = @$_POST["x_copia"];
-  $x_categoria = @$_POST["x_categoria"];
+	$x_categoria = @$_POST["x_categoria"];
 	$x_tipo = @$_POST["x_tipo"];
 	$x_tipo_expediente = @$_POST["x_tipo_expediente"];
-  //$x_formato= @$_POST["x_formato"];
 }
-switch ($sAction)
-{
-	case "C": // Get a record to display
-		if (!LoadData($sKey,$conn)) { // Load Record based on key
-			$_SESSION["ewmsg"] = "Registro " . $sKey." No encontrado";		
+switch ($sAction) {
+	case "C" :
+		if (!LoadData($sKey, $conn)) {// Load Record based on key
+			$_SESSION["ewmsg"] = "Registro " . $sKey . " No encontrado";
 			ob_end_clean();
 			echo "<script>parent.location='serielist.php';</script>";
 			exit();
 		}
 		break;
-	case "A": // Add
-		$ok=AddData($conn);
-        if($ok){ // Add New Record
-        
-        	    ?>
-              <script>
-              notificacion_saia('Serie adicionada con exito','success','',6000);
-              </script>
-              <?php
-                  //abrir_url("arbolserie.php","arbol"); --Se modifica de acuerdo a ticket 18702
-              $parametro_dependencia_serie='';
-              if(@$_REQUEST['dependencia_serie']){
-                $parametro_dependencia_serie="&dependencia_serie=".$_REQUEST['dependencia_serie'];
-              }
-              if(@$_REQUEST['x_cod_padre']){
-                  $ok=$_REQUEST['x_cod_padre'];
-              }
-              
-          //abrir_url("serieview.php?key=".$ok.$parametro_dependencia_serie,"_self"); --Se modifica de acuerdo a ticket 18702
-          $url=array();
-          if(@$_REQUEST['from_dependencia_request']){
-            $url[]="from_dependencia=".$_REQUEST['from_dependencia_request'];
-          }
-          if(@$_REQUEST['key_padre_request']){
-            $url[]="key_padre=".$_REQUEST['key_padre_request'];
-          }
-          if(@$_REQUEST['dependencia_serie_request']){
-            $url[]="dependencia_serie=".$_REQUEST['dependencia_serie_request'];
-          }
-          if(@$_REQUEST['tvd_request']){
-            $url[]="tvd=".$_REQUEST['tvd_request'];
-          }
-          abrir_url("serieadd.php?".implode("&",$url),"_self");
-          
-          exit();
-				}
-				break;
-}
-?>
-<?php include ("header.php") ?>
-<script type="text/javascript" src="ew.js"></script>
-		<script type="text/javascript" src="js/dhtmlXCommon.js"></script>		
-	<script type="text/javascript" src="js/dhtmlXTree.js"></script>
-<script type="text/javascript">
-<!--
-EW_dateSep = "/"; // set date separator	
+	case "A" :
+		$ok = AddData($conn);
+		if ($ok) {
+			notificaciones('Serie adicionada con exito', 'success', 6000);
+			$parametro_dependencia_serie = '';
+			if (@$_REQUEST['dependencia_serie']) {
+				$parametro_dependencia_serie = "&dependencia_serie=" . $_REQUEST['dependencia_serie'];
+			}
+			if (@$_REQUEST['x_cod_padre']) {
+				$ok = $_REQUEST['x_cod_padre'];
+			}
 
-//-->
-</script>
-<script type="text/javascript">
-<!--
-function EW_checkMyForm(EW_this) {
-if (EW_this.x_nombre && !EW_hasValue(EW_this.x_nombre, "TEXT" )) {
-	//if (!EW_onError(EW_this, EW_this.x_nombre, "TEXT", "Por favor ingrese el campo requerido - Nombre"))
-	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor ingrese el campo requerido - Nombre','warning','',4000);
-		return false;
-}
-if (EW_this.x_tipo && !EW_hasValue(EW_this.x_tipo, "RADIO" )) {
-	//if (!EW_onError(EW_this, EW_this.x_tipo, "RADIO", "Por favor llenar campo requerido - tipo"))
-	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor llenar campo requerido - tipo','warning','',4000);
-		return false; 
-}
-if (EW_this.x_cod_padre && !EW_checkinteger(EW_this.x_cod_padre.value)) {
-	//if (!EW_onError(EW_this, EW_this.x_cod_padre, "TEXT", "Por favor ingrese el campo requerido - cod padre"))
-	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor ingrese el campo requerido - cod padre','warning','',4000);
-		return false; 
+			$url = array();
+			if (@$_REQUEST['from_dependencia_request']) {
+				$url[] = "from_dependencia=" . $_REQUEST['from_dependencia_request'];
+			}
+			if (@$_REQUEST['key_padre_request']) {
+				$url[] = "key_padre=" . $_REQUEST['key_padre_request'];
+			}
+			if (@$_REQUEST['dependencia_serie_request']) {
+				$url[] = "dependencia_serie=" . $_REQUEST['dependencia_serie_request'];
+			}
+			if (@$_REQUEST['tvd_request']) {
+				$url[] = "tvd=" . $_REQUEST['tvd_request'];
+			}
+			abrir_url("serieadd.php?" . implode("&", $url), "_self");
+			exit();
+		}
+		break;
 }
 
-if (EW_this.x_dias_entrega && !EW_hasValue(EW_this.x_dias_entrega, "TEXT" )) {
-	//if (!EW_onError(EW_this, EW_this.x_dias_entrega, "TEXT", "Por favor ingrese el campo requerido - D&iacute;as entrega"))
-	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor ingrese el campo requerido - D&iacute;as entrega','warning','',4000);
-		return false;
-}
-if (EW_this.x_dias_entrega && !EW_checkinteger(EW_this.x_dias_entrega.value)) {
-	//if (!EW_onError(EW_this, EW_this.x_dias_entrega, "TEXT", "Por favor ingrese el campo requerido - D&iacute;as entrega"))
-	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor ingrese el campo requerido - D&iacute;as entrega','warning','',4000);
-		return false; 
-}
-if (EW_this.x_retencion_gestion && !EW_checkinteger(EW_this.x_retencion_gestion.value)) {
-	//if (!EW_onError(EW_this, EW_this.x_retencion_gestion, "TEXT", "Por favor ingrese el campo requerido - Retenci&oacute;n gesti&oacute;n"))
-	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor ingrese el campo requerido - Retenci&oacute;n gesti&oacute;n','warning','',4000);
-		return false; 
-}
-if (EW_this.x_retencion_central && !EW_checkinteger(EW_this.x_retencion_central.value)) {
-	//if (!EW_onError(EW_this, EW_this.x_retencion_central, "TEXT", "Por favor ingrese el campo requerido - Retenci&oacute;n central"))
-	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor ingrese el campo requerido - Retenci&oacute;n central','warning','',4000);
-		return false; 
-}
-if (EW_this.x_seleccion && !EW_checkinteger(EW_this.x_seleccion.value)) {
-	//if (!EW_onError(EW_this, EW_this.x_seleccion, "TEXT", "Por favor ingrese el campo requerido - Selecci&oacute;n"))
-	notificacion_saia('<b>ATENCI&Oacute;N</b><br>Por favor ingrese el campo requerido - Selecci&oacute;n','warning','',4000);
-		return false; 
-}
-return true;
-}
 
-//-->
-</script>
-
-
-
-<?php 
-
+include ("librerias_saia.php");
+echo librerias_jquery("1.8");
+echo librerias_validar_formulario("11");
+echo librerias_arboles();
+ 
 if(@$_REQUEST['key_padre']){
-	
 	$serie_padre=busca_filtro_tabla('','serie','idserie='.$_REQUEST['key_padre'],'',$conn);
-	
-	
 	$x_idserie = @$serie_padre[0]["idserie"];
 	$x_nombre_padre = @$serie_padre[0]["nombre"];
 	$x_cod_padre = @$serie_padre[0]["cod_padre"];
@@ -208,7 +122,7 @@ if(@$_REQUEST['key_padre']){
 	$x_procedimiento = @$serie_padre[0]["procedimiento"];
 	$x_digitalizacion = @$serie_padre[0]["digitalizacion"];
 	$x_copia = @$serie_padre[0]["copia"];
-    $x_categoria = @$serie_padre[0]["categoria"];
+  $x_categoria = @$serie_padre[0]["categoria"];
 	$x_tipo = @$serie_padre[0]["tipo"];
 	$x_tipo_expediente = @$serie_padre[0]["tipo_expediente"];
 ?>
@@ -229,16 +143,14 @@ $(document).ready(function(){
 			break;				
 	}
 	$('#x_tipo'+check).attr('checked',true);
-	
 });
 </script>
 <?php
 }
 ?>
 
-
-<p><span class="internos">&nbsp;&nbsp;ADICIONAR SERIES DOCUMENTALES<br><br><!--a href="serielistdep.php">Regresar al listado</a--></span></p>
-<form name="serieadd" id="serieadd" action="serieadd.php" method="post" onSubmit="return EW_checkMyForm(this);">
+<p><span class="internos">&nbsp;&nbsp;ADICIONAR SERIES DOCUMENTALES<br><br>
+<form name="serieadd" id="serieadd" action="serieadd.php" method="post">
 
 <?php if(@$_REQUEST['from_dependencia']){ ?>
   <input type="hidden" name="from_dependencia_request" value="<?php echo($_REQUEST['from_dependencia']); ?>">
@@ -263,8 +175,6 @@ $(document).ready(function(){
 		<td class="encabezado"  title="Categoria a la cual pertenece" >CATEGORIA
 		</td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-    <!--input type='radio' name='x_categoria' value='1' id='cat1'  >
-    <label for='cat1'>Comunicaciones oficiales</label-->
     <?php if(!@$_REQUEST['otras_categorias']){ $disabled=''; if(@$_REQUEST['key_padre'] && @$_REQUEST['dependencia_serie']){ $disabled='style="display:none;"'; } ?>	
     <input type='radio' name='x_categoria' value='2' id='cat2' checked <?php echo($disabled); ?> >
     <label for='cat2'>Produccion Documental</label>
@@ -412,30 +322,25 @@ $(document).ready(function(){
       tree2.enableCheckBoxes(1);
       tree2.enableRadioButtons(true);
       tree2.enableIEImageFix(true);
-      //tree2.setXMLAutoLoadingBehaviour("id");
-    //tree2.setOnClickHandler(onNodeSelect);
       tree2.setOnLoadingStart(cargando_serie);
       tree2.setOnLoadingEnd(fin_cargando_serie);
-      //tree2.loadXML("test_serie.php?tabla=serie&admin=1&sin_padre=1&categoria=2"+filtrar_arbol);
-      //tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=2"+filtrar_arbol); documental
-      //tree2.loadXML("test_serie.php?tabla=serie&admin=1&arbol_series=1&categoria=3");  3
       var filtrar_arbol='&filtrar_arbol=documental';
       
 		<?php 
 
 		if(@$_REQUEST['key_padre']){
 			?>
-        		    switch(parseInt('<?php echo($x_tipo); ?>')){
-        		        case 1:
-        		            $('#x_tipo1').attr('disabled','disabled');
-        		            filtrar_arbol='&filtrar_arbol=series';
-        		            break;
-        		        case 2:
-                            $('#x_tipo1').attr('disabled','disabled');
-        		            $('#x_tipo2').attr('disabled','disabled');
-        		            filtrar_arbol='&filtrar_arbol=documental';
-        		            break;
-        		    }		            
+		    switch(parseInt('<?php echo($x_tipo); ?>')){
+		     case 1:
+          $('#x_tipo1').attr('disabled','disabled');
+          filtrar_arbol='&filtrar_arbol=series';
+          break;
+        case 2:
+          $('#x_tipo1').attr('disabled','disabled');
+          $('#x_tipo2').attr('disabled','disabled');
+          filtrar_arbol='&filtrar_arbol=documental';
+         break;
+		    }		            
 			<?php
 			
 		}	
@@ -508,21 +413,21 @@ $(document).ready(function(){
 	</tr>
 	<?php }?>
 	<tr class="ocultar">
-		<td class="encabezado" title="Cantidad de d&iacute;as para dar tr&aacute;mite y respuesta al documento"><span class="phpmaker" style="color: #FFFFFF;">TIEMPO DE RESPUESTA (D&Iacute;AS)</span></td>
+		<td class="encabezado" title="Cantidad de d&iacute;as para dar tr&aacute;mite y respuesta al documento"><span class="phpmaker" style="color: #FFFFFF;">TIEMPO DE RESPUESTA (D&Iacute;AS) *</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <?php if (!(!is_null($x_dias_entrega)) || ($x_dias_entrega == "")) { $x_dias_entrega = 8;} // Set default value ?>
 <input type="text" name="x_dias_entrega" id="x_dias_entrega" size="30" value="<?php echo htmlspecialchars(@$x_dias_entrega) ?>">
 </span></td>
 	</tr>
 	<tr class="ocultar">
-		<td class="encabezado" title="Cantidad de a&ntilde;os que permanece la subserie en el archivo de gesti&oacute;n"><span class="phpmaker" style="color: #FFFFFF;">A&Ntilde;OS ARCHIVO GESTI&Oacute;N</span></td>
+		<td class="encabezado" title="Cantidad de a&ntilde;os que permanece la subserie en el archivo de gesti&oacute;n"><span class="phpmaker" style="color: #FFFFFF;">A&Ntilde;OS ARCHIVO GESTI&Oacute;N *</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <?php if (!(!is_null($x_retencion_gestion)) || ($x_retencion_gestion == "")) { $x_retencion_gestion = 3;} // Set default value ?>
 <input type="text" name="x_retencion_gestion" id="x_retencion_gestion" size="30" value="<?php echo htmlspecialchars(@$x_retencion_gestion) ?>">
 </span></td>
 	</tr>
 	<tr class="ocultar">
-		<td class="encabezado" title="Cantidad de a&ntilde;os que permanece la subserie en el archivo central"><span class="phpmaker" style="color: #FFFFFF;">A&Ntilde;OS ARCHIVO CENTRAL</span></td>
+		<td class="encabezado" title="Cantidad de a&ntilde;os que permanece la subserie en el archivo central"><span class="phpmaker" style="color: #FFFFFF;">A&Ntilde;OS ARCHIVO CENTRAL *</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <?php if (!(!is_null($x_retencion_central)) || ($x_retencion_central == "")) { $x_retencion_central = 5;} // Set default value ?>
 <input type="text" name="x_retencion_central" id="x_retencion_central" size="30" value="<?php echo htmlspecialchars(@$x_retencion_central) ?>">
@@ -540,7 +445,7 @@ $(document).ready(function(){
 </span></td>
 	</tr>
 	<tr class="ocultar">
-	<td class="encabezado" title="�El documento al pasarse al archivo central se le har&aacute; una selecci&oacute;n?"><span class="phpmaker" style="color: #FFFFFF;">SELECCI&Oacute;N</span></td>
+	<td class="encabezado" title="�El documento al pasarse al archivo central se le har&aacute; una selecci&oacute;n?"><span class="phpmaker" style="color: #FFFFFF;">SELECCI&Oacute;N *</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <input type="radio" id="x_seleccion1" name="x_seleccion"<?php if (@$x_seleccion == "1") { ?> checked<?php } ?> value="<?php echo htmlspecialchars("1"); ?>">
 <?php echo "SI"; ?>
@@ -584,23 +489,6 @@ $(document).ready(function(){
 <?php echo EditOptionSeparator(1); ?>
 </span></td>
 	</tr>
-
-	<!--tr class="ocultar">
-		<td class="encabezado"  title="Permite decidir si se crea un expediente o un agrupador seg&uacute;n se requiera"><span class="phpmaker" style="color: #FFFFFF;">CREACI&Oacute;N DE EXPEDIENTE &Oacute; AGRUPADOR</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker">
-    <input type="radio" id="tipo_expediente1" name="x_tipo_expediente" value="<?php echo htmlspecialchars("1"); ?>" <?php if (@$x_tipo_expediente == "1") { ?> checked<?php } ?> >
-<?php echo "Expediente"; ?>
-<?php echo EditOptionSeparator(0); ?>
-<input type="radio" id="tipo_expediente2" name="x_tipo_expediente"  value="<?php echo htmlspecialchars("2"); ?>" <?php if (@$x_tipo_expediente == "2") { ?> checked<?php } ?>>
-<?php echo "Agrupador"; ?>
-<?php echo EditOptionSeparator(1); ?>
-<input type="radio" id="tipo_expediente0" name="x_tipo_expediente"  value="<?php echo htmlspecialchars("0"); ?>" <?php if (@$x_tipo_expediente == "0") { ?> checked<?php } ?>>
-<?php echo "Ninguno"; ?>
-<?php echo EditOptionSeparator(2); ?>
-
-</span></td>
-	</tr -->	
-
 	
 
 </table>
@@ -608,43 +496,23 @@ $(document).ready(function(){
 <input type="submit" name="Action" value="Adicionar">
 <input type="hidden" id="tipo_expediente0" name="x_tipo_expediente"  value="0">
 </form>
-<?php include ("footer.php") ?>
+
 <?php
-
-//-------------------------------------------------------------------------------
-// Function LoadData
-// - Load Data based on Key Value sKey
-// - Variables setup: field variables
-
-function LoadData($sKey,$conn)
-{
+include ("footer.php");
+function LoadData($sKey, $conn) {
 	$sKeyWrk = "" . addslashes($sKey) . "";
 	$sSql = "SELECT * FROM serie A";
 	$sSql .= " WHERE A.idserie = " . $sKeyWrk;
-	$sGroupBy = "";
-	$sHaving = "";
-	$sOrderBy = "";
-	if ($sGroupBy <> "") {
-		$sSql .= " GROUP BY " . $sGroupBy;
-	}
-	if ($sHaving <> "") {
-		$sSql .= " HAVING " . $sHaving;
-	}
-	if ($sOrderBy <> "") {
-		$sSql .= " ORDER BY " . $sOrderBy;
-	}
-	$rs = phpmkr_query($sSql,$conn) or error("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
+
+	$rs = phpmkr_query($sSql, $conn) or error("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
 	if (phpmkr_num_rows($rs) == 0) {
 		$LoadData = false;
-	}else{
+	} else {
 		$LoadData = true;
 		$row = phpmkr_fetch_array($rs);
-
-		// Get the field contents
 		$GLOBALS["x_idserie"] = $row["idserie"];
 		$GLOBALS["x_nombre"] = $row["nombre"];
 		$GLOBALS["x_cod_padre"] = $row["cod_padre"];
-		//$GLOBALS["x_formato"] = $row["formato"];
 		$GLOBALS["x_dias_entrega"] = $row["dias_entrega"];
 		$GLOBALS["x_codigo"] = $row["codigo"];
 		$GLOBALS["x_retencion_gestion"] = $row["retencion_gestion"];
@@ -653,49 +521,24 @@ function LoadData($sKey,$conn)
 		$GLOBALS["x_seleccion"] = $row["seleccion"];
 		$GLOBALS["x_otro"] = $row["otro"];
 		$GLOBALS["x_procedimiento"] = $row["procedimiento"];
-		$GLOBALS["x_digitalizacion"] = $row["digitalizacion"];  
+		$GLOBALS["x_digitalizacion"] = $row["digitalizacion"];
 		$GLOBALS["x_tipo"] = $row["tipo"];
 		$GLOBALS["x_tipo_expediente"] = $row["tipo_expediente"];
-    //$GLOBALS["x_categoria"] = $row["categoria"];
 	}
 	phpmkr_free_result($rs);
 	return $LoadData;
 }
-?>
-<?php
 
-//-------------------------------------------------------------------------------
-// Function AddData
-// - Add Data
-// - Variables used: field variables
-
-function AddData($conn)
-{
-
-	// Add New Record
-	$sSql = "SELECT * FROM serie A";
-	$sGroupBy = "";
-	$sHaving = "";
-	$sOrderBy = "";
-	if ($sGroupBy <> "") {
-		$sSql .= " GROUP BY " . $sGroupBy;
-	}
-	if ($sHaving <> "") {
-		$sSql .= " HAVING " . $sHaving;
-	}
-	if ($sOrderBy <> "") {
-		$sSql .= " ORDER BY " . $sOrderBy;
-	}
-
+function AddData($conn) {
 	// Field nombre
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_nombre"]) : $GLOBALS["x_nombre"]; 
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_nombre"]) : $GLOBALS["x_nombre"];
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["nombre"] = $theValue;
 
 	// Field cod_padre
 	$theValue = ($GLOBALS["x_cod_padre"] != "") ? intval($GLOBALS["x_cod_padre"]) : "NULL";
 	$fieldList["cod_padre"] = $theValue;
-	
+
 	// Field formato
 	// Field conservacion
 
@@ -704,7 +547,7 @@ function AddData($conn)
 	$fieldList["dias_entrega"] = $theValue;
 
 	// Field codigo
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_codigo"]) : $GLOBALS["x_codigo"]; 
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_codigo"]) : $GLOBALS["x_codigo"];
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["codigo"] = $theValue;
 
@@ -717,7 +560,7 @@ function AddData($conn)
 	$fieldList["retencion_central"] = $theValue;
 
 	// Field conservacion
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_conservacion"]) : $GLOBALS["x_conservacion"]; 
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_conservacion"]) : $GLOBALS["x_conservacion"];
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["conservacion"] = $theValue;
 
@@ -726,33 +569,33 @@ function AddData($conn)
 	$fieldList["seleccion"] = $theValue;
 
 	// Field otro
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_otro"]) : $GLOBALS["x_otro"]; 
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_otro"]) : $GLOBALS["x_otro"];
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["otro"] = $theValue;
 
 	// Field procedimiento
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_procedimiento"]) : $GLOBALS["x_procedimiento"]; 
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_procedimiento"]) : $GLOBALS["x_procedimiento"];
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 	$fieldList["procedimiento"] = $theValue;
 
 	// Field digitalizacion
 	$theValue = ($GLOBALS["x_digitalizacion"] != "") ? intval($GLOBALS["x_digitalizacion"]) : "NULL";
 	$fieldList["digitalizacion"] = $theValue;
-	
+
 	// Field digitalizacion
 	$theValue = ($GLOBALS["x_copia"] != "") ? intval($GLOBALS["x_copia"]) : "NULL";
 	$fieldList["copia"] = $theValue;
-  $fieldList["categoria"] = $GLOBALS["x_categoria"];
-	
+	$fieldList["categoria"] = $GLOBALS["x_categoria"];
+
 	// tipo
-	$fieldList["tipo"]="'".$GLOBALS["x_tipo"]."'";
-	
+	$fieldList["tipo"] = "'" . $GLOBALS["x_tipo"] . "'";
+
 	//tipo_expediente
-	$fieldList["tipo_expediente"]="'".$GLOBALS["x_tipo_expediente"]."'";
-	$tipo_expediente=$GLOBALS["x_tipo_expediente"];
-	
-	if(@$_REQUEST['tvd']){
-		$fieldList["tvd"]=1;
+	$fieldList["tipo_expediente"] = "'" . $GLOBALS["x_tipo_expediente"] . "'";
+	$tipo_expediente = $GLOBALS["x_tipo_expediente"];
+
+	if (@$_REQUEST['tvd']) {
+		$fieldList["tvd"] = 1;
 	}
 	// insert into database
 	$strsql = "INSERT INTO serie (";
@@ -761,13 +604,13 @@ function AddData($conn)
 	$strsql .= implode(",", array_values($fieldList));
 	$strsql .= ")";
 	phpmkr_query($strsql, $conn);
-	$id=phpmkr_insert_id();
-	
-	if($id && @$_REQUEST['dependencia_serie']){
-		$sql_es = "INSERT INTO entidad_serie(entidad_identidad, serie_idserie, llave_entidad, estado) VALUES (2,".$id.",".$_REQUEST['dependencia_serie'].",'1')";
+	$id = phpmkr_insert_id();
+
+	if ($id && @$_REQUEST['dependencia_serie']) {
+		$sql_es = "INSERT INTO entidad_serie(entidad_identidad, serie_idserie, llave_entidad, estado) VALUES (2," . $id . "," . $_REQUEST['dependencia_serie'] . ",'1')";
 		phpmkr_query($sql_es);
 	}
-	
+
   if($id && @$_REQUEST['idnodopadre_request']){
     ?>
     <script>
@@ -775,31 +618,15 @@ function AddData($conn)
     </script>
     <?php
   }
-	
-	/*
-	$insertar_serie=busca_filtro_tabla("","serie","idserie=".$id,"",$conn);
-	if($insertar_serie[0]['tipo']==1){
-				$actualizar_orden="UPDATE serie SET orden=".($insertar_serie[0]['idserie']*100000)." WHERE idserie=".$insertar_serie[0]['idserie'];
-			}
-			elseif($datos[$i]['tipo']==2){
-				$padre=busca_filtro_tabla("","serie","where idserie=".$insertar_serie[0]['cod_padre'],"",$conn);
-				
-				$actualizar_orden="UPDATE serie SET orden=".($padre[0]['orden']+($insertar_serie[0]['idserie']*1000))." WHERE idserie=".$insertar_serie[0]['idserie'];
-			}else{
-			    $padre=busca_filtro_tabla("","serie","where idserie=".$insertar_serie[0]['cod_padre'],"",$conn);
-				
-				$actualizar_orden="UPDATE serie SET orden=".($padre[0]['orden']+($insertar_serie[0]['idserie']*100))." WHERE idserie=".$insertar_serie[0]['idserie'];
-			}
-	phpmkr_query($actualizar_orden);
-	*/
-	
-	if(intval($tipo_expediente)!=0){
+	if (intval($tipo_expediente) != 0) {
 		insertar_expediente_automatico($id);
-	}	
+	}
 	return $id;
 }
-encriptar_sqli("serieadd",1);
+
+encriptar_sqli("serieadd", 1,"form_info","",false,false);
 ?>
+
 <script>
 $(document).ready(function(){
 	<?php if(!@$_REQUEST['dependencia_serie']){ ?>
@@ -808,9 +635,30 @@ $(document).ready(function(){
 	
 	<?php if(@$_REQUEST['otras_categorias']){ ?>
 		setTimeout(function(){ $("#cat3").click(); }, 500);
-			
 	<?php } ?>
 	
+	$("#serieadd").validate({
+		rules : {
+			x_nombre : {
+				required : true
+			},
+			x_tipo : {
+				required : true
+			},
+			x_dias_entrega : {
+				required : true
+			},
+			x_retencion_gestion : {
+				required : true
+			},
+			x_retencion_central : {
+				required : true
+			},
+			x_seleccion : {
+				required : true
+			}
+		}
+	});
 });
 function cargar_datos_padre(){
 		<?php 
@@ -818,7 +666,6 @@ function cargar_datos_padre(){
 			echo("$('#nombre_padre_muestra').html('');");
 		}	
 		?>		
-	
 	$.ajax({ 
 		type:"POST",
 		dataType:"json",
