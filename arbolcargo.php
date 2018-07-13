@@ -6,7 +6,7 @@
 	<script type="text/javascript" src="js/dhtmlXTree.js"></script>
 </head>
 <body>
-<span style="font-family: Verdana; font-size: 9px;">CARGOS:<br /></span> 
+<span style="font-family: Verdana; font-size: 9px;">CARGOS:<br /></span>
 <span style="font-family: Verdana; font-size: 9px;"><a href='cargoadd.php' target='cargolist'>Adicionar&nbsp;</a><br></span>
 <div id="esperando_serie"><img src="imagenes/cargando.gif"></div>
     <span style="font-family: Verdana; font-size: 9px;">
@@ -41,7 +41,7 @@
 			function onNodeSelect(nodeId)
       {
         parent.cargolist.location="cargoview.php?key="+nodeId;
-      }   
+      }
       function fin_cargando_serie() {
         if (browserType == "gecko" )
            document.poppedLayer =
@@ -67,8 +67,8 @@
                eval('document.layers["esperando_serie"]');
         document.poppedLayer.style.display = "";
       }
-  document.top.ap_showWaitMessage('waitDiv', 0);       
-	--> 		
+  //document.top.ap_showWaitMessage('waitDiv', 0);
+	-->
 	</script>
 	</body>
 </html>
