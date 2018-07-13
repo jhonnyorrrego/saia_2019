@@ -6,6 +6,8 @@ roundcubemail/temp/**
 roundcubemail/logs/**
 errores.txt
 .project
+.vscode
+.buildpath
 .settings/
 prueba_*
 define.php
