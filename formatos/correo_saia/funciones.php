@@ -95,7 +95,7 @@ function guardar_anexos($idformato, $iddoc){
         $resultado = $almacenamiento -> copiar_contenido_externo($ruta_real, $dir_anexos . $nombre_temporal);
   
         if($resultado) {
-          unlink(ruta_real);
+          unlink($ruta_real);
         }
 		//rename($ruta_db_superior.$ruta_real, $ruta_db_superior.$dir_anexos.$nombre_temporal);
       
