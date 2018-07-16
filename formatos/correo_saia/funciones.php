@@ -41,8 +41,10 @@ function recibir_datos($idformato, $iddoc){
   if($anexos){
   	$cadena_anexos='<tr><td class="encabezado">Anexos</td><td>';
   	$cant_anexo=explode(",",$anexos);
-  	for ($i=0; $i <count($cant_anexo) ; $i++) { 
-  	      $nombre_anexo_temporal=array_pop(explode("/",$cant_anexo[$i]));
+  	$cant=count($cant_anexo);
+  	for ($i=0; $i <$cant ; $i++) { 
+  		$dato=explode("/",$cant_anexo[$i]);
+  	      $nombre_anexo_temporal=array_pop($dato);
   	      $nombre_real_anexo=explode('_|_',$nombre_anexo_temporal);
 		  $cadena_anexos.="<li>".$nombre_real_anexo[1]."</li>";
 	  }
@@ -78,31 +80,33 @@ function guardar_anexos($idformato, $iddoc){
     $datos=busca_filtro_tabla('','ft_correo_saia','documento_iddocumento='.$iddoc,'',$conn);
     $vector=explode(',',$datos[0]['anexos']);
 	
-    for($i=0;$i<count($vector);$i++){
-        $dir_anexos=selecciona_ruta_anexos("",$iddoc,'archivo');
+    $almacenamiento = new SaiaStorage("archivos");
+    for($i=0; $i<count($vector); $i++) {
+      $dir_anexos=selecciona_ruta_anexos2($iddoc, "archivos");
         
-        $ruta_real=array('');
-        $ruta_real[1]=$vector[$i];
+        $ruta_real=$vector[$i];
 
-        $archivo_actual_nombre_temporal = basename($ruta_db_superior.$ruta_real[1]);    
-        
-        $archivo_actual_vector =explode('_|_',$archivo_actual_nombre_temporal);
-        $archivo_actual=$archivo_actual_vector[1];
-        $vec_ext=explode('.',$archivo_actual);
-        $extencion=$vec_ext[1];
-        $nombre_temporal=time().".".$extencion;
-        mkdir($ruta_db_superior.$dir_anexos,0777);
-        
-        $tmpVar = 1;
-        while(file_exists($ruta_db_superior.$dir_anexos. $tmpVar . '_' . $nombre_temporal)){
-            $tmpVar++;
+        $datos_anexo = pathinfo($ruta_real);
+
+        $archivo_actual = $datos_anexo['basename'];
+        $extension = $datos_anexo["extension"];
+        $nombre_temporal = uniqid() . "." . $extension;
+
+        $resultado = $almacenamiento -> copiar_contenido_externo($ruta_real, $dir_anexos . $nombre_temporal);
+  
+        if($resultado) {
+          unlink(ruta_real);
         }
-        $nombre_temporal=$tmpVar . '_' . $nombre_temporal;    
+		//rename($ruta_db_superior.$ruta_real, $ruta_db_superior.$dir_anexos.$nombre_temporal);
+      
+    $dir_anexos_1 = array(
+      "servidor" => $almacenamiento -> get_ruta_servidor(),
+      "ruta" => $dir_anexos . $nombre_temporal
+    );
 
-		rename($ruta_db_superior.$ruta_real[1], $ruta_db_superior.$dir_anexos.$nombre_temporal);
-        
-        $sql="INSERT INTO anexos(documento_iddocumento,ruta,tipo,etiqueta,fecha_anexo,formato,campos_formato) values(".$iddoc.",'".$dir_anexos.$nombre_temporal."','".$extencion."','".$archivo_actual."'".",".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'".$idformato."','7358')";        
-         phpmkr_query($sql,$conn);
+
+        $sql0="INSERT INTO anexos(documento_iddocumento,ruta,tipo,etiqueta,fecha_anexo,formato,campos_formato) values(".$iddoc.",'". json_encode($dir_anexos_1)."','".$extension."','".$archivo_actual."'".",".fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s').",'".$idformato."','7358')";        
+         phpmkr_query($sql0) or die($sql0);
         $idanexo=phpmkr_insert_id();
         
         $sql1="insert into permiso_anexo(anexos_idanexos, idpropietario, caracteristica_propio, caracteristica_total)values('".$idanexo."', '".usuario_actual('idfuncionario')."', 'lem', 'l')";
