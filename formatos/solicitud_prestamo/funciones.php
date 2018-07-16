@@ -11,6 +11,10 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 
+include_once ($ruta_db_superior . "librerias_saia.php");
+
+echo(librerias_notificaciones());
+
 /*ADICIONAR*/
 function guardar_expedientes_prestamos($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
@@ -201,5 +205,36 @@ function insertar_item_prestamo_exp($idformato, $iddoc) {
 		}
 	}
 	return;
+}
+
+/*ADICIONAR*/
+function validar_fecha_prestamo($idformato, $iddoc) {
+	?>
+	<script>
+    	$('#formulario_formatos').validate({
+    		submitHandler : function(form) {
+				var sfecha_prestamo = $("#fecha_prestamo_rep").val();
+    			var sfecha_devolucion = $("#fecha_devolucion_rep").val();
+
+           		var fecha_prestamo=new Date(sfecha_prestamo);
+				fecha_prestamo=fecha_prestamo.setHours(0,0,0,0);
+        
+        		var fecha_devolucion=new Date(sfecha_devolucion);
+        		fecha_devolucion=fecha_devolucion.setHours(0,0,0,0);
+
+    			if(fecha_devolucion < fecha_prestamo) {
+    				//$("#alerta_fecha_devolucion_rep").remove();
+    				//$("#fecha_devolucion_rep").next("a").after("<font color='red' id='alerta_fecha_devolucion_rep'>La fecha devolucion debe ser mayor a la fecha prestamo</font>");
+					notificacion_saia('La fecha devolucion debe ser mayor a la fecha prestamo.', 'error', '', 4000);
+    				$("#fecha_devolucion_rep").focus();
+    				$('#continuar').css('display', 'inherit');
+    				$('#continuar').next('input').hide();
+    				return false;
+    			}
+    			form.submit();
+    		}
+    	});
+	</script>
+	<?php
 }
 ?>
