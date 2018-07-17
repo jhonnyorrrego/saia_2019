@@ -130,7 +130,7 @@ if($dato_padre["numcampos"]){
   <label class="control-label" for="serie_idserie">Serie asociada *
   </label>
   <div class="controls">       
-  	<?php echo("<b>Serie.</b> <span id='serie_asociada'>".mostrar_seleccionados_exp($datos[0]["serie_idserie"],"nombre","serie")."</span> <b>| Fondo.</b> ".$datos[0]["fondo"]); ?>
+  	<?php echo("<b><span id='etiqueta_serie'>Serie.</span></b> <span id='serie_asociada'>".mostrar_seleccionados_exp($datos[0]["serie_idserie"],"nombre","serie")."</span> <b>| Fondo.</b> ".$datos[0]["fondo"]); ?>
   	<br />
     <span class="phpmaker">
 			<input type="text" id="stext_serie" width="200px" size="20">          
@@ -415,6 +415,13 @@ if($dato_padre["numcampos"]){
     tree3.setOnCheckHandler(onNodeSelect_serie);
       
   	function onNodeSelect_serie(nodeId){
+  		var tipo_serie=tree3.getUserData(nodeId,"tipo_serie");
+  		if(tipo_serie==1){
+			$("#etiqueta_serie").html("Serie. ");
+  	  	}
+  		if(tipo_serie==2){
+			$("#etiqueta_serie").html("Sub Serie. ");
+  	  	}
   		var item_select=tree3.getAllChecked();
   		console.log(nodeId+" -- "+item_select);
   		if(item_select!=="undefined" && item_select!=nodeId){

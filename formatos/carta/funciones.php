@@ -29,45 +29,14 @@ function link_editar_funcion($idformato,$iddoc){
 	}
 }
 
-function mostrar_iniciales($idformato,$iddoc){
-	global $conn;
-
-	$datos=busca_filtro_tabla("B.nombres, B.apellidos","documento A, funcionario B","A.ejecutor=B.funcionario_codigo AND A.iddocumento=".$iddoc,"",$conn);
-
-  $apellido = explode(' ', $datos[0]['apellidos']);
-	$cadena= $datos[0]['nombres']." ".$apellido[0];
-
-	echo ($cadena);
-}
 
 function cargar_destinos_carta($idformato,$idcampo,$iddoc)
 {global $conn;
  echo '<script>
- $("#destinos").before(\'<table><tr><td><b>Carga del Remitente:</b></td><td><a href="#" id="carga_respuesta" anterior="'.$_REQUEST["anterior"].'" >Cargar Remitente Origen</a></td><td><a href="#" id="exportar_remitentes" >Exportar Remitentes</a></td><td><a href="carga_remitentes.php?opcion=3" id="importar_remitentes" class="highslide" onclick="return hs.htmlExpand(this, { \'+"objectType: \'iframe\',width: 500, height:400,preserveContent:false"+\' } )">Importar Remitentes</a></td></tr></table>\');
+ $("#destinos").before(\'<table><tr><td><b>Carga del Remitente:</b></td><td><a href="#" id="carga_respuesta" anterior="'.$_REQUEST["anterior"].'" >Cargar Remitente Origen</a></td><td><a href="#" id="exportar_remitentes" >Exportar Remitentes</a></td><td><a href="carga_remitentes.php?opcion=3&campo=destinos" id="importar_remitentes" class="highslide" onclick="return hs.htmlExpand(this, { \'+"objectType: \'iframe\',width: 500, height:400,preserveContent:false"+\' } )" style="text-decoration:underline;">Importar Remitentes</a></td></tr></table>\');
     </script>';
 }
 
-function mostrar_anexos($idformato,$iddoc){
-	global $conn,$ruta_db_superior;
-		$html="Anexos: ";
-		$nombre_tabla=busca_filtro_tabla("b.nombre_tabla","documento a, formato b","lower(a.plantilla)=b.nombre AND a.iddocumento=".$iddoc,"",$conn);
-		$anexos_fis=busca_filtro_tabla("anexos_fisicos",$nombre_tabla[0]['nombre_tabla'],"documento_iddocumento=".$iddoc,"",$conn);
-		if($anexos_fis['numcampos']){
-			if($anexos_fis[0]['anexos_fisicos']!=''){
-				$html.=$anexos_fis[0]['anexos_fisicos'].", ";
-			}
-		}
-	  $anex=busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc,"",$conn);
-		for($i=0;$i<$anex['numcampos'];$i++){
-			if($_REQUEST["tipo"]==5)
-				$html.= '<a title="Descargar" href="anexosdigitales/parsea_accion_archivo.php?idanexo='.$anex[$i]['idanexos'].'&amp;accion=descargar" border="0px">'.$anex[$i]['etiqueta'].'</a> &nbsp;';
-			else
-				$html.= '<a title="Descargar" href="../../anexosdigitales/parsea_accion_archivo.php?idanexo='.$anex[$i]['idanexos'].'&amp;accion=descargar" border="0px">'.$anex[$i]['etiqueta'].'</a> &nbsp;';
-		}
-		if($anexos_fis[0]['anexos_fisicos']!='' || $anex['numcampos']>0){
-			echo $html."<br/><br/>";
-		}
-}
 
 function mostrar_destinos($idformato, $iddoc) {
 	global $conn;
@@ -426,9 +395,7 @@ function displayImage(imagePath,title,description)
 }
 $().ready(function() {
 $("#exportar_remitentes").click(function(){
-
-   if($("#destinos").val()!='' || $("#copia").val()!='')
-   {
+   if($("#destinos").val()!='' || $("#copia").val()!=''){
    window.open("carga_remitentes.php?opcion=2&destinos="+$("#destinos").val()+"&copias="+$("#copia").val());
    }
    else

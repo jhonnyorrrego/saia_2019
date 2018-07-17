@@ -192,6 +192,40 @@ else if($_REQUEST["iddoc"]){
  return true;  
 }
 
+
+function mostrar_anexos($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+		$html="Anexos: ";
+		$nombre_tabla=busca_filtro_tabla("b.nombre_tabla","documento a, formato b","lower(a.plantilla)=b.nombre AND a.iddocumento=".$iddoc,"",$conn);
+		$anexos_fis=busca_filtro_tabla("anexos_fisicos",$nombre_tabla[0]['nombre_tabla'],"documento_iddocumento=".$iddoc,"",$conn);
+		if($anexos_fis['numcampos']){
+			if($anexos_fis[0]['anexos_fisicos']!=''){
+				$html.=$anexos_fis[0]['anexos_fisicos'].", ";
+			}
+		}
+	  $anex=busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc,"",$conn);
+		for($i=0;$i<$anex['numcampos'];$i++){
+			if($_REQUEST["tipo"]==5)
+				$html.= '<a title="Descargar" href="anexosdigitales/parsea_accion_archivo.php?idanexo='.$anex[$i]['idanexos'].'&amp;accion=descargar" border="0px">'.$anex[$i]['etiqueta'].'</a> &nbsp;';
+			else
+				$html.= '<a title="Descargar" href="../../anexosdigitales/parsea_accion_archivo.php?idanexo='.$anex[$i]['idanexos'].'&amp;accion=descargar" border="0px">'.$anex[$i]['etiqueta'].'</a> &nbsp;';
+		}
+		if($anexos_fis[0]['anexos_fisicos']!='' || $anex['numcampos']>0){
+			echo $html."<br/><br/>";
+		}
+}
+
+function mostrar_iniciales($idformato,$iddoc){
+	global $conn;
+
+	$datos=busca_filtro_tabla("B.nombres, B.apellidos","documento A, funcionario B","A.ejecutor=B.funcionario_codigo AND A.iddocumento=".$iddoc,"",$conn);
+
+  $apellido = explode(' ', $datos[0]['apellidos']);
+	$cadena= $datos[0]['nombres']." ".$apellido[0];
+
+	echo ($cadena);
+}
+
 //---------------------------------mostrar qr------------------------------//
 function parsear_arbol_expediente_serie_memorando(){
     global $conn,$ruta_db_superior;

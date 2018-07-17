@@ -30,6 +30,7 @@ echo(librerias_notificaciones());
 if(@$_REQUEST["idexpediente"]){
 	$idexpediente=$_REQUEST["idexpediente"];	
 } 
+$tipo_almacenamiento = new SaiaStorage("archivos");
 $expediente=busca_filtro_tabla("a.*,".fecha_db_obtener("a.fecha","Y-m-d")." AS fecha, ".fecha_db_obtener("a.fecha_extrema_i","Y-m-d")." as fecha_extrema_i, ".fecha_db_obtener("a.fecha_extrema_f","Y-m-d")." as fecha_extrema_f","expediente a","idexpediente=".$idexpediente,"",$conn);
 ?>   
 <style>
@@ -435,9 +436,17 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
   	<td>
   	    <?php
   	        for($i=0;$i<$transferencia_doc['numcampos'];$i++){
-  	            if(is_object($transferencia_doc[$i]["fecha"]))$transferencia_doc[$i]["fecha"]=$transferencia_doc[$i]["fecha"]->format('Y-m-d H:i');
+  	            if(is_object($transferencia_doc[$i]["fecha"]))
+  	            	$transferencia_doc[$i]["fecha"]=$transferencia_doc[$i]["fecha"]->format('Y-m-d H:i');
+  	           	$ruta_pdf = json_decode($transferencia_doc[$i]['pdf']);
+  	            if (is_object($ruta_pdf)) {
+  	            	if ($tipo_almacenamiento -> get_filesystem() -> has($ruta_pdf -> ruta)) {
+  	            		$ruta64 = base64_encode($transferencia_doc[$i]["pdf"]);
+  	            		$href = $ruta_db_superior . "filesystem/mostrar_binario.php?ruta=" . $ruta64;
+  	            	}
+  	            }
   	            ?>
-  	                <a class="previo_high" enlace="<?php echo($ruta_db_superior.$transferencia_doc[$i]["pdf"]); ?>" style="cursor:pointer">Ver transferencia No <?php echo($transferencia_doc[$i]["numero"]); ?> (<?php echo($transferencia_doc[$i]["fecha"]); ?>)</a>
+  	                <a class="previo_high" enlace="<?php echo($href); ?>" style="cursor:pointer">Ver transferencia No <?php echo($transferencia_doc[$i]["numero"]); ?> (<?php echo($transferencia_doc[$i]["fecha"]); ?>)</a>
   	                <br>
   	            <?php
   	        }

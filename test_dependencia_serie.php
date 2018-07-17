@@ -397,7 +397,7 @@ function llena_entidad_serie($iddependencia, $series, $tvd = 0, $codigo_dep = ''
 
 	$condicion_final = "categoria=2 AND tipo=1 AND idserie IN(" . $series . ")";
 	$condicion_subseries_tipo_documental = " AND idserie IN(" . $series . ")";
-	$series = busca_filtro_tabla("nombre,idserie,codigo", "serie", $condicion_final . $activo . $condicion_tvd, "", $conn);
+	$series = busca_filtro_tabla("nombre,idserie,codigo,tipo", "serie", $condicion_final . $activo . $condicion_tvd, "", $conn);
 	for ($i = 0; $i < $series['numcampos']; $i++) {
 		echo("<item style=\"font-family:verdana; font-size:7pt;font-weight: normal;\" ");
 		echo("text=\"" . htmlspecialchars(($series[$i]["nombre"])) . ' (' . $series[$i]['codigo'] . ') ' . " \" id=\"" . $iddependencia . "sub" . $series[$i]['idserie'] . $prefijo_tvd . "\"");
@@ -417,6 +417,7 @@ function llena_entidad_serie($iddependencia, $series, $tvd = 0, $codigo_dep = ''
 			echo(" child=\"0\">\n");
 		}
 		echo('<userdata name="serie_codigo">' . $series[$i]['codigo'] . '</userdata>');
+		echo('<userdata name="tipo_serie">' . $series[$i]['tipo'] . '</userdata>');
 		echo('<userdata name="iddependencia">' . $iddependencia . '</userdata>');
 		echo('<userdata name="idserie">' . $series[$i]['idserie'] . '</userdata>');
 		echo('<userdata name="dependencia_codigo">' . $codigo_dep["codigo"] . '</userdata>');
@@ -483,6 +484,7 @@ function llena_subseries_tipo_documental($iddependencia, $idserie, $tvd = 0, $co
 				echo(" child=\"0\">\n");
 
 			echo('<userdata name="serie_codigo">' . $papas[$i]['codigo'] . '</userdata>');
+			echo('<userdata name="tipo_serie">' . $papas[$i]['tipo'] . '</userdata>');
 			echo('<userdata name="iddependencia">' . $iddependencia . '</userdata>');
 			echo('<userdata name="idserie">' . $papas[$i]['idserie'] . '</userdata>');
 			echo('<userdata name="dependencia_codigo">' . $codigo_dep["codigo"] . '</userdata>');

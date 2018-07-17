@@ -445,13 +445,11 @@ $(document).ready(function(){
 </span></td>
 	</tr>
 	<tr class="ocultar">
-	<td class="encabezado" title="�El documento al pasarse al archivo central se le har&aacute; una selecci&oacute;n?"><span class="phpmaker" style="color: #FFFFFF;">SELECCI&Oacute;N *</span></td>
+	<td class="encabezado" title="�El documento al pasarse al archivo central se le har&aacute; una selecci&oacute;n?"><span class="phpmaker" style="color: #FFFFFF;">SELECCI&Oacute;N</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="radio" id="x_seleccion1" name="x_seleccion"<?php if (@$x_seleccion == "1") { ?> checked<?php } ?> value="<?php echo htmlspecialchars("1"); ?>">
-<?php echo "SI"; ?>
+<input type="radio" id="x_seleccion1" name="x_seleccion"<?php if (@$x_seleccion == "1") { ?> checked="checked"<?php } ?> value="<?php echo htmlspecialchars("1"); ?>"><?php echo "SI"; ?>
 <?php echo EditOptionSeparator(0); ?>
-<input type="radio"  id="x_seleccion0" name="x_seleccion"<?php if (@$x_seleccion == "0") { ?> checked<?php } ?> value="<?php echo htmlspecialchars("0"); ?>">
-<?php echo "NO"; ?>
+<input type="radio"  id="x_seleccion0" name="x_seleccion"<?php if (@$x_seleccion == "0") { ?> checked="checked" <?php } ?> value="<?php echo htmlspecialchars("0"); ?>"><?php echo "NO"; ?>
 <?php echo EditOptionSeparator(1); ?>
 </span></td>
 	</tr>
@@ -652,9 +650,6 @@ $(document).ready(function(){
 				required : true
 			},
 			x_retencion_central : {
-				required : true
-			},
-			x_seleccion : {
 				required : true
 			}
 		}

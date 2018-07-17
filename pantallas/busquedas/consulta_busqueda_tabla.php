@@ -55,7 +55,18 @@ font-size: 10px;
 .page-size {
 font-size: 10px;
 }
+.dropdown-submenu {
+    position: relative;
+}
 
+.dropdown-submenu .dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+}
+select.btn{ 
+	border:2px lightgray solid;
+}
 </style>
 </head>
 <body>
@@ -82,29 +93,28 @@ font-size: 10px;
         }
         $datos_busqueda[0]["busqueda_avanzada"] .= 'idbusqueda_componente=' . $datos_busqueda[0]["idbusqueda_componente"];
         ?>
-        <button class="btn kenlace_saia" titulo="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>" title="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>" conector="iframe" enlace="<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>">B&uacute;squeda &nbsp;</button>
+        <button class="pull-left btn btn-mini kenlace_saia" titulo="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>" title="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>" conector="iframe" enlace="<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>">B&uacute;squeda &nbsp;</button>
       <?php
         }
         $tiene_acciones = !empty($datos_busqueda[0]["acciones_seleccionados"]);
         if($tiene_acciones) {
-      ?>
-      <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="acciones_sel">Seleccionados &nbsp;
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu" id='listado_seleccionados' aria-labelledby="acciones_sel">
-        <?php
-          $acciones=explode(",",$datos_busqueda[0]["acciones_seleccionados"]);
-          $cantidad=count($acciones);
-          for($i=0;$i<$cantidad;$i++){
-              echo($acciones[$i]());
-          }
+					$acciones_selecionados='';		
+					if($datos_busqueda[0]["acciones_seleccionados"]!=''){		
+						$datos_reporte=array();		
+						$datos_reporte['idbusqueda_componente']=$datos_busqueda[0]["idbusqueda_componente"];		
+						$datos_reporte['variable_busqueda']=@$_REQUEST["variable_busqueda"]; 		
+					     $acciones=explode(",",$datos_busqueda[0]["acciones_seleccionados"]);		
+					     $cantidad=count($acciones);		
+					     for($i=0;$i<$cantidad;$i++){		
+						    echo $acciones[$i]($datos_reporte);		
+					     }              		
+					}  
         ?>
-      </ul>
     <?php
         }
     if(@$datos_busqueda[0]["enlace_adicionar"]){
       ?>
-        <button class="btn kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar</button></div></li>
+        <button class="btn btn-mini kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar</button></div></li>
       <?php
     }
     ?>
@@ -113,7 +123,7 @@ font-size: 10px;
         echo($funcion_menu[0](@$funcion_menu[1]));
     }*/
        ?>
-       <button class="btn btn-primary exportar_reporte_saia" enlace="pantallas/documento/busqueda_avanzada_documento.php" title="Exportar reporte" id="boton_exportar_excel" style="">Exportar</button>
+       <button class="btn btn-mini btn-primary exportar_reporte_saia" enlace="pantallas/documento/busqueda_avanzada_documento.php" title="Exportar reporte" id="boton_exportar_excel" style="">Exportar</button>
        <div class="pull-right" valign="middle"><iframe name="iframe_exportar_saia" id="iframe_exportar_saia" allowtransparency="1" frameborder="0" framespacing="2px" scrolling="no" width="100%" src=""  hspace="0" vspace="0" height="32px"></iframe></div>
       <?php
 
@@ -187,7 +197,7 @@ font-size: 10px;
 <script>//Utilizado por que el menu del dropdown aparece y se oculta y no deja seleccionar
 	$(document).ready(function($) {
 		$("#acciones_sel").click(function(e) {
-			$(this).next('ul.dropdown-menu').css("display", "block");
+			//$(this).next('ul.dropdown-menu').css("display", "block");
 		});
 	}); 
 </script>

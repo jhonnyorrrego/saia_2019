@@ -17,11 +17,11 @@ echo(librerias_notificaciones());
 function recibir_datos($idformato, $iddoc){
 	global $ruta_db_superior, $conn;
 	$datos_correo = json_decode($_REQUEST['datos_correo']);
-	$asunto = $datos_correo->asunto;
+	$asunto = addslashes($datos_correo->asunto);
 	$contenido = $datos_correo->contenido;
 	$de = $datos_correo->from;
 	$para = $datos_correo->to;
-  	$fecha= $datos_correo->fecha_oficio_entrada;
+  $fecha= $datos_correo->fecha_oficio_entrada;
 	$anexos = $datos_correo->anexos;
 	
 	//$lista_anexo=array_pop(explode("/",$anexos));

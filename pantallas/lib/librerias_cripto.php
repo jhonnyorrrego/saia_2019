@@ -96,92 +96,91 @@ function seguridad_externa($data) {
 	return (false);
 }
 
-function validar_enteros(){
-    global $validar_enteros;
+function validar_enteros() {
+	global $validar_enteros;
 
-    if (isset($validar_enteros)) {
-        foreach ($validar_enteros as $key => $valor) {
-            if (@$_REQUEST[$valor] && !preg_match("/^[0-9]+$/", @$_REQUEST[$valor])) {
-                return ($valor);
-            }
-        }
-    }
-    return (false);
+	if (isset($validar_enteros)) {
+		foreach ($validar_enteros as $key => $valor) {
+			if (@$_REQUEST[$valor] && !preg_match("/^[0-9]+$/", @$_REQUEST[$valor])) {
+				return ($valor);
+			}
+		}
+	}
+	return (false);
 }
 
-function desencriptar_sqli($campo_info){
-	
-    if (strpos("script", $_SERVER["PHP_SELF"]) !== false) {
-        die("Se encuentra una posible infecci&oacute;n en su c&oacute;digo, a trav&eacute;s DOM-based cross site scripting, por favor contacte a su administrador");
-    }
-    
-    if(TESTING) {
-        unset($_REQUEST["token_csrf"]);
-        unset($_SESSION["token_csrf"]);
-    }
+function desencriptar_sqli($campo_info) {
 
-    if (array_key_exists($campo_info, $_POST)) {
-        $data = json_decode(@$_POST[$campo_info], true);
-        unset($_REQUEST);
-        unset($_POST);
-        if(TESTING) {
-            unset($data["token_csrf"]);
-        }
-            $cant = count($data);
-        if (!TESTING && $_SESSION["token_csrf"] !== $data["token_csrf"]) {
-            alerta("Error de validacion del formulario por favor intente de nuevo (Posible Error: CSRF) ");
-            unset($_REQUEST["token_csrf"]);
-            unset($_SESSION["token_csrf"]);
-            return;
-        }
+	if (strpos("script", $_SERVER["PHP_SELF"]) !== false) {
+		die("Se encuentra una posible infecci&oacute;n en su c&oacute;digo, a trav&eacute;s DOM-based cross site scripting, por favor contacte a su administrador");
+	}
 
-        for ($i = 0; $i < $cant; $i++) {
-            if (@$data[$i]["es_arreglo"]) {
-                $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = explode(",", decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO));
-                $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = explode(",", decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO));
-            } else {
-                $_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
-                $_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
-            }
-        }
+	if (TESTING) {
+		unset($_REQUEST["token_csrf"]);
+		unset($_SESSION["token_csrf"]);
+	}
 
-        $error = validar_enteros();
-        if ($error !== false) {
-            echo("Se encuentra una posible infecci&oacute;n en su c&oacute;digo, en la llave: " . $_REQUEST[$error] . " (debe ser un entero),por favor contacte a su administrador");
+	if (array_key_exists($campo_info, $_POST)) {
+		$data = json_decode(@$_POST[$campo_info], true);
+		unset($_REQUEST);
+		unset($_POST);
+		if (TESTING) {
+			unset($data["token_csrf"]);
+		}
+		$cant = count($data);
+		if (!TESTING && $_SESSION["token_csrf"] !== $data["token_csrf"]) {
+			alerta("Error de validacion del formulario por favor intente de nuevo (Posible Error: CSRF) ");
+			unset($_REQUEST["token_csrf"]);
+			unset($_SESSION["token_csrf"]);
+			return;
+		}
+
+		for ($i = 0; $i < $cant; $i++) {
+			if (@$data[$i]["es_arreglo"]) {
+				$_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = explode(",", decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO));
+				$_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = explode(",", decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO));
+			} else {
+				$_REQUEST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
+				$_POST[decrypt_blowfish($data[$i]["name"], LLAVE_SAIA_CRYPTO)] = decrypt_blowfish($data[$i]["value"], LLAVE_SAIA_CRYPTO);
+			}
+		}
+
+		$error = validar_enteros();
+		if ($error !== false) {
+			echo("Se encuentra una posible infecci&oacute;n en su c&oacute;digo, en la llave: " . $_REQUEST[$error] . " (debe ser un entero),por favor contacte a su administrador");
 			unset($_REQUEST);
-            unset($_POST);
+			unset($_POST);
 			die();
-            //volver(1);
-        }
-    }
-    unset($_REQUEST["token_csrf"]);
-    unset($_SESSION["token_csrf"]);
+			//volver(1);
+		}
+	}
+	unset($_REQUEST["token_csrf"]);
+	unset($_SESSION["token_csrf"]);
 
-    return;
+	return;
 }
 
-function encriptar_sqli($nombre_form, $submit = false, $campo_info = "form_info", $ruta_superior = "", $retorno = false, $reset_form = true){
-    global $ruta_db_superior;
+function encriptar_sqli($nombre_form, $submit = false, $campo_info = "form_info", $ruta_superior = "", $retorno = false, $reset_form = true) {
+	global $ruta_db_superior;
 
-    $texto = '';
-    if ($submit) {
-        $texto .= '<script type="text/javascript">  ';
-        $texto .= ' $(document).ready(function(){ ';
-    }
+	$texto = '';
+	if ($submit) {
+		$texto .= '<script type="text/javascript">  ';
+		$texto .= ' $(document).ready(function(){ ';
+	}
 
-    $texto .= '
+	$texto .= '
       if(!$("#' . $campo_info . '").length){
         $("#' . $nombre_form . '").append(\'<input type="hidden" id="' . $campo_info . '" name="' . $campo_info . '">\');
       }
     ';
 
-    if ($submit) {
-        $texto .= '$("#' . $nombre_form . '").submit(function(event){';
-    }
+	if ($submit) {
+		$texto .= '$("#' . $nombre_form . '").submit(function(event){';
+	}
 
-    $texto .= '
+	$texto .= '
       if($(".tiny_formatos").length){
-
         $.each( $(".tiny_formatos"), function() {
           var id_textarea=$(this).attr("id");
           var contenido_textarea=tinyMCE.get(id_textarea).getContent();
@@ -193,12 +192,9 @@ function encriptar_sqli($nombre_form, $submit = false, $campo_info = "form_info"
           var contenido_textarea=tinymce.get(id_textarea).getContent();
           $("#"+id_textarea).val(contenido_textarea);
         });
+      }';
 
-      }
-
-      ';
-
-    $texto .= 'salida_sqli = false;
+	$texto .= 'salida_sqli = false;
           $.ajax({
             type:"POST",
             async: false,
@@ -207,8 +203,8 @@ function encriptar_sqli($nombre_form, $submit = false, $campo_info = "form_info"
             success: function(data) {
               //$("#' . $nombre_form . '")[0].reset();
       ';
-    if ($reset_form) {
-        $texto .= '
+	if ($reset_form) {
+		$texto .= '
           $("#' . $nombre_form . '").find("input:hidden,input:text, input:password, select, textarea").val("");
             $("#' . $nombre_form . '").find("input:radio, input:checkbox, select").removeAttr("checked").removeAttr("selected");
             $.each( $(".tiny_formatos"), function() {
@@ -220,26 +216,26 @@ function encriptar_sqli($nombre_form, $submit = false, $campo_info = "form_info"
 	          tinymce.get(id_textarea).setContent("");
 	        });
         ';
-    }
-    $texto .= '
+	}
+	$texto .= '
               $("#' . $campo_info . '").val(data);
               salida_sqli = true;
             }
           });';
-    if ($submit) {
-        $texto .= 'return salida_sqli;
+	if ($submit) {
+		$texto .= 'return salida_sqli;
           event.preventDefault();
         });
 
       });
        </script>';
-    }
+	}
 
-    if ($retorno) {
-        return ($texto);
-    } else {
-        echo ($texto);
-    }
-    return;
+	if ($retorno) {
+		return ($texto);
+	} else {
+		echo($texto);
+	}
+	return;
 }
 ?>
