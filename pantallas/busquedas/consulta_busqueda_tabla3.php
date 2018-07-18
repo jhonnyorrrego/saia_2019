@@ -16,7 +16,7 @@ include_once($ruta_db_superior."db.php");
 <meta charset="UTF-8">
 <title>Consulta de informaci&oacute;n</title>
 <?php
-//ini_set("display_errors",true);
+ini_set("display_errors",true);
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/documento/librerias.php");
 
@@ -35,8 +35,6 @@ if($datos_busqueda[0]["ruta_libreria"]){
   $librerias=array_unique(explode(",",$datos_busqueda[0]["ruta_libreria"]));
   array_walk($librerias,"incluir_librerias_busqueda");
 }
-
-echo librerias_tabla_bootstrap("1.11", false, false);
 
 function incluir_librerias_busqueda($elemento,$indice){
   global $ruta_db_superior;

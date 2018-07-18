@@ -133,19 +133,10 @@ if($dato_padre["numcampos"]){
   	<?php echo("<b>Serie.</b> <span id='serie_asociada'>".mostrar_seleccionados_exp($datos[0]["serie_idserie"],"nombre","serie")."</span> <b>| Fondo.</b> ".$datos[0]["fondo"]); ?>
   	<br />
     <span class="phpmaker">
-			<input type="text" id="stext_serie" width="200px" size="20">          
-      <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value),1)">
-      <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value),0,1)">
-      <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value))">
-      <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>      
-      <div id="esperando_serie"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
-			<div id="treeboxbox_tree3" class="arbol_saia"></div>
-    </span>
-     <input type="hidden" name="serie_idserie" id="serie_idserie" value="<?php echo($datos[0]["serie_idserie"]); ?>">
+    	<div id="treeboxbox_tree3"></div>
      <input type="hidden" name="dependencia_iddependencia" id="dependencia_iddependencia" value="<?php echo($datos[0]["dependencia_iddependencia"]); ?>">
   </div>
+  
 </div>
 
 <div data-toggle="collapse" data-target="#datos_adicionales">
@@ -336,8 +327,33 @@ if($dato_padre["numcampos"]){
   echo(librerias_arboles());
   ?>
   <script>
+  function cargar_info_Node(NodeId){
+	  if(treeserie_idserie.isItemChecked(NodeId)){
+	    $("#codigo_numero_serie").val(treeserie_idserie.getUserData(NodeId,"codigo"));
+	    /*$("#dependencia_iddependencia").val(treeserie_idserie.getUserData(NodeId,"iddependencia"));
+		  $("#codigo_numero_dependencia").val(treeserie_idserie.getUserData(NodeId,"dependencia_codigo"));
+		  $("#fondo").val(tree3.getUserData(NodeId,"dependencia_nombre"));*/
+	  	$("#codigo_numero_serie").trigger('keyup');
+	  }else{
+	  	$("#codigo_numero_serie").val("");
+	  }
+  }
+
   $(document).ready(function(){
-      
+		url2="test/test_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0&seleccionados=<?php echo($datos[0]["serie_idserie"]); ?>";
+		$.ajax({
+			url : "<?php echo($ruta_db_superior);?>test/crear_arbol.php",
+			data:{xml:url2,campo:"serie_idserie",radio:1,ruta_db_superior:"../../",busqueda_item:1,onNodeSelect:"cargar_info_Node"},
+			type : "POST",
+			async:false,
+			success : function(html_serie) {
+				$("#treeboxbox_tree3").empty().html(html_serie);
+			},error: function (){
+				top.noty({text: 'No se pudo cargar el arbol de series',type: 'error',layout: 'topCenter',timeout:5000});
+			}
+		});
+
+
       
   $(".documento_actual",parent.document).removeClass("alert-info");
   $(".documento_actual",parent.document).removeClass("documento_actual");
@@ -401,70 +417,7 @@ if($dato_padre["numcampos"]){
         document.poppedLayer = eval('document.layers["esperando_expediente"]');
       document.poppedLayer.style.display = "";
     }  
-    
-    tree3=new dhtmlXTreeObject("treeboxbox_tree3","","",0);
-  	tree3.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
-  	tree3.enableIEImageFix(true);
-    tree3.enableCheckBoxes(1);
-    tree3.enableRadioButtons(true);
-    tree3.setOnLoadingStart(cargando_serie);
-    tree3.setOnLoadingEnd(fin_cargando_serie);
-    tree3.enableSmartXMLParsing(true);
-  	tree3.setXMLAutoLoading("../../test_dependencia_serie.php?tabla=dependencia&admin=1&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&funcionario=1&carga_partes_dependencia=1&carga_partes_serie=1&seleccionado=<?php echo($datos[0]["serie_idserie"])?>&seleccionado_dep=<?php echo($datos[0]["dependencia_iddependencia"])?>");	
-  	tree3.loadXML("../../test_dependencia_serie.php?tabla=dependencia&admin=1&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&funcionario=1&carga_partes_dependencia=1&carga_partes_serie=1&seleccionado=<?php echo($datos[0]["serie_idserie"])?>&seleccionado_dep=<?php echo($datos[0]["dependencia_iddependencia"])?>");
-    tree3.setOnCheckHandler(onNodeSelect_serie);
-      
-  	function onNodeSelect_serie(nodeId){
-  		var item_select=tree3.getAllChecked();
-  		console.log(nodeId+" -- "+item_select);
-  		if(item_select!=="undefined" && item_select!=nodeId){
-  	  		lista_items=item_select.split(",");
-  	  		for(i=0;i<lista_items.length;i++){
-  	  			tree3.setCheck(lista_items[i],0);
-  	  	  	}
-  	  	}
-  		tree3.setCheck(nodeId,1);
-  	  if(tree3.isItemChecked(nodeId)){
-  	  	
-  	  	console.log(tree3.getUserData(nodeId,"dependencia_nombre"));
-        $("#serie_idserie").val(tree3.getUserData(nodeId,"idserie"));
-        $("#dependencia_iddependencia").val(tree3.getUserData(nodeId,"iddependencia"));
-        $("#codigo_numero_serie").val(tree3.getUserData(nodeId,"serie_codigo"));
-    	$("#codigo_numero_dependencia").val(tree3.getUserData(nodeId,"dependencia_codigo"));
-    	$("#fondo").val(tree3.getUserData(nodeId,"dependencia_nombre"));
-    	$("#serie_asociada").empty().html(tree3.getUserData(nodeId,"serie_seleccionada"));
-    	$("#codigo_numero_dependencia").trigger('keyup');
-    	$("#codigo_numero_serie").trigger('keyup');
-      }
-      else{
-    	$("#serie_idserie").val("");
-    	$("#dependencia_iddependencia").val("");
-    	$("#codigo_numero_serie").val('');
-  	  	$("#codigo_numero_dependencia").val('');
-  	    $("#fondo").val('');
-  	  	$("#codigo_numero_dependencia").trigger('keyup');
-  	    $("#codigo_numero_serie").trigger('keyup');
-      }
-    }
-    function fin_cargando_serie() {
-      if (browserType == "gecko" )
-        document.poppedLayer = eval('document.getElementById("esperando_serie")');
-      else if (browserType == "ie")
-        document.poppedLayer = eval('document.getElementById("esperando_serie")');
-      else
-        document.poppedLayer = eval('document.layers["esperando_serie"]');
-      document.poppedLayer.style.display = "none";
-    }
-    function cargando_serie() {
-      if (browserType == "gecko" )
-        document.poppedLayer = eval('document.getElementById("esperando_serie")');
-      else if (browserType == "ie")
-        document.poppedLayer = eval('document.getElementById("esperando_serie")');
-      else
-        document.poppedLayer = eval('document.layers["esperando_serie"]');
-      document.poppedLayer.style.display = "";
-    }   
-    
+        
   });
   
   $(".opcion_informacion").on("hide",function(){

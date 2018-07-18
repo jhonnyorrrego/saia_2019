@@ -30,11 +30,11 @@ global $conn;
         <div class="control-group">
           <label class="string required control-label" for="codigo">
 			<b>C&oacute;digo:</b>
-			<input type="hidden" name="bksaiacondicion_s@codigo" id="bksaiacondicion_s-codigo" value="like">
+			<input type="hidden" name="bksaiacondicion_orden_dependencia_serie" id="bksaiacondicion_orden_dependencia_serie" value="=">
           </label>
           <div class="controls">
-            <input id="bqsaia_codigo" name="bqsaia_s@codigo" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_s@codigo" id="bqsaiaenlace_s-codigo" value="y">
+            <input id="bqsaia_orden_dependencia_serie" name="bqsaia_orden_dependencia_serie" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_orden_dependencia_serie" id="bqsaiaenlace_orden_dependencia_serie" value="y">
           </div>
         </div> 
         
@@ -43,17 +43,17 @@ global $conn;
         <div class="row">
           <div class="control-group radio_buttons span4">
             <label class="radio_buttons optional control-label"><b>Tipo</b>
-            <input type="hidden" name="bksaiacondicion_s@tipo" id="bksaiacondicion_s-tipo" value="=">
+            <input type="hidden" name="bksaiacondicion_tipo" id="bksaiacondicion_s-tipo" value="=">
             </label>
             <div class="controls">
               <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_s-tipo1" name="bqsaia_s@tipo" type="radio" value="1">Serie
+                <input class="radio_buttons optional" id="bqsaia_s-tipo1" name="bqsaia_tipo" type="radio" value="Serie">Serie
               </label>
               <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_s-tipo2" name="bqsaia_s@tipo" type="radio" value="2">Subserie
+                <input class="radio_buttons optional" id="bqsaia_s-tipo2" name="bqsaia_tipo" type="radio" value="Subserie">Subserie
               </label>
               <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_s-tipo3" name="bqsaia_s@tipo" type="radio" value="3">Tipo Documental
+                <input class="radio_buttons optional" id="bqsaia_s-tipo3" name="bqsaia_tipo" type="radio" value="Tipo documental">Tipo Documental
               </label>
             </div>          
           </div> 
@@ -67,11 +67,11 @@ global $conn;
         <div class="control-group">
           <label class="string required control-label" for="nombre">
 			<b>Nombre:</b>
-			<input type="hidden" name="bksaiacondicion_s@nombre" id="bksaiacondicion_s-nombre" value="like">
+			<input type="hidden" name="bksaiacondicion_nombre" id="bksaiacondicion_s-nombre" value="like">
           </label>
           <div class="controls">
-            <input id="bqsaia_nombre" name="bqsaia_s@nombre" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_s@nombre" id="bqsaiaenlace_s-nombre" value="y">
+            <input id="bqsaia_nombre" name="bqsaia_nombre" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_nombre" id="bqsaiaenlace_s-nombre" value="y">
           </div>
         </div> 
         
@@ -82,11 +82,11 @@ global $conn;
         <div class="control-group">
           <label class="string required control-label" for="retencion_gestion">
 			<b>Archivo de gestion:</b>
-			<input type="hidden" name="bksaiacondicion_s@retencion_gestion" id="bksaiacondicion_s-retencion_gestion" value="=">
+			<input type="hidden" name="bksaiacondicion_retencion_gestion" id="bksaiacondicion_s-retencion_gestion" value="=">
           </label>
           <div class="controls">
-            <input id="bqsaia_codigo" name="bqsaia_s@retencion_gestion" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_s@retencion_gestion" id="bqsaiaenlace_s-retencion_gestion" value="y">
+            <input id="bqsaia_codigo" name="bqsaia_retencion_gestion" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_retencion_gestion" id="bqsaiaenlace_s-retencion_gestion" value="y">
           </div>
         </div> 
         
@@ -97,11 +97,11 @@ global $conn;
         <div class="control-group">
           <label class="string required control-label" for="retencion_central">
 			<b>Archivo de central:</b>
-			<input type="hidden" name="bksaiacondicion_s@retencion_central" id="bksaiacondicion_s-retencion_central" value="=">
+			<input type="hidden" name="bksaiacondicion_retencion_central" id="bksaiacondicion_s-retencion_central" value="=">
           </label>
           <div class="controls">
-            <input id="bqsaia_codigo" name="bqsaia_s@retencion_central" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_s@retencion_central" id="bqsaiaenlace_s-retencion_central" value="y">
+            <input id="bqsaia_codigo" name="bqsaia_retencion_central" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_retencion_central" id="bqsaiaenlace_s-retencion_central" value="y">
           </div>
         </div> 
         
@@ -110,14 +110,14 @@ global $conn;
         <div class="row">
           <div class="control-group radio_buttons span4">
             <label class="radio_buttons optional control-label"><b>Conservacion</b>
-            <input type="hidden" name="bksaiacondicion_s@conservacion" id="bksaiacondicion_s-conservacionconservacion" value="like">
+            <input type="hidden" name="bksaiacondicion_conservacion" id="bksaiacondicion_s-conservacionconservacion" value="like">
             </label>
             <div class="controls">
               <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_s-conservacion1" name="bqsaia_s@conservacion" type="radio" value="TOTAL">TOTAL
+                <input class="radio_buttons optional" id="bqsaia_s-conservacion1" name="bqsaia_conservacion" type="radio" value="TOTAL">TOTAL
               </label>
               <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_s-conservacion2" name="bqsaia_s@conservacion" type="radio" value="ELIMINACION">ELIMINACION
+                <input class="radio_buttons optional" id="bqsaia_s-conservacion2" name="bqsaia_conservacion" type="radio" value="ELIMINACION">ELIMINACION
               </label>
             </div>          
           </div> 
@@ -128,11 +128,11 @@ global $conn;
         <div class="control-group">
           <label class="string required control-label" for="procedimiento">
 			<b>Procedimiento:</b>
-			<input type="hidden" name="bksaiacondicion_s@procedimiento" id="bksaiacondicion_s-procedimiento" value="like">
+			<input type="hidden" name="bksaiacondicion_procedimiento" id="bksaiacondicion_s-procedimiento" value="like">
           </label>
           <div class="controls">
-            <input id="bqsaia_nombre" name="bqsaia_s@procedimiento" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_s@procedimiento" id="bqsaiaenlace_s-procedimiento" value="y">
+            <input id="bqsaia_nombre" name="bqsaia_procedimiento" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_procedimiento" id="bqsaiaenlace_s-procedimiento" value="y">
           </div>
         </div> 
 

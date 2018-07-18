@@ -190,7 +190,7 @@ function adicionar_pantalla_campos_formato($idpantalla, $datos) {
      * Se garantiza que la serie ya existe y que siempre llega un valor para serie_idserie en datos
      */
     if (!$campo_serie["numcampos"]) {
-        $sql2 = "INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(" . $idpantalla . ",'serie_idserie','Tipo de documento','int','11',0,'','a,e','Tipo de documento','" . $datos["serie_idserie"] . "','','hidden',0,1,'Tipo documental')";
+        $sql2 = "INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(" . $idpantalla . ",'serie_idserie','Tipo de documento','int','11',0,'../../test/test_serie_funcionario.php?estado_serie=1;2;0;1;1;0;1','a,e','Tipo de documento','" . $datos["serie_idserie"] . "','','hidden',0,1,'Tipo documental')";
         phpmkr_query($sql2);
         $retorno["serie_idserie"] = phpmkr_insert_id();
         $retorno["serie_idserie_sql"] = $sql2;

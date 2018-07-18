@@ -889,8 +889,8 @@ detalles_mostrar_".$x_nombre.".php";
         }
       }
       if(!$campo_serie){
-        $strsql="INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html) VALUES (".$idformato.",'serie_idserie', 'SERIE DOCUMENTAL', 'INT', 11, 1,".$fieldList["serie_idserie"].", 'a',".$fieldList["etiqueta"].", 'fk', 'hidden')";
-        $strsql_export=array("sql"=>"INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html) VALUES (|-idformato-|,'serie_idserie', 'SERIE DOCUMENTAL', 'INT', 11, 1,|-idserie-|, 'a',".$fieldList["etiqueta"].", 'fk', 'hidden')","variables"=>array("idserie"=>"select idserie FROM serie WHERE nombre='".$x_etiqueta."' AND categoria=3","idformato"=>"select idformato FROM formato WHERE nombre='".$x_nombre."'"));
+        $strsql="INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html,valor) VALUES (".$idformato.",'serie_idserie', 'SERIE DOCUMENTAL', 'INT', 11, 1,".$fieldList["serie_idserie"].", 'a',".$fieldList["etiqueta"].", 'fk', 'hidden','../../test/test_serie_funcionario.php?estado_serie=1;2;0;1;1;0;1')";
+        $strsql_export=array("sql"=>"INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html,valor) VALUES (|-idformato-|,'serie_idserie', 'SERIE DOCUMENTAL', 'INT', 11, 1,|-idserie-|, 'a',".$fieldList["etiqueta"].", 'fk', 'hidden','../../test/test_serie_funcionario.php?estado_serie=1;2;0;1;1;0;1')","variables"=>array("idserie"=>"select idserie FROM serie WHERE nombre='".$x_etiqueta."' AND categoria=3","idformato"=>"select idformato FROM formato WHERE nombre='".$x_nombre."'"));
 		guardar_traza($strsql,$x_tabla,$strsql_export);
       	phpmkr_query($strsql, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
       }

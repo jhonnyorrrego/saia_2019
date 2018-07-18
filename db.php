@@ -3766,4 +3766,39 @@ function notificaciones($mensaje, $tipo = 'alert', $tiempo = 3500,$ubicacion="to
 	}
 }
 
+/**
+ * @param $id=id
+ * @param $tabla => nombre de la tabla
+ * @param $tipo => 1,insert,2,update
+ * @param $cod_padre_ant => El codigo padre antes del update (aplica cuando es tipo 2)
+ * @param $cod_arbol_ant => El codigo arbol antes del update (aplica cuando es tipo 2)
+ * */
+
+function actualizar_crear_cod_arboles($id, $tabla, $tipo = 1, $cod_padre_ant = false, $cod_arbol_ant = false) {
+	if ($id) {
+		$cod_arbol = $id;
+		$datos = busca_filtro_tabla("cod_padre,cod_arbol", $tabla, "id" . $tabla . "=" . $id, "", $conn);
+		if ($datos["numcampos"]) {
+			if ($datos[0]["cod_padre"]) {
+				$padre = busca_filtro_tabla("cod_arbol", $tabla, "id" . $tabla . "=" . $datos[0]["cod_padre"], "", $conn);
+				if ($padre["numcampos"]) {
+					$cod_arbol = $padre[0]["cod_arbol"] . "." . $id;
+				}
+			}
+			$update = "UPDATE " . $tabla . " SET cod_arbol='" . $cod_arbol . "' WHERE id" . $tabla . "=" . $id;
+			phpmkr_query($update) or die("Error al actualizar el cod_arbol principal");
+			if ($tipo == 2) {
+				if ($cod_padre_ant !== false && $cod_arbol_ant !== false) {
+					if ($cod_padre_ant != $datos[0]["cod_padre"]) {
+						$update_ant = "UPDATE " . $tabla . " SET cod_arbol=replace(cod_arbol,'" . $cod_arbol_ant . "','" . $cod_arbol . "') WHERE cod_arbol LIKE '" . $cod_arbol_ant . ".%'";
+						phpmkr_query($update_ant) or die("Error al actualizar el cod_arbol");
+					}
+				} else {
+					die("Falta el cod_padre/cod_arbol");
+				}
+			}
+		}
+	}
+	return;
+}
 ?>

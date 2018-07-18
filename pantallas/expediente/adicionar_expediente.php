@@ -148,26 +148,14 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
   	</select>
   </div>
 </div>
+
+
 <div class="control-group element">
-  <label class="control-label" for="serie_idserie">Serie asociada *
-  </label>
-  <div class="controls">
-        <span class="phpmaker">
-    			<input type="text" id="stext_serie" width="200px" size="20">          
-          <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value),1)">
-          <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>
-          <!--a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value),0,1)"-->
-          <a href="javascript:void(0)" id="buscar_arb">
-          <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>
-          <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById('stext_serie').value))">
-          <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>      
-          <div id="esperando_serie"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
-    			<div id="treeboxbox_tree3" class="arbol_saia"></div>
-         
-        </span>
-         <input type="hidden" name="serie_idserie" id="serie_idserie">
-         <input type="hidden" name="dependencia_iddependencia" id="dependencia_iddependencia">
-  </div>
+	<label class="control-label" for="serie_idserie">Serie asociada *</label>
+	<div class="controls">
+		<div id="treeboxbox_tree3"></div>
+		<input type="hidden" name="dependencia_iddependencia" id="dependencia_iddependencia">
+	</div>
 </div>
 
 <div data-toggle="collapse" data-target="#datos_adicionales">
@@ -361,107 +349,34 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
   echo(librerias_arboles());
   ?>
   <script type="text/javascript">
-  $(document).ready(function(){
-		j=0;
-		$("#buscar_arb").click(function(){
-			notificacion_saia('Ejecutando busqueda... Espere un momento','warning','',2000);
-			var nombre=document.getElementById('stext_serie').value;
-			$.ajax({
-				async:false,
-				type:'GET',
-				url: "../../buscar_test_serie.php",
-				dataType: "json",
-				data: {
-					nombre:nombre,
-					tabla: "serie",
-					valores_serie:"1"
-					
-				},
-				success:function (opciones){
-					tree2.openItemsDynamic(data["datos"],true);
-				}
-			});
+  
+  function cargar_info_Node(NodeId){
+	  if(treeserie_idserie.isItemChecked(NodeId)){
+	    $("#codigo_numero_serie").val(treeserie_idserie.getUserData(NodeId,"codigo"));
+	    /*$("#dependencia_iddependencia").val(treeserie_idserie.getUserData(NodeId,"iddependencia"));
+		  $("#codigo_numero_dependencia").val(treeserie_idserie.getUserData(NodeId,"dependencia_codigo"));
+		  $("#fondo").val(tree3.getUserData(NodeId,"dependencia_nombre"));*/
+	  	$("#codigo_numero_serie").trigger('keyup');
+	  }else{
+	  	$("#codigo_numero_serie").val("");
+	  }
+  }
+  
+  $(document).ready(function (){
+		url2="test/test_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0";
+		$.ajax({
+			url : "<?php echo($ruta_db_superior);?>test/crear_arbol.php",
+			data:{xml:url2,campo:"serie_idserie",radio:1,ruta_db_superior:"../../",busqueda_item:1,onNodeSelect:"cargar_info_Node"},
+			type : "POST",
+			async:false,
+			success : function(html_serie) {
+				$("#treeboxbox_tree3").empty().html(html_serie);
+			},error: function (){
+				top.noty({text: 'No se pudo cargar el arbol de series',type: 'error',layout: 'topCenter',timeout:5000});
+			}
 		});
-    
-    var browserType;
-    if (document.layers) {browserType = "nn4"}
-    if (document.all) {browserType = "ie"}
-    if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-       browserType= "gecko"
-    }    
-    tree3=new dhtmlXTreeObject("treeboxbox_tree3","","",0);
-  	tree3.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
-  	tree3.enableIEImageFix(true);
-    tree3.enableCheckBoxes(1);
-    tree3.enableRadioButtons(true);
-    tree3.setOnLoadingStart(cargando_serie);
-    tree3.setOnLoadingEnd(fin_cargando_serie);
-    tree3.enableSmartXMLParsing(true);
-    tree3.setOnCheckHandler(onNodeSelect_serie);
-    
-  	tree3.setXMLAutoLoading("../../test_dependencia_serie.php?tabla=dependencia&admin=1&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&funcionario=1&carga_partes_dependencia=1&carga_partes_serie=1");	
-  	tree3.loadXML("../../test_dependencia_serie.php?tabla=dependencia&admin=1&mostrar_nodos=dsa&sin_padre_dependencia=1&cargar_series=1&funcionario=1&carga_partes_dependencia=1&carga_partes_serie=1");
-
-	
-	
-	function onNodeSelect_dependencia(nodeId){
-    	tiempo=null;
-    	j=nodeId.length-1;
-    	tiempo=window.setInterval(abrir_dependencias,3000,nodeId);
-    }
-    function abrir_dependencias(dato){
-    	tree3.openItem('d'+dato[j]);
-    	j--;
-    	if (j<0){clearInterval(tiempo);};
-    }
-
-  	function onNodeSelect_serie(nodeId){
-  	  if(tree3.isItemChecked(nodeId)){
-  		var item_select=tree3.getAllChecked();
-  		
-  		if(item_select!=="undefined" && item_select!=nodeId){
-  	  		lista_items=item_select.split(",");
-  	  		for(i=0;i<lista_items.length;i++){
-  	  			tree3.setCheck(lista_items[i],0);
-  	  	  	}
-  	  	}
-  		tree3.setCheck(nodeId,1);
-        $("#serie_idserie").val(tree3.getUserData(nodeId,"idserie"));
-        $("#dependencia_iddependencia").val(tree3.getUserData(nodeId,"iddependencia"));
-        $("#codigo_numero_serie").val(tree3.getUserData(nodeId,"serie_codigo"));
-    	$("#codigo_numero_dependencia").val(tree3.getUserData(nodeId,"dependencia_codigo"));
-    	$("#fondo").val(tree3.getUserData(nodeId,"dependencia_nombre"));
-    	$("#codigo_numero_serie").trigger('keyup');
-      }
-      else{
-    	$("#serie_idserie").val("");
-    	$("#dependencia_iddependencia").val("");
-    	$("#codigo_numero_serie").val('');
-  	  	$("#codigo_numero_dependencia").val('');
-  	    $("#fondo").val('');
-  	    $("#codigo_numero_serie").trigger('keyup');
-      }
-    }
-    function fin_cargando_serie() {
-      if (browserType == "gecko" )
-        document.poppedLayer = eval('document.getElementById("esperando_serie")');
-      else if (browserType == "ie")
-        document.poppedLayer = eval('document.getElementById("esperando_serie")');
-      else
-        document.poppedLayer = eval('document.layers["esperando_serie"]');
-      document.poppedLayer.style.display = "none";
-    }
-    function cargando_serie() {
-      if (browserType == "gecko" )
-        document.poppedLayer = eval('document.getElementById("esperando_serie")');
-      else if (browserType == "ie")
-        document.poppedLayer = eval('document.getElementById("esperando_serie")');
-      else
-        document.poppedLayer = eval('document.layers["esperando_serie"]');
-      document.poppedLayer.style.display = "";
-    }   
-    
-    
+  
+  
     $(".opcion_informacion").on("hide",function(){
 		  $(this).prev().children("i").removeClass();
 		  $(this).prev().children("i").addClass("icon-plus-sign");
@@ -493,6 +408,7 @@ $(document).ready(function(){
     pick12HourFormat: true,
     pickTime: false      
   });
+  
   var formulario_expediente=$("#formulario_expediente");
   formulario_expediente.validate({
     ignore: [],  
@@ -504,6 +420,7 @@ $(document).ready(function(){
   submitHandler: function(form) {
   }
   });
+  
   $("#submit_formulario_expediente").click(function(){  
     if(formulario_expediente.valid()){
     	$('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");

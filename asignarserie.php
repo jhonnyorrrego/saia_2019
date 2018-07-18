@@ -1,162 +1,138 @@
-<?php 
-include_once("db.php");
-include_once("header.php");
-include_once("pantallas/expediente/librerias.php");
-
-include_once("pantallas/lib/librerias_cripto.php");
-include_once("librerias_saia.php");
+<?php
+include_once ("db.php");
+include_once ("header.php");
+include_once ("pantallas/lib/librerias_cripto.php");
 desencriptar_sqli('form_info');
-echo(librerias_jquery('1.7'));
 
-function eliminar_permiso($idserie,$tipo_entidad,$entidad){
-	global $conn;
+if ($_REQUEST["opt"] == 1 && $_REQUEST["iddependencia"] && $_REQUEST["serie_idserie"]) {
+	//VINCULACION DE DEPENDENCIAS VS SERIES
+	$series = array_unique(explode(",", $_REQUEST["serie_idserie"]));
+	$dependencias = array_unique(explode(",", $_REQUEST["iddependencia"]));
 
-	$sqlDelete="DELETE from entidad_serie where serie_idserie='$idserie' and entidad_identidad='$tipo_entidad' and llave_entidad='$entidad'";
- 	$conn->Ejecutar_Sql($sqlDelete);  
+	if ($_REQUEST["accion"] == "eliminar") {
+		foreach ($series as $idserie) {
+			foreach ($dependencias as $id) {
+				$delete = "UPDATE entidad_serie SET estado=0 WHERE serie_idserie=" . $idserie . " and llave_entidad=" . $id;
+				phpmkr_query($delete) or die("Error al eliminar la vinculacion de la serie con la dependencia");
+			}
+		}
+	} else {
+		$cons_serie = busca_filtro_tabla("cod_arbol", "serie", "idserie in (" . implode(",", $series) . ")", "", $conn);
+		if ($cons_serie["numcampos"]) {
+			$cod_arboles = array();
+			for ($i = 0; $i < $cons_serie["numcampos"]; $i++) {
+				$cod_arboles = array_merge($cod_arboles, explode(".", $cons_serie[$i]["cod_arbol"]));
+			}
+			$ids = array_unique($cod_arboles);
+			foreach ($ids as $idserie) {
+				$temp_dep = $dependencias;
+				$exis = busca_filtro_tabla("llave_entidad", "entidad_serie", "estado=1 and serie_idserie=" . $idserie . " and llave_entidad in (" . implode(",", $temp_dep) . ")", "", $conn);
+				if ($exis["numcampos"]) {
+					$ids_insert = extrae_campo($exis, "llave_entidad");
+					$temp_dep = array_diff($temp_dep, $ids_insert);
+				}
+				foreach ($temp_dep as $iddepe) {
+					$insert = "INSERT INTO entidad_serie (entidad_identidad,serie_idserie,llave_entidad,estado,fecha) VALUES (2," . $idserie . "," . $iddepe . ",1," . fecha_db_almacenar(date("Y-m-d"), "Y-m-d") . ")";
+					phpmkr_query($insert) or die("Error al guardar la informacion");
+
+				}
+			}
+		}
+	}
+	notificaciones("Datos Guardados!", "success", 5000);
+	if ($_REQUEST["idnode"] != "") {
+		$info_node=explode(".", $_REQUEST["idnode"]);
+		if(trim($_REQUEST["iddependencia"])==$info_node[0]){
+		?>
+		<script>
+			var idnode='<?php echo $_REQUEST["idnode"];?>';
+			window.parent.frames['arbol'].tree2.deleteChildItems(idnode);
+			window.parent.frames['arbol'].tree2.refreshItem(idnode);
+		</script>
+		<?php
+		}else{
+			$dep_papa = busca_filtro_tabla("iddependencia", "dependencia", "(cod_padre=0 or cod_padre is null)", "nombre ASC", $conn);
+			?>
+			<script>
+				var idnode='<?php echo $dep_papa[0]["iddependencia"];?>.0.<?php echo $info_node[2];?>';
+				window.parent.frames['arbol'].tree2.deleteChildItems(idnode);
+				window.parent.frames['arbol'].tree2.refreshItem(idnode);
+			</script>
+			<?php
+		}
+	} else {
+		$idmodulo = busca_filtro_tabla("idmodulo", "modulo", "nombre='serie'", "", $conn);
+		if ($idmodulo["numcampos"]) {
+			abrir_url("pantallas/pantallas_kaiten/principal.php?idmodulo=" . $idmodulo[0]["idmodulo"] . "&cmd=resetall", "centro");
+		} else {
+			die();
+		}
+	}
 }
 
-//si viene de la pantalla asignar_serie_entidad.php
-if(isset($_REQUEST["serie_entidad"]) && $_REQUEST["serie_entidad"])
-	{
-	 $arreglo_nodos_actualizar=array();//Desarrollo recarga arbol
-	 $tipo_entidad = $_REQUEST["tipo_entidad"];
-	 $entidades=explode(',',$_REQUEST["entidad_identidad"]);
-	 $series=explode(',',$_REQUEST["serie_idserie"]); 
-	 //validaci�n de ids
-	 if($tipo_entidad==1)
-	 {$nuevas=array();
-	  for($i=0;$i<count($entidades);$i++) //verifico que si es una entidad repetida, ponga bien el id
-	    {if(strpos($entidades[$i],"_")!==false)
-	       $nuevas[]=substr($entidades[$i],0,strpos($entidades[$i],"_"));
-	     elseif($entidades[$i]<>"RI#")
-	       $nuevas[]=$entidades[$i];  
-	    }
-	  $entidades=$nuevas;
-	  
-	  $funcionarios=busca_filtro_tabla("idfuncionario","funcionario","funcionario_codigo in(".implode(",",$entidades).")","",$conn);
-	    $entidades=extrae_campo($funcionarios,"idfuncionario","U");
-	   } 
-	
-	 $nuevas=array();
-	 for($i=0;$i<count($series);$i++)//quito las categorias de la lista de series
-	  {if(strpos($series[$i],"-")==false)
-	     $nuevas[]=$series[$i];
-	  }
-	 $series=$nuevas; 
-	 //fin validaci�n ids
-	 for($j=0;$j<count($series);$j++){
-	 if(!$_REQUEST["opcion"])//si voy a quitar el permiso
-	  {$encontradas=busca_filtro_tabla("","entidad_serie","entidad_identidad='$tipo_entidad' and serie_idserie='".$series[$j]."' and llave_entidad in(".implode(",",$entidades).")","",$conn);  
-	   for($i=0;$i<$encontradas["numcampos"];$i++){
-	     eliminar_permiso($encontradas[$i]["serie_idserie"],$encontradas[$i]["entidad_identidad"],$encontradas[$i]["llave_entidad"]);
-       
-       if($tipo_entidad==2){//Desarrollo recarga arbol
-        $arreglo_nodos_actualizar[]=$encontradas[$i]["llave_entidad"];
-       }
-	   } 
-	  }
-	 else //si voy a adicionar el permiso
-	  {for($i=0;$i<count($entidades);$i++){
-	     insertar_permiso($series[$j],$tipo_entidad,$entidades[$i]);
-       
-       if($tipo_entidad==2){//Desarrollo recarga arbol
-          $arreglo_nodos_actualizar[]=$entidades[$i];
-       }
-	    }
-	  } 
-	 }
-	$ruta="asignarserie_entidad.php";
-	
-  if($tipo_entidad==2){//Cuando la asignacion es a la dependencia
-    $arreglo_nodos_actualizar=array_unique($arreglo_nodos_actualizar);
-    $cant_nodos=count($arreglo_nodos_actualizar);
-    if($cant_nodos){
-      ?>
-      <script>
-      <?php
-      for($i=0;$i<$cant_nodos;$i++){
-        $adicional='';
-        if(@$_REQUEST["tvd"]){
-          $adicional="_tv";
-        }
-        ?>
-        window.parent.frames['arbol'].tree2.refreshItem('<?php echo('d'.$arreglo_nodos_actualizar[$i]).$adicional; ?>');
-        window.parent.frames['arbol'].tree2.openAllItems('<?php echo('d'.$arreglo_nodos_actualizar[$i]).$adicional; ?>');
-        <?php
-      }
-      ?>
-      </script>
-      <?php
-    }
-  }
-	
-	?>
-	<script>	
-	top.noty({text: 'Asignacion realizada',type: 'success',layout: 'topCenter',timeout:4000});
-	//parent.location.reload();
-  //window.open("asignarserie_entidad.php?filtrar_serie=<?php echo(@$_REQUEST["serie_idserie"]); ?>","_self")
-  
-  window.history.go(-1);//Desarrollo recarga arbol
-	</script>
-	<?php
+if ($_REQUEST["opt"] == 2 && $_REQUEST["tipo_entidad"] && $_REQUEST["serie_idserie"]) {
+	//PERMISOS DE SERIES VS (CARGO,DEPENDENCIA,FUNCIONARIO)
+	$series = array_unique(explode(",", $_REQUEST["serie_idserie"]));
+	$entidad = array_unique(explode(",", $_REQUEST["identidad"]));
+	$entidad_identidad = $_REQUEST["tipo_entidad"];
+
+	switch ($entidad_identidad) {
+		case '1' :
+			//funcionario
+			$idfuncionarios = array();
+			foreach ($entidad as $rol) {
+				if (strpos($rol, "#") === false) {
+					$func = busca_filtro_tabla("idfuncionario", "vfuncionario_dc", "iddependencia_cargo=" . $rol, "", $conn);
+					if ($func["numcampos"]) {
+						$idfuncionarios[] = $func[0]["idfuncionario"];
+					}
+				}
+			}
+			$idllave_entidad = array_unique($idfuncionarios);
+			break;
+		case '2' :
+			//dependencia
+			$idllave_entidad = $entidad;
+			break;
+		case '4' :
+			//cargo
+			$idllave_entidad = $entidad;
+			break;
+	}
+	if ($_REQUEST["accion"] == "eliminar") {
+		foreach ($series as $idserie) {
+			foreach ($idllave_entidad as $id) {
+				$delete = "UPDATE permiso_serie SET estado=0 WHERE entidad_identidad=" . $entidad_identidad . " and serie_idserie=" . $idserie . " and llave_entidad=" . $id;
+				phpmkr_query($delete) or die("Error al eliminar el permiso");
+			}
+		}
+
+	} else {
+		$cons_serie = busca_filtro_tabla("cod_arbol", "serie", "idserie in (" . implode(",", $series) . ")", "", $conn);
+		if ($cons_serie["numcampos"]) {
+			$cod_arboles = array();
+			for ($i = 0; $i < $cons_serie["numcampos"]; $i++) {
+				$cod_arboles = array_merge($cod_arboles, explode(".", $cons_serie[$i]["cod_arbol"]));
+			}
+			$ids = array_unique($cod_arboles);
+			foreach ($ids as $idserie) {
+				$array_temp = $idllave_entidad;
+				$exis = busca_filtro_tabla("llave_entidad", "permiso_serie", "estado=1 and entidad_identidad=" . $entidad_identidad . " and serie_idserie=" . $idserie . " and llave_entidad in (" . implode(",", $array_temp) . ")", "", $conn);
+				if ($exis["numcampos"]) {
+					$ids_insert = extrae_campo($exis, "llave_entidad");
+					$array_temp = array_diff($array_temp, $ids_insert);
+				}
+				foreach ($array_temp as $id) {
+					$insert = "INSERT INTO permiso_serie (entidad_identidad,serie_idserie,llave_entidad,estado) VALUES (" . $entidad_identidad . "," . $idserie . "," . $id . ",1)";
+					phpmkr_query($insert) or die("Error al guardar la informacion");
+				}
+			}
+		}
+	}
+	notificaciones("Datos actualizados!", "success", 5000);
+	abrir_url("permiso_serie.php","_self");
 	die();
 }
 
-function insertar_permiso($idserie,$tipo_entidad,$entidad)
-{global $conn;
- $datos=busca_filtro_tabla("*","entidad_serie","entidad_identidad=".$tipo_entidad." AND serie_idserie=".$idserie." AND llave_entidad=".$entidad,"",$conn);
-
-   if(!@$datos["numcampos"])
-      {$sqlInsert = "INSERT INTO entidad_serie(entidad_identidad, serie_idserie, llave_entidad, estado) VALUES (".$tipo_entidad.",".$idserie.",".$entidad.",'1')";
-     
-      }
-    else $sqlInsert = "UPDATE entidad_serie SET estado=1 WHERE entidad_identidad=".$tipo_entidad." AND serie_idserie=".$idserie." AND llave_entidad=".$entidad;
-		
- $conn->Ejecutar_Sql($sqlInsert);  
- 
- $serie_actual=busca_filtro_tabla("cod_padre","serie","idserie=".$idserie,"",$conn);
- if(!is_null($serie_actual[0]['cod_padre']) && $serie_actual[0]['cod_padre']!='' && is_int($serie_actual[0]['cod_padre'])){
- 	insertar_permiso($serie_actual[0]['cod_padre'],$tipo_entidad,$entidad);
- }
-}
-function padres($idserie,$tipo_entidad,$entidad,$tipo)
-{global $conn;
- $padre=busca_filtro_tabla("cod_padre","serie","idserie='$idserie'","",$conn);
- 
-  if($padre[0]["cod_padre"]=='')
-   return (true);               
-  else
-   {if($tipo==1)
-      insertar_permiso($padre[0]["cod_padre"],$tipo_entidad,$entidad);
-    if($tipo==2)
-      {$hijos=busca_filtro_tabla("count(*)","entidad_serie,serie","serie_idserie=idserie and entidad_identidad='$tipo_entidad' and llave_entidad='$entidad' and cod_padre='".$padre[0]["cod_padre"]."'","",$conn);
-
-       if(!$hijos[0][0])
-         eliminar_permiso($padre[0]["cod_padre"],$tipo_entidad,$entidad); 
-
-      }
-    padres($padre[0]["cod_padre"],$tipo_entidad,$entidad,$tipo);
-    return(true);
-   }  
-}
-
-function hijos($idserie,$tipo_entidad,$entidad,$tipo)
-{global $conn;
- $hijos=busca_filtro_tabla("idserie","serie","estado=1 and cod_padre='$idserie'","",$conn);
-
- if(!$hijos["numcampos"])
-   return(true);
- else
-   {for($j=0;$j<$hijos["numcampos"];$j++)
-       {if($tipo==1)
-          insertar_permiso($hijos[$j]["idserie"],$tipo_entidad,$entidad);
-        elseif($tipo==2)
-          eliminar_permiso($hijos[$j]["idserie"],$tipo_entidad,$entidad);
-        hijos($hijos[$j]["idserie"],$tipo_entidad,$entidad,$tipo);
-       }
-    return(true);
-   }  
-} 
-   
-include_once("footer.php");
+include_once ("footer.php");
 ?>
