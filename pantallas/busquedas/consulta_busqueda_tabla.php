@@ -79,6 +79,7 @@ select.btn{
       <input type="hidden" name="adicionar_consulta" id="adicionar_consulta" value="1">
       <input type="hidden" name="idbusqueda_filtro_temp" id="idbusqueda_filtro_temp" value="<?php echo(@$_REQUEST["idbusqueda_filtro_temp"]);?>">
       <input type="hidden" name="busqueda_total_paginas" id="busqueda_total_paginas" value="">
+      <input type="hidden" value="<?php echo(@$_REQUEST["variable_busqueda"]);?>" name="variable_busqueda" id="variable_busqueda">
       <input type="hidden" name="rows" id="rows" value="20">
     </form>
   </div>
@@ -93,7 +94,7 @@ select.btn{
         }
         $datos_busqueda[0]["busqueda_avanzada"] .= 'idbusqueda_componente=' . $datos_busqueda[0]["idbusqueda_componente"];
         ?>
-        <button class="pull-left btn btn-mini kenlace_saia" titulo="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>" title="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>" conector="iframe" enlace="<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>">B&uacute;squeda &nbsp;</button>
+        <button class="pull-left btn btn-mini btn-info kenlace_saia" titulo="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>" title="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>" conector="iframe" enlace="<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>">B&uacute;squeda &nbsp;</button>
       <?php
         }
         $tiene_acciones = !empty($datos_busqueda[0]["acciones_seleccionados"]);
