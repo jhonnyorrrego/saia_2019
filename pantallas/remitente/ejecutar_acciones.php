@@ -29,24 +29,36 @@ function set_remitente() {
 	$exito = 0;
 	$campos = array("cargo", "empresa", "direccion", "telefono", "email", "titulo", "ciudad", "codigo", "ejecutor_idejecutor");
 	$valores = array();
+	$valores_busqueda = array();
 	foreach ($campos AS $key => $campo) {
 		if (@$_REQUEST[$campo]) {
 			array_push($valores, $_REQUEST[$campo]);
+			array_push($valores_busqueda,$campo."='".$_REQUEST[$campo]."' ");
 		} else {
 			array_push($valores, "");
+			array_push($valores_busqueda,"(".$campo."='' OR ".$campo." IS NULL )");
 		}
 	}
-	$sql2 = "INSERT INTO datos_ejecutor(" . implode(",", $campos) . ") VALUES('" . implode("','", $valores) . "')";
-	phpmkr_query($sql2);
-	$iddatos_ejecutor = phpmkr_insert_id();
-	$retorno -> sql = $sql2;
+	$remitente=busca_filtro_tabla("","datos_ejecutor",implode(" AND ",$valores_busqueda));
+	if(!$remitente["numcampos"]){
+		$sql2 = "INSERT INTO datos_ejecutor(" . implode(",", $campos) . ") VALUES('" . implode("','", $valores) . "')";
+		phpmkr_query($sql2);
+		$iddatos_ejecutor = phpmkr_insert_id();
+		$retorno -> sql = $sql2;
+		$retorno -> mensaje = "Datos guardados";
+	}
+	else{
+		$retorno -> mensaje = "Los datos de remitente ya se encuentran registrados ";
+		$retorno -> sql = $remitente["sql"];
+		$iddatos_ejecutor=$remitente[0]["iddatos_ejecutor"];
+	}
 	if ($iddatos_ejecutor) {
 		$exito = 1;
 	}
 	if ($exito) {
 		$retorno -> iddatos_ejecutor = $iddatos_ejecutor;
 		$retorno -> exito = 1;
-		$retorno -> mensaje = "Datos guardados";
+
 	}
 	return ($retorno);
 }

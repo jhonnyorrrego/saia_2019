@@ -51,10 +51,22 @@ function rotulo_caja($id){
 	global $logo, $ruta_db_superior;
  
 	$datos=busca_filtro_tabla(fecha_db_obtener('fecha_extrema_i','Y-m-d H:i')." as fecha_i, ".fecha_db_obtener('fecha_extrema_f','Y-m-d H:i')." as fecha_f, a.*","caja a","a.idcaja=".$id,"",$conn);
-	$serie=busca_filtro_tabla("","serie a","a.idserie=".$datos[0]["serie_idserie"],"",$conn);
-	if($serie[0]["cod_padre"]){
-		$serie2=busca_filtro_tabla("","serie a","a.idserie=".$serie[0]["cod_padre"],"",$conn);
-	}	
+
+	$serie=busca_filtro_tabla("nombre,tipo,cod_padre","serie a","a.idserie=".$datos[0]["serie_idserie"],"",$conn);
+	$nomb_serie="";
+	$nomb_subserie="";
+	if($serie[0]["tipo"]==1){
+		$nomb_serie=$serie[0]["nombre"];
+	}else if($serie[0]["tipo"]==2){
+		$nomb_subserie=$serie[0]["nombre"];
+		if($serie[0]["cod_padre"]){
+			$serie2=busca_filtro_tabla("nombre,tipo,cod_padre","serie a","a.idserie=".$serie[0]["cod_padre"],"",$conn);
+			if($serie2["numcampos"] && $serie2[0]["tipo"]==1){
+				$nomb_serie=$serie2[0]["nombre"];
+			}
+		}	
+	}
+
 	$dep=busca_filtro_tabla("","dependencia a, dependencia_cargo b","a.iddependencia=b.dependencia_iddependencia and b.funcionario_idfuncionario=".$datos[0]["funcionario_idfuncionario"]." and b.estado=1","",$conn);
 
 	
@@ -84,7 +96,7 @@ function rotulo_caja($id){
 ?>
 <table style="border-collapse:collapse;font-family:arial;font-size:8pt; width:453px; height: 650px; margin: 15px 0px 0px 33px;" border="1px">
 	<tr>
-		<td colspan="3" style="text-align:center"><img src="<?php echo $logo; ?>" border="0px"><br /><img src="<?php echo($ruta_qr); ?>"></td>
+		<td colspan="3" style="text-align:center"><img src="<?php echo $logo; ?>" border="0px"><br /><br /><img src="<?php echo($ruta_qr); ?>"></td>
 	</tr>
 	<tr>
 		<td><b>FONDO</b></td>
@@ -108,11 +120,11 @@ function rotulo_caja($id){
 	</tr>
 	<tr height="30px">
 		<td><b>SERIE</b></td>
-		<td colspan="2" style="text-align:center"><?php echo mayusculas($serie2[0]["nombre"]); ?></td>
+		<td colspan="2" style="text-align:center"><?php echo mayusculas($nomb_serie); ?></td>
 	</tr>
 	<tr height="30px">
 		<td><b>SUBSERIE</b></td>
-		<td colspan="2" style="text-align:center"><?php echo mayusculas($serie[0]["nombre"]); ?></td>
+		<td colspan="2" style="text-align:center"><?php echo mayusculas($nomb_subserie); ?></td>
 	</tr>
 	<tr>
 		<td><b>No. CARPETA</b></td>
@@ -148,10 +160,22 @@ function rotulo_carpeta($id){
         
 	$datos=busca_filtro_tabla(fecha_db_obtener('fecha_extrema_i','Y-m-d')." as fecha_i, ".fecha_db_obtener('fecha_extrema_f','Y-m-d')." as fecha_f, a.*","expediente a","a.idexpediente=".$id,"",$conn);
 	$caja=busca_filtro_tabla("","caja a","a.idcaja=".$datos[0]["fk_idcaja"],"",$conn);
-	$serie=busca_filtro_tabla("","serie a","a.idserie=".$datos[0]["serie_idserie"],"",$conn);
-	if($serie[0]["cod_padre"]){
-		$serie2=busca_filtro_tabla("","serie a","a.idserie=".$serie[0]["cod_padre"],"",$conn);
+	
+	$serie=busca_filtro_tabla("nombre,tipo,cod_padre","serie a","a.idserie=".$datos[0]["serie_idserie"],"",$conn);
+	$nomb_serie="";
+	$nomb_subserie="";
+	if($serie[0]["tipo"]==1){
+		$nomb_serie=$serie[0]["nombre"];
+	}else if($serie[0]["tipo"]==2){
+		$nomb_subserie=$serie[0]["nombre"];
+		if($serie[0]["cod_padre"]){
+			$serie2=busca_filtro_tabla("nombre,tipo","serie a","a.idserie=".$serie[0]["cod_padre"],"",$conn);
+			if($serie2["numcampos"] && $serie2[0]["tipo"]==1){
+				$nomb_serie=$serie2[0]["nombre"];
+			}
+		}	
 	}
+		
 	$secciones = explode(',',$datos[0]["unidad_admin"]);
 	
 	$array_dependencias = array();
@@ -231,11 +255,11 @@ filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 	</tr>
 	<tr>
 		<td style="text-align:center"><b>SERIE</b></td>
-		<td colspan="2"><?php echo mayusculas($serie2[0]["nombre"]); ?></td>
+		<td colspan="2"><?php echo mayusculas($nomb_serie); ?></td>
 	</tr>
 	<tr>
 		<td style="text-align:center"><b>SUBSERIE</b></td>
-		<td colspan="2"><?php echo mayusculas($serie[0]["nombre"]); ?></td>
+		<td colspan="2"><?php echo mayusculas($nomb_subserie); ?></td>
 	</tr>
 	<tr>
 		<td style="text-align:center"><b>PROCESO</b></td>
@@ -266,7 +290,8 @@ filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 	</tr>
 	<tr>
 		<td colspan="3" style="text-align:center"><img src="<?php echo $logo; ?>" border="0px">
-			<br>
+			<br/>
+			<br/>
 			<img src="<?php echo $ruta_qr; ?>"/>
 		</td>
 	</tr>

@@ -8,6 +8,7 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
+
 include_once ("header.php");
 include_once ("pantallas/lib/librerias_cripto.php");
 $validar_enteros = array("x_idserie");
@@ -67,6 +68,7 @@ switch ($sAction) {
 		$x_tvd = Null;
 		break;
 }
+
 function AddData($conn) {
 	// Field nombre
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_nombre"]) : $GLOBALS["x_nombre"];
@@ -126,6 +128,7 @@ function AddData($conn) {
 	$fieldList["tipo"] = "'" . $GLOBALS["x_tipo"] . "'";
 	$fieldList["tvd"] = "'" . $GLOBALS["x_tvd"] . "'";
 
+
 	// insert into database
 	$strsql = "INSERT INTO serie (";
 	$strsql .= implode(",", array_keys($fieldList));
@@ -134,7 +137,7 @@ function AddData($conn) {
 	$strsql .= ")";
 	phpmkr_query($strsql, $conn);
 	$id = phpmkr_insert_id();
-	
+
  	actualizar_crear_cod_arboles($id, "serie", 1);
 	return $id;
 }
@@ -394,5 +397,4 @@ encriptar_sqli("serieadd", 1, "form_info", "", false, false);
 			}
 		});
 	});
-
 </script>

@@ -130,7 +130,7 @@ if($dato_padre["numcampos"]){
   <label class="control-label" for="serie_idserie">Serie asociada *
   </label>
   <div class="controls">       
-  	<?php echo("<b>Serie.</b> <span id='serie_asociada'>".mostrar_seleccionados_exp($datos[0]["serie_idserie"],"nombre","serie")."</span> <b>| Fondo.</b> ".$datos[0]["fondo"]); ?>
+  	<?php echo("<b><span id='etiqueta_serie'>Serie.</span></b> <span id='serie_asociada'>".mostrar_seleccionados_exp($datos[0]["serie_idserie"],"nombre","serie")."</span> <b>| Fondo.</b> ".$datos[0]["fondo"]); ?>
   	<br />
     <span class="phpmaker">
     	<div id="treeboxbox_tree3"></div>
@@ -417,7 +417,6 @@ if($dato_padre["numcampos"]){
         document.poppedLayer = eval('document.layers["esperando_expediente"]');
       document.poppedLayer.style.display = "";
     }  
-        
   });
   
   $(".opcion_informacion").on("hide",function(){

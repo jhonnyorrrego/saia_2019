@@ -148,7 +148,7 @@ $().ready(function() {
     formatResult: function(row) {
 		return row[4];
 		}
-	});
+	}); 
 	$("#nombre_ejecutor").result(function(event, data, formatted) {
 		if (data){
       $("#identificacion_ejecutor").val(data[2]);
@@ -351,12 +351,13 @@ $().ready(function() {
   });
   $("#eliminar").click(function(){
     var f=$("#estado_actualizacion").find(":selected");
-    if(f.val()!=0)
-      {f.remove();
+    if(f.val()!=0){
+       $("#de_"+f.val()).remove();
+       f.remove();
        campo_padre=(parent.<?php echo $_REQUEST["formulario_autocompletar"].".".$_REQUEST["campo_autocompletar"];?>);
-       aux=eliminarItem(campo_padre.value,f.val());
-       campo_padre.value=aux;
+       campo_padre.value=($("#estado_actualizacion option").map(function() {if($(this).val()!=="0"){return $(this).val();} else return;}).get());
       }
+   
   });
   function mostrar_ejecutor(){
     var selected = $("#seleccionados_ejecutor option:selected");
@@ -434,7 +435,7 @@ $().ready(function() {
          {$lista=busca_filtro_tabla("iddatos_ejecutor,nombre","datos_ejecutor,ejecutor","ejecutor_idejecutor=idejecutor and iddatos_ejecutor in(".$_REQUEST["destinos"].")","nombre",$conn);
 		if($_REQUEST["tipo"]!='unico'){
 			for($i=0;$i<$lista["numcampos"];$i++)
-				echo $lista[$i]["nombre"]."<br>";
+				echo "<div class='datos_ejecutor' id='de_".$lista[$i]["iddatos_ejecutor"]."' >".$lista[$i]["nombre"]."</div>";
 	         }
 		 }
         }

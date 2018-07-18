@@ -131,7 +131,7 @@ function cargando_serie() {
 </script>
 
 <div class="control-group element">
-  <label class="control-label" for="codigo">Codigo
+  <label class="control-label" for="codigo">Codigo *
   </label>
   <div class="controls"> 
     <input type="text"  id="codigo_numero_dependencia" name="codigo_dependencia" value="" style="width:12%;" readonly="readonly">
@@ -141,7 +141,7 @@ function cargando_serie() {
 </div>
 
 <div class="control-group element">
-  <label class="control-label" for="fondo">Fondo
+  <label class="control-label" for="fondo">Fondo *
   </label>
   <div class="controls"> 
     <input type="text" name="fondo" required="required" id="fondo" value="" readonly="readonly">

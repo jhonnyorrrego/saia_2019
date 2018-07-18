@@ -11,6 +11,9 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
+include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
+
+desencriptar_sqli('form_info');
 
 if (isset($_REQUEST["accion"])) {
 	$_REQUEST["accion"]();
@@ -192,7 +195,7 @@ function guardar_item() {
              var direccion = new String(parent.location);
              param=direccion.split('&');
              direccion=param[0]+'&'+param[1];
-             parent.location=direccion+'&rand=" . rand(0, 100) . "';  
+             parent.location=direccion+'&mostrar_formato=item&rand=" . rand(0, 100) . "';  
              </script>";
 		}
 		if ($_REQUEST["opcion_item"] == "adicionar") {

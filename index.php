@@ -253,6 +253,7 @@ if ($dato["numcampos"]) {
 	var tiempo = 3500;
 	$("#tabla_principal").height($(window).height() - 56);
 	$("#ingresar").click(function() {
+		$("#ingresar").attr("disabled","disabled");
 		if ($("#userid").val() && $("#passwd").val()) {
 			$('#contenedor_recordar_contrasena').css('pointer-events', 'none');
 			$.ajax({
@@ -296,6 +297,7 @@ if ($dato["numcampos"]) {
 				timeout : tiempo
 			});
 		}
+		$("#ingresar").removeAttr("disabled");
 	});
 	$(document).keypress(function(event) {
 		var keycode = (event.keyCode ? event.keyCode : event.which);

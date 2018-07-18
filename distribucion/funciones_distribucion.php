@@ -561,7 +561,7 @@ function opciones_acciones_distribucion($datos) {
 	$cnombre_componente = busca_filtro_tabla("nombre", "busqueda_componente", "idbusqueda_componente=" . $datos['idbusqueda_componente'], "", $conn);
 	$nombre_componente = $cnombre_componente[0]['nombre'];
 
-	$cadena_acciones .= "<select id='opciones_acciones_distribucion' class='pull-left btn btn-mini' style=' margin-left: 10px;'>";
+	$cadena_acciones .= "<select id='opciones_acciones_distribucion' class='pull-left btn btn-mini'>";
 	$cadena_acciones .= "<option value=''>Acciones...</option>";
 
 	if ($nombre_componente == 'reporte_distribucion_general_endistribucion' || $nombre_componente == 'reporte_distribucion_general_pordistribuir') {
@@ -915,7 +915,7 @@ function filtro_mensajero_distribucion() {
 
 	if ($ver_select) {
 
-		$select = "<select class='pull-left btn btn-mini dropdown-toggle' style='height:22px; margin-left: 10px;' name='filtro_mensajero_distribucion' id='filtro_mensajero_distribucion'>";
+		$select = "<select class='pull-left btn btn-mini dropdown-toggle' name='filtro_mensajero_distribucion' id='filtro_mensajero_distribucion'>";
 		$select .= "<option value=''>Todos Los Mensajeros</option>";
 		$array_concat = array(
 			"nombres",

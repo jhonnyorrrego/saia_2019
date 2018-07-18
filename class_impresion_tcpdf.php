@@ -452,6 +452,7 @@ class Imprime_Pdf {
 				$direccion[] = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/" . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?tipo=5&iddoc=" . $datos_plantilla[0]["documento_iddocumento"] . "&formato=" . $datos_formato[0]["idformato"] . "&tipo_pdf=tcpdf&idfunc=" . $idfunc_crypto;
 			}
 		}
+
 		//$this -> pdf -> startPageGroup();
 		foreach ($direccion as $fila) {
 			$fila .= "&font_size=" . $this -> font_size;
@@ -472,9 +473,9 @@ class Imprime_Pdf {
 			$contenido = preg_replace("/([^0-9]*)([0-9]+)px/", "$1$2pt", $contenido);
 			//Cambia los px por pt
 
-			if ($datos_formato[0]["orientacion"]) {
+			if ($datos_formato[0]["orientacion"]==1) {
 				$datos_formato[0]["orientacion"] = "L";
-			} else {
+			} else if($datos_formato[0]["orientacion"]==0){
 				$datos_formato[0]["orientacion"] = "P";
 			}
 			$this -> pdf -> AddPage($datos_formato[0]["orientacion"], $datos_formato[0]["papel"]);

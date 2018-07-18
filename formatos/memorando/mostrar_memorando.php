@@ -41,9 +41,7 @@
 <td>&nbsp;</td>
 </tr>
 <tr>
-<td>&nbsp;Atentamente,</td>
-<td>&nbsp;</td>
-<td>&nbsp;</td>
+<td colspan="3">&nbsp;Atentamente,&nbsp;&nbsp;</td>
 </tr>
 <tr>
 <td>&nbsp;</td>
