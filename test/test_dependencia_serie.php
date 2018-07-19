@@ -23,20 +23,26 @@ if ($_REQUEST["id"] && $_REQUEST["cargar_partes"] && $_REQUEST["uid"]) {
 	if ($id[1] == 0) {
 		llena_dependencia($id[0], $id[2]);
 	}
-	llena_serie($id[1], $id[0], $id[2]);
+	if ($id[0] != 0) {
+		llena_serie($id[1], $id[0], $id[2]);
+	}
 
+	if ($_REQUEST["serie_sin_asignar"] == 1 && $id[0] == 0) {
+		llena_serie_sin_asignar($id[1]);
+	}
+	if ($_REQUEST["otras_categorias"] == 1 && $id[0] == 0) {
+		llena_otras_categorias($id[1]);
+	}
 } else {
 	$objetoXML -> writeAttribute("id", 0);
 	llena_dependencia(0, 0);
 	llena_dependencia(0, 1);
 
 	if ($_REQUEST["serie_sin_asignar"] == 1) {
-		$objetoXML -> startElement("item");
-		$objetoXML -> writeAttribute("style", "font-family:verdana; font-size:7pt;");
-		$objetoXML -> writeAttribute("text", "Sin Asignar - TRD");
-		$objetoXML -> writeAttribute("id", "0.0.0");
-		llena_serie_sin_asignar(0);
-		$objetoXML -> endElement();
+		llena_serie_sin_asignar(0, 1);
+	}
+	if ($_REQUEST["otras_categorias"] == 1) {
+		llena_otras_categorias(0, 1);
 	}
 }
 
@@ -98,11 +104,11 @@ function llena_dependencia($id, $tipo = 0) {
 function llena_serie($id, $iddep, $tipo = 0) {
 	global $conn, $objetoXML;
 	if ($id == 0) {
-		$papas = busca_filtro_tabla("s.*", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $iddep . " and s.tvd=" . $tipo . " and (s.cod_padre=0 or s.cod_padre is null)", "s.nombre ASC", $conn);
+		$papas = busca_filtro_tabla("s.*", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $iddep . " and s.tvd=" . $tipo . " and (s.cod_padre=0 or s.cod_padre is null) and s.categoria=2", "s.nombre ASC", $conn);
 	} else {
-		$papas = busca_filtro_tabla("s.*", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $iddep . " and s.tvd=" . $tipo . " and s.cod_padre=" . $id, "s.nombre ASC", $conn);
+		$papas = busca_filtro_tabla("s.*", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $iddep . " and s.tvd=" . $tipo . " and s.cod_padre=" . $id . " and s.categoria=2", "s.nombre ASC", $conn);
 		if ($papas["numcampos"] == 0) {
-			$papas = busca_filtro_tabla("s.*", "serie s", "s.tipo=3 and s.tvd=" . $tipo . " and s.cod_padre=" . $id, "s.nombre ASC", $conn);
+			$papas = busca_filtro_tabla("s.*", "serie s", "s.tipo=3 and s.tvd=" . $tipo . " and s.cod_padre=" . $id . " and s.categoria=2", "s.nombre ASC", $conn);
 		}
 	}
 
@@ -117,7 +123,7 @@ function llena_serie($id, $iddep, $tipo = 0) {
 			$objetoXML -> writeAttribute("text", $text);
 			$objetoXML -> writeAttribute("id", $iddep . "." . $papas[$i]["idserie"] . "." . $tipo);
 
-			$hijos = busca_filtro_tabla("count(*) as cant", "serie", "tvd=" . $tipo . "  and cod_padre=" . $papas[$i]["idserie"], "", $conn);
+			$hijos = busca_filtro_tabla("count(*) as cant", "serie", "tvd=" . $tipo . "  and cod_padre=" . $papas[$i]["idserie"] . " and categoria=2", "", $conn);
 			if ($hijos[0]["cant"]) {
 				$objetoXML -> writeAttribute("child", 1);
 				if (!$_REQUEST["cargar_partes"]) {
@@ -131,12 +137,19 @@ function llena_serie($id, $iddep, $tipo = 0) {
 	}
 }
 
-function llena_serie_sin_asignar($id) {
+function llena_serie_sin_asignar($id, $inicio = 0) {
 	global $conn, $objetoXML;
+	if ($inicio) {
+		$objetoXML -> startElement("item");
+		$objetoXML -> writeAttribute("style", "font-family:verdana; font-size:7pt;");
+		$objetoXML -> writeAttribute("text", "LISTADO DE SERIES");
+		$objetoXML -> writeAttribute("id", "0.0.0");
+	}
+
 	if ($id == 0) {
-		$papas = busca_filtro_tabla("", "serie", "(cod_padre=0 or cod_padre is null)", "nombre ASC", $conn);
+		$papas = busca_filtro_tabla("", "serie", "(cod_padre=0 or cod_padre is null) and categoria=2", "nombre ASC", $conn);
 	} else {
-		$papas = busca_filtro_tabla("", "serie", "cod_padre=" . $id, "nombre ASC", $conn);
+		$papas = busca_filtro_tabla("", "serie", "cod_padre=" . $id . " and categoria=2", "nombre ASC", $conn);
 	}
 	if ($papas["numcampos"]) {
 		for ($i = 0; $i < $papas["numcampos"]; $i++) {
@@ -153,17 +166,63 @@ function llena_serie_sin_asignar($id) {
 
 			$objetoXML -> writeAttribute("style", $style);
 			$objetoXML -> writeAttribute("text", $text);
-			$objetoXML -> writeAttribute("id", "0." . $papas[$i]["idserie"] . ".0");
+			$objetoXML -> writeAttribute("id", "0." . $papas[$i]["idserie"] . "." . $papas[$i]["tvd"]);
 
-			$hijos = busca_filtro_tabla("count(*) as cant", "serie", "cod_padre=" . $papas[$i]["idserie"], "", $conn);
+			$hijos = busca_filtro_tabla("count(*) as cant", "serie", "cod_padre=" . $papas[$i]["idserie"] . " and categoria=2", "", $conn);
 			if ($hijos[0]["cant"]) {
 				$objetoXML -> writeAttribute("child", 1);
-				llena_serie_sin_asignar($papas[$i]["idserie"]);
+				if (!$_REQUEST["cargar_partes"]) {
+					llena_serie_sin_asignar($papas[$i]["idserie"]);
+				}
 			} else {
 				$objetoXML -> writeAttribute("child", 0);
 			}
 			$objetoXML -> endElement();
 		}
+	}
+	if ($inicio) {
+		$objetoXML -> endElement();
+	}
+}
+
+function llena_otras_categorias($id, $inicio = 0) {
+	global $conn, $objetoXML;
+	if ($inicio) {
+		$objetoXML -> startElement("item");
+		$objetoXML -> writeAttribute("style", "font-family:verdana; font-size:7pt;");
+		$objetoXML -> writeAttribute("text", "OTRAS CATEGORIAS");
+		$objetoXML -> writeAttribute("id", "0.0.-1");
+	}
+	if ($id == 0) {
+		$papas = busca_filtro_tabla("", "serie", "(cod_padre=0 or cod_padre is null) and categoria=3", "nombre ASC", $conn);
+	} else {
+		$papas = busca_filtro_tabla("", "serie", "cod_padre=" . $id . " and categoria=3", "nombre ASC", $conn);
+	}
+	if ($papas["numcampos"]) {
+		for ($i = 0; $i < $papas["numcampos"]; $i++) {
+			$text = $papas[$i]["nombre"] . " (" . $papas[$i]["codigo"] . ")";
+			if ($papas[$i]["estado"] == 0) {
+				$text .= " - INACTIVO";
+			}
+			$objetoXML -> startElement("item");
+			$objetoXML -> writeAttribute("style", "font-family:verdana; font-size:7pt;");
+			$objetoXML -> writeAttribute("text", $text);
+			$objetoXML -> writeAttribute("id", "0." . $papas[$i]["idserie"] . ".-1");
+
+			$hijos = busca_filtro_tabla("count(*) as cant", "serie", "cod_padre=" . $papas[$i]["idserie"] . " and categoria=3", "", $conn);
+			if ($hijos[0]["cant"]) {
+				$objetoXML -> writeAttribute("child", 1);
+				if (!$_REQUEST["cargar_partes"]) {
+					llena_otras_categorias($papas[$i]["idserie"]);
+				}
+			} else {
+				$objetoXML -> writeAttribute("child", 0);
+			}
+			$objetoXML -> endElement();
+		}
+	}
+	if ($inicio) {
+		$objetoXML -> endElement();
 	}
 }
 ?>

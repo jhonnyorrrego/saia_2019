@@ -11,7 +11,9 @@ class Version20180712195111 extends AbstractMigration {
 		$this -> platform -> registerDoctrineTypeMapping('enum', 'string');
 
 		$table = $schema -> getTable("serie");
-		$table -> addColumn("cod_arbol", "text", ["notnull" => false]);
+		$table -> addColumn("cod_arbol", "string", [
+		"length" => 255,
+		"notnull" => false]);
 
 		if (!$schema -> hasTable("permiso_serie")) {
 			$table4 = $schema -> createTable("permiso_serie");

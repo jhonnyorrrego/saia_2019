@@ -1,11 +1,21 @@
 <?php
-include_once ("db.php");
-include_once ("header.php");
+$max_salida = 6;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
+	}
+	$ruta .= "../";
+	$max_salida--;
+}
+
+include_once ($ruta_db_superior."db.php");
+include_once ($ruta_db_superior."header.php");
 
 $tvd=array(0=>"",1=>"");
 $tvd[$_REQUEST["tvd"]]="checked";
 
-include_once ("librerias_saia.php");
+include_once ($ruta_db_superior."librerias_saia.php");
 echo(librerias_jquery("1.8"));
 echo(librerias_validar_formulario("11"));
 echo(librerias_arboles());
@@ -45,8 +55,8 @@ echo(librerias_arboles());
 	$(document).ready(function() {
 		url1="test/test_dependencia.php?seleccionados=<?php echo $_REQUEST["seleccionados"];?>";
 		$.ajax({
-			url : "test/crear_arbol.php",
-			data:{xml:url1,campo:"iddependencia",radio:0,abrir_cargar:1},
+			url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
+			data:{xml:url1,campo:"iddependencia",radio:0,abrir_cargar:1,ruta_db_superior:"../../"},
 			type : "POST",
 			async:false,
 			success : function(html_dep) {
@@ -60,8 +70,8 @@ echo(librerias_arboles());
 			tvd=$(this).val();
 			url2="test/test_serie.php?tipo3=0&tvd="+tvd;
 			$.ajax({
-				url : "test/crear_arbol.php",
-				data:{xml:url2,campo:"serie_idserie",radio:0,check_branch:1,abrir_cargar:1},
+				url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
+				data:{xml:url2,campo:"serie_idserie",radio:0,check_branch:1,abrir_cargar:1,ruta_db_superior:"../../"},
 				type : "POST",
 				async:false,
 				success : function(html_serie) {
@@ -89,4 +99,4 @@ echo(librerias_arboles());
 	});
 </script>
 
-<?php include ("footer.php") ?>
+<?php include ($ruta_db_superior."footer.php") ?>

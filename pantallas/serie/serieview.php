@@ -1,5 +1,16 @@
 <?php
-include ("db.php");
+$max_salida = 6;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
+	}
+	$ruta .= "../";
+	$max_salida--;
+}
+
+include_once ($ruta_db_superior."db.php");
+
 if (!$_REQUEST["key"]) {
 	$idmodulo = busca_filtro_tabla("idmodulo", "modulo", "nombre='serie'", "", $conn);
 	if ($idmodulo["numcampos"]) {
@@ -8,7 +19,7 @@ if (!$_REQUEST["key"]) {
 		die();
 	}
 }
-include ("header.php");
+include ($ruta_db_superior."header.php");
 $idserie = $_REQUEST["key"];
 $idnode = ($_REQUEST["idnode"]!="") ? $_REQUEST["idnode"] : 0 ;
 
@@ -18,6 +29,8 @@ $tipo_serie = array(
 	3 => "TIPO DOCUMENTAL"
 );
 $tipo=array(0=>"TRD",1=>"TVD");
+$categoria=array(2=>"PRODUCCION DOCUMENTAL",3=>"OTRAS CATAGORIAS");
+
 $conservacion=array("TOTAL"=>"CONSERVACION","ELIMINACION"=>"ELIMINACION");
 $sel=array(0=>"NO",1=>"SI");
 $estado=array(0=>"INACTIVO",1=>"ACTIVO");
@@ -30,18 +43,26 @@ if($datos[0]["tipo"]==2 || $datos[0]["tipo"]==3 && $datos[0]["cod_padre"]){
 		$nom_padre=$padre[0]["nombre"]. " - (".$padre[0]["codigo"].")";
 	}
 }
+
+include_once ($ruta_db_superior."librerias_saia.php");
+echo librerias_jquery("1.7");
 ?>
 <span style="font-family: Verdana; font-size: 9px;"><br/>
-	<a href="serieedit.php?idnode=<?php echo $idnode ;?>&key=<?php echo $idserie; ?>">EDITAR</a>
+	<a href="serieedit.php?idnode=<?php echo $idnode ;?>&x_idserie=<?php echo $idserie; ?>">EDITAR</a>
 </span><br/><br/>
 
 <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
 	<tr>
+		<td class="encabezado">CATEGORIA</td>
+		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $categoria[$datos[0]["categoria"]];?></span></td>
+	</tr>
+	
+	<tr class="ocultar">
 		<td class="encabezado">TIPO</td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $tipo[$datos[0]["tvd"]];?></span></td>
 	</tr>
 
-	<tr>
+	<tr class="ocultar">
 		<td class="encabezado">TIPO SERIE</td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $tipo_serie[$datos[0]["tipo"]];?></span></td>
 	</tr>
@@ -61,47 +82,47 @@ if($datos[0]["tipo"]==2 || $datos[0]["tipo"]==3 && $datos[0]["cod_padre"]){
 		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $nom_padre;?></span></td>
 	</tr>
 
-	<tr>
+	<tr class="ocultar">
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">D&Iacute;AS DE ENTREGA BASE</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $datos[0]["dias_entrega"];?></span></td>
 	</tr>
 
-	<tr>
+	<tr class="ocultar">
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">A&Ntilde;OS ARCHIVO GESTI&Oacute;N</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $datos[0]["retencion_gestion"];?></span></td>
 	</tr>
 
-	<tr>
+	<tr class="ocultar">
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">A&Ntilde;OS ARCHIVO CENTRAL</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $datos[0]["retencion_central"];?></span></td>
 	</tr>
 
-	<tr>
+	<tr class="ocultar">
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">CONSERVACI&Oacute;N / ELIMINACI&Oacute;N</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $conservacion[$datos[0]["conservacion"]];?></span></td>
 	</tr>
 
-	<tr>
+	<tr class="ocultar">
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">SELECCI&Oacute;N</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $sel[$datos[0]["seleccion"]];?></span></td>
 	</tr>
 
-	<tr>
+	<tr class="ocultar">
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">DIGITALIZACI&Oacute;N</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $sel[$datos[0]["digitalizacion"]];?></span></td>
 	</tr>
 
-	<tr>
+	<tr class="ocultar">
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">OTRO</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $datos[0]["otro"];?></span></td>
 	</tr>
 
-	<tr>
+	<tr class="ocultar">
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">PERMITIR COPIA</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $sel[$datos[0]["copia"]];?></span></td>
 	</tr>
 
-	<tr>
+	<tr class="ocultar">
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">PROCEDIMIENTO CONSERVACI&Oacute;N</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $datos[0]["procedimiento"];?></span></td>
 	</tr>
@@ -112,5 +133,13 @@ if($datos[0]["tipo"]==2 || $datos[0]["tipo"]==3 && $datos[0]["cod_padre"]){
 	</tr>
 </table>
 <?php
-	include ("footer.php");
- ?>
+	include_once ($ruta_db_superior."footer.php");
+?>
+<script>
+	$(document).ready(function (){
+		var categoria=parseInt(<?php echo $datos[0]["categoria"];?>);
+		if(categoria==3){
+			$(".ocultar").hide();
+		}
+	});
+</script>

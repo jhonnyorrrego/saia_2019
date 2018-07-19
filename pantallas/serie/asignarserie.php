@@ -1,7 +1,17 @@
 <?php
-include_once ("db.php");
-include_once ("header.php");
-include_once ("pantallas/lib/librerias_cripto.php");
+$max_salida = 6;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
+	}
+	$ruta .= "../";
+	$max_salida--;
+}
+
+include_once ($ruta_db_superior."db.php");
+include_once ($ruta_db_superior."header.php");
+include_once ($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 desencriptar_sqli('form_info');
 
 if ($_REQUEST["opt"] == 1 && $_REQUEST["iddependencia"] && $_REQUEST["serie_idserie"]) {
@@ -63,7 +73,7 @@ if ($_REQUEST["opt"] == 1 && $_REQUEST["iddependencia"] && $_REQUEST["serie_idse
 	} else {
 		$idmodulo = busca_filtro_tabla("idmodulo", "modulo", "nombre='serie'", "", $conn);
 		if ($idmodulo["numcampos"]) {
-			abrir_url("pantallas/pantallas_kaiten/principal.php?idmodulo=" . $idmodulo[0]["idmodulo"] . "&cmd=resetall", "centro");
+			abrir_url($ruta_db_superior."pantallas/pantallas_kaiten/principal.php?idmodulo=" . $idmodulo[0]["idmodulo"] . "&cmd=resetall", "centro");
 		} else {
 			die();
 		}
@@ -134,5 +144,5 @@ if ($_REQUEST["opt"] == 2 && $_REQUEST["tipo_entidad"] && $_REQUEST["serie_idser
 	die();
 }
 
-include_once ("footer.php");
+include_once ($ruta_db_superior."footer.php");
 ?>
