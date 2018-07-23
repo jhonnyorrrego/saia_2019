@@ -1,7 +1,17 @@
 <?php
-include_once ("db.php");
-include_once ("header.php");
-include_once ("pantallas/lib/librerias_cripto.php");
+$max_salida = 6;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
+	}
+	$ruta .= "../";
+	$max_salida--;
+}
+
+include_once ($ruta_db_superior . "db.php");
+include_once ($ruta_db_superior . "header.php");
+include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 desencriptar_sqli('form_info');
 
 if ($_REQUEST["opt"] == 1 && $_REQUEST["iddependencia"] && $_REQUEST["serie_idserie"]) {
@@ -41,7 +51,7 @@ if ($_REQUEST["opt"] == 1 && $_REQUEST["iddependencia"] && $_REQUEST["serie_idse
 	}
 	notificaciones("Datos Guardados!", "success", 5000);
 	if ($_REQUEST["idnode"] != "") {
-		$info_node=explode(".", $_REQUEST["idnode"]);
+		$info_node = explode(".", $_REQUEST["idnode"]);
 		if(trim($_REQUEST["iddependencia"])==$info_node[0]){
 		?>
 		<script>
@@ -63,7 +73,7 @@ if ($_REQUEST["opt"] == 1 && $_REQUEST["iddependencia"] && $_REQUEST["serie_idse
 	} else {
 		$idmodulo = busca_filtro_tabla("idmodulo", "modulo", "nombre='serie'", "", $conn);
 		if ($idmodulo["numcampos"]) {
-			abrir_url("pantallas/pantallas_kaiten/principal.php?idmodulo=" . $idmodulo[0]["idmodulo"] . "&cmd=resetall", "centro");
+			abrir_url($ruta_db_superior . "pantallas/pantallas_kaiten/principal.php?idmodulo=" . $idmodulo[0]["idmodulo"] . "&cmd=resetall", "centro");
 		} else {
 			die();
 		}
@@ -104,6 +114,30 @@ if ($_REQUEST["opt"] == 2 && $_REQUEST["tipo_entidad"] && $_REQUEST["serie_idser
 			foreach ($idllave_entidad as $id) {
 				$delete = "UPDATE permiso_serie SET estado=0 WHERE entidad_identidad=" . $entidad_identidad . " and serie_idserie=" . $idserie . " and llave_entidad=" . $id;
 				phpmkr_query($delete) or die("Error al eliminar el permiso");
+				$cod_padre = busca_filtro_tabla("cod_padre", "serie", "idserie=" . $idserie, "", $conn);
+				if ($cod_padre["numcampos"] && $cod_padre[0]["cod_padre"] != "" && $cod_padre[0]["cod_padre"] != 0) {
+					$padre = busca_filtro_tabla("p.idpermiso_serie", "permiso_serie p,serie s", "p.serie_idserie=s.idserie and p.estado=1 and p.entidad_identidad=" . $entidad_identidad . " and p.llave_entidad=" . $id . " and s.cod_padre=" . $cod_padre[0]["cod_padre"], "", $conn);
+					if ($padre["numcampos"] == 0) {
+						$delete = "UPDATE permiso_serie SET estado=0 WHERE entidad_identidad=" . $entidad_identidad . " and serie_idserie=" . $cod_padre[0]["cod_padre"] . " and llave_entidad=" . $id;
+						phpmkr_query($delete) or die("Error al eliminar el permiso. n2");
+					}else{// NO APLICA PARA OTRAS CATEGORIAS YA QUE PUEDEN MANEJAR MAS DE 3 NIVELES
+						$subserie = busca_filtro_tabla("s.idserie", "permiso_serie p,serie s", "p.serie_idserie=s.idserie and p.estado=1 and s.tipo=2 and p.entidad_identidad=" . $entidad_identidad . " and p.llave_entidad=" . $id . " and s.cod_padre=" . $cod_padre[0]["cod_padre"], "", $conn);
+						if($subserie["numcampos"]){
+							$borrar=1;
+							for ($i=0; $i <$subserie["numcampos"] ; $i++) {
+								$tipo = busca_filtro_tabla("s.idserie", "permiso_serie p,serie s", "p.serie_idserie=s.idserie and p.estado=1 and s.tipo=3 and p.entidad_identidad=" . $entidad_identidad . " and p.llave_entidad=" . $id . " and s.cod_padre=" . $subserie[$i]["idserie"], "", $conn);
+								if($tipo["numcampos"]){
+									$borrar=0;
+									break;
+								}
+							}
+							if($borrar){
+								$delete = "UPDATE permiso_serie SET estado=0 WHERE entidad_identidad=" . $entidad_identidad . " and serie_idserie=" . $cod_padre[0]["cod_padre"] . " and llave_entidad=" . $id;
+								phpmkr_query($delete) or die("Error al eliminar el permiso. n3");
+							}
+						}
+					}
+				}
 			}
 		}
 
@@ -130,9 +164,9 @@ if ($_REQUEST["opt"] == 2 && $_REQUEST["tipo_entidad"] && $_REQUEST["serie_idser
 		}
 	}
 	notificaciones("Datos actualizados!", "success", 5000);
-	abrir_url("permiso_serie.php","_self");
+	abrir_url("permiso_serie.php", "_self");
 	die();
 }
 
-include_once ("footer.php");
+include_once ($ruta_db_superior . "footer.php");
 ?>

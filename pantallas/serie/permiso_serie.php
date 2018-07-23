@@ -1,6 +1,16 @@
 <?php
-include_once ("db.php");
-include_once ("header.php");
+$max_salida = 6;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
+	}
+	$ruta .= "../";
+	$max_salida--;
+}
+
+include_once ($ruta_db_superior."db.php");
+include_once ($ruta_db_superior."header.php");
 
 $entidad=busca_filtro_tabla("identidad,nombre","entidad","identidad in (1,2,4)","nombre asc",$conn);
 $option='<option value="">Seleccione</option>';
@@ -10,7 +20,7 @@ if($entidad["numcampos"]){
 	}
 }
 
-include_once ("librerias_saia.php");
+include_once ($ruta_db_superior."librerias_saia.php");
 echo(librerias_jquery("1.8"));
 echo(librerias_validar_formulario("11"));
 echo(librerias_arboles());
@@ -50,8 +60,8 @@ echo(librerias_arboles());
 	$(document).ready(function() {
 		url2="test/test_serie.php?tipo1=0&tipo2=0&tvd=0&estado=1";
 		$.ajax({
-			url : "test/crear_arbol.php",
-			data:{xml:url2,campo:"serie_idserie",radio:0,check_branch:1,abrir_cargar:1},
+			url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
+			data:{xml:url2,campo:"serie_idserie",radio:0,check_branch:1,abrir_cargar:1,ruta_db_superior:"../../"},
 			type : "POST",
 			async:false,
 			success : function(html_serie) {
@@ -83,8 +93,8 @@ echo(librerias_arboles());
 					break;
 				} 
 				$.ajax({
-					url : "test/crear_arbol.php",
-					data:{xml:url1,campo:"identidad",radio:0,abrir_cargar:1,check_branch:check},
+					url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
+					data:{xml:url1,campo:"identidad",radio:0,abrir_cargar:1,check_branch:check,ruta_db_superior:"../../"},
 					type : "POST",
 					async:false,
 					success : function(html) {
@@ -114,4 +124,4 @@ echo(librerias_arboles());
 	});
 </script>
 
-<?php include ("footer.php") ?>
+<?php include ($ruta_db_superior."footer.php") ?>
