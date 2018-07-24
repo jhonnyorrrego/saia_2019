@@ -7,7 +7,7 @@ use Doctrine\DBAL\Schema\Schema;
 class Version20180712195111 extends AbstractMigration {
 
     public function getDescription() {
-        return 'Mover campo busqueda.llave a busqueda_componente.llave';
+        return 'cambios series v2';
     }
 
     public function preUp(Schema $schema) {
