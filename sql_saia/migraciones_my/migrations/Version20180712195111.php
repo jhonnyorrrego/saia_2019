@@ -104,7 +104,7 @@ class Version20180712195111 extends AbstractMigration {
         $table = $schema->getTable("serie");
         $schema->dropTable('vpermiso_serie');
         $schema->dropTable('vexpediente_serie');
-        $table->DropColumn("cod_arbol");
+        $table->dropColumn("cod_arbol");
         $schema->dropTable('permiso_serie');
     }
 
