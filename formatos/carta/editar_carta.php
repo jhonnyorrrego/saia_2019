@@ -12,7 +12,15 @@
 				</script> 
 			</head>
 			<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">COMUNICACIÓN EXTERNA</td></tr><input type="hidden" name="estado_documento" value="<?php echo(mostrar_valor_campo('estado_documento',1,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="expediente_serie" value="<?php echo(mostrar_valor_campo('expediente_serie',1,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="tipo_copia_interna" value="<?php echo(mostrar_valor_campo('tipo_copia_interna',1,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_carta" value="<?php echo(mostrar_valor_campo('idft_carta',1,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',1,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',1,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',1,$_REQUEST['iddoc'])); ?>"><tr id="tr_serie_idserie">
-								<td class="encabezado" width="20%" title="">CLASIFICAR EN EXPEDIENTE*</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(1,8,'4',$_REQUEST['iddoc']);?></div><br/><input type="hidden" maxlength="11"  class="required"  name="serie_idserie" id="serie_idserie"   value="<?php cargar_seleccionados(1,8,1,$_REQUEST['iddoc']);?>" ><div id="esperando_serie_idserie">
+								<td class="encabezado" width="20%" title="">CLASIFICAR EN EXPEDIENTE*</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(1,8,'1',$_REQUEST['iddoc']);?></div><br/>Buscar: <input  tabindex='1'  type="text" id="stext_serie_idserie" width="200px" size="25">
+									<a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value),1)">
+										<img src="../../botones/general/anterior.png"border="0px">
+									</a>
+								<a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value),0,1)">
+									<img src="../../botones/general/buscar.png"border="0px">
+								</a>
+								<a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value))">
+									<img src="../../botones/general/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="11"  class="required"  name="serie_idserie" id="serie_idserie"   value="<?php cargar_seleccionados(1,8,1,$_REQUEST['iddoc']);?>" ><div id="esperando_serie_idserie">
 									<img src="../../imagenes/cargando.gif">
 								</div>
 								<div id="treeboxbox_serie_idserie" height="90%"></div><script type="text/javascript">
@@ -26,7 +34,7 @@
 								tree_serie_idserie.setImagePath("../../imgs/");
 								tree_serie_idserie.enableIEImageFix(true);tree_serie_idserie.enableCheckBoxes(1);
 									tree_serie_idserie.enableRadioButtons(true);tree_serie_idserie.setOnLoadingStart(cargando_serie_idserie);
-								tree_serie_idserie.setOnLoadingEnd(fin_cargando_serie_idserie);tree_serie_idserie.setXMLAutoLoading("../../test_expediente_serie.php?estado=1&carga_partes_serie=1&sin_padre_expediente=1");tree_serie_idserie.loadXML("../../test_expediente_serie.php?estado=1&carga_partes_serie=1&sin_padre_expediente=1",checkear_arbol);tree_serie_idserie.setOnCheckHandler(onNodeSelect_serie_idserie);
+								tree_serie_idserie.setOnLoadingEnd(fin_cargando_serie_idserie);tree_serie_idserie.enableSmartXMLParsing(true);tree_serie_idserie.loadXML("../../test/test_expediente_funcionario.php",checkear_arbol);tree_serie_idserie.setOnCheckHandler(onNodeSelect_serie_idserie);
 									function onNodeSelect_serie_idserie(nodeId) {
 										valor_destino=document.getElementById("serie_idserie");
 										if(tree_serie_idserie.isItemChecked(nodeId)){
@@ -77,11 +85,11 @@
                   </tr><tr id="tr_tipo_mensajeria" >
                      <td class="encabezado" width="20%" title="">TIPO DE MENSAJER&Iacute;A</td><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(1,5200,$_REQUEST['iddoc']);?></td></tr><tr id="tr_asunto">
                      <td class="encabezado" width="20%" title="">ASUNTO*</td>
-                     <td bgcolor="#F5F5F5"><input  maxlength="255"  class="required"   tabindex='1'  type="text" size="100" id="asunto" name="asunto"  value="<?php echo(mostrar_valor_campo('asunto',1,$_REQUEST['iddoc'])); ?>"></td>
+                     <td bgcolor="#F5F5F5"><input  maxlength="255"  class="required"   tabindex='2'  type="text" size="100" id="asunto" name="asunto"  value="<?php echo(mostrar_valor_campo('asunto',1,$_REQUEST['iddoc'])); ?>"></td>
                     </tr><tr id="tr_contenido">
                      <td class="encabezado" width="20%" title="">CONTENIDO*</td>
-                     <td class="celda_transparente"><textarea  tabindex='2'  name="contenido" id="contenido" cols="53" rows="3" class="tiny_avanzado required"><?php echo(mostrar_valor_campo('contenido',1,$_REQUEST['iddoc'])); ?></textarea></td></tr><tr id="tr_despedida"><td class="encabezado" width="20%" title="Despedida de la Carta, Atentamente, Cordialmente, ...">DESPEDIDA</td><?php despedida(1,7,$_REQUEST['iddoc']);?></tr><tr id="tr_copiainterna">
-								<td class="encabezado" width="20%" title="">CON COPIA INTERNA A</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(1,2,'5',$_REQUEST['iddoc']);?></div><br/>Buscar: <input  tabindex='3'  type="text" id="stext_copiainterna" width="200px" size="25">
+                     <td class="celda_transparente"><textarea  tabindex='3'  name="contenido" id="contenido" cols="53" rows="3" class="tiny_avanzado required"><?php echo(mostrar_valor_campo('contenido',1,$_REQUEST['iddoc'])); ?></textarea></td></tr><tr id="tr_despedida"><td class="encabezado" width="20%" title="Despedida de la Carta, Atentamente, Cordialmente, ...">DESPEDIDA</td><?php despedida(1,7,$_REQUEST['iddoc']);?></tr><tr id="tr_copiainterna">
+								<td class="encabezado" width="20%" title="">CON COPIA INTERNA A</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(1,2,'5',$_REQUEST['iddoc']);?></div><br/>Buscar: <input  tabindex='4'  type="text" id="stext_copiainterna" width="200px" size="25">
 									<a href="javascript:void(0)" onclick="tree_copiainterna.findItem((document.getElementById('stext_copiainterna').value),1)">
 										<img src="../../botones/general/anterior.png"border="0px">
 									</a>

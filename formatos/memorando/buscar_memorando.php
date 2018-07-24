@@ -159,8 +159,12 @@
 		  </button-->
 		  <input type="hidden" name="bqsaiaenlace_serie_idserie" id="bqsaiaenlace_serie_idserie" value="y" />
 		</div>
-                   <td class="encabezado" width="20%" title="">CLASIFICAR EN EXPEDIENTE</td><input type="hidden" name="bksaiacondicion_serie_idserie" id="bksaiacondicion_serie_idserie" value="like"><td bgcolor="#F5F5F5"><div id="esperando_serie_idserie"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(,28,'4',$_REQUEST['iddoc']);?></div>
-                          <br />  <div id="treeboxbox_serie_idserie" height="90%"></div><input type="hidden" maxlength="11"  name="serie_idserie" id="serie_idserie"   value="" ><label style="display:none" class="error" for="serie_idserie">Campo obligatorio.</label><script type="text/javascript">
+                   <td class="encabezado" width="20%" title="">CLASIFICAR EN EXPEDIENTE</td><input type="hidden" name="bksaiacondicion_serie_idserie" id="bksaiacondicion_serie_idserie" value="like"><td bgcolor="#F5F5F5"><div id="esperando_serie_idserie"><img src="../../imagenes/cargando.gif"></div><div id="seleccionados"><?php mostrar_seleccionados(,28,'1',$_REQUEST['iddoc']);?></div>
+                          <br />  Buscar: <input type="text" id="stext_serie_idserie" width="200px" size="25">
+                   <a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
+                   <a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
+                          <a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
+                          <br /><br /><div id="treeboxbox_serie_idserie" height="90%"></div><input type="hidden" maxlength="11"  name="serie_idserie" id="serie_idserie"   value="" ><label style="display:none" class="error" for="serie_idserie">Campo obligatorio.</label><script type="text/javascript">
                   <!--
                       var browserType;
                       if (document.layers) {browserType = "nn4"}
@@ -172,7 +176,7 @@
                 			tree_serie_idserie.setImagePath("../../imgs/");
                 			tree_serie_idserie.enableIEImageFix(true);tree_serie_idserie.enableCheckBoxes(1);
                     tree_serie_idserie.enableRadioButtons(true);tree_serie_idserie.setOnLoadingStart(cargando_serie_idserie);
-                      tree_serie_idserie.setOnLoadingEnd(fin_cargando_serie_idserie);tree_serie_idserie.setXMLAutoLoading("../../test_expediente_serie.php?estado=1&carga_partes_serie=1&sin_padre_expediente=1");tree_serie_idserie.loadXML("../../test_expediente_serie.php?estado=1&carga_partes_serie=1&sin_padre_expediente=1");
+                      tree_serie_idserie.setOnLoadingEnd(fin_cargando_serie_idserie);tree_serie_idserie.enableSmartXMLParsing(true);tree_serie_idserie.loadXML("../../test/test_expediente_funcionario.php");
                       tree_serie_idserie.setOnCheckHandler(onNodeSelect_serie_idserie);
                       function onNodeSelect_serie_idserie(nodeId)
                       {valor_destino=document.getElementById("serie_idserie");

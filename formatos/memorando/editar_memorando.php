@@ -12,7 +12,15 @@
 				</script> 
 			</head>
 			<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");?><form name="formulario_formatos" id="formulario_formatos" method="post" action="../../class_transferencia.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4"><tr><td colspan="2" class="encabezado_list">COMUNICACIÓN INTERNA</td></tr><input type="hidden" name="expediente_serie" value="<?php echo(mostrar_valor_campo('expediente_serie',2,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="estado_documento" value="<?php echo(mostrar_valor_campo('estado_documento',2,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="idft_memorando" value="<?php echo(mostrar_valor_campo('idft_memorando',2,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',2,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',2,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',2,$_REQUEST['iddoc'])); ?>"><tr id="tr_fecha_memorando"><td class="encabezado" width="20%" title="">FECHA*</td><?php fecha_formato(2,19,$_REQUEST['iddoc']);?></tr><tr id="tr_serie_idserie">
-								<td class="encabezado" width="20%" title="">CLASIFICAR EN EXPEDIENTE</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(2,28,'4',$_REQUEST['iddoc']);?></div><br/><input type="hidden" maxlength="11"  name="serie_idserie" id="serie_idserie"   value="<?php cargar_seleccionados(2,28,1,$_REQUEST['iddoc']);?>" ><div id="esperando_serie_idserie">
+								<td class="encabezado" width="20%" title="">CLASIFICAR EN EXPEDIENTE</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(2,28,'1',$_REQUEST['iddoc']);?></div><br/>Buscar: <input  tabindex='1'  type="text" id="stext_serie_idserie" width="200px" size="25">
+									<a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value),1)">
+										<img src="../../botones/general/anterior.png"border="0px">
+									</a>
+								<a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value),0,1)">
+									<img src="../../botones/general/buscar.png"border="0px">
+								</a>
+								<a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value))">
+									<img src="../../botones/general/siguiente.png"border="0px"></a><br/><input type="hidden" maxlength="11"  name="serie_idserie" id="serie_idserie"   value="<?php cargar_seleccionados(2,28,1,$_REQUEST['iddoc']);?>" ><div id="esperando_serie_idserie">
 									<img src="../../imagenes/cargando.gif">
 								</div>
 								<div id="treeboxbox_serie_idserie" height="90%"></div><script type="text/javascript">
@@ -26,7 +34,7 @@
 								tree_serie_idserie.setImagePath("../../imgs/");
 								tree_serie_idserie.enableIEImageFix(true);tree_serie_idserie.enableCheckBoxes(1);
 									tree_serie_idserie.enableRadioButtons(true);tree_serie_idserie.setOnLoadingStart(cargando_serie_idserie);
-								tree_serie_idserie.setOnLoadingEnd(fin_cargando_serie_idserie);tree_serie_idserie.setXMLAutoLoading("../../test_expediente_serie.php?estado=1&carga_partes_serie=1&sin_padre_expediente=1");tree_serie_idserie.loadXML("../../test_expediente_serie.php?estado=1&carga_partes_serie=1&sin_padre_expediente=1",checkear_arbol);tree_serie_idserie.setOnCheckHandler(onNodeSelect_serie_idserie);
+								tree_serie_idserie.setOnLoadingEnd(fin_cargando_serie_idserie);tree_serie_idserie.enableSmartXMLParsing(true);tree_serie_idserie.loadXML("../../test/test_expediente_funcionario.php",checkear_arbol);tree_serie_idserie.setOnCheckHandler(onNodeSelect_serie_idserie);
 									function onNodeSelect_serie_idserie(nodeId) {
 										valor_destino=document.getElementById("serie_idserie");
 										if(tree_serie_idserie.isItemChecked(nodeId)){
@@ -66,7 +74,7 @@
 										}
 									}
 </script></td></tr><tr id="tr_destino">
-								<td class="encabezado" width="20%" title="">DESTINO*</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(2,21,'5',$_REQUEST['iddoc']);?></div><br/>Buscar: <input  tabindex='1'  type="text" id="stext_destino" width="200px" size="25">
+								<td class="encabezado" width="20%" title="">DESTINO*</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(2,21,'5',$_REQUEST['iddoc']);?></div><br/>Buscar: <input  tabindex='2'  type="text" id="stext_destino" width="200px" size="25">
 									<a href="javascript:void(0)" onclick="tree_destino.findItem((document.getElementById('stext_destino').value),1)">
 										<img src="../../botones/general/anterior.png"border="0px">
 									</a>
@@ -146,7 +154,7 @@
 										}
 									}
 </script></td></tr><tr id="tr_copia">
-								<td class="encabezado" width="20%" title="">CON COPIA A</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(2,22,'5',$_REQUEST['iddoc']);?></div><br/>Buscar: <input  tabindex='2'  type="text" id="stext_copia" width="200px" size="25">
+								<td class="encabezado" width="20%" title="">CON COPIA A</td><td bgcolor="#F5F5F5"><div id="seleccionados"><?php mostrar_seleccionados(2,22,'5',$_REQUEST['iddoc']);?></div><br/>Buscar: <input  tabindex='3'  type="text" id="stext_copia" width="200px" size="25">
 									<a href="javascript:void(0)" onclick="tree_copia.findItem((document.getElementById('stext_copia').value),1)">
 										<img src="../../botones/general/anterior.png"border="0px">
 									</a>
@@ -227,10 +235,10 @@
 									}
 </script></td></tr><tr id="tr_asunto">
                      <td class="encabezado" width="20%" title="">ASUNTO*</td>
-                     <td bgcolor="#F5F5F5"><input  maxlength="255"  class="required"   tabindex='3'  type="text" size="100" id="asunto" name="asunto"  value="<?php echo(mostrar_valor_campo('asunto',2,$_REQUEST['iddoc'])); ?>"></td>
+                     <td bgcolor="#F5F5F5"><input  maxlength="255"  class="required"   tabindex='4'  type="text" size="100" id="asunto" name="asunto"  value="<?php echo(mostrar_valor_campo('asunto',2,$_REQUEST['iddoc'])); ?>"></td>
                     </tr><tr id="tr_contenido">
                      <td class="encabezado" width="20%" title="">CONTENIDO*</td>
-                     <td class="celda_transparente"><textarea  tabindex='4'  name="contenido" id="contenido" cols="53" rows="3" class="tiny_avanzado required"><?php echo(mostrar_valor_campo('contenido',2,$_REQUEST['iddoc'])); ?></textarea></td></tr><tr id="tr_despedida"><td class="encabezado" width="20%" title="">DESPEDIDA*</td><?php despedida(2,25,$_REQUEST['iddoc']);?></tr><tr id="tr_iniciales"><td class="encabezado" width="20%" title="">INICIALES DE QUIEN PREPARO EL MEMORANDO*</td><?php iniciales(2,26,$_REQUEST['iddoc']);?></tr><tr id="tr_anexos">
+                     <td class="celda_transparente"><textarea  tabindex='5'  name="contenido" id="contenido" cols="53" rows="3" class="tiny_avanzado required"><?php echo(mostrar_valor_campo('contenido',2,$_REQUEST['iddoc'])); ?></textarea></td></tr><tr id="tr_despedida"><td class="encabezado" width="20%" title="">DESPEDIDA*</td><?php despedida(2,25,$_REQUEST['iddoc']);?></tr><tr id="tr_iniciales"><td class="encabezado" width="20%" title="">INICIALES DE QUIEN PREPARO EL MEMORANDO*</td><?php iniciales(2,26,$_REQUEST['iddoc']);?></tr><tr id="tr_anexos">
                      <td class="encabezado" width="20%" title="Anexos digitales">ANEXOS DIGITALES</td>
                      <td class="celda_transparente"><?php echo '<div class="textwrapper">
 			<a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=2&idcampo=32" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {

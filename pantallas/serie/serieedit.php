@@ -529,7 +529,7 @@ encriptar_sqli("serieedit", 1, "form_info", "../../", false, false);
 			if(tvd!=undefined && tipo_serie!=undefined){
 				if(tipo_serie!=1){
 					$(".ocultar_padre").show();
-					xml="test/test_serie.php?&excluidos="+$("#x_idserie").val()+"tipo3=0&tvd="+tvd;
+					xml="test/test_serie.php?excluidos="+$("#x_idserie").val()+"&tipo3=0&tvd="+tvd;
 					if(tipo_serie==2){
 						xml+="&tipo2=0";
 					}
