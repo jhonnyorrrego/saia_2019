@@ -37,7 +37,7 @@ $estado=array(0=>"INACTIVO",1=>"ACTIVO");
 
 $datos = busca_filtro_tabla("", "serie", "idserie=" . $idserie, "", $conn);
 $nom_padre="";
-if($datos[0]["tipo"]==2 || $datos[0]["tipo"]==3 && $datos[0]["cod_padre"]){
+if(($datos[0]["tipo"]==2 || $datos[0]["tipo"]==3 && $datos[0]["cod_padre"]) || $datos[0]["categoria"] == 3){
 	$padre = busca_filtro_tabla("nombre,codigo", "serie", "idserie=" . $datos[0]["cod_padre"], "", $conn);
 	if($padre["numcampos"]){
 		$nom_padre=$padre[0]["nombre"]. " - (".$padre[0]["codigo"].")";
@@ -56,7 +56,7 @@ echo librerias_jquery("1.7");
 		<td class="encabezado">CATEGORIA</td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $categoria[$datos[0]["categoria"]];?></span></td>
 	</tr>
-	
+
 	<tr class="ocultar">
 		<td class="encabezado">TIPO</td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $tipo[$datos[0]["tvd"]];?></span></td>
