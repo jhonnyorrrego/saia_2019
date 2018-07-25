@@ -126,7 +126,9 @@ class SaiaStorage {
                 if (count($rutas)) {
                     $balde = $rutas[0]->__toString();
                     if (count($rutas > 1)) {
-                        $opciones['directory'] = $rutas[1]->__toString();
+                        $rutas = explode('/', $path->__toString());
+                        unset($rutas[0]);
+                        $opciones['directory'] = implode("/", $rutas);
                     }
                 }
                 $this->adapter = new AwsS3Adapter($s3client, $balde, $opciones);
