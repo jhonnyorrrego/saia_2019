@@ -176,7 +176,7 @@ function barra_superior_busqueda() {
 
 	// INICIO NUEVO DESARROLLO REPORTE EXPEDIENTES 20171004
 	$cadena .= '
-	<li></li> 
+	<li></li>
 	<li>
 	    <a class="kenlace_saia" conector="iframe" idbusqueda_componente="' . $inventario . '" titulo="Inventario Documental" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?variable_busqueda=' . $registros_concatenados . '&idbusqueda_componente=' . $inventario . '">Inventario Documental</a>
 	</li>';
@@ -634,7 +634,7 @@ function transferencia_documental() {
 	$cadena = '<li><a href="#" id="transferencia_documental" titulo="Transferencia documental">Transferir a Archivo</a></li>
 	<script>
 		$("#transferencia_documental").click(function(){
-			var seleccionados=$("#seleccionados_expediente").val();			
+			var seleccionados=$("#seleccionados_expediente").val();
 			$.ajax({
 				type : "POST",
 				url : "../expediente/validar_cierre_expedientes.php",
@@ -650,8 +650,8 @@ function transferencia_documental() {
 				error : function (err){
 					alert("Error al procesar la solicitud");
 				}
-			});	
-					
+			});
+
 		});
 		</script>';
 	echo $cadena;
@@ -664,7 +664,7 @@ function adicionar_expediente() {
 		$cadena .= '
 	<li></li>
 	<li>
-	    <a  href="#" id="adicionar_expediente" idbusqueda_componente="' . $_REQUEST["idbusqueda_componente"] . '" conector="iframe" titulo="Adicionar expediente hijo" enlace="pantallas/expediente/adicionar_expediente.php?cod_padre=' . @$_REQUEST["idexpediente"] . '&div_actualiza=resultado_busqueda' . $_REQUEST["idbusqueda_componente"] . '&target_actualiza=parent&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '&cod_padre=' . $_REQUEST["idexpediente"] . '&estado_archivo=' . @$_REQUEST["variable_busqueda"] . '&fk_idcaja=' . $_REQUEST["idcaja"] . '">Adicionar Expediente/Agrupador</a>
+	    <a  href="#" id="adicionar_expediente" idbusqueda_componente="' . $_REQUEST["idbusqueda_componente"] . '" conector="iframe" titulo="Adicionar expediente hijo" enlace="pantallas/expediente/adicionar_expediente.php?cod_padre=' . @$_REQUEST["idexpediente"] . '&div_actualiza=resultado_busqueda' . $_REQUEST["idbusqueda_componente"] . '&target_actualiza=parent&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '&estado_archivo=' . @$_REQUEST["variable_busqueda"] . '&fk_idcaja=' . $_REQUEST["idcaja"] . '">Adicionar Expediente/Agrupador</a>
 	</li>';
 		if ($_REQUEST["idexpediente"] != 0 && $_REQUEST["idexpediente"] != "") {
 			$cadena .= '
