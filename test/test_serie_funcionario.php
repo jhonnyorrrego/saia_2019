@@ -58,9 +58,14 @@ if (isset($_REQUEST["seleccionados"])) {
 // TERMINA DEFAULT
 
 $id = 0;
+$incluir_padre = false;
 
 if (isset($_REQUEST["id"])) {
     $id = $_REQUEST["id"];
+}
+
+if(isset($_REQUEST["mostrar_padre"]) && $_REQUEST["mostrar_padre"] == "1") {
+    $incluir_padre = true;
 }
 
 if (stristr($_SERVER["HTTP_ACCEPT"], "application/xhtml+xml")) {
@@ -69,7 +74,7 @@ if (stristr($_SERVER["HTTP_ACCEPT"], "application/xhtml+xml")) {
     header("Content-type: text/xml");
 }
 
-$arbol = new DHtmlXtreeSeries($conn, $tipo, $condicion_ad, $seleccionados, true);
+$arbol = new DHtmlXtreeSeries($conn, $tipo, $condicion_ad, $seleccionados, $incluir_padre);
 echo  $arbol->generarXml($id);
 
 class DHtmlXtreeSeries {
