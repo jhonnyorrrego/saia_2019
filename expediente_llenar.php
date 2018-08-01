@@ -1,23 +1,52 @@
 <?php
+$max_salida = 6;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+    if (is_file($ruta . "db.php")) {
+        $ruta_db_superior = $ruta;
+    }
+    $ruta .= "../";
+    $max_salida--;
+}
 
-$max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; }
-
-include_once("db.php");
-include_once("pantallas/lib/librerias_cripto.php");
-$validar_enteros=array("iddoc");
-include_once("librerias_saia.php");
+include_once ("db.php");
+include_once ("pantallas/lib/librerias_cripto.php");
+$validar_enteros = array(
+    "iddoc"
+);
+include_once ("librerias_saia.php");
 desencriptar_sqli('form_info');
-include_once("pantallas/expediente/librerias.php");
+include_once ("pantallas/expediente/librerias.php");
 $iddoc = $_REQUEST["iddoc"];
-$doc_menu=@$_REQUEST["iddoc"];
-include_once("pantallas/documento/menu_principal_documento.php");
+$doc_menu = @$_REQUEST["iddoc"];
+include_once ("pantallas/documento/menu_principal_documento.php");
 
-$cadena.="";
-$cadena.=expedientes_asignados();
-$cadena.=" AND a.idexpediente=b.expediente_idexpediente AND b.documento_iddocumento in(".$iddoc.")";
+$cadena .= "";
+$cadena .= expedientes_asignados();
+$cadena .= " AND a.idexpediente=b.expediente_idexpediente AND b.documento_iddocumento in(" . $iddoc . ")";
 
-$expedientes_documento=busca_filtro_tabla("","vexpediente_serie a, expediente_doc b",$cadena,"",$conn);
-$nombres_exp=array_unique(extrae_campo($expedientes_documento,"nombre"));
+$expedientes_documento = busca_filtro_tabla("", "vexpediente_serie a, expediente_doc b", $cadena, "", $conn);
+$nombres_exp = array_unique(extrae_campo($expedientes_documento, "nombre"));
+
+$datos_doc = busca_filtro_tabla("serie", "documento", "iddocumento=$iddoc", "", $conn);
+$idserie = 0;
+$series = array();
+$incluir_series = "";
+if($datos_doc["numcampos"]) {
+    $idserie = $datos_doc[0]["serie"];
+    //Solo traer los que son tipo documental
+    $arbol = busca_filtro_tabla("cod_arbol", "serie", "tipo = 3 AND idserie=$idserie", "", $conn);
+    if($arbol["numcampos"]) {
+        $cod_arbol_padre = $arbol[0]["cod_arbol"];
+        $series = preg_split("/\./", $cod_arbol_padre);
+        //Quitar el ultimo que es la misma serie
+        array_pop($series);
+    }
+}
+
+if(!empty($series)) {
+    $incluir_series = implode(",", $series);
+}
 
 ?>
 <link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
@@ -54,7 +83,12 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
 	</div>
 </div>
 				<script type="text/javascript">
-  <!--
+
+				var incluir_series = "<?php echo $incluir_series;?>";
+				if(incluir_series != "") {
+					incluir_series = "&incluir_series=" + incluir_series;
+				}
+				var url_test = "test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1&estado_cierre=1&estado_archivo=1"+ incluir_series;
   		var browserType;
       if (document.layers) {browserType = "nn4"}
       if (document.all) {browserType = "ie"}
@@ -70,8 +104,8 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
       tree2.setOnLoadingStart(cargando_expediente);
       tree2.setOnLoadingEnd(fin_cargando_expediente);
 
-			tree2.setXMLAutoLoading("test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1&estado_cierre=1&estado_archivo=1");
-			tree2.loadXML("test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1&estado_cierre=1&estado_archivo=1");
+			tree2.setXMLAutoLoading(url_test);
+			tree2.loadXML(url_test);
 
 			function fin_cargando_expediente() {
         if (browserType == "gecko" )
@@ -98,7 +132,7 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
                eval('document.layers["esperando_expediente"]');
         document.poppedLayer.style.display = "";
       }
-			-->
+
       </script>
 
 <?php if($doc["numcampos"]>1){ ?>
@@ -133,7 +167,7 @@ if(count($nombres_exp)){
     seleccionados=tree2.getAllChecked();
     if(seleccionados!="")
       {$('#expedientes').val(seleccionados);
-	    <?php encriptar_sqli("form1",0); ?>		
+	    <?php encriptar_sqli("form1",0); ?>
 		if(salida_sqli){
 			return true;
 		}
