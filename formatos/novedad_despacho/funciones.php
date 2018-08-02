@@ -126,17 +126,27 @@ function mostrar_numero_item_novedad($idformato,$iddoc){
 }
 function mostrar_novedad_despacho_anexo_soporte($idformato,$iddoc){
 	global $ruta_db_superior,$conn;
+	
+	require_once ($ruta_db_superior . 'StorageUtils.php');
+    require_once ($ruta_db_superior . 'filesystem/SaiaStorage.php');
+    $tipo_almacenamiento = new SaiaStorage("archivos");
 
 	$anexos=busca_filtro_tabla("","anexos","documento_iddocumento=".$iddoc,"",$conn);
 	if($anexos['numcampos']){
 		$tabla='<ul>';
 	    for($j=0;$j<$anexos['numcampos'];$j++){
-	        if($anexos[$j]['tipo']=='jpg' || $anexos[$j]['tipo']=='JPG' || $anexos[$j]['tipo']=='pdf' || $anexos[$j]['tipo']=='PDF' || $anexos[$j]['tipo']=='png'){
-	            $tabla.="<li><a href='".$ruta_db_superior.$anexos[$j]['ruta']."' target='_blank'>".$anexos[$j]['etiqueta']."</a></li>";
-	        }
-	        else{
-	            $tabla.='<li><a title="Descargar" href="'.$ruta_db_superior.'anexosdigitales/parsea_accion_archivo.php?idanexo='.$anexos[$j]['idanexos'].'&amp;accion=descargar" border="0px">'.$anexos[$j]['etiqueta'].'</a></li>';
-	        }
+	    	$href = '';
+			
+	    	$ruta_imagen = json_decode($anexos[$j]['ruta']);
+		    if (is_object($ruta_imagen)) {
+		      if ($tipo_almacenamiento -> get_filesystem() -> has($ruta_imagen -> ruta)) {
+		        $ruta64 = base64_encode($anexos[$j]["ruta"]);
+		        $ruta_abrir = "filesystem/mostrar_binario.php?ruta=$ruta64";
+		        $href = $ruta_abrir;
+		      }
+		    }
+			
+	        $tabla .= "<li><a onclick=\"top.hs.htmlExpand(this, { objectType: 'iframe',width: 800, height: 2881,contentId:'cuerpo_paso', preserveContent:false, src:'".$href."', outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header', objectLoadTime: 'after'});\" style='cursor:pointer'>" . $anexos[$j]['etiqueta'] . "</a></li>";
 							
 	    }
 		$tabla.='</ul>';

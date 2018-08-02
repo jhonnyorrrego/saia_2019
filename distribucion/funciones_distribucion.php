@@ -958,7 +958,7 @@ function filtro_mensajero_distribucion() {
 
 		}
 
-		$empresas_transportadoras = busca_filtro_tabla("idcf_empresa_trans as id,nombre", "cf_empresa_trans", "", "", $conn);
+		$empresas_transportadoras = busca_filtro_tabla("idcf_empresa_trans as id,nombre", "cf_empresa_trans", "estado=1", "", $conn);
 		for ($i = 0; $i < $empresas_transportadoras['numcampos']; $i++) {
 			$selected = '';
 			if ($vector_variable_busqueda[0] == 'filtro_mensajero_distribucion' && $vector_variable_busqueda[1] && $vector_mensajero_tipo[1] == 'e') {
@@ -1008,7 +1008,7 @@ function condicion_por_ingresar_ventanilla_distribucion() {
 		if ($ventanilla_radicacion_usuario_actual) {
 			$condicion_adicional .= " AND ( a.ventanilla_radicacion=" . $ventanilla_radicacion_usuario_actual . " )";
 		} else {
-			$condicion_adicional .= " AND (1=2)";
+			$condicion_adicional .= " AND (1=1)";
 		}
 	}
 	return ($condicion_adicional);
