@@ -24,6 +24,10 @@ if (isset($_REQUEST["excluidos_exp"])) {
     $condicion_ad .= " and serie_idserie  in (" . $_REQUEST["incluir_series"] . ")";
 }
 
+if(isset($_REQUEST["idexpediente"])) {
+    $condicion_ad .= " and idexpediente = " . $_REQUEST["idexpediente"];
+}
+
 $seleccionados = array();
 if (isset($_REQUEST["seleccionados"])) {
     $seleccionados = explode(",", $_REQUEST["seleccionados"]);
