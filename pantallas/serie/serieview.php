@@ -44,11 +44,42 @@ if(($datos[0]["tipo"]==2 || $datos[0]["tipo"]==3 && $datos[0]["cod_padre"]) || $
 	}
 }
 
+// Buscar si tiene documentos asociados en algun tipo documental
+$filtro_docs = false;
+switch ($datos[0]["tipo"]) {
+    case 1:
+    case 2:
+        $filtro_docs = "like '{$datos[0]["cod_arbol"]}.%'";
+        break;
+    case 3:
+        $filtro_docs = "= '{$datos[0]["cod_arbol"]}'";
+        break;
+    default:
+        $filtro_docs = false;
+        break;
+}
+
+$docs_vinculados = array("numcampos" => 0);
+
+if($filtro_docs) {
+    $docs_vinculados = busca_filtro_tabla("iddocumento", "documento", "serie in (select distinct idserie from serie where cod_arbol $filtro_docs)" , "", $conn);
+}
+
+$vinculados = $docs_vinculados["numcampos"];
+
 include_once ($ruta_db_superior."librerias_saia.php");
 echo librerias_jquery("1.7");
 ?>
 <span style="font-family: Verdana; font-size: 9px;"><br/>
+<?php
+if($vinculados) {
+    echo "Serie de solo lectura. $vinculados documentos vinculados";
+} else {
+?>
 	<a href="serieedit.php?idnode=<?php echo $idnode ;?>&x_idserie=<?php echo $idserie; ?>">EDITAR</a>
+	<?php
+}
+	?>
 </span><br/><br/>
 
 <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
