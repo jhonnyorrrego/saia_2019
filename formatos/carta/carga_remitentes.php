@@ -118,9 +118,7 @@ case '3':
 			abrir_url("carga_remitentes.php?opcion=3&campo=".$_REQUEST["Campo"],"_self");
 		}
     else{
-    	echo("1");
     	validar_ciudades();
-    	echo("2");
     	$link=fopen($_FILES["archivo"]["tmp_name"],'r');
 		$cont=1;	
     	$valores=array();

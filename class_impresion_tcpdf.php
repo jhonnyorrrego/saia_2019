@@ -549,7 +549,7 @@ class MYPDF extends TCPDF {
 
 		if ($this -> marca_agua) {
 			$img_file = 'imagenes/marca_agua_borrador.png';
-			if ($this -> documento["estado"] == 'ANULADO') {
+			if ($this -> documento[0]["estado"] == 'ANULADO') {
 				$img_file = 'imagenes/marca_agua_anulado.png';
 			}
 			$bMargin = $this -> getBreakMargin();
