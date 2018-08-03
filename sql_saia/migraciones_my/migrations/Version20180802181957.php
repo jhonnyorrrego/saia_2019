@@ -10,7 +10,7 @@ use Doctrine\DBAL\Schema\Schema;
 class Version20180802181957 extends AbstractMigration {
 
     public function getDescription() {
-        return 'Actualizar formato ';
+        return 'Actualizar formato vincular_doc_expedie';
     }
 
     public function preUp(Schema $schema) {
