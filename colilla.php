@@ -364,12 +364,12 @@ if ($doc <> FALSE) {
 		<table align="right" border="0px" cellspacing="0" cellpadding="0" style="border-collapse:collapse; margin-right: 5px;">
 			<tr>
 				<td><?php echo ($qr); ?></td>
-				<td></strong><?php echo($nombre_empresa);?></strong><br/><br/>
+				<td><strong><?php echo($nombre_empresa);?></strong><br/><br/>
 					<!--?php echo ($logo_colilla!="") ? '<img src="'.$logo_colilla.'" style="width:140;height:20;"><br/><br/>' : '' ; ?-->
 					<?php if($datos[0]["tipo_radicado"]==1 || $datos[0]["tipo_radicado"]==2 &&  $datos[0]['plantilla']!='pqrsf'){?>
-					<b><span style="font-size: 7px">Radicado: <?php echo($info_fec[0]."-".$datos[0]["numero"]."-".$tipo_radicacion);?></span></b>
+					<b><span style="font-size: 7px">Rad: <?php echo($info_fec[0]."-".$datos[0]["numero"]."-".$tipo_radicacion);?></span></b>
 					 <?php }else{?>
-					<b><span style="font-size: 7px">Radicado: <?php echo($dependencia_creador[0]['codigo']."-".$datos[0]["numero"]."-".$fecha["year"]);?></span></b>
+					<b><span style="font-size: 7px">Rad: <?php echo($dependencia_creador[0]['codigo']."-".$datos[0]["numero"]."-".$fecha["year"]);?></span></b>
 					<?php }?><br/>
 					<b>Fecha: <?php echo $datos_fecha; ?></b><br/> 
 					
