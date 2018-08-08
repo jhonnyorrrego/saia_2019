@@ -217,17 +217,29 @@ function transferencia_copia_correo($idformato,$iddoc){
 }
 function mostrar_anexos_correo($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-	require_once($ruta_db_superior."anexosdigitales/funciones_archivo.php"); 
+	
+	require_once ($ruta_db_superior . 'StorageUtils.php');
+    require_once ($ruta_db_superior . 'filesystem/SaiaStorage.php');
+    $tipo_almacenamiento = new SaiaStorage("archivos");
+	
 	$datos=busca_filtro_tabla('','anexos','documento_iddocumento='.$iddoc,'',$conn);
 	if($datos['numcampos']){
 		$anexo="<br/><br/><b>Anexos: </b><br/>";
 		for($i=0;$i<$datos['numcampos'];$i++){
+			$href = '';
+			
+	    	$ruta_imagen = json_decode($datos[$i]['ruta']);
+		    if (is_object($ruta_imagen)) {
+		      if ($tipo_almacenamiento -> get_filesystem() -> has($ruta_imagen -> ruta)) {
+		        $ruta64 = base64_encode($datos[$i]["ruta"]);
+		        $ruta_abrir = "filesystem/mostrar_binario.php?ruta=$ruta64";
+		        $href = $ruta_abrir;
+		      }
+		    }
+			
 			if($_REQUEST['tipo']!=5){	
-				if($datos[$i]['tipo']=='jpg' || $datos[$i]['tipo']=='png' || $datos[$i]['tipo']=='pdf'){
-					$anexo.="<a href='".$ruta_db_superior.$datos[$i]['ruta']."' target='_self'>".$datos[$i]['etiqueta']."</a><br/>";
-				}else{
-					$anexo.='<a href="'.$ruta_db_superior.'anexosdigitales/parsea_accion_archivo.php?idanexo='.$datos[$i]['idanexos'].'&accion=descargar" border="0px">'.$datos[$i]['etiqueta']."</a><br/>";
-				}
+				$anexo.="<a onclick=\"top.hs.htmlExpand(this, { objectType: 'iframe',width: 800, height: 2881,contentId:'cuerpo_paso', preserveContent:false, src:'".$href."', outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header', objectLoadTime: 'after'});\" style='cursor:pointer'>".$datos[$i]['etiqueta']."</a><br/>";
+
 			}else{
 				$anexo.=$datos[$i]['etiqueta']."<br/>";
 			}
