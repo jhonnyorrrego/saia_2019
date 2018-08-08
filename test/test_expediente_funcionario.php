@@ -28,6 +28,8 @@ if(isset($_REQUEST["idexpediente"])) {
     $condicion_ad .= " and idexpediente = " . $_REQUEST["idexpediente"];
 }
 
+$condicion_ad .= " and desde_serie = 0";
+
 $seleccionados = array();
 if (isset($_REQUEST["seleccionados"])) {
     $seleccionados = explode(",", $_REQUEST["seleccionados"]);

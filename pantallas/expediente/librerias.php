@@ -41,43 +41,69 @@ function permiso_funcionario_expediente($expediente, $entidad, $llave) {
 }
 
 function mostrar_informacion_adicional_expediente($idexpediente) {
-	global $conn;
-	$cadena = '';
-	//EXPEDIENTE
-	$expediente_actual = busca_filtro_tabla("serie_idserie", "expediente", "idexpediente=" . $idexpediente, "", $conn);
-	//NOMBRE DE LA SERIE
-	$serie = busca_filtro_tabla("nombre", "serie", "idserie=" . $expediente_actual[0]['serie_idserie'], "", $conn);
+    global $conn;
+    $cadena = '';
+    // EXPEDIENTE
+    $expediente_actual = busca_filtro_tabla("serie_idserie", "expediente", "idexpediente=" . $idexpediente, "", $conn);
+    // NOMBRE DE LA SERIE
+    $serie = busca_filtro_tabla("nombre", "serie", "idserie=" . $expediente_actual[0]['serie_idserie'], "", $conn);
 
-	if ($serie['numcampos']) {
-		$cadena .= $serie[0]['nombre'];
-	}
-	$cadena .= '<br>';
-	return ($cadena);
+    if ($serie['numcampos']) {
+        $cadena .= $serie[0]['nombre'];
+    }
+    $cadena .= '<br>';
+    return ($cadena);
 }
 
 function enlace_expediente($idexpediente, $nombre) {
-	global $conn;
+    global $conn;
 
-	$expediente_actual = busca_filtro_tabla("tomo_padre,tomo_no,serie_idserie,propietario,agrupador,cod_arbol", "expediente", "idexpediente=" . $idexpediente, "", $conn);
-	$cadena_tomos = "";
-	if (!$expediente_actual[0]['agrupador']) {
-		$tomo_padre = $idexpediente;
-		if ($expediente_actual[0]['tomo_padre']) {
-			$tomo_padre = $expediente_actual[0]['tomo_padre'];
-		}
-		$ccantidad_tomos = busca_filtro_tabla("idexpediente", "expediente", "tomo_padre=" . $tomo_padre, "", $conn);
-		$cantidad_tomos = $ccantidad_tomos['numcampos'] + 1;
-		//tomos + el padre
-		$cadena_tomos = ("&nbsp;&nbsp;&nbsp;<i><b style='font-size:10px;'>Tomo: </b></i><i style='font-size:10px;'>" . $expediente_actual[0]['tomo_no'] . " de " . $cantidad_tomos . "</i>");
-	}
-	$data = array(
-		"idbusqueda_componente" => $_REQUEST["idbusqueda_componente"],
-		"idexpediente" => $idexpediente,
-		"variable_busqueda" => @$_REQUEST['variable_busqueda'],
-		"cod_arbol" => $expediente_actual[0]["cod_arbol"]
-	);
-	$req_parms = http_build_query($data);
-	return ("<div style='' class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?" . $req_parms . "' conector='iframe' titulo='" . $nombre . "'><table><tr><td style='font-size:12px;'> <i class=' icon-folder-open pull-left'></i>&nbsp;<b>" . $nombre . "</b>&nbsp;" . $cadena_tomos . "</td></tr></table></div>");
+    $expediente_actual = busca_filtro_tabla("tomo_padre,tomo_no,serie_idserie,propietario,agrupador,cod_arbol", "expediente", "idexpediente=" . $idexpediente, "", $conn);
+    $cadena_tomos = "";
+    if (!$expediente_actual[0]['agrupador']) {
+        $tomo_padre = $idexpediente;
+        if ($expediente_actual[0]['tomo_padre']) {
+            $tomo_padre = $expediente_actual[0]['tomo_padre'];
+        }
+        $ccantidad_tomos = busca_filtro_tabla("idexpediente", "expediente", "tomo_padre=" . $tomo_padre, "", $conn);
+        $cantidad_tomos = $ccantidad_tomos['numcampos'] + 1;
+        // tomos + el padre
+        $cadena_tomos = ("&nbsp;&nbsp;&nbsp;<i><b style='font-size:10px;'>Tomo: </b></i><i style='font-size:10px;'>" . $expediente_actual[0]['tomo_no'] . " de " . $cantidad_tomos . "</i>");
+    }
+    $data = array(
+        "idbusqueda_componente" => $_REQUEST["idbusqueda_componente"],
+        "idexpediente" => $idexpediente,
+        "variable_busqueda" => @$_REQUEST['variable_busqueda'],
+        "cod_arbol" => $expediente_actual[0]["cod_arbol"]
+    );
+    $req_parms = http_build_query($data);
+
+    if ($expediente_actual[0]["propietario"] == $_SESSION["usuario_actual"]) {
+        $m = 1;
+        $e = 1;
+        $p = 1;
+    } else {
+        $permiso = busca_filtro_tabla("permiso", "entidad_expediente", "expediente_idexpediente=" . $idexpediente . " AND entidad_identidad=1 and estado=1 and llave_entidad=" . usuario_actual("idfuncionario"), "", $conn);
+        if ($permiso["numcampos"] && $permiso[0]["permiso"] != "") {
+            if (strpos($permiso[0]["permiso"], "m") !== false) {
+                $m = 1;
+            }
+            if (strpos($permiso[0]["permiso"], "e") !== false) {
+                $e = 1;
+            }
+            if (strpos($permiso[0]["permiso"], "p") !== false) {
+                $p = 1;
+            }
+        }
+    }
+    if($e || $m || $p) {
+        return ("<div style='' class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?" . $req_parms . "' conector='iframe' titulo='" . $nombre . "'><table><tr><td style='font-size:12px;'> <i class=' icon-folder-open pull-left'></i>&nbsp;<b>" . $nombre . "</b>&nbsp;" . $cadena_tomos . "</td></tr></table></div>");
+    } else {
+        return ("<div><table><tr><td style='font-size:12px;'> <i class='icon-folder-close pull-left'></i>&nbsp;<b>" . $nombre . "</b>&nbsp;" . $cadena_tomos . "</td></tr></table></div>");
+
+    }
+
+
 }
 
 function request_expediente_padre() {
@@ -413,10 +439,12 @@ function enlaces_adicionales_expediente($idexpediente, $nombre, $estado_cierre, 
 		}
 	}
 
-	if ($_SESSION["tipo_dispositivo"] == "movil") {
+	$clase_info = "";
+	$texto = "";
+	if ($_SESSION["tipo_dispositivo"] == "movil" && ($e || $m || $p)) {
 		$clase_info = "kenlace_saia";
 		$texto = '<div class="btn btn-mini kenlace_saia pull-right" idregistro="' . $idexpediente . '" titulo="' . $nombre . '" conector="iframe" enlace="pantallas/expediente/detalles_expediente.php?idexpediente=' . $idexpediente . '&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '" ><i class="icon-info-sign"></i></div>';
-	} else {
+	} else if($e || $m || $p) {
 		$clase_info = "enlace_expediente";
 		$texto = '<div class="btn btn-mini enlace_expediente pull-right" idregistro="' . $idexpediente . '" title="' . $nombre . '"><i class="icon-info-sign"></i></div>';
 	}
@@ -427,7 +455,7 @@ function enlaces_adicionales_expediente($idexpediente, $nombre, $estado_cierre, 
 	if ($m) {
 		$texto .= '<div class="btn btn-mini '.$clase_info.' tooltip_saia pull-right" idregistro="' . $idexpediente . '" conector="iframe" titulo="Editar ' . $nombre . '" enlace="pantallas/expediente/editar_expediente.php?idexpediente=' . $idexpediente . '&idbusqueda_componente=' . @$_REQUEST['idbusqueda_componente'] . '&div_actualiza=resultado_pantalla_' . $idexpediente . '"><i class="icon-pencil"></i></div>';
 	}
-	if (!$agrupador) {
+	if (!$agrupador && $e) {
 		$texto .= '<div class="btn btn-mini link kenlace_saia tooltip_saia pull-right" title="Imprimir rotulo" titulo="Imprimir rotulo" enlace="pantallas/caja/rotulo.php?idexpediente=' . $idexpediente . '" conector="iframe"><i class="icon-print"></i></div>';
 	}
 	if ($p) {
@@ -437,7 +465,7 @@ function enlaces_adicionales_expediente($idexpediente, $nombre, $estado_cierre, 
 	if ($propietario == $_SESSION["usuario_actual"] && !$agrupador) {
 		$texto .= '<div class="btn btn-mini crear_tomo_expediente tooltip_saia pull-right" idregistro="' . $idexpediente . '" title="Crear Tomo ' . $nombre . '"><i class="icon-folder-open"></i></div>';
 	}
-	if (!$agrupador) {
+	if (!$agrupador && $e) {
 		$texto .= '<div id="seleccionados_expediente_' . $idexpediente . '" idregistro="' . $idexpediente . '" titulo="Seleccionar" class="btn btn-mini tooltip_saia adicionar_seleccionados_expediente pull-right"><i class="icon-uncheck" ></i></div>';
 	}
 	return ($texto);
@@ -451,6 +479,7 @@ function valida_from_caja() {
 
 function expedientes_asignados() {
 	global $conn;
+	//return "1=1";
 	$idfunc_actual = usuario_actual('idfuncionario');
 	if (@$_REQUEST["idbusqueda_componente"]) {
 		$busqueda_componente = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='expediente_admin' AND A.idbusqueda_componente=" . $_REQUEST["idbusqueda_componente"], "", $conn);
@@ -467,11 +496,18 @@ function expedientes_asignados() {
 		//FIN SI TIENE PERMISO Administraci&oacute;n de Archivo & el reporte es Inventario documental
 	}
 
+	$entidades_exp = array(1,2,4);
+	$llaves_exp = array($idfunc_actual);
+
 	$roles = busca_filtro_tabla("dependencia_iddependencia,cargo_idcargo", "dependencia_cargo a", "a.estado='1' and a.funcionario_idfuncionario=" . $idfunc_actual, "", $conn);
 	$dependencias = extrae_campo($roles, "dependencia_iddependencia");
 	$cargos = extrae_campo($roles, "cargo_idcargo");
-	$cadena .= "";
-	$cadena .= "((a.identidad_exp=1 AND a.llave_exp='" . $idfunc_actual . "') or (a.identidad_exp=2 AND a.llave_exp in ('" . implode("','", $dependencias) . "')) or (a.identidad_exp=4 AND a.llave_exp in('" . implode("','", $cargos) . "')))";
+
+	$llaves_exp = array_merge($llaves_exp, $dependencias);
+	$llaves_exp = array_merge($llaves_exp, $cargos);
+
+	$cadena = "(a.identidad_exp IN ('" . implode("','", $entidades_exp) . "') AND a.llave_exp IN ('" . implode("','", $llaves_exp) . "'))";
+
 	return ($cadena);
 }
 
