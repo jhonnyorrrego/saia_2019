@@ -28,7 +28,7 @@ if(isset($_REQUEST["idexpediente"])) {
     $condicion_ad .= " and idexpediente = " . $_REQUEST["idexpediente"];
 }
 
-$condicion_ad .= " and desde_serie = 0";
+//$condicion_ad .= " and desde_serie = 0";
 
 $seleccionados = array();
 if (isset($_REQUEST["seleccionados"])) {
@@ -75,9 +75,9 @@ class DHtmlXtreeExpedienteFunc {
 
     private function llena_expediente($id) {
         if ($id == 0) {
-            $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "vexpediente_serie a", "(cod_padre=0 or cod_padre is null)" . $this->condicion_ad, "nombre ASC", $this->conn);
+            $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre, desde_serie", "vexpediente_serie a", "(cod_padre=0 or cod_padre is null)" . $this->condicion_ad, "nombre ASC", $this->conn);
         } else {
-            $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "vexpediente_serie a", "cod_padre=" . $id . $this->condicion_ad, "nombre ASC", $this->conn);
+            $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre, desde_serie", "vexpediente_serie a", "cod_padre=" . $id . $this->condicion_ad, "nombre ASC", $this->conn);
         }
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
@@ -85,19 +85,25 @@ class DHtmlXtreeExpedienteFunc {
                 if ($papas[$i]["estado_cierre"] == 2) {
                     $text .= " - CERRADO";
                 }
+                if($papas[$i]["desde_serie"] === '0') {
+                    $hijos = busca_filtro_tabla("count(1) as cant", "vexpediente_serie a", "cod_padre=" . $papas[$i]["idexpediente"] . $this->condicion_ad, "", $this->conn);
+                    $tipo_docu = busca_filtro_tabla("count(1) as cant", "serie", "tipo=3 and tvd=0 and cod_padre=" . $papas[$i]["serie_idserie"], "", $this->conn);
+                } else {
+                    $hijos[0]["cant"] = 0;
+                    $tipo_docu[0]["cant"] = 0;
+                    $text .= " - (Sin permiso)";
+                }
                 $this->objetoXML->startElement("item");
                 $this->objetoXML->writeAttribute("style", "font-family:verdana; font-size:7pt;font-weight:bold");
                 $this->objetoXML->writeAttribute("text", $text);
                 $this->objetoXML->writeAttribute("id", $papas[$i]["idexpediente"] . "#");
                 $this->objetoXML->writeAttribute("nocheckbox", 1);
-                $hijos = busca_filtro_tabla("count(*) as cant", "vexpediente_serie a", "cod_padre=" . $papas[$i]["idexpediente"] . $this->condicion_ad, "", $this->conn);
-                $tipo_docu = busca_filtro_tabla("count(*) as cant", "serie", "tipo=3 and tvd=0 and cod_padre=" . $papas[$i]["serie_idserie"], "", $this->conn);
-
                 if ($hijos[0]["cant"] || $tipo_docu[0]["cant"]) {
                     $this->objetoXML->writeAttribute("child", 1);
                 } else {
                     $this->objetoXML->writeAttribute("child", 0);
                 }
+                //if ($hijos[0]["cant"] && $papas[$i]["desde_serie"] === 0) {
                 if ($hijos[0]["cant"]) {
                     $this->llena_expediente($papas[$i]["idexpediente"]);
                 }
