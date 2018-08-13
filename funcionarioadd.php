@@ -1,9 +1,11 @@
 <?php
 include_once("db.php");
 include_once("librerias_saia.php");
+require_once (FORMATOS_SAIA . "librerias/funciones_acciones_entidad.php");
 include_once("pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("x_idfuncionario");
 desencriptar_sqli('form_info');
+llama_funcion_accion_entidad(0, "funcionario", "ADICIONAR", "ANTERIOR");
 echo(librerias_jquery('1.7'));
 echo( librerias_validar_formulario(11) );
 echo(librerias_notificaciones());
@@ -442,7 +444,7 @@ function AddData($conn) {
 		
 	//para guardar la firma y actualizar funcionario_codigo
 	$sKeyWrk = phpmkr_insert_id();
-
+	llama_funcion_accion_entidad($sKeyWrk, "funcionario", "ADICIONAR", "POSTERIOR");
     //para que el funcionario_codigo sea el mismo idfuncionario
 	$ufcsql = "update funcionario set funcionario_codigo='$sKeyWrk' where idfuncionario=$sKeyWrk";
 	phpmkr_query($ufcsql, $conn);
@@ -489,11 +491,12 @@ function validar_usuarios_activos_add(){
 	$cupos_usados=$funcionarios_activos+$reemplazos_activos;
 	
 	//Consulta la cantidad de usuarios definidos en la configuracion y desencripta el valor
-	$consulta_usuarios=busca_filtro_tabla("valor","configuracion","nombre='numero_usuarios'","",$conn);
+	$consulta_usuarios=busca_filtro_tabla("valor","configuracion","nombre='numero_usuarios'","",$conn);	
 	$numero_encript=$consulta_usuarios[0]['valor'];
 	$numero_usuarios=decrypt_blowfish($numero_encript,LLAVE_SAIA_CRYPTO);
 	
 	//Verifica si ya se alzanzó el número de usuarios activos
+	
 	if($cupos_usados>=$numero_usuarios){
 		
 		echo(librerias_notificaciones());
