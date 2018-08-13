@@ -63,7 +63,13 @@ function adicionar_datos_formato($datos, $tipo_retorno = 1) {
 			"mensaje" => "Error al tratar de generar el adicionar de la pantalla",
 			"exito" => 0
 	);
-	$datos["nombre"]=trim($datos["nombre"]);
+	$datos["nombre"]=trim($datos["nombre_formato"]);
+	unset($datos["nombre_formato"]);
+	if(empty($datos["nombre"]) || preg_match("/undefined/", $datos["nombre"])) {
+		$retorno["mensaje"] = "Nombre del formato incorrecto: "  . $datos["nombre"];
+		echo (json_encode($retorno));
+		die();
+	}
 	// Field Banderas
 	if(is_array($datos["banderas"]))
 		$fieldList["banderas"] = "'" . implode(",", $datos["banderas"]) . "'";
@@ -275,7 +281,6 @@ detalles_mostrar_".$datos["nombre"].".php";
 		} else {
 			return ($retorno);
 		}
-
 }
 
 function crear_campo_bpmni($idpantalla) {

@@ -188,9 +188,9 @@ for($i=0;$i<$cant;$i++){
     </div>
   </div>
   <div class="control-group">
-    <label class="control-label" for="ayuda">Ayuda *</label>
+    <label class="control-label" for="ayuda">Ayuda</label>
     <div class="controls">
-      <textarea name="fs_ayuda" id="ayuda" placeholder="Ayuda" required><?php echo(@$pantalla_campos[0]["ayuda"]);?></textarea>
+      <textarea name="fs_ayuda" id="ayuda" placeholder="Ayuda"><?php echo(@$pantalla_campos[0]["ayuda"]);?></textarea>
     </div>
   </div>
 
