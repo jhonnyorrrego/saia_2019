@@ -362,17 +362,17 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 	$doc = busca_filtro_tabla("B.idformato", "documento A,formato B", "A.plantilla=B.nombre AND iddocumento=" . $idarchivo, "", $conn);
 	$idformato = @$doc[0]["idformato"];
 	llama_funcion_accion($idarchivo, $idformato, "transferir", "ANTERIOR");
-	
+
 	//Cuando ingresan demasiado texto en las notas
-	$texto_notas="";
-	if(in_array("notas", array_keys($adicionales))){
-		$cant_texto=strlen($adicionales["notas"]);
-		if($cant_texto>3000){
-			$texto_notas=$adicionales["notas"];
+	$texto_notas = "";
+	if (in_array("notas", array_keys($adicionales))) {
+		$cant_texto = strlen($adicionales["notas"]);
+		if ($cant_texto > 3000) {
+			$texto_notas = $adicionales["notas"];
 			unset($adicionales["notas"]);
 		}
 	}
-	
+
 	if ($adicionales != Null && $adicionales != "" && is_array($adicionales)) {
 		$otras_llaves = "," . implode(",", array_keys($adicionales));
 		$otros_valores = "," . implode(",", array_values($adicionales));
@@ -383,7 +383,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 		$otras_llaves = "";
 		$otros_valores = "";
 	}
-	
+
 	if ($destino != "" && $origen != "") {
 		$values_out = "$idarchivo,'" . $datos["nombre"] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",";
 		if ($datos["tipo_destino"] == "1" || $datos["tipo_destino"] == "5") {
@@ -399,46 +399,61 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 				$datos["ruta_idruta"] = 0;
 			}
 
-			$values_out .= "'" . $origen . "',1,1" . $otros_valores . ",'" . @$datos["ver_notas"] . "'";
+			$ver_notas = 0;
+			if(!empty($datos["ver_notas"])) {
+			    $ver_notas = $datos["ver_notas"];
+			}
+			$values_out .= "'" . $origen . "',1,1" . $otros_valores . ",'" . $ver_notas . "'";
 
 			foreach ($destino as $user) {
+			    if($user == null) {
+			        continue;
+			    }
 				if ($datos["nombre"] != "POR_APROBAR") {
-					$sql = "INSERT INTO buzon_salida (archivo_idarchivo,nombre,fecha,origen,tipo_origen,tipo_destino" . $otras_llaves . ",ver_notas,destino) values (" . $values_out . "," . $user . ")";
-					phpmkr_query($sql, $conn);
-					$idbuzon_s=phpmkr_insert_id();
-					$idtransferencia[] =$idbuzon_s;
-					
-					if($texto_notas!=""){
-				  	guardar_lob('notas','buzon_salida',"idtransferencia=".$idbuzon_s,$texto_notas,'texto',$conn,0);
-					}	
-					
+					$sqls = "INSERT INTO buzon_salida (archivo_idarchivo,nombre,fecha,origen,tipo_origen,tipo_destino" . $otras_llaves . ",ver_notas,destino) values ($values_out, $user)";
+					phpmkr_query($sqls) or die("Fallo buzon_salida: $sqls");
+					$idbuzon_s = phpmkr_insert_id();
+					$idtransferencia[] = $idbuzon_s;
+
+					if ($texto_notas != "") {
+						guardar_lob('notas', 'buzon_salida', "idtransferencia=" . $idbuzon_s, $texto_notas, 'texto', $conn, 0);
+					}
+
 				} else if ($datos["nombre"] == "POR_APROBAR") {
 					if (isset($_REQUEST["dependencia"]) && $_REQUEST["dependencia"] != "" && $datos["ruta_creador_documento"] == 1) {
 						$sql = "INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio) VALUES(" . $_REQUEST["dependencia"] . ",'ACTIVO'," . $user . ",NULL,'POR_APROBAR'," . $idarchivo . ",5,1,1)";
 					} else {
 						$sql = "INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio) VALUES(" . $origen . ",'ACTIVO'," . $user . ",NULL,'POR_APROBAR'," . $idarchivo . ",1,1,1)";
 					}
-					phpmkr_query($sql, $conn) or error("No se puede Generar una Ruta");
+					phpmkr_query($sql) or die("No se puede Generar una Ruta: $sql");
 					$idruta = phpmkr_insert_id();
 					$datos["ruta_idruta"] = $idruta;
 				}
-				$values_in = "$idarchivo,'" . $datos["nombre"] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'$origen',1," . $datos["ruta_idruta"] . ",$tipo_destino" . $otros_valores . ",'" . @$datos["ver_notas"] . "'";
+				$ver_notas = 0;
+				if(!empty($datos["ver_notas"])) {
+				    $ver_notas = $datos["ver_notas"];
+				}
+				$values_in = "$idarchivo,'" . $datos["nombre"] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'$origen',1," . $datos["ruta_idruta"] . ",$tipo_destino" . $otros_valores . ",'" . $ver_notas . "'";
 				$sql = "INSERT INTO buzon_entrada(archivo_idarchivo,nombre,fecha,destino,tipo_origen,ruta_idruta,tipo_destino" . $otras_llaves . ",ver_notas,origen) values(" . $values_in . "," . $user . ")";
-				phpmkr_query($sql, $conn);
-				if($texto_notas!=""){
-					$idbuzon_e=phpmkr_insert_id();
-			  	guardar_lob('notas','buzon_entrada',"idtransferencia=".$idbuzon_e,$texto_notas,'texto',$conn,0);
-				}	
+				phpmkr_query($sql) or die($sql);
+				if ($texto_notas != "") {
+					$idbuzon_e = phpmkr_insert_id();
+					guardar_lob('notas', 'buzon_entrada', "idtransferencia=" . $idbuzon_e, $texto_notas, 'texto', $conn, 0);
+				}
 				procesar_estados($origen, $user, $datos["nombre"], $idarchivo);
 			}
 		} else {
-			$values = "$idarchivo,'" . $datos["nombre"] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",$origen,$destino,$tipo_origen,$tipo_destino" . $otros_valores . ",'" . @$datos["ver_notas"] . "'";
+		    $ver_notas = 0;
+		    if(!empty($datos["ver_notas"])) {
+		        $ver_notas = $datos["ver_notas"];
+		    }
+			$values = "$idarchivo,'" . $datos["nombre"] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",$origen,$destino,$tipo_origen,$tipo_destino" . $otros_valores . ",'" . $ver_notas . "'";
 			$sql = "insert into buzon_entrada(archivo_idarchivo,nombre,fecha,destino,origen,tipo_origen,tipo_destino" . $otras_llaves . ",ver_notas) values (" . $values . ")";
-			phpmkr_query($sql, $conn);
-			if($texto_notas!=""){
-				$idbuzon_e=phpmkr_insert_id();
-		  	guardar_lob('notas','buzon_entrada',"idtransferencia=".$idbuzon_e,$texto_notas,'texto',$conn,0);
-			}	
+			phpmkr_query($sql) or die($sql);
+			if ($texto_notas != "") {
+				$idbuzon_e = phpmkr_insert_id();
+				guardar_lob('notas', 'buzon_entrada', "idtransferencia=" . $idbuzon_e, $texto_notas, 'texto', $conn, 0);
+			}
 		}
 	}
 
@@ -585,7 +600,7 @@ function aprobar($iddoc = 0, $opcion = 0) {
 	if ($aprobar_posterior == 1) {
 		llama_funcion_accion($iddoc, $tipo_radicado[0]["idformato"], "aprobar", "POSTERIOR");
 	}
-	actualizar_datos_documento($tipo_radicado[0]["idformato"],$iddoc);
+	actualizar_datos_documento($tipo_radicado[0]["idformato"], $iddoc);
 	if ($opcion == 0) {
 		if ($_REQUEST["anterior"] == $iddoc) {
 			enrutar_documento($ruta_db_superior . 'pantallas/documento/informacion_resumen_documento.php?iddoc=' . $iddoc, 'arbol_formato');
@@ -643,7 +658,7 @@ function mostrar_formato($idformato, $iddoc) {
 		} else if ($datos_formato[0]["mostrar_pdf"] == 2) {
 			$url = $ruta_db_superior . "pantallas/documento/visor_documento.php?iddoc=" . $iddoc . "&pdf_word=1";
 		} else {
-		    $url = FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?iddoc=" . $iddoc . "&idformato=$idformato";
+			$url = FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $datos_formato[0]["ruta_mostrar"] . "?iddoc=" . $iddoc . "&idformato=$idformato";
 		}
 		if (!@$_REQUEST['aprobacion_externa']) {
 			redirecciona($url);
@@ -741,7 +756,7 @@ function mostrar_estado_proceso($idformato, $iddoc) {
 						echo '<td align="left">';
 						if ($firma[0]["firma"] != "") {
 							$pagina_actual = $_SERVER["PHP_SELF"];
-							echo '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL.'/'. FORMATOS_SAIA . 'librerias/mostrar_foto.php?codigo=' . $fila["funcionario_codigo"];
+							echo '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/' . FORMATOS_SAIA . 'librerias/mostrar_foto.php?codigo=' . $fila["funcionario_codigo"];
 							echo '" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '"/><br />';
 						} else
 							echo '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/firmas/blanco.jpg" width="100" height="' . $alto_firma[0]["valor"] . '" ><br />';
@@ -807,8 +822,6 @@ function mostrar_estado_proceso($idformato, $iddoc) {
 					$fila_abierta = 0;
 				}
 			}
-
-
 
 			if ($firmas < $num_cols && $fila_abierta == 1) {
 				while ($firmas < $num_cols) {
@@ -1060,7 +1073,7 @@ function radicar_plantilla() {
 		} else if (isset($_POST["firmado"]) && $_POST["firmado"] == "varias") {
 			$usuario_origen = busca_filtro_tabla("dependencia", $_POST["tabla"], "id" . $_POST["tabla"] . "=" . $idplantilla, "", $conn);
 			if (!isset($_REQUEST["no_redirecciona"])) {
-			    redirecciona(FORMATOS_SAIA . "librerias/rutaadd.php?x_plantilla=$plantilla&doc=" . $_POST["iddoc"] . "&obligatorio=" . $_POST["obligatorio"] . "&origen=" . $usuario_origen[0][0]);
+				redirecciona(FORMATOS_SAIA . "librerias/rutaadd.php?x_plantilla=$plantilla&doc=" . $_POST["iddoc"] . "&obligatorio=" . $_POST["obligatorio"] . "&origen=" . $usuario_origen[0][0]);
 				return;
 			} else {
 				$retorno["mensaje"] = "Error al generar la ruta de aprobacion";
@@ -1120,7 +1133,7 @@ function enrutar_documento($url = "", $target = "centro") {
 					if (@$_SESSION["tipo_dispositivo"] == 'movil') {
 						abrir_url("ordenar.php?key=" . $iddoc . "&accion=mostrar&mostrar_formato=1", "_self");
 					} else {
-					    abrir_url(FORMATOS_CLIENTE . "$nom_formato/detalles_mostrar_$nom_formato.php?idformato=" . $formato_doc[0]["idformato"] . "&iddoc=" . $iddoc, "_self");
+						abrir_url(FORMATOS_CLIENTE . "$nom_formato/detalles_mostrar_$nom_formato.php?idformato=" . $formato_doc[0]["idformato"] . "&iddoc=" . $iddoc, "_self");
 					}
 					return $iddoc;
 				}
@@ -1162,7 +1175,7 @@ function crear_pretexto($asunto, $contenido) {
 	global $conn;
 	$campos = "asunto";
 	$valores = "'" . $asunto . "'";
-	$sql = "INSERT INTO " . "pretexto" . "(" . $campos . ") VALUES (" . $valores . ")";
+	$sql = "INSERT INTO pretexto(" . $campos . ") VALUES (" . $valores . ")";
 	phpmkr_query($sql);
 	$idpretexto = phpmkr_insert_id();
 	guardar_lob("contenido", "pretexto", "idpretexto=$idpretexto", $contenido, "texto", $conn);
@@ -1170,7 +1183,7 @@ function crear_pretexto($asunto, $contenido) {
 	$idfuncionario = usuarioactual("idfuncionario");
 	$campos = "pretexto_idpretexto,entidad_identidad,llave_entidad";
 	$valores = "'" . $idpretexto . "','1'," . "'" . $idfuncionario . "'";
-	$sql = "INSERT INTO " . "entidad_pretexto" . "(" . $campos . ") VALUES (" . $valores . ") ";
+	$sql = "INSERT INTO entidad_pretexto(" . $campos . ") VALUES (" . $valores . ") ";
 	phpmkr_query($sql);
 }
 
@@ -1401,9 +1414,22 @@ function guardar_documento($iddoc, $tipo = 0) {
 			}
 		}
 
+		if(in_array("serie_idserie", $campos)) {
+		    $pos = array_search('serie_idserie', $campos);
+		    if($valores[$pos] == "''") {
+		      $valores[$pos] = "NULL";
+		    }
+		}
+		if(in_array("despachado", $campos)) {
+		    $pos = array_search('despachado', $campos);
+		    if($valores[$pos] == "''") {
+		        $valores[$pos] = 0;
+		    }
+		}
+
 		llama_funcion_accion($iddoc, $idformato, "adicionar", "ANTERIOR");
 		$sql = "INSERT INTO " . $tabla . "(" . implode(",", $campos) . ") VALUES (" . implode(",", $valores) . ")";
-		phpmkr_query($sql, $conn);
+		phpmkr_query($sql) or die("Error al insertar en $tabla: " . $sql);
 		$insertado = phpmkr_insert_id();
 
 		if ($insertado) {
@@ -1457,14 +1483,14 @@ function guardar_documento($iddoc, $tipo = 0) {
 		}
 		llama_funcion_accion($iddoc, $idformato, "editar", "ANTERIOR");
 		$sql = "UPDATE " . $tabla . " SET " . implode(",", $update) . " WHERE documento_iddocumento=" . $iddoc;
-		phpmkr_query($sql, $conn);
+		phpmkr_query($sql) or die("Error al actualizar el documento");
 
 		if (isset($_REQUEST["dependencia"]) && $_REQUEST["dependencia"] != "") {
 			$valid_ruta = busca_filtro_tabla("idruta,origen,tipo_origen", "ruta", "tipo='ACTIVO' and documento_iddocumento=" . $iddoc, "idruta asc", $conn);
 			// TODO: Se valida si cambio la dependencia del creador para actualizar la ruta (Firma SVG)
 			if ($valid_ruta["numcampos"] == 1 && $valid_ruta[0]["tipo_origen"] == 5 && $valid_ruta[0]["origen"] != $_REQUEST["dependencia"]) {
 				$update_ruta = "UPDATE ruta SET origen=" . $_REQUEST["dependencia"] . " WHERE idruta=" . $valid_ruta[0]["idruta"];
-				phpmkr_query($update_ruta);
+				phpmkr_query($update_ruta) or die("Error al actualizar la ruta del documento");
 			}
 		}
 		llama_funcion_accion($iddoc, $idformato, "editar", "POSTERIOR");
@@ -1475,7 +1501,7 @@ function guardar_documento($iddoc, $tipo = 0) {
 			$insertado = 0;
 		}
 	}
-	actualizar_datos_documento($idformato,$iddoc);
+	actualizar_datos_documento($idformato, $iddoc);
 
 	if (count($ltareas)) {
 		include_once ("asignaciones/funciones.php");
@@ -1485,7 +1511,7 @@ function guardar_documento($iddoc, $tipo = 0) {
 }
 
 function actualizar_datos_documento($idformato, $iddoc) {
-    include_once (FORMATOS_SAIA . "librerias/funciones_generales.php");
+	include_once (FORMATOS_SAIA . "librerias/funciones_generales.php");
 	if (isset($_REQUEST["campo_descripcion"])) {
 		$campo = busca_filtro_tabla("nombre,etiqueta", "campos_formato", "idcampos_formato IN(" . $_REQUEST["campo_descripcion"] . ")", "orden", $conn);
 	} else if ($idformato) {
@@ -1500,26 +1526,25 @@ function actualizar_datos_documento($idformato, $iddoc) {
 			}
 		}
 	}
-	$idserie=0;
-	if($idformato){
-		$info_formato=busca_filtro_tabla("nombre_tabla,serie_idserie","formato","idformato=".$idformato,"",$conn);
-		if($info_formato["numcampos"]){
-			if($info_formato[0]["serie_idserie"]){
-				$idserie=$info_formato[0]["serie_idserie"];
+	$idserie = 0;
+	if ($idformato) {
+		$info_formato = busca_filtro_tabla("nombre_tabla,serie_idserie", "formato", "idformato=" . $idformato, "", $conn);
+		if ($info_formato["numcampos"]) {
+			if ($info_formato[0]["serie_idserie"]) {
+				$idserie = $info_formato[0]["serie_idserie"];
 			}
-			$doc_serie=busca_filtro_tabla("serie_idserie",$info_formato[0]["nombre_tabla"],"documento_iddocumento=".$iddoc,"",$conn);
-			if($doc_serie["numcampos"] && $doc_serie[0]["serie_idserie"]){
-				$idserie=$doc_serie[0]["serie_idserie"];
+			$doc_serie = busca_filtro_tabla("serie_idserie", $info_formato[0]["nombre_tabla"], "documento_iddocumento=" . $iddoc, "",$conn);
+			if ($doc_serie["numcampos"] && $doc_serie[0]["serie_idserie"]) {
+				$idserie = $doc_serie[0]["serie_idserie"];
 			}
 		}
 	}
 
 	$descripcion = str_replace("'", "", $descripcion);
-	$sql = "UPDATE documento SET descripcion='" . $descripcion . "',serie=".$idserie." WHERE iddocumento=" . $iddoc;
+	$sql = "UPDATE documento SET descripcion='" . $descripcion . "',serie=" . $idserie . " WHERE iddocumento=" . $iddoc;
 	phpmkr_query($sql);
 	return;
 }
-
 
 /*
  * <Clase>
