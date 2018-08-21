@@ -94,9 +94,9 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 								<li>
 									<a href="#encabezado_pie-tab" data-toggle="tab">5-Encabezado pie</a>
 								</li>
-								<li>
+								<!--li>
 									<a href="#asignar_funciones-tab" data-toggle="tab">6-Asignar funciones</a>
-								</li>
+								</li-->
 								<li>
 									<a href="#generar_formulario-tab" data-toggle="tab">7-Generar</a>
 								</li>
@@ -111,8 +111,7 @@ echo(load_pantalla($idpantalla));
 								</div>
 								<div class="tab-pane  active" id="datos_formulario-tab">
 									<?php
-include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
-									?>
+include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 								</div>
                 <div class="tab-pane" id="pantalla_mostrar-tab">
                   <form name="formulario_editor_mostrar" id="formulario_editor_mostrar" action="">

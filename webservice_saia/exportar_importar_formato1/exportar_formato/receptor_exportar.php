@@ -9,18 +9,15 @@ while($max_salida>0){
 	$max_salida--;
 }
 
-  require_once($ruta_db_superior.'webservice_saia/exportar_importar_formato/lib/nusoap.php');
+  require_once($ruta_db_superior.'webservice_saia/exportar_importar_formato/exportar_formato/lib/nusoap.php');
+  include_once('../define_exportar_importar.php');
   include_once('funciones.php');
 
   $URL = "www.test.com";
   $namespace = $URL . '?wsdl';
   $server = new nusoap_server();
   $server->configureWSDL('hellotesting', $namespace);
-  $server->register('generar_idformato', array (
-  		"datos" => "xsd:string"
-  ), array (
-  		"return" => "xsd:string"
-  ), "urn:tools", "urn:tools#generar_idformato" );
+  $server->register('generar_idformato');
   $server->register ( "generar_exportar", array (
         "datos" => "xsd:string" 
 ), array (

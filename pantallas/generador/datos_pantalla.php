@@ -14,11 +14,16 @@ if($_REQUEST['idformato']) {
 	$formato = busca_filtro_tabla("","formato","idformato=".$_REQUEST['idformato'],"",$conn);
 	$formato = procesar_cadena_json($formato,array("cuerpo","ayuda","etiqueta"));
 	$cod_padre=$formato[0]["cod_padre"];
+	
+	$cod_proceso_pertenece=$formato[0]["proceso_pertenece"];	
 	$categoria=$formato[0]["fk_categoria_formato"];
 	if($formato[0]["tiempo_autoguardado"]>3000){
 		$formato[0]["tiempo_autoguardado"]=$formato[0]["tiempo_autoguardado"]/60000;
 	}
 	$formato = json_encode($formato);
+	if($cod_proceso_pertenece){
+		$adicional_cod_proceso="&seleccionado=".$cod_proceso_pertenece;
+	}
 	if($cod_padre){
 		$nombre_cod_padre=busca_filtro_tabla("","formato a","a.idformato=".$cod_padre,"",$conn);
 		$adicional_cod_padre="&seleccionado=".$cod_padre;
@@ -50,7 +55,7 @@ return($resultado);
 }
 ?>
 <style type="text/css">
-.containerTableStyle {overflow:hidden;}
+.arbol_saia>.containerTableStyle {overflow:hidden;}
 </style>
 <form class="form-horizontal" name="datos_formato" id="datos_formato">
   <fieldset id="content_form_name">
@@ -62,21 +67,51 @@ return($resultado);
     </div>
   </div>
   <div class="control-group">
-    <label class="control-label" for="etiqueta">Etiqueta*</label>
+    <label class="control-label" for="etiqueta">Nombe del formato*</label>
     <div class="controls">
-      <input type="text" name="etiqueta" id="etiqueta_formato" placeholder="Etiqueta" value="" required>
+      <input type="text" name="etiqueta" id="etiqueta_formato" placeholder="Nombre" value="" required>
     </div>
   </div>
   <div class="control-group">
-    <label class="control-label" for="codigo_padre">Padre</label>
+    <label class="control-label" for="descripcion">Descripci&oacute;n del formato*</label>
     <div class="controls">
-    	<div id="esperando_codigo_padre_formato"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
-    	<?php echo($nombre_cod_padre[0]["nombre"]);?>
-      <div id="treebox_codigo_padre_formato" class="arbol_saia"></div>
-      <input id="codigo_padre_formato" type="hidden" name="cod_padre" value="<?php echo($cod_padre);?>">
-      <?php crear_arbol("codigo_padre_formato",$ruta_db_superior."test_serie.php?tabla=formato&excluido=".$_REQUEST['idformato'].$adicional_cod_padre);?>
+      <input type="text" name="descripcion_formato" id="descripcion_formato" placeholder="Descripci&oacute;n" value="" required>
     </div>
   </div>
+  <div class="control-group">
+    <label class="control-label" for="proceso">Proceso al que pertenece*</label>
+    <div class="controls">
+      <div id="esperando_proceso_pertenece"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
+      <div id="treebox_proceso_pertenece" class="arbol_saia"></div>
+      <input id="proceso_pertenece" type="hidden" name="proceso_pertenece" value="<?php echo($cod_proceso_pertenece);?>">
+      <?php crear_arbol("proceso_pertenece",$ruta_db_superior."test_serie.php?estado=1&tabla=cf_procesos_formato".$adicional_cod_proceso);?>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="version">Versi&oacute;n*</label>
+    <div class="controls">
+      <input type="text" name="version" id="version" placeholder="Versi&oacute;n" value="" required>
+    </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="documentacion">Documentaci&oacute;n del formato</label>
+    <div class="controls">
+      <input type="file" name="documentacion" id="documentacion" accept="png|jpeg|jpg|pdf">
+    </div>
+  </div>
+  
+  
+  <div class="control-group">   
+   <label class="control-label" for="codigo_padre" data-toggle="tooltip" title="Seleccione el formato principal al cual pertenece">Padre</label>
+    <div class="controls">
+    	<div id="esperando_codigo_padre_formato"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
+    	<?php echo($nombre_cod_padre[0]["etiqueta"]);?>
+      <div id="treebox_codigo_padre_formato" class="arbol_saia"></div>
+      <input id="codigo_padre_formato" type="hidden" name="cod_padre" value="<?php echo($cod_padre);?>">
+      <?php crear_arbol("codigo_padre_formato",$ruta_db_superior."test_formatos.php?tabla=formato&excluido=".$_REQUEST['idformato'].$adicional_cod_padre);?>
+      </div>    
+  </div>
+  
   <div class="control-group">
     <label class="control-label" for="serie_idserie">Serie documental</label>
     <div class="controls">
@@ -90,7 +125,7 @@ return($resultado);
   <div class="control-group">
     <label class="control-label" for="contador">Contador</label>
     <div class="controls">
-      <select name="contador_idcontador" id="contador_idcontador">
+      <select name="contador_idcontador" data-toggle="tooltip" title="Escoja un contador" id="contador_idcontador">
       	<?php 
       	$contadores=busca_filtro_tabla("","contador","nombre<>''","nombre",$conn);
       	$reinicia_contador=1;
@@ -104,13 +139,20 @@ return($resultado);
       	}
       	?>
       </select> 
-      <span id="reinicio_contador"> </span><input type="checkbox" name="reiniciar_contador" id="reiniciar_contador" <?php if($reinicia_contador){echo(' value="1" checked="checked"'); } else{echo( ' value="0" '); }?>>Reiniciar contador con el cambio de a&ntilde;o</span>
+      <!--span id="reinicio_contador"> </span><input type="checkbox" name="reiniciar_contador" id="reiniciar_contador" <?php if($reinicia_contador){echo(' value="1" checked="checked"'); } else{echo( ' value="0" '); }?>>Reiniciar contador con el cambio de a&ntilde;o</span-->
     </div>
   </div>
   <div class="control-group">
-    <label class="control-label" for="banderas">Banderas del formato</label>
+    <label class="control-label" for="tipos">Tipo de formato</label>
     <div class="controls">
-      <input type="checkbox" name="item" id="item" <?php check_banderas('item');?>>Item 
+      <input type="radio" name="item" id="item_0" value="1" <?php if(@$datos_formato[0]["item"]==1) echo(' checked="checked"');?> data-toggle="tooltip" title="Seleccione un tipo de formato">Item
+      <input type="radio" name="item" id="item_1" value="<?php echo $datos_formato[0]["item"]; ?>" <?php  if(@$datos_formato[0]["item"]==0) echo(' checked="checked"');?> data-toggle="tooltip" title="Seleccione un tipo de formato">Formato  
+     
+      </div>
+  </div>
+  <div class="control-group">
+    <label class="control-label" for="banderas">Atributos del formato</label>
+    <div class="controls">
       <input type="checkbox" name="tipo_edicion" id="tipo_edicion" <?php check_banderas('tipo_edicion');?>>Edicion Continua 
       <input type="checkbox" name="banderas[]" id="banderas" <?php check_banderas('aprobacion_automatica');?>>Aprobacion Automatica 
       <input type="checkbox" name="mostrar" id="mostrar" <?php check_banderas('mostrar');?>>Mostrar
@@ -119,9 +161,9 @@ return($resultado);
     </div>
   </div>
   <div class="control-group">
-    <label class="control-label" for="font_size">Tama&ntilde;o de Letra</label>
+    <label class="control-label" for="font_size">Tama&ntilde;o de letra</label>
     <div class="controls">
-      <select name="font_size" id="font_size">
+      <select name="font_size" id="font_size" style="max-width:7%;" data-toggle="tooltip" title="Seleccione el tamaño de letra para los formatos">
       	<?php 
       	$default_font_size=11;
       	if(@$datos_formato["numcampos"]){
@@ -138,7 +180,7 @@ return($resultado);
     </div>
   </div>
   <div class="control-group">
-    <label class="control-label" for="margenes">Margenes</label>
+    <label class="control-label" for="margenes">Margenes (mm)</label>
     <div class="controls">
       Izquierda<select class="input-mini" name="mizq" id="mizq">
       	<?php 
@@ -196,37 +238,42 @@ return($resultado);
     <div class="control-group">
     <label class="control-label" for="papel">Tama&ntilde;o papel</label>
     <div class="controls">
-      <select name="papel" id="papel">
-      	<option value="A4" <?php if(@$datos_formato[0]["papel"]=="A4") echo(' selected');?>>A4</option>
-      	<option value="A5" <?php if(@$datos_formato[0]["papel"]=="A5") echo(' selected');?>>Media Carta</option>
+      <select name="papel" id="papel" style="max-width:12%;">
       	<option value="letter" <?php if(@$datos_formato[0]["papel"]=="letter") echo(' selected');?>>Carta</option>
+      	<option value="A4" <?php if(@$datos_formato[0]["papel"]=="A4") echo(' selected');?>>A4</option>
+      	<option value="A5" <?php if(@$datos_formato[0]["papel"]=="A5") echo(' selected');?>>Media Carta</option>      	
       	<option value="legal" <?php if(@$datos_formato[0]["papel"]=="legal") echo(' selected');?>>Oficio</option>
       </select>
     </div>
   </div>
   <div class="control-group">
-    <label class="control-label" for="mostrar_pdf">Mostrar PDF</label>
+    <label class="control-label" for="mostrar_pdf">Vista del formato</label>
     <div class="controls">
-      HTML<input type="radio" name="mostrar_pdf" id="mostrar_pdf_1" value="1" <?php if(@$datos_formato[0]["mostrar_pdf"]==1) echo(' checked="checked"');?>>
-      PDF Word<input type="radio" name="mostrar_pdf" id="mostrar_pdf_2" value="2" <?php if(@$datos_formato[0]["mostrar_pdf"]==2) echo(' checked="checked"');?>>
+      Vista en Navegador (HTML)<input type="radio" name="mostrar_pdf" id="mostrar_pdf_1" value="1" <?php if(@$datos_formato[0]["mostrar_pdf"]==1) echo(' checked="checked"');?>>
+      <!--PDF WORD <input type="radio" name="mostrar_pdf" id="mostrar_pdf_2" value="2" <?php if(@$datos_formato[0]["mostrar_pdf"]==2) echo(' checked="checked"');?>-->
       PDF<input type="radio" name="mostrar_pdf" id="mostrar_pdf_0" value="0"  <?php if(@$datos_formato[0]["mostrar_pdf"]==0) echo(' checked="checked"');?>>
     </div>
   </div>
-  <div class="control-group">
-    <label class="control-label" for="exportar">M&eacute;todo exportar</label>
-    <div class="controls">
-      HTML2PS<input type="radio" name="exportar" id="exportar_1" value="html2ps"  <?php if(@$datos_formato[0]["exportar"]=="html2ps") echo(' checked="checked"');?>>
-      mPDF<input type="radio" name="exportar" id="exportar_2" value="mpdf" <?php if(@$datos_formato[0]["exportar"]=="mpdf") echo(' checked="checked"');?>>
-      TCPDF<input type="radio" name="exportar" id="exportar_0" value="tcpdf"  <?php if(@$datos_formato[0]["exportar"]=="tcpdf" || !@$datos_formato) echo(' checked="checked"');?>>
-    </div>
-  </div>
-  <div class="control-group">
-    <label class="control-label" for="pertenece_nucleo">Formato Pertenece a n&uacute;cleo</label>
-    <div class="controls">
-      Si<input type="radio" name="pertenece_nucleo" id="pertenece_nucleo_1" value="1" <?php if(@$datos_formato[0]["pertenece_nucleo"]==1) echo(' checked="checked"');?>>
-      No<input type="radio" name="pertenece_nucleo" id="pertenece_nucleo_0" value="0"  <?php if(@$datos_formato[0]["pertenece_nucleo"]==0) echo(' checked="checked"');?>>
-    </div>
-  </div>
+  <?php
+  if($_SESSION["LOGIN" . LLAVE_SAIA]=="cerok"){  	
+  ?>
+	  <div class="control-group">
+	    <label class="control-label" for="exportar">M&eacute;todo exportar</label>
+	    <div class="controls">
+	      <!--HTML2PS<input type="radio" name="exportar" id="exportar_1" value="html2ps"  <?php if(@$datos_formato[0]["exportar"]=="html2ps") echo(' checked="checked"');?>-->
+	      mPDF<input type="radio" name="exportar" id="exportar_2" value="mpdf" <?php if(@$datos_formato[0]["exportar"]=="mpdf") echo(' checked="checked"');?>>
+	      TCPDF<input type="radio" name="exportar" id="exportar_0" value="tcpdf"  <?php if(@$datos_formato[0]["exportar"]=="tcpdf" || !@$datos_formato) echo(' checked="checked"');?>>
+	    </div>
+	  </div>
+	  
+	  <div class="control-group">
+	    <label class="control-label" for="pertenece_nucleo">Formato Pertenece a n&uacute;cleo</label>
+	    <div class="controls">
+	      Si<input type="radio" name="pertenece_nucleo" id="pertenece_nucleo_1" value="1" <?php if(@$datos_formato[0]["pertenece_nucleo"]==1) echo(' checked="checked"');?>>
+	      No<input type="radio" name="pertenece_nucleo" id="pertenece_nucleo_0" value="0"  <?php if(@$datos_formato[0]["pertenece_nucleo"]==0) echo(' checked="checked"');?>>
+	    </div>
+	  </div>
+  
   <div class="control-group">
     <label class="control-label" for="tiempo_autoguardado">Tiempo autoguardado</label>
     <div class="controls">
@@ -238,8 +285,18 @@ return($resultado);
       <input id="tiempo_formato" type="number" name="tiempo_autoguardado" min="0" max="3600" step="1" value="<?php echo($defaul_tiempo)?>" style="width:50px;">Minutos
     </div>
   </div>
+  <?php
+  }
+	else{
+		?>
+		<input name="exportar" value="tcpdf">
+		<input name="pertenece_nucleo" value="0">
+		<input id="tiempo_formato" name="tiempo_autoguardado" value="5"> 
+		<?php
+	}
+  ?>
   <div class="control-group">
-    <label class="control-label" for="fk_categoria_formato">Categoria del formato</label>
+    <label class="control-label" for="fk_categoria_formato" data-toggle="tooltip" title="Escoja en donde será ubicado el formato">Categoria del formato</label>
     <div class="controls">
     	<div id="esperando_fk_categoria_formato"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
     	<?php echo($categoria_formato[0]["nombre"]);?>
@@ -249,10 +306,10 @@ return($resultado);
     </div>
   </div>
   <div class="control-group">
-    <label class="control-label" for="funcion_predeterminada">Funciones predeterminadas</label>
+    <label class="control-label" for="funcion_predeterminada">Ruta de aprobaci&oacute;n</label>
     <div class="controls">
-      Varios responsables<input type="checkbox" name="funcion_predeterminada[]" id="funcion_predeterminada_1" value="1">
-      Digitalizaci&oacute;n<input type="checkbox" name="funcion_predeterminada[]" id="funcion_predeterminada_2" value="2">
+      Varios responsables<input type="checkbox" name="funcion_predeterminada[]" id="funcion_predeterminada_1" value="1" data-toggle="tooltip" title="Opción que realiza ruta de aprobación">
+      Digitalizaci&oacute;n<input type="checkbox" name="funcion_predeterminada[]" id="funcion_predeterminada_2" value="2" data-toggle="tooltip" title="Opción que indica si el formato permite digitalizar">
     </div>
   </div>
   <div class="form-actions">
@@ -276,7 +333,16 @@ echo(librerias_kaiten());
 echo(librerias_acciones_kaiten());
 ?>
 <script type="text/javascript">
+ /*$("#elemento1").mouseenter(function(e){
+      $("#tip1").css("left", e.pageX + 5);
+      $("#tip1,").css("top", e.pageY + 5);
+      $("#tip1").css("display", "block");
+   });
+   $("#elemento1").mouseleave(function(e){
+      $("#tip1").css("display", "none");
+   }); */
 $("document").ready(function(){
+	$('[data-toggle="tooltip"]').tooltip();
 	$("#nombre_formato").blur(function(){
 		console.log($("#nombre_formato").val());
 		if($("#nombre_formato").val()){
@@ -301,6 +367,7 @@ $("document").ready(function(){
 	});
 	var formulario = $("#datos_formato");
 	var formato=jQuery.parseJSON('<?php echo($formato);?>');
+	window.console.log(formato);
 	var nombre_formato=$("#nombre_formato").val();
 	$("#enviar_datos_formato").click(function() {
 		if(formulario.valid()) {
@@ -335,10 +402,15 @@ $("document").ready(function(){
 			$(".error").first().focus();
 		}
 	});
-
-	if(formato!==null && formato.numcampos){
+	
+	
+		if(formato!==null && formato.numcampos){
     $('#nombre_formato').attr('value',formato[0].nombre);
     //$('#tabla_formato').attr('value',formato[0].tabla);
+    $('#descripcion_formato').attr('value',formato[0].descripcion_formato);
+    $('#proceso_pertenece').attr('value',formato[0].proceso_pertenece);
+    
+    $('#version').attr('value',formato[0].version);
     $('#librerias_formato').attr('value',formato[0].librerias);
     $('#etiqueta_formato').attr('value',formato[0].etiqueta);
     $('#ruta_formato').attr('value',formato[0].ruta_formato);
@@ -371,10 +443,10 @@ function parsear_items(){
 	$("#prefijo_formato").val("ft_");
 }
 </script>
-<?php
+<?php 
 function check_banderas($bandera){
 	global $datos_formato;
-	if($bandera=="aprobacion_automatica" ){
+	if($bandera=="aprobacion_automatica"){
 		echo(' value="e" ');
 		if(strpos("e",$datos_formato[0]["banderas"])!==false){
 			echo(' checked="checked" ');

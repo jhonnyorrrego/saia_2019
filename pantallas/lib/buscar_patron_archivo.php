@@ -18,7 +18,7 @@ $retorno=array("exito"=>0,"resultado"=>"Error al parsear el patron ".$pat);
 if($archivo!=''&& $pat!=''){	
 	$cadena=file_get_contents($ruta_db_superior.$archivo);
 	if($cadena!=''&&$pat){
-		$patron = '/'.$pat.'\s*.*\(.*\s*\)/';		
+		$patron = '/'.$pat.'\s+(.*)\(\s*(.*)\s*\)/';// separa en array el nombre del formato posicion 1 y en la posición 2, los parametros 	
 		if(preg_match_all($patron, $cadena, $resultado)){
 			$retorno["exito"]=1;
 			$retorno["resultado"]=$resultado[0];

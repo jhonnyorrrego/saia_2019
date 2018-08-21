@@ -220,7 +220,7 @@ function incluir_librerias_pantalla($idpantalla, $tipo_retorno = 1, $ruta = '', 
 	}
 	$ruta = str_replace("../", "", $ruta);
 	$ruta = str_replace("./", "", $ruta);
-	$ruta_include = busca_filtro_tabla("", "fromato_libreria", "ruta='" . $ruta . "'", "", $conn);
+	$ruta_include = busca_filtro_tabla("", "formato_libreria", "ruta='" . $ruta . "'", "", $conn);
 	if ($ruta_include["numcampos"]) {
 		$idlibreria = $ruta_include[0]["idpantalla_libreria"];
 	} else {

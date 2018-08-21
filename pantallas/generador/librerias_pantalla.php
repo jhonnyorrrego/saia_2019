@@ -63,6 +63,8 @@ function adicionar_datos_formato($datos, $tipo_retorno = 1) {
 			"mensaje" => "Error al tratar de generar el adicionar de la pantalla",
 			"exito" => 0
 	);
+	
+	
 	$datos["nombre"]=trim($datos["nombre_formato"]);
 	unset($datos["nombre_formato"]);
 	if(empty($datos["nombre"]) || preg_match("/undefined/", $datos["nombre"])) {
@@ -71,6 +73,7 @@ function adicionar_datos_formato($datos, $tipo_retorno = 1) {
 		die();
 	}
 	// Field Banderas
+	
 	if(is_array($datos["banderas"]))
 		$fieldList["banderas"] = "'" . implode(",", $datos["banderas"]) . "'";
 
@@ -90,6 +93,23 @@ function adicionar_datos_formato($datos, $tipo_retorno = 1) {
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["etiqueta"] = ($theValue);
 
+		// Field descripcion_formato
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($datos["descripcion_formato"]) : $datos["descripcion_formato"];
+		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+		$fieldList["descripcion_formato"] = ($theValue);
+		
+		// Field proceso al que pertenece
+		$theValue = ($datos["proceso_pertenece"] != 0) ? intval($datos["proceso_pertenece"]) : 0;
+		$fieldList["proceso_pertenece"] = $theValue;
+		
+		// Field version
+		$theValue = ($datos["version"] != 0) ? intval($datos["version"]) : 0;
+		$fieldList["version"] = $theValue;
+		
+		// Field version
+		$theValue = ($datos["documentacion"] != 0) ? intval($datos["documentacion"]) : 0;
+		$fieldList["documentacion"] = $theValue;
+		
 		// Field contador_idcontador
 		$theValue = ($datos["contador_idcontador"] != 0) ? intval($datos["contador_idcontador"]) : crear_contador($datos["nombre"]);
 		$fieldList["contador_idcontador"] = $theValue;
@@ -189,7 +209,7 @@ detalles_mostrar_".$datos["nombre"].".php";
 			 alerta("No se crea el archivo .gitignore para versionamiento");
 			 }*/
 		}
-
+		
 		// Field cod_padre
 		$theValue = ($datos["cod_padre"] != 0) ? intval($datos["cod_padre"]) : 0;
 		$fieldList["cod_padre"] = $theValue;
@@ -244,9 +264,10 @@ detalles_mostrar_".$datos["nombre"].".php";
 			if(in_array("3", $datos["funcion_predeterminada"])) {
 				vincular_campo_anexo($idformato);
 			}
+			insertar_anexo_formato($idformato);
 			crear_modulo_formato($idformato);
 		}
-
+		
 		if($fieldList["cod_padre"] && $idformato) {
 
 			$formato_padre = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $fieldList["cod_padre"], "", $conn);
@@ -258,7 +279,7 @@ detalles_mostrar_".$datos["nombre"].".php";
 			$sqlcd = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html) VALUES (" . $idformato . ",'estado_documento', 'ESTADO DEL DOCUMENTO', 'VARCHAR', 255, 0,'', 'a','', '', 'hidden')";
 			phpmkr_query($sqlcd, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
 
-			$strsql = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html,valor) VALUES (" . $idformato . ",'serie_idserie', 'SERIE DOCUMENTAL', 'INT', 11, 1," . $fieldList["serie_idserie"] . ", 'a'," . $fieldList["etiqueta"] . ", 'fk', 'hidden','../../test/test_serie_funcionario.php?estado_serie=1;2;0;1;1;0;1')";
+			$strsql = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html,valor) VALUES (" . $idformato . ",'serie_idserie', 'SERIE DOCUMENTAL', 'INT', 11, 1,'" . $fieldList["serie_idserie"] . "', 'a'," . $fieldList["etiqueta"] . ", 'fk', 'hidden','../../test/test_serie_funcionario.php?estado_serie=1;2;0;1;1;0;1')";
 			guardar_traza($strsql, "ft_" . $datos["nombre"]);
 			phpmkr_query($strsql, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
 		}
@@ -370,6 +391,7 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
 			"exito" => 0
 	);
 	if(!$datos["idformato"]){
+		
 		$retorno["mensaje"]="Error al tratar de editar un formato sin identificador ";
 		if ($tipo_retorno == 1) {
 			die (json_encode($retorno));
@@ -377,7 +399,14 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
 			return ($retorno);
 		}
 	}
-	$datos["nombre"]=trim($datos["nombre"]);
+	else{
+		$buscar_formato = busca_filtro_tabla("","formato","idformato=".$datos["idformato"],"",$conn);
+		if($buscar_formato["numcampos"]){
+			$datos["nombre"]=$buscar_formato[0]["nombre"];
+		}
+	}
+	
+
 	// Field Banderas
 	if(is_array($datos["banderas"]))
 		$fieldList["banderas"] = "'" . implode(",", $datos["banderas"]) . "'";
@@ -2744,4 +2773,53 @@ function generar_archivos_ignorados($idpantalla, $tipo_retorno){
 		return ($retorno);
 	}
 }
+function insertar_anexo_formato($idformato){
+/*if ($archivos != NULL && $archivos != "") {
+	$archivos = explode(",", $archivos);
+	foreach ($archivos as $nombre) {
+		$datos_anexo = explode(";", $nombre);
+		if (!is_dir("../anexos/$doc")) {
+			mkdir("../anexos/$doc/", PERMISOS_CARPETAS);
+			chmod("../anexos/$doc/", PERMISOS_CARPETAS);
+		}
+		if (rename('../anexos/temporal/' . $datos_anexo[0], "../anexos/$doc/" . $datos_anexo[0]))
+			$ruta = "../anexos/$doc/" . $datos_anexo[0];
+		else
+			$ruta = '../anexos/temporal/' . $datos_anexo[0];
+		phpmkr_query("INSERT INTO formato_previo(ruta,tipo,etiqueta,idformato,fecha_anexo) VALUES ('$ruta'," . $doc . ",'" . $datos_anexo[2] . "','" . $datos_anexo[1] . "',".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").")", $conn);
+	}
+
+
+
+foreach($_FILES as $key => $valor){
+	if($key!='')$nombre_campo=$key;
+}
+$ruta=ruta_archivos_pantalla();
+
+crear_destino($ruta_db_superior.$ruta);
+$ruta=vincular_anexo($nombre_campo,$ruta);
+
+$tipo=explode('.', $_FILES[$nombre_campo]['name'][0]);
+	$tamano=$_FILES[$nombre_campo]['size'][0];
+	$cant=count($tipo);
+	if($cant)
+		$type=$tipo[($cant-1)];
+	else{
+		$type=$tipo[1];
+	}
+	$extensiones_permitidas=explode("|",$extenciones);
+	
+	if(!in_array($type,$extensiones_permitidas))return false;
+	if($tamano>$max_tamanio)return false;
+	
+	$nombre=(rand());
+	
+	if(rename($_FILES[$nombre_campo]['tmp_name'][0],$ruta_db_superior.$ruta.$nombre.".".$type)){
+		chmod($ruta_db_superior.$ruta.$nombre.".".$type,PERMISOS_ARCHIVOS);
+		$sql="INSERT INTO anexos_temp_pantalla(idsesion,ruta,etiqueta,tipo,pantalla_idpantalla, fk_idpantalla_campos) values('".session_id()."','".$ruta.$nombre.'.'.$type."','".$_FILES[$nombre_campo]['name'][0]."','".$type."', ".$campos_pantalla[0]["idpantalla"].", ".$campos_pantalla[0]["idpantalla_campos"].")";
+		phpmkr_query($sql);
+		$idanexo=phpmkr_insert_id();
+	}
+ * */
+ }
 ?>
