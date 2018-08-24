@@ -97,7 +97,7 @@ function adicionar_datos_formato($datos, $tipo_retorno = 1) {
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($datos["descripcion_formato"]) : $datos["descripcion_formato"];
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["descripcion_formato"] = ($theValue);
-		
+				
 		// Field proceso al que pertenece
 		$theValue = ($datos["proceso_pertenece"] != 0) ? intval($datos["proceso_pertenece"]) : 0;
 		$fieldList["proceso_pertenece"] = $theValue;
@@ -421,7 +421,24 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($datos["etiqueta"]) : $datos["etiqueta"];
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["etiqueta"] = ($theValue);
-
+		
+		// Field descripcion_formato
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($datos["descripcion_formato"]) : $datos["descripcion_formato"];
+		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+		$fieldList["descripcion_formato"] = ($theValue);
+				
+		// Field proceso al que pertenece
+		$theValue = ($datos["proceso_pertenece"] != 0) ? intval($datos["proceso_pertenece"]) : 0;
+		$fieldList["proceso_pertenece"] = $theValue;
+		
+		// Field version
+		$theValue = ($datos["version"] != 0) ? intval($datos["version"]) : 0;
+		$fieldList["version"] = $theValue;
+		
+		// Field version
+		$theValue = ($datos["documentacion"] != 0) ? intval($datos["documentacion"]) : 0;
+		$fieldList["documentacion"] = $theValue;
+		
 		// Field contador_idcontador
 		$theValue = ($datos["contador_idcontador"] != 0) ? intval($datos["contador_idcontador"]) : crear_contador($datos["nombre"]);
 		$fieldList["contador_idcontador"] = $theValue;
@@ -2774,22 +2791,84 @@ function generar_archivos_ignorados($idpantalla, $tipo_retorno){
 	}
 }
 function insertar_anexo_formato($idformato){
-/*if ($archivos != NULL && $archivos != "") {
-	$archivos = explode(",", $archivos);
-	foreach ($archivos as $nombre) {
-		$datos_anexo = explode(";", $nombre);
-		if (!is_dir("../anexos/$doc")) {
-			mkdir("../anexos/$doc/", PERMISOS_CARPETAS);
-			chmod("../anexos/$doc/", PERMISOS_CARPETAS);
+	if ($idformato != NULL && $idformato != "") {
+		$form_uuid = null;
+		print_r($_REQUEST);
+		if (@$_REQUEST["form_uuid"]) {
+			$form_uuid = $_REQUEST["form_uuid"];
 		}
-		if (rename('../anexos/temporal/' . $datos_anexo[0], "../anexos/$doc/" . $datos_anexo[0]))
-			$ruta = "../anexos/$doc/" . $datos_anexo[0];
-		else
-			$ruta = '../anexos/temporal/' . $datos_anexo[0];
-		phpmkr_query("INSERT INTO formato_previo(ruta,tipo,etiqueta,idformato,fecha_anexo) VALUES ('$ruta'," . $doc . ",'" . $datos_anexo[2] . "','" . $datos_anexo[1] . "',".fecha_db_almacenar(date("Y-m-d H:i:s"),"Y-m-d H:i:s").")", $conn);
-	}
-
-
+	
+		$archivos = busca_filtro_tabla("", "anexos_tmp", "uuid = '$form_uuid' AND idformato=" . $idformato, "", $conn);
+		print_r($archivos["sql"]);
+		if($archivos["numcampos"]){
+			for ($j = 0; $j < $archivos["numcampos"]; $j++) {
+				$ruta_temporal = $ruta_db_superior . $archivos[$j]["ruta"];
+	
+				if (file_exists($ruta_temporal)) {
+					$nombre = $archivos[$j]["etiqueta"];
+					$datos_anexo = pathinfo($ruta_temporal);
+	
+					$temp_filename = uniqid() . "." . $datos_anexo["extension"];
+					$dir_anexos = selecciona_ruta_anexos2($iddoc, $tipo_almacenamiento);
+	
+					if (is_file($ruta_temporal)) {
+						$resultado = $almacenamiento -> copiar_contenido_externo($ruta_temporal, $dir_anexos . $temp_filename);
+					}
+					if ($resultado) {
+						$dir_anexos_1 = array(
+							"servidor" => $almacenamiento -> get_ruta_servidor(),
+							"ruta" => $dir_anexos . $temp_filename
+						);
+						$campos = array(
+							"idformato" => $idformato,
+							"ruta" => "'" . json_encode($dir_anexos_1) . "'",
+							"etiqueta" => "'" . $nombre . "'",
+							"tipo" => "'" . $datos_anexo["extension"] . "'",
+							"fecha_anexo" => fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s')
+						);
+	
+						if ($tipo_almacenamiento == "archivos") {// Los anexos estan guardados en archivos
+								
+							$sql2 = "INSERT INTO formato_previo(" . implode(", ", array_keys($campos)) . ") values (" . implode(", ", array_values($campos)) . ")";
+								phpmkr_query($sql2, $conn) or alerta("No se puede Adicionar el Anexo " . $ruta_temporal, 'error', 4000);
+								$idanexo = phpmkr_insert_id();						
+							}
+							if ($idanexo) {
+								// eliminar el temporal
+								unlink($ruta_temporal);
+								unlink("$ruta_temporal.lock");
+	
+								$update = "UPDATE " . $campo[$i]["nombre_tabla"] . " SET " . $campo[$i]["nombre"] . "=" . $idanexo . " WHERE id" . $campo[$i]["nombre_tabla"] . "=" . $iddoc;
+								phpmkr_query($update);
+								array_push($larchivos, $idanexo);
+	
+								//Eliminar los pendientes de la tabla temporal
+								$sql2 = "DELETE FROM anexos_tmp WHERE idanexos_tmp = " . $archivos[$j]["idanexos_tmp"];
+								phpmkr_query($sql2) or die($sql2);
+	
+								if (array_key_exists($nombre, $permisos)) {
+									$propio = $permisos[$nombre]["propio"];
+									$dependencia = $permisos[$nombre]["dependencia"];
+									$cargo = $permisos[$nombre]["cargo"];
+									$total = $permisos[$nombre]["total"];
+								} else {
+									$propio = "lem";
+									$dependencia = "";
+									$cargo = "";
+									$total = "l";
+								}
+								$sql_permiso = "insert into permiso_anexo(anexos_idanexos,idpropietario,caracteristica_propio,caracteristica_dependencia,caracteristica_cargo,caracteristica_total) values('$idanexo','" . usuario_actual("idfuncionario") . "','$propio','$dependencia','$cargo','$total')";
+								phpmkr_query($sql_permiso, $conn);
+							}
+						} else {
+							alerta("!Se produjo un error al copiar el archivo " . $nombre, 'error', 4000);
+						}
+					} else {
+						alerta("!No se encontró el archivo " . $nombre, 'error', 4000);
+					}
+				}
+			}
+/*
 
 foreach($_FILES as $key => $valor){
 	if($key!='')$nombre_campo=$key;
@@ -2821,5 +2900,6 @@ $tipo=explode('.', $_FILES[$nombre_campo]['name'][0]);
 		$idanexo=phpmkr_insert_id();
 	}
  * */
+ 	}
  }
 ?>

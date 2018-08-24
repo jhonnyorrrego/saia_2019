@@ -10,6 +10,7 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
+include_once ($ruta_db_superior . "pantallas/lib/librerias_componentes.php");
 if($_REQUEST['idformato']) {
 	$formato = busca_filtro_tabla("","formato","idformato=".$_REQUEST['idformato'],"",$conn);
 	$formato = procesar_cadena_json($formato,array("cuerpo","ayuda","etiqueta"));
@@ -83,7 +84,7 @@ return($resultado);
     <div class="controls">
       <div id="esperando_proceso_pertenece"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
       <div id="treebox_proceso_pertenece" class="arbol_saia"></div>
-      <input id="proceso_pertenece" type="hidden" name="proceso_pertenece" value="<?php echo($cod_proceso_pertenece);?>">
+      <input id="proceso_pertenece" type="hidden" name="proceso_pertenece" required value="<?php echo($cod_proceso_pertenece);?>">
       <?php crear_arbol("proceso_pertenece",$ruta_db_superior."test_serie.php?estado=1&tabla=cf_procesos_formato".$adicional_cod_proceso);?>
     </div>
   </div>
@@ -96,8 +97,23 @@ return($resultado);
   <div class="control-group">
     <label class="control-label" for="documentacion">Documentaci&oacute;n del formato</label>
     <div class="controls">
-      <input type="file" name="documentacion" id="documentacion" accept="png|jpeg|jpg|pdf">
+      <!--input type="file" name="documentacion" id="documentacion" accept="png|jpeg|jpg|pdf"-->
+      <div id="dz_campo_32" class="saia_dz dz-clickable dropzone " data-nombre-campo="anexos" data-idformato="2" data-idcampo-formato="32" data-extensiones=".jpg, .png, .gif, .doc, .ppt, .xls, .txt, .pdf, .docx, .pptx, .pps, .xlsx, .csv" data-multiple="multiple"><div class="dz-message"><span>Arrastra el anexo hasta aquí. <br> O si prefieres...<br><br> <span class="boton_upload">Elije un anexo para subir.</span> </span></div></div>
     </div>
+    <script type="text/javascript" src="../../dropzone/dist/dropzone.js"></script>
+    <script type="text/javascript" src="../../dropzone/dist/dropzone.js"></script>
+    <script type="text/javascript" src="../../anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style>
+    <link href="../../dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" />
+    <script type='text/javascript'> 
+    hs.graphicsDir = '../../anexosdigitales/highslide-5.0.0/highslide/graphics/'; 
+    hs.outlineType = 'rounded-white';
+    </script>";
+    <?php
+    include_once($ruta_db_superior."../../anexosdigitales/funciones_archivo.php");
+    $js_archivos = "";
+    $js_archivos = crear_campo_dropzone(null, null);
+    ?>
   </div>
   
   
@@ -127,7 +143,7 @@ return($resultado);
     <div class="controls">
       <select name="contador_idcontador" data-toggle="tooltip" title="Escoja un contador" id="contador_idcontador">
       	<?php 
-      	$contadores=busca_filtro_tabla("","contador","nombre<>''","nombre",$conn);
+      	$contadores=busca_filtro_tabla("","contador","nombre<>'' and estado=1","nombre",$conn);
       	$reinicia_contador=1;
       	for($i=0;$i<$contadores["numcampos"];$i++){
       		echo('<option value="'.$contadores[$i]["idcontador"].'"');
@@ -289,9 +305,9 @@ return($resultado);
   }
 	else{
 		?>
-		<input name="exportar" value="tcpdf">
-		<input name="pertenece_nucleo" value="0">
-		<input id="tiempo_formato" name="tiempo_autoguardado" value="5"> 
+		<input type="hidden" name="exportar" value="tcpdf">
+		<input type="hidden" name="pertenece_nucleo" value="0">
+		<input type="hidden" id="tiempo_formato" name="tiempo_autoguardado" value="5"> 
 		<?php
 	}
   ?>
@@ -322,11 +338,17 @@ return($resultado);
     <!-- button type="reset" name="cancelar" class="btn" id="cancelar_formulario_saia" value="cancelar">Cancel</button-->
     <?php if($_REQUEST["idformato"]){?>
     <!-- button type="button" name="eliminar" class="btn btn-danger kenlace_saia_propio" id="eliminar_formulario_saia" enlace="../formatos/generador/eliminar_formato.php?idformato=<?php echo($_REQUEST['idformato']);?>" titulo="Eliminar formato" eliminar_hijos="0" value="eliminar">Eliminar</button-->
-    <?php } ?>
+    <?php } 
+    $texto .= "<input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''>";
+    $id_unico = uniqid();
+    $texto .= "<input type='hidden' name='form_uuid'       id='form_uuid'       value='$id_unico'>";
+	echo $texto;
+    ?>
     <div class="pull-right" id="cargando_enviar"></div>
   </div>
 </form>
 <?php
+echo $js_archivos;
 echo(librerias_jquery("1.7"));
 echo(librerias_notificaciones());
 echo(librerias_kaiten());
@@ -534,4 +556,85 @@ $("document").ready(function(){
 </script>
 	<?php
 }
+
+function crear_campo_dropzone($nombre, $parametros) {
+        $js_archivos = "<script type='text/javascript'>
+            var upload_url = '../../dropzone/cargar_archivos_anexos.php';
+            var mensaje = 'Arrastre aquí los archivos';
+            Dropzone.autoDiscover = false;
+            var lista_archivos = new Object();
+            $(document).ready(function () {
+                Dropzone.autoDiscover = false;
+                $('.saia_dz').each(function () {
+                    var paramName = $(this).attr('data-nombre-campo');
+                	var idcampoFormato = $(this).attr('data-idcampo-formato');
+                	var extensiones = $(this).attr('data-extensiones');
+                	var multiple_text = $(this).attr('data-multiple');
+                	var multiple = false;
+                	var form_uuid = $('#form_uuid').val();
+                	var maxFiles = 1;
+                	if(multiple_text == 'multiple') {
+                		multiple = true;
+                		maxFiles = 10;
+                	}
+                    var opciones = {
+                    	ignoreHiddenFiles : true,
+                    	maxFiles : maxFiles,
+                    	acceptedFiles: extensiones,
+                   		addRemoveLinks: true,
+                   		dictRemoveFile: 'Quitar anexo',
+                   		dictMaxFilesExceeded : 'No puede subir mas archivos',
+                   		dictResponseError : 'El servidor respondió con código {{statusCode}}',
+                		uploadMultiple: multiple,
+                    	url: upload_url,
+                    	paramName : paramName,
+                    	params : {
+                        	nombre_campo : paramName,
+                        	uuid : form_uuid
+                        },
+                            removedfile : function(file) {
+                                if(lista_archivos && lista_archivos[file.upload.uuid]) {
+                                	$.ajax({
+                                		url: upload_url,
+                                		type: 'POST',
+                                		data: {
+                                    		accion:'eliminar_temporal',
+                                        	archivo: lista_archivos[file.upload.uuid]}
+                                		});
+                                }
+                                if (file.previewElement != null && file.previewElement.parentNode != null) {
+                                    file.previewElement.parentNode.removeChild(file.previewElement);
+                                	delete lista_archivos[file.upload.uuid];
+                                	$('#'+paramName).val(Object.values(lista_archivos).join());
+                                }
+                                return this._updateMaxFilesReachedClass();
+                            },
+                            success : function(file, response) {
+                            	for (var key in response) {
+                                	if(Array.isArray(response[key])) {
+                                    	for(var i=0; i < response[key].length; i++) {
+                                    		archivo=response[key][i];
+                                        	if(archivo.original_name == file.upload.filename) {
+                                        		lista_archivos[file.upload.uuid] = archivo.id;
+                                        	}
+                                    	}
+                                	} else {
+                                		if(response[key].original_name == file.upload.filename) {
+                                    		lista_archivos[file.upload.uuid] = response[key].id;
+                                		}
+                                	}
+                            	}
+                            	$('#'+paramName).val(Object.values(lista_archivos).join());
+                                if($('#dz_campo_'+idcampoFormato).find('label.error').length) {
+                                    $('#dz_campo_'+idcampoFormato).find('label.error').remove()
+                                }
+                            }
+                    };
+                    $(this).dropzone(opciones);
+                    $(this).addClass('dropzone');
+                });
+            });</script>";
+        return $js_archivos;
+    }  
+    
 ?>
