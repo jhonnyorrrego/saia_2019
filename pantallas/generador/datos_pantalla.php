@@ -61,12 +61,18 @@ return($resultado);
 <form class="form-horizontal" name="datos_formato" id="datos_formato">
   <fieldset id="content_form_name">
   </fieldset>
-  <div class="control-group">
-    <label class="control-label" for="nombre">Nombre*</label>
-    <div class="controls">
-      <input type="text" name="nombre_formato" id="nombre_formato" placeholder="Nombre" value="" required  <?php if($_REQUEST["idformato"]) echo("disabled");?>>
-    </div>
-  </div>
+  <?php
+  if($_SESSION["LOGIN" . LLAVE_SAIA]=="cerok"){  	
+  ?>
+	  <div class="control-group">
+	    <label class="control-label" for="nombre">Nombre*</label>
+	    <div class="controls">
+	      <input type="text" name="nombre_formato" id="nombre_formato" placeholder="Nombre" value="" required  <?php if($_REQUEST["idformato"]) echo("disabled");?>>
+	    </div>
+	  </div>
+	 <?php
+  } 	
+  ?>
   <div class="control-group">
     <label class="control-label" for="etiqueta">Nombe del formato*</label>
     <div class="controls">
@@ -97,8 +103,8 @@ return($resultado);
   <div class="control-group">
     <label class="control-label" for="documentacion">Documentaci&oacute;n del formato</label>
     <div class="controls">
-      <!--input type="file" name="documentacion" id="documentacion" accept="png|jpeg|jpg|pdf"-->
-      <div id="dz_campo_32" class="saia_dz dz-clickable dropzone " data-nombre-campo="anexos" data-idformato="2" data-idcampo-formato="32" data-extensiones=".jpg, .png, .gif, .doc, .ppt, .xls, .txt, .pdf, .docx, .pptx, .pps, .xlsx, .csv" data-multiple="multiple"><div class="dz-message"><span>Arrastra el anexo hasta aquí. <br> O si prefieres...<br><br> <span class="boton_upload">Elije un anexo para subir.</span> </span></div></div>
+      <input type="hidden" name="anexos" id="anexos">
+      <div id="dz_campo" class="saia_dz dz-clickable dropzone " data-nombre-campo="anexos" data-extensiones=".jpg, .png, .gif, .doc, .ppt, .xls, .txt, .pdf, .docx, .pptx, .pps, .xlsx, .csv" data-multiple=""><div class="dz-message"><span>Arrastra el anexo hasta aquí. <br> O si prefieres...<br><br> <span class="boton_upload">Elije un anexo para subir.</span> </span></div></div>
     </div>
     <script type="text/javascript" src="../../dropzone/dist/dropzone.js"></script>
     <script type="text/javascript" src="../../dropzone/dist/dropzone.js"></script>
@@ -131,11 +137,11 @@ return($resultado);
   <div class="control-group">
     <label class="control-label" for="serie_idserie">Serie documental</label>
     <div class="controls">
-    	<div id="esperando_serie_idserie"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
+    	<div id="esperando_arbol_serie_formato"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
     	<?php echo($serie[0]["nombre"]);?>
-      <div id="treebox_serie_idserie" class="arbol_saia"></div>
-      <input id="serie_idserie" type="hidden" name="serie_idserie" value="<?php echo($serie_idserie);?>">
-      <?php crear_arbol("serie_idserie",$ruta_db_superior."test_serie.php?tabla=serie");?>
+      <div id="treebox_arbol_serie_formato" class="arbol_saia"></div>
+      <input id="arbol_serie_formato" type="hidden" name="serie_idserie" value="<?php echo($serie_idserie);?>">
+      <?php crear_arbol("arbol_serie_formato",$ruta_db_superior."test_serie.php?tabla=serie&filtrar_arbol=documental&arbol_series=1");?>
     </div>
   </div>
   <div class="control-group">
@@ -341,7 +347,7 @@ return($resultado);
     <?php } 
     $texto .= "<input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''>";
     $id_unico = uniqid();
-    $texto .= "<input type='hidden' name='form_uuid'       id='form_uuid'       value='$id_unico'>";
+    $texto .= "<input type='hidden' name='form_uuid' id='form_uuid' value='$id_unico'>";
 	echo $texto;
     ?>
     <div class="pull-right" id="cargando_enviar"></div>
@@ -390,9 +396,13 @@ $("document").ready(function(){
 	var formulario = $("#datos_formato");
 	var formato=jQuery.parseJSON('<?php echo($formato);?>');
 	window.console.log(formato);
-	var nombre_formato=$("#nombre_formato").val();
+	var nombre_formato="";
+	if($("#nombre_formato").val()!=""){
+		var nombre_formato=$("#nombre_formato").val();
+	}
+	
 	$("#enviar_datos_formato").click(function() {
-		if(formulario.valid()) {
+		if(formulario.valid()) {			
 			$('#cargando_enviar').html("Procesando <i id='icon-cargando'>&nbsp;</i>");
 			var buttonAcep = $(this);
 			//buttonAcep.attr('disabled', 'disabled');
@@ -431,7 +441,7 @@ $("document").ready(function(){
     //$('#tabla_formato').attr('value',formato[0].tabla);
     $('#descripcion_formato').attr('value',formato[0].descripcion_formato);
     $('#proceso_pertenece').attr('value',formato[0].proceso_pertenece);
-    
+    $('#serie_idserie').attr('value',formato[0].serie_idserie);
     $('#version').attr('value',formato[0].version);
     $('#librerias_formato').attr('value',formato[0].librerias);
     $('#etiqueta_formato').attr('value',formato[0].etiqueta);
@@ -484,7 +494,7 @@ function check_banderas($bandera){
 		echo(' value="'.$datos_formato[0][$bandera].'" checked="checked" ');
 	}
 }
-function crear_arbol($nombre,$url,$tipo="radio"){
+function crear_arbol($nombre,$url,$tipo="radio"){	
 	global $ruta_db_superior;
 	?>
 <script>
@@ -504,26 +514,28 @@ $("document").ready(function(){
 
   tree_<?php echo($nombre);?>.enableCheckBoxes(1);
   <?php if($tipo=="radio"){ ?>
-	tree_<?php echo($nombre);?>.enableRadioButtons(true);
-	tree_<?php echo($nombre);?>.setOnCheckHandler(onNodeSelect_<?php echo($nombre);?>);
-	function onNodeSelect_<?php echo($nombre);?>(nodeId){
-		var valor_destino=document.getElementById("<?php echo($nombre);?>");
-		if(tree_<?php echo($nombre);?>.isItemChecked(nodeId)){
-			if(valor_destino.value!=="")
-				tree_<?php echo($nombre);?>.setCheck(valor_destino.value,false);
-			if(nodeId.indexOf("_")!=-1)
-				nodeId=nodeId.substr(0,nodeId.indexOf("_"));
-			valor_destino.value=nodeId;
-		}else{
-			valor_destino.value="";
-		}
-	}	
+		tree_<?php echo($nombre);?>.enableRadioButtons(true);
+		tree_<?php echo($nombre);?>.setOnCheckHandler(onNodeSelect_<?php echo($nombre);?>);
+		function onNodeSelect_<?php echo($nombre);?>(nodeId){
+			//alert(nodeId);
+			var valor_destino=document.getElementById("<?php echo($nombre);?>");			
+			if(tree_<?php echo($nombre);?>.isItemChecked(nodeId)){
+				//alert(valor_destino.value);
+				if(valor_destino.value!=="")
+					tree_<?php echo($nombre);?>.setCheck(valor_destino.value,false);
+				if(nodeId.indexOf("_")!=-1)
+					nodeId=nodeId.substr(0,nodeId.indexOf("_"));
+				valor_destino.value=nodeId;
+			}else{
+				valor_destino.value="";
+			}			
+		}	
   <?php } 
   else{
   ?>
   tree_<?php echo($nombre);?>.setOnCheckHandler(onNodeSelect_check_<?php echo($nombre);?>);
   function onNodeSelect_check_<?php echo($nombre);?>(nodeId){
-		var valor_destino=document.getElementById("<?php echo($nombre);?>");
+  		var valor_destino=document.getElementById("<?php echo($nombre);?>");
 		valor_destino.value=tree_<?php echo($nombre);?>.getAllChecked();
 	}
   <?php 
@@ -567,7 +579,6 @@ function crear_campo_dropzone($nombre, $parametros) {
                 Dropzone.autoDiscover = false;
                 $('.saia_dz').each(function () {
                     var paramName = $(this).attr('data-nombre-campo');
-                	var idcampoFormato = $(this).attr('data-idcampo-formato');
                 	var extensiones = $(this).attr('data-extensiones');
                 	var multiple_text = $(this).attr('data-multiple');
                 	var multiple = false;
@@ -610,6 +621,7 @@ function crear_campo_dropzone($nombre, $parametros) {
                                 return this._updateMaxFilesReachedClass();
                             },
                             success : function(file, response) {
+                            	
                             	for (var key in response) {
                                 	if(Array.isArray(response[key])) {
                                     	for(var i=0; i < response[key].length; i++) {
@@ -625,8 +637,8 @@ function crear_campo_dropzone($nombre, $parametros) {
                                 	}
                             	}
                             	$('#'+paramName).val(Object.values(lista_archivos).join());
-                                if($('#dz_campo_'+idcampoFormato).find('label.error').length) {
-                                    $('#dz_campo_'+idcampoFormato).find('label.error').remove()
+                                if($('#dz_campo').find('label.error').length) {
+                                    $('#dz_campo').find('label.error').remove()
                                 }
                             }
                     };

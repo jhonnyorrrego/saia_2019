@@ -59,18 +59,59 @@ function ordenar_pantalla_campos($nuevo_orden) {
 
 function adicionar_datos_formato($datos, $tipo_retorno = 1) {
 	global $ruta_db_superior;
+	
 	$retorno = array(
 			"mensaje" => "Error al tratar de generar el adicionar de la pantalla",
 			"exito" => 0
 	);
 	
+	if($datos["nombre_formato"]==""){
+		$nombre_formato_automatico = strtolower($datos["etiqueta"]);
+		$nombre_formato_automatico = preg_replace("/formato/", "", $nombre_formato_automatico);//se reemplaza la palabra formato por vacio
+		$nombre_formato_automatico = strip_tags($nombre_formato_automatico);
+		$nombre_formato_automatico = htmlentities($nombre_formato_automatico);
+ 		$nombre_formato_automatico = preg_replace('/\&(.)[^;]*;/', '\\1', $nombre_formato_automatico);
+ 		$nombre_formato_automatico = quitar_preposiciones_articulos($nombre_formato_automatico);//quita las preposiciones y articulos
+		$cant_palabra = count($nombre_formato_automatico);//cantidad de palabra
+		$cant_espacios = $cant_palabra-1;
+		$res = 23-$cant_expacios;//cantidad de caracteres permitidos
+		
+		$total_caracteres = $res/$cant_palabra;// para saber cuantos caracteres debe tener cada palabra	
+		$cadena = array();
+		//quita los ultimos caracteres que completen la palabra
+		for($i=0;$i<$cant_palabra;$i++)
+		{
+			if($nombre_formato_automatico[$i]!=""){
+				$cantidad_caracteres = strlen($nombre_formato_automatico[$i]);
+				$diferencia = $cantidad_caracteres-round($total_caracteres);
+				if(strlen($nombre_formato_automatico[$i])>round($total_caracteres)){
+					$quitar_caracteres = $diferencia*-1;
+					$cadena[] = substr($nombre_formato_automatico[$i], 0, $quitar_caracteres);
+				}
+				else {
+					$cadena[]=$nombre_formato_automatico[$i];
+				}
+			}
+		}		
+		if(count($cadena)>1)//si hay mas de una palabra
+		{
+			$nuevo_nombre_formato = implode("_", $cadena);
+		}
+		else{
+			$nuevo_nombre_formato = implode($cadena);
+		}
+		
+		$datos["nombre"] = validar_nombres($nuevo_nombre_formato);
+	}
 	
-	$datos["nombre"]=trim($datos["nombre_formato"]);
-	unset($datos["nombre_formato"]);
-	if(empty($datos["nombre"]) || preg_match("/undefined/", $datos["nombre"])) {
-		$retorno["mensaje"] = "Nombre del formato incorrecto: "  . $datos["nombre"];
-		echo (json_encode($retorno));
-		die();
+	else{
+		$datos["nombre"]=trim($datos["nombre_formato"]);
+		unset($datos["nombre_formato"]);
+		if(empty($datos["nombre"]) || preg_match("/undefined/", $datos["nombre"])) {
+			$retorno["mensaje"] = "Nombre del formato incorrecto: "  . $datos["nombre"];
+			echo (json_encode($retorno));
+			die();
+		}
 	}
 	// Field Banderas
 	
@@ -107,8 +148,14 @@ function adicionar_datos_formato($datos, $tipo_retorno = 1) {
 		$fieldList["version"] = $theValue;
 		
 		// Field version
-		$theValue = ($datos["documentacion"] != 0) ? intval($datos["documentacion"]) : 0;
-		$fieldList["documentacion"] = $theValue;
+		/*$theValue = ($datos["documentacion"] != 0) ? intval($datos["documentacion"]) : 0;
+		$fieldList["documentacion"] = $theValue;*/
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($datos["form_uuid"]) : $datos["form_uuid"];
+		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+		$fieldList["documentacion"] = ($theValue);
+		$theValue = ($datos["anexos"] != 0) ? intval($datos["anexos"]) : 0;
+		$anexos = $theValue;
+		//$fieldList["documentacion"]=$theValue;
 		
 		// Field contador_idcontador
 		$theValue = ($datos["contador_idcontador"] != 0) ? intval($datos["contador_idcontador"]) : crear_contador($datos["nombre"]);
@@ -240,7 +287,7 @@ detalles_mostrar_".$datos["nombre"].".php";
 		$fieldList["ruta_adicionar"] = "'" . "adicionar_" . $datos["nombre"] . ".php'";
 		$fieldList["funcionario_idfuncionario"] = usuario_actual("funcionario_codigo");
 		$fieldList["pertenece_nucleo"] = intval($datos["pertenece_nucleo"]);
-
+		$documentacion = $fieldList["documentacion"];
 		// insert into database
 		$strsql = "INSERT INTO formato (";
 		$strsql .= implode(",", array_keys($fieldList));
@@ -251,6 +298,7 @@ detalles_mostrar_".$datos["nombre"].".php";
 		phpmkr_query($strsql, $conn) or die("Falla al ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
 
 		$idformato = phpmkr_insert_id();
+		
 		if($idformato != '') {
 			if($x_flujo_idflujo != 0) {
 				generar_campo_flujo($idformato, $x_flujo_idflujo);
@@ -264,7 +312,7 @@ detalles_mostrar_".$datos["nombre"].".php";
 			if(in_array("3", $datos["funcion_predeterminada"])) {
 				vincular_campo_anexo($idformato);
 			}
-			insertar_anexo_formato($idformato);
+			insertar_anexo_formato($idformato,$documentacion,$anexos);			
 			crear_modulo_formato($idformato);
 		}
 		
@@ -386,6 +434,7 @@ function eliminar_datos_clase_padre($idpantalla, $clase) {
 }
 function editar_datos_formato($datos, $tipo_retorno = 1) {
 	global $ruta_db_superior;
+	print_r($datos["sql"]);
 	$retorno = array(
 			"mensaje" => "Error al tratar de generar el adicionar de la pantalla",
 			"exito" => 0
@@ -436,8 +485,14 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
 		$fieldList["version"] = $theValue;
 		
 		// Field version
-		$theValue = ($datos["documentacion"] != 0) ? intval($datos["documentacion"]) : 0;
-		$fieldList["documentacion"] = $theValue;
+		/*$theValue = ($datos["documentacion"] != 0) ? intval($datos["documentacion"]) : 0;
+		$fieldList["documentacion"] = $theValue;*/
+		
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($datos["form_uuid"]) : $datos["form_uuid"];
+		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+		$fieldList["documentacion"] = ($theValue);
+		$theValue = ($datos["anexos"] != 0) ? intval($datos["anexos"]) : 0;
+		$anexos = $theValue;
 		
 		// Field contador_idcontador
 		$theValue = ($datos["contador_idcontador"] != 0) ? intval($datos["contador_idcontador"]) : crear_contador($datos["nombre"]);
@@ -569,20 +624,23 @@ detalles_mostrar_".$datos["nombre"].".php";
 		$fieldList["ruta_adicionar"] = "'" . "adicionar_" . $datos["nombre"] . ".php'";
 		$fieldList["funcionario_idfuncionario"] = usuario_actual("funcionario_codigo");
 		$fieldList["pertenece_nucleo"] = intval($datos["pertenece_nucleo"]);
-
+		$documentacion = $fieldList["documentacion"];
 		// UPDATE
 		$strsql="UPDATE formato SET ";
 		$strsql_array=array();
 		foreach($fieldList AS $key=>$value){
 			array_push($strsql_array,$key." = ".$value);
 		}
-		$strsql.=implode(",",$strsql_array)." WHERE idformato=".$datos["idformato"];
+		$strsql.=implode(",",$strsql_array)." WHERE idformato=".$datos["idformato"];		
+		//$retorno["documentacion"]=$idformato." - ".$documentacion." - ".$anexos;
 		guardar_traza($strsql, "ft_" . $datos["nombre"]);
 
 		phpmkr_query($strsql, $conn) or die("Falla al ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
-
+		//$retorno["documentacion"]=$datos["idformato"]." - ".$documentacion." - ".$anexos;
+		$retorno["documentacion"]=insertar_anexo_formato($datos["idformato"],$documentacion,$anexos);
 
 		if($idformato != '') {
+			
 			if($x_flujo_idflujo != 0) {
 				generar_campo_flujo($idformato, $x_flujo_idflujo);
 			}
@@ -595,6 +653,8 @@ detalles_mostrar_".$datos["nombre"].".php";
 			if(in_array("3", $datos["funcion_predeterminada"])) {
 				vincular_campo_anexo($idformato);
 			}
+			//$retorno["documentacion"]=$idformato." - ".$documentacion." - ".$anexos;
+			//insertar_anexo_formato($idformato,$documentacion,$anexos);
 			crear_modulo_formato($idformato);
 		}
 
@@ -2790,30 +2850,31 @@ function generar_archivos_ignorados($idpantalla, $tipo_retorno){
 		return ($retorno);
 	}
 }
-function insertar_anexo_formato($idformato){
-	if ($idformato != NULL && $idformato != "") {
-		$form_uuid = null;
-		print_r($_REQUEST);
-		if (@$_REQUEST["form_uuid"]) {
-			$form_uuid = $_REQUEST["form_uuid"];
-		}
+function insertar_anexo_formato($idformato,$form_uuid,$idanexos){
+	global $conn, $ruta_db_superior;
+	$ok=0;
 	
-		$archivos = busca_filtro_tabla("", "anexos_tmp", "uuid = '$form_uuid' AND idformato=" . $idformato, "", $conn);
-		print_r($archivos["sql"]);
+	if ($idformato != "") {		
+		$tipo_almacenamiento="archivos";
+		$archivos = busca_filtro_tabla("", "anexos_tmp", "uuid = $form_uuid AND idanexos_tmp=" . $idanexos, "", $conn);
+		
+		
 		if($archivos["numcampos"]){
 			for ($j = 0; $j < $archivos["numcampos"]; $j++) {
 				$ruta_temporal = $ruta_db_superior . $archivos[$j]["ruta"];
-	
+				
 				if (file_exists($ruta_temporal)) {
+					
 					$nombre = $archivos[$j]["etiqueta"];
 					$datos_anexo = pathinfo($ruta_temporal);
 	
 					$temp_filename = uniqid() . "." . $datos_anexo["extension"];
-					$dir_anexos = selecciona_ruta_anexos2($iddoc, $tipo_almacenamiento);
+					$dir_anexos = selecciona_ruta_anexos2($iddoc,"archivos");
 	
 					if (is_file($ruta_temporal)) {
 						$resultado = $almacenamiento -> copiar_contenido_externo($ruta_temporal, $dir_anexos . $temp_filename);
 					}
+					return $resultado;
 					if ($resultado) {
 						$dir_anexos_1 = array(
 							"servidor" => $almacenamiento -> get_ruta_servidor(),
@@ -2831,8 +2892,11 @@ function insertar_anexo_formato($idformato){
 								
 							$sql2 = "INSERT INTO formato_previo(" . implode(", ", array_keys($campos)) . ") values (" . implode(", ", array_values($campos)) . ")";
 								phpmkr_query($sql2, $conn) or alerta("No se puede Adicionar el Anexo " . $ruta_temporal, 'error', 4000);
-								$idanexo = phpmkr_insert_id();						
+								$idanexo = phpmkr_insert_id();	
+								//return $sql2;
+								$retorno["idanexo"]=$idanexo;					
 							}
+							$ok=1;
 							if ($idanexo) {
 								// eliminar el temporal
 								unlink($ruta_temporal);
@@ -2845,6 +2909,7 @@ function insertar_anexo_formato($idformato){
 								//Eliminar los pendientes de la tabla temporal
 								$sql2 = "DELETE FROM anexos_tmp WHERE idanexos_tmp = " . $archivos[$j]["idanexos_tmp"];
 								phpmkr_query($sql2) or die($sql2);
+								$retorno["delete"]=$sql2["sql"];
 	
 								if (array_key_exists($nombre, $permisos)) {
 									$propio = $permisos[$nombre]["propio"];
@@ -2859,47 +2924,72 @@ function insertar_anexo_formato($idformato){
 								}
 								$sql_permiso = "insert into permiso_anexo(anexos_idanexos,idpropietario,caracteristica_propio,caracteristica_dependencia,caracteristica_cargo,caracteristica_total) values('$idanexo','" . usuario_actual("idfuncionario") . "','$propio','$dependencia','$cargo','$total')";
 								phpmkr_query($sql_permiso, $conn);
+								$retorno["permiso"]=$sql_permiso["sql"];
+								$ok=1;
 							}
 						} else {
 							alerta("!Se produjo un error al copiar el archivo " . $nombre, 'error', 4000);
+							$ok=2;
 						}
 					} else {
 						alerta("!No se encontró el archivo " . $nombre, 'error', 4000);
+						$ok=2;
 					}
 				}
 			}
-/*
 
-foreach($_FILES as $key => $valor){
-	if($key!='')$nombre_campo=$key;
-}
-$ruta=ruta_archivos_pantalla();
-
-crear_destino($ruta_db_superior.$ruta);
-$ruta=vincular_anexo($nombre_campo,$ruta);
-
-$tipo=explode('.', $_FILES[$nombre_campo]['name'][0]);
-	$tamano=$_FILES[$nombre_campo]['size'][0];
-	$cant=count($tipo);
-	if($cant)
-		$type=$tipo[($cant-1)];
-	else{
-		$type=$tipo[1];
-	}
-	$extensiones_permitidas=explode("|",$extenciones);
-	
-	if(!in_array($type,$extensiones_permitidas))return false;
-	if($tamano>$max_tamanio)return false;
-	
-	$nombre=(rand());
-	
-	if(rename($_FILES[$nombre_campo]['tmp_name'][0],$ruta_db_superior.$ruta.$nombre.".".$type)){
-		chmod($ruta_db_superior.$ruta.$nombre.".".$type,PERMISOS_ARCHIVOS);
-		$sql="INSERT INTO anexos_temp_pantalla(idsesion,ruta,etiqueta,tipo,pantalla_idpantalla, fk_idpantalla_campos) values('".session_id()."','".$ruta.$nombre.'.'.$type."','".$_FILES[$nombre_campo]['name'][0]."','".$type."', ".$campos_pantalla[0]["idpantalla"].", ".$campos_pantalla[0]["idpantalla_campos"].")";
-		phpmkr_query($sql);
-		$idanexo=phpmkr_insert_id();
-	}
- * */
  	}
+  //  return ($retorno);
  }
+ function quitar_preposiciones_articulos($texto){
+    $separarTexto = explode(" ", $texto);
+	
+     /* con este foreach lo que hago es que quito las palabras que sean 
+    de menos de 3 caracteres como lo son las, los, un, una y todas esas */
+    /*foreach($separarTexto as $valor){
+        $caracteres = strlen($valor); // cuento el numero de caracteres
+        if($caracteres > '3'){ // verifico que sea mayor que 3
+            $etiquetas[] = $valor; // agrego la palabra al array etiquetas si es mayor que 3
+        }   
+    }*/
+$articulos_preposiciones = array('a', 'lo','los','la','el','es','un','de','muy','con','unos', 'unas', 'este','estos', 'esos', 'aquel', 'aquellos', 'esta', 'estas', 'esas', 'aquella', 'aquellas', 'éste', 'éstos', 'ésos', 'aquél', 'aquéllos', 'ésta', 'éstas', 'ésas', 'aquélla', 'aquéllas','delete','insert','update', 'ante', 'bajo', 'cabe', 'desde', 'contra', 'entre', 'hacia', 'hasta', 'para', 'por','según', 'segun', 'sin','sobre', 'tras');
+ 
+//$resultado = str_replace($articulos_preposiciones,"",$etiquetas);
+$resultado = array_diff($separarTexto,$articulos_preposiciones);
+for($i=0;$i<count($resultado);$i++)
+{
+	if($resultado[$i]==""){
+		unset($resultado[$i]);
+	}
+}
+$resultado=array_values($resultado);
+// retorno el resultado
+return $resultado;
+}
+function validar_nombres($texto){
+	//buscar si existe el nombre
+	global $conn;
+	$cant = strlen($texto);
+	//print_r($texto);
+	$buscar_nombres = busca_filtro_tabla("", "formato", "nombre='$texto'", "", $conn);
+	$i=0;	
+	if($buscar_nombres["numcampos"]){
+		$i=substr($texto,-3);
+		if(strpos($i,"_")){
+			$i++;
+		}
+		else{
+			$i=1;
+		}
+		if(($cant+3)<23){
+			$sumar_cant = $cant+3;		
+			$nuevo_texto = str_pad($texto, $sumar_cant, "_0".$i, STR_PAD_RIGHT);			
+			validar_nombres($nuevo_texto);
+		}		
+	}
+	else{
+			$nuevo_texto = $texto;			
+		}
+	return $nuevo_texto;
+}
 ?>

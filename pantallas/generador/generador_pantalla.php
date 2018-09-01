@@ -172,7 +172,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 						?>
 					</select>
 					<div class="btn btn-mini" id="limpiar_encabezado" title="Limpiar"><i class="icon-refresh"></i></div>
-					<button type="button" class="btn btn-mini btn-primary guardar_encabezado" id="adicionar_encabezado" disabled>Adicionar</button>
+					<button type="button" class="btn btn-mini btn-primary guardar_encabezado" id="adicionar_encabezado">Adicionar</button>
 					<button type="button" class="btn btn-mini btn-success guardar_encabezado" id="modificar_encabezado" disabled>Modificar</button>
 					<button type="button" class="btn btn-mini btn-danger" <?php echo ($idencabezado ? "" : "disabled"); ?> id="eliminar_encabezado">Eliminar</button>
 
@@ -579,7 +579,7 @@ $(document).on("change","#sel_pie_pagina",function() {
     });
 });
 
-$(document).on("click", ".guardar_encabezado", function(e) {
+$(document).on("click", ".guardar_encabezado", function(e) {		
 	if(formulario_encabezado.valid()){
 
 	  	var editor = tinymce.get('editor_encabezado');
