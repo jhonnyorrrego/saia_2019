@@ -21,6 +21,12 @@ if($_REQUEST['idformato']) {
 	if($formato[0]["tiempo_autoguardado"]>3000){
 		$formato[0]["tiempo_autoguardado"]=$formato[0]["tiempo_autoguardado"]/60000;
 	}
+	$documentacion_formato =$formato[0]["documentacion"]; 
+	$anexos_formato = busca_filtro_tabla("","formato_previo","idformato=".$_REQUEST['idformato']." and idformato_previo=".$documentacion_formato,"",$conn);
+	
+	if($anexos_formato["numcampos"]){
+		$ruta = $anexos_formato[0]["ruta"];
+	}
 	$formato = json_encode($formato);
 	if($cod_proceso_pertenece){
 		$adicional_cod_proceso="&seleccionado=".$cod_proceso_pertenece;
@@ -104,7 +110,15 @@ return($resultado);
     <label class="control-label" for="documentacion">Documentaci&oacute;n del formato</label>
     <div class="controls">
       <input type="hidden" name="anexos" id="anexos">
-      <div id="dz_campo" class="saia_dz dz-clickable dropzone " data-nombre-campo="anexos" data-extensiones=".jpg, .png, .gif, .doc, .ppt, .xls, .txt, .pdf, .docx, .pptx, .pps, .xlsx, .csv" data-multiple=""><div class="dz-message"><span>Arrastra el anexo hasta aquí. <br> O si prefieres...<br><br> <span class="boton_upload">Elije un anexo para subir.</span> </span></div></div>
+      <div id="dz_campo" class="saia_dz dz-clickable dropzone " data-nombre-campo="anexos" data-extensiones=".jpg, .png, .pdf" data-multiple=""><div class="dz-message"><span>Arrastra el anexo hasta aquí. <br> O si prefieres...<br><br> <span class="boton_upload">Elije un anexo para subir.</span> </span></div></div>
+    <?php
+      if($documentacion_formato){
+      	$ruta_anexo = base64_encode($ruta);
+    	?>
+    	<a href="../../filesystem/mostrar_binario.php?ruta=<?php echo $ruta_anexo;?>" target="_blank">Ver Anexos</a>
+			<?php
+    }
+    ?>
     </div>
     <script type="text/javascript" src="../../dropzone/dist/dropzone.js"></script>
     <script type="text/javascript" src="../../dropzone/dist/dropzone.js"></script>
@@ -114,7 +128,7 @@ return($resultado);
     <script type='text/javascript'> 
     hs.graphicsDir = '../../anexosdigitales/highslide-5.0.0/highslide/graphics/'; 
     hs.outlineType = 'rounded-white';
-    </script>";
+    </script>
     <?php
     include_once($ruta_db_superior."../../anexosdigitales/funciones_archivo.php");
     $js_archivos = "";
@@ -131,7 +145,7 @@ return($resultado);
       <div id="treebox_codigo_padre_formato" class="arbol_saia"></div>
       <input id="codigo_padre_formato" type="hidden" name="cod_padre" value="<?php echo($cod_padre);?>">
       <?php crear_arbol("codigo_padre_formato",$ruta_db_superior."test_formatos.php?tabla=formato&excluido=".$_REQUEST['idformato'].$adicional_cod_padre);?>
-      </div>    
+      </div>  
   </div>
   
   <div class="control-group">
@@ -271,9 +285,9 @@ return($resultado);
   <div class="control-group">
     <label class="control-label" for="mostrar_pdf">Vista del formato</label>
     <div class="controls">
-      Vista en Navegador (HTML)<input type="radio" name="mostrar_pdf" id="mostrar_pdf_1" value="1" <?php if(@$datos_formato[0]["mostrar_pdf"]==1) echo(' checked="checked"');?>>
+      Vista en Navegador (HTML)<input type="radio" name="mostrar_pdf" id="mostrar_pdf_0" value="0" <?php if(@$datos_formato[0]["mostrar_pdf"]==0) echo(' checked="checked"');?>>
       <!--PDF WORD <input type="radio" name="mostrar_pdf" id="mostrar_pdf_2" value="2" <?php if(@$datos_formato[0]["mostrar_pdf"]==2) echo(' checked="checked"');?>-->
-      PDF<input type="radio" name="mostrar_pdf" id="mostrar_pdf_0" value="0"  <?php if(@$datos_formato[0]["mostrar_pdf"]==0) echo(' checked="checked"');?>>
+      PDF<input type="radio" name="mostrar_pdf" id="mostrar_pdf_1" value="1"  <?php if(@$datos_formato[0]["mostrar_pdf"]==1) echo(' checked="checked"');?>>
     </div>
   </div>
   <?php

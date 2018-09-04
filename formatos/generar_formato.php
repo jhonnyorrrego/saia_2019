@@ -260,6 +260,8 @@ class GenerarFormato {
             }
 
             $funciones = busca_filtro_tabla("A.*,B.funciones_formato_fk", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=" . $this->idformato . " AND A.acciones LIKE '%m%'", "A.idfunciones_formato asc", $conn);
+           
+			
             for ($i = 0; $i < $funciones["numcampos"]; $i++) {
                 $ruta_orig = "";
                 // saco el primer formato de la lista de la funcion (formato inicial)
@@ -267,7 +269,7 @@ class GenerarFormato {
                 if ($form_origen["numcampos"]) {
                     $formato_orig = $form_origen[0]["formato_idformato"];
                 }
-
+				 
                 if ($formato_orig != $this->idformato) {
                     // busco el nombre del formato inicial
                     $dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
@@ -315,7 +317,7 @@ class GenerarFormato {
                     if (is_file(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
                         $include_formato .= $this->incluir($funciones[$i]["ruta"], "librerias");
                     } elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
-                        $include_formato .= $this->incluir($funciones[$i]["ruta"], "librerias");
+                        $include_formato .= $this->incluir("../../".$funciones[$i]["ruta"], "librerias");
                     } else { // si no existe en ninguna de las dos
                              // trato de crearlo dentro de la carpeta del formato actual
                         if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
@@ -332,7 +334,7 @@ class GenerarFormato {
                 }
                 $texto = str_replace($funciones[$i]["nombre"], $this->arma_funcion($funciones[$i]["nombre_funcion"], $parametros, "mostrar"), $texto);
             }
-
+			
             $includes .= $this->incluir("../../librerias_saia.php", "librerias");
             $includes .= "<?php echo(librerias_jquery('1.7')); ?>";
             $includes .= $this->incluir_libreria("funciones_generales.php", "librerias");

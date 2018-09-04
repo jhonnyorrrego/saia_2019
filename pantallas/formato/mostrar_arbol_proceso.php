@@ -38,24 +38,26 @@ if($_REQUEST["idformato"]){
   }
   tree3=new dhtmlXTreeObject("treeboxbox_tree3","100%","100%",0);
   tree3.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
-  tree3.enableTreeImages(false); 
+  tree3.enableTreeImages(false);
   tree3.enableIEImageFix(true);
   tree3.setOnLoadingStart(cargando_serie);
   tree3.setOnLoadingEnd(fin_cargando_serie);
   tree3.setOnClickHandler(onNodeSelect);
   tree3.loadXML("<?php echo($ruta_db_superior);?>pantallas/formato/test_formatos_admin.php?tabla=formato&id=<?php echo $idformato; ?>");
-  function onNodeSelect(nodeId){  	
+  function onNodeSelect(nodeId){ 
   	var tipo_nodo=nodeId.split("_");
   	if(tipo_nodo[1]=="v"){
   		conexion="<?php echo($ruta_db_superior);?>formatos/vista_formatoedit.php?key="+tipo_nodo[0];
+  		//pantallas/generador/generador_pantalla.php?idformato={*idformato*}
   	}
   	else if(tipo_nodo[0]=='vistasmenu'){
   		conexion="<?php echo($ruta_db_superior);?>formatos/vista_formatoadd.php?formato_padre="+tipo_nodo[1];
   	}
   	else{
-   		conexion="<?php echo($ruta_db_superior);?>formatos/formatoview.php?key="+nodeId;
+   		conexion="<?php echo($ruta_db_superior);?>pantallas/generador/generador_pantalla.php?idformato="+nodeId;
    	}
-    window.parent.frames["detalles"].location=conexion;
+   // window.parent.frames["iframe_detalle"].location=conexion;
+    window.parent.location=conexion;
   }
   function fin_cargando_serie() {
     if (browserType == "gecko" )

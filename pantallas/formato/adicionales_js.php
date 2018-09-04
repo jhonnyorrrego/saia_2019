@@ -26,8 +26,8 @@ $(document).ready(function(){
     });
   });
 	
-	$(".kenlace_saia").live("click",function(){
+	/*$(".kenlace_saia").live("click",function(){
 		window.open($(this).attr('enlace'),'_self');
-	});
+	});*/
 });
 </script>
