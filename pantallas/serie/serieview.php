@@ -73,11 +73,15 @@ echo librerias_jquery("1.7");
 <span style="font-family: Verdana; font-size: 9px;"><br/>
 <?php
 if($vinculados) {
-    echo "Serie de solo lectura. $vinculados documentos vinculados";
+    echo "Serie de solo lectura. $vinculados documentos vinculados<br>";
 } else {
 ?>
 	<a href="serieedit.php?idnode=<?php echo $idnode ;?>&x_idserie=<?php echo $idserie; ?>">EDITAR</a>
 	<?php
+}
+
+if($datos[0]["tipo"]==1 || $datos[0]["tipo"]==2) {
+    echo '&nbsp;<a href="serieadd.php?idnode=' . $idnode . '&x_idserie=' . $idserie . '">ADICIONAR</a>';
 }
 	?>
 </span><br/><br/>

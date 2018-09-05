@@ -15,64 +15,101 @@ include_once ($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $validar_enteros = array("x_idserie");
 desencriptar_sqli('form_info');
 
+
+$categoria_txt = [
+    2 => "Producci&oacute;n Documental",
+    3 => "Otras Categorias"
+];
+
+$tipo_tvd_txt = array(
+    0 => "TRD",
+    1 => "TVD"
+);
+
+$tipo_serie = array(
+    1 => "Serie",
+    2 => "Subserie",
+    3 => "Tipo documental"
+);
+
 $sAction = @$_POST["a_add"];
 switch ($sAction) {
-	case "A" :
-		$x_idserie = @$_POST["x_idserie"];
-		$x_nombre = @$_POST["x_nombre"];
-		$x_cod_padre = @$_POST["x_cod_padre"];
-		$x_dias_entrega = @$_POST["x_dias_entrega"];
-		$x_codigo = @$_POST["x_codigo"];
-		$x_retencion_gestion = @$_POST["x_retencion_gestion"];
-		$x_retencion_central = @$_POST["x_retencion_central"];
-		$x_conservacion = @$_POST["x_conservacion"];
-		$x_seleccion = @$_POST["x_seleccion"];
-		$x_otro = @$_POST["x_otro"];
-		$x_procedimiento = @$_POST["x_procedimiento"];
-		$x_digitalizacion = @$_POST["x_digitalizacion"];
-		$x_copia = @$_POST["x_copia"];
-		$x_categoria = @$_POST["x_categoria"];
-		$x_tipo = @$_POST["x_tipo"];
-		$x_tvd = @$_POST["x_tvd"];
+    case "A":
+        $x_idserie = @$_POST["x_idserie"];
+        $x_nombre = @$_POST["x_nombre"];
+        $x_cod_padre = @$_POST["x_cod_padre"];
+        $x_dias_entrega = @$_POST["x_dias_entrega"];
+        $x_codigo = @$_POST["x_codigo"];
+        $x_retencion_gestion = @$_POST["x_retencion_gestion"];
+        $x_retencion_central = @$_POST["x_retencion_central"];
+        $x_conservacion = @$_POST["x_conservacion"];
+        $x_seleccion = @$_POST["x_seleccion"];
+        $x_otro = @$_POST["x_otro"];
+        $x_procedimiento = @$_POST["x_procedimiento"];
+        $x_digitalizacion = @$_POST["x_digitalizacion"];
+        $x_copia = @$_POST["x_copia"];
+        $x_tipo = @$_POST["x_tipo"];
+        $x_tvd = @$_POST["x_tvd"];
+        $x_categoria = @$_POST["x_categoria"];
 
-		$ok = AddData($conn);
-		if ($ok) {
-			notificaciones('Serie adicionada con exito', 'success', 6000);
-			if($x_categoria!=3){
-				$openNode="0.0.0";
-			}else{
-				$openNode="0.0.-1";
-			}
-			?>
-			<script>
+        $ok = AddData($conn);
+        if ($ok) {
+            notificaciones('Serie adicionada con exito', 'success', 6000);
+            if ($x_categoria != 3) {
+                $openNode = "0.0.0";
+            } else {
+                $openNode = "0.0.-1";
+            }
+            ?>
+<script>
 			window.parent.frames['arbol'].tree2.refreshItem("0");
 			/*window.parent.frames['arbol'].tree2.setOnLoadingEnd(abrir_arbol);
 			function abrir_arbol() {
 			window.parent.frames['arbol'].tree2.openAllItems("<?php echo $openNode;?>");
 			}*/
 			</script>
-			<?php
-			exit();
-		}
-		break;
-	default :
-		$x_idserie = Null;
-		$x_nombre = Null;
-		$x_cod_padre = Null;
-		$x_dias_entrega = Null;
-		$x_codigo = Null;
-		$x_retencion_gestion = Null;
-		$x_retencion_central = Null;
-		$x_conservacion = Null;
-		$x_seleccion = Null;
-		$x_otro = Null;
-		$x_procedimiento = Null;
-		$x_digitalizacion = Null;
-		$x_copia = Null;
-		$x_categoria = Null;
-		$x_tipo = Null;
-		$x_tvd = Null;
-		break;
+<?php
+            exit();
+        }
+        break;
+    default:
+        $sKey = $_REQUEST["x_idserie"];
+        $x_idserie = Null;
+        $x_nombre = Null;
+        $x_cod_padre = Null;
+        $x_dias_entrega = 8;
+        $x_codigo = Null;
+        $x_retencion_gestion = 3;
+        $x_retencion_central = 5;
+        $x_conservacion = Null;
+        $x_seleccion = Null;
+        $x_otro = Null;
+        $x_procedimiento = Null;
+        $x_digitalizacion = Null;
+        $x_copia = Null;
+        $x_categoria = Null;
+        $x_tvd = Null;
+
+        $disabled="";
+
+        $info_padre = busca_filtro_tabla("", "serie", "idserie=" . $sKey, "", $conn);
+
+        $nom_padre = "";
+        $x_tipo = Null;
+        if ($info_padre["numcampos"]) {
+            //var_dump($info_padre);die();
+            $x_cod_padre = $sKey;
+            $nom_padre = $info_padre[0]["nombre"] . " - (" . $info_padre[0]["codigo"] . ")";
+            $x_categoria = $info_padre[0]["categoria"];
+            $x_tipo = $info_padre[0]["tipo"];
+            $x_tvd = $info_padre[0]["tvd"];
+            if($x_tipo == 1 || $x_tipo == 2) {
+                $x_tipo++;
+                unset($tipo_serie[1]);
+            }
+        }
+
+        break;
 }
 
 function AddData($conn) {
@@ -171,37 +208,58 @@ echo librerias_arboles();
 		<tr>
 			<td class="encabezado" title="Definir el tipo de serie que se esta creando" >CATEGORIA*</td>
 			<td bgcolor="#F5F5F5">
-			<input type="radio" name="x_categoria" id="x_categoria2" value="2" checked="true">
-			Producci&oacute;n Documental
-			<input type="radio" name="x_categoria" id="x_categoria3" value="3">
-			Otras Categorias
-			<br/>
+			<?php
+			if(!empty($x_cod_padre)) {
+			    $id_cat = 'x_categoria' . $x_categoria;
+			    echo '<input type="hidden" name="x_categoria" id="' . $id_cat . '" value="' . $x_categoria  . '">';
+			    echo '<label for="' . $id_cat . '">' .  $categoria_txt[$x_categoria] . '</label>';
+			} else {
+			    foreach ($categoria_txt as $key => $value) {
+			        $id_cat = 'x_categoria' . $key;
+			        echo '<input type="radio" name="x_categoria" id="' . $id_cat . '" value="' . $key . '">';
+			        echo '<label for="' . $id_cat .  '">' . $value . '</label>';
+			    }
+			}
+			?>
 			</td>
 		</tr>
-		
+
 		<tr class="ocultar">
 			<td class="encabezado" title="Definir el tipo de serie que se esta creando" >TIPO*</td>
 			<td bgcolor="#F5F5F5">
-			<input type="radio" name="x_tvd" id="x_tvd1" value="0">
-			TRD
-			<input type="radio" name="x_tvd" id="x_tvd2" value="1">
-			TVD
-			<br/>
+			<?php
+			if(!empty($x_cod_padre)) {
+			    $id_tvd = "x_tvd" . $x_tvd;
+			    echo '<input type="hidden" name="x_tvd" id="' . $id_tvd . '" value="' . $x_tvd  . '">';
+			    echo '<label for="' . $id_tvd . '">' .  $tipo_tvd_txt[$x_tvd] . '</label>';
+			} else {
+			    foreach ($tipo_tvd_txt as $key => $value) {
+			        $id_tvd = "x_tvd" . $key;
+			        echo '<input type="radio" name="x_tvd" id="' . $id_tvd . '" value="' . $key . '">';
+			        echo '<label for="' . $id_tvd .  '">' . $value . '</label>';
+			    }
+			}
+			?>
 			</td>
 		</tr>
 
 		<tr class="ocultar">
 			<td class="encabezado" title="Definir el tipo de serie que se esta creando" >TIPO SERIE*</td>
 			<td bgcolor="#F5F5F5">
-			<input type="radio" name="x_tipo" id="x_tipo1" value="1">
-			Serie
-			<br/>
-			<input type="radio" name="x_tipo" id="x_tipo2" value="2">
-			Subserie
-			<br/>
-			<input type="radio" name="x_tipo" id="x_tipo3" value="3">
-			Tipo documental
-			<br/>
+
+			<?php
+			if(!empty($x_cod_padre) && $x_tipo == "3") {
+			    $id_tipo = "x_tipo" . $x_tipo;
+			    echo '<input type="hidden" name="x_tipo" id="' . $id_tipo . '" value="' . $x_tipo  . '">';
+			    echo '<label for="' . $id_tipo . '">' .  $tipo_serie[$x_tipo] . '</label>';
+			} else {
+			    foreach ($tipo_serie as $key => $value) {
+			        $id_tipo = "x_tipo" . $key;
+			        echo '<input type="radio" name="x_tipo" id="' . $id_tipo . '" value="' . $key . '">';
+			        echo '<label for="' . $id_tipo .  '">' . $value . '</label><br>';
+			    }
+			}
+			?>
 			</td>
 		</tr>
 
@@ -221,7 +279,12 @@ echo librerias_arboles();
 
 		<tr class="ocultar_padre">
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">NOMBRE PADRE </span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="divserie"></div> </td>
+			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="divserie"><?php
+			if(!empty($x_cod_padre)) {
+			    echo $nom_padre;
+			    echo '<input type="hidden" name="x_cod_padre" id="x_cod_padre" value="' . $x_cod_padre . '" />';
+			}
+			?></div> </td>
 		</tr>
 
 		<tr class="ocultar">
@@ -278,7 +341,7 @@ echo librerias_arboles();
 				<input type="text" name="x_otro" id="x_otro" size="30" maxlength="255" value="<?php echo $x_otro; ?>">
 			</span></td>
 		</tr>
-		
+
 		<tr class="ocultar">
 			<td class="encabezado" title="Describir el procedimiento de conservaci&oacute;n"><span class="phpmaker" style="color: #FFFFFF;">PROCEDIMIENTO CONSERVACI&Oacute;N</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker"> 				<textarea cols="35" rows="4" id="x_procedimiento" name="x_procedimiento"><?php echo $x_procedimiento; ?></textarea> </span></td>
@@ -304,9 +367,10 @@ echo librerias_arboles();
 </form>
 
 <?php
-include ($ruta_db_superior."footer.php");
+include_once($ruta_db_superior."footer.php");
 encriptar_sqli("serieadd", 1, "form_info", $ruta_db_superior, false, false);
 ?>
+
 <script>
 	function cargar_datos_padre(idNode) {
 		$.ajax({
@@ -373,7 +437,6 @@ encriptar_sqli("serieadd", 1, "form_info", $ruta_db_superior, false, false);
 		});
 	}
 
-
 	$(document).ready(function() {
 		$("#serieadd").validate({
 			rules:{
@@ -400,7 +463,7 @@ encriptar_sqli("serieadd", 1, "form_info", $ruta_db_superior, false, false);
 				}
 			}
 		});
-				
+
 		$("[name='x_categoria']").change(function() {
 			$("#divserie").empty();
 			if ($(this).val() == 2) {
@@ -448,7 +511,11 @@ encriptar_sqli("serieadd", 1, "form_info", $ruta_db_superior, false, false);
 				$(".ocultar").hide();
 				$(".ocultar_padre").show();
 
+				//var cod_padre = $("#x_cod_padre").val();
 				xml = "test/test_serie.php?ver_categoria2=0&ver_categoria3=1";
+				/*if(cod_padre != undefined && cod_padre != 0){
+					xml+="&seleccionados="+cod_padre;
+				}*/
 				$.ajax({
 					url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
 					data : {
@@ -479,8 +546,9 @@ encriptar_sqli("serieadd", 1, "form_info", $ruta_db_superior, false, false);
 
 		$(".ocultar_padre").hide();
 		$("[name='x_tvd'],[name='x_tipo']").change(function() {
-			tipo_serie = $("[name='x_tipo']:checked").val()
-			tvd = $("[name='x_tvd']:checked").val()
+			tipo_serie = $("[name='x_tipo']:checked").val();
+			tvd = $("[name='x_tvd']:checked").val();
+			//cod_padre=$("#x_cod_padre").val();
 			if (tvd != undefined && tipo_serie != undefined) {
 				if (tipo_serie != 1) {
 					$(".ocultar_padre").show();
@@ -488,6 +556,9 @@ encriptar_sqli("serieadd", 1, "form_info", $ruta_db_superior, false, false);
 					if (tipo_serie == 2) {
 						xml += "&tipo2=0";
 					}
+					/*if(cod_padre!=undefined && cod_padre!=0){
+						xml+="&seleccionados="+cod_padre;
+					}*/
 					$.ajax({
 						url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
 						data : {
@@ -517,5 +588,6 @@ encriptar_sqli("serieadd", 1, "form_info", $ruta_db_superior, false, false);
 				}
 			}
 		});
-	}); 
+
+	});
 </script>
