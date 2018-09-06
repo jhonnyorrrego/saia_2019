@@ -103,6 +103,7 @@ switch ($sAction) {
             $x_categoria = $info_padre[0]["categoria"];
             $x_tipo = $info_padre[0]["tipo"];
             $x_tvd = $info_padre[0]["tvd"];
+            $x_codigo = $info_padre[0]["codigo"];
             if($x_tipo == 1 || $x_tipo == 2) {
                 $x_tipo++;
                 unset($tipo_serie[1]);
@@ -352,7 +353,7 @@ echo librerias_arboles();
 			<td bgcolor="#F5F5F5"><span class="phpmaker">
 				<input type="radio" id="x_copia1" name="x_copia" value="1">
 				SI
-				<input type="radio" id="x_copia0" name="x_copia" value="0">
+				<input type="radio" id="x_copia0" name="x_copia" value="0" checked="checked">
 				NO </span></td>
 		</tr>
 
@@ -440,7 +441,10 @@ encriptar_sqli("serieadd", 1, "form_info", $ruta_db_superior, false, false);
 	$(document).ready(function() {
 		$("#serieadd").validate({
 			rules:{
-				x_nombre:{required:true}
+				x_nombre:{required:true},
+				x_tipo: {
+					required : true
+				}
 			},
 			submitHandler : function(form) {
 				x_categoria = $("[name='x_categoria']:checked").val();
@@ -542,23 +546,33 @@ encriptar_sqli("serieadd", 1, "form_info", $ruta_db_superior, false, false);
 
 			}
 		});
+
 		$("[name='x_categoria']:checked").trigger("change");
 
-		$(".ocultar_padre").hide();
+		var cod_padre = $("#x_cod_padre").val();
+		if(cod_padre) {
+			//console.log("cod_padre: " + cod_padre);
+			$(".ocultar_padre").show();
+		} else {
+			$(".ocultar_padre").hide();
+		}
 		$("[name='x_tvd'],[name='x_tipo']").change(function() {
 			tipo_serie = $("[name='x_tipo']:checked").val();
-			tvd = $("[name='x_tvd']:checked").val();
-			//cod_padre=$("#x_cod_padre").val();
+			var tvd = $("[name='x_tvd']:checked").val();
+			var cod_padre = $("#x_cod_padre").val();
+			if(tvd == undefined) {
+				tvd = $("[name='x_tvd']").val();
+			}
 			if (tvd != undefined && tipo_serie != undefined) {
-				if (tipo_serie != 1) {
+				if (tipo_serie != 1 && !cod_padre) {
 					$(".ocultar_padre").show();
 					xml = "test/test_serie.php?tipo3=0&tvd=" + tvd;
 					if (tipo_serie == 2) {
 						xml += "&tipo2=0";
 					}
-					/*if(cod_padre!=undefined && cod_padre!=0){
+					if(cod_padre!=undefined && cod_padre!=0){
 						xml+="&seleccionados="+cod_padre;
-					}*/
+					}
 					$.ajax({
 						url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
 						data : {
@@ -583,7 +597,7 @@ encriptar_sqli("serieadd", 1, "form_info", $ruta_db_superior, false, false);
 							});
 						}
 					});
-				} else {
+				} else if(!cod_padre) {
 					$(".ocultar_padre").hide();
 				}
 			}
