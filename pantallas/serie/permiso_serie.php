@@ -9,8 +9,8 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once ($ruta_db_superior."db.php");
-include_once ($ruta_db_superior."header.php");
+include_once ($ruta_db_superior . "db.php");
+include_once ($ruta_db_superior . "header.php");
 
 $idserie = null;
 $idserie_padre = null;
@@ -28,24 +28,23 @@ if ($_REQUEST["tipo_entidad"]) {
 $series_seleccionadas = null;
 if ($_REQUEST["identidad"]) {
     $identidad = $_REQUEST["identidad"];
-    if($identidad) {
+    if ($identidad) {
         $series_funcionario = busca_filtro_tabla("distinct idserie", "vpermiso_serie", "idfuncionario=$identidad", "", $conn);
-        if($series_funcionario["numcampos"]) {
+        if ($series_funcionario["numcampos"]) {
             $lista_series = extrae_campo($series_funcionario, "idserie", "U");
-            if(!empty($lista_series)) {
+            if (!empty($lista_series)) {
                 $series_seleccionadas = implode(",", $lista_series);
             }
         }
     }
 }
 
-
 $entidad = busca_filtro_tabla("identidad, nombre", "entidad", "identidad in (1,2,4)", "nombre asc", $conn);
 $option = '<option value="">Seleccione</option>';
 if ($entidad["numcampos"]) {
     for ($i = 0; $i < $entidad["numcampos"]; $i++) {
         $option .= '<option value="' . $entidad[$i]["identidad"] . '"';
-        if(!empty($tipo_entidad) && $tipo_entidad == $entidad[$i]["identidad"]) {
+        if (!empty($tipo_entidad) && $tipo_entidad == $entidad[$i]["identidad"]) {
             $option .= ' selected="selected"';
         }
         $option .= '>' . $entidad[$i]["nombre"];
@@ -53,12 +52,13 @@ if ($entidad["numcampos"]) {
     }
 }
 
-include_once ($ruta_db_superior."librerias_saia.php");
-echo(librerias_jquery("1.8"));
-echo(librerias_validar_formulario("11"));
-echo(librerias_arboles());
-
+include_once ($ruta_db_superior . "librerias_saia.php");
+echo librerias_jquery("1.8");
+echo librerias_validar_formulario("11");
+echo librerias_arboles();
 ?>
+
+<h3>Permisos sobre series</h3>
 <p>
 <form name="permiso_serie" id="permiso_serie" action="asignarserie.php" method="post" >
 	<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">

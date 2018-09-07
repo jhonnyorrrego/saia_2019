@@ -20,7 +20,8 @@ echo(librerias_jquery("1.8"));
 echo(librerias_validar_formulario("11"));
 echo(librerias_arboles());
 ?>
-<p> 
+<h3>Asignar series</h3>
+<p>
 <form name="asignarserie_entidad" id="asignarserie_entidad" action="asignarserie.php" method="post" >
 	<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
 		<tr>
@@ -35,12 +36,12 @@ echo(librerias_arboles());
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">SERIE*</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="divserie"></div> </td>
 		</tr>
-		
+
 		<tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ACCION*</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker"><input type="radio" name="accion" id="accion1" value="adicionar" checked="true" class="required"/>ADICIONAR <input type="radio" name="accion" id="accion0" value="eliminar" />ELIMINAR </td>
 		</tr>
-		
+
 		<tr>
 			<td colspan="2" style="text-align: center;background-color: #F5F5F5;">
 			<input type="hidden" name="opt" value="1">
@@ -65,7 +66,7 @@ echo(librerias_arboles());
 				top.noty({text: 'No se pudo cargar de dependencias de series',type: 'error',layout: 'topCenter',timeout:5000});
 			}
 		});
-				
+
 		$("[name='tvd']").change(function (){
 			tvd=$(this).val();
 			url2="test/test_serie.php?tipo3=0&tvd="+tvd;
@@ -82,7 +83,7 @@ echo(librerias_arboles());
 			});
 		});
 		$("[name='tvd']:checked").trigger("change");
-		
+
 		$("#asignarserie_entidad").validate({
 			submitHandler: function(form) {
 				var serie=$("#serie_idserie").val();
@@ -95,7 +96,7 @@ echo(librerias_arboles());
 					return false;
 				}
 			}
-		});		
+		});
 	});
 </script>
 
