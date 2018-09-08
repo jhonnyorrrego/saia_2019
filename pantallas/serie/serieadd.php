@@ -203,6 +203,23 @@ include ($ruta_db_superior."librerias_saia.php");
 echo librerias_jquery("1.8");
 echo librerias_validar_formulario("11");
 echo librerias_arboles();
+$tipo_entidad = null;
+if ($_REQUEST["tipo_entidad"]) {
+    $tipo_entidad = $_REQUEST["tipo_entidad"];
+}
+
+$entidad = busca_filtro_tabla("identidad, nombre", "entidad", "identidad in (1,2,4)", "nombre asc", $conn);
+$option = '<option value="">Seleccione</option>';
+if ($entidad["numcampos"]) {
+    for ($i = 0; $i < $entidad["numcampos"]; $i++) {
+        $option .= '<option value="' . $entidad[$i]["identidad"] . '"';
+        if (!empty($tipo_entidad) && $tipo_entidad == $entidad[$i]["identidad"]) {
+            $option .= ' selected="selected"';
+        }
+        $option .= '>' . $entidad[$i]["nombre"];
+        $option .= '</option>';
+    }
+}
 ?>
 <form name="serieadd" id="serieadd" action="serieadd.php" method="post">
 	<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
@@ -356,6 +373,14 @@ echo librerias_arboles();
 				<input type="radio" id="x_copia0" name="x_copia" value="0" checked="checked">
 				NO </span></td>
 		</tr>
+		<tr>
+			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">TIPO ENTIDAD*</span></td>
+			<td bgcolor="#F5F5F5"><select id="tipo_entidad" name="tipo_entidad" class="required"><?php echo $option;?></select></td>
+		</tr>
+		<tr>
+			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ENTIDAD*</span></td>
+			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="sub_entidad"></div> </td>
+		</tr>
 
 		<tr>
 			<td colspan="2" style="background-color: #FFFFFF;text-align: center" >
@@ -373,6 +398,7 @@ encriptar_sqli("serieadd", 1, "form_info", $ruta_db_superior, false, false);
 ?>
 
 <script>
+var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 	function cargar_datos_padre(idNode) {
 		$.ajax({
 			type : "POST",
@@ -439,6 +465,9 @@ encriptar_sqli("serieadd", 1, "form_info", $ruta_db_superior, false, false);
 	}
 
 	$(document).ready(function() {
+		if(identidad > 0) {
+			$("#tipo_entidad").trigger("change");
+		}
 		$("#serieadd").validate({
 			rules:{
 				x_nombre:{required:true},
@@ -602,6 +631,51 @@ encriptar_sqli("serieadd", 1, "form_info", $ruta_db_superior, false, false);
 				}
 			}
 		});
+		$("#tipo_entidad").change(function () {
+			option=$(this).val();
+			if(option != "") {
+				url1="";
+				switch(option) {
+					case '1'://Funcionario
+					//url1="test/test_funcionario.php";
+					url1="test.php?rol=1";
+					if(identidad > 0) {
+						url1  = url1 + '&id=' + identidad;
+					}
+					check=1;
+					break;
 
+					case '2'://Dependencia
+						url1="test/test_dependencia.php?estado=1";
+						if(identidad > 0) {
+							url1  = url1 + '&seleccionados=' + identidad;
+						}
+						check=0;
+					break;
+
+					case '4'://Cargo
+						url1="test/test_cargo.php?estado=1";
+						if(identidad > 0) {
+							url1  = url1 + '&seleccionados=' + identidad;
+						}
+						check=0;
+					break;
+				}
+				$.ajax({
+					url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
+					data:{xml:url1,campo:"identidad",radio:0,abrir_cargar:1,check_branch:check,ruta_db_superior:"../../"},
+					type : "POST",
+					async:false,
+					success : function(html) {
+						$("#sub_entidad").empty().html(html);
+					},error: function () {
+						top.noty({text: 'No se pudo cargar la informacion',type: 'error',layout: 'topCenter',timeout:5000});
+					}
+				});
+			}else{
+				$("#sub_entidad").empty();
+			}
+		});
+		$("#tipo_entidad").trigger("change");
 	});
 </script>

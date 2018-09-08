@@ -26,11 +26,20 @@ echo(librerias_arboles());
 	<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
 		<tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">TIPO*</span></td>
-			<td bgcolor="#F5F5F5"><input type="radio" name="tvd" id="tvd0" value="0" <?php echo $tvd[0];?> />TRD <input type="radio" name="tvd" id="tvd1" value="1" <?php echo $tvd[1];?>/>TVD </td>
+			<td bgcolor="#F5F5F5">
+				<?php if($_REQUEST["tvd"]){
+					echo "TVD";
+				}
+				else {echo "TRD";}				
+				?>
+				<!--input type="radio" name="tvd" id="tvd0" value="0" <?php echo $tvd[0];?> />TRD <input type="radio" name="tvd" id="tvd1" value="1" <?php echo $tvd[1];?>/>TVD -->
+				
+			</td>
 		</tr>
 		<tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">DEPENDENCIA*</span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="sub_entidad"></div> </td>
+			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="sub_entidad"></div> 
+				<input type="hidden" name="iddependencia" value="<?php echo $_REQUEST["seleccionados"]; ?>"></td>
 		</tr>
 		<tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">SERIE*</span></td>
@@ -54,10 +63,12 @@ echo(librerias_arboles());
 </p>
 <script type="text/javascript">
 	$(document).ready(function() {
-		url1="test/test_dependencia.php?seleccionados=<?php echo $_REQUEST["seleccionados"];?>";
+		//url1="test/test_dependencia.php?seleccionados=<?php echo $_REQUEST["seleccionados"];?>";
 		$.ajax({
-			url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
-			data:{xml:url1,campo:"iddependencia",radio:0,abrir_cargar:1,ruta_db_superior:"../../"},
+			//url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
+			url : "buscar_dependencia.php",
+			//data:{xml:url1,campo:"iddependencia",radio:0,abrir_cargar:1,ruta_db_superior:"../../"},
+			data:{campo:"iddependencia",valor:<?php echo $_REQUEST["seleccionados"];?>},
 			type : "POST",
 			async:false,
 			success : function(html_dep) {
@@ -67,8 +78,9 @@ echo(librerias_arboles());
 			}
 		});
 
-		$("[name='tvd']").change(function (){
-			tvd=$(this).val();
+		//$("[name='tvd']").change(function (){
+			//tvd=$(this).val();
+			tvd="<?php echo $_REQUEST["tvd"]; ?>";
 			url2="test/test_serie.php?tipo3=0&tvd="+tvd;
 			$.ajax({
 				url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
@@ -81,7 +93,7 @@ echo(librerias_arboles());
 					top.noty({text: 'No se pudo cargar el arbol de series',type: 'error',layout: 'topCenter',timeout:5000});
 				}
 			});
-		});
+		//});
 		$("[name='tvd']:checked").trigger("change");
 
 		$("#asignarserie_entidad").validate({

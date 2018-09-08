@@ -20,7 +20,7 @@ echo(librerias_arboles());
 	<body>
 		<span style="font-family: Verdana; font-size: 9px;">
 			<a href='serieadd.php' target='serielist'>ADICIONAR</a>
-			<a href="permiso_serie.php" target='serielist'>PERMISOS</a>
+			<!--a href="permiso_serie.php" target='serielist'>PERMISOS</a-->
 			<br/><br/>
 			 Buscar:
 			<input type="text" id="stext_serie_idserie" width="200px" size="25">

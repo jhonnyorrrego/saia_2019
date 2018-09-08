@@ -81,7 +81,8 @@ if($vinculados) {
 }
 
 if($datos[0]["tipo"]==1 || $datos[0]["tipo"]==2) {
-    echo '&nbsp;<a href="serieadd.php?idnode=' . $idnode . '&x_idserie=' . $idserie . '">ADICIONAR</a>';
+    echo '&nbsp;<a href="serieadd.php?idnode=' . $idnode . '&x_idserie=' . $idserie . '">ADICIONAR</a>
+	<a href="permiso_serie.php?idserie=' . $idserie . '" target="serielist">PERMISOS</a>';
 }
 	?>
 </span><br/><br/>

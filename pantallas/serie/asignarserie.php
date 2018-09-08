@@ -13,7 +13,7 @@ include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "header.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 desencriptar_sqli('form_info');
-
+//print_r($_REQUEST);
 if ($_REQUEST["opt"] == 1 && $_REQUEST["iddependencia"] && $_REQUEST["serie_idserie"]) {
     // VINCULACION DE DEPENDENCIAS VS SERIES
     $series = array_unique(explode(",", $_REQUEST["serie_idserie"]));

@@ -11,7 +11,7 @@ while ($max_salida > 0) {
 
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "header.php");
-
+print_r($_REQUEST);
 $idserie = null;
 $idserie_padre = null;
 $tipo_entidad = null;
@@ -24,7 +24,6 @@ if ($_REQUEST["idserie"]) {
 if ($_REQUEST["tipo_entidad"]) {
     $tipo_entidad = $_REQUEST["tipo_entidad"];
 }
-
 $series_seleccionadas = null;
 if ($_REQUEST["identidad"]) {
     $identidad = $_REQUEST["identidad"];
@@ -110,12 +109,15 @@ var series_seleccionadas = <?php echo (empty($series_seleccionadas) ? "''" : "'$
 			url2 = url2 + '&seleccionados=' + series_seleccionadas;
 		}
 		$.ajax({
-			url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
-			data:{xml:url2,campo:"serie_idserie",radio:0,check_branch:1,abrir_cargar:1,ruta_db_superior:"../../"},
+			//url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
+			url:"buscar_datos_serie.php",
+			//data:{xml:url2,campo:"serie_idserie",radio:0,check_branch:1,abrir_cargar:1,ruta_db_superior:"../../"},
+			data:{idserie:idserie},
 			type : "POST",
 			async:false,
 			success : function(html_serie) {
-				$("#divserie").empty().html(html_serie);
+				var serie = JSON.parse(html_serie);
+				$("#divserie").empty().html(serie["nombre"]);
 			},error: function (){
 				top.noty({text: 'No se pudo cargar el arbol de series',type: 'error',layout: 'topCenter',timeout:5000});
 			}
