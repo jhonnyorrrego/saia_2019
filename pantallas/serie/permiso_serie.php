@@ -11,7 +11,6 @@ while ($max_salida > 0) {
 
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "header.php");
-print_r($_REQUEST);
 $idserie = null;
 $idserie_padre = null;
 $tipo_entidad = null;
