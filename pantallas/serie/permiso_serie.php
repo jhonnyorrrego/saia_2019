@@ -10,7 +10,9 @@ while ($max_salida > 0) {
 }
 
 include_once ($ruta_db_superior . "db.php");
+include_once($ruta_db_superior."librerias_saia.php");
 include_once ($ruta_db_superior . "header.php");
+echo(librerias_notificaciones());
 $idserie = null;
 $idserie_padre = null;
 $tipo_entidad = null;
@@ -88,7 +90,7 @@ echo librerias_arboles();
 			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="sub_entidad"></div> </td>
 		</tr>
 
-		<tr>
+		<!--tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ACCION*</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker"><input type="radio" name="accion" id="accion1" value="adicionar" checked="true" class="required"/>ADICIONAR <input type="radio" name="accion" id="accion0" value="eliminar" />ELIMINAR </td>
 		</tr>
@@ -98,7 +100,7 @@ echo librerias_arboles();
 			<input type="hidden" name="opt" value="2">
 			<input type="submit" name="Action" value="Guardar">
 			</td>
-		</tr>
+		</tr-->
 	</table>
 </form>
 </p>
@@ -142,7 +144,9 @@ var entidades = <?php echo json_encode($entidades) ?>;
 			var entidades_seleccionadas='';
 			if(option != "") {
 				if(!$.isEmptyObject(entidades)){
-					entidades_seleccionadas=entidades[option].join(',');
+					if(entidades[option]){
+						entidades_seleccionadas=entidades[option].join(',');
+					}
 				}
 				if(identidad && identidad > 0) {
 					if(entidades_seleccionadas==''){
@@ -157,10 +161,9 @@ var entidades = <?php echo json_encode($entidades) ?>;
 				
 				switch(option) {
 					case '1'://Funcionario
-					entidades[option]
-					//url1="test/test_funcionario.php";					
-					url1="test.php?rol=1";						
-						url1  = url1 + '&id=' + entidades_seleccionadas;
+					url1="test/test_funcionario.php?idcampofun=funcionario_codigo";					
+					//url1="test.php?rol=1";						
+						url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
 					//}
 					check=1;
 					break;
@@ -183,7 +186,7 @@ var entidades = <?php echo json_encode($entidades) ?>;
 				}
 				$.ajax({
 					url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
-					data:{xml:url1,campo:"identidad",radio:0,abrir_cargar:1,check_branch:check,ruta_db_superior:"../../"},
+					data:{xml:url1,campo:"identidad",radio:0,abrir_cargar:1,check_branch:check,ruta_db_superior:"../../",onNodeSelect:"validar_permisos_entidad"},
 					type : "POST",
 					async:false,
 					success : function(html) {
@@ -209,8 +212,29 @@ var entidades = <?php echo json_encode($entidades) ?>;
 					return false;
 				}
 			}
-		});
+		});	
 	});
+	function validar_permisos_entidad(nodeId){
+		var tipo_entidad = $("#tipo_entidad").val();
+		var serie= $("#x_serie_idserie").val();
+		var id = nodeId;
+		var accion = treeidentidad.isItemChecked(nodeId);
+		
+        $.ajax({
+        	    url: 'validar_permisos_entidad.php',
+                dataType: 'json',
+                data:{serie:serie,tipo_entidad:tipo_entidad,id:id,accion:accion},
+                success: function(retorno){
+                    var tipo='warning';
+                    var mensaje='<b>ATENCI&Oacute;N</b><br>Se ha retirado el permiso a la serie';
+                    if(retorno.accion==1){
+                        tipo='success';
+                        mensaje='<b>ATENCI&Oacute;N</b><br>Se ha adicionado el permiso a la serie';
+                    }
+                    notificacion_saia(mensaje,tipo,"topRight",3000);
+                }
+        	});
+	}
 </script>
 
 <?php include ($ruta_db_superior."footer.php") ?>

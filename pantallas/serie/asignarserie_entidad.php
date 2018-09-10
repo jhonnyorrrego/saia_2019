@@ -19,6 +19,21 @@ include_once ($ruta_db_superior."librerias_saia.php");
 echo(librerias_jquery("1.8"));
 echo(librerias_validar_formulario("11"));
 echo(librerias_arboles());
+if ($_REQUEST["seleccionados"]) {
+	$buscar_asignacion_series["numcampos"]=array();	
+   $buscar_asignacion_series = busca_filtro_tabla("", "entidad_serie", "estado=1 and llave_entidad=".$_REQUEST["seleccionados"], "", $conn);
+	//print_r($buscar_asignacion_series["sql"]);
+    if ($buscar_asignacion_series["numcampos"]) {
+    	for($i=0;$i<$buscar_asignacion_series["numcampos"];$i++){
+        	$lista_series[] = $buscar_asignacion_series[$i]["serie_idserie"];
+        	//if (!empty($lista_series)) {
+            	
+        	//}
+		}
+		$series_seleccionadas = implode(",", $lista_series);
+    }
+}
+print_r($series_seleccionadas);
 ?>
 <h3>Asignar series</h3>
 <p>
@@ -39,14 +54,14 @@ echo(librerias_arboles());
 		<tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">DEPENDENCIA*</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="sub_entidad"></div> 
-				<input type="hidden" name="iddependencia" value="<?php echo $_REQUEST["seleccionados"]; ?>"></td>
+				<input type="hidden" name="iddependencia" id="iddependencia" value="<?php echo $_REQUEST["seleccionados"]; ?>"></td>
 		</tr>
 		<tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">SERIE*</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="divserie"></div> </td>
 		</tr>
 
-		<tr>
+		<!--tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ACCION*</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker"><input type="radio" name="accion" id="accion1" value="adicionar" checked="true" class="required"/>ADICIONAR <input type="radio" name="accion" id="accion0" value="eliminar" />ELIMINAR </td>
 		</tr>
@@ -57,7 +72,7 @@ echo(librerias_arboles());
 			<input type="hidden" name="idnode" value="<?php echo $_REQUEST["idnode"];?>">
 			<input type="submit" name="Action" value="Guardar">
 			</td>
-		</tr>
+		</tr-->
 	</table>
 </form>
 </p>
@@ -81,10 +96,11 @@ echo(librerias_arboles());
 		//$("[name='tvd']").change(function (){
 			//tvd=$(this).val();
 			tvd="<?php echo $_REQUEST["tvd"]; ?>";
-			url2="test/test_serie.php?tipo3=0&tvd="+tvd;
+			var seleccionados="<?php echo $series_seleccionadas; ?>";
+			url2="test/test_serie.php?tipo3=0&tvd="+tvd+"&seleccionados="+seleccionados;
 			$.ajax({
 				url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
-				data:{xml:url2,campo:"serie_idserie",radio:0,check_branch:1,abrir_cargar:1,ruta_db_superior:"../../"},
+				data:{xml:url2,campo:"serie_idserie",radio:0,check_branch:0,abrir_cargar:1,ruta_db_superior:"../../",onNodeSelect:"asignar_permisos_entidad"},
 				type : "POST",
 				async:false,
 				success : function(html_serie) {
@@ -110,6 +126,32 @@ echo(librerias_arboles());
 			}
 		});
 	});
+	function asignar_permisos_entidad(nodeId){
+		var iddependencia = $("#iddependencia").val();
+		var serie_idserie= $("#serie_idserie").val();
+		var id = nodeId;
+		var accion ='eliminar'; 
+		if(treeserie_idserie.isItemChecked(nodeId)==1){
+			var accion = "adicionar";
+		}
+	 	console.log("idepen"+iddependencia);
+	 	//console.log(serie_idserie);
+	 	console.log("id:"+id);
+        $.ajax({
+        	    url: 'asignarserie.php',
+                dataType: 'json',
+                data:{opt:1,iddependencia:iddependencia,serie_idserie:serie_idserie,accion:accion},
+                success: function(retorno){
+                    var tipo='warning';
+                    var mensaje='<b>ATENCI&Oacute;N</b><br>Se ha retirado el permiso a la serie';
+                    if(retorno.accion==1){
+                        tipo='success';
+                        mensaje='<b>ATENCI&Oacute;N</b><br>Se ha adicionado el permiso a la serie';
+                    }
+                    notificacion_saia(mensaje,tipo,"topRight",3000);
+                }
+        	});
+	}
 </script>
 
 <?php include ($ruta_db_superior."footer.php") ?>

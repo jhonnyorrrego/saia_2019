@@ -352,7 +352,7 @@ for($j=0;$j<$usuarios["numcampos"];$j++)
    if($usuarios[$j]["sistema"]==0)
      $sistema = "(Sin SAIA)";
   $valor=in_array($usuarios[$j][$tipo_id],$seleccionados);
-  //alerta($valor);
+  alerta($valor);
   $adicional="";
   if($valor!="" && $valor!=Null)
       $adicional=" checked=\"1\" "; 
