@@ -51,6 +51,8 @@ switch ($sAction) {
         $x_tipo = @$_POST["x_tipo"];
         $x_tvd = @$_POST["x_tvd"];
         $x_categoria = @$_POST["x_categoria"];
+		$x_tipo_entidad = @$_POST["tipo_entidad"];
+		$x_identidad = @$_POST["identidad"];
 
         $ok = AddData($conn);
         if ($ok) {
@@ -184,6 +186,14 @@ function AddData($conn) {
 		// tipo
 		$fieldList["tipo"] = "'" . $GLOBALS["x_tipo"] . "'";
 		$fieldList["tvd"] = "'" . $GLOBALS["x_tvd"] . "'";
+		
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_tipo_entidad"]) : $GLOBALS["x_tipo_entidad"];
+		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+		$fieldList_permiso["tipo_entidad"] = $theValue;
+		
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_identidad"]) : $GLOBALS["x_identidad"];
+		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+		$fieldList_permiso["identidad"] = $theValue;
 	}
 
 	// insert into database
@@ -194,7 +204,10 @@ function AddData($conn) {
 	$strsql .= ")";
 	phpmkr_query($strsql) or die("Error al insertar el registro " . $strsql);
 	$id = phpmkr_insert_id();
-
+	
+	// insert into permiso serie
+	$strsql = "INSERT INTO permiso_serie (entidad_identidad,serie_idserie,llave_entidad,estado) VALUES (".$fieldList_permiso["tipo_entidad"].",".$id.",".$fieldList_permiso["identidad"].",1)";
+	phpmkr_query($strsql) or die("Error al insertar el registro " . $strsql);	
 	actualizar_crear_cod_arboles($id, "serie", 1);
 	return $id;
 }

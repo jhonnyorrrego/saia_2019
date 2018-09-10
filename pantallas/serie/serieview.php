@@ -66,7 +66,14 @@ if($filtro_docs) {
 }
 
 $vinculados = $docs_vinculados["numcampos"];
-
+/*$identidad=array();
+$vista_series = busca_filtro_tabla("", "vpermiso_serie_entidad", "cod_padre=".$idserie, "", $conn);
+if($vista_series["numcampos"]){
+	for($i=0;$i<$vista_series["numcampos"];$i++){
+		$identidad[]=$vista_series[$i]["entidad_identidad"];
+	} 
+	$identidad = implode(",", $identidad);
+}*/
 include_once ($ruta_db_superior."librerias_saia.php");
 echo librerias_jquery("1.7");
 ?>
