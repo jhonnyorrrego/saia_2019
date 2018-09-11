@@ -81,6 +81,7 @@ class DHtmlXtreeExpedienteFunc {
         }
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
+                $con_permiso = true;
                 $text = $papas[$i]["nombre"] . " (" . $papas[$i]["codigo_numero"] . ")";
                 if ($papas[$i]["estado_cierre"] == 2) {
                     $text .= " - CERRADO";
@@ -92,6 +93,7 @@ class DHtmlXtreeExpedienteFunc {
                     $hijos[0]["cant"] = 0;
                     $tipo_docu[0]["cant"] = 0;
                     $text .= " - (Sin permiso)";
+                    $con_permiso = false;
                 }
                 $this->objetoXML->startElement("item");
                 $this->objetoXML->writeAttribute("style", "font-family:verdana; font-size:7pt;font-weight:bold");
@@ -104,11 +106,13 @@ class DHtmlXtreeExpedienteFunc {
                     $this->objetoXML->writeAttribute("child", 0);
                 }
                 //if ($hijos[0]["cant"] && $papas[$i]["desde_serie"] === 0) {
-                if ($hijos[0]["cant"]) {
-                    $this->llena_expediente($papas[$i]["idexpediente"]);
-                }
-                if ($tipo_docu[0]["cant"]) {
-                    $this->llena_tipo_documental($papas[$i]["serie_idserie"], $papas[$i]["idexpediente"]);
+                if($con_permiso) {
+                    if ($hijos[0]["cant"]) {
+                        $this->llena_expediente($papas[$i]["idexpediente"]);
+                    }
+                    if ($tipo_docu[0]["cant"]) {
+                        $this->llena_tipo_documental($papas[$i]["serie_idserie"], $papas[$i]["idexpediente"]);
+                    }
                 }
                 $this->objetoXML->endElement();
             }
