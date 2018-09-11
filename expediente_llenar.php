@@ -175,13 +175,13 @@ if(count($nombres_exp)){
     if(seleccionados!="") {
     	for (var i = 0; i < lista_series.length; i++) {
     		id_s = lista_series[i];
-    		id_exp = tree2.getUserData(id_s.split("_")[0], "idexpediente");
+    		//id_exp = tree2.getUserData(id_s.split("_")[0], "idexpediente");
+    		id_exp = tree2.getUserData(id_s, "idexpediente");
     	    //console.log("serie: " + id_s);
     	    //console.log("exped: " + id_exp);
-    	    //Do something
     		expedientes.push(id_exp);
     	}
-	    console.log(expedientes);
+	    //console.log(expedientes);
     }
 
     if(seleccionados!="") {
