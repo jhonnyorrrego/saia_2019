@@ -33,7 +33,6 @@ if ($_REQUEST["seleccionados"]) {
 		$series_seleccionadas = implode(",", $lista_series);
     }
 }
-print_r($series_seleccionadas);
 ?>
 <h3>Asignar series</h3>
 <p>
