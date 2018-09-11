@@ -81,7 +81,7 @@ FROM permiso_serie p
     JOIN serie s ON p.serie_idserie = s.idserie
     JOIN vfuncionario_dc v ON v.idcargo = p.llave_entidad
 WHERE
-    p.entidad_identidad = 40 AND v.estado_dc = 1 AND p.estado = 1";
+    p.entidad_identidad = 4 AND v.estado_dc = 1 AND p.estado = 1";
         return $sql;
     }
 
