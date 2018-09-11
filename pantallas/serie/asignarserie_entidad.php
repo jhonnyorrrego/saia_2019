@@ -19,6 +19,7 @@ include_once ($ruta_db_superior."librerias_saia.php");
 echo(librerias_jquery("1.8"));
 echo(librerias_validar_formulario("11"));
 echo(librerias_arboles());
+echo(librerias_notificaciones());
 if ($_REQUEST["seleccionados"]) {
 	$buscar_asignacion_series["numcampos"]=array();	
    $buscar_asignacion_series = busca_filtro_tabla("", "entidad_serie", "estado=1 and llave_entidad=".$_REQUEST["seleccionados"], "", $conn);
@@ -133,17 +134,14 @@ if ($_REQUEST["seleccionados"]) {
 		if(treeserie_idserie.isItemChecked(nodeId)==1){
 			var accion = "adicionar";
 		}
-	 	console.log("idepen"+iddependencia);
-	 	//console.log(serie_idserie);
-	 	console.log("id:"+id);
         $.ajax({
         	    url: 'asignarserie.php',
-                dataType: 'json',
+                type : "POST",
                 data:{opt:1,iddependencia:iddependencia,serie_idserie:serie_idserie,accion:accion},
                 success: function(retorno){
                     var tipo='warning';
                     var mensaje='<b>ATENCI&Oacute;N</b><br>Se ha retirado el permiso a la serie';
-                    if(retorno.accion==1){
+                    if(retorno==1){
                         tipo='success';
                         mensaje='<b>ATENCI&Oacute;N</b><br>Se ha adicionado el permiso a la serie';
                     }

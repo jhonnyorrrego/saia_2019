@@ -120,8 +120,9 @@ class DHtmlXtreeSeries {
     private function llena_serie($id) {
         if ($id == 0) {
             $papas = busca_filtro_tabla("", "vpermiso_serie", "(cod_padre=0 or cod_padre is null)" . $this->condicion_ad, "nombre_serie ASC", $this->conn);
+			$this->incluir_padre = false;
         } else if($this->incluir_padre) {
-            $papas = busca_filtro_tabla("", "vpermiso_serie", "idserie=" . $id . $this->condicion_ad, "nombre_serie ASC", $this->conn);
+        	$papas = busca_filtro_tabla("", "vpermiso_serie", "idserie=" . $id . $this->condicion_ad, "nombre_serie ASC", $this->conn);
             $this->incluir_padre = false;
         } else {
             $papas = busca_filtro_tabla("", "vpermiso_serie", "cod_padre=" . $id . $this->condicion_ad, "nombre_serie ASC", $this->conn);

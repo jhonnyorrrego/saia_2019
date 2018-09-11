@@ -10,11 +10,10 @@ while ($max_salida > 0) {
 }
 
 include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "header.php");
+//include_once ($ruta_db_superior . "header.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 desencriptar_sqli('form_info');
-//print_r($_REQUEST);
-//die();
+$retorno='';
 if ($_REQUEST["opt"] == 1 && $_REQUEST["iddependencia"]) {
     // VINCULACION DE DEPENDENCIAS VS SERIES
     if($_REQUEST["serie_idserie"]){
@@ -22,20 +21,17 @@ if ($_REQUEST["opt"] == 1 && $_REQUEST["iddependencia"]) {
 	}
    // $dependencias = array_unique(explode(",", $_REQUEST["iddependencia"]));
     $dependencias = $_REQUEST["iddependencia"];
-	print_r($idseries);
     //if ($_REQUEST["accion"] == "eliminar") {
     if ($_REQUEST["accion"] == "eliminar") {
         //foreach ($series as $idserie) {
             //foreach ($dependencias as $id) {
                 $delete = "UPDATE entidad_serie SET estado=0 WHERE serie_idserie not in (" . implode(",",$idseries).") and llave_entidad=" . $dependencias;
-				print_r($delete);
-				//die();
                 phpmkr_query($delete) or die("Error al eliminar la vinculacion de la serie con la dependencia");
+				$retorno=0;
             //}
         //}
     } else {
         $cons_serie = busca_filtro_tabla("cod_arbol", "serie", "idserie in (" . implode(",", $idseries) . ")", "", $conn);
-		 //print_r($cons_serie["sql"]);
         if ($cons_serie["numcampos"]) {
             $cod_arboles = array();
             for ($i = 0; $i < $cons_serie["numcampos"]; $i++) {
@@ -46,24 +42,27 @@ if ($_REQUEST["opt"] == 1 && $_REQUEST["iddependencia"]) {
             foreach ($ids as $idserie) {
                 $temp_dep = $dependencias;
                // $exis = busca_filtro_tabla("llave_entidad", "entidad_serie", "estado=1 and serie_idserie=" . $idserie . " and llave_entidad in (" . implode(",", $temp_dep) . ")", "", $conn);
-                $exis = busca_filtro_tabla("llave_entidad", "entidad_serie", "estado=1 and serie_idserie=" . $idserie . " and llave_entidad =".$temp_dep, "", $conn);
-              // print_r($exis["sql"]);
+                $exis = busca_filtro_tabla("llave_entidad", "entidad_serie", "serie_idserie=" . $idserie . " and llave_entidad =".$temp_dep, "", $conn);              
                 if (!$exis["numcampos"]) {
                     //$ids_insert = extrae_campo($exis, "llave_entidad");
                     //$ids_insert = $exis[0]["llave_entidad"];
-                    //$temp_dep = array_diff($temp_dep, $ids_insert);
-					//print_r($ids_insert);
+                    //$temp_dep = array_diff($temp_dep, $ids_insert);					
                 //}
                 //foreach ($temp_dep as $iddepe) {
                     //$insert = "INSERT INTO entidad_serie (entidad_identidad,serie_idserie,llave_entidad,estado,fecha) VALUES (2," . $idserie . "," . $iddepe . ",1," . fecha_db_almacenar(date("Y-m-d"), "Y-m-d") . ")";
                     $insert = "INSERT INTO entidad_serie (entidad_identidad,serie_idserie,llave_entidad,estado,fecha) VALUES (2," . $idserie . "," . $temp_dep . ",1," . fecha_db_almacenar(date("Y-m-d"), "Y-m-d") . ")";
-                    phpmkr_query($insert) or die("Error al guardar la informacion");
-                    
+                    phpmkr_query($insert) or die("Error al guardar la informacion");                    
                 }
+				else{
+					$update = "UPDATE entidad_serie SET estado=1 WHERE entidad_identidad=2 and serie_idserie=".$idserie." and llave_entidad=" . $temp_dep;					
+                	phpmkr_query($update) or die("Error al guardar la vinculacion de la serie con la dependencia");
+				}
+				$retorno=1;
             }
         }
     }
-    notificaciones("Datos Guardados!", "success", 5000);
+    //notificaciones("Datos Guardados!", "success", 5000);
+   //echo(json_encode($retorno));
     if ($_REQUEST["idnode"] != "") {
         $code = array(
             '<script>'
@@ -87,6 +86,7 @@ if ($_REQUEST["opt"] == 1 && $_REQUEST["iddependencia"]) {
             die();
         }
     }
+	echo ($retorno);
 }
 
 if ($_REQUEST["opt"] == 2 && $_REQUEST["tipo_entidad"] && $_REQUEST["serie_idserie"]) {
@@ -170,7 +170,6 @@ if ($_REQUEST["opt"] == 2 && $_REQUEST["tipo_entidad"] && $_REQUEST["serie_idser
     notificaciones("Datos actualizados!", "success", 5000);
     abrir_url("permiso_serie.php", "_self");
     die();
+	include_once ($ruta_db_superior . "footer.php");
 }
-
-include_once ($ruta_db_superior . "footer.php");
 ?>

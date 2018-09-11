@@ -270,10 +270,11 @@ function asignar_expediente($idexp, $tipo_entidad, $llave_entidad, $permiso = ""
 		$sql1 = "update entidad_expediente set entidad_identidad=" . $tipo_entidad . ", expediente_idexpediente=" . $idexp . ", llave_entidad=" . $llave_entidad . ", permiso='" . $permiso . "' where identidad_expediente=" . $busqueda[0]["identidad_expediente"];
 	}
 	phpmkr_query($sql1);
-	$padre = busca_filtro_tabla("", "expediente a", "a.idexpediente=" . $idexp, "", $conn);
+	/*$padre = busca_filtro_tabla("", "expediente a", "a.idexpediente=" . $idexp, "", $conn);
 	if ($padre[0]["cod_padre"] != '' && $padre[0]["cod_padre"] != 0) {
-		return (asignar_expediente($padre[0]["cod_padre"], $tipo_entidad, $llave_entidad, $permiso = "", $indice));
+		return (asignar_expediente($padre[0]["cod_padre"], $tipo_entidad, $llave_entidad, $permiso, $indice));
 	} else
+		return true;*/
 		return true;
 }
 

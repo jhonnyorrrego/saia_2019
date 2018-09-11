@@ -376,12 +376,14 @@ $serie_padre = "";
   }
 
   $(document).ready(function() {
-		var serie_padre = "<?php echo $serie_padre?>";
+  	//Se comenta coidog, porque no permite seleccionar series diferentes al exp padre
+		//var serie_padre = "<?php echo $serie_padre?>";
 		var mostrar = "&mostrar_padre=0";
-		if(serie_padre != "") {
+		/*if(serie_padre != "") {
 			mostrar = "&mostrar_padre=1";
-		}
-		url2="test/test_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0" + mostrar + "&id=" + serie_padre;
+		}*/
+		//url2="test/test_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0" + mostrar + "&id=" + serie_padre;
+		url2="test/test_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0" + mostrar;
 		$.ajax({
 			url : "<?php echo($ruta_db_superior);?>test/crear_arbol.php",
 			data:{xml:url2,campo:"serie_idserie",radio:1,ruta_db_superior:"../../",busqueda_item:1,onNodeSelect:"cargar_info_Node"},
