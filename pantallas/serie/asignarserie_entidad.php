@@ -23,7 +23,7 @@ echo(librerias_notificaciones());
 if ($_REQUEST["seleccionados"]) {
 	$buscar_asignacion_series["numcampos"]=array();	
    $buscar_asignacion_series = busca_filtro_tabla("", "entidad_serie", "estado=1 and llave_entidad=".$_REQUEST["seleccionados"], "", $conn);
-	//print_r($buscar_asignacion_series["sql"]);
+	
     if ($buscar_asignacion_series["numcampos"]) {
     	for($i=0;$i<$buscar_asignacion_series["numcampos"];$i++){
         	$lista_series[] = $buscar_asignacion_series[$i]["serie_idserie"];
