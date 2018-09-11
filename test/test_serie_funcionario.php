@@ -64,6 +64,10 @@ if (isset($_REQUEST["id"])) {
     $id = $_REQUEST["id"];
 }
 
+if($id < 0) {
+    $id = 0;
+}
+
 if(isset($_REQUEST["mostrar_padre"]) && $_REQUEST["mostrar_padre"] == "1") {
     $incluir_padre = true;
 }
