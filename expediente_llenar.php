@@ -88,7 +88,7 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
 				if(incluir_series != "") {
 					incluir_series = "&incluir_series=" + incluir_series;
 				}
-				var url_test = "test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1&estado_cierre=1&estado_archivo=1"+ incluir_series;
+				var url_test = "test/test_expediente_funcionario.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1&estado_cierre=1&estado_archivo=1"+ incluir_series;
   		var browserType;
       if (document.layers) {browserType = "nn4"}
       if (document.all) {browserType = "ie"}
@@ -162,30 +162,48 @@ if(count($nombres_exp)){
  </form>
  <script>
  $(document).ready(function() {
-	$('#form1').submit(function(){
+	$('#form1').submit(function() {
 
     seleccionados=tree2.getAllChecked();
-    if(seleccionados!="")
-      {$('#expedientes').val(seleccionados);
+    var lista_series = seleccionados.split(",");
+
+    //1574,1542_1536692460206,1540_1536692460207,1565
+
+    var id_exp = null;
+    var id_s = null;
+    var expedientes = [];
+    if(seleccionados!="") {
+    	for (var i = 0; i < lista_series.length; i++) {
+    		id_s = lista_series[i];
+    		id_exp = tree2.getUserData(id_s.split("_")[0], "idexpediente");
+    	    //console.log("serie: " + id_s);
+    	    //console.log("exped: " + id_exp);
+    	    //Do something
+    		expedientes.push(id_exp);
+    	}
+	    console.log(expedientes);
+    }
+
+    if(seleccionados!="") {
+       $('#expedientes').val(expedientes.join(","));
 	    <?php encriptar_sqli("form1",0); ?>
-		if(salida_sqli){
+		if(salida_sqli) {
 			return true;
 		}
-      }
-    else
-      {$('#expedientes').val('');
+      } else {
+        $('#expedientes').val('');
         <?php encriptar_sqli("form1",0); ?>
-        if(salida_sqli){
+        if(salida_sqli) {
        		return(true);
        	}
       }
     return(false);
   });
-  $('#accion1').click(function(){
+  $('#accion1').click(function() {
     tree2.deleteChildItems(0);
     tree2.loadXML("test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1");
   });
-  $('#accion0').click(function(){
+  $('#accion0').click(function() {
     tree2.deleteChildItems(0);
     tree2.loadXML("test_expediente.php?doc=<?php echo($iddoc); ?>&accion=0&permiso_editar=1");
   });
