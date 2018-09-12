@@ -246,7 +246,7 @@ if ($_REQUEST["tipo_entidad"]) {
     $tipo_entidad = $_REQUEST["tipo_entidad"];
 }
 
-$entidad = busca_filtro_tabla("identidad, nombre", "entidad", "identidad in (1,2,4)", "nombre asc", $conn);
+/*$entidad = busca_filtro_tabla("identidad, nombre", "entidad", "identidad in (1,2,4)", "nombre asc", $conn);
 $option = '<option value="">Seleccione</option>';
 if ($entidad["numcampos"]) {
     for ($i = 0; $i < $entidad["numcampos"]; $i++) {
@@ -257,7 +257,11 @@ if ($entidad["numcampos"]) {
         $option .= '>' . $entidad[$i]["nombre"];
         $option .= '</option>';
     }
-}
+}*/
+$option = '<option value="">Seleccione</option>
+		   <option value="4">Asignado a Cargo(s)</option>
+ 		   <option value="2">Asignado a Dependencia(s)</option>
+ 		   <option value="1">Asignado a Funcionario(s)</option>';
 ?>
 <form name="serieadd" id="serieadd" action="serieadd.php" method="post">
 	<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
