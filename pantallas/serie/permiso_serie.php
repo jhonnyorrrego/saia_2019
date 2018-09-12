@@ -114,6 +114,7 @@ var identidad = '<?php echo (empty($identidad) ? 0 : $identidad);?>';
 var series_seleccionadas = <?php echo (empty($series_seleccionadas) ? "''" : "'$series_seleccionadas'");?>;
 var entidades = <?php echo json_encode($entidades) ?>;
 	$(document).ready(function() {
+		$("#tipo_entidad option[value='2']").prop('selected', true)		
 		if(identidad > 0) {
 			$("#tipo_entidad").trigger("change");
 		}
