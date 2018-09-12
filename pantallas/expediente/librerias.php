@@ -78,32 +78,33 @@ function enlace_expediente($idexpediente, $nombre) {
     );
     $req_parms = http_build_query($data);
 
+    $estilo_expediente = "";
+    $icono_expediente = "icon-folder-open";
+    if($expediente_actual[0]["agrupador"]) {
+        $icono_expediente = "icon-bookmark";
+    }
     if ($expediente_actual[0]["propietario"] == $_SESSION["usuario_actual"]) {
         $m = 1;
         $e = 1;
         $p = 1;
+        $l = 1;
     } else {
         $permiso = busca_filtro_tabla("permiso", "entidad_expediente", "expediente_idexpediente=" . $idexpediente . " AND entidad_identidad=1 and estado=1 and llave_entidad=" . usuario_actual("idfuncionario"), "", $conn);
         if ($permiso["numcampos"] && $permiso[0]["permiso"] != "") {
-            if (strpos($permiso[0]["permiso"], "m") !== false) {
-                $m = 1;
-            }
-            if (strpos($permiso[0]["permiso"], "e") !== false) {
-                $e = 1;
-            }
-            if (strpos($permiso[0]["permiso"], "p") !== false) {
-                $p = 1;
-            }
+            $m = strpos($permiso[0]["permiso"], "m");
+            $e = strpos($permiso[0]["permiso"], "e");
+            $p = strpos($permiso[0]["permiso"], "p");
+        } else {
+            $estilo_expediente = ' style="opacity: 0.40;"';
         }
+        $l = $permiso["numcampos"] > 0;
     }
-    if($e || $m || $p) {
-        return ("<div style='' class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?" . $req_parms . "' conector='iframe' titulo='" . $nombre . "'><table><tr><td style='font-size:12px;'> <i class=' icon-folder-open pull-left'></i>&nbsp;<b>" . $nombre . "</b>&nbsp;" . $cadena_tomos . "</td></tr></table></div>");
+    if($l) {
+    return ("<div style='' class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?$req_parms' conector='iframe' titulo='$nombre'><table><tr><td style='font-size:12px;'> <i class='$icono_expediente pull-left' $estilo_expediente></i>&nbsp;<b>$nombre</b>&nbsp$cadena_tomos</td></tr></table></div>");
     } else {
-        return ("<div><table><tr><td style='font-size:12px;'> <i class='icon-folder-close pull-left'></i>&nbsp;<b>" . $nombre . "</b>&nbsp;" . $cadena_tomos . "</td></tr></table></div>");
+        return ("<div><table><tr><td style='font-size:12px;'> <i class='icon-folder-open pull-left' ></i>&nbsp;<b>" . $nombre . "</b>&nbsp;" . $cadena_tomos . "</td></tr></table></div>");
 
     }
-
-
 }
 
 function request_expediente_padre() {
@@ -552,6 +553,7 @@ function arreglo_expedientes_asignados() {
 	$where_estado_archivo = " AND estado_archivo=" . $_REQUEST['variable_busqueda'];
 
 	$expedientes_serie = busca_filtro_tabla("A.idexpediente", "expediente A, serie B, entidad_serie C", "A.serie_idserie=B.idserie AND B.idserie=C.serie_idserie AND B.estado=1 AND ((C.entidad_identidad=1 AND C.llave_entidad='" . usuario_actual("idfuncionario") . "') or (C.entidad_identidad=2 AND C.llave_entidad in ('" . implode("','", $dependencias) . "')) or (C.entidad_identidad=4 AND C.llave_entidad in('" . implode("','", $cargos) . "')))" . $where_estado_archivo, "", $conn);
+
 	$array_expedientes_serie = extrae_campo($expedientes_serie, "idexpediente");
 
 	$expedientes_serie_negado = busca_filtro_tabla("A.idexpediente", "expediente A, serie B, entidad_serie C", "A.serie_idserie=B.idserie AND B.idserie=C.serie_idserie AND B.estado=1 AND C.estado=2 AND ((C.entidad_identidad=1 AND C.llave_entidad='" . usuario_actual("idfuncionario") . "') or (C.entidad_identidad=2 AND C.llave_entidad in ('" . implode("','", $dependencias) . "')) or (C.entidad_identidad=4 AND C.llave_entidad in('" . implode("','", $cargos) . "')))" . $where_estado_archivo, "", $conn);
