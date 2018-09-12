@@ -271,11 +271,10 @@ function asignar_expediente($idexp, $tipo_entidad, $llave_entidad, $permiso = ""
 		$sql1 = "update entidad_expediente set entidad_identidad=" . $tipo_entidad . ", expediente_idexpediente=" . $idexp . ", llave_entidad=" . $llave_entidad . ", permiso='" . $permiso . "' where identidad_expediente=" . $busqueda[0]["identidad_expediente"];
 	}
 	phpmkr_query($sql1);
-	/*$padre = busca_filtro_tabla("", "expediente a", "a.idexpediente=" . $idexp, "", $conn);
+	$padre = busca_filtro_tabla("", "expediente a", "a.idexpediente=" . $idexp, "", $conn);
 	if ($padre[0]["cod_padre"] != '' && $padre[0]["cod_padre"] != 0) {
 		return (asignar_expediente($padre[0]["cod_padre"], $tipo_entidad, $llave_entidad, $permiso, $indice));
 	} else
-		return true;*/
 		return true;
 }
 
@@ -550,7 +549,9 @@ function arreglo_expedientes_asignados() {
 
 	$asignacion_expediente = busca_filtro_tabla("A.expediente_idexpediente", "entidad_expediente A", "A.estado=1 AND((entidad_identidad=1 AND llave_entidad='" . usuario_actual("idfuncionario") . "') or (entidad_identidad=2 AND llave_entidad in ('" . implode("','", $dependencias) . "')) or (entidad_identidad=4 AND llave_entidad in('" . implode("','", $cargos) . "')))", "", $conn);
 
-	$where_estado_archivo = " AND estado_archivo=" . $_REQUEST['variable_busqueda'];
+	if(isset($_REQUEST['variable_busqueda'])) {
+	   $where_estado_archivo = " AND estado_archivo=" . $_REQUEST['variable_busqueda'];
+	}
 
 	$expedientes_serie = busca_filtro_tabla("A.idexpediente", "expediente A, serie B, entidad_serie C", "A.serie_idserie=B.idserie AND B.idserie=C.serie_idserie AND B.estado=1 AND ((C.entidad_identidad=1 AND C.llave_entidad='" . usuario_actual("idfuncionario") . "') or (C.entidad_identidad=2 AND C.llave_entidad in ('" . implode("','", $dependencias) . "')) or (C.entidad_identidad=4 AND C.llave_entidad in('" . implode("','", $cargos) . "')))" . $where_estado_archivo, "", $conn);
 
