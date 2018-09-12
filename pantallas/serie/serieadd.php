@@ -53,7 +53,8 @@ switch ($sAction) {
         $x_categoria = @$_POST["x_categoria"];
 		$x_tipo_entidad = @$_POST["tipo_entidad"];
 		$x_identidad = @$_POST["identidad"];
-
+		$x_dependencias = $_REQUEST["iddependencia"];
+		
         $ok = AddData($conn);
         if ($ok) {
             notificaciones('Serie adicionada con exito', 'success', 6000);
@@ -106,10 +107,23 @@ switch ($sAction) {
             $x_tipo = $info_padre[0]["tipo"];
             $x_tvd = $info_padre[0]["tvd"];
             $x_codigo = $info_padre[0]["codigo"];
+			$x_conservacion = $info_padre[0]["conservacion"];
+			$x_seleccion = $info_padre[0]["seleccion"];
+			$x_procedimiento = $info_padre[0]["procedimiento"];
             if($x_tipo == 1 || $x_tipo == 2) {
                 $x_tipo++;
                 unset($tipo_serie[1]);
             }
+			 $conservacion = array(
+           		 "TOTAL" => "",
+            	"ELIMINACION" => ""
+        	);
+       		 $conservacion[$x_conservacion] = "checked";
+			  $seleccion = array(
+	            0 => "",
+	            1 => ""
+	        );
+	        $seleccion[$x_seleccion] = "checked";
         }
 
         break;
@@ -194,6 +208,10 @@ function AddData($conn) {
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_identidad"]) : $GLOBALS["x_identidad"];
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList_permiso["identidad"] = $theValue;
+		
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_dependencias"]) : $GLOBALS["x_dependencias"];
+		$theValue = ($theValue != "") ? "" . $theValue . "" : "NULL";
+		$fieldList_asignacion["dependencias"] = $theValue;
 	}
 
 	// insert into database
@@ -205,9 +223,16 @@ function AddData($conn) {
 	phpmkr_query($strsql) or die("Error al insertar el registro " . $strsql);
 	$id = phpmkr_insert_id();
 	
-	// insert into permiso serie
+	// insert into permiso_serie
 	$strsql = "INSERT INTO permiso_serie (entidad_identidad,serie_idserie,llave_entidad,estado) VALUES (".$fieldList_permiso["tipo_entidad"].",".$id.",".$fieldList_permiso["identidad"].",1)";
 	phpmkr_query($strsql) or die("Error al insertar el registro " . $strsql);	
+	
+	//insert into entidad_serie
+	$dependencia = explode(",",$fieldList_asignacion["dependencias"]);
+	for($i=0;$i<count($dependencia);$i++){
+		$insert = "INSERT INTO entidad_serie (entidad_identidad,serie_idserie,llave_entidad,estado,fecha) VALUES (2," . $id . "," . $dependencia[$i] . ",1," . fecha_db_almacenar(date("Y-m-d"), "Y-m-d") . ")";
+    	phpmkr_query($insert) or die("Error al guardar la informacion");
+	}
 	actualizar_crear_cod_arboles($id, "serie", 1);
 	return $id;
 }
@@ -342,18 +367,19 @@ if ($entidad["numcampos"]) {
 		<tr class="ocultar">
 			<td class="encabezado" title="El documento al pasarse al archivo central ser&aacute; conservado o eliminado?"><span class="phpmaker" style="color: #FFFFFF;">CONSERVACI&Oacute;N / ELIMINACI&Oacute;N *</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker">
-				<input type="radio" id="x_conservacionTOTAL" name="x_conservacion" value="TOTAL">
+				
+				<input type="radio" id="x_conservacionTOTAL" name="x_conservacion" value="TOTAL" <?php echo $conservacion["TOTAL"];?>>
 				Conservacion Total
-				<input type="radio" id="x_conservacionELIMINACION" name="x_conservacion" value="ELIMINACION">
+				<input type="radio" id="x_conservacionELIMINACION" name="x_conservacion" value="ELIMINACION" <?php echo $conservacion["ELIMINACION"];?>>
 				Eliminacion </span></td>
 		</tr>
 
 		<tr class="ocultar">
 			<td class="encabezado" title="El documento al pasarse al archivo central se le har&aacute; una selecci&oacute;n?"><span class="phpmaker" style="color: #FFFFFF;">SELECCI&Oacute;N *</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker">
-				<input type="radio" id="x_seleccion1" name="x_seleccion" value="1">
+				<input type="radio" id="x_seleccion1" name="x_seleccion" value="1" <?php echo $seleccion[1];?>>
 				SI
-				<input type="radio" id="x_seleccion0" name="x_seleccion" value="0">
+				<input type="radio" id="x_seleccion0" name="x_seleccion" value="0" <?php echo $seleccion[0];?>>
 				NO </span></td>
 		</tr>
 
@@ -386,12 +412,18 @@ if ($entidad["numcampos"]) {
 				<input type="radio" id="x_copia0" name="x_copia" value="0" checked="checked">
 				NO </span></td>
 		</tr>
+		<tr class="ocultar">
+			<td class="encabezado" title="Asociar serie/subserie a una dependencia"><span class="phpmaker" style="color: #FFFFFF;">DEPENDENCIA ASOCIADA *</span></td>
+			<td bgcolor="#F5F5F5"><span class="phpmaker">
+				<div id="dependencia_asociada"></div> 
+			</span></td>
+		</tr>
 		<tr>
-			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">TIPO ENTIDAD*</span></td>
+			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">TIPO DE PERMISO*</span></td>
 			<td bgcolor="#F5F5F5"><select id="tipo_entidad" name="tipo_entidad" class="required"><?php echo $option;?></select></td>
 		</tr>
 		<tr>
-			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ENTIDAD*</span></td>
+			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ASIGNAR PERMISO*</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="sub_entidad"></div> </td>
 		</tr>
 
@@ -478,6 +510,10 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 	}
 
 	$(document).ready(function() {
+		xml1="test/test_dependencia.php";
+		var dependencia_seleccionada="";
+		cargar_arbol_dependencias(xml1,dependencia_seleccionada);		
+		var dependencia_seleccionadas=0;
 		if(identidad > 0) {
 			$("#tipo_entidad").trigger("change");
 		}
@@ -676,7 +712,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 				}
 				$.ajax({
 					url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
-					data:{xml:url1,campo:"identidad",radio:0,abrir_cargar:1,check_branch:check,ruta_db_superior:"../../"},
+					data:{xml:url1,campo:"identidad",radio:0,abrir_cargar:1,check_branch:check,ruta_db_superior:"../../",seleccionar_todos:1},
 					type : "POST",
 					async:false,
 					success : function(html) {
@@ -691,4 +727,20 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 		});
 		$("#tipo_entidad").trigger("change");
 	});
+	function cargar_arbol_dependencias(xml1, dependencia_seleccionada){
+		if(dependencia_seleccionada != '') {
+			xml1 = xml1 + '?seleccionados=' + dependencia_seleccionada;
+		}
+		$.ajax({
+			url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
+			data:{xml:xml1,campo:"iddependencia",radio:0,check_branch:1,abrir_cargar:1,ruta_db_superior:"../../",seleccionar_todos:1},
+			type : "POST",
+			async:false,
+			success : function(html_dependencia) {
+				$("#dependencia_asociada").empty().html(html_dependencia);
+			},error: function (){
+				top.noty({text: 'No se pudo cargar el arbol de dependencias',type: 'error',layout: 'topCenter',timeout:5000});
+			}
+		});	
+	}
 </script>

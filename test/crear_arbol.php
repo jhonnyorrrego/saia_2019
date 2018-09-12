@@ -6,7 +6,8 @@ if ($_REQUEST["xml"] != "" && $_REQUEST["campo"]) {
 		"abrir_cargar" => 0,
 		"busqueda_item" => 0,
 		"onNodeSelect" => "",
-		"ruta_db_superior" => ""
+		"ruta_db_superior" => "",
+		"seleccionar_todos"=> ""
 	);
 
 	if (isset($_REQUEST["radio"])) {
@@ -27,6 +28,10 @@ if ($_REQUEST["xml"] != "" && $_REQUEST["campo"]) {
 	if (isset($_REQUEST["busqueda_item"])) {
 		$parametros["busqueda_item"] = $_REQUEST["busqueda_item"];
 	}
+	if (isset($_REQUEST["seleccionar_todos"])) {
+		$parametros["seleccionar_todos"] = $_REQUEST["seleccionar_todos"];
+	}
+	
 	crear_arbol($_REQUEST["xml"], $_REQUEST["campo"], $parametros);
 }
 function crear_arbol($xml,$campo,$parametros) {
@@ -138,7 +143,9 @@ function crear_arbol($xml,$campo,$parametros) {
 	}
 	</script><br/>
 	
-	<?php if($parametros["radio"]==0){?>
+	<?php	
+	
+	if($parametros["seleccionar_todos"]=="" && $parametros["radio"]==0){?>
 	<a onclick="todos_check(tree<?php echo $campo; ?>,'<?php echo $campo; ?>')" href="#">TODOS</a>&nbsp;&nbsp;&nbsp;
 	<a onclick="ninguno_check(tree<?php echo $campo; ?>,'<?php echo $campo; ?>')" href="#">NINGUNO</a>
 	<?php }?>

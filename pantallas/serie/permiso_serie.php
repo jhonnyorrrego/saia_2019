@@ -50,9 +50,12 @@ else{
 	}
 	//var_dump($entidades);
 }
-$entidad = busca_filtro_tabla("identidad, nombre", "entidad", "identidad in (1,2,4)", "nombre asc", $conn);
-$option = '<option value="">Seleccione</option>';
-if ($entidad["numcampos"]) {
+//$entidad = busca_filtro_tabla("identidad, nombre", "entidad", "identidad in (1,2,4)", "nombre asc", $conn);
+$option = '<option value="">Seleccione</option>
+		   <option value="4">Asignado a Cargo(s)</option>
+ 		   <option value="2">Asignado a Dependencia(s)</option>
+ 		   <option value="1">Asignado a Funcionario(s)</option>';
+/*if ($entidad["numcampos"]) {
     for ($i = 0; $i < $entidad["numcampos"]; $i++) {
         $option .= '<option value="' . $entidad[$i]["identidad"] . '"';
         if (!empty($tipo_entidad) && $tipo_entidad == $entidad[$i]["identidad"]) {
@@ -61,7 +64,7 @@ if ($entidad["numcampos"]) {
         $option .= '>' . $entidad[$i]["nombre"];
         $option .= '</option>';
     }
-}
+}*/
 
 include_once ($ruta_db_superior . "librerias_saia.php");
 echo librerias_jquery("1.8");
@@ -120,7 +123,6 @@ var entidades = <?php echo json_encode($entidades) ?>;
 			url2 = url2 + '&id=' + idserie_padre;
 			//url2 = url2 + '&seleccionados=' + idserie;
 		}
-		console.log(series_seleccionadas);
 		if(series_seleccionadas != '') {
 			url2 = url2 + '&seleccionados=' + series_seleccionadas;
 		}
@@ -156,7 +158,6 @@ var entidades = <?php echo json_encode($entidades) ?>;
 						entidades_seleccionadas = entidades_seleccionadas + ',' + identidad;
 					}
 				}
-				console.log(entidades_seleccionadas);
 				url1="";
 				
 				switch(option) {
@@ -186,7 +187,7 @@ var entidades = <?php echo json_encode($entidades) ?>;
 				}
 				$.ajax({
 					url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
-					data:{xml:url1,campo:"identidad",radio:0,abrir_cargar:1,check_branch:check,ruta_db_superior:"../../",onNodeSelect:"validar_permisos_entidad"},
+					data:{xml:url1,campo:"identidad",radio:0,abrir_cargar:1,check_branch:check,ruta_db_superior:"../../",onNodeSelect:"validar_permisos_entidad",seleccionar_todos:1},
 					type : "POST",
 					async:false,
 					success : function(html) {

@@ -92,6 +92,11 @@ join expediente e on ee.expediente_idexpediente = e.idexpediente", "(cod_padre=0
             $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "entidad_expediente ee
 join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" . $id . $this->condicion_ad, "nombre ASC", $this->conn);
         }
+		?>
+		<script>
+			console.log("<?php echo $papas["sql"]; ?>");
+		</script>
+		<?php
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
                 $con_permiso = true;

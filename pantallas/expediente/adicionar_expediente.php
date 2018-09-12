@@ -376,7 +376,7 @@ $serie_padre = "";
   }
 
   $(document).ready(function() {
-  	//Se comenta coidog, porque no permite seleccionar series diferentes al exp padre
+  	//Se comenta codigo, porque no permite seleccionar series diferentes al exp padre
 		//var serie_padre = "<?php echo $serie_padre?>";
 		var mostrar = "&mostrar_padre=0";
 		/*if(serie_padre != "") {

@@ -63,7 +63,7 @@ if ($_REQUEST["opt"] == 1 && $_REQUEST["iddependencia"]) {
     }
     //notificaciones("Datos Guardados!", "success", 5000);
    //echo(json_encode($retorno));
-    if ($_REQUEST["idnode"] != "") {
+   /* if ($_REQUEST["idnode"] != "") {
         $code = array(
             '<script>'
         );
@@ -85,7 +85,7 @@ if ($_REQUEST["opt"] == 1 && $_REQUEST["iddependencia"]) {
         } else {
             die();
         }
-    }
+    }*/
 	echo ($retorno);
 }
 

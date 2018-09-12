@@ -100,7 +100,7 @@ if ($_REQUEST["seleccionados"]) {
 			url2="test/test_serie.php?tipo3=0&tvd="+tvd+"&seleccionados="+seleccionados;
 			$.ajax({
 				url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
-				data:{xml:url2,campo:"serie_idserie",radio:0,check_branch:0,abrir_cargar:1,ruta_db_superior:"../../",onNodeSelect:"asignar_permisos_entidad"},
+				data:{xml:url2,campo:"serie_idserie",radio:0,check_branch:0,abrir_cargar:1,ruta_db_superior:"../../",onNodeSelect:"asignar_permisos_entidad",seleccionar_todos:1},
 				type : "POST",
 				async:false,
 				success : function(html_serie) {
