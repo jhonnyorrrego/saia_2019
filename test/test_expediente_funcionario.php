@@ -19,7 +19,7 @@ if ($_GET["id"]) {
 $condicion_ad = '';
 
 // DEFAULT DATOS
-$condicion_ad = " and " . expedientes_asignados();
+$condicion_ad = " and " . DHtmlXtreeExpedienteFunc::expedientes_asignados($conn);
 if (isset($_REQUEST["excluidos_exp"])) {
     $condicion_ad .= " and idexpediente not in (" . $_REQUEST["excluidos_exp"] . ")";
 } else if (isset($_REQUEST["incluir_series"])) {
@@ -92,11 +92,7 @@ join expediente e on ee.expediente_idexpediente = e.idexpediente", "(cod_padre=0
             $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "entidad_expediente ee
 join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" . $id . $this->condicion_ad, "nombre ASC", $this->conn);
         }
-		?>
-		<script>
-			console.log("<?php echo $papas["sql"]; ?>");
-		</script>
-		<?php
+
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
                 $con_permiso = true;
@@ -106,6 +102,8 @@ join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" 
                 }
                 $hijos = busca_filtro_tabla("count(1) as cant", "entidad_expediente ee join expediente e on ee.expediente_idexpediente = e.idexpediente", "e.cod_padre=" . $papas[$i]["idexpediente"] . $this->condicion_ad, "", $this->conn);
                 $tipo_docu = busca_filtro_tabla("count(1) as cant", "serie", "tipo=3 and tvd=0 and cod_padre=" . $papas[$i]["serie_idserie"], "", $this->conn);
+
+                // print_r($tipo_docu);
 
                 $this->objetoXML->startElement("item");
                 $this->objetoXML->writeAttribute("style", "font-family:verdana; font-size:7pt;font-weight:bold");
@@ -121,10 +119,47 @@ join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" 
                     if ($hijos[0]["cant"]) {
                         $this->llena_expediente($papas[$i]["idexpediente"]);
                     }
-                    if ($tipo_docu[0]["cant"]) {
-                        $this->llena_tipo_documental($papas[$i]["serie_idserie"], $papas[$i]["idexpediente"]);
-                    }
+
+                    $this->llena_subserie($papas[$i]["serie_idserie"], $papas[$i]["idexpediente"]);
                 }
+                $this->objetoXML->endElement();
+            }
+        }
+    }
+
+    private function llena_subserie($id, $idexp) {
+        $papas = busca_filtro_tabla("", "serie", "tipo in (2,3) and tvd=0 and cod_padre=" . $id, "nombre ASC", $this->conn);
+        if ($papas["numcampos"]) {
+            for ($i = 0; $i < $papas["numcampos"]; $i++) {
+                $permiso = busca_filtro_tabla("count(*) as cant", "vpermiso_serie", "idfuncionario=" . $_SESSION["idfuncionario"] . " and idserie=" . $papas[$i]["idserie"], "", $this->conn);
+                $tipo_docu = busca_filtro_tabla("count(1) as cant", "serie", "tipo=3 and tvd=0 and cod_padre=" . $papas[$i]["idserie"], "", $this->conn);
+                $text = $papas[$i]["nombre"] . " (" . $papas[$i]["codigo"] . ")";
+                if ($papas[$i]["estado"] == 0) {
+                    $text .= " - INACTIVO";
+                }
+                if ($permiso[0]["cant"] == 0) {
+                    $text .= " - (Sin permiso)";
+                }
+                $this->objetoXML->startElement("item");
+                $this->objetoXML->writeAttribute("style", "font-family:verdana; font-size:7pt;");
+                $this->objetoXML->writeAttribute("text", $text);
+                $this->objetoXML->writeAttribute("id", "{$papas[$i]["idserie"]}.{$idexp}");
+
+                if ($papas[$i]["tipo"] == 3 && ($papas[$i]["estado"] == 0 || $permiso[0]["cant"] == 0)) {
+                    $this->objetoXML->writeAttribute("nocheckbox", 1);
+                } else {
+                    $this->objetoXML->writeAttribute("nocheckbox", 1);
+                }
+                if ($tipo_docu[0]["cant"]) {
+                    $this->objetoXML->writeAttribute("child", 1);
+                } else {
+                    $this->objetoXML->writeAttribute("child", 0);
+                }
+
+                if ($tipo_docu[0]["cant"]) {
+                    $this->llena_tipo_documental($papas[$i]["idserie"], $idexp);
+                }
+
                 $this->objetoXML->endElement();
             }
         }
@@ -170,6 +205,31 @@ join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" 
                 $this->objetoXML->endElement();
             }
         }
+    }
+
+    public static function expedientes_asignados($conn) {
+        // return "1=1";
+        $idfunc_actual = usuario_actual('idfuncionario');
+
+        $entidades_exp = array(
+            1,
+            2,
+            4
+        );
+        $llaves_exp = array(
+            $idfunc_actual
+        );
+
+        $roles = busca_filtro_tabla("dependencia_iddependencia,cargo_idcargo", "dependencia_cargo a", "a.estado='1' and a.funcionario_idfuncionario=" . $idfunc_actual, "", $conn);
+        $dependencias = extrae_campo($roles, "dependencia_iddependencia");
+        $cargos = extrae_campo($roles, "cargo_idcargo");
+
+        $llaves_exp = array_merge($llaves_exp, $dependencias);
+        $llaves_exp = array_merge($llaves_exp, $cargos);
+
+        $cadena = "ee.entidad_identidad = 1 AND ee.llave_entidad IN ('" . implode("','", $llaves_exp) . "')";
+
+        return ($cadena);
     }
 }
 ?>
