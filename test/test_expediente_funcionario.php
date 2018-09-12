@@ -145,11 +145,8 @@ join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" 
                 $this->objetoXML->writeAttribute("text", $text);
                 $this->objetoXML->writeAttribute("id", "{$papas[$i]["idserie"]}.{$idexp}");
 
-                if ($papas[$i]["tipo"] == 3 && ($papas[$i]["estado"] == 0 || $permiso[0]["cant"] == 0)) {
-                    $this->objetoXML->writeAttribute("nocheckbox", 1);
-                } else {
-                    $this->objetoXML->writeAttribute("nocheckbox", 1);
-                }
+                $this->objetoXML->writeAttribute("nocheckbox", 1);
+
                 if ($tipo_docu[0]["cant"]) {
                     $this->objetoXML->writeAttribute("child", 1);
                 } else {
