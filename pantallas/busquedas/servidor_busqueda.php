@@ -130,13 +130,37 @@ if ($datos_busqueda["numcampos"]) {
 	if ($datos_busqueda[0]["tablas_adicionales"] != '') {
 		$tablas = array_merge((array)$tablas, (array)explode(",", $datos_busqueda[0]["tablas_adicionales"]));
 	}
+
+	$distinct = false;
+
+	if ($datos_busqueda[0]["campos"] != '') {
+	    if(preg_match("/^distinct/i", $datos_busqueda[0]["campos"])) {
+	        $datos_busqueda[0]["campos"] = preg_replace("/^distinct/i", "", $datos_busqueda[0]["campos"]);
+	        if(!$distinct) {
+	            $distinct = true;
+	        }
+	    }
+	}
+
 	if ($datos_busqueda[0]["llave"]) {
-		$select[] = $datos_busqueda[0]["llave"];
+	    if($distinct) {
+	       $select[] = "distinct " . $datos_busqueda[0]["llave"];
+	       $distinct = false;
+	    } else {
+	        $select[] = "distinct " . $datos_busqueda[0]["llave"];
+	    }
 	}
 
 	if ($datos_busqueda[0]["campos"] != '') {
-		$select[] = $datos_busqueda[0]["campos"];
+	    if($distinct) {
+	        $select[] = "distinct " . $datos_busqueda[0]["campos"];
+	        $distinct = false;
+	    } else {
+	        $select[] = $datos_busqueda[0]["campos"];
+	    }
 	}
+
+
 	if ($datos_busqueda[0]["campos_adicionales"] != '') {
 		$select[] = $datos_busqueda[0]["campos_adicionales"];
 	}
