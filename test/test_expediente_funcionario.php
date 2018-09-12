@@ -132,7 +132,6 @@ join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" 
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
                 $permiso = busca_filtro_tabla("count(*) as cant", "vpermiso_serie", "idfuncionario=" . $_SESSION["idfuncionario"] . " and idserie=" . $papas[$i]["idserie"], "", $this->conn);
-                $tipo_docu = busca_filtro_tabla("count(1) as cant", "serie", "tipo=3 and tvd=0 and cod_padre=" . $papas[$i]["idserie"], "", $this->conn);
                 $text = $papas[$i]["nombre"] . " (" . $papas[$i]["codigo"] . ")";
                 if ($papas[$i]["estado"] == 0) {
                     $text .= " - INACTIVO";
@@ -145,16 +144,17 @@ join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" 
                 $this->objetoXML->writeAttribute("text", $text);
                 $this->objetoXML->writeAttribute("id", "{$papas[$i]["idserie"]}.{$idexp}");
 
-                $this->objetoXML->writeAttribute("nocheckbox", 1);
-
-                if ($tipo_docu[0]["cant"]) {
-                    $this->objetoXML->writeAttribute("child", 1);
+                if ($papas[$i]["estado"] == 0 || $permiso[0]["cant"] == 0) {
+                    $this->objetoXML->writeAttribute("nocheckbox", 1);
                 } else {
-                    $this->objetoXML->writeAttribute("child", 0);
-                }
-
-                if ($tipo_docu[0]["cant"]) {
-                    $this->llena_tipo_documental($papas[$i]["idserie"], $idexp);
+                    $tipo_docu = busca_filtro_tabla("count(1) as cant", "serie", "tipo=3 and tvd=0 and cod_padre=" . $papas[$i]["idserie"], "", $this->conn);
+                    if ($tipo_docu[0]["cant"]) {
+                        $this->objetoXML->writeAttribute("nocheckbox", 0);
+                        $this->objetoXML->writeAttribute("child", 1);
+                        $this->llena_tipo_documental($papas[$i]["idserie"], $idexp);
+                    } else {
+                        $this->objetoXML->writeAttribute("child", 0);
+                    }
                 }
 
                 $this->objetoXML->endElement();
@@ -208,11 +208,6 @@ join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" 
         // return "1=1";
         $idfunc_actual = usuario_actual('idfuncionario');
 
-        $entidades_exp = array(
-            1,
-            2,
-            4
-        );
         $llaves_exp = array(
             $idfunc_actual
         );
@@ -224,7 +219,7 @@ join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" 
         $llaves_exp = array_merge($llaves_exp, $dependencias);
         $llaves_exp = array_merge($llaves_exp, $cargos);
 
-        $cadena = "ee.entidad_identidad = 1 AND ee.llave_entidad IN ('" . implode("','", $llaves_exp) . "')";
+        $cadena = "ee.entidad_identidad IN (1, 2, 4) AND ee.llave_entidad IN ('" . implode("','", $llaves_exp) . "')";
 
         return ($cadena);
     }
