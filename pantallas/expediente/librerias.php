@@ -505,15 +505,26 @@ function expedientes_asignados() {
 		//FIN SI TIENE PERMISO Administraci&oacute;n de Archivo & el reporte es Inventario documental
 	}
 
-	$entidades_exp = array(1,2,4);
+	//$entidades_exp = array(1,2,4);
+	$entidades_exp = array(1);
 	$llaves_exp = array($idfunc_actual);
 
 	$roles = busca_filtro_tabla("dependencia_iddependencia,cargo_idcargo", "dependencia_cargo a", "a.estado='1' and a.funcionario_idfuncionario=" . $idfunc_actual, "", $conn);
 	$dependencias = extrae_campo($roles, "dependencia_iddependencia");
 	$cargos = extrae_campo($roles, "cargo_idcargo");
 
-	$llaves_exp = array_merge($llaves_exp, $dependencias);
-	$llaves_exp = array_merge($llaves_exp, $cargos);
+	$funcionarios_d = busca_filtro_tabla("idfuncionario", "vfuncionario_dc a", "a.estado='1' and a.iddependencia IN(" . implode(',', $dependencias) . ")", "", $conn);
+	$funcionarios_c = busca_filtro_tabla("idfuncionario", "vfuncionario_dc a", "a.estado='1' and a.idcargo IN(" . implode(',', $cargos) . ")", "", $conn);
+
+	$func1 = extrae_campo($funcionarios_d, "idfuncionario");
+	$func2 = extrae_campo($funcionarios_c, "idfuncionario");
+
+	$funcionarios = array_merge($func1, $func2);
+	$llaves_exp = array_merge($llaves_exp, $funcionarios);
+	$llaves_exp = array_unique($llaves_exp);
+
+	//$llaves_exp = array_merge($llaves_exp, $dependencias);
+	//$llaves_exp = array_merge($llaves_exp, $cargos);
 
 	$cadena = "(a.identidad_exp IN ('" . implode("','", $entidades_exp) . "') AND a.llave_exp IN ('" . implode("','", $llaves_exp) . "'))";
 
