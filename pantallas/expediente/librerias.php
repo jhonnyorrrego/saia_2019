@@ -511,11 +511,18 @@ function expedientes_asignados() {
 	$roles = busca_filtro_tabla("dependencia_iddependencia,cargo_idcargo", "dependencia_cargo a", "a.estado='1' and a.funcionario_idfuncionario=" . $idfunc_actual, "", $conn);
 	$dependencias = extrae_campo($roles, "dependencia_iddependencia");
 	$cargos = extrae_campo($roles, "cargo_idcargo");
-
+	
 	$llaves_exp = array_merge($llaves_exp, $dependencias);
 	$llaves_exp = array_merge($llaves_exp, $cargos);
+	$cadena_serie = "(entidad_identidad IN ('" . implode("','", $entidades_exp) . "') AND llave_entidad IN ('" . implode("','", $llaves_exp) . "'))"; 
 
-	$cadena = "(a.identidad_exp IN ('" . implode("','", $entidades_exp) . "') AND a.llave_exp IN ('" . implode("','", $llaves_exp) . "'))";
+	$permisos_serie=busca_filtro_tabla("serie_idserie","permiso_serie",$cadena_serie,"",$conn);
+	$series = extrae_campo($permisos_serie, "serie_idserie");
+	$cadena_series_sql='';
+	if(count($series)){
+		$cadena_series_sql="or (serie_idserie IN('".implode("','",$series)."'))";
+	}
+	$cadena = "((a.identidad_exp IN ('" . implode("','", $entidades_exp) . "') AND a.llave_exp IN ('" . implode("','", $llaves_exp) . "')) ".$cadena_series_sql.")";
 
 	return ($cadena);
 }
