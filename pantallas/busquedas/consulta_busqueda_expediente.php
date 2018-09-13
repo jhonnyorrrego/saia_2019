@@ -198,15 +198,26 @@ $(document).ready(function(){
       carga_final=1;
     }
   }
-  function cargar_datos_scroll(){
+  function cargar_datos_scroll() {
     $('#loadmoreajaxloader').html("Cargando");
     $.ajax({
       type:'POST',
       url: "servidor_busqueda.php",
-      data: "idbusqueda_componente=<?php echo($idbusqueda_componente);?>&page="+$("#busqueda_pagina").val()+"&rows="+$("#busqueda_registros").val()+"&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>&actual_row="+$("#fila_actual").val()+"&variable_busqueda="+$("#variable_busqueda").val()+"&idexpediente=<?php echo($idexpediente);?>&idcaja=<?php echo($_REQUEST["idcaja"]);?>",
+      data: {
+          idbusqueda_componente: "<?php echo($idbusqueda_componente);?>",
+          page: $("#busqueda_pagina").val(),
+          rows: $("#busqueda_registros").val(),
+          idbusqueda_filtro_temp: "<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>",
+          idbusqueda_filtro: "<?php echo(@$_REQUEST['idbusqueda_filtro']);?>",
+          idbusqueda_temporal: "<?php echo (@$_REQUEST['idbusqueda_temporal']);?>",
+          actual_row: $("#fila_actual").val(),
+          variable_busqueda: $("#variable_busqueda").val(),
+          idexpediente: "<?php echo($idexpediente);?>",
+          idcaja: "<?php echo($_REQUEST["idcaja"]);?>"
+      },
       dataType:'json',
       success: function(objeto){
-          if(objeto.exito){
+          if(objeto && objeto.exito){
 	          $("#busqueda_pagina").val(objeto.page);
 	          $("#busqueda_total_paginas").val(objeto.total);
 	          $("#fila_actual").val(objeto.actual_row);
