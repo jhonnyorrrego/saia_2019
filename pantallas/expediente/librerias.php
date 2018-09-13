@@ -83,28 +83,36 @@ function enlace_expediente($idexpediente, $nombre) {
     if($expediente_actual[0]["agrupador"]) {
         $icono_expediente = "icon-bookmark";
     }
-    if ($expediente_actual[0]["propietario"] == $_SESSION["usuario_actual"]) {
-        $m = 1;
-        $e = 1;
-        $p = 1;
-        $l = 1;
-    } else {
+    $m = 1;
+    $e = 1;
+    $p = 1;
+    $l = 1;
+    if ($expediente_actual[0]["propietario"] != $_SESSION["usuario_actual"]) {
         $permiso = busca_filtro_tabla("permiso", "entidad_expediente", "expediente_idexpediente=" . $idexpediente . " AND entidad_identidad=1 and estado=1 and llave_entidad=" . usuario_actual("idfuncionario"), "", $conn);
-        if ($permiso["numcampos"] && $permiso[0]["permiso"] != "") {
+        if ($permiso["numcampos"] && !empty($permiso[0]["permiso"])) {
             $m = strpos($permiso[0]["permiso"], "m");
             $e = strpos($permiso[0]["permiso"], "e");
             $p = strpos($permiso[0]["permiso"], "p");
-        } else {
-            $estilo_expediente = ' style="opacity: 0.40;"';
         }
-        $l = $permiso["numcampos"] > 0;
+        $l = $permiso["numcampos"];
+        if(!$l) {
+            $estilo_expediente = ' style="opacity: 0.40;"';
+            $icono_expediente = "icon-folder-close";
+        }
     }
+    $a_html = array();
     if($l) {
-    return ("<div style='' class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?$req_parms' conector='iframe' titulo='$nombre'><table><tr><td style='font-size:12px;'> <i class='$icono_expediente pull-left' $estilo_expediente></i>&nbsp;<b>$nombre</b>&nbsp$cadena_tomos</td></tr></table></div>");
+        $a_html[] = '<div class="link kenlace_saia" enlace="pantallas/busquedas/consulta_busqueda_expediente.php?' . $req_parms . '" conector="iframe" titulo="' . $nombre . '">';
+        $a_html[] = '<table><tr><td style="font-size:12px;">';
+        $a_html[] = "<i class='$icono_expediente pull-left' $estilo_expediente></i>&nbsp;";
+        $a_html[] = "<b>$nombre</b>&nbsp$cadena_tomos</td></tr></table></div>";
     } else {
-        return ("<div><table><tr><td style='font-size:12px;'> <i class='icon-folder-open pull-left' ></i>&nbsp;<b>" . $nombre . "</b>&nbsp;" . $cadena_tomos . "</td></tr></table></div>");
-
+        $a_html[] = "<div><table><tr><td style='font-size:12px;'>";
+        $a_html[] = "<i class='$icono_expediente pull-left' $estilo_expediente></i>&nbsp;";
+        $a_html[] = "<b>$nombre</b>&nbsp;" . $cadena_tomos;
+        $a_html[] = "</td></tr></table></div>";
     }
+    return implode("", $a_html);
 }
 
 function request_expediente_padre() {
@@ -497,15 +505,26 @@ function expedientes_asignados() {
 		//FIN SI TIENE PERMISO Administraci&oacute;n de Archivo & el reporte es Inventario documental
 	}
 
-	$entidades_exp = array(1,2,4);
+	//$entidades_exp = array(1,2,4);
+	$entidades_exp = array(1);
 	$llaves_exp = array($idfunc_actual);
 
 	$roles = busca_filtro_tabla("dependencia_iddependencia,cargo_idcargo", "dependencia_cargo a", "a.estado='1' and a.funcionario_idfuncionario=" . $idfunc_actual, "", $conn);
 	$dependencias = extrae_campo($roles, "dependencia_iddependencia");
 	$cargos = extrae_campo($roles, "cargo_idcargo");
 
-	$llaves_exp = array_merge($llaves_exp, $dependencias);
-	$llaves_exp = array_merge($llaves_exp, $cargos);
+	$funcionarios_d = busca_filtro_tabla("idfuncionario", "vfuncionario_dc a", "a.estado='1' and a.iddependencia IN(" . implode(',', $dependencias) . ")", "", $conn);
+	$funcionarios_c = busca_filtro_tabla("idfuncionario", "vfuncionario_dc a", "a.estado='1' and a.idcargo IN(" . implode(',', $cargos) . ")", "", $conn);
+
+	$func1 = extrae_campo($funcionarios_d, "idfuncionario");
+	$func2 = extrae_campo($funcionarios_c, "idfuncionario");
+
+	$funcionarios = array_merge($func1, $func2);
+	$llaves_exp = array_merge($llaves_exp, $funcionarios);
+	$llaves_exp = array_unique($llaves_exp);
+
+	//$llaves_exp = array_merge($llaves_exp, $dependencias);
+	//$llaves_exp = array_merge($llaves_exp, $cargos);
 
 	$cadena = "(a.identidad_exp IN ('" . implode("','", $entidades_exp) . "') AND a.llave_exp IN ('" . implode("','", $llaves_exp) . "'))";
 
@@ -547,23 +566,37 @@ function arreglo_expedientes_asignados() {
 	$dependencias = extrae_campo($roles, "dependencia_iddependencia");
 	$cargos = extrae_campo($roles, "cargo_idcargo");
 
+	$funcionarios_d = busca_filtro_tabla("idfuncionario", "vfuncionario_dc a", "a.estado='1' and a.iddependencia IN(" . implode(',', $dependencias) . ")", "", $conn);
+	$funcionarios_c = busca_filtro_tabla("idfuncionario", "vfuncionario_dc a", "a.estado='1' and a.idcargo IN(" . implode(',', $cargos) . ")", "", $conn);
+
+	$func1 = extrae_campo($funcionarios_d, "idfuncionario");
+	$func2 = extrae_campo($funcionarios_c, "idfuncionario");
+
+	$funcionarios = array_merge($func1, $func2);
+	$funcionarios[] = usuario_actual("idfuncionario");
+	$funcionarios = array_unique($funcionarios);
+
 	$asignacion_expediente = busca_filtro_tabla("A.expediente_idexpediente", "entidad_expediente A", "A.estado=1 AND((entidad_identidad=1 AND llave_entidad='" . usuario_actual("idfuncionario") . "') or (entidad_identidad=2 AND llave_entidad in ('" . implode("','", $dependencias) . "')) or (entidad_identidad=4 AND llave_entidad in('" . implode("','", $cargos) . "')))", "", $conn);
 
 	if(isset($_REQUEST['variable_busqueda'])) {
 	   $where_estado_archivo = " AND estado_archivo=" . $_REQUEST['variable_busqueda'];
 	}
 
-	$expedientes_serie = busca_filtro_tabla("A.idexpediente", "expediente A, serie B, entidad_serie C", "A.serie_idserie=B.idserie AND B.idserie=C.serie_idserie AND B.estado=1 AND ((C.entidad_identidad=1 AND C.llave_entidad='" . usuario_actual("idfuncionario") . "') or (C.entidad_identidad=2 AND C.llave_entidad in ('" . implode("','", $dependencias) . "')) or (C.entidad_identidad=4 AND C.llave_entidad in('" . implode("','", $cargos) . "')))" . $where_estado_archivo, "", $conn);
-
+	$expedientes_serie = busca_filtro_tabla("A.idexpediente",
+	    "expediente A JOIN serie B ON A.serie_idserie=B.idserie JOIN permiso_serie C ON B.idserie=C.serie_idserie",
+	    "B.estado=1 AND C.entidad_identidad=1 AND C.llave_entidad in (" . implode(",", $funcionarios) . ") $where_estado_archivo", "", $conn);
 	$array_expedientes_serie = extrae_campo($expedientes_serie, "idexpediente");
 
-	$expedientes_serie_negado = busca_filtro_tabla("A.idexpediente", "expediente A, serie B, entidad_serie C", "A.serie_idserie=B.idserie AND B.idserie=C.serie_idserie AND B.estado=1 AND C.estado=2 AND ((C.entidad_identidad=1 AND C.llave_entidad='" . usuario_actual("idfuncionario") . "') or (C.entidad_identidad=2 AND C.llave_entidad in ('" . implode("','", $dependencias) . "')) or (C.entidad_identidad=4 AND C.llave_entidad in('" . implode("','", $cargos) . "')))" . $where_estado_archivo, "", $conn);
+	$expedientes_serie_negado = busca_filtro_tabla("A.idexpediente",
+	    "expediente A JOIN serie B ON A.serie_idserie=B.idserie JOIN permiso_serie C ON B.idserie=C.serie_idserie",
+	    "B.estado=1 AND C.estado=2 AND C.entidad_identidad=2 AND C.llave_entidad in (" . implode(",", $funcionarios) . ") $where_estado_archivo", "", $conn);
 	$array_expedientes_serie_negado = extrae_campo($expedientes_serie_negado, "idexpediente");
 
 	$series_asignadas = array_diff($array_expedientes_serie, $array_expedientes_serie_negado);
 
 	$lista = extrae_campo($asignacion_expediente, "expediente_idexpediente");
 	$lista = array_merge($lista, $series_asignadas);
+
 	return ($lista);
 }
 

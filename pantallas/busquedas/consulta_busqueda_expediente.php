@@ -170,7 +170,7 @@ $(document).ready(function(){
   var alto_inicial=($(window).height()-espacio_menu);
   var carga_final=false;
   var contador=1;
-  var forma_cargar=<?php echo($datos_busqueda[0]["cargar"]);?>;
+  var forma_cargar=<?php echo(!empty($datos_busqueda[0]["cargar"]) ? $datos_busqueda[0]["cargar"] : 0);?>;
   $("#resultado_20").click(function(){
     $("#busqueda_registros").val("20");
     cargar_datos_scroll();
@@ -198,15 +198,26 @@ $(document).ready(function(){
       carga_final=1;
     }
   }
-  function cargar_datos_scroll(){
+  function cargar_datos_scroll() {
     $('#loadmoreajaxloader').html("Cargando");
     $.ajax({
       type:'POST',
       url: "servidor_busqueda.php",
-      data: "idbusqueda_componente=<?php echo($idbusqueda_componente);?>&page="+$("#busqueda_pagina").val()+"&rows="+$("#busqueda_registros").val()+"&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>&actual_row="+$("#fila_actual").val()+"&variable_busqueda="+$("#variable_busqueda").val()+"&idexpediente=<?php echo($idexpediente);?>&idcaja=<?php echo($_REQUEST["idcaja"]);?>",
+      data: {
+          idbusqueda_componente: "<?php echo($idbusqueda_componente);?>",
+          page: $("#busqueda_pagina").val(),
+          rows: $("#busqueda_registros").val(),
+          idbusqueda_filtro_temp: "<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>",
+          idbusqueda_filtro: "<?php echo(@$_REQUEST['idbusqueda_filtro']);?>",
+          idbusqueda_temporal: "<?php echo (@$_REQUEST['idbusqueda_temporal']);?>",
+          actual_row: $("#fila_actual").val(),
+          variable_busqueda: $("#variable_busqueda").val(),
+          idexpediente: "<?php echo($idexpediente);?>",
+          idcaja: "<?php echo($_REQUEST["idcaja"]);?>"
+      },
       dataType:'json',
       success: function(objeto){
-          if(objeto.exito){
+          if(objeto && objeto.exito){
 	          $("#busqueda_pagina").val(objeto.page);
 	          $("#busqueda_total_paginas").val(objeto.total);
 	          $("#fila_actual").val(objeto.actual_row);
