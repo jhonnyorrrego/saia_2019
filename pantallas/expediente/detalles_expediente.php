@@ -110,7 +110,41 @@ $expediente = busca_filtro_tabla("a.*," . fecha_db_obtener("a.fecha", "Y-m-d") .
 
   <?php
       if($expediente[0]["agrupador"]){
-
+      	?>
+		 <tr>
+		  	<td class="prettyprint"><b>Responsable del expediente:</b></td>
+		  	<td colspan="3">
+		  	<?php
+		if ($expediente[0]["propietario"]) {
+		    $nombres = busca_filtro_tabla("", "funcionario A", "A.funcionario_codigo=" . $expediente[0]["propietario"], "", $conn);
+		    echo (ucwords(strtolower($nombres[0]["nombres"] . " " . $nombres[0]["apellidos"])));
+		} else {
+		    echo ("<span style='color:red'>Expediente creado por el sistema</span>");
+		}
+		$configuracion_administrador = busca_filtro_tabla("valor", "configuracion", "nombre='login_administrador'", "", $conn);
+		
+		if (($expediente[0]["propietario"] == @$_SESSION['usuario_actual']) || (!$expediente[0]["propietario"] && $configuracion_administrador[0]["valor"] == @$_SESSION['LOGIN' . LLAVE_SAIA])) {
+		  	?>
+		          	&nbsp; &nbsp; &nbsp;
+		  		    <button class='btn btn-mini btn-default cambiar_responsable_expediente'>
+		  		        <i class='icon-user' title='Cambiar Responsable'></i>
+		  		    </button>
+		  		    <script>
+		  		        $(document).ready(function(){
+		  		            $('.cambiar_responsable_expediente').click(function(){
+		                         var enlace='<?php echo($ruta_db_superior); ?>pantallas/expediente/cambiar_responsable_expediente.php?idexpediente=<?php echo($idexpediente); ?>';
+		                        hs.htmlExpand(this, { objectType: 'iframe',width: 400, height: 200,contentId:'cuerpo_paso', 		preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
+		  		            });
+		  		        });
+		  		    </script>
+		
+		  	<?php
+		  	    } //fin if  $expediente[0]["propietario"] == @$_SESSION['usuario_actual']
+		  	?>
+		
+		  	</td>
+		  </tr>
+		  <?php
         echo('</table></div></div>');
         echo('
         <script>

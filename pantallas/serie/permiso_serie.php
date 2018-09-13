@@ -12,7 +12,11 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once ($ruta_db_superior . "header.php");
+echo librerias_jquery("1.8");
 echo(librerias_notificaciones());
+echo librerias_validar_formulario("11");
+echo librerias_arboles();
+
 $idserie = null;
 $idserie_padre = null;
 $tipo_entidad = null;
@@ -66,10 +70,6 @@ $option = '<option value="">Seleccione</option>
     }
 }*/
 
-include_once ($ruta_db_superior . "librerias_saia.php");
-echo librerias_jquery("1.8");
-echo librerias_validar_formulario("11");
-echo librerias_arboles();
 ?>
 
 <h3>Permisos sobre series</h3>
@@ -119,14 +119,16 @@ var entidades = <?php echo json_encode($entidades) ?>;
 			$("#tipo_entidad").trigger("change");
 		}
 
-		url2="test/test_serie.php?tipo1=0&tipo2=0&tvd=0&estado=1";
+		//url2="test/test_serie.php?tipo1=0&tipo2=0&tvd=0&estado=1";
+		url2="test/test_serie.php?tipo1=0&tipo2=&tvd=0&estado=1";
 		if(idserie > 0) {
-			url2 = url2 + '&id=' + idserie_padre;
+			//url2 = url2 + '&id=' + idserie_padre;
+			url2 = url2 + '&id=' + idserie;
 			//url2 = url2 + '&seleccionados=' + idserie;
 		}
 		if(series_seleccionadas != '') {
 			url2 = url2 + '&seleccionados=' + series_seleccionadas;
-		}
+		}		
 		$.ajax({
 			//url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
 			url:"buscar_datos_serie.php",
@@ -137,6 +139,7 @@ var entidades = <?php echo json_encode($entidades) ?>;
 			success : function(html_serie) {
 				var serie = JSON.parse(html_serie);
 				$("#divserie").empty().html(serie["nombre"]);
+				//$("#divserie").empty().html(html_serie);
 			},error: function (){
 				top.noty({text: 'No se pudo cargar el arbol de series',type: 'error',layout: 'topCenter',timeout:5000});
 			}
@@ -231,7 +234,7 @@ var entidades = <?php echo json_encode($entidades) ?>;
                     var mensaje='<b>ATENCI&Oacute;N</b><br>Se ha retirado el permiso a la serie';
                     if(retorno.accion==1){
                         tipo='success';
-                        mensaje='<b>ATENCI&Oacute;N</b><br>Se ha adicionado el permiso a la serie';
+                        mensaje='<b>ATENCI&Oacute;N</b><br>Se ha asignado el permiso exitosamente';
                     }
                     notificacion_saia(mensaje,tipo,"topRight",3000);
                 }

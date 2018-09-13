@@ -124,8 +124,34 @@ switch ($sAction) {
 	            1 => ""
 	        );
 	        $seleccion[$x_seleccion] = "checked";
+			//buscar la dependencia asignada
+			$buscar_asignacion = busca_filtro_tabla("", "entidad_serie", "entidad_identidad=2 and serie_idserie=" . $sKey, "", $conn);			
+			$dependencia_seleccionada1=array();
+			if($buscar_asignacion["numcampos"]){
+				for($i=0;$i<$buscar_asignacion["numcampos"];$i++){
+					$dependencia_seleccionada1[]=$buscar_asignacion[$i]["llave_entidad"];
+				}
+				$dependencia_seleccionada = implode(",",$dependencia_seleccionada1);
+			}
+			//buscar la dependencia asignada
+			$buscar_asignacion = busca_filtro_tabla("", "entidad_serie", "entidad_identidad=2 and serie_idserie=" . $sKey, "", $conn);			
+			$dependencia_seleccionada1=array();
+			if($buscar_asignacion["numcampos"]){
+				for($i=0;$i<$buscar_asignacion["numcampos"];$i++){
+					$dependencia_seleccionada1[]=$buscar_asignacion[$i]["llave_entidad"];
+				}
+				$dependencia_seleccionada = implode(",",$dependencia_seleccionada1);
+			}
+			
+			//buscar permisos asociados a la serie
+			$entidades=array();
+			$buscar_permisos = busca_filtro_tabla("", "permiso_serie", "estado=1 and serie_idserie=".$sKey, "", $conn);
+			if($buscar_permisos["numcampos"]){
+				for($i=0;$i<$buscar_permisos["numcampos"];$i++){
+					$entidades[$buscar_permisos[$i]["entidad_identidad"]][]=$buscar_permisos[$i]["llave_entidad"];					
+				}				
+			}
         }
-
         break;
 }
 
@@ -515,7 +541,8 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 
 	$(document).ready(function() {
 		xml1="test/test_dependencia.php";
-		var dependencia_seleccionada="";
+		var dependencia_seleccionada="<?php echo $dependencia_seleccionada; ?>";
+		var entidades = <?php echo json_encode($entidades) ?>;		
 		cargar_arbol_dependencias(xml1,dependencia_seleccionada);		
 		var dependencia_seleccionadas=0;
 		if(identidad > 0) {
@@ -686,9 +713,25 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 		});
 		$("#tipo_entidad").change(function () {
 			option=$(this).val();
+			var entidades_seleccionadas='';
 			if(option != "") {
+				if(!$.isEmptyObject(entidades)){
+					if(entidades[option]){
+						entidades_seleccionadas=entidades[option].join(',');
+					}
+				}
+				if(identidad && identidad > 0) {
+					if(entidades_seleccionadas==''){
+						entidades_seleccionadas=identidad;
+					}
+					else{
+						entidades_seleccionadas = entidades_seleccionadas + ',' + identidad;
+					}
+				}
+				//url1="";
+			//if(option != "") {
 				url1="";
-				switch(option) {
+				/*switch(option) {
 					case '1'://Funcionario
 					//url1="test/test_funcionario.php";
 					url1="test.php?rol=1";
@@ -711,6 +754,31 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 						if(identidad > 0) {
 							url1  = url1 + '&seleccionados=' + identidad;
 						}
+						check=0;
+					break;
+				}*/
+				switch(option) {
+					case '1'://Funcionario
+					url1="test/test_funcionario.php?idcampofun=funcionario_codigo";					
+					//url1="test.php?rol=1";						
+						url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
+					//}
+					check=1;
+					break;
+
+					case '2'://Dependencia
+						url1="test/test_dependencia.php?estado=1";
+						//if(identidad > 0) {
+							url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
+						//}
+						check=0;
+					break;
+
+					case '4'://Cargo
+						url1="test/test_cargo.php?estado=1";
+						//if(identidad > 0) {
+							url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
+						//}
 						check=0;
 					break;
 				}
