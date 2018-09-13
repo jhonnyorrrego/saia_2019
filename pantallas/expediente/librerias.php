@@ -83,28 +83,36 @@ function enlace_expediente($idexpediente, $nombre) {
     if($expediente_actual[0]["agrupador"]) {
         $icono_expediente = "icon-bookmark";
     }
-    if ($expediente_actual[0]["propietario"] == $_SESSION["usuario_actual"]) {
-        $m = 1;
-        $e = 1;
-        $p = 1;
-        $l = 1;
-    } else {
+    $m = 1;
+    $e = 1;
+    $p = 1;
+    $l = 1;
+    if ($expediente_actual[0]["propietario"] != $_SESSION["usuario_actual"]) {
         $permiso = busca_filtro_tabla("permiso", "entidad_expediente", "expediente_idexpediente=" . $idexpediente . " AND entidad_identidad=1 and estado=1 and llave_entidad=" . usuario_actual("idfuncionario"), "", $conn);
-        if ($permiso["numcampos"] && $permiso[0]["permiso"] != "") {
+        if ($permiso["numcampos"] && !empty($permiso[0]["permiso"])) {
             $m = strpos($permiso[0]["permiso"], "m");
             $e = strpos($permiso[0]["permiso"], "e");
             $p = strpos($permiso[0]["permiso"], "p");
-        } else {
-            $estilo_expediente = ' style="opacity: 0.40;"';
         }
-        $l = $permiso["numcampos"] > 0;
+        $l = $permiso["numcampos"];
+        if(!$l) {
+            $estilo_expediente = ' style="opacity: 0.40;"';
+            $icono_expediente = "icon-folder-close";
+        }
     }
+    $a_html = array();
     if($l) {
-    return ("<div style='' class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?$req_parms' conector='iframe' titulo='$nombre'><table><tr><td style='font-size:12px;'> <i class='$icono_expediente pull-left' $estilo_expediente></i>&nbsp;<b>$nombre</b>&nbsp$cadena_tomos</td></tr></table></div>");
+        $a_html[] = '<div class="link kenlace_saia" enlace="pantallas/busquedas/consulta_busqueda_expediente.php?$req_parms" conector="iframe" titulo="' . $nombre . '">';
+        $a_html[] = '<table><tr><td style="font-size:12px;">';
+        $a_html[] = "<i class='$icono_expediente pull-left' $estilo_expediente></i>&nbsp;";
+        $a_html[] = "<b>$nombre</b>&nbsp$cadena_tomos</td></tr></table></div>";
     } else {
-        return ("<div><table><tr><td style='font-size:12px;'> <i class='icon-folder-open pull-left' ></i>&nbsp;<b>" . $nombre . "</b>&nbsp;" . $cadena_tomos . "</td></tr></table></div>");
-
+        $a_html[] = "<div><table><tr><td style='font-size:12px;'>";
+        $a_html[] = "<i class='$icono_expediente pull-left' $estilo_expediente></i>&nbsp;";
+        $a_html[] = "<b>$nombre</b>&nbsp;" . $cadena_tomos;
+        $a_html[] = "</td></tr></table></div>";
     }
+    return implode("", $a_html);
 }
 
 function request_expediente_padre() {
