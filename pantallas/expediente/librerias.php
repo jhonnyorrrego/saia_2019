@@ -102,7 +102,7 @@ function enlace_expediente($idexpediente, $nombre) {
     }
     $a_html = array();
     if($l) {
-        $a_html[] = '<div class="link kenlace_saia" enlace="pantallas/busquedas/consulta_busqueda_expediente.php?$req_parms" conector="iframe" titulo="' . $nombre . '">';
+        $a_html[] = '<div class="link kenlace_saia" enlace="pantallas/busquedas/consulta_busqueda_expediente.php?' . $req_parms . '" conector="iframe" titulo="' . $nombre . '">';
         $a_html[] = '<table><tr><td style="font-size:12px;">';
         $a_html[] = "<i class='$icono_expediente pull-left' $estilo_expediente></i>&nbsp;";
         $a_html[] = "<b>$nombre</b>&nbsp$cadena_tomos</td></tr></table></div>";
