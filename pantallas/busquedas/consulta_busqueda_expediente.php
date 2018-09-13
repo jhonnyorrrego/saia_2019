@@ -170,7 +170,7 @@ $(document).ready(function(){
   var alto_inicial=($(window).height()-espacio_menu);
   var carga_final=false;
   var contador=1;
-  var forma_cargar=<?php echo($datos_busqueda[0]["cargar"]);?>;
+  var forma_cargar=<?php echo(!empty($datos_busqueda[0]["cargar"]) ? $datos_busqueda[0]["cargar"] : 0);?>;
   $("#resultado_20").click(function(){
     $("#busqueda_registros").val("20");
     cargar_datos_scroll();
