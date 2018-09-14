@@ -40,32 +40,67 @@ class Version20180913144032 extends AbstractMigration {
         if (!empty($result)) {
             $idfmt = $result[0]["idformato"];
 
-            $result = $conn->fetchAll("select idcampos_formato from campos_formato where formato_idformato = :formato_idformato AND nombre = :nombre", [
-                "formato_idformato" => $idfmt,
-                "nombre" => "fk_idexpediente"
-            ]);
+            $this->actualizar_campo($schema, $idfmt);
 
-            if (!empty($result)) {
-                $conn->beginTransaction();
-
-                $datos = [
-                    'valor' => null,
-                    'etiqueta_html' => "hidden"
-                ];
-                $ident = [
-                    'idcampos_formato' => $result[0]["idcampos_formato"]
-                ];
-
-                $resp = $conn->update('campos_formato', $datos, $ident);
-
-                if (empty($resp)) {
-                    $conn->rollBack();
-                    print_r($conn->errorInfo());
-                    die("Fallo la modificacion del campo_formato");
-                }
-                $conn->commit();
-            }
+            $this->actualizar_funcion($schema, $idfmt);
         }
+    }
+
+    private function actualizar_campo(Schema $schema, $idfmt) {
+        $conn = $this->connection;
+        $result = $conn->fetchAll("select idcampos_formato from campos_formato where formato_idformato = :formato_idformato AND nombre = :nombre", [
+            "formato_idformato" => $idfmt,
+            "nombre" => "fk_idexpediente"
+        ]);
+
+        if (!empty($result)) {
+            $conn->beginTransaction();
+
+            $datos = [
+                'valor' => null,
+                'etiqueta_html' => "hidden"
+            ];
+            $ident = [
+                'idcampos_formato' => $result[0]["idcampos_formato"]
+            ];
+
+            $resp = $conn->update('campos_formato', $datos, $ident);
+
+            if (empty($resp)) {
+                $conn->rollBack();
+                print_r($conn->errorInfo());
+                die("Fallo la modificacion del campo_formato");
+            }
+            $conn->commit();
+        }
+
+    }
+
+    private function actualizar_funcion(Schema $schema, $idfmt) {
+        $conn = $this->connection;
+
+        $result = $conn->fetchAll("select idfunciones_formato from funciones_formato where nombre_funcion = :nombre_funcion", [
+            "nombre_funcion" => "fk_idexpediente_funcion"
+        ]);
+
+        if (!empty($result)) {
+            $conn->beginTransaction();
+
+            $ident = [
+                'funciones_formato_fk' => $result[0]["idfunciones_formato"],
+                "formato_idformato" => $idfmt
+            ];
+
+            $resp = $conn->delete('funciones_formato_enlace', $ident);
+
+            if (empty($resp)) {
+                $conn->rollBack();
+                print_r($conn->errorInfo());
+                die("Fallo la eliminacion de la funcion para el formato");
+            }
+            $conn->commit();
+        }
+
     }
 
     public function preDown(Schema $schema) {
