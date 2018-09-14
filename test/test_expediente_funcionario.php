@@ -17,6 +17,7 @@ if ($_GET["id"]) {
 }
 
 $condicion_ad = '';
+$idexpediente = 0;
 
 // DEFAULT DATOS
 $condicion_ad = " and " . DHtmlXtreeExpedienteFunc::expedientes_asignados($conn);
@@ -36,6 +37,7 @@ if (@$_REQUEST['estado_cierre']) {
 
 if (isset($_REQUEST["idexpediente"])) {
     $condicion_ad .= " and e.idexpediente = " . $_REQUEST["idexpediente"];
+    $idexpediente = $_REQUEST["idexpediente"];
 }
 
 $seleccionados = array();
@@ -50,7 +52,7 @@ if (stristr($_SERVER["HTTP_ACCEPT"], "application/xhtml+xml")) {
     header("Content-type: text/xml");
 }
 
-$arbol = new DHtmlXtreeExpedienteFunc($conn, $condicion_ad, $seleccionados);
+$arbol = new DHtmlXtreeExpedienteFunc($conn, $condicion_ad, $idexpediente, $seleccionados);
 echo $arbol->generarXml($id);
 
 class DHtmlXtreeExpedienteFunc {
@@ -63,10 +65,13 @@ class DHtmlXtreeExpedienteFunc {
 
     private $seleccionados;
 
-    public function __construct($conn, $condicion_ad, $seleccionados) {
+    private $idexpediente;
+
+    public function __construct($conn, $condicion_ad, $idexpediente, $seleccionados) {
         $this->conn = $conn;
         $this->condicion_ad = $condicion_ad;
         $this->seleccionados = $seleccionados;
+        $this->idexpediente = $idexpediente;
     }
 
     public function generarXml($id = 0) {
@@ -76,7 +81,7 @@ class DHtmlXtreeExpedienteFunc {
         $this->objetoXML->setIndentString("\t");
         $this->objetoXML->startDocument('1.0', 'utf-8');
         $this->objetoXML->startElement("tree");
-        $this->objetoXML->writeAttribute("id", $id);
+        $this->objetoXML->writeAttribute("id", 0);
         $this->llena_expediente($id);
         $this->objetoXML->endElement();
         $this->objetoXML->endDocument();
@@ -85,17 +90,26 @@ class DHtmlXtreeExpedienteFunc {
     }
 
     private function llena_expediente($id) {
-        if ($id == 0) {
+        if($this->idexpediente) {
             $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "entidad_expediente ee
-join expediente e on ee.expediente_idexpediente = e.idexpediente", "(cod_padre=0 or cod_padre is null)" . $this->condicion_ad, "nombre ASC", $this->conn);
+                join expediente e on ee.expediente_idexpediente = e.idexpediente", "e.idexpediente=" . $this->idexpediente, "nombre ASC", $this->conn);
+        } else if ($id == 0) {
+            $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "entidad_expediente ee
+            join expediente e on ee.expediente_idexpediente = e.idexpediente", "(cod_padre=0 or cod_padre is null)" . $this->condicion_ad, "nombre ASC", $this->conn);
         } else {
             $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "entidad_expediente ee
-join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" . $id . $this->condicion_ad, "nombre ASC", $this->conn);
+                join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" . $id . $this->condicion_ad, "nombre ASC", $this->conn);
         }
 
+        //print_r($papas);
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
-                $con_permiso = true;
+                $exp = busca_filtro_tabla("", "expediente", "idexpediente = " . $papas[$i]["idexpediente"], "", $this->conn);
+                $agrupador = 0;
+                if($exp["numcampos"]) {
+                    $agrupador = $exp[0]["agrupador"];
+                }
+
                 $text = $papas[$i]["nombre"] . " (" . $papas[$i]["codigo_numero"] . ")";
                 if ($papas[$i]["estado_cierre"] == 2) {
                     $text .= " - CERRADO";
@@ -115,13 +129,11 @@ join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" 
                 } else {
                     $this->objetoXML->writeAttribute("child", 0);
                 }
-                if ($con_permiso) {
-                    if ($hijos[0]["cant"]) {
-                        $this->llena_expediente($papas[$i]["idexpediente"]);
-                    }
-
-                    $this->llena_subserie($papas[$i]["serie_idserie"], $papas[$i]["idexpediente"]);
+                if ($hijos[0]["cant"]) {
+                    $this->llena_expediente($papas[$i]["idexpediente"]);
                 }
+
+                $this->llena_subserie($papas[$i]["serie_idserie"], $papas[$i]["idexpediente"]);
                 $this->objetoXML->endElement();
             }
         }
