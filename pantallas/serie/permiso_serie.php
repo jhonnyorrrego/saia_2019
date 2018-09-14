@@ -231,7 +231,7 @@ var entidades = <?php echo json_encode($entidades) ?>;
                 data:{serie:serie,tipo_entidad:tipo_entidad,id:id,accion:accion},
                 success: function(retorno){
                     var tipo='warning';
-                    var mensaje='<b>ATENCI&Oacute;N</b><br>Se ha retirado el permiso a la serie';
+                    var mensaje='<b>ATENCI&Oacute;N</b><br>Se ha retirado el permiso exitosamente';
                     if(retorno.accion==1){
                         tipo='success';
                         mensaje='<b>ATENCI&Oacute;N</b><br>Se ha asignado el permiso exitosamente';

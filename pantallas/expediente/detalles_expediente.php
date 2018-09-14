@@ -47,6 +47,7 @@ $expediente = busca_filtro_tabla("a.*," . fecha_db_obtener("a.fecha", "Y-m-d") .
 	$m = 0;
 	$e = 0;
 	$p = 0;
+	$l = 0;
 
 	if ($expediente[0]["propietario"] == $_SESSION["usuario_actual"]) {
 		$m = 1;
@@ -54,19 +55,22 @@ $expediente = busca_filtro_tabla("a.*," . fecha_db_obtener("a.fecha", "Y-m-d") .
 		$p = 1;
 	} else {
 		$permiso = busca_filtro_tabla("permiso", "entidad_expediente", "expediente_idexpediente=" . $idexpediente . " AND entidad_identidad=1 and estado=1 and llave_entidad=" . usuario_actual("idfuncionario"), "", $conn);
-		if ($permiso["numcampos"] && $permiso[0]["permiso"] != "") {
-			if (strpos($permiso[0]["permiso"], "m") !== false) {
-				$m = 1;
+		if ($permiso["numcampos"]) {
+			if($permiso[0]["permiso"] != "") {
+				if (strpos($permiso[0]["permiso"], "m") !== false) {
+					$m = 1;
+				}
+				if (strpos($permiso[0]["permiso"], "e") !== false) {
+					$e = 1;
+				}
+				if (strpos($permiso[0]["permiso"], "p") !== false) {
+					$p = 1;
+				}
 			}
-			if (strpos($permiso[0]["permiso"], "e") !== false) {
-				$e = 1;
-			}
-			if (strpos($permiso[0]["permiso"], "p") !== false) {
-				$p = 1;
-			}
+			$l=1;
 		}
 	}
-	if(!($e || $m || $p)) {
+	if(!($l || $e || $m || $p)) {
 	    die("No tiene permisos sobre &eacute;ste expediente");
 	}
 

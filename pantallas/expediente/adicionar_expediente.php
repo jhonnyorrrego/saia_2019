@@ -87,7 +87,7 @@ $serie_padre = "";
  if($dato_padre['numcampos']){
 ?>
 <div class="control-group element">
-	Este quedar&aacute; vinculado al expediente <b><?php echo($dato_padre[0]["nombre"]); ?></b>
+	Este Expediente quedar&aacute; vinculado a <b><?php echo($dato_padre[0]["nombre"]); ?></b>
 </div>
 
 <?php
