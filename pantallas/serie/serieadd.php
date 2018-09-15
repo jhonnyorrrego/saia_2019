@@ -51,8 +51,8 @@ switch ($sAction) {
         $x_tipo = @$_POST["x_tipo"];
         $x_tvd = @$_POST["x_tvd"];
         $x_categoria = @$_POST["x_categoria"];
-		$x_tipo_entidad = @$_POST["tipo_entidad"];
-		$x_identidad = @$_POST["identidad"];
+		$x_tipo_entidad = $_POST["tipo_entidad"];
+		$x_identidad = $_POST["identidad"];
 		$x_dependencias = $_REQUEST["iddependencia"];
 		
         $ok = AddData($conn);
@@ -135,12 +135,12 @@ switch ($sAction) {
 			}
 			//buscar la dependencia asignada
 			$buscar_asignacion = busca_filtro_tabla("", "entidad_serie", "entidad_identidad=2 and serie_idserie=" . $sKey, "", $conn);			
-			$dependencia_seleccionada1=array();
+			$lista_dependencias=array();
 			if($buscar_asignacion["numcampos"]){
 				for($i=0;$i<$buscar_asignacion["numcampos"];$i++){
-					$dependencia_seleccionada1[]=$buscar_asignacion[$i]["llave_entidad"];
+					$lista_dependencias[]=$buscar_asignacion[$i]["llave_entidad"];
 				}
-				$dependencia_seleccionada = implode(",",$dependencia_seleccionada1);
+				$dependencia_seleccionada = implode(",",$lista_dependencias);
 			}
 			
 			//buscar permisos asociados a la serie
@@ -228,11 +228,11 @@ function AddData($conn) {
 		$fieldList["tvd"] = "'" . $GLOBALS["x_tvd"] . "'";
 		
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_tipo_entidad"]) : $GLOBALS["x_tipo_entidad"];
-		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+		$theValue = ($theValue != "") ? "" . $theValue . "" : "NULL";
 		$fieldList_permiso["tipo_entidad"] = $theValue;
 		
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_identidad"]) : $GLOBALS["x_identidad"];
-		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+		$theValue = ($theValue != "") ? "" . $theValue . "" : "NULL";
 		$fieldList_permiso["identidad"] = $theValue;
 		
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_dependencias"]) : $GLOBALS["x_dependencias"];
@@ -250,8 +250,11 @@ function AddData($conn) {
 	$id = phpmkr_insert_id();
 	
 	// insert into permiso_serie
-	$strsql = "INSERT INTO permiso_serie (entidad_identidad,serie_idserie,llave_entidad,estado) VALUES (".$fieldList_permiso["tipo_entidad"].",".$id.",".$fieldList_permiso["identidad"].",1)";
-	phpmkr_query($strsql) or die("Error al insertar el registro " . $strsql);	
+	$entidades = explode(",",$fieldList_permiso["identidad"]);
+	for($i=0;$i<count($entidades);$i++){
+		$strsql = "INSERT INTO permiso_serie (entidad_identidad,serie_idserie,llave_entidad,estado) VALUES (".$fieldList_permiso["tipo_entidad"].",".$id.",".$entidades[$i].",1)";
+		phpmkr_query($strsql) or die("Error al insertar el registro " . $fieldList_permiso["identidad"]);
+	}	
 	
 	//insert into entidad_serie
 	$dependencia = explode(",",$fieldList_asignacion["dependencias"]);
@@ -759,7 +762,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 				}*/
 				switch(option) {
 					case '1'://Funcionario
-					url1="test/test_funcionario.php?idcampofun=funcionario_codigo";					
+					url1="test/test_funcionario.php?idcampofun=funcionario_codigo&sin_padre=1";					
 					//url1="test.php?rol=1";						
 						url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
 					//}

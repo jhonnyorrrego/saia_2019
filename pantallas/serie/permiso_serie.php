@@ -166,7 +166,7 @@ var entidades = <?php echo json_encode($entidades) ?>;
 				
 				switch(option) {
 					case '1'://Funcionario
-					url1="test/test_funcionario.php?idcampofun=funcionario_codigo";					
+					url1="test/test_funcionario.php?idcampofun=funcionario_codigo&sin_padre=1";					
 					//url1="test.php?rol=1";						
 						url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
 					//}

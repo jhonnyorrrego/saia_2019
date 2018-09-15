@@ -27,7 +27,7 @@ echo(librerias_arboles());
 			<a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext_serie_idserie').value),1)">
 				<img src="<?php echo $ruta_db_superior;?>botones/general/anterior.png" alt="Buscar Anterior" border="0px">
 			</a> 
-			<a href="javascript:void(0)" onclick="buscar_nodo();">
+			<a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext_serie_idserie').value),1)">
 				<img src="<?php echo $ruta_db_superior;?>botones/general/buscar.png" alt="Buscar" border="0px">
 			</a>
 			<a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext_serie_idserie').value))">
