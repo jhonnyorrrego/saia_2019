@@ -8,7 +8,7 @@ $validar_enteros = array(
 );
 desencriptar_sqli('form_info');
 
-//var_dump($_REQUEST); die();
+//var_dump($_REQUEST);
 
 if (@$_REQUEST["iddoc"]) { // si estoy llenando desde la pantalla del menu intermedio del documento
     if (@$_REQUEST['serie_idserie']) {
@@ -69,8 +69,10 @@ if (@$_REQUEST["iddoc"]) { // si estoy llenando desde la pantalla del menu inter
         if ($cantidad_eliminar) {
             $expedientes_asignados = arreglo_expedientes_asignados();
             $nuevos_quitar = array_intersect($quitar, $expedientes_asignados);
-            $sql1 = "DELETE FROM expediente_doc WHERE documento_iddocumento=" . $_REQUEST["iddoc"] . " AND expediente_idexpediente IN(" . implode(",", $nuevos_quitar) . ")";
-            phpmkr_query($sql1) or die($sql1);
+            if(!empty($nuevos_quitar)) {
+                $sql1 = "DELETE FROM expediente_doc WHERE documento_iddocumento=" . $_REQUEST["iddoc"] . " AND expediente_idexpediente IN(" . implode(",", $nuevos_quitar) . ")";
+                phpmkr_query($sql1) or die($sql1);
+            }
         }
         if ($cantidad_adicionar) {
             for ($i = 0; $i < $cantidad_adicionar; $i++) {

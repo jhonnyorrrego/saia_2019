@@ -165,26 +165,36 @@ if(count($nombres_exp)){
 	$('#form1').submit(function() {
 
     seleccionados=tree2.getAllChecked();
-    var lista_series = seleccionados.split(",");
+    var lista_seleccionados = seleccionados.split(",");
 
+    //console.log(seleccionados);
     //1574,1542_1536692460206,1540_1536692460207,1565
 
     var id_exp = null;
-    var id_s = null;
+    var id_nodo = null;
+    var id_serie = null;
     var expedientes = [];
+
     if(seleccionados!="") {
-    	for (var i = 0; i < lista_series.length; i++) {
-    		id_s = lista_series[i];
-    		//id_exp = tree2.getUserData(id_s.split("_")[0], "idexpediente");
-    		id_exp = tree2.getUserData(id_s, "idexpediente");
-    	    //console.log("serie: " + id_s);
+    	for (var i = 0; i < lista_seleccionados.length; i++) {
+    		id_nodo = lista_seleccionados[i];
+    		//console.log(id_nodo);
+			id_exp = tree2.getUserData(id_nodo, "idexpediente");
+
+			if(!id_exp) {
+				valores = id_nodo.split(".");
+				id_exp = valores[1];
+				id_serie = valores[0];
+			} else {
+				id_serie = tree2.getUserData(id_nodo, "idserie");
+			}
+    		//id_exp = tree2.getUserData(id_nodo, "idexpediente");
+    	    //console.log("serie: " + id_serie);
     	    //console.log("exped: " + id_exp);
     		expedientes.push(id_exp);
     	}
 	    //console.log(expedientes);
-    }
-
-    if(seleccionados!="") {
+	    
        $('#expedientes').val(expedientes.join(","));
 	    <?php encriptar_sqli("form1",0); ?>
 		if(salida_sqli) {
