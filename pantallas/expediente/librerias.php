@@ -721,12 +721,19 @@ function adicionar_expediente() {
 	<li>
 	    <a  href="#" id="adicionar_expediente" idbusqueda_componente="' . $_REQUEST["idbusqueda_componente"] . '" conector="iframe" titulo="Adicionar expediente hijo" enlace="pantallas/expediente/adicionar_expediente.php?cod_padre=' . @$_REQUEST["idexpediente"] . '&div_actualiza=resultado_busqueda' . $_REQUEST["idbusqueda_componente"] . '&target_actualiza=parent&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '&estado_archivo=' . @$_REQUEST["variable_busqueda"] . '&fk_idcaja=' . $_REQUEST["idcaja"] . '">Adicionar Expediente/Agrupador</a>
 	</li>';
-		if ($_REQUEST["idexpediente"] != 0 && $_REQUEST["idexpediente"] != "") {
-			$cadena .= '
-		<li></li>
-		<li>
-		    <a id="adicionar_documento_exp" conector="iframe" titulo="Adicionar Documento" enlace="' . FORMATOS_CLIENTE . 'vincular_doc_expedie/adicionar_vincular_doc_expedie.php?idexpediente=' . @$_REQUEST["idexpediente"] . '">Adicionar Documento</a>
-		</li>';
+		if (!empty($_REQUEST["idexpediente"])) {
+		    $exp_data = busca_filtro_tabla("agrupador", "expediente", "idexpediente = " . $_REQUEST["idexpediente"], "", $conn);
+		    $es_agrupador = false;
+		    if($exp_data["numcampos"]) {
+		        $es_agrupador = $exp_data[0]["agrupador"];
+		    }
+		    if(!$es_agrupador) {
+    			$cadena .= '
+    		<li></li>
+    		<li>
+    		    <a id="adicionar_documento_exp" conector="iframe" titulo="Adicionar Documento" enlace="' . FORMATOS_CLIENTE . 'vincular_doc_expedie/adicionar_vincular_doc_expedie.php?idexpediente=' . @$_REQUEST["idexpediente"] . '">Adicionar Documento</a>
+    		</li>';
+		    }
 		}
 	}
 	echo($cadena);
