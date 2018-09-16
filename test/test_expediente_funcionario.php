@@ -20,19 +20,23 @@ $condicion_ad = '';
 $idexpediente = 0;
 
 // DEFAULT DATOS
+$estado_archivo= false;
+if (@$_REQUEST['estado_archivo']) {
+    $estado_archivo = true;
+    $condicion_ad .= " AND (e.estado_archivo IN(" . $_REQUEST['estado_archivo'] . "))";
+}
+
+$estado_cierre = false;
+if (@$_REQUEST['estado_cierre']) {
+    $estado_cierre = true;
+    $condicion_ad .= " AND (e.estado_cierre IN(" . $_REQUEST['estado_cierre'] . "))";
+}
+
 $condicion_ad = " and " . DHtmlXtreeExpedienteFunc::expedientes_asignados($conn);
 if (isset($_REQUEST["excluidos_exp"])) {
     $condicion_ad .= " and idexpediente not in (" . $_REQUEST["excluidos_exp"] . ")";
-} else if (isset($_REQUEST["incluir_series"])) {
+} else if (isset($_REQUEST["incluir_series"]) && !($estado_cierre || $estado_archivo)) {
     $condicion_ad .= " and e.serie_idserie  in (" . $_REQUEST["incluir_series"] . ")";
-}
-
-if (@$_REQUEST['estado_archivo']) {
-    $condicion_ad = " AND (e.estado_archivo IN(" . $_REQUEST['estado_archivo'] . "))";
-}
-
-if (@$_REQUEST['estado_cierre']) {
-    $condicion_ad = " AND (e.estado_cierre IN(" . $_REQUEST['estado_cierre'] . "))";
 }
 
 if (isset($_REQUEST["idexpediente"])) {
@@ -189,7 +193,7 @@ class DHtmlXtreeExpedienteFunc {
                 $this->objetoXML->startElement("item");
                 $this->objetoXML->writeAttribute("style", "font-family:verdana; font-size:7pt;");
                 $this->objetoXML->writeAttribute("text", $text);
-                $this->objetoXML->writeAttribute("id", "{$papas[$i]["idserie"]}.{$idexp}");
+                $this->objetoXML->writeAttribute("id", $papas[$i]["idserie"] . "." . $idexp);
                 if ($papas[$i]["estado"] == 0 || $permiso[0]["cant"] == 0) {
                     $this->objetoXML->writeAttribute("nocheckbox", 1);
                 }
