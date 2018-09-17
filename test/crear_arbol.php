@@ -41,7 +41,7 @@ function crear_arbol($xml,$campo,$parametros) {
 		<a href="javascript:void(0)" onclick="tree<?php echo $campo; ?>.findItem((document.getElementById('stext_<?php echo $campo; ?>').value),1)">
 		<img src="<?php echo $parametros["ruta_db_superior"]; ?>botones/general/anterior.png"border="0px"></a>
 		
-		<a href="javascript:void(0)">
+		<a href="javascript:void(0)" onclick="tree<?php echo $campo; ?>.findItem((document.getElementById('stext_<?php echo $campo; ?>').value))">
 		<img src="<?php echo $parametros["ruta_db_superior"]; ?>botones/general/buscar.png"border="0px"></a>
 		<a href="javascript:void(0)" onclick="tree<?php echo $campo; ?>.findItem((document.getElementById('stext_<?php echo $campo; ?>').value))">
 		<img src="<?php echo $parametros["ruta_db_superior"]; ?>botones/general/siguiente.png"border="0px"></a>      
