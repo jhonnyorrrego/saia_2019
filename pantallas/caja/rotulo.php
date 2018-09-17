@@ -148,8 +148,8 @@ function rotulo_caja($id){
 		<td style="text-align:center;">Fecha final</td>
 	</tr>
 	<tr>
-		<td><?php echo ($datos[0]["fecha_extrema_i"]); ?></td>
-		<td><?php echo ($datos[0]["fecha_extrema_f"]); ?></td>
+		<td style="text-align:center;"><?php echo ($datos[0]["fecha_extrema_i"]); ?></td>
+		<td style="text-align:center;"><?php echo ($datos[0]["fecha_extrema_f"]); ?></td>
 	</tr>
 </table>
 <?php
