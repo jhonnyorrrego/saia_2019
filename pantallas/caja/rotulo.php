@@ -255,19 +255,19 @@ filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 	</tr>
 	<tr>
 		<td style="text-align:center"><b>SERIE</b></td>
-		<td colspan="2"><?php echo mayusculas($nomb_serie); ?></td>
+		<td colspan="2" style="text-align:center"><?php echo mayusculas($nomb_serie); ?></td>
 	</tr>
 	<tr>
 		<td style="text-align:center"><b>SUBSERIE</b></td>
-		<td colspan="2"><?php echo mayusculas($nomb_subserie); ?></td>
+		<td colspan="2" style="text-align:center"><?php echo mayusculas($nomb_subserie); ?></td>
 	</tr>
 	<tr>
 		<td style="text-align:center"><b>PROCESO</b></td>
-		<td colspan="2"><?php echo($datos[0]["proceso"]); ?></td>
+		<td colspan="2" style="text-align:center"><?php echo($datos[0]["proceso"]); ?></td>
 	</tr>
 	<tr>
 		<td style="text-align:center"><b>Observaciones</b></td>
-		<td colspan="2"><?php echo ($datos[0]["descripcion"]); ?></td>
+		<td colspan="2" style="text-align:center"><?php echo ($datos[0]["descripcion"]); ?></td>
 	</tr>
 	<tr>
 		<td rowspan="2" style="text-align:center"><b>FECHAS EXTREMAS</b></td>
