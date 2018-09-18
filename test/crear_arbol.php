@@ -41,9 +41,10 @@ function crear_arbol($xml,$campo,$parametros) {
 		<a href="javascript:void(0)" onclick="tree<?php echo $campo; ?>.findItem((document.getElementById('stext_<?php echo $campo; ?>').value),1)">
 		<img src="<?php echo $parametros["ruta_db_superior"]; ?>botones/general/anterior.png"border="0px"></a>
 		
-		<a href="javascript:void(0)" onclick="tree<?php echo $campo; ?>.findItem((document.getElementById('stext_<?php echo $campo; ?>').value))">
+		<!--a href="javascript:void(0)" onclick="tree<?php echo $campo; ?>.findItem((document.getElementById('stext_<?php echo $campo; ?>').value))"-->
+		<a href="javascript:void(0)" onClick="buscar_nodo()">
 		<img src="<?php echo $parametros["ruta_db_superior"]; ?>botones/general/buscar.png"border="0px"></a>
-		<a href="javascript:void(0)" onclick="tree<?php echo $campo; ?>.findItem((document.getElementById('stext_<?php echo $campo; ?>').value))">
+		<a href="javascript:void(0)" onclick="buscar_nodo()">
 		<img src="<?php echo $parametros["ruta_db_superior"]; ?>botones/general/siguiente.png"border="0px"></a>      
 	<?php }?>
 
@@ -120,7 +121,7 @@ function crear_arbol($xml,$campo,$parametros) {
 		document.getElementById('<?php echo $campo; ?>').value=tree<?php echo $campo; ?>.getAllChecked();
 		
 		<?php if($parametros["abrir_cargar"]){?>
-			tree<?php echo $campo; ?>.openAllItems(0);
+		tree<?php echo $campo; ?>.openAllItems(0);
 		<?php }?>
 	}
 	
@@ -141,6 +142,30 @@ function crear_arbol($xml,$campo,$parametros) {
 		}
 		document.getElementById(campo).value = "";
 	}
+	
+	function buscar_nodo(){
+       	$.ajax({
+       		type:'POST',
+       		url: "buscar_test_serie.php",
+       		dataType:"json",
+       		data: {
+       			nombre: $('#stext_<?php echo $campo; ?>').val(),
+       			 tabla: "serie"
+       		},
+       		success: function(data){
+       			$.each(data, function(i, item) {
+       				$.each(item, function(j, value) {
+       					tree2.openItem(value);
+       					if(j==item.length-1){
+       						tree2.selectItem(value);
+       						tree2.focusItem(value);
+       					}
+       				});
+       			});
+					}
+				});
+				tree2.findItem((document.getElementById('stext_<?php echo $campo; ?>').value));
+       }
 	</script><br/>
 	
 	<?php	

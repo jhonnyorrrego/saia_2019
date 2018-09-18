@@ -27,7 +27,8 @@ echo(librerias_arboles());
 			<a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext_serie_idserie').value),1)">
 				<img src="<?php echo $ruta_db_superior;?>botones/general/anterior.png" alt="Buscar Anterior" border="0px">
 			</a> 
-			<a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext_serie_idserie').value),1)">
+			<!-- a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext_serie_idserie').value),1)"-->
+			<a href="javascript:void(0)" onClick="buscar_nodo()"> 
 				<img src="<?php echo $ruta_db_superior;?>botones/general/buscar.png" alt="Buscar" border="0px">
 			</a>
 			<a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext_serie_idserie').value))">
@@ -56,6 +57,7 @@ echo(librerias_arboles());
 			tree2.setOnClickHandler(onNodeSelect);
 			tree2.setOnLoadingStart(cargando_serie);
 			tree2.setOnLoadingEnd(fin_cargando_serie);
+			
 			tree2.setXMLAutoLoading("<?php echo $ruta_db_superior;?>test/test_dependencia_serie.php?otras_categorias=1&serie_sin_asignar=1&cargar_partes=1");
 			tree2.loadXML("<?php echo $ruta_db_superior;?>test/test_dependencia_serie.php?otras_categorias=1&serie_sin_asignar=1&cargar_partes=1");
 
@@ -82,7 +84,7 @@ echo(librerias_arboles());
 				} else {
 					document.poppedLayer = eval('document.layers["esperando_serie"]');
 				}
-				document.poppedLayer.style.display = "none";
+				document.poppedLayer.style.display = "none";				
 			}
 
 			function cargando_serie() {
@@ -94,6 +96,35 @@ echo(librerias_arboles());
 					document.poppedLayer = eval('document.layers["esperando_serie"]');
 				document.poppedLayer.style.display = "";
 			}
+			
+			function buscar_nodo(){				
+	       	$.ajax({
+	       		type:'POST',
+	       		url: "buscar_test_serie.php",
+	       		dataType:"json",
+	       		data: {
+	       			nombre: $('#stext_serie_idserie').val(),
+	       			 tabla: "serie"
+	       		},
+	       		success: function(data){
+	       			tree2.openItemsDynamic(data.dependencia.join(","),true);
+				}
+			});
+					//tree2.findItem((document.getElementById('stext_serie_idserie').value));
+	       }
+		   function open_nodes(items){
+			   if(items.length){
+				   var item_abierto= items.shift();
+				   console.log(items);
+				   if(items.length){
+					   tree2.attachEvent("onOpenEnd", function(item_abierto){
+						    open_nodes(items);
+					   });
+				   }
+				   tree2.openItem(item_abierto);
+			   }
+			   return;
+		   }
 		</script>
 	</body>
 </html>

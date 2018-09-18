@@ -20,7 +20,7 @@ function barra_superior_busqueda() {
 	<li class="divider-vertical"></li>                          
 	<li>            
 	 <div class="btn-group">                    
-	    <button class="btn btn-mini" id="adicionar_caja" title="Adicionar caja" enlace="pantallas/caja/adicionar_caja.php">Adicionar Caja</button>
+	    <button class="btn btn-mini" id="adicionar_caja" title="Adicionar caja" enlace="pantallas/caja/adicionar_caja.php?idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] .'&div_actualiza=resultado_busqueda' . $_REQUEST["idbusqueda_componente"] . '">Adicionar Caja</button>
 	  </div>
 	</li>';
 	return ($cadena);
