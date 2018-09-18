@@ -107,24 +107,13 @@ echo(librerias_arboles());
 	       			 tabla: "serie"
 	       		},
 	       		success: function(data){
-	       			tree2.openItemsDynamic(data.dependencia.join(","),true);
+	       			tree2.attachEvent("onOpenDynamicEnd", function(){
+	       				tree2.findItem((document.getElementById('stext_serie_idserie').value));
+				   });
+	       			tree2.openItemsDynamic(data,true);  
 				}
 			});
-					//tree2.findItem((document.getElementById('stext_serie_idserie').value));
 	       }
-		   function open_nodes(items){
-			   if(items.length){
-				   var item_abierto= items.shift();
-				   console.log(items);
-				   if(items.length){
-					   tree2.attachEvent("onOpenEnd", function(item_abierto){
-						    open_nodes(items);
-					   });
-				   }
-				   tree2.openItem(item_abierto);
-			   }
-			   return;
-		   }
 		</script>
 	</body>
 </html>

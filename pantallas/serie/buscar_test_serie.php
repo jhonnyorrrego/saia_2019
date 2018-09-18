@@ -14,6 +14,7 @@ if($_REQUEST['tabla']){
 	$tabla=$_REQUEST['tabla'];
 	$campos_dep = array();
 	$campos = array();
+	$campos_serie=array();
 	$resultados_serie=array();
 	$resultados_entidad_serie=array();
 	$resultados_dependencia=array();
@@ -24,7 +25,7 @@ if($_REQUEST['tabla']){
 			$resultados_dependencia[]=array_reverse(array_unique($campos_dep));
 		}
 	}*/
-	$buscar_series=busca_filtro_tabla("idserie,nombre,cod_padre","serie","lower(nombre) like(lower('%".$_REQUEST['nombre']."%'))","",$conn);
+	$buscar_series=busca_filtro_tabla("idserie ,nombre,cod_padre","serie","lower(nombre) like(lower('%".$_REQUEST['nombre']."%'))","",$conn);
 	if($buscar_series["numcampos"]){
 		for ($i=0; $i < $buscar_series['numcampos']; $i++){
 			$campos = array();
@@ -39,33 +40,37 @@ if($_REQUEST['tabla']){
 			$campos_serie = array();
 			lista_papas($dependencia_serie[$i]["llave_entidad"],"dependencia");
 			$resultados_dependencia=array_merge((array)$resultados_dependencia,(array)array_reverse(($campos_dep)));
-			foreach($value AS $key_serie=>$value_serie){
-				$campos_serie[$key_serie]=$dependencia_serie[$i]["llave_entidad"].".".$value_serie.".0";
-			}
+			lista_papas($dependencia_serie[$i]["serie_idserie"],"serie",$dependencia_serie[$i]["llave_entidad"]);
+			
 			$resultados_entidad_serie=array_merge((array)$resultados_entidad_serie,(array)(($campos_serie)));
 		}
 	}
 	 
 	$resultado=array();
-	$resultado["dependencia"]=array_merge($resultados_dependencia,$resultados_entidad_serie);
-	$resultado["entidad_serie"]=$resultados_entidad_serie;
-	$resultado["series"]=$resultados_serie;
+	$resultado=implode(",",array_unique(array_merge((array)$resultados_dependencia,(array)$resultados_entidad_serie)));
+	//$resultado["entidad_serie"]=$resultados_entidad_serie;
+	//$resultado["series"]=$resultados_serie;
 	echo(json_encode($resultado));
 }
 function lista_papas($id,$tabla,$dependencia=0){
-	global $conn,$campos,$campos_dep;
+	global $conn,$campos,$campos_dep,$campos_serie;
 	if($id){
 		if($tabla=="dependencia"){
 			array_push($campos_dep,$id.".0.0");
 		}
-		else{
-			array_push($campos,$id);
+		else if($tabla=="serie"){
+			if($dependencia){
+				array_push($campos_serie,$dependencia.".".$id.".0");
+			}
+			else{
+				array_push($campos,$id);
+			}
 		}
 		$buscar_campo=busca_filtro_tabla("cod_padre",$tabla,"id".$tabla."=".$id,"",$conn);
 		if($buscar_campo["numcampos"]){
-			lista_papas($buscar_campo[0]["cod_padre"], $tabla);
+			lista_papas($buscar_campo[0]["cod_padre"], $tabla,$dependencia);
 		}
 	}
 	return;
-}
+} 
 ?>
