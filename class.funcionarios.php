@@ -73,8 +73,8 @@ function busca_datos_administrativos_funcionario($funcionario, $filtrar = array(
     );
     $datos[4] = array(
         "series_funcionario",
-        "serie",
-        "Series Asignadas al Funcionario"
+        "serie"
+       // "Series Asignadas al Funcionarios"
     );
     $datos[3] = array(
         "perfil",

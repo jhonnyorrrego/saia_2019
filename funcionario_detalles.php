@@ -79,7 +79,12 @@ for ($i = 0; isset($datos[$i]); $i++) {
     $index0 = $datos[$i][0];
     $index1 = $datos[$i][1];
     $index2 = $datos[$i][2];
-    echo ('<dt class="someClass">' . $index2 . '</dt><dd>');
+	if(!$index2){
+		$style='style="display: none;';
+	}
+		
+    echo ('<dt class="someClass" '.$style.'>' . $index2 . '</dt><dd>');
+	//}
     // for($j=0;isset($datos[$index0][$j]);$j++){
     switch ($index0) {
         case "informacion":
