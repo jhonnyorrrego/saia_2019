@@ -22,18 +22,18 @@ echo(librerias_arboles());
 			<a href='serieadd.php' target='serielist'>ADICIONAR</a>
 			<!--a href="permiso_serie.php" target='serielist'>PERMISOS</a-->
 			<br/><br/>
-			 Buscar:
+			<!-- Buscar:
 			<input type="text" id="stext_serie_idserie" width="200px" size="25">
 			<a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext_serie_idserie').value),1)">
 				<img src="<?php echo $ruta_db_superior;?>botones/general/anterior.png" alt="Buscar Anterior" border="0px">
-			</a> 
+			</a>--> 
 			<!-- a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext_serie_idserie').value),1)"-->
-			<a href="javascript:void(0)" onClick="buscar_nodo()"> 
+			<!-- <a href="javascript:void(0)" onClick="buscar_nodo()"> 
 				<img src="<?php echo $ruta_db_superior;?>botones/general/buscar.png" alt="Buscar" border="0px">
 			</a>
 			<a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext_serie_idserie').value))">
 				<img src="<?php echo $ruta_db_superior;?>botones/general/siguiente.png" alt="Buscar Siguiente" border="0px">
-			</a>
+			</a> -->
 		</span>
 		<div id="esperando_serie"><img src="<?php echo $ruta_db_superior;?>imagenes/cargando.gif">
 		</div>
