@@ -34,18 +34,21 @@ if($_REQUEST['tabla']){
 		}
 	}
 	foreach($resultados_serie AS $key=>$value){
-		$dependencia_serie=busca_filtro_tabla("","entidad_serie","entidad_identidad=2 AND serie_idserie IN('".implode(",",$value)."')","",$conn);
+		$dependencia_serie=busca_filtro_tabla("","entidad_serie","entidad_identidad=2 AND serie_idserie IN('".implode("','",$value)."')","",$conn);
 		for($i=0;$i<$dependencia_serie["numcampos"];$i++){
 			$campos_dep = array();
 			$campos_serie = array();
+			$campos=array();
 			lista_papas($dependencia_serie[$i]["llave_entidad"],"dependencia");
 			$resultados_dependencia=array_merge((array)$resultados_dependencia,(array)array_reverse(($campos_dep)));
-			lista_papas($dependencia_serie[$i]["serie_idserie"],"serie",$dependencia_serie[$i]["llave_entidad"]);
-			
-			$resultados_entidad_serie=array_merge((array)$resultados_entidad_serie,(array)(($campos_serie)));
+			if(in_array($dependencia_serie[$i]["serie_idserie"],$value)){
+				foreach($value AS $key_serie=>$value_serie){
+					lista_papas($value_serie,"serie",$dependencia_serie[$i]["llave_entidad"]);
+					$resultados_entidad_serie=array_merge((array)$resultados_entidad_serie,(array)(($campos_serie)));
+				}
+			}
 		}
 	}
-	 
 	$resultado=array();
 	$resultado=implode(",",array_unique(array_merge((array)$resultados_dependencia,(array)$resultados_entidad_serie)));
 	//$resultado["entidad_serie"]=$resultados_entidad_serie;
@@ -62,9 +65,7 @@ function lista_papas($id,$tabla,$dependencia=0){
 			if($dependencia){
 				array_push($campos_serie,$dependencia.".".$id.".0");
 			}
-			else{
 				array_push($campos,$id);
-			}
 		}
 		$buscar_campo=busca_filtro_tabla("cod_padre",$tabla,"id".$tabla."=".$id,"",$conn);
 		if($buscar_campo["numcampos"]){

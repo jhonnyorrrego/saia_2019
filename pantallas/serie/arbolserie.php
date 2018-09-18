@@ -107,10 +107,15 @@ echo(librerias_arboles());
 	       			 tabla: "serie"
 	       		},
 	       		success: function(data){
-	       			tree2.attachEvent("onOpenDynamicEnd", function(){
-	       				tree2.findItem((document.getElementById('stext_serie_idserie').value));
-				   });
-	       			tree2.openItemsDynamic(data,true);  
+		       		if(data===""){
+						alert("No se encontraron resultados para el texto '"+document.getElementById('stext_serie_idserie').value+"'");
+		       		}  
+		       		else{
+		       			tree2.attachEvent("onOpenDynamicEnd", function(){
+		       				tree2.findItem((document.getElementById('stext_serie_idserie').value),1);
+					   });
+		       			tree2.openItemsDynamic(data,true);
+			       	}
 				}
 			});
 	       }
