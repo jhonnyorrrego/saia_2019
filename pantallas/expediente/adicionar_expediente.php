@@ -69,16 +69,24 @@ $serie_padre = "";
 <script>
     $(document).ready(function(){
         $('[name="agrupador"]').click(function(){
-            var valor=$(this).val();
+            var valor = $(this).val();
+            var numero = new Number(valor);
+            var texto = "";
 
-            if(parseInt(valor)){ //agrupador = 1
+            if(numero == 1) {
                 $('#informacion_completa_expediente').hide();
                 $('#serie_idserie').val(-1);
-            }else{ // no es agrupador = 0
+                texto = "Agrupador";
+            } else if(numero == 0) {
                 $('#informacion_completa_expediente').show();
                 $('#serie_idserie').val('');
+                texto = "Expediente";
+            } else { // no es agrupador = 0
+            	texto = "Ninguno";
             }
-
+            //console.log("Numero: " + numero);
+            //console.log("Opcion: " + texto);
+            //console.log("Serie: " + $('#serie_idserie').val());
         });
     });
 </script>
@@ -386,7 +394,14 @@ $serie_padre = "";
 		url2="test/test_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0" + mostrar;
 		$.ajax({
 			url : "<?php echo($ruta_db_superior);?>test/crear_arbol.php",
-			data:{xml:url2,campo:"serie_idserie",radio:1,ruta_db_superior:"../../",busqueda_item:1,onNodeSelect:"cargar_info_Node"},
+			data:{
+				xml: url2,
+				campo: "serie_idserie",
+				radio: 1,
+				ruta_db_superior: "../../",
+				busqueda_item: 1,
+				onNodeSelect: "cargar_info_Node"
+			},
 			type : "POST",
 			async:false,
 			success : function(html_serie) {
@@ -409,10 +424,7 @@ $serie_padre = "";
 		  $(this).removeClass('clase_sin_capas');
 		  $(this).addClass('clase_capas');
 		});
-  });
-  </script>
-<script type="text/javascript">
-$(document).ready(function(){
+
   $('#fecha').datetimepicker({
     language: 'es',
     pick12HourFormat: true,
@@ -432,9 +444,9 @@ $(document).ready(function(){
   var formulario_expediente=$("#formulario_expediente");
   formulario_expediente.validate({
     ignore: [],
-  "rules":{
-      "nombre":{"required":true},
-      "serie_idserie":{"required":true}
+    rules: {
+      nombre: {"required":true},
+      serie_idserie: {"required":true}
 
   },
   submitHandler: function(form) {
@@ -463,7 +475,15 @@ $(document).ready(function(){
                 type:'POST',
                 async:false,
                 url: "<?php echo($ruta_db_superior);?>pantallas/busquedas/servidor_busqueda.php",
-                data: "idbusqueda_componente=<?php echo($_REQUEST['idbusqueda_componente']); ?>&page=1&rows=1&actual_row=0&expediente_actual="+objeto.idexpediente+"&idexpediente=<?php echo(@$_REQUEST['cod_padre']);?>&variable_busqueda=<?php echo(@$_REQUEST["estado_archivo"]); ?>",
+                data: {
+                    idbusqueda_componente: "<?php echo($_REQUEST['idbusqueda_componente']); ?>",
+                    page: 1,
+                    rows: 1,
+                    actual_row: 0,
+                    expediente_actual: objeto.idexpediente,
+                    idexpediente: "<?php echo(@$_REQUEST['cod_padre']);?>",
+                    variable_busqueda: "<?php echo(@$_REQUEST["estado_archivo"]); ?>"
+                },
                 success: function(html2){
                   if(html2){
                     var objeto2=jQuery.parseJSON(html2);
@@ -493,8 +513,7 @@ $(document).ready(function(){
           }
         }
     	});
-    }
-    else{
+    } else {
       notificacion_saia("Formulario con errores","error","",8500);
     }
   });

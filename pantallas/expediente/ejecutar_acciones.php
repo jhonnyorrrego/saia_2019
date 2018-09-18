@@ -106,7 +106,7 @@ function set_expediente() {
 			'" . @$_REQUEST['indice_dos'] . "',
 			'" . @$_REQUEST['indice_tres'] . "'
 		)";
-	phpmkr_query($sql2);
+	phpmkr_query($sql2) or die($sql2);
 	$idexpediente = phpmkr_insert_id();
 	guardar_lob('descripcion', 'expediente', "idexpediente=" . $idexpediente, @$_REQUEST['descripcion'], 'texto', $conn, 0);
 	guardar_lob('notas_transf', 'expediente', "idexpediente=" . $idexpediente, @$_REQUEST['notas_transf'], 'texto', $conn, 0);
@@ -118,7 +118,7 @@ function set_expediente() {
 		$codigo_arbol = $idexpediente;
 	}
 	$sql3 = "UPDATE expediente SET cod_arbol='" . $codigo_arbol . "' where idexpediente=" . $idexpediente;
-	phpmkr_query($sql3);
+	phpmkr_query($sql3) or die($sql3);
 	$retorno -> sql = $sql2;
 	if ($idexpediente) {
 		if (asignar_expediente($idexpediente, 1, usuario_actual("idfuncionario"), "m,e,p")) {
