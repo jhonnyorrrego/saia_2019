@@ -125,16 +125,7 @@ switch ($sAction) {
 	        );
 	        $seleccion[$x_seleccion] = "checked";
 			//buscar la dependencia asignada
-			$buscar_asignacion = busca_filtro_tabla("", "entidad_serie", "entidad_identidad=2 and serie_idserie=" . $sKey, "", $conn);			
-			$dependencia_seleccionada1=array();
-			if($buscar_asignacion["numcampos"]){
-				for($i=0;$i<$buscar_asignacion["numcampos"];$i++){
-					$dependencia_seleccionada1[]=$buscar_asignacion[$i]["llave_entidad"];
-				}
-				$dependencia_seleccionada = implode(",",$dependencia_seleccionada1);
-			}
-			//buscar la dependencia asignada
-			$buscar_asignacion = busca_filtro_tabla("", "entidad_serie", "entidad_identidad=2 and serie_idserie=" . $sKey, "", $conn);			
+			$buscar_asignacion = busca_filtro_tabla("", "entidad_serie", "entidad_identidad=2 and estado=1 and serie_idserie=" . $sKey, "", $conn);			
 			$lista_dependencias=array();
 			if($buscar_asignacion["numcampos"]){
 				for($i=0;$i<$buscar_asignacion["numcampos"];$i++){

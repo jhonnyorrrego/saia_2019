@@ -35,6 +35,9 @@ switch ($sAction) {
         $x_tvd = @$_POST["x_tvd"];
         $x_estado = @$_POST["x_estado"];
         $x_categoria = @$_POST["x_categoria"];
+		$x_tipo_entidad = $_POST["tipo_entidad"];
+		$x_identidad = $_POST["identidad"];
+		$x_dependencias = $_REQUEST["iddependencia"];
 
         $ok = EditData($x_idserie);
         if ($ok) {
@@ -142,7 +145,27 @@ switch ($sAction) {
             1 => ""
         );
         $estado[$x_estado] = "checked";
-
+		
+		//buscar la dependencia asignada
+			$buscar_asignacion = busca_filtro_tabla("", "entidad_serie", "entidad_identidad=2 and estado=1 and serie_idserie=" . $x_idserie, "", $conn);	
+			//print_r($buscar_asignacion["sql"]);
+			//print_r("<br><br>");					
+			$lista_dependencias=array();
+			if($buscar_asignacion["numcampos"]){
+				for($i=0;$i<$buscar_asignacion["numcampos"];$i++){
+					$lista_dependencias[]=$buscar_asignacion[$i]["llave_entidad"];
+				}
+				$dependencia_seleccionada = implode(",",$lista_dependencias);
+			}
+			//print_r($dependencia_seleccionada);
+			//buscar permisos asociados a la serie
+			$entidades=array();
+			$buscar_permisos = busca_filtro_tabla("", "permiso_serie", "estado=1 and serie_idserie=".$x_idserie, "", $conn);
+			if($buscar_permisos["numcampos"]){
+				for($i=0;$i<$buscar_permisos["numcampos"];$i++){
+					$entidades[$buscar_permisos[$i]["entidad_identidad"]][]=$buscar_permisos[$i]["llave_entidad"];					
+				}				
+			}
         break;
 }
 
@@ -203,6 +226,18 @@ function EditData($sKey) {
 			$fieldList["procedimiento"] = $theValue;
 
 			$fieldList["copia"] = intval($GLOBALS["x_copia"]);
+			
+			$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_tipo_entidad"]) : $GLOBALS["x_tipo_entidad"];
+			$theValue = ($theValue != "") ? "" . $theValue . "" : "NULL";
+			$fieldList_permiso["tipo_entidad"] = $theValue;
+			
+			$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_identidad"]) : $GLOBALS["x_identidad"];
+			$theValue = ($theValue != "") ? "" . $theValue . "" : "NULL";
+			$fieldList_permiso["identidad"] = $theValue;
+			
+			$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_dependencias"]) : $GLOBALS["x_dependencias"];
+			$theValue = ($theValue != "") ? "" . $theValue . "" : "NULL";
+			$fieldList_asignacion["dependencias"] = $theValue;
 		}
 		$fieldList["estado"] = intval($GLOBALS["x_estado"]);
 
@@ -224,6 +259,45 @@ function EditData($sKey) {
 			$update="UPDATE serie SET tvd=".$fieldList["tvd"]." WHERE cod_arbol like '".$datos_ant[0]["cod_arbol"].".%'";
 			phpmkr_query($update) or die("Error al cambiar el tipo de las series hijas");
 		}
+		// insert into permiso_serie
+		$entidades = explode(",",$fieldList_permiso["identidad"]);
+		
+		$buscar_existente = busca_filtro_tabla("","permiso_serie","llave_entidad not in (".$fieldList_permiso["identidad"].") and entidad_identidad = ".$fieldList_permiso["tipo_entidad"]." and serie_idserie=".$sKeyWrk,"",$conn);
+		if($buscar_existente["numcampos"]){			
+			$update = "UPDATE permiso_serie SET estado=0 WHERE llave_entidad not in (".$fieldList_permiso["identidad"].") and entidad_identidad = ".$fieldList_permiso["tipo_entidad"]." and serie_idserie=".$sKeyWrk;
+			phpmkr_query($update) or die("Error al actualizar el registro");
+		}
+		for($i=0;$i<count($entidades);$i++){
+			$buscar_permiso = busca_filtro_tabla("","permiso_serie","llave_entidad=".$entidades[$i]." and entidad_identidad = ".$fieldList_permiso["tipo_entidad"]." and serie_idserie=".$sKeyWrk,"",$conn);
+			if($buscar_permiso["numcampos"]){
+				$update = "UPDATE permiso_serie SET estado=1 WHERE llave_entidad=".$entidades[$i]." and entidad_identidad = ".$fieldList_permiso["tipo_entidad"]." and serie_idserie=".$sKeyWrk;
+				phpmkr_query($update) or die("Error al actualizar el registro");
+			}
+			else{
+				$strsql = "INSERT INTO permiso_serie (entidad_identidad,serie_idserie,llave_entidad,estado) VALUES (".$fieldList_permiso["tipo_entidad"].",".$sKeyWrk.",".$entidades[$i].",1)";
+				phpmkr_query($strsql) or die("Error al insertar el registro");
+			}
+		}	
+		
+		//insert into entidad_serie
+		$dependencia = explode(",",$fieldList_asignacion["dependencias"]);
+		
+		$buscar_existente = busca_filtro_tabla("","entidad_serie","entidad_identidad not in (".$fieldList_asignacion["dependencias"].") and entidad_identidad = 2 and serie_idserie=".$sKeyWrk,"",$conn);
+		if($buscar_existente["numcampos"]){			
+			$update = "UPDATE entidad_serie SET estado=0 WHERE llave_entidad not in (".$fieldList_asignacion["dependencias"].") and entidad_identidad = 2 and serie_idserie=".$sKeyWrk;
+			phpmkr_query($update) or die("Error al actualizar el registro");
+		}
+		for($i=0;$i<count($dependencia);$i++){
+			$buscar_asignacion = busca_filtro_tabla("","entidad_serie","llave_entidad=".$dependencia[$i]." and entidad_identidad = 2 and serie_idserie=".$sKeyWrk,"",$conn);
+			if($buscar_asignacion["numcampos"]){
+				$update = "UPDATE entidad_serie SET estado=1 WHERE llave_entidad=".$dependencia[$i]." and entidad_identidad = 2 and serie_idserie=".$sKeyWrk;
+				phpmkr_query($update) or die("Error al actualizar el registro");
+			}
+			else{
+				$insert = "INSERT INTO entidad_serie (entidad_identidad,serie_idserie,llave_entidad,estado,fecha) VALUES (2," . $sKeyWrk . "," . $dependencia[$i] . ",1," . fecha_db_almacenar(date("Y-m-d"), "Y-m-d") . ")";
+	    		phpmkr_query($insert) or die("Error al guardar la informacion");
+			}
+		}
 
 		actualizar_crear_cod_arboles($sKeyWrk,"serie",2,intval($datos_ant[0]["cod_padre"]),$datos_ant[0]["cod_arbol"]);
 		$EditData = true;
@@ -235,6 +309,10 @@ include ($ruta_db_superior."librerias_saia.php");
 echo librerias_jquery("1.8");
 echo librerias_validar_formulario("11");
 echo librerias_arboles();
+$option = '<option value="">Seleccione</option>
+		   <option value="4">Asignado a Cargo(s)</option>
+ 		   <option value="2">Asignado a Dependencia(s)</option>
+ 		   <option value="1">Asignado a Funcionario(s)</option>';
 ?>
 <form name="serieedit" id="serieedit" action="serieedit.php" method="post">
 	<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
@@ -362,7 +440,22 @@ echo librerias_arboles();
 				<input type="radio" id="x_copia0" name="x_copia" value="0" <?php echo $copia[0];?>>
 				NO </span></td>
 		</tr>
-
+		
+		<tr class="ocultar">
+			<td class="encabezado" title="Asociar serie/subserie a una dependencia"><span class="phpmaker" style="color: #FFFFFF;">DEPENDENCIA ASOCIADA *</span></td>
+			<td bgcolor="#F5F5F5"><span class="phpmaker">
+				<div id="dependencia_asociada"></div> 
+			</span></td>
+		</tr>
+		<tr>
+			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">TIPO DE PERMISO*</span></td>
+			<td bgcolor="#F5F5F5"><select id="tipo_entidad" name="tipo_entidad" class="required"><?php echo $option;?></select></td>
+		</tr>
+		<tr>
+			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ASIGNAR PERMISO*</span></td>
+			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="sub_entidad"></div> </td>
+		</tr>
+		
 		<tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ESTADO *</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker">
@@ -390,6 +483,7 @@ encriptar_sqli("serieedit", 1, "form_info", $ruta_db_superior, false, false);
 ?>
 
 <script>
+var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 	function cargar_datos_padre(idNode) {
 		$.ajax({
 			type : "POST",
@@ -456,6 +550,15 @@ encriptar_sqli("serieedit", 1, "form_info", $ruta_db_superior, false, false);
 	}
 
 	$(document).ready(function() {
+		xml1="test/test_dependencia.php";
+		var dependencia_seleccionada="<?php echo $dependencia_seleccionada; ?>";
+		var entidades = <?php echo json_encode($entidades) ?>;	
+		console.log(entidades);	
+		cargar_arbol_dependencias(xml1,dependencia_seleccionada);		
+		var dependencia_seleccionadas=0;
+		if(identidad > 0) {
+			$("#tipo_entidad").trigger("change");
+		}			
 		$("#serieedit").validate({
 			rules:{
 				x_nombre:{required:true}
@@ -604,6 +707,75 @@ encriptar_sqli("serieedit", 1, "form_info", $ruta_db_superior, false, false);
 				}
 			}
 		});
+		$("#tipo_entidad").change(function () {
+			option=$(this).val();
+			var entidades_seleccionadas='';
+			if(option != "") {
+				if(!$.isEmptyObject(entidades)){
+					if(entidades[option]){
+						entidades_seleccionadas=entidades[option].join(',');
+					}
+				}
+				if(identidad && identidad > 0) {
+					if(entidades_seleccionadas==''){
+						entidades_seleccionadas=identidad;
+					}
+					else{
+						entidades_seleccionadas = entidades_seleccionadas + ',' + identidad;
+					}
+				}
+				url1="";
+				
+				switch(option) {
+					case '1'://Funcionario
+					url1="test/test_funcionario.php?idcampofun=funcionario_codigo&sin_padre=1";					
+					url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
+					check=0;
+					break;
 
+					case '2'://Dependencia
+						url1="test/test_dependencia.php?estado=1";
+						url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
+						check=0;
+					break;
+
+					case '4'://Cargo
+						url1="test/test_cargo.php?estado=1";
+						url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
+						check=0;
+					break;
+				}
+				$.ajax({
+					url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
+					data:{xml:url1,campo:"identidad",radio:0,abrir_cargar:1,check_branch:check,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:1},
+					type : "POST",
+					async:false,
+					success : function(html) {
+						$("#sub_entidad").empty().html(html);
+					},error: function () {
+						top.noty({text: 'No se pudo cargar la informacion',type: 'error',layout: 'topCenter',timeout:5000});
+					}
+				});
+			}else{
+				$("#sub_entidad").empty();
+			}
+		});
+		$("#tipo_entidad").trigger("change");
 	});
+	function cargar_arbol_dependencias(xml1, dependencia_seleccionada){
+		if(dependencia_seleccionada != '') {
+			xml1 = xml1 + '?seleccionados=' + dependencia_seleccionada;
+		}
+		$.ajax({
+			url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
+			data:{xml:xml1,campo:"iddependencia",radio:0,check_branch:0,abrir_cargar:1,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:1},
+			type : "POST",
+			async:false,
+			success : function(html_dependencia) {
+				$("#dependencia_asociada").empty().html(html_dependencia);
+			},error: function (){
+				top.noty({text: 'No se pudo cargar el arbol de dependencias',type: 'error',layout: 'topCenter',timeout:5000});
+			}
+		});
+	}
 </script>
