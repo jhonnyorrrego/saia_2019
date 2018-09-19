@@ -92,7 +92,8 @@ if($dato_padre["numcampos"]){
   	<select name="fk_idcaja" id="fk_idcaja">
   		<option value="">Por favor seleccione...</option>
   		<?php
-  		$cajas=busca_filtro_tabla("","caja A","","",$conn);
+  		//$cajas=busca_filtro_tabla("","caja A","","",$conn);
+  		$cajas=busca_filtro_tabla("","caja a,entidad_caja e","a.idcaja=e.caja_idcaja and e.estado=1 and ((e.entidad_identidad=1 and e.llave_entidad=".usuario_actual('idfuncionario').") or a.funcionario_idfuncionario=".usuario_actual('idfuncionario').")","",$conn);
 			for($i=0;$i<$cajas["numcampos"];$i++){
 				$selected="";
 				if($datos[0]["fk_idcaja"]==$cajas[$i]["idcaja"])$selected="selected";

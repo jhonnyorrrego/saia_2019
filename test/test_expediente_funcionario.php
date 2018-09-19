@@ -113,11 +113,13 @@ class DHtmlXtreeExpedienteFunc {
                 if($exp["numcampos"]) {
                     $agrupador = $exp[0]["agrupador"];
                 }
-
+				$cerrado=false;
                 $text = $papas[$i]["nombre"] . " (" . $papas[$i]["codigo_numero"] . ")";
                 if ($papas[$i]["estado_cierre"] == 2) {
                     $text .= " - CERRADO";
+                    $cerrado=true;
                 }
+
                 $hijos = busca_filtro_tabla("count(1) as cant", "entidad_expediente ee join expediente e on ee.expediente_idexpediente = e.idexpediente", "e.cod_padre=" . $papas[$i]["idexpediente"] . $this->condicion_ad, "", $this->conn);
                 $tipo_docu = busca_filtro_tabla("count(1) as cant", "serie", "tipo=3 and tvd=0 and cod_padre=" . $papas[$i]["serie_idserie"], "", $this->conn);
 
@@ -128,16 +130,17 @@ class DHtmlXtreeExpedienteFunc {
                 $this->objetoXML->writeAttribute("text", $text);
                 $this->objetoXML->writeAttribute("id", $papas[$i]["idexpediente"] . "#");
                 $this->objetoXML->writeAttribute("nocheckbox", 1);
-                if ($hijos[0]["cant"] || $tipo_docu[0]["cant"]) {
+                if (($hijos[0]["cant"] || $tipo_docu[0]["cant"]) && !$cerrado) {
                     $this->objetoXML->writeAttribute("child", 1);
                 } else {
                     $this->objetoXML->writeAttribute("child", 0);
                 }
-                if ($hijos[0]["cant"]) {
+                if ($hijos[0]["cant"] && !$cerrado) {
                     $this->llena_expediente($papas[$i]["idexpediente"]);
                 }
-
+				if (!$cerrado) {
                 $this->llena_subserie($papas[$i]["serie_idserie"], $papas[$i]["idexpediente"]);
+				}
                 $this->objetoXML->endElement();
             }
         }

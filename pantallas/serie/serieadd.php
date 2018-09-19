@@ -778,7 +778,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 				}
 				$.ajax({
 					url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
-					data:{xml:url1,campo:"identidad",radio:0,abrir_cargar:1,check_branch:check,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:1},
+					data:{xml:url1,campo:"identidad",radio:0,abrir_cargar:1,check_branch:check,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:0},
 					type : "POST",
 					async:false,
 					success : function(html) {
@@ -799,7 +799,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 		}
 		$.ajax({
 			url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
-			data:{xml:xml1,campo:"iddependencia",radio:0,check_branch:1,abrir_cargar:1,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:1},
+			data:{xml:xml1,campo:"iddependencia",radio:0,check_branch:1,abrir_cargar:1,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:0},
 			type : "POST",
 			async:false,
 			success : function(html_dependencia) {

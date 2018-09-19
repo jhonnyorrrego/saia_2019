@@ -45,9 +45,12 @@ switch ($sAction) {
             if ($_REQUEST["idnode"]) {
                 ?>
 <script>
-					var idnode='<?php echo $_REQUEST["idnode"];?>';
-					idnodepapa=window.parent.frames['arbol'].tree2.getParentId(idnode);
-					window.parent.frames['arbol'].tree2.refreshItem(idnodepapa);
+					window.parent.frames['arbol'].tree2.refreshItem("0");
+					/*var idnode='<?php echo $_REQUEST["idnode"];?>';				
+					 idnodepapa=window.parent.frames['arbol'].tree2.getParentId(idnode);
+					console.log(idnodepapa);
+					window.parent.frames['arbol'].tree2.refreshItem(idnodepapa);*/
+					
 				</script>
 <?php
             } else {
@@ -484,6 +487,7 @@ encriptar_sqli("serieedit", 1, "form_info", $ruta_db_superior, false, false);
 
 <script>
 var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
+var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 	function cargar_datos_padre(idNode) {
 		$.ajax({
 			type : "POST",
@@ -552,10 +556,17 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 	$(document).ready(function() {
 		xml1="test/test_dependencia.php";
 		var dependencia_seleccionada="<?php echo $dependencia_seleccionada; ?>";
-		var entidades = <?php echo json_encode($entidades) ?>;	
-		console.log(entidades);	
+		var entidades = <?php echo json_encode($entidades) ?>;
 		cargar_arbol_dependencias(xml1,dependencia_seleccionada);		
 		var dependencia_seleccionadas=0;
+		if(x_tipo==2 || x_tipo==3){
+			tipo_serie = $("[name='x_tipo']:checked").val();
+			tvd = $("[name='x_tvd']:checked").val();
+			cod_padre=$("#x_cod_padre").val();
+			$(".ocultar_padre").show();
+			mostrar_papa(tipo_serie,tvd,cod_padre);
+			
+		}
 		if(identidad > 0) {
 			$("#tipo_entidad").trigger("change");
 		}			
@@ -583,8 +594,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 					form.submit();
 				}
 			}
-		});
-
+		});		
 		$("[name='x_categoria']").change(function() {
 			if ($(this).val() == 2) {
 				$("[name='x_tvd']").rules("add", {
@@ -614,9 +624,10 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 				$("[name='x_copia']").rules("add", {
 					required : true
 				});
-
-				$(".ocultar").show();
-				$(".ocultar_padre").hide();
+				if($("[name='x_tipo']:checked").val()==1){
+					$(".ocultar").show();
+					$(".ocultar_padre").hide();
+				}
 				$("[name='x_tipo']:checked").trigger("change");
 			} else {
 				$("[name='x_tvd']").rules("remove");
@@ -630,7 +641,6 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 
 				$(".ocultar").hide();
 				$(".ocultar_padre").show();
-
 				cod_padre=$("#x_cod_padre").val();
 				xml = "test/test_serie.php?ver_categoria2=0&ver_categoria3=1&excluidos="+$("#x_idserie").val();
 				if(cod_padre!=undefined && cod_padre!=0){
@@ -671,37 +681,8 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 			if(tvd!=undefined && tipo_serie!=undefined){
 				if(tipo_serie!=1){
 					$(".ocultar_padre").show();
-					xml = "test/test_serie.php?excluidos="+$("#x_idserie").val()+"&tipo3=0&tvd="+tvd;
-					if(tipo_serie==2){
-						xml+="&tipo2=0";
-					}
-					if(cod_padre!=undefined && cod_padre!=0){
-						xml+="&seleccionados="+cod_padre;
-					}
-					$.ajax({
-						url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
-						data: {
-							xml: xml,
-							campo: "x_cod_padre",
-							radio: 1,
-							abrir_cargar: 1,
-							onNodeSelect: "cargar_datos_padre",
-							ruta_db_superior: "../../"
-						},
-						type : "POST",
-						async:false,
-						success : function(html_serie) {
-							$("#divserie").empty().html(html_serie);
-						},
-						error: function() {
-							top.noty({
-								text: 'No se pudo cargar el arbol de series',
-								type: 'error',
-								layout: 'topCenter',
-								timeout:5000
-							});
-						}
-					});
+					mostrar_papa(tipo_serie,tvd,cod_padre);
+					
 				}else{
 					$(".ocultar_padre").hide();
 				}
@@ -747,7 +728,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 				}
 				$.ajax({
 					url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
-					data:{xml:url1,campo:"identidad",radio:0,abrir_cargar:1,check_branch:check,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:1},
+					data:{xml:url1,campo:"identidad",radio:0,abrir_cargar:1,check_branch:check,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:0},
 					type : "POST",
 					async:false,
 					success : function(html) {
@@ -768,13 +749,46 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 		}
 		$.ajax({
 			url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
-			data:{xml:xml1,campo:"iddependencia",radio:0,check_branch:0,abrir_cargar:1,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:1},
+			data:{xml:xml1,campo:"iddependencia",radio:0,check_branch:0,abrir_cargar:1,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:0},
 			type : "POST",
 			async:false,
 			success : function(html_dependencia) {
 				$("#dependencia_asociada").empty().html(html_dependencia);
 			},error: function (){
 				top.noty({text: 'No se pudo cargar el arbol de dependencias',type: 'error',layout: 'topCenter',timeout:5000});
+			}
+		});
+	}
+	function mostrar_papa(tipo_serie,tvd,cod_padre){
+		xml = "test/test_serie.php?excluidos="+$("#x_idserie").val()+"&tipo3=0&tvd="+tvd;
+		if(tipo_serie==2){
+			xml+="&tipo2=0";
+		}
+		if(cod_padre!=undefined && cod_padre!=0){
+			xml+="&seleccionados="+cod_padre;
+		}
+		$.ajax({
+			url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
+			data: {
+				xml: xml,
+				campo: "x_cod_padre",
+				radio: 1,
+				abrir_cargar: 1,
+				onNodeSelect: "cargar_datos_padre",
+				ruta_db_superior: "../../"
+			},
+			type : "POST",
+			async:false,
+			success : function(html_serie) {
+				$("#divserie").empty().html(html_serie);
+			},
+			error: function() {
+				top.noty({
+					text: 'No se pudo cargar el arbol de series',
+					type: 'error',
+					layout: 'topCenter',
+					timeout:5000
+				});
 			}
 		});
 	}
