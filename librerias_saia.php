@@ -41,6 +41,9 @@ function librerias_jquery($version = "1.7.2") {
 		case "1.12" :
 			$version = "1.12.4";
 			break;
+		case "2.2" :
+		    $version = "2.2.4";
+		    break;
 		case "sapi" :
 			$texto = '<script type="text/javascript" src="http://www.google.com/jsapi"></script>
 <script type="text/javascript">
@@ -63,9 +66,18 @@ function librerias_fechas($hora = 0) {
 	return ($texto);
 }
 
-function librerias_UI() {
+function librerias_UI($version = "1.8.17") {
 	global $raiz_saia;
-	$texto = '<script src="' . $raiz_saia . 'js/jquery-ui-1.8.17.min.js" type="text/javascript"></script>';
+	$texto = '';
+	switch ($version) {
+	    case "1.12" :
+	        $version = "1.12.1";
+	        break;
+	    case "1.8.17":
+	        $texto = '<script src="' . $raiz_saia . 'js/jquery-ui-1.8.17.min.js" type="text/javascript"></script>';
+	        return $texto;
+	}
+	$texto = '<script src="' . $raiz_saia . 'js/jquery-ui/' . $version . '/jquery-ui.js" type="text/javascript"></script>';
 	return ($texto);
 }
 
@@ -256,6 +268,27 @@ function librerias_arboles($opciones = '') {
 		$texto .= '<script type="text/javascript" src="' . $raiz_saia . 'js/dhtmlxTree_dragIn.js"></script>';
 	}
 	return ($texto);
+}
+
+function librerias_arboles_ft($version = "2.24", $opciones = '', $tema = "lion") {
+    global $raiz_saia;
+    $modulos = "";
+    switch ($version) {
+        case "2.24" :
+            $version = "2.24.0";
+            $modulos = "src";
+            break;
+        case "2.30" :
+            $version = "2.30.0";
+            $modulos = "modules";
+            break;
+    }
+    $texto =  '<link href="' .   $raiz_saia . "js/jquery.fancytree/$version/skin-$tema/ui.fancytree.css" . '" rel="stylesheet">';
+    $texto .= '<script src="' .  $raiz_saia . "js/jquery.fancytree/$version/jquery.fancytree.min.js" . '"></script>';
+    if($opciones == 'filtro') {
+        $texto .= '<script src="' .  $raiz_saia . 'js/jquery.fancytree/' . $version . "/$modulos" . '/jquery.fancytree.filter.js"></script>';
+    }
+    return $texto;
 }
 
 function librerias_tiny() {
