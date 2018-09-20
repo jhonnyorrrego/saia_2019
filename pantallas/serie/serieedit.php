@@ -554,6 +554,7 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 	}
 
 	$(document).ready(function() {
+		$("#tipo_entidad option[value='2']").prop('selected', true)
 		xml1="test/test_dependencia.php";
 		var dependencia_seleccionada="<?php echo $dependencia_seleccionada; ?>";
 		var entidades = <?php echo json_encode($entidades) ?>;
@@ -575,11 +576,23 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 				x_nombre:{required:true}
 			},
 			submitHandler : function(form) {
-				x_categoria = $("[name='x_categoria']:checked").val();
+				var x_identidad ="";
+				x_categoria = $("[name='x_categoria']:checked").val();				
 				if (x_categoria == 2) {
+					x_identidad = $("#identidad").val();
 					x_tipo = $("[name='x_tipo']:checked").val();
 					x_cod_padre = $("#x_cod_padre").val();
+					if(x_identidad == ""){
+						top.noty({
+							text : 'Por favor seleccione a quien le va a asignar permiso',
+							type : 'error',
+							layout : 'topCenter',
+							timeout : 5000
+						});
+						return false;
+					}
 					if (x_tipo != 1 && (x_cod_padre == "" || x_cod_padre == 0)) {
+						
 						top.noty({
 							text : 'Por favor seleccione el Padre',
 							type : 'error',
