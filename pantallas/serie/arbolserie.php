@@ -24,10 +24,19 @@ echo librerias_UI("1.12");
 echo librerias_arboles_ft("2.24", 'filtro');
 ?>
 <style type="text/css">
-.estilo-dependencia {font-family:verdana; font-size:7pt;font-weight:bold;}
-.estilo-serie {font-family:verdana; font-size:7pt;}
-.estilo-serie-sa {font-family:verdana; font-size:7pt;color: red;}
+.estilo-dependencia {
+	font-family: verdana;
+	font-size: 7pt;
+	font-weight: bold;
+}
 
+ul.fancytree-container {
+    width: 100%;
+    height: 80%;
+    overflow: auto;
+    position: relative;
+    border: none;
+}
 </style>
 </head>
 
@@ -50,6 +59,7 @@ echo librerias_arboles_ft("2.24", 'filtro');
 	$(document).ready(function() {
     	$("#treeboxbox_tree3").fancytree({
     		icon: false,
+    		autoScroll: true,
     		strings: {
     			loading: "Cargando...",
     			loadError: "Error en la carga!",
