@@ -30,6 +30,17 @@ echo librerias_arboles_ft("2.24", 'filtro');
 	font-weight: bold;
 }
 
+.estilo-serie {
+	font-family: verdana;
+	font-size: 7pt;
+}
+
+.estilo-serie-sa {
+	font-family: verdana;
+	font-size: 7pt;
+	color: red;
+}
+
 ul.fancytree-container {
     width: 100%;
     height: 80%;
@@ -38,6 +49,7 @@ ul.fancytree-container {
     border: none;
 }
 </style>
+
 </head>
 
 <body>
