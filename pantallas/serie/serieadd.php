@@ -548,13 +548,55 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 				x_nombre:{required:true},
 				x_tipo: {
 					required : true
+				},
+				x_tvd: {
+					required : true
+				},
+				x_categoria: {
+					required : true
+				},
+				x_dias_entrega: {
+					required : true
+				},
+				x_retencion_gestion: {
+					required : true
+				},
+				x_retencion_central: {
+					required : true
+				},
+				x_conservacion: {
+					required : true
+				},
+				x_seleccion: {
+					required : true
 				}
 			},
 			submitHandler : function(form) {
+				var x_identidad ="";
 				x_categoria = $("[name='x_categoria']:checked").val();
 				if (x_categoria == 2) {
+					x_identidad = $("#identidad").val();
+					x_iddependencia = $("#iddependencia").val();
 					x_tipo = $("[name='x_tipo']:checked").val();
 					x_cod_padre = $("#x_cod_padre").val();
+					if(x_iddependencia == ""){
+						top.noty({
+							text : 'Por favor seleccione a quien le va a asignar la serie',
+							type : 'error',
+							layout : 'topCenter',
+							timeout : 5000
+						});
+						return false;
+					}
+					if(x_identidad == ""){
+						top.noty({
+							text : 'Por favor seleccione a quien le va a asignar permiso',
+							type : 'error',
+							layout : 'topCenter',
+							timeout : 5000
+						});
+						return false;
+					}
 					if (x_tipo != 1 && (x_cod_padre == "" || x_cod_padre == 0)) {
 						top.noty({
 							text : 'Por favor seleccione el Padre',
@@ -779,7 +821,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 				}
 				$.ajax({
 					url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
-					data:{xml:url1,campo:"identidad",radio:0,abrir_cargar:1,check_branch:check,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:1},
+					data:{xml:url1,campo:"identidad",radio:0,abrir_cargar:1,check_branch:check,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:0},
 					type : "POST",
 					async:false,
 					success : function(html) {
@@ -800,7 +842,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 		}
 		$.ajax({
 			url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
-			data:{xml:xml1,campo:"iddependencia",radio:0,check_branch:1,abrir_cargar:1,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:1},
+			data:{xml:xml1,campo:"iddependencia",radio:0,check_branch:1,abrir_cargar:1,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:0},
 			type : "POST",
 			async:false,
 			success : function(html_dependencia) {
