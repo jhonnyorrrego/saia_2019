@@ -15,7 +15,6 @@ include_once ($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $validar_enteros = array("x_idserie");
 desencriptar_sqli('form_info');
 
-
 $categoria_txt = [
     2 => "Producci&oacute;n Documental",
     3 => "Otras Categorias"
@@ -259,9 +258,11 @@ function AddData($conn) {
 }
 
 include ($ruta_db_superior."librerias_saia.php");
-echo librerias_jquery("1.8");
+echo librerias_jquery("3.3");
 echo librerias_validar_formulario("11");
-echo librerias_arboles();
+echo librerias_UI("1.12");
+echo librerias_arboles_ft("2.24", 'filtro');
+
 $tipo_entidad = null;
 if ($_REQUEST["tipo_entidad"]) {
     $tipo_entidad = $_REQUEST["tipo_entidad"];
@@ -444,11 +445,11 @@ $option = '<option value="">Seleccione</option>
 			</span></td>
 		</tr>
 		<tr>
-			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">TIPO DE PERMISO*</span></td>
-			<td bgcolor="#F5F5F5"><select id="tipo_entidad" name="tipo_entidad" class="required"><?php echo $option;?></select></td>
+			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">TIPO DE PERMISO</span></td>
+			<td bgcolor="#F5F5F5"><select id="tipo_entidad" name="tipo_entidad"><?php echo $option;?></select></td>
 		</tr>
 		<tr>
-			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ASIGNAR PERMISO*</span></td>
+			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ASIGNAR PERMISO</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="sub_entidad"></div> </td>
 		</tr>
 
@@ -535,7 +536,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 	}
 
 	$(document).ready(function() {
-		xml1="test/test_dependencia.php";
+		xml1="arboles/arbol_dependencia.php?checkbox=true&expandir=1";
 		var dependencia_seleccionada="<?php echo $dependencia_seleccionada; ?>";
 		var entidades = <?php echo json_encode($entidades) ?>;
 		cargar_arbol_dependencias(xml1,dependencia_seleccionada);
@@ -587,7 +588,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 							timeout : 5000
 						});
 						return false;
-					}
+					}/*
 					if(x_identidad == ""){
 						top.noty({
 							text : 'Por favor seleccione a quien le va a asignar permiso',
@@ -596,7 +597,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 							timeout : 5000
 						});
 						return false;
-					}
+					}*/
 					if (x_tipo != 1 && (x_cod_padre == "" || x_cod_padre == 0)) {
 						top.noty({
 							text : 'Por favor seleccione el Padre',
@@ -661,18 +662,13 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 				$(".ocultar").hide();
 				$(".ocultar_padre").show();
 
-				//var cod_padre = $("#x_cod_padre").val();
-				xml = "test/test_serie.php?ver_categoria2=0&ver_categoria3=1";
-				/*if(cod_padre != undefined && cod_padre != 0){
-					xml+="&seleccionados="+cod_padre;
-				}*/
+				xml = "arboles/arbol_serie.php?ver_categoria2=0&ver_categoria3=1&checkbox=true";				
 				$.ajax({
-					url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
+					url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
 					data : {
 						xml : xml,
 						campo : "x_cod_padre",
-						radio : 1,
-						abrir_cargar : 1,
+						busqueda_item:1,
 						ruta_db_superior: "../../"
 					},
 					type : "POST",
@@ -697,7 +693,6 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 
 		var cod_padre = $("#x_cod_padre").val();
 		if(cod_padre) {
-			//console.log("cod_padre: " + cod_padre);
 			$(".ocultar_padre").show();
 		} else {
 			$(".ocultar_padre").hide();
@@ -712,7 +707,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 			if (tvd != undefined && tipo_serie != undefined) {
 				if (tipo_serie != 1 && !cod_padre) {
 					$(".ocultar_padre").show();
-					xml = "test/test_serie.php?tipo3=0&tvd=" + tvd;
+					xml = "arboles/arbol_serie.php?checkbox=true&tipo3=0&tvd=" + tvd;
 					if (tipo_serie == 2) {
 						xml += "&tipo2=0";
 					}
@@ -720,12 +715,11 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 						xml+="&seleccionados="+cod_padre;
 					}
 					$.ajax({
-						url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
+						url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
 						data : {
 							xml : xml,
 							campo : "x_cod_padre",
-							radio : 1,
-							abrir_cargar : 1,
+							busqueda_item:1,
 							onNodeSelect : "cargar_datos_padre",
 							ruta_db_superior: "../../"
 						},
@@ -765,38 +759,10 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 						entidades_seleccionadas = entidades_seleccionadas + ',' + identidad;
 					}
 				}
-				//url1="";
-			//if(option != "") {
-				url1="";
-				/*switch(option) {
-					case '1'://Funcionario
-					//url1="test/test_funcionario.php";
-					url1="test.php?rol=1";
-					if(identidad > 0) {
-						url1  = url1 + '&id=' + identidad;
-					}
-					check=1;
-					break;
-
-					case '2'://Dependencia
-						url1="test/test_dependencia.php?estado=1";
-						if(identidad > 0) {
-							url1  = url1 + '&seleccionados=' + identidad;
-						}
-						check=0;
-					break;
-
-					case '4'://Cargo
-						url1="test/test_cargo.php?estado=1";
-						if(identidad > 0) {
-							url1  = url1 + '&seleccionados=' + identidad;
-						}
-						check=0;
-					break;
-				}*/
+				url1="";				
 				switch(option) {
 					case '1'://Funcionario
-					url1="test/test_funcionario.php?idcampofun=funcionario_codigo&sin_padre=1";
+					url1="arboles/arbol_funcionario.php?idcampofun=funcionario_codigo&checkbox=true&sin_padre=1";
 					//url1="test.php?rol=1";
 						url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
 					//}
@@ -804,7 +770,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 					break;
 
 					case '2'://Dependencia
-						url1="test/test_dependencia.php?estado=1";
+						url1="arboles/arbol_dependencia.php?estado=1&checkbox=true";
 						//if(identidad > 0) {
 							url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
 						//}
@@ -812,7 +778,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 					break;
 
 					case '4'://Cargo
-						url1="test/test_cargo.php?estado=1";
+						url1="arboles/arbol_cargo.php?estado=1&checkbox=true";
 						//if(identidad > 0) {
 							url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
 						//}
@@ -820,8 +786,8 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 					break;
 				}
 				$.ajax({
-					url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
-					data:{xml:url1,campo:"identidad",radio:0,abrir_cargar:1,check_branch:check,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:0},
+					url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
+					data:{xml:url1,campo:"identidad",radio:0,selectMode:check,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:1},
 					type : "POST",
 					async:false,
 					success : function(html) {
@@ -836,13 +802,14 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 		});
 		$("#tipo_entidad").trigger("change");
 	});
-	function cargar_arbol_dependencias(xml1, dependencia_seleccionada){
+	function cargar_arbol_dependencias(xml1, dependencia_seleccionada){		
 		if(dependencia_seleccionada != '') {
-			xml1 = xml1 + '?seleccionados=' + dependencia_seleccionada;
+			xml1 = xml1 + '&seleccionados=' + dependencia_seleccionada;
 		}
+		console.log(xml1);
 		$.ajax({
-			url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
-			data:{xml:xml1,campo:"iddependencia",radio:0,check_branch:1,abrir_cargar:1,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:0},
+			url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
+			data:{xml:xml1,campo:"iddependencia",selectMode:1,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:1,expandir:3},
 			type : "POST",
 			async:false,
 			success : function(html_dependencia) {
