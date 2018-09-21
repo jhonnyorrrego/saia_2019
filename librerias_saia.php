@@ -44,6 +44,9 @@ function librerias_jquery($version = "1.7.2") {
 		case "2.2" :
 		    $version = "2.2.4";
 		    break;
+		case "3.3" :
+		    $version = "3.3.1";
+		    break;
 		case "sapi" :
 			$texto = '<script type="text/javascript" src="http://www.google.com/jsapi"></script>
 <script type="text/javascript">
