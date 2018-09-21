@@ -90,6 +90,8 @@ ul.fancytree-container {
         			serie_sin_asignar: 1
     			}
     		}),
+    		//minExpandLevel:2,
+    		
     		filter: {
     		    autoApply: true,   // Re-apply last filter if lazy data is loaded
     		    autoExpand: true, // Expand all branches that contain matches while filtered
@@ -103,11 +105,12 @@ ul.fancytree-container {
     		    mode: "hide",      // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
             },
 
-            activate: function(event, data) {
+            click: function(event, data) {
                 var nodeId = data.node.key;
                 //console.log(data.node.getKeyPath());
     			if(nodeId!="0.0.0" && nodeId!="0.0.-1"){
     				var datos=nodeId.split(".");
+    				//event.stopPropagation();
     				if(parent.serielist && datos[1]==0){
     					parent.serielist.location = "asignarserie_entidad.php?tvd="+datos[2]+"&seleccionados="+datos[0]+"&idnode=" + nodeId;
     				}else if(datos[1]!=0){
@@ -121,7 +124,7 @@ ul.fancytree-container {
 	//var rootNode = $("#treeboxbox_tree3").fancytree("getRootNode");
 
 	var tree = $("#treeboxbox_tree3").fancytree("getTree");
-
+     
     $("input[name=search]").keyup(function(e){
 	    var coincidencias = " coincidencias";
         var n,
