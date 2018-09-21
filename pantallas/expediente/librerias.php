@@ -101,7 +101,7 @@ function enlace_expediente($idexpediente, $nombre) {
         }
     }
     $a_html = array();
-    if($l) {
+    if($l && $m) {
         $a_html[] = '<div class="link kenlace_saia" enlace="pantallas/busquedas/consulta_busqueda_expediente.php?' . $req_parms . '" conector="iframe" titulo="' . $nombre . '">';
         $a_html[] = '<table><tr><td style="font-size:12px;">';
         $a_html[] = "<i class='$icono_expediente pull-left' $estilo_expediente></i>&nbsp;";
@@ -511,10 +511,10 @@ function expedientes_asignados() {
 	$roles = busca_filtro_tabla("dependencia_iddependencia,cargo_idcargo", "dependencia_cargo a", "a.estado='1' and a.funcionario_idfuncionario=" . $idfunc_actual, "", $conn);
 	$dependencias = extrae_campo($roles, "dependencia_iddependencia");
 	$cargos = extrae_campo($roles, "cargo_idcargo");
-	
+
 	$llaves_exp = array_merge($llaves_exp, $dependencias);
 	$llaves_exp = array_merge($llaves_exp, $cargos);
-	$cadena_serie = "(entidad_identidad IN ('" . implode("','", $entidades_exp) . "') AND llave_entidad IN ('" . implode("','", $llaves_exp) . "'))"; 
+	$cadena_serie = "(entidad_identidad IN ('" . implode("','", $entidades_exp) . "') AND llave_entidad IN ('" . implode("','", $llaves_exp) . "'))";
 
 	$permisos_serie=busca_filtro_tabla("serie_idserie","permiso_serie",$cadena_serie,"",$conn);
 	$series = extrae_campo($permisos_serie, "serie_idserie");
@@ -722,21 +722,43 @@ function adicionar_expediente() {
 	    <a  href="#" id="adicionar_expediente" idbusqueda_componente="' . $_REQUEST["idbusqueda_componente"] . '" conector="iframe" titulo="Adicionar expediente hijo" enlace="pantallas/expediente/adicionar_expediente.php?cod_padre=' . @$_REQUEST["idexpediente"] . '&div_actualiza=resultado_busqueda' . $_REQUEST["idbusqueda_componente"] . '&target_actualiza=parent&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '&estado_archivo=' . @$_REQUEST["variable_busqueda"] . '&fk_idcaja=' . $_REQUEST["idcaja"] . '">Adicionar Expediente/Agrupador</a>
 	</li>';
 		if (!empty($_REQUEST["idexpediente"])) {
+		    $idexpediente = $_REQUEST["idexpediente"];
 		    $exp_data = busca_filtro_tabla("agrupador", "expediente", "idexpediente = " . $_REQUEST["idexpediente"], "", $conn);
 		    $es_agrupador = false;
 		    if($exp_data["numcampos"]) {
 		        $es_agrupador = $exp_data[0]["agrupador"];
 		    }
-		    if(!$es_agrupador) {
-    			$cadena .= '
+		    if($es_agrupador) {
+		        $idexpediente = encontrar_expediente_padre($_REQUEST["idexpediente"]);
+		    }
+		    // 20180921: Jorge Ramirez solicita que en los agrupadores se ingresen documentos
+   			$cadena .= '
     		<li></li>
     		<li>
-    		    <a id="adicionar_documento_exp" conector="iframe" titulo="Adicionar Documento" enlace="' . FORMATOS_CLIENTE . 'vincular_doc_expedie/adicionar_vincular_doc_expedie.php?idexpediente=' . @$_REQUEST["idexpediente"] . '">Adicionar Documento</a>
+    		    <a id="adicionar_documento_exp" conector="iframe" titulo="Adicionar Documento" enlace="' . FORMATOS_CLIENTE . 'vincular_doc_expedie/adicionar_vincular_doc_expedie.php?idexpediente=' . $idexpediente . '">Adicionar Documento</a>
     		</li>';
-		    }
 		}
 	}
 	echo($cadena);
+}
+
+function encontrar_expediente_padre($idagrupador) {
+    global $conn;
+    $idexpediente = $idagrupador;
+    $expediente = busca_filtro_tabla("idexpediente, cod_padre, agrupador", "expediente", "idexpediente = $idagrupador", "", $conn);
+    if($expediente["numcampos"] && $expediente[0]["agrupador"] == 1) {
+        if(!empty($expediente[0]["cod_padre"])) {
+            $padre = busca_filtro_tabla("idexpediente, cod_padre, agrupador", "expediente", "idexpediente = " . $expediente[0]["cod_padre"] , "", $conn);
+            if($padre["numcampos"] && $padre[0]["agrupador"] == 0) {
+                $idexpediente = $padre[0]["idexpediente"];
+            } else {
+                $idexpediente = encontrar_expediente_padre($padre[0]["idexpediente"]);
+            }
+        }
+    } else {
+        return $idexpediente;
+    }
+    return $idexpediente;
 }
 
 function prestamo_documento() {
