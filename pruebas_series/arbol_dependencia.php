@@ -44,6 +44,7 @@ echo (librerias_notificaciones());
 
 		$("#treeboxbox_tree3").fancytree({
 			icon: false,
+			lazy: true,
     		strings: {
     			loading: "Cargando...",
     			loadError: "Error en la carga!",
@@ -55,9 +56,35 @@ echo (librerias_notificaciones());
 			//autoScroll: true, // Automatically scroll nodes into visible area.
 			quicksearch: true, // Navigate to next node by typing the first letters.
 			//keyboard: true, // Support keyboard navigation.
-			source: $.ajax({
-				url: "arbol_dependencia_serie.php?otras_categorias=1&serie_sin_asignar=1"
-			}),
+			source: {
+				url: "arbol_dependencia_serie.php",
+				data: {
+					cargar_partes: 1,
+					otras_categorias: 1,
+					serie_sin_asignar: 1
+				}
+			},
+			lazyLoad: function(event, data){
+			      var node = data.node;
+			      // Load child nodes via Ajax GET /getTreeData?mode=children&parent=1234
+			      data.result = $.ajax({
+			        url: "arbol_dependencia_serie.php",
+			        data: {
+				        cargar_partes: 1,
+				        id: node.key
+				    },
+			        cache: false
+			      });
+			      //console.log(data.result);
+			},
+			loadChildren: function(event, data) {
+				data.node.visit(function(subNode){
+					// quitar la condicion subNode.isExpanded() si filtra
+				    if( subNode.isUndefined() && subNode.isExpanded() ) {
+				        subNode.load();
+				    }
+				});
+			},
 			filter: {
     		    autoApply: true,   // Re-apply last filter if lazy data is loaded
     		    autoExpand: true, // Expand all branches that contain matches while filtered
@@ -69,18 +96,10 @@ echo (librerias_notificaciones());
     		    leavesOnly: false, // Match end nodes only
     		    nodata: true,      // Display a 'no data' status node if result is empty
     		    mode: "hide",      // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
-    		    select: function(event, data) {
-    			    console.log(event);
-    		            // Display list of selected nodes
-    		            //var s = data.tree.getSelectedNodes().join(", ");
-    			    //$("#echoSelection1").text(s);
-    			    //console.log(s);
-       		      }
-
 	        },
 	        activate: function(event, data) {
 	            //$("#echoActive").text(data.node.title);
-                console.log(data.node.getKeyPath());
+                //console.log(data.node.getKeyPath());
 	            if(data.node.url)
 	              window.open(data.node.url, data.node.target);
 	          },
