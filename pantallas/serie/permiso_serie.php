@@ -12,11 +12,12 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once ($ruta_db_superior . "header.php");
-echo librerias_jquery("1.8");
+echo librerias_jquery("3.3");
 echo(librerias_notificaciones());
-echo librerias_validar_formulario("11");
-echo librerias_arboles();
-
+echo librerias_validar_formulario("12");
+//echo librerias_arboles();
+echo librerias_UI("1.12");
+echo librerias_arboles_ft("2.24", 'filtro');
 $idserie = null;
 $idserie_padre = null;
 $tipo_entidad = null;
@@ -166,7 +167,7 @@ var entidades = <?php echo json_encode($entidades) ?>;
 				
 				switch(option) {
 					case '1'://Funcionario
-					url1="test/test_funcionario.php?idcampofun=funcionario_codigo&sin_padre=1";					
+					url1="arboles/arbol_funcionario.php?idcampofun=funcionario_codigo&checkbox=true&sin_padre=1";					
 					//url1="test.php?rol=1";						
 						url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
 					//}
@@ -174,27 +175,27 @@ var entidades = <?php echo json_encode($entidades) ?>;
 					break;
 
 					case '2'://Dependencia
-						url1="test/test_dependencia.php?estado=1";
+						url1="arboles/arbol_dependencia.php?estado=1&checkbox=true";
 						//if(identidad > 0) {
 							url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
 						//}
-						check=0;
+						check=2;
 					break;
 
 					case '4'://Cargo
-						url1="test/test_cargo.php?estado=1";
+						url1="arboles/arbol_cargo.php?estado=1&checkbox=true";
 						//if(identidad > 0) {
 							url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
 						//}
-						check=0;
+						check=1;
 					break;
 				}
 				$.ajax({
-					url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
-					data:{xml:url1,campo:"identidad",radio:0,abrir_cargar:1,check_branch:check,ruta_db_superior:"../../",onNodeSelect:"validar_permisos_entidad",seleccionar_todos:1,busqueda_item:0},
+					url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
+					data:{xml:url1,campo:"identidad",selectMode:check,ruta_db_superior:"../../",onNodeSelect:"validar_permisos_entidad",seleccionar_todos:1,busqueda_item:1},
 					type : "POST",
 					async:false,
-					success : function(html) {
+					success : function(html) {						
 						$("#sub_entidad").empty().html(html);
 					},error: function () {
 						top.noty({text: 'No se pudo cargar la informacion',type: 'error',layout: 'topCenter',timeout:5000});
@@ -205,26 +206,16 @@ var entidades = <?php echo json_encode($entidades) ?>;
 			}
 		});
 		$("#tipo_entidad").trigger("change");
-
-		$("#permiso_serie").validate({
-			submitHandler: function(form) {
-				var serie=$("#serie_idserie").val();
-				var entidad=$("#identidad").val();
-				if(serie!="" && entidad!="") {
-					form.submit();
-				} else {
-					top.noty({text: 'Por favor seleccione todos los campos',type: 'error',layout: 'topCenter',timeout:5000});
-					return false;
-				}
-			}
-		});	
 	});
-	function validar_permisos_entidad(nodeId){
+	
+	function validar_permisos_entidad(event,data){
+		
 		var tipo_entidad = $("#tipo_entidad").val();
 		var serie= $("#x_serie_idserie").val();
-		var id = nodeId;
-		var accion = treeidentidad.isItemChecked(nodeId);
-		
+		var id = data.node.key;
+		var accion = data.node.selected ? 1 : 0;
+		//var accion=1;d
+		//return false;
         $.ajax({
         	    url: 'validar_permisos_entidad.php',
                 dataType: 'json',

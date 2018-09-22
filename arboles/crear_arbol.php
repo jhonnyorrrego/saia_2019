@@ -15,12 +15,12 @@ include_once ($ruta_db_superior . "db.php");
 //echo(librerias_jquery("3.3"));
 if ($_REQUEST["xml"] != "" && $_REQUEST["campo"]) {
 	$parametros = array(
-		"radio" => 0,
 		"selectMode" => 2,
 		//"abrir_cargar" => 0,
 		"busqueda_item" => 0,
 		"onNodeSelect" => "",
 		"ruta_db_superior" => "",
+		"expandir"=> 4,
 		"seleccionar_todos"=> ""
 	);	
 	if (isset($_REQUEST["selectMode"])) {
@@ -40,6 +40,9 @@ if ($_REQUEST["xml"] != "" && $_REQUEST["campo"]) {
 	}
 	if (isset($_REQUEST["seleccionar_todos"])) {
 		$parametros["seleccionar_todos"] = $_REQUEST["seleccionar_todos"];
+	}
+	if (isset($_REQUEST["expandir"])) {
+		$parametros["expandir"]=$_REQUEST["expandir"];
 	}
 }
 ?>
@@ -95,10 +98,9 @@ function crear_arbol($xml,$campo,$parametros) {
 	<div id="treebox_<?php echo $campo; ?>"></div>
 	<input type="hidden" class="required" name="<?php echo $campo; ?>" id="<?php echo $campo; ?>">
 	<script type="text/javascript">
-	var nodoSeleccionado;
-
-	$(document).ready(function() {
-    	$("#treebox_<?php echo $campo; ?>").fancytree({
+	$(document).ready(function() { 
+	var nodoSeleccionado="<?php echo($parametros["onNodeSelect"]); ?>";
+	var configuracion={
     		icon: false,
     		strings: {
     			loading: "Cargando...",
@@ -106,12 +108,13 @@ function crear_arbol($xml,$campo,$parametros) {
     			moreData: "Mas...",
     			noData: "Sin datos."
     		},
-    		debugLevel: 4,
+    		debugLevel: 1,
     		extensions: ["filter"],
     		//autoScroll: true, // Automatically scroll nodes into visible area.
     		quicksearch: true, // Navigate to next node by typing the first letters.
     		//keyboard: true, // Support keyboard navigation.
     		selectMode: <?php echo $parametros["selectMode"]; ?>,
+    		clickFolderMode:2,
     		source: {
     			url: "<?php echo $parametros["ruta_db_superior"].$xml; ?>",
     			data: {
@@ -140,13 +143,18 @@ function crear_arbol($xml,$campo,$parametros) {
 				var s = seleccionados.join(","); 
 				$("#<?php echo $campo; ?>").val(s);
 			},
-            activate: function(event, data) {
+            /*activate: function(event, data) {
                 var nodeId = data.node.key;
                 console.log(nodeId);
-           },
-		});
+           },*/
+		};
+		if(nodoSeleccionado != "") {
+			delete configuracion.select;
+		}
+//	$(document).ready(function() {    	
+    	$("#treebox_<?php echo $campo; ?>").fancytree(configuracion);
 	//var rootNode = $("#treeboxbox_tree3").fancytree("getRootNode");
-
+	
 	var tree = $("#treebox_<?php echo $campo; ?>").fancytree("getTree");
 	
 	<?php if($parametros["onNodeSelect"]!=""){?>
@@ -196,13 +204,13 @@ function crear_arbol($xml,$campo,$parametros) {
 		var message = event.data; //this is the message
 
 		var tree = $("#treebox_<?php echo $campo; ?>").fancytree('getTree');
-
+		console.log("<?php echo $parametros["ruta_db_superior"].$xml; ?>");
 		var newSourceOption = {
 		    url: "<?php echo $parametros["ruta_db_superior"].$xml; ?>",
 		    type: 'POST',
 		    data: {
-				otras_categorias: 1,
-				serie_sin_asignar: 1
+				/*otras_categorias: 1,
+				serie_sin_asignar: 1*/
 		    },
 		    dataType: 'json'
 		  };

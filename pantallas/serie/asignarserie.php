@@ -27,6 +27,7 @@ if ($_REQUEST["opt"] == 1 && $_REQUEST["iddependencia"]) {
             //foreach ($dependencias as $id) {
                 $delete = "UPDATE entidad_serie SET estado=0 WHERE serie_idserie not in (" . implode(",",$idseries).") and llave_entidad=" . $dependencias;
                 phpmkr_query($delete) or die("Error al eliminar la vinculacion de la serie con la dependencia");
+				//$retorno=0;
 				$retorno=0;
             //}
         //}

@@ -17,6 +17,9 @@ $objetoJson = array(
 $id = 0;
 $hijos = array();
 $hijos_dep = array();
+$seleccionados="";
+$expandir=0;
+
 //DEFAULT DATOS
 $condicion_ad = "";
 if (isset($_REQUEST["estado"])) {
@@ -31,7 +34,9 @@ if (isset($_REQUEST["excluidos"])) {
 if (isset($_REQUEST["seleccionados"])) {
 	$seleccionados = explode(",", $_REQUEST["seleccionados"]);
 }
-
+if (isset($_REQUEST["expandir"])) {
+	$expandir = $_REQUEST["expandir"];
+}
 if (isset($_REQUEST["id"])) {
 	
 	$objetoJson["key"] = $_REQUEST["id"];	
@@ -59,7 +64,7 @@ header('Content-Type: application/json');
 echo json_encode($objetoJson);
 
 function llena_dependencia($id) {
-	global $conn, $checkbox, $condicion_ad, $seleccionados;
+	global $conn, $checkbox, $condicion_ad, $seleccionados, $expandir;
 	$objetoJson = array();
 	if ($id == 0) {
 		$papas = busca_filtro_tabla("", "dependencia", "(cod_padre=0 or cod_padre is null)" . $condicion_ad, "nombre ASC", $conn);
@@ -77,15 +82,19 @@ function llena_dependencia($id) {
             $item["title"] = $text;
 			$item["key"]= $papas[$i]["iddependencia"];
 			$item["checkbox"]=$checkbox;
+			if($expandir==1){
+				$item["expanded"]=true;
+			}
 			if ($papas[$i]["estado"] == 0) {
 				//$objetoXML -> writeAttribute("nocheckbox", 1);
 				$item["unselectableStatus"]=false;
 				$item["folder"] = 1;
 			}
-			if (in_array($papas[$i]["iddependencia"], $seleccionados) !== false) {
-				//$objetoXML -> writeAttribute("checked", 1);
-				$item["selected"]=true;
-				
+			if($seleccionados!=""){
+				if (in_array($papas[$i]["iddependencia"], $seleccionados) !== false) {
+					//$objetoXML -> writeAttribute("checked", 1);
+					$item["selected"]=true;
+				}
 			}
 			$hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"] . $condicion_ad, "", $conn);
 			if ($hijos[0]["cant"]) {

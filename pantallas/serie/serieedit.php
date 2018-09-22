@@ -110,7 +110,8 @@ switch ($sAction) {
 
         $tipo_tvd[$x_tvd] = "checked";
 
-        $categoria[$x_categoria] = "checked";
+        //$categoria[$x_categoria] = "checked";
+        $categoria=array(2=>"PRODUCCION DOCUMENTAL",3=>"OTRAS CATAGORIAS");
 
         $tipo_serie = array(
             1 => "",
@@ -263,42 +264,44 @@ function EditData($sKey) {
 			phpmkr_query($update) or die("Error al cambiar el tipo de las series hijas");
 		}
 		// insert into permiso_serie
-		$entidades = explode(",",$fieldList_permiso["identidad"]);
-		
-		$buscar_existente = busca_filtro_tabla("","permiso_serie","llave_entidad not in (".$fieldList_permiso["identidad"].") and entidad_identidad = ".$fieldList_permiso["tipo_entidad"]." and serie_idserie=".$sKeyWrk,"",$conn);
-		if($buscar_existente["numcampos"]){			
-			$update = "UPDATE permiso_serie SET estado=0 WHERE llave_entidad not in (".$fieldList_permiso["identidad"].") and entidad_identidad = ".$fieldList_permiso["tipo_entidad"]." and serie_idserie=".$sKeyWrk;
-			phpmkr_query($update) or die("Error al actualizar el registro");
-		}
-		for($i=0;$i<count($entidades);$i++){
-			$buscar_permiso = busca_filtro_tabla("","permiso_serie","llave_entidad=".$entidades[$i]." and entidad_identidad = ".$fieldList_permiso["tipo_entidad"]." and serie_idserie=".$sKeyWrk,"",$conn);
-			if($buscar_permiso["numcampos"]){
-				$update = "UPDATE permiso_serie SET estado=1 WHERE llave_entidad=".$entidades[$i]." and entidad_identidad = ".$fieldList_permiso["tipo_entidad"]." and serie_idserie=".$sKeyWrk;
+		if(@$fieldList_permiso["identidad"]!="" && @$fieldList_permiso["identidad"] !="NULL"){
+			$entidades = explode(",",$fieldList_permiso["identidad"]);		
+			$buscar_existente = busca_filtro_tabla("","permiso_serie","llave_entidad not in (".$fieldList_permiso["identidad"].") and entidad_identidad = ".$fieldList_permiso["tipo_entidad"]." and serie_idserie=".$sKeyWrk,"",$conn);
+			if($buscar_existente["numcampos"]){			
+				$update = "UPDATE permiso_serie SET estado=0 WHERE llave_entidad not in (".$fieldList_permiso["identidad"].") and entidad_identidad = ".$fieldList_permiso["tipo_entidad"]." and serie_idserie=".$sKeyWrk;
 				phpmkr_query($update) or die("Error al actualizar el registro");
 			}
-			else{
-				$strsql = "INSERT INTO permiso_serie (entidad_identidad,serie_idserie,llave_entidad,estado) VALUES (".$fieldList_permiso["tipo_entidad"].",".$sKeyWrk.",".$entidades[$i].",1)";
-				phpmkr_query($strsql) or die("Error al insertar el registro");
+			for($i=0;$i<count($entidades);$i++){
+				$buscar_permiso = busca_filtro_tabla("","permiso_serie","llave_entidad=".$entidades[$i]." and entidad_identidad = ".$fieldList_permiso["tipo_entidad"]." and serie_idserie=".$sKeyWrk,"",$conn);
+				if($buscar_permiso["numcampos"]){
+					$update = "UPDATE permiso_serie SET estado=1 WHERE llave_entidad=".$entidades[$i]." and entidad_identidad = ".$fieldList_permiso["tipo_entidad"]." and serie_idserie=".$sKeyWrk;
+					phpmkr_query($update) or die("Error al actualizar el registro");
+				}
+				else{
+					$strsql = "INSERT INTO permiso_serie (entidad_identidad,serie_idserie,llave_entidad,estado) VALUES (".$fieldList_permiso["tipo_entidad"].",".$sKeyWrk.",".$entidades[$i].",1)";
+					phpmkr_query($strsql) or die("Error al insertar el registro".$fieldList_permiso["identidad"]);
+				}
 			}
 		}	
 		
 		//insert into entidad_serie
-		$dependencia = explode(",",$fieldList_asignacion["dependencias"]);
-		
-		$buscar_existente = busca_filtro_tabla("","entidad_serie","entidad_identidad not in (".$fieldList_asignacion["dependencias"].") and entidad_identidad = 2 and serie_idserie=".$sKeyWrk,"",$conn);
-		if($buscar_existente["numcampos"]){			
-			$update = "UPDATE entidad_serie SET estado=0 WHERE llave_entidad not in (".$fieldList_asignacion["dependencias"].") and entidad_identidad = 2 and serie_idserie=".$sKeyWrk;
-			phpmkr_query($update) or die("Error al actualizar el registro");
-		}
-		for($i=0;$i<count($dependencia);$i++){
-			$buscar_asignacion = busca_filtro_tabla("","entidad_serie","llave_entidad=".$dependencia[$i]." and entidad_identidad = 2 and serie_idserie=".$sKeyWrk,"",$conn);
-			if($buscar_asignacion["numcampos"]){
-				$update = "UPDATE entidad_serie SET estado=1 WHERE llave_entidad=".$dependencia[$i]." and entidad_identidad = 2 and serie_idserie=".$sKeyWrk;
+		if(@$fieldList_asignacion["dependencias"]!="" && @$fieldList_asignacion["dependencias"] !="NULL"){
+			$dependencia = explode(",",$fieldList_asignacion["dependencias"]);		
+			$buscar_existente = busca_filtro_tabla("","entidad_serie","entidad_identidad not in (".$fieldList_asignacion["dependencias"].") and entidad_identidad = 2 and serie_idserie=".$sKeyWrk,"",$conn);
+			if($buscar_existente["numcampos"]){			
+				$update = "UPDATE entidad_serie SET estado=0 WHERE llave_entidad not in (".$fieldList_asignacion["dependencias"].") and entidad_identidad = 2 and serie_idserie=".$sKeyWrk;
 				phpmkr_query($update) or die("Error al actualizar el registro");
 			}
-			else{
-				$insert = "INSERT INTO entidad_serie (entidad_identidad,serie_idserie,llave_entidad,estado,fecha) VALUES (2," . $sKeyWrk . "," . $dependencia[$i] . ",1," . fecha_db_almacenar(date("Y-m-d"), "Y-m-d") . ")";
-	    		phpmkr_query($insert) or die("Error al guardar la informacion");
+			for($i=0;$i<count($dependencia);$i++){
+				$buscar_asignacion = busca_filtro_tabla("","entidad_serie","llave_entidad=".$dependencia[$i]." and entidad_identidad = 2 and serie_idserie=".$sKeyWrk,"",$conn);
+				if($buscar_asignacion["numcampos"]){
+					$update = "UPDATE entidad_serie SET estado=1 WHERE llave_entidad=".$dependencia[$i]." and entidad_identidad = 2 and serie_idserie=".$sKeyWrk;
+					phpmkr_query($update) or die("Error al actualizar el registro");
+				}
+				else{
+					$insert = "INSERT INTO entidad_serie (entidad_identidad,serie_idserie,llave_entidad,estado,fecha) VALUES (2," . $sKeyWrk . "," . $dependencia[$i] . ",1," . fecha_db_almacenar(date("Y-m-d"), "Y-m-d") . ")";
+		    		phpmkr_query($insert) or die("Error al guardar la informacion");
+				}
 			}
 		}
 
@@ -309,9 +312,10 @@ function EditData($sKey) {
 }
 
 include ($ruta_db_superior."librerias_saia.php");
-echo librerias_jquery("1.8");
+echo librerias_jquery("3.3");
 echo librerias_validar_formulario("11");
-echo librerias_arboles();
+echo librerias_UI("1.12");
+echo librerias_arboles_ft("2.24", 'filtro');
 $option = '<option value="">Seleccione</option>
 		   <option value="4">Asignado a Cargo(s)</option>
  		   <option value="2">Asignado a Dependencia(s)</option>
@@ -321,13 +325,14 @@ $option = '<option value="">Seleccione</option>
 	<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
 		<tr>
 			<td class="encabezado" title="Definir el tipo de serie que se esta creando" >CATEGORIA*</td>
-			<td bgcolor="#F5F5F5">
+			<!--td bgcolor="#F5F5F5">
 			<input type="radio" name="x_categoria" id="x_categoria2" value="2" <?php echo $categoria[2];?>>
 			Producci&oacute;n Documental
 			<input type="radio" name="x_categoria" id="x_categoria3" value="3" <?php echo $categoria[3];?>>
 			Otras Categorias
 			<br/>
-			</td>
+			</td-->
+			<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $categoria[$info[0]["categoria"]];?></span></td>
 		</tr>
 
 		<tr class="ocultar">
@@ -451,11 +456,11 @@ $option = '<option value="">Seleccione</option>
 			</span></td>
 		</tr>
 		<tr>
-			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">TIPO DE PERMISO*</span></td>
-			<td bgcolor="#F5F5F5"><select id="tipo_entidad" name="tipo_entidad" class="required"><?php echo $option;?></select></td>
+			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">TIPO DE PERMISO</span></td>
+			<td bgcolor="#F5F5F5"><select id="tipo_entidad" name="tipo_entidad"><?php echo $option;?></select></td>
 		</tr>
 		<tr>
-			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ASIGNAR PERMISO*</span></td>
+			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ASIGNAR PERMISO</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="sub_entidad"></div> </td>
 		</tr>
 		
@@ -554,23 +559,22 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 	}
 
 	$(document).ready(function() {
-		$("#tipo_entidad option[value='2']").prop('selected', true)
-		xml1="test/test_dependencia.php";
+		//$("#tipo_entidad option[value='2']").prop('selected', true)
+		xml1="arboles/arbol_dependencia.php?estado=1&checkbox=true&expandir=1";
 		var dependencia_seleccionada="<?php echo $dependencia_seleccionada; ?>";
 		var entidades = <?php echo json_encode($entidades) ?>;
-		cargar_arbol_dependencias(xml1,dependencia_seleccionada);		
-		var dependencia_seleccionadas=0;
+		cargar_arbol_dependencias(xml1,dependencia_seleccionada);
 		if(x_tipo==2 || x_tipo==3){
 			tipo_serie = $("[name='x_tipo']:checked").val();
 			tvd = $("[name='x_tvd']:checked").val();
 			cod_padre=$("#x_cod_padre").val();
 			$(".ocultar_padre").show();
-			mostrar_papa(tipo_serie,tvd,cod_padre);
-			
+			mostrar_papa(tipo_serie,tvd,cod_padre);			
 		}
-		if(identidad > 0) {
+		
+		/*if(identidad > 0) {
 			$("#tipo_entidad").trigger("change");
-		}			
+		}*/			
 		$("#serieedit").validate({
 			rules:{
 				x_nombre:{required:true}
@@ -582,7 +586,7 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 					x_identidad = $("#identidad").val();
 					x_tipo = $("[name='x_tipo']:checked").val();
 					x_cod_padre = $("#x_cod_padre").val();
-					if(x_identidad == ""){
+					/*if(x_identidad == ""){
 						top.noty({
 							text : 'Por favor seleccione a quien le va a asignar permiso',
 							type : 'error',
@@ -590,7 +594,7 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 							timeout : 5000
 						});
 						return false;
-					}
+					}*/
 					if (x_tipo != 1 && (x_cod_padre == "" || x_cod_padre == 0)) {
 						
 						top.noty({
@@ -655,17 +659,17 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 				$(".ocultar").hide();
 				$(".ocultar_padre").show();
 				cod_padre=$("#x_cod_padre").val();
-				xml = "test/test_serie.php?ver_categoria2=0&ver_categoria3=1&excluidos="+$("#x_idserie").val();
+				xml = "arboles/arbol_serie.php?checkbox=radio&ver_categoria2=0&ver_categoria3=1&excluidos="+$("#x_idserie").val();
 				if(cod_padre!=undefined && cod_padre!=0){
 					xml+="&seleccionados="+cod_padre;
 				}
 				$.ajax({
-					url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
+					url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",	
 					data : {
 						xml : xml,
 						campo : "x_cod_padre",
-						radio : 1,
-						abrir_cargar : 1,
+						busqueda_item:1,
+						selectMode:1,
 						ruta_db_superior: "../../"
 					},
 					type : "POST",
@@ -682,10 +686,10 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 						});
 					}
 				});
-
 			}
 		});
 		$("[name='x_categoria']:checked").trigger("change");
+		
 
 		$("[name='x_tvd'],[name='x_tipo']").change(function (){
 			tipo_serie = $("[name='x_tipo']:checked").val();
@@ -722,26 +726,26 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 				
 				switch(option) {
 					case '1'://Funcionario
-					url1="test/test_funcionario.php?idcampofun=funcionario_codigo&sin_padre=1";					
+					url1="arboles/arbol_funcionario.php?idcampofun=funcionario_codigo&sin_padre=1&checkbox=true";					
 					url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
 					check=0;
 					break;
 
 					case '2'://Dependencia
-						url1="test/test_dependencia.php?estado=1";
+						url1="arboles/arbol_dependencia.php?estado=1&checkbox=true";
 						url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
 						check=0;
 					break;
 
 					case '4'://Cargo
-						url1="test/test_cargo.php?estado=1";
+						url1="arboles/arbol_cargo.php?estado=1&checkbox=true";
 						url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
 						check=0;
 					break;
 				}
 				$.ajax({
-					url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
-					data:{xml:url1,campo:"identidad",radio:0,abrir_cargar:1,check_branch:check,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:0},
+					url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
+					data:{xml:url1,campo:"identidad",selectMode:check,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:1},
 					type : "POST",
 					async:false,
 					success : function(html) {
@@ -755,14 +759,15 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 			}
 		});
 		$("#tipo_entidad").trigger("change");
+		
 	});
 	function cargar_arbol_dependencias(xml1, dependencia_seleccionada){
 		if(dependencia_seleccionada != '') {
-			xml1 = xml1 + '?seleccionados=' + dependencia_seleccionada;
+			xml1 = xml1 + '&seleccionados=' + dependencia_seleccionada;
 		}
 		$.ajax({
-			url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
-			data:{xml:xml1,campo:"iddependencia",radio:0,check_branch:0,abrir_cargar:1,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:0},
+			url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
+			data:{xml:xml1,campo:"iddependencia",selectMode:0,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:1},
 			type : "POST",
 			async:false,
 			success : function(html_dependencia) {
@@ -773,7 +778,7 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 		});
 	}
 	function mostrar_papa(tipo_serie,tvd,cod_padre){
-		xml = "test/test_serie.php?excluidos="+$("#x_idserie").val()+"&tipo3=0&tvd="+tvd;
+		xml = "arboles/arbol_serie.php?checkbox=radio&excluidos="+$("#x_idserie").val()+"&tipo3=0&tvd="+tvd;
 		if(tipo_serie==2){
 			xml+="&tipo2=0";
 		}
@@ -781,13 +786,13 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 			xml+="&seleccionados="+cod_padre;
 		}
 		$.ajax({
-			url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
+			url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
 			data: {
 				xml: xml,
 				campo: "x_cod_padre",
-				radio: 1,
-				abrir_cargar: 1,
-				onNodeSelect: "cargar_datos_padre",
+				busqueda_item:1,
+				selectMode:1,
+				//onNodeSelect: "cargar_datos_padre",
 				ruta_db_superior: "../../"
 			},
 			type : "POST",

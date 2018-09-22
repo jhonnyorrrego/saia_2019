@@ -11,7 +11,7 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 
 $objetoJson = array(
-    "key" => 0
+    "key" => 0    
 );
 
 if ($_REQUEST["id"] && $_REQUEST["cargar_partes"] && $_REQUEST["uid"]) {
@@ -79,6 +79,7 @@ if ($_REQUEST["id"] && $_REQUEST["cargar_partes"] && $_REQUEST["uid"]) {
         $item_oc["extraClasses"] = "estilo-serie";
         $item_oc["title"] = "OTRAS CATEGORIAS";
         $item_oc["key"] = "0.0.-1";
+		//$item_oc["checkbox"] = true;
         $item_oc["folder"] = 1;
 
         $item_oc["children"] = llena_otras_categorias(0, 1);
@@ -114,8 +115,8 @@ function llena_dependencia($id, $tipo = 0) {
             $item = array();
             $item["extraClasses"] = "estilo-dependencia";
             $item["title"] = $text;
-            $item["key"] = $papas[$i]["iddependencia"] . ".0." . $tipo;
-
+            $item["key"] = $papas[$i]["iddependencia"] . ".0." . $tipo;			
+			//$item["expanded"]=true; 
             $hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"], "", $conn);
             $serie = busca_filtro_tabla("count(*) as cant", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $papas[$i]["iddependencia"] . " and s.tvd=" . $tipo . " and (s.cod_padre=0 or s.cod_padre is null)", "", $conn);
             $dependencias_hijas = array();
@@ -162,7 +163,7 @@ function llena_serie($id, $iddep, $tipo = 0) {
             $item["extraClasses"] = "estilo-serie";
             $item["title"] = $text;
             $item["key"] = $iddep . "." . $papas[$i]["idserie"] . "." . $tipo;
-
+			//$item["expanded"]=true;
             $hijos = busca_filtro_tabla("count(*) as cant", "serie", "tvd=" . $tipo . "  and cod_padre=" . $papas[$i]["idserie"] . " and categoria=2", "", $conn);
             if ($hijos[0]["cant"]) {
                 $item["folder"] = 1;

@@ -470,13 +470,13 @@ encriptar_sqli("serieadd", 1, "form_info", $ruta_db_superior, false, false);
 
 <script>
 var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
-	function cargar_datos_padre(idNode) {
+	function cargar_datos_padre(event,data) {
 		$.ajax({
 			type : "POST",
 			dataType : "json",
 			url : "buscar_datos_serie.php",
 			data : {
-				idserie : idNode
+				idserie : data.node.key
 			},
 			success : function(datos) {
 				if (datos.exito) {
@@ -662,13 +662,14 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 				$(".ocultar").hide();
 				$(".ocultar_padre").show();
 
-				xml = "arboles/arbol_serie.php?ver_categoria2=0&ver_categoria3=1&checkbox=true";				
+				xml = "arboles/arbol_serie.php?ver_categoria2=0&ver_categoria3=1&checkbox=radio";				
 				$.ajax({
 					url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
 					data : {
 						xml : xml,
 						campo : "x_cod_padre",
 						busqueda_item:1,
+						selectMode:1,
 						ruta_db_superior: "../../"
 					},
 					type : "POST",
@@ -707,7 +708,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 			if (tvd != undefined && tipo_serie != undefined) {
 				if (tipo_serie != 1 && !cod_padre) {
 					$(".ocultar_padre").show();
-					xml = "arboles/arbol_serie.php?checkbox=true&tipo3=0&tvd=" + tvd;
+					xml = "arboles/arbol_serie.php?checkbox=radio&tipo3=0&tvd=" + tvd;
 					if (tipo_serie == 2) {
 						xml += "&tipo2=0";
 					}
@@ -720,6 +721,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 							xml : xml,
 							campo : "x_cod_padre",
 							busqueda_item:1,
+							selectMode:1,
 							onNodeSelect : "cargar_datos_padre",
 							ruta_db_superior: "../../"
 						},
