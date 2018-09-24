@@ -84,14 +84,14 @@ ul.fancytree-container {
     		quicksearch: true, // Navigate to next node by typing the first letters.
     		//keyboard: true, // Support keyboard navigation.
     		source: $.ajax({
-    			url: "<?php echo $ruta_db_superior;?>test/arbol_dependencia_serie.php",
+    			url: "<?php echo $ruta_db_superior;?>arboles/arbol_dependencia_serie.php",
     			data: {
         			otras_categorias: 1,
         			serie_sin_asignar: 1
     			}
     		}),
     		//minExpandLevel:2,
-    		
+
     		filter: {
     		    autoApply: true,   // Re-apply last filter if lazy data is loaded
     		    autoExpand: true, // Expand all branches that contain matches while filtered
@@ -124,7 +124,7 @@ ul.fancytree-container {
 	//var rootNode = $("#treeboxbox_tree3").fancytree("getRootNode");
 
 	var tree = $("#treeboxbox_tree3").fancytree("getTree");
-     
+
     $("input[name=search]").keyup(function(e){
 	    var coincidencias = " coincidencias";
         var n,
@@ -170,7 +170,7 @@ ul.fancytree-container {
 		var tree = $("#treeboxbox_tree3").fancytree('getTree');
 
 		var newSourceOption = {
-		    url: "<?php echo $ruta_db_superior;?>test/arbol_dependencia_serie.php",
+		    url: "<?php echo $ruta_db_superior;?>arboles/arbol_dependencia_serie.php",
 		    type: 'POST',
 		    data: {
 				otras_categorias: 1,
