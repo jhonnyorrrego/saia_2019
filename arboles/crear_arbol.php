@@ -47,6 +47,9 @@ if ($_REQUEST["xml"] != "" && $_REQUEST["campo"]) {
 	if (isset($_REQUEST["onNodeDblClick"])) {
 		$parametros["onNodeDblClick"]=$_REQUEST["onNodeDblClick"];
 	}
+	if (isset($_REQUEST["onNodeClick"])) {
+		$parametros["onNodeClick"]=$_REQUEST["onNodeClick"];
+	}
 }
 ?>
 <html>
@@ -166,6 +169,10 @@ function crear_arbol($xml,$campo,$parametros) {
 	
 	<?php if($parametros["onNodeDblClick"]!=""){?>
 		$("#treebox_<?php echo $campo; ?>").on("fancytreedblclick", (<?php echo $parametros["onNodeDblClick"]; ?>));
+	<?php }?>
+	
+	<?php if($parametros["onNodeClick"]!=""){?>
+		$("#treebox_<?php echo $campo; ?>").on("fancytreeclick", (<?php echo $parametros["onNodeClick"]; ?>));
 	<?php }?>
 	
     $("input[name=stext_<?php echo $campo; ?>]").keyup(function(e){

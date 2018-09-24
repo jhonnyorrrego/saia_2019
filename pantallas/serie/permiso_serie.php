@@ -109,7 +109,14 @@ $option = '<option value="">Seleccione</option>
 	</table>
 </form>
 </p>
+<script type="text/javascript" src="<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
+		 <link rel="stylesheet" type="text/css" href="<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
+		 <script type='text/javascript'>
+		   hs.graphicsDir = '<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
+		   hs.outlineType = 'rounded-white';
+		</script>
 <script type="text/javascript">
+
 var idserie = <?php echo (empty($idserie) ? 0 : $idserie);?>;
 var idserie_padre = <?php echo (empty($idserie_padre) ? 0 : $idserie_padre);?>;
 var identidad = '<?php echo (empty($identidad) ? 0 : $identidad);?>';
@@ -200,7 +207,7 @@ var entidades = <?php echo json_encode($entidades) ?>;
 				}
 				$.ajax({
 					url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
-					data:{xml:url1,campo:"identidad",selectMode:check,ruta_db_superior:"../../",onNodeSelect:"validar_permisos_entidad",onNodeDblClick:"asignar_permisos_serie",seleccionar_todos:1,busqueda_item:1},
+					data:{xml:url1,campo:"identidad",selectMode:check,ruta_db_superior:"../../",onNodeSelect:"validar_permisos_entidad",onNodeClick:"asignar_permisos_serie",seleccionar_todos:1,busqueda_item:1},
 					type : "POST",
 					async:false,
 					success : function(html) {
@@ -241,13 +248,15 @@ var entidades = <?php echo json_encode($entidades) ?>;
 	}
 	function asignar_permisos_serie(event,data)
 	{
-		if(data.node.selected){
+		var elemento_evento = $.ui.fancytree.getEventTargetType(event.originalEvent);		
+		if(elemento_evento=="title" && data.node.selected){	      		 
 			var tipo_entidad = $("#tipo_entidad").val();
 			var serie= $("#x_serie_idserie").val();
-			var enlace="pantallas/serie/highslide_permiso_serie.php?serie="+serie+"&tipo_entidad="+tipo_entidad+"&entidad="+data.node.key;
+			var enlace="highslide_permiso_serie.php?serie="+serie+"&tipo_entidad="+tipo_entidad+"&entidad="+data.node.key;
 	        //var identificador=$(this).attr("identificador");
-	        top.hs.htmlExpand(this, { objectType: 'iframe',width: 300, height: 150,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header',left:450, top:183});
-		}
+	        //top.hs.htmlExpand(this, { objectType: 'iframe',width: 300, height: 150,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header',targetX:'centro 200px',targetY:null});
+	        hs.htmlExpand(this, { objectType: 'iframe',width: 300, height: 150,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
+	   }
 	}
 </script>
 

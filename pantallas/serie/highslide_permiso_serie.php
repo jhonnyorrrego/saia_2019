@@ -47,7 +47,7 @@ include_once ($ruta_db_superior . 'librerias_saia.php');
 </body>
 </html>
  <script>
-    $(document).ready(function(){
+    $(document).ready(function(){    	
     	var ruta_db_superior = "<?php echo $ruta_db_superior; ?>";
         $("[name=\'permiso_editar\']").click(function(){
             $.ajax({
