@@ -41,7 +41,7 @@ include_once ($ruta_db_superior . 'librerias_saia.php');
             <legend>Tiene permiso para editar</legend>
             <br>
             Si &nbsp; <input type="radio" value="1" name="permiso_editar" <?php echo $checked1; ?>> &nbsp;&nbsp;
-            No &nbsp; <input type="radio" value="2" name="permiso_editar" <?php echo $checked0; ?>
+            No &nbsp; <input type="radio" value="2" name="permiso_editar" <?php echo $checked0; ?>>
         </div>
 	</form>
 </body>
