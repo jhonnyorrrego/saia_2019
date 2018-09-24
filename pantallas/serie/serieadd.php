@@ -251,7 +251,7 @@ function AddData($conn) {
 	$dependencia = explode(",",$fieldList_asignacion["dependencias"]);
 	for($i=0;$i<count($dependencia);$i++){
 		$insert = "INSERT INTO entidad_serie (entidad_identidad,serie_idserie,llave_entidad,estado,fecha) VALUES (2," . $id . "," . $dependencia[$i] . ",1," . fecha_db_almacenar(date("Y-m-d"), "Y-m-d") . ")";
-    	phpmkr_query($insert) or die("Error al guardar la informacion");
+    	phpmkr_query($insert) or die("Error al guardar la informacion".$insert);
 	}
 	actualizar_crear_cod_arboles($id, "serie", 1);
 	return $id;
@@ -808,14 +808,15 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 		if(dependencia_seleccionada != '') {
 			xml1 = xml1 + '&seleccionados=' + dependencia_seleccionada;
 		}
-		console.log(xml1);
 		$.ajax({
 			url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
 			data:{xml:xml1,campo:"iddependencia",selectMode:1,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:1,expandir:3},
 			type : "POST",
 			async:false,
 			success : function(html_dependencia) {
+				
 				$("#dependencia_asociada").empty().html(html_dependencia);
+				$("#iddependencia").val(dependencia_seleccionada);
 			},error: function (){
 				top.noty({text: 'No se pudo cargar el arbol de dependencias',type: 'error',layout: 'topCenter',timeout:5000});
 			}
