@@ -31,7 +31,7 @@ if ($_REQUEST["tipo_entidad"]) {
 }
 
 $series_seleccionadas = null;
-if ($_REQUEST["identidad"]) {	
+if ($_REQUEST["identidad"]) {
     $identidad = $_REQUEST["identidad"];
     if ($identidad) {
         $series_funcionario = busca_filtro_tabla("distinct idserie", "vpermiso_serie", "idfuncionario=$identidad", "", $conn);
@@ -50,7 +50,7 @@ else{
 		for($i=0;$i<$vista_series["numcampos"];$i++){
 			$entidades[$vista_series[$i]["entidad_identidad"]][]=$vista_series[$i]["llave_entidad"];
 			//$identidad[]=$vista_series[$i]["llave_entidad"];
-		} 
+		}
 		//$entidades = implode(",", $entidades);
 	}
 	//var_dump($entidades);
@@ -80,7 +80,7 @@ $option = '<option value="">Seleccione</option>
 		<tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">SERIE*</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="divserie">
-				
+
 			</div> </td>
 			<input type="hidden" name="serie_idserie" id="x_serie_idserie" value="<?php echo $idserie; ?>">
 		</tr>
@@ -115,7 +115,7 @@ var identidad = '<?php echo (empty($identidad) ? 0 : $identidad);?>';
 var series_seleccionadas = <?php echo (empty($series_seleccionadas) ? "''" : "'$series_seleccionadas'");?>;
 var entidades = <?php echo json_encode($entidades) ?>;
 	$(document).ready(function() {
-		$("#tipo_entidad option[value='2']").prop('selected', true)		
+		$("#tipo_entidad option[value='2']").prop('selected', true)
 		if(identidad > 0) {
 			$("#tipo_entidad").trigger("change");
 		}
@@ -129,7 +129,7 @@ var entidades = <?php echo json_encode($entidades) ?>;
 		}
 		if(series_seleccionadas != '') {
 			url2 = url2 + '&seleccionados=' + series_seleccionadas;
-		}		
+		}
 		$.ajax({
 			//url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
 			url:"buscar_datos_serie.php",
@@ -164,11 +164,11 @@ var entidades = <?php echo json_encode($entidades) ?>;
 					}
 				}
 				url1="";
-				
+
 				switch(option) {
 					case '1'://Funcionario
-					url1="arboles/arbol_funcionario.php?idcampofun=funcionario_codigo&checkbox=true&sin_padre=1";					
-					//url1="test.php?rol=1";						
+					url1="arboles/arbol_funcionario.php?idcampofun=funcionario_codigo&checkbox=true&sin_padre=1";
+					//url1="test.php?rol=1";
 						url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
 					//}
 					check=1;
@@ -195,7 +195,7 @@ var entidades = <?php echo json_encode($entidades) ?>;
 					data:{xml:url1,campo:"identidad",selectMode:check,ruta_db_superior:"../../",onNodeSelect:"validar_permisos_entidad",seleccionar_todos:1,busqueda_item:1},
 					type : "POST",
 					async:false,
-					success : function(html) {						
+					success : function(html) {
 						$("#sub_entidad").empty().html(html);
 					},error: function () {
 						top.noty({text: 'No se pudo cargar la informacion',type: 'error',layout: 'topCenter',timeout:5000});
@@ -207,9 +207,9 @@ var entidades = <?php echo json_encode($entidades) ?>;
 		});
 		$("#tipo_entidad").trigger("change");
 	});
-	
+
 	function validar_permisos_entidad(event,data){
-		
+
 		var tipo_entidad = $("#tipo_entidad").val();
 		var serie= $("#x_serie_idserie").val();
 		var id = data.node.key;

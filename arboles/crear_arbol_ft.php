@@ -57,8 +57,8 @@ class ArbolFt {
         // Poner traducciones de los mensajes
         $this->opciones_arbol["strings"] = $this->cadenas;
 
-        $this->opciones_arbol["source"] = $this->fuente_datos["ruta_db_superior"] . $this->fuente_datos["url"];
-        $this->opciones_arbol["source"]["data"] = $this->fuente_datos["params"];
+        $this->opciones_arbol["source"] = array("url" => $this->fuente_datos["ruta_db_superior"] . $this->fuente_datos["url"],
+           "data" => $this->fuente_datos["params"]);
 
         if (isset($this->opciones_arbol["busqueda_item"]) && $this->opciones_arbol["busqueda_item"]) {
             $this->con_filtro = true;
@@ -125,54 +125,57 @@ FINJS;
         <input type="hidden" class="required" name="{$this->campo}" id="{$this->campo}">
 <script type="text/javascript">
 	$(document).ready(function() {
-	var configuracion={$opciones_json};
-   	$("#treebox_{$this->campo}").fancytree(configuracion);
+   	   	var configuracion={$opciones_json};
+   	   	$("#treebox_{$this->campo}").fancytree(configuracion);
 
-	var tree = $("#treebox_<?php echo $campo; ?>").fancytree("getTree");
+   	   	var tree = $("#treebox_{$this->campo}").fancytree("getTree");
+
 FINHTML;
         if (!empty($this->con_funcion_select)) {
             $this->html .= <<<FINHTML
-		$("#treebox_{$this->campo}").on("fancytreeselect", {$this->con_funcion_select});
+   	   	$("#treebox_{$this->campo}").on("fancytreeselect", {$this->con_funcion_select});
+
 FINHTML;
         }
         if ($this->con_filtro) {
             $this->html .= $this->funciones_buscador();
         }
         $this->html .= <<<FINHTML
-	});"
+   	});
 </script>
 FINHTML;
     }
 
     private function funciones_buscador() {
         $texto = <<<FINHTML
-	    $("input[name=stext_{$this->campo}]").keyup(function(e){
-	        var coincidencias = " coincidencias";
-	        var n,
-	        opts = {};
-	        var filterFunc = tree.filterNodes;
-	        var match = $(this).val();
+	  $("input[name=stext_{$this->campo}]").keyup(function(e){
+	      var coincidencias = " coincidencias";
+	      var n,
+	      opts = {};
+	      var filterFunc = tree.filterNodes;
+	      var match = $(this).val();
 
-	        opts.mode = "dimm";
+	      opts.mode = "dimm";
 
-	        if(e && e.which === $.ui.keyCode.ESCAPE || $.trim(match) === ""){
-	            $("button#btnSearch_{$this->campo}").click();
-	            return;
-	        }
-	        // Pass a string to perform case insensitive matching. Puede pasar un 3er parametro opts
-	        n = filterFunc.call(tree, match);
-	        if(n == 1) {
-	            coincidencias = " coincidencia";
-	        }
-	        $("button#btnSearch_{$this->campo}").attr("disabled", false);
-	        $("span#matches_{$this->campo}").text("(" + n + coincidencias + ")");
-	    }).focus();
+	      if(e && e.which === $.ui.keyCode.ESCAPE || $.trim(match) === ""){
+	          $("button#btnSearch_{$this->campo}").click();
+	          return;
+	      }
+	      // Pass a string to perform case insensitive matching. Puede pasar un 3er parametro opts
+	      n = filterFunc.call(tree, match);
+	      if(n == 1) {
+	          coincidencias = " coincidencia";
+	      }
+	      $("button#btnSearch_{$this->campo}").attr("disabled", false);
+	      $("span#matches_{$this->campo}").text("(" + n + coincidencias + ")");
+	  }).focus();
 
-	    $("button#btnSearch_{$this->campo}").click(function(e){
-	        $("input[name=stext_{$this->campo}]").val("");
-	        $("span#matches_{$this->campo}").text("");
-	        tree.clearFilter();
-	    }).attr("disabled", true);
+	  $("button#btnSearch_{$this->campo}").click(function(e){
+          $("input[name=stext_{$this->campo}]").val("");
+          $("span#matches_{$this->campo}").text("");
+          tree.clearFilter();
+	  }).attr("disabled", true);
+
 FINHTML;
         return $texto;
     }
