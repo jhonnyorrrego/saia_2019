@@ -59,7 +59,8 @@ else{
 $option = '<option value="">Seleccione</option>
 		   <option value="4">Asignado a Cargo(s)</option>
  		   <option value="2">Asignado a Dependencia(s)</option>
- 		   <option value="1">Asignado a Funcionario(s)</option>';
+ 		   <option value="1">Asignado a Funcionario(s)</option>
+		   <option value="5">Asignado a Roles</option>';
 /*if ($entidad["numcampos"]) {
     for ($i = 0; $i < $entidad["numcampos"]; $i++) {
         $option .= '<option value="' . $entidad[$i]["identidad"] . '"';
@@ -171,7 +172,7 @@ var entidades = <?php echo json_encode($entidades) ?>;
 					//url1="test.php?rol=1";
 						url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
 					//}
-					check=1;
+					check=2;
 					break;
 
 					case '2'://Dependencia
@@ -187,12 +188,19 @@ var entidades = <?php echo json_encode($entidades) ?>;
 						//if(identidad > 0) {
 							url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
 						//}
-						check=1;
+						check=2;
+					break;
+					case '5'://Rol
+					url1="arboles/arbol_funcionario.php?idcampofun=iddependencia_cargo&checkbox=true&sin_padre=1";
+					//url1="test.php?rol=1";
+						url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
+					//}
+					check=2;
 					break;
 				}
 				$.ajax({
 					url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
-					data:{xml:url1,campo:"identidad",selectMode:check,ruta_db_superior:"../../",onNodeSelect:"validar_permisos_entidad",seleccionar_todos:1,busqueda_item:1},
+					data:{xml:url1,campo:"identidad",selectMode:check,ruta_db_superior:"../../",onNodeSelect:"validar_permisos_entidad",onNodeDblClick:"asignar_permisos_serie",seleccionar_todos:1,busqueda_item:1},
 					type : "POST",
 					async:false,
 					success : function(html) {
@@ -219,7 +227,7 @@ var entidades = <?php echo json_encode($entidades) ?>;
         $.ajax({
         	    url: 'validar_permisos_entidad.php',
                 dataType: 'json',
-                data:{serie:serie,tipo_entidad:tipo_entidad,id:id,accion:accion},
+                data:{serie:serie,tipo_entidad:tipo_entidad,id:id,accion:accion,asignar_quitar_permiso_editar:1},
                 success: function(retorno){
                     var tipo='warning';
                     var mensaje='<b>ATENCI&Oacute;N</b><br>Se ha retirado el permiso exitosamente';
@@ -230,6 +238,16 @@ var entidades = <?php echo json_encode($entidades) ?>;
                     notificacion_saia(mensaje,tipo,"topRight",3000);
                 }
         	});
+	}
+	function asignar_permisos_serie(event,data)
+	{
+		if(data.node.selected){
+			var tipo_entidad = $("#tipo_entidad").val();
+			var serie= $("#x_serie_idserie").val();
+			var enlace="pantallas/serie/highslide_permiso_serie.php?serie="+serie+"&tipo_entidad="+tipo_entidad+"&entidad="+data.node.key;
+	        //var identificador=$(this).attr("identificador");
+	        top.hs.htmlExpand(this, { objectType: 'iframe',width: 300, height: 150,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header',left:450, top:183});
+		}
 	}
 </script>
 

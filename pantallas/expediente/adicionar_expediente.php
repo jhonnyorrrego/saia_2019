@@ -31,7 +31,10 @@ while ($max_salida > 0) {
 
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
+echo librerias_jquery("3.3");
 echo (librerias_notificaciones());
+echo librerias_UI("1.12");
+echo librerias_arboles_ft("2.24", 'filtro');
 
 $dato_padre = busca_filtro_tabla("", "expediente a", "a.idexpediente=" . $_REQUEST["cod_padre"], "", $conn);
 $serie_padre = "";
@@ -367,13 +370,13 @@ $serie_padre = "";
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>pantallas/lib/librerias_codificacion.js"></script>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/bootstrap/saia/bootstrap-datetimepicker.js"></script>
 <?php
-  echo(librerias_arboles());
+  //echo(librerias_arboles());
   ?>
   <script type="text/javascript">
 
-  function cargar_info_Node(NodeId){
-	  if(treeserie_idserie.isItemChecked(NodeId)){
-	    $("#codigo_numero_serie").val(treeserie_idserie.getUserData(NodeId,"codigo"));
+  function cargar_info_Node(event,data){
+	  if(data.node.selected){	  	
+	    $("#codigo_numero_serie").val(data.node.data.codigo);
 	    /*$("#dependencia_iddependencia").val(treeserie_idserie.getUserData(NodeId,"iddependencia"));
 		  $("#codigo_numero_dependencia").val(treeserie_idserie.getUserData(NodeId,"dependencia_codigo"));
 		  $("#fondo").val(tree3.getUserData(NodeId,"dependencia_nombre"));*/
@@ -391,13 +394,14 @@ $serie_padre = "";
 			mostrar = "&mostrar_padre=1";
 		}*/
 		//url2="test/test_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0" + mostrar + "&id=" + serie_padre;
-		url2="test/test_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0" + mostrar;
+		url2="arboles/arbol_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0&checkbox=radio" + mostrar;
 		$.ajax({
-			url : "<?php echo($ruta_db_superior);?>test/crear_arbol.php",
+			url : "<?php echo($ruta_db_superior);?>arboles/crear_arbol.php",
 			data:{
 				xml: url2,
 				campo: "serie_idserie",
 				radio: 1,
+				selectMode:1,
 				ruta_db_superior: "../../",
 				busqueda_item: 1,
 				onNodeSelect: "cargar_info_Node"
