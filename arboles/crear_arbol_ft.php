@@ -44,6 +44,10 @@ class ArbolFt {
 
     private $con_funcion_select = false;
 
+    private $con_funcion_click = false;
+
+    private $con_funcion_dblclick = false;
+
     private $html = "";
 
     public function __construct($campo, $fuente_datos, $opciones_arbol = array(), $extensiones = array()) {
@@ -57,8 +61,10 @@ class ArbolFt {
         // Poner traducciones de los mensajes
         $this->opciones_arbol["strings"] = $this->cadenas;
 
-        $this->opciones_arbol["source"] = array("url" => $this->fuente_datos["ruta_db_superior"] . $this->fuente_datos["url"],
-           "data" => $this->fuente_datos["params"]);
+        $this->opciones_arbol["source"] = array(
+            "url" => $this->fuente_datos["ruta_db_superior"] . $this->fuente_datos["url"],
+            "data" => $this->fuente_datos["params"]
+        );
 
         if (isset($this->opciones_arbol["busqueda_item"]) && $this->opciones_arbol["busqueda_item"]) {
             $this->con_filtro = true;
@@ -75,6 +81,7 @@ class ArbolFt {
             }
             $this->opciones_arbol["extensions"] = array_keys($this->extensiones);
             unset($this->opciones_arbol["busqueda_item"]);
+            $this->opciones_arbol["filter"] = $this->extensiones["filter"];
         }
         if (empty($this->opciones_arbol)) {
             $this->opciones_arbol = $this->opciones;
@@ -88,6 +95,14 @@ class ArbolFt {
             $this->con_funcion_select = $this->opciones_arbol["onNodeSelect"];
             unset($this->opciones_arbol["onNodeSelect"]);
         }
+        if (isset($this->opciones_arbol["onNodeClick"])) {
+            $this->con_funcion_click = $this->opciones_arbol["onNodeClick"];
+            unset($this->opciones_arbol["onNodeClick"]);
+        }
+        if (isset($this->opciones_arbol["onNodeDblClick"])) {
+            $this->con_funcion_dblclick = $this->opciones_arbol["onNodeDblClick"];
+            unset($this->opciones_arbol["onNodeDblClick"]);
+        }
     }
 
     public function generar_html() {
@@ -99,9 +114,9 @@ class ArbolFt {
     private function crear_arbol() {
         if ($this->con_filtro) {
             $this->html .= <<<FINHTML
-	   <p>
-	       <label>Buscar:</label> <input name="stext_{$this->campo}"
-		   placeholder="Buscar..." autocomplete="off">
+	   <p style="font-family: Verdana; font-size: 9px;">
+	       <label>Buscar:</label>
+	       <input name="stext_{$this->campo}" placeholder="Buscar..." autocomplete="off">
 	       <button id="btnSearch_{$this->campo}">&times;</button>
 	       <span id="matches_{$this->campo}"></span>
         </p>
@@ -116,7 +131,7 @@ function(event, data) { // Display list of selected nodes
 					seleccionados.push(items[i].key);
 				}
 				var s = seleccionados.join(",");
-				$("#<?php echo $campo; ?>").val(s);
+				$("#{$this->campo}").val(s);
 			}
 FINJS;
         $opciones_json = preg_replace('/"###AquiFuncionSelect###"/', $cadena_funcion, $opciones_json);
@@ -134,6 +149,18 @@ FINHTML;
         if (!empty($this->con_funcion_select)) {
             $this->html .= <<<FINHTML
    	   	$("#treebox_{$this->campo}").on("fancytreeselect", {$this->con_funcion_select});
+
+FINHTML;
+        }
+        if (!empty($this->con_funcion_click)) {
+            $this->html .= <<<FINHTML
+   	   	$("#treebox_{$this->campo}").on("fancytreeclick", {$this->con_funcion_click});
+
+FINHTML;
+        }
+        if (!empty($this->con_funcion_dblclick)) {
+            $this->html .= <<<FINHTML
+   	   	$("#treebox_{$this->campo}").on("fancytreedblclick", {$this->con_funcion_dblclick});
 
 FINHTML;
         }
