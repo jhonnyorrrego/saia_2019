@@ -813,8 +813,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 			data:{xml:xml1,campo:"iddependencia",selectMode:1,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:1,expandir:3},
 			type : "POST",
 			async:false,
-			success : function(html_dependencia) {
-				
+			success : function(html_dependencia) {				
 				$("#dependencia_asociada").empty().html(html_dependencia);
 				$("#iddependencia").val(dependencia_seleccionada);
 			},error: function (){
