@@ -745,18 +745,18 @@ function adicionar_expediente() {
 function encontrar_expediente_padre($idagrupador) {
     global $conn;
     $idexpediente = $idagrupador;
-    $expediente = busca_filtro_tabla("idexpediente, cod_padre, agrupador", "expediente", "idexpediente = $idagrupador", "", $conn);
-    if($expediente["numcampos"] && $expediente[0]["agrupador"] == 1) {
-        if(!empty($expediente[0]["cod_padre"])) {
-            $padre = busca_filtro_tabla("idexpediente, cod_padre, agrupador", "expediente", "idexpediente = " . $expediente[0]["cod_padre"] , "", $conn);
-            if($padre["numcampos"] && $padre[0]["agrupador"] == 0) {
-                $idexpediente = $padre[0]["idexpediente"];
-            } else {
-                $idexpediente = encontrar_expediente_padre($padre[0]["idexpediente"]);
+    $expediente = busca_filtro_tabla("idexpediente, cod_padre, agrupador, serie_idserie", "expediente", "idexpediente = $idagrupador", "", $conn);
+    if($expediente["numcampos"] && $expediente[0]["serie_idserie"] <= 0) {
+        if($expediente[0]["agrupador"] == 1) {
+            if(!empty($expediente[0]["cod_padre"])) {
+                $padre = busca_filtro_tabla("idexpediente, cod_padre, agrupador", "expediente", "idexpediente = " . $expediente[0]["cod_padre"] , "", $conn);
+                if($padre["numcampos"] && $padre[0]["agrupador"] == 0) {
+                    $idexpediente = $padre[0]["idexpediente"];
+                } else {
+                    $idexpediente = encontrar_expediente_padre($padre[0]["idexpediente"]);
+                }
             }
         }
-    } else {
-        return $idexpediente;
     }
     return $idexpediente;
 }
