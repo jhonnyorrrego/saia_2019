@@ -55,13 +55,26 @@ if(!empty($series)) {
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap/saia/css/bootstrap-responsive.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>pantallas/lib/librerias_css.css"/>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap/saia/css/bootstrap_reescribir.css"/>
+<style type="text/css">
+ul.fancytree-container {
+    border: none;
+    background-color:#F5F5F5;
+}
+span.fancytree-title 
+{  
+	font-family: Verdana,Tahoma,arial;
+	font-size: 9px; 
+}
+</style>
 <?php
     echo(menu_principal_documento($doc_menu,1));
-    echo(librerias_jquery('1.7'));
+    echo(librerias_jquery('3.3'));
     echo( librerias_validar_formulario(11) );
+	echo librerias_UI("1.12");
+	echo librerias_arboles_ft("2.24", 'filtro');
 ?>
-<script type="text/javascript" src="js/dhtmlXCommon.js"></script>
-<script type="text/javascript" src="js/dhtmlXTree.js"></script>
+<!--script type="text/javascript" src="js/dhtmlXCommon.js"></script>
+<script type="text/javascript" src="js/dhtmlXTree.js"></script-->
 <legend>Adicionar a un expediente ya existente</legend>
 <?php
 $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
@@ -71,25 +84,25 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
 	<label class="control-label" for="nombre">Expediente
   </label>
   <div class="controls">
-			<input type="text" id="stext" width="200px" size="20">
+			<!--input type="text" id="stext" width="200px" size="20">
       <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value),1)">
       <img src="botones/general/anterior.png"border="0px"></a>
       <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value),0,1)">
       <img src="botones/general/buscar.png"border="0px"></a>
       <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value))">
       <img src="botones/general/siguiente.png"border="0px"></a>
-      <div id="esperando_expediente"><img src="imagenes/cargando.gif"></div>
+      <div id="esperando_expediente"><img src="imagenes/cargando.gif"></div-->
 			<div id="treeboxbox_tree2"></div>
 	</div>
 </div>
-				<script type="text/javascript">
-
-				var incluir_series = "<?php echo $incluir_series;?>";
-				if(incluir_series != "") {
-					incluir_series = "&incluir_series=" + incluir_series;
-				}
-				var url_test = "test/test_expediente_funcionario.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1&estado_cierre=1&estado_archivo=1"+ incluir_series;
-  		var browserType;
+		<script type="text/javascript">
+		$(document).ready(function() {
+		var incluir_series = "<?php echo $incluir_series;?>";
+		if(incluir_series != "") {
+			incluir_series = "&incluir_series=" + incluir_series;
+		} 	
+		var url_test = "<?php echo $ruta_db_superior;?>arboles/arbol_expediente_funcionario.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1&estado_cierre=1&checkbox=radio&estado_archivo=1"+ incluir_series;
+  		/*var browserType;
       if (document.layers) {browserType = "nn4"}
       if (document.all) {browserType = "ie"}
       if (window.navigator.userAgent.toLowerCase().match("gecko")) {
@@ -131,8 +144,19 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
            document.poppedLayer =
                eval('document.layers["esperando_expediente"]');
         document.poppedLayer.style.display = "";
-      }
-
+      }*/
+	     $.ajax({
+				url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
+				data:{xml:url_test,campo:"expediente",selectMode:1,ruta_db_superior:"<?php echo $ruta_db_superior;?>",seleccionar_todos:1,busqueda_item:1},
+				type : "POST",
+				async:false,
+				success : function(html) {
+					$("#treeboxbox_tree2").empty().html(html);
+				},error: function () {
+					top.noty({text: 'No se pudo cargar la informacion',type: 'error',layout: 'topCenter',timeout:5000});
+				}
+			});
+		});
       </script>
 
 <?php if($doc["numcampos"]>1){ ?>
@@ -154,7 +178,7 @@ if(count($nombres_exp)){
 }
 ?>
 <div>
- <input type="hidden" name="expedientes" id="expedientes" value="">
+ <!--input type="hidden" name="expedientes" id="expedientes" value=""-->
  <input type="hidden" name="iddoc" value="<?php echo $iddoc; ?>">
  <input type="submit" value="Continuar" class="btn btn-primary btn-mini">
  <button class="btn btn-mini" id="" onclick="window.open('<?php echo($ruta_db_superior); ?>pantallas/expediente/adicionar_expediente_documento.php?iddoc=<?php echo(@$_REQUEST["iddoc"]); ?>','_self'); return false;">Adicionar a un nuevo expediente</button>
@@ -164,18 +188,21 @@ if(count($nombres_exp)){
  $(document).ready(function() {
 	$('#form1').submit(function() {
 
-    seleccionados=tree2.getAllChecked();
-    var lista_seleccionados = seleccionados.split(",");
-
+    //seleccionados=tree2.getAllChecked();
+    //if(data.node.selected)    
+    //var lista_seleccionados = seleccionados.split(",");
+	//var expedientes = 
     //console.log(seleccionados);
     //1574,1542_1536692460206,1540_1536692460207,1565
 
-    var id_exp = null;
+    /*var id_exp = null;
     var id_nodo = null;
     var id_serie = null;
-    var expedientes = [];
-
-    if(seleccionados!="") {
+    var expedientes = [];*/
+	var seleccionados = $('#expediente').val();
+	//var node=$("#treeboxbox_tree2").fancytree("getTree");//(expedientes);
+	var expedientes = seleccionados.split(".");
+    if(expedientes!="") {/*
     	for (var i = 0; i < lista_seleccionados.length; i++) {
     		id_nodo = lista_seleccionados[i];
     		//console.log(id_nodo);
@@ -192,10 +219,12 @@ if(count($nombres_exp)){
     	    //console.log("serie: " + id_serie);
     	    //console.log("exped: " + id_exp);
     		expedientes.push(id_exp);
-    	}
+    	}*/
 	    //console.log(expedientes);
 	    
-       $('#expedientes').val(expedientes.join(","));
+      // $('#expedientes').val(expedientes.join(","));
+       //$('#expedientes').val(expedientes);
+       $('#expediente').val(expedientes[0]);
 	    <?php encriptar_sqli("form1",0); ?>
 		if(salida_sqli) {
 			return true;

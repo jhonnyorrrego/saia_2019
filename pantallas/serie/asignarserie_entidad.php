@@ -16,6 +16,19 @@ $tvd=array(0=>"",1=>"");
 $tvd[$_REQUEST["tvd"]]="checked";
 
 include_once ($ruta_db_superior."librerias_saia.php");
+?>
+<style type="text/css">
+ul.fancytree-container {
+    border: none;
+    background-color:#F5F5F5;
+}
+span.fancytree-title 
+{  
+	font-family: Verdana,Tahoma,arial;
+	font-size: 9px; 
+}
+</style>
+<?php
 echo(librerias_jquery("3.3"));
 echo(librerias_validar_formulario("11"));
 //echo(librerias_arboles());
@@ -103,7 +116,7 @@ if ($_REQUEST["seleccionados"]) {
 			$("#serie_idserie").val("<?php echo $series_seleccionadas; ?>");
 			url2="arboles/arbol_serie.php?tipo3=0&tvd="+tvd+"&estado=1&seleccionados="+seleccionados;
 			$.ajax({
-				url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
+				url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol_ft.php",
 				data:{xml:url2,campo:"serie_idserie",selectMode:0,ruta_db_superior:"../../",onNodeSelect:"asignar_permisos_entidad",seleccionar_todos:1,busqueda_item:1},
 				type : "POST",
 				async:false,

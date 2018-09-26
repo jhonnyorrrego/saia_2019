@@ -99,8 +99,9 @@ function mostrar_informacion_qr($idformato,$iddoc){
 	$datos_vincular_doc=busca_filtro_tabla("serie_idserie,asunto,".fecha_db_obtener('fecha_documento', 'Y-m-d') . " as fecha_doc,observaciones","ft_vincular_doc_expedie","documento_iddocumento=".$iddoc,"",$conn);
 
   //$documento=busca_filtro_tabla("numero,tipo_radicado,".fecha_db_obtener("fecha","Y-m-d")." AS fecha","documento","iddocumento=".$iddoc,"",$conn);
-	$tipo_documento=busca_filtro_tabla("nombre, cod_padre","serie","idserie=".$datos_vincular_doc[0]["serie_idserie"],"",$conn);
-
+  	$dato_serie = explode(".",$datos_vincular_doc[0]["serie_idserie"]);
+	$tipo_documento=busca_filtro_tabla("nombre, cod_padre","serie","idserie=".$dato_serie[0],"",$conn);
+	
 	if($tipo_documento["numcampos"]){
 		$serie = busca_filtro_tabla("nombre","serie","idserie =".$tipo_documento[0]["cod_padre"],"",$conn);
 	}

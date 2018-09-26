@@ -12,6 +12,19 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once ($ruta_db_superior . "header.php");
+?>
+<style type="text/css">
+ul.fancytree-container {
+    border: none;
+    background-color:#F5F5F5;
+}
+span.fancytree-title 
+{  
+	font-family: Verdana,Tahoma,arial;
+	font-size: 9px; 
+}
+</style>
+<?php
 echo librerias_jquery("3.3");
 echo(librerias_notificaciones());
 echo librerias_validar_formulario("12");

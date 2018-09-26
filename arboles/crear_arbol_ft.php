@@ -122,7 +122,7 @@ class ArbolFt {
         </p>
 FINHTML;
         }
-        $opciones_json = json_encode($this->opciones_arbol);
+        $opciones_json = json_encode($this->opciones_arbol,JSON_NUMERIC_CHECK);
         $cadena_funcion = <<<FINJS
 function(event, data) { // Display list of selected nodes
 				var seleccionados = Array();
@@ -231,7 +231,6 @@ if (isset($_REQUEST["xml"]) && isset($_REQUEST["campo"])) {
      * ruta_db_superior: "../../",
      * seleccionar_todos: 1,
      * busqueda_item: 1,
-     * expandir: 3
      * }
      */
     echo $arbol->generar_html();
@@ -246,7 +245,6 @@ function procesar_solicitud() {
             "busqueda_item" => 0,
             "onNodeSelect" => "",
             "ruta_db_superior" => "",
-            "expandir" => 4,
             "seleccionar_todos" => ""
         );
         if (isset($_REQUEST["selectMode"])) {
@@ -260,9 +258,6 @@ function procesar_solicitud() {
         }
         if (isset($_REQUEST["busqueda_item"])) {
             $parametros["busqueda_item"] = $_REQUEST["busqueda_item"];
-        }
-        if (isset($_REQUEST["expandir"])) {
-            $parametros["expandir"] = $_REQUEST["expandir"];
         }
     }
     return $parametros;

@@ -312,7 +312,22 @@ function EditData($sKey) {
 	}
 	return $EditData;
 }
-
+?>
+<style type="text/css">
+ul.fancytree-container {
+    border: none;
+    background-color:#F5F5F5;
+}
+span.fancytree-title 
+{  
+	font-family: Verdana,Tahoma,arial;
+	font-size: 9px; 
+}
+span.fancytree-selected,span.fancytree-title {
+	font-style: normal; 
+}
+</style>
+<?php
 include ($ruta_db_superior."librerias_saia.php");
 echo librerias_jquery("3.3");
 echo librerias_validar_formulario("11");
@@ -667,7 +682,7 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 					xml+="&seleccionados="+cod_padre;
 				}
 				$.ajax({
-					url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",	
+					url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol_ft.php",	
 					data : {
 						xml : xml,
 						campo : "x_cod_padre",
@@ -770,7 +785,7 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 			xml1 = xml1 + '&seleccionados=' + dependencia_seleccionada;
 		}
 		$.ajax({
-			url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
+			url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol_ft.php",
 			data:{xml:xml1,campo:"iddependencia",selectMode:0,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:1},
 			type : "POST",
 			async:false,
@@ -790,7 +805,7 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 			xml+="&seleccionados="+cod_padre;
 		}
 		$.ajax({
-			url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
+			url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol_ft.php",
 			data: {
 				xml: xml,
 				campo: "x_cod_padre",
