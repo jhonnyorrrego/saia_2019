@@ -20,7 +20,6 @@ if ($_REQUEST["xml"] != "" && $_REQUEST["campo"]) {
 		"busqueda_item" => 0,
 		"onNodeSelect" => "",
 		"ruta_db_superior" => "",
-		"expandir"=> 4,
 		"seleccionar_todos"=> ""
 	);	
 	if (isset($_REQUEST["selectMode"])) {
@@ -40,9 +39,6 @@ if ($_REQUEST["xml"] != "" && $_REQUEST["campo"]) {
 	}
 	if (isset($_REQUEST["seleccionar_todos"])) {
 		$parametros["seleccionar_todos"] = $_REQUEST["seleccionar_todos"];
-	}
-	if (isset($_REQUEST["expandir"])) {
-		$parametros["expandir"]=$_REQUEST["expandir"];
 	}
 	if (isset($_REQUEST["onNodeDblClick"])) {
 		$parametros["onNodeDblClick"]=$_REQUEST["onNodeDblClick"];
@@ -64,7 +60,7 @@ echo librerias_arboles_ft("2.24", 'filtro');
 
 	crear_arbol($_REQUEST["xml"], $_REQUEST["campo"], $parametros);
 ?>
-<style type="text/css">
+<!--style type="text/css">
 .estilo-dependencia {
 	font-family: verdana;
 	font-size: 7pt;
@@ -86,7 +82,7 @@ ul.fancytree-container {
     border: none;
     background-color:#F5F5F5;
 }
-</style>
+</style-->
 </head>
 <?php
 function crear_arbol($xml,$campo,$parametros) {
@@ -145,7 +141,7 @@ function crear_arbol($xml,$campo,$parametros) {
 				var items = data.tree.getSelectedNodes();
 				for(var i=0;i<items.length;i++){
 					seleccionados.push(items[i].key);
-				}
+				}				
 				var s = seleccionados.join(","); 
 				$("#<?php echo $campo; ?>").val(s);
 			},

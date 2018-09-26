@@ -1,5 +1,5 @@
 <?php
-$max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; } 
+$max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; }
 ?>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php include_once($ruta_db_superior."pantallas/lib/librerias_componentes.php"); ?>
@@ -14,13 +14,20 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
   min-height: 0px;
   padding: 0px;
   border: 0px solid #E3E3E3;
+ }
+ul.fancytree-container {
+    border: none;
+}
+span.fancytree-title 
+{  
+	font-family: Verdana,Tahoma,arial;
+	font-size: 9px; 
 }
 </style>
 <?php include_once($ruta_db_superior."db.php"); 
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
-?>
-<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery-1.7.min.js"></script>
-<?php include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."librerias_saia.php");
+echo librerias_jquery("3.3");
 $datos=busca_filtro_tabla(fecha_db_obtener('a.fecha','Y-m-d')." as x_fecha, ".fecha_db_obtener('a.fecha_extrema_i','Y-m-d')." as x_fecha_extrema_i, ".fecha_db_obtener('a.fecha_extrema_f','Y-m-d')." x_fecha_extrema_f,a.*","expediente a","a.idexpediente=".$_REQUEST["idexpediente"],"",$conn);
 $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$datos[0]["cod_padre"],"",$conn);
 ?>
@@ -112,22 +119,12 @@ if($dato_padre["numcampos"]){
   <div class="controls">
   	<b><?php if($datos[0]["cod_padre"]){ echo("Serie. ".mostrar_seleccionados_exp($datos[0]["cod_padre"],"nombre","expediente")." | Fondo. ".mostrar_seleccionados_exp($datos[0]["cod_padre"],"fondo","expediente")); } ?></b>
   	<br />
-    <span class="phpmaker">
-			<input type="text" id="stext" width="200px" size="20">          
-      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value),1)">
-      <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value),0,1)">
-      <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value))">
-      <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>      
-      <div id="esperando_expediente"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
-			<div id="treeboxbox_tree2" class="arbol_saia"></div>
-      <input type="hidden" name="cod_padre" id="cod_padre" value="<?php echo($datos[0]["cod_padre"]); ?>">
-    </span>
+  	<div id="treeboxbox_tree2" class="arbol_saia"></div>
+   
   </div>
 </div>
 
-<div class="control-group element">
+<div id="div_serie_asociada" class="control-group element">
   <label class="control-label" for="serie_idserie">Serie asociada *
   </label>
   <div class="controls">       
@@ -325,12 +322,15 @@ if($dato_padre["numcampos"]){
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>pantallas/lib/librerias_codificacion.js"></script>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/bootstrap/saia/bootstrap-datetimepicker.js"></script>
 <?php
-  echo(librerias_arboles());
+  	//echo librerias_jquery("3.3");
+	echo librerias_UI("1.12");
+	echo librerias_arboles_ft("2.24", 'filtro');
   ?>
   <script>
-  function cargar_info_Node(NodeId){
-	  if(treeserie_idserie.isItemChecked(NodeId)){
-	    $("#codigo_numero_serie").val(treeserie_idserie.getUserData(NodeId,"codigo"));
+  function cargar_info_Node(event,data){
+  	$("#serie_idserie").val(data.node.key);
+	  if(data.node.selected){
+	    $("#codigo_numero_serie").val(data.node.data.codigo);
 	    /*$("#dependencia_iddependencia").val(treeserie_idserie.getUserData(NodeId,"iddependencia"));
 		  $("#codigo_numero_dependencia").val(treeserie_idserie.getUserData(NodeId,"dependencia_codigo"));
 		  $("#fondo").val(tree3.getUserData(NodeId,"dependencia_nombre"));*/
@@ -341,14 +341,15 @@ if($dato_padre["numcampos"]){
   }
 
   $(document).ready(function(){
-		url2="test/test_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0&seleccionados=<?php echo($datos[0]["serie_idserie"]); ?>";
+		url2="arboles/arbol_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0&checkbox=radio&seleccionados=<?php echo($datos[0]["serie_idserie"]); ?>";
 		$.ajax({
-			url : "<?php echo($ruta_db_superior);?>test/crear_arbol.php",
-			data:{xml:url2,campo:"serie_idserie",radio:1,ruta_db_superior:"../../",busqueda_item:1,onNodeSelect:"cargar_info_Node"},
+			url : "<?php echo($ruta_db_superior);?>arboles/crear_arbol_ft.php",
+			data:{xml:url2,campo:"serie_idserie",ruta_db_superior:"../../",busqueda_item:1,onNodeSelect:"cargar_info_Node",selectMode:1},
 			type : "POST",
 			async:false,
 			success : function(html_serie) {
 				$("#treeboxbox_tree3").empty().html(html_serie);
+				$("#serie_idserie").val("<?php echo($datos[0]["serie_idserie"]); ?>");
 			},error: function (){
 				top.noty({text: 'No se pudo cargar el arbol de series',type: 'error',layout: 'topCenter',timeout:5000});
 			}
@@ -364,7 +365,9 @@ if($dato_padre["numcampos"]){
 		if($datos[0]['agrupador']){
 		?>
 			$('#informacion_completa_expediente').hide();
+			$('#informacion_completa_expediente').after($('#div_serie_asociada'));
 			$('#informacion_completa_expediente').after($('#div_nombre_exp'));
+			
 		<?php
 		}
 		?>
@@ -374,50 +377,20 @@ if($dato_padre["numcampos"]){
     if (window.navigator.userAgent.toLowerCase().match("gecko")) {
        browserType= "gecko"
     }
-    tree2=new dhtmlXTreeObject("treeboxbox_tree2","","",0);
-  	tree2.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
-  	tree2.enableIEImageFix(true);
-    tree2.enableCheckBoxes(1);
-    tree2.enableRadioButtons(true);
-    tree2.setOnLoadingStart(cargando_expediente);
-    tree2.setOnLoadingEnd(fin_cargando_expediente);
-    //tree2.enableSmartXMLParsing(true);
-    tree2.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1&excluidos=<?php echo($_REQUEST["idexpediente"]); ?>&seleccionado=<?php echo($datos[0]["cod_padre"]); ?>");	
-  	tree2.loadXML("<?php echo($ruta_db_superior);?>test_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1&excluidos=<?php echo($_REQUEST["idexpediente"]); ?>&seleccionado=<?php echo($datos[0]["cod_padre"]); ?>");
-    tree2.setOnCheckHandler(onNodeSelect_expediente);
-      
-  	function onNodeSelect_expediente(nodeId){
-  		valor_destino=document.getElementById("cod_padre");
-  		if(tree2.isItemChecked(nodeId)){
-  			if(valor_destino.value!=="")
-        	tree2.setCheck(valor_destino.value,false);
-        if(nodeId.indexOf("_")!=-1)
-        	nodeId=nodeId.substr(0,nodeId.indexOf("_"));
-        valor_destino.value=nodeId;
-      }
-      else{
-      	valor_destino.value="";
-      }
-    }
-    function fin_cargando_expediente() {
-      if (browserType == "gecko" )
-        document.poppedLayer = eval('document.getElementById("esperando_expediente")');
-      else if (browserType == "ie")
-        document.poppedLayer = eval('document.getElementById("esperando_expediente")');
-      else
-        document.poppedLayer = eval('document.layers["esperando_expediente"]');
-      document.poppedLayer.style.display = "none";
-      document.getElementById('cod_padre').value=tree2.getAllChecked();
-    }
-    function cargando_expediente() {
-      if (browserType == "gecko" )
-        document.poppedLayer = eval('document.getElementById("esperando_expediente")');
-      else if (browserType == "ie")
-        document.poppedLayer = eval('document.getElementById("esperando_expediente")');
-      else
-        document.poppedLayer = eval('document.layers["esperando_expediente"]');
-      document.poppedLayer.style.display = "";
-    }  
+    url3="arboles/arbol_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1&checkbox=radio&excluidos=<?php echo($_REQUEST["idexpediente"]); ?>&seleccionado=<?php echo($datos[0]["cod_padre"]); ?>";
+		$.ajax({
+			url : "<?php echo($ruta_db_superior);?>arboles/crear_arbol_ft.php",
+			data:{xml:url3,campo:"cod_padre",ruta_db_superior:"../../",busqueda_item:1,selectMode:1},
+			type : "POST",
+			async:false,
+			success : function(html_serie) {
+				$("#treeboxbox_tree2").empty().html(html_serie);
+				console.log("<?php echo($datos[0]["cod_padre"]); ?>");
+				$("#cod_padre").val("<?php echo($datos[0]["cod_padre"]); ?>");
+			},error: function (){
+				top.noty({text: 'No se pudo cargar el arbol de padres',type: 'error',layout: 'topCenter',timeout:5000});
+			}
+		});
   });
   
   $(".opcion_informacion").on("hide",function(){

@@ -256,12 +256,26 @@ function AddData($conn) {
 	actualizar_crear_cod_arboles($id, "serie", 1);
 	return $id;
 }
+?>
+<style type="text/css">
+ul.fancytree-container {
+    border: none;
+    background-color:#F5F5F5;
+}
+span.fancytree-title 
+{  
+	font-family: Verdana,Tahoma,arial;
+	font-size: 9px; 
+}
 
+</style>
+<?php
 include ($ruta_db_superior."librerias_saia.php");
 echo librerias_jquery("3.3");
 echo librerias_validar_formulario("11");
 echo librerias_UI("1.12");
 echo librerias_arboles_ft("2.24", 'filtro');
+
 
 /*$tipo_entidad = null;
 if ($_REQUEST["tipo_entidad"]) {
@@ -472,6 +486,7 @@ encriptar_sqli("serieadd", 1, "form_info", $ruta_db_superior, false, false);
 <script>
 var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 	function cargar_datos_padre(event,data) {
+		$("#x_cod_padre").val(data.node.key);
 		$.ajax({
 			type : "POST",
 			dataType : "json",
@@ -663,7 +678,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 
 				xml = "arboles/arbol_serie.php?ver_categoria2=0&ver_categoria3=1&checkbox=radio";				
 				$.ajax({
-					url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
+					url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol_ft.php",
 					data : {
 						xml : xml,
 						campo : "x_cod_padre",
@@ -715,7 +730,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 						xml+="&seleccionados="+cod_padre;
 					}
 					$.ajax({
-						url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
+						url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol_ft.php",
 						data : {
 							xml : xml,
 							campo : "x_cod_padre",
@@ -809,7 +824,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 			xml1 = xml1 + '&seleccionados=' + dependencia_seleccionada;
 		}
 		$.ajax({
-			url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
+			url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol_ft.php",
 			data:{xml:xml1,campo:"iddependencia",selectMode:1,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:1,expandir:3},
 			type : "POST",
 			async:false,
