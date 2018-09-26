@@ -1066,7 +1066,8 @@ class GenerarFormato {
 									tree_' . $campos[$h]["nombre"] . '.enableThreeStateCheckboxes(1);';
                             } else if ($arreglo[1] == 2) {
                                 $texto .= 'tree_' . $campos[$h]["nombre"] . '.enableCheckBoxes(1);
-									tree_' . $campos[$h]["nombre"] . '.enableRadioButtons(true);';
+									tree_' . $campos[$h]["nombre"] . '.enableRadioButtons(true);
+                                    tree_' . $campos[$h]["nombre"] . '.enableSingleRadioMode(true);';
                             }
                             $texto .= 'tree_' . $campos[$h]["nombre"] . '.setOnLoadingStart(cargando_' . $campos[$h]["nombre"] . ');
 								tree_' . $campos[$h]["nombre"] . '.setOnLoadingEnd(fin_cargando_' . $campos[$h]["nombre"] . ');';
@@ -1119,9 +1120,8 @@ class GenerarFormato {
 										if(tree_' . $campos[$h]["nombre"] . '.isItemChecked(nodeId)){
 											if(valor_destino.value!=="")
 											tree_' . $campos[$h]["nombre"] . '.setCheck(valor_destino.value,false);
-											if(nodeId.indexOf("_")!=-1)
-											nodeId=nodeId.substr(0,nodeId.indexOf("_"));
-											valor_destino.value=nodeId;
+
+											valor_destino.value=nodeId.split(/[_.]/)[0];
 										}else{
 											valor_destino.value="";
 										}
@@ -1453,7 +1453,7 @@ class GenerarFormato {
 			<head>" . $includes . "
 				<script type='text/javascript'>
   $(document).ready(function() {
-			  		$('#formulario_formatos').validate({	
+			  		$('#formulario_formatos').validate({
 						submitHandler: function(form) {
 							<?php encriptar_sqli('formulario_formatos',0,'form_info','../../');?>
 							form.submit();
