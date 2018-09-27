@@ -34,14 +34,14 @@ class Version20180920192545 extends AbstractMigration {
                 "comment" => "l: Lectura, a: Adición, m: Modificación, e: Eliminación, v: Vinculación"
             ]);
         }
-        $table = $schema->getTable('expediente');
+        /*$table = $schema->getTable('expediente');
         if ($table) {
             $table->changeColumn("serie_idserie", "integer", [
                 "length" => 11,
                 "default" => 0,
                 "notnull" => true
             ]);
-        }
+        }*/
         $this->addSql($this->crear_vista());
     }
 
