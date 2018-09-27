@@ -220,7 +220,7 @@ var entidades = <?php echo json_encode($entidades) ?>;
 				}
 				$.ajax({
 					url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
-					data:{xml:url1,campo:"identidad",selectMode:check,ruta_db_superior:"../../",onNodeSelect:"validar_permisos_entidad",onNodeClick:"asignar_permisos_serie",seleccionar_todos:1,busqueda_item:1},
+					data:{xml:url1,campo:"identidad",selectMode:check,ruta_db_superior:"../../",onNodeSelect:"validar_permisos_entidad",onNodeClick:"asignar_permisos_serie",onNodeDblClick:"no_hacer_nada",seleccionar_todos:1,busqueda_item:1},
 					type : "POST",
 					async:false,
 					success : function(html) {
@@ -270,6 +270,9 @@ var entidades = <?php echo json_encode($entidades) ?>;
 	        //top.hs.htmlExpand(this, { objectType: 'iframe',width: 300, height: 150,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header',targetX:'centro 200px',targetY:null});
 	        hs.htmlExpand(this, { objectType: 'iframe',width: 300, height: 150,contentId:'cuerpo_paso', preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
 	   }
+	}
+	function no_hacer_nada(event, data){
+		return false;
 	}
 </script>
 
