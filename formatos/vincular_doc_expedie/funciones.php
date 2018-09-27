@@ -52,8 +52,16 @@ $(document).ready(function (){
 			$("[name='fk_idexpediente']").val(idexp);
 		} else {
 			tree_serie_idserie.setOnCheckHandler(function(nodeId) {
-				//console.log(nodeId);
-				$("[name='fk_idexpediente']").val(tree_serie_idserie.getUserData(nodeId,"idexpediente"));
+    			var ud = tree_serie_idserie.getUserData(nodeId,"idexpediente");
+    			var idexp = null;
+    			var idser = null;
+    			if(!ud) {
+    				var data = nodeId.split(/[._]/);
+    				idser = data[0];
+    				idexp = data[1];
+    			}
+    			$("[name='fk_idexpediente']").val(idexp);
+    			//$("#serie_idserie").val(idser);
 			});
 		}
 	});
@@ -101,7 +109,7 @@ function mostrar_informacion_qr($idformato,$iddoc){
   //$documento=busca_filtro_tabla("numero,tipo_radicado,".fecha_db_obtener("fecha","Y-m-d")." AS fecha","documento","iddocumento=".$iddoc,"",$conn);
   	$dato_serie = explode(".",$datos_vincular_doc[0]["serie_idserie"]);
 	$tipo_documento=busca_filtro_tabla("nombre, cod_padre","serie","idserie=".$dato_serie[0],"",$conn);
-	
+
 	if($tipo_documento["numcampos"]){
 		$serie = busca_filtro_tabla("nombre","serie","idserie =".$tipo_documento[0]["cod_padre"],"",$conn);
 	}
