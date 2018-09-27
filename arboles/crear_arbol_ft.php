@@ -117,7 +117,7 @@ class ArbolFt {
 	   <p style="font-family: Verdana; font-size: 9px;">
 	       <label>Buscar:</label>
 	       <input name="stext_{$this->campo}" placeholder="Buscar..." autocomplete="off">
-	       <button id="btnSearch_{$this->campo}">&times;</button>
+	       <button type="button" id="btnSearch_{$this->campo}">&times;</button>
 	       <span id="matches_{$this->campo}"></span>
         </p>
 FINHTML;

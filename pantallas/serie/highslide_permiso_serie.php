@@ -63,9 +63,10 @@ include_once ($ruta_db_superior . 'librerias_saia.php');
                     id:"<?php echo $entidad; ?>",
                     
                 },
-                success: function(exito){
+                success: function(retorno){
+                	var exito = JSON.parse(retorno);
                     var mensaje="retirado";
-                    if(exito==1){
+                    if(exito["exito"]==1){
                         mensaje="adicionado";
                     }
                     top.noty({text: "<b>ATENCI&Oacute;N</b><br>Permiso "+mensaje+" con exito!",type: "success",layout: "topCenter",timeout:2500});

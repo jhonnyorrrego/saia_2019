@@ -13,7 +13,8 @@ if($_REQUEST['id']){
     $accion=$_REQUEST['accion'];
 	$llave_entidad=$_REQUEST['id'];
     $idserie=$_REQUEST['serie'];
-    $entidad_identidad=$_REQUEST['tipo_entidad'];       
+    $entidad_identidad=$_REQUEST['tipo_entidad'];
+	      
     if(isset($_REQUEST['permiso']))//permiso para editar
     {
     	if($_REQUEST['permiso']==1)
@@ -25,13 +26,6 @@ if($_REQUEST['id']){
 		}
     }
 	
-	$buscar_permisos = busca_filtro_tabla("", "permiso_serie", "estado=1 and serie_idserie=".$idserie." and entidad_identidad=".$entidad_identidad." and llave_entidad=".$llave_entidad." and permiso like '%a,v'", "", $conn);		
-	if($buscar_permisos["numcampos"]){
-		$actualizar="si";
-	}
-	else{
-		$actualizar="no";
-	}
     if($accion==1){//insertar o actualizar
     	$sqlc = "INSERT INTO permiso_serie (entidad_identidad,serie_idserie,llave_entidad,estado,permiso) VALUES (" . $entidad_identidad . "," . $idserie . "," . $llave_entidad . ",1,'l')";
     }//eliminar
@@ -47,6 +41,7 @@ if($_REQUEST['id']){
 	$retorno=array();
     $retorno['accion']=$accion;
 	$retorno['sqlc']=$sqlc;
+	$retorno['exito']=$_REQUEST['permiso'];
     echo(json_encode($retorno));
     //die();
 }

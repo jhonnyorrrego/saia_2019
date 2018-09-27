@@ -94,9 +94,9 @@ function enlace_expediente($idexpediente, $nombre) {
     $permisos = $permiso->obtener_permisos();
 
     $l = $permiso->permiso_solo_lectura();
-    $m = $permiso->tiene_permiso_escribir_expediente();
-    $e = $permiso->tiene_permiso_eliminar_expediente();
-    $p = $permiso->tiene_permiso_compartir_expediente();
+    $m = in_array(PermisosExpediente::PERMISO_EXP_ESCRIBIR, $permisos);//$permiso->tiene_permiso_escribir_expediente();
+    /*$e = $permiso->tiene_permiso_eliminar_expediente();
+    $p = $permiso->tiene_permiso_compartir_expediente();*/
     if (empty($permisos)) {
         $estilo_expediente = ' style="opacity: 0.40;"';
         if(!$expediente_actual[0]['agrupador']){
@@ -104,7 +104,7 @@ function enlace_expediente($idexpediente, $nombre) {
         }
     }
     $a_html = array();
-    //$a_html[] = implode(",", $permisos);
+    //$a_html[] = implode(",", $permiso->getPermisosSerie());
     if ($l || $m) {
         $a_html[] = '<div class="link kenlace_saia" enlace="pantallas/busquedas/consulta_busqueda_expediente.php?' . $req_parms . '" conector="iframe" titulo="' . $nombre . '">';
         $a_html[] = '<table><tr><td style="font-size:12px;">';
