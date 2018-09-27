@@ -34,15 +34,18 @@ class Version20180920192545 extends AbstractMigration {
                 "comment" => "l: Lectura, a: Adición, m: Modificación, e: Eliminación, v: Vinculación"
             ]);
         }
-        $table = $schema->getTable('expediente');
+        /*$table = $schema->getTable('expediente');
         if ($table) {
             $table->changeColumn("serie_idserie", "integer", [
                 "length" => 11,
                 "default" => 0,
                 "notnull" => true
             ]);
-        }
-        $this->addSql($this->crear_vista());
+        }*/
+    }
+
+    public function postUp($schema) {
+        $this->connection->exec($this->crear_vista());
     }
 
     public function preDown(Schema $schema) {
@@ -62,7 +65,10 @@ class Version20180920192545 extends AbstractMigration {
         if ($table && $table->hasColumn("permiso")) {
             $table->dropColumn("permiso");
         }
-        $this->addSql($this->devolver_vista());
+    }
+
+    public function postDown($schema) {
+        $this->connection->exec($this->devolver_vista());
     }
 
     private function crear_vista() {
