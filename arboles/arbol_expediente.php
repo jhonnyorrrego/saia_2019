@@ -128,6 +128,7 @@ function llena_expediente($id) {
 				$item["extraClasses"] = "estilo-dependencia";
 	            $item["title"] = htmlspecialchars($texto_item . $cadena_tomos);
 				$item["key"] = $papas[$i]["idexpediente"];
+				$item["checkbox"] = $checkbox;
 				if (@$_REQUEST["doc"]) {
 					if ($_REQUEST["accion"] == 1 && in_array($papas[$i]["idexpediente"], $exp_doc)) {
 						if (!$varios) {
@@ -149,12 +150,16 @@ function llena_expediente($id) {
 				}
 
 				$hijos = busca_filtro_tabla("idexpediente", "vexpediente_serie a", $lista2 . " AND cod_padre=" . $papas[$i]["idexpediente"], "", $conn);
+				//print_r($hijos["sql"]);
 				if ($hijos['numcampos']) {
-					//echo(" child=\"1\" ");
-					$item["checkbox"] = $checkbox;
+					//echo(" child=\"1\" ");					
+					
+					$item["children"] = llena_expediente($papas[$i]["idexpediente"]);
 				}
 				if (@$_REQUEST["uid"] || @$_REQUEST["carga_total"]) {
-					$item["children"] = llena_expediente($papas[$i]["idexpediente"]);
+						//$item["checkbox"] = $checkbox;
+					//$item["children"] = llena_expediente($papas[$i]["idexpediente"]);
+					
 				}
 				$objetoJson[] = $item;
 			}

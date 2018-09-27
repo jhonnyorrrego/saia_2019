@@ -128,16 +128,20 @@ class DHtmlXtreeExpedienteFunc {
                 if (($hijos[0]["cant"] || $tipo_docu[0]["cant"]) && !$cerrado) {
                    // $this->objetoXML->writeAttribute("child", 1);
                    $item["folder"] = 1;
+				   		   
                 } else {
                     ///$this->objetoXML->writeAttribute("child", 0);
                     $item["folder"] = 0;
                 }
+				$hijos_exp = array();
+				$hijos_sub = array();
                 if ($hijos[0]["cant"] && !$cerrado) {
-                    $item["children"] = $this->llena_expediente($papas[$i]["idexpediente"]);
+                    $hijos_exp = $this->llena_expediente($papas[$i]["idexpediente"]);
                 }
 				if (!$cerrado) {
-               	 $item["children"] = $this->llena_subserie($papas[$i]["serie_idserie"], $papas[$i]["idexpediente"]);
+               	  $hijos_sub = $this->llena_subserie($papas[$i]["serie_idserie"], $papas[$i]["idexpediente"]);
 				}
+				$item["children"]= array_merge($hijos_exp,$hijos_sub);
                 $objetoJson[] = $item;
             }
         }
@@ -162,7 +166,10 @@ class DHtmlXtreeExpedienteFunc {
 				$item["extraClasses"] = "estilo-dependencia";
 	            $item["title"] = $text;
 				$item["key"]= "{$papas[$i]["idserie"]}.{$idexp}";
-				$item["checkbox"]=$this->checkbox;				
+				if ($papas[$i]["tipo"] == 3) {
+					$item["checkbox"]=$this->checkbox;
+				}
+				//$item["checkbox"]=$this->checkbox;			
                 if ($papas[$i]["estado"] == 0 || $permiso[0]["cant"] == 0) {
                     //$this->objetoXML->writeAttribute("nocheckbox", 1);
                     $item["folder"] = 1;
@@ -171,7 +178,7 @@ class DHtmlXtreeExpedienteFunc {
                     if ($tipo_docu[0]["cant"]) {
                         //$this->objetoXML->writeAttribute("nocheckbox", 0);
                         //$this->objetoXML->writeAttribute("child", 1);
-                        $item["folder"] = 1;
+                        $item["folder"] = 1;						
                         $item["children"] = $this->llena_tipo_documental($papas[$i]["idserie"], $idexp);
                     } else {
                         //$this->objetoXML->writeAttribute("child", 0);

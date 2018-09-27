@@ -146,7 +146,8 @@ function set_expediente_documento() {
 		"codigo",
 		"fecha",
 		"propietario",
-		"estado_archivo"
+		"estado_archivo",
+		"serie_idserie"
 	);
 	$array_vacios = array('cod_padre');
 	for ($i = 0; $i < count($array_vacios); $i++) {
@@ -161,7 +162,7 @@ function set_expediente_documento() {
 		'" . @$_REQUEST['codigo'] . "',
 		" . fecha_db_almacenar(@$_REQUEST['fecha'], 'Y-m-d') . ",
 		" . usuario_actual("funcionario_codigo") . ",
-		1
+		1,". @$_REQUEST['serie_idserie'] . "
 	)";
 	phpmkr_query($sql2);
 	$idexpediente = phpmkr_insert_id();
@@ -170,8 +171,18 @@ function set_expediente_documento() {
 	$sql3 = "UPDATE expediente SET cod_arbol='" . $cod_padre[0]["cod_arbol"] . "." . $idexpediente . "' where idexpediente=" . $idexpediente;
 	phpmkr_query($sql3);
 	$retorno -> sql = $sql2;
-	$sql4 = "INSERT INTO expediente_doc(expediente_idexpediente,documento_iddocumento,fecha) VALUES('" . $idexpediente . "', '" . @$_REQUEST["iddoc"] . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
-	phpmkr_query($sql4);
+	$busqueda = busca_filtro_tabla("", "expediente_doc A", "A.documento_iddocumento=" . @$_REQUEST["iddoc"], "", $conn);
+     if ($busqueda["numcampos"]) {
+     	$sqlus = "UPDATE expediente_doc SET expediente_idexpediente='" . $idexpediente . "' WHERE idexpediente_doc=" . $busqueda[0]["idexpediente_doc"];
+        phpmkr_query($sqlus) or die($sqlus);
+	}
+	 else{
+		$sql4 = "INSERT INTO expediente_doc(expediente_idexpediente,documento_iddocumento,fecha) VALUES('" . $idexpediente . "', '" . @$_REQUEST["iddoc"] . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
+		phpmkr_query($sql4);
+	}
+	//update documento serie_idserie
+	$sqlus = "UPDATE documento SET serie=" . @$_REQUEST['serie_idserie'] . " WHERE iddocumento=" . $_REQUEST["iddoc"];
+        phpmkr_query($sqlus) or die($sqlus);
 	if ($idexpediente) {
 		if (asignar_expediente($idexpediente, 1, usuario_actual("idfuncionario"))) {
 			$exito = 1;

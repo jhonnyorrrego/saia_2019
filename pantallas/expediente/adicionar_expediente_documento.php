@@ -1,6 +1,18 @@
 <?php
 $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; } 
 ?>
+<style type="text/css">
+ul.fancytree-container {
+    overflow: auto;
+    position: relative;
+    border: none;
+}
+span.fancytree-title 
+{  
+	font-family: Verdana,Tahoma,arial;
+	font-size: 9px; 
+}
+</style>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php include_once($ruta_db_superior."pantallas/lib/librerias_componentes.php"); ?>
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap/saia/css/bootstrap.css"/>
@@ -10,9 +22,8 @@ $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($rut
 <link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap/saia/css/bootstrap-datetimepicker.min.css"/>
 <?php include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
-?>
-<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery-1.7.min.js"></script>
-<?php include_once($ruta_db_superior."librerias_saia.php");
+include_once ($ruta_db_superior . "arboles/crear_arbol_ft.php");
+include_once($ruta_db_superior."librerias_saia.php");
 $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["cod_padre"],"",$conn);
 ?>
 <form name="formulario_expediente" id="formulario_expediente" method="post">
@@ -24,16 +35,21 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
   </label>
   <div class="controls"> 
     <span class="phpmaker">
-			<input type="text" id="stext" width="200px" size="20">          
-      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value),1)">
-      <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value),0,1)">
-      <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value))">
-      <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png"border="0px"></a>      
-      <div id="esperando_expediente"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
-			<div id="treeboxbox_tree2" class="arbol_saia"></div>
-      <input type="hidden" name="cod_padre" id="cod_padre" value="<?php echo($datos[0]["cod_padre"]); ?>">
+<?php
+echo(librerias_jquery("2.2"));
+echo librerias_UI("1.12");
+$origen = array("url" => "arboles/arbol_expediente.php", "ruta_db_superior" => $ruta_db_superior,
+    "params" => array(
+        "accion" => 1,
+        "permiso_editar" => 1,
+        "doc" => $_REQUEST["iddoc"],
+        "checkbox"=>radio,
+    ));
+$opciones_arbol = array("keyboard" => true, "busqueda_item" => 1);
+$extensiones = array("filter" => array());
+$arbol = new ArbolFt("cod_padre", $origen, $opciones_arbol, $extensiones);
+echo $arbol->generar_html();
+?>
       <input type="hidden" name="ejecutar_expediente" value="set_expediente_documento">
       <input type="hidden" name="tipo_retorno" value="1">
     </span>
@@ -60,10 +76,30 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
   </div>
 </div>
 <div class="control-group element">
-  <label class="control-label" for="nombre">Descripci&oacute;n *
+  <label class="control-label" for="nombre">Descripci&oacute;n
   </label>
   <div class="controls"> 
     <textarea name="descripcion" id="descripcion"></textarea>
+  </div>
+</div>
+<div class="control-group element">
+  <label class="control-label" for="nombre">Serie asociada *
+  </label>
+  <div class="controls"> 
+    <?php
+    $origen = array("url" => "arboles/arbol_serie_funcionario.php", "ruta_db_superior" => $ruta_db_superior,
+    "params" => array(
+   		 "tipo1" => 1,
+        "tipo2" => 1,
+        "tipo3" => 0,
+        "tvd"=>0,
+        "checkbox"=>'radio'
+    ));
+$opciones_arbol = array("keyboard" => true, "busqueda_item" => 1,"selectMode"=>1);
+$extensiones = array("filter" => array());
+$arbol = new ArbolFt("serie_idserie", $origen, $opciones_arbol, $extensiones);
+echo $arbol->generar_html();
+?>
   </div>
 </div>
 <input type="hidden" name="key_formulario_saia" value="<?php echo(generar_llave_md5_saia());?>">
@@ -86,63 +122,8 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>pantallas/lib/librerias_codificacion.js"></script>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/bootstrap/saia/bootstrap-datetimepicker.js"></script>
 <?php
-  echo(librerias_arboles());
+  echo(librerias_arboles_ft("2.24", 'filtro'));
   ?>
-  <script>
-  $(document).ready(function(){
-    var browserType;
-    if (document.layers) {browserType = "nn4"}
-    if (document.all) {browserType = "ie"}
-    if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-       browserType= "gecko"
-    }
-    tree2=new dhtmlXTreeObject("treeboxbox_tree2","","",0);
-  	tree2.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
-  	tree2.enableIEImageFix(true);
-    tree2.enableCheckBoxes(1);
-    tree2.enableRadioButtons(true);
-    tree2.setOnLoadingStart(cargando_expediente);
-    tree2.setOnLoadingEnd(fin_cargando_expediente);
-    //tree2.enableSmartXMLParsing(true);
-    tree2.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_expediente.php?accion=1&permiso_editar=1");	
-  	tree2.loadXML("<?php echo($ruta_db_superior);?>test_expediente.php?accion=1&permiso_editar=1");
-    tree2.setOnCheckHandler(onNodeSelect_expediente);
-      
-  	function onNodeSelect_expediente(nodeId){
-  		valor_destino=document.getElementById("cod_padre");
-  		if(tree2.isItemChecked(nodeId)){
-  			if(valor_destino.value!=="")
-        	tree2.setCheck(valor_destino.value,false);
-        if(nodeId.indexOf("_")!=-1)
-        	nodeId=nodeId.substr(0,nodeId.indexOf("_"));
-        valor_destino.value=nodeId;
-      }
-      else{
-      	valor_destino.value="";
-      }
-    }
-  
-    function fin_cargando_expediente() {
-      if (browserType == "gecko" )
-        document.poppedLayer = eval('document.getElementById("esperando_expediente")');
-      else if (browserType == "ie")
-        document.poppedLayer = eval('document.getElementById("esperando_expediente")');
-      else
-        document.poppedLayer = eval('document.layers["esperando_expediente"]');
-      document.poppedLayer.style.display = "none";
-      document.getElementById('expedientes').value=tree2.getAllChecked();
-    }
-    function cargando_expediente() {
-      if (browserType == "gecko" )
-        document.poppedLayer = eval('document.getElementById("esperando_expediente")');
-      else if (browserType == "ie")
-        document.poppedLayer = eval('document.getElementById("esperando_expediente")');
-      else
-        document.poppedLayer = eval('document.layers["esperando_expediente"]');
-      document.poppedLayer.style.display = "";
-    }
-  });
-  </script>
 <script type="text/javascript">
 $(document).ready(function(){
   $('#fecha').datetimepicker({

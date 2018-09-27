@@ -178,7 +178,7 @@ if(count($nombres_exp)){
 }
 ?>
 <div>
- <!--input type="hidden" name="expedientes" id="expedientes" value=""-->
+ <input type="hidden" name="expedientes" id="expedientes" value="">
  <input type="hidden" name="iddoc" value="<?php echo $iddoc; ?>">
  <input type="submit" value="Continuar" class="btn btn-primary btn-mini">
  <button class="btn btn-mini" id="" onclick="window.open('<?php echo($ruta_db_superior); ?>pantallas/expediente/adicionar_expediente_documento.php?iddoc=<?php echo(@$_REQUEST["iddoc"]); ?>','_self'); return false;">Adicionar a un nuevo expediente</button>
@@ -224,7 +224,7 @@ if(count($nombres_exp)){
 	    
       // $('#expedientes').val(expedientes.join(","));
        //$('#expedientes').val(expedientes);
-       $('#expediente').val(expedientes[0]);
+       $('#expedientes').val(expedientes[1]);
 	    <?php encriptar_sqli("form1",0); ?>
 		if(salida_sqli) {
 			return true;
