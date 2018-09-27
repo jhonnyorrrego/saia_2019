@@ -49,11 +49,11 @@ $(document).ready(function (){
 		tree_serie_idserie.setOnLoadingEnd(fin_carga_arbol_serie_idserie);
 		if(ocultar==1) {
 			var idexp = '<?php echo($_REQUEST["idexpediente"]); ?>';
-			$("[name='fk_idexpediente']").val(idexp);
+			$("[name='fk_idexpediente']").val(idexp);			
 		} else {
 			tree_serie_idserie.setOnCheckHandler(function(nodeId) {
     			var ud = tree_serie_idserie.getUserData(nodeId,"idexpediente");
-    			var idexp = null;
+    			var idexp = ud;
     			var idser = null;
     			if(!ud) {
     				var data = nodeId.split(/[._]/);
