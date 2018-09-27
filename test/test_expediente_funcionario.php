@@ -147,15 +147,26 @@ class DHtmlXtreeExpedienteFunc {
     }
 
     private function llena_subserie($id, $idexp) {
-        $papas = busca_filtro_tabla("", "serie", "tipo in (2,3) and tvd=0 and cod_padre=" . $id, "nombre ASC", $this->conn);
+        $papas = busca_filtro_tabla("distinct idserie, nombre_serie nombre, codigo, tipo, estado_serie estado, permiso",
+            "vpermiso_serie",
+            "tipo in (2,3) and tvd=0 and cod_padre=" . $id . " and idfuncionario = " . $_SESSION["idfuncionario"], "nombre ASC", $this->conn);
+
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
-                $permiso = busca_filtro_tabla("count(*) as cant", "vpermiso_serie", "idfuncionario=" . $_SESSION["idfuncionario"] . " and idserie=" . $papas[$i]["idserie"], "", $this->conn);
+                $permisos = array();
+                $tiene_permisos = false;
+                $tiene_permiso_lectura = false;
+
+                if(!empty($papas[$i]["permiso"])) {
+                    $permisos = explode(",", $papas[$i]["permiso"]);
+                    $tiene_permisos = in_array("a", $permisos) || in_array("v", $permisos);
+                    $tiene_permiso_lectura = count($permisos) == 1 && in_array("l", $permisos);
+                }
                 $text = $papas[$i]["nombre"] . " (" . $papas[$i]["codigo"] . ")";
                 if ($papas[$i]["estado"] == 0) {
                     $text .= " - INACTIVO";
                 }
-                if ($permiso[0]["cant"] == 0) {
+                if (!$tiene_permisos || $tiene_permiso_lectura) {
                     $text .= " - (Sin permiso)";
                 }
                 $this->objetoXML->startElement("item");
@@ -163,7 +174,7 @@ class DHtmlXtreeExpedienteFunc {
                 $this->objetoXML->writeAttribute("text", $text);
                 $this->objetoXML->writeAttribute("id", "{$papas[$i]["idserie"]}.{$idexp}");
 
-                if ($papas[$i]["estado"] == 0 || $permiso[0]["cant"] == 0) {
+                if ($papas[$i]["estado"] == 0 || !$tiene_permisos) {
                     $this->objetoXML->writeAttribute("nocheckbox", 1);
                 } else {
                     $tipo_docu = busca_filtro_tabla("count(1) as cant", "serie", "tipo=3 and tvd=0 and cod_padre=" . $papas[$i]["idserie"], "", $this->conn);
@@ -182,22 +193,32 @@ class DHtmlXtreeExpedienteFunc {
     }
 
     private function llena_tipo_documental($id, $idexp) {
-        $papas = busca_filtro_tabla("", "serie", "tipo=3 and tvd=0 and cod_padre=" . $id, "nombre ASC", $this->conn);
+        $papas = busca_filtro_tabla("distinct idserie, nombre_serie nombre, codigo, tipo, estado_serie estado, permiso",
+            "vpermiso_serie",
+            "tipo=3 and tvd=0 and cod_padre=" . $id . " and idfuncionario = " . $_SESSION["idfuncionario"], "nombre ASC", $this->conn);
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
-                $permiso = busca_filtro_tabla("count(*) as cant", "vpermiso_serie", "idfuncionario=" . $_SESSION["idfuncionario"] . " and idserie=" . $papas[$i]["idserie"], "", $this->conn);
+                $permisos = array();
+                $tiene_permisos = false;
+                $tiene_permiso_lectura = false;
+
+                if(!empty($papas[$i]["permiso"])) {
+                    $permisos = explode(",", $papas[$i]["permiso"]);
+                    $tiene_permisos = in_array("a", $permisos) || in_array("v", $permisos);
+                    $tiene_permiso_lectura = count($permisos) == 1 && in_array("l", $permisos);
+                }
                 $text = $papas[$i]["nombre"] . " (" . $papas[$i]["codigo"] . ")";
                 if ($papas[$i]["estado"] == 0) {
                     $text .= " - INACTIVO";
                 }
-                if ($permiso[0]["cant"] == 0) {
+                if (!$tiene_permisos || $tiene_permiso_lectura) {
                     $text .= " - (Sin permiso)";
                 }
                 $this->objetoXML->startElement("item");
                 $this->objetoXML->writeAttribute("style", "font-family:verdana; font-size:7pt;");
                 $this->objetoXML->writeAttribute("text", $text);
                 $this->objetoXML->writeAttribute("id", $papas[$i]["idserie"] . "." . $idexp);
-                if ($papas[$i]["estado"] == 0 || $permiso[0]["cant"] == 0) {
+                if ($papas[$i]["estado"] == 0 || !$tiene_permisos) {
                     $this->objetoXML->writeAttribute("nocheckbox", 1);
                 }
 

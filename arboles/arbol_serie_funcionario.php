@@ -75,15 +75,15 @@ if($id < 0) {
     $id = 0;
 }*/
 /*if (isset($_REQUEST["id"])) {
-	
-	$objetoJson["key"] = $_REQUEST["id"];	
+
+	$objetoJson["key"] = $_REQUEST["id"];
 	$id =  $_REQUEST["id"];
     if ($id[0] == 0) {
         $hijos_dep = llena_serie($id[0]);
         if (!empty($hijos_dep)) {
             $hijos[] = $hijos_dep;
         }
-    }	
+    }
 	$objetoJson["children"] = $hijos;
 }
 else{
@@ -129,9 +129,9 @@ class DHtmlXtreeSeries {
 
     public function generarXml($id=0) {
       //  $this->llena_serie($id);
-      
+
        return $this->llena_serie($id);
-	   
+
         //return $cadenaXML;
     }
 
@@ -148,18 +148,33 @@ class DHtmlXtreeSeries {
         }
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
+                $permisos = array();
+                $tiene_permisos = false;
+                $tiene_permiso_lectura = false;
+                if(!empty($papas[$i]["permiso"])) {
+                    $permisos = explode(",", $papas[$i]["permiso"]);
+                    $tiene_permisos = in_array("a", $permisos) || in_array("v", $permisos);
+                    $tiene_permiso_lectura = count($permisos) == 1 && in_array("l", $permisos);
+                }
+
+                if(!$tiene_permisos && !$tiene_permiso_lectura) {
+                    continue;
+                }
+
                 $text = $papas[$i]["nombre_serie"] . " (" . $papas[$i]["codigo"] . ")";
                 if ($papas[$i]["estado_serie"] == 0) {
                     $text .= " - INACTIVO";
                 }
-				$item = array();
+                if ($tiene_permiso_lectura) {
+                    $text .= " - (sin permiso)";
+                }
+                $item = array();
 				$item["extraClasses"] = "estilo-dependencia";
 	            $item["title"] = $text;
 				$item["key"]= $papas[$i]["idserie"];
 				$item["checkbox"]=$this->checkbox;
 				//print_r($this->tipo[$papas[$i]["tipo"]]);
-                if ($this->tipo[$papas[$i]["tipo"]] == 0 ||$papas[$i]["estado_serie"] == 0) {
-                    
+                if ($this->tipo[$papas[$i]["tipo"]] == 0 || $papas[$i]["estado_serie"] == 0 || $tiene_permiso_lectura) {
                     $item["checkbox"]= false;
                 }
                 if (in_array($papas[$i]["idserie"], $this->seleccionados) !== false) {
@@ -172,9 +187,9 @@ class DHtmlXtreeSeries {
                     $item["folder"] = 1;
                 }
 
-                /* USERDATA */				
+                /* USERDATA */
 				$item["data"]=array();
-				$item["data"]=array("nombre_serie"=>$papas[$i]["nombre_serie"],				
+				$item["data"]=array("nombre_serie"=>$papas[$i]["nombre_serie"],
 				"codigo"=>$papas[$i]["codigo"],
 				"entidad_identidad"=>$papas[$i]["entidad_identidad"]);
                 /* FIN USERDATA */
