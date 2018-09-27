@@ -339,6 +339,11 @@ if($dato_padre["numcampos"]){
 	  	$("#codigo_numero_serie").val("");
 	  }
   }
+  function select_padre(event, data){
+  	if(data.node.selected){
+  		$("#cod_padre").val(data.node.key);
+  	}
+  }
 
   $(document).ready(function(){
 		url2="arboles/arbol_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0&checkbox=radio&seleccionados=<?php echo($datos[0]["serie_idserie"]); ?>";
@@ -370,17 +375,11 @@ if($dato_padre["numcampos"]){
 			
 		<?php
 		}
-		?>
-    var browserType;
-    if (document.layers) {browserType = "nn4"}
-    if (document.all) {browserType = "ie"}
-    if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-       browserType= "gecko"
-    }
+		?>    
     url3="arboles/arbol_expediente.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1&checkbox=radio&excluidos=<?php echo($_REQUEST["idexpediente"]); ?>&seleccionado=<?php echo($datos[0]["cod_padre"]); ?>";
 		$.ajax({
 			url : "<?php echo($ruta_db_superior);?>arboles/crear_arbol_ft.php",
-			data:{xml:url3,campo:"cod_padre",ruta_db_superior:"../../",busqueda_item:1,selectMode:1},
+			data:{xml:url3,campo:"cod_padre",ruta_db_superior:"../../",busqueda_item:1,onNodeSelect:"select_padre",selectMode:1},
 			type : "POST",
 			async:false,
 			success : function(html_serie) {

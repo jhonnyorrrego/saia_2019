@@ -103,11 +103,10 @@ function llena_expediente($id) {
 	global $conn, $sql, $exp_doc, $funcionarios, $excluidos, $dependencias, $varios, $lista2, $estado_cierre, $estado_archivo, $checkbox;
 	$objetoJson = array();
 	if ($id == 0) {
-		$papas = busca_filtro_tabla("a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre", "vexpediente_serie a", $lista2 . " and (a.cod_padre=0 OR a.cod_padre IS NULL)" . $estado_cierre . $estado_archivo, "GROUP BY a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc", $conn);
+		$papas = busca_filtro_tabla("a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre, permiso_serie, permiso_exp", "vexpediente_serie a", $lista2 . " and (a.cod_padre=0 OR a.cod_padre IS NULL)" . $estado_cierre . $estado_archivo, "GROUP BY a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc", $conn);
 	} else {
-		$papas = busca_filtro_tabla("a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre", "vexpediente_serie a", $lista2 . " and (a.cod_padre=" . $id . ")" . $estado_cierre . $estado_archivo, "GROUP BY a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc", $conn);
+		$papas = busca_filtro_tabla("a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre, permiso_serie, permiso_exp", "vexpediente_serie a", $lista2 . " and (a.cod_padre=" . $id . ")" . $estado_cierre . $estado_archivo, "GROUP BY a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc", $conn);
 	}
-	//print_r($papas["sql"]);
 	if ($papas["numcampos"]) {
 		for ($i = 0; $i < $papas["numcampos"]; $i++) {
 			$permitido = 0;
@@ -123,12 +122,17 @@ function llena_expediente($id) {
 				if ($cantidad_tomos['cantidad'] > 1) {
 					$cadena_tomos = '&nbsp;&nbsp;<b>(' . $cantidad_tomos['tomo_no'] . ' de ' . $cantidad_tomos['cantidad'] . ')</b>';
 				}
-
 				$item = array();
 				$item["extraClasses"] = "estilo-dependencia";
+				if(preg_match("/a/",$papas[$i]["permiso_serie"])==1 || preg_match("/m/",$papas[$i]["permiso_exp"])==1){					
+					$item["checkbox"] = $checkbox;
+				}
+				else{
+					$texto_item.=" - (Sin permiso)";
+				}				
 	            $item["title"] = htmlspecialchars($texto_item . $cadena_tomos);
 				$item["key"] = $papas[$i]["idexpediente"];
-				$item["checkbox"] = $checkbox;
+				
 				if (@$_REQUEST["doc"]) {
 					if ($_REQUEST["accion"] == 1 && in_array($papas[$i]["idexpediente"], $exp_doc)) {
 						if (!$varios) {
