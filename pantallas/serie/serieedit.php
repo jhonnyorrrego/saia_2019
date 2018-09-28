@@ -594,6 +594,11 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 		//$("#tipo_entidad option[value='2']").prop('selected', true)
 		xml1="arboles/arbol_dependencia.php?estado=1&checkbox=true&expandir=1";
 		var dependencia_seleccionada="<?php echo $dependencia_seleccionada; ?>";
+
+		if(dependencia_seleccionada && dependencia_seleccionada != '') {
+			$("#iddependencia").val(dependencia_seleccionada);
+		}
+
 		var entidades = <?php echo json_encode($entidades) ?>;
 		cargar_arbol_dependencias(xml1,dependencia_seleccionada);
 		if(x_tipo==2 || x_tipo==3){
