@@ -568,6 +568,11 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 	$(document).ready(function() {
 		xml1="arboles/arbol_dependencia.php?checkbox=true&expandir=1";
 		var dependencia_seleccionada="<?php echo $dependencia_seleccionada; ?>";
+
+		if(dependencia_seleccionada && dependencia_seleccionada != '') {
+			$("#iddependencia").val(dependencia_seleccionada);
+		}
+
 		var entidades = <?php echo json_encode($entidades) ?>;
 		var dependencia_seleccionadas=0;
 
