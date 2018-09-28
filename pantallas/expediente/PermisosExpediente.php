@@ -52,6 +52,10 @@ class PermisosExpediente {
         $this->init();
     }
 
+    /**
+     * Devuelve un listado de permisos para el expediente
+     * @return string[]|array
+     */
     public function obtener_permisos() {
         $permisos = array();
         if ($this->funcionario->funcionario_codigo == $this->expediente->propietario) {
@@ -113,7 +117,7 @@ class PermisosExpediente {
 			$roles = array_unique($roles);
 			$this->funcionario->iddependencia = implode(",", $dependencias);
 			$this->funcionario->idcargo = implode(",", $cargos);
-			$this->funcionario->iddependencia_cargo = implode(",", $roles);  
+			$this->funcionario->iddependencia_cargo = implode(",", $roles);
         }
     }
 

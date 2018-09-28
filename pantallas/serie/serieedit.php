@@ -47,11 +47,11 @@ switch ($sAction) {
 <script>
 					//window.parent.frames['arbol'].tree2.refreshItem("0");
 					window.parent.frames['arbol'].postMessage("refrescar_arbol", "*");
-					/*var idnode='<?php echo $_REQUEST["idnode"];?>';				
+					/*var idnode='<?php echo $_REQUEST["idnode"];?>';
 					 idnodepapa=window.parent.frames['arbol'].tree2.getParentId(idnode);
 					console.log(idnodepapa);
 					window.parent.frames['arbol'].tree2.refreshItem(idnodepapa);*/
-					
+
 				</script>
 <?php
             } else {
@@ -150,11 +150,11 @@ switch ($sAction) {
             1 => ""
         );
         $estado[$x_estado] = "checked";
-		
+
 		//buscar la dependencia asignada
-			$buscar_asignacion = busca_filtro_tabla("", "entidad_serie", "entidad_identidad=2 and estado=1 and serie_idserie=" . $x_idserie, "", $conn);	
+			$buscar_asignacion = busca_filtro_tabla("", "entidad_serie", "entidad_identidad=2 and estado=1 and serie_idserie=" . $x_idserie, "", $conn);
 			//print_r($buscar_asignacion["sql"]);
-			//print_r("<br><br>");					
+			//print_r("<br><br>");
 			$lista_dependencias=array();
 			if($buscar_asignacion["numcampos"]){
 				for($i=0;$i<$buscar_asignacion["numcampos"];$i++){
@@ -168,8 +168,8 @@ switch ($sAction) {
 			$buscar_permisos = busca_filtro_tabla("", "permiso_serie", "estado=1 and serie_idserie=".$x_idserie, "", $conn);
 			if($buscar_permisos["numcampos"]){
 				for($i=0;$i<$buscar_permisos["numcampos"];$i++){
-					$entidades[$buscar_permisos[$i]["entidad_identidad"]][]=$buscar_permisos[$i]["llave_entidad"];					
-				}				
+					$entidades[$buscar_permisos[$i]["entidad_identidad"]][]=$buscar_permisos[$i]["llave_entidad"];
+				}
 			}*/
         break;
 }
@@ -231,15 +231,15 @@ function EditData($sKey) {
 			$fieldList["procedimiento"] = $theValue;
 
 			$fieldList["copia"] = intval($GLOBALS["x_copia"]);
-			
+
 			/*$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_tipo_entidad"]) : $GLOBALS["x_tipo_entidad"];
 			$theValue = ($theValue != "") ? "" . $theValue . "" : "NULL";
 			$fieldList_permiso["tipo_entidad"] = $theValue;
-			
+
 			$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_identidad"]) : $GLOBALS["x_identidad"];
 			$theValue = ($theValue != "") ? "" . $theValue . "" : "NULL";
 			$fieldList_permiso["identidad"] = $theValue;*/
-			
+
 			$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_dependencias"]) : $GLOBALS["x_dependencias"];
 			$theValue = ($theValue != "") ? "" . $theValue . "" : "NULL";
 			$fieldList_asignacion["dependencias"] = $theValue;
@@ -253,7 +253,7 @@ function EditData($sKey) {
 		if (substr($sSql, -2) == ", ") {
 			$sSql = substr($sSql, 0, strlen($sSql) - 2);
 		}
-		$sSql .= " WHERE idserie =" . $sKeyWrk;		
+		$sSql .= " WHERE idserie =" . $sKeyWrk;
 		phpmkr_query($sSql) or error("Error al actualizar la serie");
 
 		if (!$fieldList["estado"]){
@@ -267,9 +267,9 @@ function EditData($sKey) {
 		// insert into permiso_serie
 		/*
 		if(@$fieldList_permiso["identidad"]!="" && @$fieldList_permiso["identidad"] !="NULL"){
-			$entidades = explode(",",$fieldList_permiso["identidad"]);		
+			$entidades = explode(",",$fieldList_permiso["identidad"]);
 			$buscar_existente = busca_filtro_tabla("","permiso_serie","llave_entidad not in (".$fieldList_permiso["identidad"].") and entidad_identidad = ".$fieldList_permiso["tipo_entidad"]." and serie_idserie=".$sKeyWrk,"",$conn);
-			if($buscar_existente["numcampos"]){			
+			if($buscar_existente["numcampos"]){
 				$update = "UPDATE permiso_serie SET estado=0 WHERE llave_entidad not in (".$fieldList_permiso["identidad"].") and entidad_identidad = ".$fieldList_permiso["tipo_entidad"]." and serie_idserie=".$sKeyWrk;
 				phpmkr_query($update) or die("Error al actualizar el registro");
 			}
@@ -285,12 +285,12 @@ function EditData($sKey) {
 				}
 			}
 		}*/
-		
+
 		//insert into entidad_serie
 		if(@$fieldList_asignacion["dependencias"]!="" && @$fieldList_asignacion["dependencias"] !="NULL"){
-			$dependencia = explode(",",$fieldList_asignacion["dependencias"]);		
+			$dependencia = explode(",",$fieldList_asignacion["dependencias"]);
 			$buscar_existente = busca_filtro_tabla("","entidad_serie","entidad_identidad not in (".$fieldList_asignacion["dependencias"].") and entidad_identidad = 2 and serie_idserie=".$sKeyWrk,"",$conn);
-			if($buscar_existente["numcampos"]){			
+			if($buscar_existente["numcampos"]){
 				$update = "UPDATE entidad_serie SET estado=0 WHERE llave_entidad not in (".$fieldList_asignacion["dependencias"].") and entidad_identidad = 2 and serie_idserie=".$sKeyWrk;
 				phpmkr_query($update) or die("Error al actualizar el registro");
 			}
@@ -318,13 +318,13 @@ ul.fancytree-container {
     border: none;
     background-color:#F5F5F5;
 }
-span.fancytree-title 
-{  
+span.fancytree-title
+{
 	font-family: Verdana,Tahoma,arial;
-	font-size: 9px; 
+	font-size: 9px;
 }
 span.fancytree-selected,span.fancytree-title {
-	font-style: normal; 
+	font-style: normal;
 }
 </style>
 <?php
@@ -466,11 +466,23 @@ echo librerias_arboles_ft("2.24", 'filtro');
 				<input type="radio" id="x_copia0" name="x_copia" value="0" <?php echo $copia[0];?>>
 				NO </span></td>
 		</tr>
-		
+
 		<tr class="ocultar">
 			<td class="encabezado" title="Asociar serie/subserie a una dependencia"><span class="phpmaker" style="color: #FFFFFF;">DEPENDENCIA ASOCIADA *</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker">
-				<div id="dependencia_asociada"></div> 
+				<?php
+				$origen = array("url" => "arboles/arbol_dependencia.php", "ruta_db_superior" => $ruta_db_superior,
+				    "params" => array(
+				        "checkbox" => 1,
+				        "expandir" => 1,
+				        "seleccionados" => $dependencia_seleccionada
+				    ));
+				$opciones_arbol = array("keyboard" => true, "selectMode" => 2, "busqueda_item" => 1, "expandir" => 3, "busqueda_item" => 1);
+				$extensiones = array("filter" => array());
+				$arbol = new ArbolFt("iddependencia", $origen, $opciones_arbol, $extensiones);
+				echo $arbol->generar_html();
+
+				?>
 			</span></td>
 		</tr>
 		<!--tr>
@@ -481,7 +493,7 @@ echo librerias_arboles_ft("2.24", 'filtro');
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ASIGNAR PERMISO</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="sub_entidad"></div> </td>
 		</tr-->
-		
+
 		<tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ESTADO *</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker">
@@ -587,19 +599,19 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 			tvd = $("[name='x_tvd']:checked").val();
 			cod_padre=$("#x_cod_padre").val();
 			$(".ocultar_padre").show();
-			mostrar_papa(tipo_serie,tvd,cod_padre);			
+			mostrar_papa(tipo_serie,tvd,cod_padre);
 		}
-		
+
 		/*if(identidad > 0) {
 			$("#tipo_entidad").trigger("change");
-		}*/			
+		}*/
 		$("#serieedit").validate({
 			rules:{
 				x_nombre:{required:true}
 			},
 			submitHandler : function(form) {
 				var x_identidad ="";
-				x_categoria = $("[name='x_categoria']:checked").val();				
+				x_categoria = $("[name='x_categoria']:checked").val();
 				if (x_categoria == 2) {
 					x_identidad = $("#identidad").val();
 					x_tipo = $("[name='x_tipo']:checked").val();
@@ -614,7 +626,7 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 						return false;
 					}*/
 					if (x_tipo != 1 && (x_cod_padre == "" || x_cod_padre == 0)) {
-						
+
 						top.noty({
 							text : 'Por favor seleccione el Padre',
 							type : 'error',
@@ -629,7 +641,7 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 					form.submit();
 				}
 			}
-		});		
+		});
 		$("[name='x_categoria']").change(function() {
 			if ($(this).val() == 2) {
 				$("[name='x_tvd']").rules("add", {
@@ -682,7 +694,7 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 					xml+="&seleccionados="+cod_padre;
 				}
 				$.ajax({
-					url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol_ft.php",	
+					url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol_ft.php",
 					data : {
 						xml : xml,
 						campo : "x_cod_padre",
@@ -707,7 +719,7 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 			}
 		});
 		$("[name='x_categoria']:checked").trigger("change");
-		
+
 
 		$("[name='x_tvd'],[name='x_tipo']").change(function (){
 			tipo_serie = $("[name='x_tipo']:checked").val();
@@ -717,7 +729,7 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 				if(tipo_serie!=1){
 					$(".ocultar_padre").show();
 					mostrar_papa(tipo_serie,tvd,cod_padre);
-					
+
 				}else{
 					$(".ocultar_padre").hide();
 				}
@@ -741,10 +753,10 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 					}
 				}
 				url1="";
-				
+
 				switch(option) {
 					case '1'://Funcionario
-					url1="arboles/arbol_funcionario.php?idcampofun=funcionario_codigo&sin_padre=1&checkbox=true";					
+					url1="arboles/arbol_funcionario.php?idcampofun=funcionario_codigo&sin_padre=1&checkbox=true";
 					url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
 					check=0;
 					break;
@@ -763,7 +775,7 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 				}
 				$.ajax({
 					url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
-					
+
 					data:{xml:url1,campo:"identidad",selectMode:check,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:1},
 					type : "POST",
 					async:false,
@@ -780,22 +792,7 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 		$("#tipo_entidad").trigger("change");
 		*/
 	});
-	function cargar_arbol_dependencias(xml1, dependencia_seleccionada){
-		if(dependencia_seleccionada != '') {
-			xml1 = xml1 + '&seleccionados=' + dependencia_seleccionada;
-		}
-		$.ajax({
-			url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol_ft.php",
-			data:{xml:xml1,campo:"iddependencia",selectMode:0,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:1},
-			type : "POST",
-			async:false,
-			success : function(html_dependencia) {
-				$("#dependencia_asociada").empty().html(html_dependencia);
-			},error: function (){
-				top.noty({text: 'No se pudo cargar el arbol de dependencias',type: 'error',layout: 'topCenter',timeout:5000});
-			}
-		});
-	}
+
 	function mostrar_papa(tipo_serie,tvd,cod_padre){
 		xml = "arboles/arbol_serie.php?checkbox=radio&excluidos="+$("#x_idserie").val()+"&tipo3=0&tvd="+tvd;
 		if(tipo_serie==2){
