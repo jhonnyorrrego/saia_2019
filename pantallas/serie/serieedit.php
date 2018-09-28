@@ -12,6 +12,8 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior."header.php");
 include_once ($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 
+require_once $ruta_db_superior . "arboles/crear_arbol_ft.php";
+
 $validar_enteros = array("x_idserie");
 desencriptar_sqli('form_info');
 
