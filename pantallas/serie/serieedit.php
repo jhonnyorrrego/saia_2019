@@ -476,7 +476,6 @@ echo librerias_arboles_ft("2.24", 'filtro');
 				$origen = array("url" => "arboles/arbol_dependencia.php", "ruta_db_superior" => $ruta_db_superior,
 				    "params" => array(
 				        "checkbox" => 1,
-				        "expandir" => 1,
 				        "seleccionados" => $dependencia_seleccionada
 				    ));
 				$opciones_arbol = array("keyboard" => true, "selectMode" => 2, "busqueda_item" => 1, "expandir" => 3, "busqueda_item" => 1);
@@ -600,7 +599,7 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 		}
 
 		var entidades = <?php echo json_encode($entidades) ?>;
-		cargar_arbol_dependencias(xml1,dependencia_seleccionada);
+
 		if(x_tipo==2 || x_tipo==3){
 			tipo_serie = $("[name='x_tipo']:checked").val();
 			tvd = $("[name='x_tvd']:checked").val();

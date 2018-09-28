@@ -38,8 +38,8 @@ if (isset($_REQUEST["expandir"])) {
 	$expandir = $_REQUEST["expandir"];
 }
 if (isset($_REQUEST["id"])) {
-	
-	$objetoJson["key"] = $_REQUEST["id"];	
+
+	$objetoJson["key"] = $_REQUEST["id"];
     if ($id[0] == 0) {
         $hijos_dep = llena_dependencia($id[0]);
         if (!empty($hijos_dep)) {
@@ -94,6 +94,7 @@ function llena_dependencia($id) {
 				if (in_array($papas[$i]["iddependencia"], $seleccionados) !== false) {
 					//$objetoXML -> writeAttribute("checked", 1);
 					$item["selected"]=true;
+					$item["active"]=true;
 				}
 			}
 			$hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"] . $condicion_ad, "", $conn);
