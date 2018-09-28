@@ -713,11 +713,17 @@ function adicionar_expediente() {
     $permiso = new Permiso();
     $ok1 = $permiso->acceso_modulo_perfil('adicionar_expediente');
     if ($ok1) {
+        $idexpediente = $_REQUEST["idexpediente"];
+        $cadena .= '
+        	<li></li>
+        	<li>
+        	    <a  href="#" id="adicionar_expediente" idbusqueda_componente="' . $_REQUEST["idbusqueda_componente"] . '" conector="iframe" titulo="Adicionar expediente hijo" enlace="pantallas/expediente/adicionar_expediente.php?cod_padre=' . $idexpediente . '&div_actualiza=resultado_busqueda' . $_REQUEST["idbusqueda_componente"] . '&target_actualiza=parent&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '&estado_archivo=' . @$_REQUEST["variable_busqueda"] . '&fk_idcaja=' . $_REQUEST["idcaja"] . '">Adicionar Expediente/Agrupador</a>
+        	</li>';
         if (!empty($_REQUEST["idexpediente"])) {
-            $idexpediente = $_REQUEST["idexpediente"];
             $pe = new PermisosExpediente($conn, $idexpediente);
             $permisos = $pe->obtener_permisos();
 
+            $idexpediente = $_REQUEST["idexpediente"];
             //TODO: 20180928 No se usa. Ahora los agrupadores tienen serie
             /*$exp_data = busca_filtro_tabla("agrupador", "expediente", "idexpediente = " . $_REQUEST["idexpediente"], "", $conn);
             $es_agrupador = false;
@@ -728,19 +734,12 @@ function adicionar_expediente() {
                 $idexpediente = encontrar_expediente_padre($_REQUEST["idexpediente"]);
             }*/
             // 20180921: Jorge Ramirez solicita que en los agrupadores se ingresen documentos
-            if(!$pe->permiso_solo_lectura()){
-                if(in_array(PermisosExpediente::PERMISO_EXP_ESCRIBIR, $permisos)) {
-                    $cadena .= '
-                    	<li></li>
-                    	<li>
-                    	    <a  href="#" id="adicionar_expediente" idbusqueda_componente="' . $_REQUEST["idbusqueda_componente"] . '" conector="iframe" titulo="Adicionar expediente hijo" enlace="pantallas/expediente/adicionar_expediente.php?cod_padre=' . $idexpediente . '&div_actualiza=resultado_busqueda' . $_REQUEST["idbusqueda_componente"] . '&target_actualiza=parent&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '&estado_archivo=' . @$_REQUEST["variable_busqueda"] . '&fk_idcaja=' . $_REQUEST["idcaja"] . '">Adicionar Expediente/Agrupador</a>
-                    	</li>';
-                    $cadena .= '
-                		<li></li>
-                		<li>
-                		    <a id="adicionar_documento_exp" conector="iframe" titulo="Adicionar Documento" enlace="' . FORMATOS_CLIENTE . 'vincular_doc_expedie/adicionar_vincular_doc_expedie.php?idexpediente=' . $idexpediente . '">Adicionar Documento</a>
-                		</li>';
-                }
+            if(!$pe->permiso_solo_lectura() && in_array(PermisosExpediente::PERMISO_EXP_ESCRIBIR, $permisos)) {
+                $cadena .= '
+        		<li></li>
+        		<li>
+        		    <a id="adicionar_documento_exp" conector="iframe" titulo="Adicionar Documento" enlace="' . FORMATOS_CLIENTE . 'vincular_doc_expedie/adicionar_vincular_doc_expedie.php?idexpediente=' . $idexpediente . '">Adicionar Documento</a>
+        		</li>';
             }
         }
     }
