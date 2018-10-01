@@ -17,7 +17,7 @@ class PermisosExpediente {
 
     const CARGO = 4;
 
-    const ROL = 4;
+    const ROL = 5;
 
     const PERMISO_EXP_LEER = "l";
 
