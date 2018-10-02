@@ -44,7 +44,7 @@ class Version20180920192545 extends AbstractMigration {
         }*/
     }
 
-    public function postUp($schema) {
+    public function postUp(Schema $schema) {
         $this->connection->exec($this->crear_vista());
     }
 
@@ -67,7 +67,7 @@ class Version20180920192545 extends AbstractMigration {
         }
     }
 
-    public function postDown($schema) {
+    public function postDown(Schema $schema) {
         $this->connection->exec($this->devolver_vista());
     }
 
