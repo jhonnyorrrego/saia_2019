@@ -40,6 +40,7 @@ span.fancytree-title
 
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
+require_once $ruta_db_superior . "arboles/crear_arbol_ft.php";
 echo librerias_jquery("3.3");
 echo (librerias_notificaciones());
 echo librerias_UI("1.12");
@@ -98,10 +99,7 @@ $serie_padre = "";
                 texto = "Expediente";
             } else { // no es agrupador = 0
             	texto = "Ninguno";
-            }
-            //console.log("Numero: " + numero);
-            //console.log("Opcion: " + texto);
-            //console.log("Serie: " + $('#serie_idserie').val());
+            }            
         });
     });
 </script>
@@ -190,7 +188,19 @@ $serie_padre = "";
 	<label class="control-label" for="serie_idserie">Serie asociada *</label>
 	<div class="controls">
 		<div id="treeboxbox_tree3"></div>
-		<input type="hidden" name="dependencia_iddependencia" id="dependencia_iddependencia">
+		<?php
+		$origen = array("url" => "arboles/arbol_dependencia_serie_funcionario.php", "ruta_db_superior" => $ruta_db_superior,
+		    "params" => array(		    	
+		        "checkbox" => 'radio',
+		        "expandir" => 1,
+		        "funcionario"=>1
+		        //"seleccionados" => $dependencia_seleccionada
+		    ));
+		$opciones_arbol = array("keyboard" => true, "selectMode" => 1, "busqueda_item" => 1, "expandir" => 3, "busqueda_item" => 1, "onNodeSelect" =>'cargar_info_Node');
+		$extensiones = array("filter" => array());
+		$arbol = new ArbolFt("serie_idserie", $origen, $opciones_arbol, $extensiones);
+		echo $arbol->generar_html();
+		?>			
 	</div>
 </div>
 
@@ -276,6 +286,22 @@ $serie_padre = "";
 				</i>
 			</span>
 		</div>
+	</div>
+	
+	<div class="control-group element">
+	  <label class="control-label" for="consecutivo_inicial">Consecutivo Inicial
+	  </label>
+	  <div class="controls">
+	    <input name="consecutivo_inicial" id="consecutivo_inicial" value="<?php echo($datos[0]["consecutivo_inicial"]); ?>">
+	  </div>
+	</div>
+	
+	<div class="control-group element">
+	  <label class="control-label" for="consecutivo_final">Consecutivo Final
+	  </label>
+	  <div class="controls">
+	    <input name="consecutivo_final" id="consecutivo_final" value="<?php echo($datos[0]["consecutivo_final"]); ?>">
+	  </div>
 	</div>
 
 	<div class="control-group element">
@@ -390,6 +416,7 @@ $serie_padre = "";
   function cargar_info_Node(event,data){
 	  $("#serie_idserie").val(data.node.key);
 	  if(data.node.selected){
+	  	console.log(data.node.data);
 	    $("#codigo_numero_serie").val(data.node.data.codigo);
 	    /*$("#dependencia_iddependencia").val(treeserie_idserie.getUserData(NodeId,"iddependencia"));
 		  $("#codigo_numero_dependencia").val(treeserie_idserie.getUserData(NodeId,"dependencia_codigo"));
@@ -408,9 +435,10 @@ $serie_padre = "";
 			mostrar = "&mostrar_padre=1";
 		}*/
 		//url2="test/test_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0" + mostrar + "&id=" + serie_padre;
-		url2="arboles/arbol_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0&checkbox=radio" + mostrar;
+		/*url2="arboles/arbol_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0&checkbox=radio" + mostrar;
 		$.ajax({
 			url : "<?php echo($ruta_db_superior);?>arboles/crear_arbol_ft.php",
+			
 			data:{
 				xml: url2,
 				campo: "serie_idserie",
@@ -426,7 +454,7 @@ $serie_padre = "";
 			},error: function (){
 				top.noty({text: 'No se pudo cargar el arbol de series',type: 'error',layout: 'topCenter',timeout:5000});
 			}
-		});
+		});*/
 
 
     $(".opcion_informacion").on("hide",function(){

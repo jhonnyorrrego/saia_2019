@@ -23,6 +23,20 @@ echo(librerias_arboles());
 <input type="hidden" id="cerrar_higslide" value="<?php echo(@$_REQUEST["cerrar_higslide"]);?>">
 <legend>Editar caja</legend>
 
+<div class="control-group element">
+	  <label class="control-label" for="ubicacion">Ubicaci&oacute;n
+	  </label>
+	  <div class="controls">
+	  	<select name="ubicacion" id="ubicacion">
+	  		<option value="">Por favor seleccione...</option>
+				<option value="1" <?php if($datos[0]["ubicacion"]==1)echo("selected");
+else echo("selected");?>>Central</option>
+				<option value="2" <?php if($datos[0]["ubicacion"]==2)echo("selected"); ?>>Gesti&oacute;n</option>
+				<option value="3" <?php if($datos[0]["ubicacion"]==3)echo("selected"); ?>>Historico</option>
+	  	</select>
+	  </div>
+	</div>
+	
 <small id="serie_dependencia"></small>
 <div class="control-group element">
   <label class="control-label" for="serie_idserie">Serie asociada *
@@ -151,7 +165,7 @@ function cargando_serie() {
 </div>
 
 <div class="control-group element">
-  <label class="control-label" for="division">Division
+  <label class="control-label" for="division">Ubicaci&oacute;n exacta
   </label>
   <div class="controls"> 
     <input type="text" name="division" id="division" value="<?php echo($datos[0]["division"]); ?>">
@@ -192,14 +206,14 @@ function cargando_serie() {
 </div>
 -->
 <div class="control-group element">
-  <label class="control-label" for="modulo">Módulo
+  <label class="control-label" for="modulo">Estanter&iacute;a
   </label>
   <div class="controls"> 
     <input type="text" name="modulo" id="modulo" value="<?php echo($datos[0]["modulo"]);?>">
   </div>
 </div>
 <div class="control-group element">
-  <label class="control-label" for="panel">Panel
+  <label class="control-label" for="panel">Entrepa&ntilde;o
   </label>
   <div class="controls"> 
     <input type="text" name="panel" id="panel" value="<?php echo($datos[0]["panel"]);?>">
@@ -231,6 +245,8 @@ function cargando_serie() {
   		<option value="1" <?php if($datos[0]["seguridad"]==1)echo("selected");?>>Confidencial</option>
   		<option value="2" <?php if($datos[0]["seguridad"]==2)echo("selected");?>>Publica</option>
   		<option value="3" <?php if($datos[0]["seguridad"]==3)echo("selected");?>>Rutinario</option>
+  		<option value="4" <?php if($datos[0]["seguridad"]==4)echo("selected");?>>Restringido al cargo asignado</option>
+  	</select>
   	</select>
   </div>
 </div>

@@ -31,7 +31,7 @@ if (@$_REQUEST["idexpediente"]) {
     $idexpediente = $_REQUEST["idexpediente"];
 }
 $tipo_almacenamiento = new SaiaStorage("archivos");
-$expediente = busca_filtro_tabla("a.*," . fecha_db_obtener("a.fecha", "Y-m-d") . " AS fecha, " . fecha_db_obtener("a.fecha_extrema_i", "Y-m-d") . " as fecha_extrema_i, " . fecha_db_obtener("a.fecha_extrema_f", "Y-m-d") . " as fecha_extrema_f", "expediente a", "idexpediente=" . $idexpediente, "", $conn);
+$expediente = busca_filtro_tabla("a.*," . fecha_db_obtener("a.fecha", "Y-m-d") . " AS fecha, " . fecha_db_obtener("a.fecha_extrema_i", "Y-m-d") . " as fecha_extrema_i, " . fecha_db_obtener("a.fecha_extrema_f", "Y-m-d") . " as fecha_extrema_f, consecutivo_inicial, consecutivo_final", "expediente a", "idexpediente=" . $idexpediente, "", $conn);
 ?>
 <style>
 .well{ margin-bottom: 3px; min-height: 11px; padding: 10px;}.alert{ margin-bottom: 3px;  padding: 10px;}  body{ font-size:12px; line-height:100%;}.navbar-fixed-top, .navbar-fixed-bottom{ position: fixed;} .navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top{margin-right: 0px; margin-left: 0px;}
@@ -646,7 +646,22 @@ if($contenido["numcampos"]){
   <?php
   }
   ?>
-
+  <tr>
+    <td class="prettyprint">
+      <b>Consecutivo Inicial:</b>
+    </td>
+    <td colspan="3">       
+       <?php echo($expediente[0]["consecutivo_inicial"]);?>
+    </td>
+  </tr>
+   <tr>
+    <td class="prettyprint">
+      <b>Consecutivo Final:</b>
+    </td>
+    <td colspan="3">
+       <?php echo($expediente[0]["consecutivo_final"]);?>
+    </td>
+  </tr>
   <tr>
     <td class="prettyprint">
          <b>Tomo:</b>
