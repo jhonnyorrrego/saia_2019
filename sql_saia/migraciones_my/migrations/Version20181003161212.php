@@ -127,7 +127,7 @@ VIEW vexpediente_serie AS select
     a.consecutivo_inicial,
     a.consecutivo_final,
     null as permiso_serie, b.permiso as permiso_exp,
-    0 AS desde_serie
+    0 AS desde_serie, e.identidad_serie
 from expediente a
 join entidad_serie e on a.fk_entidad_serie = e.identidad_serie
 left join entidad_expediente b on a.idexpediente = b.expediente_idexpediente
@@ -164,7 +164,7 @@ union select
     a.consecutivo_inicial,
     a.consecutivo_final,
     b.permiso as permiso_serie, null as permiso_exp,
-    1 AS desde_serie
+    1 AS desde_serie, e.identidad_serie
 from expediente a
 join entidad_serie e on a.serie_idserie = e.serie_idserie
 join permiso_serie b on e.identidad_serie = b.fk_entidad_serie
