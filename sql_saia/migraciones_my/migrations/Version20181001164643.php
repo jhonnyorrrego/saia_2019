@@ -66,6 +66,7 @@ class Version20181001164643 extends AbstractMigration {
 
         $this->sm->alterTable($tableDiff);
 
+        $conn->exec($this->crear_vista_funcionario());
         $conn->exec($this->crear_vista());
         $conn->exec($this->crear_vista_expediente());
     }
@@ -141,6 +142,63 @@ class Version20181001164643 extends AbstractMigration {
         return $tableCopy;
     }
 
+    private function crear_vista_funcionario() {
+        $vista = <<<FINSQL
+CREATE
+OR REPLACE
+VIEW vfuncionario_dc AS select
+    b.idfuncionario AS idfuncionario,
+    b.funcionario_codigo AS funcionario_codigo,
+    b.login AS login,
+    b.nombres AS nombres,
+    b.apellidos AS apellidos,
+    b.firma AS firma,
+    b.estado AS estado,
+    b.fecha_ingreso AS fecha_ingreso,
+    b.clave AS clave,
+    b.nit AS nit,
+    b.perfil AS perfil,
+    b.debe_firmar AS debe_firmar,
+    b.mensajeria AS mensajeria,
+    b.email AS email,
+    b.sistema AS sistema,
+    b.tipo AS tipo,
+    b.ultimo_pwd AS ultimo_pwd,
+    b.direccion AS direccion,
+    b.telefono AS telefono,
+    c.nombre AS cargo,
+    c.idcargo AS idcargo,
+    c.tipo_cargo AS tipo_cargo,
+    c.estado AS estado_cargo,
+    a.nombre AS dependencia,
+    a.estado AS estado_dep,
+    a.codigo AS codigo,
+    a.tipo AS tipo_dep,
+    a.iddependencia AS iddependencia,
+    a.fecha_ingreso AS creacion_dep,
+    a.cod_padre AS cod_padre,
+    a.extension AS extension,
+    a.ubicacion_dependencia AS ubicacion_dependencia,
+    a.logo AS logo,
+    d.iddependencia_cargo AS iddependencia_cargo,
+    d.estado AS estado_dc,
+    d.fecha_inicial AS fecha_inicial,
+    d.fecha_final AS fecha_final,
+    d.fecha_ingreso AS creacion_dc,
+    d.tipo AS tipo_dc
+from
+    dependencia a
+join funcionario b
+join cargo c
+join dependencia_cargo d
+where
+    a.iddependencia = d.dependencia_iddependencia
+    and b.idfuncionario = d.funcionario_idfuncionario
+    and c.idcargo = d.cargo_idcargo
+FINSQL;
+        return $vista;
+    }
+
     private function crear_vista() {
         $vista = <<<FINSQL
 CREATE
@@ -158,7 +216,7 @@ select
     s.tvd AS tvd,
     s.cod_arbol AS cod_arbol,
     s.estado AS estado_serie,
-    p.permiso
+    p.permiso, e.identidad_serie
 from
      permiso_serie p
 join entidad_serie e on p.fk_entidad_serie = e.identidad_serie
@@ -179,7 +237,7 @@ union select
     s.tvd AS tvd,
     s.cod_arbol AS cod_arbol,
     s.estado AS estado_serie,
-    p.permiso
+    p.permiso, e.identidad_serie
 from
     permiso_serie p
 join entidad_serie e on p.fk_entidad_serie = e.identidad_serie
@@ -201,7 +259,7 @@ union select
     s.tvd AS tvd,
     s.cod_arbol AS cod_arbol,
     s.estado AS estado_serie,
-    p.permiso
+    p.permiso, e.identidad_serie
 from
     permiso_serie p
 join entidad_serie e on p.fk_entidad_serie = e.identidad_serie
@@ -209,7 +267,7 @@ join serie s on e.serie_idserie = s.idserie
 join vfuncionario_dc v on v.idcargo = p.llave_entidad
 where
     p.entidad_identidad = 4
-    and v.estado_dc = 1
+    and v.estado_cargo = 1
     and p.estado = 1
 union select
     v.idfuncionario AS idfuncionario,
@@ -223,12 +281,12 @@ union select
     s.tvd AS tvd,
     s.cod_arbol AS cod_arbol,
     s.estado AS estado_serie,
-    p.permiso
+    p.permiso, e.identidad_serie
 from
     permiso_serie p
 join entidad_serie e on p.fk_entidad_serie = e.identidad_serie
 join serie s on e.serie_idserie = s.idserie
-join vfuncionario_dc v on v.idcargo = p.llave_entidad
+join vfuncionario_dc v on v.iddependencia_cargo = p.llave_entidad
 where
     p.entidad_identidad = 5
     and v.estado_dc = 1
