@@ -59,7 +59,7 @@ class Version20181001164643 extends AbstractMigration {
         $conn->executeUpdate($this->platform->getTruncateTableSQL('permiso_serie', true /* whether to cascade */
         ));
 
-        $newIndex = new \Doctrine\DBAL\Schema\Index('ix_fk_entidad_serie', ['fk_entidad_serie']);
+        $newIndex = new \Doctrine\DBAL\Schema\Index('ix_fkpese_entidad_serie', ['fk_entidad_serie']);
         $oldColumn = new \Doctrine\DBAL\Schema\Column('serie_idserie', Type::getType(Type::INTEGER));
 
         $tableDiff = new \Doctrine\DBAL\Schema\TableDiff('permiso_serie', null, null, [$oldColumn], [$newIndex]);
@@ -91,7 +91,7 @@ class Version20181001164643 extends AbstractMigration {
                 "length" => 11,
                 "default" => 0
             ]);
-            $tabla->dropIndex('ix_fk_entidad_serie');
+            $tabla->dropIndex('ix_fkpese_entidad_serie');
         }
     }
 
