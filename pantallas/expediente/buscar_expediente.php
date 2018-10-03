@@ -129,6 +129,25 @@ echo(estilo_bootstrap());
 		  </div>
 		</div>
         
+        <div class="control-group">
+          <label class="string required control-label" for="bqsaia_consecutivo_inicial">
+			<b>Consecutivo inicial</b>
+			<input type="hidden" name="bksaiacondicion_consecutivo_inicial" id="bksaiacondicion_consecutivo_inicial" value="=">
+          </label>
+          <div class="controls">
+            <input id="bqsaia_consecutivo_inicial" name="bqsaia_consecutivo_inicial" size="50" type="text">
+          </div>
+        </div>
+        
+        <div class="control-group">
+          <label class="string required control-label" for="bqsaia_consecutivo_final">
+			<b>Consecutivo Final</b>
+			<input type="hidden" name="bksaiacondicion_consecutivo_final" id="bksaiacondicion_consecutivo_final" value="=">
+          </label>
+          <div class="controls">
+            <input id="bqsaia_consecutivo_final" name="bqsaia_consecutivo_final" size="50" type="text">
+          </div>
+        </div>
         
         
           <input type="hidden" name="idbusqueda_componente" id="idbusqueda_componente" value="<?php echo @$_REQUEST["idbusqueda_componente"]; ?>">

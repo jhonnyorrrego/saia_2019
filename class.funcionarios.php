@@ -33,28 +33,43 @@ function busca_datos_administrativos_funcionario($funcionario, $filtrar = array(
     $dependencias = extrae_campo($dependencia, "iddependencia", "U");
     $modulos = extrae_campo($modulo, "idpermiso", "U");
     $roles = extrae_campo($rol, "iddependencia_cargo", "U");
-
+	$permisos = " AND A.permiso like '%a,v'";
+	
+	$ids= array();
+	$ids=['funcionario'=>$funcionario,
+	'cargos' => $cargos,
+    'dependencias' => $dependencias,
+    'roles' => $roles];
     // series asignadas funcionario
-    $serie_func = busca_filtro_tabla("A.idpermiso_serie as identidad_serie, B.*", "permiso_serie A, serie B,entidad C", " A.estado=1 AND B.estado=1 AND C.nombre like 'funcionario' AND A.llave_entidad=$funcionario AND A.entidad_identidad=C.identidad AND A.serie_idserie=B.idserie ", "B.nombre", $conn);
-
+    $serie_func = busca_filtro_tabla("A.idpermiso_serie as identidad_serie, B.*", "permiso_serie A, serie B,entidad C", " A.estado=1 AND B.estado=1 AND C.nombre like 'funcionario' AND A.llave_entidad=$funcionario AND A.entidad_identidad=C.identidad AND A.serie_idserie=B.idserie ".$permisos, "B.nombre", $conn);
+	
     // series asignadas al cargo
     if (@$cargos) {
-        $serie_cargo = busca_filtro_tabla("A.idpermiso_serie as identidad_serie, B.*", "permiso_serie A, serie B,entidad C", "A.estado=1 AND B.estado=1 AND C.nombre like 'cargo' AND A.llave_entidad IN(" . implode(",", $cargos) . ") AND A.entidad_identidad=C.identidad AND A.serie_idserie=B.idserie ", "B.nombre", $conn);
+        $serie_cargo = busca_filtro_tabla("A.idpermiso_serie as identidad_serie, B.*", "permiso_serie A, serie B,entidad C", "A.estado=1 AND B.estado=1 AND C.nombre like 'cargo' AND A.llave_entidad IN(" . implode(",", $cargos) . ") AND A.entidad_identidad=C.identidad AND A.serie_idserie=B.idserie ".$permisos, "B.nombre", $conn);
     } else {
         $serie_cargo["numcampos"] = 0;
     }
 
     // series asignadas al la dependencia
     if (@$dependencias) {
-        $serie_dependencia = busca_filtro_tabla("A.idpermiso_serie as identidad_serie, B.*", "permiso_serie A, serie B,entidad C", "A.estado=1 AND B.estado=1 AND C.nombre like 'dependencia' AND A.llave_entidad IN(" . implode(",", $dependencias) . ") AND A.entidad_identidad=C.identidad AND A.serie_idserie=B.idserie ", "B.nombre", $conn);
+        $serie_dependencia = busca_filtro_tabla("A.idpermiso_serie as identidad_serie, B.*", "permiso_serie A, serie B,entidad C", "A.estado=1 AND B.estado=1 AND C.nombre like 'dependencia' AND A.llave_entidad IN(" . implode(",", $dependencias) . ") AND A.entidad_identidad=C.identidad AND A.serie_idserie=B.idserie ".$permisos, "B.nombre", $conn);
     } else {
         $serie_dependencia["numcampos"] = 0;
+    }
+    
+     // series asignadas al rol
+    if (@$roles) {
+        $serie_roles = busca_filtro_tabla("A.idpermiso_serie as identidad_serie, B.*", "permiso_serie A, serie B,entidad C", "A.estado=1 AND B.estado=1 AND C.nombre like 'dependencia_cargo' AND A.llave_entidad IN(" . implode(",", $roles) . ") AND A.entidad_identidad=C.identidad AND A.serie_idserie=B.idserie ".$permisos, "B.nombre", $conn);
+    } else {
+        $serie_roles["numcampos"] = 0;
     }
 
     // procesando datos
     $serie_f = extrae_campo($serie_func, "idserie", "U");
+	$cod_padre_f = extrae_campo($serie_func, "cod_padre", "U");	
     $serie_c = extrae_campo($serie_cargo, "idserie", "U");
     $serie_d = extrae_campo($serie_dependencia, "idserie", "U");
+    $serie_r = extrae_campo($serie_roles, "idserie", "U");
     $datos = array();
     $datos[0] = array(
         "informacion",
@@ -87,19 +102,20 @@ function busca_datos_administrativos_funcionario($funcionario, $filtrar = array(
     $datos["dependencias"] = $dependencias;
     $datos["roles"] = $roles;
     $datos["modulos"] = $modulos;
-    $datos["series"] = busca_series_funcionario($serie_f, $serie_c, $serie_d);
+    $datos["series"] = busca_series_funcionario($serie_f, $serie_c, $serie_d, $serie_r,$cod_padre_f);
     $serie_f1 = extrae_campo($serie_func, "identidad_serie", "U");
     $serie_c1 = extrae_campo($serie_cargo, "identidad_serie", "U");
     $serie_d1 = extrae_campo($serie_dependencia, "identidad_serie", "U");
     $datos["series_funcionario"] = $serie_f1;
     $datos["series_cargo"] = $serie_c1;
     $datos["series_dependencia"] = $serie_d1;
+	$datos["ids"]=$ids;
     return ($datos);
 }
 
 /* Esat Funcion esta casi lista */
-function busca_series_funcionario($serie_f, $serie_c, $serie_d) {
-    $series = array_merge((array) $serie_f, (array) $serie_c, (array) $serie_d);
+function busca_series_funcionario($serie_f, $serie_c, $serie_d,$serie_r,$cod_padre_f) {
+    $series = array_merge((array) $serie_f, (array) $serie_c, (array) $serie_d, (array) $serie_r,(array) $cod_padre_f);
     $series_gen = array_unique($series);
     sort($series_gen);
     // print_r($series_gen);

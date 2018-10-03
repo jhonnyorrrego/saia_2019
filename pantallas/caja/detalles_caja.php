@@ -48,6 +48,17 @@ $caja=busca_filtro_tabla("","caja","idcaja=".$idcaja,"",$conn);
 <table class="table table-bordered">
 	<tr>
     <td class="prettyprint">
+      <b>Ubicaci&oacute;n:</b>
+    </td>
+    <td colspan="3">
+<?php 
+	$ubicacion=array(1=>'Central',2=>'Gesti&oacute;n',3=>'Historico');
+       echo($ubicacion[$caja[0]["ubicacion"]]);
+?>
+    </td>
+  </tr>
+	<tr>
+    <td class="prettyprint">
       <b>Codigo:</b>
     </td>
     <td colspan="3">
@@ -80,7 +91,7 @@ $caja=busca_filtro_tabla("","caja","idcaja=".$idcaja,"",$conn);
   </tr>
   <tr>
     <td class="prettyprint">
-      <b>Division:</b>
+      <b>Ubicaci&oacute;n exacta:</b>
     </td>
     <td colspan="3">
        <?php echo($caja[0]["division"]);?>
@@ -123,7 +134,7 @@ $nombre_serie=busca_filtro_tabla("","serie a","a.idserie=".$caja[0]["serie_idser
   </tr>
   <tr>
     <td class="prettyprint">
-      <b>Módulo:</b>
+      <b>Estanter&iacute;a:</b>
     </td>
     <td colspan="3">
        <?php echo($caja[0]["modulo"]);?>
@@ -131,7 +142,7 @@ $nombre_serie=busca_filtro_tabla("","serie a","a.idserie=".$caja[0]["serie_idser
   </tr>
   <tr>
     <td class="prettyprint">
-      <b>Panel:</b>
+      <b>Entrepa&ntilde;o:</b>
     </td>
     <td colspan="3">
        <?php echo($caja[0]["panel"]);?>
@@ -158,7 +169,7 @@ $nombre_serie=busca_filtro_tabla("","serie a","a.idserie=".$caja[0]["serie_idser
     </td>
     <td colspan="3">
 <?php 
-	$seguridad=array(1=>'Confidencial',2=>'Publica', 3=>'Rutinario');
+	$seguridad=array(1=>'Confidencial',2=>'Publica', 3=>'Rutinario', 4=>'Restringido al cargo asignado');
        echo($seguridad[$caja[0]["seguridad"]]);
 ?>
     </td>

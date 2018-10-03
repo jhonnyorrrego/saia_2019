@@ -219,6 +219,22 @@ if($dato_padre["numcampos"]){
 	</div>
 	
 	<div class="control-group element">
+	  <label class="control-label" for="consecutivo_inicial">Consecutivo Inicial
+	  </label>
+	  <div class="controls"> 
+	    <input name="consecutivo_inicial" id="consecutivo_inicial" value="<?php echo($datos[0]["consecutivo_inicial"]); ?>">
+	  </div>
+	</div>
+	
+	<div class="control-group element">
+	  <label class="control-label" for="consecutivo_final">Consecutivo Final
+	  </label>
+	  <div class="controls"> 
+	    <input name="consecutivo_final" id="consecutivo_final" value="<?php echo($datos[0]["consecutivo_final"]); ?>">
+	  </div>
+	</div>
+	
+	<div class="control-group element">
 	  <label class="control-label" for="no_unidad_conservacion">Unidad de conservaci&oacute;n
 	  </label>
 	  <div class="controls"> 
