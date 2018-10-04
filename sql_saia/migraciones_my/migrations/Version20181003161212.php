@@ -37,9 +37,9 @@ class Version20181003161212 extends AbstractMigration {
 
         $t_dependencia = $schema->getTable('dependencia');
         if (!$t_dependencia->hasColumn("codigo_arbol")) {
-            $t_dependencia->addColumn("codigo_arbol", "integer", [
-                "length" => 11,
-                "default" => 0
+            $t_dependencia->addColumn("codigo_arbol", "string", [
+                "length" => 255,
+                "default" => "0"
             ]);
         }
     }
