@@ -34,6 +34,14 @@ class Version20181003161212 extends AbstractMigration {
             "length" => 11,
             "default" => 0
         ]);
+
+        $t_dependencia = $schema->getTable('dependencia');
+        if (!$t_dependencia->hasColumn("codigo_arbol")) {
+            $t_dependencia->addColumn("codigo_arbol", "integer", [
+                "length" => 11,
+                "default" => 0
+            ]);
+        }
     }
 
     public function postUp(Schema $schema) {
@@ -66,30 +74,24 @@ class Version20181003161212 extends AbstractMigration {
     public function down(Schema $schema) {
         $tabla = $schema->getTable('expediente');
 
-        if (!$tabla->hasColumn('serie_idserie')) {
-
-            $tabla->addColumn("serie_idserie", "integer", [
-                "length" => 11,
-                "default" => 0
-            ]);
-            $tabla->dropIndex('ix_fkexp_entidad_serie');
-        }
+        $tabla->dropIndex('ix_fkexp_entidad_serie');
     }
 
     public function postDown(Schema $schema) {
-        $tabla = $schema->getTable('permiso_serie');
+        $tabla = $schema->getTable('expediente');
 
-        if ($tabla->hasColumn('serie_idserie')) {
+        if ($tabla->hasColumn('fk_entidad_serie')) {
             $oldColumn = new \Doctrine\DBAL\Schema\Column('fk_entidad_serie', Type::getType(Type::INTEGER));
 
-            $tableDiff = new \Doctrine\DBAL\Schema\TableDiff('permiso_serie', null, null, [$oldColumn]);
+            $tableDiff = new \Doctrine\DBAL\Schema\TableDiff('expediente', null, null, [
+                $oldColumn
+            ]);
 
             $this->sm->alterTable($tableDiff);
 
             $this->connection->exec($this->devolver_vista_expediente());
         }
     }
-
 
     private function crear_vista_expediente() {
         $vista = <<<FINSQL
