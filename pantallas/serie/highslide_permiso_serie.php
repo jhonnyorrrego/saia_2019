@@ -19,12 +19,12 @@ include_once ($ruta_db_superior . 'librerias_saia.php');
 	echo(librerias_jquery('1.7'));
 	$checked1="";	
 	$checked0="";
-	if(isset($_REQUEST["serie"]) && isset($_REQUEST['tipo_entidad']) && isset($_REQUEST['entidad'])){
+	if(isset($_REQUEST["identidad_serie"]) && isset($_REQUEST['tipo_entidad']) && isset($_REQUEST['entidad'])){
 		
-		$serie =$_REQUEST["serie"];
+		$identidad_serie =$_REQUEST["identidad_serie"];
 		$entidad_identidad=$_REQUEST['tipo_entidad'];
 		$entidad=$_REQUEST['entidad'];
-		$buscar_permisos = busca_filtro_tabla("", "permiso_serie", "estado=1 and serie_idserie=".$serie." and entidad_identidad=".$entidad_identidad." and llave_entidad=".$entidad." and permiso like '%a,v'", "", $conn);
+		$buscar_permisos = busca_filtro_tabla("", "permiso_serie", "estado=1 and fk_entidad_serie=".$identidad_serie." and entidad_identidad=".$entidad_identidad." and llave_entidad=".$entidad." and permiso like '%a,v'", "", $conn);
 		
 		if($buscar_permisos["numcampos"]){//ya tiene permisos
 			$checked1 = 'checked="checked"';		
@@ -58,7 +58,7 @@ include_once ($ruta_db_superior . 'librerias_saia.php');
                     asignar_quitar_permiso_editar:2,
                     accion:2,
                     permiso:$(this).val(),
-                    serie:"<?php echo $serie; ?>",
+                    identidad_serie:"<?php echo $identidad_serie; ?>",
                     tipo_entidad:"<?php echo $entidad_identidad; ?>",
                     id:"<?php echo $entidad; ?>",
                     

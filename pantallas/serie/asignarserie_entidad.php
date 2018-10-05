@@ -171,8 +171,10 @@ if ($_REQUEST["seleccionados"]) {
                     if(retorno==1){
                         tipo='success';
                         mensaje='<b>ATENCI&Oacute;N</b><br>Se ha adicionado el permiso a la serie';
+                        
                     }
                     notificacion_saia(mensaje,tipo,"topRight",3000);
+                    window.parent.frames['arbol'].postMessage("refrescar_arbol", "*");
                 }
         	});
 	}

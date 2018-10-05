@@ -27,9 +27,14 @@ span.fancytree-title
 <?php include_once($ruta_db_superior."db.php"); 
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 include_once($ruta_db_superior."librerias_saia.php");
+require_once $ruta_db_superior . "arboles/crear_arbol_ft.php";
 echo librerias_jquery("3.3");
 $datos=busca_filtro_tabla(fecha_db_obtener('a.fecha','Y-m-d')." as x_fecha, ".fecha_db_obtener('a.fecha_extrema_i','Y-m-d')." as x_fecha_extrema_i, ".fecha_db_obtener('a.fecha_extrema_f','Y-m-d')." x_fecha_extrema_f,a.*","expediente a","a.idexpediente=".$_REQUEST["idexpediente"],"",$conn);
 $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$datos[0]["cod_padre"],"",$conn);
+$dato_serie=busca_filtro_tabla("","serie","idserie=".$datos[0]["serie_idserie"],"",$conn);
+if($dato_serie["numcampos"]){
+	$tipo_tvd = $dato_serie[0]["tvd"];
+}
 ?>
 <form name="formulario_expediente" id="formulario_expediente" method="post">
 <input type="hidden" name="idexpediente" id="idexpediente" value="<?php echo($datos[0]["idexpediente"]);?>">
@@ -131,7 +136,20 @@ if($dato_padre["numcampos"]){
   	<?php echo("<b><span id='etiqueta_serie'>Serie.</span></b> <span id='serie_asociada'>".mostrar_seleccionados_exp($datos[0]["serie_idserie"],"nombre","serie")."</span> <b>| Fondo.</b> ".$datos[0]["fondo"]); ?>
   	<br />
     <span class="phpmaker">
-    	<div id="treeboxbox_tree3"></div>
+    	<?php
+    	$key = $datos[0]["dependencia_iddependencia"].".".$datos[0]["serie_idserie"].".".$tipo_tvd;
+		$origen = array("url" => "arboles/arbol_dependencia_serie_funcionario.php", "ruta_db_superior" => $ruta_db_superior,
+		    "params" => array(		    	
+		        "checkbox" => 'radio',
+		        "expandir" => 1,
+		        "funcionario"=>1,
+		        "seleccionados" => $key
+		    ));
+		$opciones_arbol = array("keyboard" => true, "selectMode" => 1, "busqueda_item" => 1, "expandir" => 3, "busqueda_item" => 1, "onNodeSelect" =>'cargar_info_Node');
+		$extensiones = array("filter" => array());
+		$arbol = new ArbolFt("serie_idserie", $origen, $opciones_arbol, $extensiones);
+		echo $arbol->generar_html();
+		?>	
      <input type="hidden" name="dependencia_iddependencia" id="dependencia_iddependencia" value="<?php echo($datos[0]["dependencia_iddependencia"]); ?>">
   </div>
   
@@ -362,7 +380,7 @@ if($dato_padre["numcampos"]){
   }
 
   $(document).ready(function(){
-		url2="arboles/arbol_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0&checkbox=radio&seleccionados=<?php echo($datos[0]["serie_idserie"]); ?>";
+		/*url2="arboles/arbol_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0&checkbox=radio&seleccionados=<?php echo($datos[0]["serie_idserie"]); ?>";
 		$.ajax({
 			url : "<?php echo($ruta_db_superior);?>arboles/crear_arbol_ft.php",
 			data:{xml:url2,campo:"serie_idserie",ruta_db_superior:"../../",busqueda_item:1,onNodeSelect:"cargar_info_Node",selectMode:1},
@@ -374,7 +392,7 @@ if($dato_padre["numcampos"]){
 			},error: function (){
 				top.noty({text: 'No se pudo cargar el arbol de series',type: 'error',layout: 'topCenter',timeout:5000});
 			}
-		});
+		});*/
 
 
       

@@ -22,7 +22,7 @@ if (!$_REQUEST["key"]) {
 include ($ruta_db_superior."header.php");
 $idserie = $_REQUEST["key"];
 $idnode = ($_REQUEST["idnode"]!="") ? $_REQUEST["idnode"] : 0 ;
-
+$entidad_serie =$_REQUEST["identidad_serie"];
 $tipo_serie = array(
 	1 => "SERIE",
 	2 => "SUBSERIE",
@@ -90,7 +90,11 @@ if($vinculados) {
 if($datos[0]["tipo"]==1 || $datos[0]["tipo"]==2) {
     echo '&nbsp;<a href="serieadd.php?idnode=' . $idnode . '&x_idserie=' . $idserie . '">ADICIONAR</a>';
 }
-echo ' <a href="permiso_serie.php?idserie=' . $idserie . '" target="serielist">PERMISOS</a>';?>
+if(!empty($entidad_serie)){
+	echo ' <a href="permiso_serie.php?idserie=' . $idserie . '&identidad_serie='.	$entidad_serie.'" target="serielist">PERMISOS</a>';
+}
+?>
+
 </span><br/><br/>
 
 <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">

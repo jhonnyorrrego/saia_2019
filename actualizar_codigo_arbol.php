@@ -39,7 +39,7 @@ function generar_codigo_arbol($tabla,$campo_codpadre,$campo_id,$dato_padre,$camp
 		$datos=busca_filtro_tabla("",$tabla." a",$campo_codpadre."=".$dato_padre,"",$conn);
 	}
 	else if($dato_padre=="null"){
-		$datos=busca_filtro_tabla("",$tabla." a",$campo_codpadre." is ".$dato_padre,"",$conn);
+		$datos=busca_filtro_tabla("",$tabla." a", "$campo_codpadre is $dato_padre or $campo_codpadre = 0","",$conn);
 	}
 	else{
 		$datos=busca_filtro_tabla("",$tabla." a","","",$conn);

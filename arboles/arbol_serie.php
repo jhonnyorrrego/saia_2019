@@ -119,6 +119,7 @@ function llena_serie($id) {
 	} else {
 		$papas = busca_filtro_tabla("", "serie", "cod_padre=" . $id . " and categoria=2 " . $condicion_ad, "nombre ASC", $conn);
 	}
+	//print_r($papas["sql"]);
 	if ($papas["numcampos"]) {
 		for ($i = 0; $i < $papas["numcampos"]; $i++) {
 			$text = $papas[$i]["nombre"] . " (" . $papas[$i]["codigo"] . ")";
@@ -135,9 +136,9 @@ function llena_serie($id) {
 				//$item["unselectableStatus"]=false;
 				$item["folder"] = 1;
 			}
-			else{
+			//else{
 				$item["checkbox"]=$checkbox;
-			}
+			//}
 			if (in_array($papas[$i]["idserie"], $seleccionados) !== false) {
 				$item["selected"]=true;
 			}

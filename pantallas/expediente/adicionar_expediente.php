@@ -187,7 +187,7 @@ $serie_padre = "";
 <div class="control-group element">
 	<label class="control-label" for="serie_idserie">Serie asociada *</label>
 	<div class="controls">
-		<div id="treeboxbox_tree3"></div>
+		
 		<?php
 		$origen = array("url" => "arboles/arbol_dependencia_serie_funcionario.php", "ruta_db_superior" => $ruta_db_superior,
 		    "params" => array(		    	
@@ -386,6 +386,9 @@ $serie_padre = "";
 <br />
 
 <input type="hidden"  name="ejecutar_expediente" value="set_expediente"/>
+<input type="hidden"  name="dependencia_iddependencia" id="dependencia_iddependencia"/>
+<input type="hidden"  name="fondo" id="fondo"/>
+<input type="hidden"  name="identidad_serie" id="identidad_serie"/>
 <input type="hidden"  name="tipo_retorno" value="1"/>
 <input type="hidden" name="fk_idcaja" value="<?php echo(@$_REQUEST["fk_idcaja"]);?>">
 <input type="hidden" name="estado_archivo" value="1">
@@ -414,13 +417,14 @@ $serie_padre = "";
   <script type="text/javascript">
 
   function cargar_info_Node(event,data){
-	  $("#serie_idserie").val(data.node.key);
+	  $("#serie_idserie").val(data.node.data.serie_idserie);	  
 	  if(data.node.selected){
 	  	console.log(data.node.data);
 	    $("#codigo_numero_serie").val(data.node.data.codigo);
-	    /*$("#dependencia_iddependencia").val(treeserie_idserie.getUserData(NodeId,"iddependencia"));
-		  $("#codigo_numero_dependencia").val(treeserie_idserie.getUserData(NodeId,"dependencia_codigo"));
-		  $("#fondo").val(tree3.getUserData(NodeId,"dependencia_nombre"));*/
+	    $("#dependencia_iddependencia").val(data.node.data.iddependencia);
+		$("#codigo_numero_dependencia").val(data.node.data.dependencia_codigo);
+		$("#fondo").val(data.node.data.nombre_dependencia);
+		$("#identidad_serie").val(data.node.data.identidad_serie);
 	  	$("#codigo_numero_serie").trigger('keyup');
 	  }else{
 	  	$("#codigo_numero_serie").val("");

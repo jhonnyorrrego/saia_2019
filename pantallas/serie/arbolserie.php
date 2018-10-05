@@ -76,10 +76,11 @@ echo $arbol->generar_html();
         if(elemento_evento == 'title') {
     		if(nodeId!="0.0.0" && nodeId!="0.0.-1"){
     			var datos=nodeId.split(".");
+    			console.log(datos);
     			if(parent.serielist && datos[1]==0){
     				parent.serielist.location = "asignarserie_entidad.php?tvd="+datos[2]+"&seleccionados="+datos[0]+"&idnode=" + nodeId;
     			}else if(datos[1]!=0){
-    				parent.serielist.location = "serieview.php?key="+datos[1]+"&idnode="+nodeId;
+    				parent.serielist.location = "serieview.php?key="+datos[1]+"&idnode="+nodeId+"&identidad_serie="+data.node.data.entidad_serie;
     			}
     		} else if(parent.serielist) {
     			parent.serielist.location = "<?php echo $ruta_db_superior;?>vacio.php";
