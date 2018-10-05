@@ -24,7 +24,9 @@ $arbol = explodeTree($elementos, ".");
 
 // $arbol = pathToTree($elementos);
 
-print_r($arbol);
+header('Content-Type: application/json');
+
+echo(json_encode($arbol));
 
 function explodeTree($array, $delimiter = '_') {
     if (!is_array($array)) {

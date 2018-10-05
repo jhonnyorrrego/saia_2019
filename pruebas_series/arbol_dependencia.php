@@ -57,33 +57,11 @@ echo (librerias_notificaciones());
 			quicksearch: true, // Navigate to next node by typing the first letters.
 			//keyboard: true, // Support keyboard navigation.
 			source: {
-				url: "arbol_dependencia_serie.php",
+				url: "../arboles/arbol_dependencia.php",
 				data: {
-					cargar_partes: 1,
-					otras_categorias: 1,
-					serie_sin_asignar: 1
+					checkbox: 1,
+					seleccionados: "167,168"
 				}
-			},
-			lazyLoad: function(event, data){
-			      var node = data.node;
-			      // Load child nodes via Ajax GET /getTreeData?mode=children&parent=1234
-			      data.result = $.ajax({
-			        url: "arbol_dependencia_serie.php",
-			        data: {
-				        cargar_partes: 1,
-				        id: node.key
-				    },
-			        cache: false
-			      });
-			      //console.log(data.result);
-			},
-			loadChildren: function(event, data) {
-				data.node.visit(function(subNode){
-					// quitar la condicion subNode.isExpanded() si filtra
-				    if( subNode.isUndefined() && subNode.isExpanded() ) {
-				        subNode.load();
-				    }
-				});
 			},
 			filter: {
     		    autoApply: true,   // Re-apply last filter if lazy data is loaded

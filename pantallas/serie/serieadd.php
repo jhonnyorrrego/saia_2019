@@ -149,6 +149,8 @@ switch ($sAction) {
 }
 
 function AddData($conn) {
+    $fieldList = array();
+    $fieldList_asignacion = array();
 	// Field nombre
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_nombre"]) : $GLOBALS["x_nombre"];
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
@@ -250,11 +252,14 @@ function AddData($conn) {
 	}*/
 
 	//insert into entidad_serie
-	$dependencia = explode(",",$fieldList_asignacion["dependencias"]);
-	for($i=0;$i<count($dependencia);$i++){
-		$insert = "INSERT INTO entidad_serie (entidad_identidad,serie_idserie,llave_entidad,estado,fecha) VALUES (2," . $id . "," . $dependencia[$i] . ",1," . fecha_db_almacenar(date("Y-m-d"), "Y-m-d") . ")";
-    	phpmkr_query($insert) or die("Error al guardar la informacion".$insert);
-	}
+	$dependencia = explode(",", $fieldList_asignacion["dependencias"]);
+	$cd = count($dependencia);
+    if ($fieldList["categoria"] == 2) {
+        for ($i = 0; $i < $cd; $i++) {
+            $insert = "INSERT INTO entidad_serie (entidad_identidad,serie_idserie,llave_entidad,estado,fecha) VALUES (2," . $id . "," . $dependencia[$i] . ",1," . fecha_db_almacenar(date("Y-m-d"), "Y-m-d") . ")";
+            phpmkr_query($insert) or die("Error al guardar la informacion" . $insert);
+        }
+    }
 	actualizar_crear_cod_arboles($id, "serie", 1);
 	return $id;
 }

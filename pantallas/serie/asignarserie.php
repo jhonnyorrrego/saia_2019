@@ -15,22 +15,23 @@ include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 desencriptar_sqli('form_info');
 $retorno='';
 if ($_REQUEST["opt"] == 1 && $_REQUEST["iddependencia"]) {
-    // VINCULACION DE DEPENDENCIAS VS SERIES
-    if($_REQUEST["serie_idserie"]){
-    	$idseries = array_unique(explode(",", $_REQUEST["serie_idserie"]));
-	}
-   // $dependencias = array_unique(explode(",", $_REQUEST["iddependencia"]));
+        // VINCULACION DE DEPENDENCIAS VS SERIES
+    $idseries = array();
+    if ($_REQUEST["serie_idserie"]) {
+        $idseries = array_unique(explode(",", $_REQUEST["serie_idserie"]));
+    }
+    // $dependencias = array_unique(explode(",", $_REQUEST["iddependencia"]));
     $dependencias = $_REQUEST["iddependencia"];
-    //if ($_REQUEST["accion"] == "eliminar") {
+    // if ($_REQUEST["accion"] == "eliminar") {
     if ($_REQUEST["accion"] == "eliminar") {
-        //foreach ($series as $idserie) {
-            //foreach ($dependencias as $id) {
-                $delete = "UPDATE entidad_serie SET estado=0 WHERE serie_idserie not in (" . implode(",",$idseries).") and llave_entidad=" . $dependencias;
-                phpmkr_query($delete) or die("Error al eliminar la vinculacion de la serie con la dependencia");
-				//$retorno=0;
-				$retorno=0;
-            //}
-        //}
+        $cond_series = "";
+        if(!empty($idseries)) {
+            $cond_series = " and serie_idserie not in (" . implode(",", $idseries) . ")";
+        }
+        $delete = "UPDATE entidad_serie SET estado=0 WHERE  llave_entidad = $dependencias $cond_series";
+        phpmkr_query($delete) or die("Error al eliminar la vinculacion de la serie con la dependencia: $delete");
+        // $retorno=0;
+        $retorno = 0;
     } else {
         $cons_serie = busca_filtro_tabla("cod_arbol", "serie", "idserie in (" . implode(",", $idseries) . ")", "", $conn);
         if ($cons_serie["numcampos"]) {
@@ -38,27 +39,26 @@ if ($_REQUEST["opt"] == 1 && $_REQUEST["iddependencia"]) {
             for ($i = 0; $i < $cons_serie["numcampos"]; $i++) {
                 $cod_arboles = array_merge($cod_arboles, explode(".", $cons_serie[$i]["cod_arbol"]));
             }
-            $ids = array_unique($cod_arboles);
-			
+            $ids = array_filter(array_unique($cod_arboles));
+
             foreach ($ids as $idserie) {
                 $temp_dep = $dependencias;
-               // $exis = busca_filtro_tabla("llave_entidad", "entidad_serie", "estado=1 and serie_idserie=" . $idserie . " and llave_entidad in (" . implode(",", $temp_dep) . ")", "", $conn);
-                $exis = busca_filtro_tabla("llave_entidad", "entidad_serie", "serie_idserie=" . $idserie . " and llave_entidad =".$temp_dep, "", $conn);              
+                // $exis = busca_filtro_tabla("llave_entidad", "entidad_serie", "estado=1 and serie_idserie=" . $idserie . " and llave_entidad in (" . implode(",", $temp_dep) . ")", "", $conn);
+                $exis = busca_filtro_tabla("llave_entidad", "entidad_serie", "serie_idserie=" . $idserie . " and llave_entidad =" . $temp_dep, "", $conn);
                 if (!$exis["numcampos"]) {
-                    //$ids_insert = extrae_campo($exis, "llave_entidad");
-                    //$ids_insert = $exis[0]["llave_entidad"];
-                    //$temp_dep = array_diff($temp_dep, $ids_insert);					
-                //}
-                //foreach ($temp_dep as $iddepe) {
-                    //$insert = "INSERT INTO entidad_serie (entidad_identidad,serie_idserie,llave_entidad,estado,fecha) VALUES (2," . $idserie . "," . $iddepe . ",1," . fecha_db_almacenar(date("Y-m-d"), "Y-m-d") . ")";
+                    // $ids_insert = extrae_campo($exis, "llave_entidad");
+                    // $ids_insert = $exis[0]["llave_entidad"];
+                    // $temp_dep = array_diff($temp_dep, $ids_insert);
+                    // }
+                    // foreach ($temp_dep as $iddepe) {
+                    // $insert = "INSERT INTO entidad_serie (entidad_identidad,serie_idserie,llave_entidad,estado,fecha) VALUES (2," . $idserie . "," . $iddepe . ",1," . fecha_db_almacenar(date("Y-m-d"), "Y-m-d") . ")";
                     $insert = "INSERT INTO entidad_serie (entidad_identidad,serie_idserie,llave_entidad,estado,fecha) VALUES (2," . $idserie . "," . $temp_dep . ",1," . fecha_db_almacenar(date("Y-m-d"), "Y-m-d") . ")";
-                    phpmkr_query($insert) or die("Error al guardar la informacion");                    
+                    phpmkr_query($insert) or die("Error al guardar la informacion: $insert");
+                } else {
+                    $update = "UPDATE entidad_serie SET estado=1 WHERE entidad_identidad=2 and serie_idserie=" . $idserie . " and llave_entidad=" . $temp_dep;
+                    phpmkr_query($update) or die("Error al guardar la vinculacion de la serie con la dependencia");
                 }
-				else{
-					$update = "UPDATE entidad_serie SET estado=1 WHERE entidad_identidad=2 and serie_idserie=".$idserie." and llave_entidad=" . $temp_dep;					
-                	phpmkr_query($update) or die("Error al guardar la vinculacion de la serie con la dependencia");
-				}
-				$retorno=1;
+                $retorno = 1;
             }
         }
     }
