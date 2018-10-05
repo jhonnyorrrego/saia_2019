@@ -28,6 +28,8 @@ $dato_padre=busca_filtro_tabla("","expediente a","a.idexpediente=".$_REQUEST["co
 ?>
 <form name="formulario_expediente" id="formulario_expediente" method="post">
 <input type="hidden" name="iddoc" id="iddoc" value="<?php echo($_REQUEST["iddoc"]);?>">
+<input type="hidden" name="dependencia_iddependencia" id="dependencia_iddependencia">
+<input type="hidden" name="identidad_serie" id="identidad_serie">
 <input type="hidden" id="cerrar_higslide" value="<?php echo(@$_REQUEST["cerrar_higslide"]);?>">
 <legend>Crear expediente</legend>
 <div class="control-group element">
@@ -101,7 +103,7 @@ echo $arbol->generar_html();
 		        "expandir" => 1,
 		        "funcionario"=>1
 		    ));
-$opciones_arbol = array("keyboard" => true, "busqueda_item" => 1,"selectMode"=>1);
+$opciones_arbol = array("keyboard" => true, "busqueda_item" => 1,"selectMode"=>1, "onNodeSelect" =>'cargar_info_Node');
 $extensiones = array("filter" => array());
 $arbol = new ArbolFt("serie_idserie", $origen, $opciones_arbol, $extensiones);
 echo $arbol->generar_html();
@@ -131,6 +133,13 @@ echo $arbol->generar_html();
   echo(librerias_arboles_ft("2.24", 'filtro'));
   ?>
 <script type="text/javascript">
+function cargar_info_Node(event,data){	  	  
+	  if(data.node.selected){
+	  	$("#serie_idserie").val(data.node.data.serie_idserie);
+	    $("#dependencia_iddependencia").val(data.node.data.iddependencia);
+		$("#identidad_serie").val(data.node.data.identidad_serie);
+	  }
+  }
 $(document).ready(function(){
   $('#fecha').datetimepicker({
     language: 'es',

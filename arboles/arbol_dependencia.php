@@ -71,6 +71,7 @@ function llena_dependencia($id) {
 	} else {
 		$papas = busca_filtro_tabla("", "dependencia", "cod_padre=" . $id . $condicion_ad, "nombre ASC", $conn);
 	}
+	//print_r($papas["sql"]);
 	if ($papas["numcampos"]) {
 		for ($i = 0; $i < $papas["numcampos"]; $i++) {
 			$text = $papas[$i]["nombre"] . " (" . $papas[$i]["codigo"] . ")";
@@ -92,9 +93,8 @@ function llena_dependencia($id) {
 			}
 			if($seleccionados!=""){
 				if (in_array($papas[$i]["iddependencia"], $seleccionados) !== false) {
-					//$objetoXML -> writeAttribute("checked", 1);
 					$item["selected"]=true;
-					$item["active"]=true;
+					//$item["active"]=true;
 				}
 			}
 			$hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"] . $condicion_ad, "", $conn);

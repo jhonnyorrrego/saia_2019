@@ -362,12 +362,13 @@ if($dato_padre["numcampos"]){
   ?>
   <script>
   function cargar_info_Node(event,data){
-  	$("#serie_idserie").val(data.node.key);
+  	$("#serie_idserie").val(data.node.data.serie_idserie);	  
 	  if(data.node.selected){
 	    $("#codigo_numero_serie").val(data.node.data.codigo);
-	    /*$("#dependencia_iddependencia").val(treeserie_idserie.getUserData(NodeId,"iddependencia"));
-		  $("#codigo_numero_dependencia").val(treeserie_idserie.getUserData(NodeId,"dependencia_codigo"));
-		  $("#fondo").val(tree3.getUserData(NodeId,"dependencia_nombre"));*/
+	    $("#dependencia_iddependencia").val(data.node.data.iddependencia);
+		$("#codigo_numero_dependencia").val(data.node.data.dependencia_codigo);
+		$("#fondo").val(data.node.data.nombre_dependencia);
+		$("#identidad_serie").val(data.node.data.identidad_serie);
 	  	$("#codigo_numero_serie").trigger('keyup');
 	  }else{
 	  	$("#codigo_numero_serie").val("");
@@ -417,8 +418,7 @@ if($dato_padre["numcampos"]){
 			type : "POST",
 			async:false,
 			success : function(html_serie) {
-				$("#treeboxbox_tree2").empty().html(html_serie);
-				console.log("<?php echo($datos[0]["cod_padre"]); ?>");
+				$("#treeboxbox_tree2").empty().html(html_serie);				
 				$("#cod_padre").val("<?php echo($datos[0]["cod_padre"]); ?>");
 			},error: function (){
 				top.noty({text: 'No se pudo cargar el arbol de padres',type: 'error',layout: 'topCenter',timeout:5000});

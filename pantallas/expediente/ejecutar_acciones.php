@@ -189,6 +189,7 @@ function set_expediente_documento() {
 		phpmkr_query($sql4);
 	}
 	//update documento serie_idserie
+	//$serie_idserie = explode(".",@$_REQUEST['serie_idserie']);
 	$sqlus = "UPDATE documento SET serie=" . @$_REQUEST['serie_idserie'] . " WHERE iddocumento=" . $_REQUEST["iddoc"];
         phpmkr_query($sqlus) or die($sqlus);
 	if ($idexpediente) {

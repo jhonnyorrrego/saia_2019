@@ -475,7 +475,7 @@ echo librerias_arboles_ft("2.24", 'filtro');
 				<?php
 				$origen = array("url" => "arboles/arbol_dependencia.php", "ruta_db_superior" => $ruta_db_superior,
 				    "params" => array(
-				        "checkbox" => 1,
+				        "checkbox" => true,
 				        "seleccionados" => $dependencia_seleccionada
 				    ));
 				$opciones_arbol = array("keyboard" => true, "selectMode" => 2, "busqueda_item" => 1, "expandir" => 3, "busqueda_item" => 1);

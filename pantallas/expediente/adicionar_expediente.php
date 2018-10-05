@@ -416,11 +416,10 @@ $serie_padre = "";
   ?>
   <script type="text/javascript">
 
-  function cargar_info_Node(event,data){
-	  $("#serie_idserie").val(data.node.data.serie_idserie);	  
+  function cargar_info_Node(event,data){	  	  
 	  if(data.node.selected){
-	  	console.log(data.node.data);
-	    $("#codigo_numero_serie").val(data.node.data.codigo);
+	  	$("#serie_idserie").val(data.node.data.serie_idserie);
+	  	$("#codigo_numero_serie").val(data.node.data.codigo);
 	    $("#dependencia_iddependencia").val(data.node.data.iddependencia);
 		$("#codigo_numero_dependencia").val(data.node.data.dependencia_codigo);
 		$("#fondo").val(data.node.data.nombre_dependencia);

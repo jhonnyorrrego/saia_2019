@@ -83,7 +83,7 @@ $option = '<option value="">Seleccione</option>
 ?>
 <h3>Permisos sobre series</h3>
 <p>
-<form name="permiso_serie" id="permiso_serie" method="post" >
+<!--form name="permiso_serie" id="permiso_serie" method="post" -->
 	<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
 		<tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">SERIE*</span></td>
@@ -116,7 +116,7 @@ $option = '<option value="">Seleccione</option>
 			</td>
 		</tr-->
 	</table>
-</form>
+<!--/form-->
 </p>
 <script type="text/javascript" src="<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
 		 <link rel="stylesheet" type="text/css" href="<?php echo $ruta_db_superior;?>anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
