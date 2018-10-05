@@ -718,11 +718,12 @@ function adicionar_expediente() {
     $ok1 = $permiso->acceso_modulo_perfil('adicionar_expediente');
     if ($ok1) {
         $idexpediente = $_REQUEST["idexpediente"];
-        $cadena .= '
+        /*$cadena .= '
         	<li></li>
         	<li>
         	    <a  href="#" id="adicionar_expediente" idbusqueda_componente="' . $_REQUEST["idbusqueda_componente"] . '" conector="iframe" titulo="Adicionar expediente hijo" enlace="pantallas/expediente/adicionar_expediente.php?cod_padre=' . $idexpediente . '&div_actualiza=resultado_busqueda' . $_REQUEST["idbusqueda_componente"] . '&target_actualiza=parent&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '&estado_archivo=' . @$_REQUEST["variable_busqueda"] . '&fk_idcaja=' . $_REQUEST["idcaja"] . '">Adicionar Expediente/Agrupador</a>
-        	</li>';
+        	</li>';*/
+        	$cadena="";
         if (!empty($_REQUEST["idexpediente"])) {
             $pe = new PermisosExpediente($conn, $idexpediente);
             $permisos = $pe->obtener_permisos();
@@ -739,6 +740,11 @@ function adicionar_expediente() {
             }*/
             // 20180921: Jorge Ramirez solicita que en los agrupadores se ingresen documentos
             if(!$pe->permiso_solo_lectura() && in_array(PermisosExpediente::PERMISO_EXP_ESCRIBIR, $permisos)) {
+            	$cadena .= '
+        	<li></li>
+        	<li>
+        	    <a  href="#" id="adicionar_expediente" idbusqueda_componente="' . $_REQUEST["idbusqueda_componente"] . '" conector="iframe" titulo="Adicionar expediente hijo" enlace="pantallas/expediente/adicionar_expediente.php?cod_padre=' . $idexpediente . '&div_actualiza=resultado_busqueda' . $_REQUEST["idbusqueda_componente"] . '&target_actualiza=parent&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '&estado_archivo=' . @$_REQUEST["variable_busqueda"] . '&fk_idcaja=' . $_REQUEST["idcaja"] . '">Adicionar Expediente/Agrupador</a>
+        	</li>';
                 $cadena .= '
         		<li></li>
         		<li>
@@ -746,6 +752,13 @@ function adicionar_expediente() {
         		</li>';
             }
         }
+		else{
+			$cadena .= '
+        	<li></li>
+        	<li>
+        	    <a  href="#" id="adicionar_expediente" idbusqueda_componente="' . $_REQUEST["idbusqueda_componente"] . '" conector="iframe" titulo="Adicionar expediente hijo" enlace="pantallas/expediente/adicionar_expediente.php?cod_padre=' . $idexpediente . '&div_actualiza=resultado_busqueda' . $_REQUEST["idbusqueda_componente"] . '&target_actualiza=parent&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '&estado_archivo=' . @$_REQUEST["variable_busqueda"] . '&fk_idcaja=' . $_REQUEST["idcaja"] . '">Adicionar Expediente/Agrupador</a>
+        	</li>';
+		}
     }
     echo ($cadena);
 }
