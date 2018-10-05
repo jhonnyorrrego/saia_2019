@@ -137,7 +137,7 @@ if($dato_padre["numcampos"]){
   	<br />
     <span class="phpmaker">
     	<?php
-    	$key = $datos[0]["dependencia_iddependencia"].".".$datos[0]["serie_idserie"].".".$tipo_tvd;
+    	$key = $datos[0]["dependencia_iddependencia"].".".$datos[0]["serie_idserie"].".".$tipo_tvd;		
 		$origen = array("url" => "arboles/arbol_dependencia_serie_funcionario.php", "ruta_db_superior" => $ruta_db_superior,
 		    "params" => array(		    	
 		        "checkbox" => 'radio',

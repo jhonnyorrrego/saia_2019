@@ -104,7 +104,7 @@ function enlace_expediente($idexpediente, $nombre) {
         }
     }
     $a_html = array();
-    //$a_html[] = implode(",", $permiso->getPermisosSerie());
+   // $a_html[] = implode(",", $permiso->getPermisosSerie());
     if ($l || $m) {
         $a_html[] = '<div class="link kenlace_saia" enlace="pantallas/busquedas/consulta_busqueda_expediente.php?' . $req_parms . '" conector="iframe" titulo="' . $nombre . '">';
         $a_html[] = '<table><tr><td style="font-size:12px;">';
@@ -432,12 +432,13 @@ function enlaces_adicionales_expediente($idexpediente, $nombre, $estado_cierre, 
     $permisos = $permiso->obtener_permisos();
 
     $m = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_MODIFICAR);
+	$sm= $permiso->tiene_permiso_serie(PermisosExpediente::PERMISO_SER_MODIFICAR);
     $e = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_ELIMINAR);
     $p = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_COMPARTIR);
-
+	//print_r($permiso->getPermisosSerie());
     $clase_info = "";
     $texto = "";
-    if ($e || $m || $p) {
+    if ($e || $m || $p || $sm) {
         if($_SESSION["tipo_dispositivo"] == "movil") {
         $clase_info = "kenlace_saia";
         $texto = '<div class="btn btn-mini kenlace_saia pull-right" idregistro="' . $idexpediente . '" titulo="' . $nombre . '" conector="iframe" enlace="pantallas/expediente/detalles_expediente.php?idexpediente=' . $idexpediente . '&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '" ><i class="icon-info-sign"></i></div>';
@@ -455,6 +456,7 @@ function enlaces_adicionales_expediente($idexpediente, $nombre, $estado_cierre, 
     }
     if (!$agrupador && $m) {
         $texto .= '<div class="btn btn-mini link kenlace_saia tooltip_saia pull-right" title="Imprimir rotulo" titulo="Imprimir rotulo" enlace="pantallas/caja/rotulo.php?idexpediente=' . $idexpediente . '" conector="iframe"><i class="icon-print"></i></div>';
+		$texto .= '<div id="seleccionados_expediente_' . $idexpediente . '" idregistro="' . $idexpediente . '" titulo="Seleccionar" class="btn btn-mini tooltip_saia adicionar_seleccionados_expediente pull-right"><i class="icon-uncheck" ></i></div>';
     }
     if ($p) {
         $texto .= '<div class="btn btn-mini ' . $clase_info . ' tooltip_saia pull-right" idregistro="' . $idexpediente . '" conector="iframe"  titulo="Asignar ' . $nombre . '" enlace="pantallas/expediente/asignar_expediente.php?idexpediente=' . $idexpediente . '"><i class="icon-lock"></i></div>';
@@ -462,9 +464,6 @@ function enlaces_adicionales_expediente($idexpediente, $nombre, $estado_cierre, 
 
     if ($permiso->es_propietario() && !$agrupador) {
         $texto .= '<div class="btn btn-mini crear_tomo_expediente tooltip_saia pull-right" idregistro="' . $idexpediente . '" title="Crear Tomo ' . $nombre . '"><i class="icon-folder-open"></i></div>';
-    }
-    if (!$agrupador && $m) {
-        $texto .= '<div id="seleccionados_expediente_' . $idexpediente . '" idregistro="' . $idexpediente . '" titulo="Seleccionar" class="btn btn-mini tooltip_saia adicionar_seleccionados_expediente pull-right"><i class="icon-uncheck" ></i></div>';
     }
     return ($texto);
 }

@@ -11,6 +11,8 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+require_once "PermisosExpediente.php";
+use \pantallas\expediente\PermisosExpediente as PermisosExpediente;
 ?>
 <!DOCTYPE html>
 <?php
@@ -44,12 +46,15 @@ $expediente = busca_filtro_tabla("a.*," . fecha_db_obtener("a.fecha", "Y-m-d") .
 </style>
 <body>
 <?php
-	$m = 0;
-	$e = 0;
-	$p = 0;
-	$l = 0;
+	$permiso = new PermisosExpediente($conn, $idexpediente);
+    $permisos = $permiso->obtener_permisos();
 
-	if ($expediente[0]["propietario"] == $_SESSION["usuario_actual"]) {
+    $m = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_MODIFICAR);
+	$sm= $permiso->tiene_permiso_serie(PermisosExpediente::PERMISO_SER_MODIFICAR);
+    $e = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_ELIMINAR);
+    $p = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_COMPARTIR);
+   
+	/*if ($expediente[0]["propietario"] == $_SESSION["usuario_actual"]) {
 		$m = 1;
 		$e = 1;
 		$p = 1;
@@ -69,8 +74,8 @@ $expediente = busca_filtro_tabla("a.*," . fecha_db_obtener("a.fecha", "Y-m-d") .
 			}
 			$l=1;
 		}
-	}
-	if(!($l || $e || $m || $p)) {
+	}*/
+	if(!($sm || $e || $m || $p)) {
 	    die("No tiene permisos sobre &eacute;ste expediente");
 	}
 

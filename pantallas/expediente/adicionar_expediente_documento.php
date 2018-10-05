@@ -87,14 +87,20 @@ echo $arbol->generar_html();
   </label>
   <div class="controls"> 
     <?php
-    $origen = array("url" => "arboles/arbol_serie_funcionario.php", "ruta_db_superior" => $ruta_db_superior,
+   /* $origen = array("url" => "arboles/arbol_serie_funcionario.php", "ruta_db_superior" => $ruta_db_superior,
     "params" => array(
    		 "tipo1" => 1,
         "tipo2" => 1,
         "tipo3" => 0,
         "tvd"=>0,
         "checkbox"=>'radio'
-    ));
+    ));*/
+    $origen = array("url" => "arboles/arbol_dependencia_serie_funcionario.php", "ruta_db_superior" => $ruta_db_superior,
+		    "params" => array(		    	
+		        "checkbox" => 'radio',
+		        "expandir" => 1,
+		        "funcionario"=>1
+		    ));
 $opciones_arbol = array("keyboard" => true, "busqueda_item" => 1,"selectMode"=>1);
 $extensiones = array("filter" => array());
 $arbol = new ArbolFt("serie_idserie", $origen, $opciones_arbol, $extensiones);
