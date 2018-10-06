@@ -48,7 +48,11 @@ switch ($sAction) {
                 ?>
 <script>
 					//window.parent.frames['arbol'].tree2.refreshItem("0");
-					window.parent.frames['arbol'].postMessage("refrescar_arbol", "*");
+					
+					window.parent.frames['arbol'].postMessage({
+		                accion: "refrescar_arbol",
+		                expandir: "<?php echo $_REQUEST["idnode"];?>"
+		            }, "*");
 					/*var idnode='<?php echo $_REQUEST["idnode"];?>';
 					 idnodepapa=window.parent.frames['arbol'].tree2.getParentId(idnode);
 					console.log(idnodepapa);

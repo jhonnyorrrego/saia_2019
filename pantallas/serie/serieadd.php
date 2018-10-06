@@ -66,8 +66,10 @@ switch ($sAction) {
             }
             ?>
 <script>
-			//window.parent.frames['arbol'].tree2.refreshItem("0");
-			window.parent.frames['arbol'].postMessage("refrescar_arbol", "*");
+			window.parent.frames['arbol'].postMessage({
+                accion: "refrescar_arbol",
+                expandir: "<?php echo $openNode;?>"
+            }, "*");
 			/*window.parent.frames['arbol'].tree2.setOnLoadingEnd(abrir_arbol);
 			function abrir_arbol() {
 			window.parent.frames['arbol'].tree2.openAllItems("<?php echo $openNode;?>");

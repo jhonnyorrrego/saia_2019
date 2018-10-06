@@ -13,7 +13,7 @@ include_once ($ruta_db_superior . "db.php");
 //include_once ($ruta_db_superior . "header.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 desencriptar_sqli('form_info');
-$retorno='';
+$retorno= array("exito" =>0, "mensaje" => "Error al ", "accion" => $_REQUEST["accion"]);
 if ($_REQUEST["opt"] == 1 && $_REQUEST["iddependencia"]) {
         // VINCULACION DE DEPENDENCIAS VS SERIES
     $idseries = array();
@@ -28,10 +28,12 @@ if ($_REQUEST["opt"] == 1 && $_REQUEST["iddependencia"]) {
         if(!empty($idseries)) {
             $cond_series = " and serie_idserie not in (" . implode(",", $idseries) . ")";
         }
-        $delete = "UPDATE entidad_serie SET estado=0 WHERE  llave_entidad = $dependencias $cond_series";
+        $delete = "UPDATE entidad_serie SET estado=0 WHERE llave_entidad = $dependencias $cond_series";
         phpmkr_query($delete) or die("Error al eliminar la vinculacion de la serie con la dependencia: $delete");
         // $retorno=0;
-        $retorno = 0;
+        $retorno["exito"] = 1;
+        $retorno["mensaje"] = "Se ha retirado el permiso a la serie";
+        $retorno["expandir"] = $dependencias . ".0.0";
     } else {
         $cons_serie = busca_filtro_tabla("cod_arbol", "serie", "idserie in (" . implode(",", $idseries) . ")", "", $conn);
         if ($cons_serie["numcampos"]) {
@@ -41,8 +43,8 @@ if ($_REQUEST["opt"] == 1 && $_REQUEST["iddependencia"]) {
             }
             $ids = array_filter(array_unique($cod_arboles));
 
+            $temp_dep = $dependencias;
             foreach ($ids as $idserie) {
-                $temp_dep = $dependencias;
                 // $exis = busca_filtro_tabla("llave_entidad", "entidad_serie", "estado=1 and serie_idserie=" . $idserie . " and llave_entidad in (" . implode(",", $temp_dep) . ")", "", $conn);
                 $exis = busca_filtro_tabla("llave_entidad", "entidad_serie", "serie_idserie=" . $idserie . " and llave_entidad =" . $temp_dep, "", $conn);
                 if (!$exis["numcampos"]) {
@@ -56,10 +58,12 @@ if ($_REQUEST["opt"] == 1 && $_REQUEST["iddependencia"]) {
                     phpmkr_query($insert) or die("Error al guardar la informacion: $insert");
                 } else {
                     $update = "UPDATE entidad_serie SET estado=1 WHERE entidad_identidad=2 and serie_idserie=" . $idserie . " and llave_entidad=" . $temp_dep;
-                    phpmkr_query($update) or die("Error al guardar la vinculacion de la serie con la dependencia");
+                    phpmkr_query($update) or die("Error al guardar la vinculacion de la serie con la dependencia: $update");
                 }
-                $retorno = 1;
             }
+            $retorno["exito"] = 1;
+            $retorno["mensaje"] = "Se ha adicionado el permiso a la serie";
+            $retorno["expandir"] = $temp_dep . ".0.0";
         }
     }
     //notificaciones("Datos Guardados!", "success", 5000);
@@ -87,7 +91,8 @@ if ($_REQUEST["opt"] == 1 && $_REQUEST["iddependencia"]) {
             die();
         }
     }*/
-	echo ($retorno);
+    header('Content-Type: application/json');
+	echo (json_encode($retorno));
 }
 
 if ($_REQUEST["opt"] == 2 && $_REQUEST["tipo_entidad"] && $_REQUEST["serie_idserie"]) {

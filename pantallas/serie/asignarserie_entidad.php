@@ -164,7 +164,7 @@ if ($_REQUEST["seleccionados"]) {
 		
 		var seleccionados = Array();
 		var items = data.tree.getSelectedNodes();
-		console.log(data);
+		//console.log(data);
 		for(var i=0;i<items.length;i++){
 			seleccionados.push(items[i].key);
 		}
@@ -179,19 +179,33 @@ if ($_REQUEST["seleccionados"]) {
         $.ajax({
         	    url: 'asignarserie.php',
                 type : "POST",
-                data:{opt:1,iddependencia:iddependencia,serie_idserie:serie_idserie,accion:accion},
-	
+                data: {
+                    opt: 1,
+                    iddependencia: iddependencia,
+                    serie_idserie: serie_idserie,
+                    accion: accion
+                },
+                datatype: 'json',
                 success: function(retorno){
                 	
-                    var tipo='warning';
-                    var mensaje='<b>ATENCI&Oacute;N</b><br>Se ha retirado el permiso a la serie';
-                    if(retorno==1){
-                        tipo='success';
-                        mensaje='<b>ATENCI&Oacute;N</b><br>Se ha adicionado el permiso a la serie';
-                        
+                    var tipo = 'error';
+                    var mensaje = '<b>ATENCI&Oacute;N</b><br>' + retorno.mensaje;
+                    if(retorno.exito == 1) {
+                        if(retorno.accion == 'adicionar') {
+                        	tipo='success';
+                        } else {
+                        	tipo='warning';
+                        }
+                        var datos = {
+                                accion: "refrescar_arbol"
+                        };
+                        if(retorno.expandir) {
+                        	datos["expandir"] = retorno.expandir;
+                        }
+                        window.parent.frames['arbol'].postMessage(datos, "*");
                     }
+                    
                     notificacion_saia(mensaje,tipo,"topRight",3000);
-                    window.parent.frames['arbol'].postMessage("refrescar_arbol", "*");
                 }
         	});
 	}

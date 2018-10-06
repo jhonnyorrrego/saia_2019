@@ -99,6 +99,7 @@ echo $arbol->generar_html();
 
 		var source = event.source.frameElement; //this is the iframe that sent the message
 		var message = event.data; //this is the message
+		//console.log(message);
 
 		var tree = $("#treebox_campo_idserie").fancytree('getTree');
 
@@ -110,8 +111,25 @@ echo $arbol->generar_html();
 				serie_sin_asignar: 1
 		    },
 		    dataType: 'json'
-		  };
-		tree.reload(newSourceOption);
+		};
+
+		if(message) {
+			if(message.accion && message.accion == "refrescar_arbol" && message.expandir) {
+				tree.reload(newSourceOption).done(function() {
+					var node = tree.getNodeByKey(message.expandir);
+					//console.log("Expandiendo: " + message.expandir);
+					//console.log(node);
+					if(node) {
+						node.setActive();
+						node.setFocus();
+						node.setExpanded(true);
+						//$(tree.$container).focus();
+					}
+				});
+			} else if(message.accion && message.accion == "refrescar_arbol") {
+				tree.reload(newSourceOption);
+			}
+		}
 
 	}
 	window.addEventListener("message", receiveMessage, false);
