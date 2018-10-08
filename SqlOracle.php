@@ -747,7 +747,7 @@ class SqlOracle extends SQL2 {
 	protected function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta) {
 		$lcampos = array();
 		for($i = 0; $i < $campos["numcampos"]; $i++) {
-			$datos_campo = ejecuta_filtro_tabla("SELECT decode(nullable,'Y',0,'N',1) as nulo FROM user_tab_columns WHERE table_name='" . strtoupper($formato[0]["nombre_tabla"]) . "' and lower(column_name)='{$campos[$i]["nombre"]}' ORDER BY column_name ASC", $this);
+			$datos_campo = ejecuta_filtro_tabla("SELECT decode(nullable,'Y',0,'N',1) as nulo FROM user_tab_columns WHERE table_name='" . strtoupper($formato[0]["nombre_tabla"]) . "' and lower(column_name)='{$campos[$i]["nombre"]}' ORDER BY column_name ASC", $conn);
 
 			if ($datos_campo[0]["nulo"] != $campos[$i]["obligatoriedad"]) {
 				if ($formato[0]["nombre_tabla"]) {
