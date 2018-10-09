@@ -30,7 +30,7 @@ if ($_SESSION["LOGIN" . LLAVE_SAIA]!="") {
 
 	$proxima = busca_filtro_tabla("valor", "configuracion", "nombre='actualizacion_fin_anio'", "idconfiguracion DESC", $conn);
 	if ($proxima["numcampos"]) {
-		$fecha = busca_filtro_tabla(resta_fechas("'" . $proxima[0][0] . "'", "'" . date("Y-m-d") . "'"), "dual", "", "", $conn);
+		$fecha = busca_filtro_tabla(resta_fechas("'" . $proxima[0][0] . "'", "'" . date("Y-m-d") . "'"), "", "", "", $conn);
 		if (@$fecha[0][0] < 0) {
 			alerta("Se van a realizar algunas actualizaciones por el cambio de año, por favor espere.", 'success', 6000);
 			abrir_url("actualizacion_cambio_anio.php");
@@ -50,7 +50,7 @@ if ($_SESSION["LOGIN" . LLAVE_SAIA]!="") {
 	$permiso = new PERMISO();
 	$per_pendientes = $permiso -> acceso_modulo_perfil("documentos_pendientes");
 	if ($per_pendientes) {
-		$etiquetados = busca_filtro_tabla("c.nombre", "documento a, documento_etiqueta b, etiqueta c", "LOWER(a.estado) NOT IN ('eliminado') AND a.iddocumento=b.documento_iddocumento AND b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='" . $usuario . "' GROUP BY a.iddocumento", "", $conn);
+		$etiquetados = busca_filtro_tabla("c.nombre", "documento a, documento_etiqueta b, etiqueta c", "LOWER(a.estado) NOT IN ('eliminado') AND a.iddocumento=b.documento_iddocumento AND b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='" . $usuario . "' GROUP BY a.iddocumento,c.nombre", "", $conn);
 		$pendientes = busca_filtro_tabla("count(*) AS cant", "documento A,asignacion B,formato c ", "LOWER(A.estado)<>'eliminado' AND A.iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad=" . $usuario . " and lower(A.plantilla)=c.nombre ", "GROUP BY A.iddocumento", $conn);
 		$con_indicador = busca_filtro_tabla("", "documento a, prioridad_documento b,formato c ", "b.documento_iddocumento=a.iddocumento AND b.prioridad in (1,2,3,4,5) AND lower(a.estado) not in('ELIMINADO') AND lower(a.plantilla)=c.nombre AND b.funcionario_idfuncionario=" . $_SESSION["idfuncionario"], "group by a.iddocumento order by a.fecha  desc", $conn);
 		$borradores = busca_filtro_tabla("count(*) AS cant", "documento A, formato c ", "ejecutor=" . $usuario . " AND A.estado='ACTIVO' AND A.numero='0' and lower(A.plantilla)=c.nombre", "", $conn);
