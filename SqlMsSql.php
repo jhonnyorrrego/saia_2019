@@ -32,7 +32,7 @@ else
 		if (!$rs) {
 			$rs = $this->res;
 		}
-		@ mssql_free_result($rs);
+		@mssql_free_result($rs);
 	}
 
 	function Ejecutar_Sql($sql) {
@@ -577,6 +577,7 @@ else
 				}
 				break;
 		}
+		return $campo;
 	}
 
 	public function formato_crear_indice($bandera, $nombre_campo, $nombre_tabla) {

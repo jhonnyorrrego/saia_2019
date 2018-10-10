@@ -36,9 +36,8 @@ class SqlSqlServer extends SQL2 {
 			for($i = 0; $i < $this->Numero_Filas(); $i++)
 				$resultado[] = sqlsrv_fetch_array($this->res, SQLSRV_FETCH_ASSOC);
 			return $resultado;
-		} else { // se retorna la matriz
-			return (false);
 		}
+			return (false);
 	}
 
 	function liberar_resultado($rs) {
@@ -670,6 +669,7 @@ class SqlSqlServer extends SQL2 {
 				}
 				break;
 		}
+		return $campo;
 	}
 
 	public function formato_crear_indice($bandera, $nombre_campo, $nombre_tabla) {
