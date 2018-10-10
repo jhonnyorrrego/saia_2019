@@ -618,12 +618,15 @@ else
 					$pos = array_search(strtolower($campos[$i]["nombre"]), $campos_tabla);
 					$dato = "";
 
-					if ($pos === false)
+					if ($pos === false) {
 						$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ADD " . $dato_campo;
-					else
+					} else {
 						$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ALTER COLUMN " . $dato_campo;
-					guardar_traza($dato, $formato[0]["nombre_tabla"]);
-					$this->Ejecutar_Sql($dato);
+					}
+					if ($dato != "") {
+						guardar_traza($dato, $formato[0]["nombre_tabla"]);
+						$this->Ejecutar_Sql($dato);
+					}
 				}
 			}
 		}
@@ -632,7 +635,6 @@ else
 	}
 
 	protected function formato_elimina_indices_tabla($tabla) {
-		global $conn, $sql;
 		$tabla = strtoupper($tabla);
 		$sql2 = "SELECT name AS column_name FROM sys.objects WHERE type_desc LIKE '%CONSTRAINT' AND OBJECT_NAME(parent_object_id)='" . $tabla . "'";
 		$indices = $this->ejecuta_filtro_tabla($sql2);

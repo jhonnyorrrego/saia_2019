@@ -769,13 +769,9 @@ class SqlMysql extends SQL2 {
 					$dato = "";
 
 					if ($pos === false) {
-						if ($formato[0]["nombre_tabla"]) {
-							$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ADD " . $dato_campo;
-						}
+						$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ADD " . $dato_campo;
 					} else {
-						if ($formato[0]["nombre_tabla"]) {
-							$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " MODIFY " . $dato_campo;
-						}
+						$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " MODIFY " . $dato_campo;
 					}
 					if ($dato != "") {
 						guardar_traza($dato, $formato[0]["nombre_tabla"]);
