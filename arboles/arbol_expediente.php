@@ -58,21 +58,6 @@ $funcionarios = array();
 $idfunc = usuario_actual("idfuncionario");
 
 $lista2 = expedientes_asignados();
-/*if (@$_REQUEST["id"] && @$_REQUEST["uid"]) {
-	echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?" . ">");
-	echo("<tree id=\"" . $_REQUEST["id"] . "\">\n");
-	llena_expediente($_REQUEST["id"]);
-	echo("</tree>\n");
-	die();
-}
-
-echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?" . ">");
-echo("<tree id=\"0\">\n");
-echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Expedientes\" nocheckbox=\"1\" id=\"exp\">");
-llena_expediente($id);
-echo("</item>\n");
-echo("</tree>\n");
-*/
 if (isset($_REQUEST["id"])) {
 
 	$objetoJson["key"] = $_REQUEST["id"];
@@ -130,7 +115,7 @@ function llena_expediente($id) {
 				else{
 					$texto_item.=" - (Sin permiso)";
 				}
-	            $item["title"] = htmlspecialchars($texto_item . $cadena_tomos);
+	            $item["title"] = ($texto_item . $cadena_tomos);
 				$item["key"] = $papas[$i]["idexpediente"];
 
 				if (@$_REQUEST["doc"]) {

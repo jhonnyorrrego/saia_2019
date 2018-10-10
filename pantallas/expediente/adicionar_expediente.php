@@ -385,11 +385,11 @@ $serie_padre = "";
 </div>
 <br />
 
-<input type="hidden"  name="ejecutar_expediente" value="set_expediente"/>
-<input type="hidden"  name="dependencia_iddependencia" id="dependencia_iddependencia"/>
-<input type="hidden"  name="fondo" id="fondo"/>
-<input type="hidden"  name="identidad_serie" id="identidad_serie"/>
-<input type="hidden"  name="tipo_retorno" value="1"/>
+<input type="hidden" name="ejecutar_expediente" value="set_expediente"/>
+<input type="hidden" name="dependencia_iddependencia" id="dependencia_iddependencia"/>
+<input type="hidden" name="fondo" id="fondo"/>
+<input type="hidden" name="identidad_serie" id="identidad_serie"/>
+<input type="hidden" name="tipo_retorno" value="1"/>
 <input type="hidden" name="fk_idcaja" value="<?php echo(@$_REQUEST["fk_idcaja"]);?>">
 <input type="hidden" name="estado_archivo" value="1">
 <input type="hidden" name="key_formulario_saia" value="<?php echo(generar_llave_md5_saia());?>">
@@ -416,7 +416,8 @@ $serie_padre = "";
   ?>
   <script type="text/javascript">
 
-  function cargar_info_Node(event,data){	  	  
+  function cargar_info_Node(event,data){	
+  	console.log(data.node.data);  	  
 	  if(data.node.selected){
 	  	$("#serie_idserie").val(data.node.data.serie_idserie);
 	  	$("#codigo_numero_serie").val(data.node.data.codigo);
@@ -496,8 +497,6 @@ $serie_padre = "";
       nombre: {"required":true},
       serie_idserie: {"required":true}
 
-  },
-  submitHandler: function(form) {
   }
   });
 

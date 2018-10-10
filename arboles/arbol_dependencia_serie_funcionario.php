@@ -142,7 +142,15 @@ function llena_serie($id, $iddep, $tipo = 0, $nombre_dependencia, $dependencia_c
 			$item["extraClasses"] = "estilo-serie";
 			$item["title"] = $text;
 			$item["key"] = $iddep . "." . $papas[$i]["idserie"] . "." . $tipo;
-
+			if($nombre_dependencia=="" || $dependencia_codigo == ""){
+				/*$dependencias = busca_filtro_tabla("codigo, nombre", "dependencia", "iddependencia = $iddep", "", $conn);
+				if($dependencias["numcampos"]){
+					
+				}*/
+				$valores_dependencia=busca_dependencia($iddep);
+				$nombre_dependencia =$valores_dependencia["nombre"];
+				$dependencia_codigo =$valores_dependencia["codigo"];  
+			}
 			$item["data"] = array(
 					"iddependencia" => $iddep,
 					"nombre_dependencia" => $nombre_dependencia,
@@ -163,7 +171,7 @@ function llena_serie($id, $iddep, $tipo = 0, $nombre_dependencia, $dependencia_c
 			$hijos = busca_filtro_tabla("count(*) as cant", "serie", "tvd=" . $tipo . "  and cod_padre=" . $papas[$i]["idserie"] . " and categoria=2", "", $conn);
 			if($hijos[0]["cant"]) {
 				$item["folder"] = 1;
-				$item["children"] = llena_serie($papas[$i]["idserie"], $iddep, $tipo);
+				$item["children"] = llena_serie($papas[$i]["idserie"], $iddep, $tipo,$nombre_dependencia,$dependencia_codigo);
 			} else {
 				$item["folder"] = 0;
 			}

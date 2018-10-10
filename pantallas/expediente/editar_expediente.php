@@ -381,6 +381,7 @@ if($dato_padre["numcampos"]){
   }
 
   $(document).ready(function(){
+  	$("#serie_idserie").val("<?php echo($key); ?>");
 		/*url2="arboles/arbol_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0&checkbox=radio&seleccionados=<?php echo($datos[0]["serie_idserie"]); ?>";
 		$.ajax({
 			url : "<?php echo($ruta_db_superior);?>arboles/crear_arbol_ft.php",
@@ -463,8 +464,6 @@ $(document).ready(function(){
       "nombre":{"required":true},
       "serie_idserie":{"required":true}
       
-  },
-  submitHandler: function(form) {
   }
   });
   $("#submit_formulario_expediente").click(function(){  

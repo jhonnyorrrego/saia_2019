@@ -101,13 +101,12 @@ class DHtmlXtreeExpedienteFunc {
                 join expediente e on ee.expediente_idexpediente = e.idexpediente", "e.idexpediente=" . $this->idexpediente, "nombre ASC", $this->conn);
         } else if ($id == 0) {
             $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre,agrupador", "entidad_expediente ee
-            join expediente e on ee.expediente_idexpediente = e.idexpediente", "(cod_padre=0 or cod_padre is null) and e.fk_entidad_serie in (497)", "nombre ASC", $this->conn);
+            join expediente e on ee.expediente_idexpediente = e.idexpediente", "(cod_padre=0 or cod_padre is null) and e.fk_entidad_serie in (".$this->lista_entidades.")", "nombre ASC", $this->conn);
         } else {
             $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre,agrupador", "entidad_expediente ee
-                join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" . $id ." and e.fk_entidad_serie in (497)","nombre ASC", $this->conn);
+                join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" . $id ." and e.fk_entidad_serie in (".$this->lista_entidades.")","nombre ASC", $this->conn);
         }
 
-        //print_r($papas);
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
                 $agrupador = $papas[$i]["agrupador"];
