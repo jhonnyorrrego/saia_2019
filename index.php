@@ -216,8 +216,8 @@ if(@$_SESSION["tipo_dispositivo"]=="movil"){
 
 <div id="div_noticias">
 <?php
-$titulo_mostrar = busca_filtro_tabla('', 'configuracion', 'nombre="titulo_index"', '', $conn);
-$subtitulo_mostrar = busca_filtro_tabla('', 'configuracion', 'nombre="subtitulo_index"', '', $conn);
+$titulo_mostrar = busca_filtro_tabla('', 'configuracion', "nombre='titulo_index'", '', $conn);
+$subtitulo_mostrar = busca_filtro_tabla('', 'configuracion', "nombre='subtitulo_index'", '', $conn);
 
 $texto_tabla = "<p style='font-weight:bold;color: #6A6E71;text-align:left;font-size:16px;'>" . $titulo_mostrar[0]['valor'] . "<p>";
 $texto_tabla .= "<hr>";

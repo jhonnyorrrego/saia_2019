@@ -893,7 +893,7 @@ class SqlPostgres extends SQL2 {
 		return;
 	}
 
-	protected function verificar_existencia($tabla) {
+	public function verificar_existencia($tabla) {
 		$sql = "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema = 'public' AND table_name = '$tabla') as existe";
 		$existe = $this->ejecuta_filtro_tabla($sql);
 		if ($existe["numcampos"]) {
@@ -901,4 +901,9 @@ class SqlPostgres extends SQL2 {
 		}
 		return false;
 	}
+
+    public function concatenar_cadena($arreglo_cadena) {
+        return (implode("||", $arreglo_cadena));
+    }
+
 }

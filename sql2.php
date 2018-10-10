@@ -45,10 +45,10 @@ abstract class SQL2 {
 	}
 
 	/**
-	 * Segundo constructor a partir de una ruta_servidor
-	 *
-	 * @param unknown $server_path
-	 * @return SaiaStorage
+	 * Devuelve una instancia a partir de los datos de conexion y el tipo de motor
+	 * @param $conn
+	 * @param $motorBd
+	 * @return NULL|SqlPostgres
 	 */
 	public static function get_instance($conn, $motorBd) {
 		$instance = null;
@@ -88,6 +88,13 @@ abstract class SQL2 {
 	 * <Post-condiciones>
 	 */
 	public abstract function Buscar($campos, $tablas, $where, $order_by);
+
+	/**
+	 * Devuelve la sentencia para concatenar el listado de valores en el motor respectivo
+	 * @param array $arreglo_cadena
+	 * @return string sentencia concatenar adecuada para el motor configurado
+	 */
+	public abstract function concatenar_cadena($arreglo_cadena);
 
 	/*
 	 * <Clase>SQL
@@ -394,7 +401,7 @@ abstract class SQL2 {
 	 */
 	protected abstract function elimina_indice_campo($tabla, $campo);
 
-	protected abstract function verificar_existencia($tabla);
+	public abstract function verificar_existencia($tabla);
 
 	protected abstract function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta);
 

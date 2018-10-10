@@ -860,7 +860,7 @@ function busca_filtro_tabla($campos, $tabla, $filtro, $orden, $conn) {
 	$rs = $conn -> Ejecutar_Sql($sql);
 	$temp = phpmkr_fetch_array($rs);
 	$retorno["sql"] = $sql;
-	
+
 	for ($i = 0; $temp; $temp = phpmkr_fetch_array($rs), $i++) {
 		array_push($retorno, $temp);
 	}
@@ -2916,78 +2916,22 @@ $cad="";
 return($cad);
 }
 
-/*
-<Clase>
-<Nombre>fecha_in
-<Parametros>$fecha: fecha que se desea formatear; $motor: de base de datos
-<Responsabilidades> Formatear una cadena para insertarla en la base de datos segun el motor que se use
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-*/
-function fecha_in($fecha, $motor=MOTOR) {
-  switch($motor) {
-    case "MySql":
-      return $fecha;
-    break;
-    case "Oracle":
-      return "to_date($fecha,'YYYY-MM-DD HH24:MI:SS')";
-    break;
-    case "SqlServer":
-      //20 equivale al estilo de la conversion
-      return "CONVERT(datetime,'".$fecha."',20)";
-    case "MSSql":
-      //20 equivale al estilo de la conversion
-      return "CONVERT(datetime,'".$fecha."',20)";
-    break;
-
-  }
-}
-
-/*
-<Clase>
-<Nombre>fecha_out
-<Parametros>$columna: nombre de la columna a extraer; $motor: motor de base de datos actual
-<Responsabilidades> organizar la cadena para pedir una columna de tipo date a la base de datos
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-*/
-function fecha_out($columna, $motor=MOTOR) {
-  switch($motor) {
-    case "MySql":
-      return $columna;
-    case "Oracle":
-      return "to_char($columna,'YYYY-MM-DD HH24:MI:SS')";
-    case "SqlServer":
-       //20 equivale al estilo de la conversion
-      return "CONVERT(CHAR(19),'".$columna."',20)";
-    case "MSSql":
-       //20 equivale al estilo de la conversion
-      return "CONVERT(CHAR(19),'".$columna."',20)";
-  }
-}
-
-/*
-<Clase>
-<Nombre>fecha_db
-<Parametros> $formato : formato de la fecha a obtener en fromato tipo PHP;
-<Responsabilidades> Retornar la cadena adecuada dependiendo del motor para las consultas
-de tipo select
-<Notas>
-<Excepciones>
-<Salida>cadena lista para compementar las secuecias  ejem  TO_CHAR(fecha_ini,'DD-MM-YYYY')
-<Pre-condiciones>
-<Post-condiciones>
-*/
+    /*
+ * <Clase>
+ * <Nombre>fecha_db
+ * <Parametros> $formato : formato de la fecha a obtener en fromato tipo PHP;
+ * <Responsabilidades> Retornar la cadena adecuada dependiendo del motor para las consultas
+ * de tipo select
+ * <Notas>
+ * <Excepciones>
+ * <Salida>cadena lista para compementar las secuecias ejem TO_CHAR(fecha_ini,'DD-MM-YYYY')
+ * <Pre-condiciones>
+ * <Post-condiciones>
+ */
 function fecha_db($campo, $formato = NULL) {
-   global $conn;
-	return $conn->fecha_db($campo, $formato);
-    } // Fin Funcion fecha_db_obtener
+    global $conn;
+    return $conn->fecha_db($campo, $formato);
+}
 
 /*
 <Clase>
@@ -3004,7 +2948,8 @@ de tipo select
 function fecha_db_obtener($campo, $formato = NULL) {
    global $conn;
 	return $conn->fecha_db_obtener($campo, $formato);
-} // Fin Funcion fecha_db_obtener
+}
+// Fin Funcion fecha_db_obtener
 
 /*
 <Clase>
@@ -3023,7 +2968,7 @@ function fecha_db_almacenar($fecha, $formato = NULL) {
    global $conn;
 	return $conn->fecha_db_almacenar($fecha, $formato);;
 }
- // Fin Funcion fecha_db_almacenar
+// Fin Funcion fecha_db_almacenar
 
 /*<Clase>
 <Nombre>case_fecha</Nombre>
@@ -3327,7 +3272,7 @@ function crear_archivo($nombre, $texto = NULL, $modo = 'wb') {
 	if (!is_dir($ruta)) {
 		if (mkdir($ruta, PERMISOS_CARPETAS, true)) {
 			chmod($ruta, PERMISOS_CARPETAS);
-		} else {			
+		} else {
 			return (false);
 		}
 	}
@@ -3356,7 +3301,7 @@ function crear_archivo_formato($nombre, $texto = NULL, $modo = 'wb') {
 	if (!is_dir($ruta)) {
 		if (mkdir($ruta, PERMISOS_CARPETAS, true)) {
 			chmod($ruta, PERMISOS_CARPETAS);
-		} else {			
+		} else {
 			alerta("Problemas al generar las carpetas");
 			return (false);
 		}
@@ -3585,45 +3530,16 @@ function limpiar_cadena_sql($cadena){
 	case 'MSSql':
       return('RTRIM(LTRIM(lower('.$cadena.')))');
     break;
-    default:
-      return('trim(lower('.$cadena.'))');
-    break;
-  }
+        default:
+            return ('trim(lower(' . $cadena . '))');
+            break;
+    }
 }
-/*Se debe enviar la cadena completa si es una cadena de texto la que se debe concatenar se deben adicionar las comillas simples ' */
-function concatenar_cadena_sql($arreglo_cadena){
-  $cadena_final='';
-  switch(MOTOR){
-    case 'SqlServer':
-      return(implode("+",$arreglo_cadena));
-    break;
-		case 'MSSql':
-      return(implode("+",$arreglo_cadena));
-    break;
-    case 'Oracle':
-	    return(implode("||",$arreglo_cadena));
-		break;
-    default:
-      if(@$arreglo_cadena[($i+1)]==""){
-        return($arreglo_cadena[0]);
-      }
-      $cant=count($arreglo_cadena);
-      for($i=0;$i<$cant;$i++){
-        if($i>0){
-          $cadena_final.=",";
-        }
-        $cadena_final.="CONCAT(".$arreglo_cadena[$i];
-        if(@$arreglo_cadena[($i+2)]==""){
-          $cadena_final.=",".$arreglo_cadena[($i+1)];
-          $i++;
-        }
-      }
-      for(;$i>1;$i--){
-        $cadena_final.=')';
-      }
-      return($cadena_final);
-    break;
-  }
+
+/* Se debe enviar la cadena completa si es una cadena de texto la que se debe concatenar se deben adicionar las comillas simples ' */
+function concatenar_cadena_sql($arreglo_cadena) {
+    global $conn;
+    return $conn->concatenar_cadena($arreglo_cadena);
 }
 
 function obtener_reemplazo($fun_codigo = 0, $tipo = 1) {

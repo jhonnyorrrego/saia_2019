@@ -11,18 +11,6 @@ use Doctrine\DBAL\Schema\Schema;
 class Version20181008215535 extends AbstractMigration {
 
     const VALORES = [
-        "oracle" => [
-            "busqueda" => [
-                "reporte_tareas_cierre_dia" => "(a.nombres || ' ' || a.apellidos) as nombre_funcionario",
-                "reporte_acceso_usuarios" => "F.nit AS documento, (nombres || '  ' || apellidos) AS nombre,F.email AS correo,F.login"
-            ],
-            "busqueda_componente" => [
-                "reporte_estado_tareas_funcionario" => "(a.nombres || ' ' || a.apellidos) as nombre_funcionario,a.idfuncionario, c.macro_proceso, b.listado_tareas_fk"
-            ],
-            "busqueda_condicion" => [
-                "funcionario" => "(',' || f.perfil || ',') like ('%,' || p.idperfil || ',%') {*where_funcionario*}"
-            ]
-        ],
         "postgres" => [
             "busqueda" => [
                 "reporte_tareas_cierre_dia" => "(a.nombres || ' ' || a.apellidos) as nombre_funcionario",
@@ -34,8 +22,7 @@ class Version20181008215535 extends AbstractMigration {
             "busqueda_condicion" => [
                 "funcionario" => "(',' || f.perfil || ',') like ('%,' || p.idperfil || ',%') {*where_funcionario*}"
             ]
-        ]
-    ];
+        ]];
 
     public function getDescription() {
         return 'Ajustes funcionamiento varios motores';

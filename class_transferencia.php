@@ -201,6 +201,10 @@ function radicar_documento_prueba($tipo_contador, $arreglo, $archivos = NULL, $i
 	phpmkr_query($sql, $conn) or die($sql . "    <br> -" . phpmkr_error());
 	$doc = phpmkr_insert_id();
 
+	if(empty($doc)) {
+	    die("No hay ID Documento");
+	}
+
 	if ($doc && $arreglo["estado"] == "'APROBADO'") {
 		$nombre_contador = busca_filtro_tabla("nombre", "contador", "idcontador=" . $arreglo["tipo_radicado"], "", $conn);
 		contador($doc, $nombre_contador[0]["nombre"]);
@@ -362,7 +366,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 	$doc = busca_filtro_tabla("B.idformato", "documento A,formato B", "A.plantilla=B.nombre AND iddocumento=" . $idarchivo, "", $conn);
 	$idformato = @$doc[0]["idformato"];
 	llama_funcion_accion($idarchivo, $idformato, "transferir", "ANTERIOR");
-	
+
 	//Cuando ingresan demasiado texto en las notas
 	$texto_notas="";
 	if(in_array("notas", array_keys($adicionales))){
@@ -372,7 +376,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 			unset($adicionales["notas"]);
 		}
 	}
-	
+
 	if ($adicionales != Null && $adicionales != "" && is_array($adicionales)) {
 		$otras_llaves = "," . implode(",", array_keys($adicionales));
 		$otros_valores = "," . implode(",", array_values($adicionales));
@@ -383,7 +387,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 		$otras_llaves = "";
 		$otros_valores = "";
 	}
-	
+
 	if ($destino != "" && $origen != "") {
 		$values_out = "$idarchivo,'" . $datos["nombre"] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",";
 		if ($datos["tipo_destino"] == "1" || $datos["tipo_destino"] == "5") {
@@ -407,11 +411,11 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 					phpmkr_query($sql, $conn);
 					$idbuzon_s=phpmkr_insert_id();
 					$idtransferencia[] =$idbuzon_s;
-					
+
 					if($texto_notas!=""){
 				  	guardar_lob('notas','buzon_salida',"idtransferencia=".$idbuzon_s,$texto_notas,'texto',$conn,0);
-					}	
-					
+					}
+
 				} else if ($datos["nombre"] == "POR_APROBAR") {
 					if (isset($_REQUEST["dependencia"]) && $_REQUEST["dependencia"] != "" && $datos["ruta_creador_documento"] == 1) {
 						$sql = "INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio) VALUES(" . $_REQUEST["dependencia"] . ",'ACTIVO'," . $user . ",NULL,'POR_APROBAR'," . $idarchivo . ",5,1,1)";
@@ -428,7 +432,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 				if($texto_notas!=""){
 					$idbuzon_e=phpmkr_insert_id();
 			  	guardar_lob('notas','buzon_entrada',"idtransferencia=".$idbuzon_e,$texto_notas,'texto',$conn,0);
-				}	
+				}
 				procesar_estados($origen, $user, $datos["nombre"], $idarchivo);
 			}
 		} else {
@@ -438,7 +442,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 			if($texto_notas!=""){
 				$idbuzon_e=phpmkr_insert_id();
 		  	guardar_lob('notas','buzon_entrada',"idtransferencia=".$idbuzon_e,$texto_notas,'texto',$conn,0);
-			}	
+			}
 		}
 	}
 
@@ -979,7 +983,7 @@ function radicar_plantilla() {
 		$valores["municipio_idmunicipio"] = $_POST["municipio_idmunicipio"];
 	} else {
 		$mun = busca_filtro_tabla("valor", "configuracion", "nombre='ciudad'", "", $conn);
-		if ($mun["numcampos"]) {
+		if ($mun["numcampos"] && !empty($mun[0][0])) {
 			$valores["municipio_idmunicipio"] = $mun[0][0];
 		} else {
 			$valores["municipio_idmunicipio"] = 633;

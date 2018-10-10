@@ -645,7 +645,7 @@ else
 		return;
 	}
 
-	protected function verificar_existencia($tabla) {
+	public function verificar_existencia($tabla) {
 		$sql = "SELECT COUNT(table_name) FROM information_schema.tables WHERE table_name = '$tabla'";
 		$rs = $this->Ejecutar_sql($sql);
 		$fila = $this->sacar_fila($rs);
@@ -654,4 +654,9 @@ else
 		}
 		return false;
 	}
+
+    public function concatenar_cadena($arreglo_cadena) {
+        return (implode("+", $arreglo_cadena));
+    }
+
 }

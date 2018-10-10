@@ -63,9 +63,9 @@ class SqlOracle extends SQL2 {
 		}
 
 		$this->consulta = $sql;
-		$rs = @OCIParse($this->Conn->conn, $sql);
+		$rs = oci_parse($this->Conn->conn, $sql);
 		if ($rs) {
-			if (@OCIExecute($rs, OCI_COMMIT_ON_SUCCESS)) {
+			if (oci_execute($rs, OCI_COMMIT_ON_SUCCESS)) {
 				$this->res = $rs;
 
 				if (strpos(strtolower($sql), "insert") !== false) {
@@ -75,7 +75,15 @@ class SqlOracle extends SQL2 {
 				} else {
 					$this->ultimo_insert = 0;
 				}
+			} else {
+			    $e = oci_error($this->Conn->conn);
+			    trigger_error($e['message'] . " $sql", E_USER_ERROR);
+			    return false;
 			}
+		} else {
+		    $e = oci_error($this->Conn->conn);
+		    trigger_error($e['message'] . " $sql", E_USER_ERROR);
+		    return false;
 		}
 		if (strpos(strtolower($sql), 'select') !== false) {
 			$rs2 = @OCIParse($this->Conn->conn, "select count(*) as contarfilas from(" . $sql . ")");
@@ -252,7 +260,10 @@ class SqlOracle extends SQL2 {
 		$this->consulta = trim($sql);
 		$fin = strpos($this->consulta, " ");
 		$accion = strtoupper(substr($this->consulta, 0, $fin));
-
+		if(empty($sql)) {
+		    die("No hay consulta para calcular del ID");
+		}
+		print_r($sql);
 		switch ($accion) {
 			case "SELECT" :
 				$identificador = 0;
@@ -267,23 +278,25 @@ class SqlOracle extends SQL2 {
 				$tabla = trim($tabla);
 
 				$parent = strpos($tabla, "(");
-				if ($parent)
+				if ($parent) {
 					$tabla = substr($tabla, 0, $parent);
-
+				}
 				$tabla = trim($tabla);
 				$posicion = strpos($tabla, ".");
 				if ($posicion) {
 					$long = strlen($tabla);
 					$tabla = substr($tabla, ($posicion + 1), $long);
 				}
-				if (strlen($tabla) > 26)
+				if (strlen($tabla) > 26) {
 					$aux = substr($tabla, 0, 26);
-				else
+				} else {
 					$aux = $tabla;
+				}
 				$sql_id = "SELECT " . $aux . "_SEQ.currval FROM DUAL";
+				echo $sql_id;
 
 				$rs_temp = @OCIParse($this->Conn->conn, $sql_id);
-				if (@OCIExecute($rs_temp)) {
+				if (@oci_execute($rs_temp)) {
 					@OCIFetchInto($rs_temp, $arreglo, OCI_NUM);
 					$identificador = $arreglo[0];
 				}
@@ -842,13 +855,18 @@ class SqlOracle extends SQL2 {
 		return;
 	}
 
-	protected function verificar_existencia($tabla) {
-		$sql = "select tname from tab where tname = '$tabla' as existe";
+	public function verificar_existencia($tabla) {
+		$sql = "select tname as existe from tab where tname = '$tabla'";
 		$rs = $this->Ejecutar_sql($sql);
 		$fila = $this->sacar_fila($rs);
 		if ($fila) {
-			return ($fila["existe"] == 'true');
+			return (!empty($fila["existe"]));
 		}
 		return false;
 	}
+
+    public function concatenar_cadena($arreglo_cadena) {
+        return (implode("||", $arreglo_cadena));
+    }
+
 }

@@ -814,8 +814,31 @@ class SqlMysql extends SQL2 {
 		return;
 	}
 
-	protected function verificar_existencia($table) {
+	public function verificar_existencia($table) {
 		$res = $this->Ejecutar_sql("SHOW TABLES LIKE '$table'");
 		return mysqli_num_rows($res) > 0;
 	}
+
+    public function concatenar_cadena($arreglo_cadena) {
+        $cadena_final = '';
+        if (@$arreglo_cadena[($i + 1)] == "") {
+            return ($arreglo_cadena[0]);
+        }
+        $cant = count($arreglo_cadena);
+        for ($i = 0; $i < $cant; $i++) {
+            if ($i > 0) {
+                $cadena_final .= ",";
+            }
+            $cadena_final .= "CONCAT(" . $arreglo_cadena[$i];
+            if (@$arreglo_cadena[($i + 2)] == "") {
+                $cadena_final .= "," . $arreglo_cadena[($i + 1)];
+                $i++;
+            }
+        }
+        for (; $i > 1; $i--) {
+            $cadena_final .= ')';
+        }
+        return ($cadena_final);
+    }
+
 }
