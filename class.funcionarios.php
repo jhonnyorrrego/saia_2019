@@ -43,12 +43,13 @@ function busca_datos_administrativos_funcionario($funcionario, $filtrar = array(
     'roles' => $roles];
     // series asignadas funcionario
     //$serie_func = busca_filtro_tabla("A.idpermiso_serie as identidad_serie, B.*", "permiso_serie A, serie B,entidad C", " A.estado=1 AND B.estado=1 AND C.nombre like 'funcionario' AND A.llave_entidad=$funcionario AND A.entidad_identidad=C.identidad AND A.serie_idserie=B.idserie ".$permisos, "B.nombre", $conn);
-    $serie_func = busca_filtro_tabla("A.fk_entidad_serie as identidad_serie, B.serie_idserie as idserie", "permiso_serie A,entidad_serie B,entidad C", " A.estado=1 AND B.estado=1 AND C.nombre like 'funcionario' AND A.llave_entidad=$funcionario AND A.entidad_identidad=C.identidad AND A.fk_entidad_serie=B.identidad_serie ", "", $conn);
+    $serie_func = busca_filtro_tabla("A.fk_entidad_serie as identidad_serie, B.serie_idserie as idserie", "permiso_serie A,entidad_serie B,entidad C", " A.estado=1 AND B.estado=1 AND C.nombre like 'funcionario' AND A.llave_entidad=$funcionario AND A.entidad_identidad=C.identidad AND A.fk_entidad_serie=B.identidad_serie AND A.permiso like '%a,v%'", "", $conn);
+    
 	
     // series asignadas al cargo
     if (@$cargos) {
         //$serie_cargo = busca_filtro_tabla("A.idpermiso_serie as identidad_serie, B.*", "permiso_serie A, serie B,entidad C", "A.estado=1 AND B.estado=1 AND C.nombre like 'cargo' AND A.llave_entidad IN(" . implode(",", $cargos) . ") AND A.entidad_identidad=C.identidad AND A.serie_idserie=B.idserie ".$permisos, "B.nombre", $conn);
-        $serie_cargo = busca_filtro_tabla("A.fk_entidad_serie as identidad_serie, B.serie_idserie as idserie", "permiso_serie A,entidad_serie B,entidad C", " A.estado=1 AND B.estado=1 AND C.nombre like 'cargo' AND A.llave_entidad IN(" . implode(",", $cargos) . ") AND A.entidad_identidad=C.identidad AND A.fk_entidad_serie=B.identidad_serie ", "", $conn);
+        $serie_cargo = busca_filtro_tabla("A.fk_entidad_serie as identidad_serie, B.serie_idserie as idserie", "permiso_serie A,entidad_serie B,entidad C", " A.estado=1 AND B.estado=1 AND C.nombre like 'cargo' AND A.llave_entidad IN(" . implode(",", $cargos) . ") AND A.entidad_identidad=C.identidad AND A.fk_entidad_serie=B.identidad_serie AND A.permiso like '%a,v%'", "", $conn);
     } else {
         $serie_cargo["numcampos"] = 0;
     }
@@ -56,7 +57,7 @@ function busca_datos_administrativos_funcionario($funcionario, $filtrar = array(
     // series asignadas al la dependencia
     if (@$dependencias) {
         //$serie_dependencia = busca_filtro_tabla("A.idpermiso_serie as identidad_serie, B.*", "permiso_serie A, serie B,entidad C", "A.estado=1 AND B.estado=1 AND C.nombre like 'dependencia' AND A.llave_entidad IN(" . implode(",", $dependencias) . ") AND A.entidad_identidad=C.identidad AND A.serie_idserie=B.idserie ".$permisos, "B.nombre", $conn);
-        $serie_dependencia = busca_filtro_tabla("A.fk_entidad_serie as identidad_serie, B.serie_idserie as idserie", "permiso_serie A,entidad_serie B,entidad C", " A.estado=1 AND B.estado=1 AND C.nombre like 'dependencia' AND A.llave_entidad IN(" . implode(",", $dependencias) . ") AND A.entidad_identidad=C.identidad AND A.fk_entidad_serie=B.identidad_serie ", "", $conn);
+        $serie_dependencia = busca_filtro_tabla("A.fk_entidad_serie as identidad_serie, B.serie_idserie as idserie", "permiso_serie A,entidad_serie B,entidad C", " A.estado=1 AND B.estado=1 AND C.nombre like 'dependencia' AND A.llave_entidad IN(" . implode(",", $dependencias) . ") AND A.entidad_identidad=C.identidad AND A.fk_entidad_serie=B.identidad_serie AND A.permiso like '%a,v%'", "", $conn);
     } else {
         $serie_dependencia["numcampos"] = 0;
     }
@@ -64,7 +65,7 @@ function busca_datos_administrativos_funcionario($funcionario, $filtrar = array(
      // series asignadas al rol
     if (@$roles) {
         //$serie_roles = busca_filtro_tabla("A.idpermiso_serie as identidad_serie, B.*", "permiso_serie A, serie B,entidad C", "A.estado=1 AND B.estado=1 AND C.nombre like 'dependencia_cargo' AND A.llave_entidad IN(" . implode(",", $roles) . ") AND A.entidad_identidad=C.identidad AND A.serie_idserie=B.idserie ".$permisos, "B.nombre", $conn);
-        $serie_roles = busca_filtro_tabla("A.fk_entidad_serie as identidad_serie, B.serie_idserie as idserie", "permiso_serie A,entidad_serie B,entidad C", " A.estado=1 AND B.estado=1 AND C.nombre like 'dependencia_cargo' AND A.llave_entidad IN(" . implode(",", $roles) . ") AND A.entidad_identidad=C.identidad AND A.fk_entidad_serie=B.identidad_serie ", "", $conn);
+        $serie_roles = busca_filtro_tabla("A.fk_entidad_serie as identidad_serie, B.serie_idserie as idserie", "permiso_serie A,entidad_serie B,entidad C", " A.estado=1 AND B.estado=1 AND C.nombre like 'dependencia_cargo' AND A.llave_entidad IN(" . implode(",", $roles) . ") AND A.entidad_identidad=C.identidad AND A.fk_entidad_serie=B.identidad_serie AND A.permiso like '%a,v%'", "", $conn);
     } else {
         $serie_roles["numcampos"] = 0;
     }
