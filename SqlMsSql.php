@@ -49,6 +49,11 @@ else
 		if ($sql && $sql != "") {
 			// mssql_query("USE ".$this->Conn->Db,$this->Conn->conn);
 			$this->res = mssql_query($sql, $this->Conn->conn);
+			if (!$this->res) {
+			    // La consulta ha fallado, muestra un mensaje de error
+			    // utilizando mssql_get_last_message()
+			    die('MSSQL error: ' . mssql_get_last_message()." ".$sql);
+			}// or die($sql);
 			// echo $sql.'<br />';
 			// print_r(mssql_get_last_message());
 			if ($this->res) {
@@ -77,9 +82,9 @@ else
 		if ($arreglo = @mssql_fetch_array($this->res, MSSQL_BOTH)) {
 			$this->filas++;
 			return (array_map("trim", $arreglo));
-		} else
+		} else {
 			return (FALSE);
-		break;
+		}
 	}
 
 	function sacar_fila_vector($rs = Null) {
@@ -89,7 +94,6 @@ else
 			return ($arreglo);
 		} else
 			return (FALSE);
-		break;
 	}
 
 	function Insertar($campos, $tabla, $valores) {
@@ -487,7 +491,7 @@ else
 				}
 			}
 			if (MOTOR == "SqlServer") {
-				sqlsrv_query($this->Conn->conn, "USE " . $$this->Conn->Db);
+				sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
 				sqlsrv_query($this->Conn->conn, $sql) or die("consulta fallida ---- $sql " . implode("<br />", sqlsrv_errors()));
 			} else {
 				mssql_query($sql, $this->Conn->conn) or die("consulta fallida ---- $sql " . implode("<br />", mssql_get_last_message()));
@@ -497,7 +501,7 @@ else
 		return ($resultado);
 	}
 
-	public function campo_formato_tipo_dato($tipo_dato, $longitud, $predeterminado, $banderas=null) {
+	public function campo_formato_tipo_dato($tipo_dato, $longitud, $predeterminado, $banderas = null) {
 		switch (strtoupper(@$tipo_dato)) {
 			case "NUMBER" :
 				$campo .= " decimal ";
@@ -546,8 +550,8 @@ else
 			case "TEXT" :
 				if ($longitud == "")
 					$longitud = 4000;
-					$campo .= " text";
-					break;
+				$campo .= " text";
+				break;
 			case "DATE" :
 				$campo .= " DATETIME ";
 				$campo .= " DEFAULT  getdate()";
