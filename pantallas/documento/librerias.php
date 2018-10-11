@@ -358,11 +358,14 @@ function contar_cantidad($doc, $funcionario, $tipo) {
 }
 
 function serie_documento($idserie) {
+    if($idserie == 'serie') {
+        return ("Sin Serie Asignada");
+    }
 	$serie = busca_filtro_tabla("nombre", "serie", "idserie=" . $idserie, "", $conn);
 	if ($serie["numcampos"]) {
 		return (ucwords(strtolower($serie[0]["nombre"])));
-	} else
-		return ("Sin Serie Asignada");
+	}
+	return ("Sin Serie Asignada");
 }
 
 function fecha_documento($iddoc) {
@@ -718,9 +721,9 @@ function carga_soporte_ingresados($iddocumento) {
 	if (isset($_REQUEST['variable_busqueda'])) {
 		$texto = '<li><a href="#" id="cargar_soporte">Cargar soporte</a></li>';
 		$texto .= '<script>
-		  $("#cargar_soporte").click(function(){	    	
+		  $("#cargar_soporte").click(function(){
 		    var docus=$("#seleccionados").val();
-			  if(docus!=""){			  	
+			  if(docus!=""){
 						top.hs.htmlExpand(this, { objectType: "iframe",width: 400, height: 300, src:"' . RUTA_PDF_LOCAL . RUTA_PDF . FORMATOS_CLIENTE . 'despacho_ingresados/anexos_despacho.php?docs="+docus,outlineType: "rounded-white",wrapperClassName:"highslide-wrapper drag-header"});
 			  }else{
 			  	alert("Seleccione por lo menos un documento");

@@ -346,11 +346,19 @@ function mostrar_imagenes_escaneadas($idformato, $iddoc) {
 		$opt = 1;
 	}
 
-	$doc_anterior = busca_filtro_tabla("descripcion,numero", "documento", "iddocumento=" . $doc, "", $conn);
+	if(!empty($doc)) {
+	    $doc_anterior = busca_filtro_tabla("descripcion,numero", "documento", "iddocumento=" . $doc, "", $conn);
+	} else {
+	    $doc_anterior = array("numcampos" => 0);
+	}
 	if ($doc_anterior["numcampos"] && $opt == 0) {
 		$html .= "<strong>Se est&aacute; dando respuesta al documento: </strong>&nbsp;&nbsp;" . $doc_anterior[0]["numero"] . " " . $doc_anterior[0]["descripcion"] . "<br /><br />";
 	}
-	$imagenes = busca_filtro_tabla("consecutivo,imagen,ruta,pagina", "pagina", "id_documento=" . $doc, "", $conn);
+	if(!empty($doc)) {
+	    $imagenes = busca_filtro_tabla("consecutivo,imagen,ruta,pagina", "pagina", "id_documento=" . $doc, "", $conn);
+	} else {
+	    $imagenes = array("numcampos" => 0);
+	}
 	if ($imagenes["numcampos"]) {
 		$html .= '<div id="mainContainer"><div id="content">';
 		for ($i = 0; $i < $imagenes["numcampos"]; $i++) {
@@ -550,10 +558,10 @@ function parsear_arbol_expediente_serie_carta(){
 
 function vincular_expediente_serie_carta($idformato,$iddoc){ //POSTERIOR AL APROBAR
     global $conn,$ruta_db_superior;
-    
+
     $datos=busca_filtro_tabla("expediente_serie,documento_iddocumento","ft_carta","documento_iddocumento=".$iddoc,"",$conn);
     //print_r($datos);die();
-    
+
     $vinculado=busca_filtro_tabla("","expediente_doc","documento_iddocumento=".$datos[0]['documento_iddocumento']." AND expediente_idexpediente=".$datos[0]['expediente_serie'],"",$conn);
     if(!$vinculado['numcampos']){
         $sql="INSERT INTO expediente_doc (expediente_idexpediente,documento_iddocumento,fecha) VALUES (".$datos[0]['expediente_serie'].",".$datos[0]['documento_iddocumento'].",".fecha_db_almacenar(date("Y-m-d H:i:s"),'Y-m-d H:i:s').")";
@@ -602,9 +610,9 @@ function formato_radicado_enviada($idformato, $iddoc, $retorno = 0) {
 
 function vincular_distribucion_carta($idformato,$iddoc){  //POSTERIOR AL APROBAR
 	global $conn,$ruta_db_superior;
-	
+
 	$datos=busca_filtro_tabla("tipo_mensajeria,requiere_recogida","ft_carta","documento_iddocumento=".$iddoc,"",$conn);
-	
+
 	$estado_recogida=0;
 	$estado_distribucion=1;
 	if(!$datos[0]['requiere_recogida']){
@@ -614,10 +622,10 @@ function vincular_distribucion_carta($idformato,$iddoc){  //POSTERIOR AL APROBAR
 	if($datos[0]['tipo_mensajeria']==3){
 		$estado_distribucion=3;
 	}
-	
+
 	include_once($ruta_db_superior."distribucion/funciones_distribucion.php");
-	
-	pre_ingresar_distribucion($iddoc,'dependencia',1,'destinos',2,$estado_distribucion,$estado_recogida); //INT -EXT 
+
+	pre_ingresar_distribucion($iddoc,'dependencia',1,'destinos',2,$estado_distribucion,$estado_recogida); //INT -EXT
 }
 
 ?>

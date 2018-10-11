@@ -69,11 +69,11 @@ class SqlOracle extends SQL2 {
 				$this->res = $rs;
 
 				if (strpos(strtolower($sql), "insert") !== false) {
-					$this->ultimo_insert = $this->Ultimo_Insert();
+					$this->ultimoInsert = $this->Ultimo_Insert();
 				}
 				if (strpos(strtolower($sql), "alter") !== false) {
 				} else {
-					$this->ultimo_insert = 0;
+					$this->ultimoInsert = 0;
 				}
 			} else {
 			    $e = oci_error($this->Conn->conn);
@@ -86,9 +86,9 @@ class SqlOracle extends SQL2 {
 		    return false;
 		}
 		if (strpos(strtolower($sql), 'select') !== false) {
-			$rs2 = @OCIParse($this->Conn->conn, "select count(*) as contarfilas from(" . $sql . ")");
+			$rs2 = @oci_parse($this->Conn->conn, "select count(*) as contarfilas from(" . $sql . ")");
 
-			if (!OCIExecute($rs2, OCI_COMMIT_ON_SUCCESS)) {
+			if (!oci_execute($rs2, OCI_COMMIT_ON_SUCCESS)) {
 				// print_r($sql);
 				// die();
 			}
@@ -263,7 +263,6 @@ class SqlOracle extends SQL2 {
 		if(empty($sql)) {
 		    die("No hay consulta para calcular del ID");
 		}
-		print_r($sql);
 		switch ($accion) {
 			case "SELECT" :
 				$identificador = 0;
@@ -293,16 +292,20 @@ class SqlOracle extends SQL2 {
 					$aux = $tabla;
 				}
 				$sql_id = "SELECT " . $aux . "_SEQ.currval FROM DUAL";
-				echo $sql_id;
 
-				$rs_temp = @OCIParse($this->Conn->conn, $sql_id);
-				if (@oci_execute($rs_temp)) {
-					@OCIFetchInto($rs_temp, $arreglo, OCI_NUM);
+				$rs_temp = oci_parse($this->Conn->conn, $sql_id);
+				if (oci_execute($rs_temp)) {
+				    $arreglo = oci_fetch_array($rs_temp, OCI_NUM);
 					$identificador = $arreglo[0];
+				} else {
+				    $e = oci_error($this->Conn->conn);
+				    trigger_error($e['message'] . " $sql_id", E_USER_ERROR);
+				    die("NO HAY SECUENCIA");
+				    return false;
 				}
 
-				@OCIFreeStatement($rs_temp);
-				@ocicancel($rs_temp);
+				oci_free_statement($rs_temp);
+				oci_cancel($rs_temp);
 				break;
 		}
 		return ($identificador);
@@ -320,7 +323,7 @@ class SqlOracle extends SQL2 {
 		$llave = 0;
 		$string_detalle = "";
 		$func = $_SESSION["usuario_actual"];
-		$this->ultimo_insert = 0;
+		$this->ultimoInsert = 0;
 		if (isset($_SESSION)) {
 			$fecha = $this->fecha_db_almacenar(date("Y-m-d h:i:s"), "Y-m-d h:i:s");
 			if ($sqleve != "") {
@@ -504,9 +507,9 @@ class SqlOracle extends SQL2 {
 	function guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $log = 1) {
 		$resultado = TRUE;
 		$sql = "SELECT " . $campo . " FROM " . $tabla . " WHERE " . $condicion . " FOR UPDATE";
-		$stmt = OCIParse($this->Conn->conn, $sql) or print_r(OCIError($stmt));
+		$stmt = oci_parse($this->Conn->conn, $sql) or print_r(OCIError($stmt));
 		// Execute the statement using OCI_DEFAULT (begin a transaction)
-		OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError($stmt));
+		oci_execute($stmt, OCI_DEFAULT) or print_r(OCIError($stmt));
 		// Fetch the SELECTed row
 		OCIFetchInto($stmt, $row, OCI_ASSOC);
 
@@ -518,10 +521,12 @@ class SqlOracle extends SQL2 {
 				$clob_blob = 'blob';
 			}
 			$up_clob = "UPDATE " . $tabla . " SET " . $campo . "=empty_" . $clob_blob . "() WHERE " . $condicion;
-			$this->Ejecutar_Sql($up_clob);
-			$stmt = OCIParse($this->Conn->conn, $sql) or print_r(OCIError($stmt));
+		    $stmt_ue = oci_parse($this->Conn->conn, $up_clob) or print_r(oci_error($stmt));
+			    // Execute the statement using OCI_DEFAULT (begin a transaction)
+		    oci_execute($stmt_ue, OCI_DEFAULT) or print_r(oci_error($stmt_ue));
+			$stmt = oci_parse($this->Conn->conn, $sql) or print_r(oci_error($stmt));
 			// Execute the statement using OCI_DEFAULT (begin a transaction)
-			OCIExecute($stmt, OCI_DEFAULT) or print_r(OCIError($stmt));
+			oci_execute($stmt, OCI_DEFAULT) or print_r(oci_error($stmt));
 			// Fetch the SELECTed row
 			OCIFetchInto($stmt, $row, OCI_ASSOC);
 		}
@@ -702,28 +707,34 @@ class SqlOracle extends SQL2 {
 		$nombre_tabla = strtoupper($nombre_tabla);
 		$nombre_campo = strtoupper($nombre_campo);
 		$banderas = explode(",", $todas_banderas);
-		if (strlen($nombre_tabla) > 26)
+		if (strlen($nombre_tabla) > 26) {
 			$aux = substr($nombre_tabla, 0, 26);
-		else
+		} else {
 			$aux = $nombre_tabla;
+		}
 		switch (strtolower($bandera)) {
 			case "pk" :
-				$sql2 = "SELECT LAST_NUMBER AS ULTIMO FROM all_sequences WHERE sequence_owner='" . DB . "' AND sequence_name='" . $aux . "_SEQ'";
+				$sql2 = "SELECT LAST_NUMBER AS ULTIMO FROM all_sequences WHERE sequence_owner=upper('" . USER . "') AND sequence_name='" . $aux . "_SEQ'";
 				$this->filas = 0;
 				$siguiente = $this->Ejecutar_Sql($sql2);
 
 				if ($this->filas) {
-					$inicio = $siguiente[0]["ultimo"];
+				    $fila_seq = $this->sacar_fila($siguiente);
+				    if ($fila_seq) {
+				        $inicio = $fila_seq["ultimo"];
+				    }
+
 					$dato = "DROP SEQUENCE " . $aux . "_SEQ";
 					guardar_traza($dato, $nombre_tabla);
 					$this->Ejecutar_sql($dato);
-				} else
+				} else {
 					$inicio = 1;
-				$dato = "CREATE INDEX PK_" . $nombre_campo . " ON " . $nombre_tabla . "(" . $nombre_campo . ") LOGGING TABLESPACE " . TABLESPACE . " PCTFREE 10 INITRANS 2 MAXTRANS 255 STORAGE (INITIAL 128K MINEXTENTS 1 MAXEXTENTS 2147483645 PCTINCREASE 0 BUFFER_POOL DEFAULT) NOPARALLEL";
-				guardar_traza($dato, $nombre_tabla);
-				$this->Ejecutar_sql($dato);
+				}
+				//$dato = "CREATE INDEX PK_" . $nombre_campo . " ON " . $nombre_tabla . "(" . $nombre_campo . ") LOGGING TABLESPACE " . TABLESPACE . " PCTFREE 10 INITRANS 2 MAXTRANS 255 STORAGE (INITIAL 128K MINEXTENTS 1 MAXEXTENTS 2147483645 PCTINCREASE 0 BUFFER_POOL DEFAULT) NOPARALLEL";
+				//guardar_traza($dato, $nombre_tabla);
+				//$this->Ejecutar_sql($dato);
 				$this->filas = 0;
-				if ($this->verificar_existencia($nombre_tabla)) {
+				if ($this->verificar_existencia($nombre_tabla) && !$this->verificar_existencia_llave($nombre_tabla, $nombre_campo)) {
 					$dato = "ALTER TABLE " . $nombre_tabla . " ADD CONSTRAINT PK_" . $nombre_campo . "  PRIMARY KEY (" . $nombre_campo . ")";
 					guardar_traza($dato, $nombre_tabla);
 					$this->Ejecutar_sql($dato);
@@ -745,14 +756,26 @@ class SqlOracle extends SQL2 {
 				}
 				break;
 			case "i" :
-				$campo2 = $nombre_tabla . "_" . $nombre_campo;
-				if (strlen($campo2) > 15) {
-					$campo2 = str_replace("FT_", "", substr($campo2, 0, 15));
+			    $tabla_x = ltrim($nombre_tabla, "FT_");
+			    $campo2 = $tabla_x . "_" . $nombre_campo;
+				$longitud = 15;
+				if (strlen($campo2) > $longitud) {
+				    $campo2 = substr($campo2, 0, $longitud);
 				}
-				$dato = "CREATE INDEX I_" . $campo2 . " ON " . $nombre_tabla . " (" . $nombre_campo . ") LOGGING TABLESPACE " . TABLESPACE . " PCTFREE 10 INITRANS 2 MAXTRANS 255 STORAGE (INITIAL 128K MINEXTENTS 1 MAXEXTENTS 2147483645 PCTINCREASE 0 BUFFER_POOL DEFAULT) NOPARALLEL";
-				guardar_traza($dato, $nombre_tabla);
-				$this->Ejecutar_sql($dato);
 
+				$iname = "I_" . $campo2;
+
+				for(; $this->verificar_existencia_idx_nombre($nombre_tabla, $iname) && $longitud < 28; ) {
+				    $campo2 = $tabla_x . "_" . $nombre_campo;
+				    $campo2 = substr($campo2, 0, $longitud++);
+				    $iname = "I_" . $campo2;
+				}
+
+				if(!$this->verificar_existencia_idx_col($nombre_tabla, $nombre_campo)) {
+    				$dato = "CREATE INDEX $iname ON " . $nombre_tabla . " (" . $nombre_campo . ") LOGGING TABLESPACE " . TABLESPACE . " PCTFREE 10 INITRANS 2 MAXTRANS 255 STORAGE (INITIAL 128K MINEXTENTS 1 MAXEXTENTS 2147483645 PCTINCREASE 0 BUFFER_POOL DEFAULT) NOPARALLEL";
+    				guardar_traza($dato, $nombre_tabla);
+    				$this->Ejecutar_sql($dato);
+				}
 				break;
 		}
 	}
@@ -762,7 +785,7 @@ class SqlOracle extends SQL2 {
 		for($i = 0; $i < $campos["numcampos"]; $i++) {
 			$datos_campo = ejecuta_filtro_tabla("SELECT decode(nullable,'Y',0,'N',1) as nulo FROM user_tab_columns WHERE table_name='" . strtoupper($formato[0]["nombre_tabla"]) . "' and lower(column_name)='{$campos[$i]["nombre"]}' ORDER BY column_name ASC", $this);
 
-			if ($datos_campo[0]["nulo"] != $campos[$i]["obligatoriedad"]) {
+			if (!empty($datos_campo[0]["nulo"]) && $datos_campo[0]["nulo"] != $campos[$i]["obligatoriedad"]) {
 				if ($formato[0]["nombre_tabla"]) {
 					$sql = "alter table " . $formato[0]["nombre_tabla"] . " modify(" . $campos[$i]["nombre"];
 					if (!$campos[$i]["obligatoriedad"]) {
@@ -863,6 +886,39 @@ class SqlOracle extends SQL2 {
 			return (!empty($fila["existe"]));
 		}
 		return false;
+	}
+
+	private function verificar_existencia_idx_col($tabla, $campo) {
+	    $sql_existe_idx = "SELECT INDEX_NAME as existe FROM USER_IND_COLUMNS WHERE TABLE_NAME='$tabla' AND COLUMN_NAME='$campo'";
+
+	    $rs = $this->Ejecutar_sql($sql_existe_idx);
+	    $fila = $this->sacar_fila($rs);
+	    if ($fila) {
+	        return (!empty($fila["existe"]));
+	    }
+	    return false;
+	}
+
+	private function verificar_existencia_idx_nombre($tabla, $nombre_idx) {
+	    $sql_existe_idx = "SELECT INDEX_NAME as existe FROM USER_INDEXES WHERE TABLE_NAME='$tabla' AND INDEX_NAME='$nombre_idx'";
+
+	    $rs = $this->Ejecutar_sql($sql_existe_idx);
+	    $fila = $this->sacar_fila($rs);
+	    if ($fila) {
+	        return (!empty($fila["existe"]));
+	    }
+	    return false;
+	}
+
+	private function verificar_existencia_llave($tabla, $campo) {
+	    $sql_existe_idx = "select cc.CONSTRAINT_NAME as existe from USER_CONS_COLUMNS cc join USER_CONSTRAINTS c ON cc.TABLE_NAME = C.TABLE_NAME AND cc.OWNER = C.OWNER AND c.CONSTRAINT_NAME = cc.CONSTRAINT_NAME WHERE CONSTRAINT_TYPE='P' AND cc.TABLE_NAME='$tabla' AND cc.COLUMN_NAME='$campo'";
+
+	    $rs = $this->Ejecutar_sql($sql_existe_idx);
+	    $fila = $this->sacar_fila($rs);
+	    if ($fila) {
+	        return (!empty($fila["existe"]));
+	    }
+	    return false;
 	}
 
     public function concatenar_cadena($arreglo_cadena) {

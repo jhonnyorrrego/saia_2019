@@ -363,8 +363,11 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 		$origen = usuario_actual("funcionario_codigo");
 	}
 
-	$doc = busca_filtro_tabla("B.idformato", "documento A,formato B", "A.plantilla=B.nombre AND iddocumento=" . $idarchivo, "", $conn);
-	$idformato = @$doc[0]["idformato"];
+	$doc = busca_filtro_tabla("B.idformato", "documento A,formato B", "lower(A.plantilla)=B.nombre AND iddocumento=" . $idarchivo, "", $conn);
+	$idformato = $doc[0]["idformato"];
+	if(empty($idformato)) {
+	    print_r($doc); die();
+	}
 	llama_funcion_accion($idarchivo, $idformato, "transferir", "ANTERIOR");
 
 	//Cuando ingresan demasiado texto en las notas
@@ -1444,8 +1447,11 @@ function guardar_documento($iddoc, $tipo = 0) {
 				crear_pretexto($_REQUEST["asplantilla"], $_REQUEST["contenido"]);
 			}
 			$nomformato = busca_filtro_tabla("nombre", "formato", "idformato=" . $idformato, "", $conn);
-			$sql = "delete from autoguardado where usuario='" . $_SESSION["usuario_actual"] . "' and formato='" . $nomformato[0]["nombre"] . "'";
-			phpmkr_query($sql, $conn);
+			$ag = busca_filtro_tabla("idautoguardado", "autoguardado", "usuario='" . $_SESSION["usuario_actual"] . "' and formato='" . $nomformato[0]["nombre"] . "'", "", $conn);
+			if($ag["numcampos"]) {
+    			$sql = "delete from autoguardado where idautoguardado=" . $ag[0]["idautoguardado"];
+    			phpmkr_query($sql);
+			}
 		} else {
 			if (isset($iddoc)) {
 				$del = "DELETE FROM documento WHERE iddocumento=" . $iddoc;

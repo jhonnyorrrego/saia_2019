@@ -65,7 +65,7 @@ class SqlMysql extends SQL2 {
 		$strsql = str_replace("= ", "=", $strsql);
 		$accion = strtoupper(substr($strsql, 0, strpos($strsql, ' ')));
 		if ($accion == "INSERT" || $accion == "UPDATE") {
-			$this->ultimo_insert = 0;
+			$this->ultimoInsert = 0;
 			$sql = htmlentities($sql, ENT_NOQUOTES, "UTF-8", false);
 			$sql = htmlspecialchars_decode($sql, ENT_NOQUOTES);
 		}
@@ -76,12 +76,12 @@ class SqlMysql extends SQL2 {
 
 			if ($this->res) {
 				if (strpos(strtolower($sql), "insert") !== false)
-					$this->ultimo_insert = $this->Ultimo_Insert();
+					$this->ultimoInsert = $this->Ultimo_Insert();
 				else if (strpos(strtolower($sql), "select") !== false) {
-					$this->ultimo_insert = 0;
+					$this->ultimoInsert = 0;
 					$this->filas = $this->res->num_rows;
 				} else {
-					$this->ultimo_insert = 0;
+					$this->ultimoInsert = 0;
 				}
 
 				$this->consulta = trim($sql);
@@ -412,8 +412,8 @@ class SqlMysql extends SQL2 {
 	 * <Post-condiciones>
 	 */
 	function Ultimo_Insert() {
-		if ($this->ultimo_insert) {
-			return $this->ultimo_insert;
+		if ($this->ultimoInsert) {
+			return $this->ultimoInsert;
 		}
 		return @mysqli_insert_id($this->Conn->conn);
 	}
@@ -430,7 +430,7 @@ class SqlMysql extends SQL2 {
 		$llave = 0;
 		$string_detalle = "";
 		$func = $_SESSION["usuario_actual"];
-		$this->ultimo_insert = 0;
+		$this->ultimoInsert = 0;
 		if (isset($_SESSION)) {
 			$fecha = $this->fecha_db_almacenar(date("Y-m-d h:i:s"), "Y-m-d h:i:s");
 			if ($sqleve != "") {

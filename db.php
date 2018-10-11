@@ -759,31 +759,32 @@ function phpmkr_free_result($rs){
 global $conn;
 $conn->liberar_resultado($rs);
 }
-/*
-<Clase>
-<Nombre>phpmkr_insert_id
-<Parametros>
-<Responsabilidades>retonar la llave primaria del ultimo registro insertado
-<Notas>
-<Excepciones>Error al buscar la ultima insercion. Si no existe la conexion con la base de datos
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-*/
-function phpmkr_insert_id(){
-global $conn;
-if($conn){
-		$evento = $conn->Ultimo_Insert();
-  $buscar = busca_filtro_tabla("*","evento","idevento=".$evento,"",$conn);
-		if ($buscar["numcampos"]) {
-    return $buscar[0]["registro_id"];
-		} else {
-    //alerta(" Error al recuperar id ".$evento);
-  }
-	} else {
-  alerta("Error al buscar la ultima insercion.".$rs->sql);
-  return FALSE;
-}
+
+    /*
+ * <Clase>
+ * <Nombre>phpmkr_insert_id
+ * <Parametros>
+ * <Responsabilidades>retonar la llave primaria del ultimo registro insertado
+ * <Notas>
+ * <Excepciones>Error al buscar la ultima insercion. Si no existe la conexion con la base de datos
+ * <Salida>
+ * <Pre-condiciones>
+ * <Post-condiciones>
+ */
+function phpmkr_insert_id() {
+    global $conn;
+    if ($conn) {
+        $evento = $conn->Ultimo_Insert();
+        $buscar = busca_filtro_tabla("*", "evento", "idevento=" . $evento, "", $conn);
+        if ($buscar["numcampos"]) {
+            return $buscar[0]["registro_id"];
+        } else {
+            alerta(" Error al recuperar id ".$evento);
+        }
+    } else {
+        alerta("Error al buscar la ultima insercion.".$rs->sql);
+        return FALSE;
+    }
 }
 /*
 <Clase>

@@ -20,7 +20,7 @@ abstract class SQL2 {
 	protected $tipos_campos = array();
 	protected $numcampos = NULL;
 	protected $numfilas = NULL;
-	public $ultimo_insert = NULL;
+	protected $ultimoInsert = NULL;
 	protected $filas = 0;
 
 	/*

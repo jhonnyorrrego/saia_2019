@@ -595,7 +595,10 @@ class GenerarFormato {
             } else {
                 $action = '../../class_transferencia.php';
             }
-            $texto .= '<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");? ><form name="formulario_formatos" id="formulario_formatos" method="post" action="' . $action . '" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4">';
+            $texto .= '<body bgcolor="#F5F5F5"><?php if(!empty($_REQUEST["idformato"])) {
+                llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");
+            }
+            ? ><form name="formulario_formatos" id="formulario_formatos" method="post" action="' . $action . '" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4">';
 
             if (!$formato[0]["item"]) {
                 $texto .= '<tr><td colspan="2" class="encabezado_list">' . codifica_encabezado(html_entity_decode(mayusculas($formato[0]["etiqueta"]))) . '</td></tr>';
@@ -1453,7 +1456,7 @@ class GenerarFormato {
 			<head>" . $includes . "
 				<script type='text/javascript'>
   $(document).ready(function() {
-			  		$('#formulario_formatos').validate({	
+			  		$('#formulario_formatos').validate({
 						submitHandler: function(form) {
 							<?php encriptar_sqli('formulario_formatos',0,'form_info','../../');?>
 							form.submit();

@@ -66,12 +66,12 @@ class SqlSqlServer extends SQL2 {
 			if ($this->res) {
 				$filas = sqlsrv_num_rows($this->res) or print_r(sqlsrv_errors());
 				if (strpos(strtolower($sql), "insert") !== false)
-					$this->ultimo_insert = $this->Ultimo_Insert();
+					$this->ultimoInsert = $this->Ultimo_Insert();
 				else if (strpos(strtolower($sql), "select") !== false) {
-					$this->ultimo_insert = 0;
+					$this->ultimoInsert = 0;
 					$this->filas = $filas;
 				} else {
-					$this->ultimo_insert = 0;
+					$this->ultimoInsert = 0;
 				}
 
 				$this->consulta = trim($sql);
@@ -419,7 +419,7 @@ class SqlSqlServer extends SQL2 {
 		$llave = 0;
 		$string_detalle = "";
 		$func = $_SESSION["usuario_actual"];
-		$this->ultimo_insert = 0;
+		$this->ultimoInsert = 0;
 		if (isset($_SESSION)) {
 			$fecha = fecha_db_almacenar(date("Y-m-d h:i:s"), "Y-m-d h:i:s");
 			if ($sqleve != "") {

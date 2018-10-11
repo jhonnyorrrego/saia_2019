@@ -53,7 +53,7 @@ if ($_SESSION["LOGIN" . LLAVE_SAIA]!="") {
 		$etiquetados = busca_filtro_tabla("c.nombre", "documento a, documento_etiqueta b, etiqueta c", "LOWER(a.estado) NOT IN ('eliminado') AND a.iddocumento=b.documento_iddocumento AND b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='" . $usuario . "' GROUP BY a.iddocumento,c.nombre", "", $conn);
 		$pendientes = busca_filtro_tabla("count(*) AS cant", "documento A,asignacion B,formato c ", "LOWER(A.estado)<>'eliminado' AND A.iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad=" . $usuario . " and lower(A.plantilla)=c.nombre ", "GROUP BY A.iddocumento", $conn);
 		$con_indicador = busca_filtro_tabla("a.iddocumento", "documento a, prioridad_documento b,formato c ", "b.documento_iddocumento=a.iddocumento AND b.prioridad in (1,2,3,4,5) AND lower(a.estado) not in('eliminado') AND lower(a.plantilla)=lower(c.nombre) AND b.funcionario_idfuncionario=" . $_SESSION["idfuncionario"], "", $conn);
-		
+
 		$borradores = busca_filtro_tabla("count(*) AS cant", "documento A, formato c ", "ejecutor=" . $usuario . " AND A.estado='ACTIVO' AND A.numero='0' and lower(A.plantilla)=c.nombre", "", $conn);
 
 		$componente_etiquetados = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='documentos_etiquetados'", "", $conn);
@@ -588,7 +588,7 @@ function mostrar_iconos($modulo_actual,$orden=NULL){
     $permisos=extrae_campo($permisos_perfil,"idmodulo","U");
     $finales=array_diff(array_merge((array)$permisos,(array)$adicionales),$suprimir);
     if(count($finales))
-      $tablas=busca_filtro_tabla("A.nombre,A.etiqueta,A.imagen,A.enlace,A.destino,cast(A.ayuda as text) as ayuda,A.parametros,A.enlace_pantalla,A.idmodulo","modulo A","A.idmodulo IN (".implode(",",$finales).")","A.orden ASC",$conn);
+      $tablas=busca_filtro_tabla("A.nombre,A.etiqueta,A.imagen,A.enlace,A.destino,A.ayuda,A.parametros,A.enlace_pantalla,A.idmodulo","modulo A","A.idmodulo IN (".implode(",",$finales).")","A.orden ASC",$conn);
     else
       $tablas["numcampos"]=0;
     if($tablas["numcampos"]){
