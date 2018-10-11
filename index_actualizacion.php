@@ -52,7 +52,8 @@ if ($_SESSION["LOGIN" . LLAVE_SAIA]!="") {
 	if ($per_pendientes) {
 		$etiquetados = busca_filtro_tabla("c.nombre", "documento a, documento_etiqueta b, etiqueta c", "LOWER(a.estado) NOT IN ('eliminado') AND a.iddocumento=b.documento_iddocumento AND b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='" . $usuario . "' GROUP BY a.iddocumento,c.nombre", "", $conn);
 		$pendientes = busca_filtro_tabla("count(*) AS cant", "documento A,asignacion B,formato c ", "LOWER(A.estado)<>'eliminado' AND A.iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad=" . $usuario . " and lower(A.plantilla)=c.nombre ", "GROUP BY A.iddocumento", $conn);
-		$con_indicador = busca_filtro_tabla("", "documento a, prioridad_documento b,formato c ", "b.documento_iddocumento=a.iddocumento AND b.prioridad in (1,2,3,4,5) AND lower(a.estado) not in('ELIMINADO') AND lower(a.plantilla)=c.nombre AND b.funcionario_idfuncionario=" . $_SESSION["idfuncionario"], "", $conn);
+		$con_indicador = busca_filtro_tabla("a.iddocumento", "documento a, prioridad_documento b,formato c ", "b.documento_iddocumento=a.iddocumento AND b.prioridad in (1,2,3,4,5) AND lower(a.estado) not in('eliminado') AND lower(a.plantilla)=lower(c.nombre) AND b.funcionario_idfuncionario=" . $_SESSION["idfuncionario"], "", $conn);
+		
 		$borradores = busca_filtro_tabla("count(*) AS cant", "documento A, formato c ", "ejecutor=" . $usuario . " AND A.estado='ACTIVO' AND A.numero='0' and lower(A.plantilla)=c.nombre", "", $conn);
 
 		$componente_etiquetados = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='documentos_etiquetados'", "", $conn);
@@ -64,7 +65,7 @@ if ($_SESSION["LOGIN" . LLAVE_SAIA]!="") {
 
 	$per_mis_tareas = $permiso -> acceso_modulo_perfil("mis_tareas");
 	if ($per_mis_tareas) {
-	$mis_roles=busca_filtro_tabla("","vfuncionario_dc","estado=1 and funcionario_codigo=".$_SESSION["usuario_actual"],"",$conn);
+	$mis_roles=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","estado=1 and funcionario_codigo=".$_SESSION["usuario_actual"],"",$conn);
     if($mis_roles["numcampos"]){
       $roles=extrae_campo($mis_roles,"iddependencia_cargo");
       $concat=array();
@@ -75,7 +76,7 @@ if ($_SESSION["LOGIN" . LLAVE_SAIA]!="") {
     }
 
 		$tareas=busca_filtro_tabla("count(*) AS cant","tareas A","((".implode(" or ",$concat).")) and estado_tarea<>2 and ruta_aprob<>-1 and ((ruta_aprob>=0 and estado_tarea in (3,4,5)) or(ruta_aprob>=0 and estado_tarea<>-1))","",$conn);
-		$componente_tareas = busca_filtro_tabla("", "busqueda_componente A", "A.nombre='mis_tareas_pendientes'", "", $conn);
+		$componente_tareas = busca_filtro_tabla("A.idbusqueda_componente", "busqueda_componente A", "A.nombre='mis_tareas_pendientes'", "", $conn);
 	}
 
 	$per_mis_tareas_av = $permiso -> acceso_modulo_perfil("mis_tareas_avanzadas");
@@ -587,7 +588,7 @@ function mostrar_iconos($modulo_actual,$orden=NULL){
     $permisos=extrae_campo($permisos_perfil,"idmodulo","U");
     $finales=array_diff(array_merge((array)$permisos,(array)$adicionales),$suprimir);
     if(count($finales))
-      $tablas=busca_filtro_tabla("A.nombre,A.etiqueta,A.imagen,A.enlace,A.destino,A.ayuda,A.parametros,A.enlace_pantalla,A.idmodulo","modulo A","A.idmodulo IN(".implode(",",$finales).")","A.orden ASC",$conn);
+      $tablas=busca_filtro_tabla("A.nombre,A.etiqueta,A.imagen,A.enlace,A.destino,cast(A.ayuda as text) as ayuda,A.parametros,A.enlace_pantalla,A.idmodulo","modulo A","A.idmodulo IN (".implode(",",$finales).")","A.orden ASC",$conn);
     else
       $tablas["numcampos"]=0;
     if($tablas["numcampos"]){

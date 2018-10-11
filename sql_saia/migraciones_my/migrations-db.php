@@ -5,7 +5,7 @@ $motores = array(
     "MySql" => "pdo_mysql",
     "Oracle" => "oci8",
     "SqlServer" => "pdo_sqlsrv",
-    "MSSql" => "pdo_sqlsrv",
+    "MSSql" => "sqlsrv",
     "Postgres" => "pdo_pgsql"
 );
 
