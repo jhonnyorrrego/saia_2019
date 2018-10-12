@@ -76,7 +76,8 @@ menu_ordenar($x_doc);
     if($serie["numcampos"])
       echo $serie[0]["nombre"];
     else
-      echo("<a href='clasificar.php?origen=view&iddocumento=".$x_doc."&cmd=resetall'>CLASIFICACI&Oacute;N DEL DOCUMENTO NO ASIGNADA O NO ENCONTRADA</a>");
+      //echo("<a href='clasificar.php?origen=view&iddocumento=".$x_doc."&cmd=resetall'>CLASIFICACI&Oacute;N DEL DOCUMENTO NO ASIGNADA O NO ENCONTRADA</a>");
+      echo("CLASIFICACI&Oacute;N DEL DOCUMENTO NO ASIGNADA O NO ENCONTRADA");
   }
   ?></span></td>
  </tr>

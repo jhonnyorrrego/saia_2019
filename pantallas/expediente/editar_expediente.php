@@ -35,6 +35,19 @@ $dato_serie=busca_filtro_tabla("","serie","idserie=".$datos[0]["serie_idserie"],
 if($dato_serie["numcampos"]){
 	$tipo_tvd = $dato_serie[0]["tvd"];
 }
+$buscar_entidad_serie=busca_filtro_tabla("llave_entidad, serie_idserie","entidad_serie","identidad_serie=".$datos[0]["fk_entidad_serie"],"",$conn);
+if($buscar_entidad_serie["numcampos"]){
+	$iddependencia = $buscar_entidad_serie[0]["llave_entidad"];
+	$idserie = $buscar_entidad_serie[0]["serie_idserie"];
+	$buscar_dependencia=busca_filtro_tabla("codigo","dependencia","iddependencia=".$iddependencia,"",$conn);
+	if($buscar_dependencia["numcampos"]){
+		$codigo_dependencia = $buscar_dependencia[0]["codigo"];
+	}
+	$buscar_serie=busca_filtro_tabla("codigo","serie","idserie=".$idserie,"",$conn);
+	if($buscar_serie["numcampos"]){
+		$codigo_serie = $buscar_serie[0]["codigo"];
+	}
+}
 ?>
 <form name="formulario_expediente" id="formulario_expediente" method="post">
 <input type="hidden" name="idexpediente" id="idexpediente" value="<?php echo($datos[0]["idexpediente"]);?>">
@@ -137,7 +150,7 @@ if($dato_padre["numcampos"]){
   	<br />
     <span class="phpmaker">
     	<?php
-    	$key = $datos[0]["dependencia_iddependencia"].".".$datos[0]["serie_idserie"].".".$tipo_tvd;		
+    	$key = $datos[0]["serie_idserie"];		
 		$origen = array("url" => "arboles/arbol_dependencia_serie_funcionario.php", "ruta_db_superior" => $ruta_db_superior,
 		    "params" => array(		    	
 		        "checkbox" => 'radio',
@@ -168,9 +181,9 @@ if($dato_padre["numcampos"]){
 	    <?php  
 	        $vector_codigo_numero=explode('-',$datos[0]["codigo_numero"]);
 	    ?>
-	    <input name="codigo_numero_dependencia" id="codigo_numero_dependencia" value="<?php echo($vector_codigo_numero[0]); ?>"  style="width:12%;" readonly> - 
-	    <input name="codigo_numero_serie" id="codigo_numero_serie" value="<?php echo($vector_codigo_numero[1]); ?>" style="width:12%;" readonly> - 
-	    <input name="codigo_numero_consecutivo" id="codigo_numero_consecutivo" style="width:10%;" value="<?php echo($vector_codigo_numero[2]); ?>">
+	    <input name="codigo_numero_dependencia" id="codigo_numero_dependencia" value="<?php /*echo($vector_codigo_numero[0]);*/ echo $codigo_dependencia; ?>"  style="width:12%;" readonly> - 
+	    <input name="codigo_numero_serie" id="codigo_numero_serie" value="<?php /*echo($vector_codigo_numero[1]);*/ echo $codigo_serie; ?>" style="width:12%;" readonly> - 
+	    <input name="codigo_numero_consecutivo" id="codigo_numero_consecutivo" style="width:10%;" value="<?php /*echo($vector_codigo_numero[2]);*/ echo $datos[0]["codigo_numero"]; ?>">
 	    <input name="codigo_numero" id="codigo_numero" type="hidden" value="<?php echo($datos[0]["codigo_numero"]); ?>">
 	  </div>
 	  
@@ -189,8 +202,11 @@ if($dato_padre["numcampos"]){
 	              if(codigo_numero_consecutivo==''){
 	                  codigo_numero_consecutivo=0;
 	              }	  
-	              var cadena_parseo=codigo_numero_dependencia+'-'+codigo_numero_serie+'-'+codigo_numero_consecutivo;
-	              $('#codigo_numero').val(cadena_parseo);
+	             console.log(codigo_numero_consecutivo);
+	             // var cadena_parseo=codigo_numero_dependencia+'-'+codigo_numero_serie+'-'+codigo_numero_consecutivo;
+	             //$('#codigo_numero').val(cadena_parseo);
+	              $('#codigo_numero').val(codigo_numero_consecutivo);
+	              $('#codigo_numero_consecutivo').val(codigo_numero_consecutivo);
 	          });
 	      });
 	  </script>	  
@@ -335,6 +351,8 @@ if($dato_padre["numcampos"]){
 <br />
 <input type="hidden" name="key_formulario_saia" value="<?php echo(generar_llave_md5_saia());?>">
 <input type="hidden"  name="ejecutar_expediente" value="update_expediente"/>
+<input type="hidden" name="dependencia_iddependencia" id="dependencia_iddependencia" value="<?php echo $datos[0]["dependencia_iddependencia"]; ?>">
+<input type="hidden" name="identidad_serie" id="identidad_serie" value="<?php echo $datos[0]["fk_entidad_serie"]; ?>">
 <input type="hidden"  name="tipo_retorno" value="1"/>
 <div>
 <button class="btn btn-primary btn-mini" id="submit_formulario_expediente">Aceptar</button>
@@ -361,9 +379,10 @@ if($dato_padre["numcampos"]){
 	echo librerias_arboles_ft("2.24", 'filtro');
   ?>
   <script>
-  function cargar_info_Node(event,data){
-  	$("#serie_idserie").val(data.node.data.serie_idserie);	  
+  function cargar_info_Node(event,data){  		  
 	  if(data.node.selected){
+	  	console.log(data.node.data);
+	  	$("#serie_idserie").val(data.node.data.serie_idserie);
 	    $("#codigo_numero_serie").val(data.node.data.codigo);
 	    $("#dependencia_iddependencia").val(data.node.data.iddependencia);
 		$("#codigo_numero_dependencia").val(data.node.data.dependencia_codigo);
@@ -381,6 +400,7 @@ if($dato_padre["numcampos"]){
   }
 
   $(document).ready(function(){
+  	console.log("<?php echo($key); ?>");
   	$("#serie_idserie").val("<?php echo($key); ?>");
 		/*url2="arboles/arbol_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0&checkbox=radio&seleccionados=<?php echo($datos[0]["serie_idserie"]); ?>";
 		$.ajax({

@@ -239,8 +239,9 @@ $serie_padre = "";
 	              if(codigo_numero_consecutivo==''){
 	                  codigo_numero_consecutivo=0;
 	              }
-	              var cadena_parseo=codigo_numero_dependencia+'-'+codigo_numero_serie+'-'+codigo_numero_consecutivo;
-	              $('#codigo_numero').val(cadena_parseo);
+	              //var cadena_parseo=codigo_numero_dependencia+'-'+codigo_numero_serie+'-'+codigo_numero_consecutivo;
+	              //$('#codigo_numero').val(cadena_parseo);
+	              $('#codigo_numero').val(codigo_numero_consecutivo);
 
 	          });
 	      });
@@ -387,7 +388,6 @@ $serie_padre = "";
 
 <input type="hidden" name="ejecutar_expediente" value="set_expediente"/>
 <input type="hidden" name="dependencia_iddependencia" id="dependencia_iddependencia"/>
-<input type="hidden" name="fondo" id="fondo"/>
 <input type="hidden" name="identidad_serie" id="identidad_serie"/>
 <input type="hidden" name="tipo_retorno" value="1"/>
 <input type="hidden" name="fk_idcaja" value="<?php echo(@$_REQUEST["fk_idcaja"]);?>">
