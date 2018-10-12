@@ -91,19 +91,20 @@ ul.fancytree-container {
 				        cargar_partes: 1,
 				        id: node.key
 				    },
-			        cache: false
+			        cache: true
 			      });
 			      //console.log(data.result);
 			},
-			loadChildren: function(event, data) {
+			/*loadChildren: function(event, data) {
 				var match = $("#buscador").val();
+  		        var buscar = match && match != "" && match.length >= 3;
 				data.node.visit(function(subNode){
 					// quitar la condicion subNode.isExpanded() si filtra
-				    if(match && match != "" && subNode.isUndefined() && !subNode.isExpanded() ) {
-				        subNode.load();
+				    if(buscar && subNode.lazy && subNode.isUndefined() && subNode.children == null && !subNode.isExpanded() ) {
+				    	subNode.load(true);
 				    }
 				});
-			},
+			},*/
             filter: {
                 autoApply: true,
                 autoExpand: true,
@@ -156,6 +157,7 @@ ul.fancytree-container {
 	      var opts = {};
 	      var filterFunc = tree.filterNodes;
 	      var match = $(this).val();
+	      var buscar = match && match != "" && match.length >= 3;
 
 	      opts.mode = "dimm";
 
@@ -178,7 +180,8 @@ ul.fancytree-container {
   		        //console.log(subNode.children);
                   // Cargar todos los nodos hijos lazy/sin cargar
                   // (esto disparará `loadChildren` recursivamente)
-                  if(match != "" && subNode.lazy && subNode.children == null && subNode.isUndefined() && !subNode.isExpanded() ) {
+                  //console.log("Indef: " + subNode.isUndefined() + " Hijos: " + (subNode.children != null));
+                  if(buscar && subNode.lazy && subNode.isUndefined() && subNode.children == null && !subNode.isExpanded()) {
                       subNode.load();
                   }
               });
