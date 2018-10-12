@@ -162,6 +162,19 @@ function rotulo_carpeta($id){
 	$caja=busca_filtro_tabla("","caja a","a.idcaja=".$datos[0]["fk_idcaja"],"",$conn);
 	
 	$serie=busca_filtro_tabla("nombre,tipo,cod_padre","serie a","a.idserie=".$datos[0]["serie_idserie"],"",$conn);
+	$buscar_entidad_serie=busca_filtro_tabla("llave_entidad, serie_idserie","entidad_serie","identidad_serie=".$datos[0]["fk_entidad_serie"],"",$conn);
+if($buscar_entidad_serie["numcampos"]){
+	$iddependencia = $buscar_entidad_serie[0]["llave_entidad"];
+	$idserie = $buscar_entidad_serie[0]["serie_idserie"];
+	$buscar_dependencia=busca_filtro_tabla("codigo","dependencia","iddependencia=".$iddependencia,"",$conn);
+	if($buscar_dependencia["numcampos"]){
+		$codigo_dependencia = $buscar_dependencia[0]["codigo"];
+	}
+	$buscar_serie=busca_filtro_tabla("codigo","serie","idserie=".$idserie,"",$conn);
+	if($buscar_serie["numcampos"]){
+		$codigo_serie = $buscar_serie[0]["codigo"];
+	}
+}
 	$nomb_serie="";
 	$nomb_subserie="";
 	if($serie[0]["tipo"]==1){
@@ -231,7 +244,7 @@ filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 	</tr>
 	<tr>
 		<td style="text-align:center"><b>CODIGO No.</b></td>
-		<td style="text-align:center" colspan="2"><?php echo mayusculas($datos[0]["codigo_numero"]); ?></td>
+		<td style="text-align:center" colspan="2"><?php echo mayusculas($codigo_dependencia." - ".$codigo_serie." - ".$datos[0]["codigo_numero"]); ?></td>
 	</tr>
 	<tr>
 		<td style="text-align:center"><b>FONDO</b></td>
