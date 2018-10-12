@@ -43,6 +43,7 @@ class Version20181010123722 extends AbstractMigration {
                 break;
             case "sqlsrv":
                 $this->addSql("ALTER TABLE buzon_entrada ALTER COLUMN ruta_idruta INT NULL");
+                $this->addSql($this->modificar_sp_radicado_sqlsrv());
                 break;
             default:
                 $this->abortIf(true, "Motor '$motor', no soportado");
@@ -130,5 +131,33 @@ join permiso_serie b on a.serie_idserie = b.serie_idserie
 join serie c on b.serie_idserie = c.idserie;
 FINSQL;
         return $vista;
+    }
+
+    private function modificar_sp_radicado_sqlsrv() {
+        $sql = <<<FINSQL
+ALTER PROCEDURE [dbo].[sp_asignar_radicado]
+   @iddoc int,
+   @tipo int,
+   @funcionario int
+AS
+   BEGIN
+      SET  XACT_ABORT  ON
+      SET  NOCOUNT  ON
+      DECLARE @valor nvarchar(50)
+      DECLARE @sentencia nvarchar(2000)
+      DECLARE @valor_int int
+      SELECT @valor = CAST(contador.consecutivo AS varchar(50)) FROM dbo.contador WHERE contador.idcontador = @tipo
+
+      UPDATE dbo.documento SET numero = @valor WHERE documento.iddocumento = @iddoc
+
+      UPDATE dbo.contador SET consecutivo = contador.consecutivo + 1 WHERE contador.idcontador = @tipo
+      SET @sentencia = concat('UPDATE documento SET numero=', @valor, ' WHERE iddocumento=', @iddoc)
+      SET @valor_int = CAST(@valor as int) + 1
+      INSERT INTO dbo.evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado, codigo_sql, detalle) VALUES(@funcionario, CURRENT_TIMESTAMP, 'MODIFICAR', 'documento', @valor, 0, @sentencia, null)
+      SET @sentencia = concat('UPDATE contador SET consecutivo=', @valor_int, ' WHERE idcontador=', @tipo)
+      INSERT INTO dbo.evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado, codigo_sql, detalle) VALUES(@funcionario, CURRENT_TIMESTAMP, 'MODIFICAR', 'contador', @valor+1, 0, @sentencia,null)
+   END
+FINSQL;
+        return $sql;
     }
 }
