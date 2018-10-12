@@ -14,23 +14,23 @@ $objetoJson = array(
     "key" => 0    
 );
 
-if ($_REQUEST["id"] && $_REQUEST["cargar_partes"] && $_REQUEST["uid"]) {
-    $objetoJson["key"] = $_REQUEST["id"];
+if ($_REQUEST["id"] && $_REQUEST["cargar_partes"]) {
+    $objetoJson = array();
     $id = explode(".", $_REQUEST["id"]);
     $hijos_dep = array();
     $hijos_serie = array();
     $hijos_otros = array();
     $hijos = array();
     if ($id[1] == 0) {
-        $hijos_dep = llena_dependencia($id[0], $id[2]);
+        $hijos_dep = llena_dependencia($id[0], $id[2], true);
         if (!empty($hijos_dep)) {
-            $hijos[] = $hijos_dep;
+            $hijos = $hijos_dep;
         }
     }
     if ($id[0] != 0) {
         $hijos_serie = llena_serie($id[1], $id[0], $id[2]);
         if (!empty($hijos_serie)) {
-            $hijos[] = $hijos_serie;
+            $hijos = array_merge($hijos, $hijos_serie);
         }
     }
 
@@ -38,26 +38,30 @@ if ($_REQUEST["id"] && $_REQUEST["cargar_partes"] && $_REQUEST["uid"]) {
         $hijos_serie = array();
         $hijos_serie = llena_serie_sin_asignar($id[1]);
         if (!empty($hijos_serie)) {
-            $hijos[] = $hijos_serie;
+            $hijos = array_merge($hijos, $hijos_serie);
         }
     }
     if ($_REQUEST["otras_categorias"] == 1 && $id[0] == 0) {
         $hijos_otros = llena_otras_categorias($id[1]);
         if (!empty($hijos_otros)) {
-            $hijos[] = $hijos_otros;
+            $hijos = array_merge($hijos, $hijos_otros);
         }
     }
-    $objetoJson["children"] = $hijos;
+    $objetoJson = $hijos;
 } else {
+    $partes = false;
+    if(isset($_REQUEST["cargar_partes"])) {
+        $partes = true;
+    }
     $hijos = array();
     $objetoJson["key"] = 0;
     $hijos_dep = array();
-    $hijos_dep = llena_dependencia(0, 0); // TRD
+    $hijos_dep = llena_dependencia(0, 0, $partes); // TRD
     if (!empty($hijos_dep)) {
         $hijos = $hijos_dep;
     }
     $hijos_dep = array();
-    $hijos_dep = llena_dependencia(0, 1); // TVD
+    $hijos_dep = llena_dependencia(0, 1, $partes); // TVD
     if (!empty($hijos_dep)) {
         $hijos = array_merge($hijos, $hijos_dep);
     }
@@ -92,7 +96,7 @@ header('Content-Type: application/json');
 
 echo json_encode($objetoJson);
 
-function llena_dependencia($id, $tipo = 0) {
+function llena_dependencia($id, $tipo = 0, $partes = false) {
     global $conn;
     $objetoJson = array();
     $parte_text = "";
@@ -121,6 +125,7 @@ function llena_dependencia($id, $tipo = 0) {
             $serie = busca_filtro_tabla("count(*) as cant", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $papas[$i]["iddependencia"] . " and s.tvd=" . $tipo . " and (s.cod_padre=0 or s.cod_padre is null)", "", $conn);
             $dependencias_hijas = array();
             $series_hijas = array();
+            if (!$partes) {
             if ($hijos[0]["cant"] || $serie[0]["cant"]) {
                 $dependencias_hijas = llena_dependencia($papas[$i]["iddependencia"], $tipo);
             }
@@ -134,7 +139,9 @@ function llena_dependencia($id, $tipo = 0) {
             } else {
                 $item["folder"] = 0;
             }
-
+            } else {
+                $item["lazy"] = true;
+            }
             $objetoJson[] = $item;
         }
     }
@@ -144,7 +151,6 @@ function llena_dependencia($id, $tipo = 0) {
 function llena_serie($id, $iddep, $tipo = 0) {
     global $conn;
     $objetoJson = array();
-    $bandera=false;
     if ($id == 0) {
         $papas = busca_filtro_tabla("e.identidad_serie, s.*", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $iddep . " and s.tvd=" . $tipo . " and (s.cod_padre=0 or s.cod_padre is null) and s.categoria=2", "s.nombre ASC", $conn);
     } else {
