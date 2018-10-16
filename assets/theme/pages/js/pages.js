@@ -1889,12 +1889,12 @@
             $(_this.options.noteEditor).html('');
         });
 
-        $(this.options.deleteNoteConfirmButton).click(function() {
+        /*$(this.options.deleteNoteConfirmButton).click(function() {
             var checked = $(_this.options.notes).find('input[type=checkbox]:checked');
             checked.each(function() {
                 $(this).parents('li').remove();
             });
-        });
+        });*/
         $(this.options.notes).on('click', '.toolbar > li > a', function(e) {
             //e.preventDefault();
             var command = $(this).attr('data-action');
@@ -2258,7 +2258,7 @@
              setTimeout(function(){
                 // remove background color
                 $('.page-container').css({'background-color': ''});
-             },1000);
+             },500);
 
          }
 
@@ -2317,7 +2317,6 @@
          return false;
      })
      $(document).on('click.pg.sidebar.data-api', '[data-toggle="sidebar"]', function(e) {
-        console.log("menu open");
         var $this = $(this);
         var $target = $('[data-pages="sidebar"]');
         $target.data('pg.sidebar').toggleSidebar();

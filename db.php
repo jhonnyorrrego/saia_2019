@@ -1997,7 +1997,8 @@ function enviar_mensaje($correo = "", $tipo_usuario = array(), $usuarios = array
 					$mail -> AddAttachment($fila);
 				}
 			}
-		}
+        }
+        
 		if (!$mail -> Send()) {
 			return ($mail -> ErrorInfo);
 		} else {
@@ -3300,12 +3301,10 @@ function salir($texto, $login) {
 	$conn -> Conn -> Desconecta();
 	session_unset();
 	session_destroy();
-	unset($_COOKIE["PHPSESSID"]);
-	if ($texto) {
-		abrir_url(PROTOCOLO_CONEXION . RUTA_PDF . "/index.php?texto_salir=" . urlencode($texto), "_top");
-	} else {
-		abrir_url(PROTOCOLO_CONEXION . RUTA_PDF . "/index.php", "_top");
-	}
+    unset($_COOKIE["PHPSESSID"]);
+    
+    abrir_url(PROTOCOLO_CONEXION . RUTA_PDF . "/views/login/login.php", "_top");
+	
 	die();
 }
 

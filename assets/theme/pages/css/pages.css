@@ -1628,7 +1628,7 @@ body.sidebar-visible .page-sidebar .sidebar-header .sidebar-header-controls {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  width: 65%;
+  width: 100%;
 }
 .page-sidebar .sidebar-menu .menu-items > li {
   display: block;
@@ -1654,8 +1654,8 @@ body.sidebar-visible .page-sidebar .sidebar-header .sidebar-header-controls {
   background: #313131;
 }
 .page-sidebar .sidebar-menu .menu-items > li > a > .arrow {
-  float: right;
-  padding-right: 30px;
+  float: left;
+  padding-right: 0px;
 }
 .page-sidebar .sidebar-menu .menu-items > li > a > .arrow:before {
   float: right;
@@ -1682,7 +1682,7 @@ body.sidebar-visible .page-sidebar .sidebar-header .sidebar-header-controls {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  width: 65%;
+  width: 68%;
 }
 .page-sidebar .sidebar-menu .menu-items > li > a > .details {
   font-size: 12px;
@@ -2113,7 +2113,8 @@ body.sidebar-visible .page-sidebar .sidebar-header .sidebar-header-controls {
   color: #FBF9E3;
 }
 .quickview-wrapper .nav-tabs ~ .tab-content .quickview-notes .list .toolbar .btn-remove-notes {
-  background: transparent;
+  /*background: transparent;*/
+  color: #ffffff;
   bottom: 8px;
   display: block;
   left: 50%;
@@ -2121,6 +2122,7 @@ body.sidebar-visible .page-sidebar .sidebar-header .sidebar-header-controls {
   position: absolute;
   width: 83%;
   border: 1px solid #968974;
+  z-index: 1;
 }
 .quickview-wrapper .nav-tabs ~ .tab-content .quickview-notes .list > ul {
   padding: 0;
