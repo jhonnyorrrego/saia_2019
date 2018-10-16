@@ -34,7 +34,7 @@ else echo("selected");?>>Central</option>
 	  	</select>
 	  </div>
 	</div>
-<div class="control-group element">
+<!--div class="control-group element">
   <label class="control-label" for="serie_idserie">Serie asociada *
   </label>
   <div class="controls">
@@ -53,7 +53,7 @@ else echo("selected");?>>Central</option>
          <input type="hidden" name="serie_idserie" id="serie_idserie">
          <input type="hidden" name="dependencia_iddependencia" id="dependencia_iddependencia">
   </div>
-</div>
+</div-->
 <script type="text/javascript">
 
 var browserType;
@@ -147,17 +147,19 @@ function cargando_serie() {
   <label class="control-label" for="codigo">Codigo *
   </label>
   <div class="controls"> 
-    <input type="text"  id="codigo_numero_dependencia" name="codigo_dependencia" value="" style="width:12%;" readonly="readonly">
+    <!--input type="text"  id="codigo_numero_dependencia" name="codigo_dependencia" value="" style="width:12%;" readonly="readonly">
     <input type="text"  id="codigo_numero_serie"  value="" style="width:12%;" name="codigo_serie" readonly="readonly">
-    <input type="text"  id="cod_consecutivo" required="required" name="no_consecutivo" value="" style="width:12%;">
+    <input type="text"  id="cod_consecutivo" required="required" name="no_consecutivo" value="" style="width:12%;"-->
+    <input type="text"  id="cod_consecutivo" required="required" name="no_consecutivo" value="" style="width:30%;">
   </div>
 </div>
 
 <div class="control-group element">
-  <label class="control-label" for="fondo">Fondo *
+  <label class="control-label" for="fondo">Fondo 
   </label>
   <div class="controls"> 
-    <input type="text" name="fondo" required="required" id="fondo" value="" readonly="readonly">
+    <!--input type="text" name="fondo" required="required" id="fondo" value="" readonly="readonly"-->
+    <input type="text" name="fondo" id="fondo" value="">
   </div>
 </div>
 

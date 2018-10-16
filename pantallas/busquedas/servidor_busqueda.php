@@ -29,6 +29,7 @@ $sord = @$_REQUEST['sord'];
 $actual_row = @$_REQUEST['actual_row'];
 $count = false;
 $start = @$_REQUEST['actual_row'];
+
 crear_log_busqueda_excel($ruta_db_superior . "../backup/log_exportar.txt", "INICIO-------" . date("Y-m-d H:i:s") . "-----------\n");
 if (!$limit)
 	$limit = 30;
@@ -376,6 +377,7 @@ if ($page >= $total_pages) {
 }
 if (@$start !== 0 && $aux_limit != "todos" && @$_REQUEST["reporte"]) {
 	$start = $limit * $page - $limit;
+	
 	// do not put $limit*($page - 1)
 }
 

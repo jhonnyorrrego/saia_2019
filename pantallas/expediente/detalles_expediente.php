@@ -270,7 +270,8 @@ if (($expediente[0]["propietario"] == @$_SESSION['usuario_actual']) || (!$expedi
     if ($expediente[0]["fk_idcaja"]) {
         $caja = busca_filtro_tabla("", "caja", "idcaja=" . $expediente[0]["fk_idcaja"], "", $conn);
         if ($caja["numcampos"]) {
-            echo ($caja[0]["codigo"] . " - " . $caja[0]["fondo"]);
+           // echo ($caja[0]["codigo"] . " - " . $caja[0]["fondo"]);
+            echo ($caja[0]["no_consecutivo"]);
         }
     } else {
         echo ("---");

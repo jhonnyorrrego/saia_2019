@@ -176,7 +176,8 @@ $serie_padre = "";
 					if($datos[0]["fk_idcaja"]==$cajas[$i]["idcaja"]){
 						$selected="selected";
 					}
-					echo("<option value='".$cajas[$i]["idcaja"]."' ".$selected.">".$cajas[$i]["fondo"]."(".$cajas[$i]["codigo_dependencia"]."-".$cajas[$i]["codigo_serie"]."-".$cajas[$i]["no_consecutivo"].")</option>");
+					//echo("<option value='".$cajas[$i]["idcaja"]."' ".$selected.">".$cajas[$i]["fondo"]."(".$cajas[$i]["codigo_dependencia"]."-".$cajas[$i]["codigo_serie"]."-".$cajas[$i]["no_consecutivo"].")</option>");
+					echo("<option value='".$cajas[$i]["idcaja"]."' ".$selected.">".$cajas[$i]["no_consecutivo"]."</option>");
 				}
 	  		?>
 	  	</select>

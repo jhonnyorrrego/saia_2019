@@ -62,7 +62,8 @@ $caja=busca_filtro_tabla("","caja","idcaja=".$idcaja,"",$conn);
       <b>Codigo:</b>
     </td>
     <td colspan="3">
-       <?php echo($caja[0]["codigo_serie"]."-".$caja[0]["codigo_dependencia"]."-".$caja[0]["no_consecutivo"]);?>
+       <?php /*echo($caja[0]["codigo_serie"]."-".$caja[0]["codigo_dependencia"]."-".*/
+       echo $caja[0]["no_consecutivo"];?>
     </td>
   </tr>
   <tr>
