@@ -56,7 +56,10 @@ function set_expediente() {
 		"tomo_no",
 		"indice_uno",
 		"indice_dos",
-		"indice_tres"
+		"indice_tres",
+		"consecutivo_inicial",
+		"consecutivo_final",
+		"fk_entidad_serie"
 	);
 	$array_vacios = array(
 		'cod_padre',
@@ -104,9 +107,12 @@ function set_expediente() {
 			1,
 			'" . @$_REQUEST['indice_uno'] . "',
 			'" . @$_REQUEST['indice_dos'] . "',
-			'" . @$_REQUEST['indice_tres'] . "'
+			'" . @$_REQUEST['indice_tres'] . "',
+			'" . @$_REQUEST['consecutivo_inicial'] . "',
+			'" . @$_REQUEST['consecutivo_final'] . "',
+			'" . @$_REQUEST['identidad_serie'] . "'
 		)";
-	phpmkr_query($sql2);
+	phpmkr_query($sql2) or die($sql2);
 	$idexpediente = phpmkr_insert_id();
 	guardar_lob('descripcion', 'expediente', "idexpediente=" . $idexpediente, @$_REQUEST['descripcion'], 'texto', $conn, 0);
 	guardar_lob('notas_transf', 'expediente', "idexpediente=" . $idexpediente, @$_REQUEST['notas_transf'], 'texto', $conn, 0);
@@ -118,7 +124,7 @@ function set_expediente() {
 		$codigo_arbol = $idexpediente;
 	}
 	$sql3 = "UPDATE expediente SET cod_arbol='" . $codigo_arbol . "' where idexpediente=" . $idexpediente;
-	phpmkr_query($sql3);
+	phpmkr_query($sql3) or die($sql3);
 	$retorno -> sql = $sql2;
 	if ($idexpediente) {
 		if (asignar_expediente($idexpediente, 1, usuario_actual("idfuncionario"), "m,e,p")) {
@@ -146,7 +152,9 @@ function set_expediente_documento() {
 		"codigo",
 		"fecha",
 		"propietario",
-		"estado_archivo"
+		"estado_archivo",
+		"serie_idserie",
+		"fk_entidad_serie"
 	);
 	$array_vacios = array('cod_padre');
 	for ($i = 0; $i < count($array_vacios); $i++) {
@@ -161,7 +169,8 @@ function set_expediente_documento() {
 		'" . @$_REQUEST['codigo'] . "',
 		" . fecha_db_almacenar(@$_REQUEST['fecha'], 'Y-m-d') . ",
 		" . usuario_actual("funcionario_codigo") . ",
-		1
+		1,". @$_REQUEST['serie_idserie'] . ",
+		". @$_REQUEST['identidad_serie'] . "
 	)";
 	phpmkr_query($sql2);
 	$idexpediente = phpmkr_insert_id();
@@ -170,8 +179,19 @@ function set_expediente_documento() {
 	$sql3 = "UPDATE expediente SET cod_arbol='" . $cod_padre[0]["cod_arbol"] . "." . $idexpediente . "' where idexpediente=" . $idexpediente;
 	phpmkr_query($sql3);
 	$retorno -> sql = $sql2;
-	$sql4 = "INSERT INTO expediente_doc(expediente_idexpediente,documento_iddocumento,fecha) VALUES('" . $idexpediente . "', '" . @$_REQUEST["iddoc"] . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
-	phpmkr_query($sql4);
+	$busqueda = busca_filtro_tabla("", "expediente_doc A", "A.documento_iddocumento=" . @$_REQUEST["iddoc"], "", $conn);
+     if ($busqueda["numcampos"]) {
+     	$sqlus = "UPDATE expediente_doc SET expediente_idexpediente='" . $idexpediente . "' WHERE idexpediente_doc=" . $busqueda[0]["idexpediente_doc"];
+        phpmkr_query($sqlus) or die($sqlus);
+	}
+	 else{
+		$sql4 = "INSERT INTO expediente_doc(expediente_idexpediente,documento_iddocumento,fecha) VALUES('" . $idexpediente . "', '" . @$_REQUEST["iddoc"] . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
+		phpmkr_query($sql4);
+	}
+	//update documento serie_idserie
+	//$serie_idserie = explode(".",@$_REQUEST['serie_idserie']);
+	$sqlus = "UPDATE documento SET serie=" . @$_REQUEST['serie_idserie'] . " WHERE iddocumento=" . $_REQUEST["iddoc"];
+        phpmkr_query($sqlus) or die($sqlus);
 	if ($idexpediente) {
 		if (asignar_expediente($idexpediente, 1, usuario_actual("idfuncionario"))) {
 			$exito = 1;
@@ -208,11 +228,13 @@ function update_expediente() {
 			$_REQUEST[$array_vacios[$i]] = 0;
 		}
 	}
+	//print_r($_REQUEST);
 	$update = array();
 	$update[] = " nombre='" . @$_REQUEST['nombre'] . "' ";
 	$update[] = " fecha=" . fecha_db_almacenar(@$_REQUEST['fecha'], 'Y-m-d');
 	$update[] = " fk_idcaja=" . @$_REQUEST['fk_idcaja'];
 	$update[] = " cod_padre=" . @$_REQUEST['cod_padre'];
+	//$update[] = " codigo_numero='" . @$_REQUEST['codigo_numero'] . "' ";
 	$update[] = " codigo_numero='" . @$_REQUEST['codigo_numero'] . "' ";
 	$update[] = " fondo='" . @$_REQUEST['fondo'] . "' ";
 	$update[] = " proceso='" . @$_REQUEST['proceso'] . "' ";
@@ -229,13 +251,17 @@ function update_expediente() {
 	$update[] = " indice_uno='" . @$_REQUEST['indice_uno'] . "'";
 	$update[] = " indice_dos='" . @$_REQUEST['indice_dos'] . "'";
 	$update[] = " indice_tres='" . @$_REQUEST['indice_tres'] . "'";
+	$update[] = " consecutivo_inicial='" . @$_REQUEST['consecutivo_inicial'] . "'";
+	$update[] = " consecutivo_final='" . @$_REQUEST['consecutivo_final'] . "'";
+	$update[] = " fk_entidad_serie='" . @$_REQUEST['identidad_serie'] . "'";
 	//$update[]=" unidad_admin='".@$_REQUEST['unidad_admin']."' ";
 
 	$antiguo = busca_filtro_tabla("cod_padre", "expediente A", "A.idexpediente=" . $_REQUEST["idexpediente"], "", $conn);
 	$antiguo_padre = busca_filtro_tabla("idexpediente,cod_arbol", "expediente A", "A.idexpediente=" . $antiguo[0]["cod_padre"], "", $conn);
 
 	$sql2 = "UPDATE expediente SET " . implode(",", $update) . " WHERE idexpediente=" . $_REQUEST["idexpediente"];
-	phpmkr_query($sql2);
+	//print_r($sql2);
+	phpmkr_query($sql2) or die($sql2);
 	$idexpediente = $_REQUEST["idexpediente"];
 	guardar_lob('descripcion', 'expediente', "idexpediente=" . $idexpediente, @$_REQUEST['descripcion'], 'texto', $conn, 0);
 	guardar_lob('notas_transf', 'expediente', "idexpediente=" . $idexpediente, @$_REQUEST['notas_transf'], 'texto', $conn, 0);
@@ -304,7 +330,7 @@ function crear_tomo_expediente() {
 	$retorno -> mensaje = "Error al crear tomo";
 
 	$idexpediente = $_REQUEST["idexpediente"];
-	$expediente_actual = busca_filtro_tabla("tomo_padre,estado_archivo,serie_idserie,fk_idcaja, dependencia_iddependencia, codigo_numero, fondo, proceso, fecha_extrema_i, fecha_extrema_f, no_unidad_conservacion, no_folios, no_carpeta, soporte, frecuencia_consulta, ubicacion, notas_transf, indice_uno, indice_dos, indice_tres", "expediente", "idexpediente=" . $idexpediente, "", $conn);
+	$expediente_actual = busca_filtro_tabla("tomo_padre,estado_archivo,serie_idserie,fk_idcaja, dependencia_iddependencia, codigo_numero, fondo, proceso, fecha_extrema_i, fecha_extrema_f, no_unidad_conservacion, no_folios, no_carpeta, soporte, frecuencia_consulta, ubicacion, notas_transf, indice_uno, indice_dos, indice_tres, consecutivo_inicial,consecutivo_final,fk_entidad_serie", "expediente", "idexpediente=" . $idexpediente, "", $conn);
 	$tomo_padre = $idexpediente;
 	if ($expediente_actual[0]['tomo_padre']) {
 		$tomo_padre = $expediente_actual[0]['tomo_padre'];
@@ -325,7 +351,7 @@ function crear_tomo_expediente() {
 	if (!is_numeric($expediente_actual[0]['serie_idserie'])) {
 		$expediente_actual[0]['serie_idserie'] = 0;
 	}
-	$sql = "INSERT INTO expediente (serie_idserie,nombre,fecha,propietario,ver_todos,editar_todos,tomo_padre,tomo_no,estado_archivo,descripcion,cod_padre, fk_idcaja, dependencia_iddependencia, codigo_numero, fondo, proceso, fecha_extrema_i, fecha_extrema_f,no_unidad_conservacion, no_folios, no_carpeta, soporte, frecuencia_consulta, ubicacion, notas_transf, indice_uno, indice_dos, indice_tres,cod_arbol) VALUES (" . $expediente_actual[0]['serie_idserie'] . ",'" . $datos_padre[0]['nombre'] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . "," . usuario_actual('funcionario_codigo') . ",0,0," . $tomo_padre . "," . $tomo_siguiente . "," . $expediente_actual[0]['estado_archivo'] . ",'" . $datos_padre[0]['descripcion'] . "'," . $datos_padre[0]['cod_padre'] . "," . $expediente_actual[0]['fk_idcaja'] . "," . $expediente_actual[0]['dependencia_iddependencia'] . ",'" . $expediente_actual[0]['codigo_numero'] . "','" . $expediente_actual[0]['fondo'] . "','" . $expediente_actual[0]['proceso'] . "','" . $expediente_actual[0]['fecha_extrema_i'] . "','" . $expediente_actual[0]['fecha_extrema_f'] . "','" . $expediente_actual[0]['no_unidad_conservacion'] . "','" . $expediente_actual[0]['no_folios'] . "','" . $expediente_actual[0]['no_carpeta'] . "'," . $expediente_actual[0]['soporte'] . "," . $expediente_actual[0]['frecuencia_consulta'] . "," . $expediente_actual[0]['ubicacion'] . ",'" . $expediente_actual[0]['notas_transf'] . "','" . $expediente_actual[0]['indice_uno'] . "','" . $expediente_actual[0]['indice_dos'] . "','" . $expediente_actual[0]['indice_tres'] . "','".$datos_padre[0]['cod_arbol']."')";
+	$sql = "INSERT INTO expediente (serie_idserie,nombre,fecha,propietario,ver_todos,editar_todos,tomo_padre,tomo_no,estado_archivo,descripcion,cod_padre, fk_idcaja, dependencia_iddependencia, codigo_numero, fondo, proceso, fecha_extrema_i, fecha_extrema_f,no_unidad_conservacion, no_folios, no_carpeta, soporte, frecuencia_consulta, ubicacion, notas_transf, indice_uno, indice_dos, indice_tres,cod_arbol,consecutivo_inicial,consecutivo_final,fk_entidad_serie) VALUES (" . $expediente_actual[0]['serie_idserie'] . ",'" . $datos_padre[0]['nombre'] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . "," . usuario_actual('funcionario_codigo') . ",0,0," . $tomo_padre . "," . $tomo_siguiente . "," . $expediente_actual[0]['estado_archivo'] . ",'" . $datos_padre[0]['descripcion'] . "'," . $datos_padre[0]['cod_padre'] . "," . $expediente_actual[0]['fk_idcaja'] . "," . $expediente_actual[0]['dependencia_iddependencia'] . ",'" . $expediente_actual[0]['codigo_numero'] . "','" . $expediente_actual[0]['fondo'] . "','" . $expediente_actual[0]['proceso'] . "','" . $expediente_actual[0]['fecha_extrema_i'] . "','" . $expediente_actual[0]['fecha_extrema_f'] . "','" . $expediente_actual[0]['no_unidad_conservacion'] . "','" . $expediente_actual[0]['no_folios'] . "','" . $expediente_actual[0]['no_carpeta'] . "'," . $expediente_actual[0]['soporte'] . "," . $expediente_actual[0]['frecuencia_consulta'] . "," . $expediente_actual[0]['ubicacion'] . ",'" . $expediente_actual[0]['notas_transf'] . "','" . $expediente_actual[0]['indice_uno'] . "','" . $expediente_actual[0]['indice_dos'] . "','" . $expediente_actual[0]['indice_tres'] . "','".$datos_padre[0]['cod_arbol']."','".$expediente_actual[0]['consecutivo_inicial']."','".$expediente_actual[0]['consecutivo_final']."',".$expediente_actual[0]['fk_entidad_serie'].")";
 	phpmkr_query($sql);
 	$id_insertado = phpmkr_insert_id();
 	if ($id_insertado) {

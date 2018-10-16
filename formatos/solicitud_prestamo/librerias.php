@@ -113,7 +113,7 @@ function tiempo_transcurrido_reserva($fecha_entrega, $fecha_devolver) {
 }
 
 function funcion_entregar_devolver() {
-	$html = "<select class='pull-left btn btn-mini'style='height:22px; margin-left: 10px;' id='entregar_devolver'><option value=''>Acciones...</option><option value='entregar'>Entregar</option><option value='devolver'>Devolver</option></select>";
+	$html = "<select class='pull-left btn btn-mini'style='height:30px; margin-left: 10px;' id='entregar_devolver'><option value=''>Acciones...</option><option value='entregar'>Entregar</option><option value='devolver'>Devolver</option></select>";
 	return ($html);
 }
 ?>

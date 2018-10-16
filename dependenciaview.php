@@ -61,7 +61,7 @@ if(isset($_REQUEST["verlogo"])&&$_REQUEST["verlogo"])
 <?php include ("header.php") ?>
 <p><span class="internos"><img class="imagen_internos" src="botones/configuracion/dependencia.png" border="0">&nbsp;&nbsp;VER DEPENDENCIAS<br><br>
 <a href="<?php echo "dependenciaedit.php?key=" . urlencode($sKey); ?>">Editar</a>&nbsp;
-<a href="<?php echo "asignarserie_entidad.php?llave_entidad=".$sKey."&tipo_entidad=2&origen=dependencia"; ?>">Asignar serie / categor&iacute;a</a>&nbsp;
+<!--a href="<?php echo "asignarserie_entidad.php?llave_entidad=".$sKey."&tipo_entidad=2&origen=dependencia"; ?>">Asignar serie / categor&iacute;a</a-->&nbsp;
 <a href="<?php echo "dependenciadelete.php?key=".$sKey; ?>">Inactivar</a>&nbsp;
 <!--a href="<?php echo "permiso_dependenciaadd.php?key=".$sKey; ?>">Asignar Permiso</a-->
 &nbsp;

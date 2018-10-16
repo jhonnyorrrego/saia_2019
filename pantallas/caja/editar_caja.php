@@ -15,7 +15,9 @@ include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 ?>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery-1.7.min.js"></script>
 <?php include_once($ruta_db_superior."librerias_saia.php");
-$datos=busca_filtro_tabla("","caja a,dependencia b, serie c","a.codigo_serie=c.codigo AND a.codigo_dependencia=b.codigo AND a.idcaja=".$_REQUEST["idcaja"]."","",$conn);
+//$datos=busca_filtro_tabla("","caja a,dependencia b, serie c","a.codigo_serie=c.codigo AND a.codigo_dependencia=b.codigo AND a.idcaja=".$_REQUEST["idcaja"]."","",$conn);
+$datos=busca_filtro_tabla("","caja a","a.idcaja=".$_REQUEST["idcaja"]."","",$conn);
+//print_r($datos["sql"]);
 echo(librerias_arboles());
 ?>
 <form name="formulario_caja" id="formulario_caja" method="post">
@@ -23,7 +25,21 @@ echo(librerias_arboles());
 <input type="hidden" id="cerrar_higslide" value="<?php echo(@$_REQUEST["cerrar_higslide"]);?>">
 <legend>Editar caja</legend>
 
-<small id="serie_dependencia"></small>
+<div class="control-group element">
+	  <label class="control-label" for="ubicacion">Ubicaci&oacute;n
+	  </label>
+	  <div class="controls">
+	  	<select name="ubicacion" id="ubicacion">
+	  		<option value="">Por favor seleccione...</option>
+				<option value="1" <?php if($datos[0]["ubicacion"]==1)echo("selected");
+else echo("selected");?>>Central</option>
+				<option value="2" <?php if($datos[0]["ubicacion"]==2)echo("selected"); ?>>Gesti&oacute;n</option>
+				<option value="3" <?php if($datos[0]["ubicacion"]==3)echo("selected"); ?>>Historico</option>
+	  	</select>
+	  </div>
+	</div>
+	
+<!--small id="serie_dependencia"></small>
 <div class="control-group element">
   <label class="control-label" for="serie_idserie">Serie asociada *
   </label>
@@ -44,7 +60,7 @@ echo(librerias_arboles());
      <input type="hidden" name="serie_idserie" id="serie_idserie" value="<?php echo($datos[0]["serie_idserie"]); ?>">
      <input type="hidden" name="dependencia_iddependencia" id="dependencia_iddependencia" value="<?php echo($datos[0]["dependencia_iddependencia"]); ?>">
   </div>
-</div>
+</div-->
 <label style="display:none" class="error" for="serie_idserie">Campo obligatorio.</label>
 <script type="text/javascript">
 var browserType;
@@ -120,9 +136,10 @@ function cargando_serie() {
   <label class="control-label" for="codigo">Codigo
   </label>
   <div class="controls"> 
-    <input type="text"  id="cod_serie"  value="<?php echo($datos[0]["codigo_serie"]) ?>" style="width:12%;" readonly="readonly">
+    <!--input type="text"  id="cod_serie"  value="<?php echo($datos[0]["codigo_serie"]) ?>" style="width:12%;" readonly="readonly">
     <input type="text"  id="cod_dependencia" value="<?php echo($datos[0]["codigo_dependencia"]) ?>" style="width:12%;" readonly="readonly">
-    <input type="text"  id="cod_consecutivo" required="required" name="no_consecutivo" value="<?php echo($datos[0]["no_consecutivo"]) ?>" style="width:12%;">
+    <input type="text"  id="cod_consecutivo" required="required" name="no_consecutivo" value="<?php echo($datos[0]["no_consecutivo"]) ?>" style="width:12%;"-->
+    <input type="text"  id="cod_consecutivo" required="required" name="no_consecutivo" value="<?php echo($datos[0]["no_consecutivo"]) ?>" style="width:30%;">
   </div>
 </div>
 
@@ -130,7 +147,8 @@ function cargando_serie() {
   <label class="control-label" for="fondo">Fondo
   </label>
   <div class="controls"> 
-    <input type="text" name="fondo" id="fondo"  required="required" value="<?php echo($datos[0]["fondo"]); ?>" readonly="readonly">
+    <!--input type="text" name="fondo" id="fondo"  required="required" value="<?php echo($datos[0]["fondo"]); ?>" readonly="readonly"-->
+    <input type="text" name="fondo" id="fondo" value="<?php echo($datos[0]["fondo"]); ?>">
   </div>
 </div>
 
@@ -151,7 +169,7 @@ function cargando_serie() {
 </div>
 
 <div class="control-group element">
-  <label class="control-label" for="division">Division
+  <label class="control-label" for="division">Ubicaci&oacute;n exacta
   </label>
   <div class="controls"> 
     <input type="text" name="division" id="division" value="<?php echo($datos[0]["division"]); ?>">
@@ -192,14 +210,14 @@ function cargando_serie() {
 </div>
 -->
 <div class="control-group element">
-  <label class="control-label" for="modulo">Módulo
+  <label class="control-label" for="modulo">Estanter&iacute;a
   </label>
   <div class="controls"> 
     <input type="text" name="modulo" id="modulo" value="<?php echo($datos[0]["modulo"]);?>">
   </div>
 </div>
 <div class="control-group element">
-  <label class="control-label" for="panel">Panel
+  <label class="control-label" for="panel">Entrepa&ntilde;o
   </label>
   <div class="controls"> 
     <input type="text" name="panel" id="panel" value="<?php echo($datos[0]["panel"]);?>">
@@ -231,6 +249,8 @@ function cargando_serie() {
   		<option value="1" <?php if($datos[0]["seguridad"]==1)echo("selected");?>>Confidencial</option>
   		<option value="2" <?php if($datos[0]["seguridad"]==2)echo("selected");?>>Publica</option>
   		<option value="3" <?php if($datos[0]["seguridad"]==3)echo("selected");?>>Rutinario</option>
+  		<option value="4" <?php if($datos[0]["seguridad"]==4)echo("selected");?>>Restringido al cargo asignado</option>
+  	</select>
   	</select>
   </div>
 </div>
@@ -260,7 +280,7 @@ function cargando_serie() {
 <script type="text/javascript">
 $(document).ready(function(){
 	consultar_materiales_caja();
-	mostrar_serie_dependencia("<?php echo $datos[0][codigo_serie] ?>","<?php echo $datos[0][codigo_dependencia] ?>");
+	mostrar_serie_dependencia("<?php echo $datos[0]["codigo_serie"] ?>","<?php echo $datos[0]["codigo_dependencia"] ?>");
 	$('#fecha_extrema_i').datetimepicker({
     language: 'es',
     pick12HourFormat: true,

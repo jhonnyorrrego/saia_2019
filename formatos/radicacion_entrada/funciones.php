@@ -193,9 +193,9 @@ function serie_documental_radicacion($idformato,$iddoc){
 	?>
 	<script>
 	$(document).ready(function(){
-		tree_serie_idserie.setOnCheckHandler(onNodeSelect_dependencia_serie);
+		//tree_serie_idserie.setOnCheckHandler(onNodeSelect_dependencia_serie);
 		
-		function onNodeSelect_dependencia_serie(nodeId){
+		function onNodeSelect_dependencia_serie(nodeId){			
 			tree_serie_idserie.setCheck(tree_serie_idserie.getAllChecked(),0 );
 			tree_serie_idserie.setCheck(nodeId,1 );
 			var ids=nodeId.split("sub");
