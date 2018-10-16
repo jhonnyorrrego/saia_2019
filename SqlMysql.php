@@ -1,6 +1,5 @@
 <?php
 include_once ("conexion.php");
-
 class SqlMysql extends SQL2 {
 
 	public function __construct($conn, $motorBd) {
@@ -21,17 +20,17 @@ class SqlMysql extends SQL2 {
 	 * <Post-condiciones>
 	 */
 	function Buscar($campos, $tablas, $where, $order_by) {
-		if ($campos == "" || $campos == null)
+		if($campos == "" || $campos == null)
 			$campos = "*";
 		$this->consulta = "SELECT " . $campos . " FROM " . $tablas;
-		if ($where != "" && $where != null)
+		if($where != "" && $where != null)
 			$this->consulta .= " WHERE " . $where;
-		if ($order_by != "" && $order_by != null)
+		if($order_by != "" && $order_by != null)
 			$this->consulta .= " ORDER BY " . $order_by;
 		// ejecucion de la consulta, a $this->res se le asigna el resource
 		$this->res = mysqli_query($this->Conn->conn, $this->consulta);
 		// se le asignan a $resultado los valores obtenidos
-		if ($this->Numero_Filas() > 0) {
+		if($this->Numero_Filas() > 0) {
 			for($i = 0; $i < $this->Numero_Filas(); $i++)
 				$resultado[] = mysqli_fetch_array($this->res, MYSQLI_ASSOC);
 			return $resultado;
@@ -41,7 +40,7 @@ class SqlMysql extends SQL2 {
 	}
 
 	function liberar_resultado($rs) {
-		if (!$rs) {
+		if(!$rs) {
 			$rs = $this->res;
 		}
 		@mysqli_free_result($rs);
@@ -64,20 +63,20 @@ class SqlMysql extends SQL2 {
 		$strsql = str_replace(" =", "=", $strsql);
 		$strsql = str_replace("= ", "=", $strsql);
 		$accion = strtoupper(substr($strsql, 0, strpos($strsql, ' ')));
-		if ($accion == "INSERT" || $accion == "UPDATE") {
+		if($accion == "INSERT" || $accion == "UPDATE") {
 			$this->ultimoInsert = 0;
 			$sql = htmlentities($sql, ENT_NOQUOTES, "UTF-8", false);
 			$sql = htmlspecialchars_decode($sql, ENT_NOQUOTES);
 		}
 
 		$this->filas = 0;
-		if ($sql && $sql != "" && $this->Conn->conn) {
+		if($sql && $sql != "" && $this->Conn->conn) {
 			$this->res = mysqli_query($this->Conn->conn, $sql); // or die("ERROR SQL ".mysqli_error($this->Conn->conn)." en ".$_SERVER["PHP_SELF"]." ->".$sql);// or error//("Error al Ejecutar: $sql --- ".mysql_error());
 
-			if ($this->res) {
-				if (strpos(strtolower($sql), "insert") !== false)
+			if($this->res) {
+				if(strpos(strtolower($sql), "insert") !== false)
 					$this->ultimoInsert = $this->Ultimo_Insert();
-				else if (strpos(strtolower($sql), "select") !== false) {
+				else if(strpos(strtolower($sql), "select") !== false) {
 					$this->ultimoInsert = 0;
 					$this->filas = $this->res->num_rows;
 				} else {
@@ -87,15 +86,19 @@ class SqlMysql extends SQL2 {
 				$this->consulta = trim($sql);
 				// $fin=strpos($this->consulta," ");
 				// $accion=substr($this->consulta,0,$fin);
+			} else {
+				$e = mysqli_error($this->Conn->conn);
+				trigger_error($e . " $sql", E_USER_ERROR);
+				return false;
 			}
 			return ($this->res);
 		}
 	}
 
 	function sacar_fila($rs = Null) {
-		if ($rs)
+		if($rs)
 			$this->res = $rs;
-		if ($arreglo = @mysqli_fetch_array($this->res, MYSQLI_BOTH)) {
+		if($arreglo = @mysqli_fetch_array($this->res, MYSQLI_BOTH)) {
 			$this->filas++;
 			return ($arreglo);
 		} else {
@@ -104,9 +107,9 @@ class SqlMysql extends SQL2 {
 	}
 
 	function sacar_fila_vector($rs = Null) {
-		if ($rs == Null)
+		if($rs == Null)
 			$rs = $this->res;
-		if ($arreglo = @mysqli_fetch_row($rs)) {
+		if($arreglo = @mysqli_fetch_row($rs)) {
 			return ($arreglo);
 		} else
 			return (FALSE);
@@ -125,7 +128,7 @@ class SqlMysql extends SQL2 {
 	 * <Post-condiciones>
 	 */
 	function Insertar($campos, $tabla, $valores) {
-		if ($campos == "" || $campos == null)
+		if($campos == "" || $campos == null)
 			$insert = "INSERT INTO " . $tabla . " VALUES (" . $valores . ")";
 		else
 			$insert = "INSERT INTO " . $tabla . "(" . $campos . ") VALUES (" . $valores . ")";
@@ -149,7 +152,7 @@ class SqlMysql extends SQL2 {
 	// función update para mysql
 	function Modificar($tabla, $actualizaciones, $where) {
 		$actualizaciones = html_entity_decode(htmlentities(utf8_decode($actualizaciones)));
-		if ($where != null && $where != "")
+		if($where != null && $where != "")
 			$update = "UPDATE " . $tabla . " SET " . $actualizaciones . " WHERE " . $where;
 		else
 			$update = "UPDATE " . $tabla . " SET " . $actualizaciones;
@@ -176,7 +179,7 @@ class SqlMysql extends SQL2 {
 		$this->res = mysqli_query($this->Conn->conn, $this->consulta);
 		$this->Guardar_log($sql);
 		while($fila = mysqli_fetch_row($this->res)) {
-			foreach ( $fila as $valor )
+			foreach($fila as $valor)
 				$resultado[] = $valor;
 		}
 		return $resultado;
@@ -194,7 +197,7 @@ class SqlMysql extends SQL2 {
 	 * <Post-condiciones>
 	 */
 	function Eliminar($tabla, $where) {
-		if ($where != null && $where != "")
+		if($where != null && $where != "")
 			$delete = "DELETE FROM " . $tabla . " WHERE " . $where;
 		else
 			$delete = "DELETE FROM " . $tabla;
@@ -218,11 +221,11 @@ class SqlMysql extends SQL2 {
 	function Resultado() {
 		$resultado["sql"] = $this->consulta;
 		$resultado["numcampos"] = $this->Numero_Filas();
-		if ($this->Numero_Filas() > 0) {
+		if($this->Numero_Filas() > 0) {
 			for($i = 0; $i < $this->Numero_Filas(); $i++) {
 				$resultado[$i] = mysqli_fetch_array($this->res, MYSQLI_ASSOC);
 				$j = 0;
-				foreach ( $resultado[$i] as $key => $valor ) {
+				foreach($resultado[$i] as $key => $valor) {
 					$resultado[$i][$j] = $resultado[$i][$key];
 					$j++;
 				}
@@ -317,26 +320,25 @@ class SqlMysql extends SQL2 {
 	 * <Post-condiciones>
 	 */
 	function Busca_tabla($tabla, $campo) {
-		if (!$tabla && @$_REQUEST["tabla"])
+		if(!$tabla && @$_REQUEST["tabla"])
 			$tabla = $_REQUEST["tabla"];
-		else if (!$tabla)
+		else if(!$tabla)
 			return (false);
 		$this->consulta = "show columns from " . $tabla;
 		$this->res = mysqli_query($this->Conn->conn, $this->consulta);
-		$resultado = array();
 		$i = 0;
-		while($row = mysqli_fetch_row($this->res)) {
-			if ($campo && $campo == $row[0]) {
-				array_push($resultado, $row[0]);
-				$i++;
-			} else if ($campo == '') {
-				array_push($resultado, $row[0]);
-				$i++;
-			}
+		$resultado = array();
+		for(; $arreglo = $this->sacar_fila($this->res); $i++) {
+			$arreglo = array_change_key_case($arreglo, CASE_LOWER);
+			array_push($resultado, $arreglo);
 		}
-		asort($resultado);
 		$resultado["numcampos"] = $i;
-		return ($resultado);
+		$this->filas = $i;
+		if($i) {
+			return $resultado;
+		} else {
+			return (FALSE);
+		}
 	}
 
 	/*
@@ -354,7 +356,7 @@ class SqlMysql extends SQL2 {
 	// devuelve los registro en el rango $inicio:$fin de la consulta, para mysql
 	function Ejecutar_Limit($sql, $inicio, $fin) {
 		$cuantos = $fin - $inicio + 1;
-		if ($inicio < 0)
+		if($inicio < 0)
 			$inicio = 0;
 
 		$consulta = "$sql LIMIT $inicio,$cuantos";
@@ -394,7 +396,7 @@ class SqlMysql extends SQL2 {
 	 * <Post-condiciones>
 	 */
 	function Numero_Campos($rs) {
-		if (!$rs) {
+		if(!$rs) {
 			return (0);
 		}
 		return ($rs->field_count);
@@ -412,7 +414,7 @@ class SqlMysql extends SQL2 {
 	 * <Post-condiciones>
 	 */
 	function Ultimo_Insert() {
-		if ($this->ultimoInsert) {
+		if($this->ultimoInsert) {
 			return $this->ultimoInsert;
 		}
 		return @mysqli_insert_id($this->Conn->conn);
@@ -424,18 +426,18 @@ class SqlMysql extends SQL2 {
 		$sql = str_replace('', '', $sql);
 		$accion = strtoupper(substr($sql, 0, strpos($sql, ' ')));
 		// echo $strsql;
-		if ($accion == 'SELECT')
+		if($accion == 'SELECT')
 			return false;
 		$tabla = "";
 		$llave = 0;
 		$string_detalle = "";
 		$func = $_SESSION["usuario_actual"];
 		$this->ultimoInsert = 0;
-		if (isset($_SESSION)) {
+		if(isset($_SESSION)) {
 			$fecha = $this->fecha_db_almacenar(date("Y-m-d h:i:s"), "Y-m-d h:i:s");
-			if ($sqleve != "") {
+			if($sqleve != "") {
 				$result = mysqli_query($this->Conn->conn, $sqleve);
-				if (!$result)
+				if(!$result)
 					die(" Error en la consulta: " . mysqli_error($this->Conn->conn));
 				$registro = $this->Ultimo_Insert();
 			}
@@ -443,26 +445,26 @@ class SqlMysql extends SQL2 {
 	}
 
 	function resta_fechas($fecha1, $fecha2) {
-		if ($fecha2 == "")
+		if($fecha2 == "")
 			$fecha2 = "CURDATE()";
 		return "DATEDIFF($fecha1,$fecha2)";
 	}
 
 	function fecha_db_almacenar($fecha, $formato = NULL) {
-		if (is_object($fecha)) {
+		if(is_object($fecha)) {
 			$fecha = $fecha->format($formato);
 		}
 
-		if (!$fecha || $fecha == "") {
+		if(!$fecha || $fecha == "") {
 			$fecha = date($formato);
 		}
-		if (!$formato)
+		if(!$formato)
 			$formato = "Y-m-d"; // formato por defecto php
 
 		$mystring = $fecha;
 		$findme = 'DATE_FORMAT';
 		$pos = strpos($mystring, $findme);
-		if ($pos === false) {
+		if($pos === false) {
 			$reemplazos = array(
 					'd' => '%d',
 					'm' => '%m',
@@ -476,7 +478,7 @@ class SqlMysql extends SQL2 {
 					'yyyy' => '%Y'
 			);
 			$resfecha = $formato;
-			foreach ( $reemplazos as $ph => $mot ) { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
+			foreach($reemplazos as $ph => $mot) { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
 				$resfecha = preg_replace('/' . $ph . '/', "$mot", $resfecha);
 				/*
 				 * $resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
@@ -496,7 +498,7 @@ class SqlMysql extends SQL2 {
 
 	// Fin Funcion fecha_db_almacenar
 	function fecha_db_obtener($campo, $formato = NULL) {
-		if (!$formato)
+		if(!$formato)
 			$formato = "Y-m-d"; // formato por defecto php
 
 		$reemplazos = array(
@@ -512,7 +514,7 @@ class SqlMysql extends SQL2 {
 				'yyyy' => '%Y'
 		);
 		$resfecha = $formato;
-		foreach ( $reemplazos as $ph => $mot ) { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
+		foreach($reemplazos as $ph => $mot) { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
 			$resfecha = preg_replace('/' . $ph . '/', "$mot", $resfecha);
 			/*
 			 * $resfecha=preg_replace('/'.$ph.'/', "$mot", $resfecha);
@@ -530,12 +532,12 @@ class SqlMysql extends SQL2 {
 
 	// Fin Funcion fecha_db_obtener
 	function mostrar_error() {
-		if ($this->error != "")
+		if($this->error != "")
 			echo ($this->error . " en \"" . $this->consulta . "\"");
 	}
 
 	function fecha_db($campo, $formato = NULL) {
-		if (!$formato)
+		if(!$formato)
 			$formato = "Y-m-d"; // formato por defecto php
 
 		$reemplazos = array(
@@ -551,7 +553,7 @@ class SqlMysql extends SQL2 {
 				'yyyy' => '%Y'
 		);
 		$resfecha = $formato;
-		foreach ( $reemplazos as $ph => $mot ) { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
+		foreach($reemplazos as $ph => $mot) { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
 			$resfecha = preg_replace('/' . $ph . '/', "$mot", $resfecha);
 		}
 		$fsql = "DATE_FORMAT($campo,'$resfecha')";
@@ -561,19 +563,19 @@ class SqlMysql extends SQL2 {
 
 	// Fin Funcion fecha_db_obtener
 	function case_fecha($dato, $compara, $valor1, $valor2) {
-		if ($compara = "" || $compara == 0)
+		if($compara = "" || $compara == 0)
 			$compara = ">0";
 		return ("IF($dato$compara,$valor2,$valor1)");
 	}
 
 	function suma_fechas($fecha1, $cantidad, $tipo = "") {
-		if ($tipo == "")
+		if($tipo == "")
 			$tipo = 'DAY';
 		return "DATE_ADD($fecha1, INTERVAL $cantidad $tipo)";
 	}
 
 	function resta_horas($fecha1, $fecha2) {
-		if ($fecha2 == "")
+		if($fecha2 == "")
 			$fecha2 = "CURDATE()";
 		return "timediff($fecha1,$fecha2)";
 	}
@@ -584,7 +586,7 @@ class SqlMysql extends SQL2 {
 
 	// /Recibe la fecha inicial y la fecha que se debe controlar o fecha de referencia, si tiempo =1 es que la fecha iniicial esta por encima ese tiempo de la fecha de control ejemplo si fecha_inicial=2010-11-11 y fecha_control=2011-12-11 quiere decir que ha pasado 1 año , 1 mes y 0 dias desde la fecha inicial a la de control
 	function compara_fechas($fecha_control, $fecha_inicial) {
-		if (!strlen($fecha_control)) {
+		if(!strlen($fecha_control)) {
 			$fecha_control = date('Y-m-d');
 		}
 		$resultado = $this->ejecuta_filtro_tabla("SELECT " . $this->resta_fechas("'" . $fecha_control . "'", "'" . $fecha_inicial . "'") . " AS diff FROM dual");
@@ -592,16 +594,16 @@ class SqlMysql extends SQL2 {
 	}
 
 	function invocar_radicar_documento($iddocumento, $idcontador, $funcionario) {
-		$strsql="CALL sp_asignar_radicado($iddocumento, $idcontador, $funcionario)";
+		$strsql = "CALL sp_asignar_radicado($iddocumento, $idcontador, $funcionario)";
 		$this->Ejecutar_Sql($strsql) or die($strsql);
 	}
 
 	function listar_campos_tabla($tabla = NULL, $tipo_retorno = 0) {
-		if ($tabla == NULL)
+		if($tabla == NULL)
 			$tabla = $_REQUEST["tabla"];
 		$datos_tabla = $this->Ejecutar_Sql("DESCRIBE " . $tabla);
 		while($fila = $this->sacar_fila($datos_tabla)) { // print_r($fila);
-			if ($tipo_retorno) {
+			if($tipo_retorno) {
 				$lista_campos[] = array_map(strtolower, $fila);
 			} else {
 				$lista_campos[] = strtolower($fila[0]);
@@ -612,14 +614,14 @@ class SqlMysql extends SQL2 {
 
 	function guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $log = 1) {
 		$resultado = TRUE;
-		if ($tipo == "archivo") {
+		if($tipo == "archivo") {
 			$sql = "update $tabla set $campo='" . addslashes($contenido) . "' where $condicion";
 			mysqli_query($this->Conn->conn, $sql);
 			// TODO verificar resultado de la insecion $resultado=FALSE;
-		} elseif ($tipo == "texto") {
+		} elseif($tipo == "texto") {
 			$contenido = codifica_encabezado(limpia_tabla($contenido));
 			$sql = "update $tabla set $campo='" . addslashes(stripslashes($contenido)) . "' where $condicion";
-			if ($log) {
+			if($log) {
 				preg_match("/.*=(.*)/", strtolower($condicion), $resultados);
 				$llave = trim($resultados[1]);
 				$anterior = busca_filtro_tabla($campo, $tabla, $condicion, "", $this);
@@ -628,7 +630,7 @@ class SqlMysql extends SQL2 {
 				$sqleve = "INSERT INTO evento(funcionario_codigo, fecha, evento, tabla_e, registro_id, estado,detalle,codigo_sql) VALUES('" . usuario_actual("funcionario_codigo") . "','" . date('Y-m-d H:i:s') . "','MODIFICAR', '$tabla', $llave, '0','" . addslashes($sql_anterior) . "','" . addslashes($sql) . "')";
 				$this->Ejecutar_Sql($sqleve);
 				$registro = $this->Ultimo_Insert();
-				if ($registro) {
+				if($registro) {
 					$archivo = "$registro|||" . usuario_actual("funcionario_codigo") . "|||" . date('Y-m-d H:i:s') . "|||MODIFICAR|||$tabla|||0|||" . addslashes($sql_anterior) . "|||$llave|||" . addslashes($sql);
 					evento_archivo($archivo);
 				}
@@ -639,76 +641,76 @@ class SqlMysql extends SQL2 {
 	}
 
 	public function campo_formato_tipo_dato($tipo_dato, $longitud, $predeterminado, $banderas = null) {
-		switch (strtoupper(@$tipo_dato)) {
-			case "NUMBER" :
+		switch(strtoupper(@$tipo_dato)) {
+			case "NUMBER":
 				$campo .= " decimal";
-				if ($longitud) {
+				if($longitud) {
 					$campo .= "(" . intval($longitud) . ",0) ";
 				} else {
 					$campo .= "(10,0) ";
 				}
-				if ($predeterminado) {
+				if($predeterminado) {
 					$campo .= " DEFAULT '" . intval($predeterminado) . "' ";
 				}
 				break;
-			case "DOUBLE" :
+			case "DOUBLE":
 				$campo .= " double";
-				if ($longitud) {
+				if($longitud) {
 					$campo .= "(" . intval($longitud) . ") ";
 				} else {
 					$campo .= "";
 				}
-				if ($predeterminado) {
+				if($predeterminado) {
 					$campo .= " DEFAULT '" . intval($predeterminado) . "' ";
 				}
 				break;
-			case "CHAR" :
+			case "CHAR":
 				$campo .= " char ";
-				if ($longitud) {
+				if($longitud) {
 					$campo .= "(" . $this->maximo_valor(intval($longitud), 255) . ") ";
 				} else {
 					$campo .= "(10) ";
 				}
-				if ($predeterminado) {
+				if($predeterminado) {
 					$campo .= " DEFAULT '" . $this->maximo_valor(intval($predeterminado), 255) . "' ";
 				}
 				break;
-			case "VARCHAR" :
+			case "VARCHAR":
 				$campo .= " varchar";
-				if ($longitud) {
+				if($longitud) {
 					$campo .= "(" . $this->maximo_valor(intval($longitud), 255) . ") ";
 				} else {
 					$campo .= "(255) ";
 				}
-				if ($predeterminado) {
+				if($predeterminado) {
 					$campo .= " DEFAULT '" . intval($predeterminado) . "' ";
 				}
 				break;
-			case "TEXT" :
-				if ($longitud == "")
+			case "TEXT":
+				if($longitud == "")
 					$longitud = 4000;
 				$campo .= " text ";
 				break;
-			case "DATE" :
+			case "DATE":
 				$campo .= " date ";
 				break;
-			case "TIME" :
+			case "TIME":
 				$campo .= " time ";
 				break;
-			case "DATETIME" :
+			case "DATETIME":
 				$campo .= " DATETIME ";
 				break;
-			case "BLOB" :
+			case "BLOB":
 				$campo .= " blob ";
 				break;
-			default :
+			default:
 				$campo .= " int";
-				if ($longitud) {
+				if($longitud) {
 					$campo .= "(" . intval($longitud) . ") ";
 				} else {
 					$campo .= "(11) ";
 				}
-				if ($predeterminado) {
+				if($predeterminado) {
 					$campo .= " DEFAULT '" . intval($predeterminado) . "' ";
 				}
 				break;
@@ -721,15 +723,15 @@ class SqlMysql extends SQL2 {
 		$nombre_campo = strtoupper($nombre_campo);
 		$banderas = explode(",", $todas_banderas);
 		$traza = array();
-		if (strlen($nombre_tabla) > 26) {
+		if(strlen($nombre_tabla) > 26) {
 			$aux = substr($nombre_tabla, 0, 26);
 		} else {
 			$aux = $nombre_tabla;
 		}
 		$this->filas = 0;
 
-		switch (strtolower($bandera)) {
-			case "pk" :
+		switch(strtolower($bandera)) {
+			case "pk":
 				$dato = "ALTER TABLE " . strtolower($nombre_tabla) . " ADD PRIMARY KEY ( " . strtolower($nombre_campo) . ")";
 				guardar_traza($dato, $nombre_tabla);
 				$this->Ejecutar_sql($dato);
@@ -738,18 +740,20 @@ class SqlMysql extends SQL2 {
 				$this->Ejecutar_sql($dato);
 
 				break;
-			case "u" :
-				if ($this->verificar_existencia($nombre_tabla)) {
+			case "u":
+				if($this->verificar_existencia($nombre_tabla)) {
 					$dato = "ALTER TABLE " . $nombre_tabla . " ADD UNIQUE( " . $nombre_campo . " )";
 					guardar_traza($dato, $nombre_tabla);
 					$this->Ejecutar_sql($dato);
 				}
 				break;
-			case "i" :
-				if ($this->verificar_existencia($nombre_tabla)) {
-					$dato = "ALTER TABLE " . $nombre_tabla . " ADD INDEX ( " . $nombre_campo . " )";
-					guardar_traza($dato, $nombre_tabla);
-					$this->Ejecutar_sql($dato);
+			case "i":
+				if($this->verificar_existencia($nombre_tabla)) {
+					if(!$this->verificar_existencia_idx_col($nombre_tabla, $nombre_campo)) {
+						$dato = "ALTER TABLE " . $nombre_tabla . " ADD INDEX ( " . $nombre_campo . " )";
+						guardar_traza($dato, $nombre_tabla);
+						$this->Ejecutar_sql($dato);
+					}
 				}
 				break;
 		}
@@ -759,21 +763,30 @@ class SqlMysql extends SQL2 {
 	protected function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta) {
 		$lcampos = array();
 		for($i = 0; $i < $campos["numcampos"]; $i++) {
+			$datos_campo = ejecuta_filtro_tabla("SELECT (CASE IS_NULLABLE WHEN 'YES' THEN 1 WHEN 'N0' THEN 0 END) as nulo FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema = '" . DB . "' AND table_name='{$formato[0]["nombre_tabla"]}' and column_name LIKE '{$campos[$i]["nombre"]}'", $this);
+			$texto_null = "";
+			if(!empty($datos_campo[0]["nulo"]) && $datos_campo[0]["nulo"] != $campos[$i]["obligatoriedad"]) {
+				if($formato[0]["nombre_tabla"]) {
+					if($campos[$i]["obligatoriedad"]) {
+						$texto_null .= " NOT NULL";
+					}
+				}
+			}
 
 			$dato_campo = $this->crear_campo($campos[$i], $formato[0]["nombre_tabla"], $datos_campo);
-			if ($dato_campo && $dato_campo != "") {
-				if (!$tabla_esta) {
+			if($dato_campo && $dato_campo != "") {
+				if(!$tabla_esta) {
 					array_push($lcampos, $dato_campo);
 				} else {
 					$pos = array_search(strtolower($campos[$i]["nombre"]), $campos_tabla);
 					$dato = "";
 
-					if ($pos === false) {
-						$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ADD " . $dato_campo;
+					if($pos === false) {
+						$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ADD " . $dato_campo . $texto_null;
 					} else {
-						$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " MODIFY " . $dato_campo;
+						$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " MODIFY " . $dato_campo . $texto_null;
 					}
-					if ($dato != "") {
+					if($dato != "") {
 						guardar_traza($dato, $formato[0]["nombre_tabla"]);
 						$this->Ejecutar_Sql($dato);
 					}
@@ -793,19 +806,19 @@ class SqlMysql extends SQL2 {
 	}
 
 	protected function elimina_indice_campo($tabla, $campo) {
-		if ($campo["Key_name"] == "PRIMARY") {
-			if ($this->verificar_existencia($tabla)) {
+		if($campo["Key_name"] == "PRIMARY") {
+			if($this->verificar_existencia($tabla)) {
 				$sql = "ALTER TABLE " . strtolower($tabla) . " CHANGE " . $campo["Column_name"] . " " . $campo["Column_name"] . " INT( 11 ) NOT NULL";
 				guardar_traza($sql, strtolower($tabla));
-				phpmkr_query($sql, $conn);
+				phpmkr_query($sql);
 				$sql = "ALTER TABLE " . strtolower($tabla) . " DROP PRIMARY KEY";
 				guardar_traza($sql, strtolower($tabla));
-				phpmkr_query($sql, $conn);
+				phpmkr_query($sql);
 			}
-		} else {
-			$sql = "DROP INDEX " . $campo["Column_name"] . " ON " . $tabla;
+		} else if($iname = $this->verificar_existencia_idx_col($tabla, $campo["Column_name"], true) ) {
+			$sql = "DROP INDEX " . $iname . " ON " . $tabla;
 			guardar_traza($sql, strtolower($tabla));
-			phpmkr_query($sql, $conn);
+			phpmkr_query($sql);
 		}
 		return;
 	}
@@ -815,26 +828,50 @@ class SqlMysql extends SQL2 {
 		return mysqli_num_rows($res) > 0;
 	}
 
-    public function concatenar_cadena($arreglo_cadena) {
-        $cadena_final = '';
-        if (@$arreglo_cadena[($i + 1)] == "") {
-            return ($arreglo_cadena[0]);
-        }
-        $cant = count($arreglo_cadena);
-        for ($i = 0; $i < $cant; $i++) {
-            if ($i > 0) {
-                $cadena_final .= ",";
-            }
-            $cadena_final .= "CONCAT(" . $arreglo_cadena[$i];
-            if (@$arreglo_cadena[($i + 2)] == "") {
-                $cadena_final .= "," . $arreglo_cadena[($i + 1)];
-                $i++;
-            }
-        }
-        for (; $i > 1; $i--) {
-            $cadena_final .= ')';
-        }
-        return ($cadena_final);
-    }
+	private function verificar_existencia_idx_col($tabla, $campo, $ret_iname = false) {
+		$sql_existe_idx = "SELECT INDEX_NAME as existe FROM information_schema.statistics WHERE INDEX_SCHEMA='" . DB . "' AND TABLE_NAME='$tabla' AND COLUMN_NAME='$campo'";
 
+		$rs = $this->Ejecutar_sql($sql_existe_idx);
+		$fila = $this->sacar_fila($rs);
+		if($fila) {
+			if($ret_iname) {
+				return $fila["existe"];
+			}
+			return (!empty($fila["existe"]));
+		}
+		return false;
+	}
+
+	private function verificar_existencia_idx_nombre($tabla, $nombre_idx) {
+		$sql_existe_idx = "SELECT INDEX_NAME as existe FROM information_schema.statistics WHERE INDEX_SCHEMA='" . DB . "' AND TABLE_NAME='$tabla' AND INDEX_NAME='$nombre_idx'";
+
+		$rs = $this->Ejecutar_sql($sql_existe_idx);
+		$fila = $this->sacar_fila($rs);
+		if($fila) {
+			return (!empty($fila["existe"]));
+		}
+		return false;
+	}
+
+	public function concatenar_cadena($arreglo_cadena) {
+		$cadena_final = '';
+		if(@$arreglo_cadena[($i + 1)] == "") {
+			return ($arreglo_cadena[0]);
+		}
+		$cant = count($arreglo_cadena);
+		for($i = 0; $i < $cant; $i++) {
+			if($i > 0) {
+				$cadena_final .= ",";
+			}
+			$cadena_final .= "CONCAT(" . $arreglo_cadena[$i];
+			if(@$arreglo_cadena[($i + 2)] == "") {
+				$cadena_final .= "," . $arreglo_cadena[($i + 1)];
+				$i++;
+			}
+		}
+		for(; $i > 1; $i--) {
+			$cadena_final .= ')';
+		}
+		return ($cadena_final);
+	}
 }

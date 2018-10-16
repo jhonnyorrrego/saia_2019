@@ -583,7 +583,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
 
 function obtener_informacion_proveedor($idformato, $iddoc) {
 	global $conn, $datos;
-	if ($datos[0]['tipo_origen'] == 1) {
+	if ($datos[0]['tipo_origen'] == 1 && !empty($datos[0]["persona_natural"])) {
 		$info = busca_filtro_tabla("", "datos_ejecutor B, ejecutor C", "B.ejecutor_idejecutor=C.idejecutor AND B.iddatos_ejecutor=" . $datos[0]["persona_natural"], "", $conn);
 		if ($info["numcampos"]) {
 			$texto = array();
@@ -604,13 +604,15 @@ function obtener_informacion_proveedor($idformato, $iddoc) {
 			"apellidos"
 		);
 		$cadena_concat = concatenar_cadena_sql($array_concat);
-		$origen = busca_filtro_tabla($cadena_concat . " AS nombre, dependencia, cargo", "vfuncionario_dc", "iddependencia_cargo IN(" . $datos[0]['area_responsable'] . ")", "", $conn);
-		if ($origen["numcampos"]) {
-			$texto = array();
-			$texto[] = "<b>Nombre:</b> " . $origen[0]["nombre"];
-			$texto[] = "<b>Dependencia:</b> " . $origen[0]["dependencia"];
-			$texto[] = "<b>Cargo:</b> " . $origen[0]["cargo"];
-			echo(implode("<br />", $texto));
+		if(!empty($datos[0]['area_responsable'])) {
+			$origen = busca_filtro_tabla($cadena_concat . " AS nombre, dependencia, cargo", "vfuncionario_dc", "iddependencia_cargo IN(" . $datos[0]['area_responsable'] . ")", "", $conn);
+			if ($origen["numcampos"]) {
+				$texto = array();
+				$texto[] = "<b>Nombre:</b> " . $origen[0]["nombre"];
+				$texto[] = "<b>Dependencia:</b> " . $origen[0]["dependencia"];
+				$texto[] = "<b>Cargo:</b> " . $origen[0]["cargo"];
+				echo(implode("<br />", $texto));
+			}
 		}
 	}
 }
