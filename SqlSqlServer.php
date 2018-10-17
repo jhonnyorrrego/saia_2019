@@ -77,6 +77,15 @@ class SqlSqlServer extends SQL2 {
 				$this->consulta = trim($sql);
 				$fin = strpos($this->consulta, " ");
 				$accion = substr($this->consulta, 0, $fin);
+			} else {
+				if( ($errors = sqlsrv_errors() ) != null) {
+					$mensajes = array();
+					foreach( $errors as $error ) {
+						$mensajes[] = $error['message'];
+					}
+					trigger_error(implode("<br>", $mensajes) . " $sql", E_USER_ERROR);
+				}
+			    return false;
 			}
 			return ($this->res);
 		}
@@ -543,8 +552,25 @@ class SqlSqlServer extends SQL2 {
 	}
 
 	function invocar_radicar_documento($iddocumento, $idcontador, $funcionario) {
-		$strsql="EXEC sp_asignar_radicado @iddoc=$iddocumento, @idcontador=$idcontador, @idfuncionario=$funcionario;";
-		$this->Ejecutar_Sql($strsql) or die($strsql);
+		sqlsrv_configure("WarningsReturnAsErrors", 0);
+		$options = array( "Scrollable"=>SQLSRV_CURSOR_STATIC);
+
+		$strsql="EXEC sp_asignar_radicado @iddoc=$iddocumento, @tipo=$idcontador, @funcionario=$funcionario";
+
+		sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
+		$this->res = sqlsrv_query($this->Conn->conn, $strsql, null, $options);
+		if (!$this->res) {
+			if( ($errors = sqlsrv_errors() ) != null) {
+				$mensajes = array();
+				foreach( $errors as $error ) {
+					$mensajes[] = $error['message'];
+				}
+				trigger_error(implode("<br>", $mensajes) . " $strsql", E_USER_ERROR);
+			}
+			return false;
+		}
+
+
 	}
 
 	function listar_campos_tabla($tabla = NULL, $tipo_retorno = 0) {
