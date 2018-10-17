@@ -82,10 +82,13 @@ class Version20180928160000 extends AbstractMigration {
     }
 
     private function crear_vista_expediente() {
-        $vista = <<<FINSQL
-CREATE
-OR REPLACE
-VIEW vexpediente_serie AS select
+        $motor = $this->connection->getDatabasePlatform()->getName();
+        $modificar = "create or replace ";
+        if($motor == "mssql" || $motor == "sqlsrv") {
+            $modificar = "ALTER ";
+        }
+
+        $vista = $modificar . " VIEW vexpediente_serie AS select
     a.propietario AS propietario,
     c.nombre AS nombre_serie,
     a.serie_idserie AS serie_idserie,
@@ -156,16 +159,18 @@ union select
     1 AS desde_serie
 from expediente a
 join permiso_serie b on a.serie_idserie = b.serie_idserie
-join serie c on b.serie_idserie = c.idserie
-FINSQL;
+join serie c on b.serie_idserie = c.idserie";
         return $vista;
     }
 
     private function devolver_vista_expediente() {
-        $vista = <<<FINSQL
-CREATE
-OR REPLACE
-VIEW vexpediente_serie AS select
+        $motor = $this->connection->getDatabasePlatform()->getName();
+        $modificar = "create or replace ";
+        if($motor == "mssql" || $motor == "sqlsrv") {
+            $modificar = "ALTER ";
+        }
+
+        $vista = $modificar . " VIEW vexpediente_serie AS select
     a.propietario AS propietario,
     c.nombre AS nombre_serie,
     a.serie_idserie AS serie_idserie,
@@ -232,8 +237,7 @@ union select
     1 AS desde_serie
 from expediente a
 join permiso_serie b on a.serie_idserie = b.serie_idserie
-join serie c on b.serie_idserie = c.idserie
-FINSQL;
+join serie c on b.serie_idserie = c.idserie";
         return $vista;
     }
 

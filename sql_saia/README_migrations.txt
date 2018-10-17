@@ -18,6 +18,9 @@ return [
 Desde la carpeta migracioes_[my|ora|mssql|pg] (migracioes_my) ejecutar
 ../../vendor/bin/doctrine-migrations migrations:generate
 
+En windows:
+php ../../vendor/doctrine/migrations/bin/doctrine-migrations.php migrations:generate
+
 Se creará en la carpeta migrations un archivo Version<fecha_actual_con_hora>.php
 
 Modificar el archivo usando como plantilla : migrations/VersionPlantilla.php
@@ -26,6 +29,10 @@ En el archivo migrations/VersionPlantilla.php se muestran ejemplos de ejecución
 
 Una vez modificada la clase que se genera, se debe ejecutar
 ../../vendor/bin/doctrine-migrations migrations:migrate 
+
+En windows:
+php ../../vendor/doctrine/migrations/bin/doctrine-migrations.php migrations:migrate
+
 
 Opcionalmente se puede pasar el parámetro --write-sql para generar un .sql de las sentencias ejecutadas.
 

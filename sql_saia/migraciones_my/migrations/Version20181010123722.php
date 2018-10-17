@@ -42,6 +42,7 @@ class Version20181010123722 extends AbstractMigration {
                 $this->addSql("ALTER TABLE buzon_entrada MODIFY ruta_idruta INT(11)");
                 break;
             case "sqlsrv":
+            case "mssql":
                 $this->addSql("ALTER TABLE buzon_entrada ALTER COLUMN ruta_idruta INT NULL");
                 $this->addSql($this->modificar_sp_radicado_sqlsrv());
                 break;
@@ -60,10 +61,13 @@ class Version20181010123722 extends AbstractMigration {
     }
 
     private function modificar_vista_exp() {
-        $vista = <<<FINSQL
-CREATE
-OR REPLACE
-VIEW vexpediente_serie AS select
+        $motor = $this->connection->getDatabasePlatform()->getName();
+        $modificar = "CREATE OR REPLACE ";
+        if($motor == "mssql" || $motor == "sqlsrv") {
+            $modificar = "alter ";
+        }
+        $vista = $modificar . " VIEW vexpediente_serie AS 
+    select
     a.propietario AS propietario,
     c.nombre AS nombre_serie,
     a.serie_idserie AS serie_idserie,
@@ -128,8 +132,7 @@ union select
     1
 from expediente a
 join permiso_serie b on a.serie_idserie = b.serie_idserie
-join serie c on b.serie_idserie = c.idserie;
-FINSQL;
+join serie c on b.serie_idserie = c.idserie";
         return $vista;
     }
 

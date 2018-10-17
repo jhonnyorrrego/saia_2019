@@ -30,7 +30,13 @@ class Version20180808204600 extends AbstractMigration {
     }
 
     private function crear_vista() {
-        $sql = "create or replace view vexpediente_serie as
+        $motor = $this->connection->getDatabasePlatform()->getName();
+        $modificar = "create or replace ";
+        if($motor == "mssql" || $motor == "sqlsrv") {
+            $modificar = "ALTER ";
+        }
+
+        $sql = $modificar . " view vexpediente_serie as
 SELECT
     a.propietario AS propietario,
     c.nombre AS nombre_serie,

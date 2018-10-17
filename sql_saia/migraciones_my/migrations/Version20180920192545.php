@@ -72,10 +72,13 @@ class Version20180920192545 extends AbstractMigration {
     }
 
     private function crear_vista() {
-        $vista = <<<FINSQL
-CREATE
-OR REPLACE
-VIEW vpermiso_serie AS select
+        $motor = $this->connection->getDatabasePlatform()->getName();
+        $modificar = "create or replace ";
+        if($motor == "mssql" || $motor == "sqlsrv") {
+            $modificar = "CREATE ";
+        }
+
+        $vista = $modificar . " VIEW vpermiso_serie AS select
     f.idfuncionario AS idfuncionario,
     f.funcionario_codigo AS funcionario_codigo,
     s.idserie AS idserie,
@@ -136,16 +139,18 @@ join vfuncionario_dc v on v.idcargo = p.llave_entidad
 where
     p.entidad_identidad = 4
     and v.estado_dc = 1
-    and p.estado = 1
-FINSQL;
+    and p.estado = 1";
         return $vista;
     }
 
     private function devolver_vista() {
-        $vista = <<<FINSQL
-CREATE
-OR REPLACE
-VIEW vpermiso_serie AS select
+        $motor = $this->connection->getDatabasePlatform()->getName();
+        $modificar = "create or replace ";
+        if($motor == "mssql" || $motor == "sqlsrv") {
+            $modificar = "ALTER ";
+        }
+
+        $vista = $modificar . " VIEW vpermiso_serie AS select
     f.idfuncionario AS idfuncionario,
     f.funcionario_codigo AS funcionario_codigo,
     s.idserie AS idserie,
@@ -203,8 +208,7 @@ join vfuncionario_dc v on v.idcargo = p.llave_entidad
 where
     p.entidad_identidad = 4
     and v.estado_dc = 1
-    and p.estado = 1
-FINSQL;
+    and p.estado = 1";
         return $vista;
     }
 
