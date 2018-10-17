@@ -8,6 +8,7 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
+
 ?>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php include_once($ruta_db_superior."pantallas/lib/librerias_componentes.php"); ?>
@@ -365,11 +366,20 @@ $serie_padre = "";
 	  <label class="control-label" for="ubicacion">Ubicaci&oacute;n
 	  </label>
 	  <div class="controls">
-	  	<select name="ubicacion" id="ubicacion">
+	  	<!--select name="ubicacion" id="ubicacion"-->
+	  	<select name="estado_archivo" id="estado_archivo">
 	  		<option value="">Por favor seleccione...</option>
-				<option value="1" <?php if($datos[0]["ubicacion"]==1)echo("selected"); ?>>Central</option>
+				<!--option value="1" <?php if($datos[0]["ubicacion"]==1)echo("selected"); ?>>Central</option>
 				<option value="2" <?php if($datos[0]["ubicacion"]==2)echo("selected"); ?>>Gestion</option>
-				<option value="3" <?php if($datos[0]["ubicacion"]==3)echo("selected"); ?>>Historico</option>
+				<option value="3" <?php if($datos[0]["ubicacion"]==3)echo("selected"); ?>>Historico</option-->
+					<option value="1" <?php 
+					if($datos[0]["estado_archivo"]==1 || $_REQUEST["estado_archivo"]==1){
+						echo("selected"); 
+					}
+					?>
+					>Central</option>
+				<option value="2" <?php if($datos[0]["estado_archivo"]==2 || $_REQUEST["estado_archivo"]==2)echo("selected"); ?>>Gestion</option>
+				<option value="3" <?php if($datos[0]["estado_archivo"]==3 || $_REQUEST["estado_archivo"]==3)echo("selected"); ?>>Historico</option-->
 	  	</select>
 	  </div>
 	</div>
@@ -392,7 +402,7 @@ $serie_padre = "";
 <input type="hidden" name="identidad_serie" id="identidad_serie"/>
 <input type="hidden" name="tipo_retorno" value="1"/>
 <input type="hidden" name="fk_idcaja" value="<?php echo(@$_REQUEST["fk_idcaja"]);?>">
-<input type="hidden" name="estado_archivo" value="1">
+<!--input type="hidden" name="estado_archivo" value="1"-->
 <input type="hidden" name="key_formulario_saia" value="<?php echo(generar_llave_md5_saia());?>">
 <div>
 <button class="btn btn-primary btn-mini" id="submit_formulario_expediente">Aceptar</button>
@@ -501,7 +511,18 @@ $serie_padre = "";
   }
   });
 
-  $("#submit_formulario_expediente").click(function(){
+  $("#submit_formulario_expediente").click(function(){  	
+  	if(!$('select[name=estado_archivo]').val()){
+  		console.log("no selecciono selec");
+  		$("#estado_archivo").val("<?php echo $_REQUEST["estado_archivo"]; ?>");
+  		console.log($("#estado_archivo").val());
+  	}
+  	else{
+  		console.log("si se selecciono selec");
+  		console.log($("#estado_archivo").val());
+  	}
+  	//var estado_archivo = $("#estado_archivo").val();
+  	console.log(estado_archivo);
     if(formulario_expediente.valid()){
     	$('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
 			$(this).attr('disabled', 'disabled');

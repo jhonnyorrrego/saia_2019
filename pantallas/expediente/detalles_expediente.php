@@ -46,14 +46,20 @@ $expediente = busca_filtro_tabla("a.*," . fecha_db_obtener("a.fecha", "Y-m-d") .
 </style>
 <body>
 <?php
-	$permiso = new PermisosExpediente($conn, $idexpediente);
-    $permisos = $permiso->obtener_permisos();
-
-    $m = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_MODIFICAR);
-	$sm= $permiso->tiene_permiso_serie(PermisosExpediente::PERMISO_SER_MODIFICAR);
-    $e = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_ELIMINAR);
-    $p = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_COMPARTIR);
-   
+	$permiso_modulo = new Permiso();
+    $ok = $permiso_modulo->acceso_modulo_perfil('expediente_admin');  
+	if(!$ok){
+		$permiso = new PermisosExpediente($conn, $idexpediente);
+	    $permisos = $permiso->obtener_permisos();
+	
+	    $m = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_MODIFICAR);
+		$sm= $permiso->tiene_permiso_serie(PermisosExpediente::PERMISO_SER_MODIFICAR);
+	    $e = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_ELIMINAR);
+	    $p = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_COMPARTIR);
+	}
+	else{
+		$sm=$e=$m=$p=1;
+	}
 	/*if ($expediente[0]["propietario"] == $_SESSION["usuario_actual"]) {
 		$m = 1;
 		$e = 1;
@@ -538,7 +544,8 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
 </div>
 <?php
 $almacenamiento["numcampos"]=0;
-if($almacenamiento["numcampos"]){
+
+if($almacenamiento["numcampos"]){	
 ?>
 <div class="container">
 <div data-toggle="collapse" data-target="#div_info_almacenamiento" style="cursor:pointer;">
