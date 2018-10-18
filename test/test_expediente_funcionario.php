@@ -149,7 +149,7 @@ class DHtmlXtreeExpedienteFunc {
     private function llena_subserie($id, $idexp) {
         $papas = busca_filtro_tabla("distinct idserie, nombre_serie nombre, codigo, tipo, estado_serie estado, permiso",
             "vpermiso_serie",
-            "tipo in (2,3) and tvd=0 and cod_padre=" . $id . " and idfuncionario = " . $_SESSION["idfuncionario"], "nombre ASC", $this->conn);
+            "tipo in (2,3) and tvd=0 and cod_padre=" . $id . " and idfuncionario = " . $_SESSION["idfuncionario"]." and permiso like '%a,v%'", "nombre ASC", $this->conn);
 
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
@@ -208,7 +208,7 @@ class DHtmlXtreeExpedienteFunc {
     private function llena_tipo_documental($id, $idexp) {
         $papas = busca_filtro_tabla("distinct idserie, nombre_serie nombre, codigo, tipo, estado_serie estado, permiso",
             "vpermiso_serie",
-            "tipo=3 and tvd=0 and cod_padre=" . $id . " and idfuncionario = " . $_SESSION["idfuncionario"], "nombre ASC", $this->conn);
+            "tipo=3 and tvd=0 and cod_padre=" . $id . " and idfuncionario = " . $_SESSION["idfuncionario"]." and permiso like '%a,v%'", "nombre ASC", $this->conn);
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
                 $permisos = array();
