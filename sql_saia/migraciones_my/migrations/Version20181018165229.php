@@ -61,6 +61,40 @@ class Version20181018165229 extends AbstractMigration
                 $resp = $conn->update('busqueda_componente', $data, $ident);
             }
         }
+		
+		$queryBuilder = $conn->createQueryBuilder();
+        $queryBuilder->select('idbusqueda_componente')->from('busqueda_componente')->where("nombre=:nombre")->setParameter("nombre", 'documento_historico');
+
+        $result = $queryBuilder->execute()->fetchAll();
+
+        if (!empty($result)) {           
+            foreach ($result as $row) {
+                $data = [
+                    'acciones_seleccionados' => 'adicionar_expediente,transferencia_documental,prestamo_documento'
+                ];
+                $ident = [
+                    'idbusqueda_componente' => $row["idbusqueda_componente"]
+                ];
+                $resp = $conn->update('busqueda_componente', $data, $ident);
+            }
+        }
+
+$queryBuilder = $conn->createQueryBuilder();
+        $queryBuilder->select('idbusqueda_componente')->from('busqueda_componente')->where("nombre=:nombre")->setParameter("nombre", 'documento_central');
+
+        $result = $queryBuilder->execute()->fetchAll();
+
+        if (!empty($result)) {           
+            foreach ($result as $row) {
+                $data = [
+                    'acciones_seleccionados' => 'adicionar_expediente,transferencia_documental,prestamo_documento'
+                ];
+                $ident = [
+                    'idbusqueda_componente' => $row["idbusqueda_componente"]
+                ];
+                $resp = $conn->update('busqueda_componente', $data, $ident);
+            }
+        }
 
     }
 

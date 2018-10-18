@@ -394,7 +394,7 @@ if ($entidad["numcampos"]) {
 		</tr>
 
 		<tr class="ocultar">
-			<td class="encabezado" title="Cantidad de d&iacute;as para dar tr&aacute;mite y respuesta al documento"><span class="phpmaker" style="color: #FFFFFF;">TIEMPO DE RESPUESTA (D&Iacute;AS) *</span></td>
+			<td class="encabezado" title="Cantidad de d&iacute;as para dar tr&aacute;mite y respuesta al documento"><span class="phpmaker" style="color: #FFFFFF;">TIEMPO DE RESPUESTA EN (D&Iacute;AS) *</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker">
 				<input type="text" name="x_dias_entrega" id="x_dias_entrega" size="30" value="<?php echo $x_dias_entrega; ?>">
 			</span></td>
