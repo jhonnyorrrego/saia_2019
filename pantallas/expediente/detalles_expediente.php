@@ -371,12 +371,13 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
     $fecha_cierre=$datos_cierre[0]['fecha_cierre'];
 
     if($datos_cierre[0]['estado_cierre']==2){
-        $dias_calcular=365*$datos_serie[0]["retencion_".$vector_estado_expediente[$estado_expediente]];
-       // $dias_calcular=60;
+        //$dias_calcular=365*$datos_serie[0]["retencion_".$vector_estado_expediente[$estado_expediente]];
+        $dias_calcular=$datos_serie[0]["retencion_".$vector_estado_expediente[$estado_expediente]];
+       // $dias_calcular=60;       
         include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
-        $fecha_calculo=calculaFecha("days",+$dias_calcular,$fecha_cierre);
-        $interval=resta_dos_fechas_saia(date('Y-m-d'),$fecha_calculo);
-        $interval_pos_neg=$interval->invert;  //Es 1 si el intervalo representa un periodo de tiempo negativo y 0 si no
+		$fecha_calculo=calculaFecha("month",+$dias_calcular,$fecha_cierre);
+		$interval=resta_dos_fechas_saia(date('Y-m-d'),$fecha_calculo);
+		$interval_pos_neg=$interval->invert;  //Es 1 si el intervalo representa un periodo de tiempo negativo y 0 si no
         $interval_diferencia=$interval->days; //dias de diferencia
         $interval_anio=$interval->y;
         $interval_mes=$interval->m;
@@ -388,7 +389,9 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         list($h, $m, $s) = explode(':', $cadena_horas);
         $segundos = ($h * 3600) + ($m * 60) + $s;
         $horas_minutos_segundos_parseados=( conversor_segundos_hm(intval($segundos)) );
-        $cadena_final='';
+        //$cadena_final='';
+        $cadena_final=array();
+		$texto_final="";
 
         $cadena_inicial='Faltan ';
         $color='green';
@@ -404,27 +407,27 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         $color='color:'.$color.';';
 
         if($interval_anio>0){
-            $cadena_final.=$interval_anio.' años, ';
+            $cadena_final[]=$interval_anio.' años';
         }
         if($interval_mes>0){
-            $cadena_final.=$interval_mes.' meses, ';
+            $cadena_final[]=$interval_mes.' meses';
         }
         if($interval_dia>0){
-            $cadena_final.=$interval_dia.' dias, ';
+            $cadena_final[]=$interval_dia.' dias';
         }
         if($interval_hora>0){
-            $cadena_final.=$interval_hora.' horas, ';
+            $cadena_final[]=$interval_hora.' horas';
         }
         if($interval_minuto>0){
-            $cadena_final.=$interval_minuto.' minutos, ';
+            $cadena_final[]=$interval_minuto.' minutos';
         }
         if($interval_segundo>0){
-            $cadena_final.=$interval_segundo.' segundos, ';
+            $cadena_final[]=$interval_segundo.' segundos';
         }
-        if($cadena_final==''){
-            $cadena_final='Hoy';
+        if(empty($cadena_final)){
+            $texto_final='Hoy';
         }else{
-            $cadena_final=$cadena_inicial.$cadena_final;
+            $texto_final=$cadena_inicial.implode(", ",$cadena_final);
         }
     }
 
@@ -434,7 +437,7 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
           <b>Alerta de Retenci&oacute;n:</b>
         </td>
         <td>
-              <span style="<?php echo($color); ?>"><?php echo($cadena_final); ?></span>
+              <span style="<?php echo($color); ?>"><?php echo($texto_final); ?></span>
         </td>
       </tr>
     <?php
