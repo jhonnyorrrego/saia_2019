@@ -21,7 +21,7 @@ $condicion_ad = '';
 $idexpediente = 0;
 
 // DEFAULT DATOS
-$estado_archivo= false;
+$estado_archivo = false;
 if (@$_REQUEST['estado_archivo']) {
     $estado_archivo = true;
     $condicion_ad .= " AND (e.estado_archivo IN(" . $_REQUEST['estado_archivo'] . "))";
@@ -33,7 +33,7 @@ if (@$_REQUEST['estado_cierre']) {
     $condicion_ad .= " AND (e.estado_cierre IN(" . $_REQUEST['estado_cierre'] . "))";
 }
 
-//$condicion_ad = " and " . DHtmlXtreeExpedienteFunc::expedientes_asignados($conn);
+// $condicion_ad = " and " . DHtmlXtreeExpedienteFunc::expedientes_asignados($conn);
 if (isset($_REQUEST["excluidos_exp"])) {
     $condicion_ad .= " and idexpediente not in (" . $_REQUEST["excluidos_exp"] . ")";
 } else if (isset($_REQUEST["incluir_series"]) && !($estado_cierre || $estado_archivo)) {
@@ -60,24 +60,29 @@ if (stristr($_SERVER["HTTP_ACCEPT"], "application/xhtml+xml")) {
     header("Content-type: text/xml");
 }
 
-$arbol = new DHtmlXtreeExpedienteFunc($conn, $condicion_ad, $idexpediente, $seleccionados,$lista_entidades);
+$arbol = new DHtmlXtreeExpedienteFunc($conn, $condicion_ad, $idexpediente, $seleccionados, $lista_entidades);
 echo $arbol->generarXml($id);
 
 class DHtmlXtreeExpedienteFunc {
 
     private $objetoXML;
+
     private $conn;
+
     private $condicion_ad;
+
     private $seleccionados;
+
     private $idexpediente;
+
     private $lista_entidades;
 
-    public function __construct($conn, $condicion_ad, $idexpediente, $seleccionados,$lista_entidades) {
+    public function __construct($conn, $condicion_ad, $idexpediente, $seleccionados, $lista_entidades) {
         $this->conn = $conn;
         $this->condicion_ad = $condicion_ad;
         $this->seleccionados = $seleccionados;
         $this->idexpediente = $idexpediente;
-		$this->lista_entidades = $lista_entidades;
+        $this->lista_entidades = $lista_entidades;
     }
 
     public function generarXml($id = 0) {
@@ -96,28 +101,32 @@ class DHtmlXtreeExpedienteFunc {
     }
 
     private function llena_expediente($id) {
-        if($this->idexpediente) {
+        if ($this->idexpediente) {
             $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "entidad_expediente ee
                 join expediente e on ee.expediente_idexpediente = e.idexpediente", "e.idexpediente=" . $this->idexpediente, "nombre ASC", $this->conn);
-        } else if ($id == 0) {
-            $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre,agrupador", "entidad_expediente ee
-            join expediente e on ee.expediente_idexpediente = e.idexpediente", "(cod_padre=0 or cod_padre is null) and e.fk_entidad_serie in (".$this->lista_entidades.")", "nombre ASC", $this->conn);
+        } else if (!empty($this->lista_entidades)) {
+            if ($id == 0) {
+                $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre,agrupador", "entidad_expediente ee
+            join expediente e on ee.expediente_idexpediente = e.idexpediente", "(cod_padre=0 or cod_padre is null) and e.fk_entidad_serie in (" . $this->lista_entidades . ")", "nombre ASC", $this->conn);
+            } else {
+                $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre,agrupador", "entidad_expediente ee
+                join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" . $id . " and e.fk_entidad_serie in (" . $this->lista_entidades . ")", "nombre ASC", $this->conn);
+            }
         } else {
-            $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre,agrupador", "entidad_expediente ee
-                join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" . $id ." and e.fk_entidad_serie in (".$this->lista_entidades.")","nombre ASC", $this->conn);
+            $papas = ["numcampos" => 0];
         }
 
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
                 $agrupador = $papas[$i]["agrupador"];
-                if($agrupador){
-					 continue;
+                if ($agrupador) {
+                    continue;
                 }
-				$cerrado=false;
+                $cerrado = false;
                 $text = $papas[$i]["nombre"] . " (" . $papas[$i]["codigo_numero"] . ")";
                 if ($papas[$i]["estado_cierre"] == 2) {
                     $text .= " - CERRADO";
-                    $cerrado=true;
+                    $cerrado = true;
                 }
 
                 $hijos = busca_filtro_tabla("count(1) as cant", "entidad_expediente ee join expediente e on ee.expediente_idexpediente = e.idexpediente", "e.cod_padre=" . $papas[$i]["idexpediente"] . $this->condicion_ad, "", $this->conn);
@@ -138,9 +147,9 @@ class DHtmlXtreeExpedienteFunc {
                 if ($hijos[0]["cant"] && !$cerrado) {
                     $this->llena_expediente($papas[$i]["idexpediente"]);
                 }
-				if (!$cerrado) {
-                $this->llena_subserie($papas[$i]["serie_idserie"], $papas[$i]["idexpediente"]);
-				}
+                if (!$cerrado) {
+                    $this->llena_subserie($papas[$i]["serie_idserie"], $papas[$i]["idexpediente"]);
+                }
                 $this->objetoXML->endElement();
             }
         }
@@ -157,7 +166,7 @@ class DHtmlXtreeExpedienteFunc {
                 $tiene_permisos = false;
                 $tiene_permiso_lectura = false;
 
-                if(!empty($papas[$i]["permiso"])) {
+                if (!empty($papas[$i]["permiso"])) {
                     $permisos = explode(",", $papas[$i]["permiso"]);
                     $tiene_permisos = in_array("a", $permisos) || in_array("v", $permisos);
                     $tiene_permiso_lectura = count($permisos) == 1 && in_array("l", $permisos);
@@ -182,20 +191,19 @@ class DHtmlXtreeExpedienteFunc {
                         $this->objetoXML->writeAttribute("nocheckbox", 0);
                         $this->objetoXML->writeAttribute("child", 1);
                         $this->llena_tipo_documental($papas[$i]["idserie"], $idexp);
-                    } else if($papas[$i]["tipo"]==3){
-                    		/* USERDATA */
-				                $this->objetoXML->startElement("userdata");
-				                $this->objetoXML->writeAttribute("name", "idexpediente");
-				                $this->objetoXML->text($idexp);
-				                $this->objetoXML->endElement();
-				
-				                $this->objetoXML->startElement("userdata");
-				                $this->objetoXML->writeAttribute("name", "idserie");
-				                $this->objetoXML->text($papas[$i]["idserie"]);
-				                $this->objetoXML->endElement();
-			                /* FIN USERDATA */
-                    	}
-                    	else {
+                    } else if ($papas[$i]["tipo"] == 3) {
+                        /* USERDATA */
+                        $this->objetoXML->startElement("userdata");
+                        $this->objetoXML->writeAttribute("name", "idexpediente");
+                        $this->objetoXML->text($idexp);
+                        $this->objetoXML->endElement();
+
+                        $this->objetoXML->startElement("userdata");
+                        $this->objetoXML->writeAttribute("name", "idserie");
+                        $this->objetoXML->text($papas[$i]["idserie"]);
+                        $this->objetoXML->endElement();
+                        /* FIN USERDATA */
+                    } else {
                         $this->objetoXML->writeAttribute("child", 0);
                     }
                 }
@@ -215,7 +223,7 @@ class DHtmlXtreeExpedienteFunc {
                 $tiene_permisos = false;
                 $tiene_permiso_lectura = false;
 
-                if(!empty($papas[$i]["permiso"])) {
+                if (!empty($papas[$i]["permiso"])) {
                     $permisos = explode(",", $papas[$i]["permiso"]);
                     $tiene_permisos = in_array("a", $permisos) || in_array("v", $permisos);
                     $tiene_permiso_lectura = count($permisos) == 1 && in_array("l", $permisos);

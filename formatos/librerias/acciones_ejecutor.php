@@ -6,11 +6,11 @@ include_once("../../db.php");
 include_once("../../librerias_saia.php");
 	$raiz_saia='../../';
 	echo(librerias_jquery('1.7'));
-	echo(librerias_notificaciones());	
+	echo(librerias_notificaciones());
 $campos_auto=explode(",",$_REQUEST["campos_auto"]);
 $campos=explode(",",$_REQUEST["campos"]);
 $etiquetas=array("titulo"=>"T&iacute;tulo","cargo" => "Cargo","direccion"=>"Direcci&oacute;n","telefono"=>"Tel&eacute;fono","email"=>"Email","ciudad"=>"Ciudad","empresa"=>"Contacto","identificacion"=>"Identificaci&oacute;n","nombre"=>"Nombres y apellidos","nombre_pj"=>"Entidad");
-//Se adiciona el componente vacio porque no funciona la comparacion estricta 
+//Se adiciona el componente vacio porque no funciona la comparacion estricta
 $orden_campos_pn=array("","titulo","direccion","cargo","telefono","email","ciudad");
 $orden_campos_pj=array("","direccion","cargo","ciudad","empresa","telefono","email");
 foreach($campos AS $key=>$valor){
@@ -94,24 +94,24 @@ for(ind=0; ind<lista.length; ind++)
 return (vector.join(","));
 }
 $().ready(function() {
-	
+
 
 
   llenar_ejecutor(0);
-  
-  
-	<?php 
+
+
+	<?php
 	  if(@$_REQUEST['funcion_javascript']){
 	 	$funcion_parametros=explode('@',$_REQUEST['funcion_javascript']);
-		  
+
 		if(intval(count($funcion_parametros))>1){
 			echo(''.$funcion_parametros[0].'('.$funcion_parametros[1].');');
 		}else{
 			echo(''.$_REQUEST['funcion_javascript'].'();');
-		}	 
+		}
 	 }
-	?>  
-  
+	?>
+
 	function findValueCallback(event, data, formatted) {
 		$("<li>").html( !data ? "No match!" : "Selected: " + formatted).appendTo("#result");
 	}
@@ -136,7 +136,7 @@ $().ready(function() {
             }
           });
     }
-    
+
 	$("#nombre_ejecutor").autocomplete('../librerias/seleccionar_ejecutor.php?tipo=nombre', {
 		width: 500,
 		max:20,
@@ -148,7 +148,7 @@ $().ready(function() {
     formatResult: function(row) {
 		return row[4];
 		}
-	}); 
+	});
 	$("#nombre_ejecutor").result(function(event, data, formatted) {
 		if (data){
       $("#identificacion_ejecutor").val(data[2]);
@@ -307,7 +307,7 @@ $().ready(function() {
           llenar_llamado();
           //llenar_ejecutor(0);
           notificacion_saia('<b>ATENCI&Oacute;N</b><br>Remitente actualizado satisfactoriamente','success','',4000);
-          
+
         }
       });
     }
@@ -357,7 +357,7 @@ $().ready(function() {
        campo_padre=(parent.<?php echo $_REQUEST["formulario_autocompletar"].".".$_REQUEST["campo_autocompletar"];?>);
        campo_padre.value=($("#estado_actualizacion option").map(function() {if($(this).val()!=="0"){return $(this).val();} else return;}).get());
       }
-   
+
   });
   function mostrar_ejecutor(){
     var selected = $("#seleccionados_ejecutor option:selected");
@@ -413,34 +413,30 @@ $().ready(function() {
     </td>
     <td>
     <?php
-    if(isset($_REQUEST["iddoc"])&&$_REQUEST["iddoc"])
-        {$destinos=busca_filtro_tabla($_REQUEST["campo_autocompletar"],$_REQUEST["tabla"],"documento_iddocumento=".$_REQUEST["iddoc"],"",$conn);
-        if($destinos["numcapos"]);
-         {$lista=busca_filtro_tabla("iddatos_ejecutor,nombre","datos_ejecutor,ejecutor","ejecutor_idejecutor=idejecutor and iddatos_ejecutor in(".$destinos[0][0].")","nombre",$conn);
-
-         }
-         echo "<input type=hidden name='iddoc' value='".$_REQUEST["iddoc"]."'>";
+    if (isset($_REQUEST["iddoc"]) && $_REQUEST["iddoc"]) {
+        $destinos = busca_filtro_tabla($_REQUEST["campo_autocompletar"], $_REQUEST["tabla"], "documento_iddocumento=" . $_REQUEST["iddoc"], "", $conn);
+        if ($destinos["numcampos"] && !empty($destinos[0][0])) {
+            $lista = busca_filtro_tabla("iddatos_ejecutor,nombre", "datos_ejecutor,ejecutor", "ejecutor_idejecutor=idejecutor and iddatos_ejecutor in(" . $destinos[0][0] . ")", "nombre", $conn);
         }
+        echo "<input type=hidden name='iddoc' value='" . $_REQUEST["iddoc"] . "'>";
+    }
 
-        if(isset($_REQUEST["destinos"])&&$_REQUEST["destinos"])
-        {
-        	if(@$_REQUEST["iddoc"]){
-        		$iddoc=$_REQUEST["iddoc"];
-        	}
-			else{
-				$iddoc=0;
-			}
-        	$destinos=busca_filtro_tabla($_REQUEST["campo_autocompletar"],$_REQUEST["tabla"],"documento_iddocumento=".$iddoc,"",$conn);
-        if(@$destinos["numcapos"]);
-         {$lista=busca_filtro_tabla("iddatos_ejecutor,nombre","datos_ejecutor,ejecutor","ejecutor_idejecutor=idejecutor and iddatos_ejecutor in(".$_REQUEST["destinos"].")","nombre",$conn);
-		if($_REQUEST["tipo"]!='unico'){
-			for($i=0;$i<$lista["numcampos"];$i++)
-				echo "<div class='datos_ejecutor' id='de_".$lista[$i]["iddatos_ejecutor"]."' >".$lista[$i]["nombre"]."</div>";
-	         }
-		 }
+    if (isset($_REQUEST["destinos"]) && $_REQUEST["destinos"]) {
+        if (@$_REQUEST["iddoc"]) {
+            $iddoc = $_REQUEST["iddoc"];
+        } else {
+            $iddoc = 0;
         }
-    if($_REQUEST["tipo"]=="multiple")
-     {
+        $destinos = busca_filtro_tabla($_REQUEST["campo_autocompletar"], $_REQUEST["tabla"], "documento_iddocumento=" . $iddoc, "", $conn);
+        if (@$destinos["numcampos"]) {
+            $lista = busca_filtro_tabla("iddatos_ejecutor,nombre", "datos_ejecutor,ejecutor", "ejecutor_idejecutor=idejecutor and iddatos_ejecutor in(" . $_REQUEST["destinos"] . ")", "nombre", $conn);
+            if ($_REQUEST["tipo"] != 'unico') {
+                for ($i = 0; $i < $lista["numcampos"]; $i++)
+                    echo "<div class='datos_ejecutor' id='de_" . $lista[$i]["iddatos_ejecutor"] . "' >" . $lista[$i]["nombre"] . "</div>";
+            }
+        }
+    }
+    if ($_REQUEST["tipo"] == "multiple") {
     ?>
     </tr>
     <tr><td>
@@ -471,7 +467,7 @@ $().ready(function() {
         <td colspan="2">
             Persona natural <input type="radio" name="tipo_ejecutor" value="1" class="tipo_ejecutor" id="tipo_ejecutor1" style="width:20px;" checked="checked">&nbsp;&nbsp;Persona Jur&iacute;dica <input type="radio" name="tipo_ejecutor" value="2" class="tipo_ejecutor" id="tipo_ejecutor2" style="width:20px">
         </td>
-    </tr>     
+    </tr>
   <?php
       foreach($campos_auto as $nombre){
           if($nombre<>"")
@@ -531,14 +527,14 @@ $().ready(function() {
 </html>
  <?php
  }
- 
+
  if(@$_REQUEST['funcion']){
  	$funcion_parametros=explode('@',$_REQUEST['funcion']);
 	if(count($funcion_parametros)>1){
 		echo($funcion_parametros[0](implode(',',$funcion_parametros[1])));
 	}else{
 		echo($_REQUEST['funcion']());
-	}	 
+	}
  }
 
  ?>
