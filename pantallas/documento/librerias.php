@@ -876,7 +876,7 @@ function origen_documento2($doc, $numero, $origen = "", $tipo_radicado = "", $es
 	$numero = intval($numero);
 	$dato_serie = serie_documento($serie);
 	if (in_array($estado, array("GESTION", "CENTRAL", "HISTORICO")) !== FALSE || $tipo_radicado == 1 || $tipo_radicado == 2) {
-		$docu = busca_filtro_tabla("nombre_tabla", "formato B", "lower(B.nombre)=" . $plantilla, "", $conn);
+		$docu = busca_filtro_tabla("nombre_tabla", "formato B", "lower(B.nombre)='" . $plantilla ."'", "", $conn);
 		if ($plantilla == 'radicacion_entrada' || $plantilla == 'radicacion_salida' || $plantilla == 'radicacion_peticiones') {
 			$remitente = busca_filtro_tabla("", $docu[0]["nombre_tabla"] . " A, datos_ejecutor B, ejecutor C", "persona_natural=B.iddatos_ejecutor AND ejecutor_idejecutor=idejecutor AND A.documento_iddocumento=" . $doc, "", $conn);
 

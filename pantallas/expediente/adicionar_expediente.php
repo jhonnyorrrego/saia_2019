@@ -29,10 +29,10 @@ ul.fancytree-container {
     border: none;
     background-color:#F5F5F5;
 }
-span.fancytree-title 
-{  
+span.fancytree-title
+{
 	font-family: Verdana,Tahoma,arial;
-	font-size: 9px; 
+	font-size: 9px;
 }
 </style>
 <?php include_once($ruta_db_superior."db.php"); ?>
@@ -47,7 +47,11 @@ echo (librerias_notificaciones());
 echo librerias_UI("1.12");
 echo librerias_arboles_ft("2.24", 'filtro');
 
-$dato_padre = busca_filtro_tabla("", "expediente a", "a.idexpediente=" . $_REQUEST["cod_padre"], "", $conn);
+if(!empty($_REQUEST["cod_padre"])) {
+    $dato_padre = busca_filtro_tabla("", "expediente a", "a.idexpediente=" . $_REQUEST["cod_padre"], "", $conn);
+} else {
+    $dato_padre = ["numcampos" => 0];
+}
 $serie_padre = "";
 ?>
 <form name="formulario_expediente" id="formulario_expediente">
@@ -100,7 +104,7 @@ $serie_padre = "";
                 texto = "Expediente";
             } else { // no es agrupador = 0
             	texto = "Ninguno";
-            }            
+            }
         });
     });
 </script>
@@ -170,7 +174,7 @@ $serie_padre = "";
 	  		$cajas=busca_filtro_tabla("","caja a,entidad_caja e","a.idcaja=e.caja_idcaja and e.estado=1 and ((e.entidad_identidad=1 and e.llave_entidad=".usuario_actual('idfuncionario').") or a.funcionario_idfuncionario=".usuario_actual('idfuncionario').")","",$conn);
 				for($i=0;$i<$cajas["numcampos"];$i++){
 					$selected="";
-	
+
 					if(@$_REQUEST["fk_idcaja"]==$cajas[$i]["idcaja"]){
 						$selected="selected";
 					}
@@ -189,10 +193,10 @@ $serie_padre = "";
 <div class="control-group element">
 	<label class="control-label" for="serie_idserie">Serie asociada *</label>
 	<div class="controls">
-		
+
 		<?php
 		$origen = array("url" => "arboles/arbol_dependencia_serie_funcionario.php", "ruta_db_superior" => $ruta_db_superior,
-		    "params" => array(		    	
+		    "params" => array(
 		        "checkbox" => 'radio',
 		        "expandir" => 1,
 		        "funcionario"=>1
@@ -202,7 +206,7 @@ $serie_padre = "";
 		$extensiones = array("filter" => array());
 		$arbol = new ArbolFt("serie_idserie", $origen, $opciones_arbol, $extensiones);
 		echo $arbol->generar_html();
-		?>			
+		?>
 	</div>
 </div>
 
@@ -290,7 +294,7 @@ $serie_padre = "";
 			</span>
 		</div>
 	</div>
-	
+
 	<div class="control-group element">
 	  <label class="control-label" for="consecutivo_inicial">Consecutivo Inicial
 	  </label>
@@ -298,7 +302,7 @@ $serie_padre = "";
 	    <input name="consecutivo_inicial" id="consecutivo_inicial" value="<?php echo($datos[0]["consecutivo_inicial"]); ?>">
 	  </div>
 	</div>
-	
+
 	<div class="control-group element">
 	  <label class="control-label" for="consecutivo_final">Consecutivo Final
 	  </label>
@@ -372,9 +376,9 @@ $serie_padre = "";
 				<!--option value="1" <?php if($datos[0]["ubicacion"]==1)echo("selected"); ?>>Central</option>
 				<option value="2" <?php if($datos[0]["ubicacion"]==2)echo("selected"); ?>>Gestion</option>
 				<option value="3" <?php if($datos[0]["ubicacion"]==3)echo("selected"); ?>>Historico</option-->
-					<option value="1" <?php 
+					<option value="1" <?php
 					if($datos[0]["estado_archivo"]==1 || $_REQUEST["estado_archivo"]==1){
-						echo("selected"); 
+						echo("selected");
 					}
 					?>
 					>Central</option>
@@ -427,8 +431,8 @@ $serie_padre = "";
   ?>
   <script type="text/javascript">
 
-  function cargar_info_Node(event,data){	
-  	console.log(data.node.data);  	  
+  function cargar_info_Node(event,data){
+  	console.log(data.node.data);
 	  if(data.node.selected){
 	  	$("#serie_idserie").val(data.node.data.serie_idserie);
 	  	$("#codigo_numero_serie").val(data.node.data.codigo);
@@ -453,7 +457,7 @@ $serie_padre = "";
 		/*url2="arboles/arbol_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0&checkbox=radio" + mostrar;
 		$.ajax({
 			url : "<?php echo($ruta_db_superior);?>arboles/crear_arbol_ft.php",
-			
+
 			data:{
 				xml: url2,
 				campo: "serie_idserie",
@@ -465,7 +469,7 @@ $serie_padre = "";
 			type : "POST",
 			async:false,
 			success : function(html_serie) {
-				$("#treeboxbox_tree3").empty().html(html_serie);				
+				$("#treeboxbox_tree3").empty().html(html_serie);
 			},error: function (){
 				top.noty({text: 'No se pudo cargar el arbol de series',type: 'error',layout: 'topCenter',timeout:5000});
 			}
@@ -511,7 +515,7 @@ $serie_padre = "";
   }
   });
 
-  $("#submit_formulario_expediente").click(function(){  	
+  $("#submit_formulario_expediente").click(function(){
   	if(!$('select[name=estado_archivo]').val()){
   		console.log("no selecciono selec");
   		$("#estado_archivo").val("<?php echo $_REQUEST["estado_archivo"]; ?>");
