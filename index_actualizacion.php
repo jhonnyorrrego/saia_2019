@@ -354,7 +354,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
     	 </ul>
 
     </div>
-<?php }else{ ?>
+<?php } else { ?>
   <div class="dropdown pull-right">| <a href="logout.php<?php if(@$_SESSION["INDEX"]!='')echo("?INDEX_SALIDA=".$_SESSION["INDEX"]);?>">Salir</a></div>
   <div class="dropdown pull-right">|
       <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mi Cuenta<b class="caret"></b></a>
@@ -651,45 +651,43 @@ function mostrar_iconos($modulo_actual,$orden=NULL){
   }
 }
 
-function menu_saia(){
-  if(isset($_SESSION["LOGIN".LLAVE_SAIA])&& $_SESSION["LOGIN".LLAVE_SAIA]){
-    $nombres=array();
-    $cerrar=array();
-    $modulos=busca_filtro_tabla("modulo.idmodulo","permiso_perfil,modulo","permiso_perfil.modulo_idmodulo = modulo.idmodulo and modulo.cod_padre is not null AND permiso_perfil.perfil_idperfil in (".usuario_actual("perfil").")","orden",$conn);
-    $modulos2=busca_filtro_tabla("modulo.idmodulo","permiso,modulo,funcionario","permiso.modulo_idmodulo = modulo.idmodulo AND permiso.funcionario_idfuncionario=funcionario.idfuncionario and permiso.accion=1 and funcionario.idfuncionario =".usuario_actual("idfuncionario"),"orden",$conn);
-    $suprimidos=busca_filtro_tabla("modulo.idmodulo","permiso,modulo,funcionario","permiso.modulo_idmodulo = modulo.idmodulo AND permiso.funcionario_idfuncionario=funcionario.idfuncionario and(permiso.accion=0 or permiso.accion is null) and funcionario.idfuncionario =".usuario_actual("id"),"orden",$conn);
-    $mod1=extrae_campo($modulos,"idmodulo","U");
-    $mod2=extrae_campo($modulos2,"idmodulo","U");
-    $eliminar=extrae_campo($suprimidos,"idmodulo","U");
-    $mod3=array_merge((array)$mod1,(array)$mod2);
-    $mod3=array_diff($mod3,$eliminar);
-    $mod4=array_unique($mod3);
-    sort($mod3);
-    $lista=implode(",",$mod4);
-    $modulo=busca_filtro_tabla("A.tipo,A.etiqueta,A.idmodulo","modulo A","A.idmodulo IN(select distinct b.cod_padre from modulo b where b.idmodulo in(".$lista."))","orden",$conn);
-    for($i=0;$i<$modulo["numcampos"];$i++){
-      if($modulo["numcampos"] && $modulo[$i]["idmodulo"] && $modulo[$i]["etiqueta"] && $modulo[$i]["tipo"]=='1'){
-        if($_SESSION["tipo_dispositivo"]=="movil"){
+function menu_saia() {
+    if (isset($_SESSION["LOGIN" . LLAVE_SAIA]) && $_SESSION["LOGIN" . LLAVE_SAIA]) {
+        $nombres = array();
+        $cerrar = array();
+        $modulos = busca_filtro_tabla("modulo.idmodulo", "permiso_perfil,modulo", "permiso_perfil.modulo_idmodulo = modulo.idmodulo and modulo.cod_padre is not null AND permiso_perfil.perfil_idperfil in (" . usuario_actual("perfil") . ")", "orden", $conn);
+        $modulos2 = busca_filtro_tabla("modulo.idmodulo", "permiso,modulo,funcionario", "permiso.modulo_idmodulo = modulo.idmodulo AND permiso.funcionario_idfuncionario=funcionario.idfuncionario and permiso.accion=1 and funcionario.idfuncionario =" . usuario_actual("idfuncionario"), "orden", $conn);
+        $suprimidos = busca_filtro_tabla("modulo.idmodulo", "permiso,modulo,funcionario", "permiso.modulo_idmodulo = modulo.idmodulo AND permiso.funcionario_idfuncionario=funcionario.idfuncionario and(permiso.accion=0 or permiso.accion is null) and funcionario.idfuncionario =" . usuario_actual("id"), "orden", $conn);
+        $mod1 = extrae_campo($modulos, "idmodulo", "U");
+        $mod2 = extrae_campo($modulos2, "idmodulo", "U");
+        $eliminar = extrae_campo($suprimidos, "idmodulo", "U");
+        $mod3 = array_merge((array) $mod1, (array) $mod2);
+        $mod3 = array_diff($mod3, $eliminar);
+        $mod4 = array_unique($mod3);
+        sort($mod3);
+        $lista = implode(",", $mod4);
+        $modulo = busca_filtro_tabla("A.tipo,A.etiqueta,A.idmodulo", "modulo A", "A.idmodulo IN(select distinct b.cod_padre from modulo b where b.idmodulo in(" . $lista . "))", "orden", $conn);
+        for ($i = 0; $i < $modulo["numcampos"]; $i++) {
+            if ($modulo["numcampos"] && $modulo[$i]["idmodulo"] && $modulo[$i]["etiqueta"] && $modulo[$i]["tipo"] == '1') {
+                if ($_SESSION["tipo_dispositivo"] == "movil") {
             ?>
-            <li class="item-9 deeper parent">
-            	<a class="" href="#">
-            		<span data-toggle="collapse" data-parent="#menu-group-1" href="#sub-item-<?php echo($i);?>" class="sign"><i class="icon-plus icon-white"></i></span>
-            		<span class="lbl"><?php echo(strtoupper($modulo[$i]["etiqueta"]));?></span>
-                </a>
-                <?php mostrar_iconos($modulo[$i]["idmodulo"],$i);?>
-            </li>
+                <li class="item-9 deeper parent">
+                	<a class="" href="#">
+                		<span data-toggle="collapse" data-parent="#menu-group-1" href="#sub-item-<?php echo($i);?>" class="sign"><i class="icon-plus icon-white"></i></span>
+                		<span class="lbl"><?php echo(strtoupper($modulo[$i]["etiqueta"]));?></span>
+                    </a>
+                    <?php mostrar_iconos($modulo[$i]["idmodulo"],$i);?>
+                </li>
             <?php
-
-
-        }else{
-          echo '<div class="ac-title">'.strtoupper($modulo[$i]["etiqueta"]).'</div>';
-          echo('<div class="ac-content">');
-          mostrar_iconos($modulo[$i]["idmodulo"]);
-          echo('</div>');
+                } else {
+                    echo '<div class="ac-title">' . strtoupper($modulo[$i]["etiqueta"]) . '</div>';
+                    echo ('<div class="ac-content">');
+                    mostrar_iconos($modulo[$i]["idmodulo"]);
+                    echo ('</div>');
+                }
+            }
         }
-      }
     }
-  }
 }
 ?>
 <script type="text/javascript">

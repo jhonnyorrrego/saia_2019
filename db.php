@@ -3165,32 +3165,32 @@ function almacenar_sesion($exito, $login) {
 	return ($datos);
 }
 
-/*
-<Clase>
-<Nombre>usuario_actual
-<Parametros>$campo: columna del usuario que se quiere obtener
-<Responsabilidades>Establece la informacion del usuario que tiene session actual
-<Notas>
-<Excepciones>No se encuentra el funcionario en el sistema, por favor comuniquese con el administrador
-             Si no existe session en el momento
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-*/
+    /*
+ * <Clase>
+ * <Nombre>usuario_actual
+ * <Parametros>$campo: columna del usuario que se quiere obtener
+ * <Responsabilidades>Establece la informacion del usuario que tiene session actual
+ * <Notas>
+ * <Excepciones>No se encuentra el funcionario en el sistema, por favor comuniquese con el administrador
+ * Si no existe session en el momento
+ * <Salida>
+ * <Pre-condiciones>
+ * <Post-condiciones>
+ */
 function usuario_actual($campo) {
-	global $usuactual, $conn;
-	if (!isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
-		salir(decodifica_encabezado("Su sesi&oacute;n ha expirado, por favor ingrese de nuevo."));
-	} else if (!empty($usuactual)) {
-                $dato = busca_filtro_tabla("A.estado,A.idfuncionario,A.funcionario_codigo,A.email,A.email_contrasena,A.idfuncionario AS id,A.perfil,A.login", "funcionario A", "A.login='" . $usuactual . "'", "", $conn);
-		if ($dato["numcampos"]) {
-			if ($dato[0]["estado"] == 1) {
-				return ($dato[0][$campo]);
-			} else {
-				salir("El funcionario se encuentra inactivo", $usuactual);
-			}
-		} else {
-			salir("No se encuentra el funcionario en el sistema, por favor comuniquese con el administrador");
+    global $usuactual, $conn;
+    if (!isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
+        salir(decodifica_encabezado("Su sesi&oacute;n ha expirado, por favor ingrese de nuevo."));
+    } else if (!empty($usuactual)) {
+        $dato = busca_filtro_tabla("A.estado,A.idfuncionario,A.funcionario_codigo,A.email,A.email_contrasena,A.idfuncionario AS id,A.perfil,A.login, A.nombres, A.apellidos", "funcionario A", "A.login='" . $usuactual . "'", "", $conn);
+        if ($dato["numcampos"]) {
+            if ($dato[0]["estado"] == 1) {
+                return ($dato[0][$campo]);
+            } else {
+                salir("El funcionario se encuentra inactivo", $usuactual);
+            }
+        } else {
+            salir("No se encuentra el funcionario en el sistema, por favor comuniquese con el administrador");
 		}
 	}
 }
