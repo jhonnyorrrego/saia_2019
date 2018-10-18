@@ -324,18 +324,22 @@ if($dato_padre["numcampos"]){
 	  </div>
 	</div>
 	
-	<div class="control-group element">
+	<!--div class="control-group element">
 	  <label class="control-label" for="ubicacion">Ubicaci&oacute;n
 	  </label>
 	  <div class="controls">
-	  	<select name="ubicacion" id="ubicacion">
+	  	<!--select name="ubicacion" id="ubicacion"-->
+	  		<!--select name="estado_archivo" id="estado_archivo">
 	  		<option value="">Por favor seleccione...</option>
-				<option value="1" <?php if($datos[0]["ubicacion"]==1)echo("selected"); ?>>Central</option>
+				<!--option value="1" <?php if($datos[0]["ubicacion"]==1)echo("selected"); ?>>Central</option>
 				<option value="2" <?php if($datos[0]["ubicacion"]==2)echo("selected"); ?>>Gestion</option>
-				<option value="3" <?php if($datos[0]["ubicacion"]==3)echo("selected"); ?>>Historico</option>
+				<option value="3" <?php if($datos[0]["ubicacion"]==3)echo("selected"); ?>>Historico</option-->
+				<!--option value="1" <?php if($datos[0]["estado_archivo"]==1)echo("selected"); ?>>Central</option>
+				<option value="2" <?php if($datos[0]["estado_archivo"]==2)echo("selected"); ?>>Gestion</option>
+				<option value="3" <?php if($datos[0]["estado_archivo"]==3)echo("selected"); ?>>Historico</option>
 	  	</select>
 	  </div>
-	</div>
+	</div-->
 	
 	<div class="control-group element">
 	  <label class="control-label" for="notas_transf">Notas de Transferencia

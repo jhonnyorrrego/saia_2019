@@ -89,20 +89,27 @@ function enlace_expediente($idexpediente, $nombre) {
     $req_parms = http_build_query($data);
 
     $estilo_expediente = "";
-
-    $permiso = new PermisosExpediente($conn, $idexpediente);
-    $permisos = $permiso->obtener_permisos();
-
-    $l = $permiso->permiso_solo_lectura();
-    $m = in_array(PermisosExpediente::PERMISO_EXP_ESCRIBIR, $permisos);//$permiso->tiene_permiso_escribir_expediente();
+	$permiso_modulo = new Permiso();
+    $ok = $permiso_modulo->acceso_modulo_perfil('expediente_admin');  
+	if(!$ok){		
+	    $permiso = new PermisosExpediente($conn, $idexpediente);
+	    $permisos = $permiso->obtener_permisos();
+	
+	    $l = $permiso->permiso_solo_lectura();
+	    $m = in_array(PermisosExpediente::PERMISO_EXP_ESCRIBIR, $permisos);//$permiso->tiene_permiso_escribir_expediente();
+	    if (empty($permisos)) {
+	        $estilo_expediente = ' style="opacity: 0.40;"';
+	        if(!$expediente_actual[0]['agrupador']){
+	            $icono_expediente = "icon-folder-close";
+	        }
+	    }
+	}
+	else{
+		$l=1;$m=1;
+	}
     /*$e = $permiso->tiene_permiso_eliminar_expediente();
     $p = $permiso->tiene_permiso_compartir_expediente();*/
-    if (empty($permisos)) {
-        $estilo_expediente = ' style="opacity: 0.40;"';
-        if(!$expediente_actual[0]['agrupador']){
-            $icono_expediente = "icon-folder-close";
-        }
-    }
+    
     $a_html = array();
    // $a_html[] = implode(",", $permiso->getPermisosSerie());
     if ($l || $m) {
@@ -427,14 +434,21 @@ function enlaces_adicionales_expediente($idexpediente, $nombre, $estado_cierre, 
     if ($agrupador == "agrupador") {
         $agrupador = 0;
     }
-
-    $permiso = new PermisosExpediente($conn, $idexpediente);
-    $permisos = $permiso->obtener_permisos();
-
-    $m = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_MODIFICAR);
-	$sm= $permiso->tiene_permiso_serie(PermisosExpediente::PERMISO_SER_MODIFICAR);
-    $e = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_ELIMINAR);
-    $p = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_COMPARTIR);
+	$permiso_modulo = new Permiso();
+    $ok = $permiso_modulo->acceso_modulo_perfil('expediente_admin');  
+	if(!$ok){
+	    $permiso = new PermisosExpediente($conn, $idexpediente);
+	    $permisos = $permiso->obtener_permisos();		
+	    $m = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_MODIFICAR);
+		$sm= $permiso->tiene_permiso_serie(PermisosExpediente::PERMISO_SER_MODIFICAR);
+	    $e = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_ELIMINAR);
+	    $p = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_COMPARTIR);
+    } else {
+		$e=1; 
+		$m=1;
+		$p=1;
+		$sm=1;
+	}
 	//print_r($permiso->getPermisosSerie());
     $clase_info = "";
     $texto = "";
@@ -461,10 +475,11 @@ function enlaces_adicionales_expediente($idexpediente, $nombre, $estado_cierre, 
     if ($p) {
         $texto .= '<div class="btn btn-mini ' . $clase_info . ' tooltip_saia pull-right" idregistro="' . $idexpediente . '" conector="iframe"  titulo="Asignar ' . $nombre . '" enlace="pantallas/expediente/asignar_expediente.php?idexpediente=' . $idexpediente . '"><i class="icon-lock"></i></div>';
     }
-
-    if ($permiso->es_propietario() && !$agrupador) {
-        $texto .= '<div class="btn btn-mini crear_tomo_expediente tooltip_saia pull-right" idregistro="' . $idexpediente . '" title="Crear Tomo ' . $nombre . '"><i class="icon-folder-open"></i></div>';
-    }
+	if(!$ok){
+	    if ($permiso->es_propietario() && !$agrupador) {
+	        $texto .= '<div class="btn btn-mini crear_tomo_expediente tooltip_saia pull-right" idregistro="' . $idexpediente . '" title="Crear Tomo ' . $nombre . '"><i class="icon-folder-open"></i></div>';
+	    }
+	}
     return ($texto);
 }
 
