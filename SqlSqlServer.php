@@ -77,7 +77,7 @@ class SqlSqlServer extends SQL2 {
                 $this->consulta = trim($sql);
                 $fin = strpos($this->consulta, " ");
                 $accion = substr($this->consulta, 0, $fin);
-            } else {
+            } else if(defined("DEBUGEAR") && DEBUGEAR == 1) {
                 if (($errors = sqlsrv_errors()) != null) {
                     $mensajes = array();
                     foreach ($errors as $error) {

@@ -75,12 +75,12 @@ class SqlOracle extends SQL2 {
                 } else {
                     $this->ultimoInsert = 0;
                 }
-            } else {
+            } else if(defined("DEBUGEAR") && DEBUGEAR == 1) {
                 $e = oci_error($this->Conn->conn);
                 trigger_error($e['message'] . " $sql", E_USER_ERROR);
                 return false;
             }
-        } else {
+        } else if(defined("DEBUGEAR") && DEBUGEAR == 1) {
             $e = oci_error($this->Conn->conn);
             trigger_error($e['message'] . " $sql", E_USER_ERROR);
             return false;

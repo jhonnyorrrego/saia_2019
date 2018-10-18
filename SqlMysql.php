@@ -87,7 +87,7 @@ class SqlMysql extends SQL2 {
                 $this->consulta = trim($sql);
                 // $fin=strpos($this->consulta," ");
                 // $accion=substr($this->consulta,0,$fin);
-            } else {
+            } else if(defined("DEBUGEAR") && DEBUGEAR == 1) {
                 $e = mysqli_error($this->Conn->conn);
                 trigger_error($e . " $sql", E_USER_ERROR);
                 return false;
