@@ -58,7 +58,7 @@ if (@$_REQUEST["idformato"] && @$_REQUEST['idcampo_formato']) {
 
 		// set up the validation rules
 		$uploadHandler -> addRule('extension', ['allowed' => $extensiones], "{label} debe ser un formato valido ($extensiones)", $_REQUEST["nombre_campo"]);
-		$uploadHandler -> addRule('size', ['max' => $max_tamanio], '{label} debe ser de menos de {max} bytes', $_REQUEST["nombre_campo"]);
+		//$uploadHandler -> addRule('size', ['max' => "5M"], '{label} debe ser de menos de {max} bytes', $_REQUEST["nombre_campo"]);
 
 		$result = $uploadHandler -> process($_FILES[$_REQUEST["nombre_campo"]]);
 		$resp = array();
@@ -80,6 +80,8 @@ if (@$_REQUEST["idformato"] && @$_REQUEST['idcampo_formato']) {
 				$info = guardar($info, $uuid, $ruta_temporal);
 				$resp[$uuid] = $info;
 			}
+		} else {
+		    echo json_encode($result->getMessages());
 		}
 		echo json_encode($resp);
 	}
