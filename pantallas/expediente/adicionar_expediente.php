@@ -377,8 +377,8 @@ $serie_padre = "";
 						echo("selected"); 
 					}
 					?>
-					>Central</option>
-				<option value="2" <?php if($datos[0]["estado_archivo"]==2 || $_REQUEST["estado_archivo"]==2)echo("selected"); ?>>Gestion</option>
+					>Gestion</option>
+				<option value="2" <?php if($datos[0]["estado_archivo"]==2 || $_REQUEST["estado_archivo"]==2)echo("selected"); ?>>Central</option>
 				<option value="3" <?php if($datos[0]["estado_archivo"]==3 || $_REQUEST["estado_archivo"]==3)echo("selected"); ?>>Historico</option-->
 	  	</select>
 	  </div>
