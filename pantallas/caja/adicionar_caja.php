@@ -291,6 +291,20 @@ function cargando_serie() {
 <?php echo(librerias_arboles()); ?>
 <script type="text/javascript">
 $(document).ready(function(){
+	$("#cod_consecutivo").change(function() {
+    	var consecutivo = $(this).val();
+    	$.ajax({
+            type: "POST",
+            url: '<?php echo($ruta_db_superior); ?>pantallas/caja/verificar_consecutivo.php',
+            data:{consecutivo:consecutivo},
+            success: function(respuesta){
+            	if(respuesta==0){
+        			notificacion_saia("El consecutivo ya existe, por favor digitar uno diferente","error","",4000);
+        			$("#cod_consecutivo").val(" ");
+        		}
+            }
+		});
+	});
 	consultar_materiales_caja();
 	$('#fecha_extrema_i').datetimepicker({
     language: 'es',
