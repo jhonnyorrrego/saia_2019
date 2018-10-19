@@ -118,9 +118,20 @@ function rotulo_caja($id){
 		<td><b>CODIGO</b></td>
 		<td colspan="2" style="text-align:center"><?php echo mayusculas($datos[0]["no_consecutivo"]); ?></td>
 	</tr>
+		<?php
+	$expedientes=busca_filtro_tabla("es.serie_idserie","expediente e, entidad_serie es","e.fk_entidad_serie=es.identidad_serie and fk_idcaja=".$datos[0]["idcaja"],"",$conn);
+if($expedientes["numcampos"]){
+	$listado_series = array();
+	for($i=0;$i<$expedientes["numcampos"];$i++){
+		$series=busca_filtro_tabla("nombre","serie","idserie=".$expedientes[$i]["serie_idserie"],"",$conn);
+		$listado_series[]=$series[0]["nombre"];
+	}
+}
+$listado_series=array_unique($listado_series);
+$listado_series=implode(", ", $listado_series);?>
 	<tr height="30px">
 		<td><b>SERIE</b></td>
-		<td colspan="2" style="text-align:center"><?php echo mayusculas($nomb_serie); ?></td>
+		<td colspan="2" style="text-align:center"><?php echo mayusculas($listado_series); /*mayusculas($nomb_serie);*/ ?></td>
 	</tr>
 	<tr height="30px">
 		<td><b>SUBSERIE</b></td>
@@ -267,7 +278,7 @@ filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 		<td style="text-align:center" colspan="2"><?php echo mayusculas($array_dependencias[2]); ?></td>
 	</tr-->
 	<?php
-	$expedientes=busca_filtro_tabla("es.serie_idserie","expediente e, entidad_serie es","e.fk_entidad_serie=es.identidad_serie and fk_idcaja=".$caja[0]["idcaja"],"",$conn);
+	/*$expedientes=busca_filtro_tabla("es.serie_idserie","expediente e, entidad_serie es","e.fk_entidad_serie=es.identidad_serie and fk_idcaja=".$caja[0]["idcaja"],"",$conn);
 if($expedientes["numcampos"]){
 	$listado_series = array();
 	for($i=0;$i<$expedientes["numcampos"];$i++){
@@ -276,10 +287,10 @@ if($expedientes["numcampos"]){
 	}
 }
 $listado_series=array_unique($listado_series);
-$listado_series=implode(", ", $listado_series);?>
+$listado_series=implode(", ", $listado_series);*/?>
 	<tr>
 		<td style="text-align:center"><b>SERIE</b></td>
-		<td colspan="2" style="text-align:center"><?php echo mayusculas($listado_series); ?></td>
+		<td colspan="2" style="text-align:center"><?php echo mayusculas($nomb_serie); ?></td>
 	</tr>
 	<tr>
 		<td style="text-align:center"><b>SUBSERIE</b></td>
