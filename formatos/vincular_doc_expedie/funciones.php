@@ -148,6 +148,7 @@ function mostrar_informacion_qr($idformato,$iddoc){
 }
 function cargar_serie_documental($idformato,$iddoc){
 	global $conn;
+	/*
 	$idex=$_REQUEST["idexpediente"];
 	$expedientes=busca_filtro_tabla("idserie","expediente e, serie s","e.serie_idserie = s.cod_padre and idexpediente=".$idex,"",$conn);
 	?>
@@ -160,6 +161,6 @@ function cargar_serie_documental($idformato,$iddoc){
 			$("#serie_idserie").val(serie);
 		});
 	</script>
-	<?php
+	 * */
 }
 ?>
