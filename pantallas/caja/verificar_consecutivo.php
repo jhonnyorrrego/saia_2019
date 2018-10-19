@@ -11,7 +11,7 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 if(isset($_REQUEST["consecutivo"])){
 	$consecutivo = $_REQUEST["consecutivo"];
-	$cajas = busca_filtro_tabla("no_consecutivo", "caja", "no_consecutivo=".$consecutivo, "", $conn);
+	$cajas = busca_filtro_tabla("no_consecutivo", "caja", "lower(no_consecutivo)=lower('".$consecutivo."')", "", $conn);
 	if ($cajas["numcampos"]) {
 		echo 0;
 	}
