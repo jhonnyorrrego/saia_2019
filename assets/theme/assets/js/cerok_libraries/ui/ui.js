@@ -1,6 +1,6 @@
 class Ui {    
     static showUserInfo(user) {
-        $("#profile_image").attr("src", user.image);
+        $("#profile_image,#img_edit_photo").attr("src", user.image);
         $("#user_name").text(user.name);
     }
 

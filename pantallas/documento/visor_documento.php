@@ -1,6 +1,7 @@
 <?php
 $max_salida = 6;
 $ruta_db_superior = $ruta = "";
+
 while ($max_salida > 0) {
 	if (is_file($ruta . "db.php")) {
 		$ruta_db_superior = $ruta;
@@ -9,14 +10,15 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 
-include_once ($ruta_db_superior . "pantallas/documento/menu_principal_documento.php");
-$iddoc = @$_REQUEST["iddoc"];
+include_once $ruta_db_superior . 'assets/librerias.php';
+
+$iddoc = $_REQUEST["iddoc"];
+
 if(!isset($_REQUEST["menu_principal_inactivo"])){//utilizado en parsear_accion_arbol_impresion (imprimir documento)
+    include_once ($ruta_db_superior . "pantallas/documento/menu_principal_documento.php");
 	menu_principal_documento($iddoc, 1);
-}else{
-	include_once("librerias_saia.php");
-	echo librerias_jquery("1.8");
 }
+
 $datos = busca_filtro_tabla("A.pdf,A.plantilla,B.mostrar_pdf,A.numero,B.idformato", "documento A,formato B", "lower(A.plantilla)=B.nombre AND A.iddocumento=" . $iddoc, "", $conn);
 $es_pdf_word = $_REQUEST['pdf_word'];
 if ($_REQUEST['pdf_word']) {

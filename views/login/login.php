@@ -74,8 +74,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             </div>
             <!-- carousel-->
             <!-- login form-->
-            <div class="col-12 col-md-4" id="form-container">
-                <div class="mx-auto px-auto">
+            <div class="col-12 col-md-4 media" id="form-container">
+                <div class="align-self-center w-100">
                     <div class="row">
                         <div class="col-12">
                             <img id="logo">
@@ -86,11 +86,10 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                             <h5 class="bold">INICIO DE SESIÓN</h5>
                         </div>
                     </div>
-
-                    <div class="row pb-5">
+                    <div class="row">
                         <div class="col-12">
                             <!-- START Login Form -->
-                            <form id="form_login" class="p-t-15" role="form">
+                            <form id="form_login" role="form">
                                 <!-- START Form Control-->
                                 <div class="form-group form-group-default">
                                     <label><i class="fa fa-user"></i> Usuario</label>
@@ -118,7 +117,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                     </div>
                                 </div>
                                 <!-- END Form Control-->
-                                <button class="btn btn-complete btn-cons m-t-10" type="submit">Ingresar</button>
+                                <button class="btn btn-complete m-t-10" type="submit">Ingresar</button>
                             </form>
 
                         </div>
@@ -185,7 +184,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         $(function () {            
             var breakpoint = checkSize();
             var baseUrl = Session.getBaseUrl();
-
+            
+            $("#form-container").height($(window).height() - $("#footer").height());
             loadCarousel();
 
             $('#form_login').on('submit', function (event) {
@@ -260,13 +260,13 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 
                             for (var i = 0; i < response.data.length; i++) {
                                 data += `
-                            <div class="carousel-item mx-0 px-0">
-                                <img src="` + baseUrl + response.data[i].image + `" alt="` + response.data[i].image + `">
-                                <div class="carousel-caption d-none d-md-block bg-info" style="opacity: 0.7">
-                                    <h3 class="text-white" style="opacity: 1">`+ response.data[i].title + `</h3>
-                                    <p class="text-white" style="opacity: 1">` + response.data[i].content + `<p>
-                                </div>
-                            </div>`;
+                                <div class="carousel-item mx-0 px-0">
+                                    <img src="` + baseUrl + response.data[i].image + `" alt="` + response.data[i].image + `">
+                                    <div class="carousel-caption d-none d-md-block bg-info" style="opacity: 0.7">
+                                        <h3 class="text-white" style="opacity: 1">`+ response.data[i].title + `</h3>
+                                        <p class="text-white" style="opacity: 1">` + response.data[i].content + `<p>
+                                    </div>
+                                </div>`;
                                 indicator += '<li data-target="#myCarousel" data-slide-to="' + i + '"></li>';
                             }
                             
@@ -282,8 +282,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 }
             }
 
-
-            // Reload demo on  window resize
             $( window ).resize( function(){
                 breakpoint = checkSize();
                 loadCarousel();

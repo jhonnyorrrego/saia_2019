@@ -20,7 +20,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <meta charset="utf-8" />
     <title>SAIA - SGDEA</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />    
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-touch-fullscreen" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -246,6 +246,9 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown" role="menu">
                         <a href="#" class="dropdown-item" data-toggle="modal" data-target="#edit_profile"><i class="pg-settings_small"></i>
                             Editar mi perfil</a>
+                        <a href="#" class="dropdown-item" data-toggle="modal" data-target="#edit_photo_modal">
+                            <i class="fa fa-photo"></i> Cambiar Foto
+                        </a>
                         <a href="#" class="dropdown-item"><i class="fa fa-lock"></i> Cambiar mi Contraseña</a>
                         <a href="#" class="clearfix bg-master-lighter dropdown-item" id="btn_logout">
                             <span class="pull-left">Cerrar Sesión</span>
@@ -255,7 +258,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 </div>
                 <!-- END User Info-->
                 <a href="#" class="header-icon btn-link m-l-10 sm-no-margin d-inline-block" data-toggle="quickview"
-                    data-toggle-element="#quickview">
+                    data-toggle-element="#quickview" id="close_right_navbar">
                     <i class="pg pg-alt_menu" style="font-size:1.5rem"></i>
                 </a>
             </div>
@@ -1498,6 +1501,21 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 </div>
             </div>
             <!-- /.modal-content -->
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="edit_photo_modal">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body text-center mt-2">
+                    <img id="img_edit_photo">
+                </div>
+                <div class="modal-footer">
+                     <label id="#bb"> Enter Your File
+    <input type="file" id="File"   size="60" style="display:none" >
+    </label>  
+                    <div class="btn btn-success">Guardar</div>
+                </div>
+            </div>
         </div>
     </div>
     <!-- END OVERLAY -->

@@ -88,7 +88,7 @@ function mostrar_datos_dependencias_ruta($idformato, $iddoc) {
 				2 => "Inactivo"
 			);
 			$tabla .= '<form id="item_prerequisitos" action="guardar_datos_dependencias.php">
-			<table class="table table-bordered" style="border-collapse: collapse;width: 100%;" border="1">
+			<table class="table table-bordered">
 			<tr style="font-weight:bold">
 			    <td><center> Fecha</center></td>
 			    <td><center>Dependencia</center></td>
@@ -105,7 +105,9 @@ function mostrar_datos_dependencias_ruta($idformato, $iddoc) {
 					<td>' . $item[$j]['fecha_item_dependenc'] . '</td>
 					<td>' . $dependencia[0]['nombre'] . '<input type="hidden" name="dependencia_asignada[]" value="' . $item[$j]['dependencia_asignada'] . '"></td>';
 				if ($item[$j]['descripcion_dependen'] == '') {
-					$tabla .= '<td><input name="descripcion[]" type="text" style="width:200px;" value=""></td>';
+                    $tabla .= '<td>
+                    <input type="text" class="form-control" name="descripcion[]">
+                    </td>';
 				} else {
 					$tabla .= '<td>' . $item[$j]['descripcion_dependen'] . '<input type="hidden" name="descripcion[]" value="' . $item[$j]['descripcion_dependen'] . '"></td>';
 				}
@@ -115,14 +117,14 @@ function mostrar_datos_dependencias_ruta($idformato, $iddoc) {
 				);
 				$seleccionar[$item[$j]['estado_dependencia']] = 'selected';
 				$tabla .= '<td>
-					<select class="cambio_estado_dependencia" data-idft_ruta_distribucion=' . $dato[0]['idft_ruta_distribucion'] . ' data-idft=' . $item[$j]['dependencia_asignada'] . ' name="estado[]" style="width:100px;">
+					<select class="cambio_estado_dependencia" data-idft_ruta_distribucion=' . $dato[0]['idft_ruta_distribucion'] . ' data-idft=' . $item[$j]['dependencia_asignada'] . ' name="estado[]">
 						<option value="1" ' . $seleccionar[1] . '>Activo</option>
 						<option value="2" ' . $seleccionar[2] . '>Inactivo</option>
 					</select>
 					</td>
 				</tr>';
 			}
-			$tabla .= '</table><input class="btn btn-mini btn-primary" style="float:right;" type="submit" value="Guardar Cambios"/></form>';
+			$tabla .= '</table><input class="btn btn-mini btn-primary" type="submit" value="Guardar Cambios"/></form>';
 		}
 	}
 	echo $tabla;
@@ -185,7 +187,7 @@ function mostrar_datos_funcionarios_ruta($idformato, $iddoc) {
 				2 => "Inactivo"
 			);
 
-			$tabla .= '<table class="table table-bordered" style="border-collapse: collapse; width: 100%;" border="1">
+			$tabla .= '<table class="table table-bordered">
 			<tr>
 		    <td style="text-align:center;">Fecha</td>
 		    <td style="text-align:center;">Mensajero</td>
@@ -217,7 +219,7 @@ function mostrar_datos_funcionarios_ruta($idformato, $iddoc) {
 					<td>' . $item[$j]['fecha_mensajero'] . '</td>
 					<td>' . $mensajero[0]['nombre'] . '</td>
 					<td>
-						<select class="cambio_estado" name="estado[]" data-idft="' . $item[$j]['idft_funcionarios_ruta'] . '"  mensajero_ruta="' . $item[$j]['mensajero_ruta'] . '" style="width:100px;">
+						<select class="cambio_estado" name="estado[]" data-idft="' . $item[$j]['idft_funcionarios_ruta'] . '"  mensajero_ruta="' . $item[$j]['mensajero_ruta'] . '">
 							<option value="1" ' . $seleccionar[1] . '>Activo</option>
 							<option value="2" ' . $seleccionar[2] . '>Inactivo</option>
 						</select>

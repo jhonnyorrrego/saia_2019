@@ -1,4 +1,4 @@
-$(".kenlace_saia").live('click', function (){
+$(document).on('click','.kenlace_saia',function(){
   var enlace = $(this).attr('enlace');
   var titulo='';
   if(typeof $(this).attr('title')!=="undefined"){
@@ -30,7 +30,7 @@ $(".kenlace_saia").live('click', function (){
     alert("Error en la matix crear pantalla");
   } 
 });
-$(".enlace_saia").live('click', function (){
+$(document).on('click', '.enlace_saia', function () {
   var enlace = $(this).attr('enlace');
   window.open(enlace,"_self");
 });
@@ -69,7 +69,7 @@ function enlace_katien_saia(enlace,titulo,conector,ancho_columna){
   }
 }
 
-$(".kenlace_saia_propio").live('click', function (){
+$(document).on('click', '.kenlace_saia_propio', function () {
   var enlace = $(this).attr('enlace');
   var titulo='';
   if(typeof $(this).attr('title')!=="undefined"){

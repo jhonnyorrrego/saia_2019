@@ -1684,6 +1684,7 @@ body.sidebar-visible .page-sidebar .sidebar-header .sidebar-header-controls {
   overflow: hidden;
   width: 68%;
 }
+
 .page-sidebar .sidebar-menu .menu-items > li > a > .details {
   font-size: 12px;
   opacity: 0.4;
@@ -1854,6 +1855,7 @@ body.sidebar-visible .page-sidebar .sidebar-header .sidebar-header-controls {
     -webkit-transform: translate3d(-14px, 0, 0);
     transform: translate3d(-14px, 0, 0);
     -ms-transform: translate(-14px, 0);
+    margin-right:5px;
   }
   body.menu-behind .page-sidebar {
     z-index: 799;
