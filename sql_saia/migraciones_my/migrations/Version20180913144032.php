@@ -54,9 +54,10 @@ class Version20180913144032 extends AbstractMigration {
         ]);
 
         if (!empty($result)) {
-            $conn->beginTransaction();
+            $this->addSql("UPDATE campos_formato SET valor= :valor, etiqueta_html= :etiqueta WHERE idcampos_formato= :id",
+                ["valor" => null, "etiqueta_html" => "hidden", "id" => $result[0]["idcampos_formato"]]);
 
-            $datos = [
+            /*$datos = [
                 'valor' => null,
                 'etiqueta_html' => "hidden"
             ];
@@ -70,8 +71,7 @@ class Version20180913144032 extends AbstractMigration {
                 $conn->rollBack();
                 print_r($conn->errorInfo());
                 die("Fallo la modificacion del campo_formato");
-            }
-            $conn->commit();
+            }*/
         }
 
     }
@@ -84,9 +84,9 @@ class Version20180913144032 extends AbstractMigration {
         ]);
 
         if (!empty($result)) {
-            $conn->beginTransaction();
 
-            $ident = [
+            $this->addSql("DELETE funciones_formato_enlace WHERE funciones_formato_fk= :fk AND formato_idformato= :id", ["fk" => $result[0]["idfunciones_formato"], "id" => $idfmt]);
+            /*$ident = [
                 'funciones_formato_fk' => $result[0]["idfunciones_formato"],
                 "formato_idformato" => $idfmt
             ];
@@ -97,8 +97,7 @@ class Version20180913144032 extends AbstractMigration {
                 $conn->rollBack();
                 print_r($conn->errorInfo());
                 die("Fallo la eliminacion de la funcion para el formato");
-            }
-            $conn->commit();
+            }*/
         }
 
     }
