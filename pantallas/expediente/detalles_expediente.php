@@ -11,6 +11,8 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+require_once "PermisosExpediente.php";
+use \pantallas\expediente\PermisosExpediente as PermisosExpediente;
 ?>
 <!DOCTYPE html>
 <?php
@@ -31,7 +33,7 @@ if (@$_REQUEST["idexpediente"]) {
     $idexpediente = $_REQUEST["idexpediente"];
 }
 $tipo_almacenamiento = new SaiaStorage("archivos");
-$expediente = busca_filtro_tabla("a.*," . fecha_db_obtener("a.fecha", "Y-m-d") . " AS fecha, " . fecha_db_obtener("a.fecha_extrema_i", "Y-m-d") . " as fecha_extrema_i, " . fecha_db_obtener("a.fecha_extrema_f", "Y-m-d") . " as fecha_extrema_f", "expediente a", "idexpediente=" . $idexpediente, "", $conn);
+$expediente = busca_filtro_tabla("a.*," . fecha_db_obtener("a.fecha", "Y-m-d") . " AS fecha, " . fecha_db_obtener("a.fecha_extrema_i", "Y-m-d") . " as fecha_extrema_i, " . fecha_db_obtener("a.fecha_extrema_f", "Y-m-d") . " as fecha_extrema_f, consecutivo_inicial, consecutivo_final", "expediente a", "idexpediente=" . $idexpediente, "", $conn);
 ?>
 <style>
 .well{ margin-bottom: 3px; min-height: 11px; padding: 10px;}.alert{ margin-bottom: 3px;  padding: 10px;}  body{ font-size:12px; line-height:100%;}.navbar-fixed-top, .navbar-fixed-bottom{ position: fixed;} .navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top{margin-right: 0px; margin-left: 0px;}
@@ -44,29 +46,42 @@ $expediente = busca_filtro_tabla("a.*," . fecha_db_obtener("a.fecha", "Y-m-d") .
 </style>
 <body>
 <?php
-	$m = 0;
-	$e = 0;
-	$p = 0;
-
-	if ($expediente[0]["propietario"] == $_SESSION["usuario_actual"]) {
+	$permiso_modulo = new Permiso();
+    $ok = $permiso_modulo->acceso_modulo_perfil('expediente_admin');  
+	if(!$ok){
+		$permiso = new PermisosExpediente($conn, $idexpediente);
+	    $permisos = $permiso->obtener_permisos();
+	
+	    $m = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_MODIFICAR);
+		$sm= $permiso->tiene_permiso_serie(PermisosExpediente::PERMISO_SER_MODIFICAR);
+	    $e = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_ELIMINAR);
+	    $p = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_COMPARTIR);
+	}
+	else{
+		$sm=$e=$m=$p=1;
+	}
+	/*if ($expediente[0]["propietario"] == $_SESSION["usuario_actual"]) {
 		$m = 1;
 		$e = 1;
 		$p = 1;
 	} else {
 		$permiso = busca_filtro_tabla("permiso", "entidad_expediente", "expediente_idexpediente=" . $idexpediente . " AND entidad_identidad=1 and estado=1 and llave_entidad=" . usuario_actual("idfuncionario"), "", $conn);
-		if ($permiso["numcampos"] && $permiso[0]["permiso"] != "") {
-			if (strpos($permiso[0]["permiso"], "m") !== false) {
-				$m = 1;
+		if ($permiso["numcampos"]) {
+			if($permiso[0]["permiso"] != "") {
+				if (strpos($permiso[0]["permiso"], "m") !== false) {
+					$m = 1;
+				}
+				if (strpos($permiso[0]["permiso"], "e") !== false) {
+					$e = 1;
+				}
+				if (strpos($permiso[0]["permiso"], "p") !== false) {
+					$p = 1;
+				}
 			}
-			if (strpos($permiso[0]["permiso"], "e") !== false) {
-				$e = 1;
-			}
-			if (strpos($permiso[0]["permiso"], "p") !== false) {
-				$p = 1;
-			}
+			$l=1;
 		}
-	}
-	if(!($e || $m || $p)) {
+	}*/
+	if(!($sm || $e || $m || $p)) {
 	    die("No tiene permisos sobre &eacute;ste expediente");
 	}
 
@@ -110,7 +125,41 @@ $expediente = busca_filtro_tabla("a.*," . fecha_db_obtener("a.fecha", "Y-m-d") .
 
   <?php
       if($expediente[0]["agrupador"]){
-
+      	?>
+		 <tr>
+		  	<td class="prettyprint"><b>Responsable del expediente:</b></td>
+		  	<td colspan="3">
+		  	<?php
+		if ($expediente[0]["propietario"]) {
+		    $nombres = busca_filtro_tabla("", "funcionario A", "A.funcionario_codigo=" . $expediente[0]["propietario"], "", $conn);
+		    echo (ucwords(strtolower($nombres[0]["nombres"] . " " . $nombres[0]["apellidos"])));
+		} else {
+		    echo ("<span style='color:red'>Expediente creado por el sistema</span>");
+		}
+		$configuracion_administrador = busca_filtro_tabla("valor", "configuracion", "nombre='login_administrador'", "", $conn);
+		
+		if (($expediente[0]["propietario"] == @$_SESSION['usuario_actual']) || (!$expediente[0]["propietario"] && $configuracion_administrador[0]["valor"] == @$_SESSION['LOGIN' . LLAVE_SAIA])) {
+		  	?>
+		          	&nbsp; &nbsp; &nbsp;
+		  		    <button class='btn btn-mini btn-default cambiar_responsable_expediente'>
+		  		        <i class='icon-user' title='Cambiar Responsable'></i>
+		  		    </button>
+		  		    <script>
+		  		        $(document).ready(function(){
+		  		            $('.cambiar_responsable_expediente').click(function(){
+		                         var enlace='<?php echo($ruta_db_superior); ?>pantallas/expediente/cambiar_responsable_expediente.php?idexpediente=<?php echo($idexpediente); ?>';
+		                        hs.htmlExpand(this, { objectType: 'iframe',width: 400, height: 200,contentId:'cuerpo_paso', 		preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
+		  		            });
+		  		        });
+		  		    </script>
+		
+		  	<?php
+		  	    } //fin if  $expediente[0]["propietario"] == @$_SESSION['usuario_actual']
+		  	?>
+		
+		  	</td>
+		  </tr>
+		  <?php
         echo('</table></div></div>');
         echo('
         <script>
@@ -227,7 +276,8 @@ if (($expediente[0]["propietario"] == @$_SESSION['usuario_actual']) || (!$expedi
     if ($expediente[0]["fk_idcaja"]) {
         $caja = busca_filtro_tabla("", "caja", "idcaja=" . $expediente[0]["fk_idcaja"], "", $conn);
         if ($caja["numcampos"]) {
-            echo ($caja[0]["codigo"] . " - " . $caja[0]["fondo"]);
+           // echo ($caja[0]["codigo"] . " - " . $caja[0]["fondo"]);
+            echo ($caja[0]["no_consecutivo"]);
         }
     } else {
         echo ("---");
@@ -321,12 +371,13 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
     $fecha_cierre=$datos_cierre[0]['fecha_cierre'];
 
     if($datos_cierre[0]['estado_cierre']==2){
-        $dias_calcular=365*$datos_serie[0]["retencion_".$vector_estado_expediente[$estado_expediente]];
-       // $dias_calcular=60;
+        //$dias_calcular=365*$datos_serie[0]["retencion_".$vector_estado_expediente[$estado_expediente]];
+        $dias_calcular=$datos_serie[0]["retencion_".$vector_estado_expediente[$estado_expediente]];
+       // $dias_calcular=60;       
         include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
-        $fecha_calculo=calculaFecha("days",+$dias_calcular,$fecha_cierre);
-        $interval=resta_dos_fechas_saia(date('Y-m-d'),$fecha_calculo);
-        $interval_pos_neg=$interval->invert;  //Es 1 si el intervalo representa un periodo de tiempo negativo y 0 si no
+		$fecha_calculo=calculaFecha("month",+$dias_calcular,$fecha_cierre);
+		$interval=resta_dos_fechas_saia(date('Y-m-d'),$fecha_calculo);
+		$interval_pos_neg=$interval->invert;  //Es 1 si el intervalo representa un periodo de tiempo negativo y 0 si no
         $interval_diferencia=$interval->days; //dias de diferencia
         $interval_anio=$interval->y;
         $interval_mes=$interval->m;
@@ -338,7 +389,9 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         list($h, $m, $s) = explode(':', $cadena_horas);
         $segundos = ($h * 3600) + ($m * 60) + $s;
         $horas_minutos_segundos_parseados=( conversor_segundos_hm(intval($segundos)) );
-        $cadena_final='';
+        //$cadena_final='';
+        $cadena_final=array();
+		$texto_final="";
 
         $cadena_inicial='Faltan ';
         $color='green';
@@ -354,27 +407,27 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         $color='color:'.$color.';';
 
         if($interval_anio>0){
-            $cadena_final.=$interval_anio.' años, ';
+            $cadena_final[]=$interval_anio.' años';
         }
         if($interval_mes>0){
-            $cadena_final.=$interval_mes.' meses, ';
+            $cadena_final[]=$interval_mes.' meses';
         }
         if($interval_dia>0){
-            $cadena_final.=$interval_dia.' dias, ';
+            $cadena_final[]=$interval_dia.' dias';
         }
         if($interval_hora>0){
-            $cadena_final.=$interval_hora.' horas, ';
+            $cadena_final[]=$interval_hora.' horas';
         }
         if($interval_minuto>0){
-            $cadena_final.=$interval_minuto.' minutos, ';
+            $cadena_final[]=$interval_minuto.' minutos';
         }
         if($interval_segundo>0){
-            $cadena_final.=$interval_segundo.' segundos, ';
+            $cadena_final[]=$interval_segundo.' segundos';
         }
-        if($cadena_final==''){
-            $cadena_final='Hoy';
+        if(empty($cadena_final)){
+            $texto_final='Hoy';
         }else{
-            $cadena_final=$cadena_inicial.$cadena_final;
+            $texto_final=$cadena_inicial.implode(", ",$cadena_final);
         }
     }
 
@@ -384,7 +437,7 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
           <b>Alerta de Retenci&oacute;n:</b>
         </td>
         <td>
-              <span style="<?php echo($color); ?>"><?php echo($cadena_final); ?></span>
+              <span style="<?php echo($color); ?>"><?php echo($texto_final); ?></span>
         </td>
       </tr>
     <?php
@@ -494,7 +547,8 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
 </div>
 <?php
 $almacenamiento["numcampos"]=0;
-if($almacenamiento["numcampos"]){
+
+if($almacenamiento["numcampos"]){	
 ?>
 <div class="container">
 <div data-toggle="collapse" data-target="#div_info_almacenamiento" style="cursor:pointer;">
@@ -608,7 +662,22 @@ if($contenido["numcampos"]){
   <?php
   }
   ?>
-
+  <tr>
+    <td class="prettyprint">
+      <b>Consecutivo Inicial:</b>
+    </td>
+    <td colspan="3">       
+       <?php echo($expediente[0]["consecutivo_inicial"]);?>
+    </td>
+  </tr>
+   <tr>
+    <td class="prettyprint">
+      <b>Consecutivo Final:</b>
+    </td>
+    <td colspan="3">
+       <?php echo($expediente[0]["consecutivo_final"]);?>
+    </td>
+  </tr>
   <tr>
     <td class="prettyprint">
          <b>Tomo:</b>

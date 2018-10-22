@@ -23,6 +23,7 @@ if (@$_REQUEST["accion"]) {
 		$sql1 = "UPDATE ft_item_prestamo_exp SET fecha_devolucion=" . fecha_db_almacenar($fecha, 'Y-m-d H:i:s') . ", funcionario_devoluci=" . $usuario . ", observacion_devolver='" . $observaciones . "', estado_prestamo=2 WHERE idft_item_prestamo_exp in(" . $idft_item_prestamo_exp . ")";
 	}
 	phpmkr_query($sql1);
-	abrir_url($ruta_db_superior . "pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=" . $componente[0]["idbusqueda_componente"], "_self");
+	//abrir_url($ruta_db_superior . "pantallas/busquedas/consulta_busqueda_reporte.php?idbusqueda_componente=" . $componente[0]["idbusqueda_componente"], "_self");
+	abrir_url($ruta_db_superior . "pantallas/busquedas/consulta_busqueda_tabla.php?idbusqueda_componente=" . $componente[0]["idbusqueda_componente"], "_self");
 }
 ?>

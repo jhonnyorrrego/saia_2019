@@ -22,7 +22,7 @@ if (!$_REQUEST["key"]) {
 include ($ruta_db_superior."header.php");
 $idserie = $_REQUEST["key"];
 $idnode = ($_REQUEST["idnode"]!="") ? $_REQUEST["idnode"] : 0 ;
-
+$entidad_serie =$_REQUEST["identidad_serie"];
 $tipo_serie = array(
 	1 => "SERIE",
 	2 => "SUBSERIE",
@@ -66,20 +66,35 @@ if($filtro_docs) {
 }
 
 $vinculados = $docs_vinculados["numcampos"];
-
+/*$identidad=array();
+$vista_series = busca_filtro_tabla("", "vpermiso_serie_entidad", "cod_padre=".$idserie, "", $conn);
+if($vista_series["numcampos"]){
+	for($i=0;$i<$vista_series["numcampos"];$i++){
+		$identidad[]=$vista_series[$i]["entidad_identidad"];
+	} 
+	$identidad = implode(",", $identidad);
+}*/
 include_once ($ruta_db_superior."librerias_saia.php");
 echo librerias_jquery("1.7");
 ?>
 <span style="font-family: Verdana; font-size: 9px;"><br/>
 <?php
 if($vinculados) {
-    echo "Serie de solo lectura. $vinculados documentos vinculados";
+    echo "Serie de solo lectura. $vinculados documentos vinculados<br>";
 } else {
 ?>
 	<a href="serieedit.php?idnode=<?php echo $idnode ;?>&x_idserie=<?php echo $idserie; ?>">EDITAR</a>
 	<?php
 }
-	?>
+
+if($datos[0]["tipo"]==1 || $datos[0]["tipo"]==2) {
+    echo '&nbsp;<a href="serieadd.php?idnode=' . $idnode . '&x_idserie=' . $idserie . '">ADICIONAR</a>';
+}
+if(!empty($entidad_serie)){
+	echo ' <a href="permiso_serie.php?idserie=' . $idserie . '&identidad_serie='.	$entidad_serie.'" target="serielist">PERMISOS</a>';
+}
+?>
+
 </span><br/><br/>
 
 <table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">

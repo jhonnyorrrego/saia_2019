@@ -64,6 +64,10 @@ if (isset($_REQUEST["id"])) {
     $id = $_REQUEST["id"];
 }
 
+if($id < 0) {
+    $id = 0;
+}
+
 if(isset($_REQUEST["mostrar_padre"]) && $_REQUEST["mostrar_padre"] == "1") {
     $incluir_padre = true;
 }
@@ -116,23 +120,40 @@ class DHtmlXtreeSeries {
     private function llena_serie($id) {
         if ($id == 0) {
             $papas = busca_filtro_tabla("", "vpermiso_serie", "(cod_padre=0 or cod_padre is null)" . $this->condicion_ad, "nombre_serie ASC", $this->conn);
+			$this->incluir_padre = false;
         } else if($this->incluir_padre) {
-            $papas = busca_filtro_tabla("", "vpermiso_serie", "idserie=" . $id . $this->condicion_ad, "nombre_serie ASC", $this->conn);
+        	$papas = busca_filtro_tabla("", "vpermiso_serie", "idserie=" . $id . $this->condicion_ad, "nombre_serie ASC", $this->conn);
             $this->incluir_padre = false;
         } else {
             $papas = busca_filtro_tabla("", "vpermiso_serie", "cod_padre=" . $id . $this->condicion_ad, "nombre_serie ASC", $this->conn);
         }
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
+                $permisos = array();
+                $tiene_permisos = false;
+                $tiene_permiso_lectura = false;
+                if(!empty($papas[$i]["permiso"])) {
+                    $permisos = explode(",", $papas[$i]["permiso"]);
+                    $tiene_permisos = in_array("a", $permisos) || in_array("v", $permisos);
+                    $tiene_permiso_lectura = count($permisos) == 1 && in_array("l", $permisos);
+                }
+
+                if(!$tiene_permisos && !$tiene_permiso_lectura) {
+                    continue;
+                }
+
                 $text = $papas[$i]["nombre_serie"] . " (" . $papas[$i]["codigo"] . ")";
                 if ($papas[$i]["estado_serie"] == 0) {
                     $text .= " - INACTIVO";
+                }
+                if ($tiene_permiso_lectura) {
+                    $text .= " - (sin permiso)";
                 }
                 $this->objetoXML->startElement("item");
                 $this->objetoXML->writeAttribute("style", "font-family:verdana; font-size:7pt;");
                 $this->objetoXML->writeAttribute("text", $text);
                 $this->objetoXML->writeAttribute("id", $papas[$i]["idserie"]);
-                if ($this->tipo[$papas[$i]["tipo"]] == 0 || $papas[$i]["estado_serie"] == 0) {
+                if ($this->tipo[$papas[$i]["tipo"]] == 0 || $papas[$i]["estado_serie"] == 0 || $tiene_permiso_lectura) {
                     $this->objetoXML->writeAttribute("nocheckbox", 1);
                 }
                 if (in_array($papas[$i]["idserie"], $this->seleccionados) !== false) {

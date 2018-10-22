@@ -50,7 +50,7 @@ switch ($sAction)
 <p><span class="internos">
 <a href="<?php echo "cargoedit.php?key=" . urlencode($sKey); ?>">Editar</a>&nbsp;
 <a href="<?php echo "cargodelete.php?key=" . urlencode($sKey); ?>">Inactivar</a>&nbsp;
-<a href="<?php echo "asignarserie_entidad.php?llave_entidad=".$sKey."&tipo_entidad=4&origen=cargo"; ?>">Asignar serie / categor&iacute;a</a>&nbsp;
+<!--a href="<?php echo "asignarserie_entidad.php?llave_entidad=".$sKey."&tipo_entidad=4&origen=cargo"; ?>">Asignar serie / categor&iacute;a</a-->&nbsp;
 </span></p>
 
 <p>

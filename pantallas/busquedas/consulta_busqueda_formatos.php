@@ -1,43 +1,43 @@
 <?php
-$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior=$ruta="";
-while($max_salida>0){
-    if(is_file($ruta."db.php")){
-        $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+$max_salida = 10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+    if (is_file($ruta . "db.php")) {
+        $ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
     }
-    $ruta.="../";
+    $ruta .= "../";
     $max_salida--;
 }
-include_once($ruta_db_superior."db.php");
+include_once ($ruta_db_superior . "db.php");
 usuario_actual("login");
-include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
+include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 ?>
 <meta http-equiv="X-UA-Compatible" content="IE=9">
 <?php
-include_once($ruta_db_superior."librerias_saia.php");
-$funciones=array();
-$datos_componente=$_REQUEST["idbusqueda_componente"];
-$datos_busqueda=busca_filtro_tabla("","busqueda A,busqueda_componente B","A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=".$datos_componente,"",$conn);
-
+include_once ($ruta_db_superior . "librerias_saia.php");
+$funciones = array();
+$datos_componente = $_REQUEST["idbusqueda_componente"];
+$datos_busqueda = busca_filtro_tabla("", "busqueda A,busqueda_componente B", "A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=" . $datos_componente, "", $conn);
 ?>
 <link rel="stylesheet" type="text/css" media="screen" href="<?php echo($ruta_db_superior);?>pantallas/lib/librerias_css.css" />
 <?php
-echo(librerias_html5());
-echo(librerias_jquery("1.7"));
-echo(estilo_bootstrap());
-if($datos_busqueda[0]["ruta_libreria"]){
-  $librerias=array_unique(explode(",",$datos_busqueda[0]["ruta_libreria"]));
-  array_walk($librerias,"incluir_librerias_busqueda");
+echo (librerias_html5());
+echo (librerias_jquery("1.7"));
+echo (estilo_bootstrap());
+if ($datos_busqueda[0]["ruta_libreria"]) {
+    $librerias = array_unique(explode(",", $datos_busqueda[0]["ruta_libreria"]));
+    array_walk($librerias, "incluir_librerias_busqueda");
 }
-function incluir_librerias_busqueda($elemento,$indice){
-  global $ruta_db_superior;
-  include_once($ruta_db_superior.$elemento);
+
+function incluir_librerias_busqueda($elemento, $indice) {
+    global $ruta_db_superior;
+    include_once ($ruta_db_superior . $elemento);
 }
 ?>
 <style>
 .row-fluid [class*="span"]{min-height:20px;}.row-fluid {min-height:20px;}.well{ margin-bottom: 3px; min-height: 11px; padding: 4px;}.alert{ margin-bottom: 3px; padding: 10px;}  body{ font-size:12px; line-height:100%; margin-top:35px;padding:0px;}.navbar-fixed-top, .navbar-fixed-bottom{ position: fixed;} .navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top{margin-right: 0px; margin-left: 0px;}
-.texto-azul{ color:#3176c8} 
-#panel_body{margin-top:0px; overflow: auto; <?php if($_SESSION["tipo_dispositivo"]=='movil'){ echo("width:100%; -webkit-overflow-scrolling:touch;");  } else{ echo("width:50%;"); } ?>} 
+.texto-azul{ color:#3176c8}
+#panel_body{margin-top:0px; overflow: auto; <?php if($_SESSION["tipo_dispositivo"]=='movil'){ echo("width:100%; -webkit-overflow-scrolling:touch;");  } else{ echo("width:50%;"); } ?>}
 #panel_detalle{margin-top:0px; border: 0px; overflow:auto;<?php if($_SESSION["tipo_dispositivo"]=='movil'){ echo("width:0%; -webkit-overflow-scrolling:touch;");} else{ echo("width:50%;");} ?>}
 </style>
 <div class="navbar navbar-fixed-top" id="menu_buscador">
@@ -53,11 +53,52 @@ function incluir_librerias_busqueda($elemento,$indice){
               $datos_busqueda[0]["busqueda_avanzada"].="?";
            $datos_busqueda[0]["busqueda_avanzada"].='idbusqueda_componente='.$datos_busqueda[0]["idbusqueda_componente"];
         ?>
-          <button class="btn btn-mini kenlace_saia" title="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>" conector="iframe" enlace="<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>">B&uacute;squeda &nbsp;</button>
+          <button class="btn btn-mini kenlace_saia" titulo="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>" title="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>" conector="iframe" enlace="<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>">B&uacute;squeda &nbsp;</button>
         <?php
           }
         ?>
       </div>
+      <!-- /btn-group -->
+      </li>
+      <li>
+      <div class="btn-group">
+        <button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">Seleccionados &nbsp;
+          <span class="caret">
+          </span>&nbsp;
+        </button>
+        <ul class="dropdown-menu" id='listado_seleccionados'>
+          <li>
+          <a href="#">
+            <div id="filtrar_seleccionados">Filtrar Seleccionados
+            </div></a>
+          </li>
+          <li>
+          <a href="#">
+            <div id="restaurar_seleccionados">Restaurar Listado
+            </div></a>
+          </li>
+          <!--li>
+          <a href="#">
+            <div id="restaurar_listado">Restaurar  Seleccionados
+            </div></a>
+          </li-->
+          <?php
+            if($datos_busqueda[0]["acciones_seleccionados"]!=''){
+              echo('<li class="nav-header">Acciones</li>');
+            $acciones=explode(",",$datos_busqueda[0]["acciones_seleccionados"]);
+            $cantidad=count($acciones);
+            for($i=0;$i<$cantidad;$i++){
+                echo($acciones[$i]());
+            }
+
+            }
+          ?>
+        </ul>
+      </div>
+
+      <!-- /btn-group -->
+      </li>
+      <li class="divider-vertical">
       </li>
       <li>
       <div class="btn-group">
@@ -89,22 +130,100 @@ function incluir_librerias_busqueda($elemento,$indice){
       <!-- /btn-group -->
       </li>
 
+	<?php
+		if(@$datos_busqueda[0]["nombre"]=='documentos_importantes'){
+	?>
+
+      <!-- LISTA DE INDICADORES -->
+      <li class="divider-vertical"></li>
+      <li>
+      <div class="btn-group">
+         <button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">Indicadores &nbsp;
+          <span class="caret">
+          </span>&nbsp;
+        </button>
+         <ul class="dropdown-menu" id='listado_indicadores'>
+
+	          <li>
+	          <a href="#">
+	            <div name="filtro_indicadores" valor=""><b>Restaurar Listado</b>
+	            </div></a>
+	          </li>
+	          <li>
+	          <a href="#">
+	            <div name="filtro_indicadores" valor="1"><span class="icon-flag-rojo"></span>&nbsp; Rojo
+	            </div></a>
+	          </li>
+	          </li>
+	          <li>
+	          <a href="#">
+	            <div name="filtro_indicadores" valor="2"><span class="icon-flag-morado"></span>&nbsp; Morado
+	            </div></a>
+	          </li>
+	          <li>
+	          <a href="#">
+	            <div name="filtro_indicadores" valor="3"><span class="icon-flag-naranja"></span>&nbsp; Naranja
+	            </div></a>
+	          </li>
+	          <li>
+	          <a href="#">
+	            <div name="filtro_indicadores" valor="4"><span class="icon-flag-amarillo"></span>&nbsp; Amarillo
+	            </div></a>
+	          </li>
+	          <li>
+	          <a href="#">
+	            <div name="filtro_indicadores" valor="5"><span class="icon-flag-verde"></span>&nbsp; Verde
+	            </div></a>
+	          </li>
+        </ul>
+        <script>
+        	$(document).ready(function(){
+        		$('[name="filtro_indicadores"]').click(function(){
+
+        			var valor=$(this).attr('valor');
+        			window.location='consulta_busqueda_documento.php?idbusqueda_componente=<?php echo($datos_busqueda[0]['idbusqueda_componente']); ?>&filtro_indicadores='+valor+'';
+        		});
+        	});
+        </script>
+
+      </div>
+      </li>
+      <?php if(@$_REQUEST['filtro_indicadores']){
+        $vector_indicadores=array(0=>'<span class="icon-flag"></span>',1=>'<span class="icon-flag-rojo"></span>',2=>'<span class="icon-flag-morado"></span>',3=>'<span class="icon-flag-naranja"></span>',4=>'<span class="icon-flag-amarillo"></span>',5=>'<span class="icon-flag-verde"></span>');
+      ?>
+      <li>
+          <div class="btn-group">
+                <button class="btn btn-mini" disabled>
+                        <?php echo($vector_indicadores[ intval($_REQUEST['filtro_indicadores']) ]); ?>
+                </button>
+          </div>
+      </li>
+      <?php } ?>
+	<?php
+		}
+	?>
+
       <?php if(@$datos_busqueda[0]["enlace_adicionar"]){
       	?>
-      	<li class="divider-vertical"></li>
-      	<li><div class="btn-group">
-          <button class="btn btn-mini kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar formato</button></div></li>
+      	<li class="divider-vertical"></li><li><div class="btn-group">
+          <button class="btn btn-mini kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar</button></div></li>
       	<?php
       }
-		if(@$datos_busqueda[0]["menu_busqueda_superior"]){ 
-       		$funcion_menu=explode("@",$datos_busqueda[0]["menu_busqueda_superior"]);
+			?>
+      <?php if(@$datos_busqueda[0]["menu_busqueda_superior"]){ ?>
+        <?php
+          $funcion_menu=explode("@",$datos_busqueda[0]["menu_busqueda_superior"]);
           echo($funcion_menu[0](@$funcion_menu[1]));
-        }
+        ?>
+      <?php }
 				if(@$datos_busqueda[0]["exportar"]){
 					if(function_exists(exportar_excel))
           	echo(exportar_excel());
 				}
       ?>
+
+
+
 
     </ul>
   </div>
@@ -160,36 +279,25 @@ $(document).ready(function(){
 	window.parent.$(".block-iframe").attr("style","margin-top:0px; width: 100%; border:0px solid; overflow:auto; -webkit-overflow-scrolling:touch;");
 
   cargar_datos_scroll();
- 
   setTimeout("contador_buzon("+<?php echo($datos_componente);?>+",'cantidad_maxima')",<?php echo($datos_busqueda[0]["tiempo_refrescar"]); ?>);
 });
   function cargar_datos_scroll(){
   	if($('#loadmoreajaxloader_parent').hasClass("disabled"))return;
     $('#loadmoreajaxloader').html("Cargando (... de ");
-    var datos = {idbusqueda_componente:"<?php echo($datos_componente);?>",
-    			page:$("#busqueda_pagina").val(),
-    			rows:$("#busqueda_registros").val(),
-    			idbusqueda_filtro_temp: "<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>",
-    			idbusqueda_filtro: "<?php echo(@$_REQUEST['idbusqueda_filtro']);?>",
-    			idbusqueda_temporal: "<?php echo (@$_REQUEST['idbusqueda_temporal']);?> ",
-    			actual_row:$("#fila_actual").val(),
-    			variable_busqueda:$("#variable_busqueda").val()
-    			}; 
     $.ajax({
       type:'POST',
       url: "servidor_busqueda.php",
       dataType:'json',
-      data: datos,
+      data: "idbusqueda_componente=<?php echo($datos_componente);?>&page="+$("#busqueda_pagina").val()+"&rows="+$("#busqueda_registros").val()+"&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>&actual_row="+$("#fila_actual").val()+"&variable_busqueda="+$("#variable_busqueda").val()+"&cantidad_total="+$("#cantidad_total").val()+"<?php if(@$_REQUEST['filtro_categoria']){ echo('&filtro_categoria='.$_REQUEST['filtro_categoria']); } ?>"+"<?php if(@$_REQUEST['filtro_indicadores']){ echo('&filtro_indicadores='.$_REQUEST['filtro_indicadores']); } ?>",
       success: function(objeto){
           if(objeto.exito){
-          	
 	          $("#busqueda_pagina").val(objeto.page);
 	          $("#busqueda_total_paginas").val(objeto.total);
 	          $("#fila_actual").val(objeto.actual_row);
 	          $.each(objeto.rows,function(index,item){
 	            if(objeto.page===2 && index===0){
 	                $("#iframe_detalle").attr({
-	                    'src':'<?php echo($ruta_db_superior);?>pantallas/formato/mostrar_arbol_proceso.php?idformato='+item.idformato+"&idbusqueda_componente=<?php echo($_REQUEST["idbusqueda_componente"]);?>&rand=<?php echo(rand());?>",
+	                    'src':'<?php echo($ruta_db_superior);?>pantallas/documento/detalles_documento.php?iddoc='+item.iddocumento+"&idbusqueda_componente=<?php echo($_REQUEST["idbusqueda_componente"]);?>&rand=<?php echo(rand());?>",
 	                    'height': ($("#panel_body").height())
 	                });
 	            }
@@ -214,7 +322,7 @@ $(document).ready(function(){
           	$("#cantidad_total_copia").val("0");
           	finalizar_carga_datos(0);
           }
-  
+
       }
     });
   }
@@ -239,21 +347,12 @@ $(document).ready(function(){
   });
 
   function contador_buzon(idcomponente,capa){
-  	var datos = {idbusqueda_componente:idcomponente,
-    			page:0,
-    			rows:$("#busqueda_registros").val(),
-    			idbusqueda_filtro_temp: "<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>",
-    			idbusqueda_filtro: "<?php echo(@$_REQUEST['idbusqueda_filtro']);?>",
-    			idbusqueda_temporal: "<?php echo (@$_REQUEST['idbusqueda_temporal']);?> ",
-    			actual_row:0,
-    			variable_busqueda:$("#variable_busqueda").val()
-    			}; 
   	$.ajax({
   		type:'POST',
 	    url: "servidor_busqueda.php",
 	    rsync:false,
 	    dataType:'json',
-	    data: datos,
+	    data: "idbusqueda_componente="+idcomponente+"&page=0&rows="+$("#busqueda_registros").val()+"&actual_row=0&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>&variable_busqueda="+$("#variable_busqueda").val()+"<?php if(@$_REQUEST['filtro_categoria']){ echo('&filtro_categoria='.$_REQUEST['filtro_categoria']); } ?>"+"<?php if(@$_REQUEST['filtro_indicadores']){ echo('&filtro_indicadores='.$_REQUEST['filtro_indicadores']); } ?>",
 	    success: function(objeto){
       	$("#busqueda_total_paginas").val(objeto.total);
       	if(objeto.total)$("#boton_exportar_excel").show();
@@ -267,8 +366,7 @@ $(document).ready(function(){
 	  });
   }
 </script>
-<?php 
-echo(librerias_bootstrap());
+<?php echo(librerias_bootstrap());
 echo(librerias_tooltips());
 echo(librerias_acciones_kaiten());
 
@@ -280,4 +378,3 @@ if($datos_busqueda[0]["ruta_libreria_pantalla"]){
 }
 ?>
 <script type="text/javascript" src="<?php echo($ruta_db_superior."pantallas/lib/main.js");?>"></script>
-
