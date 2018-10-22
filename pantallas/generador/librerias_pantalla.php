@@ -436,7 +436,6 @@ function eliminar_datos_clase_padre($idpantalla, $clase) {
 }
 function editar_datos_formato($datos, $tipo_retorno = 1) {
 	global $ruta_db_superior;
-	print_r($datos["sql"]);
 	$retorno = array(
 			"mensaje" => "Error al tratar de generar el adicionar de la pantalla",
 			"exito" => 0
