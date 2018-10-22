@@ -3711,11 +3711,36 @@ function actualizar_crear_cod_arboles($id, $tabla, $tipo = 1, $cod_padre_ant = f
 						phpmkr_query($update_ant) or die("Error al actualizar el cod_arbol");
 					}
 				} else {
-					die("Falta el cod_padre/cod_arbol");
-				}
-			}
-		}
-	}
-	return;
+                    die("Falta el cod_padre/cod_arbol");
+                }
+            }
+        }
+    }
+    return;
+}
+
+function return_megabytes($val) {
+    $val = trim($val);
+
+    if (is_numeric($val)) {
+        return $val;
+    }
+    $last = strtolower($val[strlen($val) - 1]);
+    $val = substr($val, 0, -1); // necessary since PHP 7.1; otherwise optional
+
+    switch ($last) {
+        // The 'G' modifier is available since PHP 5.1.0
+        case 'g':
+            $val *= 1024;
+            break;
+        case 'm':
+            $val = $val;
+            break;
+        case 'k':
+            $val /= 1024;
+            break;
+    }
+
+        return $val;
 }
 ?>

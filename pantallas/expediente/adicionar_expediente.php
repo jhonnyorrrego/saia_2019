@@ -90,12 +90,12 @@ $serie_padre = "";
             var valor = $(this).val();
             var numero = new Number(valor);
             var texto = "";
-
             if(numero == 1) {
                 $('#informacion_completa_expediente').hide();
                 $('#informacion_completa_expediente_adicional').hide();
-                //$('#serie_idserie').val(-1);
-                $('#serie_idserie').val();
+                $('#serie_idserie').val(-1);
+                $('#identidad_serie').val(-1);
+                //$('#serie_idserie').val();
                 texto = "Agrupador";
             } else if(numero == 0) {
                 $('#informacion_completa_expediente').show();
@@ -188,7 +188,7 @@ $serie_padre = "";
 	  	</select>
 	  </div>
 	</div>
-</div>
+<!--/div-->
 
 <div class="control-group element">
 	<label class="control-label" for="serie_idserie">Serie asociada *</label>
@@ -381,8 +381,8 @@ $serie_padre = "";
 						echo("selected");
 					}
 					?>
-					>Central</option>
-				<option value="2" <?php if($datos[0]["estado_archivo"]==2 || $_REQUEST["estado_archivo"]==2)echo("selected"); ?>>Gestion</option>
+					>Gestion</option>
+				<option value="2" <?php if($datos[0]["estado_archivo"]==2 || $_REQUEST["estado_archivo"]==2)echo("selected"); ?>>Central</option>
 				<option value="3" <?php if($datos[0]["estado_archivo"]==3 || $_REQUEST["estado_archivo"]==3)echo("selected"); ?>>Historico</option-->
 	  	</select>
 	  </div>
@@ -516,17 +516,14 @@ $serie_padre = "";
   });
 
   $("#submit_formulario_expediente").click(function(){
+  	if($("#serie_idserie").val()==""){
+  		$("#serie_idserie").val(-1);
+  	}
   	if(!$('select[name=estado_archivo]').val()){
-  		console.log("no selecciono selec");
   		$("#estado_archivo").val("<?php echo $_REQUEST["estado_archivo"]; ?>");
-  		console.log($("#estado_archivo").val());
+  		
   	}
-  	else{
-  		console.log("si se selecciono selec");
-  		console.log($("#estado_archivo").val());
-  	}
-  	//var estado_archivo = $("#estado_archivo").val();
-  	console.log(estado_archivo);
+  	//var estado_archivo = $("#estado_archivo").val();  	
     if(formulario_expediente.valid()){
     	$('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
 			$(this).attr('disabled', 'disabled');

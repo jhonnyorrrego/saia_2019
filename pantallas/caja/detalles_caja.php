@@ -29,6 +29,7 @@ if(@$_REQUEST["idcaja"]){
 	$idcaja=$_REQUEST["idcaja"];	
 } 
 $caja=busca_filtro_tabla("","caja","idcaja=".$idcaja,"",$conn);
+//print_r($caja["sql"]);
 ?>   
 <style>
 .well{ margin-bottom: 3px; min-height: 11px; padding: 10px;}.alert{ margin-bottom: 3px;  padding: 10px;}  body{ font-size:12px; line-height:100%;}.navbar-fixed-top, .navbar-fixed-bottom{ position: fixed;} .navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top{margin-right: 0px; margin-left: 0px;}
@@ -100,13 +101,23 @@ $caja=busca_filtro_tabla("","caja","idcaja=".$idcaja,"",$conn);
   </tr>
   <tr>
 <?php
-$nombre_serie=busca_filtro_tabla("","serie a","a.idserie=".$caja[0]["serie_idserie"],"",$conn);
+$expedientes=busca_filtro_tabla("es.serie_idserie","expediente e, entidad_serie es","e.fk_entidad_serie=es.identidad_serie and fk_idcaja=".$caja[0]["idcaja"],"",$conn);
+if($expedientes["numcampos"]){
+	$listado_series = array();
+	for($i=0;$i<$expedientes["numcampos"];$i++){
+		$series=busca_filtro_tabla("nombre","serie","idserie=".$expedientes[$i]["serie_idserie"],"",$conn);
+		$listado_series[]=$series[0]["nombre"];
+	}
+}
+$listado_series=array_unique($listado_series);
+$listado_series=implode(", ", $listado_series);
+//$nombre_serie=busca_filtro_tabla("","serie a","a.idserie=".$caja[0]["serie_idserie"],"",$conn);
 ?>
     <td class="prettyprint">
       <b>Serie vinculada:</b>
     </td>
     <td colspan="3">
-       <?php echo($nombre_serie[0]["nombre"]);?>
+       <?php echo($listado_series);?>
     </td>
   </tr>
   <tr>
