@@ -143,7 +143,8 @@ if($dato_padre["numcampos"]){
   </div>
 </div>
 
-<div id="div_serie_asociada" class="control-group element">
+<!--div id="div_serie_asociada" class="control-group element"-->
+<div class="control-group element">
   <label class="control-label" for="serie_idserie">Serie asociada *
   </label>
   <div class="controls">       
