@@ -10,6 +10,7 @@ while ($max_salida > 0) {
 }
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "pantallas/expediente/librerias.php");
+include_once ($ruta_db_superior . "class.funcionarios.php");
 
 $id = 0;
 if ($_GET["id"]) {
@@ -32,7 +33,7 @@ if (@$_REQUEST['estado_cierre']) {
     $condicion_ad .= " AND (e.estado_cierre IN(" . $_REQUEST['estado_cierre'] . "))";
 }
 
-$condicion_ad = " and " . DHtmlXtreeExpedienteFunc::expedientes_asignados($conn);
+//$condicion_ad = " and " . DHtmlXtreeExpedienteFunc::expedientes_asignados($conn);
 if (isset($_REQUEST["excluidos_exp"])) {
     $condicion_ad .= " and idexpediente not in (" . $_REQUEST["excluidos_exp"] . ")";
 } else if (isset($_REQUEST["incluir_series"]) && !($estado_cierre || $estado_archivo)) {
@@ -48,6 +49,9 @@ $seleccionados = array();
 if (isset($_REQUEST["seleccionados"])) {
     $seleccionados = explode(",", $_REQUEST["seleccionados"]);
 }
+$idfuncionario = usuario_actual("idfuncionario");
+$datos_admin_funcionario = busca_datos_administrativos_funcionario($idfuncionario);
+$lista_entidades = implode(",", $datos_admin_funcionario["identidad_serie"]);
 // TERMINA DEFAULT
 
 if (stristr($_SERVER["HTTP_ACCEPT"], "application/xhtml+xml")) {
@@ -56,26 +60,24 @@ if (stristr($_SERVER["HTTP_ACCEPT"], "application/xhtml+xml")) {
     header("Content-type: text/xml");
 }
 
-$arbol = new DHtmlXtreeExpedienteFunc($conn, $condicion_ad, $idexpediente, $seleccionados);
+$arbol = new DHtmlXtreeExpedienteFunc($conn, $condicion_ad, $idexpediente, $seleccionados,$lista_entidades);
 echo $arbol->generarXml($id);
 
 class DHtmlXtreeExpedienteFunc {
 
     private $objetoXML;
-
     private $conn;
-
     private $condicion_ad;
-
     private $seleccionados;
-
     private $idexpediente;
+    private $lista_entidades;
 
-    public function __construct($conn, $condicion_ad, $idexpediente, $seleccionados) {
+    public function __construct($conn, $condicion_ad, $idexpediente, $seleccionados,$lista_entidades) {
         $this->conn = $conn;
         $this->condicion_ad = $condicion_ad;
         $this->seleccionados = $seleccionados;
         $this->idexpediente = $idexpediente;
+		$this->lista_entidades = $lista_entidades;
     }
 
     public function generarXml($id = 0) {
@@ -98,20 +100,18 @@ class DHtmlXtreeExpedienteFunc {
             $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "entidad_expediente ee
                 join expediente e on ee.expediente_idexpediente = e.idexpediente", "e.idexpediente=" . $this->idexpediente, "nombre ASC", $this->conn);
         } else if ($id == 0) {
-            $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "entidad_expediente ee
-            join expediente e on ee.expediente_idexpediente = e.idexpediente", "(cod_padre=0 or cod_padre is null)" . $this->condicion_ad, "nombre ASC", $this->conn);
+            $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre,agrupador", "entidad_expediente ee
+            join expediente e on ee.expediente_idexpediente = e.idexpediente", "(cod_padre=0 or cod_padre is null) and e.fk_entidad_serie in (".$this->lista_entidades.")", "nombre ASC", $this->conn);
         } else {
-            $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "entidad_expediente ee
-                join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" . $id . $this->condicion_ad, "nombre ASC", $this->conn);
+            $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre,agrupador", "entidad_expediente ee
+                join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" . $id ." and e.fk_entidad_serie in (".$this->lista_entidades.")","nombre ASC", $this->conn);
         }
 
-        //print_r($papas);
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
-                $exp = busca_filtro_tabla("", "expediente", "idexpediente = " . $papas[$i]["idexpediente"], "", $this->conn);
-                $agrupador = 0;
-                if($exp["numcampos"]) {
-                    $agrupador = $exp[0]["agrupador"];
+                $agrupador = $papas[$i]["agrupador"];
+                if($agrupador){
+					 continue;
                 }
 				$cerrado=false;
                 $text = $papas[$i]["nombre"] . " (" . $papas[$i]["codigo_numero"] . ")";
@@ -123,7 +123,7 @@ class DHtmlXtreeExpedienteFunc {
                 $hijos = busca_filtro_tabla("count(1) as cant", "entidad_expediente ee join expediente e on ee.expediente_idexpediente = e.idexpediente", "e.cod_padre=" . $papas[$i]["idexpediente"] . $this->condicion_ad, "", $this->conn);
                 $tipo_docu = busca_filtro_tabla("count(1) as cant", "serie", "tipo=3 and tvd=0 and cod_padre=" . $papas[$i]["serie_idserie"], "", $this->conn);
 
-                // print_r($tipo_docu);
+                // print_r($hijos);
 
                 $this->objetoXML->startElement("item");
                 $this->objetoXML->writeAttribute("style", "font-family:verdana; font-size:7pt;font-weight:bold");
@@ -149,7 +149,7 @@ class DHtmlXtreeExpedienteFunc {
     private function llena_subserie($id, $idexp) {
         $papas = busca_filtro_tabla("distinct idserie, nombre_serie nombre, codigo, tipo, estado_serie estado, permiso",
             "vpermiso_serie",
-            "tipo in (2,3) and tvd=0 and cod_padre=" . $id . " and idfuncionario = " . $_SESSION["idfuncionario"], "nombre ASC", $this->conn);
+            "tipo in (2,3) and tvd=0 and cod_padre=" . $id . " and idfuncionario = " . $_SESSION["idfuncionario"]." and permiso like '%a,v%'", "nombre ASC", $this->conn);
 
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
@@ -208,7 +208,7 @@ class DHtmlXtreeExpedienteFunc {
     private function llena_tipo_documental($id, $idexp) {
         $papas = busca_filtro_tabla("distinct idserie, nombre_serie nombre, codigo, tipo, estado_serie estado, permiso",
             "vpermiso_serie",
-            "tipo=3 and tvd=0 and cod_padre=" . $id . " and idfuncionario = " . $_SESSION["idfuncionario"], "nombre ASC", $this->conn);
+            "tipo=3 and tvd=0 and cod_padre=" . $id . " and idfuncionario = " . $_SESSION["idfuncionario"]." and permiso like '%a,v%'", "nombre ASC", $this->conn);
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
                 $permisos = array();

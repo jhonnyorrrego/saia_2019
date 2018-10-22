@@ -11,19 +11,23 @@ desencriptar_sqli('form_info');
 //var_dump($_REQUEST);
 
 if (@$_REQUEST["iddoc"]) { // si estoy llenando desde la pantalla del menu intermedio del documento
+	if($_REQUEST["expediente"]){
+		$datos = explode(".", $_REQUEST["expediente"]);
+		$_REQUEST['serie_idserie']=$datos[0];
+		$expedientes = $datos[1];
+	}
     if (@$_REQUEST['serie_idserie']) {
         $sqlus = "UPDATE documento SET serie=" . @$_REQUEST['serie_idserie'] . " WHERE iddocumento=" . $_REQUEST["iddoc"];
         phpmkr_query($sqlus) or die($sqlus);
     }
 
-    $expedientes = explode(",", $_REQUEST["expedientes"]);
+    //$expedientes = explode(",", $_REQUEST["expedientes"]);
     if (is_array($expedientes) && $_REQUEST["iddoc"] && @$_REQUEST["accion"] != 4) {
         if ($_REQUEST["accion"] == 3) { // mover a otro expediente
             $sql_elimina = "delete from expediente_doc where expediente_idexpediente='" . $_REQUEST["expediente_actual"] . "' and documento_iddocumento in (" . $_REQUEST["iddoc"] . ")";
             phpmkr_query($sql_elimina) or die($sql_elimina);
             $_REQUEST["accion"] = 1;
         }
-
         foreach ($expedientes as $fila) {
             if (!empty($fila)) {
                 $documentos = explode(",", $_REQUEST["iddoc"]);
@@ -49,37 +53,42 @@ if (@$_REQUEST["iddoc"]) { // si estoy llenando desde la pantalla del menu inter
         } else {
             redirecciona("expediente_llenar.php?iddoc=" . $_REQUEST["iddoc"]);
         }
-    } else if (@$_REQUEST["accion"] == 4) { // Guarda en los expedientes seleccionados
-        $expedientes = $_REQUEST["expedientes"];
-        $expedientes = explode(",", $expedientes);
-        $expedientes = array_filter($expedientes);
-
+    } else if (@$_REQUEST["accion"] == 4) {
+    	// Guarda en los expedientes seleccionados
+        //$expedientes = $//$_REQUEST["expedientes"];
+        //$expedientes = explode(",", $expedientes);
+        //$expedientes = array_filter($expedientes);
         $expediente_almacenado = busca_filtro_tabla("A.expediente_idexpediente", "expediente_doc A", "A.documento_iddocumento=" . $_REQUEST["iddoc"], "", $conn);
         $expedientes_doc = extrae_campo($expediente_almacenado, "expediente_idexpediente");
+		if($expediente_almacenado["numcampos"]){
+        	$quitar = array_diff($expedientes_doc, $expedientes);
+        	$quitar = array_merge($quitar);
 
-        $quitar = array_diff($expedientes_doc, $expedientes);
-        $quitar = array_merge($quitar);
+        	$adicionales = array_diff($expedientes, $expedientes_doc);
+        	$adicionales = array_merge($adicionales);
 
-        $adicionales = array_diff($expedientes, $expedientes_doc);
-        $adicionales = array_merge($adicionales);
+        	$cantidad_eliminar = count($quitar);
+        	$cantidad_adicionar = count($adicionales);
 
-        $cantidad_eliminar = count($quitar);
-        $cantidad_adicionar = count($adicionales);
-
-        if ($cantidad_eliminar) {
-            $expedientes_asignados = arreglo_expedientes_asignados();
-            $nuevos_quitar = array_intersect($quitar, $expedientes_asignados);
-            if(!empty($nuevos_quitar)) {
-                $sql1 = "DELETE FROM expediente_doc WHERE documento_iddocumento=" . $_REQUEST["iddoc"] . " AND expediente_idexpediente IN(" . implode(",", $nuevos_quitar) . ")";
-                phpmkr_query($sql1) or die($sql1);
-            }
-        }
-        if ($cantidad_adicionar) {
-            for ($i = 0; $i < $cantidad_adicionar; $i++) {
-                $sql1 = "INSERT INTO expediente_doc (documento_iddocumento,expediente_idexpediente,fecha) VALUES(" . $_REQUEST["iddoc"] . "," . $adicionales[$i] . "," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
-                phpmkr_query($sql1) or die($sql1);
-            }
-        }
+	        if ($cantidad_eliminar) {
+	            $expedientes_asignados = arreglo_expedientes_asignados();
+	            $nuevos_quitar = array_intersect($quitar, $expedientes_asignados);
+	            if(!empty($nuevos_quitar)) {
+	                $sql1 = "DELETE FROM expediente_doc WHERE documento_iddocumento=" . $_REQUEST["iddoc"] . " AND expediente_idexpediente IN(" . implode(",", $nuevos_quitar) . ")";
+	                phpmkr_query($sql1) or die($sql1);
+	            }
+	        }
+	        if ($cantidad_adicionar) {
+	            for ($i = 0; $i < $cantidad_adicionar; $i++) {
+	                $sql1 = "INSERT INTO expediente_doc (documento_iddocumento,expediente_idexpediente,fecha) VALUES(" . $_REQUEST["iddoc"] . "," . $adicionales[$i] . "," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
+	                phpmkr_query($sql1) or die($sql1);
+	            }
+	        }
+	    }
+		else {
+			$sql1 = "INSERT INTO expediente_doc (documento_iddocumento,expediente_idexpediente,fecha) VALUES(" . $_REQUEST["iddoc"] . "," . $expedientes . "," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
+	                phpmkr_query($sql1) or die($sql1);
+		}
     }
     alerta("Accion realizada");
     // terminar_actividad_flujo($_REQUEST["iddoc"]);

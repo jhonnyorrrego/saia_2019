@@ -89,22 +89,29 @@ function enlace_expediente($idexpediente, $nombre) {
     $req_parms = http_build_query($data);
 
     $estilo_expediente = "";
-
-    $permiso = new PermisosExpediente($conn, $idexpediente);
-    $permisos = $permiso->obtener_permisos();
-
-    $l = $permiso->permiso_solo_lectura();
-    $m = $permiso->tiene_permiso_escribir_expediente();
-    $e = $permiso->tiene_permiso_eliminar_expediente();
-    $p = $permiso->tiene_permiso_compartir_expediente();
-    if (empty($permisos)) {
-        $estilo_expediente = ' style="opacity: 0.40;"';
-        if(!$expediente_actual[0]['agrupador']){
-            $icono_expediente = "icon-folder-close";
-        }
-    }
+	$permiso_modulo = new Permiso();
+    $ok = $permiso_modulo->acceso_modulo_perfil('expediente_admin');  
+	if(!$ok){		
+	    $permiso = new PermisosExpediente($conn, $idexpediente);
+	    $permisos = $permiso->obtener_permisos();
+	
+	    $l = $permiso->permiso_solo_lectura();
+	    $m = in_array(PermisosExpediente::PERMISO_EXP_ESCRIBIR, $permisos);//$permiso->tiene_permiso_escribir_expediente();
+	    if (empty($permisos)) {
+	        $estilo_expediente = ' style="opacity: 0.40;"';
+	        if(!$expediente_actual[0]['agrupador']){
+	            $icono_expediente = "icon-folder-close";
+	        }
+	    }
+	}
+	else{
+		$l=1;$m=1;
+	}
+    /*$e = $permiso->tiene_permiso_eliminar_expediente();
+    $p = $permiso->tiene_permiso_compartir_expediente();*/
+    
     $a_html = array();
-    //$a_html[] = implode(",", $permisos);
+   // $a_html[] = implode(",", $permiso->getPermisosSerie());
     if ($l || $m) {
         $a_html[] = '<div class="link kenlace_saia" enlace="pantallas/busquedas/consulta_busqueda_expediente.php?' . $req_parms . '" conector="iframe" titulo="' . $nombre . '">';
         $a_html[] = '<table><tr><td style="font-size:12px;">';
@@ -427,17 +434,25 @@ function enlaces_adicionales_expediente($idexpediente, $nombre, $estado_cierre, 
     if ($agrupador == "agrupador") {
         $agrupador = 0;
     }
-
-    $permiso = new PermisosExpediente($conn, $idexpediente);
-    $permisos = $permiso->obtener_permisos();
-
-    $m = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_MODIFICAR);
-    $e = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_ELIMINAR);
-    $p = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_COMPARTIR);
-
+	$permiso_modulo = new Permiso();
+    $ok = $permiso_modulo->acceso_modulo_perfil('expediente_admin');  
+	if(!$ok){
+	    $permiso = new PermisosExpediente($conn, $idexpediente);
+	    $permisos = $permiso->obtener_permisos();		
+	    $m = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_MODIFICAR);
+		$sm= $permiso->tiene_permiso_serie(PermisosExpediente::PERMISO_SER_MODIFICAR);
+	    $e = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_ELIMINAR);
+	    $p = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_COMPARTIR);
+    } else {
+		$e=1; 
+		$m=1;
+		$p=1;
+		$sm=1;
+	}
+	//print_r($permiso->getPermisosSerie());
     $clase_info = "";
     $texto = "";
-    if ($e || $m || $p) {
+    if ($e || $m || $p || $sm) {
         if($_SESSION["tipo_dispositivo"] == "movil") {
         $clase_info = "kenlace_saia";
         $texto = '<div class="btn btn-mini kenlace_saia pull-right" idregistro="' . $idexpediente . '" titulo="' . $nombre . '" conector="iframe" enlace="pantallas/expediente/detalles_expediente.php?idexpediente=' . $idexpediente . '&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '" ><i class="icon-info-sign"></i></div>';
@@ -455,17 +470,16 @@ function enlaces_adicionales_expediente($idexpediente, $nombre, $estado_cierre, 
     }
     if (!$agrupador && $m) {
         $texto .= '<div class="btn btn-mini link kenlace_saia tooltip_saia pull-right" title="Imprimir rotulo" titulo="Imprimir rotulo" enlace="pantallas/caja/rotulo.php?idexpediente=' . $idexpediente . '" conector="iframe"><i class="icon-print"></i></div>';
+		$texto .= '<div id="seleccionados_expediente_' . $idexpediente . '" idregistro="' . $idexpediente . '" titulo="Seleccionar" class="btn btn-mini tooltip_saia adicionar_seleccionados_expediente pull-right"><i class="icon-uncheck" ></i></div>';
     }
     if ($p) {
         $texto .= '<div class="btn btn-mini ' . $clase_info . ' tooltip_saia pull-right" idregistro="' . $idexpediente . '" conector="iframe"  titulo="Asignar ' . $nombre . '" enlace="pantallas/expediente/asignar_expediente.php?idexpediente=' . $idexpediente . '"><i class="icon-lock"></i></div>';
     }
-
-    if ($permiso->es_propietario() && !$agrupador) {
-        $texto .= '<div class="btn btn-mini crear_tomo_expediente tooltip_saia pull-right" idregistro="' . $idexpediente . '" title="Crear Tomo ' . $nombre . '"><i class="icon-folder-open"></i></div>';
-    }
-    if (!$agrupador && $m) {
-        $texto .= '<div id="seleccionados_expediente_' . $idexpediente . '" idregistro="' . $idexpediente . '" titulo="Seleccionar" class="btn btn-mini tooltip_saia adicionar_seleccionados_expediente pull-right"><i class="icon-uncheck" ></i></div>';
-    }
+	if(!$ok){
+	    if ($permiso->es_propietario() && !$agrupador) {
+	        $texto .= '<div class="btn btn-mini crear_tomo_expediente tooltip_saia pull-right" idregistro="' . $idexpediente . '" title="Crear Tomo ' . $nombre . '"><i class="icon-folder-open"></i></div>';
+	    }
+	}
     return ($texto);
 }
 
@@ -497,27 +511,32 @@ function expedientes_asignados() {
     $entidades_exp = array(
         1,
         2,
-        4
+        4,
+        5
     );
     $llaves_exp = array(
         $idfunc_actual
     );
 
-    $roles = busca_filtro_tabla("dependencia_iddependencia,cargo_idcargo", "dependencia_cargo a", "a.estado='1' and a.funcionario_idfuncionario=" . $idfunc_actual, "", $conn);
-    $dependencias = extrae_campo($roles, "dependencia_iddependencia");
-    $cargos = extrae_campo($roles, "cargo_idcargo");
+    //$roles = busca_filtro_tabla("dependencia_iddependencia,cargo_idcargo", "dependencia_cargo a", "a.estado='1' and a.funcionario_idfuncionario=" . $idfunc_actual, "", $conn);
+    $consulta_funcionario = busca_filtro_tabla("iddependencia_cargo,idcargo,iddependencia", "vfuncionario_dc", "estado='1' and idfuncionario=" . $idfunc_actual, "", $conn);
+	
+    $dependencias = extrae_campo($consulta_funcionario, "iddependencia");
+    $cargos = extrae_campo($consulta_funcionario, "idcargo");
+	$roles = extrae_campo($consulta_funcionario, "iddependencia_cargo");
+//print_r($consulta_funcionario["sql"]);
+    /*$llaves_exp = array_merge($llaves_exp, $dependencias);    
+    $llaves_exp = array_merge($llaves_exp, $cargos);    
+    $cadena_serie = "(p.entidad_identidad IN (" . implode(",", $entidades_exp) . ") AND p.llave_entidad IN (" . implode(",", $llaves_exp) . "))";
 
-    $llaves_exp = array_merge($llaves_exp, $dependencias);
-    $llaves_exp = array_merge($llaves_exp, $cargos);
-    $cadena_serie = "(entidad_identidad IN ('" . implode("','", $entidades_exp) . "') AND llave_entidad IN ('" . implode("','", $llaves_exp) . "'))";
-
-    $permisos_serie = busca_filtro_tabla("serie_idserie", "permiso_serie", $cadena_serie, "", $conn);
+    $permisos_serie = busca_filtro_tabla("distinct serie_idserie", "permiso_serie p join entidad_serie e on p.fk_entidad_serie = e.identidad_serie", $cadena_serie, "", $conn);
     $series = extrae_campo($permisos_serie, "serie_idserie");
-    $cadena_series_sql = '';
-    if (count($series)) {
+    $cadena_series_sql = '';*/
+   /* if (count($series)) {
         $cadena_series_sql = "or (serie_idserie IN('" . implode("','", $series) . "'))";
-    }
-    $cadena = "((a.identidad_exp IN ('" . implode("','", $entidades_exp) . "') AND a.llave_exp IN ('" . implode("','", $llaves_exp) . "')) " . $cadena_series_sql . ")";
+    }*/
+   // $cadena = "((a.identidad_exp IN ('" . implode("','", $entidades_exp) . "') AND a.llave_exp IN ('" . implode("','", $llaves_exp) . "')) " . $cadena_series_sql . ")";
+    $cadena = "((a.identidad_exp = 1 AND a.llave_exp = $idfunc_actual) OR (a.identidad_exp = 2 AND a.llave_exp IN ('" . implode("','", $dependencias) . "')) OR (a.identidad_exp = 4 AND a.llave_exp IN ('" . implode("','", $cargos) . "')) OR (a.identidad_exp = 5 AND a.llave_exp IN ('" . implode("','", $roles) . "')))";
 
     return ($cadena);
 }
@@ -713,28 +732,48 @@ function adicionar_expediente() {
     $permiso = new Permiso();
     $ok1 = $permiso->acceso_modulo_perfil('adicionar_expediente');
     if ($ok1) {
-        $cadena .= '
-	<li></li>
-	<li>
-	    <a  href="#" id="adicionar_expediente" idbusqueda_componente="' . $_REQUEST["idbusqueda_componente"] . '" conector="iframe" titulo="Adicionar expediente hijo" enlace="pantallas/expediente/adicionar_expediente.php?cod_padre=' . @$_REQUEST["idexpediente"] . '&div_actualiza=resultado_busqueda' . $_REQUEST["idbusqueda_componente"] . '&target_actualiza=parent&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '&estado_archivo=' . @$_REQUEST["variable_busqueda"] . '&fk_idcaja=' . $_REQUEST["idcaja"] . '">Adicionar Expediente/Agrupador</a>
-	</li>';
+        $idexpediente = $_REQUEST["idexpediente"];
+        /*$cadena .= '
+        	<li></li>
+        	<li>
+        	    <a  href="#" id="adicionar_expediente" idbusqueda_componente="' . $_REQUEST["idbusqueda_componente"] . '" conector="iframe" titulo="Adicionar expediente hijo" enlace="pantallas/expediente/adicionar_expediente.php?cod_padre=' . $idexpediente . '&div_actualiza=resultado_busqueda' . $_REQUEST["idbusqueda_componente"] . '&target_actualiza=parent&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '&estado_archivo=' . @$_REQUEST["variable_busqueda"] . '&fk_idcaja=' . $_REQUEST["idcaja"] . '">Adicionar Expediente/Agrupador</a>
+        	</li>';*/
+        	$cadena="";
         if (!empty($_REQUEST["idexpediente"])) {
+            $pe = new PermisosExpediente($conn, $idexpediente);
+            $permisos = $pe->obtener_permisos();
+
             $idexpediente = $_REQUEST["idexpediente"];
-            $exp_data = busca_filtro_tabla("agrupador", "expediente", "idexpediente = " . $_REQUEST["idexpediente"], "", $conn);
+            //TODO: 20180928 No se usa. Ahora los agrupadores tienen serie
+            /*$exp_data = busca_filtro_tabla("agrupador", "expediente", "idexpediente = " . $_REQUEST["idexpediente"], "", $conn);
             $es_agrupador = false;
             if ($exp_data["numcampos"]) {
                 $es_agrupador = $exp_data[0]["agrupador"];
             }
             if ($es_agrupador) {
                 $idexpediente = encontrar_expediente_padre($_REQUEST["idexpediente"]);
-            }
+            }*/
             // 20180921: Jorge Ramirez solicita que en los agrupadores se ingresen documentos
-            $cadena .= '
-    		<li></li>
-    		<li>
-    		    <a id="adicionar_documento_exp" conector="iframe" titulo="Adicionar Documento" enlace="' . FORMATOS_CLIENTE . 'vincular_doc_expedie/adicionar_vincular_doc_expedie.php?idexpediente=' . $idexpediente . '">Adicionar Documento</a>
-    		</li>';
+            if(!$pe->permiso_solo_lectura() && in_array(PermisosExpediente::PERMISO_EXP_ESCRIBIR, $permisos)) {
+            	$cadena .= '
+        	<li></li>
+        	<li>
+        	    <a  href="#" id="adicionar_expediente" idbusqueda_componente="' . $_REQUEST["idbusqueda_componente"] . '" conector="iframe" titulo="Adicionar expediente hijo" enlace="pantallas/expediente/adicionar_expediente.php?cod_padre=' . $idexpediente . '&div_actualiza=resultado_busqueda' . $_REQUEST["idbusqueda_componente"] . '&target_actualiza=parent&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '&estado_archivo=' . @$_REQUEST["variable_busqueda"] . '&fk_idcaja=' . $_REQUEST["idcaja"] . '">Adicionar Expediente/Agrupador</a>
+        	</li>';
+                $cadena .= '
+        		<li></li>
+        		<li>
+        		    <a id="adicionar_documento_exp" conector="iframe" titulo="Adicionar Documento" enlace="' . FORMATOS_CLIENTE . 'vincular_doc_expedie/adicionar_vincular_doc_expedie.php?idexpediente=' . $idexpediente . '">Adicionar Documento</a>
+        		</li>';
+            }
         }
+		else{
+			$cadena .= '
+        	<li></li>
+        	<li>
+        	    <a  href="#" id="adicionar_expediente" idbusqueda_componente="' . $_REQUEST["idbusqueda_componente"] . '" conector="iframe" titulo="Adicionar expediente hijo" enlace="pantallas/expediente/adicionar_expediente.php?cod_padre=' . $idexpediente . '&div_actualiza=resultado_busqueda' . $_REQUEST["idbusqueda_componente"] . '&target_actualiza=parent&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '&estado_archivo=' . @$_REQUEST["variable_busqueda"] . '&fk_idcaja=' . $_REQUEST["idcaja"] . '">Adicionar Expediente/Agrupador</a>
+        	</li>';
+		}
     }
     echo ($cadena);
 }

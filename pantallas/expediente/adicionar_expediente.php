@@ -8,6 +8,7 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
+
 ?>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php include_once($ruta_db_superior."pantallas/lib/librerias_componentes.php"); ?>
@@ -40,6 +41,7 @@ span.fancytree-title
 
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
+require_once $ruta_db_superior . "arboles/crear_arbol_ft.php";
 echo librerias_jquery("3.3");
 echo (librerias_notificaciones());
 echo librerias_UI("1.12");
@@ -98,10 +100,7 @@ $serie_padre = "";
                 texto = "Expediente";
             } else { // no es agrupador = 0
             	texto = "Ninguno";
-            }
-            //console.log("Numero: " + numero);
-            //console.log("Opcion: " + texto);
-            //console.log("Serie: " + $('#serie_idserie').val());
+            }            
         });
     });
 </script>
@@ -178,7 +177,8 @@ $serie_padre = "";
 					if($datos[0]["fk_idcaja"]==$cajas[$i]["idcaja"]){
 						$selected="selected";
 					}
-					echo("<option value='".$cajas[$i]["idcaja"]."' ".$selected.">".$cajas[$i]["fondo"]."(".$cajas[$i]["codigo_dependencia"]."-".$cajas[$i]["codigo_serie"]."-".$cajas[$i]["no_consecutivo"].")</option>");
+					//echo("<option value='".$cajas[$i]["idcaja"]."' ".$selected.">".$cajas[$i]["fondo"]."(".$cajas[$i]["codigo_dependencia"]."-".$cajas[$i]["codigo_serie"]."-".$cajas[$i]["no_consecutivo"].")</option>");
+					echo("<option value='".$cajas[$i]["idcaja"]."' ".$selected.">".$cajas[$i]["no_consecutivo"]."</option>");
 				}
 	  		?>
 	  	</select>
@@ -189,8 +189,20 @@ $serie_padre = "";
 <div class="control-group element">
 	<label class="control-label" for="serie_idserie">Serie asociada *</label>
 	<div class="controls">
-		<div id="treeboxbox_tree3"></div>
-		<input type="hidden" name="dependencia_iddependencia" id="dependencia_iddependencia">
+		
+		<?php
+		$origen = array("url" => "arboles/arbol_dependencia_serie_funcionario.php", "ruta_db_superior" => $ruta_db_superior,
+		    "params" => array(		    	
+		        "checkbox" => 'radio',
+		        "expandir" => 1,
+		        "funcionario"=>1
+		        //"seleccionados" => $dependencia_seleccionada
+		    ));
+		$opciones_arbol = array("keyboard" => true, "selectMode" => 1, "busqueda_item" => 1, "expandir" => 3, "busqueda_item" => 1, "onNodeSelect" =>'cargar_info_Node');
+		$extensiones = array("filter" => array());
+		$arbol = new ArbolFt("serie_idserie", $origen, $opciones_arbol, $extensiones);
+		echo $arbol->generar_html();
+		?>			
 	</div>
 </div>
 
@@ -229,8 +241,9 @@ $serie_padre = "";
 	              if(codigo_numero_consecutivo==''){
 	                  codigo_numero_consecutivo=0;
 	              }
-	              var cadena_parseo=codigo_numero_dependencia+'-'+codigo_numero_serie+'-'+codigo_numero_consecutivo;
-	              $('#codigo_numero').val(cadena_parseo);
+	              //var cadena_parseo=codigo_numero_dependencia+'-'+codigo_numero_serie+'-'+codigo_numero_consecutivo;
+	              //$('#codigo_numero').val(cadena_parseo);
+	              $('#codigo_numero').val(codigo_numero_consecutivo);
 
 	          });
 	      });
@@ -276,6 +289,22 @@ $serie_padre = "";
 				</i>
 			</span>
 		</div>
+	</div>
+	
+	<div class="control-group element">
+	  <label class="control-label" for="consecutivo_inicial">Consecutivo Inicial
+	  </label>
+	  <div class="controls">
+	    <input name="consecutivo_inicial" id="consecutivo_inicial" value="<?php echo($datos[0]["consecutivo_inicial"]); ?>">
+	  </div>
+	</div>
+	
+	<div class="control-group element">
+	  <label class="control-label" for="consecutivo_final">Consecutivo Final
+	  </label>
+	  <div class="controls">
+	    <input name="consecutivo_final" id="consecutivo_final" value="<?php echo($datos[0]["consecutivo_final"]); ?>">
+	  </div>
 	</div>
 
 	<div class="control-group element">
@@ -337,11 +366,20 @@ $serie_padre = "";
 	  <label class="control-label" for="ubicacion">Ubicaci&oacute;n
 	  </label>
 	  <div class="controls">
-	  	<select name="ubicacion" id="ubicacion">
+	  	<!--select name="ubicacion" id="ubicacion"-->
+	  	<select name="estado_archivo" id="estado_archivo">
 	  		<option value="">Por favor seleccione...</option>
-				<option value="1" <?php if($datos[0]["ubicacion"]==1)echo("selected"); ?>>Central</option>
+				<!--option value="1" <?php if($datos[0]["ubicacion"]==1)echo("selected"); ?>>Central</option>
 				<option value="2" <?php if($datos[0]["ubicacion"]==2)echo("selected"); ?>>Gestion</option>
-				<option value="3" <?php if($datos[0]["ubicacion"]==3)echo("selected"); ?>>Historico</option>
+				<option value="3" <?php if($datos[0]["ubicacion"]==3)echo("selected"); ?>>Historico</option-->
+					<option value="1" <?php 
+					if($datos[0]["estado_archivo"]==1 || $_REQUEST["estado_archivo"]==1){
+						echo("selected"); 
+					}
+					?>
+					>Gestion</option>
+				<option value="2" <?php if($datos[0]["estado_archivo"]==2 || $_REQUEST["estado_archivo"]==2)echo("selected"); ?>>Central</option>
+				<option value="3" <?php if($datos[0]["estado_archivo"]==3 || $_REQUEST["estado_archivo"]==3)echo("selected"); ?>>Historico</option-->
 	  	</select>
 	  </div>
 	</div>
@@ -359,10 +397,12 @@ $serie_padre = "";
 </div>
 <br />
 
-<input type="hidden"  name="ejecutar_expediente" value="set_expediente"/>
-<input type="hidden"  name="tipo_retorno" value="1"/>
+<input type="hidden" name="ejecutar_expediente" value="set_expediente"/>
+<input type="hidden" name="dependencia_iddependencia" id="dependencia_iddependencia"/>
+<input type="hidden" name="identidad_serie" id="identidad_serie"/>
+<input type="hidden" name="tipo_retorno" value="1"/>
 <input type="hidden" name="fk_idcaja" value="<?php echo(@$_REQUEST["fk_idcaja"]);?>">
-<input type="hidden" name="estado_archivo" value="1">
+<!--input type="hidden" name="estado_archivo" value="1"-->
 <input type="hidden" name="key_formulario_saia" value="<?php echo(generar_llave_md5_saia());?>">
 <div>
 <button class="btn btn-primary btn-mini" id="submit_formulario_expediente">Aceptar</button>
@@ -387,13 +427,15 @@ $serie_padre = "";
   ?>
   <script type="text/javascript">
 
-  function cargar_info_Node(event,data){
-	  $("#serie_idserie").val(data.node.key);
+  function cargar_info_Node(event,data){	
+  	console.log(data.node.data);  	  
 	  if(data.node.selected){
-	    $("#codigo_numero_serie").val(data.node.data.codigo);
-	    /*$("#dependencia_iddependencia").val(treeserie_idserie.getUserData(NodeId,"iddependencia"));
-		  $("#codigo_numero_dependencia").val(treeserie_idserie.getUserData(NodeId,"dependencia_codigo"));
-		  $("#fondo").val(tree3.getUserData(NodeId,"dependencia_nombre"));*/
+	  	$("#serie_idserie").val(data.node.data.serie_idserie);
+	  	$("#codigo_numero_serie").val(data.node.data.codigo);
+	    $("#dependencia_iddependencia").val(data.node.data.iddependencia);
+		$("#codigo_numero_dependencia").val(data.node.data.dependencia_codigo);
+		$("#fondo").val(data.node.data.nombre_dependencia);
+		$("#identidad_serie").val(data.node.data.identidad_serie);
 	  	$("#codigo_numero_serie").trigger('keyup');
 	  }else{
 	  	$("#codigo_numero_serie").val("");
@@ -408,9 +450,10 @@ $serie_padre = "";
 			mostrar = "&mostrar_padre=1";
 		}*/
 		//url2="test/test_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0" + mostrar + "&id=" + serie_padre;
-		url2="arboles/arbol_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0&checkbox=radio" + mostrar;
+		/*url2="arboles/arbol_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0&checkbox=radio" + mostrar;
 		$.ajax({
 			url : "<?php echo($ruta_db_superior);?>arboles/crear_arbol_ft.php",
+			
 			data:{
 				xml: url2,
 				campo: "serie_idserie",
@@ -426,7 +469,7 @@ $serie_padre = "";
 			},error: function (){
 				top.noty({text: 'No se pudo cargar el arbol de series',type: 'error',layout: 'topCenter',timeout:5000});
 			}
-		});
+		});*/
 
 
     $(".opcion_informacion").on("hide",function(){
@@ -465,12 +508,21 @@ $serie_padre = "";
       nombre: {"required":true},
       serie_idserie: {"required":true}
 
-  },
-  submitHandler: function(form) {
   }
   });
 
-  $("#submit_formulario_expediente").click(function(){
+  $("#submit_formulario_expediente").click(function(){  	
+  	if(!$('select[name=estado_archivo]').val()){
+  		console.log("no selecciono selec");
+  		$("#estado_archivo").val("<?php echo $_REQUEST["estado_archivo"]; ?>");
+  		console.log($("#estado_archivo").val());
+  	}
+  	else{
+  		console.log("si se selecciono selec");
+  		console.log($("#estado_archivo").val());
+  	}
+  	//var estado_archivo = $("#estado_archivo").val();
+  	console.log(estado_archivo);
     if(formulario_expediente.valid()){
     	$('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
 			$(this).attr('disabled', 'disabled');

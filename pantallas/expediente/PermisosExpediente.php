@@ -17,7 +17,7 @@ class PermisosExpediente {
 
     const CARGO = 4;
 
-    const ROL = 4;
+    const ROL = 5;
 
     const PERMISO_EXP_LEER = "l";
 
@@ -52,6 +52,10 @@ class PermisosExpediente {
         $this->init();
     }
 
+    /**
+     * Devuelve un listado de permisos para el expediente
+     * @return string[]|array
+     */
     public function obtener_permisos() {
         $permisos = array();
         if ($this->funcionario->funcionario_codigo == $this->expediente->propietario) {
@@ -85,7 +89,7 @@ class PermisosExpediente {
             throw new \Exception("No existe el expediente: {$this->idexpediente}");
         }
 
-        $funcionario = busca_filtro_tabla("idfuncionario, funcionario_codigo, login, iddependencia, idcargo, iddependencia_cargo", "vfuncionario_dc", "estado = 1 and idfuncionario = {$this->idfuncionario}", "", $this->conn);
+        $funcionario = busca_filtro_tabla("idfuncionario, funcionario_codigo, login, iddependencia, idcargo, iddependencia_cargo, estado_dc, estado_dep", "vfuncionario_dc", "estado = 1 and estado_dc=1 and idfuncionario = {$this->idfuncionario}", "", $this->conn);
         if ($funcionario["numcampos"]) {
             $this->funcionario = new \stdClass();
             foreach ($funcionario[0] as $name => $value) {
@@ -93,6 +97,27 @@ class PermisosExpediente {
                     $this->funcionario->$name = $value;
                 }
             }
+            $cargos = array();
+            $dependencias = array();
+			$roles = array();
+            for($i=0;$i<$funcionario["numcampos"];$i++){
+            	if($funcionario[$i]["estado_dc"]){
+            		$roles[]=$funcionario[$i]["iddependencia_cargo"];
+            	}
+				if($funcionario[$i]["estado_dep"]){
+					$dependencias[]=$funcionario[$i]["iddependencia"];
+				}
+				$busca_cargo = busca_filtro_tabla("idcargo", "cargo", "estado = 1 and idcargo = {$funcionario[$i]["idcargo"]}", "", $this->conn);
+				if($busca_cargo["numcampos"]){
+					$cargos[]=$busca_cargo[0]["idcargo"];
+				}
+            }
+            $cargos = array_unique($cargos);
+            $dependencias = array_unique($dependencias);
+			$roles = array_unique($roles);
+			$this->funcionario->iddependencia = implode(",", $dependencias);
+			$this->funcionario->idcargo = implode(",", $cargos);
+			$this->funcionario->iddependencia_cargo = implode(",", $roles);
         }
     }
 
@@ -108,10 +133,15 @@ class PermisosExpediente {
         }
         $permisos = array_unique($permisos);
         // consultar permisos del funcionario sobre la serie del expediente en permiso_serie
-        $permisos_serie = busca_filtro_tabla("permiso, estado", "permiso_serie", "estado = 1 and serie_idserie = {$this->expediente->serie_idserie} and entidad_identidad = " . self::FUNCIONARIO . " and llave_entidad = {$this->idfuncionario}", "", $this->conn);
+        $permisos_serie = busca_filtro_tabla("permiso, estado", "permiso_serie", "estado = 1 and fk_entidad_serie = {$this->expediente->fk_entidad_serie} and entidad_identidad = " . self::FUNCIONARIO . " and llave_entidad = {$this->idfuncionario}", "", $this->conn);
         $ps = array();
         for ($i = 0; $i < $permisos_serie["numcampos"]; $i++) {
-            $ps = array_merge($ps, array_map('trim', explode(",", $permisos_serie[$i]["permiso"])));
+             if ($permisos_serie[$i]["permiso"]=="l") {
+                $ps[] = self::PERMISO_SER_LEER;
+            } else {
+                $ps = array_merge($ps, array_map('trim', explode(",", $permisos_serie[$i]["permiso"])));
+				$ps[] = self::PERMISO_SER_MODIFICAR;
+            }
         }
 
         $this->permisos_expediente = array_merge($this->permisos_expediente, $permisos);
@@ -143,13 +173,15 @@ class PermisosExpediente {
 
     private function consultar_permisos_dependencia() {
         // consultar permisos de la dependencia del funcionario sobre la serie del expediente en permiso_serie
-        $permisos_serie = busca_filtro_tabla("permiso, estado", "permiso_serie", "estado = 1 and serie_idserie = {$this->expediente->serie_idserie} and entidad_identidad = " . self::DEPENDENCIA . " and llave_entidad = {$this->funcionario->iddependencia}", "", $this->conn);
+        $permisos_serie = busca_filtro_tabla("permiso, estado", "permiso_serie", "estado = 1 and fk_entidad_serie = {$this->expediente->fk_entidad_serie} and entidad_identidad = " . self::DEPENDENCIA . " and llave_entidad in ({$this->funcionario->iddependencia})", "", $this->conn);
+		//print_r($this->funcionario);
         $ps = array();
         for ($i = 0; $i < $permisos_serie["numcampos"]; $i++) {
-            if (empty($permisos_serie[$i]["permiso"])) {
+            if ($permisos_serie[$i]["permiso"]=="l") {
                 $ps[] = self::PERMISO_SER_LEER;
             } else {
                 $ps = array_merge($ps, array_map('trim', explode(",", $permisos_serie[$i]["permiso"])));
+				$ps[] = self::PERMISO_SER_MODIFICAR;
             }
         }
 
@@ -164,13 +196,14 @@ class PermisosExpediente {
 
     private function consultar_permisos_cargo() {
         // consultar permisos del cargo del funcionario sobre la serie del expediente en permiso_serie
-        $permisos_serie = busca_filtro_tabla("permiso, estado", "permiso_serie", "estado = 1 and serie_idserie = {$this->expediente->serie_idserie} and entidad_identidad = " . self::CARGO . " and llave_entidad = {$this->funcionario->idcargo}", "", $this->conn);
+        $permisos_serie = busca_filtro_tabla("permiso, estado", "permiso_serie", "estado = 1 and fk_entidad_serie = {$this->expediente->fk_entidad_serie} and entidad_identidad = " . self::CARGO . " and llave_entidad in ({$this->funcionario->idcargo})", "", $this->conn);
         $ps = array();
         for ($i = 0; $i < $permisos_serie["numcampos"]; $i++) {
-            if (empty($permisos_serie[$i]["permiso"])) {
+           if ($permisos_serie[$i]["permiso"]=="l") {
                 $ps[] = self::PERMISO_SER_LEER;
             } else {
                 $ps = array_merge($ps, array_map('trim', explode(",", $permisos_serie[$i]["permiso"])));
+				$ps[] = self::PERMISO_SER_MODIFICAR;
             }
         }
 
@@ -185,13 +218,15 @@ class PermisosExpediente {
 
     private function consultar_permisos_rol() {
         // consultar permisos del rol del funcionario (iddependencia_cargo) sobre la serie del expediente en permiso_serie
-        $permisos_serie = busca_filtro_tabla("permiso, estado", "permiso_serie", "estado = 1 and serie_idserie = {$this->expediente->serie_idserie} and entidad_identidad = " . self::ROL . " and llave_entidad = {$this->funcionario->iddependencia_cargo}", "", $this->conn);
+        //$permisos_serie = busca_filtro_tabla("permiso, estado", "permiso_serie", "estado = 1 and serie_idserie = {$this->expediente->serie_idserie} and entidad_identidad = " . self::ROL . " and llave_entidad in ({$this->funcionario->iddependencia_cargo})", "", $this->conn);
+        $permisos_serie = busca_filtro_tabla("permiso, estado", "permiso_serie", "estado = 1 and fk_entidad_serie = {$this->expediente->fk_entidad_serie} and entidad_identidad = " . self::ROL . " and llave_entidad in ({$this->funcionario->iddependencia_cargo})", "", $this->conn);
         $ps = array();
         for ($i = 0; $i < $permisos_serie["numcampos"]; $i++) {
-            if (empty($permisos_serie[$i]["permiso"])) {
+            if ($permisos_serie[$i]["permiso"]=="l") {
                 $ps[] = self::PERMISO_SER_LEER;
             } else {
                 $ps = array_merge($ps, array_map('trim', explode(",", $permisos_serie[$i]["permiso"])));
+                $ps[] = self::PERMISO_SER_MODIFICAR;
             }
         }
 
@@ -217,7 +252,7 @@ class PermisosExpediente {
      * @param string $permiso: Valores l, a, v, o m
      * @return boolean
      */
-    public function tiene_permiso_serie(string $permiso) {
+    public function tiene_permiso_serie($permiso) {
         return in_array($permiso, $this->permisos_serie);
     }
 
@@ -254,4 +289,7 @@ class PermisosExpediente {
         return $this->permisos_expediente;
     }
 
+	public function getPermisosSerie() {
+        return $this->permisos_serie;
+    }
 }

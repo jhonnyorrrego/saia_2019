@@ -231,14 +231,22 @@ function actualizar_encabezado_pie($idformato, $tipo, $valor) {
     $retorno = array(
         "exito" => 0
     );
-    if ($tipo == "encabezado") {
+	$buscar_formato= busca_filtro_tabla("encabezado, pie_pagina", "formato", "idformato=" . $idformato, "", $conn);
+	 if ($buscar_formato["numcampos"]) {
+        	$encabezado_anterior = $buscar_formato[0]["encabezado"];
+        	$pie_pagina_anterior = $buscar_formato[0]["pie_pagina"];
+     }
+    if ($tipo == "encabezado") {        
         $sql = "UPDATE formato set encabezado=" . $valor . " WHERE idformato=" . $idformato;
         phpmkr_query($sql);
         $retorno["exito"] = 1;
+		//se ingresan las funciones del encabezado en la tabla funciones_formato y funciones_formato_enlace
+		$retorno["funciones"] = registrar_funciones_encabezado_formato($valor,$idformato,$encabezado_anterior);
     } else if ($tipo == "pie") {
         $sql = "UPDATE formato set pie_pagina=" . $valor . " WHERE idformato=" . $idformato;
         phpmkr_query($sql);
         $retorno["exito"] = 1;
+		$retorno["funciones"] = registrar_funciones_pie_formato($valor,$idformato,$pie_pagina_anterior);
     }
     $retorno["sql"] = $sql;
     return ($retorno);
@@ -378,5 +386,129 @@ if (@$_REQUEST["ejecutar_libreria_formato"]) {
 }
 if (@$_REQUEST["ejecutar_libreria_encabezado"]) {
     $_REQUEST["ejecutar_libreria_encabezado"]($_REQUEST["idencabezado"], $_REQUEST["etiqueta"], $_REQUEST["contenido"], $_REQUEST["tipo_retorno"]);
+}
+function registrar_funciones_encabezado_formato($idencabezado,$idformato,$id_encabezado_anterior){
+	global $conn;
+	$funciones_encabezado_anterior=array();
+	$funciones_encabezado_nuevo=array();
+	$buscar_encabezado_anterior = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato=".$id_encabezado_anterior, "", $conn);
+	if($buscar_encabezado_anterior["numcampos"]){
+	 	preg_match_all("/{\*([^*}]+)\*}/", $buscar_encabezado_anterior[0]["contenido"], $funciones_encabezado_anterior);
+	}
+	//print_r($buscar_encabezado_anterior["sql"]);
+	
+	$buscar_encabezado_nuevo = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato=".$idencabezado, "", $conn);
+	if($buscar_encabezado_nuevo["numcampos"]){
+	 	preg_match_all("/{\*([^*}]+)\*}/", $buscar_encabezado_nuevo[0]["contenido"], $funciones_encabezado_nuevo);
+	}
+	//return ($buscar_encabezado_anterior["sql"]." - ".$buscar_encabezado_nuevo["sql"]);
+	//return (var_dump($buscar_encabezado_nuevo)." - ".var_dump($funciones_encabezado_nuevo));
+	/*print_r($funciones_encabezado_anterior[1]);
+	print_r("<br><br>");
+	print_r($funciones_encabezado_nuevo[1]);*/
+	//$resultado = array_intersect($funciones_encabezado_anterior[1],$funciones_encabezado_nuevo[1]);
+	$funciones_borrar = array_diff($funciones_encabezado_anterior[1],$funciones_encabezado_nuevo[1]);
+	//print_r($funciones_borrar);
+	
+	for($i=1;$i<=count($funciones_borrar);$i++)
+	{
+		$buscar_funciones_formato = busca_filtro_tabla("", "funciones_formato ff, funciones_formato_enlace ffe", "ff.nombre_funcion='".$funciones_borrar[$i]."' and ff.idfunciones_formato = ffe.funciones_formato_fk and ffe.formato_idformato=".$idformato, "", $conn);		
+		//print_r($buscar_funciones_formato["sql"]);
+		if($buscar_funciones_formato["numcampos"]){
+			//delete funciones_formato_enlace			
+			$delete = "DELETE FROM funciones_formato_enlace WHERE idfunciones_formato_enlace=".$buscar_funciones_formato[0]["idfunciones_formato_enlace"];
+			phpmkr_query($delete);
+		}
+		$buscar_funciones_formato_enlace = busca_filtro_tabla("", "funciones_formato ff, funciones_formato_enlace ffe", "ff.nombre_funcion='".$funciones_borrar[$i]."' and ff.idfunciones_formato = ffe.funciones_formato_fk", "", $conn);
+		if(!$buscar_funciones_formato_enlace["numcampos"]){
+			//eliminar de funciones_formato la funcion
+			$delete = "DELETE FROM funciones_formato WHERE idfunciones_formato=".$buscar_funciones_formato_enlace[0]["idfunciones_formato"];
+			phpmkr_query($delete);
+		}
+	}
+	for($i=0;$i<count($funciones_encabezado_nuevo[1]);$i++)//funciones nuevas
+	 {
+		 $buscar_funciones_formato = busca_filtro_tabla("", "funciones_formato", "nombre_funcion='".$funciones_encabezado_nuevo[1][$i]."'", "", $conn);
+			//return $buscar_funciones_formato["sql"];
+			if($buscar_funciones_formato["numcampos"]){
+				$id_funciones_formato = $buscar_funciones_formato[0]["idfunciones_formato"];
+				//return $buscar_funciones_formato["sql"];
+				$buscar_funciones_formato_enlace = busca_filtro_tabla("", "funciones_formato_enlace", "funciones_formato_fk=".$id_funciones_formato." and formato_idformato=".$idformato, "", $conn);
+				if(!$buscar_funciones_formato_enlace["numcampos"]){
+					$insert_ffe = "INSERT INTO funciones_formato_enlace (funciones_formato_fk, formato_idformato) VALUES ($id_funciones_formato,$idformato)";
+					//print_r($insert_ffe);
+				 	 phpmkr_query($insert_ffe);
+					 $ok= phpmkr_insert_id();
+				}
+			}
+		else{ //se ingresa funciones en funciones_formato
+			$insert_ff = "INSERT INTO funciones_formato (nombre, nombre_funcion,etiqueta,ruta,acciones) VALUES ('{*".$funciones_encabezado_nuevo[1][$i]."*}', '".$funciones_encabezado_nuevo[1][$i]."', '".$funciones_encabezado_nuevo[1][$i]."','../librerias/encabezado_pie_pagina.php','m')";
+			 phpmkr_query($insert_ff);
+			 $id = phpmkr_insert_id();
+			 $insert_ffe = "INSERT INTO funciones_formato_enlace (funciones_formato_fk, formato_idformato) VALUES ($id,$idformato)";
+			  phpmkr_query($insert_ffe);
+			  $ok= phpmkr_insert_id();
+		}
+	}		
+	//}
+return $ok;
+}
+function registrar_funciones_pie_formato($idencabezado,$idformato,$id_pie_anterior){
+	global $conn;
+	$funciones_pie_anterior=array();
+	$funciones_pie_nuevo=array();
+	$buscar_pie_anterior = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato=".$id_pie_anterior, "", $conn);
+	if($buscar_pie_anterior["numcampos"]){
+	 	preg_match_all("/{\*([^*}]+)\*}/", $buscar_pie_anterior[0]["contenido"], $funciones_pie_anterior);
+	}
+	
+	$buscar_pie_nuevo = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato=".$idencabezado, "", $conn);
+	if($buscar_pie_nuevo["numcampos"]){
+	 	preg_match_all("/{\*([^*}]+)\*}/", $buscar_pie_nuevo[0]["contenido"], $funciones_pie_nuevo);
+	}
+	
+	$funciones_borrar = array_diff($funciones_pie_anterior[1],$buscar_pie_nuevo[1]);
+		
+	for($i=1;$i<=count($funciones_borrar);$i++)
+	{
+		$buscar_funciones_formato = busca_filtro_tabla("", "funciones_formato ff, funciones_formato_enlace ffe", "ff.nombre_funcion='".$funciones_borrar[$i]."' and ff.idfunciones_formato = ffe.funciones_formato_fk and ffe.formato_idformato=".$idformato, "", $conn);		
+		//print_r($buscar_funciones_formato["sql"]);
+		if($buscar_funciones_formato["numcampos"]){
+			//delete funciones_formato_enlace			
+			$delete = "DELETE FROM funciones_formato_enlace WHERE idfunciones_formato_enlace=".$buscar_funciones_formato[0]["idfunciones_formato_enlace"];
+			phpmkr_query($delete);
+		}
+		$buscar_funciones_formato_enlace = busca_filtro_tabla("", "funciones_formato ff, funciones_formato_enlace ffe", "ff.nombre_funcion='".$funciones_borrar[$i]."' and ff.idfunciones_formato = ffe.funciones_formato_fk", "", $conn);
+		if(!$buscar_funciones_formato_enlace["numcampos"]){
+			//eliminar de funciones_formato la funcion
+			$delete = "DELETE FROM funciones_formato WHERE idfunciones_formato=".$buscar_funciones_formato_enlace[0]["idfunciones_formato"];
+			phpmkr_query($delete);
+		}
+	}
+	for($i=0;$i<count($funciones_pie_nuevo[1]);$i++)//funciones nuevas
+	 {
+		 $buscar_funciones_formato = busca_filtro_tabla("", "funciones_formato", "nombre_funcion='".$funciones_pie_nuevo[1][$i]."'", "", $conn);
+			//return $buscar_funciones_formato["sql"];
+			if($buscar_funciones_formato["numcampos"]){
+				$id_funciones_formato = $buscar_funciones_formato[0]["idfunciones_formato"];
+				//return $buscar_funciones_formato["sql"];
+				$buscar_funciones_formato_enlace = busca_filtro_tabla("", "funciones_formato_enlace", "funciones_formato_fk=".$id_funciones_formato." and formato_idformato=".$idformato, "", $conn);
+				if(!$buscar_funciones_formato_enlace["numcampos"]){
+					$insert_ffe = "INSERT INTO funciones_formato_enlace (funciones_formato_fk, formato_idformato) VALUES ($id_funciones_formato,$idformato)";
+					//print_r($insert_ffe);
+				 	 phpmkr_query($insert_ffe);
+					 $ok= phpmkr_insert_id();
+				}
+			}
+		else{ //se ingresa funciones en funciones_formato
+			$insert_ff = "INSERT INTO funciones_formato (nombre, nombre_funcion,etiqueta,ruta,acciones) VALUES ('{*".$funciones_pie_nuevo[1][$i]."*}', '".$funciones_pie_nuevo[1][$i]."', '".$funciones_pie_nuevo[1][$i]."','../librerias/encabezado_pie_pagina.php','m')";
+			 phpmkr_query($insert_ff);
+			 $id = phpmkr_insert_id();
+			 $insert_ffe = "INSERT INTO funciones_formato_enlace (funciones_formato_fk, formato_idformato) VALUES ($id,$idformato)";
+			  phpmkr_query($insert_ffe);
+			  $ok= phpmkr_insert_id();
+		}
+	}
+return $ok;
 }
 ?>

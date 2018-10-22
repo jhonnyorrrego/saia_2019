@@ -20,6 +20,7 @@ include_once ("pantallas/expediente/librerias.php");
 $iddoc = $_REQUEST["iddoc"];
 $doc_menu = @$_REQUEST["iddoc"];
 include_once ("pantallas/documento/menu_principal_documento.php");
+require_once $ruta_db_superior . "arboles/crear_arbol_ft.php";
 
 $cadena .= "";
 $cadena .= expedientes_asignados();
@@ -84,70 +85,37 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
 	<label class="control-label" for="nombre">Expediente
   </label>
   <div class="controls">
-			<!--input type="text" id="stext" width="200px" size="20">
-      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value),1)">
-      <img src="botones/general/anterior.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value),0,1)">
-      <img src="botones/general/buscar.png"border="0px"></a>
-      <a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext').value))">
-      <img src="botones/general/siguiente.png"border="0px"></a>
-      <div id="esperando_expediente"><img src="imagenes/cargando.gif"></div-->
-			<div id="treeboxbox_tree2"></div>
+		<?php
+		$origen = array("url" => "arboles/arbol_expediente_funcionario.php", "ruta_db_superior" => $ruta_db_superior,
+		    "params" => array(		    	
+		        "checkbox" => 'radio',
+		        "expandir" => 1,
+		        "doc"=>$iddoc,
+		        "accion"=>1,
+		        "permiso_editar"=>1,
+		        "estado_cierre"=>1,
+		        "estado_archivo"=>1,
+		        "incluir_series"=>$incluir_series,
+		    ));
+		$opciones_arbol = array("keyboard" => true, "selectMode" => 1, "busqueda_item" => 1, "expandir" => 3, "busqueda_item" => 1, "onNodeSelect" =>'cargar_info_Node');
+		$extensiones = array("filter" => array());
+		$arbol = new ArbolFt("expediente", $origen, $opciones_arbol, $extensiones);
+		echo $arbol->generar_html();
+		?>	
 	</div>
 </div>
 		<script type="text/javascript">
-		$(document).ready(function() {
-		var incluir_series = "<?php echo $incluir_series;?>";
-		if(incluir_series != "") {
+		
+		/*var incluir_series = "<?php echo $incluir_series;?>";
+		 if(incluir_series != "") {
 			incluir_series = "&incluir_series=" + incluir_series;
 		} 	
 		var url_test = "<?php echo $ruta_db_superior;?>arboles/arbol_expediente_funcionario.php?doc=<?php echo($iddoc); ?>&accion=1&permiso_editar=1&estado_cierre=1&checkbox=radio&estado_archivo=1"+ incluir_series;
-  		/*var browserType;
-      if (document.layers) {browserType = "nn4"}
-      if (document.all) {browserType = "ie"}
-      if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-         browserType= "gecko"
-      }
-
-			tree2=new dhtmlXTreeObject("treeboxbox_tree2","100%","",0);
-			tree2.setImagePath("imgs/");
-			tree2.enableIEImageFix(true);
-      tree2.enableCheckBoxes(1);
-      //tree2.enableSmartXMLParsing(true);
-      tree2.setOnLoadingStart(cargando_expediente);
-      tree2.setOnLoadingEnd(fin_cargando_expediente);
-
-			tree2.setXMLAutoLoading(url_test);
-			tree2.loadXML(url_test);
-
-			function fin_cargando_expediente() {
-        if (browserType == "gecko" )
-           document.poppedLayer =
-               eval('document.getElementById("esperando_expediente")');
-        else if (browserType == "ie")
-           document.poppedLayer =
-              eval('document.getElementById("esperando_expediente")');
-        else
-           document.poppedLayer =
-              eval('document.layers["esperando_expediente"]');
-        document.poppedLayer.style.display = "none";
-      }
-
-      function cargando_expediente() {
-        if (browserType == "gecko" )
-           document.poppedLayer =
-               eval('document.getElementById("esperando_expediente")');
-        else if (browserType == "ie")
-           document.poppedLayer =
-              eval('document.getElementById("esperando_expediente")');
-        else
-           document.poppedLayer =
-               eval('document.layers["esperando_expediente"]');
-        document.poppedLayer.style.display = "";
-      }*/
+		  		
 	     $.ajax({
 				url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
-				data:{xml:url_test,campo:"expediente",selectMode:1,ruta_db_superior:"<?php echo $ruta_db_superior;?>",seleccionar_todos:1,busqueda_item:1},
+				data:{xml:url_test,campo:"expediente",selectMode:1,ruta_db_superior:"<?php echo $ruta_db_superior;?>"
+				,seleccionar_todos:1,busqueda_item:1,onNodeSelect:'cargar_info_Node'},
 				type : "POST",
 				async:false,
 				success : function(html) {
@@ -156,7 +124,13 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
 					top.noty({text: 'No se pudo cargar la informacion',type: 'error',layout: 'topCenter',timeout:5000});
 				}
 			});
-		});
+		});*/
+		function cargar_info_Node(event,data){  		  
+		  if(data.node.selected){
+		  	console.log(data.node.key);
+		  	$("#expediente").val(data.node.key);
+		  }
+  		}
       </script>
 
 <?php if($doc["numcampos"]>1){ ?>
@@ -178,7 +152,7 @@ if(count($nombres_exp)){
 }
 ?>
 <div>
- <input type="hidden" name="expedientes" id="expedientes" value="">
+ <!--input type="hidden" name="expedientes" id="expedientes" value=""-->
  <input type="hidden" name="iddoc" value="<?php echo $iddoc; ?>">
  <input type="submit" value="Continuar" class="btn btn-primary btn-mini">
  <button class="btn btn-mini" id="" onclick="window.open('<?php echo($ruta_db_superior); ?>pantallas/expediente/adicionar_expediente_documento.php?iddoc=<?php echo(@$_REQUEST["iddoc"]); ?>','_self'); return false;">Adicionar a un nuevo expediente</button>

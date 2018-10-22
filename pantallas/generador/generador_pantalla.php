@@ -94,9 +94,9 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 								<li>
 									<a href="#encabezado_pie-tab" data-toggle="tab">5-Encabezado pie</a>
 								</li>
-								<li>
+								<!--li>
 									<a href="#asignar_funciones-tab" data-toggle="tab">6-Asignar funciones</a>
-								</li>
+								</li-->
 								<li>
 									<a href="#generar_formulario-tab" data-toggle="tab">7-Generar</a>
 								</li>
@@ -111,8 +111,7 @@ echo(load_pantalla($idpantalla));
 								</div>
 								<div class="tab-pane  active" id="datos_formulario-tab">
 									<?php
-include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
-									?>
+include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 								</div>
                 <div class="tab-pane" id="pantalla_mostrar-tab">
                   <form name="formulario_editor_mostrar" id="formulario_editor_mostrar" action="">
@@ -173,7 +172,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');
 						?>
 					</select>
 					<div class="btn btn-mini" id="limpiar_encabezado" title="Limpiar"><i class="icon-refresh"></i></div>
-					<button type="button" class="btn btn-mini btn-primary guardar_encabezado" id="adicionar_encabezado" disabled>Adicionar</button>
+					<button type="button" class="btn btn-mini btn-primary guardar_encabezado" id="adicionar_encabezado">Adicionar</button>
 					<button type="button" class="btn btn-mini btn-success guardar_encabezado" id="modificar_encabezado" disabled>Modificar</button>
 					<button type="button" class="btn btn-mini btn-danger" <?php echo ($idencabezado ? "" : "disabled"); ?> id="eliminar_encabezado">Eliminar</button>
 
@@ -580,7 +579,7 @@ $(document).on("change","#sel_pie_pagina",function() {
     });
 });
 
-$(document).on("click", ".guardar_encabezado", function(e) {
+$(document).on("click", ".guardar_encabezado", function(e) {		
 	if(formulario_encabezado.valid()){
 
 	  	var editor = tinymce.get('editor_encabezado');

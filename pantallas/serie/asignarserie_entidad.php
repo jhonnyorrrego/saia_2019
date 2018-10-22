@@ -11,6 +11,7 @@ while ($max_salida > 0) {
 
 include_once ($ruta_db_superior."db.php");
 include_once ($ruta_db_superior."header.php");
+require_once $ruta_db_superior . "arboles/crear_arbol_ft.php";
 
 $tvd=array(0=>"",1=>"");
 $tvd[$_REQUEST["tvd"]]="checked";
@@ -38,7 +39,6 @@ echo librerias_arboles_ft("2.24", 'filtro');
 if ($_REQUEST["seleccionados"]) {
 	$buscar_asignacion_series["numcampos"]=array();	
    $buscar_asignacion_series = busca_filtro_tabla("", "entidad_serie", "estado=1 and llave_entidad=".$_REQUEST["seleccionados"], "", $conn);
-	
     if ($buscar_asignacion_series["numcampos"]) {
     	for($i=0;$i<$buscar_asignacion_series["numcampos"];$i++){
         	$lista_series[] = $buscar_asignacion_series[$i]["serie_idserie"];
@@ -73,7 +73,23 @@ if ($_REQUEST["seleccionados"]) {
 		</tr>
 		<tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">SERIE*</span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="divserie"></div> </td>
+			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="divserie"></div> 
+				<?php
+				$origen = array("url" => "arboles/arbol_serie.php", "ruta_db_superior" => $ruta_db_superior,
+				    "params" => array(
+				    	"tipo3"=> 0,
+				    	"tvd"=> $_REQUEST["tvd"],
+				    	"estado"=> 1,
+				        "checkbox" => 1,
+				        "seleccionados" => $series_seleccionadas
+				    ));
+				$opciones_arbol = array("keyboard" => true, "selectMode" => 0, "busqueda_item" => 1, "expandir" => 3, "busqueda_item" => 1,"onNodeSelect" => 'asignar_permisos_entidad');
+				$extensiones = array("filter" => array());
+				$arbol = new ArbolFt("serie_idserie", $origen, $opciones_arbol, $extensiones);
+				echo $arbol->generar_html();
+			
+				?>
+				</td>
 		</tr>
 
 		<!--tr>
@@ -113,10 +129,10 @@ if ($_REQUEST["seleccionados"]) {
 			tvd="<?php echo $_REQUEST["tvd"]; ?>";
 			var seleccionados="<?php echo $series_seleccionadas; ?>";
 			console.log("<?php echo $series_seleccionadas; ?>");
-			$("#serie_idserie").val("<?php echo $series_seleccionadas; ?>");
+			/*$("#serie_idserie").val("<?php echo $series_seleccionadas; ?>");
 			url2="arboles/arbol_serie.php?tipo3=0&tvd="+tvd+"&estado=1&seleccionados="+seleccionados;
 			$.ajax({
-				url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol_ft.php",
+				url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol_ft.php"
 				data:{xml:url2,campo:"serie_idserie",selectMode:0,ruta_db_superior:"../../",onNodeSelect:"asignar_permisos_entidad",seleccionar_todos:1,busqueda_item:1},
 				type : "POST",
 				async:false,
@@ -126,7 +142,7 @@ if ($_REQUEST["seleccionados"]) {
 					top.noty({text: 'No se pudo cargar el arbol de series',type: 'error',layout: 'topCenter',timeout:5000});
 				}
 			});
-		//});
+		//});*/
 		$("[name='tvd']:checked").trigger("change");
 
 		$("#asignarserie_entidad").validate({
@@ -148,6 +164,7 @@ if ($_REQUEST["seleccionados"]) {
 		
 		var seleccionados = Array();
 		var items = data.tree.getSelectedNodes();
+		//console.log(data);
 		for(var i=0;i<items.length;i++){
 			seleccionados.push(items[i].key);
 		}
@@ -162,16 +179,32 @@ if ($_REQUEST["seleccionados"]) {
         $.ajax({
         	    url: 'asignarserie.php',
                 type : "POST",
-                data:{opt:1,iddependencia:iddependencia,serie_idserie:serie_idserie,accion:accion},
-	
+                data: {
+                    opt: 1,
+                    iddependencia: iddependencia,
+                    serie_idserie: serie_idserie,
+                    accion: accion
+                },
+                datatype: 'json',
                 success: function(retorno){
                 	
-                    var tipo='warning';
-                    var mensaje='<b>ATENCI&Oacute;N</b><br>Se ha retirado el permiso a la serie';
-                    if(retorno==1){
-                        tipo='success';
-                        mensaje='<b>ATENCI&Oacute;N</b><br>Se ha adicionado el permiso a la serie';
+                    var tipo = 'error';
+                    var mensaje = '<b>ATENCI&Oacute;N</b><br>' + retorno.mensaje;
+                    if(retorno.exito == 1) {
+                        if(retorno.accion == 'adicionar') {
+                        	tipo='success';
+                        } else {
+                        	tipo='warning';
+                        }
+                        var datos = {
+                                accion: "refrescar_arbol"
+                        };
+                        if(retorno.expandir) {
+                        	datos["expandir"] = retorno.expandir;
+                        }
+                        window.parent.frames['arbol'].postMessage(datos, "*");
                     }
+                    
                     notificacion_saia(mensaje,tipo,"topRight",3000);
                 }
         	});

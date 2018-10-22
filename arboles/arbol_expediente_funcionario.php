@@ -10,6 +10,7 @@ while ($max_salida > 0) {
 }
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "pantallas/expediente/librerias.php");
+include_once ($ruta_db_superior . "class.funcionarios.php");
 
 $objetoJson = array(
     "key" => 0
@@ -35,7 +36,8 @@ if (@$_REQUEST['estado_cierre']) {
     $condicion_ad .= " AND (e.estado_cierre IN(" . $_REQUEST['estado_cierre'] . "))";
 }
 
-$condicion_ad = " and " . DHtmlXtreeExpedienteFunc::expedientes_asignados($conn);
+//$condicion_ad = " and " . DHtmlXtreeExpedienteFunc::expedientes_asignados($conn);
+$condicion_ad = " and " . expedientes_asignados($conn);
 if (isset($_REQUEST["excluidos_exp"])) {
     $condicion_ad .= " and idexpediente not in (" . $_REQUEST["excluidos_exp"] . ")";
 } else if (isset($_REQUEST["incluir_series"]) && !($estado_cierre || $estado_archivo)) {
@@ -54,11 +56,17 @@ if (isset($_REQUEST["seleccionados"])) {
 if (isset($_REQUEST["checkbox"])) {
     $checkbox = $_REQUEST["checkbox"];
 }
+
+$idfuncionario = usuario_actual("idfuncionario");
+$datos_admin_funcionario = busca_datos_administrativos_funcionario($idfuncionario);
+$lista_entidades = implode(",", $datos_admin_funcionario["identidad_serie"]);
+	
+
 // TERMINA DEFAULT
 
 header('Content-Type: application/json');
 
-$arbol = new DHtmlXtreeExpedienteFunc($conn, $condicion_ad, $idexpediente, $seleccionados, $checkbox);
+$arbol = new DHtmlXtreeExpedienteFunc($conn, $condicion_ad, $idexpediente, $seleccionados, $checkbox,$lista_entidades);
 echo json_encode($arbol->generarXml($id));
 
 class DHtmlXtreeExpedienteFunc {
@@ -69,13 +77,15 @@ class DHtmlXtreeExpedienteFunc {
     private $seleccionados;
     private $idexpediente;
 	private $checkbox;
+	private $lista_entidades;
 
-    public function __construct($conn, $condicion_ad, $idexpediente, $seleccionados, $checkbox) {
+    public function __construct($conn, $condicion_ad, $idexpediente, $seleccionados, $checkbox,$lista_entidades) {
         $this->conn = $conn;
         $this->condicion_ad = $condicion_ad;
         $this->seleccionados = $seleccionados;
         $this->idexpediente = $idexpediente;
         $this->checkbox = $checkbox;
+		$this->lista_entidades = $lista_entidades;
     }
 
     public function generarXml($id = 0) {
@@ -92,11 +102,12 @@ class DHtmlXtreeExpedienteFunc {
             $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "entidad_expediente ee
                 join expediente e on ee.expediente_idexpediente = e.idexpediente", "e.idexpediente=" . $this->idexpediente, "nombre ASC", $this->conn);
         } else if ($id == 0) {
+            //$papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "entidad_expediente ee join expediente e on ee.expediente_idexpediente = e.idexpediente", "(cod_padre=0 or cod_padre is null)" . $this->condicion_ad, "nombre ASC", $this->conn);
             $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "entidad_expediente ee
-            join expediente e on ee.expediente_idexpediente = e.idexpediente", "(cod_padre=0 or cod_padre is null)" . $this->condicion_ad, "nombre ASC", $this->conn);
+            join expediente e on ee.expediente_idexpediente = e.idexpediente", "(cod_padre=0 or cod_padre is null) and e.fk_entidad_serie in (" . $this->lista_entidades .")", "nombre ASC", $this->conn);
         } else {
-            $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "entidad_expediente ee
-                join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" . $id . $this->condicion_ad, "nombre ASC", $this->conn);
+            //$papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "entidad_expediente ee join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" . $id . $this->condicion_ad, "nombre ASC", $this->conn);
+                $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "entidad_expediente ee join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" . $id . " and e.fk_entidad_serie in (" . $this->lista_entidades .")", "nombre ASC", $this->conn);
         }
 
         //print_r($papas);
@@ -274,7 +285,7 @@ class DHtmlXtreeExpedienteFunc {
 		return $this->objetoXML=$objetoJson;
     }
 
-    public static function expedientes_asignados($conn) {
+   /* public static function expedientes_asignados($conn) {
         // return "1=1";
         $idfunc_actual = usuario_actual('idfuncionario');
 
@@ -292,6 +303,6 @@ class DHtmlXtreeExpedienteFunc {
         $cadena = "ee.entidad_identidad IN (1, 2, 4) AND ee.llave_entidad IN ('" . implode("','", $llaves_exp) . "')";
 
         return ($cadena);
-    }
+    }*/
 }
 ?>

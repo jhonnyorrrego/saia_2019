@@ -58,32 +58,17 @@ $funcionarios = array();
 $idfunc = usuario_actual("idfuncionario");
 
 $lista2 = expedientes_asignados();
-/*if (@$_REQUEST["id"] && @$_REQUEST["uid"]) {
-	echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?" . ">");
-	echo("<tree id=\"" . $_REQUEST["id"] . "\">\n");
-	llena_expediente($_REQUEST["id"]);
-	echo("</tree>\n");
-	die();
-}
-
-echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?" . ">");
-echo("<tree id=\"0\">\n");
-echo("<item style=\"font-family:verdana; font-size:7pt;\" text=\"Expedientes\" nocheckbox=\"1\" id=\"exp\">");
-llena_expediente($id);
-echo("</item>\n");
-echo("</tree>\n");
-*/
 if (isset($_REQUEST["id"])) {
-	
+
 	$objetoJson["key"] = $_REQUEST["id"];
-	$id =  $_REQUEST["id"];	
+	$id =  $_REQUEST["id"];
     if ($id[0] == 0) {
     	$hijos_exp = llena_expediente($id);
-		
+
         if (!empty($hijos_exp)) {
             $hijos[] = $hijos_exp;
         }
-    }	
+    }
 	$objetoJson["children"] = $hijos;
 }
 else{
@@ -103,11 +88,10 @@ function llena_expediente($id) {
 	global $conn, $sql, $exp_doc, $funcionarios, $excluidos, $dependencias, $varios, $lista2, $estado_cierre, $estado_archivo, $checkbox;
 	$objetoJson = array();
 	if ($id == 0) {
-		$papas = busca_filtro_tabla("a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre", "vexpediente_serie a", $lista2 . " and (a.cod_padre=0 OR a.cod_padre IS NULL)" . $estado_cierre . $estado_archivo, "GROUP BY a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc", $conn);
+		$papas = busca_filtro_tabla("a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre, permiso_serie, permiso_exp", "vexpediente_serie a", $lista2 . " and (a.cod_padre=0 OR a.cod_padre IS NULL)" . $estado_cierre . $estado_archivo, "GROUP BY a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc", $conn);
 	} else {
-		$papas = busca_filtro_tabla("a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre", "vexpediente_serie a", $lista2 . " and (a.cod_padre=" . $id . ")" . $estado_cierre . $estado_archivo, "GROUP BY a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc", $conn);
+		$papas = busca_filtro_tabla("a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre, permiso_serie, permiso_exp", "vexpediente_serie a", $lista2 . " and (a.cod_padre=" . $id . ")" . $estado_cierre . $estado_archivo, "GROUP BY a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc", $conn);
 	}
-	//print_r($papas["sql"]);
 	if ($papas["numcampos"]) {
 		for ($i = 0; $i < $papas["numcampos"]; $i++) {
 			$permitido = 0;
@@ -115,7 +99,7 @@ function llena_expediente($id) {
 				$texto_item = "";
 				$texto_item = ($papas[$i]["nombre"]);
 				if ($papas[$i]["estado_cierre"] == 2) {
-					$texto_item .= " <span style=\"color:red\">(CERRADO)</span>";
+					$texto_item .= " (CERRADO)";
 				}
 
 				$cantidad_tomos = cantidad_tomos($papas[$i]["idexpediente"]);
@@ -123,12 +107,17 @@ function llena_expediente($id) {
 				if ($cantidad_tomos['cantidad'] > 1) {
 					$cadena_tomos = '&nbsp;&nbsp;<b>(' . $cantidad_tomos['tomo_no'] . ' de ' . $cantidad_tomos['cantidad'] . ')</b>';
 				}
-
 				$item = array();
 				$item["extraClasses"] = "estilo-dependencia";
-	            $item["title"] = htmlspecialchars($texto_item . $cadena_tomos);
+				if(preg_match("/a/",$papas[$i]["permiso_serie"])==1 || preg_match("/m/",$papas[$i]["permiso_exp"])==1){
+					$item["checkbox"] = $checkbox;
+				}
+				else{
+					$texto_item.=" - (Sin permiso)";
+				}
+	            $item["title"] = ($texto_item . $cadena_tomos);
 				$item["key"] = $papas[$i]["idexpediente"];
-				$item["checkbox"] = $checkbox;
+
 				if (@$_REQUEST["doc"]) {
 					if ($_REQUEST["accion"] == 1 && in_array($papas[$i]["idexpediente"], $exp_doc)) {
 						if (!$varios) {
@@ -152,14 +141,14 @@ function llena_expediente($id) {
 				$hijos = busca_filtro_tabla("idexpediente", "vexpediente_serie a", $lista2 . " AND cod_padre=" . $papas[$i]["idexpediente"], "", $conn);
 				//print_r($hijos["sql"]);
 				if ($hijos['numcampos']) {
-					//echo(" child=\"1\" ");					
-					
+					//echo(" child=\"1\" ");
+
 					$item["children"] = llena_expediente($papas[$i]["idexpediente"]);
 				}
 				if (@$_REQUEST["uid"] || @$_REQUEST["carga_total"]) {
 						//$item["checkbox"] = $checkbox;
 					//$item["children"] = llena_expediente($papas[$i]["idexpediente"]);
-					
+
 				}
 				$objetoJson[] = $item;
 			}

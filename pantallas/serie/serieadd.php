@@ -12,6 +12,8 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior."header.php");
 include_once ($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 
+require_once $ruta_db_superior . "arboles/crear_arbol_ft.php";
+
 $validar_enteros = array("x_idserie");
 desencriptar_sqli('form_info');
 
@@ -64,8 +66,10 @@ switch ($sAction) {
             }
             ?>
 <script>
-			//window.parent.frames['arbol'].tree2.refreshItem("0");
-			window.parent.frames['arbol'].postMessage("refrescar_arbol", "*");
+			window.parent.frames['arbol'].postMessage({
+                accion: "refrescar_arbol",
+                expandir: "<?php echo $openNode;?>"
+            }, "*");
 			/*window.parent.frames['arbol'].tree2.setOnLoadingEnd(abrir_arbol);
 			function abrir_arbol() {
 			window.parent.frames['arbol'].tree2.openAllItems("<?php echo $openNode;?>");
@@ -147,6 +151,8 @@ switch ($sAction) {
 }
 
 function AddData($conn) {
+    $fieldList = array();
+    $fieldList_asignacion = array();
 	// Field nombre
 	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_nombre"]) : $GLOBALS["x_nombre"];
 	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
@@ -248,11 +254,14 @@ function AddData($conn) {
 	}*/
 
 	//insert into entidad_serie
-	$dependencia = explode(",",$fieldList_asignacion["dependencias"]);
-	for($i=0;$i<count($dependencia);$i++){
-		$insert = "INSERT INTO entidad_serie (entidad_identidad,serie_idserie,llave_entidad,estado,fecha) VALUES (2," . $id . "," . $dependencia[$i] . ",1," . fecha_db_almacenar(date("Y-m-d"), "Y-m-d") . ")";
-    	phpmkr_query($insert) or die("Error al guardar la informacion".$insert);
-	}
+	$dependencia = explode(",", $fieldList_asignacion["dependencias"]);
+	$cd = count($dependencia);
+    if ($fieldList["categoria"] == 2) {
+        for ($i = 0; $i < $cd; $i++) {
+            $insert = "INSERT INTO entidad_serie (entidad_identidad,serie_idserie,llave_entidad,estado,fecha) VALUES (2," . $id . "," . $dependencia[$i] . ",1," . fecha_db_almacenar(date("Y-m-d"), "Y-m-d") . ")";
+            phpmkr_query($insert) or die("Error al guardar la informacion" . $insert);
+        }
+    }
 	actualizar_crear_cod_arboles($id, "serie", 1);
 	return $id;
 }
@@ -262,10 +271,10 @@ ul.fancytree-container {
     border: none;
     background-color:#F5F5F5;
 }
-span.fancytree-title 
-{  
+span.fancytree-title
+{
 	font-family: Verdana,Tahoma,arial;
-	font-size: 9px; 
+	font-size: 9px;
 }
 
 </style>
@@ -298,7 +307,7 @@ if ($entidad["numcampos"]) {
 		   <option value="4">Asignado a Cargo(s)</option>
  		   <option value="2">Asignado a Dependencia(s)</option>
  		   <option value="1">Asignado a Funcionario(s)</option>';*/
-		  
+
 ?>
 <form name="serieadd" id="serieadd" action="serieadd.php" method="post">
 	<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
@@ -385,21 +394,21 @@ if ($entidad["numcampos"]) {
 		</tr>
 
 		<tr class="ocultar">
-			<td class="encabezado" title="Cantidad de d&iacute;as para dar tr&aacute;mite y respuesta al documento"><span class="phpmaker" style="color: #FFFFFF;">TIEMPO DE RESPUESTA (D&Iacute;AS) *</span></td>
+			<td class="encabezado" title="Cantidad de d&iacute;as para dar tr&aacute;mite y respuesta al documento"><span class="phpmaker" style="color: #FFFFFF;">TIEMPO DE RESPUESTA EN (D&Iacute;AS) *</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker">
 				<input type="text" name="x_dias_entrega" id="x_dias_entrega" size="30" value="<?php echo $x_dias_entrega; ?>">
 			</span></td>
 		</tr>
 
 		<tr class="ocultar">
-			<td class="encabezado" title="Cantidad de a&ntilde;os que permanece la subserie en el archivo de gesti&oacute;n"><span class="phpmaker" style="color: #FFFFFF;">A&Ntilde;OS ARCHIVO GESTI&Oacute;N *</span></td>
+			<td class="encabezado" title="Cantidad de a&ntilde;os que permanece la subserie en el archivo de gesti&oacute;n"><span class="phpmaker" style="color: #FFFFFF;">MESES ARCHIVO GESTI&Oacute;N *</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker">
 				<input type="text" name="x_retencion_gestion" id="x_retencion_gestion" size="30" value="<?php echo $x_retencion_gestion; ?>">
 			</span></td>
 		</tr>
 
 		<tr class="ocultar">
-			<td class="encabezado" title="Cantidad de a&ntilde;os que permanece la subserie en el archivo central"><span class="phpmaker" style="color: #FFFFFF;">A&Ntilde;OS ARCHIVO CENTRAL *</span></td>
+			<td class="encabezado" title="Cantidad de a&ntilde;os que permanece la subserie en el archivo central"><span class="phpmaker" style="color: #FFFFFF;">MESES ARCHIVO CENTRAL *</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker">
 				<input type="text" name="x_retencion_central" id="x_retencion_central" size="30" value="<?php echo $x_retencion_central; ?>">
 			</span></td>
@@ -456,7 +465,18 @@ if ($entidad["numcampos"]) {
 		<tr class="ocultar">
 			<td class="encabezado" title="Asociar serie/subserie a una dependencia"><span class="phpmaker" style="color: #FFFFFF;">DEPENDENCIA ASOCIADA *</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker">
-				<div id="dependencia_asociada"></div>
+				<?php
+				$origen = array("url" => "arboles/arbol_dependencia.php", "ruta_db_superior" => $ruta_db_superior,
+				    "params" => array(
+				        "checkbox" => 1,
+				        "seleccionados" => $dependencia_seleccionada
+				    ));
+				$opciones_arbol = array("keyboard" => true, "selectMode" => 2, "busqueda_item" => 1, "expandir" => 3, "busqueda_item" => 1);
+				$extensiones = array("filter" => array());
+				$arbol = new ArbolFt("iddependencia", $origen, $opciones_arbol, $extensiones);
+				echo $arbol->generar_html();
+
+				?>
 			</span></td>
 		</tr>
 		<!--tr>
@@ -554,10 +574,14 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 	$(document).ready(function() {
 		xml1="arboles/arbol_dependencia.php?checkbox=true&expandir=1";
 		var dependencia_seleccionada="<?php echo $dependencia_seleccionada; ?>";
+
+		if(dependencia_seleccionada && dependencia_seleccionada != '') {
+			$("#iddependencia").val(dependencia_seleccionada);
+		}
+
 		var entidades = <?php echo json_encode($entidades) ?>;
-		cargar_arbol_dependencias(xml1,dependencia_seleccionada);
 		var dependencia_seleccionadas=0;
-		
+
 		$("#serieadd").validate({
 			rules:{
 				x_nombre:{required:true},
@@ -676,7 +700,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 				$(".ocultar").hide();
 				$(".ocultar_padre").show();
 
-				xml = "arboles/arbol_serie.php?ver_categoria2=0&ver_categoria3=1&checkbox=radio";				
+				xml = "arboles/arbol_serie.php?ver_categoria2=0&ver_categoria3=1&checkbox=radio";
 				$.ajax({
 					url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol_ft.php",
 					data : {
@@ -775,7 +799,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 						entidades_seleccionadas = entidades_seleccionadas + ',' + identidad;
 					}
 				}
-				url1="";				
+				url1="";
 				switch(option) {
 					case '1'://Funcionario
 					url1="arboles/arbol_funcionario.php?idcampofun=funcionario_codigo&checkbox=true&sin_padre=1";
@@ -803,7 +827,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 				}
 				$.ajax({
 					url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
-					
+
 					data:{xml:url1,campo:"identidad",radio:0,selectMode:check,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:1},
 					type : "POST",
 					async:false,
@@ -819,21 +843,4 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 		});
 		$("#tipo_entidad").trigger("change");*/
 	});
-	function cargar_arbol_dependencias(xml1, dependencia_seleccionada){		
-		if(dependencia_seleccionada != '') {
-			xml1 = xml1 + '&seleccionados=' + dependencia_seleccionada;
-		}
-		$.ajax({
-			url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol_ft.php",
-			data:{xml:xml1,campo:"iddependencia",selectMode:1,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:1,expandir:3},
-			type : "POST",
-			async:false,
-			success : function(html_dependencia) {				
-				$("#dependencia_asociada").empty().html(html_dependencia);
-				$("#iddependencia").val(dependencia_seleccionada);
-			},error: function (){
-				top.noty({text: 'No se pudo cargar el arbol de dependencias',type: 'error',layout: 'topCenter',timeout:5000});
-			}
-		});
-	}
 </script>

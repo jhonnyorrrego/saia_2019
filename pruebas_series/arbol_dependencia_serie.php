@@ -152,16 +152,15 @@ function llena_serie($id, $iddep, $tipo = 0) {
     global $conn;
     $objetoJson = array();
     if ($id == 0) {
-        $papas = busca_filtro_tabla("s.*", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $iddep . " and s.tvd=" . $tipo . " and (s.cod_padre=0 or s.cod_padre is null) and s.categoria=2", "s.nombre ASC", $conn);
+        $papas = busca_filtro_tabla("e.identidad_serie, s.*", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $iddep . " and s.tvd=" . $tipo . " and (s.cod_padre=0 or s.cod_padre is null) and s.categoria=2", "s.nombre ASC", $conn);
     } else {
-        $papas = busca_filtro_tabla("s.*", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $iddep . " and s.tvd=" . $tipo . " and s.cod_padre=" . $id . " and s.categoria=2", "s.nombre ASC", $conn);
-        if ($papas["numcampos"] == 0) {
-            $papas = busca_filtro_tabla("s.*", "serie s", "s.tipo=3 and s.tvd=" . $tipo . " and s.cod_padre=" . $id . " and s.categoria=2", "s.nombre ASC", $conn);
-        }
+        $papas = busca_filtro_tabla("e.identidad_serie, s.*", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $iddep . " and s.tvd=" . $tipo . " and s.cod_padre=" . $id . " and s.categoria=2", "s.nombre ASC", $conn);
     }
 
     if ($papas["numcampos"]) {
         for ($i = 0; $i < $papas["numcampos"]; $i++) {
+        	$identidad_serie=$papas[$i]["identidad_serie"];
+        	
             $text = $papas[$i]["nombre"] . " (" . $papas[$i]["codigo"] . ")";
             if ($papas[$i]["estado"] == 0) {
                 $text .= " - INACTIVO";
@@ -171,6 +170,8 @@ function llena_serie($id, $iddep, $tipo = 0) {
             $item["title"] = $text;
             $item["key"] = $iddep . "." . $papas[$i]["idserie"] . "." . $tipo;
 
+            $item["data"] = array("entidad_serie"=>$identidad_serie);
+			//$item["expanded"]=true;
             $hijos = busca_filtro_tabla("count(*) as cant", "serie", "tvd=" . $tipo . "  and cod_padre=" . $papas[$i]["idserie"] . " and categoria=2", "", $conn);
             if ($hijos[0]["cant"]) {
                 $item["folder"] = 1;

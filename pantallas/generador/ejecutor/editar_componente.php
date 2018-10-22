@@ -214,9 +214,9 @@ else{
   </div>
   <input type="hidden" name="fs_valor" id="fs_valor" value="<?php echo($pantalla_campos[0]["valor"]); ?>">
   <div class="control-group">
-    <label class="control-label" for="ayuda">Ayuda *</label>
+    <label class="control-label" for="ayuda">Ayuda</label>
     <div class="controls">
-      <textarea name="fs_ayuda" id="ayuda" placeholder="Ayuda" required><?php echo(@$pantalla_campos[0]["ayuda"]);?></textarea>
+      <textarea name="fs_ayuda" id="ayuda" placeholder="Ayuda"><?php echo(@$pantalla_campos[0]["ayuda"]);?></textarea>
     </div>
   </div>
   <div class="form-actions">
