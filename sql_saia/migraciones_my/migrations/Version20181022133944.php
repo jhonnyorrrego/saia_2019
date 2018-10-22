@@ -88,8 +88,8 @@ FROM
     (
         (
             (
-                saia_series_gb.expediente a
-            JOIN saia_series_gb.entidad_serie e
+                expediente a
+            JOIN entidad_serie e
             ON
                 (
                     (
@@ -99,7 +99,7 @@ FROM
                     )
                 )
             )
-        LEFT JOIN saia_series_gb.entidad_expediente b
+        LEFT JOIN entidad_expediente b
         ON
             (
                 (
@@ -107,7 +107,7 @@ FROM
                 )
             )
         )
-    LEFT JOIN saia_series_gb.serie c
+    LEFT JOIN serie c
     ON
         ((e.serie_idserie = c.idserie))
     )
@@ -151,8 +151,8 @@ FROM
     (
         (
             (
-                saia_series_gb.expediente a
-            JOIN saia_series_gb.entidad_serie e
+                expediente a
+            JOIN entidad_serie e
             ON
                 (
                     (
@@ -162,7 +162,7 @@ FROM
                     )
                 )
             )
-        JOIN saia_series_gb.permiso_serie b
+        JOIN permiso_serie b
         ON
             (
                 (
@@ -170,7 +170,7 @@ FROM
                 )
             )
         )
-    JOIN saia_series_gb.serie c
+    JOIN serie c
     ON
         ((e.serie_idserie = c.idserie))
     )
@@ -211,7 +211,7 @@ SELECT
     0 AS desde_serie,
     -(1) AS identidad_serie
 FROM
-    saia_series_gb.expediente a
+    expediente a
 WHERE
     (a.agrupador = 1)";
         return $sql;
@@ -258,8 +258,8 @@ FROM
     (
         (
             (
-                saia_series_gb.expediente a
-            JOIN saia_series_gb.entidad_serie e
+                expediente a
+            JOIN entidad_serie e
             ON
                 (
                     (
@@ -267,7 +267,7 @@ FROM
                     )
                 )
             )
-        LEFT JOIN saia_series_gb.entidad_expediente b
+        LEFT JOIN entidad_expediente b
         ON
             (
                 (
@@ -275,7 +275,7 @@ FROM
                 )
             )
         )
-    LEFT JOIN saia_series_gb.serie c
+    LEFT JOIN serie c
     ON
         ((e.serie_idserie = c.idserie))
     )
@@ -319,8 +319,8 @@ FROM
     (
         (
             (
-                saia_series_gb.expediente a
-            JOIN saia_series_gb.entidad_serie e
+                expediente a
+            JOIN entidad_serie e
             ON
                 (
                     (
@@ -328,7 +328,7 @@ FROM
                     )
                 )
             )
-        JOIN saia_series_gb.permiso_serie b
+        JOIN permiso_serie b
         ON
             (
                 (
@@ -336,7 +336,7 @@ FROM
                 )
             )
         )
-    JOIN saia_series_gb.serie c
+    JOIN serie c
     ON
         ((e.serie_idserie = c.idserie))
     )";
