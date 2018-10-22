@@ -91,7 +91,7 @@ function enlace_expediente($idexpediente, $nombre) {
     $estilo_expediente = "";
 	$permiso_modulo = new Permiso();
     $ok = $permiso_modulo->acceso_modulo_perfil('expediente_admin');  
-	if(!$ok && !$expediente_actual[0]['agrupador']){		
+	if(!$ok){		
 	    $permiso = new PermisosExpediente($conn, $idexpediente);
 	    $permisos = $permiso->obtener_permisos();
 	
@@ -111,7 +111,7 @@ function enlace_expediente($idexpediente, $nombre) {
     $p = $permiso->tiene_permiso_compartir_expediente();*/
     
     $a_html = array();
-   //$a_html[] = implode(",", $permiso->getPermisosSerie());
+   // $a_html[] = implode(",", $permiso->getPermisosSerie());
     if ($l || $m) {
         $a_html[] = '<div class="link kenlace_saia" enlace="pantallas/busquedas/consulta_busqueda_expediente.php?' . $req_parms . '" conector="iframe" titulo="' . $nombre . '">';
         $a_html[] = '<table><tr><td style="font-size:12px;">';
@@ -536,7 +536,7 @@ function expedientes_asignados() {
         $cadena_series_sql = "or (serie_idserie IN('" . implode("','", $series) . "'))";
     }*/
    // $cadena = "((a.identidad_exp IN ('" . implode("','", $entidades_exp) . "') AND a.llave_exp IN ('" . implode("','", $llaves_exp) . "')) " . $cadena_series_sql . ")";
-    $cadena = "((a.identidad_exp = 1 AND a.llave_exp = $idfunc_actual) OR (a.identidad_exp = 2 AND a.llave_exp IN ('" . implode("','", $dependencias) . "')) OR (a.identidad_exp = 4 AND a.llave_exp IN ('" . implode("','", $cargos) . "')) OR (a.identidad_exp = 5 AND a.llave_exp IN ('" . implode("','", $roles) . "')) OR (a.identidad_exp = 1 AND a.llave_exp = 0))";
+    $cadena = "((a.identidad_exp = 1 AND a.llave_exp = $idfunc_actual) OR (a.identidad_exp = 2 AND a.llave_exp IN ('" . implode("','", $dependencias) . "')) OR (a.identidad_exp = 4 AND a.llave_exp IN ('" . implode("','", $cargos) . "')) OR (a.identidad_exp = 5 AND a.llave_exp IN ('" . implode("','", $roles) . "')))";
 
     return ($cadena);
 }

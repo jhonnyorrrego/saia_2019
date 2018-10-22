@@ -86,12 +86,12 @@ $serie_padre = "";
             var valor = $(this).val();
             var numero = new Number(valor);
             var texto = "";
+
             if(numero == 1) {
                 $('#informacion_completa_expediente').hide();
                 $('#informacion_completa_expediente_adicional').hide();
-                $('#serie_idserie').val(-1);
-                $('#identidad_serie').val(-1);
-                //$('#serie_idserie').val();
+                //$('#serie_idserie').val(-1);
+                $('#serie_idserie').val();
                 texto = "Agrupador";
             } else if(numero == 0) {
                 $('#informacion_completa_expediente').show();
@@ -184,26 +184,25 @@ $serie_padre = "";
 	  	</select>
 	  </div>
 	</div>
-<!--/div-->
+</div>
 
-	<div class="control-group element">
-		<label class="control-label" for="serie_idserie">Serie asociada *</label>
-		<div class="controls">
-			
-			<?php
-			$origen = array("url" => "arboles/arbol_dependencia_serie_funcionario.php", "ruta_db_superior" => $ruta_db_superior,
-			    "params" => array(		    	
-			        "checkbox" => 'radio',
-			        "expandir" => 1,
-			        "funcionario"=>1
-			        //"seleccionados" => $dependencia_seleccionada
-			    ));
-			$opciones_arbol = array("keyboard" => true, "selectMode" => 1, "busqueda_item" => 1, "expandir" => 3, "busqueda_item" => 1, "onNodeSelect" =>'cargar_info_Node');
-			$extensiones = array("filter" => array());
-			$arbol = new ArbolFt("serie_idserie", $origen, $opciones_arbol, $extensiones);
-			echo $arbol->generar_html();
-			?>			
-		</div>
+<div class="control-group element">
+	<label class="control-label" for="serie_idserie">Serie asociada *</label>
+	<div class="controls">
+		
+		<?php
+		$origen = array("url" => "arboles/arbol_dependencia_serie_funcionario.php", "ruta_db_superior" => $ruta_db_superior,
+		    "params" => array(		    	
+		        "checkbox" => 'radio',
+		        "expandir" => 1,
+		        "funcionario"=>1
+		        //"seleccionados" => $dependencia_seleccionada
+		    ));
+		$opciones_arbol = array("keyboard" => true, "selectMode" => 1, "busqueda_item" => 1, "expandir" => 3, "busqueda_item" => 1, "onNodeSelect" =>'cargar_info_Node');
+		$extensiones = array("filter" => array());
+		$arbol = new ArbolFt("serie_idserie", $origen, $opciones_arbol, $extensiones);
+		echo $arbol->generar_html();
+		?>			
 	</div>
 </div>
 
@@ -512,15 +511,18 @@ $serie_padre = "";
   }
   });
 
-  $("#submit_formulario_expediente").click(function(){
-  	if($("#serie_idserie").val()==""){
-  		$("#serie_idserie").val(-1);
-  	}
+  $("#submit_formulario_expediente").click(function(){  	
   	if(!$('select[name=estado_archivo]').val()){
+  		console.log("no selecciono selec");
   		$("#estado_archivo").val("<?php echo $_REQUEST["estado_archivo"]; ?>");
-  		
+  		console.log($("#estado_archivo").val());
   	}
-  	//var estado_archivo = $("#estado_archivo").val();  	
+  	else{
+  		console.log("si se selecciono selec");
+  		console.log($("#estado_archivo").val());
+  	}
+  	//var estado_archivo = $("#estado_archivo").val();
+  	console.log(estado_archivo);
     if(formulario_expediente.valid()){
     	$('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
 			$(this).attr('disabled', 'disabled');
