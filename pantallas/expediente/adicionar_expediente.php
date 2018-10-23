@@ -8,7 +8,6 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-
 ?>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php include_once($ruta_db_superior."pantallas/lib/librerias_componentes.php"); ?>
@@ -513,16 +512,13 @@ $serie_padre = "";
 
   $("#submit_formulario_expediente").click(function(){  	
   	if(!$('select[name=estado_archivo]').val()){
-  		console.log("no selecciono selec");
   		$("#estado_archivo").val("<?php echo $_REQUEST["estado_archivo"]; ?>");
   		console.log($("#estado_archivo").val());
   	}
   	else{
-  		console.log("si se selecciono selec");
   		console.log($("#estado_archivo").val());
   	}
   	//var estado_archivo = $("#estado_archivo").val();
-  	console.log(estado_archivo);
     if(formulario_expediente.valid()){
     	$('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
 			$(this).attr('disabled', 'disabled');

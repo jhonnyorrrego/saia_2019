@@ -110,9 +110,9 @@ class DHtmlXtreeExpedienteFunc {
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
                 $agrupador = $papas[$i]["agrupador"];
-                if($agrupador){
+               /* if($agrupador){
 					 continue;
-                }
+                }*/
 				$cerrado=false;
                 $text = $papas[$i]["nombre"] . " (" . $papas[$i]["codigo_numero"] . ")";
                 if ($papas[$i]["estado_cierre"] == 2) {
@@ -196,6 +196,7 @@ class DHtmlXtreeExpedienteFunc {
 			                /* FIN USERDATA */
                     	}
                     	else {
+                    		$this->objetoXML->writeAttribute("nocheckbox", 0);
                         $this->objetoXML->writeAttribute("child", 0);
                     }
                 }
