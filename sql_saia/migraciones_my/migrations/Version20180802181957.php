@@ -32,7 +32,7 @@ class Version20180802181957 extends AbstractMigration {
             "nombre" => 'vincular_doc_expedie'
         ]);
 
-        $this->abortIf(!$result, "No existe el formato 'vincular_doc_expedie'");
+        $this->skipIf(!$result, "No existe el formato 'vincular_doc_expedie'");
 
         $idformato = $result[0]["idformato"];
 
@@ -41,7 +41,7 @@ class Version20180802181957 extends AbstractMigration {
             "idformato" => $idformato
         ]);
 
-        $this->abortIf(!$result, "No existe el campo 'serie_idserie' en el formato 'vincular_doc_expedie'");
+        $this->skipIf(!$result, "No existe el campo 'serie_idserie' en el formato 'vincular_doc_expedie'");
 
         $idcampo_serie = $result[0]["idcampos_formato"];
 

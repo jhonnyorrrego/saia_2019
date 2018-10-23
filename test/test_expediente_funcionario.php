@@ -119,10 +119,10 @@ class DHtmlXtreeExpedienteFunc {
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
                 $agrupador = $papas[$i]["agrupador"];
-                if ($agrupador) {
-                    continue;
-                }
-                $cerrado = false;
+               /* if($agrupador){
+					 continue;
+                }*/
+				$cerrado=false;
                 $text = $papas[$i]["nombre"] . " (" . $papas[$i]["codigo_numero"] . ")";
                 if ($papas[$i]["estado_cierre"] == 2) {
                     $text .= " - CERRADO";
@@ -191,19 +191,21 @@ class DHtmlXtreeExpedienteFunc {
                         $this->objetoXML->writeAttribute("nocheckbox", 0);
                         $this->objetoXML->writeAttribute("child", 1);
                         $this->llena_tipo_documental($papas[$i]["idserie"], $idexp);
-                    } else if ($papas[$i]["tipo"] == 3) {
-                        /* USERDATA */
-                        $this->objetoXML->startElement("userdata");
-                        $this->objetoXML->writeAttribute("name", "idexpediente");
-                        $this->objetoXML->text($idexp);
-                        $this->objetoXML->endElement();
-
-                        $this->objetoXML->startElement("userdata");
-                        $this->objetoXML->writeAttribute("name", "idserie");
-                        $this->objetoXML->text($papas[$i]["idserie"]);
-                        $this->objetoXML->endElement();
-                        /* FIN USERDATA */
-                    } else {
+                    } else if($papas[$i]["tipo"]==3){
+                    		/* USERDATA */
+				                $this->objetoXML->startElement("userdata");
+				                $this->objetoXML->writeAttribute("name", "idexpediente");
+				                $this->objetoXML->text($idexp);
+				                $this->objetoXML->endElement();
+				
+				                $this->objetoXML->startElement("userdata");
+				                $this->objetoXML->writeAttribute("name", "idserie");
+				                $this->objetoXML->text($papas[$i]["idserie"]);
+				                $this->objetoXML->endElement();
+			                /* FIN USERDATA */
+                    	}
+                    	else {
+                    		$this->objetoXML->writeAttribute("nocheckbox", 0);
                         $this->objetoXML->writeAttribute("child", 0);
                     }
                 }

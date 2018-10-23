@@ -158,9 +158,7 @@ switch ($sAction) {
         $estado[$x_estado] = "checked";
 
 		//buscar la dependencia asignada
-			$buscar_asignacion = busca_filtro_tabla("", "entidad_serie", "entidad_identidad=2 and estado=1 and serie_idserie=" . $x_idserie, "", $conn);
-			//print_r($buscar_asignacion["sql"]);
-			//print_r("<br><br>");
+			$buscar_asignacion = busca_filtro_tabla("", "entidad_serie", "entidad_identidad=2 and estado=1 and serie_idserie=" . $x_idserie, "", $conn);			
 			$lista_dependencias=array();
 			if($buscar_asignacion["numcampos"]){
 				for($i=0;$i<$buscar_asignacion["numcampos"];$i++){
@@ -168,15 +166,6 @@ switch ($sAction) {
 				}
 				$dependencia_seleccionada = implode(",",$lista_dependencias);
 			}
-			//print_r($dependencia_seleccionada);
-			//buscar permisos asociados a la serie
-			/*$entidades=array();
-			$buscar_permisos = busca_filtro_tabla("", "permiso_serie", "estado=1 and serie_idserie=".$x_idserie, "", $conn);
-			if($buscar_permisos["numcampos"]){
-				for($i=0;$i<$buscar_permisos["numcampos"];$i++){
-					$entidades[$buscar_permisos[$i]["entidad_identidad"]][]=$buscar_permisos[$i]["llave_entidad"];
-				}
-			}*/
         break;
 }
 
@@ -238,14 +227,6 @@ function EditData($sKey) {
 
 			$fieldList["copia"] = intval($GLOBALS["x_copia"]);
 
-			/*$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_tipo_entidad"]) : $GLOBALS["x_tipo_entidad"];
-			$theValue = ($theValue != "") ? "" . $theValue . "" : "NULL";
-			$fieldList_permiso["tipo_entidad"] = $theValue;
-
-			$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_identidad"]) : $GLOBALS["x_identidad"];
-			$theValue = ($theValue != "") ? "" . $theValue . "" : "NULL";
-			$fieldList_permiso["identidad"] = $theValue;*/
-
 			$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_dependencias"]) : $GLOBALS["x_dependencias"];
 			$theValue = ($theValue != "") ? "" . $theValue . "" : "NULL";
 			$fieldList_asignacion["dependencias"] = $theValue;
@@ -261,7 +242,7 @@ function EditData($sKey) {
 		}
 		$sSql .= " WHERE idserie =" . $sKeyWrk;
 		phpmkr_query($sSql) or error("Error al actualizar la serie");
-
+		
 		if (!$fieldList["estado"]){
 			$update="UPDATE serie SET estado=0 WHERE cod_arbol like '".$datos_ant[0]["cod_arbol"].".%'";
 			phpmkr_query($update) or die("Error al inactivar las series hijas");
@@ -339,6 +320,7 @@ echo librerias_jquery("3.3");
 echo librerias_validar_formulario("11");
 echo librerias_UI("1.12");
 echo librerias_arboles_ft("2.24", 'filtro');
+
 /*$option = '<option value="">Seleccione</option>
 		   <option value="4">Asignado a Cargo(s)</option>
  		   <option value="2">Asignado a Dependencia(s)</option>
@@ -401,7 +383,7 @@ echo librerias_arboles_ft("2.24", 'filtro');
 
 		<tr class="ocultar_padre">
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">NOMBRE PADRE </span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="divserie"><?php echo $nom_padre;?><input type="text" name="x_cod_padre" id="x_cod_padre" value="<?php echo $x_cod_padre;?>" /> </div> </td>
+			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="divserie"><?php echo $nom_padre;?><!--input type="text" name="x_cod_padre" id="x_cod_padre" value="<?php echo $x_cod_padre;?>" /--> </div> </td>
 		</tr>
 
 		<tr class="ocultar">
@@ -607,7 +589,8 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 		if(x_tipo==2 || x_tipo==3){
 			tipo_serie = $("[name='x_tipo']:checked").val();
 			tvd = $("[name='x_tvd']:checked").val();
-			cod_padre=$("#x_cod_padre").val();
+			//cod_padre=$("#x_cod_padre").val();
+			cod_padre="<?php echo $x_cod_padre; ?>";
 			$(".ocultar_padre").show();
 			mostrar_papa(tipo_serie,tvd,cod_padre);
 		}
@@ -710,6 +693,7 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 						campo : "x_cod_padre",
 						busqueda_item:1,
 						selectMode:1,
+						onNodeSelect:"asignar_cod_padre",
 						ruta_db_superior: "../../"
 					},
 					type : "POST",
@@ -804,6 +788,8 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 	});
 
 	function mostrar_papa(tipo_serie,tvd,cod_padre){
+		console.log(cod_padre);
+		
 		xml = "arboles/arbol_serie.php?checkbox=radio&excluidos="+$("#x_idserie").val()+"&tipo3=0&tvd="+tvd;
 		if(tipo_serie==2){
 			xml+="&tipo2=0";
@@ -819,12 +805,15 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 				busqueda_item:1,
 				selectMode:1,
 				//onNodeSelect: "cargar_datos_padre",
+				onNodeSelect:"asignar_cod_padre",
 				ruta_db_superior: "../../"
 			},
 			type : "POST",
 			async:false,
 			success : function(html_serie) {
+				
 				$("#divserie").empty().html(html_serie);
+				$("#x_cod_padre").val(cod_padre);
 			},
 			error: function() {
 				top.noty({
@@ -835,5 +824,9 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 				});
 			}
 		});
+	}
+	function asignar_cod_padre(event,data){
+		console.log(data.node.key);
+		$("#x_cod_padre").val(data.node.key);		
 	}
 </script>

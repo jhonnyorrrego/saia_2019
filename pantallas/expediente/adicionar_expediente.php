@@ -8,7 +8,6 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-
 ?>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php include_once($ruta_db_superior."pantallas/lib/librerias_componentes.php"); ?>
@@ -29,10 +28,10 @@ ul.fancytree-container {
     border: none;
     background-color:#F5F5F5;
 }
-span.fancytree-title
-{
+span.fancytree-title 
+{  
 	font-family: Verdana,Tahoma,arial;
-	font-size: 9px;
+	font-size: 9px; 
 }
 </style>
 <?php include_once($ruta_db_superior."db.php"); ?>
@@ -90,12 +89,12 @@ $serie_padre = "";
             var valor = $(this).val();
             var numero = new Number(valor);
             var texto = "";
+
             if(numero == 1) {
                 $('#informacion_completa_expediente').hide();
                 $('#informacion_completa_expediente_adicional').hide();
-                $('#serie_idserie').val(-1);
-                $('#identidad_serie').val(-1);
-                //$('#serie_idserie').val();
+                //$('#serie_idserie').val(-1);
+                $('#serie_idserie').val();
                 texto = "Agrupador";
             } else if(numero == 0) {
                 $('#informacion_completa_expediente').show();
@@ -104,7 +103,7 @@ $serie_padre = "";
                 texto = "Expediente";
             } else { // no es agrupador = 0
             	texto = "Ninguno";
-            }
+            }            
         });
     });
 </script>
@@ -174,7 +173,7 @@ $serie_padre = "";
 	  		$cajas=busca_filtro_tabla("","caja a,entidad_caja e","a.idcaja=e.caja_idcaja and e.estado=1 and ((e.entidad_identidad=1 and e.llave_entidad=".usuario_actual('idfuncionario').") or a.funcionario_idfuncionario=".usuario_actual('idfuncionario').")","",$conn);
 				for($i=0;$i<$cajas["numcampos"];$i++){
 					$selected="";
-
+	
 					if(@$_REQUEST["fk_idcaja"]==$cajas[$i]["idcaja"]){
 						$selected="selected";
 					}
@@ -188,15 +187,15 @@ $serie_padre = "";
 	  	</select>
 	  </div>
 	</div>
-<!--/div-->
+</div>
 
 <div class="control-group element">
 	<label class="control-label" for="serie_idserie">Serie asociada *</label>
 	<div class="controls">
-
+		
 		<?php
 		$origen = array("url" => "arboles/arbol_dependencia_serie_funcionario.php", "ruta_db_superior" => $ruta_db_superior,
-		    "params" => array(
+		    "params" => array(		    	
 		        "checkbox" => 'radio',
 		        "expandir" => 1,
 		        "funcionario"=>1
@@ -206,7 +205,7 @@ $serie_padre = "";
 		$extensiones = array("filter" => array());
 		$arbol = new ArbolFt("serie_idserie", $origen, $opciones_arbol, $extensiones);
 		echo $arbol->generar_html();
-		?>
+		?>			
 	</div>
 </div>
 
@@ -294,7 +293,7 @@ $serie_padre = "";
 			</span>
 		</div>
 	</div>
-
+	
 	<div class="control-group element">
 	  <label class="control-label" for="consecutivo_inicial">Consecutivo Inicial
 	  </label>
@@ -302,7 +301,7 @@ $serie_padre = "";
 	    <input name="consecutivo_inicial" id="consecutivo_inicial" value="<?php echo($datos[0]["consecutivo_inicial"]); ?>">
 	  </div>
 	</div>
-
+	
 	<div class="control-group element">
 	  <label class="control-label" for="consecutivo_final">Consecutivo Final
 	  </label>
@@ -376,9 +375,9 @@ $serie_padre = "";
 				<!--option value="1" <?php if($datos[0]["ubicacion"]==1)echo("selected"); ?>>Central</option>
 				<option value="2" <?php if($datos[0]["ubicacion"]==2)echo("selected"); ?>>Gestion</option>
 				<option value="3" <?php if($datos[0]["ubicacion"]==3)echo("selected"); ?>>Historico</option-->
-					<option value="1" <?php
+					<option value="1" <?php 
 					if($datos[0]["estado_archivo"]==1 || $_REQUEST["estado_archivo"]==1){
-						echo("selected");
+						echo("selected"); 
 					}
 					?>
 					>Gestion</option>
@@ -431,8 +430,8 @@ $serie_padre = "";
   ?>
   <script type="text/javascript">
 
-  function cargar_info_Node(event,data){
-  	console.log(data.node.data);
+  function cargar_info_Node(event,data){	
+  	console.log(data.node.data);  	  
 	  if(data.node.selected){
 	  	$("#serie_idserie").val(data.node.data.serie_idserie);
 	  	$("#codigo_numero_serie").val(data.node.data.codigo);
@@ -457,7 +456,7 @@ $serie_padre = "";
 		/*url2="arboles/arbol_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0&checkbox=radio" + mostrar;
 		$.ajax({
 			url : "<?php echo($ruta_db_superior);?>arboles/crear_arbol_ft.php",
-
+			
 			data:{
 				xml: url2,
 				campo: "serie_idserie",
@@ -469,7 +468,7 @@ $serie_padre = "";
 			type : "POST",
 			async:false,
 			success : function(html_serie) {
-				$("#treeboxbox_tree3").empty().html(html_serie);
+				$("#treeboxbox_tree3").empty().html(html_serie);				
 			},error: function (){
 				top.noty({text: 'No se pudo cargar el arbol de series',type: 'error',layout: 'topCenter',timeout:5000});
 			}
@@ -515,15 +514,15 @@ $serie_padre = "";
   }
   });
 
-  $("#submit_formulario_expediente").click(function(){
-  	if($("#serie_idserie").val()==""){
-  		$("#serie_idserie").val(-1);
-  	}
+  $("#submit_formulario_expediente").click(function(){  	
   	if(!$('select[name=estado_archivo]').val()){
   		$("#estado_archivo").val("<?php echo $_REQUEST["estado_archivo"]; ?>");
-  		
+  		console.log($("#estado_archivo").val());
   	}
-  	//var estado_archivo = $("#estado_archivo").val();  	
+  	else{
+  		console.log($("#estado_archivo").val());
+  	}
+  	//var estado_archivo = $("#estado_archivo").val();
     if(formulario_expediente.valid()){
     	$('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
 			$(this).attr('disabled', 'disabled');

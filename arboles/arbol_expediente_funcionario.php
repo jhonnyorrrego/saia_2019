@@ -37,7 +37,7 @@ if (@$_REQUEST['estado_cierre']) {
 }
 
 //$condicion_ad = " and " . DHtmlXtreeExpedienteFunc::expedientes_asignados($conn);
-$condicion_ad = " and " . expedientes_asignados($conn);
+//$condicion_ad = " and " . expedientes_asignados($conn);
 if (isset($_REQUEST["excluidos_exp"])) {
     $condicion_ad .= " and idexpediente not in (" . $_REQUEST["excluidos_exp"] . ")";
 } else if (isset($_REQUEST["incluir_series"]) && !($estado_cierre || $estado_archivo)) {
@@ -110,7 +110,7 @@ class DHtmlXtreeExpedienteFunc {
                 $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "entidad_expediente ee join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" . $id . " and e.fk_entidad_serie in (" . $this->lista_entidades .")", "nombre ASC", $this->conn);
         }
 
-        //print_r($papas);
+       // print_r($papas);
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
                 $cerrado=false;
@@ -122,9 +122,7 @@ class DHtmlXtreeExpedienteFunc {
 
                 $hijos = busca_filtro_tabla("count(1) as cant", "entidad_expediente ee join expediente e on ee.expediente_idexpediente = e.idexpediente", "e.cod_padre=" . $papas[$i]["idexpediente"] . $this->condicion_ad, "", $this->conn);
                 $tipo_docu = busca_filtro_tabla("count(1) as cant", "serie", "tipo=3 and tvd=0 and cod_padre=" . $papas[$i]["serie_idserie"], "", $this->conn);
-
-                // print_r($tipo_docu);
-
+                
                $item = array();
 				$item["extraClasses"] = "estilo-dependencia";
 	            $item["title"] = $text;

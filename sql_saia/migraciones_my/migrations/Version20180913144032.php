@@ -1,8 +1,10 @@
 <?php
 namespace Migrations;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Types\Type;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
@@ -18,6 +20,11 @@ class Version20180913144032 extends AbstractMigration {
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
             $this->platform->registerDoctrineTypeMapping('enum', 'string');
+        }
+        if ($this->connection->getDatabasePlatform()->getName() == "oracle") {
+            //Type::addType('interval day(2) to second(6)', 'string');
+
+            $this->platform->registerDoctrineTypeMapping('interval day(2) to second(6)', "string");
         }
     }
 
@@ -48,16 +55,14 @@ class Version20180913144032 extends AbstractMigration {
 
     private function actualizar_campo(Schema $schema, $idfmt) {
         $conn = $this->connection;
+
         $result = $conn->fetchAll("select idcampos_formato from campos_formato where formato_idformato = :formato_idformato AND nombre = :nombre", [
             "formato_idformato" => $idfmt,
             "nombre" => "fk_idexpediente"
         ]);
 
         if (!empty($result)) {
-            $this->addSql("UPDATE campos_formato SET valor= :valor, etiqueta_html= :etiqueta WHERE idcampos_formato= :id",
-                ["valor" => null, "etiqueta_html" => "hidden", "id" => $result[0]["idcampos_formato"]]);
-
-            /*$datos = [
+            $datos = [
                 'valor' => null,
                 'etiqueta_html' => "hidden"
             ];
@@ -71,7 +76,7 @@ class Version20180913144032 extends AbstractMigration {
                 $conn->rollBack();
                 print_r($conn->errorInfo());
                 die("Fallo la modificacion del campo_formato");
-            }*/
+            }
         }
 
     }
@@ -107,6 +112,11 @@ class Version20180913144032 extends AbstractMigration {
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
             $this->platform->registerDoctrineTypeMapping('enum', 'string');
+        }
+        if ($this->connection->getDatabasePlatform()->getName() == "oracle") {
+            //Type::addType('interval day(2) to second(6)', 'string');
+
+            $this->platform->registerDoctrineTypeMapping('interval day(2) to second(6)', "string");
         }
     }
 
