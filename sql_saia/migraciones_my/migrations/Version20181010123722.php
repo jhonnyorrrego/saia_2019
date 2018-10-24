@@ -33,7 +33,8 @@ class Version20181010123722 extends AbstractMigration {
         $motor = $this->connection->getDatabasePlatform()->getName();
         switch ($motor) {
             case "oracle":
-                $this->addSql("ALTER TABLE EVENTO MODIFY (CODIGO_SQL DEFAULT empty_clob() NULL)");
+                //$this->addSql("ALTER TABLE EVENTO MODIFY (CODIGO_SQL DEFAULT empty_clob() NULL)");
+                $this->addSql("ALTER TABLE EVENTO MODIFY (CODIGO_SQL DEFAULT empty_clob())");
                 $this->addSql("ALTER TABLE BUZON_ENTRADA MODIFY (RUTA_IDRUTA NULL)");
                 $this->addSql("ALTER TABLE ENTIDAD_EXPEDIENTE MODIFY (ESTADO NUMBER(10) DEFAULT 1 )");
                 $this->addSql($this->modificar_vista_exp());

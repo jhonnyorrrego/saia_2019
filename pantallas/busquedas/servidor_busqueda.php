@@ -148,19 +148,19 @@ if ($datos_busqueda["numcampos"]) {
 	       $select[] = "distinct " . $datos_busqueda[0]["llave"];
 	       $distinct = false;
 	    } else {
-	        $select[] = "distinct " . $datos_busqueda[0]["llave"];
+	        $select[] =  $datos_busqueda[0]["llave"];
 	    }
 	}
 
 	if ($datos_busqueda[0]["campos"] != '') {
 	    if($distinct) {
 	        $select[] = "distinct " . $datos_busqueda[0]["campos"];
+			
 	        $distinct = false;
 	    } else {
 	        $select[] = $datos_busqueda[0]["campos"];
 	    }
-	}
-
+	}	
 
 	if ($datos_busqueda[0]["campos_adicionales"] != '') {
 		$select[] = $datos_busqueda[0]["campos_adicionales"];

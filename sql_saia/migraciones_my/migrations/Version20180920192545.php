@@ -19,6 +19,11 @@ class Version20180920192545 extends AbstractMigration {
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
             $this->platform->registerDoctrineTypeMapping('enum', 'string');
         }
+        if ($this->connection->getDatabasePlatform()->getName() == "oracle") {
+            //Type::addType('interval day(2) to second(6)', 'string');
+
+            $this->platform->registerDoctrineTypeMapping('interval day(2) to second(6)', "string");
+        }
     }
 
     /**
@@ -53,6 +58,11 @@ class Version20180920192545 extends AbstractMigration {
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
             $this->platform->registerDoctrineTypeMapping('enum', 'string');
+        }
+        if ($this->connection->getDatabasePlatform()->getName() == "oracle") {
+            //Type::addType('interval day(2) to second(6)', 'string');
+
+            $this->platform->registerDoctrineTypeMapping('interval day(2) to second(6)', "string");
         }
     }
 

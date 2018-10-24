@@ -538,19 +538,20 @@ class SqlOracle extends SQL2 {
             $resultado = FALSE;
         } else { // Now save a value to the LOB
             if ($tipo == "texto") { // para campos clob como en los formatos
-                if ($row[strtoupper($campo)]->size() > 0)
+                if ($row[strtoupper($campo)] && $row[strtoupper($campo)]->size() > 0)
+                    
                     $contenido_actual = htmlspecialchars_decode($row[strtoupper($campo)]->read($row[strtoupper($campo)]->size()));
                 else
                     $contenido_actual = "";
 
                 if ($contenido_actual != $contenido) {
-                    if ($row[strtoupper($campo)]->size() > 0 && !$row[strtoupper($campo)]->truncate()) {
+                    if ($row[strtoupper($campo)] && $row[strtoupper($campo)]->size() > 0 && !$row[strtoupper($campo)]->truncate()) {
                         oci_rollback($this->Conn->conn);
                         alerta("No se pudo modificar el campo.");
                         $resultado = FALSE;
                     } else {
                         $contenido = limpia_tabla($contenido);
-                        if (!$row[strtoupper($campo)]->save(trim((($contenido))))) {
+                        if ($row[strtoupper($campo)] && !$row[strtoupper($campo)]->save(trim((($contenido))))) {
                             oci_rollback($this->Conn->conn);
                             $resultado = FALSE;
                         } else
@@ -613,7 +614,9 @@ class SqlOracle extends SQL2 {
                     oci_commit($this->Conn->conn);
             }
             oci_free_statement($stmt);
-            $row[strtoupper($campo)]->free();
+			if ($row[strtoupper($campo)]) {
+            	$row[strtoupper($campo)]->free();
+			}
         }
         return ($resultado);
     }
