@@ -88,9 +88,9 @@ function llena_expediente($id) {
 	global $conn, $sql, $exp_doc, $funcionarios, $excluidos, $dependencias, $varios, $lista2, $estado_cierre, $estado_archivo, $checkbox;
 	$objetoJson = array();
 	if ($id == 0) {
-		$papas = busca_filtro_tabla("a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre, permiso_serie, permiso_exp", "vexpediente_serie a", $lista2 . " and (a.cod_padre=0 OR a.cod_padre IS NULL)" . $estado_cierre . $estado_archivo, "GROUP BY a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc", $conn);
+		$papas = busca_filtro_tabla("a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre, max(permiso_serie) as permiso_serie, max(permiso_exp) as permiso_exp", "vexpediente_serie a", $lista2 . " and (a.cod_padre=0 OR a.cod_padre IS NULL)" . $estado_cierre . $estado_archivo, "GROUP BY a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc", $conn);
 	} else {
-		$papas = busca_filtro_tabla("a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre, permiso_serie, permiso_exp", "vexpediente_serie a", $lista2 . " and (a.cod_padre=" . $id . ")" . $estado_cierre . $estado_archivo, "GROUP BY a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc", $conn);
+		$papas = busca_filtro_tabla("a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre, max(permiso_serie) as permiso_serie, max(permiso_exp) as permiso_exp", "vexpediente_serie a", $lista2 . " and (a.cod_padre=" . $id . ")" . $estado_cierre . $estado_archivo, "GROUP BY a.fecha, a.nombre, a.cod_arbol, a.idexpediente, estado_cierre order by idexpediente desc", $conn);
 	}
 	if ($papas["numcampos"]) {
 		for ($i = 0; $i < $papas["numcampos"]; $i++) {

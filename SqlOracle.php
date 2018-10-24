@@ -297,7 +297,8 @@ class SqlOracle extends SQL2 {
                 if (oci_execute($rs_temp)) {
                     $arreglo = oci_fetch_array($rs_temp, OCI_NUM);
                     $identificador = $arreglo[0];
-                } else {
+                } else if(defined("DEBUGEAR") && DEBUGEAR == 1){
+                	
                     $e = oci_error($this->Conn->conn);
                     trigger_error($e['message'] . " $sql_id", E_USER_ERROR);
                     die("NO HAY SECUENCIA");
