@@ -10,7 +10,6 @@ use Gaufrette\Adapter\AwsS3 as AwsS3Adapter;
 use Gaufrette\Adapter\GoogleCloudStorage;
 use Gaufrette\Adapter\Ftp as FtpAdapter;
 
-use Stringy\Stringy as String;
 use Stringy\StaticStringy as StringUtils;
 use Gaufrette\Adapter\SaiaLocalAdapter as Local;
 
@@ -83,12 +82,12 @@ class SaiaStorage {
     }
 
     public function resolver_adaptador($server_path) {
-        $str_path = String::create($server_path);
+        $str_path = Stringy::create($server_path);
         $storage_type = $str_path->first($str_path->indexOf("://"))->ensureRight("://");
 
         $ruta_resuelta = $server_path;
         // $path = $str_path->removeLeft($storage_type);
-        $path = String::create($server_path)->removeLeft($storage_type);
+        $path = Stringy::create($server_path)->removeLeft($storage_type);
         // print_r($path);die();
         switch ($storage_type) {
             case StorageUtils::LOCAL:
@@ -243,8 +242,8 @@ class SaiaStorage {
     }
 
     private function completar_ruta($filesystem1, $ruta_origen) {
-        $ruta1 = String::create($filesystem1->getAdapter()->getDirectory())->ensureRight(StorageUtils::SEPARADOR);
-        $ruta2 = String::create(dirname($ruta_origen))->removeLeft(StorageUtils::SEPARADOR);
+        $ruta1 = Stringy::create($filesystem1->getAdapter()->getDirectory())->ensureRight(StorageUtils::SEPARADOR);
+        $ruta2 = Stringy::create(dirname($ruta_origen))->removeLeft(StorageUtils::SEPARADOR);
         $adapter = new Local($ruta1->append($ruta2));
         return $adapter;
     }
@@ -296,7 +295,7 @@ class SaiaStorage {
      * @return string
      */
     public function get_ruta_servidor() {
-        $cad = String::create($this->ruta_servidor)->ensureRight(StorageUtils::SEPARADOR);
+        $cad = Stringy::create($this->ruta_servidor)->ensureRight(StorageUtils::SEPARADOR);
         return (string) $cad;
     }
 

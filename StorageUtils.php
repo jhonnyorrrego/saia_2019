@@ -13,7 +13,6 @@ use Gaufrette\Adapter\GoogleCloudStorage;
 use Gaufrette\Adapter\InMemory;
 use Gaufrette\StreamWrapper;
 
-use Stringy\Stringy as String;
 use Stringy\StaticStringy as StringUtils;
 
 use Imagine\Image\Palette\RGB;
@@ -152,14 +151,14 @@ class StorageUtils {
 
 	private static function ensure_dir_exists($destino) {
 		$adapter = null;
-		$mi_ruta = String::create(__DIR__);
+		$mi_ruta = Stringy::create(__DIR__);
 		$root = $_SERVER["DOCUMENT_ROOT"];
 		// $resto = $mi_ruta->removeLeft($root)->removeRight(self::SEPARADOR . "saia");
 		$resto = self::SEPARADOR . RUTA_SCRIPT;
 
 		$root .= $resto;
 
-		$str_path = String::create($destino);
+		$str_path = Stringy::create($destino);
 		$storage_type = $str_path -> first($str_path -> indexOf("://")) -> ensureRight("://");
 		$path = $str_path -> removeLeft($storage_type);
 
@@ -167,7 +166,7 @@ class StorageUtils {
 			case self::LOCAL :
 			case self::NETWORK :
 				if (StringUtils::startsWith($path, "..")) {
-					$path = String::create($path) -> trimLeft(".." . self::SEPARADOR) -> removeRight(self::SEPARADOR) -> ensureLeft(self::SEPARADOR);
+					$path = Stringy::create($path) -> trimLeft(".." . self::SEPARADOR) -> removeRight(self::SEPARADOR) -> ensureLeft(self::SEPARADOR);
 					$adapter = new Local($root . $path, true, 0777);
 				} else {
 					$adapter = new Local($path, true, 0777);
@@ -183,7 +182,7 @@ class StorageUtils {
 				'secret' => SECRET_AWS, ],
 				'version' => 'latest',
 				'region' => REGION_AWS, ]);
-				$path = String::create($path) -> removeRight(StorageUtils::SEPARADOR);
+				$path = Stringy::create($path) -> removeRight(StorageUtils::SEPARADOR);
 				$adapter = new AwsS3Adapter($s3client, $path);
 				break;
 			default :
@@ -204,7 +203,7 @@ class StorageUtils {
 	public static function resolver_ruta($path) {
 		$resp = array("error" => true);
 
-		$ruta = String::create($path);
+		$ruta = Stringy::create($path);
 
 		$almacenamiento = null;
 		if ($ruta -> isJson()) {
@@ -212,7 +211,7 @@ class StorageUtils {
 			/*$ruta_resuelta = static::parsear_ruta_servidor($rutaj->servidor);
 			 $rutaj->servidor = (string)$ruta_resuelta["servidor"];
 			 if(!empty($ruta_resuelta["ruta"])) {
-			 $ruta_compuesta = String::create($ruta_resuelta["ruta"]);
+			 $ruta_compuesta = Stringy::create($ruta_resuelta["ruta"]);
 			 $rutaj->ruta = (string)$ruta_compuesta->ensureRight(static::SEPARADOR)->append($rutaj->ruta);
 			 }*/
 			$almacenamiento = SaiaStorage::con_ruta_servidor($rutaj -> servidor);
@@ -232,13 +231,13 @@ class StorageUtils {
 				}
 			}
 
-			$str_path = String::create($path);
+			$str_path = Stringy::create($path);
 			$posibles = array();
 			foreach ($constantes as $key => $value) {
 				if ($str_path -> startsWith($value)) {
 					$posibles[] = $value;
 				} else {
-					$str_const = String::create($value);
+					$str_const = Stringy::create($value);
 					if ($str_const -> contains("://")) {
 						$storage_type = $str_const -> first($str_const -> indexOf("://")) -> ensureRight("://");
 						$otra_ruta = $str_const -> removeLeft($storage_type);
@@ -258,7 +257,7 @@ class StorageUtils {
 
 				$ruta_compuesta = (string)$str_path -> removeLeft($mejor_opcion);
 				if (!empty($ruta_resuelta["ruta"])) {
-					$ruta_compuesta = String::create($ruta_resuelta["ruta"]);
+					$ruta_compuesta = Stringy::create($ruta_resuelta["ruta"]);
 				}
 
 				$almacenamiento = new SaiaStorage($ruta_resuelta["servidor"]);
@@ -280,7 +279,7 @@ class StorageUtils {
 	 */
 	private static function parsear_ruta_servidor($ruta_servidor) {
 		//debug_print_backtrace();
-		$str_ruta = String::create($ruta_servidor);
+		$str_ruta = Stringy::create($ruta_servidor);
 		$storage_type = $str_ruta -> first($str_ruta -> indexOf("://")) -> ensureRight("://");
 		$str_ruta = $str_ruta -> removeLeft($storage_type);
 		$rutas = $str_ruta -> removeLeft(static::SEPARADOR) -> split(static::SEPARADOR);
@@ -294,7 +293,7 @@ class StorageUtils {
 			//Tener en cuenta la letra de la unidad si esta en la raiz
 			if (SO == "Windows") {
 				if (preg_match("/^([a-zA-Z]:)/", $str_ruta, $unidad)) {
-					$str_ruta = String::create(preg_replace("/^[a-zA-Z]:/", '', $str_ruta));
+					$str_ruta = Stringy::create(preg_replace("/^[a-zA-Z]:/", '', $str_ruta));
 					if ($str_ruta -> startsWith(StorageUtils::SEPARADOR)) {
 						$prefijo_servidor = $unidad[0] . StorageUtils::SEPARADOR;
 					}
@@ -305,11 +304,11 @@ class StorageUtils {
 				}
 			}
 
-			$ruta_srv = String::create($rutas[0]) -> prepend($prefijo_servidor) -> prepend($storage_type);
+			$ruta_srv = Stringy::create($rutas[0]) -> prepend($prefijo_servidor) -> prepend($storage_type);
 			if (count($rutas) > 1) {
 				unset($rutas[0]);
 				$resto = implode(static::SEPARADOR, $rutas);
-				$resto = String::create($resto) -> removeRight(static::SEPARADOR);
+				$resto = Stringy::create($resto) -> removeRight(static::SEPARADOR);
 			}
 		}
 		$resp = array(
