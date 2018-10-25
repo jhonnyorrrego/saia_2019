@@ -13,6 +13,7 @@ use Gaufrette\Adapter\GoogleCloudStorage;
 use Gaufrette\Adapter\InMemory;
 use Gaufrette\StreamWrapper;
 
+use Stringy\Stringy;
 use Stringy\StaticStringy as StringUtils;
 
 use Imagine\Image\Palette\RGB;
@@ -74,7 +75,7 @@ class StorageUtils {
 				//Usar el tipo. Ej. BACKUP
 				$server_path = $tipo;
 		}
-		
+
 		$filesystem = static::ensure_dir_exists($server_path);
 		if ($cadena) {
 			return $filesystem -> getAdapter() -> getDirectory();
@@ -90,7 +91,7 @@ class StorageUtils {
 	 */
 	public static function get_binary_file($vector_ruta, $img_blanco = true) {
 		$pdf = @$_REQUEST["tipo"] == 5;
-		$tipo_pdf = $_REQUEST['tipo_pdf'];
+		$tipo_pdf = $_REQUEST['tipo_pdf'] ?? null;
 		$resolver_ruta = static::resolver_ruta($vector_ruta);
 		$ruta = $resolver_ruta['ruta'];
 		$tipo_almacenamiento = $resolver_ruta['clase'];

@@ -128,7 +128,7 @@ if(@$_SESSION["tipo_dispositivo"]=="movil"){
       <div id="loginForm" class="row-fluid">
       	<div id="contenedor_login" class="<?php echo($estilo_form); ?>">
             <form method="post" name="loguin" id="formulario_login" action="login.php">
-            <?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
+            <?php if(isset($_SESSION["tipo_dispositivo"]) && $_SESSION["tipo_dispositivo"]=="movil"){ ?>
                 <div class="control-group">
                     <label class="control-label blueTexts" for="inputEmail">Nombre de usuario:</label>
                     <div class="controls">

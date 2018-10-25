@@ -11,10 +11,10 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 
 $objetoJson = array(
-    "key" => 0    
+    "key" => 0
 );
 
-if ($_REQUEST["id"] && $_REQUEST["cargar_partes"]) {
+if (isset($_REQUEST["id"]) && $_REQUEST["id"] && $_REQUEST["cargar_partes"]) {
     $objetoJson = array();
     $id = explode(".", $_REQUEST["id"]);
     $hijos_dep = array();
@@ -119,8 +119,8 @@ function llena_dependencia($id, $tipo = 0, $partes = false) {
             $item = array();
             $item["extraClasses"] = "estilo-dependencia";
             $item["title"] = $text;
-            $item["key"] = $papas[$i]["iddependencia"] . ".0." . $tipo;			
-			//$item["expanded"]=true; 
+            $item["key"] = $papas[$i]["iddependencia"] . ".0." . $tipo;
+			//$item["expanded"]=true;
             $hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"], "", $conn);
             $serie = busca_filtro_tabla("count(*) as cant", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $papas[$i]["iddependencia"] . " and s.tvd=" . $tipo . " and (s.cod_padre=0 or s.cod_padre is null)", "", $conn);
             $dependencias_hijas = array();
@@ -160,7 +160,7 @@ function llena_serie($id, $iddep, $tipo = 0) {
     if ($papas["numcampos"]) {
         for ($i = 0; $i < $papas["numcampos"]; $i++) {
         	$identidad_serie=$papas[$i]["identidad_serie"];
-        	
+
             $text = $papas[$i]["nombre"] . " (" . $papas[$i]["codigo"] . ")";
             if ($papas[$i]["estado"] == 0) {
                 $text .= " - INACTIVO";
@@ -169,7 +169,7 @@ function llena_serie($id, $iddep, $tipo = 0) {
             $item["extraClasses"] = "estilo-serie";
             $item["title"] = $text;
             $item["key"] = $iddep . "." . $papas[$i]["idserie"] . "." . $tipo;
-            
+
             $item["data"] = array("entidad_serie"=>$identidad_serie);
 			//$item["expanded"]=true;
             $hijos = busca_filtro_tabla("count(*) as cant", "serie", "tvd=" . $tipo . "  and cod_padre=" . $papas[$i]["idserie"] . " and categoria=2", "", $conn);
@@ -202,7 +202,7 @@ function llena_serie_sin_asignar($id, $inicio = 0) {
                 $text .= " - INACTIVO";
             }
             $item = array();
-            $asig = busca_filtro_tabla("count(*) as cant", "entidad_serie", "estado=1 and serie_idserie=" . $papas[$i]["idserie"], "");
+            $asig = busca_filtro_tabla("count(*) as cant", "entidad_serie", "estado=1 and serie_idserie=" . $papas[$i]["idserie"], "", $conn);
             $style = "estilo-serie";
             if ($asig[0]["cant"] == 0 && $papas[$i]["tipo"] != 3) {
                 $style = "estilo-serie-sa";

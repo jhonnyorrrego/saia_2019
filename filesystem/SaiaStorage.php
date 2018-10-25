@@ -10,6 +10,7 @@ use Gaufrette\Adapter\AwsS3 as AwsS3Adapter;
 use Gaufrette\Adapter\GoogleCloudStorage;
 use Gaufrette\Adapter\Ftp as FtpAdapter;
 
+use Stringy\Stringy;
 use Stringy\StaticStringy as StringUtils;
 use Gaufrette\Adapter\SaiaLocalAdapter as Local;
 
@@ -124,7 +125,7 @@ class SaiaStorage {
                 );
                 if (count($rutas)) {
                     $balde = $rutas[0]->__toString();
-                    if (count($rutas > 1)) {
+                    if (count($rutas ) > 1) {
                         $rutas = explode('/', $path->__toString());
                         unset($rutas[0]);
                         $opciones['directory'] = implode("/", $rutas);

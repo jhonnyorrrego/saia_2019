@@ -5,10 +5,6 @@ include_once ("SqlSqlServer.php");
 include_once ("SqlOracle.php");
 include_once ("SqlMsSql.php");
 include_once ("SqlPostgres.php");
-use SqlMysql;
-use SqlSqlServer;
-use SqlOracle;
-use SqlMsSql;
 
 abstract class SQL2 {
 	protected $consulta;

@@ -36,7 +36,7 @@ if (isset($_SESSION["LOGIN" . LLAVE_SAIA]) && $_SESSION["LOGIN" . LLAVE_SAIA]) {
 	$_SESSION["ruta_temp_funcionario"] = $ruta_temp_func . "_" . $_SESSION["LOGIN" . LLAVE_SAIA]."/";
 }
 
-if ($_REQUEST['idfunc'] && !isset($_SESSION["LOGIN" . LLAVE_SAIA])) {//Utilizado para la generacion del PDF
+if (isset($_REQUEST['idfunc']) && $_REQUEST['idfunc'] && !isset($_SESSION["LOGIN" . LLAVE_SAIA])) {//Utilizado para la generacion del PDF
 	include_once ('pantallas/lib/librerias_cripto.php');
 	$idfuncionario_crypto = decrypt_blowfish($_REQUEST["idfunc"], LLAVE_SAIA_CRYPTO);
 	$fun = busca_filtro_tabla("login,funcionario_codigo,idfuncionario", "funcionario", "estado=1 and idfuncionario=" . $idfuncionario_crypto, "", $conn);
@@ -3114,7 +3114,7 @@ function almacenar_sesion($exito, $login) {
 		$login = usuario_actual("login");
 		$id = usuario_actual("idfuncionario");
 	} else {
-		$id = $_SESSION["idfuncionario"];
+		$id = $_SESSION["idfuncionario"] ?? null;
 	}
 	$iplocal = getRealIP();
 	$ipremoto = servidor_remoto();
@@ -3157,10 +3157,10 @@ function almacenar_sesion($exito, $login) {
 			$_SESSION["idsesion_php"] = session_id();
 			$sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,idsesion_php,fecha,funcionario_idfuncionario) VALUES('" . $iplocal . "','" . $ipremoto . "','" . $login . "'," . $exito . ",'" . $_SESSION["idsesion_php"] . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . "," . $id . ")";
 			$datos["mensaje"] = "Sesion creada";
+			$conn -> Ejecutar_Sql($sql);
 		} else {
 			$datos["mensaje"] = "Sesion ya existe";
 		}
-		$conn -> Ejecutar_Sql($sql);
 	}
 	return ($datos);
 }
