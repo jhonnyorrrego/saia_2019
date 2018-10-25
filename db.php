@@ -462,8 +462,7 @@ global $conn;
 	if($conn) {
 		$sqleve = "";
 		$sql = trim($strsql);
-		$sql = str_replace(" =", "=", $sql);
-		$sql = str_replace("= ", "=", $sql);
+		$sql = preg_replace("/\s*=\s*/", "=", $sql);		
 		$accion = strtoupper(substr($sql, 0, strpos($sql, ' ')));
 		$llave = 0;
 		$tabla = "";
@@ -486,11 +485,11 @@ global $conn;
 				$rs = $conn->Ejecutar_Sql($strsql);
 
 				$llave = $conn->Ultimo_Insert();
-				preg_match("/insert into (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
+				preg_match("/insert into (\w*\.)*(\w+)/i", strtolower($strsql), $resultados);
 				if(isset($resultados[2])) {
 					$tabla = $resultados[2];
 				} else {
-					preg_match("/insert all into (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
+					preg_match("/insert all into (\w*\.)*(\w+)/i", strtolower($strsql), $resultados);
 					if(isset($resultados[2])) {
 						$tabla = $resultados[2];
 					} else {
@@ -500,10 +499,10 @@ global $conn;
 				guardar_evento($strsql, $llave, $tabla, $func, "ADICIONAR");
 				break;
 			case ('UPDATE'):
-				preg_match("/update (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
+				preg_match("/update (\w*\.)*(\w+)/i", strtolower($strsql), $resultados);
 				$tabla = $resultados[2];
 				//preg_match("/where (.+)=(.*)/", strtolower($strsql), $resultados);
-				preg_match("/where (.+)=([\w]+|'[\w]+')/", strtolower($strsql), $resultados);
+				preg_match("/where (.+)\s*=\s*([\w]+|'[\w]+')/i", strtolower($strsql), $resultados);
 				$llave = trim($resultados[2]);
 				$llave = str_replace("'","",$llave);
 				$campo_llave = $resultados[1];
@@ -532,10 +531,10 @@ global $conn;
 				}
 				break;
 			case ('DELETE'):
-				preg_match("/delete from (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
+				preg_match("/delete from (\w*\.)*(\w+)/i", strtolower($strsql), $resultados);
 				$tabla = $resultados[2];
 				//preg_match("/where (.+)=(.*)/", strtolower($strsql), $resultados);
-				preg_match("/where (.+)=([\w]+|'[\w]+')/", strtolower($strsql), $resultados);
+				preg_match("/where (.+)\s*=\s*([\w]+|'[\w]+')/i", strtolower($strsql), $resultados);
 				$llave = trim($resultados[2]);
 				$llave = str_replace("'","",$llave);
 				$campo_llave = $resultados[1];
