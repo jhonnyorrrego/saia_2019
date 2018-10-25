@@ -36,7 +36,7 @@ class ChainAdapter implements AdapterInterface, PruneableInterface, ResettableIn
      * @param CacheItemPoolInterface[] $adapters        The ordered list of adapters used to fetch cached items
      * @param int                      $defaultLifetime The default lifetime of items propagated from lower adapters to upper ones
      */
-    public function __construct(array $adapters, $defaultLifetime = 0)
+    public function __construct(array $adapters, int $defaultLifetime = 0)
     {
         if (!$adapters) {
             throw new InvalidArgumentException('At least one adapter must be specified.');
@@ -44,7 +44,7 @@ class ChainAdapter implements AdapterInterface, PruneableInterface, ResettableIn
 
         foreach ($adapters as $adapter) {
             if (!$adapter instanceof CacheItemPoolInterface) {
-                throw new InvalidArgumentException(sprintf('The class "%s" does not implement the "%s" interface.', get_class($adapter), CacheItemPoolInterface::class));
+                throw new InvalidArgumentException(sprintf('The class "%s" does not implement the "%s" interface.', \get_class($adapter), CacheItemPoolInterface::class));
             }
 
             if ($adapter instanceof AdapterInterface) {
@@ -53,7 +53,7 @@ class ChainAdapter implements AdapterInterface, PruneableInterface, ResettableIn
                 $this->adapters[] = new ProxyAdapter($adapter);
             }
         }
-        $this->adapterCount = count($this->adapters);
+        $this->adapterCount = \count($this->adapters);
 
         $this->syncItem = \Closure::bind(
             function ($sourceItem, $item) use ($defaultLifetime) {

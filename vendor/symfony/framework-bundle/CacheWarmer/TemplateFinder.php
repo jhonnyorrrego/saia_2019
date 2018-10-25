@@ -11,11 +11,11 @@
 
 namespace Symfony\Bundle\FrameworkBundle\CacheWarmer;
 
-use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Templating\TemplateNameParserInterface;
 use Symfony\Component\Templating\TemplateReferenceInterface;
-use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 
 /**
  * Finds all the templates.
@@ -34,7 +34,7 @@ class TemplateFinder implements TemplateFinderInterface
      * @param TemplateNameParserInterface $parser  A TemplateNameParserInterface instance
      * @param string                      $rootDir The directory where global templates can be stored
      */
-    public function __construct(KernelInterface $kernel, TemplateNameParserInterface $parser, $rootDir)
+    public function __construct(KernelInterface $kernel, TemplateNameParserInterface $parser, string $rootDir)
     {
         $this->kernel = $kernel;
         $this->parser = $parser;

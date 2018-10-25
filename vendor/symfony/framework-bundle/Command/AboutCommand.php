@@ -11,6 +11,7 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Command;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Helper;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,9 +25,9 @@ use Symfony\Component\HttpKernel\KernelInterface;
  *
  * @author Roland Franssen <franssen.roland@gmail.com>
  *
- * @final since version 3.4
+ * @final
  */
-class AboutCommand extends ContainerAwareCommand
+class AboutCommand extends Command
 {
     protected static $defaultName = 'about';
 
@@ -69,7 +70,7 @@ EOT
             new TableSeparator(),
             array('<info>Kernel</>'),
             new TableSeparator(),
-            array('Type', get_class($kernel)),
+            array('Type', \get_class($kernel)),
             array('Name', $kernel->getName()),
             array('Environment', $kernel->getEnvironment()),
             array('Debug', $kernel->isDebug() ? 'true' : 'false'),
@@ -84,9 +85,9 @@ EOT
             array('Architecture', (PHP_INT_SIZE * 8).' bits'),
             array('Intl locale', class_exists('Locale', false) && \Locale::getDefault() ? \Locale::getDefault() : 'n/a'),
             array('Timezone', date_default_timezone_get().' (<comment>'.(new \DateTime())->format(\DateTime::W3C).'</>)'),
-            array('OPcache', extension_loaded('Zend OPcache') && ini_get('opcache.enable') ? 'true' : 'false'),
-            array('APCu', extension_loaded('apcu') && ini_get('apc.enabled') ? 'true' : 'false'),
-            array('Xdebug', extension_loaded('xdebug') ? 'true' : 'false'),
+            array('OPcache', \extension_loaded('Zend OPcache') && ini_get('opcache.enable') ? 'true' : 'false'),
+            array('APCu', \extension_loaded('apcu') && ini_get('apc.enabled') ? 'true' : 'false'),
+            array('Xdebug', \extension_loaded('xdebug') ? 'true' : 'false'),
         );
 
         if ($dotenv = self::getDotenvVars()) {
@@ -102,12 +103,12 @@ EOT
         $io->table(array(), $rows);
     }
 
-    private static function formatPath($path, $baseDir = null)
+    private static function formatPath(string $path, string $baseDir = null): string
     {
         return null !== $baseDir ? preg_replace('~^'.preg_quote($baseDir, '~').'~', '.', $path) : $path;
     }
 
-    private static function formatFileSize($path)
+    private static function formatFileSize(string $path): string
     {
         if (is_file($path)) {
             $size = filesize($path) ?: 0;
@@ -121,14 +122,14 @@ EOT
         return Helper::formatMemory($size);
     }
 
-    private static function isExpired($date)
+    private static function isExpired(string $date): bool
     {
         $date = \DateTime::createFromFormat('m/Y', $date);
 
         return false !== $date && new \DateTime() > $date->modify('last day of this month 23:59:59');
     }
 
-    private static function getDotenvVars()
+    private static function getDotenvVars(): array
     {
         $vars = array();
         foreach (explode(',', getenv('SYMFONY_DOTENV_VARS')) as $name) {
