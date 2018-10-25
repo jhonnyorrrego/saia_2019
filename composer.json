@@ -17,7 +17,8 @@
 		"smalot/pdfparser": "*",
 		"tecnickcom/tcpdf": "*",
 		"mpdf/mpdf": "*",
-		"aws/aws-sdk-php": "*"
+		"aws/aws-sdk-php": "*",
+		"symfony/yaml": "^4.1"
 	},
 	"extra": {
 		"class": "Corley\\Composer\\MyHook"

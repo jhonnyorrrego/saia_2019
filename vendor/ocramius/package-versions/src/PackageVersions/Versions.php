@@ -75,11 +75,12 @@ final class Versions
   'symfony/polyfill-mbstring' => 'v1.9.0@d0cd638f4634c16d8df4508e847f14e9e43168b8',
   'symfony/process' => 'v4.1.6@ee33c0322a8fee0855afcc11fff81e6b1011b529',
   'symfony/routing' => 'v4.1.6@537803f0bdfede36b9acef052d2e4d447d9fa0e9',
+  'symfony/yaml' => 'v4.1.6@367e689b2fdc19965be435337b50bc8adf2746c9',
   'tecnickcom/tcpdf' => '6.2.26@367241059ca166e3a76490f4448c284e0a161f15',
   'zendframework/zend-code' => '3.3.1@c21db169075c6ec4b342149f446e7b7b724f95eb',
   'zendframework/zend-escaper' => '2.6.0@31d8aafae982f9568287cb4dce987e6aff8fd074',
   'zendframework/zend-eventmanager' => '3.2.1@a5e2583a211f73604691586b8406ff7296a946dd',
-  '__root__' => 'dev-saia_basic4_php7@524457e387edbb5b025c3c42304c5d77fb7ac04f',
+  '__root__' => 'dev-saia_basic4_php7@940219838531d0492a17e776fabf19d191d781fe',
 );
 
     private function __construct()
