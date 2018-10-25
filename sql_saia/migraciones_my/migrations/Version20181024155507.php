@@ -4,6 +4,7 @@ namespace Migrations;
 
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Types\Type;
 
 /**
  * Auto-generated Migration: Please modify to your needs!
@@ -18,6 +19,11 @@ class Version20181024155507 extends AbstractMigration
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
             $this->platform->registerDoctrineTypeMapping('enum', 'string');
+        }
+        if ($this->connection->getDatabasePlatform()->getName() == "oracle") {
+            //Type::addType('interval day(2) to second(6)', 'string');
+
+            $this->platform->registerDoctrineTypeMapping('interval day(2) to second(6)', "string");
         }
     }
     /**
@@ -90,7 +96,7 @@ class Version20181024155507 extends AbstractMigration
         if (!empty($result)) {           
             foreach ($result as $row) {
                 $data = [
-                    'agrupador_por' => 'a.idexpediente,a.fecha,a.nombre,a.descripcion,a.cod_arbol,a.estado_cierre,a.nombre_serie,a.propietario,agrupador,B.iddocumento,B.fecha, B.numero,B.descripcion,B.estado,B.serie,B.tipo_radicado,B.plantilla,B.fecha_limiteexpediente_documento'
+                    'agrupado_por' => 'a.idexpediente,a.fecha,a.nombre,a.descripcion,a.cod_arbol,a.estado_cierre,a.nombre_serie,a.propietario,agrupador,B.iddocumento,B.fecha, B.numero,B.descripcion,B.estado,B.serie,B.tipo_radicado,B.plantilla,B.fecha_limiteexpediente_documento'
                 ];
                 $ident = [
                     'idbusqueda_componente' => $row["idbusqueda_componente"]

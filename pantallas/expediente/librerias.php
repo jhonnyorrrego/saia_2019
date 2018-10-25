@@ -271,7 +271,7 @@ function vincular_documento_expediente($idexp, $iddoc) {
     global $conn;
     $existe = busca_filtro_tabla("idexpediente_doc", "expediente_doc", "expediente_idexpediente=" . $idexp . " and documento_iddocumento=" . $iddoc, "", $conn);
     if (!$existe['numcampos']) {
-        $sql2 = "insert into expediente_doc(expediente_idexpediente,documento_iddocumento) values('" . $idexp . "','" . $iddoc . "')";
+        $sql2 = "insert into expediente_doc(expediente_idexpediente,documento_iddocumento,fecha) values('" . $idexp . "','" . $iddoc . "', " . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
         phpmkr_query($sql2);
     }
     return;
