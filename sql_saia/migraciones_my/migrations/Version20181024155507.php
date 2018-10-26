@@ -128,7 +128,7 @@ class Version20181024155507 extends AbstractMigration
 			$table3->addColumn("papel", "string", ["length" => 50, "default" => 'letter']);
 			$table3->addColumn("exportar", "string", ["length" => 255, "default" => 'pdf']);
 			$table3->addColumn("funcionario_idfuncionario", "integer", ["length" => 11, "default" => 0]);
-			$table3->addColumn("fecha", "date", ["default"=> "CURRENT_TIMESTAMP"]);
+			$table3->addColumn("fecha", "date", ["default"=> $this->connection->getDatabasePlatform()->getCurrentTimestampSQL()]);
 			$table3->addColumn("imagen", "string", ["length" => 255]);
 			$table3->addColumn("ayuda", "string", ["length" => 400]);
 			$table3->addColumn("font_size", "string", ["length" => 4, "default" => '12']);
