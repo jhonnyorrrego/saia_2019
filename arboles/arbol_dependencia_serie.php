@@ -202,7 +202,7 @@ function llena_serie_sin_asignar($id, $inicio = 0) {
                 $text .= " - INACTIVO";
             }
             $item = array();
-            $asig = busca_filtro_tabla("count(*) as cant", "entidad_serie", "estado=1 and serie_idserie=" . $papas[$i]["idserie"], "");
+            $asig = busca_filtro_tabla("count(*) as cant", "entidad_serie", "estado=1 and serie_idserie=" . $papas[$i]["idserie"], "",$conn);
             $style = "estilo-serie";
             if ($asig[0]["cant"] == 0 && $papas[$i]["tipo"] != 3) {
                 $style = "estilo-serie-sa";
