@@ -115,7 +115,7 @@ class Version20181024155507 extends AbstractMigration
             
 			$table3->addColumn("nombre", "string", ["length" => 255] );
 			$table3->addColumn("etiqueta", "string", ["length" => 255] );
-			$table3->addColumn("formato_padre", "number", ["length" => 11, "default" => 0]);
+			$table3->addColumn("formato_padre", "integer", ["length" => 11, "default" => 0]);
 			$table3->addColumn("ruta_mostrar", "string", ["length" => 255]);
 			$table3->addColumn("librerias", "string", ["length" => 255]);
 			$table3->addColumn("estilos", "string", ["length" => 255]);
@@ -127,7 +127,7 @@ class Version20181024155507 extends AbstractMigration
 			$table3->addColumn("orientacion", "string", ["length" => 50]);
 			$table3->addColumn("papel", "string", ["length" => 50, "default" => 'letter']);
 			$table3->addColumn("exportar", "string", ["length" => 255, "default" => 'pdf']);
-			$table3->addColumn("funcionario_idfuncionario", "number", ["length" => 11, "default" => 0]);
+			$table3->addColumn("funcionario_idfuncionario", "integer", ["length" => 11, "default" => 0]);
 			$table3->addColumn("fecha", "date", ["default"=> "CURRENT_TIMESTAMP"]);
 			$table3->addColumn("imagen", "string", ["length" => 255]);
 			$table3->addColumn("ayuda", "string", ["length" => 400]);
