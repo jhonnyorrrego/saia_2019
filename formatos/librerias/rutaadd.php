@@ -1116,8 +1116,8 @@ function cancelar_ruta($doc,$plantilla){
 	phpmkr_query($sql1);
 	$sql1="UPDATE documento SET activa_admin=0 WHERE iddocumento=".$doc;
 	phpmkr_query($sql1);
-	//$usuario = $_SESSION["usuario_actual"];
-	$usuario = usuario_actual("funcionario_codigo");
+	$usuario = $_SESSION["usuario_actual"];
+	
 	$radicador = busca_filtro_tabla("F.funcionario_codigo as codigo","configuracion A,funcionario F","A.nombre like 'radicador_salida' and A.valor like F.login","",$conn);
 	$sql="INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio) VALUES(".$usuario.",'ACTIVO',".$radicador[0]["codigo"].",NULL,'POR_APROBAR',".$doc.",1,1,1)";
 	phpmkr_query($sql,$conn) or error("No se puede Generar una Ruta");

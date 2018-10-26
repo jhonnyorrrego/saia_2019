@@ -2176,8 +2176,12 @@ class GenerarFormato {
     private function arma_funcion($nombre, $parametros, $accion) {
         if ($parametros != "" && $accion != "adicionar" && $accion != 'buscar')
             $parametros .= ",";
-        if ($accion == "mostrar")
-            $texto = "<?php " . $nombre . "(" . $parametros . "$" . "_REQUEST['iddoc']);? >";
+        if ($accion == "mostrar"){
+        	$texto = '<?php if(isset($_REQUEST["iddoc"])){';
+        		$texto.= $nombre . "(" . $parametros . "$" . "_REQUEST['iddoc']);";
+        	$texto.='}?>';
+        }
+            
         elseif ($accion == "adicionar")
             $texto = "<?php " . $nombre . "(" . $parametros . ");? >";
         elseif ($accion == "editar")

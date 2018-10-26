@@ -3631,21 +3631,21 @@ function parsear_comilla_sencilla_cadena($cadena){
 	global $conn;
 	$cadena_original=$cadena;
 	$cadena_sinespacios=trim($cadena);
-	$cadena_minuscula=strtolower($cadena_sinespacios);
+//	$cadena_minuscula=strtolower($cadena_sinespacios);
 	$parseada=0;
-	if( substr($cadena_minuscula,0,6)=='select' ){
-		$findme   = "'";
-		$pos = strpos($cadena, $findme);
-		if ($pos !== false) {  //fue encontrada
-			$motor=$conn->motor;
-			$vector_replaces=array('Oracle'=>"''",'MySql'=>"''",'SqlServer'=>"''",'MSSql'=>"''");
-			$cadena=str_replace("'",$vector_replaces[$motor],$cadena);
+	if(preg_match('/^select/i',$cadena_sinespacios)){
+		//$findme   = "'";
+		//$pos = strpos($cadena, $findme);
+		if (preg_match("/'/",$cadena)) {  //fue encontrada
+			/*$motor=$conn->motor;
+			$vector_replaces=array('Oracle'=>"''",'MySql'=>"''",'SqlServer'=>"''",'MSSql'=>"''");*/
+			$cadena=str_replace("'","''",$cadena);
 			$parseada=1;
 		}
 	}else{
-		$findme   = "'";
-		$pos = strpos($cadena, $findme);
-		if ($pos !== false) {  //fue encontrada
+		//$findme   = "'";
+		//$pos = strpos($cadena, $findme);
+		if (preg_match("/'/",$cadena)) {  //fue encontrada
 			$cadena=str_replace("'","''",$cadena);
 			$parseada=1;
 		}
