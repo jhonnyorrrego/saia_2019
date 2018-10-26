@@ -96,7 +96,7 @@ class Version20181024155507 extends AbstractMigration
         if (!empty($result)) {
             foreach ($result as $row) {
                 $data = [
-                    'agrupado_por' => 'a.idexpediente,a.fecha,a.nombre,a.descripcion,a.cod_arbol,a.estado_cierre,a.nombre_serie,a.propietario,agrupador,B.iddocumento,B.fecha, B.numero,B.descripcion,B.estado,B.serie,B.tipo_radicado,B.plantilla,B.fecha_limiteexpediente_documento'
+                    'agrupado_por' => 'a.idexpediente,a.fecha,a.nombre,a.descripcion,a.cod_arbol,a.estado_cierre,a.nombre_serie,a.propietario,agrupador,B.iddocumento,B.fecha, B.numero,B.descripcion,B.estado,B.serie,B.tipo_radicado,B.plantilla,B.fecha_limite'
                 ];
                 $ident = [
                     'idbusqueda_componente' => $row["idbusqueda_componente"]

@@ -32,8 +32,8 @@ $tipo_serie = array(
     2 => "Subserie",
     3 => "Tipo documental"
 );
-
 $sAction = @$_POST["a_add"];
+
 switch ($sAction) {
     case "A":
         $x_idserie = @$_POST["x_idserie"];
@@ -79,8 +79,8 @@ switch ($sAction) {
             exit();
         }
         break;
-    default:
-        $sKey = $_REQUEST["x_idserie"];
+    default:		
+        $sKey = isset($_REQUEST["x_idserie"])? $_REQUEST["x_idserie"]:null;
         $x_idserie = Null;
         $x_nombre = Null;
         $x_cod_padre = Null;
@@ -98,9 +98,13 @@ switch ($sAction) {
         $x_tvd = Null;
 
         $disabled="";
-
-        $info_padre = busca_filtro_tabla("", "serie", "idserie=" . $sKey, "", $conn);
-
+		
+		if(!empty($sKey)){
+			$info_padre = busca_filtro_tabla("", "serie", "idserie=" . $sKey, "", $conn);
+		}
+		else{
+			$info_padre=array("numcampos"=>0);				
+		}
         $nom_padre = "";
         $x_tipo = Null;
         if ($info_padre["numcampos"]) {
@@ -139,16 +143,18 @@ switch ($sAction) {
 			}
 
 			//buscar permisos asociados a la serie
-			$entidades=array();
+			/*$entidades=array();
 			$buscar_permisos = busca_filtro_tabla("", "permiso_serie", "estado=1 and serie_idserie=".$sKey, "", $conn);
 			if($buscar_permisos["numcampos"]){
 				for($i=0;$i<$buscar_permisos["numcampos"];$i++){
 					$entidades[$buscar_permisos[$i]["entidad_identidad"]][]=$buscar_permisos[$i]["llave_entidad"];
 				}
-			}
+			}*/
         }
         break;
-}
+    }
+
+ 
 
 function AddData($conn) {
     $fieldList = array();
