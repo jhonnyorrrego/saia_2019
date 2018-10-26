@@ -39,7 +39,7 @@ class Version20181024155507 extends AbstractMigration
             ];
             $tabla->changeColumn('indice_uno', $opciones);
         }
-		
+
 		$tabla = $schema->getTable('expediente');
 
         if ($tabla->hasColumn('indice_dos')) {
@@ -48,7 +48,7 @@ class Version20181024155507 extends AbstractMigration
             ];
             $tabla->changeColumn('indice_dos', $opciones);
         }
-		
+
 		$tabla = $schema->getTable('expediente');
 
         if ($tabla->hasColumn('indice_tres')) {
@@ -57,7 +57,7 @@ class Version20181024155507 extends AbstractMigration
             ];
             $tabla->changeColumn('indice_tres', $opciones);
         }
-        
+
 		$tabla = $schema->getTable('documento');
 
         if ($tabla->hasColumn('descripcion')) {
@@ -67,7 +67,7 @@ class Version20181024155507 extends AbstractMigration
             ];
             $tabla->changeColumn('descripcion', $opciones);
         }
-		
+
 		$tabla = $schema->getTable('ft_carta');
 
         if ($tabla->hasColumn('version_carta')) {
@@ -76,7 +76,7 @@ class Version20181024155507 extends AbstractMigration
             ];
             $tabla->changeColumn('version_carta', $opciones);
         }
-		
+
 		$tabla = $schema->getTable('buzon_entrada');
 
         if ($tabla->hasColumn('ruta_idruta')) {
@@ -85,7 +85,7 @@ class Version20181024155507 extends AbstractMigration
             ];
             $tabla->changeColumn('ruta_idruta', $opciones);
         }
-		
+
 		$conn = $this->connection;
 
         $queryBuilder = $conn->createQueryBuilder();
@@ -93,7 +93,7 @@ class Version20181024155507 extends AbstractMigration
 
         $result = $queryBuilder->execute()->fetchAll();
 
-        if (!empty($result)) {           
+        if (!empty($result)) {
             foreach ($result as $row) {
                 $data = [
                     'agrupado_por' => 'a.idexpediente,a.fecha,a.nombre,a.descripcion,a.cod_arbol,a.estado_cierre,a.nombre_serie,a.propietario,agrupador,B.iddocumento,B.fecha, B.numero,B.descripcion,B.estado,B.serie,B.tipo_radicado,B.plantilla,B.fecha_limiteexpediente_documento'
@@ -104,7 +104,7 @@ class Version20181024155507 extends AbstractMigration
                 $resp = $conn->update('busqueda_componente', $data, $ident);
             }
         }
-		
+
 		if (!$schema->hasTable("vista_formato")) {
 			$table3 = $schema->createTable("vista_formato" );
             $table3->addColumn("idvista_formato", "integer", [
@@ -112,10 +112,10 @@ class Version20181024155507 extends AbstractMigration
                 "notnull" => true,
                 'autoincrement' => true
             ]);
-            
+
 			$table3->addColumn("nombre", "string", ["length" => 255] );
 			$table3->addColumn("etiqueta", "string", ["length" => 255] );
-			$table3->addColumn("formato_padre", "number", ["length" => 11, "default" => 0]);
+			$table3->addColumn("formato_padre", "integer", ["length" => 11, "default" => 0]);
 			$table3->addColumn("ruta_mostrar", "string", ["length" => 255]);
 			$table3->addColumn("librerias", "string", ["length" => 255]);
 			$table3->addColumn("estilos", "string", ["length" => 255]);
@@ -127,14 +127,14 @@ class Version20181024155507 extends AbstractMigration
 			$table3->addColumn("orientacion", "string", ["length" => 50]);
 			$table3->addColumn("papel", "string", ["length" => 50, "default" => 'letter']);
 			$table3->addColumn("exportar", "string", ["length" => 255, "default" => 'pdf']);
-			$table3->addColumn("funcionario_idfuncionario", "number", ["length" => 11, "default" => 0]);
-			$table3->addColumn("fecha", "date", ["default"=> "CURRENT_TIMESTAMP"]);
+			$table3->addColumn("funcionario_idfuncionario", "integer", ["length" => 11, "default" => 0]);
+			$table3->addColumn("fecha", "datetime", ["default"=> $this->connection->getDatabasePlatform()->getCurrentTimestampSQL()]);
 			$table3->addColumn("imagen", "string", ["length" => 255]);
 			$table3->addColumn("ayuda", "string", ["length" => 400]);
 			$table3->addColumn("font_size", "string", ["length" => 4, "default" => '12']);
 			$table3->addColumn(
 			"banderas", "string", ["length" => 255, "default" => 'nd']);
-			
+
 			$table3->setPrimaryKey(["idvista_formato" ]);
 		}
 	}
@@ -143,7 +143,7 @@ class Version20181024155507 extends AbstractMigration
      */
     public function down(Schema $schema)
     {
-        
+
 
     }
 }

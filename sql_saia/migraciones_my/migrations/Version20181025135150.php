@@ -11,7 +11,7 @@ use Doctrine\DBAL\Schema\Schema;
 class Version20181025135150 extends AbstractMigration
 {
 	public function getDescription() {
-        return 'Modifica agrupado_por en busqueda_componente';
+        return 'Modifica agrupado_por en busqueda_componente y tamaño campo tipo tabla anexo_tmp';
     }
 	public function preUp(Schema $schema) {
         date_default_timezone_set("America/Bogota");
@@ -48,6 +48,14 @@ a.fecha_limite'
                 ];
                 $resp = $conn->update('busqueda_componente', $data, $ident);
             }
+        }
+		 $tabla = $schema->getTable('anexos_tmp');
+
+        if ($tabla->hasColumn('tipo')) {
+            $opciones = [
+                "length" => 100
+            ];
+            $tabla->changeColumn('tipo', $opciones);
         }
 
     }

@@ -499,7 +499,13 @@ if ($result["numcampos"]) {
 		for ($j = 0; $j < $cant_campos; $j++) {
 			$caden = ' \ ';
 			if (is_object($result[$i][$lcampos[$j]])) {// para mssql y sqlserver
-				$result[$i][$lcampos[$j]] = $result[$i][$lcampos[$j]] -> date;
+				$fecha_doc = $result[$i][$lcampos[$j]];
+				if($fecha_doc instanceof DateTime){
+					$result[$i][$lcampos[$j]] = $fecha_doc -> format('Y-m-d H:i:s');
+				}else{
+					$result[$i][$lcampos[$j]] = $fecha_doc -> date;	
+				}
+				
 			}
 			$response -> rows[$i] -> $lcampos[$j] = str_replace('"', "", str_replace(trim($caden), "", $result[$i][$lcampos[$j]]));
 			$info = str_replace("{*" . $lcampos[$j] . "*}", addslashes($result[$i][$lcampos[$j]]), $info);

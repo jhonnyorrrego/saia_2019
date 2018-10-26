@@ -850,7 +850,7 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
  */
 function buscar_dependencia($iformato=0) {
 	global $conn;
-	if($_REQUEST['iddoc']) {
+	if(isset($_REQUEST['iddoc'])) {
 		$idformato = busca_filtro_tabla("idformato,nombre_tabla", "formato f,documento d", "lower(f.nombre)=lower(d.plantilla) and iddocumento=" . $_REQUEST['iddoc'], "", $conn);
 		if($idformato['numcampos']) {
 			$datos = busca_filtro_tabla("dependencia", $idformato[0]['nombre_tabla'] . " ft", "documento_iddocumento=" . $_REQUEST['iddoc'], "", $conn);
@@ -1700,6 +1700,7 @@ function cargar_seleccionados($idformato, $idcampo, $tipo = 1, $iddoc) {
  function mostrar_seleccionados($idformato, $idcampo, $tipo_arbol, $iddoc, $tipo = 0) {
 	global $conn;
 	$campo = busca_filtro_tabla("nombre,valor", "campos_formato", "idcampos_formato=" . $idcampo, "", $conn);
+	$nombres = array();
 	if ($iddoc != NULL) {
 		$tabla = busca_filtro_tabla("nombre_tabla,item", "formato", "idformato=" . $idformato, "", $conn);
 		if ($tabla[0]["item"]) {
@@ -1715,7 +1716,7 @@ function cargar_seleccionados($idformato, $idcampo, $tipo = 1, $iddoc) {
 		$vector = explode(",", str_replace("#", "d", $valor[0][0]));
 		$vector = array_unique($vector);
 		sort($vector);
-		$nombres = array();
+		
 		foreach ($vector as $fila) {
 			switch ($tipo_arbol) {
 				case 0 :

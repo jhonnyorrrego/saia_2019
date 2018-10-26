@@ -63,8 +63,10 @@ class SqlOracle extends SQL2 {
         }
 
         $this->consulta = $sql;
-        $rs = oci_parse($this->Conn->conn, $sql);
+        $rs = oci_parse($this->Conn->conn, $sql);		
         if ($rs) {
+        	$rs_fecha = oci_parse($this->Conn->conn, "ALTER SESSION SET NLS_DATE_FORMAT = 'YYYY/MM/DD HH24:MI:SS'");
+        	oci_execute($rs_fecha);
             if (oci_execute($rs, OCI_COMMIT_ON_SUCCESS)) {
                 $this->res = $rs;
 
@@ -77,11 +79,13 @@ class SqlOracle extends SQL2 {
                 }
             } else if(defined("DEBUGEAR") && DEBUGEAR == 1) {
                 $e = oci_error($this->Conn->conn);
+				debug_print_backtrace();
                 trigger_error($e['message'] . " $sql", E_USER_ERROR);
                 return false;
             }
         } else if(defined("DEBUGEAR") && DEBUGEAR == 1) {
             $e = oci_error($this->Conn->conn);
+			
             trigger_error($e['message'] . " $sql", E_USER_ERROR);
             return false;
         }
