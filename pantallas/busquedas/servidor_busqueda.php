@@ -155,12 +155,12 @@ if ($datos_busqueda["numcampos"]) {
 	if ($datos_busqueda[0]["campos"] != '') {
 	    if($distinct) {
 	        $select[] = "distinct " . $datos_busqueda[0]["campos"];
-			
+
 	        $distinct = false;
 	    } else {
 	        $select[] = $datos_busqueda[0]["campos"];
 	    }
-	}	
+	}
 
 	if ($datos_busqueda[0]["campos_adicionales"] != '') {
 		$select[] = $datos_busqueda[0]["campos_adicionales"];
@@ -338,10 +338,10 @@ if (!@$_REQUEST["cantidad_total"]) {
 	$result[0]['cant'] = @$_REQUEST["cantidad_total"];
 }
 
-$response = new stdClass();
-$response -> cantidad_total = $result[0]['cant'];
-$response -> exito = 0;
-$response -> mensaje = 'Error inesperado';
+$response = array();
+$response["cantidad_total"] = $result[0]['cant'];
+$response["exito"] = 0;
+$response["mensaje"] = 'Error inesperado';
 if (trim($agrupar_consulta) != "" && !@$count && $datos_busqueda[0]["tipo_busqueda"] == 2) {
 	if (@$_REQUEST["exportar_saia"]) {
 		$count = ($result["numcampos"]);
@@ -363,21 +363,21 @@ if ($count > 0) {
 	$total_pages = ceil($count / $limit);
 } else {
 	$total_pages = 0;
-	$response -> exito = 0;
-	$response -> mensaje = "No existen registros";
+	$response["exito"] = 0;
+	$response["mensaje"] = "No existen registros";
 }
 if ($count <= $actual_row) {
-	$response -> exito = 0;
-	$response -> mensaje = "Existe un error al recuperar los datos de la consulta " . $result["sql"];
+	$response["exito"] = 0;
+	$response["mensaje"] = "Existe un error al recuperar los datos de la consulta " . $result["sql"];
 }
 if ($page >= $total_pages) {
 	//$page=$total_pages;
-	$response -> exito = 0;
-	$response -> mensaje = "Fin del listado";
+	$response["exito"] = 0;
+	$response["mensaje"] = "Fin del listado";
 }
 if (@$start !== 0 && $aux_limit != "todos" && @$_REQUEST["reporte"]) {
 	$start = $limit * $page - $limit;
-	
+
 	// do not put $limit*($page - 1)
 }
 
@@ -397,15 +397,15 @@ if (MOTOR == 'SqlServer') {
 $start = $limit * $page - $limit;
 // do not put $limit*($page - 1)
 if ($datos_busqueda[0]["tipo_busqueda"] == 1 || $_REQUEST['tipo_busqueda'] == 1) {
-	$response -> page = $page + 1;
+	$response["page"] = $page + 1;
 } else {
-	$response -> page = $page;
+	$response["page"] = $page;
 }
-//$response->total = $count; //DESARROLLO ALEJANDRO CARVAJAL
-$response -> total = $total_pages;
-$response -> records = $count;
+//$response["total"] = $count; //DESARROLLO ALEJANDRO CARVAJAL
+$response["total"] = $total_pages;
+$response["records"] = $count;
 
-$response -> sql = $result["sql"];
+$response["sql"] = $result["sql"];
 $cant_campos = count($lcampos);
 $info_base = str_replace('"', "'", $datos_busqueda[0]["info"]);
 for ($j = 0; $j < $cant_campos; $j++) {
@@ -426,9 +426,9 @@ if (@$_REQUEST["exportar_saia"]) {
 	$listado_funciones = array_merge($listado_funciones, $listado_funciones2);
 }
 if ($result["numcampos"]) {
-	$response -> exito = 1;
+	$response["exito"] = 1;
 	$archivo_excel = 0;
-	$response -> mensaje = "Registros encontrados";
+	$response["mensaje"] = "Registros encontrados";
 	if (@$_REQUEST["exportar_saia"]) {
 		if (@$_REQUEST["ruta_exportar_saia"]) {
 
@@ -492,9 +492,7 @@ if ($result["numcampos"]) {
 		$array_export = array();
 	}
 	for ($i = 0; $i < $result["numcampos"]; $i++) {
-		$response -> rows[$i] = new stdClass();
-		unset($listado_campos);
-		$listado_campos = array();
+		$response["rows"][$i] = array();
 		$info = $info_base;
 		for ($j = 0; $j < $cant_campos; $j++) {
 			$caden = ' \ ';
@@ -503,11 +501,11 @@ if ($result["numcampos"]) {
 				if($fecha_doc instanceof DateTime){
 					$result[$i][$lcampos[$j]] = $fecha_doc -> format('Y-m-d H:i:s');
 				}else{
-					$result[$i][$lcampos[$j]] = $fecha_doc -> date;	
+					$result[$i][$lcampos[$j]] = $fecha_doc -> date;
 				}
-				
+
 			}
-			$response -> rows[$i] -> $lcampos[$j] = str_replace('"', "", str_replace(trim($caden), "", $result[$i][$lcampos[$j]]));
+			$response["rows"][$i][$lcampos[$j]] = str_replace('"', "", str_replace(trim($caden), "", $result[$i][$lcampos[$j]]));
 			$info = str_replace("{*" . $lcampos[$j] . "*}", addslashes($result[$i][$lcampos[$j]]), $info);
 		}
 		foreach ($listado_funciones as $key => $valor) {
@@ -527,41 +525,42 @@ if ($result["numcampos"]) {
 				$info = str_replace("{*" . $valor . "*}", $valor_funcion, $info);
 
 				if (@$_REQUEST["exportar_saia"] == "excel" || @$_REQUEST["exportar_saia"] == 'csv') {
-					$response -> rows[$i] -> $funcion[0] = $valor_funcion;
+					$response["rows"][$i][$funcion[0]] = $valor_funcion;
 				}
 				if ($datos_busqueda[0]["tipo_busqueda"] == 2) {
-					$response -> rows[$i] -> $funcion[0] = $valor_funcion;
+					$response["rows"][$i][$funcion[0]] = $valor_funcion;
 				}
 			}
 		}
 		if ($datos_busqueda[0]["tipo_busqueda"] == 1) {
 			if (!@$_REQUEST["estilo_actualizar_informacion"])
-				$response -> rows[$i] -> info = "<div id='resultado_pantalla_" . $result[$i][$llave] . "' class='well'>";
+				$response["rows"][$i] ["info"] = "<div id='resultado_pantalla_" . $result[$i][$llave] . "' class='well'>";
 
 			if (!@$_REQUEST["estilo_actualizar_informacion"])
-				$response -> rows[$i] -> info .= "</div>";
-			$response -> rows[$i] -> info = str_replace("\n", "", str_replace("\r", "", $info));
-			$response -> rows[$i] -> llave = $result[$i][$llave];
+				$response["rows"][$i] ["info"] .= "</div>";
+			$response["rows"][$i] ["info"] = str_replace("\n", "", str_replace("\r", "", $info));
+			$response["rows"][$i] ["llave"] = $result[$i][$llave];
 
 			if (@$_REQUEST["exportar_saia"] == 'excel' || @$_REQUEST["exportar_saia"] == 'csv') {
 				for ($k = 0; $k < $cant_columnas_excel; $k++) {
-					$array_export[$i][$columnas_excel[$k]] = codifica_encabezado(html_entity_decode(strip_tags($response -> rows[$i] -> $columnas_excel[$k])));
+					$array_export[$i][$columnas_excel[$k]] = codifica_encabezado(html_entity_decode(strip_tags($response["rows"][$i][$columnas_excel[$k]])));
 				}
 
 			}
 		} else if ($datos_busqueda[0]["tipo_busqueda"] == 2) {
 			for ($k = 0; $k < $cant_columnas_excel; $k++) {
 				if (@$_REQUEST["exportar_saia"] == 'excel' || @$_REQUEST["exportar_saia"] == 'csv') {
-					$array_export[$i][$columnas_excel[$k]] = (html_entity_decode(strip_tags($response -> rows[$i] -> $columnas_excel[$k])));
+					$array_export[$i][$columnas_excel[$k]] = (html_entity_decode(strip_tags($response["rows"][$i][$columnas_excel[$k]])));
 				} else {
-					$array_export[$i][$columnas_excel[$k]] = codifica_encabezado(html_entity_decode(strip_tags($response -> rows[$i] -> $columnas_excel[$k])));
+					$array_export[$i][$columnas_excel[$k]] = codifica_encabezado(html_entity_decode(strip_tags($response["rows"][$i][$columnas_excel[$k]])));
 				}
 			}
 		}
 		if ($_REQUEST["export_saia"] == "csv" || $_REQUEST["export_saia"] == "excel") {
-			unset($response -> rows[$i]);
+			unset($response["rows"][$i]);
 		}
 	}
+	//var_dump($response["rows"]);die();
 	if (@$_REQUEST["exportar_saia"] == "csv") {
 		fputcsv($file_export, $array_export, ",", '"');
 	} else if (@$_REQUEST["exportar_saia"] == "excel") {
@@ -576,18 +575,18 @@ if ($result["numcampos"]) {
 		crear_log_busqueda_excel($ruta_db_superior . "../backup/log_exportar.txt", "INICIO DATOS--- " . date("Y-m-d H:i:s") . "-----------\n");
 		crear_log_busqueda_excel($ruta_db_superior . "../backup/log_exportar.txt", implode("--", $array_export) . "\n");
 		crear_log_busqueda_excel($ruta_db_superior . "../backup/log_exportar.txt", "FIN DATOS--- " . date("Y-m-d H:i:s") . "-----------\n");
-		$response -> exito = 1;
+		$response["exito"] = 1;
 	}
 	if (@$file_export) {
 		fclose($file_export);
 	}
 }
-$response -> actual_row = $actual_row + $i;
-if ($response -> actual_row > $response -> records) {
-	$response -> actual_row = $response -> records;
+$response["actual_row"] = $actual_row + $i;
+if ($response["actual_row"] > $response["records"]) {
+	$response["actual_row"] = $response["records"];
 }
-if ($response -> records < 0) {
-	$response -> records = 0;
+if ($response["records"] < 0) {
+	$response["records"] = 0;
 }
 if (!@$_REQUEST["no_imprime"]) {
 	echo json_encode($response);

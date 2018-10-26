@@ -272,7 +272,7 @@ class SqlSqlServer extends SQL2 {
         return ($resultado);
     }
 
-    function Busca_tabla($tabla, $campo) {
+    function Busca_tabla($tabla, $campo = "") {
         if (!$tabla && @$_REQUEST["tabla"])
             $tabla = $_REQUEST["tabla"];
         else if (!$tabla)

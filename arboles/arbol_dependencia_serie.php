@@ -34,14 +34,14 @@ if (isset($_REQUEST["id"]) && $_REQUEST["id"] && $_REQUEST["cargar_partes"]) {
         }
     }
 
-    if ($_REQUEST["serie_sin_asignar"] == 1 && $id[0] == 0) {
+    if (isset($_REQUEST["serie_sin_asignar"]) && $_REQUEST["serie_sin_asignar"] == 1 && $id[0] == 0) {
         $hijos_serie = array();
         $hijos_serie = llena_serie_sin_asignar($id[1]);
         if (!empty($hijos_serie)) {
             $hijos = array_merge($hijos, $hijos_serie);
         }
     }
-    if ($_REQUEST["otras_categorias"] == 1 && $id[0] == 0) {
+    if (isset($_REQUEST["otras_categorias"]) && $_REQUEST["otras_categorias"] == 1 && $id[0] == 0) {
         $hijos_otros = llena_otras_categorias($id[1]);
         if (!empty($hijos_otros)) {
             $hijos = array_merge($hijos, $hijos_otros);

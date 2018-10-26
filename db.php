@@ -462,7 +462,7 @@ global $conn;
 	if($conn) {
 		$sqleve = "";
 		$sql = trim($strsql);
-		$sql = preg_replace("/\s*=\s*/", "=", $sql);		
+		$sql = preg_replace("/\s*=\s*/", "=", $sql);
 		$accion = strtoupper(substr($sql, 0, strpos($sql, ' ')));
 		$llave = 0;
 		$tabla = "";
@@ -3217,7 +3217,7 @@ function ultima_sesion($login) {
 <Pre-condiciones>
 <Post-condiciones>
 */
-function salir($texto, $login) {
+function salir($texto, $login="") {
 	global $usuactual, $conn;
 	if ($login != "") {
 		$iplocal = getRealIP();

@@ -210,7 +210,7 @@ else
 		return ($resultado);
 	}
 
-	function Busca_tabla($tabla, $campo = null) {
+	function Busca_tabla($tabla, $campo = "") {
 		if (!$tabla && @$_REQUEST["tabla"])
 			$tabla = $_REQUEST["tabla"];
 		else if (!$tabla)

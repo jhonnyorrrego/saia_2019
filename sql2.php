@@ -263,7 +263,7 @@ abstract class SQL2 {
 	 * <Pre-condiciones>
 	 * <Post-condiciones>
 	 */
-	public abstract function Busca_tabla($tabla, $campo);
+	public abstract function Busca_tabla($tabla, $campo = "");
 
 	/*
 	 * <Clase>SQL

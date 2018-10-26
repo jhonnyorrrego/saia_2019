@@ -19,6 +19,11 @@ class Version20181018181955 extends AbstractMigration {
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
             $this->platform->registerDoctrineTypeMapping('enum', 'string');
+            $tabla = $schema->getTable('documento');
+
+            if ($tabla->hasColumn('pantalla_idpantalla')) {
+                $this->connection->executeQuery("update documento set pantalla_idpantalla = '0' where pantalla_idpantalla=''");
+            }
         }
     }
 

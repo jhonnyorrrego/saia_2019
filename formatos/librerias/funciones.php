@@ -15,7 +15,7 @@ include_once ($ruta_db_superior . "db.php");
  el sql y las variables estos 2 campos del json deben tener el sql a ejecutar y en variables cada una de las variables
  que se relacionan en el sql y nombre_formato siempre debe enviar el nombre de la tabla en la base de datos
  */
-function guardar_traza($sql, $nombre_formato, $sql_export) {
+function guardar_traza($sql, $nombre_formato, $sql_export = null) {
 	global $conn, $ruta_db_superior;
 	$nombre = strtolower($nombre_formato) . "/" . DB . "_" . date("Ymd") . ".txt";
 	$alm = new SaiaStorage(RUTA_EVENTO_FORMATO);

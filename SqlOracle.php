@@ -63,7 +63,7 @@ class SqlOracle extends SQL2 {
         }
 
         $this->consulta = $sql;
-        $rs = oci_parse($this->Conn->conn, $sql);		
+        $rs = oci_parse($this->Conn->conn, $sql);
         if ($rs) {
         	$rs_fecha = oci_parse($this->Conn->conn, "ALTER SESSION SET NLS_DATE_FORMAT = 'YYYY/MM/DD HH24:MI:SS'");
         	oci_execute($rs_fecha);
@@ -85,7 +85,7 @@ class SqlOracle extends SQL2 {
             }
         } else if(defined("DEBUGEAR") && DEBUGEAR == 1) {
             $e = oci_error($this->Conn->conn);
-			
+
             trigger_error($e['message'] . " $sql", E_USER_ERROR);
             return false;
         }
@@ -170,7 +170,7 @@ class SqlOracle extends SQL2 {
     function Lista_Tabla($db) {
     }
 
-    function Busca_tabla($tabla, $campo = '') {
+    function Busca_tabla($tabla, $campo = "") {
         if (!$tabla && @$_REQUEST["tabla"])
             $tabla = $_REQUEST["tabla"];
         else if (!$tabla)
@@ -302,7 +302,7 @@ class SqlOracle extends SQL2 {
                     $arreglo = oci_fetch_array($rs_temp, OCI_NUM);
                     $identificador = $arreglo[0];
                 } else if(defined("DEBUGEAR") && DEBUGEAR == 1){
-                	
+
                     $e = oci_error($this->Conn->conn);
                     trigger_error($e['message'] . " $sql_id", E_USER_ERROR);
                     die("NO HAY SECUENCIA");
@@ -544,7 +544,7 @@ class SqlOracle extends SQL2 {
         } else { // Now save a value to the LOB
             if ($tipo == "texto") { // para campos clob como en los formatos
                 if ($row[strtoupper($campo)] && $row[strtoupper($campo)]->size() > 0)
-                    
+
                     $contenido_actual = htmlspecialchars_decode($row[strtoupper($campo)]->read($row[strtoupper($campo)]->size()));
                 else
                     $contenido_actual = "";

@@ -48,27 +48,27 @@ function datos_editar_radicacion($idformato,$iddoc){
                         $('#persona_natural_dest').removeClass('required');
                         $('#tr_tipo_mensajeria').hide();
                         $('[name="tipo_mensajeria"]').removeClass('required');
-                        
+
                         //$('#fecha_oficio_entrada').addClass('required');
                         $('#fecha_oficio_entrada').removeClass('required');
                         $('#fecha_oficio_entrada').parent().parent().parent().show();
                         $('#numero_oficio').parent().parent().show();
                         $('#persona_natural').addClass('required');
                         $('#persona_natural').parent().parent().show();
-                        
+
                         $('#numero_guia').parent().parent().show();
                     });
                 </script>
         <?php
     }else{
         ?>
-                    <script>        
+                    <script>
                         $('#tipo_origen0').parent().hide();
-                        
+
                         $('#area_responsable').parent().parent().show();
                         $('#area_responsable').addClass('required');
                         $('#tr_tipo_destino').show();
-                        
+
                         $('#fecha_oficio_entrada').removeClass('required');
                         $('#fecha_oficio_entrada').parent().parent().parent().hide();
                         $('#numero_oficio').parent().parent().hide();
@@ -77,7 +77,7 @@ function datos_editar_radicacion($idformato,$iddoc){
                         //$('#anexos_digitales').parent().parent().hide();
                         $('#tr_tipo_mensajeria').show();
                         $('[name="tipo_mensajeria"]').addClass('required');
-                        
+
                         $('#numero_guia').parent().parent().hide();
                     </script>
         <?php
@@ -93,14 +93,14 @@ function datos_editar_radicacion($idformato,$iddoc){
                         $('#copia_a').parent().parent().hide();
                         $('#persona_natural_dest').parent().parent().show();
                         $('#persona_natural_dest').addClass('required');
-                        
+
                     }else{
                         $('#destino').addClass('required');
                         $('#destino').parent().parent().show();
                         $('#copia_a').parent().parent().show();
                         $('#persona_natural_dest').parent().parent().hide();
                         $('#persona_natural_dest').removeClass('required');
-                       
+
                     }
                 });
             });
@@ -139,12 +139,12 @@ function quitar_descripcion_entrada($idformato,$iddoc){
 					mes='0'+mes;
 				}
 				var fecha2=f.getFullYear() + "-" + mes + "-" + dia;
-			
+
 				if(fecha[0]>fecha2){
 					$("#fecha_oficio_entrada").after("<font color='red'>La fecha es mayor a la de hoy</font>");
 					$("#fecha_oficio_entrada").focus();
-					$('#continuar').css('display','inherit');						
-					$('#continuar').next('input').hide();					
+					$('#continuar').css('display','inherit');
+					$('#continuar').next('input').hide();
 					return false;
 				}
 				var destinos=$("#destino").val();
@@ -152,7 +152,7 @@ function quitar_descripcion_entrada($idformato,$iddoc){
 					if(respuesta==1){
 						var confirmacion=confirm("Esta seguro de transferir el documento a los destinos seleccionadas?");
 						if(!confirmacion){
-						    $('#continuar').css('display','inherit');                       
+						    $('#continuar').css('display','inherit');
                             $('#continuar').next('input').hide();
                             return false;
                         }
@@ -162,7 +162,7 @@ function quitar_descripcion_entrada($idformato,$iddoc){
                         if(respuesta==1){
                             var confirmacion=confirm("Esta seguro de transferir el documento con copia a las personas seleccionadas?");
                             if(!confirmacion){
-                                $('#continuar').css('display','inherit');                       
+                                $('#continuar').css('display','inherit');
                                 $('#continuar').next('input').hide();
                                 return false;
                             }
@@ -170,7 +170,7 @@ function quitar_descripcion_entrada($idformato,$iddoc){
                         form.submit();
                     });
 				});
-            }        
+            }
         });
 	</script>
 	<?php
@@ -178,14 +178,14 @@ function quitar_descripcion_entrada($idformato,$iddoc){
 
 function serie_documental_radicacion($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-	
-	
+
+
 	$dependencia_maestra=busca_filtro_tabla("iddependencia","dependencia","cod_padre=0 OR cod_padre IS NULL","",$conn);
-	
+
 	$dependencia_actual=busca_filtro_tabla("iddependencia","vfuncionario_dc","estado_dep=1 AND estado_dc=1 AND funcionario_codigo=".usuario_actual("funcionario_codigo"),"",$conn);
 	$dependencia_principal=buscar_dependencias_principal($dependencia_actual[0]["iddependencia"]);
 	$primeros_hijos=busca_filtro_tabla("iddependencia","dependencia","cod_padre=".$dependencia_principal,"",$conn);
-	
+
 	for($i=0;$i<$primeros_hijos['numcampos'];$i++){
 	    $arreglo[]=$primeros_hijos[$i]['iddependencia'];
 	}
@@ -194,59 +194,59 @@ function serie_documental_radicacion($idformato,$iddoc){
 	<script>
 	$(document).ready(function(){
 		//tree_serie_idserie.setOnCheckHandler(onNodeSelect_dependencia_serie);
-		
-		function onNodeSelect_dependencia_serie(nodeId){			
+
+		function onNodeSelect_dependencia_serie(nodeId){
 			tree_serie_idserie.setCheck(tree_serie_idserie.getAllChecked(),0 );
 			tree_serie_idserie.setCheck(nodeId,1 );
 			var ids=nodeId.split("sub");
 			var idserie=ids[1];
 			$('#serie_idserie').val(idserie);
-			
+
 		}
 	    var dependencia_principal='<?php echo($dependencia_principal); ?>';
 	    var cargado=[<?php echo($cargo); ?>];
 	    cargado.push(dependencia_principal);
 
 	    tree_destino.setOnCheckHandler(onNodeSelect);
-	    
+
         function onNodeSelect(nodeId){
-        	
+
         	var seleccionados=tree_destino.getAllChecked();
-        	
+
 	        var numeral=nodeId.indexOf("#");
-	        
+
 	        if(numeral>=0){
 	            var padre=tree_destino.getParentId(nodeId);
 	            padre=padre.replace("#","");
 	            var dependencia=nodeId.replace("#","");
 	        }else{
-	            
+
 	            var dependencia=tree_destino.getParentId(nodeId);
 	            var padre=tree_destino.getParentId(dependencia);
-	            
+
 	            if(padre==0){  //SOLO PARA SU ORGANIZACION
 	                padre='<?php echo($dependencia_maestra[0]['iddependencia']); ?>';
 	            }
-	            
+
 	            padre=padre.replace("#","");
 	            dependencia=dependencia.replace("#","");
 	        }
-	        
+
 	       var parametro_adicional='';
 	       if(dependencia=='<?php echo($dependencia_maestra[0]['iddependencia']); ?>'){
 	           parametro_adicional='&carga_partes_dependencia=1';
 	       }
-	       
+
 	       tree_serie_idserie.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&mostrar_nodos=dsa&sin_padre_dependencia=1&estado=1&cargar_series=1&carga_partes_serie=1&iddependencia="+dependencia+parametro_adicional);
-	       tree_serie_idserie.smartRefreshItem("d"+padre);  
+	       tree_serie_idserie.smartRefreshItem("d"+padre);
 	       tree_serie_idserie.openItem( "d"+padre ); //ARBOL: expande nodo hasta el item indicado
-	       
+
         }
-        
+
         $('#tipo_origen1').click(function(){
             var dependencia=$('#dependencia').val();
             tree_serie_idserie.setOnLoadingEnd(obtener_dependencia(dependencia));
-            
+
             function obtener_dependencia(rol){
                 $.ajax({
                     type:'POST',
@@ -260,26 +260,26 @@ function serie_documental_radicacion($idformato,$iddoc){
                         var x = Math.floor((Math.random() * 100000) + 1);
                         cargado.push(datos[1]);
                     }
-                });  
+                });
             }
         });
-        
+
 	});
-        
+
     </script>
     <?php
 }
-												
+
 function buscar_dependencias_principal($iddependencia){
 	$cod_dep=busca_filtro_tabla("cod_padre","dependencia","cod_padre is not null and iddependencia=".$iddependencia,"",$conn);
-	
+
 	if($cod_dep['numcampos']){
 	    return(buscar_dependencias_principal($cod_dep[0]["cod_padre"]));
 	}else{
 		return($iddependencia);
 	}
 }
-												
+
 function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
 	global $conn,$ruta_db_superior;
     $funcionario_codigo=usuario_actual('funcionario_codigo');
@@ -293,16 +293,16 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                 var dependencia_principal='<?php echo($dependencia_principal); ?>';
                 tipo_origen($("input:radio[name=tipo_origen]:checked").val());
                 tipo_destino($("input:radio[name=tipo_destino]:checked").val());
-                
-                
+
+
                 $('[name="tipo_origen"]').click(function(){
                     tipo_origen($(this).val());
                 });
-                
+
                 $('[name="tipo_destino"]').click(function(){
                     tipo_destino($(this).val());
                 });
-                
+
 		            $("[name='requiere_recogida']").change(function (){
 		            	if($(this).val()==1){
 		            		$("[name='tipo_mensajeria'][value=3]").attr("checked",false);
@@ -312,8 +312,8 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
 		            	}
 		            });
 		            $("[name='requiere_recogida']:checked").trigger("change");
-                
-                
+
+
                 <?php
                 $permiso_mod=new Permiso();
 		        $ok_permiso_radicacion_externa=$permiso_mod->acceso_modulo_perfil("permiso_radicacion_externa");
@@ -326,16 +326,16 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
 		            <?php
 		        }
                 ?>
-                
+
             });
             function tipo_origen(tipo){
                 if(tipo==1){   //EXTERNO
                 	$('#tr_requiere_recogida').hide();
-                	
+
                 	$('#empresa_transportado').parent().parent().show();
-                	
+
                     $('[name="tipo_radicado"]').val('radicacion_entrada');
-                    seleccionar_interno_actual(0);    
+                    seleccionar_interno_actual(0);
                     $('#area_responsable').parent().parent().hide();
                     $('#area_responsable').removeClass('required');
                     $('#destino').addClass('required');
@@ -347,7 +347,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                     $('#persona_natural_dest').removeClass('required');
                     $('#tr_tipo_mensajeria').hide();
                     $('[name="tipo_mensajeria"]').removeClass('required');
-                        
+
                     //$('#fecha_oficio_entrada').addClass('required');
                     $('#fecha_oficio_entrada').removeClass('required');
                     $('#fecha_oficio_entrada').parent().parent().parent().show();
@@ -356,19 +356,19 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                     $('#persona_natural').parent().parent().show();
                     //$('#anexos_digitales').parent().parent().show();
                     $('#numero_guia').parent().parent().show();
-                    
+
                 }else{ //INTERNO
                 	$('#tr_requiere_recogida').show();
-                	
+
                 	$('#empresa_transportado').parent().parent().hide();
-                
+
                     seleccionar_interno_actual(1);
-                
+
                     $('[name="tipo_radicado"]').val('radicacion_salida');
                     $('[name="area_responsable"]').parent().parent().show();
                     $('#area_responsable').addClass('required');
                     $('#tr_tipo_destino').show();
-                        
+
                     $('#fecha_oficio_entrada').removeClass('required');
                     $('#fecha_oficio_entrada').parent().parent().parent().hide();
                     $('#numero_oficio').parent().parent().hide();
@@ -377,7 +377,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                     //$('#anexos_digitales').parent().parent().hide();
                     $('#tr_tipo_mensajeria').show();
                     $('[name="tipo_mensajeria"]').addClass('required');
-                                          
+
                     $('#numero_guia').parent().parent().hide();
                  }
 	                  $.ajax({
@@ -391,7 +391,7 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
 	                      success: function(datos){
 	                          $('#numero_radicado').html(datos[0]);
 	                      }
-	                 });                   
+	                 });
             }
             function tipo_destino(tipo){
                 if(tipo==1){
@@ -401,10 +401,10 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                         $('#persona_natural_dest').parent().parent().show();
                         $('#persona_natural_dest').addClass('required');
                         //$('#tipo_mensajeria0').parent().show();
-                        
-                        
+
+
                         refrescar_arbol_tipo_documental_funcionario_responsable();
-                         
+
                     }else{
                         $('#destino').addClass('required');
                         $('#destino').parent().parent().show();
@@ -412,20 +412,20 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                         $('#persona_natural_dest').parent().parent().hide();
                         $('#persona_natural_dest').removeClass('required');
                         //$('#tipo_mensajeria0').parent().hide();
-                        
-                        
+
+
                     }
             }
-            
+
             tree_area_responsable.setOnCheckHandler(refrescar_arbol_tipo_documental_funcionario_responsable);
-			        	
+
             function refrescar_arbol_tipo_documental_funcionario_responsable(){
-				<?php 
+				<?php
 				$dependencia_maestra=busca_filtro_tabla("iddependencia","dependencia","cod_padre=0 OR cod_padre IS NULL","",$conn);
-				?>            	
+				?>
             	if($("input:radio[name=tipo_origen]:checked").val()==2 && $("input:radio[name=tipo_destino]:checked").val()==1){
-            		
-            	
+
+
 						var seleccionado=tree_area_responsable.getAllChecked();
 			        	seleccionado=parseInt(seleccionado);
 			        	if(seleccionado){
@@ -434,26 +434,26 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
 
             	            if(padre==0){  //SOLO PARA SU ORGANIZACION
             	                padre='<?php echo($dependencia_maestra[0]['iddependencia']); ?>';
-            	            }				            
-				            
+            	            }
+
 				            padre=padre.replace("#","");
 				            dependencia=dependencia.replace("#","");
 
                 	       var parametro_adicional='';
                 	       if(dependencia=='<?php echo($dependencia_maestra[0]['iddependencia']); ?>'){
                 	           parametro_adicional='&carga_partes_dependencia=1';
-                	       }				            
-				            
+                	       }
+
                 	       tree_serie_idserie.setXMLAutoLoading("<?php echo($ruta_db_superior); ?>test_dependencia_serie.php?tabla=dependencia&mostrar_nodos=dsa&sin_padre_dependencia=1&estado=1&cargar_series=1&carga_partes_serie=1&iddependencia="+dependencia+parametro_adicional);
-                	       tree_serie_idserie.smartRefreshItem("d"+padre);  
-                	       tree_serie_idserie.openItem( "d"+padre ); //ARBOL: expande nodo hasta el item indicado	
-			        	}  
-			     }  	           
-            
+                	       tree_serie_idserie.smartRefreshItem("d"+padre);
+                	       tree_serie_idserie.openItem( "d"+padre ); //ARBOL: expande nodo hasta el item indicado
+			        	}
+			     }
+
             }
-            
-            
-            
+
+
+
             function seleccionar_interno_actual(seleccionar){
 
                 if(seleccionar){
@@ -462,28 +462,28 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
                 }else{
                     tree_area_responsable.setCheck(tree_area_responsable.getAllChecked(),false);
                     tree_area_responsable.closeAllItems(); //ARBOL: cierra todo el arbol
-                    $('#area_responsable').val('');                    
+                    $('#area_responsable').val('');
                 }
             }
-            
-            
+
+
             function seleccion_reponsable_actual(){
                     var lista_iddependencia_cargo='<?php echo($lista_iddependencia_cargo); ?>';
                     var vector_iddependencia_cargo=lista_iddependencia_cargo.split(',');
-                   
+
                     var sin_open=undefined;
-                    
+
                     var iddependencia_cargo=parseInt(vector_iddependencia_cargo[0]);
                     sin_open=tree_area_responsable.openItem(iddependencia_cargo); //ARBOL: expande nodo hasta el item indicado
                     tree_area_responsable.setCheck(iddependencia_cargo,true);
-                    
+
                     var str = tree_area_responsable.getAllChecked();
-                    
+
                     var long=str.length;
                     for(i=0;i<long;i++){
                         str = str.replace(",", "");
                     }
-                    $('#area_responsable').val(str); 
+                    $('#area_responsable').val(str);
             }
         </script>
     <?php
@@ -504,19 +504,21 @@ function llenar_datos_funcion($idformato, $iddoc) {
 
 function mostrar_informacion_general_radicacion($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
-	$datos = busca_filtro_tabla("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio," . fecha_db_obtener("fecha_oficio_entrada", "Y-m-d") . " AS fecha_oficio_entrada," . fecha_db_obtener("fecha_radicacion_entrada", "Y-m-d") . " AS fecha_radicacion_entrada,numero_guia,empresa_transportado,requiere_recogida,tipo_mensajeria", "ft_radicacion_entrada", "documento_iddocumento=" . $iddoc, "", $conn);
 
+	$datos = busca_filtro_tabla("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio," . fecha_db_obtener("fecha_oficio_entrada", "Y-m-d") . " AS fecha_oficio_entrada," . fecha_db_obtener("fecha_radicacion_entrada", "Y-m-d") . " AS fecha_radicacion_entrada,numero_guia,empresa_transportado,requiere_recogida,tipo_mensajeria", "ft_radicacion_entrada", "documento_iddocumento=" . $iddoc, "", $conn);
 	$documento = busca_filtro_tabla("numero,tipo_radicado," . fecha_db_obtener("fecha", "Y-m-d") . " AS fecha", "documento", "iddocumento=" . $iddoc, "", $conn);
-	$tipo_documento = busca_filtro_tabla("nombre", "serie", "idserie=" . $datos[0]["serie_idserie"], "", $conn);
+	if ($documento[0]['tipo_radicado'] == 1) {
+	    $tipo = "E";
+	} else {
+	    $tipo = "I";
+	}
+	if($datos["numcampos"] && !empty($datos[0]["serie_idserie"])) {
+	    $tipo_documento = busca_filtro_tabla("nombre", "serie", "idserie=" . $datos[0]["serie_idserie"], "", $conn);
+	    $numero_radicado = $datos[0]['fecha_radicacion_entrada'] . "-" . $documento[0]['numero'] . "-" . $tipo;
+	}
 	$anexos = busca_filtro_tabla("etiqueta", "anexos", "documento_iddocumento=" . $iddoc, "", $conn);
 	$nombre_anexos = '';
 	$fecha_radicacion = $documento[0]['fecha'];
-	if ($documento[0]['tipo_radicado'] == 1) {
-		$tipo = "E";
-	} else {
-		$tipo = "I";
-	}
-	$numero_radicado = $datos[0]['fecha_radicacion_entrada'] . "-" . $documento[0]['numero'] . "-" . $tipo;
 
 	for ($i = 0; $i < $anexos['numcampos']; $i++) {
 		$nombre_anexos .= $anexos[$i]['etiqueta'];
@@ -537,7 +539,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
   </tr>
   <tr>
     <td><b>Tipo de documento:</b></td>
-    <td colspan="3">' . $tipo_documento[0]["nombre"] . '</td> 
+    <td colspan="3">' . $tipo_documento[0]["nombre"] . '</td>
   </tr>
   <tr>
     <td><b>Descripci&oacute;n o asunto:</b></td>
