@@ -51,11 +51,11 @@ function mostrar_informacion_adicional_expediente($idexpediente) {
     global $conn;
     $cadena = '';
     // EXPEDIENTE
-    $expediente_actual = busca_filtro_tabla("serie_idserie", "expediente", "idexpediente=" . $idexpediente, "", $conn);
+    $expediente_actual = busca_filtro_tabla("serie_idserie,agrupador", "expediente", "idexpediente=" . $idexpediente, "", $conn);
     // NOMBRE DE LA SERIE
     $serie = busca_filtro_tabla("nombre", "serie", "idserie=" . $expediente_actual[0]['serie_idserie'], "", $conn);
 
-    if ($serie['numcampos']) {
+    if ($serie['numcampos'] && !$expediente_actual[0]["agrupador"]) {
         $cadena .= $serie[0]['nombre'];
     }
     $cadena .= '<br>';
