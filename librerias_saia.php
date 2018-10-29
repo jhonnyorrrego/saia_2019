@@ -422,7 +422,7 @@ function librerias_datepicker_bootstrap() {
 	$texto = '';
 	$texto .= '<script src="' . $raiz_saia . 'js/bootstrap/saia/bootstrap-datetimepicker.js" type="text/javascript" charset="utf-8"></script>';
 	$texto .= '<script src="' . $raiz_saia . 'js/bootstrap/saia/bootstrap-datetimepicker.es.js" type="text/javascript" charset="utf-8"></script>';
-	$texto .= '<link rel="stylesheet" href="' . $raiz_saia . 'css/bootstrap/saia/css/bootstrap-datetimepicker.min.css" type="text/css" />';
+	$texto .= '<link rel="stylesheet" href="' . $raiz_saia . 'css/bootstrap-datetimepicker.min.css" type="text/css" />';
 	return ($texto);
 }
 

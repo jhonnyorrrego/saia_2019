@@ -79,7 +79,7 @@ function fecha_documento_funcion($idformato, $iddoc) {
 
 function ver_anexos_doc_vincu($idformato, $iddoc){
 	global $conn,$ruta_db_superior;
-	$anexos=busca_filtro_tabla("ruta,etiqueta,tipo,idanexos","anexos","documento_iddocumento=".$iddoc,"");
+	$anexos=busca_filtro_tabla("ruta,etiqueta,tipo,idanexos","anexos","documento_iddocumento=".$iddoc,"", $conn);
 	$html="";
 	if($anexos["numcampos"]){
 		for ($i=0; $i <$anexos["numcampos"] ; $i++) {

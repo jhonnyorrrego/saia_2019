@@ -149,7 +149,7 @@ PUBLIC activeCalendar() -> class constructor, does the initial date calculation
 $GMTDiff: GMT Zone for current day calculation, do not set to use local server time
 ********************************************************************************
 */
-function activeCalendar($year=false,$month=false,$day=false,$formato=false,$GMTDiff="none"){
+public function __construct($year=false,$month=false,$day=false,$formato=false,$GMTDiff="none"){
 if(!$formato)
 $this->timetoday=time();
 $this->selectedday=-2;
@@ -219,11 +219,11 @@ param javaScript: sets a Javascript function on each day link
 function enableDayLinks($link=false,$javaScript=false,$select_fecha_par=NULL){
 	if ($link) $this->url=$link;
 	else $this->url=$_SERVER['PHP_SELF'];
-	
-	if ($javaScript) 
+
+	if ($javaScript)
 	 { $this->javaScriptDay=$javaScript;
 	   $this->selec_fecha_params=$select_fecha_par;
-	  
+
     	}
 $this->dayLinks=true;
 }
@@ -437,7 +437,7 @@ $out="<tr>\n";
 		if ($stmonth == 12) {
 			$stmonth = 1;
 			$curyear++;
-		} 
+		}
 		else $stmonth++;
 	}
 $out.="</tr>\n";
@@ -618,7 +618,7 @@ $linkstr=$this->mkUrl($this->actyear,$this->actmonth,$var);
 	{ if($this->selec_fecha_params) // Recibio parametros especiales para la funcion de retorno retDAte del DATE PICKER SE SAIA
 	   $linkstr="<a href=\"javascript:".$this->javaScriptDay."(".$this->actyear.",".$this->actmonth.",".$var.",0,0,0,".$this->selec_fecha_params.")\">".$var."</a>";
 	  else
-       $linkstr="<a href=\"javascript:".$this->javaScriptDay."(".$this->actyear.",".$this->actmonth.",".$var.",0,0,0".")\">".$var."</a>";	     
+       $linkstr="<a href=\"javascript:".$this->javaScriptDay."(".$this->actyear.",".$this->actmonth.",".$var.",0,0,0".")\">".$var."</a>";
 	}
 	if ($this->isEvent($var)){
 		if ($this->eventUrl){
@@ -626,7 +626,7 @@ $linkstr=$this->mkUrl($this->actyear,$this->actmonth,$var);
 		   	$link=$this->eventUrl."&";
 		   else
 		      $link=$this->eventUrl."?";
-		   $link.="anio=".$this->actyear."&mes=".$this->actmonth."&dia=".$var;   
+		   $link.="anio=".$this->actyear."&mes=".$this->actmonth."&dia=".$var;
 			$out="<td class=\"".$this->eventID."\"><a href=\"".$link."\"";
 			if($this->target)
 				$out.=" target=\"".$this->target."\"";
