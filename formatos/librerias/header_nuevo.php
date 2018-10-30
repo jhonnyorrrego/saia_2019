@@ -136,37 +136,37 @@ if ($formato[0]["orientacion"]) {
 				$vista = busca_filtro_tabla("encabezado", "vista_formato", "idvista_formato='" . $_REQUEST["vista"] . "'", "", $conn);
 				$encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $vista[0]["encabezado"] . "'", "", $conn);
 			} else {
-				$encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["encabezado"] . "'", "", $conn);				
+				$encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["encabezado"] . "'", "", $conn);
 			}
 		}
 		if ($formato[0]["paginar"] == '1') {
 			echo('<style type="text/css">
 			.page_border { border: 1px solid #CACACA; margin-bottom: 8px; box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); }
 			.paginador_docs { width: ' . $ancho_paginador . 'px; height:' . $alto_paginador . 'px; margin:30px auto 30px auto; box-shadow: 5px 5px 13px #0f0e0e;}
-			
+
 			.page_margin_top {height:' . ($tam_pagina["margen_superior"]) . 'px; margin:20px '.$tam_pagina["margen_izquierda"].'px 10px '.$tam_pagina["margen_derecha"].'px;overflow: hidden; }
 			.page_content {height: ' . ($alto_paginador - ($tam_pagina["margen_superior"] + $tam_pagina["margen_inferior"]+40)) . 'px; margin:0px '.$tam_pagina["margen_izquierda"].'px 0px '.$tam_pagina["margen_derecha"].'px;  overflow:hidden; }
 			.page_margin_bottom {height:' . ($tam_pagina["margen_inferior"]) . 'px; margin:10px '.$tam_pagina["margen_izquierda"].'px 10px '.$tam_pagina["margen_derecha"].'px;overflow: hidden; }
-			
+
 			</style>
 			<script>
 				$(document).ready(function(){
 					var alto_papel=' . ($alto_paginador) . ';
 			    var alto_encabezado=' . ($tam_pagina["margen_superior"]+30) . ';
 			    var alto_pie_pagina=' . ($tam_pagina["margen_inferior"]+20). ';
-					var altopagina = alto_papel-(alto_encabezado+alto_pie_pagina); 
+					var altopagina = alto_papel-(alto_encabezado+alto_pie_pagina);
 			    var paginas=1;
-			    var alto=0; 
+			    var alto=0;
 			    var inicial=$("#documento").offset().top;
-					
+
 			    alto = $("#page_overflow").height();
-				  paginas =Math.ceil(alto/altopagina);   
+				  paginas =Math.ceil(alto/altopagina);
 					var contenido = $("#page_overflow").html();
 					var encabezado = $("#doc_header").html();
 					var piedepagina = $("#doc_footer").html();
-					
+
 					for(i=1;i<paginas;i++){
-						var altoPaginActual = altopagina*i;             
+						var altoPaginActual = altopagina*i;
 						var pagina = \'<div id="pag-\'+i+\'" class="paginador_docs page_border"><div class="page_margin_top">\'+encabezado+\'</div><div id="pag_content-\'+i+\'" class="page_content"><div style="margin-top:-\'+altoPaginActual+\'px">\'+contenido+\'</div></div><div class="page_margin_bottom">\'+piedepagina+\'</div></div>\';
 						$("#documento").append(pagina);
 					}
@@ -176,10 +176,10 @@ if ($formato[0]["orientacion"]) {
 			echo('<style type="text/css">
 			.page_border { border: 1px solid #CACACA; margin-bottom: 8px; box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); }
 			.paginador_docs { width: ' . $ancho_paginador . 'px; margin:30px auto 30px auto; box-shadow: 5px 5px 13px #0f0e0e;}
-			
+
 			.page_margin_top {height:' . ($tam_pagina["margen_superior"]) . 'px; margin:20px '.$tam_pagina["margen_izquierda"].'px 10px '.$tam_pagina["margen_derecha"].'px;overflow: hidden; }
 			.page_content {margin:0px '.$tam_pagina["margen_izquierda"].'px 0px '.$tam_pagina["margen_derecha"].'px;  overflow:hidden; }
-			.page_margin_bottom {height:' . ($tam_pagina["margen_inferior"]) . 'px; margin:10px '.$tam_pagina["margen_izquierda"].'px 10px '.$tam_pagina["margen_derecha"].'px;overflow: hidden; }		
+			.page_margin_bottom {height:' . ($tam_pagina["margen_inferior"]) . 'px; margin:10px '.$tam_pagina["margen_izquierda"].'px 10px '.$tam_pagina["margen_derecha"].'px;overflow: hidden; }
 			</style>');
 		}
 		$style="";
@@ -198,7 +198,7 @@ if ($formato[0]["orientacion"]) {
 					echo crear_encabezado_pie_pagina(stripslashes($encabezado[0][0]), $_REQUEST["iddoc"], $formato[0]["idformato"], $pagina);
 				}
 			echo('</div>
-			
+
 		<div id="pag_content-0" class="page_content">
 			<div id="page_overflow"><table style="width:100%">');
 	} else {

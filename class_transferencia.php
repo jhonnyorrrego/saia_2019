@@ -2196,6 +2196,12 @@ function arbol_serie($condicion_adicional = '') {
 
 if (isset($_REQUEST["funcion"]) && trim($_REQUEST["funcion"]) != "") {
 	$funcion = str_replace("'", "", str_replace("\\", "", strtolower($_REQUEST["funcion"])));
-	$funcion();
+	if (isset($_REQUEST["parametros"]) && trim($_REQUEST["parametros"]) != "") {
+	    $params = preg_split("/;/", $_REQUEST["parametros"]);
+	    call_user_func_array($funcion, $params);
+	} else {
+	    $funcion();
+	}
+
 }
 ?>

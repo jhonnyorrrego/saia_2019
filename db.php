@@ -1752,7 +1752,7 @@ function abrir_url($location,$target="_blank") {
 <Post-condiciones>
 */
 function redirecciona($location){
-    if(!@$_SESSION['radicacion_masiva'] && !$_REQUEST["llamado_ajax"]){
+    if((!isset($_SESSION['radicacion_masiva']) && !isset($_REQUEST["llamado_ajax"])) || (!$_SESSION['radicacion_masiva'] && !$_REQUEST["llamado_ajax"])){
         ?>
         <script language="javascript">
         	window.location="<?php print($location);?>";
