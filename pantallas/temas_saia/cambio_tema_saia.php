@@ -28,25 +28,28 @@ echo(librerias_notificaciones());
 </center>
 <script>
 	$(document).ready(function(){
-		$("#cambiar").click(function(){
-			if($("#colores").val()!=0){
+		$("#cambiar").click(function() {
+			if($("#colores").val()!=0) {
 				$.ajax({
 					type:'POST',
-					url:"<?php echo $ruta_db_superior; ?>pantallas/temas_saia/tema_"+$("#colores").val()+"/cambia_color.php",
-					data:{color:$("#colores").val()},
-					success:function(respuesta){
-						if(respuesta==1){
+					url:"<?php echo $ruta_db_superior; ?>pantallas/temas_saia/cambia_color.php",
+					data: {
+						color:$("#colores").val()
+					},
+					success:function(respuesta) {
+						console.log(respuesta);
+						if(respuesta == 1) {
 							top.noty({text:"Cambios realizados!!", type:"warning", layout:"topCenter", timeout:3500});
 							window.parent.parent.location.reload();
-						}else{
+						} else {
 							top.noty({text:"Error al actualizar los valores", type:"warning", layout:"topCenter", timeout:3500});
 							window.location.reload();
 						}
-					},error:function (){
+					},error:function() {
 						top.noty({text:"Error al procesar la solicitud", type:"error", layout:"topCenter", timeout:3500});
 					}
 				});
-			}else{
+			} else {
 				alert("Seleccione por favor");
 			}
 		});
