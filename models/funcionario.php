@@ -13,6 +13,7 @@ class Funcionario
     protected $estado;
     protected $email;
     protected $foto_original;
+    protected $foto_recorte;
     protected $email_contrasena;
     protected $direccion;
     protected $telefono;
@@ -102,7 +103,8 @@ class Funcionario
             'iduser' => $this->idfuncionario,
             'name' => $this->getName(),
             'state' => $this->getState(),
-            'image' => $this->getImage(),
+            'foto_original' => $this->getImage('foto_original'),
+            'foto_recorte' => $this->getImage('foto_recorte')
         );
 
         return $data;
@@ -123,17 +125,17 @@ class Funcionario
         return $this->estado = 1 ? 'Activo' : 'Inactivo';
     }
 
-    public function getImage()
+    public function getImage($image)
     {
         global $ruta_db_superior; 
         
         $finalRoute = '';
         $Storage = new SaiaStorage("archivos");
-        $Image = json_decode($this->foto_original);
+        $Image = json_decode($this->$image);
 
         if (is_object($Image)) {
             if ($Storage->get_filesystem()->has($Image->ruta)) {
-                $binary = StorageUtils::get_binary_file($this->foto_original);
+                $binary = StorageUtils::get_binary_file($this->$image);
 
                 if (!is_dir($ruta_db_superior . 'temporal/temporal_' . $this->login)) {
                     mkdir($ruta_db_superior . 'temporal/temporal_' . $this->login, 0777);
@@ -143,14 +145,12 @@ class Funcionario
                 $fileName = $route[count($route) - 1];
                 $finalRoute = $ruta_db_superior . 'temporal/temporal_' . $this->login . '/' . $fileName;
 
-                if (!is_file($finalRoute)) {
-                    $file = fopen($finalRoute, 'a+');
+                $file = fopen($finalRoute, 'w+');
 
-                    if ($file) {
-                        $content = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $binary));
-                        fwrite($file, $content);
-                        fclose($file);
-                    }
+                if ($file) {
+                    $content = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $binary));
+                    fwrite($file, $content);
+                    fclose($file);
                 }
             }
         }
@@ -158,22 +158,24 @@ class Funcionario
         return 'temporal/temporal_' . $this->login . '/' . $fileName;
     }
 
-    public function updateImage($files){
-        $ruta_final = RUTA_FOTOGRAFIA_FUNCIONARIO . 'original/';
-        $nombre  = (rand());
-        $binario = file_get_contents($files['image']['tmp_name']);
-        $tipo = explode('.', $files['image']['name']);
-        $ruta = $ruta_final . $nombre . 'r.' . $tipo[1];
+    public function updateImage($image, $campo){
+        $ruta = RUTA_FOTOGRAFIA_FUNCIONARIO . 'original/' . rand() . 'r.' . $image['extention'];
 
         $tipo_almacenamiento = new SaiaStorage("imagenes");
-        $resultado = $tipo_almacenamiento->almacenar_contenido($ruta, $binario, false);
+        $content = $tipo_almacenamiento->almacenar_contenido($ruta, $image['binary'], false);
 
-        $ruta_anexos = array(
-            "servidor" => $tipo_almacenamiento->get_ruta_servidor(),
-            "ruta" => $ruta
-        );
-        $ruta_anexos = json_encode($ruta_anexos);
-        $sql = "UPDATE funcionario SET foto_original='" . $ruta_anexos . "' WHERE idfuncionario=" . $this->idfuncionario;
-        phpmkr_query($sql);
+        if($content){
+            $this->$campo = json_encode(array(
+                "servidor" => $tipo_almacenamiento->get_ruta_servidor(),
+                "ruta" => $ruta
+            ));
+            
+            $sql = "UPDATE funcionario SET ".$campo."='" . $this->$campo . "' WHERE idfuncionario=" . $this->idfuncionario;
+            phpmkr_query($sql);
+            
+            return $this->$campo;
+        }else{
+            return false;
+        }
     }
 }

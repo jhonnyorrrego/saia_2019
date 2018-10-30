@@ -49,7 +49,7 @@ echo librerias_highslide();
 </style>
 <div class="container-fluid">
     <div class="row">
-        <div class="d-none d-md-block col-md-3 px-0 mx-0">
+        <div class="d-none d-xl-block col-xl-3 px-0 mx-0">
             <div id="izquierdo_saia" ></div>
         </div>
         <div class="col-12 col-md-9 px-0 mx-0">

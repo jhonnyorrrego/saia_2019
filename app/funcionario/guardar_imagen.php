@@ -22,13 +22,18 @@ $Response = (object) array(
     'success' => 1,
 );
 
-if (isset($_SESSION['idfuncionario'])) {    
-    $Funcionario = new Funcionario($_SESSION['idfuncionario']);
-    $Funcionario->setAttributes($_REQUEST);
+if (isset($_SESSION['idfuncionario'])) {
+    $image = array(
+        'binary' => file_get_contents($_FILES['image']['tmp_name']),
+        'extention' => explode('.', $_FILES['image']['name'])[1]
+    );
 
-    if($Funcionario->update()){
+    $Funcionario = new Funcionario($_SESSION['idfuncionario']);
+
+    if ($Funcionario->updateImage($image, 'foto_original')) {
+        $Response->data = $Funcionario->getImage('foto_original');
         $Response->message = "Datos Actualizados";
-    }else{
+    } else {
         $Response->message = "Error al guardar";
         $Response->success = 0;
     }

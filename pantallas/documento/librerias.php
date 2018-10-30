@@ -968,4 +968,74 @@ function origen_documento2($doc, $numero, $origen = "", $tipo_radicado = "", $es
 
 	return ($pre_texto);
 }
+
+function origen_documento_pendiente($iddocumento, $numero, $fecha){
+	global $conn, $ruta_db_superior;
+
+	include_once $ruta_db_superior . 'models/funcionario.php';
+
+	$buscaOrigen = busca_filtro_tabla('b.idfuncionario', 'buzon_salida a, funcionario b', 'a.origen = b.funcionario_codigo and nombre="TRANSFERIDO" and archivo_idarchivo='.$iddocumento.' and destino ='. usuario_actual('funcionario_codigo'), '', $conn);
+	$Funcionario = new Funcionario($buscaOrigen[0]['idfuncionario']);
+	
+    $html = '<div class="col-1 px-0">
+        <span class="thumbnail-wrapper d32 circular inline">
+            <img id="profile_image" src="'.$ruta_db_superior . $Funcionario->getImage('foto_recorte') .'" width="32" height="32">
+        </span>
+    </div>';
+    $html.= '<div class="col"><small class="mt-1 hint-text">';
+    $html.= '<div class="link kenlace_saia pull-left" enlace="ordenar.php?key=' . $iddocumento . '&accion=mostrar&mostrar_formato=1" conector="iframe" titulo="Documento No.' . $numero . '"><b>'.$numero." - ". $Funcionario->getName(). '</b></div></small></div>';
+    $html.= '<div class="col-auto"><small class="mt-1 hint-text" id="time_'.$iddocumento.'"></small></div>';
+    $html.= '<script>$(function(){$("#time_'.$iddocumento.'").text(moment("'.$fecha.'").fromNow())})</script>';
+
+    return $html;
+}
+
+function sin_leer($iddocumento, $fecha){
+    global $conn;
+
+    $idfuncionario = usuario_actual('funcionario_codigo');
+    $leido = busca_filtro_tabla("idtransferencia", "buzon_salida", "archivo_idarchivo=" . $iddocumento . " and origen=".$idfuncionario." and (nombre='LEIDO' or nombre='BORRADOR') and " . fecha_db_obtener("fecha", "Y-m-d H:i:s") . " >= '".$fecha."'", "", $conn);
+
+    if (!$leido["numcampos"]) {
+        $html = '<h6 class="my-0 text-center"><i class="fa fa-circle text-complete"></i></h6>';
+    }
+
+    return $html;
+}
+
+function contiene_anexos($iddocumento){
+    global $conn;
+
+    $anexos = busca_filtro_tabla('idanexos', 'anexos', 'documento_iddocumento ='. $iddocumento, '', $conn);
+
+    if($anexos['numcampos']){
+        return '<h6 class="my-0 text-center"><i class="fa fa-paperclip hint-text"></i></h6>';
+    }else{
+        $paginas = busca_filtro_tabla('consecutivo', 'pagina', 'id_documento ='.$iddocumento, '', $conn);
+        if($paginas['numcampos']){
+            return '<h6 class="my-0 text-center"><i class="fa fa-paperclip hint-text"></i></h6>';
+        }
+    }
+
+    return '';
+}
+
+function prioridad($iddocumento){
+    $html = '<h6 class="my-0 text-center"><i class="fa fa-flag text-danger"></i></h6>';
+
+    return $html;
+}
+
+function tipo_documental($iddocumento){
+    $html = '<small class="hint-text">PQRS</small>';
+
+    return $html;
+}
+
+function vencimiento($iddocumento){
+    $html = '<small class="hint-text">Vence:</small> <button class="btn btn-danger btn-sm">Hoy</button>';
+    return $html;
+}
+
+
 ?>

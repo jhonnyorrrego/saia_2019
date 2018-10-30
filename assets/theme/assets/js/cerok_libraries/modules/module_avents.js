@@ -19,6 +19,8 @@ $(function(){
     });
 
     $(".page-sidebar").on('touchmove', function (evt) {
+        evt.preventDefault();
+        
         if (!xDown || !yDown) {
             return;
         }

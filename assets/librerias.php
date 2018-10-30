@@ -43,6 +43,25 @@ function bootstrap()
 
     return $popper . $css . $js;
 }
+/**
+ * retorna los enlaces css , js y locale
+ * de bootstrap table v1.12.1 minificados
+ */
+function bootstrapTable()
+{
+    global $ruta_db_superior;
+
+    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/bootstrap-table.min.css';
+    $css = '<link href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
+    
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/bootstrap-table.min.js';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+    
+    $locale = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/locale/bootstrap-table-es-ES.min.js';
+    $languaje = '<script src="' . $locale . '" type="text/javascript"></script>';
+
+    return $css . $js . $languaje;
+}
 
 /**
  * retorna los enlaces css y js
@@ -121,16 +140,44 @@ function pace()
  * retorna el enlace de moment js
  * v2.22.2
  */
-function moment(){
+function moment()
+{
     global $ruta_db_superior;
-    
+
     $route = $ruta_db_superior . 'assets/theme/assets/plugins/moment/moment.min.js';
     return '<script type="text/javascript" src="' . $route . '"></script>';
 }
 
-function breakpoint(){
+/**
+ * retorna enlace de libreria
+ * que permite determinar el breakpoint
+ * actual según bootstrap
+ */
+function breakpoint()
+{
     global $ruta_db_superior;
-    
+
     $route = $ruta_db_superior . 'assets/theme/assets/js/cerok_libraries/breakpoint/if-b4-breakpoint.js';
     return '<script type="text/javascript" src="' . $route . '"></script>';
+}
+
+function kaiten(){
+    global $ruta_db_superior;
+    
+    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/kaiten/css/kaiten.css';
+    $css = '<link class="main-stylesheet" href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
+
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/kaiten/js/jquery.min.js';
+    $jq = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+
+    $routeUi = $ruta_db_superior . 'assets/theme/assets/plugins/kaiten/js/jquery-ui.custom.min.js';
+    $ui = '<script type="text/javascript" src="' . $routeUi . '"></script>';
+
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/kaiten/js/kaiten.min.js';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+
+    $resize = $ruta_db_superior . 'assets/theme/assets/plugins/kaiten/js/jquery.ba-resize.min.js';
+    $jqresize = '<script type="text/javascript" src="' . $resize . '"></script>';
+
+    return $css . $jq . $ui . $js . $jqresize;
 }

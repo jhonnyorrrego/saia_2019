@@ -70,30 +70,51 @@ function menu_principal_documento($iddocumento, $tipo_visualizacion = "", $modul
                     <button id="btnGroupDrop1" type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-edit"></i>
                     </button>
-                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                    <div class="dropdown-menu pre-scrollable" aria-labelledby="btnGroupDrop1" style="width:300px;">
+                        <ul class="pl-1">
                         <?php foreach ($acciones as $key => $accion): ?>
-                            <a class="dropdown-item" href="<?=$accion['ruta']?>" target="<?=$accion['target']?>" id="<?=$accion['id']?>"><i class="<?=$accion['icono']?>"></i><?=$accion['etiqueta']?></a>
+                            <li class="dropdown-item text-truncate">
+                                <a href="<?=$accion['ruta']?>" target="<?=$accion['target']?>" id="<?=$accion['id']?>" class="text-body">
+                                    <i class="<?=$accion['icono']?> mr-1"></i>
+                                    <?=$accion['etiqueta']?>
+                                </a>
+                            </li>
                         <?php endforeach;?>
+                        </ul>
                     </div>
                 </div>
                 <div class="btn-group" role="group">
                     <button id="btnGroupDrop2" type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="fa fa-share"></i>
                     </button>
-                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop2">
+                    <div class="dropdown-menu pre-scrollable" aria-labelledby="btnGroupDrop2" style="width:300px;">
+                        <ul class="pl-1">
                         <?php foreach ($seguimiento as $key => $accion): ?>
-                            <a class="dropdown-item" href="<?=$accion['ruta']?>" target="<?=$accion['target']?>" id="<?=$accion['id']?>"><i class="<?=$accion['icono']?>"></i><?=$accion['etiqueta']?></a>
+                            <li class="dropdown-item text-truncate">
+                                <a href="<?=$accion['ruta']?>" target="<?=$accion['target']?>" id="<?=$accion['id']?>" class="text-body">
+                                    <i class="<?=$accion['icono']?> mr-1"></i>
+                                    <?=$accion['etiqueta']?>
+                                </a>
+                            </li>
                         <?php endforeach;?>
+                        </ul>
                     </div>
                 </div>
                 <div class="btn-group" role="group">
                     <button id="btnGroupDrop3" type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="pg pg-bag"></i>
                     </button>
-                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop3">
+                    <div class="dropdown-menu pre-scrollable" aria-labelledby="btnGroupDrop3" style="width:300px;">
+                        <ul class="pl-1">
                         <?php foreach ($otros as $key => $accion): ?>
-                            <a class="dropdown-item" href="<?=$accion['ruta']?>" target="<?=$accion['target']?>" id="<?=$accion['id']?>"><i class="<?=$accion['icono']?>"></i><?=$accion['etiqueta']?></a>
+                            <li class="dropdown-item text-truncate">
+                                <a href="<?=$accion['ruta']?>" target="<?=$accion['target']?>" id="<?=$accion['id']?>" class="text-body">
+                                    <i class="<?=$accion['icono']?> mr-1"></i>
+                                    <?=$accion['etiqueta']?>
+                                </a>
+                            </li>
                         <?php endforeach;?>
+                        </ul>
                     </div>
                 </div>
                 <div class="btn-group" role="group">

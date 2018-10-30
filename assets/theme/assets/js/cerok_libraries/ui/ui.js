@@ -1,6 +1,10 @@
 class Ui {    
     static showUserInfo(user) {
-        $("#profile_image,#img_edit_photo").attr("src", user.image);
+        let img_complete = Session.getBaseUrl() + user.foto_original;
+        let img_cut = Session.getBaseUrl() + user.foto_recorte;
+
+        $("#img_edit_photo").attr('src', img_complete);
+        $("#profile_image").attr("src", img_cut);
         $("#user_name").text(user.name);
     }
 
@@ -39,6 +43,27 @@ class Ui {
                 }
             }, 'json');
         }
+    }
+
+    static imageAreaSelect(){
+        setTimeout(() => {
+            $("#img_edit_photo").imgAreaSelect({
+                handles: "corners",
+                aspectRatio: "1:1",
+                minHeight: 150,
+                x1: 25,
+                y1: 25,
+                x2: 230,
+                y2: 230,
+                persistent: true,
+            });
+        }, 500);
+    }
+
+    static hideImgAreaSelect(){
+        let ias = $("#img_edit_photo").imgAreaSelect({ instance: true });
+        ias.setOptions({ hide: true });
+        ias.update();
     }
 
     static close() {

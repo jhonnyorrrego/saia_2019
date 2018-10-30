@@ -14,7 +14,6 @@ class Session {
             async:false,
             success: function (response) {
                 if (response.success) {
-                    response.data.image = session.baseUrl + response.data.image;
                     session.user = response.data;
                 }else{
                     Session.violation('Debe iniciar sessión');
@@ -78,7 +77,7 @@ class Session {
     }
 
     static close(){
-        localStorage.setItem('key', 0);
+        localStorage.clear();
     }
 
     static getBaseUrl() {

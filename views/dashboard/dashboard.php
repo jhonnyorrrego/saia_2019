@@ -35,6 +35,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 	<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css" rel="stylesheet" type="text/css" media="screen" />
 	<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen" />
 	<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/switchery/css/switchery.min.css" rel="stylesheet" type="text/css" media="screen" />
+	<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/css/imgareaselect-default.css" rel="stylesheet" type="text/css" media="screen" />
     <link class="main-stylesheet" href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -1452,16 +1453,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                 <hr>
                                 <div class="form-group-attached">
                                     <div class="row mb-1">
-                                        <label for="user" class="col-md-2 control-label text-black" style="line-height: 1;">Foto</label>
-                                        <div class="offset-md-1 col-md-9">
-                                            <div class="custom-file">
-                                                <input type="file" class="custom-file-input" name="image" id="image">
-                                                <label class="custom-file-label" for="validatedCustomFile">Choose
-                                                    file...</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-1">
                                         <label for="user" class="col-md-2 control-label text-black" style="line-height: 1;">Email</label>
                                         <div class="offset-md-1 col-md-9">
                                             <input type="email" class="form-control" placeholder="prueba@ejemplo.com"
@@ -1507,13 +1498,13 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-body text-center mt-2">
-                    <img id="img_edit_photo">
+                    <img id="img_edit_photo" width="250px">
                 </div>
                 <div class="modal-footer">
-                     <label id="#bb"> Enter Your File
-    <input type="file" id="File"   size="60" style="display:none" >
-    </label>  
-                    <div class="btn btn-success">Guardar</div>
+                    <label class="btn btn-danger">Cargar imagen
+                        <input type="file" style="display:none" id="file_photo">
+                    </label>    
+                    <div class="btn btn-complete" id="btn_save_photo">Guardar</div>
                 </div>
             </div>
         </div>
@@ -1530,6 +1521,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/pages/js/pages.js" type="text/javascript"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/scripts.js" type="text/javascript"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/scripts/jquery.imgareaselect.js" type="text/javascript"></script>
+    
     <?= moment() ?>        
     <!-- SESION LIBRARY -->
     <script data-baseurl="<?= $ruta_db_superior ?>" id="baseUrl" src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/session/session.js"></script>
