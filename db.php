@@ -504,10 +504,10 @@ global $conn;
 				//preg_match("/where (.+)=(.*)/", strtolower($strsql), $resultados);
 				preg_match("/where (.+)\s*=\s*([\w]+|'[\w]+')/i", strtolower($strsql), $resultados);
 				$llave = trim($resultados[2]);
-				$llave = str_replace("'","",$llave);
+				//$llave = str_replace("'","",$llave);
 				$campo_llave = $resultados[1];
 				$detalle = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
-				$rs = $conn->Ejecutar_Sql(((($strsql))));
+				$rs = $conn->Ejecutar_Sql($strsql);
 				$detalle2 = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
 				// ************ miro cuales campos cambiaron en la tabla ****************
 				$nombres_campos = array();
