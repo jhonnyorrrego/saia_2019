@@ -3181,7 +3181,7 @@ function usuario_actual($campo) {
     if (!isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
         salir(decodifica_encabezado("Su sesi&oacute;n ha expirado, por favor ingrese de nuevo."));
     } else if (!empty($usuactual)) {
-        $dato = busca_filtro_tabla("A.estado,A.idfuncionario,A.funcionario_codigo,A.email,A.email_contrasena,A.idfuncionario AS id,A.perfil,A.login, A.nombres, A.apellidos", "funcionario A", "A.login='" . $usuactual . "'", "", $conn);
+        $dato = busca_filtro_tabla("A.estado,A.idfuncionario,A.funcionario_codigo,A.email,A.email_contrasena,A.idfuncionario AS id,A.perfil,A.login, A.nombres, A.apellidos, A.ventanilla_radicacion", "funcionario A", "A.login='" . $usuactual . "'", "", $conn);
         if ($dato["numcampos"]) {
             if ($dato[0]["estado"] == 1) {
                 return ($dato[0][$campo]);
