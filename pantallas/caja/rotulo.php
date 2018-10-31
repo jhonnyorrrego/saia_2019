@@ -111,7 +111,7 @@ function rotulo_caja($id){
 		<td colspan="2" style="text-align:center"><?php echo mayusculas($datos[0]["subseccion"]); ?></td>
 	</tr>
 	<tr height="30px">
-		<td><b>DIVISION</b></td>
+		<td><b>UBICACI&Oacute;N EXACTA</b></td>
 		<td colspan="2" style="text-align:center"><?php echo mayusculas($datos[0]["division"]); ?></td>
 	</tr>
 	<tr height="30px">

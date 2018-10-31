@@ -51,11 +51,11 @@ function mostrar_informacion_adicional_expediente($idexpediente) {
     global $conn;
     $cadena = '';
     // EXPEDIENTE
-    $expediente_actual = busca_filtro_tabla("serie_idserie", "expediente", "idexpediente=" . $idexpediente, "", $conn);
+    $expediente_actual = busca_filtro_tabla("serie_idserie,agrupador", "expediente", "idexpediente=" . $idexpediente, "", $conn);
     // NOMBRE DE LA SERIE
     $serie = busca_filtro_tabla("nombre", "serie", "idserie=" . $expediente_actual[0]['serie_idserie'], "", $conn);
 
-    if ($serie['numcampos']) {
+    if ($serie['numcampos'] && !$expediente_actual[0]["agrupador"]) {
         $cadena .= $serie[0]['nombre'];
     }
     $cadena .= '<br>';
@@ -126,17 +126,19 @@ function enlace_expediente($idexpediente, $nombre) {
     return implode("", $a_html);
 }
 
-function request_expediente_padre() {
+function request_expediente_padre() {	
     $texto = '';
     if (@$_REQUEST["idexpediente"]) {
         $texto .= "cod_padre=" . $_REQUEST["idexpediente"];
     } else if (@$_REQUEST["idbusqueda_filtro_temp"]) {
         $texto .= "1=1";
     } else {
-        $texto .= "(cod_padre=0 OR cod_padre IS NULL) ";
+    	if(!$_REQUEST["idcaja"]){
+        	$texto .= "(cod_padre=0 OR cod_padre IS NULL)";
+        }
     }
     if (@$_REQUEST["idcaja"]) {
-        $texto .= " AND fk_idcaja=" . @$_REQUEST["idcaja"];
+        $texto .= " fk_idcaja=" . @$_REQUEST["idcaja"];
     }
     if (@$_REQUEST["variable_busqueda"] == 2 || @$_REQUEST["variable_busqueda"] == 3) {
         if (@$_REQUEST["idexpediente"]) {

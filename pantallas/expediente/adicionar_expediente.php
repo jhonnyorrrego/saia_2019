@@ -404,7 +404,7 @@ $serie_padre = "";
 <input type="hidden" name="dependencia_iddependencia" id="dependencia_iddependencia"/>
 <input type="hidden" name="identidad_serie" id="identidad_serie"/>
 <input type="hidden" name="tipo_retorno" value="1"/>
-<input type="hidden" name="fk_idcaja" value="<?php echo(@$_REQUEST["fk_idcaja"]);?>">
+<!--input type="hidden" name="fk_idcaja" value="<?php echo(@$_REQUEST["fk_idcaja"]);?>"-->
 <!--input type="hidden" name="estado_archivo" value="1"-->
 <input type="hidden" name="key_formulario_saia" value="<?php echo(generar_llave_md5_saia());?>">
 <div>
