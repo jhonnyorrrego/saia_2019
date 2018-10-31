@@ -31,7 +31,7 @@ PUBLIC activeCalendarWeek() -> class constructor. Calls the main class construct
 ********************************************************************************
 */
 public function __construct($year=false,$month=false,$day=false,$GMTDiff="none") {
-parent::activeCalendar($year, $month, $day, $GMTDiff);
+    parent::__construct($year, $month, $day, $GMTDiff);
 $this->GMT=$GMTDiff;
 }
 /*
