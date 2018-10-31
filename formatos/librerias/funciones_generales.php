@@ -85,7 +85,7 @@ function transferencia_automatica($idformato, $iddoc, $destinos, $tipo, $notas =
 		$adicionales["notas"] = "'" . $notas . "'";
 		$datos["ver_notas"] = 1;
 	}
-
+	$vector=array_filter($vector);
 	foreach($vector as $fila) {
 		if(!strpos($fila, "#")) {
 			if($tipo == 3) {
