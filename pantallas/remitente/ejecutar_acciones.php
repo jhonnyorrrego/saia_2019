@@ -23,6 +23,7 @@ if (@$_REQUEST["ejecutar_remitente"]) {
 	}
 }
 function set_remitente() {
+	global $conn;
 	$retorno = new stdClass;
 	$retorno -> exito = 0;
 	$retorno -> mensaje = "Error al guardar";
@@ -39,7 +40,7 @@ function set_remitente() {
 			array_push($valores_busqueda,"(".$campo."='' OR ".$campo." IS NULL )");
 		}
 	}
-	$remitente=busca_filtro_tabla("","datos_ejecutor",implode(" AND ",$valores_busqueda));
+	$remitente=busca_filtro_tabla("","datos_ejecutor",implode(" AND ",$valores_busqueda),"",$conn);
 	if(!$remitente["numcampos"]){
 		$sql2 = "INSERT INTO datos_ejecutor(" . implode(",", $campos) . ") VALUES('" . implode("','", $valores) . "')";
 		phpmkr_query($sql2);
