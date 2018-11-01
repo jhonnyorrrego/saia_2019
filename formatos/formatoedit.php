@@ -1135,7 +1135,7 @@ function vincular_funcion_digitalizacion($idformato,$x_banderas){
 }
 function desvincular_funcion_responsables($idformato){
 	global $conn;
-	$formato=busca_filtro_tabla("","formato","idfotmato=".$idformato,"",$conn);
+	$formato=busca_filtro_tabla("","formato","idformato=".$idformato,"",$conn);
 	$buscar_funcion=busca_filtro_tabla("","funciones_formato A","nombre_funcion='asignar_responsables'","",$conn);
 	if(in_array($idformato,explode(",",$buscar_funcion[0]["formato"]))){
 		$formats=explode(",",$buscar_funcion[0]["formato"]);

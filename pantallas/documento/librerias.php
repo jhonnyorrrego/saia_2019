@@ -453,9 +453,9 @@ function fecha_creacion_documento($fecha0, $plantilla = Null, $doc = Null) {
 		$fecha = mostrar_fecha_saia($fecha1["day"] . "-" . $fecha1["month"] . "-" . $fecha1["year"]);
 	}
 
-	$exito = 0;
-	$papa = buscar_papa_primero($doc);
-	if ($doc != $papa) {
+	$exito = 0;	
+	if (!empty($doc)) {
+		$papa = buscar_papa_primero($doc);
 		if ($papa != $doc) {
 			$doc_papa = busca_filtro_tabla("", "documento", "iddocumento=" . $papa, "", $conn);
 			if ($doc_papa["numcampos"]) {

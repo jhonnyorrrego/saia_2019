@@ -45,7 +45,7 @@ function mostrar_ruta_reporte($iddistribucion){
     
 	$datos=busca_filtro_tabla('tipo_origen,estado_recogida,origen,tipo_destino,destino,ruta_origen,ruta_destino','distribucion','iddistribucion='.$iddistribucion,'',$conn);
 
-	$nombre_ruta_distribucion=mostrar_nombre_ruta_distribucion($datos[0]['tipo_origen'],$datos[0]['estado_recogida'],$datos[0]['ruta_origen'],$datos[0]['ruta_destino'],$datos[0]['tipo_destino']);
+	$nombre_ruta_distribucion=mostrar_nombre_ruta_distribucion($datos[0]['tipo_origen'],$datos[0]['estado_recogida'],$datos[0]['ruta_origen'],$datos[0]['ruta_destino'],$datos[0]['tipo_destino'],$iddistribucion);
 	
 	return($nombre_ruta_distribucion);
 }
@@ -103,7 +103,7 @@ function mostrar_cantidad_origen_externo(){
 }
 function mopstrar_nombre_ventanilla_radicacion($ventanilla_radicacion){
 	global $conn;
-	
+	if(!empty($ventanilla_radicacion) && $ventanilla_radicacion!='ventanilla_radicacion')
 	$ventanillas=busca_filtro_tabla("valor","cf_ventanilla","idcf_ventanilla=".$ventanilla_radicacion,"",$conn);
 	if($ventanillas['numcampos']){
 		return($ventanillas[0]['valor']);

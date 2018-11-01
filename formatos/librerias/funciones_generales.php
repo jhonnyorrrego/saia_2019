@@ -1718,100 +1718,102 @@ function cargar_seleccionados($idformato, $idcampo, $tipo = 1, $iddoc) {
 		sort($vector);
 		
 		foreach ($vector as $fila) {
-			switch ($tipo_arbol) {
-				case 0 :
-					//Funcionarios
-					if (strpos($fila, 'd') > 0) {
-						$datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . str_replace("d", "", $fila), "", $conn);
-						if ($datos["numcampos"]) {
-							$nombres[] = $datos[0]["nombre"];
-						}
-					} else {
-						if ($pos = strpos($fila, "_")) {
-							$fila = substr($fila, 0, $pos);
-						}
-						if ($ok) {
-							$datos = busca_filtro_tabla($nombre_campo, "funcionario", "funcionario_codigo=" . $fila, "", $conn);
+			if($fila!=""){
+				switch ($tipo_arbol) {
+					case 0 :
+						//Funcionarios
+						if (strpos($fila, 'd') > 0) {
+							$datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . str_replace("d", "", $fila), "", $conn);
 							if ($datos["numcampos"]) {
-								$nombres[] = ucwords($datos[0][0]);
+								$nombres[] = $datos[0]["nombre"];
 							}
 						} else {
-							$datos = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $fila, "", $conn);
-							if ($datos["numcampos"]) {
-								$nombres[] = ucwords($datos[0]["nombres"] . " " . $datos[0]["apellidos"]);
+							if ($pos = strpos($fila, "_")) {
+								$fila = substr($fila, 0, $pos);
 							}
-						}
-
-					}
-					break;
-				case 1 :
-					//Series
-					if ($ok) {
-						$datos = busca_filtro_tabla($nombre_campo, "serie", "idserie=" . $fila, "", $conn);
-					} else {
-						$datos = busca_filtro_tabla("nombre", "serie", "idserie=" . $fila, "", $conn);
-					}
-					if ($datos["numcampos"]) {
-						$nombres[] = ucwords($datos[0][0]);
-					}
-					break;
-				case 2 :
-					//Dependencia
-					if ($ok) {
-						$datos = busca_filtro_tabla($nombre_campo, "dependencia", "iddependencia=" . $fila, "", $conn);
-					} else {
-						$datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . $fila, "", $conn);
-					}
-					if ($datos["numcampos"]) {
-						$nombres[] = ucwords($datos[0][0]);
-					}
-					break;
-				case 3 :
-					// Otros
-					$nombres[] = $fila;
-					break;
-				case 4 :
-					// valor de tabla cuando se llama a test_serie.php el unico campo que se puede mostrar de la tabla es nombre
-					if ($campo["numcampos"]) {
-						if (preg_match("/.*tabla=([^&]+)/", $campo[0]["valor"], $info_tabla)) {
-							$tabla = $info_tabla[1];
 							if ($ok) {
-								$valor_tabla = busca_filtro_tabla($nombre_campo, $tabla, "id" . $tabla . " =" . $fila, "", $conn);
+								$datos = busca_filtro_tabla($nombre_campo, "funcionario", "funcionario_codigo=" . $fila, "", $conn);
+								if ($datos["numcampos"]) {
+									$nombres[] = ucwords($datos[0][0]);
+								}
 							} else {
-								$valor_tabla = busca_filtro_tabla("nombre", $tabla, "id" . $tabla . " =" . $fila, "", $conn);
+								$datos = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $fila, "", $conn);
+								if ($datos["numcampos"]) {
+									$nombres[] = ucwords($datos[0]["nombres"] . " " . $datos[0]["apellidos"]);
+								}
 							}
-							if ($valor_tabla["numcampos"]) {
-								$nombres[] = $valor_tabla[0][0];
-							}
+	
 						}
-					}
-					break;
-
-				case 5 :
-				//roles
-				default :
-					if (strpos($fila, 'd') > 0) {
-						$datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . str_replace("d", "", $fila), "", $conn);
-						if ($datos["numcampos"]) {
-							$nombres[] = $datos[0]["nombre"];
-						}
-					} else {
-						if ($pos = strpos($fila, "_")) {
-							$fila = substr($fila, 0, $pos);
-						}
+						break;
+					case 1 :
+						//Series
 						if ($ok) {
-							$datos = busca_filtro_tabla($nombre_campo, "vfuncionario_dc", "iddependencia_cargo='" . $fila . "'", "", $conn);
+							$datos = busca_filtro_tabla($nombre_campo, "serie", "idserie=" . $fila, "", $conn);
+						} else {
+							$datos = busca_filtro_tabla("nombre", "serie", "idserie=" . $fila, "", $conn);
+						}
+						if ($datos["numcampos"]) {
+							$nombres[] = ucwords($datos[0][0]);
+						}
+						break;
+					case 2 :
+						//Dependencia
+						if ($ok) {
+							$datos = busca_filtro_tabla($nombre_campo, "dependencia", "iddependencia=" . $fila, "", $conn);
+						} else {
+							$datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . $fila, "", $conn);
+						}
+						if ($datos["numcampos"]) {
+							$nombres[] = ucwords($datos[0][0]);
+						}
+						break;
+					case 3 :
+						// Otros
+						$nombres[] = $fila;
+						break;
+					case 4 :
+						// valor de tabla cuando se llama a test_serie.php el unico campo que se puede mostrar de la tabla es nombre
+						if ($campo["numcampos"]) {
+							if (preg_match("/.*tabla=([^&]+)/", $campo[0]["valor"], $info_tabla)) {
+								$tabla = $info_tabla[1];
+								if ($ok) {
+									$valor_tabla = busca_filtro_tabla($nombre_campo, $tabla, "id" . $tabla . " =" . $fila, "", $conn);
+								} else {
+									$valor_tabla = busca_filtro_tabla("nombre", $tabla, "id" . $tabla . " =" . $fila, "", $conn);
+								}
+								if ($valor_tabla["numcampos"]) {
+									$nombres[] = $valor_tabla[0][0];
+								}
+							}
+						}
+						break;
+	
+					case 5 :
+					//roles
+					default :
+						if (strpos($fila, 'd') > 0) {
+							$datos = busca_filtro_tabla("nombre", "dependencia", "iddependencia=" . str_replace("d", "", $fila), "", $conn);
 							if ($datos["numcampos"]) {
-								$nombres[] = ucwords($datos[0][0]);
+								$nombres[] = $datos[0]["nombre"];
 							}
 						} else {
-							$datos = busca_filtro_tabla("nombres,apellidos,cargo", "vfuncionario_dc", "iddependencia_cargo='" . $fila . "'", "", $conn);
-							if ($datos["numcampos"]) {
-								$nombres[] = ucwords($datos[0]["nombres"] . " " . $datos[0]["apellidos"] . " - " . $datos[0]["cargo"]);
+							if ($pos = strpos($fila, "_")) {
+								$fila = substr($fila, 0, $pos);
+							}
+							if ($ok) {
+								$datos = busca_filtro_tabla($nombre_campo, "vfuncionario_dc", "iddependencia_cargo='" . $fila . "'", "", $conn);
+								if ($datos["numcampos"]) {
+									$nombres[] = ucwords($datos[0][0]);
+								}
+							} else {
+								$datos = busca_filtro_tabla("nombres,apellidos,cargo", "vfuncionario_dc", "iddependencia_cargo='" . $fila . "'", "", $conn);
+								if ($datos["numcampos"]) {
+									$nombres[] = ucwords($datos[0]["nombres"] . " " . $datos[0]["apellidos"] . " - " . $datos[0]["cargo"]);
+								}
 							}
 						}
-					}
-					break;
+						break;
+				}
 			}
 		}
 	}
