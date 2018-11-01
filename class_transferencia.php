@@ -37,7 +37,9 @@ function buscar_funcionarios($dependencia, $arreglo = NULL) {
 	array_push($dependencias, $dependencia);
 	$dependencias = array_unique($dependencias);
 	$funcionarios = busca_filtro_tabla("A.funcionario_codigo", "funcionario A,dependencia_cargo B, cargo C,dependencia D", "B.cargo_idcargo=C.idcargo AND B.funcionario_idfuncionario=A.idfuncionario AND B.dependencia_iddependencia=D.iddependencia and B.dependencia_iddependencia IN(" . implode(",", $dependencias) . ") AND A.estado=1 AND B.estado=1 AND C.estado=1 AND D.estado=1 AND A.sistema=1 AND C.tipo_cargo=1", "", $conn);
-	$arreglo = extrae_campo($funcionarios, "funcionario_codigo", "U");
+	if($funcionarios["numcampos"]){
+	    $arreglo = extrae_campo($funcionarios, "funcionario_codigo", "U");
+	}
 	return ($arreglo);
 }
 

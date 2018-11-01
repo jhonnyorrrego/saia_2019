@@ -17,7 +17,7 @@ echo (estilo_bootstrap());
 
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("idcontador","x_idformato","x_contador_idcontador","x_serie_idserie");
-desencriptar_sqli('form_info'); 
+desencriptar_sqli('form_info');
 
 // Initialize common variables
 $x_idformato = Null;
@@ -1189,11 +1189,13 @@ function desvincular_funcion_digitalizacion($idformato,$x_banderas){
 		phpmkr_query($sql);
 	}
 	//--------------------------------------------------------
-	$buscar_funcion_accion=busca_filtro_tabla("","funciones_formato_accion","idfunciones_formato=".$buscar_funcion[0]["idfunciones_formato"]." AND formato_idformato=".$idformato,"",$conn);
-	if($buscar_funcion_accion["numcampos"]){
-		$sql="DELETE FROM funciones_formato_accion WHERE idfunciones_formato_accion=".$buscar_funcion_accion[0]["idfunciones_formato_accion"];
-		guardar_traza($sql);
-		phpmkr_query($sql);
+	if(!empty($buscar_funcion[0]["idfunciones_formato"])) {
+    	$buscar_funcion_accion=busca_filtro_tabla("","funciones_formato_accion","idfunciones_formato=".$buscar_funcion[0]["idfunciones_formato"]." AND formato_idformato=".$idformato,"",$conn);
+    	if($buscar_funcion_accion["numcampos"]){
+    		$sql="DELETE FROM funciones_formato_accion WHERE idfunciones_formato_accion=".$buscar_funcion_accion[0]["idfunciones_formato_accion"];
+    		guardar_traza($sql);
+    		phpmkr_query($sql);
+    	}
 	}
 }
 function vincular_campo_anexo($idformato){
