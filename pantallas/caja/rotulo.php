@@ -11,6 +11,7 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 include_once ($ruta_db_superior . "pantallas/qr/librerias.php");
+include_once($ruta_db_superior."pantallas/caja/librerias.php");
 
 $cons_logo = busca_filtro_tabla("valor", "configuracion", "nombre='logo' and tipo='empresa'", "", $conn);
 if ($cons_logo["numcampos"]) {
@@ -139,12 +140,12 @@ $listado_series=implode(", ", $listado_series);?>
 	</tr>
 	<tr>
 		<td><b>No. CARPETA</b></td>
-		<td colspan="2" style="text-align:center"><?php echo mayusculas($datos[0]["no_carpetas"]); ?></td>
+		<td colspan="2" style="text-align:center"><?php echo consultar_numero_carpetas_caja($datos[0]["idcaja"]); //echo mayusculas($datos[0]["no_carpetas"]); ?></td>
 	</tr>
-	<tr>
+	<!--tr>
 		<td><b>No. CAJA</b></td>
 		<td colspan="2" style="text-align:center;font-size:18pt"><?php echo mayusculas($datos[0]["no_cajas"]); ?></td>
-	</tr>
+	</tr-->
 	<!--tr>
 		<td><b>No. CONSECUTIVO</b></td>
 		<td colspan="2" style="text-align:center;"><?php echo mayusculas($datos[0]["no_consecutivo"]); ?></td>
