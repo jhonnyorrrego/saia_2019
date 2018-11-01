@@ -31,9 +31,12 @@ if(@$_REQUEST['funcionario']) {
 	// busca_dependencias_papas($datos_admin_funcionario["dependencias"]);
 	$lista_series_funcionario = implode(",", $datos_admin_funcionario["series"]);
 	// $ids_funcionario = busca_datos_administrativos_funcionario("ids");
-	$lista_entidades = implode(",", $datos_admin_funcionario["identidad_serie"]);
-	$datos = busca_filtro_tabla("llave_entidad", "entidad_serie", "identidad_serie in (" . $lista_entidades . ") and entidad_identidad=2 and estado=1", "", $conn);
-	// print_r($datos["sql"]);
+	if(!empty($datos_admin_funcionario["identidad_serie"])) {
+    	$lista_entidades = implode(",", $datos_admin_funcionario["identidad_serie"]);
+    	$datos = busca_filtro_tabla("llave_entidad", "entidad_serie", "identidad_serie in (" . $lista_entidades . ") and entidad_identidad=2 and estado=1", "", $conn);
+	} else {
+	    $datos = ["numcampos" => 0];
+	}
 	if($datos["numcampos"]) {
 		$lista_dependencias = extrae_campo($datos, "llave_entidad", "U");
 		// print_r($lista_dependencias);
@@ -145,11 +148,11 @@ function llena_serie($id, $iddep, $tipo = 0, $nombre_dependencia, $dependencia_c
 			if($nombre_dependencia=="" || $dependencia_codigo == ""){
 				/*$dependencias = busca_filtro_tabla("codigo, nombre", "dependencia", "iddependencia = $iddep", "", $conn);
 				if($dependencias["numcampos"]){
-					
+
 				}*/
 				$valores_dependencia=busca_dependencia($iddep);
 				$nombre_dependencia =$valores_dependencia["nombre"];
-				$dependencia_codigo =$valores_dependencia["codigo"];  
+				$dependencia_codigo =$valores_dependencia["codigo"];
 			}
 			$item["data"] = array(
 					"iddependencia" => $iddep,
