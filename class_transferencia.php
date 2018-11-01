@@ -380,7 +380,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 		}
 	}
 
-	if ($adicionales != Null && $adicionales != "" && is_array($adicionales)) {
+	if (!empty($adicionales) && is_array($adicionales)) {
 		$otras_llaves = "," . implode(",", array_keys($adicionales));
 		$otros_valores = "," . implode(",", array_values($adicionales));
 		if ($otros_valores == ",") {
@@ -441,7 +441,14 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 				    $ver_notas = $datos["ver_notas"];
 				}
 				$values_in = "$idarchivo,'" . $datos["nombre"] . "'," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'$origen',1," . $datos["ruta_idruta"] . ",$tipo_destino" . $otros_valores . ",'" . $ver_notas . "'";
-				$sql = "INSERT INTO buzon_entrada(archivo_idarchivo,nombre,fecha,destino,tipo_origen,ruta_idruta,tipo_destino" . $otras_llaves . ",ver_notas,origen) values(" . $values_in . "," . $user . ")";
+				$campos_be = "archivo_idarchivo,nombre,fecha,destino,tipo_origen,ruta_idruta,tipo_destino" . $otras_llaves . ",ver_notas,origen";
+				$values_in .= "," . $user;
+				if(!isset($adicionales["activo"])) {
+				    $campos_be .= ", activo";
+				    $values_in .= ", 1";
+				}
+
+				$sql = "INSERT INTO buzon_entrada(" . $campos_be . ") values(" . $values_in . ")";
 				phpmkr_query($sql) or die($sql);
 				if ($texto_notas != "") {
 					$idbuzon_e = phpmkr_insert_id();
@@ -1862,10 +1869,14 @@ function verificar_ruta($fila, $id_documento) {// verifico que est�n bien los 
 		echo "</table><input type=button value='Continuar' onclick='location=\"class_transferencia.php?funcion=llamar_buscar_ruta&iddoc=" . $_POST["iddoc"] . "\";'>";
 	}// si todo est� bien hago la transferencia
 	else {
-		if (isset($_POST["iddoc"]))
+	    $datos = array();
+	    $adicionales = array();
+	    $destino = array();
+	    if (isset($_POST["iddoc"])) {
 			$datos["archivo_idarchivo"] = $_POST["iddoc"];
-		else
+	    } else {
 			$datos["archivo_idarchivo"] = $id_documento;
+	    }
 		$datos["nombre"] = "POR_APROBAR";
 		$datos["tipo"] = "";
 		foreach ($fila as $fila2) {
