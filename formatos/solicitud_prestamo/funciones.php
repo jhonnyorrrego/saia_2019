@@ -127,14 +127,14 @@ function mostrar_expedientes_prestamos($idformato, $iddoc) {
 			);
 
 			$estilo_general = ' style="text-align:center;font-weight:bold;"';
-			$texto .= '<table style="width:100%;border-collapse:collapse;" border="1">
+			$texto .= '<table class="table table-bordered" style="width:100%" border="1">
 			<tr>
-				<th rowspan="2" ' . $estilo_general . '>NUMERO DE ORDEN</th>
-				<th rowspan="2" ' . $estilo_general . '>CODIGO</th>
+				<th rowspan="2" ' . $estilo_general . '>N&Uacute;MERO DE ORDEN</th>
+				<th rowspan="2" ' . $estilo_general . '>C&Oacute;DIGO</th>
 				<th rowspan="2" ' . $estilo_general . '>NOMBRE</th>
 				<th colspan="2" ' . $estilo_general . '>FECHAS EXTREMAS</th>
-				<th colspan="4" ' . $estilo_general . '>UNIDAD DE CONSERVACION</th>
-				<th rowspan="2" ' . $estilo_general . '>NUMERO DE FOLIOS</th>
+				<th colspan="4" ' . $estilo_general . '>UNIDAD DE CONSERVACI&Oacute;N</th>
+				<th rowspan="2" ' . $estilo_general . '>N&Uacute;MERO DE FOLIOS</th>
 				<th rowspan="2" ' . $estilo_general . '>SOPORTE</th>
 				<th rowspan="2" ' . $estilo_general . '>FRECUENCIA DE CONSULTA</th>
 				<th rowspan="2" ' . $estilo_general . '>NOTAS</th>

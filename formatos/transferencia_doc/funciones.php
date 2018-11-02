@@ -10,7 +10,7 @@ while ($max_salida > 0) {
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
-
+echo estilo_bootstrap();
 //MOSTRAR
 function mostrar_unidad_admin_transf($idformato,$iddoc){
     global $conn;
@@ -147,6 +147,7 @@ function guardar_expedientes_add($idformato,$iddoc){
 
 function expedientes_vinculados_funcion($idformato, $iddoc) {
 	global $conn, $ruta_db_superior;
+	
 	$nombre_entidad = busca_filtro_tabla('valor', 'configuracion', "nombre='nombre'", "", $conn);
 	$nombre_entidad = strtoupper(codifica_encabezado(html_entity_decode($nombre_entidad[0]['valor'])));
 	$texto = '';
@@ -154,7 +155,7 @@ function expedientes_vinculados_funcion($idformato, $iddoc) {
 	$expedientes = busca_filtro_tabla("", "expediente A", "A.idexpediente in(" . $datos[0]["expediente_vinculado"] . ")", "", $conn);
 	if ($expedientes["numcampos"]) {
 		$estilo_general = ' style="text-align:center;font-weight:bold;"';
-		$texto .= '<p>&nbsp;</p><table style="width:100%;border-collapse:collapse;" border="1">';
+		$texto .= '<table style="width:100%;border-collapse:collapse;" border="1">';
 		if ($_REQUEST["tipo"] != 5) {
 			$texto .= ' <tr>
       	<td colspan="2" style="border:hidden">
@@ -188,14 +189,14 @@ function expedientes_vinculados_funcion($idformato, $iddoc) {
       	&nbsp;
       	</td>
       	<td colspan="9" style="border-top:hidden;border-top:bottom;"></td>
-      	<td>&nbsp;</td>
-      	<td colspan="3">&nbsp;</td>
+      	<td style="border-left:hidden;border-right:hidden">&nbsp;</td>
+      	<td colspan="3" style="border-left:hidden;border-right:hidden">&nbsp;</td>
       	
       </tr>
       <tr>
-      	<td colspan="11" style="border-top:hidden;border-left:hidden"></td>
-      	 <td style="border-top:hidden">asdfas</td>
-      	<td colspan="3" style="border-top:hidden">adfasd</td>
+      	<td colspan="11" style="border-top:hidden;border-left:hidden;border-right:hidden"></td>
+      	 <td style="border-top:hidden;border-left:hidden;border-right:hidden"></td>
+      	<td colspan="3" style="border-top:hidden;border-left:hidden;border-right:hidden"></td>
       </tr>';
 		} else {
 			$texto .= ' <tr>
@@ -233,12 +234,12 @@ function expedientes_vinculados_funcion($idformato, $iddoc) {
 					<td>&nbsp;</td>
 					<td colspan="3">&nbsp;</td>
 					
-				</tr>
+				</tr>';/*
 				<tr>
-					<td colspan="11" style="border-left:none">andres</td>
+					<td colspan="11" style="border-left:none"></td>
 					 <td></td>
 					<td colspan="3"></td>
-				</tr>';
+				</tr>';*/
 		}
 
 		$texto .= ' <tr>
@@ -292,10 +293,17 @@ function expedientes_vinculados_funcion($idformato, $iddoc) {
 			//tomos + el padre
 			$cadena_tomos = ("<i><b style='font-size:10px;'></b></i><i style='font-size:10px;'>" . $expedientes[$i]['tomo_no'] . " de " . $cantidad_tomos . "</i>");
 
-			if (is_object($expedientes[$i]["fecha_extrema_i"]))
+			if (is_object($expedientes[$i]["fecha_extrema_i"])){
 				$expedientes[$i]["fecha_extrema_i"] = $expedientes[$i]["fecha_extrema_i"] -> format('Y-m-d');
-			if (is_object($expedientes[$i]["fecha_extrema_f"]))
-				$expedientes[$i]["fecha_extrema_f"] = $expedientes[$i]["fecha_extrema_f"] -> format('Y-m-d');
+			}
+			else{
+				$expedientes[$i]["fecha_extrema_i"]=date('Y-m-d',strtotime($expedientes[$i]["fecha_extrema_i"]));
+			}
+			if (is_object($expedientes[$i]["fecha_extrema_f"])){				$expedientes[$i]["fecha_extrema_f"] = $expedientes[$i]["fecha_extrema_f"] -> format('Y-m-d');
+			}
+			else{
+				$expedientes[$i]["fecha_extrema_f"]=date('Y-m-d',strtotime($expedientes[$i]["fecha_extrema_f"]));
+			}
 
 			$texto .= '<tr id="tr_' . $expedientes[$i]["idexpediente"] . '">
 			<td style="text-align:center">' . ($i + 1) . '</td>
