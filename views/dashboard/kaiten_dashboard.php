@@ -21,6 +21,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 
+    <?= icons() ?>
     <?= kaiten() ?>
 </head>
 <body>
@@ -28,18 +29,33 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 
     <script>
         $(function(){
-            var baseUrl = '<?= $ruta_db_superior ?>';
-
+            var baseUrl = '<?= $ruta_db_superior ?>';           
+    
             $('#container').kaiten({
                 columnWidth : '100%',
                 startup : function(dataFromURL){
-                    this.kaiten('load', {
-                        kConnector:'html.page',
-                        url: baseUrl + 'views/dashboard/index_dashboard.php?idbusqueda_componente=<?=$_REQUEST['idbusqueda_componente']?>',
-                        kTitle :'titulo kaiten dashboard'
-                    });
+                    var panels = JSON.parse('<?= $_REQUEST["panels"] ?>');
+                    
+                    for(panel of panels){
+                        panel.url = baseUrl + panel.url;
+                        this.kaiten('load', panel);
+                    }
+                    
                 }
-            });  
+            });
+
+            window.crear_pantalla_busqueda = function(datos,elimina){
+                var panel = $('#container').kaiten("getPanel",1);
+
+                if(elimina){
+                    if(typeof(panel) != 'undefined'){
+                        $('#container').kaiten("removeChildren", panel);
+                    }
+                }
+                
+                datos.url = baseUrl + datos.url;
+                $('#container').kaiten("load",datos);                                                  
+            }
         });
     </script>
 </body>

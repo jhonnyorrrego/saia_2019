@@ -280,10 +280,10 @@ button
     max-width:480px;
 }
 
-#k-breadcrumb li a
+/*#k-breadcrumb li a, #k-breadcrumb li button
 {
 	cursor : pointer;
-	color: #fff;
+	color:  #626262;
 	line-height: 32px;    
 	display: block;
 	text-decoration:none;
@@ -293,7 +293,8 @@ button
     overflow: hidden;
     -o-text-overflow: ellipsis;
     text-overflow: ellipsis;
-}
+    font-weight: bold;
+}*/
 
 #k-breadcrumb li.last
 {
@@ -306,11 +307,11 @@ button
 	width:48px;
 	padding:0;
 }
-#k-breadcrumb li.home a
+/*#k-breadcrumb li.home a
 {
 	width:32px;
 	background:url('../images/sprites-32.png') no-repeat -288px 0;
-}
+}*/
 #k-breadcrumb li.home.last
 {
 	width:40px;

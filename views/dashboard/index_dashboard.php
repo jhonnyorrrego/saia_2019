@@ -22,16 +22,12 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <title>SAIA - SGDEA</title>
     <?= jquery() ?>
     <?= bootstrap() ?>
-    <?= breakpoint() ?>
-    <?= toastr() ?>
-    <?= icons() ?>
-    <?= theme() ?>
 </head>
 <body>
-    <div class="container-fluid mx-2 px-1">
+    <div class="container-fluid px-1 py-0">
         <div class="row">
-            <div class="col-12 col-md-4 px-1 ">
-                <div id="mailbox"></div>
+            <div class="col-12 col-md-4">
+                <iframe id="mailbox" frameborder="0" width="100%"></iframe>
             </div>
             <div class="d-none d-md-block col-md-8 ">
                 CALENDARIO
@@ -41,20 +37,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <script>
         $(function(){
             var baseUrl = '<?= $ruta_db_superior ?>';
-
-            (function loadMailbox(){
-                let route = baseUrl + 'pantallas/busquedas/listado.php';
-                let data = {
-                    idbusqueda_componente : '<?= $_REQUEST['idbusqueda_componente'] ?>'
-                }
-
-                $("#mailbox").load(route, data, function(response, status, xhr){
-                    $('#table').on('load-success.bs.table', function (data) {
-                        $(".pagination-detail").html('<span id="total_items"></span>');
-                        $("#total_items").text('Registros '+ $('#table').bootstrapTable('getOptions').totalRows);
-                    });
-                });
-            })();
+            let route = baseUrl + 'pantallas/busquedas/listado.php?idbusqueda_componente=<?= $_REQUEST['idbusqueda_componente'] ?>';
+            $("#mailbox").attr('src', route).height($(window).height() - $("#k-topbar").height() - 5);
         });
     </script>
 </body>

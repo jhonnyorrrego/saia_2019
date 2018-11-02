@@ -35,69 +35,59 @@ if ($documento['numcampos']) {
 } else {
     alerta("No se ha podido encontrar el Documento");
 }
-
-echo jquery();
-echo bootstrap();
-echo librerias_arboles();
-echo librerias_principal();
-echo librerias_highslide();
 ?>
-<style>
-    #detalles{height:100%; }
-    #panel_arbol_formato{border:0px solid;}
-    body{ padding-right: 0px; padding-left: 0px;height:100%}
-</style>
-<div class="container-fluid">
-    <div class="row">
-        <div class="d-none d-xl-block col-xl-3 px-0 mx-0">
-            <div id="izquierdo_saia" ></div>
-        </div>
-        <div class="col-12 col-md-9 px-0 mx-0">
-            <div id="contenedor_saia"></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <?= jquery() ?>
+    <?= bootstrap() ?>
+    <?= librerias_arboles() ?>
+    <?= librerias_principal() ?>
+    <?= librerias_highslide() ?>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="d-none d-md-block col-md-3 px-0 mx-0" id="izquierdo_saia"></div>
+            <div class="col-12 col-md-9 px-0 mx-0" id="contenedor_saia"></div>
         </div>
     </div>
-</div>
-<script type="text/javascript">
-    var alto = $(window).height()-8;
-
-    function llamado_pantalla(ruta,datos,destino,nombre){
-        if(datos){
-            ruta += "?" + datos;
-        }
-
-        if(nombre === "<?php echo ($_REQUEST['destino_click']); ?>"){
-            ruta = ruta+'&click_clase=<?php echo ($_REQUEST['click_clase']); ?>';
-        }
-    
-        destino.html('<div id="panel_'+nombre+'"><iframe name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0"></iframe></div>');
-    }
-
-    $(document).ready(function(){
-        $("#panel_arbol_formato").height(alto);
-        $("#arbol_formato").height(alto-2);
-        $("#panel_detalles").height(alto);
-    });
-</script>
-<?php if ($documento["numcampos"]) : ?>
     <script type="text/javascript">
-        llamado_pantalla("pantallas/documento/informacion_resumen_documento.php","<?php if ($_REQUEST['click_mostrar']) {echo ('click_mostrar=1&');}?>form_info=<?php echo ($llave); ?>&alto_pantalla="+(alto-1),$("#izquierdo_saia"),"arbol_formato");
-        
-        <?php if (!$_REQUEST['click_mostrar']): ?>
-            llamado_pantalla("","",$("#contenedor_saia"),'detalles');
-        <?php endif; ?>
+        $(document).ready(function(){
+            var documento = '<?= $documento["numcampos"] ?>';            
+            
+            function llamado_pantalla(ruta,datos,destino,nombre){
+                if(datos){
+                    ruta += "?" + datos;
+                }
 
-        hs.graphicsDir = '<?php echo ($ruta_db_superior); ?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
-        hs.outlineType = 'rounded-white';
-        hs.Expander.prototype.onAfterClose = function() {
-            if (this.isClosing) {
-                var data=this.a.id;
-                window.frames.arbol_formato.click_funcion(data);
+                if(nombre === "<?= $_REQUEST['destino_click'] ?>"){
+                    ruta = ruta + '&click_clase=<?= $_REQUEST['click_clase'] ?>';
+                }
+                
+                destino.html('<iframe name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0" scrolling="no" onload="js:$(\'#'+nombre+'\').height($(document).height()-6)"></iframe>');
             }
-        }
+            
+            if(documento){
+                var click_mostrar = '<?= $_REQUEST['click_mostrar'] ?>';
+                var param = 'form_info=<?= $llave ?>';
+                
+                if(click_mostrar) {
+                    param += '&click_mostrar=1';
+                }else{
+                    llamado_pantalla("","",$("#contenedor_saia"),'detalles');
+                }
+                
+                llamado_pantalla("<?= $ruta_db_superior ?>pantallas/documento/informacion_resumen_documento.php",param,$("#izquierdo_saia"),"arbol_formato");
+            }else{
+                $("#izquierdo_saia").html('<?= $documento[0]["descripcion"] ?>');
+                llamado_pantalla("<?= $ruta_db_superior ?>pantallas/documento/listado_paginas.php","iddoc=<?= $iddocumento ?>",$("#contenedor_saia"));
+            }
+        });
     </script>
-<?php else :?>
-    <script type="text/javascript">
-        $("#izquierdo_saia").html(<?php echo ($documento[0]["descripcion"]); ?>);
-        llamado_pantalla("pantallas/documento/listado_paginas.php","iddoc=<?php echo ($iddocumento); ?>",$("#contenedor_saia"));
-    </script>
-<?php endif; ?>
+</body>
+</html>

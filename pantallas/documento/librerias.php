@@ -981,11 +981,18 @@ function origen_documento_pendiente($iddocumento, $numero, $fecha){
         <span class="thumbnail-wrapper d32 circular inline">
             <img id="profile_image" src="'.$ruta_db_superior . $Funcionario->getImage('foto_recorte') .'" width="32" height="32">
         </span>
-    </div>';
-    $html.= '<div class="col"><small class="mt-1 hint-text">';
-    $html.= '<div class="link kenlace_saia pull-left" enlace="ordenar.php?key=' . $iddocumento . '&accion=mostrar&mostrar_formato=1" conector="iframe" titulo="Documento No.' . $numero . '"><b>'.$numero." - ". $Funcionario->getName(). '</b></div></small></div>';
-    $html.= '<div class="col-auto"><small class="mt-1 hint-text" id="time_'.$iddocumento.'"></small></div>';
-    $html.= '<script>$(function(){$("#time_'.$iddocumento.'").text(moment("'.$fecha.'").fromNow())})</script>';
+    </div>
+    <div class="col kenlace_saia" enlace="ordenar.php?key=' . $iddocumento . '&accion=mostrar&mostrar_formato=1" conector="iframe" titulo="Documento No.' . $numero . '" style="cursor:pointer;">
+        <small class="mt-1 hint-text">'.$numero." - ". $Funcionario->getName(). '</small>
+    </div>
+    <div class="col-auto">
+        <small class="mt-1 hint-text" id="time_'.$iddocumento.'"></small>
+    </div>
+    <script>
+        $(function(){
+            $("#time_'.$iddocumento.'").text(moment("'.$fecha.'").fromNow())
+        })
+    </script>';
 
     return $html;
 }

@@ -89,13 +89,16 @@ function theme()
 {
     global $ruta_db_superior;
 
+    $routeM = $ruta_db_superior . 'assets/theme/assets/plugins/modernizr.custom.js';
+    $modernizr = '<script type="text/javascript" src="' . $routeM . '"></script>';
+
     $routeCss = $ruta_db_superior . 'assets/theme/pages/css/pages.css';
     $css = '<link class="main-stylesheet" href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
 
     $routeJs = $ruta_db_superior . 'assets/theme/pages/js/pages.js';
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
-    return $css . $js;
+    return $modernizr . $css . $js;
 }
 
 /**
@@ -173,7 +176,7 @@ function kaiten(){
     $routeUi = $ruta_db_superior . 'assets/theme/assets/plugins/kaiten/js/jquery-ui.custom.min.js';
     $ui = '<script type="text/javascript" src="' . $routeUi . '"></script>';
 
-    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/kaiten/js/kaiten.min.js';
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/kaiten/js/kaiten.js';
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
     $resize = $ruta_db_superior . 'assets/theme/assets/plugins/kaiten/js/jquery.ba-resize.min.js';

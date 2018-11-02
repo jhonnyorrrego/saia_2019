@@ -732,7 +732,6 @@ Kaiten = /**@lends jQuery.ui.kaiten.prototype*/{
                 callback: function (e, $panel, $kaiten) {
                     e.preventDefault();
                     $panel.kpanel('reload');
-                    console.log('recargando panel');
                 }
             }],
         panelRightTools: [
@@ -4212,14 +4211,21 @@ Kaiten = /**@lends jQuery.ui.kaiten.prototype*/{
 		 * @private
 		 */
         _doItemLayout: function ($item, newWidth) {
-            if (newWidth) {
+            if (newWidth) {console.log(newWidth);
                 if (newWidth < this.options.minItemWidth) {
                     newWidth = this.options.minItemWidth;
                 }
                 else if (newWidth >= $item.data('orig-width')) {
                     newWidth = $item.data('orig-width') + 1; // on certain small items, 1px is missing...
                 }
+
                 $item.css('width', newWidth + 'px');
+
+                if(newWidth < 70){
+                    $item.find('button').hide();
+                }else{
+                    $item.find('button').show();
+                }
             }
         },
 
@@ -4259,17 +4265,22 @@ Kaiten = /**@lends jQuery.ui.kaiten.prototype*/{
                 "class": Kaiten.selectors.breadcrumbItems.lastClass + ' ' + Kaiten.selectors.visibleClass            
             });
             
-            var tabContent = this._genTabContent(options.title);
+            var elements = this._genTabContent(options.title),
+                enlace = elements[0],
+                button = elements[1];
             
             if (this._state.itemsData.length === 1) {
+                enlace.append(
+                    $('<i>', {
+                        class: 'text-dark fa fa-home'
+                    })
+                );
                 $listItem.addClass(Kaiten.selectors.breadcrumbItems.homeClass);
-                $listItem = $listItem.append(tabContent[1]).appendTo(this.$list);
+                $listItem = $listItem.append(enlace).appendTo(this.$list);
             }
             else {
-                var enlace = tabContent[1];
-                enlace.css('display', 'inline');
                 enlace.append(options.title);
-                $listItem = $listItem.append(enlace, tabContent[0]).appendTo(this.$list);
+                $listItem = $listItem.append(enlace,button).appendTo(this.$list);
                 $listItem.css('min-width', this.options.minItemWidth + 'px').data('orig-width', $listItem.width());
                 $listItem.prev().removeClass(Kaiten.selectors.breadcrumbItems.lastClass);
                 this._doLayout();
@@ -4280,18 +4291,20 @@ Kaiten = /**@lends jQuery.ui.kaiten.prototype*/{
             var $anchor = $('<a />', {
                 title: title,
                 href: '#',
-                class: 'pr-2'
+                class: 'btn text-truncate text-dark',
+                width: '70%'
             });
 
             var $remove = $('<button>',{
-                class: 'btn btn-sm btn-link mb-2'
+                class: 'btn btn-sm btn-link my-1 pull-right',
+                width: '30%'
             }).append(
                 $('<i>',{
-                    class: 'text-white fa fa-times'                    
+                    class: 'text-dark fa fa-times'
                 })
             );
 
-            return [$remove, $anchor];
+            return [$anchor, $remove];
         },
 
 		/**
