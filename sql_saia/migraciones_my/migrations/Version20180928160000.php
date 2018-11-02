@@ -47,7 +47,7 @@ class Version20180928160000 extends AbstractMigration {
                 "notnull" => false
             ]);
         }
-        if (!$tabla_exp->hasColumn('ubicacion')) {
+        if (!$tabla_caja->hasColumn('ubicacion')) {
             $tabla_caja->addColumn("ubicacion", "integer", [
                 "length" => 11,
                 "default" => 1

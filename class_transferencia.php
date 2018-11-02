@@ -2037,13 +2037,13 @@ function devolucion() {
 
 	// NUEVO DESARROLLO DEVOLVER
 
-	$sql2 = " UPDATE buzon_entrada SET nombre='ELIMINA_REVISADO' WHERE archivo_idarchivo=" . $datos["archivo_idarchivo"] . " AND destino=" . $_REQUEST["x_funcionario_destino"] . " AND origen=" . $_SESSION["usuario_actual"] . "  AND nombre='REVISADO';";
+	$sql2 = " UPDATE buzon_entrada SET nombre='ELIMINA_REVISADO' WHERE archivo_idarchivo=" . $datos["archivo_idarchivo"] . " AND destino=" . $_REQUEST["x_funcionario_destino"] . " AND origen=" . $_SESSION["usuario_actual"] . "  AND nombre='REVISADO'";
 	phpmkr_query($sql2);
 
-	$sql3 = " UPDATE buzon_entrada SET activo=1 WHERE archivo_idarchivo=" . $datos["archivo_idarchivo"] . " AND destino=" . $_REQUEST["x_funcionario_destino"] . " AND origen=" . $_SESSION["usuario_actual"] . "  AND nombre='POR_APROBAR'; ";
+	$sql3 = " UPDATE buzon_entrada SET activo=1 WHERE archivo_idarchivo=" . $datos["archivo_idarchivo"] . " AND destino=" . $_REQUEST["x_funcionario_destino"] . " AND origen=" . $_SESSION["usuario_actual"] . "  AND nombre='POR_APROBAR'";
 	phpmkr_query($sql3);
 
-	$sql4 = " UPDATE asignacion SET tarea_idtarea=-1 WHERE documento_iddocumento=" . $datos["archivo_idarchivo"] . " AND llave_entidad='" . $_SESSION["usuario_actual"] . "'; ";
+	$sql4 = " UPDATE asignacion SET tarea_idtarea=-1 WHERE documento_iddocumento=" . $datos["archivo_idarchivo"] . " AND llave_entidad='" . $_SESSION["usuario_actual"] . "' ";
 	phpmkr_query($sql4);
 
 	$strsql = "INSERT INTO asignacion (tarea_idtarea,fecha_inicial,documento_iddocumento,serie_idserie,estado,entidad_identidad,llave_entidad)";
