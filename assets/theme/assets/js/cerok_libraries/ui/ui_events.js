@@ -82,7 +82,8 @@ $(function () {
 
         $.post(Session.getBaseUrl() + 'app/funcionario/guardar_recorte.php', options, function(response){
             if(response.success){
-                $("#profile_image").attr('src', Session.getBaseUrl() + response.data);
+                $("#profile_image").attr('src', Session.getBaseUrl() + response.data.foto_recorte);
+                $("#img_edit_photo").attr('src', Session.getBaseUrl() + response.data.foto_original);
                 $('#edit_photo_modal').modal('hide');
             }
         }, 'json');

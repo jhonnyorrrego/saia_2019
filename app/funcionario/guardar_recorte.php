@@ -45,13 +45,19 @@ if (isset($_SESSION['idfuncionario']) && $_REQUEST) {
         ->resize(new Box($width, $height))
         ->save($ruta_db_superior . $routeImage);
 
+    $splitRoute = explode('.', $routeImage);
+    $extention = $splitRoute[count($splitRoute) - 1];
+
     $image = array(
         'binary' => file_get_contents($ruta_db_superior . $routeImage),
-        'extention' => explode('.', $routeImage)[1]
+        'extention' => $extention
     );
 
     if($Funcionario->updateImage($image, 'foto_recorte')){
-        $Response->data = $Funcionario->getImage('foto_recorte');
+        $Response->data = array(
+            'foto_original' => $Funcionario->getImage('foto_original', true),
+            'foto_recorte' => $Funcionario->getImage('foto_recorte', true)
+        );
         $Response->success = 1;
         $Response->message = "Imagen Recortada";
     }else{

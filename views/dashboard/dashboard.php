@@ -1533,8 +1533,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <!-- NOTE LIBRARY-->
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notes/notes.js"></script>    
     <!-- BEGIN LIBRARIES FOR EVENTS-->
-    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/ui/ui_avents.js"></script>
-    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/modules/module_avents.js"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/ui/ui_events.js"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/modules/module_events.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notes/note_events.js"></script>
     <!-- END LIBRARIES FOR EVENTS-->
 
