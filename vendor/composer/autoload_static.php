@@ -74,9 +74,19 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         array (
             'Mpdf\\' => 5,
         ),
+        'L' => 
+        array (
+            'LasseRafn\\Initials\\' => 19,
+            'LasseRafn\\InitialAvatarGenerator\\' => 33,
+            'LasseRafn\\' => 10,
+        ),
         'J' => 
         array (
             'JmesPath\\' => 9,
+        ),
+        'I' => 
+        array (
+            'Intervention\\Image\\' => 19,
         ),
         'G' => 
         array (
@@ -259,9 +269,25 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         array (
             0 => __DIR__ . '/..' . '/mpdf/mpdf/src',
         ),
+        'LasseRafn\\Initials\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/lasserafn/php-initials/src',
+        ),
+        'LasseRafn\\InitialAvatarGenerator\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/lasserafn/php-initial-avatar-generator/src',
+        ),
+        'LasseRafn\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/lasserafn/php-string-script-language/src',
+        ),
         'JmesPath\\' => 
         array (
             0 => __DIR__ . '/..' . '/mtdowling/jmespath.php/src',
+        ),
+        'Intervention\\Image\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/intervention/image/src/Intervention/Image',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (

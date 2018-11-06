@@ -17,7 +17,8 @@
 		"smalot/pdfparser": "^0.12.0",
 		"tecnickcom/tcpdf": "^6.2",
 		"mpdf/mpdf": "^7.1",
-		"aws/aws-sdk-php": "^3.63"
+		"aws/aws-sdk-php": "^3.63",
+		"lasserafn/php-initial-avatar-generator": "^3.0"
 	},
 	"extra": {
 		"class": "Corley\\Composer\\MyHook"
