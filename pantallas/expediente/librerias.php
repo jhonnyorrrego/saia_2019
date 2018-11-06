@@ -96,7 +96,7 @@ function enlace_expediente($idexpediente, $nombre) {
 	    $permisos = $permiso->obtener_permisos();
 	
 	    $l = $permiso->permiso_solo_lectura();
-	    $m = in_array(PermisosExpediente::PERMISO_EXP_ESCRIBIR, $permisos);//$permiso->tiene_permiso_escribir_expediente();
+	    $m = in_array(PermisosExpediente::PERMISO_EXP_MODIFICAR, $permisos);//$permiso->tiene_permiso_escribir_expediente();
 	    if (empty($permisos)) {
 	        $estilo_expediente = ' style="opacity: 0.40;"';
 	        if(!$expediente_actual[0]['agrupador']){
