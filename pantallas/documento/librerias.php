@@ -978,6 +978,7 @@ function origen_documento_pendiente($iddocumento, $numero, $fecha){
 	$Funcionario = new Funcionario($buscaOrigen[0]['idfuncionario']);
 	
     $html = '<div class="col-1 px-0">
+        <input type="hidden" value="'.$iddocumento.'" class="identificador">
         <span class="thumbnail-wrapper d32 circular inline">
             <img id="profile_image" src="'.$ruta_db_superior . $Funcionario->getImage('foto_recorte') .'" width="32" height="32">
         </span>
