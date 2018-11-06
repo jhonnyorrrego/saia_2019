@@ -974,7 +974,7 @@ function origen_documento_pendiente($iddocumento, $numero, $fecha){
 
 	include_once $ruta_db_superior . 'models/funcionario.php';
 
-	$buscaOrigen = busca_filtro_tabla('b.idfuncionario', 'buzon_salida a, funcionario b', 'a.origen = b.funcionario_codigo and nombre="TRANSFERIDO" and archivo_idarchivo='.$iddocumento.' and destino ='. usuario_actual('funcionario_codigo'), '', $conn);
+    $buscaOrigen = busca_filtro_tabla('b.idfuncionario', 'buzon_salida a, funcionario b', "a.origen = b.funcionario_codigo and nombre in ('TRANSFERIDO','POR_APROBAR','APROBADO','DEVUELTO','REVISADO') and archivo_idarchivo=".$iddocumento." and destino =". usuario_actual('funcionario_codigo'), 'a.idtransferencia desc', $conn);
 	$Funcionario = new Funcionario($buscaOrigen[0]['idfuncionario']);
 	
     $html = '<div class="col-1 px-0">

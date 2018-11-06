@@ -1,5 +1,6 @@
 <?php
 require_once $ruta_db_superior . 'db.php';
+require_once $ruta_db_superior . 'vendor/autoload.php';
 require_once $ruta_db_superior . 'StorageUtils.php';
 require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
 
@@ -125,11 +126,11 @@ class Funcionario
         return $this->estado = 1 ? 'Activo' : 'Inactivo';
     }
 
-    public function getImage($image)
+    public function getImage($image, $force = false)
     {
-        global $ruta_db_superior; 
-        
-        $finalRoute = '';
+        global $ruta_db_superior;
+
+        $tempRoute = $ruta_db_superior . 'temporal/temporal_' . $this->login;
         $Storage = new SaiaStorage("archivos");
         $Image = json_decode($this->$image);
 
@@ -137,25 +138,51 @@ class Funcionario
             if ($Storage->get_filesystem()->has($Image->ruta)) {
                 $binary = StorageUtils::get_binary_file($this->$image);
 
-                if (!is_dir($ruta_db_superior . 'temporal/temporal_' . $this->login)) {
-                    mkdir($ruta_db_superior . 'temporal/temporal_' . $this->login, 0777);
+                if (!is_dir($tempRoute)) {
+                    mkdir($tempRoute, 0777);
                 }
 
                 $route = explode('/', $Image->ruta);
                 $fileName = $route[count($route) - 1];
-                $finalRoute = $ruta_db_superior . 'temporal/temporal_' . $this->login . '/' . $fileName;
-
-                $file = fopen($finalRoute, 'w+');
-
-                if ($file) {
-                    $content = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $binary));
-                    fwrite($file, $content);
-                    fclose($file);
+                $finalRoute = $tempRoute . '/' . $fileName;
+                
+                if(!is_file($finalRoute) || $force){
+                    $file = fopen($finalRoute, 'w+');
+                    
+                    if ($file) {
+                        $content = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $binary));
+                        fwrite($file, $content);
+                        fclose($file);
+                    }
                 }
-            }
-        }
 
-        return 'temporal/temporal_' . $this->login . '/' . $fileName;
+                return 'temporal/temporal_' . $this->login . '/' . $fileName;
+            }
+        }else{
+            $avatar = new LasseRafn\InitialAvatarGenerator\InitialAvatar();
+
+            $name = strtok($this->nombres, " ") . ' ' . $this->apellidos;
+            $avatar = $avatar
+                ->name($name)
+                ->background('#48b0f7')
+                ->color('#fff')
+                ->generate();
+            
+            if (!is_dir($tempRoute)) {
+                mkdir($tempRoute, 0777);
+            }
+            
+            $fileName = 'avatar.jpg';
+            $avatar->save($tempRoute . '/' . $fileName);
+
+            $imageData = array(
+                'binary' => file_get_contents($tempRoute . '/' . $fileName),
+                'extention' => 'jpg',
+            );
+
+            if($this->updateImage($imageData, $image))
+                return $this->getImage($image, true);
+        }
     }
 
     public function updateImage($image, $campo){
