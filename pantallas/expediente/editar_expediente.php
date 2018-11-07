@@ -400,8 +400,13 @@ if($dato_padre["numcampos"]){
 	  }
   }
   function select_padre(event, data){
+  	console.log(data);
   	if(data.node.selected){
   		$("#cod_padre").val(data.node.key);
+  	}
+  	else
+  	{
+  		$("#cod_padre").val(0);
   	}
   }
 
@@ -487,12 +492,15 @@ $(document).ready(function(){
   ignore: [],
   "rules":{
       "nombre":{"required":true},
-      "serie_idserie":{"required":true}
-      
+      "serie_idserie":{"required":true}      
   }
   });
   $("#submit_formulario_expediente").click(function(){  
     if(formulario_expediente.valid()){
+    	if($("#cod_padre").val()==""){
+    		$("#cod_padre").val(0);
+    		console.log($("#cod_padre").val());
+    	}
     	var cod_padre = $("#cod_padre_anterior").val();
     	$('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
 			$(this).attr('disabled', 'disabled');
