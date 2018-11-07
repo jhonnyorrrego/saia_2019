@@ -1,11 +1,11 @@
 <?php
 require_once $ruta_db_superior . 'db.php';
+require_once $ruta_db_superior . 'models/model.php';
 require_once $ruta_db_superior . 'vendor/autoload.php';
 require_once $ruta_db_superior . 'StorageUtils.php';
 require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
 
-class Funcionario
-{
+class Funcionario extends Model {
     protected $idfuncionario;
     protected $funcionario_codigo;
     protected $login;
@@ -18,84 +18,11 @@ class Funcionario
     protected $email_contrasena;
     protected $direccion;
     protected $telefono;
+    protected $table = 'funcionario';
+    protected $primary = 'idfuncionario';
 
-    public function __construct($idfuncionario = null)
-    {
-        if ($idfuncionario) {
-            $this->idfuncionario = $idfuncionario;
-            $this->find();
-        }
-    }
-
-    public function getAttributeNames()
-    {
-        return array_keys(get_class_vars(__CLASS__));
-    }
-
-    public function getAttributes(){
-        return get_object_vars($this);
-    }
-
-    public function setAttributes($attributes){
-        foreach ($attributes as $name => $value) {
-            if(property_exists(__CLASS__, $name)){
-                $this->$name = $value;
-            }
-        }
-
-        return true;
-    }
-
-    private function getNotNullAttributes(){
-        return array_filter($this->getAttributes());
-    }
-
-    public function getPK(){
-        return $this->idfuncionario;
-    }
-
-    public function setPK($value){
-        $this->idfuncionario = $value;
-    }
-
-    protected function find()
-    {
-        global $conn;
-
-        $columns = implode(',', $this->getAttributeNames());
-        $data = busca_filtro_tabla($columns, 'funcionario', 'idfuncionario = ' . $this->idfuncionario, '', $conn);
-
-        if ($data['numcampos']) {
-            foreach ($data[0] as $key => $value) {
-                if (is_string($key)) {
-                    $this->$key = $value;
-                }
-            }
-        } else {
-            throw new Exception("Invalid user", 1);
-        }
-    }
-
-    public function update(){
-        $attributes = $this->getNotNullAttributes();
-
-        if(count($attributes)){
-
-            $sql = "update funcionario set ";
-            
-            foreach($attributes as $key => $value){
-                $sql .= $key . "='" . addslashes($value) ."',";
-            }
-            
-            $sql = substr($sql, 0, strlen($sql)-1);
-
-            $sql .= " where idfuncionario = " . $this->getPK();
-            phpmkr_query($sql);
-
-            return $this->getPK();       
-        }else{
-            return 0;
-        }
+    function __construct($id){
+        return parent::__construct($id);
     }
 
     public function getBasicInformation()

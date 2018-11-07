@@ -11,6 +11,9 @@ $(function(){
         if(['xs','sm'].indexOf(breakpoint) != -1){
             $('#toggle_sidebar').trigger('click');
         }
+        
+        $("#module_list").find('span.bg-institutional').removeClass('bg-institutional');
+        $(this).find('span:last').addClass('bg-institutional');
     });
 
     $(".page-sidebar").on('touchstart', function (evt) {

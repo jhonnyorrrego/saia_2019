@@ -1498,7 +1498,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-body text-center mt-2">
-                    <img id="img_edit_photo" width="250px">
+                    <img id="img_edit_photo" width="100%">
                 </div>
                 <div class="modal-footer">
                     <label class="btn btn-danger">Cargar imagen

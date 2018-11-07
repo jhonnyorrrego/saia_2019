@@ -29,10 +29,14 @@ class Ui {
         const color = localStorage.getItem('color');
 
         if(color){
-            $(".bg-institutional").css({
-                background: color,
-                color: '#ffff'
-            });
+            $('head').append(
+                $('<style>',{
+                    id: 'instition_style',
+                    rel: 'stylesheet',
+                    type: 'text/css',
+                    text: `.bg-institutional{background: ${color}!important;color: "#ffff"!important}`
+                })
+            );
         }else{
             $.get(Session.getBaseUrl() + 'app/configuracion/consulta_configuraciones.php',{
                 configurations: ['color_institucional']
@@ -50,7 +54,7 @@ class Ui {
             $("#img_edit_photo").imgAreaSelect({
                 handles: "corners",
                 aspectRatio: "1:1",
-                minHeight: 150,
+                minHeight: 80,
                 x1: 25,
                 y1: 25,
                 x2: 230,

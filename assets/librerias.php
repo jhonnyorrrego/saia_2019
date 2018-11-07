@@ -56,8 +56,8 @@ function bootstrapTable()
     
     $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/bootstrap-table.min.js';
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
-    
-    $locale = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/locale/bootstrap-table-es-ES.min.js';
+
+    $locale = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/locale/bootstrap-table-es-ES.js';
     $languaje = '<script src="' . $locale . '" type="text/javascript"></script>';
 
     return $css . $js . $languaje;

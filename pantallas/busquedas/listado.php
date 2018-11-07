@@ -28,7 +28,6 @@ include_once $ruta_db_superior . 'librerias_saia.php';
         <?= moment() ?>
         <?= theme() ?>
         <?= librerias_acciones_kaiten() ?>
-
     </head>
     <body>
         <div class="container">
