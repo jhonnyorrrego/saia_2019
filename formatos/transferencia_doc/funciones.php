@@ -158,14 +158,14 @@ function expedientes_vinculados_funcion($idformato, $iddoc) {
 		$texto .= '<table style="width:100%;border-collapse:collapse;" border="1">';
 		if ($_REQUEST["tipo"] != 5) {
 			$texto .= ' <tr>
-      	<td colspan="2" style="border:hidden;text-align:center;font-weight:bold;font-size:9px;">
+      	<td colspan="2" style="border:hidden;text-align:left;font-weight:bold;font-size:9px;">
       		ENTIDAD REMITENTE
       	</td>
       	<td colspan="9" style="border-top:hidden;border-top:bottom;font-size:9px;">' . $nombre_entidad . '</td>
       	<td colspan="4" '.$estilo_general.'>REGISTRO DE ENTRADA</td>
       </tr>
       <tr>
-      	<td colspan="2" style="border:hidden;text-align:center;font-weight:bold;font-size:9px;">
+      	<td colspan="2" style="border:hidden;text-align:left;font-weight:bold;font-size:9px;">
       		OFICINA PRODUCTORA
       	</td>
       	<td colspan="9" style="border-top:hidden;border-top:bottom;font-size:9px;">' . mostrar_valor_campo('oficina_productora', $idformato, $iddoc, 1) . '</td>
@@ -175,7 +175,7 @@ function expedientes_vinculados_funcion($idformato, $iddoc) {
       	<td '.$estilo_general.'>N.T.</td>
       </tr>
       <tr>
-      	<td colspan="2" style="border:hidden;text-align:center;font-weight:bold;font-size:9px;">
+      	<td colspan="2" style="border:hidden;text-align:left;font-weight:bold;font-size:9px;">
       		OBJETO
       	</td>
       	<td colspan="9" style="border-top:hidden;border-top:bottom;font-size:9px;">TRANSFERENCIA DOCUMENTAL</td>

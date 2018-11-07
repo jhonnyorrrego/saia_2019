@@ -38,6 +38,20 @@ class Version20181102215216 extends AbstractMigration
             ];
             $tabla->changeColumn('dependencia_iddependencia', $opciones);
         }
+		if ($tabla->hasColumn('modulo')) {
+            $opciones = [
+                "notnull" => false
+            ];
+            $tabla->changeColumn('modulo', $opciones);
+        }
+		$tabla = $schema->getTable('caja');
+
+        if ($tabla->hasColumn('nivel')) {
+            $opciones = [
+                "notnull" => false
+            ];
+            $tabla->changeColumn('nivel', $opciones);
+        }
 
     }
 
