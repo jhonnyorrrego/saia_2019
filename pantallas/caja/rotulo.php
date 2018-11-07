@@ -52,7 +52,7 @@ function rotulo_caja($id){
  
 	$datos=busca_filtro_tabla(fecha_db_obtener('fecha_extrema_i','Y-m-d H:i')." as fecha_i, ".fecha_db_obtener('fecha_extrema_f','Y-m-d H:i')." as fecha_f, a.*","caja a","a.idcaja=".$id,"",$conn);
 
-	$serie=busca_filtro_tabla("nombre,tipo,cod_padre","serie a","a.idserie=".$datos[0]["serie_idserie"],"",$conn);
+	/*$serie=busca_filtro_tabla("nombre,tipo,cod_padre","serie a","a.idserie=".$datos[0]["serie_idserie"],"",$conn);
 	$nomb_serie="";
 	$nomb_subserie="";
 	if($serie[0]["tipo"]==1){
@@ -65,7 +65,7 @@ function rotulo_caja($id){
 				$nomb_serie=$serie2[0]["nombre"];
 			}
 		}	
-	}
+	}*/
 
 	$dep=busca_filtro_tabla("","dependencia a, dependencia_cargo b","a.iddependencia=b.dependencia_iddependencia and b.funcionario_idfuncionario=".$datos[0]["funcionario_idfuncionario"]." and b.estado=1","",$conn);
 
@@ -133,10 +133,10 @@ $listado_series=implode(", ", $listado_series);?>
 		<td><b>SERIE</b></td>
 		<td colspan="2" style="text-align:center"><?php echo mayusculas($listado_series); /*mayusculas($nomb_serie);*/ ?></td>
 	</tr>
-	<tr height="30px">
+	<!--tr height="30px">
 		<td><b>SUBSERIE</b></td>
 		<td colspan="2" style="text-align:center"><?php echo mayusculas($nomb_subserie); ?></td>
-	</tr>
+	</tr-->
 	<tr>
 		<td><b>No. CARPETA</b></td>
 		<td colspan="2" style="text-align:center"><?php echo mayusculas($datos[0]["no_carpetas"]); ?></td>

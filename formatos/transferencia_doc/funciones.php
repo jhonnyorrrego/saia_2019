@@ -154,31 +154,31 @@ function expedientes_vinculados_funcion($idformato, $iddoc) {
 	$datos = busca_filtro_tabla("", "ft_transferencia_doc A, documento B", "A.documento_iddocumento=" . $iddoc . " and A.documento_iddocumento=B.iddocumento", "", $conn);
 	$expedientes = busca_filtro_tabla("", "expediente A", "A.idexpediente in(" . $datos[0]["expediente_vinculado"] . ")", "", $conn);
 	if ($expedientes["numcampos"]) {
-		$estilo_general = ' style="text-align:center;font-weight:bold;"';
+		$estilo_general = ' style="text-align:center;font-weight:bold;font-size:9px;"';
 		$texto .= '<table style="width:100%;border-collapse:collapse;" border="1">';
 		if ($_REQUEST["tipo"] != 5) {
 			$texto .= ' <tr>
-      	<td colspan="2" style="border:hidden">
+      	<td colspan="2" style="border:hidden;text-align:center;font-weight:bold;font-size:9px;">
       		ENTIDAD REMITENTE
       	</td>
-      	<td colspan="9" style="border-top:hidden;border-top:bottom;">' . $nombre_entidad . '</td>
-      	<td colspan="4" >REGISTRO DE ENTRADA</td>
+      	<td colspan="9" style="border-top:hidden;border-top:bottom;font-size:9px;">' . $nombre_entidad . '</td>
+      	<td colspan="4" '.$estilo_general.'>REGISTRO DE ENTRADA</td>
       </tr>
       <tr>
-      	<td colspan="2" style="border:hidden">
+      	<td colspan="2" style="border:hidden;text-align:center;font-weight:bold;font-size:9px;">
       		OFICINA PRODUCTORA
       	</td>
-      	<td colspan="9" style="border-top:hidden;border-top:bottom;">' . mostrar_valor_campo('oficina_productora', $idformato, $iddoc, 1) . '</td>
-      	<td>AÑO</td>
-      	<td>MES</td>
-      	<td>DIA</td>
-      	<td>N.T.</td>
+      	<td colspan="9" style="border-top:hidden;border-top:bottom;font-size:9px;">' . mostrar_valor_campo('oficina_productora', $idformato, $iddoc, 1) . '</td>
+      	<td '.$estilo_general.'>AÑO</td>
+      	<td '.$estilo_general.'>MES</td>
+      	<td '.$estilo_general.'>DIA</td>
+      	<td '.$estilo_general.'>N.T.</td>
       </tr>
       <tr>
-      	<td colspan="2" style="border:hidden">
+      	<td colspan="2" style="border:hidden;text-align:center;font-weight:bold;font-size:9px;">
       		OBJETO
       	</td>
-      	<td colspan="9" style="border-top:hidden;border-top:bottom;">TRANSFERENCIA DOCUMENTAL</td>
+      	<td colspan="9" style="border-top:hidden;border-top:bottom;font-size:9px;">TRANSFERENCIA DOCUMENTAL</td>
       	<td></td>
       	<td></td>
       	<td></td>
@@ -200,27 +200,27 @@ function expedientes_vinculados_funcion($idformato, $iddoc) {
       </tr>';
 		} else {
 			$texto .= ' <tr>
-				<td colspan="2">
+				<td colspan="2" '.$estilo_general.'>
 						ENTIDAD REMITENTE
 					</td>
-					<td colspan="9">' . $nombre_entidad . '</td>
-					<td colspan="4" >REGISTRO DE ENTRADA</td>
+					<td colspan="9" style="font-size:9px;">' . $nombre_entidad . '</td>
+					<td colspan="4" '.$estilo_general.'>REGISTRO DE ENTRADA</td>
 				</tr>
 				<tr>
-					<td colspan="2">
+					<td colspan="2" '.$estilo_general.'>
 						OFICINA PRODUCTORA
 					</td>
-					<td colspan="9">' . mostrar_valor_campo('oficina_productora', $idformato, $iddoc, 1) . '</td>
-					<td>AÑO</td>
-					<td>MES</td>
-					<td>DIA</td>
-					<td>N.T.</td>
+					<td colspan="9" style="font-size:9px;">' . mostrar_valor_campo('oficina_productora', $idformato, $iddoc, 1) . '</td>
+					<td '.$estilo_general.'>AÑO</td>
+					<td '.$estilo_general.'>MES</td>
+					<td '.$estilo_general.'>DIA</td>
+					<td '.$estilo_general.'>N.T.</td>
 				</tr>
 				<tr>
-					<td colspan="2">
+					<td colspan="2" '.$estilo_general.'>
 						OBJETO
 					</td>
-					<td colspan="9">TRANSFERENCIA DOCUMENTAL</td>
+					<td colspan="9" '.$estilo_general.'>TRANSFERENCIA DOCUMENTAL</td>
 					<td></td>
 					<td></td>
 					<td></td>
@@ -245,7 +245,7 @@ function expedientes_vinculados_funcion($idformato, $iddoc) {
 		$texto .= ' <tr>
 			<th rowspan="2" ' . $estilo_general . '>N. DE <br> ORDEN</th>
 			<th rowspan="2" ' . $estilo_general . '>C&Oacute;DIGO</th>
-			<th rowspan="2" ' . $estilo_general . '>Nombre de la serie,Subseries o Asuntos</th>
+			<th rowspan="2" ' . $estilo_general . '>Nombre</th>
 			<th colspan="2" ' . $estilo_general . '>FECHAS EXTREMAS</th>
 			<th colspan="4" ' . $estilo_general . '>Unidad de Conservaci&oacute;n</th>
 			<th rowspan="2" ' . $estilo_general . '>N&uacute;mero <br> Folios</th>
@@ -291,7 +291,7 @@ function expedientes_vinculados_funcion($idformato, $iddoc) {
 			$ccantidad_tomos = busca_filtro_tabla("idexpediente", "expediente", "tomo_padre=" . $tomo_padre, "", $conn);
 			$cantidad_tomos = $ccantidad_tomos['numcampos'] + 1;
 			//tomos + el padre
-			$cadena_tomos = ("<i><b style='font-size:10px;'></b></i><i style='font-size:10px;'>" . $expedientes[$i]['tomo_no'] . " de " . $cantidad_tomos . "</i>");
+			$cadena_tomos = ("<i><b style='font-size:9px;'></b></i><i style='font-size:9px;'>" . $expedientes[$i]['tomo_no'] . " de " . $cantidad_tomos . "</i>");
 
 			if (is_object($expedientes[$i]["fecha_extrema_i"])){
 				$expedientes[$i]["fecha_extrema_i"] = $expedientes[$i]["fecha_extrema_i"] -> format('Y-m-d');
@@ -306,18 +306,18 @@ function expedientes_vinculados_funcion($idformato, $iddoc) {
 			}
 
 			$texto .= '<tr id="tr_' . $expedientes[$i]["idexpediente"] . '">
-			<td style="text-align:center">' . ($i + 1) . '</td>
-			<td>' . $expedientes[$i]["codigo_numero"] . '</td>
-			<td>' . $expedientes[$i]["nombre"] . '</td>
-			<td>' . $expedientes[$i]["fecha_extrema_i"] . '</td>
-			<td>' . $expedientes[$i]["fecha_extrema_f"] . '</td>
-			<td style="text-align:center;">' . $x_caja . '</td>
-			<td style="text-align:center;">X</td>
-			<td style="text-align:center">' . $cadena_tomos . '</td>
-			<td style="text-align:center">' . $expedientes[$i]['no_unidad_conservacion'] . '</td>
-			<td style="text-align:center">' . $expedientes[$i]["no_folios"] . '</td>
-			<td>' . $vector_soportes[$expedientes[$i]['soporte']] . '</td>
-			<td>' . $vector_frecuencias[$expedientes[$i]['frecuencia_consulta']] . '</td>
+			<td style="text-align:center;font-size:10px;">' . ($i + 1) . '</td>
+			<td style="font-size:9px;">' . $expedientes[$i]["codigo_numero"] . '</td>
+			<td style="font-size:9px;">' . $expedientes[$i]["nombre"] . '</td>
+			<td style="font-size:9px;">' . $expedientes[$i]["fecha_extrema_i"] . '</td>
+			<td style="font-size:9px;">' . $expedientes[$i]["fecha_extrema_f"] . '</td>
+			<td style="text-align:center;font-size:9px;">' . $x_caja . '</td>
+			<td style="text-align:center;font-size:9px;">X</td>
+			<td style="text-align:center;font-size:9px;">' . $cadena_tomos . '</td>
+			<td style="text-align:center;font-size:9px;">' . $expedientes[$i]['no_unidad_conservacion'] . '</td>
+			<td style="text-align:center;font-size:9px;">' . $expedientes[$i]["no_folios"] . '</td>
+			<td style="font-size:9px;">' . $vector_soportes[$expedientes[$i]['soporte']] . '</td>
+			<td style="font-size:9px;">' . $vector_frecuencias[$expedientes[$i]['frecuencia_consulta']] . '</td>
 			<td colspan="3">' . $expedientes[$i]['notas_transf'] . '</td>
 			';
 
