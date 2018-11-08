@@ -1484,7 +1484,8 @@ function guardar_documento($iddoc, $tipo = 0) {
 				phpmkr_query($del);
 			}
 			alerta("<b>ATENCI&Oacute;N</b><br>No se ha podido Crear el formato..", 'error', 5000);
-			die($sql);
+			//die($sql);
+			redirecciona($ruta_db_superior . "vacio.php");
 		}
 	} elseif ($tipo == 1) {// cuando voy a editar
 		$update = array();

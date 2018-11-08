@@ -245,7 +245,7 @@ function expedientes_vinculados_funcion($idformato, $iddoc) {
 		$texto .= ' <tr>
 			<th rowspan="2" ' . $estilo_general . '>N. DE <br> ORDEN</th>
 			<th rowspan="2" ' . $estilo_general . '>C&Oacute;DIGO</th>
-			<th rowspan="2" ' . $estilo_general . '>Nombre</th>
+			<th rowspan="2" ' . $estilo_general . '>Nombre de la serie,Subseries o Asuntos</th>
 			<th colspan="2" ' . $estilo_general . '>FECHAS EXTREMAS</th>
 			<th colspan="4" ' . $estilo_general . '>Unidad de Conservaci&oacute;n</th>
 			<th rowspan="2" ' . $estilo_general . '>N&uacute;mero <br> Folios</th>
@@ -306,7 +306,7 @@ function expedientes_vinculados_funcion($idformato, $iddoc) {
 			}
 
 			$texto .= '<tr id="tr_' . $expedientes[$i]["idexpediente"] . '">
-			<td style="text-align:center;font-size:10px;">' . ($i + 1) . '</td>
+			<td style="text-align:center;font-size:9px;">' . ($i + 1) . '</td>
 			<td style="font-size:9px;">' . $expedientes[$i]["codigo_numero"] . '</td>
 			<td style="font-size:9px;">' . $expedientes[$i]["nombre"] . '</td>
 			<td style="font-size:9px;">' . $expedientes[$i]["fecha_extrema_i"] . '</td>
