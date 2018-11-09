@@ -46,9 +46,8 @@ class Version20181109130233 extends AbstractMigration
             }
         }
 		
-		
-		 $tabla=$this->getTable("busqueda_componente");
-		 $datos=	 ["busqueda_idbusqueda"=>"98","tipo"=>"2","conector"=>"1","url"=>null,"etiqueta"=>"Tabla de retenci&oacute;","nombre"=>"listado_reporte_retencion",
+	$tabla=$schema->getTable("busqueda_componente");
+	$datos=	 ["busqueda_idbusqueda"=>"98","tipo"=>"2","conector"=>"1","url"=>null,"etiqueta"=>"Tabla de retenci&oacute;","nombre"=>"listado_reporte_retencion",
 "orden"=>"3","info"=>"<div title=\"Reporte Retenci\u00f3n\" data-load='{\"kConnector\":\"iframe\",\"url\":\"..\/pantallas\/serie\/busqueda_reporte_series_dependencias.php?idbusqueda_componente=272\",\"kTitle\":\"Retencion\",\"kWidth\":\"320px\"}' class=\"items navigable\">\r\n<div class=\"head\"><\/div>\r\n<div class=\"label\">Tabla de retenci&oacute;n<\/div>\r\n<div class=\"tail\"><\/div>\r\n<\/div>",
 "exportar"=>null,"exportar_encabezado"=>null,"encabezado_componente"=>null,"estado"=>"1","ancho"=>"320","cargar"=>"1","campos_adicionales"=>null,"tablas_adicionales"=>null,
 "ordenado_por"=>null,"direccion"=>null,"agrupado_por"=>null,"busqueda_avanzada"=>null,"acciones_seleccionados"=>null,"modulo_idmodulo"=>null,"menu_busqueda_superior"=>null,
