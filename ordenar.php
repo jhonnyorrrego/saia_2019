@@ -20,11 +20,7 @@ $iddocumento = $_REQUEST["key"];
 $documento = busca_filtro_tabla("*", "documento a,formato b", "lower(a.plantilla) = lower(b.nombre) and a.iddocumento=" . $iddocumento, "", $conn);
 
 if (!$_REQUEST["mostrar_formato"] || !$documento[0]["plantilla"]) {
-    $valores = array();
-    foreach ($_REQUEST as $nombre => $valor) {
-        $valores[] = $nombre . "=" . $valor;
-    }
-    redirecciona("ordenar_paginas.php?" . implode("&", $valores));
+    redirecciona("ordenar_paginas.php?" . http_build_query($_REQUEST));
 }
 
 if ($documento['numcampos']) {
@@ -69,7 +65,7 @@ if ($documento['numcampos']) {
                     ruta = ruta + '&click_clase=<?= $_REQUEST['click_clase'] ?>';
                 }
                 
-                destino.html('<iframe name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0" scrolling="no" onload="js:$(\'#'+nombre+'\').height($(document).height()-6)"></iframe>');
+                destino.html('<iframe name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0" scrolling="yes" onload="js:$(\'#'+nombre+'\').height($(document).height()-6)"></iframe>');
             }
             
             if(documento){
@@ -79,13 +75,13 @@ if ($documento['numcampos']) {
                 if(click_mostrar) {
                     param += '&click_mostrar=1';
                 }else{
-                    llamado_pantalla("","",$("#contenedor_saia"),'detalles');
+                    llamado_pantalla('', '', $("#contenedor_saia"), 'detalles');
                 }
                 
-                llamado_pantalla("<?= $ruta_db_superior ?>pantallas/documento/informacion_resumen_documento.php",param,$("#izquierdo_saia"),"arbol_formato");
+                llamado_pantalla('<?= $ruta_db_superior ?>pantallas/documento/informacion_resumen_documento.php', param, $("#izquierdo_saia"), 'arbol_formato');
             }else{
-                $("#izquierdo_saia").html('<?= addslashes($documento[0]["descripcion"]) ?>');
-                llamado_pantalla("<?= $ruta_db_superior ?>pantallas/documento/listado_paginas.php","iddoc=<?= $iddocumento ?>",$("#contenedor_saia"));
+                $('#izquierdo_saia').html('<?= addslashes($documento[0]['descripcion']) ?>');
+                llamado_pantalla('<?= $ruta_db_superior ?>pantallas/documento/listado_paginas.php', 'iddoc=<?= $iddocumento ?>',$('#contenedor_saia'));
             }
         });
     </script>

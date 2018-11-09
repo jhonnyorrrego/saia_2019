@@ -39,7 +39,7 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
                 <table id="table" data-selections=""></table>
             </div>
         </div>
-        <script data-baseUrl='<?= $ruta_db_superior ?>'>
+        <script data-baseurl='<?= $ruta_db_superior ?>' id="baseUrl">
             $(function(){
                 var baseUrl = '<?= $ruta_db_superior ?>';
                 var encabezado = '<?= $component[0]['encabezado_componente'] ?>'

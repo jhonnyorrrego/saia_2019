@@ -1,12 +1,23 @@
-(function ($) {
-    $.fn.topModal = function (options) {
-        options = $.extend({}, $.fn.topModal.defaultOptions, options);
+var topModalDefaults = {
+    url : '',
+    size: '',
+    title: '',
+    buttons :[]
+}
 
-        return this.each(function () {
-           
+function topModal(options){
+    var modal = $("#dinamic_modal", window.top.document);
+    var options = $.extend({}, topModalDefaults, options);
+
+    if(options.url){
+        modal.find("#modal_body").load(options.url, function(response, xhr, status){
+            modal.find("#modal_body").prepend('<hr>');
+            modal.find("#modal_title").text(options.title);
+            modal.modal({
+                backdrop : false
+            });
         });
-    };
-
-    $.fn.topModal.defaultOptions = {};
-
-}(jQuery));
+    }else{
+        console.log('undefined url');
+    }
+}

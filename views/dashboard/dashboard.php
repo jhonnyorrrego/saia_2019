@@ -1509,6 +1509,25 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             </div>
         </div>
     </div>
+    <!-- Modal -->
+    <div class="modal" tabindex="-1" role="dialog" id="dinamic_modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title bold" id="modal_title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modal_body"></div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-complete" id="btn_success">Enviar</button>
+            </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.modal-dialog -->
     <!-- END OVERLAY -->
     <!-- BEGIN VENDOR JS -->
         <!-- BEGIN VENDOR JS -->
