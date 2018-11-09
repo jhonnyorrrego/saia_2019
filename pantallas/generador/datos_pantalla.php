@@ -106,7 +106,7 @@ return($resultado);
       <input type="text" name="version" id="version" placeholder="Versi&oacute;n" value="" required>
     </div>
   </div>
-  <div class="control-group">
+  <!--<div class="control-group">
     <label class="control-label" for="documentacion">Documentaci&oacute;n del formato</label>
     <div class="controls">
       <input type="hidden" name="anexos" id="anexos">
@@ -134,7 +134,7 @@ return($resultado);
     $js_archivos = "";
     $js_archivos = crear_campo_dropzone(null, null);
     ?>
-  </div>
+  </div>-->
   
   
   <div class="control-group">   
@@ -399,7 +399,7 @@ $("document").ready(function(){
 			    	  notificacion_saia(objeto.mensaje,'success','topCenter',3000);
 			      }
 			      else{
-			    	  notificacion_saia(objeto.mensaje,'error','topCenter',3000);
+			    	  //notificacion_saia(objeto.mensaje,'error','topCenter',3000);
 			    	  $("#nombre_formato").focus();
 			      }
 			  	

@@ -33,7 +33,26 @@ if (@$_REQUEST["ejecutar_datos_pantalla"]) {
 }
 
 function load_pantalla($idpantalla, $generar_archivo = "", $accion = '') {
-	$pantalla = busca_filtro_tabla("", "formato A,campos_formato B", "A.idformato=B.formato_idformato AND A.idformato=" . $idpantalla, "B.orden", $conn);
+	
+	$consulta_campos_lectura=busca_filtro_tabla("valor","configuracion","nombre='campos_solo_lectura'","",$conn);
+		if($consulta_campos_lectura['numcampos']){
+			$campos_lectura=json_decode($consulta_campos_lectura[0]['valor'],true);
+			$campos_lectura=implode(",",$campos_lectura);
+			$campos_lectura = str_replace(",", "','", $campos_lectura);		
+			$busca_idft = strpos($campos_lectura, "idft_");		
+			$condicion_adicional = '';
+			if($busca_idft!==false){
+				$consulta_ft=busca_filtro_tabla("nombre_tabla","formato","idformato=".$idpantalla,"",$conn);
+				$campos_lectura = str_replace("idft_", "id".$consulta_ft[0]['nombre_tabla'], $campos_lectura);
+				$condicion_adicional = " and B.nombre not in('".$campos_lectura."')";			
+			}				
+		}
+		$pantalla = busca_filtro_tabla("", "formato A,campos_formato B", "A.idformato=B.formato_idformato AND A.idformato=" . $idpantalla .$condicion_adicional , "B.orden", $conn);
+	
+	/*foreach ($campos_lectura as $key => $value) {
+    	
+	}*/
+
 	$texto = '';
 	for($i = 0; $i < $pantalla["numcampos"]; $i++) {
 		$cadena = load_pantalla_campos($pantalla[$i]["idcampos_formato"], 0, $generar_archivo, $accion, $pantalla[$i]);
@@ -51,9 +70,11 @@ function echo_load_pantalla($idpantalla, $tipo_retorno) {
 function ordenar_pantalla_campos($nuevo_orden) {
 	$pantalla_campos = explode(",", $nuevo_orden);
 	$i = 0;
+	
 	foreach ($pantalla_campos as $key => $valor) {
 		$cadena = str_replace("pc_", "", $valor);
-		$sql2 = 'UPDATE pantalla_campos SET orden=' . $i . ' WHERE idpantalla_campos=' . $cadena;
+		/*$sql2 = 'UPDATE pantalla_campos SET orden=' . $i . ' WHERE idpantalla_campos=' . $cadena;*/
+		$sql2 = 'UPDATE campos_formato SET orden=' . $i . ' WHERE idcampos_formato=' . $cadena;
 		$i++;
 		phpmkr_query($sql2);
 	}

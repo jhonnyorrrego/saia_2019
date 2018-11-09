@@ -708,6 +708,7 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
 	
 	switch($tipo) {
 		case "radio":
+		    //$texto .= '<div class="radio radio-success">';
 			$texto .= '<table border="0">';
 			for($j = 0; $j < $cont3; $j++) {
 				$fila = ($j % $columnas);
@@ -729,7 +730,8 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
 					$texto .= '</tr>';
 				}
 			}
-			$texto .= "<tr><td colspan='$columnas'><label style='display:none' for='$nombre' class='error'>Campo obligatorio</label></td></tr></table>";
+			//$texto .= "<tr><td colspan='$columnas'><label style='display:none' for='$nombre' class='error'>Campo obligatorio</label></td></tr></table>";
+			$texto .= "<tr><td colspan='$columnas'></td></tr></table>";
 			break;
 		case "checkbox":
 			$texto .= '<table border="0">';
@@ -757,10 +759,10 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
 			break;
 		case "select":
 			if($buscar) {
-				$texto = '<select name="bqsaia_g@' . $nombre . '" id="' . $nombre . '" ' . $obligatorio . ' >
+				$texto = '<select name="bqsaia_g@' . $nombre . '" id="' . $nombre . '" ' . $obligatorio . ' class="form-control">
 	  		  <option value="" selected >Por favor seleccione...</option>';
 			} else {
-				$texto = '<select name="' . $nombre . '" id="' . $nombre . '" ' . $obligatorio . ' >
+				$texto = '<select name="' . $nombre . '" id="' . $nombre . '" ' . $obligatorio . ' class="form-control" >
               <option value="" selected >Por favor seleccione...</option>';
 			}
 			for($j = 0; $j < $cont3; $j++) {
@@ -864,9 +866,9 @@ function buscar_dependencia($iformato=0) {
 	$dep = busca_filtro_tabla("distinct dependencia.nombre,iddependencia_cargo,cargo.nombre as cargo", "funcionario,dependencia_cargo,dependencia,cargo", "dependencia_cargo.funcionario_idfuncionario=funcionario.idfuncionario  AND cargo_idcargo=idcargo AND cargo.estado=1 AND dependencia_cargo.dependencia_iddependencia=dependencia.iddependencia AND dependencia_cargo.estado=1 AND funcionario.login='" . usuario_actual('login') . "' AND cargo.tipo_cargo='1' AND " . fecha_db_obtener('dependencia_cargo.fecha_inicial', 'Y-m-d') . "<='" . $hoy . "' AND " . fecha_db_obtener('dependencia_cargo.fecha_final', 'Y-m-d') . ">='" . $hoy . "'", "dependencia.nombre", $conn);
 	$numfilas = $dep["numcampos"];
 	
-	$html = '<td width="79%" bgcolor="#F5F5F5">';
+	$html = '';
 	if($numfilas > 1) {
-		$html .= '<select name="dependencia" id="dependencia" class="required">';
+		$html .= '<select class ="form-control" name="dependencia" id="dependencia" class="required">';
 		if($dep_sel==''){
 			$html .= "<option value='' selected>Por favor seleccione...</option>";
 		}
@@ -880,12 +882,11 @@ function buscar_dependencia($iformato=0) {
 		}
 		$html .= '</select>';
 	} else if($numfilas == 1) {
-		$html .= "<input class='required' type='hidden' value='" . $dep[0]["iddependencia_cargo"] . "' id='dependencia' name='dependencia'>" . $dep[0]["nombre"] . " - (" . $dep[0]["cargo"] . ")";
+		$html .= "<input class='required' type='hidden' value='" . $dep[0]["iddependencia_cargo"] . "' id='dependencia' name='dependencia'><label class ='form-control'>" . $dep[0]["nombre"] . " - (" . $dep[0]["cargo"] . ")</label>";
 	} else {
 		alerta("Existe un problema al momento de definir su dependencia. Por favor Comuniquese con su administrador");
 		redirecciona("../../responder.php");
 	}
-	$html .= '</td>';
 	echo $html;
 }
 
@@ -947,7 +948,7 @@ function fecha_formato($idformato, $idcampo, $iddoc = NULL) {
 		$resultado = busca_filtro_tabla(fecha_db_obtener($campo[0]["nombre"], $formato) . " as fecha", $datos[0]["nombre_tabla"], "documento_iddocumento=$iddoc", "", $conn);
 		$valor = $resultado[0]["fecha"];
 	}
-	echo "<td bgcolor='#F5F5F5'><input type='text' name='" . $campo[0]["nombre"] . "' id='" . $campo[0]["nombre"] . "' value='$valor' readonly='true'></td>";
+	echo "<input type='text' class='form-control' name='" . $campo[0]["nombre"] . "' id='" . $campo[0]["nombre"] . "' value='$valor' readonly='true'>";
 }
 
 /*
@@ -1410,8 +1411,7 @@ function submit_formato($formato, $iddoc = NULL) {
 	}
 	$datos_f = busca_filtro_tabla("item,nombre,nombre_tabla,contador_idcontador", "formato", "idformato=" . $formato, "", $conn);
 	if ($iddoc == NULL || $datos_f[0]["item"]) {
-		echo '<tr><td colspan="4" align="center">
-		<input type="hidden" name="funcion" value="radicar_plantilla">
+		echo '<input type="hidden" name="funcion" value="radicar_plantilla">
     <input type="hidden" name="tabla" value="' . $datos_f[0]["nombre_tabla"] . '">
     <input type="hidden" name="formato" value="' . $datos_f[0]["nombre"] . '">';
 		$contador = busca_filtro_tabla("nombre", "contador", "idcontador=" . $datos_f[0]["contador_idcontador"], "", $conn);
@@ -1433,15 +1433,18 @@ function submit_formato($formato, $iddoc = NULL) {
 			}
 			echo('<button class="cancel" onClick="javascript:redirecciona_padre(); return false;" id="cancel" value="Cancelar" style="margin-right:6px;">Cancelar</button>');
 		}
-		echo('<button class="submit" type="submit" id="continuar" value="Continuar">Continuar</button>');
-		echo('</td></tr>');
+		echo('<div class="col-md-9">
+				<button class="btn btn-success submit" type="submit" id="continuar" value="Continuar">Continuar</button>
+             <div>');
 	} else {
 
-		echo '<tr><td colspan="2" align="center">
+		echo '
 		<input type="hidden" name="iddoc" value="' . $iddoc . '">
     <input type="hidden" name="tabla" value="' . $datos_f[0]["nombre_tabla"] . '">
     <script>formulario_formatos.action="../librerias/modificar_plantilla.php";</script>
-    <input class="submit" type="submit" id="continuar" value="Continuar"></td></tr>';
+    <div class="col-md-9">
+	   <input class="btn btn-success submit" type="submit" id="continuar" value="Continuar">
+     <div>';
 	}
 	?>
 	<script>

@@ -76,10 +76,10 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 					<div class="span9">
 						<div class="tabbable">
 							<ul class="nav nav-tabs" id="tabs_formulario">
-								<li class="active">
+								<li>
 									<a href="#datos_formulario-tab" data-toggle="tab">1-Datos</a>
 								</li>
-								<li id="generar_formulario_pantalla">
+								<li id="generar_formulario_pantalla"  class="active">
 									<a href="#formulario-tab" data-toggle="tab">2-Formularios</a>
 								</li>
                 				<li>
@@ -102,14 +102,14 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 								</li>
 							</ul>
 							<div class="tab-content">
-								<div class="tab-pane" id="formulario-tab">
+								<div class="tab-pane active" id="formulario-tab">
 									<form id="contenedor_saia" class="form-horizontal">
 										<?php
 echo(load_pantalla($idpantalla));
 										?>
 									</form>
 								</div>
-								<div class="tab-pane  active" id="datos_formulario-tab">
+								<div class="tab-pane " id="datos_formulario-tab">
 									<?php
 include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 								</div>

@@ -1,6 +1,6 @@
 <?php
 
-namespace PhpOffice\PhpWord;
+use PhpOffice\PhpWord\TemplateProcessor;
 
 class SaiaTemplateProcessor extends TemplateProcessor {
 

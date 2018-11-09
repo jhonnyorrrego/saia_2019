@@ -101,7 +101,7 @@ else{
         Obligatorio
       </label>
       <label class="control-label" for="radios-1">
-        <input type="radio" name="fs_obligatoriedad" id="opcional" value="0" <?php echo($obligatoriedad_no);?>>
+        <input type="radio" name="fs_obligatoriedad" id="opcional" value="0" <?php echo($obligatoriedad_no);?>><br>
         Opcional
       </label>
     </div>

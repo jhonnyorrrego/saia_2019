@@ -73,6 +73,7 @@ function adicionar_pantalla_campos($idpantalla, $idpantalla_componente, $tipo_re
 		}
 		if (count($sql_campos) && count($sql_valores)) {
 			$sql2 = "INSERT INTO campos_formato(" . implode(",", $sql_campos) . ") VALUES('" . implode("','", $sql_valores) . "')";
+
 			$retorno["sql"] = $sql2;    
 			phpmkr_query($sql2);
 			$idcampo = phpmkr_insert_id();  

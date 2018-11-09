@@ -100,8 +100,8 @@ else{
         <input type="radio" name="fs_obligatoriedad" id="obligatorio" value="1" <?php echo($obligatoriedad_si);?> required>
         Obligatorio
       </label>
-      <label class="control-label" for="radios-1">
-        <input type="radio" name="fs_obligatoriedad" id="opcional" value="0" <?php echo($obligatoriedad_no);?>>
+      <label class="control-label" for="obligatorio">
+        <input type="radio" name="fs_obligatoriedad" id="obligatorio" value="1" <?php echo($obligatoriedad_si);?> required><br>
         Opcional
       </label>
     </div>

@@ -217,7 +217,10 @@ function validar_digitalizacion_formato($idformato, $iddoc) {
  </Clase> */
 function digitalizar_formato($idformato, $iddoc) {
 	global $conn;
-	echo "<tr><td class='encabezado'>DESEA DIGITALIZAR</td><td><input name='digitalizacion' type='radio' value='1'>Si  <input name='digitalizacion' type='radio' value='0' checked>No</td></tr>";
+	echo '<div class="form-group" id="digitalizacion">
+            	<label>DESEA DIGITALIZAR?</label>
+            	<input name="digitalizacion" type="radio" value="1">Si  <input name="digitalizacion" type="radio" value="0" checked>No
+			</div>';
 }
 
 /*****/
