@@ -219,7 +219,6 @@ function update_expediente() {
 		'ubicacion',
 		'estado_archivo',
 		'estado_cierre',
-		'estado_cierre',
 		'fk_idcaja',
 		'agrupador'
 	);
@@ -228,7 +227,6 @@ function update_expediente() {
 			$_REQUEST[$array_vacios[$i]] = 0;
 		}
 	}
-	//print_r($_REQUEST);
 	$update = array();
 	$update[] = " nombre='" . @$_REQUEST['nombre'] . "' ";
 	$update[] = " fecha=" . fecha_db_almacenar(@$_REQUEST['fecha'], 'Y-m-d');
@@ -260,7 +258,6 @@ function update_expediente() {
 	$antiguo_padre = busca_filtro_tabla("idexpediente,cod_arbol", "expediente A", "A.idexpediente=" . $antiguo[0]["cod_padre"], "", $conn);
 
 	$sql2 = "UPDATE expediente SET " . implode(",", $update) . " WHERE idexpediente=" . $_REQUEST["idexpediente"];
-	//print_r($sql2);
 	phpmkr_query($sql2) or die($sql2);
 	$idexpediente = $_REQUEST["idexpediente"];
 	guardar_lob('descripcion', 'expediente', "idexpediente=" . $idexpediente, @$_REQUEST['descripcion'], 'texto', $conn, 0);
