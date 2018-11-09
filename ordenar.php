@@ -84,7 +84,7 @@ if ($documento['numcampos']) {
                 
                 llamado_pantalla("<?= $ruta_db_superior ?>pantallas/documento/informacion_resumen_documento.php",param,$("#izquierdo_saia"),"arbol_formato");
             }else{
-                $("#izquierdo_saia").html('<?= $documento[0]["descripcion"] ?>');
+                $("#izquierdo_saia").html('<?= addslashes($documento[0]["descripcion"]) ?>');
                 llamado_pantalla("<?= $ruta_db_superior ?>pantallas/documento/listado_paginas.php","iddoc=<?= $iddocumento ?>",$("#contenedor_saia"));
             }
         });

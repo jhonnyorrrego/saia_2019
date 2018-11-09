@@ -20,7 +20,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-
     <?= icons() ?>
     <?= kaiten() ?>
 </head>

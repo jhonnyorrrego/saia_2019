@@ -66,9 +66,7 @@ $ruta_db_superior="../";
             if($conector!=''){
               $texto.='<div title="'.$componentes[$i]["etiqueta"].'" data-load=\'{"kConnector":"'.$conector.'", "url":"'.$url.'", "kTitle":"'.$componentes[$i]["etiqueta"].'","kWidth":"'.$componentes[$i]["ancho"].'px"}\' class="items navigable">';
               $texto.='<div class="head">';              				            
-              if($componentes[$i]["encabezado_componente"]!=''){
-                $texto.=$componentes[$i]["encabezado_componente"]($componentes[$i]["idbusqueda_componente"]);
-              }             
+                         
               //$texto.='<img src="'.$componentes[$i]["imagen"].'"/>'; 
               $texto.='</div>
                 <div class="label">';

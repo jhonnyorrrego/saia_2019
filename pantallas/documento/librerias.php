@@ -1,6 +1,7 @@
 <?php
 $max_salida = 6;
 $ruta_db_superior = $ruta = "";
+
 while ($max_salida > 0) {
 	if (is_file($ruta . "db.php")) {
 		$ruta_db_superior = $ruta;
@@ -8,11 +9,12 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once ($ruta_db_superior . 'db.php');
-include_once ($ruta_db_superior . "pantallas/documento/librerias_flujo.php");
-include_once ($ruta_db_superior . "pantallas/lib/librerias_fechas.php");
-include_once ($ruta_db_superior . "workflow/libreria_paso.php");
-include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
+
+include_once $ruta_db_superior . 'db.php';
+include_once $ruta_db_superior . "pantallas/documento/librerias_flujo.php";
+include_once $ruta_db_superior . "pantallas/lib/librerias_fechas.php";
+include_once $ruta_db_superior . "workflow/libreria_paso.php";
+include_once $ruta_db_superior . "formatos/librerias/funciones_generales.php";
 
 function barra_inferior_documento($iddoc, $numero) {
 	$dato_prioridad = busca_filtro_tabla("", "prioridad_documento", "documento_iddocumento=" . $iddoc . " AND funcionario_idfuncionario=" . usuario_actual("idfuncionario"), "fecha_asignacion DESC", $conn);
@@ -974,28 +976,33 @@ function origen_documento_pendiente($iddocumento, $numero, $fecha){
 
 	include_once $ruta_db_superior . 'models/funcionario.php';
 
-    $buscaOrigen = busca_filtro_tabla('b.idfuncionario', 'buzon_salida a, funcionario b', "a.origen = b.funcionario_codigo and nombre in ('TRANSFERIDO','POR_APROBAR','APROBADO','DEVUELTO','REVISADO') and archivo_idarchivo=".$iddocumento." and destino =". usuario_actual('funcionario_codigo'), 'a.idtransferencia desc', $conn);
-	$Funcionario = new Funcionario($buscaOrigen[0]['idfuncionario']);
-	
+    $findOrigin = busca_filtro_tabla('b.idfuncionario', 'buzon_salida a, funcionario b', "a.origen = b.funcionario_codigo and nombre in ('TRANSFERIDO','POR_APROBAR','APROBADO','DEVUELTO','REVISADO') and archivo_idarchivo=".$iddocumento." and destino =". usuario_actual('funcionario_codigo'), 'a.idtransferencia desc', $conn);
+    $Funcionario = new Funcionario($findOrigin[0]['idfuncionario']);
+    
+    $routeImage = $ruta_db_superior . $Funcionario->getImage('foto_recorte');
+    $title = $numero . " - " . $Funcionario->getName();
+    $temporality = temporality($fecha);
     $html = '<div class="col-1 px-0">
         <input type="hidden" value="'.$iddocumento.'" class="identificador">
         <span class="thumbnail-wrapper d32 circular inline">
-            <img id="profile_image" src="'.$ruta_db_superior . $Funcionario->getImage('foto_recorte') .'" width="32" height="32">
+            <img id="profile_image" src="'.$routeImage.'" width="32" height="32">
         </span>
     </div>
     <div class="col kenlace_saia" enlace="ordenar.php?key=' . $iddocumento . '&accion=mostrar&mostrar_formato=1" conector="iframe" titulo="Documento No.' . $numero . '" style="cursor:pointer;">
-        <small class="mt-1 hint-text">'.$numero." - ". $Funcionario->getName(). '</small>
+        <span class="mt-1 hint-text" style="font-size: 12px;">'.$title.'</span>
     </div>
     <div class="col-auto">
-        <small class="mt-1 hint-text" id="time_'.$iddocumento.'"></small>
-    </div>
-    <script>
-        $(function(){
-            $("#time_'.$iddocumento.'").text(moment("'.$fecha.'").fromNow())
-        })
-    </script>';
+        <span class="mt-1 hint-text">'.$temporality.'</span>
+    </div>';
 
     return $html;
+}
+
+function limit_description($description, $limit){
+    if(strlen($description) > $limit)
+        $description = substr($description, 0, $limit - 3) . '...';
+
+    return $description;
 }
 
 function sin_leer($iddocumento, $fecha){
@@ -1004,11 +1011,10 @@ function sin_leer($iddocumento, $fecha){
     $idfuncionario = usuario_actual('funcionario_codigo');
     $leido = busca_filtro_tabla("idtransferencia", "buzon_salida", "archivo_idarchivo=" . $iddocumento . " and origen=".$idfuncionario." and (nombre='LEIDO' or nombre='BORRADOR') and " . fecha_db_obtener("fecha", "Y-m-d H:i:s") . " >= '".$fecha."'", "", $conn);
 
-    if (!$leido["numcampos"]) {
-        $html = '<h6 class="my-0 text-center"><i class="fa fa-circle text-complete"></i></h6>';
-    }
-
-    return $html;
+    if (!$leido["numcampos"])
+        return '<h6 class="my-0 text-center"><i class="fa fa-circle text-complete"></i></h6>';
+    else
+        return '';
 }
 
 function contiene_anexos($iddocumento){
@@ -1034,16 +1040,71 @@ function prioridad($iddocumento){
     return $html;
 }
 
-function tipo_documental($iddocumento){
-    $html = '<small class="hint-text">PQRS</small>';
+function documental_type($documentId){
+    global $conn;
 
-    return $html;
+    $findSerie = busca_filtro_tabla('LOWER(b.nombre)','documento a,serie b', 'a.serie = b.idserie and a.iddocumento='.$documentId, '', $conn);
+
+    if($findSerie['numcampos'] && $findSerie[0][0])
+        return '<span class="hint-text">' . ucfirst($findSerie[0][0]) . '</span>';
+    else
+        return '';
 }
 
-function vencimiento($iddocumento){
-    $html = '<small class="hint-text">Vence:</small> <button class="btn btn-danger btn-sm">Hoy</button>';
-    return $html;
+function expiration($date){
+    if(strtotime($date)){
+        $Limit = new DateTime($date);
+        $Today = new DateTime();
+
+        $diference = dias_habiles_entre_fechas($Today, $Limit);
+
+        if($diference < 3){
+            if($diference == 0){
+                $html = '<span class="hint-text">Vence:</span> <span class="label label-danger btn_expiration">Hoy</span>';
+            }elseif($diference == 1){
+                $html = '<span class="hint-text">Vence:</span> <span class="label label-danger btn_expiration">Mañana</span>';
+            }else{
+                $html = '<span class="hint-text">Venció:</span> <span class="label label-danger btn_expiration">Hace '.abs($diference).' días</span>';
+            }
+        }elseif($diference >= 3 && $diference <= 8){
+            $html = '<span class="hint-text">Vence en:</span> <span class="label label-warning btn_expiration">'.$diference.' días</span>';
+        }else{
+            $html = '<span class="hint-text">Vence en:</span> <span class="label label-info btn_expiration">'.$diference.' días</span>';
+        }
+
+        return $html;
+    }
 }
 
+function temporality($date){
+    $date = DateTime::createFromFormat('Y-m-d H:i:s', $date);
+    $timeFromDate = strtotime($date->format('Y-m-d H:i:s'));
+    $diference = strtotime("now") - $timeFromDate;
+    
+    if($diference < 900){//under 15 minutes 15 * 60
+        if($diference < 300){ //5 minutes 5 * 60 
+            return 'Hace un momento';
+        }else { //15 minutes
+            $minutes = round($diference / 60); //convert to minutes
+            return 'Hace ' . $minutes . ' Minutos';
+        }
+    }
+    
+    if(strtotime(date('Y-m-d')) < $timeFromDate){// today
+        return $date->format('H:i:s a');
+    }
+    
+    $yesterday = (new DateTime())->sub(new DateInterval('P1D'))->format('Y-m-d');
+    if(strtotime($yesterday) < $timeFromDate){// yesterday
+        return 'Ayer';
+    }
+
+    $beforeYesterday = (new DateTime())->sub(new DateInterval('P2D'))->format('Y-m-d');
+    if(strtotime($beforeYesterday) < $timeFromDate){// yesterday
+        return 'Anteayer';
+    }else{
+        return $date->format('d-m-Y');
+    }
+}
 
 ?>

@@ -37,7 +37,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <script>
         $(function(){
             var baseUrl = '<?= $ruta_db_superior ?>';
-            let route = baseUrl + 'pantallas/busquedas/listado.php?idbusqueda_componente=<?= $_REQUEST['idbusqueda_componente'] ?>';
+            let route = baseUrl + 'views/buzones/listado.php?idbusqueda_componente=<?= $_REQUEST['idbusqueda_componente'] ?>';
             $("#mailbox").attr('src', route).height($(window).height() - $("#k-topbar").height() - 5);
         });
     </script>

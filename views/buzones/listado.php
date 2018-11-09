@@ -12,6 +12,9 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'assets/librerias.php';
 include_once $ruta_db_superior . 'librerias_saia.php';
+
+global $conn;
+$component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_componente', 'busqueda a,busqueda_componente b', 'a.idbusqueda = b.busqueda_idbusqueda and b.idbusqueda_componente='. $_REQUEST['idbusqueda_componente'], '', $conn);
 ?>
 <!doctype html>
 <html lang="en">
@@ -31,15 +34,19 @@ include_once $ruta_db_superior . 'librerias_saia.php';
     </head>
     <body>
         <div class="container">
-            <div class="row" id="header_list">ESPACIO PARA ACCIONES</div>
+            <div class="row sticky-top bg-master-light" id="header_list"></div>
             <div class="row" id="content">
                 <table id="table" data-selections=""></table>
             </div>
         </div>
-        <script>
+        <script data-baseUrl='<?= $ruta_db_superior ?>'>
             $(function(){
+                var baseUrl = '<?= $ruta_db_superior ?>';
+                var encabezado = '<?= $component[0]['encabezado_componente'] ?>'
+                var component = '<?= $_REQUEST['idbusqueda_componente'] ?>';
+
                 $('#table').bootstrapTable({
-                    url: '<?= $ruta_db_superior ?>app/busquedas/datosBootstrapTable.php?idbusqueda_componente=<?= $_REQUEST['idbusqueda_componente'] ?>',
+                    url: `${baseUrl}app/busquedas/datosBootstrapTable.php?idbusqueda_componente=${component}`,
                     sidePagination: 'server',
                     queryParamsType: 'other',
                     columns: [{
@@ -58,7 +65,11 @@ include_once $ruta_db_superior . 'librerias_saia.php';
                         return response;
                     },
                     onPostBody: function(){
-                        var selections = $('#table').data('selections').split(',').map(Number).filter(n => n > 0);
+                        var selections = $('#table')
+                            .data('selections')
+                            .split(',')
+                            .map(Number)
+                            .filter(n => n > 0);
                         
                         if(selections.length){
                             $('[name="btSelectItem"]').each(function (i, element) {
@@ -71,7 +82,7 @@ include_once $ruta_db_superior . 'librerias_saia.php';
                     maintainSelected: true
                 });
 
-                $('#table').on('check.bs.table uncheck.bs.table check-all.bs.table uncheck-all.bs.table', function () {
+                $('#table').on('check.bs.table uncheck.bs.table', function () {
                     var selections = $(this).data('selections').split(',').map(Number).filter(n => n > 0);
 
                     $('[name="btSelectItem"]').each(function (i, element) {
@@ -86,7 +97,20 @@ include_once $ruta_db_superior . 'librerias_saia.php';
 
                     $(this).data('selections', selections.join(','))
                 });
+
+                $("#header_list").load(baseUrl+encabezado, function(){
+                    $('[data-toggle="tooltip"]').tooltip();
+                });
             });
         </script>
+        <?php
+            if ($component['numcampos'] && $component[0]['ruta_libreria_pantalla']) {
+                $libraries = explode(',', $component[0]['ruta_libreria_pantalla']);
+
+                foreach ($libraries as $librarie) {
+                    include_once $ruta_db_superior . $librarie;
+                }
+            }
+        ?>
     </body>
 </html>
