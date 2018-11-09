@@ -188,14 +188,14 @@ function expedientes_vinculados_funcion($idformato, $iddoc) {
       	&nbsp;
       	</td>
       	<td colspan="9" style="border-top:hidden;border-top:bottom;"></td>
-      	<td>&nbsp;</td>
-      	<td colspan="3">&nbsp;</td>
+      	<td style="border-left:hidden;border-right:hidden">&nbsp;</td>
+      	<td colspan="3" style="border-left:hidden;border-right:hidden">&nbsp;</td>
       	
       </tr>
       <tr>
-      	<td colspan="11" style="border-top:hidden;border-left:hidden"></td>
-      	 <td style="border-top:hidden">asdfas</td>
-      	<td colspan="3" style="border-top:hidden">adfasd</td>
+      	<td colspan="11" style="border-top:hidden;border-left:hidden;border-right:hidden"></td>
+      	 <td style="border-top:hidden;border-left:hidden;border-right:hidden"></td>
+      	<td colspan="3" style="border-top:hidden;border-left:hidden;border-right:hidden"></td>
       </tr>';
 		} else {
 			$texto .= ' <tr>

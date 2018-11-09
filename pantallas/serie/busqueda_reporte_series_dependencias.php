@@ -27,7 +27,29 @@ global $conn;
          
 		<div class="container master-container">
        <form accept-charset="UTF-8" id="kformulario_saia"  method="post" >  
-        <div class="control-group">
+       
+       <div class="control-group">
+          <label class="string required control-label" for="codigo">
+			<b>Dependencia:</b>
+			<input type="hidden" name="bksaiacondicion_iddependencia" id="bksaiacondicion_iddependencia" value="=">
+          </label>
+          <div class="controls">
+          <select style="height:34px;" name="bqsaia_iddependencia" id="bqsaia_iddependencia">
+				<option value="">Por favor seleccione</option>
+			   <?php
+			    $datos=busca_filtro_tabla("iddependencia, nombre,codigo","dependencia","estado=1","nombre ASC",$conn);
+				if($datos['numcampos']){
+			    	for($i=0;$i<$datos['numcampos'];$i++){
+			    	echo "<option value='".$datos[$i]['iddependencia']."'>".$datos[$i]['codigo']." - ".$datos[$i]['nombre']."</option>";
+			    	}			        
+			    }
+				?>
+			    </select>		   
+            <input type="hidden" name="bqsaiaenlace_iddependencia" id="bqsaiaenlace_iddependencia" value="y">
+          </div>
+        </div> 
+        
+		<div class="control-group">
           <label class="string required control-label" for="codigo">
 			<b>C&oacute;digo:</b>
 			<input type="hidden" name="bksaiacondicion_orden_dependencia_serie" id="bksaiacondicion_orden_dependencia_serie" value="=">
@@ -36,8 +58,7 @@ global $conn;
             <input id="bqsaia_orden_dependencia_serie" name="bqsaia_orden_dependencia_serie" size="50" type="text">
             <input type="hidden" name="bqsaiaenlace_orden_dependencia_serie" id="bqsaiaenlace_orden_dependencia_serie" value="y">
           </div>
-        </div> 
-        
+        </div>        
     <br>
     
         <div class="row">
