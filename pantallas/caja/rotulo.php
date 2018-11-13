@@ -51,7 +51,7 @@ function obntener_niveles_dependencia_rotulo(&$array_dependencias, $iddependenci
 function rotulo_caja($id){
 	global $logo, $ruta_db_superior;
  
-	$datos=busca_filtro_tabla(fecha_db_obtener('fecha_extrema_i','Y-m-d H:i')." as fecha_i, ".fecha_db_obtener('fecha_extrema_f','Y-m-d H:i')." as fecha_f, a.*","caja a","a.idcaja=".$id,"",$conn);
+	$datos=busca_filtro_tabla("","caja a","a.idcaja=".$id,"",$conn);
 
 	/*$serie=busca_filtro_tabla("nombre,tipo,cod_padre","serie a","a.idserie=".$datos[0]["serie_idserie"],"",$conn);
 	$nomb_serie="";
