@@ -160,8 +160,10 @@ $listado_series=implode(", ", $listado_series);?>
 		<td style="text-align:center;">Fecha final</td>
 	</tr>
 	<tr>
-		<td style="text-align:center;"><?php echo ($datos[0]["fecha_extrema_i"]); ?></td>
-		<td style="text-align:center;"><?php echo ($datos[0]["fecha_extrema_f"]); ?></td>
+		<td style="text-align:center;"><?php /*echo ($datos[0]["fecha_extrema_i"]);*/
+		echo calcular_fecha_extrema_inicial($datos[0]["idcaja"]); ?></td>
+		<td style="text-align:center;"><?php /*echo ($datos[0]["fecha_extrema_f"]);*/
+		echo calcular_fecha_extrema_final($datos[0]["idcaja"]); ?></td>
 	</tr>
 </table>
 <?php
