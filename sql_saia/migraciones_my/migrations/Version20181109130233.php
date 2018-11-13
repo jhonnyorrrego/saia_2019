@@ -79,5 +79,9 @@ class Version20181109130233 extends AbstractMigration
                 $resp = $conn->update('busqueda_componente', $data, $ident);
             }
         }
+         $ident = [
+                'nombre' => "listado_reporte_retencion"
+            ];
+            $resp = $conn->delete('busqueda_componente', $ident);
     }
 }
