@@ -37,13 +37,14 @@ if (@$_REQUEST["no_redireccionar"] == 1) {
 
 function obntener_niveles_dependencia_rotulo(&$array_dependencias, $iddependencia) {
 	global $conn;
-
-	$dependencia = busca_filtro_tabla("A.cod_padre, A.nombre", "dependencia A", "A.iddependencia=" . $iddependencia . " AND (cod_padre is not null or cod_padre<>0)", "", $conn);
-
-	if ($dependencia["numcampos"]) {
-		$array_dependencias[] = $dependencia[0]["nombre"];
-		if ($dependencia[0]["cod_padre"]) {
-			obntener_niveles_dependencia_rotulo($array_dependencias, $dependencia[0]["cod_padre"]);
+	if(!empty($iddependencia)){
+		$dependencia = busca_filtro_tabla("A.cod_padre, A.nombre", "dependencia A", "A.iddependencia=" . $iddependencia . " AND (cod_padre is not null or cod_padre<>0)", "", $conn);
+	
+		if ($dependencia["numcampos"]) {
+			$array_dependencias[] = $dependencia[0]["nombre"];
+			if ($dependencia[0]["cod_padre"]) {
+				obntener_niveles_dependencia_rotulo($array_dependencias, $dependencia[0]["cod_padre"]);
+			}
 		}
 	}
 }
@@ -207,10 +208,11 @@ if($buscar_entidad_serie["numcampos"]){
 	obntener_niveles_dependencia_rotulo($array_dependencias, $secciones[0]);
 	$array_dependencias = array_reverse($array_dependencias);
 	
-	$subseccioni=busca_filtro_tabla("nombre,cod_padre","dependencia a","a.iddependencia=".$secciones[0],"",$conn);
-	$subseccionii=busca_filtro_tabla("nombre","dependencia a","a.iddependencia=".$secciones[1],"",$conn);	
-	$seccion=busca_filtro_tabla("nombre","dependencia a","a.iddependencia=".$subseccioni[0]['cod_padre'],"",$conn);
-			
+	if(!$secciones){
+		$subseccioni=busca_filtro_tabla("nombre,cod_padre","dependencia a","a.iddependencia=".$secciones[0],"",$conn);
+		$subseccionii=busca_filtro_tabla("nombre","dependencia a","a.iddependencia=".$secciones[1],"",$conn);	
+		$seccion=busca_filtro_tabla("nombre","dependencia a","a.iddependencia=".$subseccioni[0]['cod_padre'],"",$conn);
+	}
 	$ruta_archivo = json_decode($datos[0]["ruta_qr"]);
 	if (is_object($ruta_archivo)) {
 		$qr_bin = StorageUtils::get_binary_file($datos[0]["ruta_qr"], false);

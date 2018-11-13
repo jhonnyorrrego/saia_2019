@@ -246,7 +246,7 @@ switch ($sAction)
 			  {
 					$destinos_copias = array();
 					$dep_copias=array(); 
-					$destinos_aux=split(",",$x_copia);
+					$destinos_aux=explode(",",$x_copia);
 					$num_destino = count($destinos_aux);	
 					for($i=0; $i<$num_destino; $i++){
 			   			$filtro = strpos($destinos_aux[$i],'_');
@@ -933,7 +933,6 @@ function AddData($conn)
 	 $id = ejecuta_sql($sql_insert,$conn);
 	 $fieldList["municipio_idmunicipio"] = (2000+$id);
 	}	
-	//print_r($fieldList);die();
   $x_archivos=NULL; // OJO  LOS ARCHIVOS YA NO LOS PROCESA UN IFRAME
   $fieldList["estado"] = "'APROBADO'"; 
   $idpaso=Null;

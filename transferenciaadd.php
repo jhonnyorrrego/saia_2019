@@ -817,7 +817,7 @@ function AddData($conn) {
 	//$fieldList["funcionario_destino"] = $theValue;
 	//para sacar la lista de los funcionarios destinos en caso de que hayan dependencias
   $destinos = array();
-  $destinos_aux=split(",",$x_funcionario_destino);
+  $destinos_aux=explode(",",$x_funcionario_destino);
   
   $dep=array();
 	$num_destino = count($destinos_aux);

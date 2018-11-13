@@ -41,7 +41,7 @@ if (($sKey == "") || ((is_null($sKey)))) {
 	$sKey = @$_POST["key_d"];
 }
 $sDbWhere = "";
-$arRecKey = split(",",$sKey);
+$arRecKey = explode(",",$sKey);
 
 // Single delete record
 if (($sKey == "") || ((is_null($sKey)))) {
@@ -122,7 +122,7 @@ if ((!is_null($x_entidad_identidad)) && ($x_entidad_identidad <> "")) {
 	$sTmp = $x_entidad_identidad;
 	$sTmp = addslashes($sTmp);
 	$sSqlWrk .= " WHERE (identidad = " . $sTmp . ")";
-	$rswrk = phpmkr_query($sSqlWrk,$conn) or die("Falló la búsqueda" . phpmkr_error() . ' SQL:' . $sSqlWrk);
+	$rswrk = phpmkr_query($sSqlWrk,$conn) or die("Fallï¿½ la bï¿½squeda" . phpmkr_error() . ' SQL:' . $sSqlWrk);
 	if ($rswrk && $rowwrk = phpmkr_fetch_array($rswrk)) {
 		$sTmp = $rowwrk["nombre"];
 	}
@@ -143,7 +143,7 @@ if ((!is_null($x_serie_idserie)) && ($x_serie_idserie <> "")) {
 	$sTmp = $x_serie_idserie;
 	$sTmp = addslashes($sTmp);
 	$sSqlWrk .= " WHERE (idserie = " . $sTmp . ")";
-	$rswrk = phpmkr_query($sSqlWrk,$conn) or die("Falló la búsqueda" . phpmkr_error() . ' SQL:' . $sSqlWrk);
+	$rswrk = phpmkr_query($sSqlWrk,$conn) or die("Fallï¿½ la bï¿½squeda" . phpmkr_error() . ' SQL:' . $sSqlWrk);
 	if ($rswrk && $rowwrk = phpmkr_fetch_array($rswrk)) {
 		$sTmp = $rowwrk["nombre"];
 		$sTmp .= ValueSeparator(0) . $rowwrk["codigo"];
@@ -202,7 +202,7 @@ function LoadData($sKey,$conn)
 	if ($sOrderBy <> "") {
 		$sSql .= " ORDER BY " . $sOrderBy;
 	}
-	$rs = phpmkr_query($sSql,$conn) or die("Falló la búsqueda" . phpmkr_error() . ' SQL:' . $sSql);
+	$rs = phpmkr_query($sSql,$conn) or die("Fallï¿½ la bï¿½squeda" . phpmkr_error() . ' SQL:' . $sSql);
 	if (phpmkr_num_rows($rs) == 0) {
 		$LoadData = false;
 	}else{
@@ -244,7 +244,7 @@ function LoadRecordCount($sqlKey,$conn)
 	if ($sOrderBy <> "") {
 		$sSql .= " ORDER BY " . $sOrderBy;
 	}
-	$rs = phpmkr_query($sSql,$conn) or die("Falló la búsqueda" . phpmkr_error() . ' SQL:' . $sSql);
+	$rs = phpmkr_query($sSql,$conn) or die("Fallï¿½ la bï¿½squeda" . phpmkr_error() . ' SQL:' . $sSql);
 	return phpmkr_num_rows($rs);
 	phpmkr_free_result($rs);
 }
