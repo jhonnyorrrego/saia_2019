@@ -215,6 +215,8 @@ function barra_superior_busqueda() {
             $tipo = '3';
             break;
     }
+	$listado_exp_admin = busca_filtro_tabla("nombre", "busqueda_componente", "idbusqueda_componente=" . $_REQUEST['idbusqueda_componente'], "", $conn);
+	if($listado_exp_admin[0]["nombre"]!="expediente_admin"){
     $registros_concatenados = "cod_arbol|" . @$_REQUEST["cod_arbol"] . "|-|tipo_expediente|" . $tipo;
     $cadena .= '<li><div class="btn-group">
                     <button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">Listar &nbsp;
@@ -235,6 +237,7 @@ function barra_superior_busqueda() {
 	</li>';
     // FIN NUEVO DESARROLLO REPORTE EXPEDIENTES 20171004
     $cadena .= '</ul></div></li>';
+    }
     return ($cadena);
 }
 

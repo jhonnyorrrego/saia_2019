@@ -52,7 +52,7 @@ function obntener_niveles_dependencia_rotulo(&$array_dependencias, $iddependenci
 function rotulo_caja($id){
 	global $logo, $ruta_db_superior;
  
-	$datos=busca_filtro_tabla(fecha_db_obtener('fecha_extrema_i','Y-m-d H:i')." as fecha_i, ".fecha_db_obtener('fecha_extrema_f','Y-m-d H:i')." as fecha_f, a.*","caja a","a.idcaja=".$id,"",$conn);
+	$datos=busca_filtro_tabla("","caja a","a.idcaja=".$id,"",$conn);
 
 	/*$serie=busca_filtro_tabla("nombre,tipo,cod_padre","serie a","a.idserie=".$datos[0]["serie_idserie"],"",$conn);
 	$nomb_serie="";
@@ -161,8 +161,10 @@ $listado_series=implode(", ", $listado_series);?>
 		<td style="text-align:center;">Fecha final</td>
 	</tr>
 	<tr>
-		<td style="text-align:center;"><?php echo ($datos[0]["fecha_extrema_i"]); ?></td>
-		<td style="text-align:center;"><?php echo ($datos[0]["fecha_extrema_f"]); ?></td>
+		<td style="text-align:center;"><?php /*echo ($datos[0]["fecha_extrema_i"]);*/
+		echo calcular_fecha_extrema_inicial($datos[0]["idcaja"]); ?></td>
+		<td style="text-align:center;"><?php /*echo ($datos[0]["fecha_extrema_f"]);*/
+		echo calcular_fecha_extrema_final($datos[0]["idcaja"]); ?></td>
 	</tr>
 </table>
 <?php
