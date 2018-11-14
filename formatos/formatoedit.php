@@ -365,7 +365,7 @@ return true;
 <?php
 $x_contador_idcontadorList = "<select name=\"x_contador_idcontador\" id=\"x_contador_idcontador\" onchange=\"actualizar_contador(this.value)\">";
 //$x_contador_idcontadorList .= "<option value=''>Crear Contador</option>";
-$sSqlWrk = "SELECT DISTINCT idcontador, etiqueta_contador FROM contador" . " ORDER BY nombre Asc";
+$sSqlWrk = "SELECT DISTINCT idcontador, etiqueta_contador FROM contador" . " ORDER BY etiqueta_contador Asc";
 $rswrk = phpmkr_query($sSqlWrk,$conn) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSqlWrk);
 if ($rswrk) {
 	$rowcntwrk = 0;

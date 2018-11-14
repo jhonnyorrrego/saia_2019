@@ -96,7 +96,7 @@ if(isset($_REQUEST["editar"])&& $_REQUEST["id"])
    $sql="insert into encabezado_formato(etiqueta,contenido) values('".$_REQUEST["etiqueta"]."','".addslashes(stripslashes($_REQUEST["contenido"]))."')";
     //echo $sql;
     guardar_traza($sql);
-    phpmkr_query($sql,$conn);
+    phpmkr_query($sql);
     $id=phpmkr_insert_id();
     redirecciona("encabezadoadd.php?listar=1");     
   }   

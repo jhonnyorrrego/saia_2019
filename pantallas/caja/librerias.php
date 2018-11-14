@@ -124,21 +124,22 @@ function consultar_numero_carpetas_caja($idcaja) {
 
 function calcular_fecha_extrema_inicial($idcaja) {
 	global $conn;
-	$expedientes = busca_filtro_tabla("MIN(date(fecha)) as fecha", "expediente", "fk_idcaja = " . $idcaja, "", $conn);
+	$expedientes = busca_filtro_tabla("MIN(fecha) as fecha", "expediente", "fk_idcaja = " . $idcaja, "", $conn);
 	return $expedientes[0]["fecha"];
 }
 
 function calcular_fecha_extrema_final($idcaja) {
 	global $conn;
-	$expedientes = busca_filtro_tabla("MAX(date(fecha)) as fecha", "expediente", "fk_idcaja = " . $idcaja, "", $conn);
+	$expedientes = busca_filtro_tabla("MAX(fecha) as fecha", "expediente", "fk_idcaja = " . $idcaja, "", $conn);
 	return $expedientes[0]["fecha"];
 }
 
 function consulta_material_caja($idcaja) {
 	global $conn;
-	if($idcaja){
+	if(!empty($idcaja)){
 		$caja = busca_filtro_tabla('nombre', 'cf_material', "valor=" . $idcaja, "idcf_material", $conn);
-		return $caja[0]["nombre"];
+		return $caja[0]["nombre"]; 
 	}
+	return "";
 }
 ?>

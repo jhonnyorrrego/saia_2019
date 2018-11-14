@@ -10,7 +10,9 @@ use Gaufrette\Filesystem;
 use Gaufrette\StreamMode;
 use Imagine\Image\Box;
 use Imagine\Gd\Imagine;
+use PHPSQLParser\PHPSQLParser;
 require_once("sql2.php");
+
 
 if (!isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
 	session_start();
@@ -499,16 +501,29 @@ global $conn;
 				guardar_evento($strsql, $llave, $tabla, $func, "ADICIONAR");
 				break;
 			case ('UPDATE'):
+				$parser = new PHPSQLParser($strsql, true);
+	
+				//$campos=$parser->parsed["UPDATE"][0]["columns"];
+				$valores=$parser->parsed["WHERE"];
+				$cant=count($valores);
+				$condicion='';
+				for($i=0;$i<$cant;$i++){
+					$condicion.=$valores[$i]["base_expr"];
+					$condicion.=" ";
+				}		
 				preg_match("/update (\w*\.)*(\w+)/i", strtolower($strsql), $resultados);
 				$tabla = $resultados[2];
+				
 				//preg_match("/where (.+)=(.*)/", strtolower($strsql), $resultados);
-				preg_match("/where (.+)\s*=\s*([\w]+|'[\w]+')/i", strtolower($strsql), $resultados);
-				$llave = trim($resultados[2]);
+				//preg_match("/where (.+)\s*=\s*([\w]+|'[\w]+')/i", strtolower($strsql), $resultados);
+				//$llave = trim($resultados[2]);
 				//$llave = str_replace("'","",$llave);
-				$campo_llave = $resultados[1];
-				$detalle = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
+				//$campo_llave = $resultados[1];
+				//$detalle = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
+				$detalle = busca_filtro_tabla("", $tabla, $condicion, "", $conn);
 				$rs = $conn->Ejecutar_Sql($strsql);
-				$detalle2 = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
+				//$detalle2 = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
+				$detalle2 = busca_filtro_tabla("", $tabla, $condicion, "", $conn);
 				// ************ miro cuales campos cambiaron en la tabla ****************
 				$nombres_campos = array();
 				if($detalle["numcampos"]) {
@@ -521,12 +536,13 @@ global $conn;
 							$cambios[] = $nombres_campos[($i * 2) + 1] . "='" . codifica_encabezado(html_entity_decode(htmlspecialchars_decode($detalle[0][$i]))) . "'";
 					}
 				}
-				$diferencias = "update $tabla set " . implode(", ", $cambios) . " where " . $campo_llave . "=" . $llave;
+				//$diferencias = "update $tabla set " . implode(", ", $cambios) . " where " . $campo_llave . "=" . $llave;
+				$diferencias = "update $tabla set " . implode(", ", $cambios) . " where " . $condicion;
 				// guardo el evento
 				if(count($cambios)) {
-					if(!is_numeric($llave)) {
+					//if(!is_numeric($llave)) {
 						$llave = $detalle[0]["id" . $tabla];
-					}
+					//}
 					guardar_evento($strsql, intval($llave), $tabla, $func, "MODIFICAR", $diferencias);
 				}
 				break;
