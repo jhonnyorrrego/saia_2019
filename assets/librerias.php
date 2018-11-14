@@ -184,3 +184,24 @@ function kaiten(){
 
     return $css . $jq . $ui . $js . $jqresize;
 }
+
+function scrollBar(){
+    global $ruta_db_superior;
+
+    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css';
+    $css = '<link class="main-stylesheet" href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
+
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+
+    return $css . $js;
+}
+
+function validate(){
+    global $ruta_db_superior;
+
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-validation/js/jquery.validate.min.js';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+
+    return $css . $js;
+}
