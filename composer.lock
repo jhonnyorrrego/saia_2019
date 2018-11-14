@@ -1865,23 +1865,23 @@
         },
         {
             "name": "mpdf/mpdf",
-            "version": "v7.1.1",
+            "version": "v7.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mpdf/mpdf.git",
-                "reference": "800a7f9d93474988cc2ffb8c155497ca5910fb09"
+                "reference": "ef5d8cf2c63def40fb76fc0a9e286721cb4dffcd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mpdf/mpdf/zipball/800a7f9d93474988cc2ffb8c155497ca5910fb09",
-                "reference": "800a7f9d93474988cc2ffb8c155497ca5910fb09",
+                "url": "https://api.github.com/repos/mpdf/mpdf/zipball/ef5d8cf2c63def40fb76fc0a9e286721cb4dffcd",
+                "reference": "ef5d8cf2c63def40fb76fc0a9e286721cb4dffcd",
                 "shasum": ""
             },
             "require": {
                 "ext-gd": "*",
                 "ext-mbstring": "*",
                 "myclabs/deep-copy": "^1.7",
-                "paragonie/random_compat": "^1.4|^2.0",
+                "paragonie/random_compat": "^1.4|^2.0|9.99.99",
                 "php": "^5.6 || ~7.0.0 || ~7.1.0 || ~7.2.0",
                 "psr/log": "^1.0",
                 "setasign/fpdi": "1.6.*"
@@ -1900,7 +1900,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-development": "7.0-dev"
+                    "dev-development": "7.x-dev"
                 }
             },
             "autoload": {
@@ -1929,7 +1929,7 @@
                 "php",
                 "utf-8"
             ],
-            "time": "2018-07-02T14:26:48+00:00"
+            "time": "2018-10-18T11:37:12+00:00"
         },
         {
             "name": "mtdowling/jmespath.php",
