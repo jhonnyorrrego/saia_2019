@@ -136,7 +136,9 @@ function calcular_fecha_extrema_final($idcaja) {
 
 function consulta_material_caja($idcaja) {
 	global $conn;
-	$caja = busca_filtro_tabla('nombre', 'cf_material', "valor=" . $idcaja, "idcf_material", $conn);
-	return $caja[0]["nombre"];
+	if($idcaja){
+		$caja = busca_filtro_tabla('nombre', 'cf_material', "valor=" . $idcaja, "idcf_material", $conn);
+		return $caja[0]["nombre"];
+	}
 }
 ?>

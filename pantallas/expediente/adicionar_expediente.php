@@ -170,7 +170,8 @@ $serie_padre = "";
 	  	<select name="fk_idcaja" id="fk_idcaja">
 	  		<option value="">Por favor seleccione...</option>
 	  		<?php
-	  		$cajas=busca_filtro_tabla("","caja a,entidad_caja e","a.idcaja=e.caja_idcaja and e.estado=1 and ((e.entidad_identidad=1 and e.llave_entidad=".usuario_actual('idfuncionario').") or a.funcionario_idfuncionario=".usuario_actual('idfuncionario').")","",$conn);
+	  		$cajas=busca_filtro_tabla("distinct a.idcaja,a.no_consecutivo","caja a,entidad_caja e","a.idcaja=e.caja_idcaja and e.estado=1 and ((e.entidad_identidad=1 and e.llave_entidad=".usuario_actual('idfuncionario').") or a.funcionario_idfuncionario=".usuario_actual('idfuncionario').")","",$conn);
+	  		if($cajas["numcampos"]){
 				for($i=0;$i<$cajas["numcampos"];$i++){
 					$selected="";
 	
@@ -183,6 +184,7 @@ $serie_padre = "";
 					//echo("<option value='".$cajas[$i]["idcaja"]."' ".$selected.">".$cajas[$i]["fondo"]."(".$cajas[$i]["codigo_dependencia"]."-".$cajas[$i]["codigo_serie"]."-".$cajas[$i]["no_consecutivo"].")</option>");
 					echo("<option value='".$cajas[$i]["idcaja"]."' ".$selected.">".$cajas[$i]["no_consecutivo"]."</option>");
 				}
+			}
 	  		?>
 	  	</select>
 	  </div>
@@ -404,7 +406,7 @@ $serie_padre = "";
 <input type="hidden" name="dependencia_iddependencia" id="dependencia_iddependencia"/>
 <input type="hidden" name="identidad_serie" id="identidad_serie"/>
 <input type="hidden" name="tipo_retorno" value="1"/>
-<input type="hidden" name="fk_idcaja" value="<?php echo(@$_REQUEST["fk_idcaja"]);?>">
+<!--input type="hidden" name="fk_idcaja" value="<?php echo(@$_REQUEST["fk_idcaja"]);?>"-->
 <!--input type="hidden" name="estado_archivo" value="1"-->
 <input type="hidden" name="key_formulario_saia" value="<?php echo(generar_llave_md5_saia());?>">
 <div>

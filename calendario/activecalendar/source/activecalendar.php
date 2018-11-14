@@ -149,7 +149,7 @@ PUBLIC activeCalendar() -> class constructor, does the initial date calculation
 $GMTDiff: GMT Zone for current day calculation, do not set to use local server time
 ********************************************************************************
 */
-public function __construct($year=false,$month=false,$day=false,$formato=false,$GMTDiff="none"){
+function activeCalendar($year=false,$month=false,$day=false,$formato=false,$GMTDiff="none"){
 if(!$formato)
 $this->timetoday=time();
 $this->selectedday=-2;

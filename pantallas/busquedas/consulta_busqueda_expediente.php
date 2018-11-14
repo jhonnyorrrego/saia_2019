@@ -81,6 +81,9 @@ if ($datos_busqueda[0]["busqueda_avanzada"] != '') {
 
       <!-- /btn-group -->
       </li>
+       <?php
+            if($datos_busqueda[0]["acciones_seleccionados"]!=''){
+      ?>
       <li>
       <div class="btn-group">
         <button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">Acciones &nbsp;
@@ -89,19 +92,19 @@ if ($datos_busqueda[0]["busqueda_avanzada"] != '') {
         </button>
         <ul class="dropdown-menu" id='listado_seleccionados'>
           <?php
-            if($datos_busqueda[0]["acciones_seleccionados"]!=''){
-            $acciones=explode(",",$datos_busqueda[0]["acciones_seleccionados"]);
+           $acciones=explode(",",$datos_busqueda[0]["acciones_seleccionados"]);
             $cantidad=count($acciones);
 		        for($i=0;$i<$cantidad;$i++){
 		            echo($acciones[$i]());
 		        }
-            }
           ?>
         </ul>
       </div>
       <!-- /btn-group -->
       </li>
-      <?php if(@$datos_busqueda[0]["menu_busqueda_superior"]){ ?>
+      <?php 
+      }
+      if(@$datos_busqueda[0]["menu_busqueda_superior"]){ ?>
         <?php
           $funcion_menu=explode("@",$datos_busqueda[0]["menu_busqueda_superior"]);
           echo($funcion_menu[0](@$funcion_menu[1]));
