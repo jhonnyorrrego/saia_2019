@@ -73,7 +73,7 @@ echo (librerias_notificaciones());
 				        cargar_partes: 1,
 				        id: node.key
 				    },
-			        cache: false
+			        cache: true
 			      });
 			      //console.log(data.result);
 			},
