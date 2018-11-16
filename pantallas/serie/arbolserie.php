@@ -96,16 +96,16 @@ ul.fancytree-container {
 			      });
 			      //console.log(data.result);
 			},
-			/*loadChildren: function(event, data) {
+			loadChildren: function(event, data) {
 				var match = $("#buscador").val();
   		        var buscar = match && match != "" && match.length >= 3;
 				data.node.visit(function(subNode){
 					// quitar la condicion subNode.isExpanded() si filtra
-				    if(buscar && subNode.lazy && subNode.isUndefined() && subNode.children == null && !subNode.isExpanded() ) {
-				    	subNode.load(true);
+				    if(match != "" && subNode.lazy && subNode.children == null && subNode.isUndefined() && !subNode.isExpanded() ) {
+	                    subNode.load();
 				    }
 				});
-			},*/
+			},
             filter: {
                 autoApply: true,
                 autoExpand: true,
@@ -151,13 +151,18 @@ ul.fancytree-container {
 
    	   	var tree = $("#treebox_campo_idserie").fancytree("getTree");
 
-   	   	$("input[name=stext_campo_idserie]").keyup(function(e) {
+   	   	 $("input[name=stext_campo_idserie]").keyup(function(e){
+	    	$("#btnResetSearch_campo_idserie").attr("disabled",false);
+	    });
+	   	 $("#btnSearch").click(function(e){	
+   	   	//$("input[name=stext_campo_idserie]").keyup(function(e) {
 	      var coincidencias = " coincidencias";
 	      var n;
 	      var tree = $.ui.fancytree.getTree();
 	      var opts = {};
 	      var filterFunc = tree.filterNodes;
-	      var match = $(this).val();
+	     // var match = $(this).val();
+	      var match = $("input[name=stext_campo_idserie]").val();
 	      var buscar = match && match != "" && match.length >= 3;
 
 	      opts.mode = "dimm";
@@ -171,10 +176,10 @@ ul.fancytree-container {
 	      if(n == 1) {
 	          coincidencias = " coincidencia";
 	      }
-          if(n > 0) {
+          /*if(n > 0) {
   	        $("button#btnResetSearch_campo_idserie").attr("disabled", false);
   	        $("span#matches_campo_idserie").text("(" + n + coincidencias + ")");
-          } else {
+          } else {*/
   	        var raiz = tree.getRootNode();
   	        //console.log(raiz);
   	        raiz.visit(function(subNode){
@@ -186,7 +191,7 @@ ul.fancytree-container {
                       subNode.load();
                   }
               });
-          }
+          //}
   	  }).focus();
 
 	  $("button#btnResetSearch_campo_idserie").click(function(e){
@@ -206,6 +211,7 @@ ul.fancytree-container {
    <p style="font-family: Verdana; font-size: 9px;">
 	       <label>Buscar:</label>
 	       <input name="stext_campo_idserie" id="buscador" placeholder="Buscar..." autocomplete="off">
+		   <button type="button" id="btnSearch">Buscar</button>
 	       <button type="button" id="btnResetSearch_campo_idserie">&times;</button>
 	       <span id="matches_campo_idserie"></span>
         </p>

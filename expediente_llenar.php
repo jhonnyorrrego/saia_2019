@@ -96,8 +96,9 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
 		        "estado_cierre"=>1,
 		        "estado_archivo"=>1,
 		        "incluir_series"=>$incluir_series,
+		        "cargar_partes"=> 1
 		    ));
-		$opciones_arbol = array("keyboard" => true, "selectMode" => 1, "busqueda_item" => 1, "expandir" => 3, "busqueda_item" => 1, "onNodeSelect" =>'cargar_info_Node');
+		$opciones_arbol = array("keyboard" => true, "selectMode" => 1, "busqueda_item" => 1, "expandir" => 3, "busqueda_item" => 1, "onNodeSelect" =>'cargar_info_Node',"lazy"=> true);
 		$extensiones = array("filter" => array());
 		$arbol = new ArbolFt("expediente", $origen, $opciones_arbol, $extensiones);
 		echo $arbol->generar_html();

@@ -166,7 +166,7 @@ $serie_padre = "";
 	  	<select name="fk_idcaja" id="fk_idcaja">
 	  		<option value="">Por favor seleccione...</option>
 	  		<?php
-	  		$cajas=busca_filtro_tabla("","caja a,entidad_caja e","a.idcaja=e.caja_idcaja and e.estado=1 and ((e.entidad_identidad=1 and e.llave_entidad=".usuario_actual('idfuncionario').") or a.funcionario_idfuncionario=".usuario_actual('idfuncionario').")","",$conn);
+	  		$cajas=busca_filtro_tabla("distinct a.idcaja,a.no_consecutivo","caja a,entidad_caja e","a.idcaja=e.caja_idcaja and e.estado=1 and ((e.entidad_identidad=1 and e.llave_entidad=".usuario_actual('idfuncionario').") or a.funcionario_idfuncionario=".usuario_actual('idfuncionario').")","",$conn);
 				for($i=0;$i<$cajas["numcampos"];$i++){
 					$selected="";
 	
@@ -194,10 +194,11 @@ $serie_padre = "";
 		    "params" => array(		    	
 		        "checkbox" => 'radio',
 		        "expandir" => 1,
-		        "funcionario"=>1
+		        "funcionario"=>1,
+		        "cargar_partes"=> 1
 		        //"seleccionados" => $dependencia_seleccionada
 		    ));
-		$opciones_arbol = array("keyboard" => true, "selectMode" => 1, "busqueda_item" => 1, "expandir" => 3, "busqueda_item" => 1, "onNodeSelect" =>'cargar_info_Node');
+		$opciones_arbol = array("keyboard" => true, "selectMode" => 1, "busqueda_item" => 1, "expandir" => 3, "busqueda_item" => 1, "onNodeSelect" =>'cargar_info_Node',"lazy"=> true);
 		$extensiones = array("filter" => array());
 		$arbol = new ArbolFt("serie_idserie", $origen, $opciones_arbol, $extensiones);
 		echo $arbol->generar_html();
