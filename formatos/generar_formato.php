@@ -260,8 +260,8 @@ class GenerarFormato {
             }
 
             $funciones = busca_filtro_tabla("A.*,B.funciones_formato_fk", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=" . $this->idformato . " AND A.acciones LIKE '%m%'", "A.idfunciones_formato asc", $conn);
-           
-			
+
+
             for ($i = 0; $i < $funciones["numcampos"]; $i++) {
                 $ruta_orig = "";
                 // saco el primer formato de la lista de la funcion (formato inicial)
@@ -269,7 +269,7 @@ class GenerarFormato {
                 if ($form_origen["numcampos"]) {
                     $formato_orig = $form_origen[0]["formato_idformato"];
                 }
-				 
+
                 if ($formato_orig != $this->idformato) {
                     // busco el nombre del formato inicial
                     $dato_formato_orig = busca_filtro_tabla("nombre", "formato", "idformato=" . $formato_orig, "", $conn);
@@ -334,7 +334,7 @@ class GenerarFormato {
                 }
                 $texto = str_replace($funciones[$i]["nombre"], $this->arma_funcion($funciones[$i]["nombre_funcion"], $parametros, "mostrar"), $texto);
             }
-			
+
             $includes .= $this->incluir("'../../librerias_saia.php'", "librerias");
             $includes .= "<?php echo(librerias_jquery('1.7')); ?>";
             $includes .= $this->incluir_libreria("funciones_generales.php", "librerias");
@@ -607,7 +607,7 @@ class GenerarFormato {
             $texto .= '<?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR"); ?>
                        <form name="formulario_formatos" id="formulario_formatos" class="form-horizontal" role="form" autocomplete="off" method="post" action="' . $action . '" enctype="multipart/form-data">';
 
-            
+
             $librerias = array();
             if ($formato[0]["librerias"] && $formato[0]["librerias"] != "") {
                 $includes .= $this->incluir($formato[0]["librerias"], "librerias", 1);
@@ -627,6 +627,7 @@ class GenerarFormato {
             $dependientes = 0;
             $mascaras = 0;
             $textareas = 0;
+            $textareacke = 0;
             $autocompletar = 0;
             $checkboxes = 0;
             $fecha = 0;
@@ -640,15 +641,18 @@ class GenerarFormato {
 
             $fun_campos = array();
             for ($h = 0; $h < $campos["numcampos"]; $h++) {
-                if ($campos[$h]["etiqueta_html"] == "arbol")
+                if ($campos[$h]["etiqueta_html"] == "arbol") {
                     $arboles = 1;
-                elseif ($campos[$h]["etiqueta_html"] == "textarea")
+                } else if ($campos[$h]["etiqueta_html"] == "textarea") {
                     $textareas = 1;
-                if ($campos[$h]["obligatoriedad"])
+                } else if ($campos[$h]["etiqueta_html"] == "textarea_cke") {
+                    $textareacke = 1;
+                }
+                if ($campos[$h]["obligatoriedad"]) {
                     $obliga = "*";
-                else
+                } else {
                     $obliga = "";
-
+                }
                 $tabindex = " tabindex='$indice_tabindex' ";
                 if ($campos[$h]["autoguardado"])
                     $autoguardado[] = $campos[$h]["nombre"];
@@ -721,6 +725,28 @@ class GenerarFormato {
                     </div>';
                             $indice_tabindex++;
                             break;
+                        case "textarea_cke":
+                            $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
+                     <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
+<div class="celda_transparente">';
+                            $idcampo_cke = $campos[$h]["nombre"];
+                            $texto .= '<textarea ' . $tabindex . ' name="' . $campos[$h]["nombre"] . '" id="' . $idcampo_cke . '" cols="53" rows="3" class="form-control';
+                            if ($campos[$h]["obligatoriedad"]) {
+                                $texto .= ' required';
+                            }
+                            $texto .= '">' . $valor . '</textarea>';
+                            $texto .= '<script>
+                            // Replace the <textarea id="editor1"> with a CKEditor
+                            // instance, using default configuration.
+                            var config = {
+                                removePlugins : "sourcedialog,flash,iframe,forms,sourcearea,base64image,div,showblocks,smiley"
+                            };
+                            var editor = CKEDITOR.replace("' . $idcampo_cke .'", config);
+                            </script>
+                            </div></div>';
+                            $textareacke++;
+                            $indice_tabindex++;
+                            break;
                         case "textarea":
                             $valor = $campos[$h]["valor"];
                             $valor2 = explode("|", $campos[$h]["valor"]);
@@ -769,13 +795,13 @@ class GenerarFormato {
                             $formato_fecha="YYYY-MM-DD";
                             $fecha_por_defecto='';
                             if (strtoupper($campos[$h]["tipo_dato"]) == "DATE") {
-                                
+
                                 if ($accion == "adicionar") {
                                     if ($campos[$h]["predeterminado"] == "now()")
                                         $fecha_por_defecto= '<?php echo(date("Y-m-d")); ?' . '>';
                                     else
                                         $fecha_por_defecto= '';
-                                }                                    
+                                }
                                 $fecha++;
                                 $indice_tabindex++;
                             } else if (strtoupper($campos[$h]["tipo_dato"]) == "DATETIME") {
@@ -802,7 +828,7 @@ class GenerarFormato {
                             if ($accion == "editar"){
                                 $fecha_por_defecto = "<?php echo(mostrar_valor_campo('" . $campos[$h]["nombre"] . "',$this->idformato,$" . "_REQUEST['iddoc'])); ?" . ">";
                             }
-                           
+
                             $texto .= '<script type="text/javascript">
                                             $(function () {
                                                 $("#' . $campos[$h]["nombre"] . '").datetimepicker({
@@ -824,7 +850,7 @@ class GenerarFormato {
                             $texto .='<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
 				                        <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
                                      ';
-						
+
                             $texto .= $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . '</div>';
                             break;
                         case "link":
@@ -878,7 +904,7 @@ class GenerarFormato {
                                     $extensiones_fijas = $vector_extensiones_tipo[0];
                                 }
                             }
-                            
+
                             // $ul_adicional_archivo='';
 
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
@@ -1336,9 +1362,9 @@ class GenerarFormato {
             if ($textareas) {
                 $includes .= $this->incluir_libreria("header_formato.php", "librerias");
             }
-            /*if ($fecha) {
-                $includes .= $this->incluir("../../calendario/calendario.php", "librerias");
-            }*/
+            if ($textareacke) {
+                $includes .= $this->incluir('<?= $ruta_db_superior ?>js/ckeditor/4.11/ckeditor_std/ckeditor.js', "javascript");
+            }
 
             $includes .= '<?= pace() ?>
                         <?= jquery() ?>
@@ -1347,7 +1373,7 @@ class GenerarFormato {
                         <?= toastr() ?>
                         <?= icons() ?>
                         <?= moment() ?>';
-            $includes .= "<?php echo(librerias_validar_formulario()); ?>";
+            $includes .= "<?= validate() ?>";
 
             $includes .= $this->incluir('<?= $ruta_db_superior ?>js/title2note.js', "javascript");
             if ($arboles) {
@@ -1452,16 +1478,16 @@ class GenerarFormato {
             $contenido = '<?php
                     $max_salida = 10;
                     $ruta_db_superior = $ruta = "";
-                    
+
                     while ($max_salida > 0) {
                         if (is_file($ruta . "db.php")) {
                             $ruta_db_superior = $ruta;
                         }
-                    
+
                         $ruta .= "../";
                         $max_salida --;
                     }
-                    
+
                     ?>
                         <!DOCTYPE html>
                             <html>
@@ -1475,7 +1501,7 @@ class GenerarFormato {
                                     <meta name="apple-touch-fullscreen" content="yes">
                                     <meta name="apple-mobile-web-app-status-bar-style" content="default">
                                     <meta content="" name="description" />
-                                    <meta content="" name="Cero K" /> ' . $includes .' 
+                                    <meta content="" name="Cero K" /> ' . $includes .'
                 				<link
                                 	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css"
                                 	rel="stylesheet" type="text/css" media="screen" />
@@ -1497,10 +1523,10 @@ class GenerarFormato {
                                 <script
                                 	src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-validation/js/jquery.validate.min.js"
                                 	type="text/javascript"></script>
-                                
+
                                 <link rel="stylesheet"
                                 	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
-                                
+
                                 <script
                                 	src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>' . $enmascarar . ' '.$codigo_enter2tab.'
                 			</head>
@@ -2201,7 +2227,7 @@ class GenerarFormato {
         }else{
             $includes .= $this->incluir("../../" . FORMATOS_SAIA . "librerias/" . $nombre, $tipo);
         }
-        
+
         return ($includes);
     }
 
@@ -2437,7 +2463,7 @@ class GenerarFormato {
         $maximo = return_megabytes($upload_max_size);
         $js_archivos = "<script type='text/javascript'>
             var upload_url = '../../dropzone/cargar_archivos_formato.php';
-            var mensaje = 'Arrastre aqui­ los archivos';
+            var mensaje = 'Arrastre aquiï¿½ los archivos';
             Dropzone.autoDiscover = false;
             var lista_archivos = new Object();
             $(document).ready(function () {

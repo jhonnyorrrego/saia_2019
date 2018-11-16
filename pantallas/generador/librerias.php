@@ -26,6 +26,9 @@ function adicionar_pantalla_campos($idpantalla, $idpantalla_componente, $tipo_re
 		$sql_valores = array();
 		//$default_campo = new SimpleXmlIterator("<?" . "xml version='1.0' standalone='yes'?" . ">" . $dato[0]["opciones"]);
 		$default_campo = json_decode($dato[0]["opciones"],true);
+		if(isset($default_campo["valor"]) && is_array($default_campo["valor"])) {
+		    $default_campo["valor"] = json_encode($default_campo["valor"]);
+		}
 		$texto = $dato[0]["componente"];
 		foreach ($default_campo AS $key=>$value){
 			array_push($sql_campos, $key);

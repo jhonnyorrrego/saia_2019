@@ -1417,14 +1417,13 @@ function generar_pantalla(nombre_accion){
 		});
 	}
 
-function receiveMessage(event) {
-  // Do we trust the sender of this message?
+/*function receiveMessage(event) {
       if(event.data["etiqueta_html"] && event.data["etiqueta_html"] == 'textarea_cke') {
    		  CKEDITOR.instances[event.data["nombre_campo"]].setData(event.data["fs_predeterminado"]);
       }
 }
 
-window.addEventListener("message", receiveMessage, false);
+window.addEventListener("message", receiveMessage, false);*/
 });//Fin Document ready
 /*
 function generar_archivos_ignorados(){
