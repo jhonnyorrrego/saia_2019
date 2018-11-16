@@ -34,18 +34,18 @@ function adicionar_pantalla_campos($idpantalla, $idpantalla_componente, $tipo_re
 			} else {
 				$valor = strval($value);
 			}
-			array_push($sql_valores, $valor);			
+			array_push($sql_valores, $valor);
 		}
 		/*
-		 * Pilas con el tema de archivos que se quita porque en ningun componente se encuentra en las opciones el campo archivo 
-		 * 
+		 * Pilas con el tema de archivos que se quita porque en ningun componente se encuentra en las opciones el campo archivo
+		 *
 		 * Ejemplo:
-		 * 
+		 *
 		 * <pantalla_campos><nombre>campo_texto</nombre><etiqueta>Campo de texto</etiqueta><tipo_dato>varchar</tipo_dato><longitud>255</longitud><obligatoriedad>1</obligatoriedad><valor></valor><acciones>a,e,b</acciones><ayuda></ayuda><predeterminado></predeterminado><banderas></banderas><etiqueta_html>text</etiqueta_html><orden>1</orden><mascara></mascara><adicionales></adicionales><autoguardado>1</autoguardado><fila_visible>1</fila_visible><placeholder>Campo texto</placeholder>
 </pantalla_campos>
 		 * {"nombre":"campo_texto","etiqueta":"campo de texto","tipo_dato":"varchar","longitud":255,"obligatoriedad":1,"valor":"","acciones":"a,e,b","ayuda":"","predeterminado":"","banderas":"","etiqueta_html":"text","orden":1,"mascara":"","adicionales":"","autoguardado":1,"fila_visible":1,"placeholder":"campo texto"}
-		 * 
-		 * 
+		 *
+		 *
 		 * for($default_campo->rewind(); $default_campo->valid(); $default_campo->next()) {
 			if ($default_campo->key() != "archivos") {
 				array_push($sql_campos, $default_campo->key());
@@ -74,9 +74,9 @@ function adicionar_pantalla_campos($idpantalla, $idpantalla_componente, $tipo_re
 		if (count($sql_campos) && count($sql_valores)) {
 			$sql2 = "INSERT INTO campos_formato(" . implode(",", $sql_campos) . ") VALUES('" . implode("','", $sql_valores) . "')";
 
-			$retorno["sql"] = $sql2;    
+			$retorno["sql"] = $sql2;
 			phpmkr_query($sql2);
-			$idcampo = phpmkr_insert_id();  
+			$idcampo = phpmkr_insert_id();
 			$retorno["sql"]=$sql2;
 			if ($idcampo) {
 				$cadena = load_pantalla_campos($idcampo, 0);
@@ -97,23 +97,31 @@ function adicionar_pantalla_campos($idpantalla, $idpantalla_componente, $tipo_re
 function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1) {
 	global $conn, $ruta_db_superior;
 	$retorno = array(
-			"exito" => 0
+		"exito" => 0,
+	    "idpantalla_campos" => $idpantalla_campos
 	);
-	$pantalla_campos = busca_filtro_tabla("", "campos_formato", "idcampos_formato=" . $idpantalla_campos, "", $conn);
+	$pantalla_campos = busca_filtro_tabla("idcampos_formato,nombre,etiqueta_html", "campos_formato", "idcampos_formato=" . $idpantalla_campos, "", $conn);
 	$procesar = 0;
 	if ($pantalla_campos["numcampos"]) {
+	    $retorno["nombre_campo"] = $pantalla_campos[0]["nombre"];
+	    $retorno["etiqueta_html"] = $pantalla_campos[0]["etiqueta_html"];
 		$sql_update = array();
 		foreach ($_REQUEST as $key => $value) {
 			if (strpos($key, "fs_") !== false) {
-				if ($key == 'fs_acciones') {
-					$value = implode(",", $value);
-				}
-				if ($key == "fs_etiqueta") {
-					$retorno["etiqueta"] = $value;
-				}
-				if ($key == "fs_placeholder") {
-					$retorno["placeholder"] = $value;
-				}
+                switch ($key) {
+                    case 'fs_acciones':
+                        $value = implode(",", $value);
+                        break;
+                    case "fs_etiqueta":
+                        $retorno["etiqueta"] = $value;
+                        break;
+                    case "fs_placeholder":
+                        $retorno["placeholder"] = $value;
+                        break;
+                    case "fs_predeterminado":
+                        $retorno["fs_predeterminado"] = $value;
+                        break;
+                }
 				array_push($sql_update, str_replace("fs_", "", $key) . "='" . $value . "'");
 			}
 		}
@@ -125,9 +133,9 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1) {
 			$retorno["codigo_html"] = $cadena["codigo_html"];
 		}
 	}
-	if ($tipo_retorno == 1)
+	if ($tipo_retorno == 1) {
 		echo (json_encode($retorno));
-	else {
+	} else {
 		return ($retorno);
 	}
 }
@@ -161,7 +169,7 @@ function load_pantalla_campos($idpantalla_campos, $tipo_retorno = 1, $generar_ar
 		}
 		$ruta_componente = "pantallas/generador/" . $pantalla_campos[0]["nombre_componente"] . "/procesar_componente.php";
 		if ($accion != '' && $accion != 'retorno_campo') {
-			
+
 			$texto = str_replace("{*clase_eliminar_pantalla_componente*}", "", $texto);
 			if (file_exists($ruta_db_superior . $ruta_componente)) {
 				foreach ($regs[0] as $key => $value) {
@@ -176,7 +184,7 @@ function load_pantalla_campos($idpantalla_campos, $tipo_retorno = 1, $generar_ar
 			if (file_exists($ruta_db_superior . $ruta_componente)) {
 				include_once ($ruta_db_superior . $ruta_componente);
 			}
-			foreach ($regs[0] as $key => $value) {				
+			foreach ($regs[0] as $key => $value) {
 				$nombre_funcion = str_replace("*}", "", str_replace("{*", "", $value));
 				$proceso_componente = call_user_func_array($nombre_funcion, array(
 						$idpantalla_campos,
@@ -202,9 +210,9 @@ function get_pantalla_campos($idpantalla_campos, $tipo_retorno = 1) {
 	if ($pantalla_campos["numcampos"]) {
 		$pantalla_campos["exito"] = 1;
 	}
-	if ($tipo_retorno == 1)
+	if ($tipo_retorno == 1) {
 		echo (json_encode($pantalla_campos));
-	else {
+	} else {
 		return ($pantalla_campos);
 	}
 }
@@ -311,7 +319,7 @@ function eliminar_archivo_incluido($idpantalla_include, $tipo_retorno) {
 		$retorno["idformato"]=$idpantalla_include;
 		$retorno["mensaje"] = "Librer&iacute;a  desasociada de forma exitosa de la pantalla";
 		/**
-		 * TODO: Validar que se hace con las funciones de los formatos actualmente vinculados 
+		 * TODO: Validar que se hace con las funciones de los formatos actualmente vinculados
 		//ELIMINO FUNCIONES y PARAMETROS (SI TIENE)
 		$funciones_asociadas=busca_filtro_tabla("","pantalla_funcion_exe a, pantalla_funcion b","b.fk_idpantalla_libreria=".$idpantalla_libreria." AND a.fk_idpantalla_funcion=b.idpantalla_funcion AND a.pantalla_idpantalla=".$pantalla_idpantalla,"",$conn);
 		if($funciones_asociadas['numcampos']){

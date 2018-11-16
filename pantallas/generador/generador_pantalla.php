@@ -12,6 +12,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/generador/librerias_pantalla.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_componentes.php");
+
 if($_REQUEST["idformato"]){
   $idpantalla=$_REQUEST["idformato"];
   $datos_formato=busca_filtro_tabla("","formato","idformato=".$idpantalla,"",$conn);
@@ -21,6 +22,14 @@ if($_REQUEST["idformato"]){
 <head>
 <title>Generador Pantallas SAIA</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style type="text/css">
+ul.fancytree-container {
+    width: 50%;
+    overflow: auto;
+    position: relative;
+    border: none;
+}
+</style>
 <?php
 echo (estilo_bootstrap());
 echo (librerias_jquery("1.8.3"));
@@ -30,9 +39,10 @@ $es_movil = ($_SESSION["tipo_dispositivo"]) == "movil";
 
 $campos = busca_filtro_tabla("", "pantalla_componente B", "1=1", "", $conn);
 $librerias_js = array();
+$librerias_jsh = array();
 for ($i = 0; $i < $campos["numcampos"]; $i++) {
-    $librerias = explode(",", $campos[$i]["librerias"]);
-    foreach ($librerias as $key => $libreria) {
+    $librerias = array_filter(array_map('trim', explode(",", $campos[$i]["librerias"])));
+    foreach ($librerias as $libreria) {
         $extension = explode(".", $libreria);
         $cant = count($extension);
         if ($extension[$cant - 1] !== '') {
@@ -44,8 +54,11 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
                     array_push($librerias_js, $libreria);
                     break;
                 case "js@h":
-                    $header = explode("@", $libreria);
-                    echo ('<script type="text/javascript" src="' . $ruta_db_superior . $header[0] . '"></script>');
+                    $header = array_filter(explode("@", $libreria));
+                    if(!empty($header) && !in_array($header[0], $librerias_jsh)) {
+                        array_push($librerias_jsh, $header[0]);
+                        echo ('<script type="text/javascript" src="' . $ruta_db_superior . $header[0] . '"></script>');
+                    }
                     break;
                 case "css":
                     $texto = '<link rel="stylesheet" type="text/css" href="' . $ruta_db_superior . $libreria . '"/>';
@@ -60,94 +73,96 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 }
 
 ?>
-		<link href="<?php echo($ruta_db_superior);?>pantallas/generador/css/generador_pantalla.css" rel="stylesheet"><style>
+
+<link href="<?php echo($ruta_db_superior);?>pantallas/generador/css/generador_pantalla.css" rel="stylesheet">
+<style>
     .well{ margin-bottom: 3px; min-height: 11px; padding: 4px;}
     .progress{margin-bottom: 0px;}
     #tabs_formulario, #tabs_opciones{margin-bottom: 0px;}
     .tab-content {padding-top:0px;}
-    </style>
-    <script src="<?php echo $ruta_db_superior;?>js/jquery-migrate-1.4.1.js"></script>
+</style>
+<script src="<?php echo $ruta_db_superior;?>js/jquery-migrate-1.4.1.js"></script>
 
-	</head>
-	<body>
+</head>
+<body>
 
-			<div class="container-fluid">
-				<div class="row-fluid">
-					<div class="span9">
-						<div class="tabbable">
-							<ul class="nav nav-tabs" id="tabs_formulario">
-								<li>
-									<a href="#datos_formulario-tab" data-toggle="tab">1-Datos</a>
-								</li>
-								<li id="generar_formulario_pantalla"  class="active">
-									<a href="#formulario-tab" data-toggle="tab">2-Formularios</a>
-								</li>
-                				<li>
-                				<a href="#librerias_formulario-tab" data-toggle="tab">3-Librerias</a>
-								</li>
-                				<li>
+	<div class="container-fluid">
+		<div class="row-fluid">
+			<div class="span9">
+				<div class="tabbable">
+					<ul class="nav nav-tabs" id="tabs_formulario">
+						<li>
+							<a href="#datos_formulario-tab" data-toggle="tab">1-Datos</a>
+						</li>
+						<li id="generar_formulario_pantalla"  class="active">
+							<a href="#formulario-tab" data-toggle="tab">2-Formularios</a>
+						</li>
+                		<li>
+                			<a href="#librerias_formulario-tab" data-toggle="tab">3-Librerias</a>
+						</li>
+                		<li>
                 				<a href="#pantalla_mostrar-tab" data-toggle="tab">4-Mostrar</a>
-								</li>
+						</li>
                                 <!-- li>
 									<a href="#pantalla_listar-tab" data-toggle="tab">5-listar</a>
 								</li -->
-								<li>
+						<li>
 									<a href="#encabezado_pie-tab" data-toggle="tab">5-Encabezado pie</a>
-								</li>
+						</li>
 								<!--li>
 									<a href="#asignar_funciones-tab" data-toggle="tab">6-Asignar funciones</a>
 								</li-->
-								<li>
+						<li>
 									<a href="#generar_formulario-tab" data-toggle="tab">7-Generar</a>
-								</li>
-							</ul>
-							<div class="tab-content">
-								<div class="tab-pane active" id="formulario-tab">
-									<form id="contenedor_saia" class="form-horizontal">
-										<?php
+						</li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane active" id="formulario-tab">
+							<form id="contenedor_saia" class="form-horizontal">
+							<?php
 echo(load_pantalla($idpantalla));
-										?>
-									</form>
-								</div>
-								<div class="tab-pane " id="datos_formulario-tab">
-									<?php
+							?>
+							</form>
+						</div>
+						<div class="tab-pane " id="datos_formulario-tab">
+						<?php
 include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
-								</div>
-                <div class="tab-pane" id="pantalla_mostrar-tab">
-                  <form name="formulario_editor_mostrar" id="formulario_editor_mostrar" action="">
-                  <textarea name="editor_mostrar" id="editor_mostrar" class="editor_tiny">
-                  <?php
-                    echo($datos_formato[0]["cuerpo"]);
-                  ?>
-                  </textarea>
-                  </form>
-				</div>
-                <div class="tab-pane" id="pantalla_listar-tab">
-                  <form name="formulario_editor_listar" id="formulario_editor_listar" action="">    <br />
-                    <div id="tipo_listar">
-                      Por favor seleccione un tipo de visualizaci&oacute;n:
-									<select name="tipo_pantalla_busqueda"
-										id="tipo_pantalla_busqueda">
-										<option value="0">Por favor seleccione</option>
-                      <?php
-                    $tipo_listado = busca_filtro_tabla("", "pantalla_busqueda a", "estado=1", "etiqueta asc", $conn);
-                    for ($i = 0; $i < $tipo_listado["numcampos"]; $i++) {
-                        echo ('<option value="' . $tipo_listado[$i]["idpantalla_busqueda"] . '" nombre="' . $tipo_listado[$i]["nombre"] . '">' . $tipo_listado[$i]["etiqueta"].'</option>');
-							}
-					  ?>
-                    </select>
-									<?php if($tipo_listado["numcampos"]){ ?>
-                      <div width="100%" id="frame_tipo_listado"></div>
-                      <?php } ?>
-                    </div>
-                  </form>
-				</div>
-				<div class="tab-pane" id="librerias_formulario-tab">
-					<div id="configurar_libreria_pantalla"></div>
-					<div id="librerias_en_uso"></div>
-				</div>
+						</div>
+                		<div class="tab-pane" id="pantalla_mostrar-tab">
+                  			<form name="formulario_editor_mostrar" id="formulario_editor_mostrar" action="">
+                      			<textarea name="editor_mostrar" id="editor_mostrar" class="editor_tiny">
+                      			<?php
+                        echo($datos_formato[0]["cuerpo"]);
+                                ?>
+                      			</textarea>
+                  			</form>
+						</div>
+        		        <div class="tab-pane" id="pantalla_listar-tab">
+							<form name="formulario_editor_listar" id="formulario_editor_listar" action="">    <br />
+                    			<div id="tipo_listar">
+                      			Por favor seleccione un tipo de visualizaci&oacute;n:
+    								<select name="tipo_pantalla_busqueda"
+    										id="tipo_pantalla_busqueda">
+    									<option value="0">Por favor seleccione</option>
+                          			<?php
+                        $tipo_listado = busca_filtro_tabla("", "pantalla_busqueda a", "estado=1", "etiqueta asc", $conn);
+                        for ($i = 0; $i < $tipo_listado["numcampos"]; $i++) {
+                            echo ('<option value="' . $tipo_listado[$i]["idpantalla_busqueda"] . '" nombre="' . $tipo_listado[$i]["nombre"] . '">' . $tipo_listado[$i]["etiqueta"].'</option>');
+    							}
+    					  ?>
+                        			</select>
+								<?php if($tipo_listado["numcampos"]){ ?>
+                      			<div width="100%" id="frame_tipo_listado"></div>
+                      			<?php } ?>
+                    			</div>
+                  			</form>
+						</div>
+					<div class="tab-pane" id="librerias_formulario-tab">
+						<div id="configurar_libreria_pantalla"></div>
+						<div id="librerias_en_uso"></div>
+					</div>
 
-				<div class="tab-pane" id="encabezado_pie-tab">
+					<div class="tab-pane" id="encabezado_pie-tab">
 					<br>
 					<legend>Encabezado</legend><br>
 					<select name="sel_encabezado" id="sel_encabezado">
@@ -176,21 +191,21 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 					<button type="button" class="btn btn-mini btn-success guardar_encabezado" id="modificar_encabezado" disabled>Modificar</button>
 					<button type="button" class="btn btn-mini btn-danger" <?php echo ($idencabezado ? "" : "disabled"); ?> id="eliminar_encabezado">Eliminar</button>
 
-                  <form name="formulario_editor_encabezado" id="formulario_editor_encabezado" action="">
-                  <input type="hidden" name="idencabezado" id="idencabezado" value="<?php echo $idencabezado;?>"></input>
-                  <input type="hidden" name="accion_encab" id="accion_encabezado" value="1"></input>
-                  <div id="div_etiqueta_encabezado">
-                    <label for="etiqueta_encabezado">Etiqueta:
-                  		<input type="text" id="etiqueta_encabezado" name="etiqueta_encabezado" value="<?php echo $etiqueta_encabezado;?>"></input>
-					</label>
-                  </div>
-                  <textarea name="editor_encabezado" id="editor_encabezado" class="editor_tiny"> <?php
+                  	<form name="formulario_editor_encabezado" id="formulario_editor_encabezado" action="">
+                  		<input type="hidden" name="idencabezado" id="idencabezado" value="<?php echo $idencabezado;?>"></input>
+                  		<input type="hidden" name="accion_encab" id="accion_encabezado" value="1"></input>
+                  		<div id="div_etiqueta_encabezado">
+                    		<label for="etiqueta_encabezado">Etiqueta:
+                  				<input type="text" id="etiqueta_encabezado" name="etiqueta_encabezado" value="<?php echo $etiqueta_encabezado;?>"></input>
+							</label>
+                  		</div>
+                  		<textarea name="editor_encabezado" id="editor_encabezado" class="editor_tiny"> <?php
                   if($idencabezado) {
                     echo $contenido_enc[$idencabezado];
                   }
                   ?>
-                  </textarea>
-                  </form>
+                  		</textarea>
+                  	</form>
 					<legend>Pie</legend><br>
 					<select name="sel_pie_pagina" id="sel_pie_pagina">
 						<option value="0">Por favor Seleccione</option>
@@ -215,33 +230,31 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 					<button type="button" class="btn btn-mini btn-success guardar_pie disabled" id="modificar_pie" disabled>Modificar</button>
 					<button type="button" class="btn btn-mini btn-danger <?php echo ($idpie ? "" : "disabled"); ?>" id="eliminar_pie">Eliminar</button>
 
-                  <form name="formulario_editor_pie" id="formulario_editor_pie" action="">
-                  <input type="hidden" name="idpie" id="idpie" value="<?php echo $idpie;?>"></input>
+                  	<form name="formulario_editor_pie" id="formulario_editor_pie" action="">
+                  		<input type="hidden" name="idpie" id="idpie" value="<?php echo $idpie;?>"></input>
 
-                  <div id="div_etiqueta_pie">
-                    <label for="etiqueta_pie">Etiqueta: </label>
-                  	<input type="text" id="etiqueta_pie" name="etiqueta_pie" value="<?php echo $etiqueta_pie;?>"></input>
-                  </div>
-                  <textarea name="editor_pie" id="editor_pie" class="editor_tiny"> <?php
+                  		<div id="div_etiqueta_pie">
+                    		<label for="etiqueta_pie">Etiqueta: </label>
+                  			<input type="text" id="etiqueta_pie" name="etiqueta_pie" value="<?php echo $etiqueta_pie;?>"></input>
+                  		</div>
+                  		<textarea name="editor_pie" id="editor_pie" class="editor_tiny"> <?php
                   if($idpie) {
                       echo $contenido_enc[$idpie];
                   }
                   ?>
-                  </textarea>
-                  </form>
-                  <script type="text/javascript">
-					var encabezados = <?php echo json_encode($contenido_enc); ?>;
-					var idencabezado = <?php echo $idencabezado;?>;
-					var etiquetas = <?php echo json_encode($etiqueta_enc);?>;
-                  </script>
+                  		</textarea>
+                  	</form>
+                  	<script type="text/javascript">
+						var encabezados = <?php echo json_encode($contenido_enc); ?>;
+						var idencabezado = <?php echo $idencabezado;?>;
+						var etiquetas = <?php echo json_encode($etiqueta_enc);?>;
+                  	</script>
 
 				</div>
-
 
 				<div class="tab-pane" id="asignar_funciones-tab">
 					<?php include_once "asignar_funciones.php";?>
 				</div>
-
 
 				<div class="tab-pane" id="generar_formulario-tab">
 					<div class="accordion" id="acordion_generar">
@@ -458,10 +471,13 @@ echo(librerias_validar_formulario());
 echo(librerias_arboles());
 echo(librerias_tooltips());
 //echo(librerias_tiny());
-$cant_js=count($librerias_js);
-for($i=0;$i<$cant_js;$i++){
-	if($librerias_js[$i])
-		echo('<script type="text/javascript" src="'.$ruta_db_superior.$librerias_js[$i].'"></script>');
+$cant_js = count($librerias_js);
+$incluidas = array();
+for ($i = 0; $i < $cant_js; $i++) {
+    if (!in_array($librerias_js[$i], $librerias_jsh) && !in_array($librerias_js[$i], $incluidas) && !empty($librerias_js[$i])) {
+        array_push($incluidas, $librerias_js[$i]);
+        echo ('<script type="text/javascript" src="' . $ruta_db_superior . $librerias_js[$i] . '"></script>');
+    }
 }
 ?>
 <!--script src="<?php echo($ruta_db_superior)?>pantallas/generador/editor/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -579,7 +595,7 @@ $(document).on("change","#sel_pie_pagina",function() {
     });
 });
 
-$(document).on("click", ".guardar_encabezado", function(e) {		
+$(document).on("click", ".guardar_encabezado", function(e) {
 	if(formulario_encabezado.valid()){
 
 	  	var editor = tinymce.get('editor_encabezado');
@@ -1354,13 +1370,12 @@ $(document).on("click","#actualizar_cuerpo_formato",function(){
    	  url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias_formato.php",
    	  data: "ejecutar_libreria_formato=actualizar_cuerpo_formato&contenido="+tinyMCE.editors["editor_mostrar"].getContent()+"&idformato="+$("#idformato").val()+"&rand="+Math.round(Math.random()*100000),
    	  success: function(html){
-   	   	  console.log(html);
+   	   	//console.log(html);
    	    if(html){
    	      var objeto=jQuery.parseJSON(html);
    	      if(objeto.exito){
    	    	  notificacion_saia(objeto.mensaje,"success","",3500);
-   	      }
-   	      else{
+   	      } else {
    	    	  notificacion_saia(objeto.mensaje,"error","",3500);
    	  	  }
    	  	}
@@ -1401,6 +1416,15 @@ function generar_pantalla(nombre_accion){
 	    }
 		});
 	}
+
+function receiveMessage(event) {
+  // Do we trust the sender of this message?
+      if(event.data["etiqueta_html"] && event.data["etiqueta_html"] == 'textarea_cke') {
+   		  CKEDITOR.instances[event.data["nombre_campo"]].setData(event.data["fs_predeterminado"]);
+      }
+}
+
+window.addEventListener("message", receiveMessage, false);
 });//Fin Document ready
 /*
 function generar_archivos_ignorados(){
