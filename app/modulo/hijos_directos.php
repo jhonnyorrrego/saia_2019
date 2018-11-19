@@ -21,39 +21,33 @@ $Response = (object) array(
 
 if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
     global $conn;
-
+    
+    $data = array();
+    $grouperParent = $_REQUEST['grouper'] ? $_REQUEST['grouper'] : 0;
     $parent = $_REQUEST['parent'] ? $_REQUEST['parent'] : 0;
-
     $modules = busca_filtro_tabla('*', 'modulo', 'cod_padre=' . $parent, 'orden asc', $conn);
 
-    if ($modules['numcampos']) {
+    if($grouperParent == 1){
+        $dashboard = busca_filtro_tabla('*', 'modulo', "nombre='dashboard'", '', $conn);
+        $data [] = addElement($dashboard[0], 0);
+    }
+    
+    if ($modules['numcampos']) {     
         $permiso = new PERMISO();
-        $data = array();
 
         for ($i = 0; $i < $modules['numcampos']; $i++) {
             $module = $modules[$i];
             $access = $permiso->acceso_modulo_perfil($module['nombre']);
 
             if ($access) {
-                if($module['tipo'] != 'agrupador'){
+                if($grouperParent){
                     $countChilds = busca_filtro_tabla('count(*) as total', 'modulo', 'cod_padre = ' . $module['idmodulo'], '', $conn);
                     $isParent = $countChilds[0]['total'] ? 1 : 0;
-                }else{
-                    $isParent = 1;
                 }
 
-                $data[] = array(
-                    'idmodule' => $module['idmodulo'],
-                    'isParent' => $isParent,
-                    'name' => html_entity_decode($module['etiqueta']),
-                    'icon' => $module['imagen'],
-                    'type' => $module['tipo'],
-                    'url' => $module['enlace']
-                );
-
+                $data[] = addElement($module, $isParent);
             }
         }
-
     }
 
     $Response->data = $data;
@@ -63,3 +57,14 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
 }
 
 echo json_encode($Response);
+
+function addElement($data, $isParent){
+    return array(
+        'idmodule' => $data['idmodulo'],
+        'isParent' => $isParent,
+        'name' => html_entity_decode($data['etiqueta']),
+        'icon' => $data['imagen'],
+        'type' => $data['tipo'],
+        'url' => $data['enlace'],
+    );
+}

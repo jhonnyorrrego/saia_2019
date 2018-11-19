@@ -7,11 +7,18 @@ $(function(){
     
     var modules = new Modules(iduser, grouperSelector, listSelector);
 
-    $(document).on('click', '.grouper,.parent_item', function(){    
+    $(document).on('click', '.grouper', function(){    
+        let idmodule = $(this).attr('id');
+        modules.find(idmodule);
+
+        $('[data-pages-toggle="#appMenu"]').trigger("click");
+    });
+
+    $(document).on('click', '.parent_item', function () {
         let idmodule = $(this).attr('id');
         modules.find(idmodule);
     });
-    
+
     $(document).on('click', '.module_link', function(){
         $("#iframe_workspace").attr('src', $(this).attr('url'));
 
@@ -65,4 +72,11 @@ $(function(){
     function getTouches(evt) {
         return evt.touches || evt.originalEvent.touches;
     }
+
+    let interval = window.setInterval(() => {
+        if ($(listSelector).find(".module_link").length){
+            $(listSelector).find(".module_link").first().trigger("click");
+            clearInterval(interval);
+        }
+    }, 50);
 });

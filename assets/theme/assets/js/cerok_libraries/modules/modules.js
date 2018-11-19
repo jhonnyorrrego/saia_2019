@@ -54,7 +54,11 @@ class Modules {
 
     defaultModule(){
         if (!localStorage.getItem('modules')){
-            this.modules = [{ idmodule: 0, isParent: 1 }];
+            this.modules = [{
+                idmodule: 0,
+                isParent: 1,
+                type: 'grouper'
+            }];
         }        
     }
 
@@ -63,10 +67,12 @@ class Modules {
 
         if(!parentModule.childs && parentModule.isParent){
             let instance = this;
+            let grouper = parentModule.type == "grouper" ? 1 : 0;
             
             $.get(`${this.baseUrl}app/modulo/hijos_directos.php`,{
                 iduser: this.user,
-                parent: idmodule
+                parent: idmodule,
+                grouper: grouper
             }, function(response){
                 if(response.success){
                     if(response.data.length){
@@ -92,7 +98,7 @@ class Modules {
         }else{
             if(this.groupers.find(m => m.idmodule == idmodule)){
                 $(this._listSelector).empty();
-                nodes.list.forEach(i => $(this._listSelector).append(i));
+                nodes.list.forEach(i => $(this._listSelector).append(i));                
             }else{
                 let selector = $(`#${idmodule} > .child_list`);
 
