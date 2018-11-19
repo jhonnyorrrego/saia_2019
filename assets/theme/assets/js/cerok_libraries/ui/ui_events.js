@@ -5,8 +5,7 @@ $(function () {
     
     Ui.putLogo();
     Ui.showUserInfo(session.user);
-    
-    $("#iframe_workspace").height($(window).height() - $("#header").height() - 9);
+    Ui.resizeIframe();
     
     $("#btn_logout").on('click', function (event) {
         event.preventDefault();
@@ -123,4 +122,10 @@ $(function () {
     function getTouches(evt) {
         return evt.touches || evt.originalEvent.touches;
     }
+
+    window.addEventListener("orientationchange", function () {
+        setTimeout(() => {
+            Ui.resizeIframe();
+        }, 500);
+    }, false);
 });

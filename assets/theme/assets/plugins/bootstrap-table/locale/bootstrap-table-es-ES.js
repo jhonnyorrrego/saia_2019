@@ -11,7 +11,7 @@
         },
         formatRecordsPerPage: function (pageNumber) {
             //return pageNumber + ' resultados por página';
-            return pageNumber;
+            return '';
         },
         formatShowingRows: function (pageFrom, pageTo, totalRows) {
             //return 'Mostrando desde ' + pageFrom + ' hasta ' + pageTo + ' - En total ' + totalRows + ' resultados';

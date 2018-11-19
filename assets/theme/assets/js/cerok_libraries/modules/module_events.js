@@ -1,6 +1,17 @@
 $(function(){
-    var modules = new Modules(localStorage.getItem('key'));
-    var xDown = null;
+    let iduser = localStorage.getItem("key");;
+    let grouperSelector = "#appMenu";
+    let listSelector = "#module_list";
+
+    var modules = new Modules(iduser, grouperSelector, listSelector);
+
+    $(document).on('click', '.grouper', function(){alert('click');
+        let idmodule = $(this).attr('id');
+        
+        modules.showList(idmodule);
+    });
+    
+    /*var xDown = null;
     var yDown = null;
     
     $(document).on('click', '.module_link', function(){
@@ -23,7 +34,7 @@ $(function(){
 
     $(".page-sidebar").on('touchmove', function (evt) {
         evt.preventDefault();
-        
+
         if (!xDown || !yDown) {
             return;
         }
@@ -34,21 +45,26 @@ $(function(){
         var xDiff = xDown - xUp;
         var yDiff = yDown - yUp;
 
-        if (Math.abs(xDiff) > Math.abs(yDiff)) {/*most significant*/
+        if (Math.abs(xDiff) > Math.abs(yDiff)) {/*most significant*
             if (xDiff > 0) {
                 $('#toggle_sidebar').trigger('click');
             } else {
-                /** right swipe*/
+                /** right swipe*
+                return true;
             }
         } else {
-            if (yDiff > 0) {/** up swipe*/} else {/** Dowsn swipe*/}
+            if (yDiff > 0) {
+                /** up swipe* return true;
+            } else {
+                /** Dowsn swipe* return true;
+            }
         }
-        /* reset values */
+        /* reset values *
         xDown = null;
         yDown = null;
     });
 
     function getTouches(evt) {
         return evt.touches || evt.originalEvent.touches;
-    }
+    }*/
 });

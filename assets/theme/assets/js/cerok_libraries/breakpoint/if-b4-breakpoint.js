@@ -55,4 +55,8 @@ $(document).ready(function(){
  	// Add some invisible elements with Bootstrap CSS visibile utility classes
 	$( "body" ).append( "<div style='display:none;' class='breakpoint-check'><span class='xs d-block d-sm-inline'></span><span class='sm d-sm-block d-md-inline'></span><span class='md d-md-block d-lg-inline'></span><span class='lg d-lg-block d-xl-inline'></span><span class='xl d-xl-block'></span></div>" );
 	checkSize();
+    
+    window.addEventListener("orientationchange", function () {
+        checkSize();
+    }, false);
 });

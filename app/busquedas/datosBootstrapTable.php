@@ -40,4 +40,3 @@ foreach ($output->rows as $key => $value) {
 }
 
 echo json_encode($data);
-

@@ -22,15 +22,14 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <title>SAIA - SGDEA</title>
     <?= jquery() ?>
     <?= bootstrap() ?>
+    <?= theme() ?>
 </head>
 <body>
     <div class="container-fluid px-1 py-0">
         <div class="row">
-            <div class="col-12 col-md-4">
-                <iframe id="mailbox" frameborder="0" width="100%"></iframe>
-            </div>
-            <div class="d-none d-md-block col-md-8 ">
-                CALENDARIO
+            <div class="col-12 col-xl-4 pr-0" id="mailbox"></div>
+            <div class="col-12 col-xl-8 px-0" id="right_workspace">
+                <iframe id="iframe_right_workspace" width="100%" frameBorder="0"></iframe>
             </div>
         </div>
     </div>
@@ -38,7 +37,25 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         $(function(){
             var baseUrl = '<?= $ruta_db_superior ?>';
             let route = baseUrl + 'views/buzones/listado.php?idbusqueda_componente=<?= $_REQUEST['idbusqueda_componente'] ?>';
-            $("#mailbox").attr('src', route).height($(window).height() - $("#k-topbar").height() - 5);
+            $("#mailbox").load(route);
+
+            $('#iframe_right_workspace').on('load', function(){
+                $(this).height($(window).height());
+            });
+
+            window.addEventListener("orientationchange", function () {
+                setTimeout(() => {
+                    window.resizeIframe();
+                }, 500);
+            }, false);
+            
+            window.resizeIframe = function (){
+                let frameH = $(window).height();
+                let paginationH = $('.fixed-table-pagination').height();
+                let headerH = $('#header_list').height();
+                $(".fixed-table-container").height(frameH - paginationH - headerH);
+                $('#iframe_right_workspace').height($(window).height());
+            }
         });
     </script>
 </body>

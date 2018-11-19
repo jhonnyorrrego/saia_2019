@@ -70,6 +70,10 @@ class Ui {
         ias.update();
     }
 
+    static resizeIframe() {
+        $("#iframe_workspace").height($(window).height() - $("#header").height() - 6);
+    }
+
     static close() {
         Session.close();
         window.location = Session.getBaseUrl() + 'logout.php';

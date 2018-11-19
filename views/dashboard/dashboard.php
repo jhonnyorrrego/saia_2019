@@ -43,28 +43,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <!-- BEGIN SIDEBPANEL-->
     <nav class="page-sidebar" data-pages="sidebar">
         <!-- BEGIN SIDEBAR MENU TOP TRAY CONTENT-->
-        <div class="sidebar-overlay-slide from-top" id="appMenu">
-            <div class="row">
-                <div class="col-xs-6 no-padding">
-                    <a href="#" class="p-l-40"><img  alt="socail">
-                    </a>
-                </div>
-                <div class="col-xs-6 no-padding">
-                    <a href="#" class="p-l-10"><img  alt="socail">
-                    </a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-6 m-t-20 no-padding">
-                    <a href="#" class="p-l-40"><img  alt="socail">
-                    </a>
-                </div>
-                <div class="col-xs-6 m-t-20 no-padding">
-                    <a href="#" class="p-l-10"><img  alt="socail">
-                    </a>
-                </div>
-            </div>
-        </div>
+        <div class="sidebar-overlay-slide from-top" id="appMenu"></div>
         <!-- END SIDEBAR MENU TOP TRAY CONTENT-->
         <!-- BEGIN SIDEBAR MENU HEADER-->
         <div class="sidebar-header">

@@ -11,14 +11,14 @@
                     </table>
                 </div>
             </div>
-            
             <div class="page_margin_bottom" id="doc_footer">'
                 <?php if ($pie[0][0] && $contenido_pie["numcampos"]) {
                     echo crear_encabezado_pie_pagina(stripslashes($contenido_pie[0][0]), $_REQUEST["iddoc"], $formato[0]["idformato"]);
                 } ?>
             </div>
-            </div>
-            </div>
+            </div> <!-- end page-n -->
+            </div> <!-- end #documento-->
+            </div> <!-- end .container -->
 		<?php else : ?>
 			</table>
         <?php endif; ?>

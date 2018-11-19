@@ -22,40 +22,17 @@ $documento = array();
 $funcionario = 0;
 
 function menu_principal_documento($iddocumento, $tipo_visualizacion = "", $modulo_adicional = ""){
-    global $conn, $ruta_db_superior, $documento, $funcionario;
+    global $conn, $ruta_db_superior, $documento;
 
-    if (!$iddocumento) {
-        if ($_REQUEST['iddocumento']) {
-            $iddocumento = $_REQUEST['iddocumento'];
-        } else if ($_REQUEST['key']) {
-            $iddocumento = $_REQUEST['key'];
-        } else {
-            die('No existe un documento valido');
-        }
-    }
-    
-    $documento = busca_filtro_tabla("", "formato a,documento b", "lower(b.plantilla)=lower(a.nombre) and b.iddocumento=" . $iddocumento, "", $conn);
-    $nombre_formato = $documento[0]["nombre"];
-    $funcionario = $_SESSION["usuario_actual"];
-
-    if ($documento[0]['mostrar_pdf'] == 1) {
-        $_SESSION["tipo_pagina"] = "pantallas/documento/visor_documento.php?iddoc=" . $iddocumento . "&rnd=" . rand(0, 1000);
-    } elseif ($documento[0]['mostrar_pdf'] == 2) {
-        $_SESSION["tipo_pagina"] = "pantallas/documento/visor_documento.php?pdf_word=1&iddoc=" . $iddocumento . "&rand=" . rand(0, 1000);
-    } else {
-        $_SESSION["tipo_pagina"] = FORMATOS_CLIENTE . $nombre_formato . "/mostrar_" . $nombre_formato . ".php?iddoc=" . $iddocumento . "&rand=" . rand(0, 1000);
-    }
-
-    $ft = busca_filtro_tabla("id" . $documento[0]["nombre_tabla"] . " AS idft", $documento[0]["nombre_tabla"], "documento_iddocumento=" . $iddocumento, '', $conn);
-    $identificador_arbol = $documento[0]["idformato"] . "-" . $ft[0]["idft"] . "-id" . $documento[0]["nombre_tabla"];
+    $documento = consulta_documento($iddocumento);          
+    $datos_admin = botones_administrativos_menu($iddocumento);
+    $identificador_arbol = identificador_arbol($documento);
 
     if ($_REQUEST["tipo"] !== 5 && !$_REQUEST["output"] && !$_REQUEST["imprimir"]) {
         $acciones = permisos_modulo_menu_intermedio($iddocumento, "acciones_menu_intermedio", array("tipo" => 2));
         $seguimiento = permisos_modulo_menu_intermedio($iddocumento, "informacion_menu_intermedio", array("tipo" => 2));
         $otros = permisos_modulo_menu_intermedio($iddocumento, "otros_menu_intermedio", array("tipo" => 2));
     }
-
-    $datos_admin = botones_administrativos_menu($iddocumento);
     ?>
     <link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.css">
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.js"></script>
@@ -144,7 +121,7 @@ function menu_principal_documento($iddocumento, $tipo_visualizacion = "", $modul
                 </div>
             </div>
         </div>
-    </div>     
+    </div>
     <script type="text/javascript">
         $(function(){
             var ruta = "<?= $ruta_db_superior ?>formatos/arboles/test_formatos_documento.php?id=<?= $identificador_arbol ?>";
@@ -201,105 +178,143 @@ function menu_principal_documento($iddocumento, $tipo_visualizacion = "", $modul
             function cargando() {
                 $("#esperando_arbol").show();
             }
+
             function actualizar_papa(nodeId){
                 var papa = tree2.getParentId(nodeId);
                 tree2.closeItem(papa);
                 tree2.deleteItem(nodeId,true);
                 tree2.findItem(papa);
             }
-            
-            var fab = new Fab({
-                selector: "#fab",
-                button: {
-                    style: "large blue",
-                    html: ""
-                },
-                icon:{
-                    style: "fa fa-chevron-up",
-                    html: ""
-                },
-                // "top-left" || "top-right" || "bottom-left" || "bottom-right"
-                position: "bottom-right",
-                // "horizontal" || "vertical"
-                direction: "vertical",
-                buttons:[
-                    <?php if ($datos_admin["confirmar"]): ?>
-                        {
-                            button: {
-                                style: "small yellow",
-                                html: ""
-                            },
-                            icon:{
-                                style: "fa fa-check",
-                                html: ""
-                            },
-                            onClick: function(){
-                                if(window.parent.frames["arbol_formato"] !== undefined){
-                                    match_iddoc = window.parent.frames["arbol_formato"].location.href.match(/(iddoc)=([\d]+)/);
-                                    if(match_iddoc){
-                                        var iddoc_padre = match_iddoc[2];
+
+            <?php if(in_array(true, array_values($datos_admin))) :?>
+                var fab = new Fab({
+                    selector: "#fab",
+                    button: {
+                        style: "large blue",
+                        html: ""
+                    },
+                    icon:{
+                        style: "fa fa-chevron-up",
+                        html: ""
+                    },
+                    // "top-left" || "top-right" || "bottom-left" || "bottom-right"
+                    position: "bottom-right",
+                    // "horizontal" || "vertical"
+                    direction: "vertical",
+                    buttons:[
+                        <?php if ($datos_admin["confirmar"]): ?>
+                            {
+                                button: {
+                                    style: "small yellow",
+                                    html: ""
+                                },
+                                icon:{
+                                    style: "fa fa-check",
+                                    html: ""
+                                },
+                                onClick: function(){
+                                    if(window.parent.frames["arbol_formato"] !== undefined){
+                                        match_iddoc = window.parent.frames["arbol_formato"].location.href.match(/(iddoc)=([\d]+)/);
+                                        if(match_iddoc){
+                                            var iddoc_padre = match_iddoc[2];
+                                        }else{
+                                            var iddoc_padre = 0;
+                                        }
                                     }else{
-                                        var iddoc_padre = 0;
+                                        var iddoc_padre = <?= $iddocumento ?>
                                     }
-                                }else{
-                                    var iddoc_padre = <?= $iddocumento ?>
+                                    
+                                    var ruta = "<?= $ruta_db_superior ?>class_transferencia.php?iddoc=<?= $iddocumento ?>&funcion=aprobar&anterior=" + iddoc_padre;
+                                    window.open(ruta, "_self");
                                 }
-                                
-                                var ruta = "<?= $ruta_db_superior ?>class_transferencia.php?iddoc=<?= $iddocumento ?>&funcion=aprobar&anterior=" + iddoc_padre;
-                                window.open(ruta, "_self");
+                            },
+                        <?php endif; ?>
+                        <?php if ($datos_admin["editar"]): ?>
+                            {
+                                button: {
+                                    style: "small yellow",
+                                    html: ""
+                                },
+                                icon:{
+                                    style: "fa fa-edit",
+                                    html: ""
+                                },
+                                onClick: function(){
+                                    window.open("<?php echo $ruta_db_superior . FORMATOS_CLIENTE . $documento[0]["nombre"] .'/'. $documento[0]["ruta_editar"] ?>?iddoc=<?= ($iddocumento); ?>&idformato=<?= $documento[0]["idformato"] ?>","_self");
+                                }
+                            },
+                        <?php endif; ?>
+                        <?php if ($datos_admin["ver_responsables"]): ?>
+                            {
+                                button: {
+                                    style: "small yellow",
+                                    html: ""
+                                },
+                                icon:{
+                                    style: "fa fa-users",
+                                    html: ""
+                                },
+                                onClick: function(){
+                                    window.open("<?= $ruta_db_superior ?>mostrar_ruta.php?doc=<?= $iddocumento ?>", "_self");
+                                }
+                            },
+                        <?php endif; ?>
+                        <?php if ($datos_admin["devolucion"]) : ?>
+                            {
+                                button: {
+                                    style: "small yellow",
+                                    html: ""
+                                },
+                                icon:{
+                                    style: "fa fa-backward",
+                                    html: ""
+                                },
+                                onClick: function(){
+                                    window.open("<?= $ruta_db_superior ?>class_transferencia.php?iddoc=<?= $iddocumento ?>&funcion=formato_devolucion","_self");
+                                }
                             }
-                        },
-                    <?php endif; ?>
-                    <?php if ($datos_admin["editar"]): ?>
-                        {
-                            button: {
-                                style: "small yellow",
-                                html: ""
-                            },
-                            icon:{
-                                style: "fa fa-edit",
-                                html: ""
-                            },
-                            onClick: function(){
-                                window.open("<?php echo $ruta_db_superior . FORMATOS_CLIENTE . $documento[0]["nombre"] .'/'. $documento[0]["ruta_editar"] ?>?iddoc=<?= ($iddocumento); ?>&idformato=<?= $documento[0]["idformato"] ?>","_self");
-                            }
-                        },
-                    <?php endif; ?>
-                    <?php if ($datos_admin["ver_responsables"]): ?>
-                        {
-                            button: {
-                                style: "small yellow",
-                                html: ""
-                            },
-                            icon:{
-                                style: "fa fa-users",
-                                html: ""
-                            },
-                            onClick: function(){
-                                window.open("<?= $ruta_db_superior ?>mostrar_ruta.php?doc=<?= $iddocumento ?>", "_self");
-                            }
-                        },
-                    <?php endif; ?>
-                    <?php if ($datos_admin["devolucion"]) : ?>
-                        {
-                            button: {
-                                style: "small yellow",
-                                html: ""
-                            },
-                            icon:{
-                                style: "fa fa-backward",
-                                html: ""
-                            },
-                            onClick: function(){
-                                window.open("<?= $ruta_db_superior ?>class_transferencia.php?iddoc=<?= $iddocumento ?>&funcion=formato_devolucion","_self");
-                            }
-                        }
-                    <?php endif; ?>
-                ]
-            });
+                        <?php endif; ?>
+                    ]
+                });
+            <?php endif; ?>
         });
     </script>
     <?php
+}
+
+function consulta_documento($iddocumento){
+    global $conn, $funcionario;
+
+    if (!$iddocumento) {
+        if ($_REQUEST['iddocumento']) {
+            $iddocumento = $_REQUEST['iddocumento'];
+        } else if ($_REQUEST['key']) {
+            $iddocumento = $_REQUEST['key'];
+        } else {
+            die('No existe un documento valido');
+        }
+    }
+    
+    $documento = busca_filtro_tabla("", "formato a,documento b", "lower(b.plantilla)=lower(a.nombre) and b.iddocumento=" . $iddocumento, "", $conn);
+    $nombre_formato = $documento[0]["nombre"];
+    $funcionario = $_SESSION["usuario_actual"];
+
+    if ($documento[0]['mostrar_pdf'] == 1) {
+        $_SESSION["tipo_pagina"] = "pantallas/documento/visor_documento.php?iddoc=" . $iddocumento . "&rnd=" . rand(0, 1000);
+    } elseif ($documento[0]['mostrar_pdf'] == 2) {
+        $_SESSION["tipo_pagina"] = "pantallas/documento/visor_documento.php?pdf_word=1&iddoc=" . $iddocumento . "&rand=" . rand(0, 1000);
+    } else {
+        $_SESSION["tipo_pagina"] = FORMATOS_CLIENTE . $nombre_formato . "/mostrar_" . $nombre_formato . ".php?iddoc=" . $iddocumento . "&rand=" . rand(0, 1000);
+    }
+
+    return $documento;
+}
+
+function identificador_arbol($documento){
+    global $conn;
+
+    $ft = busca_filtro_tabla("id" . $documento[0]["nombre_tabla"] . " AS idft", $documento[0]["nombre_tabla"], "documento_iddocumento=" . $documento[0]['iddocumento'], '', $conn);
+    return $documento[0]["idformato"] . "-" . $ft[0]["idft"] . "-id" . $documento[0]["nombre_tabla"];    
 }
 /*
 $iddoc=iddocumento

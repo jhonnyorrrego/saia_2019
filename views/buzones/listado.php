@@ -34,7 +34,7 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
     </head>
     <body>
         <div class="container">
-            <div class="row sticky-top bg-master-light" id="header_list"></div>
+            <div class="row sticky-top bg-master-lightest" id="header_list"></div>
             <div class="row" id="content">
                 <table id="table" data-selections=""></table>
             </div>
@@ -49,6 +49,7 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
                     url: `${baseUrl}app/busquedas/datosBootstrapTable.php?idbusqueda_componente=${component}`,
                     sidePagination: 'server',
                     queryParamsType: 'other',
+                    height: $(document).height() - 6,
                     columns: [{
                         field: 'info',
                     }],
@@ -98,7 +99,9 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
                     $(this).data('selections', selections.join(','))
                 });
 
-                $("#header_list").load(baseUrl+encabezado, function(){
+                $("#header_list").load(baseUrl+encabezado,{
+                    idbusqueda_componente: component
+                }, function(){
                     $('[data-toggle="tooltip"]').tooltip();
                 });
             });

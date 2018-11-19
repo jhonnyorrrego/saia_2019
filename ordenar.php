@@ -29,7 +29,7 @@ if ($documento['numcampos']) {
 
     leido(usuario_actual("funcionario_codigo"), $iddocumento);
 } else {
-    alerta("No se ha podido encontrar el Documento");
+    alerta("No se ha podido encontrar el Documento");die();
 }
 ?>
 <!DOCTYPE html>
@@ -39,11 +39,9 @@ if ($documento['numcampos']) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
+
     <?= jquery() ?>
     <?= bootstrap() ?>
-    <?= librerias_arboles() ?>
-    <?= librerias_principal() ?>
-    <?= librerias_highslide() ?>
 </head>
 <body>
     <div class="container-fluid">
@@ -56,7 +54,7 @@ if ($documento['numcampos']) {
         $(document).ready(function(){
             var documento = '<?= $documento["numcampos"] ?>';            
             
-            function llamado_pantalla(ruta,datos,destino,nombre){
+            function llamado_pantalla(ruta, datos, destino, nombre){
                 if(datos){
                     ruta += "?" + datos;
                 }

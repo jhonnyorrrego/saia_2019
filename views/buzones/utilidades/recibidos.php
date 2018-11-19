@@ -13,6 +13,27 @@ $(function(){
         }
     });
 
+    $(document).on('click', '.show_document', function(){
+        let url = $(this).data('url');
+        let breakpoint = localStorage.getItem('breakpoint');
+        let actualUrl = $("#iframe_right_workspace").attr('src');
+        
+        if(actualUrl != baseUrl + url){
+            $("#iframe_right_workspace").attr('src', baseUrl + url);
+        }
+
+        if($.inArray(breakpoint, ['xs', 'sm', 'md']) != -1){
+            let width = $('#mailbox').width();
+
+            $("#right_workspace").show().css('left', 0);
+            $('#mailbox').animate({
+                left: -width
+            },300,function(){
+                $('#mailbox').hide();
+            });
+        }
+    });
+
     $(document).on('click', '.btn_expiration', function(){
         topModal({
             url: `${baseUrl}views/documento/asignar_vencimiento.php`

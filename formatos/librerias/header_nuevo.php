@@ -10,6 +10,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 include_once  $ruta_db_superior . "db.php";
+include_once  $ruta_db_superior . "assets/librerias.php";
 include_once  $ruta_db_superior . "formatos/librerias/encabezado_pie_pagina.php";
 
 global $conn;
@@ -71,7 +72,7 @@ $tam_pagina = array(
     'margen_izquierda' => $margenes[0] * 5,
     'margen_derecha' => $margenes[1] * 5,
     'margen_superior' => $margenes[2] * 5,
-    'margen_inferior' => $margenes[3] * 5,
+    'margen_inferior' => $margenes[3] * 5
 );
 
 if ($formato[0]["orientacion"]) {
@@ -82,30 +83,33 @@ if ($formato[0]["orientacion"]) {
     $ancho_paginador = $tam_pagina[$formato[0]["papel"]]["ancho"];
 }
 
-$config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "", $conn);
+$color = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "", $conn);
 $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", "", $conn);
 ?>
-<html>
+<html style="font-size:12px;">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <?= librerias_arboles() ?>
-        <?= librerias_acciones_kaiten() ?>
 
-        <?php if ($config["numcampos"]): ?>
+        <?= jquery() ?>
+        <?= bootstrap() ?>
+        <?= icons() ?>
+        <?= theme() ?>
+       
+        <?php if ($color["numcampos"]): ?>
             <style type="text/css">
                 .phpmaker{
                     font-family: Verdana,Tahoma,arial;
                     color:#000000;
                 }
                 .encabezado{
-                    background-color: <?=$config[0]["valor"]?>;
+                    background-color: <?= $color[0]["valor"]?>;
                     color:white;
                     padding: 10px;
                     text-align: left;
                 }
                 .encabezado_list{
-                    background-color: <?=$config[0]["valor"]?>;
+                    background-color: <?= $color[0]["valor"]?>;
                     color:white;
                     vertical-align:middle;
                     text-align: center;
@@ -116,115 +120,117 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
         <?php if ($fuente["numcampos"]): ?>
             <?php if ($_REQUEST["tipo"] != 5): ?>
                 <style>
-                    body,table,tr,td,div,p,span {
+                    #documento > table tr td div p span {
                         font-size : <?=$formato[0]["font_size"] . 'px'?>;
                         font-family : <?=$fuente[0]["valor"]?>
                     }
                 </style>
             <?php else: ?>
                 <style>
-                    body,table,tr,td,div,p,span {
+                    #documento >table tr td div p span {
                         font-size: <?=$formato[0]["font_size"] . 'pt'?>;
                         font-family: <?=$fuente[0]["valor"]?>
                     }
                 </style>
             <?php endif;?>
-        <?php endif;?>        
+        <?php endif;?>  
+        <?php if($_REQUEST['tipo'] != 5):
+            leido($_SESSION["usuario_actual"], $iddocumento);
+
+            if (!$formato[0]["item"]) {
+                if (isset($_REQUEST["vista"]) && $_REQUEST["vista"]) {
+                    $vista = busca_filtro_tabla("encabezado", "vista_formato", "idvista_formato='" . $_REQUEST["vista"] . "'", "", $conn);
+                    $encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $vista[0]["encabezado"] . "'", "", $conn);
+                } else {
+                    $encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["encabezado"] . "'", "", $conn);
+                }
+            }?>
+
+            <style type="text/css">
+                .page_border {
+                    border: 1px solid #CACACA;
+                    margin-bottom: 8px;
+                    box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+                    -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+                    -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+                    box-shadow: 5px 5px 8px #c6c6c6;
+                }
+
+                .page_margin_top,
+                .page_content,
+                .page_margin_bottom{
+                    overflow:hidden;
+                    margin-left: 5%;
+                    margin-right: 5%;
+                    margin-top: 5%;
+                    margin-bottom: 5%;
+                }
+
+                .page_margin_top {
+                    height: <?=$tam_pagina["margen_superior"] . 'px'?>;
+                }
+
+                .page_content {
+                    height: <?=$alto_paginador - $tam_pagina["margen_superior"] - $tam_pagina["margen_inferior"] . 'px'?>;
+                }
+
+                .page_margin_bottom {
+                    height: <?=$tam_pagina["margen_inferior"] . 'px'?>;
+                }
+            </style>
+            <?php if ($formato[0]["paginar"] == '1'): ?>
+                <script>
+                    $(document).ready(function(){
+                        var alto_papel = '<?=$alto_paginador?>';
+                        var alto_encabezado = '<?=$tam_pagina["margen_superior"] + 30?>';
+                        var alto_pie_pagina = '<?=$tam_pagina["margen_inferior"] + 20?>';
+                        var altopagina = alto_papel-(alto_encabezado+alto_pie_pagina);
+                        var alto = $("#page_overflow").height();
+                        var paginas = Math.ceil(alto/altopagina);
+                        var contenido = $("#page_overflow").html();
+                        var encabezado = $("#doc_header").html();
+                        var piedepagina = $("#doc_footer").html();
+
+                        for(i = 1;i < paginas;i++){
+                            var altoPaginActual = altopagina*i;
+                            var pagina = `
+                            <div id="pag-${i}" class="col-12 page_border bg-white">
+                                <div class="page_margin_top">${encabezado}</div>
+                                <div id="pag_content-${i}" class="page_content">
+                                    <div style="margin-top:-${altoPaginActual}'px">${contenido}</div>
+                                </div>
+                                <div class="page_margin_bottom">${piedepagina}</div>
+                            </div>`;
+                            $("#documento").append(pagina);
+                        }
+                    });
+                </script>
+            <?php endif;?>
+        <?php endif; ?>
 	</head>
 	<body>
-<?php
-if ($_REQUEST["tipo"] != 5):
-    leido($_SESSION["usuario_actual"], $iddocumento);
-
-    if (!isset($_REQUEST["menu_principal_inactivo"])) {
-        include_once $ruta_db_superior . "pantallas/documento/menu_principal_documento.php";
-        menu_principal_documento($iddocumento, 1);
-    }
-    
-    if (!$formato[0]["item"]) {
-        if (isset($_REQUEST["vista"]) && $_REQUEST["vista"]) {
-            $vista = busca_filtro_tabla("encabezado", "vista_formato", "idvista_formato='" . $_REQUEST["vista"] . "'", "", $conn);
-            $encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $vista[0]["encabezado"] . "'", "", $conn);
-        } else {
-            $encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["encabezado"] . "'", "", $conn);
-        }
-    } ?>
-
-    <style type="text/css">
-        .page_border {
-            border: 1px solid #CACACA;
-            margin-bottom: 8px;
-            box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-            -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-            -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-            box-shadow: 5px 5px 13px #0f0e0e;        
-        }
-
-        .page_margin_top,
-        .page_content,
-        .page_margin_bottom{
-            overflow:hidden;
-            margin-left: 5%; 
-            margin-right: 5%; 
-            margin-top: 5%; 
-            margin-bottom: 5%; 
-        }
-
-        .page_margin_top {
-            height: <?= $tam_pagina["margen_superior"] . 'px'?>; 
-        }
-
-        .page_content {
-            height: <?= $alto_paginador - $tam_pagina["margen_superior"] - $tam_pagina["margen_inferior"] . 'px'?>;
-        }  
-
-        .page_margin_bottom {
-            height: <?= $tam_pagina["margen_inferior"] . 'px'?>;
-        }
-        
-        /*.paginador_docs { 
-            width: <?= $ancho_paginador . 'px'?>;
-            height: <?= $alto_paginador . 'px'?>;
-            margin:30px auto 30px auto;
-            box-shadow: 5px 5px 13px #0f0e0e;
-        }*/
-        
-    </style>
-    <?php if ($formato[0]["paginar"] == '1') :?>
-        <script>
-            $(document).ready(function(){
-                var alto_papel = '<?= $alto_paginador ?>';
-                var alto_encabezado = '<?= $tam_pagina["margen_superior"] + 30 ?>';
-                var alto_pie_pagina = '<?= $tam_pagina["margen_inferior"] + 20 ?>';
-                var altopagina = alto_papel-(alto_encabezado+alto_pie_pagina);
-                var alto = $("#page_overflow").height();
-                var paginas = Math.ceil(alto/altopagina);
-                var contenido = $("#page_overflow").html();
-                var encabezado = $("#doc_header").html();
-                var piedepagina = $("#doc_footer").html();
-
-                for(i = 1;i < paginas;i++){
-                    var altoPaginActual = altopagina*i;º
-                    var pagina = '<div id="pag-'+i+'" class="paginador_docs page_border"><div class="page_margin_top">'+encabezado+'</div><div id="pag_content-'+i+'" class="page_content"><div style="margin-top:-'+altoPaginActual+'px">'+contenido+'</div></div><div class="page_margin_bottom">'+piedepagina+'</div></div>';
-                    $("#documento").append(pagina);
-                }
-            });
-        </script>
-    <?php endif;?>
-    <div id="documento">
-        <div id="pag-0" class="paginador_docs page_border m-1">
-            <div class="page_margin_top" id="doc_header">
-                <?php if ($encabezado["numcampos"]) {
-                    if (!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] == 1) {
-                        $pagina = 0;
-                    } else {
-                        $pagina = 1;
-                    }
-                    echo crear_encabezado_pie_pagina(stripslashes($encabezado[0][0]), $iddocumento, $formato[0]["idformato"], $pagina);
-                } ?>
+<?php if ($_REQUEST["tipo"] != 5): ?>
+    <div class="container-fluid bg-master-lightest px-3">
+        <div class="row sticky-top pt-2 bg-master-lightest px-3">
+            <div class="col-12 px-0 mx-0">
+                <?php include_once $ruta_db_superior . 'views/documento/encabezado.php'; ?>
             </div>
-            <div id="pag_content-0" class="page_content">
-                <div id="page_overflow"><table style="width:100%">
+        </div>
+        <div id="documento" class="row px-3">
+            <div id="pag-0" class="col-12 page_border bg-white">
+                <div class="page_margin_top" id="doc_header">
+                    <?php if ($encabezado["numcampos"]) {
+                        if (!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] == 1) {
+                            $pagina = 0;
+                        } else {
+                            $pagina = 1;
+                        }
+                        echo crear_encabezado_pie_pagina(stripslashes($encabezado[0][0]), $iddocumento, $formato[0]["idformato"], $pagina);
+                    } ?>
+                </div>
+                <div id="pag_content-0" class="page_content">
+                    <div id="page_overflow">
+                        <table style="width:100%">
 <?php else : ?>
     <table border="0" width="100%" cellpadding="0" cellspacing="0">
 <?php endif;?>

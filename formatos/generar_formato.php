@@ -1523,10 +1523,14 @@ class GenerarFormato {
                                 <script
                                 	src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-validation/js/jquery.validate.min.js"
                                 	type="text/javascript"></script>
-
+                                <script
+                                    src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.full.min.js"
+                                    type="text/javascript"></script>
+                                
                                 <link rel="stylesheet"
                                 	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
-
+                                <link rel="stylesheet"
+                                    href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css"  type="text/css" media="screen" />
                                 <script
                                 	src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>' . $enmascarar . ' '.$codigo_enter2tab.'
                 			</head>

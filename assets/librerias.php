@@ -14,6 +14,22 @@ function jquery()
 
 /**
  * retorna script para cargar
+ * jquery Mobile  v1.4.5 minificado
+ */
+function jqueryMobile(){
+    global $ruta_db_superior;
+
+    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-mobile/jquery.mobile-1.4.5.min.css';
+    $css = '<link href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
+
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-mobile/jquery.mobile-1.4.5.min.js';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+
+    return $css . $js;
+}
+
+/**
+ * retorna script para cargar
  * jquery ui  v1.11.1 minificado
  */
 function jqueryUi()
@@ -203,5 +219,5 @@ function validate(){
     $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-validation/js/jquery.validate.min.js';
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
-    return $css . $js;
+    return $js;
 }

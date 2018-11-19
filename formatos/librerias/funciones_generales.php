@@ -708,32 +708,38 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
 	
 	switch($tipo) {
 		case "radio":
-		    //$texto .= '<div class="radio radio-success">';
+		    $texto .= '<div class="radio radio-info">';
 			$texto .= '<table border="0">';
 			for($j = 0; $j < $cont3; $j++) {
 				$fila = ($j % $columnas);
 				if(!$fila) {
 					$texto .= '<tr>';
 				}
-				$texto .= '<td><label for="' . $nombre . $j . '"><input type="' . $tipo . '" ';
-				if($j == 0)
-					$texto .= $obligatorio;
+				
+				/*<input type="' . $tipo . '" value="yes" name="optionyes" id="yes">
+				<label for="' . $nombre . $j . '">>Agree</label>*/
+				$texto .= '<td><input type="' . $tipo . '" ';
 				if($buscar) {
-					$texto .= ' name="bqsaia_g@' . $nombre . '" id="' . $nombre . $j . '" value="' . ($listado3[$j][0]) . '" class="radio"';
+				    $texto .= ' name="bqsaia_g@' . $nombre . '" id="' . $nombre . $j . '" value="' . ($listado3[$j][0]) . '" class="radio"';
 				} else {
-					$texto .= ' name="' . $nombre . '" id="' . $nombre . $j . '" value="' . ($listado3[$j][0]) . '"';
+				    $texto .= ' name="' . $nombre . '" id="' . $nombre . $j . '" value="' . ($listado3[$j][0]) . '"';
 				}
 				if(($listado3[$j][0]) == $default)
-					$texto .= ' checked ';
-				$texto .= '>' . codifica_encabezado($listado3[$j][1]) . "</label></td>";
+				    $texto .= ' checked ';
+				    if($j == 0)
+				        $texto .= $obligatorio;
+				    
+				$texto .= ' aria-required="true"><label for="' . $nombre . $j . '">' . codifica_encabezado($listado3[$j][1]) . "</label></td>";
+				
 				if($fila == ($columnas - 1)) {
 					$texto .= '</tr>';
 				}
 			}
 			//$texto .= "<tr><td colspan='$columnas'><label style='display:none' for='$nombre' class='error'>Campo obligatorio</label></td></tr></table>";
-			$texto .= "<tr><td colspan='$columnas'></td></tr></table>";
+			$texto .= "<tr><td colspan='$columnas'></td></tr></table></div>";
 			break;
 		case "checkbox":
+		    $texto .='<div class="checkbox check-info">';
 			$texto .= '<table border="0">';
 			$lista_default = explode(',', $default);
 			for($j = 0; $j < $cont3; $j++) {
@@ -741,7 +747,7 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
 				if(!$fila) {
 					$texto .= '<tr>';
 				}
-				$texto .= '<td><label for="' . $nombre . $j . '"><input type="' . $tipo . '" ';
+				$texto .= '<td><input type="' . $tipo . '" ';
 				
 				if($j == 0)
 					$texto .= $obligatorio;
@@ -749,20 +755,21 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
 				
 				if(in_array(($listado3[$j][0]), $lista_default))
 					$texto .= ' checked ';
-				$texto .= '>' . codifica_encabezado(strip_tags($listado3[$j][1])) . "</label></td>";
+				$texto .= '><label for="' . $nombre . $j . '">' . codifica_encabezado(strip_tags($listado3[$j][1])) . "</label></td>";
 				if($fila == ($columnas - 1)) {
 					$texto .= '</tr>';
 				}
 			}
 			$texto .= "<tr><td colspan='$columnas'>
-    <label style='display:none' for='" . $nombre . "[]' class='error'>Campo obligatorio</label></td></tr></table>";
+    <label style='display:none' for='" . $nombre . "[]' class='error'>Campo obligatorio</label></td></tr></table></div>";
 			break;
 		case "select":
+		    $texto = ' <div class="form-group ">';
 			if($buscar) {
-				$texto = '<select name="bqsaia_g@' . $nombre . '" id="' . $nombre . '" ' . $obligatorio . ' class="form-control">
+				$texto = '<select name="bqsaia_g@' . $nombre . '" id="' . $nombre . '" ' . $obligatorio . ' data-init-plugin="select2" class="full-width">
 	  		  <option value="" selected >Por favor seleccione...</option>';
 			} else {
-				$texto = '<select name="' . $nombre . '" id="' . $nombre . '" ' . $obligatorio . ' class="form-control" >
+				$texto = '<select name="' . $nombre . '" id="' . $nombre . '" ' . $obligatorio . ' data-init-plugin="select2" class="full-width" >
               <option value="" selected >Por favor seleccione...</option>';
 			}
 			for($j = 0; $j < $cont3; $j++) {

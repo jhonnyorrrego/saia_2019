@@ -971,7 +971,7 @@ function origen_documento2($doc, $numero, $origen = "", $tipo_radicado = "", $es
 	return ($pre_texto);
 }
 
-function origen_documento_pendiente($iddocumento, $numero, $fecha){
+function origen_documento_pendiente($iddocumento, $numero, $fecha, $plantilla){
 	global $conn, $ruta_db_superior;
 
 	include_once $ruta_db_superior . 'models/funcionario.php';
@@ -980,15 +980,22 @@ function origen_documento_pendiente($iddocumento, $numero, $fecha){
     $Funcionario = new Funcionario($findOrigin[0]['idfuncionario']);
     
     $routeImage = $ruta_db_superior . $Funcionario->getImage('foto_recorte');
-    $title = $numero . " - " . $Funcionario->getName();
-    $temporality = temporality($fecha);
+	$title = $numero . " - " . $Funcionario->getName();
+	
+	if(strtotime($fecha))
+		$temporality = temporality($fecha);
+	else
+        $temporality = '---';
+    
+    $route = 'formatos/' . $plantilla . '/mostrar_' . $plantilla .'.php?iddoc=' . $iddocumento;
+
     $html = '<div class="col-1 px-0">
         <input type="hidden" value="'.$iddocumento.'" class="identificador">
         <span class="thumbnail-wrapper d32 circular inline">
             <img id="profile_image" src="'.$routeImage.'" width="32" height="32">
         </span>
     </div>
-    <div class="col kenlace_saia" enlace="ordenar.php?key=' . $iddocumento . '&accion=mostrar&mostrar_formato=1" conector="iframe" titulo="Documento No.' . $numero . '" style="cursor:pointer;">
+    <div class="col show_document" data-url="'.$route.'" titulo="Documento No.' . $numero . '" style="cursor:pointer;">
         <span class="mt-1 hint-text" style="font-size: 12px;">'.$title.'</span>
     </div>
     <div class="col-auto">

@@ -1,8 +1,29 @@
 class Modules {
-    constructor(iduser){
-        this.baseUrl = Session.getBaseUrl();
-        this.user = iduser;
-        this.load();
+    constructor(iduser, grouperSelector, listSelector){
+        if (this.setAttributes(iduser, grouperSelector, listSelector)){
+            if(!this.modules[0].childs){
+                let initialModule = Modules.getModuleById(0);
+                this.find(initialModule);
+            }else{
+                this.show();
+            }
+        }else{
+            console.error('invalid arguments');
+        }
+    }
+
+    setAttributes(iduser, grouperSelector, listSelector){
+        if(iduser && grouperSelector && listSelector){
+            this.baseUrl = Session.getBaseUrl();
+            this.user = iduser;
+            this._grouperSelector = grouperSelector;
+            this._listSelector = listSelector;
+            this.defaultModule();
+
+            return true;
+        }else{
+            return false;
+        }
     }
     
     set baseUrl(route){
@@ -21,37 +42,100 @@ class Modules {
         return this._iduser;
     }
 
-    set modules(data) {
-        this._modules = data;
+    set modules(data) {        
+        data = JSON.stringify(data);
+        localStorage.setItem('modules', data);
     }
 
     get modules() {
-        return this._modules;
+        let string = localStorage.getItem('modules');
+        return JSON.parse(string);
     }
 
-    load(){
+    defaultModule(){
+        if (!localStorage.getItem('modules')){
+            this.modules = [{ idmodule: 0 }];
+        }        
+    }
+
+    find(parentModule){
         let instance = this;
-        $.get(this.baseUrl + 'getModules.php',{
-            iduser: this.user
+        
+        $.get(`${this.baseUrl}app/modulo/hijos_directos.php`,{
+            iduser: this.user,
+            parent: parentModule.idmodule
         }, function(response){
             if(response.success){
-                instance.modules = response.data;
+                parentModule.childs = response.data;
+
+                instance.modules = instance.modules.map(m => {
+                    if (parentModule.idmodule == m.idmodule) {
+                        return parentModule;
+                    }else{
+                        return m;
+                    }
+                });
+
                 instance.show();
             }
         },'json');
     }
 
     show(){
-        let html = Modules.createNodeList(this.modules);
-        $("#module_list").append(html);
+        let nodes = this.createNodes();
 
-        $(".module_link").first().trigger('click');
+        if(nodes.groupers){
+            $(this._grouperSelector).append(nodes.groupers);
+
+            let groupers = this.modules[0].childs.find(m => m.type == "grouper");
+            this.showList(groupers.idmodule);
+        }else{
+            $(this._listSelector).append(nodes.list);
+        }
     }
 
-    static createNodeList(data){
-        let nodes = [];
+    createNodes(data) {        
+        if(!$(this._grouperSelector).children().length){
+            return this.createGroupers();
+        }else{
+            return this.createList();
+        }
+    }
 
-        data.forEach(module => {
+    createGroupers(){
+        let groupers = this.modules[0].childs.filter(m => m.type == 'grouper');
+        
+        let row = $('<div>',{
+            class: 'row'
+        });
+        
+        groupers.forEach(g => {
+            row.append($("<div>", {
+                    class: "col-12 col-md-6 py-1 px-0 mx-0 grouper",
+                    id: g.idmodule
+                }).append($("<div>", {
+                        class:"bg-complete text-center py-2 align-middle mx-auto",
+                        height: 92,
+                        width: 92
+                    }).append($("<i>", {
+                            class: `${g.icon} w-100 py-2`,
+                            style: "font-size:1.8rem"
+                        }),
+                        g.name
+                    )
+                )
+            );
+        });
+
+        let container = $('<div>',{
+            class: 'container'
+        }).append(row);
+
+        return {groupers : container};
+    }
+
+    createList(){
+        /*data.forEach(module => {
             if (module.childs){
                 var items = $('<li>').append(
                     $('<a>', {
@@ -101,6 +185,29 @@ class Modules {
             nodes.push(items);
         });
 
-        return nodes;
+        return nodes;*/
+    }
+
+    showList(idmodule){
+        let module = Modules.getModuleById(this.modules, idmodule);
+        console.log(module);
+    }
+    
+    static getModuleById(modules, idmodule){
+        let totalModules = Modules.getTotalModules(modules);
+        return totalModules.find(m => m.idmodule == idmodule);
+    }
+
+    static getTotalModules(modules){
+        let total = [];
+        modules.forEach(m => {
+            total.push(m);
+
+            if(m.childs){
+                total = total.concat(Modules.getTotalModules(m.childs));
+            }
+        });
+
+        return total;
     }
 }

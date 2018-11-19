@@ -372,7 +372,6 @@ Kaiten = /**@lends jQuery.ui.kaiten.prototype*/{
             for (i = allTools.length - 1; i >= 0; i--) {
                 t = allTools[i];
                 if ($.isFunction(t.callback) && $target.hasClass(t.cssClass)) {
-                    console.log($target[0], e, $panel, self.element);
                     t.callback.call($target[0], e, $panel, self.element);
                     return;
                 }
@@ -2547,7 +2546,7 @@ Kaiten = /**@lends jQuery.ui.kaiten.prototype*/{
         }
         $p = this.closest(Kaiten.selectors.panelClass);
         if (!$p.length) {
-            console.log(this);
+            //console.log(this);
             $.error('Panel Not Found!');
         }
         return $p;
@@ -4211,7 +4210,7 @@ Kaiten = /**@lends jQuery.ui.kaiten.prototype*/{
 		 * @private
 		 */
         _doItemLayout: function ($item, newWidth) {
-            if (newWidth) {console.log(newWidth);
+            if (newWidth) {
                 if (newWidth < this.options.minItemWidth) {
                     newWidth = this.options.minItemWidth;
                 }

@@ -11,6 +11,16 @@ $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 $ruta.="../";
 $max_salida--;
 }
+include_once ($ruta_db_superior . "assets/librerias.php");
+echo jquery();
+echo bootstrap();
+
+?>
+<link href="../../assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="../../assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen" />
+<link class="main-stylesheet" href="../../assets/theme/pages/css/pages.css" rel="stylesheet" type="text/css" />
+
+<?php
 $texto='<script type="text/javascript">      
     $("#pais_ejecutor_'.$_REQUEST["campo"].'").change(function(){
       actualiza_ciudad_'.$_REQUEST["campo"].'($("#pais_ejecutor_'.$_REQUEST["campo"].'").find('."':selected'".').val(),0);
@@ -29,9 +39,13 @@ $texto='<script type="text/javascript">
         }
       });
     }
-  </script>';
+  </script>
+  <script src="../../assets/theme/assets/plugins/modernizr.custom.js" type="text/javascript"></script>
+<script src="../../assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+<script type="text/javascript" src="../../assets/theme/assets/plugins/select2/js/select2.full.min.js"></script>
+<script src="../../assets/theme/pages/js/pages.js"></script>';
 $paises=busca_filtro_tabla("","pais","","",$conn);
-$texto.='<select name="pais_ejecutor_'.$_REQUEST["campo"].'" id="pais_ejecutor_'.$_REQUEST["campo"].'">';
+$texto.='<select class="full-width" data-init-plugin="select2" name="pais_ejecutor_'.$_REQUEST["campo"].'" id="pais_ejecutor_'.$_REQUEST["campo"].'">';
 for($i=0;$i<$paises["numcampos"];$i++){
   $texto.='<option value="'.$paises[$i]["idpais"].'"';
   if($paises[$i]["idpais"]==@$_REQUEST["pais"])
@@ -46,7 +60,7 @@ else{
   $pais=$paises[0]["idpais"];
 }
 $departamentos=busca_filtro_tabla("","departamento","pais_idpais=".$pais,"lower(nombre)",$conn);
-$texto.='<select name="departamento_ejecutor_'.$_REQUEST["campo"].'" id="departamento_ejecutor_'.$_REQUEST["campo"].'">';
+$texto.='<select class="full-width" data-init-plugin="select2" name="departamento_ejecutor_'.$_REQUEST["campo"].'" id="departamento_ejecutor_'.$_REQUEST["campo"].'">';
 if($departamentos["numcampos"]){
   
   for($i=0;$i<$departamentos["numcampos"];$i++){
@@ -55,7 +69,7 @@ if($departamentos["numcampos"]){
      $texto.=" SELECTED ";
     $texto.=">".$departamentos[$i]["nombre"].'</option>';  
   }
-  $texto.='</select>';
+  $texto.='</select>&nbsp;&nbsp;&nbsp;';
   if(@$_REQUEST["departamento"]){
     $departamento=$_REQUEST["departamento"];
   }
@@ -64,12 +78,12 @@ if($departamentos["numcampos"]){
   }  
   $municipios=busca_filtro_tabla("","municipio","departamento_iddepartamento=".$departamento,"lower(nombre)",$conn);
   if($municipios["numcampos"]){
-    $texto.='<select name="'.$_REQUEST["campo"].'" id="'.$_REQUEST["campo"].'">';
+    $texto.='<select class="full-width" data-init-plugin="select2" name="'.$_REQUEST["campo"].'" id="'.$_REQUEST["campo"].'">';
     for($i=0;$i<$municipios["numcampos"];$i++){
       $texto.='<option value="'.$municipios[$i]["idmunicipio"].'"';
       $texto.=">".$municipios[$i]["nombre"].'</option>';  
     }   
-    $texto.='</select>';
+    $texto.='</select>&nbsp;&nbsp;&nbsp;';
   }
 }
 else{

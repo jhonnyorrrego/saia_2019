@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid px-1">
     <div class="row w-100 mx-0">
         <div class="col-auto mr-auto text-left px-0">
             <span><small>HOY Septiembre 20 de 2018</small></span>

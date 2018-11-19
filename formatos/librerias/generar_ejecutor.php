@@ -1,15 +1,31 @@
 <?php
-include_once ("../../db.php");
-
+$max_salida = 6;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta;
+	}
+	$ruta .= "../";
+	$max_salida--;
+}
+include_once ($ruta_db_superior ."db.php");
+include_once ($ruta_db_superior . "assets/librerias.php");
+echo jquery();
+echo bootstrap();
+echo jqueryUi();
+echo icons();
+?>
+<link href="../../assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="../../assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen" />
+<link class="main-stylesheet" href="../../assets/theme/pages/css/pages.css" rel="stylesheet" type="text/css" />
+<?php
 $campos = explode(",", $_REQUEST["campos"]);
 $etiquetas = array("titulo" => "T&iacute;tulo","cargo" => "Cargo", "direccion" => "Direcci&oacute;n", "telefono" => "Tel&eacute;fono", "email" => "Email", "ciudad" => "Ciudad", "empresa" => "Contacto", "identificacion" => "Identificaci&oacute;n", "nombre" => "Nombres y apellidos", "nombre_pj" => "Entidad");
 $texto = '';
-$texto .= '<table>';
 foreach ($campos as $nombre) {
 	if ($nombre <> '')
 		$texto .= crear_campo($nombre);
 }
-$texto .= '</table>';
 echo $texto;
 
 function crear_campo($nombre) {
@@ -19,17 +35,21 @@ function crear_campo($nombre) {
 	else
 		$datos_ejecutor = busca_filtro_tabla($nombre, "datos_ejecutor,ejecutor", "ejecutor_idejecutor=idejecutor and ejecutor_idejecutor=" . $_REQUEST["idejecutor"], "fecha desc", $conn);
 
-	$texto = '<tr><td width="150">
+	$texto = '
       <label id="label_' . $nombre . '">' . $etiquetas[$nombre] . ':</label>
-    </td>';
-	if ($nombre == "titulo") {$texto .= '<td><div id="div_titulo_ejecutor">
+    ';
+	if ($nombre == "titulo") {$texto .= '<div id="div_titulo_ejecutor">
 <script type="text/javascript">
     $("#otro_titulo_ejecutor").click(function() {
 		$("#div_titulo_ejecutor").empty();
-		$("#div_titulo_ejecutor").append(' . "'" . '<input type="text" name="titulo_ejecutor" id="titulo_ejecutor" value="">' . "'" . ');
-	});
+		$("#div_titulo_ejecutor").append(' . "'" . '<input type="text"  class="form-control" name="titulo_ejecutor" id="titulo_ejecutor" value="">' . "'" . ');
+	});	
 	</script>
-        <select name="titulo_ejecutor" id="titulo_ejecutor" width="100px">';
+	<script src="../../assets/theme/assets/plugins/modernizr.custom.js" type="text/javascript"></script>
+<script src="../../assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+<script type="text/javascript" src="../../assets/theme/assets/plugins/select2/js/select2.full.min.js"></script>
+<script src="../../assets/theme/pages/js/pages.js"></script>
+        <select class="full-width" data-init-plugin="select2" name="titulo_ejecutor" id="titulo_ejecutor" width="100px">';
 		$titulos = array("Se&ntilde;or", "Se&ntilde;ora", 'Doctor', 'Doctora', 'Ingeniero', 'Ingeniera');
 		if (!in_array(@$datos_ejecutor[0][$nombre], $titulos))
 			$titulos[] = @$datos_ejecutor[0][$nombre];
@@ -41,16 +61,16 @@ function crear_campo($nombre) {
 		}
 		$texto .= '
         </select>&nbsp;&nbsp;&nbsp;<a href="#" id="otro_titulo_ejecutor" style="cursor:pointer">Otro</a>
-      </div></td></tr>';
-	} elseif ($nombre == "ciudad" || $nombre == "lugar_expedicion" || $nombre == "lugar_nacimiento") {$texto .= '<td><div id="div_' . $nombre . '_ejecutor">' . generar_ciudad(@$datos_ejecutor[0][$nombre], $nombre) . '</div></td></tr>';
-	} elseif ($nombre == "estudios") {$texto .= '<td><textarea style="font-size:x-small;font-family:verdana" id="' . $nombre . '_ejecutor" cols=35 rows=2>' . @$datos_ejecutor[0][$nombre] . '</textarea></td></tr>';
+      </div>';
+	} elseif ($nombre == "ciudad" || $nombre == "lugar_expedicion" || $nombre == "lugar_nacimiento") {$texto .= '<div id="div_' . $nombre . '_ejecutor">' . generar_ciudad(@$datos_ejecutor[0][$nombre], $nombre) . '</div>';
+	} elseif ($nombre == "estudios") {$texto .= '<textarea style="font-size:x-small;font-family:verdana" id="' . $nombre . '_ejecutor" cols=35 rows=2>' . @$datos_ejecutor[0][$nombre] . '</textarea>';
 	} elseif ($nombre == "fecha_nacimiento") {
 		include_once ("../../calendario/calendario.php");
 		if (@$datos_ejecutor[0][$nombre] <> "0000-00-00" && @$datos_ejecutor[0][$nombre] <> "")
 			$valor = $datos_ejecutor[0][$nombre];
 		else
 			$valor = "0000-00-00";
-		$texto .= '<td><input type="text" readonly="true" name="' . $nombre . '" id="' . $nombre . '" value="' . $valor . '">&nbsp;&nbsp;&nbsp;<a href="javascript:showcalendar(\'' . $nombre . '\',\'form1\',\'Y-m-d\',\'../../calendario/selec_fecha.php?nombre_campo=' . $nombre . '&nombre_form=form1&formato=Y-m-d&anio=' . date('Y') . '&mes=' . date('m') . '&css=default.css\',220,225)" ><img src="../../calendario/activecalendar/data/img/calendar.gif" border="0" alt="Elija Fecha" /></a></td></tr>';
+		$texto .= '<input type="text" readonly="true" name="' . $nombre . '" id="' . $nombre . '" value="' . $valor . '">&nbsp;&nbsp;&nbsp;<a href="javascript:showcalendar(\'' . $nombre . '\',\'form1\',\'Y-m-d\',\'../../calendario/selec_fecha.php?nombre_campo=' . $nombre . '&nombre_form=form1&formato=Y-m-d&anio=' . date('Y') . '&mes=' . date('m') . '&css=default.css\',220,225)" ><img src="../../calendario/activecalendar/data/img/calendar.gif" border="0" alt="Elija Fecha" /></a>';
 	} elseif ($nombre == "tipo_documento" || $nombre == "estado_civil" || $nombre == "sexo") {
 		if ($nombre == "tipo_documento") {
 			if (!$datos_ejecutor["numcampos"])
@@ -61,18 +81,17 @@ function crear_campo($nombre) {
 		elseif ($nombre == "sexo")
 			$opciones = array("Seleccionar...", "Femenino", "Masculino");
 
-		$texto .= '<td><select name="' . $nombre . '" id="' . $nombre . '_ejecutor">';
+		$texto .= '<select class="full-width" data-init-plugin="select2"  name="' . $nombre . '" id="' . $nombre . '_ejecutor">';
 		for ($i = 0; $i < count($opciones); $i++) {$texto .= '<option value="' . $i . '" ';
 			if ($i == @$datos_ejecutor[0][$nombre])
 				$texto .= ' selected ';
 			$texto .= ' >' . $opciones[$i] . '</option>';
 		}
-		$texto .= '</td></tr>';
+		$texto .= '';
 	} else
-		$texto .= '<td>
-      <input type="text" id="' . $nombre . '_ejecutor" name="cargo_ejecutor" value="' . @$datos_ejecutor[0][$nombre] . '"><br />
-    </td>
-  </tr>';
+		$texto .= '
+      <input type="text" class="form-control" id="' . $nombre . '_ejecutor" name="cargo_ejecutor" value="' . @$datos_ejecutor[0][$nombre] . '"><br />
+    ';
 	return ($texto);
 }
 
@@ -112,7 +131,7 @@ function generar_ciudad($ciudad, $campo) {
       {alert("Faltan datos por llenar");}
     }
     $("#nuevo_municipio_' . $campo . '").click(function(){
-        codigo="<table><tr><td>Pais</td><td><input type=\"text\" id=\"pais_' . $campo . '\"></td></tr><tr><td>Estado/Provincia</td><td><input type=\"text\" id=\"depto_' . $campo . '\"></td></tr><tr><td>Ciudad</td><td><input type=\"text\" id=\"municipio_' . $campo . '\"></td></tr><tr><td colspan=2><a href=\"JavaScript:boton_guardar_' . $campo . '();\" id=\"guardar_municipio_' . $campo . '\" >Guardar</a></td></tr></table>";
+        codigo="Pais<input type=\"text\" id=\"pais_' . $campo . '\" class=\"form-control\">Estado/Provincia<input type=\"text\" id=\"depto_' . $campo . '\" class=\"form-control\">Ciudad<input type=\"text\" id=\"municipio_' . $campo . '\" class=\"form-control\"><a href=\"JavaScript:boton_guardar_' . $campo . '();\" id=\"guardar_municipio_' . $campo . '\" >Guardar</a>";
         $("#div_' . $campo . '_ejecutor").html(codigo);
     });
     $("#departamento_ejecutor_' . $campo . '").change(function(){
@@ -130,21 +149,21 @@ function generar_ciudad($ciudad, $campo) {
       });
     }
   </script>';
-		$texto .= '<select name="pais_ejecutor_' . $campo . '" id="pais_ejecutor_' . $campo . '">';
+		$texto .= '<select  name="pais_ejecutor_' . $campo . '" id="pais_ejecutor_' . $campo . '" class="full-width" data-init-plugin="select2">';
 		for ($i = 0; $i < $paises["numcampos"]; $i++) {
 			$texto .= '<option value="' . $paises[$i]["idpais"] . '"';
 			if ($paises[$i]["idpais"] == $municipio[0]["idpais"])
 				$texto .= " SELECTED ";
 			$texto .= ">" . $paises[$i]["nombre"] . '</option>';
 		}
-		$texto .= '</select>&nbsp;&nbsp;&nbsp;<select name="departamento_ejecutor_' . $campo . '" id="departamento_ejecutor_' . $campo . '">';
+		$texto .= '</select>&nbsp;&nbsp;&nbsp;<select  name="departamento_ejecutor_' . $campo . '" id="departamento_ejecutor_' . $campo . '" class="full-width" data-init-plugin="select2">';
 		for ($i = 0; $i < $departamentos["numcampos"]; $i++) {
 			$texto .= '<option value="' . $departamentos[$i]["iddepartamento"] . '"';
 			if ($departamentos[$i]["iddepartamento"] == $municipio[0]["iddepartamento"])
 				$texto .= " SELECTED ";
 			$texto .= ">" . $departamentos[$i]["nombre"] . '</option>';
 		}
-		$texto .= '</select>&nbsp;&nbsp;&nbsp;<select name="' . $campo . '" id="' . $campo . '">';
+		$texto .= '</select>&nbsp;&nbsp;&nbsp;<select name="' . $campo . '" id="' . $campo . '" class="full-width" data-init-plugin="select2">';
 		for ($i = 0; $i < $municipios["numcampos"]; $i++) {
 			$texto .= '<option value="' . $municipios[$i]["idmunicipio"] . '"';
 			if ($municipios[$i]["idmunicipio"] == $municipio[0]["idmunicipio"])
@@ -157,3 +176,4 @@ function generar_ciudad($ciudad, $campo) {
 	return ($texto);
 }
 ?>
+
