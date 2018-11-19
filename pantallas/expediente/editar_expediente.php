@@ -144,7 +144,7 @@ if($dato_padre["numcampos"]){
 	  </div>
 	</div>
 	
-	<div class="control-group element">
+	<!--div class="control-group element">
 	  <label class="control-label" for="serie_idserie">Serie asociada *
 	  </label>
 	  <div class="controls">       
@@ -168,7 +168,49 @@ if($dato_padre["numcampos"]){
 	     <input type="hidden" name="dependencia_iddependencia" id="dependencia_iddependencia" value="<?php echo($datos[0]["dependencia_iddependencia"]); ?>">
 	  </div>
 	  
+	</div-->
+	<div class="control-group element">
+	<label class="control-label" for="dependencia">Seleccione dependencia *</label>
+	<div class="controls">
+		<?php echo("<b><span id='etiqueta_serie'>Serie.</span></b> <span id='serie_asociada'>".mostrar_seleccionados_exp($datos[0]["serie_idserie"],"nombre","serie")." - ".mostrar_seleccionados_exp($datos[0]["serie_idserie"],"codigo","serie")."</span> <b>| Fondo.</b> ".$datos[0]["fondo"]); ?>
+	  	<br />
+	  	<span class="phpmaker">
+		<?php
+		$origen = array("url" => "arboles/arbol_dependencia.php", "ruta_db_superior" => $ruta_db_superior,
+		    "params" => array(		    	
+		        "checkbox" => 'radio',		        
+		        "cargar_partes"=>1
+		       // "seleccionados" => $datos[0]["dependencia_iddependencia"]
+		    ));
+		$opciones_arbol = array("keyboard" => true, "selectMode" => 1, "busqueda_item" => 1, "expandir" => 3, "onNodeSelect" =>'seleccionar_dependencia',"lazy"=> true);
+		$extensiones = array("filter" => array());
+		$arbol_dependencia = new ArbolFt("iddependencia", $origen, $opciones_arbol, $extensiones);
+		echo $arbol_dependencia->generar_html();
+		?>
 	</div>
+</div>
+
+<div id="mostrar_serie" class="control-group element">
+	<label class="control-label" for="serie_idserie">Seleccione serie *</label>
+	<div class="controls">
+			<?php
+			/*
+		$origen = array("url" => "arboles/arbol_expediente_serie.php", "ruta_db_superior" => $ruta_db_superior,
+		    "params" => array(		    	
+		        "checkbox" => 'radio',		        
+		        "cargar_partes"=>1,
+		        "iddependencia"=>$datos[0]["dependencia_iddependencia"],
+		        "seleccionados" => $datos[0]["dependencia_iddependencia"].'.'.$datos[0]["serie_idserie"].'.0'
+		    ));
+		$opciones_arbol = array("keyboard" => true, "selectMode" => 1, "onNodeSelect" =>'cargar_info_Node',"lazy"=> true);
+		$extensiones = array("filter" => array());
+		$arbol_serie = new ArbolFt("serie_idserie", $origen, $opciones_arbol, $extensiones);
+		echo $arbol_serie->generar_html();*/
+		?>
+		<div id="treebox_idserie" class="arbol_saia"></div>
+        <input type="hidden" class="required" name="serie_idserie" id="serie_idserie">
+	</div>
+</div>
 </div>
 <div data-toggle="collapse" data-target="#datos_adicionales">
   <i class="icon-plus-sign"></i><b>Informaci&oacute;n adicional</b>
@@ -386,6 +428,31 @@ if($dato_padre["numcampos"]){
 	echo librerias_arboles_ft("2.24", 'filtro');
   ?>
   <script>
+  function seleccionar_dependencia(event,data){		  
+	  if(data.node.selected){
+	  	var iddependencia = data.node.key;
+	  	 $("#iddependencia").val(iddependencia);	  	 
+         $('#mostrar_serie').show();
+	  	var tree = $("#treebox_idserie").fancytree('getTree');
+
+		var newSourceOption = {
+		    url: "<?php echo $ruta_db_superior;?>arboles/arbol_expediente_serie.php",
+		    type: 'POST',
+		    data: {
+				otras_categorias: 1,
+				serie_sin_asignar: 1,
+				carga_partes:1,
+				iddependencia:iddependencia,
+				checkbox:'radio'				
+		    },
+		    dataType: 'json'
+		};
+
+		tree.reload(newSourceOption).done(function() {
+			console.log("cargado");
+		});
+	  }
+  }
   function cargar_info_Node(event,data){  		  
 	  if(data.node.selected){
 	  	$("#serie_idserie").val(data.node.data.serie_idserie);
@@ -411,7 +478,76 @@ if($dato_padre["numcampos"]){
   }
 
   $(document).ready(function(){
-  	$("#serie_idserie").val("<?php echo($key); ?>");
+  		$("#iddependencia").val("<?php echo($datos[0]["dependencia_iddependencia"]); ?>");
+  		$('#mostrar_serie').hide();
+  		var configuracion = {
+		   	icon: false,
+		   	lazy: true,
+	        strings: {
+	            loading: "Cargando...",
+	            loadError: "Error en la carga!",
+	            moreData: "Mas...",
+	            noData: "Sin datos."
+	        },
+	        debugLevel: 4,
+	        extensions: ["filter"],
+	        //autoScroll: true,
+	        quicksearch: true,
+	        //keyboard: true,
+	        selectMode:1,
+	        clickFolderMode:2,
+	        source:[{key:0,title:"Sin datos"}],
+	        
+	       /*source: {
+                url: "../../arboles/arbol_expediente_serie.php",
+                data: {
+					cargar_partes: 1,
+					checkbox:'radio',		        
+		            iddependencia:"<?php echo $datos[0]["dependencia_iddependencia"];?>",
+		        	//seleccionados:"<?php echo $datos[0]["dependencia_iddependencia"].'.'.$datos[0]["serie_idserie"].'.0'; ?>"
+                }
+            },*/
+	        
+	        filter: {
+	            autoApply: true,
+	            autoExpand: true,
+	            counter: true,
+	            fuzzy: false,
+	            hideExpandedCounter: true,
+	            hideExpanders: false,
+	            highlight: true,
+	            leavesOnly: false,
+	            nodata: true,
+	            mode: "hide"
+	        },
+	        lazyLoad: function(event, data){
+			      var node = data.node;
+			      data.result = $.ajax({
+			        url: "../../arboles/arbol_expediente_serie.php",
+			        data: {
+				        cargar_partes: 0,
+				        id: node.key,
+				        checkbox:'radio',
+				        serie_idserie:node.data.serie_idserie,
+				        iddependencia:node.data.iddependencia,
+				        
+				    },
+			        cache: true
+			      });
+			},
+	        select: function(event, data) { // Display list of selected nodes
+				var seleccionados = Array();
+				var items = data.tree.getSelectedNodes();
+				for(var i=0;i<items.length;i++){
+					seleccionados.push(items[i].key);
+				}
+				var s = seleccionados.join(",");
+				$("#serie_idserie").val(s);
+				cargar_info_Node(event,data);
+			}
+		};
+		$("#treebox_idserie").fancytree(configuracion);
+  		$("#serie_idserie").val("<?php echo($key); ?>");
 		/*url2="arboles/arbol_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0&checkbox=radio&seleccionados=<?php echo($datos[0]["serie_idserie"]); ?>";
 		$.ajax({
 			url : "<?php echo($ruta_db_superior);?>arboles/crear_arbol_ft.php",

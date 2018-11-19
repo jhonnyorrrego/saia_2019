@@ -61,10 +61,15 @@ class ArbolFt {
         // Poner traducciones de los mensajes
         $this->opciones_arbol["strings"] = $this->cadenas;
 
-        $this->opciones_arbol["source"] = array(
+        if(empty($this->opciones_arbol)){
+        	//$this->opciones_arbol["source"];
+        }
+        else{
+        	$this->opciones_arbol["source"] = array(
             "url" => $this->fuente_datos["ruta_db_superior"] . $this->fuente_datos["url"],
             "data" => $this->fuente_datos["params"]
         );
+		}
 
         if (isset($this->opciones_arbol["busqueda_item"]) && $this->opciones_arbol["busqueda_item"]) {
             $this->con_filtro = true;
