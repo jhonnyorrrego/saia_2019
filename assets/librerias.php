@@ -4,8 +4,7 @@
  * retorna script para cargar
  * jquery v3.2.1 minificado
  */
-function jquery()
-{
+function jquery() {
     global $ruta_db_superior;
 
     $route = $ruta_db_superior . 'assets/theme/assets/plugins/jquery/jquery-3.2.1.min.js';
@@ -14,10 +13,9 @@ function jquery()
 
 /**
  * retorna script para cargar
- * jquery ui  v1.11.1 minificado
+ * jquery ui v1.11.1 minificado
  */
-function jqueryUi()
-{
+function jqueryUi() {
     global $ruta_db_superior;
 
     $route = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-ui/jquery-ui.min.js';
@@ -28,8 +26,7 @@ function jqueryUi()
  * retorna los enlaces css y js
  * de bootstrap v4.1.0 minificados
  */
-function bootstrap()
-{
+function bootstrap() {
     global $ruta_db_superior;
 
     $routePopper = $ruta_db_superior . 'assets/theme/assets/plugins/popper/umd/popper.min.js';
@@ -43,17 +40,17 @@ function bootstrap()
 
     return $popper . $css . $js;
 }
+
 /**
  * retorna los enlaces css , js y locale
  * de bootstrap table v1.12.1 minificados
  */
-function bootstrapTable()
-{
+function bootstrapTable() {
     global $ruta_db_superior;
 
     $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/bootstrap-table.min.css';
     $css = '<link href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
-    
+
     $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/bootstrap-table.min.js';
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
@@ -67,8 +64,7 @@ function bootstrapTable()
  * retorna los enlaces css y js
  * de toastr v2.1.3 minificados
  */
-function toastr()
-{
+function toastr() {
     global $ruta_db_superior;
 
     $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/toastr/toastr.min.css';
@@ -84,9 +80,7 @@ function toastr()
  * retorna los enlaces css y js
  * usados en el tema actual
  */
-
-function theme()
-{
+function theme() {
     global $ruta_db_superior;
 
     $routeM = $ruta_db_superior . 'assets/theme/assets/plugins/modernizr.custom.js';
@@ -106,8 +100,7 @@ function theme()
  * por el tema para el uso
  * de iconos
  */
-function icons()
-{
+function icons() {
     global $ruta_db_superior;
 
     $routePages = $ruta_db_superior . 'assets/theme/pages/css/pages-icons.css';
@@ -126,8 +119,7 @@ function icons()
  * retorna los enlaces para mostrar
  * el loader automatico
  */
-function pace()
-{
+function pace() {
     global $ruta_db_superior;
 
     $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/pace/pace-theme-flash.css';
@@ -143,8 +135,7 @@ function pace()
  * retorna el enlace de moment js
  * v2.22.2
  */
-function moment()
-{
+function moment() {
     global $ruta_db_superior;
 
     $route = $ruta_db_superior . 'assets/theme/assets/plugins/moment/moment.min.js';
@@ -156,17 +147,16 @@ function moment()
  * que permite determinar el breakpoint
  * actual según bootstrap
  */
-function breakpoint()
-{
+function breakpoint() {
     global $ruta_db_superior;
 
     $route = $ruta_db_superior . 'assets/theme/assets/js/cerok_libraries/breakpoint/if-b4-breakpoint.js';
     return '<script type="text/javascript" src="' . $route . '"></script>';
 }
 
-function kaiten(){
+function kaiten() {
     global $ruta_db_superior;
-    
+
     $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/kaiten/css/kaiten.css';
     $css = '<link class="main-stylesheet" href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
 
@@ -185,7 +175,7 @@ function kaiten(){
     return $css . $jq . $ui . $js . $jqresize;
 }
 
-function scrollBar(){
+function scrollBar() {
     global $ruta_db_superior;
 
     $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css';
@@ -197,11 +187,41 @@ function scrollBar(){
     return $css . $js;
 }
 
-function validate(){
+function validate() {
     global $ruta_db_superior;
 
     $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-validation/js/jquery.validate.min.js';
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
     return $css . $js;
+}
+
+/**
+ * Incluir libreria para arboles jquery.fancytree
+ * @param string $version
+ * @param string $opciones
+ * @param string $tema
+ * @return string
+ */
+function arboles_ft($version = "2.30", $opciones = '', $tema = "lion") {
+    global $ruta_db_superior;
+    $ruta = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-fancytree/';
+
+    $modulos = "";
+    switch ($version) {
+        case "2.24" :
+            $version = "2.24.0";
+            $modulos = "src";
+            break;
+        case "2.30" :
+            $version = "2.30.0";
+            $modulos = "modules";
+            break;
+    }
+    $texto =  '<link href="' . $ruta . "$version/skin-$tema/ui.fancytree.css" . '" rel="stylesheet">';
+    $texto .= '<script src="' . $ruta . "$version/jquery.fancytree.min.js" . '"></script>';
+    if($opciones == 'filtro') {
+        $texto .= '<script src="' . $ruta . $version . "/$modulos" . '/jquery.fancytree.filter.js"></script>';
+    }
+    return $texto;
 }
