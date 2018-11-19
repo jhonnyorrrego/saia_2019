@@ -36,7 +36,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             window.location = Session.getBaseUrl() + 'views/dashboard/dashboard.php';
         }
     </script>
-    <?= pace() ?>
+    <?//= pace() ?>
     <?= bootstrap() ?>
     <?= theme() ?>
     <?= icons() ?>

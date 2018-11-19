@@ -26,7 +26,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta content="" name="description" />
     <meta content="" name="author" />  
-    <?= pace() ?>
     <?= jquery() ?>
     <?= bootstrap() ?>
     <?= breakpoint() ?>
@@ -36,7 +35,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 	<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen" />
 	<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/switchery/css/switchery.min.css" rel="stylesheet" type="text/css" media="screen" />
 	<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/css/imgareaselect-default.css" rel="stylesheet" type="text/css" media="screen" />
-    <link class="main-stylesheet" href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.css" rel="stylesheet" type="text/css" />
+    <link class="main-stylesheet" href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.min.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body class="fixed-header ">
@@ -60,13 +59,11 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         <!-- END SIDEBAR MENU HEADER-->
         <!-- START SIDEBAR MENU -->
         <div class="sidebar-menu">
-            <!-- BEGIN SIDEBAR MENU ITEMS-->
             <ul class="menu-items mt-2" id="module_list"></ul>
             <div class="clearfix"></div>
         </div>
         <!-- END SIDEBAR MENU -->
     </nav>
-    <!-- END SIDEBAR -->
     <!-- END SIDEBPANEL-->
     <!-- START PAGE-CONTAINER -->
     <div class="page-container ">
@@ -74,32 +71,26 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         <div class="header" id="header">
             <!-- START MOBILE SIDEBAR TOGGLE -->
             <a href="#" class="btn-link toggle-sidebar d-lg-none" data-toggle="sidebar" id="toggle_sidebar">
-                <i class="pg pg-menu" style="font-size: 1.5rem"></i>
+                <i class="fa fa-navicon" style="font-size: 1.5rem"></i>
             </a>
             <!-- END MOBILE SIDEBAR TOGGLE -->
             <div class="">
                 <div class="brand inline">
                     <img alt="logo" height="47px" id="client_image">
                 </div>
-                <!-- START NOTIFICATION LIST -->
-                <ul class="d-lg-inline-block d-none notification-list no-margin d-lg-inline-block b-grey b-l b-r no-style p-l-30 p-r-20">
+                <!--<ul class="d-lg-inline-block d-none notification-list no-margin d-lg-inline-block b-grey b-l b-r no-style p-l-30 p-r-20">
                     <li class="p-r-10 inline">
                         <div class="dropdown">
-                            <a href="javascript:;" id="notification-center" class="header-icon pg pg-world" data-toggle="dropdown">
+                            <a href="javascript:;" id="notification-center" class="header-icon fa fa-globe" data-toggle="dropdown">
                                 <span class="bubble"></span>
                             </a>
-                            <!-- START Notification Dropdown -->
                             <div class="dropdown-menu notification-toggle" role="menu" aria-labelledby="notification-center">
-                                <!-- START Notification -->
                                 <div class="notification-panel">
-                                    <!-- START Notification Body-->
                                     <div class="notification-body scrollable">
-                                        <!-- START Notification Item-->
                                         <div class="notification-item unread clearfix">
-                                            <!-- START Notification Item-->
                                             <div class="heading open">
                                                 <a href="#" class="text-complete pull-left">
-                                                    <i class="pg-map fs-16 m-r-10"></i>
+                                                    <i class="fa fa-map-marker fs-16 m-r-10"></i>
                                                     <span class="bold">Carrot Design</span>
                                                     <span class="fs-12 m-l-10">David Nester</span>
                                                 </a>
@@ -123,15 +114,10 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- END Notification Item-->
-                                            <!-- START Notification Item Right Side-->
                                             <div class="option" data-toggle="tooltip" data-placement="left" title="mark as read">
                                                 <a href="#" class="mark"></a>
                                             </div>
-                                            <!-- END Notification Item Right Side-->
                                         </div>
-                                        <!-- START Notification Body-->
-                                        <!-- START Notification Item-->
                                         <div class="notification-item  clearfix">
                                             <div class="heading">
                                                 <a href="#" class="text-danger pull-left">
@@ -141,14 +127,10 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                                 </a>
                                                 <span class="pull-right time">2 mins ago</span>
                                             </div>
-                                            <!-- START Notification Item Right Side-->
                                             <div class="option">
                                                 <a href="#" class="mark"></a>
                                             </div>
-                                            <!-- END Notification Item Right Side-->
                                         </div>
-                                        <!-- END Notification Item-->
-                                        <!-- START Notification Item-->
                                         <div class="notification-item  clearfix">
                                             <div class="heading">
                                                 <a href="#" class="text-warning-dark pull-left">
@@ -158,14 +140,10 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                                 </a>
                                                 <span class="pull-right time">yesterday</span>
                                             </div>
-                                            <!-- START Notification Item Right Side-->
                                             <div class="option">
                                                 <a href="#" class="mark"></a>
                                             </div>
-                                            <!-- END Notification Item Right Side-->
                                         </div>
-                                        <!-- END Notification Item-->
-                                        <!-- START Notification Item-->
                                         <div class="notification-item unread clearfix">
                                             <div class="heading">
                                                 <div class="thumbnail-wrapper d24 circular b-white m-r-5 b-a b-white m-t-10 m-r-10">
@@ -177,27 +155,19 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                                 </a>
                                                 <span class="pull-right time">11:00pm</span>
                                             </div>
-                                            <!-- START Notification Item Right Side-->
                                             <div class="option" data-toggle="tooltip" data-placement="left" title="mark as read">
                                                 <a href="#" class="mark"></a>
                                             </div>
-                                            <!-- END Notification Item Right Side-->
                                         </div>
-                                        <!-- END Notification Item-->
                                     </div>
-                                    <!-- END Notification Body-->
-                                    <!-- START Notification Footer-->
                                     <div class="notification-footer text-center">
                                         <a href="#" class="">Read all notifications</a>
                                         <a data-toggle="refresh" class="portlet-refresh text-black pull-right" href="#">
                                             <i class="pg-refresh_new"></i>
                                         </a>
                                     </div>
-                                    <!-- START Notification Footer-->
                                 </div>
-                                <!-- END Notification -->
                             </div>
-                            <!-- END Notification Dropdown -->
                         </div>
                     </li>
                     <li class="p-r-10 inline">
@@ -206,13 +176,11 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                     <li class="p-r-10 inline">
                         <a href="#" class="header-icon pg pg-thumbs"></a>
                     </li>
-                </ul>
-                <!-- END NOTIFICATIONS LIST -->
+                </ul>-->
                 <a href="#" class="search-link d-lg-inline-block d-none" data-toggle="search"><i class="pg-search"></i>Type
                     anywhere to <span class="bold">search</span></a>
             </div>
             <div class="d-flex align-items-center">
-                <!-- START User Info-->
                 <div class="pull-left p-r-10 fs-14 font-heading d-lg-block d-none">
                     <span class="semi-bold" id="user_name"></span>
                 </div>
@@ -224,7 +192,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         </span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right profile-dropdown" role="menu">
-                        <a href="#" class="dropdown-item" data-toggle="modal" data-target="#edit_profile"><i class="pg-settings_small"></i>
+                        <a href="#" class="dropdown-item" data-toggle="modal" data-target="#edit_profile">
+                            <i class="fa fa-edit"></i>
                             Editar mi perfil</a>
                         <a href="#" class="dropdown-item" data-toggle="modal" data-target="#edit_photo_modal">
                             <i class="fa fa-photo"></i> Cambiar Foto
@@ -232,7 +201,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         <a href="#" class="dropdown-item"><i class="fa fa-lock"></i> Cambiar mi Contraseña</a>
                         <a href="#" class="clearfix bg-master-lighter dropdown-item" id="btn_logout">
                             <span class="pull-left">Cerrar Sesión</span>
-                            <span class="pull-right"><i class="pg-power"></i></span>
+                            <span class="pull-right"><i class="fa fa-power-off"></i></span>
                         </a>
                     </div>
                 </div>
@@ -248,49 +217,13 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         <div class="page-content-wrapper mx-0 px-0">
             <!-- START PAGE CONTENT -->
             <div class="content">
-                <!-- START JUMBOTRON ->
-                <div class="jumbotron" data-pages="parallax">
-                    <div class="container-fluid container-fixed-lg sm-p-l-0 sm-p-r-0">
-                        <div class="inner">
-                            <!-- START BREADCRUMB ->
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="#">Pages</a></li>
-                                <li class="breadcrumb-item active">Blank template</li>
-                            </ol>
-                            <!-- END BREADCRUMB ->
-                        </div>
-                    </div>
-                </div>
-                <!-- END JUMBOTRON -->
-                <!-- START CONTAINER FLUID -->
+               <!-- START CONTAINER FLUID -->
                 <div class="container-fluid container-fixed-lg my-0 py-0 mx-0 px-0" id="workspace">
-                    <iframe class="container-fluid container-fixed-lg my-0 py-0 mx-0 px-0" frameBorder="0" id="iframe_workspace"
-                        width="100%" scrolling="no"></iframe>
-                    <!-- BEGIN PlACE PAGE CONTENT HERE -->
-                    <!-- END PLACE PAGE CONTENT HERE -->
+                    <iframe class="container-fluid container-fixed-lg my-0 py-0 mx-0 px-0" frameBorder="0" id="iframe_workspace" width="100%" scrolling="no"></iframe>
                 </div>
                 <!-- END CONTAINER FLUID -->
             </div>
             <!-- END PAGE CONTENT -->
-            <!-- START COPYRIGHT -->
-            <!-- START CONTAINER FLUID -->
-            <!-- START CONTAINER FLUID 
-            <div class=" container-fluid  container-fixed-lg footer">
-                <div class="copyright sm-text-center">
-                    <p class="small no-margin pull-left sm-pull-reset">
-                        <span class="hint-text">Copyright &copy; 2017 </span>
-                        <span class="font-montserrat">REVOX</span>.
-                        <span class="hint-text">All rights reserved. </span>
-                        <span class="sm-block"><a href="#" class="m-l-10 m-r-10">Terms of use</a> <span class="muted">|</span>
-                            <a href="#" class="m-l-10">Privacy Policy</a></span>
-                    </p>
-                    <p class="small no-margin pull-right sm-pull-reset">
-                        Hand-crafted <span class="hint-text">&amp; made with Love</span>
-                    </p>
-                    <div class="clearfix"></div>
-                </div>
-            </div>
-            <!-- END COPYRIGHT -->
         </div>
         <!-- END PAGE CONTENT WRAPPER -->
     </div>
@@ -299,20 +232,14 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <div id="quickview" class="quickview-wrapper" data-pages="quickview">
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
-            <li class="">
+            <li class="">            
                 <a href="#quickview-notes" data-target="#quickview-notes" data-toggle="tab" role="tab" id="note_tab">Notas</a>
-            </li>
-            <li>
-                <a href="#quickview-alerts" data-target="#quickview-alerts" data-toggle="tab" role="tab">Alerts</a>
-            </li>
-            <li class="">
-                <a class="active" href="#quickview-chat" data-toggle="tab" role="tab">Chat</a>
             </li>
         </ul>
         <a class="btn-link quickview-toggle" data-toggle-element="#quickview" data-toggle="quickview">
             <i class="text-white fa fa-times" id="close_quickview"></i>
         </a>
-        <!-- Tab panes -->
+        <!-- BEGIN TAB PANES -->
         <div class="tab-content">
             <!-- BEGIN Notes !-->
             <div class="tab-pane no-padding" id="quickview-notes">
@@ -366,934 +293,20 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 </div>
             </div>
             <!-- END Notes !-->
-            <!-- BEGIN Alerts !-->
-            <div class="tab-pane no-padding" id="quickview-alerts">
-                <div class="view-port clearfix" id="alerts">
-                    <!-- BEGIN Alerts View !-->
-                    <div class="view bg-white">
-                        <!-- BEGIN View Header !-->
-                        <div class="navbar navbar-default navbar-sm">
-                            <div class="navbar-inner">
-                                <!-- BEGIN Header Controler !-->
-                                <a href="javascript:;" class="inline action p-l-10 link text-master" data-navigate="view"
-                                    data-view-port="#chat" data-view-animation="push-parrallax">
-                                    <i class="pg-more"></i>
-                                </a>
-                                <!-- END Header Controler !-->
-                                <div class="view-heading">
-                                    Notications
-                                </div>
-                                <!-- BEGIN Header Controler !-->
-                                <a href="#" class="inline action p-r-10 pull-right link text-master">
-                                    <i class="pg-search"></i>
-                                </a>
-                                <!-- END Header Controler !-->
-                            </div>
-                        </div>
-                        <!-- END View Header !-->
-                        <!-- BEGIN Alert List !-->
-                        <div data-init-list-view="ioslist" class="list-view boreded no-top-border">
-                            <!-- BEGIN List Group !-->
-                            <div class="list-view-group-container">
-                                <!-- BEGIN List Group Header!-->
-                                <div class="list-view-group-header text-uppercase">
-                                    Calendar
-                                </div>
-                                <!-- END List Group Header!-->
-                                <ul>
-                                    <!-- BEGIN List Group Item!-->
-                                    <li class="alert-list">
-                                        <!-- BEGIN Alert Item Set Animation using data-view-animation !-->
-                                        <a href="javascript:;" class="align-items-center" data-navigate="view"
-                                            data-view-port="#chat" data-view-animation="push-parrallax">
-                                            <p class="">
-                                                <span class="text-warning fs-10"><i class="fa fa-circle"></i></span>
-                                            </p>
-                                            <p class="p-l-10 overflow-ellipsis fs-12">
-                                                <span class="text-master">David Nester Birthday</span>
-                                            </p>
-                                            <p class="p-r-10 ml-auto fs-12 text-right">
-                                                <span class="text-warning">Today <br></span>
-                                                <span class="text-master">All Day</span>
-                                            </p>
-                                        </a>
-                                        <!-- END Alert Item!-->
-                                        <!-- BEGIN List Group Item!-->
-                                    </li>
-                                    <!-- END List Group Item!-->
-                                    <!-- BEGIN List Group Item!-->
-                                    <li class="alert-list">
-                                        <!-- BEGIN Alert Item Set Animation using data-view-animation !-->
-                                        <a href="#" class="align-items-center" data-navigate="view" data-view-port="#chat"
-                                            data-view-animation="push-parrallax">
-                                            <p class="">
-                                                <span class="text-warning fs-10"><i class="fa fa-circle"></i></span>
-                                            </p>
-                                            <p class="p-l-10 overflow-ellipsis fs-12">
-                                                <span class="text-master">Meeting at 2:30</span>
-                                            </p>
-                                            <p class="p-r-10 ml-auto fs-12 text-right">
-                                                <span class="text-warning">Today</span>
-                                            </p>
-                                        </a>
-                                        <!-- END Alert Item!-->
-                                    </li>
-                                    <!-- END List Group Item!-->
-                                </ul>
-                            </div>
-                            <!-- END List Group !-->
-                            <div class="list-view-group-container">
-                                <!-- BEGIN List Group Header!-->
-                                <div class="list-view-group-header text-uppercase">
-                                    Social
-                                </div>
-                                <!-- END List Group Header!-->
-                                <ul>
-                                    <!-- BEGIN List Group Item!-->
-                                    <li class="alert-list">
-                                        <!-- BEGIN Alert Item Set Animation using data-view-animation !-->
-                                        <a href="javascript:;" class="p-t-10 p-b-10 align-items-center" data-navigate="view"
-                                            data-view-port="#chat" data-view-animation="push-parrallax">
-                                            <p class="">
-                                                <span class="text-complete fs-10"><i class="fa fa-circle"></i></span>
-                                            </p>
-                                            <p class="col overflow-ellipsis fs-12 p-l-10">
-                                                <span class="text-master link">Jame Smith commented on your status<br></span>
-                                                <span class="text-master">“Perfection Simplified - Company Revox"</span>
-                                            </p>
-                                        </a>
-                                        <!-- END Alert Item!-->
-                                    </li>
-                                    <!-- END List Group Item!-->
-                                    <!-- BEGIN List Group Item!-->
-                                    <li class="alert-list">
-                                        <!-- BEGIN Alert Item Set Animation using data-view-animation !-->
-                                        <a href="javascript:;" class="p-t-10 p-b-10 align-items-center" data-navigate="view"
-                                            data-view-port="#chat" data-view-animation="push-parrallax">
-                                            <p class="">
-                                                <span class="text-complete fs-10"><i class="fa fa-circle"></i></span>
-                                            </p>
-                                            <p class="col overflow-ellipsis fs-12 p-l-10">
-                                                <span class="text-master link">Jame Smith commented on your status<br></span>
-                                                <span class="text-master">“Perfection Simplified - Company Revox"</span>
-                                            </p>
-                                        </a>
-                                        <!-- END Alert Item!-->
-                                    </li>
-                                    <!-- END List Group Item!-->
-                                </ul>
-                            </div>
-                            <div class="list-view-group-container">
-                                <!-- BEGIN List Group Header!-->
-                                <div class="list-view-group-header text-uppercase">
-                                    Sever Status
-                                </div>
-                                <!-- END List Group Header!-->
-                                <ul>
-                                    <!-- BEGIN List Group Item!-->
-                                    <li class="alert-list">
-                                        <!-- BEGIN Alert Item Set Animation using data-view-animation !-->
-                                        <a href="#" class="p-t-10 p-b-10 align-items-center" data-navigate="view"
-                                            data-view-port="#chat" data-view-animation="push-parrallax">
-                                            <p class="">
-                                                <span class="text-danger fs-10"><i class="fa fa-circle"></i></span>
-                                            </p>
-                                            <p class="col overflow-ellipsis fs-12 p-l-10">
-                                                <span class="text-master link">12:13AM GTM, 10230, ID:WR174s<br></span>
-                                                <span class="text-master">Server Load Exceeted. Take action</span>
-                                            </p>
-                                        </a>
-                                        <!-- END Alert Item!-->
-                                    </li>
-                                    <!-- END List Group Item!-->
-                                </ul>
-                            </div>
-                        </div>
-                        <!-- END Alert List !-->
-                    </div>
-                    <!-- EEND Alerts View !-->
-                </div>
-            </div>
-            <!-- END Alerts !-->
-            <div class="tab-pane active no-padding" id="quickview-chat">
-                <div class="view-port clearfix" id="chat">
-                    <div class="view bg-white">
-                        <!-- BEGIN View Header !-->
-                        <div class="navbar navbar-default">
-                            <div class="navbar-inner">
-                                <!-- BEGIN Header Controler !-->
-                                <a href="javascript:;" class="inline action p-l-10 link text-master" data-navigate="view"
-                                    data-view-port="#chat" data-view-animation="push-parrallax">
-                                    <i class="pg-plus"></i>
-                                </a>
-                                <!-- END Header Controler !-->
-                                <div class="view-heading">
-                                    Chat List
-                                    <div class="fs-11">Show All</div>
-                                </div>
-                                <!-- BEGIN Header Controler !-->
-                                <a href="#" class="inline action p-r-10 pull-right link text-master">
-                                    <i class="pg-more"></i>
-                                </a>
-                                <!-- END Header Controler !-->
-                            </div>
-                        </div>
-                        <!-- END View Header !-->
-                        <div data-init-list-view="ioslist" class="list-view boreded no-top-border">
-                            <div class="list-view-group-container">
-                                <div class="list-view-group-header text-uppercase">
-                                    a</div>
-                                <ul>
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">ava flores</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                </ul>
-                            </div>
-                            <div class="list-view-group-container">
-                                <div class="list-view-group-header text-uppercase">b</div>
-                                <ul>
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">bella mccoy</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image" class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">bob stephens</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                </ul>
-                            </div>
-                            <div class="list-view-group-container">
-                                <div class="list-view-group-header text-uppercase">c</div>
-                                <ul>
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">carole roberts</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">christopher perez</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                </ul>
-                            </div>
-                            <div class="list-view-group-container">
-                                <div class="list-view-group-header text-uppercase">d</div>
-                                <ul>
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">danielle fletcher</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">david sutton</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                </ul>
-                            </div>
-                            <div class="list-view-group-container">
-                                <div class="list-view-group-header text-uppercase">e</div>
-                                <ul>
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">earl hamilton</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">elaine lawrence</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">ellen grant</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">erik taylor</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image" class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">everett wagner</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                </ul>
-                            </div>
-                            <div class="list-view-group-container">
-                                <div class="list-view-group-header text-uppercase">f</div>
-                                <ul>
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">freddie gomez</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                </ul>
-                            </div>
-                            <div class="list-view-group-container">
-                                <div class="list-view-group-header text-uppercase">g</div>
-                                <ul>
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">glen jensen</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">gwendolyn walker</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                </ul>
-                            </div>
-                            <div class="list-view-group-container">
-                                <div class="list-view-group-header text-uppercase">j</div>
-                                <ul>
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">janet romero</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                </ul>
-                            </div>
-                            <div class="list-view-group-container">
-                                <div class="list-view-group-header text-uppercase">k</div>
-                                <ul>
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">kim martinez</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                </ul>
-                            </div>
-                            <div class="list-view-group-container">
-                                <div class="list-view-group-header text-uppercase">l</div>
-                                <ul>
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">lawrence white</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">leroy bell</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">letitia carr</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image" class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">lucy castro</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                </ul>
-                            </div>
-                            <div class="list-view-group-container">
-                                <div class="list-view-group-header text-uppercase">m</div>
-                                <ul>
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">mae hayes</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">marilyn owens</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">marlene cole</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">marsha warren</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">marsha dean</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">mia diaz</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                </ul>
-                            </div>
-                            <div class="list-view-group-container">
-                                <div class="list-view-group-header text-uppercase">n</div>
-                                <ul>
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">noah elliott</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                </ul>
-                            </div>
-                            <div class="list-view-group-container">
-                                <div class="list-view-group-header text-uppercase">p</div>
-                                <ul>
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">phyllis hamilton</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                </ul>
-                            </div>
-                            <div class="list-view-group-container">
-                                <div class="list-view-group-header text-uppercase">r</div>
-                                <ul>
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image" class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">raul rodriquez</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">rhonda barnett</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">roberta king</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                </ul>
-                            </div>
-                            <div class="list-view-group-container">
-                                <div class="list-view-group-header text-uppercase">s</div>
-                                <ul>
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">scott armstrong</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">sebastian austin</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">sofia davis</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                </ul>
-                            </div>
-                            <div class="list-view-group-container">
-                                <div class="list-view-group-header text-uppercase">t</div>
-                                <ul>
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">terrance young</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">theodore woods</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">todd wood</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image" class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">tommy jenkins</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                </ul>
-                            </div>
-                            <div class="list-view-group-container">
-                                <div class="list-view-group-header text-uppercase">w</div>
-                                <ul>
-                                    <!-- BEGIN Chat User List Item  !-->
-                                    <li class="chat-user-list clearfix">
-                                        <a data-view-animation="push-parrallax" data-view-port="#chat" data-navigate="view"
-                                            class="" href="#">
-                                            <span class="thumbnail-wrapper d32 circular bg-success">
-                                                <img width="34" height="34" alt="image"  class="col-top">
-                                            </span>
-                                            <p class="p-l-10 ">
-                                                <span class="text-master">wilma hicks</span>
-                                                <span class="block text-master hint-text fs-12">Hello there</span>
-                                            </p>
-                                        </a>
-                                    </li>
-                                    <!-- END Chat User List Item  !-->
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- BEGIN Conversation View  !-->
-                    <div class="view chat-view bg-white clearfix">
-                        <!-- BEGIN Header  !-->
-                        <div class="navbar navbar-default">
-                            <div class="navbar-inner">
-                                <a href="javascript:;" class="link text-master inline action p-l-10 p-r-10"
-                                    data-navigate="view" data-view-port="#chat" data-view-animation="push-parrallax">
-                                    <i class="pg-arrow_left"></i>
-                                </a>
-                                <div class="view-heading">
-                                    John Smith
-                                    <div class="fs-11 hint-text">Online</div>
-                                </div>
-                                <a href="#" class="link text-master inline action p-r-10 pull-right ">
-                                    <i class="pg-more"></i>
-                                </a>
-                            </div>
-                        </div>
-                        <!-- END Header  !-->
-                        <!-- BEGIN Conversation  !-->
-                        <div class="chat-inner" id="my-conversation">
-                            <!-- BEGIN From Me Message  !-->
-                            <div class="message clearfix">
-                                <div class="chat-bubble from-me">
-                                    Hello there
-                                </div>
-                            </div>
-                            <!-- END From Me Message  !-->
-                            <!-- BEGIN From Them Message  !-->
-                            <div class="message clearfix">
-                                <div class="profile-img-wrapper m-t-5 inline">
-                                    <img class="col-top" width="30" height="30" alt="image" >
-                                </div>
-                                <div class="chat-bubble from-them">
-                                    Hey
-                                </div>
-                            </div>
-                            <!-- END From Them Message  !-->
-                            <!-- BEGIN From Me Message  !-->
-                            <div class="message clearfix">
-                                <div class="chat-bubble from-me">
-                                    Did you check out Pages framework ?
-                                </div>
-                            </div>
-                            <!-- END From Me Message  !-->
-                            <!-- BEGIN From Me Message  !-->
-                            <div class="message clearfix">
-                                <div class="chat-bubble from-me">
-                                    Its an awesome chat
-                                </div>
-                            </div>
-                            <!-- END From Me Message  !-->
-                            <!-- BEGIN From Them Message  !-->
-                            <div class="message clearfix">
-                                <div class="profile-img-wrapper m-t-5 inline">
-                                    <img class="col-top" width="30" height="30" alt="image" >
-                                </div>
-                                <div class="chat-bubble from-them">
-                                    Yea
-                                </div>
-                            </div>
-                            <!-- END From Them Message  !-->
-                        </div>
-                        <!-- BEGIN Conversation  !-->
-                        <!-- BEGIN Chat Input  !-->
-                        <div class="b-t b-grey bg-white clearfix p-l-10 p-r-10">
-                            <div class="row">
-                                <div class="col-1 p-t-15">
-                                    <a href="#" class="link text-master"><i class="fa fa-plus-circle"></i></a>
-                                </div>
-                                <div class="col-8 no-padding">
-                                    <input type="text" class="form-control chat-input" data-chat-input=""
-                                        data-chat-conversation="#my-conversation" placeholder="Say something">
-                                </div>
-                                <div class="col-2 link text-master m-l-10 m-t-15 p-l-10 b-l b-grey col-top">
-                                    <a href="#" class="link text-master"><i class="pg-camera"></i></a>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- END Chat Input  !-->
-                    </div>
-                    <!-- END Conversation View  !-->
-                </div>
-            </div>
         </div>
+        <!--END TAB PANES -->
     </div>
     <!-- END QUICKVIEW-->
-    <!-- START OVERLAY -->
+    <!-- START OVERLAY 
     <div class="overlay hide" data-pages="search">
-        <!-- BEGIN Overlay Content !-->
         <div class="overlay-content has-results m-t-20">
-            <!-- BEGIN Overlay Header !-->
             <div class="container-fluid">
-                <!-- BEGIN Overlay Logo !-->
                 <img class="overlay-brand" alt="logo" width="78" height="22">
-                <!-- END Overlay Logo !-->
-                <!-- BEGIN Overlay Close !-->
                 <a href="#" class="close-icon-light overlay-close text-black fs-16">
                     <i class="pg-close"></i>
                 </a>
-                <!-- END Overlay Close !-->
             </div>
-            <!-- END Overlay Header !-->
             <div class="container-fluid">
-                <!-- BEGIN Overlay Controls !-->
                 <input id="overlay-search" class="no-border overlay-search bg-transparent" placeholder="Search..."
                     autocomplete="off" spellcheck="false">
                 <br>
@@ -1306,9 +319,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 <div class="inline-block m-l-10">
                     <p class="fs-13">Press enter to search</p>
                 </div>
-                <!-- END Overlay Controls !-->
             </div>
-            <!-- BEGIN Overlay Search Results, This part is for demo purpose, you can add anything you like !-->
             <div class="container-fluid">
                 <span>
                     <strong>suggestions :</strong>
@@ -1319,102 +330,76 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                     <p class="bold">Pages Search Results</p>
                     <div class="row">
                         <div class="col-md-6">
-                            <!-- BEGIN Search Result Item !-->
                             <div class="">
-                                <!-- BEGIN Search Result Item Thumbnail !-->
                                 <div class="thumbnail-wrapper d48 circular bg-success text-white inline m-t-10">
                                     <div>
                                         <img width="50" height="50" alt="image">
                                     </div>
                                 </div>
-                                <!-- END Search Result Item Thumbnail !-->
                                 <div class="p-l-10 inline p-t-5">
                                     <h5 class="m-b-5"><span class="semi-bold result-name">ice cream</span> on pages</h5>
                                     <p class="hint-text">via john smith</p>
                                 </div>
                             </div>
-                            <!-- END Search Result Item !-->
-                            <!-- BEGIN Search Result Item !-->
                             <div class="">
-                                <!-- BEGIN Search Result Item Thumbnail !-->
                                 <div class="thumbnail-wrapper d48 circular bg-success text-white inline m-t-10">
                                     <div>T</div>
                                 </div>
-                                <!-- END Search Result Item Thumbnail !-->
                                 <div class="p-l-10 inline p-t-5">
                                     <h5 class="m-b-5"><span class="semi-bold result-name">ice cream</span> related
                                         topics</h5>
                                     <p class="hint-text">via pages</p>
                                 </div>
                             </div>
-                            <!-- END Search Result Item !-->
-                            <!-- BEGIN Search Result Item !-->
                             <div class="">
-                                <!-- BEGIN Search Result Item Thumbnail !-->
                                 <div class="thumbnail-wrapper d48 circular bg-success text-white inline m-t-10">
                                     <div><i class="fa fa-headphones large-text "></i>
                                     </div>
                                 </div>
-                                <!-- END Search Result Item Thumbnail !-->
                                 <div class="p-l-10 inline p-t-5">
                                     <h5 class="m-b-5"><span class="semi-bold result-name">ice cream</span> music</h5>
                                     <p class="hint-text">via pagesmix</p>
                                 </div>
                             </div>
-                            <!-- END Search Result Item !-->
                         </div>
                         <div class="col-md-6">
-                            <!-- BEGIN Search Result Item !-->
                             <div class="">
-                                <!-- BEGIN Search Result Item Thumbnail !-->
                                 <div class="thumbnail-wrapper d48 circular bg-info text-white inline m-t-10">
                                     <div><i class="fa fa-facebook large-text "></i>
                                     </div>
                                 </div>
-                                <!-- END Search Result Item Thumbnail !-->
                                 <div class="p-l-10 inline p-t-5">
                                     <h5 class="m-b-5"><span class="semi-bold result-name">ice cream</span> on facebook</h5>
                                     <p class="hint-text">via facebook</p>
                                 </div>
                             </div>
-                            <!-- END Search Result Item !-->
-                            <!-- BEGIN Search Result Item !-->
                             <div class="">
-                                <!-- BEGIN Search Result Item Thumbnail !-->
                                 <div class="thumbnail-wrapper d48 circular bg-complete text-white inline m-t-10">
                                     <div><i class="fa fa-twitter large-text "></i>
                                     </div>
                                 </div>
-                                <!-- END Search Result Item Thumbnail !-->
                                 <div class="p-l-10 inline p-t-5">
                                     <h5 class="m-b-5">Tweats on<span class="semi-bold result-name"> ice cream</span></h5>
                                     <p class="hint-text">via twitter</p>
                                 </div>
                             </div>
-                            <!-- END Search Result Item !-->
-                            <!-- BEGIN Search Result Item !-->
                             <div class="">
-                                <!-- BEGIN Search Result Item Thumbnail !-->
                                 <div class="thumbnail-wrapper d48 circular text-white bg-danger inline m-t-10">
                                     <div><i class="fa fa-google-plus large-text "></i>
                                     </div>
                                 </div>
-                                <!-- END Search Result Item Thumbnail !-->
                                 <div class="p-l-10 inline p-t-5">
                                     <h5 class="m-b-5">Circles on<span class="semi-bold result-name"> ice cream</span></h5>
                                     <p class="hint-text">via google plus</p>
                                 </div>
                             </div>
-                            <!-- END Search Result Item !-->
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- END Overlay Search Results !-->
         </div>
-        <!-- END Overlay Content !-->
     </div>
-    <!-- END OVERLAY -->
+    END OVERLAY -->
 
     <div class="modal fade slide-up disable-scroll" id="edit_profile" tabindex="-1" role="dialog" aria-hidden="false">
         <div class="modal-dialog ">
@@ -1507,9 +492,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         </div>
     </div>
     <!-- /.modal-dialog -->
-    <!-- END OVERLAY -->
-    <!-- BEGIN VENDOR JS -->
-        <!-- BEGIN VENDOR JS -->
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/modernizr.custom.js" type="text/javascript"></script>
     <?= jqueryUi() ?>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery/jquery-easy.js" type="text/javascript"></script>
@@ -1517,8 +499,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-ios-list/jquery.ioslist.min.js" type="text/javascript"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-actual/jquery.actual.min.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js"></script>
-    <script src="<?= $ruta_db_superior ?>assets/theme/pages/js/pages.js" type="text/javascript"></script>
-    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/scripts.js" type="text/javascript"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/pages/js/pages.min.js" type="text/javascript"></script>
+    <!--<script src="<?= $ruta_db_superior ?>assets/theme/assets/js/scripts.js" type="text/javascript"></script>-->
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/scripts/jquery.imgareaselect.js" type="text/javascript"></script>
     
     <?= moment() ?>        

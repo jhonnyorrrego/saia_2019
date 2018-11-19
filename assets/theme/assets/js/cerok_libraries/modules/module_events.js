@@ -2,17 +2,15 @@ $(function(){
     let iduser = localStorage.getItem("key");;
     let grouperSelector = "#appMenu";
     let listSelector = "#module_list";
-
+    var xDown = null;
+    var yDown = null;
+    
     var modules = new Modules(iduser, grouperSelector, listSelector);
 
-    $(document).on('click', '.grouper', function(){alert('click');
+    $(document).on('click', '.grouper,.parent_item', function(){    
         let idmodule = $(this).attr('id');
-        
-        modules.showList(idmodule);
+        modules.find(idmodule);
     });
-    
-    /*var xDown = null;
-    var yDown = null;
     
     $(document).on('click', '.module_link', function(){
         $("#iframe_workspace").attr('src', $(this).attr('url'));
@@ -45,26 +43,26 @@ $(function(){
         var xDiff = xDown - xUp;
         var yDiff = yDown - yUp;
 
-        if (Math.abs(xDiff) > Math.abs(yDiff)) {/*most significant*
+        if (Math.abs(xDiff) > Math.abs(yDiff)) {/*most significant*/
             if (xDiff > 0) {
                 $('#toggle_sidebar').trigger('click');
             } else {
-                /** right swipe*
+                /* right swipe*/
                 return true;
             }
         } else {
             if (yDiff > 0) {
-                /** up swipe* return true;
+                /* up swipe* return true;*/
             } else {
-                /** Dowsn swipe* return true;
+                /* Dowsn swipe* return true;*/
             }
         }
-        /* reset values *
+        /* reset values */
         xDown = null;
         yDown = null;
     });
 
     function getTouches(evt) {
         return evt.touches || evt.originalEvent.touches;
-    }*/
+    }
 });

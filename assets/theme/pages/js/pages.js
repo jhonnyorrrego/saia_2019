@@ -2205,7 +2205,7 @@
 
              if ($('.sidebar-overlay-slide').hasClass('show')) {
                  $('.sidebar-overlay-slide').removeClass('show')
-                 $("[data-pages-toggle']").removeClass('active')
+                 $("[data-pages-toggle]").removeClass('active')
 
              }
 
