@@ -86,6 +86,10 @@ if (EW_this.x_nombre && !EW_hasValue(EW_this.x_nombre, "TEXT" )) {
 	if (!EW_onError(EW_this, EW_this.x_nombre, "TEXT", "Por favor ingrese los campos requeridos - nombre"))
 		return false;
 }
+if (EW_this.x_codigo_cargo && !EW_hasValue(EW_this.x_codigo_cargo, "TEXT" )) {
+	if (!EW_onError(EW_this, EW_this.x_codigo_cargo, "TEXT", "Por favor ingrese los campos requeridos - codigo del cargo"))
+		return false;
+}
 return true;
 }
 
@@ -104,15 +108,15 @@ return true;
 </span></td>
 	</tr>
 	<tr>
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">C&Oacute;IGO DEL CARGO</span></td>
+		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">C&Oacute;IGO DEL CARGO*</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-			<input type="text" name="x_codigo_cargo" id="x_codigo_cargo" size="30" maxlength="255" value="<?php echo $x_codigo_cargo; ?>">
+			<input type="text" name="x_codigo_cargo" id="x_codigo_cargo" class="required" size="30" maxlength="255" value="<?php echo $x_codigo_cargo; ?>">
 </span></td>
 	</tr>
 	<tr>
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">NOMBRE DEL CARGO</span></td>
+		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">NOMBRE DEL CARGO*</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="text" name="x_nombre" id="x_nombre" size="30" maxlength="255" value="<?php echo (@$x_nombre) ?>">
+<input type="text" name="x_nombre" id="x_nombre" size="30" class="required" maxlength="255" value="<?php echo (@$x_nombre) ?>">
 </span></td>
 	</tr>
 	<tr>
