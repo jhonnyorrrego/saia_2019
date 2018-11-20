@@ -12,7 +12,7 @@ include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/generador/librerias.php");
 echo(estilo_bootstrap());
-if(@$_REQUEST["idpantalla_campos"]){  
+if(@$_REQUEST["idpantalla_campos"]){
   $pantalla_campos=get_pantalla_campos($_REQUEST["idpantalla_campos"],0);
 	if("id".$pantalla_campos[0]["pantalla"]==$pantalla_campos[0]["nombre"]){
 		die("No es posible eliminar este campo");
@@ -58,7 +58,7 @@ if($pantalla_campos[0]["etiqueta_html"]=="campo_heredado"&&$pantalla_campos[0]["
   </div>
 </form>
 <?php
-echo(librerias_jquery("1.7"));
+echo(librerias_jquery("1.8.3"));
 echo(librerias_bootstrap());
 echo(librerias_validar_formulario());
 echo(librerias_notificaciones());
@@ -67,35 +67,35 @@ echo(librerias_notificaciones());
 $(document).ready(function(){
 	var formulario = $("#editar_pantalla_campo");
 	formulario.validate();
-	$("#enviar_formulario_saia").click(function(){    
+	$("#enviar_formulario_saia").click(function(){
 		if(formulario.valid()){
 			$('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
 			$(this).attr('disabled', 'disabled');
-      var idpantalla_campo=$("#idpantalla_campos").val();      
+      var idpantalla_campo=$("#idpantalla_campos").val();
 			$.ajax({
         type:'POST',
         url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias.php",
         data: "ejecutar_campos_formato=delete_pantalla_campos&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario.serialize(),
-        success: function(html){                
-          if(html){          
-            var objeto=jQuery.parseJSON(html);                  
+        success: function(html){
+          if(html){
+            var objeto=jQuery.parseJSON(html);
             if(objeto.exito){
               $('#cargando_enviar').html("Terminado ...");
               //$("#content").append(objeto.etiqueta_html);
-              //setTimeout(notificacion_saia("Eliminaci&oacute;n realizada con &eacute;xito.","success","",2500),5000);                                                      
-              $("#pc_"+idpantalla_campo,parent.document).remove();               
-              parent.hs.close(); 	
-            }                  
+              //setTimeout(notificacion_saia("Eliminaci&oacute;n realizada con &eacute;xito.","success","",2500),5000);
+              $("#pc_"+idpantalla_campo,parent.document).remove();
+              parent.hs.close();
+            }
         	}
         }
-    	});		
+    	});
 		}
-		else{			
-			$(".error").first().focus();			
+		else{
+			$(".error").first().focus();
 		}
 	});
-	$("#cancelar_formulario_saia").click(function(){		
+	$("#cancelar_formulario_saia").click(function(){
 		parent.hs.close();
 	});
-});	
+});
 </script>
