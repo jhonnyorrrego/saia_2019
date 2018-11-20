@@ -33,7 +33,29 @@ $(function () {
         topModal(modal_options);
     });
     
-    $('#edit_photo_modal').on('shown.bs.modal', function () {console.log(123);
+    $("#change_password").on("click", function(){
+        let modal_options = {
+            url: `${baseUrl}views/funcionario/cambiar_clave.php`,
+            params: {
+                baseUrl: baseUrl
+            },
+            buttons: {
+                success: {
+                    label: 'Cambiar la Contraseña',
+                    class: 'btn btn-complete'
+                },
+                cancel: {
+                    label: 'Cancelar',
+                    class: 'btn btn-danger'
+                }
+            },
+            size: 'modal-lg',
+            title: 'Cambiar Contraseña',
+        }
+        topModal(modal_options);
+    });
+
+    $('#edit_photo_modal').on('shown.bs.modal', function () {
         Ui.imageAreaSelect();
     });
 

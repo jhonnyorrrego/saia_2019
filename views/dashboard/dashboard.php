@@ -194,7 +194,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         <a href="#" class="dropdown-item" id="config_profile">
                             <i class="fa fa-user"></i>Configurar perfil
                         </a>
-                        <a href="#" class="dropdown-item">
+                        <a href="#" class="dropdown-item" id="change_password">
                             <i class="fa fa-lock"></i>Cambiar mi Contraseña
                         </a>
                         <a href="#" class="clearfix bg-master-lighter dropdown-item" id="btn_logout">
