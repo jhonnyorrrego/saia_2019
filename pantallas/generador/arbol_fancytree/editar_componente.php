@@ -12,10 +12,16 @@ include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "pantallas/generador/librerias.php");
 echo (estilo_bootstrap());
+echo (librerias_jquery("1.8"));
 $campos = busca_filtro_tabla("", "pantalla_componente B", "idpantalla_componente=" . $_REQUEST["idpantalla_componente"], "", $conn);
 for ($i = 0; $i < $campos["numcampos"]; $i++) {
     $librerias = explode(",", $campos[$i]["librerias"]);
     foreach ($librerias as $key => $libreria) {
+        $pos = strpos($libreria, '@');
+        if ($pos !== false) {
+            $pre_libreria = explode('@', $libreria);
+            $libreria = $pre_libreria[0];
+        }
         $extension = explode(".", $libreria);
         $cant = count($extension);
         if ($extension[$cant - 1] !== '') {
@@ -188,14 +194,14 @@ if (MOTOR == "Oracle") {
 		        $valor_url = ' value="' .  $opciones["url"] . '"';
 		    }
 		    $texto_opc[] = $valor_url . "></label></div>";
-		    $texto_opc[] = '<div class="controls controls-row"><label class="radio inline" for="opciones_checkbox">';
+		    $texto_opc[] = '<div class="controls controls-row"><label class="radio inline" for="opciones_checkbox_1">';
 		    $texto_opc[] = '<input type="radio" class="opciones" name="opciones_checkbox" id="opciones_checkbox_1" value="1"';
 		    $valor_checkbox = '';
 		    if(isset($opciones["checkbox"]) && $opciones["checkbox"] == "1") {
 		        $valor_checkbox = ' checked="checked"';
 		    }
 		    $texto_opc[] = $valor_checkbox . ">Checkbox</label>";
-		    $texto_opc[] = '<label class="radio inline" for="opciones_checkbox">';
+		    $texto_opc[] = '<label class="radio inline" for="opciones_checkbox_2">';
 		    $texto_opc[] = '<input type="radio" class="opciones" name="opciones_checkbox" id="opciones_checkbox_2" value="radio"';
 		    $valor_checkbox = '';
 		    if(isset($opciones["checkbox"]) && $opciones["checkbox"] == "radio") {
@@ -203,15 +209,22 @@ if (MOTOR == "Oracle") {
 		    }
 		    $texto_opc[] = $valor_checkbox . ">Radio</label></div>";
 
-		    $texto_opc[] = '<div class="controls controls-row"><label class="checkbox inline" for="opciones_buscador">';
-		    $texto_opc[] = '<input type="checkbox" class="opciones" name="opciones_buscador" id="opciones_buscador"';
-		    $valor_buscador = ' value="0"';
-		    if(isset($opciones["buscador"]) && $opciones["buscador"] == "1") {
-		        $valor_buscador = ' value="' .  $opciones["buscador"] . '" checked="checked"';
+		    $texto_opc[] = '<div class="controls controls-row">Buscador&nbsp;<label class="radio inline" for="opciones_buscador_1">';
+		    $texto_opc[] = '<input type="radio" class="opciones" name="opciones_buscador" id="opciones_buscador_1" value="0"';
+		    $valor_buscador = '';
+		    if(isset($opciones["buscador"]) && $opciones["buscador"] == "0") {
+		        $valor_buscador = ' checked="checked"';
 		    }
-		    $texto_opc[] = $valor_buscador . ">Buscador</label></div>";
+		    $texto_opc[] = $valor_buscador . ">No</label>";
+		    $texto_opc[] = '<label class="radio inline" for="opciones_buscador_2">';
+		    $texto_opc[] = '<input type="radio" class="opciones" name="opciones_buscador" id="opciones_buscador_2" value="1"';
+		    $valor_buscador = '';
+		    if(isset($opciones["buscador"]) && $opciones["buscador"] == "1") {
+		        $valor_buscador = ' checked="checked"';
+		    }
+		    $texto_opc[] = $valor_buscador . ">Si</label></div>";
 
-		    $texto_opc[] = '<div class="controls controls-row"><label for="opciones_funcsel">Funci&oacute;n seleccionar';
+		    $texto_opc[] = '<div class="controls controls-row"><label for="opciones_funcsel">Funci&oacute;n seleccionar&nbsp;';
 		    $texto_opc[] = '<input type="text" class="opciones" name="opciones_funcion_select" id="opciones_funcsel"';
 		    $valor_funcsel = ' value=""';
 		    if(isset($opciones["funcion_select"])) {
@@ -219,7 +232,7 @@ if (MOTOR == "Oracle") {
 		    }
 		    $texto_opc[] = $valor_funcsel . "></label></div>";
 
-		    $texto_opc[] = '<div class="controls controls-row"><label for="opciones_funcclick">Funci&oacute;n click';
+		    $texto_opc[] = '<div class="controls controls-row"><label for="opciones_funcclick">Funci&oacute;n click&nbsp;';
 		    $texto_opc[] = '<input type="text" class="opciones" name="opciones_funcion_click" id="opciones_funcclick"';
 		    $valor_funcclick = ' value=""';
 		    if(isset($opciones["funcion_click"])) {
@@ -227,7 +240,7 @@ if (MOTOR == "Oracle") {
 		    }
 		    $texto_opc[] = $valor_funcclick . "></label></div>";
 
-		    $texto_opc[] = '<div class="controls controls-row"><label for="opciones_funcdclick">Funci&oacute;n doble click';
+		    $texto_opc[] = '<div class="controls controls-row"><label for="opciones_funcdclick">Funci&oacute;n doble click&nbsp;';
 		    $texto_opc[] = '<input type="text" class="opciones" name="opciones_funcion_dobleclick" id="opciones_funcdclick"';
 		    $valor_funcdclick = ' value=""';
 		    if(isset($opciones["funcion_dobleclick"])) {
@@ -271,7 +284,6 @@ if (MOTOR == "Oracle") {
 	</div>
 </form>
 <?php
-echo (librerias_jquery("1.7"));
 echo (librerias_bootstrap());
 echo (librerias_validar_formulario());
 echo (librerias_notificaciones());
@@ -287,6 +299,7 @@ $(document).ready(function() {
         }
     }
 });
+
 $("#enviar_formulario_saia").click(function() {
     var idpantalla_campo = $("#idpantalla_campos").val();
     if(formulario.valid()) {
@@ -313,7 +326,7 @@ $("#enviar_formulario_saia").click(function() {
             nuevo[x] = $(this).val();
         });
         js_data.fs_valor = JSON.stringify(nuevo);
-    	console.log(js_data);
+    	//console.log(js_data);
     	$.ajax({
             type:'POST',
             url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias.php",
@@ -327,7 +340,7 @@ $("#enviar_formulario_saia").click(function() {
                         //$("#content").append(objeto.etiqueta_html);
                         //setTimeout(notificacion_saia("Actualizaci&oacute;n realizada con &eacute;xito.","success","",2500),5000);
                         //$("#pc_"+idpantalla_campo,parent.document).find(".control-label").html(objeto.etiqueta);
-                        $("#pc_"+idpantalla_campo,parent.document).replaceWith(objeto.codigo_html);
+                        //$("#pc_"+idpantalla_campo,parent.document).replaceWith(objeto.codigo_html);
                         //$("#pc_"+idpantalla_campo,parent.document).find(".elemento_formulario").attr("placeholder",objeto.placeholder);
                         parent.hs.close();
                     }
