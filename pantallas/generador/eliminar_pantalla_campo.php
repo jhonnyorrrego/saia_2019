@@ -58,7 +58,7 @@ if($pantalla_campos[0]["etiqueta_html"]=="campo_heredado"&&$pantalla_campos[0]["
   </div>
 </form>
 <?php
-echo(librerias_jquery("1.8.3"));
+echo(librerias_jquery("1.8"));
 echo(librerias_bootstrap());
 echo(librerias_validar_formulario());
 echo(librerias_notificaciones());
