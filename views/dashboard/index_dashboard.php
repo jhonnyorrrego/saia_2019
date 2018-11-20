@@ -27,8 +27,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 <body>
     <div class="container-fluid px-1 py-0">
         <div class="row">
-            <div class="col-12 col-xl-4 pr-0" id="mailbox"></div>
-            <div class="col-12 col-xl-8 px-0" id="right_workspace">
+            <div class="col-12 col-md-4 pr-0" id="mailbox"></div>
+            <div class="col-12 col-md-8 px-0" id="right_workspace">
                 <iframe id="iframe_right_workspace" width="100%" frameBorder="0"></iframe>
             </div>
         </div>
