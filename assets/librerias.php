@@ -180,6 +180,10 @@ function breakpoint()
     return '<script type="text/javascript" src="' . $route . '"></script>';
 }
 
+/**
+ * retorna la libreria kaiten
+ * con las nuevas modificaciones
+ */
 function kaiten()
 {
     global $ruta_db_superior;
@@ -202,6 +206,10 @@ function kaiten()
     return $css . $jq . $ui . $js . $jqresize;
 }
 
+/** 
+ * retorna enlaces para el uso
+ * de la libreria jquery scrollbar
+ */
 function scrollBar()
 {
     global $ruta_db_superior;
@@ -215,6 +223,10 @@ function scrollBar()
     return $css . $js;
 }
 
+/**
+ * retorna enlaces para el uso
+ * de la libreria jquery validate
+ */
 function validate()
 {
     global $ruta_db_superior;
@@ -254,4 +266,17 @@ function arboles_ft($version = "2.30", $opciones = '', $tema = "lion")
         $texto .= '<script src="' . $ruta . $version . "/$modulos" . '/jquery.fancytree.filter.js"></script>';
     }
     return $texto;
+}
+
+/**
+ * retorna libreria para ejecucion
+ * de ventana modal en el top
+ */
+function topModal(){
+    global $ruta_db_superior;
+
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/js/cerok_libraries/topModal/topModal.js';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+
+    return $js;
 }

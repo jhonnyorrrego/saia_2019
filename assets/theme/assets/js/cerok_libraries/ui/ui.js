@@ -1,10 +1,6 @@
 class Ui {    
     static showUserInfo(user) {
-        let img_complete = Session.getBaseUrl() + user.foto_original;
-        let img_cut = Session.getBaseUrl() + user.foto_recorte;
-
-        $("#img_edit_photo").attr('src', img_complete);
-        $("#profile_image").attr("src", img_cut);
+        $("#profile_image").attr("src", Session.getBaseUrl() + user.cutedPhoto);
         $("#user_name").text(user.name);
     }
 
@@ -54,11 +50,11 @@ class Ui {
             $("#img_edit_photo").imgAreaSelect({
                 handles: "corners",
                 aspectRatio: "1:1",
-                minHeight: 80,
-                x1: 25,
-                y1: 25,
-                x2: 230,
-                y2: 230,
+                minHeight: 40,
+                x1: 0,
+                y1: 0,
+                x2: 70,
+                y2: 70,
                 persistent: true,
             });
         }, 500);

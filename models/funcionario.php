@@ -21,23 +21,31 @@ class Funcionario extends Model {
     protected $table = 'funcionario';
     protected $primary = 'idfuncionario';
 
+    /**
+     * @param int $id value for idfuncionario attribute
+     * @author jhon.valencia@cerok.com
+     */
     function __construct($id){
         return parent::__construct($id);
     }
 
+    /**
+     * @return the basic information from user
+     * @author jhon.valencia@cerok.com
+     */
     public function getBasicInformation()
     {
-        $data = array(
+        return array(
             'iduser' => $this->idfuncionario,
             'name' => $this->getName(),
-            'state' => $this->getState(),
-            'foto_original' => $this->getImage('foto_original'),
-            'foto_recorte' => $this->getImage('foto_recorte')
+            'cutedPhoto' => $this->getImage('foto_recorte')
         );
-
-        return $data;
     }
 
+    /**
+     * @return the complete name formatted
+     * @author jhon.valencia@cerok.com
+     */
     public function getName()
     {
         $name = trim($this->nombres);
@@ -48,11 +56,47 @@ class Funcionario extends Model {
         return $completeName;
     }
 
+    /**
+     * @return string for represent state attribute
+     * @author jhon.valencia@cerok.com
+     */
     public function getState()
     {
         return $this->estado = 1 ? 'Activo' : 'Inactivo';
     }
 
+    /**
+     * @return email attribute
+     * @author jhon.valencia@cerok.com
+     */
+    public function getEmail(){
+        return $this->email;
+    }
+
+    /**
+     * @return email attribute
+     * @author jhon.valencia@cerok.com
+     */
+    public function getDirection(){
+        return $this->direccion;
+    }
+
+    /**
+     * @return email attribute
+     * @author jhon.valencia@cerok.com
+     */
+    public function getPhoneNumber(){
+        return $this->telefono;
+    }
+
+    /**
+     * create a temporal image
+     * 
+     * @param string $image attribute for find ej . foto_recorte foto_original
+     * @param boolean $force omit if the temporal image exist
+     * @return string url from temporal image
+     * @author jhon.valencia@cerok.com
+     */
     public function getImage($image, $force = false)
     {
         global $ruta_db_superior;
@@ -112,22 +156,30 @@ class Funcionario extends Model {
         }
     }
 
-    public function updateImage($image, $campo){
+    /**
+     * update a specific image attribute
+     * 
+     * @param array $image ej. [extention => png, binary => binary_to_save]
+     * @param string $attribute attribute to update ej. foto_recorte, foto_original
+     * @return the new $attribute value
+     * @author jhon.valencia@cerok.com
+     */
+    public function updateImage($image, $attribute){
         $ruta = RUTA_FOTOGRAFIA_FUNCIONARIO . 'original/' . rand() . 'r.' . $image['extention'];
 
         $tipo_almacenamiento = new SaiaStorage("imagenes");
         $content = $tipo_almacenamiento->almacenar_contenido($ruta, $image['binary'], false);
 
         if($content){
-            $this->$campo = json_encode(array(
+            $this->$attribute = json_encode(array(
                 "servidor" => $tipo_almacenamiento->get_ruta_servidor(),
                 "ruta" => $ruta
             ));
             
-            $sql = "UPDATE funcionario SET ".$campo."='" . $this->$campo . "' WHERE idfuncionario=" . $this->idfuncionario;
+            $sql = "UPDATE funcionario SET ".$attribute."='" . $this->$attribute . "' WHERE idfuncionario=" . $this->idfuncionario;
             phpmkr_query($sql);
             
-            return $this->$campo;
+            return $this->$attribute;
         }else{
             return false;
         }

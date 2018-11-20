@@ -185,20 +185,18 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                     <span class="semi-bold" id="user_name"></span>
                 </div>
                 <div class="dropdown pull-right d-xs-block">
-                    <button class="profile-dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true"
-                        aria-expanded="false">
+                    <button class="profile-dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="user_info">
                         <span class="thumbnail-wrapper d32 circular inline">
-                            <img id="profile_image" width="32" height="32">
+                            <img id="profile_image" class="cuted_photo" width="32" height="32">
                         </span>
                     </button>
-                    <div class="dropdown-menu dropdown-menu-right profile-dropdown" role="menu">
-                        <a href="#" class="dropdown-item" data-toggle="modal" data-target="#edit_profile">
-                            <i class="fa fa-edit"></i>
-                            Editar mi perfil</a>
-                        <a href="#" class="dropdown-item" data-toggle="modal" data-target="#edit_photo_modal">
-                            <i class="fa fa-photo"></i> Cambiar Foto
+                    <div class="dropdown-menu dropdown-menu-right profile-dropdown" role="menu" id="menu_user_info">
+                        <a href="#" class="dropdown-item" id="config_profile">
+                            <i class="fa fa-user"></i>Configurar perfil
                         </a>
-                        <a href="#" class="dropdown-item"><i class="fa fa-lock"></i> Cambiar mi Contraseña</a>
+                        <a href="#" class="dropdown-item">
+                            <i class="fa fa-lock"></i>Cambiar mi Contraseña
+                        </a>
                         <a href="#" class="clearfix bg-master-lighter dropdown-item" id="btn_logout">
                             <span class="pull-left">Cerrar Sesión</span>
                             <span class="pull-right"><i class="fa fa-power-off"></i></span>
@@ -401,7 +399,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     </div>
     END OVERLAY -->
 
-    <div class="modal fade slide-up disable-scroll" id="edit_profile" tabindex="-1" role="dialog" aria-hidden="false">
+    <!--<div class="modal fade slide-up disable-scroll" id="edit_profile" tabindex="-1" role="dialog" aria-hidden="false">
         <div class="modal-dialog ">
             <div class="modal-content-wrapper">
                 <div class="modal-content">
@@ -411,53 +409,12 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form role="form" id="profile_form">
-                        <div class="modal-body">
-                            <div class="col-12">
-                                <hr>
-                                <div class="form-group-attached">
-                                    <div class="row mb-1">
-                                        <label for="user" class="col-md-2 control-label text-black" style="line-height: 1;">Email</label>
-                                        <div class="offset-md-1 col-md-9">
-                                            <input type="email" class="form-control" placeholder="prueba@ejemplo.com"
-                                                name="email">
-                                        </div>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <label for="user" class="col-md-2 control-label text-black" style="line-height: 1;">Clave
-                                            de email</label>
-                                        <div class="offset-md-1 col-md-9">
-                                            <input type="password" class="form-control" placeholder="Clave" name="email_contrasena">
-                                        </div>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <label for="user" class="col-md-2 control-label text-black" style="line-height: 1;">Dirección</label>
-                                        <div class="offset-md-1 col-md-9">
-                                            <input type="text" class="form-control" placeholder="Direccion"
-                                                name="direccion">
-                                        </div>
-                                    </div>
-                                    <div class="row mb-1">
-                                        <label for="user" class="col-md-2 control-label text-black" style="line-height: 1;">Teléfono</label>
-                                        <div class="offset-md-1 col-md-9">
-                                            <input type="text" class="form-control" placeholder="1234567890."
-                                                name="telefono">
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                            <button type="submit" class="btn btn-complete">Enviar</button>
-                        </div>
-                    </form>
+                    
                 </div>
             </div>
-            <!-- /.modal-content -->
+            <!-- /.modal-content ->
         </div>
-    </div>
+    </div>-->
     <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="edit_photo_modal">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -485,8 +442,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             </div>
             <div class="modal-body" id="modal_body"></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-complete" id="btn_success">Enviar</button>
+                <button type="button" data-dismiss="modal" id="close_modal"></button>
+                <button type="submit" id="btn_success"></button>
             </div>
             </div>
         </div>
@@ -504,20 +461,16 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/scripts/jquery.imgareaselect.js" type="text/javascript"></script>
     
     <?= moment() ?>        
-    <!-- SESION LIBRARY -->
     <script data-baseurl="<?= $ruta_db_superior ?>" id="baseUrl" src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/session/session.js"></script>
-    <!-- USER INTERFACE LIBRARY-->
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/ui/ui.js"></script>
-    <!-- MODULE LIBRARY-->
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/modules/modules.js"></script>
-    <!-- NOTE LIBRARY-->
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notes/notes.js"></script>    
     <!-- BEGIN LIBRARIES FOR EVENTS-->
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/ui/ui_events.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/modules/module_events.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notes/note_events.js"></script>
     <!-- END LIBRARIES FOR EVENTS-->
-
+    <?= topModal() ?>
     <script>
         $(function(){
             Ui.putColor();

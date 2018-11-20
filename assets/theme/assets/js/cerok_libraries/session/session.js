@@ -11,6 +11,9 @@ class Session {
             type:'GET',
             dataType:'json',
             url: this.baseUrl + 'app/funcionario/consulta_funcionario.php',
+            data:{
+                type: 'session'
+            },
             async:false,
             success: function (response) {
                 if (response.success) {
