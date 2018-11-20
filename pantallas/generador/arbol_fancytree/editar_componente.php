@@ -188,12 +188,21 @@ if (MOTOR == "Oracle") {
 			<?php
 			$texto_opc = array();
 			$texto_opc[] = '<label for="opciones_url">URL';
-			$texto_opc[] = '<input type="text" class="opciones" name="opciones_url" id="opciones_url"';
-			$valor_url = ' value=""';
-		    if(isset($opciones["url"])) {
-		        $valor_url = ' value="' .  $opciones["url"] . '"';
-		    }
-		    $texto_opc[] = $valor_url . "></label></div>";
+			$texto_opc[] = '<select class="opciones" name="opciones_url" id="opciones_url">';
+			$valor_url = "";
+			if(isset($opciones["url"])) {
+			    $valor_url = $opciones["url"];
+			}
+			$sel_fun = $valor_url == "arboles/arbol_funcionario.php" ? "selected" : "";
+			$sel_dep = $valor_url == "arboles/arbol_dependencia.php" ? "selected" : "";
+			$sel_car = $valor_url == "arboles/arbol_cargo.php" ? "selected" : "";
+			$sel_ser = $valor_url == "arboles/arbol_serie.php" ? "selected" : "";
+			$texto_opc[] = '<option value="arboles/arbol_funcionario.php" ' . $sel_fun . '>Funcionarios</option>';
+			$texto_opc[] = '<option value="arboles/arbol_dependencia.php" ' . $sel_dep . '>Dependencias</option>';
+			$texto_opc[] = '<option value="arboles/arbol_cargo.php" ' . $sel_car . '>Cargos</option>';
+			$texto_opc[] = '<option value="arboles/arbol_serie.php" ' . $sel_ser  . '>Series</option>';
+		    $texto_opc[] = "</select></label></div>";
+
 		    $texto_opc[] = '<div class="controls controls-row"><label class="radio inline" for="opciones_checkbox_1">';
 		    $texto_opc[] = '<input type="radio" class="opciones" name="opciones_checkbox" id="opciones_checkbox_1" value="1"';
 		    $valor_checkbox = '';
@@ -321,7 +330,7 @@ $("#enviar_formulario_saia").click(function() {
         });
         var orig = $("#fs_valor").val();
         var nuevo = {};
-        $("input.opciones").each(function() {
+        $("input.opciones,select.opciones").each(function() {
             var x = $(this).attr("name").replace("opciones_", "");
             nuevo[x] = $(this).val();
         });
@@ -339,7 +348,7 @@ $("#enviar_formulario_saia").click(function() {
                         $('#cargando_enviar').html("Terminado ...");
                         //$("#content").append(objeto.etiqueta_html);
                         //setTimeout(notificacion_saia("Actualizaci&oacute;n realizada con &eacute;xito.","success","",2500),5000);
-                        //$("#pc_"+idpantalla_campo,parent.document).find(".control-label").html(objeto.etiqueta);
+                        $("#pc_"+idpantalla_campo,parent.document).find(".control-label").html(objeto.etiqueta);
                         //$("#pc_"+idpantalla_campo,parent.document).replaceWith(objeto.codigo_html);
                         //$("#pc_"+idpantalla_campo,parent.document).find(".elemento_formulario").attr("placeholder",objeto.placeholder);
                         parent.hs.close();

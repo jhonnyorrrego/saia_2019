@@ -30,11 +30,11 @@ function procesar_fancytree($idcampo = '', $seleccionado = '', $accion = '', $ca
         //procesar parametros;
     }
 
-    $encabezado_fancy = '<div class="control-group element" idpantalla_componente="' . $campo["idpantalla_componente"] . '" idpantalla_campo="' . $idcampo . '" id="pc_' . $idcampo . '" nombre="' . $campo["etiqueta_html"] . '">' . clase_eliminar_pantalla_componente($idcampo) . '<label class="control-label" for="' . $campo["nombre"] . '">' . $campo["etiqueta"];
+    $encabezado_fancy = '<div class="control-group element" idpantalla_componente="' . $campo["idpantalla_componente"] . '" idpantalla_campo="' . $idcampo . '" id="pc_' . $idcampo . '" nombre="' . $campo["etiqueta_html"] . '">' . clase_eliminar_pantalla_componente($idcampo) . '<label class="control-label" for="' . $campo["nombre"] . '"><b>' . $campo["etiqueta"];
     if ($campo["obligatoriedad"]) {
         $encabezado_fancy .= '*';
     }
-    $encabezado_fancy .= '</label><div class="controls">';
+    $encabezado_fancy .= '</b></label><div class="controls">';
     $pie_fancy = '</div></div>';
 
     $origen = array();

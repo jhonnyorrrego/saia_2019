@@ -15,15 +15,15 @@ if($_REQUEST['idformato']) {
 	$formato = busca_filtro_tabla("","formato","idformato=".$_REQUEST['idformato'],"",$conn);
 	$formato = procesar_cadena_json($formato,array("cuerpo","ayuda","etiqueta"));
 	$cod_padre=$formato[0]["cod_padre"];
-	
-	$cod_proceso_pertenece=$formato[0]["proceso_pertenece"];	
+
+	$cod_proceso_pertenece=$formato[0]["proceso_pertenece"];
 	$categoria=$formato[0]["fk_categoria_formato"];
 	if($formato[0]["tiempo_autoguardado"]>3000){
 		$formato[0]["tiempo_autoguardado"]=$formato[0]["tiempo_autoguardado"]/60000;
 	}
-	$documentacion_formato =$formato[0]["documentacion"]; 
+	$documentacion_formato =$formato[0]["documentacion"];
 	$anexos_formato = busca_filtro_tabla("","formato_previo","idformato=".$_REQUEST['idformato']." and idformato_previo=".$documentacion_formato,"",$conn);
-	
+
 	if($anexos_formato["numcampos"]){
 		$ruta = $anexos_formato[0]["ruta"];
 	}
@@ -41,7 +41,7 @@ if($_REQUEST['idformato']) {
 	}
 }
 /**
- * Esta funcion puede servir para 
+ * Esta funcion puede servir para
  */
 function procesar_cadena_json($resultado,$lista_valores){
 	for($i=0; $i<$resultado["numcampos"]; $i++) {
@@ -58,7 +58,7 @@ function procesar_cadena_json($resultado,$lista_valores){
 		}
 		$resultado[$i]=$busqueda;
 	}
-return($resultado);	
+return($resultado);
 }
 ?>
 <style type="text/css">
@@ -68,7 +68,7 @@ return($resultado);
   <fieldset id="content_form_name">
   </fieldset>
   <?php
-  if($_SESSION["LOGIN" . LLAVE_SAIA]=="cerok"){  	
+  if($_SESSION["LOGIN" . LLAVE_SAIA]=="cerok"){
   ?>
 	  <div class="control-group">
 	    <label class="control-label" for="nombre">Nombre*</label>
@@ -77,7 +77,7 @@ return($resultado);
 	    </div>
 	  </div>
 	 <?php
-  } 	
+  }
   ?>
   <div class="control-group">
     <label class="control-label" for="etiqueta">Nombe del formato*</label>
@@ -125,8 +125,8 @@ return($resultado);
     <script type="text/javascript" src="../../anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script>
     <link rel="stylesheet" type="text/css" href="../../anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style>
     <link href="../../dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" />
-    <script type='text/javascript'> 
-    hs.graphicsDir = '../../anexosdigitales/highslide-5.0.0/highslide/graphics/'; 
+    <script type='text/javascript'>
+    hs.graphicsDir = '../../anexosdigitales/highslide-5.0.0/highslide/graphics/';
     hs.outlineType = 'rounded-white';
     </script>
     <?php
@@ -135,9 +135,9 @@ return($resultado);
     $js_archivos = crear_campo_dropzone(null, null);
     ?>
   </div>-->
-  
-  
-  <div class="control-group">   
+
+
+  <div class="control-group">
    <label class="control-label" for="codigo_padre" data-toggle="tooltip" title="Seleccione el formato principal al cual pertenece">Padre</label>
     <div class="controls">
     	<div id="esperando_codigo_padre_formato"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
@@ -145,9 +145,9 @@ return($resultado);
       <div id="treebox_codigo_padre_formato" class="arbol_saia"></div>
       <input id="codigo_padre_formato" type="hidden" name="cod_padre" value="<?php echo($cod_padre);?>">
       <?php crear_arbol("codigo_padre_formato",$ruta_db_superior."test_formatos.php?tabla=formato&excluido=".$_REQUEST['idformato'].$adicional_cod_padre);?>
-      </div>  
+      </div>
   </div>
-  
+
   <div class="control-group">
     <label class="control-label" for="serie_idserie">Serie documental</label>
     <div class="controls">
@@ -162,19 +162,19 @@ return($resultado);
     <label class="control-label" for="contador">Contador</label>
     <div class="controls">
       <select name="contador_idcontador" data-toggle="tooltip" title="Escoja un contador" id="contador_idcontador">
-      	<?php 
+      	<?php
       	$contadores=busca_filtro_tabla("","contador","nombre<>'' and estado=1","nombre",$conn);
       	$reinicia_contador=1;
       	for($i=0;$i<$contadores["numcampos"];$i++){
       		echo('<option value="'.$contadores[$i]["idcontador"].'"');
       		if($datos_formato[0]["contador_idcontador"]==$contadores[$i]["idcontador"]){
-				echo(" selected='selected' "); 
+				echo(" selected='selected' ");
 				$reinicia_contador=$contadores[$i]["reiniciar_cambio_anio"];
       		}
       		echo('>'.$contadores[$i]["nombre"].'</option>');
       	}
       	?>
-      </select> 
+      </select>
       <!--span id="reinicio_contador"> </span><input type="checkbox" name="reiniciar_contador" id="reiniciar_contador" <?php if($reinicia_contador){echo(' value="1" checked="checked"'); } else{echo( ' value="0" '); }?>>Reiniciar contador con el cambio de a&ntilde;o</span-->
     </div>
   </div>
@@ -182,17 +182,17 @@ return($resultado);
     <label class="control-label" for="tipos">Tipo de formato</label>
     <div class="controls">
       <input type="radio" name="item" id="item_0" value="1" <?php if(@$datos_formato[0]["item"]==1) echo(' checked="checked"');?> data-toggle="tooltip" title="Seleccione un tipo de formato">Item
-      <input type="radio" name="item" id="item_1" value="<?php echo $datos_formato[0]["item"]; ?>" <?php  if(@$datos_formato[0]["item"]==0) echo(' checked="checked"');?> data-toggle="tooltip" title="Seleccione un tipo de formato">Formato  
-     
+      <input type="radio" name="item" id="item_1" value="<?php echo $datos_formato[0]["item"]; ?>" <?php  if(@$datos_formato[0]["item"]==0) echo(' checked="checked"');?> data-toggle="tooltip" title="Seleccione un tipo de formato">Formato
+
       </div>
   </div>
   <div class="control-group">
     <label class="control-label" for="banderas">Atributos del formato</label>
     <div class="controls">
-      <input type="checkbox" name="tipo_edicion" id="tipo_edicion" <?php check_banderas('tipo_edicion');?>>Edicion Continua 
-      <input type="checkbox" name="banderas[]" id="banderas" <?php check_banderas('aprobacion_automatica');?>>Aprobacion Automatica 
+      <input type="checkbox" name="tipo_edicion" id="tipo_edicion" <?php check_banderas('tipo_edicion');?>>Edicion Continua
+      <input type="checkbox" name="banderas[]" id="banderas" <?php check_banderas('aprobacion_automatica');?>>Aprobacion Automatica
       <input type="checkbox" name="mostrar" id="mostrar" <?php check_banderas('mostrar');?>>Mostrar
-      <input type="checkbox" name="paginar" id="paginar" <?php check_banderas('paginar');?>>Paginar al mostrar 
+      <input type="checkbox" name="paginar" id="paginar" <?php check_banderas('paginar');?>>Paginar al mostrar
       <input type="checkbox" name="banderas[]"	id="banderas" <?php check_banderas('asunto_padre');?>>Tomar el asunto del padre al responder
     </div>
   </div>
@@ -200,7 +200,7 @@ return($resultado);
     <label class="control-label" for="font_size">Tama&ntilde;o de letra</label>
     <div class="controls">
       <select name="font_size" id="font_size" style="max-width:7%;" data-toggle="tooltip" title="Seleccione el tamaño de letra para los formatos">
-      	<?php 
+      	<?php
       	$default_font_size=11;
       	if(@$datos_formato["numcampos"]){
       		$default_font_size=$datos_formato[0]["font_size"];
@@ -219,7 +219,7 @@ return($resultado);
     <label class="control-label" for="margenes">Margenes (mm)</label>
     <div class="controls">
       Izquierda<select class="input-mini" name="mizq" id="mizq">
-      	<?php 
+      	<?php
       	$defaul_margen=array(15,20,15,30);
       	if(@$datos_formato["numcampos"]){
       		$defaul_margen=explode(",",$datos_formato[0]["margenes"]);
@@ -233,7 +233,7 @@ return($resultado);
       	?>
       </select>
       Derecha<select class="input-mini" name="mder" id="mder">
-      	<?php 
+      	<?php
       	for($i=0;$i<11;$i++){
       		echo('<option value="'.($i*5).'"');
       		if(($i*5)==$defaul_margen[1])
@@ -243,7 +243,7 @@ return($resultado);
       	?>
       </select>
       Superior<select class="input-mini" name="msup" id="msup">
-      	<?php 
+      	<?php
       	for($i=0;$i<11;$i++){
       		echo('<option value="'.($i*5).'"');
       		if(($i*5)==$defaul_margen[2])
@@ -253,7 +253,7 @@ return($resultado);
       	?>
       </select>
       Inferior<select class="input-mini" name="minf" id="minf">
-      	<?php 
+      	<?php
       	for($i=0;$i<11;$i++){
       		echo('<option value="'.($i*5).'"');
       		if(($i*5)==$defaul_margen[3])
@@ -277,7 +277,7 @@ return($resultado);
       <select name="papel" id="papel" style="max-width:12%;">
       	<option value="letter" <?php if(@$datos_formato[0]["papel"]=="letter") echo(' selected');?>>Carta</option>
       	<option value="A4" <?php if(@$datos_formato[0]["papel"]=="A4") echo(' selected');?>>A4</option>
-      	<option value="A5" <?php if(@$datos_formato[0]["papel"]=="A5") echo(' selected');?>>Media Carta</option>      	
+      	<option value="A5" <?php if(@$datos_formato[0]["papel"]=="A5") echo(' selected');?>>Media Carta</option>
       	<option value="legal" <?php if(@$datos_formato[0]["papel"]=="legal") echo(' selected');?>>Oficio</option>
       </select>
     </div>
@@ -291,7 +291,7 @@ return($resultado);
     </div>
   </div>
   <?php
-  if($_SESSION["LOGIN" . LLAVE_SAIA]=="cerok"){  	
+  if($_SESSION["LOGIN" . LLAVE_SAIA]=="cerok"){
   ?>
 	  <div class="control-group">
 	    <label class="control-label" for="exportar">M&eacute;todo exportar</label>
@@ -301,7 +301,7 @@ return($resultado);
 	      TCPDF<input type="radio" name="exportar" id="exportar_0" value="tcpdf"  <?php if(@$datos_formato[0]["exportar"]=="tcpdf" || !@$datos_formato) echo(' checked="checked"');?>>
 	    </div>
 	  </div>
-	  
+
 	  <div class="control-group">
 	    <label class="control-label" for="pertenece_nucleo">Formato Pertenece a n&uacute;cleo</label>
 	    <div class="controls">
@@ -309,13 +309,13 @@ return($resultado);
 	      No<input type="radio" name="pertenece_nucleo" id="pertenece_nucleo_0" value="0"  <?php if(@$datos_formato[0]["pertenece_nucleo"]==0) echo(' checked="checked"');?>>
 	    </div>
 	  </div>
-  
+
   <div class="control-group">
     <label class="control-label" for="tiempo_autoguardado">Tiempo autoguardado</label>
     <div class="controls">
     <?php $defaul_tiempo=6;
     if(@$datos_formato[0]["tiempo_autoguardado"]){
-		$defaul_tiempo=$datos_formato[0]["tiempo_autoguardado"]/60000;    	
+		$defaul_tiempo=$datos_formato[0]["tiempo_autoguardado"]/60000;
     }
     ?>
       <input id="tiempo_formato" type="number" name="tiempo_autoguardado" min="0" max="3600" step="1" value="<?php echo($defaul_tiempo)?>" style="width:50px;">Minutos
@@ -327,7 +327,7 @@ return($resultado);
 		?>
 		<input type="hidden" name="exportar" value="tcpdf">
 		<input type="hidden" name="pertenece_nucleo" value="0">
-		<input type="hidden" id="tiempo_formato" name="tiempo_autoguardado" value="5"> 
+		<input type="hidden" id="tiempo_formato" name="tiempo_autoguardado" value="5">
 		<?php
 	}
   ?>
@@ -358,7 +358,7 @@ return($resultado);
     <!-- button type="reset" name="cancelar" class="btn" id="cancelar_formulario_saia" value="cancelar">Cancel</button-->
     <?php if($_REQUEST["idformato"]){?>
     <!-- button type="button" name="eliminar" class="btn btn-danger kenlace_saia_propio" id="eliminar_formulario_saia" enlace="../formatos/generador/eliminar_formato.php?idformato=<?php echo($_REQUEST['idformato']);?>" titulo="Eliminar formato" eliminar_hijos="0" value="eliminar">Eliminar</button-->
-    <?php } 
+    <?php }
     $texto .= "<input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''>";
     $id_unico = uniqid();
     $texto .= "<input type='hidden' name='form_uuid' id='form_uuid' value='$id_unico'>";
@@ -369,7 +369,7 @@ return($resultado);
 </form>
 <?php
 echo $js_archivos;
-echo(librerias_jquery("1.7"));
+//echo(librerias_jquery("1.7"));
 echo(librerias_notificaciones());
 echo(librerias_kaiten());
 echo(librerias_acciones_kaiten());
@@ -402,7 +402,7 @@ $("document").ready(function(){
 			    	  //notificacion_saia(objeto.mensaje,'error','topCenter',3000);
 			    	  $("#nombre_formato").focus();
 			      }
-			  	
+
 			  }
 			});
 		}
@@ -414,9 +414,9 @@ $("document").ready(function(){
 	if($("#nombre_formato").val()!=""){
 		var nombre_formato=$("#nombre_formato").val();
 	}
-	
+
 	$("#enviar_datos_formato").click(function() {
-		if(formulario.valid()) {			
+		if(formulario.valid()) {
 			$('#cargando_enviar').html("Procesando <i id='icon-cargando'>&nbsp;</i>");
 			var buttonAcep = $(this);
 			//buttonAcep.attr('disabled', 'disabled');
@@ -435,12 +435,12 @@ $("document").ready(function(){
               var kaiten_actual=obtener_panel_kaiten();
               parent.Kaiten.reload(kaiten_actual,data_iframe);
               notificacion_saia('El registro se a insertado exitosamente','success','topCenter',3000);
-         
+
             } else {
             	notificacion_saia(objeto.error,'error','topCenter',3000);
             	buttonAcep.removeAttr('disabled');
             }
-        	
+
         }
     	});
 		} else {
@@ -448,8 +448,8 @@ $("document").ready(function(){
 			$(".error").first().focus();
 		}
 	});
-	
-	
+
+
 		if(formato!==null && formato.numcampos){
     $('#nombre_formato').attr('value',formato[0].nombre);
     //$('#tabla_formato').attr('value',formato[0].tabla);
@@ -489,7 +489,7 @@ function parsear_items(){
 	$("#prefijo_formato").val("ft_");
 }
 </script>
-<?php 
+<?php
 function check_banderas($bandera){
 	global $datos_formato;
 	if($bandera=="aprobacion_automatica"){
@@ -508,7 +508,7 @@ function check_banderas($bandera){
 		echo(' value="'.$datos_formato[0][$bandera].'" checked="checked" ');
 	}
 }
-function crear_arbol($nombre,$url,$tipo="radio"){	
+function crear_arbol($nombre,$url,$tipo="radio"){
 	global $ruta_db_superior;
 	?>
 <script>
@@ -532,7 +532,7 @@ $("document").ready(function(){
 		tree_<?php echo($nombre);?>.setOnCheckHandler(onNodeSelect_<?php echo($nombre);?>);
 		function onNodeSelect_<?php echo($nombre);?>(nodeId){
 			//alert(nodeId);
-			var valor_destino=document.getElementById("<?php echo($nombre);?>");			
+			var valor_destino=document.getElementById("<?php echo($nombre);?>");
 			if(tree_<?php echo($nombre);?>.isItemChecked(nodeId)){
 				//alert(valor_destino.value);
 				if(valor_destino.value!=="")
@@ -542,9 +542,9 @@ $("document").ready(function(){
 				valor_destino.value=nodeId;
 			}else{
 				valor_destino.value="";
-			}			
-		}	
-  <?php } 
+			}
+		}
+  <?php }
   else{
   ?>
   tree_<?php echo($nombre);?>.setOnCheckHandler(onNodeSelect_check_<?php echo($nombre);?>);
@@ -552,11 +552,11 @@ $("document").ready(function(){
   		var valor_destino=document.getElementById("<?php echo($nombre);?>");
 		valor_destino.value=tree_<?php echo($nombre);?>.getAllChecked();
 	}
-  <?php 
+  <?php
   }
   ?>
   /*tree_<?php echo($nombre);?>.enableThreeStateCheckboxes(true);*/
- 
+
 
   tree_<?php echo($nombre);?>.loadXML("<?php echo($url);?>");
 
@@ -635,7 +635,7 @@ function crear_campo_dropzone($nombre, $parametros) {
                                 return this._updateMaxFilesReachedClass();
                             },
                             success : function(file, response) {
-                            	
+
                             	for (var key in response) {
                                 	if(Array.isArray(response[key])) {
                                     	for(var i=0; i < response[key].length; i++) {
@@ -661,6 +661,6 @@ function crear_campo_dropzone($nombre, $parametros) {
                 });
             });</script>";
         return $js_archivos;
-    }  
-    
+    }
+
 ?>

@@ -17,6 +17,7 @@ if (!$_SESSION["LOGIN" . LLAVE_SAIA] && isset($_REQUEST["LOGIN"]) && @$_REQUEST[
 include_once ($ruta_db_superior . FORMATOS_SAIA . "librerias/funciones.php");
 include_once ($ruta_db_superior . FORMATOS_SAIA . "generar_formato_buscar.php");
 include_once ($ruta_db_superior . "pantallas/documento/class_documento_elastic.php");
+include_once ($ruta_db_superior . "arboles/crear_arbol_ft.php");
 
 if (@$_REQUEST["archivo"] != '') {
     $archivo = $ruta_db_superior . str_replace("-", "/", $_REQUEST["archivo"]);
@@ -628,6 +629,7 @@ class GenerarFormato {
             $mascaras = 0;
             $textareas = 0;
             $textareacke = 0;
+            $arboles_fancy = 0;
             $autocompletar = 0;
             $checkboxes = 0;
             $fecha = 0;
@@ -736,8 +738,6 @@ class GenerarFormato {
                             }
                             $texto .= '">' . $valor . '</textarea>';
                             $texto .= '<script>
-                            // Replace the <textarea id="editor1"> with a CKEditor
-                            // instance, using default configuration.
                             var config = {
                                 removePlugins : "sourcedialog,flash,iframe,forms,sourcearea,base64image,div,showblocks,smiley"
                             };
@@ -746,6 +746,54 @@ class GenerarFormato {
                             </div></div>';
                             $textareacke++;
                             $indice_tabindex++;
+                            break;
+                        case "arbol_fancytree":
+                            $idcampo_ft = $campos[$h]["idcampos_formato"];
+                            $params_ft = json_decode($campos[$h]["valor"], true);
+                            if (json_last_error() === JSON_ERROR_NONE) {
+                                $opc_ft = "";
+                                $param_url = "";
+                                $parts = parse_url($params_ft["url"]);
+                                parse_str($parts['query'], $query_ft);
+                                foreach ($query_ft as $key => $value) {
+                                    $param_url .= '"' . $key . '" => "' . $value . '",';
+                                }
+
+                                $texto .= '<?php $origen_' . $idcampo_ft . ' = array(
+                                    "url" => "' . $params_ft["url"] . '",
+                                    "ruta_db_superior" => $ruta_db_superior,';
+                                if(!empty($param_url)) {
+                                    $texto .= '"params" => array(' . $param_url . '),';
+                                }
+                                $texto .= ');';
+                                if(isset($params_ft["checkbox"]) && $params_ft["checkbox"]) {
+                                    $texto .= '$origen_' . $idcampo_ft . '["params"]["checkbox"]="' .$params_ft["checkbox"] .'";';
+                                }
+
+                                if(isset($params_ft["funcion_click"]) && !empty($params_ft["funcion_click"])) {
+                                    $opc_ft .= '"onNodeClick" => "' . $params_ft["funcion_click"] . '", ';
+                                }
+                                if(isset($params_ft["funcion_select"]) && !empty($params_ft["funcion_select"])) {
+                                    $opc_ft .= '"onNodeSelect" => "' . $params_ft["funcion_select"] . '", ';
+                                }
+                                if(isset($params_ft["funcion_dobleclick"]) && !empty($params_ft["funcion_dobleclick"])) {
+                                    $opc_ft .= '"onNodeDblClick" => "' . $params_ft["funcion_dobleclick"] . '", ';
+                                }
+                                if(isset($params_ft["buscador"]) && !empty($params_ft["buscador"])) {
+                                    $opc_ft .= '"busqueda_item" => "' . $params_ft["buscador"] . '", ';
+                                }
+
+                                $texto .= '$opciones_arbol_' . $idcampo_ft . ' = array(
+                                    "keyboard" => true,' . $opc_ft . '
+                                );
+                                $extensiones_' . $idcampo_ft . ' = array(
+                                    "filter" => array()
+                                );
+                                $arbol_'. $idcampo_ft .' = new ArbolFt("' . $campos[$h]["nombre"] . '", $origen_' . $idcampo_ft . ', $opciones_arbol_'. $idcampo_ft .', $extensiones_' . $idcampo_ft . ');
+                                echo $arbol_'. $idcampo_ft .'->generar_html();?>';
+                                $arboles_fancy++;
+                            }
+
                             break;
                         case "textarea":
                             $valor = $campos[$h]["valor"];
@@ -1365,7 +1413,6 @@ class GenerarFormato {
             if ($textareacke) {
                 $includes .= $this->incluir('<?= $ruta_db_superior ?>js/ckeditor/4.11/ckeditor_std/ckeditor.js', "javascript");
             }
-
             $includes .= '<?= pace() ?>
                         <?= jquery() ?>
                         <?= bootstrap() ?>
@@ -1374,6 +1421,24 @@ class GenerarFormato {
                         <?= icons() ?>
                         <?= moment() ?>';
             $includes .= "<?= validate() ?>";
+
+            if($arboles_fancy) {
+                $includes .= '<style>
+    ul.fancytree-container {
+	width: 80%;
+	height: 80%;
+	overflow: auto;
+	position: relative;
+	border: none;
+}
+span.fancytree-title {
+    font-family: verdana;
+	font-size: 7pt;
+}</style>';
+                $includes .= $this->incluir('$ruta_db_superior . "arboles/crear_arbol_ft.php"', "librerias");
+                $includes .= '<?= jqueryUi() ?>';
+                $includes .= '<?= arboles_ft("2.30", "filtro") ?>';
+            }
 
             $includes .= $this->incluir('<?= $ruta_db_superior ?>js/title2note.js', "javascript");
             if ($arboles) {
@@ -1526,7 +1591,7 @@ class GenerarFormato {
                                 <script
                                     src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.full.min.js"
                                     type="text/javascript"></script>
-                                
+
                                 <link rel="stylesheet"
                                 	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
                                 <link rel="stylesheet"

@@ -463,14 +463,14 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 	</body>
 </html>
 <?php
-echo(librerias_highslide());
-echo(librerias_UI());
-echo(librerias_bootstrap());
-echo(librerias_notificaciones());
-echo(librerias_validar_formulario());
-echo(librerias_arboles());
-echo(librerias_tooltips());
-//echo(librerias_tiny());
+echo (librerias_highslide());
+echo (librerias_UI());
+echo (librerias_bootstrap());
+echo (librerias_notificaciones());
+echo (librerias_validar_formulario());
+echo (librerias_arboles());
+echo (librerias_tooltips());
+// echo(librerias_tiny());
 $cant_js = count($librerias_js);
 $incluidas = array();
 for ($i = 0; $i < $cant_js; $i++) {
@@ -885,17 +885,18 @@ var form_builder = {
     },
     addComponent: function(component) {
         $.ajax({
-          type:'POST',
-          url: "<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php",
-          data: "librerias=pantallas/generador/librerias.php&funcion=adicionar_pantalla_campos&parametros="+$("#idformato").val()+";"+component.attr("idpantalla_componente")+";1&rand="+Math.round(Math.random()*100000),
-          success: function(html){
-            if(html){
-              var objeto=jQuery.parseJSON(html);
-              if(objeto.exito){
-                $("#contenedor_saia").append(objeto.codigo_html);
-              }
-          	}
-          }
+            type:'POST',
+            url: "<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php",
+            data: "librerias=pantallas/generador/librerias.php&funcion=adicionar_pantalla_campos&parametros="+$("#idformato").val()+";"+component.attr("idpantalla_componente")+";1&rand="+Math.round(Math.random()*100000),
+            success: function(html) {
+                if(html) {
+                    console.log(html);
+                    var objeto=jQuery.parseJSON(html);
+                    if(objeto.exito) {
+                        $("#contenedor_saia").append(objeto.codigo_html);
+                    }
+                }
+            }
       	});
     }
 };
@@ -1417,13 +1418,13 @@ function generar_pantalla(nombre_accion){
 		});
 	}
 
-/*function receiveMessage(event) {
+function receiveMessage(event) {
       if(event.data["etiqueta_html"] && event.data["etiqueta_html"] == 'textarea_cke') {
    		  CKEDITOR.instances[event.data["nombre_campo"]].setData(event.data["fs_predeterminado"]);
       }
 }
 
-window.addEventListener("message", receiveMessage, false);*/
+window.addEventListener("message", receiveMessage, false);
 });//Fin Document ready
 /*
 function generar_archivos_ignorados(){

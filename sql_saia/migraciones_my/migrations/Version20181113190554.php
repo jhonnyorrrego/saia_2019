@@ -1,6 +1,7 @@
 <?php
 namespace Migrations;
 
+use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
@@ -26,7 +27,7 @@ class Version20181113190554 extends AbstractMigration {
      * @param Schema $schema
      */
     public function up(Schema $schema) {
-        $this->addSql("");
+        $conn = $this->connection;
 
         $datos = [
             [
@@ -58,6 +59,9 @@ class Version20181113190554 extends AbstractMigration {
                 "etiqueta_html" => "arbol_fancytree"
             ]
         ];
+        foreach ($datos as $data) {
+            $conn->insert("pantalla_componente", $data);
+        }
     }
 
     public function preDown(Schema $schema) {
@@ -73,6 +77,24 @@ class Version20181113190554 extends AbstractMigration {
      * @param Schema $schema
      */
     public function down(Schema $schema) {
-        // this down() migration is auto-generated, please modify it to your needs
+        $conn = $this->connection;
+
+        $types = [
+            Connection::PARAM_STR_ARRAY
+        ];
+
+        $sql = "select idpantalla_componente from pantalla_componente where nombre IN (?)";
+        $filtro = [["arbol_fancytree", "textarea_cke"]];
+        $stmt = $conn->executeQuery($sql, $filtro, $types);
+        $result = $stmt->fetchAll();
+
+        if (!empty($result)) {
+            foreach ($result as $row) {
+                $ident = [
+                    'idpantalla_componente' => $row["idpantalla_componente"]
+                ];
+                //$resp = $conn->delete('pantalla_componente', $ident);
+            }
+        }
     }
 }

@@ -72,13 +72,9 @@ function listado_funciones($ruta_libreria, $idlibreria) {
         $pos2 = strpos($valor, ")");
         $nombre = trim(substr($valor, 8, ($pos1 - 8)));
         $dato = trim(substr($valor, 8));
-		//print_r($dato);
-			//die();
         $texto_param = $dato;
         // strpos($texto_param,'$idformato,$iddoc') valida que la funcion sea valida como funcion de saia para los formatos
-        
-        //if ($nombre != '' && strpos($texto_param, '$idformato,$iddoc')) {
-        if ($nombre != '' && preg_match('/\$idformato[\s]*,[\s]*\$iddoc/',$texto_param)){        	        	
+        if ($nombre != '' && preg_match('/\$idformato[\s]*,[\s]*\$iddoc/',$texto_param)) {
             $texto .= "<item style=\"font-family:verdana; font-size:7pt;\" text=\"" . htmlspecialchars($texto_param) . "\" id=\"func_" . $idlibreria . "_" . $nombre . "\" >";
             $texto .= "<userdata name='myfunc'>{*" . $nombre . "*}</userdata>\n";
             $texto .= "<userdata name='mylib_id'>" . $idlibreria . "</userdata>\n";

@@ -18,32 +18,32 @@ for($i=0;$i<$campos["numcampos"];$i++){
 	foreach($librerias AS $key=>$libreria){
 		$extension=explode(".",$libreria);
 		$cant=count($extension);
-    if($extension[$cant-1]!==''){            	
+    if($extension[$cant-1]!==''){
   		switch($extension[($cant-1)]){
-  	    case "php":           
+  	    case "php":
   	      include_once($ruta_db_superior.$libreria);
   	    break;
   	    case "js":
   	      $texto='<script type="text/javascript" src="'.$ruta_db_superior.$libreria.'"></script>';
   	    break;
-  	    case "css": 
-  	      $texto='<link rel="stylesheet" type="text/css" href="'.$ruta_db_superior.$libreria.'"/>';    
+  	    case "css":
+  	      $texto='<link rel="stylesheet" type="text/css" href="'.$ruta_db_superior.$libreria.'"/>';
   	    break;
   	    default:
   	      $texto=""; //retorna un vacio si no existe el tipo
   	    break;
   	  }
-  		echo($texto);    
+  		echo($texto);
   	}
   }
 }
-if(@$_REQUEST["idpantalla_campos"]){    
+if(@$_REQUEST["idpantalla_campos"]){
   $pantalla_campos=get_pantalla_campos($_REQUEST["idpantalla_campos"],0);
   $obligatoriedad_si='';
-  $obligatoriedad_no='';    
+  $obligatoriedad_no='';
   if($pantalla_campos[0]["obligatoriedad"])
     $obligatoriedad_si=' checked="checked"';
-  else 
+  else
     $obligatoriedad_no=' checked="checked"';
 }
 else{
@@ -57,21 +57,21 @@ else{
   <div class="control-group">
     <label class="control-label" for="tabla">Tabla</label>
     <div class="controls">
-      <?php 
+      <?php
           $tablas=array();
-          $ltablas=$conn->Lista_Tabla();          
-          foreach($ltablas AS $key=>$valor){          
-            if($valor[0]!=''){  
-              array_push($tablas,$valor[0]);              
-            }            
+          $ltablas=$conn->Lista_Tabla();
+          foreach($ltablas AS $key=>$valor){
+            if($valor[0]!=''){
+              array_push($tablas,$valor[0]);
+            }
           }
           $tablas_campos=  busca_filtro_tabla("tabla", "pantalla_campos", "tabla<>''", "GROUP BY tabla", $conn);
           for($i=0;$i<$tablas_campos["numcampos"];$i++){
             array_push($tablas,$tablas_campos[$i]["tabla"]);
           }
           $tablas=array_unique($tablas);
-        ?>        
-    <input type="text" data-provide="typeahead" data-items="4" name="fs_tabla" id="tabla" data-source='[<?php echo('"'.implode('","',$tablas)).'"';?>]' value="<?echo($pantalla_campos[0]["tabla"]);?>">                   
+        ?>
+    <input type="text" data-provide="typeahead" data-items="4" name="fs_tabla" id="tabla" data-source='[<?php echo('"'.implode('","',$tablas)).'"';?>]' value="<?echo($pantalla_campos[0]["tabla"]);?>">
     </div>
   </div>
   <div class="control-group">
@@ -152,7 +152,7 @@ else{
   </div>
 </form>
 <?php
-echo(librerias_jquery("1.7"));
+//echo(librerias_jquery("1.7"));
 echo(librerias_bootstrap());
 echo(librerias_validar_formulario());
 echo(librerias_notificaciones());
@@ -164,11 +164,11 @@ $(document).ready(function(){
     rules: {
       "fs_acciones[]": {
         required: true,
-        minlength:1            
+        minlength:1
       }
     }
   });
-	$("#enviar_formulario_saia").click(function(){    
+	$("#enviar_formulario_saia").click(function(){
     var idpantalla_campo=$("#idpantalla_campos").val();
 		if(formulario.valid()){
 			$('#cargando_enviar').html("Procesando <i id='icon-cargando'>&nbsp;</i>");
@@ -177,28 +177,28 @@ $(document).ready(function(){
         type:'POST',
         url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias.php",
         data: "ejecutar_pantalla_campo=set_pantalla_campos&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+"&"+formulario.serialize(),
-        success: function(html){                
-          if(html){          
-            var objeto=jQuery.parseJSON(html);                  
+        success: function(html){
+          if(html){
+            var objeto=jQuery.parseJSON(html);
             if(objeto.exito){
               $('#cargando_enviar').html("Terminado ...");
               //$("#content").append(objeto.etiqueta_html);
-              //setTimeout(notificacion_saia("Actualizaci&oacute;n realizada con &eacute;xito.","success","",2500),5000);  
-              //$("#pc_"+idpantalla_campo,parent.document).find(".control-label").html(objeto.etiqueta);             
-              $("#pc_"+idpantalla_campo,parent.document).replaceWith(objeto.codigo_html);              
-              //$("#pc_"+idpantalla_campo,parent.document).find(".elemento_formulario").attr("placeholder",objeto.placeholder);        
-              parent.hs.close();                                    	
-            }                  
+              //setTimeout(notificacion_saia("Actualizaci&oacute;n realizada con &eacute;xito.","success","",2500),5000);
+              //$("#pc_"+idpantalla_campo,parent.document).find(".control-label").html(objeto.etiqueta);
+              $("#pc_"+idpantalla_campo,parent.document).replaceWith(objeto.codigo_html);
+              //$("#pc_"+idpantalla_campo,parent.document).find(".elemento_formulario").attr("placeholder",objeto.placeholder);
+              parent.hs.close();
+            }
         	}
         }
-    	});		
+    	});
 		}
-		else{			
-			$(".error").first().focus();			
+		else{
+			$(".error").first().focus();
 		}
 	});
-	$("#cancelar_formulario_saia").click(function(){		
+	$("#cancelar_formulario_saia").click(function(){
 		parent.hs.close();
 	});
-});	
+});
 </script>

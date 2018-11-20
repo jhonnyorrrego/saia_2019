@@ -75,7 +75,7 @@ $input_variable_formulario='<input type="text" name="_dato" value="" class="lpar
     if(@$_REQUEST['funcion_mostrar']){
         include_once($ruta_db_superior."librerias_saia.php");
         echo(estilo_bootstrap());
-        echo(librerias_jquery('1.7'));
+        //echo(librerias_jquery('1.7'));
         echo(librerias_notificaciones());
 
   ?>
