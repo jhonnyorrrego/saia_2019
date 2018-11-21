@@ -18,6 +18,7 @@ class Funcionario extends Model {
     protected $email_contrasena;
     protected $direccion;
     protected $telefono;
+    protected $clave;
     protected $table = 'funcionario';
     protected $primary = 'idfuncionario';
 
@@ -87,6 +88,14 @@ class Funcionario extends Model {
      */
     public function getPhoneNumber(){
         return $this->telefono;
+    }
+
+    /**
+     * @return email attribute
+     * @author jhon.valencia@cerok.com
+     */
+    public function getPassword(){
+        return $this->clave;
     }
 
     /**
