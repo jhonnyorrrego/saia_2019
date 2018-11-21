@@ -782,6 +782,9 @@ class GenerarFormato {
                                 if(isset($params_ft["buscador"]) && !empty($params_ft["buscador"])) {
                                     $opc_ft .= '"busqueda_item" => "' . $params_ft["buscador"] . '", ';
                                 }
+                                if ($campos[$h]["obligatoriedad"]) {
+                                    $opc_ft .= '"obligatorio" => 1,';
+                                }
 
                                 $texto .= '$opciones_arbol_' . $idcampo_ft . ' = array(
                                     "keyboard" => true,' . $opc_ft . '

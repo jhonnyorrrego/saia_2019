@@ -50,6 +50,8 @@ class ArbolFt {
 
     private $html = "";
 
+    private $campo_obligatorio = false;
+
     public function __construct($campo, $fuente_datos, $opciones_arbol = array(), $extensiones = array()) {
         $this->fuente_datos = $fuente_datos;
         $this->opciones_arbol = $opciones_arbol;
@@ -116,9 +118,11 @@ class ArbolFt {
             $this->con_funcion_dblclick = $this->opciones_arbol["onNodeDblClick"];
             unset($this->opciones_arbol["onNodeDblClick"]);
         }
-		if(isset($this->opciones_arbol["lazy"]))
-		{
+		if(isset($this->opciones_arbol["lazy"])) {
 			$this->opciones_arbol["lazyLoad"] = "###AquiFuncionLazy###";
+		}
+		if(isset($this->opciones_arbol["obligatorio"]) && $this->opciones_arbol["obligatorio"]) {
+		    $this->campo_obligatorio = true;
 		}
     }
 
@@ -152,7 +156,7 @@ function(event, data) { // Display list of selected nodes
 			}
 FINJS;
 		$funcion_lazy = <<<FINJS
-		 
+
 		function(event, data){
 			      var node = data.node;
 			      // Load child nodes via Ajax GET /getTreeData?mode=children&parent=1234
@@ -169,9 +173,13 @@ FINJS;
 FINJS;
         $opciones_json = preg_replace('/"###AquiFuncionSelect###"/', $cadena_funcion, $opciones_json);
 		$opciones_json = preg_replace('/"###AquiFuncionLazy###"/', $funcion_lazy, $opciones_json);
+		$obligatorio = "";
+		if($this->campo_obligatorio) {
+		    $obligatorio = 'class="required"';
+		}
         $this->html .= <<<FINHTML
         <div id="treebox_{$this->campo}"></div>
-        <input type="hidden" class="required" name="{$this->campo}" id="{$this->campo}">
+        <input type="hidden" {$obligatorio} name="{$this->campo}" id="{$this->campo}">
 <script type="text/javascript">
 	$(document).ready(function() {
    	   	var configuracion={$opciones_json};
