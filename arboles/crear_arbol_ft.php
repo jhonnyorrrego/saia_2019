@@ -116,6 +116,10 @@ class ArbolFt {
             $this->con_funcion_dblclick = $this->opciones_arbol["onNodeDblClick"];
             unset($this->opciones_arbol["onNodeDblClick"]);
         }
+		if(isset($this->opciones_arbol["lazy"]))
+		{
+			$this->opciones_arbol["lazyLoad"] = "###AquiFuncionLazy###";
+		}
     }
 
     public function generar_html() {
@@ -147,7 +151,24 @@ function(event, data) { // Display list of selected nodes
 				$("#{$this->campo}").val(s);
 			}
 FINJS;
+		$funcion_lazy = <<<FINJS
+		 
+		function(event, data){
+			      var node = data.node;
+			      // Load child nodes via Ajax GET /getTreeData?mode=children&parent=1234
+			      data.result = $.ajax({
+			        url: "{$this->opciones_arbol["source"]["url"]}",
+			        data: {
+				        cargar_partes: 1,
+				        id: node.key
+				    },
+			        cache: true
+			      });
+			      //console.log(data.result);
+			},
+FINJS;
         $opciones_json = preg_replace('/"###AquiFuncionSelect###"/', $cadena_funcion, $opciones_json);
+		$opciones_json = preg_replace('/"###AquiFuncionLazy###"/', $funcion_lazy, $opciones_json);
         $this->html .= <<<FINHTML
         <div id="treebox_{$this->campo}"></div>
         <input type="hidden" class="required" name="{$this->campo}" id="{$this->campo}">

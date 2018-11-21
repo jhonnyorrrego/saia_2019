@@ -124,13 +124,13 @@ function consultar_numero_carpetas_caja($idcaja) {
 
 function calcular_fecha_extrema_inicial($idcaja) {
 	global $conn;
-	$expedientes = busca_filtro_tabla("MIN(date(fecha)) as fecha", "expediente", "fk_idcaja = " . $idcaja, "", $conn);
+	$expedientes = busca_filtro_tabla("MIN(date(fecha_extrema_i)) as fecha", "expediente", "fk_idcaja = " . $idcaja, "", $conn);
 	return $expedientes[0]["fecha"];
 }
 
 function calcular_fecha_extrema_final($idcaja) {
 	global $conn;
-	$expedientes = busca_filtro_tabla("MAX(date(fecha)) as fecha", "expediente", "fk_idcaja = " . $idcaja, "", $conn);
+	$expedientes = busca_filtro_tabla("MAX(date(fecha_extrema_f)) as fecha", "expediente", "fk_idcaja = " . $idcaja, "", $conn);
 	return $expedientes[0]["fecha"];
 }
 

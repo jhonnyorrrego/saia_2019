@@ -61,10 +61,10 @@ global $conn;
             </label>
             <div class="controls">
               <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_s-estado1" name="bqsaia_estado" type="radio" value="1">Activo
+                <input class="radio_buttons optional" id="bqsaia_s-estado1" name="bqsaia_estado" type="radio" value='Activo'>Activo
               </label>
               <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_s-estado2" name="bqsaia_estado" type="radio" value="0">Inactivo
+                <input class="radio_buttons optional" id="bqsaia_s-estado2" name="bqsaia_estado" type="radio" value='Inactivo'>Inactivo
               </label>
             </div>          
           </div> 

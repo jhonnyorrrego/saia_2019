@@ -16,10 +16,19 @@ $objetoJson = array(
     "key" => 0
 );
 $id = 0;
-if ($_GET["id"]) {
+/*if ($_GET["id"]) {
     $id = $_GET["id"];
+}*/
+$partes=false;
+if(isset($_REQUEST["cargar_partes"]) && $_REQUEST["cargar_partes"]==1){
+	$partes = true;
 }
-
+if($partes && $_REQUEST["id"]){
+	//$datos = explode(".",$_REQUEST["id"]);	//id[0] idserie id[1] idexp
+	//$id=$datos[1];
+	$id=$_REQUEST["id"];
+		
+}
 $condicion_ad = '';
 $idexpediente = 0;
 
@@ -57,19 +66,39 @@ if (isset($_REQUEST["checkbox"])) {
     $checkbox = $_REQUEST["checkbox"];
 }
 
+if (isset($_REQUEST["agrupador"])) {
+    $agrupador = $_REQUEST["agrupador"];
+}
+if (isset($_REQUEST["serie_idserie"])) {
+    $serie_idserie = $_REQUEST["serie_idserie"];
+}
 $idfuncionario = usuario_actual("idfuncionario");
 $datos_admin_funcionario = busca_datos_administrativos_funcionario($idfuncionario);
 $lista_entidades = implode(",", $datos_admin_funcionario["identidad_serie"]);
-	
+
+if(!$id){
+$arbol=llena_expediente($id,$idexpediente,$lista_entidades,$condicion_ad,$partes);
+}
+elseif($id && $agrupador==1){
+	$arbol=llena_expediente($id,0,$lista_entidades,$condicion_ad,$partes);
+}
+else{
+	if($agrupador==0 && $serie_idserie){
+		$arbol_exp=llena_expediente($id,0,$lista_entidades,$condicion_ad,$partes);
+		$arbol_serie=llena_subserie($serie_idserie,$id);
+		$arbol = array_merge($arbol_exp,$arbol_serie);
+	}
+}
 
 // TERMINA DEFAULT
 
 header('Content-Type: application/json');
 
-$arbol = new DHtmlXtreeExpedienteFunc($conn, $condicion_ad, $idexpediente, $seleccionados, $checkbox,$lista_entidades);
-echo json_encode($arbol->generarXml($id));
+//$arbol = new DHtmlXtreeExpedienteFunc($conn, $condicion_ad, $idexpediente, $seleccionados, $checkbox,$lista_entidades,$partes);
+//echo json_encode($arbol->generarXml($id));
+echo json_encode($arbol);
 
-class DHtmlXtreeExpedienteFunc {
+/*class DHtmlXtreeExpedienteFunc {
 
     private $objetoXML;
     private $conn;
@@ -78,14 +107,16 @@ class DHtmlXtreeExpedienteFunc {
     private $idexpediente;
 	private $checkbox;
 	private $lista_entidades;
+	private $partes;
 
-    public function __construct($conn, $condicion_ad, $idexpediente, $seleccionados, $checkbox,$lista_entidades) {
+    public function __construct($conn, $condicion_ad, $idexpediente, $seleccionados, $checkbox,$lista_entidades,$partes) {
         $this->conn = $conn;
         $this->condicion_ad = $condicion_ad;
         $this->seleccionados = $seleccionados;
         $this->idexpediente = $idexpediente;
         $this->checkbox = $checkbox;
 		$this->lista_entidades = $lista_entidades;
+		$this->partes = $partes;
     }
 
     public function generarXml($id = 0) {
@@ -94,23 +125,24 @@ class DHtmlXtreeExpedienteFunc {
         //$cadenaXML = trim($this->objetoXML->outputMemory());
         //print($this->llena_expediente($id));
         return $this->llena_expediente($id);
-    }
+    }*/
 
-    private function llena_expediente($id) {
+    /*private */function llena_expediente($id,$idexpediente,$lista_entidades,$condicion_ad,$partes) {
+    	global $conn;
     	$objetoJson = array();
-        if($this->idexpediente) {
-            $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "entidad_expediente ee
-                join expediente e on ee.expediente_idexpediente = e.idexpediente", "e.idexpediente=" . $this->idexpediente, "nombre ASC", $this->conn);
+		//$id = explode(".",$id);
+		//print_r($id);
+        //if($this->idexpediente) {
+        if($idexpediente) {
+            $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre,agrupador", "entidad_expediente ee
+                join expediente e on ee.expediente_idexpediente = e.idexpediente", "e.idexpediente=" . $idexpediente, "nombre ASC", $conn);
         } else if ($id == 0) {
-            //$papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "entidad_expediente ee join expediente e on ee.expediente_idexpediente = e.idexpediente", "(cod_padre=0 or cod_padre is null)" . $this->condicion_ad, "nombre ASC", $this->conn);
-            $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "entidad_expediente ee
-            join expediente e on ee.expediente_idexpediente = e.idexpediente", "(cod_padre=0 or cod_padre is null) and e.fk_entidad_serie in (" . $this->lista_entidades .")", "nombre ASC", $this->conn);
+            $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre,agrupador", "entidad_expediente ee
+            join expediente e on ee.expediente_idexpediente = e.idexpediente", "(cod_padre=0 or cod_padre is null) and e.fk_entidad_serie in (" . $lista_entidades .")", "nombre ASC", $conn);
         } else {
-            //$papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "entidad_expediente ee join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" . $id . $this->condicion_ad, "nombre ASC", $this->conn);
-                $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre", "entidad_expediente ee join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" . $id . " and e.fk_entidad_serie in (" . $this->lista_entidades .")", "nombre ASC", $this->conn);
+                $papas = busca_filtro_tabla("DISTINCT idexpediente,serie_idserie,nombre,codigo_numero,estado_cierre,agrupador", "entidad_expediente ee join expediente e on ee.expediente_idexpediente = e.idexpediente", "cod_padre=" . $id . " and e.fk_entidad_serie in (" . $lista_entidades .")", "nombre ASC", $conn);
         }
-
-       // print_r($papas);
+		//print_r($papas["sql"]);
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
                 $cerrado=false;
@@ -120,15 +152,20 @@ class DHtmlXtreeExpedienteFunc {
                     $cerrado=true;
                 }
 
-                $hijos = busca_filtro_tabla("count(1) as cant", "entidad_expediente ee join expediente e on ee.expediente_idexpediente = e.idexpediente", "e.cod_padre=" . $papas[$i]["idexpediente"] . $this->condicion_ad, "", $this->conn);
-                $tipo_docu = busca_filtro_tabla("count(1) as cant", "serie", "tipo=3 and tvd=0 and cod_padre=" . $papas[$i]["serie_idserie"], "", $this->conn);
-                
+                $hijos = busca_filtro_tabla("count(1) as cant", "entidad_expediente ee join expediente e on ee.expediente_idexpediente = e.idexpediente", "e.cod_padre=" . $papas[$i]["idexpediente"] . $condicion_ad, "", $conn);
+                $tipo_docu = busca_filtro_tabla("count(1) as cant", "serie", "tipo=3 and tvd=0 and cod_padre=" . $papas[$i]["serie_idserie"], "", $conn);
+               // print_r($tipo_docu);
                $item = array();
 				$item["extraClasses"] = "estilo-dependencia";
 	            $item["title"] = $text;
-				$item["key"]= $papas[$i]["idexpediente"] . "#";
+				$item["key"]= $papas[$i]["idexpediente"];
 
                 //$this->objetoXML->writeAttribute("nocheckbox", 1);
+                $item["data"] = array(
+					"idexpediente" => $papas[$i]["idexpediente"],
+					"serie_idserie" => $papas[$i]["serie_idserie"],
+					"agrupador" => $papas[$i]["agrupador"]
+			    );
                 if (($hijos[0]["cant"] || $tipo_docu[0]["cant"]) && !$cerrado) {
                    // $this->objetoXML->writeAttribute("child", 1);
                    $item["folder"] = 1;
@@ -137,27 +174,37 @@ class DHtmlXtreeExpedienteFunc {
                     ///$this->objetoXML->writeAttribute("child", 0);
                     $item["folder"] = 0;
                 }
+			 
 				$hijos_exp = array();
 				$hijos_sub = array();
                 if ($hijos[0]["cant"] && !$cerrado) {
-                    $hijos_exp = $this->llena_expediente($papas[$i]["idexpediente"]);
+                    $hijos_exp = llena_expediente($papas[$i]["idexpediente"],$idexpediente,$lista_entidades,$condicion_ad,$partes);
                 }
-				if (!$cerrado) {
-               	  $hijos_sub = $this->llena_subserie($papas[$i]["serie_idserie"], $papas[$i]["idexpediente"]);
+				if(!$partes){
+					//if (!$cerrado) {
+						//!$this->partes=false;
+	               	  $hijos_sub = llena_subserie($papas[$i]["serie_idserie"], $papas[$i]["idexpediente"]);
+					//}
+					$item["children"]= array_merge($hijos_exp,$hijos_sub);
 				}
-				$item["children"]= array_merge($hijos_exp,$hijos_sub);
+				else{
+					$item["folder"] = 1;
+					$item["lazy"] = true;
+				}
                 $objetoJson[] = $item;
             }
         }
-		return $this->objetoXML=$objetoJson;
+		//return $this->objetoXML=$objetoJson;
+		return $objetoJson;
     }
 
-    private function llena_subserie($id, $idexp) {
+    /*private*/ function llena_subserie($id, $idexp) {
+    	global $conn,$checkbox;
     	$objetoJson = array();
         $papas = busca_filtro_tabla("distinct idserie, nombre_serie nombre, codigo, tipo, estado_serie estado, permiso",
             "vpermiso_serie",
-            "tipo in (2,3) and tvd=0 and cod_padre=" . $id . " and idfuncionario = " . $_SESSION["idfuncionario"], "nombre ASC", $this->conn);
-		//print_r($papas["sql"]);
+            "tipo in (2,3) and tvd=0 and cod_padre=" . $id . " and idfuncionario = " . $_SESSION["idfuncionario"], "nombre ASC", $conn);
+		
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
                 $permisos = array();
@@ -172,17 +219,9 @@ class DHtmlXtreeExpedienteFunc {
 
                 $text = $papas[$i]["nombre"] . " (" . $papas[$i]["codigo"] . ")";
 
-                /*if(!$tiene_permisos && !$tiene_permiso_lectura) {
-                    continue;
-                }*/
-
-                if ($papas[$i]["estado"] == 0) {
+                 if ($papas[$i]["estado"] == 0) {
                     $text .= " - INACTIVO";
                 }
-
-                /*if ($tiene_permiso_lectura) {
-                    $text .= " - (sin permiso)";
-                }*/
 
                 if (!$tiene_permisos || $tiene_permiso_lectura) {
                     $text .= " - (Sin permiso)";
@@ -193,37 +232,44 @@ class DHtmlXtreeExpedienteFunc {
 	            $item["title"] = $text;
 				$item["key"]= "{$papas[$i]["idserie"]}.{$idexp}";
 				if ($papas[$i]["tipo"] == 3 && $tiene_permisos) {
-					$item["checkbox"]=$this->checkbox;
+					$item["checkbox"]=$checkbox;
 				}
 				//$item["checkbox"]=$this->checkbox;
-				if ($papas[$i]["estado"] == 0 || !$tiene_permisos) {
-                    //$this->objetoXML->writeAttribute("nocheckbox", 1);
-                    $item["folder"] = 1;
-                } else {
-                    $tipo_docu = busca_filtro_tabla("count(1) as cant", "serie", "tipo=3 and tvd=0 and cod_padre=" . $papas[$i]["idserie"], "", $this->conn);
-                    if ($tipo_docu[0]["cant"]) {
-                        //$this->objetoXML->writeAttribute("nocheckbox", 0);
-                        //$this->objetoXML->writeAttribute("child", 1);
-                        $item["folder"] = 1;
-                        $item["children"] = $this->llena_tipo_documental($papas[$i]["idserie"], $idexp);
-                    } else {
-                        //$this->objetoXML->writeAttribute("child", 0);
-                        $item["folder"] = 0;
-                    }
-                }
+				//if(!$partes){
+					if ($papas[$i]["estado"] == 0 || !$tiene_permisos) {
+	                    //$this->objetoXML->writeAttribute("nocheckbox", 1);
+	                    $item["folder"] = 1;
+	                } else {
+	                    $tipo_docu = busca_filtro_tabla("count(1) as cant", "serie", "tipo=3 and tvd=0 and cod_padre=" . $papas[$i]["idserie"], "", $conn);
+	                    if ($tipo_docu[0]["cant"]) {
+	                        //$this->objetoXML->writeAttribute("nocheckbox", 0);
+	                        //$this->objetoXML->writeAttribute("child", 1);
+	                        $item["folder"] = 1;
+	                        $item["children"] = llena_tipo_documental($papas[$i]["idserie"], $idexp);
+	                    } else {
+	                        //$this->objetoXML->writeAttribute("child", 0);
+	                        $item["folder"] = 0;
+	                    }
+	                }
+				/*}
+				else{
+					$item["lazy"] = true;
+				}*/
 
                 $objetoJson[] = $item;
             }
         }
-        return $this->objetoXML = $objetoJson;
+       // return $this->objetoXML = $objetoJson;
+       return $objetoJson;
     }
 
-    private function llena_tipo_documental($id, $idexp) {
+    /*private */function llena_tipo_documental($id, $idexp) {
+        global $conn,$checkbox;
         $objetoJson = array();
 
         $papas = busca_filtro_tabla("distinct idserie, nombre_serie nombre, codigo, tipo, estado_serie estado, permiso",
             "vpermiso_serie",
-            "tipo=3 and tvd=0 and cod_padre=" . $id . " and idfuncionario = " . $_SESSION["idfuncionario"], "nombre ASC", $this->conn);
+            "tipo=3 and tvd=0 and cod_padre=" . $id . " and idfuncionario = " . $_SESSION["idfuncionario"], "nombre ASC", $conn);
 		//print_r($papas["sql"]);
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
@@ -241,24 +287,28 @@ class DHtmlXtreeExpedienteFunc {
                 if ($papas[$i]["estado"] == 0) {
                     $text .= " - INACTIVO";
                 }
-                if (!$tiene_permisos || $tiene_permiso_lectura) {
-                    $text .= " - (Sin permiso)";
-                }
+                
                 $item = array();
 				$item["extraClasses"] = "estilo-dependencia";
-	            $item["title"] = $text;
+	            
 				$item["key"] = $papas[$i]["idserie"] . "." . $idexp;
-				$item["checkbox"]=$this->checkbox;
+				if (!$tiene_permisos || $tiene_permiso_lectura) {
+                    $text .= " - (Sin permiso)";
+                }
+				else{
+					$item["checkbox"]=$checkbox;
+				}
+				$item["title"] = $text;
 				if ($papas[$i]["estado"] == 0 || !$tiene_permisos) {
                    // $this->objetoXML->writeAttribute("nocheckbox", 1);
                    $item["folder"] = 1;
                 }
 
-                if (in_array($papas[$i]["idserie"], $this->seleccionados) !== false) {
+                /*if (in_array($papas[$i]["idserie"], $seleccionados) !== false) {
                     //$this->objetoXML->writeAttribute("checked", 1);
                     $item["selected"]=true;
-                }
-               // $this->objetoXML->writeAttribute("child", 0);
+                }/*
+               // /$this->objetoXML->writeAttribute("child", 0);
               // $item["folder"] = 1;
 
                 /* USERDATA */
@@ -280,27 +330,7 @@ class DHtmlXtreeExpedienteFunc {
                 $objetoJson[] = $item;
             }
         }
-		return $this->objetoXML=$objetoJson;
+		//return $this->objetoXML=$objetoJson;
+		return $objetoJson;
     }
-
-   /* public static function expedientes_asignados($conn) {
-        // return "1=1";
-        $idfunc_actual = usuario_actual('idfuncionario');
-
-        $llaves_exp = array(
-            $idfunc_actual
-        );
-
-        $roles = busca_filtro_tabla("dependencia_iddependencia,cargo_idcargo", "dependencia_cargo a", "a.estado='1' and a.funcionario_idfuncionario=" . $idfunc_actual, "", $conn);
-        $dependencias = extrae_campo($roles, "dependencia_iddependencia");
-        $cargos = extrae_campo($roles, "cargo_idcargo");
-
-        $llaves_exp = array_merge($llaves_exp, $dependencias);
-        $llaves_exp = array_merge($llaves_exp, $cargos);
-
-        $cadena = "ee.entidad_identidad IN (1, 2, 4) AND ee.llave_entidad IN ('" . implode("','", $llaves_exp) . "')";
-
-        return ($cadena);
-    }*/
-}
 ?>
