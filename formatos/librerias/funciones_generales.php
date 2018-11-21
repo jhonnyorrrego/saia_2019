@@ -1461,7 +1461,7 @@ function submit_formato($formato, $iddoc = NULL) {
 	$(document).ready(function (){
 		$("#continuar").click(function(){
 		  var elementos = $('[class^="tiny_"]:not(.tiny_sin_tiny)');
-			var size = elementos.size();
+			var size = elementos.length;
 			if(size){
 				$.each( elementos, function(i, val){
 					var contenido_textarea=tinyMCE.get($(val).attr('id')).getContent();
