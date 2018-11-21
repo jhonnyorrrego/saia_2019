@@ -1315,17 +1315,18 @@ $('#idpantalla_funcion_exe').live("change",function(){
 });
 
 
-$("#generar_pantalla").live("click",function(){
-  $(".generador_pantalla").find(".accordion-inner").html("");
-  $(".generador_pantalla").removeClass("alert-success");
-  $(".generador_pantalla").removeClass("alert-error");
-  //generar_archivos_ignorados();
-  $(".generador_pantalla").each(function(index,val){
-    if($(this).prev().children(":checkbox").is(':checked')){
-      generar_pantalla(this.id);
-    }
-  });
+$("#generar_pantalla").live("click",function() {
+    $(".generador_pantalla").find(".accordion-inner").html("");
+    $(".generador_pantalla").removeClass("alert-success");
+    $(".generador_pantalla").removeClass("alert-error");
+    //generar_archivos_ignorados();
+    $(".generador_pantalla").each(function(index,val){
+        if($(this).prev().children(":checkbox").is(':checked')) {
+          	generar_pantalla(this.id);
+        }
+    });
 });
+
 $(".eliminar_campos_tabla_pantalla").live("click",function(){
 	alert($(this).attr("tabla")+"--"+$(this).attr("idpantalla"));
 });
@@ -1383,40 +1384,45 @@ $(document).on("click","#actualizar_cuerpo_formato",function(){
    	  }
    	});
 });
-function generar_pantalla(nombre_accion){
-	$("#cargando_generar_pantalla").html("<img src='<?php echo($ruta_db_superior); ?>imagenes/cargando.gif' class='pull-left'>");
-	var ruta_generar='formatos/generar_formato.php';
-	accion=nombre_accion.replace("generar_","");
-	  $.ajax({
-	    type:'POST',
-	    url: '<?php echo($ruta_db_superior);?>'+ruta_generar,
-	    data:'idformato='+$("#idformato").val()+"&rand="+Math.round(Math.random()*100000)+'&crea='+accion+"&llamado_ajax=1",
-	    success: function(html){
-	      if(html){
-	      	var objeto=jQuery.parseJSON(html);
-	        if(objeto.exito==1){
-	          $("#"+nombre_accion).prev().removeClass("alert-error");
-	          $("#"+nombre_accion).prev().addClass("alert-success");
-	          $("#"+nombre_accion).html("");
-	          notificacion_saia(objeto.mensaje,"success","",3500);
-	          if(typeof(objeto.descripcion_error)!=="undefined"){
-	        		$("#"+nombre_accion).html(objeto.descripcion_error);
-	        		$("#"+nombre_accion).collapse('show');
-	        	}
-	        }
-	        else{
-	        	$("#"+nombre_accion).prev().addClass("alert-error");
-	        	notificacion_saia(objeto.mensaje,"error","",9500);
-	        	if(typeof(objeto.descripcion_error)!=="undefined"){
-	        		$("#"+nombre_accion).html(objeto.descripcion_error);
-	        		$("#"+nombre_accion).collapse('show');
-	        	}
-	        }
-	    	}
-	    	$("#cargando_generar_pantalla").html("");
-	    }
-		});
-	}
+
+function generar_pantalla(nombre_accion) {
+    $("#cargando_generar_pantalla").html("<img src='<?php echo($ruta_db_superior); ?>imagenes/cargando.gif' class='pull-left'>");
+    var ruta_generar='formatos/generar_formato.php';
+    var accion = nombre_accion.replace("generar_","");
+    var datos = {
+        idformato: $("#idformato").val(),
+        crea: accion,
+        llamado_ajax: 1
+    };
+    $.ajax({
+        type:'POST',
+        url: '<?php echo($ruta_db_superior);?>'+ruta_generar,
+        data: datos,
+        success: function(html) {
+            if(html) {
+                var objeto=jQuery.parseJSON(html);
+                if(objeto.exito==1) {
+                    $("#"+nombre_accion).prev().removeClass("alert-error");
+                    $("#"+nombre_accion).prev().addClass("alert-success");
+                    $("#"+nombre_accion).html("");
+                    notificacion_saia(objeto.mensaje,"success","",3500);
+                    if(typeof(objeto.descripcion_error)!=="undefined"){
+                    	$("#"+nombre_accion).html(objeto.descripcion_error);
+                    	$("#"+nombre_accion).collapse('show');
+                    }
+                } else {
+                    $("#"+nombre_accion).prev().addClass("alert-error");
+                    notificacion_saia(objeto.mensaje,"error","",9500);
+                    if(typeof(objeto.descripcion_error)!=="undefined"){
+                        $("#"+nombre_accion).html(objeto.descripcion_error);
+                        $("#"+nombre_accion).collapse('show');
+                    }
+                }
+            }
+        	$("#cargando_generar_pantalla").html("");
+        }
+    });
+}
 
 function receiveMessage(event) {
       if(event.data["etiqueta_html"] && event.data["etiqueta_html"] == 'textarea_cke') {

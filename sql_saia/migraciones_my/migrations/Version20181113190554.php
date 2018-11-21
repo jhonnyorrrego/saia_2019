@@ -35,7 +35,7 @@ class Version20181113190554 extends AbstractMigration {
                 "etiqueta" => "&Aacute;rea de texto(con ck editor)",
                 "clase" => "icon-cuadro_texto",
                 "componente" => "{*procesar_textarea_cke*}",
-                "opciones" => "{\"nombre\":\"textarea_cke\",\"etiqueta\":\"Area de texto\",\"tipo_dato\":\"text\",\"longitud\":\"\",\"obligatoriedad\":1,\"valor\":\"avanzado\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"textarea_cke\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1,\"placeholder\":\"Area de texto\"}",
+                "opciones" => "{\"nombre\":\"textarea_cke\",\"etiqueta\":\"Area de texto\",\"tipo_dato\":\"text\",\"longitud\":\"\",\"obligatoriedad\":1,\"valor\":\"\",\"acciones\":\"a,e,b\",\"ayuda\":\"\",\"predeterminado\":\"\",\"banderas\":\"\",\"etiqueta_html\":\"textarea_cke\",\"orden\":1,\"mascara\":\"\",\"adicionales\":\"\",\"autoguardado\":1,\"fila_visible\":1,\"placeholder\":\"Area de texto\"}",
                 "procesar" => "",
                 "categoria" => "Texto",
                 "estado" => 1,
@@ -93,7 +93,7 @@ class Version20181113190554 extends AbstractMigration {
                 $ident = [
                     'idpantalla_componente' => $row["idpantalla_componente"]
                 ];
-                //$resp = $conn->delete('pantalla_componente', $ident);
+                $resp = $conn->delete('pantalla_componente', $ident);
             }
         }
     }
