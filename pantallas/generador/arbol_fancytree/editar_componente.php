@@ -197,7 +197,7 @@ if (MOTOR == "Oracle") {
 			$sel_dep = $valor_url == "arboles/arbol_dependencia.php" ? "selected" : "";
 			$sel_car = $valor_url == "arboles/arbol_cargo.php" ? "selected" : "";
 			$sel_ser = $valor_url == "arboles/arbol_serie.php" ? "selected" : "";
-			$texto_opc[] = '<option value="arboles/arbol_funcionario.php" ' . $sel_fun . '>Funcionarios</option>';
+			$texto_opc[] = '<option value="arboles/arbol_funcionario.php?idcampofun=1" ' . $sel_fun . '>Funcionarios</option>';
 			$texto_opc[] = '<option value="arboles/arbol_dependencia.php" ' . $sel_dep . '>Dependencias</option>';
 			$texto_opc[] = '<option value="arboles/arbol_cargo.php" ' . $sel_car . '>Cargos</option>';
 			$texto_opc[] = '<option value="arboles/arbol_serie.php" ' . $sel_ser  . '>Series</option>';
