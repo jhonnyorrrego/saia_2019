@@ -187,7 +187,7 @@ if (MOTOR == "Oracle") {
 			<input type="hidden" name="fs_valor" id="valor" value="<?php echo(@$pantalla_campos[0]["valor"]);?>"/>
 			<?php
 			$texto_opc = array();
-			$texto_opc[] = '<label for="opciones_url">URL';
+			$texto_opc[] = '<label for="opciones_url">Tipo&nbsp;';
 			$texto_opc[] = '<select class="opciones" name="opciones_url" id="opciones_url">';
 			$valor_url = "";
 			if(isset($opciones["url"])) {
@@ -209,14 +209,14 @@ if (MOTOR == "Oracle") {
 		    if(isset($opciones["checkbox"]) && $opciones["checkbox"] == "1") {
 		        $valor_checkbox = ' checked="checked"';
 		    }
-		    $texto_opc[] = $valor_checkbox . ">Checkbox</label>";
+		    $texto_opc[] = $valor_checkbox . ">M&uacute;ltiple</label>";
 		    $texto_opc[] = '<label class="radio inline" for="opciones_checkbox_2">';
 		    $texto_opc[] = '<input type="radio" class="opciones" name="opciones_checkbox" id="opciones_checkbox_2" value="radio"';
 		    $valor_checkbox = '';
 		    if(isset($opciones["checkbox"]) && $opciones["checkbox"] == "radio") {
 		        $valor_checkbox = ' checked="checked"';
 		    }
-		    $texto_opc[] = $valor_checkbox . ">Radio</label></div>";
+		    $texto_opc[] = $valor_checkbox . ">Simple</label></div>";
 
 		    $texto_opc[] = '<div class="controls controls-row">Buscador&nbsp;<label class="radio inline" for="opciones_buscador_1">';
 		    $texto_opc[] = '<input type="radio" class="opciones" name="opciones_buscador" id="opciones_buscador_1" value="0"';
