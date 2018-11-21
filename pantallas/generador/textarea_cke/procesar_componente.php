@@ -35,7 +35,7 @@ FINTAG;
     }
     $texto .= '<label class="control-label" for="{$campo["nombre"]}"><b>' . $campo["etiqueta"] . $obligatoriedad . '</b></label>';
 
-    $texto .= '<div class="controls"><textarea class="tiny_avanzado" name="' . $campo["nombre"] . '" id="' . $campo["nombre"] . '">' . $selec . '</textarea>';
+    $texto .= '<div class="controls"><textarea name="' . $campo["nombre"] . '" id="' . $campo["nombre"] . '">' . $selec . '</textarea>';
     $texto .= <<<FINJS
     <script>
     var config = {
