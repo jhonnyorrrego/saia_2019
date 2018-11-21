@@ -205,7 +205,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 </div>
                 <!-- END User Info-->
                 <a href="#" class="header-icon btn-link m-l-10 sm-no-margin d-inline-block" data-toggle="quickview"
-                    data-toggle-element="#quickview" id="close_right_navbar">
+                    data-toggle-element="#quickview" id="toggle_right_navbar">
                     <i class="pg pg-alt_menu" style="font-size:1.5rem"></i>
                 </a>
             </div>
@@ -231,7 +231,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
             <li class="">            
-                <a href="#quickview-notes" data-target="#quickview-notes" data-toggle="tab" role="tab" id="note_tab">Notas</a>
+                <a class="active show" href="#quickview-notes" data-target="#quickview-notes" data-toggle="tab" role="tab" id="note_tab">Notas</a>
             </li>
         </ul>
         <a class="btn-link quickview-toggle" data-toggle-element="#quickview" data-toggle="quickview">
@@ -240,7 +240,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         <!-- BEGIN TAB PANES -->
         <div class="tab-content">
             <!-- BEGIN Notes !-->
-            <div class="tab-pane no-padding" id="quickview-notes">
+            <div class="tab-pane no-padding active show" id="quickview-notes">
                 <div class="view-port clearfix quickview-notes" id="note-views">
                     <!-- BEGIN Note List !-->
                     <div class="view list" id="quick-note-list">

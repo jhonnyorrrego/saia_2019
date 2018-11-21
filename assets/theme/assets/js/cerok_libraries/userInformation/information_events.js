@@ -1,9 +1,35 @@
 $(function(){
     let key = localStorage.getItem('key');
     var userInformation = new UserInformation(key);
-    var baseUrl = Session.getBaseUrl();
     
-    $('#btn_success').on('click', function () {
+    $("#btn_success").on('click', function () {
+        $("#profile_form").submit();
+    });
+
+    $("#show_image_modal").on("click", function() {
+        $("#edit_photo_modal,#dinamic_modal").modal('toggle');
+    });
+
+    setTimeout(() => {
+        $("#profile_form").trigger('reset');
+        $("[name='email']").blur();
+    }, 300);
+});
+
+$("#profile_form").validate({
+    rules: {
+        email: {
+            email: true
+        }
+    },
+    messages: {
+        email: {
+            email: "Ingrese un correo válido",
+        }
+    },
+    submitHandler: function (form) {
+        var baseUrl = Session.getBaseUrl();
+
         $.ajax({
             type: 'POST',
             data: $('#profile_form').serialize(),
@@ -18,13 +44,5 @@ $(function(){
                 }
             }
         });
-    });
-
-    $("#show_image_modal").on("click", function() {
-        $("#edit_photo_modal,#dinamic_modal").modal('toggle');
-    });
-
-    setTimeout(() => {
-        $("#profile_form").trigger('reset');
-    }, 300);
+    }
 });

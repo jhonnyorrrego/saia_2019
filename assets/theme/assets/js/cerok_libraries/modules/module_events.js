@@ -38,8 +38,6 @@ $(function(){
     });
 
     $(".page-sidebar").on('touchmove', function (evt) {
-        evt.preventDefault();
-
         if (!xDown || !yDown) {
             return;
         }
@@ -52,7 +50,10 @@ $(function(){
 
         if (Math.abs(xDiff) > Math.abs(yDiff)) {/*most significant*/
             if (xDiff > 0) {
-                $('#toggle_sidebar').trigger('click');
+                evt.preventDefault();
+                setTimeout(() => {
+                    $('#toggle_sidebar').trigger('click');
+                }, 150);
             } else {
                 /* right swipe*/
                 return true;

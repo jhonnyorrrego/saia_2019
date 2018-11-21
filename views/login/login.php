@@ -36,7 +36,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             window.location = Session.getBaseUrl() + 'views/dashboard/dashboard.php';
         }
     </script>
-    <?//= pace() ?>
     <?= bootstrap() ?>
     <?= theme() ?>
     <?= icons() ?>
@@ -52,9 +51,9 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     </script>
 </head>
 
-<body class="fixed-header bg-white">
-    <div class="container-fluid mx-0 px-0">
-        <div class="row bg-white mx-0 px-0">
+<body class="bg-white">
+    <div class="container-fluid m-0 p-0">
+        <div class="row bg-white m-0 p-0" id="content">
             <!-- carousel-->
             <div class="d-none d-md-block col-md-8 mx-0 px-0" id="carousel-container">
                 <div id="myCarousel" class="carousel slide mx-0 px-0" data-ride="carousel">
@@ -74,53 +73,58 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             </div>
             <!-- carousel-->
             <!-- login form-->
-            <div class="col-12 col-md-4 media" id="form-container">
-                <div class="align-self-center w-100">
-                    <div class="row">
-                        <div class="col-12">
-                            <img id="logo">
-                        </div>
+            <div class="col-12 col-md-4 px-5 py-5" id="form-container">
+                <div class="row">
+                    <div class="col-12">
+                        <img id="logo" width="201">
                     </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <h5 class="bold">INICIO DE SESIÓN</h5>
-                        </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <h5 class="bold">INICIO DE SESIÓN</h5>
                     </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <!-- START Login Form -->
-                            <form id="form_login" role="form">
-                                <!-- START Form Control-->
-                                <div class="form-group form-group-default">
-                                    <label><i class="fa fa-user"></i> Usuario</label>
-                                    <div class="controls">
-                                        <input type="text" name="username" placeholder="Nombre de Usuario" class="form-control"
-                                            required>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <!-- START Login Form -->
+                        <form id="form_login" role="form">
+                            <!-- START Form Control-->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group form-group-default">
+                                        <label><i class="fa fa-user"></i> Usuario</label>
+                                        <div class="controls">
+                                            <input type="text" name="username" placeholder="Nombre de Usuario" class="form-control"
+                                                required>
+                                        </div>
+                                    </div>
+                                    <!-- END Form Control-->
+                                    <!-- START Form Control-->
+                                    <div class="form-group form-group-default">
+                                        <label><i class="fa fa-lock"></i> Contraseña</label>
+                                        <div class="controls">
+                                            <input type="password" class="form-control" name="password" placeholder="Clave de acceso"
+                                                required>
+                                        </div>
                                     </div>
                                 </div>
-                                <!-- END Form Control-->
-                                <!-- START Form Control-->
-                                <div class="form-group form-group-default">
-                                    <label><i class="fa fa-lock"></i> Contraseña</label>
-                                    <div class="controls">
-                                        <input type="password" class="form-control" name="password" placeholder="Clave de acceso"
-                                            required>
-                                    </div>
+                            </div>
+                            <!-- START Form Control-->
+                            <div class="row">
+                                <div class="col-12 text-right">
+                                    <label>
+                                        <a href="#" onclick="javascript:$('#recovery_modal').modal('show')" class="text-info small">Necesita
+                                            ayuda para ingresar <i class="fa fa-question-circle"></i> </a>
+                                    </label>
                                 </div>
-                                <!-- START Form Control-->
-                                <div class="row">
-                                    <div class="col-12 text-right">
-                                        <label>
-                                            <a href="#" onclick="javascript:$('#recovery_modal').modal('show')" class="text-info small">Necesita
-                                                ayuda para ingresar <i class="fa fa-question-circle"></i> </a>
-                                        </label>
-                                    </div>
+                            </div>
+                            <!-- END Form Control-->
+                            <div class="row">
+                                <div class="col-12">
+                                    <button class="btn btn-lg btn-complete m-t-10" type="submit">Ingresar</button>
                                 </div>
-                                <!-- END Form Control-->
-                                <button class="btn btn-complete m-t-10" type="submit">Ingresar</button>
-                            </form>
-
-                        </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -181,12 +185,9 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     </div>
     <!-- /.modal-dialog -->
     <script>
-        $(function () {            
-            var breakpoint = checkSize();
+        $(function () {
             var baseUrl = Session.getBaseUrl();
-            
-            $("#form-container").height($(window).height() - $("#footer").height());
-            loadCarousel();
+            resize();
 
             $('#form_login').on('submit', function (event) {
                 event.preventDefault();
@@ -242,13 +243,15 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         if (response.success) {
                             localStorage.setItem('logo', response.data[0].value);
                             $('#logo').attr('src', response.data[0].value);
+                            resize();
                         }
                     }, 'json');
                 } else {
                     $('#logo').attr('src', logo);
+                    resize();
                 }
             })();
-
+            
             function loadCarousel(){
                 if (['md','lg','xl'].indexOf(breakpoint) != -1 && !$('#homepageItems').children().length ) {
                     $.ajax({
@@ -272,8 +275,9 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                             
                             $('#homepageItems').append(data);
                             $('#indicators').append(indicator);
-                            $('.carousel-item > img').attr('height', $(window).height() - $("#footer").height());
-                            $('.carousel-item > img').attr('width', $("#carousel-container").width())
+                            $('.carousel-item > img')
+                                .attr('height', $(window).height() - $("#footer").height())
+                                .attr('width', $("#carousel-container").width());
                             $('.carousel-item').first().addClass('active');
                             $('.carousel-indicators > li').first().addClass('active');                        
                             $("#myCarousel").carousel();                        
@@ -282,10 +286,24 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 }
             }
 
-            $( window ).resize( function(){
+            $(window).resize( function(){
+                resize();
+            });
+
+            window.addEventListener("orientationchange", function () {
+                setTimeout(() => {
+                    resize();
+                }, 500);
+            }, false);
+
+            function resize(){
+                //$("#content").height($(document).height() - $("#footer").height());
                 breakpoint = checkSize();
                 loadCarousel();
-            });
+                $('.carousel-item > img')
+                    .attr('height', $(window).height() - $("#footer").height())
+                    .attr('width', $("#carousel-container").width());
+            }
         });
         
     </script>

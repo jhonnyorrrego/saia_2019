@@ -1,3 +1,5 @@
+<?php $ruta_db_superior = $_REQUEST['baseUrl']?>
+<?php include_once $ruta_db_superior . 'assets/librerias.php'?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -70,15 +72,18 @@
                 </form>
             </div>
         </div>
-    </div>   
-    <script>    
-        if(typeof UserInformation == 'undefined'){
-            $.getScript(`${Session.getBaseUrl()}assets/theme/assets/js/cerok_libraries/userInformation/userInformation.js`, function(){
+    </div>
+    <?= validate() ?>
+    <script>
+        $(function(){
+            if(typeof UserInformation == 'undefined'){
+                $.getScript(`${Session.getBaseUrl()}assets/theme/assets/js/cerok_libraries/userInformation/userInformation.js`, function(){
+                    $.getScript(`${Session.getBaseUrl()}assets/theme/assets/js/cerok_libraries/userInformation/information_events.js`);
+                });
+            }else{
                 $.getScript(`${Session.getBaseUrl()}assets/theme/assets/js/cerok_libraries/userInformation/information_events.js`);
-            });
-        }else{
-            $.getScript(`${Session.getBaseUrl()}assets/theme/assets/js/cerok_libraries/userInformation/information_events.js`);
-        }
+            }
+        });
     </script>    
 </body>
 </html>
