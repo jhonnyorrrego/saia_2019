@@ -203,21 +203,26 @@ if (MOTOR == "Oracle") {
 			$texto_opc[] = '<option value="arboles/arbol_serie.php" ' . $sel_ser  . '>Series</option>';
 		    $texto_opc[] = "</select></label></div>";
 
-		    $texto_opc[] = '<div class="controls controls-row"><label class="radio inline" for="opciones_checkbox_1">';
+		    //INICIO TIPO
+
+		    $texto_opc[] = '<div class="controls controls-row">Selecci&oacute;n<label class="radio inline" for="opciones_checkbox_1">';
 		    $texto_opc[] = '<input type="radio" class="opciones" name="opciones_checkbox" id="opciones_checkbox_1" value="1"';
-		    $valor_checkbox = '';
+		    $valor_check = '';
 		    if(isset($opciones["checkbox"]) && $opciones["checkbox"] == "1") {
-		        $valor_checkbox = ' checked="checked"';
+		        $valor_check = ' checked="checked"';
 		    }
-		    $texto_opc[] = $valor_checkbox . ">M&uacute;ltiple</label>";
+		    $texto_opc[] = $valor_check . ">M&uacute;ltiple</label>";
 		    $texto_opc[] = '<label class="radio inline" for="opciones_checkbox_2">';
 		    $texto_opc[] = '<input type="radio" class="opciones" name="opciones_checkbox" id="opciones_checkbox_2" value="radio"';
-		    $valor_checkbox = '';
+		    $valor_check = '';
 		    if(isset($opciones["checkbox"]) && $opciones["checkbox"] == "radio") {
-		        $valor_checkbox = ' checked="checked"';
+		        $valor_check = ' checked="checked"';
 		    }
-		    $texto_opc[] = $valor_checkbox . ">Simple</label></div>";
+		    $texto_opc[] = $valor_check . ">Simple</label></div>";
 
+		    //FIN TIPO
+
+		    //INICIO BUSCADOR
 		    $texto_opc[] = '<div class="controls controls-row">Buscador&nbsp;<label class="radio inline" for="opciones_buscador_1">';
 		    $texto_opc[] = '<input type="radio" class="opciones" name="opciones_buscador" id="opciones_buscador_1" value="0"';
 		    $valor_buscador = '';
@@ -332,10 +337,15 @@ $("#enviar_formulario_saia").click(function() {
         var nuevo = {};
         $("input.opciones,select.opciones").each(function() {
             var x = $(this).attr("name").replace("opciones_", "");
-            nuevo[x] = $(this).val();
+            if($(this).is(':radio')) {
+                if($(this).attr("checked")) {
+            		nuevo[x] = $(this).val();
+                }
+            } else {
+            	nuevo[x] = $(this).val();
+            }
         });
         js_data.fs_valor = JSON.stringify(nuevo);
-    	//console.log(js_data);
     	$.ajax({
             type:'POST',
             url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias.php",

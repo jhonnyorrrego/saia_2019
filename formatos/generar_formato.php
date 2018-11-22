@@ -766,8 +766,15 @@ class GenerarFormato {
                                     $texto .= '"params" => array(' . $param_url . '),';
                                 }
                                 $texto .= ');';
-                                if(isset($params_ft["checkbox"]) && $params_ft["checkbox"]) {
-                                    $texto .= '$origen_' . $idcampo_ft . '["params"]["checkbox"]="' .$params_ft["checkbox"] .'";';
+                                if(isset($params_ft["checkbox"])) {
+                                    $texto .= '$origen_' . $idcampo_ft . '["params"]["checkbox"]="' . $params_ft["checkbox"] .'";';
+                                    if($params_ft["checkbox"] == "1") {
+                                        $opc_ft .= '"selectMode" => 2,';
+                                    } else {
+                                        $opc_ft .= '"selectMode" => 1,';
+                                    }
+                                } else {
+                                    $opc_ft .= '"selectMode" => 1,';
                                 }
 
                                 if(isset($params_ft["funcion_click"]) && !empty($params_ft["funcion_click"])) {

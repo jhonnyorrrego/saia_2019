@@ -48,6 +48,8 @@ class ArbolFt {
 
     private $con_funcion_dblclick = false;
 
+    private $seleccionar_con_click = false;
+
     private $html = "";
 
     private $campo_obligatorio = false;
@@ -113,7 +115,12 @@ class ArbolFt {
         if (isset($this->opciones_arbol["onNodeClick"])) {
             $this->con_funcion_click = $this->opciones_arbol["onNodeClick"];
             unset($this->opciones_arbol["onNodeClick"]);
+        } else if (isset($this->opciones_arbol["seleccionarClick"])) {
+            $this->opciones_arbol["click"] = "###AquiFuncionClick###";
+            $this->seleccionar_con_click = true;
+            unset($this->opciones_arbol["seleccionarClick"]);
         }
+
         if (isset($this->opciones_arbol["onNodeDblClick"])) {
             $this->con_funcion_dblclick = $this->opciones_arbol["onNodeDblClick"];
             unset($this->opciones_arbol["onNodeDblClick"]);
@@ -123,6 +130,7 @@ class ArbolFt {
 		}
 		if(isset($this->opciones_arbol["obligatorio"]) && $this->opciones_arbol["obligatorio"]) {
 		    $this->campo_obligatorio = true;
+		    unset($this->opciones_arbol["obligatorio"]);
 		}
     }
 
@@ -144,35 +152,49 @@ class ArbolFt {
 FINHTML;
         }
         $opciones_json = json_encode($this->opciones_arbol,JSON_NUMERIC_CHECK);
-        $cadena_funcion = <<<FINJS
-function(event, data) { // Display list of selected nodes
-				var seleccionados = Array();
-				var items = data.tree.getSelectedNodes();
-				for(var i=0;i<items.length;i++){
-					seleccionados.push(items[i].key);
-				}
-				var s = seleccionados.join(",");
-				$("#{$this->campo}").val(s);
-			}
+        $funcion_select = <<<FINJS
+        function(event, data) { // Display list of selected nodes
+    		var seleccionados = Array();
+    		var items = data.tree.getSelectedNodes();
+    		for(var i=0;i<items.length;i++){
+    			seleccionados.push(items[i].key);
+    		}
+    		var s = seleccionados.join(",");
+    		$("#{$this->campo}").val(s);
+		}
 FINJS;
-		$funcion_lazy = <<<FINJS
+        $funcion_click = <<<FINJS
+        function(event, data) { // Display list of selected nodes
+            // data.node.setSelected(true) will work too
+console.log(data);
+            if(data.node.isFolder()){
+                  return true;
+            }
+            data.node.toggleSelected();
+            return false;
+		}
+FINJS;
 
+        $funcion_lazy = <<<FINJS
 		function(event, data){
-			      var node = data.node;
-			      // Load child nodes via Ajax GET /getTreeData?mode=children&parent=1234
-			      data.result = $.ajax({
-			        url: "{$this->opciones_arbol["source"]["url"]}",
-			        data: {
-				        cargar_partes: 1,
-				        id: node.key
-				    },
-			        cache: true
-			      });
-			      //console.log(data.result);
-			},
+            var node = data.node;
+            // Load child nodes via Ajax GET /getTreeData?mode=children&parent=1234
+            data.result = $.ajax({
+            url: "{$this->opciones_arbol["source"]["url"]}",
+            data: {
+                cargar_partes: 1,
+                id: node.key
+            },
+            cache: true
+            });
+            //console.log(data.result);
+		},
 FINJS;
-        $opciones_json = preg_replace('/"###AquiFuncionSelect###"/', $cadena_funcion, $opciones_json);
+		$opciones_json = preg_replace('/"###AquiFuncionSelect###"/', $funcion_select, $opciones_json);
 		$opciones_json = preg_replace('/"###AquiFuncionLazy###"/', $funcion_lazy, $opciones_json);
+		if($this->seleccionar_con_click) {
+		    $opciones_json = preg_replace('/"###AquiFuncionClick###"/', $funcion_click, $opciones_json);
+		}
 		$obligatorio = "";
 		if($this->campo_obligatorio) {
 		    $obligatorio = 'class="required"';
