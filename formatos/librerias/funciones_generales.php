@@ -1468,11 +1468,25 @@ function submit_formato($formato, $iddoc = NULL) {
 					$("#"+$(val).attr('id')).val(contenido_textarea);
 				});
 			}
-
-		  if($('#formulario_formatos').valid()){
+		  /*if($('#formulario_formatos').validate({ignore:""})){
 				$("#continuar").hide();
 				$("#continuar").after('<input type="button" disabled="true" value="Enviando..." id="boton_enviando">');
 		   }
+		}*/
+			$("#formulario_formatos").validate({
+				ignore: [],
+    				submitHandler: function(form) {
+    					// disable your button here
+					$("#continuar").hide();
+                                	$("#continuar").after('<input type="button" disabled="true" value="Enviando..." id="boton_enviando">');
+    					form.submit();
+   				},
+   				invalidHandler: function() {
+     					// re-enable the button here as validation has failed
+					$("#continuar").show();
+					$("#boton_enviando").remove();
+   				}
+			});
 		});
 	});
 	</script>

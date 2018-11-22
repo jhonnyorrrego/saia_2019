@@ -21,13 +21,6 @@ if (count($request)) {
 	$adicional = "?" . implode("&", $request);
 }
 
-echo(estilo_bootstrap());
-echo(librerias_html5());
-echo(librerias_jquery("1.7"));
-echo(librerias_UI());
-echo(librerias_kaiten());
-echo(librerias_acciones_kaiten());
-
 $acceso = new Permiso();
 $idcategoria_formato = $_REQUEST['idcategoria_formato'];
 if (!$idcategoria_formato) {
