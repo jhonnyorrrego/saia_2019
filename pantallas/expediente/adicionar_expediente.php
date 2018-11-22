@@ -28,10 +28,10 @@ ul.fancytree-container {
     border: none;
     background-color:#F5F5F5;
 }
-span.fancytree-title 
-{  
+span.fancytree-title
+{
 	font-family: Verdana,Tahoma,arial;
-	font-size: 9px; 
+	font-size: 9px;
 }
 </style>
 <?php include_once($ruta_db_superior."db.php"); ?>
@@ -103,7 +103,7 @@ $serie_padre = "";
                 texto = "Expediente";
             } else { // no es agrupador = 0
             	texto = "Ninguno";
-            }            
+            }
         });
     });
 </script>
@@ -171,14 +171,14 @@ $serie_padre = "";
 	  		<option value="">Por favor seleccione...</option>
 	  		<?php
 	  		$cajas=busca_filtro_tabla("distinct a.idcaja,a.no_consecutivo","caja a,entidad_caja e","a.idcaja=e.caja_idcaja and e.estado=1 and ((e.entidad_identidad=1 and e.llave_entidad=".usuario_actual('idfuncionario').") or a.funcionario_idfuncionario=".usuario_actual('idfuncionario').")","",$conn);
-	  		if($cajas["numcampos"]){
-				for($i=0;$i<$cajas["numcampos"];$i++){
+	  		if($cajas["numcampos"]) {
+				for($i=0;$i<$cajas["numcampos"];$i++) {
 					$selected="";
-	
-					if(@$_REQUEST["fk_idcaja"]==$cajas[$i]["idcaja"]){
+
+					if(@$_REQUEST["fk_idcaja"]==$cajas[$i]["idcaja"]) {
 						$selected="selected";
 					}
-					if($datos[0]["fk_idcaja"]==$cajas[$i]["idcaja"]){
+					if($datos[0]["fk_idcaja"]==$cajas[$i]["idcaja"]) {
 						$selected="selected";
 					}
 					//echo("<option value='".$cajas[$i]["idcaja"]."' ".$selected.">".$cajas[$i]["fondo"]."(".$cajas[$i]["codigo_dependencia"]."-".$cajas[$i]["codigo_serie"]."-".$cajas[$i]["no_consecutivo"].")</option>");
@@ -194,11 +194,11 @@ $serie_padre = "";
 <div class="control-group element">
 	<label class="control-label" for="dependencia">Seleccione dependencia *</label>
 	<div class="controls">
-		
+
 		<?php
 		$origen = array("url" => "arboles/arbol_dependencia.php", "ruta_db_superior" => $ruta_db_superior,
-		    "params" => array(		    	
-		        "checkbox" => 'radio',		        
+		    "params" => array(
+		        "checkbox" => 'radio',
 		        "cargar_partes"=>1
 		        //"seleccionados" => $dependencia_seleccionada
 		    ));
@@ -215,7 +215,7 @@ $serie_padre = "";
 	<div class="controls">
 		<div id="treebox_idserie" class="arbol_saia"></div>
         <input type="hidden" class="required" name="serie_idserie" id="serie_idserie">
-			
+
 	</div>
 </div>
 
@@ -303,7 +303,7 @@ $serie_padre = "";
 			</span>
 		</div>
 	</div>
-	
+
 	<div class="control-group element">
 	  <label class="control-label" for="consecutivo_inicial">Consecutivo Inicial
 	  </label>
@@ -311,7 +311,7 @@ $serie_padre = "";
 	    <input name="consecutivo_inicial" id="consecutivo_inicial" value="<?php echo($datos[0]["consecutivo_inicial"]); ?>">
 	  </div>
 	</div>
-	
+
 	<div class="control-group element">
 	  <label class="control-label" for="consecutivo_final">Consecutivo Final
 	  </label>
@@ -385,9 +385,9 @@ $serie_padre = "";
 				<!--option value="1" <?php if($datos[0]["ubicacion"]==1)echo("selected"); ?>>Central</option>
 				<option value="2" <?php if($datos[0]["ubicacion"]==2)echo("selected"); ?>>Gestion</option>
 				<option value="3" <?php if($datos[0]["ubicacion"]==3)echo("selected"); ?>>Historico</option-->
-					<option value="1" <?php 
+					<option value="1" <?php
 					if($datos[0]["estado_archivo"]==1 || $_REQUEST["estado_archivo"]==1){
-						echo("selected"); 
+						echo("selected");
 					}
 					?>
 					>Gestion</option>
@@ -439,12 +439,12 @@ $serie_padre = "";
   //echo(librerias_arboles());
   ?>
   <script type="text/javascript">
-  	
+
 	function seleccionar_dependencia(event,data){
-		  
+
 	  if(data.node.selected){
 	  	var iddependencia = data.node.key;
-	  	 $("#iddependencia").val(iddependencia);	  	 
+	  	 $("#iddependencia").val(iddependencia);
          $('#mostrar_serie').show();
 	  	var tree = $("#treebox_idserie").fancytree('getTree');
 
@@ -456,7 +456,7 @@ $serie_padre = "";
 				serie_sin_asignar: 1,
 				cargar_partes:1,
 				iddependencia:iddependencia,
-				checkbox:'radio'				
+				checkbox:'radio'
 		    },
 		    dataType: 'json'
 		};
@@ -467,7 +467,7 @@ $serie_padre = "";
 	  }
   }
   function cargar_info_Node(event,data){
-  	console.log(data.node.data);  	  
+  	console.log(data.node.data);
 	  if(data.node.selected){
 	  	$("#serie_idserie").val(data.node.data.serie_idserie);
 	  	$("#codigo_numero_serie").val(data.node.data.codigo);
@@ -501,7 +501,7 @@ $serie_padre = "";
 	        clickFolderMode:2,
 	        source:[{key:0,title:"Sin datos"}],
 	       lazy: true,
-	        
+
 	        filter: {
 	            autoApply: true,
 	            autoExpand: true,
@@ -526,7 +526,7 @@ $serie_padre = "";
 				        checkbox:'radio',
 				        serie_idserie:node.data.serie_idserie,
 				        iddependencia:node.data.iddependencia,
-				        
+
 				    },
 			        cache: true
 			      });
@@ -544,8 +544,8 @@ $serie_padre = "";
 			}
 		};
 		$("#treebox_idserie").fancytree(configuracion);
-		
-		
+
+
   	//Se comenta codigo, porque no permite seleccionar series diferentes al exp padre
 		//var serie_padre = "<?php echo $serie_padre?>";
 		var mostrar = "&mostrar_padre=0";
@@ -556,7 +556,7 @@ $serie_padre = "";
 		/*url2="arboles/arbol_serie_funcionario.php?tipo1=1&tipo2=1&tipo3=0&tvd=0&checkbox=radio" + mostrar;
 		$.ajax({
 			url : "<?php echo($ruta_db_superior);?>arboles/crear_arbol_ft.php",
-			
+
 			data:{
 				xml: url2,
 				campo: "serie_idserie",
@@ -568,7 +568,7 @@ $serie_padre = "";
 			type : "POST",
 			async:false,
 			success : function(html_serie) {
-				$("#treeboxbox_tree3").empty().html(html_serie);				
+				$("#treeboxbox_tree3").empty().html(html_serie);
 			},error: function (){
 				top.noty({text: 'No se pudo cargar el arbol de series',type: 'error',layout: 'topCenter',timeout:5000});
 			}
@@ -615,7 +615,7 @@ $serie_padre = "";
   }
   });
 
-  $("#submit_formulario_expediente").click(function(){  	
+  $("#submit_formulario_expediente").click(function(){
   	if(!$('select[name=estado_archivo]').val()){
   		$("#estado_archivo").val("<?php echo $_REQUEST["estado_archivo"]; ?>");
   		console.log($("#estado_archivo").val());
