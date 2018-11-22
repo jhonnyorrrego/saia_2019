@@ -739,7 +739,7 @@ class GenerarFormato {
                             $texto .= '">' . $valor . '</textarea>';
                             $texto .= '<script>
                             var config = {
-                                removePlugins : "sourcedialog,flash,iframe,forms,sourcearea,base64image,div,showblocks,smiley"
+                                removePlugins : "preview,copyformatting,save,sourcedialog,flash,iframe,forms,sourcearea,base64image,div,showblocks,smiley"
                             };
                             var editor = CKEDITOR.replace("' . $idcampo_cke .'", config);
                             </script>
@@ -1414,7 +1414,7 @@ class GenerarFormato {
                 $includes .= $this->incluir_libreria("header_formato.php", "librerias");
             }
             if ($textareacke) {
-                $includes .= $this->incluir('<?= $ruta_db_superior ?>js/ckeditor/4.11/ckeditor_std/ckeditor.js', "javascript");
+                $includes .= $this->incluir('<?= $ruta_db_superior ?>js/ckeditor/4.11/ckeditor_cust/ckeditor.js', "javascript");
             }
             $includes .= '<?= pace() ?>
                         <?= jquery() ?>
