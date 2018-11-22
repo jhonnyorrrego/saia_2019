@@ -285,29 +285,6 @@ echo librerias_validar_formulario("11");
 echo librerias_UI("1.12");
 echo librerias_arboles_ft("2.24", 'filtro');
 
-
-/*$tipo_entidad = null;
-if ($_REQUEST["tipo_entidad"]) {
-    $tipo_entidad = $_REQUEST["tipo_entidad"];
-}*/
-
-/*$entidad = busca_filtro_tabla("identidad, nombre", "entidad", "identidad in (1,2,4)", "nombre asc", $conn);
-$option = '<option value="">Seleccione</option>';
-if ($entidad["numcampos"]) {
-    for ($i = 0; $i < $entidad["numcampos"]; $i++) {
-        $option .= '<option value="' . $entidad[$i]["identidad"] . '"';
-        if (!empty($tipo_entidad) && $tipo_entidad == $entidad[$i]["identidad"]) {
-            $option .= ' selected="selected"';
-        }
-        $option .= '>' . $entidad[$i]["nombre"];
-        $option .= '</option>';
-    }
-}*/
-/*$option = '<option value="">Seleccione</option>
-		   <option value="4">Asignado a Cargo(s)</option>
- 		   <option value="2">Asignado a Dependencia(s)</option>
- 		   <option value="1">Asignado a Funcionario(s)</option>';*/
-
 ?>
 <form name="serieadd" id="serieadd" action="serieadd.php" method="post">
 	<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
@@ -352,8 +329,10 @@ if ($entidad["numcampos"]) {
 		<tr class="ocultar">
 			<td class="encabezado" title="Definir el tipo de serie que se esta creando" >TIPO SERIE*</td>
 			<td bgcolor="#F5F5F5">
-
+			<input type="hidden" name="x_tipo" id="x_tipo1" value="1">
+			Serie
 			<?php
+			 /*
 			if(!empty($x_cod_padre) && $x_tipo == "3") {
 			    $id_tipo = "x_tipo" . $x_tipo;
 			    echo '<input type="hidden" name="x_tipo" id="' . $id_tipo . '" value="' . $x_tipo  . '">';
@@ -365,6 +344,7 @@ if ($entidad["numcampos"]) {
 			        echo '<label for="' . $id_tipo .  '">' . $value . '</label><br>';
 			    }
 			}
+			*/
 			?>
 			</td>
 		</tr>
@@ -479,15 +459,6 @@ if ($entidad["numcampos"]) {
 				?>
 			</span></td>
 		</tr>
-		<!--tr>
-			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">TIPO DE PERMISO</span></td>
-			<td bgcolor="#F5F5F5"><select id="tipo_entidad" name="tipo_entidad"><?php echo $option;?></select></td>
-		</tr>
-		<tr>
-			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ASIGNAR PERMISO</span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="sub_entidad"></div> </td>
-		</tr-->
-
 		<tr>
 			<td colspan="2" style="background-color: #FFFFFF;text-align: center" >
 			<input type="hidden" name="a_add" value="A">
@@ -626,16 +597,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 							timeout : 5000
 						});
 						return false;
-					}/*
-					if(x_identidad == ""){
-						top.noty({
-							text : 'Por favor seleccione a quien le va a asignar permiso',
-							type : 'error',
-							layout : 'topCenter',
-							timeout : 5000
-						});
-						return false;
-					}*/
+					}
 					if (x_tipo != 1 && (x_cod_padre == "" || x_cod_padre == 0)) {
 						top.noty({
 							text : 'Por favor seleccione el Padre',
@@ -708,6 +670,7 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 						campo : "x_cod_padre",
 						busqueda_item:1,
 						selectMode:1,
+						onNodeSelect : "cargar_datos_padre",
 						ruta_db_superior: "../../"
 					},
 					type : "POST",
@@ -782,65 +745,5 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 				}
 			}
 		});
-		/*$("#tipo_entidad").change(function () {
-			option=$(this).val();
-			var entidades_seleccionadas='';
-			if(option != "") {
-				if(!$.isEmptyObject(entidades)){
-					if(entidades[option]){
-						entidades_seleccionadas=entidades[option].join(',');
-					}
-				}
-				if(identidad && identidad > 0) {
-					if(entidades_seleccionadas==''){
-						entidades_seleccionadas=identidad;
-					}
-					else{
-						entidades_seleccionadas = entidades_seleccionadas + ',' + identidad;
-					}
-				}
-				url1="";
-				switch(option) {
-					case '1'://Funcionario
-					url1="arboles/arbol_funcionario.php?idcampofun=funcionario_codigo&checkbox=true&sin_padre=1";
-					//url1="test.php?rol=1";
-						url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
-					//}
-					check=1;
-					break;
-
-					case '2'://Dependencia
-						url1="arboles/arbol_dependencia.php?estado=1&checkbox=true";
-						//if(identidad > 0) {
-							url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
-						//}
-						check=0;
-					break;
-
-					case '4'://Cargo
-						url1="arboles/arbol_cargo.php?estado=1&checkbox=true";
-						//if(identidad > 0) {
-							url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
-						//}
-						check=0;
-					break;
-				}
-				$.ajax({
-					url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
-
-					data:{xml:url1,campo:"identidad",radio:0,selectMode:check,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:1},
-					type : "POST",
-					async:false,
-					success : function(html) {
-						$("#sub_entidad").empty().html(html);
-					},error: function () {
-						top.noty({text: 'No se pudo cargar la informacion',type: 'error',layout: 'topCenter',timeout:5000});
-					}
-				});
-			}else{
-				$("#sub_entidad").empty();
-			}
-		});
-		$("#tipo_entidad").trigger("change");*/
 	});
 </script>
