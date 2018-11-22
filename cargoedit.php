@@ -110,7 +110,7 @@ return true;
 	<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">C&Oacute;IGO DEL CARGO*</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-			<input type="text" name="x_codigo_cargo" id="x_codigo_cargo" class="required" size="30" maxlength="255" value="<?php echo $x_codigo_cargo; ?>">
+			<?php echo $x_codigo_cargo; ?>
 </span></td>
 	</tr>
 	<tr>
