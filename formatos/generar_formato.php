@@ -1436,20 +1436,28 @@ class GenerarFormato {
 
             if($arboles_fancy) {
                 $includes .= '<style>
-    ul.fancytree-container {
+ul.fancytree-container {
 	width: 80%;
 	height: 80%;
 	overflow: auto;
 	position: relative;
-	border: none;
+	border: none !important;
+    outline:none !important;
 }
 span.fancytree-title {
     font-family: verdana;
 	font-size: 7pt;
-}</style>';
+}
+span.fancytree-checkbox.fancytree-radio {
+    vertical-align: middle;
+}
+span.fancytree-expander {
+    vertical-align: middle !important;
+}
+</style>';
                 $includes .= $this->incluir('$ruta_db_superior . "arboles/crear_arbol_ft.php"', "librerias");
                 $includes .= '<?= jqueryUi() ?>';
-                $includes .= '<?= arboles_ft("2.30", "filtro") ?>';
+                $includes .= '<?= arboles_ft("2.30", "filtro", "lion") ?>';
             }
 
             $includes .= $this->incluir('<?= $ruta_db_superior ?>js/title2note.js', "javascript");
