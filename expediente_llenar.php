@@ -86,6 +86,7 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
   </label>
   <div class="controls">
 		<?php
+		/*
 		$origen = array("url" => "arboles/arbol_expediente_funcionario.php", "ruta_db_superior" => $ruta_db_superior,
 		    "params" => array(		    	
 		        "checkbox" => 'radio',
@@ -96,12 +97,16 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
 		        "estado_cierre"=>1,
 		        "estado_archivo"=>1,
 		        "incluir_series"=>$incluir_series,
+		        "cargar_partes"=> 1
 		    ));
-		$opciones_arbol = array("keyboard" => true, "selectMode" => 1, "busqueda_item" => 1, "expandir" => 3, "busqueda_item" => 1, "onNodeSelect" =>'cargar_info_Node');
+		$opciones_arbol = array("keyboard" => true, "selectMode" => 1, "busqueda_item" => 1, "expandir" => 3, "busqueda_item" => 1, "onNodeSelect" =>'cargar_info_Node',"lazy"=> true);
 		$extensiones = array("filter" => array());
 		$arbol = new ArbolFt("expediente", $origen, $opciones_arbol, $extensiones);
 		echo $arbol->generar_html();
+		 */
 		?>	
+		<div id="treebox_expediente" class="arbol_saia"></div>
+        <input type="hidden" class="required" name="expediente" id="expediente">
 	</div>
 </div>
 		<script type="text/javascript">
@@ -127,7 +132,6 @@ $doc=busca_filtro_tabla("","documento","iddocumento in($iddoc)","",$conn);
 		});*/
 		function cargar_info_Node(event,data){  		  
 		  if(data.node.selected){
-		  	console.log(data.node.key);
 		  	$("#expediente").val(data.node.key);
 		  }
   		}
@@ -155,21 +159,78 @@ if(count($nombres_exp)){
  <!--input type="hidden" name="expedientes" id="expedientes" value=""-->
  <input type="hidden" name="iddoc" value="<?php echo $iddoc; ?>">
  <input type="submit" value="Continuar" class="btn btn-primary btn-mini">
- <button class="btn btn-mini" id="" onclick="window.open('<?php echo($ruta_db_superior); ?>pantallas/expediente/adicionar_expediente_documento.php?iddoc=<?php echo(@$_REQUEST["iddoc"]); ?>','_self'); return false;">Adicionar a un nuevo expediente</button>
+ <!--button class="btn btn-mini" id="" onclick="window.open('<?php echo($ruta_db_superior); ?>pantallas/expediente/adicionar_expediente_documento.php?iddoc=<?php echo(@$_REQUEST["iddoc"]); ?>','_self'); return false;">Adicionar a un nuevo expediente</button-->
 </div>
  </form>
  <script>
  $(document).ready(function() {
+ 	var configuracion = {
+	   	icon: false,
+	   	nodata: true,
+        strings: {
+            loading: "Cargando...",
+            loadError: "Error en la carga!",
+            moreData: "Mas...",
+            noData: "Sin datos."
+        },
+        debugLevel: 4,
+        extensions: ["filter"],
+        //autoScroll: true,
+        quicksearch: true,
+        //keyboard: true,
+        selectMode:1,
+        clickFolderMode:2,
+        lazy: true,
+         source: {
+                url: <?php echo $ruta_db_superior;?>"arboles/arbol_expediente_funcionario.php",
+                data: {
+					cargar_partes: 1
+                }
+            },
+        filter: {
+            autoApply: true,
+            autoExpand: true,
+            counter: true,
+            fuzzy: false,
+            hideExpandedCounter: true,
+            hideExpanders: false,
+            highlight: true,
+            leavesOnly: false,
+            nodata: true,
+            mode: "hide"
+        },
+        lazyLoad: function(event, data){
+		      var node = data.node;
+		      // Load child nodes via Ajax GET /getTreeData?mode=children&parent=1234
+		      data.result = $.ajax({
+		        url: <?php echo $ruta_db_superior;?>"arboles/arbol_expediente_funcionario.php",
+		        data: {
+			        cargar_partes: 1,
+			        id: node.key,
+			        checkbox:'radio',
+			        agrupador:node.data.agrupador,
+			        serie_idserie:node.data.serie_idserie			        
+			    },
+		        cache: true
+		      });
+		      //console.log(data.result);
+		},
+        select: function(event, data) { // Display list of selected nodes
+			var seleccionados = Array();
+			var items = data.tree.getSelectedNodes();
+			for(var i=0;i<items.length;i++){
+				seleccionados.push(items[i].key);
+			}
+			var s = seleccionados.join(",");
+			$("#expediente").val(s);
+			cargar_info_Node(event,data);
+		}
+	};
+	$("#treebox_expediente").fancytree(configuracion);
+	
 	$('#form1').submit(function() {
 
-    //seleccionados=tree2.getAllChecked();
-    //if(data.node.selected)    
-    //var lista_seleccionados = seleccionados.split(",");
-	//var expedientes = 
-    //console.log(seleccionados);
-    //1574,1542_1536692460206,1540_1536692460207,1565
-
-    /*var id_exp = null;
+     /*var id_exp = null;
     var id_nodo = null;
     var id_serie = null;
     var expedientes = [];*/

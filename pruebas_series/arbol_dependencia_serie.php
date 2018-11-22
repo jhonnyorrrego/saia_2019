@@ -35,7 +35,7 @@ if ($_REQUEST["id"] && $_REQUEST["cargar_partes"]) {
         }
     }
 
-    if ($_REQUEST["serie_sin_asignar"] == 1 && $id[0] == 0) {
+    /*if ($_REQUEST["serie_sin_asignar"] == 1 && $id[0] == 0) {
         $hijos_serie = array();
         $hijos_serie = llena_serie_sin_asignar($id[1]);
         if (!empty($hijos_serie)) {
@@ -47,7 +47,7 @@ if ($_REQUEST["id"] && $_REQUEST["cargar_partes"]) {
         if (!empty($hijos_otros)) {
             $hijos = array_merge($hijos, $hijos_otros);
         }
-    }
+    }*/
     $objetoJson = $hijos;
 } else {
     $partes = false;
@@ -69,7 +69,7 @@ if ($_REQUEST["id"] && $_REQUEST["cargar_partes"]) {
     $hijos_serie = array();
     $hijos_otros = array();
 
-    if ($_REQUEST["serie_sin_asignar"] == 1) {
+    /*if ($_REQUEST["serie_sin_asignar"] == 1) {
         $item_sa = array();
         $item_sa["extraClasses"] = "estilo-serie";
         $item_sa["title"] = "LISTADO DE SERIES";
@@ -88,7 +88,7 @@ if ($_REQUEST["id"] && $_REQUEST["cargar_partes"]) {
 
         $item_oc["children"] = llena_otras_categorias(0, 1);
         $hijos[] = $item_oc;
-    }
+    }*/
     $objetoJson["children"] = $hijos;
 }
 
@@ -125,22 +125,21 @@ function llena_dependencia($id, $tipo = 0, $partes = false) {
             $serie = busca_filtro_tabla("count(*) as cant", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $papas[$i]["iddependencia"] . " and s.tvd=" . $tipo . " and (s.cod_padre=0 or s.cod_padre is null)", "", $conn);
             $dependencias_hijas = array();
             $series_hijas = array();
-            if (!$partes) {
                 if ($hijos[0]["cant"] || $serie[0]["cant"]) {
                     $dependencias_hijas = llena_dependencia($papas[$i]["iddependencia"], $tipo);
                 }
                 /* SERIES */
-                $series_hijas = llena_serie(0, $papas[$i]["iddependencia"], $tipo);
-                $dependencias_hijas = array_merge($dependencias_hijas, $series_hijas);
+		$series_dep = busca_filtro_tabla("e.identidad_serie, s.*", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $papas[$i]["iddependencia"] . " and s.tvd=" . $tipo . " and (s.cod_padre=0 or s.cod_padre is null) and s.categoria=2", "s.nombre ASC", $conn);
+
                 /* TERMINA SERIES */
-                if (!empty($dependencias_hijas)) {
-                    $item["folder"] = true;
-                    $item["children"] = $dependencias_hijas;
-                } else {
-                    $item["folder"] = 0;
-                }
-            } else {
+            if (!empty($dependencias_hijas)) {
+                $item["folder"] = true;
+                $item["children"] = $dependencias_hijas;
+	    } else if($series_dep["numcampos"]) {
+                $item["folder"] = true;
                 $item["lazy"] = true;
+	    } else {
+                $item["folder"] = 0;
             }
             $objetoJson[] = $item;
         }

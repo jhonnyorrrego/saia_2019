@@ -13,6 +13,7 @@ $ewCurSec = 0; // Initialise
 // Initialize common variables
 $x_idcargo = Null;
 $x_nombre = Null;
+$x_codigo_cargo = Null;
 $x_cod_padre = Null;
 $x_tipo_cargo = Null;
 $sKey = @$_GET["key"];
@@ -60,6 +61,12 @@ switch ($sAction)
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">IDENTIFICACI&Oacute;N DEL CARGO</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <?php echo $x_idcargo; ?>
+</span></td>
+	</tr>
+	<tr>
+		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">C&Oacute;DIGO DEL CARGO</span></td>
+		<td bgcolor="#F5F5F5"><span class="phpmaker">
+<?php echo $x_codigo_cargo; ?>
 </span></td>
 	</tr>
 	<tr>
@@ -114,6 +121,7 @@ echo @$cargo[0][0];
 function LoadData($sKey,$conn)
 {global $x_idcargo;
 global $x_nombre;
+global $x_codigo_cargo;
 global $x_estado;
 global $x_cod_padre ;
 global $x_tipo_cargo;
@@ -143,6 +151,7 @@ global $x_tipo_cargo;
 		// Get the field contents
 		$x_idcargo = $row["idcargo"];
 		$x_nombre = $row["nombre"];
+		$x_codigo_cargo = $row["codigo_cargo"];
 		$x_estado = $row["estado"];
 		$x_tipo_cargo = $row["tipo_cargo"];
     $x_cod_padre = $row["cod_padre"];
