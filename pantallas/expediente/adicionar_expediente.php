@@ -170,7 +170,7 @@ $serie_padre = "";
 	  	<select name="fk_idcaja" id="fk_idcaja">
 	  		<option value="">Por favor seleccione...</option>
 	  		<?php
-	  		$cajas=busca_filtro_tabla("","caja a,entidad_caja e","a.idcaja=e.caja_idcaja and e.estado=1 and ((e.entidad_identidad=1 and e.llave_entidad=".usuario_actual('idfuncionario').") or a.funcionario_idfuncionario=".usuario_actual('idfuncionario').")","",$conn);
+	  		$cajas=busca_filtro_tabla("distinct a.idcaja,a.no_consecutivo","caja a,entidad_caja e","a.idcaja=e.caja_idcaja and e.estado=1 and ((e.entidad_identidad=1 and e.llave_entidad=".usuario_actual('idfuncionario').") or a.funcionario_idfuncionario=".usuario_actual('idfuncionario').")","",$conn);
 				for($i=0;$i<$cajas["numcampos"];$i++){
 					$selected="";
 	
@@ -190,22 +190,30 @@ $serie_padre = "";
 </div>
 
 <div class="control-group element">
-	<label class="control-label" for="serie_idserie">Serie asociada *</label>
+	<label class="control-label" for="dependencia">Seleccione dependencia *</label>
 	<div class="controls">
 		
 		<?php
-		$origen = array("url" => "arboles/arbol_dependencia_serie_funcionario.php", "ruta_db_superior" => $ruta_db_superior,
+		$origen = array("url" => "arboles/arbol_dependencia.php", "ruta_db_superior" => $ruta_db_superior,
 		    "params" => array(		    	
-		        "checkbox" => 'radio',
-		        "expandir" => 1,
-		        "funcionario"=>1
+		        "checkbox" => 'radio',		        
+		        "cargar_partes"=>1
 		        //"seleccionados" => $dependencia_seleccionada
 		    ));
-		$opciones_arbol = array("keyboard" => true, "selectMode" => 1, "busqueda_item" => 1, "expandir" => 3, "busqueda_item" => 1, "onNodeSelect" =>'cargar_info_Node');
+		$opciones_arbol = array("keyboard" => true, "selectMode" => 1, "busqueda_item" => 1, "expandir" => 3, "busqueda_item" => 1, "onNodeSelect" =>'seleccionar_dependencia',"lazy"=> true);
 		$extensiones = array("filter" => array());
-		$arbol = new ArbolFt("serie_idserie", $origen, $opciones_arbol, $extensiones);
-		echo $arbol->generar_html();
-		?>			
+		$arbol_dependencia = new ArbolFt("iddependencia", $origen, $opciones_arbol, $extensiones);
+		echo $arbol_dependencia->generar_html();
+		?>
+	</div>
+</div>
+
+<div id="mostrar_serie" class="control-group element">
+	<label class="control-label" for="serie_idserie">Seleccione serie *</label>
+	<div class="controls">
+		<div id="treebox_idserie" class="arbol_saia"></div>
+        <input type="hidden" class="required" name="serie_idserie" id="serie_idserie">
+			
 	</div>
 </div>
 
@@ -429,8 +437,34 @@ $serie_padre = "";
   //echo(librerias_arboles());
   ?>
   <script type="text/javascript">
+  	
+	function seleccionar_dependencia(event,data){
+		  
+	  if(data.node.selected){
+	  	var iddependencia = data.node.key;
+	  	 $("#iddependencia").val(iddependencia);	  	 
+         $('#mostrar_serie').show();
+	  	var tree = $("#treebox_idserie").fancytree('getTree');
 
-  function cargar_info_Node(event,data){	
+		var newSourceOption = {
+		    url: "<?php echo $ruta_db_superior;?>arboles/arbol_expediente_serie.php",
+		    type: 'POST',
+		    data: {
+				otras_categorias: 1,
+				serie_sin_asignar: 1,
+				cargar_partes:1,
+				iddependencia:iddependencia,
+				checkbox:'radio'				
+		    },
+		    dataType: 'json'
+		};
+
+		tree.reload(newSourceOption).done(function() {
+			console.log("cargado");
+		});
+	  }
+  }
+  function cargar_info_Node(event,data){
   	console.log(data.node.data);  	  
 	  if(data.node.selected){
 	  	$("#serie_idserie").val(data.node.data.serie_idserie);
@@ -446,6 +480,70 @@ $serie_padre = "";
   }
 
   $(document).ready(function() {
+  	$('#mostrar_serie').hide();
+  		var configuracion = {
+		   	icon: false,
+		   	nodata: true,
+	        strings: {
+	            loading: "Cargando...",
+	            loadError: "Error en la carga!",
+	            moreData: "Mas...",
+	            noData: "Sin datos."
+	        },
+	        debugLevel: 4,
+	        extensions: ["filter"],
+	        //autoScroll: true,
+	        quicksearch: true,
+	        //keyboard: true,
+	        selectMode:1,
+	        clickFolderMode:2,
+	        source:[{key:0,title:"Sin datos"}],
+	       lazy: true,
+	        
+	        filter: {
+	            autoApply: true,
+	            autoExpand: true,
+	            counter: true,
+	            fuzzy: false,
+	            hideExpandedCounter: true,
+	            hideExpanders: false,
+	            highlight: true,
+	            leavesOnly: false,
+	            nodata: true,
+	            mode: "hide"
+	        },
+	        lazyLoad: function(event, data){
+			      var node = data.node;
+			     // console.log(node);
+			      // Load child nodes via Ajax GET /getTreeData?mode=children&parent=1234
+			      data.result = $.ajax({
+			        url: "../../arboles/arbol_expediente_serie.php",
+			        data: {
+				        cargar_partes: 0,
+				        id: node.key,
+				        checkbox:'radio',
+				        serie_idserie:node.data.serie_idserie,
+				        iddependencia:node.data.iddependencia,
+				        
+				    },
+			        cache: true
+			      });
+			      //console.log(data.result);
+			},
+	        select: function(event, data) { // Display list of selected nodes
+				var seleccionados = Array();
+				var items = data.tree.getSelectedNodes();
+				for(var i=0;i<items.length;i++){
+					seleccionados.push(items[i].key);
+				}
+				var s = seleccionados.join(",");
+				$("#serie_idserie").val(s);
+				cargar_info_Node(event,data);
+			}
+		};
+		$("#treebox_idserie").fancytree(configuracion);
+		
+		
   	//Se comenta codigo, porque no permite seleccionar series diferentes al exp padre
 		//var serie_padre = "<?php echo $serie_padre?>";
 		var mostrar = "&mostrar_padre=0";
@@ -509,7 +607,8 @@ $serie_padre = "";
     ignore: [],
     rules: {
       nombre: {"required":true},
-      serie_idserie: {"required":true}
+      serie_idserie: {"required":true},
+      iddependencia : {"required":true}
 
   }
   });
