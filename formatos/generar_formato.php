@@ -779,6 +779,8 @@ class GenerarFormato {
 
                                 if(isset($params_ft["funcion_click"]) && !empty($params_ft["funcion_click"])) {
                                     $opc_ft .= '"onNodeClick" => "' . $params_ft["funcion_click"] . '", ';
+                                } else {
+                                    $opc_ft .= '"seleccionarClick" => 1,';
                                 }
                                 if(isset($params_ft["funcion_select"]) && !empty($params_ft["funcion_select"])) {
                                     $opc_ft .= '"onNodeSelect" => "' . $params_ft["funcion_select"] . '", ';
