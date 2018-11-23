@@ -451,7 +451,7 @@ echo librerias_arboles_ft("2.24", 'filtro');
 				        "checkbox" => 1,
 				        "seleccionados" => $dependencia_seleccionada
 				    ));
-				$opciones_arbol = array("keyboard" => true, "selectMode" => 2, "busqueda_item" => 1, "expandir" => 3, "busqueda_item" => 1);
+				$opciones_arbol = array("keyboard" => true, "selectMode" => 2, "busqueda_item" => 1, "expandir" => 3);
 				$extensiones = array("filter" => array());
 				$arbol = new ArbolFt("iddependencia", $origen, $opciones_arbol, $extensiones);
 				echo $arbol->generar_html();
