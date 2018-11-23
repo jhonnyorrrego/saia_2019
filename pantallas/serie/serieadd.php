@@ -329,22 +329,23 @@ echo librerias_arboles_ft("2.24", 'filtro');
 		<tr class="ocultar">
 			<td class="encabezado" title="Definir el tipo de serie que se esta creando" >TIPO SERIE*</td>
 			<td bgcolor="#F5F5F5">
-			<input type="hidden" name="x_tipo" id="x_tipo1" value="1">
-			Serie
 			<?php
-			 /*
-			if(!empty($x_cod_padre) && $x_tipo == "3") {
-			    $id_tipo = "x_tipo" . $x_tipo;
-			    echo '<input type="hidden" name="x_tipo" id="' . $id_tipo . '" value="' . $x_tipo  . '">';
-			    echo '<label for="' . $id_tipo . '">' .  $tipo_serie[$x_tipo] . '</label>';
-			} else {
-			    foreach ($tipo_serie as $key => $value) {
-			        $id_tipo = "x_tipo" . $key;
-			        echo '<input type="radio" name="x_tipo" id="' . $id_tipo . '" value="' . $key . '">';
-			        echo '<label for="' . $id_tipo .  '">' . $value . '</label><br>';
-			    }
-			}
-			*/
+			if(isset($_REQUEST["x_idserie"])){
+				if(!empty($x_cod_padre) && $x_tipo == "3") {
+    			    $id_tipo = "x_tipo" . $x_tipo;
+    			    echo '<input type="hidden" name="x_tipo" id="' . $id_tipo . '" value="' . $x_tipo  . '">';
+    			    echo '<label for="' . $id_tipo . '">' .  $tipo_serie[$x_tipo] . '</label>';
+    			} else {
+    			    foreach ($tipo_serie as $key => $value) {
+    			        $id_tipo = "x_tipo" . $key;
+    			        echo '<input type="radio" name="x_tipo" id="' . $id_tipo . '" value="' . $key . '">';
+    			        echo '<label for="' . $id_tipo .  '">' . $value . '</label><br>';
+    			    }
+    			}
+			}else{
+                echo "Serie";
+                echo '<input type="hidden" name="x_tipo" id="x_tipo1" value="1">';
+               }
 			?>
 			</td>
 		</tr>
