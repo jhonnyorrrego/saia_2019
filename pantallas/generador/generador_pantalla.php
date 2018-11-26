@@ -92,16 +92,16 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 				<div class="tabbable">
 					<ul class="nav nav-tabs" id="tabs_formulario">
 						<li>
-							<a href="#datos_formulario-tab" data-toggle="tab">1-Datos</a>
+							<a href="#datos_formulario-tab" data-toggle="tab">Informaci&oacute;n</a>
 						</li>
 						<li id="generar_formulario_pantalla"  class="active">
-							<a href="#formulario-tab" data-toggle="tab">2-Formularios</a>
+							<a href="#formulario-tab" data-toggle="tab">Campos</a>
 						</li>
                 		<li>
                 			<a href="#librerias_formulario-tab" data-toggle="tab">3-Librerias</a>
 						</li>
                 		<li>
-                				<a href="#pantalla_mostrar-tab" data-toggle="tab">4-Mostrar</a>
+                				<a href="#pantalla_mostrar-tab" data-toggle="tab">Dise&ntilde;o</a>
 						</li>
                                 <!-- li>
 									<a href="#pantalla_listar-tab" data-toggle="tab">5-listar</a>
@@ -113,7 +113,7 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 									<a href="#asignar_funciones-tab" data-toggle="tab">6-Asignar funciones</a>
 								</li-->
 						<li>
-									<a href="#generar_formulario-tab" data-toggle="tab">7-Generar</a>
+									<a href="#generar_formulario-tab" data-toggle="tab">Publicar</a>
 						</li>
 					</ul>
 					<div class="tab-content">
@@ -470,6 +470,10 @@ echo (librerias_notificaciones());
 echo (librerias_validar_formulario());
 echo (librerias_arboles());
 echo (librerias_tooltips());
+
+include_once($ruta_db_superior."assets/librerias.php");
+
+echo icons();
 // echo(librerias_tiny());
 $cant_js = count($librerias_js);
 $incluidas = array();
