@@ -14,7 +14,7 @@ function checkSize (){
     }
     $el.remove();
     
-    localStorage.setItem('breakpoint', breakpoint);
+    localStorage.setItem('breakpoint', env);
     return env; 
 } 
 
