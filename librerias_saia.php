@@ -394,9 +394,8 @@ function librerias_kaiten() {
 
 function librerias_acciones_kaiten() {
 	global $raiz_saia;
-	$texto = '';
-	$texto .= '<script type="text/javascript" src="' . $raiz_saia . 'pantallas/lib/acciones_kaiten.js"></script>';
-	return ($texto);
+	$texto = '<script type="text/javascript" src="' . $raiz_saia . 'pantallas/lib/acciones_kaiten.js"></script>';
+	return $texto;
 }
 
 function librerias_scroll_infinito() {

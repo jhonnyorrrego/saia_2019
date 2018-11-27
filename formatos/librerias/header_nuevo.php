@@ -9,9 +9,11 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once  $ruta_db_superior . "db.php";
-include_once  $ruta_db_superior . "assets/librerias.php";
-include_once  $ruta_db_superior . "formatos/librerias/encabezado_pie_pagina.php";
+
+include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "assets/librerias.php";
+include_once $ruta_db_superior . "pantallas/documento/menu_principal_documento.php";
+include_once $ruta_db_superior . "formatos/librerias/encabezado_pie_pagina.php";
 
 global $conn;
 
@@ -90,11 +92,6 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        <?= jquery() ?>
-        <?= bootstrap() ?>
-        <?= icons() ?>
-        <?= theme() ?>
        
         <?php if ($color["numcampos"]): ?>
             <style type="text/css">
@@ -210,11 +207,9 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
 	</head>
 	<body>
 <?php if ($_REQUEST["tipo"] != 5): ?>
-    <div class="container-fluid bg-master-lightest px-3">
+    <div class="container-fluid bg-master-lightest px-4">
         <div class="row sticky-top pt-2 bg-master-lightest px-3">
-            <div class="col-12 px-0 mx-0">
-                <?php include_once $ruta_db_superior . 'views/documento/encabezado.php'; ?>
-            </div>
+            <?= menu_principal_documento($iddocumento) ?>
         </div>
         <div id="documento" class="row px-3">
             <div id="pag-0" class="col-12 page_border bg-white">

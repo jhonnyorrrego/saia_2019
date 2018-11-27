@@ -1,5 +1,5 @@
-<?php $ruta_db_superior = $_REQUEST['baseUrl'] ?>
-<?php include_once $ruta_db_superior . 'assets/librerias.php' ?>
+<?php $ruta_db_superior = $_REQUEST['baseUrl']?>
+<?php include_once $ruta_db_superior . 'assets/librerias.php'?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,9 +38,14 @@
                             <i class="change_type fa fa-eye"></i>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <span class="bold">Seguridad de la contraseña:<label id="password_validation"></label></span>
+                        </div>
+                    </div>
                     <div>
                         <p>
-                            Usa al menos 8 caracteres. Se recomienda combinar caracteres alfanuméricos (letras y números) con símbolos:<br><br> 
+                            Usa al menos 8 caracteres. Se recomienda combinar caracteres alfanuméricos (letras y números) con símbolos:<br><br>
                             - Letras mayúsculas como: A, E, R.<br>
                             - Letras minúsculas como: a, e, r.<br>
                             - Números como: 2, 6, 7.<br>
@@ -64,7 +69,7 @@
             </form>
         </div>
     </div>
-    <?= validate() ?>
+    <?=validate()?>
     <script>
         $(function(){
             $('.change_type').on('click', function(){
@@ -82,9 +87,50 @@
             $("#btn_success").on('click', function(){
                 $("#form_password").submit();
             });
+
+            $("#new_password").keyup(function() {
+                checkStrength("#password_validation", $(this).val());
+            });
+
+            function checkStrength(selector, password) {
+                var strength = 0;
+
+                if (password.length < 9) {
+                    $(selector)[0].className = 'label label-danger';
+                    $(selector).html("Demasiado Corta");
+                    return true;
+                }
+
+                if (password.length > 7) strength += 1;
+                // If password contains both lower and uppercase characters, increase strength value.
+                if (password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) strength += 1;
+                // If it has numbers and characters, increase strength value.
+                if (password.match(/([a-zA-Z])/) && password.match(/([0-9])/))
+                strength += 1;
+                // If it has one special character, increase strength value.
+                if (password.match(/([!,%,&,@,#,$,^,*,?,_,~])/)) strength += 1;
+                // If it has two special characters, increase strength value.
+                if (password.match(/(.*[!,%,&,@,#,$,^,*,?,_,~].*[!,%,&,@,#,$,^,*,?,_,~])/))
+                strength += 1;
+                // Calculated strength value, we can return messages
+
+                if (strength < 2) {
+                    $(selector)[0].className = 'label label-warning';
+                    $(selector).html("Débil");
+                    return true;
+                } else if (strength == 2) {
+                    $(selector)[0].className = 'label label-info';
+                    $(selector).html("Buena");
+                    return true;
+                } else {
+                    $(selector)[0].className = 'label label-success';
+                    $(selector).html("Optima");
+                    return true;
+                }
+            }
         });
 
-         $("#form_password").validate({
+        $("#form_password").validate({
             rules: {
                 actual_password: {
                     required: true
@@ -124,7 +170,7 @@
                     }else{
                         toastr.error(response.message, 'Error!');
                     }
-                }, 'json') 
+                }, 'json')
             }
         });
     </script>

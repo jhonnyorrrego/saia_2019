@@ -23,9 +23,13 @@ $params = http_build_query(array(
     'rows' => $_REQUEST['pageSize'],
     'actual_row' => $actualRow
 ));
-$url = PROTOCOLO_CONEXION . RUTA_PDF . '/pantallas/busquedas/servidor_busqueda.php?' . $params;
 
+$url = PROTOCOLO_CONEXION . RUTA_PDF . '/pantallas/busquedas/servidor_busqueda.php?' . $params;
 $ch = curl_init();
+if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+}
 curl_setopt($ch, CURLOPT_URL, $url);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 $output = json_decode(curl_exec($ch));

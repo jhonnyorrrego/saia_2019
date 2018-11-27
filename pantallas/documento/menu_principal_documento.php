@@ -9,6 +9,7 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
+
 include_once $ruta_db_superior . "db.php";
 include_once $ruta_db_superior . "assets/librerias.php";
 include_once $ruta_db_superior . "librerias_saia.php";
@@ -16,7 +17,8 @@ include_once $ruta_db_superior . "librerias_saia.php";
 echo jquery();
 echo bootstrap();
 echo icons();
-echo librerias_arboles();
+echo theme();
+echo topModal();
 
 $documento = array();
 $funcionario = 0;
@@ -33,158 +35,198 @@ function menu_principal_documento($iddocumento, $tipo_visualizacion = "", $modul
         $seguimiento = permisos_modulo_menu_intermedio($iddocumento, "informacion_menu_intermedio", array("tipo" => 2));
         $otros = permisos_modulo_menu_intermedio($iddocumento, "otros_menu_intermedio", array("tipo" => 2));
     }
-    ?>
-    <link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.css">
-    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.js"></script>
-
-    <div class="text-right">
-        <div class="fixed-top mt-1">
-            <div class="pr-1">
-                <button class="btn btn-sm" onClick="js: $('#actions').toggle()"><i class="fa fa-eye"></i></button>
+    ?>    
+    <div class="col-12 px-0 mx-0" style="font-size:12px">
+        <div class="row pb-2 mx-0">
+            <div class="col text-center p-0" id="container_go_back">
+                <span>
+                    <i style="cursor:pointer;" class="fa fa-chevron-left" id="go_back"></i>
+                </span>
             </div>
-            <div class="btn btn-sm btn-group-vertical pr-1" role="group" aria-label="Button group with nested dropdown" id="actions" style="display:none">
-                <div class="btn-group" role="group">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-edit"></i>
-                    </button>
-                    <div class="dropdown-menu pre-scrollable" aria-labelledby="btnGroupDrop1" style="width:300px;">
-                        <ul class="pl-1">
-                        <?php foreach ($acciones as $key => $accion): ?>
-                            <li class="dropdown-item text-truncate">
-                                <a href="<?=$accion['ruta']?>" target="<?=$accion['target']?>" id="<?=$accion['id']?>" class="text-body">
-                                    <i class="<?=$accion['icono']?> mr-1"></i>
-                                    <?=$accion['etiqueta']?>
-                                </a>
-                            </li>
-                        <?php endforeach;?>
-                        </ul>
+            <div class="col p-0 m-0 text-center">
+                <span>
+                    <i class="fa fa-sitemap"></i>
+                    <i style="cursor:pointer;" class="fa fa-angle-double-down" id="show_tree"></i>
+                </span>
+            </div>
+            <div class="col text-center p-0">
+                <span style="cursor:pointer;">
+                    <i class="fa fa-mail-reply"></i><label class="d-none d-sm-inline">&nbsp;Responder</label>
+                </span>
+            </div>
+            <div class="col-auto text-center px-0">
+                <span style="cursor:pointer;">
+                    <i class="fa fa-mail-reply-all"></i><label class="d-none d-sm-inline">&nbsp;Responder a todos</label>
+                </span>
+            </div>
+            <div class="col text-center p-0">
+                <span style="cursor:pointer;">
+                    <i class="fa fa-share"></i><label class="d-none d-sm-inline">&nbsp;Reenviar</label>
+                </span>
+            </div>
+            <div class="col-auto p-0">
+                <span style="cursor:pointer;">
+                    <div class="pr-1">
+                        <div class="dropdown pull-right d-xs-block">
+                            <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor:pointer">
+                                <i class="fa fa-angle-double-left"></i>
+                                &nbsp;Opciones
+                            </span>
+                            <div class="dropdown-menu dropdown-menu-right" role="menu" x-placement="bottom-end">
+                                <?php foreach ($acciones as $key => $item): ?>
+                                    <a class="dropdown-item menu_options text-truncate" href="<?=$item['route']?>" class="text-body">
+                                        <i class="<?=$item['icon']?>"></i> <?=$item['label']?>
+                                    </a>
+                                <?php endforeach;?>
+                                <?php foreach ($seguimiento as $key => $item): ?>
+                                    <a class="dropdown-item menu_options text-truncate" href="<?=$item['route']?>" class="text-body">
+                                        <i class="<?=$item['icon']?>"></i> <?=$item['label']?>
+                                    </a>
+                                <?php endforeach;?>
+                                <?php foreach ($otros as $key => $item): ?>
+                                    <a class="dropdown-item menu_options text-truncate" href="<?=$item['route']?>" class="text-body">
+                                        <i class="<?=$item['icon']?>"></i> <?=$item['label']?>
+                                    </a>
+                                <?php endforeach;?>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="btn-group" role="group">
-                    <button id="btnGroupDrop2" type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="fa fa-share"></i>
-                    </button>
-                    <div class="dropdown-menu pre-scrollable" aria-labelledby="btnGroupDrop2" style="width:300px;">
-                        <ul class="pl-1">
-                        <?php foreach ($seguimiento as $key => $accion): ?>
-                            <li class="dropdown-item text-truncate">
-                                <a href="<?=$accion['ruta']?>" target="<?=$accion['target']?>" id="<?=$accion['id']?>" class="text-body">
-                                    <i class="<?=$accion['icono']?> mr-1"></i>
-                                    <?=$accion['etiqueta']?>
-                                </a>
-                            </li>
-                        <?php endforeach;?>
-                        </ul>
-                    </div>
-                </div>
-                <div class="btn-group" role="group">
-                    <button id="btnGroupDrop3" type="button" class="btn btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="pg pg-bag"></i>
-                    </button>
-                    <div class="dropdown-menu pre-scrollable" aria-labelledby="btnGroupDrop3" style="width:300px;">
-                        <ul class="pl-1">
-                        <?php foreach ($otros as $key => $accion): ?>
-                            <li class="dropdown-item text-truncate">
-                                <a href="<?=$accion['ruta']?>" target="<?=$accion['target']?>" id="<?=$accion['id']?>" class="text-body">
-                                    <i class="<?=$accion['icono']?> mr-1"></i>
-                                    <?=$accion['etiqueta']?>
-                                </a>
-                            </li>
-                        <?php endforeach;?>
-                        </ul>
-                    </div>
-                </div>
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn" data-toggle="modal" data-target=".bd-example-modal-sm">
-                        <i class="fa fa-sitemap"></i>
-                    </button>
-                </div>
+                </span>
             </div>
         </div>
-        <div class="fixed-bottom">
+        <div class="row px-0 mx-0">
+            <div class="col-1 px-0 mx-0">
+                <span class="thumbnail-wrapper circular inline">
+                    <img id="profile_image" src="../../temporal/temporal_andres.mendoza/2108097194r.png" style="width:3rem;height:3rem;">
+                </span>
+            </div>
+            <div class="col-2">
+                <div class="row">
+                    <div class="col-12">
+                        <span class="bold">Angélica Gómez</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <span>Hace 5 minutos</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <span class="px-1" style="cursor:pointer;"><i class="fa fa-flag"></i></span>
+                <span class="px-1" style="cursor:pointer;"><i class="fa fa-paperclip"></i></span>
+                <span class="px-1" style="cursor:pointer;"><i class="fa fa-comments"></i></span>
+                <span class="px-1" style="cursor:pointer;"><i class="fa fa-calendar"></i></span>
+                <span class="px-1" style="cursor:pointer;"><i class="fa fa-road"></i></span>
+            </div>
+            <div class="col-auto">
+                vence: <label class="label label-danger" style="cursor:pointer;">Hoy</label>
+            </div>
+        </div>
+        <div class="row mx-0 px-1">
+            <div class="col-1 px-0 mx-0 text-center">
+                <span class="bold">PQRS</span>
+            </div>
+            <div class="col">
+                <p style="line-height:1;font-size:12px;" class="bold">Lorem ipsum dolor sit amet consectetur adipisicing elit. Doloremque, iusto fuga. Ea eaque quasi voluptates voluptate eligendi aperiam quidem ab facere nobis, incidunt fugit delectus. Eius odio non modi at.</p>
+            </div>
+        </div>
+        <div class="row mx-0 px-1">
+            <div class="col-12 px-0 mx-0">
+                <p style="line-height:1;font-size:12px;">Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum nemo culpa, laborum optio animi fugiat qui, consequuntur rem quia consectetur exercitationem vel iste similique eum quas incidunt eveniet fuga in.</p>
+            </div>
+        </div>
+        <div class="row mx-0 px-1">
             <div id="fab"></div>
         </div>
     </div>
-    <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close btn btn-sm" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div id="esperando_arbol">
-                        <img src="<?= $ruta_db_superior ?>imagenes/cargando.gif">
-                    </div>
-                    <div id="tree_box" class="arbol_saia"></div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.css">
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.js"></script>
     <script type="text/javascript">
         $(function(){
-            var ruta = "<?= $ruta_db_superior ?>formatos/arboles/test_formatos_documento.php?id=<?= $identificador_arbol ?>";
-            tree2 = new dhtmlXTreeObject("tree_box","100%","<?= $alto_inicial ?>",0);
-            tree2.enableAutoTooltips(1);
-            tree2.enableTreeImages("false");
-            tree2.enableTreeLines("true");
-            tree2.enableTextSigns("true");
-            tree2.setOnLoadingStart(cargando);
-            tree2.setOnLoadingEnd(fin_cargando);
-            tree2.setOnClickHandler(onNodeSelect);
-            tree2.loadXML(ruta);
-            
-            function onNodeSelect(nodeId){
-                var llave = tree2.getParentId(nodeId);
-                var datos = nodeId.split("-");
-                
-                if(datos[2][0] == "r"){
-                    seleccion_accion('adicionar');
-                }else{
-                    documento_saia = datos[3];
-                    var conexion = "<?=$ruta_db_superior ?>formatos/arboles/parsear_accion_arbol.php?id="+nodeId+"&accion=mostrar&llave="+llave+"&enlace_adicionar_formato=1";
-                    window.parent.open(conexion,"detalles");
+            var baseUrl = '<?= $ruta_db_superior ?>';
+            var iddocumento = '<?= $iddocumento ?>';
+            var breakpoint = localStorage.getItem('breakpoint');
+
+            if($.inArray(breakpoint, ['xs', 'sm', 'md']) != -1){
+                $('#container_go_back').show();
+                $("#go_back").on('click', function(){
+                    var leftPanel = $("#mailbox", parent.document);
+                    var rightPanel = $("#right_workspace", parent.document);
+                    let width = rightPanel.width();
+        
+                    rightPanel.animate({
+                        left: width
+                    },200,function(){
+                        leftPanel.show().css('left', 0);
+                        rightPanel.hide();
+                        window.parent.window.resizeIframe();
+                    });
+                });
+            }else{
+                $('#container_go_back').hide();
+            }
+
+            /*$(".menu_options").on('click', function(e){
+                let type = $(this).data('type');
+                let options = {
+                    html: true,
+                    size: 'modal-sm',
+                    buttons: {
+                        cancel: {
+                            label: 'Cerrar',
+                            class: 'btn btn-danger'
+                        }
+                    }
+                };
+
+                switch (type) {
+                    case 'acciones':
+                        options.title = "Acciones";
+                        options.content = $("#actions_content").html();
+                        break;
+                    case 'seguimiento':
+                        options.title = "Seguimiento";
+                        options.content = $("#trace_content").html();
+                        break;
+                    case 'otros':
+                        options.title = "Otros";
+                        options.content = $("#others_content").html();
+                        break;
                 }
-            }
-            function seleccion_accion(accion,id){
-                var nodeId = tree2.getSelectedItemId();
                 
-                if(!nodeId){
-                    alert("Por Favor seleccione un documento del arbol");
-                    return;
-                }
+                topModal(options);
+            });
 
-                var llave = tree2.getParentId(nodeId);
-                tree2.closeAllItems(tree2.getParentId(nodeId));
-                tree2.openItem(nodeId);
-                tree2.openItem(tree2.getParentId(nodeId));
-                
-                var conexion = "<?= $ruta_db_superior ?>formatos/arboles/parsear_accion_arbol.php?id="+nodeId+"&accion="+accion+"&llave="+llave;
-                window.parent.open(conexion, "detalles");
-            }
+            $(".menu_item").on('click', function(){
+                let options = {
+                    url: baseUrl + $(this).data('url'),
+                    params: {
+                        iddocumento: iddocumento
+                    },
+                    title: $(this).text(),
+                    size: 'modal-lg'
+                };
+                topModal(options);
+            });*/
 
-            function fin_cargando(){
-                $("#esperando_arbol").hide();
-
-                tree2.openAllItems(0); //esta linea permite que los arboles carguen abiertos totalmente
-                <?php  if ($_REQUEST['click_mostrar']): ?>
-                    var nodeId = tree2.getSelectedItemId();
-                    var llave = tree2.getParentId(nodeId);
-                    onNodeSelect(nodeId);
-                <?php endif; ?>
-            }
-
-            function cargando() {
-                $("#esperando_arbol").show();
-            }
-
-            function actualizar_papa(nodeId){
-                var papa = tree2.getParentId(nodeId);
-                tree2.closeItem(papa);
-                tree2.deleteItem(nodeId,true);
-                tree2.findItem(papa);
-            }
+            $("#show_tree").on('click', function(){
+                let options = {
+                    url: `${baseUrl}views/arbol/proceso_formato.php`,
+                    params: {
+                        iddocumento: iddocumento
+                    },
+                    title: 'Proceso',
+                    size: 'modal-sm',
+                    buttons: {
+                        cancel: {
+                            label: 'Cerrar',
+                            class: 'btn btn-danger'
+                        }
+                    }
+                };
+                topModal(options);
+            })
 
             <?php if(in_array(true, array_values($datos_admin))) :?>
                 var fab = new Fab({
@@ -396,10 +438,9 @@ function permisos_modulo_menu_intermedio($iddoc, $modulo_padre, $lista, $target 
 
             $enlaces[] = array(
                 'id' => $modulos[$i]["nombre"],
-                'ruta' => $ruta_db_superior . $modulos[$i]["enlace"],
-                'icono' => $modulos[$i]["imagen"],
-                'target' => $target,
-                'etiqueta' => $modulos[$i]["etiqueta"],
+                'route' => $ruta_db_superior . $modulos[$i]["enlace"],
+                'icon' => $modulos[$i]["imagen"],
+                'label' => $modulos[$i]["etiqueta"]
             );
         }
     }

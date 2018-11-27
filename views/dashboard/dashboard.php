@@ -12,6 +12,7 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'assets/librerias.php';
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -35,10 +36,10 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 	<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen" />
 	<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/switchery/css/switchery.min.css" rel="stylesheet" type="text/css" media="screen" />
 	<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/css/imgareaselect-default.css" rel="stylesheet" type="text/css" media="screen" />
-    <link class="main-stylesheet" href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.min.css" rel="stylesheet" type="text/css" />
+    <link class="main-stylesheet" href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.css" rel="stylesheet" type="text/css" />
 </head>
 
-<body class="fixed-header ">
+<body class="fixed-header">
     <!-- BEGIN SIDEBPANEL-->
     <nav class="page-sidebar" data-pages="sidebar">
         <!-- BEGIN SIDEBAR MENU TOP TRAY CONTENT-->
@@ -66,7 +67,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     </nav>
     <!-- END SIDEBPANEL-->
     <!-- START PAGE-CONTAINER -->
-    <div class="page-container ">
+    <div class="page-container">
         <!-- START HEADER -->
         <div class="header" id="header">
             <!-- START MOBILE SIDEBAR TOGGLE -->
@@ -78,107 +79,28 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 <div class="brand inline">
                     <img alt="logo" height="47px" id="client_image">
                 </div>
-                <!--<ul class="d-lg-inline-block d-none notification-list no-margin d-lg-inline-block b-grey b-l b-r no-style p-l-30 p-r-20">
-                    <li class="p-r-10 inline">
-                        <div class="dropdown">
-                            <a href="javascript:;" id="notification-center" class="header-icon fa fa-globe" data-toggle="dropdown">
-                                <span class="bubble"></span>
-                            </a>
-                            <div class="dropdown-menu notification-toggle" role="menu" aria-labelledby="notification-center">
-                                <div class="notification-panel">
-                                    <div class="notification-body scrollable">
-                                        <div class="notification-item unread clearfix">
-                                            <div class="heading open">
-                                                <a href="#" class="text-complete pull-left">
-                                                    <i class="fa fa-map-marker fs-16 m-r-10"></i>
-                                                    <span class="bold">Carrot Design</span>
-                                                    <span class="fs-12 m-l-10">David Nester</span>
-                                                </a>
-                                                <div class="pull-right">
-                                                    <div class="thumbnail-wrapper d16 circular inline m-t-15 m-r-10 toggle-more-details">
-                                                        <div><i class="fa fa-angle-left"></i>
-                                                        </div>
-                                                    </div>
-                                                    <span class=" time">few sec ago</span>
-                                                </div>
-                                                <div class="more-details">
-                                                    <div class="more-details-inner">
-                                                        <h5 class="semi-bold fs-16">“Apple’s Motivation - Innovation
-                                                            <br>
-                                                            distinguishes between <br>
-                                                            A leader and a follower.”</h5>
-                                                        <p class="small hint-text">
-                                                            Commented on john Smiths wall.
-                                                            <br> via pages framework.
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="option" data-toggle="tooltip" data-placement="left" title="mark as read">
-                                                <a href="#" class="mark"></a>
-                                            </div>
-                                        </div>
-                                        <div class="notification-item  clearfix">
-                                            <div class="heading">
-                                                <a href="#" class="text-danger pull-left">
-                                                    <i class="fa fa-exclamation-triangle m-r-10"></i>
-                                                    <span class="bold">98% Server Load</span>
-                                                    <span class="fs-12 m-l-10">Take Action</span>
-                                                </a>
-                                                <span class="pull-right time">2 mins ago</span>
-                                            </div>
-                                            <div class="option">
-                                                <a href="#" class="mark"></a>
-                                            </div>
-                                        </div>
-                                        <div class="notification-item  clearfix">
-                                            <div class="heading">
-                                                <a href="#" class="text-warning-dark pull-left">
-                                                    <i class="fa fa-exclamation-triangle m-r-10"></i>
-                                                    <span class="bold">Warning Notification</span>
-                                                    <span class="fs-12 m-l-10">Buy Now</span>
-                                                </a>
-                                                <span class="pull-right time">yesterday</span>
-                                            </div>
-                                            <div class="option">
-                                                <a href="#" class="mark"></a>
-                                            </div>
-                                        </div>
-                                        <div class="notification-item unread clearfix">
-                                            <div class="heading">
-                                                <div class="thumbnail-wrapper d24 circular b-white m-r-5 b-a b-white m-t-10 m-r-10">
-                                                    <img width="30" height="30" alt="image" >
-                                                </div>
-                                                <a href="#" class="text-complete pull-left">
-                                                    <span class="bold">Revox Design Labs</span>
-                                                    <span class="fs-12 m-l-10">Owners</span>
-                                                </a>
-                                                <span class="pull-right time">11:00pm</span>
-                                            </div>
-                                            <div class="option" data-toggle="tooltip" data-placement="left" title="mark as read">
-                                                <a href="#" class="mark"></a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="notification-footer text-center">
-                                        <a href="#" class="">Read all notifications</a>
-                                        <a data-toggle="refresh" class="portlet-refresh text-black pull-right" href="#">
-                                            <i class="pg-refresh_new"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="p-r-10 inline">
-                        <a href="#" class="header-icon pg pg-link"></a>
-                    </li>
-                    <li class="p-r-10 inline">
-                        <a href="#" class="header-icon pg pg-thumbs"></a>
-                    </li>
-                </ul>-->
-                <a href="#" class="search-link d-lg-inline-block d-none" data-toggle="search"><i class="pg-search"></i>Type
-                    anywhere to <span class="bold">search</span></a>
+                <div class="dropdown d-lg-inline-block d-none">
+                    <button class="btn btn-complete mx-1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="new_action">
+                        <i class="fa fa-plus"></i> Nuevo
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-left bg-white" role="menu">
+                        <a href="#" class="dropdown-item new_add" data-type="folder">
+                            <i class="fa fa-folder-open"></i> Expediente
+                        </a>
+                        <a href="#" class="dropdown-item new_add" data-type="task">
+                            <i class="fa fa-calendar-o"></i> Tarea o Recordatorio
+                        </a>
+                        <a href="#" class="dropdown-item new_add" data-type="comunication">
+                            <i class="fa fa-file-text-o"></i> Comunicaciones Oficiales
+                        </a>
+                        <a href="#" class="dropdown-item new_add" data-type="process">
+                            <i class="fa fa-share-alt"></i> Procesos Generales
+                        </a>                        
+                    </div>
+                </div>
+                <a href="#" class="search-link d-lg-inline-block d-none" data-toggle="search">
+                    <i class="pg-search"></i>Type anywhere to <span class="bold">search</span>
+                </a>
             </div>
             <div class="d-flex align-items-center">
                 <div class="pull-left p-r-10 fs-14 font-heading d-lg-block d-none">
@@ -216,8 +138,13 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             <!-- START PAGE CONTENT -->
             <div class="content">
                <!-- START CONTAINER FLUID -->
-                <div class="container-fluid container-fixed-lg my-0 py-0 mx-0 px-0" id="workspace">
-                    <iframe class="container-fluid container-fixed-lg my-0 py-0 mx-0 px-0" frameBorder="0" id="iframe_workspace" width="100%" scrolling="no"></iframe>
+                <div class="container-fluid container-fixed-lg my-0 py-0 mx-0 px-0" id="workspace"  style="position:absolute;">
+                    <iframe class="container-fluid container-fixed-lg my-0 py-0 mx-0 px-0" frameBorder="0" id="iframe_workspace" width="100%" scrolling="no" style="position:absolute;z-index:0;"></iframe>
+                    <div class="d-inline d-block d-lg-none rounded-circle bg-white text-center" style="z-index:1;position:absolute;width:60px;height:60px;" id="new_action_mobile_container">
+                        <span class="p-0 m-0 rounded-circle w-100 h-100" id="new_action_mobile" style="cursor:pointer;">
+                            <i class="fa fa-plus-circle text-complete" style="font-size:60px" ></i>
+                        </span>
+                    </div>                  
                 </div>
                 <!-- END CONTAINER FLUID -->
             </div>
@@ -266,13 +193,25 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                     <div class="view note" id="quick-note">
                         <div>
                             <ul class="toolbar">
-                                <li><a href="#" class="close-note-link"><i class="pg-arrow_left"></i></a>
+                                <li>
+                                    <a href="#" class="close-note-link">
+                                        <i class="pg-arrow_left"></i>
+                                    </a>
                                 </li>
-                                <li><a href="#" data-action="Bold" class="fs-12"><i class="fa fa-bold"></i></a>
+                                <li>
+                                    <a href="#" data-action="Bold" class="fs-12">
+                                        <i class="fa fa-bold"></i>
+                                    </a>
                                 </li>
-                                <li><a href="#" data-action="Italic" class="fs-12"><i class="fa fa-italic"></i></a>
+                                <li>
+                                    <a href="#" data-action="Italic" class="fs-12">
+                                        <i class="fa fa-italic"></i>
+                                    </a>
                                 </li>
-                                <li><a href="#" id="save_note" class="fs-12"><i class="fa fa-save"></i></a>
+                                <li>
+                                    <a href="#" id="save_note" class="fs-12">
+                                        <i class="fa fa-save"></i>
+                                    </a>
                                 </li>
                             </ul>
                             <div class="body">
@@ -281,8 +220,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                         <span id="span_note_header"></span>
                                     </div>
                                     <div class="content">
-                                        <div class="quick-note-editor full-width full-height js-input" contenteditable="true"
-                                            id="note_content"></div>
+                                        <div class="quick-note-editor full-width full-height js-input" contenteditable="true" id="note_content"></div>
                                     </div>
                                 </div>
                             </div>
@@ -295,126 +233,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         <!--END TAB PANES -->
     </div>
     <!-- END QUICKVIEW-->
-    <!-- START OVERLAY 
-    <div class="overlay hide" data-pages="search">
-        <div class="overlay-content has-results m-t-20">
-            <div class="container-fluid">
-                <img class="overlay-brand" alt="logo" width="78" height="22">
-                <a href="#" class="close-icon-light overlay-close text-black fs-16">
-                    <i class="pg-close"></i>
-                </a>
-            </div>
-            <div class="container-fluid">
-                <input id="overlay-search" class="no-border overlay-search bg-transparent" placeholder="Search..."
-                    autocomplete="off" spellcheck="false">
-                <br>
-                <div class="inline-block">
-                    <div class="checkbox right">
-                        <input id="checkboxn" type="checkbox" value="1" checked="checked">
-                        <label for="checkboxn"><i class="fa fa-search"></i> Search within page</label>
-                    </div>
-                </div>
-                <div class="inline-block m-l-10">
-                    <p class="fs-13">Press enter to search</p>
-                </div>
-            </div>
-            <div class="container-fluid">
-                <span>
-                    <strong>suggestions :</strong>
-                </span>
-                <span id="overlay-suggestions"></span>
-                <br>
-                <div class="search-results m-t-40">
-                    <p class="bold">Pages Search Results</p>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="">
-                                <div class="thumbnail-wrapper d48 circular bg-success text-white inline m-t-10">
-                                    <div>
-                                        <img width="50" height="50" alt="image">
-                                    </div>
-                                </div>
-                                <div class="p-l-10 inline p-t-5">
-                                    <h5 class="m-b-5"><span class="semi-bold result-name">ice cream</span> on pages</h5>
-                                    <p class="hint-text">via john smith</p>
-                                </div>
-                            </div>
-                            <div class="">
-                                <div class="thumbnail-wrapper d48 circular bg-success text-white inline m-t-10">
-                                    <div>T</div>
-                                </div>
-                                <div class="p-l-10 inline p-t-5">
-                                    <h5 class="m-b-5"><span class="semi-bold result-name">ice cream</span> related
-                                        topics</h5>
-                                    <p class="hint-text">via pages</p>
-                                </div>
-                            </div>
-                            <div class="">
-                                <div class="thumbnail-wrapper d48 circular bg-success text-white inline m-t-10">
-                                    <div><i class="fa fa-headphones large-text "></i>
-                                    </div>
-                                </div>
-                                <div class="p-l-10 inline p-t-5">
-                                    <h5 class="m-b-5"><span class="semi-bold result-name">ice cream</span> music</h5>
-                                    <p class="hint-text">via pagesmix</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="">
-                                <div class="thumbnail-wrapper d48 circular bg-info text-white inline m-t-10">
-                                    <div><i class="fa fa-facebook large-text "></i>
-                                    </div>
-                                </div>
-                                <div class="p-l-10 inline p-t-5">
-                                    <h5 class="m-b-5"><span class="semi-bold result-name">ice cream</span> on facebook</h5>
-                                    <p class="hint-text">via facebook</p>
-                                </div>
-                            </div>
-                            <div class="">
-                                <div class="thumbnail-wrapper d48 circular bg-complete text-white inline m-t-10">
-                                    <div><i class="fa fa-twitter large-text "></i>
-                                    </div>
-                                </div>
-                                <div class="p-l-10 inline p-t-5">
-                                    <h5 class="m-b-5">Tweats on<span class="semi-bold result-name"> ice cream</span></h5>
-                                    <p class="hint-text">via twitter</p>
-                                </div>
-                            </div>
-                            <div class="">
-                                <div class="thumbnail-wrapper d48 circular text-white bg-danger inline m-t-10">
-                                    <div><i class="fa fa-google-plus large-text "></i>
-                                    </div>
-                                </div>
-                                <div class="p-l-10 inline p-t-5">
-                                    <h5 class="m-b-5">Circles on<span class="semi-bold result-name"> ice cream</span></h5>
-                                    <p class="hint-text">via google plus</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    END OVERLAY -->
-
-    <!--<div class="modal fade slide-up disable-scroll" id="edit_profile" tabindex="-1" role="dialog" aria-hidden="false">
-        <div class="modal-dialog ">
-            <div class="modal-content-wrapper">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title bold">Datos Personales</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    
-                </div>
-            </div>
-            <!-- /.modal-content ->
-        </div>
-    </div>-->
     <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="edit_photo_modal">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -431,8 +249,9 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         </div>
     </div>
     <!-- Modal -->
+    <button data-toggle="modal" data-target="#dinamic_modal" style="display:none"></button>
     <div class="modal" tabindex="-1" role="dialog" id="dinamic_modal">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title bold" id="modal_title"></h5>
@@ -456,7 +275,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-ios-list/jquery.ioslist.min.js" type="text/javascript"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-actual/jquery.actual.min.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js"></script>
-    <script src="<?= $ruta_db_superior ?>assets/theme/pages/js/pages.min.js" type="text/javascript"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/pages/js/pages.js" type="text/javascript"></script>
     <!--<script src="<?= $ruta_db_superior ?>assets/theme/assets/js/scripts.js" type="text/javascript"></script>-->
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/scripts/jquery.imgareaselect.js" type="text/javascript"></script>
     

@@ -137,8 +137,8 @@ body.menu-pin .overlay .overlay-brand {
 .page-container .page-content-wrapper .content {
   /* Content holder */
   z-index: 10;
-  padding-top: 60px;
-  padding-bottom: 69px;
+  padding-top: 47px;
+  /*padding-bottom: 69px;*/
   min-height: 100%;
   -webkit-transition: all 0.3s ease;
   transition: all 0.3s ease;
@@ -1137,7 +1137,7 @@ body.menu-pin .overlay .overlay-brand {
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
-  height: 60px;
+  /*height: 60px;*/
   width: 100%;
   padding: 0 20px 0 0;
   z-index: 800;
@@ -14060,9 +14060,9 @@ Main components
 }
 /* Landscape view of all tablet devices */
 @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
-  .page-container .page-content-wrapper .content {
+  /*.page-container .page-content-wrapper .content {
     padding-top: 60px;
-  }
+  }*/
   body.box-layout > .container {
     width: 100%;
   }

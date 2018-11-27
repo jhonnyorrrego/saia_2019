@@ -78,6 +78,10 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
                             });
                         }
                     },
+                    onClickRow: function(row, element, field){
+                        element.parent().find('tr[data-index]').removeClass('selected');
+                        element.addClass('selected');
+                    },
                     cardView : true,
                     pagination: true,
                     maintainSelected: true

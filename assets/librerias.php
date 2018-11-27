@@ -233,8 +233,11 @@ function validate()
 
     $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-validation/js/jquery.validate.min.js';
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+    
+    $routeLocaleJs = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-validation/js/localization/messages_es.min.js';
+    $locale = '<script type="text/javascript" src="' . $routeLocaleJs . '"></script>';
 
-    return $js;
+    return $js . $locale;
 }
 
 /**
@@ -279,4 +282,31 @@ function topModal(){
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
     return $js;
+}
+
+/**
+ * incluye las librerias necesarias 
+ * para la pantalla del topModal
+ * 
+ * @param array $data
+ * @return string <script> incluye las librerias
+ * cuando el documento esta listo
+ */
+function librariesForTopModal($data){
+    $data = implode('', $data);
+    $libraries = str_replace('</script>','<\/script>', $data);
+    
+    return "<script type='text/javascript'>
+        div = $('<div>').append('". $libraries ."');
+        
+        $.each(div.children(), function(i, e){
+            if(e.href){
+                $('head').append(e);
+            }else if(e.src){
+                $('body').append(e);
+            }
+        });
+
+        delete div;
+    </script>";
 }

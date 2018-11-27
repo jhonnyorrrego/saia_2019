@@ -67,7 +67,13 @@ class Ui {
     }
 
     static resizeIframe() {
-        $("#iframe_workspace").height($(window).height() - $("#header").height() - 6);
+        $("#iframe_workspace").height($(window).height() - $("#header").height() - 5);
+        if (!$("#new_action_mobile_container").is(':hidden')) {
+            $("#new_action_mobile_container").css({
+                top: $("#iframe_workspace").height() - 80,
+                left: $("#iframe_workspace").width() - 80
+            });
+        }
     }
 
     static close() {

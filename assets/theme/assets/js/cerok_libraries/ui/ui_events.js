@@ -55,6 +55,36 @@ $(function () {
         topModal(modal_options);
     });
 
+    $("#new_action_mobile").on('click', function(){
+        let html = `
+            <a href="#" class="dropdown-item new_add" data-type="folder">
+                <i class="fa fa-folder-open"></i> Expediente
+            </a>
+            <a href="#" class="dropdown-item new_add" data-type="task">
+                <i class="fa fa-calendar-o"></i> Tarea o Recordatorio
+            </a>
+            <a href="#" class="dropdown-item new_add" data-type="comunication">
+                <i class="fa fa-file-text-o"></i> Comunicaciones Oficiales
+            </a>
+            <a href="#" class="dropdown-item new_add" data-type="process">
+                <i class="fa fa-share-alt"></i> Procesos Generales
+            </a>
+        `;
+
+        let modal_options = {
+            html: true,
+            content: html,
+            buttons: {
+                cancel: {
+                    label: 'Cerrar',
+                    class: 'btn btn-danger'
+                }
+            },
+            size: 'modal-sm',
+        }
+        topModal(modal_options);
+    });
+
     $("#edit_photo_modal").on("shown.bs.modal", function () {
         Ui.imageAreaSelect();
     });
@@ -119,7 +149,56 @@ $(function () {
     });
 
     $("#toggle_right_navbar").on("click", function() {
-      $("#note_tab").trigger("click");
+        $("#note_tab").trigger("click");
+    });
+
+    $(document).on("click",".new_add", function(){
+        switch ($(this).data('type')) {
+            case 'folder':
+                var data = JSON.stringify([{
+                    kConnector: "html.page",
+                    url: "pantallas/expediente/adicionar_expediente.php"
+                }])
+                break;
+            case 'task':
+                var data = JSON.stringify([{
+                    kConnector: "html.page",
+                    url: "pantallas/expediente/adicionar_expediente.php"
+                }])
+                break;
+            case 'comunication':
+                var data = JSON.stringify([
+                    {
+                        kConnector: "html.page",
+                        url: "pantallas/formato/listar_proceso_formatos.php",
+                        kTitle: "Procesos"
+                    },
+                    {
+                        kConnector: "html.page",
+                        url: "pantallas/formato/listar_formatos.php?idcategoria_formato=3",
+                        kTitle: "Tramites generales"
+                    }
+                ]);
+            break;
+            case 'process':
+                var data = JSON.stringify([
+                    {
+                        kConnector: "html.page",
+                        url: "pantallas/formato/listar_proceso_formatos.php",
+                        kTitle: "Procesos"
+                    },
+                    {
+                        kConnector: "html.page",
+                        url: "pantallas/formato/listar_formatos.php?idcategoria_formato=5",
+                        kTitle: "Tramites generales"
+                    }
+                ]);
+                break;
+        }
+        
+        let route = `${baseUrl}views/dashboard/kaiten_dashboard.php?panels=${data}`;
+        $("#iframe_workspace").attr('src', route);
+        $("#close_modal", window.top.document).trigger("click");
     });
 
     $(".tab-content").on("touchstart", function (evt) {
