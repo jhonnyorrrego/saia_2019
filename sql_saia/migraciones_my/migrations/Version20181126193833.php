@@ -58,7 +58,7 @@ class Version20181126193833 extends AbstractMigration {
             "categoria" => "Texto",
             "etiqueta" => "T&iacute;tulo de secci&oacute;n",
             "estado" => 1,
-            "clase" => "fa fa-h-square"
+            "clase" => "fa fa-header"
         ],
         "hidden" => [
             "categoria" => "Texto",
@@ -99,7 +99,7 @@ class Version20181126193833 extends AbstractMigration {
     ];
 
     public function getDescription() {
-        return 'Modifica pantalla_componente para modificar etiquetas y ocultar opciones';
+        return 'Modifica pantalla_componente para cambiar etiquetas y ocultar opciones';
     }
 
     public function preUp(Schema $schema) {

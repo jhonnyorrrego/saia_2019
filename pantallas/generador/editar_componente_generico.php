@@ -14,7 +14,7 @@ include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "pantallas/generador/librerias.php");
 
-$componente = busca_filtro_tabla("nombre, etiqueta, clase", "pantalla_componente", "idpantalla_componente=" . $_REQUEST["idpantalla_componente"], "", $conn);
+$componente = busca_filtro_tabla("nombre, etiqueta, clase, opciones_propias", "pantalla_componente", "idpantalla_componente=" . $_REQUEST["idpantalla_componente"], "", $conn);
 $texto_titulo = $componente[0]["etiqueta"];
 $nombre_componente = $componente[0]["nombre"];
 $valores = array();
@@ -39,12 +39,17 @@ if (@$_REQUEST["idpantalla_campos"]) {
         $valores["fs_valor"] = $pantalla_campos[0]["valor"];
     }
 
+    $opciones_propias = json_decode($pantalla_campos[0]["opciones_propias"], true);
+    if (json_last_error() === JSON_ERROR_NONE) {
+        if(is_array($valores)) {
+            $opciones_propias["value"] = $valores;
+        }
+    }
+
 } else {
     alerta("No es posible Editar el Campo");
 }
-
-$valores_str = json_encode($valores, JSON_NUMERIC_CHECK);
-
+$opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
 ?>
 <!DOCTYPE html>
 <html>
@@ -73,108 +78,33 @@ echo jquery();
     	<div id="res" class="alert"></div>
     </div>
 	<script type="text/javascript">
-	var datos = <?=$valores_str?>;
 	var nombre_componente = "<?=$nombre_componente?>";
+	var opciones_form = <?=$opciones_str?>;
 	$(document).ready(function(){
 		var rutaSuperior = "<?=$ruta_db_superior?>";
-		var opciones_def = {
-				schema: {
-					fs_etiqueta: {
-						type: "string",
-						title: "Etiqueta del campo",
-						maxLength: 255,
-						required: true
-					},
-					fs_nombre: {
-						type: 'string',
-						title: 'Nombre',
-						maxLength: 255,
-						required: true
-					},
-					fs_acciones: {
-						type: "string",
-						title: "Incluirse en la descripción del formato",
-						"enum": ["", "p"]
-					},
-					fs_obligatoriedad: {
-					    "type": "string",
-					    "title": "Obligatoriedad",
-					    "enum": [ "1", "0"]
-					}
-				},
-				form: [
-					{
-						"key": "fs_etiqueta",
-						"onChange": function (evt) {
-					        var value = $(evt.target).val();
-					        if (value) {
-					        	value = normalizar(value);
-					        	$("[name='fs_nombre']").val(value);
-					        }
-					    }
-					},
-					{
-						key: "fs_nombre",
-						type: "hidden"
-					},
-					{
-						key: "fs_obligatoriedad",
-						type: "radios",
-						titleMap: {
-					        "0": "No obligatrio",
-					        "1": "Obligatorio"
-						},
-					},
-					{
-						key: "fs_acciones",
-						type: "radios",
-						titleMap: {
-					        "": "No incluirse",
-					        "p": "Incluirse"
-						}
-					}
-				],
-				onSubmit: function (errors, values) {
-					if (errors) {
-						console.log(errors);
-						$('#res').html('<p>Ruego por su perd&oacute;n?</p>');
-					} else {
-						console.log(JSON.stringify(values.fs_valor));
-						console.log(JSON.stringify(values.fs_acciones));
-					}
-				},
-				params: {
-				    "fieldHtmlClass": "input-small"
-				},
-				value: datos
-			};
-		var adicional = {};
-		$.ajax({
-			url: "opciones_"+nombre_componente+".json",
-			dataType: "json",
-			async: false,
-			success : function(json) {
-			    adicional = json;
-			}
-		});
-		var opciones_form = opciones_def;
-		if(adicional.length) {
-    		$.each(adicional.schema, function(i, obj) {
-    			opciones_form.schema[i] = obj;
-    			});
-    		$.each(adicional.form, function(i, obj) {
-    			opciones_form['form'].push(obj);
-    			});
-		}
 
-		opciones_form.schema["fs_ayuda"] = {
-            "type": "string",
-            "title": "Ayuda para el usuario"
-	    };
-		opciones_form['form'].push({
-            "key": "fs_ayuda",
-            "type": "textarea"
-	    });
+		opciones_form["onSubmit"] = function (errors, values) {
+			if (errors) {
+				console.log(errors);
+				$('#res').html('<p>Ruego por su perd&oacute;n?</p>');
+			} else {
+				console.log(JSON.stringify(values.fs_valor));
+				console.log(JSON.stringify(values.fs_acciones));
+			}
+		};
+		opciones_form["params"] = {
+		    "fieldHtmlClass": "input-small"
+		};
+		opciones_form['form'].unshift({
+			"key": "fs_etiqueta",
+			"onChange": function (evt) {
+		        var value = $(evt.target).val();
+		        if (value) {
+		        	value = normalizar(value);
+		        	$("[name='fs_nombre']").val(value);
+		        }
+		    }
+		});
 
 		opciones_form['form'].push({
 			"type": "submit",
