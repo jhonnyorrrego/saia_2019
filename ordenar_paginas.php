@@ -22,7 +22,7 @@ if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["doc"]){
 	}
 	
 	include_once("pantallas/documento/menu_principal_documento.php");
-	echo(menu_principal_documento(@$_REQUEST["iddoc"],1));
+	echo menu_principal_documento($_REQUEST["iddoc"]);
 }  
  /* header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
   header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified

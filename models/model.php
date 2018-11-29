@@ -16,7 +16,7 @@ class Model {
         $attributes = $this->getAttributeNames();
 
         foreach ($values as $key => $value){
-            if(in_array($key, $attributes))
+            if(in_array(strval($key), $attributes))
                 $this->$key = $value;
         }
     }
@@ -29,7 +29,9 @@ class Model {
     }
 
     public function getNotNullAttributes(){
-        return array_filter($this->getAttributes());
+        return array_filter($this->getAttributes(), function($value){
+            return count($value) && $value !== false;
+        });
     }
 
     public function getAttributeNames(){
@@ -78,7 +80,7 @@ class Model {
             
             return $this->getPK();
         }else{
-            throw new Exception('Error al guardar ' . $sql);
+            return 0;
         }
     }
 
@@ -113,14 +115,4 @@ class Model {
         $pk = $this->primary;
         $this->$pk = $value;
     }
-
-    /*static function findByPK($primary){
-        $class = get_called_class();
-        $instance = new $class();
-
-        $sql = 'select * from ' . $instance->table . ' where ' . $instance->primary . '=' . $primary;
-        $data = $instance->find($sql);
-
-        return new $instance($data[0]);
-    }*/
 }

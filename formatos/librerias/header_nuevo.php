@@ -19,6 +19,7 @@ global $conn;
 
 $iddocumento = $_REQUEST['iddoc'];
 $idformato = $_REQUEST['idformato'];
+$idtransferencia = $_REQUEST['idtransferencia'] ? $_REQUEST['idtransferencia'] : 0;
 
 if ($iddocumento) {
     $formato = busca_filtro_tabla("", "formato a,documento b", "lower(b.plantilla)= lower(a.nombre) and b.iddocumento=" . $iddocumento, "", $conn);
@@ -209,7 +210,7 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
 <?php if ($_REQUEST["tipo"] != 5): ?>
     <div class="container-fluid bg-master-lightest px-4">
         <div class="row sticky-top pt-2 bg-master-lightest px-3">
-            <?= menu_principal_documento($iddocumento) ?>
+            <?= menu_principal_documento($iddocumento, $idtransferencia) ?>
         </div>
         <div id="documento" class="row px-3">
             <div id="pag-0" class="col-12 page_border bg-white">

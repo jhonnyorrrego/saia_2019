@@ -127,6 +127,7 @@ class Modules {
         this.groupers.forEach((g, i) => {
             row.append($("<div>", {
                     class: "col-12 col-md-6 py-1 px-0 mx-0 grouper",
+                    style: "cursor:pointer",
                     id: g.idmodule
                 }).append($("<div>", {
                         class:`${backgrounds[i]} text-center py-2 align-middle mx-auto`,

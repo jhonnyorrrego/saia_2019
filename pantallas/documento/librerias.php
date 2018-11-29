@@ -971,38 +971,54 @@ function origen_documento2($doc, $numero, $origen = "", $tipo_radicado = "", $es
 	return ($pre_texto);
 }
 
-function origen_documento_pendiente($iddocumento, $numero, $fecha, $plantilla){
+/**
+ * @return int retorna el funcionario codigo 
+ * para las cosultas de los buzones
+ */
+function code_logged_user(){
+    return usuario_actual('funcionario_codigo');
+}
+
+function origin_pending_document($iddocumento, $funcionarioCodigo, $numero, $fecha, $plantilla, $idtransferencia){
 	global $conn, $ruta_db_superior;
 
 	include_once $ruta_db_superior . 'models/funcionario.php';
 
-    $findOrigin = busca_filtro_tabla('b.idfuncionario', 'buzon_salida a, funcionario b', "a.origen = b.funcionario_codigo and nombre in ('TRANSFERIDO','POR_APROBAR','APROBADO','DEVUELTO','REVISADO') and archivo_idarchivo=".$iddocumento." and destino =". usuario_actual('funcionario_codigo'), 'a.idtransferencia desc', $conn);
-    $Funcionario = new Funcionario($findOrigin[0]['idfuncionario']);
-    
-    $routeImage = $ruta_db_superior . $Funcionario->getImage('foto_recorte');
-	$title = $numero . " - " . $Funcionario->getName();
-	
-	if(strtotime($fecha))
-		$temporality = temporality($fecha);
-	else
-        $temporality = '---';
-    
-    $route = 'formatos/' . $plantilla . '/mostrar_' . $plantilla .'.php?iddoc=' . $iddocumento;
+    $Funcionario = new Funcionario($funcionarioCodigo);
+    $roundedImage = roundedImage($Funcionario->getImage('foto_recorte'));
+	$temporality = strtotime($fecha) ? temporality($fecha) : '';
+    $documentRoute = 'formatos/' . $plantilla . '/mostrar_' . $plantilla .'.php?';
+    $documentRoute.= http_build_query([
+        'iddoc' => $iddocumento,
+        'idtransferencia' => $idtransferencia
+    ]);
 
-    $html = '<div class="col-1 px-0">
-        <input type="hidden" value="'.$iddocumento.'" class="identificador">
-        <span class="thumbnail-wrapper d32 circular inline">
-            <img id="profile_image" src="'.$routeImage.'" width="32" height="32">
-        </span>
-    </div>
-    <div class="col show_document" data-url="'.$route.'" titulo="Documento No.' . $numero . '" style="cursor:pointer;">
-        <span class="mt-1 hint-text" style="font-size: 12px;">'.$title.'</span>
+    $html = '<div class="col-1 px-0 text-center">
+        <input type="hidden" value="'.$iddocumento.'" class="identificador">'
+        . $roundedImage .
+    '</div>
+    <div class="col show_document" data-url="'.$documentRoute.'" titulo="Documento No.' . $numero . '" style="cursor:pointer;">
+        <span class="mt-1 hint-text" style="font-size: 12px;">'.$numero . " - " . $Funcionario->getName().'</span>
     </div>
     <div class="col-auto">
         <span class="mt-1 hint-text">'.$temporality.'</span>
     </div>';
 
     return $html;
+}
+
+/**
+ *  retorna una imagen redondeada
+ * @param string $route ruta de la imagen
+ * @return string html de la imagen
+ */
+function roundedImage($route){
+    global $ruta_db_superior;
+    
+    $routeImage = $ruta_db_superior . $route;
+    return '<span class="thumbnail-wrapper d32 circular inline" style="float:none">
+        <img id="profile_image" src="'.$routeImage.'" width="32" height="32">
+    </span>';
 }
 
 function limit_description($description, $limit){
@@ -1012,7 +1028,7 @@ function limit_description($description, $limit){
     return $description;
 }
 
-function sin_leer($iddocumento, $fecha){
+function unread($iddocumento, $fecha){
     global $conn;
 
     $idfuncionario = usuario_actual('funcionario_codigo');
@@ -1024,27 +1040,38 @@ function sin_leer($iddocumento, $fecha){
         return '';
 }
 
-function contiene_anexos($iddocumento){
+function has_files($iddocumento){
     global $conn;
 
     $anexos = busca_filtro_tabla('idanexos', 'anexos', 'documento_iddocumento ='. $iddocumento, '', $conn);
 
     if($anexos['numcampos']){
-        return '<h6 class="my-0 text-center"><i class="fa fa-paperclip hint-text"></i></h6>';
+        return '<span class="my-0 text-center h6"><i class="fa fa-paperclip hint-text"></i></span>';
     }else{
         $paginas = busca_filtro_tabla('consecutivo', 'pagina', 'id_documento ='.$iddocumento, '', $conn);
         if($paginas['numcampos']){
-            return '<h6 class="my-0 text-center"><i class="fa fa-paperclip hint-text"></i></h6>';
+            return '<span class="my-0 text-center h6"><i class="fa fa-paperclip hint-text"></i></span>';
         }
     }
 
     return '';
 }
 
-function prioridad($iddocumento){
-    $html = '<h6 class="my-0 text-center"><i class="fa fa-flag text-danger"></i></h6>';
+function priority($documentId){
+    global $conn;
+    
+    $class = 'text-dark';
+    $findPriority = busca_filtro_tabla('prioridad', 'prioridad_documento', 'documento_iddocumento=' . $documentId, '', $conn);
 
-    return $html;
+    if($findPriority['numcampos'] && $findPriority[0]['prioridad']){
+        $class = 'text-danger';
+    }else{
+        $class = 'text-dark';
+    }
+    
+    return '<span class="my-0 text-center h6 priority_flag">
+        <i data-key="'.$documentId.'" class="priority fa fa-flag '.$class.'"></i>
+    </span>';
 }
 
 function documental_type($documentId){
@@ -1113,5 +1140,4 @@ function temporality($date){
         return $date->format('d-m-Y');
     }
 }
-
 ?>

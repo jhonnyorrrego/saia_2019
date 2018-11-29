@@ -19,7 +19,7 @@ function findDocumentChilds($documentId){
     $document = busca_filtro_tabla('iddocumento,descripcion', 'documento', 'iddocumento='. $documentId, '', $conn);
 
     $ouput = array(
-        'title' => substr($document[0]['descripcion'], 0, 50),
+        'title' => substr($document[0]['descripcion'], 0, 40),
         'key' => $documentId,
         'active' => $documentId == $_REQUEST['iddocumento']
     );

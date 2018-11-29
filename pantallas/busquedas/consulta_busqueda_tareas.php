@@ -39,13 +39,9 @@ else{
 	$seleccionados=true;
 	$frame=true;
 }
-if($_REQUEST["iddoc"]){
-  include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
-  menu_principal_documento($_REQUEST["iddoc"]);
-}
-else{
+
 echo(librerias_jquery("1.7"));
-}
+
 ?>      
 <style>
 .row-fluid [class*="span"]{min-height:20px;}.row-fluid {min-height:20px;}.well{ margin-bottom: 3px; min-height: 11px; padding: 4px;}.alert{ margin-bottom: 3px; padding: 10px;}  body{ font-size:12px; line-height:100%; padding:0px;}.navbar-fixed-top, .navbar-fixed-bottom{ position: fixed;} .navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top{margin-right: 0px; margin-left: 0px;}

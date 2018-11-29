@@ -8,9 +8,13 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
-usuario_actual("login");
+include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "assets/librerias.php";
+include_once $ruta_db_superior . "librerias_saia.php";
+
+echo jquery();
+echo bootstrap();
+echo librerias_acciones_kaiten();
 
 $adicional = "";
 $request = array();
@@ -30,39 +34,28 @@ $lista_formatos = busca_filtro_tabla("nombre,etiqueta,ruta_adicionar", "formato"
 $proceso = busca_filtro_tabla('', 'categoria_formato', 'idcategoria_formato=' . $idcategoria_formato, '', $conn);
 $nombre_proceso = codifica_encabezado(html_entity_decode($proceso[0]['nombre']));
 $nombre_proceso = mb_strtoupper($nombre_proceso);
-$nombre_proceso = $nombre_proceso;
-$texto = '
-		<style>
-			body{
-				overflow:scroll;
-			}
-		</style>
-		<br/>
-		<div class="container">
-			<table class="table table-hover" >
-			<tbody>
-			<tr>
-				<th style="text-align:center;"><b>' . $nombre_proceso . '</b></th>
-			</tr>
-	';
-for ($i = 0; $i < $lista_formatos['numcampos']; $i++) {
-	$ok = $acceso -> acceso_modulo_perfil('crear_' . $lista_formatos[$i]['nombre']);
-	if ($ok) {
-		$etiqueta = codifica_encabezado(html_entity_decode($lista_formatos[$i]['etiqueta']));
-		$etiqueta = strtolower($etiqueta);
-		$etiqueta = ucwords($etiqueta);
-
-		$enlace_adicionar = FORMATOS_CLIENTE . $lista_formatos[$i]['nombre'] . '/' . $lista_formatos[$i]['ruta_adicionar'];
-
-		$texto .= '
-				<tr>
-					<td>
-						<div class="kenlace_saia" style="cursor:pointer" titulo="' . $etiqueta . '" title="' . $etiqueta . '" enlace="' . $enlace_adicionar . $adicional . '" conector="iframe">  ' . $etiqueta . ' </div>
-					</td>
-				</tr>
-			';
-	}
-}
-$texto .= '</tbody></table></div>';
-echo($texto);
 ?>
+
+<div class="container" style="font-size:16px">
+    <table class="table table-hover" >
+        <tr>
+            <td class="text-center"><b><?= $nombre_proceso?></b></td>
+        </tr>
+        <?php for ($i = 0; $i < $lista_formatos['numcampos']; $i++):
+            $access = $acceso -> acceso_modulo_perfil('crear_' . $lista_formatos[$i]['nombre']);
+            if ($access) :
+                $etiqueta = codifica_encabezado(html_entity_decode($lista_formatos[$i]['etiqueta']));
+                $etiqueta = strtolower($etiqueta);
+                $etiqueta = ucwords($etiqueta);
+
+                $enlace_adicionar = FORMATOS_CLIENTE . $lista_formatos[$i]['nombre'] . '/' . $lista_formatos[$i]['ruta_adicionar'];
+                ?>
+                <tr>
+                    <td>
+                        <div class="kenlace_saia" style="cursor:pointer" titulo="<?= $etiqueta ?>" title="<?= $etiqueta ?>" enlace="<?= $enlace_adicionar . $adicional ?>" conector="iframe"><?= $etiqueta ?></div>
+                    </td>
+                </tr>
+            <?php endif; ?>
+        <?php endfor; ?>
+    </table>
+</div>

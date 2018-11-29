@@ -98,9 +98,25 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         </a>                        
                     </div>
                 </div>
-                <a href="#" class="search-link d-lg-inline-block d-none" data-toggle="search">
+                <!--<a href="#" class="search-link d-lg-inline-block d-none" data-toggle="search">
                     <i class="pg-search"></i>Type anywhere to <span class="bold">search</span>
-                </a>
+                </a>-->
+                <div class="d-lg-inline-block align-middle">
+                    <div class="input-group transparent">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text transparent">
+                                <i class="fa fa-search"></i>
+                            </span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Buscar..." style="width:350px">
+                        <div class="input-group-append ">
+                            <span class="input-group-text transparent">
+                                <i class="fa fa-times pr-3"></i>
+                                <i class="fa fa-chevron-down"></i>
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="d-flex align-items-center">
                 <div class="pull-left p-r-10 fs-14 font-heading d-lg-block d-none">

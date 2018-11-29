@@ -240,4 +240,8 @@ $(function () {
             Ui.resizeIframe();
         }, 500);
     }, false);
+
+    $(window).resize(function() {
+        Ui.resizeIframe();
+    });
 });

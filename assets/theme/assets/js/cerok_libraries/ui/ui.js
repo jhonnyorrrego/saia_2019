@@ -67,7 +67,10 @@ class Ui {
     }
 
     static resizeIframe() {
-        $("#iframe_workspace").height($(window).height() - $("#header").height() - 5);
+        let headerHeight = Math.ceil($("#header").height());
+        let windowHeight = Math.ceil($(window).height());
+        $("#iframe_workspace").height(windowHeight - headerHeight - 5);
+
         if (!$("#new_action_mobile_container").is(':hidden')) {
             $("#new_action_mobile_container").css({
                 top: $("#iframe_workspace").height() - 80,

@@ -1,7 +1,7 @@
 <?php 
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"]){
 	include_once("pantallas/documento/menu_principal_documento.php");
-	echo(menu_principal_documento($_REQUEST["iddoc"],@$_REQUEST["vista"]));
+	echo menu_principal_documento($_REQUEST["iddoc"]);
 }
 include_once("db.php");
 // Initialize common variables

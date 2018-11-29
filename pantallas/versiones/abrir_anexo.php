@@ -9,8 +9,6 @@ while($max_salida>0){
 	$max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
-menu_principal_documento(@$_REQUEST["id"],1);
 
 $datos=explode("-",@$_REQUEST["id"]);
 $tipo=$datos[0];

@@ -16,7 +16,7 @@ $iddoc = $_REQUEST["iddoc"];
 
 if(!isset($_REQUEST["menu_principal_inactivo"])){//utilizado en parsear_accion_arbol_impresion (imprimir documento)
     include_once ($ruta_db_superior . "pantallas/documento/menu_principal_documento.php");
-	menu_principal_documento($iddoc, 1);
+	menu_principal_documento($iddoc);
 }
 
 $datos = busca_filtro_tabla("A.pdf,A.plantilla,B.mostrar_pdf,A.numero,B.idformato", "documento A,formato B", "lower(A.plantilla)=B.nombre AND A.iddocumento=" . $iddoc, "", $conn);

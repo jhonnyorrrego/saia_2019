@@ -12,7 +12,7 @@ include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "pantallas/documento/menu_principal_documento.php");
 if (@$_REQUEST["iddoc"] || @$_REQUEST["key"]) {
-	menu_principal_documento($_REQUEST["iddoc"], @$_REQUEST["vista"]);
+	menu_principal_documento($_REQUEST["iddoc"]);
 }
 echo(estilo_bootstrap());
 echo(librerias_arboles());

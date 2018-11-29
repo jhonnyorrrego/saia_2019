@@ -10,7 +10,7 @@ echo(librerias_jquery());
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["doc"]){
 	$_REQUEST["iddoc"]=@$_REQUEST["doc"];
 	include_once("pantallas/documento/menu_principal_documento.php");
-	echo(menu_principal_documento(@$_REQUEST["iddoc"],@$_REQUEST["vista"]));
+	echo menu_principal_documento($_REQUEST["iddoc"]);
 }
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";

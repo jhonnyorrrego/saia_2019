@@ -28,8 +28,9 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
         <?= bootstrap() ?>
         <?= icons() ?>
         <?= bootstrapTable() ?>
-        <?= moment() ?>
         <?= theme() ?>
+        <?= moment() ?>
+        <?= toastr() ?>
         <?= librerias_acciones_kaiten() ?>
     </head>
     <body>
@@ -49,7 +50,7 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
                     url: `${baseUrl}app/busquedas/datosBootstrapTable.php?idbusqueda_componente=${component}`,
                     sidePagination: 'server',
                     queryParamsType: 'other',
-                    height: $(document).height() - 6,
+                    height: $(window).height() - 10,
                     columns: [{
                         field: 'info',
                     }],
@@ -79,7 +80,11 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
                         }
                     },
                     onClickRow: function(row, element, field){
-                        element.parent().find('tr[data-index]').removeClass('selected');
+                        element.parent().find('tr[data-index]').each(function(i, e){
+                            if(!$(e).find(':checkbox').is(':checked'))
+                                $(e).removeClass('selected');
+                                
+                        })
                         element.addClass('selected');
                     },
                     cardView : true,
