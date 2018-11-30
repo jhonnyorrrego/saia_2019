@@ -18,13 +18,13 @@ echo jqueryUi();
 echo icons();
 
 if(!isset($_REQUEST['no_kaiten'])){
-	echo librerias_acciones_kaiten();	
+	echo librerias_acciones_kaiten();
 }
 
 if(!isset($_REQUEST['id'])){
 ?>
 <!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -45,7 +45,7 @@ td.alignRight {
     text-align: right;
 }
 .table tbody tr td {
-padding:13px;	
+padding:13px;
 }
 
 </style>
@@ -74,10 +74,10 @@ padding:13px;
           // render the checkboxes into the 1st column
       },
       click: function(event,data){
-      	var nodeId = data.node.key; 
-		var title =  data.node.title;     
+      	var nodeId = data.node.key;
+		var title =  data.node.title;
 		var elemento_evento = $.ui.fancytree.getEventTargetType(event.originalEvent);
-		if(elemento_evento == 'title') {	        			
+		if(elemento_evento == 'title') {
 			abrir_kaiten("pantallas/generador/iframe_generador.php?nokaiten=1&idformato="+nodeId,title);
 			//window.location= ruta_db_superior+"pantallas/generador/generador_pantalla.php?idformato="+nodeId;
 		}
@@ -101,37 +101,37 @@ padding:13px;
         data.result = {url: "ajax-sub2.json"}
       },
       renderColumns: function(event, data) {
-      	
+
         var node = data.node,
           $tdList = $(node.tr).find(">td");
         // (index #0 is rendered by fancytree by adding the checkbox)
         $tdList.eq(0).text(node.getIndexHier());
         // (index #2 is rendered by fancytree)
         $tdList.eq(2).text(node.data.descripcion);
-        
+
         $tdList.eq(3).text(node.data.version);
         // Rendered by row template:
 //        $tdList.eq(4).html("<input type='checkbox' name='like' value='" + node.key + "'>");
       }
     });
-    
+
 
     /* Handle custom checkbox clicks */
      /*$("#tree_campo_idformato").on("onNodeClick", function(e){
-     	console.log($.ui.fancytree.getEventTargetType())	
+     	console.log($.ui.fancytree.getEventTargetType())
       	var node = $.ui.fancytree.getNode(e),
         $input = $(e.target);
       	e.stopPropagation();  // prevent fancytree activate for this row
-      	var nodeId = node.key; 
+      	var nodeId = node.key;
 		var title =  node.title;
 		    	//abrir_kaiten("pantallas/generador/iframe_generador.php?nokaiten=1&idformato="+nodeId,title);
         	//window.location= ruta_db_superior+"pantallas/generador/generador_pantalla.php?idformato="+nodeId;
     });*/
 
-    
+
     var tree = $("#tree_campo_idformato").fancytree("getTree");
-   
-    
+
+
     $("input[name=search]").keyup(function(e){
 		    var coincidencias = " coincidencias";
 	        var n,
@@ -162,22 +162,27 @@ padding:13px;
 	        $("span#matches").text("");
 	        tree.clearFilter();
 	      }).attr("disabled", true);
- 
+
   });
 </script>
 
  <?= theme() ?>
 </head>
+<body>
 <div class="container">
-<body class="example">
   <!-- Add a <table> element where the tree should appear: -->
-  	  <p>
-    <label>Filtro:</label>
-    <input name="search" placeholder="Filtrar..." autocomplete="off">
-    <button id="btnResetSearch">&times;</button>
-    <span id="matches"></span>
-  </p>
-  <table class="table table-bordered" id="tree_campo_idformato" width="85%;">  
+  	<div class="row">
+      	<div class="col-sm">
+            <label>Filtro:</label>
+            <input name="search" placeholder="Filtrar..." autocomplete="off">
+            <button id="btnResetSearch">&times;</button>
+            <span id="matches"></span>
+        </div>
+        <div class="col-sm">
+        	<input id="nuevo_formato" class="btn btn-primary" type="button" value="Nuevo">
+        </div>
+  </div>
+  <table class="table table-bordered" id="tree_campo_idformato" width="85%;">
     <thead>
       <tr> <td class="bold Default alignCenter" style="font-size: 11px;">N°</td> <td class="bold Default alignCenter" style="font-size: 11px;">Formatos</td> <td class="bold Default alignCenter" style="font-size: 11px;">Descripci&oacute;n</td> <td class="bold Default alignCenter" style="font-size: 11px;">Versi&oacute;n</td> </tr>
     </thead>
@@ -188,16 +193,23 @@ padding:13px;
         <td class="hint-text" style="font-size: 11px;"></td>
         <td class="hint-text" style="font-size: 11px;"></td>
         <td class="hint-text" style="font-size: 11px;"></td>
-        
+
       </tr>
     </tbody>
   </table>
-
+<script type="text/javascript">
+$(document).ready(function() {
+	$("#nuevo_formato").click(function() {
+		console.log("LCDTM");
+		abrir_kaiten("pantallas/generador/iframe_generador.php?nokaiten=1","Nuevo formato");
+	});
+});
+</script>
   <!-- (Irrelevant source removed.) -->
 </body>
 </div>
 </html>
-<?php 
+<?php
 }else{
 	echo (librerias_jquery("3.3"));
 	echo (estilo_bootstrap());
@@ -208,7 +220,7 @@ padding:13px;
 	$extensiones = array("filter" => array());
 	$arbol = new ArbolFt("campo_idformato", $origen, $opciones_arbol, $extensiones, $validaciones);
 	?><!doctype html>
-<html lang="en">
+<html lang="es">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -245,23 +257,23 @@ ul.fancytree-container {
   	<div class="container">
   		<?= $arbol->generar_html() ?>
   	</div>
-		<script type="text/javascript">
+	<script type="text/javascript">
 		var ruta_db_superior = "<?php echo $ruta_db_superior; ?>";
 		var idformato = "<?php echo $_REQUEST['id']; ?>";
-		
+
 			if(!idformato){
 				function evento_click(event, data) {
-			        var nodeId = data.node.key; 
-			        var title =  data.node.title;     
+			        var nodeId = data.node.key;
+			        var title =  data.node.title;
 			        var elemento_evento = $.ui.fancytree.getEventTargetType(event.originalEvent);
 			        if(elemento_evento == 'title') {
 			        	abrir_kaiten("pantallas/generador/iframe_generador.php?nokaiten=1&idformato="+nodeId,title);
 			        	//window.location= ruta_db_superior+"pantallas/generador/generador_pantalla.php?idformato="+nodeId;
 					}
-				}				
-			}else{				
+				}
+			}else{
 				function evento_click(event, data) {
-			        var nodeId = data.node.key; 
+			        var nodeId = data.node.key;
 			        var title =  data.node.title;
 	        		//console.log($("#admin_generador",window.parent.document));
 	        		var elemento_evento = $.ui.fancytree.getEventTargetType(event.originalEvent);
@@ -269,19 +281,19 @@ ul.fancytree-container {
 		        		$("#iframe_generador",window.parent.document).attr("src", ruta_db_superior+"pantallas/generador/generador_pantalla.php?idformato="+nodeId)
 			        	//window.location= ruta_db_superior+"pantallas/generador/generador_pantalla.php?idformato="+nodeId;
 					}
-					//$("#admin_generador").attr("src","vacio.php");   
+					//$("#admin_generador").attr("src","vacio.php");
 			        /*var elemento_evento = $.ui.fancytree.getEventTargetType(event.originalEvent);
 			        if(elemento_evento == 'title') {*/
 			        	/*$("#admin_generador",window.parent.document).load(ruta_db_superior+"pantallas/generador/generador_pantalla.php?idformato="+idformato+" admin_generador",
 				        	function(response){
-				        		$("#admin_generador",window.parent.document).html($(response).find("#admin_generador").contents()); 
+				        		$("#admin_generador",window.parent.document).html($(response).find("#admin_generador").contents());
 				        		//console.log($("#admin_generador",window.parent.document).length)
 				        		}
 			        	)
 							//$("#admin_generador").load("vacio.php");*/
 				//}
-				}	
-			}				
+				}
+			}
 		</script>
 	</body>
 </html>
