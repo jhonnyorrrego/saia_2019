@@ -1,0 +1,117 @@
+{
+	"schema": {
+		"title": "",
+		"description": "Editar propiedades",
+		"type": "object",
+		"properties": {
+			"fs_etiqueta": {
+				"type": "string",
+				"title": "Etiqueta del campo",
+				"maxLength": 255,
+				"required": true
+			},
+			"fs_nombre": {
+				"type": "string",
+				"title": "Nombre",
+				"maxLength": 255,
+				"required": true
+			},
+			"fs_estilo": {
+				"type": "object",
+				"title": "",
+				"properties": {
+					"rows": {
+						"title": "Ancho del campo",
+						"type": "string",
+						"enum": [
+							"3",
+							"6",
+							"9"
+						]
+					},
+					"cols": {
+						"title": "Alto del campo",
+						"type": "string",
+						"enum": [
+							"10",
+							"20",
+							"30"
+						]
+					}
+				}
+			},
+			"fs_acciones": {
+				"type": "string",
+				"title": "Incluirse en la descripción del formato",
+				"enum": [
+					"",
+					"p"
+				]
+			},
+			"fs_obligatoriedad": {
+				"type": "string",
+				"title": "Obligatoriedad",
+				"enum": [
+					"1",
+					"0"
+				]
+			},
+			"fs_ayuda": {
+				"type": "string",
+				"title": "Ayuda para el usuario"
+			}
+		}
+	},
+	"options": {
+		"fields": {
+			"fs_nombre": {
+				"type": "hidden"
+			},
+			"fs_estilo": {
+				"fields": {
+					"rows": {
+						"type": "select",
+						"sort": false,
+						"removeDefaultNone": false,
+						"optionLabels": [
+							"Pequeño",
+							"Mediano",
+							"Grande"
+						]
+					},
+					"cols": {
+						"type": "select",
+						"sort": false,
+						"removeDefaultNone": false,
+						"optionLabels": [
+							"Pequeño",
+							"Mediano",
+							"Grande"
+						]
+					}
+				}
+			},
+			"fs_obligatoriedad": {
+				"type": "radio",
+				"vertical": false,
+				"removeDefaultNone": true,
+				"optionLabels": [
+					"No obligatrio",
+					"Obligatorio"
+				]
+			},
+			"fs_acciones": {
+				"type": "radio",
+				"vertical": false,
+				"removeDefaultNone": true,
+				"optionLabels": [
+					"No incluirse",
+					"Incluirse"
+				]
+			},
+			"fs_ayuda": {
+				"type": "textarea"
+			}
+		}
+	}
+}

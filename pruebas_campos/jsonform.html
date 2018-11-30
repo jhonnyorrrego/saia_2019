@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8" />
+<title>JSON Form</title>
+<link rel="stylesheet" type="text/css"
+	href="../css/bootstrap/3.3.7/css/bootstrap.css" />
+
+<script>
+//var palabras = ["y", "o", "e", "u", "el", "la", "los", "las", "un", "uno", "una", "unos", "unas", "lo", "al", "del", "a", "de", "en", "con"];
+
+var palabras = ["y", "o", "e", "u", "lo", "al", "del", "a", "de", "en", "con"
+];
+
+function recortar(palabras, numLetras=22, union='_') {
+	var txt = palabras.join(union);
+	var minsize=3;
+	var longitud = palabras.length;
+	var i = 0;
+	var maximo = txt.length;
+	if(maximo <= numLetras) {
+		return txt;
+	}
+	for (var iteraciones = 0; iteraciones < maximo; iteraciones++) {
+		if(palabras[i].length > minsize) {
+			palabras[i] = palabras[i].slice(0,-1);
+		}
+		if(palabras.join(" ").length <= numLetras) {
+			break;
+		}
+		i++;
+		if(i >= longitud) {
+			i = 0;
+		}
+	}
+	var resp = palabras.join(union);
+	if(resp.length > numLetras) {
+		resp = resp.slice(0, numLetras);
+	}
+	return resp;
+} // end funcion
+
+var normalizar = (function() {
+	  var from = "ÃÀÁÄÂÈÉËÊÌÍÏÎÒÓÖÔÙÚÜÛãàáäâèéëêìíïîòóöôùúüûÑñÇç", 
+	      to   = "AAAAAEEEEIIIIOOOOUUUUaaaaaeeeeiiiioooouuuuNncc",
+	      mapping = {};
+	 
+	  for(var i = 0, j = from.length; i < j; i++ ) {
+	      mapping[from.charAt(i)] = to.charAt(i);
+	  }
+	  return function(str) {
+	      var ret = [];
+	      for(var i = 0, j = str.length; i < j; i++) {
+	          var c = str.charAt(i);
+	          if(mapping.hasOwnProperty(str.charAt(i))) {
+	              ret.push(mapping[c]);
+	          }  else {
+	              ret.push(c);
+	          }
+	      }
+	      // replace(/\s+/g, '_' )
+	      var normal = ret.join('').toLowerCase().replace(/[^a-z0-9\s]+/g, '');
+	      var cadenas = normal.split(/\s+/);
+	      var resp = [];
+	      for(var i = 0, j = cadenas.length; i < j; i++) {
+	    	  var index = palabras.indexOf(cadenas[i]);
+	    	  if (index === -1) {
+	    		  resp.push(cadenas[i]);
+	    	  }
+	      }
+	      return recortar(resp, 22, '_');
+	  }
+	 
+	})();
+</script>
+</head>
+
+<body>
+	<h1>Empezando con JSON Form</h1>
+	<form id="editar_pantalla_campo" name="editar_pantalla_campo"></form>
+	<div id="res" class="alert"></div>
+	<script type="text/javascript" src="../js/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="js/underscore.js"></script>
+	<script type="text/javascript" src="js/jsv.js"></script>
+	<script type="text/javascript" src="js/jsonform.js"></script>
+	
+	<script type="text/javascript">
+	$(document).ready(function(){
+		var opciones_def = {
+				schema: {
+					fs_etiqueta: {
+						type: "string",
+						title: "Etiqueta del campo",
+						maxLength: 255,
+						required: true
+					},
+					fs_nombre: {
+						type: 'string',
+						title: 'Nombre',
+						maxLength: 255,
+						required: true
+					},
+					fs_acciones: {
+						type: "string",
+						title: "Incluirse en la descripción del formato",
+						enum: ["", "p"]
+					},
+					fs_obligatoriedad: {
+					    "type": "string",
+					    "title": "Obligatoriedad",
+					    "enum": [ "1", "0"]
+					}
+				},
+				form: [
+					{
+						"key": "fs_etiqueta",
+						"onChange": function (evt) {
+					        var value = $(evt.target).val();
+					        if (value) {
+					        	value = normalizar(value);
+					        	$("[name='fs_nombre']").val(value);
+					        }
+					    }		
+					},
+					{
+						key: "fs_nombre",
+						type: "hidden"
+					},
+					{
+						key: "fs_obligatoriedad",
+						type: "radios",
+						titleMap: {
+					        "0": "No obligatrio",
+					        "1": "Obligatorio"
+						},
+					},
+					{
+						key: "fs_acciones",
+						type: "radios",
+						titleMap: {
+					        "": "No incluirse",
+					        "p": "Incluirse"
+						}
+					}
+				],
+				onSubmit: function (errors, values) {
+					if (errors) {
+						console.log(errors);
+						$('#res').html('<p>Ruego por su perd&oacute;n?</p>');
+					} else {
+						console.log(JSON.stringify(values.fs_valor));
+						console.log(JSON.stringify(values.fs_acciones));
+					}
+				},
+				value: {
+					fs_valor : {url: "dependencia"}
+				}
+			};
+		var adicional = null;
+		$.ajax({
+			url: "opciones_ft.json",
+			dataType: "json",
+			async: false,
+			success : function(json) {
+			    adicional = json;
+			}
+		});
+		var opciones_form = opciones_def;
+		$.each(adicional.schema, function(i, obj) {
+			opciones_form.schema[i] = obj;
+			});
+		$.each(adicional.form, function(i, obj) {
+			opciones_form['form'].push(obj);
+			});
+		opciones_form['form'].push({
+			"type": "submit",
+			"title": "Enviar"
+		});
+	    //console.log(opciones_form);
+		$('#editar_pantalla_campo').jsonForm(opciones_form);
+	});
+	</script>
+</body>
+
+</html>

@@ -35,6 +35,10 @@ echo (estilo_bootstrap());
 echo (librerias_jquery("1.8.3"));
 echo(librerias_html5());
 
+include_once($ruta_db_superior."assets/librerias.php");
+
+echo topModal();
+
 $es_movil = ($_SESSION["tipo_dispositivo"]) == "movil";
 
 $campos = busca_filtro_tabla("", "pantalla_componente B", "1=1", "", $conn);
@@ -464,7 +468,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 </html>
 <?php
 echo (librerias_highslide());
-echo (librerias_UI());
+echo (librerias_UI("1.12"));
 echo (librerias_bootstrap());
 echo (librerias_notificaciones());
 echo (librerias_validar_formulario());
@@ -917,16 +921,19 @@ $(document).on('click', '.element > .close', function(e) {
     });
 });
 $(document).on('click', '.element', function() {
-	hs.htmlExpand( null, {
-    src: "<?php echo($ruta_db_superior);?>pantallas/generador/"+$(this).attr("nombre")+"/editar_componente.php?idpantalla_componente="+$(this).attr("idpantalla_componente")+"&idpantalla_campos="+$(this).attr("idpantalla_campo"),
-    objectType: 'iframe',
-    outlineType: 'rounded-white',
-    wrapperClassName: 'highslide-wrapper drag-header',
-    preserveContent: false,
-    width: 590,
-    height: 300
-  });
+	//var componente = $(this).attr("nombre");
+	var opciones = {
+	    src: "<?php echo($ruta_db_superior);?>pantallas/generador/editar_componente_generico.php?idpantalla_componente="+$(this).attr("idpantalla_componente")+"&idpantalla_campos="+$(this).attr("idpantalla_campo"),
+	    objectType: 'iframe',
+	    outlineType: 'rounded-white',
+	    wrapperClassName: 'highslide-wrapper drag-header',
+	    preserveContent: false,
+	    width: 600,
+	    height: 350
+	};
+	hs.htmlExpand(null, opciones);
 });
+
 $(document).on('click', '.element > input, .element > textarea, .element > label', function(e) {
     e.preventDefault();
 });

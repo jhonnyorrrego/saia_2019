@@ -218,7 +218,13 @@ class Version20181129143713 extends AbstractMigration {
 
         $conn = $this->connection;
         foreach ($this->nuevos as $value) {
-            $conn->insert("pantalla_componente", $value);
+            $result = $conn->fetchColumn("select idpantalla_componente from pantalla_componente where nombre=:nombre", [
+                "nombre" => $value["nombre"]
+            ]);
+
+            if(!$result) {
+                $conn->insert("pantalla_componente", $value);
+            }
         }
 
         $sql = "update pantalla_componente set estado=0 where nombre IN (?)";

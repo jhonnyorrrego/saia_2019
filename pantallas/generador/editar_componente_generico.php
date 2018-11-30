@@ -42,7 +42,7 @@ if (@$_REQUEST["idpantalla_campos"]) {
     $opciones_propias = json_decode($pantalla_campos[0]["opciones_propias"], true);
     if (json_last_error() === JSON_ERROR_NONE) {
         if(is_array($valores)) {
-            $opciones_propias["value"] = $valores;
+            $opciones_propias["data"] = $valores;
         }
     }
 
@@ -65,9 +65,13 @@ vertical-align: middle;
 <?php
 echo jquery();
 ?>
-	<script type="text/javascript" src="<?=$ruta_db_superior?>assets/theme/assets/js/underscore.js"></script>
-	<script type="text/javascript" src="<?=$ruta_db_superior?>assets/theme/assets/js/jsv.js"></script>
-	<script type="text/javascript" src="<?=$ruta_db_superior?>assets/theme/assets/js/jsonform.js"></script>
+    <!-- handlebars -->
+    <script type="text/javascript" src="<?=$ruta_db_superior?>assets/theme/assets/js/handlebars.js"></script>
+
+    <!-- alpaca -->
+    <link type="text/css" href="<?=$ruta_db_superior?>assets/theme/assets/js/alpaca.min.css" rel="stylesheet" />
+    <script type="text/javascript" src="<?=$ruta_db_superior?>assets/theme/assets/js/alpaca.min.js"></script>
+
 	<script type="text/javascript" src="<?=$ruta_db_superior?>pantallas/generador/editar_componente_generico.js"></script>
 </head>
 
@@ -92,34 +96,55 @@ echo jquery();
 				console.log(JSON.stringify(values.fs_acciones));
 			}
 		};
-		opciones_form["params"] = {
-		    "fieldHtmlClass": "input-small"
+
+		opciones_form["options"]["fields"]["fs_etiqueta"] = {
+			events: {
+    			change: function (evt) {
+    		        var value = $(evt.target).val();
+    		        if (value) {
+    		        	value = normalizar(value);
+    		        	$("[name='fs_nombre']").val(value);
+    		        }
+    		    }
+			}
 		};
-		opciones_form['form'].unshift({
-			"key": "fs_etiqueta",
-			"onChange": function (evt) {
-		        var value = $(evt.target).val();
-		        if (value) {
-		        	value = normalizar(value);
-		        	$("[name='fs_nombre']").val(value);
-		        }
-		    }
-		});
 
-		opciones_form['form'].push({
-			"type": "submit",
-			"title": "Enviar"
-		});
-	    console.log(JSON.stringify(opciones_form));
-		$('#editar_pantalla_campo').jsonForm(opciones_form);
+		/*opciones_form["params"] = {
+		    "fieldHtmlClass": "input-small"
+		};*/
 
-		//radio radio-inline
-		$(".radio").each(function() {
-			$(this).addClass("radio-inline");
-			$(this).css("display", "inline");
-			$(this).find("label").first().addClass("radio-inline control-label");
-			//$(this).find("label").first().css("display", "inline");
-		});
+		//console.log(opciones_form);
+		opciones_form["options"]['form'] = {
+			buttons : {
+				submit: {
+	                "click": function() {
+	                    this.refreshValidationState(true);
+	                    if (this.isValid(true)) {
+	                        var value = this.getValue();
+	                        console.log(JSON.stringify(value, null, "  "));
+	                    }
+	        		}
+				},
+				cancel : {
+		            "type": "button",
+		            "value": "Cancelar",
+		            "click": function (evt) {
+		            	parent.hs.close();
+		            }
+				}
+			}
+		};
+
+		opciones_form["view"] = {
+	        "locale": "es_ES"
+	    };
+
+		opciones_form["postRender"] = function() {
+			$(".alpaca-required-indicator").html("<span style='font-size:18px;color:red;'>*</span>");
+		};
+
+		$('#editar_pantalla_campo').alpaca(opciones_form);
+
 	});
 	</script>
 </body>
