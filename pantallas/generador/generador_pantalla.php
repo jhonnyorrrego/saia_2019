@@ -929,7 +929,7 @@ $(document).on('click', '.element', function() {
 	    wrapperClassName: 'highslide-wrapper drag-header',
 	    preserveContent: false,
 	    width: 600,
-	    height: 350
+	    height: 400
 	};
 	hs.htmlExpand(null, opciones);
 });

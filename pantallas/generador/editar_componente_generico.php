@@ -39,17 +39,20 @@ if (@$_REQUEST["idpantalla_campos"]) {
         $valores["fs_valor"] = $pantalla_campos[0]["valor"];
     }
 
-    $opciones_propias = json_decode($pantalla_campos[0]["opciones_propias"], true);
+    //$opciones_propias = json_decode(mb_convert_encoding($pantalla_campos[0]["opciones_propias"], 'UTF-8', 'UTF-8'), true);
+    $opciones_propias = json_decode(utf8_encode($pantalla_campos[0]["opciones_propias"]), true);
     if (json_last_error() === JSON_ERROR_NONE) {
         if(is_array($valores)) {
             $opciones_propias["data"] = $valores;
         }
+    } else {
+    	//print_r(json_last_error_msg());
     }
-
 } else {
     alerta("No es posible Editar el Campo");
 }
 $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -117,6 +120,7 @@ echo jquery();
 		opciones_form["options"]['form'] = {
 			buttons : {
 				submit: {
+					"styles": "btn btn-primary",
 	                "click": function() {
 	                    this.refreshValidationState(true);
 	                    if (this.isValid(true)) {
@@ -136,7 +140,12 @@ echo jquery();
 		};
 
 		opciones_form["view"] = {
-	        "locale": "es_ES"
+	        "locale": "es_ES",
+	        "messages": {
+	            "es_ES": {
+	                "stringNotANumber": "Escriba sólo números"
+	            }
+	        }
 	    };
 
 		opciones_form["postRender"] = function() {

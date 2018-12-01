@@ -1,0 +1,156 @@
+{
+  "schema": {
+    "title": "",
+    "description": "Editar propiedades",
+    "type": "object",
+    "properties": {
+      "fs_etiqueta": {
+        "type": "string",
+        "title": "Etiqueta del campo",
+        "maxLength": 255,
+        "required": true
+      },
+      "fs_nombre": {
+        "type": "string",
+        "title": "Nombre",
+        "maxLength": 255,
+        "required": true
+      },
+      "fs_estilo": {
+        "type": "object",
+        "title": "",
+        "properties": {
+          "con_decimales": {
+            "title": "",
+            "type": "boolean"
+          },
+          "decimales": {
+            "type": "number",
+            "numericEntry": true
+          },
+          "criterio": {
+            "title": "Criterio",
+            "type": "string",
+            "enum": [
+              "max_lt",
+              "max",
+              "min_gt",
+              "min",
+              "between",
+              "not_between"
+            ]
+          },
+          "decimales_1": {
+            "type": "number",
+            "numericEntry": true
+          },
+          "decimales_2": {
+            "type": "number",
+            "numericEntry": true
+          }
+        },
+        "dependencies": {
+          "decimales": "con_decimales",
+          "decimales_1": "criterio",
+          "decimales_2": "criterio"
+        }
+      },
+      "fs_acciones": {
+        "type": "string",
+        "title": "Incluirse en la descripción del formato",
+        "enum": [
+          "",
+          "p"
+        ]
+      },
+      "fs_obligatoriedad": {
+        "type": "string",
+        "title": "Obligatoriedad",
+        "enum": [
+          "1",
+          "0"
+        ]
+      },
+      "fs_ayuda": {
+        "type": "string",
+        "title": "Ayuda para el usuario"
+      }
+    }
+  },
+  "options": {
+    "fields": {
+      "fs_nombre": {
+        "type": "hidden"
+      },
+      "fs_estilo": {
+        "fields": {
+          "con_decimales": {
+            "rightLabel": "Incluye decimales"
+          },
+          "decimales": {
+            "type": "number",
+            "validate": true
+          },
+          "criterio": {
+            "type": "select",
+            "sort": false,
+            "removeDefaultNone": false,
+            "noneLabel": "Cualquier número",
+            "optionLabels": [
+              "Antes del",
+              "El o antes del",
+              "Después del",
+              "El o después del",
+              "Entre",
+              "No entre"
+            ]
+          },
+          "decimales_1": {
+            "type": "number",
+            "validate": true,
+            "dependencies": {
+              "criterio": [
+                "max_lt",
+                "max",
+                "min_gt",
+                "min", "between",
+                "not_between"
+              ]
+            }
+          },
+          "decimales_2": {
+            "type": "number",
+            "validate": true,
+            "dependencies": {
+              "criterio": [
+                "between",
+                "not_between"
+              ]
+            }
+          }
+        }
+      },
+      "fs_obligatoriedad": {
+        "type": "radio",
+        "vertical": false,
+        "removeDefaultNone": true,
+        "optionLabels": [
+          "No obligatrio",
+          "Obligatorio"
+        ]
+      },
+      "fs_acciones": {
+        "type": "radio",
+        "vertical": false,
+        "removeDefaultNone": true,
+        "optionLabels": [
+          "No incluirse",
+          "Incluirse"
+        ]
+      },
+      "fs_ayuda": {
+        "type": "textarea"
+      }
+    }
+  }
+}
