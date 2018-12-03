@@ -38,12 +38,10 @@ $(function(){
                     let key = element.data('key');
                     
                     if($.inArray(key, selections) != -1){
-                        element.removeClass('text-dark text-danger');
-
                         if(priority){
                             element.addClass('text-danger');
                         }else{
-                            element.addClass('text-dark');
+                            element.removeClass('text-danger');
                         }
                     }
                 });
@@ -51,12 +49,11 @@ $(function(){
                 if($.inArray(documentSelected, selections) != -1){
                     let selected = $("#iframe_right_workspace").contents().find(`.priority[data-key='${documentSelected}']`);
                     if(selected.length){
-                        selected.removeClass('text-dark text-danger');
 
                         if(priority){
                             selected.addClass('text-danger');
                         }else{
-                            selected.addClass('text-dark');
+                            selected.removeClass('text-danger');
                         }
                     }
                 };
