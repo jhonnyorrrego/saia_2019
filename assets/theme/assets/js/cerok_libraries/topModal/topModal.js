@@ -5,6 +5,7 @@ var topModalDefaults = {
     content: '', //string to put on modal
     size: "", //'modal-lg', 'modal-sm'
     title: "", //title for modal
+    centerAlign: true, //true for center align, false for top align
     buttons: {
         success: {
             label: 'Enviar',
@@ -24,8 +25,14 @@ function topModal(options){
     modal.find("#btn_success").off("click");
     modal.find('#modal_body').html('');
     modal.find('#modal_title').text(options.title);
+
+    if(options.centerAlign){
+        modal.find('.modal-dialog').addClass('modal-dialog-centered');
+    }else{
+        modal.find('.modal-dialog').removeClass('modal-dialog-centered');
+    }
+    
     //evita error de backdrop en iframes
-    $("[data-target='#dinamic_modal']", window.top.document).trigger('click');
     if ($.inArray(options.size, ['modal-lg', 'modal-sm']) != -1) {
         modal.find('.modal-dialog').removeClass('modal-lg modal-sm');
         modal.find('.modal-dialog').addClass(options.size);
@@ -55,9 +62,13 @@ function topModal(options){
                 console.error('failed to load');
                 modal.find('#modal_body').html('');
             }
+
+            $("[data-target='#dinamic_modal']", window.top.document).trigger('click');
         });
     }else if(options.html && options.content){
         modal.find('#modal_body').html(options.content);
         modal.find('#modal_body').prepend('<hr>');
+        
+        $("[data-target='#dinamic_modal']", window.top.document).trigger('click');
     }
 }

@@ -1572,6 +1572,7 @@ body.sidebar-visible .page-sidebar .sidebar-header .sidebar-header-controls {
 }
 .page-sidebar .sidebar-overlay-slide {
   /* Side-bar Top Slider */
+  overflow-y: auto;
   width: 100%;
   height: 100%;
   background-color: #272b35;
@@ -1677,7 +1678,8 @@ body.sidebar-visible .page-sidebar .sidebar-header .sidebar-header-controls {
 .page-sidebar .sidebar-menu .menu-items > li > a > .badge {
   margin-top: 12px;
 }
-.page-sidebar .sidebar-menu .menu-items > li > a > .title {
+.page-sidebar .sidebar-menu .menu-items > li > a > .title ,
+.page-sidebar .sidebar-menu .menu-items > li ul.sub-menu > li > a > .title{
   float: left;
   white-space: nowrap;
   text-overflow: ellipsis;
