@@ -1060,13 +1060,11 @@ function has_files($iddocumento){
 function priority($documentId){
     global $conn;
     
-    $class = 'text-dark';
     $findPriority = busca_filtro_tabla('prioridad', 'prioridad_documento', 'documento_iddocumento=' . $documentId, '', $conn);
-
     if($findPriority['numcampos'] && $findPriority[0]['prioridad']){
         $class = 'text-danger';
     }else{
-        $class = 'text-dark';
+        $class = '';
     }
     
     return '<span class="my-0 text-center h6 priority_flag">

@@ -182,7 +182,7 @@ function menu_principal_documento($documentId, $transferId = 0){
             $(".priority_flag").on('click', function(){
                 var flagParent = $(`.priority[data-key='${documentId}']`, window.parent.document),
                     flag = $(this).find('.priority');
-                    priority = flag.hasClass('text-dark') ? 1 : 0,
+                    priority = flag.hasClass('text-danger') ? 0 : 1,
                     key = localStorage.getItem('key');
 
                 $.post(`${baseUrl}app/documento/asignar_prioridad.php`,{
@@ -192,16 +192,13 @@ function menu_principal_documento($documentId, $transferId = 0){
                 }, function(response){
                     if(response.success){
                         toastr.success(response.message);
-                        
-                        flag.removeClass('text-dark text-danger');
-                        flagParent.removeClass('text-dark text-danger');
 
                         if(priority){
                             flag.addClass('text-danger');
                             flagParent.addClass('text-danger');
                         }else{
-                            flag.addClass('text-dark');
-                            flagParent.addClass('text-dark');
+                            flag.removeClass('text-danger');
+                            flagParent.removeClass('text-danger');
                         }
                     }else{
                         toastr.error(response.message);

@@ -1,7 +1,6 @@
 <script>
 $(function(){
     var baseUrl = $("#baseUrl").data('baseurl');
-    var documentSelected = 0;
 
     $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/topModal/topModal.js`);
 
@@ -46,6 +45,7 @@ $(function(){
                     }
                 });
                 
+                let documentSelected = sessionStorage.getItem('documentSelected') || 0;
                 if($.inArray(documentSelected, selections) != -1){
                     let selected = $("#iframe_right_workspace").contents().find(`.priority[data-key='${documentSelected}']`);
                     if(selected.length){
@@ -68,8 +68,9 @@ $(function(){
             url = $(this).data('url'),
             actualUrl = iframe.attr('src');
 
-        documentSelected = +$(this).parent().find('.identificador').val();
-        
+        let documentSelected = +$(this).parent().find('.identificador').val();
+        sessionStorage.setItem('documentSelected', documentSelected);
+
         if(actualUrl != baseUrl + url){
             iframe.attr('src', baseUrl + url);
         }
