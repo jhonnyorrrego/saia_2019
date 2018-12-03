@@ -716,10 +716,16 @@ class GenerarFormato {
                     }
                     switch ($campos[$h]["etiqueta_html"]) {
                         case "etiqueta":
-                            //TODO: leer las opciones para pintar parrafo, linea o titulo
+                        case "etiqueta_titulo":
                             $texto .='<div class="card-body" id="tr_' . $campos[$h]["nombre"] . '">
                                         <h5 title="' . $campos[$h]["ayuda"] . '" id="' . $campos[$h]["nombre"] . '"><center>' . $campos[$h]["valor"] . '</center></h5>
                                       </div>';
+                            break;
+                        case "etiqueta_parrafo":
+                            $texto .='<p id="' . $campos[$h]["nombre"] . '">' . $campos[$h]["valor"] . '</p>';
+                            break;
+                        case "etiqueta_linea":
+                            $texto .='<hr id="' . $campos[$h]["nombre"] . '">';
                             break;
                         case "password":
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
