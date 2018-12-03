@@ -36,8 +36,11 @@ function jqueryUi()
 {
     global $ruta_db_superior;
 
-    $route = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-ui/jquery-ui.min.js';
-    return '<script type="text/javascript" src="' . $route . '"></script>';
+    $route_js =  $ruta_db_superior . 'assets/theme/assets/plugins/jquery-ui/jquery-ui.min.js';
+    $route_css = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-ui/jquery-ui-1.10.1.custom.min.css';
+    $css = '<link type="text/css" href="' . $route_css . '" rel="stylesheet"/>';
+    $js =  '<script type="text/javascript" src="' . $route_js . '"></script>';
+    return $css . "\n" . $js;
 }
 
 /**
@@ -206,7 +209,7 @@ function kaiten()
     return $css . $jq . $ui . $js . $jqresize;
 }
 
-/** 
+/**
  * retorna enlaces para el uso
  * de la libreria jquery scrollbar
  */
@@ -233,7 +236,7 @@ function validate()
 
     $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-validation/js/jquery.validate.min.js';
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
-    
+
     $routeLocaleJs = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-validation/js/localization/messages_es.min.js';
     $locale = '<script type="text/javascript" src="' . $routeLocaleJs . '"></script>';
 
@@ -285,9 +288,9 @@ function topModal(){
 }
 
 /**
- * incluye las librerias necesarias 
+ * incluye las librerias necesarias
  * para la pantalla del topModal
- * 
+ *
  * @param array $data
  * @return string <script> incluye las librerias
  * cuando el documento esta listo
@@ -295,10 +298,10 @@ function topModal(){
 function librariesForTopModal($data){
     $data = implode('', $data);
     $libraries = str_replace('</script>','<\/script>', $data);
-    
+
     return "<script type='text/javascript'>
         div = $('<div>').append('". $libraries ."');
-        
+
         $.each(div.children(), function(i, e){
             if(e.href){
                 $('head').append(e);
