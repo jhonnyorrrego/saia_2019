@@ -39,14 +39,15 @@ if (@$_REQUEST["idpantalla_campos"]) {
         $valores["fs_valor"] = $pantalla_campos[0]["valor"];
     }
 
-    //$opciones_propias = json_decode(mb_convert_encoding($pantalla_campos[0]["opciones_propias"], 'UTF-8', 'UTF-8'), true);
-    $opciones_propias = json_decode(utf8_encode($pantalla_campos[0]["opciones_propias"]), true);
+    $opciones_propias = json_decode(mb_convert_encoding($pantalla_campos[0]["opciones_propias"], 'UTF-8', 'UTF-8'), true);
+    //$opciones_propias = json_decode(utf8_encode($pantalla_campos[0]["opciones_propias"]), true);
     if (json_last_error() === JSON_ERROR_NONE) {
         if(is_array($valores)) {
             $opciones_propias["data"] = $valores;
         }
     } else {
     	//print_r(json_last_error_msg());
+    	//die();
     }
 } else {
     alerta("No es posible Editar el Campo");
@@ -60,20 +61,35 @@ $opciones_str = json_encode($opciones_propias, JSON_NUMERIC_CHECK);
 <meta charset="utf-8" />
 <title>Configuraci&oacute;n del campo <?=$texto_titulo?></title>
 <link rel="stylesheet" type="text/css" href="<?=$ruta_db_superior?>/css/bootstrap/3.3.7/css/bootstrap.css" />
+
 <style type="text/css">
 label {
 vertical-align: middle;
 }
 </style>
 <?php
-echo jquery();
+echo librerias_jquery("2.2");
 ?>
+    <script type="text/javascript" src="<?=$ruta_db_superior?>js/bootstrap/3.3.7/bootstrap.js"></script>
+
     <!-- handlebars -->
     <script type="text/javascript" src="<?=$ruta_db_superior?>assets/theme/assets/js/handlebars.js"></script>
 
     <!-- alpaca -->
     <link type="text/css" href="<?=$ruta_db_superior?>assets/theme/assets/js/alpaca.min.css" rel="stylesheet" />
     <script type="text/javascript" src="<?=$ruta_db_superior?>assets/theme/assets/js/alpaca.min.js"></script>
+
+	<script type="text/javascript" src="<?=$ruta_db_superior?>js/jquery-ui/1.12.1/jquery-ui.js"></script>
+    <link type="text/css" href="<?=$ruta_db_superior?>js/jquery-ui/1.12.1/jquery-ui.min.css" rel="stylesheet" />
+
+<!-- Required for jQuery UI DateTimePicker control -->
+<script type="text/javascript" src="<?=$ruta_db_superior?>assets/theme/assets/plugins/jqueryui-timepicker-addon/dist/jquery-ui-timepicker-addon.js"></script>
+<link type="text/css" href="<?=$ruta_db_superior?>assets/theme/assets/plugins/jqueryui-timepicker-addon/dist/jquery-ui-timepicker-addon.css" rel="stylesheet"/>
+
+<!-- bootstrap datetimepicker for date, time and datetime controls -->
+<script src="<?=$ruta_db_superior?>assets/theme/assets/plugins/moment/min/moment-with-locales.min.js"></script>
+<script src="<?=$ruta_db_superior?>assets/theme/assets/plugins/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<link rel="stylesheet" media="screen" href="<?=$ruta_db_superior?>assets/theme/assets/plugins/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css"/>
 
 	<script type="text/javascript" src="<?=$ruta_db_superior?>pantallas/generador/editar_componente_generico.js"></script>
 </head>
@@ -119,6 +135,14 @@ echo jquery();
 		//console.log(opciones_form);
 		opciones_form["options"]['form'] = {
 			buttons : {
+				cancel : {
+					"styles": "btn btn-danger",
+		            "type": "button",
+		            "value": "Cancelar",
+		            "click": function (evt) {
+		            	parent.hs.close();
+		            }
+				},
 				submit: {
 					"styles": "btn btn-primary",
 	                "click": function() {
@@ -128,13 +152,6 @@ echo jquery();
 	                        console.log(JSON.stringify(value, null, "  "));
 	                    }
 	        		}
-				},
-				cancel : {
-		            "type": "button",
-		            "value": "Cancelar",
-		            "click": function (evt) {
-		            	parent.hs.close();
-		            }
 				}
 			}
 		};
@@ -150,6 +167,7 @@ echo jquery();
 
 		opciones_form["postRender"] = function() {
 			$(".alpaca-required-indicator").html("<span style='font-size:18px;color:red;'>*</span>");
+			$(".alpaca-field-radio").find("label").css("display", "block");
 		};
 
 		$('#editar_pantalla_campo').alpaca(opciones_form);

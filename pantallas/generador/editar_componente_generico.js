@@ -2,6 +2,8 @@
 
 var palabras = ["y", "o", "e", "u", "lo", "al", "del", "a", "de", "en", "con"];
 
+var letrasRandom = '0123456789abcdefghijklmnopqrstuvwxyz_';
+
 function recortar(palabras, numLetras=22, union='_') {
 	var txt = palabras.join(union);
 	var minsize=3;
@@ -62,3 +64,15 @@ var normalizar = (function() {
 	  }
 
 	})();
+
+function randomString(longitud, prefijo='') {
+	if(prefijo && !prefijo.endsWith('_')) {
+		prefijo += '_';
+		longitud -= prefijo.length;
+	}
+    var result = prefijo;
+    for (var i = longitud; i > 0; --i) {
+    	result += letrasRandom[Math.floor(Math.random() * letrasRandom.length)];
+    }
+    return result;
+}
