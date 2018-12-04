@@ -148,6 +148,9 @@ function estilo_bootstrap($version = "saia") {
 		case "3.2" :
 			$version = "3.2.0";
 			break;
+		case "3.3" :
+		    $version = "3.3.7";
+		    break;
 		case "saia" :
 			$texto = "";
 			$texto = '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/css/bootstrap.css">';

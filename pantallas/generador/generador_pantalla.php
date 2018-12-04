@@ -921,9 +921,13 @@ $(document).on('click', '.element > .close', function(e) {
     });
 });
 $(document).on('click', '.element', function() {
-	//var componente = $(this).attr("nombre");
+	var componente = $(this).attr("nombre");
+	var ulr_hs = "<?php echo($ruta_db_superior);?>pantallas/generador/editar_componente_generico.php?idpantalla_componente="+$(this).attr("idpantalla_componente")+"&idpantalla_campos="+$(this).attr("idpantalla_campo");
+	if(componente == "archivo_xxx") {
+		ulr_hs = "<?php echo($ruta_db_superior);?>pantallas/generador/"+componente+"/editar_componente.php?idpantalla_componente="+$(this).attr("idpantalla_componente")+"&idpantalla_campos="+$(this).attr("idpantalla_campo");
+	}
 	var opciones = {
-	    src: "<?php echo($ruta_db_superior);?>pantallas/generador/editar_componente_generico.php?idpantalla_componente="+$(this).attr("idpantalla_componente")+"&idpantalla_campos="+$(this).attr("idpantalla_campo"),
+	    src: ulr_hs,
 	    objectType: 'iframe',
 	    outlineType: 'rounded-white',
 	    wrapperClassName: 'highslide-wrapper drag-header',

@@ -42,7 +42,12 @@ if (@$_REQUEST["idpantalla_campos"]) {
     $opciones_propias = json_decode(mb_convert_encoding($pantalla_campos[0]["opciones_propias"], 'UTF-8', 'UTF-8'), true);
     //$opciones_propias = json_decode(utf8_encode($pantalla_campos[0]["opciones_propias"]), true);
     if (json_last_error() === JSON_ERROR_NONE) {
-        if(is_array($valores)) {
+        $val_default = array();
+        if(isset($opciones_propias["data"]) && is_array($valores)) {
+            $val_default = $opciones_propias["data"];
+            $resultado = array_merge_recursive($val_default, $valores);
+            $opciones_propias["data"] = $resultado;
+        } else if(is_array($valores)) {
             $opciones_propias["data"] = $valores;
         }
     } else {
@@ -150,6 +155,7 @@ echo librerias_jquery("2.2");
 	                    if (this.isValid(true)) {
 	                        var value = this.getValue();
 	                        console.log(JSON.stringify(value, null, "  "));
+	                        funcion_enviar(value);
 	                    }
 	        		}
 				}
@@ -173,6 +179,47 @@ echo librerias_jquery("2.2");
 		$('#editar_pantalla_campo').alpaca(opciones_form);
 
 	});
+
+	function funcion_enviar(datos) {
+		console.log("funcion envio");
+		if(datos.fs_valor) {
+			datos.fs_valor = JSON.stringify(datos.fs_valor)
+		}
+		if(datos.fs_opciones) {
+			datos.fs_opciones = JSON.stringify(datos.fs_opciones)
+		}
+		if(datos.fs_estilo) {
+			datos.fs_estilo = JSON.stringify(datos.fs_estilo)
+		}
+
+    	datos["ejecutar_campos_formato"] = "set_pantalla_campos";
+    	datos["tipo_retorno"] = 1;
+
+    	console.log(datos);
+    	return false;
+    	$.ajax({
+            type:'POST',
+            url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias.php",
+            data: datos,
+            async: false,
+            dataType: "json",
+            success: function(html) {
+                if(html) {
+                    var objeto=jQuery.parseJSON(html);
+                    if(objeto.exito) {
+                        $('#cargando_enviar').html("Terminado ...");
+                        //$("#content").append(objeto.etiqueta_html);
+                        //setTimeout(notificacion_saia("Actualizaci&oacute;n realizada con &eacute;xito.","success","",2500),5000);
+                        $("#pc_"+idpantalla_campo,parent.document).find(".control-label").html(objeto.etiqueta);
+                        //$("#pc_"+idpantalla_campo,parent.document).replaceWith(objeto.codigo_html);
+                        //$("#pc_"+idpantalla_campo,parent.document).find(".elemento_formulario").attr("placeholder",objeto.placeholder);
+                        parent.hs.close();
+                    }
+                }
+            }
+        });
+
+	}
 	</script>
 </body>
 
