@@ -1,0 +1,27 @@
+{
+  "schema": {
+    "title": "",
+    "description": "Editar propiedades",
+    "type": "object",
+    "properties": {
+      "fs_valor": {
+        "type": "string",
+        "title": "Título",
+        "maxLength": 255,
+        "required": true
+      },
+      "fs_ayuda": {
+        "type": "string",
+        "title": "Ayuda para el usuario"
+      }
+    }
+  },
+  "options": {
+    "fields": {
+      "fs_ayuda": {
+        "rows": 3,
+        "type": "textarea"
+      }
+    }
+  }
+}

@@ -16,20 +16,14 @@
         "maxLength": 255,
         "required": true
       },
-      "fs_estilo": {
-        "type": "object",
-        "title": "",
-        "properties": {
-          "size": {
-            "title": "Ancho del campo",
-            "type": "string",
-            "enum": [
-              "10",
-              "25",
-              "50"
-            ]
-          }
-        }
+      "fs_valor": {
+        "type": "array",
+        "items": {
+          "item": "Item 1",
+          "type": "string",
+          "minLength": 1
+        },
+        "minItems": 1
       },
       "fs_acciones": {
         "type": "boolean"
@@ -48,17 +42,12 @@
       "fs_nombre": {
         "type": "hidden"
       },
-      "fs_estilo": {
+      "fs_valor": {
+        "toolbarSticky": true,
+        "toolbarPosition": "right",
         "fields": {
-          "size": {
-            "type": "select",
-            "sort": false,
-            "removeDefaultNone": false,
-            "optionLabels": [
-              "Pequeño",
-              "Mediano",
-              "Grande"
-            ]
+          "item": {
+            "label": "Item"
           }
         }
       },

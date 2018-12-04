@@ -53,20 +53,10 @@
         }
       },
       "fs_acciones": {
-        "type": "string",
-        "title": "Incluirse en la descripción del formato",
-        "enum": [
-          "",
-          "p"
-        ]
+        "type": "boolean"
       },
       "fs_obligatoriedad": {
-        "type": "string",
-        "title": "Obligatoriedad",
-        "enum": [
-          "1",
-          "0"
-        ]
+        "type": "boolean"
       },
       "fs_ayuda": {
         "type": "string",
@@ -114,10 +104,10 @@
                 "not_between"
               ]
             },
-	        "picker": {
-	            "locale": "es",
-	            "format": "YYYY/MM/DD"
-	        }            
+	    "picker": {
+	      "locale": "es",
+	      "format": "YYYY/MM/DD"
+	    }            
           },          
           "fecha_2": {
             "type": "date", 
@@ -135,26 +125,16 @@
         }
       },
       "fs_obligatoriedad": {
-        "type": "radio",
-        "vertical": false,
-        "removeDefaultNone": true,
-        "optionLabels": [
-          "No obligatrio",
-          "Obligatorio"
-        ]
+        "type": "checkbox",
+        "rightLabel": "Obligatorio"
       },
       "fs_acciones": {
-        "type": "radio",
-        "vertical": false,
-        "removeDefaultNone": true,
-        "optionLabels": [
-          "No incluirse",
-          "Incluirse"
-        ]
+        "type": "checkbox",
+        "rightLabel": "Incluirse en la descripción del formato"
       },
       "fs_ayuda": {
-        "type": "textarea",
-        "rows": 3
+        "rows": 3,
+        "type": "textarea"
       }
     }
   }
