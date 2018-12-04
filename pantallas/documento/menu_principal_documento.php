@@ -49,35 +49,34 @@ function menu_principal_documento($documentId, $transferId = 0){
         $otherModules = moduleAccess($documentId, "otros_menu_intermedio", array("tipo" => 2));
     }
     ?>    
-    <div class="col-12 px-0 mx-0" style="font-size:12px">
-        <div class="row m-0 h6">
+    <div class="col-12 px-0 mx-0">
+        <div class="row m-0">
             <div class="col-auto px-1">
-                <span>
-                    <i style="cursor:pointer;font-size:1.3rem;display:none" class="fa fa-chevron-left px-3" id="go_back"></i>
+                <span class="h6">
+                    <i style="display:none" class="fa fa-chevron-left px-3 cursor" id="go_back"></i>
                 </span>
-                <span id="show_tree">
-                    <i class="fa fa-sitemap" style="cursor:pointer;font-size:1.3rem"></i>
-                    <i style="cursor:pointer;font-size:1.3rem" class="fa fa-angle-double-down"></i>
+                <span id="show_tree" class="h6">
+                    <i class="fa fa-sitemap cursor"></i>
+                    <i class="cursor fa fa-angle-double-down"></i>
                 </span>
             </div>
             <div class="col text-center">
-                <span style="cursor:pointer;" class="p-1">
-                    <i class="fa fa-mail-reply" style="font-size:1.3rem;"></i><label class="d-none d-sm-inline">&nbsp;Responder</label>
+                <span class="cursor p-1 h6">
+                    <i class="fa fa-mail-reply"></i><label style="font-size:13px;" class="d-none d-sm-inline">&nbsp;Responder</label>
                 </span>
-                <span style="cursor:pointer;" class="p-1">
-                    <i class="fa fa-mail-reply-all" style="font-size:1.3rem;"></i><label class="d-none d-sm-inline">&nbsp;Responder a todos</label>
+                <span class="cursor p-1 h6">
+                    <i class="fa fa-mail-reply-all"></i><label style="font-size:13px;" class="d-none d-sm-inline">&nbsp;Responder a todos</label>
                 </span>
-                <span style="cursor:pointer;" class="p-1">
-                    <i class="fa fa-share" style="font-size:1.3rem;"></i><label class="d-none d-sm-inline">&nbsp;Reenviar</label>
+                <span class="cursor p-1 h6">
+                    <i class="fa fa-share"></i><label style="font-size:13px;" class="d-none d-sm-inline">&nbsp;Reenviar</label>
                 </span>
             </div>
             <div class="col-auto">
-                <span style="cursor:pointer;">
+                <span class="cursor">
                     <div class="pr-1">
                         <div class="dropdown pull-right d-xs-block">
-                            <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor:pointer">
-                                <i class="fa fa-angle-double-left" style="font-size:1.3rem"></i>
-                                &nbsp;Opciones
+                            <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-angle-double-left"></i> Opciones
                             </span>
                             <div class="dropdown-menu dropdown-menu-right" role="menu" x-placement="bottom-end">
                                 <?php foreach ($actionModules as $key => $item): ?>
@@ -101,21 +100,26 @@ function menu_principal_documento($documentId, $transferId = 0){
                 </span>
             </div>
         </div>
-        <div class="row px-0 mx-0 py-3">
+        <div class="row px-0 mx-0 py-2">
             <div class="col col-md-auto px-0 mx-0">
                 <div class="row px-0 mx-0">
-                    <div class="col-auto text-center px-1">
+                    <div class="col-auto text-center p-1">
                         <?= roundedImage($Transfer->user->getImage('foto_recorte')) ?>
                     </div>
                     <div class="col px-1">
-                        <div class="row">
+                        <div class="row" style="line-height:1.5">
                             <div class="col-12">
                                 <span class="bold"><?= $Transfer->user->getName() ?></span>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row" style="line-height:1.5;font-size:11px">
                             <div class="col-12">
                                 <span><?= $temporality ?></span>
+                            </div>
+                        </div>
+                        <div class="row" style="line-height:1.5">
+                            <div class="col-auto d-none d-md-block" style="font-size:11px">
+                                <span><?= documental_type($documentId) ?></span>
                             </div>
                         </div>
                     </div>
@@ -124,27 +128,24 @@ function menu_principal_documento($documentId, $transferId = 0){
             <div class="col-auto col-md">
                 <?= priority($documentId) ?>
                 <?= has_files($documentId) ?>
-                <span class="px-1 h6" style="cursor:pointer;font-size:1.3rem"><i class="fa fa-comments"></i></span>
-                <span class="px-1 h6" style="cursor:pointer;font-size:1.3rem"><i class="fa fa-calendar"></i></span>
-                <span class="px-1 h6" style="cursor:pointer;font-size:1.3rem"><i class="fa fa-road"></i></span>
+                <span class="px-1 h6 cursor"><i class="fa fa-comments"></i></span>
+                <span class="px-1 h6 cursor"><i class="fa fa-calendar"></i></span>
+                <span class="px-1 h6 cursor"><i class="fa fa-road"></i></span>
             </div>
             <div class="col-auto d-none d-md-block">
                 <?= expiration($document[0]['fecha_limite']) ?>
             </div>
         </div>
-        <div class="row mx-0 px-1">
-            <div class="col-auto pl-0 mx-0 d-none d-md-block">
-                <span class="bold"><?= documental_type($documentId) ?></span>
-            </div>
-            <div class="col px-0 px-md-2">
-                <span style="font-size:12px;" class="m-0">
+        <div class="row mx-0 px-1">            
+            <div class="col px-0">
+                <span class="m-0">
                     <?= $document[0]['descripcion'] ?>
                 </span>
             </div>
         </div>
         <div class="row mx-0 px-1">
             <div class="col-12 px-0 mx-0">
-                <p style="line-height:1;font-size:12px;">
+                <p style="line-height:1;">
                     <?= $Transfer->notas ?>
                 </p>
             </div>
@@ -160,6 +161,7 @@ function menu_principal_documento($documentId, $transferId = 0){
             var baseUrl = '<?= $ruta_db_superior ?>';
             var documentId = '<?= $documentId ?>';
             toggleGoBack();
+            showFlag();        
             
             $("#go_back").on('click', function(){                                
                 $("#mailbox,#right_workspace", parent.document).toggleClass('d-none');                
@@ -199,10 +201,10 @@ function menu_principal_documento($documentId, $transferId = 0){
 
                         if(priority){
                             flag.addClass('text-danger');
-                            flagParent.addClass('text-danger');
+                            flagParent.show();
                         }else{
                             flag.removeClass('text-danger');
-                            flagParent.removeClass('text-danger');
+                            flagParent.hide();
                         }
                     }else{
                         toastr.error(response.message);
@@ -317,6 +319,14 @@ function menu_principal_documento($documentId, $transferId = 0){
                     $("#go_back").show();
                 }else{
                     $("#go_back").hide();
+                }
+            }
+
+            function showFlag(){                
+                if($(".priority").is(':hidden')){
+                    $(".priority")
+                        .removeClass('text-danger')
+                        .show();
                 }
             }
         });

@@ -1016,8 +1016,8 @@ function roundedImage($route){
     global $ruta_db_superior;
     
     $routeImage = $ruta_db_superior . $route;
-    return '<span class="thumbnail-wrapper d32 circular inline" style="float:none">
-        <img id="profile_image" src="'.$routeImage.'" width="32" height="32">
+    return '<span class="thumbnail-wrapper circular inline" style="float:none" style="width:36px;height:36px">
+        <img id="profile_image" src="'.$routeImage.'" style="width:36px;height:36px">
     </span>';
 }
 
@@ -1046,11 +1046,11 @@ function has_files($iddocumento){
     $anexos = busca_filtro_tabla('idanexos', 'anexos', 'documento_iddocumento ='. $iddocumento, '', $conn);
 
     if($anexos['numcampos']){
-        return '<span class="my-0 text-center h6"><i class="fa fa-paperclip hint-text" style="font-size:1.3rem"></i></span>';
+        return '<span class="my-0 text-center h6"><i class="fa fa-paperclip"></i></span>';
     }else{
         $paginas = busca_filtro_tabla('consecutivo', 'pagina', 'id_documento ='.$iddocumento, '', $conn);
         if($paginas['numcampos']){
-            return '<span class="my-0 text-center h6"><i class="fa fa-paperclip hint-text" style="font-size:1.3rem"></i></span>';
+            return '<span class="my-0 text-center h6"><i class="fa fa-paperclip"></i></span>';
         }
     }
 
@@ -1061,14 +1061,14 @@ function priority($documentId){
     global $conn;
     
     $findPriority = busca_filtro_tabla('prioridad', 'prioridad_documento', 'documento_iddocumento=' . $documentId, '', $conn);
-    if($findPriority['numcampos'] && $findPriority[0]['prioridad']){
-        $class = 'text-danger';
+    if(!$findPriority['numcampos'] || !$findPriority[0]['prioridad']){
+        $style = 'style="display:none"';
     }else{
-        $class = '';
+        $style = '';
     }
     
     return '<span class="my-0 text-center h6 priority_flag cursor">
-        <i style="font-size:1.3rem" data-key="'.$documentId.'" class="priority fa fa-flag '.$class.'"></i>
+        <i data-key="'.$documentId.'" class="priority fa fa-flag text-danger" '.$style.'></i>
     </span>';
 }
 
