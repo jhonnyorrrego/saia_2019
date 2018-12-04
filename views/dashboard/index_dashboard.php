@@ -38,8 +38,12 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         $(function(){
             var baseUrl = '<?= $ruta_db_superior ?>';
             let route = baseUrl + 'views/buzones/listado.php?idbusqueda_componente=<?= $_REQUEST['idbusqueda_componente'] ?>';
-            $("#mailbox").load(route);
-
+            $("#mailbox").load(route, function(){
+                setTimeout(() => {
+                    window.resizeIframe();
+                }, 1000);
+            });
+            
             $('#iframe_right_workspace').on('load', function(){
                 $(this).height($(window).height());
             });

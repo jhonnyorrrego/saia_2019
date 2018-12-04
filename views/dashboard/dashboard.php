@@ -115,7 +115,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                 <i class="fa fa-search"></i>
                             </span>
                         </div>
-                        <input id="document_finder" type="text" class="form-control" placeholder="Buscar..." style="width:350px">
+                        <input id="document_finder" type="text" class="form-control" placeholder="Buscar..." style="width:250px" >
                         <div class="input-group-append ">
                             <span class="input-group-text transparent">
                                 <i class="fa fa-times pr-3" id="clean_finder"></i>

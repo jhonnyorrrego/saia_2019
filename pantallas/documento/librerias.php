@@ -997,7 +997,7 @@ function origin_pending_document($iddocumento, $funcionarioCodigo, $numero, $fec
         <input type="hidden" value="'.$iddocumento.'" class="identificador">'
         . $roundedImage .
     '</div>
-    <div class="col show_document" data-url="'.$documentRoute.'" titulo="Documento No.' . $numero . '" style="cursor:pointer;">
+    <div class="col show_document cursor" data-url="'.$documentRoute.'" titulo="Documento No.' . $numero . '">
         <span class="mt-1 hint-text" style="font-size: 12px;">'.$numero . " - " . $Funcionario->getName().'</span>
     </div>
     <div class="col-auto">
@@ -1046,11 +1046,11 @@ function has_files($iddocumento){
     $anexos = busca_filtro_tabla('idanexos', 'anexos', 'documento_iddocumento ='. $iddocumento, '', $conn);
 
     if($anexos['numcampos']){
-        return '<span class="my-0 text-center h6"><i class="fa fa-paperclip hint-text"></i></span>';
+        return '<span class="my-0 text-center h6"><i class="fa fa-paperclip hint-text" style="font-size:1.3rem"></i></span>';
     }else{
         $paginas = busca_filtro_tabla('consecutivo', 'pagina', 'id_documento ='.$iddocumento, '', $conn);
         if($paginas['numcampos']){
-            return '<span class="my-0 text-center h6"><i class="fa fa-paperclip hint-text"></i></span>';
+            return '<span class="my-0 text-center h6"><i class="fa fa-paperclip hint-text" style="font-size:1.3rem"></i></span>';
         }
     }
 
@@ -1067,8 +1067,8 @@ function priority($documentId){
         $class = '';
     }
     
-    return '<span class="my-0 text-center h6 priority_flag">
-        <i data-key="'.$documentId.'" class="priority fa fa-flag '.$class.'"></i>
+    return '<span class="my-0 text-center h6 priority_flag cursor">
+        <i style="font-size:1.3rem" data-key="'.$documentId.'" class="priority fa fa-flag '.$class.'"></i>
     </span>';
 }
 

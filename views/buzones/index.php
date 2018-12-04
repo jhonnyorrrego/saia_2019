@@ -45,6 +45,9 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         clearInterval(interval);
                     }
                 }, 50);
+                setTimeout(() => {
+                    window.resizeIframe();
+                }, 1000);
             });
 
             $('#iframe_right_workspace').on('load', function(){

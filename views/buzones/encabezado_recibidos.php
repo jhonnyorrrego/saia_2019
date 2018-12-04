@@ -26,7 +26,7 @@
             <span class="btn btn-link py-0 px-1" data-toggle="tooltip" data-placement="bottom" title="Etiquetar" id="mark_document">
                 <i class="fa fa-tag"></i>
             </span>
-            <span class="btn btn-link py-0 px-1" data-toggle="tooltip" data-placement="bottom" title="Guardar en Expediente">
+            <span class="btn btn-link py-0 px-1" data-toggle="tooltip" data-placement="bottom" title="Mover a Expediente">
                 <i class="fa fa-folder"></i>
             </span>
             <span class="btn btn-link py-0 px-1">

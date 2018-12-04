@@ -50,7 +50,6 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
                     url: `${baseUrl}app/busquedas/datosBootstrapTable.php?idbusqueda_componente=${component}`,
                     sidePagination: 'server',
                     queryParamsType: 'other',
-                    height: $(window).height() - 10,
                     columns: [{
                         field: 'info',
                     }],
@@ -72,16 +71,14 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
                             .split(',')
                             .map(Number)
                             .filter(n => n > 0);
+
+                        if(sessionStorage.getItem('documentSelected')){
+                            let id = sessionStorage.getItem('documentSelected');
+                            let index = $(`input[data-id="${+id}"]`).data('index');
+                            $(`tr[data-index="${+index}"]`).addClass('selected');
+                        }
                         
                         if(selections.length){
-                            console.log(sessionStorage.getItem('documentSelected'),123);
-                            if(sessionStorage.getItem('documentSelected')){
-                                let id = sessionStorage.getItem('documentSelected');
-                                let index = $(`input[data-id="${+id}"]`).data('index');
-                                $(`tr[data-index="${+index}"]`).addClass('selected');
-                                console.log(id,index);
-                            }
-                            
                             $('[name="btSelectItem"]').each(function (i, e) {
                                 let selected = $.inArray($(e).data('id'), selections) != -1;
                                 $(e).attr('checked', selected);
@@ -90,14 +87,16 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
                                     $(`tr[data-index="${$(e).data('index')}"]`).addClass('selected');
                                 }
                             });
+
+                            $("#pagination_other_info").text('Seleccionados: ' + selections.length);
                         }
                     },
                     onClickRow: function(row, element, field){
                         element.parent().find('tr[data-index]').each(function(i, e){
                             if(!$(e).find(':checkbox').is(':checked')){}
                                 $(e).removeClass('selected');
-                                
                         });
+                        element.addClass('selected');
                     },
                     cardView : true,
                     pagination: true,
@@ -119,6 +118,7 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
                     });
 
                     $(this).data('selections', selections.join(','))
+                    $("#pagination_other_info").text('Seleccionados: ' + selections.length);
                 });
 
                 $("#header_list").load(baseUrl+encabezado,{

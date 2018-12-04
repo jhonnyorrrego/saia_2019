@@ -1,6 +1,7 @@
 <script>
 $(function(){
     var baseUrl = $("#baseUrl").data('baseurl');
+    sessionStorage.setItem('documentSelected', 0);
 
     $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/topModal/topModal.js`);
 
@@ -78,6 +79,8 @@ $(function(){
         if($("#right_workspace").is(':hidden')){
             $("#mailbox,#right_workspace").toggleClass('d-none');
         }
+
+        $(this).parents('tr[data-index]').addClass('selected');
     });
 
     $(document).on('click', '.btn_expiration', function(){
