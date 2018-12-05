@@ -54,10 +54,12 @@
       "fs_valor": {
         "fields": {
           "longitud": {
-            "inputType": "number"
+            "inputType": "number",
+            "data": {"min" : 1, "max": 20}
           },
           "cantidad": {
-            "inputType": "number"
+            "inputType": "number",
+            "data": {"min" : 1, "max": 10}
           }
         }
       },

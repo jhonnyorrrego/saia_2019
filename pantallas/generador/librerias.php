@@ -104,15 +104,19 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1) {
 	);
 	$pantalla_campos = busca_filtro_tabla("idcampos_formato,nombre,etiqueta_html", "campos_formato", "idcampos_formato=" . $idpantalla_campos, "", $conn);
 	$procesar = 0;
+	$acciones = array("a","e","b");
 	if ($pantalla_campos["numcampos"]) {
 	    $retorno["nombre_campo"] = $pantalla_campos[0]["nombre"];
 	    $retorno["etiqueta_html"] = $pantalla_campos[0]["etiqueta_html"];
 		$sql_update = array();
 		foreach ($_REQUEST as $key => $value) {
-			if (strpos($key, "fs_") !== false) {
+		    if (preg_match("/^fs_/", $key)) {
                 switch ($key) {
                     case 'fs_acciones':
-                        $value = implode(",", $value);
+                        if($value) {
+                            array_push($acciones, "p");
+                        }
+                        $value = implode(",", $acciones);
                         break;
                     case "fs_etiqueta":
                         $retorno["etiqueta"] = $value;
@@ -123,13 +127,20 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1) {
                     case "fs_predeterminado":
                         $retorno["fs_predeterminado"] = $value;
                         break;
+                    case "fs_opciones":
+                    case "fs_estilo":
+                        if(is_array($value)) {
+                            $value = json_encode($value);
+                        }
+                        $retorno[$key] = $value;
+                        break;
                 }
-				array_push($sql_update, str_replace("fs_", "", $key) . "='" . $value . "'");
+				array_push($sql_update, preg_replace('/^fs_/', '', $key) . "='" . $value . "'");
 			}
 		}
 		if (count($sql_update)) {
 			$sql2 = "UPDATE campos_formato SET " . implode(", ", $sql_update) . " WHERE idcampos_formato=" . $idpantalla_campos;
-			phpmkr_query($sql2);
+			phpmkr_query($sql2) or die($sql2);
 			$retorno["exito"] = 1;
 			$cadena = load_pantalla_campos($idpantalla_campos, 0);
 			$retorno["codigo_html"] = $cadena["codigo_html"];

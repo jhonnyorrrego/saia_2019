@@ -18,7 +18,9 @@ $componente = busca_filtro_tabla("nombre, etiqueta, clase, opciones_propias", "p
 $texto_titulo = $componente[0]["etiqueta"];
 $nombre_componente = $componente[0]["nombre"];
 $valores = array();
+$idpantalla_campos = null;
 if (@$_REQUEST["idpantalla_campos"]) {
+    $idpantalla_campos = $_REQUEST["idpantalla_campos"];
     $pantalla_campos = get_pantalla_campos($_REQUEST["idpantalla_campos"], 0);
 
     $valores["fs_nombre"] = $pantalla_campos[0]["nombre"];
@@ -110,11 +112,12 @@ echo librerias_jquery("2.2");
 	var opciones_form = <?=$opciones_str?>;
 	$(document).ready(function(){
 		var rutaSuperior = "<?=$ruta_db_superior?>";
+		var idpantalla_campo = <?=$idpantalla_campos?>;
 
 		opciones_form["onSubmit"] = function (errors, values) {
 			if (errors) {
 				console.log(errors);
-				$('#res').html('<p>Ruego por su perd&oacute;n?</p>');
+				$('#res').html('<p>Error al validar</p>');
 			} else {
 				console.log(JSON.stringify(values.fs_valor));
 				console.log(JSON.stringify(values.fs_acciones));
@@ -149,13 +152,14 @@ echo librerias_jquery("2.2");
 		            }
 				},
 				submit: {
+					"title": "Aceptar",
 					"styles": "btn btn-primary",
 	                "click": function() {
 	                    this.refreshValidationState(true);
 	                    if (this.isValid(true)) {
 	                        var value = this.getValue();
-	                        console.log(JSON.stringify(value, null, "  "));
-	                        funcion_enviar(value);
+	                        //console.log(JSON.stringify(value, null, "  "));
+	                        funcion_enviar(value, idpantalla_campo);
 	                    }
 	        		}
 				}
@@ -174,15 +178,26 @@ echo librerias_jquery("2.2");
 		opciones_form["postRender"] = function() {
 			$(".alpaca-required-indicator").html("<span style='font-size:18px;color:red;'>*</span>");
 			$(".alpaca-field-radio").find("label").css("display", "block");
+			console.log("Componente " + nombre_componente);
+			if(nombre_componente == 'archivo') {
+				$("input[type='number'][data-min]").each(function() {
+					 var valor = $(this).data("min");
+					 $(this).attr("min", valor);
+				});
+				$("input[type='number'][data-max]").each(function() {
+					 var valor = $(this).data("max");
+					 $(this).attr("max", valor);
+				});
+			}
 		};
 
 		$('#editar_pantalla_campo').alpaca(opciones_form);
 
 	});
 
-	function funcion_enviar(datos) {
+	function funcion_enviar(datos, idpantalla_campo) {
 		console.log("funcion envio");
-		if(datos.fs_valor) {
+		/*if(datos.fs_valor) {
 			datos.fs_valor = JSON.stringify(datos.fs_valor)
 		}
 		if(datos.fs_opciones) {
@@ -190,31 +205,30 @@ echo librerias_jquery("2.2");
 		}
 		if(datos.fs_estilo) {
 			datos.fs_estilo = JSON.stringify(datos.fs_estilo)
-		}
+		}*/
 
     	datos["ejecutar_campos_formato"] = "set_pantalla_campos";
     	datos["tipo_retorno"] = 1;
+    	datos["idpantalla_campos"] = idpantalla_campo;
 
     	console.log(datos);
-    	return false;
+    	//return false;
     	$.ajax({
             type:'POST',
             url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias.php",
             data: datos,
             async: false,
             dataType: "json",
-            success: function(html) {
-                if(html) {
-                    var objeto=jQuery.parseJSON(html);
-                    if(objeto.exito) {
+            success: function(objeto) {
+                console.log(objeto);
+                if(objeto && objeto.exito) {
                         $('#cargando_enviar').html("Terminado ...");
                         //$("#content").append(objeto.etiqueta_html);
                         //setTimeout(notificacion_saia("Actualizaci&oacute;n realizada con &eacute;xito.","success","",2500),5000);
-                        $("#pc_"+idpantalla_campo,parent.document).find(".control-label").html(objeto.etiqueta);
+                        $("#pc_"+idpantalla_campo, parent.document).find(".control-label").html(objeto.etiqueta);
                         //$("#pc_"+idpantalla_campo,parent.document).replaceWith(objeto.codigo_html);
                         //$("#pc_"+idpantalla_campo,parent.document).find(".elemento_formulario").attr("placeholder",objeto.placeholder);
                         parent.hs.close();
-                    }
                 }
             }
         });

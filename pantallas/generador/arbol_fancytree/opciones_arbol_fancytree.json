@@ -1,119 +1,112 @@
 {
-	"schema": {
-		"fs_etiqueta": {
-			"type": "string",
-			"title": "Etiqueta del campo",
-			"maxLength": 255,
-			"required": true
-		},
-		"fs_nombre": {
-			"type": "string",
-			"title": "Nombre",
-			"maxLength": 255,
-			"required": true
-		},
-		"fs_acciones": {
-			"type": "string",
-			"title": "Incluirse en la descripción del formato",
-			"enum": [
-				"",
-				"p"
-			]
-		},
-		"fs_obligatoriedad": {
-			"type": "string",
-			"title": "Obligatoriedad",
-			"enum": [
-				"1",
-				"0"
-			]
-		},
-		"fs_ayuda": {
-			"type": "string",
-			"title": "Ayuda para el usuario"
-		},
-		"fs_opciones": {
-			"type": "object",
-			"title": "Configuración",
-			"properties": {
-				"url": {
-					"title": "Tipo",
-					"type": "string",
-					"enum": [
-						"funcionario",
-						"dependencia",
-						"cargo",
-						"serie"
-					]
-				},
-				"checkbox": {
-					"type": "string",
-					"title": "Selección",
-					"enum": [
-						"1",
-						"radio"
-					]
-				},
-				"buscador": {
-					"type": "string",
-					"title": "Obligatoriedad",
-					"enum": [
-						"1",
-						"0"
-					]
-				}
-			}
-		}
-	},
-	"form": [
-		{
-			"key": "fs_nombre",
-			"type": "hidden"
-		},
-		{
-			"key": "fs_obligatoriedad",
-			"type": "radios",
-			"titleMap": {
-				"0": "No obligatrio",
-				"1": "Obligatorio"
-			}
-		},
-		{
-			"key": "fs_acciones",
-			"type": "radios",
-			"titleMap": {
-				"": "No incluirse",
-				"p": "Incluirse"
-			}
-		},
-		{
-			"key": "fs_opciones.url",
-			"titleMap": {
-				"funcionario": "Funcionario",
-				"dependencia": "Dependencia",
-				"cargo": "Cargo",
-				"serie": "Serie"
-			}
-		},
-		{
-			"key": "fs_opciones.checkbox",
-			"type": "radios",
-			"titleMap": {
-				"1": "Múltiple",
-				"radio": "Simple"
-			}
-		},
-		{
-			"key": "fs_opciones.buscador",
-			"type": "radios",
-			"titleMap": {
-				"0": "No",
-				"1": "Si"
-			}
-		},
-		{
-			"key": "fs_ayuda",
-			"type": "textarea"
-		}
-	]
+  "schema": {
+    "title": "",
+    "description": "Editar propiedades",
+    "type": "object",
+    "properties": {
+      "fs_etiqueta": {
+        "type": "string",
+        "title": "Etiqueta del campo",
+        "maxLength": 255,
+        "required": true
+      },
+      "fs_nombre": {
+        "type": "string",
+        "title": "Nombre",
+        "maxLength": 255,
+        "required": true
+      },
+      "fs_opciones": {
+        "type": "object",
+        "title": "",
+        "properties": {
+          "url": {
+            "title": "Tipo",
+            "type": "string",
+            "enum": [
+              "funcionario",
+              "dependencia",
+              "cargo",
+              "serie"
+            ]
+          },
+          "checkbox": {
+            "type": "string",
+            "title": "Selección",
+            "enum": [
+              "1",
+              "radio"
+            ]
+          },
+          "buscador": {
+            "type": "string",
+            "title": "Obligatoriedad",
+            "enum": [
+              "1",
+              "0"
+            ]
+          }
+        }
+      },
+      "fs_acciones": {
+        "type": "boolean"
+      },
+      "fs_obligatoriedad": {
+        "type": "boolean"
+      },
+      "fs_ayuda": {
+        "type": "string",
+        "title": "Ayuda para el usuario"
+      }
+    }
+  },
+  "options": {
+    "fields": {
+      "fs_nombre": {
+        "type": "hidden"
+      },
+      "fs_opciones": {
+        "fields": {
+          "url": {
+            "optionLabels": [
+              "Funcionario",
+              "Dependencia",
+              "Cargo",
+              "Serie"
+            ]
+          },
+          "checkbox": {
+            "type": "radio",
+            "vertical": false,
+            "removeDefaultNone": true,
+            "optionLabels": [
+              "Múltiple",
+              "Simple"
+            ]
+          },
+          "buscador": {
+            "type": "radio",
+            "vertical": false,
+            "removeDefaultNone": true,
+            "optionLabels": [
+              "No",
+              "Si"
+            ]
+          }
+        }
+      },
+      "fs_obligatoriedad": {
+        "type": "checkbox",
+        "rightLabel": "Obligatorio"
+      },
+      "fs_acciones": {
+        "type": "checkbox",
+        "rightLabel": "Incluirse en la descripción del formato"
+      },
+      "fs_ayuda": {
+        "rows": 3,
+        "type": "textarea"
+      }
+    }
+  }
 }
