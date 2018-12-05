@@ -39,18 +39,17 @@ $(function(){
                     
                     if($.inArray(key, selections) != -1){
                         if(priority){
-                            element.addClass('text-danger');
+                            element.show();
                         }else{
-                            element.removeClass('text-danger');
+                            element.hide();
                         }
                     }
                 });
                 
                 let documentSelected = sessionStorage.getItem('documentSelected') || 0;
-                if($.inArray(documentSelected, selections) != -1){
+                if($.inArray(+documentSelected, selections) != -1){
                     let selected = $("#iframe_right_workspace").contents().find(`.priority[data-key='${documentSelected}']`);
                     if(selected.length){
-
                         if(priority){
                             selected.addClass('text-danger');
                         }else{
@@ -69,7 +68,7 @@ $(function(){
             url = $(this).data('url'),
             actualUrl = iframe.attr('src');
 
-        let documentSelected = +$(this).parent().find('.identificador').val();
+        let documentSelected = $(this).parent().find('.identificador').val();
         sessionStorage.setItem('documentSelected', documentSelected);
 
         if(actualUrl != baseUrl + url){
