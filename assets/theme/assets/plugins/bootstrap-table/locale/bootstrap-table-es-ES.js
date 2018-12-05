@@ -15,7 +15,7 @@
         },
         formatShowingRows: function (pageFrom, pageTo, totalRows) {
             //return 'Mostrando desde ' + pageFrom + ' hasta ' + pageTo + ' - En total ' + totalRows + ' resultados';
-            return 'total ' + totalRows + ' resultados';
+            return pageFrom + ' - ' + pageTo + ' de ' + totalRows;
         },
         formatSearch: function () {
             return 'Buscar';

@@ -16,17 +16,17 @@
                 </span>
                 <div  id="priority_menu" class="dropdown-menu priority_dropdown" role="menu" id="menu_user_info" x-placement="bottom-end" style="position: absolute; transform: translate3d(-105px, 20px, 0px); top: 0px; left: 0px; will-change: transform;">
                     <a href="#" class="dropdown-item prioritize_document" data-priority="1">
-                        <i class="fa fa-flag text-danger"></i>aaaa
+                        <i class="fa fa-flag text-danger"></i>Alta
                     </a>
                     <a href="#" class="dropdown-item prioritize_document" data-priority="0">
-                        <i class="fa fa-flag hint-text"></i>aaaa
+                        <i class="fa fa-flag hint-text"></i>Normal
                     </a>
                 </div>
             </div>
             <span class="btn btn-link py-0 px-1" data-toggle="tooltip" data-placement="bottom" title="Etiquetar" id="mark_document">
                 <i class="fa fa-tag"></i>
             </span>
-            <span class="btn btn-link py-0 px-1" data-toggle="tooltip" data-placement="bottom" title="Guardar en Expediente">
+            <span class="btn btn-link py-0 px-1" data-toggle="tooltip" data-placement="bottom" title="Mover a Expediente">
                 <i class="fa fa-folder"></i>
             </span>
             <span class="btn btn-link py-0 px-1">

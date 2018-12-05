@@ -1,7 +1,7 @@
 <script>
 $(function(){
     var baseUrl = $("#baseUrl").data('baseurl');
-    var documentSelected = 0;
+    sessionStorage.setItem('documentSelected', 0);
 
     $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/topModal/topModal.js`);
 
@@ -38,25 +38,22 @@ $(function(){
                     let key = element.data('key');
                     
                     if($.inArray(key, selections) != -1){
-                        element.removeClass('text-dark text-danger');
-
                         if(priority){
-                            element.addClass('text-danger');
+                            element.show();
                         }else{
-                            element.addClass('text-dark');
+                            element.hide();
                         }
                     }
                 });
                 
-                if($.inArray(documentSelected, selections) != -1){
+                let documentSelected = sessionStorage.getItem('documentSelected') || 0;
+                if($.inArray(+documentSelected, selections) != -1){
                     let selected = $("#iframe_right_workspace").contents().find(`.priority[data-key='${documentSelected}']`);
                     if(selected.length){
-                        selected.removeClass('text-dark text-danger');
-
                         if(priority){
                             selected.addClass('text-danger');
                         }else{
-                            selected.addClass('text-dark');
+                            selected.removeClass('text-danger');
                         }
                     }
                 };
@@ -71,8 +68,9 @@ $(function(){
             url = $(this).data('url'),
             actualUrl = iframe.attr('src');
 
-        documentSelected = +$(this).parent().find('.identificador').val();
-        
+        let documentSelected = $(this).parent().find('.identificador').val();
+        sessionStorage.setItem('documentSelected', documentSelected);
+
         if(actualUrl != baseUrl + url){
             iframe.attr('src', baseUrl + url);
         }
@@ -80,6 +78,8 @@ $(function(){
         if($("#right_workspace").is(':hidden')){
             $("#mailbox,#right_workspace").toggleClass('d-none');
         }
+
+        $(this).parents('tr[data-index]').addClass('selected');
     });
 
     $(document).on('click', '.btn_expiration', function(){

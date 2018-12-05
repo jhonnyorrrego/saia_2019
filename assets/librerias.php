@@ -67,10 +67,10 @@ function bootstrapTable()
 {
     global $ruta_db_superior;
 
-    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/bootstrap-table.min.css';
+    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/bootstrap-table.css';
     $css = '<link href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
 
-    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/bootstrap-table.min.js';
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/bootstrap-table.js';
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
     $locale = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/locale/bootstrap-table-es-ES.js';
@@ -126,16 +126,16 @@ function icons()
 {
     global $ruta_db_superior;
 
-    $routePages = $ruta_db_superior . 'assets/theme/pages/css/pages-icons.css';
+    /*$routePages = $ruta_db_superior . 'assets/theme/pages/css/pages-icons.css';
     $pg = '<link class="main-stylesheet" href="' . $routePages . '" rel="stylesheet" type="text/css" />';
-
+    */
     $routeAwesome = $ruta_db_superior . 'assets/theme/assets/plugins/font-awesome/css/font-awesome.css';
     $fa = '<link class="main-stylesheet" href="' . $routeAwesome . '" rel="stylesheet" type="text/css" />';
 
-    $routeLine = $ruta_db_superior . 'assets/theme/assets/plugins/simple-line-icons/simple-line-icons.css';
+    /*$routeLine = $ruta_db_superior . 'assets/theme/assets/plugins/simple-line-icons/simple-line-icons.css';
     $sl = '<link class="main-stylesheet" href="' . $routeLine . '" rel="stylesheet" type="text/css" />';
-
-    return $pg . $fa . $sl;
+    */
+    return $fa;
 }
 
 /**

@@ -3,6 +3,7 @@ require_once ("define.php");
 require_once ("conexion.php");
 require_once('StorageUtils.php');
 require_once('filesystem/SaiaStorage.php');
+require_once 'controllers/utilities.php';
 require('vendor/autoload.php');
 date_default_timezone_set("America/Bogota");
 

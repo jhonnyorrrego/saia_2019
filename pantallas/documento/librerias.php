@@ -997,7 +997,7 @@ function origin_pending_document($iddocumento, $funcionarioCodigo, $numero, $fec
         <input type="hidden" value="'.$iddocumento.'" class="identificador">'
         . $roundedImage .
     '</div>
-    <div class="col show_document" data-url="'.$documentRoute.'" titulo="Documento No.' . $numero . '" style="cursor:pointer;">
+    <div class="col show_document cursor" data-url="'.$documentRoute.'" titulo="Documento No.' . $numero . '">
         <span class="mt-1 hint-text" style="font-size: 12px;">'.$numero . " - " . $Funcionario->getName().'</span>
     </div>
     <div class="col-auto">
@@ -1016,8 +1016,8 @@ function roundedImage($route){
     global $ruta_db_superior;
     
     $routeImage = $ruta_db_superior . $route;
-    return '<span class="thumbnail-wrapper d32 circular inline" style="float:none">
-        <img id="profile_image" src="'.$routeImage.'" width="32" height="32">
+    return '<span class="thumbnail-wrapper circular inline" style="float:none" style="width:36px;height:36px">
+        <img id="profile_image" src="'.$routeImage.'" style="width:36px;height:36px">
     </span>';
 }
 
@@ -1040,37 +1040,36 @@ function unread($iddocumento, $fecha){
         return '';
 }
 
-function has_files($iddocumento){
-    global $conn;
-
-    $anexos = busca_filtro_tabla('idanexos', 'anexos', 'documento_iddocumento ='. $iddocumento, '', $conn);
-
-    if($anexos['numcampos']){
-        return '<span class="my-0 text-center h6"><i class="fa fa-paperclip hint-text"></i></span>';
-    }else{
-        $paginas = busca_filtro_tabla('consecutivo', 'pagina', 'id_documento ='.$iddocumento, '', $conn);
-        if($paginas['numcampos']){
-            return '<span class="my-0 text-center h6"><i class="fa fa-paperclip hint-text"></i></span>';
-        }
+function has_files($iddocumento) {
+  global $conn,$ruta_db_superior;
+  $html = '';
+  if ($iddocumento) {
+    $anexos = busca_filtro_tabla('count(*) as cant', 'anexos', 'documento_iddocumento =' . $iddocumento, '', $conn);
+    $paginas = busca_filtro_tabla('count(*) as cant', 'pagina', 'id_documento =' . $iddocumento, '', $conn);
+    if ($anexos[0]['cant'] || $paginas[0]['cant']) {
+      $total=$anexos[0]["cant"]+$paginas[0]['cant'];
+      $html = '<span class="my-0 text-center h6">
+      <a href="'.$ruta_db_superior.'views/documento/paginas.php?iddoc='.$iddocumento.'" class="fa fa-paperclip hint-text">
+        <span class="badge badge-important">'.$total.'</span>
+      </a>
+      </span>';
     }
-
-    return '';
+  }
+  return $html;
 }
 
 function priority($documentId){
     global $conn;
-    
     $class = 'text-dark';
     $findPriority = busca_filtro_tabla('prioridad', 'prioridad_documento', 'documento_iddocumento=' . $documentId, '', $conn);
-
-    if($findPriority['numcampos'] && $findPriority[0]['prioridad']){
-        $class = 'text-danger';
+    if(!$findPriority['numcampos'] || !$findPriority[0]['prioridad']){
+        $style = 'style="display:none"';
     }else{
-        $class = 'text-dark';
+        $style = '';
     }
     
-    return '<span class="my-0 text-center h6 priority_flag">
-        <i data-key="'.$documentId.'" class="priority fa fa-flag '.$class.'"></i>
+    return '<span class="my-0 text-center h6 priority_flag cursor">
+        <i data-key="'.$documentId.'" class="priority fa fa-flag text-danger" '.$style.'></i>
     </span>';
 }
 

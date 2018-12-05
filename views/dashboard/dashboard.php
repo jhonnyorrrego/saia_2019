@@ -12,7 +12,6 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'assets/librerias.php';
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -36,6 +35,14 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 	<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen" />
 	<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/switchery/css/switchery.min.css" rel="stylesheet" type="text/css" media="screen" />
 	<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/css/imgareaselect-default.css" rel="stylesheet" type="text/css" media="screen" />
+    <style>
+        .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+        .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
+        .autocomplete-selected { background: #F0F0F0; }
+        .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
+        .autocomplete-group { padding: 2px 5px; }
+        .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
+    </style>
     <link class="main-stylesheet" href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.css" rel="stylesheet" type="text/css" />
 </head>
 
@@ -101,18 +108,18 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 <!--<a href="#" class="search-link d-lg-inline-block d-none" data-toggle="search">
                     <i class="pg-search"></i>Type anywhere to <span class="bold">search</span>
                 </a>-->
-                <div class="d-lg-inline-block align-middle">
+                <div class="d-lg-inline-block align-middle d-none">
                     <div class="input-group transparent">
                         <div class="input-group-prepend">
                             <span class="input-group-text transparent">
                                 <i class="fa fa-search"></i>
                             </span>
                         </div>
-                        <input type="text" class="form-control" placeholder="Buscar..." style="width:350px">
+                        <input id="document_finder" type="text" class="form-control" placeholder="Buscar..." style="width:250px" >
                         <div class="input-group-append ">
                             <span class="input-group-text transparent">
-                                <i class="fa fa-times pr-3"></i>
-                                <i class="fa fa-chevron-down"></i>
+                                <i class="fa fa-times pr-3" id="clean_finder"></i>
+                                <i class="fa fa-chevron-down" id="show_filters"></i>
                             </span>
                         </div>
                     </div>
@@ -292,7 +299,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-actual/jquery.actual.min.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.min.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/pages/js/pages.js" type="text/javascript"></script>
-    <!--<script src="<?= $ruta_db_superior ?>assets/theme/assets/js/scripts.js" type="text/javascript"></script>-->
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-autocomplete/jquery.autocomplete.min.js" type="text/javascript"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/scripts/jquery.imgareaselect.js" type="text/javascript"></script>
     
     <?= moment() ?>        
@@ -303,6 +310,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <!-- BEGIN LIBRARIES FOR EVENTS-->
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/ui/ui_events.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/modules/module_events.js"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/autocomplete/autocomplete_events.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notes/note_events.js"></script>
     <!-- END LIBRARIES FOR EVENTS-->
     <?= topModal() ?>
