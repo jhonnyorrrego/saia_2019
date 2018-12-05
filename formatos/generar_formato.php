@@ -1267,6 +1267,7 @@ class GenerarFormato {
                             }
                             break;
                         case "spin":
+                        case "moneda":
                             $aux[] = "imageBasePath:'../../images/'";
                             if ($campos[$h]["valor"] != "") {
                                 $parametros = explode("@", $campos[$h]["valor"]);
