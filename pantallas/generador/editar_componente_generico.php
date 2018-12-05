@@ -26,13 +26,15 @@ if (@$_REQUEST["idpantalla_campos"]) {
     $valores["fs_nombre"] = $pantalla_campos[0]["nombre"];
     $valores["fs_etiqueta"] = $pantalla_campos[0]["etiqueta"];
 
-    $valores["fs_obligatoriedad"] = $pantalla_campos[0]["obligatoriedad"];
-    $valores["fs_acciones"] = "";
+    $valores["fs_obligatoriedad"] = false;
+    if($pantalla_campos[0]["obligatoriedad"]) {
+        $valores["fs_obligatoriedad"] = true;
+    }
+    $valores["fs_acciones"] = false;
 
     if(preg_match("/p/", $pantalla_campos[0]["acciones"])) {
-        $valores["fs_acciones"] = "p";
+        $valores["fs_acciones"] = true;
     }
-    $acciones_guardadas = explode(",", $pantalla_campos[0]["acciones"]);
 
     $opciones = json_decode($pantalla_campos[0]["valor"], true);
     if (json_last_error() === JSON_ERROR_NONE) {
@@ -55,6 +57,12 @@ if (@$_REQUEST["idpantalla_campos"]) {
     } else {
     	//print_r(json_last_error_msg());
     	//die();
+    }
+
+    $config_campo = obtener_valores_campo($idpantalla_campos, $opciones_propias);
+
+    if(!empty($config_campo)) {
+        $opciones_propias["data"] = $config_campo;
     }
 } else {
     alerta("No es posible Editar el Campo");
@@ -109,6 +117,7 @@ echo librerias_jquery("2.2");
     </div>
 	<script type="text/javascript">
 	var nombre_componente = "<?=$nombre_componente?>";
+	var con_numeros = ["archivo", "moneda", "spin"];
 	var opciones_form = <?=$opciones_str?>;
 	$(document).ready(function(){
 		var rutaSuperior = "<?=$ruta_db_superior?>";
@@ -179,7 +188,7 @@ echo librerias_jquery("2.2");
 			$(".alpaca-required-indicator").html("<span style='font-size:18px;color:red;'>*</span>");
 			$(".alpaca-field-radio").find("label").css("display", "block");
 			console.log("Componente " + nombre_componente);
-			if(nombre_componente == 'archivo') {
+			if(con_numeros.includes(nombre_componente)) {
 				$("input[type='number'][data-min]").each(function() {
 					 var valor = $(this).data("min");
 					 $(this).attr("min", valor);
@@ -236,5 +245,64 @@ echo librerias_jquery("2.2");
 	}
 	</script>
 </body>
-
 </html>
+
+<?php
+
+function obtener_valores_campo($idcampo_formato, $opciones_defecto) {
+    global $conn;
+    $resp = array();
+
+    $campo_formato = busca_filtro_tabla("nombre, etiqueta, opciones, estilo, ayuda", "campos_formato", "idcampos_formato=$idcampo_formato", "", $conn);
+
+    if($campo_formato["numcampos"]) {
+        $opciones = json_decode(mb_convert_encoding($campo_formato[0]["opciones"], 'UTF-8', 'UTF-8'), true);
+        //$opciones_propias = json_decode(utf8_encode($pantalla_campos[0]["opciones_propias"]), true);
+        if (json_last_error() === JSON_ERROR_NONE && !empty($opciones)) {
+            $resp["fs_opciones"] = $opciones;
+        }
+        $estilo = json_decode(mb_convert_encoding($campo_formato[0]["estilo"], 'UTF-8', 'UTF-8'), true);
+        //$opciones_propias = json_decode(utf8_encode($pantalla_campos[0]["opciones_propias"]), true);
+        if (json_last_error() === JSON_ERROR_NONE && !empty($estilo)) {
+            $resp["fs_estilo"] = $estilo;
+        }
+
+        $resp["fs_ayuda"] = $campo_formato[0]["ayuda"];
+
+        if($campo_formato[0]["obligatoriedad"]) {
+            $resp["fs_obligatoriedad"] = true;
+        } else {
+            $resp["fs_obligatoriedad"] = false;
+        }
+        $resp["fs_acciones"] = false;
+
+        if(preg_match("/p/", $campo_formato[0]["acciones"])) {
+            $resp["fs_acciones"] = true;
+        }
+
+        $resp["fs_nombre"] = $campo_formato[0]["nombre"];
+        $resp["fs_etiqueta"] = $campo_formato[0]["etiqueta"];
+
+    }
+
+    if(isset($opciones_defecto["data"])) {
+        $resp = array_merge_recursive_distinct($resp, $opciones_defecto["data"]);
+    }
+    return $resp;
+
+}
+
+function array_merge_recursive_distinct(array &$array1, array &$array2) {
+    $merged = $array1;
+    foreach ($array2 as $key => &$value) {
+        if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
+            $merged[$key] = array_merge_recursive_distinct($merged[$key], $value);
+        } else {
+            $merged[$key] = $value;
+        }
+    }
+    return $merged;
+}
+
+
+?>

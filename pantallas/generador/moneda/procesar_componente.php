@@ -27,18 +27,18 @@ function procesar_moneda($idcampo = '', $seleccionado = '', $accion = '', $campo
         $valor = $campo["predeterminado"];
     }
 
-    $texto = "<div class=\"control-group element\" idpantalla_componente=\"{$campo["idpantalla_componente"]}\" idpantalla_campo=\"$idcampo\"";
-    $texto .= " id=\"pc_{$idcampo}\" nombre=\"{$campo["nombre"]}\">\n";
+    $obligatorio = "";
+    if(!empty($campo["obligatoriedad"])) {
+        $obligatorio = " *";
+    }
+
+    $texto = '<div class="control-group element" idpantalla_componente="' . $campo["idpantalla_componente"] . '" idpantalla_campo="' . $idcampo . '"';
+    $texto .= ' id="pc_' . $idcampo . '" nombre="' . $campo["nombre"] . '">';
     $texto .= clase_eliminar_pantalla_componente($idcampo);
-    $texto .= "\n  <label class=\"control-label\" for=\"{$campo["nombre"]}\"><b>{{$campo["etiqueta"]}{{$campo["obligatoriedad"]}<\/b>\n  <\/label>\n";
-    $texto .= "<div class=\"controls\"> \n\t\t<div id=\"\" class=\"input-append\">\n\t\t\t";
-    $texto .= "<input id=\"{$campo["nombre"]}\" type=\"text\" value=\"{$valor}\" class=\"\" style=\"width:70px\" name=\"{$campo["nombre"]}\">\n";
-    $texto .= "<button class=\"btn\" type=\"button\" style=\"height:27px\" id=\"up_{$campo["nombre"]}\">+<\/button>\n";
-    $texto .= "<button class=\"btn\" type=\"button\" style=\"height:27px\" id=\"down_{$campo["nombre"]}\">-<\/button>\n\t\t<\/div>\n  <\/div>\n<\/div>\n";
-    $texto .= "<script>\n$(document).ready(function(){\n    $(\"#up_{$campo["nombre"]}\").click(function(){\nvar campo=$(\"#{$campo["nombre"]}\").val();\n";
-    $texto .= "if(parseInt(campo)||campo==0)$(\"#{$campo["nombre"]}\").val(parseInt(campo)+1);\nelse $(\"#{$campo["nombre"]}\").val(0);\n    });\n";
-    $texto .= "$(\"#down_{$campo["nombre"]}\").click(function(){\nvar campo=$(\"#{$campo["nombre"]}\").val();\n";
-    $texto .= "if(parseInt(campo)||campo==0)$(\"#{$campo["nombre"]}\").val(parseInt(campo)-1);\nelse $(\"#{$campo["nombre"]}\").val(0);\n    });\n});\n<\/script>";
+    $texto .= '<label class="control-label" for="' . $campo["nombre"] . '"><b>' . $campo["etiqueta"] . $obligatorio . '</b></label>';
+    $texto .= '<div class="controls"><div id=" class="input-append">';
+    $texto .= '<input id="' . $campo["nombre"] . '" type="number" value="' . $valor . '" name="' . $campo["nombre"] . '">';
+    $texto .= '</div></div></div>';
 
     return ($texto);
 }

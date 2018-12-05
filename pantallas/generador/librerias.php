@@ -38,37 +38,6 @@ function adicionar_pantalla_campos($idpantalla, $idpantalla_componente, $tipo_re
 			}
 			array_push($sql_valores, $valor);
 		}
-		/*
-		 * Pilas con el tema de archivos que se quita porque en ningun componente se encuentra en las opciones el campo archivo
-		 *
-		 * Ejemplo:
-		 *
-		 * <pantalla_campos><nombre>campo_texto</nombre><etiqueta>Campo de texto</etiqueta><tipo_dato>varchar</tipo_dato><longitud>255</longitud><obligatoriedad>1</obligatoriedad><valor></valor><acciones>a,e,b</acciones><ayuda></ayuda><predeterminado></predeterminado><banderas></banderas><etiqueta_html>text</etiqueta_html><orden>1</orden><mascara></mascara><adicionales></adicionales><autoguardado>1</autoguardado><fila_visible>1</fila_visible><placeholder>Campo texto</placeholder>
-</pantalla_campos>
-		 * {"nombre":"campo_texto","etiqueta":"campo de texto","tipo_dato":"varchar","longitud":255,"obligatoriedad":1,"valor":"","acciones":"a,e,b","ayuda":"","predeterminado":"","banderas":"","etiqueta_html":"text","orden":1,"mascara":"","adicionales":"","autoguardado":1,"fila_visible":1,"placeholder":"campo texto"}
-		 *
-		 *
-		 * for($default_campo->rewind(); $default_campo->valid(); $default_campo->next()) {
-			if ($default_campo->key() != "archivos") {
-				array_push($sql_campos, $default_campo->key());
-				if ($default_campo->key() == "nombre") {
-					$valor = strval($default_campo->current()) . "_" . rand();
-				} else {
-					$valor = strval($default_campo->current());
-				}
-				array_push($sql_valores, $valor);
-			} else {
-				$func = $default_campo->getChildren();
-				if (count($func)) {
-					foreach ($func as $key2 => $value2) {
-						if ($key2 == "archivo")
-							array_push($archivos, strval($value2[0]));
-						else if ($key2 == "funcion")
-							array_push($funciones, strval($value2[0]));
-					}
-				}
-			}
-		}*/
 		if (in_array("formato_idformato", $sql_campos) === false) {
 			array_push($sql_campos, 'formato_idformato');
 			array_push($sql_valores, $idpantalla);
@@ -77,7 +46,7 @@ function adicionar_pantalla_campos($idpantalla, $idpantalla_componente, $tipo_re
 			$sql2 = "INSERT INTO campos_formato(" . implode(",", $sql_campos) . ") VALUES('" . implode("','", $sql_valores) . "')";
 
 			$retorno["sql"] = $sql2;
-			phpmkr_query($sql2);
+			phpmkr_query($sql2) or die($sql2);
 			$idcampo = phpmkr_insert_id();
 			$retorno["sql"]=$sql2;
 			if ($idcampo) {

@@ -16,7 +16,7 @@
         "maxLength": 255,
         "required": true
       },
-      "fs_estilo": {
+      "fs_opciones": {
         "type": "object",
         "title": "",
         "properties": {
@@ -40,19 +40,17 @@
               "not_between"
             ]
           },
-          "decimales_1": {
-            "type": "number",
-            "numericEntry": true
+          "valor_1": {
+            "type": "number"
           },
-          "decimales_2": {
-            "type": "number",
-            "numericEntry": true
+          "valor_2": {
+            "type": "number"
           }
         },
         "dependencies": {
           "decimales": "con_decimales",
-          "decimales_1": "criterio",
-          "decimales_2": "criterio"
+          "valor_1": "criterio",
+          "valor_2": "criterio"
         }
       },
       "fs_acciones": {
@@ -72,14 +70,15 @@
       "fs_nombre": {
         "type": "hidden"
       },
-      "fs_estilo": {
+      "fs_opciones": {
         "fields": {
           "con_decimales": {
             "rightLabel": "Incluye decimales"
           },
           "decimales": {
-            "type": "number",
-            "validate": true
+            "validate": true,
+            "inputType": "number",
+            "data": {"min" : 0, "max": 9}
           },
           "criterio": {
             "type": "select",
@@ -95,9 +94,10 @@
               "No entre"
             ]
           },
-          "decimales_1": {
-            "type": "number",
+          "valor_1": {
             "validate": true,
+            "inputType": "number",
+            "data": {"min" : 0},
             "dependencies": {
               "criterio": [
                 "max_lt",
@@ -108,9 +108,10 @@
               ]
             }
           },
-          "decimales_2": {
-            "type": "number",
+          "valor_2": {
             "validate": true,
+            "inputType": "number",
+            "data": {"min" : 1},
             "dependencies": {
               "criterio": [
                 "between",

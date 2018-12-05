@@ -16,7 +16,7 @@
         "maxLength": 255,
         "required": true
       },
-      "fs_estilo": {
+      "fs_opciones": {
         "type": "object",
         "title": "",
         "properties": {
@@ -69,7 +69,7 @@
       "fs_nombre": {
         "type": "hidden"
       },
-      "fs_estilo": {
+      "fs_opciones": {
         "fields": {
           "tipo": {
             "vertical": false,
