@@ -48,7 +48,20 @@ function menu_principal_documento($documentId, $transferId = 0){
         $traceModules = moduleAccess($documentId, "informacion_menu_intermedio", array("tipo" => 2));
         $otherModules = moduleAccess($documentId, "otros_menu_intermedio", array("tipo" => 2));
     }
-    ?>    
+    ?>
+    <style>
+    a.fa-paperclip {
+      position: relative;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    span.badge-important {
+      position: absolute;
+      font-size: 0.5em;
+      top: -9px;
+      left: 1px;
+    }
+    </style>    
     <div class="col-12 px-0 mx-0">
         <div class="row m-0">
             <div class="col-auto px-1">
