@@ -110,7 +110,7 @@ class Funcionario extends Model {
     {
         global $ruta_db_superior;
 
-        $tempRoute = $ruta_db_superior . 'temporal/temporal_' . $this->login;
+        $tempRoute = $ruta_db_superior .$_SESSION["ruta_temp_funcionario"];
         $Storage = new SaiaStorage("archivos");
         $Image = json_decode($this->$image);
 
@@ -136,7 +136,7 @@ class Funcionario extends Model {
                     }
                 }
 
-                return 'temporal/temporal_' . $this->login . '/' . $fileName;
+                return $_SESSION["ruta_temp_funcionario"]. '/' . $fileName;
             }
         }else{
             $avatar = new LasseRafn\InitialAvatarGenerator\InitialAvatar();

@@ -1040,26 +1040,27 @@ function unread($iddocumento, $fecha){
         return '';
 }
 
-function has_files($iddocumento){
-    global $conn;
-
-    $anexos = busca_filtro_tabla('idanexos', 'anexos', 'documento_iddocumento ='. $iddocumento, '', $conn);
-
-    if($anexos['numcampos']){
-        return '<span class="my-0 text-center h6"><i class="fa fa-paperclip"></i></span>';
-    }else{
-        $paginas = busca_filtro_tabla('consecutivo', 'pagina', 'id_documento ='.$iddocumento, '', $conn);
-        if($paginas['numcampos']){
-            return '<span class="my-0 text-center h6"><i class="fa fa-paperclip"></i></span>';
-        }
+function has_files($iddocumento) {
+  global $conn,$ruta_db_superior;
+  $html = '';
+  if ($iddocumento) {
+    $anexos = busca_filtro_tabla('count(*) as cant', 'anexos', 'documento_iddocumento =' . $iddocumento, '', $conn);
+    $paginas = busca_filtro_tabla('count(*) as cant', 'pagina', 'id_documento =' . $iddocumento, '', $conn);
+    if ($anexos[0]['cant'] || $paginas[0]['cant']) {
+      $total=$anexos[0]["cant"]+$paginas[0]['cant'];
+      $html = '<span class="my-0 text-center h6">
+      <a href="'.$ruta_db_superior.'views/documento/paginas.php?iddoc='.$iddocumento.'" class="fa fa-paperclip hint-text">
+        <span class="badge badge-important">'.$total.'</span>
+      </a>
+      </span>';
     }
-
-    return '';
+  }
+  return $html;
 }
 
 function priority($documentId){
     global $conn;
-    
+    $class = 'text-dark';
     $findPriority = busca_filtro_tabla('prioridad', 'prioridad_documento', 'documento_iddocumento=' . $documentId, '', $conn);
     if(!$findPriority['numcampos'] || !$findPriority[0]['prioridad']){
         $style = 'style="display:none"';
