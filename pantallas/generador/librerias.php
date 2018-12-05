@@ -122,6 +122,37 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1) {
 	}
 }
 
+function kma_valor_campo($tiqueta_html, $opciones, $estilo) {
+    switch ($tiqueta_html) {
+        case "radio":
+        case "checkbox":
+        case "select":
+            //viene en fs_valor.item y es un array con las opciones. Toca convertirlos a 1,1;2,2;
+            ;
+            break;
+        case "spin":
+        case "moneda":
+            //viene en fs_opciones y tiene con_decimale(boolean) decimales(int), criterio donde criterio puede ser  "max_lt", "max", "min_gt", "min", "between", "not_between"
+            // Si viene criterio = "between" o "not_between" => se toman valor_1 y valor_2, sino solo valor_1
+            ;
+            break;
+        case "datetime":
+            //viene en fs_opciones y tiene tipo(date, datetime), criterio donde criterio puede ser  "max_lt", "max", "min_gt", "min", "between", "not_between"
+            // Si viene criterio = "between" o "not_between" => se toman fecha_1 y fecha_2, sino solo fecha_1
+            ;
+            break;
+        case "archivo":
+            //viene en fs_opciones.tipos es una lista separada por comas de los tipos pdf, doc, docx, jpg, jpeg, gif, png, bmp, xls, xlsx, ppt,
+            // fs_opciones.longitud define el tam max t fs_opciones.cantidad define si es unico o multiple
+            // se debe convertir a: csv|CSV|xls|XLS|xlsx|XLSX@unico
+            break;
+        default:
+            ;
+            break;
+
+    }
+}
+
 function load_pantalla_campos($idpantalla_campos, $tipo_retorno = 1, $generar_archivo = "", $accion = '', $campos_pantalla = '') {
 	global $ruta_db_superior;
 	$retorno = array(

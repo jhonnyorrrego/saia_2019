@@ -16,7 +16,7 @@
         "maxLength": 255,
         "required": true
       },
-      "fs_valor": {
+      "fs_opciones": {
         "type": "object",
         "properties": {
           "tipos": {
@@ -51,7 +51,7 @@
       "fs_nombre": {
         "type": "hidden"
       },
-      "fs_valor": {
+      "fs_opciones": {
         "fields": {
           "longitud": {
             "inputType": "number",
@@ -72,5 +72,10 @@
         "type": "textarea"
       }
     }
+  },
+  "data": {
+	  "fs_opciones": {
+	  	"tipos": "pdf,doc,docx,jpg,jpeg,gif,png,bmp,xls,xlsx,ppt"
+	  }
   }
 }
