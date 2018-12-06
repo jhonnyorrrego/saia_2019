@@ -16,7 +16,7 @@
         "maxLength": 255,
         "required": true
       },
-      "fs_valor": {
+      "fs_opciones": {
         "type": "array",
         "items": {
           "item": "Item 1",
@@ -42,9 +42,10 @@
       "fs_nombre": {
         "type": "hidden"
       },
-      "fs_valor": {
+      "fs_opciones": {
         "toolbarSticky": true,
-        "toolbarPosition": "right",
+        "toolbarPosition": "top",
+	"hideInitValidationError": true,
         "fields": {
           "item": {
             "label": "Item"

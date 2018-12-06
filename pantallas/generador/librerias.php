@@ -72,13 +72,18 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1) {
 	    "idpantalla_campos" => $idpantalla_campos
 	);
 	$pantalla_campos = busca_filtro_tabla("idcampos_formato,nombre,etiqueta_html", "campos_formato", "idcampos_formato=" . $idpantalla_campos, "", $conn);
-	$procesar = 0;
 	$acciones = array("a","e","b");
 	if ($pantalla_campos["numcampos"]) {
+	    $datos = $_REQUEST;
 	    $retorno["nombre_campo"] = $pantalla_campos[0]["nombre"];
 	    $retorno["etiqueta_html"] = $pantalla_campos[0]["etiqueta_html"];
+
+
+	    $datos = kma_valor_campo($datos, $pantalla_campos[0]["etiqueta_html"]);
+	    //die();
+
 		$sql_update = array();
-		foreach ($_REQUEST as $key => $value) {
+		foreach ($datos as $key => $value) {
 		    if (preg_match("/^fs_/", $key)) {
                 switch ($key) {
                     case 'fs_acciones':
@@ -109,6 +114,7 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1) {
 		}
 		if (count($sql_update)) {
 			$sql2 = "UPDATE campos_formato SET " . implode(", ", $sql_update) . " WHERE idcampos_formato=" . $idpantalla_campos;
+			$retorno["sql"] = $sql2;
 			phpmkr_query($sql2) or die($sql2);
 			$retorno["exito"] = 1;
 			$cadena = load_pantalla_campos($idpantalla_campos, 0);
@@ -122,35 +128,121 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1) {
 	}
 }
 
-function kma_valor_campo($tiqueta_html, $opciones, $estilo) {
+function kma_valor_campo($datos, $tiqueta_html) {
     switch ($tiqueta_html) {
         case "radio":
         case "checkbox":
         case "select":
-            //viene en fs_valor.item y es un array con las opciones. Toca convertirlos a 1,1;2,2;
-            ;
+            //viene en fs_opciones y es un array con las opciones. Toca convertirlos a 1,1;2,2;
+            if(is_array($datos["fs_opciones"]) && !empty($datos["fs_opciones"])) {
+                $num_items = count($datos["fs_opciones"]);
+                $valor_i = array();
+                for($i=0; $i < $num_items; $i++) {
+                    $valor_i[] = $i+1 . "," . $datos["fs_opciones"][$i];
+                }
+                if(!empty($valor_i)) {
+                 $datos["fs_valor"] = implode(";", $valor_i);
+                }
+            }
             break;
         case "spin":
         case "moneda":
-            //viene en fs_opciones y tiene con_decimale(boolean) decimales(int), criterio donde criterio puede ser  "max_lt", "max", "min_gt", "min", "between", "not_between"
-            // Si viene criterio = "between" o "not_between" => se toman valor_1 y valor_2, sino solo valor_1
-            ;
+                // viene en fs_opciones y tiene con_decimales(boolean) decimales(int), criterio donde criterio puede ser "max_lt", "max", "min_gt", "min", "between", "not_between"
+                // Si viene criterio = "between" o "not_between" => se toman valor_1 y valor_2, sino solo valor_1
+                // Debe quedar 0@1000@1@0 => Valor inicial: valor mínimo permitido
+                // Valor final: valor máximo permitido
+                // Incremento: incremento entre cada opcion
+                // Bloquear entrada por teclado: 1 o 0
+            if (is_array($datos["fs_opciones"]) && !empty($datos["fs_opciones"])) {
+                $ini = 0;
+                $fin = 1000;
+                $decimales = 0;
+                $incremento = 1;
+                if (isset($datos["fs_opciones"]["con_decimales"]) && isset($datos["fs_opciones"]["decimales"])) {
+                    $decimales = $datos["fs_opciones"]["decimales"];
+                }
+                if (isset($datos["fs_opciones"]["criterio"])) {
+                    $criterio = $datos["fs_opciones"]["criterio"];
+                    switch ($criterio) {
+                        case "max_lt":
+                            $fin = $datos["fs_opciones"]["valor_1"] - 1;
+                            break;
+                        case "max":
+                            $fin = $datos["fs_opciones"]["valor_1"];
+                            break;
+                        case "min":
+                            $ini = $datos["fs_opciones"]["valor_1"];
+                            break;
+                        case "min_gt":
+                            $ini = $datos["fs_opciones"]["valor_1"] + 1;
+                            break;
+                        case "between":
+                            $ini = $datos["fs_opciones"]["valor_1"];
+                            $fin = $datos["fs_opciones"]["valor_2"];
+                            if(empty($fin)) {
+                                $fin = 1000;
+                            }
+                            if($fin <= $ini) {
+                                $fin = $ini + 1;
+                            }
+                            break;
+                        case "not_between":
+                            break;
+                    }
+                    if($decimales) {
+                        $incremento = pow(10, -$decimales);
+                    }
+                    $datos["fs_valor"] = $ini . "@" . "$fin" . "@" . $incremento . "@0";
+                }
+            }
             break;
-        case "datetime":
+        case "fecha":
             //viene en fs_opciones y tiene tipo(date, datetime), criterio donde criterio puede ser  "max_lt", "max", "min_gt", "min", "between", "not_between"
             // Si viene criterio = "between" o "not_between" => se toman fecha_1 y fecha_2, sino solo fecha_1
-            ;
             break;
         case "archivo":
             //viene en fs_opciones.tipos es una lista separada por comas de los tipos pdf, doc, docx, jpg, jpeg, gif, png, bmp, xls, xlsx, ppt,
             // fs_opciones.longitud define el tam max t fs_opciones.cantidad define si es unico o multiple
             // se debe convertir a: csv|CSV|xls|XLS|xlsx|XLSX@unico
+            if (is_array($datos["fs_opciones"]) && !empty($datos["fs_opciones"])) {
+                $file_arr = array_map('trim', explode(',', $datos["fs_opciones"]["tipos"]));
+                $varios = "unico";
+                $cantidad = $datos["fs_opciones"]["cantidad"];
+                if($cantidad > 1) {
+                    $varios = "multiple";
+                }
+                $datos["fs_valor"] = implode("|", $file_arr) . "@" . $varios;
+            }
+            break;
+        case "etiqueta_parrafo":
+        case "etiqueta_titulo":
+            //viene en fs_opciones.texto
+            if(is_array($datos["fs_opciones"]) && !empty($datos["fs_opciones"])) {
+                $datos["fs_valor"] = $datos["fs_opciones"]["texto"];
+            }
+            break;
+        case "arbol_fancytree":
+            //Viene en fs_opciones
+            //{"url":"","checkbox":"radio","buscador":"0","funcion_select":"","funcion_click":"","funcion_dobleclick":""}
+            $texto_opc = [];
+            $texto_opc["funcionario"] = "arboles/arbol_funcionario.php?idcampofun=1";
+            $texto_opc["dependencia"] = "arboles/arbol_dependencia.php";
+            $texto_opc["cargo"] = "arboles/arbol_cargo.php";
+            $texto_opc["serie"] = "arboles/arbol_serie.php";
+
+            if(is_array($datos["fs_opciones"]) && !empty($datos["fs_opciones"])) {
+                $datos_ft = $datos["fs_opciones"];
+                $idx = $datos_ft["url"];
+                $url_ft = $texto_opc[$idx];
+                $datos_ft["url"] = $url_ft;
+                $datos["fs_valor"] = json_encode($datos_ft, JSON_NUMERIC_CHECK);
+            }
             break;
         default:
             ;
             break;
-
     }
+    return $datos;
 }
 
 function load_pantalla_campos($idpantalla_campos, $tipo_retorno = 1, $generar_archivo = "", $accion = '', $campos_pantalla = '') {

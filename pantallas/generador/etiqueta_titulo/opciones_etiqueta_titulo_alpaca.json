@@ -4,11 +4,16 @@
     "description": "Editar propiedades",
     "type": "object",
     "properties": {
-      "fs_valor": {
-        "type": "string",
-        "title": "Título",
-        "maxLength": 255,
-        "required": true
+      "fs_opciones": {
+        "type": "object",
+        "properties": {
+          "texto": {
+            "type": "string",
+            "title": "Título",
+            "maxLength": 255,
+            "required": true
+          }
+        }
       },
       "fs_ayuda": {
         "type": "string",

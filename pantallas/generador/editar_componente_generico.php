@@ -187,7 +187,7 @@ echo librerias_jquery("2.2");
 		opciones_form["postRender"] = function() {
 			$(".alpaca-required-indicator").html("<span style='font-size:18px;color:red;'>*</span>");
 			$(".alpaca-field-radio").find("label").css("display", "block");
-			console.log("Componente " + nombre_componente);
+			//console.log("Componente " + nombre_componente);
 			if(con_numeros.includes(nombre_componente)) {
 				$("input[type='number'][data-min]").each(function() {
 					 var valor = $(this).data("min");
@@ -205,7 +205,6 @@ echo librerias_jquery("2.2");
 	});
 
 	function funcion_enviar(datos, idpantalla_campo) {
-		console.log("funcion envio");
 		/*if(datos.fs_valor) {
 			datos.fs_valor = JSON.stringify(datos.fs_valor)
 		}
@@ -220,8 +219,12 @@ echo librerias_jquery("2.2");
     	datos["tipo_retorno"] = 1;
     	datos["idpantalla_campos"] = idpantalla_campo;
 
-    	console.log(datos);
+    	//console.log(datos);
     	//return false;
+
+
+    	var evitar_html=["arbol_fancytree"];
+
     	$.ajax({
             type:'POST',
             url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias.php",
@@ -229,15 +232,17 @@ echo librerias_jquery("2.2");
             async: false,
             dataType: "json",
             success: function(objeto) {
-                console.log(objeto);
+                //console.log(objeto);
                 if(objeto && objeto.exito) {
-                        $('#cargando_enviar').html("Terminado ...");
-                        //$("#content").append(objeto.etiqueta_html);
-                        //setTimeout(notificacion_saia("Actualizaci&oacute;n realizada con &eacute;xito.","success","",2500),5000);
-                        $("#pc_"+idpantalla_campo, parent.document).find(".control-label").html(objeto.etiqueta);
-                        //$("#pc_"+idpantalla_campo,parent.document).replaceWith(objeto.codigo_html);
-                        //$("#pc_"+idpantalla_campo,parent.document).find(".elemento_formulario").attr("placeholder",objeto.placeholder);
-                        parent.hs.close();
+                    $('#cargando_enviar').html("Terminado ...");
+                    //$("#content").append(objeto.etiqueta_html);
+                    //setTimeout(notificacion_saia("Actualizaci&oacute;n realizada con &eacute;xito.","success","",2500),5000);
+                    $("#pc_"+idpantalla_campo, parent.document).find(".control-label").html(objeto.etiqueta);
+                    if(!evitar_html.includes(nombre_componente)) {
+                    	$("#pc_"+idpantalla_campo,parent.document).replaceWith(objeto.codigo_html);
+                    }
+                    //$("#pc_"+idpantalla_campo,parent.document).find(".elemento_formulario").attr("placeholder",objeto.placeholder);
+                    parent.hs.close();
                 }
             }
         });

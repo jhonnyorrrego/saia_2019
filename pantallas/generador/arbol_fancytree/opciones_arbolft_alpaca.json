@@ -23,6 +23,7 @@
           "url": {
             "title": "Tipo",
             "type": "string",
+            "required": true,
             "enum": [
               "funcionario",
               "dependencia",
@@ -39,12 +40,7 @@
             ]
           },
           "buscador": {
-            "type": "string",
-            "title": "Obligatoriedad",
-            "enum": [
-              "1",
-              "0"
-            ]
+            "type": "boolean"
           }
         }
       },
@@ -85,15 +81,10 @@
             ]
           },
           "buscador": {
-            "type": "radio",
-            "vertical": false,
-            "removeDefaultNone": true,
-            "optionLabels": [
-              "No",
-              "Si"
-            ]
+            "rightLabel": "Tiene buscador"
           }
-        },
+        }
+      },
       "fs_obligatoriedad": {
         "type": "checkbox",
         "rightLabel": "Obligatorio"
@@ -105,7 +96,6 @@
       "fs_ayuda": {
         "rows": 3,
         "type": "textarea"
-        }
       }
     }
   }

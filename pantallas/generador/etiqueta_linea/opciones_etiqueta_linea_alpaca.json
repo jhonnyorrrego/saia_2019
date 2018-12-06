@@ -4,7 +4,7 @@
     "description": "Editar propiedades",
     "type": "object",
     "properties": {
-      "fs_valor": {
+      "fs_opciones": {
         "type": "string",
         "title": "Etiqueta del campo",
         "maxLength": 255,

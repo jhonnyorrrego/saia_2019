@@ -4,11 +4,16 @@
     "description": "Editar propiedades",
     "type": "object",
     "properties": {
-      "fs_valor": {
-        "type": "string",
-        "title": "Texto descriptivo",
-        "maxLength": 2000,
-        "required": true
+      "fs_opciones": {
+        "type": "object",
+        "properties": {
+          "texto": {
+            "type": "string",
+            "title": "Texto descriptivo",
+            "maxLength": 2000,
+            "required": true
+          }
+        }
       },
       "fs_ayuda": {
         "type": "string",
@@ -18,9 +23,13 @@
   },
   "options": {
     "fields": {
-      "fs_valor": {
-        "type": "textarea",
-        "rows": 3
+      "fs_opciones": {
+        "fields": {
+          "texto": {
+            "type": "textarea",
+            "rows": 3
+          }
+        }
       },
       "fs_ayuda": {
         "rows": 3,

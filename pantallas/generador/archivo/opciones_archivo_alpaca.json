@@ -32,6 +32,7 @@
           "cantidad": {
             "type": "number",
             "title": "Cantidad de anexos",
+            "required": true,
             "minimum": 1,
             "maximum": 10
           }
@@ -55,11 +56,17 @@
         "fields": {
           "longitud": {
             "inputType": "number",
-            "data": {"min" : 1, "max": 20}
+            "data": {
+              "min": 1,
+              "max": 20
+            }
           },
           "cantidad": {
             "inputType": "number",
-            "data": {"min" : 1, "max": 10}
+            "data": {
+              "min": 1,
+              "max": 10
+            }
           }
         }
       },
@@ -74,8 +81,8 @@
     }
   },
   "data": {
-	  "fs_opciones": {
-	  	"tipos": "pdf,doc,docx,jpg,jpeg,gif,png,bmp,xls,xlsx,ppt"
-	  }
+    "fs_opciones": {
+      "tipos": "pdf,doc,docx,jpg,jpeg,gif,png,bmp,xls,xlsx,ppt"
+    }
   }
 }
