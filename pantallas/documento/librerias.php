@@ -10,7 +10,7 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 
-include_once $ruta_db_superior . 'db.php';
+include_once $ruta_db_superior . "db.php";
 include_once $ruta_db_superior . "pantallas/documento/librerias_flujo.php";
 include_once $ruta_db_superior . "pantallas/lib/librerias_fechas.php";
 include_once $ruta_db_superior . "workflow/libreria_paso.php";
@@ -1040,22 +1040,29 @@ function unread($iddocumento, $fecha){
         return '';
 }
 
-function has_files($iddocumento) {
-  global $conn,$ruta_db_superior;
-  $html = '';
-  if ($iddocumento) {
-    $anexos = busca_filtro_tabla('count(*) as cant', 'anexos', 'documento_iddocumento =' . $iddocumento, '', $conn);
-    $paginas = busca_filtro_tabla('count(*) as cant', 'pagina', 'id_documento =' . $iddocumento, '', $conn);
-    if ($anexos[0]['cant'] || $paginas[0]['cant']) {
-      $total=$anexos[0]["cant"]+$paginas[0]['cant'];
-      $html = '<span class="my-0 text-center h6">
-      <a href="'.$ruta_db_superior.'views/documento/paginas.php?iddoc='.$iddocumento.'" class="fa fa-paperclip hint-text">
-        <span class="badge badge-important">'.$total.'</span>
-      </a>
-      </span>';
+function has_files($documentId, $showConunter = false) {
+    global $conn,$ruta_db_superior;
+
+    $response = '';
+    if ($documentId) {
+        $files = busca_filtro_tabla('count(*) as cant', 'anexos', 'documento_iddocumento =' . $documentId, '', $conn);
+        $pages = busca_filtro_tabla('count(*) as cant', 'pagina', 'id_documento =' . $documentId, '', $conn);
+
+        if ($files[0]['cant'] || $pages[0]['cant']) {
+            if($showConunter){
+                $total = $files[0]["cant"] + $pages[0]['cant'];
+                
+                $response = '<span class="my-0 text-center h6">
+                    <a href="' . $ruta_db_superior . 'views/documento/paginas.php?iddoc=' . $documentId . '" class="fa fa-paperclip notification">
+                        <span class="badge badge-important counter">' . $total . '</span>
+                    </a>
+                </span>';
+            }else{
+                $response = '<span class="my-0 text-center h6 cursor"><i class="fa fa-paperclip"></i></span>';
+            }
+        }
     }
-  }
-  return $html;
+    return $response;
 }
 
 function priority($documentId){

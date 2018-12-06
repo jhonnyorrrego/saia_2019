@@ -61,8 +61,6 @@ $libraries = [
             if(data.node.isFolder()) {
                 data.tree.activateKey(nodeId);
             }
-
-            console.log(nodeId);
         }
     </script>
     <?= $Tree->generar_html() ?>

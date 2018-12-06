@@ -3,7 +3,7 @@ $(function(){
     var baseUrl = $("#baseUrl").data('baseurl');
     sessionStorage.setItem('documentSelected', 0);
 
-    $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/topModal/topModal.js`);
+    //$.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/topModal/topModal.js`);
 
     $('#table').on('check.bs.table uncheck.bs.table', function () {
         if ($(this).data('selections').length){
@@ -83,20 +83,20 @@ $(function(){
     });
 
     $(document).on('click', '.btn_expiration', function(){
-        topModal({
+        top.topModal({
             url: `${baseUrl}views/documento/asignar_vencimiento.php`
         })
     });
 
     $(document).on('click', '#share_document', function(){
-        topModal({
+        top.topModal({
             url: `${baseUrl}views/documento/transferir.php`,
             title: 'Reenviar'
         })
     });
 
     $(document).on('click', '#mark_document', function(){
-        topModal({
+        top.topModal({
             url: `${baseUrl}views/documento/etiquetar.php`
         })
     });

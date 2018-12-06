@@ -7,22 +7,27 @@ class Session {
     init() {
         let session = this;
         
-        $.ajax({
-            type:'GET',
-            dataType:'json',
-            url: this.baseUrl + 'app/funcionario/consulta_funcionario.php',
-            data:{
-                type: 'session'
-            },
-            async:false,
-            success: function (response) {
-                if (response.success) {
-                    session.user = response.data;
-                }else{
-                    Session.violation('Debe iniciar sessión');
+        if(!localStorage.getItem('user')){
+            $.ajax({
+                type:'GET',
+                dataType:'json',
+                url: this.baseUrl + 'app/funcionario/consulta_funcionario.php',
+                data:{
+                    type: 'session'
+                },
+                async:false,
+                success: function (response) {
+                    if (response.success) {
+                        session.user = response.data;
+                    }else{
+                        Session.violation('Debe iniciar sessión');
+                    }
                 }
-            }
-        })
+            })
+        }else{
+            let data = localStorage.getItem('user');
+            session.user = JSON.parse(data);
+        }
     }
 
     set baseUrl(route) {
@@ -36,10 +41,12 @@ class Session {
     set user(data) {
         this._user = data;
 
-        if(data.iduser){
+        if(data.iduser){            
+            localStorage.setItem('user', JSON.stringify(data));
             localStorage.setItem('key', data.iduser);
         }else{
             localStorage.setItem('key', 0);
+            localStorage.setItem('userImage', '');
         }
     }
 
