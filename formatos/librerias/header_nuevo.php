@@ -12,7 +12,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . "db.php";
 include_once $ruta_db_superior . "assets/librerias.php";
-include_once $ruta_db_superior . "pantallas/documento/menu_principal_documento.php";
+include_once $ruta_db_superior . "views/documento/encabezado.php";
 include_once $ruta_db_superior . "formatos/librerias/encabezado_pie_pagina.php";
 
 global $conn;
@@ -210,7 +210,7 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
 <?php if ($_REQUEST["tipo"] != 5): ?>
     <div class="container-fluid bg-master-lightest px-4">
         <div class="row sticky-top pt-2 bg-master-lightest px-3">
-            <?= menu_principal_documento($iddocumento, $idtransferencia) ?>
+            <?= plantilla($iddocumento, $idtransferencia) ?>
         </div>
         <div id="documento" class="row px-3">
             <div id="pag-0" class="col-12 page_border bg-white">

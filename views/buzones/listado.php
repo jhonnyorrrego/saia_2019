@@ -121,11 +121,13 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
                     $("#pagination_other_info").text('Seleccionados: ' + selections.length);
                 });
 
-                $("#header_list").load(baseUrl+encabezado,{
-                    idbusqueda_componente: component
-                }, function(){
-                    $('[data-toggle="tooltip"]').tooltip();
-                });
+                if(encabezado){
+                    $("#header_list").load(baseUrl+encabezado,{
+                        idbusqueda_componente: component
+                    }, function(){
+                        $('[data-toggle="tooltip"]').tooltip();
+                    });
+                }
             });
         </script>
         <?php

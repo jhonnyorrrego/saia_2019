@@ -103,8 +103,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                     <div class="form-group form-group-default">
                                         <label><i class="fa fa-lock"></i> Contraseña</label>
                                         <div class="controls">
-                                            <input type="password" class="form-control" name="password" placeholder="Clave de acceso"
-                                                required>
+                                            <input type="password" class="form-control" name="password" placeholder="Clave de acceso" required autocomplete>
                                         </div>
                                     </div>
                                 </div>
@@ -251,41 +250,39 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                     resize();
                 }
             })();
-            
-            function loadCarousel(){
-                if (['md','lg','xl'].indexOf(breakpoint) != -1 && !$('#homepageItems').children().length ) {
-                    $.ajax({
-                        url: baseUrl + 'app/carrusel/consulta_carousel.php',
-                        dataType: 'json',
-                        success: function (response) {
-                            var data = '',
-                                indicator = '';
 
-                            for (var i = 0; i < response.data.length; i++) {
-                                data += `
-                                <div class="carousel-item mx-0 px-0">
-                                    <img src="` + baseUrl + response.data[i].image + `" alt="` + response.data[i].image + `">
-                                    <div class="carousel-caption d-none d-md-block bg-info" style="opacity: 0.7">
-                                        <h3 class="text-white" style="opacity: 1">`+ response.data[i].title + `</h3>
-                                        <p class="text-white" style="opacity: 1">` + response.data[i].content + `<p>
-                                    </div>
-                                </div>`;
-                                indicator += '<li data-target="#myCarousel" data-slide-to="' + i + '"></li>';
-                            }
-                            
-                            $('#homepageItems').append(data);
-                            $('#indicators').append(indicator);
-                            $('.carousel-item > img')
-                                .attr('height', $(window).height() - $("#footer").height())
-                                .attr('width', $("#carousel-container").width());
-                            $('.carousel-item').first().addClass('active');
-                            $('.carousel-indicators > li').first().addClass('active');                        
-                            $("#myCarousel").carousel();                        
+            (function loadCarousel(){
+                $.ajax({
+                    url: baseUrl + 'app/carrusel/consulta_carousel.php',
+                    dataType: 'json',
+                    success: function (response) {
+                        var data = '',
+                            indicator = '';
+
+                        for (var i = 0; i < response.data.length; i++) {
+                            data += `
+                            <div class="carousel-item mx-0 px-0">
+                                <img src="` + baseUrl + response.data[i].image + `" alt="` + response.data[i].image + `">
+                                <div class="carousel-caption d-none d-md-block bg-info" style="opacity: 0.7">
+                                    <h3 class="text-white" style="opacity: 1">`+ response.data[i].title + `</h3>
+                                    <p class="text-white" style="opacity: 1">` + response.data[i].content + `<p>
+                                </div>
+                            </div>`;
+                            indicator += '<li data-target="#myCarousel" data-slide-to="' + i + '"></li>';
                         }
-                    });
-                }
-            }
-
+                        
+                        $('#homepageItems').append(data);
+                        $('#indicators').append(indicator);
+                        $('.carousel-item > img')
+                            .attr('height', $(window).height() - $("#footer").height())
+                            .attr('width', $("#carousel-container").width());
+                        $('.carousel-item').first().addClass('active');
+                        $('.carousel-indicators > li').first().addClass('active');                        
+                        $("#myCarousel").carousel();                        
+                    }
+                });
+            })()
+            
             $(window).resize( function(){
                 resize();
             });
@@ -297,9 +294,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             }, false);
 
             function resize(){
-                //$("#content").height($(document).height() - $("#footer").height());
                 breakpoint = checkSize();
-                loadCarousel();
                 $('.carousel-item > img')
                     .attr('height', $(window).height() - $("#footer").height())
                     .attr('width', $("#carousel-container").width());
