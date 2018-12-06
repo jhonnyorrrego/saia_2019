@@ -145,7 +145,9 @@ class StorageUtils {
 		if ($resolver_ruta["error"] === false) {
 			$ruta = $resolver_ruta['ruta'];
 			$clase = $resolver_ruta['clase'];
-			$contenido_binario = $clase -> get_filesystem() -> read($ruta);
+            if($clase -> get_filesystem() -> has($ruta)){
+                $contenido_binario = $clase -> get_filesystem() -> read($ruta);   
+            }
 		}
 		return ($contenido_binario);
 	}

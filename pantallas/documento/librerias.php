@@ -1053,7 +1053,7 @@ function has_files($documentId, $showConunter = false) {
                 $total = $files[0]["cant"] + $pages[0]['cant'];
                 
                 $response = '<span class="my-0 text-center h6">
-                    <a href="' . $ruta_db_superior . 'views/documento/paginas.php?iddoc=' . $documentId . '" class="fa fa-paperclip notification">
+                    <a href="' . $ruta_db_superior . 'views/pagina/pagina.php?iddoc=' . $documentId . '" class="fa fa-paperclip notification">
                         <span class="badge badge-important counter">' . $total . '</span>
                     </a>
                 </span>';

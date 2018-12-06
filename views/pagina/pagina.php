@@ -17,7 +17,9 @@ include_once $ruta_db_superior . 'db.php';
 include_once $ruta_db_superior . "pantallas/documento/menu_principal_documento.php";
 include_once $ruta_db_superior . 'models/pagina.php';
 $iddocumento = $_REQUEST["iddoc"];
-$paginas = Pagina::getAllResultDocument($iddocumento);
+
+$iddocumento = 1;
+$paginas = Pagina::getAllResultDocument($iddocumento, "pagina asc");
 ?>
 <!DOCTYPE >
 <html>
@@ -26,29 +28,46 @@ $paginas = Pagina::getAllResultDocument($iddocumento);
 		<link href="<?=$ruta_db_superior; ?>assets/theme/assets/plugins/owl-carousel/assets/owl.theme.default.min.css" rel="stylesheet" type="text/css" media="screen" />
 	</head>
 	<body>
-    <div class="container-fluid bg-master-lightest px-4">
-        <div class="row sticky-top pt-2 bg-master-lightest px-3">
+		<div class="container-fluid bg-master-lightest px-4">
+			<div class="row sticky-top pt-2 bg-master-lightest px-3">
 				<?= menu_principal_documento($iddocumento) ?>
+			</div>
+			<div class="row">
+				<div class="col-12">
+				    <?php if(Utilities::permisoModulo("editar_paginas")):?>
+					<a href="listar_pagina.php?iddoc=<?=$iddocumento; ?>" class="btn btn-mini float-right"><i class="fa fa-edit"></i></a>
+					<?php endif;?>
+				</div>
 			</div>
 			<hr/>
 			<div class="row">
 				<div class="col-12 owl-carousel text-center">
-					<?php for($i=0;$i<$paginas["numcampos"];$i++):?>
-                        <div data-image="<?=$paginas["img_small"][$i]["url"]; ?>" data-src="<?=$paginas["img_big"][$i]["url"]; ?>"></div>
-                    <?php endfor; ?>
+					<?php
+                    for ($i = 0; $i < $paginas["numcampos"]; $i++): 
+                        $fileMin = $paginas["data"][$i] -> getUrlImagenTemp();
+                        $fileMax = $paginas["data"][$i] -> getUrlRutaTemp();
+                        if ($fileMin !== false && $fileMax !== false):?>
+                            <div data-image="<?=$fileMin;?>" data-src="<?=$fileMax;?>" data-toggle="tooltip" data-placement="bottom" title="P&aacute;gina No <?=$paginas["data"][$i] -> getPagina(); ?>"></div>
+                        <?php
+                        endif;
+                    endfor;
+					?>                 
 				</div>
 			</div>
 			<hr/>
 			<div class="row">
 				<div class="col-12">
-					<img id="img-pagina" class="w-100" src="<?=$paginas["img_big"][0]["url"]; ?>"/>
+				    <?php if($paginas["numcampos"]):?>
+				    <span id="num_pagina" class="float-right">P&aacute;gina No <?=$paginas["data"][0] -> getPagina(); ?></span>
+					<img id="img-pagina" class="w-100" src="<?=$paginas["data"][0] -> getUrlRutaTemp(); ?>"/>
+					<?php endif; ?>
 				</div>
 			</div>
 
 		</div>
 		<script src="<?= $ruta_db_superior; ?>assets/theme/assets/plugins/owl-carousel/owl.carousel.min.js" type="text/javascript"></script>
 		<script>
-			$(document).ready(function() {
+			$(document).ready(function() {			    
 				$('.owl-carousel > div').each(function() {
 					var img = $(this).data('image');
 					$(this).css({
@@ -60,6 +79,9 @@ $paginas = Pagina::getAllResultDocument($iddocumento);
 					$(this).on('click', function(event) {
 						var img2 = $(this).data('src');
 						$("#img-pagina").attr("src", img2);
+
+						var title = $(this).attr('title');
+						$("#num_pagina").empty().text(title);
 					});
 				});
 
