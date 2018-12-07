@@ -24,7 +24,7 @@ if (@$_REQUEST["idpantalla_campos"]) {
     $pantalla_campos = get_pantalla_campos($_REQUEST["idpantalla_campos"], 0);
 
     $valores["fs_nombre"] = $pantalla_campos[0]["nombre"];
-    $valores["fs_etiqueta"] = $pantalla_campos[0]["etiqueta"];
+    $valores["fs_etiqueta"] = html_entity_decode($pantalla_campos[0]["etiqueta"]);
 
     $valores["fs_obligatoriedad"] = false;
     if($pantalla_campos[0]["obligatoriedad"]) {

@@ -23,6 +23,7 @@
           "tipo": {
             "title": "Tipo de Campo",
             "type": "string",
+            "required": true,
             "enum": [
               "date",
               "datetime"

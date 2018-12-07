@@ -238,6 +238,22 @@ function kma_valor_campo($datos, $tiqueta_html) {
                 $datos["fs_valor"] = json_encode($datos_ft, JSON_NUMERIC_CHECK);
             }
             break;
+        case "ejecutor":
+            //Viene en fs_opciones: tipo: "multiple" o "unico"
+            // fs_opciones.adicional : Informacion adicional "cargo,empresa,direccion,telefono,email,titulo,ciudad"
+            // Siempre va "nombre,identificacion"
+
+            if(is_array($datos["fs_opciones"]) && !empty($datos["fs_opciones"])) {
+                $tipo = $datos["fs_opciones"]["tipo"];
+                $adicional = "direccion,telefono,email";
+                if(isset($datos["fs_opciones"]["adicional"])) {
+                    $adicional = $datos["fs_opciones"]["adicional"];
+                }
+                $url_ft = $texto_opc[$idx];
+                $datos_ft["url"] = $url_ft;
+                $datos["fs_valor"] = $tipo . "@nombre,identificacion@" . $adicional;
+            }
+            break;
         default:
             ;
             break;

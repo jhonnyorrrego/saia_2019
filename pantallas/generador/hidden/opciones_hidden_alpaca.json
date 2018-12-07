@@ -16,30 +16,11 @@
         "maxLength": 255,
         "required": true
       },
-      "fs_estilo": {
-        "type": "object",
-        "title": "",
-        "properties": {
-          "size": {
-            "title": "Ancho del campo",
-            "type": "string",
-            "enum": [
-              "10",
-              "25",
-              "50"
-            ]
-          }
-        }
-      },
       "fs_acciones": {
         "type": "boolean"
       },
       "fs_obligatoriedad": {
         "type": "boolean"
-      },
-      "fs_ayuda": {
-        "type": "string",
-        "title": "Ayuda para el usuario"
       }
     }
   },
@@ -48,31 +29,9 @@
       "fs_nombre": {
         "type": "hidden"
       },
-      "fs_estilo": {
-        "fields": {
-          "size": {
-            "type": "select",
-            "sort": false,
-            "removeDefaultNone": false,
-            "optionLabels": [
-              "Pequeño",
-              "Mediano",
-              "Grande"
-            ]
-          }
-        }
-      },
       "fs_obligatoriedad": {
         "type": "checkbox",
         "rightLabel": "Obligatorio"
-      },
-      "fs_acciones": {
-        "type": "checkbox",
-        "rightLabel": "Incluirse en la descripción del formato"
-      },
-      "fs_ayuda": {
-        "rows": 3,
-        "type": "textarea"
       }
     }
   }

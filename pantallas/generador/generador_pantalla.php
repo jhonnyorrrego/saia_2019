@@ -933,7 +933,7 @@ $(document).on('click', '.element', function() {
 	    wrapperClassName: 'highslide-wrapper drag-header',
 	    preserveContent: false,
 	    width: 600,
-	    height: 400
+	    height: 500
 	};
 	hs.htmlExpand(null, opciones);
 });
