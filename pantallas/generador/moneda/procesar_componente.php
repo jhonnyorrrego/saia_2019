@@ -36,7 +36,7 @@ function procesar_moneda($idcampo = '', $seleccionado = '', $accion = '', $campo
     $texto .= ' id="pc_' . $idcampo . '" nombre="' . $campo["nombre"] . '">';
     $texto .= clase_eliminar_pantalla_componente($idcampo);
     $texto .= '<label class="control-label" for="' . $campo["nombre"] . '"><b>' . $campo["etiqueta"] . $obligatorio . '</b></label>';
-    $texto .= '<div class="controls"><div id=" class="input-append">';
+    $texto .= '<div class="controls"><div class="input-prepend"><span class="add-on" style="padding-bottom: 1px;">$</span>';
     $texto .= '<input id="' . $campo["nombre"] . '" type="number" value="' . $valor . '" name="' . $campo["nombre"] . '">';
     $texto .= '</div></div></div>';
 

@@ -33,7 +33,7 @@ function procesar_etiqueta_titulo($idcampo = '', $seleccionado = '', $accion = '
     $texto = '<div class="control-group element" idpantalla_componente="' . $campo["idpantalla_componente"]. '"';
     $texto .= '" idpantalla_campo="' . $idcampo . '" id="pc_' . $idcampo . '" nombre="' . $campo["etiqueta_html"] . '">';
     $texto .= clase_eliminar_pantalla_componente($idcampo);
-    $texto .= "<p>$datos</p>";
+    $texto .= "<h5>$datos</h5>";
     $texto .= "\n</div>";
 
     return ($texto);

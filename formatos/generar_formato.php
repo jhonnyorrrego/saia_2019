@@ -569,7 +569,7 @@ class GenerarFormato {
      * </Clase>
      */
     private function codifica($texto) {
-        return mayusculas($texto);
+        return $texto;
     }
 
     /*
@@ -704,7 +704,7 @@ class GenerarFormato {
                     $nombre_func = str_replace("{*", "", $campos[$h]["valor"]);
                     $nombre_func = str_replace("*}", "", $nombre_func);
 
-                    $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '"><label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>';
+                    $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '"><label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>';
                     $parametros = $this->idformato . "," . $campos[$h]["idcampos_formato"];
                     $texto .= $this->arma_funcion($nombre_func, $parametros, $accion) . "</div>";
                     array_push($fun_campos, $nombre_func);
@@ -718,25 +718,25 @@ class GenerarFormato {
                         case "etiqueta":
                         case "etiqueta_titulo":
                             $texto .='<div class="card-body" id="tr_' . $campos[$h]["nombre"] . '">
-                                        <h5 title="' . $campos[$h]["ayuda"] . '" id="' . $campos[$h]["nombre"] . '"><center>' . $campos[$h]["valor"] . '</center></h5>
+                                        <h5 title="' . $campos[$h]["ayuda"] . '" id="' . $campos[$h]["nombre"] . '"><center><span class="etiqueta_titulo">' . $campos[$h]["valor"] . '</span></center></h5>
                                       </div>';
                             break;
                         case "etiqueta_parrafo":
                             $texto .='<p id="' . $campos[$h]["nombre"] . '">' . $campos[$h]["valor"] . '</p>';
                             break;
                         case "etiqueta_linea":
-                            $texto .='<hr id="' . $campos[$h]["nombre"] . '">';
+                            $texto .='<hr class="border border-info" id="' . $campos[$h]["nombre"] . '">';
                             break;
                         case "password":
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
-                     <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
+                     <label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
                      <input class="form-control" ' . $tabindex . ' type="password" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . " $adicionales " . ' value="' . $valor . '">
                     </div>';
                             $indice_tabindex++;
                             break;
                         case "textarea_cke":
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
-                     <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
+                     <label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
 <div class="celda_transparente">';
                             $idcampo_cke = $campos[$h]["nombre"];
                             $texto .= '<textarea ' . $tabindex . ' name="' . $campos[$h]["nombre"] . '" id="' . $idcampo_cke . '" cols="53" rows="3" class="form-control';
@@ -840,7 +840,7 @@ class GenerarFormato {
                                 $nivel_barra = "basico";
                             }
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
-                     <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
+                     <label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
 <div class="celda_transparente">
                      <textarea ' . $tabindex . ' name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" cols="53" rows="3" class="form-control tiny_' . $nivel_barra;
                             if ($campos[$h]["obligatoriedad"]) {
@@ -854,7 +854,7 @@ class GenerarFormato {
                             // si la fecha es obligatoria, que valide que no se vaya con solo ceros
                             $adicionales = str_replace("required", "required dateISO", $adicionales);
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
-                            <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
+                            <label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
                             <div class="input-group">
                             <input ' . $tabindex . ' type="text" class="form-control" ' . $adicionales . ' id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '">
                             <span class="input-group-text"><i class="fa fa-calendar"></i></span>
@@ -915,14 +915,14 @@ class GenerarFormato {
                         case "radio" :
 						/* En los campos de este tipo se debe validar que valor contenga un listado con las siguentes caracteristicas*/
                             $texto .='<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
-				                        <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
+				                        <label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
                                      ';
 
                             $texto .= $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . '</div>';
                             break;
                         case "link":
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
-                     <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>';
+                     <label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>';
                             if (strpos($adicionales, "class") !== false)
                                 $adicionales = str_replace("required", "required url", $adicionales);
                             else
@@ -936,13 +936,13 @@ class GenerarFormato {
                             break;
                         case "checkbox":
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
-                  <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>';
+                  <label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>';
                             $texto .= $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . '</div>';
                             $checkboxes++;
                             break;
                         case "select":
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
-                     <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>';
+                     <label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>';
                             $texto .= $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . '</div>';
                             break;
                         case "dependientes" :
@@ -954,7 +954,7 @@ class GenerarFormato {
                                 alerta_formatos("Por favor verifique los parametros de configuracion de su select dependiente " . $campos[$h]["etiqueta"]);
                             else {
                                 $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
-                                          <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>';
+                                          <label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>';
                                 $texto .= $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . '</div>';
                                 $dependientes++;
                             }
@@ -975,7 +975,7 @@ class GenerarFormato {
                             // $ul_adicional_archivo='';
 
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
-                     <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
+                     <label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
                      <div class="tools">
                           <a class="collapse" href="javascript:;"></a>
                           <a class="config" data-toggle="modal" href="#grid-config"></a>
@@ -1058,7 +1058,7 @@ class GenerarFormato {
                                 die("Autocompletar: El campo valor debe ser una cadena json");
                             }
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
-                   <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>';
+                   <label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>';
                             if ($campos[$h]["obligatoriedad"] == 1) {
                                 $obligatorio = "required";
                             }
@@ -1083,7 +1083,7 @@ class GenerarFormato {
                                 $valor = $campos[$h]["predeterminado"];
 
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
-                   <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
+                   <label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
                    <input type="hidden" ' . $adicionales . ' name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '" value="' . $valor . '"><?php componente_ejecutor("' . $campos[$h]["idcampos_formato"] . '",@$_REQUEST["iddoc"]); ?' . '>';
                             $texto .= '</div>';
                             break;
@@ -1110,7 +1110,7 @@ class GenerarFormato {
                                 $arreglo[6] = 5;
                             }
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
-								<label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>';
+								<label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>';
                             $texto .= '<div class="form-control"><div id="seleccionados">' . $this->arma_funcion("mostrar_seleccionados", $this->idformato . "," . $campos[$h]["idcampos_formato"] . ",'" . $arreglo[6] . "'", "mostrar") . '</div><br/>';
                             if ($arreglo[4]) {
                                 $texto .= 'Buscar: <input ' . $tabindex . ' type="text" id="stext_' . $campos[$h]["nombre"] . '" width="200px" size="25">
@@ -1266,45 +1266,29 @@ class GenerarFormato {
                                 }
                             }
                             break;
-                        case "spin":
                         case "moneda":
-                            $aux[] = "imageBasePath:'../../images/'";
-                            if ($campos[$h]["valor"] != "") {
-                                $parametros = explode("@", $campos[$h]["valor"]);
-                                if (is_numeric($parametros[0])) {
-                                    $aux[] = 'min:' . $parametros[0];
-                                    $aux2[] = 'min="' . $parametros[0] . '"';
-                                }
-                                if (is_numeric($parametros[1])) {
-                                    $aux[] = 'max:' . $parametros[1];
-                                    $aux2[] = 'max="' . $parametros[1] . '"';
-                                }
-                                if (is_numeric($parametros[2]))
-                                    $aux[] = 'interval:' . $parametros[2];
-                                if (is_numeric($parametros[3]) && $parametros[3])
-                                    $aux[] = 'lock:true';
-                            }
-                            if (is_array($aux2))
-                                $adicionales .= implode(" ", $aux2);
-                            $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
-                     <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
-                     <input class="form-control" ' . " $adicionales $tabindex" . ' type="input" id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . ' value="' . $valor . '">
-                    </div>
-                 <script type="text/javascript">
-              $(document).ready(function(){
-		            $("#' . $campos[$h]["nombre"] . '").spin({';
-                            if (is_array($aux))
-                                $texto .= implode(",", $aux);
-                            $texto .= '});
-              });
-              </script>';
+                            $texto .= $this->procesar_componente_numero($campos[$h], $indice_tabindex, true);
                             $indice_tabindex++;
-                            $spinner++;
+                            //$spinner++;
+                            break;
+                        case "spin":
+                            $texto .= $this->procesar_componente_numero($campos[$h], $indice_tabindex);
+                            $indice_tabindex++;
+                            //$spinner++;
                             break;
                         default: // text
+                            $estilo = json_decode($campos[$h]["estilo"], true);
+                            $tam = 100;
+                            $ancho = "";
+                            if(!empty($estilo)) {
+                                $tam = $estilo["size"];
+                                $ancho = ' style="width:' . $tam . '%;" ';
+                            }
+
+
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
-                     <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
-                     <input class="form-control" ' . " $adicionales $tabindex" . ' type="text" size="100" id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . ' value="' . $valor . '">
+                     <label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
+                     <input class="form-control" ' . " $adicionales $tabindex" . ' type="text" ' . $ancho . ' size="100" id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . ' value="' . $valor . '">
                     </div>';
                             if ($campos[$h]["mascara"] != "") {
                                 $mascaras++;
@@ -2105,6 +2089,107 @@ span.fancytree-expander {
         return $js_archivos;
     }
 
+    private function procesar_componente_numero($campo, $indice_tabindex, $moneda = false) {
+        $valor = $campo["valor"];
+
+        $tabindex = ' tabindex="' . $indice_tabindex . ' "';
+        if ($campo["obligatoriedad"]) {
+            $obliga = "*";
+        } else {
+            $obliga = "";
+        }
+        $aux2 = [];
+        $texto = array();
+        if(!empty($campo["opciones"])) {
+            $opciones  = json_decode($campo["opciones"], true);
+            $estilo = json_decode($campo["estilo"], true);
+
+            $ini = 0;
+            $fin = 1000;
+            $decimales = 0;
+            $incremento = 1;
+            $tam = 100;
+            $ancho = "";
+            if (isset($opciones["con_decimales"]) && isset($opciones["decimales"])) {
+                $decimales = $opciones["decimales"];
+            }
+            if(!empty($estilo)) {
+                $tam = $estilo["size"];
+            }
+            if (isset($opciones["criterio"])) {
+                $criterio = $opciones["criterio"];
+                switch ($criterio) {
+                    case "max_lt":
+                        $fin = $opciones["valor_1"] - 1;
+                        break;
+                    case "max":
+                        $fin = $opciones["valor_1"];
+                        break;
+                    case "min":
+                        $ini = $opciones["valor_1"];
+                        break;
+                    case "min_gt":
+                        $ini = $opciones["valor_1"] + 1;
+                        break;
+                    case "between":
+                        $ini = $opciones["valor_1"];
+                        $fin = $opciones["valor_2"];
+                        if(empty($fin)) {
+                            $fin = 1000;
+                        }
+                        if($fin <= $ini) {
+                            $fin = $ini + 1;
+                        }
+                        break;
+                    case "not_between":
+                        break;
+                }
+                if($decimales) {
+                    $incremento = pow(10, -$decimales);
+                }
+            }
+            $aux2[] = 'min="'  . $ini . '"';
+            $aux2[] = 'max="' . $fin . '"';
+            $aux2[] = 'step=' . $incremento;
+            $ancho = 'style="width:' . $tam . '%;"';
+
+        } else if (!empty($valor)) {
+            $parametros = explode("@", $valor);
+            if (is_numeric($parametros[0])) {
+                $aux2[] = 'min="' . $parametros[0] . '"';
+            }
+            if (is_numeric($parametros[1])) {
+                $aux2[] = 'max="' . $parametros[1] . '"';
+            }
+            if (is_numeric($parametros[2]))
+                $aux2[] = 'step="' . $parametros[2] . '"';
+            if (is_numeric($parametros[3]) && $parametros[3]) {
+                $aux[] = 'lock:true';
+            }
+        }
+
+        if (is_array($aux2)) {
+            $adicionales .= implode(" ", $aux2);
+        }
+        $pre = "";
+        $post = "";
+        $texto[] = '<div class="form-group" id="tr_' . $campo["nombre"] . '">';
+        $texto[] = '<label class="etiqueta_campo" title="' . $campo["ayuda"] . '" for="' . $campo["nombre"] . '">' . $campo["etiqueta"] . $obliga . '</label>';
+        if ($moneda) {
+            $pre = '<div class="input-group" ' . $ancho . '>
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">$</div>
+                        </div>';
+            $post = '</div>';
+            $ancho = "";
+        }
+        $adicionales .= " $ancho";
+        $texto[] = $pre;
+        $texto[] = '<input class="form-control" ' . " $adicionales $tabindex" . ' type="number" id="' . $campo["nombre"] . '" name="' . $campo["nombre"] . '" ' . $obligatorio . ' value="' . $valor . '">';
+        $texto[] = '</div>';
+        $texto[] = $post;
+        return implode("\n", $texto);
+    }
 }
 
 ?>

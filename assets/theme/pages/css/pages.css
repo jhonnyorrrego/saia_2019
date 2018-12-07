@@ -14727,3 +14727,21 @@ Main components
     display: none;
   }
 }
+
+.etiqueta_titulo {
+	font-size: 13px !important;
+	text-transform: initial;
+	font-weight: bold;
+	color: #2C2C2C;
+}
+
+.etiqueta_campo {
+	font-size: 12px !important;
+	text-transform: initial !important;
+	font-weight: bold !important;
+	color: #626262;
+}
+
+.etiqueta_selector {
+	text-transform: none !important;
+}

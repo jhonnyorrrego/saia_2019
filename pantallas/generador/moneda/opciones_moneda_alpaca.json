@@ -16,6 +16,21 @@
         "maxLength": 255,
         "required": true
       },
+      "fs_estilo": {
+        "type": "object",
+        "title": "",
+        "properties": {
+          "size": {
+            "title": "Ancho del campo",
+            "type": "string",
+            "enum": [
+              "25",
+              "50",
+              "100"
+            ]
+          }
+        }
+      },
       "fs_opciones": {
         "type": "object",
         "title": "",
@@ -70,6 +85,20 @@
       "fs_nombre": {
         "type": "hidden"
       },
+      "fs_estilo": {
+        "fields": {
+          "size": {
+            "type": "select",
+            "sort": false,
+            "removeDefaultNone": false,
+            "optionLabels": [
+              "Pequeño",
+              "Mediano",
+              "Grande"
+            ]
+	  }
+	}
+      },
       "fs_opciones": {
         "fields": {
           "con_decimales": {
@@ -78,7 +107,10 @@
           "decimales": {
             "validate": true,
             "inputType": "number",
-            "data": {"min" : 0, "max": 9}
+            "data": {
+              "min": 0,
+              "max": 9
+            }
           },
           "criterio": {
             "type": "select",
@@ -103,7 +135,8 @@
                 "max_lt",
                 "max",
                 "min_gt",
-                "min", "between",
+                "min",
+                "between",
                 "not_between"
               ]
             }

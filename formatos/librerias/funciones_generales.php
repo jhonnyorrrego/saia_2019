@@ -34,23 +34,23 @@ function retornar_seleccionados($valor) {
 
 function buscar_funcionarios2($dependencia, $arreglo = NULL) {
     global $conn, $ruta_db_superior;
-    
+
     include_once ($ruta_db_superior . "class_transferencia.php");
     $dependencias = dependencias($dependencia);
     array_push($dependencias, $dependencia);
-    
+
     $dependencias = array_unique($dependencias);
-    
+
     $funcionarios = busca_filtro_tabla("A.funcionario_codigo", "funcionario A,dependencia_cargo B, cargo C,dependencia D", "B.cargo_idcargo=C.idcargo AND B.funcionario_idfuncionario=A.idfuncionario AND B.dependencia_iddependencia=D.iddependencia and B.dependencia_iddependencia IN(" . implode(",", $dependencias) . ") AND A.estado=1 AND B.estado=1 AND C.estado=1 AND D.estado=1", "", $conn);
-    
+
     $arreglo = extrae_campo($funcionarios, "funcionario_codigo", "U");
-    
+
     return ($arreglo);
 }
 
 function serie_subserie($idformato, $iddoc, $tipo = 0) {
     global $conn;
-    
+
     $formato = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $idformato, "", $conn);
     $serie = busca_filtro_tabla("A.codigo,A.cod_padre", "serie A," . $formato[0]['nombre_tabla'] . " B", "B.serie_idserie=A.idserie and B.documento_iddocumento=$iddoc", "", $conn);
     if($serie[0][0] == "") {
@@ -85,7 +85,7 @@ function transferencia_automatica($idformato, $iddoc, $destinos, $tipo, $notas =
         $adicionales["notas"] = "'" . $notas . "'";
         $datos["ver_notas"] = 1;
     }
-    
+
     foreach($vector as $fila) {
         if(!strpos($fila, "#")) {
             if($tipo == 3) {
@@ -101,7 +101,7 @@ function transferencia_automatica($idformato, $iddoc, $destinos, $tipo, $notas =
         } else {
             $lista = buscar_funcionarios(str_replace("#", "", $fila));
         }
-        
+
         $datos["tipo_destino"] = "1";
         $datos["archivo_idarchivo"] = $iddoc;
         $datos["origen"] = usuario_actual("funcionario_codigo");
@@ -115,7 +115,7 @@ function transferencia_automatica($idformato, $iddoc, $destinos, $tipo, $notas =
 function mostrar_preparo($idformato, $iddoc) {
     global $conn;
     $ejecutor = busca_filtro_tabla("ejecutor", "documento", "iddocumento=$iddoc", "", $conn);
-    
+
     if($ejecutor["numcampos"] == 0)
         return;
         else {
@@ -129,7 +129,7 @@ function mostrar_preparo($idformato, $iddoc) {
 function buscar_jefe_directo($dep) {
     global $conn;
     $funcionario_dependencia = busca_filtro_tabla("c.funcionario_codigo", "dependencia_cargo a, cargo b, funcionario c", "a.funcionario_idfuncionario=c.idfuncionario and a.estado=1 and a.dependencia_iddependencia=" . $dep . " and a.cargo_idcargo=b.idcargo and (lower(b.nombre) like '%director%' OR lower(b.nombre) like '%lider%' OR lower(b.nombre) like '%jefe%')", "", $conn);
-    
+
     if($funcionario_dependencia["numcampos"])
         return ($funcionario_dependencia[0]["funcionario_codigo"]);
         else {
@@ -272,7 +272,7 @@ function componente_ejecutor($idcampo, $iddoc) {
 function busca_campo($campos, $llave, $tabla, $id) {
     global $conn;
     $resultado = busca_filtro_tabla($campos, $tabla, $llave . "='" . $id . "'", "", $conn);
-    
+
     if(strpos($campos, ",") > 0) {
         $lista = explode(",", $campos);
         foreach($lista as $uno)
@@ -352,7 +352,7 @@ function listar_funcionarios($idformato, $nombre_campo, $iddoc) {
     global $conn;
     $formato = busca_filtro_tabla('nombre_tabla', 'formato', 'idformato=' . $idformato, '', $conn);
     $valor = busca_filtro_tabla($nombre_campo, $formato[0]["nombre_tabla"], 'documento_iddocumento=' . $iddoc, '', $conn);
-    
+
     if($valor["numcampos"]) {
         $lista = explode(',', $valor[0][0]);
         for($i = 0; $i < count($lista); $i++) {
@@ -385,7 +385,7 @@ function listar_dependencias($idformato, $nombre_campo, $iddoc) {
     global $conn;
     $formato = busca_filtro_tabla('nombre_tabla', 'formato', 'idformato=' . $idformato, '', $conn);
     $valor = busca_filtro_tabla($nombre_campo, $formato[0]["nombre_tabla"], 'documento_iddocumento=' . $iddoc, '', $conn);
-    
+
     if($valor["numcampos"]) {
         $lista = explode(',', $valor[0][0]);
         for($i = 0; $i < count($lista); $i++) {
@@ -662,8 +662,9 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
 	for($i = 0; $i < $caracteristicas["numcampos"]; $i++)
 		$obligatorio[] = $caracteristicas[$i]["tipo"] . "='" . $caracteristicas[$i]["valor"] . "'";
 
-	if(is_array($obligatorio) && count($obligatorio) > 0)
+		if(is_array($obligatorio) && count($obligatorio) > 0) {
 		$obligatorio = implode(" ", $obligatorio);
+		}
 		// *************************************************
 
 	$listado0 = array();
@@ -708,60 +709,48 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
 
 	switch($tipo) {
 		case "radio":
-		    $texto .= '<div class="radio radio-info">';
-			$texto .= '<table border="0">';
+		    $texto .= '<div class="row">';
+			//$texto .= '<table border="0">';
 			for($j = 0; $j < $cont3; $j++) {
-				$fila = ($j % $columnas);
-				if(!$fila) {
-					$texto .= '<tr>';
-				}
 
 				/*<input type="' . $tipo . '" value="yes" name="optionyes" id="yes">
 				<label for="' . $nombre . $j . '">>Agree</label>*/
-				$texto .= '<td><input type="' . $tipo . '" ';
+				$texto .= '<div class="col-3 px-1"><div class="form-check"><input class="form-check-input" type="' . $tipo . '" ';
 				if($buscar) {
 				    $texto .= ' name="bqsaia_g@' . $nombre . '" id="' . $nombre . $j . '" value="' . ($listado3[$j][0]) . '" class="radio"';
 				} else {
 				    $texto .= ' name="' . $nombre . '" id="' . $nombre . $j . '" value="' . ($listado3[$j][0]) . '"';
 				}
-				if(($listado3[$j][0]) == $default)
+				if(($listado3[$j][0]) == $default) {
 				    $texto .= ' checked ';
-				    if($j == 0)
-				        $texto .= $obligatorio;
-
-				$texto .= ' aria-required="true"><label for="' . $nombre . $j . '">' . codifica_encabezado($listado3[$j][1]) . "</label></td>";
-
-				if($fila == ($columnas - 1)) {
-					$texto .= '</tr>';
 				}
+				if($j == 0) {
+				        $texto .= $obligatorio;
+				}
+				$texto .= ' aria-required="true"><label class="form-check-label etiqueta_selector" for="' . $nombre . $j . '">' . codifica_encabezado($listado3[$j][1]) . "</label></div></div>";
+
 			}
 			//$texto .= "<tr><td colspan='$columnas'><label style='display:none' for='$nombre' class='error'>Campo obligatorio</label></td></tr></table>";
-			$texto .= "<tr><td colspan='$columnas'></td></tr></table></div>";
+			$texto .= "</div>";
 			break;
 		case "checkbox":
-		    $texto .='<div class="checkbox check-info">';
-			$texto .= '<table border="0">';
+		    $texto .='<div class="row">';
+			//$texto .= '<table border="0">';
 			$lista_default = explode(',', $default);
 			for($j = 0; $j < $cont3; $j++) {
-				$fila = ($j % $columnas);
-				if(!$fila) {
-					$texto .= '<tr>';
-				}
-				$texto .= '<td><input type="' . $tipo . '" ';
+				$texto .= '<div class="col-3 px-1"><div class="form-check"><input class="form-check-input" type="' . $tipo . '" ';
 
-				if($j == 0)
+				if($j == 0) {
 					$texto .= $obligatorio;
+				}
 				$texto .= ' name="' . $nombre . '[]" id="' . $nombre . $j . '" value="' . ($listado3[$j][0]) . '"';
 
-				if(in_array(($listado3[$j][0]), $lista_default))
+				if(in_array(($listado3[$j][0]), $lista_default)) {
 					$texto .= ' checked ';
-				$texto .= '><label for="' . $nombre . $j . '">' . codifica_encabezado(strip_tags($listado3[$j][1])) . "</label></td>";
-				if($fila == ($columnas - 1)) {
-					$texto .= '</tr>';
 				}
+				$texto .= '><label class="form-check-label etiqueta_selector" for="' . $nombre . $j . '">' . codifica_encabezado(strip_tags($listado3[$j][1])) . "</label></div></div>";
 			}
-			$texto .= "<tr><td colspan='$columnas'>
-    <label style='display:none' for='" . $nombre . "[]' class='error'>Campo obligatorio</label></td></tr></table></div>";
+			// $texto .= "<tr><td colspan='$columnas'><label style='display:none' for='" . $nombre . "[]' class='error'>Campo obligatorio</label></td></tr></table></div>";
 			break;
 		case "select":
 		    $texto = ' <div class="form-group ">';
@@ -774,18 +763,19 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
 			}
 			for($j = 0; $j < $cont3; $j++) {
 				$texto .= '<option value="' . ($listado3[$j][0]) . '"';
-				if(($listado3[$j][0]) == $default)
+				if(($listado3[$j][0]) == $default) {
 					$texto .= ' selected ';
+				}
 				$texto .= '>' . codifica_encabezado($listado3[$j][1]) . '</option>';
 			}
 			$texto .= '</select>';
 			$texto .='
                      <script>
                     $(document).ready(function() {
-                        
+
                         $("#' . $nombre . '").select2();
                     });
-                    </script> 
+                    </script>
                      ';
 			break;
 		case "dependientes":
@@ -819,12 +809,10 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
 				if($i == (count($parametros) - 1)) {
 					$nombre2 = $nombre;
 					$hijo = "";
-				} elseif($i == (count($parametros) - 2)) // si es el penultimo
-{
+				} elseif($i == (count($parametros) - 2)) { // si es el penultimo
 					$nombre2 = $select[0] . $idcampo;
 					$hijo = " hijo='" . $nombre . "' ";
-				} else // si es un select intermedio
-{
+				} else {// si es un select intermedio
 					$nombre2 = $select[0] . $idcampo;
 					$select3 = explode(";", $parametros[$i + 1]);
 					$hijo = " hijo='" . $select3[0] . $idcampo . "' ";
@@ -832,8 +820,7 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = NULL, $busc
 
 				$texto .= "<tr><td>" . $select[0] . "</td><td><select name='$nombre2' id='$nombre2' pos='$i' idcomponente='" . $campo[0]["idcampos_formato"] . "' ";
 
-				if($i == (count($parametros) - 1)) // si es el ultimo select
-{
+				if($i == (count($parametros) - 1)) { // si es el ultimo select
 					$texto .= $obligatorio;
 				}
 				$texto .= " $hijo >";
@@ -2386,19 +2373,19 @@ function transferir_desde_papa($idformato, $iddoc, $destinos, $tipo, $notas = ""
 /**
  * busca el iddocumento del primer
  * papa en el proceso
- * 
+ *
  * @param int $documentId iddocumento del documento actual
  * @param int $exit numero de vuelta actual en la recursividad
  * @return int iddocumento del papa
- * 
+ *
  */
 function buscar_papa_primero($documentId, $exit = 0) {
     global $conn;
-    
+
     if($exit > 20) {
 		return false;
     }
-    
+
 	$documents = busca_filtro_tabla("B.cod_padre,B.nombre_tabla", "documento A, formato B", "lower(A.plantilla)=lower(B.nombre) AND B.cod_padre <> 0 AND iddocumento=" . $documentId , "", $conn);
 	if($documents["numcampos"]) {
 		$parentFormat = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $documents[0]["cod_padre"], "", $conn);
