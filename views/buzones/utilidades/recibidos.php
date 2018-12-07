@@ -96,8 +96,24 @@ $(function(){
     });
 
     $(document).on('click', '#mark_document', function(){
+        let selections = $('#table').data('selections');
         top.topModal({
-            url: `${baseUrl}views/documento/etiquetar.php`
+            url: `${baseUrl}views/documento/etiquetar.php`,
+            title: 'Etiquetas',
+            size: 'modal-sm',
+            params: {
+                selections: selections
+            },
+            buttons: {
+                success: {
+                    label: 'Guardar',
+                    class: 'btn btn-complete'
+                },
+                cancel: {
+                    label: 'Cancelar',
+                    class: 'btn btn-danger'
+                }
+            },
         })
     });
     
