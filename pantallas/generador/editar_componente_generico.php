@@ -133,17 +133,19 @@ echo librerias_jquery("2.2");
 			}
 		};
 
-		opciones_form["options"]["fields"]["fs_etiqueta"] = {
-			events: {
-    			change: function (evt) {
-    		        var value = $(evt.target).val();
-    		        if (value) {
-    		        	value = normalizar(value);
-    		        	$("[name='fs_nombre']").val(value);
-    		        }
-    		    }
-			}
-		};
+		if(opciones_form && opciones_form.hasOwnProperty("options")) {
+			opciones_form["options"]["fields"]["fs_etiqueta"] = {
+				events: {
+	    			change: function (evt) {
+	    		        var value = $(evt.target).val();
+	    		        if (value) {
+	    		        	value = normalizar(value);
+	    		        	$("[name='fs_nombre']").val(value);
+	    		        }
+	    		    }
+				}
+			};
+	    }
 
 		/*opciones_form["params"] = {
 		    "fieldHtmlClass": "input-small"
