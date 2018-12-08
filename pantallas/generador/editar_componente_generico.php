@@ -133,7 +133,7 @@ echo librerias_jquery("2.2");
 			}
 		};
 
-		if(!opciones_form.hasOwnProperty("options") {
+		if(!opciones_form.hasOwnProperty("options")) {
 			console.log(opciones_form);
 		} else {
 			opciones_form["options"]["fields"]["fs_etiqueta"] = {
@@ -154,6 +154,9 @@ echo librerias_jquery("2.2");
 		};*/
 
 		//console.log(opciones_form);
+		if(!opciones_form.hasOwnProperty("options")) {
+			console.log(opciones_form);
+		} else {
 		opciones_form["options"]['form'] = {
 			buttons : {
 				cancel : {
@@ -178,6 +181,7 @@ echo librerias_jquery("2.2");
 				}
 			}
 		};
+}
 
 		opciones_form["view"] = {
 	        "locale": "es_ES",
