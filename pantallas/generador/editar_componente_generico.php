@@ -133,7 +133,9 @@ echo librerias_jquery("2.2");
 			}
 		};
 
-		if(opciones_form && opciones_form.hasOwnProperty("options")) {
+		if(!opciones_form.hasOwnProperty("options") {
+			console.log(opciones_form);
+		} else {
 			opciones_form["options"]["fields"]["fs_etiqueta"] = {
 				events: {
 	    			change: function (evt) {
@@ -145,7 +147,7 @@ echo librerias_jquery("2.2");
 	    		    }
 				}
 			};
-	    }
+		}
 
 		/*opciones_form["params"] = {
 		    "fieldHtmlClass": "input-small"
