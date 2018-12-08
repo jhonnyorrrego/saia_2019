@@ -1621,7 +1621,7 @@ class Version20181206225012 extends AbstractMigration {
      */
     public function up(Schema $schema) {
         $conn = $this->connection;
-        foreach ($this->modulo as $value) {
+        foreach ($this->pantalla_componente as $value) {
             $result = $conn->fetchColumn("select idpantalla_componente from pantalla_componente where nombre=:nombre", [
                 "nombre" => $value["nombre"]
             ]);

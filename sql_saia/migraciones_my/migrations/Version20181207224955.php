@@ -1462,6 +1462,21 @@ class Version20181207224955 extends AbstractMigration {
     
     public function postUp(Schema $schema) {
     	$conn = $this->connection;
+    	
+    	foreach ($this->pantalla_componente as $value) {
+    		$result = $conn->fetchColumn("select idpantalla_componente from pantalla_componente where nombre=:nombre", [
+    				"nombre" => $value["nombre"]
+    		]);
+    		
+    		if (!$result) {
+    			$conn->insert("pantalla_componente", $value);
+    		} else {
+    			$conn->update("pantalla_componente", $value, [
+    					"idpantalla_componente" => $result
+    			]);
+    		}
+    	}
+    	
     	foreach ($this->orden as $key => $value) {
     		$result = $conn->fetchColumn("select idpantalla_componente from pantalla_componente where nombre=:nombre", [
     				"nombre" => $key
