@@ -1407,6 +1407,25 @@ class Version20181207224955 extends AbstractMigration {
   }
 }')
     );
+   
+   private $orden = [
+   		"etiqueta_titulo" => 1,
+   		"etiqueta_parrafo" => 2,
+   		"etiqueta_linea" => 3,
+   		"text" => 4,
+   		"textarea" => 5,
+   		"textarea_cke" => 6,
+   		"contador" => 7,
+   		"moneda" => 8,
+   		"datetime" => 9,
+   		"checkbox" => 10,
+   		"radio" => 11,
+   		"select" => 12,
+   		"arbol_fancytree" => 13,
+   		"ejecutor" => 14,
+   		"archivo" => 15,
+   		"hidden" => 20
+   ];
 
    public function getDescription() {
        return 'Cambios opciones de configuración';
@@ -1425,11 +1444,41 @@ class Version20181207224955 extends AbstractMigration {
      * @param Schema $schema
      */
     public function up(Schema $schema) {
-        // this up() migration is auto-generated, please modify it to your needs
-        //TODO: Orden en los componentes, se requiere nuevo campo en pantalla_camponente.orden
-        //TODO: Ajustar el ancho de los iconos para que queden alineados
+        //DONE: Orden en los componentes, se requiere nuevo campo en pantalla_camponente.orden
+    	$cmp = $schema->getTable('pantalla_componente');
+    	
+    	if (!$cmp->hasColumn("orden")) {
+    		$cmp->addColumn("orden", "integer", [
+    				"length" => 11,
+    				"notnull" => false,
+    				"default" => 1
+    		]);
+    	}
+    	
+        //DONE: Ajustar el ancho de los iconos para que queden alineados
         //TODO: Cambiar el idioma del componente fecha y ocultar/pìntar reloj dependiendo del tipo date/datetime
         //TODO: En el editor de campos poner icono para editar y quitar el evento click sobre todo el componente
+    }
+    
+    public function postUp(Schema $schema) {
+    	$conn = $this->connection;
+    	foreach ($this->orden as $key => $value) {
+    		$result = $conn->fetchColumn("select idpantalla_componente from pantalla_componente where nombre=:nombre", [
+    				"nombre" => $key
+    		]);
+    		
+    		if ($result) {
+    			$conn->update("pantalla_componente", ["orden" => $value], [
+    					"idpantalla_componente" => $result
+    			]);
+    			
+    			if($key == 'hidden') {
+    				$conn->update("pantalla_componente", ["categoria" => "Campos avanzados"], [
+    						"idpantalla_componente" => $result
+    				]);
+    			}
+    		}
+    	}
     }
 
     /**

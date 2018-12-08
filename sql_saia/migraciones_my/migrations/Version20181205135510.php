@@ -88,58 +88,62 @@ class Version20181205135510 extends AbstractMigration {
 
         $modulo->getColumn("tipo")->setDefault(3);
         $modulo->getColumn("imagen")->setDefault(NULL);
+        $modulo->getColumn("enlace")->setNotnull(false);
         $modulo->getColumn("enlace")->setDefault(NULL);
 
         $this->connection->delete('modulo', [
             'nombre' => 'menu_documento'
         ]);
+
+    }
+
+    public function postUp(Schema $schema) {
         $this->connection->insert('modulo', [
             'pertenece_nucleo' => 1,
             'nombre' => 'menu_documento',
             'etiqueta' => 'Acciones Documento'
         ]);
-
-        $queryBuilder = $this->connection->createQueryBuilder();
-        $queryBuilder->select('idmodulo')
-            ->from('modulo')
-            ->where("nombre=:nombre")
-            ->setParameter("nombre", 'menu_documento');
-
-        $moduleId = $queryBuilder->execute()->fetchColumn();
-
-        $types = [
-            \PDO::PARAM_INT,
-            Connection::PARAM_STR_ARRAY
-        ];
-        $sql = "delete from modulo  where cod_padre=? and nombre IN (?)";
-        $filtro = [
-            $moduleId,
-            [
-                'responder',
-                'responder_todos',
-                'reenviar',
-                'mover_expediente',
-                'asignar_serie'
-            ]
-        ];
-        $result = $this->connection->executeUpdate($sql, $filtro, $types);
-
-        foreach ($this->datos_modulo as $key => $value) {
-            $result = $this->connection->fetchColumn("select idmodulo from modulo where nombre=:nombre", [
-                "nombre" => $key
-            ]);
-            $value['cod_padre'] = $moduleId;
-
-            if (!$result) {
-                $this->connection->insert("modulo", $value);
-            } else {
-                $this->connection->update("modulo", $value, [
-                    "idmodulo" => $result
-                ]);
-            }
-        }
+    	$queryBuilder = $this->connection->createQueryBuilder();
+    	$queryBuilder->select('idmodulo')
+    	->from('modulo')
+    	->where("nombre=:nombre")
+    	->setParameter("nombre", 'menu_documento');
+    	
+    	$moduleId = $queryBuilder->execute()->fetchColumn();
+    	
+    	$types = [
+    			\PDO::PARAM_INT,
+    			Connection::PARAM_STR_ARRAY
+    	];
+    	$sql = "delete from modulo  where cod_padre=? and nombre IN (?)";
+    	$filtro = [
+    			$moduleId,
+    			[
+    					'responder',
+    					'responder_todos',
+    					'reenviar',
+    					'mover_expediente',
+    					'asignar_serie'
+    			]
+    	];
+    	$result = $this->connection->executeUpdate($sql, $filtro, $types);
+    	
+    	foreach ($this->datos_modulo as $key => $value) {
+    		$result = $this->connection->fetchColumn("select idmodulo from modulo where nombre=:nombre", [
+    				"nombre" => $key
+    		]);
+    		$value['cod_padre'] = $moduleId;
+    		
+    		if (!$result) {
+    			$this->connection->insert("modulo", $value);
+    		} else {
+    			$this->connection->update("modulo", $value, [
+    					"idmodulo" => $result
+    			]);
+    		}
+    	}
     }
-
+    
     /**
      *
      * @param Schema $schema

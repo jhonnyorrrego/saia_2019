@@ -94,16 +94,16 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 		<div class="row-fluid">
 			<div class="span9">
 				<div class="tabbable">
-					<ul class="nav nav-tabs" id="tabs_formulario">
+					<ul class="nav nav-pills" id="tabs_formulario">
 						<li>
 							<a href="#datos_formulario-tab" data-toggle="tab">Informaci&oacute;n</a>
 						</li>
 						<li id="generar_formulario_pantalla"  class="active">
 							<a href="#formulario-tab" data-toggle="tab">Campos</a>
 						</li>
-                		<li>
+                		<!-- <li>
                 			<a href="#librerias_formulario-tab" data-toggle="tab">3-Librerias</a>
-						</li>
+						</li> -->
                 		<li>
                 				<a href="#pantalla_mostrar-tab" data-toggle="tab">Dise&ntilde;o</a>
 						</li>
@@ -414,18 +414,18 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 					</div>
 					<div class="span3">
 						<div class="tabbable">
-							<ul class="nav nav-tabs" id="tabs_opciones">
+							<ul class="nav nav-pills" id="tabs_opciones">
 								<li class="active">
-									<a href="#componentes-tab" data-toggle="tab">I</a>
+									<a href="#componentes-tab" data-toggle="tab">Componentes</a>
+								</li>
+								<!--<li>
+									<a href="#archivos-tab" data-toggle="tab">Archivos</a>
 								</li>
 								<li>
-									<a href="#archivos-tab" data-toggle="tab">F</a>
-								</li>
-                <!--li>
 									<a href="#includes-tab" data-toggle="tab">S</a>
 								</li-->
 								<li>
-									<a href="#acciones-tab" data-toggle="tab">A</a>
+									<a href="#acciones-tab" data-toggle="tab">Acciones</a>
 								</li>
 							</ul>
 							<div class="tab-content" id="contenidos_componentes">
@@ -920,7 +920,7 @@ $(document).on('click', '.element > .close', function(e) {
       height: 300
     });
 });
-$(document).on('click', '.element', function() {
+$(document).on('click', '.element > .edit', function() {
 	var componente = $(this).attr("nombre");
 	var ulr_hs = "<?php echo($ruta_db_superior);?>pantallas/generador/editar_componente_generico.php?idpantalla_componente="+$(this).attr("idpantalla_componente")+"&idpantalla_campos="+$(this).attr("idpantalla_campo");
 	if(componente == "archivo_xxx") {
@@ -1409,6 +1409,18 @@ function generar_pantalla(nombre_accion) {
         crea: accion,
         llamado_ajax: 1
     };
+
+    //TODO: Para quitar la lista de checkboxes
+    /*
+    var ruta_generar='formatos/llamado_formatos.php';
+    var idformato= $("#idformato").val();
+    var datos = {
+    	    acciones_formato: "formato,adicionar,buscar,editar,mostrar,tabla",
+    	    accion:"generar",
+    	    condicion: "idformato = " + idformato
+    };
+    */
+    
     $.ajax({
         type:'POST',
         url: '<?php echo($ruta_db_superior);?>'+ruta_generar,

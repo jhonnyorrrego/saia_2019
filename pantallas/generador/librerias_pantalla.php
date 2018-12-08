@@ -818,19 +818,18 @@ function load_componentes($tipo_retorno) {
 	if ($pantalla["numcampos"] && $pantalla[0]["tipo_pantalla"] != 2) {
 		$where .= " AND lower(categoria)<>'documento'";
 	}
-	$categorias = busca_filtro_tabla("", "pantalla_componente", "estado=1" . $where, "GROUP BY categoria", $conn);
+	$categorias = busca_filtro_tabla("", "pantalla_componente", "estado=1" . $where, "GROUP BY categoria ORDER BY orden", $conn);
 	if ($categorias["numcampos"]) {
 		$retorno["exito"] = 1;
 		$texto = '<div class="accordion" id="acordion_componentes">';
 		for($i = 0; $i < $categorias["numcampos"]; $i++) {
-			$texto .= '<div class="accordion-group">
-	    <div class="accordion-heading">';
+			$texto .= '<div class="accordion-group"><div class="accordion-heading">';
 			$texto .= '<a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_componentes" href="#categoria_' . $categorias[$i]["nombre"] . '">';
 			$texto .= $categorias[$i]["categoria"];
 			$texto .= '</a>';
 			$texto .= '</div>';
-			$texto .= '<div id="categoria_' . $categorias[$i]["nombre"] . '" class="accordion-body collapse">
-	      <div class="accordion-inner">';
+			//$texto .= '<div id="categoria_' . $categorias[$i]["nombre"] . '" class="accordion-body collapse"><div class="accordion-inner">';
+			$texto .= '<div id="categoria_' . $categorias[$i]["nombre"] . '" class="accordion-body"><div class="accordion-inner">';
 			$texto .= llena_componentes($categorias[$i]["categoria"]);
 			$texto .= '</div>';
 			$texto .= '</div>';
@@ -849,10 +848,11 @@ function load_componentes($tipo_retorno) {
 function llena_componentes($nombre) {
 	global $conn;
 	$texto = '';
-	$componentes = busca_filtro_tabla("", "pantalla_componente", "estado=1 AND lower(categoria)='" . strtolower($nombre) . "'", "nombre", $conn);
+	$componentes = busca_filtro_tabla("", "pantalla_componente", "estado=1 AND lower(categoria)='" . strtolower($nombre) . "'", "orden", $conn);
 	if ($componentes["numcampos"]) {
 		for($i = 0; $i < $componentes["numcampos"]; $i++) {
-			$texto .= '<div class="component" idpantalla_componente="' . $componentes[$i]["idpantalla_componente"] . '"><i class="' . $componentes[$i]["clase"] . '"></i>&nbsp;' . $componentes[$i]["etiqueta"] . '</div>';
+			$texto .= '<div class="component" idpantalla_componente="' . $componentes[$i]["idpantalla_componente"] . '">';
+			$texto .= '<span class="' . $componentes[$i]["clase"] . ' fa-fw"></span>&nbsp;' . $componentes[$i]["etiqueta"] . '</div>';
 		}
 	}
 	return ($texto);
