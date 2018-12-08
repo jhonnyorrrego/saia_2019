@@ -108,6 +108,12 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1) {
                         }
                         $retorno[$key] = $value;
                         break;
+                    case "fs_obligatoriedad":
+                    	if($value == "true") {
+                    		$value = 1;
+                    	} else {
+                    		$value = 0;
+                    	}
                 }
 				array_push($sql_update, preg_replace('/^fs_/', '', $key) . "='" . $value . "'");
 			}
