@@ -328,7 +328,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 										</div>
 										<div class="accordion-group">
 									    <div class="accordion-heading">
-									      <input type="checkbox" checked="true"class="pull-left check_genera" value="editar">
+									      <input type="checkbox" checked="true" class="pull-left check_genera" value="editar">
                         <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_editar">
 									      	Crear archivo editar
 									      </a>
@@ -920,7 +920,7 @@ $(document).on('click', '.element > .close', function(e) {
       height: 300
     });
 });
-$(document).on('click', '.element > .edit', function() {
+$(document).on('click', '.element', function() {
 	var componente = $(this).attr("nombre");
 	var ulr_hs = "<?php echo($ruta_db_superior);?>pantallas/generador/editar_componente_generico.php?idpantalla_componente="+$(this).attr("idpantalla_componente")+"&idpantalla_campos="+$(this).attr("idpantalla_campo");
 	if(componente == "archivo_xxx") {
