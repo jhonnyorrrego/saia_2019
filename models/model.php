@@ -85,6 +85,7 @@ class Model {
 
     public function update() {
         $attributes = $this -> getNotNullAttributes();
+
         if (count($attributes)) {
             $sql = "update " . $this -> table . " set ";
             foreach ($attributes as $key => $value) {

@@ -44,9 +44,7 @@ if($_SESSION['idfuncionario'] == $_REQUEST['key']){
     $Response->data = $data;
 }else{
     $Response->success = 0;
-    $Response->message = 'Debe seleccionar un color';
+    $Response->message = 'Debe iniciar Session';
 }
 
-ob_start('ob_gzhandler');
 echo json_encode($Response);
-ob_end_flush();
