@@ -105,9 +105,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         </a>                        
                     </div>
                 </div>
-                <!--<a href="#" class="search-link d-lg-inline-block d-none" data-toggle="search">
-                    <i class="pg-search"></i>Type anywhere to <span class="bold">search</span>
-                </a>-->
                 <div class="d-lg-inline-block align-middle d-none">
                     <div class="input-group transparent">
                         <div class="input-group-prepend">
@@ -151,7 +148,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 <!-- END User Info-->
                 <a href="#" class="header-icon btn-link m-l-10 sm-no-margin d-inline-block" data-toggle="quickview"
                     data-toggle-element="#quickview" id="toggle_right_navbar">
-                    <i class="pg pg-alt_menu" style="font-size:1.5rem"></i>
+                    <i class="fa fa-bars" style="font-size:1.5rem"></i>
                 </a>
             </div>
         </div>
@@ -218,7 +215,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                             <ul class="toolbar">
                                 <li>
                                     <a href="#" class="close-note-link">
-                                        <i class="pg-arrow_left"></i>
+                                        <i class="fa fa-angle-left"></i>
                                     </a>
                                 </li>
                                 <li>

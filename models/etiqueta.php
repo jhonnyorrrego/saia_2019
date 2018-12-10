@@ -9,6 +9,11 @@ class Etiqueta extends Model
     protected $estado;
     protected $table = 'etiqueta';
     protected $primary = 'idetiqueta';
+    protected $safeDbAttributes = [
+        'nombre',
+        'fk_funcionario',
+        'estado'
+    ];
 
     function __construct($id){
         return parent::__construct($id);

@@ -10,6 +10,12 @@ class ComentarioDocumento extends Model
     protected $fecha;
     protected $table = 'comentario_documento';
     protected $primary = 'idcomentario_documento';
+    protected $safeDbAttributes = [
+        'fk_funcionario',
+        'fk_documento',
+        'comentario',
+        'fecha'
+    ];
 
     function __construct($id){
         return parent::__construct($id);

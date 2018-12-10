@@ -21,6 +21,20 @@ class Funcionario extends Model {
     protected $clave;
     protected $table = 'funcionario';
     protected $primary = 'idfuncionario';
+    protected $safeDbAttributes = [
+        'funcionario_codigo',
+        'login',
+        'nombres',
+        'apellidos',
+        'estado',
+        'email',
+        'foto_original',
+        'foto_recorte',
+        'email_contrasena',
+        'direccion',
+        'telefono',
+        'clave'
+    ];
 
     /**
      * @param int $id value for idfuncionario attribute
@@ -31,7 +45,7 @@ class Funcionario extends Model {
     }
 
     /**
-     * @return the basic information from user
+     * @return array the basic information from user
      * @author jhon.valencia@cerok.com
      */
     public function getBasicInformation()
@@ -44,7 +58,7 @@ class Funcionario extends Model {
     }
 
     /**
-     * @return the complete name formatted
+     * @return  string the complete name formatted
      * @author jhon.valencia@cerok.com
      */
     public function getName()

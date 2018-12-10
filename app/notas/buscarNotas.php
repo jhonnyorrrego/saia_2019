@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 
@@ -11,8 +13,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . 'db.php';
-include_once $ruta_db_superior . 'models/note.php';
+include_once $ruta_db_superior . 'models/notaFuncionario.php';
 
 $Response = (object) array(
     'data' => new stdClass(),
@@ -21,7 +22,7 @@ $Response = (object) array(
 );
 
 if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
-    $notes = Note::findActiveByUser($_REQUEST['iduser']);
+    $notes = NotaFuncionario::findActiveByUser($_REQUEST['iduser']);
 
     if(count($notes)){
         $Response->data = $notes;

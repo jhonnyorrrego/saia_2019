@@ -11,8 +11,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . 'db.php';
-include_once $ruta_db_superior . 'models/note.php';
+include_once $ruta_db_superior . 'models/notaFuncionario.php';
 
 $Response = (object) array(
     'data' => new stdClass(),
@@ -20,20 +19,25 @@ $Response = (object) array(
     'success' => 0,
 );
 
-if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
-    $note = new Note($_REQUEST['id']);
-    $note->contenido = $_REQUEST['content'];
+if ($_SESSION['idfuncionario'] == $_REQUEST['key']) {
+    $NotaFuncionario = new NotaFuncionario($_REQUEST['id']);
+    $NotaFuncionario->setAttributes([
+        'contenido' => $_REQUEST['content'],
+        'fk_funcionario' => $_REQUEST['key'],
+        'fecha' => date('Y-m-d'),
+        'estado' => 1
+    ]);
 
-    if($note->save()){
+    if($NotaFuncionario->save()){
         $Response->success = 1;
         $Response->message = "Datos almacenados";
-        $Response->data = $note->idnota;
+        $Response->data = $NotaFuncionario->getPk();
     }else{
         $Response->message = "Error al guardar!";
     }
 
 } else {
-    $Response->message = "Usuario inválido";
+    $Response->message = "Usuario invalido";
 }
 
 echo json_encode($Response);
