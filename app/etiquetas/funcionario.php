@@ -14,6 +14,7 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'models/etiqueta.php';
+include_once $ruta_db_superior . 'models/etiquetaDocumento.php';
 
 $Response = (object)array(
     'success' => 1,
@@ -22,7 +23,14 @@ $Response = (object)array(
 );
 
 if($_SESSION['idfuncionario'] == $_REQUEST['key']){
-    $Response->data = Etiqueta::findActiveByUser($_REQUEST['key']);
+    $tags = Etiqueta::findActiveByUser($_REQUEST['key']);
+
+    if($_REQUEST['selections']){
+        foreach($tags as $key => $tag){
+            $tags[$key]['checkboxType'] = EtiquetaDocumento::defineCheckboxType($tag['idetiqueta'], $_REQUEST['selections']);
+        }
+    }
+    $Response->data = $tags;
 }else{
     $Response->success = 0;
     $Response->message = 'Debe iniciar session';

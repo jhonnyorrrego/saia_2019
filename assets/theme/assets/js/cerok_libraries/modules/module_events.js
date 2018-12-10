@@ -15,8 +15,10 @@ $(function(){
     });
 
     $(document).on('click', '.parent_item', function () {
-        let idmodule = $(this).attr('id');
-        modules.find(idmodule);
+        let moduleId = $(this).attr('id');
+        let url = $(this).data('url');
+        
+        modules.find(moduleId, url);
     });
 
     $(document).on('click', '.module_link', function(){

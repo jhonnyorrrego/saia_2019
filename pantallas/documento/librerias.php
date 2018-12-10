@@ -979,6 +979,10 @@ function code_logged_user(){
     return usuario_actual('funcionario_codigo');
 }
 
+function variable_busqueda(){
+    return $_REQUEST['variable_busqueda'];
+}
+
 function origin_pending_document($iddocumento, $funcionarioCodigo, $numero, $fecha, $plantilla, $idtransferencia){
 	global $conn, $ruta_db_superior;
 

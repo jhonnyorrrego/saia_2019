@@ -175,7 +175,7 @@ $(function () {
                     },
                     {
                         kConnector: "html.page",
-                        url: "pantallas/formato/listar_formatos.php?idcategoria_formato=3",
+                        url: "pantallas/formato/listar_formatos.php?idcategoria_formato=5",
                         kTitle: "Tramites generales"
                     }
                 ]);
@@ -189,7 +189,7 @@ $(function () {
                     },
                     {
                         kConnector: "html.page",
-                        url: "pantallas/formato/listar_formatos.php?idcategoria_formato=5",
+                        url: "pantallas/formato/listar_formatos.php?idcategoria_formato=3",
                         kTitle: "Tramites generales"
                     }
                 ]);

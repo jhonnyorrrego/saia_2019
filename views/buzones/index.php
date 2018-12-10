@@ -37,7 +37,10 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <script>
         $(function(){
             var baseUrl = '<?= $ruta_db_superior ?>';
-            let route = baseUrl + 'views/buzones/listado.php?idbusqueda_componente=<?= $_REQUEST['idbusqueda_componente'] ?>';
+            var component = '<?= $_REQUEST['idbusqueda_componente'] ?>';
+            var param = '<?= $_REQUEST['variable_busqueda'] ?>';
+
+            let route = `${baseUrl}views/buzones/listado.php?idbusqueda_componente=${component}&variable_busqueda=${param}`;
             $("#mailbox").load(route, function(){
                 let interval = setInterval(() => {
                     if($(".show_document").length){

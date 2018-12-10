@@ -30,26 +30,32 @@
         if(typeof Tags == 'undefined'){
             $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/tags/tags.js`, r => {
                 $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/tags/tag_events.js`, r => {
-                    var tags = new Tags(userId);
-                    $('#tag_list').html(tags.createList());
+                    showTags(userId, selections);
                 }); 
             });
         }else{
-            var tags = new Tags(userId);
-            $('#tag_list').html(tags.createList());
+            showTags(userId, selections);
         }
 
         $('#btn_success').on('click', e => {
-            let tags = [];
+            let tags = {};
 
-            $('.checkbox_tag:checked').each((i,c) => {
-                tags.push($(c).parents('li.tag_item').data('tagid'));
+            $('.checkbox_tag').each(function(i, c){
+                let tagId = $(c).parents('li.tag_item').data('tagid');
+
+                if($(c).is(':checked')){
+                    tags[tagId] = 1;
+                }else if($(c).is(':indeterminate')){
+                    tags[tagId] = 2;
+                }else{
+                    tags[tagId] = 0;
+                }
             });
 
             $.post(`${baseUrl}app/etiquetas/enlace_documento.php`, {
                 key: userId,
                 selections: selections,
-                tags: tags.join()
+                tags: tags
             }, function(response){
                 if(response.success){
                     toastr.success('Documentos etiquetados');
@@ -59,5 +65,12 @@
                 }
             }, 'json')
         });
+
+        function showTags(userId, selections){
+            var tags = new Tags(userId);
+            tags.selections = selections;
+            $('#tag_list').html(tags.createList());
+            tags.check();
+        }
     });
 </script>

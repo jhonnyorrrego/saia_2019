@@ -45,9 +45,10 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
                 var baseUrl = '<?= $ruta_db_superior ?>';
                 var encabezado = '<?= $component[0]['encabezado_componente'] ?>'
                 var component = '<?= $_REQUEST['idbusqueda_componente'] ?>';
+                var param = '<?= $_REQUEST['variable_busqueda'] ?>';
 
                 $('#table').bootstrapTable({
-                    url: `${baseUrl}app/busquedas/datosBootstrapTable.php?idbusqueda_componente=${component}`,
+                    url: `${baseUrl}app/busquedas/datosBootstrapTable.php?idbusqueda_componente=${component}&variable_busqueda=${param}`,
                     sidePagination: 'server',
                     queryParamsType: 'other',
                     columns: [{

@@ -27,7 +27,7 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
     $parent = $_REQUEST['parent'] ? $_REQUEST['parent'] : 0;
     $modules = busca_filtro_tabla('*', 'modulo', 'cod_padre=' . $parent, 'orden asc', $conn);
 
-    if($grouperParent == 1){
+    if($grouperParent == 1 && $parent){
         $dashboard = busca_filtro_tabla('*', 'modulo', "nombre='dashboard'", '', $conn);
         $data [] = addElement($dashboard[0], 0);
     }
@@ -65,6 +65,6 @@ function addElement($data, $isParent){
         'name' => html_entity_decode($data['etiqueta']),
         'icon' => $data['imagen'],
         'type' => $data['tipo'],
-        'url' => $data['enlace'],
+        'url' => $data['enlace']
     );
 }

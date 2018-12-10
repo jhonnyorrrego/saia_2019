@@ -18,6 +18,7 @@ $actualRow = ($_REQUEST['pageNumber'] - 1 ) * $_REQUEST['pageSize'];
 
 $params = http_build_query(array(
     'idbusqueda_componente' =>  $_REQUEST["idbusqueda_componente"],
+    'variable_busqueda' =>  $_REQUEST["variable_busqueda"],
     'idfunc' => $idfuncionario,
     'page' => $_REQUEST['pageNumber'],
     'rows' => $_REQUEST['pageSize'],
@@ -25,6 +26,7 @@ $params = http_build_query(array(
 ));
 
 $url = PROTOCOLO_CONEXION . RUTA_PDF . '/pantallas/busquedas/servidor_busqueda.php?' . $params;
+
 $ch = curl_init();
 if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);

@@ -62,14 +62,15 @@ class Modules {
         }        
     }
 
-    find(idmodule){
+    find(idmodule, url = ''){
         let parentModule = Modules.findModule(this.modules, idmodule);
+        url = url || 'app/modulo/hijos_directos.php';
 
-        if(!parentModule.childs && parentModule.isParent){
+        if((!parentModule.childs && parentModule.isParent) || parentModule.url){
             let instance = this;
             let grouper = parentModule.type == "grouper" ? 1 : 0;
             
-            $.get(`${this.baseUrl}app/modulo/hijos_directos.php`,{
+            $.get(this.baseUrl + url, {
                 iduser: this.user,
                 parent: idmodule,
                 grouper: grouper
@@ -100,9 +101,10 @@ class Modules {
                 $(this._listSelector).empty();
                 nodes.list.forEach(i => $(this._listSelector).append(i));                
             }else{
+                let module = Modules.findModule(this.modules, idmodule);
                 let selector = $(`#${idmodule} > .child_list`);
 
-                if(!selector.children().length){
+                if(!selector.children().length || (module.url && module.isParent)){
                     selector.html(nodes.list);
                 }
             }
@@ -219,7 +221,7 @@ class Modules {
             $('<ul>',{
                 class: 'sub-menu child_list'                
             })
-        );
+        ).attr('data-url', module.url);
     }
 
     static createChild(module){       
