@@ -852,65 +852,9 @@ class GenerarFormato {
                             break;
                         case "fecha":
                             // si la fecha es obligatoria, que valide que no se vaya con solo ceros
-                            $adicionales = str_replace("required", "required dateISO", $adicionales);
-                            $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
-                            <label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
-                            <div class="input-group">
-                            <input ' . $tabindex . ' type="text" class="form-control" ' . $adicionales . ' id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '">
-                            <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                            ';
-                            $formato_fecha="YYYY-MM-DD";
-                            $fecha_por_defecto='';
-                            if (strtoupper($campos[$h]["tipo_dato"]) == "DATE") {
-
-                                if ($accion == "adicionar") {
-                                    if ($campos[$h]["predeterminado"] == "now()")
-                                        $fecha_por_defecto= '<?php echo(date("Y-m-d")); ?' . '>';
-                                    else
-                                        $fecha_por_defecto= '';
-                                }
-                                $fecha++;
-                                $indice_tabindex++;
-                            } else if (strtoupper($campos[$h]["tipo_dato"]) == "DATETIME") {
-                                $formato_fecha="YYYY-MM-DD HH:mm";
-                                if ($accion == "adicionar") {
-                                    if ($campos[$h]["predeterminado"] == "now()")
-                                        $fecha_por_defecto= '<?php echo(date("Y-m-d H:i")); ?' . '>';
-                                    else
-                                        $fecha_por_defecto= '';
-                                }
-                                $fecha++;
-                                $indice_tabindex++;
-                            } else if (strtoupper($campos[$h]["tipo_dato"]) == "TIME") {
-                                $formato_fecha="HH:mm";
-                                if ($accion == "adicionar") {
-                                    if ($campos[$h]["predeterminado"] == "now()")
-                                        $fecha_por_defecto= '<?php echo(date("H:i")); ?' . '>';
-                                        else
-                                            $fecha_por_defecto= '';
-                                }
-                                $fecha++;
-                                $indice_tabindex++;
-                            }
-                            if ($accion == "editar"){
-                                $fecha_por_defecto = "<?php echo(mostrar_valor_campo('" . $campos[$h]["nombre"] . "',$this->idformato,$" . "_REQUEST['iddoc'])); ?" . ">";
-                            }
-
-                            $texto .= '<script type="text/javascript">
-                                            $(function () {
-                                                $("#' . $campos[$h]["nombre"] . '").datetimepicker({
-                                                	locale: "es",
-                                                	format: "<?php echo($formato_fecha); ?>",
-                                                	useCurrent: true,
-                                                	defaultDate: "'.$fecha_por_defecto.'"
-                                                });
-                                            });
-                                        </script>';
-                                $hora++;
-                                $indice_tabindex++;
-
-                            $texto .= '</div>';
-
+                            $texto .= $this->procesar_componente_fecha($campos[$h], $indice_tabindex, $accion);
+                            $indice_tabindex++;
+                            $fecha++;
                             break;
                         case "radio" :
 						/* En los campos de este tipo se debe validar que valor contenga un listado con las siguentes caracteristicas*/
@@ -1605,11 +1549,11 @@ span.fancytree-expander {
                                     type="text/javascript"></script>
 
                                 <link rel="stylesheet"
-                                	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
-                                <link rel="stylesheet"
                                     href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css"  type="text/css" media="screen" />
                                 <script
                                 	src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>' . $enmascarar . ' '.$codigo_enter2tab.'
+                                <script
+                                	src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/locales/es.js"></script>' . $enmascarar . ' '.$codigo_enter2tab.'
                 			</head>
                 			' . $texto . $js_archivos . '
                 		</html>';
@@ -2092,11 +2036,12 @@ span.fancytree-expander {
     private function procesar_componente_numero($campo, $indice_tabindex, $moneda = false) {
         $valor = $campo["valor"];
 
+        $obligatorio = "";
+        $obliga = "";
         $tabindex = ' tabindex="' . $indice_tabindex . ' "';
         if ($campo["obligatoriedad"]) {
             $obliga = "*";
-        } else {
-            $obliga = "";
+            $obligatorio = " required ";
         }
         $aux2 = [];
         $texto = array();
@@ -2190,6 +2135,150 @@ span.fancytree-expander {
         $texto[] = $post;
         return implode("\n", $texto);
     }
-}
 
-?>
+    private function procesar_componente_fecha($campo, $indice_tabindex, $accion) {
+        $tabindex = ' tabindex="' . $indice_tabindex . ' "';
+        if ($campo["obligatoriedad"]) {
+            $obliga = "*";
+        } else {
+            $obliga = "";
+        }
+        //$formato_fecha="L";
+        $formato_fecha="YYYY-MM-DD";
+        $texto = array();
+
+        //$nombre_selector =  "dtp_" . $campo["nombre"];
+        $nombre_selector =  $campo["nombre"];
+        /*$texto[] = '<div class="form-group" id="tr_' . $campo["nombre"] . '">';
+        $texto[] = '<label class="etiqueta_campo" title="' . $campo["ayuda"] . '">' . $this->codifica($campo["etiqueta"]) . $obliga . '</label>';
+        $texto[] = '<div class="input-group date">';
+        $texto[] = '<input ' . $tabindex . ' type="text" class="form-control" ' . ' id="' . $campo["nombre"] . '" name="' . $campo["nombre"] . '">';
+        $texto[] = '<span class="input-group-addon"><i class="fa fa-calendar"></i></span>';
+*/
+
+        $texto[] = '<div class="form-group" id="tr_' . $campo["nombre"] . '">';
+        $texto[] = '<label class="etiqueta_campo" title="' . $campo["ayuda"] . '">' . $this->codifica($campo["etiqueta"]) . $obliga . '</label>';
+        $texto[] = '<div class="input-group">';
+        $texto[] = '<input ' . $tabindex . ' type="text" class="form-control" ' . ' id="' . $campo["nombre"] . '" name="' . $campo["nombre"] . '">';
+        $texto[] = '<span class="input-group-text"><i class="fa fa-calendar"></i></span>';
+
+        if(!empty($campo["opciones"])) {
+            $opciones  = json_decode($campo["opciones"], true);
+
+            $ini = "";
+            $fin = "";
+            $ancho = "";
+            if (isset($opciones["tipo"]) && $opciones["tipo"] == "datetime") {
+                //$formato_fecha="L LT";
+                $formato_fecha="YYYY-MM-DD HH:mm:ss";
+            }
+
+            $opciones_fecha = array();
+            if (isset($opciones["criterio"])) {
+                $criterio = $opciones["criterio"];
+                switch ($criterio) {
+                    case "max_lt":
+                        $ff = new Datetime($opciones["fecha_1"]);
+                        $fin = $ff->sub(new DateInterval('P1D'));
+                        $opciones_fecha["maxDate"] = $fin->format("Y-m-d");
+                        break;
+                    case "max":
+                        $fin = $opciones["fecha_1"];
+                        $opciones_fecha["maxDate"] = $fin;
+                        break;
+                    case "min":
+                        $ini = $opciones["fecha_1"];
+                        $opciones_fecha["minDate"] = $ini;
+                        break;
+                    case "min_gt":
+                        $fi = new Datetime($opciones["fecha_1"]);
+                        $ini = $fi->add(new DateInterval('P1D'));
+                        $opciones_fecha["minDate"] = $ini->format("Y-m-d");
+                        break;
+                    case "between":
+                        $ini = $opciones["fecha_1"];
+                        $fin = $opciones["fecha_2"];
+                        $opciones_fecha["minDate"] = $ini;
+                        $opciones_fecha["maxDate"] = $fin;
+                        break;
+                    case "not_between":
+                        $excluidos = array();
+                        $fi = new Datetime($opciones["fecha_1"]);
+                        $ff = new Datetime($opciones["fecha_2"]);
+                        if($fi > $ff) {
+                            $t = $fi;
+                            $fi = $ff;
+                            $ff = $t;
+                        }
+                        $interval = DateInterval::createFromDateString('1 day');
+                        $period = new DatePeriod($fi, $interval, $ff);
+
+                        foreach ($period as $dt) {
+                            $excluidos[] = $dt->format("Y-m-d");
+                        }
+                        if(!empty($excluidos)) {
+                            $opciones_fecha["disabledDates"] = $excluidos;
+                        }
+                        break;
+                }
+            }
+        } else {
+            $fecha_por_defecto='';
+            if (strtoupper($campo["tipo_dato"]) == "DATE") {
+                $formato_fecha="L";
+
+                if ($accion == "adicionar") {
+                    if ($campo["predeterminado"] == "now()") {
+                        $fecha_por_defecto= '<?php echo(date("Y-m-d")); ?' . '>';
+                    } else {
+                        $fecha_por_defecto= '';
+                    }
+                }
+                $indice_tabindex++;
+            } else if (strtoupper($campo["tipo_dato"]) == "DATETIME") {
+                $formato_fecha="L LT";
+                if ($accion == "adicionar") {
+                    if ($campo["predeterminado"] == "now()") {
+                        $fecha_por_defecto= '<?php echo(date("Y-m-d H:i")); ?' . '>';
+                    } else {
+                        $fecha_por_defecto= '';
+                    }
+                }
+                $indice_tabindex++;
+            } else if (strtoupper($campo["tipo_dato"]) == "TIME") {
+                $formato_fecha="LT";
+                if ($accion == "adicionar") {
+                    if ($campo["predeterminado"] == "now()") {
+                        $fecha_por_defecto= '<?php echo(date("H:i")); ?' . '>';
+                    } else {
+                        $fecha_por_defecto= '';
+                    }
+                }
+                $indice_tabindex++;
+            }
+            if ($accion == "editar"){
+                $fecha_por_defecto = "<?php echo(mostrar_valor_campo('" . $campo["nombre"] . "',$this->idformato,$" . "_REQUEST['iddoc'])); ?" . ">";
+            }
+        }
+
+        if(!empty($fecha_por_defecto)) {
+            $opciones_fecha["defaultDate"] = $fecha_por_defecto;
+        }
+        $opciones_fecha["format"] = $formato_fecha;
+        $opciones_fecha["locale"] = "es";
+        $opciones_fecha["useCurrent"] = true;
+
+        $texto[] = "</div>";
+        $opciones_json = json_encode($opciones_fecha, JSON_NUMERIC_CHECK);
+        $texto[] = '<script type="text/javascript">
+            $(function () {
+                var configuracion=' . $opciones_json . ';
+                $("#' . $nombre_selector . '").datetimepicker(configuracion);
+            });
+        </script>';
+        $texto[] = "</div>";
+
+        return implode("\n", $texto);
+    }
+
+}

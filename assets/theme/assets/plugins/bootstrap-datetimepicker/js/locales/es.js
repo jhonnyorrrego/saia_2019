@@ -32,9 +32,9 @@
         monthsParse : monthsParse,
         longMonthsParse : monthsParse,
         shortMonthsParse : monthsParse,
-        weekdays : 'domingo_lunes_martes_miércoles_jueves_viernes_sábado'.split('_'),
-        weekdaysShort : 'dom._lun._mar._mié._jue._vie._sáb.'.split('_'),
-        weekdaysMin : 'do_lu_ma_mi_ju_vi_sá'.split('_'),
+        weekdays : 'domingo_lunes_martes_miÃ©rcoles_jueves_viernes_sÃ¡bado'.split('_'),
+        weekdaysShort : 'dom._lun._mar._miÃ©._jue._vie._sÃ¡b.'.split('_'),
+        weekdaysMin : 'do_lu_ma_mi_ju_vi_sÃ¡'.split('_'),
         weekdaysParseExact : true,
         longDateFormat : {
             LT : 'H:mm',
@@ -49,7 +49,7 @@
                 return '[hoy a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
             },
             nextDay : function () {
-                return '[mañana a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
+                return '[maÃ±ana a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
             },
             nextWeek : function () {
                 return 'dddd [a la' + ((this.hours() !== 1) ? 's' : '') + '] LT';
@@ -71,15 +71,15 @@
             mm : '%d minutos',
             h : 'una hora',
             hh : '%d horas',
-            d : 'un día',
-            dd : '%d días',
+            d : 'un dÃ­a',
+            dd : '%d dÃ­as',
             M : 'un mes',
             MM : '%d meses',
-            y : 'un año',
-            yy : '%d años'
+            y : 'un aÃ±o',
+            yy : '%d aÃ±os'
         },
-        dayOfMonthOrdinalParse : /\d{1,2}º/,
-        ordinal : '%dº',
+        dayOfMonthOrdinalParse : /\d{1,2}Âº/,
+        ordinal : '%dÂº',
         week : {
             dow : 1, // Monday is the first day of the week.
             doy : 4  // The week that contains Jan 4th is the first week of the year.
