@@ -14,7 +14,7 @@ if (!isset($_REQUEST["iddoc"])) {
 }
 
 include_once $ruta_db_superior . 'db.php';
-include_once $ruta_db_superior . "pantallas/documento/menu_principal_documento.php";
+include_once $ruta_db_superior . "views/documento/encabezado.php";
 include_once $ruta_db_superior . 'models/pagina.php';
 $iddocumento = $_REQUEST["iddoc"];
 
@@ -30,13 +30,13 @@ $paginas = Pagina::getAllResultDocument($iddocumento, "pagina asc");
 	<body>
 		<div class="container-fluid bg-master-lightest px-4">
 			<div class="row sticky-top pt-2 bg-master-lightest px-3">
-				<?= menu_principal_documento($iddocumento) ?>
+				<?=plantilla($iddocumento); ?>
 			</div>
 			<div class="row">
 				<div class="col-12">
 				    <?php if(Utilities::permisoModulo("editar_paginas")):?>
 					<a href="listar_pagina.php?iddoc=<?=$iddocumento; ?>" class="btn btn-mini float-right"><i class="fa fa-edit"></i></a>
-					<?php endif;?>
+					<?php endif; ?>
 				</div>
 			</div>
 			<hr/>
@@ -47,10 +47,10 @@ $paginas = Pagina::getAllResultDocument($iddocumento, "pagina asc");
                         $fileMin = $paginas["data"][$i] -> getUrlImagenTemp();
                         $fileMax = $paginas["data"][$i] -> getUrlRutaTemp();
                         if ($fileMin !== false && $fileMax !== false):?>
-                            <div data-image="<?=$fileMin;?>" data-src="<?=$fileMax;?>" data-toggle="tooltip" data-placement="bottom" title="P&aacute;gina No <?=$paginas["data"][$i] -> getPagina(); ?>"></div>
+                            <div data-image="<?=$fileMin; ?>" data-src="<?=$fileMax; ?>" data-toggle="tooltip" data-placement="bottom" title="P&aacute;gina No <?=$paginas["data"][$i] -> getPagina(); ?>"></div>
                         <?php
                         endif;
-                    endfor;
+                        endfor;
 					?>                 
 				</div>
 			</div>
@@ -67,7 +67,7 @@ $paginas = Pagina::getAllResultDocument($iddocumento, "pagina asc");
 		</div>
 		<script src="<?= $ruta_db_superior; ?>assets/theme/assets/plugins/owl-carousel/owl.carousel.min.js" type="text/javascript"></script>
 		<script>
-			$(document).ready(function() {			    
+			$(document).ready(function() {
 				$('.owl-carousel > div').each(function() {
 					var img = $(this).data('image');
 					$(this).css({
