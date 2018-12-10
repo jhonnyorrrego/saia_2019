@@ -45,7 +45,7 @@ class Notes {
     }
 
     getInfoFromActive(){
-        return this.notes.find(n => n.idnota == this.active);
+        return this.notes.find(n => n.idnota_funcionario == this.active);
     }
 
     list(refresh = 0) {
@@ -75,9 +75,7 @@ class Notes {
             }
         });
 
-        if(note.notes.length){
-            return note.list(0);
-        }
+        return note.list(0);
     }
 
     createNodes() {
@@ -87,12 +85,12 @@ class Notes {
             for (const note of this.notes) {
                 let fecha = moment(note.fecha, 'YYYY-MM-DD ').format('DD-MM-YYYY');
                 elements.push({
-                    id: note.idnota,
-                    node: `<li data-noteid="` + note.idnota + `" class="note_item">
+                    id: note.idnota_funcionario,
+                    node: `<li data-noteid="` + note.idnota_funcionario + `" class="note_item">
                         <div class="left">
                                 <div class="checkbox check-warning no-margin" class="label_checkbox_note">
-                                    <input id="qncheckbox`+ note.idnota + `" type="checkbox" value="` + note.idnota + `" class="checkbox_note">
-                                    <label for="qncheckbox`+ note.idnota + `"></label>
+                                    <input id="qncheckbox`+ note.idnota_funcionario + `" type="checkbox" value="` + note.idnota_funcionario + `" class="checkbox_note">
+                                    <label for="qncheckbox`+ note.idnota_funcionario + `"></label>
                                 </div>
                                 <p class="note-preview">`+ note.contenido + `</p>
                         </div>
@@ -119,7 +117,7 @@ class Notes {
             data: {
                 id: this.active,
                 content: content,
-                iduser: this.user
+                key: localStorage.getItem('key')
             },
             success: function (response) {
                 if (response.success) {

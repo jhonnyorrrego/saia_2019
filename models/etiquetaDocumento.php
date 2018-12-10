@@ -8,6 +8,10 @@ class EtiquetaDocumento extends Model
     protected $fk_documento;
     protected $table = 'documento_etiqueta';
     protected $primary = 'iddocumento_etiqueta';
+    protected $safeDbAttributes = [
+        'fk_etiqueta',
+        'fk_documento'
+    ];
 
     function __construct($id){
         return parent::__construct($id);

@@ -10,6 +10,12 @@ class PrioridadDocumento extends Model
     protected $prioridad;
     protected $table = 'prioridad_documento';
     protected $primary = 'idprioridad_documento';
+    protected $safeDbAttributes = [
+        'documento_iddocumento',
+        'funcionario_idfuncionario',
+        'fecha_asignacion',
+        'prioridad'
+    ];
 
     function __construct($id){
         return parent::__construct($id);

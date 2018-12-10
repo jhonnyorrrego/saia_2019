@@ -9,6 +9,13 @@ class Pagina extends Model {
     protected $pagina;
     protected $ruta;
     protected $fecha_pagina;
+    protected $safeDbAttributes = [
+        'id_documento',
+        'imagen',
+        'pagina',
+        'ruta',
+        'fecha_pagina'
+    ];
 
     function __construct($id) {
         parent::__construct($id);

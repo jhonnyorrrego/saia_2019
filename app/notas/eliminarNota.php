@@ -11,8 +11,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . 'db.php';
-include_once $ruta_db_superior . 'models/note.php';
+include_once $ruta_db_superior . 'models/notaFuncionario.php';
 
 $Response = (object) array(
     'data' => new stdClass(),
@@ -22,7 +21,7 @@ $Response = (object) array(
 
 if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
     foreach ($_REQUEST['ids'] as $key => $value) {
-        $delete = Note::deleteByPk($value);        
+        $delete = NotaFuncionario::deleteByPk($value);        
     }
 
     $Response->message = "Notas eliminadas";

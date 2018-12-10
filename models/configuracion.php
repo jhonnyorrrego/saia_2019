@@ -11,6 +11,13 @@ class Configuracion extends Model
     protected $encrypt;
     protected $table = 'configuracion';
     protected $primary = 'idconfiguracion';
+    protected $safeDbAttributes = [
+        'nombre',
+        'valor',
+        'tipo',
+        'fecha',
+        'encrypt'
+    ];
 
     function __construct($id){
         return parent::__construct($id);
