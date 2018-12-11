@@ -362,12 +362,21 @@ class Imprime_Pdf {
 
 	public function configurar_encabezado() {
 		global $conn;
-		if ($this -> documento[0]["estado"] == "ACTIVO" || $this -> documento[0]["estado"] == "ANULADO") {
-			$this -> pdf -> marca_agua = 1;
-		}
+		/*Marca de agua, no sirve para PDFA/
+		   /*if ($this -> documento[0]["estado"] == "ACTIVO") {
+		        $this -> pdf -> SetWatermarkImage('imagenes/marca_agua_borrador.png');
+		        $this -> pdf ->showWatermarkImage = true;
+		    }
+		    if ($this -> documento[0]["estado"] == "ANULADO") {
+		        $this -> pdf -> SetWatermarkImage('imagenes/marca_agua_anulado.png');
+		        $this -> pdf ->showWatermarkImage = true;
+		    }*/
+	
 		if ($this -> formato[0]["encabezado"]) {
 			$encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato=" . $this -> formato[0]["encabezado"], "", $conn);
 			if ($encabezado["numcampos"]) {
+			    //$this -> pdf ->setHeader('{PAGENO}');
+			    //$this -> pdf ->setHeader('Pagina {PAGENO} de {nbpg}');
 				$this -> pdf -> SetHTMLHeader(crear_encabezado_pie_pagina($encabezado[0]["contenido"], $this -> documento[0]["iddocumento"], $this -> formato[0]["idformato"], 1), 'O', TRUE);
 			}
 		}
@@ -494,6 +503,7 @@ class Imprime_Pdf {
 				$i++;
 				$nombre_revisar = str_replace('.pdf', 'version' . $i . '.pdf', $nombre);
 			}
+			
 			if (is_file($nombre)) {
 				chmod($nombre, 0777);
 				rename($nombre, $nombre_revisar);
@@ -506,7 +516,9 @@ class Imprime_Pdf {
 	public function set_variable($campo, $valor) {
 		$this -> $campo = $valor;
 	}
-
+	function TotalPaginas() {
+	    return count($this->pages);
+	}
 }
 
 if (@$_REQUEST["iddoc"]) {
