@@ -14745,3 +14745,11 @@ Main components
 .etiqueta_selector {
 	text-transform: none !important;
 }
+
+.f-12{
+    font-size: 12px;
+}
+
+.f-20{
+    font-size: 20px;
+}

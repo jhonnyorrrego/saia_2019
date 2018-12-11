@@ -29,14 +29,12 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
         <?= icons() ?>
         <?= bootstrapTable() ?>
         <?= theme() ?>
-        <?= moment() ?>
         <?= toastr() ?>
-        <?= librerias_acciones_kaiten() ?>
     </head>
     <body>
         <div class="container">
-            <div class="row sticky-top bg-master-lightest" id="header_list"></div>
-            <div class="row" id="content">
+            <div class="row sticky-top bg-master-lightest mx-0" style="height:35px" id="header_list"></div>
+            <div class="row mx-0" id="content">
                 <table id="table" data-selections=""></table>
             </div>
         </div>
@@ -89,13 +87,16 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
                                 }
                             });
 
-                            $("#pagination_other_info").text('Seleccionados: ' + selections.length);
+                            $("#selected_rows").text(selections.length);
                         }
                     },
                     onClickRow: function(row, element, field){
                         element.parent().find('tr[data-index]').each(function(i, e){
-                            if(!$(e).find(':checkbox').is(':checked')){}
+                            if(!$(e).find(':checkbox').is(':checked'))
                                 $(e).removeClass('selected');
+                            else
+                                $(e).addClass('selected');
+
                         });
                         element.addClass('selected');
                     },
@@ -119,7 +120,7 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
                     });
 
                     $(this).data('selections', selections.join(','))
-                    $("#pagination_other_info").text('Seleccionados: ' + selections.length);
+                    $("#selected_rows").text(selections.length);
                 });
 
                 if(encabezado){

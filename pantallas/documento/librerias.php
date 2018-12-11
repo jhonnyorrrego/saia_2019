@@ -985,7 +985,7 @@ function variable_busqueda(){
 
 function origin_pending_document($iddocumento, $funcionarioCodigo, $numero, $fecha, $plantilla, $idtransferencia){
 	global $conn, $ruta_db_superior;
-
+    
 	include_once $ruta_db_superior . 'models/funcionario.php';
 
     $Funcionario = new Funcionario($funcionarioCodigo);
@@ -997,14 +997,14 @@ function origin_pending_document($iddocumento, $funcionarioCodigo, $numero, $fec
         'idtransferencia' => $idtransferencia
     ]);
 
-    $html = '<div class="col-1 px-0 text-center">
+    $html = '<div class="col-1 px-0 text-center action">
         <input type="hidden" value="'.$iddocumento.'" class="identificador">'
         . $roundedImage .
     '</div>
-    <div class="col show_document cursor" data-url="'.$documentRoute.'" titulo="Documento No.' . $numero . '">
-        <span class="mt-1 hint-text" style="font-size: 12px;">'.$numero . " - " . $Funcionario->getName().'</span>
+    <div class="col show_document cursor principal_action" data-url="'.$documentRoute.'" titulo="Documento No.' . $numero . '">
+        <span class="mt-1 hint-text">'.$numero . " - " . $Funcionario->getName().'</span>
     </div>
-    <div class="col-auto">
+    <div class="col-auto pr-0">
         <span class="mt-1 hint-text">'.$temporality.'</span>
     </div>';
 
@@ -1056,13 +1056,13 @@ function has_files($documentId, $showConunter = false) {
             if($showConunter){
                 $total = $files[0]["cant"] + $pages[0]['cant'];
                 
-                $response = '<span class="my-0 text-center h6">
-                    <a href="' . $ruta_db_superior . 'views/pagina/pagina.php?iddoc=' . $documentId . '" class="fa fa-paperclip notification">
+                $response = '<span class="my-0 text-center f-20 px-1">
+                    <a href="' . $ruta_db_superior . 'views/pagina/pagina.php?iddoc=' . $documentId . '" class="fa fa-paperclip notification  text-master">
                         <span class="badge badge-important counter">' . $total . '</span>
                     </a>
                 </span>';
             }else{
-                $response = '<span class="my-0 text-center h6 cursor"><i class="fa fa-paperclip"></i></span>';
+                $response = '<span class="my-0 text-center cursor fa fa-paperclip f-20"></span>';
             }
         }
     }
@@ -1079,7 +1079,7 @@ function priority($documentId){
         $style = '';
     }
     
-    return '<span class="my-0 text-center h6 priority_flag cursor">
+    return '<span class="my-0 text-center priority_flag cursor f-20 px-1">
         <i data-key="'.$documentId.'" class="priority fa fa-flag text-danger" '.$style.'></i>
     </span>';
 }
@@ -1104,16 +1104,16 @@ function expiration($date){
 
         if($diference < 3){
             if($diference == 0){
-                $html = '<span class="hint-text">Vence:</span> <span class="label label-danger btn_expiration">Hoy</span>';
+                $html = '<span class="hint-text">Vence:</span> <span class="label label-danger btn_expiration action">Hoy</span>';
             }elseif($diference == 1){
-                $html = '<span class="hint-text">Vence:</span> <span class="label label-danger btn_expiration">Mañana</span>';
+                $html = '<span class="hint-text">Vence:</span> <span class="label label-danger btn_expiration action">Mañana</span>';
             }else{
-                $html = '<span class="hint-text">Venció:</span> <span class="label label-danger btn_expiration">Hace '.abs($diference).' días</span>';
+                $html = '<span class="hint-text">Venció:</span> <span class="label label-danger btn_expiration action">Hace '.abs($diference).' días</span>';
             }
         }elseif($diference >= 3 && $diference <= 8){
-            $html = '<span class="hint-text">Vence en:</span> <span class="label label-warning btn_expiration">'.$diference.' días</span>';
+            $html = '<span class="hint-text">Vence en:</span> <span class="label label-warning btn_expiration action">'.$diference.' días</span>';
         }else{
-            $html = '<span class="hint-text">Vence en:</span> <span class="label label-info btn_expiration">'.$diference.' días</span>';
+            $html = '<span class="hint-text">Vence en:</span> <span class="label label-info btn_expiration action">'.$diference.' días</span>';
         }
 
         return $html;

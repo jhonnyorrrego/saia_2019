@@ -141,6 +141,10 @@ $(function () {
 
         $.post(`${baseUrl}app/funcionario/guardar_recorte.php`, options, function(response){
             if(response.success){
+                let user = JSON.parse(localStorage.getItem('user'));
+                user.cutedPhoto = response.data.foto_recorte;
+                localStorage.setItem('user', JSON.stringify(user));
+
                 $(".cuted_photo").attr("src", baseUrl + response.data.foto_recorte);
                 $("#img_edit_photo").attr("src", baseUrl + response.data.foto_original);
                 $("#edit_photo_modal,#dinamic_modal").modal("toggle");

@@ -211,48 +211,36 @@ function plantilla($documentId, $transferId = 0){
     ?>
     <link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.css">
     <style>.notification {position: relative;cursor: pointer;text-decoration: none;}.notification > .counter {position: absolute;font-size: 0.5em;top: -9px;left: 1px;}</style>
-    <div class="col-12 px-0 mx-0">
-        <div class="row m-0">
-            <div class="col-auto px-1">
-                <span class="h6">
-                    <i style="display:none" class="fa fa-chevron-left px-3 cursor" id="go_back"></i>
-                </span>
-                <span id="show_tree" class="h6">
-                    <i class="fa fa-sitemap cursor"></i>
-                    <i class="cursor fa fa-angle-double-down"></i>
-                </span>
+    <div class="col-12">
+        <div class="row m-0 bg-info text-white px-1" style="font-size:20px;height:35px">
+            <div class="col px-1 my-auto">
+                <span style="display:none" class="fa fa-arrow-left pr-3 cursor" id="go_back"></span>
+                <span class="fa fa-sitemap cursor"></span>
+                <span class="cursor fa fa-angle-double-down" id="show_tree"></span>
             </div>
-            <div class="col text-center">
-                <span class="cursor p-1 h6">
-                    <i class="fa fa-mail-reply"></i><label style="font-size:13px;" class="d-none d-sm-inline">&nbsp;Responder</label>
+            <div class="col-auto text-center my-auto pr-2">
+                <span class="fa fa-mail-reply px-1">
+                   <label class="d-none d-sm-inline f-12 font-heading">&nbsp;Responder</label>
                 </span>
-                <span class="cursor p-1 h6">
-                    <i class="fa fa-mail-reply-all"></i><label style="font-size:13px;" class="d-none d-sm-inline">&nbsp;Responder a todos</label>
+                <span class="fa fa-mail-reply-all px-1 d-none d-md-inline">
+                   <label class="d-none d-sm-inline f-12 font-heading">&nbsp;Responder a todos</label>
                 </span>
-                <span class="cursor p-1 h6">
-                    <i class="fa fa-share"></i><label style="font-size:13px;" class="d-none d-sm-inline">&nbsp;Reenviar</label>
+                <span class="fa fa-share px-1">
+                    <label class="d-none d-sm-inline f-12 font-heading">&nbsp;Reenviar</label>
                 </span>
-            </div>
-            <?php if (isset($moduleActions) && count($moduleActions)): ?>
-                <div class="col-auto">
-                    <span class="cursor">
-                        <div class="pr-1">
-                            <div class="dropdown pull-right d-xs-block">
-                                <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-angle-double-left"></i> Opciones
-                                </span>
-                                <div class="dropdown-menu dropdown-menu-right" role="menu" x-placement="bottom-end">
-                                    <?php foreach ($moduleActions as $key => $item): ?>
-                                        <a class="dropdown-item menu_options text-truncate" href="<?= $ruta_db_superior . $item['enlace']?>" class="text-body" style="line-height:28px;">
-                                            <i class="<?= $item['imagen'] ?>"></i> <?= $item['etiqueta']?>
-                                        </a>
-                                    <?php endforeach;?>
-                                </div>
-                            </div>
-                        </div>
+                <div class="dropdown d-inline px-1">
+                    <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-ellipsis-v"></i>
                     </span>
+                    <div class="dropdown-menu dropdown-menu-right" role="menu" x-placement="bottom-end">
+                        <?php foreach ($moduleActions as $key => $item): ?>
+                            <a class="dropdown-item menu_options text-truncate" href="<?= $ruta_db_superior . $item['enlace']?>" class="text-body" style="line-height:28px;">
+                                <i class="<?= $item['imagen'] ?>"></i> <?= $item['etiqueta']?>
+                            </a>
+                        <?php endforeach;?>
+                    </div>
                 </div>
-            <?php endif; ?>
+            </div>
         </div>
         <div class="row px-0 mx-0 py-2">
             <div class="col col-md-auto px-0 mx-0">
@@ -279,16 +267,14 @@ function plantilla($documentId, $transferId = 0){
                     </div>
                 </div>
             </div>
-            <div class="col-auto col-md">
+            <div class="col-auto col-md mt-2 pr-0">
                 <?= priority($documentId) ?>
                 <?= has_files($documentId, true) ?>
-                <span class="px-1 h6 cursor" id="show_comments">
-                    <a class="fa fa-comments notification">
-                        <span class="badge badge-important counter"><?= $totalComments ?></span>
-                    </a>
+                <span class="px-1 cursor fa fa-comments notification f-20" id="show_comments">
+                    <span class="badge badge-important counter"><?= $totalComments ?></span>
                 </span>
-                <span class="px-1 h6 cursor"><i class="fa fa-calendar"></i></span>
-                <span class="px-1 h6 cursor"><i class="fa fa-road"></i></span>
+                <span class="px-1 cursor fa fa-calendar f-20"></span>
+                <span class="px-1 cursor fa fa-road f-20"></span>
             </div>
             <div class="col-auto d-none d-md-block">
                 <?= expiration($document[0]['fecha_limite']) ?>

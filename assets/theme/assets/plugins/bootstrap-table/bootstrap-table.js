@@ -357,7 +357,7 @@
         pageNumber: 1,
         pageSize: 10,
         pageList: [10, 25, 50, 100],
-        paginationHAlign: 'right', //right, left
+        paginationHAlign: 'left', //right, left
         paginationVAlign: 'bottom', //bottom, top, both
         paginationDetailHAlign: 'left', //right, left
         paginationPreText: '&lsaquo;',
@@ -1537,7 +1537,7 @@
         }
 
         html.push(
-            '<div class="pagination-detail mt-0 float-right">',
+            '<div class="pagination-detail mt-0' + sprintf(' float-%s', this.options.paginationHAlign) + '">',
             '<span class="pagination-info">',
             this.options.onlyInfoPagination ? this.options.formatDetailPagination(this.options.totalRows) :
             this.options.formatShowingRows(this.pageFrom, this.pageTo, this.options.totalRows),
@@ -1587,9 +1587,7 @@
 
         html.push(this.options.formatRecordsPerPage(pageNumber.join('')));
         html.push('</span>');
-        html.push('<span id="pagination_other_info"></span>');
         html.push('</div>');
-
 
         this.$pagination.html(html.join(''));
 

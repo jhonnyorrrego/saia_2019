@@ -89,7 +89,7 @@ if ($formato[0]["orientacion"]) {
 $color = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "", $conn);
 $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", "", $conn);
 ?>
-<html style="font-size:12px;">
+<html class="f-12">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -208,8 +208,8 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
 	</head>
 	<body>
 <?php if ($_REQUEST["tipo"] != 5): ?>
-    <div class="container-fluid bg-master-lightest px-4">
-        <div class="row sticky-top pt-2 bg-master-lightest px-3">
+    <div class="container bg-master-lightest mx-0 mw-100">
+        <div class="row sticky-top pt-0 bg-master-lightest">
             <?= plantilla($iddocumento, $idtransferencia) ?>
         </div>
         <div id="documento" class="row px-3">

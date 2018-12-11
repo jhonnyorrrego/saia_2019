@@ -3,15 +3,20 @@ $(function(){
     var baseUrl = $("#baseUrl").data('baseurl');
     sessionStorage.setItem('documentSelected', 0);
 
-    //$.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/topModal/topModal.js`);
-
     $('#table').on('check.bs.table uncheck.bs.table', function () {
         if ($(this).data('selections').length){
             if ($('#component_actions').is(':hidden')){
-                $('#component_actions').show('slide');
+                $('#mail_initial_info').slideUp(100, function(){
+                    $('#component_actions').slideDown(100,function(){
+                        $(this).parent().toggleClass('bg-master-lightest bg-info');
+                    });
+                });
             }
         }else{
-            $('#component_actions').hide('slide');
+            $('#component_actions').slideUp(100,function(){
+                $(this).parent().toggleClass('bg-master-lightest bg-info');
+                $('#mail_initial_info').slideDown(100);
+            });
         }
     });
 
@@ -64,22 +69,7 @@ $(function(){
     })
     
     $(document).on('click', '.show_document', function(){
-        let iframe = $("#iframe_right_workspace"),
-            url = $(this).data('url'),
-            actualUrl = iframe.attr('src');
-
-        let documentSelected = $(this).parent().find('.identificador').val();
-        sessionStorage.setItem('documentSelected', documentSelected);
-
-        if(actualUrl != baseUrl + url){
-            iframe.attr('src', baseUrl + url);
-        }
-
-        if($("#right_workspace").is(':hidden')){
-            $("#mailbox,#right_workspace").toggleClass('d-none');
-        }
-
-        $(this).parents('tr[data-index]').addClass('selected');
+        executeAction($(this));
     });
 
     $(document).on('click', '.btn_expiration', function(){
@@ -116,6 +106,50 @@ $(function(){
             },
         })
     });
+
+    $(document).on('click', 'tr[data-index]', function(e){
+        if(!$(e.target).hasClass('action')){
+            let node = $(this).find('.principal_action');
+            executeAction(node);
+        }            
+    });
+
+    $(document).on('click', '#uncheck_list', function(){
+        $('#table').data('selections', '');
+        $(':checkbox[data-index]:checked').trigger('click');
+    });
+
+    function executeAction(node){
+        let iframe = $("#iframe_right_workspace"),
+            url = node.data('url'),
+            actualUrl = iframe.attr('src');
+
+        let documentSelected = node.parent().find('.identificador').val();
+        sessionStorage.setItem('documentSelected', documentSelected);
+
+        if(actualUrl != baseUrl + url){
+            iframe.attr('src', baseUrl + url);
+        }
+
+        if($("#right_workspace").is(':hidden')){
+            $("#mailbox,#right_workspace").toggleClass('d-none');
+        }
+
+        node.parents('tr[data-index]').addClass('selected');
+    }
+
+    (function setDate(){
+        let interval = setInterval(() => {
+            if($("#actual_date").length){
+                var months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        
+                let date = new Date();
+                let text = `Hoy ${date.getDate()} de ${months[date.getMonth()]} del ${date.getFullYear()} `
+                $("#actual_date").text(text);
+                clearInterval(interval);
+            }
+        }, 50);        
+    })();
     
 });
 </script>
