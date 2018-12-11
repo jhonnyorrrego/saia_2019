@@ -11,10 +11,13 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_componentes.php");
+
+$serie_idserie = "";
 if($_REQUEST['idformato']) {
 	$formato = busca_filtro_tabla("","formato","idformato=".$_REQUEST['idformato'],"",$conn);
 	$formato = procesar_cadena_json($formato,array("cuerpo","ayuda","etiqueta"));
 	$cod_padre=$formato[0]["cod_padre"];
+	$serie_idserie = $formato[0]["serie_idserie"];
 
 	$cod_proceso_pertenece=$formato[0]["proceso_pertenece"];
 	$categoria=$formato[0]["fk_categoria_formato"];
