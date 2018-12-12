@@ -128,13 +128,9 @@ class Model {
         }else{
             throw new Exception("invalid Pk", 1);
         }
-
-        return $data;
     }
 
     public static function findByAttributes($conditions, $fields = []){
-        global $conn;
-
         $data = self::findAllByAttributes($conditions, $fields, 1);
         return count($data) ? $data[0] : NULL;
     }
@@ -185,7 +181,6 @@ class Model {
     public function create() {
         $table = self::getTableName();
         $attributes = $this->getNotNullAttributes();
-        $safeAttributes = $this->getSafeAttributes();
         $dateAttributes = $this->getDateAttributes();
 
         $fields = $values = '';
@@ -218,7 +213,6 @@ class Model {
      */
     public function update() {
         $attributes = $this->getNotNullAttributes();
-        $safeAttributes = $this->getSafeAttributes();
         $dateAttributes = $this->getDateAttributes();
 
         if (count($attributes)) {

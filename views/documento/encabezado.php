@@ -251,7 +251,10 @@ function plantilla($documentId, $transferId = 0){
                     <div class="col px-1">
                         <div class="row" style="line-height:1.5">
                             <div class="col-12">
-                                <span class="bold"><?= $Transfer->user->getName() ?></span>
+                                <span class="bold">
+                                    <?= $Transfer->user->getName() ?>
+                                    <span class="badge"><?= $document[0]['numero']?></span>
+                                </span>
                             </div>
                         </div>
                         <div class="row" style="line-height:1.5;font-size:11px">

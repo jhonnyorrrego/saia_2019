@@ -32,7 +32,7 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
         <?= toastr() ?>
     </head>
     <body>
-        <div class="container px-0">
+        <div class="container px-2">
             <div class="row sticky-top bg-master-lightest mx-0" style="height:35px" id="header_list"></div>
             <div class="row mx-0" id="content">
                 <table id="table" data-selections=""></table>
@@ -55,7 +55,7 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
                     responseHandler: function(response){
                         for (let index = 0; index < response.rows.length; index++) {
                             let node = $(response.rows[index].info);
-                            let identificador = node.find('.identificador').val();
+                            let identificador = node.find('.identificator').val();
 
                             node.find('#checkbox_location').html(`<input data-index="${index}" data-id="${identificador}" name="btSelectItem" type="checkbox">`);
 
@@ -111,7 +111,7 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
 
                     $('[name="btSelectItem"]').each(function (i, element) {
                         let id = $(element).data('id');
-
+                        
                         if(element.checked && $.inArray(id, selections) == -1){
                             selections.push(id);
                         }else if(!element.checked){

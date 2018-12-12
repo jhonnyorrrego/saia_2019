@@ -41,9 +41,9 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             $("#mailbox").load(route, function(){
                 setTimeout(() => {
                     window.resizeIframe();
-                }, 1000);
+                }, 1500);
             });
-            
+
             $('#iframe_right_workspace').on('load', function(){
                 $(this).height($(window).height());
             });
