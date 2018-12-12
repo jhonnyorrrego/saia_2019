@@ -832,7 +832,7 @@ function load_componentes($tipo_retorno) {
     if ($pantalla["numcampos"] && $pantalla[0]["tipo_pantalla"] != 2) {
         $where .= " AND lower(categoria)<>'documento'";
     }
-    $categorias = busca_filtro_tabla("", "pantalla_componente", "estado=1" . $where, "GROUP BY categoria ORDER BY orden", $conn);
+    $categorias = busca_filtro_tabla("categoria, nombre", "pantalla_componente", "estado=1" . $where, "GROUP BY categoria ORDER BY orden", $conn);
     if ($categorias["numcampos"]) {
         $retorno["exito"] = 1;
         $texto = '<div class="accordion" id="acordion_componentes">';
@@ -862,11 +862,12 @@ function load_componentes($tipo_retorno) {
 function llena_componentes($nombre) {
     global $conn;
     $texto = '';
-    $componentes = busca_filtro_tabla("", "pantalla_componente", "estado=1 AND lower(categoria)='" . strtolower($nombre) . "'", "orden", $conn);
+    $componentes = busca_filtro_tabla("idpantalla_componente, clase, etiqueta", "pantalla_componente", "estado=1 AND lower(categoria)='" . strtolower($nombre) . "'", "orden", $conn);
     if ($componentes["numcampos"]) {
         for ($i = 0; $i < $componentes["numcampos"]; $i++) {
+            $etiqueta = htmlentities(html_entity_decode(utf8_encode($componentes[$i]["etiqueta"])));
             $texto .= '<div class="component" idpantalla_componente="' . $componentes[$i]["idpantalla_componente"] . '">';
-            $texto .= '<span class="' . $componentes[$i]["clase"] . ' fa-fw"></span>&nbsp;' . $componentes[$i]["etiqueta"] . '</div>';
+            $texto .= '<span class="' . $componentes[$i]["clase"] . ' fa-fw"></span>&nbsp;' . $etiqueta . '</div>';
         }
     }
     return ($texto);
