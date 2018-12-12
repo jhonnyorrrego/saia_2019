@@ -1,4 +1,5 @@
 <?php
+
 $max_salida = 6;
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
@@ -10,90 +11,261 @@ while ($max_salida > 0) {
 }
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
-echo(librerias_jquery("1.7"));
-echo(librerias_arboles());
+include_once ($ruta_db_superior . "arboles/crear_arbol_ft.php");
+
 ?>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset= UTF-8 ">
-	</head>
-	<body>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset= UTF-8 ">
+<?php
+echo (estilo_bootstrap());
+
+echo(librerias_jquery("2.2"));
+?>
+<script src="<?php echo $ruta_db_superior;?>js/jquery-migrate/jquery-migrate-1.4.1.js"></script>
+<?php
+
+echo librerias_UI("1.12");
+
+echo librerias_arboles_ft("2.24", 'filtro');
+?>
+<style type="text/css">
+.estilo-dependencia {
+	font-family: verdana;
+	font-size: 7pt;
+	font-weight: bold;
+}
+
+.estilo-serie {
+	font-family: verdana;
+	font-size: 7pt;
+}
+
+.estilo-serie-sa {
+	font-family: verdana;
+	font-size: 7pt;
+	color: red;
+}
+
+ul.fancytree-container {
+    width: 100%;
+    height: 80%;
+    overflow: auto;
+    position: relative;
+    border: none;
+}
+</style>
+
+<script type="text/javascript">
+	$(function() {
+   	   	var configuracion = {
+    	   	icon: false,
+    	   	lazy: true,
+            strings: {
+                loading: "Cargando...",
+                loadError: "Error en la carga!",
+                moreData: "Mas...",
+                noData: "Sin datos."
+            },
+            debugLevel: 4,
+            extensions: ["filter"],
+            //autoScroll: true,
+            quicksearch: true,
+            //keyboard: true,
+            selectMode:1,
+            clickFolderMode:2,
+
+            source: {
+                url: "../../arboles/arbol_dependencia_serie.php",
+                data: {
+					cargar_partes: 1,
+                    otras_categorias: 1,
+                	serie_sin_asignar: 1
+                }
+            },
+			lazyLoad: function(event, data){
+			      var node = data.node;
+			      // Load child nodes via Ajax GET /getTreeData?mode=children&parent=1234
+			      data.result = $.ajax({
+			        url: "../../arboles/arbol_dependencia_serie.php",
+			        data: {
+				        cargar_partes: 1,
+				        id: node.key
+				    },
+			        cache: true
+			      });
+			      //console.log(data.result);
+			},
+			loadChildren: function(event, data) {
+				var match = $("#buscador").val();
+  		        var buscar = match && match != "" && match.length >= 3;
+				data.node.visit(function(subNode){
+					// quitar la condicion subNode.isExpanded() si filtra
+				    if(match != "" && subNode.lazy && subNode.children == null && subNode.isUndefined() && !subNode.isExpanded() ) {
+	                    subNode.load();
+				    }
+				});
+			},
+            filter: {
+                autoApply: true,
+                autoExpand: true,
+                counter: true,
+                fuzzy: false,
+                hideExpandedCounter: true,
+                hideExpanders: false,
+                highlight: true,
+                leavesOnly: false,
+                nodata: true,
+                mode: "hide"
+            },
+            select: function(event, data) { // Display list of selected nodes
+				var seleccionados = Array();
+				var items = data.tree.getSelectedNodes();
+				for(var i=0;i<items.length;i++){
+					seleccionados.push(items[i].key);
+				}
+				var s = seleccionados.join(",");
+				$("#campo_idserie").val(s);
+			},
+            click: function(event, data) {
+                var nodeId = data.node.key;
+                var elemento_evento = $.ui.fancytree.getEventTargetType(event.originalEvent);
+                if(elemento_evento == 'title') {
+            		if(nodeId!="0.0.0" && nodeId!="0.0.-1"){
+            			var datos=nodeId.split(".");
+            			/*if(parent.serielist && datos[1]==0){
+            				parent.serielist.location = "asignarserie_entidad.php?tvd="+datos[2]+"&seleccionados="+datos[0]+"&idnode=" + nodeId;
+            			}else */if(datos[1]!=0){
+            				parent.serielist.location = "serieview.php?key="+datos[1]+"&idnode="+nodeId+"&identidad_serie="+data.node.data.entidad_serie;
+            			}
+            		} else if(parent.serielist) {
+            			parent.serielist.location = "<?php echo $ruta_db_superior;?>vacio.php";
+            		}
+                }
+                if(data.node.isFolder()) {
+        			data.tree.activateKey(nodeId);
+                }
+			}
+		};
+   	   	$("#treebox_campo_idserie").fancytree(configuracion);
+
+   	   	var tree = $("#treebox_campo_idserie").fancytree("getTree");
+
+   	   	 $("input[name=stext_campo_idserie]").keyup(function(e){
+	    	$("#btnResetSearch_campo_idserie").attr("disabled",false);
+	    });
+	   	 $("#btnSearch").click(function(e){	
+   	   	//$("input[name=stext_campo_idserie]").keyup(function(e) {
+	      var coincidencias = " coincidencias";
+	      var n;
+	      var tree = $.ui.fancytree.getTree();
+	      var opts = {};
+	      var filterFunc = tree.filterNodes;
+	     // var match = $(this).val();
+	      var match = $("input[name=stext_campo_idserie]").val();
+	      var buscar = match && match != "" && match.length >= 3;
+
+	      opts.mode = "dimm";
+
+	      if(e && e.which === $.ui.keyCode.ESCAPE || $.trim(match) === ""){
+	          $("button#btnResetSearch_campo_idserie").click();
+	          return;
+	      }
+	      // Pass a string to perform case insensitive matching. Puede pasar un 3er parametro opts
+	      n = filterFunc.call(tree, match);
+	      if(n == 1) {
+	          coincidencias = " coincidencia";
+	      }
+          /*if(n > 0) {
+  	        $("button#btnResetSearch_campo_idserie").attr("disabled", false);
+  	        $("span#matches_campo_idserie").text("(" + n + coincidencias + ")");
+          } else {*/
+  	        var raiz = tree.getRootNode();
+  	        //console.log(raiz);
+  	        raiz.visit(function(subNode){
+  		        //console.log(subNode.children);
+                  // Cargar todos los nodos hijos lazy/sin cargar
+                  // (esto disparará `loadChildren` recursivamente)
+                  //console.log("Indef: " + subNode.isUndefined() + " Hijos: " + (subNode.children != null));
+                  if(buscar && subNode.lazy && subNode.isUndefined() && subNode.children == null && !subNode.isExpanded()) {
+                      subNode.load();
+                  }
+              });
+          //}
+  	  }).focus();
+
+	  $("button#btnResetSearch_campo_idserie").click(function(e){
+          $("input[name=stext_campo_idserie]").val("");
+          $("span#matches_campo_idserie").text("");
+          tree.clearFilter();
+	  }).attr("disabled", true);
+
+   	});
+  </script>
+</head>
+<body>
 		<span style="font-family: Verdana; font-size: 9px;">
 			<a href='serieadd.php' target='serielist'>ADICIONAR</a>
-			<a href="permiso_serie.php" target='serielist'>PERMISOS</a>
-			<br/><br/>
-			 Buscar:
-			<input type="text" id="stext_serie_idserie" width="200px" size="25">
-			<a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext_serie_idserie').value),1)">
-				<img src="<?php echo $ruta_db_superior;?>botones/general/anterior.png" alt="Buscar Anterior" border="0px">
-			</a> 
-			<a href="javascript:void(0)" onclick="buscar_nodo();">
-				<img src="<?php echo $ruta_db_superior;?>botones/general/buscar.png" alt="Buscar" border="0px">
-			</a>
-			<a href="javascript:void(0)" onclick="tree2.findItem((document.getElementById('stext_serie_idserie').value))">
-				<img src="<?php echo $ruta_db_superior;?>botones/general/siguiente.png" alt="Buscar Siguiente" border="0px">
-			</a>
 		</span>
-		<div id="esperando_serie"><img src="<?php echo $ruta_db_superior;?>imagenes/cargando.gif">
-		</div>
-		<div id="treeboxbox_tree2" width="100px" height="100px"></div>
-		<script type="text/javascript">
-			idNodes = "";
-			var browserType;
-			if (document.layers) {
-				browserType = "nn4"
-			}
-			if (document.all) {
-				browserType = "ie"
-			}
-			if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-				browserType = "gecko"
-			}
-			tree2 = new dhtmlXTreeObject("treeboxbox_tree2", "100%", "85%", 0);
-			tree2.setImagePath("<?php echo $ruta_db_superior;?>imgs/");
-			tree2.enableTreeImages(false);
-			tree2.enableIEImageFix(true);
-			tree2.setOnClickHandler(onNodeSelect);
-			tree2.setOnLoadingStart(cargando_serie);
-			tree2.setOnLoadingEnd(fin_cargando_serie);
-			tree2.setXMLAutoLoading("<?php echo $ruta_db_superior;?>test/test_dependencia_serie.php?otras_categorias=1&serie_sin_asignar=1&cargar_partes=1");
-			tree2.loadXML("<?php echo $ruta_db_superior;?>test/test_dependencia_serie.php?otras_categorias=1&serie_sin_asignar=1&cargar_partes=1");
 
+   <p style="font-family: Verdana; font-size: 9px;">
+	       <label>Buscar:</label>
+	       <input name="stext_campo_idserie" id="buscador" placeholder="Buscar..." autocomplete="off">
+		   <button type="button" id="btnSearch">Buscar</button>
+	       <button type="button" id="btnResetSearch_campo_idserie">&times;</button>
+	       <span id="matches_campo_idserie"></span>
+        </p>
 
-			function onNodeSelect(nodeId) {
-				//iddep.idserie.tipo_tvd
-				if(nodeId!="0.0.0" && nodeId!="0.0.-1"){
-					var datos=nodeId.split(".");
-					if(datos[1]==0){
-						parent.serielist.location = "asignarserie_entidad.php?tvd="+datos[2]+"&seleccionados="+datos[0]+"&idnode=" + nodeId;
-					}else if(datos[1]!=0){
-						parent.serielist.location = "serieview.php?key="+datos[1]+"&idnode="+nodeId;
+<div id="treebox_campo_idserie" class="arbol_saia"></div>
+        <input type="hidden" class="required" name="campo_idserie" id="campo_idserie">
+
+<script type="text/javascript">
+$(document).ready(function() {
+	function receiveMessage(event) {
+		// Do we trust the sender of this message?  (might be
+		// different from what we originally opened, for example).
+		/*if (event.origin !== "http://example.org") {
+		  return;
+		}*/
+
+		var source = event.source.frameElement; //this is the iframe that sent the message
+		var message = event.data; //this is the message
+		//console.log(message);
+
+		var tree = $("#treebox_campo_idserie").fancytree('getTree');
+
+		var newSourceOption = {
+		    url: "<?php echo $ruta_db_superior;?>arboles/arbol_dependencia_serie.php",
+		    type: 'POST',
+		    data: {
+				otras_categorias: 1,
+				serie_sin_asignar: 1
+		    },
+		    dataType: 'json'
+		};
+
+		if(message) {
+			if(message.accion && message.accion == "refrescar_arbol" && message.expandir) {
+				tree.reload(newSourceOption).done(function() {
+					var node = tree.getNodeByKey(message.expandir);
+					//console.log("Expandiendo: " + message.expandir);
+					//console.log(node);
+					if(node) {
+						node.setActive();
+						node.setFocus();
+						node.setExpanded(true);
+						//$(tree.$container).focus();
 					}
-				}else{
-					parent.serielist.location = "<?php echo $ruta_db_superior;?>vacio.php";
-				}
+				});
+			} else if(message.accion && message.accion == "refrescar_arbol") {
+				tree.reload(newSourceOption);
 			}
+		}
 
-			function fin_cargando_serie(opt) {
-				if (browserType == "gecko") {
-					document.poppedLayer = eval('document.getElementById("esperando_serie")');
-				} else if (browserType == "ie") {
-					document.poppedLayer = eval('document.getElementById("esperando_serie")');
-				} else {
-					document.poppedLayer = eval('document.layers["esperando_serie"]');
-				}
-				document.poppedLayer.style.display = "none";
-			}
+	}
+	window.addEventListener("message", receiveMessage, false);
 
-			function cargando_serie() {
-				if (browserType == "gecko")
-					document.poppedLayer = eval('document.getElementById("esperando_serie")');
-				else if (browserType == "ie")
-					document.poppedLayer = eval('document.getElementById("esperando_serie")');
-				else
-					document.poppedLayer = eval('document.layers["esperando_serie"]');
-				document.poppedLayer.style.display = "";
-			}
-		</script>
-	</body>
+});
+</script>
+</body>
 </html>

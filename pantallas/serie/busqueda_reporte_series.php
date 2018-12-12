@@ -38,103 +38,38 @@ global $conn;
           </div>
         </div> 
         
-    <br>
-    
-        <div class="row">
-          <div class="control-group radio_buttons span4">
-            <label class="radio_buttons optional control-label"><b>Tipo</b>
-            <input type="hidden" name="bksaiacondicion_tipo" id="bksaiacondicion_s-tipo" value="=">
-            </label>
-            <div class="controls">
-              <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_s-tipo1" name="bqsaia_tipo" type="radio" value="Serie">Serie
-              </label>
-              <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_s-tipo2" name="bqsaia_tipo" type="radio" value="Subserie">Subserie
-              </label>
-              <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_s-tipo3" name="bqsaia_tipo" type="radio" value="Tipo documental">Tipo Documental
-              </label>
-            </div>          
-          </div> 
-      </div><br>
-
-
-	<br>
         
         <div class="container master-container">
        <form accept-charset="UTF-8" id="kformulario_saia"  method="post" >  
         <div class="control-group">
           <label class="string required control-label" for="nombre">
 			<b>Nombre:</b>
-			<input type="hidden" name="bksaiacondicion_nombre" id="bksaiacondicion_s-nombre" value="like">
+			<input type="hidden" name="bksaiacondicion_nombre" id="bksaiacondicion_nombre" value="like">
           </label>
           <div class="controls">
             <input id="bqsaia_nombre" name="bqsaia_nombre" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_nombre" id="bqsaiaenlace_s-nombre" value="y">
+            <input type="hidden" name="bqsaiaenlace_nombre" id="bqsaiaenlace_nombre" value="y">
           </div>
         </div> 
-        
-    <br>
        
-        <div class="container master-container">
-       <form accept-charset="UTF-8" id="kformulario_saia"  method="post" >  
-        <div class="control-group">
-          <label class="string required control-label" for="retencion_gestion">
-			<b>Archivo de gestion:</b>
-			<input type="hidden" name="bksaiacondicion_retencion_gestion" id="bksaiacondicion_s-retencion_gestion" value="=">
-          </label>
-          <div class="controls">
-            <input id="bqsaia_codigo" name="bqsaia_retencion_gestion" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_retencion_gestion" id="bqsaiaenlace_s-retencion_gestion" value="y">
-          </div>
-        </div> 
-        
-    <br>
-    
-        <div class="container master-container">
-       <form accept-charset="UTF-8" id="kformulario_saia"  method="post" >  
-        <div class="control-group">
-          <label class="string required control-label" for="retencion_central">
-			<b>Archivo de central:</b>
-			<input type="hidden" name="bksaiacondicion_retencion_central" id="bksaiacondicion_s-retencion_central" value="=">
-          </label>
-          <div class="controls">
-            <input id="bqsaia_codigo" name="bqsaia_retencion_central" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_retencion_central" id="bqsaiaenlace_s-retencion_central" value="y">
-          </div>
-        </div> 
-        
-    <br>
+
 
         <div class="row">
           <div class="control-group radio_buttons span4">
-            <label class="radio_buttons optional control-label"><b>Conservacion</b>
-            <input type="hidden" name="bksaiacondicion_conservacion" id="bksaiacondicion_s-conservacionconservacion" value="like">
+            <label class="radio_buttons optional control-label"><b>Estado</b>
+            <input type="hidden" name="bksaiacondicion_estado" id="bksaiacondicion_s-estado" value="=">
             </label>
             <div class="controls">
               <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_s-conservacion1" name="bqsaia_conservacion" type="radio" value="TOTAL">TOTAL
+                <input class="radio_buttons optional" id="bqsaia_s-estado1" name="bqsaia_estado" type="radio" value='Activo'>Activo
               </label>
               <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_s-conservacion2" name="bqsaia_conservacion" type="radio" value="ELIMINACION">ELIMINACION
+                <input class="radio_buttons optional" id="bqsaia_s-estado2" name="bqsaia_estado" type="radio" value='Inactivo'>Inactivo
               </label>
             </div>          
           </div> 
       </div><br>
 
-        <div class="container master-container">
-       <form accept-charset="UTF-8" id="kformulario_saia"  method="post" >  
-        <div class="control-group">
-          <label class="string required control-label" for="procedimiento">
-			<b>Procedimiento:</b>
-			<input type="hidden" name="bksaiacondicion_procedimiento" id="bksaiacondicion_s-procedimiento" value="like">
-          </label>
-          <div class="controls">
-            <input id="bqsaia_nombre" name="bqsaia_procedimiento" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_procedimiento" id="bqsaiaenlace_s-procedimiento" value="y">
-          </div>
-        </div> 
 
 	<br>
 	

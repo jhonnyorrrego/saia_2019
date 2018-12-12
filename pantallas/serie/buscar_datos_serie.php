@@ -26,6 +26,7 @@ if ($_REQUEST["idserie"]) {
 		$x_procedimiento = $serie_padre[0]["procedimiento"];
 		$x_digitalizacion = $serie_padre[0]["digitalizacion"];
 		$x_copia = $serie_padre[0]["copia"];
+		$x_nombre = $serie_padre[0]["nombre"];
 
 		$vector = array(
 			'dias_entrega' => $x_dias_entrega,
@@ -38,6 +39,7 @@ if ($_REQUEST["idserie"]) {
 			'procedimiento' => $x_procedimiento,
 			'digitalizacion' => $x_digitalizacion,
 			'copia' => $x_copia,
+			'nombre' => $x_nombre
 		);
 		$retorno["exito"]=1;
 		$retorno=array_merge($retorno,$vector);

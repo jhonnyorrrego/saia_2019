@@ -29,11 +29,23 @@ $estado_archivo = '';
 if (@$_REQUEST['estado_archivo']) {
 	$estado_archivo = " AND (a.estado_archivo IN(" . $_REQUEST['estado_archivo'] . "))";
 }
+if (isset($_REQUEST["incluir_series"])) {
+    $estado_archivo .= " and serie_idserie  in (" . $_REQUEST["incluir_series"] . ")";
+}
 
 if (@$_REQUEST["seleccionado"]) {
 	$_REQUEST["seleccionado"] = explode(",", $_REQUEST["seleccionado"]);
 }
 
+if (@$_REQUEST['carga_partes']) {
+    if ($id and $id <> "" && @$_REQUEST["uid"]) {
+
+        echo("<tree id=\"" . $id . "\">\n");
+        echo llena_expediente($id);
+        echo("</tree>\n");
+        die();
+    }
+}
 if (@$_REQUEST["doc"]) {
 	$varios = 1;
 	$varios_docs = explode(",", $_REQUEST["doc"]);

@@ -182,11 +182,14 @@ background-position: -192px -96px;
 background-position: -0px -24px;
 }
 .icon-folder-close {
-background-position: -432px -192px;
+background-position: -384px -122px;
 }
 .icon-ruta_aprobaciones {
 background-position: -408px -336px;
 }
 .icon-seguimiento_rastro {
 background-position: -432px -336px;
+}
+.icon-caja-cerrada {
+background-position: -432px -192px;
 }

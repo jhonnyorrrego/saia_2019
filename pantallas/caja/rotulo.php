@@ -11,6 +11,7 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
 include_once ($ruta_db_superior . "pantallas/qr/librerias.php");
+include_once($ruta_db_superior."pantallas/caja/librerias.php");
 
 $cons_logo = busca_filtro_tabla("valor", "configuracion", "nombre='logo' and tipo='empresa'", "", $conn);
 if ($cons_logo["numcampos"]) {
@@ -50,9 +51,9 @@ function obntener_niveles_dependencia_rotulo(&$array_dependencias, $iddependenci
 function rotulo_caja($id){
 	global $logo, $ruta_db_superior;
  
-	$datos=busca_filtro_tabla(fecha_db_obtener('fecha_extrema_i','Y-m-d H:i')." as fecha_i, ".fecha_db_obtener('fecha_extrema_f','Y-m-d H:i')." as fecha_f, a.*","caja a","a.idcaja=".$id,"",$conn);
+	$datos=busca_filtro_tabla("","caja a","a.idcaja=".$id,"",$conn);
 
-	$serie=busca_filtro_tabla("nombre,tipo,cod_padre","serie a","a.idserie=".$datos[0]["serie_idserie"],"",$conn);
+	/*$serie=busca_filtro_tabla("nombre,tipo,cod_padre","serie a","a.idserie=".$datos[0]["serie_idserie"],"",$conn);
 	$nomb_serie="";
 	$nomb_subserie="";
 	if($serie[0]["tipo"]==1){
@@ -65,7 +66,7 @@ function rotulo_caja($id){
 				$nomb_serie=$serie2[0]["nombre"];
 			}
 		}	
-	}
+	}*/
 
 	$dep=busca_filtro_tabla("","dependencia a, dependencia_cargo b","a.iddependencia=b.dependencia_iddependencia and b.funcionario_idfuncionario=".$datos[0]["funcionario_idfuncionario"]." and b.estado=1","",$conn);
 
@@ -111,45 +112,58 @@ function rotulo_caja($id){
 		<td colspan="2" style="text-align:center"><?php echo mayusculas($datos[0]["subseccion"]); ?></td>
 	</tr>
 	<tr height="30px">
-		<td><b>DIVISION</b></td>
+		<td><b>UBICACI&Oacute;N EXACTA</b></td>
 		<td colspan="2" style="text-align:center"><?php echo mayusculas($datos[0]["division"]); ?></td>
 	</tr>
 	<tr height="30px">
 		<td><b>CODIGO</b></td>
-		<td colspan="2" style="text-align:center"><?php echo mayusculas($datos[0]["codigo"]); ?></td>
+		<td colspan="2" style="text-align:center"><?php echo mayusculas($datos[0]["no_consecutivo"]); ?></td>
 	</tr>
+		<?php
+	$expedientes=busca_filtro_tabla("es.serie_idserie","expediente e, entidad_serie es","e.fk_entidad_serie=es.identidad_serie and fk_idcaja=".$datos[0]["idcaja"],"",$conn);
+if($expedientes["numcampos"]){
+	$listado_series = array();
+	for($i=0;$i<$expedientes["numcampos"];$i++){
+		$series=busca_filtro_tabla("nombre","serie","idserie=".$expedientes[$i]["serie_idserie"],"",$conn);
+		$listado_series[]=$series[0]["nombre"];
+	}
+}
+$listado_series=array_unique($listado_series);
+$listado_series=implode(", ", $listado_series);?>
 	<tr height="30px">
 		<td><b>SERIE</b></td>
-		<td colspan="2" style="text-align:center"><?php echo mayusculas($nomb_serie); ?></td>
+		<td colspan="2" style="text-align:center"><?php echo mayusculas($listado_series); /*mayusculas($nomb_serie);*/ ?></td>
 	</tr>
-	<tr height="30px">
+	<!--tr height="30px">
 		<td><b>SUBSERIE</b></td>
 		<td colspan="2" style="text-align:center"><?php echo mayusculas($nomb_subserie); ?></td>
-	</tr>
+	</tr-->
 	<tr>
 		<td><b>No. CARPETA</b></td>
-		<td colspan="2" style="text-align:center"><?php echo mayusculas($datos[0]["no_carpetas"]); ?></td>
+		<td colspan="2" style="text-align:center"><?php echo consultar_numero_carpetas_caja($datos[0]["idcaja"]); //echo mayusculas($datos[0]["no_carpetas"]); ?></td>
 	</tr>
-	<tr>
+	<!--tr>
 		<td><b>No. CAJA</b></td>
 		<td colspan="2" style="text-align:center;font-size:18pt"><?php echo mayusculas($datos[0]["no_cajas"]); ?></td>
-	</tr>
-	<tr>
+	</tr-->
+	<!--tr>
 		<td><b>No. CONSECUTIVO</b></td>
 		<td colspan="2" style="text-align:center;"><?php echo mayusculas($datos[0]["no_consecutivo"]); ?></td>
-	</tr>
-	<tr>
+	</tr-->
+	<!--tr>
 		<td><b>No. CORRELATIVO</b></td>
 		<td colspan="2" style="text-align:center;"><?php echo mayusculas($datos[0]["no_consecutivo"]); ?></td>
-	</tr>
+	</tr-->
 	<tr>
 		<td rowspan="2" style="text-align:center;">FECHAS EXTREMAS</td>
 		<td style="text-align:center;">Fecha inicial</td>
 		<td style="text-align:center;">Fecha final</td>
 	</tr>
 	<tr>
-		<td><?php echo ($datos[0]["fecha_extrema_i"]); ?></td>
-		<td><?php echo ($datos[0]["fecha_extrema_f"]); ?></td>
+		<td style="text-align:center;"><?php /*echo ($datos[0]["fecha_extrema_i"]);*/
+		echo calcular_fecha_extrema_inicial($datos[0]["idcaja"]); ?></td>
+		<td style="text-align:center;"><?php /*echo ($datos[0]["fecha_extrema_f"]);*/
+		echo calcular_fecha_extrema_final($datos[0]["idcaja"]); ?></td>
 	</tr>
 </table>
 <?php
@@ -162,6 +176,19 @@ function rotulo_carpeta($id){
 	$caja=busca_filtro_tabla("","caja a","a.idcaja=".$datos[0]["fk_idcaja"],"",$conn);
 	
 	$serie=busca_filtro_tabla("nombre,tipo,cod_padre","serie a","a.idserie=".$datos[0]["serie_idserie"],"",$conn);
+	$buscar_entidad_serie=busca_filtro_tabla("llave_entidad, serie_idserie","entidad_serie","identidad_serie=".$datos[0]["fk_entidad_serie"],"",$conn);
+if($buscar_entidad_serie["numcampos"]){
+	$iddependencia = $buscar_entidad_serie[0]["llave_entidad"];
+	$idserie = $buscar_entidad_serie[0]["serie_idserie"];
+	$buscar_dependencia=busca_filtro_tabla("codigo","dependencia","iddependencia=".$iddependencia,"",$conn);
+	if($buscar_dependencia["numcampos"]){
+		$codigo_dependencia = $buscar_dependencia[0]["codigo"];
+	}
+	$buscar_serie=busca_filtro_tabla("codigo","serie","idserie=".$idserie,"",$conn);
+	if($buscar_serie["numcampos"]){
+		$codigo_serie = $buscar_serie[0]["codigo"];
+	}
+}
 	$nomb_serie="";
 	$nomb_subserie="";
 	if($serie[0]["tipo"]==1){
@@ -231,13 +258,13 @@ filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 	</tr>
 	<tr>
 		<td style="text-align:center"><b>CODIGO No.</b></td>
-		<td style="text-align:center" colspan="2"><?php echo mayusculas($datos[0]["codigo_numero"]); ?></td>
+		<td style="text-align:center" colspan="2"><?php echo mayusculas($codigo_dependencia." - ".$codigo_serie." - ".$datos[0]["codigo_numero"]); ?></td>
 	</tr>
 	<tr>
 		<td style="text-align:center"><b>FONDO</b></td>
 		<td style="text-align:center" colspan="2"><?php echo mayusculas($datos[0]["fondo"]); ?></td>
 	</tr>
-	<tr>
+	<!--tr>
 		<td style="text-align:center"><b>SECCION</b></td>
 		<td style="text-align:center" colspan="2"><?php echo mayusculas($array_dependencias[0]); ?></td>
 	</tr>
@@ -252,22 +279,33 @@ filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
 	<tr>
 		<td style="text-align:center"><b>SUBSECCION II</b></td>
 		<td style="text-align:center" colspan="2"><?php echo mayusculas($array_dependencias[2]); ?></td>
-	</tr>
+	</tr-->
+	<?php
+	/*$expedientes=busca_filtro_tabla("es.serie_idserie","expediente e, entidad_serie es","e.fk_entidad_serie=es.identidad_serie and fk_idcaja=".$caja[0]["idcaja"],"",$conn);
+if($expedientes["numcampos"]){
+	$listado_series = array();
+	for($i=0;$i<$expedientes["numcampos"];$i++){
+		$series=busca_filtro_tabla("nombre","serie","idserie=".$expedientes[$i]["serie_idserie"],"",$conn);
+		$listado_series[]=$series[0]["nombre"];
+	}
+}
+$listado_series=array_unique($listado_series);
+$listado_series=implode(", ", $listado_series);*/?>
 	<tr>
 		<td style="text-align:center"><b>SERIE</b></td>
-		<td colspan="2"><?php echo mayusculas($nomb_serie); ?></td>
+		<td colspan="2" style="text-align:center"><?php echo mayusculas($nomb_serie); ?></td>
 	</tr>
 	<tr>
 		<td style="text-align:center"><b>SUBSERIE</b></td>
-		<td colspan="2"><?php echo mayusculas($nomb_subserie); ?></td>
+		<td colspan="2" style="text-align:center"><?php echo mayusculas($nomb_subserie); ?></td>
 	</tr>
 	<tr>
 		<td style="text-align:center"><b>PROCESO</b></td>
-		<td colspan="2"><?php echo($datos[0]["proceso"]); ?></td>
+		<td colspan="2" style="text-align:center"><?php echo($datos[0]["proceso"]); ?></td>
 	</tr>
 	<tr>
 		<td style="text-align:center"><b>Observaciones</b></td>
-		<td colspan="2"><?php echo ($datos[0]["descripcion"]); ?></td>
+		<td colspan="2" style="text-align:center"><?php echo ($datos[0]["descripcion"]); ?></td>
 	</tr>
 	<tr>
 		<td rowspan="2" style="text-align:center"><b>FECHAS EXTREMAS</b></td>

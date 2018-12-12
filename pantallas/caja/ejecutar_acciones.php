@@ -29,7 +29,7 @@ function set_caja() {
 	$retorno -> exito = 0;
 	$retorno -> mensaje = "Error al guardar";
 	$exito = 0;
-	$campos = array("fondo", "seccion", "subseccion", "division", "codigo", "serie_idserie", "no_carpetas", "no_cajas", "no_consecutivo", "no_correlativo", "fecha_extrema_i", "fecha_extrema_f", "estanteria", "panel", "material", "seguridad", "funcionario_idfuncionario", "modulo", "nivel", "codigo_serie", "codigo_dependencia", "dependencia_iddependencia");
+	$campos = array("fondo", "seccion", "subseccion", "division", "codigo", "serie_idserie", "no_carpetas", "no_cajas", "no_consecutivo", "no_correlativo", "estanteria", "panel", "material", "seguridad", "funcionario_idfuncionario", "modulo", "nivel", "codigo_serie", "codigo_dependencia", "dependencia_iddependencia","ubicacion");
 	$valores = array();
 	foreach ($campos AS $key => $campo) {
 		if (@$_REQUEST[$campo]) {
@@ -39,7 +39,7 @@ function set_caja() {
 		}
 	}
 	$sql2 = "INSERT INTO caja(" . implode(",", $campos) . ") VALUES('" . implode("','", $valores) . "')";
-	phpmkr_query($sql2);
+	phpmkr_query($sql2) or die($sql2);
 	$idcaja = phpmkr_insert_id();
 	if ($idcaja) {
 		if (asignar_caja($idcaja, 1, usuario_actual("idfuncionario"))) {
@@ -59,7 +59,7 @@ function update_caja() {
 	$retorno -> exito = 0;
 	$retorno -> mensaje = "Error al guardar";
 	$exito = 0;
-	$campos = array("fondo", "seccion", "subseccion", "division", "codigo", "serie_idserie", "no_carpetas", "no_cajas", "no_consecutivo", "no_correlativo", "fecha_extrema_i", "fecha_extrema_f", "estanteria", "panel", "material", "seguridad", "funcionario_idfuncionario", "dependencia_iddependencia");
+	$campos = array("fondo", "seccion", "subseccion", "division", "codigo", "serie_idserie", "no_carpetas", "no_cajas", "no_consecutivo", "no_correlativo", "estanteria", "panel", "material", "seguridad", "funcionario_idfuncionario", "dependencia_iddependencia","ubicacion");
 	$valores = array();
 	$update = array();
 	foreach ($campos AS $key => $campo) {

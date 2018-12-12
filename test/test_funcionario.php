@@ -44,6 +44,9 @@ $seleccionados = array();
 if (isset($_REQUEST["seleccionados"])) {
 	$seleccionados = explode(",", $_REQUEST["seleccionados"]);
 }
+$no_padre=false;  
+if(@$_REQUEST["sin_padre"])  
+  $no_padre=true;
 //TERMINA DEFAULT
 
 $objetoXML = new XMLWriter();
@@ -66,7 +69,7 @@ if (stristr($_SERVER["HTTP_ACCEPT"], "application/xhtml+xml")) {
 echo $cadenaXML;
 
 function llena_dependencia($id) {
-	global $conn, $objetoXML, $condicion_dep;
+	global $conn, $objetoXML, $condicion_dep,$no_padre;
 	if ($id == 0) {
 		$papas = busca_filtro_tabla("", "dependencia", "(cod_padre=0 or cod_padre is null)" . $condicion_dep, "nombre ASC", $conn);
 	} else {
@@ -82,7 +85,10 @@ function llena_dependencia($id) {
 			$objetoXML -> writeAttribute("style", "font-family:verdana; font-size:7pt;font-weight:bold");
 			$objetoXML -> writeAttribute("text", $text);
 			$objetoXML -> writeAttribute("id", $papas[$i]["iddependencia"] . "#");
-
+			if($no_padre){
+      			//$cadena .= " nocheckbox=\"1\" ";
+				$objetoXML -> writeAttribute("nocheckbox", 1);
+			}
 			$hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"] . $condicion_dep, "", $conn);
 			$funcionario = busca_filtro_tabla("count(*) as cant", "vfuncionario_dc", "estado=1 and estado_dc=1 and iddependencia=" . $papas[$i]["iddependencia"], "", $conn);
 			if ($hijos[0]["cant"] || $funcionario[0]["cant"]) {

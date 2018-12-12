@@ -16,6 +16,7 @@ $ewCurSec = 0; // Initialise
 // Initialize common variables
 $x_idcargo = Null;
 $x_nombre = Null;
+$x_codigo_cargo = Null;
 $x_cod_padre = Null;
 $x_tipo_cargo = Null;
 ?>
@@ -47,6 +48,7 @@ if (($sAction == "") || ((is_null($sAction)))) {
     // Get fields from form
     $x_idcargo = @$_POST["x_idcargo"];
     $x_nombre = @$_POST["x_nombre"];
+    $x_codigo_cargo = @$_POST["x_codigo_cargo"];
     $x_cod_padre = @$_POST["x_cod_padre"];
     $x_tipo_cargo = @$_POST["x_tipo_cargo"];
 }
@@ -92,7 +94,8 @@ $(document).ready(function() {
 			dataType: 'html',
 			data: {
 				cargo : 1,
-				nombre :$(this).val()
+				campo : "nombre",
+				valor :$(this).val()
 			},
 			success: function(data){
 				if(data==1){
@@ -102,6 +105,35 @@ $(document).ready(function() {
 						layout: "topCenter",
 						timeout:4500
 					});
+					$("#guardar").attr("disabled",true);
+				}else{
+					$("#guardar").attr("disabled",false);
+				}
+			}
+		});
+	});
+	
+	$("#x_codigo_cargo").change(function() {
+    	var consecutivo = $(this).val();
+    	$.ajax({
+            type: "POST",
+            url:"pantallas/rol/valida_repetido.php",
+			type: 'POST',
+			dataType: 'html',
+			data: {
+				cargo : 1,
+				campo: "codigo_cargo",
+				valor :$(this).val()
+			},
+			success: function(data){
+				if(data==1){
+					top.noty({
+						text: 'Código del cargo repetido!',
+						type: 'error',
+						layout: "topCenter",
+						timeout:4500
+					});
+					$("#x_codigo_cargo").val(" ");
 					$("#guardar").attr("disabled",true);
 				}else{
 					$("#guardar").attr("disabled",false);
@@ -120,6 +152,16 @@ $(document).ready(function() {
 
 
 	<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
+		<tr>
+			<td class="encabezado" title="Nombre del nuevo cargo.">
+				<span class="phpmaker" style="color: #FFFFFF;">C&Oacute;DIGO DEL CARGO*</span>
+			</td>
+			<td bgcolor="#F5F5F5">
+    			<span class="phpmaker">
+    				<input type="text" name="x_codigo_cargo" id="x_codigo_cargo" size="30" maxlength="255" class="required" value="<?php echo htmlspecialchars(@$x_codigo_cargo) ?>">
+    			</span>
+    		</td>
+		</tr>
 		<tr>
 			<td class="encabezado" title="Nombre del nuevo cargo.">
 				<span class="phpmaker" style="color: #FFFFFF;">NOMBRE *</span>
@@ -194,6 +236,7 @@ include ("footer.php");
 function LoadData($sKey, $conn) {
     global $x_idcargo;
     global $x_nombre;
+	global $x_codigo_cargo;
     global $x_cod_padre;
     global $x_tipo_cargo;
     $sKeyWrk = "" . addslashes($sKey) . "";
@@ -227,6 +270,7 @@ function LoadData($sKey, $conn) {
         // Get the field contents
         $x_idcargo = $row["idcargo"];
         $x_nombre = $row["nombre"];
+		$x_codigo_cargo = $row["codigo_cargo"];
         $x_tipo_cargo = $row["tipo_cargo"];
         $x_cod_padre = $row["cod_padre"];
     }
@@ -250,6 +294,7 @@ function LoadData($sKey, $conn) {
 function AddData($conn) {
     global $x_idcargo;
     global $x_nombre;
+	global $x_codigo_cargo;
     global $x_cod_padre;
     global $x_tipo_cargo;
     // Add New Record
@@ -259,6 +304,9 @@ function AddData($conn) {
     $theValue = (!get_magic_quotes_gpc()) ? addslashes($x_nombre) : $x_nombre;
     $theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
     $fieldList["nombre"] = $theValue;
+	$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_codigo_cargo) : $x_codigo_cargo;
+    $theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+    $fieldList["codigo_cargo"] = $theValue;
     $fieldList["cod_padre"] = $x_cod_padre;
     if (empty($x_cod_padre)) {
         $fieldList["cod_padre"] = 0;

@@ -53,9 +53,9 @@ if ($datos_busqueda[0]["busqueda_avanzada"] != '') {
 <link rel="stylesheet" type="text/css" media="screen" href="<?php echo($ruta_db_superior);?>pantallas/lib/librerias_css.css" />
 <style>
 .row-fluid [class*="span"]{min-height:20px;}.row-fluid {min-height:20px;}.well{ margin-bottom: 3px; min-height: 11px; padding: 4px;}.alert{ margin-bottom: 3px; padding: 10px;}  body{ font-size:12px; line-height:100%; margin-top:35px;padding:0px;}.navbar-fixed-top, .navbar-fixed-bottom{ position: fixed;} .navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top{margin-right: 0px; margin-left: 0px;}
-.texto-azul{ color:#3176c8} 
+.texto-azul{ color:#3176c8}
 
-#panel_body{margin-top:0px; overflow: auto; <?php if($_SESSION["tipo_dispositivo"]=='movil'){ echo("width:100%; -webkit-overflow-scrolling:touch;");  } else{ echo("width:50%;"); } ?>} 
+#panel_body{margin-top:0px; overflow: auto; <?php if($_SESSION["tipo_dispositivo"]=='movil'){ echo("width:100%; -webkit-overflow-scrolling:touch;");  } else{ echo("width:50%;"); } ?>}
 #panel_detalle{margin-top:0px; border: 0px; overflow:auto;<?php if($_SESSION["tipo_dispositivo"]=='movil'){ echo("width:0%; -webkit-overflow-scrolling:touch;");} else{ echo("width:50%;");} ?>}
 
 </style>
@@ -63,7 +63,7 @@ if ($datos_busqueda[0]["busqueda_avanzada"] != '') {
   <div class="navbar-inner">
     <ul class="nav pull-left">
       <li>
-	      <div class="btn-group">            
+	      <div class="btn-group">
 	        <button type="button" class="btn btn-mini">Busqueda</button>
 	        <button type="button" class="btn dropdown-toggle btn-mini" data-toggle="dropdown"><span class="caret"> </span>&nbsp;</button>
 	        <ul class="dropdown-menu" id='lista_busqueda'>
@@ -77,31 +77,34 @@ if ($datos_busqueda[0]["busqueda_avanzada"] != '') {
 	        </ul>
 	      </div>
       </li>
-      
-      
+
+
       <!-- /btn-group -->
       </li>
-      <li>          
-      <div class="btn-group">            
+      <?php
+            if($datos_busqueda[0]["acciones_seleccionados"]!=''){
+      ?>
+      <li>
+      <div class="btn-group">
         <button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">Acciones &nbsp;
           <span class="caret">
           </span>&nbsp;
-        </button>            
-        <ul class="dropdown-menu" id='listado_seleccionados'>              
-          <?php 
-            if($datos_busqueda[0]["acciones_seleccionados"]!=''){
+        </button>
+        <ul class="dropdown-menu" id='listado_seleccionados'>
+          <?php
             $acciones=explode(",",$datos_busqueda[0]["acciones_seleccionados"]);
             $cantidad=count($acciones);
 		        for($i=0;$i<$cantidad;$i++){
 		            echo($acciones[$i]());
-		        }
-            }              
-          ?>                                
-        </ul>             
+		        }            
+          ?>
+        </ul>
       </div>
-      <!-- /btn-group -->               
-      </li> 
-      <?php if(@$datos_busqueda[0]["menu_busqueda_superior"]){ ?>
+      <!-- /btn-group -->
+      </li>
+      <?php 
+      }
+         if(@$datos_busqueda[0]["menu_busqueda_superior"]){ ?>
         <?php
           $funcion_menu=explode("@",$datos_busqueda[0]["menu_busqueda_superior"]);
           echo($funcion_menu[0](@$funcion_menu[1]));
@@ -109,8 +112,8 @@ if ($datos_busqueda[0]["busqueda_avanzada"] != '') {
       <?php }
       ?>
        <li class="divider-vertical"> </li>
-      <li>            
-      <div class="btn-group">            
+      <li>
+      <div class="btn-group">
         <button type="button" class="btn btn-mini " id="loadmoreajaxloader" >M&aacute;s Resultados
         </button>
         <button type="button" class="btn dropdown-toggle btn-mini" data-toggle="dropdown">
@@ -170,7 +173,7 @@ $(document).ready(function(){
   var alto_inicial=($(window).height()-espacio_menu);
   var carga_final=false;
   var contador=1;
-  var forma_cargar=<?php echo($datos_busqueda[0]["cargar"]);?>;
+  var forma_cargar=<?php echo(!empty($datos_busqueda[0]["cargar"]) ? $datos_busqueda[0]["cargar"] : 0);?>;
   $("#resultado_20").click(function(){
     $("#busqueda_registros").val("20");
     cargar_datos_scroll();
@@ -198,15 +201,26 @@ $(document).ready(function(){
       carga_final=1;
     }
   }
-  function cargar_datos_scroll(){
+  function cargar_datos_scroll() {
     $('#loadmoreajaxloader').html("Cargando");
     $.ajax({
       type:'POST',
       url: "servidor_busqueda.php",
-      data: "idbusqueda_componente=<?php echo($idbusqueda_componente);?>&page="+$("#busqueda_pagina").val()+"&rows="+$("#busqueda_registros").val()+"&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>&actual_row="+$("#fila_actual").val()+"&variable_busqueda="+$("#variable_busqueda").val()+"&idexpediente=<?php echo($idexpediente);?>&idcaja=<?php echo($_REQUEST["idcaja"]);?>",
+      data: {
+          idbusqueda_componente: "<?php echo($idbusqueda_componente);?>",
+          page: $("#busqueda_pagina").val(),
+          rows: $("#busqueda_registros").val(),
+          idbusqueda_filtro_temp: "<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>",
+          idbusqueda_filtro: "<?php echo(@$_REQUEST['idbusqueda_filtro']);?>",
+          idbusqueda_temporal: "<?php echo (@$_REQUEST['idbusqueda_temporal']);?>",
+          actual_row: $("#fila_actual").val(),
+          variable_busqueda: $("#variable_busqueda").val(),
+          idexpediente: "<?php echo($idexpediente);?>",
+          idcaja: "<?php echo($_REQUEST["idcaja"]);?>"
+      },
       dataType:'json',
       success: function(objeto){
-          if(objeto.exito){
+          if(objeto && objeto.exito){
 	          $("#busqueda_pagina").val(objeto.page);
 	          $("#busqueda_total_paginas").val(objeto.total);
 	          $("#fila_actual").val(objeto.actual_row);
@@ -284,7 +298,7 @@ $(document).ready(function(){
             else{
             	finalizar_carga_datos();
             }
-         
+
         }
       });
     }

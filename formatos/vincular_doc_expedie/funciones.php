@@ -12,26 +12,57 @@ include_once ($ruta_db_superior . "db.php");
 
 /*ADICIONAR - EDITAR*/
 function add_edit_vincu_exp() {
-	global $conn;
-	if ($_REQUEST["iddoc"]) {
-		$opt = 1;
-	} else {
-		$opt = 0;
-		$ocultar = 0;
-		if (isset($_REQUEST["idexpediente"])) {
-			$ocultar = 1;
-		}
+    global $ruta_db_superior;
+	$opt = 0;
+	$ocultar = 0;
+	if (isset($_REQUEST["idexpediente"])) {
+		$ocultar = 1;
 	}
 ?>
 <script>
-	$(document).ready(function (){
-		var opt=parseInt(<?php echo $opt;?>);
-		if(opt==0){
-			var ocultar=parseInt(<?php echo $ocultar;?>);
-			if(ocultar==1){
-				$("#td_fk_idexpediente").html('<input type="hidden" name="redirecciona_exp" value="1"><input type="text" id="fk_idexpediente" name="fk_idexpediente" value="<?php echo $_REQUEST["idexpediente"];?>" readonly="true">');
-				$("#tr_fk_idexpediente").hide();
-			}
+var cargado = false;
+var opt=parseInt(<?php echo $opt;?>);
+var ocultar=parseInt(<?php echo $ocultar;?>);
+
+function fin_carga_arbol_serie_idserie() {
+	$("#esperando_serie_idserie").hide();
+
+	if(!cargado) {
+		refrescar_arbol();
+	}
+}
+
+function refrescar_arbol() {
+	if(ocultar == 1) {
+		var idexp = '<?php echo($_REQUEST["idexpediente"]); ?>';
+		//console.log("Exp: "+idexp);
+		var url_arbol = "<?php echo($ruta_db_superior); ?>test/test_expediente_funcionario.php?idexpediente=" + idexp;
+		if(ocultar==1) {
+			tree_serie_idserie.deleteChildItems(0);
+			tree_serie_idserie.loadXML(url_arbol);
+			cargado = true;
+		}
+	}
+}
+
+$(document).ready(function (){
+		tree_serie_idserie.setOnLoadingEnd(fin_carga_arbol_serie_idserie);
+		if(ocultar==1) {
+			var idexp = '<?php echo($_REQUEST["idexpediente"]); ?>';
+			$("[name='fk_idexpediente']").val(idexp);			
+		} else {
+			tree_serie_idserie.setOnCheckHandler(function(nodeId) {
+    			var ud = tree_serie_idserie.getUserData(nodeId,"idexpediente");
+    			var idexp = ud;
+    			var idser = null;
+    			if(!ud) {
+    				var data = nodeId.split(/[._]/);
+    				idser = data[0];
+    				idexp = data[1];
+    			}
+    			$("[name='fk_idexpediente']").val(idexp);
+    			//$("#serie_idserie").val(idser);
+			});
 		}
 	});
 </script>
@@ -52,7 +83,7 @@ function ver_anexos_doc_vincu($idformato, $iddoc){
 	$html="";
 	if($anexos["numcampos"]){
 		for ($i=0; $i <$anexos["numcampos"] ; $i++) {
-			$ruta_anexo=$ruta_db_superior.'anexosdigitales/mostrar_menu_anexo.php?idanexo='.$anexos[$i]["idanexos"].'&iddoc='.$iddoc; 
+			$ruta_anexo=$ruta_db_superior.'anexosdigitales/mostrar_menu_anexo.php?idanexo='.$anexos[$i]["idanexos"].'&iddoc='.$iddoc;
 			$html.='<a href="'.$ruta_anexo.'">'.$anexos[$i]["etiqueta"].'</a><br/>';
 		}
 	}
@@ -74,23 +105,24 @@ function post_aprob_vincu_exp($idformato, $iddoc) {
 function mostrar_informacion_qr($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
 	$datos_vincular_doc=busca_filtro_tabla("serie_idserie,asunto,".fecha_db_obtener('fecha_documento', 'Y-m-d') . " as fecha_doc,observaciones","ft_vincular_doc_expedie","documento_iddocumento=".$iddoc,"",$conn);
-    
+
   //$documento=busca_filtro_tabla("numero,tipo_radicado,".fecha_db_obtener("fecha","Y-m-d")." AS fecha","documento","iddocumento=".$iddoc,"",$conn);
-	$tipo_documento=busca_filtro_tabla("nombre, cod_padre","serie","idserie=".$datos_vincular_doc[0]["serie_idserie"],"",$conn);
+  	$dato_serie = explode(".",$datos_vincular_doc[0]["serie_idserie"]);
+	$tipo_documento=busca_filtro_tabla("nombre, cod_padre","serie","idserie=".$dato_serie[0],"",$conn);
 
 	if($tipo_documento["numcampos"]){
-		$serie = busca_filtro_tabla("nombre","serie","idserie =".$tipo_documento[0]["cod_padre"],"",$conn);		
+		$serie = busca_filtro_tabla("nombre","serie","idserie =".$tipo_documento[0]["cod_padre"],"",$conn);
 	}
-	
+
 	$datos_fecha = date_parse($datos_vincular_doc[0]["fecha_doc"]);
 	$fecha_doc = $datos_fecha["day"] . " de " . mes($datos_fecha["month"]) . " del " . $datos_fecha["year"];
-	
+
 	$estado_doc=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"", $conn);
 	if($estado_doc[0]['estado']=='APROBADO'){
 		include_once ($ruta_db_superior . "pantallas/qr/librerias.php");
 		$img=mostrar_codigo_qr($idformato, $iddoc, 1);
 	}
-	
+
     $tabla='
         <table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">
   <tr>
@@ -100,24 +132,25 @@ function mostrar_informacion_qr($idformato,$iddoc){
  </tr>
  <tr>
     <td style="width: 18%;"><b>Asunto:</b></td>
-    <td style="width: 18%;">'.$datos_vincular_doc[0]["asunto"].'</td> 
+    <td style="width: 18%;">'.$datos_vincular_doc[0]["asunto"].'</td>
     <td><b>Serie:</b></td>
-    <td>'.$serie[0]["nombre"].' - '.$tipo_documento[0]["nombre"].'.</td>   
+    <td>'.$serie[0]["nombre"].' - '.$tipo_documento[0]["nombre"].'.</td>
   </tr>
  <tr>
     <td style="width: 18%;"><b>Anexo:</b></td>
-    <td style="width: 18%;">'.ver_anexos_doc_vincu($idformato,$iddoc).'</td> 
+    <td style="width: 18%;">'.ver_anexos_doc_vincu($idformato,$iddoc).'</td>
     <td><b>Observaciones:</b></td>
-    <td>'.$datos_vincular_doc[0]["observaciones"].'</td>   
+    <td>'.$datos_vincular_doc[0]["observaciones"].'</td>
   </tr>
-  </table>';  
+  </table>';
     echo $tabla;
-    
+
 }
 function cargar_serie_documental($idformato,$iddoc){
 	global $conn;
+	/*
 	$idex=$_REQUEST["idexpediente"];
-	$expedientes=busca_filtro_tabla("idserie","expediente e, serie s","e.serie_idserie = s.cod_padre and idexpediente=".$idex,"",$conn);	
+	$expedientes=busca_filtro_tabla("idserie","expediente e, serie s","e.serie_idserie = s.cod_padre and idexpediente=".$idex,"",$conn);
 	?>
 	<script>
 		$(document).ready(function(){
@@ -125,9 +158,9 @@ function cargar_serie_documental($idformato,$iddoc){
 			tree_serie_idserie.setOnLoadingEnd(function(){
 				tree_serie_idserie.setCheck(serie,true);
 			});
-			$("#serie_idserie").val(serie);			
+			$("#serie_idserie").val(serie);
 		});
 	</script>
-	<?php
+	 * */
 }
 ?>

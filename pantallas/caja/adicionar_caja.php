@@ -21,7 +21,20 @@ echo(librerias_arboles());
 <input type="hidden" name="iddocumento" id="iddocumento" value="<?php echo($_REQUEST["iddocumento"]);?>">
 <input type="hidden" id="cerrar_higslide" value="<?php echo(@$_REQUEST["cerrar_higslide"]);?>">
 <legend>Crear caja</legend>
-<div class="control-group element">
+	<div class="control-group element">
+	  <label class="control-label" for="ubicacion">Ubicaci&oacute;n
+	  </label>
+	  <div class="controls">
+	  	<select name="ubicacion" id="ubicacion">
+	  		<option value="">Por favor seleccione...</option>
+				<option value="1" <?php if($datos[0]["ubicacion"]==1)echo("selected");
+else echo("selected");?>>Central</option>
+				<option value="2" <?php if($datos[0]["ubicacion"]==2)echo("selected"); ?>>Gesti&oacute;n</option>
+				<option value="3" <?php if($datos[0]["ubicacion"]==3)echo("selected"); ?>>Historico</option>
+	  	</select>
+	  </div>
+	</div>
+<!--div class="control-group element">
   <label class="control-label" for="serie_idserie">Serie asociada *
   </label>
   <div class="controls">
@@ -40,7 +53,7 @@ echo(librerias_arboles());
          <input type="hidden" name="serie_idserie" id="serie_idserie">
          <input type="hidden" name="dependencia_iddependencia" id="dependencia_iddependencia">
   </div>
-</div>
+</div-->
 <script type="text/javascript">
 
 var browserType;
@@ -134,17 +147,19 @@ function cargando_serie() {
   <label class="control-label" for="codigo">Codigo *
   </label>
   <div class="controls"> 
-    <input type="text"  id="codigo_numero_dependencia" name="codigo_dependencia" value="" style="width:12%;" readonly="readonly">
+    <!--input type="text"  id="codigo_numero_dependencia" name="codigo_dependencia" value="" style="width:12%;" readonly="readonly">
     <input type="text"  id="codigo_numero_serie"  value="" style="width:12%;" name="codigo_serie" readonly="readonly">
-    <input type="text"  id="cod_consecutivo" required="required" name="no_consecutivo" value="" style="width:12%;">
+    <input type="text"  id="cod_consecutivo" required="required" name="no_consecutivo" value="" style="width:12%;"-->
+    <input type="text"  id="cod_consecutivo" required="required" name="no_consecutivo" value="" style="width:30%;">
   </div>
 </div>
 
 <div class="control-group element">
-  <label class="control-label" for="fondo">Fondo *
+  <label class="control-label" for="fondo">Fondo 
   </label>
   <div class="controls"> 
-    <input type="text" name="fondo" required="required" id="fondo" value="" readonly="readonly">
+    <!--input type="text" name="fondo" required="required" id="fondo" value="" readonly="readonly"-->
+    <input type="text" name="fondo" id="fondo" value="">
   </div>
 </div>
 
@@ -165,7 +180,7 @@ function cargando_serie() {
 </div>
 
 <div class="control-group element">
-  <label class="control-label" for="division">Division
+  <label class="control-label" for="division">Ubicaci&oacute;n exacta
   </label>
   <div class="controls"> 
     <input type="text" name="division" id="division" value="">
@@ -208,14 +223,14 @@ function cargando_serie() {
 -->
 
 <div class="control-group element">
-  <label class="control-label" for="modulo">Módulo
+  <label class="control-label" for="modulo">Estanter&iacute;a
   </label>
   <div class="controls"> 
     <input type="text" name="modulo" id="modulo" value="">
   </div>
 </div>
 <div class="control-group element">
-  <label class="control-label" for="panel">Panel
+  <label class="control-label" for="panel">Entrepa&ntilde;o
   </label>
   <div class="controls"> 
     <input type="text" name="panel" id="panel" value="">
@@ -247,6 +262,7 @@ function cargando_serie() {
   		<option value="1" <?php if($datos[0]["seguridad"]==1)echo("selected");?>>Confidencial</option>
   		<option value="2" <?php if($datos[0]["seguridad"]==2)echo("selected");?>>Publica</option>
   		<option value="3" <?php if($datos[0]["seguridad"]==3)echo("selected");?>>Rutinario</option>
+  		<option value="4" <?php if($datos[0]["seguridad"]==4)echo("selected");?>>Restringido al cargo asignado</option>
   	</select>
   </div>
 </div>
@@ -275,6 +291,20 @@ function cargando_serie() {
 <?php echo(librerias_arboles()); ?>
 <script type="text/javascript">
 $(document).ready(function(){
+	$("#cod_consecutivo").change(function() {
+    	var consecutivo = $(this).val();
+    	$.ajax({
+            type: "POST",
+            url: '<?php echo($ruta_db_superior); ?>pantallas/caja/verificar_consecutivo.php',
+            data:{consecutivo:consecutivo},
+            success: function(respuesta){
+            	if(respuesta==0){
+        			notificacion_saia("El consecutivo ya existe, por favor digitar uno diferente","error","",4000);
+        			$("#cod_consecutivo").val(" ");
+        		}
+            }
+		});
+	});
 	consultar_materiales_caja();
 	$('#fecha_extrema_i').datetimepicker({
     language: 'es',

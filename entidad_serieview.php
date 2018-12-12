@@ -3,9 +3,9 @@
 <?php
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
-header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1 
-header("Cache-Control: post-check=0, pre-check=0", false); 
-header("Pragma: no-cache"); // HTTP/1.0 
+header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache"); // HTTP/1.0
 ?>
 <?php
 $ewCurSec = 0; // Initialise
@@ -17,8 +17,8 @@ define("ewAllowEdit", 4, true);
 define("ewAllowView", 8, true);
 define("ewAllowList", 8, true);
 define("ewAllowReport", 8, true);
-define("ewAllowSearch", 8, true);																														
-define("ewAllowAdmin", 16, true);						
+define("ewAllowSearch", 8, true);
+define("ewAllowAdmin", 16, true);
 ?>
 <?php
 
@@ -36,11 +36,11 @@ $x_fecha = Null;
 <?php
 $sKey = @$_GET["key"];
 if (($sKey == "") || ((is_null($sKey)))) {
-	$sKey = @$_GET["key"]; 
+	$sKey = @$_GET["key"];
 }
 if (($sKey == "") || ((is_null($sKey)))) {
-	ob_end_clean(); 
-	header("Locationentidad_serielist.php"); 
+	ob_end_clean();
+	header("Location entidad_serielist.php");
 	exit();
 }
 if (!empty($sKey)) $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
@@ -85,7 +85,7 @@ if ((!is_null($x_entidad_identidad)) && ($x_entidad_identidad <> "")) {
 	$sTmp = $x_entidad_identidad;
 	$sTmp = addslashes($sTmp);
 	$sSqlWrk .= " WHERE (identidad = " . $sTmp . ")";
-	$rswrk = phpmkr_query($sSqlWrk,$conn) or die("Falló la búsqueda" . phpmkr_error() . ' SQL:' . $sSqlWrk);
+	$rswrk = phpmkr_query($sSqlWrk,$conn) or die("Fallï¿½ la bï¿½squeda" . phpmkr_error() . ' SQL:' . $sSqlWrk);
 	if ($rswrk && $rowwrk = phpmkr_fetch_array($rswrk)) {
 		$sTmp = $rowwrk["nombre"];
 	}
@@ -109,7 +109,7 @@ if ((!is_null($x_serie_idserie)) && ($x_serie_idserie <> "")) {
 	$sTmp = $x_serie_idserie;
 	$sTmp = addslashes($sTmp);
 	$sSqlWrk .= " WHERE (idserie = " . $sTmp . ")";
-	$rswrk = phpmkr_query($sSqlWrk,$conn) or die("Falló la búsqueda" . phpmkr_error() . ' SQL:' . $sSqlWrk);
+	$rswrk = phpmkr_query($sSqlWrk,$conn) or die("Fallï¿½ la bï¿½squeda" . phpmkr_error() . ' SQL:' . $sSqlWrk);
 	if ($rswrk && $rowwrk = phpmkr_fetch_array($rswrk)) {
 		$sTmp = $rowwrk["nombre"];
 		$sTmp .= ValueSeparator(0) . $rowwrk["codigo"];
@@ -134,16 +134,16 @@ $x_serie_idserie = $sTmp;
 	<tr>
 		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Estado</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php 
+<?php
 switch($x_estado){
   case 1:
-    echo "ACTIVO"; 
+    echo "ACTIVO";
   break;
   case 0:
     echo "INACTIVO";
   break;
-}   
-?>         
+}
+?>
 </span></td>
 	</tr>
 	<!--tr>
@@ -189,7 +189,7 @@ function LoadData($sKey,$conn)
 	if ($sOrderBy <> "") {
 		$sSql .= " ORDER BY " . $sOrderBy;
 	}
-	$rs = phpmkr_query($sSql,$conn) or die("Falló la búsqueda" . phpmkr_error() . ' SQL:' . $sSql);
+	$rs = phpmkr_query($sSql,$conn) or die("Fallï¿½ la bï¿½squeda" . phpmkr_error() . ' SQL:' . $sSql);
 	if (phpmkr_num_rows($rs) == 0) {
 		$LoadData = false;
 	}else{
