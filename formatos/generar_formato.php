@@ -19,15 +19,16 @@ include_once ($ruta_db_superior . FORMATOS_SAIA . "generar_formato_buscar.php");
 include_once ($ruta_db_superior . "pantallas/documento/class_documento_elastic.php");
 include_once ($ruta_db_superior . "arboles/crear_arbol_ft.php");
 
-if (@$_REQUEST["archivo"] != '') {
+if (isset($_REQUEST["archivo"]) && !empty($_REQUEST["archivo"])) {
     $archivo = $ruta_db_superior . str_replace("-", "/", $_REQUEST["archivo"]);
 }
-if (@$_REQUEST["crea"]) {
+if (isset($_REQUEST["crea"])) {
     $_REQUEST["genera"] = $_REQUEST["crea"];
 }
-if (@$_REQUEST["genera"]) {
+
+if (isset($_REQUEST["genera"])) {
     $accion = $_REQUEST["genera"];
-    if (@$_REQUEST["idformato"]) {
+    if (isset($_REQUEST["idformato"])) {
         $idformato = $_REQUEST["idformato"];
         $generar = new GenerarFormato($idformato, $accion, $archivo);
         $redireccion = $generar->ejecutar_accion();
@@ -38,13 +39,54 @@ if (@$_REQUEST["genera"]) {
             $redireccion = $archivo;
         }
     }
-    if ($_REQUEST["llamado_ajax"] && $accion != "buscar") {
+    if (isset($_REQUEST["llamado_ajax"]) && $_REQUEST["llamado_ajax"] && $accion != "buscar") {
         echo (json_encode(array(
             "exito" => $generar->exito,
             "mensaje" => $generar->mensaje
         )));
+        die();
     }
     redirecciona($redireccion);
+    die();
+} else if (isset($_REQUEST["accion"]) && $_REQUEST["accion"] == "full" && isset($_REQUEST["idformato"])) {
+    $status = array(
+        "exito" => 0,
+        "mensaje" => ["No se pudo generar el formato"]
+    );
+    ob_start();
+    $acciones = [
+        "tabla",
+        "adicionar",
+        "editar",
+        "mostrar",
+        "buscar"];
+    $mensajes = array();
+    $idformato = $_REQUEST["idformato"];
+    $exito = true;
+    foreach ($acciones as $accion) {
+        $generar = new GenerarFormato($idformato, $accion);
+        $generar->ejecutar_accion();
+        if(!$generar->exito) {
+            $mensajes[] = "Error en la accion $accion";
+            $mensajes[] = $generar->mensaje;
+            $exito = false;
+            break;
+        } else {
+            $exito = $exito && $generar->exito;
+            $msg = $generar->mensaje;
+            if(is_array($generar->mensaje) && isset($generar->mensaje["mensaje"])) {
+                $msg = $generar->mensaje["mensaje"];
+            }
+            $mensajes[] = $msg;
+        }
+    }
+    //$mensajes = array_unique($mensajes, SORT_STRING);
+    ob_get_clean();
+    $status["exito"] = $exito;
+    $status["mensaje"] = $mensajes;
+    ob_end_clean();
+    echo json_encode($status);
+    die();
 }
 
 class GenerarFormato {
@@ -108,6 +150,9 @@ class GenerarFormato {
                 $generar = new GenerarBuscar($this->idformato, "buscar");
                 $generar->crear_formato_buscar();
                 $redireccion = "funciones_formatolist.php?idformato=" . $this->idformato;
+                $this->exito = $generar->exito;
+                $this->mensaje = $generar->mensaje;
+
                 if ($_REQUEST["llamado_ajax"]) {
                     echo (json_encode(array(
                         "exito" => $generar->exito,
