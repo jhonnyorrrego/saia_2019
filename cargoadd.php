@@ -94,7 +94,8 @@ $(document).ready(function() {
 			dataType: 'html',
 			data: {
 				cargo : 1,
-				nombre :$(this).val()
+				campo : "nombre",
+				valor :$(this).val()
 			},
 			success: function(data){
 				if(data==1){
@@ -104,6 +105,35 @@ $(document).ready(function() {
 						layout: "topCenter",
 						timeout:4500
 					});
+					$("#guardar").attr("disabled",true);
+				}else{
+					$("#guardar").attr("disabled",false);
+				}
+			}
+		});
+	});
+	
+	$("#x_codigo_cargo").change(function() {
+    	var consecutivo = $(this).val();
+    	$.ajax({
+            type: "POST",
+            url:"pantallas/rol/valida_repetido.php",
+			type: 'POST',
+			dataType: 'html',
+			data: {
+				cargo : 1,
+				campo: "codigo_cargo",
+				valor :$(this).val()
+			},
+			success: function(data){
+				if(data==1){
+					top.noty({
+						text: 'Código del cargo repetido!',
+						type: 'error',
+						layout: "topCenter",
+						timeout:4500
+					});
+					$("#x_codigo_cargo").val(" ");
 					$("#guardar").attr("disabled",true);
 				}else{
 					$("#guardar").attr("disabled",false);

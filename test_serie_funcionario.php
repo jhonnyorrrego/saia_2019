@@ -28,6 +28,15 @@ if ($id != "") {
 } else {
 	$id = "NULL";
 }
+if (@$_REQUEST['carga_partes']) {
+    if ($id and $id <> "" && @$_REQUEST["uid"]) {
+
+         echo("<tree id=\"" . $id . "\">\n");
+         echo llena_serie($id);
+         echo("</tree>\n");
+         die();
+    }
+}
 $categoria = $_REQUEST["categoria"];
 if ($categoria == "") {
 	echo "\n<tree id=\"0\">\n";
@@ -105,10 +114,16 @@ function llena_serie($serie, $condicion = "", $padre = "") {
 	if ($papas["numcampos"] > 0) {
 		for ($i = 0; $i < $papas["numcampos"]; $i++) {
 			if (!@$_REQUEST["solo_papas"]) {
-				$hijos = llena_serie($papas[$i]["idserie"]);
+			    
+			    if(!$_REQUEST["carga_partes"]){
+				    $hijos = llena_serie($papas[$i]["idserie"]);
+			    }
 			}
 			$texto .= ("\n<item style=\"font-family:verdana; font-size:7pt;\" ");
 			$texto .= "text=\"" . ucwords(codifica_caracteres($papas[$i]["nombre"])) . "(" . strtoupper($papas[$i]["codigo"]) . ") \" ";
+			if($_REQUEST["carga_partes"]){
+			    $texto .= " child=\"1\" ";
+			}
 			if ($papas[$i]['tipo'] != 3) {
 				if (!@$_REQUEST["con_padres"]) {
 					$texto .= " nocheckbox=\"1\"";
