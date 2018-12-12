@@ -2,23 +2,38 @@
 require_once $ruta_db_superior . 'models/model.php';
 
 class Pagina extends Model {
-    protected $table = 'pagina';
-    protected $primary = 'consecutivo';
+    public static $primary = 'consecutivo';
     protected $id_documento;
     protected $imagen;
     protected $pagina;
     protected $ruta;
     protected $fecha_pagina;
-    protected $safeDbAttributes = [
-        'id_documento',
-        'imagen',
-        'pagina',
-        'ruta',
-        'fecha_pagina'
-    ];
+    protected $dbAttributes;
 
     function __construct($id) {
         parent::__construct($id);
+    }
+
+    /**
+     * define the values for dbAttributes
+     */
+    protected function defineAttributes(){
+        // set the safe attributes to update and consult
+        $safeDbAttributes = [
+            'id_documento',
+            'imagen',
+            'pagina',
+            'ruta',
+            'fecha_pagina'
+        ];
+    
+        // set the date attributes on the schema
+        $dateAttributes = ['fecha_pagina'];
+
+        $this->dbAttributes = (object) [
+            'safe' => $safeDbAttributes,
+            'date' => $dateAttributes
+        ];
     }
 
     /**

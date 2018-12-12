@@ -27,6 +27,9 @@ $params = http_build_query(array(
 
 $url = PROTOCOLO_CONEXION . RUTA_PDF . '/pantallas/busquedas/servidor_busqueda.php?' . $params;
 
+if($_REQUEST['debug']){
+    echo '<pre>';var_dump($url);echo '</pre>';exit;
+}
 $ch = curl_init();
 if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);

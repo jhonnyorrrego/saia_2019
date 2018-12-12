@@ -29,12 +29,26 @@ class BusquedaComponente extends Model
     protected $enlace_adicionar;
     protected $encabezado_grillas;
     protected $llave;
-    protected $table = 'busqueda_componente';
-    protected $primary = 'idcomentario_documento';
-    protected $safeDbAttributes = ['busqueda_idbusqueda','tipo','conector','url','etiqueta','nombre','orden','info','exportar','exportar_encabezado','encabezado_componente','estado','ancho','cargar','campos_adicionales','tablas_adicionales','ordenado_por','direccion','agrupado_por','busqueda_avanzada','acciones_seleccionados','modulo_idmodulo','menu_busqueda_superior','enlace_adicionar','encabezado_grillas','llave'];
+    protected $dbAttributes;
 
     function __construct($id){
         return parent::__construct($id);
+    }
+
+    /**
+     * define the values for dbAttributes
+     */
+    protected function defineAttributes(){
+        // set the safe attributes to update and consult
+        $safeDbAttributes = ['busqueda_idbusqueda','tipo','conector','url','etiqueta','nombre','orden','info','exportar','exportar_encabezado','encabezado_componente','estado','ancho','cargar','campos_adicionales','tablas_adicionales','ordenado_por','direccion','agrupado_por','busqueda_avanzada','acciones_seleccionados','modulo_idmodulo','menu_busqueda_superior','enlace_adicionar','encabezado_grillas','llave'];
+
+        // set the date attributes on the schema
+        $dateAttributes = [];
+
+        $this->dbAttributes = (object) [
+            'safe' => $safeDbAttributes,
+            'date' => $dateAttributes
+        ];
     }
 
     public static function findByName($name){

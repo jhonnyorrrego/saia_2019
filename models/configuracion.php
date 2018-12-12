@@ -9,18 +9,31 @@ class Configuracion extends Model
     protected $tipo;
     protected $fecha;
     protected $encrypt;
-    protected $table = 'configuracion';
-    protected $primary = 'idconfiguracion';
-    protected $safeDbAttributes = [
-        'nombre',
-        'valor',
-        'tipo',
-        'fecha',
-        'encrypt'
-    ];
+    protected $dbAttributes;
 
     function __construct($id){
         return parent::__construct($id);
+    }
+
+     /**
+     * define the values for dbAttributes
+     */
+    protected function defineAttributes(){
+        // set the safe attributes to update and consult
+        $safeDbAttributes = [
+            'nombre',
+            'valor',
+            'tipo',
+            'fecha',
+            'encrypt'
+        ];
+        // set the date attributes on the schema
+        $dateAttributes = ['fecha'];
+
+        $this->dbAttributes = (object) [
+            'safe' => $safeDbAttributes,
+            'date' => $dateAttributes
+        ];
     }
 
     public static function findByName($name){

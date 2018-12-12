@@ -8,33 +8,30 @@ class PrioridadDocumento extends Model
     protected $funcionario_idfuncionario;
     protected $fecha_asignacion;
     protected $prioridad;
-    protected $table = 'prioridad_documento';
-    protected $primary = 'idprioridad_documento';
-    protected $safeDbAttributes = [
-        'documento_iddocumento',
-        'funcionario_idfuncionario',
-        'fecha_asignacion',
-        'prioridad'
-    ];
-
+    protected $dbAttributes;
+    
     function __construct($id){
         return parent::__construct($id);
     }
 
-    static function findByDocument($id){
-        global $conn;
-
-        if($id){
-            $Instance = new self;
-            $record = busca_filtro_tabla('*', $Instance->table, 'documento_iddocumento = '. $id, '', $conn);
-
-            if($record['numcampos']){
-                $Instance->setAttributes($record[0]);
-            }
-            return $Instance;
-        }else{
-            return NULL;
-        }
-    }
+    /**
+     * define the values for dbAttributes
+     */
+    protected function defineAttributes(){
+        // set the safe attributes to update and consult
+        $safeDbAttributes = [
+            'documento_iddocumento',
+            'funcionario_idfuncionario',
+            'fecha_asignacion',
+            'prioridad'
+        ];
     
+        // set the date attributes on the schema
+        $dateAttributes = ['fecha_asignacion'];
+
+        $this->dbAttributes = (object) [
+            'safe' => $safeDbAttributes,
+            'date' => $dateAttributes
+        ];
+    }    
 }

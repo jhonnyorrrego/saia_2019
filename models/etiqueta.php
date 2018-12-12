@@ -7,16 +7,29 @@ class Etiqueta extends Model
     protected $nombre;
     protected $fk_funcionario;
     protected $estado;
-    protected $table = 'etiqueta';
-    protected $primary = 'idetiqueta';
-    protected $safeDbAttributes = [
-        'nombre',
-        'fk_funcionario',
-        'estado'
-    ];
+    protected $dbAttributes;
 
     function __construct($id){
         return parent::__construct($id);
+    }
+
+     /**
+     * define the values for dbAttributes
+     */
+    protected function defineAttributes(){
+        // set the safe attributes to update and consult
+        $safeDbAttributes = [
+            'nombre',
+            'fk_funcionario',
+            'estado'
+        ];
+        // set the date attributes on the schema
+        $dateAttributes = [];
+
+        $this->dbAttributes = (object) [
+            'safe' => $safeDbAttributes,
+            'date' => $dateAttributes
+        ];
     }
 
     public static function findActiveByUser($userId){

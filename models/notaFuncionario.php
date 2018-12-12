@@ -8,18 +8,32 @@ class NotaFuncionario extends Model{
     protected $fk_funcionario;
     protected $fecha;
     protected $estado;
-    protected $table = 'nota_funcionario';
-    protected $primary = 'idnota_funcionario';
-    protected $safeDbAttributes = [
-        'nombre',
-        'contenido',
-        'fk_funcionario',
-        'fecha',
-        'estado'
-    ];
+    protected $dbAttributes;
 
     function __construct($id){
         return parent::__construct($id);
+    }
+
+    /**
+     * define the values for dbAttributes
+     */
+    protected function defineAttributes(){
+        // set the safe attributes to update and consult
+        $safeDbAttributes = [
+            'nombre',
+            'contenido',
+            'fk_funcionario',
+            'fecha',
+            'estado'
+        ];
+    
+        // set the date attributes on the schema
+        $dateAttributes = ['fecha'];
+
+        $this->dbAttributes = (object) [
+            'safe' => $safeDbAttributes,
+            'date' => $dateAttributes
+        ];
     }
 
     public static function findActiveByUser($userId){

@@ -19,29 +19,43 @@ class Funcionario extends Model {
     protected $direccion;
     protected $telefono;
     protected $clave;
-    protected $table = 'funcionario';
-    protected $primary = 'idfuncionario';
-    protected $safeDbAttributes = [
-        'funcionario_codigo',
-        'login',
-        'nombres',
-        'apellidos',
-        'estado',
-        'email',
-        'foto_original',
-        'foto_recorte',
-        'email_contrasena',
-        'direccion',
-        'telefono',
-        'clave'
-    ];
-
+    protected $dbAttributes;
+    
     /**
      * @param int $id value for idfuncionario attribute
      * @author jhon.valencia@cerok.com
      */
     function __construct($id){
         return parent::__construct($id);
+    }
+
+    /**
+     * define the values for dbAttributes
+     */
+    protected function defineAttributes(){
+        // set the safe attributes to update and consult
+        $safeDbAttributes = [
+            'funcionario_codigo',
+            'login',
+            'nombres',
+            'apellidos',
+            'estado',
+            'email',
+            'foto_original',
+            'foto_recorte',
+            'email_contrasena',
+            'direccion',
+            'telefono',
+            'clave'
+        ];
+    
+        // set the date attributes on the schema
+        $dateAttributes = [];
+
+        $this->dbAttributes = (object) [
+            'safe' => $safeDbAttributes,
+            'date' => $dateAttributes
+        ];
     }
 
     /**

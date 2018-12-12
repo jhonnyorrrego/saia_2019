@@ -158,8 +158,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             <!-- START PAGE CONTENT -->
             <div class="content">
                <!-- START CONTAINER FLUID -->
-                <div class="container-fluid container-fixed-lg my-0 py-0 mx-0 px-0" id="workspace"  style="position:absolute;">
-                    <iframe class="container-fluid container-fixed-lg my-0 py-0 mx-0 px-0" frameBorder="0" id="iframe_workspace" width="100%" scrolling="no" style="position:absolute;z-index:0;"></iframe>
+                <div class="container-fluid container-fixed-lg m-0 p-0" id="workspace"  style="position:absolute;">
+                    <iframe class="container-fluid container-fixed-lg m-0 p-0" frameBorder="0" id="iframe_workspace" width="100%" scrolling="no" style="position:absolute;z-index:0;"></iframe>
                     <div class="d-inline d-block d-lg-none rounded-circle bg-white text-center" style="z-index:1;position:absolute;width:60px;height:60px;" id="new_action_mobile_container">
                         <span class="p-0 m-0 rounded-circle w-100 h-100" id="new_action_mobile" style="cursor:pointer;">
                             <i class="fa fa-plus-circle text-complete" style="font-size:60px" ></i>

@@ -96,9 +96,11 @@ class Comments {
                         <div class="media-body">
                             <div class="m-0 p-0">
                                 <span class="bold">${comment.user.name}</span>
-                                <span class="float-right pr-3 hint-text">${comment.temporality}</span>
                             </div>
-                            <p class="my-2" style="line-height:1">${comment.comment}</p>
+                            <p class="my-2" style="line-height:1">
+                                ${comment.comment}
+                                <span class="float-right pr-3 hint-text">${comment.temporality}</span>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -108,7 +110,10 @@ class Comments {
                 <div class="offset-2 col-10 px-0 bg-complete-lighter" style="border-radius:5px">
                     <div class="media">
                         <div class="media-body pl-3">
-                            <p class="my-2 text-justify" style="line-height:1">${comment.comment}</p>
+                            <p class="my-2 text-justify" style="line-height:1">
+                                ${comment.comment}
+                                <span class="float-right pr-3 hint-text">${comment.temporality}</span>
+                            </p>
                         </div>
                         <img class="align-self-center ml-1 mr-2 rounded-circle" src="${baseUrl + comment.user.image}" style="width:32px;height:32px;">
                     </div>

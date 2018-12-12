@@ -8,25 +8,30 @@ class ComentarioDocumento extends Model
     protected $fk_documento;
     protected $comentario;
     protected $fecha;
-    protected $table = 'comentario_documento';
-    protected $primary = 'idcomentario_documento';
-    protected $safeDbAttributes = [
-        'fk_funcionario',
-        'fk_documento',
-        'comentario',
-        'fecha'
-    ];
+    protected $dbAttributes;
 
     function __construct($id){
         return parent::__construct($id);
     }
 
-    public static function findByDocument($documentId){
-        global $conn;
+    /**
+     * define the values for dbAttributes
+     */
+    protected function defineAttributes(){
+        // set the safe attributes to update and consult
+        $safeDbAttributes = [
+            'fk_funcionario',
+            'fk_documento',
+            'comentario',
+            'fecha'
+        ];
+        // set the date attributes on the schema
+        $dateAttributes = ['fecha'];
 
-        $findComments = busca_filtro_tabla('*', 'comentario_documento', 'fk_documento =' . $documentId, '', $conn);
-        unset($findComments['tabla'], $findComments['sql'], $findComments['numcampos']);
-        return $findComments;
+        $this->dbAttributes = (object) [
+            'safe' => $safeDbAttributes,
+            'date' => $dateAttributes
+        ];
     }
 
     public static function getTotalByDocument($documentId){

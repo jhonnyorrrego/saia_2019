@@ -25,19 +25,23 @@ $Response = (object)array(
 
 if($_SESSION['idfuncionario'] == $_REQUEST['key']){
     $documentId = $_REQUEST['documentId'];
-    $comments = ComentarioDocumento::findByDocument($documentId);
+    $comments = ComentarioDocumento::findAllByAttributes([
+        'fk_documento' => $documentId
+    ]);
 
     $data = [];
-    for($i = 0, $total = count($comments); $i < $total; $i++){
-        $Funcionario = new Funcionario($comments[$i]['fk_funcionario']);
+    foreach ($comments as $key => $ComentarioDocumento) {
+        $Funcionario = new Funcionario($ComentarioDocumento->fk_funcionario);
+        $DateTime = DateTime::createFromFormat('Y-m-d H:i:s', $ComentarioDocumento->fecha);
+
         $data[] = [
             'user' => [
                 'key' => $Funcionario->getPk(),
                 'name' => $Funcionario->getName(),
                 'image' => $Funcionario->getImage('foto_recorte')
             ],
-            'comment' => $comments[$i]['comentario'],
-            'temporality' => temporality($comments[$i]['fecha'])
+            'comment' => $ComentarioDocumento->comentario,
+            'temporality' => $DateTime->format('h:i a')
         ];
     }
 

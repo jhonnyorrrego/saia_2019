@@ -6,15 +6,28 @@ class EtiquetaDocumento extends Model
     protected $iddocumento_etiqueta;
     protected $fk_etiqueta;
     protected $fk_documento;
-    protected $table = 'etiqueta_documento';
-    protected $primary = 'idetiqueta_documento';
-    protected $safeDbAttributes = [
-        'fk_etiqueta',
-        'fk_documento'
-    ];
+    protected $dbAttributes;
 
     function __construct($id){
         return parent::__construct($id);
+    }
+
+    /**
+     * define the values for dbAttributes
+     */
+    protected function defineAttributes(){
+        // set the safe attributes to update and consult
+        $safeDbAttributes = [
+            'fk_etiqueta',
+            'fk_documento'
+        ];
+        // set the date attributes on the schema
+        $dateAttributes = [];
+
+        $this->dbAttributes = (object) [
+            'safe' => $safeDbAttributes,
+            'date' => $dateAttributes
+        ];
     }
 
     public static function defineCheckboxType($tagId, $documentIds){

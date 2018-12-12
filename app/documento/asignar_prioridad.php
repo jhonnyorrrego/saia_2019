@@ -27,7 +27,14 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         $selections = explode(',', $_REQUEST['selections']);
 
         foreach($selections as $documentId){
-            $PrioridadDocumento = PrioridadDocumento::findByDocument($documentId);            
+            $PrioridadDocumento = PrioridadDocumento::findByAttributes([
+                'documento_iddocumento' => $id
+            ]);
+
+            if(!$PrioridadDocumento){
+                $PrioridadDocumento = new PrioridadDocumento();
+            }
+            
             $PrioridadDocumento->setAttributes(array(
                 'documento_iddocumento' => $documentId,
                 'funcionario_idfuncionario' => usuario_actual('idfuncionario'),

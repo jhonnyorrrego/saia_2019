@@ -26,8 +26,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <?= toastr() ?>
 </head>
 <body>
-    <div class="container-fluid px-1 py-0">
-        <div class="row">
+    <div class="container m-0 p-0 mw-100 mx-100">
+        <div class="row mx-0">
             <div class="col-12 col-md-4 d-md-block px-1" id="mailbox"></div>
             <div class="col-12 col-md-8 d-md-block d-none px-1" id="right_workspace">
                 <iframe id="iframe_right_workspace" width="100%" frameBorder="0"></iframe>

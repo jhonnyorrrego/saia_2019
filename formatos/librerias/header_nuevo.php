@@ -208,7 +208,7 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
 	</head>
 	<body>
 <?php if ($_REQUEST["tipo"] != 5): ?>
-    <div class="container bg-master-lightest mx-0 mw-100">
+    <div class="container bg-master-lightest mx-0 px-4 px-md-0 mw-100">
         <div class="row sticky-top pt-0 bg-master-lightest">
             <?= plantilla($iddocumento, $idtransferencia) ?>
         </div>

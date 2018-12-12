@@ -32,7 +32,7 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
         <?= toastr() ?>
     </head>
     <body>
-        <div class="container">
+        <div class="container px-0">
             <div class="row sticky-top bg-master-lightest mx-0" style="height:35px" id="header_list"></div>
             <div class="row mx-0" id="content">
                 <table id="table" data-selections=""></table>
