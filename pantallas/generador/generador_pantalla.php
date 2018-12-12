@@ -288,7 +288,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 									      </div>
 									    </div>
 										</div-->
-										<div class="accordion-group">
+										<!-- <div class="accordion-group">
 									    <div class="accordion-heading">
 									      <input type="checkbox" checked="true"class="pull-left check_genera" value="tabla">
                         <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_tabla">
@@ -300,7 +300,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 
 									      </div>
 									    </div>
-										</div>
+										</div> -->
 										<!-- div class="accordion-group">
 									    <div class="accordion-heading">
                         <input type="checkbox" checked="true"class="pull-left check_genera" value="librerias">
@@ -314,7 +314,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 									      </div>
 									    </div>
 										</div-->
-										<div class="accordion-group">
+										<!-- <div class="accordion-group">
 									    <div class="accordion-heading">
 									      <input type="checkbox" checked="true"class="pull-left check_genera" value="adicionar">
                         <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_adicionar">
@@ -325,8 +325,8 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 									      <div class="accordion-inner">
 									      </div>
 									    </div>
-										</div>
-										<div class="accordion-group">
+										</div>  -->
+										<!-- <div class="accordion-group">
 									    <div class="accordion-heading">
 									      <input type="checkbox" checked="true" class="pull-left check_genera" value="editar">
                         <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_editar">
@@ -338,7 +338,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 
 									      </div>
 									    </div>
-										</div>
+										</div>  -->
 										<!--  div class="accordion-group">
 									    <div class="accordion-heading">
 									      <input type="checkbox" checked="true"class="pull-left check_genera" value="eliminar">
@@ -352,7 +352,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 									      </div>
 									    </div>
 										</div-->
-										<div class="accordion-group">
+										<!-- <div class="accordion-group">
 									    <div class="accordion-heading">
 									      <input type="checkbox" checked="true"class="pull-left check_genera" value="mostrar">
                         <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_mostrar">
@@ -364,8 +364,9 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 
 									      </div>
 									    </div>
-										</div>
-										<div class="accordion-group">
+										</div>  -->
+
+										<!-- <div class="accordion-group">
 									    <div class="accordion-heading">
 									      <input type="checkbox" checked="true"class="pull-left check_genera" value="buscar">
                         <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_buscar">
@@ -377,7 +378,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 
 									      </div>
 									    </div>
-										</div>
+										</div>  -->
 										<!-- div class="accordion-group">
 									    <div class="accordion-heading">
 									      <input type="checkbox" checked="true"class="pull-left check_genera" value="listar">
@@ -1335,11 +1336,12 @@ $("#generar_pantalla").live("click",function() {
     $(".generador_pantalla").removeClass("alert-success");
     $(".generador_pantalla").removeClass("alert-error");
     //generar_archivos_ignorados();
-    $(".generador_pantalla").each(function(index,val){
+    /*$(".generador_pantalla").each(function(index,val){
         if($(this).prev().children(":checkbox").is(':checked')) {
           	generar_pantalla(this.id);
         }
-    });
+    });*/
+  	generar_pantalla("full");
 });
 
 $(".eliminar_campos_tabla_pantalla").live("click",function(){
@@ -1406,21 +1408,10 @@ function generar_pantalla(nombre_accion) {
     var accion = nombre_accion.replace("generar_","");
     var datos = {
         idformato: $("#idformato").val(),
-        crea: accion,
+        accion: "full",
         llamado_ajax: 1
     };
 
-    //TODO: Para quitar la lista de checkboxes
-    /*
-    var ruta_generar='formatos/llamado_formatos.php';
-    var idformato= $("#idformato").val();
-    var datos = {
-    	    acciones_formato: "formato,adicionar,buscar,editar,mostrar,tabla",
-    	    accion:"generar",
-    	    condicion: "idformato = " + idformato
-    };
-    */
-    
     $.ajax({
         type:'POST',
         url: '<?php echo($ruta_db_superior);?>'+ruta_generar,
@@ -1429,21 +1420,22 @@ function generar_pantalla(nombre_accion) {
             if(html) {
                 var objeto=jQuery.parseJSON(html);
                 if(objeto.exito==1) {
-                    $("#"+nombre_accion).prev().removeClass("alert-error");
+                    /*$("#"+nombre_accion).prev().removeClass("alert-error");
                     $("#"+nombre_accion).prev().addClass("alert-success");
                     $("#"+nombre_accion).html("");
                     notificacion_saia(objeto.mensaje,"success","",3500);
                     if(typeof(objeto.descripcion_error)!=="undefined"){
                     	$("#"+nombre_accion).html(objeto.descripcion_error);
                     	$("#"+nombre_accion).collapse('show');
-                    }
+                    }*/
+                	notificacion_saia("Formato generado correctamente","success","",3500);
                 } else {
-                    $("#"+nombre_accion).prev().addClass("alert-error");
+                    //$("#"+nombre_accion).prev().addClass("alert-error");
                     notificacion_saia(objeto.mensaje,"error","",9500);
-                    if(typeof(objeto.descripcion_error)!=="undefined"){
+                    /*if(typeof(objeto.descripcion_error)!=="undefined"){
                         $("#"+nombre_accion).html(objeto.descripcion_error);
                         $("#"+nombre_accion).collapse('show');
-                    }
+                    }*/
                 }
             }
         	$("#cargando_generar_pantalla").html("");
