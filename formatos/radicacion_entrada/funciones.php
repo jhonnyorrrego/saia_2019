@@ -583,7 +583,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
 
 function obtener_informacion_proveedor($idformato, $iddoc) {
 	global $conn, $datos;
-	if ($datos[0]['tipo_origen'] == 1) {
+	if ($datos[0]['tipo_origen'] == 1 && !empty($datos[0]["persona_natural"])) {
 		$info = busca_filtro_tabla("", "datos_ejecutor B, ejecutor C", "B.ejecutor_idejecutor=C.idejecutor AND B.iddatos_ejecutor=" . $datos[0]["persona_natural"], "", $conn);
 		if ($info["numcampos"]) {
 			$texto = array();
@@ -604,13 +604,15 @@ function obtener_informacion_proveedor($idformato, $iddoc) {
 			"apellidos"
 		);
 		$cadena_concat = concatenar_cadena_sql($array_concat);
-		$origen = busca_filtro_tabla($cadena_concat . " AS nombre, dependencia, cargo", "vfuncionario_dc", "iddependencia_cargo IN(" . $datos[0]['area_responsable'] . ")", "", $conn);
-		if ($origen["numcampos"]) {
-			$texto = array();
-			$texto[] = "<b>Nombre:</b> " . $origen[0]["nombre"];
-			$texto[] = "<b>Dependencia:</b> " . $origen[0]["dependencia"];
-			$texto[] = "<b>Cargo:</b> " . $origen[0]["cargo"];
-			echo(implode("<br />", $texto));
+		if(!empty($datos[0]['area_responsable'])) {
+			$origen = busca_filtro_tabla($cadena_concat . " AS nombre, dependencia, cargo", "vfuncionario_dc", "iddependencia_cargo IN(" . $datos[0]['area_responsable'] . ")", "", $conn);
+			if ($origen["numcampos"]) {
+				$texto = array();
+				$texto[] = "<b>Nombre:</b> " . $origen[0]["nombre"];
+				$texto[] = "<b>Dependencia:</b> " . $origen[0]["dependencia"];
+				$texto[] = "<b>Cargo:</b> " . $origen[0]["cargo"];
+				echo(implode("<br />", $texto));
+			}
 		}
 	}
 }
@@ -726,9 +728,10 @@ function ingresar_item_destino_radicacion($idformato, $iddoc) {//posterior al ad
 
 function actualizar_campos_documento($idformato, $iddoc) {
 	global $conn;
-	$datos = busca_filtro_tabla("persona_natural,anexos_fisicos,numero_oficio,numero_oficio,descripcion_anexos,fecha_oficio_entrada", "ft_radicacion_entrada A", "A.documento_iddocumento=" . $iddoc, "", $conn);
+	//$datos = busca_filtro_tabla("persona_natural,anexos_fisicos,numero_oficio,numero_oficio,descripcion_anexos,fecha_oficio_entrada", "ft_radicacion_entrada A", "A.documento_iddocumento=" . $iddoc, "", $conn);
+	$datos = busca_filtro_tabla("persona_natural,anexos_digitales,numero_oficio,numero_oficio,descripcion_anexos,fecha_oficio_entrada", "ft_radicacion_entrada A", "A.documento_iddocumento=" . $iddoc, "", $conn);
 	if ($datos["numcampos"]) {
-		$campo_formato = busca_filtro_tabla("A.valor", "campos_formato A", "A.formato_idformato=" . $idformato . " AND A.nombre='anexos_fisicos'", "", $conn);
+		$campo_formato = busca_filtro_tabla("A.valor", "campos_formato A", "A.formato_idformato=" . $idformato . " AND A.nombre='anexos_digitales'", "", $conn);
 		$valores = array();
 		if ($campo_formato["numcampos"]) {
 			$filas = explode(";", $campo_formato[0]["valor"]);
@@ -741,7 +744,7 @@ function actualizar_campos_documento($idformato, $iddoc) {
 		if ($datos[0]["persona_natural"]) {
 			$ejecutor = busca_filtro_tabla("ciudad", "datos_ejecutor A, ejecutor B", "A.ejecutor_idejecutor=B.idejecutor AND iddatos_ejecutor=" . $datos[0]["persona_natural"], "", $conn);
 		}
-		$sql1 = "UPDATE documento SET oficio='" . $datos[0]["numero_oficio"] . "', anexo='" . $valores[$datos[0]["anexos_fisicos"]] . "', descripcion_anexo='" . $datos[0]["descripcion_anexos"] . "', fecha_oficio=" . fecha_db_almacenar($datos[0]["fecha_oficio_entrada"], 'Y-m-d H:i:s') . ", municipio_idmunicipio='" . $ejecutor[0]["ciudad"] . "' WHERE iddocumento=" . $iddoc;
+		$sql1 = "UPDATE documento SET oficio='" . $datos[0]["numero_oficio"] . "', anexo='" . $valores[$datos[0]["anexos_digitales"]] . "', descripcion_anexo='" . $datos[0]["descripcion_anexos"] . "', fecha_oficio=" . fecha_db_almacenar($datos[0]["fecha_oficio_entrada"], 'Y-m-d H:i:s') . ", municipio_idmunicipio='" . $ejecutor[0]["ciudad"] . "' WHERE iddocumento=" . $iddoc;
 		phpmkr_query($sql1);
 	}
 	return;

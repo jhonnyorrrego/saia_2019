@@ -37,7 +37,7 @@ if(count($request)){
 					$url=$ruta_db_superior . FORMATOS_CLIENTE . $cuantos_formatos[$i]['nombre'].'/'.$cuantos_formatos[$i]['ruta_adicionar']."?1=1";
 					$proceso='';
 					
-					$modulo_formato=busca_filtro_tabla('idmodulo','modulo','nombre="crear_'.$cuantos_formatos[$i]['nombre'].'"','',$conn);
+					$modulo_formato=busca_filtro_tabla("idmodulo","modulo","nombre='crear_".$cuantos_formatos[$i]['nombre']."'","",$conn);
 					
 					$ok=0;
 					if($modulo_formato['numcampos']){

@@ -10,7 +10,9 @@ use Gaufrette\Filesystem;
 use Gaufrette\StreamMode;
 use Imagine\Image\Box;
 use Imagine\Gd\Imagine;
+use PHPSQLParser\PHPSQLParser;
 require_once("sql2.php");
+
 
 if (!isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
 	session_start();
@@ -462,8 +464,7 @@ global $conn;
 	if($conn) {
 		$sqleve = "";
 		$sql = trim($strsql);
-		$sql = str_replace(" =", "=", $sql);
-		$sql = str_replace("= ", "=", $sql);
+		$sql = preg_replace("/\s*=\s*/", "=", $sql);		
 		$accion = strtoupper(substr($sql, 0, strpos($sql, ' ')));
 		$llave = 0;
 		$tabla = "";
@@ -486,11 +487,11 @@ global $conn;
 				$rs = $conn->Ejecutar_Sql($strsql);
 
 				$llave = $conn->Ultimo_Insert();
-				preg_match("/insert into (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
+				preg_match("/insert into (\w*\.)*(\w+)/i", strtolower($strsql), $resultados);
 				if(isset($resultados[2])) {
 					$tabla = $resultados[2];
 				} else {
-					preg_match("/insert all into (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
+					preg_match("/insert all into (\w*\.)*(\w+)/i", strtolower($strsql), $resultados);
 					if(isset($resultados[2])) {
 						$tabla = $resultados[2];
 					} else {
@@ -500,16 +501,29 @@ global $conn;
 				guardar_evento($strsql, $llave, $tabla, $func, "ADICIONAR");
 				break;
 			case ('UPDATE'):
-				preg_match("/update (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
+				$parser = new PHPSQLParser($strsql, true);
+	
+				//$campos=$parser->parsed["UPDATE"][0]["columns"];
+				$valores=$parser->parsed["WHERE"];
+				$cant=count($valores);
+				$condicion='';
+				for($i=0;$i<$cant;$i++){
+					$condicion.=$valores[$i]["base_expr"];
+					$condicion.=" ";
+				}		
+				preg_match("/update (\w*\.)*(\w+)/i", strtolower($strsql), $resultados);
 				$tabla = $resultados[2];
+				
 				//preg_match("/where (.+)=(.*)/", strtolower($strsql), $resultados);
-				preg_match("/where (.+)=([\w]+|'[\w]+')/", strtolower($strsql), $resultados);
-				$llave = trim($resultados[2]);
-				$llave = str_replace("'","",$llave);
-				$campo_llave = $resultados[1];
-				$detalle = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
-				$rs = $conn->Ejecutar_Sql(((($strsql))));
-				$detalle2 = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
+				//preg_match("/where (.+)\s*=\s*([\w]+|'[\w]+')/i", strtolower($strsql), $resultados);
+				//$llave = trim($resultados[2]);
+				//$llave = str_replace("'","",$llave);
+				//$campo_llave = $resultados[1];
+				//$detalle = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
+				$detalle = busca_filtro_tabla("", $tabla, $condicion, "", $conn);
+				$rs = $conn->Ejecutar_Sql($strsql);
+				//$detalle2 = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
+				$detalle2 = busca_filtro_tabla("", $tabla, $condicion, "", $conn);
 				// ************ miro cuales campos cambiaron en la tabla ****************
 				$nombres_campos = array();
 				if($detalle["numcampos"]) {
@@ -522,20 +536,21 @@ global $conn;
 							$cambios[] = $nombres_campos[($i * 2) + 1] . "='" . codifica_encabezado(html_entity_decode(htmlspecialchars_decode($detalle[0][$i]))) . "'";
 					}
 				}
-				$diferencias = "update $tabla set " . implode(", ", $cambios) . " where " . $campo_llave . "=" . $llave;
+				//$diferencias = "update $tabla set " . implode(", ", $cambios) . " where " . $campo_llave . "=" . $llave;
+				$diferencias = "update $tabla set " . implode(", ", $cambios) . " where " . $condicion;
 				// guardo el evento
 				if(count($cambios)) {
-					if(!is_numeric($llave)) {
+					//if(!is_numeric($llave)) {
 						$llave = $detalle[0]["id" . $tabla];
-					}
+					//}
 					guardar_evento($strsql, intval($llave), $tabla, $func, "MODIFICAR", $diferencias);
 				}
 				break;
 			case ('DELETE'):
-				preg_match("/delete from (\w*\.)*(\w+)/", strtolower($strsql), $resultados);
+				preg_match("/delete from (\w*\.)*(\w+)/i", strtolower($strsql), $resultados);
 				$tabla = $resultados[2];
 				//preg_match("/where (.+)=(.*)/", strtolower($strsql), $resultados);
-				preg_match("/where (.+)=([\w]+|'[\w]+')/", strtolower($strsql), $resultados);
+				preg_match("/where (.+)\s*=\s*([\w]+|'[\w]+')/i", strtolower($strsql), $resultados);
 				$llave = trim($resultados[2]);
 				$llave = str_replace("'","",$llave);
 				$campo_llave = $resultados[1];
@@ -759,31 +774,32 @@ function phpmkr_free_result($rs){
 global $conn;
 $conn->liberar_resultado($rs);
 }
-/*
-<Clase>
-<Nombre>phpmkr_insert_id
-<Parametros>
-<Responsabilidades>retonar la llave primaria del ultimo registro insertado
-<Notas>
-<Excepciones>Error al buscar la ultima insercion. Si no existe la conexion con la base de datos
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-*/
-function phpmkr_insert_id(){
-global $conn;
-if($conn){
-		$evento = $conn->Ultimo_Insert();
-  $buscar = busca_filtro_tabla("*","evento","idevento=".$evento,"",$conn);
-		if ($buscar["numcampos"]) {
-    return $buscar[0]["registro_id"];
-		} else {
-    //alerta(" Error al recuperar id ".$evento);
-  }
-	} else {
-  alerta("Error al buscar la ultima insercion.".$rs->sql);
-  return FALSE;
-}
+
+    /*
+ * <Clase>
+ * <Nombre>phpmkr_insert_id
+ * <Parametros>
+ * <Responsabilidades>retonar la llave primaria del ultimo registro insertado
+ * <Notas>
+ * <Excepciones>Error al buscar la ultima insercion. Si no existe la conexion con la base de datos
+ * <Salida>
+ * <Pre-condiciones>
+ * <Post-condiciones>
+ */
+function phpmkr_insert_id() {
+    global $conn;
+    if ($conn) {
+        $evento = $conn->Ultimo_Insert();
+        $buscar = busca_filtro_tabla("*", "evento", "idevento=" . $evento, "", $conn);
+        if ($buscar["numcampos"]) {
+            return $buscar[0]["registro_id"];
+        } else {
+            alerta(" Error al recuperar id ".$evento);
+        }
+    } else {
+        alerta("Error al buscar la ultima insercion.".$rs->sql);
+        return FALSE;
+    }
 }
 /*
 <Clase>
@@ -2916,78 +2932,22 @@ $cad="";
 return($cad);
 }
 
-/*
-<Clase>
-<Nombre>fecha_in
-<Parametros>$fecha: fecha que se desea formatear; $motor: de base de datos
-<Responsabilidades> Formatear una cadena para insertarla en la base de datos segun el motor que se use
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-*/
-function fecha_in($fecha, $motor=MOTOR) {
-  switch($motor) {
-    case "MySql":
-      return $fecha;
-    break;
-    case "Oracle":
-      return "to_date($fecha,'YYYY-MM-DD HH24:MI:SS')";
-    break;
-    case "SqlServer":
-      //20 equivale al estilo de la conversion
-      return "CONVERT(datetime,'".$fecha."',20)";
-    case "MSSql":
-      //20 equivale al estilo de la conversion
-      return "CONVERT(datetime,'".$fecha."',20)";
-    break;
-
-  }
-}
-
-/*
-<Clase>
-<Nombre>fecha_out
-<Parametros>$columna: nombre de la columna a extraer; $motor: motor de base de datos actual
-<Responsabilidades> organizar la cadena para pedir una columna de tipo date a la base de datos
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-*/
-function fecha_out($columna, $motor=MOTOR) {
-  switch($motor) {
-    case "MySql":
-      return $columna;
-    case "Oracle":
-      return "to_char($columna,'YYYY-MM-DD HH24:MI:SS')";
-    case "SqlServer":
-       //20 equivale al estilo de la conversion
-      return "CONVERT(CHAR(19),'".$columna."',20)";
-    case "MSSql":
-       //20 equivale al estilo de la conversion
-      return "CONVERT(CHAR(19),'".$columna."',20)";
-  }
-}
-
-/*
-<Clase>
-<Nombre>fecha_db
-<Parametros> $formato : formato de la fecha a obtener en fromato tipo PHP;
-<Responsabilidades> Retornar la cadena adecuada dependiendo del motor para las consultas
-de tipo select
-<Notas>
-<Excepciones>
-<Salida>cadena lista para compementar las secuecias  ejem  TO_CHAR(fecha_ini,'DD-MM-YYYY')
-<Pre-condiciones>
-<Post-condiciones>
-*/
+    /*
+ * <Clase>
+ * <Nombre>fecha_db
+ * <Parametros> $formato : formato de la fecha a obtener en fromato tipo PHP;
+ * <Responsabilidades> Retornar la cadena adecuada dependiendo del motor para las consultas
+ * de tipo select
+ * <Notas>
+ * <Excepciones>
+ * <Salida>cadena lista para compementar las secuecias ejem TO_CHAR(fecha_ini,'DD-MM-YYYY')
+ * <Pre-condiciones>
+ * <Post-condiciones>
+ */
 function fecha_db($campo, $formato = NULL) {
-   global $conn;
-	return $conn->fecha_db($campo, $formato);
-    } // Fin Funcion fecha_db_obtener
+    global $conn;
+    return $conn->fecha_db($campo, $formato);
+}
 
 /*
 <Clase>
@@ -3004,7 +2964,8 @@ de tipo select
 function fecha_db_obtener($campo, $formato = NULL) {
    global $conn;
 	return $conn->fecha_db_obtener($campo, $formato);
-} // Fin Funcion fecha_db_obtener
+}
+// Fin Funcion fecha_db_obtener
 
 /*
 <Clase>
@@ -3023,7 +2984,7 @@ function fecha_db_almacenar($fecha, $formato = NULL) {
    global $conn;
 	return $conn->fecha_db_almacenar($fecha, $formato);;
 }
- // Fin Funcion fecha_db_almacenar
+// Fin Funcion fecha_db_almacenar
 
 /*<Clase>
 <Nombre>case_fecha</Nombre>
@@ -3219,32 +3180,32 @@ function almacenar_sesion($exito, $login) {
 	return ($datos);
 }
 
-/*
-<Clase>
-<Nombre>usuario_actual
-<Parametros>$campo: columna del usuario que se quiere obtener
-<Responsabilidades>Establece la informacion del usuario que tiene session actual
-<Notas>
-<Excepciones>No se encuentra el funcionario en el sistema, por favor comuniquese con el administrador
-             Si no existe session en el momento
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
-*/
+    /*
+ * <Clase>
+ * <Nombre>usuario_actual
+ * <Parametros>$campo: columna del usuario que se quiere obtener
+ * <Responsabilidades>Establece la informacion del usuario que tiene session actual
+ * <Notas>
+ * <Excepciones>No se encuentra el funcionario en el sistema, por favor comuniquese con el administrador
+ * Si no existe session en el momento
+ * <Salida>
+ * <Pre-condiciones>
+ * <Post-condiciones>
+ */
 function usuario_actual($campo) {
-	global $usuactual, $conn;
-	if (!isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
-		salir(decodifica_encabezado("Su sesi&oacute;n ha expirado, por favor ingrese de nuevo."));
-	} else if ($usuactual <> "") {
-		$dato = busca_filtro_tabla("A.*,A.idfuncionario AS id", "funcionario A", "A.login='" . $usuactual . "'", "", $conn);
-		if ($dato["numcampos"]) {
-			if ($dato[0]["estado"] == 1) {
-				return ($dato[0][$campo]);
-			} else {
-				salir("El funcionario se encuentra inactivo", $usuactual);
-			}
-		} else {
-			salir("No se encuentra el funcionario en el sistema, por favor comuniquese con el administrador");
+    global $usuactual, $conn;
+    if (!isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
+        salir(decodifica_encabezado("Su sesi&oacute;n ha expirado, por favor ingrese de nuevo."));
+    } else if (!empty($usuactual)) {
+        $dato = busca_filtro_tabla("A.estado,A.idfuncionario,A.funcionario_codigo,A.email,A.email_contrasena,A.idfuncionario AS id,A.perfil,A.login, A.nombres, A.apellidos, A.ventanilla_radicacion", "funcionario A", "A.login='" . $usuactual . "'", "", $conn);
+        if ($dato["numcampos"]) {
+            if ($dato[0]["estado"] == 1) {
+                return ($dato[0][$campo]);
+            } else {
+                salir("El funcionario se encuentra inactivo", $usuactual);
+            }
+        } else {
+            salir("No se encuentra el funcionario en el sistema, por favor comuniquese con el administrador");
 		}
 	}
 }
@@ -3585,45 +3546,16 @@ function limpiar_cadena_sql($cadena){
 	case 'MSSql':
       return('RTRIM(LTRIM(lower('.$cadena.')))');
     break;
-    default:
-      return('trim(lower('.$cadena.'))');
-    break;
-  }
+        default:
+            return ('trim(lower(' . $cadena . '))');
+            break;
+    }
 }
-/*Se debe enviar la cadena completa si es una cadena de texto la que se debe concatenar se deben adicionar las comillas simples ' */
-function concatenar_cadena_sql($arreglo_cadena){
-  $cadena_final='';
-  switch(MOTOR){
-    case 'SqlServer':
-      return(implode("+",$arreglo_cadena));
-    break;
-		case 'MSSql':
-      return(implode("+",$arreglo_cadena));
-    break;
-    case 'Oracle':
-	    return(implode("||",$arreglo_cadena));
-		break;
-    default:
-      if(@$arreglo_cadena[($i+1)]==""){
-        return($arreglo_cadena[0]);
-      }
-      $cant=count($arreglo_cadena);
-      for($i=0;$i<$cant;$i++){
-        if($i>0){
-          $cadena_final.=",";
-        }
-        $cadena_final.="CONCAT(".$arreglo_cadena[$i];
-        if(@$arreglo_cadena[($i+2)]==""){
-          $cadena_final.=",".$arreglo_cadena[($i+1)];
-          $i++;
-        }
-      }
-      for(;$i>1;$i--){
-        $cadena_final.=')';
-      }
-      return($cadena_final);
-    break;
-  }
+
+/* Se debe enviar la cadena completa si es una cadena de texto la que se debe concatenar se deben adicionar las comillas simples ' */
+function concatenar_cadena_sql($arreglo_cadena) {
+    global $conn;
+    return $conn->concatenar_cadena($arreglo_cadena);
 }
 
 function obtener_reemplazo($fun_codigo = 0, $tipo = 1) {
@@ -3715,21 +3647,21 @@ function parsear_comilla_sencilla_cadena($cadena){
 	global $conn;
 	$cadena_original=$cadena;
 	$cadena_sinespacios=trim($cadena);
-	$cadena_minuscula=strtolower($cadena_sinespacios);
+//	$cadena_minuscula=strtolower($cadena_sinespacios);
 	$parseada=0;
-	if( substr($cadena_minuscula,0,6)=='select' ){
-		$findme   = "'";
-		$pos = strpos($cadena, $findme);
-		if ($pos !== false) {  //fue encontrada
-			$motor=$conn->motor;
-			$vector_replaces=array('Oracle'=>"''",'MySql'=>"''",'SqlServer'=>"''",'MSSql'=>"''");
-			$cadena=str_replace("'",$vector_replaces[$motor],$cadena);
+	if(preg_match('/^select/i',$cadena_sinespacios)){
+		//$findme   = "'";
+		//$pos = strpos($cadena, $findme);
+		if (preg_match("/'/",$cadena)) {  //fue encontrada
+			/*$motor=$conn->motor;
+			$vector_replaces=array('Oracle'=>"''",'MySql'=>"''",'SqlServer'=>"''",'MSSql'=>"''");*/
+			$cadena=str_replace("'","''",$cadena);
 			$parseada=1;
 		}
 	}else{
-		$findme   = "'";
-		$pos = strpos($cadena, $findme);
-		if ($pos !== false) {  //fue encontrada
+		//$findme   = "'";
+		//$pos = strpos($cadena, $findme);
+		if (preg_match("/'/",$cadena)) {  //fue encontrada
 			$cadena=str_replace("'","''",$cadena);
 			$parseada=1;
 		}

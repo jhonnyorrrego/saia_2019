@@ -595,7 +595,10 @@ class GenerarFormato {
             } else {
                 $action = '../../class_transferencia.php';
             }
-            $texto .= '<body bgcolor="#F5F5F5"><?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");? ><form name="formulario_formatos" id="formulario_formatos" method="post" action="' . $action . '" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4">';
+            $texto .= '<body bgcolor="#F5F5F5"><?php if(!empty($_REQUEST["idformato"])) {
+                llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR");
+            }
+            ? ><form name="formulario_formatos" id="formulario_formatos" method="post" action="' . $action . '" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4">';
 
             if (!$formato[0]["item"]) {
                 $texto .= '<tr><td colspan="2" class="encabezado_list">' . codifica_encabezado(html_entity_decode(mayusculas($formato[0]["etiqueta"]))) . '</td></tr>';
@@ -2173,8 +2176,12 @@ class GenerarFormato {
     private function arma_funcion($nombre, $parametros, $accion) {
         if ($parametros != "" && $accion != "adicionar" && $accion != 'buscar')
             $parametros .= ",";
-        if ($accion == "mostrar")
-            $texto = "<?php " . $nombre . "(" . $parametros . "$" . "_REQUEST['iddoc']);? >";
+        if ($accion == "mostrar"){
+        	$texto = '<?php if(isset($_REQUEST["iddoc"])){';
+        		$texto.= $nombre . "(" . $parametros . "$" . "_REQUEST['iddoc']);";
+        	$texto.='}?>';
+        }
+            
         elseif ($accion == "adicionar")
             $texto = "<?php " . $nombre . "(" . $parametros . ");? >";
         elseif ($accion == "editar")

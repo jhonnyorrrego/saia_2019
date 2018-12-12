@@ -63,15 +63,15 @@ function llena_vista($formato) {
 	global $conn, $imagenes;
 	$arreglo = explode("-", $formato);
 	$texto = "";
-	$campo_descripcion = array();
 
-	$vista = busca_filtro_tabla("", "vista_formato", "formato_padre=" . $arreglo[0], "", $conn);
-	for ($i = 0; $i < $vista["numcampos"]; $i++) {
-		$texto .= '<item style="font-family:verdana; font-size:7pt;" ' . $imagenes;
-		$texto .= 'text="' . $vista[$i]["etiqueta"] . '" id="' . $arreglo[0] . '-vista_formato-' . $arreglo[1] . '-vista-' . $vista[$i]["idvista_formato"] . '">';
-		$texto .= '</item>';
+	if($conn->verificar_existencia("vista_formato")) {
+		$vista = busca_filtro_tabla("", "vista_formato", "formato_padre=" . $arreglo[0], "", $conn);
+		for($i = 0; $i < $vista["numcampos"]; $i++) {
+			$texto .= '<item style="font-family:verdana; font-size:7pt;" ' . $imagenes;
+			$texto .= 'text="' . $vista[$i]["etiqueta"] . '" id="' . $arreglo[0] . '-vista_formato-' . $arreglo[1] . '-vista-' . $vista[$i]["idvista_formato"] . '">';
+			$texto .= '</item>';
+		}
 	}
-
 	return ($texto);
 }
 

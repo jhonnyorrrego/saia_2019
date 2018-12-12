@@ -201,6 +201,10 @@ function radicar_documento_prueba($tipo_contador, $arreglo, $archivos = NULL, $i
 	phpmkr_query($sql, $conn) or die($sql . "    <br> -" . phpmkr_error());
 	$doc = phpmkr_insert_id();
 
+	if(empty($doc)) {
+	    die("No hay ID Documento");
+	}
+
 	if ($doc && $arreglo["estado"] == "'APROBADO'") {
 		$nombre_contador = busca_filtro_tabla("nombre", "contador", "idcontador=" . $arreglo["tipo_radicado"], "", $conn);
 		contador($doc, $nombre_contador[0]["nombre"]);
@@ -359,8 +363,11 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = NUL
 		$origen = usuario_actual("funcionario_codigo");
 	}
 
-	$doc = busca_filtro_tabla("B.idformato", "documento A,formato B", "A.plantilla=B.nombre AND iddocumento=" . $idarchivo, "", $conn);
-	$idformato = @$doc[0]["idformato"];
+	$doc = busca_filtro_tabla("B.idformato", "documento A,formato B", "lower(A.plantilla)=B.nombre AND iddocumento=" . $idarchivo, "", $conn);
+	$idformato = $doc[0]["idformato"];
+	if(empty($idformato)) {
+	    print_r($doc); die();
+	}
 	llama_funcion_accion($idarchivo, $idformato, "transferir", "ANTERIOR");
 
 	//Cuando ingresan demasiado texto en las notas
@@ -992,7 +999,7 @@ function radicar_plantilla() {
 		$valores["municipio_idmunicipio"] = $_POST["municipio_idmunicipio"];
 	} else {
 		$mun = busca_filtro_tabla("valor", "configuracion", "nombre='ciudad'", "", $conn);
-		if ($mun["numcampos"]) {
+		if ($mun["numcampos"] && !empty($mun[0][0])) {
 			$valores["municipio_idmunicipio"] = $mun[0][0];
 		} else {
 			$valores["municipio_idmunicipio"] = 633;
@@ -1466,15 +1473,19 @@ function guardar_documento($iddoc, $tipo = 0) {
 				crear_pretexto($_REQUEST["asplantilla"], $_REQUEST["contenido"]);
 			}
 			$nomformato = busca_filtro_tabla("nombre", "formato", "idformato=" . $idformato, "", $conn);
-			$sql = "delete from autoguardado where usuario='" . $_SESSION["usuario_actual"] . "' and formato='" . $nomformato[0]["nombre"] . "'";
-			phpmkr_query($sql, $conn);
+			$ag = busca_filtro_tabla("idautoguardado", "autoguardado", "usuario='" . $_SESSION["usuario_actual"] . "' and formato='" . $nomformato[0]["nombre"] . "'", "", $conn);
+			if($ag["numcampos"]) {
+    			$sql = "delete from autoguardado where idautoguardado=" . $ag[0]["idautoguardado"];
+    			phpmkr_query($sql);
+			}
 		} else {
 			if (isset($iddoc)) {
 				$del = "DELETE FROM documento WHERE iddocumento=" . $iddoc;
 				phpmkr_query($del);
 			}
 			alerta("<b>ATENCI&Oacute;N</b><br>No se ha podido Crear el formato..", 'error', 5000);
-			die($sql);
+			//die($sql);
+			redirecciona($ruta_db_superior . "vacio.php");
 		}
 	} elseif ($tipo == 1) {// cuando voy a editar
 		$update = array();
@@ -2027,13 +2038,13 @@ function devolucion() {
 
 	// NUEVO DESARROLLO DEVOLVER
 
-	$sql2 = " UPDATE buzon_entrada SET nombre='ELIMINA_REVISADO' WHERE archivo_idarchivo=" . $datos["archivo_idarchivo"] . " AND destino=" . $_REQUEST["x_funcionario_destino"] . " AND origen=" . $_SESSION["usuario_actual"] . "  AND nombre='REVISADO';";
+	$sql2 = " UPDATE buzon_entrada SET nombre='ELIMINA_REVISADO' WHERE archivo_idarchivo=" . $datos["archivo_idarchivo"] . " AND destino=" . $_REQUEST["x_funcionario_destino"] . " AND origen=" . $_SESSION["usuario_actual"] . "  AND nombre='REVISADO'";
 	phpmkr_query($sql2);
 
-	$sql3 = " UPDATE buzon_entrada SET activo=1 WHERE archivo_idarchivo=" . $datos["archivo_idarchivo"] . " AND destino=" . $_REQUEST["x_funcionario_destino"] . " AND origen=" . $_SESSION["usuario_actual"] . "  AND nombre='POR_APROBAR'; ";
+	$sql3 = " UPDATE buzon_entrada SET activo=1 WHERE archivo_idarchivo=" . $datos["archivo_idarchivo"] . " AND destino=" . $_REQUEST["x_funcionario_destino"] . " AND origen=" . $_SESSION["usuario_actual"] . "  AND nombre='POR_APROBAR'";
 	phpmkr_query($sql3);
 
-	$sql4 = " UPDATE asignacion SET tarea_idtarea=-1 WHERE documento_iddocumento=" . $datos["archivo_idarchivo"] . " AND llave_entidad='" . $_SESSION["usuario_actual"] . "'; ";
+	$sql4 = " UPDATE asignacion SET tarea_idtarea=-1 WHERE documento_iddocumento=" . $datos["archivo_idarchivo"] . " AND llave_entidad='" . $_SESSION["usuario_actual"] . "' ";
 	phpmkr_query($sql4);
 
 	$strsql = "INSERT INTO asignacion (tarea_idtarea,fecha_inicial,documento_iddocumento,serie_idserie,estado,entidad_identidad,llave_entidad)";

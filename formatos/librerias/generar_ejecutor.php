@@ -77,20 +77,21 @@ function crear_campo($nombre) {
 }
 
 function generar_ciudad($ciudad, $campo) {
-	global $conn;
-	if (!$ciudad) {$ciudad_conf = busca_filtro_tabla("valor", "configuracion", "nombre='ciudad'", "", $conn);
-		if ($ciudad_conf["numcampos"]) {
-			$ciudad_valor = $ciudad_conf[0][0];
-		} else {
-			$ciudad_valor = "658";
-		}
-	} else
-		$ciudad_valor = $ciudad;
-	$municipio = busca_filtro_tabla("idmunicipio,iddepartamento,idpais", "municipio A,departamento B, pais C", "A.departamento_iddepartamento=B.iddepartamento AND C.idpais=B.pais_idpais AND A.idmunicipio=" . $ciudad_valor, "", $conn);
-	if ($municipio["numcampos"]) {
-		$paises = busca_filtro_tabla("", "pais", "", "lower(nombre)", $conn);
-		$departamentos = busca_filtro_tabla("", "departamento", "pais_idpais=" . $municipio[0]["idpais"], "lower(nombre)", $conn);
-		$municipios = busca_filtro_tabla("", "municipio", "departamento_iddepartamento=" . $municipio[0]["iddepartamento"], "lower(nombre)", $conn);
+    global $conn;
+    if (!$ciudad) {
+        $ciudad_conf = busca_filtro_tabla("valor", "configuracion", "nombre='ciudad'", "", $conn);
+        if ($ciudad_conf["numcampos"]) {
+            $ciudad_valor = $ciudad_conf[0][0];
+        } else {
+            $ciudad_valor = "658";
+        }
+    } else
+        $ciudad_valor = $ciudad;
+    $municipio = busca_filtro_tabla("idmunicipio,iddepartamento,idpais", "municipio A,departamento B, pais C", "A.departamento_iddepartamento=B.iddepartamento AND C.idpais=B.pais_idpais AND A.idmunicipio=" . $ciudad_valor, "", $conn);
+    if ($municipio["numcampos"]) {
+        $paises = busca_filtro_tabla("", "pais", "", "lower(nombre)", $conn);
+        $departamentos = busca_filtro_tabla("", "departamento", "pais_idpais=" . $municipio[0]["idpais"], "lower(nombre)", $conn);
+        $municipios = busca_filtro_tabla("", "municipio", "departamento_iddepartamento=" . $municipio[0]["iddepartamento"], "lower(nombre)", $conn);
 		$texto = '<script type="text/javascript">
     $("#pais_ejecutor_' . $campo . '").change(function(){
       actualiza_ciudad_' . $campo . '($("#pais_ejecutor_' . $campo . '").find(' . "':selected'" . ').val(),0);

@@ -216,13 +216,13 @@ if(@$_SESSION["tipo_dispositivo"]=="movil"){
 
 <div id="div_noticias">
 <?php
-$titulo_mostrar = busca_filtro_tabla('', 'configuracion', 'nombre="titulo_index"', '', $conn);
-$subtitulo_mostrar = busca_filtro_tabla('', 'configuracion', 'nombre="subtitulo_index"', '', $conn);
+$titulo_mostrar = busca_filtro_tabla('', 'configuracion', "nombre='titulo_index'", '', $conn);
+$subtitulo_mostrar = busca_filtro_tabla('', 'configuracion', "nombre='subtitulo_index'", '', $conn);
 
 $texto_tabla = "<p style='font-weight:bold;color: #6A6E71;text-align:left;font-size:16px;'>" . $titulo_mostrar[0]['valor'] . "<p>";
 $texto_tabla .= "<hr>";
 $texto_tabla .= "<p style='color:#666666;text-align:left;font-size:15px'>" . $subtitulo_mostrar[0]['valor'] . "</p><br />";
-$dato = busca_filtro_tabla("", "noticia_index", "estado=1 AND mostrar=1", "", $conn);
+$dato = busca_filtro_tabla("previo,idnoticia_index", "noticia_index", "estado=1 AND mostrar=1", "", $conn);
 if ($dato["numcampos"]) {
 	$texto_tabla .= "<table align='bottom' style='text-align:justify;'>";
 	for ($i = 0; $i < $dato["numcampos"]; $i++) {

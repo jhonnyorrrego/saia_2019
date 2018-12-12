@@ -46,7 +46,11 @@ echo (librerias_notificaciones());
 echo librerias_UI("1.12");
 echo librerias_arboles_ft("2.24", 'filtro');
 
-$dato_padre = busca_filtro_tabla("", "expediente a", "a.idexpediente=" . $_REQUEST["cod_padre"], "", $conn);
+if(!empty($_REQUEST["cod_padre"])) {
+    $dato_padre = busca_filtro_tabla("", "expediente a", "a.idexpediente=" . $_REQUEST["cod_padre"], "", $conn);
+} else {
+    $dato_padre = ["numcampos" => 0];
+}
 $serie_padre = "";
 ?>
 <form name="formulario_expediente" id="formulario_expediente">

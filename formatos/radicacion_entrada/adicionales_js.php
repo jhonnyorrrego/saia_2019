@@ -11,7 +11,7 @@ while($max_salida>0){
 
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
-echo(librerias_jquery('1.7'));
+//echo(librerias_jquery('1.7'));
 echo(librerias_notificaciones());
 $busca_componente=busca_filtro_tabla("nombre","busqueda_componente","idbusqueda_componente=".$_REQUEST['idbusqueda_componente'],"",$conn);
 

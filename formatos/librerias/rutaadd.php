@@ -950,14 +950,18 @@ function AddData($conn)
    $busca_memo=busca_filtro_tabla("A.*","ft_memorando A","A.documento_iddocumento=".$fieldList["documento_iddocumento"],"",$conn);
 
    if($busca_memo["numcampos"])
-      {$sql2="update ft_memorando set origen='".$fieldList["destino"]."' where idft_memorando=".$busca_memo[0]["idft_memorando"];
+      {
+      	$sql2="update ft_memorando set destino='".$fieldList["destino"]."' where idft_memorando=".$busca_memo[0]["idft_memorando"];
        phpmkr_query($sql2,$conn);
       }
-   $busca_cc=busca_filtro_tabla("A.*","ft_nota_interna A","A.documento_iddocumento=".$fieldList["documento_iddocumento"],"",$conn);   
-   if($busca_cc["numcampos"])
-      {$sql2="update ft_nota_interna set origen='".$fieldList["destino"]."' where idft_nota_interna=".$busca_cc[0]["idft_nota_interna"];
-       phpmkr_query($sql2,$conn);
-      }
+	  if($conn->verificar_existencia("ft_nota_interna")){
+		 $busca_cc=busca_filtro_tabla("A.*","ft_nota_interna A","A.documento_iddocumento=".$fieldList["documento_iddocumento"],"",$conn);   
+		 if($busca_cc["numcampos"])
+		    {
+		    	$sql2="update ft_nota_interna set origen='".$fieldList["destino"]."' where idft_nota_interna=".$busca_cc[0]["idft_nota_interna"];
+		       phpmkr_query($sql2,$conn);
+		    }
+	  }
   }
   genera_ruta($destino,$fieldList["idtipo_documental"],$fieldList["documento_iddocumento"]);
   
@@ -1011,7 +1015,7 @@ function cambiar_ruta($iddoc){
 	global $conn;  
   $temp=busca_filtro_tabla("","documento","iddocumento=".$iddoc,"",$conn); 
   
-     $condicion_not_borrador=" AND A.nombre NOT LIKE('BORRADOR') ";
+     $condicion_not_borrador=" AND nombre NOT LIKE('BORRADOR') ";
      $adiciona_in_borrador='';
     if(@$_REQUEST['reset_borrador']){
         $condicion_not_borrador='';
@@ -1020,11 +1024,11 @@ function cambiar_ruta($iddoc){
   
   
 	if($temp[0]["estado"]=='ACTIVO'){
-	$sql="UPDATE ruta A SET A.tipo='INACTIVO' WHERE A.documento_iddocumento=".$temp[0]["iddocumento"];      
+	$sql="UPDATE ruta SET tipo='INACTIVO' WHERE documento_iddocumento=".$temp[0]["iddocumento"];      
 	phpmkr_query($sql,$conn);
-	$sql="UPDATE buzon_entrada A SET A.nombre=".concatenar_cadena_sql(array("'ELIMINA_'","A.nombre"))." WHERE A.archivo_idarchivo=".$temp[0]["iddocumento"]." AND A.nombre NOT LIKE('ELIMINA_%') ".$condicion_not_borrador." AND A.nombre IN(".$adiciona_in_borrador."'POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','TERMINADO')";
+	$sql="UPDATE buzon_entrada SET nombre=".concatenar_cadena_sql(array("'ELIMINA_'","nombre"))." WHERE archivo_idarchivo=".$temp[0]["iddocumento"]." AND nombre NOT LIKE('ELIMINA_%') ".$condicion_not_borrador." AND nombre IN(".$adiciona_in_borrador."'POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','TERMINADO')";
 	phpmkr_query($sql,$conn);
-	$sql="UPDATE buzon_salida A SET A.nombre=".concatenar_cadena_sql(array("'ELIMINA_'","A.nombre"))."  WHERE A.archivo_idarchivo=".$temp[0]["iddocumento"]." AND A.nombre NOT LIKE('ELIMINA_%') ".$condicion_not_borrador." AND A.nombre IN(".$adiciona_in_borrador."'POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','TERMINADO')";
+	$sql="UPDATE buzon_salida SET nombre=".concatenar_cadena_sql(array("'ELIMINA_'","nombre"))."  WHERE archivo_idarchivo=".$temp[0]["iddocumento"]." AND nombre NOT LIKE('ELIMINA_%') ".$condicion_not_borrador." AND nombre IN(".$adiciona_in_borrador."'POR_APROBAR','LEIDO','COPIA','BLOQUEADO','RECHAZADO','REVISADO','APROBADO','DEVOLUCION','TRANSFERIDO','TERMINADO')";
 	phpmkr_query($sql,$conn);
 	$sql1="DELETE FROM asignacion where tarea_idtarea=2 and documento_iddocumento=".$temp[0]["iddocumento"];
 	phpmkr_query($sql1,$conn);
@@ -1113,11 +1117,12 @@ function cancelar_ruta($doc,$plantilla){
 	$sql1="UPDATE documento SET activa_admin=0 WHERE iddocumento=".$doc;
 	phpmkr_query($sql1);
 	$usuario = $_SESSION["usuario_actual"];
+	
 	$radicador = busca_filtro_tabla("F.funcionario_codigo as codigo","configuracion A,funcionario F","A.nombre like 'radicador_salida' and A.valor like F.login","",$conn);
 	$sql="INSERT INTO ruta(origen,tipo,destino,idtipo_documental,condicion_transferencia,documento_iddocumento,tipo_origen,tipo_destino,obligatorio) VALUES(".$usuario.",'ACTIVO',".$radicador[0]["codigo"].",NULL,'POR_APROBAR',".$doc.",1,1,1)";
 	phpmkr_query($sql,$conn) or error("No se puede Generar una Ruta");
   $idruta=phpmkr_insert_id();
-  
+  	
 	phpmkr_query("INSERT INTO buzon_entrada (archivo_idarchivo,nombre,destino,tipo_destino,fecha,origen,tipo_origen,activo,ruta_idruta) VALUES (".$doc.",'POR_APROBAR','$usuario',1,".fecha_db_almacenar(date("Y-m-d h:m:s"),'Y-m-d H:i:s').",'".$radicador[0]["codigo"]."',1,1,".$idruta.")");
 
 }

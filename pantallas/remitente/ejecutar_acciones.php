@@ -87,6 +87,16 @@ function insert_remitente(){
 		$inser="INSERT INTO ejecutor (nombre,identificacion,tipo_ejecutor) VALUES ('".($_REQUEST["nombre"])."','".$_REQUEST["identificacion"]."',".@$_REQUEST["tipo_ejecutor"].")";
 		phpmkr_query($inser) or die($retorno);
 		$idejecutor = phpmkr_insert_id();
+		$buscar_datos_ejecutor=busca_filtro_tabla("","datos_ejecutor","ejecutor_idejecutor=".$idejecutor,"",$conn);
+		if(!$buscar_datos_ejecutor["numcampos"]){
+			
+			$buscar_ciudad=busca_filtro_tabla("valor","configuracion","nombre='ciudad'","",$conn);
+			if($buscar_ciudad["numcampos"]){
+				$_REQUEST["ciudad"] = $buscar_ciudad[0]["valor"];
+				$sql2 = "INSERT INTO datos_ejecutor(ciudad,ejecutor_idejecutor) VALUES('".$buscar_ciudad[0]["valor"]."',$idejecutor)";
+				phpmkr_query($sql2);
+			}
+		}
 		$retorno -> idejecutor = $idejecutor;
 		$retorno -> exito = 1;
 		$retorno -> mensaje = "Datos Guardados";
