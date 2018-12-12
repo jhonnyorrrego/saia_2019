@@ -441,7 +441,7 @@ if($dato_padre["numcampos"]){
 		    data: {
 				otras_categorias: 1,
 				serie_sin_asignar: 1,
-				carga_partes:1,
+				cargar_partes:1,
 				iddependencia:iddependencia,
 				checkbox:'radio'				
 		    },

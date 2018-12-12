@@ -101,14 +101,14 @@ function llena_dependencia($id, $tipo = 0, $partes = false) {
     $objetoJson = array();
     $parte_text = "";
     if ($id == 0) {
-        $papas = busca_filtro_tabla("", "dependencia", "(cod_padre=0 or cod_padre is null)", "nombre ASC", $conn);
+        $papas = busca_filtro_tabla("iddependencia,codigo,nombre,estado", "dependencia", "(cod_padre=0 or cod_padre is null)", "nombre ASC", $conn);
         if ($tipo) {
             $parte_text = " - TVD";
         } else {
             $parte_text = " - TRD";
         }
     } else {
-        $papas = busca_filtro_tabla("", "dependencia", "cod_padre=" . $id, "nombre ASC", $conn);
+        $papas = busca_filtro_tabla("iddependencia,codigo,nombre,estado", "dependencia", "cod_padre=" . $id, "nombre ASC", $conn);
     }
     if ($papas["numcampos"]) {
         for ($i = 0; $i < $papas["numcampos"]; $i++) {
@@ -123,12 +123,26 @@ function llena_dependencia($id, $tipo = 0, $partes = false) {
 			//$item["expanded"]=true; 
             $hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"], "", $conn);
             $serie = busca_filtro_tabla("count(*) as cant", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $papas[$i]["iddependencia"] . " and s.tvd=" . $tipo . " and (s.cod_padre=0 or s.cod_padre is null)", "", $conn);
+           // print_r($serie["sql"]);
             $dependencias_hijas = array();
             $series_hijas = array();
+            $dependencias_hijas1 = array();
            // if (!$partes) {
-	            if ($hijos[0]["cant"] || $serie[0]["cant"]) {
-	                $dependencias_hijas = llena_dependencia($papas[$i]["iddependencia"], $tipo);
-	            }
+           if(!partes){
+                if ($hijos[0]["cant"]) {
+                   // print_r("hola1");
+                    $dependencias_hijas1 = llena_dependencia($papas[$i]["iddependencia"], $tipo);
+                    
+                }
+                if ($serie[0]["cant"]) {
+    	             $series_hijas = llena_serie(0,$papas[$i]["iddependencia"], $tipo);
+    	        }
+           }
+           else{
+               $item["lazy"] = true;
+           }
+	            
+	            $dependencias_hijas = array_merge($dependencias_hijas1, $series_hijas);
 	            /* SERIES */
 	            $series_dep = busca_filtro_tabla("e.identidad_serie, s.*", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $papas[$i]["iddependencia"] . " and s.tvd=" . $tipo . " and (s.cod_padre=0 or s.cod_padre is null) and s.categoria=2", "s.nombre ASC", $conn);
 				
@@ -161,11 +175,10 @@ function llena_serie($id, $iddep, $tipo = 0) {
     } else {
         $papas = busca_filtro_tabla("e.identidad_serie,s.*", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $iddep . " and s.tvd=" . $tipo . " and s.cod_padre=" . $id . " and s.categoria=2", "s.nombre ASC", $conn);
     }
-
+   // print_r($papas["sql"]);
     if ($papas["numcampos"]) {
         for ($i = 0; $i < $papas["numcampos"]; $i++) {
         	$identidad_serie=$papas[$i]["identidad_serie"];
-        	
             $text = $papas[$i]["nombre"] . " (" . $papas[$i]["codigo"] . ")";
             if ($papas[$i]["estado"] == 0) {
                 $text .= " - INACTIVO";

@@ -93,6 +93,11 @@ if($datos[0]["tipo"]==1 || $datos[0]["tipo"]==2) {
 if(!empty($entidad_serie)){
 	echo ' <a href="permiso_serie.php?idserie=' . $idserie . '&identidad_serie='.	$entidad_serie.'" target="serielist">PERMISOS</a>';
 }
+if(!empty($entidad_serie)){
+$id = explode(".",$idnode);
+	
+echo ' <a href="asignarserie_entidad.php?tvd='.$id[2].'&seleccionados='.$id[1].'&idnode='.$idnode.'" target="serielist">ASOCIAR A DEPENDENCIA</a>';
+}
 ?>
 
 </span><br/><br/>

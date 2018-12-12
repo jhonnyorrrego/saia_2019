@@ -38,17 +38,20 @@ echo librerias_UI("1.12");
 echo librerias_arboles_ft("2.24", 'filtro');
 if ($_REQUEST["seleccionados"]) {
 	$buscar_asignacion_series["numcampos"]=array();	
-   $buscar_asignacion_series = busca_filtro_tabla("", "entidad_serie", "estado=1 and llave_entidad=".$_REQUEST["seleccionados"], "", $conn);
+   //$buscar_asignacion_series = busca_filtro_tabla("", "entidad_serie", "estado=1 and llave_entidad=".$_REQUEST["seleccionados"], "", $conn);
+   $buscar_asignacion_series = busca_filtro_tabla("", "entidad_serie", "estado=1 and serie_idserie=".$_REQUEST["seleccionados"], "", $conn);
     if ($buscar_asignacion_series["numcampos"]) {
     	for($i=0;$i<$buscar_asignacion_series["numcampos"];$i++){
-        	$lista_series[] = $buscar_asignacion_series[$i]["serie_idserie"];
+        	//$lista_series[] = $buscar_asignacion_series[$i]["serie_idserie"];
+        	$lista_dependencias[] = $buscar_asignacion_series[$i]["llave_entidad"];
         	//if (!empty($lista_series)) {
             	
         	//}
 		}
-		$series_seleccionadas = implode(",", $lista_series);
+		$dependencia_seleccionada = implode(",", $lista_dependencias);
     }
 }
+$serie_idserie = $_REQUEST["seleccionados"];
 ?>
 <h3>Asignar series</h3>
 <p>
@@ -69,13 +72,26 @@ if ($_REQUEST["seleccionados"]) {
 		<tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">DEPENDENCIA*</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="sub_entidad"></div> 
-				<input type="hidden" name="iddependencia" id="iddependencia" value="<?php echo $_REQUEST["seleccionados"]; ?>"></td>
+				<!--input type="hidden" name="iddependencia" id="iddependencia" value="<?php echo $_REQUEST["seleccionados"]; ?>"-->
+				<?php
+				$origen = array("url" => "arboles/arbol_dependencia.php", "ruta_db_superior" => $ruta_db_superior,
+				    "params" => array(
+				        "checkbox" => 1,
+				        "seleccionados" => $dependencia_seleccionada
+				    ));
+				$opciones_arbol = array("keyboard" => true, "selectMode" => 2, "busqueda_item" => 1, "expandir" => 3,"onNodeSelect" => 'asignar_permisos_entidad');
+				$extensiones = array("filter" => array());
+				$arbol = new ArbolFt("iddependencia", $origen, $opciones_arbol, $extensiones);
+				echo $arbol->generar_html();
+
+				?>
+				</td>
 		</tr>
-		<tr>
+		<!--tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">SERIE*</span></td>
 			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="divserie"></div> 
 				<?php
-				$origen = array("url" => "arboles/arbol_serie.php", "ruta_db_superior" => $ruta_db_superior,
+				/*$origen = array("url" => "arboles/arbol_serie.php", "ruta_db_superior" => $ruta_db_superior,
 				    "params" => array(
 				    	"tipo3"=> 0,
 				    	"tvd"=> $_REQUEST["tvd"],
@@ -83,14 +99,14 @@ if ($_REQUEST["seleccionados"]) {
 				        "checkbox" => 1,
 				        "seleccionados" => $series_seleccionadas
 				    ));
-				$opciones_arbol = array("keyboard" => true, "selectMode" => 0, "busqueda_item" => 1, "expandir" => 3, "busqueda_item" => 1,"onNodeSelect" => 'asignar_permisos_entidad');
+				$opciones_arbol = array("keyboard" => true, "selectMode" => 0, "busqueda_item" => 1, "expandir" => 3,"onNodeSelect" => 'asignar_permisos_entidad');
 				$extensiones = array("filter" => array());
 				$arbol = new ArbolFt("serie_idserie", $origen, $opciones_arbol, $extensiones);
-				echo $arbol->generar_html();
+				echo $arbol->generar_html();*/
 			
 				?>
 				</td>
-		</tr>
+		</tr-->
 
 		<!--tr>
 			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ACCION*</span></td>
@@ -110,19 +126,7 @@ if ($_REQUEST["seleccionados"]) {
 <script type="text/javascript">
 	$(document).ready(function() {
 		//url1="test/test_dependencia.php?seleccionados=<?php echo $_REQUEST["seleccionados"];?>";
-		$.ajax({
-			//url : "<?php echo $ruta_db_superior;?>test/crear_arbol.php",
-			url : "buscar_dependencia.php",
-			//data:{xml:url1,campo:"iddependencia",radio:0,abrir_cargar:1,ruta_db_superior:"../../"},
-			data:{campo:"iddependencia",valor:<?php echo $_REQUEST["seleccionados"];?>},
-			type : "POST",
-			async:false,
-			success : function(html_dep) {
-				$("#sub_entidad").empty().html(html_dep);
-			},error: function (){
-				top.noty({text: 'No se pudo cargar de dependencias de series',type: 'error',layout: 'topCenter',timeout:5000});
-			}
-		});
+		
 
 		//$("[name='tvd']").change(function (){
 			//tvd=$(this).val();
@@ -160,16 +164,16 @@ if ($_REQUEST["seleccionados"]) {
 		});
 	});
 	function asignar_permisos_entidad(event,data){
-		var iddependencia = $("#iddependencia").val();
-		
+		//var iddependencia = $("#iddependencia").val();
+		var serie_idserie = "<?php echo $serie_idserie; ?>";
 		var seleccionados = Array();
 		var items = data.tree.getSelectedNodes();
 		//console.log(data);
 		for(var i=0;i<items.length;i++){
 			seleccionados.push(items[i].key);
 		}
-		var serie_idserie = seleccionados.join(","); 
-		$("#serie_idserie").val(serie_idserie);
+		var iddependencia= seleccionados.join(","); 
+		$("#iddependencia").val(iddependencia);
 		
 		var id = data.node.key;
 		var accion ='eliminar'; 
@@ -187,7 +191,6 @@ if ($_REQUEST["seleccionados"]) {
                 },
                 datatype: 'json',
                 success: function(retorno){
-                	
                     var tipo = 'error';
                     var mensaje = '<b>ATENCI&Oacute;N</b><br>' + retorno.mensaje;
                     if(retorno.exito == 1) {
@@ -202,7 +205,7 @@ if ($_REQUEST["seleccionados"]) {
                         if(retorno.expandir) {
                         	datos["expandir"] = retorno.expandir;
                         }
-                        window.parent.frames['arbol'].postMessage(datos, "*");
+                        //window.parent.frames['arbol'].postMessage(datos, "*");
                     }
                     
                     notificacion_saia(mensaje,tipo,"topRight",3000);
