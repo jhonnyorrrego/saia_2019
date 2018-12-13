@@ -165,10 +165,17 @@
                     new: $("[name='new_password']").val()
                 }, function(response){
                     if(response.success){
-                        toastr.success('Datos Actualizados');
+                        top.notification({
+                            message: 'Datos Actualizados',
+                            type: 'success'
+                        });
                         $("#close_modal").trigger('click');
                     }else{
-                        toastr.error(response.message, 'Error!');
+                        top.notification({
+                            message: response.message,
+                            type: 'error',
+                            title: 'Error!'
+                        });
                     }
                 }, 'json')
             }

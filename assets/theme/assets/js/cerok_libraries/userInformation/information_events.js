@@ -37,10 +37,17 @@ $("#profile_form").validate({
             url: `${baseUrl}app/funcionario/actualiza_funcionario.php`,
             success: function (response) {
                 if (response.success) {
-                    toastr.success(response.message);
+                    top.notification({
+                        message: response.message,
+                        type: 'success'
+                    });
                     $('#close_modal').trigger('click');
                 } else {
-                    toastr.error(response.message, 'Error!');
+                    top.notification({
+                        message: response.message,
+                        type: 'error',
+                        title: 'Error!'
+                    });
                 }
             }
         });

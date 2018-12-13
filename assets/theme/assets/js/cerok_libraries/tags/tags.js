@@ -67,7 +67,11 @@ class Tags {
                     instance.tags = response.data;
                     ouput = instance.createList();
                 }else{
-                    toastr.error(response.message, 'Error!');
+                    top.notification({
+                        message: response.message,
+                        type: 'error',
+                        title: 'Error!'
+                    });
                 }
             }
         });
@@ -94,7 +98,11 @@ class Tags {
                 if(!parseInt(tag.idetiqueta))
                     $('li.tag_item[data-tagid=0]').attr('data-tagid', response.data);
             }else{
-                toastr.error(response.message, 'Error!');
+                top.notification({
+                    message: response.message,
+                    type: 'error',
+                    title: 'Error!'
+                });
             }
         }, 'json');
     }
@@ -104,11 +112,14 @@ class Tags {
 
         $.post(`${baseUrl}app/etiquetas/inactivar.php`, tag, (response) => {
             if(!response.success){
-                toastr.error(response.message, 'Error!');
+                top.notification({
+                    message: response.message,
+                    type: 'error',
+                    title: 'Error!'
+                });
             }
         }, 'json');
     }
-
 
     static createTemplate(tag){
         return `<li class="tag_item list-group-item d-flex justify-content-between align-items-center p-1" data-tagid="${tag.idetiqueta}">

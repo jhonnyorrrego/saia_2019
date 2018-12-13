@@ -18,7 +18,6 @@ echo jquery();
 echo bootstrap();
 echo icons();
 echo theme();
-echo toastr();
 echo topModal();
 
 $document = array();
@@ -365,7 +364,6 @@ function menu_principal_documento($documentId, $transferId = 0){
                     key: key
                 }, function(response){
                     if(response.success){
-                        toastr.success(response.message);
 
                         if(priority){
                             flag.addClass('text-danger');
@@ -375,7 +373,6 @@ function menu_principal_documento($documentId, $transferId = 0){
                             flagParent.hide();
                         }
                     }else{
-                        toastr.error(response.message);
                     }
                 }, 'json')
             });

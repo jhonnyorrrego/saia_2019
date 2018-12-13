@@ -39,7 +39,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <?= bootstrap() ?>
     <?= theme() ?>
     <?= icons() ?>
-    <?= toastr() ?>
     <?= breakpoint() ?>
 
     <script type="text/javascript">
@@ -183,6 +182,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         </div>
     </div>
     <!-- /.modal-dialog -->
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/js/cerok_libraries/notifications/topNotification.js"></script>
     <script>
         $(function () {
             var baseUrl = Session.getBaseUrl();
@@ -202,7 +202,11 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         if (response.ingresar) {
                             window.location = baseUrl + 'views/dashboard/dashboard.php';
                         } else {
-                            toastr.error(response.mensaje, 'Error!');
+                            top.notification({
+                                message: response.mensaje,
+                                type: 'error',
+                                title: 'Error!'
+                            });
                         }
                     },
                     error: function (xhr) {
@@ -220,10 +224,17 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                     data: $("#recovery_form").serialize(),
                     success: function (response) {
                         if (response.success) {
-                            toastr.success(response.message);
+                            top.notification({
+                                message: response.message,
+                                type: 'success'
+                            });
                             $('#recovery_modal').modal('toggle');
                         } else {
-                            toastr.error(response.message);
+                            top.notification({
+                                message: response.message,
+                                type: 'error',
+                                title: 'Error!'
+                            });
                         }
                     },
                     error: function (xhr) {

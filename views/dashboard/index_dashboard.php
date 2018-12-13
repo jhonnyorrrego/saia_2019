@@ -23,7 +23,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <?= jquery() ?>
     <?= bootstrap() ?>
     <?= theme() ?>
-    <?= toastr() ?>
 </head>
 <body>
     <div class="container m-0 p-0 mw-100 mx-100">

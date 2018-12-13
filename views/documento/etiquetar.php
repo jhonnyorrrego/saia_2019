@@ -58,10 +58,17 @@
                 tags: tags
             }, function(response){
                 if(response.success){
-                    toastr.success('Documentos etiquetados');
+                    top.notification({
+                        message: 'Documentos etiquetados',
+                        type: 'success'
+                    });
                     $('#close_modal').trigger('click');
                 }else{
-                    toastr.error(response.message, 'Error!');
+                    top.notification({
+                        message: response.message,
+                        type: 'error',
+                        title: 'Error!'
+                    });
                 }
             }, 'json')
         });

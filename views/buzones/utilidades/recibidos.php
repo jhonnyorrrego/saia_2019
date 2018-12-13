@@ -35,7 +35,10 @@ $(function(){
             key: key
         }, function(response){
             if(response.success){
-                toastr.success(response.message);
+                top.notification({
+                    message: response.message,
+                    type: 'success'
+                });
                 
                 selections = selections.split(',').map(Number);
                 $("i.priority").each(function(i, e){
@@ -63,7 +66,11 @@ $(function(){
                     }
                 };
             }else{
-                toastr.error(response.message);
+                top.notification({
+                    message: response.message,
+                    type: 'error',
+                    title: 'Error!'
+                });
             }
         }, 'json')
     })

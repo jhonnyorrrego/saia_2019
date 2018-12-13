@@ -76,7 +76,11 @@ class Comments {
                     instance.comments = response.data;
                     ouput = instance.createList();
                 }else{
-                    toastr.error(response.message, 'Error!');
+                    top.notification({
+                        message: response.message,
+                        type: 'error',
+                        title: 'Error!'
+                    });
                 }
             }
         });
@@ -129,7 +133,11 @@ class Comments {
 
         $.post(`${baseUrl}app/comentarios/guardar.php`, comment, function(response){
             if(!response.success){
-                toastr.error(response.message, 'Error!');
+                top.notification({
+                    message: response.message,
+                    type: 'error',
+                    title: 'Error!'
+                });
             }
         }, 'json');
     }
