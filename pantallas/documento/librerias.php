@@ -998,7 +998,7 @@ function origin_pending_document($iddocumento, $funcionarioCodigo, $numero, $fec
     ]);
 
     $html = '<div class="col-1 px-0 text-center action">
-        <input type="hidden" value="'.$iddocumento.'" class="identificador">'
+        <input type="hidden" value="'.$iddocumento.'" class="identificator">'
         . $roundedImage .
     '</div>
     <div class="col show_document cursor principal_action" data-url="'.$documentRoute.'" titulo="Documento No.' . $numero . '">
@@ -1039,7 +1039,7 @@ function unread($iddocumento, $fecha){
     $leido = busca_filtro_tabla("idtransferencia", "buzon_salida", "archivo_idarchivo=" . $iddocumento . " and origen=".$idfuncionario." and (nombre='LEIDO' or nombre='BORRADOR') and " . fecha_db_obtener("fecha", "Y-m-d H:i:s") . " >= '".$fecha."'", "", $conn);
 
     if (!$leido["numcampos"])
-        return '<h6 class="my-0 text-center"><i class="fa fa-circle text-complete"></i></h6>';
+        return '<h6 class="my-0 text-center unread"><i class="fa fa-circle text-complete"></i></h6>';
     else
         return '';
 }
@@ -1104,16 +1104,16 @@ function expiration($date){
 
         if($diference < 3){
             if($diference == 0){
-                $html = '<span class="hint-text">Vence:</span> <span class="label label-danger btn_expiration action">Hoy</span>';
+                $html = '<span class="hint-text">Vence:</span> <span class="label label-danger btn_expiration action cursor">Hoy</span>';
             }elseif($diference == 1){
-                $html = '<span class="hint-text">Vence:</span> <span class="label label-danger btn_expiration action">Mañana</span>';
+                $html = '<span class="hint-text">Vence:</span> <span class="label label-danger btn_expiration action cursor">Mañana</span>';
             }else{
-                $html = '<span class="hint-text">Venció:</span> <span class="label label-danger btn_expiration action">Hace '.abs($diference).' días</span>';
+                $html = '<span class="hint-text">Venció:</span> <span class="label label-danger btn_expiration action cursor">Hace '.abs($diference).' días</span>';
             }
         }elseif($diference >= 3 && $diference <= 8){
-            $html = '<span class="hint-text">Vence en:</span> <span class="label label-warning btn_expiration action">'.$diference.' días</span>';
+            $html = '<span class="hint-text">Vence en:</span> <span class="label label-warning btn_expiration action cursor">'.$diference.' días</span>';
         }else{
-            $html = '<span class="hint-text">Vence en:</span> <span class="label label-info btn_expiration action">'.$diference.' días</span>';
+            $html = '<span class="hint-text">Vence en:</span> <span class="label label-info btn_expiration action cursor">'.$diference.' días</span>';
         }
 
         return $html;

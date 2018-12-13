@@ -124,7 +124,7 @@ $(function(){
             url = node.data('url'),
             actualUrl = iframe.attr('src');
 
-        let documentSelected = node.parent().find('.identificador').val();
+        let documentSelected = node.parent().find('.identificator').val();
         sessionStorage.setItem('documentSelected', documentSelected);
 
         if(actualUrl != baseUrl + url){
@@ -136,6 +136,7 @@ $(function(){
         }
 
         node.parents('tr[data-index]').addClass('selected');
+        node.parents('tr[data-index]').find('.unread').hide();
     }
 
     (function setDate(){

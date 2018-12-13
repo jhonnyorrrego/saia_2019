@@ -169,7 +169,7 @@ class Funcionario extends Model {
         }else{
             $avatar = new LasseRafn\InitialAvatarGenerator\InitialAvatar();
 
-            $name = strtok($this->nombres, " ") . ' ' . $this->apellidos;
+            $name = strtok($this->nombres, " ") . ' ' . strtok($this->apellidos, " ");
             $avatar = $avatar
                 ->name($name)
                 ->background('#48b0f7')

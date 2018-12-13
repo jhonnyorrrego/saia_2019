@@ -16,9 +16,8 @@ if (!isset($_REQUEST["iddoc"])) {
 include_once $ruta_db_superior . 'db.php';
 include_once $ruta_db_superior . "views/documento/encabezado.php";
 include_once $ruta_db_superior . 'models/pagina.php';
-$iddocumento = $_REQUEST["iddoc"];
 
-$iddocumento = 1;
+$iddocumento = $_REQUEST["iddoc"];
 $paginas = Pagina::getAllResultDocument($iddocumento, "pagina asc");
 ?>
 <!DOCTYPE >

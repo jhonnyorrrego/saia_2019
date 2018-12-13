@@ -113,16 +113,11 @@ class Pagina extends Model {
      * */
 
     public static function getAllResultDocument($iddoc, $order = "") {
-        global $conn;
-        $retorno = array();
-        $data = busca_filtro_tabla("consecutivo,imagen,ruta", "pagina", "id_documento=" . $iddoc, $order, $conn);
-        if ($data["numcampos"]) {
-            $retorno["numcampos"] = $data["numcampos"];
-            for ($i = 0; $i < $data["numcampos"]; $i++) {
-                $retorno["data"][$i] = new Pagina($data[$i]['consecutivo']);
-            }
-        }
-        return $retorno;
+        $response = array();
+        $response['data'] = self::findAllByAttributes(['id_documento' => $iddoc], ["consecutivo","imagen","ruta"], $order);
+        $response['numcampos'] = count($response['data']);
+
+        return $response;
     }
 
 }
