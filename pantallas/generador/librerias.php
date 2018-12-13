@@ -78,7 +78,6 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1) {
 	    $retorno["nombre_campo"] = $pantalla_campos[0]["nombre"];
 	    $retorno["etiqueta_html"] = $pantalla_campos[0]["etiqueta_html"];
 
-
 	    $datos = kma_valor_campo($datos, $pantalla_campos[0]["etiqueta_html"]);
 	    //die();
 
@@ -120,7 +119,7 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1) {
 		}
 		if (count($sql_update)) {
 			$sql2 = "UPDATE campos_formato SET " . implode(", ", $sql_update) . " WHERE idcampos_formato=" . $idpantalla_campos;
-			$retorno["sql"] = $sql2;
+			//$retorno["sql"] = $sql2; // Solo para depurar
 			phpmkr_query($sql2) or die($sql2);
 			$retorno["exito"] = 1;
 			$cadena = load_pantalla_campos($idpantalla_campos, 0);

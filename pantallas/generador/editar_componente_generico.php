@@ -227,11 +227,7 @@ echo librerias_jquery("2.2");
     	datos["tipo_retorno"] = 1;
     	datos["idpantalla_campos"] = idpantalla_campo;
 
-    	//console.log(datos);
-    	//return false;
-
-
-    	var evitar_html=["arbol_fancytree"];
+    	var evitar_html=["arbol_fancytree", "datetime", "textarea_cke"];
 
     	$.ajax({
             type:'POST',
@@ -245,7 +241,7 @@ echo librerias_jquery("2.2");
                     $('#cargando_enviar').html("Terminado ...");
                     //$("#content").append(objeto.etiqueta_html);
                     //setTimeout(notificacion_saia("Actualizaci&oacute;n realizada con &eacute;xito.","success","",2500),5000);
-                    $("#pc_"+idpantalla_campo, parent.document).find(".control-label").html(objeto.etiqueta);
+                    $("#pc_"+idpantalla_campo, parent.document).find(".control-label").html("<b>" + objeto.etiqueta + "</b>");
                     if(!evitar_html.includes(nombre_componente)) {
                     	$("#pc_"+idpantalla_campo,parent.document).replaceWith(objeto.codigo_html);
                     }

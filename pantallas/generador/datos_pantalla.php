@@ -522,7 +522,7 @@ echo(librerias_acciones_kaiten());
 $("document").ready(function(){
 	$('[data-toggle="tooltip"]').tooltip();
 	$("#nombre_formato").blur(function() {
-		console.log($("#nombre_formato").val());
+		//console.log($("#nombre_formato").val());
 		if($("#nombre_formato").val()) {
 			$.ajax({
 			    type:'POST',
@@ -543,7 +543,7 @@ $("document").ready(function(){
 	});
 	var formulario = $("#datos_formato");
 	var formato=jQuery.parseJSON('<?php echo($formato);?>');
-	window.console.log(formato);
+	//window.console.log(formato);
 	var nombre_formato="";
 	if($("#nombre_formato").val()!="") {
 		var nombre_formato=$("#nombre_formato").val();
@@ -628,6 +628,19 @@ $("document").ready(function(){
         $('#enviar_datos_formato').attr('value','editar_datos_formato');
   	    $('#tabs_formulario a[href="#formulario-tab"]').tab('show');
   	    $('.nav li').removeClass('disabled');
+
+        var item = formato[0].item;
+        var mostrar_pdf = formato[0].mostrar_pdf;
+        if(item == 0 && mostrar_pdf == 0) {
+        	$("#tipo_registro").val(2);
+        }
+        if(item == 0 && mostrar_pdf == 1) {
+        	$("#tipo_registro").val(1);
+        }
+        if(item == 1 && mostrar_pdf == 0) {
+        	$("#tipo_registro").val(3);
+        }
+
 	} else {
 		$('.nav li').addClass('disabled');
 		$("#contenidos_componentes").hide();
@@ -640,9 +653,9 @@ $("document").ready(function(){
 });
 
    function parsear_serie_formato(nodeId) {
-		console.log(nodeId);
+		//console.log(nodeId);
 		var datos = tree_arbol_serie_formato.getUserData(nodeId, "serie_codigo");
-		console.log(datos);
+		//console.log(datos);
 		$("#codigo_serie").val(datos);
 		/*if(datos) {
 			$('[name="expediente_serie"]').val(datos);
