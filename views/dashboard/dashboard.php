@@ -30,6 +30,9 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <?= bootstrap() ?>
     <?= breakpoint() ?>
     <?= icons() ?>
+    <link rel="icon" type="image/png" href="<?= $ruta_db_superior ?>assets/images/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="<?= $ruta_db_superior ?>assets/images/favicon-16x16.png" sizes="16x16" />
+
 	<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css" rel="stylesheet" type="text/css" media="screen" />
 	<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen" />
 	<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/switchery/css/switchery.min.css" rel="stylesheet" type="text/css" media="screen" />
@@ -126,7 +129,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                     <span class="semi-bold" id="user_name"></span>
                 </div>
                 <div class="dropdown pull-right d-xs-block">
-                    <button class="profile-dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="user_info">
+                    <button class="profile-dropdown-toggle cursor" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="user_info">
                         <span class="thumbnail-wrapper d32 circular inline">
                             <img id="profile_image" class="cuted_photo" width="32" height="32">
                         </span>

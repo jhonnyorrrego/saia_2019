@@ -14,11 +14,13 @@ $(function(){
         $('[data-pages-toggle="#appMenu"]').trigger("click");
     });
 
-    $(document).on('click', '.parent_item', function () {
-        let moduleId = $(this).attr('id');
-        let url = $(this).data('url');
-        
-        modules.find(moduleId, url);
+    $(document).on('click', '.parent_item', function (e) {
+        if($(e.target).parent().find('.arrow').length){
+            let moduleId = $(this).attr('id');
+            let url = $(this).data('url');
+            
+            modules.find(moduleId, url);
+        }
     });
 
     $(document).on('click', '.module_link', function(){

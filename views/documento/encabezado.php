@@ -19,7 +19,6 @@ echo jquery();
 echo bootstrap();
 echo icons();
 echo theme();
-echo toastr();
 
 $document = array();
 $userId = 0;
@@ -219,18 +218,18 @@ function plantilla($documentId, $transferId = 0){
                 <span class="cursor fa fa-angle-double-down" id="show_tree"></span>
             </div>
             <div class="col-auto text-center my-auto pr-2">
-                <span class="fa fa-mail-reply px-1">
+                <span class="fa fa-mail-reply px-1 cursor">
                    <label class="d-none d-sm-inline f-12 font-heading">&nbsp;Responder</label>
                 </span>
-                <span class="fa fa-mail-reply-all px-1 d-none d-md-inline">
+                <span class="fa fa-mail-reply-all px-1 d-none d-md-inline cursor">
                    <label class="d-none d-sm-inline f-12 font-heading">&nbsp;Responder a todos</label>
                 </span>
-                <span class="fa fa-share px-1">
+                <span class="fa fa-share px-1 cursor">
                     <label class="d-none d-sm-inline f-12 font-heading">&nbsp;Reenviar</label>
                 </span>
                 <div class="dropdown d-inline px-1">
-                    <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-ellipsis-v"></i>
+                    <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="cursor">
+                        &nbsp;&nbsp;<i class="fa fa-ellipsis-v"></i>&nbsp;&nbsp;
                     </span>
                     <div class="dropdown-menu dropdown-menu-right" role="menu" x-placement="bottom-end">
                         <?php foreach ($moduleActions as $key => $item): ?>
@@ -255,8 +254,8 @@ function plantilla($documentId, $transferId = 0){
                         <div class="row" style="line-height:1.5">
                             <div class="col-12">
                                 <span class="bold">
-                                    <?= $Transfer->user->getName() ?>
                                     <span class="badge"><?= $document[0]['numero']?></span>
+                                    <?= $Transfer->user->getName() ?>
                                 </span>
                             </div>
                         </div>

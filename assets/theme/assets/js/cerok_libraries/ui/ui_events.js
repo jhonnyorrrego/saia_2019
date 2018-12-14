@@ -13,10 +13,6 @@ $(function () {
         Ui.close();
     });
 
-    $("#profile_image").mouseover(function() {
-        $("#user_info").trigger("click");
-    });
-
     $("#menu_user_info").mouseleave(function() {
         $("#user_info").trigger("click");
     });

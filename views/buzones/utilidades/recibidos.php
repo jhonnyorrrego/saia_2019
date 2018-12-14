@@ -126,21 +126,19 @@ $(function(){
         $(':checkbox[data-index]:checked').trigger('click');
     });
 
-    function executeAction(node){
-        let iframe = $("#iframe_right_workspace"),
-            url = node.data('url'),
-            actualUrl = iframe.attr('src');
-
-        let documentSelected = node.parent().find('.identificator').val();
-        sessionStorage.setItem('documentSelected', documentSelected);
-
-        if(actualUrl != baseUrl + url){
-            iframe.attr('src', baseUrl + url);
-        }
-
+    document.getElementById('iframe_right_workspace').onload = function(){
         if($("#right_workspace").is(':hidden')){
             $("#mailbox,#right_workspace").toggleClass('d-none');
         }
+    }
+
+    function executeAction(node){
+        let iframe = $("#iframe_right_workspace"),
+            url = node.data('url');
+
+        iframe.attr('src', baseUrl + url);
+        let documentSelected = node.parent().find('.identificator').val();
+        sessionStorage.setItem('documentSelected', documentSelected);
 
         node.parents('tr[data-index]').addClass('selected');
         node.parents('tr[data-index]').find('.unread').hide();

@@ -43,3 +43,7 @@ window.notification = function(options){
         showNotification(options);
     }
 }
+
+window.closeNotifications = function(){
+    top.toastr.clear();
+}
