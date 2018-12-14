@@ -209,10 +209,10 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
 	<body>
 <?php if ($_REQUEST["tipo"] != 5): ?>
     <div class="container bg-master-lightest mx-0 px-2 px-md-0 mw-100">
-        <div class="row sticky-top pt-0 bg-master-lightest">
+        <div class="row sticky-top p-0 m-0 bg-master-lightest">
             <?= plantilla($iddocumento, $idtransferencia) ?>
         </div>
-        <div id="documento" class="row px-3">
+        <div id="documento" class="row p-0 m-0">
             <div id="pag-0" class="col-12 page_border bg-white">
                 <div class="page_margin_top" id="doc_header">
                     <?php if ($encabezado["numcampos"]) {

@@ -78,7 +78,11 @@ class Session {
     }
 
     static violation(message) {
-        toastr.error(message, 'Error!');
+        top.notification({
+            message: message,
+            type: 'error',
+            title: 'Error!'
+        });
 
         setTimeout(() => {
             Session.close();

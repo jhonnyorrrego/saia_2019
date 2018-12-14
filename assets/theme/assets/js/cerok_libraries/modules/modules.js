@@ -121,35 +121,38 @@ class Modules {
 
     createGroupers(){              
         let row = $('<div>',{
-            class: 'row'
+            class: 'row p-0 m-0'
         });
 
-        let backgrounds = ['bg-complete', 'bg-success', 'bg-primary'];
+        let backgrounds = ['bg-complete', 'bg-success', 'bg-primary', 'bg-warning'];
         
         this.groupers.forEach((g, i) => {
-            row.append($("<div>", {
-                    class: "col-12 col-md-6 py-1 px-0 mx-0 grouper",
-                    style: "cursor:pointer",
+            row.append(
+                $("<div>", {
+                    class: "col-12 col-md-6 grouper cursor text-center p-1",
                     id: g.idmodule
-                }).append($("<div>", {
-                        class:`${backgrounds[i]} text-center py-2 align-middle mx-auto`,
-                        height: 92,
-                        width: 92
-                    }).append($("<i>", {
+                }).append(
+                    $("<div>", {
+                        class:`${backgrounds[i]} mx-auto`,
+                        height: 90,
+                        width: 90
+                    }).append(
+                        $("<i>", {
                             class: `${g.icon} w-100 py-2`,
                             style: "font-size:1.8rem"
                         }),
-                        g.name
+                        $("<span>", {
+                            class: 'd-block text-truncate',
+                            title: g.name,
+                            text: g.name
+                        })
+                        
                     )
                 )
             );
         });
 
-        let container = $('<div>',{
-            class: 'container'
-        }).append(row);
-
-        return {groupers : container};
+        return {groupers : row};
     }
 
     createList(idmodule){ 

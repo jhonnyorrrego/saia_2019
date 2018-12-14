@@ -52,7 +52,10 @@ $(function(){
             key: key
         }, function(response){
             if(response.success){
-                toastr.success(response.message);
+                top.notification({
+                    message: response.message,
+                    type: 'success'
+                });
 
                 if(priority){
                     flag.addClass('text-danger');
@@ -62,7 +65,11 @@ $(function(){
                     flagParent.hide();
                 }
             }else{
-                toastr.error(response.message);
+                top.notification({
+                    message: response.message,
+                    type: 'error',
+                    title: 'Error!'
+                });
             }
         }, 'json')
     });
@@ -182,4 +189,26 @@ $(function(){
                 .show();
         }
     }
+
+    /////// MENU INTERMEDIO ////////
+    $(document).on('click', '#etiquetar', function(){
+        top.topModal({
+            url: `${baseUrl}views/documento/etiquetar.php`,
+            title: 'Etiquetas',
+            size: 'modal-sm',
+            params: {
+                selections: documentId
+            },
+            buttons: {
+                success: {
+                    label: 'Guardar',
+                    class: 'btn btn-complete'
+                },
+                cancel: {
+                    label: 'Cancelar',
+                    class: 'btn btn-danger'
+                }
+            },
+        })
+    });
 });

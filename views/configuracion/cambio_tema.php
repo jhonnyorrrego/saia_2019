@@ -23,7 +23,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <?=jquery()?>
     <?=bootstrap()?>
     <?=theme()?>
-    <?=toastr()?>
 </head>
 <body>
     <div class="container px-1 py-0">
@@ -159,17 +158,28 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 if(color){
                     $.post(baseUrl + 'app/configuracion/actualizar_color.php', {color: color}, function(response){
                         if(response.success){
-                            toastr.success(response.message);
+                            top.notification({
+                                message: response.message,
+                                type: 'success'
+                            });
 
                             let style = `.bg-institutional{background: ${color}!important;color: "#ffff"!important}`;
                             $('#instition_style', window.top.document).text(style);
                             window.top.localStorage.setItem('color', color);
                         }else{
-                            toastr.error(response.message);
+                            top.notification({
+                                message: response.message,
+                                type: 'error',
+                                title: 'Error!'
+                            });
                         }
                     }, 'json');
                 }else{
-                    toastr.error('Debe Seleccionar un color', 'Error!');
+                    top.notification({
+                        message: 'Debe Seleccionar un color',
+                        type: 'error',
+                        title: 'Error!'
+                    });
                 }
             })
         });

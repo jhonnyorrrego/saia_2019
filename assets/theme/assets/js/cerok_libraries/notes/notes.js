@@ -70,7 +70,11 @@ class Notes {
                     note.notes = response.data;
                 } else {
                     note.notes = {};
-                    toastr.error(response.message, 'Error!');
+                    top.notification({
+                        message: response.message,
+                        type: 'error',
+                        title: 'Error!'
+                    });
                 }
             }
         });
@@ -125,7 +129,11 @@ class Notes {
                     instance.refreshList();
                     $("#save_note").attr('disabled', false);
                 } else {
-                    toastr.error(response.error, 'Error!');
+                    top.notification({
+                        message: response.error,
+                        type: 'error',
+                        title: 'Error!'
+                    });
                 }
             }
         });
@@ -173,12 +181,20 @@ class Notes {
                         instance.selected = null;                        
                         instance.refreshList();
                     } else {
-                        toastr.error(response.message, 'Error!');
+                        top.notification({
+                            message: response.message,
+                            type: 'error',
+                            title: 'Error!'
+                        });
                     }
                 }
             });
         }else{
-            toastr.info('<span class="bold">Seleccione una tarea</span>', 'Error!');
+            top.notification({
+                message: '<span class="bold">Seleccione una tarea</span>',
+                type: 'info',
+                title: 'Error!'
+            });
         }
     }
 }

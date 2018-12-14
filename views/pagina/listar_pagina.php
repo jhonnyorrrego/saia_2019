@@ -137,7 +137,11 @@ $iddocumento = $_REQUEST["iddoc"];
 							$("#sortable").disableSelection();
 						},
 						error : function() {
-							toastr.error('Error! No es posible cargar la informaci&oacute;n');
+                            top.notification({
+                                message: 'No es posible cargar la informaci&oacute;n',
+                                type: 'error',
+                                title: 'Error!'
+                            });
 						}
 					});
 				}
@@ -182,14 +186,25 @@ $iddocumento = $_REQUEST["iddoc"];
 						dataType : 'json',
 						success : function(data) {
 							if (data.success == 1) {
-								toastr.success(data.message);
+                                top.notification({
+                                    message: data.message,
+                                    type: 'success'
+                                });
 								listarPaginas();
 							} else {
-								toastr.error(data.message);
+                                top.notification({
+                                    message: data.message,
+                                    type: 'error',
+                                    title: 'Error!'
+                                });
 							}
 						},
 						error : function() {
-							toastr.error('Error! No es posible actualizar la informaci&oacute;n');
+                            top.notification({
+                                message: 'No es posible actualizar la informaci&oacute;n',
+                                type: 'error',
+                                title: 'Error!'
+                            });
 						}
 					});
 				});

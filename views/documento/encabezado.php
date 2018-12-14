@@ -75,7 +75,7 @@ function moduleActions($parentModule){
     global $ruta_db_superior, $document, $userId, $conn;
 
     $links = array();
-    $findModules = busca_filtro_tabla('a.idmodulo,a.enlace,a.imagen,a.etiqueta', 'modulo a, modulo b', 'a.cod_padre = b.idmodulo and b.nombre = "' . $parentModule . '"', 'a.orden', $conn);
+    $findModules = busca_filtro_tabla('a.nombre,a.enlace,a.imagen,a.etiqueta', 'modulo a, modulo b', 'a.cod_padre = b.idmodulo and b.nombre = "' . $parentModule . '"', 'a.orden', $conn);
     unset($findModules['tabla'],$findModules['numcampos'],$findModules['sql']);
     
     return $findModules;
@@ -209,10 +209,10 @@ function plantilla($documentId, $transferId = 0){
         $moduleActions = moduleActions('menu_documento');
     }
     ?>
-    <link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.css">
+    <!--<link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.css">-->
     <style>.notification {position: relative;cursor: pointer;text-decoration: none;}.notification > .counter {position: absolute;font-size: 0.5em;top: -9px;left: 1px;}</style>
-    <div class="col-12">
-        <div class="row m-0 bg-info text-white px-1" style="font-size:20px;height:35px">
+    <div class="col-12 p-0 m-0">
+        <div class="row m-0 bg-info text-white px-1" style="font-size:20px;height:36px">
             <div class="col px-1 my-auto">
                 <span style="display:none" class="fa fa-arrow-left pr-3 cursor" id="go_back"></span>
                 <span class="fa fa-sitemap cursor"></span>
@@ -234,9 +234,12 @@ function plantilla($documentId, $transferId = 0){
                     </span>
                     <div class="dropdown-menu dropdown-menu-right" role="menu" x-placement="bottom-end">
                         <?php foreach ($moduleActions as $key => $item): ?>
-                            <a class="dropdown-item menu_options text-truncate" href="<?= $ruta_db_superior . $item['enlace']?>" class="text-body" style="line-height:28px;">
+                            <span id="<?= $item['nombre'] ?>" class="dropdown-item menu_options text-truncate" data-url="<?= $ruta_db_superior . $item['enlace']?>" class="text-body" style="line-height:28px;">
                                 <i class="<?= $item['imagen'] ?>"></i> <?= $item['etiqueta']?>
-                            </a>
+                            </span>
+                            <?php if($key == 4 || $key == 11): ?>
+                                <hr class="m-1">
+                            <?php endif; ?>
                         <?php endforeach;?>
                     </div>
                 </div>
@@ -301,7 +304,7 @@ function plantilla($documentId, $transferId = 0){
             <div id="fab"></div>
         </div>
     </div>
-    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.js"></script>
+    <!--<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.js"></script>-->
     <script src="<?= $ruta_db_superior ?>views/documento/js/encabezado.js" data-baseurl="<?= $ruta_db_superior ?>" data-documentid="<?= $documentId ?>"></script>
     <?php
 }

@@ -123,7 +123,11 @@ $(function () {
                         Ui.imageAreaSelect();
                     });
                 } else {
-                    toastr.error("Error en la carga!", "Error");
+                    top.notification({
+                        message: "Error en la carga!",
+                        type: 'error',
+                        title: 'Error!'
+                    });
                 }
             }
         });

@@ -3753,19 +3753,6 @@ function generar_cadena_like_comas($campo,$value){
 	return($cadena_like);
 }
 
-function notificaciones($mensaje, $tipo = 'alert', $tiempo = 3500,$ubicacion="topCenter") {
-	if($_REQUEST["llamado_ajax"]){
-		return($mensaje);
-	}
-	if ($mensaje != '') {
-	?>
-		<script type="text/javascript">
-			top.noty({text: '<?php echo($mensaje)?>',type: '<?php echo($tipo); ?>',layout: '<?php echo($ubicacion)?>',timeout:<?php echo($tiempo); ?>});
-		</script>
-	<?php
-	}
-}
-
 /**
  * @param $id=id
  * @param $tabla => nombre de la tabla
