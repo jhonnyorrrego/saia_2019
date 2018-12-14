@@ -43,8 +43,9 @@ if (@$_REQUEST["idpantalla_campos"]) {
         $valores["fs_valor"] = $pantalla_campos[0]["valor"];
     }
 
-    //$opciones_propias = json_decode(mb_convert_encoding($pantalla_campos[0]["opciones_propias"], 'UTF-8', 'UTF-8'), true);
-    $opciones_propias = json_decode(utf8_encode($pantalla_campos[0]["opciones_propias"]), true);
+    //V1. $opciones_propias = json_decode(mb_convert_encoding($pantalla_campos[0]["opciones_propias"], 'UTF-8', 'UTF-8'), true);
+    //V2. $opciones_propias = json_decode(utf8_encode($pantalla_campos[0]["opciones_propias"]), true);
+    $opciones_propias = json_decode(html_entity_decode($pantalla_campos[0]["opciones_propias"]), true);
     if (json_last_error() === JSON_ERROR_NONE) {
         $val_default = array();
         if(isset($opciones_propias["data"]) && is_array($valores)) {
