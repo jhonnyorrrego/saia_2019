@@ -200,7 +200,6 @@ padding:13px;
 <script type="text/javascript">
 $(document).ready(function() {
 	$("#nuevo_formato").click(function() {
-		console.log("LCDTM");
 		abrir_kaiten("pantallas/generador/iframe_generador.php?nokaiten=1","Nuevo formato");
 	});
 });

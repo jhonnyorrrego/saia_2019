@@ -149,6 +149,9 @@ function crear_campo_dropzone($nombre, $parametros) {
 <style type="text/css">
 .arbol_saia>.containerTableStyle {overflow:hidden;}
 </style>
+
+	<script type="text/javascript" src="<?=$ruta_db_superior?>pantallas/generador/editar_componente_generico.js"></script>
+
 </head>
 <body>
 
@@ -158,26 +161,30 @@ function crear_campo_dropzone($nombre, $parametros) {
   <hr>
 
   <?php
-  if($_SESSION["LOGIN" . LLAVE_SAIA]=="cerok"){
+  if($_SESSION["LOGIN" . LLAVE_SAIA]=="cerok") {
   ?>
   <div class="row-fluid"><div class="span12">
 	  <div class="control-group">
 	    <label class="control-label" for="nombre">Nombre*</label>
 	    <div class="controls">
-	      <input type="text" name="nombre_formato" id="nombre_formato" placeholder="Nombre" value="" required  <?php if($_REQUEST["idformato"]) echo("disabled");?>>
+	      <input type="text" name="nombre_formato" id="nombre_formato" placeholder="Nombre" value="" required readonly>
 	    </div>
 	  </div>
 	  </div></div>
 	 <?php
+  } else {
+?>
+      <input type="hidden" name="nombre_formato" id="nombre_formato" value="" required>
+<?php
   }
   ?>
 
   <div class="row-fluid">
     <div class="span8">
       <div class="control-group">
-        <label class="control-label" for="etiqueta">Nombe del formato *</label>
+        <label class="control-label" for="etiqueta">Nombre del formato *</label>
         <div class="controls">
-          <input type="text" style="width: 80%;" name="etiqueta" id="etiqueta_formato" placeholder="Nombre" value="" required>
+          <input type="text" style="width: 80%;" name="etiqueta" id="etiqueta_formato" placeholder="Nombre" value="" required <?php if($_REQUEST["idformato"]) echo("disabled");?>>
         </div>
       </div>
     </div>
@@ -521,7 +528,7 @@ echo(librerias_acciones_kaiten());
 
 $("document").ready(function(){
 	$('[data-toggle="tooltip"]').tooltip();
-	$("#nombre_formato").blur(function() {
+	/*$("#nombre_formato").blur(function() {
 		//console.log($("#nombre_formato").val());
 		if($("#nombre_formato").val()) {
 			$.ajax({
@@ -540,7 +547,18 @@ $("document").ready(function(){
 			    }
 			});
 		}
+	});*/
+
+	$("#etiqueta_formato").change(function() {
+        var valor = $(this).val();
+        console.log(valor);
+        if (valor) {
+        	var nombre = normalizar(valor);
+            console.log(nombre);
+        	$("#nombre_formato").val(nombre);
+        }
 	});
+
 	var formulario = $("#datos_formato");
 	var formato=jQuery.parseJSON('<?php echo($formato);?>');
 	//window.console.log(formato);
@@ -563,12 +581,21 @@ $("document").ready(function(){
                 success: function(objeto) {
                     if(objeto.exito) {
                         $('#cargando_enviar').html("Terminado ...");
-                        var ruta_iframe=$(".k-focus",window.parent.document).find("iframe").attr("src");
-                        ruta_iframe=ruta_iframe.substr(0,ruta_iframe.indexOf("generador_pantalla"));
-                        var data_iframe= { url:ruta_iframe+"generador_pantalla.php?idformato="+objeto.idformato,  kTitle:"Formato "+$("#etiqueta_formato").val()};
-                        var kaiten_actual=obtener_panel_kaiten();
-                        parent.Kaiten.reload(kaiten_actual,data_iframe);
-                        notificacion_saia('El registro se a insertado exitosamente','success','topCenter',3000);
+                        //var iframe = $("#iframe_generador", window.parent.document);
+                        //var ruta_iframe = $(iframe).attr("src");
+                        var ruta_iframe = window.location.href;
+                        var ruta_iframe=$(".k-focus", window.parent.parent.document).find("iframe").attr("src");
+                        //console.log(ruta_iframe);
+                        //ruta_iframe=ruta_iframe.substr(0,ruta_iframe.indexOf("generador_pantalla"));
+                        //var data_iframe= { url:ruta_iframe+"generador_pantalla.php?idformato="+objeto.idformato,  kTitle:"Formato "+$("#etiqueta_formato").val()};
+                        var data_iframe= { url:ruta_iframe+"&idformato="+objeto.idformato,  kTitle:"Formato "+$("#etiqueta_formato").val()};
+
+                        $id = $(".k-focus", parent.parent.document).attr("id").replace("kp", "");
+                        var kaiten_actual = parent.parent.$("#contenedor_busqueda").kaiten("getPanel", ($id - 1));
+                        //#iframe_generador
+
+                        parent.parent.Kaiten.reload(kaiten_actual, data_iframe);
+                        notificacion_saia('El registro se ha insertado exitosamente','success','topCenter',3000);
                     } else {
                     	notificacion_saia(objeto.error,'error','topCenter',3000);
                     	buttonAcep.removeAttr('disabled');
