@@ -41,7 +41,7 @@ if (is_dir("roundcubemail")) {
 		</form>
 		<script type="text/javascript">
 		<?php if($_SESSION["tipo_dispositivo"]!="movil"){?>
-		  top.collapser_mainui.click();
+		  //top.collapser_mainui.click();
 		 <?php }?>
 		  document.form_roundcube.submit();
 		</script>
