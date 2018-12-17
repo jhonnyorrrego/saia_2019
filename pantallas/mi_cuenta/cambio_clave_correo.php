@@ -14,7 +14,7 @@ $ruta_db_superior='';
 	include_once($ruta_db_superior."librerias_saia.php");
 	echo(librerias_jquery('1.7'));
 	echo(estilo_bootstrap());
-	
+
 if(@$_REQUEST['from_correo']){
 	$correo_funcionario=busca_filtro_tabla("email","funcionario","idfuncionario=".usuario_actual('idfuncionario'),"",$conn);
 
@@ -24,18 +24,18 @@ $(document).ready(function(){
 	$("#enviar_form").click(function(){
 		var nueva_con=$("#passwordPwd").val();
 			var confi_con=$("#passwordTxt").val();
-			
+
 			if(nueva_con!=confi_con){
 				alert('Las contraseñas deben ser iguales');
 				$("#passwordPwd").val('');
 				$("#passwordTxt").val('');
 				return false;
-			}	
+			}
 			if(nueva_con==''){
 				alert('Debe ingresar una contraseña valida');
-				return false;			
-			}	
-			<?php encriptar_sqli("cambio_pass",0,"form_info",""); ?>		
+				return false;
+			}
+			<?php encriptar_sqli("cambio_pass", 0, "form_info", $ruta_db_superior); ?>
 			if(salida_sqli){
 				$("#cambio_pass").submit();
 			}
@@ -43,8 +43,8 @@ $(document).ready(function(){
 });
 </script>
 <div class="container">
-<form class="form-vertical" method="post" action="<?php echo($ruta_db_superior); ?>pantallas/mi_cuenta/guardar_pass_correo.php" id="cambio_pass">  
- 			<input type="hidden" name="from_correo" value="1" /> 			
+<form class="form-vertical" method="post" action="<?php echo($ruta_db_superior); ?>pantallas/mi_cuenta/guardar_pass_correo.php" id="cambio_pass">
+ 			<input type="hidden" name="from_correo" value="1" />
             <div class="control-group">
                 <label class="control-label" for="new_password"><b>Nueva Contrase&ntilde;a</b></label>
               <div class="controls">
@@ -58,11 +58,11 @@ $(document).ready(function(){
                 <input type="password" id="passwordTxt" name="passwordTxt" placeholder="Confirmar nueva Contrase&ntilde;a">
                 <div id="confirmacion_pass"></div>
               </div>
-            </div>                               
+            </div>
             <div class="control-group">
                 <button type="button" class="btn btn-mini btn-primary" id="enviar_form">Cambiar contrase&ntilde;a de correo</button>
                 <button type="button" class="btn btn-mini " id="cancelar_form">Cancelar</button>
-            </div>           
+            </div>
 </form>
 <div>
  <ul>
@@ -74,8 +74,8 @@ $(document).ready(function(){
     </li>
  </ul>
 </div>
-</div>    
-	<?php	
+</div>
+	<?php
 	die();
 }
 
@@ -86,20 +86,20 @@ $(document).ready(function(){
 <script type="text/javascript" src="pantallas/mi_cuenta/js/pwd_meter.js"></script>
 <script>
 $("#enviar_form").click(function(){
-	
-	
+
+
 	var nueva_con=$("#passwordPwd").val();
 		var confi_con=$("#passwordTxt").val();
-		
+
 		if(nueva_con!=confi_con){
 			$("#confirmacion_pass").html('<span style="color:red">Las contraseñas no coinciden.</span>');
 			return false;
-		}		
-		<?php encriptar_sqli("cambio_pass",0,"form_info",""); ?>		
+		}
+		<?php encriptar_sqli("cambio_pass", 0, "form_info", $ruta_db_superior); ?>
 		if(salida_sqli){
 			$("#cambio_pass").submit();
 		}
-	
+
 });
 $("#passwordTxt").blur(function(){
 	var nueva_con=$("#passwordPwd").val();
@@ -115,8 +115,8 @@ $("#passwordTxt").blur(function(){
 <!--link rel="STYLESHEET" type="text/css" href="pantallas/mi_cuenta/css/password.css"-->
 </head>
 <div class="container">
-<form class="form-vertical" method="post" action="pantallas/mi_cuenta/guardar_pass_correo.php" id="cambio_pass">  
- 
+<form class="form-vertical" method="post" action="pantallas/mi_cuenta/guardar_pass_correo.php" id="cambio_pass">
+
             <div class="control-group">
                 <label class="control-label" for="new_password"><b>Nueva Contrase&ntilde;a</b></label>
               <div class="controls">
@@ -130,16 +130,16 @@ $("#passwordTxt").blur(function(){
                 <input type="password" id="passwordTxt" name="passwordTxt" autocomplete="off" class="" placeholder="Confirmar nueva Contrase&ntilde;a">
                 <div id="confirmacion_pass"></div>
               </div>
-            </div>                               
+            </div>
             <div class="control-group">
                 <label class="control-label" for="seguridad"><b>seguridad de la contrase&ntilde;a</b></label>
-              <div class="controls">                              
+              <div class="controls">
                 <div id="complexity" class="pull-left">Debil </div>
                 <div id="scorebar" class="pull-left" style="background-position: 0px 50%; left:200px;">&nbsp;</div>
                 <div id="score" style="display:none"></div>
-                <br /><div id="nscore"></div>              
-                <div class="exceed"></div>                           
-                <div id="div_nAlphasOnly" style="display:none"></div>                
+                <br /><div id="nscore"></div>
+                <div class="exceed"></div>
+                <div id="div_nAlphasOnly" style="display:none"></div>
                 <div id="nAlphaUC" style="display:none"></div>
                 <div id="nAlphaLC" style="display:none"></div>
                 <div id="nNumber" style="display:none"></div>
@@ -193,13 +193,13 @@ $("#passwordTxt").blur(function(){
                 <div id="nSeqSymbolBonus" style="display:none"></div>
                 <div id="nSeqNumberBonus" style="display:none"></div>
                 <div id="nSeqAlphaBonus" style="display:none"></div>
-                <div id="nConsecAlphaLCBonus" style="display:none"></div>                               
+                <div id="nConsecAlphaLCBonus" style="display:none"></div>
               </div>
-            </div> 
+            </div>
             <div class="control-group">
                 <button type="button" class="btn btn-mini btn-primary" id="enviar_form">Cambiar contrase&ntilde;a de correo</button>
                 <button type="button" class="btn btn-mini " id="cancelar_form">Cancelar</button>
-            </div>           
+            </div>
 </form>
 <div>
  <ul>

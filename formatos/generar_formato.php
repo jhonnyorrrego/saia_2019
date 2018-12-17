@@ -1605,6 +1605,7 @@ span.fancytree-expander {
             if ($accion == "editar") {
                 $contenido .= '<?php include_once($ruta_db_superior . FORMATOS_SAIA . "librerias/footer_plantilla.php");?' . '>';
             }
+            include_once($ruta_db_superior . "pantallas/lib/librerias_notificaciones.php");
 
             $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_" . $accion], $contenido);
             if ($mostrar !== false) {
