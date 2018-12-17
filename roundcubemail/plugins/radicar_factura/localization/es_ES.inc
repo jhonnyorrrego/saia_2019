@@ -2,7 +2,7 @@
 
 /*
  +-----------------------------------------------------------------------+
- | plugins/radicar_saia/localization/<lang>.inc                            |
+ | plugins/radicar_factura/localization/<lang>.inc                            |
  |                                                                       |
  | Localization file of the Roundcube Webmail Mark-As-Junk plugin        |
  | Copyright (C) 2012-2013, The Roundcube Dev Team                       |
@@ -17,5 +17,6 @@
 */
 $labels['buttontext'] = 'Radicar Factura';
 $labels['buttontitle'] = 'Radicar Factura en SAIA';
-$labels['reportedasradicado'] = 'Radicado en saia, correctamente';
+$labels['msgfacturaradicada'] = 'Factura radicada en saia, correctamente';
+$labels['errpermisorwtmp'] = 'No tiene permisos de escritura en la carpeta temporal';
 ?>

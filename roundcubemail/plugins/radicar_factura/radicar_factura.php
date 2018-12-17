@@ -1,10 +1,14 @@
 <?php
 /**
- * Radicacion SAIA
+ * Radicacion de Facturas SAIA
  */
+
 class radicar_factura extends rcube_plugin {
 	public $task = 'mail';
 	private $charset = 'ASCII';
+
+	private $valid_types = array("pdf", "xml", "eml");
+
 	function init() {
 		$rcmail = rcmail::get_instance();
 
@@ -15,10 +19,7 @@ class radicar_factura extends rcube_plugin {
 		//$this->add_hook('storage_init', array($this, 'storage_init'));
 
 		if ($rcmail -> action == '' || $rcmail -> action == 'show') {
-			$skin_path = $this -> local_skin_path();
 			$this -> include_script('radicar_factura.js');
-			/*if (is_file($this->home . "/$skin_path/radicar_factura.css"))
-			 $this->include_stylesheet("$skin_path/radicar_factura.css");*/
 			$this -> add_texts('localization', true);
 			$this -> charset = $rcmail -> config -> get('radicar_factura_charset', RCUBE_CHARSET);
 			$this -> add_button(array(
@@ -33,18 +34,6 @@ class radicar_factura extends rcube_plugin {
 		}
 	}
 
-	/*function storage_init($args){
-	 $flags = array(
-	 'JUNK'    => 'Junk',
-	 'NONJUNK' => 'NonJunk',
-	 );
-
-	 // register message flags
-	 $args['message_flags'] = array_merge((array)$args['message_flags'], $flags);
-
-	 return $args;
-	 }*/
-
 	function request_action() {
 		$max_salida = 10;
 		$ruta_db_superior = $ruta = "";
@@ -56,7 +45,7 @@ class radicar_factura extends rcube_plugin {
 			$max_salida--;
 		}
 		global $conn;
-		include_once($ruta_db_superior."vendor/autoload.php");
+		require_once($ruta_db_superior."vendor/autoload.php");
 		include_once ($ruta_db_superior . "db.php");
 		$this -> add_texts('localization');
 
@@ -64,6 +53,25 @@ class radicar_factura extends rcube_plugin {
 		$storage = $rcmail -> get_storage();
 		$dato_correo = array();
 		$tempfiles = array();
+
+		$temp_dir = $rcmail -> config -> get('temp_dir');
+
+		$almacenamiento = StorageUtils::get_storage_path("TEMPORAL");
+		if(!$almacenamiento) {
+		    $almacenamiento = StorageUtils::get_storage_path($temp_dir);
+		}
+		$str_tmp_dir = new Stringy\Stringy($temp_dir);
+		$temp_dir = (string) $str_tmp_dir->ensureRight("/");
+
+		if(!is_dir($temp_dir)) {
+		    mkdir($temp_dir);
+		    chmod($temp_dir, 0777);
+		}
+		if(!is_writable($temp_dir)) {
+		    $rcmail -> output -> command('display_message', $this -> gettext('errpermisorwtmp') . ": $temp_dir", 'error');
+		    return false;
+		}
+
 		foreach (rcmail::get_uids() as $mbox => $uids) {
 			$message = new rcube_message($uids[0]);
 			rcmail_check_safe($message);
@@ -73,12 +81,11 @@ class radicar_factura extends rcube_plugin {
 			$dato_correo["tipo_radicado"] = $mbox;
 			$dato_correo["to"] = $message -> headers -> to . "-" . $message -> headers -> cc . "--" . $message -> headers -> cco;
 
-			$temp_dir = $rcmail -> config -> get('temp_dir');
 			foreach ($message->attachments as $part) {
 				$pid = $part -> mime_id;
 				$part = $message -> mime_parts[$pid];
 				$filename = $part -> filename;
-				if ($filename === null || $filename === '') {
+				if (empty($filename)) {
 					$ext = (array)rcube_mime::get_mime_extensions($part -> mimetype);
 					$ext = array_shift($ext);
 					$filename = $rcmail -> gettext('messagepart') . ' ' . $pid;
@@ -86,20 +93,28 @@ class radicar_factura extends rcube_plugin {
 						$filename .= '.' . $ext;
 					}
 				}
-				$tmpfn = $temp_dir . "/" . uniqid() . "_|_" . $this -> _convert_filename($filename);
+				$ext_arch = pathinfo($filename,  PATHINFO_EXTENSION);
+				$valido = array();
+				if(!empty($ext_arch)) {
+    				$valido = preg_grep("/$ext_arch$/i", $this->valid_types);
+				}
+				if(empty($valido)) {
+				    continue;
+				}
+				$tmpfn = $temp_dir . uniqid() . "___" . $this -> _convert_filename($filename);
 				$tmpfp = fopen($tmpfn, 'w');
 				$tempfiles[] = $tmpfn;
 				$message -> get_part_body($part -> mime_id, false, 0, $tmpfp);
 				fclose($tmpfp);
 			}
-			$tmpfn = $temp_dir . "/" . uniqid() . "_|_mail.eml";
+			$tmpfn = $temp_dir . uniqid() . "___mail.eml";
 			$tmpfp = fopen($tmpfn, 'w');
 			$storage -> get_raw_body($uids[0], $tmpfp);
 			fclose($tmpfp);
 			$tempfiles[] = $tmpfn;
-			$dato_correo["anexos"] = implode(",", $tempfiles);
+			$dato_correo["adjuntos"] = $tempfiles;
 		}
-		$rcmail -> output -> command('display_message', $this -> gettext('reportedasradicado'), 'confirmation');
+		$rcmail -> output -> command('display_message', $this -> gettext('msgfacturaradicada'), 'confirmation');
 		$rcmail -> dato_correo = $dato_correo;
 		$configuracion = busca_filtro_tabla("", "configuracion", "tipo='correo' AND nombre='formato_correo'", "", $conn);
 		$ruta_formato = 'pruebas_factura/radicar_factura.php';
