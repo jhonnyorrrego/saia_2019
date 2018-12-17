@@ -1,8 +1,36 @@
 <?php
 require_once 'FacturaXML.php';
-$factura = new FacturaXML(array("archivo" => "factura_ms.xml"));
+
+
+//print_r($_REQUEST);
+
+$datos = array();
+if(isset($_REQUEST["datos_correo"])) {
+    $datos = json_decode($_REQUEST["datos_correo"], true);
+    if(json_last_error() !== JSON_ERROR_NONE) {
+        echo "error en la cadena json<br>";
+        print_r($_REQUEST["datos_correo"]);
+        die();
+    }
+
+}
+
+if(!empty($datos)) {
+    echo "Recibidos<br>";
+    foreach ($datos["adjuntos"] as $archivo) {
+        $es = file_exists($archivo);
+        echo $archivo . " => ";
+        echo "" . (!$es ? 'No' : 'Si');
+        echo "<br>";
+    }
+}
+die();
+
+$factura = new FacturaXML(array("archivo" => "factura_ex.xml"));
 
 $finl = "<br>";
+
+
 
 echo "Factura No.: " . $factura->numeroFactura() . $finl;
 echo "Fecha expedición: " . $factura->fechaExpedicion() . $finl;
@@ -37,6 +65,10 @@ if(is_array($items)) {
 } else {
     echo $items . $finl;
 }
+echo $finl;
+
+$total = $factura->totalFactura();
+print_r($total);
 echo $finl;
 
 //echo print_r($factura->notas());
