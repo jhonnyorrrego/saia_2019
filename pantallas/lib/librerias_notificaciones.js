@@ -1,8 +1,8 @@
 function notificacion_saia(message ,type, location, duration){
   top.notification({
-    message: mensaje,
-    type: tipo,
-    duration: tiempo
+    message: message,
+    type: type,
+    duration: duration
   });
 }
 

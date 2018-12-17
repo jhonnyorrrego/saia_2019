@@ -1,70 +1,72 @@
 <?php
-$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior=$ruta="";
-while($max_salida>0){
-  if(is_file($ruta."db.php")){
-    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+$max_salida = 10;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+  if (is_file($ruta . "db.php")) {
+    $ruta_db_superior = $ruta;
   }
-  $ruta.="../";
+  $ruta .= "../";
   $max_salida--;
 }
-include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."librerias_saia.php");
+include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "librerias_saia.php";
+include_once $ruta_db_superior . "assets/librerias.php";
+
 usuario_actual("login");
 ?>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=9">
 <?php
-echo(estilo_bootstrap());
-if(@$_REQUEST["idbusqueda"]){
-  $parte_where="A.idbusqueda=".$_REQUEST["idbusqueda"];
+if (@$_REQUEST["idbusqueda"]) {
+  $parte_where = "A.idbusqueda=" . $_REQUEST["idbusqueda"];
 }
-if(@$_REQUEST["nombre"]){
-  $parte_where="A.nombre='".$_REQUEST["nombre"]."'";
+if (@$_REQUEST["nombre"]) {
+  $parte_where = "A.nombre='" . $_REQUEST["nombre"] . "'";
 }
 
-$datos_buscador=busca_filtro_tabla("","busqueda A",$parte_where." AND estado=1","",$conn);
-if($datos_buscador["numcampos"]){
-  if($datos_buscador[0]["tipo_busqueda"]==1 || $datos_buscador[0]["tipo_busqueda"]==2){
-    $enlace_ruta_visualizacion="?";    
-    if(strpos($datos_buscador[0]["ruta_visualizacion"],"?"))   
-      $enlace_ruta_visualizacion="&";    
-    $where_componente=" AND estado<>0";
-    if(@$_REQUEST["default_componente"]){
-      $where_componente.=" AND nombre LIKE '".$_REQUEST["default_componente"]."'";
+$datos_buscador = busca_filtro_tabla("", "busqueda A", $parte_where . " AND estado=1", "", $conn);
+if ($datos_buscador["numcampos"]) {
+  if ($datos_buscador[0]["tipo_busqueda"] == 1 || $datos_buscador[0]["tipo_busqueda"] == 2) {
+    $enlace_ruta_visualizacion = "?";
+    if (strpos($datos_buscador[0]["ruta_visualizacion"], "?"))
+      $enlace_ruta_visualizacion = "&";
+    $where_componente = " AND estado<>0";
+    if (@$_REQUEST["default_componente"]) {
+      $where_componente .= " AND nombre LIKE '" . $_REQUEST["default_componente"] . "'";
     }
-    $datos_componente=busca_filtro_tabla("","busqueda_componente","busqueda_idbusqueda=".$datos_buscador[0]["idbusqueda"].$where_componente,"estado DESC",$conn);
-    if(@$_REQUEST["default_componente"] && $datos_componente["numcampos"]){
-      $datos_componente[0]["estado"]=2;
-      if($datos_componente["numcampos"]&& $datos_componente[0]["url"]!=''){
-        if(strpos($datos_componente[0]["url"],"?"))   
-          $enlace_ruta_visualizacion="&";
-        $url_busqueda=$ruta_db_superior.$datos_componente[0]["url"].$enlace_ruta_visualizacion."idbusqueda_componente=".$datos_componente[0]["idbusqueda_componente"];
-      }     
-      else{
-        $url_busqueda=$ruta_db_superior.$datos_buscador[0]["ruta_visualizacion"].$enlace_ruta_visualizacion."idbusqueda_componente=".$datos_componente[0]["idbusqueda_componente"];
+    $datos_componente = busca_filtro_tabla("", "busqueda_componente", "busqueda_idbusqueda=" . $datos_buscador[0]["idbusqueda"] . $where_componente, "estado DESC", $conn);
+    if (@$_REQUEST["default_componente"] && $datos_componente["numcampos"]) {
+      $datos_componente[0]["estado"] = 2;
+      if ($datos_componente["numcampos"] && $datos_componente[0]["url"] != '') {
+        if (strpos($datos_componente[0]["url"], "?"))
+          $enlace_ruta_visualizacion = "&";
+        $url_busqueda = $ruta_db_superior . $datos_componente[0]["url"] . $enlace_ruta_visualizacion . "idbusqueda_componente=" . $datos_componente[0]["idbusqueda_componente"];
+      } else {
+        $url_busqueda = $ruta_db_superior . $datos_buscador[0]["ruta_visualizacion"] . $enlace_ruta_visualizacion . "idbusqueda_componente=" . $datos_componente[0]["idbusqueda_componente"];
       }
-	  
+
+    } else {
+      $url_busqueda = $ruta_db_superior . $datos_buscador[0]["ruta_visualizacion"] . $enlace_ruta_visualizacion . "idbusqueda_componente=" . $datos_componente[0]["idbusqueda_componente"];
     }
-    else{
-      $url_busqueda=$ruta_db_superior.$datos_buscador[0]["ruta_visualizacion"].$enlace_ruta_visualizacion."idbusqueda_componente=".$datos_componente[0]["idbusqueda_componente"];
+    if (@$_REQUEST["parametros_adicionales_buscador"]) {
+      $complemento = explode("|", $_REQUEST["parametros_adicionales_buscador"]);
+      foreach ($complemento as $key => $valor) {
+        $complemento2 = explode("@", $valor);
+        $url_busqueda .= "&" . $complemento2[0] . "=" . $complemento2[1];
+        $complemento_componente .= "&" . $complemento2[0] . "=" . $complemento2[1];
+      }
     }
-	if(@$_REQUEST["parametros_adicionales_buscador"]){
-      $complemento=explode("|",$_REQUEST["parametros_adicionales_buscador"]);
-      foreach($complemento AS $key=>$valor){
-        $complemento2=explode("@",$valor);
-        $url_busqueda.="&".$complemento2[0]."=".$complemento2[1];
-        $complemento_componente.="&".$complemento2[0]."=".$complemento2[1];
-      }            
-    }
-    echo(librerias_html5());
-    echo(librerias_jquery("1.7"));
-    echo(librerias_UI());
-    echo(librerias_kaiten());   
-    echo(librerias_acciones_kaiten());       
-    $ktitle='B&uacute;squeda ';
-    if($datos_buscador[0]['etiqueta']){
-        $ktitle=$datos_buscador[0]['etiqueta']." ";
+    //echo (librerias_html5());
+    //echo (librerias_jquery("1.7"));
+    //echo (librerias_UI());
+    //echo (librerias_kaiten());
+    echo bootstrap();
+    echo icons();
+    echo kaiten();
+    echo librerias_acciones_kaiten();
+    $ktitle = 'B&uacute;squeda ';
+    if ($datos_buscador[0]['etiqueta']) {
+      $ktitle = $datos_buscador[0]['etiqueta'] . " ";
     }
     ?>         
 </head>
@@ -81,10 +83,11 @@ if($datos_buscador["numcampos"]){
         $('#contenedor_busqueda').kaiten({ 
           columnWidth : '100%',
           startup : function(dataFromURL){          
-            this.kaiten('load', { kConnector:'html.page', url:'<?php echo("busquedas/componentes_busqueda.php?idbusqueda=".$datos_buscador[0]["idbusqueda"].$complemento_componente);?>', 'kTitle':'<?php echo($ktitle); ?>'});
-            <?php if($datos_componente["numcampos"] && acceso_modulo($datos_componente[0]["modulo_idmodulo"]) && $datos_componente[0]["estado"]!=1) {  ?>
-            this.kaiten('load', { kConnector:'iframe', url:'<?php echo($url_busqueda); ?>', 'kTitle':'<?php echo($datos_componente[0]["etiqueta"]);?> '});
-            <?php } ?> 
+            this.kaiten('load', { kConnector:'html.page', url:'<?php echo ("busquedas/componentes_busqueda.php?idbusqueda=" . $datos_buscador[0]["idbusqueda"] . $complemento_componente); ?>', 'kTitle':'<?php echo ($ktitle); ?>'});
+            <?php if ($datos_componente["numcampos"] && acceso_modulo($datos_componente[0]["modulo_idmodulo"]) && $datos_componente[0]["estado"] != 1) { ?>
+            this.kaiten('load', { kConnector:'iframe', url:'<?php echo ($url_busqueda); ?>', 'kTitle':'<?php echo ($datos_componente[0]["etiqueta"]); ?> '});
+            <?php 
+          } ?> 
           }
         }); 
         $("#ksubmit_saia").live('click', function (){
@@ -107,29 +110,28 @@ if($datos_buscador["numcampos"]){
               $('#contenedor_busqueda').kaiten("removeChildren",$panel);
             }
           }  
-          datos["url"]="<?php echo($ruta_db_superior);?>"+datos["url"];
+          datos["url"]="<?php echo ($ruta_db_superior); ?>"+datos["url"];
           $('#contenedor_busqueda').kaiten("load",datos);                                                  
         }   
       </script>
 <?php
-    
-  }
-  else if($datos_buscador[0]["ruta_visualizacion"]){  
-    abrir_url(PROTOCOLO_CONEXION.RUTA_PDF."/".$datos_buscador[0]["ruta_visualizacion"],"centro");
-  }      
+
+} else if ($datos_buscador[0]["ruta_visualizacion"]) {
+  abrir_url(PROTOCOLO_CONEXION . RUTA_PDF . "/" . $datos_buscador[0]["ruta_visualizacion"], "centro");
 }
-else {
+} else {
   error("No es posible encontrar la busqueda");
   die("No es posible encontrar la busqueda");
-}    
-function acceso_modulo($idmodulo){
-  if($idmodulo=='' || $idmodulo==Null || $idmodulo==0 ||  usuario_actual("login")=="cerok"){
+}
+function acceso_modulo($idmodulo)
+{
+  if ($idmodulo == '' || $idmodulo == null || $idmodulo == 0 || usuario_actual("login") == "cerok") {
     return true;
   }
-  $ok=new Permiso();
-  $modulo=busca_filtro_tabla("","modulo","idmodulo=".$idmodulo,"");
-  $acceso=$ok->acceso_modulo_perfil($modulo[0]["nombre"]);
+  $ok = new Permiso();
+  $modulo = busca_filtro_tabla("", "modulo", "idmodulo=" . $idmodulo, "");
+  $acceso = $ok->acceso_modulo_perfil($modulo[0]["nombre"]);
   return $acceso;
 }
-  ?>         
+?>         
 </body>  
