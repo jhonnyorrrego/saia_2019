@@ -38,13 +38,11 @@ foreach($_REQUEST as $key => $value){
                     <label for="name">Nombre</label>
                     <input type="email" class="form-control" id="name" placeholder="Crear documento x.">
                 </div>
-                <div class="form-group form-group-default required">
-                    <label for="initial_date">Fecha inicio</label>
-                    <input type="date" class="form-control" id="initial_date">
-                </div>
-                <div class="form-group form-group-default required">
-                    <label for="final_date">Fecha vencimiento</label>
-                    <input type="date" class="form-control" id="final_date">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
+                    </div>
+                    <input type="text" name="dates" class="form-control">
                 </div>
                 <div class="form-group form-group-default required invisible">
                     <label for="description">Descripción</label>
