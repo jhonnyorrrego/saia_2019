@@ -23,6 +23,9 @@ if (isset($_REQUEST["datos_correo"])) {
     }
 }
 
+$formato = busca_filtro_tabla("idformato", "formato", "nombre='factura_electronica'", "", $conn);
+$idformato = $formato[0]["idformato"];
+
 foreach ($datos as $datos_correo) {
     $id_correo = registar_correo($datos_correo);
 
@@ -43,10 +46,10 @@ foreach ($datos as $datos_correo) {
         $iddatos_factura = registar_factura($datos_factura);
         $datos_factura["iddt_datos_factura"] = $iddatos_factura;
         $datos_factura["fk_datos_factura"] = $iddatos_factura;
-        /*$iddoc = radicar_factura($datos_factura);
+        $iddoc = radicar_factura($datos_factura);
         if(!empty($iddoc)) {
-            guardar_anexos($idformato, $iddoc);
-        }*/
+            guardar_anexos($datos_correo["adjuntos"], $idformato, $iddoc);
+        }
     }
 }
 
@@ -77,8 +80,8 @@ function procesar_factura($adjuntos) {
             "archivo" => $archivo_face
         ));
 
-        $datos_factura["num_factura"] = $factura->numeroFactura();
-        $datos_factura["fecha_factura"] = $factura->fechaExpedicion();
+        $datos_factura["num_factura"] = "'" . $factura->numeroFactura() . "'";
+        $datos_factura["fecha_factura"] = fecha_db_almacenar($factura->fechaExpedicion(), "Y-m-d H:i:s");
 
         $proveedor = $factura->datosProveedor();
         if (is_array($proveedor)) {
@@ -104,7 +107,7 @@ function procesar_factura($adjuntos) {
                         $datos_factura["pais_proveedor"] = "'$value'";
                         break;
                     default:
-                        $info[] = $value;
+                        $info[] = "$key : $value";
                         break;
                 }
             }
@@ -148,7 +151,7 @@ function registar_correo($info_correo) {
     $insert = "INSERT INTO dt_datos_correo (" . implode(", ", array_keys($valores)) . ") VALUES (" . implode(", ", array_values($valores)) . ")";
     // print_r(array_keys($valores));
 
-    phpmkr_query($insert) or die("Error al ingresar el registro del correo");
+    phpmkr_query($insert) or die("Error al ingresar el registro del correo: " . $insert);
     return phpmkr_insert_id();
 }
 
@@ -157,7 +160,7 @@ function registar_factura($info_factura) {
     $insert = "INSERT INTO dt_datos_factura (" . implode(", ", array_keys($info_factura)) . ") VALUES (" . implode(", ", array_values($info_factura)) . ")";
     // print_r(array_keys($valores));
 
-    phpmkr_query($insert) or die("Error al ingresar el registro del correo");
+    phpmkr_query($insert) or die("Error al ingresar el registro de la factura: " . $insert);
     return phpmkr_insert_id();
 }
 
@@ -242,6 +245,7 @@ function radicar_factura($datos) {
         $_REQUEST["info_proveedor"] = limpiarContenido($datos["info_proveedor"]);
         $_REQUEST["anexos"] = str_replace("\\", "/", $datos["anexos"]);
 
+        $_REQUEST["tipo_radicado"] = "radicacion_entrada";
         $_REQUEST["encabezado"] = "1";
         $_REQUEST["estado_documento"] = "1";
         $_REQUEST["firma"] = "1";
@@ -260,30 +264,31 @@ function radicar_factura($datos) {
         if ($iddoc) {
             $ok = busca_filtro_tabla("d.iddocumento,d.numero", "$tabla ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "", $conn);
             if ($ok["numcampos"]) {
-                $update_ok = "UPDATE dt_datos_factura SET iddoc_rad=" . $ok[0]["iddocumento"] . ",numero_rad=" . $ok[0]["numero"] . " WHERE iddt_datos_correo=" . $datos[0]["iddt_datos_correo"];
-                phpmkr_query($update_ok) or die("Error al actualizar la DT");
+                $update_ok = "UPDATE dt_datos_factura SET iddoc_rad=" . $ok[0]["iddocumento"] . ",numero_rad=" . $ok[0]["numero"] . " WHERE iddt_datos_factura=" . $datos[0]["iddt_datos_factura"];
+                phpmkr_query($update_ok) or die("Error al actualizar la DT: $update_ok");
             } else {
                 $update = "UPDATE documento SET estado='ELIMINADO' WHERE iddocumento=" . $iddoc;
-                phpmkr_query($update) or die("Error al Eliminar el documento");
+                phpmkr_query($update) or die("Error al Eliminar el documento: $update");
 
                 $update_dt = "UPDATE dt_datos_factura SET iddoc_rad=-1 WHERE iddt_datos_factura=" . $datos["iddt_datos_factura"];
-                phpmkr_query($update_dt) or die("Error al actualizar la DT");
+                phpmkr_query($update_dt) or die("Error al actualizar la DT: $update_dt");
             }
         } else {
             $update_dt = "UPDATE dt_datos_factura SET iddoc_rad=-1 WHERE iddt_datos_factura=" . $datos["iddt_datos_factura"];
-            phpmkr_query($update_dt) or die("Error al actualizar la DT");
+            phpmkr_query($update_dt) or die("Error al actualizar la DT: $update_dt");
         }
         //redirecciona("radicar_correo_masivo.php?idgrupo=" . $idgrupo);
         return $iddoc;
     }
 }
 
-function guardar_anexos($idformato, $iddoc) {
+function guardar_anexos($datos, $idformato, $iddoc) {
     global $conn, $ruta_db_superior;
     require_once($ruta_db_superior."anexosdigitales/funciones_archivo.php");
-    $datos = busca_filtro_tabla("anexos,numero", "ft_correo_saia,documento", "documento_iddocumento=iddocumento and documento_iddocumento=" . $iddoc, "", $conn);
-    $vector = explode(",", $datos[0]['anexos']);
-    for ($i = 0; $i < count($vector); $i++) {
+    //$datos = busca_filtro_tabla("anexos,numero", "ft_factura_electronica,documento", "documento_iddocumento=iddocumento and documento_iddocumento=" . $iddoc, "", $conn);
+    $vector = $datos;
+    $total = count($vector);
+    for ($i = 0; $i < $total; $i++) {
         $ruta_real = $ruta_db_superior . "roundcubemail/" . $vector[$i];
         if (file_exists($ruta_real)) {
             $dir_anexos = selecciona_ruta_anexos2($iddoc, "archivos");
@@ -299,11 +304,11 @@ function guardar_anexos($idformato, $iddoc) {
                 $datos_anexo = pathinfo($ruta_real);
                 $consulta_campos_formato = busca_filtro_tabla("idcampos_formato", "campos_formato", "nombre='anexos' and formato_idformato=" . $idformato, "", $conn);
                 $sql = "INSERT INTO anexos(documento_iddocumento,ruta,tipo,etiqueta,fecha_anexo,formato,campos_formato) values(" . $iddoc . ",'" . json_encode($dir_anexos_1) . "','" . $datos_anexo["extension"] . "','" . $archivo . "'" . "," . fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s') . ",'" . $idformato . "','" . $consulta_campos_formato[0]['idcampos_formato'] . "')";
-                phpmkr_query($sql) or die("Error al registrar el anexo");
+                phpmkr_query($sql) or die("Error al registrar el anexo: $sql");
                 $idanexo = phpmkr_insert_id();
                 if ($idanexo) {
                     $sql1 = "insert into permiso_anexo(anexos_idanexos, idpropietario, caracteristica_propio, caracteristica_total)values('" . $idanexo . "', '" . $_SESSION["idfuncionario"] . "', 'lem', 'l')";
-                    phpmkr_query($sql1) or die("Error al registrar los permisos del anexo");
+                    phpmkr_query($sql1) or die("Error al registrar los permisos del anexo: $sql1");
                 }
             }
         }
@@ -312,4 +317,8 @@ function guardar_anexos($idformato, $iddoc) {
     return;
 }
 
+function limpiarContenido($texto){
+    $textoLimpio = preg_replace('([^ A-Za-z0-9_-ñÑ,&;@\.\-])', '', utf8_decode($texto));
+    return $textoLimpio;
+}
 ?>

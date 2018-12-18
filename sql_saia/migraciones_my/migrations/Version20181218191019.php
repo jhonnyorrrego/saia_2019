@@ -9,6 +9,15 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version20181218191019 extends AbstractMigration {
 
+
+    public function preUp(Schema $schema) {
+        date_default_timezone_set("America/Bogota");
+
+        if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
+            $this->platform->registerDoctrineTypeMapping('enum', 'string');
+        }
+    }
+
     /**
      *
      * @param Schema $schema
