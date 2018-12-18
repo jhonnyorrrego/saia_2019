@@ -35,13 +35,19 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     </div>
     <script>
         $(function(){
-            var baseUrl = '<?= $ruta_db_superior ?>';
-            let route = baseUrl + 'views/buzones/listado.php?idbusqueda_componente=<?= $_REQUEST['idbusqueda_componente'] ?>';
-            $("#mailbox").load(route, function(){
+            let baseUrl = '<?= $ruta_db_superior ?>';
+            let mailRoute = baseUrl + 'views/buzones/listado.php?idbusqueda_componente=<?= $_REQUEST['idbusqueda_componente'] ?>';
+
+            $("#mailbox").load(mailRoute, function(){
                 setTimeout(() => {
                     window.resizeIframe();
                 }, 1500);
             });
+
+            if($('#right_workspace').is(':visible')){
+                let calendarRoute = baseUrl + 'views/calendario/tareas.php';
+                $('#iframe_right_workspace').attr('src', calendarRoute);
+            }
 
             $('#iframe_right_workspace').on('load', function(){
                 $(this).height($(window).height());
