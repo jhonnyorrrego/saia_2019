@@ -7,8 +7,8 @@ class radicar_factura extends rcube_plugin {
 	public $task = 'mail';
 	private $charset = 'ASCII';
 
-	private $valid_types = array("pdf", "xml", "eml");
-
+	private $valid_types = array("pdf", "xml");
+	//private $valid_types = array("pdf", "xml", "eml");
 	function init() {
 		$rcmail = rcmail::get_instance();
 
@@ -72,6 +72,7 @@ class radicar_factura extends rcube_plugin {
 		    return false;
 		}
 
+		$conteo_xml = 0;
 		foreach (rcmail::get_uids() as $mbox => $uids) {
 			$message = new rcube_message($uids[0]);
 			rcmail_check_safe($message);
@@ -95,11 +96,15 @@ class radicar_factura extends rcube_plugin {
 				}
 				$ext_arch = pathinfo($filename,  PATHINFO_EXTENSION);
 				$valido = array();
+				//$rcmail -> output -> command('display_message', $ext_arch, 'warning');
 				if(!empty($ext_arch)) {
     				$valido = preg_grep("/$ext_arch$/i", $this->valid_types);
 				}
 				if(empty($valido)) {
 				    continue;
+				}
+				if(preg_match("/xml/i", $ext_arch)) {
+				    $conteo_xml++;
 				}
 				$tmpfn = $temp_dir . uniqid() . "___" . $this -> _convert_filename($filename);
 				$tmpfp = fopen($tmpfn, 'w');
@@ -114,6 +119,11 @@ class radicar_factura extends rcube_plugin {
 			$tempfiles[] = $tmpfn;
 			$dato_correo["adjuntos"] = $tempfiles;
 		}
+		if($conteo_xml < 1) {
+		    $rcmail -> output -> command('display_message', $this -> gettext('errarchivosxml'), 'error');
+		    return false;
+		}
+
 		$rcmail -> output -> command('display_message', $this -> gettext('msgfacturaradicada'), 'confirmation');
 		$rcmail -> dato_correo = $dato_correo;
 		$configuracion = busca_filtro_tabla("", "configuracion", "tipo='correo' AND nombre='formato_correo'", "", $conn);
