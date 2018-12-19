@@ -77,8 +77,8 @@ class Funcionario extends Model {
      */
     public function getName()
     {
-        $name = trim($this->nombres);
-        $lastName = trim($this->apellidos);
+        $name = trim(strtolower($this->nombres));
+        $lastName = trim(strtolower($this->apellidos));
 
         $completeName = ucfirst($name . " " . $lastName);
 
@@ -220,5 +220,26 @@ class Funcionario extends Model {
         }else{
             return false;
         }
+    }
+
+    public static function findAllByTerm($term){
+        global $conn;
+        
+        $table = self::getTableName();
+        $findRecords = busca_filtro_tabla('idfuncionario,nombres,apellidos', $table, "lower(nombres) like '%".$term."%' or apellidos like '%".$term."%'", '', $conn);
+
+        $data = [];
+        if ($findRecords['numcampos']) {
+            for($row=0; $row < $findRecords['numcampos']; $row++){                
+                $Instance = new Funcionario();
+                foreach ($findRecords[$row] as $key => $value) {
+                    if (is_string($key) && property_exists(Funcionario , $key)) {
+                        $Instance->$key = $value;
+                    }
+                }
+                $data[] = $Instance;
+            }
+        }
+        return $data;
     }
 }

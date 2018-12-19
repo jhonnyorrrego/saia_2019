@@ -46,23 +46,29 @@
 
         //create the picker HTML object
         var DRPTemplate = '<div class="daterangepicker dropdown-menu">' +
-                '<div class="calendar first left"></div>' +
-                '<div class="calendar second right"></div>' +
-                '<div class="ranges">' +
-                  '<div class="range_inputs">' +
+            '<div class="calendar first left"></div>' +
+            '<div class="calendar second right"></div>';              
+        
+        this.showRanges = (typeof options === 'object' && typeof options.showRanges === 'boolean') ? options.showRanges : true;
+
+        if(this.showRanges){
+            DRPTemplate += '<div class="ranges">' +
+                '<div class="range_inputs">' +
                     '<div class="daterangepicker_start_input form-group form-group-default ">' +
-                      '<label for="daterangepicker_start"></label>' +
-                      '<input class="form-control" type="text" name="daterangepicker_start" value="" />' +
+                        '<label for="daterangepicker_start"></label>' +
+                        '<input class="form-control" type="text" name="daterangepicker_start" value="" />' +
                     '</div>' +
                     '<div class="daterangepicker_end_input form-group form-group-default ">' +
-                      '<label for="daterangepicker_end"></label>' +
-                      '<input class="form-control" type="text" name="daterangepicker_end" value="" />' +
+                        '<label for="daterangepicker_end"></label>' +
+                        '<input class="form-control" type="text" name="daterangepicker_end" value="" />' +
                     '</div>' +
                     '<button class="applyBtn" disabled="disabled"></button>&nbsp;' +
                     '<button class="cancelBtn"></button>' +
-                  '</div>' +
                 '</div>' +
-              '</div>';
+            '</div>' ;
+        }
+
+        DRPTemplate += '</div>';
 
         //custom options
         if (typeof options !== 'object' || options === null)

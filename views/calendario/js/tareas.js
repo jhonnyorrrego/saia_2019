@@ -41,8 +41,7 @@ $(function() {
             },
             centerAlign:false,
             size: "modal-lg",
-            title: "Crear Tarea",
-            buttons: {}
+            title: "Crear una tarea o recordatorio",
         };
 
         top.topModal(options);

@@ -151,7 +151,8 @@ class Model {
         
         if ($records['numcampos']) {
             for($row=0; $row < $records['numcampos']; $row++){
-                $Instance = new self;
+                $className = get_called_class();
+                $Instance = new $className;
                 foreach ($records[$row] as $key => $value) {
                     if (is_string($key) && property_exists(get_called_class() , $key)) {
                         $Instance->$key = $value;
