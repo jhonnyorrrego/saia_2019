@@ -54,7 +54,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <div class="container-fluid m-0 p-0">
         <div class="row bg-white m-0 p-0" id="content">
             <!-- carousel-->
-            <div class="d-none d-md-block col-md-8 mx-0 px-0" id="carousel-container">
+            <div class="d-none d-md-block col-md-8 mx-0 px-0" id="carousel_container">
                 <div id="myCarousel" class="carousel slide mx-0 px-0" data-ride="carousel">
                     <!-- Indicators -->
                     <ol class="carousel-indicators" id="indicators"></ol>
@@ -253,46 +253,48 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         if (response.success) {
                             localStorage.setItem('logo', response.data[0].value);
                             $('#logo').attr('src', response.data[0].value);
-                            resize();
                         }
                     }, 'json');
                 } else {
                     $('#logo').attr('src', logo);
-                    resize();
                 }
             })();
 
-            (function loadCarousel(){
-                $.ajax({
-                    url: baseUrl + 'app/carrusel/consulta_carousel.php',
-                    dataType: 'json',
-                    success: function (response) {
-                        var data = '',
-                            indicator = '';
+            function loadCarousel(){
+                if($("#carousel_container").is(':visible') && !$("#homepageItems").children().length){
+                    $.ajax({
+                        url: baseUrl + 'app/carrusel/consulta_carousel.php',
+                        dataType: 'json',
+                        success: function (response) {
+                            if(!$("#homepageItems").children().length){
+                                var data = '',
+                                    indicator = '';
 
-                        for (var i = 0; i < response.data.length; i++) {
-                            data += `
-                            <div class="carousel-item mx-0 px-0">
-                                <img src="` + baseUrl + response.data[i].image + `" alt="` + response.data[i].image + `">
-                                <div class="carousel-caption d-none d-md-block bg-info" style="opacity: 0.7">
-                                    <h3 class="text-white" style="opacity: 1">`+ response.data[i].title + `</h3>
-                                    <p class="text-white" style="opacity: 1">` + response.data[i].content + `<p>
-                                </div>
-                            </div>`;
-                            indicator += '<li data-target="#myCarousel" data-slide-to="' + i + '"></li>';
+                                for (var i = 0; i < response.data.length; i++) {
+                                    data += `
+                                    <div class="carousel-item mx-0 px-0">
+                                        <img src="` + baseUrl + response.data[i].image + `" alt="` + response.data[i].image + `">
+                                        <div class="carousel-caption d-none d-md-block bg-info" style="opacity: 0.7">
+                                            <h3 class="text-white" style="opacity: 1">`+ response.data[i].title + `</h3>
+                                            <p class="text-white" style="opacity: 1">` + response.data[i].content + `<p>
+                                        </div>
+                                    </div>`;
+                                    indicator += '<li data-target="#myCarousel" data-slide-to="' + i + '"></li>';
+                                }
+                                
+                                $('#homepageItems').append(data);
+                                $('#indicators').append(indicator);
+                                $('.carousel-item > img')
+                                    .attr('height', $(window).height() - $("#footer").height())
+                                    .attr('width', $("#carousel_container").width());
+                                $('.carousel-item').first().addClass('active');
+                                $('.carousel-indicators > li').first().addClass('active');                        
+                                $("#myCarousel").carousel();                        
+                            }
                         }
-                        
-                        $('#homepageItems').append(data);
-                        $('#indicators').append(indicator);
-                        $('.carousel-item > img')
-                            .attr('height', $(window).height() - $("#footer").height())
-                            .attr('width', $("#carousel-container").width());
-                        $('.carousel-item').first().addClass('active');
-                        $('.carousel-indicators > li').first().addClass('active');                        
-                        $("#myCarousel").carousel();                        
-                    }
-                });
-            })()
+                    });
+                }
+            }
             
             $(window).resize( function(){
                 resize();
@@ -308,7 +310,9 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 breakpoint = checkSize();
                 $('.carousel-item > img')
                     .attr('height', $(window).height() - $("#footer").height())
-                    .attr('width', $("#carousel-container").width());
+                    .attr('width', $("#carousel_container").width());
+                
+                loadCarousel();
             }
         });
         

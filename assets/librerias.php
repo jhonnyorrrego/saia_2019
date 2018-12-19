@@ -166,8 +166,13 @@ function moment()
 {
     global $ruta_db_superior;
 
+    $route = $ruta_db_superior . 'assets/theme/assets/plugins/moment/moment-with-locales.min.js';
+    $locale = '<script type="text/javascript" src="' . $route . '"></script>';
+
     $route = $ruta_db_superior . 'assets/theme/assets/plugins/moment/moment.min.js';
-    return '<script type="text/javascript" src="' . $route . '"></script>';
+    $js = '<script type="text/javascript" src="' . $route . '"></script>';
+
+    return $locale . $js;
 }
 
 /**
