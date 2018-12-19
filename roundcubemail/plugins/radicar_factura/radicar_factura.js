@@ -3,7 +3,7 @@
  *
  */
 
-function rcmail_radicar_saia(prop){
+function rcmail_radicar_factura(prop){
   if (!rcmail.env.uid && (!rcmail.message_list || !rcmail.message_list.get_selection().length))
     return;
   
@@ -16,7 +16,7 @@ function rcmail_radicar_saia(prop){
 if (window.rcmail) {
   rcmail.addEventListener('init', function(evt) {
     // register command (directly enable in message view mode)
-    rcmail.register_command('plugin.radicar_factura', rcmail_radicar_saia, rcmail.env.uid);
+    rcmail.register_command('plugin.radicar_factura', rcmail_radicar_factura, rcmail.env.uid);
     
     // add event-listener to message list
     if (rcmail.message_list)

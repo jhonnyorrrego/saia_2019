@@ -19,6 +19,8 @@ include_once ($ruta_db_superior . FORMATOS_SAIA . "generar_formato_buscar.php");
 include_once ($ruta_db_superior . "pantallas/documento/class_documento_elastic.php");
 include_once ($ruta_db_superior . "arboles/crear_arbol_ft.php");
 
+include_once $ruta_db_superior . "pantallas/lib/librerias_notificaciones.php";
+
 if (isset($_REQUEST["archivo"]) && !empty($_REQUEST["archivo"])) {
     $archivo = $ruta_db_superior . str_replace("-", "/", $_REQUEST["archivo"]);
 }

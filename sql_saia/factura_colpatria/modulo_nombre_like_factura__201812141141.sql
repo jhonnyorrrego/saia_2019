@@ -1,0 +1,6 @@
+﻿INSERT INTO modulo (pertenece_nucleo,nombre,tipo,imagen,etiqueta,enlace,enlace_mobil,destino,cod_padre,orden,ayuda,parametros,busqueda_idbusqueda,permiso_admin,busqueda,enlace_pantalla) VALUES 
+(0,'crear_facturas_obras','secundario','botones/formatos/modulo.gif','Crear RADICACI&Oacute;N FACTURAS DE OBRA','formatos/facturas_obras/adicionar_facturas_obras.php',NULL,'centro',1006,1,'Permite crear Facturas de Obras.',NULL,NULL,0,'1',0)
+,(0,'facturas_obras','secundario','botones/formatos/modulo.gif','RADICACI&Oacute;N FACTURAS DE OBRA','formatos/facturas_obras/mostrar_facturas_obras.php',NULL,'centro',236,1,'Permite administrar el formato Facturas de Obras.',NULL,NULL,0,'1',0)
+,(0,'radicacion_facturas_correo','secundario','botones/principal/reportes.png','Radicaci&oacute;n de Facturas por Correo','pantallas/buscador_principal.php?idbusqueda=117',NULL,'centro',1057,7,'','',0,0,'1',0)
+,(0,'reporte_facturas_obras','secundario','botones/principal/reportes.png','Factura de Obras','pantallas/buscador_principal.php?idbusqueda=109&default_componente=reporte_facturas_obras',NULL,'centro',1770,4,'','',0,0,'1',0)
+;

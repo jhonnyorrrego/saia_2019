@@ -158,10 +158,24 @@ class FacturaXML {
     }
 
     public function items() {
-        $result = array();
         $elements = $this->xpath->query("//{$this->ns_fe}InvoiceLine");
         $items = $this->iterar_items($elements);
         return $items;
+    }
+
+    public function detalleImpuestos() {
+        $elements = $this->xpath->query("//{$this->ns_fe}TaxTotal");
+        //TODO: Iterar c/u de los elementos (hasta ahora 6 detectados):
+        // Iva 19%, Iva 16%, Iva 5%, Imp Consumo 16%, Imp Consumo 8%, Imp Consumo 4%
+        return array();
+    }
+
+    public function totalFactura() {
+        $elements = $this->xpath->query("//{$this->ns_fe}LegalMonetaryTotal/{$this->ns_cbc}PayableAmount");
+        //TODO: Iterar c/u de los elementos (hasta ahora 6 detectados):
+        // Iva 19%, Iva 16%, Iva 5%, Imp Consumo 16%, Imp Consumo 8%, Imp Consumo 4%
+        $total = implode("\n", $this->iterar_elementos($elements));
+        return $total;
     }
 
     private function iterar_items(DOMNodeList $elements) {

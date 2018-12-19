@@ -70,11 +70,11 @@ $components = busca_filtro_tabla("A.*,B.ruta_visualizacion", "busqueda_component
                     }
 
                     if ($components[$i]["url"]) {
-                        $url = $ruta_db_superior . $components[$i]["url"];
+                        $url = '../' . $components[$i]["url"];
                     } else if ($components[$i]["ruta_visualizacion"]) {
-                        $url = $ruta_db_superior . $components[$i]["ruta_visualizacion"];
+                        $url = '../' . $components[$i]["ruta_visualizacion"];
                     } else {
-                        $url = $ruta_db_superior . 'pantallas/busquedas/consulta_busqueda.php';
+                        $url = '../' . 'pantallas/busquedas/consulta_busqueda.php';
                     }
 
                     if ($url) {
