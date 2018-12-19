@@ -49,11 +49,13 @@ foreach ($datos as $datos_correo) {
         $iddoc = radicar_factura($datos_factura);
         if(!empty($iddoc)) {
             guardar_anexos($datos_correo["adjuntos"], $idformato, $iddoc);
+        } else {
+        	die("No es posible adjuntar los anexos al documento");
         }
     }
 }
 
-// print_r($datos);
+abrir_url($ruta_db_superior . "index_correo.php", "_self");
 die("HECHO");
 
 function procesar_factura($adjuntos) {
@@ -220,7 +222,7 @@ function radicar_correo($idgrupo) {
             phpmkr_query($update_dt) or die("Error al actualizar la DT");
         }
         //redirecciona("radicar_correo_masivo.php?idgrupo=" . $idgrupo);
-        die();
+        //die();
     }
 }
 
@@ -244,7 +246,8 @@ function radicar_factura($datos) {
         $_REQUEST["pais_proveedor"] = limpiarContenido($datos["pais_proveedor"]);
         $_REQUEST["info_proveedor"] = limpiarContenido($datos["info_proveedor"]);
         $_REQUEST["anexos"] = str_replace("\\", "/", $datos["anexos"]);
-
+        $_REQUEST["total_factura"] = $datos["total_factura"];
+        
         $_REQUEST["tipo_radicado"] = "radicacion_entrada";
         $_REQUEST["encabezado"] = "1";
         $_REQUEST["estado_documento"] = "1";
@@ -264,7 +267,7 @@ function radicar_factura($datos) {
         if ($iddoc) {
             $ok = busca_filtro_tabla("d.iddocumento,d.numero", "$tabla ft,documento d", "d.iddocumento=ft.documento_iddocumento and d.iddocumento=" . $iddoc, "", $conn);
             if ($ok["numcampos"]) {
-                $update_ok = "UPDATE dt_datos_factura SET iddoc_rad=" . $ok[0]["iddocumento"] . ",numero_rad=" . $ok[0]["numero"] . " WHERE iddt_datos_factura=" . $datos[0]["iddt_datos_factura"];
+                $update_ok = "UPDATE dt_datos_factura SET iddoc_rad=" . $ok[0]["iddocumento"] . ",numero_rad=" . $ok[0]["numero"] . " WHERE iddt_datos_factura=" . $datos["iddt_datos_factura"];
                 phpmkr_query($update_ok) or die("Error al actualizar la DT: $update_ok");
             } else {
                 $update = "UPDATE documento SET estado='ELIMINADO' WHERE iddocumento=" . $iddoc;
@@ -280,6 +283,7 @@ function radicar_factura($datos) {
         //redirecciona("radicar_correo_masivo.php?idgrupo=" . $idgrupo);
         return $iddoc;
     }
+    return null;
 }
 
 function guardar_anexos($datos, $idformato, $iddoc) {
@@ -289,7 +293,9 @@ function guardar_anexos($datos, $idformato, $iddoc) {
     $vector = $datos;
     $total = count($vector);
     for ($i = 0; $i < $total; $i++) {
-        $ruta_real = $ruta_db_superior . "roundcubemail/" . $vector[$i];
+        //$ruta_real = $ruta_db_superior . "roundcubemail/" . $vector[$i];
+        $ruta_real = $vector[$i];
+        //print_r($ruta_real);
         if (file_exists($ruta_real)) {
             $dir_anexos = selecciona_ruta_anexos2($iddoc, "archivos");
             $archivo = uniqid() . "_" . basename($ruta_real);

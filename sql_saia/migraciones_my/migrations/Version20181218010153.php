@@ -234,7 +234,7 @@ class Version20181218010153 extends AbstractMigration {
 	 * @param Schema $schema
 	 */
 	public function up(Schema $schema) {
-		if (!$schema->hasTable("funciones_formato_enlace")) {
+		if (!$schema->hasTable("dt_datos_correo")) {
 			$table = $schema->createTable("dt_datos_correo");
 			$table->addColumn("iddt_datos_correo", "integer", ["length" => 11, 'autoincrement' => true, "notnull" => true]);
 			$table->addColumn("idgrupo", "string", ["length" =>255 , "notnull" => true]);
