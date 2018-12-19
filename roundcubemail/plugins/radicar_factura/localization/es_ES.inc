@@ -19,4 +19,5 @@ $labels['buttontext'] = 'Radicar Factura';
 $labels['buttontitle'] = 'Radicar Factura en SAIA';
 $labels['msgfacturaradicada'] = 'Factura radicada en saia, correctamente';
 $labels['errpermisorwtmp'] = 'No tiene permisos de escritura en la carpeta temporal';
+$labels['errarchivosxml'] = 'No existen facturas (archivos xml) en los adjuntos';
 ?>
