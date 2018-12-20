@@ -2,9 +2,12 @@ $(function() {
     let baseUrl = $('script[data-baseurl]').data('baseurl');
 
     $('#calendar').fullCalendar({
+        longPressDelay:300,
+        selectLongPressDelay: 500,
+        editable: true,
         customButtons: {
             refresh: {
-                text: 'Refescar',
+                icon: 'clockwise-arrow',
                 click: function() {
                     $('#calendar').fullCalendar('refetchEvents');
                 }
@@ -20,6 +23,12 @@ $(function() {
         selectable: true,        
         select: function( start, end){
             addTask(arguments);
+        },
+        eventDrop: function( event ) {
+            updateTask(event);
+        },
+        eventResize: function( event ) {
+            updateTask(event);
         },
         events: function(start, end, timezone, callback) {
             $.ajax({
@@ -53,5 +62,24 @@ $(function() {
         };
 
         top.topModal(options);
+    }
+
+    function updateTask(event){
+        let initialTime = event.start.format('YYYY-MM-DD HH:mm:ss');
+        let finalTime = event.end.format('YYYY-MM-DD HH:mm:ss');
+        
+        $.post(`${baseUrl}app/tareas/guardar.php`,{
+            initialDate: initialTime,
+            finalDate: finalTime,
+            key: localStorage.getItem('key'),
+            task: event.id
+        }, function(response){
+            if(!response.success){
+                top.notification({
+                    type: 'error',
+                    message: response.message
+                })
+            }
+        }, 'json')
     }
 });

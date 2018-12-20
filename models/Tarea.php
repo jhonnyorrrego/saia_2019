@@ -63,6 +63,23 @@ class Tarea extends Model
         return $this->fecha_final;
     }
 
+    public function getColor(){
+        $Limit = new DateTime($this->fecha_final);
+        $Today = new DateTime();
+
+        $diference = UtilitiesController::dias_habiles_entre_fechas($Today, $Limit);
+
+        if($diference < 3){
+            $color = '#dc3545';
+        }elseif($diference >= 3 && $diference <= 8){
+            $color = '#ffc107';
+        }else{
+            $color = '#17a2b8';
+        }
+
+        return $color;
+    }
+
     /**
      * Undocumented function
      *

@@ -97,16 +97,20 @@ $(function(){
     });    
 
     $('#btn_success').on('click', function(){
+        let key = localStorage.getItem('key');
+        let managers = getOptions('#manager');
+        let followers = getOptions('#followers');
+
         data = {
-            key: localStorage.getItem('key'),
+            key: key,
             name: $('#name').val(),
-            managers: getOptions('#manager'),
+            managers: managers.length ? managers : [key],
             notification: $('#send_notification').is(':checked') ? 1 : 0,
             initialDate: params.initialTime,
             finalDate: moment($('#final_date').val(),'YYYY-MM-DDThh:mm').format('YYYY-MM-DD HH:mm:ss'),
             priority: $('#priority').val(),
             description: $('#description').val(),
-            followers: getOptions('#followers'),
+            followers: followers.length ? followers : '',
             files: loadedFiles
         }
         
@@ -118,7 +122,11 @@ $(function(){
                 });
 
                 //se debe mejorar, actualiza el calendario
-                $('#iframe_workspace').contents().find('#iframe_right_workspace').contents().find('.fc-refresh-button').trigger('click');
+                if($('#iframe_workspace').contents().find('#iframe_right_workspace').length){
+                    $('#iframe_workspace').contents().find('#iframe_right_workspace').contents().find('.fc-refresh-button').trigger('click');
+                }else{
+                    $('#iframe_workspace').contents().find('.fc-refresh-button').trigger('click');
+                }
                 $('#close_modal').trigger('click');
             }
         }, 'json')

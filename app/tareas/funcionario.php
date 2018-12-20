@@ -33,7 +33,8 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
                 'id' => $Tarea->getPK(),
                 'title' => $Tarea->getName(),
                 'start' => $Tarea->getInitialDate(),
-                'end' => $Tarea->getFinalDate()
+                'end' => $Tarea->getFinalDate(),
+                'color' => $Tarea->getColor()
             ];
         }
         $Response->data = $data;

@@ -22,7 +22,12 @@ $Response = (object) array(
 );
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $Tarea = new Tarea();
+    if($_REQUEST['task']){
+        $Tarea = new Tarea($_REQUEST['task']);
+    }else{
+        $Tarea = new Tarea();
+    }
+
     $Tarea->setAttributes([
         'nombre' => $_REQUEST['name'],
         'fecha_inicial' => $_REQUEST['initialDate'],
@@ -30,11 +35,14 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         'prioridad' => $_REQUEST['priority'],
         'descripcion' => $_REQUEST['description']
     ]);
+    
     if($Tarea->save()){
-        if(!count($_REQUEST['managers'])){
-            FuncionarioTarea::assignUser($Tarea->getPk(), [$_REQUEST['key']], 1);
-        }else{
-            FuncionarioTarea::assignUser($Tarea->getPk(), $_REQUEST['managers'], 1);
+        if(isset($_REQUEST['managers'])){
+            if(!count($_REQUEST['managers'])){
+                FuncionarioTarea::assignUser($Tarea->getPk(), [$_REQUEST['key']], 1);
+            }else{
+                FuncionarioTarea::assignUser($Tarea->getPk(), $_REQUEST['managers'], 1);
+            }
         }
 
         if(count($_REQUEST['followers'])){
