@@ -325,9 +325,9 @@ class GenerarFormato {
                         if ($dato_formato_orig["numcampos"]) {
                             // si el archivo existe dentro de la carpeta del archivo inicial
                             if (is_file($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
-                                $include_formato .= $this->incluir("../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
+                                $include_formato .= $this->incluir("'../" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"] . "'", "librerias");
                             } elseif (is_file($funciones[$i]["ruta"])) { // si el archivo existe en la ruta especificada partiendo de la raiz
-                                $include_formato .= $this->incluir("../" . $funciones[$i]["ruta"], "librerias");
+                                $include_formato .= $this->incluir("'../" . $funciones[$i]["ruta"] . "'", "librerias");
                             } else {
                                 alerta("Hay funciones vinculadas al archivo (" . $funciones[$i]["ruta"] . ") => " . $funciones[$i]["nombre_funcion"] . ", el archivo no se ha encontrado");
                             }
@@ -348,7 +348,7 @@ class GenerarFormato {
                                     // trato de crearlo dentro de la carpeta del formato actual
                                     alerta_formatos("Las funciones del Formato " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"] . " son requeridas  no se han encontrado");
                                     if (crear_archivo(FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
-                                        $include_formato .= $this->incluir("'".$dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]."'", "librerias");
+                                        $include_formato .= $this->incluir("'" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"] . "'", "librerias");
                                     } else {
                                         alerta_formatos("No es posible generar el archivo " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
                                     }
@@ -1702,8 +1702,8 @@ span.fancytree-expander {
         $lib = explode(",", $cad);
         switch ($tipo) {
             case "librerias":
-                $texto1 = '<?php include_once("';
-                $texto2 = '"); ? >';
+                $texto1 = '<?php include_once(';
+                $texto2 = '); ? >';
                 break;
             case "javascript":
                 $texto1 = '<script type="text/javascript" src="';
