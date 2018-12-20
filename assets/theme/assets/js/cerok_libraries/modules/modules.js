@@ -124,7 +124,7 @@ class Modules {
             class: 'row p-0 m-0'
         });
 
-        let backgrounds = ['bg-complete', 'bg-success', 'bg-primary', 'bg-warning'];
+        let backgrounds = ['bg-complete', 'bg-danger', 'bg-primary', 'bg-warning'];
         
         this.groupers.forEach((g, i) => {
             row.append(

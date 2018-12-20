@@ -56,7 +56,7 @@ foreach ($datos as $datos_correo) {
 }
 
 abrir_url($ruta_db_superior . "index_correo.php", "_self");
-die("HECHO");
+//die("HECHO");
 
 function procesar_factura($adjuntos) {
     $archivo_face = null;
@@ -247,7 +247,7 @@ function radicar_factura($datos) {
         $_REQUEST["info_proveedor"] = limpiarContenido($datos["info_proveedor"]);
         $_REQUEST["anexos"] = str_replace("\\", "/", $datos["anexos"]);
         $_REQUEST["total_factura"] = $datos["total_factura"];
-        
+
         $_REQUEST["tipo_radicado"] = "radicacion_entrada";
         $_REQUEST["encabezado"] = "1";
         $_REQUEST["estado_documento"] = "1";

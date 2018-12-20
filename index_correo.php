@@ -18,7 +18,7 @@ if (is_dir("roundcubemail")) {
 		mkdir($ruta_db_superior . "roundcubemail/temp/", 0777);
 	}
 
-	$funcionario = busca_filtro_tabla("email_contrasena", "funcionario", "funcionario_codigo=" . $_SESSION["usuario_actual"], "", $conn);
+	$funcionario = busca_filtro_tabla("email, email_contrasena", "funcionario", "funcionario_codigo=" . $_SESSION["usuario_actual"], "", $conn);
 	if (!$funcionario["numcampos"]) {
 	?>
 	<div class="alert alert-error">

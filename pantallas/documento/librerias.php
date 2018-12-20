@@ -470,7 +470,7 @@ function fecha_creacion_documento($fecha0, $plantilla = Null, $doc = Null) {
 		$iddoc_papa = $doc;
 		$plantilla = nombre_plantilla($plantilla, $iddoc_papa);
 	}
-	$texto = '<div class="pull-right">' . $fecha . '</div><br /><br /><div class="link kenlace_saia" enlace="ordenar.php?key=' . $iddoc_papa . '&accion=mostrar&mostrar_formato=1" conector="iframe" titulo="Documento" style="float:right;" ><b>Ver: </b>' . $plantilla . '</div>';
+	$texto = '<div class="pull-right">' . $fecha . '</div><br /><br /><div class="link kenlace_saia cursor" enlace="ordenar.php?key=' . $iddoc_papa . '&accion=mostrar&mostrar_formato=1" conector="iframe" titulo="Documento" style="float:right;" ><b>Ver: </b>' . $plantilla . '</div>';
 	return ($texto);
 }
 
@@ -720,9 +720,9 @@ function carga_soporte_ingresados($iddocumento) {
 	if (isset($_REQUEST['variable_busqueda'])) {
 		$texto = '<li><a href="#" id="cargar_soporte">Cargar soporte</a></li>';
 		$texto .= '<script>
-		  $("#cargar_soporte").click(function(){	    	
+		  $("#cargar_soporte").click(function(){
 		    var docus=$("#seleccionados").val();
-			  if(docus!=""){			  	
+			  if(docus!=""){
 						top.hs.htmlExpand(this, { objectType: "iframe",width: 400, height: 300, src:"' . RUTA_PDF_LOCAL . RUTA_PDF . FORMATOS_CLIENTE . 'despacho_ingresados/anexos_despacho.php?docs="+docus,outlineType: "rounded-white",wrapperClassName:"highslide-wrapper drag-header"});
 			  }else{
 			  	alert("Seleccione por lo menos un documento");
@@ -972,7 +972,7 @@ function origen_documento2($doc, $numero, $origen = "", $tipo_radicado = "", $es
 }
 
 /**
- * @return int retorna el funcionario codigo 
+ * @return int retorna el funcionario codigo
  * para las cosultas de los buzones
  */
 function code_logged_user(){
@@ -1018,7 +1018,7 @@ function origin_pending_document($iddocumento, $funcionarioCodigo, $numero, $fec
  */
 function roundedImage($route){
     global $ruta_db_superior;
-    
+
     $routeImage = $ruta_db_superior . $route;
     return '<span class="thumbnail-wrapper circular inline" style="float:none" style="width:36px;height:36px">
         <img id="profile_image" src="'.$routeImage.'" style="width:36px;height:36px">
@@ -1055,7 +1055,7 @@ function has_files($documentId, $showConunter = false) {
         if ($files[0]['cant'] || $pages[0]['cant']) {
             if($showConunter){
                 $total = $files[0]["cant"] + $pages[0]['cant'];
-                
+
                 $response = '<span class="my-0 text-center f-20 px-1">
                     <a href="' . $ruta_db_superior . 'views/pagina/pagina.php?iddoc=' . $documentId . '" class="fa fa-paperclip notification  text-master">
                         <span class="badge badge-important counter">' . $total . '</span>
@@ -1078,7 +1078,7 @@ function priority($documentId){
     }else{
         $style = '';
     }
-    
+
     return '<span class="my-0 text-center priority_flag cursor f-20 px-1">
         <i data-key="'.$documentId.'" class="priority fa fa-flag text-danger" '.$style.'></i>
     </span>';
@@ -1124,20 +1124,20 @@ function temporality($date){
     $date = DateTime::createFromFormat('Y-m-d H:i:s', $date);
     $timeFromDate = strtotime($date->format('Y-m-d H:i:s'));
     $diference = strtotime("now") - $timeFromDate;
-    
+
     if($diference < 900){//under 15 minutes 15 * 60
-        if($diference < 300){ //5 minutes 5 * 60 
+        if($diference < 300){ //5 minutes 5 * 60
             return 'Hace un momento';
         }else { //15 minutes
             $minutes = round($diference / 60); //convert to minutes
             return 'Hace ' . $minutes . ' Minutos';
         }
     }
-    
+
     if(strtotime(date('Y-m-d')) < $timeFromDate){// today
         return $date->format('H:i:s a');
     }
-    
+
     $yesterday = (new DateTime())->sub(new DateInterval('P1D'))->format('Y-m-d');
     if(strtotime($yesterday) < $timeFromDate){// yesterday
         return 'Ayer';

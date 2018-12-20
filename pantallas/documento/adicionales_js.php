@@ -1,6 +1,6 @@
 <script>
 $(function(){
-    $(".documento_prioridad").live("click",function(){
+    $(document).on("click", ".documento_prioridad", function() {
         var idregistro=$(this).attr("idregistro");
 
         if($(this).attr("prioridad") != $("#prioridad_"+idregistro).attr("prioridad")){
@@ -19,7 +19,7 @@ $(function(){
 
     $(".exportar_listado_saia").click(function(){
         $("#barra_exp_ppal").html('<img src="<?php echo($ruta_db_superior); ?>imagenes/cargando.gif">');
-        
+
         var docus=$("#seleccionados").val();
         if(docus){
             $.ajax({
