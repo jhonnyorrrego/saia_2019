@@ -29,6 +29,7 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
         <?= icons() ?>
         <?= bootstrapTable() ?>
         <?= theme() ?>
+    	<?= librerias_acciones_kaiten() ?>
     </head>
     <body>
         <div class="container px-2">
@@ -60,7 +61,7 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
 
                             response.rows[index].info = node.prop('outerHTML');
                         }
-                        
+
                         return response;
                     },
                     onPostBody: function(){
@@ -75,7 +76,7 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
                             let index = $(`input[data-id="${+id}"]`).data('index');
                             $(`tr[data-index="${+index}"]`).addClass('selected');
                         }
-                        
+
                         if(selections.length){
                             $('[name="btSelectItem"]').each(function (i, e) {
                                 let selected = $.inArray($(e).data('id'), selections) != -1;
@@ -110,7 +111,7 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
 
                     $('[name="btSelectItem"]').each(function (i, element) {
                         let id = $(element).data('id');
-                        
+
                         if(element.checked && $.inArray(id, selections) == -1){
                             selections.push(id);
                         }else if(!element.checked){
