@@ -1702,8 +1702,8 @@ span.fancytree-expander {
         $lib = explode(",", $cad);
         switch ($tipo) {
             case "librerias":
-                $texto1 = '<?php include_once(';
-                $texto2 = '); ? >';
+                $texto1 = '<?php include_once("';
+                $texto2 = '"); ? >';
                 break;
             case "javascript":
                 $texto1 = '<script type="text/javascript" src="';
