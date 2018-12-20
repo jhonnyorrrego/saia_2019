@@ -135,6 +135,15 @@ class Model {
         return count($data) ? $data[0] : NULL;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param [type] $conditions
+     * @param array $fields
+     * @param string $order
+     * @param integer $limit
+     * @return void
+     */
     public static function findAllByAttributes($conditions, $fields = [], $order = '', $limit = 0){
         global $conn;
 
@@ -150,16 +159,7 @@ class Model {
         }
         
         if ($records['numcampos']) {
-            for($row=0; $row < $records['numcampos']; $row++){
-                $className = get_called_class();
-                $Instance = new $className;
-                foreach ($records[$row] as $key => $value) {
-                    if (is_string($key) && property_exists(get_called_class() , $key)) {
-                        $Instance->$key = $value;
-                    }
-                }
-                $data[] = $Instance;
-            }
+            $data = self::convertToObjectCollection($records);
         }
         return $data;
     }
@@ -255,7 +255,13 @@ class Model {
         $this->$pk = $value;
     }
 
-    
+    /**
+     * crea el selec de una consulta
+     * valida los campos tipo fecha
+     *
+     * @param [type] $fields
+     * @return void
+     */
     public static function createSelect($fields){
         $Instance = new self;
         $safeAttributes = $Instance->getSafeAttributes();
@@ -283,6 +289,13 @@ class Model {
         return $select;
     }
 
+    /**
+     * crea la condicion de una busqueda
+     * valida los campos tipo fecha
+     *
+     * @param array $conditions
+     * @return string
+     */
     public static function createCondition($conditions){
         $condition = '';
 
@@ -305,4 +318,48 @@ class Model {
 
         return $condition;
     }
+
+    /**
+     * convierte un array simple a un array de objetos
+     *
+     * @param array:busca_filtro_tabla $records
+     * @return array
+     */
+    public static function convertToObjectCollection($records){
+        $class = get_called_class();
+        $total = isset($records['numcampos']) ? $records['numcampos'] : count($records);
+        $data = [];
+        for($row=0; $row < $total; $row++){                
+            $Instance = new $class();
+            foreach ($records[$row] as $key => $value) {
+                if (is_string($key) && property_exists($class , $key)) {
+                    $Instance->$key = $value;
+                }
+            }
+            $data[] = $Instance;
+        }
+
+        return $data;
+    }
+
+    /**
+     * crea un registro en la base de datos
+     *
+     * @param array $attributes atributos a guardar
+     * @return int identificador del registro
+     */
+    public static function newRecord($attributes){
+        $className = get_called_class();
+        $Instance = new $className();
+        $Instance->setAttributes($attributes);
+            
+        if($Instance->save()){
+            $response = $Instance->getPK();
+        }else{
+            $response = 0;
+        }
+
+        return $response;
+    }
+    
 }

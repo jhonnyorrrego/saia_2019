@@ -75,6 +75,9 @@ class SaiaStorage {
             case 'historial_impresion':
                 $server_path = RUTA_HISTORIAL_IMPRESION;
                 break;
+            case 'anexos_tareas':
+                $server_path = RUTA_ANEXOS_TAREAS;
+                break;
             default:
                 // Usar el tipo. Ej. BACKUP
                 $server_path = $this->tipo;

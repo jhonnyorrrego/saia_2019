@@ -986,7 +986,7 @@ function variable_busqueda(){
 function origin_pending_document($iddocumento, $funcionarioCodigo, $numero, $fecha, $plantilla, $idtransferencia){
 	global $conn, $ruta_db_superior;
     
-	include_once $ruta_db_superior . 'models/funcionario.php';
+	include_once $ruta_db_superior . 'controllers/autoload.php';
 
     $Funcionario = new Funcionario($funcionarioCodigo);
     $roundedImage = roundedImage($Funcionario->getImage('foto_recorte'));

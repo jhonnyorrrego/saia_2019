@@ -13,10 +13,10 @@ if (!isset($_REQUEST["iddoc"])) {
     return false;
 }
 
-include_once $ruta_db_superior . 'db.php';
+include_once $ruta_db_superior . 'controllers/autoload.php';
 include_once $ruta_db_superior . "views/documento/encabezado.php";
 
-if (!Utilities::permisoModulo("editar_paginas")) {
+if (!UtilitiesController::permisoModulo("editar_paginas")) {
     return false;
 }
 $iddocumento = $_REQUEST["iddoc"];

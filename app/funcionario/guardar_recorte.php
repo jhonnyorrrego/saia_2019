@@ -19,7 +19,7 @@ while ($max_salida > 0) {
 require_once $ruta_db_superior . 'vendor/autoload.php';
 require_once $ruta_db_superior . 'StorageUtils.php';
 require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
-include_once $ruta_db_superior . 'models/funcionario.php';
+include_once $ruta_db_superior . 'controllers/autoload.php';
 
 $Response = (object) array(
     'data' => new stdClass(),

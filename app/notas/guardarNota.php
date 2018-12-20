@@ -11,8 +11,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . 'models/notaFuncionario.php';
-
+include_once $ruta_db_superior . 'controllers/autoload.php';
 $Response = (object) array(
     'data' => new stdClass(),
     'message' => "",

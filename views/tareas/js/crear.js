@@ -1,5 +1,7 @@
 $(function(){
     let baseUrl = Session.getBaseUrl();
+    let params = $('script[data-params]').data('params');
+    let loadedFiles = [];
     language = {
         errorLoading: function () {
             return "La carga falló" 
@@ -28,6 +30,14 @@ $(function(){
             return "Buscando…" 
         }
     };
+
+    //default actions
+    setTimeout(() => {
+        $('#followers_container').hide();
+
+        let finaldate = moment(params.finalTime, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDThh:mm')
+        $('#final_date').val(finaldate)
+    }, 0);
     
     $("#manager,#followers").select2({
         minimumInputLength: 3,
@@ -57,15 +67,72 @@ $(function(){
         }
     });
     
-    $(".dropzone").dropzone({
-        url: "/file/post" 
+    
+    var myDropzone = new Dropzone("#task_files", { 
+        url: `${baseUrl}app/tareas/cargar_anexos.php`,
+        params: {
+            key: localStorage.getItem('key')
+        },
+        paramName: 'task_file',
+        init: function() {
+            this.on("success", function(file, response) {
+                response = jQuery.parseJSON(response)
+
+                if(response.success){
+                    response.data.forEach(e => {
+                        loadedFiles.push(e);
+                    })
+                }else{
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    })
+                }
+            })
+        }
     });
     
     $(".toggle_advanced").on('click', function(){
         $(".toggle_advanced, .advanced").toggle();
+    });    
+
+    $('#btn_success').on('click', function(){
+        data = {
+            key: localStorage.getItem('key'),
+            name: $('#name').val(),
+            managers: getOptions('#manager'),
+            notification: $('#send_notification').is(':checked') ? 1 : 0,
+            initialDate: params.initialTime,
+            finalDate: moment($('#final_date').val(),'YYYY-MM-DDThh:mm').format('YYYY-MM-DD HH:mm:ss'),
+            priority: $('#priority').val(),
+            description: $('#description').val(),
+            followers: getOptions('#followers'),
+            files: loadedFiles
+        }
+        
+        $.post(`${baseUrl}/app/tareas/guardar.php`, data, function(response){
+            if(response.success){
+                top.notification({
+                    type: 'success',
+                    message: 'Nota creada'
+                });
+
+                //se debe mejorar, actualiza el calendario
+                $('#iframe_workspace').contents().find('#iframe_right_workspace').contents().find('.fc-refresh-button').trigger('click');
+                $('#close_modal').trigger('click');
+            }
+        }, 'json')
     });
 
-    setTimeout(() => {
-        $('#followers_container').hide();
-    }, 0);
+    function getOptions(selector){
+        let data = [];
+
+        if($(selector).children().length){
+            $.each($(selector).children(), function(i, e){
+                data.push($(e).val());
+            });
+        }
+
+        return data;
+    }
 });

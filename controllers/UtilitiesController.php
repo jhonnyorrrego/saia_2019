@@ -1,5 +1,5 @@
 <?php
-class Utilities {
+class UtilitiesController {
     /**
      * @param string $ruta string obtenido de la DB
      * @param string $suf Sufijo que se concatena al Nombre de la imagen
@@ -49,11 +49,26 @@ class Utilities {
      * @return boolean
      * @author Andres.Agudelo
      * */
-
     public static function permisoModulo($nombreModulo) {
         $permiso = new PERMISO();
         $ok = $permiso -> acceso_modulo_perfil($nombreModulo);
         return $ok;
+    }
+
+    public static function createFileDbRoute($route, $storageType, $content){        
+        $SaiaStorage = new SaiaStorage($storageType);
+        $size = $SaiaStorage->almacenar_contenido($route, $content, false);
+        
+        if($size){
+            $response = json_encode([
+                "servidor" => $SaiaStorage->get_ruta_servidor(),
+                "ruta" => $route
+            ]);
+        }else{
+            $response = NULL;
+        }
+
+        return $response;
     }
 
 }

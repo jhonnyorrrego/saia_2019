@@ -13,8 +13,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . 'models/comentarioDocumento.php';
-include_once $ruta_db_superior . 'models/funcionario.php';
+include_once $ruta_db_superior . 'controllers/autoload.php';
 include_once $ruta_db_superior . 'pantallas/documento/librerias.php';
 
 $Response = (object)array(
