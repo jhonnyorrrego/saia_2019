@@ -4,7 +4,7 @@ $(function() {
     $('#calendar').fullCalendar({
         customButtons: {
             refresh: {
-                text: 'custom!',
+                text: 'Refescar',
                 click: function() {
                     $('#calendar').fullCalendar('refetchEvents');
                 }

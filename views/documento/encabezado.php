@@ -10,10 +10,9 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . 'db.php';
+include_once $ruta_db_superior . 'controllers/autoload.php';
 include_once $ruta_db_superior . 'pantallas/documento/librerias.php';
 include_once $ruta_db_superior . 'assets/librerias.php';
-include_once $ruta_db_superior . 'models/comentarioDocumento.php';
 
 echo jquery();
 echo bootstrap();
