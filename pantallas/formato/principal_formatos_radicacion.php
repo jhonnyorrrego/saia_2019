@@ -9,20 +9,16 @@ while($max_salida>0){
   $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."librerias_saia.php");
+include_once $ruta_db_superior . 'assets/librerias.php';
+include_once $ruta_db_superior . "librerias_saia.php";
 usuario_actual("login");
 ?>
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=9">
-<?php
-echo(estilo_bootstrap());
-
-    echo(librerias_html5());
-    echo(librerias_jquery("1.7"));
-    echo(librerias_UI());
-    echo(librerias_kaiten());   
-    echo(librerias_acciones_kaiten());       
-    ?>
+    <?= bootstrap() ?>
+    <?= icons() ?>
+    <?= kaiten() ?>
+    <?= librerias_acciones_kaiten() ?>
 </head>
 <body>                      
 <style>

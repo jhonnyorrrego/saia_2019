@@ -108,6 +108,13 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 						<input type="text" id="descripcion_general" name="descripcion_general"/>
 						</td>
 					</tr>
+                    <tr>
+                        <td style="font-size:8pt;"  align="center">Colilla</td>
+                        <td align="center">
+                            <label class="radio-inline"><input type="radio" name="colilla_vertical" checked value="0">Horizontal</label>
+                            <label class="radio-inline"><input type="radio" name="colilla_vertical" value="1">Vertical</label>
+                        </td>
+                    </tr>
 					<tr>
 						<td colspan="2" align="center">
 						<input class="btn btn-primary btn-mini" type="submit" value="Radicar" id="enviar" name="enviar"/>

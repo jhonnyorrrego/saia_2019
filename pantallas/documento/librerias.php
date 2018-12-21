@@ -1150,4 +1150,8 @@ function temporality($date){
         return $date->format('d-m-Y');
     }
 }
+function mostrar_numero_enlace($numero,$iddoc){
+    $campo='<div class="link kenlace_saia" enlace="ordenar.php?key='.$iddoc.'&accion=mostrar&mostrar_formato=1" conector="iframe" titulo="No '.$numero.'"><span class="badge cursor btn">'.$numero.'</span></div>';
+    return $campo;
+}
 ?>

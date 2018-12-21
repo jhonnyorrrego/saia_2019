@@ -13,19 +13,46 @@ include_once ($ruta_db_superior . "db.php");
 
 require_once 'FacturaXML.php';
 
+header('Content-Type: application/json');
+
 $datos = array();
+
+$resp = array("status" => 0);
+
+if(!isset($_REQUEST["saia_key"])) {
+    $resp["message"] = "No se envió identificación del funcionario";
+    echo json_encode($resp);
+    die();
+}
+
+$saia_key = $_REQUEST["saia_key"];
+
+$resp["data"] = $_REQUEST["datos_correo"];
 if (isset($_REQUEST["datos_correo"])) {
     $datos = json_decode($_REQUEST["datos_correo"], true);
     if (json_last_error() !== JSON_ERROR_NONE) {
-        echo "error en la cadena json<br>";
-        print_r($_REQUEST["datos_correo"]);
+        $resp["message"] = "error en la cadena json";
+        echo json_encode($resp);
         die();
     }
 }
 
+logear_funcionario_webservice("radicador_web");
+$datos_funcionario = busca_filtro_tabla("idfuncionario, funcionario_codigo, login", "funcionario", "idfuncionario=$saia_key", "", $conn);
 $formato = busca_filtro_tabla("idformato", "formato", "nombre='factura_electronica'", "", $conn);
 $idformato = $formato[0]["idformato"];
 
+if($datos_funcionario["numcampos"]) {
+    logear_funcionario_webservice($datos_funcionario[0]["login"]);
+} else {
+    $resp["message"] = "No se encontró el funcionario";
+    echo json_encode($resp);
+    die();
+}
+
+//echo json_encode($resp); die();
+
+$radicados = 0;
 foreach ($datos as $datos_correo) {
     $id_correo = registar_correo($datos_correo);
 
@@ -50,14 +77,25 @@ foreach ($datos as $datos_correo) {
         if(!empty($iddoc)) {
             guardar_anexos($datos_correo["adjuntos"], $idformato, $iddoc);
         } else {
-        	die("No es posible adjuntar los anexos al documento");
+            $resp["message"] = "No es posible adjuntar los anexos al documento";
+            break;
         }
+        $radicados++;
     }
     mover_correo_buzon($datos_correo);
 }
 
-abrir_url($ruta_db_superior . "index_correo.php", "_self");
+$resp["radicados"] = $radicados;
+if($radicados) {
+    $resp["status"] = 1;
+    $resp["message"] = "Radicación existosa";
+}
+
+//abrir_url($ruta_db_superior . "index_correo.php", "_self");
 //die("HECHO");
+
+echo json_encode($resp);
+die();
 
 function procesar_factura($adjuntos) {
     $archivo_face = null;
@@ -103,6 +141,9 @@ function procesar_factura($adjuntos) {
                         break;
                     case "pais":
                         $datos_factura["pais_proveedor"] = "'$value'";
+                        break;
+                    case "tipo_persona":
+                        $datos_factura["tipo_persona"] = $value;
                         break;
                     default:
                         $info[] = "$key : $value";
@@ -263,6 +304,8 @@ function radicar_factura($datos) {
         $_REQUEST["info_proveedor"] = limpiarContenido($datos["info_proveedor"]);
         $_REQUEST["anexos"] = str_replace("\\", "/", $datos["anexos"]);
         $_REQUEST["total_factura"] = $datos["total_factura"];
+
+        //TODO: Revisar lo del remitente
 
         $_REQUEST["tipo_radicado"] = "radicacion_entrada";
         $_REQUEST["encabezado"] = "1";
