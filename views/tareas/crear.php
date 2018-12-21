@@ -38,7 +38,7 @@ foreach($_REQUEST as $key => $value){
         <div class="tab-pane fade show active" id="information" role="tabpanel" aria-labelledby="information-tab">
             <div class="form-group">
                 <label class="my-0" for="name">Nombre de la tarea</label>
-                <input type="email" class="form-control" id="name" placeholder="Qué desea que se realice?">
+                <input type="text" class="form-control" id="name" placeholder="Qué desea que se realice?">
             </div>
             <div class="row">
                 <div class="col">
@@ -66,7 +66,7 @@ foreach($_REQUEST as $key => $value){
             <div class="form-group">
                 <label class="my-0" for="priority">Prioridad de la tarea</label>
                 <select id="priority" class="form-control">
-                    <option value="">Ninguna</option>
+                    <option value="0">Ninguna</option>
                     <option value="1">Alta</option>
                     <option value="2">Media</option>
                     <option value="3">Baja</option>

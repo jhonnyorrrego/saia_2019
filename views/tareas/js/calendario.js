@@ -11,18 +11,28 @@ $(function() {
                 click: function() {
                     $('#calendar').fullCalendar('refetchEvents');
                 }
+            },
+            select: {
+                icon: 'clockwise-arrow',
+                click: function() {
+                    console.log(1);
+                }
             }
         },
         header:{
             left:   'title',
-            center: '',
+            center: 'select',
             right:  'prev,next,refresh month,agendaWeek,agendaDay,today'
         },
         defaultView: 'agendaWeek',
         height:'parent',
         selectable: true,        
         select: function( start, end){
-            addTask(arguments);
+            let params = {
+                initialTime: start.format('YYYY-MM-DD HH:mm:ss'),
+                finalTime: end.format('YYYY-MM-DD HH:mm:ss')
+            };
+            modalTask(params);
         },
         eventDrop: function( event ) {
             updateTask(event);
@@ -30,11 +40,15 @@ $(function() {
         eventResize: function( event ) {
             updateTask(event);
         },
+        eventClick: function( event ) {
+            modalTask({id: event.id});
+        },
         events: function(start, end, timezone, callback) {
             $.ajax({
                 url: `${baseUrl}app/tareas/funcionario.php`,
                 dataType: 'json',
                 data: {
+                    serachtype: getSearchType(),
                     initialDate: start.format('YYYY-MM-DD HH:mm:ss'),
                     finalDate: end.format('YYYY-MM-DD HH:mm:ss'),
                     key: localStorage.getItem('key')
@@ -46,16 +60,24 @@ $(function() {
         }
     });
 
-    function addTask(times){
-        let initialTime = times[0].format('YYYY-MM-DD HH:mm:ss');
-        let finalTime = times[1].format('YYYY-MM-DD HH:mm:ss');
-        
+    $(document).on("change", "#changeCalendarParams", function(event) {
+        $('#calendar').fullCalendar('refetchEvents'); 
+    });
+
+    function getSearchType(){
+        if($("#changeCalendarParams").length){
+            var type = $("#changeCalendarParams").val();
+        }else{
+            var type = 1;
+        }
+
+        return type;
+    }
+
+    function modalTask(params){
         let options = {
             url: `${baseUrl}views/tareas/crear.php`,
-            params: {
-                initialTime: initialTime,
-                finalTime: finalTime
-            },
+            params: params,
             centerAlign:false,
             size: "modal-lg",
             title: "Crear una tarea o recordatorio",
@@ -82,4 +104,28 @@ $(function() {
             }
         }, 'json')
     }
+
+    (function defaultOptions(){
+        $('.fc-select-button').parent().append(
+            $('<select>', {
+                id: 'changeCalendarParams',
+                class: 'btn py-1'
+            }).append(
+                $('<option>',{
+                    value: 1,
+                    text: 'Soy Responsable'
+                }),
+                $('<option>',{
+                    value: 2,
+                    text: 'Soy Seguidor'
+                }),
+                $('<option>',{
+                    value: 3,
+                    text: 'Soy Planeador'
+                })
+            )
+        );
+        $('.fc-select-button').remove();
+        $('.fc-toolbar').find('button').addClass('btn');
+    })();
 });

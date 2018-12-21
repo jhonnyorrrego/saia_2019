@@ -49,6 +49,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     }
 } else {
     $Response->message = "Debe iniciar sesion";
+    $Response->success = 0;
 }
 
 echo json_encode($Response);

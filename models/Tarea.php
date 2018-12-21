@@ -81,18 +81,20 @@ class Tarea extends Model
     }
 
     /**
-     * Undocumented function
+     * busca las tareas entre fechas 
+     * segun el tipo de funcionario
      *
-     * @param [type] $userId
-     * @param [type] $initialDate
-     * @param [type] $finalDate
-     * @return void
+     * @param int $userId idfuncionario
+     * @param date $initialDate fecha inicial
+     * @param date $finalDate fecha final
+     * @param int $type tipo de relacion 1,responsable.2,seguidor.3,creador
+     * @return array objetos de la clase tarea
      */
-    public static function findBetweenDates($userId, $initialDate, $finalDate){
+    public static function findBetweenDates($userId, $initialDate, $finalDate, $type){
         global $conn;
 
         $tables = self::getTableName() . ' a,' . FuncionarioTarea::getTableName() . ' b';
-        $findRecords = busca_filtro_tabla('*', $tables, "a.idtarea = b.fk_tarea and b.fk_funcionario =" . $userId . " and " . fecha_db_obtener('a.fecha_inicial', 'Y-m-d H:i:s') . ">='" . $initialDate . "' and " . fecha_db_obtener('a.fecha_final', 'Y-m-d H:i:s') . "<='". $finalDate . "'", '', $conn);
+        $findRecords = busca_filtro_tabla('a.*', $tables, "a.idtarea = b.fk_tarea and b.estado=1 and b.fk_funcionario =" . $userId . " and b.tipo= " . $type . " and " . fecha_db_obtener('a.fecha_inicial', 'Y-m-d H:i:s') . ">='" . $initialDate . "' and " . fecha_db_obtener('a.fecha_final', 'Y-m-d H:i:s') . "<='". $finalDate . "'", '', $conn);
         
         return self::convertToObjectCollection($findRecords);
     }

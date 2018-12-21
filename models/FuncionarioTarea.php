@@ -29,28 +29,74 @@ class FuncionarioTarea extends Model
     }
 
     /**
+     * activa la ralacion entre 
+     * el funcionario y la tarea
+     *
+     * @return int idfuncionario_tarea
+     */
+    public function activeRalation(){
+        $this->estado = 1;
+        if($this->save()){
+            $response = $this->getPK();
+        }else{
+            $response = 0;
+        }
+
+        return $response;
+    }
+
+    /**
      * asigna funcionario a la tarea
      *
-     * @param int $tasksId
+     * @param int $taskId
      * @param array $user listado de funcionarios
      * @param int $type tipo de asignacion 1:responsable , 2: seguidor
      * @return void
      */
-    public static function assignUser($tasksId, $users, $type){
-        if($tasksId && count($users)){
+    public static function assignUser($taskId, $users, $type){
+        if($taskId && count($users)){
             $data = [];
+            
             foreach($users as $user){
-                $data [] = self::newRecord([
+                $findRelation = self::findByAttributes([
                     'fk_funcionario' => $user,
-                    'fk_tarea' => $tasksId,
-                    'estado' => 1,
+                    'fk_tarea' => $taskId,
                     'tipo' => $type
                 ]);
+                
+                if(!$findRelation){
+                    $data [] = self::newRecord([
+                        'fk_funcionario' => $user,
+                        'fk_tarea' => $taskId,
+                        'estado' => 1,
+                        'tipo' => $type
+                    ]);
+                }else{
+                    $data [] = $findRelation->activeRalation();
+                }
             }
         }else{
             $data = NULL;
         }
 
         return $data;
+    }
+
+    public static function findUsersByType($taskId, $type){
+        global $conn;
+
+        $tables = self::getTableName() .' a,' . Funcionario::getTableName() .' b';
+        $findRecords = busca_filtro_tabla('b.*', $tables, 'a.fk_funcionario = b.idfuncionario and a.estado=1 and a.fk_tarea=' . $taskId . ' and a.tipo = '. $type, '', $conn);
+
+        return Funcionario::convertToObjectCollection($findRecords);
+    }
+
+    public static function inactiveRelationsByTask($taskId, $type){
+        self::executeUpdate([
+            'estado' => 0
+        ],[
+            'fk_tarea' => $taskId,
+            'tipo' => $type
+        ]);
     }
 }

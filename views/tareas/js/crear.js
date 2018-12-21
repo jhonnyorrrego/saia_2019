@@ -2,7 +2,8 @@ $(function(){
     let baseUrl = Session.getBaseUrl();
     let params = $('script[data-params]').data('params');
     let loadedFiles = [];
-    language = {
+
+    let language = {
         errorLoading: function () {
             return "La carga falló" 
         },
@@ -34,9 +35,12 @@ $(function(){
     //default actions
     setTimeout(() => {
         $('#followers_container').hide();
-
-        let finaldate = moment(params.finalTime, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDThh:mm')
-        $('#final_date').val(finaldate)
+        if(!params.id){
+            let finaldate = moment(params.finalTime, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDThh:mm');
+            $('#final_date').val(finaldate);
+        }else{
+            findFormData(params.id);
+        }
     }, 0);
     
     $("#manager,#followers").select2({
@@ -66,8 +70,12 @@ $(function(){
             }
         }
     });
-    
-    
+
+    $("#manager,#followers").on('select2:unselect', function (e) {
+        let id = e.params.data.id;
+        $(this).find(`[value="${id}"]`).remove();
+    });
+        
     var myDropzone = new Dropzone("#task_files", { 
         url: `${baseUrl}app/tareas/cargar_anexos.php`,
         params: {
@@ -102,6 +110,7 @@ $(function(){
         let followers = getOptions('#followers');
 
         data = {
+            task: params.id || 0,
             key: key,
             name: $('#name').val(),
             managers: managers.length ? managers : [key],
@@ -142,5 +151,46 @@ $(function(){
         }
 
         return data;
+    }
+
+    function findFormData(id){
+        $.post(`${baseUrl}app/tareas/consulta.php`, {
+            key: localStorage.getItem('key'),
+            task: id
+        }, function(response){
+            if(response.success){
+                fillForm(response.data);
+            }else{
+                top.notification({
+                    type: 'error',
+                    message: response.message
+                })
+            }
+        }, 'json');
+    }
+
+    function fillForm(data){
+        $('#name').val(data.task.nombre);        
+        let finaldate = moment(data.task.fecha_final, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDThh:mm');
+        $('#final_date').val(finaldate);
+        $('#priority').val(data.task.prioridad);
+        $('#description').val(data.task.descripcion);
+
+        fillSelect('#manager', data.users.managers);
+        fillSelect('#followers', data.users.followers || []);
+    }
+
+    function fillSelect(selector, data){
+        if(data.length){
+            data.forEach(u => {
+                $(selector).append(
+                    $('<option>',{
+                        value: u.id,
+                        text: u.name,
+                        selected: true
+                    })
+                );
+            })
+        }
     }
 });

@@ -24,7 +24,7 @@ $Response = (object) array(
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
     $initialDate = $_REQUEST['initialDate'];
     $finalDate = $_REQUEST['finalDate'];
-    $tareas = Tarea::findBetweenDates($_REQUEST['key'], $initialDate, $finalDate);
+    $tareas = Tarea::findBetweenDates($_REQUEST['key'], $initialDate, $finalDate, $_REQUEST['serachtype']);
 
     if(count($tareas)){
         $data = [];
@@ -44,6 +44,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     }
 } else {
     $Response->message = "Debe iniciar sesión";
+    $Response->success = 0;
 }
 
 echo json_encode($Response);

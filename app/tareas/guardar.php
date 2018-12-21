@@ -38,14 +38,16 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     
     if($Tarea->save()){
         if(isset($_REQUEST['managers'])){
-            if(!count($_REQUEST['managers'])){
-                FuncionarioTarea::assignUser($Tarea->getPk(), [$_REQUEST['key']], 1);
-            }else{
-                FuncionarioTarea::assignUser($Tarea->getPk(), $_REQUEST['managers'], 1);
-            }
+            $maker = [$_REQUEST['key']];
+            FuncionarioTarea::assignUser($Tarea->getPk(), $maker, 3);
+
+            $managers = count($_REQUEST['managers']) ? $_REQUEST['managers'] : $maker;
+            FuncionarioTarea::inactiveRelationsByTask($Tarea->getPK(), 1);
+            FuncionarioTarea::assignUser($Tarea->getPk(), $_REQUEST['managers'], 1);
         }
 
         if(count($_REQUEST['followers'])){
+            FuncionarioTarea::inactiveRelationsByTask($Tarea->getPK(), 2);
             FuncionarioTarea::assignUser($Tarea->getPk(), $_REQUEST['followers'], 2);
         }
 
@@ -59,7 +61,8 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         $Response->success = 0;
     }
 } else {
-    $Response->message = "Debe iniciar sesión";
+    $Response->message = "Debe iniciar sesion";
+    $Response->success = 0;
 }
 
 echo json_encode($Response);

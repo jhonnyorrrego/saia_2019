@@ -1,5 +1,4 @@
 <?php
-require_once $ruta_db_superior . 'db.php';
 use Stringy\Stringy;
 
 class Model {
@@ -131,7 +130,7 @@ class Model {
     }
 
     public static function findByAttributes($conditions, $fields = []){
-        $data = self::findAllByAttributes($conditions, $fields, 1);
+        $data = self::findAllByAttributes($conditions, $fields, '', 1);
         return count($data) ? $data[0] : NULL;
     }
 
@@ -163,7 +162,6 @@ class Model {
         }
         return $data;
     }
-
 
     /**
      * save the data on the table 
@@ -213,30 +211,9 @@ class Model {
      * modify a record on the table by pk
      */
     public function update() {
-        $attributes = $this->getNotNullAttributes();
-        $dateAttributes = $this->getDateAttributes();
-
-        if (count($attributes)) {
-            $table = self::getTableName();
-            $primary = self::getPrimaryLabel();
-
-            $sql = "update " . $table . " set ";
-
-            foreach($attributes as $attribute => $value){
-                if(in_array($attribute, $dateAttributes)){
-                    $sql .= $attribute . "=" . fecha_db_almacenar($value, 'Y-m-d H:i:s') . ",";
-                }else{
-                    $sql .= $attribute . "='" . addslashes($value) . "',";
-                }
-            }
-
-            $sql = substr($sql, 0, strlen($sql) - 1);
-            $sql .= " where " . $primary . " = " . $this->getPK();
-            phpmkr_query($sql) or die("Error al actualizar");
-            return $this->getPK();
-        } else {
-            return 0;
-        }
+        return $response = self::executeUpdate($this->getNotNullAttributes(),[
+            self::getPrimaryLabel() => $this->getPK()
+        ]);
     }
 
     /**
@@ -311,7 +288,7 @@ class Model {
                 if(in_array($attribute, $dateAttributes)){
                     $condition .= fecha_db_obtener($attribute, 'Y-m-d H:i:s') . "=" . $value;
                 }else{
-                    $condition .= $attribute . "=" . $value;
+                    $condition .= $attribute . "='" . $value . "'";
                 }
             }
         }
@@ -361,5 +338,23 @@ class Model {
 
         return $response;
     }
-    
+
+    public static function executeUpdate($fields, $conditions){        
+        $set = $where = '';
+
+        foreach($fields as $attribute => $value){
+            if(strlen($set)){
+                $set .= ',';
+            }
+            
+            if(in_array($attribute, $dateAttributes)){
+                $set .= $attribute . "=" . fecha_db_almacenar($value, 'Y-m-d H:i:s');
+            }else{
+                $set .= $attribute . "='" . $value . "'";
+            }
+        }
+        
+        $sql = 'UPDATE ' . self::getTableName() . ' set ' . $set . ' where ' . self::createCondition($conditions);
+        return phpmkr_query($sql);
+    }   
 }
