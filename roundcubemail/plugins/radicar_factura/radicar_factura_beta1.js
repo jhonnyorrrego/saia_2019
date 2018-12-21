@@ -9,8 +9,7 @@ function rcmail_radicar_factura(prop){
   
     var uids = rcmail.env.uid ? rcmail.env.uid : rcmail.message_list.get_selection().join(','), lock = rcmail.set_busy(true, 'loading');
 
-    var key = localStorage.getItem("key");
-    rcmail.http_post('plugin.radicar_factura', '_uid='+uids+'&_mbox='+urlencode(rcmail.env.mailbox)+"&saia_key="+key, lock);
+    rcmail.http_post('plugin.radicar_factura', '_uid='+uids+'&_mbox='+urlencode(rcmail.env.mailbox), lock);
 }
 
 // callback for app-onload event
@@ -30,6 +29,6 @@ if (window.rcmail) {
 }
 
 function procesarRespuesta(respuesta) {
-	//alert("Hola mundo");
+	alert("Hola mundo");
 	console.log(respuesta);
 }
