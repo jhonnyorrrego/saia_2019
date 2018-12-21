@@ -251,7 +251,7 @@ function componente_ejecutor($idcampo, $iddoc) {
                 );
                 // $parametros=explode("@",$campo[0]["valor"]);
                 $campos = explode(",", $parametros[2]);
-                $alto = 26 * (count($campos) + 6);
+                $alto = 80 * (count($campos) + 6);
                 echo '<iframe border=0 frameborder="0" framespacing="0" name="frame_' . $campo[0]["nombre"] . '" id="frame_' . $campo[0]["nombre"] . '" src="../librerias/acciones_ejecutor.php?formulario_autocompletar=formulario_formatos&campo_autocompletar=' . $campo[0]["nombre"] . '&tabla=' . $formato[0]["nombre_tabla"] . '&campos_auto=' . $parametros[1] . '&tipo=' . $parametros[0] . '&campos=' . $parametros[2] . $adicionales . '" width="100%" height="' . $alto . 'px"></iframe>';
 }
 
@@ -1439,7 +1439,7 @@ function submit_formato($formato, $iddoc = NULL) {
 			echo('<button class="cancel" onClick="javascript:redirecciona_padre(); return false;" id="cancel" value="Cancelar" style="margin-right:6px;">Cancelar</button>');
 		}
 		echo('<div class="col-md-9">
-				<button class="btn btn-success submit" type="submit" id="continuar" value="Continuar">Continuar</button>
+				<button class="btn btn-complete submit" type="submit" id="continuar" value="Continuar">Continuar</button>
              <div>');
 	} else {
 
@@ -1448,7 +1448,7 @@ function submit_formato($formato, $iddoc = NULL) {
     <input type="hidden" name="tabla" value="' . $datos_f[0]["nombre_tabla"] . '">
     <script>formulario_formatos.action="../librerias/modificar_plantilla.php";</script>
     <div class="col-md-9">
-	   <input class="btn btn-success submit" type="submit" id="continuar" value="Continuar">
+	   <input class="btn btn-complete submit" type="submit" id="continuar" value="Continuar">
      <div>';
 	}
 	?>
