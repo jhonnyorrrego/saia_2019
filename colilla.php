@@ -114,7 +114,7 @@ function validar_confirmacion_salida($consecutivo, $enlace, $enlace2) {
 		//var ingreso=confirm("Esta seguro de generar un nuevo radicado?");
 		ingreso=1;
 		if(ingreso){
-			window.open("colilla.php?consecutivo=<?php echo $consecutivo;?>&salidas=1&target=_self&enlace=<?php echo $enlace_redireccion;?>&descripcion_general=<?php echo $_REQUEST['descripcion_general'];?>","_self"); 
+			window.open("colilla.php?consecutivo=<?php echo $consecutivo;?>&salidas=1&target=_self&enlace=<?php echo $enlace_redireccion;?>&descripcion_general=<?php echo $_REQUEST['descripcion_general'];?>&colilla_vertical=<?php echo $_REQUEST['colilla_vertical'];?>","_self");
 		}else{
 			window.open("<?php echo $enlace2;?>","_self");
 		}
@@ -370,8 +370,8 @@ if ($doc <> FALSE) {
 		</script>
 	</head>
     <?php
+
         if($_REQUEST['colilla_vertical']==1) {
-            ?>
             ?>
             <body <?php echo(@$imprimir_colilla); ?> ><br/>
             <div class="colilla-vertical">
