@@ -3,15 +3,11 @@
 /**
  * Radicacion de Facturas SAIA
  */
-class radicar_factura extends rcube_plugin {
+class radicar_factura_beta1 extends rcube_plugin {
 
     public $task = 'mail';
 
     private $charset = 'ASCII';
-
-    private $conn;
-
-    private $ruta_saia;
 
     private $valid_types = array(
         "pdf",
@@ -20,9 +16,6 @@ class radicar_factura extends rcube_plugin {
 
     // private $valid_types = array("pdf", "xml", "eml");
     function init() {
-
-        $this->_inicializarSaia();
-
         $rcmail = rcmail::get_instance();
 
         $this->register_action('plugin.radicar_factura', array(
@@ -48,6 +41,18 @@ class radicar_factura extends rcube_plugin {
     }
 
     function request_action() {
+        $max_salida = 10;
+        $ruta_db_superior = $ruta = "";
+        while ($max_salida > 0) {
+            if (is_file($ruta . "db.php")) {
+                $ruta_db_superior = $ruta;
+            }
+            $ruta .= "../";
+            $max_salida--;
+        }
+        global $conn;
+        require_once ($ruta_db_superior . "vendor/autoload.php");
+        include_once ($ruta_db_superior . "db.php");
         $this->add_texts('localization');
 
         $rcmail = rcmail::get_instance();
@@ -74,11 +79,7 @@ class radicar_factura extends rcube_plugin {
         $info_correo = array();
         $conteo_xml = 0;
         $idgrupo = uniqid();
-        $buzon = null;
         foreach (rcmail::get_uids() as $mbox => $uids) {
-            if(empty($buzon)) {
-                $buzon = $mbox;
-            }
             foreach ($uids as $idcorreo) {
                 $tempfiles = array();
                 $dato_correo = array();
@@ -130,46 +131,26 @@ class radicar_factura extends rcube_plugin {
                 fclose($tmpfp);
                 $tempfiles[] = $tmpfn;
                 $dato_correo["adjuntos"] = $tempfiles;
-                if ($conteo_xml < 1) {
-                    $rcmail->output->command('display_message', $this->gettext('errarchivosxml'), 'error');
-                    return false;
-                }
                 $info_correo[] = $dato_correo;
             }
         }
-
-        $saia_key = $_REQUEST["saia_key"];
-        $respuesta = $this->_enviarPeticion($saia_key, $info_correo);
-        $json = json_decode($respuesta, true);
-
-        if(empty($json)) {
-            $json = array('message' =>$respuesta);
-        }
-        if(isset($json["status"]) && $json["status"] == 1) {
-            $rcmail->output->command('display_message', $this->gettext('msgfacturaradicada'), 'confirmation');
-            //$this->_moverCorreos($buzon);
-        } else if(isset($json["message"])) {
-            $rcmail->output->command('display_message', $json["message"], 'error');
+        if ($conteo_xml < 1) {
+            $rcmail->output->command('display_message', $this->gettext('errarchivosxml'), 'error');
+            return false;
         }
 
-        $rcmail->output->command('plugin.procesar_respuesta', $json);
+        $rcmail->output->command('display_message', $this->gettext('msgfacturaradicada'), 'confirmation');
+        $rcmail->dato_correo = $dato_correo;
+        $configuracion = busca_filtro_tabla("", "configuracion", "tipo='correo' AND nombre='formato_correo'", "", $conn);
+        $ruta_formato = 'pruebas_factura/radicar_factura.php';
+        /*
+         * if ($configuracion["numcampos"]) {
+         * $ruta_formato = $configuracion[0]["valor"];
+         * }
+         */
+        $rcmail->output->command('redirect', $ruta_db_superior . $ruta_formato . "?datos_correo=" . json_encode($info_correo), '');
+        //$rcmail->output->command('plugin.procesar_respuesta', array('message' => 'Tolis parce'));
         $rcmail->output->send();
-    }
-
-    private function _moverCorreos($buzon) {
-        $rcmail  = rcmail::get_instance();
-        $storage = $rcmail->get_storage();
-        //$storage->move_message(rcmail::get_uids(), "Facturas SAIA");
-        $moved = $this->conn->move(rcmail::get_uids(), $buzon, "Facturas SAIA");
-        /*foreach (rcmail::get_uids() as $mbox => $uids) {
-            $storage->unset_flag($uids, 'NONJUNK', $mbox);
-            $storage->set_flag($uids, 'JUNK', $mbox);
-        }
-
-        if (($junk_mbox = $rcmail->config->get('junk_mbox'))) {
-            $rcmail->output->command('move_messages', $junk_mbox);
-        }*/
-
     }
 
     private function _convert_filename($str) {
@@ -179,55 +160,4 @@ class radicar_factura extends rcube_plugin {
             '/' => '-'
         ));
     }
-
-    private function _enviarPeticion($saia_key, $dato_correo) {
-        $ruta_formato = $this->ruta_saia . 'app/factura/radicar_factura.php';
-        $ch = curl_init($ruta_formato);
-        $timeout = 15;
-        #curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-        if (strpos(PROTOCOLO_CONEXION, 'https') !== false) {
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        }
-        //curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
-
-        $fields_string = json_encode($dato_correo);
-        if(!$fields_string) {
-            return ["status" => "error"];
-        }
-        curl_setopt($ch, CURLOPT_POSTFIELDS, array("datos_correo" => $fields_string, "saia_key" => $saia_key));
-        $result = curl_exec($ch);
-        curl_close ($ch);
-
-        // delete temporary file ##
-        //@unlink($sTmpFile);
-        return $result;
-    }
-
-    private function _inicializarSaia() {
-        global $conn;
-        $max_salida = 10;
-        $ruta_db_superior = $ruta = "";
-        while ($max_salida > 0) {
-            if (is_file($ruta . "db.php")) {
-                $ruta_db_superior = $ruta;
-            }
-            $ruta .= "../";
-            $max_salida--;
-        }
-
-        $conn_tmp = $conn;
-
-        require_once ($ruta_db_superior . "vendor/autoload.php");
-        include_once ($ruta_db_superior . "db.php");
-        $this->ruta_saia = PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . "/";
-        if(empty($conn_tmp)) {
-            $conn_tmp = $conn;
-        }
-
-        $this->conn = $conn_tmp;
-    }
-
 }
