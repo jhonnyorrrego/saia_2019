@@ -70,9 +70,9 @@ $components = busca_filtro_tabla("A.*,B.ruta_visualizacion", "busqueda_component
                     }
 
                     if ($components[$i]["url"]) {
-                        $url = '../' . $components[$i]["url"];
+                        $url = $ruta_db_superior . $components[$i]["url"];
                     } else if ($components[$i]["ruta_visualizacion"]) {
-                        $url = '../' . $components[$i]["ruta_visualizacion"];
+                        $url = $ruta_db_superior . $components[$i]["ruta_visualizacion"];
                     } else {
                         $url = '../' . 'pantallas/busquedas/consulta_busqueda.php';
                     }
@@ -101,7 +101,7 @@ $components = busca_filtro_tabla("A.*,B.ruta_visualizacion", "busqueda_component
                 case 4:
                     $etiqueta = codifica_encabezado(html_entity_decode($components[$i]['etiqueta']));
                     $url = $ruta_db_superior . $components[$i]['url'];
-                    
+
                     switch ($components[$i]["conector"]) {
                         case 1:
                             $conector = 'html.page';

@@ -12,6 +12,7 @@ while ($max_salida > 0) {
     $ruta .= '../';
     $max_salida--;
 }
+
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
 $Response = (object) array(
@@ -21,22 +22,24 @@ $Response = (object) array(
 );
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $Funcionario = new Funcionario($_SESSION['idfuncionario']);
-    $password = $Funcionario->getPassword();
+    $initialDate = $_REQUEST['initialDate'];
+    $finalDate = $_REQUEST['finalDate'];
+    $tareas = Tarea::findBetweenDates($_REQUEST['key'], $initialDate, $finalDate);
 
-    if($password == md5(md5($_REQUEST['actual']))){
-        $Funcionario->setAttributes(array(
-            'clave' => md5(md5($_REQUEST['new']))
-        ));
-        
-        if ($Funcionario->update()) {
-            $Response->message = "Datos Actualizados";
-        } else {
-            $Response->message = "Error al guardar";
-            $Response->success = 0;
+    if(count($tareas)){
+        $data = [];
+        foreach($tareas as $Tarea){
+            $data[] = [
+                'id' => $Tarea->getPK(),
+                'title' => $Tarea->getName(),
+                'start' => $Tarea->getInitialDate(),
+                'end' => $Tarea->getFinalDate(),
+                'color' => $Tarea->getColor()
+            ];
         }
+        $Response->data = $data;
     }else{
-        $Response->message = "Contraseña incorrecta";
+        $Response->message = "sin tareas";
         $Response->success = 0;
     }
 } else {

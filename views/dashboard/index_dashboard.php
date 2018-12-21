@@ -45,7 +45,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             });
 
             if($('#right_workspace').is(':visible')){
-                let calendarRoute = baseUrl + 'views/calendario/tareas.php';
+                let calendarRoute = baseUrl + 'views/tareas/calendario.php';
                 $('#iframe_right_workspace').attr('src', calendarRoute);
             }
 

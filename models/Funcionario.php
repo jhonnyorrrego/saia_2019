@@ -1,5 +1,4 @@
 <?php
-require_once $ruta_db_superior . 'db.php';
 require_once $ruta_db_superior . 'models/model.php';
 require_once $ruta_db_superior . 'vendor/autoload.php';
 require_once $ruta_db_superior . 'StorageUtils.php';
@@ -20,13 +19,22 @@ class Funcionario extends Model {
     protected $telefono;
     protected $clave;
     protected $dbAttributes;
-    
+
     /**
      * @param int $id value for idfuncionario attribute
      * @author jhon.valencia@cerok.com
      */
     function __construct($id){
         return parent::__construct($id);
+    }
+
+    /**
+     * return the user temporal route
+     *
+     * @return string
+     */
+    public function getTemporalRoute(){
+        return 'temporal/temporal_' . $this->login;
     }
 
     /**
@@ -77,8 +85,8 @@ class Funcionario extends Model {
      */
     public function getName()
     {
-        $name = trim($this->nombres);
-        $lastName = trim($this->apellidos);
+        $name = trim(strtolower($this->nombres));
+        $lastName = trim(strtolower($this->apellidos));
 
         $completeName = ucfirst($name . " " . $lastName);
 
@@ -151,7 +159,7 @@ class Funcionario extends Model {
                 }
 
                 $route = explode('/', $Image->ruta);
-                $fileName = $route[count($route) - 1];
+                $fileName = end($route);
                 $finalRoute = $tempRoute . '/' . $fileName;
                 
                 if(!is_file($finalRoute) || $force){
@@ -185,7 +193,7 @@ class Funcionario extends Model {
 
             $imageData = array(
                 'binary' => file_get_contents($tempRoute . '/' . $fileName),
-                'extention' => 'jpg',
+                'extension' => 'jpg',
             );
 
             if($this->updateImage($imageData, $image))
@@ -196,13 +204,13 @@ class Funcionario extends Model {
     /**
      * update a specific image attribute
      * 
-     * @param array $image ej. [extention => png, binary => binary_to_save]
+     * @param array $image ej. [extension => png, binary => binary_to_save]
      * @param string $attribute attribute to update ej. foto_recorte, foto_original
      * @return the new $attribute value
      * @author jhon.valencia@cerok.com
      */
     public function updateImage($image, $attribute){
-        $ruta = RUTA_FOTOGRAFIA_FUNCIONARIO . 'original/' . rand() . 'r.' . $image['extention'];
+        $ruta = RUTA_FOTOGRAFIA_FUNCIONARIO . 'original/' . rand() . 'r.' . $image['extension'];
 
         $tipo_almacenamiento = new SaiaStorage("imagenes");
         $content = $tipo_almacenamiento->almacenar_contenido($ruta, $image['binary'], false);
@@ -213,12 +221,31 @@ class Funcionario extends Model {
                 "ruta" => $ruta
             ));
             
-            $sql = "UPDATE funcionario SET ".$attribute."='" . $this->$attribute . "' WHERE idfuncionario=" . $this->idfuncionario;
-            phpmkr_query($sql);
-            
+            $this->save();
             return $this->$attribute;
         }else{
             return false;
         }
+    }
+
+    public static function findAllByTerm($term){
+        global $conn;
+        
+        $table = self::getTableName();
+        $findRecords = busca_filtro_tabla('idfuncionario,nombres,apellidos', $table, "lower(nombres) like '%".$term."%' or apellidos like '%".$term."%'", '', $conn);
+
+        $data = [];
+        if ($findRecords['numcampos']) {
+            for($row=0; $row < $findRecords['numcampos']; $row++){                
+                $Instance = new Funcionario();
+                foreach ($findRecords[$row] as $key => $value) {
+                    if (is_string($key) && property_exists(Funcionario , $key)) {
+                        $Instance->$key = $value;
+                    }
+                }
+                $data[] = $Instance;
+            }
+        }
+        return $data;
     }
 }

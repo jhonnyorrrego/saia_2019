@@ -80,7 +80,10 @@ class FacturaXML {
                 if($nodo_id) {
                     $result["identificacion"] = $nodo_id->nodeValue;
                 }
-                $nodo_nombre = $this->xpath->query("{$this->ns_fe}Party/{$this->ns_cac}PartyName/{$this->ns_cbc}Name", $element)->item(0);
+
+                //$nodo_nombre = $this->xpath->query("{$this->ns_fe}Party/{$this->ns_cac}PartyName/{$this->ns_cbc}Name", $element)->item(0);
+                $nodo_nombre = $this->xpath->query("{$this->ns_fe}Party/{$this->ns_fe}PartyLegalEntity/{$this->ns_cbc}RegistrationName", $element)->item(0);
+
                 if($nodo_nombre) {
                     $result["nombre"] = $nodo_nombre->nodeValue;
                 }

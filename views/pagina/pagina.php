@@ -13,9 +13,8 @@ if (!isset($_REQUEST["iddoc"])) {
     return false;
 }
 
-include_once $ruta_db_superior . 'db.php';
+include_once $ruta_db_superior . "controllers/autoload.php";
 include_once $ruta_db_superior . "views/documento/encabezado.php";
-include_once $ruta_db_superior . 'models/pagina.php';
 
 $iddocumento = $_REQUEST["iddoc"];
 $paginas = Pagina::getAllResultDocument($iddocumento, "pagina asc");
@@ -33,7 +32,7 @@ $paginas = Pagina::getAllResultDocument($iddocumento, "pagina asc");
 			</div>
 			<div class="row">
 				<div class="col-12">
-				    <?php if(Utilities::permisoModulo("editar_paginas")):?>
+				    <?php if(UtilitiesController::permisoModulo("editar_paginas")):?>
 					<a href="listar_pagina.php?iddoc=<?=$iddocumento; ?>" class="btn btn-mini float-right"><i class="fa fa-edit"></i></a>
 					<?php endif; ?>
 				</div>

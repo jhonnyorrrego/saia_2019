@@ -16,22 +16,30 @@ include_once $ruta_db_superior . 'controllers/autoload.php';
 
 $Response = (object) array(
     'data' => new stdClass(),
-    'message' => "",
+    'message' => '',
     'success' => 1,
 );
 
-if (isset($_SESSION['idfuncionario'])) {    
-    $Funcionario = new Funcionario($_SESSION['idfuncionario']);
-    $Funcionario->setAttributes($_REQUEST);
+if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']){
+    $funcionarios = Funcionario::findAllByTerm($_REQUEST['term']);
 
-    if($Funcionario->update()){
-        $Response->message = "Datos Actualizados";
+    if(count($funcionarios)){
+        $data = [];
+        
+        foreach($funcionarios as $Funcionario){
+            $data[] = [
+                'id' => $Funcionario->getPK(),
+                'text' => $Funcionario->getName()
+            ];
+        }
+
+        $Response->data = $data;
     }else{
         $Response->message = "Error al guardar";
         $Response->success = 0;
     }
 } else {
-    $Response->message = "Debe iniciar sesión";
+    $Response->message = "Debe iniciar sesion";
 }
 
 echo json_encode($Response);
