@@ -142,6 +142,9 @@ function procesar_factura($adjuntos) {
                     case "pais":
                         $datos_factura["pais_proveedor"] = "'$value'";
                         break;
+                    case "tipo_persona":
+                        $datos_factura["tipo_persona"] = $value;
+                        break;
                     default:
                         $info[] = "$key : $value";
                         break;
@@ -301,6 +304,8 @@ function radicar_factura($datos) {
         $_REQUEST["info_proveedor"] = limpiarContenido($datos["info_proveedor"]);
         $_REQUEST["anexos"] = str_replace("\\", "/", $datos["anexos"]);
         $_REQUEST["total_factura"] = $datos["total_factura"];
+
+        //TODO: Revisar lo del remitente
 
         $_REQUEST["tipo_radicado"] = "radicacion_entrada";
         $_REQUEST["encabezado"] = "1";
