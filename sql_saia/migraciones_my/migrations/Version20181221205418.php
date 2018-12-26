@@ -81,7 +81,20 @@ class Version20181221205418 extends AbstractMigration {
         array('nombre' => 'num_factura','etiqueta' => 'N&Uacute;MERO DE FACTURA','tipo_dato' => 'VARCHAR','longitud' => '255','obligatoriedad' => '0','valor' => '','acciones' => 'a,e,b','ayuda' => '','predeterminado' => '','banderas' => '','etiqueta_html' => 'text','orden' => '13','mascara' => '','adicionales' => '','autoguardado' => '0','fila_visible' => '1'),
         array('nombre' => 'num_folios','etiqueta' => 'N&Uacute;MERO DE FOLIOS','tipo_dato' => 'VARCHAR','longitud' => '255','obligatoriedad' => '0','valor' => '','acciones' => 'a,e,b','ayuda' => '','predeterminado' => '','banderas' => '','etiqueta_html' => 'text','orden' => '15','mascara' => '','adicionales' => '','autoguardado' => '0','fila_visible' => '1'),
         array('nombre' => 'observaciones_check','etiqueta' => 'Observaciones check','tipo_dato' => 'TEXT','longitud' => '','obligatoriedad' => '0','valor' => '','acciones' => 'a,e,b','ayuda' => '','predeterminado' => '','banderas' => '','etiqueta_html' => 'hidden','orden' => '0','mascara' => '','adicionales' => '','autoguardado' => '0','fila_visible' => '1'),
-        array('nombre' => 'serie_idserie','etiqueta' => 'SERIE DOCUMENTAL','tipo_dato' => 'INT','longitud' => '11','obligatoriedad' => '1','valor' => '1472','acciones' => 'a','ayuda' => 'Radicaci&oacute;n de Facturas','predeterminado' => '18696','banderas' => 'fk','etiqueta_html' => 'hidden','orden' => '2','mascara' => '','adicionales' => '','autoguardado' => '0','fila_visible' => '1'));
+        array('nombre' => 'serie_idserie','etiqueta' => 'SERIE DOCUMENTAL','tipo_dato' => 'INT','longitud' => '11','obligatoriedad' => '1','valor' => '1472','acciones' => 'a','ayuda' => 'Radicaci&oacute;n de Facturas','predeterminado' => '18696','banderas' => 'fk','etiqueta_html' => 'hidden','orden' => '2','mascara' => '','adicionales' => '','autoguardado' => '0','fila_visible' => '1'),
+        array(
+            "nombre" => "total_factura",
+            "etiqueta" => "Total factura",
+            "tipo_dato" => "VARCHAR",
+            "longitud" => "50",
+            "obligatoriedad" => 0,
+            "acciones" => "a,e,b",
+            "etiqueta_html" => "text",
+            "orden" => 0,
+            "autoguardado" => 0,
+            "fila_visible" => 1
+    )
+    );
 
     private $campos_item_facturas= array(
         array('nombre' => 'clasificacion_fact','etiqueta' => 'CLASIFICACI&Oacute;N','tipo_dato' => 'VARCHAR','longitud' => '255','obligatoriedad' => '1','valor' => '1,Orden de Compra;2,Contrato;3,Servicios p&uacute;blicos - Administraci&oacute;n;4,Cuenta de cobro','acciones' => 'a,e,b','ayuda' => '','predeterminado' => '','banderas' => '','etiqueta_html' => 'radio','orden' => '6','mascara' => '','adicionales' => '','autoguardado' => '0','fila_visible' => '1'),
