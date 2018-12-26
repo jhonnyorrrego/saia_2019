@@ -30,7 +30,12 @@ class Version20180803211224 extends AbstractMigration {
     }
 
     private function crear_vista() {
-        $sql = "create or replace view vpermiso_serie_entidad as
+        $motor = $this->connection->getDatabasePlatform()->getName();
+        $modificar = "create or replace ";
+        if($motor == "mssql" || $motor == "sqlsrv") {
+            $modificar = "CREATE ";
+        }
+        $sql = $modificar . " view vpermiso_serie_entidad as
 SELECT p.idpermiso_serie,
     f.idfuncionario AS idfuncionario,
     f.funcionario_codigo AS funcionario_codigo,

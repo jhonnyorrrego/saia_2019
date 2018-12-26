@@ -189,6 +189,7 @@ function llena_otras_categorias($id) {
 			if(in_array($papas[$i]["idserie"], $seleccionados) !== false) {
 				$item["selected"] = true;
 			}
+			$item["checkbox"] = $checkbox;
 			$hijos = busca_filtro_tabla("count(*) as cant", "serie", "cod_padre=" . $papas[$i]["idserie"] . " and categoria=3" . $condicion_oc, "", $conn);
 			if($hijos[0]["cant"]) {
 				$item["folder"] = 1;

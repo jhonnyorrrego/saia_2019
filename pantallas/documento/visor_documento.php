@@ -20,8 +20,8 @@ if(!isset($_REQUEST["menu_principal_inactivo"])){
 }
 
 $datos = busca_filtro_tabla("A.pdf,A.plantilla,B.mostrar_pdf,A.numero,B.idformato", "documento A,formato B", "lower(A.plantilla)=B.nombre AND A.iddocumento=" . $iddoc, "", $conn);
-$es_pdf_word = $_REQUEST['pdf_word'];
-if ($_REQUEST['pdf_word']) {
+//$es_pdf_word = $_REQUEST['pdf_word'];
+if (isset($_REQUEST['pdf_word'])) {
 	if ($datos[0]["pdf"] != "" && !isset($_REQUEST["actualizar_pdf"])) {
 		$export = "visores/pdf.js-view/web/viewer2.php?tipo_visor=1&actualizar_pdf=1&iddocumento=" . $iddoc . "&ruta=" . base64_encode($datos[0]["pdf"]);
 	} else {

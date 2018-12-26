@@ -56,13 +56,7 @@ if(is_object($documento[0]["fecha"])){
 echo(origen_documento($documento[0]["iddocumento"],$documento[0]["numero"],$documento[0]["ejecutor"],$documento[0]["tipo_radicado"],$documento[0]["estado"],$documento[0]["serie"],$documento[0]["tipo_ejecutor"])); ?>
 <?php echo(fecha_creacion_documento($documento[0]["fecha"],$documento[0]["plantilla"],$documento[0]["iddocumento"])); ?><br></div>
 <div class="row">
-
-	<!--div class="pull-left"><b>Proceso: </b><?php echo(nombre_flujo($iddocumento,$documento[0]["plantilla"])); ?></div>
-	<b><div class="texto-azul pull-right paso_actual"></div></b>
-</div>
-	<br />
-	<div style="text-align: justify;"><?php echo(codifica_encabezado(html_entity_decode($documento[0]["descripcion"])));?></div><br />
-	<div class="btn-group pull-center"><?php echo(barra_adicional_documento($iddocumento));?></div><br /--><br />
+<br />
 <div data-toggle="collapse" data-target="#div_info_doc" style="cursor:pointer;">
   <i class="icon-minus-sign"></i>  <b>Informaci&oacute;n del documento</b>
 </div>

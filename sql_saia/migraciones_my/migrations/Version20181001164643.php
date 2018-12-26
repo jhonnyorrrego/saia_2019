@@ -21,6 +21,11 @@ class Version20181001164643 extends AbstractMigration {
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
             $this->platform->registerDoctrineTypeMapping('enum', 'string');
         }
+        if ($this->connection->getDatabasePlatform()->getName() == "oracle") {
+            //Type::addType('interval day(2) to second(6)', 'string');
+
+            $this->platform->registerDoctrineTypeMapping('interval day(2) to second(6)', "string");
+        }
 
         $this->nombre_copia = "permiso_serie_" . date("Y_m_d");
     }
@@ -31,7 +36,7 @@ class Version20181001164643 extends AbstractMigration {
      */
     public function up(Schema $schema) {
         $tabla = $schema->getTable('permiso_serie');
-        $this->abortIf($tabla->hasColumn('fk_entidad_serie'), "Ya existe la columna permiso_serie.fk_entidad_serie");
+        $this->skipIf($tabla->hasColumn('fk_entidad_serie'), "Ya existe la columna permiso_serie.fk_entidad_serie");
 
         $tableCopy = $this->copyTable($schema, $this->nombre_copia, $tabla, null, false);
 
@@ -54,7 +59,15 @@ class Version20181001164643 extends AbstractMigration {
         foreach ($nueva_tabla->getColumns() as $column) {
             $columnas[] = $column->getName();
         }
-        $conn->executeQuery("insert INTO $this->nombre_copia (" . implode(", ", $columnas) . ") SELECT " . implode(", ", $columnas) . " FROM permiso_serie");
+
+        $identidad = "";
+        $motor = $this->connection->getDatabasePlatform()->getName();
+        $modificar = "create or replace ";
+        if($motor == "mssql" || $motor == "sqlsrv") {
+            $identidad = "SET IDENTITY_INSERT $this->nombre_copia ON ";
+        }
+
+        $conn->executeQuery("$identidad insert INTO $this->nombre_copia (" . implode(", ", $columnas) . ") SELECT " . implode(", ", $columnas) . " FROM permiso_serie");
 
         $conn->executeUpdate($this->platform->getTruncateTableSQL('permiso_serie', true /* whether to cascade */
         ));
@@ -68,13 +81,22 @@ class Version20181001164643 extends AbstractMigration {
 
         $conn->exec($this->crear_vista_funcionario());
         $conn->exec($this->crear_vista());
-        $conn->exec($this->crear_vista_expediente());
+        if($motor == "oracle") {
+            $conn->exec($this->crear_vista_expediente_ora());
+        } else {
+            $conn->exec($this->crear_vista_expediente());
+        }
     }
 
     public function preDown(Schema $schema) {
         date_default_timezone_set("America/Bogota");
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
             $this->platform->registerDoctrineTypeMapping('enum', 'string');
+        }
+        if ($this->connection->getDatabasePlatform()->getName() == "oracle") {
+            //Type::addType('interval day(2) to second(6)', 'string');
+
+            $this->platform->registerDoctrineTypeMapping('interval day(2) to second(6)', "string");
         }
     }
 
@@ -110,8 +132,12 @@ class Version20181001164643 extends AbstractMigration {
 
             $this->sm->alterTable($tableDiff);
 
+            if($this->connection->getDatabasePlatform()->getName() == "oracle") {
+                $this->connection->exec($this->devolver_vista_expediente_ora());
+            } else {
+                $this->connection->exec($this->devolver_vista_expediente());
+            }
             $this->connection->exec($this->devolver_vista());
-            $this->connection->exec($this->devolver_vista_expediente());
 
         }
     }
@@ -119,11 +145,9 @@ class Version20181001164643 extends AbstractMigration {
     /**
      *
      * @param Schema $schema
-     * @param
-     *            $newTableName
+     * @param string $newTableName
      * @param \Doctrine\DBAL\Schema\Table $existingTable
-     * @param
-     *            $keyIdentifier
+     * @param string $keyIdentifier
      * @return \Doctrine\DBAL\Schema\Table
      */
     private function copyTable(Schema $schema, $newTableName, \Doctrine\DBAL\Schema\Table $existingTable, $keyIdentifier, $setForeignKeys = true) {
@@ -143,10 +167,13 @@ class Version20181001164643 extends AbstractMigration {
     }
 
     private function crear_vista_funcionario() {
-        $vista = <<<FINSQL
-CREATE
-OR REPLACE
-VIEW vfuncionario_dc AS select
+        $motor = $this->connection->getDatabasePlatform()->getName();
+        $modificar = "create or replace ";
+        if($motor == "mssql" || $motor == "sqlsrv") {
+            $modificar = "ALTER ";
+        }
+
+        $vista = $modificar . " VIEW vfuncionario_dc AS select
     b.idfuncionario AS idfuncionario,
     b.funcionario_codigo AS funcionario_codigo,
     b.login AS login,
@@ -186,24 +213,21 @@ VIEW vfuncionario_dc AS select
     d.fecha_final AS fecha_final,
     d.fecha_ingreso AS creacion_dc,
     d.tipo AS tipo_dc
-from
-    dependencia a
-join funcionario b
-join cargo c
-join dependencia_cargo d
-where
-    a.iddependencia = d.dependencia_iddependencia
-    and b.idfuncionario = d.funcionario_idfuncionario
-    and c.idcargo = d.cargo_idcargo
-FINSQL;
+from dependencia_cargo d
+join dependencia a on a.iddependencia = d.dependencia_iddependencia
+join funcionario b on b.idfuncionario = d.funcionario_idfuncionario
+join cargo c on c.idcargo = d.cargo_idcargo";
         return $vista;
     }
 
     private function crear_vista() {
-        $vista = <<<FINSQL
-CREATE
-OR REPLACE
-VIEW vpermiso_serie AS
+        $motor = $this->connection->getDatabasePlatform()->getName();
+        $modificar = "create or replace ";
+        if($motor == "mssql" || $motor == "sqlsrv") {
+            $modificar = "ALTER ";
+        }
+
+        $vista = $modificar . " VIEW vpermiso_serie AS
 select
     f.idfuncionario AS idfuncionario,
     f.funcionario_codigo AS funcionario_codigo,
@@ -290,16 +314,18 @@ join vfuncionario_dc v on v.iddependencia_cargo = p.llave_entidad
 where
     p.entidad_identidad = 5
     and v.estado_dc = 1
-    and p.estado = 1
-FINSQL;
+    and p.estado = 1";
         return $vista;
     }
 
     private function devolver_vista() {
-        $vista = <<<FINSQL
-CREATE
-OR REPLACE
-VIEW vpermiso_serie AS select
+        $motor = $this->connection->getDatabasePlatform()->getName();
+        $modificar = "create or replace ";
+        if($motor == "mssql" || $motor == "sqlsrv") {
+            $modificar = "ALTER ";
+        }
+
+        $vista = $modificar . " VIEW vpermiso_serie AS select
     f.idfuncionario AS idfuncionario,
     f.funcionario_codigo AS funcionario_codigo,
     s.idserie AS idserie,
@@ -360,16 +386,18 @@ join vfuncionario_dc v on v.idcargo = p.llave_entidad
 where
     p.entidad_identidad = 4
     and v.estado_dc = 1
-    and p.estado = 1
-FINSQL;
+    and p.estado = 1";
         return $vista;
     }
 
     private function crear_vista_expediente() {
-        $vista = <<<FINSQL
-CREATE
-OR REPLACE
-VIEW vexpediente_serie AS select
+        $motor = $this->connection->getDatabasePlatform()->getName();
+        $modificar = "create or replace ";
+        if($motor == "mssql" || $motor == "sqlsrv") {
+            $modificar = "ALTER ";
+        }
+
+        $vista = $modificar . " VIEW vexpediente_serie AS select
     a.propietario AS propietario,
     c.nombre AS nombre_serie,
     a.serie_idserie AS serie_idserie,
@@ -441,17 +469,101 @@ union select
 from expediente a
 join entidad_serie e on a.serie_idserie = e.serie_idserie
 join permiso_serie b on e.identidad_serie = b.fk_entidad_serie
-join serie c on e.serie_idserie = c.idserie
-FINSQL;
+join serie c on e.serie_idserie = c.idserie";
         return $vista;
     }
 
+    private function crear_vista_expediente_ora() {
+        $motor = $this->connection->getDatabasePlatform()->getName();
+        $modificar = "create or replace ";
+        if($motor == "mssql" || $motor == "sqlsrv") {
+            $modificar = "ALTER ";
+        }
+
+        $vista = $modificar . " VIEW vexpediente_serie AS select
+    a.propietario AS propietario,
+    c.nombre AS nombre_serie,
+    a.serie_idserie AS serie_idserie,
+    a.fecha AS fecha,
+    a.nombre AS nombre,
+    to_char(a.descripcion) AS descripcion,
+    a.cod_arbol AS cod_arbol,
+    a.cod_padre AS cod_padre,
+    a.estado_archivo AS estado_archivo,
+    a.fk_idcaja AS fk_idcaja,
+    a.estado_cierre AS estado_cierre,
+    a.idexpediente AS idexpediente,
+    b.entidad_identidad AS identidad_exp,
+    b.llave_entidad AS llave_exp,
+    a.prox_estado_archivo AS prox_estado_archivo,
+    a.fecha_extrema_i AS fecha_extrema_i,
+    a.fecha_extrema_f AS fecha_extrema_f,
+    a.no_unidad_conservacion AS no_unidad_conservacion,
+    a.no_folios AS no_folios,
+    a.no_carpeta AS no_carpeta,
+    a.soporte AS soporte,
+    to_char(a.notas_transf) AS notas_transf,
+    a.tomo_no AS tomo_no,
+    a.agrupador AS agrupador,
+    a.indice_uno AS indice_uno,
+    a.indice_dos AS indice_dos,
+    a.indice_tres AS indice_tres,
+    a.codigo_numero AS codigo_numero,
+    a.consecutivo_inicial,
+    a.consecutivo_final,
+    null as permiso_serie, b.permiso as permiso_exp,
+    0 AS desde_serie
+from expediente a
+left join entidad_expediente b on a.idexpediente = b.expediente_idexpediente
+left join serie c on a.serie_idserie = c.idserie
+union select
+    a.propietario AS propietario,
+    c.nombre AS nombre,
+    a.serie_idserie AS serie_idserie,
+    a.fecha AS fecha,
+    a.nombre AS nombre,
+    to_char(a.descripcion) AS descripcion,
+    a.cod_arbol AS cod_arbol,
+    a.cod_padre AS cod_padre,
+    a.estado_archivo AS estado_archivo,
+    a.fk_idcaja AS fk_idcaja,
+    a.estado_cierre AS estado_cierre,
+    a.idexpediente AS idexpediente,
+    b.entidad_identidad AS entidad_identidad,
+    b.llave_entidad AS llave_entidad,
+    a.prox_estado_archivo AS prox_estado_archivo,
+    a.fecha_extrema_i AS fecha_extrema_i,
+    a.fecha_extrema_f AS fecha_extrema_f,
+    a.no_unidad_conservacion AS no_unidad_conservacion,
+    a.no_folios AS no_folios,
+    a.no_carpeta AS no_carpeta,
+    a.soporte AS soporte,
+    to_char(a.notas_transf) AS notas_transf,
+    a.tomo_no AS tomo_no,
+    a.agrupador AS agrupador,
+    a.indice_uno AS indice_uno,
+    a.indice_dos AS indice_dos,
+    a.indice_tres AS indice_tres,
+    a.codigo_numero AS codigo_numero,
+    a.consecutivo_inicial,
+    a.consecutivo_final,
+    b.permiso as permiso_serie, null as permiso_exp,
+    1 AS desde_serie
+from expediente a
+join entidad_serie e on a.serie_idserie = e.serie_idserie
+join permiso_serie b on e.identidad_serie = b.fk_entidad_serie
+join serie c on e.serie_idserie = c.idserie";
+        return $vista;
+    }
 
     private function devolver_vista_expediente() {
-        $vista = <<<FINSQL
-CREATE
-OR REPLACE
-VIEW vexpediente_serie AS select
+        $motor = $this->connection->getDatabasePlatform()->getName();
+        $modificar = "create or replace ";
+        if($motor == "mssql" || $motor == "sqlsrv") {
+            $modificar = "ALTER ";
+        }
+
+        $vista = $modificar . " VIEW vexpediente_serie AS select
     a.propietario AS propietario,
     c.nombre AS nombre_serie,
     a.serie_idserie AS serie_idserie,
@@ -522,8 +634,89 @@ union select
     1 AS desde_serie
 from expediente a
 join permiso_serie b on a.serie_idserie = b.serie_idserie
-join serie c on b.serie_idserie = c.idserie
-FINSQL;
+join serie c on b.serie_idserie = c.idserie";
+        return $vista;
+    }
+
+    private function devolver_vista_expediente_ora() {
+        $motor = $this->connection->getDatabasePlatform()->getName();
+        $modificar = "create or replace ";
+        if($motor == "mssql" || $motor == "sqlsrv") {
+            $modificar = "ALTER ";
+        }
+
+        $vista = $modificar . " VIEW vexpediente_serie AS select
+    a.propietario AS propietario,
+    c.nombre AS nombre_serie,
+    a.serie_idserie AS serie_idserie,
+    a.fecha AS fecha,
+    a.nombre AS nombre,
+    to_char(a.descripcion) AS descripcion,
+    a.cod_arbol AS cod_arbol,
+    a.cod_padre AS cod_padre,
+    a.estado_archivo AS estado_archivo,
+    a.fk_idcaja AS fk_idcaja,
+    a.estado_cierre AS estado_cierre,
+    a.idexpediente AS idexpediente,
+    b.entidad_identidad AS identidad_exp,
+    b.llave_entidad AS llave_exp,
+    a.prox_estado_archivo AS prox_estado_archivo,
+    a.fecha_extrema_i AS fecha_extrema_i,
+    a.fecha_extrema_f AS fecha_extrema_f,
+    a.no_unidad_conservacion AS no_unidad_conservacion,
+    a.no_folios AS no_folios,
+    a.no_carpeta AS no_carpeta,
+    a.soporte AS soporte,
+    to_char(a.notas_transf) AS notas_transf,
+    a.tomo_no AS tomo_no,
+    a.agrupador AS agrupador,
+    a.indice_uno AS indice_uno,
+    a.indice_dos AS indice_dos,
+    a.indice_tres AS indice_tres,
+    a.codigo_numero AS codigo_numero,
+    a.consecutivo_inicial,
+    a.consecutivo_final,
+    null as permiso_serie, b.permiso as permiso_exp,
+    0 AS desde_serie
+from expediente a
+left join entidad_expediente b on a.idexpediente = b.expediente_idexpediente
+left join serie c on a.serie_idserie = c.idserie
+union select
+    a.propietario AS propietario,
+    c.nombre AS nombre,
+    a.serie_idserie AS serie_idserie,
+    a.fecha AS fecha,
+    a.nombre AS nombre,
+    to_char(a.descripcion) AS descripcion,
+    a.cod_arbol AS cod_arbol,
+    a.cod_padre AS cod_padre,
+    a.estado_archivo AS estado_archivo,
+    a.fk_idcaja AS fk_idcaja,
+    a.estado_cierre AS estado_cierre,
+    a.idexpediente AS idexpediente,
+    b.entidad_identidad AS entidad_identidad,
+    b.llave_entidad AS llave_entidad,
+    a.prox_estado_archivo AS prox_estado_archivo,
+    a.fecha_extrema_i AS fecha_extrema_i,
+    a.fecha_extrema_f AS fecha_extrema_f,
+    a.no_unidad_conservacion AS no_unidad_conservacion,
+    a.no_folios AS no_folios,
+    a.no_carpeta AS no_carpeta,
+    a.soporte AS soporte,
+    to_char(a.notas_transf) AS notas_transf,
+    a.tomo_no AS tomo_no,
+    a.agrupador AS agrupador,
+    a.indice_uno AS indice_uno,
+    a.indice_dos AS indice_dos,
+    a.indice_tres AS indice_tres,
+    a.codigo_numero AS codigo_numero,
+    a.consecutivo_inicial,
+    a.consecutivo_final,
+    b.permiso as permiso_serie, null as permiso_exp,
+    1 AS desde_serie
+from expediente a
+join permiso_serie b on a.serie_idserie = b.serie_idserie
+join serie c on b.serie_idserie = c.idserie";
         return $vista;
     }
 

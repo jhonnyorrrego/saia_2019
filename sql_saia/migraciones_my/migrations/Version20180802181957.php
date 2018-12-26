@@ -28,31 +28,31 @@ class Version20180802181957 extends AbstractMigration {
     public function up(Schema $schema) {
         $conn = $this->connection;
 
-        $result = $conn->fetchAll("select idformato from formato where nombre=:nombre", [
+        $result = $conn->fetchColumn("select idformato from formato where nombre=:nombre", [
             "nombre" => 'vincular_doc_expedie'
         ]);
 
-        $this->abortIf(!$result, "No existe el formato 'vincular_doc_expedie'");
+        $this->skipIf(!$result, "No existe el formato 'vincular_doc_expedie'");
 
-        $idformato = $result[0]["idformato"];
+        $idformato = $result;
 
-        $result = $conn->fetchAll("select idcampos_formato from campos_formato where nombre=:nombre and formato_idformato = :idformato", [
+        $result = $conn->fetchColumn("select idcampos_formato from campos_formato where nombre=:nombre and formato_idformato = :idformato", [
             "nombre" => 'serie_idserie',
             "idformato" => $idformato
         ]);
 
-        $this->abortIf(!$result, "No existe el campo 'serie_idserie' en el formato 'vincular_doc_expedie'");
+        $this->skipIf(!$result, "No existe el campo 'serie_idserie' en el formato 'vincular_doc_expedie'");
 
-        $idcampo_serie = $result[0]["idcampos_formato"];
+        $idcampo_serie = $result;
 
-        $result = $conn->fetchAll("select idcampos_formato from campos_formato where nombre=:nombre and formato_idformato = :idformato", [
+        $result = $conn->fetchColumn("select idcampos_formato from campos_formato where nombre=:nombre and formato_idformato = :idformato", [
             "nombre" => 'fk_idexpediente',
             "idformato" => $idformato
         ]);
 
         $this->abortIf(!$result, "No existe el campo 'fk_idexpediente' en el formato 'vincular_doc_expedie'");
 
-        $idcampo_expediente = $result[0]["fk_idexpediente"];
+        $idcampo_expediente = $result;
 
         // var_dump($result);
 
@@ -76,18 +76,18 @@ class Version20180802181957 extends AbstractMigration {
         ];
         $conn->update("campos_formato", $datos_campo2, $condicion2);
 
-        $result_ff = $conn->fetchAll("select idfunciones_formato from funciones_formato where nombre=:nombre", [
+        $result_ff = $conn->fetchColumn("select idfunciones_formato from funciones_formato where nombre=:nombre", [
             "nombre" => 'fk_idexpediente_funcion'
         ]);
 
         if ($result_ff) {
             $condicion_ffe = [
-                "funciones_formato_fk" => $result_ff[0]["idfunciones_formato"],
+                "funciones_formato_fk" => $result_ff,
                 "formato_idformato" => $idformato
             ];
             $conn->delete("funciones_formato_enlace", $condicion_ffe);
             $condicion_ff = [
-                "idfunciones_formato" => $result_ff[0]["idfunciones_formato"]
+                "idfunciones_formato" => $result_ff
             ];
             $conn->delete("funciones_formato", $condicion_ff);
         }

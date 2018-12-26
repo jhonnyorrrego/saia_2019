@@ -346,11 +346,19 @@ function mostrar_imagenes_escaneadas($idformato, $iddoc) {
 		$opt = 1;
 	}
 
-	$doc_anterior = busca_filtro_tabla("descripcion,numero", "documento", "iddocumento=" . $doc, "", $conn);
+	if(!empty($doc)) {
+	    $doc_anterior = busca_filtro_tabla("descripcion,numero", "documento", "iddocumento=" . $doc, "", $conn);
+	} else {
+	    $doc_anterior = array("numcampos" => 0);
+	}
 	if ($doc_anterior["numcampos"] && $opt == 0) {
 		$html .= "<strong>Se est&aacute; dando respuesta al documento: </strong>&nbsp;&nbsp;" . $doc_anterior[0]["numero"] . " " . $doc_anterior[0]["descripcion"] . "<br /><br />";
 	}
-	$imagenes = busca_filtro_tabla("consecutivo,imagen,ruta,pagina", "pagina", "id_documento=" . $doc, "", $conn);
+	if(!empty($doc)) {
+	    $imagenes = busca_filtro_tabla("consecutivo,imagen,ruta,pagina", "pagina", "id_documento=" . $doc, "", $conn);
+	} else {
+	    $imagenes = array("numcampos" => 0);
+	}
 	if ($imagenes["numcampos"]) {
 		$html .= '<div id="mainContainer"><div id="content">';
 		for ($i = 0; $i < $imagenes["numcampos"]; $i++) {

@@ -47,11 +47,11 @@ $expediente = busca_filtro_tabla("a.*," . fecha_db_obtener("a.fecha", "Y-m-d") .
 <body>
 <?php
 	$permiso_modulo = new Permiso();
-    $ok = $permiso_modulo->acceso_modulo_perfil('expediente_admin');  
+    $ok = $permiso_modulo->acceso_modulo_perfil('expediente_admin');
 	if(!$ok){
 		$permiso = new PermisosExpediente($conn, $idexpediente);
 	    $permisos = $permiso->obtener_permisos();
-	
+
 	    $m = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_MODIFICAR);
 		$sm= $permiso->tiene_permiso_serie(PermisosExpediente::PERMISO_SER_MODIFICAR);
 	    $e = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_ELIMINAR);
@@ -137,7 +137,7 @@ $expediente = busca_filtro_tabla("a.*," . fecha_db_obtener("a.fecha", "Y-m-d") .
 		    echo ("<span style='color:red'>Expediente creado por el sistema</span>");
 		}
 		$configuracion_administrador = busca_filtro_tabla("valor", "configuracion", "nombre='login_administrador'", "", $conn);
-		
+
 		if (($expediente[0]["propietario"] == @$_SESSION['usuario_actual']) || (!$expediente[0]["propietario"] && $configuracion_administrador[0]["valor"] == @$_SESSION['LOGIN' . LLAVE_SAIA])) {
 		  	?>
 		          	&nbsp; &nbsp; &nbsp;
@@ -152,11 +152,11 @@ $expediente = busca_filtro_tabla("a.*," . fecha_db_obtener("a.fecha", "Y-m-d") .
 		  		            });
 		  		        });
 		  		    </script>
-		
+
 		  	<?php
 		  	    } //fin if  $expediente[0]["propietario"] == @$_SESSION['usuario_actual']
 		  	?>
-		
+
 		  	</td>
 		  </tr>
 		  <?php
@@ -290,7 +290,11 @@ $cadena_cierre = array();
 if (is_object($expediente[0]["fecha_cierre"])) {
     $expediente[0]["fecha_cierre"] = $expediente[0]["fecha_cierre"]->format('Y-m-d');
 }
-$usuario_cierre = busca_filtro_tabla("", "vfuncionario_dc a", "a.idfuncionario=" . $expediente[0]["funcionario_cierre"], "", $conn);
+if(!empty($expediente[0]["funcionario_cierre"])) {
+    $usuario_cierre = busca_filtro_tabla("", "vfuncionario_dc a", "a.idfuncionario=" . $expediente[0]["funcionario_cierre"], "", $conn);
+} else {
+    $usuario_cierre = ["numcampos" => 0];
+}
 $estado_cierre = "";
 $enlace_abrir = '<a style="cursor:pointer" class="accion_abrir_cierre" accion="1">Abrir</a><input type="hidden" name="accion" value="1" />';
 $enlace_cerrar = '<a style="cursor:pointer" class="accion_abrir_cierre" accion="2">Cerrar</a><input type="hidden" name="accion" value="2" />';
@@ -324,7 +328,9 @@ if ($expediente[0]["estado_cierre"] == 1) {
 
 $cadena_cierre[] = "<b>Estado:</b> " . $estado_cierre;
 $cadena_cierre[] = $expediente[0]["fecha_cierre"];
-$cadena_cierre[] = ucwords(strtolower($usuario_cierre[0]["nombres"] . " " . $usuario_cierre[0]["apellidos"]));
+if($usuario_cierre["numcampos"]) {
+    $cadena_cierre[] = ucwords(strtolower($usuario_cierre[0]["nombres"] . " " . $usuario_cierre[0]["apellidos"]));
+}
   ?>
   <tr>
     <td class="prettyprint">
@@ -373,7 +379,7 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
     if($datos_cierre[0]['estado_cierre']==2){
         //$dias_calcular=365*$datos_serie[0]["retencion_".$vector_estado_expediente[$estado_expediente]];
         $dias_calcular=$datos_serie[0]["retencion_".$vector_estado_expediente[$estado_expediente]];
-       // $dias_calcular=60;       
+       // $dias_calcular=60;
         include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
 		$fecha_calculo=calculaFecha("month",+$dias_calcular,$fecha_cierre);
 		$interval=resta_dos_fechas_saia(date('Y-m-d'),$fecha_calculo);
@@ -548,7 +554,7 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
 <?php
 $almacenamiento["numcampos"]=0;
 
-if($almacenamiento["numcampos"]){	
+if($almacenamiento["numcampos"]){
 ?>
 <div class="container">
 <div data-toggle="collapse" data-target="#div_info_almacenamiento" style="cursor:pointer;">
@@ -615,16 +621,20 @@ if($contenido["numcampos"]){
     </td>
     <td>
        <?php
-      $expedientes=arreglo_expedientes_asignados();
-			$arreglo=array();
-			obtener_expedientes_padre($idexpediente,$expedientes);
-			$arreglo=array_merge($arreglo,array($idexpediente));
-			//return(implode(",",$arreglo));
-			$documentos=busca_filtro_tabla("count(*) as cantidad","expediente_doc A, documento B","A.expediente_idexpediente in(".implode(",",$arreglo).") AND A.documento_iddocumento=B.iddocumento AND B.estado not in('ELIMINADO')","",$conn);
-			//return($cantidad["sql"]);
+    $expedientes = arreglo_expedientes_asignados();
+    $arreglo = array();
+    //TODO: WTF!!!
+    //obtener_expedientes_padre($idexpediente, $expedientes);
+    $arreglo = array_merge($arreglo, array(
+        $idexpediente
+    ));
+    // return(implode(",",$arreglo));
+    $documentos = busca_filtro_tabla("count(*) as cantidad", "expediente_doc A, documento B", "A.expediente_idexpediente in(" . implode(",", $arreglo) . ") AND A.documento_iddocumento=B.iddocumento AND B.estado not in('ELIMINADO')", "", $conn);
+    // return($cantidad["sql"]);
 
-			if(!$documentos["numcampos"])$documentos[0]["cantidad"]=0;
-				echo($documentos[0]["cantidad"]);
+    if (!$documentos["numcampos"])
+        $documentos[0]["cantidad"] = 0;
+    echo ($documentos[0]["cantidad"]);
 			?>
     </td>
   </tr>
@@ -666,7 +676,7 @@ if($contenido["numcampos"]){
     <td class="prettyprint">
       <b>Consecutivo Inicial:</b>
     </td>
-    <td colspan="3">       
+    <td colspan="3">
        <?php echo($expediente[0]["consecutivo_inicial"]);?>
     </td>
   </tr>

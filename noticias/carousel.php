@@ -36,7 +36,10 @@ if (@$_REQUEST["idcarousel"]) {
 	$carousel = busca_filtro_tabla("", "carrusel", "'" . $fecha_actual . "'<=" . fecha_db_obtener("fecha_fin", "Y-m-d") . " and '" . $fecha_actual . "'>=" . fecha_db_obtener("fecha_inicio", "Y-m-d"), "", $conn);
 }
 //Tipo=1 Carousel;
-$banco_imagenes = busca_filtro_tabla("", "banco_imagenes", "tipo=1 AND estado=1", "", $conn);
+$banco_imagenes = array("numcampos" => 0);
+if($conn->verificar_existencia("banco_imagenes")) {
+    $banco_imagenes = busca_filtro_tabla("", "banco_imagenes", "tipo=1 AND estado=1", "", $conn);
+}
 if ($banco_imagenes["numcampos"]) {
 	$aleatorio = rand(0, $banco_imagenes["numcampos"]);
 	$imagen = $banco_imagenes[$aleatorio]["ruta"];
@@ -87,8 +90,8 @@ for ($i = 0; $i < $contenidos["numcampos"]; $i++) {
 	}
 }
 $sliders .= ']';
-?>				
-		<script type="text/javascript">			
+?>
+		<script type="text/javascript">
 		function ventana_info(valor){
 			hs.htmlExpand(null,{ contentId: 'cuerpo',objectType: 'iframe',width: 500, height: 350, src: 'carousel_vermas.php?id='+valor});
 		}
@@ -99,57 +102,57 @@ $sliders .= ']';
 					autoplay 						 : <?php echo($carousel[0]["autoplay"]); ?>,
 					transition_speed		 : <?php echo($carousel[0]["animationtime"]); ?>,
 					slide_links					 : 'blank',
-					slides 							 : <?php echo($sliders);?>				
+					slides 							 : <?php echo($sliders);?>
 				});
 				$("#bloque-info").draggable();
-				top.$("#iFrameContainer").height($(window).height());		    
+				top.$("#iFrameContainer").height($(window).height());
 		    });
-	    
-		</script>		
+
+		</script>
 		<script type='text/javascript'>
 		    hs.graphicsDir = '<?php echo($ruta_db_superior);?>anexosdigitales/highslide-5.0.0/highslide/graphics/';
 		    hs.outlineType = 'rounded-white';
 		    hs.targetX = 'descriptor -265px';
 		    hs.targetY = 'descriptor 0px';
 		</script>
-	</head>	
+	</head>
 <body>
 	<!--Thumbnail Navigation-->
 	<div id="prevthumb"></div>
-	<div id="nextthumb"></div>	
+	<div id="nextthumb"></div>
 	<!--Arrow Navigation-->
 	<a id="prevslide" class="load-item"></a>
 	<a id="nextslide" class="load-item"></a>
-	
+
 	<div id="thumb-tray" class="load-item">
 		<div id="thumb-back"></div>
 		<div id="thumb-forward"></div>
 	</div>
-	
+
 	<!--Time Bar-->
 	<div id="progress-back" class="load-item">
 		<div id="progress-bar"></div>
 	</div>
-	
+
 	<!--Control Bar-->
 	<div id="controls-wrapper" class="load-item">
-		<div id="controls">			
+		<div id="controls">
 			<a id="play-button"><img id="pauseplay" src="../imgs/pause.png"/></a>
-		
+
 			<!--Slide counter-->
 			<div id="slidecounter">
 				<span class="slidenumber"></span> / <span class="totalslides"></span>
 			</div>
-			
+
 			<!--Slide captions displayed here-->
 			<div id="slidecaption"></div>
-			
+
 			<!--Thumb Tray button-->
 			<a id="tray-button"><img id="tray-arrow" src="../imgs/button-tray-up.png"/></a>
-			
+
 			<!--Navigation-->
 			<ul id="slide-list"></ul>
-			
+
 		</div>
 	</div>
 		<div id="bloque-info" style="position: absolute; width: 280px; height: auto; right: 60px; top: 50px; padding: 10px; font-size:14px;" class="ui-widget ui-widget-content ui-corner-all">

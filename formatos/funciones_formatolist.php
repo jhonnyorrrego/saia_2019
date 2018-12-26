@@ -16,7 +16,7 @@ if (!$_REQUEST["idformato"]) {
 }
 $parte_table = "";
 $idformato = $_REQUEST["idformato"];
-$formato = busca_filtro_tabla("DISTINCT A.*", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=" . $idformato, "A.etiqueta", $conn);
+$formato = busca_filtro_tabla("DISTINCT A.idfunciones_formato,A.nombre, A.etiqueta, A.descripcion, A.acciones, A.ruta", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=" . $idformato, "A.etiqueta", $conn);
 $datos_formato = busca_filtro_tabla("nombre,etiqueta", "formato", "idformato=" . $idformato, "", $conn);
 if ($formato["numcampos"]) {
 	$acciones = array("m" => "Mostrar", "a" => "Adicionar", "e" => "Editar");

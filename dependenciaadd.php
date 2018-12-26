@@ -366,7 +366,7 @@ function AddData($conn) {
 
     // guardo codigo del arbol
     if ($id) {
-        $codigo_arbol_papa = busca_filtro_tabla("codigo_arbol", "dependencia A", "A.iddependencia=" . $x_cod_padre, "", $conn);
+        $codigo_arbol_papa = busca_filtro_tabla("codigo_arbol", "dependencia A", "A.iddependencia=" . $id, "", $conn);
         if ($codigo_arbol_papa["numcampos"] && $codigo_arbol_papa[0]["codigo_arbol"] != '') {
             $modificar = $codigo_arbol_papa[0]["codigo_arbol"] . "." . $id;
         } else {

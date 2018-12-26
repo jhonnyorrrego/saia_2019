@@ -13,7 +13,7 @@ include_once ($ruta_db_superior . 'pantallas/lib/PhpWord/funciones_radicacion_wo
 
 function add_edit_oficio_word($idformato, $iddoc) {
 	global $ruta_db_superior, $conn;
-	if ($_REQUEST["iddoc"]) {
+	if (isset($_REQUEST["iddoc"])) {
 		$opt = 1;
 		$datos = busca_filtro_tabla("numero", "documento", "iddocumento=" . $_REQUEST["iddoc"], "", $conn);
 		if ($datos["numcampos"] && $datos[0]["numero"] != 0) {

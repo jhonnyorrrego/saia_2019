@@ -333,7 +333,7 @@ function contar_cantidad($doc, $funcionario, $tipo) {
 		if (@$funcionario !== "funcionario") {
 			$where_notas = " AND (destino=" . $funcionario . " OR origen=" . $funcionario . " OR ver_notas<>0)";
 		}
-		$notas_transferencia = busca_filtro_tabla("count(notas) AS notas", "buzon_salida", "archivo_idarchivo=" . $doc . " AND notas!='' AND notas IS NOT NULL AND (lower(nombre) LIKE 'TRANSFERIDO' OR lower(nombre) LIKE 'DEVOLUCION')" . $where_notas, "", $conn);
+		$notas_transferencia = busca_filtro_tabla("count(1) AS notas", "buzon_salida", "archivo_idarchivo=" . $doc . " AND notas IS NOT NULL AND (lower(nombre) LIKE 'TRANSFERIDO' OR lower(nombre) LIKE 'DEVOLUCION')" . $where_notas, "", $conn);
 		$notas_pdf = busca_filtro_tabla("count(*) AS notas", "comentario_pdf", "tipo_archivo='documento' and iddocumento=" . $doc, "", $conn);
 		$cantidades["ver_notas"] = intval($comentarios[0]["notas"] + $notas_transferencia[0]["notas"] + $notas_pdf[0]["notas"]);
 	}
@@ -360,11 +360,14 @@ function contar_cantidad($doc, $funcionario, $tipo) {
 }
 
 function serie_documento($idserie) {
+    if($idserie == 'serie') {
+        return ("Sin Serie Asignada");
+    }
 	$serie = busca_filtro_tabla("nombre", "serie", "idserie=" . $idserie, "", $conn);
 	if ($serie["numcampos"]) {
 		return (ucwords(strtolower($serie[0]["nombre"])));
-	} else
-		return ("Sin Serie Asignada");
+	}
+	return ("Sin Serie Asignada");
 }
 
 function fecha_documento($iddoc) {
@@ -875,7 +878,7 @@ function origen_documento2($doc, $numero, $origen = "", $tipo_radicado = "", $es
 	$numero = intval($numero);
 	$dato_serie = serie_documento($serie);
 	if (in_array($estado, array("GESTION", "CENTRAL", "HISTORICO")) !== FALSE || $tipo_radicado == 1 || $tipo_radicado == 2) {
-		$docu = busca_filtro_tabla("nombre_tabla", "formato B", "lower(B.nombre)=" . $plantilla, "", $conn);
+		$docu = busca_filtro_tabla("nombre_tabla", "formato B", "lower(B.nombre)='" . $plantilla ."'", "", $conn);
 		if ($plantilla == 'radicacion_entrada' || $plantilla == 'radicacion_salida' || $plantilla == 'radicacion_peticiones') {
 			$remitente = busca_filtro_tabla("", $docu[0]["nombre_tabla"] . " A, datos_ejecutor B, ejecutor C", "persona_natural=B.iddatos_ejecutor AND ejecutor_idejecutor=idejecutor AND A.documento_iddocumento=" . $doc, "", $conn);
 
