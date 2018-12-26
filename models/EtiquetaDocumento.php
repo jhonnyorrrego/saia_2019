@@ -13,7 +13,7 @@ class EtiquetaDocumento extends Model
     }
 
     /**
-     * define the values for dbAttributes
+     * define values for dbAttributes
      */
     protected function defineAttributes(){
         // set the safe attributes to update and consult

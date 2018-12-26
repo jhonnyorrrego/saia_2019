@@ -297,7 +297,7 @@ function radicar_factura($datos) {
         $_REQUEST["descripcion"] = implode("\n", $datos["notas"]);
 
         // TODO: Revisar lo del remitente
-        $idejecutor = obtener_iddatos_ejecutor($datos);
+        $idejecutor = obtener_ejecutor($datos);
 
         $_REQUEST["natural_juridica"] = $idejecutor;
 
@@ -388,7 +388,7 @@ function limpiarContenido($texto) {
     return $textoLimpio;
 }
 
-function obtener_iddatos_ejecutor($datos) {
+function obtener_ejecutor($datos) {
     global $conn;
     //$datos_ejecutor = explode($separador_ejecutor, $datos);
 
@@ -404,8 +404,8 @@ function obtener_iddatos_ejecutor($datos) {
 
     if (!empty($datos)) {
 
-        $nombre = $datos["nombre_proveedor"];
-        $identificacion = trim($datos["nit_proveedor"]);
+        $nombre = trim(trim($datos["nombre_proveedor"], "'"));
+        $identificacion = trim(trim($datos["nit_proveedor"], "'"));
         $datos_persona["departamento"] = 0;
         $valida_dep = busca_filtro_tabla("iddepartamento", "departamento", "lower(nombre) like lower('" . htmlentities($datos["estado_proveedor"]) . "')", "", $conn);
         if ($valida_dep["numcampos"]) {
@@ -454,11 +454,11 @@ function obtener_iddatos_ejecutor($datos) {
                 $otros .= ",identificacion='" . $identificacion . "'";
             }
             $sql = "UPDATE ejecutor SET nombre ='$nombre'" . $otros . " WHERE idejecutor=" . $ejecutor[0]["idejecutor"];
-            phpmkr_query($sql);
+            phpmkr_query($sql) or die($sql);
             $idejecutor = $ejecutor[0]["idejecutor"];
         } else {
             $sql = "INSERT INTO ejecutor(nombre,identificacion)VALUES('$nombre','$identificacion')";
-            phpmkr_query($sql);
+            phpmkr_query($sql) or die($sql);
             $idejecutor = phpmkr_insert_id();
             $insertado = 1;
         }
@@ -483,9 +483,9 @@ function obtener_iddatos_ejecutor($datos) {
         $condicion_actualiza = "";
         for ($i = 0; $i < count($campos_ejecutor); $i++) {
             if (isset($datos_persona[$campos_ejecutor[$i]])) {
-                if ($datos_persona[$campos_ejecutor[$i]])
+                if ($datos_persona[$campos_ejecutor[$i]]) {
                     $condicion_actualiza .= " AND {$campos_ejecutor[$i]} = '{$datos_persona[$campos_ejecutor[$i]]}'";
-                else {
+                } else {
                     $condicion_actualiza .= " AND {$campos_ejecutor[$i]} IS NULL or {$campos_ejecutor[$i] } = '')";
                 }
             }
@@ -519,10 +519,10 @@ function obtener_iddatos_ejecutor($datos) {
         } else if ($datos_ejecutor["numcampos"]) {
             $iddatos_ejecutor = $datos_ejecutor[0]["iddatos_ejecutor"];
         }
-        return ($iddatos_ejecutor);
+        return ($idejecutor);
     } else {
-        $iddatos_ejecutor = 0;
+        $idejecutor = 0;
     }
-    return ($iddatos_ejecutor);
+    return ($idejecutor);
 }
 ?>

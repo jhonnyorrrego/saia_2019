@@ -8,13 +8,14 @@ class FuncionarioTarea extends Model
     protected $fk_tarea;
     protected $tipo;
     protected $estado;
+    protected $dbAttributes;
 
     function __construct($id){
         return parent::__construct($id);
     }
 
     /**
-     * define the values for dbAttributes
+     * define values for dbAttributes
      */
     protected function defineAttributes(){
         $this->dbAttributes = (object) [

@@ -26,19 +26,10 @@ class Funcionario extends Model {
      */
     function __construct($id){
         return parent::__construct($id);
-    }
+    }   
 
     /**
-     * return the user temporal route
-     *
-     * @return string
-     */
-    public function getTemporalRoute(){
-        return 'temporal/temporal_' . $this->login;
-    }
-
-    /**
-     * define the values for dbAttributes
+     * define values for dbAttributes
      */
     protected function defineAttributes(){
         // set the safe attributes to update and consult
@@ -64,6 +55,15 @@ class Funcionario extends Model {
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];
+    }
+
+    /**
+     * return the user temporal route
+     *
+     * @return string
+     */
+    public function getTemporalRoute(){
+        return 'temporal/temporal_' . $this->login;
     }
 
     /**
