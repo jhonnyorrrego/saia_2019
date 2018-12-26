@@ -21,9 +21,10 @@ $Response = (object) array(
 );
 
 if (isset($_SESSION['idfuncionario'])) {
+    $namePath = explode('.', $_FILES['image']['name']);
     $image = array(
         'binary' => file_get_contents($_FILES['image']['tmp_name']),
-        'extention' => explode('.', $_FILES['image']['name'])[1]
+        'extension' => end($namePath)
     );
 
     $Funcionario = new Funcionario($_SESSION['idfuncionario']);
