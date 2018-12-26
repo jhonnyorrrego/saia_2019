@@ -7,15 +7,15 @@ class Tarea extends Model
     protected $nombre;
     protected $fecha_inicial;
     protected $fecha_final;
-    protected $prioridad;
     protected $descripcion;
+    protected $dbAttributes;
 
     function __construct($id){
         return parent::__construct($id);
     }
 
     /**
-     * define the values for dbAttributes
+     * define values for dbAttributes
      */
     protected function defineAttributes(){
         // set the safe attributes to update and consult
@@ -23,7 +23,6 @@ class Tarea extends Model
             'nombre',
             'fecha_inicial',
             'fecha_final',
-            'prioridad',
             'descripcion',
         ];
     

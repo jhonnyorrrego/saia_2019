@@ -48,7 +48,7 @@ class Model {
     }
 
     /** 
-     * get the safe attributes 
+     * get safe attributes 
      * @return array
      */
     public function getSafeAttributes(){
@@ -56,7 +56,7 @@ class Model {
     }
 
     /** 
-     * get the date attributes 
+     * get date attributes 
      * @return array
      */
     public function getDateAttributes(){
@@ -68,19 +68,18 @@ class Model {
      * @return boolean 
      *      false if some attribute is not included on safeAttributes
      */
-    public function setAttributes($values) {
-        $violation = false;
+    public function setAttributes($attributes) {
+        $diff = array_diff(array_keys($attributes), $this->getSafeAttributes());
 
-        foreach ($values as $key => $value) {
-            if (in_array(strval($key), $this->getSafeAttributes())){
+        if(!count($diff)){
+            foreach ($attributes as $key => $value) {
                 $this->$key = $value;
-            }else{
-                $violation = true;
-                break;
             }
+        }else{
+            $error = true;
         }
 
-        return $violation;
+        return isset($error) ? false : true;
     }
 
     /**
@@ -113,17 +112,12 @@ class Model {
     protected function find() {
         global $conn;
 
-        $table = self::getTableName();
-        $primary = self::getPrimaryLabel();
-        $select = self::createSelect($fields);
-        $record = busca_filtro_tabla($select, $table, $primary.'='.$this->getPK(), '', $conn);
-        
-        if ($record['numcampos']) {
-            foreach ($record[0] as $key => $value) {
-                if (is_string($key) && property_exists($this, $key)) {
-                    $this->$key = $value;
-                }
-            }
+        $data = self::findByAttributes([
+            self::getPrimaryLabel() => $this->getPK()
+        ]);
+
+        if ($data) {
+            $this->setAttributes($data->getAttributes());
         }else{
             throw new Exception("invalid Pk", 1);
         }
@@ -299,7 +293,7 @@ class Model {
     /**
      * convierte un array simple a un array de objetos
      *
-     * @param array:busca_filtro_tabla $records
+     * @param array $records
      * @return array
      */
     public static function convertToObjectCollection($records){
@@ -339,6 +333,13 @@ class Model {
         return $response;
     }
 
+    /**
+     * ejecuta un update simple
+     *
+     * @param array $fields nuevos valores
+     * @param array $conditions filtro de coincidencias
+     * @return void
+     */
     public static function executeUpdate($fields, $conditions){        
         $set = $where = '';
 

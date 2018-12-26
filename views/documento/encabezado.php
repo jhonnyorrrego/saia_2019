@@ -158,7 +158,6 @@ function findActions($documentId){
 
 function getTransfer($transferId){
     global $conn, $ruta_db_superior, $userId;
-    include_once $ruta_db_superior . 'models/funcionario.php';
 
     if(!$transferId)
         $transferId = $_SESSION['transferId'];

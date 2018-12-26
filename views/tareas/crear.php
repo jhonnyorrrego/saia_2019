@@ -11,9 +11,40 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-foreach($_REQUEST as $key => $value){
-    $$key = $value;
-}
+$tabs = [[
+        'href' => 'information',
+        'url' => "{$ruta_db_superior}views/tareas/informacion.php",
+        'icon' => 'fa fa-bell'
+    ],[
+        'href' => 'priority',
+        'url' => "{$ruta_db_superior}views/tareas/prioridad.php",
+        'icon' => 'fa fa-flag'
+    ],[
+        'href' => 'files',
+        'url' => "{$ruta_db_superior}views/tareas/anexos.php",
+        'icon' => 'fa fa-paperclip'
+    ],[
+        'href' => 'followers',
+        'url' => "{$ruta_db_superior}views/tareas/seguidores.php",
+        'icon' => 'fa fa-users'
+    ],[
+        'href' => 'concurrence',
+        'url' => "{$ruta_db_superior}views/tareas/concurrencia.php",
+        'icon' => 'fa fa-history'
+    ],[
+        'href' => 'tags',
+        'url' => "{$ruta_db_superior}views/tareas/etiquetas.php",
+        'icon' => 'fa fa-tags'
+    ],[
+        'href' => 'comments',
+        'url' => "{$ruta_db_superior}views/tareas/cometarios.php",
+        'icon' => 'fa fa-comments'
+    ],[
+        'href' => 'state',
+        'url' => "{$ruta_db_superior}views/tareas/estado.php",
+        'icon' => 'fa fa-thumbs-up'
+    ]
+];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -23,82 +54,41 @@ foreach($_REQUEST as $key => $value){
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen">
     <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/css/dropzone.css" rel="stylesheet" type="text/css" media="screen">
-    
 </head>
 <body>
     <ul class="nav nav-tabs" id="taskTab" role="tablist">
-        <li class="nav-item">
-            <a class="nav-link active" data-toggle="tab" href="#information" role="tab" aria-controls="information" aria-selected="true">Tarea</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#comments" role="tab" aria-controls="comments" aria-selected="false">Comentarios</a>
-        </li>
+        <?php foreach($tabs as $tab): ?>
+            <li class="nav-item">
+                <a class="nav-link tasktab" data-toggle="tab" href="#<?= $tab['href'] ?>" data-url="<?= $tab['url'] ?>" role="tab" style="min-width:auto">
+                    <i class="f-12 <?= $tab['icon'] ?>"></i>
+                </a>
+            </li>
+        <?php endforeach; ?>
     </ul>
     <div class="tab-content" id="taskTabContent">
-        <div class="tab-pane fade show active" id="information" role="tabpanel" aria-labelledby="information-tab">
-            <div class="form-group">
-                <label class="my-0" for="name">Nombre de la tarea</label>
-                <input type="text" class="form-control" id="name" placeholder="Qué desea que se realice?">
-            </div>
-            <div class="row">
-                <div class="col">
-                    <div class="form-group">
-                        <label class="my-0" for="manager">Responsable</label>
-                        <select class="form-control" id="manager" multiple="multiple" placeholder="Quien desea que la realice?"></select>                                
-                    </div>
-                </div>
-                <div class="col-auto">
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="send_notification">
-                        <label class="form-check-label" for="send_notification">Desea notificar por email?</label>
-                    </div>                            
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="my-0" for="date_ranger">Fecha limite</label>
-                <div class="input-group">
-                    <input type="datetime-local" class="form-control" id="final_date">
-                    <div class="input-group-append ">
-                        <span class="input-group-text"><i class="fa fa-calendar"></i></span>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="my-0" for="priority">Prioridad de la tarea</label>
-                <select id="priority" class="form-control">
-                    <option value="0">Ninguna</option>
-                    <option value="1">Alta</option>
-                    <option value="2">Media</option>
-                    <option value="3">Baja</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label class="float-right toggle_advanced"><i class="fa fa-plus-circle f-12"></i>&nbsp;&nbsp;Más opciones</label>
-                <label class="float-right toggle_advanced" style="display:none"><i class="fa fa-minus-circle f-12"></i>&nbsp;&nbsp;Menos opciones</label>
-            </div>
-            <div class="form-group advanced" style="display:none">
-                <label for="description">Descripción detallada para esta tarea</label>
-                <textarea class="form-control" id="description" rows="3"></textarea>
-            </div>
-            <div class="form-group advanced" id="followers_container">
-                <label class="my-0" for="followers">Seguidores</label>
-                <select class="form-control" id="followers" multiple="multiple"></select>
-            </div>
-            <div class="form-group advanced" style="display:none">
-                <div class="dropzone no-margin" id="task_files">
-                    <div class="fallback">
-                    <input name="file" type="file" multiple/>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="tab-pane fade" id="comments" role="tabpanel" aria-labelledby="comments-tab">
-            listado de comentarios    
-        </div>
+        <?php foreach($tabs as $tab): ?>
+            <div class="tab-pane fade" id="<?= $tab['href'] ?>" role="tabpanel" aria-labelledby="<?= $tab['href'] ?>-tab"></div>
+        <?php endforeach; ?>
     </div>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.min.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/i18n/es.js"></script>
     <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/dropzone.min.js"></script>
-    <script src="<?= $ruta_db_superior ?>views/tareas/js/crear.js" data-params='<?= json_encode($_REQUEST) ?>'></script>
+    <script data-params='<?= json_encode($_REQUEST) ?>'>
+        $(function(){
+            $('.tasktab').on('shown.bs.tab', function (e) {
+                let tab = $(e.target);
+                let container = $(tab.attr('href'))
+
+                $("#btn_success").off("click");
+                container.load(tab.data('url'));
+            });
+            
+            $('.tasktab:first').trigger('click');
+
+            if(!"<?= $_REQUEST['id'] ?>".length){
+                $('.tasktab:not(:first)').addClass('disabled');
+            }
+        })
+    </script>
 </body>
 </html>
