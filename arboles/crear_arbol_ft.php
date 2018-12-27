@@ -144,9 +144,11 @@ class ArbolFt {
         if ($this->con_filtro) {
             $this->html .= <<<FINHTML
 	   <p style="font-family: Verdana; font-size: 9px;">
-	       <label>Buscar:</label>
-	       <input name="stext_{$this->campo}" placeholder="Buscar..." autocomplete="off">
+	   		<div>
+	       <input name="stext_{$this->campo}" style="width: 130px;" placeholder="Buscar..." autocomplete="off">
+	       
 	       <button type="button" id="btnSearch_{$this->campo}">&times;</button>
+	       </div>
 	       <span id="matches_{$this->campo}"></span>
         </p>
 FINHTML;

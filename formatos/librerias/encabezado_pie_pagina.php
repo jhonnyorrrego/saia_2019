@@ -201,7 +201,7 @@ function nombre_proceso($doc) {
 		return ("");
 }
 
-function logo_empresa() {
+function logo_empresa($idformato,$iddoc) {
 	global $conn, $ruta_db_superior;
 	$logo = busca_filtro_tabla("valor", "configuracion", "nombre='logo'", "", $conn);
 	if ($logo["numcampos"]) {
