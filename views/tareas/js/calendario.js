@@ -80,16 +80,7 @@ $(function() {
             params: params,
             centerAlign:false,
             size: "modal-lg",
-            buttons: {
-                success: {
-                    label: 'Guardar Cambios',
-                    class: 'btn btn-complete'
-                },
-                cancel: {
-                    label: 'Cancelar',
-                    class: 'btn btn-danger'
-                }
-            }
+            buttons: {}
         };
 
         top.topModal(options);

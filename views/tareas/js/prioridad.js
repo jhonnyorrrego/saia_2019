@@ -6,7 +6,7 @@ $(function(){
         findPriority(params.id);
     })();        
     
-    $('#btn_success').on('click', function(){
+    $("[name='priority']").on('click', function(){
         let key = localStorage.getItem('key');
 
         data = {
@@ -22,7 +22,7 @@ $(function(){
                     message: response.message
                 });
 
-                $('#close_modal').trigger('click');
+                findPriority(params.id);
             }
         }, 'json')
     });
@@ -47,13 +47,15 @@ $(function(){
     function showHistory(data){
         if(data.length){
             data.forEach(p => {
-                $('#priority_history').append(`
-                <tr id="${p.id}">
-                <td>${p.date}</td>
-                <td>${p.user}</td>
-                <td>${p.priorityLabel}</td>
-                </tr>
-                `);
+                if (!$(`tr#${p.id}`).length) {
+                    $('#priority_history').append(`
+                        <tr id="${p.id}">
+                        <td>${p.date}</td>
+                        <td>${p.user}</td>
+                        <td>${p.priorityLabel}</td>
+                        </tr>
+                    `);
+                }
             });
             $('#priority_history').show();
         }
