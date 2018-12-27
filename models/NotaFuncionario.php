@@ -10,7 +10,7 @@ class NotaFuncionario extends Model{
     protected $estado;
     protected $dbAttributes;
 
-    function __construct($id){
+    function __construct($id = null) {
         return parent::__construct($id);
     }
 
@@ -26,7 +26,7 @@ class NotaFuncionario extends Model{
             'fecha',
             'estado'
         ];
-    
+
         // set the date attributes on the schema
         $dateAttributes = ['fecha'];
 
@@ -39,7 +39,7 @@ class NotaFuncionario extends Model{
     public static function findActiveByUser($userId){
         $notes = busca_filtro_tabla('*', 'nota_funcionario', 'estado=1 and fk_funcionario =' . $userId, '', $conn);
         unset($notes['numcampos'], $notes['sql'], $notes['tabla']);
-        
+
         return $notes;
     }
 
@@ -49,6 +49,6 @@ class NotaFuncionario extends Model{
             return phpmkr_query($update);
         }else{
             return false;
-        }            
+        }
     }
 }

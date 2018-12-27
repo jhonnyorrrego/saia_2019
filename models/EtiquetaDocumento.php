@@ -8,7 +8,7 @@ class EtiquetaDocumento extends Model
     protected $fk_documento;
     protected $dbAttributes;
 
-    function __construct($id){
+    function __construct($id = null) {
         return parent::__construct($id);
     }
 
@@ -34,7 +34,7 @@ class EtiquetaDocumento extends Model
         global $conn;
 
         $findIncluded = busca_filtro_tabla("count(*) as total", "etiqueta_documento", "fk_etiqueta =" . $tagId . " and fk_documento in(".$documentIds.")", "", $conn);
-        
+
         $totalDocuments = substr_count($documentIds, ',') + 1;
         if($findIncluded[0]['total'] ==  $totalDocuments){
             $response = 1;

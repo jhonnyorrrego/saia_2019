@@ -10,7 +10,7 @@ class FuncionarioTarea extends Model
     protected $estado;
     protected $dbAttributes;
 
-    function __construct($id){
+    function __construct($id = null) {
         return parent::__construct($id);
     }
 
@@ -30,7 +30,7 @@ class FuncionarioTarea extends Model
     }
 
     /**
-     * activa la ralacion entre 
+     * activa la ralacion entre
      * el funcionario y la tarea
      *
      * @return int idfuncionario_tarea
@@ -57,14 +57,14 @@ class FuncionarioTarea extends Model
     public static function assignUser($taskId, $users, $type){
         if($taskId && count($users)){
             $data = [];
-            
+
             foreach($users as $user){
                 $findRelation = self::findByAttributes([
                     'fk_funcionario' => $user,
                     'fk_tarea' => $taskId,
                     'tipo' => $type
                 ]);
-                
+
                 if(!$findRelation){
                     $data [] = self::newRecord([
                         'fk_funcionario' => $user,

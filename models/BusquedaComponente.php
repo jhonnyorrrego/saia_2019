@@ -31,7 +31,7 @@ class BusquedaComponente extends Model
     protected $llave;
     protected $dbAttributes;
 
-    function __construct($id){
+    function __construct($id = null) {
         return parent::__construct($id);
     }
 

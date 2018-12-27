@@ -24,9 +24,9 @@ class Funcionario extends Model {
      * @param int $id value for idfuncionario attribute
      * @author jhon.valencia@cerok.com
      */
-    function __construct($id){
+    function __construct($id = null) {
         return parent::__construct($id);
-    }   
+    }
 
     /**
      * define values for dbAttributes
@@ -47,7 +47,7 @@ class Funcionario extends Model {
             'telefono',
             'clave'
         ];
-    
+
         // set the date attributes on the schema
         $dateAttributes = [];
 
@@ -103,7 +103,7 @@ class Funcionario extends Model {
     }
 
     /**
-     * @return email attribute
+     * @return string attribute
      * @author jhon.valencia@cerok.com
      */
     public function getEmail(){
@@ -111,7 +111,7 @@ class Funcionario extends Model {
     }
 
     /**
-     * @return email attribute
+     * @return string attribute
      * @author jhon.valencia@cerok.com
      */
     public function getDirection(){
@@ -119,7 +119,7 @@ class Funcionario extends Model {
     }
 
     /**
-     * @return email attribute
+     * @return string attribute
      * @author jhon.valencia@cerok.com
      */
     public function getPhoneNumber(){
@@ -127,7 +127,7 @@ class Funcionario extends Model {
     }
 
     /**
-     * @return email attribute
+     * @return string attribute
      * @author jhon.valencia@cerok.com
      */
     public function getPassword(){
@@ -136,7 +136,7 @@ class Funcionario extends Model {
 
     /**
      * create a temporal image
-     * 
+     *
      * @param string $image attribute for find ej . foto_recorte foto_original
      * @param boolean $force omit if the temporal image exist
      * @return string url from temporal image
@@ -161,10 +161,10 @@ class Funcionario extends Model {
                 $route = explode('/', $Image->ruta);
                 $fileName = end($route);
                 $finalRoute = $tempRoute . '/' . $fileName;
-                
+
                 if(!is_file($finalRoute) || $force){
                     $file = fopen($finalRoute, 'w+');
-                    
+
                     if ($file) {
                         $content = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $binary));
                         fwrite($file, $content);
@@ -183,11 +183,11 @@ class Funcionario extends Model {
                 ->background('#48b0f7')
                 ->color('#fff')
                 ->generate();
-            
+
             if (!is_dir($tempRoute)) {
                 mkdir($tempRoute, 0777);
             }
-            
+
             $fileName = 'avatar.jpg';
             $avatar->save($tempRoute . '/' . $fileName);
 
@@ -203,10 +203,10 @@ class Funcionario extends Model {
 
     /**
      * update a specific image attribute
-     * 
+     *
      * @param array $image ej. [extension => png, binary => binary_to_save]
      * @param string $attribute attribute to update ej. foto_recorte, foto_original
-     * @return the new $attribute value
+     * @return string the new $attribute value
      * @author jhon.valencia@cerok.com
      */
     public function updateImage($image, $attribute){
@@ -220,7 +220,7 @@ class Funcionario extends Model {
                 "servidor" => $tipo_almacenamiento->get_ruta_servidor(),
                 "ruta" => $ruta
             ));
-            
+
             $this->save();
             return $this->$attribute;
         }else{
@@ -230,13 +230,13 @@ class Funcionario extends Model {
 
     public static function findAllByTerm($term){
         global $conn;
-        
+
         $table = self::getTableName();
         $findRecords = busca_filtro_tabla('idfuncionario,nombres,apellidos', $table, "lower(nombres) like '%".$term."%' or apellidos like '%".$term."%'", '', $conn);
 
         $data = [];
         if ($findRecords['numcampos']) {
-            for($row=0; $row < $findRecords['numcampos']; $row++){                
+            for($row=0; $row < $findRecords['numcampos']; $row++){
                 $Instance = new Funcionario();
                 foreach ($findRecords[$row] as $key => $value) {
                     if (is_string($key) && property_exists(Funcionario , $key)) {

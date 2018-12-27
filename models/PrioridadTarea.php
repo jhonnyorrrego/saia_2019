@@ -10,8 +10,8 @@ class PrioridadTarea extends Model
     protected $estado;
     protected $fecha;
     protected $dbAttributes;
-    
-    function __construct($id){
+
+    function __construct($id = null) {
         return parent::__construct($id);
     }
 

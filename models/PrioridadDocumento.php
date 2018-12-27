@@ -9,8 +9,8 @@ class PrioridadDocumento extends Model
     protected $fecha_asignacion;
     protected $prioridad;
     protected $dbAttributes;
-    
-    function __construct($id){
+
+    function __construct($id = null){
         return parent::__construct($id);
     }
 
@@ -25,7 +25,7 @@ class PrioridadDocumento extends Model
             'fecha_asignacion',
             'prioridad'
         ];
-    
+
         // set the date attributes on the schema
         $dateAttributes = ['fecha_asignacion'];
 
@@ -33,5 +33,5 @@ class PrioridadDocumento extends Model
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];
-    }    
+    }
 }
