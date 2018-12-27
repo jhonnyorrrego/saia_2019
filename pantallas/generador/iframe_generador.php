@@ -67,15 +67,15 @@ $(document).ready(function(){
 
 </head>
 	<body>
-			<div class="container-fluid">
-				<div class="row">					
-				    <div class="col-3 m-0 p-0" id="panel_izquierdo">         
+			<div class="container-fluid px-2" >
+				<div class="row mx-0">					
+				    <div class="col-2 m-0 p-0 px-0" id="panel_izquierdo">         
 				        <div id="izquierdo_saia">
 				        	
 				        </div>					   
 				    </div>			
-					<div class="col-9 m-0 p-0" id="admin_generador" style="margin-left:0px; margin-right: 0px; padding-left: 0px; padding-right: 0px;">
-						<iframe border="0" id="iframe_generador" width="100%" src="<?php echo $ruta_db_superior."pantallas/generador/generador_pantalla.php?idformato=".$_REQUEST['idformato']; ?>" scrolling="yes"></iframe> 
+					<div class="col-10 m-0 p-0 mw-100" id="admin_generador">
+						<iframe frameborder="0" id="iframe_generador" width="100%" src="<?php echo $ruta_db_superior."pantallas/generador/generador_pantalla.php?idformato=".$idpantalla; ?>" scrolling="yes"></iframe> 
 					</div>
 				</div>
 			</div>
@@ -83,6 +83,12 @@ $(document).ready(function(){
 	</body>
 </html>
 <script> 
-llamado_pantalla("<?php echo($ruta_db_superior);?>pantallas/formato/listado_formatos.php","no_kaiten=1&id=<?php echo($_REQUEST['idformato']);?>&cargar_seleccionado=1&tabla=formato&alto_pantalla="+alto,$("#izquierdo_saia"),"arbol_formato");  
+<?php
+if(isset($idpantalla)){
+	?>
+	llamado_pantalla("<?php echo($ruta_db_superior);?>pantallas/formato/listado_formatos.php","no_kaiten=1&id=<?php echo($_REQUEST['idformato']);?>&cargar_seleccionado=1&tabla=formato&alto_pantalla="+alto,$("#izquierdo_saia"),"arbol_formato");  	
+	<?php
+}
+?>
 //llamado_pantalla("<?php echo($ruta_db_superior);?>pantallas/formato/generador_pantallas.php","",$("#contenedor_formatos"),'detalles');
 </script>
