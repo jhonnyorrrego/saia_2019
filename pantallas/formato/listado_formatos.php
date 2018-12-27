@@ -145,7 +145,7 @@ padding:13px;
 	        opts.mode = "dimm";
 
 	        if(e && e.which === $.ui.keyCode.ESCAPE || $.trim(match) === ""){
-	          $("button#btnResetSearch").click();
+	          $("i#btnResetSearch").click();
 	          return;
 	        }
 	          // Pass a string to perform case insensitive matching. Puede pasar un 3er parametro opts
@@ -153,11 +153,11 @@ padding:13px;
 	        if(n == 1) {
 	        	coincidencias = " coincidencia";
 	        }
-	        $("button#btnResetSearch").attr("disabled", false);
+	        $("i#btnResetSearch").attr("disabled", false);
 	        $("span#matches").text("(" + n + coincidencias + ")");
 	      }).focus();
 
-	      $("button#btnResetSearch").click(function(e){
+	      $("i#btnResetSearch").click(function(e){
 	        $("input[name=search]").val("");
 	        $("span#matches").text("");
 	        tree.clearFilter();
@@ -171,28 +171,46 @@ padding:13px;
 <body>
 <div class="container">
   <!-- Add a <table> element where the tree should appear: -->
-  	<div class="row">
-      	<div class="col-sm">
-            <label>Filtro:</label>
-            <input name="search" placeholder="Filtrar..." autocomplete="off">
-            <button id="btnResetSearch">&times;</button>
+  	
+  	<div class="row mt-4">
+      	<div class="col-sm-10">
+      		
+      		 <div class="d-lg-inline-block align-middle d-none">
+                    <div class="input-group transparent">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text transparent">
+                                <i class="fa fa-search"></i>
+                            </span>
+                        </div>
+                        <input id="document_finder" type="text" class="form-control" name="search" placeholder="Buscar..." style="width:250px" autocomplete="off">
+                        <div class="input-group-append ">
+                            <span class="input-group-text transparent">
+                                <i class="fa fa-times" id="btnResetSearch"></i>
+                                
+                            </span>
+                        </div>
+                    </div>
+                </div>
             <span id="matches"></span>
         </div>
-        <div class="col-sm">
-        	<input id="nuevo_formato" class="btn btn-primary" type="button" value="Nuevo">
+        <div class="col-sm-2" >
+        	 <button style="float: right;"class="btn btn-complete mx-1" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="nuevo_formato">
+               	<i class="fa fa-plus"></i> Nuevo
+              </button>
+        	<!--<input id="nuevo_formato" class="btn btn-complete" type="button" value="Nuevo">-->
         </div>
   </div>
-  <table class="table table-bordered" id="tree_campo_idformato" width="85%;">
+  <table class="table table-bordered" id="tree_campo_idformato" heigt="50%;" width="85%;">
     <thead>
       <tr> <td class="bold Default alignCenter" style="font-size: 11px;">N°</td> <td class="bold Default alignCenter" style="font-size: 11px;">Formatos</td> <td class="bold Default alignCenter" style="font-size: 11px;">Descripci&oacute;n</td> <td class="bold Default alignCenter" style="font-size: 11px;">Versi&oacute;n</td> </tr>
     </thead>
     <!-- Otionally define a row that serves as template, when new nodes are created: -->
     <tbody>
       <tr>
-        <td class="hint-text" style="font-size: 11px;"></td>
-        <td class="hint-text" style="font-size: 11px;"></td>
-        <td class="hint-text" style="font-size: 11px;"></td>
-        <td class="hint-text" style="font-size: 11px;"></td>
+        <td class="hint-text alignCenter" style="font-size: 11px; padding:8px;"></td>
+        <td class="hint-text" style="font-size: 11px;  padding:8px;"></td>
+        <td class="hint-text" style="font-size: 11px;  padding:8px;"></td>
+        <td class="hint-text alignCenter" style="font-size: 11px;  padding:8px;"></td>
 
       </tr>
     </tbody>
@@ -253,7 +271,7 @@ ul.fancytree-container {
 
   </head>
   <body>
-  	<div class="container">
+  	<div class="container px-0 mx-1">
   		<?= $arbol->generar_html() ?>
   	</div>
 	<script type="text/javascript">

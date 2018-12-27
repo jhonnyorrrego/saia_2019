@@ -9,7 +9,7 @@ class Etiqueta extends Model
     protected $estado;
     protected $dbAttributes;
 
-    function __construct($id){
+    function __construct($id = null) {
         return parent::__construct($id);
     }
 
@@ -37,7 +37,7 @@ class Etiqueta extends Model
 
         $findTags = busca_filtro_tabla('*', 'etiqueta', 'estado = 1 and fk_funcionario =' . $userId, '', $conn);
         unset($findTags['tabla'], $findTags['sql'], $findTags['numcampos']);
-        
+
         return $findTags;
     }
 

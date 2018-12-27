@@ -10,7 +10,7 @@ class Tarea extends Model
     protected $descripcion;
     protected $dbAttributes;
 
-    function __construct($id){
+    function __construct($id = null) {
         return parent::__construct($id);
     }
 
@@ -25,7 +25,7 @@ class Tarea extends Model
             'fecha_final',
             'descripcion',
         ];
-    
+
         // set the date attributes on the schema
         $dateAttributes = [ 'fecha_inicial','fecha_final'];
 
@@ -47,7 +47,7 @@ class Tarea extends Model
     /**
      * retorna la fecha inicial
      *
-     * @return date
+     * @return DateTime
      */
     public function getInitialDate(){
         return $this->fecha_inicial;
@@ -56,7 +56,7 @@ class Tarea extends Model
     /**
      * retorna la fecha final
      *
-     * @return date
+     * @return DateTime
      */
     public function getFinalDate(){
         return $this->fecha_final;
@@ -80,12 +80,12 @@ class Tarea extends Model
     }
 
     /**
-     * busca las tareas entre fechas 
+     * busca las tareas entre fechas
      * segun el tipo de funcionario
      *
      * @param int $userId idfuncionario
-     * @param date $initialDate fecha inicial
-     * @param date $finalDate fecha final
+     * @param DateTime $initialDate fecha inicial
+     * @param DateTime $finalDate fecha final
      * @param int $type tipo de relacion 1,responsable.2,seguidor.3,creador
      * @return array objetos de la clase tarea
      */
@@ -94,7 +94,7 @@ class Tarea extends Model
 
         $tables = self::getTableName() . ' a,' . FuncionarioTarea::getTableName() . ' b';
         $findRecords = busca_filtro_tabla('a.*', $tables, "a.idtarea = b.fk_tarea and b.estado=1 and b.fk_funcionario =" . $userId . " and b.tipo= " . $type . " and " . fecha_db_obtener('a.fecha_inicial', 'Y-m-d H:i:s') . ">='" . $initialDate . "' and " . fecha_db_obtener('a.fecha_final', 'Y-m-d H:i:s') . "<='". $finalDate . "'", '', $conn);
-        
+
         return self::convertToObjectCollection($findRecords);
     }
 }

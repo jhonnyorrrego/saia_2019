@@ -14,11 +14,10 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . 'db.php';
 
 function acceso_modulo($idmodulo = 0){
+    global $conn;
     if ($idmodulo) {
-        global $conn;
-
         $Permiso = new Permiso();
-        $modulo = busca_filtro_tabla("*", "modulo", "idmodulo=" . $idmodulo, "");
+        $modulo = busca_filtro_tabla("*", "modulo", "idmodulo=" . $idmodulo, "", $conn);
         $acceso = $Permiso->acceso_modulo_perfil($modulo[0]["nombre"]);
         return $acceso;
     } else {

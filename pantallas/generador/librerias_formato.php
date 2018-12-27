@@ -183,6 +183,57 @@ function vincular_funciones_formato($libreria, $funcion) {
     return ($retorno);
 }
 
+function vincular_funciones_formatos($libreria, $funcion) {
+    global $conn;
+    $idformato=$_REQUEST['idformato'];
+    $retorno = array(
+        "mensaje" => "Error al tratar de vincular la funcion al formato",
+        "exito" => 0
+    );
+    $funciones_nucleo = busca_filtro_tabla("", "funciones_nucleo A", "A.idfunciones_nucleo=" . $libreria, "", $conn);
+   
+    if ($funciones_nucleo["numcampos"]) {
+        $datos_funcion = busca_filtro_tabla("", "funciones_formato A", "A.nombre = '" . $funcion . "'", "", $conn);
+		 	
+        if ($datos_funcion["numcampos"]) {
+            $nombre = str_replace("{*", "", $funcion);
+            $nombre = str_replace("*}", "", $nombre);
+			$consulta_existe_func=busca_filtro_tabla("","funciones_formato_enlace","formato_idformato=".$idformato." and funciones_formato_fk=".$datos_funcion[0]['idfunciones_formato']." ","",$conn);
+			
+				if(!$consulta_existe_func['numcampos']){
+	                $sql2 = "INSERT INTO funciones_formato_enlace(formato_idformato,funciones_formato_fk) VALUES(" . $idformato . "," . $datos_funcion[0]['idfunciones_formato'] . ")";
+	                phpmkr_query($sql2);
+	                $idfunciones_formato_enlace = phpmkr_insert_id();
+	                if ($idfunciones_formato_enlace) {
+	                    $retorno["exito"] = 1;
+	                    $retorno["mensaje"] = "Funcion vinculada con &eacute;xito";
+	                } else {
+	                    $retorno["mensaje"] = "Error al vincular la funcion " . $nombre . " al formato error al generar el enlace  idfunciones_formato=" . $idfunciones_formato;
+	                }
+                }else{
+                	//$retorno["mensaje"] = "Error al vincular la funcion " . $nombre . " al formato la funcion ya se encuentra vinculada";
+					return false;
+				}	
+        } else {
+            if (strpos($datos_funcion[0]["acciones"], "m") !== false) {
+            	
+                $sql3 = "UPDATE acciones='m," . $datos_funcion[0]["acciones"] . "' WHERE idfunciones_formato=" . $datos_funcion[0]["idfunciones_formato"];
+                return $sql3;
+                phpmkr_query($sql3);
+                /*
+                 * TODO: Validar que las acciones queden vinculadas al mostrar
+                 */
+                $retorno["exito"] = 1;
+                $retorno["mensaje"] = "Funcion vinculada con &eacute;xito";
+            }
+        }
+    } else {
+        $retorno["mensaje"] = "La libreria no se encuentra vinculada con el formato, por lo tanto no se puede usar la funcion " . $funcion;
+    }
+    return ($retorno);
+}
+
+
 function adicionar_pantalla_campos_formato($idpantalla, $datos) {
     $retorno = array();
     $campo_serie = busca_filtro_tabla("", "campos_formato", "nombre='serie_idserie' AND formato_idformato=" . $idpantalla, "", $conn);

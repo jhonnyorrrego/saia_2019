@@ -94,12 +94,13 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 		<div class="row-fluid">
 			<div class="span9">
 				<div class="tabbable">
-					<ul class="nav nav-pills" id="tabs_formulario">
-						<li>
+					<ul class="nav nav-tabs" id="tabs_formulario">
+						<li class="active">
 							<a href="#datos_formulario-tab" data-toggle="tab">Informaci&oacute;n</a>
 						</li>
-						<li id="generar_formulario_pantalla"  class="active">
+						<li id="generar_formulario_pantalla">
 							<a href="#formulario-tab" data-toggle="tab">Campos</a>
+							
 						</li>
                 		<!-- <li>
                 			<a href="#librerias_formulario-tab" data-toggle="tab">3-Librerias</a>
@@ -117,18 +118,23 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 									<a href="#asignar_funciones-tab" data-toggle="tab">6-Asignar funciones</a>
 								</li-->
 						<li>
-									<a href="#generar_formulario-tab" data-toggle="tab">Publicar</a>
+									<!--<a href="#generar_formulario-tab" data-toggle="tab">Publicar</a>-->
+									 <div class="container-fluid">
+									 	<div class="row"  class="span3 offset2" style="float:right">
+									   		<button style="background: #48b0f7;color:fff;" class="btn btn-info" id="generar_pantalla" ><span  style="color:fff; background: #48b0f7;"> Publicar</span></button>
+										 </div>
+									 </div>
 						</li>
 					</ul>
 					<div class="tab-content">
-						<div class="tab-pane active" id="formulario-tab">
+						<div class="tab-pane" id="formulario-tab">
 							<form id="contenedor_saia" class="form-horizontal">
 							<?php
 echo(load_pantalla($idpantalla));
 							?>
 							</form>
 						</div>
-						<div class="tab-pane " id="datos_formulario-tab">
+						<div class="tab-pane active" id="datos_formulario-tab">
 						<?php
 include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 						</div>
@@ -138,8 +144,9 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
                       			<?php
                         echo($datos_formato[0]["cuerpo"]);
                                 ?>
-                      			</textarea>
+                      			</textarea>                      			
                   			</form>
+                  			<button  style="background: #48b0f7;color:fff;float:right" class="btn btn-info" id="actualizar_cuerpo_formato" ><span  style="color:fff; background: #48b0f7;"> Guardar cambios</span></button>
 						</div>
         		        <div class="tab-pane" id="pantalla_listar-tab">
 							<form name="formulario_editor_listar" id="formulario_editor_listar" action="">    <br />
@@ -406,17 +413,17 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 									    </div>
 										</div-->
 								  </div>
-                  <div >
+                  <!--<div >
                     <button id="generar_pantalla" class="btn btn-primary">Generar<span id="cargando_generar_pantalla"></span></button>
-                  </div>
+                  </div>-->
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="span3">
-						<div class="tabbable">
-							<ul class="nav nav-pills" id="tabs_opciones">
-								<li class="active">
+						<div class="tabbable" id="componentes_acciones">
+							<ul class="nav" id="tabs_opciones">
+								<li class="active invisible" id="componente_tab">
 									<a href="#componentes-tab" data-toggle="tab">Componentes</a>
 								</li>
 								<!--<li>
@@ -425,8 +432,11 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 								<li>
 									<a href="#includes-tab" data-toggle="tab">S</a>
 								</li-->
-								<li>
+								<!--<li>
 									<a href="#acciones-tab" data-toggle="tab">Acciones</a>
+								</li>-->
+								<li id="funciones_tab" class="invisible">
+									<a href="#funciones-tab" data-toggle="tab">Funciones</a>
 								</li>
 							</ul>
 							<div class="tab-content" id="contenidos_componentes">
@@ -450,16 +460,18 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 								</div>
                 <!--div class="tab-pane" id="includes-tab"  style="overflow:auto;">
 								</div-->
-								<div class="tab-pane" id="acciones-tab">
+								<div class="tab-pane" id="funciones-tab">
 								    <input type="hidden" name="idpantalla_funcion_exe" id="idpantalla_funcion_exe">
 								    <input type="hidden" name="nombre_funcion_insertar" id="nombre_funcion_insertar">
-                  <div id="esperando_acciones">
+                  <!--<div id="esperando_acciones">
     								<img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif">
-    							</div>
-                  <div id="actualizar_cuerpo_formato" class="btn btn-mini btn-success">Actualizar</div>
-                  <div id="treeboxbox_tree4" style="height:90%;"></div>
+    							</div>-->
+                  <!--<div id="actualizar_cuerpo_formato" class="btn btn-mini btn-success">Actualizar</div>-->
+                  <div id="funciones_desplegables" style="height:90%;"></div>
 								</div>
+								
 							</div>
+							
 						</div>
 					</div>
 				</div>
@@ -493,6 +505,116 @@ for ($i = 0; $i < $cant_js; $i++) {
 <script src="<?php echo($ruta_db_superior)?>pantallas/generador/editor/ext-language_tools.js"></script-->
 <script type="text/javascript">
 $(document).ready(function() {
+	
+$("#generar_pantalla").live("click",function() {
+    $(".generador_pantalla").find(".accordion-inner").html("");
+    $(".generador_pantalla").removeClass("alert-success");
+    $(".generador_pantalla").removeClass("alert-error");
+    //generar_archivos_ignorados();
+    /*$(".generador_pantalla").each(function(index,val){
+        if($(this).prev().children(":checkbox").is(':checked')) {
+          	generar_pantalla(this.id);
+        }
+    });*/
+  	generar_pantalla("full");
+});
+	$(document).on("click","#funcionesPropias",function(){
+		var idfuncionFormato=$(this).attr("idfuncionFormato");
+		var funcion=$(this).attr("name");
+		var tipo=idfuncionFormato.split("_");
+		if(tipo[1]==='func'){
+			tinymce.activeEditor.execCommand('mceInsertContent', false, funcion);
+		    $.ajax({
+		    	  type:'POST',
+		    	  url: "<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php",
+		    	  data: "librerias=pantallas/generador/librerias_formato.php&funcion=vincular_funciones_formatos&parametros="+tipo[0]+";"+funcion+"&idformato="+$("#idformato").val()+"&rand="+Math.round(Math.random()*100000),
+		    	  success: function(html){
+		    	    if(html){
+		    	      var objeto=jQuery.parseJSON(html);
+		    	      if(objeto.exito){
+		    	    	  notificacion_saia(objeto.mensaje,"success","",3500);
+		    	      }
+		    	      else{
+		    	    	  notificacion_saia(objeto.mensaje,"error","",3500);
+		    	  	  }
+		    	  	}
+		    	  }
+		    });
+		}
+	});
+	
+	$(document).on("click","#camposPropios",function(){
+		
+		var idcamposFormato=$(this).attr("idcamposFormato");
+		var funcion=$(this).attr("name");
+		var tipo=idcamposFormato.split("_");
+		if(tipo[1]==='campo'){
+			tinymce.activeEditor.execCommand('mceInsertContent', false, funcion);
+
+		}
+		
+	});
+	$(document).on("click","#actualizar_cuerpo_formato",function(){
+	 $.ajax({
+   	  type:'POST',
+   	  url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias_formato.php",
+   	  data: "ejecutar_libreria_formato=actualizar_cuerpo_formato&contenido="+tinyMCE.editors["editor_mostrar"].getContent()+"&idformato="+$("#idformato").val()+"&rand="+Math.round(Math.random()*100000),
+   	  success: function(html){
+   	   	//console.log(html);
+   	    if(html){
+   	      var objeto=jQuery.parseJSON(html);
+   	      if(objeto.exito){
+   	    	  notificacion_saia(objeto.mensaje,"success","",3500);
+   	      } else {
+   	    	  notificacion_saia(objeto.mensaje,"error","",3500);
+   	  	  }
+   	  	}
+   	  }
+   	});
+});
+
+function generar_pantalla(nombre_accion) {
+	
+    $("#cargando_generar_pantalla").html("<img src='<?php echo($ruta_db_superior); ?>imagenes/cargando.gif' class='pull-left'>");
+    var ruta_generar='formatos/generar_formato.php';
+    var accion = nombre_accion.replace("generar_","");
+    var datos = {
+        idformato: $("#idformato").val(),
+        accion: "full",
+        llamado_ajax: 1
+    };
+
+    $.ajax({
+        type:'POST',
+        url: '<?php echo($ruta_db_superior);?>'+ruta_generar,
+        data: datos,
+        success: function(html) {
+            if(html) {
+                var objeto=jQuery.parseJSON(html);
+                if(objeto.exito==1) {
+                    /*$("#"+nombre_accion).prev().removeClass("alert-error");
+                    $("#"+nombre_accion).prev().addClass("alert-success");
+                    $("#"+nombre_accion).html("");
+                    notificacion_saia(objeto.mensaje,"success","",3500);
+                    if(typeof(objeto.descripcion_error)!=="undefined"){
+                    	$("#"+nombre_accion).html(objeto.descripcion_error);
+                    	$("#"+nombre_accion).collapse('show');
+                    }*/
+                	notificacion_saia("Formato generado correctamente","success","",3500);
+                } else {
+                    //$("#"+nombre_accion).prev().addClass("alert-error");
+                    notificacion_saia(objeto.mensaje,"error","",9500);
+                    /*if(typeof(objeto.descripcion_error)!=="undefined"){
+                        $("#"+nombre_accion).html(objeto.descripcion_error);
+                        $("#"+nombre_accion).collapse('show');
+                    }*/
+                }
+            }
+        	$("#cargando_generar_pantalla").html("");
+        }
+    });
+}
+
     campo_id_foco="";
     var alto=$(window).height();
     var ancho=$(window).width();
@@ -899,7 +1021,7 @@ var form_builder = {
             data: "librerias=pantallas/generador/librerias.php&funcion=adicionar_pantalla_campos&parametros="+$("#idformato").val()+";"+component.attr("idpantalla_componente")+";1&rand="+Math.round(Math.random()*100000),
             success: function(html) {
                 if(html) {
-                    console.log(html);
+                    
                     var objeto=jQuery.parseJSON(html);
                     if(objeto.exito) {
                         $("#contenedor_saia").append(objeto.codigo_html);
@@ -1101,6 +1223,8 @@ $('a[data-toggle="tab"]').on('show', function (e) {
   }
 });
 $('a[data-toggle="tab"]').on('shown', function (e) {
+	
+	$("#componentes_acciones").show();
 	var id=e.target.toString().split("#");
   switch(id[1]){
     case 'archivos-tab':
@@ -1116,13 +1240,32 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
       tree4.enableSmartXMLParsing(true);
 	    tree4.loadXML("<?php echo($ruta_db_superior);?>pantallas/generador/arbol_funciones_campos.php?pantalla_idpantalla="+$("#idformato").val()+"&extensiones_permitidas=php");
     break;
+     case 'funciones-tab':
+      if(tab_acciones==false){
+        $('#tabs_formulario a[href="#pantalla_mostrar-tab"]').tab('show');
+    	}
+    	$('#componente_tab').hide();
+      	$('#funciones_tab').show();
+    	
+	    $.ajax({
+			  type:"POST",
+			  dataType:"json",
+			  url: "<?php echo($ruta_db_superior);?>pantallas/generador/funciones_desplegables.php?pantalla_idpantalla="+$("#idformato").val()+"&extensiones_permitidas=php&funciones_nucleo=1",
+			  success: function(html){
+				if(html){
+					$("#funciones_desplegables").html(html.codigo_html);
+				}
+			  }
+			});
+			
+    break;
     case 'pantalla_mostrar-tab':
       tab_acciones=true;
-      $('#tabs_opciones a[href="#acciones-tab"]').tab('show');
+      $('#tabs_opciones a[href="#funciones-tab"]').tab('show');
     break;
     case 'pantalla_listar-tab':
       tab_acciones=true;
-      $('#tabs_opciones a[href="#acciones-tab"]').tab('show');
+      $('#tabs_opciones a[href="#funciones-tab"]').tab('show');
       tree4.deleteChildItems(0);
 	    tree4.enableSmartXMLParsing(true);
 	    tree4.loadXML("<?php echo($ruta_db_superior);?>pantallas/generador/arbol_funciones_campos.php?pantalla_idpantalla="+$("#idformato").val()+"&extensiones_permitidas=php");
@@ -1141,6 +1284,12 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
     case 'formulario-tab':
       tab_acciones=false;
       $('#tabs_opciones a[href="#componentes-tab"]').tab('show');
+      $('#componente_tab').show();
+      $('#funciones_tab').hide();
+    break;
+    case 'datos_formulario-tab':
+      tab_acciones=false;
+      $('#componentes_acciones').hide();
     break;
     case 'librerias_formulario-tab':
 		//alert("librerias tab");
@@ -1264,13 +1413,13 @@ function cargando_mostrar() {
 }
 function insertar_mostrar(nodeId){
   var tipo=nodeId.split("_");
-
+//aqui
   if(tipo[0]==="func"){
 	    tinymce.activeEditor.execCommand('mceInsertContent', false, tree4.getUserData(nodeId,"myfunc"));
 	    $.ajax({
 	    	  type:'POST',
 	    	  url: "<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php",
-	    	  data: "librerias=pantallas/generador/librerias_formato.php&funcion=vincular_funciones_formato&parametros="+tree4.getUserData(nodeId,"mylib_id")+";"+tree4.getUserData(nodeId,"myfunc")+"&idformato="+$("#idformato").val()+"&rand="+Math.round(Math.random()*100000),
+	    	  data: "librerias=pantallas/generador/librerias_formato.php&funcion=vincular_funciones_formatos&parametros="+tree4.getUserData(nodeId,"mylib_id")+";"+tree4.getUserData(nodeId,"myfunc")+"&idformato="+$("#idformato").val()+"&rand="+Math.round(Math.random()*100000),
 	    	  success: function(html){
 	    	    if(html){
 	    	      var objeto=jQuery.parseJSON(html);
@@ -1331,18 +1480,6 @@ $('#idpantalla_funcion_exe').live("change",function(){
 });
 
 
-$("#generar_pantalla").live("click",function() {
-    $(".generador_pantalla").find(".accordion-inner").html("");
-    $(".generador_pantalla").removeClass("alert-success");
-    $(".generador_pantalla").removeClass("alert-error");
-    //generar_archivos_ignorados();
-    /*$(".generador_pantalla").each(function(index,val){
-        if($(this).prev().children(":checkbox").is(':checked')) {
-          	generar_pantalla(this.id);
-        }
-    });*/
-  	generar_pantalla("full");
-});
 
 $(".eliminar_campos_tabla_pantalla").live("click",function(){
 	alert($(this).attr("tabla")+"--"+$(this).attr("idpantalla"));
@@ -1383,65 +1520,6 @@ function cambios_editor(editor){
 	}
 }
 
-$(document).on("click","#actualizar_cuerpo_formato",function(){
-	 $.ajax({
-   	  type:'POST',
-   	  url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias_formato.php",
-   	  data: "ejecutar_libreria_formato=actualizar_cuerpo_formato&contenido="+tinyMCE.editors["editor_mostrar"].getContent()+"&idformato="+$("#idformato").val()+"&rand="+Math.round(Math.random()*100000),
-   	  success: function(html){
-   	   	//console.log(html);
-   	    if(html){
-   	      var objeto=jQuery.parseJSON(html);
-   	      if(objeto.exito){
-   	    	  notificacion_saia(objeto.mensaje,"success","",3500);
-   	      } else {
-   	    	  notificacion_saia(objeto.mensaje,"error","",3500);
-   	  	  }
-   	  	}
-   	  }
-   	});
-});
-
-function generar_pantalla(nombre_accion) {
-    $("#cargando_generar_pantalla").html("<img src='<?php echo($ruta_db_superior); ?>imagenes/cargando.gif' class='pull-left'>");
-    var ruta_generar='formatos/generar_formato.php';
-    var accion = nombre_accion.replace("generar_","");
-    var datos = {
-        idformato: $("#idformato").val(),
-        accion: "full",
-        llamado_ajax: 1
-    };
-
-    $.ajax({
-        type:'POST',
-        url: '<?php echo($ruta_db_superior);?>'+ruta_generar,
-        data: datos,
-        success: function(html) {
-            if(html) {
-                var objeto=jQuery.parseJSON(html);
-                if(objeto.exito==1) {
-                    /*$("#"+nombre_accion).prev().removeClass("alert-error");
-                    $("#"+nombre_accion).prev().addClass("alert-success");
-                    $("#"+nombre_accion).html("");
-                    notificacion_saia(objeto.mensaje,"success","",3500);
-                    if(typeof(objeto.descripcion_error)!=="undefined"){
-                    	$("#"+nombre_accion).html(objeto.descripcion_error);
-                    	$("#"+nombre_accion).collapse('show');
-                    }*/
-                	notificacion_saia("Formato generado correctamente","success","",3500);
-                } else {
-                    //$("#"+nombre_accion).prev().addClass("alert-error");
-                    notificacion_saia(objeto.mensaje,"error","",9500);
-                    /*if(typeof(objeto.descripcion_error)!=="undefined"){
-                        $("#"+nombre_accion).html(objeto.descripcion_error);
-                        $("#"+nombre_accion).collapse('show');
-                    }*/
-                }
-            }
-        	$("#cargando_generar_pantalla").html("");
-        }
-    });
-}
 
 function receiveMessage(event) {
       if(event.data["etiqueta_html"] && event.data["etiqueta_html"] == 'textarea_cke') {

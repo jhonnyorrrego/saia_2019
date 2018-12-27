@@ -11,7 +11,7 @@ class Configuracion extends Model
     protected $encrypt;
     protected $dbAttributes;
 
-    function __construct($id){
+    function __construct($id = null) {
         return parent::__construct($id);
     }
 

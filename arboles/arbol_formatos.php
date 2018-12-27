@@ -77,6 +77,7 @@ function llena_formato($id, $nivel=0, $seleccionados=array(), $filtrar=null, $ca
         for ($i = 0; $i < $papas["numcampos"]; $i++) {
             $hijos = busca_filtro_tabla("count(*) total", "formato", $valida_item . "  cod_padre=" . $papas[$i]["idformato"], "", $conn);
             $item = ["extraClasses" => "estilo-arbol kenlace_saia"];
+			
 			$item["expanded"] = true;
             if (in_array($papas[$i]["idformato"], $seleccionados)) {
                 $item["selected"] = true;
