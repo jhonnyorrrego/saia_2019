@@ -14,7 +14,7 @@ class Modulo extends Model
     protected $orden;
     protected $dbAttributes;
 
-    function __construct($id){
+    function __construct($id = null) {
         return parent::__construct($id);
     }
 
@@ -33,7 +33,7 @@ class Modulo extends Model
             'cod_padre',
             'orden'
         ];
-    
+
         // set the date attributes on the schema
         $dateAttributes = [];
 
