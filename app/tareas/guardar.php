@@ -40,7 +40,8 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         FuncionarioTarea::inactiveRelationsByTask($Tarea->getPK(), 1);
         FuncionarioTarea::assignUser($Tarea->getPk(), $_REQUEST['managers'], 1);
 
-        $Response->message = "Datos almacenados";
+        $Response->message = "Tarea creada";
+        $Response->data = $Tarea->getPK();
     }else{
         $Response->message = "Error al guardar";
         $Response->success = 0;
