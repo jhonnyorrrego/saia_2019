@@ -7,8 +7,7 @@ function rcmail_radicar_saia(prop){
   if (!rcmail.env.uid && (!rcmail.message_list || !rcmail.message_list.get_selection().length))
     return;
   
-    var uids = rcmail.env.uid ? rcmail.env.uid : rcmail.message_list.get_selection().join(','),
-      lock = rcmail.set_busy(true, 'loading');
+    var uids = rcmail.env.uid ? rcmail.env.uid : rcmail.message_list.get_selection().join(','), lock = rcmail.set_busy(true, 'loading');
 
     rcmail.http_post('plugin.radicar_saia', '_uid='+uids+'&_mbox='+urlencode(rcmail.env.mailbox), lock);
 }

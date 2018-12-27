@@ -71,8 +71,6 @@ if(@$_REQUEST['iddoc']){
 
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["doc"]){
 	$_REQUEST["iddoc"]=@$_REQUEST["doc"];
-	include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
-	echo(menu_principal_documento(@$_REQUEST["iddoc"],@$_REQUEST["vista"]));
 }
 ?>
 <form action="notas_versiones.php"  method="POST" id="formulario_notas_versiones">

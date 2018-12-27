@@ -60,7 +60,7 @@ if (! empty($series)) {
 <link rel="stylesheet" type="text/css"
 	href="<?php echo($ruta_db_superior);?>css/bootstrap/saia/css/bootstrap_reescribir.css" />
 <?php
-echo (menu_principal_documento($doc_menu, 1));
+echo menu_principal_documento($doc_menu);
 echo (librerias_jquery('1.7'));
 echo (librerias_validar_formulario(11));
 ?>

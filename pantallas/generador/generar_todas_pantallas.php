@@ -37,7 +37,7 @@ echo(estilo_bootstrap());
   </tbody>
 </table>
 <?php
-echo(librerias_jquery("1.7"));
+//echo(librerias_jquery("1.7"));
 echo(librerias_bootstrap());
 ?>
 <script type="text/javascript">

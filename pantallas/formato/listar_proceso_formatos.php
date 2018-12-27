@@ -1,6 +1,7 @@
 <?php
 $max_salida = 10;
 $ruta_db_superior = $ruta = "";
+
 while ($max_salida > 0) {
 	if (is_file($ruta . "db.php")) {
 		$ruta_db_superior = $ruta;
@@ -8,8 +9,10 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
+
 include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
+
 usuario_actual("login");
 
 $consulta = busca_filtro_tabla('idcategoria_formato,nombre', 'categoria_formato', 'cod_padre=2 and estado=1', 'nombre ASC', $conn);
@@ -44,7 +47,7 @@ if (count($request)) {
 				for ($j = 0; $j < $cuantos_formatos['numcampos']; $j++) {
 					$ok = $acceso -> acceso_modulo_perfil("crear_" . $cuantos_formatos[$j]['nombre']);
 					if ($ok) {
-						$url = 'listar_formatos.php?idcategoria_formato=' . $consulta[$i]["idcategoria_formato"];
+						$url = $ruta_db_superior . 'pantallas/formato/listar_formatos.php?idcategoria_formato=' . $consulta[$i]["idcategoria_formato"];
 						$mostrar = 1;
 					}
 				}

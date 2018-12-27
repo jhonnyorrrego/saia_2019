@@ -148,6 +148,9 @@ function estilo_bootstrap($version = "saia") {
 		case "3.2" :
 			$version = "3.2.0";
 			break;
+		case "3.3" :
+		    $version = "3.3.7";
+		    break;
 		case "saia" :
 			$texto = "";
 			$texto = '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/css/bootstrap.css">';
@@ -394,9 +397,8 @@ function librerias_kaiten() {
 
 function librerias_acciones_kaiten() {
 	global $raiz_saia;
-	$texto = '';
-	$texto .= '<script type="text/javascript" src="' . $raiz_saia . 'pantallas/lib/acciones_kaiten.js"></script>';
-	return ($texto);
+	$texto = '<script type="text/javascript" src="' . $raiz_saia . 'pantallas/lib/acciones_kaiten.js"></script>';
+	return $texto;
 }
 
 function librerias_scroll_infinito() {

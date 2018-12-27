@@ -1,4 +1,4 @@
-<?php 
+<?php
 $max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
@@ -38,7 +38,7 @@ echo(estilo_bootstrap());
   </tbody>
 </table>
 <?php
-echo(librerias_jquery("1.7"));
+//echo(librerias_jquery("1.7"));
 echo(librerias_bootstrap());
 ?>
 <script type="text/javascript">
@@ -48,7 +48,7 @@ $(document).ready(function(){
     var listado_generar_pantallas= new Array("generar_clase", "generar_tablas", "generar_adicionar", "generar_editar",  "generar_eliminar", "generar_version_pantalla", "generar_pantalla_libreria", "generar_buscar","generar_modulo");
     idpantalla=$(this).attr("idpantalla");
     var incremento=(100/listado_generar_pantallas.length);
-    llamado_ejecutar_genera(listado_generar_pantallas,idpantalla,incremento);  
+    llamado_ejecutar_genera(listado_generar_pantallas,idpantalla,incremento);
   });
 });
 function llamado_ejecutar_genera(generar_pantallas,idpantalla,incremento){
@@ -56,17 +56,17 @@ var porcentaje=100-(generar_pantallas.length*incremento);
 $("#pantalla"+idpantalla).width(porcentaje+"%");
 $("#pantalla"+idpantalla).html(Math.round(porcentaje)+"%");
 //$("#pantalla"+idpantalla).parent().attr("width",porcentaje+"%");
-if(generar_pantallas.length>0){                              
+if(generar_pantallas.length>0){
   //$("#error_"+idpantalla).append(idpantalla+":"+generar_pantallas.length+"-->"+generar_pantallas[0]+"<br>");
   $.ajax({
     type:'POST',
-    url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias_pantalla.php",    
-    data: "ejecutar_libreria_pantalla="+generar_pantallas[0]+"&parametros=1&idpantalla="+idpantalla+"&rand="+Math.round(Math.random()*100000),	            	           
-    success: function(html){                
-      if(html){          
-        var objeto=jQuery.parseJSON(html);                  
+    url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias_pantalla.php",
+    data: "ejecutar_libreria_pantalla="+generar_pantallas[0]+"&parametros=1&idpantalla="+idpantalla+"&rand="+Math.round(Math.random()*100000),
+    success: function(html){
+      if(html){
+        var objeto=jQuery.parseJSON(html);
         if(!objeto.exito){
-          //alert(generar_pantallas[0]+"<br>"+"#error_"+idpantalla);                    
+          //alert(generar_pantallas[0]+"<br>"+"#error_"+idpantalla);
           $("#error_"+idpantalla).append(generar_pantallas[0]+"<br>");
           if(objeto.descripcion_error!==undefined){
             $("#error_"+idpantalla).append(objeto.descripcion_error+"<br>");
@@ -76,7 +76,7 @@ if(generar_pantallas.length>0){
         }
         generar_pantallas.shift();
         setTimeout(function(){},500);
-        return(llamado_ejecutar_genera(generar_pantallas,idpantalla,incremento)); 
+        return(llamado_ejecutar_genera(generar_pantallas,idpantalla,incremento));
       }
     }
   });

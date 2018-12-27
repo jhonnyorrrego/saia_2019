@@ -22,7 +22,7 @@ if($_REQUEST["idpantalla"]){
 <input type="hidden" name="idpantalla" value="<?php $_REQUEST['idpantalla']?>">
 <div class="alert alert-danger"> <h5>Est&aacute; absolutamente seguro? </h5>Esta acci&oacute;n <b>NO SE PUEDE DESHACER</b> ser&aacute; eliminado el registro por completo con todo lo que se encuentre relacionado.</div>
 <div calss="listado">Los siguientes son los registros que ser&aacute;n borrados de la pantalla <b><?php echo($pantalla[0]["etiqueta"]);?></b>:<br>
-<?php 
+<?php
   if($pantalla_campos["numcampos"]){
     echo("<b>Listado de campos:</b><ul>");
     for($i=0;$i<$pantalla_campos["numcampos"];$i++){
@@ -46,7 +46,7 @@ if($_REQUEST["idpantalla"]){
 <div class="alert alert-danger"> Debe confirmar la eliminac&oacute;n haciendo click en el bot&oacute;n<br><div id="confirmar_eliminar" class="btn btn-mini btn-danger" >Confirmaci&oacute;n de borrado</div><div id="cargando_enviar" class="pull-right" style="display:hidden"></div></div>
 <?php
 }
-echo(librerias_jquery("1.7"));
+//echo(librerias_jquery("1.7"));
 echo(librerias_notificaciones());
 echo(librerias_bootstrap());
 echo(librerias_acciones_kaiten());

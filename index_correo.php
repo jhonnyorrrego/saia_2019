@@ -18,7 +18,7 @@ if (is_dir("roundcubemail")) {
 		mkdir($ruta_db_superior . "roundcubemail/temp/", 0777);
 	}
 
-	$funcionario = busca_filtro_tabla("email_contrasena", "funcionario", "funcionario_codigo=" . $_SESSION["usuario_actual"], "", $conn);
+	$funcionario = busca_filtro_tabla("idfuncionario, email, email_contrasena", "funcionario", "funcionario_codigo=" . $_SESSION["usuario_actual"], "", $conn);
 	if (!$funcionario["numcampos"]) {
 	?>
 	<div class="alert alert-error">
@@ -40,10 +40,14 @@ if (is_dir("roundcubemail")) {
 		  <!--input type="submit" class="button mainaction" value="Enter" /></p-->
 		</form>
 		<script type="text/javascript">
+		var funcionario = "<?=$funcionario[0]["idfuncionario"]?>";
 		<?php if($_SESSION["tipo_dispositivo"]!="movil"){?>
-		  top.collapser_mainui.click();
+		  //top.collapser_mainui.click();
 		 <?php }?>
-		  document.form_roundcube.submit();
+		 if(localStorage.getItem("key") == null) {
+			localStorage.setItem("key", funcionario);
+		 }
+		 document.form_roundcube.submit();
 		</script>
 		<?php
 	}

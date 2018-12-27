@@ -225,6 +225,7 @@ class Imprime_Pdf {
 	}
 
 	public function imprimir() {
+	    global $conn;
 		$this -> pdf = new \Mpdf\Mpdf([
 		'mode' => 'utf-8',
 		'format' => $this -> papel,
@@ -309,8 +310,17 @@ class Imprime_Pdf {
 			$formato_ruta = $ruta_db_superior . $ruta_tmp_usr;
 		}
 
+		$prefijo_nombre = "";
+		if($this->documento[0]["serie_idserie"] && $this->formato[0]["mostrar_tipodoc_pdf"]) {
+		    $datos_serie = busca_filtro_tabla("nombre, codigo", "serie", "idserie=" . $this->documento[0]["serie_idserie"], "", $conn);
+		    if($datos_serie["numcampos"] && !empty($datos_serie[0]["codigo"])) {
+		        $prefijo_nombre = str_replace("-", "_", $datos_serie[0]["codigo"]);
+		        $prefijo_nombre .= "_";
+		    }
+		}
+
 		if ($this -> nombre_archivo !== false) {
-			$this -> pdf -> Output(__DIR__ . "/" . $this -> nombre_archivo, $this -> tipo_salida);
+		    $this -> pdf -> Output(__DIR__ . "/" . $prefijo_nombre . $this -> nombre_archivo, $this -> tipo_salida);
 		} else {
 			$pdf_temp = StorageUtils::obtener_archivo_temporal("impresion_", $ruta_tmp_usr);
 			chmod($pdf_temp, 0777);
@@ -324,11 +334,15 @@ class Imprime_Pdf {
 				$carpeta = $formato_ruta . "/pdf";
 
 				$adicional = "";
+				$versiones = busca_filtro_tabla("", "documento_version", "documento_iddocumento=" . $this -> documento[0]["iddocumento"], "numero_version ASC", $conn);
+				if($versiones["numcampos"]) {
+				    $adicional = "_V" . $versiones[0]["numero"];
+				}
 				if ($this -> imprimir_vistas) {
-					$adicional = "_vista" . @$_REQUEST["vista"];
+					$adicional .= "_vista" . @$_REQUEST["vista"];
 				}
 
-				$nombre_pdf = $carpeta . "/" . strtoupper($this -> formato[0]["nombre"]) . "_" . $this -> documento[0]["numero"] . "_" . str_replace("-", "_", $this -> documento[0]["fecha1"]) . $adicional . ".pdf";
+				$nombre_pdf = $carpeta . "/" . strtoupper($prefijo_nombre . $this -> formato[0]["nombre"]) . "_" . $this -> documento[0]["numero"] . "_" . str_replace("-", "_", $this -> documento[0]["fecha1"]) . $adicional . ".pdf";
 			} else {
 				$tipo_almacenamiento = new SaiaStorage("archivos");
 				$nombre_pdf = $this -> documento[0]["numero"] . "_" . str_replace("-", "_", $this -> documento[0]["fecha1"]) . ".pdf";
@@ -362,12 +376,21 @@ class Imprime_Pdf {
 
 	public function configurar_encabezado() {
 		global $conn;
-		if ($this -> documento[0]["estado"] == "ACTIVO" || $this -> documento[0]["estado"] == "ANULADO") {
-			$this -> pdf -> marca_agua = 1;
-		}
+		/*Marca de agua, no sirve para PDFA/
+		   /*if ($this -> documento[0]["estado"] == "ACTIVO") {
+		        $this -> pdf -> SetWatermarkImage('imagenes/marca_agua_borrador.png');
+		        $this -> pdf ->showWatermarkImage = true;
+		    }
+		    if ($this -> documento[0]["estado"] == "ANULADO") {
+		        $this -> pdf -> SetWatermarkImage('imagenes/marca_agua_anulado.png');
+		        $this -> pdf ->showWatermarkImage = true;
+		    }*/
+
 		if ($this -> formato[0]["encabezado"]) {
 			$encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato=" . $this -> formato[0]["encabezado"], "", $conn);
 			if ($encabezado["numcampos"]) {
+			    //$this -> pdf ->setHeader('{PAGENO}');
+			    //$this -> pdf ->setHeader('Pagina {PAGENO} de {nbpg}');
 				$this -> pdf -> SetHTMLHeader(crear_encabezado_pie_pagina($encabezado[0]["contenido"], $this -> documento[0]["iddocumento"], $this -> formato[0]["idformato"], 1), 'O', TRUE);
 			}
 		}
@@ -494,6 +517,7 @@ class Imprime_Pdf {
 				$i++;
 				$nombre_revisar = str_replace('.pdf', 'version' . $i . '.pdf', $nombre);
 			}
+
 			if (is_file($nombre)) {
 				chmod($nombre, 0777);
 				rename($nombre, $nombre_revisar);
@@ -506,7 +530,9 @@ class Imprime_Pdf {
 	public function set_variable($campo, $valor) {
 		$this -> $campo = $valor;
 	}
-
+	function TotalPaginas() {
+	    return count($this->pages);
+	}
 }
 
 if (@$_REQUEST["iddoc"]) {

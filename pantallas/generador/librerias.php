@@ -24,8 +24,10 @@ function adicionar_pantalla_campos($idpantalla, $idpantalla_componente, $tipo_re
 		$funciones = array();
 		$sql_campos = array();
 		$sql_valores = array();
-		//$default_campo = new SimpleXmlIterator("<?" . "xml version='1.0' standalone='yes'?" . ">" . $dato[0]["opciones"]);
 		$default_campo = json_decode($dato[0]["opciones"],true);
+		if(isset($default_campo["valor"]) && is_array($default_campo["valor"])) {
+		    $default_campo["valor"] = json_encode($default_campo["valor"]);
+		}
 		$texto = $dato[0]["componente"];
 		foreach ($default_campo AS $key=>$value){
 			array_push($sql_campos, $key);
@@ -34,48 +36,18 @@ function adicionar_pantalla_campos($idpantalla, $idpantalla_componente, $tipo_re
 			} else {
 				$valor = strval($value);
 			}
-			array_push($sql_valores, $valor);			
+			array_push($sql_valores, $valor);
 		}
-		/*
-		 * Pilas con el tema de archivos que se quita porque en ningun componente se encuentra en las opciones el campo archivo 
-		 * 
-		 * Ejemplo:
-		 * 
-		 * <pantalla_campos><nombre>campo_texto</nombre><etiqueta>Campo de texto</etiqueta><tipo_dato>varchar</tipo_dato><longitud>255</longitud><obligatoriedad>1</obligatoriedad><valor></valor><acciones>a,e,b</acciones><ayuda></ayuda><predeterminado></predeterminado><banderas></banderas><etiqueta_html>text</etiqueta_html><orden>1</orden><mascara></mascara><adicionales></adicionales><autoguardado>1</autoguardado><fila_visible>1</fila_visible><placeholder>Campo texto</placeholder>
-</pantalla_campos>
-		 * {"nombre":"campo_texto","etiqueta":"campo de texto","tipo_dato":"varchar","longitud":255,"obligatoriedad":1,"valor":"","acciones":"a,e,b","ayuda":"","predeterminado":"","banderas":"","etiqueta_html":"text","orden":1,"mascara":"","adicionales":"","autoguardado":1,"fila_visible":1,"placeholder":"campo texto"}
-		 * 
-		 * 
-		 * for($default_campo->rewind(); $default_campo->valid(); $default_campo->next()) {
-			if ($default_campo->key() != "archivos") {
-				array_push($sql_campos, $default_campo->key());
-				if ($default_campo->key() == "nombre") {
-					$valor = strval($default_campo->current()) . "_" . rand();
-				} else {
-					$valor = strval($default_campo->current());
-				}
-				array_push($sql_valores, $valor);
-			} else {
-				$func = $default_campo->getChildren();
-				if (count($func)) {
-					foreach ($func as $key2 => $value2) {
-						if ($key2 == "archivo")
-							array_push($archivos, strval($value2[0]));
-						else if ($key2 == "funcion")
-							array_push($funciones, strval($value2[0]));
-					}
-				}
-			}
-		}*/
 		if (in_array("formato_idformato", $sql_campos) === false) {
 			array_push($sql_campos, 'formato_idformato');
 			array_push($sql_valores, $idpantalla);
 		}
 		if (count($sql_campos) && count($sql_valores)) {
 			$sql2 = "INSERT INTO campos_formato(" . implode(",", $sql_campos) . ") VALUES('" . implode("','", $sql_valores) . "')";
-			$retorno["sql"] = $sql2;    
-			phpmkr_query($sql2);
-			$idcampo = phpmkr_insert_id();  
+
+			$retorno["sql"] = $sql2;
+			phpmkr_query($sql2) or die($sql2);
+			$idcampo = phpmkr_insert_id();
 			$retorno["sql"]=$sql2;
 			if ($idcampo) {
 				$cadena = load_pantalla_campos($idcampo, 0);
@@ -96,39 +68,202 @@ function adicionar_pantalla_campos($idpantalla, $idpantalla_componente, $tipo_re
 function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1) {
 	global $conn, $ruta_db_superior;
 	$retorno = array(
-			"exito" => 0
+		"exito" => 0,
+	    "idpantalla_campos" => $idpantalla_campos
 	);
-	$pantalla_campos = busca_filtro_tabla("", "campos_formato", "idcampos_formato=" . $idpantalla_campos, "", $conn);
-	$procesar = 0;
+	$pantalla_campos = busca_filtro_tabla("idcampos_formato,nombre,etiqueta_html", "campos_formato", "idcampos_formato=" . $idpantalla_campos, "", $conn);
+	$acciones = array("a","e","b");
 	if ($pantalla_campos["numcampos"]) {
+	    $datos = $_REQUEST;
+	    $retorno["nombre_campo"] = $pantalla_campos[0]["nombre"];
+	    $retorno["etiqueta_html"] = $pantalla_campos[0]["etiqueta_html"];
+
+	    $datos = kma_valor_campo($datos, $pantalla_campos[0]["etiqueta_html"]);
+	    //die();
+
 		$sql_update = array();
-		foreach ($_REQUEST as $key => $value) {
-			if (strpos($key, "fs_") !== false) {
-				if ($key == 'fs_acciones') {
-					$value = implode(",", $value);
-				}
-				if ($key == "fs_etiqueta") {
-					$retorno["etiqueta"] = $value;
-				}
-				if ($key == "fs_placeholder") {
-					$retorno["placeholder"] = $value;
-				}
-				array_push($sql_update, str_replace("fs_", "", $key) . "='" . $value . "'");
+		foreach ($datos as $key => $value) {
+		    if (preg_match("/^fs_/", $key)) {
+                switch ($key) {
+                    case 'fs_acciones':
+                        if($value) {
+                            array_push($acciones, "p");
+                        }
+                        $value = implode(",", $acciones);
+                        break;
+                    case "fs_etiqueta":
+                        $retorno["etiqueta"] = $value;
+                        break;
+                    case "fs_placeholder":
+                        $retorno["placeholder"] = $value;
+                        break;
+                    case "fs_predeterminado":
+                        $retorno["fs_predeterminado"] = $value;
+                        break;
+                    case "fs_opciones":
+                    case "fs_estilo":
+                        if(is_array($value)) {
+                            $value = json_encode($value);
+                        }
+                        $retorno[$key] = $value;
+                        break;
+                    case "fs_obligatoriedad":
+                    	if($value == "true") {
+                    		$value = 1;
+                    	} else {
+                    		$value = 0;
+                    	}
+                }
+				array_push($sql_update, preg_replace('/^fs_/', '', $key) . "='" . $value . "'");
 			}
 		}
 		if (count($sql_update)) {
 			$sql2 = "UPDATE campos_formato SET " . implode(", ", $sql_update) . " WHERE idcampos_formato=" . $idpantalla_campos;
-			phpmkr_query($sql2);
+			//$retorno["sql"] = $sql2; // Solo para depurar
+			phpmkr_query($sql2) or die($sql2);
 			$retorno["exito"] = 1;
 			$cadena = load_pantalla_campos($idpantalla_campos, 0);
 			$retorno["codigo_html"] = $cadena["codigo_html"];
 		}
 	}
-	if ($tipo_retorno == 1)
+	if ($tipo_retorno == 1) {
 		echo (json_encode($retorno));
-	else {
+	} else {
 		return ($retorno);
 	}
+}
+
+function kma_valor_campo($datos, $tiqueta_html) {
+    switch ($tiqueta_html) {
+        case "radio":
+        case "checkbox":
+        case "select":
+            //viene en fs_opciones y es un array con las opciones. Toca convertirlos a 1,1;2,2;
+            if(is_array($datos["fs_opciones"]) && !empty($datos["fs_opciones"])) {
+                $num_items = count($datos["fs_opciones"]);
+                $valor_i = array();
+                for($i=0; $i < $num_items; $i++) {
+                    $valor_i[] = $i+1 . "," . $datos["fs_opciones"][$i];
+                }
+                if(!empty($valor_i)) {
+                 $datos["fs_valor"] = implode(";", $valor_i);
+                }
+            }
+            break;
+        case "spin":
+        case "moneda":
+                // viene en fs_opciones y tiene con_decimales(boolean) decimales(int), criterio donde criterio puede ser "max_lt", "max", "min_gt", "min", "between", "not_between"
+                // Si viene criterio = "between" o "not_between" => se toman valor_1 y valor_2, sino solo valor_1
+                // Debe quedar 0@1000@1@0 => Valor inicial: valor mínimo permitido
+                // Valor final: valor máximo permitido
+                // Incremento: incremento entre cada opcion
+                // Bloquear entrada por teclado: 1 o 0
+            if (is_array($datos["fs_opciones"]) && !empty($datos["fs_opciones"])) {
+                $ini = 0;
+                $fin = 1000;
+                $decimales = 0;
+                $incremento = 1;
+                if (isset($datos["fs_opciones"]["con_decimales"]) && isset($datos["fs_opciones"]["decimales"])) {
+                    $decimales = $datos["fs_opciones"]["decimales"];
+                }
+                if (isset($datos["fs_opciones"]["criterio"])) {
+                    $criterio = $datos["fs_opciones"]["criterio"];
+                    switch ($criterio) {
+                        case "max_lt":
+                            $fin = $datos["fs_opciones"]["valor_1"] - 1;
+                            break;
+                        case "max":
+                            $fin = $datos["fs_opciones"]["valor_1"];
+                            break;
+                        case "min":
+                            $ini = $datos["fs_opciones"]["valor_1"];
+                            break;
+                        case "min_gt":
+                            $ini = $datos["fs_opciones"]["valor_1"] + 1;
+                            break;
+                        case "between":
+                            $ini = $datos["fs_opciones"]["valor_1"];
+                            $fin = $datos["fs_opciones"]["valor_2"];
+                            if(empty($fin)) {
+                                $fin = 1000;
+                            }
+                            if($fin <= $ini) {
+                                $fin = $ini + 1;
+                            }
+                            break;
+                        case "not_between":
+                            break;
+                    }
+                    if($decimales) {
+                        $incremento = pow(10, -$decimales);
+                    }
+                    $datos["fs_valor"] = $ini . "@" . "$fin" . "@" . $incremento . "@0";
+                }
+            }
+            break;
+        case "fecha":
+            //viene en fs_opciones y tiene tipo(date, datetime), criterio donde criterio puede ser  "max_lt", "max", "min_gt", "min", "between", "not_between"
+            // Si viene criterio = "between" o "not_between" => se toman fecha_1 y fecha_2, sino solo fecha_1
+            break;
+        case "archivo":
+            //viene en fs_opciones.tipos es una lista separada por comas de los tipos pdf, doc, docx, jpg, jpeg, gif, png, bmp, xls, xlsx, ppt,
+            // fs_opciones.longitud define el tam max t fs_opciones.cantidad define si es unico o multiple
+            // se debe convertir a: csv|CSV|xls|XLS|xlsx|XLSX@unico
+            if (is_array($datos["fs_opciones"]) && !empty($datos["fs_opciones"])) {
+                $file_arr = array_map('trim', explode(',', $datos["fs_opciones"]["tipos"]));
+                $varios = "unico";
+                $cantidad = $datos["fs_opciones"]["cantidad"];
+                if($cantidad > 1) {
+                    $varios = "multiple";
+                }
+                $datos["fs_valor"] = implode("|", $file_arr) . "@" . $varios;
+            }
+            break;
+        case "etiqueta_parrafo":
+        case "etiqueta_titulo":
+            //viene en fs_opciones.texto
+            if(is_array($datos["fs_opciones"]) && !empty($datos["fs_opciones"])) {
+                $datos["fs_valor"] = $datos["fs_opciones"]["texto"];
+            }
+            break;
+        case "arbol_fancytree":
+            //Viene en fs_opciones
+            //{"url":"","checkbox":"radio","buscador":"0","funcion_select":"","funcion_click":"","funcion_dobleclick":""}
+            $texto_opc = [];
+            $texto_opc["funcionario"] = "arboles/arbol_funcionario.php?idcampofun=1";
+            $texto_opc["dependencia"] = "arboles/arbol_dependencia.php";
+            $texto_opc["cargo"] = "arboles/arbol_cargo.php";
+            $texto_opc["serie"] = "arboles/arbol_serie.php";
+
+            if(is_array($datos["fs_opciones"]) && !empty($datos["fs_opciones"])) {
+                $datos_ft = $datos["fs_opciones"];
+                $idx = $datos_ft["url"];
+                $url_ft = $texto_opc[$idx];
+                $datos_ft["url"] = $url_ft;
+                $datos["fs_valor"] = json_encode($datos_ft, JSON_NUMERIC_CHECK);
+            }
+            break;
+        case "ejecutor":
+            //Viene en fs_opciones: tipo: "multiple" o "unico"
+            // fs_opciones.adicional : Informacion adicional "cargo,empresa,direccion,telefono,email,titulo,ciudad"
+            // Siempre va "nombre,identificacion"
+
+            if(is_array($datos["fs_opciones"]) && !empty($datos["fs_opciones"])) {
+                $tipo = $datos["fs_opciones"]["tipo"];
+                $adicional = "direccion,telefono,email";
+                if(isset($datos["fs_opciones"]["adicional"])) {
+                    $adicional = $datos["fs_opciones"]["adicional"];
+                }
+                $url_ft = $texto_opc[$idx];
+                $datos_ft["url"] = $url_ft;
+                $datos["fs_valor"] = $tipo . "@nombre,identificacion@" . $adicional;
+            }
+            break;
+        default:
+            ;
+            break;
+    }
+    return $datos;
 }
 
 function load_pantalla_campos($idpantalla_campos, $tipo_retorno = 1, $generar_archivo = "", $accion = '', $campos_pantalla = '') {
@@ -160,7 +295,7 @@ function load_pantalla_campos($idpantalla_campos, $tipo_retorno = 1, $generar_ar
 		}
 		$ruta_componente = "pantallas/generador/" . $pantalla_campos[0]["nombre_componente"] . "/procesar_componente.php";
 		if ($accion != '' && $accion != 'retorno_campo') {
-			
+
 			$texto = str_replace("{*clase_eliminar_pantalla_componente*}", "", $texto);
 			if (file_exists($ruta_db_superior . $ruta_componente)) {
 				foreach ($regs[0] as $key => $value) {
@@ -175,7 +310,7 @@ function load_pantalla_campos($idpantalla_campos, $tipo_retorno = 1, $generar_ar
 			if (file_exists($ruta_db_superior . $ruta_componente)) {
 				include_once ($ruta_db_superior . $ruta_componente);
 			}
-			foreach ($regs[0] as $key => $value) {				
+			foreach ($regs[0] as $key => $value) {
 				$nombre_funcion = str_replace("*}", "", str_replace("{*", "", $value));
 				$proceso_componente = call_user_func_array($nombre_funcion, array(
 						$idpantalla_campos,
@@ -196,14 +331,14 @@ function load_pantalla_campos($idpantalla_campos, $tipo_retorno = 1, $generar_ar
 }
 
 function get_pantalla_campos($idpantalla_campos, $tipo_retorno = 1) {
-	$pantalla_campos = busca_filtro_tabla("A.*,B.nombre AS nombre_componente,B.etiqueta AS etiqueta_componente,B.componente,B.opciones,B.categoria,B.procesar,B.estado AS componente_estado,B.idpantalla_componente, B.eliminar, C.nombre AS pantalla,A.idcampos_formato AS idpantalla_campos,B.etiqueta_html AS etiqueta_html_componente", "campos_formato A,pantalla_componente B, formato C", "A.formato_idformato=C.idformato AND A.idcampos_formato=" . $idpantalla_campos . " AND A.etiqueta_html=B.etiqueta_html", "", $conn);
+	$pantalla_campos = busca_filtro_tabla("A.*,B.nombre AS nombre_componente,B.etiqueta AS etiqueta_componente,B.componente,B.opciones,B.categoria,B.procesar,B.estado AS componente_estado,B.idpantalla_componente, B.eliminar, B.opciones_propias, C.nombre AS pantalla,A.idcampos_formato AS idpantalla_campos,B.etiqueta_html AS etiqueta_html_componente", "campos_formato A,pantalla_componente B, formato C", "A.formato_idformato=C.idformato AND A.idcampos_formato=" . $idpantalla_campos . " AND A.etiqueta_html=B.etiqueta_html", "", $conn);
 	$pantalla_campos["exito"] = 0;
 	if ($pantalla_campos["numcampos"]) {
 		$pantalla_campos["exito"] = 1;
 	}
-	if ($tipo_retorno == 1)
+	if ($tipo_retorno == 1) {
 		echo (json_encode($pantalla_campos));
-	else {
+	} else {
 		return ($pantalla_campos);
 	}
 }
@@ -220,7 +355,7 @@ function incluir_librerias_pantalla($idpantalla, $tipo_retorno = 1, $ruta = '', 
 	}
 	$ruta = str_replace("../", "", $ruta);
 	$ruta = str_replace("./", "", $ruta);
-	$ruta_include = busca_filtro_tabla("", "fromato_libreria", "ruta='" . $ruta . "'", "", $conn);
+	$ruta_include = busca_filtro_tabla("", "formato_libreria", "ruta='" . $ruta . "'", "", $conn);
 	if ($ruta_include["numcampos"]) {
 		$idlibreria = $ruta_include[0]["idpantalla_libreria"];
 	} else {
@@ -310,7 +445,7 @@ function eliminar_archivo_incluido($idpantalla_include, $tipo_retorno) {
 		$retorno["idformato"]=$idpantalla_include;
 		$retorno["mensaje"] = "Librer&iacute;a  desasociada de forma exitosa de la pantalla";
 		/**
-		 * TODO: Validar que se hace con las funciones de los formatos actualmente vinculados 
+		 * TODO: Validar que se hace con las funciones de los formatos actualmente vinculados
 		//ELIMINO FUNCIONES y PARAMETROS (SI TIENE)
 		$funciones_asociadas=busca_filtro_tabla("","pantalla_funcion_exe a, pantalla_funcion b","b.fk_idpantalla_libreria=".$idpantalla_libreria." AND a.fk_idpantalla_funcion=b.idpantalla_funcion AND a.pantalla_idpantalla=".$pantalla_idpantalla,"",$conn);
 		if($funciones_asociadas['numcampos']){

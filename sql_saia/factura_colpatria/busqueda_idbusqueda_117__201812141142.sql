@@ -1,0 +1,3 @@
+﻿INSERT INTO busqueda (nombre,etiqueta,estado,ancho,campos,llave,tablas,ruta_libreria,ruta_libreria_pantalla,cantidad_registros,tiempo_refrescar,ruta_visualizacion,tipo_busqueda,badge_cantidades,pertenece_nucleo) VALUES 
+('radicacion_facturas_correo','Radicaci&oacute;n de Facturas por Correo',1,200,'fc.no_factura,fc.nit_proveedor,fc.centro_costo,fc.idft_correo_saia,d.numero','fc.documento_iddocumento','ft_correo_saia fc, documento d','formatos/correo_saia/librerias.php',NULL,30,500,'pantallas/busquedas/consulta_busqueda_reporte.php',2,NULL,NULL)
+;

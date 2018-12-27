@@ -9,11 +9,25 @@ while($max_salida>0){
 	$max_salida--;
 }
 
-
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
+include_once($ruta_db_superior."calendario/calendario.php");
+include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
+include_once($ruta_db_superior."formatos/librerias/header_formato.php");
 echo(estilo_bootstrap());
+
 $campos=explode(",",$_REQUEST['campos']);
+
+$tipo_fecha='';
+$html='<div class="container">
+		<br>
+		<div class="control-group" nombre="etiqueta">
+			<legend>Editar </legend>
+		</div>
+		<form id="formulario_tareas" class="form-vertical">';
+
+echo($html);
+
 for($i=0;$i<count($campos);$i++){
 	if($campos[$i]=='cod_padre'){
 		$cod_padre=1;
@@ -29,10 +43,36 @@ for($i=0;$i<count($campos);$i++){
 	}
 }
 
-if($_REQUEST['guardar']==1){	
+if($_REQUEST['guardar']==1){
+
+	$valores='';
+	$tabla=$_REQUEST['tabla'];
+	$id=$_REQUEST["id"];
+	$llave=array_keys($_REQUEST);
+	unset($_REQUEST['tabla']);
+	unset($_REQUEST['submit']);
+	unset($_REQUEST['guardar']);
+	unset($_REQUEST['id']);
+	
+	if($_REQUEST["tipo_fecha"]){
+		$fecha=explode(',',$_REQUEST["tipo_fecha"]);		
+		for($j=0;$j<count($fecha);$j++){
+			$tipo_fecha[$fecha[$j]]=fecha_db_almacenar($_REQUEST[$fecha[$j]],"Y-m-d");
+			unset($_REQUEST[$fecha[$j]]);		
+		}			
+	}
+	
+	unset($_REQUEST["tipo_fecha"]);
+	
+	foreach ($tipo_fecha as $key=>$temp) {
+      $valores .= $key." = ".$temp.",";   
+	}
+	
+	foreach ($_REQUEST as $key=>$temp) {
+      $valores .= $key." = '".$temp."',";   
+	}
+	$sql="update ".$tabla." set ".trim($valores,",")." where id".$tabla."=".$id;
 		
-	$sql="UPDATE ".$_REQUEST['tabla']." SET nombre='".$_REQUEST['nombre']."', valor='".$_REQUEST['valor']."', cod_padre='".$_REQUEST['cod_padre']."', descripcion='".$_REQUEST['descripcion']."', tipo='".$_REQUEST[tipo]."', categoria='".$_REQUEST['categoria']."', estado='".$_REQUEST['estado']."' WHERE id".$_REQUEST['tabla']."=".$_REQUEST['id'];
-	//print_r($sql);die();
 	phpmkr_query($sql);
 	echo('<script>parent.window.location.reload();</script>');
 	
@@ -40,29 +80,16 @@ if($_REQUEST['guardar']==1){
 $tabla=$_REQUEST['tabla'];
 $id=$_REQUEST['key'];
 $datos=busca_filtro_tabla("",$tabla,"id".$tabla."=".$id,"",$conn);
-//print_r($datos);die();
 
 echo(librerias_jquery("1.7"));
 echo(librerias_arboles());
 echo(librerias_bootstrap());
-
 ?>
-	<div class="container">
-		<br>
-		<div class="control-group" nombre="etiqueta">
-			<legend>Editar </legend>
-		</div>
-		<form id="formulario_tareas" class="form-vertical">
+	
 			<div class="control-group">
 				<label class="control-label" for="etiqueta">Nombre*:</label>
 				<div class="controls">
 					<input type="text" name="nombre" id="nombre" class="required" value="<?php echo $datos[0]['nombre'];?>">
-				</div>
-			</div>
-			<div class="control-group">
-				<label class="control-label" for="etiqueta">Valor*:</label>
-				<div class="controls">
-					<input type="text" name="valor" id="valor" class="required" value="<?php echo $datos[0]['valor'];?>">
 				</div>
 			</div>
 			<?php 
@@ -72,6 +99,7 @@ echo(librerias_bootstrap());
 				<label class="control-label" for="etiqueta">Padre:</label>
 				<div class="controls">
 					<?php
+						
 						echo arbol("cod_padre","cod_padre","pantallas/admin_cf/test_tabla_cf.php?tabla=".$_REQUEST['tabla'],0,0,1,1,'radio',$datos[0]['cod_padre']);
 					?>
 				</div>
@@ -119,11 +147,140 @@ echo(librerias_bootstrap());
 					<label class="error" for="estado"></label>
 				</div>
 			</div> 
-			<div class="control-group">
+			
+<?php
+
+for($i=0;$i<count($campos);$i++){
+		
+	$opcion_campo=explode("|||",$campos[$i]);
+	$categoria=explode("@",$opcion_campo[0]);
+	$nombre_campo=$categoria[0];
+	$tipo_campo=$categoria[1];
+	
+	if($campos[$i]=='cod_padre'){
+		$cod_padre=1;
+	}else if($campos[$i]=='descripcion'){
+		$descripcion=1;
+	}
+	else if($campos[$i]=='tipo'){
+		$tipo=1;
+	}
+	else if($campos[$i]=='categoria'){
+		$categoria=1;
+	}else{
+	
+		switch($tipo_campo){
+			case 'select':
+	        	$opcion=explode("||",$opcion_campo[1]);
+				
+				$html='<b>'.strtoupper(str_replace("_", " ", $nombre_campo)).':</b><br/> <select id="'.$nombre_campo.'" name="'.$nombre_campo.'"><option val="">Por favor seleccione...</option>';			
+				for($j=0;$j<count($opcion);$j++){
+					$opciones=explode("|",$opcion[$j]);
+					$eti_opcion=$opciones[0];
+					$valor_opcion=$opciones[1];
+					if($valor_opcion==$datos[0][$nombre_campo]){
+						$html.='<option value="'.$valor_opcion.'" selected>'.$eti_opcion.'</option>';
+					}else{
+						$html.='<option value="'.$valor_opcion.'">'.$eti_opcion.'</option>';
+					}
+					
+				}
+				
+				$html.='</select><br/><br/>';
+				echo($html);		
+	        break;
+			
+			case 'radio':
+				$opcion=explode("||",$opcion_campo[1]);
+				
+				$html='<b>'.strtoupper(str_replace("_", " ", $nombre_campo)).':</b><br/> ';
+				for($j=0;$j<count($opcion);$j++){
+					$opciones=explode("|",$opcion[$j]);
+					$eti_opcion=$opciones[0];
+					$valor_opcion=$opciones[1];
+					
+					$seleccionados=explode(",",$datos[0][$nombre_campo]);
+					for($op=0;$op<count($seleccionados);$op++){
+						if($seleccionados[$op]==$valor_opcion){
+							$html.=' <input type="radio" id="'.$nombre_campo.$j.'" name="'.$nombre_campo.'" value="'.$valor_opcion.'" checked> '.$eti_opcion;
+						}else{
+							$html.=' <input type="radio" id="'.$nombre_campo.$j.'" name="'.$nombre_campo.'" value="'.$valor_opcion.'"> '.$eti_opcion;
+						}
+					}
+					
+					
+				}
+				$html.='<br/><br/>';
+				echo($html);
+	
+			break;
+			
+			case 'checkbox':
+				$opcion=explode("||",$opcion_campo[1]);
+				
+				$html='<b>'.strtoupper(str_replace("_", " ", $nombre_campo)).' </b><br/> ';
+				for($j=0;$j<count($opcion);$j++){
+					$opciones=explode("|",$opcion[$j]);
+					$eti_opcion=$opciones[0];
+					$valor_opcion=$opciones[1];
+					
+					$seleccionados=explode(",",$datos[0][$nombre_campo]);
+					for($op=0;$op<count($seleccionados);$op++){
+						if($seleccionados[$op]==$valor_opcion){
+							$html.=' <input type="checkbox" id="'.$nombre_campo.$j.'" name="'.$nombre_campo.'[]" value="'.$valor_opcion.'" checked> '.$eti_opcion;
+						}else{
+							$html.=' <input type="checkbox" id="'.$nombre_campo.$j.'" name="'.$nombre_campo.'[]" value="'.$valor_opcion.'"> '.$eti_opcion;						}
+					}
+					
+					
+					
+				}
+				$html.='<br/><br/>';
+				echo($html);
+			
+			break;
+			
+			case 'date':
+				$html='<div class="control-group">
+				<b>'.strtoupper(str_replace("_", " ", $nombre_campo)).' </b><br/>
+		            <input id="'.$nombre_campo.'" value="'.$datos[0][$nombre_campo].'" name="'.$nombre_campo.'" style="width:100px" type="text" value="" placeholder="Inicio">';
+	       		echo($html);
+				echo(selector_fecha($nombre_campo,"formulario_tareas","Y-m-d",date("m"),date("Y"),"default.css","../../","").'</div>');
+				$tipo_fecha[]=$nombre_campo;
+					
+			break;
+			
+			case 'text':
+				$html='<b>'.strtoupper(str_replace("_", " ", $nombre_campo)).' </b><br/> ';
+				$html.='<input required type="text" id="'.$nombre_campo.'" name="'.$nombre_campo.'" value="'.$datos[0][$nombre_campo].'"><br/>';
+				echo($html);
+			break;
+			
+			case 'area':
+				$html='<b>'.strtoupper(str_replace("_", " ", $nombre_campo)).' </b><br/> ';
+				
+				$html.='<textarea tabindex="4" cols="53" rows="3" class="tiny_avanzado" id="'.$nombre_campo.'" name="'.$nombre_campo.'">'.$datos[0][$nombre_campo].'</textarea>';
+				echo($html);
+			break;  
+			
+			default:
+				if($nombre_campo!=''){
+					$html='<b>'.strtoupper(str_replace("_", " ", $nombre_campo)).' </b><br/> ';
+					$html.='<input required type="text" id="'.$nombre_campo.'" name="'.$nombre_campo.'" value="'.$datos[0][$nombre_campo].'"><br/>';
+					echo($html);
+				}
+			break;
+		}
+
+	}
+}
+?>
+<div class="control-group">
 				<div class="controls">
 					<input type='submit' class="btn btn-primary btn-mini" name="submit" id="submit" value="continuar">
 					<input type="hidden" name="tabla" value="<?php echo($tabla)?>">
 					<input type="hidden" name="id" value="<?php echo($id)?>">
+					<input type="hidden" name="tipo_fecha" value="<?php echo(implode(",",$tipo_fecha))?>">
 					<input type="hidden" name="guardar" value="1">
 				</div>
 			</div>
@@ -136,8 +293,7 @@ echo(librerias_bootstrap());
 		color: red;
 	}
 	</style>
-	<script>
-		
+<script>	
 	$(document).ready(function(){
 
 		formulario = $("#formulario_tareas");
@@ -218,8 +374,12 @@ background-color: A9E2F3;
 
 function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$quitar_padres=false,$adicionales=false,$tipo_etiqueta='check',$seleccionado){
 	global $ruta_db_superior;
+	if ($seleccionado=='') {
+		$seleccionado=0;
+	}
 	$entidad=$nombre_arbol;
 	?>
+	<div><?php //echo $seleccionados; ?></div>
 	<input type="text" id="stext<?php echo $entidad; ?>" width="200px" size="25" placeholder="Buscar">
 <a href="javascript:void(0)" onclick="stext<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value),1)">
 <img src="<?php echo $ruta_db_superior; ?>botones/general/anterior.png" alt="Buscar Anterior" border="0px"></a>
@@ -227,14 +387,15 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
 <img src="<?php echo $ruta_db_superior; ?>botones/general/buscar.png" alt="Buscar" border="0px"></a>
 <a href="javascript:void(0)" onclick="tree<?php echo $entidad; ?>.findItem(htmlentities(document.getElementById('stext<?php echo $entidad; ?>').value))">
 <img src="<?php echo $ruta_db_superior; ?>botones/general/siguiente.png" alt="Buscar Siguiente" border="0px"></a>
+</span>
 
-<div id="esperando<?php echo $entidad; ?>">
-    <img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif">
-</div>
+<!--a href="javascript:seleccionar_todos<?php echo $entidad; ?>(1)"><img src="<?php echo $ruta_db_superior; ?>imgs/iconCheckAll.gif" alt="Seleccionar todos" title="Seleccionar todos"></a>
+	<a href="javascript:seleccionar_todos<?php echo $entidad; ?>(0)"><img src="<?php echo $ruta_db_superior; ?>imgs/iconUncheckAll.gif" alt="Quitar todos" title="Quitar todos"></a><br-->
+<div id="esperando<?php echo $entidad; ?>"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
 <div id="treeboxbox<?php echo $entidad; ?>"></div>
 <input type="hidden" value="<?php echo $seleccionado;?>" name="<?php echo $campo; ?>" id="<?php echo $entidad; ?>" >
 <script type="text/javascript">
-	$(document).ready(function(){
+	$("document").ready(function(){
       var browserType;
       if (document.layers) {browserType = "nn4"}
       if (document.all) {browserType = "ie"}
@@ -251,8 +412,13 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
       <?php }else if($tipo_etiqueta=='radio'){?>
       tree<?php echo $entidad; ?>.enableRadioButtons(true);
       tree<?php echo $entidad; ?>.enableCheckBoxes(1);
-      <?php }  
-      if($entidad!='plantilla'&&$entidad!='serie'){ ?>
+      <?php } ?>
+      
+      <?php /*if($padresehijos){?>
+      tree<?php echo $entidad; ?>.enableThreeStateCheckboxes(true);
+      tree<?php echo $entidad; ?>.enableSmartXMLParsing(true);
+      <?php }*/?>
+      <?php if($entidad!='plantilla'&&$entidad!='serie'){ ?>
       tree<?php echo $entidad; ?>.enableSmartXMLParsing(false);
       <?php } ?>
       <?php /*Esta condicion reemplaza a la que está comentada arriba, tomada de opav*/      
@@ -287,7 +453,8 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
 							$("#bksaiacondicion_<?php echo $adicionales[0];?>").val("<?php echo $adicionales[1];?>");
 							$("#bqsaia_<?php echo $adicionales[0];?>").val("<?php echo $adicionales[2];?>");
 						}
-					}else{
+					}
+					else{
 						$("#bksaiacondicion_<?php echo $adicionales[0];?>").val("");
 						$("#bqsaia_<?php echo $adicionales[0];?>").val("");
 					}
@@ -295,14 +462,15 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
 				
 				<?php if($tipo_etiqueta=='radio'){ ?>
 					valor_destino=document.getElementById("<?php echo $entidad; ?>");
-                       if(tree<?php echo $entidad; ?>.isItemChecked(nodeId)){
-          	 	  if(valor_destino.value!=="")
+                       if(tree<?php echo $entidad; ?>.isItemChecked(nodeId))
+                         {if(valor_destino.value!=="")
                           tree<?php echo $entidad; ?>.setCheck(valor_destino.value,false);
                           if(nodeId.indexOf("_")!=-1)
                              nodeId=nodeId.substr(0,nodeId.length);
                           	 valor_destino.value=nodeId;
-                         }else{
-        			valor_destino.value="";
+                         }
+                       else
+                         {valor_destino.value="";
                          }
                          var nuevo_valor=valor_destino.value.replace("'","");
                          nuevo_valor=nuevo_valor.replace("'","");
@@ -310,8 +478,17 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
                          var ruta_sup="<?php echo $ruta_db_superior; ?>";
                          var comp="<?php echo $idbusqueda_componente[0]["idbusqueda_componente"]; ?>";
                          if(formato!=''){
+                         	//$("#gestion_mostrar").hide();
+                         	<?php
+							$cantidad=count($nombre_arbol);
+							for($i=0;$i<$cantidad;$i++){
+								//echo 'seleccionar_todos'.$nombre_arbol[$i]."(0); ";
+							}
+							?>
                          	$("#filtro_adicional").remove();
-                         }else{
+                         }
+                         else{
+                         	//$("#gestion_mostrar").show();
                          	$("#filtro_adicional").val("buzon_salida z@ AND iddocumento=z.archivo_idarchivo");
                          }
                          llamado_formulario(formato,ruta_sup,comp);
@@ -332,13 +509,7 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
          document.poppedLayer =
             eval('document.layers["esperando<?php echo $entidad; ?>"]');
       document.poppedLayer.style.display = "none";
-			<?php
-				if($seleccionado!=""){
-					?>
       tree<?php echo $entidad; ?>.setCheck(<?php echo $seleccionado; ?>,true);
-					<?php
-				}
-			?>
       document.getElementById('<?php echo $entidad; ?>').value=tree<?php echo $entidad; ?>.getAllChecked();
       
       <?php
@@ -347,7 +518,6 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
       }
       ?>
     }
-		
     function cargando<?php echo $entidad; ?>() {
       if (browserType == "gecko" )
          document.poppedLayer =
@@ -373,5 +543,8 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
                   --></script><br>
 <script type="text/javascript" src="<?php echo $ruta_db_superior; ?>pantallas/lib/codificacion_funciones.js"></script>
 	<?php
+	}
+	if($_REQUEST["librerias_cf"]){
+		include_once($ruta_db_superior.$_REQUEST["librerias_cf"]);	
 	}
 ?>

@@ -11,6 +11,7 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Tests\DependencyInjection;
 
+use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\DependencyInjection\Configuration;
 use Symfony\Bundle\FullStack;
@@ -18,6 +19,7 @@ use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Lock\Store\SemaphoreStore;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\Serializer\Serializer;
 
 class ConfigurationTest extends TestCase
 {
@@ -218,22 +220,24 @@ class ConfigurationTest extends TestCase
                 'throw_exception_on_invalid_index' => false,
             ),
             'property_info' => array(
-                'enabled' => false,
+                'enabled' => !class_exists(FullStack::class),
             ),
             'router' => array(
                 'enabled' => false,
                 'http_port' => 80,
                 'https_port' => 443,
                 'strict_requirements' => true,
+                'utf8' => false,
             ),
             'session' => array(
                 'enabled' => false,
                 'storage_id' => 'session.storage.native',
                 'handler_id' => 'session.handler.native_file',
                 'cookie_httponly' => true,
+                'cookie_samesite' => null,
                 'gc_probability' => 1,
                 'save_path' => '%kernel.cache_dir%/sessions',
-                'metadata_update_threshold' => '0',
+                'metadata_update_threshold' => 0,
             ),
             'request' => array(
                 'enabled' => false,
@@ -265,6 +269,7 @@ class ConfigurationTest extends TestCase
                 'directory' => '%kernel.cache_dir%/pools',
                 'default_redis_provider' => 'redis://localhost',
                 'default_memcached_provider' => 'memcached://localhost',
+                'default_pdo_provider' => class_exists(Connection::class) ? 'database_connection' : null,
             ),
             'workflows' => array(
                 'enabled' => false,
@@ -290,12 +295,10 @@ class ConfigurationTest extends TestCase
                 'routing' => array(),
                 'transports' => array(),
                 'serializer' => array(
-                    'enabled' => !class_exists(FullStack::class),
+                    'id' => !class_exists(FullStack::class) && class_exists(Serializer::class) ? 'messenger.transport.symfony_serializer' : null,
                     'format' => 'json',
                     'context' => array(),
                 ),
-                'encoder' => 'messenger.transport.serializer',
-                'decoder' => 'messenger.transport.serializer',
                 'default_bus' => null,
                 'buses' => array('messenger.bus.default' => array('default_middleware' => true, 'middleware' => array())),
             ),

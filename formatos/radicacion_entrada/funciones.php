@@ -35,50 +35,50 @@ function datos_editar_radicacion($idformato,$iddoc){
         ?>
                 <script>
                     $(document).ready(function(){
-                        $('#tipo_origen1').parent().hide();
+                        $('#tr_tipo_origen').hide();
                         $('#tr_requiere_recogida').hide();
-                        $('#area_responsable').parent().parent().hide();
+                        $('#tr_area_responsable').hide();
                         $('#area_responsable').removeClass('required');
                         $('#destino').addClass('required');
                         $('#tr_tipo_destino').hide();
                         $('input:radio[name="tipo_destino"]').filter('[value="2"]').attr('checked', true);
-                        $('#destino').parent().parent().show();
-                        $('#copia_a').parent().parent().show();
-                        $('#persona_natural_dest').parent().parent().hide();
+                        $('#tr_destino').show();
+                        $('#tr_copia_a').show();
+                        $('#tr_persona_natural_dest').hide();
                         $('#persona_natural_dest').removeClass('required');
                         $('#tr_tipo_mensajeria').hide();
                         $('[name="tipo_mensajeria"]').removeClass('required');
 
                         //$('#fecha_oficio_entrada').addClass('required');
                         $('#fecha_oficio_entrada').removeClass('required');
-                        $('#fecha_oficio_entrada').parent().parent().parent().show();
-                        $('#numero_oficio').parent().parent().show();
+                        $('#tr_fecha_oficio_entrada').show();
+                        $('#tr_numero_oficio').show();
                         $('#persona_natural').addClass('required');
-                        $('#persona_natural').parent().parent().show();
-
-                        $('#numero_guia').parent().parent().show();
+                        $('#tr_persona_natural').show();
+                        
+                        $('#tr_umero_guia').show();
                     });
                 </script>
         <?php
     }else{
         ?>
-                    <script>
-                        $('#tipo_origen0').parent().hide();
-
-                        $('#area_responsable').parent().parent().show();
+                    <script>        
+                        $('#tr_tipo_origen').hide();
+                        
+                        $('#tr_area_responsable').show();
                         $('#area_responsable').addClass('required');
                         $('#tr_tipo_destino').show();
 
                         $('#fecha_oficio_entrada').removeClass('required');
-                        $('#fecha_oficio_entrada').parent().parent().parent().hide();
-                        $('#numero_oficio').parent().parent().hide();
+                        $('#tr_fecha_oficio_entrada').hide();
+                        $('#tr_numero_oficio').hide();
                         $('#persona_natural').removeClass('required');
-                        $('#persona_natural').parent().parent().hide();
+                        $('#tr_persona_natural').hide();
                         //$('#anexos_digitales').parent().parent().hide();
                         $('#tr_tipo_mensajeria').show();
                         $('[name="tipo_mensajeria"]').addClass('required');
-
-                        $('#numero_guia').parent().parent().hide();
+                        
+                        $('#tr_numero_guia').hide();
                     </script>
         <?php
     }
@@ -89,16 +89,16 @@ function datos_editar_radicacion($idformato,$iddoc){
                     var tipo=$(this).val();
                     if(tipo==1){
                         $('#destino').removeClass('required');
-                        $('#destino').parent().parent().hide();
-                        $('#copia_a').parent().parent().hide();
-                        $('#persona_natural_dest').parent().parent().show();
+                        $('#tr_destino').hide();
+                        $('#tr_copia_a').hide();
+                        $('#tr_persona_natural_dest').show();
                         $('#persona_natural_dest').addClass('required');
 
                     }else{
                         $('#destino').addClass('required');
-                        $('#destino').parent().parent().show();
-                        $('#copia_a').parent().parent().show();
-                        $('#persona_natural_dest').parent().parent().hide();
+                        $('#tr_destino').show();
+                        $('#tr_copia_a').show();
+                        $('#tr_persona_natural_dest').hide();
                         $('#persona_natural_dest').removeClass('required');
 
                     }
@@ -331,54 +331,54 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
             function tipo_origen(tipo){
                 if(tipo==1){   //EXTERNO
                 	$('#tr_requiere_recogida').hide();
-
-                	$('#empresa_transportado').parent().parent().show();
-
+                	
+                	$('#tr_empresa_transportado').show();
+                	
                     $('[name="tipo_radicado"]').val('radicacion_entrada');
-                    seleccionar_interno_actual(0);
-                    $('#area_responsable').parent().parent().hide();
+                    seleccionar_interno_actual(0);    
+                    $('#tr_area_responsable').hide();
                     $('#area_responsable').removeClass('required');
                     $('#destino').addClass('required');
                     $('#tr_tipo_destino').hide();
                     $('input:radio[name="tipo_destino"]').filter('[value="2"]').attr('checked', true);
-                    $('#destino').parent().parent().show();
-                    $('#copia_a').parent().parent().show();
-                    $('#persona_natural_dest').parent().parent().hide();
+                    $('#tr_destino').show();
+                    $('#tr_copia_a').show();
+                    $('#tr_persona_natural_dest').hide();
                     $('#persona_natural_dest').removeClass('required');
                     $('#tr_tipo_mensajeria').hide();
                     $('[name="tipo_mensajeria"]').removeClass('required');
 
                     //$('#fecha_oficio_entrada').addClass('required');
                     $('#fecha_oficio_entrada').removeClass('required');
-                    $('#fecha_oficio_entrada').parent().parent().parent().show();
-                    $('#numero_oficio').parent().parent().show();
+                    $('#tr_fecha_oficio_entrada').show();
+                    $('#tr_numero_oficio').show();
                     $('#persona_natural').addClass('required');
-                    $('#persona_natural').parent().parent().show();
+                    $('#tr_persona_natural').show();
                     //$('#anexos_digitales').parent().parent().show();
-                    $('#numero_guia').parent().parent().show();
-
+                    $('#tr_numero_guia').show();
+                    
                 }else{ //INTERNO
                 	$('#tr_requiere_recogida').show();
-
-                	$('#empresa_transportado').parent().parent().hide();
-
+                	
+                	$('#tr_empresa_transportado').hide();
+                
                     seleccionar_interno_actual(1);
 
                     $('[name="tipo_radicado"]').val('radicacion_salida');
-                    $('[name="area_responsable"]').parent().parent().show();
+                    $('#tr_area_responsable').show();
                     $('#area_responsable').addClass('required');
                     $('#tr_tipo_destino').show();
 
                     $('#fecha_oficio_entrada').removeClass('required');
-                    $('#fecha_oficio_entrada').parent().parent().parent().hide();
-                    $('#numero_oficio').parent().parent().hide();
+                    $('#tr_fecha_oficio_entrada').hide();
+                    $('#tr_numero_oficio').hide();
                     $('#persona_natural').removeClass('required');
-                    $('#persona_natural').parent().parent().hide();
+                    $('#tr_persona_natural').hide();
                     //$('#anexos_digitales').parent().parent().hide();
                     $('#tr_tipo_mensajeria').show();
                     $('[name="tipo_mensajeria"]').addClass('required');
-
-                    $('#numero_guia').parent().parent().hide();
+                                          
+                    $('#tr_numero_guia').hide();
                  }
 	                  $.ajax({
 	                      type:'POST',
@@ -396,9 +396,9 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
             function tipo_destino(tipo){
                 if(tipo==1){
                         $('#destino').removeClass('required');
-                        $('#destino').parent().parent().hide();
-                        $('#copia_a').parent().parent().hide();
-                        $('#persona_natural_dest').parent().parent().show();
+                        $('#tr_destino').hide();
+                        $('#tr_copia_a').hide();
+                        $('#tr_persona_natural_dest').show();
                         $('#persona_natural_dest').addClass('required');
                         //$('#tipo_mensajeria0').parent().show();
 
@@ -407,9 +407,9 @@ function tipo_radicado_radicacion($idformato,$iddoc){//en el adicionar
 
                     }else{
                         $('#destino').addClass('required');
-                        $('#destino').parent().parent().show();
-                        $('#copia_a').parent().parent().show();
-                        $('#persona_natural_dest').parent().parent().hide();
+                        $('#tr_destino').show();
+                        $('#tr_copia_a').show();
+                        $('#tr_persona_natural_dest').hide();
                         $('#persona_natural_dest').removeClass('required');
                         //$('#tipo_mensajeria0').parent().hide();
 

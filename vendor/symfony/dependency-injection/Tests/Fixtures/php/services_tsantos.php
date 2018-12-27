@@ -19,11 +19,6 @@ class ProjectServiceContainer extends Container
     private $parameters;
     private $targetDirs = array();
 
-    /**
-     * @internal but protected for BC on cache:clear
-     */
-    protected $privates = array();
-
     public function __construct()
     {
         $this->services = $this->privates = array();
@@ -33,12 +28,6 @@ class ProjectServiceContainer extends Container
         $this->aliases = array(
             'TSantos\\Serializer\\SerializerInterface' => 'tsantos_serializer',
         );
-    }
-
-    public function reset()
-    {
-        $this->privates = array();
-        parent::reset();
     }
 
     public function compile()
@@ -68,22 +57,20 @@ class ProjectServiceContainer extends Container
     {
         $a = new \TSantos\Serializer\NormalizerRegistry();
 
-        $d = new \TSantos\Serializer\EventDispatcher\EventDispatcher();
-        $d->addSubscriber(new \TSantos\SerializerBundle\EventListener\StopwatchListener(new \Symfony\Component\Stopwatch\Stopwatch(true)));
-
-        $this->services['tsantos_serializer'] = $instance = new \TSantos\Serializer\EventEmitterSerializer(new \TSantos\Serializer\Encoder\JsonEncoder(), $a, $d);
-
         $b = new \TSantos\Serializer\Normalizer\CollectionNormalizer();
 
+        $c = new \TSantos\Serializer\EventDispatcher\EventDispatcher();
+        $c->addSubscriber(new \TSantos\SerializerBundle\EventListener\StopwatchListener(new \Symfony\Component\Stopwatch\Stopwatch(true)));
+
+        $this->services['tsantos_serializer'] = $instance = new \TSantos\Serializer\EventEmitterSerializer(new \TSantos\Serializer\Encoder\JsonEncoder(), $a, $c);
+
         $b->setSerializer($instance);
-
-        $c = new \TSantos\Serializer\Normalizer\JsonNormalizer();
-
-        $c->setSerializer($instance);
+        $d = new \TSantos\Serializer\Normalizer\JsonNormalizer();
+        $d->setSerializer($instance);
 
         $a->add(new \TSantos\Serializer\Normalizer\ObjectNormalizer(new \TSantos\SerializerBundle\Serializer\CircularReferenceHandler()));
         $a->add($b);
-        $a->add($c);
+        $a->add($d);
 
         return $instance;
     }

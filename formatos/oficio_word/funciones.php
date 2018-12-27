@@ -41,7 +41,33 @@ function add_edit_oficio_word($idformato, $iddoc) {
 		$("#plantilla_word").change(function (){
 			$("#descargar_plantilla").empty().html('<a href="<?php echo $ruta_db_superior;?>anexosdigitales/parsea_accion_archivo.php?accion=descargar_ruta_json&ruta='+$(this).val()+'">Descargar</a>');
 		});
+		$("#formulario_formatos").submit(function(event){
+			var csv = $("#anexo_csv").val();
+			var word = $("#anexo_word").val();
+			$.ajax({
+				type:'POST',
+				dataType: 'json',
+				url: "validar_plantilla.php",
+				data: {anexo_word:word, anexo_csv:csv},
+				success: function(respuesta){
+					if(respuesta.exito == 1){
+						//form.submit();
+					}else if(respuesta.exito == 0){
+						alert("Faltan variables obligatorias en el word. (formato_numero, ciudad_fecha, nombre_funcionario, cargo, nombre_dependencia)");
+					}else if(respuesta.exito == 2){
+						alert("Faltan variables en archivo excel o csv. Faltantes: "+respuesta.faltante);
+					}else if(respuesta.exito == 3){
+						alert("Excel o csv vacios");
+					}
+					event.preventDefault();
+					return false;
+				}
+			});
+			return false;
+		});
 	});
+	
+	
 	function actualiza_serie_expediente(nodeId) {
 		idexp_serie = nodeId.split('sub');
 		$('[name="serie_idserie"]').val(idexp_serie[1]);

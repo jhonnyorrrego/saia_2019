@@ -342,8 +342,24 @@ function fecha_planilla($idformato, $iddoc) {
 }
 
 function mostrar_num_pagina($idformato, $iddoc) {
-	if ($_REQUEST['pagina'] == 1) {
-		return ('{PAGENO}');
+	$formato = busca_filtro_tabla("exportar", "formato", "idformato=$idformato", "", $conn);
+	if($formato["numcampos"]){
+		if($formato[0]["exportar"]=='mpdf')	{	
+			if ($_REQUEST['pagina'] == 1) {
+				return ('{PAGENO}');
+			}
+			else{
+				return ('_');
+			}
+		}
+		else{
+			if ($_REQUEST['pagina'] == 1) {
+				return ('##PAGE##');
+			}
+			else{
+				return ('_');
+			}
+		}
 	}
 }
 
@@ -354,6 +370,27 @@ function nombre_formato_gh($idformato, $iddoc, $tipo) {
 		return (ucwords(substr($formato[0][0], 2)));
 	} else {
 		echo ucwords(substr($formato[0][0], 2));
+	}
+}
+function mostrar_total_paginas($idformato, $iddoc) {
+	$formato = busca_filtro_tabla("exportar", "formato", "idformato=$idformato", "", $conn);
+	if($formato["numcampos"]){
+		if($formato[0]["exportar"]=='mpdf')	{	
+			if ($_REQUEST['pagina'] == 1) {
+				return ('{nb}');
+			}
+			else{
+				return ('_');
+			}
+		}
+		else{
+			if ($_REQUEST['pagina'] == 1) {
+				return ('##PAGES##');
+			}
+			else{
+				return '_';
+			}
+		}
 	}
 }
 ?>

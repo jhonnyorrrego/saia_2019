@@ -1,0 +1,102 @@
+{
+	"schema": {
+		"fs_etiqueta": {
+			"type": "string",
+			"title": "Etiqueta del campo",
+			"maxLength": 255,
+			"required": true
+		},
+		"fs_nombre": {
+			"type": "string",
+			"title": "Nombre",
+			"maxLength": 255,
+			"required": true
+		},
+		"fs_acciones": {
+			"type": "string",
+			"title": "Incluirse en la descripción del formato",
+			"enum": [
+				"",
+				"p"
+			]
+		},
+		"fs_obligatoriedad": {
+			"type": "string",
+			"title": "Obligatoriedad",
+			"enum": [
+				"1",
+				"0"
+			]
+		},
+		"fs_ayuda": {
+			"type": "string",
+			"title": "Ayuda para el usuario"
+		},
+		"fs_estilo": {
+			"type": "object",
+			"title": "Configuración",
+			"properties": {
+				"rows": {
+					"title": "Ancho del campo",
+					"type": "string",
+					"enum": [
+						"3",
+						"6",
+						"9"
+					]
+				},
+				"cols": {
+					"title": "Alto del campo",
+					"type": "string",
+					"enum": [
+						"10",
+						"20",
+						"30"
+					]
+				}
+			}
+		}
+	},
+	"form": [
+		{
+			"key": "fs_nombre",
+			"type": "hidden"
+		},
+		{
+			"key": "fs_estilo.rows",
+			"titleMap": {
+				"3": "Pequeño",
+				"6": "Mediano",
+				"9": "Grande"
+			}
+		},
+		{
+			"key": "fs_estilo.cols",
+			"titleMap": {
+				"10": "Pequeño",
+				"20": "Mediano",
+				"30": "Grande"
+			}
+		},
+		{
+			"key": "fs_obligatoriedad",
+			"type": "radios",
+			"titleMap": {
+				"0": "No obligatrio",
+				"1": "Obligatorio"
+			}
+		},
+		{
+			"key": "fs_acciones",
+			"type": "radios",
+			"titleMap": {
+				"": "No incluirse",
+				"p": "Incluirse"
+			}
+		},
+		{
+			"key": "fs_ayuda",
+			"type": "textarea"
+		}
+	]
+}

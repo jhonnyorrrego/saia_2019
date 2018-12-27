@@ -18,23 +18,21 @@ $(document).ready( function() {
 	$("input:reset").addClass("ui-corner-all").addClass("forms");
 	$("input:button").addClass("ui-corner-all").addClass("forms");
 	$("input:submit").addClass("ui-corner-all").addClass("forms");
-	
-	
-
 
 	/* Modulos colapsables */
-	$('.icon-collapser').live("click",function() {
+    $(document).on('click', '.icon-collapser', function () {
 		$(this).next().toggle('fast');
-    $(this).addClass('icon-collapser-close');
-    $(this).removeClass('icon-collapser');
-	$(this).html(' <i id="icono" class="icon-plus icon-white"></i>');
+        $(this).addClass('icon-collapser-close');
+        $(this).removeClass('icon-collapser');
+        $(this).html(' <i id="icono" class="icon-plus icon-white"></i>');
 		return false;
-	}).next();
-  $('.icon-collapser-close').live("click",function() {
+    }).next();
+    
+    $(document).on('click', '.icon-collapser-close', function () {
 		$(this).next().toggle('fast');
-    $(this).addClass('icon-collapser');
-    $(this).removeClass('icon-collapser-close');
-    $(this).html(' <i id="icono" class="icon-minus icon-white"></i>');       
+        $(this).addClass('icon-collapser');
+        $(this).removeClass('icon-collapser-close');
+        $(this).html(' <i id="icono" class="icon-minus icon-white"></i>');       
 		return false;
 	}).next();
 	

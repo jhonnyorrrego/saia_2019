@@ -1,8 +1,9 @@
 <?php
 function menu_superior_adicionar($idmodulo){
 	global $ruta_db_superior;
-	$texto='<li class="divider-vertical"></li><li><div class="btn-group">                    
-          <button class="btn btn-mini kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar pantalla" enlace="pantallas/generador/generador_pantalla.php?idbusqueda_componente='.$idmodulo.'">Adicionar pantalla</button><button class="btn btn-mini kenlace_saia" conector="iframe" id="generar_pantallas" destino="_self" title="Generar pantallas" enlace="pantallas/generador/generar_todas_pantallas.php?idbusqueda_componente='.$idmodulo.'">Generar todas</button></div></li>';
+	$texto='<li><div class="btn-group">                    
+          <button class="btn btn-mini kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar formato" enlace="pantallas/generador/generador_pantalla.php?idbusqueda_componente='.$idmodulo.'">Adicionar formato</button><button class="btn btn-mini kenlace_saia" conector="iframe" id="generar_pantallas" destino="_self" title="Generar pantallas" enlace="pantallas/generador/generar_todas_pantallas.php?idbusqueda_componente='.$idmodulo.'">Generar todas</button></div>';
+      
 	return($texto);
 }
 function pdf_funcion($idpantalla){

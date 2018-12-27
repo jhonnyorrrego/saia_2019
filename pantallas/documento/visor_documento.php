@@ -1,6 +1,7 @@
 <?php
 $max_salida = 6;
 $ruta_db_superior = $ruta = "";
+
 while ($max_salida > 0) {
 	if (is_file($ruta . "db.php")) {
 		$ruta_db_superior = $ruta;
@@ -9,26 +10,27 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 
-include_once ($ruta_db_superior . "pantallas/documento/menu_principal_documento.php");
-$iddoc = @$_REQUEST["iddoc"];
-if(!isset($_REQUEST["menu_principal_inactivo"])){//utilizado en parsear_accion_arbol_impresion (imprimir documento)
-	menu_principal_documento($iddoc, 1);
-}else{
-	include_once("librerias_saia.php");
-	echo librerias_jquery("1.8");
+include_once $ruta_db_superior . 'assets/librerias.php';
+
+$iddoc = $_REQUEST["iddoc"];
+
+if(!isset($_REQUEST["menu_principal_inactivo"])){
+    include_once $ruta_db_superior . "views/documento/encabezado.php";
+	echo plantilla($iddoc);
 }
+
 $datos = busca_filtro_tabla("A.pdf,A.plantilla,B.mostrar_pdf,A.numero,B.idformato", "documento A,formato B", "lower(A.plantilla)=B.nombre AND A.iddocumento=" . $iddoc, "", $conn);
 //$es_pdf_word = $_REQUEST['pdf_word'];
 if (isset($_REQUEST['pdf_word'])) {
 	if ($datos[0]["pdf"] != "" && !isset($_REQUEST["actualizar_pdf"])) {
-		$export = "visores/pdf.js-view/web/viewer2.php?tipo_visor=1&iddocumento=" . $iddoc . "&ruta=" . base64_encode($datos[0]["pdf"]);
+		$export = "visores/pdf.js-view/web/viewer2.php?tipo_visor=1&actualizar_pdf=1&iddocumento=" . $iddoc . "&ruta=" . base64_encode($datos[0]["pdf"]);
 	} else {
 		if (!isset($_REQUEST["error_pdf_word"])) {
 			include_once ($ruta_db_superior . FORMATOS_CLIENTE . "oficio_word/funciones.php");
 			generar_documento_word($datos[0]["idformato"], $iddoc);
 			$datos_word = busca_filtro_tabla("pdf", "documento", "iddocumento=" . $iddoc, "", $conn);
 			if ($datos_word[0]["pdf"] != "") {
-				$export = "visores/pdf.js-view/web/viewer2.php?tipo_visor=1&iddocumento=" . $iddoc . "&ruta=" . base64_encode($datos_word[0]["pdf"]);
+				$export = "visores/pdf.js-view/web/viewer2.php?tipo_visor=1&actualizar_pdf=1&iddocumento=" . $iddoc . "&ruta=" . base64_encode($datos_word[0]["pdf"]);
 			}
 		}
 	}

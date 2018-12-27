@@ -84,7 +84,6 @@ if ($idpantalla) {
         $accion_formato = $_REQUEST["accion_funcion"];
     }
     $accion_funcion = busca_filtro_tabla("", "funciones_formato_accion", "idfunciones_formato_accion=" . $accion_formato, "", $conn);
-    // print_r($lfunciones["numcampos"]."#".$lacciones["numcampos"]);die();
     if ($lfunciones["numcampos"] && $lacciones["numcampos"]) {
         $texto .= '<div class="control-group"><label class="control-label" for="funciones" title="Listado de funciones que se encuentran disponibles para el formato, si desea agregar una función debe adicionarla al formato directamente" >Funciones disponibles para el formato *: </label>';
         $texto .= '<div class="controls"><select name="funciones" id="funciones"><option value="">Seleccione...</option>';

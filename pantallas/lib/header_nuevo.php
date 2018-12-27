@@ -11,7 +11,6 @@ $ruta.="../";
 $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."pantallas/documento/menu_principal_documento.php");
 include_once($ruta_db_superior.'librerias_saia.php');
 //para exportar a word
 if(isset($_REQUEST["export"])){
@@ -64,7 +63,6 @@ $fuente = busca_filtro_tabla("valor","configuracion","nombre='tipo_letra'","",$c
 ?>
 </head>
 <body bgcolor="<?php echo $fondo; ?>">
-<?php  echo(menu_principal_documento($_REQUEST["iddoc"],@$_REQUEST["vista"])); ?>
 <?php
 $tam_pagina=array();
 $equivalencia=3.7882;

@@ -1,0 +1,38 @@
+{
+  "schema": {
+    "title": "",
+    "description": "Editar propiedades",
+    "type": "object",
+    "properties": {
+      "fs_etiqueta": {
+        "type": "string",
+        "title": "Etiqueta del campo",
+        "maxLength": 255,
+        "required": true
+      },
+      "fs_nombre": {
+        "type": "string",
+        "title": "Nombre",
+        "maxLength": 255,
+        "required": true
+      },
+      "fs_acciones": {
+        "type": "boolean"
+      },
+      "fs_obligatoriedad": {
+        "type": "boolean"
+      }
+    }
+  },
+  "options": {
+    "fields": {
+      "fs_nombre": {
+        "type": "hidden"
+      },
+      "fs_obligatoriedad": {
+        "type": "checkbox",
+        "rightLabel": "Obligatorio"
+      }
+    }
+  }
+}

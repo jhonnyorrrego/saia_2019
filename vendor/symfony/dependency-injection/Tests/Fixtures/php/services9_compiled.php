@@ -19,11 +19,6 @@ class ProjectServiceContainer extends Container
     private $parameters;
     private $targetDirs = array();
 
-    /**
-     * @internal but protected for BC on cache:clear
-     */
-    protected $privates = array();
-
     public function __construct()
     {
         $this->parameters = $this->getDefaultParameters();
@@ -62,12 +57,6 @@ class ProjectServiceContainer extends Container
             'alias_for_foo' => 'foo',
             'decorated' => 'decorator_service_with_name',
         );
-    }
-
-    public function reset()
-    {
-        $this->privates = array();
-        parent::reset();
     }
 
     public function compile()
@@ -243,7 +232,7 @@ class ProjectServiceContainer extends Container
      */
     protected function getFactoryServiceSimpleService()
     {
-        return $this->services['factory_service_simple'] = ($this->privates['factory_simple'] ?? $this->getFactorySimpleService())->getInstance();
+        return $this->services['factory_service_simple'] = $this->getFactorySimpleService()->getInstance();
     }
 
     /**
@@ -301,7 +290,6 @@ class ProjectServiceContainer extends Container
         $this->services['foo_with_inline'] = $instance = new \Foo();
 
         $a = new \Bar();
-
         $a->pub = 'pub';
         $a->setBaz(($this->services['baz'] ?? $this->getBazService()));
 
@@ -381,7 +369,7 @@ class ProjectServiceContainer extends Container
      */
     protected function getRuntimeErrorService()
     {
-        return $this->services['runtime_error'] = new \stdClass(($this->privates['errored_definition'] ?? $this->getErroredDefinitionService()));
+        return $this->services['runtime_error'] = new \stdClass($this->throw('Service "errored_definition" is broken.'));
     }
 
     /**
@@ -403,18 +391,8 @@ class ProjectServiceContainer extends Container
     {
         return $this->services['tagged_iterator'] = new \Bar(new RewindableGenerator(function () {
             yield 0 => ($this->services['foo'] ?? $this->getFooService());
-            yield 1 => ($this->privates['tagged_iterator_foo'] ?? $this->privates['tagged_iterator_foo'] = new \Bar());
+            yield 1 => ($this->privates['tagged_iterator_foo'] ?? ($this->privates['tagged_iterator_foo'] = new \Bar()));
         }, 2));
-    }
-
-    /**
-     * Gets the private 'errored_definition' shared service.
-     *
-     * @return \stdClass
-     */
-    protected function getErroredDefinitionService()
-    {
-        throw new RuntimeException('Service "errored_definition" is broken.');
     }
 
     /**
@@ -428,7 +406,7 @@ class ProjectServiceContainer extends Container
     {
         @trigger_error('The "factory_simple" service is deprecated. You should stop using it, as it will soon be removed.', E_USER_DEPRECATED);
 
-        return $this->privates['factory_simple'] = new \SimpleFactoryClass('foo');
+        return new \SimpleFactoryClass('foo');
     }
 
     public function getParameter($name)
@@ -476,7 +454,7 @@ class ProjectServiceContainer extends Container
     /**
      * Computes a dynamic parameter.
      *
-     * @param string The name of the dynamic parameter to load
+     * @param string $name The name of the dynamic parameter to load
      *
      * @return mixed The value of the dynamic parameter
      *
@@ -499,5 +477,10 @@ class ProjectServiceContainer extends Container
             'foo_class' => 'Bar\\FooClass',
             'foo' => 'bar',
         );
+    }
+
+    protected function throw($message)
+    {
+        throw new RuntimeException($message);
     }
 }

@@ -11,18 +11,6 @@ while ($max_salida > 0) {
 
 require_once ($ruta_db_superior . 'vendor/autoload.php');
 require_once 'SaiaTemplateProcessor.php';
-date_default_timezone_set('UTC');
-
-use PhpOffice\PhpWord\Settings;
-use PhpOffice\PhpWord\SaiaTemplateProcessor;
-error_reporting(E_ALL);
-
-if (!defined('CLI')) {
-	define('CLI', (PHP_SAPI == 'cli') ? true : false);
-	define('EOL', CLI ? PHP_EOL : '<br />');
-	define('SCRIPT_FILENAME', basename($_SERVER['SCRIPT_FILENAME'], '.php'));
-	define('IS_INDEX', SCRIPT_FILENAME == 'index');
-}
 
 class RadicadoWord {
 
@@ -521,7 +509,7 @@ class RadicadoWord {
 		}
 	}
 
-	private function cargar_csv($inputFileName) {
+	public static function cargar_csv($inputFileName) {
 		$resp = array();
 		$fila = 1;
 		$header = array();

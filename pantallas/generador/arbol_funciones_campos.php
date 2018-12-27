@@ -46,6 +46,7 @@ function listado_librerias($pantalla_idpantalla, $tipo) {
     // Librerias diferentes a las del sistema (tipo_libreria<>2)
     $librerias = busca_filtro_tabla("", "formato_libreria A", " A.formato_idformato=" . $pantalla_idpantalla, "A.orden,A.ruta", $conn);
     $texto = '';
+	
     if ($librerias["numcampos"]) {
         for ($i = 0; $i < $librerias["numcampos"]; $i++) {
             $texto_temp = listado_funciones($librerias[$i]["ruta"], $librerias[$i]["idformato_libreria"]);
@@ -73,7 +74,7 @@ function listado_funciones($ruta_libreria, $idlibreria) {
         $dato = trim(substr($valor, 8));
         $texto_param = $dato;
         // strpos($texto_param,'$idformato,$iddoc') valida que la funcion sea valida como funcion de saia para los formatos
-        if ($nombre != '' && strpos($texto_param, '$idformato,$iddoc')) {
+        if ($nombre != '' && preg_match('/\$idformato[\s]*,[\s]*\$iddoc/',$texto_param)) {
             $texto .= "<item style=\"font-family:verdana; font-size:7pt;\" text=\"" . htmlspecialchars($texto_param) . "\" id=\"func_" . $idlibreria . "_" . $nombre . "\" >";
             $texto .= "<userdata name='myfunc'>{*" . $nombre . "*}</userdata>\n";
             $texto .= "<userdata name='mylib_id'>" . $idlibreria . "</userdata>\n";

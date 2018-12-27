@@ -4,7 +4,7 @@ include_once ("pantallas/lib/librerias_cripto.php");
 $salida = 0;
 $bValidPwd = false;
 $retorno["ingresar"] = 0;
-$retorno["mensaje"] = "<span style='color:white;'><b>El nombre de usuario o contrase&ntilde;a introducidos no son correctos!</b> <br/> intente de nuevo</span>";
+$retorno["mensaje"] = "El nombre de usuario o contrase&ntilde;a introducidos no son correctos! intente de nuevo";
 $redirecciona = '#';
 $admin=0;
 $redirecciona_exito = 'index_' . $_REQUEST["INDEX"] . ".php";
@@ -38,7 +38,7 @@ if ($_REQUEST["userid"] <> "" && $_REQUEST["passwd"] <> "") {
 			$admin=1;
 			$bValidPwd = true;
 		} else {
-			$retorno["mensaje"] = "<span style='color:white;'><b>El funcionario esta inactivo o no pertenece al sistema!<b> <br/> por favor comuniquese con el administrador del sistema.</span>";
+			$retorno["mensaje"] = "El funcionario esta inactivo o no pertenece al sistema! por favor comuniquese con el administrador del sistema.";
 			die(stripslashes(json_encode($retorno)));
 		}
 	}
@@ -57,7 +57,7 @@ if ($_REQUEST["userid"] <> "" && $_REQUEST["passwd"] <> "") {
 						}
 					}
 					if (!$rol) {
-						$retorno["mensaje"] = "<span style='color:white;'><b>Error en roles !</b> <br/> El usuario no cuenta con roles activos, fechas caducadas</span>";
+						$retorno["mensaje"] = "Error en roles ! El usuario no cuenta con roles activos, fechas caducadas";
 					} else {
 						$error_hab = 0;
 						$ok_valida = 0;
@@ -82,13 +82,13 @@ if ($_REQUEST["userid"] <> "" && $_REQUEST["passwd"] <> "") {
 							if ($validar_ldap[0]['valor'] == 0 || ($validar_ldap[0]['valor'] == 1 && in_array(strtolower($sUserId), $funcionarios_excluidos))) {
 								if (trim($usuario[0]["clave"]) == trim(encrypt_md5($sPassWd))) {
 									if ($ok_valida && intval($cant[0]["cant"]) >= intval(decrypt_blowfish($cant_concurrente[0]["valor"]))) {
-										$retorno["mensaje"] = "<span style='color:white;'>Se ha alcanzado el limite de conexiones concurrentes</span>";
+										$retorno["mensaje"] = "Se ha alcanzado el limite de conexiones concurrentes";
 									} else {
 										$_SESSION["LOGIN" . LLAVE_SAIA] = $usuario[0]["login"];
 										$bValidPwd = TRUE;
 									}
 								} else {
-									$retorno["mensaje"] = "<span style='color:white;'><b>Error en la clave de acceso!</b> <br/> intente de nuevo</span>";
+									$retorno["mensaje"] = "Error en la clave de acceso! intente de nuevo";
 								}
 							} elseif ($validar_ldap[0]['valor'] == 1) {
 								$conexion_ldap = buscar_fun_dir_activo($sUserId, $sPassWd);
@@ -96,27 +96,27 @@ if ($_REQUEST["userid"] <> "" && $_REQUEST["passwd"] <> "") {
 									$retorno["mensaje"] = $conexion_ldap['mensaje'];
 								} elseif ($conexion_ldap['ingreso'] == 1) {
 									if ($ok_valida == 1 && intval($cant[0]["cant"]) >= intval(decrypt_blowfish($cant_concurrente[0]["valor"]))) {
-										$retorno["mensaje"] = "<span style='color:white;'>Se ha alcanzado el limite de conexiones concurrentes</span>";
+										$retorno["mensaje"] = "Se ha alcanzado el limite de conexiones concurrentes";
 									} else {
 										$_SESSION["LOGIN" . LLAVE_SAIA] = $usuario[0]["login"];
 										$bValidPwd = TRUE;
 									}
 								}
 							} else {
-								$retorno["mensaje"] = "<span style='color:white;'><b>Error al consultar la forma de autenticacion!</b> <br/> intente de nuevo</span>";
+								$retorno["mensaje"] = "Error al consultar la forma de autenticacion! intente de nuevo";
 							}
 						} else {
-							$retorno["mensaje"] = "<span style='color:white;'><b>Error, no se ha definido la cantidad de usuarios permitidos!</b> <br/> por favor comuniquese con el administrador del sistema.</span>";
+							$retorno["mensaje"] = "Error, no se ha definido la cantidad de usuarios permitidos! por favor comuniquese con el administrador del sistema.";
 						}
 					}
 				} else {
-					$retorno["mensaje"] = "<span style='color:white;'><b>Error en roles !</b> <br/> El usuario no cuenta con roles activos</span>";
+					$retorno["mensaje"] = "Error en roles ! El usuario no cuenta con roles activos";
 				}
 			} else {
-				$retorno["mensaje"] = "<span style='color:white;'><b>El funcionario esta inactivo!<b> <br/> por favor comuniquese con el administrador del sistema.</span>";
+				$retorno["mensaje"] = "El funcionario esta inactivo! por favor comuniquese con el administrador del sistema.";
 			}
 		} else {
-			$retorno["mensaje"] = "<span style='color:white;'><b>El funcionario no pertenece al sistema!<b> <br/> por favor comuniquese con el administrador del sistema.</span>";
+			$retorno["mensaje"] = "El funcionario no pertenece al sistema! por favor comuniquese con el administrador del sistema.";
 		}
 	}
 	if ($bValidPwd) {
@@ -139,9 +139,9 @@ if ($_REQUEST["userid"] <> "" && $_REQUEST["passwd"] <> "") {
 		}
 		borrar_archivos_carpeta($ruta_temp_func . "_" . $sUserId, false);
 		if($admin){
-			$retorno["mensaje"] = "<b>IMPORTANTE!</b> <br/> Acaba de ingresar como Administrador del sistema, todas las acciones realizadas son registradas bajo su responsabilidad";
+			$retorno["mensaje"] = "IMPORTANTE! Acaba de ingresar como Administrador del sistema, todas las acciones realizadas son registradas bajo su responsabilidad";
 		}else{
-			$retorno["mensaje"] = "<b>Bienvenido</b> <br/>has ingresado al sistema SAIA";
+			$retorno["mensaje"] = "Bienvenido has ingresado al sistema SAIA";
 		}
 		$retorno["ruta"] = $redirecciona_exito;
 		$retorno["ingresar"] = 1;

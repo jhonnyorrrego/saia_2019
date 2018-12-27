@@ -1,6 +1,7 @@
 <?php
 $max_salida = 6;
 $ruta_db_superior = $ruta = "";
+
 while ($max_salida > 0) {
 	if (is_file($ruta . "db.php")) {
 		$ruta_db_superior = $ruta;
@@ -8,11 +9,12 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once ($ruta_db_superior . 'db.php');
-include_once ($ruta_db_superior . "pantallas/documento/librerias_flujo.php");
-include_once ($ruta_db_superior . "pantallas/lib/librerias_fechas.php");
-include_once ($ruta_db_superior . "workflow/libreria_paso.php");
-include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
+
+include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "pantallas/documento/librerias_flujo.php";
+include_once $ruta_db_superior . "pantallas/lib/librerias_fechas.php";
+include_once $ruta_db_superior . "workflow/libreria_paso.php";
+include_once $ruta_db_superior . "formatos/librerias/funciones_generales.php";
 
 function barra_inferior_documento($iddoc, $numero) {
 	$dato_prioridad = busca_filtro_tabla("", "prioridad_documento", "documento_iddocumento=" . $iddoc . " AND funcionario_idfuncionario=" . usuario_actual("idfuncionario"), "fecha_asignacion DESC", $conn);
@@ -471,7 +473,7 @@ function fecha_creacion_documento($fecha0, $plantilla = Null, $doc = Null) {
 		$iddoc_papa = $doc;
 		$plantilla = nombre_plantilla($plantilla, $iddoc_papa);
 	}
-	$texto = '<div class="pull-right">' . $fecha . '</div><br /><br /><div class="link kenlace_saia" enlace="ordenar.php?key=' . $iddoc_papa . '&accion=mostrar&mostrar_formato=1" conector="iframe" titulo="Documento" style="float:right;" ><b>Ver: </b>' . $plantilla . '</div>';
+	$texto = '<div class="pull-right">' . $fecha . '</div><br /><br /><div class="link kenlace_saia cursor" enlace="ordenar.php?key=' . $iddoc_papa . '&accion=mostrar&mostrar_formato=1" conector="iframe" titulo="Documento" style="float:right;" ><b>Ver: </b>' . $plantilla . '</div>';
 	return ($texto);
 }
 
@@ -970,5 +972,189 @@ function origen_documento2($doc, $numero, $origen = "", $tipo_radicado = "", $es
 	$pre_texto = "<div class='link kenlace_saia pull-left' enlace='ordenar.php?key=" . $doc . "&accion=mostrar&mostrar_formato=1' conector='iframe' titulo='Documento No." . $numero . "'><b>" . $numero . "-" . $ruta . $ver_estado . "</b></div>";
 
 	return ($pre_texto);
+}
+
+/**
+ * @return int retorna el funcionario codigo
+ * para las cosultas de los buzones
+ */
+function code_logged_user(){
+    return usuario_actual('funcionario_codigo');
+}
+
+function variable_busqueda(){
+    return $_REQUEST['variable_busqueda'];
+}
+
+function origin_pending_document($iddocumento, $funcionarioCodigo, $numero, $fecha, $plantilla, $idtransferencia){
+	global $conn, $ruta_db_superior;
+    
+	include_once $ruta_db_superior . 'controllers/autoload.php';
+
+    $Funcionario = new Funcionario($funcionarioCodigo);
+    $roundedImage = roundedImage($Funcionario->getImage('foto_recorte'));
+	$temporality = strtotime($fecha) ? temporality($fecha) : '';
+    $documentRoute = 'formatos/' . $plantilla . '/mostrar_' . $plantilla .'.php?';
+    $documentRoute.= http_build_query([
+        'iddoc' => $iddocumento,
+        'idtransferencia' => $idtransferencia
+    ]);
+
+    $html = '<div class="col-1 px-0 text-center action">
+        <input type="hidden" value="'.$iddocumento.'" class="identificator">'
+        . $roundedImage .
+    '</div>
+    <div class="col show_document cursor principal_action" data-url="'.$documentRoute.'" titulo="Documento No.' . $numero . '">
+        <span class="mt-1 hint-text">'.$numero . " - " . $Funcionario->getName().'</span>
+    </div>
+    <div class="col-auto pr-0">
+        <span class="mt-1 hint-text">'.$temporality.'</span>
+    </div>';
+
+    return $html;
+}
+
+/**
+ *  retorna una imagen redondeada
+ * @param string $route ruta de la imagen
+ * @return string html de la imagen
+ */
+function roundedImage($route){
+    global $ruta_db_superior;
+
+    $routeImage = $ruta_db_superior . $route;
+    return '<span class="thumbnail-wrapper circular inline" style="float:none" style="width:36px;height:36px">
+        <img id="profile_image" src="'.$routeImage.'" style="width:36px;height:36px">
+    </span>';
+}
+
+function limit_description($description, $limit){
+    if(strlen($description) > $limit)
+        $description = substr($description, 0, $limit - 3) . '...';
+
+    return $description;
+}
+
+function unread($iddocumento, $fecha){
+    global $conn;
+
+    $idfuncionario = usuario_actual('funcionario_codigo');
+    $leido = busca_filtro_tabla("idtransferencia", "buzon_salida", "archivo_idarchivo=" . $iddocumento . " and origen=".$idfuncionario." and (nombre='LEIDO' or nombre='BORRADOR') and " . fecha_db_obtener("fecha", "Y-m-d H:i:s") . " >= '".$fecha."'", "", $conn);
+
+    if (!$leido["numcampos"])
+        return '<h6 class="my-0 text-center unread"><i class="fa fa-circle text-complete"></i></h6>';
+    else
+        return '';
+}
+
+function has_files($documentId, $showConunter = false) {
+    global $conn,$ruta_db_superior;
+
+    $response = '';
+    if ($documentId) {
+        $files = busca_filtro_tabla('count(*) as cant', 'anexos', 'documento_iddocumento =' . $documentId, '', $conn);
+        $pages = busca_filtro_tabla('count(*) as cant', 'pagina', 'id_documento =' . $documentId, '', $conn);
+
+        if ($files[0]['cant'] || $pages[0]['cant']) {
+            if($showConunter){
+                $total = $files[0]["cant"] + $pages[0]['cant'];
+
+                $response = '<span class="my-0 text-center f-20 px-1">
+                    <a href="' . $ruta_db_superior . 'views/pagina/pagina.php?iddoc=' . $documentId . '" class="fa fa-paperclip notification  text-master">
+                        <span class="badge badge-important counter">' . $total . '</span>
+                    </a>
+                </span>';
+            }else{
+                $response = '<span class="my-0 text-center cursor fa fa-paperclip f-20"></span>';
+            }
+        }
+    }
+    return $response;
+}
+
+function priority($documentId){
+    global $conn;
+    $class = 'text-dark';
+    $findPriority = busca_filtro_tabla('prioridad', 'prioridad_documento', 'documento_iddocumento=' . $documentId, '', $conn);
+    if(!$findPriority['numcampos'] || !$findPriority[0]['prioridad']){
+        $style = 'style="display:none"';
+    }else{
+        $style = '';
+    }
+
+    return '<span class="my-0 text-center priority_flag cursor f-20 px-1">
+        <i data-key="'.$documentId.'" class="priority fa fa-flag text-danger" '.$style.'></i>
+    </span>';
+}
+
+function documental_type($documentId){
+    global $conn;
+
+    $findSerie = busca_filtro_tabla('LOWER(b.nombre)','documento a,serie b', 'a.serie = b.idserie and a.iddocumento='.$documentId, '', $conn);
+
+    if($findSerie['numcampos'] && $findSerie[0][0])
+        return '<span class="hint-text">' . ucfirst($findSerie[0][0]) . '</span>';
+    else
+        return '';
+}
+
+function expiration($date){
+    if(strtotime($date)){
+        $Limit = new DateTime($date);
+        $Today = new DateTime();
+
+        $diference = dias_habiles_entre_fechas($Today, $Limit);
+
+        if($diference < 3){
+            if($diference == 0){
+                $html = '<span class="hint-text">Vence:</span> <span class="label label-danger btn_expiration action cursor">Hoy</span>';
+            }elseif($diference == 1){
+                $html = '<span class="hint-text">Vence:</span> <span class="label label-danger btn_expiration action cursor">Mañana</span>';
+            }else{
+                $html = '<span class="hint-text">Venció:</span> <span class="label label-danger btn_expiration action cursor">Hace '.abs($diference).' días</span>';
+            }
+        }elseif($diference >= 3 && $diference <= 8){
+            $html = '<span class="hint-text">Vence en:</span> <span class="label label-warning btn_expiration action cursor">'.$diference.' días</span>';
+        }else{
+            $html = '<span class="hint-text">Vence en:</span> <span class="label label-info btn_expiration action cursor">'.$diference.' días</span>';
+        }
+
+        return $html;
+    }
+}
+
+function temporality($date){
+    $date = DateTime::createFromFormat('Y-m-d H:i:s', $date);
+    $timeFromDate = strtotime($date->format('Y-m-d H:i:s'));
+    $diference = strtotime("now") - $timeFromDate;
+
+    if($diference < 900){//under 15 minutes 15 * 60
+        if($diference < 300){ //5 minutes 5 * 60
+            return 'Hace un momento';
+        }else { //15 minutes
+            $minutes = round($diference / 60); //convert to minutes
+            return 'Hace ' . $minutes . ' Minutos';
+        }
+    }
+
+    if(strtotime(date('Y-m-d')) < $timeFromDate){// today
+        return $date->format('H:i:s a');
+    }
+
+    $yesterday = (new DateTime())->sub(new DateInterval('P1D'))->format('Y-m-d');
+    if(strtotime($yesterday) < $timeFromDate){// yesterday
+        return 'Ayer';
+    }
+
+    $beforeYesterday = (new DateTime())->sub(new DateInterval('P2D'))->format('Y-m-d');
+    if(strtotime($beforeYesterday) < $timeFromDate){// yesterday
+        return 'Anteayer';
+    }else{
+        return $date->format('d-m-Y');
+    }
+}
+function mostrar_numero_enlace($numero,$iddoc){
+    $campo='<div class="link kenlace_saia" enlace="ordenar.php?key='.$iddoc.'&accion=mostrar&mostrar_formato=1" conector="iframe" titulo="No '.$numero.'"><span class="badge cursor btn">'.$numero.'</span></div>';
+    return $campo;
 }
 ?>

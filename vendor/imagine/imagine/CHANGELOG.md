@@ -1,5 +1,11 @@
 # CHANGELOG
 
+### 1.2.0 (2018-12-07)
+* `ExifMetadataReader` now returns all the available metadata, not only EXIF and IFD0 (#701, @mlocati)
+
+### 1.1.0 (2018-10-25)
+* New `ImageInterface::THUMBNAIL_FLAG_NOCLONE` flag for `thumbnail()` to let it modify the original image instance in order to save memory (@mlocati)
+
 ### 1.0.2 (2018-10-24)
 * Check that the Imagick PHP extension is not compiled using ImageMagick version 7.0.7-32 because it does not work correctly (@mlocati)
 
