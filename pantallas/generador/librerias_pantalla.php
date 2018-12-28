@@ -136,6 +136,7 @@ function adicionar_datos_formato($datos, $tipo_retorno = 1) {
     }
     // Field Banderas
 
+    $fieldList = array();
     if (is_array($datos["banderas"])) {
         $fieldList["banderas"] = "'" . implode(",", $datos["banderas"]) . "'";
     }
@@ -321,17 +322,17 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
     $fieldList["pertenece_nucleo"] = intval($datos["pertenece_nucleo"]);
     $documentacion = $fieldList["documentacion"];
     // insert into database
-    $strsql = "INSERT INTO formato (";
-    $strsql .= implode(",", array_keys($fieldList));
-    $strsql .= ") VALUES (";
-    $strsql .= implode(",", array_values($fieldList));
-    $strsql .= ")";
-    guardar_traza($strsql, "ft_" . $datos["nombre"]);
-    phpmkr_query($strsql, $conn) or die("Falla al ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
+    $sql_if = "INSERT INTO formato (";
+    $sql_if .= implode(",", array_keys($fieldList));
+    $sql_if .= ") VALUES (";
+    $sql_if .= implode(",", array_values($fieldList));
+    $sql_if .= ")";
+    guardar_traza($sql_if, "ft_" . $datos["nombre"]);
+    phpmkr_query($sql_if) or die("Falla al ejecutar INSERT " . phpmkr_error() . ' SQL:' . $sql_if);
 
     $idformato = phpmkr_insert_id();
 
-    if ($idformato != '') {
+    if (!empty($idformato)) {
         if ($x_flujo_idflujo != 0) {
             generar_campo_flujo($idformato, $x_flujo_idflujo);
         }
@@ -351,17 +352,17 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
     if ($fieldList["cod_padre"] && $idformato) {
 
         $formato_padre = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $fieldList["cod_padre"], "", $conn);
-        $strsql = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html,placeholder) VALUES (" . $idformato . ",'" . $formato_padre[0]["nombre_tabla"] . "', " . $fieldList["nombre"] . ", 'INT', 11, 1," . $fieldList["cod_padre"] . ", 'a','" . str_replace("'", "", $fieldList["etiqueta"]) . "(Formato padre)', 'fk', 'detalle','Formato padre')";
-        guardar_traza($strsql, "ft_" . $datos["nombre"]);
-        phpmkr_query($strsql, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
+        $sql_icf1 = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html,placeholder) VALUES (" . $idformato . ",'" . $formato_padre[0]["nombre_tabla"] . "', " . $fieldList["nombre"] . ", 'INT', 11, 1," . $fieldList["cod_padre"] . ", 'a','" . str_replace("'", "", $fieldList["etiqueta"]) . "(Formato padre)', 'fk', 'detalle','Formato padre')";
+        guardar_traza($sql_icf1, "ft_" . $datos["nombre"]);
+        phpmkr_query($sql_icf1) or die("Falla al Ejecutar INSERT " . phpmkr_error() . ' SQL:' . $sql_icf1);
     }
     if ($idformato && !$fieldList["item"]) {
-        $sqlcd = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html) VALUES (" . $idformato . ",'estado_documento', 'ESTADO DEL DOCUMENTO', 'VARCHAR', 255, 0,'', 'a','', '', 'hidden')";
-        phpmkr_query($sqlcd, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
+        $sql_icf2 = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html) VALUES (" . $idformato . ",'estado_documento', 'ESTADO DEL DOCUMENTO', 'VARCHAR', 255, 0,'', 'a','', '', 'hidden')";
+        phpmkr_query($sql_icf2) or die("Falla al Ejecutar INSERT " . phpmkr_error() . ' SQL:' . $sql_icf2);
 
-        $strsql = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html,valor) VALUES (" . $idformato . ",'serie_idserie', 'SERIE DOCUMENTAL', 'INT', 11, 1,'" . $fieldList["serie_idserie"] . "', 'a'," . $fieldList["etiqueta"] . ", 'fk', 'hidden','../../test/test_serie_funcionario.php?estado_serie=1;2;0;1;1;0;1')";
-        guardar_traza($strsql, "ft_" . $datos["nombre"]);
-        phpmkr_query($strsql, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
+        $sql_icf3 = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html,valor) VALUES (" . $idformato . ",'serie_idserie', 'SERIE DOCUMENTAL', 'INT', 11, 1,'" . $fieldList["serie_idserie"] . "', 'a'," . $fieldList["etiqueta"] . ", 'fk', 'hidden','../../test/test_serie_funcionario.php?estado_serie=1;2;0;1;1;0;1')";
+        guardar_traza($sql_icf3, "ft_" . $datos["nombre"]);
+        phpmkr_query($sql_icf3) or die("Falla al Ejecutar INSERT " . phpmkr_error() . ' SQL:' . $sql_icf3);
     }
     /*
      * Se validan y adicionan los campos adicionales al formato como iddocumento, serie_idserie, idft , etc
@@ -486,6 +487,7 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
         }
     }
 
+    $fieldList = array();
     // Field Banderas
     if (is_array($datos["banderas"]))
         $fieldList["banderas"] = "'" . implode(",", $datos["banderas"]) . "'";
@@ -498,8 +500,9 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
 
     // Field etiqueta
     $theValue = (!get_magic_quotes_gpc()) ? addslashes($datos["etiqueta"]) : $datos["etiqueta"];
-    $theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-    $fieldList["etiqueta"] = htmlentities($theValue);
+    if(!empty($thevalue)) {
+        $fieldList["etiqueta"] = htmlentities($theValue);
+    }
 
     // Field descripcion_formato
     $theValue = (!get_magic_quotes_gpc()) ? addslashes($datos["descripcion_formato"]) : $datos["descripcion_formato"];
@@ -670,16 +673,20 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
     $strsql = "UPDATE formato SET ";
     $strsql_array = array();
     foreach ($fieldList as $key => $value) {
+        if($key == "etiqueta" && (empty($value) || preg_match("/NULL/", $value))) {
+            continue;
+        }
         array_push($strsql_array, $key . " = " . $value);
     }
     $strsql .= implode(",", $strsql_array) . " WHERE idformato=" . $datos["idformato"];
     // $retorno["documentacion"]=$idformato." - ".$documentacion." - ".$anexos;
     guardar_traza($strsql, "ft_" . $datos["nombre"]);
 
-    phpmkr_query($strsql, $conn) or die("Falla al ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
+    phpmkr_query($strsql) or die("Falla al ejecutar " . phpmkr_error() . ' SQL:' . $strsql);
     // $retorno["documentacion"]=$datos["idformato"]." - ".$documentacion." - ".$anexos;
     $retorno["documentacion"] = insertar_anexo_formato($datos["idformato"], $documentacion, $anexos);
 
+    $idformato = $datos["idformato"];
     if ($idformato != '') {
 
         if ($x_flujo_idflujo != 0) {
@@ -702,17 +709,19 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
     if ($fieldList["cod_padre"] && $idformato) {
 
         $formato_padre = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $fieldList["cod_padre"], "", $conn);
-        $strsql = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html,placeholder) VALUES (" . $idformato . ",'" . $formato_padre[0]["nombre_tabla"] . "', " . $fieldList["nombre"] . ", 'INT', 11, 1," . $fieldList["cod_padre"] . ", 'a','" . str_replace("'", "", $fieldList["etiqueta"]) . "(Formato padre)', 'fk', 'detalle','Formato padre')";
-        guardar_traza($strsql, "ft_" . $datos["nombre"]);
-        phpmkr_query($strsql, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
+        $strsql_icf = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html,placeholder) VALUES (" . $idformato . ",'" . $formato_padre[0]["nombre_tabla"] . "', " . $fieldList["nombre"] . ", 'INT', 11, 1," . $fieldList["cod_padre"] . ", 'a','" . str_replace("'", "", $fieldList["etiqueta"]) . "(Formato padre)', 'fk', 'detalle','Formato padre')";
+        guardar_traza($strsql_icf, "ft_" . $datos["nombre"]);
+        phpmkr_query($strsql_icf) or die("Falla al Ejecutar INSERT " . phpmkr_error() . ' SQL:' . $strsql_icf);
     }
     if ($idformato && !$fieldList["item"]) {
-        $sqlcd = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html) VALUES (" . $idformato . ",'estado_documento', 'ESTADO DEL DOCUMENTO', 'VARCHAR', 255, 0,'', 'a','', '', 'hidden')";
-        phpmkr_query($sqlcd, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
+        $strsql_icf2 = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html) VALUES (" . $idformato . ",'estado_documento', 'ESTADO DEL DOCUMENTO', 'VARCHAR', 255, 0,'', 'a','', '', 'hidden')";
+        //TODO: Verificar existencia del campo
+        //phpmkr_query($strsql_icf2) or die("Falla al Ejecutar INSERT " . phpmkr_error() . ' SQL:' . $strsql_icf2);
 
-        $strsql = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html) VALUES (" . $idformato . ",'serie_idserie', 'SERIE DOCUMENTAL', 'INT', 11, 1," . $fieldList["serie_idserie"] . ", 'a'," . $fieldList["etiqueta"] . ", 'fk', 'hidden')";
-        guardar_traza($strsql, "ft_" . $datos["nombre"]);
-        phpmkr_query($strsql, $conn) or die("Falla al Ejecutar la busqueda " . phpmkr_error() . ' SQL:' . $strsql);
+        $strsql_icf3 = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html) VALUES (" . $idformato . ",'serie_idserie', 'SERIE DOCUMENTAL', 'INT', 11, 1," . $fieldList["serie_idserie"] . ", 'a'," . $fieldList["etiqueta"] . ", 'fk', 'hidden')";
+        //TODO: Verificar existencia del campo
+        //guardar_traza($strsql_icf3, "ft_" . $datos["nombre"]);
+        //phpmkr_query($strsql_icf3) or die("Falla al Ejecutar INSERT " . phpmkr_error() . ' SQL:' . $strsql_icf3);
     }
     /*
      * Se validan y adicionan los campos adicionales al formato como iddocumento, serie_idserie, idft , etc
@@ -2716,7 +2725,7 @@ function generar_modulo($idpantalla, $tipo_retorno) {
         $modulo_formatos = busca_filtro_tabla("A.idmodulo", "modulo A", "A.nombre='modulo_formatos'", "", $conn);
         $existe_modulo = busca_filtro_tabla("", "modulo A", "A.nombre='" . $pantalla[0]["nombre"] . "'", "", $conn);
         if (!$existe_modulo["numcampos"]) {
-            $sql1 = "INSERT INTO modulo(nombre,etiqueta,tipo,imagen,enlace,destino,cod_padre,orden,ayuda,permiso_admin)VALUES('" . $pantalla[0]["nombre"] . "','" . $pantalla[0]["etiqueta"] . "','secundario','botones/formatos/modulo.gif','" . $pantalla[0]["ruta_pantalla"] . "/adicionar_" . $pantalla[0]["nombre"] . ".php','centro','" . $modulo_formatos[0]["idmodulo"] . "','1','Modulo creado automaticamente para adicionar la pantalla',0)";
+            $sql1 = "INSERT INTO modulo(nombre,etiqueta,tipo,imagen,enlace,cod_padre,orden)VALUES('" . $pantalla[0]["nombre"] . "','" . $pantalla[0]["etiqueta"] . "','secundario','botones/formatos/modulo.gif','" . $pantalla[0]["ruta_pantalla"] . "/adicionar_" . $pantalla[0]["nombre"] . ".php','" . $modulo_formatos[0]["idmodulo"] . "','1')";
             phpmkr_query($sql1) or die($sql1);
             $mensaje = "Se ha generado el m&oacute;dulo relacionado con la pantalla";
             $err_code = 1;
@@ -2820,13 +2829,13 @@ function crear_modulo_formato($idformato) {
             } else {
                 $papa = $modulo_formato[0]["idmodulo"];
             }
-            $sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda,busqueda) VALUES ('" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','" . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["ruta_mostrar"] . "','centro','" . $papa . "','1','Permite administrar el formato " . $datos_formato[0]["etiqueta"] . ".',1)";
+            $sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,cod_padre,orden) VALUES ('" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','" . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["ruta_mostrar"] . "','" . $papa . "','1')";
             // guardar_traza($sql, $datos_formato[0]["nombre_tabla"]);
-            phpmkr_query($sql, $conn);
+            phpmkr_query($sql, $conn) or die("Error al crear el modulo: $sql");
             $modulo_id = phpmkr_insert_id();
             $sql = "INSERT INTO permiso(funcionario_idfuncionario,modulo_idmodulo) VALUES('" . usuario_actual("id") . "'," . $modulo_id . ")";
             // guardar_traza($sql, $datos_formato[0]["nombre_tabla"]);
-            phpmkr_query($sql, $conn);
+            phpmkr_query($sql) or die("Error al crear los permisos: $sql");
         } else {
             $padre = busca_filtro_tabla("idmodulo", "vpantalla_formato A, modulo B", "idformato=" . $datos_formato[0]["cod_padre"] . " AND lower(A.nombre)=(B.nombre)", "", $conn);
             if ($padre["numcampos"] > 0) {
@@ -2844,7 +2853,7 @@ function crear_modulo_formato($idformato) {
     if ($modulo_crear["numcampos"]) {
         $submodulo_formato = busca_filtro_tabla("", "modulo", "nombre = 'crear_" . $datos_formato[0]["nombre"] . "'", "", $conn);
         if (!$submodulo_formato["numcampos"]) {
-            $sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,destino,cod_padre,orden,ayuda) VALUES ('crear_" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','Crear " . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["ruta_adicionar"] . "','centro','" . $modulo_crear[0]["idmodulo"] . "','1','Permite crear " . $datos_formato[0]["etiqueta"] . ".')";
+            $sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,cod_padre,orden) VALUES ('crear_" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','Crear " . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["ruta_adicionar"] . "','" . $modulo_crear[0]["idmodulo"] . "','1')";
             // /die($sql);
             // guardar_traza($sql, $formato[0]["nombre_tabla"]);
             phpmkr_query($sql, $conn);
