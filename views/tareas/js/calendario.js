@@ -4,6 +4,7 @@ $(function() {
     $('#calendar').fullCalendar({
         longPressDelay:300,
         selectLongPressDelay: 500,
+        eventDurationEditable:false,
         editable: true,
         customButtons: {
             refresh: {
