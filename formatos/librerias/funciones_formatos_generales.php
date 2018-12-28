@@ -219,7 +219,7 @@ function digitalizar_formato($idformato, $iddoc) {
 	global $conn;
 	echo '<div class="form-group" id="digitalizacion">
             	<label>DESEA DIGITALIZAR?</label>
-            	<input name="digitalizacion" type="radio" value="1">Si  <input name="digitalizacion" type="radio" value="0" checked>No
+            	<input name="digitalizacion" type="radio" value="1" checked>Si  <input name="digitalizacion" type="radio" value="0" >No
 			</div>';
 }
 
