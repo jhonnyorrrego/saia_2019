@@ -473,7 +473,7 @@ if($datos_formato["numcampos"]) {
         	<div id="esperando_fk_categoria_formato"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
         	<?php echo($categoria_formato[0]["nombre"]);?>
           <div id="treebox_fk_categoria_formato" class="arbol_saia"></div>
-          <input id="fk_categoria_formato" type="hidden" name="fk_categoria_formato" value="<?php echo($fk_categoria_formato);?>">
+          <input id="fk_categoria_formato" type="hidden" name="fk_categoria_formato" value="<?php echo($datos_formato[0]["fk_categoria_formato"]);?>">
           <?php crear_arbol("fk_categoria_formato",$ruta_db_superior."test_categoria.php?tipo=1&seleccionados=".@$datos_formato[0]["fk_categoria_formato"],"checkbox");?>
         </div>
       </div>
