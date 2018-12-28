@@ -38,6 +38,13 @@ class Version20181228154312 extends AbstractMigration
 
         $conn->commit();
     }
+    /**
+     *
+     * @param Schema $schema
+     */
+    public function down(Schema $schema) {
+        // this down() migration is auto-generated, please modify it to your needs
+    }
     private function guardar($tabla, $datos, $campo_nombre = "nombre", $idname = null) {
         $conn = $this->connection;
 
