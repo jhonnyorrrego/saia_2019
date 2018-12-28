@@ -1785,7 +1785,7 @@ span.fancytree-expander {
         		$texto.= $nombre . "(" . $parametros . "$" . "_REQUEST['iddoc']);";
         	$texto.='}?>';
         }
-            
+
         elseif ($accion == "adicionar")
             $texto = "<?php " . $nombre . "(" . $parametros . ");? >";
         elseif ($accion == "editar")
