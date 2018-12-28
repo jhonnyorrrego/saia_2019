@@ -46,9 +46,9 @@ $(function(){
 
     function showHistory(data){
         if(data.length){
+            $('#priority_history > tbody').find('tr:not(:first)').remove();
             data.forEach(p => {
-                $('#priority_history').find('tr:not(:first)').remove();
-                $('#priority_history').append(`
+                $('#priority_history > tbody').append(`
                     <tr id="${p.id}">
                     <td>${p.date}</td>
                     <td>${p.user}</td>

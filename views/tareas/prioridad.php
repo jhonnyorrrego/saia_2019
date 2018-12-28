@@ -39,9 +39,9 @@
     <div class="col-12">
         <table class="table table-striped" id="priority_history" style="display:none">
             <tr>
-                <th>Fecha</th>
-                <th>Responsable</th>
-                <th>Prioridad</th>
+                <td>Fecha</td>
+                <td>Responsable</td>
+                <td>Prioridad</td>
             </tr>
         </table>
     </div>

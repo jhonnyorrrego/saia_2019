@@ -70,6 +70,9 @@ $(function(){
     $('#save').on('click', function(){
         let key = localStorage.getItem('key');
         let managers = getOptions('#manager');
+        let initial = moment($('#final_date').val(), 'YYYY-MM-DDThh:mm')
+            .subtract(30, "minutes").format('YYYY-MM-DD HH:mm:ss');
+        let final = moment($('#final_date').val(), 'YYYY-MM-DDThh:mm').format('YYYY-MM-DD HH:mm:ss');
 
         data = {
             task: params.id || 0,
@@ -77,8 +80,8 @@ $(function(){
             name: $('#name').val(),
             managers: managers.length ? managers : [key],
             notification: $('#send_notification').is(':checked') ? 1 : 0,
-            initialDate: params.initialTime,
-            finalDate: moment($('#final_date').val(),'YYYY-MM-DDThh:mm').format('YYYY-MM-DD HH:mm:ss'),
+            initialDate: initial,
+            finalDate: final,
             description: $('#description').val(),
         }
         
