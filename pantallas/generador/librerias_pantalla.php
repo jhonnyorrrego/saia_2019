@@ -2820,6 +2820,7 @@ function crear_modulo_formato($idformato) {
     $datos_formato = busca_filtro_tabla("nombre,etiqueta,cod_padre,ruta_mostrar,ruta_adicionar", "vpantalla_formato", "idformato=" . $idformato, "", $conn);
     // este modulo debe estar creado y debe ser el modulo principal para visualizar los formatos del menu documentos
     $modulo_formato = busca_filtro_tabla("", "modulo", "(nombre = 'modulo_formatos')", "", $conn);
+    $papa = null;
     if ($modulo_formato["numcampos"]) {
         $submodulo_formato = busca_filtro_tabla("", "modulo", "nombre ='" . $datos_formato[0]["nombre"] . "'", "", $conn);
         if (!$submodulo_formato["numcampos"]) {
@@ -2853,7 +2854,12 @@ function crear_modulo_formato($idformato) {
     if ($modulo_crear["numcampos"]) {
         $submodulo_formato = busca_filtro_tabla("", "modulo", "nombre = 'crear_" . $datos_formato[0]["nombre"] . "'", "", $conn);
         if (!$submodulo_formato["numcampos"]) {
-            $sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,cod_padre,orden) VALUES ('crear_" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','Crear " . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["ruta_adicionar"] . "','" . $modulo_crear[0]["idmodulo"] . "','1')";
+            if(empty($papa)) {
+                $papa = $modulo_crear[0]["idmodulo"];
+            }
+            //20181228 se cambia modulo crear por modulo_formatos
+            //$sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,cod_padre,orden) VALUES ('crear_" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','Crear " . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["ruta_adicionar"] . "','" . $modulo_crear[0]["idmodulo"] . "','1')";
+            $sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,cod_padre,orden) VALUES ('crear_" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','Crear " . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["ruta_adicionar"] . "','" . $papa . "','1')";
             // /die($sql);
             // guardar_traza($sql, $formato[0]["nombre_tabla"]);
             phpmkr_query($sql, $conn);
