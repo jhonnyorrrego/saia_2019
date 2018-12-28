@@ -79,7 +79,7 @@ $(function() {
             url: `${baseUrl}views/tareas/crear.php`,
             params: params,
             centerAlign:false,
-            size: "modal-lg",
+            size: "modal-xl",
             buttons: {}
         };
 

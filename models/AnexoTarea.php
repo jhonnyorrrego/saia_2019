@@ -1,5 +1,5 @@
 <?php
-require_once $ruta_db_superior . 'controllers/autoload.php';
+require_once $ruta_db_superior . 'models/model.php';
 
 class AnexoTarea extends Model
 {
@@ -35,24 +35,33 @@ class AnexoTarea extends Model
         ];
     }
 
-    public static function uploadTemporalFiles($temporalRoutes, $taskId){
-        global $ruta_db_superior;
+    public function getUser(){
+        return new Funcionario($this->fk_funcionario);
+    }
 
-        $data = [];
-        foreach($temporalRoutes as $route){
-            $content = file_get_contents($ruta_db_superior . $_SESSION["ruta_temp_funcionario"] . $route);
-            $route = $taskId . '/' . $route;
+    public function getDate(){
+        return $this->fecha;
+    }
 
-            $dbRoute = UtilitiesController::createFileDbRoute($route, 'anexos_tareas', $content);
+    public function getFileSize(){        
+        $data = StorageUtils::resolver_ruta($this->ruta);
+        $bites = $data['clase']->get_filesystem()->size($data['ruta']);
+        $size = round($bites / 1000);
+        
+        return $size . ' Kb';
+    }
 
-            $data[] = self::newRecord([
-                'fk_funcionario' => $_SESSION['idfuncionario'],
-                'fk_tarea' => $taskId,
-                'estado' => 1,
-                'ruta' => $dbRoute
-            ]);
-        }
+    public function getFileName(){
+        $file = json_decode($this->ruta);
+        $filePath = explode('/', $file->ruta);
+        return end($filePath);
+    }
 
-        return $data;
+    public function getVersion(){
+        return $this->version;
+    }
+
+    public function getDescription(){
+        return $this->descripcion;
     }
 }

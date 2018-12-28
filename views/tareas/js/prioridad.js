@@ -47,15 +47,15 @@ $(function(){
     function showHistory(data){
         if(data.length){
             data.forEach(p => {
-                if (!$(`tr#${p.id}`).length) {
-                    $('#priority_history').append(`
-                        <tr id="${p.id}">
-                        <td>${p.date}</td>
-                        <td>${p.user}</td>
-                        <td>${p.priorityLabel}</td>
-                        </tr>
-                    `);
-                }
+                $('#priority_history').find('tr:not(:first)').remove();
+                $('#priority_history').append(`
+                    <tr id="${p.id}">
+                    <td>${p.date}</td>
+                    <td>${p.user}</td>
+                    <td>${p.priorityLabel}</td>
+                    </tr>
+                `);
+                
             });
             $('#priority_history').show();
         }

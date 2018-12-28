@@ -3,7 +3,7 @@ var topModalDefaults = {
     params: {}, //params for url ej: baseUrl
     html: false, //for show specific html
     content: '', //string to put on modal
-    size: "", //'modal-lg', 'modal-sm'
+    size: "", //'modal-lg', 'modal-sm' , 'modal-xl'
     title: "", //title for modal
     centerAlign: true, //true for center align, false for top align
     buttons: {
@@ -32,9 +32,8 @@ function topModal(options){
         modal.find('.modal-dialog').removeClass('modal-dialog-centered');
     }
     
-    //evita error de backdrop en iframes
-    if ($.inArray(options.size, ['modal-lg', 'modal-sm']) != -1) {
-        modal.find('.modal-dialog').removeClass('modal-lg modal-sm');
+    if ($.inArray(options.size, ['modal-lg', 'modal-sm', 'modal-xl']) != -1) {
+        modal.find('.modal-dialog').removeClass('modal-lg modal-sm modal-xl');
         modal.find('.modal-dialog').addClass(options.size);
     }
 

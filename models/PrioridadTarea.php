@@ -39,7 +39,7 @@ class PrioridadTarea extends Model
         global $conn;
 
         $tables = self::getTableName() . ' a,' . Funcionario::getTableName() . ' b';
-        $findRecords = busca_filtro_tabla('a.idprioridad_tarea,a.fecha,a.estado,a.prioridad,b.nombres,b.apellidos', $tables, 'a.fk_funcionario = b.idfuncionario and a.fk_tarea =' . $taskId, 'a.idprioridad_tarea desc', $conn);
+        $findRecords = busca_filtro_tabla('a.idprioridad_tarea,a.fecha,a.estado,a.prioridad,b.nombres,b.apellidos', $tables, 'a.fk_funcionario = b.idfuncionario and a.fk_tarea =' . $taskId, 'idprioridad_tarea desc', $conn);
 
         unset($findRecords['numcampos'], $findRecords['tabla'], $findRecords['sql']);
         return $findRecords;
