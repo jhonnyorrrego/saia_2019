@@ -8,6 +8,9 @@ class AnexoTarea extends Model
     protected $fk_funcionario;
     protected $ruta;
     protected $estado;
+    protected $descripcion;
+    protected $version;
+    protected $fecha;
     protected $dbAttributes;
 
     function __construct($id = null) {
@@ -23,9 +26,12 @@ class AnexoTarea extends Model
                 'fk_funcionario',
                 'fk_tarea',
                 'ruta',
-                'estado'
+                'estado',
+                'descripcion',
+                'version',
+                'fecha'
             ],
-            'date' => []
+            'date' => ['fecha']
         ];
     }
 

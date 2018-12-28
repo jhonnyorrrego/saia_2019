@@ -1,5 +1,20 @@
+<?php
+$max_salida = 10;
+$ruta_db_superior = $ruta = '';
+
+while ($max_salida > 0) {
+    if (is_file($ruta . 'db.php')) {
+        $ruta_db_superior = $ruta;
+    }
+
+    $ruta .= '../';
+    $max_salida--;
+}
+
+?>
+<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen">
 <div class="form-group">
-    <label class="my-0" for="name">Nombre de la tarea</label>
+    <label class="my-0" for="name">Nombre de la tarea<span class="text-danger">*</span></label>
     <input type="text" class="form-control" id="name" placeholder="Qué desea que se realice?">
 </div>
 <div class="row">
@@ -33,9 +48,9 @@
     <label for="description">Instrucciones adicionales</label>
     <textarea class="form-control" id="description" rows="3"></textarea>
 </div>
-<script>
-    $(function(){
-        let baseUrl = Session.getBaseUrl();
-        $.getScript(`${baseUrl}views/tareas/js/informacion.js`);
-    })
-</script>
+<div class="form-group text-right">
+    <button class="btn btn-complete" id="save">Guardar</button>
+</div>
+<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.min.js"></script>
+<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/i18n/es.js"></script>
+<script src="<?= $ruta_db_superior ?>views/tareas/js/informacion.js"></script>
