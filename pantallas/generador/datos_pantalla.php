@@ -653,7 +653,8 @@ $("document").ready(function(){
         }
         $('#aprobacion_automatica_'+formato[0].aprobacion_automatica).attr('checked',"checked");
         $('#enviar_datos_formato').attr('value','editar_datos_formato');
-  	    $('#tabs_formulario a[href="#formulario-tab"]').tab('show');
+  	    $('#tabs_formulario a[href="#datos_formulario-tab"]').tab('show');
+  	    $('#componentes_acciones').hide();
   	    $('.nav li').removeClass('disabled');
 
         var item = formato[0].item;
@@ -670,6 +671,8 @@ $("document").ready(function(){
 
 	} else {
 		$('.nav li').addClass('disabled');
+		$('#generar_pantalla').addClass('disabled');
+		
 		$("#contenidos_componentes").hide();
 		$('#tabs_formulario li:first').removeClass('disabled');
 		$('#tabs_formulario a[href="#datos_formulario-tab"]').tab('show');

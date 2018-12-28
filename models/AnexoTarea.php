@@ -8,9 +8,12 @@ class AnexoTarea extends Model
     protected $fk_funcionario;
     protected $ruta;
     protected $estado;
+    protected $descripcion;
+    protected $version;
+    protected $fecha;
     protected $dbAttributes;
 
-    function __construct($id){
+    function __construct($id = null) {
         return parent::__construct($id);
     }
 
@@ -23,12 +26,15 @@ class AnexoTarea extends Model
                 'fk_funcionario',
                 'fk_tarea',
                 'ruta',
-                'estado'
+                'estado',
+                'descripcion',
+                'version',
+                'fecha'
             ],
-            'date' => []
+            'date' => ['fecha']
         ];
     }
-    
+
     public static function uploadTemporalFiles($temporalRoutes, $taskId){
         global $ruta_db_superior;
 
@@ -36,9 +42,9 @@ class AnexoTarea extends Model
         foreach($temporalRoutes as $route){
             $content = file_get_contents($ruta_db_superior . $_SESSION["ruta_temp_funcionario"] . $route);
             $route = $taskId . '/' . $route;
-            
+
             $dbRoute = UtilitiesController::createFileDbRoute($route, 'anexos_tareas', $content);
-            
+
             $data[] = self::newRecord([
                 'fk_funcionario' => $_SESSION['idfuncionario'],
                 'fk_tarea' => $taskId,

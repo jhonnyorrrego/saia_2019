@@ -10,7 +10,7 @@ class Pagina extends Model {
     protected $fecha_pagina;
     protected $dbAttributes;
 
-    function __construct($id) {
+    function __construct($id = null) {
         parent::__construct($id);
     }
 
@@ -26,7 +26,7 @@ class Pagina extends Model {
             'ruta',
             'fecha_pagina'
         ];
-    
+
         // set the date attributes on the schema
         $dateAttributes = ['fecha_pagina'];
 
