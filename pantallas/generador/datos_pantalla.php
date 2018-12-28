@@ -184,7 +184,7 @@ function crear_campo_dropzone($nombre, $parametros) {
       <div class="control-group">
         <label class="control-label" for="etiqueta">Nombre del formato *</label>
         <div class="controls">
-          <input type="text" style="width: 80%;" name="etiqueta" id="etiqueta_formato" placeholder="Nombre" value="" required <?php if($_REQUEST["idformato"]) echo("disabled");?>>
+          <input type="text" style="width: 80%;" name="etiqueta" id="etiqueta_formato" placeholder="Nombre" value="" required <?php if($_REQUEST["idformato"]) echo("readonly");?>>
         </div>
       </div>
     </div>
@@ -633,6 +633,7 @@ $("document").ready(function(){
 
 	if(formato!==null && formato.numcampos) {
         $('#nombre_formato').attr('value',formato[0].nombre);
+        $('#etiqueta_formato').attr('value',formato[0].etiqueta);
         //$('#tabla_formato').attr('value',formato[0].tabla);
         $('#descripcion_formato').attr('value',formato[0].descripcion_formato);
         $('#proceso_pertenece').attr('value',formato[0].proceso_pertenece);
@@ -672,7 +673,7 @@ $("document").ready(function(){
 	} else {
 		$('.nav li').addClass('disabled');
 		$('#generar_pantalla').addClass('disabled');
-		
+
 		$("#contenidos_componentes").hide();
 		$('#tabs_formulario li:first').removeClass('disabled');
 		$('#tabs_formulario a[href="#datos_formulario-tab"]').tab('show');
