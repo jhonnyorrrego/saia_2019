@@ -32,11 +32,9 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 
     $temporalRoutes = [];
     foreach($_FILES as $key => $file){
-        $name = rand(0, 10000) . '.' . $file['name'];
-
         $content = file_get_contents($file['tmp_name']);
-        if(file_put_contents($dir . $name, $content) !== false){
-            $temporalRoutes[] = $name;            
+        if(file_put_contents($dir . $file['name'], $content) !== false){
+            $temporalRoutes[] = $_SESSION["ruta_temp_funcionario"] . $file['name'];
         }
     }
 
