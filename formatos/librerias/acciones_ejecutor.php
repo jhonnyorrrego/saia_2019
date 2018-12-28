@@ -58,6 +58,8 @@
     <div class="container-fluid container-fixed-lg col-lg-8">
     <div class="card card-default">
     <div class="card-body">
+        <div class="row">
+            <div class="col-8">
       <div class="form-group">
         <form name="form1" id="form1" class="form-horizontal">
             <?php
@@ -125,9 +127,9 @@
               foreach($campos_auto as $nombre){
                 if($nombre<>""){
                   echo '
-                  <div class="form-group">
-                  <label for="'.$nombre.'_ejecutor" id="label_'.$nombre.'">'.$etiquetas[$nombre].':</label>
-                  <input class="form-control" type="text" id="'.$nombre.'_ejecutor" name="'.$nombre.'" /><br />
+                  <div>
+                  <label class="col-5" for="'.$nombre.'_ejecutor" id="label_'.$nombre.'">'.$etiquetas[$nombre].':</label>
+                  <input class="col-4" type="text" id="'.$nombre.'_ejecutor" name="'.$nombre.'" />
                   </div>';
                 }
               }
@@ -164,6 +166,8 @@
               ?>
         </form>
       </div>
+            </div>
+      </div>
     </div>
   </div>
   </div>
@@ -183,7 +187,7 @@
   }
   $(function() {
   	$("#nombre_ejecutor").hide();
-	$("#nombre_ejecutor").parent().append("<input class='form-control' type='text' id='buscar_nombre' size='50' name='buscar_nombre'><div id='ul_completar' class='ac_results' style='cursor:pointer'></div>");
+	$("#nombre_ejecutor").parent().append("<input class='col-4' type='text' id='buscar_nombre' size='50' name='buscar_nombre'><div id='ul_completar' class='ac_results' style='cursor:pointer'></div>");
 	
 	$("#buscar_nombre").keyup(function (){
 		if($(this).val()==0 || $(this).val()==""){

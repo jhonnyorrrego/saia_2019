@@ -721,9 +721,8 @@ class SqlMysql extends SQL2 {
     }
 
     public function formato_crear_indice($bandera, $nombre_campo, $nombre_tabla) {
-        $nombre_tabla = strtoupper($nombre_tabla);
-        $nombre_campo = strtoupper($nombre_campo);
-        $banderas = explode(",", $todas_banderas);
+        $nombre_tabla = strtolower($nombre_tabla);
+        $nombre_campo = strtolower($nombre_campo);
         $traza = array();
         if (strlen($nombre_tabla) > 26) {
             $aux = substr($nombre_tabla, 0, 26);
@@ -735,11 +734,14 @@ class SqlMysql extends SQL2 {
         switch (strtolower($bandera)) {
             case "pk":
                 $this->filas = 0;
-                if ($this->verificar_existencia($nombre_tabla) && !$this->verificar_existencia_llave($nombre_tabla, $nombre_campo)) {
+                $tabla_existe = $this->verificar_existencia($nombre_tabla);
+                $crear_llave = $tabla_existe && !$this->verificar_existencia_llave($nombre_tabla, $nombre_campo);
+                if ($crear_llave) {
                     $dato = "ALTER TABLE " . strtolower($nombre_tabla) . " ADD PRIMARY KEY ( " . strtolower($nombre_campo) . ")";
                     guardar_traza($dato, $nombre_tabla);
                     $this->Ejecutar_sql($dato);
                 }
+                //var_dump($nombre_tabla, $tabla_existe, $crear_llave, $dato);die();
                 $dato = "ALTER TABLE " . strtolower($nombre_tabla) . " CHANGE " . strtolower($nombre_campo) . " " . strtolower($nombre_campo) . " INT(11) NOT NULL AUTO_INCREMENT ";
                 guardar_traza($dato, $nombre_tabla);
                 $this->Ejecutar_sql($dato);
