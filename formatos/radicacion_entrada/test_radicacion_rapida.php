@@ -32,14 +32,13 @@ if ($formato_radicacion["numcampos"]) {
 		echo("text=\"" . ucwords(strtolower(htmlspecialchars($formato_radicacion[0]["etiqueta"]))) . " Origen Interno\" id=\"radicacion_salida\" ></item>");
 	}
 }
-
-//FORMATO pqrsf
-$formato_pqrsf = busca_filtro_tabla("etiqueta,nombre", "formato", "nombre='pqrsf'", "", $conn);
-if ($formato_pqrsf["numcampos"]) {
-	$ok_pqrsf = $ok -> acceso_modulo_perfil("crear_" . $formato_pqrsf[0]['nombre']);
-	if ($ok_pqrsf) {
+//FORMATOS
+$formatos = busca_filtro_tabla("etiqueta,nombre", "formato", "fk_categoria_formato like '1' OR fk_categoria_formato like '1,%' OR fk_categoria_formato like '%,1,%' OR fk_categoria_formato like '%,1' ", "", $conn);
+if ($formatos["numcampos"]) {
+	$ok_formato = $ok -> acceso_modulo_perfil("crear_" . $formatos[0]['nombre']);
+	if ($ok_formato) {
 		echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-		echo("text=\"" . ucwords(strtolower(htmlspecialchars($formato_pqrsf[0]["etiqueta"]))) . " \" id=\"pqrsf\" ></item>");
+		echo("text=\"" . ucwords(strtolower(htmlspecialchars($formatos[0]["etiqueta"]))) . " \" id=\"".$formatos[0]["nombre"]."\" ></item>");
 	}
 }
 
