@@ -59,7 +59,7 @@
     <div class="card card-default">
     <div class="card-body">
         <div class="row">
-            <div class="col-8">
+            <div class="col-12">
       <div class="form-group">
         <form name="form1" id="form1" class="form-horizontal">
             <?php
@@ -89,11 +89,11 @@
                 } 
             if($_REQUEST["tipo"]=="multiple"){
               ?>
-              <div class="row">
-                <div class="col-md-4">
-                  <div class="form-group">
-                    <label for="estado_actualizacion">Seleccionados:</label>                                               
-                    <select class="full-width" data-init-plugin="select2" id="estado_actualizacion" name="seleccionados_ejecutor">
+              <div id="div_seleccionados_multiple" class="row">
+
+                    <label for="estado_actualizacion" class ="col-5 control-label">Seleccionados:</label>
+
+                    <select style="width:40%;" data-init-plugin="select2" id="estado_actualizacion" name="seleccionados_ejecutor">
         	           <option value="0">Listado de Seleccionados</option>
         			       <?php
         			       if(isset($lista)&&$lista["numcampos"]){
@@ -104,11 +104,11 @@
         			       }
         		        ?>
           			    </select>
-            		  </div>
-                  <div class="col-auto m-2">  
+
+                  <div class="col-auto">
                     <span id="eliminar" class="label label-success"  style="cursor:pointer">Quitar</span>
                   </div>
-                </div>
+
               </div>                   
               <?php
               }else if($_REQUEST["tipo"]=="unico"){
@@ -127,9 +127,9 @@
               foreach($campos_auto as $nombre){
                 if($nombre<>""){
                   echo '
-                  <div>
+                  <div class="row">
                   <label class="col-5" for="'.$nombre.'_ejecutor" id="label_'.$nombre.'">'.$etiquetas[$nombre].':</label>
-                  <input class="col-4" type="text" id="'.$nombre.'_ejecutor" name="'.$nombre.'" />
+                  <input class="col-6" type="text" id="'.$nombre.'_ejecutor" name="'.$nombre.'" />
                   </div>';
                 }
               }
@@ -187,7 +187,7 @@
   }
   $(function() {
   	$("#nombre_ejecutor").hide();
-	$("#nombre_ejecutor").parent().append("<input class='col-4' type='text' id='buscar_nombre' size='50' name='buscar_nombre'><div id='ul_completar' class='ac_results' style='cursor:pointer'></div>");
+	$("#nombre_ejecutor").parent().append("<input class='col-6' type='text' id='buscar_nombre' size='50' name='buscar_nombre'><div id='ul_completar' class='ac_results' style='cursor:pointer'></div>");
 	
 	$("#buscar_nombre").keyup(function (){
 		if($(this).val()==0 || $(this).val()==""){
