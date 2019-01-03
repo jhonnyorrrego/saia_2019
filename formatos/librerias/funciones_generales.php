@@ -259,7 +259,6 @@ function componente_ejecutor($idcampo, $iddoc) {
                 $( document ).ready(function() {
                     let breakpoint = localStorage.getItem(\'breakpoint\');
                     if(breakpoint != "xs" || breakpoint != "xs"){
-                        console.log("entro");
                         $("#frame_' . $campo[0]["nombre"] . '").attr("height",'.$alto_escritorio.');
                     }
                 });
