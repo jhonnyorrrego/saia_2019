@@ -35,8 +35,9 @@ $texto='<script type="text/javascript">
         data:'."'pais='+pais+'&departamento='+departamento+'&campo=".$_REQUEST["campo"]."',".'
         success: function(datos,exito){
         $("#div_titulo_ejecutor").find(".select2").remove();
-          $("#div_'.$_REQUEST["campo"].'_ejecutor").empty();
-          $("#div_'.$_REQUEST["campo"].'_ejecutor").append(datos);
+        $("#div_seleccionados_multiple").find(".select2").remove();
+          $("#div_select_' . $_REQUEST["campo"] . '_ciudades").empty();
+          $("#div_select_' . $_REQUEST["campo"] . '_ciudades").append(datos);
         }
       });
     }
@@ -46,7 +47,7 @@ $texto='<script type="text/javascript">
 <script type="text/javascript" src="../../assets/theme/assets/plugins/select2/js/select2.full.min.js"></script>
 <script src="../../assets/theme/pages/js/pages.js"></script>';
 $paises=busca_filtro_tabla("","pais","","",$conn);
-$texto.='<div class="row"><div class="col"><div class="row"><div class="col-auto px-1"><select data-init-plugin="select2" name="pais_ejecutor_'.$_REQUEST["campo"].'" id="pais_ejecutor_'.$_REQUEST["campo"].'">';
+$texto.='<div class="col-auto px-1"><select data-init-plugin="select2" name="pais_ejecutor_'.$_REQUEST["campo"].'" id="pais_ejecutor_'.$_REQUEST["campo"].'">';
 for($i=0;$i<$paises["numcampos"];$i++){
   $texto.='<option value="'.$paises[$i]["idpais"].'"';
   if($paises[$i]["idpais"]==@$_REQUEST["pais"])
@@ -84,7 +85,7 @@ if($departamentos["numcampos"]){
       $texto.='<option value="'.$municipios[$i]["idmunicipio"].'"';
       $texto.=">".$municipios[$i]["nombre"].'</option>';  
     }   
-    $texto.='</select></div></div></div></div>';
+    $texto.='</select></div><div class="col-auto px-1"><span class="label label-success" style="cursor:pointer;" id="nuevo_municipio_' . $campo . '">Otro</span></div></div>';
   }
 }
 else{
