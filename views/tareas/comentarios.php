@@ -1,5 +1,4 @@
-
-<div class="container" id="document_comments"></div>
+<div class="container" id="task_comments"></div>
 <script>
     $(function(){
         if(typeof Comments == 'undefined'){
@@ -14,9 +13,10 @@
         }
 
         function start(){
+            let params = JSON.parse($('script[data-params]').attr('data-params'));
             let user = JSON.parse(localStorage.getItem('user'));
             let options = {
-                selector: '#document_comments',
+                selector: '#task_comments',
                 baseUrl: Session.getBaseUrl(),
                 placeholder: 'Escriba su mensaje',
                 order: 'desc',
@@ -28,13 +28,13 @@
                 source: function (){
                     let data = new Object();
                     $.ajax({
-                        url: `${this.baseUrl}app/comentarios/documento.php`,
+                        url: `${this.baseUrl}app/tareas/consulta_comentarios.php`,
                         dataType: 'json',
                         type: 'POST',
                         async: false,
                         data: {
                             key: this.userData.id,
-                            relation: "<?= $_REQUEST['documentId'] ?>"
+                            relation: params.id
                         },
                         success: function(response){
                             if(response.success){
@@ -54,13 +54,13 @@
                 save: function(comment){
                     let data = false;
                     $.ajax({
-                        url: `${this.baseUrl}app/comentarios/guardar.php`,
+                        url: `${this.baseUrl}app/tareas/guardar_comentarios.php`,
                         dataType: 'json',
                         type: 'POST',
                         async: false,
                         data: {
                             key: this.userData.id,
-                            relation: "<?= $_REQUEST['documentId'] ?>",
+                            relation: params.id,
                             comment: comment
                         },
                         success: function(response){

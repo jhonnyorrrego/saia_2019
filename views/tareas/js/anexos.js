@@ -78,11 +78,11 @@ $(function () {
                 $('#file_history > tbody').append(`
                     <tr id="${f.id}">
                         <td>${f.name}</td>
-                        <td>${f.version}</td>
+                        <td class="text-center">${f.version}</td>
                         <td>${f.description}</td>
                         <td>${f.user}</td>
-                        <td>${f.date}</td>
-                        <td>${f.size}</td>
+                        <td class="text-center">${f.date}</td>
+                        <td class="text-center">${f.size}</td>
                     </tr>
                 `);
             })

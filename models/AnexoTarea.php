@@ -40,7 +40,8 @@ class AnexoTarea extends Model
     }
 
     public function getDate(){
-        return $this->fecha;
+        $DateTime = DateTime::createFromFormat('Y-m-d H:i:s', $this->fecha);
+        return $DateTime->format('d-m-Y');
     }
 
     public function getFileSize(){        

@@ -23,24 +23,20 @@ $Response = (object)array(
 );
 
 if($_SESSION['idfuncionario'] == $_REQUEST['key']){
-    $documentId = $_REQUEST['documentId'];
     $comments = ComentarioDocumento::findAllByAttributes([
-        'fk_documento' => $documentId
+        'fk_documento' => $_REQUEST['relation']
     ]);
 
     $data = [];
     foreach ($comments as $key => $ComentarioDocumento) {
-        $Funcionario = new Funcionario($ComentarioDocumento->fk_funcionario);
-        $DateTime = DateTime::createFromFormat('Y-m-d H:i:s', $ComentarioDocumento->fecha);
-
         $data[] = [
             'user' => [
-                'key' => $Funcionario->getPk(),
-                'name' => $Funcionario->getName(),
-                'image' => $Funcionario->getImage('foto_recorte')
+                'key' => $ComentarioDocumento->getUser()->getPk(),
+                'name' => $ComentarioDocumento->getUser()->getName(),
+                'image' => $ComentarioDocumento->getUser()->getImage('foto_recorte')
             ],
-            'comment' => $ComentarioDocumento->comentario,
-            'temporality' => $DateTime->format('h:i a')
+            'comment' => $ComentarioDocumento->getComment(),
+            'temporality' => $ComentarioDocumento->getDate('d-m-Y h:i a')
         ];
     }
 
