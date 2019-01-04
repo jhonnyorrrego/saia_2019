@@ -390,9 +390,10 @@ if($datos_formato["numcampos"]) {
               	if(@$datos_formato["numcampos"]){
               		$default_font_size=$datos_formato[0]["font_size"];
               	}
+              	
               	foreach ($tam_letras as $value) {
               	    echo('<option value="' . $value . '"');
-              	    if($i == $default_font_size) {
+              	    if($value == $default_font_size) {
               	        echo(' selected="selected"');
               	    }
               	    echo('>'. $value .'</option>');
