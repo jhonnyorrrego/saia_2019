@@ -125,7 +125,7 @@ $iddocumento = $_REQUEST["iddoc"];
 					del = new Array();
 					y = 0;
 					$.ajax({
-						url : baseUrl + 'views/pagina/cargar_pagina.php',
+						url : baseUrl + 'app/pagina/obtenerpagina.php',
 						data : {
 							iddoc : iddoc
 						},
