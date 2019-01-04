@@ -41,7 +41,8 @@ print_r($paginas["data"]);
 			</div>
 			<div class="row">
 				<div class="col-12">
-				    <?php if(UtilitiesController::permisoModulo("editar_paginas")):?>
+					<a href="#" id="addNoty" class="btn btn-mini float-right"><i class="fa fa-comment-o"></i></a>
+					<?php if(UtilitiesController::permisoModulo("editar_paginas")):?>
 					<a href="listar_pagina.php?iddoc=<?=$iddocumento; ?>" class="btn btn-mini float-right"><i class="fa fa-edit"></i></a>
 					<?php endif; ?>
 				</div>

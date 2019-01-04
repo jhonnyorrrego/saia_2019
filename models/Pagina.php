@@ -20,13 +20,11 @@ class Pagina extends Model {
     protected function defineAttributes() {
         // set the safe attributes to update and consult
         $safeDbAttributes = [
-            'id_documento',
-            'imagen',
-            'pagina',
-            'ruta',
-            'fecha_pagina'
-        ];
-
+        'id_documento',
+        'imagen',
+        'pagina',
+        'ruta',
+        'fecha_pagina'];
 
         // set the date attributes on the schema
         $dateAttributes = ['fecha_pagina'];
@@ -98,7 +96,7 @@ class Pagina extends Model {
      * */
     protected function getUrlTemp($campo, $sufijo, $nameFile, $force) {
         $urlTemp = false;
-        $urlImg = Utilities::getFileTemp($campo, $sufijo, $nameFile, $force);
+        $urlImg = UtilitiesController::getFileTemp($campo, $sufijo, $nameFile, $force);
         if ($urlImg["exito"]) {
             $urlTemp = $urlImg["url"];
         }
@@ -113,24 +111,24 @@ class Pagina extends Model {
      * */
 
     public static function getAllResultDocument($iddoc, $order = "") {
-        /*$response = array();
-         $response['data'] = self::findAllByAttributes(['id_documento' => $iddoc], [
-         "consecutivo",
-         "imagen",
-         "ruta"], $order);
-         $response['numcampos'] = count($response['data']);
+        $response = array();
+        $response['data'] = self::findAllByAttributes(['id_documento' => $iddoc], [
+        "consecutivo",
+        "imagen",
+        "ruta"], $order);
+        $response['numcampos'] = count($response['data']);
+        return $response;
 
-         return $response;
-        global $conn;
-        $retorno = array();
-        $data = busca_filtro_tabla("consecutivo", "pagina", "id_documento=" . $iddoc, $order, $conn);
-        if ($data["numcampos"]) {
-            $retorno["numcampos"] = $data["numcampos"];
-            for ($i = 0; $i < $data["numcampos"]; $i++) {
-                $retorno["data"][$i] = new Pagina($data[$i]['consecutivo']);
-            }
-        }
-        return $retorno;*/
+        /*global $conn;
+         $retorno = array();
+         $data = busca_filtro_tabla("consecutivo", "pagina", "id_documento=" . $iddoc, $order, $conn);
+         if ($data["numcampos"]) {
+         $retorno["numcampos"] = $data["numcampos"];
+         for ($i = 0; $i < $data["numcampos"]; $i++) {
+         $retorno["data"][$i] = new Pagina($data[$i]['consecutivo']);
+         }
+         }
+         return $retorno;*/
     }
 
 }
