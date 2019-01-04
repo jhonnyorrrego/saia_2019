@@ -185,7 +185,7 @@ function generar_ciudad($ciudad, $campo) {
 				$texto .= " SELECTED ";
 			$texto .= ">" . $municipios[$i]["nombre"] . '</option>';
 		}
-		$texto .= '</select></div><div class="col-auto px-1"><span class="label label-success" style="cursor:pointer;" id="nuevo_municipio_' . $campo . '">Otro</span></div></div>';
+		$texto .= '</select></div><div class="col-auto px-1"><span class="label label-success" style="cursor:pointer;" id="nuevo_municipio_' . $campo . '">Otro</span></div></div></div>';
 
 	}
 	return ($texto);
