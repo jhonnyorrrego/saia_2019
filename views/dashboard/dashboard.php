@@ -38,7 +38,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 	<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/switchery/css/switchery.min.css" rel="stylesheet" type="text/css" media="screen" />
 	<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/css/imgareaselect-default.css" rel="stylesheet" type="text/css" media="screen" />
     <style>
-        .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+        .autocomplete-suggestions { border: 1px solid #E6E6E6; background: #FFF; overflow: auto; }
         .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
         .autocomplete-selected { background: #F0F0F0; }
         .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
