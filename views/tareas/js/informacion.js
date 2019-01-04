@@ -95,13 +95,7 @@ $(function(){
                 let newParams = JSON.stringify({ id: response.data });
                 $('script[data-params]').attr('data-params', newParams);
                 $('.tasktab.disabled').removeClass('disabled');
-
-                //se debe mejorar, actualiza el calendario
-                if($('#iframe_workspace').contents().find('#iframe_right_workspace').length){
-                    $('#iframe_workspace').contents().find('#iframe_right_workspace').contents().find('.fc-refresh-button').trigger('click');
-                }else{
-                    $('#iframe_workspace').contents().find('.fc-refresh-button').trigger('click');
-                }
+                $('#iframe_workspace').contents().find('.fc-refresh-button').trigger('click');
             }
         }, 'json')
     });

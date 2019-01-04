@@ -111,7 +111,7 @@ function theme()
     $routeM = $ruta_db_superior . 'assets/theme/assets/plugins/modernizr.custom.js';
     $modernizr = '<script type="text/javascript" src="' . $routeM . '"></script>';
 
-    $routeCss = $ruta_db_superior . 'assets/theme/pages/css/pages.css';
+    $routeCss = $ruta_db_superior . 'assets/theme/pages/css/pages.min.css';
     $css = '<link class="main-stylesheet" href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
 
     $routeJs = $ruta_db_superior . 'assets/theme/pages/js/pages.js';

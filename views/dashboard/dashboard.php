@@ -45,7 +45,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         .autocomplete-group { padding: 2px 5px; }
         .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
     </style>
-    <link class="main-stylesheet" href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.css" rel="stylesheet" type="text/css" />
+    <link class="main-stylesheet" href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.min.css" rel="stylesheet" type="text/css" />
 </head>
 
 <body class="fixed-header">

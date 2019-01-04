@@ -5,9 +5,7 @@
         if(typeof Comments == 'undefined'){
             let baseUrl = Session.getBaseUrl();
             $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/comments/comments.js`, function(){
-                $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/comments/comment_events.js`, function(){
-                    start();
-                }); 
+                start();
             });
         }else{
             start();

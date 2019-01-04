@@ -26,7 +26,7 @@ $(function() {
             right:  'prev,next,refresh month,agendaWeek,agendaDay,today'
         },
         defaultView: 'agendaWeek',
-        height:'parent',
+        height: $(window).height() - 20,
         selectable: true,        
         select: function( start, end){
             let params = {
