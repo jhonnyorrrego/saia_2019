@@ -37,7 +37,7 @@ $tabs = [[
         'icon' => 'fa fa-tags'
     ],[
         'href' => 'comments',
-        'url' => "{$ruta_db_superior}views/tareas/cometarios.php",
+        'url' => "{$ruta_db_superior}views/tareas/comentarios.php",
         'icon' => 'fa fa-comments'
     ],[
         'href' => 'state',

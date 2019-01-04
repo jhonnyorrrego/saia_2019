@@ -24,8 +24,14 @@ if($_SESSION['idfuncionario'] == $_REQUEST['key']){
     $tags = Etiqueta::findActiveByUser($_REQUEST['key']);
 
     if($_REQUEST['selections']){
-        foreach($tags as $key => $tag){
-            $tags[$key]['checkboxType'] = EtiquetaDocumento::defineCheckboxType($tag['idetiqueta'], $_REQUEST['selections']);
+        if($_REQUEST['dataBind'] == 'document'){
+            foreach($tags as $key => $tag){
+                $tags[$key]['checkboxType'] = EtiquetaDocumento::defineCheckboxType($tag['idetiqueta'], $_REQUEST['selections']);
+            }
+        }else if($_REQUEST['dataBind'] == 'task'){
+            foreach($tags as $key => $tag){
+                $tags[$key]['checkboxType'] = EtiquetaTarea::isActive($tag['idetiqueta'], $_REQUEST['selections']);
+            }
         }
     }
     $Response->data = $tags;

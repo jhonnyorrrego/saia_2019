@@ -18,20 +18,20 @@ include_once $ruta_db_superior . 'controllers/autoload.php';
 $Response = (object)array(
     'success' => 1,
     'message' => '',
-    'data' => (object)array()
+    'data' => []
 );
 
-if($_SESSION['idfuncionario'] == $_REQUEST['key']){
-    $pk = $ComentarioDocumento = ComentarioDocumento::newRecord([
+if($_SESSION['idfuncionario'] == $_REQUEST['key'] && $_REQUEST['relation']){
+    $pk = ComentarioTarea::newRecord([
         'fk_funcionario' => $_REQUEST['key'],
-        'fk_documento' => $_REQUEST['relation'],
+        'fk_tarea' => $_REQUEST['relation'],
         'comentario' => $_REQUEST['comment']['comment'],
         'fecha' => date('Y-m-d H:i:s')
     ]);
 
     if(!$pk){
+        $Response->message = 'Error al guardar';
         $Response->success = 0;
-        $Response->message = "Error al guardar";
     }
 }else{
     $Response->success = 0;
