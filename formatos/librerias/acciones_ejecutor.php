@@ -480,6 +480,8 @@
         url:'generar_ejecutor.php',
         data:'idejecutor='+id+"&campos="+lista_campos,
         success: function(datos,exito){
+            $("#div_titulo_ejecutor").find(".select2").remove();
+            $("#div_seleccionados_multiple").find(".select2").remove();
           $("#datos_ejecutor").empty();
           $("#datos_ejecutor").append(datos);
         }

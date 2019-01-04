@@ -252,7 +252,7 @@ function componente_ejecutor($idcampo, $iddoc) {
                 // $parametros=explode("@",$campo[0]["valor"]);
                 $campos = explode(",", $parametros[2]);
                 $alto_movil = 40 * (count($campos) + 6);
-                $alto_escritorio = 32 * (count($campos) + 6);
+                $alto_escritorio = 35 * (count($campos) + 6);
                 echo '
                 <iframe border=0 frameborder="0" framespacing="0" name="frame_' . $campo[0]["nombre"] . '" id="frame_' . $campo[0]["nombre"] . '" src="../librerias/acciones_ejecutor.php?formulario_autocompletar=formulario_formatos&campo_autocompletar=' . $campo[0]["nombre"] . '&tabla=' . $formato[0]["nombre_tabla"] . '&campos_auto=' . $parametros[1] . '&tipo=' . $parametros[0] . '&campos=' . $parametros[2] . $adicionales . '" width="100%" height="' . $alto_movil . 'px"></iframe>
                 <script>
