@@ -123,9 +123,15 @@ class Model {
         }
     }
 
+    public static function findByPk($pk){
+        return self::findAllByAttributes([
+            self::getPrimaryLabel() => $pk
+        ]);
+    }
+
     public static function findByAttributes($conditions, $fields = []){
         $data = self::findAllByAttributes($conditions, $fields, '', 1);
-        return count($data) ? $data[0] : NULL;
+        return $data ? $data[0] : NULL;
     }
 
     /**
@@ -140,7 +146,6 @@ class Model {
     public static function findAllByAttributes($conditions, $fields = [], $order = '', $limit = 0){
         global $conn;
 
-        $data = [];
         $table = self::getTableName();        
         $select = self::createSelect($fields);
         $condition = self::createCondition($conditions);
@@ -152,9 +157,12 @@ class Model {
         }
         
         if ($records['numcampos']) {
-            $data = self::convertToObjectCollection($records);
+            $response = self::convertToObjectCollection($records);
+        }else{
+            $response = NULL;
         }
-        return $data;
+
+        return $response;
     }
 
     /**

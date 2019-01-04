@@ -88,7 +88,7 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
             cardView : true,
             pagination: true,
             maintainSelected: true,
-            pageSize: 20
+            pageSize: 15
         });
 
         $('#table').on('check.bs.table uncheck.bs.table', function () {

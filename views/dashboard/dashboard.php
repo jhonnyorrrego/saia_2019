@@ -317,6 +317,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <script>
         $(function(){
             Ui.putColor();
+            Ui.inactiveTime();
         });
     </script>
 </body>
