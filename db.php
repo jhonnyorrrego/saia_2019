@@ -4,7 +4,7 @@ require_once 'conexion.php';
 require_once 'sql2.php';
 require_once 'StorageUtils.php';
 require_once 'filesystem/SaiaStorage.php';
-require 'vendor/autoload.php';
+require_once 'vendor/autoload.php';
 
 date_default_timezone_set('America/Bogota');
 
@@ -14,7 +14,6 @@ use Imagine\Image\Box;
 use Imagine\Gd\Imagine;
 use PHPSQLParser\PHPSQLParser;
 require_once("sql2.php");
-
 
 if (!isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
     session_start();
@@ -190,15 +189,7 @@ function leido($codigo, $llave)
 </Clase>  */
 function limpia_tabla($tabla)
 {
-    $max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
-    $ruta_db_superior = $ruta = "";
-    while ($max_salida > 0) {
-        if (is_file($ruta . "db.php")) {
-            $ruta_db_superior = $ruta; //Preserva la ruta superior encontrada
-        }
-        $ruta .= "../";
-        $max_salida--;
-    }
+    global $ruta_db_superior;
 
     include_once($ruta_db_superior . "kses-0.2.3/kses.php");
 
@@ -835,76 +826,40 @@ function phpmkr_error()
     $conn->mostrar_error();
 }
 
-/*
-<Clase>
-<Nombre>busca_filtro_tabla
-<Parametros>$campos: columnas que se van a seleccionar
-            $tabla: Tabla(s) desde la(s) que se va a seleccionar los datos
-            $filtro: where de la consulta
-            $orden: columna por la que se ordenaran los datos
-<Responsabilidades>Invocar la busqueda a la base de datos y retornar el resultado de la misma en un arreglo
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
+/**
+ * ejecuta una busqueda sobre la base de datos
+ *
+ * @param string $campos
+ * @param string $tabla
+ * @param string $filtro
+ * @param string $orden
+ * @param string $conn
+ * @return void
  */
-function busca_filtro_tabla($campos, $tabla, $filtro, $orden, $conn)
-{
+function busca_filtro_tabla($campos, $tabla, $filtro, $orden, $conn){
     global $sql, $conn;
-    if (!$conn) {
-        $conn = phpmkr_db_connect();
-    }
-    $retorno = array();
-    $temp = array();
-    $retorno["tabla"] = $tabla;
-    switch ($tabla) {
-        case ("dependencia2"):
-            $tabla = "dependencia";
-            break;
-        case ("cargo2"):
-            $tabla = "cargo";
-            break;
-        case ("cargo3"):
-            $tabla = "dependencia_cargo";
-            break;
-        case ("funcionario2"):
-            $tabla = "funcionario";
-            break;
-    }
+   
     $sql = "Select ";
-    if ($campos) {
-        $sql .= $campos;
-    } else {
-        $sql .= "*";
-    }
-    if ($tabla) {
-        $sql .= " FROM " . $tabla;
-    }
-    if ($filtro) {
-        $sql .= " WHERE " . $filtro;
-    }
-    if ($orden) {
-        if (substr(strtolower($orden), 0, 5) == "group") {
-            $sql .= " " . $orden;
-        } else {
-            $sql .= " ORDER BY " . $orden;
-        }
-    }
+    $sql.= $campos ? $campos : "*";
+    $sql.= " FROM {$tabla}";
+    $sql.= $filtro ? " WHERE {$filtro} " : ' ';
+    $sql.= $orden ? (substr(strtolower($orden), 0, 5) == "group" ?
+        $orden : "ORDER BY {$orden} ") : '';
+        
     $sql = htmlspecialchars_decode($sql);
     $rs = $conn->Ejecutar_Sql($sql);
     $temp = phpmkr_fetch_array($rs);
-    $retorno["sql"] = $sql;
 
+    $return = [];
     for ($i = 0; $temp; $temp = phpmkr_fetch_array($rs), $i++) {
-        array_push($retorno, $temp);
+        $return[] = $temp;
     }
-    $retorno["numcampos"] = $i;
     phpmkr_free_result($rs);
-    if (DEBUGEAR_FLUJOS && strpos($tabla, 'funcionario') === false && strpos($tabla, 'evento') === false) {
-        error(print_r($retorno, true));
-    }
-    return ($retorno);
+
+    $return['numcampos'] = $i;
+    $return['tabla'] = $tabla;
+    $return['sql'] = $sql;
+    return $return;
 }
 /*
 <Clase>
@@ -1736,80 +1691,30 @@ function error($cad, $ruta = "", $file = "", $imprime_cadena = 0)
         $size = file_put_contents($ruta, "[" . date("Y-m-d H:i:s") . "][" . $file . "]" . $cad . "\n\r", FILE_APPEND);
     }
 }
-/*
-<Clase>
-<Nombre>imprime_error
-<Parametros>
-<Responsabilidades>
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
+
+/**
+ * abre una url
+ *
+ * @param string $location url destino
+ * @param string $target ventana destino
+ * @return void
  */
-function imprime_error()
-{
-    global $error;
-    if (!empty($error))
-        echo (implode($error, "<BR><BR>"));
-    $error = null;
-    die();
+function abrir_url($location, $target = "_blank"){
+    echo "<script language='javascript'>
+        window.open('".$location."',".$target.");
+    </script>";
 }
 
-/*
-<Clase>
-<Nombre>abrir_url
-<Parametros>$location: url, $target: frame
-<Responsabilidades>Esta Funcion Abre una pagina en el frame objetivo con open si no existe un frame objetivo trata de abri la pagina en un frame llamado "centro"
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
+/**
+ * redirecciona la ventana actual
+ *
+ * @param string $location url destino
+ * @return void
  */
-function abrir_url($location, $target = "_blank")
-{
-    if (!@$_SESSION['radicacion_masiva']) {
-        if ($target) {
-            ?>
-    <script language="javascript">
-    	window.open("<?php print($location); ?>","<?php print($target); ?>");
-    </script>
-    <?php
-
-} else {
-    ?>
-    <script language="javascript">
-    	window.open("<?php print($location); ?>","centro");
-    </script>
-    <?php
-
-}
-}
-}
-
-/*
-<Clase>
-<Nombre>redirecciona
-<Parametros>$location: pagina a abrir
-<Responsabilidades> Esta Funcion Abre una pagina con location
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
- */
-function redirecciona($location)
-{
-    if (!@$_SESSION['radicacion_masiva'] && !$_REQUEST["llamado_ajax"]) {
-        ?>
-        <script language="javascript">
-        	window.location="<?php print($location); ?>";
-        </script>
-        <?php
-        exit();
-    }
-
+function redirecciona($location){
+    echo "<script language='javascript'>
+        window.location='" . $location ."';
+    </script>";
 }
 /*
 <Clase>
@@ -3203,27 +3108,23 @@ function almacenar_sesion($exito, $login)
     return ($datos);
 }
 
-/*
-<Clase>
-<Nombre>usuario_actual
-<Parametros>$campo: columna del usuario que se quiere obtener
-<Responsabilidades>Establece la informacion del usuario que tiene session actual
-<Notas>
-<Excepciones>No se encuentra el funcionario en el sistema, por favor comuniquese con el administrador
-             Si no existe session en el momento
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
+/**
+ * obtiene un attributo del 
+ * usuario logueado
+ *
+ * @param string $campo
+ * @return void
  */
 function usuario_actual($campo) {
     global $usuactual, $conn;
+
     if (!isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
-        salir(decodifica_encabezado("Su sesi&oacute;n ha expirado, por favor ingrese de nuevo."));
+        salir("Su sesión ha expirado, por favor ingrese de nuevo.");
     } else if (!empty($usuactual)) {
-        $dato = busca_filtro_tabla("A.estado,A.idfuncionario,A.funcionario_codigo,A.email,A.email_contrasena,A.idfuncionario AS id,A.perfil,A.login, A.nombres, A.apellidos, A.ventanilla_radicacion", "funcionario A", "A.login='" . $usuactual . "'", "", $conn);
+        $dato = busca_filtro_tabla("estado,{$campo}", "funcionario A", "A.login='" . $usuactual . "'", "", $conn);
         if ($dato["numcampos"]) {
             if ($dato[0]["estado"] == 1) {
-                return ($dato[0][$campo]);
+                return $dato[0][$campo];
             } else {
                 salir("El funcionario se encuentra inactivo", $usuactual);
             }
@@ -3288,7 +3189,7 @@ function salir($texto, $login)
     session_destroy();
     unset($_COOKIE["PHPSESSID"]);
 
-    abrir_url(PROTOCOLO_CONEXION . RUTA_PDF . "/views/login/login.php", "_top");
+    redirecciona(PROTOCOLO_CONEXION . RUTA_PDF . "/views/login/login.php");
 
     die();
 }
@@ -3416,14 +3317,8 @@ function servidor_remoto()
 <Post-condiciones><Post-condiciones>
 </Clase>
  */
-function cerrar_ventana()
-{
-    ?>
-<script>
-  window.close();
-</script>
-<?php
-
+function cerrar_ventana(){
+    echo "<script>window.close();</script>";
 }
 /*<Clase>
 <Nombre>ejecuta_filtro_tabla</Nombre>

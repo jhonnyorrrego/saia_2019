@@ -70,6 +70,7 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 						function onNodeSelect(nodeId){
 							if(nodeId.indexOf('#',0)==-1){
 								$('#generar_consecutivo').val(nodeId);
+								console.log(nodeId);
 								if(nodeId=='radicacion_salida'){
 									$('#enlace').val("ordenar.php?accion=mostrar&mostrar_formato=1");
 								}else{
@@ -111,8 +112,8 @@ include_once ($ruta_db_superior . "librerias_saia.php");
                     <tr>
                         <td style="font-size:8pt;"  align="center">Colilla</td>
                         <td align="center">
-                            <label class="radio-inline"><input type="radio" name="colilla_vertical" checked value="0">Horizontal</label>
-                            <label class="radio-inline"><input type="radio" name="colilla_vertical" value="1">Vertical</label>
+                            <label class="radio-inline"><input type="radio" name="colilla_vertical" value="0">Horizontal</label>
+                            <label class="radio-inline"><input type="radio" name="colilla_vertical" checked value="1">Vertical</label>
                         </td>
                     </tr>
 					<tr>

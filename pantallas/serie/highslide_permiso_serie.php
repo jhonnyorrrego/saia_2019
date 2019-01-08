@@ -69,7 +69,11 @@ include_once ($ruta_db_superior . 'librerias_saia.php');
                     if(exito["exito"]==1){
                         mensaje="adicionado";
                     }
-                    top.noty({text: "<b>ATENCI&Oacute;N</b><br>Permiso "+mensaje+" con exito!",type: "success",layout: "topCenter",timeout:2500});
+                    top.notification({
+                        message: mensaje,
+                        type: 'success',
+                        duration: 3000
+                    });
                     parent.hs.close();
                 }
             });                     

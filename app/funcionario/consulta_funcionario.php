@@ -38,7 +38,7 @@ if(isset($_REQUEST['type'])){
         $Response->success = 0;
     }
 }else{
-    $Response->message = "Debe iniciar sesión";
+    $Response->message = "Debe iniciar sesion";
     $Response->success = 0;
 }
 

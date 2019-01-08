@@ -1,6 +1,6 @@
 $(function(){
     let baseUrl = Session.getBaseUrl();
-    let params = $('script[data-params]').data('params');    
+    let params = JSON.parse($('script[data-params]').attr('data-params'));
     let language = {
         errorLoading: function () {
             return "La carga falló" 
@@ -31,9 +31,10 @@ $(function(){
     };
 
     (function init(){
-        if(!params.id){
+        if (!params.id) {
             let finaldate = moment(params.finalTime, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDThh:mm');
             $('#final_date').val(finaldate);
+            checkName();
         }else{
             findFormData(params.id);
         }
@@ -60,11 +61,18 @@ $(function(){
     $("#manager").on('select2:unselect', function (e) {
         let id = e.params.data.id;
         $(this).find(`[value="${id}"]`).remove();
-    });        
+    });
+
+    $(document).on('keyup', '#name', function () {
+        checkName();
+    });
     
-    $('#btn_success').on('click', function(){
+    $('#save').on('click', function(){
         let key = localStorage.getItem('key');
         let managers = getOptions('#manager');
+        let initial = moment($('#final_date').val(), 'YYYY-MM-DDThh:mm')
+            .subtract(30, "minutes").format('YYYY-MM-DD HH:mm:ss');
+        let final = moment($('#final_date').val(), 'YYYY-MM-DDThh:mm').format('YYYY-MM-DD HH:mm:ss');
 
         data = {
             task: params.id || 0,
@@ -72,8 +80,8 @@ $(function(){
             name: $('#name').val(),
             managers: managers.length ? managers : [key],
             notification: $('#send_notification').is(':checked') ? 1 : 0,
-            initialDate: params.initialTime,
-            finalDate: moment($('#final_date').val(),'YYYY-MM-DDThh:mm').format('YYYY-MM-DD HH:mm:ss'),
+            initialDate: initial,
+            finalDate: final,
             description: $('#description').val(),
         }
         
@@ -84,14 +92,10 @@ $(function(){
                     message: response.message
                 });
 
-                //se debe mejorar, actualiza el calendario
-                if($('#iframe_workspace').contents().find('#iframe_right_workspace').length){
-                    $('#iframe_workspace').contents().find('#iframe_right_workspace').contents().find('.fc-refresh-button').trigger('click');
-                }else{
-                    $('#iframe_workspace').contents().find('.fc-refresh-button').trigger('click');
-                }
-
-                $('#close_modal').trigger('click');
+                let newParams = JSON.stringify({ id: response.data });
+                $('script[data-params]').attr('data-params', newParams);
+                $('.tasktab.disabled').removeClass('disabled');
+                $('#iframe_workspace').contents().find('.fc-refresh-button').trigger('click');
             }
         }, 'json')
     });
@@ -145,28 +149,8 @@ $(function(){
             })
         }
     }
+
+    function checkName() {        
+        $('#save').attr('disabled', $('#name').val().length ? false : true);
+    }
 });
-
-    /*var myDropzone = new Dropzone("#task_files", { 
-        url: `${baseUrl}app/tareas/cargar_anexos.php`,
-        params: {
-            key: localStorage.getItem('key')
-        },
-        paramName: 'task_file',
-        init: function() {
-            this.on("success", function(file, response) {
-                response = jQuery.parseJSON(response)
-
-                if(response.success){
-                    response.data.forEach(e => {
-                        loadedFiles.push(e);
-                    })
-                }else{
-                    top.notification({
-                        type: 'error',
-                        message: response.message
-                    })
-                }
-            })
-        }
-    });*/

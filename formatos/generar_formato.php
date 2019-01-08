@@ -392,7 +392,8 @@ class GenerarFormato {
             }
             $includes .= $include_formato;
             $includes .= $this->incluir_libreria("header_nuevo.php", "librerias");
-            $contenido = $includes . $texto . $enlace . $this->incluir_libreria("footer_nuevo.php", "librerias");
+            $estilo_letra_default ="<style> table{font-size: ".$formato[0]['font_size'].";} </style>";
+            $contenido = $includes .$estilo_letra_default. $texto . $enlace . $this->incluir_libreria("footer_nuevo.php", "librerias");
             $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $contenido);
             if ($mostrar !== false) {
                 notificaciones("Formato mostrar Creado con exito por favor verificar la carpeta " . dirname($mostrar), "success", 2000);
@@ -1785,7 +1786,7 @@ span.fancytree-expander {
         		$texto.= $nombre . "(" . $parametros . "$" . "_REQUEST['iddoc']);";
         	$texto.='}?>';
         }
-            
+
         elseif ($accion == "adicionar")
             $texto = "<?php " . $nombre . "(" . $parametros . ");? >";
         elseif ($accion == "editar")

@@ -1,5 +1,5 @@
 <?php
-require_once $ruta_db_superior . 'models/model.php';
+require_once $ruta_db_superior . 'controllers/autoload.php';
 
 class Configuracion extends Model
 {

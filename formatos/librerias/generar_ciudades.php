@@ -34,8 +34,10 @@ $texto='<script type="text/javascript">
         url:'."'".$ruta_db_superior."formatos/librerias/generar_ciudades.php'".',
         data:'."'pais='+pais+'&departamento='+departamento+'&campo=".$_REQUEST["campo"]."',".'
         success: function(datos,exito){
-          $("#div_'.$_REQUEST["campo"].'_ejecutor").empty();
-          $("#div_'.$_REQUEST["campo"].'_ejecutor").append(datos);
+        $("#div_titulo_ejecutor").find(".select2").remove();
+        $("#div_seleccionados_multiple").find(".select2").remove();
+          $("#div_select_' . $_REQUEST["campo"] . '_ciudades").empty();
+          $("#div_select_' . $_REQUEST["campo"] . '_ciudades").append(datos);
         }
       });
     }
@@ -45,14 +47,14 @@ $texto='<script type="text/javascript">
 <script type="text/javascript" src="../../assets/theme/assets/plugins/select2/js/select2.full.min.js"></script>
 <script src="../../assets/theme/pages/js/pages.js"></script>';
 $paises=busca_filtro_tabla("","pais","","",$conn);
-$texto.='<select class="full-width" data-init-plugin="select2" name="pais_ejecutor_'.$_REQUEST["campo"].'" id="pais_ejecutor_'.$_REQUEST["campo"].'">';
+$texto.='<div class="col-auto px-1"><select data-init-plugin="select2" name="pais_ejecutor_'.$_REQUEST["campo"].'" id="pais_ejecutor_'.$_REQUEST["campo"].'">';
 for($i=0;$i<$paises["numcampos"];$i++){
   $texto.='<option value="'.$paises[$i]["idpais"].'"';
   if($paises[$i]["idpais"]==@$_REQUEST["pais"])
     $texto.=" SELECTED ";
   $texto.=">".$paises[$i]["nombre"].'</option>';  
 }
-$texto.='</select>&nbsp;&nbsp;&nbsp;';
+$texto.='</select></div><div class="col-auto px-1">';
 if(@$_REQUEST["pais"]){
   $pais=$_REQUEST["pais"];
 }
@@ -60,7 +62,7 @@ else{
   $pais=$paises[0]["idpais"];
 }
 $departamentos=busca_filtro_tabla("","departamento","pais_idpais=".$pais,"lower(nombre)",$conn);
-$texto.='<select class="full-width" data-init-plugin="select2" name="departamento_ejecutor_'.$_REQUEST["campo"].'" id="departamento_ejecutor_'.$_REQUEST["campo"].'">';
+$texto.='<select data-init-plugin="select2" name="departamento_ejecutor_'.$_REQUEST["campo"].'" id="departamento_ejecutor_'.$_REQUEST["campo"].'">';
 if($departamentos["numcampos"]){
   
   for($i=0;$i<$departamentos["numcampos"];$i++){
@@ -69,7 +71,7 @@ if($departamentos["numcampos"]){
      $texto.=" SELECTED ";
     $texto.=">".$departamentos[$i]["nombre"].'</option>';  
   }
-  $texto.='</select>&nbsp;&nbsp;&nbsp;';
+  $texto.='</select></div><div class="col-auto px-1">';
   if(@$_REQUEST["departamento"]){
     $departamento=$_REQUEST["departamento"];
   }
@@ -78,16 +80,16 @@ if($departamentos["numcampos"]){
   }  
   $municipios=busca_filtro_tabla("","municipio","departamento_iddepartamento=".$departamento,"lower(nombre)",$conn);
   if($municipios["numcampos"]){
-    $texto.='<select class="full-width" data-init-plugin="select2" name="'.$_REQUEST["campo"].'" id="'.$_REQUEST["campo"].'">';
+    $texto.='<select data-init-plugin="select2" name="'.$_REQUEST["campo"].'" id="'.$_REQUEST["campo"].'">';
     for($i=0;$i<$municipios["numcampos"];$i++){
       $texto.='<option value="'.$municipios[$i]["idmunicipio"].'"';
       $texto.=">".$municipios[$i]["nombre"].'</option>';  
     }   
-    $texto.='</select>&nbsp;&nbsp;&nbsp;';
+    $texto.='</select></div><div class="col-auto px-1"><span class="label label-success" style="cursor:pointer;" id="nuevo_municipio_' . $campo . '">Otro</span></div></div>';
   }
 }
 else{
-  $texto.='<option value="0">Por favor seleccione otro</option></select>';
+  $texto.='<option value="0">Por favor seleccione otro</option></select></div></div></div></div>';
 }
 echo($texto);
 ?>

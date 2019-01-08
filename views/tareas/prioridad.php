@@ -35,15 +35,17 @@
         </div>
     </div>
 </div>
-<br>
-<br>
-<table class="table table-striped" id="priority_history" style="display:none">
-    <tr>
-        <th>Fecha</th>
-        <th>Responsable</th>
-        <th>Prioridad</th>
-    </tr>
-</table>
+<div class="row pt-3">
+    <div class="col-12">
+        <table class="table table-striped table-condensed" id="priority_history" style="display:none">
+            <tr>
+                <td>Fecha</td>
+                <td>Responsable</td>
+                <td>Prioridad</td>
+            </tr>
+        </table>
+    </div>
+</div>
 <script>
     $(function(){
         let baseUrl = Session.getBaseUrl();

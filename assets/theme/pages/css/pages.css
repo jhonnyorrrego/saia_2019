@@ -5802,7 +5802,7 @@ body > .pgn-wrapper {
 ------------------------------------
 */
 @media (min-width: 992px) {
-  .modal-lg {
+  .modal-lg .modal-xl {
     width: 900px;
   }
 }
@@ -14752,4 +14752,9 @@ Main components
 
 .f-20{
     font-size: 20px;
+}
+
+.modal-xl {
+    max-width: 100%;
+    width: calc(100% - 35%) !important;
 }

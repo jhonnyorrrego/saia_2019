@@ -12,12 +12,6 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
 include_once $ruta_db_superior . 'pantallas/documento/librerias.php';
-include_once $ruta_db_superior . 'assets/librerias.php';
-
-echo jquery();
-echo bootstrap();
-echo icons();
-echo theme();
 
 $document = array();
 $userId = 0;
@@ -25,7 +19,7 @@ $userId = 0;
 /**
  * retorna los datos del documento
  * @param int $documentId identificador del documento
- * @return busca_filtro_tabla 
+ * @return array busca_filtro_tabla 
  */
 function findDocument($documentId){
     global $conn, $userId;
@@ -70,9 +64,8 @@ function findDocument($documentId){
     )
  */
 function moduleActions($parentModule){
-    global $ruta_db_superior, $document, $userId, $conn;
+    global $conn;
 
-    $links = array();
     $findModules = busca_filtro_tabla('a.nombre,a.enlace,a.imagen,a.etiqueta', 'modulo a, modulo b', 'a.cod_padre = b.idmodulo and b.nombre = "' . $parentModule . '"', 'a.orden', $conn);
     unset($findModules['tabla'],$findModules['numcampos'],$findModules['sql']);
     
@@ -92,8 +85,6 @@ function moduleActions($parentModule){
  */
 function findActions($documentId){
     global $conn, $ruta_db_superior, $userId, $document;
-
-    include_once $ruta_db_superior . "class_transferencia.php";
 
     $seePreviousManagers = false;
     $seeManagers = false;
@@ -157,7 +148,7 @@ function findActions($documentId){
 }
 
 function getTransfer($transferId){
-    global $conn, $ruta_db_superior, $userId;
+    global $conn, $userId;
 
     if(!$transferId)
         $transferId = $_SESSION['transferId'];
@@ -191,7 +182,7 @@ function getTransfer($transferId){
  * @param int $idtransferencia identificador de la
  *      transferencia en caso de venir de un buzon
  * 
- * @return html del encabezado
+ * @return string html del encabezado
  */
 function plantilla($documentId, $transferId = 0){
     global $conn, $ruta_db_superior, $document;
@@ -304,5 +295,9 @@ function plantilla($documentId, $transferId = 0){
     <!--<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.js"></script>-->
     <script src="<?= $ruta_db_superior ?>views/documento/js/encabezado.js" data-baseurl="<?= $ruta_db_superior ?>" data-documentid="<?= $documentId ?>"></script>
     <?php
+}
+
+if(isset($_REQUEST['documentId'])){
+    plantilla($_REQUEST['documentId'], $_REQUEST['transferId']);
 }
 ?>

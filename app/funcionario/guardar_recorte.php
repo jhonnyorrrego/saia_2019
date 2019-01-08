@@ -64,7 +64,7 @@ if (isset($_SESSION['idfuncionario']) && $_REQUEST) {
         $Response->message = "Error";
     }
 } else {
-    $Response->message = "Debe iniciar sesión";
+    $Response->message = "Debe iniciar sesion";
 }
 
 echo json_encode($Response);

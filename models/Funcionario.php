@@ -1,5 +1,5 @@
 <?php
-require_once $ruta_db_superior . 'models/model.php';
+require_once $ruta_db_superior . 'controllers/autoload.php';
 require_once $ruta_db_superior . 'vendor/autoload.php';
 require_once $ruta_db_superior . 'StorageUtils.php';
 require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
@@ -132,6 +132,14 @@ class Funcionario extends Model {
      */
     public function getPassword(){
         return $this->clave;
+    }
+
+    /**
+     * @return string attribute
+     * @author jhon.valencia@cerok.com
+     */
+    public function getLogin(){
+        return $this->login;
     }
 
     /**

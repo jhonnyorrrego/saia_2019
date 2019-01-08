@@ -11,15 +11,12 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . "db.php";
-include_once $ruta_db_superior . "assets/librerias.php";
-include_once $ruta_db_superior . "views/documento/encabezado.php";
 include_once $ruta_db_superior . "formatos/librerias/encabezado_pie_pagina.php";
 
 global $conn;
 
 $iddocumento = $_REQUEST['iddoc'];
 $idformato = $_REQUEST['idformato'];
-$idtransferencia = $_REQUEST['idtransferencia'] ? $_REQUEST['idtransferencia'] : 0;
 
 if ($iddocumento) {
     $formato = busca_filtro_tabla("", "formato a,documento b", "lower(b.plantilla)= lower(a.nombre) and b.iddocumento=" . $iddocumento, "", $conn);
@@ -151,7 +148,7 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
                     box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
                     -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
                     -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-                    box-shadow: 5px 5px 8px #c6c6c6;
+                    box-shadow: 2px 2px 8px #c6c6c6;
                 }
 
                 .page_margin_top,
@@ -209,9 +206,6 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
 	<body>
 <?php if ($_REQUEST["tipo"] != 5): ?>
     <div class="container bg-master-lightest mx-0 px-2 px-md-0 mw-100">
-        <div class="row sticky-top p-0 m-0 bg-master-lightest">
-            <?= plantilla($iddocumento, $idtransferencia) ?>
-        </div>
         <div id="documento" class="row p-0 m-0">
             <div id="pag-0" class="col-12 page_border bg-white">
                 <div class="page_margin_top" id="doc_header">

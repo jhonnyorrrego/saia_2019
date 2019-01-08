@@ -30,7 +30,7 @@ $idcategoria_formato = $_REQUEST['idcategoria_formato'];
 if (!$idcategoria_formato) {
 	$idcategoria_formato = 2;
 }
-$lista_formatos = busca_filtro_tabla("nombre,etiqueta,ruta_adicionar", "formato", "mostrar=1 AND (fk_categoria_formato like '" . $idcategoria_formato . "' OR   fk_categoria_formato like '%," . $idcategoria_formato . "'  OR   fk_categoria_formato like '" . $idcategoria_formato . ",%' OR   fk_categoria_formato like '%," . $idcategoria_formato . ",%') AND (fk_categoria_formato like '2' OR fk_categoria_formato like '%,2'  OR fk_categoria_formato like '2,%' OR fk_categoria_formato like '%,2,%')", "etiqueta ASC", $conn);
+$lista_formatos = busca_filtro_tabla("idformato,nombre,etiqueta,ruta_adicionar", "formato", "mostrar=1 AND (fk_categoria_formato like '" . $idcategoria_formato . "' OR   fk_categoria_formato like '%," . $idcategoria_formato . "'  OR   fk_categoria_formato like '" . $idcategoria_formato . ",%' OR   fk_categoria_formato like '%," . $idcategoria_formato . ",%') AND (fk_categoria_formato like '2' OR fk_categoria_formato like '%,2'  OR fk_categoria_formato like '2,%' OR fk_categoria_formato like '%,2,%')", "etiqueta ASC", $conn);
 $proceso = busca_filtro_tabla('', 'categoria_formato', 'idcategoria_formato=' . $idcategoria_formato, '', $conn);
 $nombre_proceso = codifica_encabezado(html_entity_decode($proceso[0]['nombre']));
 $nombre_proceso = mb_strtoupper($nombre_proceso);
@@ -47,6 +47,12 @@ $nombre_proceso = mb_strtoupper($nombre_proceso);
                 $etiqueta = codifica_encabezado(html_entity_decode($lista_formatos[$i]['etiqueta']));
                 $etiqueta = strtolower($etiqueta);
                 $etiqueta = ucwords($etiqueta);
+                if(empty($adicional)) {
+                    $adicional = "?";
+                } else {
+                    $adicional .= "&";
+                }
+                $adicional .= "idformato=" . $lista_formatos[$i]['idformato'];
 
                 $enlace_adicionar = FORMATOS_CLIENTE . $lista_formatos[$i]['nombre'] . '/' . $lista_formatos[$i]['ruta_adicionar'];
                 ?>

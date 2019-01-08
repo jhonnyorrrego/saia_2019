@@ -43,7 +43,7 @@ switch ($sAction) {
 
         $ok = EditData($x_idserie);
         if ($ok) {
-            notificaciones('Serie editada con exito', 'success', 6000);
+            alerta('Serie editada con exito');
             if ($_REQUEST["idnode"]) {
                 ?>
 <script>
@@ -68,7 +68,7 @@ switch ($sAction) {
 <?php
             }
         } else {
-            notificaciones('Serie editada con exito', 'success', 6000);
+            alerta('Serie editada con exito');
             abrir_url("serieedit.php?key=" . $x_idserie);
         }
         exit();
@@ -76,7 +76,7 @@ switch ($sAction) {
     default:
         $sKey = $_REQUEST["x_idserie"];
         if (!$sKey) {
-            notificaciones("No se encontro el identificador de la serie", "error", 5000);
+            alerta("No se encontro el identificador de la serie", "error");
         }
         $info = busca_filtro_tabla("", "serie", "idserie=" . $sKey, "", $conn);
         $x_idserie = $info[0]["idserie"];
@@ -556,21 +556,19 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 						$("[name='x_copia']").attr('checked', false);
 					}
 				}else{
-					top.noty({
-						text: datos.msn,
-						type: 'error',
-						layout: 'topCenter',
-						timeout:5000
-					});
+                    top.notification({
+                        message: datos.msn,
+                        type: 'error',
+                        duration: 5000
+                    });
 				}
 			},
 			error: function() {
-				top.noty({
-					text: 'Error al consultar los datos de la serie padre',
-					type: 'error',
-					layout: 'topCenter',
-					timeout:5000
-				});
+                top.notification({
+                    message: 'Error al consultar los datos de la serie padre',
+                    type: 'error',
+                    duration: 5000
+                });
 			}
 		});
 	}
@@ -609,23 +607,14 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 					x_identidad = $("#identidad").val();
 					x_tipo = $("[name='x_tipo']:checked").val();
 					x_cod_padre = $("#x_cod_padre").val();
-					/*if(x_identidad == ""){
-						top.noty({
-							text : 'Por favor seleccione a quien le va a asignar permiso',
-							type : 'error',
-							layout : 'topCenter',
-							timeout : 5000
-						});
-						return false;
-					}*/
-					if (x_tipo != 1 && (x_cod_padre == "" || x_cod_padre == 0)) {
 
-						top.noty({
-							text : 'Por favor seleccione el Padre',
-							type : 'error',
-							layout : 'topCenter',
-							timeout : 5000
-						});
+					if (x_tipo != 1 && (x_cod_padre == "" || x_cod_padre == 0)) {
+                        top.notification({
+                            message: 'Por favor seleccione el Padre',
+                            type: 'error',
+                            duration: 5000
+                        });
+
 						return false;
 					} else {
 						form.submit();
@@ -702,12 +691,11 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 						$("#divserie").empty().html(html_serie);
 					},
 					error : function() {
-						top.noty({
-							text : 'No se pudo cargar el arbol de series',
-							type : 'error',
-							layout : 'topCenter',
-							timeout : 5000
-						});
+                        top.notification({
+                            message: 'No se pudo cargar el arbol de series',
+                            type: 'error',
+                            duration: 5000
+                        });					    
 					}
 				});
 			}
@@ -729,62 +717,6 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 				}
 			}
 		});
-		/*$("#tipo_entidad").change(function () {
-			option=$(this).val();
-			var entidades_seleccionadas='';
-			if(option != "") {
-				if(!$.isEmptyObject(entidades)){
-					if(entidades[option]){
-						entidades_seleccionadas=entidades[option].join(',');
-					}
-				}
-				if(identidad && identidad > 0) {
-					if(entidades_seleccionadas==''){
-						entidades_seleccionadas=identidad;
-					}
-					else{
-						entidades_seleccionadas = entidades_seleccionadas + ',' + identidad;
-					}
-				}
-				url1="";
-
-				switch(option) {
-					case '1'://Funcionario
-					url1="arboles/arbol_funcionario.php?idcampofun=funcionario_codigo&sin_padre=1&checkbox=true";
-					url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
-					check=0;
-					break;
-
-					case '2'://Dependencia
-						url1="arboles/arbol_dependencia.php?estado=1&checkbox=true";
-						url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
-						check=0;
-					break;
-
-					case '4'://Cargo
-						url1="arboles/arbol_cargo.php?estado=1&checkbox=true";
-						url1  = url1 + '&seleccionados=' + entidades_seleccionadas;
-						check=0;
-					break;
-				}
-				$.ajax({
-					url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol.php",
-
-					data:{xml:url1,campo:"identidad",selectMode:check,ruta_db_superior:"../../",seleccionar_todos:1,busqueda_item:1},
-					type : "POST",
-					async:false,
-					success : function(html) {
-						$("#sub_entidad").empty().html(html);
-					},error: function () {
-						top.noty({text: 'No se pudo cargar la informacion',type: 'error',layout: 'topCenter',timeout:5000});
-					}
-				});
-			}else{
-				$("#sub_entidad").empty();
-			}
-		});
-		$("#tipo_entidad").trigger("change");
-		*/
 	});
 
 	function mostrar_papa(tipo_serie,tvd,cod_padre){
@@ -816,12 +748,11 @@ var x_tipo = <?php echo (empty($x_tipo) ? 0 : $x_tipo);?>;
 				$("#x_cod_padre").val(cod_padre);
 			},
 			error: function() {
-				top.noty({
-					text: 'No se pudo cargar el arbol de series',
-					type: 'error',
-					layout: 'topCenter',
-					timeout:5000
-				});
+                top.notification({
+                    message: 'No se pudo cargar el arbol de series',
+                    type: 'error',
+                    duration: 5000
+                }); 
 			}
 		});
 	}

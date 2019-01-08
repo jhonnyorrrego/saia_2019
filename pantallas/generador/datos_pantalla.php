@@ -184,7 +184,7 @@ function crear_campo_dropzone($nombre, $parametros) {
       <div class="control-group">
         <label class="control-label" for="etiqueta">Nombre del formato *</label>
         <div class="controls">
-          <input type="text" style="width: 80%;" name="etiqueta" id="etiqueta_formato" placeholder="Nombre" value="" required <?php if($_REQUEST["idformato"]) echo("disabled");?>>
+          <input type="text" style="width: 80%;" name="etiqueta" id="etiqueta_formato" placeholder="Nombre" value="" required <?php if($_REQUEST["idformato"]) echo("readonly");?>>
         </div>
       </div>
     </div>
@@ -390,9 +390,10 @@ if($datos_formato["numcampos"]) {
               	if(@$datos_formato["numcampos"]){
               		$default_font_size=$datos_formato[0]["font_size"];
               	}
+              	
               	foreach ($tam_letras as $value) {
               	    echo('<option value="' . $value . '"');
-              	    if($i == $default_font_size) {
+              	    if($value == $default_font_size) {
               	        echo(' selected="selected"');
               	    }
               	    echo('>'. $value .'</option>');
@@ -473,7 +474,7 @@ if($datos_formato["numcampos"]) {
         	<div id="esperando_fk_categoria_formato"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
         	<?php echo($categoria_formato[0]["nombre"]);?>
           <div id="treebox_fk_categoria_formato" class="arbol_saia"></div>
-          <input id="fk_categoria_formato" type="hidden" name="fk_categoria_formato" value="<?php echo($fk_categoria_formato);?>">
+          <input id="fk_categoria_formato" type="hidden" name="fk_categoria_formato" value="<?php echo($datos_formato[0]["fk_categoria_formato"]);?>">
           <?php crear_arbol("fk_categoria_formato",$ruta_db_superior."test_categoria.php?tipo=1&seleccionados=".@$datos_formato[0]["fk_categoria_formato"],"checkbox");?>
         </div>
       </div>
@@ -633,6 +634,7 @@ $("document").ready(function(){
 
 	if(formato!==null && formato.numcampos) {
         $('#nombre_formato').attr('value',formato[0].nombre);
+        $('#etiqueta_formato').attr('value',formato[0].etiqueta);
         //$('#tabla_formato').attr('value',formato[0].tabla);
         $('#descripcion_formato').attr('value',formato[0].descripcion_formato);
         $('#proceso_pertenece').attr('value',formato[0].proceso_pertenece);
@@ -672,7 +674,7 @@ $("document").ready(function(){
 	} else {
 		$('.nav li').addClass('disabled');
 		$('#generar_pantalla').addClass('disabled');
-		
+
 		$("#contenidos_componentes").hide();
 		$('#tabs_formulario li:first').removeClass('disabled');
 		$('#tabs_formulario a[href="#datos_formulario-tab"]').tab('show');

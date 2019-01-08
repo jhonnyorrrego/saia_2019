@@ -15,7 +15,7 @@ include_once($ruta_db_superior."db.php");
 if(isset($_REQUEST['num_radicado'])){
 	$array_concat=array("nombres","' '","apellidos");
 	$concat=concatenar_cadena_sql($array_concat);
-	$datos=busca_filtro_tabla("funcionario_codigo,".$concat." as nombre_funcionario,cargo","vfuncionario_dc","estado_dc=1 AND (lower(nombres) LIKE lower('%".$_REQUEST['num_radicado']."%') OR lower(apellidos) LIKE lower('%".$_REQUEST['num_radicado']."%'))","nombres,apellidos",$conn);
+	$datos=busca_filtro_tabla("funcionario_codigo,".$concat." as nombre_funcionario,cargo","vfuncionario_dc","estado_dc=1 AND (nombres LIKE '%".$_REQUEST['num_radicado']."%' OR apellidos LIKE '%".$_REQUEST['num_radicado']."%')","nombres,apellidos",$conn);
 	$html="<ul>";
 	if($datos['numcampos']){
 		for($i=0;$i<$datos['numcampos'];$i++){

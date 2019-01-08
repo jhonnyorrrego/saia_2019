@@ -4,6 +4,7 @@ $(function() {
     $('#calendar').fullCalendar({
         longPressDelay:300,
         selectLongPressDelay: 500,
+        eventDurationEditable:false,
         editable: true,
         customButtons: {
             refresh: {
@@ -25,7 +26,7 @@ $(function() {
             right:  'prev,next,refresh month,agendaWeek,agendaDay,today'
         },
         defaultView: 'agendaWeek',
-        height:'parent',
+        height: $(window).height() - 20,
         selectable: true,        
         select: function( start, end){
             let params = {
@@ -79,17 +80,8 @@ $(function() {
             url: `${baseUrl}views/tareas/crear.php`,
             params: params,
             centerAlign:false,
-            size: "modal-lg",
-            buttons: {
-                success: {
-                    label: 'Guardar Cambios',
-                    class: 'btn btn-complete'
-                },
-                cancel: {
-                    label: 'Cancelar',
-                    class: 'btn btn-danger'
-                }
-            }
+            size: "modal-xl",
+            buttons: {}
         };
 
         top.topModal(options);

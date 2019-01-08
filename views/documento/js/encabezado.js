@@ -41,8 +41,7 @@ $(function(){
     });
     
     $(".priority_flag").on('click', function(){
-        var flagParent = $(`.priority[data-key='${documentId}']`, window.parent.document),
-            flag = $(this).find('.priority');
+        let flag = $(this).find('.priority'),
             priority = flag.hasClass('text-danger') ? 0 : 1,
             key = localStorage.getItem('key');
 
@@ -59,10 +58,8 @@ $(function(){
 
                 if(priority){
                     flag.addClass('text-danger');
-                    flagParent.show();
                 }else{
                     flag.removeClass('text-danger');
-                    flagParent.hide();
                 }
             }else{
                 top.notification({

@@ -1,7 +1,6 @@
 <script>
 $(function(){
     var baseUrl = $("#baseUrl").data('baseurl');
-    sessionStorage.setItem('documentSelected', 0);
 
     $('#table').on('check.bs.table uncheck.bs.table', function () {
         if ($(this).data('selections').length){
@@ -52,19 +51,7 @@ $(function(){
                             element.hide();
                         }
                     }
-                });
-                
-                let documentSelected = sessionStorage.getItem('documentSelected') || 0;
-                if($.inArray(+documentSelected, selections) != -1){
-                    let selected = $("#iframe_right_workspace").contents().find(`.priority[data-key='${documentSelected}']`);
-                    if(selected.length){
-                        if(priority){
-                            selected.addClass('text-danger');
-                        }else{
-                            selected.removeClass('text-danger');
-                        }
-                    }
-                };
+                });                                
             }else{
                 top.notification({
                     message: response.message,
@@ -126,19 +113,14 @@ $(function(){
         $(':checkbox[data-index]:checked').trigger('click');
     });
 
-    document.getElementById('iframe_right_workspace').onload = function(){
-        if($("#right_workspace").is(':hidden')){
-            $("#mailbox,#right_workspace").toggleClass('d-none');
-        }
-    }
-
     function executeAction(node){
-        let iframe = $("#iframe_right_workspace"),
-            url = node.data('url');
+        let url = node.data('url');
 
-        iframe.attr('src', baseUrl + url);
-        let documentSelected = node.parent().find('.identificator').val();
-        sessionStorage.setItem('documentSelected', documentSelected);
+        $("#right_workspace").load(baseUrl + url, function(){
+            if($("#right_workspace").is(':hidden')){
+                $("#mailbox,#right_workspace").toggleClass('d-none');
+            }
+        });
 
         node.parents('tr[data-index]').addClass('selected');
         node.parents('tr[data-index]').find('.unread').hide();

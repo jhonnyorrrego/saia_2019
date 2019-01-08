@@ -13,7 +13,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . 'models/comentarioDocumento.php';
+include_once $ruta_db_superior . 'controllers/autoload.php';
 
 $Response = (object)array(
     'success' => 1,
@@ -21,16 +21,15 @@ $Response = (object)array(
     'data' => (object)array()
 );
 
-if($_SESSION['idfuncionario'] == $_REQUEST['user']['key']){
-    $ComentarioDocumento = new ComentarioDocumento();
-    $ComentarioDocumento->setAttributes([
-        'fk_funcionario' => $_REQUEST['user']['key'],
-        'fk_documento' => $_REQUEST['documentId'],
-        'comentario' => $_REQUEST['comment'],
+if($_SESSION['idfuncionario'] == $_REQUEST['key']){
+    $pk = $ComentarioDocumento = ComentarioDocumento::newRecord([
+        'fk_funcionario' => $_REQUEST['key'],
+        'fk_documento' => $_REQUEST['relation'],
+        'comentario' => $_REQUEST['comment']['comment'],
         'fecha' => date('Y-m-d H:i:s')
     ]);
-    
-    if(!$ComentarioDocumento->save()){
+
+    if(!$pk){
         $Response->success = 0;
         $Response->message = "Error al guardar";
     }

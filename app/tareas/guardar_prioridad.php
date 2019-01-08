@@ -33,7 +33,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     ]);
 
     if($pk){
-        $Response->message = "Datos almacenados";
+        $Response->message = "Prioridad asignada";
         $Response->success = 1;
     }else{
         $Response->message = "Error al guardar";

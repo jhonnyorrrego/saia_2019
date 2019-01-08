@@ -14,7 +14,7 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . 'db.php';
 
 $Response = (object) array(
-    'data' => new stdClass(),
+    'data' => [],
     'message' => '',
     'success' => 1,
 );
@@ -52,7 +52,7 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
 
     $Response->data = $data;
 } else {
-    $Response->message = 'Usuario inválido';
+    $Response->message = 'Debe inicial session';
     $Response->success = 0;
 }
 

@@ -34,23 +34,21 @@ if ($carousel_content['numcampos']) {
         if (is_object($Image)) {
             if ($Storage->get_filesystem()->has($Image->ruta)) {
                 $binary = StorageUtils::get_binary_file($carousel_content[$i]['imagen']);
+                $dir = 'temporal/temporal_carousel';
                                 
-                if (!is_dir($ruta_db_superior . 'temporal/temporal_carousel')) {
-                    mkdir($ruta_db_superior . 'temporal/temporal_carousel', 0777);
+                if (!is_dir($ruta_db_superior . $dir)) {
+                    if(!mkdir($ruta_db_superior . $dir, 0777, true)){
+                        throw new Exception("cant no create dir", 1);                        
+                    }
                 }
 
                 $route = explode('/', $Image->ruta);
-                $fileName = $route[count($route) - 1];
-                $finalRoute = $ruta_db_superior . 'temporal/temporal_carousel/' . $fileName;
+                $fileName = end($route);
+                $finalRoute = $ruta_db_superior . $dir . '/'. $fileName;
 
                 if(!is_file($finalRoute)){
-                    $file = fopen($finalRoute, 'a+');
-                    
-                    if ($file) {
-                        $content = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $binary));
-                        fwrite($file, $content);
-                        fclose($file);
-                    }
+                    $content = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $binary));
+                    file_put_contents($finalRoute, $content);
 
                     $imagine->open($finalRoute)
                         ->resize(new Box(900, 630))
@@ -59,7 +57,7 @@ if ($carousel_content['numcampos']) {
                 }
 
                 $Response->data[$i] = array(
-                    'image' => 'temporal/temporal_carousel/' . $fileName,
+                    'image' => $dir . '/' . $fileName,
                     'title' => $carousel_content[$i]['nombre'],
                     'content' => $carousel_content[$i]['contenido'],
                 );
