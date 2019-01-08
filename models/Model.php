@@ -110,8 +110,6 @@ class Model {
      * find and set the safeAttributes by pk
      */
     protected function find() {
-        global $conn;
-
         $data = self::findByAttributes([
             self::getPrimaryLabel() => $this->getPK()
         ]);
@@ -213,7 +211,7 @@ class Model {
      * modify a record on the table by pk
      */
     public function update() {
-        return $response = self::executeUpdate($this->getNotNullAttributes(),[
+        return self::executeUpdate($this->getNotNullAttributes(),[
             self::getPrimaryLabel() => $this->getPK()
         ]);
     }
@@ -349,7 +347,7 @@ class Model {
      * @return void
      */
     public static function executeUpdate($fields, $conditions){        
-        $set = $where = '';
+        $set = '';
 
         foreach($fields as $attribute => $value){
             if(strlen($set)){
