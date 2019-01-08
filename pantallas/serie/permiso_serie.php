@@ -190,7 +190,11 @@ var entidades = <?php echo json_encode($entidades) ?>;
 					success : function(html) {
 						$("#sub_entidad").empty().html(html);
 					},error: function () {
-						top.noty({text: 'No se pudo cargar la informacion',type: 'error',layout: 'topCenter',timeout:5000});
+                        top.notification({
+                            message: 'No se pudo cargar la informacion',
+                            type: 'error',
+                            duration: 5000
+                        });
 					}
 				});
 			}else{

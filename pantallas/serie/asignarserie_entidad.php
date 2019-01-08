@@ -125,28 +125,9 @@ $serie_idserie = $_REQUEST["seleccionados"];
 </p>
 <script type="text/javascript">
 	$(document).ready(function() {
-		//url1="test/test_dependencia.php?seleccionados=<?php echo $_REQUEST["seleccionados"];?>";
-		
-
-		//$("[name='tvd']").change(function (){
-			//tvd=$(this).val();
 			tvd="<?php echo $_REQUEST["tvd"]; ?>";
 			var seleccionados="<?php echo $series_seleccionadas; ?>";
-			console.log("<?php echo $series_seleccionadas; ?>");
-			/*$("#serie_idserie").val("<?php echo $series_seleccionadas; ?>");
-			url2="arboles/arbol_serie.php?tipo3=0&tvd="+tvd+"&estado=1&seleccionados="+seleccionados;
-			$.ajax({
-				url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol_ft.php"
-				data:{xml:url2,campo:"serie_idserie",selectMode:0,ruta_db_superior:"../../",onNodeSelect:"asignar_permisos_entidad",seleccionar_todos:1,busqueda_item:1},
-				type : "POST",
-				async:false,
-				success : function(html_serie) {					
-					$("#divserie").empty().html(html_serie);
-				},error: function (){
-					top.noty({text: 'No se pudo cargar el arbol de series',type: 'error',layout: 'topCenter',timeout:5000});
-				}
-			});
-		//});*/
+
 		$("[name='tvd']:checked").trigger("change");
 
 		$("#asignarserie_entidad").validate({
@@ -157,7 +138,11 @@ $serie_idserie = $_REQUEST["seleccionados"];
 				if(serie!="" && dependencia!=""){
 					form.submit();
 				}else{
-					top.noty({text: 'Por favor seleccione la serie y la dependencia',type: 'error',layout: 'topCenter',timeout:5000});
+				    top.notification({
+                        message: 'Por favor seleccione la serie y la dependencia',
+                        type: 'error',
+                        duration: 3000
+                    });
 					return false;
 				}
 			}

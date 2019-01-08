@@ -1,6 +1,5 @@
 <?php
 $max_salida=6; $ruta_db_superior=$ruta=""; while($max_salida>0){ if(is_file($ruta."db.php")){ $ruta_db_superior=$ruta;} $ruta.="../"; $max_salida--; }
-$_REQUEST["tipo_entidad"]=5; 
 ?>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php include_once($ruta_db_superior."pantallas/lib/librerias_componentes.php"); ?>
@@ -16,6 +15,12 @@ $_REQUEST["tipo_entidad"]=5;
 <?php 
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+require_once $ruta_db_superior . "arboles/crear_arbol_ft.php";
+//echo librerias_jquery("3.3");
+echo (librerias_notificaciones());
+echo librerias_UI("1.12");
+echo librerias_arboles_ft("2.24", 'filtro');
+
 $propietario=busca_filtro_tabla("idfuncionario","expediente e,funcionario f","f.funcionario_codigo=e.propietario and idexpediente IN(".$_REQUEST["idexpediente"].")","",$conn);
 
 $array_propietarios=extrae_campo($propietario,'idfuncionario');
@@ -58,71 +63,62 @@ $table.="</table>";
 <input type="hidden" name="idexpediente" id="idexpediente" value="<?php echo($_REQUEST["idexpediente"]);?>">
 <input type="hidden" id="cerrar_higslide" value="<?php echo(@$_REQUEST["cerrar_higslide"]);?>">
 <legend>Asignar acceso expediente(s) <?php $expediente=busca_filtro_tabla("","expediente","idexpediente IN(".$_REQUEST["idexpediente"].")","",$conn); echo(implode(", ", extrae_campo($expediente,'nombre','U')));?></legend>
+<style>
+.clase_sin_capas{
+	margin-bottom: 0px;
+  min-height: 0px;
+  padding: 0px;
+  border: 0px solid #E3E3E3;
+}
+ul.fancytree-container {
+    border: none;
+    background-color:#F5F5F5;
+}
+span.fancytree-title 
+{  
+	font-family: Verdana,Tahoma,arial;
+	font-size: 9px; 
+}
+</style>
 
-<div class="control-group element">
+<!--div class="control-group element">
     <label class="control-label" for="nombre"><b>Seleccionar Expediente(s):</b>
     </label>
     <div class="controls">
-     <div id="botones_todos_ninguno" style="cursor:pointer;">
-         
-         <a name="todos_ninguno" value="todos">Todos</a>
-          - 
-         <a name="todos_ninguno" value="ninguno">Ninguno</a>
-         <script>
-             $(document).ready(function(){
-                $('[name="todos_ninguno"]').click(function(){
-                    var valor=$(this).attr('value');
-                    if(valor=='todos'){
-                        seleccionar_todos_ninguno(tree3,true);
-                    }else if(valor=='ninguno'){
-                        seleccionar_todos_ninguno(tree3,false);
-                    }  
-                }); 
-             });
-             
-             function seleccionar_todos_ninguno(elemento,bol){
-                seleccionados=elemento.getAllLeafs();
-                nodos=seleccionados.split(",");
-                for(i=0;i<nodos.length;i++){
-                	elemento.setCheck(nodos[i],bol);
-                }
-                seleccionados_padres=elemento.getAllFatItems();	 
-                nodos_padre=seleccionados_padres.split(",");
-                for(i=0;i<nodos_padre.length;i++){
-                	elemento.setCheck(nodos_padre[i],bol);   
-                }  
-                var coma='';
-                if(bol){
-                    coma=',';
-                }
-                var expedientes_lista=elemento.getAllChecked()+coma+'<?php echo($_REQUEST["idexpediente"]); ?>';
-                $('[name="idexpediente"]').val(expedientes_lista);
-             }
-             function cargar_seleccionados_hijos(NodeId){
-                 var coma='';
-                 if(tree3.getAllChecked()){
-                    coma=',';
-                 }
-                 var expedientes_lista=tree3.getAllChecked()+coma+'<?php echo($_REQUEST["idexpediente"]); ?>';
-                 $('[name="idexpediente"]').val(expedientes_lista);
-             }
-         </script>
-
-     </div>    
-     <div id="esperando_expediente"><img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
-     <?php
-     for ($i=0; $i <$expediente['numcampos'] ; $i++) {
-     	?> 
-         <img src="<?php echo($ruta_db_superior);?>imgs/iconCheckAll.gif">&nbsp;<?php echo($expediente[$i]["nombre"]);?><br>
-         <?php
-     }
-     ?>
-    
-	  <div id="treeboxbox_tree3"></div>
+    	<?php
+		$origen = array("url" => "arboles/arbol_expediente.php", "ruta_db_superior" => $ruta_db_superior,
+		    "params" => array(		    	
+		        "checkbox" => true,		        
+		        "cargar_partes"=>1,
+		        "inicia"=>$_REQUEST["idexpediente"],
+		        "id"=>$_REQUEST["idexpediente"]
+		        //"seleccionados" => $dependencia_seleccionada
+		    ));
+			
+			
+		$opciones_arbol = array("keyboard" => true, "selectMode" => 2, "onNodeSelect" =>'seleccionar_expedientes',"lazy"=> true);
+		$extensiones = array("filter" => array());
+		$arbol_expediente = new ArbolFt("expedientes", $origen, $opciones_arbol, $extensiones);
+		echo $arbol_expediente->generar_html();
+		?>
 	 
 	</div>
-</div>
-				<script type="text/javascript">
+</div-->
+	<script type="text/javascript">
+	function seleccionar_expedientes(event,data){
+		  
+	  if(data.node.selected){
+	  	var idexpediente = data.node.key;
+	  	 //$("#expedientes").val(idexpediente);
+	  	 var seleccionados = Array();
+		var items = data.tree.getSelectedNodes();
+		for(var i=0;i<items.length;i++){
+			seleccionados.push(items[i].key);
+		}
+		var s = seleccionados.join(",");
+		$("#expedientes").val(s);	  
+	  }
+  }			
   <!--
   		var browserType;
       if (document.layers) {browserType = "nn4"}
@@ -181,22 +177,7 @@ $table.="</table>";
     </div>
 </div>    
     
-
-
-
-
 <div class="control-group element">
-  <label class="control-label" for="nombre"><?php if(@$_REQUEST["tipo_entidad"]){
-      echo"<input type='hidden' value='".$_REQUEST["tipo_entidad"]."' name='tipo_entidad' >";
-      $entidad = busca_filtro_tabla("*","entidad","identidad=".$_REQUEST["tipo_entidad"],"nombre",$conn);
-			if($_REQUEST["tipo_entidad"]!=5){
-				echo($entidad[0]["nombre"]);
-			}
-    }
-    else{
-      echo("Entidad");
-    }?>
-  </label>
   <div class="controls"> 
     <?php
     if(@$_REQUEST["llave_entidad"]){
@@ -285,7 +266,7 @@ background-color: A9E2F3;
 </style>
 
 <?php
-echo(librerias_arboles());
+
 if(@$_REQUEST["mostrar_arbol_expediente"]){  
   ?>
   <script>
@@ -451,10 +432,8 @@ function eliminar_asociado(idfunc){
 		}
 	}
 	var datos_guardar=nuevos_datos.join(",");
-	$("#idfuncionario").val(datos_guardar);
+	$("#idfuncionario").val(datos_guardar);	
 	
-	
-	$('#submit_formulario_asignar_expediente').click();
-	
+	$('#submit_formulario_asignar_expediente').click();	
 }
 </script>

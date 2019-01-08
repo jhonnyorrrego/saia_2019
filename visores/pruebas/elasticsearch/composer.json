@@ -1,7 +1,0 @@
-{
-    "require": {
-        "elasticsearch/elasticsearch": "~2.0@beta",
-                "monolog/monolog": "~1.0"
-
-    }
-}
