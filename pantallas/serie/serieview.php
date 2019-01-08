@@ -134,17 +134,17 @@ echo ' <a href="asignarserie_entidad.php?tvd='.$id[2].'&seleccionados='.$id[1].'
 	</tr>
 
 	<tr class="ocultar">
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">D&Iacute;AS DE ENTREGA BASE</span></td>
+		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">TIEMPO DE RESPUESTA (D&Iacute;AS)</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $datos[0]["dias_entrega"];?></span></td>
 	</tr>
 
 	<tr class="ocultar">
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">A&Ntilde;OS ARCHIVO GESTI&Oacute;N</span></td>
+		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">MESES ARCHIVO GESTI&Oacute;N</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $datos[0]["retencion_gestion"];?></span></td>
 	</tr>
 
 	<tr class="ocultar">
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">A&Ntilde;OS ARCHIVO CENTRAL</span></td>
+		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">MESES ARCHIVO CENTRAL</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $datos[0]["retencion_central"];?></span></td>
 	</tr>
 
