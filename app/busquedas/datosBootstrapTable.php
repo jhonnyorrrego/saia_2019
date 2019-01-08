@@ -13,7 +13,7 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . 'db.php';
 include_once $ruta_db_superior . 'pantallas/lib/librerias_cripto.php';
 
-$idfuncionario = encrypt_blowfish(usuario_actual('id'), LLAVE_SAIA_CRYPTO);
+$idfuncionario = encrypt_blowfish($_SESSION["idfuncionario"], LLAVE_SAIA_CRYPTO);
 $actualRow = ($_REQUEST['pageNumber'] - 1 ) * $_REQUEST['pageSize'];
 
 $params = http_build_query(array(
@@ -26,6 +26,7 @@ $params = http_build_query(array(
 ));
 
 $url = PROTOCOLO_CONEXION . RUTA_PDF . '/pantallas/busquedas/servidor_busqueda.php?' . $params;
+
 
 if($_REQUEST['debug']){
     echo '<pre>';var_dump($url);echo '</pre>';exit;

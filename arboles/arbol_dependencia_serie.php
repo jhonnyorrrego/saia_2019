@@ -10,9 +10,7 @@ while ($max_salida > 0) {
 }
 include_once ($ruta_db_superior . "db.php");
 
-$objetoJson = array(
-    "key" => 0    
-);
+$objetoJson = array("key" => 0);
 
 if ($_REQUEST["id"] && $_REQUEST["cargar_partes"]) {
     $objetoJson = array();
@@ -50,41 +48,31 @@ if ($_REQUEST["id"] && $_REQUEST["cargar_partes"]) {
     $objetoJson = $hijos;
 } else {
     $partes = false;
-    if(isset($_REQUEST["cargar_partes"])) {
+    if (isset($_REQUEST["cargar_partes"])) {
         $partes = true;
     }
     $hijos = array();
     $objetoJson["key"] = 0;
     $hijos_dep = array();
-    $hijos_dep = llena_dependencia(0, 0, $partes); // TRD
+    $hijos_dep = llena_dependencia(0, 0, $partes);
+    // TRD
     if (!empty($hijos_dep)) {
         $hijos = $hijos_dep;
     }
     $hijos_dep = array();
-    $hijos_dep = llena_dependencia(0, 1, $partes); // TVD
+    $hijos_dep = llena_dependencia(0, 1, $partes);
+    // TVD
     if (!empty($hijos_dep)) {
         $hijos = array_merge($hijos, $hijos_dep);
     }
     $hijos_serie = array();
     $hijos_otros = array();
 
-   /* if ($_REQUEST["serie_sin_asignar"] == 1) {
-        $item_sa = array();
-        $item_sa["extraClasses"] = "estilo-serie";
-        $item_sa["title"] = "LISTADO DE SERIES";
-        $item_sa["key"] = "0.0.0";
-        $item_sa["folder"] = 1;
-
-        $item_sa["children"] = llena_serie_sin_asignar(0, 1);
-        $hijos[] = $item_sa;
-    }*/
     if ($_REQUEST["otras_categorias"] == 1) {
         $item_oc = array();
         $item_oc["extraClasses"] = "estilo-serie";
         $item_oc["title"] = "OTRAS CATEGORIAS";
         $item_oc["key"] = "0.0.-1";
-		//$item_oc["checkbox"] = true;
-        $item_oc["folder"] = 1;
 
         $item_oc["children"] = llena_otras_categorias(0, 1);
         $hijos[] = $item_oc;
@@ -93,7 +81,6 @@ if ($_REQUEST["id"] && $_REQUEST["cargar_partes"]) {
 }
 
 header('Content-Type: application/json');
-
 echo json_encode($objetoJson);
 
 function llena_dependencia($id, $tipo = 0, $partes = false) {
@@ -119,48 +106,33 @@ function llena_dependencia($id, $tipo = 0, $partes = false) {
             $item = array();
             $item["extraClasses"] = "estilo-dependencia";
             $item["title"] = $text;
-            $item["key"] = $papas[$i]["iddependencia"] . ".0." . $tipo;			
-			//$item["expanded"]=true; 
+            $item["key"] = $papas[$i]["iddependencia"] . ".0." . $tipo;
+
             $hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"], "", $conn);
             $serie = busca_filtro_tabla("count(*) as cant", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $papas[$i]["iddependencia"] . " and s.tvd=" . $tipo . " and (s.cod_padre=0 or s.cod_padre is null)", "", $conn);
-           // print_r($serie["sql"]);
+
             $dependencias_hijas = array();
             $series_hijas = array();
             $dependencias_hijas1 = array();
-           // if (!$partes) {
-           if(!partes){
+            if (!$partes) {
                 if ($hijos[0]["cant"]) {
-                   // print_r("hola1");
                     $dependencias_hijas1 = llena_dependencia($papas[$i]["iddependencia"], $tipo);
-                    
                 }
                 if ($serie[0]["cant"]) {
-    	             $series_hijas = llena_serie(0,$papas[$i]["iddependencia"], $tipo);
-    	        }
-           }
-           else{
-               $item["lazy"] = true;
-           }
-	            
-	            $dependencias_hijas = array_merge($dependencias_hijas1, $series_hijas);
-	            /* SERIES */
-	            $series_dep = busca_filtro_tabla("e.identidad_serie, s.*", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $papas[$i]["iddependencia"] . " and s.tvd=" . $tipo . " and (s.cod_padre=0 or s.cod_padre is null) and s.categoria=2", "s.nombre ASC", $conn);
-				
-	            //$series_hijas = llena_serie(0, $papas[$i]["iddependencia"], $tipo);
-	           // $dependencias_hijas = array_merge($dependencias_hijas, $series_hijas);
-	            /* TERMINA SERIES */
-	            if (!empty($dependencias_hijas)) {
-	                $item["folder"] = true;
-	                $item["children"] = $dependencias_hijas;
-	            } else  if($series_dep["numcampos"]) {
-                		$item["folder"] = true;
-                		$item["lazy"] = true;
-				}
-				else{   $item["folder"] = 0;
-	            }
-            /*} else {
+                    $series_hijas = llena_serie(0, $papas[$i]["iddependencia"], $tipo);
+                }
+                $dependencias_hijas = array_merge($dependencias_hijas1, $series_hijas);
+            } else {
                 $item["lazy"] = true;
-            }*/
+            }
+
+            if (!empty($dependencias_hijas)) {
+                $item["children"] = $dependencias_hijas;
+            } else if ($serie[0]["cant"] || $hijos[0]["cant"]) {
+                $item["lazy"] = true;
+            } else {
+                $item["lazy"] = false;
+            }
             $objetoJson[] = $item;
         }
     }
@@ -175,10 +147,9 @@ function llena_serie($id, $iddep, $tipo = 0) {
     } else {
         $papas = busca_filtro_tabla("e.identidad_serie,s.*", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $iddep . " and s.tvd=" . $tipo . " and s.cod_padre=" . $id . " and s.categoria=2", "s.nombre ASC", $conn);
     }
-   // print_r($papas["sql"]);
     if ($papas["numcampos"]) {
         for ($i = 0; $i < $papas["numcampos"]; $i++) {
-        	$identidad_serie=$papas[$i]["identidad_serie"];
+            $identidad_serie = $papas[$i]["identidad_serie"];
             $text = $papas[$i]["nombre"] . " (" . $papas[$i]["codigo"] . ")";
             if ($papas[$i]["estado"] == 0) {
                 $text .= " - INACTIVO";
@@ -187,16 +158,11 @@ function llena_serie($id, $iddep, $tipo = 0) {
             $item["extraClasses"] = "estilo-serie";
             $item["title"] = $text;
             $item["key"] = $iddep . "." . $papas[$i]["idserie"] . "." . $tipo;
-            
-            $item["data"] = array("entidad_serie"=>$identidad_serie);
-			//$item["expanded"]=true;
+
+            $item["data"] = array("entidad_serie" => $identidad_serie);
             $hijos = busca_filtro_tabla("count(*) as cant", "serie", "tvd=" . $tipo . "  and cod_padre=" . $papas[$i]["idserie"] . " and categoria=2", "", $conn);
-			//print_r($hijos["sql"]);
             if ($hijos[0]["cant"]) {
-                $item["folder"] = 1;
                 $item["children"] = llena_serie($papas[$i]["idserie"], $iddep, $tipo);
-            } else {
-                $item["folder"] = 0;
             }
             $objetoJson[] = $item;
         }
@@ -220,7 +186,7 @@ function llena_serie_sin_asignar($id, $inicio = 0) {
                 $text .= " - INACTIVO";
             }
             $item = array();
-            $asig = busca_filtro_tabla("count(*) as cant", "entidad_serie", "estado=1 and serie_idserie=" . $papas[$i]["idserie"], "",$conn);
+            $asig = busca_filtro_tabla("count(*) as cant", "entidad_serie", "estado=1 and serie_idserie=" . $papas[$i]["idserie"], "", $conn);
             $style = "estilo-serie";
             if ($asig[0]["cant"] == 0 && $papas[$i]["tipo"] != 3) {
                 $style = "estilo-serie-sa";
@@ -232,10 +198,7 @@ function llena_serie_sin_asignar($id, $inicio = 0) {
 
             $hijos = busca_filtro_tabla("count(*) as cant", "serie", "cod_padre=" . $papas[$i]["idserie"] . " and categoria=2", "", $conn);
             if ($hijos[0]["cant"]) {
-                $item["folder"] = 1;
                 $item["children"] = llena_serie_sin_asignar($papas[$i]["idserie"]);
-            } else {
-                $item["folder"] = 0;
             }
             $objetoJson[] = $item;
         }
@@ -264,10 +227,7 @@ function llena_otras_categorias($id, $inicio = 0) {
 
             $hijos = busca_filtro_tabla("count(*) as cant", "serie", "cod_padre=" . $papas[$i]["idserie"] . " and categoria=3", "", $conn);
             if ($hijos[0]["cant"]) {
-                $item["folder"] = 1;
                 $item["children"] = llena_otras_categorias($papas[$i]["idserie"]);
-            } else {
-                $item["folder"] = 0;
             }
             $objetoJson[] = $item;
         }
