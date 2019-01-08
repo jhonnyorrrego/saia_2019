@@ -35,8 +35,8 @@ class FuncionarioTarea extends Model
      *
      * @return int idfuncionario_tarea
      */
-    public function activeRalation(){
-        $this->estado = 1;
+    public function toggleRelation($newState){
+        $this->estado = $newState;
         if($this->save()){
             $response = $this->getPK();
         }else{
@@ -51,7 +51,7 @@ class FuncionarioTarea extends Model
      *
      * @param int $taskId
      * @param array $user listado de funcionarios
-     * @param int $type tipo de asignacion 1:responsable , 2: seguidor
+     * @param int $type tipo de asignacion 1:responsable , 2: seguidor, 3:creador
      * @return void
      */
     public static function assignUser($taskId, $users, $type){
@@ -73,7 +73,7 @@ class FuncionarioTarea extends Model
                         'tipo' => $type
                     ]);
                 }else{
-                    $data [] = $findRelation->activeRalation();
+                    $data [] = $findRelation->toggleRelation(0);
                 }
             }
         }else{

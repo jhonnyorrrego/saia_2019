@@ -37,11 +37,11 @@
 </div>
 <div class="row pt-3">
     <div class="col-12">
-        <table class="table table-striped" id="priority_history" style="display:none">
+        <table class="table table-striped table-condensed" id="priority_history" style="display:none">
             <tr>
-                <th>Fecha</th>
-                <th>Responsable</th>
-                <th>Prioridad</th>
+                <td>Fecha</td>
+                <td>Responsable</td>
+                <td>Prioridad</td>
             </tr>
         </table>
     </div>

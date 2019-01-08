@@ -1,5 +1,5 @@
 <?php
-require_once $ruta_db_superior . 'models/model.php';
+require_once $ruta_db_superior . 'controllers/autoload.php';
 
 class AnexoTarea extends Model
 {
@@ -40,7 +40,8 @@ class AnexoTarea extends Model
     }
 
     public function getDate(){
-        return $this->fecha;
+        $DateTime = DateTime::createFromFormat('Y-m-d H:i:s', $this->fecha);
+        return $DateTime->format('d-m-Y');
     }
 
     public function getFileSize(){        

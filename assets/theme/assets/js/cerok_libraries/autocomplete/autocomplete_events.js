@@ -11,6 +11,7 @@ $(function(){
     $("#document_finder").autocomplete({
         serviceUrl: `${baseUrl}app/documento/buscador.php`,
         lookupLimit: 10,
+        width:500,
         minChars:4,
         noCache: true,
         type: 'POST',

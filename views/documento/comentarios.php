@@ -1,37 +1,83 @@
-<div class="container">
-    <div class="row mx-0">
-        <div class="col-12 px-0" id="comment_list"></div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="form-group">
-                <textarea class="form-control" id="comment" rows="3" placeholder="Comentario..."></textarea>
-            </div>
-        </div>
-        <div class="col-auto px-0 ">
-            <button class="btn btn-sm btn-complete" id="send_comment">Enviar</button>
-        </div>
-    </div>
-</div>
-<script data-documentid="<?= $_REQUEST['documentId'] ?>">
+
+<div class="container" id="document_comments"></div>
+<script>
     $(function(){
         if(typeof Comments == 'undefined'){
             let baseUrl = Session.getBaseUrl();
             $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/comments/comments.js`, function(){
-                $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/comments/comment_events.js`, function(){
-                    start();
-                }); 
+                start();
             });
         }else{
             start();
         }
 
         function start(){
-            let userId = localStorage.getItem('key');
-            let documentId = "<?= $_REQUEST['documentId'] ?>";
-            var comments = new Comments(userId, documentId);
-            
-            $("#comment_list").html(comments.createList());
+            let user = JSON.parse(localStorage.getItem('user'));
+            let options = {
+                selector: '#document_comments',
+                baseUrl: Session.getBaseUrl(),
+                placeholder: 'Escriba su mensaje',
+                order: 'desc',
+                userData: {
+                    id: user.iduser,
+                    name: user.name,
+                    image: user.cutedPhoto
+                },
+                source: function (){
+                    let data = new Object();
+                    $.ajax({
+                        url: `${this.baseUrl}app/comentarios/documento.php`,
+                        dataType: 'json',
+                        type: 'POST',
+                        async: false,
+                        data: {
+                            key: this.userData.id,
+                            relation: "<?= $_REQUEST['documentId'] ?>"
+                        },
+                        success: function(response){
+                            if(response.success){
+                                data = response.data;
+                            }else{
+                                top.notification({
+                                    message: response.message,
+                                    type: 'error',
+                                    title: 'Error!'
+                                });
+                            }
+                        }
+                    });
+
+                    return data;
+                },
+                save: function(comment){
+                    let data = false;
+                    $.ajax({
+                        url: `${this.baseUrl}app/comentarios/guardar.php`,
+                        dataType: 'json',
+                        type: 'POST',
+                        async: false,
+                        data: {
+                            key: this.userData.id,
+                            relation: "<?= $_REQUEST['documentId'] ?>",
+                            comment: comment
+                        },
+                        success: function(response){
+                            if(response.success){
+                                data = true;
+                            }else{
+                                top.notification({
+                                    message: response.message,
+                                    type: 'error',
+                                    title: 'Error!'
+                                });
+                            }
+                        }
+                    });
+
+                    return data;
+                }
+            }
+            var comments = new Comments(options);
         }
     });
 </script>

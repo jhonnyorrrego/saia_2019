@@ -110,8 +110,6 @@ class Model {
      * find and set the safeAttributes by pk
      */
     protected function find() {
-        global $conn;
-
         $data = self::findByAttributes([
             self::getPrimaryLabel() => $this->getPK()
         ]);
@@ -123,9 +121,15 @@ class Model {
         }
     }
 
+    public static function findByPk($pk){
+        return self::findAllByAttributes([
+            self::getPrimaryLabel() => $pk
+        ]);
+    }
+
     public static function findByAttributes($conditions, $fields = []){
         $data = self::findAllByAttributes($conditions, $fields, '', 1);
-        return count($data) ? $data[0] : NULL;
+        return $data ? $data[0] : NULL;
     }
 
     /**
@@ -140,7 +144,6 @@ class Model {
     public static function findAllByAttributes($conditions, $fields = [], $order = '', $limit = 0){
         global $conn;
 
-        $data = [];
         $table = self::getTableName();        
         $select = self::createSelect($fields);
         $condition = self::createCondition($conditions);
@@ -152,9 +155,12 @@ class Model {
         }
         
         if ($records['numcampos']) {
-            $data = self::convertToObjectCollection($records);
+            $response = self::convertToObjectCollection($records);
+        }else{
+            $response = NULL;
         }
-        return $data;
+
+        return $response;
     }
 
     /**
@@ -205,7 +211,7 @@ class Model {
      * modify a record on the table by pk
      */
     public function update() {
-        return $response = self::executeUpdate($this->getNotNullAttributes(),[
+        return self::executeUpdate($this->getNotNullAttributes(),[
             self::getPrimaryLabel() => $this->getPK()
         ]);
     }
@@ -341,7 +347,7 @@ class Model {
      * @return void
      */
     public static function executeUpdate($fields, $conditions){        
-        $set = $where = '';
+        $set = '';
 
         foreach($fields as $attribute => $value){
             if(strlen($set)){

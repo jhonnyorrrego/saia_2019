@@ -1,5 +1,5 @@
 <?php
-require_once $ruta_db_superior . 'models/model.php';
+require_once $ruta_db_superior . 'controllers/autoload.php';
 
 class ComentarioDocumento extends Model
 {
@@ -9,6 +9,7 @@ class ComentarioDocumento extends Model
     protected $comentario;
     protected $fecha;
     protected $dbAttributes;
+    public $user;
 
     function __construct($id = null) {
         return parent::__construct($id);
@@ -39,5 +40,22 @@ class ComentarioDocumento extends Model
 
         $findTotal = busca_filtro_tabla('count(*) as total', 'comentario_documento', 'fk_documento =' . $documentId, '', $conn);
         return $findTotal[0]['total'];
+    }
+
+    public function getUser(){
+        if(!$this->user){
+            $this->user = new Funcionario($this->fk_funcionario);
+        }
+        
+        return $this->user;
+    }
+
+    public function getDate($format = 'Y-m-d'){
+        $DateTime = DateTime::createFromFormat('Y-m-d H:i:s', $this->fecha);
+        return $DateTime->format($format);
+    }
+
+    public function getComment(){
+        return $this->comentario;
     }
 }

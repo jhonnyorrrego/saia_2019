@@ -24,9 +24,13 @@ class Session {
                     }
                 }
             })
-        }else{
-            let data = localStorage.getItem('user');
-            session.user = JSON.parse(data);
+        } else {
+            if (Session.check(Session.getBaseUrl())) {
+                let data = localStorage.getItem('user');
+                session.user = JSON.parse(data);
+            } else {
+                Session.close();
+            }
         }
     }
 

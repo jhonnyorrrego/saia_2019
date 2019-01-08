@@ -37,8 +37,11 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     
     if($Tarea->save()){
         FuncionarioTarea::assignUser($Tarea->getPk(), [$_REQUEST['key']], 3);
-        FuncionarioTarea::inactiveRelationsByTask($Tarea->getPK(), 1);
-        FuncionarioTarea::assignUser($Tarea->getPk(), $_REQUEST['managers'], 1);
+
+        if(isset($_REQUEST['managers'])){
+            FuncionarioTarea::inactiveRelationsByTask($Tarea->getPK(), 1);
+            FuncionarioTarea::assignUser($Tarea->getPk(), $_REQUEST['managers'], 1);
+        }
 
         $Response->message = "Tarea creada";
         $Response->data = $Tarea->getPK();

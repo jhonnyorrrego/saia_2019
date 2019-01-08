@@ -22,20 +22,19 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <title>SAIA - SGDEA</title>
     <?= jquery() ?>
     <?= bootstrap() ?>
+    <?= icons() ?>
     <?= theme() ?>
 </head>
 <body>
     <div class="container m-0 p-0 mw-100 mx-100">
         <div class="row mx-0">
             <div class="col-12 col-md-4 d-md-block px-1" id="mailbox"></div>
-            <div class="col-12 col-md-8 d-md-block d-none px-1" id="right_workspace">
-                <iframe id="iframe_right_workspace" width="100%" frameBorder="0"></iframe>
-            </div>
+            <div class="col-12 col-md-8 d-md-block d-none px-1" id="right_workspace" style="overflow: auto;"></div>
         </div>
     </div>
-    <script>
+    <script data-baseurl="<?= $ruta_db_superior ?>">
         $(function(){
-            let baseUrl = '<?= $ruta_db_superior ?>';
+            let baseUrl = $('script[data-baseurl]').data('baseurl');
             let mailRoute = baseUrl + 'views/buzones/listado.php?idbusqueda_componente=<?= $_REQUEST['idbusqueda_componente'] ?>';
 
             $("#mailbox").load(mailRoute, function(){
@@ -46,12 +45,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 
             if($('#right_workspace').is(':visible')){
                 let calendarRoute = baseUrl + 'views/tareas/calendario.php';
-                $('#iframe_right_workspace').attr('src', calendarRoute);
+                $('#right_workspace').load(calendarRoute);
             }
-
-            $('#iframe_right_workspace').on('load', function(){
-                $(this).height($(window).height());
-            });
 
             window.addEventListener("orientationchange", function () {
                 setTimeout(() => {
@@ -68,7 +63,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 let paginationH = $('.fixed-table-pagination').height();
                 let headerH = $('#header_list').height();
                 $(".fixed-table-container").height(frameH - paginationH - headerH);
-                $('#iframe_right_workspace').height($(window).height());
+                $('#right_workspace').height(frameH);
             }
         });
     </script>

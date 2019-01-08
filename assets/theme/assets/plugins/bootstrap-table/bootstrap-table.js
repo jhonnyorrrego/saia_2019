@@ -1537,7 +1537,7 @@
         }
 
         html.push(
-            '<div class="pagination-detail mt-0' + sprintf(' float-%s', this.options.paginationHAlign) + '">',
+            '<div class="pagination-detail my-0' + sprintf(' float-%s', this.options.paginationHAlign) + '">',
             '<span class="pagination-info">',
             this.options.onlyInfoPagination ? this.options.formatDetailPagination(this.options.totalRows) :
             this.options.formatShowingRows(this.pageFrom, this.pageTo, this.options.totalRows),

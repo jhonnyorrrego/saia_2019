@@ -28,14 +28,14 @@ while ($max_salida > 0) {
 </div>
 <div class="row pt-3">
     <div class="col-12 table-responsive">
-        <table class="table table-striped" id="file_history" style="display:none">
+        <table class="table table-striped table-condensed" id="file_history" style="display:none">
             <tr>
-                <td>Nombre</td>
-                <td>Versión</td>
-                <td>Descripción</td>
-                <td>Responsable</td>
-                <td>Fecha</td>
-                <td>Tamaño</td>
+                <td class="text-center">Nombre</td>
+                <td class="text-center">Versión</td>
+                <td class="text-center">Descripción</td>
+                <td class="text-center">Responsable</td>
+                <td class="text-center">Fecha</td>
+                <td class="text-center">Tamaño</td>
             </tr>
         </table>
     </div>

@@ -4,6 +4,7 @@ $(function() {
     $('#calendar').fullCalendar({
         longPressDelay:300,
         selectLongPressDelay: 500,
+        eventDurationEditable:false,
         editable: true,
         customButtons: {
             refresh: {
@@ -25,7 +26,7 @@ $(function() {
             right:  'prev,next,refresh month,agendaWeek,agendaDay,today'
         },
         defaultView: 'agendaWeek',
-        height:'parent',
+        height: $(window).height() - 20,
         selectable: true,        
         select: function( start, end){
             let params = {

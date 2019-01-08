@@ -690,7 +690,7 @@ function obtener_pantilla_documento($plantilla) {
 }
 
 function obtener_descripcion($descripcion) {
-	return (delimita(strip_tags($descripcion), 150));
+	return delimita(strip_tags($descripcion), 150);
 }
 
 function obtener_iddocumento() {
@@ -993,26 +993,26 @@ function variable_busqueda(){
     return $_REQUEST['variable_busqueda'];
 }
 
-function origin_pending_document($iddocumento, $funcionarioCodigo, $numero, $fecha, $plantilla, $idtransferencia){
+function origin_pending_document($documentId, $userCode, $number, $date, $transferId){
 	global $conn, $ruta_db_superior;
 
 	include_once $ruta_db_superior . 'controllers/autoload.php';
 
-    $Funcionario = new Funcionario($funcionarioCodigo);
+    $Funcionario = Funcionario::findByAttributes(['funcionario_codigo' => $userCode]);
     $roundedImage = roundedImage($Funcionario->getImage('foto_recorte'));
-	$temporality = strtotime($fecha) ? temporality($fecha) : '';
-    $documentRoute = 'formatos/' . $plantilla . '/mostrar_' . $plantilla .'.php?';
+	$temporality = strtotime($date) ? temporality($date) : '';
+    $documentRoute = 'views/documento/acordeon.php?';
     $documentRoute.= http_build_query([
-        'iddoc' => $iddocumento,
-        'idtransferencia' => $idtransferencia
+        'documentId' => $documentId,
+        'transferId' => $transferId
     ]);
 
     $html = '<div class="col-1 px-0 text-center action">
-        <input type="hidden" value="'.$iddocumento.'" class="identificator">'
+        <input type="hidden" value="'.$documentId.'" class="identificator">'
         . $roundedImage .
     '</div>
-    <div class="col show_document cursor principal_action" data-url="'.$documentRoute.'" titulo="Documento No.' . $numero . '">
-        <span class="mt-1 hint-text">'.$numero . " - " . $Funcionario->getName().'</span>
+    <div class="col show_document cursor principal_action" data-url="'.$documentRoute.'" titulo="Documento No.' . $number . '">
+        <span class="mt-1 hint-text">'.$number . " - " . $Funcionario->getName().'</span>
     </div>
     <div class="col-auto pr-0">
         <span class="mt-1 hint-text">'.$temporality.'</span>

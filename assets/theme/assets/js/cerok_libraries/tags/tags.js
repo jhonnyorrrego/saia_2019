@@ -26,6 +26,14 @@ class Tags {
     get selections(){
         return this._selections;
     }
+
+    set dataBind(data = 'document'){
+        this._dataBind = data;
+    }
+
+    get dataBind(){
+        return this._dataBind;
+    }
     
     createList(){
         let response = new String();
@@ -60,7 +68,8 @@ class Tags {
             dataType: 'json',
             data: {
                 key: this.user,
-                selections: this.selections
+                selections: this.selections,
+                dataBind: this.dataBind
             },
             success: response => {
                 if(response.success){
