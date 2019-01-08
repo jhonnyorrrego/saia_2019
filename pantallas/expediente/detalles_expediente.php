@@ -2,11 +2,11 @@
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
 while($max_salida>0){
-    if(is_file($ruta."db.php")){
-        $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
-    }
-    $ruta.="../";
-    $max_salida--;
+	if(is_file($ruta."db.php")){
+		$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+	}
+	$ruta.="../";
+	$max_salida--;
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
@@ -46,23 +46,44 @@ $expediente = busca_filtro_tabla("a.*," . fecha_db_obtener("a.fecha", "Y-m-d") .
 </style>
 <body>
 <?php
-    $permiso_modulo = new Permiso();
-    $ok = $permiso_modulo->acceso_modulo_perfil('expediente_admin');  
-    if(!$ok){
-        $permiso = new PermisosExpediente($conn, $idexpediente);
-        $permisos = $permiso->obtener_permisos();
-    
-        $m = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_MODIFICAR);
-        $sm= $permiso->tiene_permiso_serie(PermisosExpediente::PERMISO_SER_MODIFICAR);
-        $e = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_ELIMINAR);
-        $p = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_COMPARTIR);
-    }
-    else{
-        $sm=$e=$m=$p=1;
-    }
-    if(!($sm || $e || $m || $p)) {
-        die("No tiene permisos sobre &eacute;ste expediente");
-    }
+	$permiso_modulo = new Permiso();
+    $ok = $permiso_modulo->acceso_modulo_perfil('expediente_admin');
+	if(!$ok){
+		$permiso = new PermisosExpediente($conn, $idexpediente);
+	    $permisos = $permiso->obtener_permisos();
+
+	    $m = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_MODIFICAR);
+		$sm= $permiso->tiene_permiso_serie(PermisosExpediente::PERMISO_SER_MODIFICAR);
+	    $e = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_ELIMINAR);
+	    $p = $permiso->tiene_permiso_expediente(PermisosExpediente::PERMISO_EXP_COMPARTIR);
+	}
+	else{
+		$sm=$e=$m=$p=1;
+	}
+	/*if ($expediente[0]["propietario"] == $_SESSION["usuario_actual"]) {
+		$m = 1;
+		$e = 1;
+		$p = 1;
+	} else {
+		$permiso = busca_filtro_tabla("permiso", "entidad_expediente", "expediente_idexpediente=" . $idexpediente . " AND entidad_identidad=1 and estado=1 and llave_entidad=" . usuario_actual("idfuncionario"), "", $conn);
+		if ($permiso["numcampos"]) {
+			if($permiso[0]["permiso"] != "") {
+				if (strpos($permiso[0]["permiso"], "m") !== false) {
+					$m = 1;
+				}
+				if (strpos($permiso[0]["permiso"], "e") !== false) {
+					$e = 1;
+				}
+				if (strpos($permiso[0]["permiso"], "p") !== false) {
+					$p = 1;
+				}
+			}
+			$l=1;
+		}
+	}*/
+	if(!($sm || $e || $m || $p)) {
+	    die("No tiene permisos sobre &eacute;ste expediente");
+	}
 
     $etiqueta_expediente="expediente";
     if($expediente[0]["agrupador"]) {
@@ -104,41 +125,41 @@ $expediente = busca_filtro_tabla("a.*," . fecha_db_obtener("a.fecha", "Y-m-d") .
 
   <?php
       if($expediente[0]["agrupador"]){
-        ?>
-         <tr>
-            <td class="prettyprint"><b>Responsable del expediente:</b></td>
-            <td colspan="3">
-            <?php
-        if ($expediente[0]["propietario"]) {
-            $nombres = busca_filtro_tabla("", "funcionario A", "A.funcionario_codigo=" . $expediente[0]["propietario"], "", $conn);
-            echo (ucwords(strtolower($nombres[0]["nombres"] . " " . $nombres[0]["apellidos"])));
-        } else {
-            echo ("<span style='color:red'>Expediente creado por el sistema</span>");
-        }
-        $configuracion_administrador = busca_filtro_tabla("valor", "configuracion", "nombre='login_administrador'", "", $conn);
-        
-        if (($expediente[0]["propietario"] == @$_SESSION['usuario_actual']) || (!$expediente[0]["propietario"] && $configuracion_administrador[0]["valor"] == @$_SESSION['LOGIN' . LLAVE_SAIA])) {
-            ?>
-                    &nbsp; &nbsp; &nbsp;
-                    <button class='btn btn-mini btn-default cambiar_responsable_expediente'>
-                        <i class='icon-user' title='Cambiar Responsable'></i>
-                    </button>
-                    <script>
-                        $(document).ready(function(){
-                            $('.cambiar_responsable_expediente').click(function(){
-                                 var enlace='<?php echo($ruta_db_superior); ?>pantallas/expediente/cambiar_responsable_expediente.php?idexpediente=<?php echo($idexpediente); ?>';
-                                hs.htmlExpand(this, { objectType: 'iframe',width: 400, height: 200,contentId:'cuerpo_paso',         preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
-                            });
-                        });
-                    </script>
-        
-            <?php
-                } //fin if  $expediente[0]["propietario"] == @$_SESSION['usuario_actual']
-            ?>
-        
-            </td>
-          </tr>
-          <?php
+      	?>
+		 <tr>
+		  	<td class="prettyprint"><b>Responsable del expediente:</b></td>
+		  	<td colspan="3">
+		  	<?php
+		if ($expediente[0]["propietario"]) {
+		    $nombres = busca_filtro_tabla("", "funcionario A", "A.funcionario_codigo=" . $expediente[0]["propietario"], "", $conn);
+		    echo (ucwords(strtolower($nombres[0]["nombres"] . " " . $nombres[0]["apellidos"])));
+		} else {
+		    echo ("<span style='color:red'>Expediente creado por el sistema</span>");
+		}
+		$configuracion_administrador = busca_filtro_tabla("valor", "configuracion", "nombre='login_administrador'", "", $conn);
+
+		if (($expediente[0]["propietario"] == @$_SESSION['usuario_actual']) || (!$expediente[0]["propietario"] && $configuracion_administrador[0]["valor"] == @$_SESSION['LOGIN' . LLAVE_SAIA])) {
+		  	?>
+		          	&nbsp; &nbsp; &nbsp;
+		  		    <button class='btn btn-mini btn-default cambiar_responsable_expediente'>
+		  		        <i class='icon-user' title='Cambiar Responsable'></i>
+		  		    </button>
+		  		    <script>
+		  		        $(document).ready(function(){
+		  		            $('.cambiar_responsable_expediente').click(function(){
+		                         var enlace='<?php echo($ruta_db_superior); ?>pantallas/expediente/cambiar_responsable_expediente.php?idexpediente=<?php echo($idexpediente); ?>';
+		                        hs.htmlExpand(this, { objectType: 'iframe',width: 400, height: 200,contentId:'cuerpo_paso', 		preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
+		  		            });
+		  		        });
+		  		    </script>
+
+		  	<?php
+		  	    } //fin if  $expediente[0]["propietario"] == @$_SESSION['usuario_actual']
+		  	?>
+
+		  	</td>
+		  </tr>
+		  <?php
         echo('</table></div></div>');
         echo('
         <script>
@@ -214,9 +235,9 @@ $expediente = busca_filtro_tabla("a.*," . fecha_db_obtener("a.fecha", "Y-m-d") .
     </td>
   </tr>
   <tr>
-    <td class="prettyprint"><b>Responsable del expediente:</b></td>
-    <td colspan="3">
-    <?php
+  	<td class="prettyprint"><b>Responsable del expediente:</b></td>
+  	<td colspan="3">
+  	<?php
 if ($expediente[0]["propietario"]) {
     $nombres = busca_filtro_tabla("", "funcionario A", "A.funcionario_codigo=" . $expediente[0]["propietario"], "", $conn);
     echo (ucwords(strtolower($nombres[0]["nombres"] . " " . $nombres[0]["apellidos"])));
@@ -226,32 +247,32 @@ if ($expediente[0]["propietario"]) {
 $configuracion_administrador = busca_filtro_tabla("valor", "configuracion", "nombre='login_administrador'", "", $conn);
 
 if (($expediente[0]["propietario"] == @$_SESSION['usuario_actual']) || (!$expediente[0]["propietario"] && $configuracion_administrador[0]["valor"] == @$_SESSION['LOGIN' . LLAVE_SAIA])) {
-    ?>
-            &nbsp; &nbsp; &nbsp;
-            <button class='btn btn-mini btn-default cambiar_responsable_expediente'>
-                <i class='icon-user' title='Cambiar Responsable'></i>
-            </button>
-            <script>
-                $(document).ready(function(){
-                    $('.cambiar_responsable_expediente').click(function(){
+  	?>
+          	&nbsp; &nbsp; &nbsp;
+  		    <button class='btn btn-mini btn-default cambiar_responsable_expediente'>
+  		        <i class='icon-user' title='Cambiar Responsable'></i>
+  		    </button>
+  		    <script>
+  		        $(document).ready(function(){
+  		            $('.cambiar_responsable_expediente').click(function(){
                          var enlace='<?php echo($ruta_db_superior); ?>pantallas/expediente/cambiar_responsable_expediente.php?idexpediente=<?php echo($idexpediente); ?>';
-                        hs.htmlExpand(this, { objectType: 'iframe',width: 400, height: 200,contentId:'cuerpo_paso',         preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
-                    });
-                });
-            </script>
+                        hs.htmlExpand(this, { objectType: 'iframe',width: 400, height: 200,contentId:'cuerpo_paso', 		preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
+  		            });
+  		        });
+  		    </script>
 
-    <?php
-        } //fin if  $expediente[0]["propietario"] == @$_SESSION['usuario_actual']
-    ?>
+  	<?php
+  	    } //fin if  $expediente[0]["propietario"] == @$_SESSION['usuario_actual']
+  	?>
 
-    </td>
+  	</td>
   </tr>
   <tr>
-    <td class="prettyprint">
+  	<td class="prettyprint">
       <b>Vinculado a la caja:</b>
     </td>
     <td>
-        <?php
+    	<?php
     if ($expediente[0]["fk_idcaja"]) {
         $caja = busca_filtro_tabla("", "caja", "idcaja=" . $expediente[0]["fk_idcaja"], "", $conn);
         if ($caja["numcampos"]) {
@@ -264,56 +285,16 @@ if (($expediente[0]["propietario"] == @$_SESSION['usuario_actual']) || (!$expedi
        ?>
     </td>
   </tr>
-  
-  
-  
-  <tr>
-    <td class="prettyprint">
-      <b>Soporte:</b>
-    </td>
-    <td>
-        <?php
-            switch ($expediente[0]["soporte"]) {
-                case '1':
-                    $soporte='CD-ROM';
-                    break;
-                case '2':
-                    $soporte='DISKETE';
-                    break;
-                case '3':
-                    $soporte='DVD';
-                    break;
-                case '4':
-                    $soporte='DOCUMENTO';
-                    break;
-                case '5':
-                    $soporte='FAX';
-                    break;
-                case '6':
-                    $soporte='REVISTA O LIBRO';
-                    break;
-                case '7':
-                    $soporte='VIDEO';
-                    break;
-                case '8':
-                    $soporte='OTROS ANEXOS';
-                    break;
-                default:
-                    $soporte='---';
-                    break;
-            }
-            echo $soporte;
-        ?>
-    </td>
-  </tr>
-  
-  
   <?php
 $cadena_cierre = array();
 if (is_object($expediente[0]["fecha_cierre"])) {
     $expediente[0]["fecha_cierre"] = $expediente[0]["fecha_cierre"]->format('Y-m-d');
 }
-$usuario_cierre = busca_filtro_tabla("", "vfuncionario_dc a", "a.idfuncionario=" . $expediente[0]["funcionario_cierre"], "", $conn);
+if(!empty($expediente[0]["funcionario_cierre"])) {
+    $usuario_cierre = busca_filtro_tabla("", "vfuncionario_dc a", "a.idfuncionario=" . $expediente[0]["funcionario_cierre"], "", $conn);
+} else {
+    $usuario_cierre = ["numcampos" => 0];
+}
 $estado_cierre = "";
 $enlace_abrir = '<a style="cursor:pointer" class="accion_abrir_cierre" accion="1">Abrir</a><input type="hidden" name="accion" value="1" />';
 $enlace_cerrar = '<a style="cursor:pointer" class="accion_abrir_cierre" accion="2">Cerrar</a><input type="hidden" name="accion" value="2" />';
@@ -347,7 +328,9 @@ if ($expediente[0]["estado_cierre"] == 1) {
 
 $cadena_cierre[] = "<b>Estado:</b> " . $estado_cierre;
 $cadena_cierre[] = $expediente[0]["fecha_cierre"];
-$cadena_cierre[] = ucwords(strtolower($usuario_cierre[0]["nombres"] . " " . $usuario_cierre[0]["apellidos"]));
+if($usuario_cierre["numcampos"]) {
+    $cadena_cierre[] = ucwords(strtolower($usuario_cierre[0]["nombres"] . " " . $usuario_cierre[0]["apellidos"]));
+}
   ?>
   <tr>
     <td class="prettyprint">
@@ -396,11 +379,11 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
     if($datos_cierre[0]['estado_cierre']==2){
         //$dias_calcular=365*$datos_serie[0]["retencion_".$vector_estado_expediente[$estado_expediente]];
         $dias_calcular=$datos_serie[0]["retencion_".$vector_estado_expediente[$estado_expediente]];
-       // $dias_calcular=60;       
+       // $dias_calcular=60;
         include_once($ruta_db_superior."pantallas/lib/librerias_fechas.php");
-        $fecha_calculo=calculaFecha("month",+$dias_calcular,$fecha_cierre);
-        $interval=resta_dos_fechas_saia(date('Y-m-d'),$fecha_calculo);
-        $interval_pos_neg=$interval->invert;  //Es 1 si el intervalo representa un periodo de tiempo negativo y 0 si no
+		$fecha_calculo=calculaFecha("month",+$dias_calcular,$fecha_cierre);
+		$interval=resta_dos_fechas_saia(date('Y-m-d'),$fecha_calculo);
+		$interval_pos_neg=$interval->invert;  //Es 1 si el intervalo representa un periodo de tiempo negativo y 0 si no
         $interval_diferencia=$interval->days; //dias de diferencia
         $interval_anio=$interval->y;
         $interval_mes=$interval->m;
@@ -414,7 +397,7 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         $horas_minutos_segundos_parseados=( conversor_segundos_hm(intval($segundos)) );
         //$cadena_final='';
         $cadena_final=array();
-        $texto_final="";
+		$texto_final="";
 
         $cadena_inicial='Faltan ';
         $color='green';
@@ -517,59 +500,61 @@ if($expediente[0]["estado_cierre"]==2){  //si esta cerrado
         } //fin ejecutar ajax
     });
   });
-    </script>
+ 	</script>
   <?php
   if(MOTOR=='MySql'){
-    $transferencia_doc=busca_filtro_tabla("","ft_transferencia_doc a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO') and (CONCAT(',',a.expediente_vinculado,',') like '%,".$expediente[0]["idexpediente"].",%')","a.idft_transferencia_doc DESC",$conn);
-    }
-    if(MOTOR=='Oracle'){
-    $transferencia_doc=busca_filtro_tabla("","ft_transferencia_doc a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO') and (CONCAT(',',CONCAT(a.expediente_vinculado,',')) like '%,".$expediente[0]["idexpediente"].",%')","a.idft_transferencia_doc DESC",$conn);
-    }
-    if(MOTOR=='SqlServer'){
-    $transferencia_doc=busca_filtro_tabla("","ft_transferencia_doc a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO') and (','+a.expediente_vinculado+',' like '%,".$expediente[0]["idexpediente"].",%')","a.idft_transferencia_doc DESC",$conn);
-    }
+  	$transferencia_doc=busca_filtro_tabla("","ft_transferencia_doc a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO') and (CONCAT(',',a.expediente_vinculado,',') like '%,".$expediente[0]["idexpediente"].",%')","a.idft_transferencia_doc DESC",$conn);
+	}
+	if(MOTOR=='Oracle'){
+  	$transferencia_doc=busca_filtro_tabla("","ft_transferencia_doc a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO') and (CONCAT(',',CONCAT(a.expediente_vinculado,',')) like '%,".$expediente[0]["idexpediente"].",%')","a.idft_transferencia_doc DESC",$conn);
+	}
+	if(MOTOR=='SqlServer'){
+  	$transferencia_doc=busca_filtro_tabla("","ft_transferencia_doc a, documento b","a.documento_iddocumento=b.iddocumento and b.estado not in('ELIMINADO', 'ACTIVO') and (','+a.expediente_vinculado+',' like '%,".$expediente[0]["idexpediente"].",%')","a.idft_transferencia_doc DESC",$conn);
+	}
 
   if($transferencia_doc["numcampos"]){
+
   ?>
   <tr>
-    <td class="prettyprint"><b>Transferencia documental</b></td>
-    <td>
-        <?php
-            for($i=0;$i<$transferencia_doc['numcampos'];$i++){
-                $href=$ruta_db_superior."pantallas/documento/visor_documento.php?iddoc=".$transferencia_doc[$i]["iddocumento"]."&menu_principal_inactivo=1";
-                if(is_object($transferencia_doc[$i]["fecha"]))
-                    $transferencia_doc[$i]["fecha"]=$transferencia_doc[$i]["fecha"]->format('Y-m-d H:i');
-                    
-                     $ruta_pdf = json_decode($transferencia_doc[$i]['pdf']);
-                    if (is_object($ruta_pdf)) {
-                        if ($tipo_almacenamiento -> get_filesystem() -> has($ruta_pdf -> ruta)) {
-                            $ruta64 = base64_encode($transferencia_doc[$i]["pdf"]);
-                            $href = $ruta_db_superior . "filesystem/mostrar_binario.php?ruta=" . $ruta64;
-                        }
-                    }
-                ?>
-                    <a class="previo_high" enlace="<?php echo($href); ?>" style="cursor:pointer">Ver transferencia No <?php echo($transferencia_doc[$i]["numero"]); ?> (<?php echo($transferencia_doc[$i]["fecha"]); ?>)</a>
-                    <br>
-                <?php
-            }
-        ?>
-    </td>
+  	<td class="prettyprint"><b>Transferencia documental</b></td>
+  	<td>
+  	    <?php
+  	        for($i=0;$i<$transferencia_doc['numcampos'];$i++){
+  	            if(is_object($transferencia_doc[$i]["fecha"]))
+  	            	$transferencia_doc[$i]["fecha"]=$transferencia_doc[$i]["fecha"]->format('Y-m-d H:i');
+  	           	$ruta_pdf = json_decode($transferencia_doc[$i]['pdf']);
+  	            if (is_object($ruta_pdf)) {
+  	            	if ($tipo_almacenamiento -> get_filesystem() -> has($ruta_pdf -> ruta)) {
+  	            		$ruta64 = base64_encode($transferencia_doc[$i]["pdf"]);
+  	            		$href = $ruta_db_superior . "filesystem/mostrar_binario.php?ruta=" . $ruta64;
+  	            	}
+  	            }
+  	            ?>
+  	                <a class="previo_high" enlace="<?php echo($href); ?>" style="cursor:pointer">Ver transferencia No <?php echo($transferencia_doc[$i]["numero"]); ?> (<?php echo($transferencia_doc[$i]["fecha"]); ?>)</a>
+  	                <br>
+  	            <?php
+  	        }
+  	    ?>
+
+
+  	</td>
   </tr>
   <script>
-        $(document).ready(function(){
-            $(".previo_high").click(function(e){
-                var enlace=$(this).attr("enlace");
-                top.hs.htmlExpand(this, { objectType: 'iframe',width: 1000, height: 600,contentId:'cuerpo_paso', preserveContent:false, src:"pantallas/expediente/visor_pdf.php?ruta="+enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
-            });
-        });
-        </script>
+		$(document).ready(function(){
+			$(".previo_high").click(function(e){
+				var enlace=$(this).attr("enlace");
+				top.hs.htmlExpand(this, { objectType: 'iframe',width: 1000, height: 600,contentId:'cuerpo_paso', preserveContent:false, src:"pantallas/expediente/visor_pdf.php?ruta="+enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
+
+			});
+		});
+		</script>
   <?php } ?>
 </table>
 </div>
 <?php
 $almacenamiento["numcampos"]=0;
 
-if($almacenamiento["numcampos"]){   
+if($almacenamiento["numcampos"]){
 ?>
 <div class="container">
 <div data-toggle="collapse" data-target="#div_info_almacenamiento" style="cursor:pointer;">
@@ -636,17 +621,21 @@ if($contenido["numcampos"]){
     </td>
     <td>
        <?php
-      $expedientes=arreglo_expedientes_asignados();
-            $arreglo=array();
-            obtener_expedientes_padre($idexpediente,$expedientes);
-            $arreglo=array_merge($arreglo,array($idexpediente));
-            //return(implode(",",$arreglo));
-            $documentos=busca_filtro_tabla("count(*) as cantidad","expediente_doc A, documento B","A.expediente_idexpediente in(".implode(",",$arreglo).") AND A.documento_iddocumento=B.iddocumento AND B.estado not in('ELIMINADO')","",$conn);
-            //return($cantidad["sql"]);
+    $expedientes = arreglo_expedientes_asignados();
+    $arreglo = array();
+    //TODO: WTF!!!
+    //obtener_expedientes_padre($idexpediente, $expedientes);
+    $arreglo = array_merge($arreglo, array(
+        $idexpediente
+    ));
+    // return(implode(",",$arreglo));
+    $documentos = busca_filtro_tabla("count(*) as cantidad", "expediente_doc A, documento B", "A.expediente_idexpediente in(" . implode(",", $arreglo) . ") AND A.documento_iddocumento=B.iddocumento AND B.estado not in('ELIMINADO')", "", $conn);
+    // return($cantidad["sql"]);
 
-            if(!$documentos["numcampos"])$documentos[0]["cantidad"]=0;
-                echo($documentos[0]["cantidad"]);
-            ?>
+    if (!$documentos["numcampos"])
+        $documentos[0]["cantidad"] = 0;
+    echo ($documentos[0]["cantidad"]);
+			?>
     </td>
   </tr>
   <tr>
@@ -687,7 +676,7 @@ if($contenido["numcampos"]){
     <td class="prettyprint">
       <b>Consecutivo Inicial:</b>
     </td>
-    <td colspan="3">       
+    <td colspan="3">
        <?php echo($expediente[0]["consecutivo_inicial"]);?>
     </td>
   </tr>
@@ -730,7 +719,7 @@ echo(librerias_acciones_kaiten());
 ?>
 <script type="text/javascript">
 $(document).ready(function(){
-    iniciar_tooltip();
+	iniciar_tooltip();
   $(".opcion_informacion").on("hide",function(){
     $(this).prev().children("i").removeClass();
     $(this).prev().children("i").addClass("icon-plus-sign");
