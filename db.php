@@ -189,7 +189,15 @@ function leido($codigo, $llave)
 </Clase>  */
 function limpia_tabla($tabla)
 {
-    global $ruta_db_superior;
+    $max_salida = 6;
+    $ruta_db_superior = $ruta = "";
+    while ($max_salida > 0) {
+        if (is_file($ruta . "db.php")) {
+            $ruta_db_superior = $ruta;
+        }
+        $ruta .= "../";
+        $max_salida--;
+    }
 
     include_once($ruta_db_superior . "kses-0.2.3/kses.php");
 
