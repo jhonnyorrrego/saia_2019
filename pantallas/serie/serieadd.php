@@ -32,8 +32,8 @@ $tipo_serie = array(
     2 => "Subserie",
     3 => "Tipo documental"
 );
-$sAction = @$_POST["a_add"];
 
+$sAction = @$_POST["a_add"];
 switch ($sAction) {
     case "A":
         $x_idserie = @$_POST["x_idserie"];
@@ -58,7 +58,7 @@ switch ($sAction) {
 
         $ok = AddData($conn);
         if ($ok) {
-            notificaciones('Serie adicionada con exito', 'success', 6000);
+            alerta('Serie adicionada con exito');
             if ($x_categoria != 3) {
                 $openNode = "0.0.0";
             } else {
@@ -70,17 +70,13 @@ switch ($sAction) {
                 accion: "refrescar_arbol",
                 expandir: "<?php echo $openNode;?>"
             }, "*");
-			/*window.parent.frames['arbol'].tree2.setOnLoadingEnd(abrir_arbol);
-			function abrir_arbol() {
-			window.parent.frames['arbol'].tree2.openAllItems("<?php echo $openNode;?>");
-			}*/
 			</script>
 <?php
             exit();
         }
         break;
-    default:		
-        $sKey = isset($_REQUEST["x_idserie"])? $_REQUEST["x_idserie"]:null;
+    default:
+        $sKey = $_REQUEST["x_idserie"];
         $x_idserie = Null;
         $x_nombre = Null;
         $x_cod_padre = Null;
@@ -98,13 +94,9 @@ switch ($sAction) {
         $x_tvd = Null;
 
         $disabled="";
-		
-		if(!empty($sKey)){
-			$info_padre = busca_filtro_tabla("", "serie", "idserie=" . $sKey, "", $conn);
-		}
-		else{
-			$info_padre=array("numcampos"=>0);				
-		}
+
+        $info_padre = busca_filtro_tabla("", "serie", "idserie=" . $sKey, "", $conn);
+
         $nom_padre = "";
         $x_tipo = Null;
         if ($info_padre["numcampos"]) {
@@ -143,18 +135,16 @@ switch ($sAction) {
 			}
 
 			//buscar permisos asociados a la serie
-			/*$entidades=array();
+			$entidades=array();
 			$buscar_permisos = busca_filtro_tabla("", "permiso_serie", "estado=1 and serie_idserie=".$sKey, "", $conn);
 			if($buscar_permisos["numcampos"]){
 				for($i=0;$i<$buscar_permisos["numcampos"];$i++){
 					$entidades[$buscar_permisos[$i]["entidad_identidad"]][]=$buscar_permisos[$i]["llave_entidad"];
 				}
-			}*/
+			}
         }
         break;
-    }
-
- 
+}
 
 function AddData($conn) {
     $fieldList = array();
@@ -530,21 +520,20 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 						$("[name='x_copia']").attr('checked', false);
 					}
 				} else {
-					top.noty({
-						text : datos.msn,
-						type : 'error',
-						layout : 'topCenter',
-						timeout : 5000
-					});
+                    top.notification({
+                        message: datos.msn,
+                        type: 'error',
+                        duration: 5000
+                    });
 				}
 			},
 			error : function() {
-				top.noty({
-					text : 'Error al consultar los datos de la serie padre',
-					type : 'error',
-					layout : 'topCenter',
-					timeout : 5000
-				});
+                top.notification({
+                    message: 'Error al consultar los datos de la serie padre'
+                    type: 'error',
+                    duration: 5000
+                });
+        
 			}
 		});
 	}
@@ -597,21 +586,19 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 					x_tipo = $("[name='x_tipo']:checked").val();
 					x_cod_padre = $("#x_cod_padre").val();
 					if(x_iddependencia == ""){
-						top.noty({
-							text : 'Por favor seleccione a quien le va a asignar la serie',
-							type : 'error',
-							layout : 'topCenter',
-							timeout : 5000
-						});
+                        top.notification({
+                            message: 'Por favor seleccione a quien le va a asignar la serie',
+                            type: 'error',
+                            duration: 5000
+                        });
 						return false;
 					}
 					if (x_tipo != 1 && (x_cod_padre == "" || x_cod_padre == 0)) {
-						top.noty({
-							text : 'Por favor seleccione el Padre',
-							type : 'error',
-							layout : 'topCenter',
-							timeout : 5000
-						});
+                        top.notification({
+                            message: 'Por favor seleccione el Padre',
+                            type: 'error',
+                            duration: 5000
+                        });
 						return false;
 					} else {
 						form.submit();
@@ -686,12 +673,11 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 						$("#divserie").empty().html(html_serie);
 					},
 					error : function() {
-						top.noty({
-							text : 'No se pudo cargar el arbol de series',
-							type : 'error',
-							layout : 'topCenter',
-							timeout : 5000
-						});
+                        top.notification({
+                            message: 'No se pudo cargar el arbol de series',
+                            type: 'error',
+                            duration: 5000
+                        });
 					}
 				});
 
@@ -739,12 +725,12 @@ var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
 							$("#divserie").empty().html(html_serie);
 						},
 						error : function() {
-							top.noty({
-								text : 'No se pudo cargar el arbol de series',
-								type : 'error',
-								layout : 'topCenter',
-								timeout : 5000
-							});
+                            top.notification({
+                                message: 'No se pudo cargar el arbol de series',
+                                type: 'error',
+                                duration: 5000
+                            });
+
 						}
 					});
 				} else if(!cod_padre) {
