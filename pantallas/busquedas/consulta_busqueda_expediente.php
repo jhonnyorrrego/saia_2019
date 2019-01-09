@@ -320,20 +320,18 @@ echo(estilo_bootstrap());
                                 $('#loadmoreajaxloader').html("M&aacute;s Resultados");
                             }
                         } else {
-                            top.noty({
-                                text : objeto.mensaje,
-                                type : 'error',
-                                layout : 'topCenter',
-                                timeout : 5000
+                            top.notification({
+                                message : objeto.mensaje,
+                                type : "error",
+                                duration : 3000
                             });
                         }
                     },
                     error : function() {
-                        top.noty({
-                            text : "Error al procesar la solicitud",
-                            type : 'error',
-                            layout : 'topCenter',
-                            timeout : 5000
+                        top.notification({
+                            message : "Error al procesar la solicitud",
+                            type : "error",
+                            duration : 3000
                         });
                     }
                 });
@@ -390,20 +388,18 @@ echo(estilo_bootstrap());
                                 $('#loadmoreajaxloader').html("M&aacute;s Resultados");
                             }
                         } else {
-                            top.noty({
-                                text : objeto.mensaje,
-                                type : 'error',
-                                layout : 'topCenter',
-                                timeout : 5000
+                            top.notification({
+                                message : objeto.mensaje,
+                                type : "error",
+                                duration : 3000
                             });
                         }
                     },
                     error : function() {
-                        top.noty({
-                            text : "Error al procesar la solicitud documento",
-                            type : 'error',
-                            layout : 'topCenter',
-                            timeout : 5000
+                        top.notification({
+                            message : "Error al procesar la solicitud documento",
+                            type : "error",
+                            duration : 3000
                         });
                     }
                 });

@@ -711,14 +711,14 @@ table.fancytree-ext-table {
   border-collapse: collapse;
 }
 table.fancytree-ext-table tbody tr.fancytree-focused {
-  background-color: #99DEFD;
+  background-color: #6DC0F9;
 }
 table.fancytree-ext-table tbody tr.fancytree-active {
-  background-color: royalblue;
+  background-color: #6DC0F9;
 }
-table.fancytree-ext-table tbody tr.fancytree-selected {
+/*table.fancytree-ext-table tbody tr.fancytree-selected {
   background-color: #99DEFD;
-}
+}*/
 /*******************************************************************************
  * 'columnview' extension
  */
@@ -729,5 +729,5 @@ table.fancytree-ext-columnview span.fancytree-node.fancytree-expanded {
   background-color: #ccc;
 }
 table.fancytree-ext-columnview span.fancytree-node.fancytree-active {
-  background-color: royalblue;
+  background-color: #6DC0F9;
 }

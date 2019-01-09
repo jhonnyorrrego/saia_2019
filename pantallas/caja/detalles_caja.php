@@ -125,7 +125,7 @@ $listado_series=implode(", ", $listado_series);
       <b>No carpetas:</b>
     </td>
     <td colspan="3">
-       <?php echo consultar_numero_carpetas_caja($caja[0]["idcaja"])?>
+       <?php echo consultar_numero_carpetas_caja($caja[0][idcaja])?>
     </td>
   </tr>
   <tr>
@@ -133,7 +133,7 @@ $listado_series=implode(", ", $listado_series);
       <b>Fecha extrema inicial:</b>
     </td>
     <td colspan="3">
-       <?php echo calcular_fecha_extrema_inicial($caja[0]["idcaja"]) ?>
+       <?php echo calcular_fecha_extrema_inicial($caja[0][idcaja]) ?>
     </td>
   </tr>
   <tr>
@@ -141,7 +141,7 @@ $listado_series=implode(", ", $listado_series);
       <b>Fecha extrema final:</b>
     </td>
     <td colspan="3">
-       <?php echo calcular_fecha_extrema_final($caja[0]["idcaja"])  ?>
+       <?php echo calcular_fecha_extrema_final($caja[0][idcaja])  ?>
     </td>
   </tr>
   <tr>
@@ -173,7 +173,7 @@ $listado_series=implode(", ", $listado_series);
       <b>Material:</b>
     </td>
     <td colspan="3">
-       <?php echo consulta_material_caja($caja[0]["material"])?>
+       <?php echo consulta_material_caja($caja[0][material])?>
     </td>
   <tr>
     <td class="prettyprint">
