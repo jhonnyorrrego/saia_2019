@@ -384,7 +384,6 @@ class GenerarFormato {
             }
 
             $includes .= $this->incluir("'../../librerias_saia.php'", "librerias");
-            $includes .= "<?php echo(librerias_jquery('1.7')); ?>";
             $includes .= $this->incluir_libreria("funciones_generales.php", "librerias");
             $includes .= $this->incluir("'../../class_transferencia.php'", "librerias");
             if ($formato[0]["librerias"] && $formato[0]["librerias"] != "") {

@@ -1709,7 +1709,7 @@ function error($cad, $ruta = "", $file = "", $imprime_cadena = 0)
  */
 function abrir_url($location, $target = "_blank"){
     echo "<script language='javascript'>
-        window.open('".$location."',".$target.");
+        window.open(\"".$location."\",\"".$target."\");
     </script>";
 }
 
@@ -1721,7 +1721,7 @@ function abrir_url($location, $target = "_blank"){
  */
 function redirecciona($location){
     echo "<script language='javascript'>
-        window.location='" . $location ."';
+        window.location=\"" . $location ."\";
     </script>";
 }
 /*

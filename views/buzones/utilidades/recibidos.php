@@ -40,15 +40,17 @@ $(function(){
                 });
                 
                 selections = selections.split(',').map(Number);
-                $("i.priority").each(function(i, e){
+                $("#table i.priority").each(function(i, e){
                     let element = $(e);
                     let key = element.data('key');
                     
                     if($.inArray(key, selections) != -1){
                         if(priority){
                             element.show();
+                            $(`#document_information [data-key=${key}]`).addClass('text-danger')
                         }else{
                             element.hide();
+                            $(`#document_information [data-key=${key}]`).removeClass('text-danger')
                         }
                     }
                 });                                

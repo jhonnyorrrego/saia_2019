@@ -1082,7 +1082,7 @@ function has_files($documentId, $showConunter = false) {
 function priority($documentId){
     global $conn;
     $class = 'text-dark';
-    $findPriority = busca_filtro_tabla('prioridad', 'prioridad_documento', 'documento_iddocumento=' . $documentId, '', $conn);
+    $findPriority = busca_filtro_tabla('prioridad', 'prioridad_documento', 'fk_documento=' . $documentId, '', $conn);
     if(!$findPriority['numcampos'] || !$findPriority[0]['prioridad']){
         $style = 'style="display:none"';
     }else{

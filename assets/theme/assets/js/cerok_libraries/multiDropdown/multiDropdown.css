@@ -1,0 +1,19 @@
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu> a:after {
+    content: " >";
+    float: right;
+}
+
+.dropdown-submenu>.dropdown-menu {
+    top: 100%;
+    left: 0px;
+    margin-top: 0px;
+    margin-left: 0px;
+}
+
+.dropdown-submenu:hover>.dropdown-menu {
+    display: block;
+}

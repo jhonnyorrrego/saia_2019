@@ -24,23 +24,30 @@ $Response = (object) array(
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
     if($_REQUEST['selections']){
         $selections = explode(',', $_REQUEST['selections']);
-
+        
         foreach($selections as $documentId){
             $PrioridadDocumento = PrioridadDocumento::findByAttributes([
-                'documento_iddocumento' => $id
+                'fk_documento' => $documentId
             ]);
 
             if(!$PrioridadDocumento){
-                $PrioridadDocumento = new PrioridadDocumento();
+                $pk = PrioridadDocumento::newRecord([
+                    'fk_documento' => $documentId,
+                    'fk_funcionario' => $_REQUEST['key'],
+                    'fecha' => date('Y-m-d H:i:s'),
+                    'prioridad' => strval($_REQUEST['priority'])
+                ]);
+            }else{
+                $PrioridadDocumento->setAttributes(array(
+                    'fk_documento' => $documentId,
+                    'fk_funcionario' => $_REQUEST['key'],
+                    'fecha' => date('Y-m-d H:i:s'),
+                    'prioridad' => strval($_REQUEST['priority'])
+                ));
+                $pk = $PrioridadDocumento->save();
             }
-            
-            $PrioridadDocumento->setAttributes(array(
-                'documento_iddocumento' => $documentId,
-                'funcionario_idfuncionario' => usuario_actual('idfuncionario'),
-                'prioridad' => strval($_REQUEST['priority'])
-            ));
 
-            if($PrioridadDocumento->save()){
+            if($pk){
                 $Response->message = "Prioridad actualizada";
                 $Response->success = 1; 
             }else{
