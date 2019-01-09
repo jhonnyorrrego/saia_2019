@@ -14,6 +14,7 @@ include_once ($ruta_db_superior . "db.php");
 if (!$_SESSION["LOGIN" . LLAVE_SAIA] && isset($_REQUEST["LOGIN"]) && @$_REQUEST["conexion_remota"]) {
     logear_funcionario_webservice($_REQUEST["LOGIN"]);
 }
+
 include_once ($ruta_db_superior . FORMATOS_SAIA . "librerias/funciones.php");
 include_once ($ruta_db_superior . FORMATOS_SAIA . "generar_formato_buscar.php");
 include_once ($ruta_db_superior . "pantallas/documento/class_documento_elastic.php");
@@ -1080,17 +1081,21 @@ class GenerarFormato {
                             $texto .= '</div>';
                             break;
 
-                        case "arbol" :
-						/*En campos valor se deben almacenar los siguientes datos: ../../test.php;1;0;1;1;0;0
-						 arreglo[0] ruta de el xml
-						 arreglo[1] 1=> checkbox; 2=>radiobutton
-						 arreglo[2] Modo calcular numero de nodos hijo
-						 arreglo[3] Forma de carga 0=>autoloading; 1=>smartXML
-						 arreglo[4] Busqueda
-						 arreglo[5] Almacenar 0=>iddato 1=>valordato
-						 arreglo[6] Tipo de arbol 0=>funcionarios 1=>series 2=>dependencias 3=>Otro (se debe sacar el dato) 4=>Sale de la tabla enviada a test_serie.php?tabla=nombre_tabla,5 => rol
-						 */
-						$arreglo = explode(";", $campos[$h]["valor"]);
+                    case "arbol" :
+                        /*En campos valor se deben almacenar los siguientes datos: ../../test.php;1;0;1;1;0;0
+                         arreglo[0] ruta de el xml
+                         arreglo[1] 1=> checkbox; 2=>radiobutton
+                         arreglo[2] Modo calcular numero de nodos hijo
+                         arreglo[3] Forma de carga 0=>autoloading; 1=>smartXML
+                         arreglo[4] Busqueda
+                         arreglo[5] Almacenar 0=>iddato 1=>valordato
+                         arreglo[6] Tipo de arbol 0=>funcionarios 1=>series 2=>dependencias 3=>Otro (se debe sacar el dato) 4=>Sale de la tabla enviada a test_serie.php?tabla=nombre_tabla,5 => rol
+                         */
+                        $arreglo = explode(";", $campos[$h]["valor"]);
+                            $dinamico=0;
+                            if(strpos($arreglo[0],'vacio.php')!==false){
+                                $dinamico=1;
+                            }
                             if (isset($arreglo) && $arreglo[0] != "") {
                                 $ruta = "\"" . $arreglo[0] . "\"";
                             } else {
@@ -1102,18 +1107,30 @@ class GenerarFormato {
                                 $arreglo[6] = 5;
                             }
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
-								<label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>';
+                                <label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>';
                             $texto .= '<div class="form-control"><div id="seleccionados">' . $this->arma_funcion("mostrar_seleccionados", $this->idformato . "," . $campos[$h]["idcampos_formato"] . ",'" . $arreglo[6] . "'", "mostrar") . '</div><br/>';
                             if ($arreglo[4]) {
-                                $texto .= 'Buscar: <input ' . $tabindex . ' type="text" id="stext_' . $campos[$h]["nombre"] . '" width="200px" size="25">
-									<a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value),1)">
-										<img src="../../botones/general/anterior.png"border="0px">
-									</a>
-								<a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value),0,1)">
-									<img src="../../botones/general/buscar.png"border="0px">
-								</a>
-								<a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value))">
-									<img src="../../botones/general/siguiente.png"border="0px"></a><br/>';
+                                if($arreglo[3]){
+                                    $busqueda='tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value),0,1)';
+                                }else{
+                                    $busqueda = "buscar_nodo_" . $campos[$h]["nombre"] . "('tree_" . $campos[$h]["nombre"] . "')";
+                                    if(strpos($ruta, "cargar_partes")===false){
+                                        if(strpos($ruta, ".php?")===false){
+                                            $ruta=substr($ruta, 0,-1).'?cargar_partes=1"';
+                                        }else{
+                                            $ruta=substr($ruta, 0,-1).'&cargar_partes=1"';
+                                        }
+                                    }
+                                }
+                                $texto .= 'Buscar: <input ' . $tabindex . ' type="text" id="stext_' . $campos[$h]["nombre"] . '" width="200px" size="25" onblur="closetree_' . $campos[$h]["nombre"] . '()"> <input type="hidden" id="idclosetree_' . $campos[$h]["nombre"] . '">
+                                <a href="javascript:void(0)" onclick="'.$busqueda.'">
+                                    <img src="../../botones/general/buscar.png"border="0px">
+                                </a>
+                                    <a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value),1)">
+                                        <img src="../../botones/general/anterior.png"border="0px">
+                                    </a>
+                                <a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value))">
+                                    <img src="../../botones/general/siguiente.png"border="0px"></a><br/>';
                                 $indice_tabindex++;
                             }
 
@@ -1125,122 +1142,141 @@ class GenerarFormato {
                             }
 
                             $texto .= '<div id="esperando_' . $campos[$h]["nombre"] . '">
-									<img src="../../imagenes/cargando.gif">
-								</div>
-								<div id="treeboxbox_' . $campos[$h]["nombre"] . '" height="90%"></div>';
+                                    <img src="../../imagenes/cargando.gif">
+                                </div>
+                                <div id="treeboxbox_' . $campos[$h]["nombre"] . '" height="90%"></div>';
 
                             $texto .= '<script type="text/javascript">
-								var browserType;
-								if (document.layers) {browserType = "nn4"}
-								if (document.all) {browserType = "ie"}
-								if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-									browserType= "gecko"
-								}
-								tree_' . $campos[$h]["nombre"] . '=new dhtmlXTreeObject("treeboxbox_' . $campos[$h]["nombre"] . '","100%","100%",0);
-								tree_' . $campos[$h]["nombre"] . '.setImagePath("../../imgs/");
-								tree_' . $campos[$h]["nombre"] . '.enableIEImageFix(true);';
+                                var browserType;
+                                if (document.layers) {browserType = "nn4"}
+                                if (document.all) {browserType = "ie"}
+                                if (window.navigator.userAgent.toLowerCase().match("gecko")) {
+                                    browserType= "gecko"
+                                }
+                                tree_' . $campos[$h]["nombre"] . '=new dhtmlXTreeObject("treeboxbox_' . $campos[$h]["nombre"] . '","100%","100%",0);
+                                tree_' . $campos[$h]["nombre"] . '.setImagePath("../../imgs/");
+                                tree_' . $campos[$h]["nombre"] . '.enableTreeImages("false");
+                                tree_' . $campos[$h]["nombre"] . '.enableTreeLines("false");
+                                tree_' . $campos[$h]["nombre"] . '.enableIEImageFix(true);';
 
                             if ($arreglo[1] == 1) {
                                 $texto .= 'tree_' . $campos[$h]["nombre"] . '.enableCheckBoxes(1);
-									tree_' . $campos[$h]["nombre"] . '.enableThreeStateCheckboxes(1);';
+                                    tree_' . $campos[$h]["nombre"] . '.enableThreeStateCheckboxes(1);';
                             } else if ($arreglo[1] == 2) {
                                 $texto .= 'tree_' . $campos[$h]["nombre"] . '.enableCheckBoxes(1);
-									tree_' . $campos[$h]["nombre"] . '.enableRadioButtons(true);
+                                    tree_' . $campos[$h]["nombre"] . '.enableRadioButtons(true);
                                     tree_' . $campos[$h]["nombre"] . '.enableSingleRadioMode(true);';
                             }
                             $texto .= 'tree_' . $campos[$h]["nombre"] . '.setOnLoadingStart(cargando_' . $campos[$h]["nombre"] . ');
-								tree_' . $campos[$h]["nombre"] . '.setOnLoadingEnd(fin_cargando_' . $campos[$h]["nombre"] . ');';
+                                tree_' . $campos[$h]["nombre"] . '.setOnLoadingEnd(fin_cargando_' . $campos[$h]["nombre"] . ');';
 
                             if ($arreglo[3]) {
                                 $texto .= 'tree_' . $campos[$h]["nombre"] . '.enableSmartXMLParsing(true);';
                             } else {
+                                if(!$dinamico){
                                 $texto .= 'tree_' . $campos[$h]["nombre"] . '.setXMLAutoLoading(' . $ruta . ');';
+                            }
                             }
                             if ($accion == "editar") {
                                 $ruta .= ",checkear_arbol";
                             }
+                            if(!$dinamico){
                             $texto .= 'tree_' . $campos[$h]["nombre"] . '.loadXML(' . $ruta . ');';
+                            }
                             if ($arreglo[1] == 1) {
-                                $texto .= '
-									tree_' . $campos[$h]["nombre"] . '.setOnCheckHandler(onNodeSelect_' . $campos[$h]["nombre"] . ');
+                                $texto .= 'tree_' . $campos[$h]["nombre"] . '.setOnCheckHandler(onNodeSelect_' . $campos[$h]["nombre"] . ');
 
-									function onNodeSelect_' . $campos[$h]["nombre"] . '(nodeId){
-										valor_destino=document.getElementById("' . $campos[$h]["nombre"] . '");
-										destinos=tree_' . $campos[$h]["nombre"] . '.getAllChecked();
-										nuevo=destinos.replace(/\,{2,}(d)*/gi,",");
-										nuevo=nuevo.replace(/\,$/gi,"");
-										vector=destinos.split(",");
-										for(i=0;i<vector.length;i++){
-											if(vector[i].indexOf("_")!=-1){
-												vector[i]=vector[i].substr(0,vector[i].indexOf("_"));
-											}
-											nuevo=vector.join(",");
-											if(vector[i].indexOf("#")!=-1){
-												hijos=tree_' . $campos[$h]["nombre"] . '.getAllSubItems(vector[i]);
-												hijos=hijos.replace(/\,{2,}(d)*/gi,",");
-												hijos=hijos.replace(/\,$/gi,"");
-												vectorh=hijos.split(",");
+                                    function onNodeSelect_' . $campos[$h]["nombre"] . '(nodeId){
+                                        valor_destino=document.getElementById("' . $campos[$h]["nombre"] . '");
+                                        destinos=tree_' . $campos[$h]["nombre"] . '.getAllChecked();
+                                        nuevo=destinos.replace(/\,{2,}(d)*/gi,",");
+                                        nuevo=nuevo.replace(/\,$/gi,"");
+                                        vector=destinos.split(",");
+                                        for(i=0;i<vector.length;i++){
+                                            if(vector[i].indexOf("_")!=-1){
+                                                vector[i]=vector[i].substr(0,vector[i].indexOf("_"));
+                                            }
+                                            nuevo=vector.join(",");
+                                            if(vector[i].indexOf("#")!=-1){
+                                                hijos=tree_' . $campos[$h]["nombre"] . '.getAllSubItems(vector[i]);
+                                                hijos=hijos.replace(/\,{2,}(d)*/gi,",");
+                                                hijos=hijos.replace(/\,$/gi,"");
+                                                vectorh=hijos.split(",");
 
-												for(h=0;h<vectorh.length;h++){
-													if(vectorh[h].indexOf("_")!=-1)
-													vectorh[h]=vectorh[h].substr(0,vectorh[h].indexOf("_"));
-													nuevo=eliminarItem(nuevo,vectorh[h]);
-												}
-											}
-										}
-										nuevo=nuevo.replace(/\,{2,}(d)*/gi,",");
-										nuevo=nuevo.replace(/\,$/gi,"");
-										valor_destino.value=nuevo;
-									}';
+                                                for(h=0;h<vectorh.length;h++){
+                                                    if(vectorh[h].indexOf("_")!=-1)
+                                                    vectorh[h]=vectorh[h].substr(0,vectorh[h].indexOf("_"));
+                                                    nuevo=eliminarItem(nuevo,vectorh[h]);
+                                                }
+                                            }
+                                        }
+                                        nuevo=nuevo.replace(/\,{2,}(d)*/gi,",");
+                                        nuevo=nuevo.replace(/\,$/gi,"");
+                                        valor_destino.value=nuevo;
+                                    }';
                             } elseif ($arreglo[1] == 2) {
                                 $texto .= 'tree_' . $campos[$h]["nombre"] . '.setOnCheckHandler(onNodeSelect_' . $campos[$h]["nombre"] . ');
-									function onNodeSelect_' . $campos[$h]["nombre"] . '(nodeId) {
-										valor_destino=document.getElementById("' . $campos[$h]["nombre"] . '");
-										if(tree_' . $campos[$h]["nombre"] . '.isItemChecked(nodeId)){
-											if(valor_destino.value!=="")
-											tree_' . $campos[$h]["nombre"] . '.setCheck(valor_destino.value,false);
+                                    function onNodeSelect_' . $campos[$h]["nombre"] . '(nodeId) {
+                                        valor_destino=document.getElementById("' . $campos[$h]["nombre"] . '");
+                                        if(tree_' . $campos[$h]["nombre"] . '.isItemChecked(nodeId)){
+                                            if(valor_destino.value!=="")
+                                            tree_' . $campos[$h]["nombre"] . '.setCheck(valor_destino.value,false);
 
-											valor_destino.value=nodeId.split(/[_.]/)[0];
-										}else{
-											valor_destino.value="";
-										}
-									}';
+                                            valor_destino.value=nodeId.split(/[_.]/)[0];
+                                        }else{
+                                            valor_destino.value="";
+                                        }
+                                    }';
                             }
+                            if(!$arreglo[3]){
+                                $texto .= $this->busca_funcion_test($campos[$h]["nombre"], str_replace('../', "", $arreglo[0]));
 
+                                $texto .="function closetree_" . $campos[$h]["nombre"] . "() {
+                                    var bus_ant=document.getElementById('idclosetree_" . $campos[$h]["nombre"] . "').value;
+                                    var bus_actual=document.getElementById('stext_" . $campos[$h]["nombre"] . "').value.trim();
+                                    if(bus_actual!=''){
+                                        if(bus_actual!=bus_ant){
+                                            document.getElementById('idclosetree_" . $campos[$h]["nombre"] . "').value=bus_actual;
+                                            tree_" . $campos[$h]["nombre"] . ".closeAllItems('1#');
+                                        }
+                                    }
+                                }";
+                            }                           
                             $texto .= "function fin_cargando_" . $campos[$h]["nombre"] . "() {
-									if (browserType == \"gecko\" ) {
-										document.poppedLayer = eval('document.getElementById(\"esperando_" . $campos[$h]["nombre"] . "\")');
-									} else if (browserType == \"ie\") {
-										document.poppedLayer = eval('document.getElementById(\"esperando_" . $campos[$h]["nombre"] . "\")');
-									} else {
-										document.poppedLayer = eval('document.layers[\"esperando_" . $campos[$h]["nombre"] . "\"]');
-									}
-									document.poppedLayer.style.display = \"none\";
-								}
+                                    if (browserType == \"gecko\" ) {
+                                        document.poppedLayer = eval('document.getElementById(\"esperando_" . $campos[$h]["nombre"] . "\")');
+                                    } else if (browserType == \"ie\") {
+                                        document.poppedLayer = eval('document.getElementById(\"esperando_" . $campos[$h]["nombre"] . "\")');
+                                    } else {
+                                        document.poppedLayer = eval('document.layers[\"esperando_" . $campos[$h]["nombre"] . "\"]');
+                                    }
+                                    document.poppedLayer.style.display = \"none\";
+                                }
 
-								function cargando_" . $campos[$h]["nombre"] . "() {
-									if (browserType == \"gecko\" ) {
-										document.poppedLayer = eval('document.getElementById(\"esperando_" . $campos[$h]["nombre"] . "\")');
-									} else if (browserType == \"ie\") {
-										document.poppedLayer = eval('document.getElementById(\"esperando_" . $campos[$h]["nombre"] . "\")');
-									} else {
-										document.poppedLayer = eval('document.layers[\"esperando_" . $campos[$h]["nombre"] . "\"]');
-									}
-									document.poppedLayer.style.display = \"\";
-								}";
+                                function cargando_" . $campos[$h]["nombre"] . "() {
+                                    if (browserType == \"gecko\" ) {
+                                        document.poppedLayer = eval('document.getElementById(\"esperando_" . $campos[$h]["nombre"] . "\")');
+                                    } else if (browserType == \"ie\") {
+                                        document.poppedLayer = eval('document.getElementById(\"esperando_" . $campos[$h]["nombre"] . "\")');
+                                    } else {
+                                        document.poppedLayer = eval('document.layers[\"esperando_" . $campos[$h]["nombre"] . "\"]');
+                                    }
+                                    document.poppedLayer.style.display = \"\";
+                                }";
 
                             if ($accion == "editar") {
                                 $texto .= "function checkear_arbol(){
-										vector2=\"" . $this->arma_funcion("cargar_seleccionados", $this->idformato . "," . $campos[$h]["idcampos_formato"] . ",1", "mostrar") . "\";
-										vector2=vector2.split(\",\");
-										for(m=0;m<vector2.length;m++) {
-											tree_" . $campos[$h]["nombre"] . ".setCheck(vector2[m],true);
-										}
-									}\n";
+                                        vector2=\"" . $this->arma_funcion("cargar_seleccionados", $this->idformato . "," . $campos[$h]["idcampos_formato"] . ",1", "mostrar") . "\";
+                                        vector2=vector2.split(\",\");
+                                        for(m=0;m<vector2.length;m++) {
+                                            tree_" . $campos[$h]["nombre"] . ".setCheck(vector2[m],true);
+                                        }
+                                    }\n";
                             }
                             $texto .= '</script></div></div>';
                             $arboles++;
                             break;
+                            
                         case "item":
                             break;
                         case "detalle":
