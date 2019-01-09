@@ -875,7 +875,8 @@ function load_componentes($tipo_retorno) {
 function llena_componentes($nombre) {
     global $conn;
     $texto = '';
-    $componentes = busca_filtro_tabla("idpantalla_componente, clase, etiqueta", "pantalla_componente", "estado=1 AND lower(categoria)='" . strtolower($nombre) . "'", "orden", $conn);
+    $componentes = busca_filtro_tabla("idpantalla_componente, clase, etiqueta", "pantalla_componente", "estado=1 AND lower(categoria)='" . strtolower($nombre) . "'", "etiqueta ASC", $conn);
+
     if ($componentes["numcampos"]) {
         for ($i = 0; $i < $componentes["numcampos"]; $i++) {
             $etiqueta = htmlentities(html_entity_decode(utf8_encode($componentes[$i]["etiqueta"])));
