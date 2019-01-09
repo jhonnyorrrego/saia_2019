@@ -11,7 +11,7 @@ $max_salida--;
 include_once($ruta_db_superior."librerias_saia.php"); 
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
-usuario_actual();
+usuario_actual('idfuncionario');
 ?>
 <html>
 <head>
