@@ -6,6 +6,11 @@ class Model {
     public static $table;
     public static $primary;
 
+    /**
+     * class initialization
+     *
+     * @param int $id row identificator
+     */
     function __construct($id = null) {
         $this->defineAttributes();
 
@@ -16,35 +21,13 @@ class Model {
     }
 
     /**
-     * define the database attributes
+     * define database attributes
      */
     protected function defineAttributes(){
         $this->dbAttributes = (object) [
             'safe' => [],
             'date' => []
         ];
-    }
-
-    /**
-     * define the label of primary key
-     * @return string
-     */
-    public static function getPrimaryLabel(){
-        return self::$primary ? self::$primary : 'id'.self::getTableName();
-    }
-
-    /**
-     * define the table name
-     */
-    public static function getTableName(){
-        if(self::$table){
-            $response = self::$table;
-        }else{
-            $Stringy = new Stringy(get_called_class());        
-            $response = $Stringy->underscored();
-        }
-
-        return $response;
     }
 
     /** 
@@ -109,7 +92,7 @@ class Model {
     /**
      * find and set the safeAttributes by pk
      */
-    protected function find() {
+    public function find() {
         $data = self::findByAttributes([
             self::getPrimaryLabel() => $this->getPK()
         ]);
@@ -119,48 +102,6 @@ class Model {
         }else{
             throw new Exception("invalid Pk", 1);
         }
-    }
-
-    public static function findByPk($pk){
-        return self::findAllByAttributes([
-            self::getPrimaryLabel() => $pk
-        ]);
-    }
-
-    public static function findByAttributes($conditions, $fields = []){
-        $data = self::findAllByAttributes($conditions, $fields, '', 1);
-        return $data ? $data[0] : NULL;
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @param [type] $conditions
-     * @param array $fields
-     * @param string $order
-     * @param integer $limit
-     * @return void
-     */
-    public static function findAllByAttributes($conditions, $fields = [], $order = '', $limit = 0){
-        global $conn;
-
-        $table = self::getTableName();        
-        $select = self::createSelect($fields);
-        $condition = self::createCondition($conditions);
-
-        if($limit){
-            $records = busca_filtro_tabla_limit($select, $table, $condition, $order, 0, $limit, $conn);
-        }else{
-            $records = busca_filtro_tabla($select, $table, $condition, $order, $conn);
-        }
-        
-        if ($records['numcampos']) {
-            $response = self::convertToObjectCollection($records);
-        }else{
-            $response = NULL;
-        }
-
-        return $response;
     }
 
     /**
@@ -217,7 +158,7 @@ class Model {
     }
 
     /**
-     * return the value from the primary key
+     * get primary key value
      */
     public function getPK() {
         $pk = self::getPrimaryLabel();
@@ -225,7 +166,10 @@ class Model {
     }
 
     /**
-     * set the value for the primary key
+     * set primary key value
+     *
+     * @param int $value
+     * @return void
      */
     public function setPK($value) {
         $pk = self::getPrimaryLabel();
@@ -233,10 +177,86 @@ class Model {
     }
 
     /**
-     * crea el selec de una consulta
-     * valida los campos tipo fecha
+     * get date attribute with specific format
      *
-     * @param [type] $fields
+     * @param string $attribute attribute to convert
+     * @param string $format required format
+     * @return string 
+     */
+    public function getDateAttribute($attribute, $format = 'd/m/Y H:i a'){
+        return DateController::convertDate($this->$attribute, 'Y-m-d H:i:s', $format);
+    }
+
+     /**
+     * define primary key label
+     * @return string
+     */
+    public static function getPrimaryLabel(){
+        return self::$primary ? self::$primary : 'id'.self::getTableName();
+    }
+
+    /**
+     * define table name
+     */
+    public static function getTableName(){
+        if(self::$table){
+            $response = self::$table;
+        }else{
+            $Stringy = new Stringy(get_called_class());        
+            $response = $Stringy->underscored();
+        }
+
+        return $response;
+    }
+
+    /**
+     * find a record filtered by $conditions
+     *
+     * @param array $conditions
+     * @param array $fields
+     * @return void
+     */
+    public static function findByAttributes($conditions, $fields = []){
+        $data = self::findAllByAttributes($conditions, $fields, '', 1);
+        return $data ? $data[0] : NULL;
+    }
+
+    /**
+     * find all records filtered by $conditions
+     *
+     * @param array $conditions
+     * @param array $fields
+     * @param string $order
+     * @param integer $limit
+     * @return void
+     */
+    public static function findAllByAttributes($conditions, $fields = [], $order = '', $limit = 0){
+        global $conn;
+
+        $table = self::getTableName();        
+        $select = self::createSelect($fields);
+        $condition = self::createCondition($conditions);
+
+        if($limit){
+            $records = busca_filtro_tabla_limit($select, $table, $condition, $order, 0, $limit, $conn);
+        }else{
+            $records = busca_filtro_tabla($select, $table, $condition, $order, $conn);
+        }
+        
+        if ($records['numcampos']) {
+            $response = self::convertToObjectCollection($records);
+        }else{
+            $response = NULL;
+        }
+
+        return $response;
+    }
+    
+    /**
+     * create select portion for sql query
+     * check date attributes
+     *
+     * @param array $fields
      * @return void
      */
     public static function createSelect($fields){
@@ -267,9 +287,9 @@ class Model {
     }
 
     /**
-     * crea la condicion de una busqueda
-     * valida los campos tipo fecha
-     *
+     * create where portion for sql query
+     * check date attributes
+     * 
      * @param array $conditions
      * @return string
      */
@@ -297,7 +317,7 @@ class Model {
     }
 
     /**
-     * convierte un array simple a un array de objetos
+     * convert simple array to array of objects
      *
      * @param array $records
      * @return array
@@ -320,17 +340,17 @@ class Model {
     }
 
     /**
-     * crea un registro en la base de datos
+     * create a new record on table
      *
-     * @param array $attributes atributos a guardar
-     * @return int identificador del registro
+     * @param array $attributes
+     * @return int new primary key 
      */
     public static function newRecord($attributes){
         $className = get_called_class();
         $Instance = new $className();
         $Instance->setAttributes($attributes);
             
-        if($Instance->save()){
+        if($Instance->create()){
             $response = $Instance->getPK();
         }else{
             $response = 0;
@@ -340,10 +360,10 @@ class Model {
     }
 
     /**
-     * ejecuta un update simple
+     * execute a update sentence
      *
-     * @param array $fields nuevos valores
-     * @param array $conditions filtro de coincidencias
+     * @param array $fields new attributes
+     * @param array $conditions
      * @return void
      */
     public static function executeUpdate($fields, $conditions){        
@@ -363,5 +383,5 @@ class Model {
         
         $sql = 'UPDATE ' . self::getTableName() . ' set ' . $set . ' where ' . self::createCondition($conditions);
         return phpmkr_query($sql);
-    }   
+    }
 }

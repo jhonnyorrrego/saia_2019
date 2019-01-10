@@ -51,14 +51,16 @@
 </div>
 <div class="row pt-3">
     <div class="col-12">
-        <table class="table table-striped table-condensed" id="state_history" style="display:none">
-            <tr>
-                <td>Fecha</td>
-                <td>Responsable</td>
-                <td>Descripción</td>
-                <td>Estado</td>
-            </tr>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-striped" id="state_history" style="display:none">
+                <tr>
+                    <td>Fecha</td>
+                    <td>Responsable</td>
+                    <td>Descripción</td>
+                    <td>Estado</td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>
 <script>
