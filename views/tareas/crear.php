@@ -66,7 +66,6 @@ $tabs = [[
             let tab = $(e.target);
             let container = $(tab.attr('href'))
 
-            $("#btn_success").off("click");
             container.load(tab.data('url'));
         });
         

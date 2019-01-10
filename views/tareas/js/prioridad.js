@@ -50,9 +50,9 @@ $(function(){
             data.forEach(p => {
                 $('#priority_history > tbody').append(`
                     <tr id="${p.id}">
-                    <td>${p.date}</td>
-                    <td>${p.user}</td>
-                    <td>${p.priorityLabel}</td>
+                    <td class="text-center">${p.date}</td>
+                    <td class="text-center">${p.user}</td>
+                    <td class="text-center">${p.priorityLabel}</td>
                     </tr>
                 `);
                 

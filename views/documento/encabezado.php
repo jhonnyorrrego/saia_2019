@@ -199,7 +199,7 @@ function plantilla($documentId, $transferId = 0){
     ?>
     <!--<link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.css">-->
     <style>.notification {position: relative;cursor: pointer;text-decoration: none;}.notification > .counter {position: absolute;font-size: 0.5em;top: -9px;left: 1px;}</style>
-    <div class="col-12 p-0 m-0">
+    <div class="col-12 p-0 m-0" id="document_information">
         <div class="row m-0 bg-info text-white px-1" style="font-size:20px;height:36px">
             <div class="col px-1 my-auto">
                 <span style="display:none" class="fa fa-arrow-left pr-3 cursor" id="go_back"></span>
@@ -210,12 +210,29 @@ function plantilla($documentId, $transferId = 0){
                 <span class="fa fa-mail-reply px-1 cursor">
                    <label class="d-none d-sm-inline f-12 font-heading">&nbsp;Responder</label>
                 </span>
-                <span class="fa fa-mail-reply-all px-1 d-none d-md-inline cursor">
-                   <label class="d-none d-sm-inline f-12 font-heading">&nbsp;Responder a todos</label>
+                <span class="fa fa-share px-1 d-none d-md-inline cursor">
+                   <label class="d-none d-sm-inline f-12 font-heading">&nbsp;Reenviar</label>
                 </span>
-                <span class="fa fa-share px-1 cursor">
-                    <label class="d-none d-sm-inline f-12 font-heading">&nbsp;Reenviar</label>
-                </span>
+                <div class="dropdown d-inline px-0">
+                    <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="cursor">
+                        &nbsp;<i class="fa fa-flash"></i>
+                        <label class="d-none d-sm-inline f-12 font-heading">&nbsp;Dar trámite</label>
+                    </span>
+                    <div class="dropdown-menu dropdown-menu-right" role="menu" x-placement="bottom-end">
+                        <a href="#" class="dropdown-item new_add" data-type="comunication">
+                            <i class="fa fa-folder-open"></i> Gestionar con comunicación oficial
+                        </a>
+                        <a href="#" class="dropdown-item new_add" data-type="process">
+                            <i class="fa fa-calendar-o"></i> Gestionar con otros formatos
+                        </a>
+                        <a href="#" class="dropdown-item new_add" data-type="approval">
+                            <i class="fa fa-file-text-o"></i> Solicitar aprobación
+                        </a>
+                        <a href="#" class="dropdown-item new_add" data-type="task">
+                            <i class="fa fa-share-alt"></i> Asignar tareas o recordatorios
+                        </a>
+                    </div>
+                </div>
                 <div class="dropdown d-inline px-1">
                     <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="cursor">
                         &nbsp;&nbsp;<i class="fa fa-ellipsis-v"></i>&nbsp;&nbsp;

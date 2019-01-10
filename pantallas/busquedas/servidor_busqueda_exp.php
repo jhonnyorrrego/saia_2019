@@ -350,6 +350,7 @@ if ($count > 0) {
     }
 } else {
     $response -> exito = 3;
+    //$response -> sql = $result["sql"];
     $response -> mensaje = "No existen registros";
 }
 

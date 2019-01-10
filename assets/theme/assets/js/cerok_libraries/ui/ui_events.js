@@ -159,50 +159,19 @@ $(function () {
     $(document).on("click",".new_add", function(){
         switch ($(this).data('type')) {
             case 'folder':
-                var data = JSON.stringify([{
-                    kConnector: "html.page",
-                    url: "pantallas/expediente/adicionar_expediente.php"
-                }])
+                console.log('pending');
                 break;
             case 'task':
-                var data = JSON.stringify([{
-                    kConnector: "html.page",
-                    url: "pantallas/expediente/adicionar_expediente.php"
-                }])
+                taskAction();
                 break;
             case 'comunication':
-                var data = JSON.stringify([
-                    {
-                        kConnector: "html.page",
-                        url: "pantallas/formato/listar_proceso_formatos.php",
-                        kTitle: "Procesos"
-                    },
-                    {
-                        kConnector: "html.page",
-                        url: "pantallas/formato/listar_formatos.php?idcategoria_formato=5",
-                        kTitle: "Tramites generales"
-                    }
-                ]);
+                newDocument(5);
+                
             break;
             case 'process':
-                var data = JSON.stringify([
-                    {
-                        kConnector: "html.page",
-                        url: "pantallas/formato/listar_proceso_formatos.php",
-                        kTitle: "Procesos"
-                    },
-                    {
-                        kConnector: "html.page",
-                        url: "pantallas/formato/listar_formatos.php?idcategoria_formato=3",
-                        kTitle: "Tramites generales"
-                    }
-                ]);
+                newDocument(3);
                 break;
         }
-        
-        let route = `${baseUrl}views/dashboard/kaiten_dashboard.php?panels=${data}`;
-        $("#iframe_workspace").attr('src', route);
-        $("#close_modal", window.top.document).trigger("click");
     });
 
     $(".tab-content").on("touchstart", function (evt) {
@@ -248,4 +217,38 @@ $(function () {
     $(window).resize(function() {
         Ui.resizeIframe();
     });
+
+    function newDocument(category) {
+        var data = JSON.stringify([
+            {
+                kConnector: "html.page",
+                url: "pantallas/formato/listar_proceso_formatos.php",
+                kTitle: "Procesos"
+            },
+            {
+                kConnector: "html.page",
+                url: `pantallas/formato/listar_formatos.php?idcategoria_formato=${category}`,
+                kTitle: "Tramites generales"
+            }
+        ]);
+
+        let route = `${baseUrl}views/dashboard/kaiten_dashboard.php?panels=${data}`;
+        $("#iframe_workspace").attr('src', route);
+        $("#close_modal", window.top.document).trigger("click");
+    }
+
+    function taskAction() {
+        let options = {
+            url: `${baseUrl}views/tareas/crear.php`,
+            params: {
+                finalTime: moment().format('YYYY-MM-DD HH:mm:ss')
+            },
+            centerAlign:false,
+            size: "modal-lg",
+            buttons: {}
+        };
+        
+        $("#close_modal", window.top.document).trigger("click");
+        top.topModal(options);
+    }
 });
