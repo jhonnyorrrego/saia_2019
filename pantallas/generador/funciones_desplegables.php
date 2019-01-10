@@ -92,9 +92,9 @@ function funciones_nucleo($pantalla_idpantalla, $tipo) {
 function lista_funciones_vincular($ruta_libreria, $idlibreria,$nombre_funcion,$etiqueta,$imagen) {
     global $conn;
 
-    $listado_funciones = buscar_funciones_archivo($ruta_libreria, "function", $nombre_funcion,0);	
-	$retorno=array();
-	
+    $listado_funciones = buscar_funciones_archivo($ruta_libreria, "function", $nombre_funcion,0);
+    
+	$retorno=array();	
     $texto = '<div class="accordion" id="acordion_componentes" style="margin-bottom: 5px;">';
     foreach ($listado_funciones["resultado"] as $key => $valor) {
         $cant_funciones = '';
@@ -102,8 +102,7 @@ function lista_funciones_vincular($ruta_libreria, $idlibreria,$nombre_funcion,$e
         $pos2 = strpos($valor, ")");
         $nombre = trim(substr($valor, 8, ($pos1 - 8)));
         $dato = trim(substr($valor, 8));
-        $texto_param = $dato;
-		
+        $texto_param = $dato;		
         // strpos($texto_param,'$idformato,$iddoc') valida que la funcion sea valida como funcion de saia para los formatos
         if ($nombre != '' && preg_match('/\$idformato[\s]*,[\s]*\$\w*doc/',$texto_param)) {
             $texto .= '
@@ -114,9 +113,7 @@ function lista_funciones_vincular($ruta_libreria, $idlibreria,$nombre_funcion,$e
             		</div>
             	</div>';
         }
-
     }
-
 	$texto .= '</div>';
 	return $texto;
 

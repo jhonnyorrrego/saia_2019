@@ -3170,4 +3170,8 @@ function generar_correo_confirmacion($idformato, $iddoc, $nomb_campo = "email_ap
 	}
 }
 
+function fecha_documento($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+	$consulta_datos = busca_fultro_tabla("","","","",$conn);
+}
 ?>
