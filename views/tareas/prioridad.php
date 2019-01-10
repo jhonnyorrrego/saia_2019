@@ -37,13 +37,15 @@
 </div>
 <div class="row pt-3">
     <div class="col-12">
-        <table class="table table-striped table-condensed" id="priority_history" style="display:none">
-            <tr>
-                <td>Fecha</td>
-                <td>Responsable</td>
-                <td>Prioridad</td>
-            </tr>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-striped" id="priority_history" style="display:none">
+                <tr>
+                    <td class="text-center">Fecha</td>
+                    <td class="text-center">Responsable</td>
+                    <td class="text-center">Prioridad</td>
+                </tr>
+            </table>
+        </div>
     </div>
 </div>
 <script>

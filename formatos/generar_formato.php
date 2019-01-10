@@ -266,7 +266,25 @@ class GenerarFormato {
     public function crear_formato_mostrar() {
         global $conn;
         $include_formato = '';
-        $includes = '';
+        $includes = '<?php
+    $max_salida = 10;
+    $ruta_db_superior = $ruta = "";
+
+    while ($max_salida > 0) {
+        if (is_file($ruta . "db.php")) {
+            $ruta_db_superior = $ruta;
+        }
+        $ruta .= "../";
+        $max_salida --;
+   }
+?>
+<?php include_once($ruta_db_superior . "assets/librerias.php"); ?>
+<?= jquery() ?>
+<?= bootstrap() ?>
+<?= breakpoint() ?>
+<?= toastr() ?>
+<?= icons() ?>
+<?= moment() ?>';
         $texto = '';
         $enlace = "";
         $formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $this->idformato, "", $conn);
@@ -393,7 +411,9 @@ class GenerarFormato {
             $includes .= $include_formato;
             $includes .= $this->incluir_libreria("header_nuevo.php", "librerias");
             $estilo_letra_default ="<style> table{font-size: ".$formato[0]['font_size'].";} </style>";
-            $contenido = $includes .$estilo_letra_default. $texto . $enlace . $this->incluir_libreria("footer_nuevo.php", "librerias");
+            $includes_estilos_tema='<link class="main-stylesheet" href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.css" rel="stylesheet" type="text/css" />
+<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />';
+            $contenido = $includes . $includes_estilos_tema . $estilo_letra_default. $texto . $enlace . $this->incluir_libreria("footer_nuevo.php", "librerias");
             $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $contenido);
             if ($mostrar !== false) {
                 notificaciones("Formato mostrar Creado con exito por favor verificar la carpeta " . dirname($mostrar), "success", 2000);

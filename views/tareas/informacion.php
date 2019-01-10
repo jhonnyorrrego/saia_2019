@@ -49,7 +49,7 @@ while ($max_salida > 0) {
     <textarea class="form-control" id="description" rows="3"></textarea>
 </div>
 <div class="form-group text-right">
-    <button class="btn btn-complete" id="save">Guardar</button>
+    <button class="btn btn-complete" id="save">Crear Tarea</button>
 </div>
 <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.min.js"></script>
 <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/i18n/es.js"></script>

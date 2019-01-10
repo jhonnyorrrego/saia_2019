@@ -31,7 +31,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         $Response->data [] = [
             'id' => $AnexoTarea->getPK(),
             'user' => $AnexoTarea->getUser()->getName(),
-            'date' => $AnexoTarea->getDate(),
+            'date' => $AnexoTarea->getDateAttribute('fecha'),
             'size' => $AnexoTarea->getFileSize(),
             'name' => $AnexoTarea->getFileName(),
             'version' => $AnexoTarea->getVersion(),
