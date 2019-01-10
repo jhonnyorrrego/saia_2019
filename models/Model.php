@@ -21,6 +21,41 @@ class Model {
     }
 
     /**
+     * get attribute value
+     *
+     * @param string $attribute
+     * @return void
+     */
+    public function __get($attribute) {
+        if (property_exists($this, $attribute) && 
+            in_array($attribute, $this->getSafeAttributes())) {
+            $response = $this->$attribute;
+        }else{
+            $response = NULL;
+        }
+        
+        return $response;
+    }
+    
+    /**
+     * set attribute value
+     *
+     * @param string $attribute
+     * @param void $value
+     * @return boolean
+     */
+    public function __set($attribute, $value) {
+        $response = property_exists($this, $attribute) && 
+            in_array($attribute, $this->getSafeAttributes());
+
+        if ($response) {
+            $this->$attribute = $value;
+        }
+
+        return $response;;
+    }
+
+    /**
      * define database attributes
      */
     protected function defineAttributes(){
