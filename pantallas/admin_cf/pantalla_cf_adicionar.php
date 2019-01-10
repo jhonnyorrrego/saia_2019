@@ -9,25 +9,41 @@ while($max_salida>0){
 	$max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."librerias_saia.php");
+
 include_once($ruta_db_superior."class_transferencia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
 include_once($ruta_db_superior."formatos/librerias/header_formato.php");
-include_once($ruta_db_superior."calendario/calendario.php");
-echo(estilo_bootstrap());
-echo(librerias_html5());
-echo(librerias_jquery("1.7"));
+include_once($ruta_db_superior."assets/librerias.php");
+
+?>
+<?= jquery() ?>
+<?= bootstrap() ?>
+<?= breakpoint() ?>
+<?= toastr() ?>
+<?= icons() ?>
+<?= moment() ?><?= validate() ?>
+<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen">
+<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css" rel="stylesheet" type="text/css" media="screen">
+
+<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+<link class="main-stylesheet"
+                                	href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.css"
+                                	rel="stylesheet" type="text/css" />
+                                <link
+                                	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/font-awesome/css/font-awesome.css"
+                                	rel="stylesheet" type="text/css" />
+                                
+                                <script
+                                	src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-validation/js/jquery.validate.min.js"
+                                	type="text/javascript"></script>
+<div class="card card-default">
+	<div class="card-body"><h5>ADICIONAR</h5>
+		<form name="formulario_tareas" id="formulario_tareas" class="form-vertical">
+<?php
 
 $campos=explode(",",$_REQUEST['campos']);
 $tipo_fecha='';
-$html='<div class="container">
-		<br>
-		<div class="control-group" nombre="etiqueta">
-			<legend>Adicionar </legend>
-		</div>
-		<form id="formulario_tareas" class="form-vertical">';
 
-echo($html);
 
 for($i=0;$i<count($campos);$i++){
 		
@@ -94,24 +110,19 @@ if($_REQUEST['guardar']==1){
 	echo('<script>parent.window.location.reload();</script>');
 }else{
   
-    echo(librerias_jquery("1.7"));
-    echo(librerias_arboles());
-    echo(librerias_bootstrap());
   
 	?>
-			<div class="control-group">
-				<label class="control-label" for="etiqueta"><b>NOMBRE*:</b></label>
-				<div class="controls">
-					<input type="text" name="nombre" id="nombre" class="required" value="">
-				</div>
-			</div>
-			<div class="control-group">
+	<div class="form-group" id="tr_fecha_radicacion_entrada">
+		<label class="etiqueta_campo" title="">NOMBRE*</label>
+		<input type="text" name="nombre" id="nombre" class="required form-control" value="">
+	</div>
+	<div class="form-group">
 			
 			<?php 
 			autocompletar_categoria();
 			if($cod_padre){?>
-			<div class="control-group">
-				<label class="control-label" for="etiqueta"><b>PADRE:</b></label>
+			<div class="form-group">
+				<label class="etiqueta_campo" for="etiqueta"><b>PADRE:</b></label>
 				<div class="controls">
 					<?php
 						echo arbol("cod_padre","cod_padre","pantallas/admin_cf/test_tabla_cf.php?tabla=".$_REQUEST['tabla'],0,0,1,1,'radio');
@@ -122,44 +133,42 @@ if($_REQUEST['guardar']==1){
 			}
 			if($descripcion){
 			?>
-			<div class="control-group">
-				<label class="control-label" for="etiqueta"><b>DESCRIPCI&oacute;N:</b></label>
+			<div class="form-group">
+				<label class="etiqueta_campo" for="etiqueta"><b>DESCRIPCI&oacute;N:</b></label>
 				<div class="controls">
-					<textarea id="descripcion" maxlength="255" name="descripcion" placeholder="Descripcion"></textarea>
+					<textarea class="form-control" id="descripcion" maxlength="255" name="descripcion" placeholder="Descripcion"></textarea>
 				</div>
 			</div>
 			<?php 
 			}
 			if($tipo){
 			?>
-			<div class="control-group">
-				<label class="control-label" for="etiqueta"><b>TIPO:</b></label>
-				<div class="controls">
-					<input type="text" name="tipo" id="tipo">
-					<div id='completar_tipo' class='ac_results'></div>
-				</div>
+			<div class="form-group">
+				<label class="etiqueta_campo" for="etiqueta"><b>TIPO:</b></label>
+				<input class="form-control" type="text" name="tipo" id="tipo">
+				<div id='completar_tipo' class='ac_results'></div>
 			</div>
 			<?php 
 			}
 			if($categorias){
 			?>
-			<div class="control-group">
-				<label class="control-label" for="etiqueta"><b>CATEGORIA:</b></label>
-				<div class="controls">
-					<input type="text"  name="categoria" id="categoria">
-					<div id='completar_categoria' class='ac_results'></div>
-				</div>
+			<div class="form-group">
+				<label class="etiqueta_campo" for="etiqueta"><b>CATEGORIA:</b></label>
+				<input class="form-control" type="text"  name="categoria" id="categoria">
+				<div id='completar_categoria' class='ac_results'></div>
 			</div>
 			<?php 
 			}
 			?>
-			<div class="control-group">
-				<label class="control-label" for="etiqueta"><b>ESTADO*:</b></label>
-				<div class="controls">
-					<input type="radio" class="required" name="estado" id="estado0" value="1">Activo
-					<input type="radio" name="estado" id="estado1" value="0">Inactivo
-					<label class="error" for="estado"></label>
-				</div>
+			
+			<div class="form-group">
+				<label class="etiqueta_campo" for="etiqueta"><b>ESTADO*:</b></label>
+				<div class="radio radio-success">
+					<input type="radio" value="1" name="estado" id="estado1" class="required" checked="checked">
+                    <label for="estado1">Activo</label>
+                    <input type="radio" value="0" name="estado" id="estado0">
+                    <label for="estado0">Inactivo</label>
+                </div>
 			</div> 
 			
 <?php
@@ -187,7 +196,7 @@ for($i=0;$i<count($campos);$i++){
 			case 'select':
 	        	$opcion=explode("||",$opcion_campo[1]);
 				
-				$html='<label class="control-label" for="'.$nombre_campo.'"><b>'.strtoupper(str_replace("_", " ", $nombre_campo)).':</b></label> <select id="'.$nombre_campo.'" name="'.$nombre_campo.'"><option val="">Por favor seleccione...</option>';			
+				$html='<label class="etiqueta_campo" for="'.$nombre_campo.'"><b>'.strtoupper(str_replace("_", " ", $nombre_campo)).':</b></label> <select id="'.$nombre_campo.'" name="'.$nombre_campo.'"><option val="">Por favor seleccione...</option>';			
 				for($j=0;$j<count($opcion);$j++){
 					$opciones=explode("|",$opcion[$j]);
 					$eti_opcion=$opciones[0];
@@ -274,7 +283,7 @@ for($i=0;$i<count($campos);$i++){
 			
 		<div class="control-group">
 				<div class="controls">
-					<input type='submit' class="btn btn-primary btn-mini" name="submit" id="submit" value="continuar">
+					<input type='submit' class="btn btn-complete" name="submit" id="submit" value="continuar">
 					<input type="hidden" name="tabla" value="<?php echo($_REQUEST['tabla'])?>">
 					<input type="hidden" name="guardar" value="1">
 					<input type="hidden" name="tipo_fecha" value="<?php echo(implode(",",$tipo_fecha))?>">
@@ -283,7 +292,7 @@ for($i=0;$i<count($campos);$i++){
 			
 		</form>
 	</div>
-	<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>js/jquery.validate.1.13.1.js"></script>
+	</div>
 	<style>
 	label.error {
 		font-weight: bold;
