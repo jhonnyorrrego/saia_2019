@@ -1,7 +1,0 @@
-[25-Jan-2010 20:13:49] PHP Warning:  Invalid argument supplied for foreach() in /home/cerokcom/public_html/cerok/saia1.06/asignaciones/asignacionedit.php on line 385
-[04-Feb-2010 08:50:01] PHP Warning:  Invalid argument supplied for foreach() in /home/cerokcom/public_html/cerok/saia1.06/asignaciones/asignacionedit.php on line 385
-[04-Feb-2010 08:51:08] PHP Warning:  Invalid argument supplied for foreach() in /home/cerokcom/public_html/cerok/saia1.06/asignaciones/asignacionedit.php on line 385
-[04-Feb-2010 10:45:45] PHP Warning:  Invalid argument supplied for foreach() in /home/cerokcom/public_html/cerok/saia1.06/asignaciones/asignacionedit.php on line 385
-[04-Feb-2010 11:24:06] PHP Warning:  Invalid argument supplied for foreach() in /home/cerokcom/public_html/cerok/saia1.06/asignaciones/asignacionedit.php on line 385
-[03-Dec-2010 06:47:48] PHP Fatal error:  Call to undefined function  salir() in /home1/netsaiac/public_html/demo/saia1.06/footer.php on line 8
-[03-Dec-2010 06:50:34] PHP Fatal error:  Call to undefined function  salir() in /home1/netsaiac/public_html/demo/saia1.06/footer.php on line 8

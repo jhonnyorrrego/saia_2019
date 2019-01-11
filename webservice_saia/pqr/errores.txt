@@ -1,2 +1,0 @@
-INSERT INTO saia_release1.documento(fecha,tipo_radicado,ejecutor,serie,plantilla,responsable,numero,municipio_idmunicipio,estado,fecha_creacion) VALUES (DATE_FORMAT('2015-08-19 10:40:53','%Y-%m-%d %H:%i:%s'),1,'112233',1032,'PQRSF',214,0,658,'ACTIVO',DATE_FORMAT('2015-08-19 10:40:53','%Y-%m-%d %H:%i:%s'))    <br> -
-
