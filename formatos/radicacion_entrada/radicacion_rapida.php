@@ -9,17 +9,26 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
+include_once ($ruta_db_superior . "assets/librerias.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 ?>
 <html>
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<?= jquery() ?>
+        <?= bootstrap() ?>
+        <?= validate() ?>
 		<?php
-		echo(librerias_jquery("1.7"));
 		echo(librerias_arboles());
-		echo(estilo_bootstrap());
 		?>
 	</head>
+	<style>
+	   .error{
+	       color:red;
+	   }
+	</style>
+	<link class="main-stylesheet" href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.css" rel="stylesheet" type="text/css" />
+<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
 	<body>
 		<div id="div_contenido">
 			<form method="POST" id="form_radicacion_rapida" action="<?php echo($ruta_db_superior); ?>colilla.php" >
@@ -27,11 +36,11 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 				<br />
 				<table class="table-bordered" border="1" align="center">
 					<tr>
-						<td class="encabezado_list" colspan="2" align="center">Seleccione Tipo de Radicación</td>
+						<td class="encabezado_list" colspan="2" align="center">Seleccione Tipo de Radicaci&oacute;n</td>
 					</tr>
 					<tr>
 						<td colspan="2">
-						<input type="hidden" id="generar_consecutivo" name="generar_consecutivo">
+						<input type="hidden" class="required" id="generar_consecutivo" name="generar_consecutivo">
 						<input type="hidden" name="enlace" id="enlace" value="pantallas/buscador_principal.php?idbusqueda=7">
 						<input type="hidden" name="enlace2" id="enlace2" value="formatos/radicacion_entrada/radicacion_rapida.php">
 						<?php
@@ -42,12 +51,10 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 						?>
 						<div id="esperando_serie">
 							<img src="<?php echo($ruta_db_superior); ?>imagenes/cargando.gif">
-						</div><div id="treeboxbox_tree_equipos" class="arbol_saia" style="height:89%;width:95%" ></div>
+						</div><div id="treeboxbox_tree_equipos" class="arbol_saia" style="" ></div>
 						<script type="text/javascript">
 						<!--		
-						$(document).ready(function  () {
-							top.setTitulo("Ingreso de documentos");  
-						});	
+						
 							
 						var browserType;
 						if (document.layers) {browserType = "nn4"}
@@ -70,7 +77,6 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 						function onNodeSelect(nodeId){
 							if(nodeId.indexOf('#',0)==-1){
 								$('#generar_consecutivo').val(nodeId);
-								console.log(nodeId);
 								if(nodeId=='radicacion_salida'){
 									$('#enlace').val("ordenar.php?accion=mostrar&mostrar_formato=1");
 								}else{
@@ -110,26 +116,24 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 						</td>
 					</tr>
                     <tr>
-                        <td style="font-size:8pt;"  align="center">Colilla</td>
+                        <td style="font-size:8pt;"  align="center">Colilla*</td>
                         <td align="center">
-                            <label class="radio-inline"><input type="radio" name="colilla_vertical" value="0">Horizontal</label>
+                            <label class="radio-inline required"><input type="radio" name="colilla_vertical" value="0">Horizontal</label>
                             <label class="radio-inline"><input type="radio" name="colilla_vertical" checked value="1">Vertical</label>
                         </td>
                     </tr>
 					<tr>
 						<td colspan="2" align="center">
-						<input class="btn btn-primary btn-mini" type="submit" value="Radicar" id="enviar" name="enviar"/>
+						<input class="btn btn-complete mx-1" type="submit" value="Radicar" id="enviar" name="enviar"/>
 						</td>
 					</tr>
 				</table>
 				<input type="hidden" name="target" value="_self">
 			</form>
-			<?php
-			echo(librerias_validar_formulario(11));
-			?>
 			<script>
 				$(document).ready(function() {
 					$("#form_radicacion_rapida").validate({
+						ignore: [],
 						submitHandler : function(form) {
 							var generar_consecutivo = $('#generar_consecutivo').val();
 							if (!generar_consecutivo || generar_consecutivo == '') {
