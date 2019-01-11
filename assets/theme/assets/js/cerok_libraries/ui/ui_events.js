@@ -165,11 +165,11 @@ $(function () {
                 taskAction();
                 break;
             case 'comunication':
-                newDocument(5);
+                newDocument(5, 'Comunicaciones');
                 
             break;
             case 'process':
-                newDocument(3);
+                newDocument(3, 'Tramites generales');
                 break;
         }
     });
@@ -218,7 +218,7 @@ $(function () {
         Ui.resizeIframe();
     });
 
-    function newDocument(category) {
+    function newDocument(category, title) {
         var data = JSON.stringify([
             {
                 kConnector: "html.page",
@@ -228,7 +228,7 @@ $(function () {
             {
                 kConnector: "html.page",
                 url: `pantallas/formato/listar_formatos.php?idcategoria_formato=${category}`,
-                kTitle: "Tramites generales"
+                kTitle: title
             }
         ]);
 

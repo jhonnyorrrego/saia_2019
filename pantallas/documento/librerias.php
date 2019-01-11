@@ -993,7 +993,7 @@ function variable_busqueda(){
     return $_REQUEST['variable_busqueda'];
 }
 
-function origin_pending_document($documentId, $userCode, $number, $date, $transferId){
+function origin_pending_document($documentId, $userCode, $number, $date, $transferId, $format){
 	global $conn, $ruta_db_superior;
 
 	include_once $ruta_db_superior . 'controllers/autoload.php';
@@ -1004,7 +1004,8 @@ function origin_pending_document($documentId, $userCode, $number, $date, $transf
     $documentRoute = 'views/documento/acordeon.php?';
     $documentRoute.= http_build_query([
         'documentId' => $documentId,
-        'transferId' => $transferId
+        'transferId' => $transferId,
+        'format' => strtolower($format)
     ]);
 
     $html = '<div class="col-1 px-0 text-center action">

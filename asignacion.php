@@ -8,7 +8,7 @@
 <Notas></Notas>
 <Salida></Salida>
 </Archivo>
-*/
+ */
 include_once 'db.php';
 /*
 <Clase>
@@ -21,58 +21,57 @@ include_once 'db.php';
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>
-*/
-function procesar_estados($idorigen,$iddestino,$nombre_transferencia,$iddocumento=NULL,$fecha_final=NULL)
-{ 
-  switch($nombre_transferencia)
-   { 
-     case "TRANSFERIDO":        
-          eliminar_asignacion($idorigen,$iddocumento);                
-          asignar_tarea_buzon($iddocumento,NULL,2,$iddestino,1,NULL,$fecha_final,"PENDIENTE");         
-     break;
-		 case "COPIA":        
-          eliminar_asignacion($idorigen,$iddocumento);                
-          asignar_tarea_buzon($iddocumento,NULL,2,$iddestino,1,NULL,$fecha_final,"PENDIENTE");         
-     break;
-     case "DELEGADO":        
-          eliminar_asignacion($idorigen,$iddocumento);                
-          asignar_tarea_buzon($iddocumento,NULL,2,$iddestino,1,NULL,$fecha_final,"PENDIENTE");         
-     break;
-     case "REVISADO":
-      eliminar_asignacion($idorigen,$iddocumento);          
-      asignar_tarea_buzon($iddocumento,NULL,2,$iddestino,1,NULL,$fecha_final,"PENDIENTE");
-     break;
-     
-     case "APROBADO":
-       eliminar_asignacion($idorigen,$iddocumento);           
-       asignar_tarea_buzon($iddocumento,NULL,2,$iddestino,1,NULL,$fecha_final,"PENDIENTE");
-     break;
-     
-     case "DEVOLUCION":
-        eliminar_asignacion($idorigen,$iddocumento);          
-        asignar_tarea_buzon($iddocumento,NULL,2,$iddestino,1,NULL,$fecha_final,"PENDIENTE");       
-     break;    
-     case "RESPONDIDO":
-       eliminar_asignacion($idorigen,$iddocumento);
-     break;
-		 case "TRAMITE":
-       eliminar_asignacion($idorigen,$iddocumento);
-     break;
-     case "BORRADOR" : 
+ */
+function procesar_estados($idorigen, $iddestino, $nombre_transferencia, $iddocumento = null, $fecha_final = null)
+{
+    switch ($nombre_transferencia) {
+        case "TRANSFERIDO":
+            eliminar_asignacion($idorigen, $iddocumento);
+            asignar_tarea_buzon($iddocumento, null, 2, $iddestino, 1, null, $fecha_final, "PENDIENTE");
+            break;
+        case "COPIA":
+            eliminar_asignacion($idorigen, $iddocumento);
+            asignar_tarea_buzon($iddocumento, null, 2, $iddestino, 1, null, $fecha_final, "PENDIENTE");
+            break;
+        case "DELEGADO":
+            eliminar_asignacion($idorigen, $iddocumento);
+            asignar_tarea_buzon($iddocumento, null, 2, $iddestino, 1, null, $fecha_final, "PENDIENTE");
+            break;
+        case "REVISADO":
+            eliminar_asignacion($idorigen, $iddocumento);
+            asignar_tarea_buzon($iddocumento, null, 2, $iddestino, 1, null, $fecha_final, "PENDIENTE");
+            break;
+
+        case "APROBADO":
+            eliminar_asignacion($idorigen, $iddocumento);
+            asignar_tarea_buzon($iddocumento, null, 2, $iddestino, 1, null, $fecha_final, "PENDIENTE");
+            break;
+
+        case "DEVOLUCION":
+            eliminar_asignacion($idorigen, $iddocumento);
+            asignar_tarea_buzon($iddocumento, null, 2, $iddestino, 1, null, $fecha_final, "PENDIENTE");
+            break;
+        case "RESPONDIDO":
+            eliminar_asignacion($idorigen, $iddocumento);
+            break;
+        case "TRAMITE":
+            eliminar_asignacion($idorigen, $iddocumento);
+            break;
+        case "BORRADOR": 
         //asignar_tarea_buzon($iddocumento,NULL,2,$iddestino,1,NULL,$fecha_final,"PENDIENTE");
-     break;           
-     case "TERMINADO":             
-        eliminar_asignacion($idorigen,$iddocumento);
-     break;
-     case "DISTRIBUCION":             
-        eliminar_asignacion($idorigen,$iddocumento);
-     break;
-     default:
-      return;
-     break;       
+            break;
+        case "TERMINADO":
+            eliminar_asignacion($idorigen, $iddocumento);
+            break;
+        case "DISTRIBUCION":
+            eliminar_asignacion($idorigen, $iddocumento);
+            break;
+        default:
+            return;
+            break;       
 //Tener encuenta en el case aprobado que si el destino es el radicador de salida solo se cancela la tarea y yap sino se reasigna.
-}
-return true;
+    }
+    return true;
 }
 /*
 <Clase>
@@ -85,25 +84,21 @@ return true;
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>
-*/
-function eliminar_asignacion($funcionario,$iddocumento)
-{ 
-  global $conn;  
-  $datos_asignacion = busca_filtro_tabla("idasignacion","asignacion","documento_iddocumento=$iddocumento AND entidad_identidad=1 AND llave_entidad=$funcionario and tarea_idtarea=2","",$conn);  
-  if ($datos_asignacion["numcampos"])
-   {  
-       for($i=0; $i<$datos_asignacion["numcampos"]; $i++)
-        { 
+ */
+function eliminar_asignacion($funcionario, $iddocumento)
+{
+    global $conn;
+    $datos_asignacion = busca_filtro_tabla("idasignacion", "asignacion", "documento_iddocumento=$iddocumento AND entidad_identidad=1 AND llave_entidad=$funcionario and tarea_idtarea=2", "", $conn);
+    if ($datos_asignacion["numcampos"]) {
+        for ($i = 0; $i < $datos_asignacion["numcampos"]; $i++) { 
          //echo "delete from asignacion where idasignacion=".$datos_asignacion[$i]["idasignacion"];
-         phpmkr_query("delete from asignacion where idasignacion=".$datos_asignacion[$i]["idasignacion"],$conn);
+            phpmkr_query("delete from asignacion where idasignacion=" . $datos_asignacion[$i]["idasignacion"], $conn);
         }
-   }
-  else 
-   {  
+    } else {  
      //alerta("Problemas al Eliminar la tarea Error # 003");     
-     return FALSE;
-   }  
-return TRUE;
+        return false;
+    }
+    return true;
 }
 /*
 <Clase>
@@ -116,22 +111,20 @@ return TRUE;
 <Pre-condiciones>Campos obligatorios iddocumento y idtarea<Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>
-*/
-function asignar_tarea_buzon($iddocumento,$idserie=NULL,$idtarea=NULL,$list_entidad=NULL,$identidad=NULL,$fecha_inicial=NULL,$fecha_final=NULL,$estado = "PENDIENTE")
-{    
-global $conn;
-  $formato = "Y-m-d H:i:s";       
-  if(!$fecha_inicial)
-    $fecha_inicial=fecha_db_almacenar(date('Y-m-d H:i:s'),'Y-m-d H:i:s');  
-  if(($idserie||$iddocumento) && isset($idtarea))
-  {   
-    $sql = "INSERT INTO asignacion (documento_iddocumento,tarea_idtarea,fecha_inicial,estado,entidad_identidad,llave_entidad) VALUES ($iddocumento,$idtarea,$fecha_inicial,'$estado',1,$list_entidad)";    
-    phpmkr_query($sql); 
-  }
-  else{
-     alerta("Diligencie correctamente los datos e intente nuevamente");     
-     return FALSE;
-  }
-return TRUE; 
+ */
+function asignar_tarea_buzon($iddocumento, $idserie = null, $idtarea = null, $list_entidad = null, $identidad = null, $fecha_inicial = null, $fecha_final = null, $estado = "PENDIENTE")
+{
+    global $conn;
+    $formato = "Y-m-d H:i:s";
+    if (!$fecha_inicial)
+        $fecha_inicial = fecha_db_almacenar(date('Y-m-d H:i:s'), 'Y-m-d H:i:s');
+    if (($idserie || $iddocumento) && isset($idtarea)) {
+        $sql = "INSERT INTO asignacion (documento_iddocumento,tarea_idtarea,fecha_inicial,estado,entidad_identidad,llave_entidad) VALUES ($iddocumento,$idtarea,$fecha_inicial,'$estado',1,$list_entidad)";
+        phpmkr_query($sql);
+    } else {
+        alerta("Diligencie correctamente los datos e intente nuevamente");
+        return false;
+    }
+    return true;
 }
 ?>
