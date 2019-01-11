@@ -880,7 +880,7 @@ function buscar_dependencia($iformato=0) {
 
 	$html = '';
 	if($numfilas > 1) {
-		$html .= '<select class ="form-control required" name="dependencia" id="dependencia">';
+		$html .= '<select class ="form-control" name="dependencia" id="dependencia" class="required">';
 		if($dep_sel==''){
 			$html .= "<option value='' selected>Por favor seleccione...</option>";
 		}
