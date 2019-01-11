@@ -15,7 +15,10 @@ include_once($ruta_db_superior."pantallas/lib/librerias_componentes.php");
 
 if($_REQUEST["idformato"]){
   $idpantalla=$_REQUEST["idformato"];
-  $datos_formato=busca_filtro_tabla("","formato","idformato=".$idpantalla,"",$conn);
+  $consulta_formato = busca_filtro_tabla("cuerpo","formato f","idformato=".$idpantalla,"",$conn);
+  if($consulta_formato['numcampos']){
+  	$contenido_formato=json_encode($consulta_formato[0]['cuerpo']);
+  }		
 }
 ?>
 <html>
@@ -38,8 +41,6 @@ echo(librerias_html5());
 include_once($ruta_db_superior."assets/librerias.php");
 
 echo topModal();
-
-$es_movil = ($_SESSION["tipo_dispositivo"]) == "movil";
 
 $campos = busca_filtro_tabla("", "pantalla_componente B", "1=1", "", $conn);
 $librerias_js = array();
@@ -157,6 +158,7 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 						<?php
 						
 							$encabezados=busca_filtro_tabla("","encabezado_formato","1=1","etiqueta",$conn);
+							
 							$contenido_enc = array();
 							$etiqueta_enc = array();
 							$idencabezado = 0;
@@ -555,8 +557,8 @@ for ($i = 0; $i < $cant_js; $i++) {
 <script type="text/javascript">
 
 $(document).ready(function() {
-
-	
+var contenido_formato = <?php echo $contenido_formato ?>;
+CKEDITOR.instances.editor_mostrar.setData(contenido_formato)
 $("#generar_pantalla").live("click",function() {
     $(".generador_pantalla").find(".accordion-inner").html("");
     $(".generador_pantalla").removeClass("alert-success");
@@ -573,14 +575,14 @@ $("#generar_pantalla").live("click",function() {
 		var idfuncionFormato=$(this).attr("idfuncionFormato");
 		var funcion=$(this).attr("name");
 		var tipo=idfuncionFormato.split("_");
-		for(var id in CKEDITOR.instances) {
+		/*for(var id in CKEDITOR.instances) {
 			    CKEDITOR.instances[id].on('focus', function(e) {
 			        // Fill some global var here
 			        global_editor = e.editor.name;
 			    });
-			}
+			}*/
 		if(tipo[1]==='func'){			
-			CKEDITOR.instances[global_editor].insertText(funcion);
+			CKEDITOR.instances['editor_mostrar'].insertText(funcion);
 			//tinymce.activeEditor.execCommand('mceInsertContent', false, funcion);
 		    $.ajax({
 		    	  type:'POST',
@@ -643,7 +645,6 @@ function generar_pantalla(nombre_accion) {
 	
     $("#cargando_generar_pantalla").html("<img src='<?php echo($ruta_db_superior); ?>imagenes/cargando.gif' class='pull-left'>");
     var ruta_generar='formatos/generar_formato.php';
-    var accion = nombre_accion.replace("generar_","");
     var datos = {
         idformato: $("#idformato").val(),
         accion: "full",
@@ -658,22 +659,9 @@ function generar_pantalla(nombre_accion) {
             if(html) {
                 var objeto=jQuery.parseJSON(html);
                 if(objeto.exito==1) {
-                    /*$("#"+nombre_accion).prev().removeClass("alert-error");
-                    $("#"+nombre_accion).prev().addClass("alert-success");
-                    $("#"+nombre_accion).html("");
-                    notificacion_saia(objeto.mensaje,"success","",3500);
-                    if(typeof(objeto.descripcion_error)!=="undefined"){
-                    	$("#"+nombre_accion).html(objeto.descripcion_error);
-                    	$("#"+nombre_accion).collapse('show');
-                    }*/
                 	notificacion_saia("Formato generado correctamente","success","",3500);
                 } else {
-                    //$("#"+nombre_accion).prev().addClass("alert-error");
                     notificacion_saia(objeto.mensaje,"error","",9500);
-                    /*if(typeof(objeto.descripcion_error)!=="undefined"){
-                        $("#"+nombre_accion).html(objeto.descripcion_error);
-                        $("#"+nombre_accion).collapse('show');
-                    }*/
                 }
             }
         	$("#cargando_generar_pantalla").html("");
@@ -1052,6 +1040,7 @@ hs.Expander.prototype.onAfterClose = function(event) {
 	var etiqueta_actual = idactual[2];
 	
 	if(editor_enlace[0]='editor_encabezado.php'){
+		
 		var datos = {
 			ejecutar_libreria_encabezado: "consultar_contenido_encabezado",
 			tipo_retorno : 1
@@ -1615,7 +1604,6 @@ function receiveMessage(event) {
       if(event.data["etiqueta_html"] && event.data["etiqueta_html"] == 'textarea_cke') {
    		  CKEDITOR.instances[event.data["nombre_campo"]].setData(event.data["fs_predeterminado"]);
       }
-      alert("Dsds")
    	var source = event.source.frameElement; //this is the iframe that sent the message
    	var message = event.data; //this is the message
 	console.log(event);

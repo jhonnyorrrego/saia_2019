@@ -880,7 +880,7 @@ function buscar_dependencia($iformato=0) {
 
 	$html = '';
 	if($numfilas > 1) {
-		$html .= '<select class ="form-control required" name="dependencia" id="dependencia">';
+		$html .= '<select class ="form-control" name="dependencia" id="dependencia" class="required">';
 		if($dep_sel==''){
 			$html .= "<option value='' selected>Por favor seleccione...</option>";
 		}
@@ -3172,6 +3172,11 @@ function generar_correo_confirmacion($idformato, $iddoc, $nomb_campo = "email_ap
 
 function fecha_documento($idformato,$iddoc){
 	global $conn,$ruta_db_superior;
-	$consulta_datos = busca_fultro_tabla("","","","",$conn);
+	$fecha_creacion = '';
+	$consulta_datos = busca_filtro_tabla(fecha_db_obtener("fecha_creacion","Y-m-d")." as fecha_creacion","documento","iddocumento=".$iddoc,"",$conn);
+	if($consulta_datos['numcampos']){
+		$fecha_creacion = $consulta_datos[0]['fecha_creacion'];
+	}
+	echo $fecha_creacion;
 }
 ?>

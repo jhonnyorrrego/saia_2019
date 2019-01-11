@@ -113,7 +113,8 @@ $(function(){
             data: datos,
             success: function(data) {
             	if(data.exito == 1) {            		
-            		notificacion_saia("Encabezado pagina actualizado","success","",3000);           		                                  
+            		notificacion_saia("Encabezado pagina actualizado","success","",3000);
+            		parent.hs.close();           		                                  
             	}
             }
         });

@@ -24,7 +24,7 @@ if($_REQUEST['funciones_nucleo']){
 
 function funciones_nucleo($pantalla_idpantalla, $tipo) {
     global $conn;
-    $consulta_funciones = busca_filtro_tabla("","funciones_nucleo","","",$conn);
+    $consulta_funciones = busca_filtro_tabla("","funciones_nucleo","","etiqueta ASC",$conn);
 
     $texto = '<div class="accordion" id="acordion_componentes" style="margin-bottom: 5px;">
      <div class="accordion-group">

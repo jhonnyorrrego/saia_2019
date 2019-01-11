@@ -62,7 +62,8 @@ if (isset($_REQUEST["genera"])) {
         "adicionar",
         "editar",
         "mostrar",
-        "buscar"];
+        "buscar",
+        "cuerpo_formato"];
     $mensajes = array();
     $idformato = $_REQUEST["idformato"];
     $exito = true;
@@ -163,6 +164,12 @@ class GenerarFormato {
                     )));
                 }
                 break;
+				
+			case "cuerpo_formato":
+                $this->crear_cuerpo_formato();
+                $redireccion = "funciones_formatolist.php?idformato=" . $this->idformato;
+                break;
+					
             case "eliminar":
                 $this->crear_formato_mostrar("eliminar");
                 $redireccion = "funciones_formatolist.php?idformato=" . $this->idformato;
@@ -433,6 +440,61 @@ class GenerarFormato {
         return (false);
     }
 
+	/*
+     * <Clase>
+     * <Nombre>crear_cuerpo_formato</Nombre>
+     * <Parametros>$idformato:id de la vista</Parametros>
+     * <Responsabilidades>Se encarga de crear el cuerpo del formato por defecto para el usuario final<Responsabilidades>
+     * <Notas></Notas>
+     * <Excepciones></Excepciones>
+     * <Salida></Salida>
+     * <Pre-condiciones><Pre-condiciones>
+     * <Post-condiciones><Post-condiciones>
+     * </Clase>
+     */
+	 public function crear_cuerpo_formato(){
+	 	global $conn,$ruta_db_superior;
+		
+		$formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $this->idformato, "", $conn);
+		
+        if ($formato["numcampos"] && !$formato[0]['cuerpo']) {
+			$consulta_campos_lectura = busca_filtro_tabla("valor", "configuracion", "nombre='campos_solo_lectura'", "", $conn);
+		    $campos_excluir = array(
+		        "dependencia",
+		        "documento_iddocumento",
+		        "estado_documento",
+		        "firma",
+		        "serie_idserie",
+		        "encabezado"
+		    );
+			if ($consulta_campos_lectura['numcampos']) {
+		        $campos_lectura = json_decode($consulta_campos_lectura[0]['valor'], true);				
+		        $campos_lectura = implode(",", $campos_lectura);
+		        $campos_lectura = str_replace(",", "','", $campos_lectura);
+		        $busca_idft = strpos($campos_lectura, "idft_");
+		        if ($busca_idft !== false) {
+		            $consulta_ft = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $this->idformato, "", $conn);
+		            $campos_lectura = str_replace("idft_", "id" . $formato[0]['nombre_tabla'], $campos_lectura);
+		            $campos_excluir[] =  $campos_lectura;    		           
+		        }
+		    }
+			
+	 		$condicion_adicional = " and A.nombre not in('" . implode("', '", $campos_excluir) . "')"; 
+			$campos = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $this->idformato . " and etiqueta_html<>'campo_heredado' ".$condicion_adicional."", "A.orden", $conn);
+			if($campos['numcampos']){
+				$cuerpo_formato='<table style="border-collapse: collapse; width: 100%;" border="1" align="center"><tbody><tr><td style="text-align: center; width: 30%; border: 1px solid #b6b8b7;" valign="middle"><strong>campo prueba</strong>&nbsp;</td><td style="text-align: center; width: 40%; border: 1px solid #b6b8b7;" valign="middle"><span><strong>valor campo prueba</strong></span></tr></tbody></table>';
+				$update_formato = "UPDATE formato set cuerpo='".$cuerpo_formato."' where idformato=".$this->idformato;
+				phpmkr_query($update_formato);
+				$this->exito = 1;
+				$this->mensaje = "";
+				return true;
+				
+			}
+		  }
+$this->exito = 1;
+
+return false;	
+		}
     /*
      * <Clase>
      * <Nombre>generar_vista</Nombre>
