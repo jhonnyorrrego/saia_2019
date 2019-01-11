@@ -34,7 +34,7 @@ echo(estilo_file_upload());
 <p><i class="icon-share-alt"></i><a href="<?php echo($ruta_db_superior);?>bpmn/paso/actividades_paso.php?idpaso=<?php echo($_REQUEST["idpaso"]);?>&diagrama=<?php echo(@$_REQUEST['diagrama']); ?>&documento=<?php echo(@$_REQUEST['documento']); ?>&idpaso_documento=<?php echo(@$_REQUEST['idpaso_documento']); ?>">Regresar</a></p>
 
 </br>	
-<form class="form-horizontal" id="terminar_actividad_paso" name="terminar_actividad_paso" method="POST"  action="" enctype="multipart/form-data">
+<form class="form-horizontal" id="terminar_actividad_paso" method="POST"  action="" enctype="multipart/form-data">
 		<legend class="texto-azul">terminar actividad del paso </legend>  
 	  <div class="control-group">
 	    <label class="control-label" for="observaciones">Observaciones *</label>

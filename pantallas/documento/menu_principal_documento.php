@@ -1,627 +1,501 @@
 <?php
 $max_salida = 6;
 $ruta_db_superior = $ruta = "";
+
 while ($max_salida > 0) {
-	if (is_file($ruta . "db.php")) {
-		$ruta_db_superior = $ruta;
-	}
-	$ruta .= "../";
-	$max_salida--;
-}
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
-$documento = '';
-$funcionario = usuario_actual("funcionario_codigo");
-/**
- * @param type $iddoc es el iddocumento
- * @param type $tipo_visualizacion es el tipo de visualizacion por defecto vacio que equivale a documento
- **/
-function menu_principal_documento($iddoc, $tipo_visualizacion = "", $modulo_adicional = "") {
-	global $documento, $conn, $ruta_db_superior, $funcionario;
-	$formato = busca_filtro_tabla("", "formato,documento", "lower(plantilla)=lower(nombre) and iddocumento=" . $iddoc, "", $conn);
-	$nombre = $formato[0]["nombre"];
-	$_SESSION["pagina_actual"] = $iddoc;
-
-	if ($formato[0]['mostrar_pdf'] == 1) {
-		$_SESSION["tipo_pagina"] = "pantallas/documento/visor_documento.php?iddoc=" . $iddoc . "&rnd=" . rand();
-	} else if ($formato[0]['mostrar_pdf'] == 2) {
-		$_SESSION["tipo_pagina"] = "pantallas/documento/visor_documento.php?pdf_word=1&iddoc=" . $iddoc;
-	} else {
-		$_SESSION["tipo_pagina"] = FORMATOS_CLIENTE . "$nombre/mostrar_$nombre.php?iddoc=$iddoc";
-	}
-
-	echo(librerias_jquery("1.7"));
-	echo(librerias_arboles());
-	echo(estilo_bootstrap());
-	echo(librerias_bootstrap());
-	if (@$_REQUEST["tipo"] !== 5 && !@$_REQUEST["output"] && !@$_REQUEST["imprimir"]) {
-		if (!@$iddoc) {
-			if (@$_REQUEST['iddocumento']) {
-				$iddoc = $_REQUEST['iddocumento'];
-			} else if (@$_REQUEST['key']) {
-				$iddoc = $_REQUEST['key'];
-			} else {
-				die('No existe un documento valido');
-			}
-		}
-		$documento = busca_filtro_tabla("", "documento A", "A.iddocumento=" . $iddoc, "", $conn);
-		$formato = busca_filtro_tabla("", "documento A, formato B", "lower(A.plantilla)=lower(B.nombre) AND A.iddocumento=" . $iddoc, "", $conn);
-		$descripcion = busca_filtro_tabla("", "campos_formato", "formato_idformato=" . $formato[0]["idformato"] . " AND acciones LIKE '%d%'", "", $conn);
-		if ($descripcion["numcampos"]) {
-			$campo_descripcion = $descripcion[0]["nombre"];
-		} else {
-			$campo_descripcion = "id" . $formato[0]["nombre_tabla"];
-		}
-		$papas = busca_filtro_tabla("id" . $formato[0]["nombre_tabla"] . " AS llave, " . $campo_descripcion . " AS etiqueta ,'" . $formato[0]["nombre_tabla"] . "' AS nombre_tabla", $formato[0]["nombre_tabla"], "documento_iddocumento=" . $iddoc, "id" . $formato[0]["nombre_tabla"] . " ASC", $conn);
-
-		if ($papas["numcampos"]) {
-			$iddoc2 = $formato[0]["idformato"] . "-" . $papas[0]["llave"] . "-id" . $formato[0]["nombre_tabla"];
-			$llave_formato = $formato[0]["idformato"] . "-id" . $formato[0]["nombre_tabla"] . "-" . $papas[0]["llave"] . "-" . $iddoc;
-		} else {
-			$iddoc = 0;
-			$llave_formato = 0;
-		}
-		$mostrar_menu_acciones_rapidas = 0;
-		if ($_SESSION["tipo_dispositivo"] != "movil") {
-			$mostrar_menu_acciones_rapidas = 1;
-			$dropdown_menu = ' top:40%; left: 40%; ';
-			$tipo_pagina = $_SESSION["tipo_pagina"];
-		} else {
-			$tipo_pagina = "pantallas/documento/informacion_resumen_documento.php?iddoc=" . $iddoc . "&no_seleccionar=1";
-			$dropdown_menu = ' position: fixed; top: 35; left: 0px; ';
-		}
-		$datos_admin = botones_administrativos_menu($iddoc);
-		echo(librerias_acciones_kaiten());
-?>
-    <style type="text/css">
-        .navbar-inner{height: 50px;}
-        body{ font-size:12px; line-height:100%; margin-top:70px}
-        .navbar-fixed-top, .navbar-fixed-bottom{ position: fixed;}
-        .navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top{margin-right: 0px; margin-left: 0px;}
-        .texto-azul{ color:#3176c8}
-        .btn-under {text-align: center;vertical-align: top;}
-        .btn-under ul{text-align: left;}
-        .btn-under h6{margin-top: 0px; font-size: 11; font-weight:normal;font-family: arial;}
-        .btn-under > .dropdown-menu{ <?php echo($dropdown_menu);?>}
-    </style>
-    <div class="navbar navbar-fixed-top pull-center" id="menu_principal_documento">
-      <div class="navbar-inner">
-          <div class="container">
-            <ul class="nav">
-              <li>
-              	<div class="btn-group pull-left btn-under">
-              		<!-- a href="<?php echo($ruta_db_superior.$tipo_pagina); ?>" class="kenlace_saia_propio" enlace="<?php echo($tipo_pagina); ?>" destino="_centro">
-                    <button type="button" class="btn btn-mini">
-                      
-                        <i class="icon-acciones_menu_mostrar"></i>
-                      
-                    </button>
-                   </a -->
-                   <?php
-                   if($_SESSION["tipo_dispositivo"]=="movil"){
-                   ?>
-                   <button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
-                      
-                        <i class="icon-acciones_menu_mostrar"></i>
-                      
-                    </button>
-                   
-                   <ul class="dropdown-menu">
-                        <li>
-                        	<div class="tab-pane active" id="arbol">
-                              <div id="esperando_arbol">
-                                <img src="<?php echo($ruta_db_superior);?>imagenes/cargando.gif"></div>
-                              <div id="tree_box" class="arbol_saia"></div>
-                            </div>
-                        </li>
-                    </ul>
-                    <?php }else{?>
-              		<a class="kenlace_saia_propio enlace_home_documento"  destino="_centro">
-                    <button type="button" class="btn btn-mini">
-                      
-                        <i class="icon-acciones_menu_mostrar"></i>
-                      
-                    </button>
-                   </a>
-                    <?php }?>
-                   <script>
-										$(document).ready(function(){
-											$('.enlace_home_documento').live('click',function(){
-												var iddoc='<?php echo($iddoc); ?>';
-												var cod_padre='<?php echo($formato[0]['cod_padre']); ?>';
-												<?php if($_SESSION["tipo_dispositivo"]!="movil"){ ?>
-												redirecciona_home_documento(iddoc,cod_padre);
-												<?php } ?>
-											});	
-										});
-										
-										var item="<?php echo($llave_formato);?>";
-										function redirecciona_home_documento(iddoc,cod_padre){
-											if(cod_padre!='' && cod_padre!='0'){
-												direccion=new String(window.parent.frames[0].location);
-												vector=direccion.split('&');
-												vector_iddoc=vector[1].split('=');
-												if(window.parent.parent.frames[0].frameElement.name=='centro'){
-													window.parent.parent.frames[0].location="<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
-												}else if(window.parent.parent.frames[2].frameElement.name=='centro'){
-													window.parent.parent.frames[2].location="<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+vector_iddoc[1];
-												}					  
-											}else{
-												window.open("<?php echo($ruta_db_superior);?>ordenar.php?click_mostrar=1&accion=mostrar&mostrar_formato=1&key="+iddoc,"arbol_formato");				
-											}              			
-										}
-                   		<?php if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
-                   		var browserType;
-                   	  if (document.layers) {browserType = "nn4";}
-                   	  if (document.all) {browserType = "ie";}
-                   	  if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-                   	     browserType= "gecko";
-                   	  }
-                   	  no_seleccionar=<?php echo((@$_REQUEST["no_seleccionar"]?"1":"0")); ?>;
-                   	  tree2=new dhtmlXTreeObject("tree_box","100%","<?php echo($alto_inicial);?>",0);
-                   	  tree2.enableAutoTooltips(1);
-                   	  tree2.enableTreeImages("false");
-                   	  tree2.enableTreeLines("true");
-                   	  tree2.enableTextSigns("true");
-                   	  tree2.setOnLoadingStart(cargando);
-                   	  tree2.setOnLoadingEnd(fin_cargando);
-                   	  tree2.setOnClickHandler(onNodeSelect);
-                   	  tree2.loadXML("<?php echo($ruta_db_superior);?>formatos/arboles/test_formatos_documento2.php?id=<?php echo($iddoc2);?>");
-                   	  function redireccion_ruta(iframe_destino,ruta_enlace){
-                   	    if(iframe_destino==''){
-                   	      window.location=ruta_enlace;
-                   	    }
-                   	    else if(window.parent.frames[iframe_destino]!=undefined){
-                   	      window.parent.frames[iframe_destino].location=ruta_enlace;
-                   	    }
-                   	    else if(window.frames[iframe_destino]!=undefined){
-                   	      window.frames[iframe_destino].location=ruta_enlace;
-                   	    }
-                   	    else{
-                   	      window.location=ruta_enlace;
-                   	    }
-                   	  }
-                   	  function onNodeSelect(nodeId){
-
-                   	  	var llave=0;
-                   	    llave=tree2.getParentId(nodeId);
-                   	    var datos=nodeId.split("-");
-                   	    if(datos[2][0]=="r"){
-                   	    	seleccion_accion('adicionar');
-                   	    }
-                   	    else{
-                   	    	documento_saia=datos[3];
-                   		    conexion="<?php echo($ruta_db_superior); ?>formatos/arboles/parsear_accion_arbol.php?id="+nodeId+"&accion=mostrar&llave="+llave+"&enlace_adicionar_formato=1";
-                   		    redireccion_detalles(conexion);
-                   	    }
-                   		}
-                   		function seleccion_accion(accion,id){
-                   	    var nodeId=0;
-                   	    var llave=0;
-                   	    nodeId=tree2.getSelectedItemId();
-                   	    if(!nodeId){
-                   	      alert("Por Favor seleccione un documento del arbol");
-                   	      return;
-                   	    }
-                   	    llave=tree2.getParentId(nodeId);
-                   	    tree2.closeAllItems(tree2.getParentId(nodeId))
-                   	    tree2.openItem(nodeId);
-                   	    tree2.openItem(tree2.getParentId(nodeId));
-                   	    conexion="<?php echo($ruta_db_superior); ?>formatos/arboles/parsear_accion_arbol.php?id="+nodeId+"&accion="+accion+"&llave="+llave;
-                   	    redireccion_detalles(conexion);
-                   	    }
-                   	    function redireccion_detalles(conexion){
-                   	        if(!no_seleccionar){
-                   	            window.parent.open(conexion,"detalles");
-                   	        }
-                   	        else{
-                   	            no_seleccionar=0;
-                   	        }
-                   	    }
-                   	    function fin_cargando(){
-                   	        if (browserType == "gecko" )
-                   	           document.poppedLayer =
-                   	               eval('document.getElementById("esperando_arbol")');
-                   	        else if (browserType == "ie")
-                   	           document.poppedLayer =
-                   	              eval('document.getElementById("esperando_arbol")');
-                   	        else
-                   	           document.poppedLayer =
-                   	              eval('document.layers["esperando_arbol"]');
-                   	        document.poppedLayer.style.visibility = "hidden";
-                   	        tree2.selectItem(item,true,false);
-                   	        tree2.openAllItems(0); //esta linea permite que los arboles carguen abiertos totalmente
-                   	        <?php
-                   	            if(@$_REQUEST['click_mostrar']){
-                   	                ?>
-                   	                nodeId=tree2.getSelectedItemId();
-                   	                llave=tree2.getParentId(nodeId);
-                   	                onNodeSelect(nodeId);
-                   	                <?php
-                   	            }
-                   	        ?>
-                   	      }
-                   	    function cargando() {
-                   	      if (browserType == "gecko" )
-                   	         document.poppedLayer =
-                   	             eval('document.getElementById("esperando_arbol")');
-                   	      else if (browserType == "ie")
-                   	         document.poppedLayer =
-                   	            eval('document.getElementById("esperando_arbol")');
-                   	      else
-                   	         document.poppedLayer =
-                   	             eval('document.layers["esperando_arbol"]');
-                   	      document.poppedLayer.style.visibility = "visible";
-
-                   	    }
-                   	    function actualizar_papa(nodeId){
-                   	        var papa=tree2.getParentId(nodeId);
-                   	        tree2.closeItem(papa);
-                   	        tree2.deleteItem(nodeId,true);
-                   	        //tree2.refreshItem(nodeId);
-                   	        tree2.findItem(papa);
-                   	      }
-                   	 <?php } ?>
-                   </script>               
-                </div>
-                <div class="btn-group pull-left btn-under">
-                    <button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
-                        <i class="icon-acciones_menu_intermedio"></i>
-                        <span class="caret alignPreview">&nbsp;</span>
-                    </button><h6>Acciones</h6>
-                    <ul class="dropdown-menu  <?php echo($clase_menu);?>">
-                        <?php
-                        echo(permisos_modulo_menu_intermedio($iddoc,"acciones_menu_intermedio",array("tipo"=>2)));
-                        ?>
-                    </ul>
-                </div>
-              </li>
-              <li class="divider-vertical"></li>
-              <li>
-                <div class="btn-group pull-left btn-under">
-                    <button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown" >
-                        <i class="icon-informacion_menu_intermedio"></i>
-                        <span class="caret alignPreview">&nbsp;</span>
-                    </button><h6>Seguimiento</h6>
-                    <ul class="dropdown-menu  <?php echo($clase_menu);?>">
-                        <?php
-                        echo(permisos_modulo_menu_intermedio($iddoc,"informacion_menu_intermedio",array("tipo"=>2)));
-                        ?>
-                    </ul>
-                </div>
-              </li>
-              <li class="divider-vertical"></li>
-              <li>
-                <div class="btn-group pull-left btn-under">
-                    <button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
-                        <i class="icon-otros_menu_intermedio"></i>
-                        <span class="caret alignPreview">&nbsp;</span>
-                    </button><h6>Otros</h6>
-                    <ul class="dropdown-menu <?php echo($clase_menu);?>">
-                        <?php
-                        echo(permisos_modulo_menu_intermedio($iddoc,"otros_menu_intermedio",array("tipo"=>2)));
-                        ?>
-                    </ul>
-                </div>
-              </li>
-              <li class="divider-vertical"></li>
-              <?php
-                 if(@$mostrar_menu_acciones_rapidas){
-              ?>
-              <li id="acciones_rapidas_menu_saia">
-                <div class="btn-group pull-left btn-under">
-                    <?php
-                    echo(permisos_modulo_menu_intermedio($iddoc,"rapidos_menu_intermedio",array("nombre"=>"rapidos_menu_intermedio","tipo"=>1)));
-                    ?>
-                    <script type="text/javascript">
-                      $(document).ready(function(){
-                        $("#transferir").click(function(){
-                            var pagactual=1;
-                        	$("#transferir").removeAttr("enlace");
-                            try{
-                        		pagactual=document.getElementById('detalles').contentDocument.getElementById('pageNumber').value;
-                            }catch(err){
-                            	pagactual=1;
-                            }
-                          window.open("<?php echo($ruta_db_superior); ?>transferenciaadd.php?doc=<?php echo($iddoc); ?>&&mostrar=1&key=<?php echo($iddoc); ?>&pag_pdf="+pagactual,"_self");
-                        });
-                      });
-                    </script>
-                    <h6>Acciones r&aacute;pidas</h6>
-                </div>
-              </li>
-              <li class="divider-vertical"></li>
-              <?php
-                }
-                $estado_documento="";
-              ?>
-              <li>
-              	<div class="btn-group pull- btn-under">
-              	<?php
-              	$titulo=false;
-              	if($datos_admin["confirmar"]){
-              	$titulo=true;
-              	?>
-                <div class="btn btn-mini" id="aprobar_documento" titulo="Aprobar documento" title="Aprobar documento" destino="_self">
-             &nbsp;<i class="icon-ok"></i>
-                <script type="text/javascript">
-                  $(document).ready(function(){
-                  	var iddoc_ref=parseInt(<?php echo($iddoc); ?>);
-                  	if(window.parent.frames["arbol_formato"]!==undefined){
-											match_iddoc=window.parent.frames["arbol_formato"].location.href.match(/(iddoc)=([\d]+)/);
-											if(match_iddoc){
-												iddoc_ref=match_iddoc[2];
-											}
-                  	}
-                    $("#aprobar_documento").click(function(){
-                     window.open("<?php echo($ruta_db_superior); ?>class_transferencia.php?iddoc=<?php echo($iddoc); ?>&funcion=aprobar&anterior="+iddoc_ref,"_self");
-                    });
-                  });
-                </script>
-                </div>
-              <?php
-							}
-
-							if($datos_admin["editar"]){
-              	$titulo=true;
-              	$datos_pantalla=busca_filtro_tabla("ruta_pantalla,nombre","pantalla A","A.idpantalla=".$documento->documento[0]["pantalla_idpantalla"],"",$conn);
-              ?>
-              	<div class="btn btn-mini" id="editar_documento" titulo="Editar" title="Editar" destino="_self">
-              		&nbsp;<i class="icon-edit"></i>
-             		<script type="text/javascript">
-                  $(document).ready(function(){
-                    $("#editar_documento").click(function(){
-                      window.open("<?php echo($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]["nombre"]); ?>/<?php echo($formato[0]["ruta_editar"]); ?>?iddoc=<?php echo($iddoc); ?>&idformato=<?php echo($formato[0]["idformato"]); ?>","_self");
-                    });
-                  });
-                </script>
-               	</div>
-              <?php } ?>
-              <?php if($datos_admin["ver_responsables"]){
-              	$titulo=true;
-              ?>
-              	<div class="btn btn-mini" id="ver_responsables" titulo="Ver responsables" title="Ver responsables" destino="_self">
-              		&nbsp;<i class="icon-hand-right"></i>
-             		<script type="text/javascript">
-                  $(document).ready(function(){
-                    $("#ver_responsables").click(function(){
-                      window.open("<?php echo($ruta_db_superior); ?>mostrar_ruta.php?doc=<?php echo($iddoc);?>","_self");
-                    });
-                  });
-                </script>
-                </div>
-              <?php } ?>
-              <?php if($datos_admin["devolucion"]){
-              	$titulo=true;
-              ?>
-              	<div class="btn btn-mini" id="devolver" titulo="Devolver" title="Devolver" destino="_self">
-              		&nbsp;<i class="icon-hand-left"></i>
-             		<script type="text/javascript">
-                  $(document).ready(function(){
-                    $("#devolver").click(function(){
-                      window.open("<?php echo($ruta_db_superior); ?>class_transferencia.php?iddoc=<?php echo($iddoc); ?>&funcion=formato_devolucion","_self");
-                    });
-                  });
-                </script>
-                </div>
-              <?php }
-              if($titulo){
-              ?>
-              <h6>Acciones documento</h6>
-              <?php } ?>
-                </div>
-              </li>
-              <?php if(@$modulo_adicional["nombre"]!==''){
-                    $modulos_adicionales=busca_filtro_tabla("","modulo", "nombre='".$modulo_adicional["nombre"]."'", "", $conn);
-                    if($modulos_adicionales["numcampos"]){
-                     ?>
-              <li class="divider-vertical"></li>
-              <li>
-               <div class="btn-group btn-under" id="modulo_adicional_<?php echo($modulos_adicionales[0]["nombre"]);?>">
-                   <?php
-                    if(@$modulo_adicional["tipo"]){
-                   ?>
-                    <button class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
-                        <i class="icon-flag"></i>
-                        <span class="caret alignPreview">&nbsp;</span>
-                    </button><h6><?php echo($modulos_adicionales[0]["etiqueta"]);?></h6>
-                    <ul class="dropdown-menu pull-right <?php echo($clase_menu);?>" style="top:50%;left:auto;">
-                        <?php
-                    }
-                        echo(permisos_modulo_menu_intermedio($iddoc,$modulos_adicionales[0]["nombre"],array("tipo"=>$modulo_adicional["tipo"])));
-                    if(!$modulo_adicional["tipo"]){
-                        ?>
-                        <h6><?php echo($modulos_adicionales[0]["etiqueta"]);?></h6>
-                        <?php
-                    }
-                    else{
-                        ?>
-                    </ul>
-                    <?php
-                    } ?>
-                </div>
-              </li>
-                    <?php
-                    }
-
-                }
-              ?>
-            </ul>
-          </div>
-      </div>
-    </div>
-        <?php
+    if (is_file($ruta . "db.php")) {
+        $ruta_db_superior = $ruta;
     }
+    $ruta .= "../";
+    $max_salida--;
 }
 
-/*
- $iddoc=iddocumento
- $modulo_padre=nombre del modulo padre
- $lista=arreglo con nombre: nombre del modulo y tipo=1 botones con enlace, tipo=2 listado, tipo= 0 clase
- $target=destino donde se debe abrir el enlace
+include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "pantallas/documento/librerias.php";
+include_once $ruta_db_superior . "assets/librerias.php";
+
+echo jquery();
+echo bootstrap();
+echo icons();
+echo theme();
+echo topModal();
+
+$document = array();
+$userId = 0;
+
+/**
+ * retorna los datos del documento
+ * @param int $documentId identificador del documento
+ * @return busca_filtro_tabla 
  */
-function permisos_modulo_menu_intermedio($iddoc, $modulo_padre, $lista, $target = "_self") {
-	global $ruta_db_superior, $documento, $funcionario;
-	$texto = '';
-	if ($modulo_padre == "rapidos_menu_intermedio") {
-		$datos_modulos = array(
-				'devolucion',
-				'transferir',
-				'responder',
-				'seguimiento_rastro',
-				'terminar_documento',
-				'vista_previa'
-		);
-	} else {
-		$datos_modulos = modulos_menu_intermedio($modulo_padre);
-	}
+function findDocument($documentId){
+    global $conn, $userId;
 
-	$documento_anulado = busca_filtro_tabla("estado", "documento", "iddocumento=" . $iddoc, "", $conn);
-	if ($documento_anulado[0]['estado'] == 'ANULADO') {
-		$modulos_documentos_anulados = array();
-		switch(strtolower($modulo_padre)) {
-			case 'otros_menu_intermedio' :
-				$modulos_documentos_anulados = array(
-						'Almacenamiento'
-				);
-				break;
-			case 'acciones_menu_intermedio' :
-				$modulos_documentos_anulados = array(
-						'devolucion',
-						'transferir',
-						'expediente_menu',
-						'enviar_documento_correo'
-				);
-				break;
-			case 'rapidos_menu_intermedio' :
-				$modulos_documentos_anulados = array(
-						'transferir',
-						'seguimiento_rastro',
-						'devolucion',
-						'vista_previa'
-				);
-				break;
-			default :
-				break;
-		}
+    if (!$documentId) {
+        if ($_REQUEST['iddocumento']) {
+            $documentId = $_REQUEST['iddocumento'];
+        } else if ($_REQUEST['key']) {
+            $documentId = $_REQUEST['key'];
+        } else {
+            die('No existe un documento valido');
+        }
+    }
+    
+    $document = busca_filtro_tabla("*", "formato a,documento b", "lower(b.plantilla)=lower(a.nombre) and b.iddocumento=" . $documentId, "", $conn);
+    $formatName = $document[0]["nombre"];
+    $userId = $_SESSION["usuario_actual"];
 
-		$datos_modulos = $modulos_documentos_anulados;
-	}
+    if ($document[0]['mostrar_pdf'] == 1) {
+        $_SESSION["tipo_pagina"] = "pantallas/documento/visor_documento.php?iddoc=" . $documentId . "&rnd=" . rand(0, 1000);
+    } elseif ($document[0]['mostrar_pdf'] == 2) {
+        $_SESSION["tipo_pagina"] = "pantallas/documento/visor_documento.php?pdf_word=1&iddoc=" . $documentId . "&rand=" . rand(0, 1000);
+    } else {
+        $_SESSION["tipo_pagina"] = FORMATOS_CLIENTE . $formatName . "/mostrar_" . $formatName . ".php?iddoc=" . $documentId . "&rand=" . rand(0, 1000);
+    }
 
-	$permiso = new PERMISO();
-	$modulo = busca_filtro_tabla("", "modulo", "nombre IN ('" . implode("','", $datos_modulos) . "')", "orden", $conn);
-
-	for ($i = 0; $i < $modulo["numcampos"]; $i++) {
-		$ok = $permiso -> acceso_modulo_perfil($modulo[$i]["nombre"], 1);
-		if ($ok || usuario_actual('login') == 'cerok') {
-			if ($modulo[$i]["nombre"] == "eliminar_borrador" && ($documento[0]["estado"] != "ACTIVO" || $documento[0]["ejecutor"] != $funcionario)) {
-				continue;
-			}
-			if ($modulo[$i]["nombre"] == 'vista_previa' && @$_REQUEST["vista"]) {
-				$modulo[$i]["enlace"] .= "&vista=" . $_REQUEST["vista"];
-			}
-			if ($modulo[$i]["nombre"] == 'ver_notas_posit') {
-				$datos_documento = busca_filtro_tabla("", "documento A, formato B", "lower(A.plantilla)=lower(B.nombre) AND A.iddocumento=" . $iddoc, "", $conn);
-				$modulo[$i]["enlace"] = FORMATOS_CLIENTE . $datos_documento[0]["nombre"] . "/" . $datos_documento[0]["ruta_mostrar"] . "?iddoc=" . $datos_documento[0]["iddocumento"] . "&idformato=" . $datos_documento[0]["idformato"] . "&ver_notas=1";
-			}
-			if ($modulo[$i]["destino"] && $modulo[$i]["destino"] != "centro") {
-				$target = $modulo[$i]["destino"];
-			}
-			if (@$iddoc) {
-				$dir = str_replace('@key@', $iddoc, $modulo[$i]["enlace"]);
-			}
-			if ($lista["tipo"] == 2) {
-				//Menu listado
-				$texto .= '<li><a href="/' . RUTA_SAIA . $dir . '" class="kenlace_saia_propio" enlace="/' . RUTA_SAIA . $dir . '" destino="' . $target . '"><i class="icon-' . $modulo[$i]["nombre"] . '"></i> ' . $modulo[$i]["etiqueta"] . '</a></li>';
-			} else if ($lista["tipo"] == 1) {
-				//Menu rapido
-				$texto .= '<div class="btn btn-mini kenlace_saia_propio" titulo="' . $modulo[$i]["etiqueta"] . '" enlace="/' . RUTA_SAIA . $dir . '" title="' . $modulo[$i]["etiqueta"] . '" destino="' . $target . '" id="' . $modulo[$i]["nombre"] . '">
-             &nbsp;<i class="icon-' . $modulo[$i]["nombre"] . '"></i> &nbsp;
-            </div>';
-			} else {
-				$texto .= '<div class="btn btn-mini tooltip_saia_abajo ' . $modulo[$i]["nombre"] . '" title="' . $modulo[$i]["etiqueta"] . '">
-             &nbsp; <i class="icon-' . $modulo[$i]["nombre"] . '"></i> &nbsp;
-            </div>';
-			}
-		}
-	}
-	return ($texto);
+    return $document;
 }
 
-function modulos_menu_intermedio($nombre_padre) {
-	$modulo_padre = busca_filtro_tabla("", "modulo", "nombre LIKE '" . $nombre_padre . "'", "orden", $conn);
-	$lmodulos = busca_filtro_tabla("", "modulo", "cod_padre=" . $modulo_padre[0]["idmodulo"], "orden", $conn);
-	$arreglo = extrae_campo($lmodulos, "nombre", "UL");
-	return ($arreglo);
+/**
+ * retorna los permisos sobre modulos
+ * hijos de un determinado modulo
+ * 
+ * @param int $documentId identificador del documento
+ * @param int $parentModule
+ * 
+ * @return array de array [] = array(
+        'id' => int,
+        'route' => string,
+        'icon' => string,
+        'label' => string
+    )
+ */
+function moduleActions($parentModule){
+    global $ruta_db_superior, $document, $userId, $conn;
+
+    $links = array();
+    $Permiso = new PERMISO();
+
+    $findModules = busca_filtro_tabla('a.*', 'modulo a, modulo b', 'a.cod_padre = b.idmodulo and b.nombre = "' . $parentModule . '"', 'a.orden', $conn);
+    for ($i = 0; $i < $findModules["numcampos"]; $i++) {
+        if ($Permiso->acceso_modulo_perfil($findModules[$i]["nombre"], 1)) {
+            $links[] = array(
+                'id' => $findModules[$i]["nombre"],
+                'route' => $ruta_db_superior . $findModules[$i]["enlace"],
+                'icon' => $findModules[$i]["imagen"],
+                'label' => $findModules[$i]["etiqueta"]
+            );
+        }
+    }
+
+    return $links;
+}
+
+/**
+ * busca las acciones permitidas sobre 
+ * el documento por el funcionario
+ * 
+ * @param int $documentId identificador del documento
+ * @return array 
+        "ver_responsables" => boolean,
+        "editar" => boolean,
+        "devolucion" => boolean,
+        "confirmar" => boolean
+ */
+function findActions($documentId){
+    global $conn, $ruta_db_superior, $userId, $document;
+
+    include_once $ruta_db_superior . "class_transferencia.php";
+
+    $seePreviousManagers = false;
+    $seeManagers = false;
+    $editButton = false;
+    $confirmButton = false;
+    $returnButton = false;
+
+    $permissions = array();
+    $findPermissions = busca_filtro_tabla("", "permiso_documento", "funcionario='" . $userId . "' AND documento_iddocumento=" . $documentId, "", $conn);
+    if ($findPermissions["numcampos"]) {
+        $permissions = explode(",", $findPermissions[0]["permisos"]);
+    }
+
+    $findManager = busca_filtro_tabla("destino,estado,plantilla", "buzon_entrada,documento", "iddocumento=archivo_idarchivo and archivo_idarchivo=" . $documentId, "buzon_entrada.idtransferencia asc", $conn);
+
+    if ($findManager["numcampos"]) {
+        if ($findManager[0]["estado"] == "ACTIVO" || $document["numcampos"]) {
+            if ($findManager[0]["estado"] == "ACTIVO") {
+                $seePreviousManagers = true;
+            }
+            if (in_array("m", $permissions)) {
+                if (!$_REQUEST["vista"]) {
+                    $editButton = true;
+                }
+            }
+        }
+
+        $findCurrent = busca_filtro_tabla("A.idtransferencia as idtrans,A.destino,A.ruta_idruta", "buzon_entrada A", "A.activo=1 and A.archivo_idarchivo=" . $documentId . " and (A.nombre='POR_APROBAR') and A.destino='" . $userId . "'", "A.idtransferencia", $conn);
+        if ($findCurrent["numcampos"] > 0) {
+            $findPrevious = busca_filtro_tabla("A.idtransferencia,A.ruta_idruta", "buzon_entrada A", "A.idtransferencia <" . $findCurrent[0]["idtrans"] . " and A.nombre='POR_APROBAR' and A.activo=1 and A.archivo_idarchivo=" . $documentId . " and origen='" . $userId . "'", "", $conn);
+        }
+        if (!$_REQUEST["vista"]) {
+            $confirmButton = true;
+        }
+
+        if ($findManager["numcampos"] > 0 && $findManager[0]["destino"] != $userId) {
+            $returnButton = true;
+        }
+
+        if (@$findCurrent[0]["destino"] != $userId || @$findPrevious["numcampos"] > 0) {
+            $seeManagers = false;
+            if ($seePreviousManagers && in_array("r", $permissions)) {
+                $seeManagers = true;
+            }
+            $confirmButton = false;
+            $returnButton = false;
+        }
+        if ($seePreviousManagers && in_array("r", $permissions)) {
+            if ($_REQUEST["vista"] == "") {
+                $seeManagers = true;
+            }
+        }
+    }
+
+    return array(
+        "ver_responsables" => $seeManagers,
+        "editar" => $editButton,
+        "devolucion" => $returnButton,
+        "confirmar" => $confirmButton
+    );
+}
+
+function getTransfer($transferId){
+    global $conn, $ruta_db_superior, $userId;
+    include_once $ruta_db_superior . 'models/funcionario.php';
+
+    if(!$transferId)
+        $transferId = $_SESSION['transferId'];
+
+    if($transferId){
+        $_SESSION['transferId'] = $transferId;
+
+        $findTransfer = busca_filtro_tabla('*', 'buzon_salida', 'idtransferencia ='. $transferId, '', $conn);
+        if($findTransfer[0]['origen'] == $userId){
+            $ReferenceUser = new Funcionario($findTransfer[0]['destino']);
+        }else{
+            $ReferenceUser = new Funcionario($findTransfer[0]['origen']);
+        }
+
+        $Response = (object) $findTransfer[0];
+        $Response->user = $ReferenceUser;
+    }else{
+        $Response = new stdclass();
+        $Response->user = new Funcionario($userId);
+    }
+
+    return $Response;
 }
 
 
-function botones_administrativos_menu($iddoc) {
-	global $conn,$ruta_db_superior;
-	$formato = busca_filtro_tabla("", "documento A, formato B", "lower(A.plantilla)=lower(B.nombre) AND A.iddocumento=" . $iddoc, "", $conn);
-	include_once ($ruta_db_superior . "class_transferencia.php");
-	$texto = array();
-	$usuario_actual = $_SESSION["usuario_actual"];
+/**
+ *  pinta en el encabezado con la 
+ *  informaciobndel documento
+ * 
+ * @param int $documentId  identificador del documento
+ * @param int $idtransferencia identificador de la
+ *      transferencia en caso de venir de un buzon
+ * 
+ * @return html del encabezado
+ */
+function menu_principal_documento($documentId, $transferId = 0){
+    global $conn, $ruta_db_superior, $document;
 
-	$responsable = busca_filtro_tabla("destino,estado,plantilla", "buzon_entrada,documento", "iddocumento=archivo_idarchivo and archivo_idarchivo=" . $iddoc, "buzon_entrada.idtransferencia asc", $conn);
+    $document = findDocument($documentId);    
+    $documentActions = findActions($documentId);
+    $Transfer = getTransfer($transferId);
+    $temporality = $Transfer->fecha ? temporality($Transfer->fecha) : '';
 
-	$ver_responsables_previo = false;
-	$ver_responsables = false;
-	$boton_editar = false;
-	$boton_confirmar = false;
-	$boton_devolucion = false;
+    if($_REQUEST['tipo'] !== 5){
+        $moduleActions = moduleActions('menu_documento');
+    }
+    ?>
+    <link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.css">
+    <style>a.fa-paperclip {position: relative;cursor: pointer;text-decoration: none;}span.badge-important {position: absolute;font-size: 0.5em;top: -9px;left: 1px;}</style>
+    <div class="col-12 px-0 mx-0">
+        <div class="row m-0">
+            <div class="col-auto px-1">
+                <span class="h6">
+                    <i style="display:none" class="fa fa-chevron-left px-3 cursor" id="go_back"></i>
+                </span>
+                <span id="show_tree" class="h6">
+                    <i class="fa fa-sitemap cursor"></i>
+                    <i class="cursor fa fa-angle-double-down"></i>
+                </span>
+            </div>
+            <div class="col text-center">
+                <span class="cursor p-1 h6">
+                    <i class="fa fa-mail-reply"></i><label style="font-size:13px;" class="d-none d-sm-inline">&nbsp;Responder</label>
+                </span>
+                <span class="cursor p-1 h6">
+                    <i class="fa fa-mail-reply-all"></i><label style="font-size:13px;" class="d-none d-sm-inline">&nbsp;Responder a todos</label>
+                </span>
+                <span class="cursor p-1 h6">
+                    <i class="fa fa-share"></i><label style="font-size:13px;" class="d-none d-sm-inline">&nbsp;Reenviar</label>
+                </span>
+            </div>
+            <?php if (isset($moduleActions) && count($moduleActions)): ?>
+                <div class="col-auto">
+                    <span class="cursor">
+                        <div class="pr-1">
+                            <div class="dropdown pull-right d-xs-block">
+                                <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-angle-double-left"></i> Opciones
+                                </span>
+                                <div class="dropdown-menu dropdown-menu-right" role="menu" x-placement="bottom-end">
+                                    <?php foreach ($moduleActions as $key => $item): ?>
+                                        <a class="dropdown-item menu_options text-truncate" href="<?=$item['route']?>" class="text-body" style="line-height:28px;">
+                                            <i class="<?=$item['icon']?>"></i> <?=$item['label']?>
+                                        </a>
+                                    <?php endforeach;?>
+                                </div>
+                            </div>
+                        </div>
+                    </span>
+                </div>
+            <?php endif; ?>
+        </div>
+        <div class="row px-0 mx-0 py-2">
+            <div class="col col-md-auto px-0 mx-0">
+                <div class="row px-0 mx-0">
+                    <div class="col-auto text-center p-1">
+                        <?= roundedImage($Transfer->user->getImage('foto_recorte')) ?>
+                    </div>
+                    <div class="col px-1">
+                        <div class="row" style="line-height:1.5">
+                            <div class="col-12">
+                                <span class="bold"><?= $Transfer->user->getName() ?></span>
+                            </div>
+                        </div>
+                        <div class="row" style="line-height:1.5;font-size:11px">
+                            <div class="col-12">
+                                <span><?= $temporality ?></span>
+                            </div>
+                        </div>
+                        <div class="row" style="line-height:1.5">
+                            <div class="col-auto d-none d-md-block" style="font-size:11px">
+                                <span><?= documental_type($documentId) ?></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-auto col-md">
+                <?= priority($documentId) ?>
+                <?= has_files($documentId) ?>
+                <span class="px-1 h6 cursor" id="show_comments"><i class="fa fa-comments"></i></span>
+                <span class="px-1 h6 cursor"><i class="fa fa-calendar"></i></span>
+                <span class="px-1 h6 cursor"><i class="fa fa-road"></i></span>
+            </div>
+            <div class="col-auto d-none d-md-block">
+                <?= expiration($document[0]['fecha_limite']) ?>
+            </div>
+        </div>
+        <div class="row mx-0 px-1">            
+            <div class="col px-0">
+                <span class="m-0">
+                    <?= $document[0]['descripcion'] ?>
+                </span>
+            </div>
+        </div>
+        <div class="row mx-0 px-1">
+            <div class="col-12 px-0 mx-0">
+                <p style="line-height:1;">
+                    <?= $Transfer->notas ?>
+                </p>
+            </div>
+        </div>
+        <div class="row mx-0 px-1">
+            <div id="fab"></div>
+        </div>
+    </div>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            var baseUrl = '<?= $ruta_db_superior ?>';
+            var documentId = '<?= $documentId ?>';
+            toggleGoBack();
+            displayComments();
+            showFlag();        
+            
+            $("#go_back").on('click', function(){                                
+                $("#mailbox,#right_workspace", parent.document).toggleClass('d-none');                
+            });
 
-	$v_permisos = array();
-	$permisos = busca_filtro_tabla("", "permiso_documento A", "A.funcionario='" . $usuario_actual . "' AND documento_iddocumento=" . $iddoc, "", $conn);
-	if ($permisos["numcampos"]) {
-		$v_permisos = explode(",", $permisos[0]["permisos"]);
-	}
+            $("#show_comments").on('click', function(){
 
-	if ($responsable["numcampos"]) {
-		$formato2 = busca_filtro_tabla("", "formato A", "A.nombre LIKE '" . strtolower($responsable[0]["plantilla"]) . "' AND tipo_edicion=1", "", $conn);
-		if ($responsable[0]["estado"] == "ACTIVO" || $formato2["numcampos"]) {
-			if ($responsable[0]["estado"] == "ACTIVO") {
-				$ver_responsables_previo = true;
-			}
-			if (in_array("m", $v_permisos)) {
-				if (@$_REQUEST["vista"] == "") {
-					$boton_editar = True;
-				}
-			}
-		}
+            });
 
-		$actual = busca_filtro_tabla("A.idtransferencia as idtrans,A.destino,A.ruta_idruta", "buzon_entrada A", "A.activo=1 and A.archivo_idarchivo=" . $iddoc . " and (A.nombre='POR_APROBAR') and A.destino='" . $usuario_actual . "'", "A.idtransferencia", $conn);
-		if ($actual["numcampos"] > 0) {
-			$anterior = busca_filtro_tabla("A.idtransferencia,A.ruta_idruta", "buzon_entrada A", "A.idtransferencia <" . $actual[0]["idtrans"] . " and A.nombre='POR_APROBAR' and A.activo=1 and A.archivo_idarchivo=" . $iddoc . " and origen='" . $usuario_actual . "'", "", $conn);
-		}
-		if ($_REQUEST["vista"] == "") {
-			$boton_confirmar = true;
-		}
+            $("#show_tree").on('click', function(){
+                let options = {
+                    url: `${baseUrl}views/arbol/proceso_formato.php`,
+                    params: {
+                        iddocumento: documentId
+                    },
+                    title: 'Proceso',
+                    size: 'modal-sm',
+                    buttons: {
+                        cancel: {
+                            label: 'Cerrar',
+                            class: 'btn btn-danger'
+                        }
+                    }
+                };
+                topModal(options);
+            });
+            
+            $(".priority_flag").on('click', function(){
+                var flagParent = $(`.priority[data-key='${documentId}']`, window.parent.document),
+                    flag = $(this).find('.priority');
+                    priority = flag.hasClass('text-danger') ? 0 : 1,
+                    key = localStorage.getItem('key');
 
-		if ($responsable["numcampos"] > 0 && $responsable[0]["destino"] <> $usuario_actual) {
-			$boton_devolucion = true;
-		}
+                $.post(`${baseUrl}app/documento/asignar_prioridad.php`,{
+                    priority: priority,
+                    selections: documentId,
+                    key: key
+                }, function(response){
+                    if(response.success){
 
-		if (@$actual[0]["destino"] <> $usuario_actual || @$anterior["numcampos"] > 0) {
-			$ver_responsables = false;
-			if ($ver_responsables_previo && in_array("r", $v_permisos)) {
-				$ver_responsables = true;
-			}
-			$boton_confirmar = false;
-			$boton_devolucion = false;
-		}
-		if ($ver_responsables_previo && in_array("r", $v_permisos)) {
-			if ($_REQUEST["vista"] == "") {
-				$ver_responsables = true;
-			}
-		}
-	}
-	return ( array("ver_responsables" => $ver_responsables, "editar" => $boton_editar, "devolucion" => $boton_devolucion, "confirmar" => $boton_confirmar));
-}
+                        if(priority){
+                            flag.addClass('text-danger');
+                            flagParent.show();
+                        }else{
+                            flag.removeClass('text-danger');
+                            flagParent.hide();
+                        }
+                    }else{
+                    }
+                }, 'json')
+            });
 
-if (@$_REQUEST["mostrar_menu"]) {
-	if ($_REQUEST["iddocumento"]) {
-		menu_principal_documento($_REQUEST["iddocumento"]);
-	}
+            <?php if(in_array(true, array_values($documentActions))) :?>
+                var fab = new Fab({
+                    selector: "#fab",
+                    button: {
+                        style: "large blue",
+                        html: ""
+                    },
+                    icon:{
+                        style: "fa fa-chevron-up",
+                        html: ""
+                    },
+                    // "top-left" || "top-right" || "bottom-left" || "bottom-right"
+                    position: "bottom-right",
+                    // "horizontal" || "vertical"
+                    direction: "vertical",
+                    buttons:[
+                        <?php if ($documentActions["confirmar"]): ?>
+                            {
+                                button: {
+                                    style: "small yellow",
+                                    html: ""
+                                },
+                                icon:{
+                                    style: "fa fa-check",
+                                    html: ""
+                                },
+                                onClick: function(){
+                                    if(window.parent.frames["arbol_formato"] !== undefined){
+                                        match_iddoc = window.parent.frames["arbol_formato"].location.href.match(/(iddoc)=([\d]+)/);
+                                        if(match_iddoc){
+                                            var parentDocumentId = match_iddoc[2];
+                                        }else{
+                                            var parentDocumentId = 0;
+                                        }
+                                    }else{
+                                        var parentDocumentId = documentId;
+                                    }
+                                    
+                                    var route = `${baseUrl}class_transferencia.php?iddoc=${documentId}&funcion=aprobar&anterior=${parentDocumentId}`;
+                                    window.open(route, "_self");
+                                }
+                            },
+                        <?php endif; ?>
+                        <?php if ($documentActions["editar"]): ?>
+                            {
+                                button: {
+                                    style: "small yellow",
+                                    html: ""
+                                },
+                                icon:{
+                                    style: "fa fa-edit",
+                                    html: ""
+                                },
+                                onClick: function(){
+                                    window.open("<?php echo $ruta_db_superior . FORMATOS_CLIENTE . $document[0]["nombre"] .'/'. $document[0]["ruta_editar"] ?>?iddoc=<?= $documentId ?>&idformato=<?= $document[0]["idformato"] ?>","_self");
+                                }
+                            },
+                        <?php endif; ?>
+                        <?php if ($documentActions["ver_responsables"]): ?>
+                            {
+                                button: {
+                                    style: "small yellow",
+                                    html: ""
+                                },
+                                icon:{
+                                    style: "fa fa-users",
+                                    html: ""
+                                },
+                                onClick: function(){
+                                    window.open(`${baseUrl}mostrar_ruta.php?doc=${documentId}`, "_self");
+                                }
+                            },
+                        <?php endif; ?>
+                        <?php if ($documentActions["devolucion"]) : ?>
+                            {
+                                button: {
+                                    style: "small yellow",
+                                    html: ""
+                                },
+                                icon:{
+                                    style: "fa fa-backward",
+                                    html: ""
+                                },
+                                onClick: function(){
+                                    window.open(`${baseUrl}class_transferencia.php?iddoc=${documentId}&funcion=formato_devolucion`,"_self");
+                                }
+                            }
+                        <?php endif; ?>
+                    ]
+                });
+            <?php endif; ?>
+
+            window.addEventListener("orientationchange", function () {
+                setTimeout(() => {
+                    toggleGoBack();
+                }, 500);
+            }, false);
+
+            $(window).resize(function() {
+                toggleGoBack();
+            });
+
+            function toggleGoBack(){                
+                if($("#mailbox", parent.document).is(':hidden')){
+                    $("#go_back").show();
+                }else{
+                    $("#go_back").hide();
+                }
+            }
+
+            function showFlag(){                
+                if($(".priority").is(':hidden')){
+                    $(".priority")
+                        .removeClass('text-danger')
+                        .show();
+                }
+            }
+        });
+    </script>
+    <?php
 }
 ?>

@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtDiagnosticoTratamiento" table="ft_diagnostico_tratamiento">
+    <indexes>
+      <index name="i_ft_diagnostico_tratamiento_doc" columns="documento_iddocumento"/>
+      <index name="i_diagnostico_tratami_solicitud_" columns="ft_solicitud_cita"/>
+      <index name="i_diagnostico_tratami_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftDiagnosticoTratamiento" type="integer" column="idft_diagnostico_tratamiento">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="ftSolicitudCita" type="integer" column="ft_solicitud_cita" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1012</option>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="dependencia" type="integer" column="dependencia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="encabezado" type="integer" column="encabezado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="firma" type="integer" column="firma" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="fechaDiagnostico" type="datetime" column="fecha_diagnostico" nullable="false"/>
+    <field name="nombreDiagnosticado" type="string" column="nombre_diagnosticado" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="sna" type="string" column="sna" length="11" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="snb" type="integer" column="snb" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="anb" type="integer" column="anb" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="mxMd" type="integer" column="mx_md" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="snmd" type="integer" column="snmd" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="wits" type="integer" column="wits" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="interincisivo" type="integer" column="interincisivo" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="unoMx" type="integer" column="uno_mx" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="unoMd" type="integer" column="uno_md" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="etiquetaMeaw" type="string" column="etiqueta_meaw" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="odi" type="string" column="odi" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="apdi" type="integer" column="apdi" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="cf" type="integer" column="cf" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="etiquetaFacial" type="integer" column="etiqueta_facial" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="lineaESuperior" type="integer" column="linea_e_superior" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="lineaEInferior" type="integer" column="linea_e_inferior" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="fhiLs" type="integer" column="fhi_ls" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="menorNl" type="integer" column="menor_nl" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="ortodoncista" type="integer" column="ortodoncista" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="auxiliar" type="string" column="auxiliar" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="esqueletico" type="text" column="esqueletico" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="oclusal" type="text" column="oclusal" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="dental" type="text" column="dental" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tejidoBlando" type="string" column="tejido_blando" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="funcional" type="text" column="funcional" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="planTratamiento" type="text" column="plan_tratamiento" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="reEvaluaciones" type="text" column="re_evaluaciones" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="retencion" type="text" column="retencion" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="remisionProcedimiento" type="text" column="remision_procedimiento" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="itemEvolucion" type="string" column="item_evolucion" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="planPreventivo" type="string" column="plan_preventivo" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="extSeriada" type="string" column="ext_seriada" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ortopedia" type="string" column="ortopedia" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ortopediaOrtodoncia" type="string" column="ortopedia_ortodoncia" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="otroTratamiento" type="string" column="otro_tratamiento" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ortodonciaCaso" type="string" column="ortodoncia_caso" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ortodonciaNoComplicada" type="string" column="ortodoncia_no_complicada" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ortodoncia" type="string" column="ortodoncia" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ortodonciaCirugia" type="string" column="ortodoncia_cirugia" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="otroEvaluaciones" type="string" column="otro_evaluaciones" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="estadoDocumento" type="integer" column="estado_documento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

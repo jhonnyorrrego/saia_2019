@@ -32,9 +32,8 @@
             $image = self::image($frame, $pixelPerPoint, $outerFrame);
             
             if ($filename === false) {
-                return(ImagePng($image));
-                //Header("Content-type: image/png");
-                //ImagePng($image);
+                Header("Content-type: image/png");
+                ImagePng($image);
             } else {
                 if($saveandprint===TRUE){
                     ImagePng($image, $filename);

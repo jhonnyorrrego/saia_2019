@@ -16,7 +16,7 @@ class IndiceOracle extends IndiceSaia {
 
 	public function __construct($conn, $tablespace = null) {
 		$this->conn = $conn;
-		$this->tablespace = $tablespace; //"SAIA_INDEX01";
+		$this->tablespace = "SAIA_INDEX01";
 		if(!empty($tablespace)) {
 			$this->tablespace = $tablespace;
 		}
@@ -46,15 +46,15 @@ class IndiceOracle extends IndiceSaia {
 	}
 
 	protected function consultar_nombre_pk($tabla) {
-		$indices = ejecuta_filtro_tabla("SELECT cols.table_name, cols.column_name, cons.constraint_name,index_name
+		$indices = ejecuta_filtro_tabla("SELECT cols.table_name, cols.column_name, cons.constraint_name
 			FROM user_constraints cons, user_cons_columns cols
-			WHERE cols.table_name = '" . $tabla . "'
+			WHERE cols.table_name = 'DOCUMENTO'
 			AND cons.constraint_type = 'P'
 			AND cons.constraint_name = cols.constraint_name
 			AND cons.owner = cols.owner
 			ORDER BY cols.table_name, cols.position", $this->conn);
 		if ($indices["numcampos"]) {
-			return $indices[0]["index_name"];
+			return $indices[0]["CONSTRAINT_NAME"];
 		}
 		return "";
 	}

@@ -11,11 +11,7 @@ while ($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 $exito = 0;
 if ($_REQUEST['iddoc']) {
-	$configuracion_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal' AND tipo='ruta'", "", $conn);
-	if ($configuracion_temporal["numcampos"]) {
-		$ruta_temp = $configuracion_temporal[0]["valor"];
-	}
-	$ruta_grafico = $ruta_db_superior . $ruta_temp . "_" . usuario_actual("login") . "/" . $_REQUEST['iddoc'] . "/";
+	$ruta_grafico = $ruta_db_superior . $_SESSION["ruta_temp_funcionario"]. $_REQUEST['iddoc'] . "/";
 	if (!file_exists($ruta_grafico)) {
 		crear_destino($ruta_grafico);
 	}

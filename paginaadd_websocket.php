@@ -202,7 +202,7 @@ table tbody td {
 				$ruta_ftp = $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
 				break;
 			case "ruta_temporal" :
-				$temporal_usuario = $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
+				$temporal_usuario = $_SESSION["ruta_temp_funcionario"];
 				break;
 			case "puerto_ftp" :
 				$puerto_ftp = 21;
@@ -420,7 +420,7 @@ function abrir_url_digitalizacion($iddocumento, $location, $target = "_blank") {
         }
 
         function onError(evt) {
-             notificacion_saia('<span style="color:white;">La aplicacion de digitalizacion no se esta ejecutado!</span>','error','',4000);
+             notificacion_saia('<span style="color:white;">El Scanner No se encuentra ejecutado!</span>','error','',4000);
         }
 
         function doSend(message) {

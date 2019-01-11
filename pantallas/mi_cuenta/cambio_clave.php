@@ -185,5 +185,4 @@ $("#passwordPwd").blur(function(){
     </li>
  </ul>
 </div>
-</div>    
-
+</div>

@@ -17,7 +17,7 @@ class Cargo
      *
      * @ORM\Column(name="idcargo", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idcargo;
 
@@ -36,9 +36,9 @@ class Cargo
     private $codPadre;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="estado", type="boolean", nullable=false)
+     * @ORM\Column(name="estado", type="integer", nullable=false)
      */
     private $estado = '1';
 
@@ -50,9 +50,9 @@ class Cargo
     private $codigoCargo;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="tipo", type="boolean", nullable=false)
+     * @ORM\Column(name="tipo", type="integer", nullable=false)
      */
     private $tipo = '1';
 
@@ -63,159 +63,12 @@ class Cargo
      */
     private $tipoCargo = '1';
 
-
-
     /**
-     * Get idcargo
+     * @var integer
      *
-     * @return integer
+     * @ORM\Column(name="pertenece_nucleo", type="integer", nullable=false)
      */
-    public function getIdcargo()
-    {
-        return $this->idcargo;
-    }
+    private $perteneceNucleo = '0';
 
-    /**
-     * Set nombre
-     *
-     * @param string $nombre
-     *
-     * @return Cargo
-     */
-    public function setNombre($nombre)
-    {
-        $this->nombre = $nombre;
 
-        return $this;
-    }
-
-    /**
-     * Get nombre
-     *
-     * @return string
-     */
-    public function getNombre()
-    {
-        return $this->nombre;
-    }
-
-    /**
-     * Set codPadre
-     *
-     * @param integer $codPadre
-     *
-     * @return Cargo
-     */
-    public function setCodPadre($codPadre)
-    {
-        $this->codPadre = $codPadre;
-
-        return $this;
-    }
-
-    /**
-     * Get codPadre
-     *
-     * @return integer
-     */
-    public function getCodPadre()
-    {
-        return $this->codPadre;
-    }
-
-    /**
-     * Set estado
-     *
-     * @param boolean $estado
-     *
-     * @return Cargo
-     */
-    public function setEstado($estado)
-    {
-        $this->estado = $estado;
-
-        return $this;
-    }
-
-    /**
-     * Get estado
-     *
-     * @return boolean
-     */
-    public function getEstado()
-    {
-        return $this->estado;
-    }
-
-    /**
-     * Set codigoCargo
-     *
-     * @param integer $codigoCargo
-     *
-     * @return Cargo
-     */
-    public function setCodigoCargo($codigoCargo)
-    {
-        $this->codigoCargo = $codigoCargo;
-
-        return $this;
-    }
-
-    /**
-     * Get codigoCargo
-     *
-     * @return integer
-     */
-    public function getCodigoCargo()
-    {
-        return $this->codigoCargo;
-    }
-
-    /**
-     * Set tipo
-     *
-     * @param boolean $tipo
-     *
-     * @return Cargo
-     */
-    public function setTipo($tipo)
-    {
-        $this->tipo = $tipo;
-
-        return $this;
-    }
-
-    /**
-     * Get tipo
-     *
-     * @return boolean
-     */
-    public function getTipo()
-    {
-        return $this->tipo;
-    }
-
-    /**
-     * Set tipoCargo
-     *
-     * @param integer $tipoCargo
-     *
-     * @return Cargo
-     */
-    public function setTipoCargo($tipoCargo)
-    {
-        $this->tipoCargo = $tipoCargo;
-
-        return $this;
-    }
-
-    /**
-     * Get tipoCargo
-     *
-     * @return integer
-     */
-    public function getTipoCargo()
-    {
-        return $this->tipoCargo;
-    }
 }

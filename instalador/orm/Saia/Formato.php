@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Formato
  *
- * @ORM\Table(name="formato")
+ * @ORM\Table(name="formato", indexes={@ORM\Index(name="i_formato_serie_idse", columns={"serie_idserie"})})
  * @ORM\Entity
  */
 class Formato
@@ -17,7 +17,7 @@ class Formato
      *
      * @ORM\Column(name="idformato", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idformato;
 
@@ -26,35 +26,35 @@ class Formato
      *
      * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
-    private $nombre;
+    private $nombre = '';
 
     /**
      * @var string
      *
      * @ORM\Column(name="etiqueta", type="string", length=255, nullable=false)
      */
-    private $etiqueta;
+    private $etiqueta = '';
 
     /**
      * @var integer
      *
      * @ORM\Column(name="cod_padre", type="integer", nullable=false)
      */
-    private $codPadre = 0;
+    private $codPadre = '0';
 
     /**
      * @var integer
      *
      * @ORM\Column(name="contador_idcontador", type="integer", nullable=true)
      */
-    private $contadorIdcontador = 0;
+    private $contadorIdcontador = '0';
 
     /**
      * @var string
      *
      * @ORM\Column(name="nombre_tabla", type="string", length=255, nullable=false)
      */
-    private $nombreTabla;
+    private $nombreTabla = '';
 
     /**
      * @var string
@@ -183,9 +183,9 @@ class Formato
     private $detalle = '0';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="tipo_edicion", type="boolean", nullable=false)
+     * @ORM\Column(name="tipo_edicion", type="integer", nullable=false)
      */
     private $tipoEdicion = '0';
 
@@ -246,9 +246,9 @@ class Formato
     private $orden;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="enter2tab", type="boolean", nullable=false)
+     * @ORM\Column(name="enter2tab", type="integer", nullable=false)
      */
     private $enter2tab = '0';
 

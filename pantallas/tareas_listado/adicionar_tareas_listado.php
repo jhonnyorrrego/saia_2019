@@ -145,7 +145,7 @@ if(@$_REQUEST['guardar']==1){
 			Fecha Limite: ".$_REQUEST["fecha_limite"]."<br/><br/>
 			Responsables: ".html_entity_decode($responsable[0]["nombres"]." ".$responsable[0]["apellidos"])."<br/>".$parte_msn."<br/><br/>".$link;
 			$fun_codes[]=$responsable[0]["funcionario_codigo"];
-			enviar_mensaje("","codigo",$fun_codes,"Nueva Tarea Asignada",$mensaje);
+			enviar_mensaje("",array("para"=>"funcionario_codigo"),array("para"=>$fun_codes),"Nueva Tarea Asignada",$mensaje);
 		}
 	}
 
@@ -239,7 +239,7 @@ if(@$_REQUEST['guardar']==1){
 		<div class="control-group" nombre="etiqueta">
 			<legend><?php echo($titulo_pantalla) ?></legend>
 		</div>
-		<form id="formulario_tareas" name="formulario_tareas" class="form-horizontal" method="post">
+		<form id="formulario_tareas" class="form-horizontal" method="post">
 		<input type="hidden" name="cod_padre" id="cod_padre" value="<?php echo($cod_padre); ?>">	
 		
 		<?php

@@ -98,8 +98,8 @@ document.getElementById("ocultar").style.display="none";
       echo "<a href='activar_documentofunc.php?func=1&key=".$res[$i]["iddocumento"]."'>Activar</a>";
       echo "&nbsp;</td>";
       echo "<td width='30px'>";
-      if($res[$i]["plantilla"] != "")
-      	echo "<a href='" . FORMATOS_CLIENTE . "$ruta/mostrar_$ruta.php?iddoc=".$res[$i]["iddocumento"]."'>Detalles</a>";
+      if($res[$i]["plantilla"]<>"")
+          echo "<a href='" . FORMATOS_CLIENTE . "$ruta/mostrar_$ruta.php?iddoc=".$res[$i]["iddocumento"]."'>Detalles</a>";
       echo "&nbsp;</td></tr>";
      }
   ?>

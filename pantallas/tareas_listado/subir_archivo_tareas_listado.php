@@ -14,10 +14,17 @@ include_once($ruta_db_superior."StorageUtils.php");
 include_once($ruta_db_superior.'filesystem/SaiaStorage.php');
 error_reporting(E_ALL | E_STRICT);
 $tipo =  explode('/', $_FILES['files']['type'][0]);
-if(@$_REQUEST["idtareas_listado"] && @$_REQUEST['idlistado_tareas']){
+if(@$_REQUEST["idtareas_listado"] || @$_REQUEST['listado_tareas_fk']){
 	
-	$ruta = RUTA_ANEXOS_TAREAS.@$_REQUEST['idlistado_tareas'].'/'.@$_REQUEST['idtareas_listado'].'/';
+	
+	if(@$_REQUEST["idtareas_listado"]){
+		$ruta = RUTA_ANEXOS_TAREAS.@$_REQUEST['listado_tareas_fk'].'/'.@$_REQUEST['idtareas_listado'].'/';
 		$idtareas_listado=@$_REQUEST['idtareas_listado'];
+	}else{
+		$ruta_temp = (rand());
+		$ruta = RUTA_ANEXOS_TAREAS.'temporal_tareas/'.@$_REQUEST['listado_tareas_fk'].'/t_'.@$ruta_temp.'/';
+		$idtareas_listado=$ruta_temp;
+	}
 	
 	$configuracion = busca_filtro_tabla("valor,nombre","configuracion","nombre LIKE 'extensiones_upload' OR nombre LIKE 'tamanio_maximo_upload'","",$conn);
 	
@@ -108,7 +115,7 @@ if(@$_REQUEST["idtareas_listado"] && @$_REQUEST['idlistado_tareas']){
         					$mensaje="Saludos,<br/><br/>Se ha adicionado un anexo a la tarea <strong>".$responsable[0]["nombre_tarea"]."</strong><br/><br/>
         					Fecha: ".$fecha_actual."<br/>
         					<br/>".$link;
-        					enviar_mensaje("","codigo",$funcionarios_enviar_vector,"Nuevo Anexo",$mensaje,array($ruta_anexo));
+        					enviar_mensaje("",array("para"=>"funcionario_codigo"),array("para"=>$funcionarios_enviar_vector),"Nuevo Anexo",$mensaje,array($ruta_anexo));
         				} //fin if funcionario numcampos        				
         				
         			}	//fin if responsable numcampos

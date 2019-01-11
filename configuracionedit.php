@@ -147,7 +147,6 @@ return true;
 	</tr>
 </table>
 <p>
-
 <input type="submit" name="Action" value="Editar">
 </form>
 <?php include ("footer.php") ?>

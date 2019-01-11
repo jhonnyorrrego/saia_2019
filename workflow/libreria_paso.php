@@ -86,7 +86,8 @@ else
  */  
 function terminar_actividad_paso($iddocumento,$accion,$tipo_terminacion=1,$paso_documento=0,$idactividad=0){
   global $conn;
-  $listado_acciones_paso='';
+  //$listado_acciones_paso='';
+  $listado_acciones_paso=array();
   $sql2='';
   
   //error("INICIA TERMINAR ACTIVIDAD PASO--->");

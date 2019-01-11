@@ -1,0 +1,209 @@
+body {
+	font-family: verdana, tahoma, arial;
+	font-size: 11px;
+}
+
+.arbol_saia th, .arbol_saia td {
+	background: transparent;
+	border: none;
+	margin: 0px;
+	border-top: none;
+	padding: 0px;
+	margin: 0px;
+}
+.containerTableStyle {
+	overflow: hidden;
+}
+.arbol_saia {
+	overflow: overlay;
+}
+
+.standarttreeimage {
+	width: 0px;
+}
+.selectedTreeRow {
+	background-color: #3176c8;
+	color: #fff;
+}
+.phpmaker {
+	font-family: verdana, tahoma, arial;
+	font-size: 11px;
+}
+
+.table td, .table td p, .table tr, .table th, .table-bordered td, .table-striped td {
+	font-family: verdana, tahoma, arial;
+	font-size: 11px;
+}
+.encabezado {
+	color: white;
+	padding: 10px;
+	text-align: left;
+	font-family: verdana, tahoma, arial;
+	font-size: 11px;
+	background-color: #57B0DE;
+}
+.encabezado_list {
+	color: white;
+	vertical-align: middle;
+	font-size: 11px;
+	text-align: center;
+	font-weight: bold;
+	font-family: verdana, tahoma, arial;
+	background-color: #57B0DE;
+}
+
+.dropdown-menu a {
+	text-decoration: none;
+}
+
+.highslide img {
+	border: none;
+}
+
+.dropdown-menu a.highslide i {
+	margin-left: -10px;
+	margin-right: 15px;
+}
+
+label.error {
+	font-family: verdana, tahoma, arial;
+	font-size: 11px;
+}
+
+.dropdown-menu ul {
+	width: 80px;
+}
+[class^="icon-"], [class*=" icon-"] {
+	width: 16px;
+	height: 16px;
+}
+.pull-center {
+	text-align: center;
+}
+.prettyprint {
+	background-color: #ececf0;
+}
+.resaltar {
+	font-weight: bold;
+}
+.descripcion_documento {
+	margin-bottom: 7px;
+}
+form, form legend, form label {
+	font-size: 11px;
+	font-family: verdana, tahoma, arial;
+}
+
+.form-horizontal .control-group {
+	margin: 7px;
+}
+legend {
+	font-size: 11px;
+	font-family: verdana, tahoma, arial;
+	color: #3176c8;
+	font-weight: bold;
+	margin: 0px;
+	line-height: 15px;
+}
+.legend {
+	color: #3176c8;
+	font-weight: bold;
+}
+
+.form-horizontal .controls {
+	margin-left: 25%;
+}
+.form-horizontal .control-label {
+	width: 20%;
+}
+
+@media (max-width: 480px) {
+	.form-horizontal .controls, .form-horizontal .well .controls, .small-labels .controls {
+		margin-left: 0;
+	}
+}
+#icon-cargando {
+	width: 16px;
+	height: 16px;
+	background-image: url('../../../../images/loader-ajax.gif');
+}
+.navbar .divider-vertical {
+	margin-left: 2.5px;
+	margin-right: 2.5px;
+	max-height: 30px;
+}
+.controls > .radio:first-child, .controls > .checkbox:first-child {
+	margin-left: 10px;
+}
+.highslide-container {
+	visibility: hidden;
+}
+.tab-content {
+	padding: 18px 10 0 0;
+}
+.enlace {
+	cursor: pointer;
+	cursor: hand;
+}
+.cargando {
+	background-image: url('../imagenes/cargando.gif');
+}
+.input-append .add-on {
+	height: inherit;
+}
+.bootstrap-datetimepicker-widget > ul {
+	width: 100%;
+}
+
+.bootstrap-datetimepicker-widget a {
+	padding: 3px 0px;
+}
+.ranges > ul {
+	width: inherit;
+}
+.k-panel > .title {
+	padding: 0 0 0 0;
+}
+.mce-ico {
+	font-size: 11px;
+	width: 14px;
+	height: 14px;
+}
+.mce-container, .mce-container *, .mce-widget, .mce-widget * {
+	font-size: 11px;
+}
+.mce-btn button {
+	font-size: 11px;
+	line-height: 12px;
+}
+.form-horizontal .form-actions {
+	padding-left: 0px;
+	background-color: transparent;
+	border-top: 0px;
+}
+.navbar .nav {
+	margin: 0px;
+}
+input[type="radio"], input[type="checkbox"] {
+	margin: 0px;
+	margin-right: 5px;
+	line-height: normal;
+	cursor: pointer;
+}
+
+.arbol_saia {
+	overflow: overlay;
+}
+
+.arbol_saia th, .arbol_saia td {
+	background: transparent;
+	border: none;
+	margin: 0px;
+	border-top: none;
+	padding: 0px;
+	margin: 0px;
+}
+
+.dhx_bg_img_fix {
+	width: 0px;
+}

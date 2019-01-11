@@ -21,24 +21,26 @@ function vista_previa_anexo($idanexo,$tipo){
     return($ruta.$imagen);
 }
 
-function descargar_anexo($idanexo,$tipo_al=NULL){   
+function descargar_anexo($idanexo,$tipo_al=NULL){
 //Recibe el id del anexo y opcinalmente el id del binario para descargar archivos o desde la bd respectivamente
   global $conn;
    if(!$tipo_al){
    	 // Si no se solicita directamente el origen (BD O ARCHIVO ) se busca en configuracion cual se va a descargar
      	$config = busca_filtro_tabla("valor","configuracion","nombre='tipo_almacenamiento'","",$conn);
-		if ($config["numcampos"]) {
+       if($config["numcampos"]) {
          $tipo_al=$config[0]['valor'];
-		} else {
+       } else {
          $tipo_al="archivo"; // Si no encuentra el registro en configuracion almacena en archivo
-		}
+	   }
   }
   if($tipo_al=="archivo"){
     $datos=busca_filtro_tabla("","anexos","idanexos=".$idanexo,"",$conn);
-		if (! $datos["numcampos"]) {
+    if(!$datos["numcampos"]) {
        alerta('problema con el archivo anexo');
-		}
-     
+    } else {
+      $file=$datos[0]["ruta"];
+    }
+
 		$arr_alm = StorageUtils::resolver_ruta($datos[0]["ruta"]);
 		$almacenamiento = $arr_alm["clase"];
 		$file_name = $arr_alm["ruta"];
@@ -82,7 +84,6 @@ if($anexos["numcampos"]){
 				$texto .= '<a href="' . $mostrar . $ruta64 . '"><i class="icon-download" target="_blank"></i></a>';
     }
     if(strpos($permisos,"e")!==false){
-				//TODO: En cuales casos se usa? como?
       $texto.='<div enlace="'.PROTOCOLO_CONEXION.RUTA_PDF."/".$anexos[$i]["ruta"].'"><i class="icon-minus-sign"></i></div>';
     }
     $texto.='</td>';
@@ -112,7 +113,7 @@ function eliminar_anexos($idanexo,$tipo_retorno=1){
        $sql1="DELETE FROM binario WHERE idbinario=".$anexo[0]['idbinario'];
         phpmkr_query($sql1,$conn);
      }
-  }
+     }  
    $file=$ruta_db_superior.$anexo[0]["ruta"];
    $info=busca_filtro_tabla("","anexos","idanexos=".$idanexo,"",$conn);
    $carpeta_eliminados=RUTA_BACKUP_ELIMINADOS.$info[0]["documento_iddocumento"];
@@ -127,16 +128,16 @@ function eliminar_anexos($idanexo,$tipo_retorno=1){
     $x_detalle= "Identificador: ".$info[0]["idanexos"]." ,Nombre: ".$info[0]["etiqueta"];
 		if($justificacion!=''){
     	$x_detalle.=" , Justificacion: ".$justificacion;
-	} else if (@$_REQUEST["justificacion"]) {
+    } else if(@$_REQUEST["justificacion"]){
       $x_detalle.=" , Justificacion: ".$_REQUEST["justificacion"];
     }
     $idregistro=registrar_accion_digitalizacion($info[0]["documento_iddocumento"],'ELIMINACION ANEXO',$x_detalle);
     if($idregistro){
       $retorno["exito"]=1;
     }
-	if ($tipo_retorno == 1) {
+  if($tipo_retorno==1) {
   	echo(json_encode($retorno));
-	} else {
+  } else {
   	return($retorno);
   }
 }
@@ -144,12 +145,12 @@ function eliminar_anexos($idanexo,$tipo_retorno=1){
 function mostrar_anexo($idanexo){
 	$file='';
 	$datos=busca_filtro_tabla("","anexos","idanexos=".$idanexo,"",$conn);
-	if (! $datos["numcampos"]) {
+  if(!$datos["numcampos"]) {
     $file='<span class="label label-important">problema con el archivo anexo</span>';
-	} else {
-  	$file='<a href="'.PROTOCOLO_CONEXION.RUTA_PDF.'/pantallas/anexos/librerias.php?ejecutar_anexos=descargar_anexo&idanexo='.$datos[0]["idanexos"].'" target="_blank">'.$datos[0]["etiqueta"].'</a>'; 	
+  } else {
+  	$file='<a href="'.PROTOCOLO_CONEXION.RUTA_PDF.'/pantallas/anexos/librerias.php?ejecutar_anexos=descargar_anexo&idanexo='.$datos[0]["idanexos"].'" target="_blank">'.$datos[0]["etiqueta"].'</a>';
 	}
-	return($file);	
+	return($file);
 }
 if(@$_REQUEST["ejecutar_anexos"]){
   $_REQUEST["ejecutar_anexos"]($_REQUEST["idanexo"],@$_REQUEST["tipo_retorno"]);

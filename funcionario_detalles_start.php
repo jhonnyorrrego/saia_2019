@@ -4,10 +4,10 @@ include_once("pantallas/lib/librerias_cripto.php");
 include_once("librerias_saia.php");
 
 ?>
-<script type="text/javascript" src="js/jquery-1.7.2.js"></script>
+<script type="text/javascript" src="js/jquery.js"></script>
 <script type="text/javascript" src="js/jquery.validate.js"></script>
 <script type="text/javascript">(function($) {
-
+            	
           })(jQuery);
 $(document).ready(function(){
 	$("#funcionarioedit").validate();
@@ -15,7 +15,7 @@ $(document).ready(function(){
         </script>
 <?php
 $ewCurSec = 0; // Initialise
-
+				
 ?>
 <?php
 
@@ -76,13 +76,13 @@ if (($sAction == "") || ((is_null($sAction)))) {
 	$x_perfil = @$_POST["x_perfil"];
 	$x_sistema = @$_POST["x_sistema"];
   $x_acceso_web = implode(",",@$_POST["x_acceso_web"]);
-
+  
   if($x_estado==1){
   	$x_intento_login=0;
   }else{
   	$x_intento_login=@$_POST["x_intento_login"];;
   }
-
+  
 
 
 }
@@ -130,11 +130,11 @@ label.error{
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <?php echo htmlspecialchars(@$x_login) ?>
 </span></td>
-	</tr>
+	</tr>  
 	<!-- tr>
 		<td class="encabezado" title="Contraseña asignada al funcionario para ingresar al sistema"><span class="phpmaker" style="color: #FFFFFF;">CLAVE</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-
+			
 </span></td>
 	</tr -->
 	<tr>
@@ -167,15 +167,15 @@ label.error{
 <?php echo @$x_email ?>
 </span></td>
 	</tr>
-
+	
 	<tr>
 		<td class="encabezado" title="Firma digital del funcionario"><span class="phpmaker" style="color: #FFFFFF;">FIRMA</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php
+<?php 
 
 	if($x_firma!=''){
 		echo '<img src="'.PROTOCOLO_CONEXION.RUTA_PDF_LOCAL.'/formatos/librerias/mostrar_foto.php?codigo='.$x_funcionario_codigo;
-		echo '" width="200" height="100"/><br />';
+		echo '" width="200" height="100"/><br />';		
 	}else{
 		echo'Sin Firma';
 	}
@@ -184,27 +184,27 @@ label.error{
 
  ?>
 
-
+		
 
 </span></td>
 	</tr>
 	<tr>
 		<td class="encabezado" title="Estado del funcionario en el sistema"><span class="phpmaker" style="color: #FFFFFF;">ESTADO</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php
+<?php 
 
 	if (@$x_estado == "1") {
 		echo('Activo');
-
+	
 	}else{
 		echo('Inactivo');
-	}
+	} 
 ?>
 </span>
 
 </td>
 	</tr>
-
+	
 <tr>
 	<td class="encabezado" title="Ventanilla de radicaci&oacute;n del funcionario en el sistema">
 		<span class="phpmaker" style="color: #FFFFFF;">VENTANILLA DE RADICACI&Oacute;N
@@ -224,8 +224,8 @@ label.error{
 			?>
 		</span>
 	</td>
-</tr>
-
+</tr>	
+	
 	<tr>
 		<td class="encabezado" title="Fecha de ingreso del funcionario"><span class="phpmaker" style="color: #FFFFFF;">FECHA DE INGRESO</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
@@ -237,13 +237,13 @@ label.error{
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
   		<?php
   		$nombre_perfil=busca_filtro_tabla("nombre","perfil","idperfil in($x_perfil)","",$conn);
-
+		
 		for($i=0;$i<$nombre_perfil['numcampos'];$i++){
 			echo($nombre_perfil[$i]['nombre'].'<br/>');
 		}
-
-
-	?>
+		
+		
+	?>    
 	</span></td>
 	</tr>
 		<!--tr>
@@ -263,21 +263,21 @@ label.error{
 	$tipos=extrae_campo($busqueda,"tipo");
 
 	?>
-
-			 <?php
-			 	if(in_array("1",$tipos)){
+	
+			 <?php 
+			 	if(in_array("1",$tipos)){	
 			?>
 				<tr>
 				<td class="encabezado" title="Permite elefir el perfil de acceso al funcionario"><span class="phpmaker" style="color: #FFFFFF;">TIPO DE VALIDACI&Oacute;N</span></td>
-
-				<td bgcolor="#F5F5F5"><span class="phpmaker">
-			<?php
-			 		 echo 'Transferencias Masivas';
+		
+				<td bgcolor="#F5F5F5"><span class="phpmaker">			
+			<?php		
+			 		 echo 'Transferencias Masivas'; 	 
 			?>
 				</span></td>
-				</tr>
-			<?php
-				}
+				</tr>			
+			<?php		 
+				} 
 			 ?>
 
 
@@ -316,7 +316,7 @@ function LoadData($sKey,$conn)
 		$LoadData = false;
 	}else{
 		$LoadData = true;
-
+	  
 		// Get the field contents
 		$GLOBALS["x_idfuncionario"] = $row["idfuncionario"];
 		$GLOBALS["x_funcionario_codigo"] = $row["funcionario_codigo"];

@@ -34,17 +34,17 @@ $indice=Utilizado para prevenir un ciclo infinito sobre la funcion
 function generar_codigo_arbol($tabla,$campo_codpadre,$campo_id,$dato_padre,$campo_actualizar,$indice=1){
 	global $conn;
 	if($indice>200)return false;
-	
+
 	if($dato_padre>=0&&$dato_padre!="null"){
 		$datos=busca_filtro_tabla("",$tabla." a",$campo_codpadre."=".$dato_padre,"",$conn);
 	}
 	else if($dato_padre=="null"){
-		$datos=busca_filtro_tabla("",$tabla." a",$campo_codpadre." is ".$dato_padre,"",$conn);
+		$datos=busca_filtro_tabla("",$tabla." a", "$campo_codpadre is $dato_padre or $campo_codpadre = 0","",$conn);
 	}
 	else{
 		$datos=busca_filtro_tabla("",$tabla." a","","",$conn);
 	}
-	
+
 	if($datos["numcampos"]){
 		for($i=0;$i<$datos["numcampos"];$i++){
 			if($datos[$i][$campo_codpadre]==0){
@@ -52,7 +52,7 @@ function generar_codigo_arbol($tabla,$campo_codpadre,$campo_id,$dato_padre,$camp
 			}
 			else{
 				$padre=busca_filtro_tabla("",$tabla." a",$campo_id."=".$datos[$i][$campo_codpadre],"",$conn);
-				
+
 				$sql1="update ".$tabla." set ".$campo_actualizar."='".$padre[0][$campo_actualizar].".".$datos[$i][$campo_id]."' where ".$campo_id."=".$datos[$i][$campo_id];
 			}
 			phpmkr_query($sql1);

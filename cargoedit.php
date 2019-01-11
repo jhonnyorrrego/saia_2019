@@ -15,6 +15,7 @@ $ewCurSec = 0; // Initialise
 // Initialize common variables
 $x_idcargo = Null;
 $x_nombre = Null;
+$x_codigo_cargo= Null;
 $x_cod_padre = Null;
 $x_tipo_cargo = Null;
 ?>
@@ -39,6 +40,7 @@ if (($sAction == "") || ((is_null($sAction)))) {
 	// Get fields from form
 	$x_idcargo = @$_POST["x_idcargo"];
 	$x_nombre = @$_POST["x_nombre"];
+	$x_codigo_cargo = @$_POST["x_codigo_cargo"];
 	$x_estado = @$_POST["x_estado"];
 	$x_cod_padre = @$_POST["x_cod_padre"];
 	$x_tipo_cargo = @$_POST["x_tipo_cargo"];
@@ -84,6 +86,10 @@ if (EW_this.x_nombre && !EW_hasValue(EW_this.x_nombre, "TEXT" )) {
 	if (!EW_onError(EW_this, EW_this.x_nombre, "TEXT", "Por favor ingrese los campos requeridos - nombre"))
 		return false;
 }
+if (EW_this.x_codigo_cargo && !EW_hasValue(EW_this.x_codigo_cargo, "TEXT" )) {
+	if (!EW_onError(EW_this, EW_this.x_codigo_cargo, "TEXT", "Por favor ingrese los campos requeridos - codigo del cargo"))
+		return false;
+}
 return true;
 }
 
@@ -102,9 +108,15 @@ return true;
 </span></td>
 	</tr>
 	<tr>
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">NOMBRE DEL CARGO</span></td>
+		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">C&Oacute;IGO DEL CARGO*</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<input type="text" name="x_nombre" id="x_nombre" size="30" maxlength="255" value="<?php echo (@$x_nombre) ?>">
+			<?php echo $x_codigo_cargo; ?>
+</span></td>
+	</tr>
+	<tr>
+		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">NOMBRE DEL CARGO*</span></td>
+		<td bgcolor="#F5F5F5"><span class="phpmaker">
+<input type="text" name="x_nombre" id="x_nombre" size="30" class="required" maxlength="255" value="<?php echo (@$x_nombre) ?>">
 </span></td>
 	</tr>
 	<tr>
@@ -153,6 +165,7 @@ function LoadData($sKey,$conn)
 {global $x_idcargo;
 global $x_nombre;
 global $x_estado;
+global $x_codigo_cargo;
 global $x_cod_padre;
 global $x_tipo_cargo;
 	$sKeyWrk = "" . addslashes($sKey) . "";
@@ -181,6 +194,7 @@ global $x_tipo_cargo;
 		// Get the field contents
 		$x_idcargo = $row["idcargo"];
 		$x_nombre = $row["nombre"];
+		$x_codigo_cargo = $row["codigo_cargo"];
 		$x_estado = $row["estado"];
 		$x_tipo_cargo = $row["tipo_cargo"];
     $x_cod_padre= $row["cod_padre"];
@@ -196,6 +210,7 @@ global $x_tipo_cargo;
 function EditData($sKey,$conn)
 {global $x_idcargo;
 global $x_nombre;
+global $x_codigo_cargo;
 global $x_estado;
 global $x_cod_padre;
 global $x_tipo_cargo;
@@ -223,6 +238,9 @@ global $x_tipo_cargo;
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_nombre) : $x_nombre; 
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["nombre"] = $theValue;
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_codigo_cargo) : $x_codigo_cargo; 
+		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
+		$fieldList["codigo_cargo"] = $theValue;
     $theValue = (!get_magic_quotes_gpc()) ? addslashes($x_estado) : $x_estado; 
 		$theValue = ($theValue != "") ?  $theValue  : "NULL";
 		$fieldList["estado"] = " '" .$theValue. "'";

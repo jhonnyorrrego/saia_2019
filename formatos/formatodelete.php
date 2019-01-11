@@ -61,7 +61,6 @@ if (($sKey == "") || ((is_null($sKey)))) {
 	header("Location: formatolist.php");
 	exit(); 
 }
-
 	$sKey = (get_magic_quotes_gpc()) ? $sKey : addslashes($sKey);
 $sDbWhere .= "idformato=" . trim($sKey) . "";
 
@@ -77,7 +76,7 @@ switch ($sAction)
 		if (LoadRecordCount($sDbWhere,$conn) <= 0) {
 			//phpmkr_db_close($conn);
 			ob_end_clean();
-			header("Location: formatolist.php"); 
+			header("Location: formatolist.php");
 			exit();
 		}
 		break;

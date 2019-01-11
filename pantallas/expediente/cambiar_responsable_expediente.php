@@ -48,7 +48,6 @@ echo(estilo_bootstrap());
                 if(cambiar_tomos){
                     tomos_asociados=$('#tomos_asociados').val();
                 }
-                $('#tomos_asociados').val(tomos_asociados);
             }
             
             <?php encriptar_sqli("form_cambiar_responsable",0,"form_info",$ruta_db_superior); ?>

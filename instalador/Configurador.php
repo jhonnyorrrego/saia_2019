@@ -25,8 +25,8 @@ class ConfigCaptureCommand extends Command {
     protected $motores = array(
         "MySql" => "pdo_mysql",
         "Oracle" => "oci8",
-        "SqlServer" => "pdo_sqlsrv",
-        "MSSql" => "pdo_sqlsrv",
+        "SqlServer" => "sqlsrv",
+        "MSSql" => "sqlsrv",
         "Postgres" => "pdo_pgsql"
     );
 
@@ -109,6 +109,7 @@ class ConfigCaptureCommand extends Command {
         $preguntaUsuario = new Question("Usuario bdd: ");
         $preguntaPw = new Question('Clave bdd: ');
         $preguntaPw->setHidden(true);
+        $preguntaPw->setHiddenFallback(true);
         // $preguntaPw->setValidator($validar_vacio);
         $preguntaServidorBdd = new Question("Servidor bdd: ");
         $preguntaServidorWeb = new Question("Dominio/IP instalación: ");

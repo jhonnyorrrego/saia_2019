@@ -10,6 +10,12 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 include_once ($ruta_db_superior . "db.php");
+include_once($ruta_db_superior."librerias_saia.php");
+echo(librerias_jquery());
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("formato");
+desencriptar_sqli('form_info');
+
 $display_add='none;';
 $display_ver='block;';
 if($_REQUEST["adicionar"]==1){
@@ -32,9 +38,9 @@ if (isset($_REQUEST["guardar"]) && $_REQUEST["guardar"] == 1 && $idfor) {
 	</script>
 	<?php
 	}else{
-		$acciones = implode(",", $_REQUEST["acciones"]);
+	$acciones = implode(",", $_REQUEST["acciones"]);
 		$sql = "insert into funciones_formato(nombre,nombre_funcion,etiqueta,ruta,descripcion,acciones) values('{*$nombre*}','$nombre','$nombre','" . $_REQUEST["ruta"] . "','" . $_REQUEST["descripcion"] . "','$acciones')";
-		phpmkr_query($sql, $conn) or die("Error al crear la funcion");
+	phpmkr_query($sql, $conn) or die("Error al crear la funcion");
 		$idfuncion=phpmkr_insert_id();
 		if($idfuncion){
 			$sql_enlace="INSERT INTO funciones_formato_enlace (funciones_formato_fk,formato_idformato) VALUES (".$idfuncion.",".$idfor.")";
@@ -92,7 +98,10 @@ if (isset($_REQUEST["guardar"]) && $_REQUEST["guardar"] == 1 && $idfor) {
 			});
 			function validar() {
 				if (form1.nombre.value != '' && form1.ruta.value != '') {
-					form1.submit();
+					<?php encriptar_sqli('form1',0,'form_info',$ruta_db_superior);?>
+	                if(salida_sqli){
+						$('#form1').submit();
+					}
 				} else {
 					alert('Debe llenar los campos obligatorios');
 				}
@@ -155,16 +164,16 @@ if (isset($_REQUEST["guardar"]) && $_REQUEST["guardar"] == 1 && $idfor) {
 				$order='GROUP BY f.idfunciones_formato ORDER BY nombre ASC';
 			}
 			else{
-				$colspan = 4;
 				$where = " and e.formato_idformato=".$idfor;
 				$order= "nombre asc";
-			}
+		}
 		}
 		$resultado = busca_filtro_tabla("f.*", "funciones_formato f, funciones_formato_enlace e", "f.idfunciones_formato=e.funciones_formato_fk".$where,$order, $conn);
 		if ($resultado["numcampos"]) {
 			$html .= "<table border='1' style='border-collapse:collapse;' align='center' class='productTable'>
          <tr align='center' bgcolor='lightgray'>
-         <td width='30%'>NOMBRE</td><td colspan='" . $colspan . "'>OPCIONES</td>
+         <td width='30%'>NOMBRE</td>
+         <td colspan='" . $colspan . "'>OPCIONES</td>
       </tr>";
 			for ($i = 0; $i < $resultado["numcampos"]; $i++) {
 				$html .= "<tr>
@@ -172,10 +181,6 @@ if (isset($_REQUEST["guardar"]) && $_REQUEST["guardar"] == 1 && $idfor) {
 					<td align='center' valign='center'>" . '<img onclick="ajax_showTooltip(window.event,\'detalles.php?tipo=funciones_formato&id=' . $resultado[$i]["idfunciones_formato"] . '\',this);return false"  src="images/mostrar_nota.png"/>' . "</td>";
 				$html .= '<td align="center"><a title="' . codifica_encabezado(html_entity_decode($resultado[$i]["descripcion"])) . '" href="javascript:FormatosDialog.insert(\'' . $resultado[$i]["nombre_funcion"] . '\');" >Insertar</a>
 				</td>';
-				if ($_REQUEST["tipo"]!="funciones_generales") {
-					$html .= "<td  align='center'><a href='" . $ruta_db_superior . "formatos/funciones_formatoedit.php?idformato=" . $idfor . "&key=" . $resultado[$i]["idfunciones_formato"] . "&pantalla=tiny' >Editar</a></td>";
-					$html .= "<td align='center'><a  href='" . $ruta_db_superior . "formatos/funciones_formatodelete.php?idformato=" . $idfor . "&key=" . $resultado[$i]["idfunciones_formato"] . "&pantalla=tiny' >Eliminar</a></td>";
-				}
 			}
 			$html .= "</table><br/><br/>";
 		}

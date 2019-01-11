@@ -1,7 +1,4 @@
 <?php
-include_once("../header.php");
-include_once("librerias/funciones_acciones.php");
-
 $max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
 while($max_salida>0)
@@ -13,12 +10,14 @@ $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 $ruta.="../";
 $max_salida--;
 }
-
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("idformato","funciones");
 include_once($ruta_db_superior."librerias_saia.php");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
+
+include_once("../header.php");
+include_once("librerias/funciones_acciones.php");
 
 ?>
 <!--script type="text/javascript" src="../js/jquery.js"></script-->
@@ -27,10 +26,11 @@ echo(librerias_jquery());
   $().ready(function() {
 	// validar los campos del formato
 	$('#asignar_funcion_formato').validate();
-	
+
 });
 </script-->
 <?php
+
 if(@$_REQUEST["adicionar"]==1){
 	if(adicionar_funciones_accion(@$_REQUEST["acciones"],@$_REQUEST["idformato"],@$_REQUEST["funciones"],@$_REQUEST["momento"],@$_REQUEST["estado"])){
     alerta("Asignacion realizada Correctamente");
@@ -113,7 +113,10 @@ if(@$_REQUEST["idformato"]){
       $texto.='</select><input type="hidden" name="adicionar" value="1"><input type="hidden" name="idformato" value="'.$_REQUEST["idformato"].'"></td></tr>';
     $texto.='<tr align="center"><td class="celda_normal" colspan="2"><input type="submit"> </td></tr>';
   }
-  $texto.='</table></form><br />'."<div align='left'><a href='asignar_funciones.php?idformato=".$_REQUEST["idformato"]."'>ASIGNAR</a></div><br />";
+  $texto.='<input type="hidden" name="accion_ejecutar" value="'.@$_REQUEST['accion_ejecutar'].'">
+  <input type="hidden" name="accion_ejecutar" value="'.@$_REQUEST['accion_ejecutar'].'">
+  <input type="hidden" name="accion_funcion" value="'.@$_REQUEST['accion_funcion'].'">
+  </table></form><br />'."<div align='left'><a href='asignar_funciones.php?idformato=".$_REQUEST["idformato"]."'>ASIGNAR</a></div><br />";
 }
 $lasignadas=busca_filtro_tabla("A.nombre AS accion, A.ruta AS ruta_accion,B.etiqueta AS funcion, B.ruta AS ruta_funcion, C.estado AS estado_af, B.parametros,C.idfunciones_formato_accion","funciones_formato_accion C,accion A,funciones_formato B","C.accion_idaccion=A.idaccion AND B.idfunciones_formato=C.idfunciones_formato AND C.formato_idformato=".$_REQUEST["idformato"],"",$conn);
 if($lasignadas["numcampos"]){

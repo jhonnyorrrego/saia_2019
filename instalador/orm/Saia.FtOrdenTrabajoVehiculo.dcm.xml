@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtOrdenTrabajoVehiculo" table="ft_orden_trabajo_vehiculo">
+    <indexes>
+      <index name="i_orden_trabajo_vehic_documento_" columns="documento_iddocumento"/>
+      <index name="i_orden_trabajo_vehic_confir_neg" columns="ft_confir_negoci_vehiculo"/>
+      <index name="i_orden_trabajo_vehic_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftOrdenTrabajoVehiculo" type="integer" column="idft_orden_trabajo_vehiculo">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="ftConfirNegociVehiculo" type="integer" column="ft_confir_negoci_vehiculo" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">951</option>
+      </options>
+    </field>
+    <field name="fechaOrdenTrabajo" type="date" column="fecha_orden_trabajo" nullable="false"/>
+    <field name="fechaCompromiso" type="date" column="fecha_compromiso" nullable="false"/>
+    <field name="prioridadServicio" type="integer" column="prioridad_servicio" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="nombreSolicitante" type="string" column="nombre_solicitante" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="dependencia" type="integer" column="dependencia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="encabezado" type="integer" column="encabezado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="firma" type="integer" column="firma" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="nombreAsegurador" type="string" column="nombre_asegurador" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="motivoServicio" type="text" column="motivo_servicio" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tipoServicio" type="integer" column="tipo_servicio" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="fechaSolicitudOrden" type="date" column="fecha_solicitud_orden" nullable="false"/>
+    <field name="llamadasRequeridas" type="text" column="llamadas_requeridas" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="kilometrosVehiculo" type="integer" column="kilometros_vehiculo" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="campoServicio" type="string" column="campo_servicio" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="cttoNumero" type="string" column="ctto_numero" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="funcionarioRecibo" type="string" column="funcionario_recibo" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="firmaExternaCliente" type="string" column="firma_externa_cliente" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="firmaExternaSatisfaccion" type="string" column="firma_externa_satisfaccion" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="estadoDocumento" type="integer" column="estado_documento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

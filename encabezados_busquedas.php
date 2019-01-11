@@ -111,175 +111,200 @@ if ($sExport == "html")
       $nueva_b="solicitud_mantenimiento";
       //echo "<br /><br /><br />".$resultado;
 
-    } else if ($lista[0] == "cargo") {
-		$titulo = "CARGOS";
-	} else if ($lista[0] == "ft_recibo_caja_menor") {
-		$sin_adicionar = 1;
-		$nueva_b = 1;
-		$enlaces = '<br /><a class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 700, height:250,preserveContent:false } )" href="../' . FORMATOS_CLIENTE . 'recibo_caja_menor/filtrar_listado.php?tipo=' . $_REQUEST["tipo"] . '">Filtrar por n&uacute;mero</a><br /><br />';
-		$imagen = "default.gif";
-		switch ($_REQUEST["tipo"]) {
-			case "privado" :
-				$tipo = "PRIVADOS";
-				break;
-			case "publico" :
-				$tipo = "P&Uacute;BLICOS";
-				break;
-			case "exp1" :
-				$tipo = "EXP P&Uacute;BLICOS";
-				break;
-			case "exp2" :
-				$tipo = "EXP PRIVADOS";
-				break;
-			default :
-				$tipo = "TODOS";
-				break;
+    }
+    else if($lista[0]=="cargo")
+    {
+      $titulo="CARGOS";
+    }
+    else if($lista[0]=="ft_recibo_caja_menor")
+    {$sin_adicionar=1;
+     $nueva_b=1;
+     $enlaces='<br /><a class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 700, height:250,preserveContent:false } )" href="../' . FORMATOS_CLIENTE . 'recibo_caja_menor/filtrar_listado.php?tipo='.$_REQUEST["tipo"].'">Filtrar por n&uacute;mero</a><br /><br />';
+	   $imagen="default.gif";
+	   switch($_REQUEST["tipo"])
+	     {case "privado": $tipo="PRIVADOS"; break;
+	      case "publico": $tipo="P&Uacute;BLICOS"; break;
+	      case "exp1": $tipo="EXP P&Uacute;BLICOS"; break;
+        case "exp2": $tipo="EXP PRIVADOS"; break;
+        default: $tipo="TODOS";break;
+       }
+     $titulo="RECIBOS DE CAJA MENOR ($tipo)";
+    }
+		else if($lista[0]=="ft_radicacion_entrada"){
+			$imagen="reportes.png";
+			$titulo="Reporte de radiaciones de entrada-David";
+			$nueva_b='1';
+			//$enlaces='<a class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 400, height:250,preserveContent:false } )" href="../reportes/filtrar_reporte_documentos.php" style="font-size:8pt;color:blue">Filtrar</a>';
 		}
-		$titulo = "RECIBOS DE CAJA MENOR ($tipo)";
-    } else if($lista[0]=="ft_radicacion_entrada") {
-		$imagen = "reportes.png";
-		$titulo = "Reporte de radiaciones de entrada-David";
-		$nueva_b = '1';
-		// $enlaces='<a class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 400, height:250,preserveContent:false } )" href="../reportes/filtrar_reporte_documentos.php" style="font-size:8pt;color:blue">Filtrar</a>';
-	} else if ($lista[0] == "almacenamiento") {
-		$sin_adicionar = 1;
-		$sin_busqueda = 1;
-		$enlaces = '<a class="highslide" style="font-size:8pt" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 400, height:400,preserveContent:false } )" href="../pantallas/almacenamiento/filtrar_almacenamiento.php">Filtrar</a>';
-		$titulo = "";
-		$sin_exportar = 1;
+		else if($lista[0]=="almacenamiento"){
+			$sin_adicionar=1;
+      $sin_busqueda=1;
+      $enlaces = '<a class="highslide" style="font-size:8pt" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 400, height:400,preserveContent:false } )" href="../pantallas/almacenamiento/filtrar_almacenamiento.php">Filtrar</a>';
+      $titulo = "";
+	  $sin_exportar=1;
 	  //$sin_mostrar_todos=1;
-	} else if($lista[0]=="busquedas") {
-		$titulo = "BUSQUEDAS/LISTADOS";
-		$adicionar = "busquedaadd.php?accion=adicionar";
-		$enlaces = "   <a href='../funciones_busquedasadd.php?accion=adicionar' target='centro'>Adicionar Funcion</a>";
-    } else if($lista[0]=="modulo") {
+		}
+    else if($lista[0]=="busquedas")
+    {
+      $titulo="BUSQUEDAS/LISTADOS";
+      $adicionar="busquedaadd.php?accion=adicionar";
+      $enlaces="   <a href='../funciones_busquedasadd.php?accion=adicionar' target='centro'>Adicionar Funcion</a>";
+    }
+    else if($lista[0]=="modulo")
+    {
       $titulo="MODULOS";
       $adicionar="moduloadd.php?accion=adicionar";
-	} else if ($lista[0] == "dependencia_cargo") {
-		$titulo = "ROL DEL FUNCIONARIO";
-	} else if ($lista[0] == "ejecutor") {
-		$titulo = "EJECUTOR REMITENTE";
-	} else if ($lista[0] == "configuracion") {
-		$titulo = "CONFIGURACI&Oacute;N DEL SISTEMA";
-		if (usuario_actual("login") == "cerok")
-			$enlaces_adicionales = "<br /><br /><br /><a target='_blank' href='../tarea_limpiar_instalacion.php'>Limpiar base de datos y carpetas</a>";
-	} else if ($lista[0] == "permiso_perfil") {
-		$titulo = "PERMISOS DE ACCESO";
-		$imagen = "permiso.png";
-		// $adicionar="permiso_perfiladd.php?pantalla=listado";
-		$enlaces_adicionales = "<br /><br /><br /><a href='../busqueda_documentos.php?tipo_b=permisos_doc'>Permisos Documento</a>";
-	} else if ($lista[0] == "evento") {
-		$titulo = "HISTORIAL";
-		// echo $resultado;
-	} else if (@$lista[0] == "tarea") {
-		$titulo = "ADICIONAR TAREAS";
-		$adicionar = "asignaciones/tareaadd.php";
-		$imagen = "asignar_tareas.png";
-	} else if(@$lista[0]=="documento") {
-		if (@$lista[1] == "ft_hoja_vida") {
-			$titulo = "LISTADO DE HOJAS DE VIDA ";
-			$nueva_b = "todos";
-
-			switch (@$_REQUEST["estado"]) {
-				case 'activas' :
-					$titulo .= "ACTIVAS";
-					$imagen = "../hoja_vida/hv_activos.png";
-					break;
-				case 'retirado' :
-					$titulo .= "RETIRADOS";
-					$imagen = "../hoja_vida/hv_retirados.png";
-					break;
-				case 'pensionado' :
-					$titulo .= "PENSIONADOS";
-					$imagen = "../hoja_vida/hv_pensionados.png";
-					break;
-				default :
-					$imagen = "../hoja_vida/listar.png";
-					break;
-			}
-		} else if (@$lista[1] == "ft_estructura_hoja_vida") {
-			$titulo = "ESTRUCTURA DE HOJAS DE VIDA ";
-			$imagen = "../hoja_vida/listar_estructura.png";
-			$nueva_b = "todos";
-		} else if (isset($_REQUEST["estado"])) {
-			// echo $_REQUEST["estado"];
-			if ($_REQUEST["estado"] == "GESTION") {
-				$titulo = "LISTADO DE DOCUMENTOS EN GESTI&Oacute;N";
-				$nueva_b = "gestion";
-			} else if ($_REQUEST["estado"] == "CENTRAL") {
-				$titulo = "LISTADO DE DOCUMENTOS EN ARCHIVO CENTRAL";
-				$nueva_b = "central";
-			} else if ($_REQUEST["estado"] == "HISTORICO") {
-				$titulo = "LISTADO DE DOCUMENTOS EN ARCHIVO HIST&Oacute;RICO";
-				$nueva_b = "historico";
-			} else if ($_REQUEST["estado"] == "INICIADO") {
-				$titulo = "LISTADO DE DOCUMENTOS PENDIENTES";
-				$nueva_b = "rad_pendientes";
-			} else if ($_REQUEST["estado"] == "APROBADO") {
-				$titulo = "LISTADO DE DOCUMENTOS DE SALIDA";
-				$nueva_b = "ejecutados";
-				$imagen = "documentos.png";
-				$enlace = '&nbsp;&nbsp;<a href="../impresion_despacho.php">Reporte de Despacho</a>&nbsp;&nbsp;&nbsp;<a href="../graficos/listado_graficos.php?lreportes=3">Documentos despachados</a>&nbsp;&nbsp;&nbsp;';
-			} else if ($_REQUEST["estado"] == "ACTIVO") {
-				$titulo = "LISTADO DE DOCUMENTOS EN PROCESO";
-				$nueva_b = "rad_proceso";
-				$imagen = "en_proceso.png";
-			} else {
-				$titulo = "";
-			}
-		} else {
-			$titulo = "LISTADO GENERAL";
-			$imagen = "buscar_general.png";
-			$avanzada = "buscador_general.php";
-			$nueva_b = "todos";
-		}
     }
-	if (isset($_REQUEST["pantalla"]) && $_REQUEST["pantalla"] == "anulaciones_pendientes") {
-		$titulo = "SOLICITUDES DE ANULACION PENDIENTES";
-		$imagen = "documentos.png";
-		$enlace = '&nbsp;&nbsp;<a href="../solicitar_anulacion.php?accion=listado_procesados">Solicitudes Procesadas</a>&nbsp;&nbsp;&nbsp;';
-	}
-	if (isset($_REQUEST["pantalla"]) && $_REQUEST["pantalla"] == "anulaciones_procesadas") {
-		$titulo = "SOLICITUDES DE ANULACION PROCESADAS";
-		$imagen = "documentos.png";
-		$enlace = '&nbsp;&nbsp;<a href="../solicitar_anulacion.php?accion=listado_pendientes">Solicitudes Pendientes</a>&nbsp;&nbsp;&nbsp;';
-	}
-	if (isset($_REQUEST["pantalla"]) && $_REQUEST["pantalla"] == "ejecutados") {
-		$titulo = "LISTADO DE DOCUMENTOS DE SALIDA";
-		$nueva_b = "ejecutados";
-		$imagen = "documentos.png";
-		$enlace = '&nbsp;&nbsp;<a href="../impresion_despacho.php">Reporte de Despacho</a>&nbsp;&nbsp;&nbsp;<a href="../graficos/listado_graficos.php?lreportes=3">Documentos despachados</a>&nbsp;&nbsp;&nbsp;';
-		// echo "entra aqui!!!!!!!!!!!!!!!";
-	} elseif (isset($_REQUEST["pantalla"]) && $_REQUEST["pantalla"] == "no_transferidos") {
-		$titulo = "LISTADO DE DOCUMENTOS POR TRANSFERIR";
-		$nueva_b = "no_transferidos";
-	} elseif (isset($_REQUEST["pantalla"]) && $_REQUEST["pantalla"] == "pendientes") {
-		$titulo = "LISTADO DE DOCUMENTOS PENDIENTES";
-		if (isset($_REQUEST["fun_permiso"]) && $_REQUEST["fun_permiso"] != "") {
-			$nom = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . $_REQUEST["fun_permiso"], "", $conn);
-			$titulo .= " DEL FUNCIONARIO " . $nom[0]["nombres"] . " " . $nom[0]["apellidos"];
-		}
-		include_once ("permiso_documentos.php");
-		$nueva_b = "pendientes";
-	} elseif (isset($_REQUEST["pantalla"]) && $_REQUEST["pantalla"] == "proceso") {
-		$titulo = "LISTADO DE DOCUMENTOS EN PROCESO";
-		$nueva_b = "proceso";
-	} elseif (isset($_REQUEST["pantalla"]) && $_REQUEST["pantalla"] == "doc_plantillas") {
-		$titulo = "LISTADO DE DOCUMENTOS CON PLANTILLA" . strtoupper(@$_REQUEST["plantilla_ppal"]);
-		if (isset($_REQUEST["list_plantillas"])) {
-			$lista_plantillas = explode("#", $_REQUEST["list_plantillas"]);
-			$enlaces_adicionales = "<br /><br />";
-			$enlaces_adicionales .= "<form name='general'><select name='plantilla'>";
-			for($i = 0; $i < count($lista_plantillas); $i++) {
-				$enlaces_adicionales .= '<option value="' . $lista_plantillas[$i] . '"';
-				if (strtoupper($lista_plantillas[$i]) == strtoupper($_REQUEST["plantilla_ppal"]))
-					$enlaces_adicionales .= ' selected';
-				$enlaces_adicionales .= '>' . $lista_plantillas[$i] . '</option>';
-			}
-			$enlaces_adicionales .= '</select><input type=button value="Buscar" onclick="window.location=' . "'../documentolistplantillas.php?plantilla_ppal='+general.plantilla.value" . ';"></form>';
-			$enlaces_adicionales .= '<a href="../documentolist_todo.php">Volver</a>' . $cambio_password;
-		}
-	}
+    else if($lista[0]=="dependencia_cargo")
+    {
+      $titulo="ROL DEL FUNCIONARIO";
+    }
+   else if($lista[0]=="ejecutor")
+    {
+      $titulo="EJECUTOR REMITENTE";
+    }
+   else if($lista[0]=="configuracion")
+    {
+      $titulo="CONFIGURACI&Oacute;N DEL SISTEMA";
+      if(usuario_actual("login")=="cerok")
+         $enlaces_adicionales="<br /><br /><br /><a target='_blank' href='../tarea_limpiar_instalacion.php'>Limpiar base de datos y carpetas</a>";
+    }
+   else if($lista[0]=="permiso_perfil")
+    {
+      $titulo="PERMISOS DE ACCESO";
+      $imagen="permiso.png";
+      //$adicionar="permiso_perfiladd.php?pantalla=listado";
+      $enlaces_adicionales="<br /><br /><br /><a href='../busqueda_documentos.php?tipo_b=permisos_doc'>Permisos Documento</a>";
+    }
+   else if($lista[0]=="evento")
+    {
+      $titulo="HISTORIAL";
+      //echo $resultado;
+    }
+   else if(@$lista[0]=="tarea"){
+    $titulo="ADICIONAR TAREAS";
+    $adicionar="asignaciones/tareaadd.php";
+    $imagen="asignar_tareas.png";
+   }
+   else if(@$lista[0]=="documento")
+    {if(@$lista[1]=="ft_hoja_vida")
+        {$titulo="LISTADO DE HOJAS DE VIDA ";
+         $nueva_b = "todos";
+
+         switch(@$_REQUEST["estado"])
+          {case 'activas':
+              $titulo.="ACTIVAS";
+              $imagen="../hoja_vida/hv_activos.png";
+              break;
+           case 'retirado':
+              $titulo.="RETIRADOS";
+              $imagen="../hoja_vida/hv_retirados.png";
+              break;
+           case 'pensionado':
+              $titulo.="PENSIONADOS";
+              $imagen="../hoja_vida/hv_pensionados.png";
+              break;
+           default:
+              $imagen="../hoja_vida/listar.png";
+              break;
+          }
+        }
+     elseif(@$lista[1]=="ft_estructura_hoja_vida")
+        {$titulo="ESTRUCTURA DE HOJAS DE VIDA ";
+         $imagen="../hoja_vida/listar_estructura.png";
+         $nueva_b = "todos";
+        }
+     elseif(isset($_REQUEST["estado"]))
+        {//echo $_REQUEST["estado"];
+         if($_REQUEST["estado"]=="GESTION")
+            {$titulo="LISTADO DE DOCUMENTOS EN GESTI&Oacute;N";
+             $nueva_b = "gestion";
+            }
+         else if($_REQUEST["estado"]=="CENTRAL")
+            {$titulo="LISTADO DE DOCUMENTOS EN ARCHIVO CENTRAL";
+             $nueva_b = "central";
+            }
+         else if($_REQUEST["estado"]=="HISTORICO")
+            {$titulo="LISTADO DE DOCUMENTOS EN ARCHIVO HIST&Oacute;RICO";
+             $nueva_b = "historico";
+            }
+         else if($_REQUEST["estado"]=="INICIADO")
+            {$titulo="LISTADO DE DOCUMENTOS PENDIENTES";
+             $nueva_b = "rad_pendientes";
+            }
+        else if($_REQUEST["estado"]=="APROBADO")
+            {$titulo="LISTADO DE DOCUMENTOS DE SALIDA";
+             $nueva_b = "ejecutados";
+             $imagen="documentos.png";
+             $enlace='&nbsp;&nbsp;<a href="../impresion_despacho.php">Reporte de Despacho</a>&nbsp;&nbsp;&nbsp;<a href="../graficos/listado_graficos.php?lreportes=3">Documentos despachados</a>&nbsp;&nbsp;&nbsp;';
+            }
+         else if($_REQUEST["estado"]=="ACTIVO")
+            {$titulo="LISTADO DE DOCUMENTOS EN PROCESO";
+             $nueva_b="rad_proceso";
+             $imagen="en_proceso.png";
+            }
+         else
+            {$titulo="";
+            }
+        }
+     else
+        {$titulo="LISTADO GENERAL";
+         $imagen="buscar_general.png";
+         $avanzada="buscador_general.php";
+         $nueva_b="todos";
+        }
+    }
+  if(isset($_REQUEST["pantalla"]) && $_REQUEST["pantalla"]=="anulaciones_pendientes"){
+     $titulo="SOLICITUDES DE ANULACION PENDIENTES";
+     $imagen="documentos.png";
+     $enlace='&nbsp;&nbsp;<a href="../solicitar_anulacion.php?accion=listado_procesados">Solicitudes Procesadas</a>&nbsp;&nbsp;&nbsp;';
+  }
+  if(isset($_REQUEST["pantalla"]) && $_REQUEST["pantalla"]=="anulaciones_procesadas"){
+     $titulo="SOLICITUDES DE ANULACION PROCESADAS";
+     $imagen="documentos.png";
+     $enlace='&nbsp;&nbsp;<a href="../solicitar_anulacion.php?accion=listado_pendientes">Solicitudes Pendientes</a>&nbsp;&nbsp;&nbsp;';
+  }
+  if(isset($_REQUEST["pantalla"]) && $_REQUEST["pantalla"]=="ejecutados"){
+     $titulo="LISTADO DE DOCUMENTOS DE SALIDA";
+     $nueva_b = "ejecutados";
+     $imagen="documentos.png";
+     $enlace='&nbsp;&nbsp;<a href="../impresion_despacho.php">Reporte de Despacho</a>&nbsp;&nbsp;&nbsp;<a href="../graficos/listado_graficos.php?lreportes=3">Documentos despachados</a>&nbsp;&nbsp;&nbsp;';
+   //   echo "entra aqui!!!!!!!!!!!!!!!";
+  }
+  elseif(isset($_REQUEST["pantalla"]) && $_REQUEST["pantalla"]=="no_transferidos")
+     {$titulo="LISTADO DE DOCUMENTOS POR TRANSFERIR";
+      $nueva_b = "no_transferidos";
+     }
+  elseif(isset($_REQUEST["pantalla"]) && $_REQUEST["pantalla"]=="pendientes")
+     {$titulo="LISTADO DE DOCUMENTOS PENDIENTES";
+      if(isset($_REQUEST["fun_permiso"]) && $_REQUEST["fun_permiso"]!="")
+      { $nom = busca_filtro_tabla("nombres,apellidos","funcionario","funcionario_codigo=".$_REQUEST["fun_permiso"],"",$conn);
+        $titulo.=" DEL FUNCIONARIO ".$nom[0]["nombres"]." ".$nom[0]["apellidos"];
+      }
+      include_once("permiso_documentos.php");
+      $nueva_b = "pendientes";
+     }
+  elseif(isset($_REQUEST["pantalla"]) && $_REQUEST["pantalla"]=="proceso")
+     {$titulo="LISTADO DE DOCUMENTOS EN PROCESO";
+      $nueva_b = "proceso";
+     }
+  elseif(isset($_REQUEST["pantalla"]) && $_REQUEST["pantalla"]=="doc_plantillas")
+   {  $titulo="LISTADO DE DOCUMENTOS CON PLANTILLA".strtoupper(@$_REQUEST["plantilla_ppal"]);
+      if(isset($_REQUEST["list_plantillas"]))
+      { $lista_plantillas = explode("#",$_REQUEST["list_plantillas"]);
+        $enlaces_adicionales="<br /><br />";
+        $enlaces_adicionales.="<form name='general'><select name='plantilla'>";
+        for($i=0; $i<count($lista_plantillas); $i++)
+        {
+          $enlaces_adicionales.= '<option value="'.$lista_plantillas[$i].'"';
+          if(strtoupper($lista_plantillas[$i])==strtoupper($_REQUEST["plantilla_ppal"]))
+            $enlaces_adicionales.= ' selected';
+          $enlaces_adicionales.= '>'.$lista_plantillas[$i].'</option>';
+        }
+        $enlaces_adicionales.='</select><input type=button value="Buscar" onclick="window.location='."'../documentolistplantillas.php?plantilla_ppal='+general.plantilla.value".';"></form>';
+        $enlaces_adicionales.= '<a href="../documentolist_todo.php">Volver</a>'.$cambio_password;
+      }
+   }
 
  $tablas=implode(",",$lista);
 

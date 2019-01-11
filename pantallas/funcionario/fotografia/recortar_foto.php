@@ -57,10 +57,6 @@ if(@$_REQUEST['recortar']){
 		$sql="UPDATE funcionario SET foto_cordenadas='".$cordenadas."',foto_recorte='".$ruta_anexos."' WHERE idfuncionario=".$idfuncionario;
 		phpmkr_query($sql);				
 		$exito=1;
-		
-		//$archivo_binario=StorageUtils::get_binary_file($ruta_anexos);
-		
-		//$ruta_anexos=$archivo_binario;
 	}
 	$retorno=array('exito'=>$exito,'ruta_recortada'=>$ruta_anexos);
 	echo(json_encode($retorno));

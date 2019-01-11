@@ -11,11 +11,13 @@ $ruta.="../";
 $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."formatos/librerias/estilo_formulario.php");
-include_once($ruta_db_superior."formatos/librerias/header_formato.php");
-include_once($ruta_db_superior."formatos/librerias/funciones.php"); 
+include_once($ruta_db_superior. FORMATOS_SAIA . "librerias/estilo_formulario.php");
+include_once($ruta_db_superior. FORMATOS_SAIA . "librerias/header_formato.php");
+include_once($ruta_db_superior. FORMATOS_SAIA . "librerias/funciones.php");
+include_once ($ruta_db_superior . "librerias_saia.php");
+echo (estilo_bootstrap());
+
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
-include_once($ruta_db_superior."librerias_saia.php");
 $validar_enteros=array("idformato");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
@@ -31,9 +33,10 @@ body, table{
 	font-size: 9px;
 }
 </style>
+<legend></br>Ruta de aprobación del Formato</legend>
+
 <?php
 encabezado();
-
 if(@$_REQUEST["accion"]=='adicionar'){
 	formulario_adicionar();
 }
@@ -56,10 +59,11 @@ function encabezado(){
 	$idformato=$_REQUEST["idformato"];
 	$formato=busca_filtro_tabla("","formato","idformato=".$idformato,"",$conn);
 	?>
-	<form method="post" name="formulario_ruta" id="formulario_ruta">
-	<b><?php echo mayusculas($formato[0]["etiqueta"]); ?></b> (<?php echo ($formato[0]["nombre"]); ?>)<br><br>
-	<a href="formatoview.php?key=<?php echo $_REQUEST["idformato"]; ?>">Regresar</a>&nbsp;&nbsp;
-	<a href="rutas_automaticas.php?idformato=<?php echo $_REQUEST["idformato"]; ?>&accion=adicionar">Adicionar Ruta</a>
+	<br/><form method="post" name="formulario_ruta_encabezado" id="formulario_ruta_encabezado">
+	<a class="btn btn-mini btn-default" href="formatoview.php?key=<?php echo $_REQUEST["idformato"]; ?>">Regresar</a>
+	<a class="btn btn-mini btn-info" href="rutas_automaticas.php?idformato=<?php echo $_REQUEST["idformato"]; ?>&accion=adicionar">Adicionar Ruta</a>
+
+	<a class="btn btn-mini btn-info" href="<?php echo $ruta_db_superior . FORMATOS_SAIA; ?>transferencias_automaticas.php?idformato=<?php echo $_REQUEST["idformato"];?>">Transferencias</a>&nbsp;&nbsp;<br/><br/>
 	<?php
 }
 function formulario(){
@@ -67,7 +71,7 @@ function formulario(){
 	$idformato=$_REQUEST["idformato"];
 	$formato=busca_filtro_tabla("","formato","idformato=".$idformato,"",$conn);
 	?>
-	<form method="post" name="formulario_ruta" id="formulario_ruta">
+	<form method="post" name="formulario_ruta_mostrar" id="formulario_ruta_mostrar">
 	<table name="tabla_ruta" id="name="tabla_ruta" cellspacing="1" cellpadding="4" border="0" bgcolor="#CCCCCC" style="width:600px;font-family:arial">
 		<tr class="encabezado_list">
 			<td>TIPO DE CAMPO</td>
@@ -151,7 +155,7 @@ function formulario_adicionar(){
 	$checked2='';
 	$checked3='';
 	?>
-	<form method="post" name="formulario_ruta" id="formulario_ruta" action="rutas_automaticas.php">
+	<form method="post" name="formulario_ruta_adicionar" id="formulario_ruta_adicionar" action="rutas_automaticas.php">
 	<table name="tabla_ruta" id="tabla_ruta" cellspacing="1" cellpadding="4" border="0" bgcolor="#CCCCCC" style="width:600px;font-family:arial">
 		<tr>
 			<td class="encabezado" width="30%">Tipo de campo</td>
@@ -207,9 +211,9 @@ function formulario_adicionar(){
 	</form>
 	<script>
 	$().ready(function(){
-		$('#formulario_ruta').validate({
+		$('#formulario_ruta_encabezado').validate({
 			submitHandler: function(form) {
-				<?php encriptar_sqli("formulario_ruta",0,"form_info",$ruta_db_superior);?>
+				<?php encriptar_sqli("formulario_ruta_encabezado",0,"form_info",$ruta_db_superior);?>
 			    form.submit();
 			    
 			  }
@@ -218,15 +222,11 @@ function formulario_adicionar(){
 	$('input[name$="entidad"]').click(function(){
 		if(this.value==5){
 			treellave.deleteChildItems(0);
-			treellave.setXMLAutoLoading("<?php echo $ruta_db_superior; ?>test_funcionario.php?sin_padre=1&rol=1");
-			treellave.loadXML("<?php echo $ruta_db_superior; ?>test_funcionario.php?sin_padre=1&rol=1");
+			treellave.loadXML("<?php echo $ruta_db_superior; ?>test.php?sin_padre=1&rol=1");
 		}
     if(this.value==1){
 			treellave.deleteChildItems(0);
-			treellave.setXMLAutoLoading("<?php echo $ruta_db_superior; ?>test_funcionario.php?sin_padre=1");
-			treellave.loadXML("<?php echo $ruta_db_superior; ?>test_funcionario.php?sin_padre=1");
-			$("#id").attr("onclick","new_function_name()");
-			tree<?php echo $nombre; ?>.findItem(document.getElementById('stext').value,0,1)
+			treellave.loadXML("<?php echo $ruta_db_superior; ?>test.php?sin_padre=1");
 		}
 		if(this.value==2){
 			treellave.deleteChildItems(0);
@@ -311,7 +311,7 @@ function formulario_editar(){
 		$tipo_campo3='checked';
 	}
 	?>
-	<form method="post" name="formulario_ruta" id="formulario_ruta" action="rutas_automaticas.php">
+	<form method="post" name="formulario_ruta_editar" id="formulario_ruta_editar" action="rutas_automaticas.php">
 	<table name="tabla_ruta" id="name="tabla_ruta" cellspacing="1" cellpadding="4" border="0" bgcolor="#CCCCCC" style="width:600px;font-family:arial">
 		<tr>
 			<td class="encabezado" width="30%">Tipo de campo</td>
@@ -370,13 +370,11 @@ function formulario_editar(){
 	$('input[name$="entidad"]').click(function(){
 		if(this.value==1){
 			treellave.deleteChildItems(0);
-			treellave.setXMLAutoLoading("<?php echo $ruta_db_superior; ?>test_funcionario.php?sin_padre=1");
-			treellave.loadXML("<?php echo $ruta_db_superior; ?>test_funcionario.php?sin_padre=1");
+			treellave.loadXML("<?php echo $ruta_db_superior; ?>test.php?sin_padre=1");
 		}
     if(this.value==5){
 			treellave.deleteChildItems(0);
-			treellave.setXMLAutoLoading("<?php echo $ruta_db_superior; ?>test_funcionario.php?sin_padre=1&rol=1");
-			treellave.loadXML("<?php echo $ruta_db_superior; ?>test_funcionario.php?sin_padre=1&rol=1");
+			treellave.loadXML("<?php echo $ruta_db_superior; ?>test.php?sin_padre=1&rol=1");
 		}
 		if(this.value==2){
 			treellave.deleteChildItems(0);
@@ -434,7 +432,7 @@ function formulario_editar(){
 	<?php } ?>
 	</script>
 	<?php
-	encriptar_sqli("formulario_ruta",1,"form_info",$ruta_db_superior);
+	encriptar_sqli("formulario_ruta_encabezado",1,"form_info",$ruta_db_superior);
 }
 function registrar_adicionar(){
 	global $ruta_db_superior;
@@ -454,7 +452,6 @@ function registrar_adicionar(){
 	phpmkr_query($sql);
 	redirecciona("rutas_automaticas.php?idformato=".$idformato);
 }
-
 function registrar_editar(){
 	global $ruta_db_superior;
 	$fun=$_REQUEST["llave"];
@@ -481,11 +478,10 @@ function eliminar(){
 	phpmkr_query($sql1);
 	redirecciona("rutas_automaticas.php?idformato=".$idformato);
 }
-
 function arbol($nombre,$seleccionado=Null,$entidad=Null,$archivo=Null){
 	global $ruta_db_superior;
 	if(!$archivo){
-		$archivo=$ruta_db_superior."test_funcionario.php?sin_padre=1&seleccionado=".$seleccionado;
+		$archivo=$ruta_db_superior."test.php?sin_padre=1&seleccionado=".$seleccionado;
 	}
 	if($seleccionado){
 		if($entidad==1){

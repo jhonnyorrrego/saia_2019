@@ -1,15 +1,15 @@
 <?php
-$max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior = $ruta = "";
-while ($max_salida > 0) {
-    if (is_file($ruta . "db.php")) {
-        $ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
-    }
-    $ruta .= "../";
-    $max_salida--;
+$max_salida=6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior=$ruta="";
+while($max_salida>0){
+  if(is_file($ruta."db.php")){
+    $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+  }
+  $ruta.="../";
+  $max_salida--;
 }
 
-include_once ($ruta_db_superior . "db.php");
+include_once($ruta_db_superior."db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ("funciones_archivo.php");
 ?>
@@ -26,7 +26,7 @@ include_once ("funciones_archivo.php");
 
 <script type='text/javascript'>
 	hs.graphicsDir = 'highslide-4.0.10/highslide/graphics/';
-	hs.outlineType = 'rounded-white';
+	hs.outlineType = 'rounded-white'; 
 </script>
 </head>
 <body>
@@ -36,65 +36,65 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 if ($config["numcampos"]) {
     $style = "
      <style type=\"text/css\">
-     <!--INPUT, TEXTAREA, SELECT
+     <!--INPUT, TEXTAREA, SELECT 
      {
-        font-family: Verdana,Tahoma,arial;
-        font-size: 10px;
+        font-family: Verdana,Tahoma,arial; 
+        font-size: 10px; 
         /*text-transform:Uppercase;*/
-       }
-       .phpmaker
+       } 
+       .phpmaker 
        {
-       font-family: Verdana,Tahoma,arial;
-       font-size: 9px;
+       font-family: Verdana,Tahoma,arial; 
+       font-size: 9px; 
        /*text-transform:Uppercase;*/
-       }
-       .encabezado
+       } 
+       .encabezado 
        {
-       background-color:" . $config[0]["valor"] . ";
-       color:white ;
-       padding:10px;
-       text-align: left;
-       }
-       .encabezado_list
-       {
-       background-color:" . $config[0]["valor"] . ";
-       color:white ;
+       background-color:" . $config[0]["valor"] . "; 
+       color:white ; 
+       padding:10px; 
+       text-align: left;	
+       } 
+       .encabezado_list 
+       { 
+       background-color:" . $config[0]["valor"] . "; 
+       color:white ; 
        vertical-align:middle;
        text-align: center;
-       font-weight: bold;
+       font-weight: bold;	
        }
-       table thead td
+       table thead td 
        {
 		    font-weight:bold;
     		cursor:pointer;
     		background-color:" . $config[0]["valor"] . ";
     		text-align: center;
-        font-family: Verdana,Tahoma,arial;
+        font-family: Verdana,Tahoma,arial; 
         font-size: 9px;
         /*text-transform:Uppercase;*/
-        vertical-align:middle;
+        vertical-align:middle;    
     	 }
-    	 table tbody td
-       {
-    		font-family: Verdana,Tahoma,arial;
+    	 table tbody td 
+       {	
+    		font-family: Verdana,Tahoma,arial; 
         font-size: 9px;
     	 }
        -->
        </style>";
-    echo $style;
+	echo $style;
 }
 
 if (isset($_REQUEST["Adicionar"])) {
-    $permisos = $_REQUEST["permisos_anexos"];
-    if (isset($_REQUEST["idformato"]) && isset($_REQUEST["idcampo"])) {
-        cargar_archivo($_REQUEST["key"], $permisos, $_REQUEST["idformato"], $_REQUEST["idcampo"]);
+	$permisos = $_REQUEST["permisos_anexos"];
+	if (isset($_REQUEST["idformato"]) && isset($_REQUEST["idcampo"])) {
+		cargar_archivo($_REQUEST["key"], $permisos, $_REQUEST["idformato"], $_REQUEST["idcampo"]);
         //redirecciona("anexos_documento_edit.php?key=" . $_REQUEST["key"] . "&idformato=" . $_REQUEST["idformato"] . "&idcampo=" . $_REQUEST["idcampo"]);
-        exit();
-    } else {
-        cargar_archivo($_REQUEST["key"], $permisos);
+		exit();
+	} else {
+		cargar_archivo($_REQUEST["key"], $permisos);
         //redirecciona("anexos_documento_edit.php?key=" . $iddocumento, $_REQUEST["frame"]);
-        exit();
-    }
+		exit();
+	}
 }
 
 $iddocumento = null;
@@ -102,21 +102,21 @@ $idcampo = null;
 $tabla = null;
 if (isset($_REQUEST["key"]) && isset($_REQUEST["idformato"]) && isset($_REQUEST["idcampo"])) {
     $tabla = listar_anexos_documento($_REQUEST["key"], $_REQUEST["idformato"], $_REQUEST["idcampo"]);
-    $iddocumento = $_REQUEST["key"];
-    $idformato = $_REQUEST["idformato"];
-    $idcampo = $_REQUEST["idcampo"];
-    if ($_REQUEST["frame"]) {
-        $frame = $_REQUEST["frame"];
-    } else {
-        $frame = "centro";
-    }
+	$iddocumento = $_REQUEST["key"];
+	$idformato = $_REQUEST["idformato"];
+	$idcampo = $_REQUEST["idcampo"];
+	if ($_REQUEST["frame"]){
+		$frame = $_REQUEST["frame"];
+	}else{
+		$frame = "centro";
+	}
 } elseif (isset($_REQUEST["key"])) {
-    $iddocumento = $_REQUEST["key"];
-    $idformato = $idcampo = NULL;
-    echo listar_anexos_documento($iddocumento);
+	$iddocumento = $_REQUEST["key"];
+	$idformato = $idcampo = NULL;
+	echo listar_anexos_documento($iddocumento);
 } else {
-    echo "No se recibio la informacion del documento";
-    die("");
+	echo "No se recibio la informacion del documento";
+	die("");
 }
 
 if(empty($tabla)) {
@@ -126,40 +126,40 @@ echo $tabla;
 
 $validaciones = busca_filtro_tabla("valor", "campos_formato A", "A.idcampos_formato=" . @$_REQUEST["idcampo"], "", $conn);
 $extensiones = "";
-if ($validaciones[0]["valor"]) {
-    $extensiones_fijas = $validaciones[0]["valor"];
-    $mystring = $validaciones[0]["valor"];
-    $findme = '@';
-    $pos = strpos($mystring, $findme);
-    if ($pos !== false) { // fue encontrada
-        $vector_extensiones_tipo = explode($findme, $mystring);
-        $tipo_input = $vector_extensiones_tipo[1];
-        $extensiones_fijas = $vector_extensiones_tipo[0];
-    }
+if ($validaciones[0]["valor"]){
+		$extensiones_fijas=$validaciones[0]["valor"];
+		$mystring = $validaciones[0]["valor"];
+		$findme   = '@';
+		$pos = strpos($mystring, $findme);
+		if ($pos !== false) { //fue encontrada
+			$vector_extensiones_tipo=explode($findme,$mystring);
+			$tipo_input=$vector_extensiones_tipo[1];
+			$extensiones_fijas=$vector_extensiones_tipo[0];
+		}
     if ($extensiones_fijas != "") {
         $new_ext = array_map('trim', explode('|', $extensiones_fijas));
         $extensiones_fijas = "." . implode(', .', $new_ext);
         $extensiones = $extensiones_fijas;
         // $adicional = 'accept="' . $extensiones_fijas . '"';
-    }
+	}
 }
 ?>
 <br>
 	<form id="formulario_anexos" action="anexos_documento_edit.php" method="POST" class="dropzone" enctype="multipart/form-data">
-		<input type="hidden" value="" id="permisos_anexos" name="permisos_anexos" />
-		<input type="hidden" value="<?php echo $iddocumento; ?>" id="key" name="key" />
-        <input type="hidden" value="<?php echo $idformato; ?>" id="idformato" name="idformato" />
-        <input type="hidden" value="<?php echo $idcampo; ?>" id="idcampo" name="idcampo" />
-        <input type="hidden" value="<?php echo $frame; ?>" id="frame" name="frame" />
+<input type="hidden" value="" id="permisos_anexos" name="permisos_anexos"/>
+<input type="hidden" value="<?php echo $iddocumento; ?>" id="key" name="key"/>
+<input type="hidden" value="<?php echo $idformato; ?>" id="idformato" name="idformato"/>
+<input type="hidden" value="<?php echo $idcampo; ?>" id="idcampo" name="idcampo"/>
+<input type="hidden" value="<?php echo $frame; ?>" id="frame" name="frame"/>
 
-		<table>
-			<tr>
-				<td>
+<table>
+	<tr>
+		<td>
 						<div class="dz-message"><span>Adicionar Anexos</span></div>
-				</td>
-			</tr>
-		</table>
-	</form>
+		</td>
+	</tr>
+</table>
+</form>
 </body>
 <script>
 var iddocumento = "<?php echo $iddocumento;?>";

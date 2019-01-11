@@ -11,7 +11,6 @@ $ruta.="../";
 $max_salida--;
 }
 
-
 include_once("../header.php");
 include_once("../db.php");
 include_once("librerias/funciones.php");

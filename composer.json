@@ -1,32 +1,35 @@
 {
-	"require" : {
-        	"luracast/restler": "*",
-        	"doctrine/doctrine-migrations-bundle": "*",
-        	"firebase/php-jwt": "^5.0",
-        	"phpoffice/phpword": "^0.13.0",
-		"danielstjules/stringy" : "~2.3",
-		"knplabs/gaufrette" : "^0.3.1",
-		"imagine/imagine" : "~0.5.0",
-		"aws/aws-sdk-php" : "~3",
-		"elasticsearch/elasticsearch": "~5.0",
-		"gaufrette/ftp-adapter": "^0.4.0",
-		"greenlion/php-sql-parser" : "^4.1",
-        	"setasign/fpdi": "^2.0.0-beta2",
-        	"setasign/fpdi-fpdf": "^2.0.0-beta2",
-        	"setasign/fpdi-tcpdf": "^2.0.0-beta2",
+	"require": {
+		"luracast/restler": "*",
+		"firebase/php-jwt": "^5.0",
+		"phpoffice/phpword": "^0.13.0",
+		"greenlion/php-sql-parser": "^4.1",
+		"setasign/fpdi": "2.0.3 as 1.6.2",
+		"setasign/fpdi-fpdf": "^2.0.0-rc1",
+		"setasign/fpdi-tcpdf": "^2.0.0-rc1",
+		"siriusphp/upload": "^2.1",
 		"symfony/process": "~3.3|~4.0",
 		"doctrine/orm": "^2.5",
-		"siriusphp/upload" : "*"
+		"danielstjules/stringy": "~2.3",
+		"knplabs/gaufrette": "^0.3.1",
+		"imagine/imagine": "~0.5.0",
+		"doctrine/doctrine-migrations-bundle": "^1.3",
+		"smalot/pdfparser": "^0.12.0",
+		"tecnickcom/tcpdf": "^6.2",
+		"mpdf/mpdf": "^7.1",
+		"aws/aws-sdk-php": "^3.63",
+		"lasserafn/php-initial-avatar-generator": "^3.0",
+		"google/apiclient": "^2.0"
 	},
-	"extra" : {
-		"class" : "Corley\\Composer\\MyHook"
+	"extra": {
+		"class": "Corley\\Composer\\MyHook"
 	},
-	"autoload" : {
-		"psr-4" : {
+	"autoload": {
+		"psr-4": {
 			"Corley\\Composer\\" : "instalador/"
 		}
 	},
-	"scripts" : {
-		"post-install-cmd" : "Corley\\Composer\\MyHook::localConf"
+	"scripts": {
+		"post-install-cmd": "Corley\\Composer\\MyHook::localConf"
 	}
 }

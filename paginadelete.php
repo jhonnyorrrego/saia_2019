@@ -8,6 +8,7 @@ include_once ("db.php");
 require ('vendor/autoload.php');
 require_once 'filesystem/SaiaStorage.php';
 include_once "StorageUtils.php";
+
 $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado'", "", $conn);
 if ($config["numcampos"]) {
 	$style = "<style type='text/css'>
@@ -170,7 +171,7 @@ foreach ($arRecKey as $sRecKey) {
     <img src="<?php echo $imagen; ?>" alt="Ruta <?php print($x_ruta)?>">
     <?php }
     } ?>
-    </span></div>
+	</span></div>
     </td></tr>
     <tr class="encabezado">
     <td width="131" valign="top"><span class="phpmaker" style="color: #FFFFFF;">JUSTIFICACI&Oacute;N</span></td>

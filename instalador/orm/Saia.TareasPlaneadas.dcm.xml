@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\TareasPlaneadas" table="tareas_planeadas">
+    <id name="idtareasPlaneadas" type="integer" column="idtareas_planeadas">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="funcionarioIdfuncionario" type="integer" column="funcionario_idfuncionario" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="fkTareasListado" type="integer" column="fk_tareas_listado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="rolTareas" type="string" column="rol_tareas" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="fechaPlaneada" type="datetime" column="fecha_planeada" nullable="true"/>
+    <field name="fechaPlaneadaFin" type="datetime" column="fecha_planeada_fin" nullable="true"/>
+  </entity>
+</doctrine-mapping>

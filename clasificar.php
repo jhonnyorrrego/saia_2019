@@ -5,8 +5,6 @@ include_once("librerias_saia.php");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
 
-
-
 if(@$_REQUEST["iddoc"] || @$_REQUEST["key"] || @$_REQUEST["iddocumento"]){
 	$_REQUEST["iddoc"]=@$_REQUEST["iddocumento"];
 	include_once("pantallas/documento/menu_principal_documento.php");
@@ -34,7 +32,7 @@ function EW_checkMyForm(EW_this)
 		return false;  
   }         
   else if(list_funcionarios!="")
-    document.clasificar.x_serie.value=list_funcionarios;
+    document.formulario_clasificar.x_serie.value=list_funcionarios;
     
   return true;   
 }
@@ -106,7 +104,7 @@ DESCRIPCI&Oacute;N DEL DOCUMENTO&nbsp;
 </span></td>
 </tr>
 </table><br>
-<form name="clasificar" id="clasificar" action="clasificar.php" method="post" onSubmit="return EW_checkMyForm(this);">
+<form name="formulario_clasificar" id="formulario_clasificar" action="clasificar.php" method="post" onSubmit="return EW_checkMyForm(this);">
 <input type="hidden" name="iddocumento" value="<?php echo $_REQUEST["iddocumento"]; ?>">
 <input type="hidden" name="origen" value="<?php echo $origen; ?>">
 <table>
@@ -184,5 +182,5 @@ function LoadData($sKey,$conn)
 	return $LoadData;
 }
 
-encriptar_sqli("clasificar",1);
- 
+encriptar_sqli("formulario_clasificar",1);
+?>

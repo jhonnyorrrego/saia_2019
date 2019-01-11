@@ -1,28 +1,27 @@
-<?php 
-$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior=$ruta="";
-while($max_salida>0)
-{
-if(is_file($ruta."db.php"))
-{
-$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+<?php
+$max_salida = 6;
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+    if (is_file($ruta . "db.php")) {
+        $ruta_db_superior = $ruta;
+    }
+    $ruta .= "../";
+    $max_salida--;
 }
-$ruta.="../";
-$max_salida--;
-}
-include_once("../db.php");
+include_once ($ruta_db_superior . "db.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("idformato");
 include_once($ruta_db_superior."librerias_saia.php");
-$validar_enteros=array("idformato");
 desencriptar_sqli('form_info');
-echo(librerias_jquery());
+echo(librerias_jquery('1.7'));
 include_once("../header.php");
 include_once("librerias/header_formato.php");
 include_once("librerias/funciones_acciones.php");
 include_once("librerias/funciones.php"); 
+echo (estilo_bootstrap());
+echo (librerias_validar_formulario('11'));
 ?>
-<script type="text/javascript" src="../js/jquery.validate.js"></script>
+
 <script type="text/javascript" src="../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
 <link rel="stylesheet" type="text/css" href="../anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
 <script type='text/javascript'>
@@ -99,22 +98,15 @@ else if(@$_REQUEST["eliminar"]==1 && @$_REQUEST["idformato"]){
 }
 
 if(@$_REQUEST["idformato"]){
-  $texto='<div align="center">';
-  if(@$_REQUEST["accion_ejecutar"]==1){
-    $texto.="<b>EDITANDO ASIGNACION ";
-  }
-  else if(@$_REQUEST["accion_ejecutar"]==2){
-    $texto.="<b>ELIMINANDO ASIGNACION";
-  }
-  else {
-    $texto.="<b>ASIGNANDO";
-  }
   $idformato=$_REQUEST["idformato"];
   $formato=busca_filtro_tabla("etiqueta","formato","idformato=$idformato","",$conn);
-  $texto.=' Transferencia Automatica ('.$formato[0]["etiqueta"].')<br /><br /></b></div><div><a href="formatoview.php?key='.$_REQUEST["idformato"].'">Regresar</a>
-  &nbsp;&nbsp;<a href="transferencias_automaticas.php?idformato='.$_REQUEST["idformato"].'">Asignar Transferencia</a>
-  &nbsp;&nbsp;<a href="funciones_formato_ordenar.php?idformato='.$_REQUEST["idformato"].'" class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 550, height:400,preserveContent:false } )" style="text-decoration: underline; cursor:pointer;">Ordenar Funciones</a>
-  <br /><form method="POST" name="asignar_funcion_formato" id="asignar_funcion_formato"><table style="border-collapse:collapse;" border="1px" width="100%">';
+  $texto.='<br/><legend>Transferencias Autom&aacute;ticas</legend><br/><div><a class="btn btn-mini btn-default" href="formatoview.php?key='.$_REQUEST["idformato"].'">Regresar</a>
+  
+  <a class="btn btn-mini btn-default" href="rutas_automaticas.php?idformato='.$_REQUEST["idformato"].'">Rutas de Aprobación</a>
+  
+  &nbsp;&nbsp;<a class="btn btn-mini btn-info" href="transferencias_automaticas.php?idformato='.$_REQUEST["idformato"].'">Asignar Transferencia</a>
+  &nbsp;&nbsp;<a class="btn btn-mini btn-info" href="funciones_formato_ordenar.php?idformato='.$_REQUEST["idformato"].'" class="highslide" onclick="return hs.htmlExpand(this, { objectType: \'iframe\',width: 550, height:400,preserveContent:false } )" >Ordenar Funciones</a>
+  <br /><br /><form method="POST" name="asignar_funcion_formato" id="asignar_funcion_formato"><table style="border-collapse:collapse;" border="1px" width="100%">';
   
   $lacciones=busca_filtro_tabla("","accion","","",$conn);
 
@@ -190,7 +182,7 @@ if(@$_REQUEST["idformato"]){
 	<script type="text/javascript" src="../js/dhtmlXCommon.js"></script>
 	<script type="text/javascript" src="../js/dhtmlXTree.js"></script>';
   $texto.=$nombres_seleccionados.'Buscar:<br><input type="text" id="stext_3" width="200px" size="20" >      
-      <a href="javascript:void(0)" onclick="buscar_nodo()">
+      <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById(\'stext_3\').value),1)">
       <img src="../botones/general/anterior.png" border="0px" alt="Anterior"></a>
       <a href="javascript:void(0)" onclick="tree3.findItem((document.getElementById(\'stext_3\').value),0,1)">
       <img src="../botones/general/buscar.png" border="0px" alt="Buscar"></a>
@@ -213,8 +205,7 @@ if(@$_REQUEST["idformato"]){
 			tree3.enableCheckBoxes(1);
 			tree3.setOnLoadingStart(cargando_serie);
       tree3.setOnLoadingEnd(fin_cargando_serie);
-            tree3.setXMLAutoLoading("../test_funcionario.php?rol=1&seleccionado='.str_replace("@",",",str_replace("#","d",$destinos)).'");
-			tree3.loadXML("../test_funcionario.php?rol=1&seleccionado='.str_replace("@",",",str_replace("#","d",$destinos)).'");
+			tree3.loadXML("../test.php?rol=1&seleccionado='.str_replace("@",",",str_replace("#","d",$destinos)).'");
 			tree3.setOnCheckHandler(onNodeSelect_tree3);
       function onNodeSelect_tree3(nodeId)
       {seleccionados=tree3.getAllChecked();
@@ -244,45 +235,16 @@ if(@$_REQUEST["idformato"]){
            document.poppedLayer =
                eval(\'document.layers["esperando_serie"]\');
         document.poppedLayer.style.visibility = "visible";
-      }
-        function buscar_nodo() {
-				$.ajax({
-					type : "POST",
-					url : "../test_funcionario_buscar.php",
-					dataType : "json",
-					data : {
-						nombre : $("#stext_tree3").val(),
-						tabla : "dependencia"
-					},
-					success : function(data) {
-						if(data["error"]){
-							alert(data["mensaje"]);
-						}
-						else{
-							tree3.attachEvent("onOpenDynamicEnd", function(){
-								tree3.selectItem("1#",false,false);
-								tree3.clearSelection();
-								for(var i=0;i<data["numcampos_func"];i++){
-									tree3.selectItem(data["funcionarios"][i],false,true);
-								}
-								for(var i=0;i<data["numcampos_dep"];i++){
-									tree3.selectItem(data["dependencias"][i],false,true);
-								}
-							});
-							tree3.openItemsDynamic(data["datos"],true);
-						}
-					}
-				});
       }              
 	--> 		
 	</script>';
     $texto.='</td></tr>';  
     $texto.='<input type="hidden"  class="required"  name="estado" id="estado" value="1" >';
     if(@$_REQUEST["accion_ejecutar"]==1){
-      $texto.='</select><input type="hidden" name="editar" value="1"><input type="hidden" name="idformato" value="'.$_REQUEST["idformato"].'"><input type="hidden" name="idaccion_funcion" value="'.$_REQUEST["accion_funcion"].'"></td></tr>';
+      $texto.='</select><input type="hidden" name="accion_ejecutar" value="1"><input type="hidden" name="editar" value="1"><input type="hidden" name="idformato" value="'.$_REQUEST["idformato"].'"><input type="hidden" name="idaccion_funcion" value="'.$_REQUEST["accion_funcion"].'"><input type="hidden" name="accion_funcion" value="'.$_REQUEST["accion_funcion"].'"></td></tr>';
     }
     else if(@$_REQUEST["accion_ejecutar"]==2){
-      $texto.='</select><input type="hidden" name="eliminar" value="1"><input type="hidden" name="idformato" value="'.$_REQUEST["idformato"].'"><input type="hidden" name="idaccion_funcion" value="'.$_REQUEST["accion_funcion"].'"></td></tr>';
+      $texto.='</select><input type="hidden" name="accion_ejecutar" value="2"><input type="hidden" name="eliminar" value="1"><input type="hidden" name="idformato" value="'.$_REQUEST["idformato"].'"><input type="hidden" name="idaccion_funcion" value="'.$_REQUEST["accion_funcion"].'"><input type="hidden" name="accion_funcion" value="'.$_REQUEST["accion_funcion"].'"></td></tr>';
     }
     else
       $texto.='</select><input type="hidden" name="adicionar" value="1"><input type="hidden" name="idformato" value="'.$_REQUEST["idformato"].'"></td></tr>';

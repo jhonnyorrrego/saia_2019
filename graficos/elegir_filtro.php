@@ -15,11 +15,11 @@ include_once("../header.php");
 include_once("../calendario/calendario.php");
 include_once($ruta_db_superior."librerias_saia.php");
 echo(librerias_jquery());
+echo(librerias_validar_formulario('11'));
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("grafica_idgrafica","idfiltro_grafica","idfiltro","reporte","grafica","id");
 desencriptar_sqli('form_info');
 ?>
-<script type="text/javascript" src="../js/jquery.validate.js"></script>
 <script type="text/javascript" src="../anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
 <link rel="stylesheet" type="text/css" href="../anexosdigitales/highslide-4.0.10/highslide/highslide.css" />
 <script type='text/javascript'>

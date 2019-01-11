@@ -52,7 +52,7 @@ function condicion_adicional_series(){
 function colocar_select_dependencias(){
     global $ruta_db_superior,$conn;
     
-    $select="<select class='pull-left btn btn-mini dropdown-toggle' style='height:22px; margin-left: 30px;' name='filtro_dependencias' id='filtro_dependencias'>";
+    $select="<select class='pull-left btn btn-mini dropdown-toggle' style='height:34px; margin-left: 30px;' name='filtro_dependencias' id='filtro_dependencias'>";
     $select.="<option value=''>Por favor seleccione</option>";
     $datos=busca_filtro_tabla("iddependencia, nombre","dependencia","estado=1","nombre ASC",$conn);
     //print_r($datos);die();

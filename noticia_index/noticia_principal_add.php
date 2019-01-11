@@ -1,113 +1,112 @@
 <?php
-$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior=$ruta="";
-while($max_salida>0)
-{
-if(is_file($ruta."db.php"))
-{
-$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+$max_salida = 10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+    if (is_file($ruta . "db.php")) {
+        $ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
+    }
+    $ruta .= "../";
+    $max_salida--;
 }
-$ruta.="../";
-$max_salida--;
-}
-include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."librerias_saia.php"); 
+include_once ($ruta_db_superior . "db.php");
+include_once ($ruta_db_superior . "librerias_saia.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
-echo(librerias_jquery('1.7'));
-echo(estilo_bootstrap());
-echo(librerias_notificaciones());
+echo (librerias_jquery('1.7'));
+echo (estilo_bootstrap());
+echo (librerias_notificaciones());
 
 ?>
 
 <!DOCTYPE html>
 <html>
-	<head>
-		
-	</head>	
-	<body>
+<head>
 
-<div class="container">
+</head>
+<body>
+
+	<div class="container">
 		<h5>Configuración de Noticias y contenido relacionado</h5>
-		<br/>
-		
+		<br />
+
 		<ul class="nav nav-tabs">
-		  <li ><a href="noticia_detalles.php">Detalles</a></li>
-		    <li ><a href="noticia_add.php">Adicionar</a></li>
-		     <li class="active"><a href="noticia_principal_add.php">Informacion Principal</a></li>
-		</ul>		
-		<br/>
-		
+			<li><a href="noticia_detalles.php">Detalles</a></li>
+			<li><a href="noticia_add.php">Adicionar</a></li>
+			<li class="active"><a href="noticia_principal_add.php">Informacion
+					Principal</a></li>
+		</ul>
+		<br />
+
 		<fieldset>
-		
-		<!-- Form Name -->
-		<legend>Informacion Actual</legend>
-		
-		
-		 <table class="table table-striped">
-		    <thead>
-		      <tr >
-		      	<th style="text-align:center;"><h6>Titulo</h6></th>
-		      	<th style="text-align:center;"><h6>Subtitulo</h6></th>
-		      </tr>
-		    </thead>
-		    <tbody>		
-		      <tr >
-		      	<td style="text-align:center;" id="titulo_mostrar">
+
+			<!-- Form Name -->
+			<legend>Informacion Actual</legend>
+
+
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th style="text-align: center;"><h6>Titulo</h6></th>
+						<th style="text-align: center;"><h6>Subtitulo</h6></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td style="text-align: center;" id="titulo_mostrar">
 		      		<?php
-		      			$titulo_mostrar=busca_filtro_tabla('','configuracion','nombre="titulo_index"','',$conn);
-						echo($titulo_mostrar[0]['valor']);  
-		      		?>		      		
+        $titulo_mostrar = busca_filtro_tabla('', 'configuracion', 'nombre="titulo_index"', '', $conn);
+        echo ($titulo_mostrar[0]['valor']);
+        ?>		      		
 		      	</td>
-		      	<td style="text-align:center;" id="subtitulo_mostrar">
+						<td style="text-align: center;" id="subtitulo_mostrar">
 		      		<?php
-		      			$subtitulo_mostrar=busca_filtro_tabla('','configuracion','nombre="subtitulo_index"','',$conn);
-						echo($subtitulo_mostrar[0]['valor']);  
-		      		?>		      		
+        $subtitulo_mostrar = busca_filtro_tabla('', 'configuracion', 'nombre="subtitulo_index"', '', $conn);
+        echo ($subtitulo_mostrar[0]['valor']);
+        ?>		      		
 		      	</td>
-		      </tr>		    	
-		    </tbody>
-		  </table>
-		    	
-		
-		
+					</tr>
+				</tbody>
+			</table>
+
+
+
 		</fieldset>
 
 		<fieldset>
-		
-		<!-- Form Name -->
-		<legend>Configurar Titulo & Subtitulo Principal</legend>
-	
-		 <table class="table table-striped">
-		    <tbody>		
-		      <tr >
-		      	<td style="text-align:center;" id="titulo_mostrar">
-					<!-- Text input-->
-					<form name="form_actualizar_titulo" id="form_actualizar_titulo" method="post">
-					    <input id="titulo" name="titulo" type="text" placeholder="Titulo" class="input-xlarge">	
-					    <br/>    
-					    <input type="hidden" name="actualizar_titulo" value="actualizar_titulo">
-					    <input type="button" id="actualizar_titulo" name="actualizar_titulo" class="btn btn-primary" value="Actualizar" />  
-					</form>		
-		      	</td>
-		      	<td style="text-align:center;" id="subtitulo_mostrar">
-					<!-- Text input-->
-					<form name="form_actualizar_subtitulo" id="form_actualizar_subtitulo" method="post">
-					    <input id="subtitulo" name="subtitulo" type="text" placeholder="Subtitulo" class="input-xlarge">
-					    <input type="hidden" name="actualizar_subtitulo" value="actualizar_subtitulo" />
-					    <br/>    
-					    <input type="button" id="actualizar_subtitulo" name="actualizar_subtitulo" class="btn btn-primary" value="Actualizar" />  
-					</form>						    
-		      	</td>
-		      </tr>		    	
-		    </tbody>
-		  </table>	
-		
+
+			<!-- Form Name -->
+			<legend>Configurar Titulo & Subtitulo Principal</legend>
+
+			<table class="table table-striped">
+				<tbody>
+					<tr>
+						<td style="text-align: center;" id="titulo_mostrar">
+							<!-- Text input--> 
+							<form name="form_actualizar_titulo" id="form_actualizar_titulo" method="post">
+								<input id="titulo" name="titulo" type="text" placeholder="Titulo" class="input-xlarge"> <br />
+								<br/>   
+								<input type="hidden" name="actualizar_titulo" value="actualizar_titulo"> 
+								<input type="button" id="actualizar_titulo" name="actualizar_titulo" class="btn btn-primary" value="Actualizar" />
+							</form>	
+						</td>
+						<td style="text-align: center;" id="subtitulo_mostrar">
+							<!-- Text input--> 
+							<form name="form_actualizar_subtitulo" id="form_actualizar_subtitulo" method="post">
+							    <input id="subtitulo" name="subtitulo" type="text" placeholder="Subtitulo" class="input-xlarge">
+							    <input type="hidden" name="actualizar_subtitulo" value="actualizar_subtitulo" />
+							    <br/>    
+							    <input type="button" id="actualizar_subtitulo" name="actualizar_subtitulo" class="btn btn-primary" value="Actualizar" />  
+							</form>		
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
 		</fieldset>
 
-</div>				
-							
-	</body>
-	
+	</div>
+
+</body>
+
 </html>
 <script>
 	$(document).ready(function(){
@@ -169,4 +168,4 @@ echo(librerias_notificaciones());
 		});		
 	
 	});
-</script>  	
+</script>

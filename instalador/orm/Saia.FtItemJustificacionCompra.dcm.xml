@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtItemJustificacionCompra" table="ft_item_justificacion_compra">
+    <indexes>
+      <index name="i_item_justificacion__justificac" columns="ft_justificacion_compra"/>
+      <index name="i_item_justificacion__serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftItemJustificacionCompra" type="integer" column="idft_item_justificacion_compra">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="cantidad" type="string" column="cantidad" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="descripcionItem" type="string" column="descripcion_item" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="valor" type="string" column="valor" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="ftJustificacionCompra" type="integer" column="ft_justificacion_compra" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

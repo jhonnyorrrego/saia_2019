@@ -1,6 +1,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9">
+
 <?php
-date_default_timezone_set("America/Bogota");
 include_once ("db.php");
 include_once ("librerias_saia.php");
 
@@ -12,11 +12,11 @@ if (!isset($_GET['fin']) || !$_GET['fin']) {
 	echo(librerias_highslide());
 }
 
-if (@$_SESSION["LOGIN" . LLAVE_SAIA]) {
+if ($_SESSION["LOGIN" . LLAVE_SAIA]!="") {
 	almacenar_sesion(1, $_SESSION["LOGIN" . LLAVE_SAIA]);
 	$usuario =  $_SESSION["usuario_actual"];
 	$funcionario_idfuncionario = $_SESSION["idfuncionario"];
-		
+
 	$recarga = busca_filtro_tabla("A.valor", "configuracion A", "A.tipo='interfaz' AND A.nombre='intervalo_recarga'", "A.fecha DESC", $conn);
 	if ($recarga["numcampos"]) {
 		$intervalo_recarga_informacion = $recarga[0]["valor"];
@@ -30,8 +30,8 @@ if (@$_SESSION["LOGIN" . LLAVE_SAIA]) {
 	}
 
 	$proxima = busca_filtro_tabla("valor", "configuracion", "nombre='actualizacion_fin_anio'", "idconfiguracion DESC", $conn);
-	if ($proxima["numcampos"]) {
-		$fecha = busca_filtro_tabla(resta_fechas("'" . $proxima[0][0] . "'", "'" . date("Y-m-d") . "'"), "dual", "", "", $conn);
+	if ($proxima["numcampos"] && !empty($proxima[0][0])) {
+		$fecha = busca_filtro_tabla(resta_fechas("'" . $proxima[0][0] . "'", "'" . date("Y-m-d") . "'"), "", "", "", $conn);
 		if (@$fecha[0][0] < 0) {
 			alerta("Se van a realizar algunas actualizaciones por el cambio de año, por favor espere.", 'success', 6000);
 			abrir_url("actualizacion_cambio_anio.php");
@@ -51,9 +51,10 @@ if (@$_SESSION["LOGIN" . LLAVE_SAIA]) {
 	$permiso = new PERMISO();
 	$per_pendientes = $permiso -> acceso_modulo_perfil("documentos_pendientes");
 	if ($per_pendientes) {
-		$etiquetados = busca_filtro_tabla("c.nombre", "documento a, documento_etiqueta b, etiqueta c", "LOWER(a.estado) NOT IN ('eliminado') AND a.iddocumento=b.documento_iddocumento AND b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='" . $usuario . "' GROUP BY a.iddocumento", "", $conn);
+		$etiquetados = busca_filtro_tabla("c.nombre", "documento a, documento_etiqueta b, etiqueta c", "LOWER(a.estado) NOT IN ('eliminado') AND a.iddocumento=b.documento_iddocumento AND b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario='" . $usuario . "' GROUP BY a.iddocumento,c.nombre", "", $conn);
 		$pendientes = busca_filtro_tabla("count(*) AS cant", "documento A,asignacion B,formato c ", "LOWER(A.estado)<>'eliminado' AND A.iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad=" . $usuario . " and lower(A.plantilla)=c.nombre ", "GROUP BY A.iddocumento", $conn);
-		$con_indicador = busca_filtro_tabla("", "documento a, prioridad_documento b,formato c ", "b.documento_iddocumento=a.iddocumento AND b.prioridad in (1,2,3,4,5) AND lower(a.estado) not in('ELIMINADO') AND lower(a.plantilla)=c.nombre AND b.funcionario_idfuncionario=" . usuario_actual("idfuncionario"), "group by a.iddocumento order by a.fecha  desc", $conn);
+		$con_indicador = busca_filtro_tabla("a.iddocumento", "documento a, prioridad_documento b,formato c ", "b.documento_iddocumento=a.iddocumento AND b.prioridad in (1,2,3,4,5) AND lower(a.estado) not in('eliminado') AND lower(a.plantilla)=lower(c.nombre) AND b.funcionario_idfuncionario=" . $_SESSION["idfuncionario"], "", $conn);
+
 		$borradores = busca_filtro_tabla("count(*) AS cant", "documento A, formato c ", "ejecutor=" . $usuario . " AND A.estado='ACTIVO' AND A.numero='0' and lower(A.plantilla)=c.nombre", "", $conn);
 
 		$componente_etiquetados = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='documentos_etiquetados'", "", $conn);
@@ -65,27 +66,28 @@ if (@$_SESSION["LOGIN" . LLAVE_SAIA]) {
 
 	$per_mis_tareas = $permiso -> acceso_modulo_perfil("mis_tareas");
 	if ($per_mis_tareas) {
-	  $mis_roles=busca_filtro_tabla("","vfuncionario_dc","estado=1 and funcionario_codigo=".usuario_actual("funcionario_codigo"),"",$conn);
+	$mis_roles=busca_filtro_tabla("iddependencia_cargo","vfuncionario_dc","estado=1 and funcionario_codigo=".$_SESSION["usuario_actual"],"",$conn);
     if($mis_roles["numcampos"]){
       $roles=extrae_campo($mis_roles,"iddependencia_cargo");
       $concat=array();
+	  $res_concat=concatenar_cadena_sql(array("','","responsable","','"));
       foreach ($roles AS $key=>$value){
-        array_push($concat,"CONCAT(',',responsable,',') LIKE('%,".$value.",%')");
+        array_push($concat,$res_concat." LIKE('%,".$value.",%')");
       }
     }
-	  
+
 		$tareas=busca_filtro_tabla("count(*) AS cant","tareas A","((".implode(" or ",$concat).")) and estado_tarea<>2 and ruta_aprob<>-1 and ((ruta_aprob>=0 and estado_tarea in (3,4,5)) or(ruta_aprob>=0 and estado_tarea<>-1))","",$conn);
-		$componente_tareas = busca_filtro_tabla("", "busqueda_componente A", "A.nombre='mis_tareas_pendientes'", "", $conn);
+		$componente_tareas = busca_filtro_tabla("A.idbusqueda_componente", "busqueda_componente A", "A.nombre='mis_tareas_pendientes'", "", $conn);
 	}
 
 	$per_mis_tareas_av = $permiso -> acceso_modulo_perfil("mis_tareas_avanzadas");
 	if ($per_mis_tareas_av) {
-		$tareas_responsable = busca_filtro_tabla("count(*) AS cant", "tareas_listado A", "A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.responsable_tarea =" . usuario_actual("idfuncionario"), "", $conn);
+		$tareas_responsable = busca_filtro_tabla("count(*) AS cant", "tareas_listado A", "A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.responsable_tarea =" . $_SESSION["idfuncionario"], "", $conn);
 		$condicion_coparticipantes_unico = " AND ( a.co_participantes LIKE '%," . $funcionario_idfuncionario . ",%' OR a.co_participantes LIKE '%," . $funcionario_idfuncionario . "' OR a.co_participantes LIKE '" . $funcionario_idfuncionario . ",%' OR  a.co_participantes='" . $funcionario_idfuncionario . "' )";
 		$tareas_coparticipante = busca_filtro_tabla("count(*) AS cant", "tareas_listado a", "a.generica=0 AND a.estado_tarea<>'TERMINADO'  AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 " . $condicion_coparticipantes_unico, "", $conn);
 		$condicion_seguidores_unico = " AND ( a.seguidores LIKE '%," . $funcionario_idfuncionario . ",%' OR a.seguidores LIKE '%," . $funcionario_idfuncionario . "' OR a.seguidores LIKE '" . $funcionario_idfuncionario . ",%' OR  a.seguidores='" . $funcionario_idfuncionario . "' )";
 		$tareas_seguidor = busca_filtro_tabla("count(*) AS cant", "tareas_listado a", "a.generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 " . $condicion_seguidores_unico, "", $conn);
-		$tareas_evaluador = busca_filtro_tabla("count(*) AS cant", "tareas_listado A", "A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.evaluador =" . usuario_actual("idfuncionario"), "", $conn);
+		$tareas_evaluador = busca_filtro_tabla("count(*) AS cant", "tareas_listado A", "A.generica=0 AND A.estado_tarea<>'TERMINADO' AND A.listado_tareas_fk<>-1 AND A.cod_padre=0 AND  A.evaluador =" . $_SESSION["idfuncionario"], "", $conn);
 
 		$condicion_coparticipantes = " OR ( a.co_participantes LIKE '%," . $funcionario_idfuncionario . ",%' OR a.co_participantes LIKE '%," . $funcionario_idfuncionario . "' OR a.co_participantes LIKE '" . $funcionario_idfuncionario . ",%' OR  a.co_participantes='" . $funcionario_idfuncionario . "' )";
 		$condicion_seguidores = " OR ( a.seguidores LIKE '%," . $funcionario_idfuncionario . ",%' OR a.seguidores LIKE '%," . $funcionario_idfuncionario . "' OR a.seguidores LIKE '" . $funcionario_idfuncionario . ",%' OR  a.seguidores='" . $funcionario_idfuncionario . "' )";
@@ -104,19 +106,8 @@ if (@$_SESSION["LOGIN" . LLAVE_SAIA]) {
 	//$actualizaciones = busca_filtro_tabla("count(*) AS cant", "documento_accion A,asignacion B", "A.documento_iddocumento=B.documento_iddocumento AND B.tarea_idtarea<>-1 AND B.entidad_identidad=1 AND B.llave_entidad=" . $usuario, "GROUP BY A.documento_iddocumento", $conn);
 
 	include_once ("tarea_limpiar_carpeta.php");
-	$configuracion_temporal = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal' AND tipo='ruta'", "", $conn);
-	if ($configuracion_temporal['numcampos']) {
-		$cont_ruta = $configuracion_temporal[0]['valor'];
-		if (!is_dir($cont_ruta)) {
-			mkdir($cont_ruta, 0777, true);
-			chmod($cont_ruta, 0777);
-		}
-		if (!is_dir($cont_ruta . '_' . usuario_actual("login"))) {
-			mkdir($cont_ruta . '_' . usuario_actual("login"), 0777, true);
-		}
-		borrar_archivos_carpeta($configuracion_temporal[0]['valor'] . '_' . usuario_actual("login"), 0);
-	} else {
-		notificaciones("Por favor defina la ruta de los temporales","warning",3500);
+	if (!is_dir($_SESSION["ruta_temp_funcionario"])) {
+		mkdir($_SESSION["ruta_temp_funcionario"], 0777, true);
 	}
 }
 ?>
@@ -190,12 +181,12 @@ body {padding-right:0px;padding-left:0px;}
 #left ul.nav>li.parent>a {
     border: solid 1px #999;
     text-transform: uppercase;
-}    
+}
 #left ul.nav li.parent a:hover {
     background-color: #fff;
     -webkit-box-shadow:inset 0 3px 8px rgba(0,0,0,0.125);
     -moz-box-shadow:inset 0 3px 8px rgba(0,0,0,0.125);
-    box-shadow:inset 0 3px 8px rgba(0,0,0,0.125);    
+    box-shadow:inset 0 3px 8px rgba(0,0,0,0.125);
 }
 
 /* link tag (a)*/
@@ -203,14 +194,14 @@ body {padding-right:0px;padding-left:0px;}
     color: #222;
     border: none;
     display:block;
-    padding-left: 5px;    
+    padding-left: 5px;
 }
 
 #left ul.nav li.parent ul li a:hover {
     background-color: #fff;
     -webkit-box-shadow:none;
     -moz-box-shadow:none;
-    box-shadow:none;  
+    box-shadow:none;
 }
 
 /* sign for parent item */
@@ -326,9 +317,9 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
 			<li class="item-8 deeper parent">
 				<a class="" href="#">
 					<span data-toggle="collapse" data-parent="#menu-group-1" href="#sub-item-8" id="menu_primer_nodo" class="sign"><i class="icon-plus icon-white"></i></span>
-					
+
 					<span class="lbl">SAIA</span>
-					<div style="float: right; padding-top:5%">|<b><?php echo(usuario_actual("nombres")." ".usuario_actual("apellidos"));?></b></div>                      
+					<div style="float: right; padding-top:5%">|<b><?php echo(usuario_actual("nombres")." ".usuario_actual("apellidos"));?></b></div>
                 </a>
                 <ul class="children nav-child unstyled small collapse" id="sub-item-8">
                 	<?php
@@ -362,9 +353,9 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
     	  		</ul>
     	  	</li>
     	 </ul>
-    	 
+
     </div>
-<?php }else{ ?>
+<?php } else { ?>
   <div class="dropdown pull-right">| <a href="logout.php<?php if(@$_SESSION["INDEX"]!='')echo("?INDEX_SALIDA=".$_SESSION["INDEX"]);?>">Salir</a></div>
   <div class="dropdown pull-right">|
       <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mi Cuenta<b class="caret"></b></a>
@@ -486,7 +477,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
             <?php
             }
             ?>
-            
+
             <!-- FIN OPCIONES PRINCIPALES -->
 
 
@@ -584,8 +575,9 @@ echo(librerias_notificaciones());
 function mostrar_iconos($modulo_actual,$orden=NULL){
   global $conn;
   $cols=4;
-  $usuario_actual=usuario_actual("funcionario_codigo");
-      $idfuncionario_actual=usuario_actual("idfuncionario");
+  $usuario_actual=$_SESSION["usuario_actual"];
+  $idfuncionario_actual=$_SESSION["idfuncionario"];
+
   $modulo=busca_filtro_tabla("A.idmodulo","modulo A","A.idmodulo=".$modulo_actual,"",$conn);
   if($modulo["numcampos"]){
     $condicion="A.modulo_idmodulo=B.idmodulo AND B.cod_padre=".$modulo[0]["idmodulo"]." AND A.funcionario_idfuncionario=".$idfuncionario_actual;
@@ -597,7 +589,7 @@ function mostrar_iconos($modulo_actual,$orden=NULL){
     $permisos=extrae_campo($permisos_perfil,"idmodulo","U");
     $finales=array_diff(array_merge((array)$permisos,(array)$adicionales),$suprimir);
     if(count($finales))
-      $tablas=busca_filtro_tabla("A.nombre,A.etiqueta,A.imagen,A.enlace,A.destino,A.ayuda,A.parametros,A.enlace_pantalla,A.idmodulo","modulo A","A.idmodulo IN(".implode(",",$finales).")","A.orden ASC",$conn);
+      $tablas=busca_filtro_tabla("A.nombre,A.etiqueta,A.imagen,A.enlace,A.destino,A.ayuda,A.parametros,A.enlace_pantalla,A.idmodulo","modulo A","A.idmodulo IN (".implode(",",$finales).")","A.orden ASC",$conn);
     else
       $tablas["numcampos"]=0;
     if($tablas["numcampos"]){
@@ -660,45 +652,43 @@ function mostrar_iconos($modulo_actual,$orden=NULL){
   }
 }
 
-function menu_saia(){
-  if(isset($_SESSION["LOGIN".LLAVE_SAIA])&& $_SESSION["LOGIN".LLAVE_SAIA]){
-    $nombres=array();
-    $cerrar=array();
-    $modulos=busca_filtro_tabla("modulo.idmodulo","permiso_perfil,modulo","permiso_perfil.modulo_idmodulo = modulo.idmodulo and modulo.cod_padre is not null AND permiso_perfil.perfil_idperfil in (".usuario_actual("perfil").")","orden",$conn);
-    $modulos2=busca_filtro_tabla("modulo.idmodulo","permiso,modulo,funcionario","permiso.modulo_idmodulo = modulo.idmodulo AND permiso.funcionario_idfuncionario=funcionario.idfuncionario and permiso.accion=1 and funcionario.idfuncionario =".usuario_actual("idfuncionario"),"orden",$conn);
-    $suprimidos=busca_filtro_tabla("modulo.idmodulo","permiso,modulo,funcionario","permiso.modulo_idmodulo = modulo.idmodulo AND permiso.funcionario_idfuncionario=funcionario.idfuncionario and(permiso.accion=0 or permiso.accion is null) and funcionario.idfuncionario =".usuario_actual("id"),"orden",$conn);
-    $mod1=extrae_campo($modulos,"idmodulo","U");
-    $mod2=extrae_campo($modulos2,"idmodulo","U");
-    $eliminar=extrae_campo($suprimidos,"idmodulo","U");
-    $mod3=array_merge((array)$mod1,(array)$mod2);
-    $mod3=array_diff($mod3,$eliminar);
-    $mod4=array_unique($mod3);
-    sort($mod3);
-    $lista=implode(",",$mod4);
-    $modulo=busca_filtro_tabla("A.tipo,A.etiqueta,A.idmodulo","modulo A","A.idmodulo IN(select distinct b.cod_padre from modulo b where b.idmodulo in(".$lista."))","orden",$conn);
-    for($i=0;$i<$modulo["numcampos"];$i++){
-      if($modulo["numcampos"] && $modulo[$i]["idmodulo"] && $modulo[$i]["etiqueta"] && $modulo[$i]["tipo"]=='1'){
-        if($_SESSION["tipo_dispositivo"]=="movil"){
+function menu_saia() {
+    if (isset($_SESSION["LOGIN" . LLAVE_SAIA]) && $_SESSION["LOGIN" . LLAVE_SAIA]) {
+        $nombres = array();
+        $cerrar = array();
+        $modulos = busca_filtro_tabla("modulo.idmodulo", "permiso_perfil,modulo", "permiso_perfil.modulo_idmodulo = modulo.idmodulo and modulo.cod_padre is not null AND permiso_perfil.perfil_idperfil in (" . usuario_actual("perfil") . ")", "orden", $conn);
+        $modulos2 = busca_filtro_tabla("modulo.idmodulo", "permiso,modulo,funcionario", "permiso.modulo_idmodulo = modulo.idmodulo AND permiso.funcionario_idfuncionario=funcionario.idfuncionario and permiso.accion=1 and funcionario.idfuncionario =" . usuario_actual("idfuncionario"), "orden", $conn);
+        $suprimidos = busca_filtro_tabla("modulo.idmodulo", "permiso,modulo,funcionario", "permiso.modulo_idmodulo = modulo.idmodulo AND permiso.funcionario_idfuncionario=funcionario.idfuncionario and(permiso.accion=0 or permiso.accion is null) and funcionario.idfuncionario =" . usuario_actual("id"), "orden", $conn);
+        $mod1 = extrae_campo($modulos, "idmodulo", "U");
+        $mod2 = extrae_campo($modulos2, "idmodulo", "U");
+        $eliminar = extrae_campo($suprimidos, "idmodulo", "U");
+        $mod3 = array_merge((array) $mod1, (array) $mod2);
+        $mod3 = array_diff($mod3, $eliminar);
+        $mod4 = array_unique($mod3);
+        sort($mod3);
+        $lista = implode(",", $mod4);
+        $modulo = busca_filtro_tabla("A.tipo,A.etiqueta,A.idmodulo", "modulo A", "A.idmodulo IN(select distinct b.cod_padre from modulo b where b.idmodulo in(" . $lista . "))", "orden", $conn);
+        for ($i = 0; $i < $modulo["numcampos"]; $i++) {
+            if ($modulo["numcampos"] && $modulo[$i]["idmodulo"] && $modulo[$i]["etiqueta"] && $modulo[$i]["tipo"] == '1') {
+                if ($_SESSION["tipo_dispositivo"] == "movil") {
             ?>
-            <li class="item-9 deeper parent">
-            	<a class="" href="#">
-            		<span data-toggle="collapse" data-parent="#menu-group-1" href="#sub-item-<?php echo($i);?>" class="sign"><i class="icon-plus icon-white"></i></span>
-            		<span class="lbl"><?php echo(strtoupper($modulo[$i]["etiqueta"]));?></span> 
-                </a>
-                <?php mostrar_iconos($modulo[$i]["idmodulo"],$i);?>
-            </li>
-            <?php 
-
-          
-        }else{
-          echo '<div class="ac-title">'.strtoupper($modulo[$i]["etiqueta"]).'</div>';
-          echo('<div class="ac-content">');
-          mostrar_iconos($modulo[$i]["idmodulo"]);
-          echo('</div>');
+                <li class="item-9 deeper parent">
+                	<a class="" href="#">
+                		<span data-toggle="collapse" data-parent="#menu-group-1" href="#sub-item-<?php echo($i);?>" class="sign"><i class="icon-plus icon-white"></i></span>
+                		<span class="lbl"><?php echo(strtoupper($modulo[$i]["etiqueta"]));?></span>
+                    </a>
+                    <?php mostrar_iconos($modulo[$i]["idmodulo"],$i);?>
+                </li>
+            <?php
+                } else {
+                    echo '<div class="ac-title">' . strtoupper($modulo[$i]["etiqueta"]) . '</div>';
+                    echo ('<div class="ac-content">');
+                    mostrar_iconos($modulo[$i]["idmodulo"]);
+                    echo ('</div>');
+                }
+            }
         }
-      }
     }
-  }
 }
 ?>
 <script type="text/javascript">
@@ -733,27 +723,18 @@ function menu_saia(){
 	        type:'POST',
 	        url: "pantallas/busquedas/servidor_busqueda.php",
 	        data: "idbusqueda_componente=7&page=0&rows=1&actual_row=0",
-	        success: function(html){
-	          if(html){
-	            var valor=$("#documentos_pendientes").html();
-	            var objeto=jQuery.parseJSON(html);
-	            if(valor!=objeto.records){
-	              $("#documentos_pendientes").html(objeto.records);
-	              $("#documentos_pendientes").removeClass("label-success");
-	              $("#documentos_pendientes").addClass("label-important");
-	              //clearInterval(refreshInterval_SAIA);
-	            }
-	            if(objeto.records==0){
-	              $("#documentos_pendientes").removeClass("label-important");
-	              $("#documentos_pendientes").addClass("label-success");
-	            }
-	            //else alert("0k");
-	          }
-	          else{
-	            $("#documentos_pendientes").html(0);
-	            $("#documentos_pendientes").removeClass("label-important");
-	            $("#documentos_pendientes").addClass("label-success");
-	          }
+	        dataType: "json",
+	        success: function(objeto){
+            var valor=$("#documentos_pendientes").html();
+            if(valor!=objeto.records){
+              $("#documentos_pendientes").html(objeto.records);
+              $("#documentos_pendientes").removeClass("label-success");
+              $("#documentos_pendientes").addClass("label-important");
+            }
+            if(objeto.records==0){
+              $("#documentos_pendientes").removeClass("label-important");
+              $("#documentos_pendientes").addClass("label-success");
+            }
 	        }
 	      });
 	    }, <?php echo($intervalo_recarga_informacion);?>);
@@ -784,27 +765,19 @@ function menu_saia(){
         type:'POST',
         url: "pantallas/busquedas/servidor_busqueda.php",
         data: "idbusqueda_componente="+idcomponente+"&page=0&rows=1&actual_row=0",
-        success: function(html){
-          if(html){
-		        var valor=$("#"+div_actualizar).html();
-		        var objeto=jQuery.parseJSON(html);
-
-		        if(valor!=objeto.records){
-		          $("#"+div_actualizar).html(objeto.records);
-		          $("#"+div_actualizar).removeClass("label-success");
-		          $("#"+div_actualizar).addClass("label-important");
-		        }
-		        if(objeto.records==0){
-							$("#"+div_actualizar).html(0);
-		          $("#"+div_actualizar).removeClass("label-important");
-		          //$("#"+div_actualizar).addClass("label-success");
-		        }
-		      }
-		      else{
-		        $("#"+div_actualizar).html(0);
-		        $("#"+div_actualizar).removeClass("label-important");
-		        $("#"+div_actualizar).addClass("label-success");
-		      }
+        dataType: "json",
+        success: function(objeto){
+	        var valor=$("#"+div_actualizar).html();
+	        if(valor!=objeto.records){
+	          $("#"+div_actualizar).html(objeto.records);
+	          $("#"+div_actualizar).removeClass("label-success");
+	          $("#"+div_actualizar).addClass("label-important");
+	        }
+	        if(objeto.records==0){
+						$("#"+div_actualizar).html(0);
+	          $("#"+div_actualizar).removeClass("label-important");
+	          //$("#"+div_actualizar).addClass("label-success");
+	        }
         }
       });
 
@@ -899,7 +872,7 @@ function menu_saia(){
 </script>
 <script>
 $(document).ready(function(){
-	hs.graphicsDir = '<?php echo($ruta_db_superior);?>anexosdigitales/highslide-4.0.10/highslide/graphics/';
+	hs.graphicsDir = '<?php echo($ruta_db_superior);?>anexosdigitales/highslide-5.0.0/highslide/graphics/';
 	hs.outlineType = 'rounded-white';
 	$("#resize_centro").click(function(){
 	    var nuevo_alto=$(top).height()-($(".footer_login").height()+$(".user-menu-top div").height()<?php if($_SESSION["tipo_dispositivo"]!="movil") echo("+20");?>);
@@ -913,17 +886,17 @@ $(document).ready(function(){
 	});
 });
 !function ($) {
-    
+
     // Le left-menu sign
-    
+
     $('#left ul.nav li.parent > a > span.sign').click(function () {
         $(this).find('i:first').toggleClass("icon-minus");
-    }); 
-    
-    /*$(document).on("click","#left ul.nav li.parent > a > span.sign", function(){          
-        $(this).find('i:first').toggleClass("icon-minus");      
+    });
+
+    /*$(document).on("click","#left ul.nav li.parent > a > span.sign", function(){
+        $(this).find('i:first').toggleClass("icon-minus");
     }); */
-    
+
     // Open Le current menu
     $("#left ul.nav li.parent.active > a > span.sign").find('i:first').addClass("icon-minus");
     $("#left ul.nav li.current").parents('ul.children').addClass("in");

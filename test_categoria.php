@@ -106,7 +106,7 @@ function adicionar_formato($idcategoria){
 	}*/
 	for($i=0;$i<$formatos["numcampos"];$i++){
 		$categorias_formato=explode(",",$formatos[$i]["fk_categoria_formato"]);
-		if(in_array($idcategoria,$categorias_formato) && is_file(FORMATOS_CLIENTE.$formatos[$i]["nombre"]."/".$formatos[$i]["ruta_adicionar"])){
+		if(in_array($idcategoria,$categorias_formato) && is_file(FORMATOS_CLIENTE . $formatos[$i]["nombre"]."/".$formatos[$i]["ruta_adicionar"])){
 
 
             $ok=1;

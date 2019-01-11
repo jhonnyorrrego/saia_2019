@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PantallaCampos
  *
- * @ORM\Table(name="pantalla_campos", indexes={@ORM\Index(name="i_pant_campos_pantalla", columns={"pantalla_idpantalla"})})
+ * @ORM\Table(name="pantalla_campos", indexes={@ORM\Index(name="fk_pantalla_campos_pantalla1_idx", columns={"pantalla_idpantalla"})})
  * @ORM\Entity
  */
 class PantallaCampos
@@ -17,7 +17,7 @@ class PantallaCampos
      *
      * @ORM\Column(name="idpantalla_campos", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idpantallaCampos;
 
@@ -57,9 +57,9 @@ class PantallaCampos
     private $longitud;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="obligatoriedad", type="boolean", nullable=false)
+     * @ORM\Column(name="obligatoriedad", type="integer", nullable=false)
      */
     private $obligatoriedad = '0';
 
@@ -457,7 +457,7 @@ class PantallaCampos
     /**
      * Set orden
      *
-     * @param integer $orden
+     * @param boolean $orden
      *
      * @return PantallaCampos
      */
@@ -471,7 +471,7 @@ class PantallaCampos
     /**
      * Get orden
      *
-     * @return integer
+     * @return boolean
      */
     public function getOrden()
     {

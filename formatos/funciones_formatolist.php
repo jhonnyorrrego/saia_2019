@@ -16,8 +16,8 @@ if (!$_REQUEST["idformato"]) {
 }
 $parte_table = "";
 $idformato = $_REQUEST["idformato"];
-$formato = busca_filtro_tabla("DISTINCT A.*", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=" . $idformato, "A.etiqueta", $conn);
-$datos_formato = busca_filtro_tabla("nombre", "formato", "idformato=" . $idformato, "", $conn);
+$formato = busca_filtro_tabla("DISTINCT A.idfunciones_formato,A.nombre, A.etiqueta, A.descripcion, A.acciones, A.ruta", "funciones_formato A, funciones_formato_enlace B", "A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=" . $idformato, "A.etiqueta", $conn);
+$datos_formato = busca_filtro_tabla("nombre,etiqueta", "formato", "idformato=" . $idformato, "", $conn);
 if ($formato["numcampos"]) {
 	$acciones = array("m" => "Mostrar", "a" => "Adicionar", "e" => "Editar");
 	for ($i = 0; $i < $formato["numcampos"]; $i++) {
@@ -28,10 +28,10 @@ if ($formato["numcampos"]) {
 			if ($dato_formato_orig["numcampos"]) {
 				// si el archivo existe dentro de la carpeta formatos
 				if (is_file($ruta_db_superior . FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $formato[$i]["ruta"])) {
-					$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA . FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $formato[$i]["ruta"]);
+					$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA ."/". FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $formato[$i]["ruta"]);
 				} elseif (is_file($ruta_db_superior . $formato[$i]["ruta"])) {
 					// si el archivo existe en la ruta especificada partiendo de la raiz
-					$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA . $formato[$i]["ruta"]);
+					$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA ."/". $formato[$i]["ruta"]);
 				} else {
 					$ruta_formato = 'Error: ' . $x_ruta . "|id=" . $formato[$i]["idfunciones_formato"];
 				}
@@ -39,10 +39,10 @@ if ($formato["numcampos"]) {
 		} else {
 			// si el archivo existe dentro de la carpeta formatos
 			if (is_file($ruta_db_superior . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $formato[$i]["ruta"])) {
-				$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA . FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $formato[$i]["ruta"]);
+				$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA ."/". FORMATOS_CLIENTE . $datos_formato[0]["nombre"] . "/" . $formato[$i]["ruta"]);
 			} elseif (is_file($ruta_db_superior . $formato[$i]["ruta"])) {
 				// si el archivo existe en la ruta especificada partiendo de la raiz
-				$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA . $formato[$i]["ruta"]);
+				$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA ."/". $formato[$i]["ruta"]);
 			} else {
 				$ruta_formato = 'Error: ' . $formato[$i]["ruta"] . "|id=" . $formato[$i]["idfunciones_formato"];
 			}
@@ -79,7 +79,12 @@ echo(estilo_bootstrap());
 			hs.outlineType = 'rounded-white';
 		</script>
 		<p>
-			<span class="phpmaker">FUNCIONES DEL FORMATO <?php	if ($formato["numcampos"])	echo("<b>" . $formato[0]["etiqueta"] . "</b>");?>	</span>
+			<legend></br>Funciones del formato <?php echo("<b>" . $datos_formato[0]["etiqueta"] . "</b>");?></legend></br>
+			<a class="btn btn-mini btn-info" href="campos_formatolist.php?idformato=<?php echo($idformato);?>">Campos del Formato</a>
+			<a class="btn btn-mini btn-info" href="formatoadd_paso2.php?key=<?php echo($idformato);?>">Dise&ntilde;o del Formato</a>
+			<a class="btn btn-mini btn-info highslide" style="text-decoration:none" href="asignar_funciones.php?idformato=<?php echo($idformato);?>" onclick="return hs.htmlExpand(this, { objectType: 'iframe',width: 550, height:400,preserveContent:false } )">Asignar Funciones</a>
+			<a class="btn btn-mini btn-info highslide" style="text-decoration:none" href="funciones_formato_ordenar.php?idformato=<?php echo($idformato);?>" onclick="return hs.htmlExpand(this, { objectType: 'iframe',width: 550, height:400,preserveContent:false } )">Ordenar Funciones</a>
+			<a class="btn btn-mini btn-success" href="llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@<?php echo($idformato);?>">Publicar Formato</a>
 		</p>
 		<p>
 			<table class="table table-bordered">
@@ -94,11 +99,5 @@ echo(estilo_bootstrap());
 				</tr>
 				<?php echo $parte_table;?>
 			</table>
-			<a href="formatoedit.php?key=<?php echo($idformato);?>">Editar formato</a>|
-			<a href="formatoadd_paso2.php?key=<?php echo($idformato);?>">Editar Cuerpo</a>|
-			<a href="campos_formatolist.php?idformato=<?php echo($idformato);?>">Tabla Formato</a>|
-			<a href="llamado_formatos.php?acciones_formato=formato,adicionar,buscar,editar,mostrar,tabla&accion=generar&condicion=idformato@<?php echo($idformato);?>">Generar el Formato</a>|
-			<a href="asignar_funciones.php?idformato=<?php echo($idformato);?>" class="highslide" onclick="return hs.htmlExpand(this, { objectType: 'iframe',width: 550, height:400,preserveContent:false } )">Asignar Funciones al formato</a>|
-			<a href="funciones_formato_ordenar.php?idformato=<?php echo($idformato);?>" class="highslide" onclick="return hs.htmlExpand(this, { objectType: 'iframe',width: 550, height:400,preserveContent:false } )">Ordenar Funciones del formato</a>
 	</body>
 </html>

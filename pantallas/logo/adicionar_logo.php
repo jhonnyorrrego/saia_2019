@@ -10,12 +10,12 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
+require_once($ruta_db_superior . 'StorageUtils.php');
+require_once($ruta_db_superior . 'filesystem/SaiaStorage.php');
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
-require_once($ruta_db_superior . 'StorageUtils.php');
-require_once($ruta_db_superior . 'filesystem/SaiaStorage.php');
 echo(estilo_bootstrap());
 echo(estilo_file_upload());
 $ruta_logo=busca_filtro_tabla("","configuracion a","a.nombre='logo'","",$conn);

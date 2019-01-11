@@ -30,11 +30,11 @@ global $conn;
         <div class="control-group">
           <label class="string required control-label" for="codigo">
 			<b>C&oacute;digo:</b>
-			<input type="hidden" name="bksaiacondicion_s@codigo" id="bksaiacondicion_codigo" value="like">
+			<input type="hidden" name="bksaiacondicion_orden_dependencia_serie" id="bksaiacondicion_orden_dependencia_serie" value="=">
           </label>
           <div class="controls">
-            <input id="bqsaia_codigo" name="bqsaia_s@codigo" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_s@codigo" id="bqsaiaenlace_codigo" value="y">
+            <input id="bqsaia_orden_dependencia_serie" name="bqsaia_orden_dependencia_serie" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_orden_dependencia_serie" id="bqsaiaenlace_orden_dependencia_serie" value="y">
           </div>
         </div> 
         
@@ -44,11 +44,11 @@ global $conn;
         <div class="control-group">
           <label class="string required control-label" for="nombre">
 			<b>Nombre:</b>
-			<input type="hidden" name="bksaiacondicion_s@nombre" id="bksaiacondicion_nombre" value="like">
+			<input type="hidden" name="bksaiacondicion_nombre" id="bksaiacondicion_nombre" value="like">
           </label>
           <div class="controls">
-            <input id="bqsaia_nombre" name="bqsaia_s@nombre" size="50" type="text">
-            <input type="hidden" name="bqsaiaenlace_s@nombre" id="bqsaiaenlace_nombre" value="y">
+            <input id="bqsaia_nombre" name="bqsaia_nombre" size="50" type="text">
+            <input type="hidden" name="bqsaiaenlace_nombre" id="bqsaiaenlace_nombre" value="y">
           </div>
         </div> 
        
@@ -57,14 +57,14 @@ global $conn;
         <div class="row">
           <div class="control-group radio_buttons span4">
             <label class="radio_buttons optional control-label"><b>Estado</b>
-            <input type="hidden" name="bksaiacondicion_s@estado" id="bksaiacondicion_s-estado" value="=">
+            <input type="hidden" name="bksaiacondicion_estado" id="bksaiacondicion_s-estado" value="=">
             </label>
             <div class="controls">
               <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_s-estado1" name="bqsaia_s@estado" type="radio" value="1">Activo
+                <input class="radio_buttons optional" id="bqsaia_s-estado1" name="bqsaia_estado" type="radio" value='Activo'>Activo
               </label>
               <label class="radio inline">
-                <input class="radio_buttons optional" id="bqsaia_s-estado2" name="bqsaia_s@estado" type="radio" value="0">Inactivo
+                <input class="radio_buttons optional" id="bqsaia_s-estado2" name="bqsaia_estado" type="radio" value='Inactivo'>Inactivo
               </label>
             </div>          
           </div> 

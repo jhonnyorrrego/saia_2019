@@ -424,7 +424,7 @@ var Dropzone = function (_Emitter) {
         /**
          * The text that replaces the default message text it the browser is not supported.
          */
-        dictFallbackMessage: "Your browser does not support drag'n'drop file uploads.",
+        dictFallbackMessage: "Su navegador no soporta la posibilidad de arrastrar y soltar archivos.",
 
         /**
          * The text that will be added before the fallback form.
@@ -437,12 +437,12 @@ var Dropzone = function (_Emitter) {
          * If the filesize is too big.
          * `{{filesize}}` and `{{maxFilesize}}` will be replaced with the respective configuration values.
          */
-        dictFileTooBig: "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.",
+        dictFileTooBig: "El archivo es más grande de lo permitido ({{filesize}}MiB). Máximo tamaño: {{maxFilesize}}MiB.",
 
         /**
          * If the file doesn't match the file type.
          */
-        dictInvalidFileType: "You can't upload files of this type.",
+        dictInvalidFileType: "No puede subir este tipo de archivos.",
 
         /**
          * If the server response was invalid.
@@ -453,17 +453,17 @@ var Dropzone = function (_Emitter) {
         /**
          * If `addRemoveLinks` is true, the text to be used for the cancel upload link.
          */
-        dictCancelUpload: "Cancel upload",
+        dictCancelUpload: "Cancelar carga",
 
         /**
          * If `addRemoveLinks` is true, the text to be used for confirmation when cancelling upload.
          */
-        dictCancelUploadConfirmation: "Are you sure you want to cancel this upload?",
+        dictCancelUploadConfirmation: "Está seguro de cancelar esta carga?",
 
         /**
          * If `addRemoveLinks` is true, the text to be used to remove a file.
          */
-        dictRemoveFile: "Remove file",
+        dictRemoveFile: "Carga cancelada.",
 
         /**
          * If this is not null, then the user will be prompted before removing a file.
@@ -474,7 +474,7 @@ var Dropzone = function (_Emitter) {
          * Displayed if `maxFiles` is st and exceeded.
          * The string `{{maxFiles}}` will be replaced by the configuration value.
          */
-        dictMaxFilesExceeded: "You can not upload any more files.",
+        dictMaxFilesExceeded: "No puede cargar más archivos.",
 
         /**
          * Allows you to translate the different units. Starting with `tb` for terabytes and going down to

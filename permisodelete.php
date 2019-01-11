@@ -372,4 +372,3 @@ function DeleteData($sqlKey,$conn)
 	return true;
 }
 ?>
-

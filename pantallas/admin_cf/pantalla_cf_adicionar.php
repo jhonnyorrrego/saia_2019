@@ -9,63 +9,120 @@ while($max_salida>0){
 	$max_salida--;
 }
 include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."librerias_saia.php");
+
 include_once($ruta_db_superior."class_transferencia.php");
 include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
-echo(estilo_bootstrap());
+include_once($ruta_db_superior."formatos/librerias/header_formato.php");
+include_once($ruta_db_superior."assets/librerias.php");
+
+?>
+<?= jquery() ?>
+<?= bootstrap() ?>
+<?= breakpoint() ?>
+<?= toastr() ?>
+<?= icons() ?>
+<?= moment() ?><?= validate() ?>
+<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen">
+<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css" rel="stylesheet" type="text/css" media="screen">
+
+<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+<link class="main-stylesheet"
+                                	href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.css"
+                                	rel="stylesheet" type="text/css" />
+                                <link
+                                	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/font-awesome/css/font-awesome.css"
+                                	rel="stylesheet" type="text/css" />
+                                
+                                <script
+                                	src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-validation/js/jquery.validate.min.js"
+                                	type="text/javascript"></script>
+<div class="card card-default">
+	<div class="card-body"><h5>ADICIONAR</h5>
+		<form name="formulario_tareas" id="formulario_tareas" class="form-vertical">
+<?php
 
 $campos=explode(",",$_REQUEST['campos']);
+$tipo_fecha='';
+
+
 for($i=0;$i<count($campos);$i++){
+		
+	$opcion_campo=explode("|||",$campos[$i]);
+	$categoria=explode("@",$opcion_campo[0]);
+	$nombre_campo=$categoria[0];
+	$tipo_campo=$categoria[1];
+	
 	if($campos[$i]=='cod_padre'){
 		$cod_padre=1;
-	}
-	if($campos[$i]=='descripcion'){
+	}else if($campos[$i]=='descripcion'){
 		$descripcion=1;
 	}
-	if($campos[$i]=='tipo'){
+	else if($campos[$i]=='tipo'){
 		$tipo=1;
 	}
-	if($campos[$i]=='categoria'){
-		$categoria=1;
+	else if($campos[$i]=='categoria'){
+		$categorias=1;
 	}
 }
 
+
 if($_REQUEST['guardar']==1){
+		
+	if(@$_REQUEST["tipo_fecha"]!=''){
+		$fecha=explode(',',$_REQUEST["tipo_fecha"]);
+		for($j=0;$j<count($fecha);$j++){
+			$tipo_fecha[$fecha[$j]]=fecha_db_almacenar($_REQUEST[$fecha[$j]],"Y-m-d");
+			unset($_REQUEST[$fecha[$j]]);
+		}
+	}else{
+		$tipo_fecha=array();	
+	}
+	unset($_REQUEST["tipo_fecha"]);	
+		
+	$tabla=$_REQUEST['tabla'];
+	$llave=array_keys($_REQUEST);
+	unset($_REQUEST['tabla']);
+	unset($_REQUEST['submit']);
+	unset($_REQUEST['guardar']);
+		
+	$valores=array();
+	for($i=0;$i<count($llave);$i++){
+		if(is_array($_REQUEST[$llave[$i]])){
+			$_REQUEST[$llave[$i]]=implode(",",array_filter($_REQUEST[$llave[$i]]));		
+		}
+	}	
+	if($tabla=='cf_convenio'){
+		$nombre_contador=str_replace(" ", "_", strtolower($_REQUEST['nombre']));
+		$insert_convenio="insert into contador (consecutivo,nombre,reiniciar_cambio_anio) values (1,'".$nombre_contador."',0)";
+		phpmkr_query($insert_convenio);
+		$insert=phpmkr_insert_id();
+		if($insert){
+			$_REQUEST['contador_idcontador']=$insert;
+		}
+	}
+	if(count($tipo_fecha)){
+		$sql="INSERT INTO ".$tabla." (".implode(",",array_keys($_REQUEST)).",".implode(",",array_keys($tipo_fecha)).") VALUES('".implode("','",array_values($_REQUEST))."',".implode(",",array_values($tipo_fecha)).")";
+	}else{
+		$sql="INSERT INTO ".$tabla." (".implode(",",array_keys($_REQUEST)).") VALUES('".implode("','",array_values($_REQUEST))."')";
+	}
 	
-	$sql="INSERT INTO ".$_REQUEST['tabla']." (nombre,valor,cod_padre,descripcion,tipo,categoria,estado) VALUES('".htmlentities($_REQUEST['nombre'])."','".$_REQUEST['valor']."','".$_REQUEST['cod_padre']."','".htmlentities($_REQUEST[descripcion])."','".$_REQUEST[tipo]."','".htmlentities($_REQUEST['categoria'])."','".$_REQUEST['estado']."')";
-	//print_r($sql);die();
 	phpmkr_query($sql);
 	echo('<script>parent.window.location.reload();</script>');
 }else{
   
-    echo(librerias_jquery("1.7"));
-    echo(librerias_arboles());
-    echo(librerias_bootstrap());
   
 	?>
-	<div class="container">
-		<br>
-		<div class="control-group" nombre="etiqueta">
-			<legend>Adicionar </legend>
-		</div>
-		<form id="formulario_tareas" class="form-vertical">
-			<div class="control-group">
-				<label class="control-label" for="etiqueta">Nombre*:</label>
-				<div class="controls">
-					<input type="text" name="nombre" id="nombre" class="required" value="">
-				</div>
-			</div>
-			<div class="control-group">
-				<label class="control-label" for="etiqueta">Valor*:</label>
-				<div class="controls">
-					<input type="text" name="valor" id="valor" class="required" value="">
-				</div>
-			</div>
+	<div class="form-group" id="tr_fecha_radicacion_entrada">
+		<label class="etiqueta_campo" title="">NOMBRE*</label>
+		<input type="text" name="nombre" id="nombre" class="required form-control" value="">
+	</div>
+	<div class="form-group">
+			
 			<?php 
 			autocompletar_categoria();
 			if($cod_padre){?>
-			<div class="control-group">
-				<label class="control-label" for="etiqueta">Padre:</label>
+			<div class="form-group">
+				<label class="etiqueta_campo" for="etiqueta"><b>PADRE:</b></label>
 				<div class="controls">
 					<?php
 						echo arbol("cod_padre","cod_padre","pantallas/admin_cf/test_tabla_cf.php?tabla=".$_REQUEST['tabla'],0,0,1,1,'radio');
@@ -76,55 +133,166 @@ if($_REQUEST['guardar']==1){
 			}
 			if($descripcion){
 			?>
-			<div class="control-group">
-				<label class="control-label" for="etiqueta">Descripci&oacute;n:</label>
+			<div class="form-group">
+				<label class="etiqueta_campo" for="etiqueta"><b>DESCRIPCI&oacute;N:</b></label>
 				<div class="controls">
-					<textarea id="descripcion" maxlength="255" name="descripcion" placeholder="Descripcion"></textarea>
+					<textarea class="form-control" id="descripcion" maxlength="255" name="descripcion" placeholder="Descripcion"></textarea>
 				</div>
 			</div>
 			<?php 
 			}
 			if($tipo){
 			?>
-			<div class="control-group">
-				<label class="control-label" for="etiqueta">Tipo:</label>
-				<div class="controls">
-					<input type="text" name="tipo" id="tipo">
-					<div id='completar_tipo' class='ac_results'></div>
-				</div>
+			<div class="form-group">
+				<label class="etiqueta_campo" for="etiqueta"><b>TIPO:</b></label>
+				<input class="form-control" type="text" name="tipo" id="tipo">
+				<div id='completar_tipo' class='ac_results'></div>
 			</div>
 			<?php 
 			}
-			if($categoria){
+			if($categorias){
 			?>
-			<div class="control-group">
-				<label class="control-label" for="etiqueta">Categoria:</label>
-				<div class="controls">
-					<input type="text"  name="categoria" id="categoria">
-					<div id='completar_categoria' class='ac_results'></div>
-				</div>
+			<div class="form-group">
+				<label class="etiqueta_campo" for="etiqueta"><b>CATEGORIA:</b></label>
+				<input class="form-control" type="text"  name="categoria" id="categoria">
+				<div id='completar_categoria' class='ac_results'></div>
 			</div>
 			<?php 
 			}
 			?>
-			<div class="control-group">
-				<label class="control-label" for="etiqueta">Estado*:</label>
-				<div class="controls">
-					<input type="radio" class="required" name="estado" id="estado0" value="1">Activo
-					<input type="radio" name="estado" id="estado1" value="0">Inactivo
-					<label class="error" for="estado"></label>
-				</div>
+			
+			<div class="form-group">
+				<label class="etiqueta_campo" for="etiqueta"><b>ESTADO*:</b></label>
+				<div class="radio radio-success">
+					<input type="radio" value="1" name="estado" id="estado1" class="required" checked="checked">
+                    <label for="estado1">Activo</label>
+                    <input type="radio" value="0" name="estado" id="estado0">
+                    <label for="estado0">Inactivo</label>
+                </div>
 			</div> 
-			<div class="control-group">
+			
+<?php
+
+for($i=0;$i<count($campos);$i++){
+		
+	$opcion_campo=explode("|||",$campos[$i]);
+	$categoria=explode("@",$opcion_campo[0]);
+	$nombre_campo=$categoria[0];
+	$tipo_campo=$categoria[1];
+	
+	if($campos[$i]=='cod_padre'){
+		$cod_padre=1;
+	}else if($campos[$i]=='descripcion'){
+		$descripcion=1;
+	}
+	else if($campos[$i]=='tipo'){
+		$tipo=1;
+	}
+	else if($campos[$i]=='categoria'){
+		$categoria=1;
+	}else{
+	
+		switch($tipo_campo){
+			case 'select':
+	        	$opcion=explode("||",$opcion_campo[1]);
+				
+				$html='<label class="etiqueta_campo" for="'.$nombre_campo.'"><b>'.strtoupper(str_replace("_", " ", $nombre_campo)).':</b></label> <select id="'.$nombre_campo.'" name="'.$nombre_campo.'"><option val="">Por favor seleccione...</option>';			
+				for($j=0;$j<count($opcion);$j++){
+					$opciones=explode("|",$opcion[$j]);
+					$eti_opcion=$opciones[0];
+					$valor_opcion=$opciones[1];
+					$html.='<option value="'.$valor_opcion.'">'.$eti_opcion.'</option>';
+				}
+				
+				$html.='</select><br/><br/>';
+				echo($html);		
+	        break;
+			
+			case 'radio':
+				$opcion=explode("||",$opcion_campo[1]);
+				
+				$html='<b>'.strtoupper(str_replace("_", " ", $nombre_campo)).':</b><br/> ';
+				for($j=0;$j<count($opcion);$j++){
+					$opciones=explode("|",$opcion[$j]);
+					$eti_opcion=$opciones[0];
+					$valor_opcion=$opciones[1];
+					
+					$html.=' <input type="radio" id="'.$nombre_campo.$j.'" name="'.$nombre_campo.'" value="'.$valor_opcion.'"> '.$eti_opcion;
+				}
+				$html.='<br/><br/>';
+				echo($html);
+	
+			break;
+			
+			case 'checkbox':
+				$opcion=explode("||",$opcion_campo[1]);
+				
+				$html='<b>'.strtoupper(str_replace("_", " ", $nombre_campo)).':</b><br/> ';
+				for($j=0;$j<count($opcion);$j++){
+					$opciones=explode("|",$opcion[$j]);
+					$eti_opcion=$opciones[0];
+					$valor_opcion=$opciones[1];
+					
+					$html.=' <input type="checkbox" id="'.$nombre_campo.$j.'" name="'.$nombre_campo.'[]" value="'.$valor_opcion.'"> '.$eti_opcion;
+				}
+				$html.='<br/><br/>';
+				echo($html);
+			
+			break;
+			
+			case 'date':
+				$html='<div class="control-group">
+				<b>'.strtoupper(str_replace("_", " ", $nombre_campo)).':</b><br/>
+		            <input id="'.$nombre_campo.'" name="'.$nombre_campo.'" style="width:100px" type="text" value="" placeholder="Inicio">';
+	       		echo($html);
+				echo(selector_fecha($nombre_campo,"formulario_tareas","Y-m-d",date("m"),date("Y"),"default.css","../../","").'</div>');
+				$tipo_fecha[]=$nombre_campo;
+					
+			break;
+			
+			case 'text':
+				$html='<b>'.strtoupper(str_replace("_", " ", $nombre_campo)).':</b><br/> ';
+				$html.='<input type="text" id="'.$nombre_campo.'" name="'.$nombre_campo.'"><br/>';
+				echo($html);
+			break; 
+			
+			case 'area':
+				$html='<b>'.strtoupper(str_replace("_", " ", $nombre_campo)).' </b><br/> ';
+				$html.='<textarea tabindex="4" cols="53" rows="3" class="tiny_avanzado" id="'.$nombre_campo.'" name="'.$nombre_campo.'">&nbsp;</textarea>';
+				echo($html);
+			break;  
+			
+			default:
+				if($nombre_campo!=''){
+					$html='<b>'.strtoupper(str_replace("_", " ", $nombre_campo)).':</b><br/> ';
+					$html.='<input required type="text" id="'.$nombre_campo.'" name="'.$nombre_campo.'"><br/>';
+					echo($html);
+				}
+			break;
+		}
+
+	}
+}
+
+
+
+
+
+
+?>			
+			
+		<div class="control-group">
 				<div class="controls">
-					<input type='submit' class="btn btn-primary btn-mini" name="submit" id="submit" value="continuar">
+					<input type='submit' class="btn btn-complete" name="submit" id="submit" value="continuar">
 					<input type="hidden" name="tabla" value="<?php echo($_REQUEST['tabla'])?>">
 					<input type="hidden" name="guardar" value="1">
+					<input type="hidden" name="tipo_fecha" value="<?php echo(implode(",",$tipo_fecha))?>">
 				</div>
 			</div>
+			
 		</form>
 	</div>
-	<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>js/jquery.validate.1.13.1.js"></script>
+	</div>
 	<style>
 	label.error {
 		font-weight: bold;
@@ -134,8 +302,16 @@ if($_REQUEST['guardar']==1){
 	<script>
 		
 	$(document).ready(function(){
-
 		$("#formulario_tareas").validate();
+		
+		$('.datetimepicker').datetimepicker({			
+			language: 'es',
+			pick12HourFormat: true,
+			pickTime: false
+		}).on('changeDate', function(e){
+        	$(this).datetimepicker('hide');
+		});
+		
 	});
 	</script>
 <?php
@@ -380,5 +556,7 @@ function arbol($campo,$nombre_arbol,$url,$cargar_todos=0,$padresehijos=false,$qu
 <script type="text/javascript" src="<?php echo $ruta_db_superior; ?>pantallas/lib/codificacion_funciones.js"></script>
 	<?php
 	}
-	
+	if($_REQUEST["librerias_cf"]){
+		include_once($ruta_db_superior.$_REQUEST["librerias_cf"]);	
+	}
 ?>

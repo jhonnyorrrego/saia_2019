@@ -2,7 +2,7 @@
 namespace Luracast\Restler\Format;
 
 
-use Luracast\Restler\Data\Obj;
+use Luracast\Restler\Data\Object;
 use Luracast\Restler\RestException;
 
 /**
@@ -44,10 +44,10 @@ class CsvFormat extends Format implements iDecodeStream
      */
     public function encode($data, $humanReadable = false)
     {
-        $char               = Obj::$separatorChar;
-        Obj::$separatorChar = false;
-        $data               = Obj::toArray($data);
-        Obj::$separatorChar = $char;
+        $char = Object::$separatorChar;
+        Object::$separatorChar = false;
+        $data = Object::toArray($data);
+        Object::$separatorChar = $char;
         if (is_array($data) && array_values($data) == $data) {
             //if indexed array
             $lines = array();
@@ -109,10 +109,10 @@ class CsvFormat extends Format implements iDecodeStream
         while (($row = static::getRow(array_shift($lines), $keys)) !== FALSE)
             $decoded [] = $row;
 
-        $char               = Obj::$separatorChar;
-        Obj::$separatorChar = false;
-        $decoded            = Obj::toArray($decoded);
-        Obj::$separatorChar = $char;
+        $char = Object::$separatorChar;
+        Object::$separatorChar = false;
+        $decoded = Object::toArray($decoded);
+        Object::$separatorChar = $char;
         return $decoded;
     }
 
@@ -172,10 +172,10 @@ class CsvFormat extends Format implements iDecodeStream
         while (($row = static::getRow(stream_get_line($stream, 0, PHP_EOL), $keys)) !== FALSE)
             $decoded [] = $row;
 
-        $char               = Obj::$separatorChar;
-        Obj::$separatorChar = false;
-        $decoded            = Obj::toArray($decoded);
-        Obj::$separatorChar = $char;
+        $char = Object::$separatorChar;
+        Object::$separatorChar = false;
+        $decoded = Object::toArray($decoded);
+        Object::$separatorChar = $char;
         return $decoded;
     }
 }

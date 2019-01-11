@@ -8,16 +8,22 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."librerias_saia.php");
+include_once ($ruta_db_superior . "db.php");
+include_once ($ruta_db_superior . "librerias_saia.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("responsable");
 desencriptar_sqli('form_info');
-echo(librerias_jquery("1.7"));
-include_once($ruta_db_superior."class_transferencia.php");
-include_once($ruta_db_superior."formatos/librerias/funciones_generales.php");
+
+include_once ($ruta_db_superior . "class_transferencia.php");
+include_once ($ruta_db_superior . "formatos/librerias/funciones_generales.php");
 echo(estilo_bootstrap());
 echo(librerias_jquery("1.7"));
+echo(librerias_validar_formulario('11'));
+if(isset($_REQUEST["idtemas"])){
+	$idtema=$_REQUEST["idtemas"];
+}else{
+	$idtema=0;
+}
 
 if ($_REQUEST['guardar'] == 1) {
 	$orden = 0;
@@ -27,7 +33,7 @@ if ($_REQUEST['guardar'] == 1) {
 		$orden = $tareas_ruta_aprob["numcampos"] + 1;
 		$accion_tareas = intval(@$_REQUEST["accion_tareas"]);
 	}
-	$sql = "INSERT INTO tareas (fecha,tarea,responsable,descripcion,prioridad,fecha_tarea,ejecutor,documento_iddocumento,ruta_aprob,orden_tareas,accion_tareas) VALUES(" . fecha_db_almacenar($_REQUEST['fecha'], "Y-m-d H:i:s") . ",'" . ($_REQUEST['tarea']) . "','" . $_REQUEST['responsable'] . "','" . ($_REQUEST[descripcion]) . "','" . $_REQUEST[prioridad] . "'," . fecha_db_almacenar($_REQUEST['fecha_tarea'], "Y-m-d") . ",'" . usuario_actual("funcionario_codigo") . "','" . $_REQUEST['iddoc'] . "'," . $_REQUEST["ruta_aprob"] . "," . $orden . "," . $accion_tareas . ")";
+	$sql = "INSERT INTO tareas (fecha,tarea,responsable,descripcion,prioridad,fecha_tarea,ejecutor,documento_iddocumento,ruta_aprob,orden_tareas,accion_tareas,idtema) VALUES(" . fecha_db_almacenar($_REQUEST['fecha'], "Y-m-d H:i:s") . ",'" . ($_REQUEST['tarea']) . "','" . $_REQUEST['responsable'] . "','" . ($_REQUEST[descripcion]) . "','" . $_REQUEST[prioridad] . "'," . fecha_db_almacenar($_REQUEST['fecha_tarea'], "Y-m-d") . ",'" . usuario_actual("funcionario_codigo") . "','" . $_REQUEST['iddoc'] . "'," . $_REQUEST["ruta_aprob"] . "," . $orden . "," . $accion_tareas . ",".$idtema.")";
 	phpmkr_query($sql);
 	if (@$_REQUEST["ruta_aprob"] == -1 || $_REQUEST["refrescar"]==1) {
 	?>
@@ -60,7 +66,6 @@ if ($_REQUEST['guardar'] == 1) {
 }
 
 $ruta_aprob=0;
-
 if (@$_REQUEST["fecha"]) {
 	$fecha_tarea = date("Y-m-d", $_REQUEST["fecha"]);
 }
@@ -98,7 +103,7 @@ label.error {
 		<div class="control-group" nombre="etiqueta">
 			<legend>Asignar tarea al documento</legend>
 		</div>
-		<form id="formulario_tareas" class="form-horizontal" method="POST">
+		<form id="formulario_tareas" class="form-horizontal" method="post">
 			<div class="control-group">
 				<label class="control-label" for="etiqueta">Fecha*:</label>
 				<div class="controls">
@@ -120,7 +125,20 @@ label.error {
 					<input type="text" class="required" name="tarea" id="etiqueta" placeholder="Tarea a realizar">
 				</div>
 			</div>
-			
+			<?php
+			if($idtema){
+				?>
+				<div class="control-group">
+					<label class="control-label" for="etiqueta">Tema relacionado:</label>
+					<div class="controls">
+						<input type="text" name="tema" id="tema" placeholder="Tema relacionado" value="<?php echo($_REQUEST["texto_tarea"]);?>" readonly>
+						<input type="hidden" name="idtemas" id="idtemas" value="<?php echo($idtema);?>">
+					</div>
+				</div>
+				<?php
+			}
+			?>
+		
 			<div class="control-group">
 				<label class="control-label" for="etiqueta">Descripci&oacute;n:</label>
 				<div class="controls">
@@ -177,7 +195,7 @@ label.error {
 			</div>
 		</form>
 	</div>
-	<script type="text/javascript" src="<?php echo($ruta_db_superior); ?>js/jquery.validate.1.13.1.js"></script>
+	
 	<script>
 	$(document).ready(function(){
 		var opcion=parseInt("<?php echo $_REQUEST["tarea_ruta_aprob"];?>");
@@ -196,7 +214,6 @@ label.error {
 			submitHandler: function(form) {
 				<?php encriptar_sqli("formulario_tareas",0,"form_info",$ruta_db_superior);?>
 			    form.submit();
-			    
 			  }
 		});
 	});

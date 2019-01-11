@@ -27,6 +27,7 @@ use Symfony\Component\Cache\Adapter\RedisAdapter;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\ClosureLoader;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
@@ -190,8 +191,8 @@ abstract class FrameworkExtensionTest extends TestCase
     {
         $container = $this->createContainerFromFile('workflows');
 
-        $this->assertTrue($container->hasDefinition('workflow.article', 'Workflow is registered as a service'));
-        $this->assertTrue($container->hasDefinition('workflow.article.definition', 'Workflow definition is registered as a service'));
+        $this->assertTrue($container->hasDefinition('workflow.article'), 'Workflow is registered as a service');
+        $this->assertTrue($container->hasDefinition('workflow.article.definition'), 'Workflow definition is registered as a service');
 
         $workflowDefinition = $container->getDefinition('workflow.article.definition');
 
@@ -209,8 +210,8 @@ abstract class FrameworkExtensionTest extends TestCase
         );
         $this->assertSame(array('workflow.definition' => array(array('name' => 'article', 'type' => 'workflow', 'marking_store' => 'multiple_state'))), $workflowDefinition->getTags());
 
-        $this->assertTrue($container->hasDefinition('state_machine.pull_request', 'State machine is registered as a service'));
-        $this->assertTrue($container->hasDefinition('state_machine.pull_request.definition', 'State machine definition is registered as a service'));
+        $this->assertTrue($container->hasDefinition('state_machine.pull_request'), 'State machine is registered as a service');
+        $this->assertTrue($container->hasDefinition('state_machine.pull_request.definition'), 'State machine definition is registered as a service');
         $this->assertCount(4, $workflowDefinition->getArgument(1));
         $this->assertSame('draft', $workflowDefinition->getArgument(2));
 
@@ -292,8 +293,8 @@ abstract class FrameworkExtensionTest extends TestCase
     {
         $container = $this->createContainerFromFile('workflow_with_multiple_transitions_with_same_name');
 
-        $this->assertTrue($container->hasDefinition('workflow.article', 'Workflow is registered as a service'));
-        $this->assertTrue($container->hasDefinition('workflow.article.definition', 'Workflow definition is registered as a service'));
+        $this->assertTrue($container->hasDefinition('workflow.article'), 'Workflow is registered as a service');
+        $this->assertTrue($container->hasDefinition('workflow.article.definition'), 'Workflow definition is registered as a service');
 
         $workflowDefinition = $container->getDefinition('workflow.article.definition');
 
@@ -317,6 +318,22 @@ abstract class FrameworkExtensionTest extends TestCase
 
         $this->assertTrue($container->has(Registry::class));
         $this->assertTrue($container->hasDefinition('console.command.workflow_dump'));
+    }
+
+    public function testEnabledPhpErrorsConfig()
+    {
+        $container = $this->createContainerFromFile('php_errors_enabled');
+
+        $this->assertEquals(new Reference('logger', ContainerInterface::NULL_ON_INVALID_REFERENCE), $container->getDefinition('debug.debug_handlers_listener')->getArgument(1));
+        $this->assertSame(-1, $container->getParameter('debug.error_handler.throw_at'));
+    }
+
+    public function testDisabledPhpErrorsConfig()
+    {
+        $container = $this->createContainerFromFile('php_errors_disabled');
+
+        $this->assertNull($container->getDefinition('debug.debug_handlers_listener')->getArgument(1));
+        $this->assertSame(0, $container->getParameter('debug.error_handler.throw_at'));
     }
 
     public function testRouter()

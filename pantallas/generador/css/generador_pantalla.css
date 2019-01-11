@@ -1,0 +1,82 @@
+/* FORM CONTENT BOX */
+#content {
+	border: 1px solid #eee;
+	border-radius: 4px;
+	padding: 10px 20px;
+}
+
+#content_form_name {
+	cursor: pointer;
+}
+
+.content-hover {
+	border: 1px dashed #3a87ad !important;
+	color: #3a87ad;
+	background: #d9edf7;
+	opacity: 0.5;
+}
+
+.content-hover legend {
+	color: #3a87ad;
+	border-color: -moz-use-text-color -moz-use-text-color #3a87ad;
+}
+
+.content-hover .element {
+	border: 1px solid #d9edf7;
+}
+
+/* COMPONENTS */
+.component {
+	background: #fafafa !important;
+	border: 1px solid #eee;
+	cursor: move;	
+	border: 1px solid #fff;
+}
+
+.component:hover {
+	background: #fafafa !important;
+	border: 2px solid #eee;
+}
+
+.component-drag {
+	border: 1px solid #eee;
+	border-radius: 4px;
+	padding: 10px;
+	background: #FFF;
+}
+
+/* ELEMENTS */
+.element {
+	cursor: move;
+	padding: 10px;
+	border: 1px solid #fff;
+}
+
+.element:hover {
+	background: #fafafa;
+	border: 1px solid #eee;
+}
+
+.element-placeholder {
+	border: 1px dashed #3a87ad;
+	color: #3a87ad;
+	background: #d9edf7;
+	min-height: 50px;
+	opacity: 0.5;
+}
+
+/* OPTION BOXES */
+.options {
+	display: none;
+}
+.accordion-heading .accordion-toggle {
+padding: 0px 15px;
+}
+.accordion-inner {
+padding: 5px;
+}
+.form-actions {
+	padding: 5;
+	margin-top: 0;
+	margin-bottom: 0;
+}

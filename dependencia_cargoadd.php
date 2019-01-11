@@ -3,13 +3,13 @@
 <?php
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
-header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1 
-header("Cache-Control: post-check=0, pre-check=0", false); 
-header("Pragma: no-cache"); // HTTP/1.0 
+header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache"); // HTTP/1.0
 ?>
 <?php
 $ewCurSec = 0; // Initialise
-				
+
 ?>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="STYLESHEET" type="text/css" href="css/dhtmlXTree.css">
@@ -25,7 +25,7 @@ $x_funcionario_idfuncionario = Null;
 $x_dependencia_iddependencia = Null;
 $x_cargo_idcargo = Null;
 $x_estado = Null;
-$x_fecha_inicial = Null;  
+$x_fecha_inicial = Null;
 $x_fecha_final = Null;
 $x_fecha_ingreso = Null;
 ?>
@@ -36,7 +36,6 @@ $x_fecha_ingreso = Null;
 include_once ("pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("x_iddependencia_cargo","x_funcionario_idfuncionario","x_dependencia_iddependencia","x_cargo_idcargo");
 desencriptar_sqli('form_info');
-echo(librerias_jquery());
 // Get action
 $sAction = @$_POST["a_add"];
 if (($sAction == "") || ((is_null($sAction)))) {
@@ -83,18 +82,18 @@ switch ($sAction)
 ?>
 <?php include ("header.php") ?>
 <script type="text/javascript" src="ew.js"></script>
-          <style>label.error{color:red}                                 
+          <style>label.error{color:red}
           </style>
 <script type='text/javascript'>
   $().ready(function(){
 	// validar los campos del formato
 	$('#dependencia_cargoadd').validate();
-	
+
 });
-</script>  
+</script>
 <script type="text/javascript">
 <!--
-EW_dateSep = "/"; // set date separator	
+EW_dateSep = "/"; // set date separator
 
 //-->
 </script>
@@ -108,7 +107,7 @@ if (EW_this.x_fecha_inicial && !EW_hasValue(EW_this.x_fecha_inicial, "TEXT" )) {
 }
 if (EW_this.x_fecha_inicial && !EW_checkdate(EW_this.x_fecha_inicial.value)) {
 	if (!EW_onError(EW_this, EW_this.x_fecha_inicial, "TEXT", "Formato de fecha incorrecto yyyy/mm/dd - Fecha Inicio Actividades"))
-		return false; 
+		return false;
 }
 if (EW_this.x_fecha_final && !EW_hasValue(EW_this.x_fecha_final, "TEXT" )) {
 	if (!EW_onError(EW_this, EW_this.x_fecha_final, "TEXT", "Por favor ingrese los campos requeridos - Fecha Final Actividades"))
@@ -116,7 +115,7 @@ if (EW_this.x_fecha_final && !EW_hasValue(EW_this.x_fecha_final, "TEXT" )) {
 }
 if (EW_this.x_fecha_final && !EW_checkdate(EW_this.x_fecha_final.value)) {
 	if (!EW_onError(EW_this, EW_this.x_fecha_final, "TEXT", "Formato de fecha incorrecto yyyy/mm/dd - Fecha Final Actividades"))
-		return false; 
+		return false;
 }
 // verificar que la fecha final de actividades sea mayor que la fecha inicial de actividades de un rol
 var dif;
@@ -128,7 +127,7 @@ inicio = new Date(fecha1.substring(0,4),mes,fecha1.substring(8,10));
 fin = new Date(fecha2.substring(0,4),mes2,fecha2.substring(8,10));
 dif = Math.floor((fin.getTime() - inicio.getTime())/(1000*60*60*24));
 if(dif<=0)
-{ 
+{
     notificacion_saia('<b>ATENCI&Oacute;</b><br>La fecha final de actividades no puede ser menor o igual que la fecha inicial, por favor verifique','warning','',5000);
   return false;
 }
@@ -157,6 +156,7 @@ echo(ucwords(strtolower($funcionario[0]["nombres"]." ".$funcionario[0]["apellido
 			?>
 			<td bgcolor="#F5F5F5"><span class="phpmaker">
 			<select name="x_funcionario_idfuncionario" id="x_funcionario_idfuncionario">
+				<option value="">Seleccione...</option>
 			<?php for($i=0;$i<$funcionarios["numcampos"];$i++){
 				echo('<option value="'.$funcionarios[$i]["idfuncionario"].'">'.ucwords(strtolower($funcionarios[$i]["nombres"].' '.$funcionarios[$i]["apellidos"])).'</option>');
 			} ?>
@@ -203,7 +203,7 @@ echo(ucwords(strtolower($funcionario[0]["nombres"]." ".$funcionario[0]["apellido
 
 			function onNodeSelect(nodeId)
       { document.getElementById('x_dependencia_iddependencia').value=nodeId;
-      }   
+      }
       function fin_cargando_serie() {
         if (browserType == "gecko" )
            document.poppedLayer =
@@ -228,8 +228,8 @@ echo(ucwords(strtolower($funcionario[0]["nombres"]." ".$funcionario[0]["apellido
            document.poppedLayer =
                eval('document.layers["esperando_dep"]');
         document.poppedLayer.style.display = "";
-      }       
-	--> 		
+      }
+	-->
 	</script>
 
 </span></td>
@@ -273,7 +273,7 @@ echo(ucwords(strtolower($funcionario[0]["nombres"]." ".$funcionario[0]["apellido
 
 			function onNodeSelect(nodeId)
       { document.getElementById('x_cargo_idcargo').value=nodeId;
-      }   
+      }
       function fin_cargando_serie() {
         if (browserType == "gecko" )
            document.poppedLayer =
@@ -298,8 +298,8 @@ echo(ucwords(strtolower($funcionario[0]["nombres"]." ".$funcionario[0]["apellido
            document.poppedLayer =
                eval('document.layers["esperando_serie"]');
         document.poppedLayer.style.display = "";
-      }       
-	--> 		
+      }
+	-->
 	</script>
 
 </span></td>
@@ -390,7 +390,8 @@ function LoadData($sKey,$conn)
 // Function AddData
 // - Add Data
 // - Variables used: field variables
-
+//encriptar_sqli("dependencia_cargoadd",1);
+encriptar_sqli("dependencia_cargoadd", 1,"form_info","",false,false);
 function AddData($conn)
 {
 	global $x_iddependencia_cargo, $x_funcionario_idfuncionario, $x_dependencia_iddependencia, $x_cargo_idcargo, $x_estado,
@@ -432,14 +433,14 @@ function AddData($conn)
 	$fieldList["fecha_inicial"] = fecha_db_almacenar($x_fecha_inicial,'Y/m/d');
 
 
-	// Field fecha_final	
+	// Field fecha_final
   $anio=date("Y");
   $fecha_fin= date("Y-m-d", mktime( 0, 0, 0,1, 1,$anio+1));
   $fieldList["fecha_final"] = fecha_db_almacenar($x_fecha_final,'Y-m-d');
 
-  
+
   $fieldList["tipo"] =1;
-	
+
 	if(!validar_tipo_cargo($fieldList))return false;
 	// insert into database
 	$strsql = "INSERT INTO dependencia_cargo (";
@@ -451,7 +452,6 @@ function AddData($conn)
 	phpmkr_query($strsql, $conn) or error("Fall� la b�squeda" . phpmkr_error() . ' SQL:' . $strsql);
 	return true;
 }
-encriptar_sqli("dependencia_cargoadd",1); 
 function validar_tipo_cargo($datos){
 	global $conn;
 	$idfuncionario=$datos["funcionario_idfuncionario"];

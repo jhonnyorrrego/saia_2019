@@ -363,9 +363,50 @@ class ImportDbCommand extends Command {
     }
 
     private function ejecutar_insert(\Doctrine\DBAL\Connection $conn, $tabla, $valores) {
-        foreach ($valores as $value) {
-            $conn->insert($tabla, $value);
+        $fu_sqlsrv = false;
+        if(preg_match("/sqlsrv$/", $this->connectionParams['driver'])) {
+            $fu_sqlsrv = true;
         }
+
+        foreach ($valores as $value) {
+            if($fu_sqlsrv) {
+                $this->insertar_sql_server($conn, $tabla, $value);
+            } else {
+                $conn->insert($tabla, $value);
+            }
+        }
+
+    }
+
+    private function insertar_sql_server(\Doctrine\DBAL\Connection $conn, $tabla, $data) {
+        if (empty($data)) {
+            return $conn->executeUpdate('INSERT INTO ' . $tabla . ' ()' . ' VALUES ()');
+        }
+
+        $columnList = array();
+        $paramPlaceholders = array();
+        $paramValues = array();
+
+        if($tabla == 'funcionario') {
+            unset($data["firma"]);
+            unset($data["firma_temporal"]);
+            unset($data["firma_original"]);
+        }
+        if($tabla == 'dependencia') {
+            unset($data["logo"]);
+        }
+
+        foreach ($data as $columnName => $value) {
+            $columnList[] = $columnName;
+            $paramPlaceholders[] = '?';
+            $paramValues[] = $value;
+        }
+
+        return $conn->executeUpdate(
+            "SET IDENTITY_INSERT $tabla ON; " .
+            'INSERT INTO ' . $tabla . ' (' . implode(', ', $columnList) . ')' .
+            ' VALUES (' . implode(', ', $paramPlaceholders) . ')',
+            $paramValues);
     }
 
     private function crear_vista(\Doctrine\DBAL\Connection $conn, $nombre, $sql) {

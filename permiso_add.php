@@ -6,7 +6,6 @@ include_once("librerias_saia.php");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
 
-
 $tabla=@$_REQUEST["tabla"];
 if(!$tabla){
   $tabla="expediente";
@@ -42,7 +41,6 @@ else{ // Carga los permisos si estan definidos*/
     $p_todos=array("l");
   }
 }
-
 ?>
 <style>td{font-family:verdana;}.celda_permiso{font-size:10px;text-align:"center";}.celda_encabezado{font-size:11px;text-align:"center";}
 </style>

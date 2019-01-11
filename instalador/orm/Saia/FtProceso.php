@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FtProceso
  *
- * @ORM\Table(name="ft_proceso")
+ * @ORM\Table(name="ft_proceso", indexes={@ORM\Index(name="i_proceso_documento_", columns={"documento_iddocumento"}), @ORM\Index(name="i_proceso_serie_idse", columns={"serie_idserie"})})
  * @ORM\Entity
  */
 class FtProceso
@@ -17,7 +17,7 @@ class FtProceso
      *
      * @ORM\Column(name="idft_proceso", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idftProceso;
 
@@ -59,7 +59,7 @@ class FtProceso
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="fecha", type="date", nullable=false)
+     * @ORM\Column(name="fecha", type="date", nullable=true)
      */
     private $fecha;
 

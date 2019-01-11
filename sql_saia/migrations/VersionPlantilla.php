@@ -17,15 +17,15 @@ class Version20170915184511 extends AbstractMigration {
 	public function up(Schema $schema) {
 		date_default_timezone_set("America/Bogota");
 
-		$this->abortIf($this->connection->getDatabasePlatform()->getName() != "mysql", "La migration solo puede ser ejecutada con seguridad en 'mysql'.");
+		$this -> abortIf($this -> connection -> getDatabasePlatform() -> getName() != "mysql", "La migration solo puede ser ejecutada con seguridad en 'mysql'.");
 
 		//$this->addSql('ALTER TABLE person ADD title VARCHAR(255) DEFAULT NULL');
 		//$this->addIndex( 'table_name', 'index_name', $options );
 
-		$this->platform->registerDoctrineTypeMapping('enum', 'string');
+		$this -> platform -> registerDoctrineTypeMapping('enum', 'string');
 
-		if (!$schema->hasTable("distribucion")) {
-			$table = $schema->createTable("distribucion");
+		if (!$schema -> hasTable("distribucion")) {
+			$table = $schema -> createTable("distribucion");
 			$table->addColumn("iddistribucion", "integer", [
 					"length" => 11,
 					"notnull" => false,
@@ -93,13 +93,13 @@ class Version20170915184511 extends AbstractMigration {
 	}
 
 	public function postUp(Schema $schema) {
-		$conn = $this->connection;
+		$conn = $this -> connection;
 
 		$result = $conn->fetchAll("select idbusqueda from busqueda where nombre = :nombre", [
 				'nombre' => 'reporte_distribucion_general'
 		]);
 
-		$conn->beginTransaction();
+		$conn -> beginTransaction();
 
 		$busqueda = [
 				'nombre' => 'reporte_distribucion_general',
@@ -117,7 +117,7 @@ class Version20170915184511 extends AbstractMigration {
 				'tipo_busqueda' => 2
 		];
 
-		$idbusq = $this->guardar_busqueda($busqueda);
+		$idbusq = $this -> guardar_busqueda($busqueda);
 
 		$componente1 = [
 				'busqueda_idbusqueda' => $idbusq,
@@ -192,13 +192,13 @@ class Version20170915184511 extends AbstractMigration {
 				'modulo_idmodulo' => NULL
 		];
 
-		$idcmp1 = $this->guardar_componente($componente1);
+		$idcmp1 = $this -> guardar_componente($componente1);
 
-		$idcmp2 = $this->guardar_componente($componente2);
+		$idcmp2 = $this -> guardar_componente($componente2);
 
-		$idcmp3 = $this->guardar_componente($componente3);
+		$idcmp3 = $this -> guardar_componente($componente3);
 
-		$idcmp4 = $this->guardar_componente($componente4);
+		$idcmp4 = $this -> guardar_componente($componente4);
 
 		$cond1 = [
 				"fk_busqueda_componente" => $idcmp1,
@@ -221,15 +221,15 @@ class Version20170915184511 extends AbstractMigration {
 				"etiqueta_condicion" => "condicion_reporte_distribucion_general_pordistribuir"
 		];
 
-		$resp1 = $this->guardar_condicion($cond1);
+		$resp1 = $this -> guardar_condicion($cond1);
 
-		$resp2 = $this->guardar_condicion($cond2);
+		$resp2 = $this -> guardar_condicion($cond2);
 
-		$resp3 = $this->guardar_condicion($cond3);
+		$resp3 = $this -> guardar_condicion($cond3);
 
-		$resp4 = $this->guardar_condicion($cond4);
+		$resp4 = $this -> guardar_condicion($cond4);
 
-		$conn->commit();
+		$conn -> commit();
 	}
 
 	/**
@@ -238,19 +238,19 @@ class Version20170915184511 extends AbstractMigration {
 	 */
 	public function down(Schema $schema) {
 
-		$this->abortIf($this->connection->getDatabasePlatform()->getName() != "mysql", "La migration solo puede ser ejecutada con seguridad en 'mysql'.");
+		$this -> abortIf($this -> connection -> getDatabasePlatform() -> getName() != "mysql", "La migration solo puede ser ejecutada con seguridad en 'mysql'.");
 
 		//$this->addSql('ALTER TABLE person DROP title');
 
-		$schema->dropTable('distribucion');
+		$schema -> dropTable('distribucion');
 	}
 
 	private function guardar_busqueda($datos) {
-		if(empty($datos)) {
+		if (empty($datos)) {
 			return false;
 		}
 
-		$conn = $this->connection;
+		$conn = $this -> connection;
 
 		$result = $conn->fetchAll("select idbusqueda from busqueda where nombre = :nombre", [
 				'nombre' => $datos["nombre"]
@@ -260,25 +260,25 @@ class Version20170915184511 extends AbstractMigration {
 		if (!empty($result)) {
 			$idbusq = $result[0]["idbusqueda"];
 		} else {
-			$resp = $conn->insert('busqueda', $datos);
+			$resp = $conn -> insert('busqueda', $datos);
 
 			if (empty($resp)) {
-				$conn->rollBack();
-				print_r($conn->errorInfo());
+				$conn -> rollBack();
+				print_r($conn -> errorInfo());
 				die("Fallo la creacion de la busqueda");
 			}
-			$idbusq = $conn->lastInsertId();
+			$idbusq = $conn -> lastInsertId();
 
 		}
 		return $idbusq;
 	}
 
 	private function guardar_componente($datos) {
-		if(empty($datos)) {
+		if (empty($datos)) {
 			return false;
 		}
 
-		$conn = $this->connection;
+		$conn = $this -> connection;
 
 		$result = $conn->fetchAll("select idbusqueda_componente from busqueda_componente where nombre = :nombre", [
 				'nombre' => $datos["nombre"]
@@ -288,25 +288,25 @@ class Version20170915184511 extends AbstractMigration {
 		if (!empty($result)) {
 			$idbusq = $result[0]["idbusqueda_componente"];
 		} else {
-			$resp = $conn->insert('busqueda_componente', $datos);
+			$resp = $conn -> insert('busqueda_componente', $datos);
 
 			if (empty($resp)) {
-				$conn->rollBack();
-				print_r($conn->errorInfo());
+				$conn -> rollBack();
+				print_r($conn -> errorInfo());
 				die("Fallo la creacion de la busqueda_componente");
 			}
-			$idbusq = $conn->lastInsertId();
+			$idbusq = $conn -> lastInsertId();
 
 		}
 		return $idbusq;
 	}
 
 	private function guardar_condicion($datos) {
-		if(empty($datos)) {
+		if (empty($datos)) {
 			return false;
 		}
 
-		$conn = $this->connection;
+		$conn = $this -> connection;
 
 		$result = $conn->fetchAll("select idbusqueda_condicion from busqueda_condicion where etiqueta_condicion  = :etiqueta_condicion", [
 				'etiqueta_condicion' => $datos["etiqueta_condicion"]
@@ -316,14 +316,14 @@ class Version20170915184511 extends AbstractMigration {
 		if (!empty($result)) {
 			$idbusq = $result[0]["idbusqueda_condicion"];
 		} else {
-			$resp = $conn->insert('busqueda_condicion', $datos);
+			$resp = $conn -> insert('busqueda_condicion', $datos);
 
 			if (empty($resp)) {
-				$conn->rollBack();
-				print_r($conn->errorInfo());
+				$conn -> rollBack();
+				print_r($conn -> errorInfo());
 				die("Fallo la creacion de la busqueda_condicion");
 			}
-			$idbusq = $conn->lastInsertId();
+			$idbusq = $conn -> lastInsertId();
 
 		}
 		return $idbusq;

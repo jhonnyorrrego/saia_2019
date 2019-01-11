@@ -20,7 +20,7 @@ abstract class SQL2 {
 	protected $tipos_campos = array();
 	protected $numcampos = NULL;
 	protected $numfilas = NULL;
-	public $ultimo_insert = NULL;
+	protected $ultimoInsert = NULL;
 	protected $filas = 0;
 
 	/*
@@ -45,10 +45,10 @@ abstract class SQL2 {
 	}
 
 	/**
-	 * Segundo constructor a partir de una ruta_servidor
-	 *
-	 * @param unknown $server_path
-	 * @return SaiaStorage
+	 * Devuelve una instancia a partir de los datos de conexion y el tipo de motor
+	 * @param $conn
+	 * @param $motorBd
+	 * @return NULL|SqlPostgres
 	 */
 	public static function get_instance($conn, $motorBd) {
 		$instance = null;
@@ -88,6 +88,13 @@ abstract class SQL2 {
 	 * <Post-condiciones>
 	 */
 	public abstract function Buscar($campos, $tablas, $where, $order_by);
+
+	/**
+	 * Devuelve la sentencia para concatenar el listado de valores en el motor respectivo
+	 * @param array $arreglo_cadena
+	 * @return string sentencia concatenar adecuada para el motor configurado
+	 */
+	public abstract function concatenar_cadena($arreglo_cadena);
 
 	/*
 	 * <Clase>SQL
@@ -394,7 +401,7 @@ abstract class SQL2 {
 	 */
 	protected abstract function elimina_indice_campo($tabla, $campo);
 
-	protected abstract function verificar_existencia($tabla);
+	public abstract function verificar_existencia($tabla);
 
 	protected abstract function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta);
 
@@ -402,10 +409,10 @@ abstract class SQL2 {
 		$resp = array("estado" => "KO", "mensaje" => "Error en formato_generar_tabla");
 		$datos_tabla = $this -> Busca_tabla($formato[0]["nombre_tabla"]);
 		$tabla_esta = $datos_tabla["numcampos"];
-		for ($i = 0; $i < $datos_tabla["numcampos"]; $i++) {
-			$datos_tabla[$i] = array_change_key_case($datos_tabla[$i], CASE_LOWER);
-		}
 		if ($datos_tabla["numcampos"]) {
+    		for ($i = 0; $i < $datos_tabla["numcampos"]; $i++) {
+    			$datos_tabla[$i] = array_change_key_case($datos_tabla[$i], CASE_LOWER);
+    		}
 			$campos_tabla = extrae_campo($datos_tabla, "field", "U,m"); // esto es para saber si existe el campo o no.
 		} else {
 			$campos_tabla = array();
@@ -414,7 +421,7 @@ abstract class SQL2 {
 		$this -> crear_campos_basicos_formato($idformato, $formato);
 		// 20160916 FIN Agregar el campo estado_documento si no existe
 		$campos = $this -> ejecuta_filtro_tabla("select * from campos_formato A where A.formato_idformato=" . $idformato);
-		if (!$campos["numcampos"]) {
+		if (empty($campos["numcampos"])) {
 			$resp["estado"] = "KO";
 			$resp["mensaje"] = "Problemas al Generar la tabla, No existen Campos";
 			return $resp;
@@ -428,7 +435,6 @@ abstract class SQL2 {
 
 		if (!$tabla_esta) {
 			$sql_tabla = "CREATE TABLE " . strtolower($formato[0]["nombre_tabla"]) . "(";
-
 			$sql_tabla .= implode(",", $lcampos);
 			$sql_tabla .= ") ";
 			guardar_traza($sql_tabla, $formato[0]["nombre_tabla"]);

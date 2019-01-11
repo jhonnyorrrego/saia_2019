@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * PermisoFuncionario
  *
- * @ORM\Table(name="permiso_funcionario", indexes={@ORM\Index(name="i_permiso_func_asignado_por", columns={"asignado_por"}), @ORM\Index(name="i_permiso_func_entidad_comp", columns={"entidad_compartida"})})
+ * @ORM\Table(name="permiso_funcionario")
  * @ORM\Entity
  */
 class PermisoFuncionario
@@ -17,14 +17,14 @@ class PermisoFuncionario
      *
      * @ORM\Column(name="idpermiso_funcionario", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idpermisoFuncionario;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="entidad_propietaria", type="boolean", nullable=false)
+     * @ORM\Column(name="entidad_propietaria", type="integer", nullable=false)
      */
     private $entidadPropietaria;
 
@@ -36,9 +36,9 @@ class PermisoFuncionario
     private $llavePropietaria;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="entidad_compartida", type="boolean", nullable=false)
+     * @ORM\Column(name="entidad_compartida", type="integer", nullable=false)
      */
     private $entidadCompartida;
 

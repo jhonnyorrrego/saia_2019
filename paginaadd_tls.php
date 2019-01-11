@@ -80,17 +80,17 @@ if (($sAction == "") || (($sAction == NULL))) {
 	if (@$_POST["x_enlace"]) {
 		$x_enlace = @$_POST["x_enlace"];
 	}
-	//sincronizar_carpetas($tabla, $conn);
+	sincronizar_carpetas($tabla, $conn);
 }
 
 switch ($sAction) {
 	case "A" :
 		// Add
-		//if (sincronizar_carpetas($tabla, $conn)) {
+		if (sincronizar_carpetas($tabla, $conn)) {
 			if ($key && $idformato[0][0]) {
 				llama_funcion_accion($key, $idformato[0][0], "digitalizar", "POSTERIOR");
 			}
-		//}
+		}
 		if ($x_escaneo == "1") {
 			$x_enlace = "paginaadd.php?key=" . $key . "&" . $x_enlace;
 		} else if ($x_enlace == '') {
@@ -205,7 +205,7 @@ table tbody td {
 				$params["dftp"]= $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
 				break;
 			case "ruta_temporal" :
-				$temporal_usuario = $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
+				$temporal_usuario = $_SESSION["ruta_temp_funcionario"];
 				$params["url"]= $configuracion[$i]["valor"] . "_" . $_SESSION["LOGIN" . LLAVE_SAIA];
 				break;
 			case "puerto_ftp" :
@@ -251,9 +251,11 @@ table tbody td {
 				break;
 		}
 	}
+	$params["ver_log"] = false;
 	if(!$params["ftp_type"] || $params["ftp_type"]==''){
 		$params["ftp_type"] = "ftp";
 	}
+
 	?>
 
 	<input type="hidden" name="EW_Max_File_Size" value="<?php echo($peso); ?>">
@@ -363,11 +365,13 @@ if($buscar_tarea["numcampos"]) {
         var pc = new RTCPeerConnection(servers, mediaConstraints);
         function handleCandidate(candidate){
             //match just the IP address
-            var ip_regex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/
-            var ip_addr = ip_regex.exec(candidate)[1];
+            var ip_regex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/;
+			var dirs_ip = ip_regex.exec(candidate);
+            var ip_addr = dirs_ip == null ? dirs_ip: dirs_ip[1];
             //remove duplicates
-            if(ip_dups[ip_addr] === undefined)
+            if(ip_dups[ip_addr] === undefined) {
                 callback(ip_addr);
+			}
             ip_dups[ip_addr] = true;
         }
         //listen for candidate events

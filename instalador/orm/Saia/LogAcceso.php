@@ -17,7 +17,7 @@ class LogAcceso
      *
      * @ORM\Column(name="idlog_acceso", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idlogAcceso;
 
@@ -43,9 +43,9 @@ class LogAcceso
     private $ipremota;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="exito", type="boolean", nullable=false)
+     * @ORM\Column(name="exito", type="integer", nullable=false)
      */
     private $exito = '0';
 

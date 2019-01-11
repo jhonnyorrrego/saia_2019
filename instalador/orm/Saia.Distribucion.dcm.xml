@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\Distribucion" table="distribucion">
+    <id name="iddistribucion" type="integer" column="iddistribucion">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="origen" type="integer" column="origen" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="tipoOrigen" type="integer" column="tipo_origen" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="rutaOrigen" type="integer" column="ruta_origen" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="mensajeroOrigen" type="integer" column="mensajero_origen" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="destino" type="integer" column="destino" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="tipoDestino" type="integer" column="tipo_destino" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="rutaDestino" type="integer" column="ruta_destino" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="mensajeroDestino" type="integer" column="mensajero_destino" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="mensajeroEmpresad" type="integer" column="mensajero_empresad" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="numeroDistribucion" type="string" column="numero_distribucion" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="estadoDistribucion" type="integer" column="estado_distribucion" nullable="true">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="estadoRecogida" type="integer" column="estado_recogida" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="fechaCreacion" type="datetime" column="fecha_creacion" nullable="true"/>
+  </entity>
+</doctrine-mapping>

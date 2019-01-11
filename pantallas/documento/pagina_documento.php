@@ -22,10 +22,7 @@ echo(estilo_lightness());
 echo(librerias_UI(""));
 echo(estilo_bootstrap());
 echo(librerias_bootstrap());
-?>
-<!--script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery.gzoom.js"></script>
-<link href="<?php echo($ruta_db_superior);?>css/jquery.gzoom.css" type="text/css" rel="stylesheet" /-->
-<?php
+
 menu_paginas_documento($pagina[0]["consecutivo"]);
 $datos_img = StorageUtils::get_binary_file($pagina[0]["ruta"]);
 ?>
@@ -38,9 +35,9 @@ $(document).ready(function(){
   alto=parent.$(".modal-body").height()-50;
   ancho_imagen=$('.imagen_saia').width();
   alto_imagen=$('.imagen_saia').height();
+  
   ResizeImage($('.imagen_saia'),ancho,alto);
-  /*$(".pagina_zoom").gzoom({sW: $('.imagen_saia').width(), sH:$('.imagen_saia').height() ,lW:<?php echo($ancho_imagen[0]["valor"]);?> ,lH:<?php echo($alto_imagen[0]["valor"]);?>, lighbox : false });
-});*/
+
   function ResizeImage(imagen, maxWidth, maxHeight){
     var srcWidth = imagen.width();
     var srcHeight = imagen.height();
@@ -59,6 +56,7 @@ $(document).ready(function(){
     imagen.width(resizeWidth);
     imagen.height(resizeHeight);
   }
+});
 </script>
 <?php
 function menu_paginas_documento($idpagina){
@@ -75,7 +73,7 @@ $paginas=busca_filtro_tabla("","pagina","id_documento=".$pagina[0]["id_documento
                 <li>               
                   <div class="btn-group pull-left btn-under">
                   	<?php if($pagina_anterior["numcampos"]){ ?>
-                      <button enlace="<?php echo(PROTOCOLO_CONEXION.RUTA_PDF."/pantallas/documento/pagina_documento.php?idpagina=".$pagina_anterior[0]["consecutivo"]);?>" titulo="P&aacute;gina<br />Anterior" class="btn btn-mini tooltip_saia kenlace_saia_propio" type="button"><i class="icon-arrow-left">&nbsp;</i>                                         
+                      <button enlace="<?php echo(PROTOCOLO_CONEXION.RUTA_PDF."/pantallas/documento/pagina_documento.php?idpagina=".$pagina_anterior[0]["consecutivo"]);?>" destino="_self" titulo="P&aacute;gina<br />Anterior" class="btn btn-mini tooltip_saia enlace_propio" type="button"><i class="icon-arrow-left">&nbsp;</i>                                         
                       </button>
                     <?php } ?>  
                     
@@ -83,7 +81,7 @@ $paginas=busca_filtro_tabla("","pagina","id_documento=".$pagina[0]["id_documento
                       </button>
                       
                     <?php if($pagina_siguiente["numcampos"]){ ?>
-                      <button enlace="<?php echo(PROTOCOLO_CONEXION.RUTA_PDF."/pantallas/documento/pagina_documento.php?idpagina=".$pagina_siguiente[0]["consecutivo"]);?>" titulo="P&aacute;gina<br />Siguiente" class="btn btn-mini tooltip_saia kenlace_saia_propio" type="button"><i class="icon-arrow-right">&nbsp;</i>
+                      <button enlace="<?php echo(PROTOCOLO_CONEXION.RUTA_PDF."/pantallas/documento/pagina_documento.php?idpagina=".$pagina_siguiente[0]["consecutivo"]);?>" destino="_self" titulo="P&aacute;gina<br />Siguiente" class="btn btn-mini tooltip_saia enlace_propio" type="button"><i class="icon-arrow-right">&nbsp;</i>
                       </button>
                     <?php } ?>
                   </div>

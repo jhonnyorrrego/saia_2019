@@ -20,7 +20,7 @@ function barra_superior_busqueda() {
 	<li class="divider-vertical"></li>                          
 	<li>            
 	 <div class="btn-group">                    
-	    <button class="btn btn-mini" id="adicionar_caja" title="Adicionar caja" enlace="pantallas/caja/adicionar_caja.php">Adicionar Caja</button>
+	    <button class="btn btn-mini" id="adicionar_caja" title="Adicionar caja" enlace="pantallas/caja/adicionar_caja.php?idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] .'&div_actualiza=resultado_busqueda' . $_REQUEST["idbusqueda_componente"] . '">Adicionar Caja</button>
 	  </div>
 	</li>';
 	return ($cadena);
@@ -81,7 +81,8 @@ function enlaces_adicionales_caja($idcaja, $propietario) {
 function enlace_caja($idcaja, $dependencia, $serie, $numero) {
 	global $conn;
 	$componente_exp = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente a", "a.nombre='expediente'", "", $conn);
-	return ("<div class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?idbusqueda_componente=" . $componente_exp[0]["idbusqueda_componente"] . "&idcaja=" . $idcaja . "&variable_busqueda=from_caja' conector='iframe' titulo='Caja No.  " . $dependencia . "-" . $serie . "-" . $numero . "'><b>" . $dependencia . "-" . $serie . "-" . $numero . "</b></div>");
+	//return ("<div class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?idbusqueda_componente=" . $componente_exp[0]["idbusqueda_componente"] . "&idcaja=" . $idcaja . "&variable_busqueda=from_caja' conector='iframe' titulo='Caja No.  " . $dependencia . "-" . $serie . "-" . $numero . "'><b>" . $dependencia . "-" . $serie . "-" . $numero . "</b></div>");
+	return ("<div class='link kenlace_saia' enlace='pantallas/busquedas/consulta_busqueda_expediente.php?idbusqueda_componente=" . $componente_exp[0]["idbusqueda_componente"] . "&idcaja=" . $idcaja . "&variable_busqueda=from_caja' conector='iframe' titulo='Caja No.  " . $numero . "'><b>". $numero . "</b></div>");
 }
 
 function obtener_descripcion_caja($fondo, $seccion, $subseccion, $codigo) {
@@ -123,13 +124,13 @@ function consultar_numero_carpetas_caja($idcaja) {
 
 function calcular_fecha_extrema_inicial($idcaja) {
 	global $conn;
-	$expedientes = busca_filtro_tabla("MIN(date(fecha)) as fecha", "expediente", "fk_idcaja = " . $idcaja, "", $conn);
+	$expedientes = busca_filtro_tabla("MIN(date(fecha_extrema_i)) as fecha", "expediente", "fk_idcaja = " . $idcaja, "", $conn);
 	return $expedientes[0]["fecha"];
 }
 
 function calcular_fecha_extrema_final($idcaja) {
 	global $conn;
-	$expedientes = busca_filtro_tabla("MAX(date(fecha)) as fecha", "expediente", "fk_idcaja = " . $idcaja, "", $conn);
+	$expedientes = busca_filtro_tabla("MAX(date(fecha_extrema_f)) as fecha", "expediente", "fk_idcaja = " . $idcaja, "", $conn);
 	return $expedientes[0]["fecha"];
 }
 

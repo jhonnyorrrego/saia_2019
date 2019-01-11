@@ -1,0 +1,40 @@
+{
+  "schema": {
+    "title": "",
+    "description": "Editar propiedades",
+    "type": "object",
+    "properties": {
+      "fs_opciones": {
+        "type": "object",
+        "properties": {
+          "texto": {
+            "type": "string",
+            "title": "Texto descriptivo",
+            "maxLength": 2000,
+            "required": true
+          }
+        }
+      },
+      "fs_ayuda": {
+        "type": "string",
+        "title": "Ayuda para el usuario"
+      }
+    }
+  },
+  "options": {
+    "fields": {
+      "fs_opciones": {
+        "fields": {
+          "texto": {
+            "type": "textarea",
+            "rows": 3
+          }
+        }
+      },
+      "fs_ayuda": {
+        "rows": 3,
+        "type": "textarea"
+      }
+    }
+  }
+}

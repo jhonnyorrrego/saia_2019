@@ -11,11 +11,6 @@
 	$max_salida--;
 	}
   include_once($ruta_db_superior."db.php");
-	include_once("pantallas/lib/librerias_cripto.php");
-	$validar_enteros=array("padre");
-	include_once("librerias_saia.php");
-	desencriptar_sqli('form_info');
-	echo(librerias_jquery());  
   include_once($ruta_db_superior."formatos/librerias/estilo_formulario.php");
   $material = NULL;
   $padre = NULL;
@@ -48,7 +43,6 @@
   {
     var campo = document.formu1;
     campo.send.value=1;
-    <?php encriptar_sqli("formu1");?>
     campo.submit();
   }
   
@@ -57,7 +51,7 @@
   <body>
 
 <?php
-  echo '<form method="post" action="categoria_formatoadd.php" name="formu1" id="formu1">
+  echo '<form method="post" action="categoria_formatoadd.php" name="formu1">
   <table width="100%" cellspacing="1" cellpadding="2" border="0">
   <tr>
     <td class="encabezado" colspan="2" style="text-align:center"><strong>Adicionar</strong></td>

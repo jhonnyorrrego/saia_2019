@@ -1,5 +1,5 @@
 <?php
-
+die("borrar");
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
 while($max_salida>0){
@@ -47,7 +47,7 @@ for($i=0;$i<$formatos['numcampos'];$i++){
 	$cadena.='
 			<tr bgcolor="#CCCCCC">
 				<td style="text-align:center;">
-					<a href="'.$ruta_db_superior.FORMATOS_CLIENTE.$formatos[$i]['nombre'].'/'.$formatos[$i]['ruta_adicionar'].'">'.$etiqueta.'</a>
+					<a href="'.$ruta_db_superior. FORMATOS_CLIENTE . $formatos[$i]['nombre'].'/'.$formatos[$i]['ruta_adicionar'].'">'.$etiqueta.'</a>
 				</td>
 			<tr>
 	';

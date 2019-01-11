@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FtRadicacionEntrada
  *
- * @ORM\Table(name="ft_radicacion_entrada")
+ * @ORM\Table(name="ft_radicacion_entrada", indexes={@ORM\Index(name="i_radicacion_entrada_documento_", columns={"documento_iddocumento"}), @ORM\Index(name="i_radicacion_entrada_serie_idse", columns={"serie_idserie"}), @ORM\Index(name="i_radicacion_entrada_tipo_desti", columns={"tipo_destino"})})
  * @ORM\Entity
  */
 class FtRadicacionEntrada
@@ -17,7 +17,7 @@ class FtRadicacionEntrada
      *
      * @ORM\Column(name="idft_radicacion_entrada", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idftRadicacionEntrada;
 
@@ -216,13 +216,6 @@ class FtRadicacionEntrada
      * @ORM\Column(name="descripcion_general", type="string", length=255, nullable=true)
      */
     private $descripcionGeneral;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="requiere_recogida", type="integer", nullable=true)
-     */
-    private $requiereRecogida = '1';
 
 
 
@@ -906,29 +899,5 @@ class FtRadicacionEntrada
     public function getDescripcionGeneral()
     {
         return $this->descripcionGeneral;
-    }
-
-    /**
-     * Set requiereRecogida
-     *
-     * @param integer $requiereRecogida
-     *
-     * @return FtRadicacionEntrada
-     */
-    public function setRequiereRecogida($requiereRecogida)
-    {
-        $this->requiereRecogida = $requiereRecogida;
-
-        return $this;
-    }
-
-    /**
-     * Get requiereRecogida
-     *
-     * @return integer
-     */
-    public function getRequiereRecogida()
-    {
-        return $this->requiereRecogida;
     }
 }

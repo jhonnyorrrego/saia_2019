@@ -6,35 +6,32 @@ while ($max_salida > 0) {
 	} $ruta .= "../";
 	$max_salida--;
 }
-include_once ($ruta_db_superior."db.php");
+include_once ($ruta_db_superior . "db.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 echo(estilo_bootstrap());
-echo(librerias_bootstrap());
-echo(librerias_notificaciones());
 echo (librerias_jquery("1.7"));
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
-
 
 ?>
 <form name="formulario_datos_ejecutor" id="formulario_datos_ejecutor" method="post">
 	<table class="table table-bordered" style="width:70%;margin: 20px;margin-left: auto;margin-right: auto;">
 		<tr>
-			<td style="width:30%;" class="prettyprint"><b>Tipo</b></td>
+			<td style="width:30%;" class="prettyprint"><b>Tipo *</b></td>
 			<td style="width:40%;">
 				Persona natural <input type="radio" name="tipo_ejecutor" id="tipo_ejecutor1" value="1" checked/> 
 				Persona Jur&iacute;dica <input type="radio" name="tipo_ejecutor" id="tipo_ejecutor2" value="2" /> 
 			</td>
 		</tr>		
 		<tr>
-			<td style="width:30%;" class="prettyprint" id="etiqueta_nombre"><b>Nombres y apellidos</b></td>
+			<td style="width:30%;" class="prettyprint" id="etiqueta_nombre"><b>Nombres y apellidos *</b></td>
 			<td style="width:40%;">
-			<input type="text" name="nombre" id="nombre">
+			<input type="text" name="nombre" id="nombre" required="required">
 			</td>
 		</tr>
 		<tr>
-			<td class="prettyprint"><b>Identificacion</b></td>
+			<td class="prettyprint"><b>Identificacion *</b></td>
 			<td>
-			<input type="text" name="identificacion" id="identificacion"> <span id="msn_identificacion"></span>
+			<input type="text" name="identificacion" id="identificacion"  required="required"> <span id="msn_identificacion"></span>
 			</td>
 		</tr>
 		<tr>
@@ -51,7 +48,9 @@ include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 <div id="tabla_identificacion"></div>
 <div id="tabla_nombre"></div>
 <?php 
-
+echo(librerias_bootstrap());
+echo(librerias_notificaciones());
+echo(librerias_validar_formulario());
 ?>
 
 <script>
@@ -121,10 +120,9 @@ include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 					});
 				}
 			}else{
-				notificacion_saia('<span style="color:#000">Los campos son obligatorios</span>',"error", "", 2500);
+				notificacion_saia('<span style="color:#000">Los campos identificaci&oacute;n y nombres y apellidos son obligatorios</span>',"error", "", 2500);
 			}
 			return false;
 		});
 	}); 
 </script>
-

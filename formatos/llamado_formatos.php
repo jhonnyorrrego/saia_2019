@@ -1,9 +1,9 @@
 <?php
-$max_salida = 6; // Previene algun posible ciclo infinito limitando a 10 los ../
+$max_salida = 6;
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
 	if (is_file($ruta . "db.php")) {
-		$ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
+		$ruta_db_superior = $ruta;
 	}
 	$ruta .= "../";
 	$max_salida--;
@@ -56,7 +56,7 @@ if (@$_REQUEST["accion"] == "generar") {
 	} else {
 		if ($registro >= $formatos["numcampos"]) {
 			alerta_formatos($formatos["numcampos"] . " Formatos Creados con exito");
-			redirecciona(PROTOCOLO_CONEXION . RUTA_PDF . "/formatos/formatolist.php");
+			redirecciona(PROTOCOLO_CONEXION . RUTA_PDF . "/formatos/formatoview.php?key=" . $formatos[0]["idformato"]);
 		}
 		alerta_formatos("No se puede realizar (" . $cant_acciones . ") en " . $formatos["numcampos"] . " formatos ");
 	}

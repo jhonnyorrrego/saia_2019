@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtInformeContraloria" table="ft_informe_contraloria">
+    <indexes>
+      <index name="i_ft_informe_contraloria_doc" columns="documento_iddocumento"/>
+      <index name="i_informe_contraloria_plan_mejor" columns="ft_plan_mejoramiento"/>
+      <index name="i_informe_contraloria_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftInformeContraloria" type="integer" column="idft_informe_contraloria">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="dependencia" type="integer" column="dependencia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="municipioInforme" type="string" column="municipio_informe" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="fechaCompromisos" type="date" column="fecha_compromisos" nullable="false"/>
+    <field name="procesoAuditado" type="text" column="proceso_auditado" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="cumplimientoGeneral" type="text" column="cumplimiento_general" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="cumplimientoEspecificos" type="text" column="cumplimiento_especificos" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="observaciones" type="text" column="observaciones" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="cumplimientoPlan" type="string" column="cumplimiento_plan" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="conclusiones" type="text" column="conclusiones" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ftPlanMejoramiento" type="integer" column="ft_plan_mejoramiento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="firma" type="integer" column="firma" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="jefeControl" type="string" column="jefe_control" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="encabezado" type="integer" column="encabezado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">2580</option>
+      </options>
+    </field>
+    <field name="estadoDocumento" type="integer" column="estado_documento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

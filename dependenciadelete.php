@@ -10,7 +10,11 @@ $x_fecha_ingreso = Null;
 <?php include ("db.php") ?>
 <?php include ("phpmkrfn.php") ?>
 <?php
-
+include ("librerias_saia.php");
+include_once ("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_iddependencia");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
 // Load Key Parameters
 $sKey = @$_GET["key"];
 if (($sKey == "") || ((is_null($sKey)))) {
@@ -48,7 +52,7 @@ switch ($sAction)
 <?php include ("header.php") ?>
 <p><span class="internos"><img class="imagen_internos" src="botones/configuracion/dependencia.png" border="0">&nbsp;&nbsp;Inactivar Dependencia<br><br>
 </span></p>
-<form action="dependenciadelete.php" method="post">
+<form action="dependenciadelete.php" name="dependenciadelete" id="dependenciadelete" method="post">
 <p>
 <input type="hidden" name="a_delete" value="D">
 <?php $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey; ?>
@@ -101,7 +105,7 @@ foreach ($arRecKey as $sRecKey) {
 // Function LoadData
 // - Load Data based on Key Value sKey
 // - Variables setup: field variables
-
+encriptar_sqli("dependenciadelete",1);
 function LoadData($sKey,$conn)
 {
 	$sKeyWrk = "" . addslashes($sKey) . "";

@@ -124,8 +124,12 @@ function incluir_librerias_busqueda($elemento,$indice){
       </li>
       <?php if(@$datos_busqueda[0]["enlace_adicionar"]){
       	?>
-      	<li class="divider-vertical"></li><li><div class="btn-group">                    
-          <button class="btn btn-mini kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar</button></div></li>
+      	<li class="divider-vertical"></li>
+      	<li>
+      		<div class="btn-group">                    
+          	<button class="btn btn-mini btn-info kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar</button>
+          </div>
+        </li>
       	<?php
       }
       ?>
@@ -159,9 +163,8 @@ function incluir_librerias_busqueda($elemento,$indice){
 </div>                                           
 <script>  
   <!--               
-  //var alto_inicial=$(document).height();
   var espacio_menu=$("#menu_buscador").height()+18;
-  var alto_inicial=($(document).height()-espacio_menu); 
+  var alto_inicial=($(window).height()-espacio_menu); 
   var carga_final=false;
   var contador=1;
   
@@ -190,47 +193,41 @@ $(document).ready(function(){
   	if($('#loadmoreajaxloader_parent').hasClass("disabled"))return;
     $('#loadmoreajaxloader').html("Cargando (... de ");
     $.ajax({
-      type:'GET',
+      type:'POST',
       url: "servidor_busqueda.php",
       data: "idbusqueda_componente=<?php echo($datos_componente);?>&idbusqueda_grafico=<?php echo(@$_REQUEST['idbusqueda_grafico']); ?>&page="+$("#busqueda_pagina").val()+"&rows="+$("#busqueda_registros").val()+"&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>&actual_row="+$("#fila_actual").val()+"&variable_busqueda="+$("#variable_busqueda").val()+"&cantidad_total="+$("#cantidad_total").val(),
-      success: function(html){
-        if(html){
-          var objeto=jQuery.parseJSON(html);
-          if(objeto.exito){  
-	          $("#busqueda_pagina").val(objeto.page);
-	          $("#busqueda_total_paginas").val(objeto.total);
-	          //$("#busqueda_sql").html(objeto.sql);
-	          $("#fila_actual").val(objeto.actual_row);          
-	          $.each(objeto.rows,function(i,item){
-	          	 if(!$("#resultado_pantalla_"+item.llave).length){   
-	            if(forma_cargar==1)         
-		              $("#resultado_busqueda_principal<?php echo($datos_componente);?>").prepend("<div id='resultado_pantalla_"+item.llave+"' class='well'>"+item.info+"</div>");
-		            else{
-		              $("#resultado_busqueda_principal<?php echo($datos_componente);?>").append("<div id='resultado_pantalla_"+item.llave+"' class='well'>"+item.info+"</div>");
-		            }
-	           }  
-	          });
-	          $(".kenlace_saia").attr("onclick"," ");
-	          iniciar_tooltip();
-						if($("#resultado_busqueda_principal<?php echo($datos_componente);?>").height()<alto_inicial){
-							//$('#loadmoreajaxloader').html("Cargando ( ...");
-	            //cargar_datos_scroll();
-	          }
-	          if(objeto.actual_row>=objeto.records){
-	            finalizar_carga_datos(objeto.records);
-	          }
-	          else{
-							$('#loadmoreajaxloader').html("resultados("+objeto.actual_row+" de ");
-	          }
-         } 
+      dataType:'json',
+      success: function(objeto){
+        if(objeto.exito){  
+          $("#busqueda_pagina").val(objeto.page);
+          $("#busqueda_total_paginas").val(objeto.total);
+          $("#fila_actual").val(objeto.actual_row);          
+          $.each(objeto.rows,function(i,item){
+          	 if(!$("#resultado_pantalla_"+item.llave).length){   
+            if(forma_cargar==1)         
+	              $("#resultado_busqueda_principal<?php echo($datos_componente);?>").prepend("<div id='resultado_pantalla_"+item.llave+"' class='well'>"+item.info+"</div>");
+	            else{
+	              $("#resultado_busqueda_principal<?php echo($datos_componente);?>").append("<div id='resultado_pantalla_"+item.llave+"' class='well'>"+item.info+"</div>");
+	            }
+           }  
+          });
+          $(".kenlace_saia").attr("onclick"," ");
+          iniciar_tooltip();
+					if($("#resultado_busqueda_principal<?php echo($datos_componente);?>").height()<alto_inicial){
+						//$('#loadmoreajaxloader').html("Cargando ( ...");
+            //cargar_datos_scroll();
+          }
+          if(objeto.actual_row>=objeto.records){
+            finalizar_carga_datos(objeto.records);
+          }
           else{
-          	$("#cantidad_total_copia").val("0");
-          	finalizar_carga_datos(0);
-          }   
-        }else{
-          $("#cantidad_total_copia").val("0");
-          	finalizar_carga_datos(0);
-        }
+						$('#loadmoreajaxloader').html("resultados("+objeto.actual_row+" de ");
+          }
+       }else{
+        	$("#cantidad_total_copia").val("0");
+        	finalizar_carga_datos(0);
+        }   
+       
       }
     });
   } 
@@ -259,18 +256,16 @@ $(document).ready(function(){
   		type:'POST',
 	    url: "servidor_busqueda.php",     
 	    data: "idbusqueda_componente="+idcomponente+"&idbusqueda_grafico=<?php echo(@$_REQUEST['idbusqueda_grafico']); ?>&page=0&rows="+$("#busqueda_registros").val()+"&actual_row=0&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>",
-	    success: function(html){
-	    	if(html){  
-	      	var objeto=jQuery.parseJSON(html);
-	      	$("#busqueda_total_paginas").val(objeto.total);
-	      	if(objeto.total)$("#boton_exportar_excel").show();
-					$("#"+capa).html(objeto.records+")"); 
-					$("#cantidad_total").val(objeto.records);
-					$("#cantidad_total_copia").val(objeto.records);
-					if(parseInt($("#fila_actual").val())>=parseInt(objeto.records)){
-						$('#loadmoreajaxloader_parent').addClass("disabled");
-					}
-	      }
+	    dataType:'json',
+	    success: function(objeto){
+      	$("#busqueda_total_paginas").val(objeto.total);
+      	if(objeto.total)$("#boton_exportar_excel").show();
+				$("#"+capa).html(objeto.records+")"); 
+				$("#cantidad_total").val(objeto.records);
+				$("#cantidad_total_copia").val(objeto.records);
+				if(parseInt($("#fila_actual").val())>=parseInt(objeto.records)){
+					$('#loadmoreajaxloader_parent').addClass("disabled");
+				}
 	    }
 	  });
   }

@@ -1,5 +1,10 @@
 <?php 
 include_once("db.php") ;
+include_once("pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("x_iddependencia_cargo","x_funcionario_idfuncionario","x_dependencia_iddependencia","x_cargo_idcargo");
+include_once("librerias_saia.php");
+desencriptar_sqli('form_info');
+echo(librerias_jquery());
 include ("phpmkrfn.php");
 header("Expires: Mon, 26 Jul 1997 05:00:00 GMT"); // date in the past
 header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT"); // always modified
@@ -54,7 +59,7 @@ switch ($sAction)
  
  ?>
 <p><span class="internos">Eliminar Rol de Funcionario<br><!--a href="dependencia_cargolist.php">Volver al Listado</a--></span></p>
-<form action="dependencia_cargodelete.php" method="post">
+<form action="dependencia_cargodelete.php" id="dependencia_cargodelete" name="dependencia_cargodelete" method="post">
 <p>
 <input type="hidden" name="a_delete" value="D">
 <?php $sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey; ?>
@@ -163,7 +168,7 @@ $x_cargo_idcargo = $sTmp;
 // Function LoadData
 // - Load Data based on Key Value sKey
 // - Variables setup: field variables
-
+encriptar_sqli("dependencia_cargodelete",1);
 function LoadData($sKey)
 {
 	global $x_iddependencia_cargo;

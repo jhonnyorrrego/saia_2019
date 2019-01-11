@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtNovedadesServicio" table="ft_novedades_servicio">
+    <indexes>
+      <index name="i_novedades_servicio_documento_" columns="documento_iddocumento"/>
+      <index name="i_novedades_servicio_verifica_i" columns="ft_verifica_informacion"/>
+      <index name="i_novedades_servicio_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftNovedadesServicio" type="integer" column="idft_novedades_servicio">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="ftVerificaInformacion" type="integer" column="ft_verifica_informacion" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">986</option>
+      </options>
+    </field>
+    <field name="anexoFormato" type="string" column="anexo_formato" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="anexosFisicos" type="string" column="anexos_fisicos" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="asunto" type="string" column="asunto" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="codigo" type="string" column="codigo" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="copia" type="text" column="copia" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="copiainterna" type="text" column="copiainterna" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="despedida" type="string" column="despedida" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="destinos" type="text" column="destinos" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="fechaCreacion" type="date" column="fecha_creacion" nullable="false"/>
+    <field name="firma" type="integer" column="firma" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="iniciales" type="string" column="iniciales" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="saludo" type="string" column="saludo" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="variosRadicados" type="integer" column="varios_radicados" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="vercopiainterna" type="string" column="vercopiainterna" length="1" nullable="false">
+      <options>
+        <option name="fixed">1</option>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="tipoMensajeria" type="integer" column="tipo_mensajeria" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="dependencia" type="integer" column="dependencia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="encabezado" type="integer" column="encabezado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="estadoDocumento" type="integer" column="estado_documento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

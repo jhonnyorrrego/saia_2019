@@ -81,7 +81,7 @@ else // Carga los permisos si estan definidos
    }
 	  
 }
-//encriptar_sqli("asigpermiso",1,"form_info",$ruta_db_superior);
+encriptar_sqli("asigpermiso",1,"form_info",$ruta_db_superior);
 ?>
 <html>  
   <head>    

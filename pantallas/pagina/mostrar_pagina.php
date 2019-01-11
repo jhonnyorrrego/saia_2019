@@ -21,10 +21,7 @@ use Imagine\Gd\Imagine;
 
 //echo(estilo_bootstrap());
 $modulo="ordenar_pag";
-echo (menu_principal_documento($_REQUEST["iddocumento"], 1, array(
-		"nombre" => $modulo,
-		"tipo" => 0
-)));
+echo menu_principal_documento($_REQUEST["iddocumento"]);
 unset($_SESSION["pagina_actual"]);
 unset($_SESSION["tipo_pagina"]);
 $_SESSION["pagina_actual"]=$_REQUEST["idpagina"];

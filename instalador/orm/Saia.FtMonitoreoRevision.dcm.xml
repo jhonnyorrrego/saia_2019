@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtMonitoreoRevision" table="ft_monitoreo_revision">
+    <indexes>
+      <index name="i_ft_monitoreo_revision_doc" columns="documento_iddocumento"/>
+      <index name="i_monitoreo_revision_riesgos_pr" columns="ft_riesgos_proceso"/>
+      <index name="i_monitoreo_revision_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftMonitoreoRevision" type="integer" column="idft_monitoreo_revision">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="dependencia" type="integer" column="dependencia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="fechaMonitoreo" type="date" column="fecha_monitoreo" nullable="false"/>
+    <field name="numeroRiesgo" type="integer" column="numero_riesgo" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="nombreRiesgo" type="string" column="nombre_riesgo" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="cambioIdentificacion" type="integer" column="cambio_identificacion" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="descripcionCambio" type="text" column="descripcion_cambio" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="cambiosAnalisis" type="integer" column="cambios_analisis" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="descripcionAnalisis" type="text" column="descripcion_analisis" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="controlesExistentes" type="string" column="controles_existentes" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="resultadoEvaluacion" type="text" column="resultado_evaluacion" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="accionesPropuestas" type="string" column="acciones_propuestas" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="logrosAlcanzados" type="text" column="logros_alcanzados" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="controlesNuevos" type="integer" column="controles_nuevos" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="descripcionNcontrol" type="text" column="descripcion_ncontrol" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="evidenciasAdjuntas" type="string" column="evidencias_adjuntas" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="observacionesGenerales" type="text" column="observaciones_generales" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ftRiesgosProceso" type="integer" column="ft_riesgos_proceso" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="firma" type="integer" column="firma" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="encabezado" type="integer" column="encabezado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">3258</option>
+      </options>
+    </field>
+    <field name="estadoDocumento" type="integer" column="estado_documento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

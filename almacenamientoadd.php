@@ -26,13 +26,6 @@ $max_salida--;
 }
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."formatos/librerias/estilo_formulario.php");
-
-include_once("pantallas/lib/librerias_cripto.php");
-$validar_enteros=array("x_idalmacenamiento","x_documento_iddocumento");
-include_once("librerias_saia.php");
-desencriptar_sqli('form_info');
-echo(librerias_jquery());
-
 ?>
 <?php
 
@@ -85,7 +78,7 @@ switch ($sAction)
 			<script>top.noty({text: "Documento almacenado",modal:true, type: alert,layout: "topCenter",timeout:2500});</script>
 			<?php
 			$formato=busca_filtro_tabla("ruta_mostrar, nombre, idformato","documento a, formato b","lower(a.plantilla)=lower(b.nombre) and iddocumento=".$_REQUEST["x_documento_iddocumento"],"",$conn);
-			abrir_url(FORMATOS_CLIENTE.$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$_REQUEST["x_documento_iddocumento"]."&idformato=".$formato[0]["idformato"],"detalles");
+			abrir_url(FORMATOS_CLIENTE . $formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$_REQUEST["x_documento_iddocumento"]."&idformato=".$formato[0]["idformato"],"detalles");
 		}
 		break;
 	case "D": // Add
@@ -211,7 +204,7 @@ else {
 			<script>top.noty({text: "Documento almacenado en la carpeta <?php echo $folder[0]["nombre_expediente"];?>",modal:true, type: alert,layout: "topCenter",timeout:2500});</script>
 			<?php
 				$formato=busca_filtro_tabla("ruta_mostrar, nombre, idformato","documento a, formato b","lower(a.plantilla)=lower(b.nombre) and iddocumento=".$_REQUEST["documentos"],"",$conn);
-				redirecciona(FORMATOS_CLIENTE.$formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$_REQUEST["documentos"]."&idformato=".$formato[0]["idformato"],"detalles");
+				redirecciona(FORMATOS_CLIENTE . $formato[0]["nombre"]."/".$formato[0]["ruta_mostrar"]."?iddoc=".$_REQUEST["documentos"]."&idformato=".$formato[0]["idformato"],"detalles");
       }
       //print_r($almacenamiento);
     }
@@ -523,6 +516,4 @@ function buscar_serie_papa($idserie){
   }
   return($idserie);
 }
-
-encriptar_sqli("almacenamientoadd",1);
 ?>

@@ -88,9 +88,9 @@ $formatos=busca_filtro_tabla('A.*','formato A, funciones_formato_enlace B',"A.id
         echo("<ul>");
     for($i=0;$i<$formatos["numcampos"];$i++){
         	echo("<li>".html_entity_decode($formatos[$i]["etiqueta"])."</li>");
-    }
+	}
     echo("</ul>");
-}
+	}
 ?>
 <?php $x_formato = $ox_formato; // Restore Original Value ?>
 </span></td>

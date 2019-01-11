@@ -21,7 +21,17 @@ function filtro_cod_arbol() {
 	} else {
 		return "";
 	}
+}
 
+function tipo_expediente() {
+	if (!empty($_REQUEST['variable_busqueda'])) {
+		$variables = explode("|-|", $_REQUEST['variable_busqueda']);
+		$tipo_expediente = explode("|", $variables[1]);
+		$where = "and estado_archivo=" . $tipo_expediente[1];
+		return ($where);
+	} else {
+		return "";
+	}
 }
 
 function filtro_expediente_doc() {
@@ -31,19 +41,17 @@ function filtro_expediente_doc() {
 	return " AND a.expediente_idexpediente = " . $_REQUEST["variable_busqueda"];
 }
 
-function direcciona_nombre($idexpediente, $nombre) {
-
-	return ($nombre);
-}
-
 function fecha_reten($idexpediente) {
 	global $conn, $ruta_db_superior;
 	$expediente = busca_filtro_tabla("estado_archivo,serie_idserie", "expediente a", "idexpediente=" . $idexpediente, "", $conn);
 	$estado_expediente = $expediente[0]["estado_archivo"];
 	$serie_idserie = $expediente[0]["serie_idserie"];
-	$vector_estado_expediente = array(1 => 'gestion', 2 => 'central');
+	$vector_estado_expediente = array(
+		1 => 'gestion',
+		2 => 'central'
+	);
 	$datos_serie = busca_filtro_tabla("retencion_" . $vector_estado_expediente[$estado_expediente], "serie", "idserie=" . $serie_idserie, "", $conn);
-	$datos_cierre = busca_filtro_tabla("fecha_cierre,estado_cierre", "expediente_abce", "expediente_idexpediente=" . $idexpediente, "idexpediente_abce DESC", $conn);
+	$datos_cierre = busca_filtro_tabla(fecha_db_obtener("fecha_cierre","Y-m-d")." as fecha_cierre,estado_cierre", "expediente_abce", "expediente_idexpediente=" . $idexpediente, "idexpediente_abce DESC", $conn);
 	$fecha_cierre = $datos_cierre[0]['fecha_cierre'];
 	if ($datos_cierre[0]['estado_cierre'] == 2) {
 
@@ -110,8 +118,7 @@ function radicado_exp_doc($iddoc) {
 }
 
 function tipo_doc($iddoc) {
-	$formato = busca_filtro_tabla("nombre_tabla", "documento d,formato f", "lower(d.plantilla)=f.nombre and d.iddocumento=" . $iddoc, "", $conn);
-	$tipo_docu = busca_filtro_tabla("b.nombre", $formato[0]['nombre_tabla'] . " a,serie b", "a.serie_idserie=b.idserie and documento_iddocumento=" . $iddoc, "", $conn);
+	$tipo_docu = busca_filtro_tabla("b.nombre", "documento a,serie b", "a.serie=b.idserie and iddocumento=" . $iddoc, "", $conn);
 	return ($tipo_docu[0]['nombre']);
 }
 
@@ -120,25 +127,12 @@ function descripcion_doc($iddoc) {
 	return ($descripcion[0]['descripcion']);
 }
 
-function tipo_expediente() {
-	if (!empty($_REQUEST['variable_busqueda'])) {
-		$variables = explode("|-|", $_REQUEST['variable_busqueda']);
-		$tipo_expediente = explode("|", $variables[1]);
-		$where = "and estado_archivo=" . $tipo_expediente[1];
-		return ($where);
-	} else {
-		return "";
-	}
-}
-
 function check_expedientes($idexp) {
 	return ('<input type="checkbox" name="idexp_' . $idexp . '" id="idexp_' . $idexp . '" class="seleccionar" value="' . $idexp . '">');
 }
 
 function acciones_expediente() {
 	$html = '<ul class=\"nav pull-left\"><li><div class=\"btn-group\"><button class=\"btn dropdown-toggle btn-mini\" data-toggle=\"dropdown\">Acciones &nbsp;<span class=\"caret\"></span>&nbsp;</button><ul class=\"dropdown-menu pull-left\" id=\"listado_seleccionados\"><li class=\"pull-left\"><a href=\"#\" id=\"transferencia_documental\" titulo=\"Transferencia documental\">Transferencia documental</a></li><li><a href=\"#\" id=\"prestamo_documento\" titulo=\"Solicitud de prestamo de documentos\">Solicitud de prestamo de documentos</a></li></ul></div></li></ul><input type=\"hidden\" id=\"seleccionados\" value=\"\" name=\"seleccionados\"><input type=\"hidden\" id=\"seleccionados_expediente\" value=\"\" name=\"seleccionados_expediente\">';
-	//$html='<ul class=\"nav pull-left\"><li><div class=\"btn-group\"><button class=\"btn dropdown-toggle btn-mini\" data-toggle=\"dropdown\">Acciones &nbsp; <span class=\"caret\"> </span>&nbsp;</button><ul class=\"dropdown-menu\" id=\"listado_seleccionados\"><li><div style=\"color:black; \">Transferencia Documental</div></li></ul></div></li></ul>';
-	//$html='<div class=\"input-append\"><div class=\"btn-group\"><button class=\"btn dropdown-toggle\" data-toggle=\"dropdown\">Action<span class=\"caret\"></span></button><ul class=\"dropdown-menu\">dato</ul></div></div>';
 	return ($html);
 }
 ?>

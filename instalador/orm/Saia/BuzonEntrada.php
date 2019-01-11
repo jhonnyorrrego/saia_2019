@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * BuzonEntrada
  *
- * @ORM\Table(name="buzon_entrada", indexes={@ORM\Index(name="i_buzon_entrad_fecha", columns={"fecha"}), @ORM\Index(name="i_buzon_entrad_destino", columns={"destino"}), @ORM\Index(name="i_buzon_entrad_ruta_idruta", columns={"ruta_idruta"}), @ORM\Index(name="i_buzon_entrad_archivo_idar", columns={"archivo_idarchivo"}), @ORM\Index(name="i_buzon_entrad_origen", columns={"origen"})})
+ * @ORM\Table(name="buzon_entrada", indexes={@ORM\Index(name="destino", columns={"destino"}), @ORM\Index(name="archivo_idarchivo", columns={"archivo_idarchivo"}), @ORM\Index(name="origen", columns={"origen"}), @ORM\Index(name="i_buzon_entrada_tipo_desti", columns={"tipo_destino"})})
  * @ORM\Entity
  */
 class BuzonEntrada
@@ -17,7 +17,7 @@ class BuzonEntrada
      *
      * @ORM\Column(name="idtransferencia", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idtransferencia;
 
@@ -99,9 +99,9 @@ class BuzonEntrada
     private $tipo = 'ARCHIVO';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="activo", type="boolean", nullable=false)
+     * @ORM\Column(name="activo", type="integer", nullable=false)
      */
     private $activo = '0';
 

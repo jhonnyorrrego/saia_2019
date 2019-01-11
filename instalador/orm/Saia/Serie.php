@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Serie
  *
- * @ORM\Table(name="serie", indexes={@ORM\Index(name="i_serie_tipo_entidad", columns={"tipo_entidad"}), @ORM\Index(name="i_serie_cod_padre", columns={"cod_padre"}), @ORM\Index(name="i_serie_llave_entidad", columns={"llave_entidad"})})
+ * @ORM\Table(name="serie", indexes={@ORM\Index(name="cod_padre", columns={"cod_padre"}), @ORM\Index(name="Indice_llave_entidad", columns={"llave_entidad"}), @ORM\Index(name="serie_idserie_PK", columns={"idserie"})})
  * @ORM\Entity
  */
 class Serie
@@ -17,7 +17,7 @@ class Serie
      *
      * @ORM\Column(name="idserie", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idserie;
 
@@ -26,7 +26,7 @@ class Serie
      *
      * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
-    private $nombre;
+    private $nombre = '';
 
     /**
      * @var integer
@@ -64,16 +64,16 @@ class Serie
     private $llaveEntidad;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="retencion_gestion", type="boolean", nullable=false)
+     * @ORM\Column(name="retencion_gestion", type="integer", nullable=false)
      */
     private $retencionGestion = '3';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="retencion_central", type="boolean", nullable=false)
+     * @ORM\Column(name="retencion_central", type="integer", nullable=false)
      */
     private $retencionCentral = '5';
 
@@ -85,16 +85,16 @@ class Serie
     private $conservacion;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="digitalizacion", type="boolean", nullable=true)
+     * @ORM\Column(name="digitalizacion", type="integer", nullable=true)
      */
     private $digitalizacion;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="seleccion", type="boolean", nullable=true)
+     * @ORM\Column(name="seleccion", type="integer", nullable=true)
      */
     private $seleccion;
 
@@ -108,35 +108,35 @@ class Serie
     /**
      * @var string
      *
-     * @ORM\Column(name="procedimiento", type="text", nullable=true)
+     * @ORM\Column(name="procedimiento", type="text", length=65535, nullable=true)
      */
     private $procedimiento;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="copia", type="boolean", nullable=false)
+     * @ORM\Column(name="copia", type="integer", nullable=false)
      */
     private $copia = '0';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="tipo", type="boolean", nullable=false)
+     * @ORM\Column(name="tipo", type="integer", nullable=false)
      */
     private $tipo = '0';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="clase", type="boolean", nullable=true)
+     * @ORM\Column(name="clase", type="integer", nullable=true)
      */
     private $clase = '1';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="estado", type="boolean", nullable=false)
+     * @ORM\Column(name="estado", type="integer", nullable=false)
      */
     private $estado = '1';
 

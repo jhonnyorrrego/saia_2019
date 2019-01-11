@@ -29,7 +29,6 @@ $validar_enteros=array("x_idconfiguracion");
 desencriptar_sqli('form_info');
 echo(librerias_jquery());
 
-
 echo(librerias_notificaciones()); ?>
 <?php
 
@@ -228,6 +227,4 @@ global $x_fecha;
 	phpmkr_query($strsql, $conn) or error("Fall� la b�squeda" . phpmkr_error() . ' SQL:' . $sSql);
 	return true;
 }
-
-
 ?>

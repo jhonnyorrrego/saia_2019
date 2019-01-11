@@ -15,6 +15,11 @@ include ($ruta_db_superior . "phpmkrfn.php");
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "formatos/librerias/funciones.php");
 echo(librerias_arboles());
+
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("idformato");
+desencriptar_sqli('form_info');
+
 $x_idfuncion_formato = Null;
 $x_nombre = Null;
 $x_etiqueta = Null;
@@ -35,13 +40,10 @@ if (($sKey == "") || (is_null($sKey))) {
 if (!empty($sKey))
 	$sKey = (get_magic_quotes_gpc()) ? stripslashes($sKey) : $sKey;
 
-// Get action
 $sAction = @$_POST["a_edit"];
 if (($sAction == "") || ((is_null($sAction)))) {
 	$sAction = "I";
-	// Display with input box
 } else {
-
 	// Get fields from form
 	$x_idfuncion_formato = @$_POST["x_idfunciones_formato"];
 	$x_nombre = @$_POST["x_nombre"];
@@ -56,7 +58,7 @@ if (($sKey == "") || ((is_null($sKey)))) {
 		redirecciona("funciones_formatolist.php?idformato=" . $idformato);
 	redirecciona("funciones_formatolist.php");
 }
-//
+
 switch ($sAction) {
 	case "I" :
 		// Get a record to display
@@ -68,10 +70,8 @@ switch ($sAction) {
 		}
 		break;
 	case "U" :
-		// Update
 		if (EditData($sKey, $conn)) {// Update Record based on key
 			alerta("Actualizacion exitosa");
-			////phpmkr_db_close($conn);
 			if (isset($_REQUEST["pantalla"]) && $_REQUEST["pantalla"] == "tiny")
 				redirecciona("../tinymce34/jscripts/tiny_mce/plugins/formatos/formatos.php?formato=" . $idformato . "&tipo=funciones_formato");
 			else if ($idformato)
@@ -82,11 +82,12 @@ switch ($sAction) {
 		break;
 }
 echo(librerias_jquery("1.7"));
+echo(estilo_bootstrap());
 ?>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>ew.js"></script>
 <script type="text/javascript">
 <!--
-EW_dateSep = "/"; // set date separator
+EW_dateSep = "/"; // set date separator	
 
 function EW_checkMyForm(EW_this) {
 var lformatos='';
@@ -134,12 +135,9 @@ return true;
 
 //-->
 </script>
-
-<p><span class="phpmaker">funciones formato<br><br>
-<?php if(!isset($_REQUEST["pantalla"])){ ?>
-<a href="funciones_formatolist.php<?php if($idformato)echo("?idformato=".$idformato);?>">Ir al Listado</a>
-<?php } ?>
-</span></p>
+<p><br />
+<a class="btn btn-mini btn-default" href="funciones_formatolist.php?idformato=<?php echo $idformato; ?>">Regresar</a>
+</p>
 <form name="funciones_formatoedit" id="funciones_formatoedit" action="funciones_formatoedit.php" method="post" onSubmit="return EW_checkMyForm(this);">
 <p>
 <?php
@@ -171,15 +169,15 @@ if(isset($_REQUEST["pantalla"])&&$_REQUEST["pantalla"]=="tiny")
 	<tr>
 		<td  class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">Ubicada en Archivo</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php
-$formatos=busca_filtro_tabla("A.etiqueta,A.idformato,A.nombre,C.ruta,C.etiqueta AS etiqueta_funcion,B.funciones_formato_fk","formato A, funciones_formato_enlace B,funciones_formato C","A.idformato=B.formato_idformato AND B.funciones_formato_fk=C.idfunciones_formato AND funciones_formato_fk=".$sKey."","GROUP BY A.idformato HAVING min(B.funciones_formato_fk)=B.funciones_formato_fk ORDER BY B.idfunciones_formato_enlace ASC",$conn);
+<?php 
+$formatos=busca_filtro_tabla("A.etiqueta,A.idformato,A.nombre,C.ruta,C.etiqueta AS etiqueta_funcion,B.funciones_formato_fk","formato A, funciones_formato_enlace B,funciones_formato C","A.idformato=B.formato_idformato AND B.funciones_formato_fk=C.idfunciones_formato AND funciones_formato_fk=".$sKey."","GROUP BY A.etiqueta,A.idformato,A.nombre,C.ruta,C.etiqueta,B.funciones_formato_fk,B.idfunciones_formato_enlace HAVING min(B.funciones_formato_fk)=B.funciones_formato_fk ORDER BY B.idfunciones_formato_enlace ASC",$conn);
 // si el archivo existe dentro de la carpeta formatos
 $ruta_final=$formatos[0]["nombre"] . "/" . $formatos[0]["ruta"];
 if (is_file($ruta_db_superior . FORMATOS_CLIENTE . $formatos[0]["nombre"] . "/" . $formatos[0]["ruta"])) {
-	$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA . FORMATOS_CLIENTE . $formatos[0]["nombre"]);
+	$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA ."/". FORMATOS_CLIENTE . $formatos[0]["nombre"]);
 } elseif (is_file($ruta_db_superior . $formatos[0]["ruta"])) {
 	// si el archivo existe en la ruta especificada partiendo de la raiz
-	$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA );
+	$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA."/" );
 } else {
 	$ruta_formato = 'Error: ' . $formatos[0]["ruta"] . "|id=" . $formatos[0]["idfunciones_formato"];
 }
@@ -201,13 +199,13 @@ $x_formato=extrae_campo($formatos,"idformato","U");
 </div>
 <div id="treeboxbox_tree2"></div>
 <input type="hidden" name="x_formato" id="x_formato" value="<?php echo(implode(",",$x_formato))?>">
-<script type="text/javascript">
+<script type="text/javascript">		
 	var browserType;
 	if (document.layers) {browserType = "nn4"}
 	if (document.all) {browserType = "ie"}
 	if (window.navigator.userAgent.toLowerCase().match("gecko")) {
 	   browserType= "gecko"
-	}
+			}
 	tree2=new dhtmlXTreeObject("treeboxbox_tree2","100%","100%",0);
 	tree2.setImagePath("<?php echo($ruta_db_superior);?>imgs/");
 	tree2.enableIEImageFix(true);
@@ -216,11 +214,11 @@ $x_formato=extrae_campo($formatos,"idformato","U");
 	tree2.setOnLoadingStart(cargando_arbol);
     tree2.setOnLoadingEnd(fin_cargando_arbol);
 	tree2.setXMLAutoLoading("<?php echo($ruta_db_superior);?>test_formatos.php?seleccionados=<?php implode(",",$x_formato);?>");
-	tree2.loadXML("<?php echo($ruta_db_superior);?>test_formatos.php?seleccionados=<?php echo(implode(",",$x_formato)); ?>");
+	tree2.loadXML("<?php echo($ruta_db_superior);?>test_formatos.php?seleccionados=<?php echo(implode(",",$x_formato)); ?>"); 	
 	function onNodeSelect(nodeId){
 		console.log(tree2.getAllChecked());
-      $("#x_formato").val(tree2.getAllChecked());
-    }
+      $("#x_formato").val(tree2.getAllChecked());  
+		}
 	function fin_cargando_arbol() {
         if (browserType == "gecko" )
            document.poppedLayer =
@@ -232,7 +230,7 @@ $x_formato=extrae_campo($formatos,"idformato","U");
            document.poppedLayer =
               eval('document.layers["esperando_arbol"]');
         document.poppedLayer.style.visibility = "hidden";
-      }
+	}
 
       function cargando_arbol() {
         if (browserType == "gecko" )
@@ -245,25 +243,25 @@ $x_formato=extrae_campo($formatos,"idformato","U");
            document.poppedLayer =
                eval('document.layers["esperando_arbol"]');
         document.poppedLayer.style.visibility = "visible";
-      }
+}
 
 
-     /* $(document).ready(function(){
+     /* $(document).ready(function(){ 
     		if(!$("#form_info").length){
     			$("#funciones_formatoedit").append('<input type="hidden" id="form_info" name="form_info">');
     		}
     	$("#funciones_formatoedit").submit(function(event){
-
+    		
     		if($(".tiny_formatos").length){
-
+    			
     			$.each( ".tiny_formatos", function() {
     				var id_textarea=$(this).attr("id");
-    				var contenido_textarea=tinyMCE.get(id_textarea).getContent();
+    				var contenido_textarea=tinyMCE.get(id_textarea).getContent(); 
     				$("#"+id_textarea).val(contenido_textarea);
     			});
-
+    			
     		}
-
+    		
     		salida_sqli = false;
     	      $.ajax({
     	        type:"POST",
@@ -272,17 +270,17 @@ $x_formato=extrae_campo($formatos,"idformato","U");
     	        data: {datos:JSON.stringify($("#funciones_formatoedit").serializeArray())},
     	        success: function(data) {
     						//$("#funciones_formatoedit")[0].reset();
-
+    		
     				$("#funciones_formatoedit").find("input:hidden,input:text, input:password, select, textarea").val("");
     	    		$("#funciones_formatoedit").find("input:radio, input:checkbox").removeAttr("checked").removeAttr("selected");
-
+    						
     	          $("#form_info").val(data);
     	          salida_sqli = true;
     	        }
     	      });return salida_sqli;
     				event.preventDefault();
     		  });
-
+    		
     		});*/
 </script>
 </span></td>
@@ -290,7 +288,7 @@ $x_formato=extrae_campo($formatos,"idformato","U");
 	<tr>
 		<td  class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">acciones</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
-<?php
+<?php 
 $ar_x_acciones = explode(",",@$x_acciones);
 $x_accionesChk = "";
 $x_accionesChk .= "<input type=\"checkbox\" name=\"x_acciones[]\" value=\"" . htmlspecialchars("a"). "\"";
@@ -326,7 +324,7 @@ echo $x_accionesChk;
 <input type="submit" name="Action" value="EDITAR">
 </form>
 <?php
-//encriptar_sqli("funciones_formatoedit",1,"form_info",$ruta_db_superior);
+encriptar_sqli("funciones_formatoedit",1,"form_info",$ruta_db_superior);
 function LoadData($sKey,$conn){
   global $x_idfuncion_formato, $x_nombre,	$x_etiqueta, $x_descripcion, $x_ruta, $x_formato, $x_acciones;
 	$sSql = "SELECT * FROM funciones_formato WHERE idfunciones_formato = " . $sKey;
@@ -341,7 +339,7 @@ function LoadData($sKey,$conn){
 		$x_descripcion = $row["descripcion"];
 		$x_ruta = $row["ruta"];
 		$x_acciones = $row["acciones"];
-
+		
 		$x_formato = array();
 		$idform_enlace=busca_filtro_tabla("formato_idformato","funciones_formato_enlace","funciones_formato_fk=".$sKey,"",$conn);
 		if($idform_enlace["numcampos"]){
@@ -353,45 +351,45 @@ function LoadData($sKey,$conn){
 	return $LoadData;
 }
 
-function EditData($sKey, $conn) {
-	global $x_idfuncion_formato, $x_nombre, $x_etiqueta, $x_descripcion, $x_ruta, $x_formato, $x_acciones;
+function EditData($sKey,$conn) {
+  global $x_idfuncion_formato, $x_nombre,	$x_etiqueta, $x_descripcion, $x_ruta, $x_formato, $x_acciones;
 	$formato = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $_REQUEST["idformato"], "", $conn);
 	$funciones_formato = busca_filtro_tabla("idfunciones_formato", "funciones_formato", "idfunciones_formato=" . $sKey, "", $conn);
 	if ($funciones_formato["numcampos"] == 0) {
 		$EditData = false;
-	} else {
-		$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_nombre) : $x_nombre;
+	}else{
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_nombre) : $x_nombre; 
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["nombre"] = $theValue;
-		$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiqueta) : $x_etiqueta;
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_etiqueta) : $x_etiqueta; 
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["etiqueta"] = $theValue;
-		$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_descripcion) : $x_descripcion;
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_descripcion) : $x_descripcion; 
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["descripcion"] = $theValue;
-		$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_ruta) : $x_ruta;
+		$theValue = (!get_magic_quotes_gpc()) ? addslashes($x_ruta) : $x_ruta; 
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["ruta"] = $theValue;
 		$theValue = implode(",", $x_acciones);
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($theValue) : $theValue;
 		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
 		$fieldList["acciones"] = $theValue;
-
+        
 		$sSql = "UPDATE funciones_formato SET ";
-		foreach ($fieldList as $key => $temp) {
+		foreach ($fieldList as $key=>$temp) {
 			$sSql .= "$key = $temp, ";
 		}
 		if (substr($sSql, -2) == ", ") {
-			$sSql = substr($sSql, 0, strlen($sSql) - 2);
+			$sSql = substr($sSql, 0, strlen($sSql)-2);
 		}
 		$sSql .= " WHERE idfunciones_formato =" . $sKey;
-		guardar_traza($sSql, $formato[0]["nombre_tabla"]);
+		guardar_traza($sSql,$formato[0]["nombre_tabla"]);
 		phpmkr_query($sSql) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
 		if($x_formato){
 			$delete="DELETE FROM funciones_formato_enlace WHERE funciones_formato_fk=".$sKey." AND formato_idformato not in (".$x_formato.")";
 			guardar_traza($delete, $formato[0]["nombre_tabla"]);
 			phpmkr_query($delete) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $delete);
-
+			
 			$funciones_enlace=busca_filtro_tabla("formato_idformato","funciones_formato_enlace","funciones_formato_fk=".$sKey,"",$conn);
 			if ($funciones_enlace["numcampos"]) {
 				$idform_enlace=extrae_campo($funciones_enlace,"formato_idformato");
@@ -408,7 +406,7 @@ function EditData($sKey, $conn) {
 			$delete="DELETE FROM funciones_formato_enlace WHERE funciones_formato_fk=".$sKey;
 			guardar_traza($delete, $formato[0]["nombre_tabla"]);
 			phpmkr_query($delete) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $delete);
-
+			
 			$delete_f="DELETE FROM funciones_formato WHERE idfunciones_formato=".$sKey;
 			guardar_traza($delete_f, $formato[0]["nombre_tabla"]);
 			phpmkr_query($delete_f) or die("Failed to execute query" . phpmkr_error() . ' SQL:' . $delete_f);

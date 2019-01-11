@@ -45,7 +45,7 @@ if (isset($_REQUEST['login']) && $_REQUEST['login'] != '') {
 	if ($jwt) {
 		$valida_usuario = busca_filtro_tabla("idfuncionario", "funcionario", "estado=1 and login='" . $login . "'", "", $conn);
 		if ($valida_usuario['numcampos']) {
-			$msj = enviar_mensaje("", "email", array("soporte@cerok.com"), "Solicitud Token Release1", $mensaje);
+			$msj = enviar_mensaje("", array("para"=>"email"), array("para"=>array("soporte@cerok.com")), "Solicitud Token", $mensaje);
 			$retorno["exito"] = $msj;
 			$retorno["mensaje"] = $mensaje;
 		} else {

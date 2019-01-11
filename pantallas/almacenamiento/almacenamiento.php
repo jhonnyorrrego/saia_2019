@@ -22,13 +22,13 @@ if(@$_REQUEST["idcaja"]&&@$_REQUEST["idcarpeta"]){
 }
 
 if(@$_REQUEST["defecto"]){
-    //$defecto= FORMATOS_CLIENTE . $_REQUEST["defecto"]."/adicionar_".$_REQUEST["defecto"].".php";
+  //$defecto=FORMATOS_CLIENTE.$_REQUEST["defecto"]."/adicionar_".$_REQUEST["defecto"].".php";
 }
 else if(!$defecto){
-    //$defecto= FORMATOS_CLIENTE . "radicacion_entrada/adicionar_radicacion_entrada.php";
+  //$defecto= FORMATOS_CLIENTE . "radicacion_entrada/adicionar_radicacion_entrada.php";
 }
 ?>
-<script type="text/javascript" src="<?php echo $ruta_db_superior; ?>js/jquery-1.4.2.js"></script>
+<script type="text/javascript" src="<?php echo $ruta_db_superior; ?>js/jquery/1.4.2/jquery.js"></script>
 <style>
 .column{float: left;}
 </style>
@@ -43,4 +43,4 @@ $("document").ready(function(){
   var alto=$(window).height()-25;
   $(".alto_frame").height(alto);
 });
-</script>  
+</script>

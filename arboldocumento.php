@@ -185,7 +185,7 @@ $(document).ready(function() {
       tree2.setOnLoadingEnd(fin_cargando);
       tree2.enableSmartXMLParsing(true);
       tree2.setOnClickHandler(onNodeSelect);
-			tree2.loadXML("test_formatos_documento2.php?id=<?php echo($iddoc);?>");
+			tree2.loadXML("test_formatos_documento.php?id=<?php echo($iddoc);?>");
       tree2.findItem("<?php echo($nodoinicial);?>");
 			function onNodeSelect(nodeId)
       {

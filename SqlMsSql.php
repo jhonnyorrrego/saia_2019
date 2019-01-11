@@ -32,7 +32,7 @@ else
 		if (!$rs) {
 			$rs = $this->res;
 		}
-		@ mssql_free_result($rs);
+		@mssql_free_result($rs);
 	}
 
 	function Ejecutar_Sql($sql) {
@@ -49,18 +49,23 @@ else
 		if ($sql && $sql != "") {
 			// mssql_query("USE ".$this->Conn->Db,$this->Conn->conn);
 			$this->res = mssql_query($sql, $this->Conn->conn);
+			if (!$this->res) {
+			    // La consulta ha fallado, muestra un mensaje de error
+			    // utilizando mssql_get_last_message()
+			    die('MSSQL error: ' . mssql_get_last_message()." ".$sql);
+			}// or die($sql);
 			// echo $sql.'<br />';
 			// print_r(mssql_get_last_message());
 			if ($this->res) {
 				if ($this->res != 1)
 					$filas = mssql_num_rows($this->res);
 				if (strpos(strtolower($sql), "insert") !== false)
-					$this->ultimo_insert = $this->Ultimo_Insert();
+					$this->ultimoInsert = $this->Ultimo_Insert();
 				else if (strpos(strtolower($sql), "select") !== false) {
-					$this->ultimo_insert = 0;
+					$this->ultimoInsert = 0;
 					$this->filas = $filas;
 				} else {
-					$this->ultimo_insert = 0;
+					$this->ultimoInsert = 0;
 				}
 
 				$this->consulta = trim($sql);
@@ -77,9 +82,9 @@ else
 		if ($arreglo = @mssql_fetch_array($this->res, MSSQL_BOTH)) {
 			$this->filas++;
 			return (array_map("trim", $arreglo));
-		} else
+		} else {
 			return (FALSE);
-		break;
+		}
 	}
 
 	function sacar_fila_vector($rs = Null) {
@@ -89,7 +94,6 @@ else
 			return ($arreglo);
 		} else
 			return (FALSE);
-		break;
 	}
 
 	function Insertar($campos, $tabla, $valores) {
@@ -323,7 +327,7 @@ else
 		$llave = 0;
 		$string_detalle = "";
 		$func = $_SESSION["usuario_actual"];
-		$this->ultimo_insert = 0;
+		$this->ultimoInsert = 0;
 		if (isset($_SESSION)) {
 			$fecha = fecha_db_almacenar(date("Y-m-d h:i:s"), "Y-m-d h:i:s");
 			if ($sqleve != "") {
@@ -447,7 +451,7 @@ else
 	}
 
 	function invocar_radicar_documento($iddocumento, $idcontador, $funcionario) {
-		$strsql="EXEC sp_asignar_radicado @iddoc=$iddocumento, @idcontador=$idcontador, @idfuncionario=$funcionario;";
+		$strsql="EXEC sp_asignar_radicado @iddoc=$iddocumento, @tipo=$idcontador, @funcionario=$funcionario;";
 		$this->Ejecutar_Sql($strsql) or die($strsql);
 	}
 
@@ -487,7 +491,7 @@ else
 				}
 			}
 			if (MOTOR == "SqlServer") {
-				sqlsrv_query($this->Conn->conn, "USE " . $$this->Conn->Db);
+				sqlsrv_query($this->Conn->conn, "USE " . $this->Conn->Db);
 				sqlsrv_query($this->Conn->conn, $sql) or die("consulta fallida ---- $sql " . implode("<br />", sqlsrv_errors()));
 			} else {
 				mssql_query($sql, $this->Conn->conn) or die("consulta fallida ---- $sql " . implode("<br />", mssql_get_last_message()));
@@ -497,7 +501,7 @@ else
 		return ($resultado);
 	}
 
-	public function campo_formato_tipo_dato($tipo_dato, $longitud, $predeterminado, $banderas=null) {
+	public function campo_formato_tipo_dato($tipo_dato, $longitud, $predeterminado, $banderas = null) {
 		switch (strtoupper(@$tipo_dato)) {
 			case "NUMBER" :
 				$campo .= " decimal ";
@@ -546,8 +550,8 @@ else
 			case "TEXT" :
 				if ($longitud == "")
 					$longitud = 4000;
-					$campo .= " text";
-					break;
+				$campo .= " text";
+				break;
 			case "DATE" :
 				$campo .= " DATETIME ";
 				$campo .= " DEFAULT  getdate()";
@@ -573,6 +577,7 @@ else
 				}
 				break;
 		}
+		return $campo;
 	}
 
 	public function formato_crear_indice($bandera, $nombre_campo, $nombre_tabla) {
@@ -613,12 +618,15 @@ else
 					$pos = array_search(strtolower($campos[$i]["nombre"]), $campos_tabla);
 					$dato = "";
 
-					if ($pos === false)
+					if ($pos === false) {
 						$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ADD " . $dato_campo;
-					else
+					} else {
 						$dato = "ALTER TABLE " . strtolower($formato[0]["nombre_tabla"]) . " ALTER COLUMN " . $dato_campo;
-					guardar_traza($dato, $formato[0]["nombre_tabla"]);
-					$this->Ejecutar_Sql($dato);
+					}
+					if ($dato != "") {
+						guardar_traza($dato, $formato[0]["nombre_tabla"]);
+						$this->Ejecutar_Sql($dato);
+					}
 				}
 			}
 		}
@@ -627,7 +635,6 @@ else
 	}
 
 	protected function formato_elimina_indices_tabla($tabla) {
-		global $conn, $sql;
 		$tabla = strtoupper($tabla);
 		$sql2 = "SELECT name AS column_name FROM sys.objects WHERE type_desc LIKE '%CONSTRAINT' AND OBJECT_NAME(parent_object_id)='" . $tabla . "'";
 		$indices = $this->ejecuta_filtro_tabla($sql2);
@@ -645,7 +652,7 @@ else
 		return;
 	}
 
-	protected function verificar_existencia($tabla) {
+	public function verificar_existencia($tabla) {
 		$sql = "SELECT COUNT(table_name) FROM information_schema.tables WHERE table_name = '$tabla'";
 		$rs = $this->Ejecutar_sql($sql);
 		$fila = $this->sacar_fila($rs);
@@ -654,4 +661,9 @@ else
 		}
 		return false;
 	}
+
+    public function concatenar_cadena($arreglo_cadena) {
+        return (implode("+", $arreglo_cadena));
+    }
+
 }

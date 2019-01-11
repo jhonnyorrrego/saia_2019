@@ -31,8 +31,8 @@ if($seleccionados["numcampos"]){
 }
 ?>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap_reescribir.css"/>
+<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap/saia/css/bootstrap.css"/>
+<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior);?>css/bootstrap/saia/css/bootstrap_reescribir.css"/>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery-1.7.min.js"></script>
 <script type="text/javascript" src="<?php echo($ruta_db_superior);?>pantallas/lib/librerias_codificacion.js"></script>
 <?php
@@ -146,7 +146,6 @@ echo(librerias_notificaciones());
 $(document).ready(function(){ 
 
   $("#submit_formulario").click(function(){  
-  	
     $('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
 		$(this).attr('disabled', true);  
 		var func_selec=$("#funcionarios").val();

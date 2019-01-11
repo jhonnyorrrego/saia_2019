@@ -15,8 +15,6 @@ include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("iddoc","id","funcionario");
 desencriptar_sqli('form_info');
 
-//print_r($_REQUEST);die();
-
 $usuario_actual=usuario_actual("funcionario_codigo");
 echo (librerias_jquery("1.7"));
 echo (estilo_bootstrap());
@@ -43,8 +41,7 @@ if($_REQUEST["iddoc"]!="" && $_REQUEST["accion"]!=""){
 }
 
 function guardar_permiso_documento($iddoc,$accion){
-	//$permisos=implode(",",@$_REQUEST["permisos"]);
-	$permisos=(@$_REQUEST["permisos"]);
+	$permisos=implode(",",@$_REQUEST["permisos"]);
 	if($accion=="adicionar" && $permisos!=""){
 		$sql="INSERT INTO permiso_documento (funcionario,documento_iddocumento,permisos) VALUES ('".$_REQUEST["funcionario"]."','".$iddoc."','".$permisos."')";
 		phpmkr_query($sql) or die("Error al adicionar el permiso");
@@ -60,7 +57,6 @@ function guardar_permiso_documento($iddoc,$accion){
 	die();
 }
 
-
 function funcionarios_permiso_documento($iddoc){
 	global $conn;
 	$parte_tabla='';
@@ -73,7 +69,7 @@ function funcionarios_permiso_documento($iddoc){
 			$edit_r = (in_array("r", $perm)) ? "X" : ""; 
 			
 			$parte_tabla.='<tr>';
-			$parte_tabla.='<td>'.ucwords(strtolower($permisos[$i]["nombres"].''.$permisos[$i]["apellidos"])).'</td>';
+			$parte_tabla.='<td>'.ucwords(strtolower($permisos[$i]["nombres"].' '.$permisos[$i]["apellidos"])).'</td>';
 			$parte_tabla.='<td style="text-align:center">'.$mod.'</td> <td style="text-align:center">'.$eli.'</td> <td style="text-align:center">'.$edit_r.'</td>';
 			if(intval($permisos[$i]["funcionario"])==intval($permisos[$i]["ejecutor"])){
 					$parte_tabla.='<td style="text-align:center">Creador Documento</td>';
@@ -194,7 +190,6 @@ function add_permiso_documento($iddoc){
 <?php
 }
 
-
 function edit_permiso_documento($iddoc,$idpermiso){
 	global $conn;
 	$funcionarios=busca_filtro_tabla("f.nombres,f.apellidos,f.funcionario_codigo,permisos","funcionario f,permiso_documento p","f.funcionario_codigo=p.funcionario and p.idpermiso_documento=".$idpermiso,"f.nombres,f.apellidos",$conn);
@@ -273,5 +268,4 @@ function edit_permiso_documento($iddoc,$idpermiso){
 	</script>
 <?php
 }
-//encriptar_sqli("edit_permiso_documento",1);
 ?>

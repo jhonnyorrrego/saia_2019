@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\BuzonEntrada" table="buzon_entrada">
+    <indexes>
+      <index name="destino" columns="destino"/>
+      <index name="archivo_idarchivo" columns="archivo_idarchivo"/>
+      <index name="origen" columns="origen"/>
+      <index name="i_buzon_entrada_tipo_desti" columns="tipo_destino"/>
+    </indexes>
+    <id name="idtransferencia" type="integer" column="idtransferencia">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="archivoIdarchivo" type="integer" column="archivo_idarchivo" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="nombre" type="string" column="nombre" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default">RECEPCION</option>
+      </options>
+    </field>
+    <field name="destino" type="string" column="destino" length="20" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tipoDestino" type="integer" column="tipo_destino" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="fecha" type="datetime" column="fecha" nullable="true"/>
+    <field name="respuesta" type="date" column="respuesta" nullable="true"/>
+    <field name="origen" type="string" column="origen" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default"/>
+      </options>
+    </field>
+    <field name="tipoOrigen" type="integer" column="tipo_origen" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="notas" type="text" column="notas" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="transferenciaDescripcion" type="text" column="transferencia_descripcion" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tipo" type="string" column="tipo" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default">ARCHIVO</option>
+      </options>
+    </field>
+    <field name="activo" type="boolean" column="activo" nullable="false">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="rutaIdruta" type="integer" column="ruta_idruta" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="verNotas" type="string" column="ver_notas" length="1" nullable="true">
+      <options>
+        <option name="fixed"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

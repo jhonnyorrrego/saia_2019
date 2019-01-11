@@ -19,7 +19,7 @@ if(isset($_REQUEST["tipo"])&&$_REQUEST["tipo"]&&isset($_REQUEST["id"])&&$_REQUES
  if($resultado["numcampos"])
    {if($_REQUEST["tipo"]=="campos_formato")
       {
-      	echo '<table style="border-collapse:collapse" border="1" align="center">
+echo '<table style="border-collapse:collapse" border="1" align="center">
              <tr>
              <td bgcolor="silver">Nombre:</td>
              <td>'.$resultado[0]["nombre"].'</td>
@@ -46,21 +46,21 @@ if(isset($_REQUEST["tipo"])&&$_REQUEST["tipo"]&&isset($_REQUEST["id"])&&$_REQUES
              </tr>
              </table>';
       }
-    else{
+    else {
     	$ruta_formato='';
     	$formatos=busca_filtro_tabla("A.etiqueta,A.idformato,A.nombre,C.ruta,C.etiqueta AS etiqueta_funcion,B.funciones_formato_fk","formato A, funciones_formato_enlace B,funciones_formato C","A.idformato=B.formato_idformato AND B.funciones_formato_fk=C.idfunciones_formato AND funciones_formato_fk=".$_REQUEST["id"]."","GROUP BY A.idformato HAVING min(B.funciones_formato_fk)=B.funciones_formato_fk ORDER BY A.nombre,B.idfunciones_formato_enlace ASC",$conn);
     	// si el archivo existe dentro de la carpeta formatos
     	$ruta_final=$formatos[0]["nombre"] . "/" . $formatos[0]["ruta"];
     	if (is_file($ruta_db_superior . FORMATOS_CLIENTE . $formatos[0]["nombre"] . "/" . $formatos[0]["ruta"])) {
-    		$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA . FORMATOS_CLIENTE . $formatos[0]["nombre"] . "/" . $formatos[0]["ruta"]);
+    		$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA ."/". FORMATOS_CLIENTE . $formatos[0]["nombre"] . "/" . $formatos[0]["ruta"]);
     	} elseif (is_file($ruta_db_superior . $formatos[0]["ruta"])) {
     		// si el archivo existe en la ruta especificada partiendo de la raiz
-    		$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA . $formatos[0]["ruta"]);
+    		$ruta_formato = realpath($_SERVER["DOCUMENT_ROOT"] . "/" . RUTA_SAIA ."/". $formatos[0]["ruta"]);
     	} else {
     		$ruta_formato = 'Error: ' . $formatos[0]["ruta"] . "|id=" . $formatos[0]["idfunciones_formato"];
     	}
     	$formatos=busca_filtro_tabla("etiqueta","formato A, funciones_formato_enlace B","A.idformato=B.formato_idformato AND funciones_formato_fk=".$_REQUEST["id"]."","B.idfunciones_formato_enlace ASC",$conn);
-    	$nombres=extrae_campo($formatos,"etiqueta","U");
+       $nombres=extrae_campo($formatos,"etiqueta","U"); 
     	foreach($nombres AS $key=>$valor){
     		$nombres[$key]=codifica_encabezado(html_entity_decode($valor));
     	}
@@ -69,7 +69,7 @@ if(isset($_REQUEST["tipo"])&&$_REQUEST["tipo"]&&isset($_REQUEST["id"])&&$_REQUES
              <td bgcolor="silver">Formatos:</td>
              <td>'.implode(", ",$nombres).'</td>
              </tr>
- 			 <tr>
+             <tr>
              <td bgcolor="silver">Nombre de la funci&oacute;n:</td>
              <td>'.$resultado[0]["nombre_funcion"].'</td>
              </tr>

@@ -144,7 +144,7 @@ if($_REQUEST['guardar']==1){
 		<div class="control-group" nombre="etiqueta">
 			<legend><?php echo($titulo_pantalla); ?></legend>
 		</div>
-		<form id="formulario_tareas" name="formulario_tareas" class="form-horizontal" method="post">
+		<form id="formulario_tareas" class="form-horizontal" method="post">
 		
 		
 		<?php

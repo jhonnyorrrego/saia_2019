@@ -18,10 +18,16 @@ class GenerarBuscar {
     private $accion;
 
     private $incluidos;
+    
+    public $exito;
+    
+    public $mensaje;
 
     public function __construct($idformato, $accion) {
         $this->idformato = $idformato;
         $this->accion = $accion;
+        $this->exito=0;
+        $this->mensaje="Error al generar el formato con id ".$idformato;
     }
 
     /*
@@ -37,7 +43,7 @@ class GenerarBuscar {
      * </Clase>
      */
     public function crear_formato_buscar() {
-        global $sql, $conn, $ruta_db_superior;
+        global $conn, $ruta_db_superior;
         $datos_detalles["numcampos"] = 0;
         $texto = '';
         $includes = "";
@@ -56,7 +62,7 @@ class GenerarBuscar {
             $includes .= $texto1 . $texto2;
             $includes .= $this->incluir_libreria("estilo_formulario.php", "librerias");
             $includes .= $this->incluir_libreria("funciones_formatos.js", "javascript");
-            $includes .= $this->incluir("../../js/jquery-1.7.2.js", "javascript");
+            $includes .= "<?php echo(librerias_jquery('1.7')); ?>";
             if ($formato[0]["estilos"] && $formato[0]["estilos"] != "") {
                 $includes .= $this->incluir($formato[0]["estilos"], "estilos", 1);
             }
@@ -81,8 +87,6 @@ class GenerarBuscar {
             $obliga = "";
             $adicionales = "";
             $campos = busca_filtro_tabla("*", "campos_formato A", "A.acciones like '%" . $accion[0] . "%' and A.formato_idformato=" . $this->idformato, "orden ASC", $conn);
-            // funciones creadas para el formato, pero que corresponden a nombres de campos
-            // print_r($campos);die();
             $fun_campos = array();
             for ($h = 0; $h < $campos["numcampos"]; $h++) {
                 $saltar_campo = false;
@@ -113,141 +117,135 @@ class GenerarBuscar {
                 $otros = busca_filtro_tabla("", "caracteristicas_campos", "tipo_caracteristica='adicionales' and idcampos_formato=" . $campos[$h]["idcampos_formato"], "", $conn);
                 if ($otros["numcampos"])
                     $adicionales .= $otros[0]["valor"];
-                /* */
-                {
-                    $valor = "";
-                    switch ($campos[$h]["etiqueta_html"]) {
-                        case "password":
-                            $texto .= '<tr>' . generar_condicion($campos[$h]["nombre"]) . '
-                     <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>' . generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]) . '
+
+                $valor = "";
+                switch ($campos[$h]["etiqueta_html"]) {
+                    case "password":
+                        $texto .= '<tr>' . $this->generar_condicion($campos[$h]["nombre"]) . '
+                     <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>' . $this->generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]) . '
                      <td bgcolor="#F5F5F5"><input type="password" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . " $adicionales " . ' value="' . $valor . '"></td>
                     </tr>';
-                            break;
-                        case "fecha":
-                            // si la fecha es obligatoria, que valide que no se vaya con solo ceros
-                            $adicionales = str_replace("required", "required dateISO", $adicionales);
-                            if ($campos[$h]["tipo_dato"] == "DATE") {
-                                $texto .= '<tr>' . $this->generar_condicion($campos[$h]["nombre"]) . '
+                        break;
+                    case "fecha":
+                        // si la fecha es obligatoria, que valide que no se vaya con solo ceros
+                        $adicionales = str_replace("required", "required dateISO", $adicionales);
+                        if ($campos[$h]["tipo_dato"] == "DATE") {
+                            $texto .= '<tr>' . $this->generar_condicion($campos[$h]["nombre"]) . '
                        <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td><td class="encabezado">ENTRE &nbsp;</td><td colspan="2" bgcolor="#F5F5F5"><span class="phpmaker"><input type="text" readonly="true" ' . $adicionales . ' name="' . $campos[$h]["nombre"] . '_1" id="' . $campos[$h]["nombre"] . '_1" tipo="fecha" value="';
 
-                                $texto .= '"><?php selector_fecha("' . $campos[$h]["nombre"] . '_1","formulario_formatos","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?' . '>&nbsp;&nbsp; Y &nbsp;&nbsp;';
-                                $texto .= '<input type="text" readonly="true" ' . $adicionales . ' name="' . $campos[$h]["nombre"] . '_2" id="' . $campos[$h]["nombre"] . '_2" tipo="fecha" value="';
+                            $texto .= '"><?php selector_fecha("' . $campos[$h]["nombre"] . '_1","formulario_formatos","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?' . '>&nbsp;&nbsp; Y &nbsp;&nbsp;';
+                            $texto .= '<input type="text" readonly="true" ' . $adicionales . ' name="' . $campos[$h]["nombre"] . '_2" id="' . $campos[$h]["nombre"] . '_2" tipo="fecha" value="';
 
-                                $texto .= '"><?php selector_fecha("' . $campos[$h]["nombre"] . '_2","formulario_formatos","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?' . '></span></font>';
-                                $fecha++;
-                            } else if ($campos[$h]["tipo_dato"] == "DATETIME") {
-                                $texto .= '<tr>' . $this->generar_condicion($campos[$h]["nombre"]) . '
+                            $texto .= '"><?php selector_fecha("' . $campos[$h]["nombre"] . '_2","formulario_formatos","Y-m-d",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?' . '></span></font>';
+                            $fecha++;
+                        } else if ($campos[$h]["tipo_dato"] == "DATETIME") {
+                            $texto .= '<tr>' . $this->generar_condicion($campos[$h]["nombre"]) . '
                     <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td><td class="encabezado">ENTRE &nbsp;</td><td colspan="2" bgcolor="#F5F5F5"><input type="text" readonly="true" name="' . $campos[$h]["nombre"] . '_1" ' . $adicionales . ' id="' . $campos[$h]["nombre"] . '_1" value="';
 
-                                $texto .= '"><?php selector_fecha("' . $campos[$h]["nombre"] . '_1","formulario_formatos","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?' . '>&nbsp;&nbsp; Y &nbsp;&nbsp;';
-                                $texto .= '<input type="text" readonly="true" name="' . $campos[$h]["nombre"] . '_2" ' . $adicionales . ' id="' . $campos[$h]["nombre"] . '_2" value="';
+                            $texto .= '"><?php selector_fecha("' . $campos[$h]["nombre"] . '_1","formulario_formatos","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?' . '>&nbsp;&nbsp; Y &nbsp;&nbsp;';
+                            $texto .= '<input type="text" readonly="true" name="' . $campos[$h]["nombre"] . '_2" ' . $adicionales . ' id="' . $campos[$h]["nombre"] . '_2" value="';
 
-                                $texto .= '"><?php selector_fecha("' . $campos[$h]["nombre"] . '_2","formulario_formatos","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?' . '>';
-                                $fecha++;
-                            } else
-                                alerta_formatos("No esta definido su formato de Fecha");
-                            $texto .= '</td></tr>';
-                            break;
-                        case "radio":
-              /* En los campos de este tipo se debe validar que valor contenga un listado con las siguentes caracteristicas*/
-                $texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">' . $this->generar_condicion($campos[$h]["nombre"]) . '
+                            $texto .= '"><?php selector_fecha("' . $campos[$h]["nombre"] . '_2","formulario_formatos","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?' . '>';
+                            $fecha++;
+                        } else
+                            alerta_formatos("No esta definido su formato de Fecha");
+                        $texto .= '</td></tr>';
+                        break;
+                    case "radio":
+                                        /* En los campos de este tipo se debe validar que valor contenga un listado con las siguentes caracteristicas*/
+                                        $texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">' . $this->generar_condicion($campos[$h]["nombre"]) . '
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>' . $this->generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]);
 
-                            $texto .= '<td bgcolor="#F5F5F5">' . $this->arma_funcion("genera_campo_listados_editar", $idformato . "," . $campos[$h]["idcampos_formato"], 'buscar') . '</td></tr>';
-                            break;
-                        case "checkbox":
-                            $texto .= '<tr>' . $this->generar_condicion($campos[$h]["nombre"]) . '
+                        $texto .= '<td bgcolor="#F5F5F5">' . $this->arma_funcion("genera_campo_listados_editar", $idformato . "," . $campos[$h]["idcampos_formato"], 'buscar') . '</td></tr>';
+                        break;
+                    case "checkbox":
+                        $texto .= '<tr>' . $this->generar_condicion($campos[$h]["nombre"]) . '
                   <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>' . $this->generar_comparacion("arbol", $campos[$h]["nombre"]);
-                            $texto .= '<td bgcolor="#F5F5F5">' . $this->arma_funcion("genera_campo_listados_editar", $idformato . "," . $campos[$h]["idcampos_formato"], 'buscar') . '</td></tr>';
-                            $checkboxes++;
-                            break;
-                        case "select":
+                        $texto .= '<td bgcolor="#F5F5F5">' . $this->arma_funcion("genera_campo_listados_editar", $idformato . "," . $campos[$h]["idcampos_formato"], 'buscar') . '</td></tr>';
+                        $checkboxes++;
+                        break;
+                    case "select":
+                        $texto .= '<tr>' . $this->generar_condicion($campos[$h]["nombre"]) . '
+                     <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>' . $this->generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]);
+                        $texto .= '<td bgcolor="#F5F5F5">' . $this->arma_funcion("genera_campo_listados_editar", $idformato . "," . $campos[$h]["idcampos_formato"], 'buscar') . '</td></tr>';
+                        break;
+                    case "dependientes":
+                                        /*parametros:
+                                         nombre del select padre; sql select padre| nombre del select hijo; sql select hijo....
+                                         (ej: departamento;select iddepartamento as id,nombre from departamento order by nombre| municipio; select idmunicipio as id,nombre from municipio where departamento_iddepartamento=)*/
+                                        $parametros = explode("|", $campos[$h]["valor"]);
+                        if (count($parametros) < 2)
+                            alerta_formatos("Por favor verifique los parametros de configuracion de su select dependiente " . $campos[$h]["etiqueta"]);
+                        else {
                             $texto .= '<tr>' . $this->generar_condicion($campos[$h]["nombre"]) . '
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>' . $this->generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]);
-                            $texto .= '<td bgcolor="#F5F5F5">' . $this->arma_funcion("genera_campo_listados_editar", $idformato . "," . $campos[$h]["idcampos_formato"], 'buscar') . '</td></tr>';
-                            break;
-                        case "dependientes":
-              /*parametros:
-              nombre del select padre; sql select padre| nombre del select hijo; sql select hijo....
-              (ej: departamento;select iddepartamento as id,nombre from departamento order by nombre| municipio; select idmunicipio as id,nombre from municipio where departamento_iddepartamento=)*/
-                $parametros = explode("|", $campos[$h]["valor"]);
-                            if (count($parametros) < 2)
-                                alerta_formatos("Por favor verifique los parametros de configuracion de su select dependiente " . $campos[$h]["etiqueta"]);
-                            else {
-                                $texto .= '<tr>' . $this->generar_condicion($campos[$h]["nombre"]) . '
-                     <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>' . $this->generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]);
-                                $texto .= '<td bgcolor="#F5F5F5">' . $this->arma_funcion("genera_campo_listados_editar", $idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . '</td></tr>';
-                                $dependientes++;
-                            }
-                            break;
-                        case "autocompletar":
-                /* parametros: campos a mostrar separados por comas; campo a guardar en el hidden; tabla
-                  ej: nombres,apellidos;idfuncionario;funcionario
+                            $texto .= '<td bgcolor="#F5F5F5">' . $this->arma_funcion("genera_campo_listados_editar", $idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . '</td></tr>';
+                            $dependientes++;
+                        }
+                        break;
+                    case "autocompletar":
+                                        /* parametros: campos a mostrar separados por comas; campo a guardar en el hidden; tabla
+                                         ej: nombres,apellidos;idfuncionario;funcionario
 
-                  Queda pendiente La parte de la busqueda.
-                */
-                $texto .= '<tr>
+                                         Queda pendiente La parte de la busqueda.
+                                         */
+                                        $texto .= '<tr>
                    <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>' . $this->generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]) . '
                    <td bgcolor="#F5F5F5">';
-                            $texto .= '<input type="text" size="30" ' . $adicionales . ' value="" id="input' . $campos[$h]["idcampos_formato"] . '" onkeyup="lookup(this.value,' . $campos[$h]["idcampos_formato"] . ');" onblur="fill(this.value,' . $campos[$h]["idcampos_formato"] . ');" />
+                        $texto .= '<input type="text" size="30" ' . $adicionales . ' value="" id="input' . $campos[$h]["idcampos_formato"] . '" onkeyup="lookup(this.value,' . $campos[$h]["idcampos_formato"] . ');" onblur="fill(this.value,' . $campos[$h]["idcampos_formato"] . ');" />
                 <div class="suggestionsBox" id="suggestions' . $campos[$h]["idcampos_formato"] . '" style="display: none;">
 				        <div class="suggestionList" id="list' . $campos[$h]["idcampos_formato"] . '" >&nbsp;
         				</div>
         			  </div>
         			  <input ' . $obligatorio . ' type="text" name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '">
                 </td></tr>';
-                            $autocompletar++;
-                            break;
-                        case "etiqueta":
-                            $texto .= '<tr>
+                        $autocompletar++;
+                        break;
+                    case "etiqueta":
+                        $texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">
                    <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>
                    <td bgcolor="#F5F5F5"><label>' . $valor . '</label><input type="hidden" name="' . $campos[$h]["nombre"] . '" value="' . $valor . '"></td>
                   </tr>';
-                            break;
-                        case "arbol":
-               /*En campos valor se deben almacenar los siguientes datos:
-                arreglo[0]:ruta de el xml
-                arreglo[1]=1=> checkbox;arreglo[1]=2=>radiobutton
-                arreglo[2] Modo calcular numero de nodos hijo
-                arreglo[3] Forma de carga 0=>autoloading; 1=>smartXML
-                arreglo[4] Busqueda
-                arreglo[5] Almacenar 0=>iddato 1=>valordato
-                arreglo[6] Tipo de arbol 0=>funcionarios 1=>series 2=>dependencias
-                */
-                $arreglo = explode(";", $campos[$h]["valor"]);
-                            // print_r($arreglo);
-                            /*
-                             * print_r($campos[$h]);
-                             * die("<br />".$campos[$h]["nombre"]."<br />".$campos[$h]["valor"]);
-                             */
-                            if (isset($arreglo) && $arreglo[0] != "") {
-                                $ruta = "\"" . $arreglo[0] . "\"";
-                            } else {
-                                $ruta = "\"../arboles/test_dependencia.xml\"";
-                                $arreglo[1] = 0;
-                                $arreglo[2] = 0;
-                                $arreglo[3] = 0;
-                                $arreglo[4] = 1;
-                            }
-                            $texto .= '<tr>' . $this->generar_condicion($campos[$h]["nombre"]) . '
+                        break;
+                    case "arbol":
+                                        /*En campos valor se deben almacenar los siguientes datos:
+                                         arreglo[0]:ruta de el xml
+                                         arreglo[1]=1=> checkbox;arreglo[1]=2=>radiobutton
+                                         arreglo[2] Modo calcular numero de nodos hijo
+                                         arreglo[3] Forma de carga 0=>autoloading; 1=>smartXML
+                                         arreglo[4] Busqueda
+                                         arreglo[5] Almacenar 0=>iddato 1=>valordato
+                                         arreglo[6] Tipo de arbol 0=>funcionarios 1=>series 2=>dependencias
+                                         */
+                                        $arreglo = explode(";", $campos[$h]["valor"]);
+                        if (isset($arreglo) && $arreglo[0] != "") {
+                            $ruta = "\"" . $arreglo[0] . "\"";
+                        } else {
+                            $ruta = "\"../arboles/test_dependencia.xml\"";
+                            $arreglo[1] = 0;
+                            $arreglo[2] = 0;
+                            $arreglo[3] = 0;
+                            $arreglo[4] = 1;
+                        }
+                        $texto .= '<tr>' . $this->generar_condicion($campos[$h]["nombre"]) . '
                    <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . strtoupper($campos[$h]["etiqueta"]) . $obliga . '</td>' . $this->generar_comparacion("arbol", $campos[$h]["nombre"]) . '<td bgcolor="#F5F5F5"><div id="esperando_' . $campos[$h]["nombre"] . '"><img src="../../imagenes/cargando.gif"></div>';
-                            $texto .= '<div id="seleccionados">' . $this->arma_funcion("mostrar_seleccionados", $idformato . "," . $campos[$h]["idcampos_formato"] . ",'" . $arreglo[6] . "'", "mostrar") . '</div>
+                        $texto .= '<div id="seleccionados">' . $this->arma_funcion("mostrar_seleccionados", $idformato . "," . $campos[$h]["idcampos_formato"] . ",'" . $arreglo[6] . "'", "mostrar") . '</div>
                           <br />  ';
-                            if ($arreglo[4]) {
-                                $texto .= 'Buscar: <input type="text" id="stext_' . $campos[$h]["nombre"] . '" width="200px" size="25">
+                        if ($arreglo[4]) {
+                            $texto .= 'Buscar: <input type="text" id="stext_' . $campos[$h]["nombre"] . '" width="200px" size="25">
                    <a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value),1)"><img src="../../botones/general/anterior.png"border="0px"></a>
                    <a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value),0,1)"><img src="../../botones/general/buscar.png"border="0px"></a>
                           <a href="javascript:void(0)" onclick="tree_' . $campos[$h]["nombre"] . '.findItem((document.getElementById(\'stext_' . $campos[$h]["nombre"] . '\').value))"><img src="../../botones/general/siguiente.png"border="0px"></a>
                           <br /><br />';
-                            }
-                            $texto .= '<div id="treeboxbox_' . $campos[$h]["nombre"] . '" height="90%"></div>';
-                            // miro si ya estan incluidas las librerias del arbol
-                            $texto .= '<input type="hidden" ' . $adicionales . ' name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '"  ';
-                            if ($accion == "editar") {
-                                $texto .= ' value="' . $this->arma_funcion("cargar_seleccionados", $idformato . "," . $campos[$h]["idcampos_formato"] . ",1", "mostrar") . '" >';
-                            } else
-                                $texto .= ' value="" ><label style="display:none" class="error" for="' . $campos[$h]["nombre"] . '">Campo obligatorio.</label>';
-                            $texto .= '<script type="text/javascript">
+                        }
+                        $texto .= '<div id="treeboxbox_' . $campos[$h]["nombre"] . '" height="90%"></div>';
+                        // miro si ya estan incluidas las librerias del arbol
+                        $texto .= '<input type="hidden" ' . $adicionales . ' name="' . $campos[$h]["nombre"] . '" id="' . $campos[$h]["nombre"] . '"  ';
+                        if ($accion == "editar") {
+                            $texto .= ' value="' . $this->arma_funcion("cargar_seleccionados", $idformato . "," . $campos[$h]["idcampos_formato"] . ",1", "mostrar") . '" >';
+                        } else
+                            $texto .= ' value="" ><label style="display:none" class="error" for="' . $campos[$h]["nombre"] . '">Campo obligatorio.</label>';
+                        $texto .= '<script type="text/javascript">
                   <!--
                       var browserType;
                       if (document.layers) {browserType = "nn4"}
@@ -258,23 +256,23 @@ class GenerarBuscar {
                 			tree_' . $campos[$h]["nombre"] . '=new dhtmlXTreeObject("treeboxbox_' . $campos[$h]["nombre"] . '","100%","100%",0);
                 			tree_' . $campos[$h]["nombre"] . '.setImagePath("../../imgs/");
                 			tree_' . $campos[$h]["nombre"] . '.enableIEImageFix(true);';
-                            if ($arreglo[1] == 1) {
-                                $texto .= 'tree_' . $campos[$h]["nombre"] . '.enableCheckBoxes(1);
+                        if ($arreglo[1] == 1) {
+                            $texto .= 'tree_' . $campos[$h]["nombre"] . '.enableCheckBoxes(1);
                 			tree_' . $campos[$h]["nombre"] . '.enableThreeStateCheckboxes(1);';
-                            } else if ($arreglo[1] == 2) {
-                                $texto .= 'tree_' . $campos[$h]["nombre"] . '.enableCheckBoxes(1);
+                        } else if ($arreglo[1] == 2) {
+                            $texto .= 'tree_' . $campos[$h]["nombre"] . '.enableCheckBoxes(1);
                     tree_' . $campos[$h]["nombre"] . '.enableRadioButtons(true);';
-                            }
-                            $texto .= 'tree_' . $campos[$h]["nombre"] . '.setOnLoadingStart(cargando_' . $campos[$h]["nombre"] . ');
+                        }
+                        $texto .= 'tree_' . $campos[$h]["nombre"] . '.setOnLoadingStart(cargando_' . $campos[$h]["nombre"] . ');
                       tree_' . $campos[$h]["nombre"] . '.setOnLoadingEnd(fin_cargando_' . $campos[$h]["nombre"] . ');';
-                            if ($arreglo[3]) {
-                                $texto .= 'tree_' . $campos[$h]["nombre"] . '.enableSmartXMLParsing(true);';
-                            } else
-                                $texto .= 'tree_' . $campos[$h]["nombre"] . '.setXMLAutoLoading(' . $ruta . ');';
-                            if ($accion == "editar") {
-                                $ruta .= ",checkear_arbol";
-                            }
-                            $texto .= 'tree_' . $campos[$h]["nombre"] . '.loadXML(' . $ruta . ');
+                        if ($arreglo[3]) {
+                            $texto .= 'tree_' . $campos[$h]["nombre"] . '.enableSmartXMLParsing(true);';
+                        } else
+                            $texto .= 'tree_' . $campos[$h]["nombre"] . '.setXMLAutoLoading(' . $ruta . ');';
+                        if ($accion == "editar") {
+                            $ruta .= ",checkear_arbol";
+                        }
+                        $texto .= 'tree_' . $campos[$h]["nombre"] . '.loadXML(' . $ruta . ');
                       tree_' . $campos[$h]["nombre"] . '.setOnCheckHandler(onNodeSelect_' . $campos[$h]["nombre"] . ');
                       function onNodeSelect_' . $campos[$h]["nombre"] . '(nodeId)
                       {valor_destino=document.getElementById("' . $campos[$h]["nombre"] . '");
@@ -294,7 +292,7 @@ class GenerarBuscar {
 						}
                        valor_destino.value=nuevo;
                       }';
-                            $texto .= "
+                        $texto .= "
                       function fin_cargando_" . $campos[$h]["nombre"] . "() {
                         if (browserType == \"gecko\" )
                            document.poppedLayer =
@@ -320,44 +318,44 @@ class GenerarBuscar {
                         document.poppedLayer.style.visibility = \"visible\";
                       }
                 	";
-                            if ($accion == "editar") {
-                                $texto .= "
+                        if ($accion == "editar") {
+                            $texto .= "
                   function checkear_arbol(){
                   vector2=\"" . $this->arma_funcion("cargar_seleccionados", $this->idformato . "," . $campos[$h]["idcampos_formato"] . ",1", "mostrar") . "\";
                   vector2=vector2.split(\",\");
                   for(m=0;m<vector2.length;m++)
                     {tree_" . $campos[$h]["nombre"] . ".setCheck(vector2[m],true);
                     }}\n";
-                            }
-                            $texto .= "--></script>";
-                            $texto .= '</td></tr>';
-                            $arboles++;
-                            break;
-                        case "detalle":
-                            $padre = busca_filtro_tabla("nombre_tabla", "formato A", "idformato=" . $campos[$h]["valor"], "", $conn);
-                            if ($padre["numcampos"]) {
-                                $texto .= '<?php if($_REQUEST["padre"]) {?' . '><input type="hidden"  name="' . $padre[0]["nombre_tabla"] . '" ' . $obligatorio . ' value="<?php echo $_REQUEST["padre"]; ?' . '>">' . '<?php } ?' . '>';
-                                $texto .= '<?php if($_REQUEST["anterior"]) {?' . '><input type="hidden"  name="' . $padre[0]["nombre_tabla"] . '" ' . $obligatorio . ' value="<?php echo $_REQUEST["anterior"]; ?' . '>">' . '<?php }  else {listar_select_padres(' . $padre[0]["nombre_tabla"] . ');} ?' . '>';
-                            }
-                            break;
-                        case "ejecutor":
-                            $texto .= '<tr>' . $this->generar_condicion($campos[$h]["nombre"]) . '
+                        }
+                        $texto .= "--></script>";
+                        $texto .= '</td></tr>';
+                        $arboles++;
+                        break;
+                    case "detalle":
+                        $padre = busca_filtro_tabla("nombre_tabla", "formato A", "idformato=" . $campos[$h]["valor"], "", $conn);
+                        if ($padre["numcampos"]) {
+                            $texto .= '<?php if($_REQUEST["padre"]) {?' . '><input type="hidden"  name="' . $padre[0]["nombre_tabla"] . '" ' . $obligatorio . ' value="<?php echo $_REQUEST["padre"]; ?' . '>">' . '<?php } ?' . '>';
+                            $texto .= '<?php if($_REQUEST["anterior"]) {?' . '><input type="hidden"  name="' . $padre[0]["nombre_tabla"] . '" ' . $obligatorio . ' value="<?php echo $_REQUEST["anterior"]; ?' . '>">' . '<?php }  else {listar_select_padres(' . $padre[0]["nombre_tabla"] . ');} ?' . '>';
+                        }
+                        break;
+                    case "ejecutor":
+                        $texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">' . $this->generar_condicion($campos[$h]["nombre"]) . '
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>' . $this->generar_comparacion("arbol", $campos[$h]["nombre"]) . '
                      <td bgcolor="#F5F5F5"><select multiple ' . " $adicionales " . ' id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . ' ></select></td>
                     </tr>
                     <script>
-                     $(document).ready(function()
-                      {
+                     $(document).ready(function() {
                       $("#' . $campos[$h]["nombre"] . '").fcbkcomplete({
                         complete_text:"Nombre o identificacion",
                         newel: true
                       });
                       });
                      </script>';
-                            $ejecutores++;
-                            break;
-                        default: // text
-                            $texto .= '<tr>' . $this->generar_condicion($campos[$h]["nombre"]) . '
+                        $ejecutores++;
+                        break;
+
+                    default: // text
+                        $texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">' . $this->generar_condicion($campos[$h]["nombre"]) . '
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>' . $this->generar_comparacion("arbol", $campos[$h]["nombre"]) . '
                      <td bgcolor="#F5F5F5"><select multiple id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '"></select><script>
                      $(document).ready(function()
@@ -369,10 +367,10 @@ class GenerarBuscar {
                       });
                      </script></td>
                     </tr>';
-                            $ejecutores++;
-                            break;
-                    }
+                        $ejecutores++;
+                        break;
                 }
+
                 array_push($listado_campos, "'" . $campos[$h]["nombre"] . "'");
             }
             // die();
@@ -496,8 +494,8 @@ class GenerarBuscar {
             if ($textareas) {
                 $includes .= $this->incluir_libreria("header_formato.php", "librerias");
             }
-            $includes .= $this->incluir("../../js/jquery-1.7.2.js", "javascript");
-            $includes .= $this->incluir("../../js/jquery.validate.1.13.1.js", "javascript");
+            $includes .= "<?php echo(librerias_jquery('1.8')); ?>";
+            $includes .= $this->incluir("../../js/jquery.validate.js", "javascript");
 
             $includes .= $this->incluir("../../js/title2note.js", "javascript");
             if ($arboles) {
@@ -510,24 +508,27 @@ class GenerarBuscar {
                 $includes .= $this->incluir("../../css/style_fcbkcomplete.css", "estilos");
             }
             if ($autocompletar) {
-                $includes .= $this->incluir("../../js/jquery-1.7.2.js", "javascript");
+                $includes .= "<?php echo(librerias_jquery('1.7')); ?>";
                 $includes .= $this->incluir("../../js/selectize.js", "javascript");
                 $includes .= $this->incluir("../../css/selectize.css", "estilos");
                 // $includes .= $this->incluir("../librerias/autocompletar.js", "javascript");
             }
             if ($dependientes > 0) {
-                $includes .= $this->incluir("../../js/jquery-1.7.2.js", "javascript");
+                $includes .= "<?php echo(librerias_jquery('1.7')); ?>";
                 $includes .= $this->incluir("../librerias/dependientes.js", "javascript");
             }
             $contenido = "<html><title>.:" . strtoupper($accion . " " . $formato[0]["etiqueta"]) . ":.</title><head>" . $includes . $enmascarar . "</head>" . $texto . "</html>";
             if ($accion == "editar")
                 $contenido .= '<?php include_once("../librerias/footer_plantilla.php");?' . '>';
             $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/buscar_" . $formato[0]["nombre"] . ".php", $contenido);
-            // die();
             if ($mostrar != "") {
-                alerta_formatos("Formato Creado con exito por favor verificar la carpeta " . dirname($mostrar));
+            	$this->exito=1;
+            	$this->mensaje="Formato buscar Creado con exito por favor verificar la carpeta " . dirname($mostrar);
+                alerta_formatos("Formato Buscar  Creado con exito por favor verificar la carpeta " . dirname($mostrar));
             }
         } else {
+        	$this->exito=0;
+        	$this->mensaje="No es posible generar el Formato";
             alerta_formatos("No es posible generar el Formato");
         }
     }

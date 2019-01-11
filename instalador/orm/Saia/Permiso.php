@@ -17,7 +17,7 @@ class Permiso
      *
      * @ORM\Column(name="idpermiso", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idpermiso;
 
@@ -64,9 +64,9 @@ class Permiso
     private $caracteristicaTotal;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="tipo", type="boolean", nullable=false)
+     * @ORM\Column(name="tipo", type="integer", nullable=false)
      */
     private $tipo = '1';
 

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtOrdenPago" table="ft_orden_pago">
+    <indexes>
+      <index name="i_orden_pago_documento_" columns="documento_iddocumento"/>
+      <index name="i_orden_pago_informe_re" columns="ft_informe_recibo"/>
+      <index name="i_orden_pago_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftOrdenPago" type="integer" column="idft_orden_pago">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="ftInformeRecibo" type="integer" column="ft_informe_recibo" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">907</option>
+      </options>
+    </field>
+    <field name="adicionalesOrden" type="integer" column="adicionales_orden" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">78</option>
+      </options>
+    </field>
+    <field name="centroCostos" type="string" column="centro_costos" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="descripcion" type="text" column="descripcion" length="65535" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="pageA" type="string" column="page_a" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ordenPago" type="integer" column="orden_pago" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="observaciones" type="text" column="observaciones" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="observacionesIva" type="text" column="observaciones_iva" length="65535" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="urgenciaPago" type="integer" column="urgencia_pago" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="dependencia" type="integer" column="dependencia" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="encabezado" type="integer" column="encabezado" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="firma" type="integer" column="firma" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+    <field name="estadoDocumento" type="integer" column="estado_documento" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">1</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

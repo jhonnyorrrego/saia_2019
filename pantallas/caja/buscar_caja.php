@@ -13,7 +13,7 @@ include_once($ruta_db_superior."librerias_saia.php");
 echo(librerias_html5());
 echo(librerias_jquery("1.7"));
 echo(estilo_bootstrap()); 
-echo(librerias_validar_formulario('1.16'));
+echo(librerias_validar_formulario());
 ?>    
 <!DOCTYPE html>     
 <html>
@@ -43,6 +43,20 @@ echo(librerias_validar_formulario('1.16'));
        <form accept-charset="UTF-8" id="kformulario_saia" method="post">  
         <legend>Filtrar Caja</legend>  
         
+        <div class="control-group">
+		  <label class="string required control-label" for="ubicacion">
+		  Ubicaci&oacute;n</label>
+		  <div class="controls">
+		  	<input type="hidden" name="bksaiacondicion_a@ubicacion" id="bksaiacondicion_a-ubicacion" value="=">
+		  	<select name="bqsaia_a@ubicacion" id="bqsaia_a-ubicacion">
+		  		<option value="">Por favor seleccione...</option>		  		
+		  		<option value="1">Central</option>
+				<option value="2">Gesti&oacute;n</option>
+				<option value="3">Historico</option>
+		  	</select>
+		  </div>
+		</div>
+		
         <div class="control-group">
           <label class="string required control-label" for="no_consecutivo">
 			No consecutivo
@@ -85,7 +99,7 @@ echo(librerias_validar_formulario('1.16'));
         
         <div class="control-group">
           <label class="string required control-label" for="division">
-			Division
+			Ubicaci&oacute;n exacta
 			<input type="hidden" name="bksaiacondicion_a@division" id="bksaiacondicion_a-division" value="like_total">
           </label>
           <div class="controls">
@@ -100,6 +114,26 @@ echo(librerias_validar_formulario('1.16'));
           </label>
           <div class="controls">
             <input id="bqsaia_a-codigo" name="bqsaia_a@codigo" size="50" type="text">
+          </div>
+        </div>
+        
+        <div class="control-group">
+          <label class="string required control-label" for="division">
+			Estanter&iacute;a
+			<input type="hidden" name="bksaiacondicion_a@modulo" id="bksaiacondicion_a-modulo" value="like_total">
+          </label>
+          <div class="controls">
+            <input id="bqsaia_a-modulo" name="bqsaia_a@modulo" size="50" type="text">
+          </div>
+        </div>
+        
+        <div class="control-group">
+          <label class="string required control-label" for="division">
+			Entrepa&ntilde;o
+			<input type="hidden" name="bksaiacondicion_a@panel" id="bksaiacondicion_a-panel" value="like_total">
+          </label>
+          <div class="controls">
+            <input id="bqsaia_a-panel" name="bqsaia_a@panel" size="50" type="text">
           </div>
         </div>
         

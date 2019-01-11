@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * DependenciaCargo
  *
- * @ORM\Table(name="dependencia_cargo", indexes={@ORM\Index(name="i_dependencia__dependencia_", columns={"dependencia_iddependencia"}), @ORM\Index(name="i_dependencia__funcionario_", columns={"funcionario_idfuncionario"}), @ORM\Index(name="i_dependencia__cargo_idcarg", columns={"cargo_idcargo"})})
+ * @ORM\Table(name="dependencia_cargo")
  * @ORM\Entity
  */
 class DependenciaCargo
@@ -17,7 +17,7 @@ class DependenciaCargo
      *
      * @ORM\Column(name="iddependencia_cargo", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $iddependenciaCargo;
 
@@ -43,9 +43,9 @@ class DependenciaCargo
     private $cargoIdcargo = '0';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="estado", type="boolean", nullable=false)
+     * @ORM\Column(name="estado", type="integer", nullable=false)
      */
     private $estado = '1';
 
@@ -71,9 +71,9 @@ class DependenciaCargo
     private $fechaIngreso = 'CURRENT_TIMESTAMP';
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="tipo", type="boolean", nullable=false)
+     * @ORM\Column(name="tipo", type="integer", nullable=false)
      */
     private $tipo = '1';
 

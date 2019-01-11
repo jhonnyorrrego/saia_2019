@@ -185,54 +185,47 @@ function formulario($iddocs)
 <?php 
 }
 
-function guardar_transferencias()
-{ global $conn;  
-  $list_destinos = $_REQUEST["x_funcionario_destino"];
-  $list_docs = $_REQUEST["docs"];
-  $datos["fecha"] = $_REQUEST["x_fecha"];
-  $datos["nombre"] = $_REQUEST["x_nombre"];
-  $datos_adicionales["notas"] = "'".$_REQUEST["x_notas"]."'";
-  $tipo_envio = $_REQUEST["x_tipo_envio"];
-  $datos["ver_notas"] = $_REQUEST["x_ver_nota"];
-  $datos["tipo_destino"] = 1; 
-  $destinos_aux = array();
-  $dep = array();
-  $destinos = explode(",",$list_destinos);   
-  $docs = explode(",",$list_docs);
-  $dep=array();  
-	for($i=0; $i<count($destinos); $i++)
-	{
-   $filtro = strpos($destinos[$i],'_');
-   if($filtro)
-      $destinos[$i]=substr($destinos[$i],0,$filtro);     
-   $dependencia = strpos($destinos[$i],'#');
-   if($dependencia)   
-    { 
-      unset($destinos[$i]);
-    }   
-  }
-  
-  $destinos_aux=$destinos;  
-  $max_destinos=busca_filtro_tabla("valor","configuracion","nombre='max_transferencias'","",$conn);
-  if(!$max_destinos["numcampos"])
-    {$max_destinos[0]["valor"]=10;
-    }
-  if(count($destinos)>$max_destinos[0]["valor"]){
-  	$permiso=busca_filtro_tabla("","funcionario_validacion a","funcionario_idfuncionario=".usuario_actual('idfuncionario')." and tipo='1'","",$conn);
-	if(!$permiso["numcampos"]&&usuario_actual('login')!='cerok'){
-		alerta("Usted no puede enviar el documento a mas de ".$max_destinos[0]["valor"]." persona(s)");
-    	redirecciona("transferenciaadd_plantillas.php?docs=".implode(",",$docs)."&retorno=pantallas/buscador_principal.php?idbusqueda=5");
-    	die();
+function guardar_transferencias() {
+	global $conn;
+	$list_destinos = $_REQUEST["x_funcionario_destino"];
+	$list_docs = $_REQUEST["docs"];
+	$datos["fecha"] = $_REQUEST["x_fecha"];
+	$datos["nombre"] = $_REQUEST["x_nombre"];
+	$datos_adicionales["notas"] = "'" . $_REQUEST["x_notas"] . "'";
+	$tipo_envio = $_REQUEST["x_tipo_envio"];
+	$datos["ver_notas"] = $_REQUEST["x_ver_nota"];
+	$datos["tipo_destino"] = 1;
+	$destinos_aux = array();
+	$dep = array();
+	$destinos = explode(",", $list_destinos);
+	$docs = explode(",", $list_docs);
+	$dep = array();
+	for ($i = 0; $i < count($destinos); $i++) {
+		$filtro = strpos($destinos[$i], '_');
+		if ($filtro)
+			$destinos[$i] = substr($destinos[$i], 0, $filtro);
+		$dependencia = strpos($destinos[$i], '#');
+		if ($dependencia) {
+			unset($destinos[$i]);
+		}
 	}
-  }
-  /*print_r($destinos_aux);
-  die("aquiiii");*/  
-  for($i=0; $i<count($docs); $i++)
-  { $datos["archivo_idarchivo"]=$docs[$i];
-    transferir_archivo_prueba($datos,$destinos_aux,$datos_adicionales,$_REQUEST["retorno"]);
-  }
-  $funcionarios_mensaje[]=$list_destinos;
-  $mensaje = "Pruebas";
-  //enviar_mensaje("origen",$funcionarios_mensaje,$mensaje,$tipo_envio);
+
+	$destinos_aux = $destinos;
+	$max_destinos = busca_filtro_tabla("valor", "configuracion", "nombre='max_transferencias'", "", $conn);
+	if (!$max_destinos["numcampos"]) {$max_destinos[0]["valor"] = 10;
+	}
+	if (count($destinos) > $max_destinos[0]["valor"]) {
+		$permiso = busca_filtro_tabla("", "funcionario_validacion a", "funcionario_idfuncionario=" . usuario_actual('idfuncionario') . " and tipo='1'", "", $conn);
+		if (!$permiso["numcampos"] && usuario_actual('login') != 'cerok') {
+			alerta("Usted no puede enviar el documento a mas de " . $max_destinos[0]["valor"] . " persona(s)");
+			redirecciona("transferenciaadd_plantillas.php?docs=" . implode(",", $docs) . "&retorno=pantallas/buscador_principal.php?idbusqueda=5");
+			die();
+		}
+	}
+
+	for ($i = 0; $i < count($docs); $i++) {
+		$datos["archivo_idarchivo"] = $docs[$i];
+		transferir_archivo_prueba($datos, $destinos_aux, $datos_adicionales, $_REQUEST["retorno"]);
+	}
 }
 ?>

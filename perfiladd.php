@@ -60,15 +60,14 @@ switch ($sAction)
 }
 ?>
 <?php include ("header.php") ?>
-
-<script type="text/javascript" src="ew.js"></script>
-<script type="text/javascript">
 <?php
 include_once("librerias_saia.php"); 
 echo(librerias_jquery('1.7'));
 echo(estilo_bootstrap());
 echo(librerias_notificaciones());
 ?>
+<script type="text/javascript" src="ew.js"></script>
+<script type="text/javascript">
 <!--
 EW_dateSep = "/"; // set date separator	
 
@@ -202,5 +201,4 @@ function AddData($conn)
 	phpmkr_query($strsql, $conn) or error("Failed to execute query" . phpmkr_error() . ' SQL:' . $sSql);
 	return true;
 }
-
 ?>

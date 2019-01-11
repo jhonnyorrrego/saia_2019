@@ -4,18 +4,19 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2
+class ComposerStaticInit718f03846feaff3d4705b9006384fb76
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         '023d27dca8066ef29e6739335ea73bad' => __DIR__ . '/..' . '/symfony/polyfill-php70/bootstrap.php',
         '32dcc8afd4335739640db7d200c1971d' => __DIR__ . '/..' . '/symfony/polyfill-apcu/bootstrap.php',
         'a0edc8309cc5e1d60e3047b5df6b7052' => __DIR__ . '/..' . '/guzzlehttp/psr7/src/functions_include.php',
         'c964ee0ededf28c96ebd9db5099ef910' => __DIR__ . '/..' . '/guzzlehttp/promises/src/functions_include.php',
+        '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         'b067bc7112e384b61c701452d53a14a8' => __DIR__ . '/..' . '/mtdowling/jmespath.php/src/JmesPath.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
-        'ad155f8f1cf0d418fe49e248db8c661b' => __DIR__ . '/..' . '/react/promise/src/functions_include.php',
         '8a9dc1de0ca7e01f3e08231539562f61' => __DIR__ . '/..' . '/aws/aws-sdk-php/src/functions.php',
         '65fec9ebcfbb3cbb4fd0d519687aea01' => __DIR__ . '/..' . '/danielstjules/stringy/src/Create.php',
     );
@@ -37,6 +38,7 @@ class ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2
         array (
             'Symfony\\Polyfill\\Php70\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Polyfill\\Apcu\\' => 22,
             'Symfony\\Component\\Yaml\\' => 23,
             'Symfony\\Component\\Routing\\' => 26,
@@ -58,10 +60,6 @@ class ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2
             'Sirius\\Validation\\' => 18,
             'Sirius\\Upload\\' => 14,
         ),
-        'R' => 
-        array (
-            'React\\Promise\\' => 14,
-        ),
         'P' => 
         array (
             'Psr\\SimpleCache\\' => 16,
@@ -72,14 +70,26 @@ class ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2
             'PhpOffice\\PhpWord\\' => 18,
             'PhpOffice\\Common\\' => 17,
         ),
+        'M' => 
+        array (
+            'Mpdf\\' => 5,
+        ),
+        'L' => 
+        array (
+            'LasseRafn\\Initials\\' => 19,
+            'LasseRafn\\InitialAvatarGenerator\\' => 33,
+            'LasseRafn\\' => 10,
+        ),
         'J' => 
         array (
             'JmesPath\\' => 9,
         ),
+        'I' => 
+        array (
+            'Intervention\\Image\\' => 19,
+        ),
         'G' => 
         array (
-            'GuzzleHttp\\Stream\\' => 18,
-            'GuzzleHttp\\Ring\\' => 16,
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
@@ -87,10 +97,6 @@ class ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2
         'F' => 
         array (
             'Firebase\\JWT\\' => 13,
-        ),
-        'E' => 
-        array (
-            'Elasticsearch\\' => 14,
         ),
         'D' => 
         array (
@@ -102,6 +108,7 @@ class ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2
             'Doctrine\\Bundle\\MigrationsBundle\\' => 33,
             'Doctrine\\Bundle\\DoctrineCacheBundle\\' => 36,
             'Doctrine\\Bundle\\DoctrineBundle\\' => 31,
+            'DeepCopy\\' => 9,
         ),
         'C' => 
         array (
@@ -145,6 +152,10 @@ class ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
+        'Symfony\\Polyfill\\Ctype\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
         'Symfony\\Polyfill\\Apcu\\' => 
         array (
@@ -226,10 +237,6 @@ class ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2
         array (
             0 => __DIR__ . '/..' . '/siriusphp/upload/src',
         ),
-        'React\\Promise\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/react/promise/src',
-        ),
         'Psr\\SimpleCache\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/simple-cache/src',
@@ -258,17 +265,29 @@ class ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2
         array (
             0 => __DIR__ . '/..' . '/phpoffice/common/src/Common',
         ),
+        'Mpdf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mpdf/mpdf/src',
+        ),
+        'LasseRafn\\Initials\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/lasserafn/php-initials/src',
+        ),
+        'LasseRafn\\InitialAvatarGenerator\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/lasserafn/php-initial-avatar-generator/src',
+        ),
+        'LasseRafn\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/lasserafn/php-string-script-language/src',
+        ),
         'JmesPath\\' => 
         array (
             0 => __DIR__ . '/..' . '/mtdowling/jmespath.php/src',
         ),
-        'GuzzleHttp\\Stream\\' => 
+        'Intervention\\Image\\' => 
         array (
-            0 => __DIR__ . '/..' . '/guzzlehttp/streams/src',
-        ),
-        'GuzzleHttp\\Ring\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/guzzlehttp/ringphp/src',
+            0 => __DIR__ . '/..' . '/intervention/image/src/Intervention/Image',
         ),
         'GuzzleHttp\\Psr7\\' => 
         array (
@@ -285,10 +304,6 @@ class ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2
         'Firebase\\JWT\\' => 
         array (
             0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
-        ),
-        'Elasticsearch\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/elasticsearch/elasticsearch/src/Elasticsearch',
         ),
         'Doctrine\\Instantiator\\' => 
         array (
@@ -322,6 +337,10 @@ class ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2
         array (
             0 => __DIR__ . '/..' . '/doctrine/doctrine-bundle',
         ),
+        'DeepCopy\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
+        ),
         'Corley\\Composer\\' => 
         array (
             0 => __DIR__ . '/../..' . '/instalador',
@@ -333,6 +352,13 @@ class ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2
     );
 
     public static $prefixesPsr0 = array (
+        'S' => 
+        array (
+            'Smalot\\PdfParser\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/smalot/pdfparser/src',
+            ),
+        ),
         'P' => 
         array (
             'ProxyManager\\' => 
@@ -427,10 +453,10 @@ class ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitdf8d0fb669f65f5539641c3088bf7af2::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit718f03846feaff3d4705b9006384fb76::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit718f03846feaff3d4705b9006384fb76::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit718f03846feaff3d4705b9006384fb76::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit718f03846feaff3d4705b9006384fb76::$classMap;
 
         }, null, ClassLoader::class);
     }

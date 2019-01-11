@@ -3,16 +3,16 @@ require_once  __DIR__ . '/../../define.php';
 
 $motores = array(
     "MySql" => "pdo_mysql",
-    "Oracle" => "pdo_oci",
+    "Oracle" => "oci8",
     "SqlServer" => "pdo_sqlsrv",
-    "MSSql" => "pdo_sqlsrv",
+    "MSSql" => "sqlsrv",
     "Postgres" => "pdo_pgsql"
 );
 
 return [
-    'dbname' => DB,
-    'user' => USER,
-    'password' => PASS,
-    'host' => HOST,
+'dbname' => DB,
+'user' => USER,
+'password' => PASS,
+'host' => HOST,
     'driver' => $motores[MOTOR],
     'port' => PORT];

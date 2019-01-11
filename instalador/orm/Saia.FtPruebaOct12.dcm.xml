@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\FtPruebaOct12" table="ft_prueba_oct_12">
+    <indexes>
+      <index name="i_prueba_oct_12_documento_" columns="documento_iddocumento"/>
+      <index name="i_prueba_oct_12_serie_idse" columns="serie_idserie"/>
+    </indexes>
+    <id name="idftPruebaOct12" type="integer" column="idft_prueba_oct_12">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="serieIdserie" type="integer" column="serie_idserie" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="documentoIddocumento" type="integer" column="documento_iddocumento" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="dependencia" type="string" column="dependencia" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="estadoFormato" type="integer" column="estado_formato" nullable="false">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+    <field name="cuadroText" type="string" column="cuadro_text" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

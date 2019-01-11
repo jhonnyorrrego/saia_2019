@@ -11,10 +11,8 @@ while($max_salida>0){
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 
-echo(librerias_jquery("1.7"));
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 desencriptar_sqli('form_info');
-
 
 usuario_actual('idfuncionario');
 ?>   
@@ -22,6 +20,7 @@ usuario_actual('idfuncionario');
 <head>    
 <?php               
 echo(librerias_html5());
+echo(librerias_jquery("1.7"));
 echo(librerias_UI());
 echo(estilo_bootstrap()); 
 echo(librerias_tooltips());

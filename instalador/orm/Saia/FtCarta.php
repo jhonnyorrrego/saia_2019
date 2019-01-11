@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FtCarta
  *
- * @ORM\Table(name="ft_carta", indexes={@ORM\Index(name="i_ft_carta_doc", columns={"documento_iddocumento"})})
+ * @ORM\Table(name="ft_carta", indexes={@ORM\Index(name="i_ft_carta_doc", columns={"documento_iddocumento"}), @ORM\Index(name="i_carta_expediente", columns={"expediente_serie"}), @ORM\Index(name="i_carta_serie_idse", columns={"serie_idserie"}), @ORM\Index(name="carta_asunto", columns={"asunto"})})
  * @ORM\Entity
  */
 class FtCarta
@@ -17,7 +17,7 @@ class FtCarta
      *
      * @ORM\Column(name="idft_carta", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idftCarta;
 
@@ -181,20 +181,6 @@ class FtCarta
      * @ORM\Column(name="expediente_serie", type="integer", nullable=true)
      */
     private $expedienteSerie;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="tipo_mensajeria", type="integer", nullable=true)
-     */
-    private $tipoMensajeria = '1';
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="requiere_recogida", type="integer", nullable=true)
-     */
-    private $requiereRecogida = '1';
 
 
 
@@ -758,53 +744,5 @@ class FtCarta
     public function getExpedienteSerie()
     {
         return $this->expedienteSerie;
-    }
-
-    /**
-     * Set tipoMensajeria
-     *
-     * @param integer $tipoMensajeria
-     *
-     * @return FtCarta
-     */
-    public function setTipoMensajeria($tipoMensajeria)
-    {
-        $this->tipoMensajeria = $tipoMensajeria;
-
-        return $this;
-    }
-
-    /**
-     * Get tipoMensajeria
-     *
-     * @return integer
-     */
-    public function getTipoMensajeria()
-    {
-        return $this->tipoMensajeria;
-    }
-
-    /**
-     * Set requiereRecogida
-     *
-     * @param integer $requiereRecogida
-     *
-     * @return FtCarta
-     */
-    public function setRequiereRecogida($requiereRecogida)
-    {
-        $this->requiereRecogida = $requiereRecogida;
-
-        return $this;
-    }
-
-    /**
-     * Get requiereRecogida
-     *
-     * @return integer
-     */
-    public function getRequiereRecogida()
-    {
-        return $this->requiereRecogida;
     }
 }

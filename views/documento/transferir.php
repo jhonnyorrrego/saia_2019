@@ -1,0 +1,1 @@
+<p>pantalla para transferir</p>

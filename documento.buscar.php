@@ -321,16 +321,15 @@ function codificar_repetidos(lista)
                   </tr>
                   <tr id="plantillas">
                     <td class="encabezado">Plantilla</td>                  <td>
-<?php
-$plantillas = busca_filtro_tabla("nombre,etiqueta,nombre_tabla", "formato", "mostrar=1", "etiqueta", $conn);
-if ($plantillas["numcampos"] > 0) {
-	echo "<select name='plantilla' id='plantilla' ><option value='' >Seleccionar...</option>";
-	for($i = 0; $i < $plantillas["numcampos"]; $i++)
-		echo "<option value='" . $plantillas[$i]["nombre_tabla"] . "' title=\"" . $plantillas[$i]["nombre"] . "\">" . $plantillas[$i]["etiqueta"] . "</option>";
-	echo "</select>";
-}
+<?php $plantillas = busca_filtro_tabla("nombre,etiqueta,nombre_tabla","formato","mostrar=1","etiqueta",$conn);
+                      if($plantillas["numcampos"]>0)
+                      { echo "<select name='plantilla' id='plantilla' ><option value='' >Seleccionar...</option>";
+                        for($i=0; $i<$plantillas["numcampos"]; $i++)
+                         echo "<option value='".$plantillas[$i]["nombre_tabla"]."' title=\"".$plantillas[$i]["nombre"]."\">".$plantillas[$i]["etiqueta"]."</option>";
+                       echo "</select>";
+                      }
 
-?>
+                                            ?>
                       <div id="busqueda_interna">
                       </div>
 <script type="text/javascript" src="anexosdigitales/highslide-4.0.10/highslide/highslide-with-html.js"></script>
@@ -340,17 +339,18 @@ if ($plantillas["numcampos"] > 0) {
     hs.outlineType = 'rounded-white';
 </script>
 <script>
-	$().ready(function() {
-		$("#link_buscador").click(function() {
-			formato=$("#plantilla option:selected").attr('title');
-			if(formato!="") {
-				$("#link_buscador").attr("href","<?php echo FORMATOS_CLIENTE ;?>"+formato+"/buscar_"+formato+".php?campo__retorno=campos_formato");
-				return hs.htmlExpand(this, { objectType: 'iframe',width: 700, height:500,preserveContent:false} );
-			} else {
-				alert("Por favor seleccione una plantilla");
-			}
-		});
-	});
+                   $().ready(function() {
+	                  $("#link_buscador").click(
+                   function(){
+                   formato=$("#plantilla option:selected").attr('title');
+                  if(formato!="") {
+                     $("#link_buscador").attr("href","<?php echo FORMATOS_CLIENTE;?>"+formato+"/buscar_"+formato+".php?campo__retorno=campos_formato");
+                     return hs.htmlExpand(this, { objectType: 'iframe',width: 700, height:500,preserveContent:false} );
+                     }
+                    else
+                      alert("Por favor seleccione una plantilla");
+                   })
+});
 
                    </script>
                       <a class="highslide" name="link_buscador" id="link_buscador" >Campos dentro de la plantilla</a>

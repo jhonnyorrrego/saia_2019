@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * FtRadicacionSalida
  *
- * @ORM\Table(name="ft_radicacion_salida")
+ * @ORM\Table(name="ft_radicacion_salida", indexes={@ORM\Index(name="i_radicacion_salida_documento_", columns={"documento_iddocumento"}), @ORM\Index(name="i_radicacion_salida_serie_idse", columns={"serie_idserie"})})
  * @ORM\Entity
  */
 class FtRadicacionSalida
@@ -17,7 +17,7 @@ class FtRadicacionSalida
      *
      * @ORM\Column(name="idft_radicacion_salida", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idftRadicacionSalida;
 

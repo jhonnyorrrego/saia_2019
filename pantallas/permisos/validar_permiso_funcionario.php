@@ -9,6 +9,8 @@ $ruta.="../";
 $max_salida--;
 }
 include_once($ruta_db_superior . 'db.php');
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+desencriptar_sqli('form_info');
 
 if(@$_REQUEST['asignar_quitar_permiso_crear']){ //asigno o quito el permiso crear
     $accion=@$_REQUEST['accion'];
@@ -95,8 +97,8 @@ if(@$_REQUEST['valida_modulo_formato']){  //valida si el modulo es un formato
 }
 
 if(@$_REQUEST['adicionar_quitar_permiso']){ //PARA ADICIONAR O QUITAR AMBOS PERMISOS
-    $idfuncionario=$_REQUEST['idfuncionario'];
-    $idmodulo=$_REQUEST['idmodulo'];
+    $idfuncionario=$_REQUEST['x_funcionario_idfuncionario'];
+    $idmodulo=$_REQUEST['x_modulo_idmodulo'];
     
     $existe=busca_filtro_tabla("","permiso","funcionario_idfuncionario=".$idfuncionario." AND modulo_idmodulo=".$idmodulo,"",$conn);
     if($existe['numcampos']){ //eliminar

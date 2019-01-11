@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="Saia\Busquedas" table="busquedas">
+    <id name="idbusquedas" type="integer" column="idbusquedas">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="etiqueta" type="string" column="etiqueta" length="100" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default"/>
+      </options>
+    </field>
+    <field name="codigo" type="text" column="codigo" length="16777215" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="moduloIdmodulo" type="integer" column="modulo_idmodulo" nullable="false">
+      <options>
+        <option name="unsigned"/>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="tipo" type="string" column="tipo" length="50" nullable="true">
+      <options>
+        <option name="fixed"/>
+        <option name="default"/>
+      </options>
+    </field>
+    <field name="grafico" type="boolean" column="grafico" nullable="false">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
+    <field name="subtitulo" type="string" column="subtitulo" length="50" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="totales" type="text" column="totales" length="16777215" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="tablas" type="string" column="tablas" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="llave" type="string" column="llave" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="ordenado" type="string" column="ordenado" length="50" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="orden" type="string" column="orden" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default">asc</option>
+      </options>
+    </field>
+    <field name="tipoB" type="string" column="tipo_b" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default">listado</option>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

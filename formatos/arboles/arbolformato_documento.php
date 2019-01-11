@@ -272,7 +272,7 @@ if ($("#openCloseIdentifier2").is(":hidden")) {
 			tree2.setOnLoadingStart(cargando);
       tree2.setOnLoadingEnd(fin_cargando);
       tree2.setOnClickHandler(onNodeSelect);
-			tree2.loadXML("test_formatos_documento2.php?id=<?php echo($iddoc2);?>");
+			tree2.loadXML("test_formatos_documento.php?id=<?php echo($iddoc2);?>");
 			click_menu();
 			function esperar(){
       }

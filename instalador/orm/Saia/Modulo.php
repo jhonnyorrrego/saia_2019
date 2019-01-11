@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Modulo
  *
- * @ORM\Table(name="modulo", uniqueConstraints={@ORM\UniqueConstraint(name="u_modulo_nombre", columns={"nombre"})})
+ * @ORM\Table(name="modulo", uniqueConstraints={@ORM\UniqueConstraint(name="ux_modulo_nombre", columns={"nombre"})})
  * @ORM\Entity
  */
 class Modulo
@@ -17,7 +17,7 @@ class Modulo
      *
      * @ORM\Column(name="idmodulo", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idmodulo;
 
@@ -33,7 +33,7 @@ class Modulo
      *
      * @ORM\Column(name="nombre", type="string", length=255, nullable=false)
      */
-    private $nombre;
+    private $nombre = '';
 
     /**
      * @var string
@@ -89,12 +89,12 @@ class Modulo
      *
      * @ORM\Column(name="orden", type="integer", nullable=false)
      */
-    private $orden = 1;
+    private $orden = '1';
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ayuda", type="text", nullable=true)
+     * @ORM\Column(name="ayuda", type="text", length=65535, nullable=false)
      */
     private $ayuda;
 
@@ -113,9 +113,9 @@ class Modulo
     private $busquedaIdbusqueda;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="permiso_admin", type="boolean", nullable=false)
+     * @ORM\Column(name="permiso_admin", type="integer", nullable=false)
      */
     private $permisoAdmin = '0';
 
@@ -364,7 +364,7 @@ class Modulo
     /**
      * Set orden
      *
-     * @param integer $orden
+     * @param boolean $orden
      *
      * @return Modulo
      */
@@ -378,7 +378,7 @@ class Modulo
     /**
      * Get orden
      *
-     * @return integer
+     * @return boolean
      */
     public function getOrden()
     {

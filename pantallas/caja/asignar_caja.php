@@ -10,6 +10,7 @@ while ($max_salida > 0) {
 include_once($ruta_db_superior."db.php");
 include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_componentes.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 
 $caja=busca_filtro_tabla("","caja","idcaja=".$_REQUEST["idcaja"]);
 $nombre=($caja[0]["codigo_serie"]."-".$caja[0]["codigo_dependencia"]."-".$caja[0]["no_consecutivo"]);
@@ -122,7 +123,8 @@ $(document).ready(function(){
 $("#submit_formulario_asignar_caja").click(function(){  
 	var formulario_asignar_caja=$("#formulario_asignar_caja");
   $('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
-	$(this).attr('disabled', 'disabled');  
+	$(this).attr('disabled', 'disabled');
+  <?php encriptar_sqli("formulario_asignar_caja",0,"form_info",$ruta_db_superior); ?>
   $.ajax({
     type:'POST',
     async:false,
@@ -136,6 +138,7 @@ $("#submit_formulario_asignar_caja").click(function(){
         notificacion_saia(objeto.mensaje,"error","",8500);
       }
       $('#cargando_enviar').html(""); 
+      window.location.reload();
     },error:function (a,b,c){
     	notificacion_saia("Error al procesar la solicitud","error","",8500);
     	$('#cargando_enviar').html("");

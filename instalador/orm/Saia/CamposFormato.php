@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * CamposFormato
  *
- * @ORM\Table(name="campos_formato", uniqueConstraints={@ORM\UniqueConstraint(name="ix_campos_formato_formato", columns={"formato_idformato", "nombre"})}, indexes={@ORM\Index(name="i_campos_forma_formato_idfo", columns={"formato_idformato"})})
+ * @ORM\Table(name="campos_formato", uniqueConstraints={@ORM\UniqueConstraint(name="ix_campos_formato_formato", columns={"formato_idformato", "nombre"})}, indexes={@ORM\Index(name="formato_idformato", columns={"formato_idformato"})})
  * @ORM\Entity
  */
 class CamposFormato
@@ -17,7 +17,7 @@ class CamposFormato
      *
      * @ORM\Column(name="idcampos_formato", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idcamposFormato;
 
@@ -57,9 +57,9 @@ class CamposFormato
     private $longitud;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="obligatoriedad", type="boolean", nullable=false)
+     * @ORM\Column(name="obligatoriedad", type="integer", nullable=false)
      */
     private $obligatoriedad = '0';
 
@@ -443,7 +443,7 @@ class CamposFormato
     /**
      * Set orden
      *
-     * @param integer $orden
+     * @param boolean $orden
      *
      * @return CamposFormato
      */
@@ -457,7 +457,7 @@ class CamposFormato
     /**
      * Get orden
      *
-     * @return integer
+     * @return boolean
      */
     public function getOrden()
     {

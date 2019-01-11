@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Documento
  *
- * @ORM\Table(name="documento", indexes={@ORM\Index(name="i_documento_ejecutor", columns={"ejecutor"}), @ORM\Index(name="i_documento_plantilla", columns={"plantilla"}), @ORM\Index(name="i_documento_fecha", columns={"fecha"}), @ORM\Index(name="i_documento_estado", columns={"estado"})})
+ * @ORM\Table(name="documento", indexes={@ORM\Index(name="serie", columns={"serie", "fecha", "tipo_radicado", "estado"}), @ORM\Index(name="fecha", columns={"fecha"}), @ORM\Index(name="estado", columns={"estado"}), @ORM\Index(name="ejecutor", columns={"ejecutor"})})
  * @ORM\Entity
  */
 class Documento
@@ -17,14 +17,14 @@ class Documento
      *
      * @ORM\Column(name="iddocumento", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $iddocumento;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="numero", type="string", length=50, nullable=false)
+     * @ORM\Column(name="numero", type="string", length=255, nullable=false)
      */
     private $numero;
 
@@ -129,7 +129,7 @@ class Documento
     /**
      * @var string
      *
-     * @ORM\Column(name="pdf", type="string", length=255, nullable=true)
+     * @ORM\Column(name="pdf", type="string", length=600, nullable=true)
      */
     private $pdf;
 
@@ -169,9 +169,9 @@ class Documento
     private $descripcionAnexo;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="almacenado", type="boolean", nullable=false)
+     * @ORM\Column(name="almacenado", type="integer", nullable=false)
      */
     private $almacenado = '0';
 
@@ -243,7 +243,7 @@ class Documento
      *
      * @ORM\Column(name="ventanilla_radicacion", type="integer", nullable=true)
      */
-    private $ventanillaRadicacion;
+    private $ventanillaRadicacion = '0';
 
 
 
@@ -543,30 +543,6 @@ class Documento
     public function getTipoEjecutor()
     {
         return $this->tipoEjecutor;
-    }
-
-    /**
-     * Set pantallaIdpantalla
-     *
-     * @param string $pantallaIdpantalla
-     *
-     * @return Documento
-     */
-    public function setPantallaIdpantalla($pantallaIdpantalla)
-    {
-        $this->pantallaIdpantalla = $pantallaIdpantalla;
-
-        return $this;
-    }
-
-    /**
-     * Get pantallaIdpantalla
-     *
-     * @return string
-     */
-    public function getPantallaIdpantalla()
-    {
-        return $this->pantallaIdpantalla;
     }
 
     /**

@@ -63,7 +63,7 @@ if (@$_REQUEST["idbusqueda_componente"]) {
 	<br/>
 	<?php
 	$nombre_arbol[0] = "serie";
-	echo arbol("bqsaia_A@serie", $nombre_arbol[0], "test_serie_funcionario.php", 0, 1);
+	echo arbol("bqsaia_A@serie", $nombre_arbol[0], "test_serie_funcionario.php?carga_partes=1", 0, 1);
  ?>
 	<input type="hidden" name="bksaiacondicion_A@serie" id="bksaiacondicion_A@serie" value="in">
 	<input type="hidden" name="bqsaiaenlace_A@serie" id="bqsaiaenlace_A@serie" value="y" />
@@ -198,7 +198,7 @@ if (@$_REQUEST["idbusqueda_componente"]) {
 			$open_tree = 1;
 		}
 		$nombre_arbol[6] = "bqsaia_expediente_idexpediente";
-		echo arbol2("bqsaia_t@expediente_idexpediente", $nombre_arbol[6], "test_expediente.php?accion=1&carga_total=1&inicia=" . $idexpediente . $parte, $open_tree);
+		echo arbol2("bqsaia_t@expediente_idexpediente", $nombre_arbol[6], "test_expediente.php?carga_partes=1&accion=1&carga_total=1&inicia=" . $idexpediente . $parte, $open_tree);
 		?>
 		<input type="hidden" name="bksaiacondicion_t@expediente_idexpediente" id="bksaiacondicion_expediente_idexpediente" value="in">
 		<input type="hidden" name="bqsaiaenlace_t@expediente_idexpediente" value="y" />
@@ -399,7 +399,7 @@ function arbol2($campo,$nombre_arbol,$url,$abrir_arbol=0){
 			tree<?php echo $entidad; ?>.enableCheckBoxes(1);
 			tree<?php echo $entidad; ?>.enableSmartXMLParsing(true);
 			tree<?php echo $entidad; ?>.loadXML("<?php echo $ruta_db_superior.$url; ?>");
-			//tree<?php echo $entidad; ?>.setXMLAutoLoading("<?php echo $ruta_db_superior.$url; ?>");
+			tree<?php echo $entidad; ?>.setXMLAutoLoading("<?php echo $ruta_db_superior.$url; ?>");
 			tree<?php echo $entidad; ?>.setOnCheckHandler(onNodeSelect<?php echo $entidad; ?>);
 			tree<?php echo $entidad; ?>.setOnLoadingEnd(fin_cargando<?php echo $entidad; ?>);
 			

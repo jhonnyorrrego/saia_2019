@@ -129,62 +129,6 @@ function incluir_librerias_busqueda($elemento,$indice){
       <!-- /btn-group -->
       </li>
 
-
-
-
-      <?php
-      /*
-      $sin_proceso=array('pendientes_ingresar','pendiente_salida','tramitados');
-	  if(!in_array(@$datos_busqueda[0]["nombre"], $sin_proceso)){
-      ?>
-
-      <!-- LISTA DE PROCESO -->
-      <li class="divider-vertical"></li>
-      <li>
-      <div class="btn-group">
-         <button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">Procesos &nbsp;
-          <span class="caret">
-          </span>&nbsp;
-        </button>
-         <ul class="dropdown-menu" id='listado_procesos'>
-
-	          <li>
-	          <a href="#">
-	            <div name="filtro_categoria" valor=""><b>Restaurar Listado</b>
-	            </div></a>
-	          </li>
-
-			<?php
-				$categoria_formato=busca_filtro_tabla('','categoria_formato','cod_padre=2 AND estado=1','',$conn);
-				for($j=0;$j<$categoria_formato['numcampos'];$j++){
-					echo'
-						<li>
-							<a href="#">
-						    	<div name="filtro_categoria" valor="'.$categoria_formato[$j]['idcategoria_formato'].'">'.$categoria_formato[$j]['nombre'].'
-						        </div>
-						    </a>
-						</li>
-					';
-				}
-			?>
-        </ul>
-        <script>
-        	$(document).ready(function(){
-        		$('[name="filtro_categoria"]').click(function(){
-
-        			var valor=$(this).attr('valor');
-        			window.location='consulta_busqueda_documento.php?idbusqueda_componente=<?php echo($datos_busqueda[0]['idbusqueda_componente']); ?>&filtro_categoria='+valor+'';
-        		});
-        	});
-        </script>
-      </div>
-      </li>
-
-      <?php
-      	  }*/
-      ?>
-
-
 	<?php
 		if(@$datos_busqueda[0]["nombre"]=='documentos_importantes'){
 	?>
@@ -306,7 +250,7 @@ function incluir_librerias_busqueda($elemento,$indice){
 
 <script>
   var espacio_menu=$("#menu_buscador").height()+18;
-  var alto_inicial=($(document).height()-espacio_menu);
+  var alto_inicial=($(window).height()-espacio_menu);
   var carga_final=false;
   var contador=1;
 
@@ -342,14 +286,12 @@ $(document).ready(function(){
     $.ajax({
       type:'POST',
       url: "servidor_busqueda.php",
+      dataType:'json',
       data: "idbusqueda_componente=<?php echo($datos_componente);?>&page="+$("#busqueda_pagina").val()+"&rows="+$("#busqueda_registros").val()+"&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>&actual_row="+$("#fila_actual").val()+"&variable_busqueda="+$("#variable_busqueda").val()+"&cantidad_total="+$("#cantidad_total").val()+"<?php if(@$_REQUEST['filtro_categoria']){ echo('&filtro_categoria='.$_REQUEST['filtro_categoria']); } ?>"+"<?php if(@$_REQUEST['filtro_indicadores']){ echo('&filtro_indicadores='.$_REQUEST['filtro_indicadores']); } ?>",
-      success: function(html){
-        if(html){
-          var objeto=jQuery.parseJSON(html);
+      success: function(objeto){
           if(objeto.exito){
 	          $("#busqueda_pagina").val(objeto.page);
 	          $("#busqueda_total_paginas").val(objeto.total);
-	          //$("#busqueda_sql").html(objeto.sql);
 	          $("#fila_actual").val(objeto.actual_row);
 	          $.each(objeto.rows,function(index,item){
 	            if(objeto.page===2 && index===0){
@@ -368,10 +310,6 @@ $(document).ready(function(){
 	          });
 	          $(".kenlace_saia").attr("onclick"," ");
 	          iniciar_tooltip();
-	          if($("#resultado_busqueda_principal<?php echo($datos_componente);?>").height()<alto_inicial){
-	          	//$('#loadmoreajaxloader').html("Cargando ( ...");
-	            //cargar_datos_scroll();
-	          }
 	          if(objeto.actual_row>=objeto.records){
 	            finalizar_carga_datos(objeto.records);
 	          }
@@ -383,10 +321,7 @@ $(document).ready(function(){
           	$("#cantidad_total_copia").val("0");
           	finalizar_carga_datos(0);
           }
-        }else{
-          $("#cantidad_total_copia").val("0");
-          	finalizar_carga_datos(0);
-        }
+  
       }
     });
   }
@@ -415,19 +350,17 @@ $(document).ready(function(){
   		type:'POST',
 	    url: "servidor_busqueda.php",
 	    rsync:false,
+	    dataType:'json',
 	    data: "idbusqueda_componente="+idcomponente+"&page=0&rows="+$("#busqueda_registros").val()+"&actual_row=0&idbusqueda_filtro_temp=<?php echo(@$_REQUEST['idbusqueda_filtro_temp']);?>&idbusqueda_filtro=<?php echo(@$_REQUEST['idbusqueda_filtro']);?>&idbusqueda_temporal=<?php echo (@$_REQUEST['idbusqueda_temporal']);?>&variable_busqueda="+$("#variable_busqueda").val()+"<?php if(@$_REQUEST['filtro_categoria']){ echo('&filtro_categoria='.$_REQUEST['filtro_categoria']); } ?>"+"<?php if(@$_REQUEST['filtro_indicadores']){ echo('&filtro_indicadores='.$_REQUEST['filtro_indicadores']); } ?>",
-	    success: function(html){
-	    	if(html){
-	      	var objeto=jQuery.parseJSON(html);
-	      	$("#busqueda_total_paginas").val(objeto.total);
-	      	if(objeto.total)$("#boton_exportar_excel").show();
-					$("#"+capa).html(objeto.records+")");
-					$("#cantidad_total").val(objeto.records);
-					$("#cantidad_total_copia").val(objeto.records);
-					if(parseInt($("#fila_actual").val())>=parseInt(objeto.records)){
-						$('#loadmoreajaxloader_parent').addClass("disabled");
-					}
-	      }
+	    success: function(objeto){
+      	$("#busqueda_total_paginas").val(objeto.total);
+      	if(objeto.total)$("#boton_exportar_excel").show();
+				$("#"+capa).html(objeto.records+")");
+				$("#cantidad_total").val(objeto.records);
+				$("#cantidad_total_copia").val(objeto.records);
+				if(parseInt($("#fila_actual").val())>=parseInt(objeto.records)){
+					$('#loadmoreajaxloader_parent').addClass("disabled");
+				}
 	    }
 	  });
   }

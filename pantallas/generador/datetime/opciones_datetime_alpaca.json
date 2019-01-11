@@ -1,0 +1,142 @@
+{
+  "schema": {
+    "title": "",
+    "description": "Editar propiedades",
+    "type": "object",
+    "properties": {
+      "fs_etiqueta": {
+        "type": "string",
+        "title": "Etiqueta del campo",
+        "maxLength": 255,
+        "required": true
+      },
+      "fs_nombre": {
+        "type": "string",
+        "title": "Nombre",
+        "maxLength": 255,
+        "required": true
+      },
+      "fs_opciones": {
+        "type": "object",
+        "title": "",
+        "properties": {
+          "tipo": {
+            "title": "Tipo de Campo",
+            "type": "string",
+            "required": true,
+            "enum": [
+              "date",
+              "datetime"
+              ]
+          },
+          "criterio": {
+            "title": "Criterio",
+            "type": "string",
+            "enum": [
+              "max_lt",
+              "max",
+              "min_gt",
+              "min",
+              "between",
+              "not_between"
+            ]
+          },
+          "fecha_1": {
+            "type": "date"
+          },
+          "fecha_2": {
+            "type": "date"
+          }
+        },
+        "dependencies": {
+          "fecha_1": "criterio",
+          "fecha_2": "criterio"
+        }
+      },
+      "fs_acciones": {
+        "type": "boolean"
+      },
+      "fs_obligatoriedad": {
+        "type": "boolean"
+      },
+      "fs_ayuda": {
+        "type": "string",
+        "title": "Ayuda para el usuario"
+      }
+    }
+  },
+  "options": {
+    "fields": {
+      "fs_nombre": {
+        "type": "hidden"
+      },
+      "fs_opciones": {
+        "fields": {
+          "tipo": {
+            "vertical": false,
+            "removeDefaultNone": true,
+            "optionLabels": [
+              "Sólo fecha",
+              "Fecha y hora"
+              ]
+          },
+          "criterio": {
+            "type": "select",
+            "sort": false,
+            "removeDefaultNone": false,
+            "noneLabel": "Cualquier fecha",
+            "optionLabels": [
+              "Antes del",
+              "El o antes del",
+              "Después del",
+              "El o después del",
+              "Entre",
+              "No entre"
+            ]
+          },
+          "fecha_1": {
+            "type": "date",
+            "dependencies": {
+              "criterio": [
+                "max_lt",
+                "max",
+                "min_gt",
+                "min", "between",
+                "not_between"
+              ]
+            },
+	    "picker": {
+	      "locale": "es",
+	      "format": "YYYY/MM/DD"
+	    }            
+          },          
+          "fecha_2": {
+            "type": "date", 
+            "dependencies": {
+              "criterio": [
+                "between",
+                "not_between"
+              ]
+            },
+	        "picker": {
+	            "locale": "es",
+	            "format": "YYYY/MM/DD"
+	        }                        
+          }
+        }
+      },
+      "fs_obligatoriedad": {
+        "type": "checkbox",
+        "rightLabel": "Obligatorio"
+      },
+      "fs_acciones": {
+        "type": "checkbox",
+        "rightLabel": "Incluirse en la descripción del formato"
+      },
+      "fs_ayuda": {
+        "rows": 3,
+        "type": "textarea"
+      }
+    }
+  }
+}

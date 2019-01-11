@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Asignacion
  *
- * @ORM\Table(name="asignacion", indexes={@ORM\Index(name="i_asignacion_llave_entida", columns={"llave_entidad"}), @ORM\Index(name="i_asignacion_fecha_inicia", columns={"fecha_inicial"}), @ORM\Index(name="i_asignacion_doc", columns={"documento_iddocumento"})})
+ * @ORM\Table(name="asignacion", indexes={@ORM\Index(name="i_asignacion_doc", columns={"documento_iddocumento"}), @ORM\Index(name="i_asignacion_serie_idse", columns={"serie_idserie"})})
  * @ORM\Entity
  */
 class Asignacion
@@ -17,7 +17,7 @@ class Asignacion
      *
      * @ORM\Column(name="idasignacion", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $idasignacion;
 
@@ -78,9 +78,9 @@ class Asignacion
     private $llaveEntidad;
 
     /**
-     * @var boolean
+     * @var integer
      *
-     * @ORM\Column(name="reprograma", type="boolean", nullable=true)
+     * @ORM\Column(name="reprograma", type="integer", nullable=true)
      */
     private $reprograma;
 

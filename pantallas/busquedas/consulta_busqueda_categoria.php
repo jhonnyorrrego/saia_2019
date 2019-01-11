@@ -43,7 +43,9 @@ if(@$_REQUEST["idbusqueda_componente"]){
 ?>      
 <style>
 .row-fluid [class*="span"]{min-height:20px;}.row-fluid {min-height:20px;}.well{ margin-bottom: 3px; min-height: 11px; padding: 4px;}.alert{ margin-bottom: 3px; padding: 10px;}  body{ font-size:12px; line-height:100%; margin-top:35px;padding:0px;}.navbar-fixed-top, .navbar-fixed-bottom{ position: fixed;} .navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top{margin-right: 0px; margin-left: 0px;}
-.texto-azul{ color:#3176c8} #panel_body{margin-top:0px; width: 50%; overflow: auto; <?php if($_SESSION["tipo_dispositivo"]=='movil'){?>-webkit-overflow-scrolling:touch;<?php } ?>} #panel_detalle{margin-top:0px; width: 50%; border: 0px; overflow:auto;<?php if($_SESSION["tipo_dispositivo"]=='movil'){?>-webkit-overflow-scrolling:touch;<?php } ?>}
+.texto-azul{ color:#3176c8} 
+#panel_body{margin-top:0px; overflow: auto; <?php if($_SESSION["tipo_dispositivo"]=='movil'){ echo("width:100%; -webkit-overflow-scrolling:touch;");  } else{ echo("width:50%;"); } ?>} 
+#panel_detalle{margin-top:0px; border: 0px; overflow:auto;<?php if($_SESSION["tipo_dispositivo"]=='movil'){ echo("width:0%; -webkit-overflow-scrolling:touch;");} else{ echo("width:50%;");} ?>}
 </style>       
 <div class="navbar navbar-fixed-top" id="menu_buscador">
   <div class="navbar-inner">                           
@@ -134,7 +136,7 @@ $(document).ready(function(){
 });
 
   var espacio_menu=$("#menu_buscador").height()+18;
-  var alto_inicial=($(document).height()-espacio_menu); 
+  var alto_inicial=($(window).height()-espacio_menu); 
   var carga_final=false;
   var contador=1;
   var forma_cargar=<?php echo($datos_busqueda[0]["cargar"]);?>;

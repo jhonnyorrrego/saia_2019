@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Smalot\\PdfParser\\' => array($vendorDir . '/smalot/pdfparser/src'),
     'ProxyManager\\' => array($vendorDir . '/ocramius/proxy-manager/src'),
     'PHPSQLParser\\' => array($vendorDir . '/greenlion/php-sql-parser/src'),
     'Luracast\\Restler' => array($vendorDir . '/luracast/restler/vendor'),

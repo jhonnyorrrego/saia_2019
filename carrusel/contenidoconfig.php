@@ -1,8 +1,8 @@
 <?php
 $max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
 $ruta_db_superior=$ruta="";
-while($max_salida>0) {
-if(is_file($ruta."class_transferencia.php")) {
+while ($max_salida > 0) {
+    if (is_file($ruta . "class_transferencia.php")) {
 $ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
 }
 $ruta.="../";
@@ -12,11 +12,13 @@ $max_salida--;
 include_once("../db.php");
 include_once("../header.php");
 include_once($ruta_db_superior . "librerias_saia.php");
+include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
+$validar_enteros=array("id","carrusel_idcarrusel");
+desencriptar_sqli('form_info');
 echo(estilo_bootstrap());
 ?>
 
-<link href="<?php echo $ruta_db_superior;?>dropzone/dist/dropzone.css" type="text/css" rel="stylesheet" />
-
+<link href="<?php echo $ruta_db_superior;?>dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" />
 <div class="container">
 		<h5>CONFIGURACI&Oacute;N DE CARRUSEL Y CONTENIDOS RELACIONADOS</h5>
 		<br/>
@@ -114,7 +116,7 @@ width:"350px"
     		submitHandler: function(form) {
 				<?php encriptar_sqli("form1",0,"form_info",$ruta_db_superior);?>
 			    form.submit();
-
+			    
 			  }
     	});
     	$.spin.imageBasePath = '../images/';
@@ -150,13 +152,13 @@ width:"350px"
 		<br/>
 
    <?php
-   echo "<br /><fieldset><legend>" . ucwords($accion . " contenido")."</legend></fieldset><br /><br /><form action='contenidoconfig.php' name='form1' method='post' id='form1' enctype='multipart/form-data'><table class='table table-bordered table-striped'>";
+    echo "<br /><fieldset><legend>" . ucwords($accion . " contenido") . "</legend></fieldset><br /><br /><form action='contenidoconfig.php' name='form1' method='post' id='form1' enctype='multipart/form-data'><table class='table table-bordered table-striped'>";
    echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>NOMBRE*</td><td><input class='required'  type='text' name='nombre' value='".@$contenido[0]["nombre"]."'></td></tr>";
    echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>CARRUSEL*</td><td><select class='required'  type='text' name='carrusel_idcarrusel'>";
    $carrusel=busca_filtro_tabla("idcarrusel,nombre","carrusel","","nombre",$conn);
-   for($i=0;$i<$carrusel["numcampos"];$i++) {
-       echo "<option value='".$carrusel[$i]["idcarrusel"]."' ";
-       if($carrusel[$i]["idcarrusel"]==@$contenido[0]["carrusel_idcarrusel"]) {
+    for ($i = 0; $i < $carrusel["numcampos"]; $i++) {
+        echo "<option value='" . $carrusel[$i]["idcarrusel"] . "' ";
+        if ($carrusel[$i]["idcarrusel"] == @$contenido[0]["carrusel_idcarrusel"]) {
          echo " selected ";
         }
        echo ">".$carrusel[$i]["nombre"]."</option>";
@@ -172,19 +174,19 @@ width:"350px"
    echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>CONTENIDO*</td><td><textarea class='required tiny_avanzado2' name='contenido' id='contenido'>".stripslashes(@$contenido[0]["contenido"])."</textarea></td></tr>";
    echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>PREVISUALIZAR</td><td><textarea name='preview' id='preview' class=''>".stripslashes(codifica_encabezado(html_entity_decode(@$contenido[0]["preview"])))."</textarea></td></tr>";
    echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;'>IMAGEN</td><td>";
-   if($contenido[0]["imagen"] != "") {
-     echo "<a href='" . $ruta_db_superior . 'filesystem/mostrar_binario.php?ruta='.base64_encode($contenido[0]["imagen"])."' target='_blank'>Ver Imagen Actual</a><br />Borrar Imagen<input type='checkbox' value='1' name='borrar_imagen'><br />Subir nueva";
-   }
-   echo '<div id="dz_carrusel"><div class="dz-message"><span>Arrastre aquí los archivos adjuntos</span></div></div>';
+    if ($contenido[0]["imagen"] != "") {
+        echo "<a href='" . $ruta_db_superior . 'filesystem/mostrar_binario.php?ruta='.base64_encode($contenido[0]["imagen"]) . "' target='_blank'>Ver Imagen Actual</a><br />Borrar Imagen<input type='checkbox' value='1' name='borrar_imagen'><br />Subir nueva";
+    }
+        echo '<div id="dz_carrusel"><div class="dz-message"><span>Arrastre aquí los archivos adjuntos</span></div></div>';
    echo "</td></tr>";
    echo "<tr><td  style='text-align: center; background-color:#57B0DE; color: #ffffff;' width=20%>ALINEACION DE LA IMAGEN</td><td>";
-   $opciones = array(
-		"left"=>"Izquierda",
-		"right"=>"Derecha"
-	);
-   foreach($opciones as $valor=>$nombre) {
-      echo "<input type='radio' name='align' value='$valor' ";
-      if($valor==@$contenido[0]["align"]) {
+    $opciones = array(
+        "left" => "Izquierda",
+        "right" => "Derecha"
+    );
+    foreach ($opciones as $valor => $nombre) {
+        echo "<input type='radio' name='align' value='$valor' ";
+        if ($valor == @$contenido[0]["align"]) {
         echo " checked ";
         }
       echo ">$nombre&nbsp;&nbsp;";
@@ -222,7 +224,7 @@ width:"350px"
                 		archivo=response[key][i];
                     	if(archivo.original_name == file.upload.filename) {
                     		lista_archivos[file.upload.uuid] = archivo.id;
-                    	}
+}
                 	}
             	} else {
             		if(response[key].original_name == file.upload.filename) {
@@ -260,28 +262,28 @@ function guardar_adicionar($accion, $datos, $carrusel) {
  $nheight=$carrusel[0]["alto"];
 
     $sql1 = "insert into contenidos_carrusel(" . implode(",", array_keys($datos)) . ") values(" . implode(",", array_values($datos)) . ")";
- phpmkr_query($sql1,$conn);
+    phpmkr_query($sql1, $conn);
  $id=phpmkr_insert_id();
  guardar_lob("contenido","contenidos_carrusel","idcontenidos_carrusel=".$id,$_REQUEST["contenido"],"texto",$conn);
 
     guardar_archivos($id, $_REQUEST["form_uuid"]);
     redirecciona($ruta_db_superior . "carrusel/sliderconfig.php");
- }
+      }
 
 
 function guardar_editar($accion, $datos, $carrusel) {
     global $ruta_db_superior, $conn;
-    $nwidth = $carrusel[0]["alto"];
-    $nheight = $carrusel[0]["alto"];
+ $nwidth=$carrusel[0]["alto"];
+ $nheight=$carrusel[0]["alto"];
 
     $fields = array();
     foreach($datos as $field => $val) {
         $fields[] = "$field = $val";
-    }
+   }
 
     $id = $_REQUEST["id"];
     $sql1 = "update contenidos_carrusel set " . implode(",", $fields) . " where idcontenidos_carrusel=" . $id;
- 			phpmkr_query($sql1,$conn);
+ phpmkr_query($sql1,$conn);
     guardar_lob("contenido", "contenidos_carrusel", "idcontenidos_carrusel=" . $id, $_REQUEST["contenido"], "texto", $conn);
 
     if ($accion == "guardar_editar" && @$_REQUEST["borrar_imagen"]) {
@@ -290,12 +292,12 @@ function guardar_editar($accion, $datos, $carrusel) {
             phpmkr_query("update contenidos_carrusel set imagen=null where idcontenidos_carrusel=$id");
         } else if (MOTOR == "Oracle") {
             phpmkr_query("update contenidos_carrusel set imagen=empty_blob() where idcontenidos_carrusel=$id");
-      }
-        @unlink($ruta_db_superior . $contenido[0]["imagen"]);
-    }
+        }
+		 @unlink($ruta_db_superior.$contenido[0]["imagen"]);
+	}
 
     guardar_archivos($id, $_REQUEST["form_uuid"]);
- redirecciona($ruta_db_superior."carrusel/sliderconfig.php");
+    redirecciona($ruta_db_superior . "carrusel/sliderconfig.php");
 }
 
 
@@ -330,16 +332,16 @@ function guardar_archivos($id, $form_uuid) {
             if ($tipo_almacenamiento->get_filesystem()->has($imagen_reducida)) {
                 $ruta_anexos = json_encode($ruta_anexos);
                 $sql1 = "update contenidos_carrusel set imagen='" . $ruta_anexos . "' where idcontenidos_carrusel=" . $id;
-                phpmkr_query($sql1, $conn);
+ 			phpmkr_query($sql1,$conn);
 
                 @unlink($ruta_temporal);
                 unlink("$ruta_temporal.lock");
                 //Eliminar los pendientes de la tabla temporal
                 $sql2 = "DELETE FROM anexos_tmp WHERE idanexos_tmp = " . $archivos[$j]["idanexos_tmp"];
                 phpmkr_query($sql2) or die($sql2);
-            }
-        }
-    }
+      }
+}
+}
 }
 ?>
 </div>
