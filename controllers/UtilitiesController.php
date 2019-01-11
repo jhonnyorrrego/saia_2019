@@ -61,8 +61,7 @@ class UtilitiesController {
      * */
     public static function permisoModulo($nombreModulo) {
         $permiso = new PERMISO();
-        $ok = $permiso -> acceso_modulo_perfil($nombreModulo);
-        return $ok;
+        return $permiso -> acceso_modulo_perfil($nombreModulo);
     }
 
     /**

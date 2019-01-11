@@ -37,11 +37,19 @@ class Configuracion extends Model
     }
 
     public static function findByName($name){
-        global $conn;
+        return Configuracion::findAllByAttributes(["nombre" => $name]);
+    }
 
-        $data = busca_filtro_tabla('idconfiguracion', 'configuracion', 'nombre="'.$name.'"', '', $conn);
-
-        return new Configuracion($data[0]['idconfiguracion']);
+    /**
+     * Recibe una lista de nombres y devuelve un arreglo de objetos
+     * @param array $nombres
+     * @return Configuracion[]
+     */
+     public static function findByNames($nombres) {
+         global $conn;
+         $cond = implode("','", $nombres);
+         $data = busca_filtro_tabla('nombre,valor', 'configuracion', "nombre IN('" . $cond . "'", '', $conn);
+         return self::convertToObjectCollection($data);
     }
 
     public function setValue($value){

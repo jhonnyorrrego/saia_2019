@@ -318,3 +318,35 @@ function librariesForTopModal($data){
         delete div;
     </script>";
 }
+
+function bpmnModeler() {
+    global $ruta_db_superior;
+    $ruta_lib = "assets/theme/assets/plugins/bpmn-js/3.0.4/";
+    $rutaModeler = $ruta_db_superior . $ruta_lib . "bpmn-modeler.development.js";
+    $modeler = '<script src="' . $rutaModeler . '" type="text/javascript"></script>';
+
+    $rutaCss = $ruta_db_superior . $ruta_lib . 'bootstrap.min.css';
+    $css = '<link href="' . $rutaCss . '" rel="stylesheet" type="text/css" />';
+
+    $rutaJs = $ruta_db_superior . $ruta_lib . 'bootstrap.min.js';
+    $js = '<script type="text/javascript" src="' . $rutaJs . '"></script>';
+
+    //return $modeler . $css . $js;
+    return $modeler;
+}
+
+function bpmnViewer() {
+    global $ruta_db_superior;
+    $ruta_lib = "assets/theme/assets/plugins/bpmn-js/3.0.4/";
+    $rutaViewer = $ruta_db_superior . $ruta_lib . "bpmn-viewer.development.js";
+    $viewer = '<script src="' . $rutaViewer . '" type="text/javascript"></script>';
+
+    $rutaCss = $ruta_db_superior . $ruta_lib . 'bootstrap.min.css';
+    $css = '<link href="' . $rutaCss . '" rel="stylesheet" type="text/css" />';
+
+    $rutaJs = $ruta_db_superior . $ruta_lib . 'bootstrap.min.js';
+    $js = '<script type="text/javascript" src="' . $rutaJs . '"></script>';
+
+    //return $modeler . $css . $js;
+    return $viewer;
+}

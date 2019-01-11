@@ -1,7 +1,7 @@
 function llenar_valor(id,valor){
 	$("#"+id).val(valor);
 }
-$("#ksubmit_saia").live('click', function (){
+$(document).on('click', '#ksubmit_saia' ,function (){
 	var enlace = $(this).attr('enlace');
   $.ajax({      
 	  async: false,

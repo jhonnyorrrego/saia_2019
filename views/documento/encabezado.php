@@ -150,12 +150,7 @@ function findActions($documentId){
 function getTransfer($transferId){
     global $conn, $userId;
 
-    if(!$transferId)
-        $transferId = $_SESSION['transferId'];
-
     if($transferId){
-        $_SESSION['transferId'] = $transferId;
-
         $findTransfer = busca_filtro_tabla('*', 'buzon_salida', 'idtransferencia ='. $transferId, '', $conn);
         if($findTransfer[0]['origen'] == $userId){
             $ReferenceUser = new Funcionario($findTransfer[0]['destino']);
@@ -220,16 +215,16 @@ function plantilla($documentId, $transferId = 0){
                     </span>
                     <div class="dropdown-menu dropdown-menu-right" role="menu" x-placement="bottom-end">
                         <a href="#" class="dropdown-item new_add" data-type="comunication">
-                            <i class="fa fa-folder-open"></i> Gestionar con comunicación oficial
+                            <i class="fa fa-file-text-o"></i> Gestionar con comunicación oficial
                         </a>
                         <a href="#" class="dropdown-item new_add" data-type="process">
-                            <i class="fa fa-calendar-o"></i> Gestionar con otros formatos
+                            <i class="fa fa-link"></i> Gestionar con otros formatos
                         </a>
                         <a href="#" class="dropdown-item new_add" data-type="approval">
-                            <i class="fa fa-file-text-o"></i> Solicitar aprobación
+                            <i class="fa fa-thumbs-o-up"></i> Solicitar aprobación
                         </a>
                         <a href="#" class="dropdown-item new_add" data-type="task">
-                            <i class="fa fa-share-alt"></i> Asignar tareas o recordatorios
+                            <i class="fa fa-calendar-o"></i> Asignar tareas o recordatorios
                         </a>
                     </div>
                 </div>

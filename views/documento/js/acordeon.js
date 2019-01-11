@@ -14,6 +14,7 @@ $(function () {
         
         if (type == 'comunication' || type == 'process') {
             let param = type == 'comunication' ? 5 : 3;
+            let title = type == 'comunication' ? 'Comunicaciones' : 'Tramites generales';
             var data = JSON.stringify([
                 {
                     kConnector: "html.page",
@@ -23,7 +24,7 @@ $(function () {
                 {
                     kConnector: "html.page",
                     url: "pantallas/formato/listar_formatos.php?idcategoria_formato=" + param,
-                    kTitle: "Tramites generales"
+                    kTitle: title
                 }
             ]);
             let route = `${baseUrl}views/dashboard/kaiten_dashboard.php?panels=${data}`;
@@ -35,16 +36,17 @@ $(function () {
     });
 
     function loadHeader() {
-        $('#document_header').load(`${baseUrl}views/documento/encabezado.php?documentId=${params.documentId}&transferId=${params.transferId}`);
+        let route = `${baseUrl}views/documento/encabezado.php?documentId=${params.documentId}`;
+        
+        if (params.transferId) {
+            route += `&transferId=${params.transferId}`;
+        }
+            
+        $('#document_header').load(route);
     }
 
     function loadDocument() {
-        $.post(`${baseUrl}app/formato/generar_enlace.php`, {
-            view: 'mostrar',
-            documentId: params.documentId,
-            key: key
-        }, function (response) {
-            $('#view_document').load(`${baseUrl+response.data.url}?iddoc=${params.documentId}&key=${key}`);
-        }, 'json');
+        let route = `${baseUrl}formatos/${params.format}/mostrar_${params.format}.php?iddoc=${params.documentId}&key=${key}`;
+        $('#view_document').load(route);
     }
 });
