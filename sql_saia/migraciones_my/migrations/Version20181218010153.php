@@ -2,7 +2,7 @@
 
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -217,11 +217,11 @@ class Version20181218010153 extends AbstractMigration {
 			"firma_digital" => 0,"fk_categoria_formato" => '1',"flujo_idflujo" => 0, "funcion_predeterminada" => '2',"paginar"=>'1',
 			"pertenece_nucleo" => 0,"permite_imprimir" => 1);
 
-	public function getDescription() {
+	public function getDescription(): string {
 		return 'Crear formatos correo_saia y facturas_obras';
 	}
 	
-	public function preUp(Schema $schema) {
+	public function preUp(Schema $schema): void {
 		date_default_timezone_set("America/Bogota");
 		
 		if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -233,7 +233,7 @@ class Version20181218010153 extends AbstractMigration {
 	 *
 	 * @param Schema $schema
 	 */
-	public function up(Schema $schema) {
+	public function up(Schema $schema): void {
 		if (!$schema->hasTable("dt_datos_correo")) {
 			$table = $schema->createTable("dt_datos_correo");
 			$table->addColumn("iddt_datos_correo", "integer", ["length" => 11, 'autoincrement' => true, "notnull" => true]);
@@ -288,7 +288,7 @@ class Version20181218010153 extends AbstractMigration {
 		
 	}
 
-	public function preDown(Schema $schema) {
+	public function preDown(Schema $schema): void {
 		date_default_timezone_set("America/Bogota");
 		
 		if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -300,7 +300,7 @@ class Version20181218010153 extends AbstractMigration {
 	 *
 	 * @param Schema $schema
 	 */
-	public function down(Schema $schema) {
+	public function down(Schema $schema): void {
 		// this down() migration is auto-generated, please modify it to your needs
 	}
 	

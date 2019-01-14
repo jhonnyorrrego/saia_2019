@@ -2,11 +2,11 @@
 
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 class Version20180615152353 extends AbstractMigration {
-	public function up(Schema $schema) {
+	public function up(Schema $schema): void {
 		date_default_timezone_set("America/Bogota");
 		$this -> platform -> registerDoctrineTypeMapping('enum', 'string');
 		$cadena_sql = "UPDATE busqueda_componente SET info = '<div id=\"resultado_pantalla_{*idexpediente*}\" class=\"well\">{*enlaces_adicionales_expediente@idexpediente,nombre,estado_cierre,propietario,agrupador*}{*enlace_expediente@idexpediente,nombre*}<br/><div class=\'nombre_serie\'><b>Serie: </b>{*nombre_serie*}</div><br/><div class=\'descripcion_documento\'>{*descripcion*}</div></div>' WHERE idbusqueda_componente = 9";
@@ -22,7 +22,7 @@ class Version20180615152353 extends AbstractMigration {
 		$this -> addSql($cadena_sql4);
 	}
 
-	public function down(Schema $schema) {
+	public function down(Schema $schema): void {
 		date_default_timezone_set("America/Bogota");
 		$this -> platform -> registerDoctrineTypeMapping('enum', 'string');
 		$cadena_sql = "UPDATE busqueda_componente SET info = '<div id=\"resultado_pantalla_{*idexpediente*}\" class=\"well\"><div class=\"btn btn-mini enlace_expediente pull-right\" idregistro=\"{*idexpediente*}\" title=\"{*nombre*}\"><i class=\"icon-info-sign\"></i></div>{*enlaces_adicionales_expediente@idexpediente,nombre,estado_cierre,propietario,agrupador*}{*enlace_expediente@idexpediente,nombre*}<br/><div class=\'nombre_serie\'><b>Serie: </b>{*nombre_serie*}</div><br/><div class=\'descripcion_documento\'>{*descripcion*}</div></div>' WHERE idbusqueda_componente = 9";

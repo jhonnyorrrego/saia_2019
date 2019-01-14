@@ -2,7 +2,7 @@
 
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -10,11 +10,11 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version20181218044652 extends AbstractMigration {
 
-	public function getDescription() {
+	public function getDescription(): string {
 		return 'Crear modulos y funciones para los formatos correo_saia y facturas_obras';
 	}
 	
-	public function preUp(Schema $schema) {
+	public function preUp(Schema $schema): void {
 		date_default_timezone_set("America/Bogota");
 		
 		if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -26,7 +26,7 @@ class Version20181218044652 extends AbstractMigration {
 	 *
 	 * @param Schema $schema
 	 */
-	public function up(Schema $schema) {
+	public function up(Schema $schema): void {
 		$this->skipIf(true);
 		$conn = $this->connection;
 		
@@ -64,7 +64,7 @@ class Version20181218044652 extends AbstractMigration {
 		
 	}
 	
-	public function preDown(Schema $schema) {
+	public function preDown(Schema $schema): void {
 		date_default_timezone_set("America/Bogota");
 		
 		if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -76,7 +76,7 @@ class Version20181218044652 extends AbstractMigration {
 	 *
 	 * @param Schema $schema
 	 */
-	public function down(Schema $schema) {
+	public function down(Schema $schema): void {
 		// this down() migration is auto-generated, please modify it to your needs
 	}
 	

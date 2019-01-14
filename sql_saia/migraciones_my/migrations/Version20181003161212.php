@@ -1,7 +1,7 @@
 <?php
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Type;
 
@@ -10,11 +10,11 @@ use Doctrine\DBAL\Types\Type;
  */
 class Version20181003161212 extends AbstractMigration {
 
-    public function getDescription() {
+    public function getDescription():string {
         return 'Modificar expedientes para establecer permisos sobre la llave serie+dependencia';
     }
 
-    public function preUp(Schema $schema) {
+    public function preUp(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -31,7 +31,7 @@ class Version20181003161212 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function up(Schema $schema) {
+    public function up(Schema $schema): void {
         $tabla = $schema->getTable('expediente');
         $this->skipIf($tabla->hasColumn('fk_entidad_serie'), "Ya existe la columna expediente.fk_entidad_serie");
 
@@ -49,7 +49,7 @@ class Version20181003161212 extends AbstractMigration {
         }
     }
 
-    public function postUp(Schema $schema) {
+    public function postUp(Schema $schema): void {
         $conn = $this->connection;
 
         $newIndex = new \Doctrine\DBAL\Schema\Index('ix_fkexp_entidad_serie', [
@@ -69,7 +69,7 @@ class Version20181003161212 extends AbstractMigration {
         }
     }
 
-    public function preDown(Schema $schema) {
+    public function preDown(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
             $this->platform->registerDoctrineTypeMapping('enum', 'string');
@@ -85,13 +85,13 @@ class Version20181003161212 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function down(Schema $schema) {
+    public function down(Schema $schema): void {
         $tabla = $schema->getTable('expediente');
 
         $tabla->dropIndex('ix_fkexp_entidad_serie');
     }
 
-    public function postDown(Schema $schema) {
+    public function postDown(Schema $schema): void {
         $conn = $this->connection;
         $tabla = $schema->getTable('expediente');
 

@@ -10,11 +10,11 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20181031134703 extends AbstractMigration
 {
-	public function getDescription() {
+	public function getDescription(): string {
         return 'Modificaciones en busqueda_componente, busqueda y vejecutor';
     }
 
-    public function preUp(Schema $schema) {
+    public function preUp(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -27,7 +27,7 @@ final class Version20181031134703 extends AbstractMigration
         }
     }
 	
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
        $conn = $this->connection;
 
@@ -73,7 +73,7 @@ final class Version20181031134703 extends AbstractMigration
     }
 
 
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         $conn = $this->connection;
 
@@ -101,7 +101,7 @@ final class Version20181031134703 extends AbstractMigration
 
     }
 
-	 public function preDown(Schema $schema) {
+	 public function preDown(Schema $schema): void {
 	        date_default_timezone_set("America/Bogota");
 	
 	        if ($this->connection->getDatabasePlatform()->getName() == "mysql") {

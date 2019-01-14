@@ -2,7 +2,7 @@
 
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -31,17 +31,17 @@ array('idcampos_formato' => '5088','formato_idformato' => '353','nombre' => 'doc
 array('idcampos_formato' => '5189','formato_idformato' => '353','nombre' => 'tipo_mensajero','etiqueta' => 'tipo_mensajero','tipo_dato' => 'VARCHAR','longitud' => '255','obligatoriedad' => '0','valor' => NULL,'acciones' => 'a,e,b','ayuda' => NULL,'predeterminado' => 'i','banderas' => NULL,'etiqueta_html' => 'hidden','orden' => '0','mascara' => NULL,'adicionales' => NULL,'autoguardado' => '0','fila_visible' => '1'),
 array('idcampos_formato' => '6623','formato_idformato' => '353','nombre' => 'idft_ruta_dist','etiqueta' => 'Id de la ruta','tipo_dato' => 'VARCHAR','longitud' => '255','obligatoriedad' => '0','valor' => NULL,'acciones' => 'a','ayuda' => NULL,'predeterminado' => NULL,'banderas' => NULL,'etiqueta_html' => 'hidden','orden' => '0','mascara' => NULL,'adicionales' => NULL,'autoguardado' => '0','fila_visible' => '1')
 );
-    public function getDescription() {
+    public function getDescription(): string {
         return 'Crear formato despacho_ingresados';
     }
-    public function preUp(Schema $schema) {
+    public function preUp(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
             $this->platform->registerDoctrineTypeMapping('enum', 'string');
         }
     }
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         $conn = $this->connection;
 
@@ -66,12 +66,12 @@ array('idcampos_formato' => '6623','formato_idformato' => '353','nombre' => 'idf
     /**
      * @param Schema $schema
      */
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
 
     }
-    public function preDown(Schema $schema) {
+    public function preDown(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {

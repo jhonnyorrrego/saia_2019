@@ -2,7 +2,7 @@
 namespace Migrations;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Type;
 
@@ -11,11 +11,11 @@ use Doctrine\DBAL\Types\Type;
  */
 class Version20180913144032 extends AbstractMigration {
 
-    public function getDescription() {
+    public function getDescription(): string {
         return 'Actualizacion de campos en bdd Req 20620';
     }
 
-    public function preUp(Schema $schema) {
+    public function preUp(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -32,7 +32,7 @@ class Version20180913144032 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function up(Schema $schema) {
+    public function up(Schema $schema): void {
         if ($schema->hasTable("expediente")) {
             $table = $schema->getTable("expediente");
             $table->getColumn("ver_todos")->setDefault(0);
@@ -107,7 +107,7 @@ class Version20180913144032 extends AbstractMigration {
 
     }
 
-    public function preDown(Schema $schema) {
+    public function preDown(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -124,7 +124,7 @@ class Version20180913144032 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function down(Schema $schema) {
+    public function down(Schema $schema): void {
         $conn = $this->connection;
         $result = $conn->fetchAll("select idformato from formato where nombre = :nombre", [
             "nombre" => "vincular_doc_expedie"

@@ -2,7 +2,7 @@
 
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -224,10 +224,10 @@ class Version20181219160009 extends AbstractMigration
         array('idmodulo' => '2007','pertenece_nucleo' => '0','nombre' => 'agr_correspondencia','tipo' => '1','imagen' => 'fa fa-envelope-o','etiqueta' => 'Correspondencia','enlace' => '','cod_padre' => '1','orden' => '2'),
         array('idmodulo' => '2008','pertenece_nucleo' => '0','nombre' => 'agr_archivo_documental','tipo' => '1','imagen' => 'fa fa-archive','etiqueta' => 'Archivo Documental','enlace' => '','cod_padre' => '1','orden' => '3')
     );
-    public function getDescription() {
+    public function getDescription(): string {
         return 'Crear formato despacho_ingresados';
     }
-    public function preUp(Schema $schema)
+    public function preUp(Schema $schema): void
     {
         date_default_timezone_set("America/Bogota");
 
@@ -235,7 +235,7 @@ class Version20181219160009 extends AbstractMigration
             $this->platform->registerDoctrineTypeMapping('enum', 'string');
         }
     }
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         $conn = $this->connection;
 
@@ -254,11 +254,10 @@ class Version20181219160009 extends AbstractMigration
     /**
      * @param Schema $schema
      */
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
-    return true;
     }
-    public function preDown(Schema $schema) {
+    public function preDown(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {

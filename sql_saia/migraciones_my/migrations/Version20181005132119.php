@@ -1,7 +1,7 @@
 <?php
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -9,11 +9,11 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version20181005132119 extends AbstractMigration {
 
-    public function getDescription() {
+    public function getDescription(): string {
         return 'Modificar la vista vpermiso_serie_entidad para establecer permisos sobre la llave serie+dependencia';
     }
 
-    public function preUp(Schema $schema) {
+    public function preUp(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -25,7 +25,7 @@ class Version20181005132119 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function up(Schema $schema) {
+    public function up(Schema $schema): void {
         $this->addSql($this->crear_vista());
     }
 
@@ -33,11 +33,11 @@ class Version20181005132119 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function down(Schema $schema) {
+    public function down(Schema $schema): void {
         $this->addSql($this->devolver_vista());
     }
 
-    public function preDown(Schema $schema) {
+    public function preDown(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
             $this->platform->registerDoctrineTypeMapping('enum', 'string');

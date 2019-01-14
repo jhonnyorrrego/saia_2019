@@ -1,16 +1,16 @@
 <?php
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 class Version20180712195111 extends AbstractMigration {
 
-    public function getDescription() {
+    public function getDescription(): string {
         return 'cambios series v2';
     }
 
-    public function preUp(Schema $schema) {
+    public function preUp(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -18,7 +18,7 @@ class Version20180712195111 extends AbstractMigration {
         }
     }
 
-    public function up(Schema $schema) {
+    public function up(Schema $schema): void {
         $table = $schema->getTable("serie");
         $table->addColumn("cod_arbol", "string", [
             "length" => 255,
@@ -60,7 +60,7 @@ class Version20180712195111 extends AbstractMigration {
         $this->addSql($cadena_sql);
     }
 
-    public function postUp(Schema $schema) {
+    public function postUp(Schema $schema): void {
         $conn = $this->connection;
 
         $cadena_sql = "CREATE OR REPLACE VIEW vpermiso_serie AS
@@ -92,7 +92,7 @@ class Version20180712195111 extends AbstractMigration {
         $this->actualizar_series($schema);
     }
 
-    public function preDown(Schema $schema) {
+    public function preDown(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -100,7 +100,7 @@ class Version20180712195111 extends AbstractMigration {
         }
     }
 
-    public function down(Schema $schema) {
+    public function down(Schema $schema): void {
         $table = $schema->getTable("serie");
         $schema->dropTable('vpermiso_serie');
         $schema->dropTable('vexpediente_serie');

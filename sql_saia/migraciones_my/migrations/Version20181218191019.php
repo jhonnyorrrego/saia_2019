@@ -1,7 +1,7 @@
 <?php
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -29,11 +29,11 @@ class Version20181218191019 extends AbstractMigration {
 		array('nombre' => 'total_factura','etiqueta' => 'Total factura','tipo_dato' => 'VARCHAR','longitud' => '50','obligatoriedad' => '0','valor' => NULL,'acciones' => 'a,e,b','ayuda' => NULL,'predeterminado' => NULL,'banderas' => NULL,'etiqueta_html' => 'text','orden' => '0','mascara' => NULL,'adicionales' => NULL,'autoguardado' => '0','fila_visible' => '1','placeholder' => NULL,'longitud_vis' => NULL,'opciones' => NULL,'estilo' => NULL)
 	);
 
-	public function getDescription() {
+	public function getDescription(): string {
 		return 'Crear formato facturas_electronica';
 	}
 
-    public function preUp(Schema $schema) {
+    public function preUp(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -45,7 +45,7 @@ class Version20181218191019 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function up(Schema $schema) {
+    public function up(Schema $schema): void {
         if (!$schema->hasTable("dt_datos_factura")) {
             $table = $schema->createTable("dt_datos_factura");
             $table->addColumn("iddt_datos_factura", "integer", ["length" => 11, 'autoincrement' => true, "notnull" => true]);
@@ -68,7 +68,7 @@ class Version20181218191019 extends AbstractMigration {
         }
     }
 
-    public function postUp(Schema $schema) {
+    public function postUp(Schema $schema): void {
     	$conn = $this->connection;
 
     	$idfmt_factura = $conn->fetchColumn("select idformato from formato where nombre = :nombre", [
@@ -88,7 +88,7 @@ class Version20181218191019 extends AbstractMigration {
     	}
     }
 
-    public function preDown(Schema $schema) {
+    public function preDown(Schema $schema): void {
     	date_default_timezone_set("America/Bogota");
 
     	if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -99,7 +99,7 @@ class Version20181218191019 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function down(Schema $schema) {
+    public function down(Schema $schema): void {
         // this down() migration is auto-generated, please modify it to your needs
     }
 

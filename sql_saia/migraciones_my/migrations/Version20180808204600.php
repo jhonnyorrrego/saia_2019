@@ -1,7 +1,7 @@
 <?php
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -9,11 +9,11 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version20180808204600 extends AbstractMigration {
 
-    public function getDescription() {
+    public function getDescription(): string {
         return 'Actualizar vista vexpediente_serie';
     }
 
-    public function preUp(Schema $schema) {
+    public function preUp(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -25,7 +25,7 @@ class Version20180808204600 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function up(Schema $schema) {
+    public function up(Schema $schema): void {
         if ($this->connection->getDatabasePlatform()->getName() == "oracle") {
             $this->addSql($this->crear_vista_ora());
         } else {
@@ -197,7 +197,7 @@ JOIN serie c ON
         return $sql;
     }
 
-    public function preDown(Schema $schema) {
+    public function preDown(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -209,7 +209,7 @@ JOIN serie c ON
      *
      * @param Schema $schema
      */
-    public function down(Schema $schema) {
+    public function down(Schema $schema): void {
         $this->addSql($this->vista_anterior());
     }
 

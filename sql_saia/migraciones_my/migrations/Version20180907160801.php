@@ -1,7 +1,7 @@
 <?php
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -9,11 +9,11 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version20180907160801 extends AbstractMigration {
 
-    public function getDescription() {
+    public function getDescription(): string {
         return 'Actualizar nombre del icono caja en reescritura de bootstrap Req 20620';
     }
 
-    public function preUp(Schema $schema) {
+    public function preUp(Schema $schema):void  {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -25,7 +25,7 @@ class Version20180907160801 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function up(Schema $schema) {
+    public function up(Schema $schema):void  {
         $conn = $this->connection;
 
         $queryBuilder = $conn->createQueryBuilder();
@@ -60,7 +60,7 @@ class Version20180907160801 extends AbstractMigration {
         }
     }
 
-    public function preDown(Schema $schema) {
+    public function preDown(Schema $schema):void  {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -72,7 +72,7 @@ class Version20180907160801 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function down(Schema $schema) {
+    public function down(Schema $schema):void  {
         $conn = $this->connection;
 
         $queryBuilder = $conn->createQueryBuilder();

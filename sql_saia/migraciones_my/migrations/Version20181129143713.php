@@ -1,8 +1,8 @@
 <?php
 namespace Migrations;
 
-use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Connection;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -156,11 +156,11 @@ class Version20181129143713 extends AbstractMigration {
 
     ];
 
-    public function getDescription() {
+    public function getDescription(): string {
         return 'Modifica pantalla_componente y campos_formato para incluir nuevos componentes y configuraciones de los mismos';
     }
 
-    public function preUp(Schema $schema) {
+    public function preUp(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -172,7 +172,7 @@ class Version20181129143713 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function up(Schema $schema) {
+    public function up(Schema $schema): void {
         /*
          $table = $schema->getTable('mi_tabla');
          if ($table) {
@@ -211,7 +211,7 @@ class Version20181129143713 extends AbstractMigration {
 
     }
 
-    public function postUp(Schema $schema) {
+    public function postUp(Schema $schema): void {
         $types = [
             Connection::PARAM_STR_ARRAY
         ];
@@ -254,7 +254,7 @@ class Version20181129143713 extends AbstractMigration {
         $result = $conn->executeUpdate($sql6, $filtro6);
     }
 
-    public function preDown(Schema $schema) {
+    public function preDown(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -266,7 +266,7 @@ class Version20181129143713 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function down(Schema $schema) {
+    public function down(Schema $schema): void {
         $types = [
             Connection::PARAM_STR_ARRAY
         ];
@@ -287,7 +287,7 @@ class Version20181129143713 extends AbstractMigration {
         }
     }
 
-    public function postDown(Schema $schema) {
+    public function postDown(Schema $schema): void {
         // TODO: Eliminar los campos nuevos?
     }
 }

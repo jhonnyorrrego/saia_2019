@@ -1,7 +1,7 @@
 <?php
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -9,11 +9,11 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version20180920192545 extends AbstractMigration {
 
-    public function getDescription() {
+    public function getDescription(): string {
         return 'Campo permiso_serie.permiso';
     }
 
-    public function preUp(Schema $schema) {
+    public function preUp(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -30,7 +30,7 @@ class Version20180920192545 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function up(Schema $schema) {
+    public function up(Schema $schema): void {
         $table = $schema->getTable('permiso_serie');
         if ($table && !$table->hasColumn("permiso")) {
             $table->addColumn("permiso", "string", [
@@ -49,11 +49,11 @@ class Version20180920192545 extends AbstractMigration {
         }*/
     }
 
-    public function postUp(Schema $schema) {
+    public function postUp(Schema $schema): void {
         $this->connection->exec($this->crear_vista());
     }
 
-    public function preDown(Schema $schema) {
+    public function preDown(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -70,14 +70,14 @@ class Version20180920192545 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function down(Schema $schema) {
+    public function down(Schema $schema): void {
         $table = $schema->getTable('permiso_serie');
         if ($table && $table->hasColumn("permiso")) {
             $table->dropColumn("permiso");
         }
     }
 
-    public function postDown(Schema $schema) {
+    public function postDown(Schema $schema): void {
         $this->connection->exec($this->devolver_vista());
     }
 

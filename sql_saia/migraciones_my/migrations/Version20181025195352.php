@@ -1,7 +1,7 @@
 <?php
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use \Doctrine\DBAL\FetchMode;
 
@@ -10,11 +10,11 @@ use \Doctrine\DBAL\FetchMode;
  */
 final class Version20181025195352 extends AbstractMigration {
 
-    public function getDescription() {
+    public function getDescription(): string {
         return 'Modificaciones en busqueda_componente, info';
     }
 
-    public function preUp(Schema $schema) {
+    public function preUp(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -33,7 +33,7 @@ final class Version20181025195352 extends AbstractMigration {
         }
     }
 
-    public function postUp(Schema $schema) {
+    public function postUp(Schema $schema): void {
         $conn = $this->connection;
         // ft_radicacion_entrada
         $queryBuilder = $conn->createQueryBuilder();

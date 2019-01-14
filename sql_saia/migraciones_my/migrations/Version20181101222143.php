@@ -10,11 +10,11 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20181101222143 extends AbstractMigration
 {
-    public function getDescription() {
+    public function getDescription(): string {
         return 'Modificaciones en busqueda_componente, campo info';
     }
 
-    public function preUp(Schema $schema) {
+    public function preUp(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -26,7 +26,7 @@ final class Version20181101222143 extends AbstractMigration
             $this->platform->registerDoctrineTypeMapping('interval day(2) to second(6)', "string");
         }
     }
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         
 		$conn = $this->connection;
@@ -84,7 +84,7 @@ final class Version20181101222143 extends AbstractMigration
 
     }
 
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         $conn = $this->connection;
 
