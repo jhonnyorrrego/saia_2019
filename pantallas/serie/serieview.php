@@ -1,196 +1,175 @@
 <?php
-$max_salida = 6;
-$ruta_db_superior = $ruta = "";
-while ($max_salida > 0) {
-	if (is_file($ruta . "db.php")) {
-		$ruta_db_superior = $ruta;
-	}
-	$ruta .= "../";
-	$max_salida--;
-}
+$max_salida = 10;
+$ruta_db_superior = $ruta = '';
 
-include_once ($ruta_db_superior."db.php");
+while ($max_salida > 0) {
+    if (is_file($ruta . 'db.php')) {
+        $ruta_db_superior = $ruta;
+    }
+
+    $ruta .= '../';
+    $max_salida--;
+}
 
 if (!$_REQUEST["key"]) {
-	$idmodulo = busca_filtro_tabla("idmodulo", "modulo", "nombre='serie'", "", $conn);
-	if ($idmodulo["numcampos"]) {
-		abrir_url("pantallas/pantallas_kaiten/principal.php?idmodulo=" . $idmodulo[0]["idmodulo"], "centro");
-	} else {
-		die();
-	}
+    return false;
 }
-include ($ruta_db_superior."header.php");
+include_once $ruta_db_superior . "controllers/autoload.php";
+
 $idserie = $_REQUEST["key"];
-$idnode = ($_REQUEST["idnode"]!="") ? $_REQUEST["idnode"] : 0 ;
-$entidad_serie =$_REQUEST["identidad_serie"];
-$tipo_serie = array(
-	1 => "SERIE",
-	2 => "SUBSERIE",
-	3 => "TIPO DOCUMENTAL"
-);
-$tipo=array(0=>"TRD",1=>"TVD");
-$categoria=array(2=>"PRODUCCION DOCUMENTAL",3=>"OTRAS CATAGORIAS");
+$entidad_serie = $_REQUEST["identidad_serie"];
+$idnode = ($_REQUEST["idnode"] != "") ? $_REQUEST["idnode"] : 0;
 
-$conservacion=array("TOTAL"=>"CONSERVACION","ELIMINACION"=>"ELIMINACION");
-$sel=array(0=>"NO",1=>"SI");
-$estado=array(0=>"INACTIVO",1=>"ACTIVO");
-
-$datos = busca_filtro_tabla("", "serie", "idserie=" . $idserie, "", $conn);
-$nom_padre="";
-if(($datos[0]["tipo"]==2 || $datos[0]["tipo"]==3 && $datos[0]["cod_padre"]) || $datos[0]["categoria"] == 3){
-	$padre = busca_filtro_tabla("nombre,codigo", "serie", "idserie=" . $datos[0]["cod_padre"], "", $conn);
-	if($padre["numcampos"]){
-		$nom_padre=$padre[0]["nombre"]. " - (".$padre[0]["codigo"].")";
-	}
+$datos = new Serie($idserie);
+$datosPadre = $datos -> getCodPadre();
+$nomPadre = '';
+if ($datosPadre !== false) {
+    $nomPadre = $datosPadre -> nombre;
 }
 
-// Buscar si tiene documentos asociados en algun tipo documental
-$filtro_docs = false;
-switch ($datos[0]["tipo"]) {
-    case 1:
-    case 2:
-        $filtro_docs = "like '{$datos[0]["cod_arbol"]}.%'";
-        break;
-    case 3:
-        $filtro_docs = "= '{$datos[0]["cod_arbol"]}'";
-        break;
-    default:
-        $filtro_docs = false;
-        break;
-}
-
-$docs_vinculados = array("numcampos" => 0);
-
-if($filtro_docs) {
-    $docs_vinculados = busca_filtro_tabla("iddocumento", "documento", "serie in (select distinct idserie from serie where cod_arbol $filtro_docs)" , "", $conn);
-}
-
-$vinculados = $docs_vinculados["numcampos"];
-/*$identidad=array();
-$vista_series = busca_filtro_tabla("", "vpermiso_serie_entidad", "cod_padre=".$idserie, "", $conn);
-if($vista_series["numcampos"]){
-	for($i=0;$i<$vista_series["numcampos"];$i++){
-		$identidad[]=$vista_series[$i]["entidad_identidad"];
-	} 
-	$identidad = implode(",", $identidad);
-}*/
-include_once ($ruta_db_superior."librerias_saia.php");
-echo librerias_jquery("1.7");
-?>
-<span style="font-family: Verdana; font-size: 9px;"><br/>
-<?php
-if($vinculados) {
-    echo "Serie de solo lectura. $vinculados documentos vinculados<br>";
+$lectura = 0;
+$add = 0;
+$ent = 0;
+if ($datos -> countDocuments()) {
+    $lectura = 1;
 } else {
+    $add = 1;
+    if (!empty($entidad_serie)) {
+        $ent = 1;
+        $id = explode(".", $idnode);
+    }
+}
+
+include_once $ruta_db_superior . 'assets/librerias.php';
+include_once ($ruta_db_superior . "librerias_saia.php");
 ?>
-	<a href="serieedit.php?idnode=<?php echo $idnode ;?>&x_idserie=<?php echo $idserie; ?>">EDITAR</a>
-	<?php
-}
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>SAIA - SGDEA</title>
+		<?= jquery() ?>
+		<?= bootstrap() ?>
+		<?= icons() ?>
+		<?= theme() ?>
+	</head>
 
-if($datos[0]["tipo"]==1 || $datos[0]["tipo"]==2) {
-    echo '&nbsp;<a href="serieadd.php?idnode=' . $idnode . '&x_idserie=' . $idserie . '">ADICIONAR</a>';
-}
-if(!empty($entidad_serie)){
-	echo ' <a href="permiso_serie.php?idserie=' . $idserie . '&identidad_serie='.	$entidad_serie.'" target="serielist">PERMISOS</a>';
-}
-if(!empty($entidad_serie)){
-$id = explode(".",$idnode);
-	
-echo ' <a href="asignarserie_entidad.php?tvd='.$id[2].'&seleccionados='.$id[1].'&idnode='.$idnode.'" target="serielist">ASOCIAR A DEPENDENCIA</a>';
-}
-?>
+	<body>
+		<div class="container m-0 p-0 mw-100 mx-100">
+			<div class="row mx-0">
+				<div class="col-12">
+				    <?php if(!$lectura):?>
+				    <a class="btn btn-complete mx-1" href="serieedit.php?idnode=<?= $idnode ?>&x_idserie=<?= $idserie ?>">
+                        <i class="fa fa-plus"></i> Editar
+                    </a>
+                        <?php if($add):?>
+                            <a class="btn btn-complete mx-1" href="serieadd.php?idnode=<?= $idnode ?>&x_idserie=<?= $idserie ?>">
+                                <i class="fa fa-plus"></i> Adicionar
+                            </a>
+                        <?php endif; ?>
+                        
+                        <?php if($ent):?>
+                            <a class="btn btn-complete my-2" href="permiso_serie.php?idserie=<?= $idserie ?>&identidad_serie=<?= $entidad_serie ?>" target="serielist">
+                                <i class="fa fa-plus"></i> Permisos
+                            </a>
+                            <a class="btn btn-complete mx-1" href="asignarserie_entidad.php?seleccionados=<?= $id[1] ?>&idnode=<?= $idnode ?>" target="serielist">
+                                <i class="fa fa-plus"></i> Asociar a dependencia
+                            </a>
+                        <?php endif; ?>
+                        
+                    <?php else: ?>
+                     Serie de solo lectura. Tiene documentos vinculados
+                    <?php endif; ?>
+                    <table class="table tabled-bordered">
+                        <tr>
+                            <td>CATEGORIA</td>
+                            <td><?=$datos -> getCategoria(); ?></td>
+                        </tr>
+                    
+                        <tr class="ocultar">
+                            <td>TIPO SERIE</td>
+                            <td><?=$datos -> getTipo(); ?></td>
+                        </tr>
+                    
+                        <tr>
+                            <td>C&Oacute;DIGO</td>
+                            <td><?=$datos -> codigo ?></td>
+                        </tr>
+                    
+                        <tr>
+                            <td>NOMBRE</td>
+                            <td><?=$datos -> nombre; ?></td>
+                        </tr>
+                    
+                        <tr>
+                            <td>PADRE</td>
+                            <td><?=$nomPadre; ?></td>
+                        </tr>
+                    
+                        <tr class="ocultar">
+                            <td>TIEMPO DE RESPUESTA (D&Iacute;AS)</td>
+                            <td><?=$datos -> dias_entrega; ?></td>
+                        </tr>
+                    
+                        <tr class="ocultar">
+                            <td>MESES ARCHIVO GESTI&Oacute;N</td>
+                            <td><?=$datos -> retencion_gestion; ?></td>
+                        </tr>
+                    
+                        <tr class="ocultar">
+                            <td>MESES ARCHIVO CENTRAL</td>
+                            <td><?=$datos -> retencion_central; ?></td>
+                        </tr>
+                    
+                        <tr class="ocultar">
+                            <td>CONSERVACI&Oacute;N / ELIMINACI&Oacute;N</td>
+                            <td><?=$datos -> getConservacion(); ?></td>
+                        </tr>
+                    
+                        <tr class="ocultar">
+                            <td>SELECCI&Oacute;N</td>
+                            <td><?=$datos -> getLabelCampo('seleccion'); ?></td>
+                        </tr>
+                    
+                        <tr class="ocultar">
+                            <td>DIGITALIZACI&Oacute;N</td>
+                            <td><?=$datos -> getLabelCampo('digitalizacion'); ?></td>
+                        </tr>
+                    
+                        <tr class="ocultar">
+                            <td>OTRO</td>
+                            <td><?=$datos -> otro; ?></td>
+                        </tr>
+                    
+                        <tr class="ocultar">
+                            <td>PERMITIR COPIA</td>
+                            <td><?=$datos -> getLabelCampo('copia'); ?></td>
+                        </tr>
+                    
+                        <tr class="ocultar">
+                            <td>PROCEDIMIENTO CONSERVACI&Oacute;N</td>
+                            <td><?=$datos -> procedimiento; ?></td>
+                        </tr>
+                    
+                        <tr>
+                            <td>ESTADO</td>
+                            <td><?=$datos -> getEstado(); ?></td>
+                        </tr>
+                    </table>
+				</div>
+			</div>
+		</div>
 
-</span><br/><br/>
-
-<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
-	<tr>
-		<td class="encabezado">CATEGORIA</td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $categoria[$datos[0]["categoria"]];?></span></td>
-	</tr>
-
-	<tr class="ocultar">
-		<td class="encabezado">TIPO</td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $tipo[$datos[0]["tvd"]];?></span></td>
-	</tr>
-
-	<tr class="ocultar">
-		<td class="encabezado">TIPO SERIE</td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $tipo_serie[$datos[0]["tipo"]];?></span></td>
-	</tr>
-
-	<tr>
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">C&Oacute;DIGO</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $datos[0]["codigo"];?></span></td>
-	</tr>
-
-	<tr>
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">NOMBRE</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $datos[0]["nombre"];?></span></td>
-	</tr>
-
-	<tr>
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">PADRE</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $nom_padre;?></span></td>
-	</tr>
-
-	<tr class="ocultar">
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">TIEMPO DE RESPUESTA (D&Iacute;AS)</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $datos[0]["dias_entrega"];?></span></td>
-	</tr>
-
-	<tr class="ocultar">
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">MESES ARCHIVO GESTI&Oacute;N</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $datos[0]["retencion_gestion"];?></span></td>
-	</tr>
-
-	<tr class="ocultar">
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">MESES ARCHIVO CENTRAL</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $datos[0]["retencion_central"];?></span></td>
-	</tr>
-
-	<tr class="ocultar">
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">CONSERVACI&Oacute;N / ELIMINACI&Oacute;N</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $conservacion[$datos[0]["conservacion"]];?></span></td>
-	</tr>
-
-	<tr class="ocultar">
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">SELECCI&Oacute;N</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $sel[$datos[0]["seleccion"]];?></span></td>
-	</tr>
-
-	<tr class="ocultar">
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">DIGITALIZACI&Oacute;N</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $sel[$datos[0]["digitalizacion"]];?></span></td>
-	</tr>
-
-	<tr class="ocultar">
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">OTRO</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $datos[0]["otro"];?></span></td>
-	</tr>
-
-	<tr class="ocultar">
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">PERMITIR COPIA</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $sel[$datos[0]["copia"]];?></span></td>
-	</tr>
-
-	<tr class="ocultar">
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">PROCEDIMIENTO CONSERVACI&Oacute;N</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $datos[0]["procedimiento"];?></span></td>
-	</tr>
-
-	<tr>
-		<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">ESTADO</span></td>
-		<td bgcolor="#F5F5F5"><span class="phpmaker"><?php echo $estado[$datos[0]["estado"]];?></span></td>
-	</tr>
-</table>
-<?php
-	include_once ($ruta_db_superior."footer.php");
-?>
-<script>
-	$(document).ready(function (){
-		var categoria=parseInt(<?php echo $datos[0]["categoria"];?>);
-		if(categoria==3){
-			$(".ocultar").hide();
-		}
-	});
-</script>
+		<script data-categoria='<?= $datos -> categoria ?>'>
+			$(document).ready(function() {
+				let
+				categoria = $("script[data-categoria]").data("categoria");
+				if (categoria == 3) {
+					$(".ocultar").hide();
+				}
+			});
+		</script>
+	</body>
+</html>
