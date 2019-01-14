@@ -28,7 +28,7 @@ if($_REQUEST['idformato']) {
 	if($anexos_formato["numcampos"]){
 		$ruta = $anexos_formato[0]["ruta"];
 	}
-	$formato = json_encode($formato);
+	//$formato = json_encode($formato);
 	if($cod_proceso_pertenece){
 		$adicional_cod_proceso="&seleccionado=".$cod_proceso_pertenece;
 	}
@@ -370,9 +370,9 @@ if($datos_formato["numcampos"]) {
         <div class="span6">
           <div class="control-group">
             <label class="control-label" for="orientacion">Orientaci&oacute;n</label>
-            <div class="controls">
-              Horizontal<input type="radio" name="orientacion" id="orientacion_1" value="1" <?php if(@$datos_formato[0]["orientacion"]) echo(' checked="checked"');?>>
+            <div class="controls">            
               Vertical<input type="radio" name="orientacion" id="orientacion_0" value="0" <?php if(!@$datos_formato[0]["orientacion"]) echo(' checked="checked"');?>>
+               Horizontal<input type="radio" name="orientacion" id="orientacion_1" value="1" <?php if(@$datos_formato[0]["orientacion"]) echo(' checked="checked"');?>>
             </div>
           </div>
         </div>
@@ -561,7 +561,7 @@ $("document").ready(function(){
 	});
 
 	var formulario = $("#datos_formato");
-	var formato=jQuery.parseJSON('<?php echo($formato);?>');
+	var formato=<?php echo(json_encode($formato));?>;
 	//window.console.log(formato);
 	var nombre_formato="";
 	if($("#nombre_formato").val()!="") {

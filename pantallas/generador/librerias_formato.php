@@ -191,10 +191,10 @@ function vincular_funciones_formatos($libreria, $funcion) {
         "exito" => 0
     );
     $funciones_nucleo = busca_filtro_tabla("", "funciones_nucleo A", "A.idfunciones_nucleo=" . $libreria, "", $conn);
-   
+ 
     if ($funciones_nucleo["numcampos"]) {
         $datos_funcion = busca_filtro_tabla("", "funciones_formato A", "A.nombre = '" . $funcion . "'", "", $conn);
-		 	
+	
         if ($datos_funcion["numcampos"]) {
             $nombre = str_replace("{*", "", $funcion);
             $nombre = str_replace("*}", "", $nombre);
@@ -393,6 +393,37 @@ function actualizar_contenido_encabezado($idencabezado, $etiqueta, $contenido, $
     }
 }
 
+function consultar_contenido_encabezado(){
+	
+    global $conn;
+    $retorno = array(
+        "exito" => 0
+    );
+    $encabezados = busca_filtro_tabla("","encabezado_formato","1=1","etiqueta ASC",$conn);
+	$tipo_retorno=$_REQUEST['tipo_retorno'];
+    $datos = array();
+    if($encabezados['numcampos']){
+    	$retorno["exito"] = 1;
+	    for ($i = 0; $i < $encabezados["numcampos"]; $i++) {
+	        $fila = array(
+	            "idencabezado" => $encabezados[$i]["idencabezado_formato"],
+	            "etiqueta" => $encabezados[$i]["etiqueta"],
+	            "contenido" => $encabezados[$i]["contenido"]
+	        );
+	        $datos[] = $fila;
+	    }
+    }
+    if (!empty($datos)) {
+        $retorno["datos"] = $datos;
+    }
+	
+    if ($tipo_retorno == 1) {
+        echo (json_encode($retorno));
+    } else {
+        return ($retorno);
+    }
+
+}
 function eliminar_contenido_encabezado($idencabezado, $etiqueta, $contenido, $tipo_retorno = 1) {
     global $conn;
     $retorno = array(

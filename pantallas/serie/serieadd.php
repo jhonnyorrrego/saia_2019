@@ -220,14 +220,6 @@ function AddData($conn) {
 		$fieldList["tipo"] = "'" . $GLOBALS["x_tipo"] . "'";
 		$fieldList["tvd"] = "'" . $GLOBALS["x_tvd"] . "'";
 
-		/*$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_tipo_entidad"]) : $GLOBALS["x_tipo_entidad"];
-		$theValue = ($theValue != "") ? "" . $theValue . "" : "NULL";
-		$fieldList_permiso["tipo_entidad"] = $theValue;
-
-		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_identidad"]) : $GLOBALS["x_identidad"];
-		$theValue = ($theValue != "") ? "" . $theValue . "" : "NULL";
-		$fieldList_permiso["identidad"] = $theValue;*/
-
 		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_dependencias"]) : $GLOBALS["x_dependencias"];
 		$theValue = ($theValue != "") ? "" . $theValue . "" : "NULL";
 		$fieldList_asignacion["dependencias"] = $theValue;
@@ -242,14 +234,6 @@ function AddData($conn) {
 	phpmkr_query($strsql) or die("Error al insertar el registro " . $strsql);
 	$id = phpmkr_insert_id();
 
-	// insert into permiso_serie
-	/*$entidades = explode(",",$fieldList_permiso["identidad"]);
-	for($i=0;$i<count($entidades);$i++){
-		$strsql = "INSERT INTO permiso_serie (entidad_identidad,serie_idserie,llave_entidad,estado) VALUES (".$fieldList_permiso["tipo_entidad"].",".$id.",".$entidades[$i].",1)";
-		phpmkr_query($strsql) or die("Error al insertar el registro " . $fieldList_permiso["identidad"]);
-	}*/
-
-	//insert into entidad_serie
 	$dependencia = explode(",", $fieldList_asignacion["dependencias"]);
 	$cd = count($dependencia);
     if ($fieldList["categoria"] == 2) {
@@ -450,7 +434,7 @@ echo librerias_arboles_ft("2.24", 'filtro');
 				    ));
 				$opciones_arbol = array("keyboard" => true, "selectMode" => 2, "busqueda_item" => 1, "expandir" => 3);
 				$extensiones = array("filter" => array());
-				$arbol = new ArbolFt("iddependencia", $origen, $opciones_arbol, $extensiones);
+				$arbol = new ArbolFt("iddependencia", $origen, $opciones_arbol, $extensiones,$dependencia_seleccionada);
 				echo $arbol->generar_html();
 
 				?>

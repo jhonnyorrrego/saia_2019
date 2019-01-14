@@ -271,8 +271,13 @@ ul.fancytree-container {
 
   </head>
   <body>
-  	<div class="container px-0 mx-1">
-  		<?= $arbol->generar_html() ?>
+  	<div class="container">
+  		<div class="row mx-0 px-0">
+			<div class="col-auto px-0 mx-0">
+				<?= $arbol->generar_html() ?>
+		  	</div>
+		  </div>
+  		
   	</div>
 	<script type="text/javascript">
 		var ruta_db_superior = "<?php echo $ruta_db_superior; ?>";

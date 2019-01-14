@@ -1,9 +1,11 @@
-$(function(){
+$(function () {
     var baseUrl = $("[data-baseurl]").data("baseurl");
     var documentId = $("[data-documentid]").data("documentid");
 
-    toggleGoBack();
-    showFlag();        
+    (function init() {
+        toggleGoBack();
+        showFlag();                
+    })();
     
     $("#go_back").on('click', function(){                                
         $("#mailbox,#right_workspace", parent.document).toggleClass('d-none');                
@@ -58,8 +60,10 @@ $(function(){
 
                 if(priority){
                     flag.addClass('text-danger');
+                    $(`#table i[data-key=${documentId}]`).show();
                 }else{
                     flag.removeClass('text-danger');
+                    $(`#table i[data-key=${documentId}]`).hide();
                 }
             }else{
                 top.notification({
@@ -180,10 +184,8 @@ $(function(){
     }
 
     function showFlag(){                
-        if($(".priority").is(':hidden')){
-            $(".priority")
-                .removeClass('text-danger')
-                .show();
+        if($("#document_information .priority").is(':hidden')){
+            $("#document_information .priority").removeClass('text-danger').show();
         }
     }
 

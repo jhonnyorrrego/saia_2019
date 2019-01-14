@@ -24,9 +24,9 @@ if($_REQUEST['funciones_nucleo']){
 
 function funciones_nucleo($pantalla_idpantalla, $tipo) {
     global $conn;
-    $consulta_funciones = busca_filtro_tabla("","funciones_nucleo","","",$conn);
+    $consulta_funciones = busca_filtro_tabla("","funciones_nucleo","","etiqueta ASC",$conn);
 
-    $texto = '<div class="accordion" id="acordion_componentes">
+    $texto = '<div class="accordion" id="acordion_componentes" style="margin-bottom: 5px;">
      <div class="accordion-group">
      <div class="accordion-heading">
      <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_componentes" href="#categoria_1">Funciones de nucleo</a></div>';
@@ -66,7 +66,7 @@ function funciones_nucleo($pantalla_idpantalla, $tipo) {
 	$campos = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $pantalla_idpantalla . " and etiqueta_html<>'campo_heredado' ".$condicion_adicional."", "A.orden", $conn);
 	
     if ($campos["numcampos"]) {
-    $texto.= '<div class="accordion" id="acordion_componentes">
+    $texto.= '<div class="accordion" id="acordion_componentes" style="margin-bottom: 5px;">
      <div class="accordion-group">
      	
     		<a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_componentes" href="#categoria_1">Elementos del formato</a></div>';
@@ -74,9 +74,9 @@ function funciones_nucleo($pantalla_idpantalla, $tipo) {
 		        	 $etiqueta = htmlentities(html_entity_decode(utf8_encode($campos[$i]["etiqueta"])));			
 					$texto .= '
 					<div id="categoria_' . $campos[$i]["nombre"] . '" class="accordion-body">
-						<div class="accordion">
-							<div  style="cursor:pointer;" class="fa '.$imagen.'" id="camposPropios" name="{*'.$campos[$i]["nombre"] .'*}" idcamposFormato="' . $campos[$i]["idcampos_formato"] . '_campo">
-						<span class="fa-fw"></span>&nbsp;' . $etiqueta . '</div>
+						<div class="accordion" style="margin-bottom: 5px;">
+							<div  style="cursor:pointer;" id="camposPropios" name="{*'.$campos[$i]["nombre"] .'*}" idcamposFormato="' . $campos[$i]["idcampos_formato"] . '_campo">
+						<span class="fa-fw fa '.$imagen.'"></span>&nbsp;' . $etiqueta . '</div>
 		            	</div>
 		            </div>';
 		
@@ -92,31 +92,28 @@ function funciones_nucleo($pantalla_idpantalla, $tipo) {
 function lista_funciones_vincular($ruta_libreria, $idlibreria,$nombre_funcion,$etiqueta,$imagen) {
     global $conn;
 
-    $listado_funciones = buscar_funciones_archivo($ruta_libreria, "function", $nombre_funcion,0);	
-	$retorno=array();
-	
-    $texto = '<div class="accordion" id="acordion_componentes">';
+    $listado_funciones = buscar_funciones_archivo($ruta_libreria, "function", $nombre_funcion,0);
+    
+	$retorno=array();	
+    $texto = '<div class="accordion" id="acordion_componentes" style="margin-bottom: 5px;">';
     foreach ($listado_funciones["resultado"] as $key => $valor) {
         $cant_funciones = '';
         $pos1 = strpos($valor, "(");
         $pos2 = strpos($valor, ")");
         $nombre = trim(substr($valor, 8, ($pos1 - 8)));
         $dato = trim(substr($valor, 8));
-        $texto_param = $dato;
-		
+        $texto_param = $dato;		
         // strpos($texto_param,'$idformato,$iddoc') valida que la funcion sea valida como funcion de saia para los formatos
         if ($nombre != '' && preg_match('/\$idformato[\s]*,[\s]*\$\w*doc/',$texto_param)) {
             $texto .= '
             <div id="categoria_' . $nombre . '" class="accordion-body">
-            	<div class="accordion">
-            		<div style="cursor:pointer;" class="fa '.$imagen.'" id="funcionesPropias"  name="{*'.$nombre .'*}" idfuncionFormato="' . $idlibreria . '_func">
-            			<span class="' . $nombre . ' fa-fw"></span>&nbsp;' . $etiqueta . '</div>
+            	<div class="accordion" style="margin-bottom: 5px;">
+            		<div style="cursor:pointer;"  id="funcionesPropias"  name="{*'.$nombre .'*}" idfuncionFormato="' . $idlibreria . '_func">
+            			<span class="fa '.$imagen.' ' . $nombre . ' fa-fw"></span>&nbsp;' . $etiqueta . '</div>
             		</div>
             	</div>';
         }
-
     }
-
 	$texto .= '</div>';
 	return $texto;
 

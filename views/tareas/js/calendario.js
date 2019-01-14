@@ -6,6 +6,10 @@ $(function() {
         selectLongPressDelay: 500,
         eventDurationEditable:false,
         editable: true,
+        defaultView: 'agendaWeek',
+	    eventTextColor: 'white',
+        height: $(window).height() - 20,
+        selectable: true,        
         customButtons: {
             refresh: {
                 icon: 'clockwise-arrow',
@@ -25,9 +29,6 @@ $(function() {
             center: 'select',
             right:  'prev,next,refresh month,agendaWeek,agendaDay,today'
         },
-        defaultView: 'agendaWeek',
-        height: $(window).height() - 20,
-        selectable: true,        
         select: function( start, end){
             let params = {
                 initialTime: start.format('YYYY-MM-DD HH:mm:ss'),
@@ -80,7 +81,7 @@ $(function() {
             url: `${baseUrl}views/tareas/crear.php`,
             params: params,
             centerAlign:false,
-            size: "modal-xl",
+            size: "modal-lg",
             buttons: {}
         };
 

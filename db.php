@@ -189,7 +189,15 @@ function leido($codigo, $llave)
 </Clase>  */
 function limpia_tabla($tabla)
 {
-    global $ruta_db_superior;
+    $max_salida = 6;
+    $ruta_db_superior = $ruta = "";
+    while ($max_salida > 0) {
+        if (is_file($ruta . "db.php")) {
+            $ruta_db_superior = $ruta;
+        }
+        $ruta .= "../";
+        $max_salida--;
+    }
 
     include_once($ruta_db_superior . "kses-0.2.3/kses.php");
 
@@ -1701,7 +1709,7 @@ function error($cad, $ruta = "", $file = "", $imprime_cadena = 0)
  */
 function abrir_url($location, $target = "_blank"){
     echo "<script language='javascript'>
-        window.open('".$location."',".$target.");
+        window.open(\"".$location."\",\"".$target."\");
     </script>";
 }
 
@@ -1713,7 +1721,7 @@ function abrir_url($location, $target = "_blank"){
  */
 function redirecciona($location){
     echo "<script language='javascript'>
-        window.location='" . $location ."';
+        window.location=\"" . $location ."\";
     </script>";
 }
 /*

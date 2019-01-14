@@ -39,11 +39,6 @@ class AnexoTarea extends Model
         return new Funcionario($this->fk_funcionario);
     }
 
-    public function getDate(){
-        $DateTime = DateTime::createFromFormat('Y-m-d H:i:s', $this->fecha);
-        return $DateTime->format('d-m-Y');
-    }
-
     public function getFileSize(){        
         $data = StorageUtils::resolver_ruta($this->ruta);
         $bites = $data['clase']->get_filesystem()->size($data['ruta']);

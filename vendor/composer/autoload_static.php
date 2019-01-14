@@ -36,6 +36,7 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
             'Symfony\\Contracts\\' => 18,
             'Symfony\\Component\\Yaml\\' => 23,
             'Symfony\\Component\\VarExporter\\' => 30,
+            'Symfony\\Component\\Stopwatch\\' => 28,
             'Symfony\\Component\\Routing\\' => 26,
             'Symfony\\Component\\Process\\' => 26,
             'Symfony\\Component\\HttpKernel\\' => 29,
@@ -95,7 +96,6 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
             'Doctrine\\ORM\\' => 13,
             'Doctrine\\Migrations\\' => 20,
             'Doctrine\\Instantiator\\' => 22,
-            'Doctrine\\DBAL\\Migrations\\' => 25,
             'Doctrine\\DBAL\\' => 14,
             'Doctrine\\Common\\Inflector\\' => 26,
             'Doctrine\\Common\\Cache\\' => 22,
@@ -151,6 +151,10 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         'Symfony\\Component\\VarExporter\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/var-exporter',
+        ),
+        'Symfony\\Component\\Stopwatch\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/stopwatch',
         ),
         'Symfony\\Component\\Routing\\' => 
         array (
@@ -303,10 +307,6 @@ class ComposerStaticInit718f03846feaff3d4705b9006384fb76
         'Doctrine\\Instantiator\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/instantiator/src/Doctrine/Instantiator',
-        ),
-        'Doctrine\\DBAL\\Migrations\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/doctrine/migrations/lib/Doctrine/DBAL/Migrations',
         ),
         'Doctrine\\DBAL\\' => 
         array (

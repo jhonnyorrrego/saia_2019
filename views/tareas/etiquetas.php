@@ -1,3 +1,17 @@
+<?php
+$max_salida = 10;
+$ruta_db_superior = $ruta = '';
+
+while ($max_salida > 0) {
+    if (is_file($ruta . 'db.php')) {
+        $ruta_db_superior = $ruta;
+    }
+
+    $ruta .= '../';
+    $max_salida--;
+}
+
+?>
 <div class="container-fluid p-0">
     <div class="row mx-0">
         <div class="col-12 p-0">
@@ -26,3 +40,4 @@
         </div>
     </div>
 </div>
+<script src="<?= $ruta_db_superior ?>views/tareas/js/etiquetas.js"></script>

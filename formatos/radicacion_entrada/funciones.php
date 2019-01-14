@@ -127,6 +127,7 @@ function quitar_descripcion_entrada($idformato,$iddoc){
 		$("#copia_a").val("");
 	}
 	$('#formulario_formatos').validate({
+		ignore: [],
             submitHandler: function(form){
                 var fecha = $("#fecha_oficio_entrada").val().split(" ");
 				var f = new Date();

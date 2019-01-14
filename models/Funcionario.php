@@ -85,12 +85,10 @@ class Funcionario extends Model {
      */
     public function getName()
     {
-        $name = trim(strtolower($this->nombres));
-        $lastName = trim(strtolower($this->apellidos));
-
-        $completeName = ucfirst($name . " " . $lastName);
-
-        return $completeName;
+	$name = $this->nombres . ' ' . $this->apellidos;
+        $name = trim(strtolower($name));
+        $name = ucwords($name);
+        return $name;
     }
 
     /**

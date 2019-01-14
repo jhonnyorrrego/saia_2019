@@ -370,29 +370,6 @@ function serie_documento($idserie) {
 	return ("Sin Serie Asignada");
 }
 
-function fecha_documento($iddoc) {
-	$dias1 = busca_filtro_tabla("iddocumento," . fecha_db_obtener("fecha", 'Y-m-d') . " as fecha,numero," . case_fecha('dias', "''", 'dias_entrega', 'dias') . " as dias_r", "documento left join serie on serie=idserie", "iddocumento=$iddoc", "", $conn);
-	$dias2["numcampos"] = 0;
-	if ($dias1[0]["dias_r"] <> "") {
-		$fecha_f = dias_habiles_listado($dias1[0]["dias_r"] + 1, 'Y-m-d', $dias1[0]["fecha"]);
-		$dias2 = busca_filtro_tabla(resta_fechas(fecha_db_almacenar($fecha_f, 'Y-m-d'), "") . " as respuesta", "dual", "", "", $conn);
-	}
-	if ($dias2["numcampos"]) {
-		$retraso = busca_filtro_tabla("A.valor", DB . ".configuracion A", "A.nombre='dias_retraso'", "", $conn);
-		$dias = intval(ceil($dias2[0]["respuesta"]));
-		if ($dias < 0) {
-			$cadena = array("btn-danger", $fecha_f, $dias, "Vencido " . $dias . " d&iacute;as");
-		} else if ($dias > $retraso[0]["valor"]) {
-			$cadena = array("btn-success", $fecha_f, $dias, "Vence en " . $dias . " d&iacute;as");
-		} else if ($dias <= $retraso[0]["valor"] && $dias >= 0) {
-			$cadena = array("btn-warning", $fecha_f, $dias, "Vence en " . $dias . " d&iacute;as");
-		}
-	} else {
-		$cadena = array("btn-warning", date("Y-m-d"), 0, "Sin vencimiento");
-	}
-	return ($cadena);
-}
-
 function vincular_documentos() {
 	global $ruta_db_superior;
 	$texto = '<li><a href="#" id="vincular_documentos">Vincular documentos</a></li>';
@@ -993,7 +970,7 @@ function variable_busqueda(){
     return $_REQUEST['variable_busqueda'];
 }
 
-function origin_pending_document($documentId, $userCode, $number, $date, $transferId){
+function origin_pending_document($documentId, $userCode, $number, $date, $transferId, $format){
 	global $conn, $ruta_db_superior;
 
 	include_once $ruta_db_superior . 'controllers/autoload.php';
@@ -1004,7 +981,8 @@ function origin_pending_document($documentId, $userCode, $number, $date, $transf
     $documentRoute = 'views/documento/acordeon.php?';
     $documentRoute.= http_build_query([
         'documentId' => $documentId,
-        'transferId' => $transferId
+        'transferId' => $transferId,
+        'format' => strtolower($format)
     ]);
 
     $html = '<div class="col-1 px-0 text-center action">
@@ -1082,7 +1060,7 @@ function has_files($documentId, $showConunter = false) {
 function priority($documentId){
     global $conn;
     $class = 'text-dark';
-    $findPriority = busca_filtro_tabla('prioridad', 'prioridad_documento', 'documento_iddocumento=' . $documentId, '', $conn);
+    $findPriority = busca_filtro_tabla('prioridad', 'prioridad_documento', 'fk_documento=' . $documentId, '', $conn);
     if(!$findPriority['numcampos'] || !$findPriority[0]['prioridad']){
         $style = 'style="display:none"';
     }else{

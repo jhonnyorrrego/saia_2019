@@ -76,18 +76,18 @@
                           <a class="remove" href="javascript:;"></a>
                     </div>
                     <div class="card-body no-scroll no-padding"><?php echo '<div class="textwrapper">
-			<a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=414&idcampo=6744" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
+			<a href="../../anexosdigitales/anexos_documento_edit.php?key='.$_REQUEST["iddoc"].'&idformato=423&idcampo=6995" id="anexo_admin" class="highslide" onclick="return hs.htmlExpand( this, {
 			objectType: \'iframe\', outlineType: \'rounded-white\', wrapperClassName: \'highslide-wrapper drag-header\',
 			outlineWhileAnimating: true, preserveContent: false, width: 400 } )">Administrar Anexos</a>
 			</div>'; ?></div></div><div class="form-group" id="tr_ciudad_proveedor">
                      <label class="etiqueta_campo" title="">Ciudad proveedor</label>
-                     <input class="form-control"  maxlength="255"   tabindex='2'  type="text"  size="100" id="ciudad_proveedor" name="ciudad_proveedor"  value="<?php echo(mostrar_valor_campo('ciudad_proveedor',414,$_REQUEST['iddoc'])); ?>">
+                     <input class="form-control"  maxlength="255"   tabindex='2'  type="text"  size="100" id="ciudad_proveedor" name="ciudad_proveedor"  value="<?php echo(mostrar_valor_campo('ciudad_proveedor',423,$_REQUEST['iddoc'])); ?>">
                     </div><div class="form-group" id="tr_direccion_proveedor">
                      <label class="etiqueta_campo" title="">Direcci&oacute;n proveedor</label>
-                     <input class="form-control"  maxlength="255"   tabindex='3'  type="text"  size="100" id="direccion_proveedor" name="direccion_proveedor"  value="<?php echo(mostrar_valor_campo('direccion_proveedor',414,$_REQUEST['iddoc'])); ?>">
+                     <input class="form-control"  maxlength="255"   tabindex='3'  type="text"  size="100" id="direccion_proveedor" name="direccion_proveedor"  value="<?php echo(mostrar_valor_campo('direccion_proveedor',423,$_REQUEST['iddoc'])); ?>">
                     </div><div class="form-group" id="tr_estado_proveedor">
                      <label class="etiqueta_campo" title="">Departamento proveedor</label>
-                     <input class="form-control"  maxlength="255"   tabindex='4'  type="text"  size="100" id="estado_proveedor" name="estado_proveedor"  value="<?php echo(mostrar_valor_campo('estado_proveedor',414,$_REQUEST['iddoc'])); ?>">
+                     <input class="form-control"  maxlength="255"   tabindex='4'  type="text"  size="100" id="estado_proveedor" name="estado_proveedor"  value="<?php echo(mostrar_valor_campo('estado_proveedor',423,$_REQUEST['iddoc'])); ?>">
                     </div><div class="form-group" id="tr_fecha_factura">
 <label class="etiqueta_campo" title="">Fecha factura</label>
 <div class="input-group">
@@ -96,29 +96,29 @@
 </div>
 <script type="text/javascript">
             $(function () {
-                var configuracion={"defaultDate":"<?php echo(mostrar_valor_campo('fecha_factura',414,$_REQUEST['iddoc'])); ?>","format":"L LT","locale":"es","useCurrent":true};
+                var configuracion={"defaultDate":"<?php echo(mostrar_valor_campo('fecha_factura',423,$_REQUEST['iddoc'])); ?>","format":"L LT","locale":"es","useCurrent":true};
                 $("#fecha_factura").datetimepicker(configuracion);
             });
         </script>
-</div><input type="hidden" name="fk_datos_factura" value="<?php echo(mostrar_valor_campo('fk_datos_factura',414,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_info_proveedor">
+</div><input type="hidden" name="fk_datos_factura" value="<?php echo(mostrar_valor_campo('fk_datos_factura',423,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_info_proveedor">
                      <label class="etiqueta_campo" title="">Informaci&oacute;n adicional del proveedor</label>
 <div class="celda_transparente">
-                     <textarea  tabindex='6'  name="info_proveedor" id="info_proveedor" cols="53" rows="3" class="form-control tiny_basico"><?php echo(mostrar_valor_campo('info_proveedor',414,$_REQUEST['iddoc'])); ?></textarea></div></div><div class="form-group" id="tr_nit_proveedor">
+                     <textarea  tabindex='6'  name="info_proveedor" id="info_proveedor" cols="53" rows="3" class="form-control tiny_basico"><?php echo(mostrar_valor_campo('info_proveedor',423,$_REQUEST['iddoc'])); ?></textarea></div></div><div class="form-group" id="tr_nit_proveedor">
                      <label class="etiqueta_campo" title="">NIT Proveedor*</label>
-                     <input class="form-control"  maxlength="20"  class="required"   tabindex='7'  type="text"  size="100" id="nit_proveedor" name="nit_proveedor"  value="<?php echo(mostrar_valor_campo('nit_proveedor',414,$_REQUEST['iddoc'])); ?>">
+                     <input class="form-control"  maxlength="20"  class="required"   tabindex='7'  type="text"  size="100" id="nit_proveedor" name="nit_proveedor"  value="<?php echo(mostrar_valor_campo('nit_proveedor',423,$_REQUEST['iddoc'])); ?>">
                     </div><div class="form-group" id="tr_nombre_proveedor">
                      <label class="etiqueta_campo" title="">Nombre proveedor</label>
-                     <input class="form-control"  maxlength="255"   tabindex='8'  type="text"  size="100" id="nombre_proveedor" name="nombre_proveedor"  value="<?php echo(mostrar_valor_campo('nombre_proveedor',414,$_REQUEST['iddoc'])); ?>">
+                     <input class="form-control"  maxlength="255"   tabindex='8'  type="text"  size="100" id="nombre_proveedor" name="nombre_proveedor"  value="<?php echo(mostrar_valor_campo('nombre_proveedor',423,$_REQUEST['iddoc'])); ?>">
                     </div><div class="form-group" id="tr_num_factura">
                      <label class="etiqueta_campo" title="">N&uacute;mero de factura*</label>
-                     <input class="form-control"  maxlength="255"  class="required"   tabindex='9'  type="text"  size="100" id="num_factura" name="num_factura"  value="<?php echo(mostrar_valor_campo('num_factura',414,$_REQUEST['iddoc'])); ?>">
+                     <input class="form-control"  maxlength="255"  class="required"   tabindex='9'  type="text"  size="100" id="num_factura" name="num_factura"  value="<?php echo(mostrar_valor_campo('num_factura',423,$_REQUEST['iddoc'])); ?>">
                     </div><div class="form-group" id="tr_pais_proveedor">
                      <label class="etiqueta_campo" title="">Pais proveedor</label>
-                     <input class="form-control"  maxlength="255"   tabindex='10'  type="text"  size="100" id="pais_proveedor" name="pais_proveedor"  value="<?php echo(mostrar_valor_campo('pais_proveedor',414,$_REQUEST['iddoc'])); ?>">
-                    </div><input type="hidden" name="serie_idserie" value="<?php echo(mostrar_valor_campo('serie_idserie',414,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_total_factura">
+                     <input class="form-control"  maxlength="255"   tabindex='10'  type="text"  size="100" id="pais_proveedor" name="pais_proveedor"  value="<?php echo(mostrar_valor_campo('pais_proveedor',423,$_REQUEST['iddoc'])); ?>">
+                    </div><input type="hidden" name="serie_idserie" value="<?php echo(mostrar_valor_campo('serie_idserie',423,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_total_factura">
                      <label class="etiqueta_campo" title="">Total factura</label>
-                     <input class="form-control"  maxlength="50"   tabindex='11'  type="text"  size="100" id="total_factura" name="total_factura"  value="<?php echo(mostrar_valor_campo('total_factura',414,$_REQUEST['iddoc'])); ?>">
-                    </div><input type="hidden" name="idft_factura_electronica" value="<?php echo(mostrar_valor_campo('idft_factura_electronica',414,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(mostrar_valor_campo('documento_iddocumento',414,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_dependencia"><label class="etiqueta_campo" title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(414,6795,$_REQUEST['iddoc']);?></div><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',414,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',414,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="campo_descripcion" value="<?php echo('6752,6754'); ?>"><input type="hidden" name="formato" value="414"><tr><td colspan='2'><?php submit_formato(414,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
+                     <input class="form-control"  maxlength="50"   tabindex='11'  type="text"  size="100" id="total_factura" name="total_factura"  value="<?php echo(mostrar_valor_campo('total_factura',423,$_REQUEST['iddoc'])); ?>">
+                    </div><input type="hidden" name="campo_descripcion" value="<?php echo('7003,7005'); ?>"><input type="hidden" name="formato" value="423"><tr><td colspan='2'><?php submit_formato(423,$_REQUEST['iddoc']);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
             var upload_url = '../../dropzone/cargar_archivos_formato.php';
             var mensaje = 'Arrastre aqui� los archivos';
             Dropzone.autoDiscover = false;
@@ -140,7 +140,7 @@
                 		maxFiles = 10;
                 	}
                     var opciones = {
-                        maxFilesize: 2,
+                        maxFilesize: 16,
                     	ignoreHiddenFiles : true,
                     	maxFiles : maxFiles,
                     	acceptedFiles: extensiones,

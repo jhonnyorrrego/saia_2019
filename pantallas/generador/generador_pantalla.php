@@ -15,7 +15,10 @@ include_once($ruta_db_superior."pantallas/lib/librerias_componentes.php");
 
 if($_REQUEST["idformato"]){
   $idpantalla=$_REQUEST["idformato"];
-  $datos_formato=busca_filtro_tabla("","formato","idformato=".$idpantalla,"",$conn);
+  $consulta_formato = busca_filtro_tabla("cuerpo","formato f","idformato=".$idpantalla,"",$conn);
+  if($consulta_formato['numcampos']){
+  	$contenido_formato=json_encode($consulta_formato[0]['cuerpo']);
+  }		
 }
 ?>
 <html>
@@ -38,8 +41,6 @@ echo(librerias_html5());
 include_once($ruta_db_superior."assets/librerias.php");
 
 echo topModal();
-
-$es_movil = ($_SESSION["tipo_dispositivo"]) == "movil";
 
 $campos = busca_filtro_tabla("", "pantalla_componente B", "1=1", "", $conn);
 $librerias_js = array();
@@ -80,13 +81,24 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 
 <link href="<?php echo($ruta_db_superior);?>pantallas/generador/css/generador_pantalla.css" rel="stylesheet">
 <style>
-    .well{ margin-bottom: 3px; min-height: 11px; padding: 4px;}
-    .progress{margin-bottom: 0px;}
-    #tabs_formulario, #tabs_opciones{margin-bottom: 0px;}
-    .tab-content {padding-top:0px;}
+    .well{ 
+    	margin-bottom: 3px; min-height: 11px; padding: 4px;
+    }
+    .progress{
+    	margin-bottom: 0px;
+    }
+    #tabs_formulario, #tabs_opciones{
+    	margin-bottom: 0px;
+    }
+    .tab-content {
+    	padding-top:0px;
+    }
+    .nav-tabs > li > a, .nav-pills > li > a {  
+    margin-right: 14px;
+}
 </style>
 <script src="<?php echo $ruta_db_superior;?>js/jquery-migrate-1.4.1.js"></script>
-
+<script src="<?php echo $ruta_db_superior;?>js/ckeditor/4.11/ckeditor_std/ckeditor.js"></script>
 </head>
 <body>
 
@@ -95,25 +107,25 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 			<div class="span9">
 				<div class="tabbable">
 					<ul class="nav nav-tabs" id="tabs_formulario">
-						<li class="active">
-							<a href="#datos_formulario-tab" data-toggle="tab">Informaci&oacute;n</a>
+						<li style="width:180px;" class="active">
+							<a href="#datos_formulario-tab" data-toggle="tab" style="text-align:center;">Informaci&oacute;n</a>
 						</li>
-						<li id="generar_formulario_pantalla">
-							<a href="#formulario-tab" data-toggle="tab">Campos</a>
+						<li style="width:180px;" id="generar_formulario_pantalla">
+							<a href="#formulario-tab" data-toggle="tab"style="text-align:center;">Campos</a>
 							
 						</li>
                 		<!-- <li>
                 			<a href="#librerias_formulario-tab" data-toggle="tab">3-Librerias</a>
 						</li> -->
-                		<li>
-                				<a href="#pantalla_mostrar-tab" data-toggle="tab">Dise&ntilde;o</a>
+                		<li style="width:180px;">
+                				<a href="#pantalla_mostrar-tab" data-toggle="tab" style="text-align:center;">Dise&ntilde;o</a>
 						</li>
                                 <!-- li>
 									<a href="#pantalla_listar-tab" data-toggle="tab">5-listar</a>
 								</li -->
-						<li>
+						<!--<li>
 									<a href="#encabezado_pie-tab" data-toggle="tab">5-Encabezado pie</a>
-						</li>
+						</li>-->
 								<!--li>
 									<a href="#asignar_funciones-tab" data-toggle="tab">6-Asignar funciones</a>
 								</li-->
@@ -121,7 +133,7 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 									<!--<a href="#generar_formulario-tab" data-toggle="tab">Publicar</a>-->
 									 <div class="container-fluid">
 									 	<div class="row"  class="span3 offset2" style="float:right">
-									   		<button style="background: #48b0f7;color:fff;" class="btn btn-info" id="generar_pantalla" ><span  style="color:fff; background: #48b0f7;"> Publicar</span></button>
+									   		<button style="background: #48b0f7;color:fff;margin-top:3px;" class="btn btn-info" id="generar_pantalla" ><span  style="color:fff; background: #48b0f7;"> Publicar</span></button>
 										 </div>
 									 </div>
 						</li>
@@ -138,16 +150,145 @@ echo(load_pantalla($idpantalla));
 						<?php
 include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 						</div>
-                		<div class="tab-pane" id="pantalla_mostrar-tab">
-                  			<form name="formulario_editor_mostrar" id="formulario_editor_mostrar" action="">
-                      			<textarea name="editor_mostrar" id="editor_mostrar" class="editor_tiny">
+                		<div class="tab-pane" id="pantalla_mostrar-tab"><br>
+                			
+					<legend>Encabezado del formato</legend><br>
+					<select name="sel_encabezado" id="sel_encabezado">
+						<option value="0">Por favor Seleccione</option>
+						<?php
+						
+							$encabezados=busca_filtro_tabla("","encabezado_formato","1=1","etiqueta",$conn);
+							
+							$contenido_enc = array();
+							$etiqueta_enc = array();
+							$idencabezado = 0;
+							$etiqueta_encabezado = "";
+							for($i=0;$i<$encabezados["numcampos"];$i++) {
+							    $contenido_enc[$encabezados[$i]["idencabezado_formato"]] = $encabezados[$i]["contenido"];
+							    $etiqueta_enc[$encabezados[$i]["idencabezado_formato"]] = $encabezados[$i]["etiqueta"];
+							    echo("<option value='".$encabezados[$i]["idencabezado_formato"]."'");
+								if($encabezados[$i]["idencabezado_formato"] == $datos_formato[0]["encabezado"]) {
+								    $idencabezado = $encabezados[$i]["idencabezado_formato"];
+								    $etiqueta_encabezado = $encabezados[$i]["etiqueta"];
+									echo(' selected="selected" ');
+								}
+								echo(">".$encabezados[$i]["etiqueta"]."</option>");
+							}
+						?>
+					</select>
+					<!--<div class="btn btn-mini" id="limpiar_encabezado" title="Limpiar"><i class="icon-refresh"></i></div>-->
+					<!--<span style="cursor:pointer;font-size:20px;margin-left: 5px;" title="Limpiar" id="limpiar_encabezado">
+						<i class="fa fa-refresh"></i>
+					</span>-->
+					<!--<button type="button" class="btn btn-mini btn-primary guardar_encabezado" id="adicionar_encabezado">Adicionar</button>-->
+					<span style="cursor:pointer;font-size:20px;margin-left: 5px;" class="guardar_encabezado" id="adicionar_encabezado" >
+						<i class="fa fa-plus-circle" ></i>
+					</span>
+					<!--<span style="cursor:pointer;font-size:20px;margin-left: 5px;" class="guardar_encabezado" id="modificar_encabezado">
+						<i class="fa fa-edit"></i>
+					</span>-->
+					<!--<button type="button" class="btn btn-mini btn-success guardar_encabezado" id="modificar_encabezado" disabled>Modificar</button>-->
+					<span style="cursor:pointer;font-size:20px;margin-left: 5px;" <?php echo ($idencabezado ? "" : "disabled"); ?> id="eliminar_encabezado">
+						<i class="fa fa-trash"></i>
+					</span>
+					<!--<button type="button" class="btn btn-mini btn-danger" <?php echo ($idencabezado ? "" : "disabled"); ?> id="eliminar_encabezado">Eliminar</button>-->
+
+                  	<form name="formulario_editor_encabezado" id="formulario_editor_encabezado" action="">
+                  		<input type="hidden" name="idencabezado" id="idencabezado" value="<?php echo $idencabezado;?>"></input>
+                  		<input type="hidden" name="accion_encab" id="accion_encabezado" value="1"></input>
+                  		<div id="div_etiqueta_encabezado">
+                    		<label style="display:none" for="etiqueta_encabezado">Etiqueta:
+                  				<input type="hidden" id="etiqueta_encabezado" name="etiqueta_encabezado" value="<?php echo $etiqueta_encabezado;?>"></input>
+							</label>
+                  		</div>
+                  		<textarea name="editor_encabezado" id="editor_encabezado"> 
+                  			<?php
+                  if($idencabezado) {
+                  	//aquii
+                    echo $contenido_enc[$idencabezado];
+                  }
+                  ?>
+                  		</textarea>
+                  		<script>
+							var editor_encabezado = CKEDITOR.replace("editor_encabezado");
+						</script>
+                  	</form>
+                  	
+                  	<legend>Cuerpo del formato</legend><br>
+                  	<form name="formulario_editor_mostrar" id="formulario_editor_mostrar" action="">
+                      			<textarea name="editor_mostrar" id="editor_mostrar" class="">
                       			<?php
                         echo($datos_formato[0]["cuerpo"]);
                                 ?>
-                      			</textarea>                      			
+                      			</textarea>
+                      			<script>
+									var editor_mostrar = CKEDITOR.replace("editor_mostrar");
+								</script>                      			
                   			</form>
-                  			<button  style="background: #48b0f7;color:fff;float:right" class="btn btn-info" id="actualizar_cuerpo_formato" ><span  style="color:fff; background: #48b0f7;"> Guardar cambios</span></button>
-						</div>
+                  	<button  style="background: #48b0f7;color:fff;float:right" class="btn btn-info" id="actualizar_cuerpo_formato" ><span  style="color:fff; background: #48b0f7;"> Guardar cambios</span></button><br><br>
+						
+                  	
+					<legend>Pie del formato :</legend><br>
+					<select name="sel_pie_pagina" id="sel_pie_pagina">
+						<option value="0">Por favor Seleccione</option>
+						<?php
+						    $idpie = 0;
+						    $etiqueta_pie = "";
+						    $pie_pagina=$encabezados; // No volver a consultar
+							for($i=0; $i<$pie_pagina["numcampos"]; $i++) {
+								echo("<option value='" . $pie_pagina[$i]["idencabezado_formato"] . "'");
+								if($pie_pagina[$i]["idencabezado_formato"]==$datos_formato[0]["pie_pagina"]) {
+								    $idpie = $pie_pagina[$i]["idencabezado_formato"];
+								    $etiqueta_pie = $pie_pagina[$i]["etiqueta"];
+								    echo(' selected="selected" ');
+								}
+								echo(">".$pie_pagina[$i]["etiqueta"]."</option>");
+							}
+						?>
+					</select>
+
+					<!--<div class="btn btn-mini" id="limpiar_pie" title="Limpiar"><i class="icon-refresh"></i></div>-->
+					<!--<span style="cursor:pointer;font-size:20px;margin-left: 5px;" title="Limpiar" id="limpiar_pie">
+						<i class="fa fa-refresh"></i>
+					</span>-->
+					<!--<button type="button" class="btn btn-mini btn-primary guardar_pie disabled" id="adicionar_pie" disabled>Adicionar</button>-->
+					<span style="cursor:pointer;font-size:20px;margin-left: 5px;" class="guardar_pie" id="adicionar_pie">
+						<i class="fa fa-plus-circle" ></i>
+					</span>
+					
+					<!--<button type="button" class="btn btn-mini btn-success guardar_pie disabled" id="modificar_pie" disabled>Modificar</button>-->
+					<!--<span style="cursor:pointer;font-size:20px;margin-left: 5px;" class="guardar_pie" id="modificar_pie">
+						<i class="fa fa-edit"></i>
+					</span>-->
+					<!--<button type="button" class="btn btn-mini btn-danger <?php echo ($idpie ? "" : "disabled"); ?>" id="eliminar_pie">Eliminar</button>-->
+					<span style="cursor:pointer;font-size:20px;margin-left: 5px;" <?php echo ($idpie ? "" : "disabled"); ?> id="eliminar_pie">
+						<i class="fa fa-trash"></i>
+					</span>
+
+					
+                  	<form name="formulario_editor_pie" id="formulario_editor_pie" action="">
+                  		<input type="hidden" name="idpie" id="idpie" value="<?php echo $idpie;?>"></input>
+
+                  		<div id="div_etiqueta_pie">
+                    		<label style="display:none" for="etiqueta_pie">Etiqueta: </label>
+                  			<input type="hidden" id="etiqueta_pie" name="etiqueta_pie" value="<?php echo $etiqueta_pie;?>"></input>
+                  		</div>
+                  		<textarea name="editor_pie" id="editor_pie" class=""> <?php
+                  if($idpie) {
+                      echo $contenido_enc[$idpie];
+                  }
+                  ?>
+                  		</textarea>
+                  		<script>
+							var editor_pie = CKEDITOR.replace("editor_pie");
+						</script>
+                  	</form>
+                  	<script type="text/javascript">
+						var encabezados = <?php echo json_encode($contenido_enc); ?>;
+						var idencabezado = <?php echo $idencabezado;?>;
+						var etiquetas = <?php echo json_encode($etiqueta_enc);?>;
+                  	</script>
+                  	</div>
         		        <div class="tab-pane" id="pantalla_listar-tab">
 							<form name="formulario_editor_listar" id="formulario_editor_listar" action="">    <br />
                     			<div id="tipo_listar">
@@ -172,97 +313,6 @@ include_once($ruta_db_superior.'pantallas/generador/datos_pantalla.php');?>
 						<div id="configurar_libreria_pantalla"></div>
 						<div id="librerias_en_uso"></div>
 					</div>
-
-					<div class="tab-pane" id="encabezado_pie-tab">
-					<br>
-					<legend>Encabezado</legend><br>
-					<select name="sel_encabezado" id="sel_encabezado">
-						<option value="0">Por favor Seleccione</option>
-						<?php
-							$encabezados=busca_filtro_tabla("","encabezado_formato","1=1","etiqueta",$conn);
-							$contenido_enc = array();
-							$etiqueta_enc = array();
-							$idencabezado = 0;
-							$etiqueta_encabezado = "";
-							for($i=0;$i<$encabezados["numcampos"];$i++) {
-							    $contenido_enc[$encabezados[$i]["idencabezado_formato"]] = $encabezados[$i]["contenido"];
-							    $etiqueta_enc[$encabezados[$i]["idencabezado_formato"]] = $encabezados[$i]["etiqueta"];
-							    echo("<option value='".$encabezados[$i]["idencabezado_formato"]."'");
-								if($encabezados[$i]["idencabezado_formato"] == $datos_formato[0]["encabezado"]) {
-								    $idencabezado = $encabezados[$i]["idencabezado_formato"];
-								    $etiqueta_encabezado = $encabezados[$i]["etiqueta"];
-									echo(' selected="selected" ');
-								}
-								echo(">".$encabezados[$i]["etiqueta"]."</option>");
-							}
-						?>
-					</select>
-					<div class="btn btn-mini" id="limpiar_encabezado" title="Limpiar"><i class="icon-refresh"></i></div>
-					<button type="button" class="btn btn-mini btn-primary guardar_encabezado" id="adicionar_encabezado">Adicionar</button>
-					<button type="button" class="btn btn-mini btn-success guardar_encabezado" id="modificar_encabezado" disabled>Modificar</button>
-					<button type="button" class="btn btn-mini btn-danger" <?php echo ($idencabezado ? "" : "disabled"); ?> id="eliminar_encabezado">Eliminar</button>
-
-                  	<form name="formulario_editor_encabezado" id="formulario_editor_encabezado" action="">
-                  		<input type="hidden" name="idencabezado" id="idencabezado" value="<?php echo $idencabezado;?>"></input>
-                  		<input type="hidden" name="accion_encab" id="accion_encabezado" value="1"></input>
-                  		<div id="div_etiqueta_encabezado">
-                    		<label for="etiqueta_encabezado">Etiqueta:
-                  				<input type="text" id="etiqueta_encabezado" name="etiqueta_encabezado" value="<?php echo $etiqueta_encabezado;?>"></input>
-							</label>
-                  		</div>
-                  		<textarea name="editor_encabezado" id="editor_encabezado" class="editor_tiny"> <?php
-                  if($idencabezado) {
-                    echo $contenido_enc[$idencabezado];
-                  }
-                  ?>
-                  		</textarea>
-                  	</form>
-					<legend>Pie</legend><br>
-					<select name="sel_pie_pagina" id="sel_pie_pagina">
-						<option value="0">Por favor Seleccione</option>
-						<?php
-						    $idpie = 0;
-						    $etiqueta_pie = "";
-						    $pie_pagina=$encabezados; // No volver a consultar
-							for($i=0; $i<$pie_pagina["numcampos"]; $i++) {
-								echo("<option value='" . $pie_pagina[$i]["idencabezado_formato"] . "'");
-								if($pie_pagina[$i]["idencabezado_formato"]==$datos_formato[0]["pie_pagina"]) {
-								    $idpie = $pie_pagina[$i]["idencabezado_formato"];
-								    $etiqueta_pie = $pie_pagina[$i]["etiqueta"];
-								    echo(' selected="selected" ');
-								}
-								echo(">".$pie_pagina[$i]["etiqueta"]."</option>");
-							}
-						?>
-					</select>
-
-					<div class="btn btn-mini" id="limpiar_pie" title="Limpiar"><i class="icon-refresh"></i></div>
-					<button type="button" class="btn btn-mini btn-primary guardar_pie disabled" id="adicionar_pie" disabled>Adicionar</button>
-					<button type="button" class="btn btn-mini btn-success guardar_pie disabled" id="modificar_pie" disabled>Modificar</button>
-					<button type="button" class="btn btn-mini btn-danger <?php echo ($idpie ? "" : "disabled"); ?>" id="eliminar_pie">Eliminar</button>
-
-                  	<form name="formulario_editor_pie" id="formulario_editor_pie" action="">
-                  		<input type="hidden" name="idpie" id="idpie" value="<?php echo $idpie;?>"></input>
-
-                  		<div id="div_etiqueta_pie">
-                    		<label for="etiqueta_pie">Etiqueta: </label>
-                  			<input type="text" id="etiqueta_pie" name="etiqueta_pie" value="<?php echo $etiqueta_pie;?>"></input>
-                  		</div>
-                  		<textarea name="editor_pie" id="editor_pie" class="editor_tiny"> <?php
-                  if($idpie) {
-                      echo $contenido_enc[$idpie];
-                  }
-                  ?>
-                  		</textarea>
-                  	</form>
-                  	<script type="text/javascript">
-						var encabezados = <?php echo json_encode($contenido_enc); ?>;
-						var idencabezado = <?php echo $idencabezado;?>;
-						var etiquetas = <?php echo json_encode($etiqueta_enc);?>;
-                  	</script>
-
-				</div>
-
 				<div class="tab-pane" id="asignar_funciones-tab">
 					<?php include_once "asignar_funciones.php";?>
 				</div>
@@ -503,9 +553,12 @@ for ($i = 0; $i < $cant_js; $i++) {
 ?>
 <!--script src="<?php echo($ruta_db_superior)?>pantallas/generador/editor/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?php echo($ruta_db_superior)?>pantallas/generador/editor/ext-language_tools.js"></script-->
+
 <script type="text/javascript">
+
 $(document).ready(function() {
-	
+var contenido_formato = <?php echo $contenido_formato ?>;
+CKEDITOR.instances.editor_mostrar.setData(contenido_formato)
 $("#generar_pantalla").live("click",function() {
     $(".generador_pantalla").find(".accordion-inner").html("");
     $(".generador_pantalla").removeClass("alert-success");
@@ -522,8 +575,15 @@ $("#generar_pantalla").live("click",function() {
 		var idfuncionFormato=$(this).attr("idfuncionFormato");
 		var funcion=$(this).attr("name");
 		var tipo=idfuncionFormato.split("_");
-		if(tipo[1]==='func'){
-			tinymce.activeEditor.execCommand('mceInsertContent', false, funcion);
+		/*for(var id in CKEDITOR.instances) {
+			    CKEDITOR.instances[id].on('focus', function(e) {
+			        // Fill some global var here
+			        global_editor = e.editor.name;
+			    });
+			}*/
+		if(tipo[1]==='func'){			
+			CKEDITOR.instances['editor_mostrar'].insertText(funcion);
+			//tinymce.activeEditor.execCommand('mceInsertContent', false, funcion);
 		    $.ajax({
 		    	  type:'POST',
 		    	  url: "<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php",
@@ -549,17 +609,25 @@ $("#generar_pantalla").live("click",function() {
 		var funcion=$(this).attr("name");
 		var tipo=idcamposFormato.split("_");
 		if(tipo[1]==='campo'){
-			tinymce.activeEditor.execCommand('mceInsertContent', false, funcion);
+			//tinymce.activeEditor.execCommand('mceInsertContent', false, funcion);
+			CKEDITOR.instances['editor_mostrar'].insertText(funcion);
+			
 
 		}
 		
 	});
 	$(document).on("click","#actualizar_cuerpo_formato",function(){
+	 var contenido_editor = CKEDITOR.instances['editor_mostrar'].getData();		 	
 	 $.ajax({
    	  type:'POST',
    	  url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias_formato.php",
-   	  data: "ejecutar_libreria_formato=actualizar_cuerpo_formato&contenido="+tinyMCE.editors["editor_mostrar"].getContent()+"&idformato="+$("#idformato").val()+"&rand="+Math.round(Math.random()*100000),
-   	  success: function(html){
+	  data:{
+	   	  	ejecutar_libreria_formato:'actualizar_cuerpo_formato' ,
+	   	  	contenido:contenido_editor,
+	   	  	idformato:$("#idformato").val(),
+	   	  	rand:Math.round(Math.random()*100000)
+	   	},	   	 
+	   	success: function(html){
    	   	//console.log(html);
    	    if(html){
    	      var objeto=jQuery.parseJSON(html);
@@ -577,7 +645,6 @@ function generar_pantalla(nombre_accion) {
 	
     $("#cargando_generar_pantalla").html("<img src='<?php echo($ruta_db_superior); ?>imagenes/cargando.gif' class='pull-left'>");
     var ruta_generar='formatos/generar_formato.php';
-    var accion = nombre_accion.replace("generar_","");
     var datos = {
         idformato: $("#idformato").val(),
         accion: "full",
@@ -592,22 +659,9 @@ function generar_pantalla(nombre_accion) {
             if(html) {
                 var objeto=jQuery.parseJSON(html);
                 if(objeto.exito==1) {
-                    /*$("#"+nombre_accion).prev().removeClass("alert-error");
-                    $("#"+nombre_accion).prev().addClass("alert-success");
-                    $("#"+nombre_accion).html("");
-                    notificacion_saia(objeto.mensaje,"success","",3500);
-                    if(typeof(objeto.descripcion_error)!=="undefined"){
-                    	$("#"+nombre_accion).html(objeto.descripcion_error);
-                    	$("#"+nombre_accion).collapse('show');
-                    }*/
                 	notificacion_saia("Formato generado correctamente","success","",3500);
                 } else {
-                    //$("#"+nombre_accion).prev().addClass("alert-error");
                     notificacion_saia(objeto.mensaje,"error","",9500);
-                    /*if(typeof(objeto.descripcion_error)!=="undefined"){
-                        $("#"+nombre_accion).html(objeto.descripcion_error);
-                        $("#"+nombre_accion).collapse('show');
-                    }*/
                 }
             }
         	$("#cargando_generar_pantalla").html("");
@@ -637,45 +691,63 @@ function generar_pantalla(nombre_accion) {
 
 	var formulario_encabezado = $("#formulario_editor_encabezado");
 	formulario_encabezado.validate({
+		ignore: [],
+        debug: false,
         rules: {
           "etiqueta_encabezado": {
               required: true,
               minlength:1
           },
-          "editor_encabezado": {
-              required: true,
-              minlength:1
-          }
-        }
+          editor_encabezado:{
+              required: function(){
+                 CKEDITOR.instances.editor_encabezado.updateElement();
+                },
+                minlength:1
+            }
+        }    
 	});
 	var formulario_pie = $("#formulario_editor_pie");
 	formulario_pie.validate({
+		ignore: [],
+        debug: false,
         rules: {
           "etiqueta_pie": {
               required: true,
               minlength:1
           },
-          "editor_pie": {
-              required: true,
-              minlength:1
-          }
+          editor_pie:{
+              required: function(){
+                 CKEDITOR.instances.editor_pie.updateElement();
+                },
+                minlength:1
+            }
         }
   });
 
 $(document).on("change","#sel_encabezado",function(){
   	var seleccionado = this.value;
-  	var editor = tinymce.get('editor_encabezado');
+  	//var editor = tinymce.get('editor_encabezado');
 
   	$("#idencabezado").val(seleccionado);
   	if(seleccionado > 0) {
+  		/*$("#adicionar_encabezado").addClass("disabled");
+  		$("#adicionar_encabezado").prop('disabled', true);*/
+  		$("#modificar_encabezado").removeClass("disabled");
+  		$("#modificar_encabezado").prop('disabled', false);
         $("#eliminar_encabezado").removeClass('disabled');
         $("#eliminar_encabezado").prop('disabled', false);
-      	editor.setContent(encabezados[seleccionado]);
+        
+        
+      	CKEDITOR.instances.editor_encabezado.setData(encabezados[seleccionado])
       	$("#etiqueta_encabezado").val(etiquetas[seleccionado]);
   	} else {
         $("#eliminar_encabezado").addClass('disabled');
         $("#eliminar_encabezado").prop('disabled', true);
-      	editor.setContent("");
+        $("#modificar_encabezado").addClass("disabled");
+  		$("#modificar_encabezado").prop('disabled', true);
+  		$("#adicionar_encabezado").removeClass("disabled");
+  		$("#adicionar_encabezado").prop('disabled', false);
+      	CKEDITOR.instances.editor_encabezado.setData("")
       	$("#etiqueta_encabezado").val("");
   	}
 
@@ -697,17 +769,17 @@ $(document).on("change","#sel_encabezado",function(){
 
 $(document).on("change","#sel_pie_pagina",function() {
   	var seleccionado = this.value;
-  	var editor = tinymce.get('editor_pie');
-
+  	//var editor = tinymce.get('editor_pie');
+	$("#idpie").val(seleccionado);
   	if(seleccionado > 0) {
         $("#eliminar_pie").removeClass('disabled');
         $("#eliminar_pie").prop('disabled', false);
-      	editor.setContent(encabezados[seleccionado]);
+      	CKEDITOR.instances.editor_pie.setData(encabezados[seleccionado]);
       	$("#etiqueta_pie").val(etiquetas[seleccionado]);
   	} else {
         $("#eliminar_pie").addClass('disabled');
         $("#eliminar_pie").prop('disabled', true);
-      	editor.setContent("");
+      	CKEDITOR.instances.editor_pie.setData("");
       	$("#etiqueta_pie").val(etiquetas[seleccionado]);
   	}
 
@@ -727,53 +799,20 @@ $(document).on("change","#sel_pie_pagina",function() {
 });
 
 $(document).on("click", ".guardar_encabezado", function(e) {
-	if(formulario_encabezado.valid()){
+	var id = $("#idencabezado").val();
+	var etiqueta = $("#etiqueta_encabezado").val();
+	
+	var enlace='editor_encabezado.php?idencabezado='+id+'&etiqueta='+etiqueta;
+        hs.htmlExpand(this, { objectType: 'iframe',width: 800, height: 500,contentId:'cuerpo_paso', 		preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
+       
 
-	  	var editor = tinymce.get('editor_encabezado');
-		var etiqueta = $("#etiqueta_encabezado").val();
-		var contenido = editor.getContent();
-		var id = $("#idencabezado").val();
-
-		var datos = {
-			ejecutar_libreria_encabezado: "actualizar_contenido_encabezado",
-			idencabezado : id,
-			rand: Math.round(Math.random()*100000),
-			etiqueta : etiqueta,
-			contenido : contenido,
-			tipo_retorno : 1
-		};
-		$.ajax({
-            type:'POST',
-            dataType: "json",
-            url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias_formato.php",
-            data: datos,
-            success: function(data) {
-                //console.log(data);
-            	if(data.exito == 1) {
-            		$("#sel_encabezado").empty();
-            		encabezados = [];
-            		$("#sel_encabezado").append('<option value="0">Por favor seleccione</option>');
-            	    $.each(data.datos, function() {
-            	    	encabezados[this.idencabezado] = this.contenido;
-            	    	etiquetas[this.idencabezado] = this.etiqueta;
-            	        $("#sel_encabezado").append('<option value="'+ this.idencabezado +'">'+ this.etiqueta +'</option>');
-            	    });
-            	    $("#adicionar_encabezado").addClass("disabled");
-                    $("#adicionar_encabezado").prop('disabled', true);
-            	    $("#modificar_encabezado").addClass("disabled");
-                    $("#modificar_encabezado").prop('disabled', true);
-            		notificacion_saia("Encabezado pagina guardado","success","",3000);
-            	}
-            }
-        });
-	}
 });
 
 $(document).on("click", "#eliminar_encabezado", function(e) {
 	var id = $("#idencabezado").val();
 	if(id && id > 0){
 
-	  	var editor = tinymce.get('editor_encabezado');
+	  	//var editor = tinymce.get('editor_encabezado');
 		var etiqueta = "";
 		var contenido = "";
 
@@ -801,13 +840,16 @@ $(document).on("click", "#eliminar_encabezado", function(e) {
             	    	etiquetas[this.idencabezado] = this.etiqueta;
             	        $("#sel_encabezado").append('<option value="'+ this.idencabezado +'">'+ this.etiqueta +'</option>');
             	    });
-            	    $("#adicionar_encabezado").addClass("disabled");
-                    $("#adicionar_encabezado").prop('disabled', true);
+            	    $("#adicionar_encabezado").removeClass("disabled");
+                    $("#adicionar_encabezado").prop('disabled', false);
             	    $("#modificar_encabezado").addClass("disabled");
                     $("#modificar_encabezado").prop('disabled', true);
+                    $("#eliminar_encabezado").addClass("disabled");
+                    $("#eliminar_encabezado").prop('disabled', true);
             		notificacion_saia("Encabezado pagina eliminado","success","",3000);
 
-            		editor.setContent("");
+            		//editor.setContent("");
+            		CKEDITOR.instances.editor_encabezado.setData("");
             		$("#etiqueta_encabezado").val("");
             		$("#idencabezado").val("0");
             	}
@@ -826,60 +868,34 @@ $(document).on("click", "#limpiar_encabezado", function(e) {
     $("#eliminar_encabezado").prop('disabled', true);
     $("#etiqueta_encabezado").val("");
 
-  	var editor = tinymce.get('editor_encabezado');
-  	editor.setContent("");
+  	//var editor = tinymce.get('editor_encabezado');
+  	CKEDITOR.instances.editor_encabezado.setData("")
+  	$("#adicionar_encabezado").removeClass("disabled");
+    $("#adicionar_encabezado").prop('disabled', false);
+    $("#modificar_encabezado").addClass("disabled");
+    $("#modificar_encabezado").prop('disabled', true);
+  	//editor.setContent("");
 
 });
 
 $(document).on("click", ".guardar_pie", function(e) {
-	if(formulario_pie.valid()){
+	
+	var id = $("#idpie").val();
+	var etiqueta = $("#etiqueta_pie").val();
+	
+	var enlace='editor_encabezado.php?idpie='+id+'&etiqueta='+etiqueta+'&pie=1';
+        hs.htmlExpand(this, { objectType: 'iframe',width: 800, height: 500,contentId:'cuerpo_paso', 		preserveContent:false, src:enlace,outlineType: 'rounded-white',wrapperClassName:'highslide-wrapper drag-header'});
+       
 
-	  	var editor = tinymce.get('editor_pie');
-		var etiqueta = $("#etiqueta_pie").val();
-		var contenido = editor.getContent();
-		var id = $("#idpie").val();
-
-		var datos = {
-			ejecutar_libreria_encabezado: "actualizar_contenido_encabezado",
-			idencabezado : id,
-			rand: Math.round(Math.random()*100000),
-			etiqueta : etiqueta,
-			contenido : contenido,
-			tipo_retorno : 1
-		};
-		$.ajax({
-            type:'POST',
-            dataType: "json",
-            url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias_formato.php",
-            data: datos,
-            success: function(data) {
-                //console.log(data);
-            	if(data.exito == 1) {
-            		$("#sel_pie_pagina").empty();
-            		encabezados = [];
-            		$("#sel_pie_pagina").append('<option value="0">Por favor seleccione</option>');
-            	    $.each(data.datos, function() {
-            	    	encabezados[this.idencabezado] = this.contenido;
-            	    	etiquetas[this.idencabezado] = this.etiqueta;
-            	        $("#sel_pie_pagina").append('<option value="'+ this.idencabezado +'">'+ this.etiqueta +'</option>');
-            	    });
-            	    $("#adicionar_pie").addClass("disabled");
-            	    $("#adicionar_pie").prop('disabled', true);
-            	    $("#modificar_pie").addClass("disabled");
-            	    $("#modificar_pie").prop('disabled', true);
-            		notificacion_saia("Pie pagina guardado","success","",3000);
-            	}
-            }
-        });
-	}
 });
 
+
 $(document).on("click", "#eliminar_pie", function(e) {
-	var id = $("#idpie").val();
+	var id = $("#sel_pie_pagina").val();
 
 	if(id && id > 0) {
 
-	  	var editor = tinymce.get('editor_pie');
+	  	//var editor = tinymce.get('editor_pie');
 		var etiqueta = "";
 		var contenido = "";
 
@@ -907,15 +923,22 @@ $(document).on("click", "#eliminar_pie", function(e) {
             	    	etiquetas[this.idencabezado] = this.etiqueta;
             	        $("#sel_pie_pagina").append('<option value="'+ this.idencabezado +'">'+ this.etiqueta +'</option>');
             	    });
-            	    $("#adicionar_pie").addClass("disabled");
-            	    $("#adicionar_pie").prop('disabled', true);
+            	    $("#adicionar_pie").removeClass("disabled");
+            	    $("#adicionar_pie").prop('disabled', false);
             	    $("#modificar_pie").addClass("disabled");
             	    $("#modificar_pie").prop('disabled', true);
+            	    $("#eliminar_pie").addClass("disabled");
+                    $("#eliminar_pie").prop('disabled', true);
             		notificacion_saia("Pie pagina eliminado","success","",3000);
 
             		$("#etiqueta_pie").val("");
-            		editor.setContent("");
+            		//editor.setContent("");
+            		CKEDITOR.instances.editor_pie.setData("");           	
             		$("#idpie").val("0");
+            		
+            		
+            		
+            		
 
             	}
             }
@@ -932,8 +955,14 @@ $(document).on("click", "#limpiar_pie", function(e) {
     $("#eliminar_pie").addClass('disabled');
     $("#eliminar_pie").prop('disabled', true);
 
-  	var editor = tinymce.get('editor_pie');
-  	editor.setContent("");
+  	//var editor = tinymce.get('editor_pie');
+  	//editor.setContent("");
+  	CKEDITOR.instances.editor_pie.setData("");
+
+  	$("#adicionar_pie").removeClass("disabled");
+    $("#adicionar_pie").prop('disabled', false);
+    $("#modificar_pie").addClass("disabled");
+    $("#modificar_pie").prop('disabled', true);
 
 });
 
@@ -941,7 +970,7 @@ $("#frame_tipo_listado").height(alto-125);
 $(".tab-pane").height(alto-50);
 $(".tab-content").height(alto-40);
 $(".tab-content").css("padding-top",0);
-tinymce.init({
+/*tinymce.init({
  	selector:'.editor_tiny',
  	language:'es',
  	height:(alto-($(".mce-toolbar-grp").height()+$(".mce-menubar").height()+150)),
@@ -950,12 +979,12 @@ tinymce.init({
  	plugins : 'advlist autolink lists charmap print preview pagebreak table code contextmenu responsivefilemanager image link',
  	toolbar:'bold italic underline strikethrough alignleft aligncenter alignright alignjustify | cut copy paste bullist numlist outdent indent blockquote undo redo | removeformat subscript superscript code jbimages responsivefilemanager image link ',
  	external_filemanager_path:"<?php echo(PROTOCOLO_CONEXION.RUTA_PDF);?>/tinymce/filemanager/",
-  filemanager_title:"Administrador Imagenes" ,
+  /*filemanager_title:"Administrador Imagenes" ,
   external_plugins: {
   		"filemanager" : "<?php echo(PROTOCOLO_CONEXION.RUTA_PDF);?>/tinymce/filemanager/plugin.min.js"
-  },
+  /*},
   content_css : "<?php echo($ruta_db_superior);?>css/bootstrap/saia/css/bootstrap.css",
-  extended_valid_elements :"div[*]",
+  /*extended_valid_elements :"div[*]",
   setup: function (ed) {
       ed.on('keyup', function (e) {
           cambios_editor(ed);
@@ -964,7 +993,7 @@ tinymce.init({
           cambios_editor(ed);
       });
   }
-});
+});*/
 $.ajax({
   type:'POST',
   url: "<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php",
@@ -1002,6 +1031,53 @@ $("#seleccionar_archivo").click(function(){
   }
 });
 hs.graphicsDir = '<?php echo($ruta_db_superior);?>images/highslide/';
+hs.Expander.prototype.onAfterClose = function(event) {
+	var editor_enlace = event.src.split('?');
+	var separandosrc = editor_enlace[1].split('=');
+	var buscandoid = separandosrc[1].split('&');
+	var buscandopie = editor_enlace[1].split('&');
+	var idactual = buscandoid[0];
+	var etiqueta_actual = idactual[2];
+	
+	if(editor_enlace[0]='editor_encabezado.php'){
+		
+		var datos = {
+			ejecutar_libreria_encabezado: "consultar_contenido_encabezado",
+			tipo_retorno : 1
+		};			
+		$.ajax({
+            type:'POST',
+            dataType: "json",
+            url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias_formato.php",
+            data: datos,
+            success: function(data) {
+                if(data.exito == 1 && buscandopie[2]!='pie=1') {
+            		$("#sel_encabezado").empty();
+            		encabezados = [];
+            		$("#sel_encabezado").append('<option value="0">Por favor seleccione</option>');
+            	    $.each(data.datos, function() {
+            	    	encabezados[this.idencabezado] = this.contenido;
+            	    	etiquetas[this.idencabezado] = this.etiqueta;
+            	        $("#sel_encabezado").append('<option value="'+ this.idencabezado +'">'+ this.etiqueta +'</option>');
+            	     });
+					$("#sel_encabezado").val(idactual).trigger('change');
+					
+               }else{               	
+               		$("#sel_pie_pagina").empty();
+            		encabezados = [];
+            		$("#sel_pie_pagina").append('<option value="0">Por favor seleccione</option>');
+            	    $.each(data.datos, function() {
+            	    	encabezados[this.idencabezado] = this.contenido;
+            	    	etiquetas[this.idencabezado] = this.etiqueta;
+            	        $("#sel_pie_pagina").append('<option value="'+ this.idencabezado +'">'+ this.etiqueta +'</option>');
+            	        
+            	     });
+					$("#sel_pie_pagina").val(idactual).trigger('change');
+               }       
+      		}
+        });
+	}
+}
 hs.dimmingOpacity = 0.75;
 var form_builder = {
     el: null,
@@ -1159,7 +1235,9 @@ tree3.enableThreeStateCheckboxes(true);
   }
 } */
 function cargar_editor(nodeId){
+	
     var ruta_archivo=tree3.getUserData(nodeId,"myurl");
+    console.log(ruta_archivo)
     if(ruta_archivo!=''){
     $("#configurar_libreria_pantalla").html("cargando...");
     $.ajax({
@@ -1177,6 +1255,7 @@ function cargar_editor(nodeId){
   }
   else{
   	tree3.openItem(nodeId);
+
   }
 }
 function fin_cargando_serie() {
@@ -1413,9 +1492,9 @@ function cargando_mostrar() {
 }
 function insertar_mostrar(nodeId){
   var tipo=nodeId.split("_");
-//aqui
+
   if(tipo[0]==="func"){
-	    tinymce.activeEditor.execCommand('mceInsertContent', false, tree4.getUserData(nodeId,"myfunc"));
+	    //tinymce.activeEditor.execCommand('mceInsertContent', false, tree4.getUserData(nodeId,"myfunc"));
 	    $.ajax({
 	    	  type:'POST',
 	    	  url: "<?php echo($ruta_db_superior);?>pantallas/lib/llamado_ajax.php",
@@ -1434,7 +1513,7 @@ function insertar_mostrar(nodeId){
 	    	});
   }
   else if(tipo[0]==="campo"){
-    	tinymce.activeEditor.execCommand('mceInsertContent', false, tree4.getUserData(nodeId,"mycampo"));
+    	//tinymce.activeEditor.execCommand('mceInsertContent', false, tree4.getUserData(nodeId,"mycampo"));
   }
   else if(tipo[0]==="esquema"){
 		notificacion_saia("Cargando","alert","",3000);
@@ -1444,7 +1523,7 @@ function insertar_mostrar(nodeId){
 			success: function(html){
 				if(html){
 					cerrar_notificaciones_saia();
-					tinymce.activeEditor.execCommand('mceInsertContent', false, html);
+					//tinymce.activeEditor.execCommand('mceInsertContent', false, html);
 				}
 			}
 		});
@@ -1463,7 +1542,7 @@ $('#idpantalla_funcion_exe').live("change",function(){
 
   	if($('#pantalla_listar-tab').hasClass("active")){
   		if($("#tipo_pantalla_busqueda").val()==1){
-  			tinymce.activeEditor.execCommand('mceInsertContent', false, nombre_funcion_insertar);
+  			//tinymce.activeEditor.execCommand('mceInsertContent', false, nombre_funcion_insertar);
   		}
   		else if($("#tipo_pantalla_busqueda").val()==2){
   			valor=nombre_funcion_insertar;
@@ -1472,7 +1551,7 @@ $('#idpantalla_funcion_exe').live("change",function(){
   		}
   	}
   	else{
-   		tinymce.activeEditor.execCommand('mceInsertContent', false, nombre_funcion_insertar);
+   		//tinymce.activeEditor.execCommand('mceInsertContent', false, nombre_funcion_insertar);
    	}
 
 
@@ -1525,6 +1604,9 @@ function receiveMessage(event) {
       if(event.data["etiqueta_html"] && event.data["etiqueta_html"] == 'textarea_cke') {
    		  CKEDITOR.instances[event.data["nombre_campo"]].setData(event.data["fs_predeterminado"]);
       }
+   	var source = event.source.frameElement; //this is the iframe that sent the message
+   	var message = event.data; //this is the message
+	console.log(event);
 }
 
 window.addEventListener("message", receiveMessage, false);

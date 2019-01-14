@@ -10,15 +10,10 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 
+include_once $ruta_db_superior . 'controllers/autoload.php';
 include_once $ruta_db_superior . 'assets/librerias.php';
 
 $iddoc = $_REQUEST["iddoc"];
-
-if(!isset($_REQUEST["menu_principal_inactivo"])){
-    include_once $ruta_db_superior . "views/documento/encabezado.php";
-	echo plantilla($iddoc);
-}
-
 $datos = busca_filtro_tabla("A.pdf,A.plantilla,B.mostrar_pdf,A.numero,B.idformato", "documento A,formato B", "lower(A.plantilla)=B.nombre AND A.iddocumento=" . $iddoc, "", $conn);
 //$es_pdf_word = $_REQUEST['pdf_word'];
 if (isset($_REQUEST['pdf_word'])) {
@@ -54,16 +49,4 @@ if (@$_REQUEST["vista"]) {
 	$pdf .= "&vista=" . $_REQUEST["vista"];
 }
 ?>
-<script>
-	$(document).ready(function() {
-		var alto_menu = $("#menu_principal_documento").height();
-		if (parseInt(alto_menu) >= 0) {
-			var alto = ($(window).height());
-			$("#detalles").height((alto - alto_menu) - 20);
-		} else {
-			var alto = ($(window).height());
-			$("#detalles").height(alto - 20);
-		}
-	}); 
-</script>
-<iframe id="detalles" width="100%" height="100%" frameborder="0" name="detalles" src="<?php echo($pdf); ?>"></iframe>
+<iframe id="detalles" width="100%" onload="this.height = window.innerHeight - 20" frameborder="0" name="detalles" src="<?php echo($pdf); ?>"></iframe>

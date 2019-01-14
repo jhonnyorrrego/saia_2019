@@ -3170,4 +3170,13 @@ function generar_correo_confirmacion($idformato, $iddoc, $nomb_campo = "email_ap
 	}
 }
 
+function fecha_documento($idformato,$iddoc){
+	global $conn,$ruta_db_superior;
+	$fecha_creacion = '';
+	$consulta_datos = busca_filtro_tabla(fecha_db_obtener("fecha_creacion","Y-m-d")." as fecha_creacion","documento","iddocumento=".$iddoc,"",$conn);
+	if($consulta_datos['numcampos']){
+		$fecha_creacion = $consulta_datos[0]['fecha_creacion'];
+	}
+	echo $fecha_creacion;
+}
 ?>

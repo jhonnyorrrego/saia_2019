@@ -18,8 +18,9 @@ $(function(){
                     type: 'success',
                     message: response.message
                 });
-
+                
                 findState(params.id);
+                $('#state_description').val('');
             }
         }, 'json')
     });

@@ -10,10 +10,11 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
+include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "assets/librerias.php";
 
-usuario_actual("login");
+echo jquery();
+echo bootstrap();
 
 $consulta = busca_filtro_tabla('idcategoria_formato,nombre', 'categoria_formato', 'cod_padre=2 and estado=1', 'nombre ASC', $conn);
 $adicional = "";
@@ -30,7 +31,6 @@ if (count($request)) {
 		<?php
 		$acceso = new Permiso();
 		$texto = '';
-		$conector = 'iframe';
 
 		for ($i = 0; $i < $consulta["numcampos"]; $i++) {
 			$idcategoria_formato = $consulta[$i]['idcategoria_formato'];
@@ -55,7 +55,7 @@ if (count($request)) {
 
 			if ($mostrar) {
 				$etiqueta_formato = ucfirst(codifica_encabezado(html_entity_decode(strtolower($consulta[$i]["nombre"]))));
-				$texto .= '<div title="' . $etiqueta_formato . '" data-load=\'{"kConnector":"' . $conector . '", "url":"' . $url . $adicional . '", "kTitle":"' . $etiqueta_formato . '"}\' class="items navigable">';
+				$texto .= '<div title="' . $etiqueta_formato . '" data-load=\'{"kConnector":"iframe", "url":"' . $url . $adicional . '", "kTitle":"' . $etiqueta_formato . '"}\' class="items navigable">';
 				$texto .= '<div class="head"></div>';
 				$texto .= '<div class="label">' . $etiqueta_formato . '</div>';
 				$texto .= '<div class="info"></div>';
@@ -63,7 +63,7 @@ if (count($request)) {
 				$texto .= '</div>';
 			}
 		}
-		echo($texto);
+		echo $texto;
 		?>
 	</div>
 </div>

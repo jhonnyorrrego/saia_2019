@@ -432,7 +432,8 @@ if ($doc <> FALSE) {
                                         if (strlen($cadena) > 30) {
                                             $suspensivos = '...';
                                         }
-                                        echo substr($cadena, 0, 60) . $suspensivos;
+                                        
+                                        echo $cadena . $suspensivos;
                                     } ?></b><br/>
                             <?php } ?>
                             <b>Fecha: <?php echo $datos_fecha; ?></b><br/>
