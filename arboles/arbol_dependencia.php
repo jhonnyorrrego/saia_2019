@@ -86,7 +86,6 @@ class ArbolDependencia {
         } else {
             $papas = busca_filtro_tabla("", "dependencia", "cod_padre=" . $id . $this->condicion_ad, "nombre ASC", $this->conn);
         }
-        // print_r($papas["sql"]);
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
                 $text = $papas[$i]["nombre"] . " (" . $papas[$i]["codigo"] . ")";
@@ -102,7 +101,6 @@ class ArbolDependencia {
                     $item["expanded"] = true;
                 }
                 if ($papas[$i]["estado"] == 0) {
-                    // $objetoXML -> writeAttribute("nocheckbox", 1);
                     $item["unselectableStatus"] = false;
                     $item["folder"] = 1;
                 }
@@ -117,10 +115,8 @@ class ArbolDependencia {
                 }
                 $hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"] . $this->condicion_ad, "", $this->conn);
                 if ($hijos[0]["cant"]) {
-                    // $objetoXML -> writeAttribute("child", 1);
                     $item["children"] = $this->llena_dependencia($papas[$i]["iddependencia"]);
                 } else {
-                    // $objetoXML -> writeAttribute("child", 0);
                     $item["folder"] = 0;
                 }
                 $objetoJson[] = $item;

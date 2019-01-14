@@ -32,45 +32,44 @@ class ArbolFt {
 
     private $campo;
     private $seleccionados;
-
-    private $fuente_datos;
-
-    private $opciones_arbol;
-
+    private $fuenteDatos;
+    private $opcionesArbol;
     private $extensiones;
-
     private $con_filtro = false;
-
     private $con_funcion_select = false;
-
     private $con_funcion_click = false;
-
     private $con_funcion_dblclick = false;
-
     private $html = "";
 
-    public function __construct($campo, $fuente_datos, $opciones_arbol = array(), $extensiones = array(), $seleccionados = "") {
-        $this -> fuente_datos = $fuente_datos;
-        $this -> opciones_arbol = $opciones_arbol;
-        $this -> extensiones = $extensiones;
+    public function __construct($campo, $fuenteDatos, $opcionesArbol = array(), $extensiones = array()) {
         $this -> campo = $campo;
-        $this -> seleccionados = $seleccionados;
+        $this -> fuenteDatos = $fuenteDatos;
+        $this -> opcionesArbol = $opcionesArbol;
+        $this -> extensiones = $extensiones;
+    }
+
+    public function generar_html() {
+        $this -> procesar_opciones();
+        $this -> crear_arbol();
+        return $this -> html;
     }
 
     private function procesar_opciones() {
-        // Poner traducciones de los mensajes
-        $this -> opciones_arbol["strings"] = $this -> cadenas;
-
-        if (empty($this -> opciones_arbol)) {
-            //$this->opciones_arbol["source"];
+        if (empty($this -> opcionesArbol["strings"])) {
+            $this -> opcionesArbol["strings"] = $this -> cadenas;
+        }
+        if (empty($this -> fuenteDatos["params"]["seleccionados"])) {
+            $this -> seleccionados = '';
         } else {
-            $this -> opciones_arbol["source"] = array(
-                "url" => $this -> fuente_datos["ruta_db_superior"] . $this -> fuente_datos["url"],
-                "data" => $this -> fuente_datos["params"]
-            );
+            $this -> seleccionados = $this -> fuenteDatos["params"]["seleccionados"];
         }
 
-        if (isset($this -> opciones_arbol["busqueda_item"]) && $this -> opciones_arbol["busqueda_item"]) {
+        $this -> opcionesArbol["source"] = array(
+            "url" => $this -> fuenteDatos["ruta_db_superior"] . $this -> fuenteDatos["url"],
+            "data" => $this -> fuenteDatos["params"]
+        );
+
+        if (isset($this -> opcionesArbol["busqueda_item"]) && $this -> opcionesArbol["busqueda_item"]) {
             $this -> con_filtro = true;
             $opciones_filtro = array();
             if (isset($this -> extensiones["filter"])) {
@@ -83,107 +82,101 @@ class ArbolFt {
             } else {
                 $this -> extensiones["filter"] = $this -> opciones_filtro;
             }
-            $this -> opciones_arbol["extensions"] = array_keys($this -> extensiones);
-            unset($this -> opciones_arbol["busqueda_item"]);
-            $this -> opciones_arbol["filter"] = $this -> extensiones["filter"];
+            $this -> opcionesArbol["extensions"] = array_keys($this -> extensiones);
+            unset($this -> opcionesArbol["busqueda_item"]);
+            $this -> opcionesArbol["filter"] = $this -> extensiones["filter"];
         }
-        if (empty($this -> opciones_arbol)) {
-            $this -> opciones_arbol = $this -> opciones;
-        } else {
-            $opciones = array_merge($this -> opciones, $this -> opciones_arbol);
-            $this -> opciones_arbol = $opciones;
-        }
-        if (!isset($this -> opciones_arbol["onNodeSelect"])) {
-            $this -> opciones_arbol["select"] = "###AquiFuncionSelect###";
-        } else {
-            $this -> con_funcion_select = $this -> opciones_arbol["onNodeSelect"];
-            unset($this -> opciones_arbol["onNodeSelect"]);
-        }
-        if (isset($this -> opciones_arbol["onNodeClick"])) {
-            $this -> con_funcion_click = $this -> opciones_arbol["onNodeClick"];
-            unset($this -> opciones_arbol["onNodeClick"]);
-        }
-        if (isset($this -> opciones_arbol["onNodeDblClick"])) {
-            $this -> con_funcion_dblclick = $this -> opciones_arbol["onNodeDblClick"];
-            unset($this -> opciones_arbol["onNodeDblClick"]);
-        }
-        if (isset($this -> opciones_arbol["lazy"])) {
-            $this -> opciones_arbol["lazyLoad"] = "###AquiFuncionLazy###";
-        }
-    }
 
-    public function generar_html() {
-        $this -> procesar_opciones();
-        $this -> crear_arbol();
-        return $this -> html;
+        if (empty($this -> opcionesArbol)) {
+            $this -> opcionesArbol = $this -> opciones;
+        } else {
+            $opciones = array_merge($this -> opciones, $this -> opcionesArbol);
+            $this -> opcionesArbol = $opciones;
+        }
+
+        if (!isset($this -> opcionesArbol["onNodeSelect"])) {
+            $this -> opcionesArbol["select"] = "###AquiFuncionSelect###";
+        } else {
+            $this -> con_funcion_select = $this -> opcionesArbol["onNodeSelect"];
+            unset($this -> opcionesArbol["onNodeSelect"]);
+        }
+        if (isset($this -> opcionesArbol["onNodeClick"])) {
+            $this -> con_funcion_click = $this -> opcionesArbol["onNodeClick"];
+            unset($this -> opcionesArbol["onNodeClick"]);
+        }
+        if (isset($this -> opcionesArbol["onNodeDblClick"])) {
+            $this -> con_funcion_dblclick = $this -> opcionesArbol["onNodeDblClick"];
+            unset($this -> opcionesArbol["onNodeDblClick"]);
+        }
+        if (isset($this -> opcionesArbol["lazy"])) {
+            $this -> opcionesArbol["lazyLoad"] = "###AquiFuncionLazy###";
+        }
     }
 
     private function crear_arbol() {
         if ($this -> con_filtro) {
             $this -> html .= <<<FINHTML
-	   <p style="font-family: Verdana; font-size: 9px;">
-	       <label>Buscar:</label>
-	       <input name="stext_{$this->campo}" placeholder="Buscar..." autocomplete="off">
-	       <button type="button" id="btnSearch_{$this->campo}">&times;</button>
-	       <span id="matches_{$this->campo}"></span>
-        </p>
+               <p style="font-family: Verdana; font-size: 9px;">
+                   <label>Buscar:</label>
+                   <input name="stext_{$this->campo}" placeholder="Buscar..." autocomplete="off">
+                   <button type="button" id="btnSearch_{$this->campo}">&times;</button>
+                   <span id="matches_{$this->campo}"></span>
+                </p>
 FINHTML;
         }
-        $opciones_json = json_encode($this -> opciones_arbol, JSON_NUMERIC_CHECK);
+
+        $opciones_json = json_encode($this -> opcionesArbol, JSON_NUMERIC_CHECK);
         $cadena_funcion = <<<FINJS
-function(event, data) { // Display list of selected nodes
-				var seleccionados = Array();
-				var items = data.tree.getSelectedNodes();
-				for(var i=0;i<items.length;i++){
-					seleccionados.push(items[i].key);
-				}
-				var s = seleccionados.join(",");
-				$("#{$this->campo}").val(s);
-			}
+            function(event, data) { // Display list of selected nodes
+                var seleccionados = Array();
+                var items = data.tree.getSelectedNodes();
+                for(var i=0;i<items.length;i++){
+                    seleccionados.push(items[i].key);
+                }
+                var s = seleccionados.join(",");
+                $("#{$this->campo}").val(s);
+            }
 FINJS;
         $funcion_lazy = <<<FINJS
-		 
-		function(event, data){
-			      var node = data.node;
-			      // Load child nodes via Ajax GET /getTreeData?mode=children&parent=1234
-			      data.result = $.ajax({
-			        url: "{$this->opciones_arbol["source"]["url"]}",
-			        data: {
-				        cargar_partes: 1,
-				        id: node.key
-				    },
-			        cache: true
-			      });
-			},
+            function(event, data){
+              var node = data.node;
+              data.result = $.ajax({
+                url: "{$this->opcionesArbol["source"]["url"]}",
+                data: {
+                    cargar_partes: 1,
+                    id: node.key
+                },
+                cache: true
+              });
+            },
 FINJS;
         $opciones_json = preg_replace('/"###AquiFuncionSelect###"/', $cadena_funcion, $opciones_json);
         $opciones_json = preg_replace('/"###AquiFuncionLazy###"/', $funcion_lazy, $opciones_json);
+                
         $this -> html .= <<<FINHTML
         <div id="treebox_{$this->campo}"></div>
-        <input type="hidden" class="required" name="{$this->campo}" id="{$this->campo}" value="{$this->seleccionados}">
-<script type="text/javascript">
-	$(document).ready(function() {
-   	   	var configuracion={$opciones_json};
-   	   	$("#treebox_{$this->campo}").fancytree(configuracion);
-
-   	   	var tree = $("#treebox_{$this->campo}").fancytree("getTree");
-
+        <input type="hidden" class="required" name="{$this->campo}" id="{$this->campo}" value="{$this -> seleccionados}">
+        <script type="text/javascript">
+        $(document).ready(function() {
+            var configuracion={$opciones_json};
+            $("#treebox_{$this->campo}").fancytree(configuracion);
+            var tree = $("#treebox_{$this->campo}").fancytree("getTree");
 FINHTML;
         if (!empty($this -> con_funcion_select)) {
             $this -> html .= <<<FINHTML
-   	   	$("#treebox_{$this->campo}").on("fancytreeselect", {$this->con_funcion_select});
+        $("#treebox_{$this->campo}").on("fancytreeselect", {$this->con_funcion_select});
 
 FINHTML;
         }
         if (!empty($this -> con_funcion_click)) {
             $this -> html .= <<<FINHTML
-   	   	$("#treebox_{$this->campo}").on("fancytreeclick", {$this->con_funcion_click});
+        $("#treebox_{$this->campo}").on("fancytreeclick", {$this->con_funcion_click});
 
 FINHTML;
         }
         if (!empty($this -> con_funcion_dblclick)) {
             $this -> html .= <<<FINHTML
-   	   	$("#treebox_{$this->campo}").on("fancytreedblclick", {$this->con_funcion_dblclick});
+        $("#treebox_{$this->campo}").on("fancytreedblclick", {$this->con_funcion_dblclick});
 
 FINHTML;
         }
@@ -191,40 +184,40 @@ FINHTML;
             $this -> html .= $this -> funciones_buscador();
         }
         $this -> html .= <<<FINHTML
-   	});
+    });
 </script>
 FINHTML;
     }
 
     private function funciones_buscador() {
         $texto = <<<FINHTML
-	  $("input[name=stext_{$this->campo}]").keyup(function(e){
-	      var coincidencias = " coincidencias";
-	      var n,
-	      opts = {};
-	      var filterFunc = tree.filterNodes;
-	      var match = $(this).val();
+      $("input[name=stext_{$this->campo}]").keyup(function(e){
+          var coincidencias = " coincidencias";
+          var n,
+          opts = {};
+          var filterFunc = tree.filterNodes;
+          var match = $(this).val();
 
-	      opts.mode = "dimm";
+          opts.mode = "dimm";
 
-	      if(e && e.which === $.ui.keyCode.ESCAPE || $.trim(match) === ""){
-	          $("button#btnSearch_{$this->campo}").click();
-	          return;
-	      }
-	      // Pass a string to perform case insensitive matching. Puede pasar un 3er parametro opts
-	      n = filterFunc.call(tree, match);
-	      if(n == 1) {
-	          coincidencias = " coincidencia";
-	      }
-	      $("button#btnSearch_{$this->campo}").attr("disabled", false);
-	      $("span#matches_{$this->campo}").text("(" + n + coincidencias + ")");
-	  }).focus();
+          if(e && e.which === $.ui.keyCode.ESCAPE || $.trim(match) === ""){
+              $("button#btnSearch_{$this->campo}").click();
+              return;
+          }
+          // Pass a string to perform case insensitive matching. Puede pasar un 3er parametro opts
+          n = filterFunc.call(tree, match);
+          if(n == 1) {
+              coincidencias = " coincidencia";
+          }
+          $("button#btnSearch_{$this->campo}").attr("disabled", false);
+          $("span#matches_{$this->campo}").text("(" + n + coincidencias + ")");
+      }).focus();
 
-	  $("button#btnSearch_{$this->campo}").click(function(e){
+      $("button#btnSearch_{$this->campo}").click(function(e){
           $("input[name=stext_{$this->campo}]").val("");
           $("span#matches_{$this->campo}").text("");
           tree.clearFilter();
-	  }).attr("disabled", true);
+      }).attr("disabled", true);
 
 FINHTML;
         return $texto;
@@ -232,6 +225,7 @@ FINHTML;
 
 }
 
+/*
 if (isset($_REQUEST["xml"]) && isset($_REQUEST["campo"])) {
     $parametros = procesar_solicitud();
     $url = parse_url($_REQUEST["xml"]);
@@ -245,18 +239,7 @@ if (isset($_REQUEST["xml"]) && isset($_REQUEST["campo"])) {
         "ruta_db_superior" => $parametros["ruta_db_superior"]
     );
     unset($parametros["ruta_db_superior"]);
-
     $arbol = new ArbolFt($_REQUEST["campo"], $fuente, $parametros);
-    /*
-     * data: {
-     * xml: xml1,
-     * campo: "iddependencia",
-     * selectMode: 1,
-     * ruta_db_superior: "../../",
-     * seleccionar_todos: 1,
-     * busqueda_item: 1,
-     * }
-     */
     echo $arbol -> generar_html();
 }
 
@@ -265,7 +248,6 @@ function procesar_solicitud() {
     if ($_REQUEST["xml"] != "" && $_REQUEST["campo"]) {
         $parametros = array(
             "selectMode" => 2,
-            // "abrir_cargar" => 0,
             "busqueda_item" => 0,
             "onNodeSelect" => "",
             "ruta_db_superior" => "",
@@ -285,5 +267,5 @@ function procesar_solicitud() {
         }
     }
     return $parametros;
-}
+}*/
 ?>

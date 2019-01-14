@@ -1,726 +1,479 @@
 <?php
-$max_salida = 6;
-$ruta_db_superior = $ruta = "";
+$max_salida = 10;
+$ruta_db_superior = $ruta = '';
+
 while ($max_salida > 0) {
-	if (is_file($ruta . "db.php")) {
-		$ruta_db_superior = $ruta;
-	}
-	$ruta .= "../";
-	$max_salida--;
+    if (is_file($ruta . 'db.php')) {
+        $ruta_db_superior = $ruta;
+    }
+
+    $ruta .= '../';
+    $max_salida--;
 }
 
-include_once ($ruta_db_superior."header.php");
-include_once ($ruta_db_superior."pantallas/lib/librerias_cripto.php");
-
+include_once $ruta_db_superior . "controllers/autoload.php";
 require_once $ruta_db_superior . "arboles/crear_arbol_ft.php";
 
-$validar_enteros = array("x_idserie");
-desencriptar_sqli('form_info');
+$sAction = $_POST["a_add"];
+if ($sAction == "A") {
+    if ($_POST["categoria"] == 3) {
+        $_POST["dias_entrega"] = 0;
+        $_POST["retencion_gestion"] = 0;
+        $_POST["retencion_central"] = 0;
+        $_POST["copia"] = -1;
+        $_POST["tipo"] = -1;
+        $_POST["fk_dependencia"] = '';
+    }
 
-$categoria_txt = [
-    2 => "Producci&oacute;n Documental",
-    3 => "Otras Categorias"
-];
+    $attributes = [
+    'nombre' => $_POST["nombre"],
+    'cod_padre' => $_POST["cod_padre"],
+    'dias_entrega' => $_POST["dias_entrega"],
+    'codigo' => $_POST["codigo"],
+    'retencion_gestion' => $_POST["retencion_gestion"],
+    'retencion_central' => $_POST["retencion_central"],
+    'conservacion' => $_POST["conservacion"],
+    'digitalizacion' => $_POST["digitalizacion"],
+    'seleccion' => $_POST["seleccion"],
+    'otro' => $_POST["otro"],
+    'procedimiento' => $_POST["procedimiento"],
+    'copia' => $_POST["copia"],
+    'tipo' => $_POST["tipo"],
+    'estado' => 1,
+    'categoria' => $_POST["categoria"]];
 
-$tipo_tvd_txt = array(
-    0 => "TRD",
-    1 => "TVD"
-);
+    $Serie = new Serie();
+    $Serie -> SetAttributes($attributes);
+    $response = $Serie -> createSerie();
+    if ($response['exito']) {
+        alerta($response['message']);
+    } else {
+        alerta($response['message'] . 'error');
+    }
+} else {
+    $categoria = [
+    2 => '',
+    3 => ''];
 
-$tipo_serie = array(
-    1 => "Serie",
-    2 => "Subserie",
-    3 => "Tipo documental"
-);
+    $tipo = [
+    1 => '',
+    2 => '',
+    3 => ''];
 
-$sAction = @$_POST["a_add"];
-switch ($sAction) {
-    case "A":
-        $x_idserie = @$_POST["x_idserie"];
-        $x_nombre = @$_POST["x_nombre"];
-        $x_cod_padre = @$_POST["x_cod_padre"];
-        $x_dias_entrega = @$_POST["x_dias_entrega"];
-        $x_codigo = @$_POST["x_codigo"];
-        $x_retencion_gestion = @$_POST["x_retencion_gestion"];
-        $x_retencion_central = @$_POST["x_retencion_central"];
-        $x_conservacion = @$_POST["x_conservacion"];
-        $x_seleccion = @$_POST["x_seleccion"];
-        $x_otro = @$_POST["x_otro"];
-        $x_procedimiento = @$_POST["x_procedimiento"];
-        $x_digitalizacion = @$_POST["x_digitalizacion"];
-        $x_copia = @$_POST["x_copia"];
-        $x_tipo = @$_POST["x_tipo"];
-        $x_tvd = @$_POST["x_tvd"];
-        $x_categoria = @$_POST["x_categoria"];
-		/*$x_tipo_entidad = $_POST["tipo_entidad"];
-		$x_identidad = $_POST["identidad"];*/
-		$x_dependencias = $_REQUEST["iddependencia"];
+    $conservacion = [
+    'TOTAL' => '',
+    'ELIMINACION' => ''];
 
-        $ok = AddData($conn);
-        if ($ok) {
-            alerta('Serie adicionada con exito');
-            if ($x_categoria != 3) {
-                $openNode = "0.0.0";
-            } else {
-                $openNode = "0.0.-1";
-            }
-            ?>
-<script>
-			window.parent.frames['arbol'].postMessage({
-                accion: "refrescar_arbol",
-                expandir: "<?php echo $openNode;?>"
-            }, "*");
-			</script>
-<?php
-            exit();
+    $seleccion = [
+    0 => '',
+    1 => ''];
+
+    $digitalizacion = [
+    0 => '',
+    1 => ''];
+    $copia = [
+    0 => '',
+    1 => ''];
+
+    if (empty($_REQUEST)) {
+        $idserie = 0;
+        $Serie = new Serie();
+        $attributes = [
+        'nombre' => '',
+        'cod_padre' => 0,
+        'dias_entrega' => 8,
+        'codigo' => '',
+        'retencion_gestion' => 3,
+        'retencion_central' => 5,
+        'conservacion' => 'TOTAL',
+        'digitalizacion' => 0,
+        'seleccion' => 0,
+        'otro' => '',
+        'procedimiento' => '',
+        'copia' => 0,
+        'tipo' => 1,
+        'categoria' => 2];
+        $Serie -> SetAttributes($attributes);
+
+        $key = $Serie -> tipo;
+    } else {
+        $idserie = $_REQUEST['x_idserie'];
+        $Serie = new Serie($idserie);
+        if ($Serie -> categotia == 3) {
+            $Serie -> SetAttributes([
+            'conservacion' => 'TOTAL',
+            'copia' => 1,
+            'seleccion' => 0]);
         }
-        break;
-    default:
-        $sKey = $_REQUEST["x_idserie"];
-        $x_idserie = Null;
-        $x_nombre = Null;
-        $x_cod_padre = Null;
-        $x_dias_entrega = 8;
-        $x_codigo = Null;
-        $x_retencion_gestion = 3;
-        $x_retencion_central = 5;
-        $x_conservacion = Null;
-        $x_seleccion = Null;
-        $x_otro = Null;
-        $x_procedimiento = Null;
-        $x_digitalizacion = Null;
-        $x_copia = Null;
-        $x_categoria = Null;
-        $x_tvd = Null;
-
-        $disabled="";
-
-        $info_padre = busca_filtro_tabla("", "serie", "idserie=" . $sKey, "", $conn);
-
-        $nom_padre = "";
-        $x_tipo = Null;
-        if ($info_padre["numcampos"]) {
-            //var_dump($info_padre);die();
-            $x_cod_padre = $sKey;
-            $nom_padre = $info_padre[0]["nombre"] . " - (" . $info_padre[0]["codigo"] . ")";
-            $x_categoria = $info_padre[0]["categoria"];
-            $x_tipo = $info_padre[0]["tipo"];
-            $x_tvd = $info_padre[0]["tvd"];
-            $x_codigo = $info_padre[0]["codigo"];
-			$x_conservacion = $info_padre[0]["conservacion"];
-			$x_seleccion = $info_padre[0]["seleccion"];
-			$x_procedimiento = $info_padre[0]["procedimiento"];
-            if($x_tipo == 1 || $x_tipo == 2) {
-                $x_tipo++;
-                unset($tipo_serie[1]);
-            }
-			 $conservacion = array(
-           		 "TOTAL" => "",
-            	"ELIMINACION" => ""
-        	);
-       		 $conservacion[$x_conservacion] = "checked";
-			  $seleccion = array(
-	            0 => "",
-	            1 => ""
-	        );
-	        $seleccion[$x_seleccion] = "checked";
-			//buscar la dependencia asignada
-			$buscar_asignacion = busca_filtro_tabla("", "entidad_serie", "entidad_identidad=2 and estado=1 and serie_idserie=" . $sKey, "", $conn);
-			$lista_dependencias=array();
-			if($buscar_asignacion["numcampos"]){
-				for($i=0;$i<$buscar_asignacion["numcampos"];$i++){
-					$lista_dependencias[]=$buscar_asignacion[$i]["llave_entidad"];
-				}
-				$dependencia_seleccionada = implode(",",$lista_dependencias);
-			}
-
-			//buscar permisos asociados a la serie
-			$entidades=array();
-			$buscar_permisos = busca_filtro_tabla("", "permiso_serie", "estado=1 and serie_idserie=".$sKey, "", $conn);
-			if($buscar_permisos["numcampos"]){
-				for($i=0;$i<$buscar_permisos["numcampos"];$i++){
-					$entidades[$buscar_permisos[$i]["entidad_identidad"]][]=$buscar_permisos[$i]["llave_entidad"];
-				}
-			}
-        }
-        break;
-}
-
-function AddData($conn) {
-    $fieldList = array();
-    $fieldList_asignacion = array();
-	// Field nombre
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_nombre"]) : $GLOBALS["x_nombre"];
-	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-	$fieldList["nombre"] = $theValue;
-
-	// Field cod_padre
-	$theValue = ($GLOBALS["x_cod_padre"] != "") ? intval($GLOBALS["x_cod_padre"]) : "NULL";
-	$fieldList["cod_padre"] = $theValue;
-
-	// Field codigo
-	$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_codigo"]) : $GLOBALS["x_codigo"];
-	$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-	$fieldList["codigo"] = $theValue;
-
-	$fieldList["categoria"] = $GLOBALS["x_categoria"];
-	if ($fieldList["categoria"] == 3) {
-		$fieldList["dias_entrega"] = 0;
-		$fieldList["retencion_gestion"] = 0;
-		$fieldList["retencion_central"] = 0;
-		$fieldList["conservacion"] = "NULL";
-		$fieldList["seleccion"] = "NULL";
-		$fieldList["otro"] = "NULL";
-		$fieldList["procedimiento"] = "NULL";
-		$fieldList["digitalizacion"] = "NULL";
-		$fieldList["copia"] = -1;
-		$fieldList["tipo"] = -1;
-		$fieldList["tvd"]=-1;
-	} else {
-		// Field dias_entrega
-		$theValue = ($GLOBALS["x_dias_entrega"] != "") ? intval($GLOBALS["x_dias_entrega"]) : "NULL";
-		$fieldList["dias_entrega"] = $theValue;
-
-		// Field retencion_gestion
-		$theValue = ($GLOBALS["x_retencion_gestion"] != "") ? intval($GLOBALS["x_retencion_gestion"]) : "NULL";
-		$fieldList["retencion_gestion"] = $theValue;
-
-		// Field retencion_central
-		$theValue = ($GLOBALS["x_retencion_central"] != "") ? intval($GLOBALS["x_retencion_central"]) : "NULL";
-		$fieldList["retencion_central"] = $theValue;
-
-		// Field conservacion
-		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_conservacion"]) : $GLOBALS["x_conservacion"];
-		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-		$fieldList["conservacion"] = $theValue;
-
-		// Field seleccion
-		$theValue = ($GLOBALS["x_seleccion"] != "") ? intval($GLOBALS["x_seleccion"]) : "NULL";
-		$fieldList["seleccion"] = $theValue;
-
-		// Field otro
-		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_otro"]) : $GLOBALS["x_otro"];
-		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-		$fieldList["otro"] = $theValue;
-
-		// Field procedimiento
-		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_procedimiento"]) : $GLOBALS["x_procedimiento"];
-		$theValue = ($theValue != "") ? " '" . $theValue . "'" : "NULL";
-		$fieldList["procedimiento"] = $theValue;
-
-		// Field digitalizacion
-		$theValue = ($GLOBALS["x_digitalizacion"] != "") ? intval($GLOBALS["x_digitalizacion"]) : "NULL";
-		$fieldList["digitalizacion"] = $theValue;
-
-		// Field digitalizacion
-		$theValue = ($GLOBALS["x_copia"] != "") ? intval($GLOBALS["x_copia"]) : "NULL";
-		$fieldList["copia"] = $theValue;
-
-		// tipo
-		$fieldList["tipo"] = "'" . $GLOBALS["x_tipo"] . "'";
-		$fieldList["tvd"] = "'" . $GLOBALS["x_tvd"] . "'";
-
-		$theValue = (!get_magic_quotes_gpc()) ? addslashes($GLOBALS["x_dependencias"]) : $GLOBALS["x_dependencias"];
-		$theValue = ($theValue != "") ? "" . $theValue . "" : "NULL";
-		$fieldList_asignacion["dependencias"] = $theValue;
-	}
-
-	// insert into database
-	$strsql = "INSERT INTO serie (";
-	$strsql .= implode(",", array_keys($fieldList));
-	$strsql .= ") VALUES (";
-	$strsql .= implode(",", array_values($fieldList));
-	$strsql .= ")";
-	phpmkr_query($strsql) or die("Error al insertar el registro " . $strsql);
-	$id = phpmkr_insert_id();
-
-	$dependencia = explode(",", $fieldList_asignacion["dependencias"]);
-	$cd = count($dependencia);
-    if ($fieldList["categoria"] == 2) {
-        for ($i = 0; $i < $cd; $i++) {
-            $insert = "INSERT INTO entidad_serie (entidad_identidad,serie_idserie,llave_entidad,estado,fecha) VALUES (2," . $id . "," . $dependencia[$i] . ",1," . fecha_db_almacenar(date("Y-m-d"), "Y-m-d") . ")";
-            phpmkr_query($insert) or die("Error al guardar la informacion" . $insert);
+        $key = $Serie -> tipo;
+        if ($key != 3) {
+            $key++;
         }
     }
-	actualizar_crear_cod_arboles($id, "serie", 1);
-	return $id;
+
+    $cod_padre = $idserie;
+    $Serie -> SetAttributes(['cod_padre' => $cod_padre]);
+    $SerieCodPadre = $Serie -> getCodPadre();
+    $nombrePadre = '';
+    if ($SerieCodPadre) {
+        $nombrePadre = $SerieCodPadre -> nombre;
+    }
+
+    $tipo[$key] = 'checked';
+    $Serie -> SetAttributes(['tipo' => $key]);
+
+    $conservacion[$Serie -> conservacion] = 'checked';
+    $categoria[$Serie -> categoria] = 'checked';
+    $seleccion[$Serie -> seleccion] = 'checked';
+    $digitalizacion[$Serie -> digitalizacion] = 'checked';
+    $copia[$Serie -> copia] = 'checked';
+
+    $EntidadSerie = $Serie -> getEntidadSerieFk();
+    $cant = count($EntidadSerie);
+    $idsDep = [];
+    if ($cant) {
+        for ($i = 0; $i < $cant; $i++) {
+            $idsDep[] = $EntidadSerie[$i] -> fk_dependencia;
+        }
+    }
+    $selecccionados = '';
+    if (count($idsDep)) {
+        $selecccionados = implode(",", $idsDep);
+    }
+
+    $origen = array(
+        "url" => "arboles/arbol_dependencia.php",
+        "ruta_db_superior" => $ruta_db_superior,
+        "params" => array(
+            "checkbox" => 1,
+            "seleccionados" => $selecccionados
+        )
+    );
+
+    $opcionArbol = array(
+        "keyboard" => true,
+        "selectMode" => 2,
+        "busqueda_item" => 1,
+        "expandir" => 3
+    );
+    $extensiones = array("filter" => array());
+    $arbol = new ArbolFt("fk_dependencia", $origen, $opcionArbol, $extensiones);
+
+    $params = [
+    'idserie' => $idserie,
+    'categoria' => $Serie -> categoria];
+
 }
+
+include_once $ruta_db_superior . 'assets/librerias.php';
+include_once ($ruta_db_superior . "librerias_saia.php");
 ?>
-<style type="text/css">
-ul.fancytree-container {
-    border: none;
-    background-color:#F5F5F5;
-}
-span.fancytree-title
-{
-	font-family: Verdana,Tahoma,arial;
-	font-size: 9px;
-}
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>SAIA - SGDEA</title>
+		<?= jquery() ?>
+		<?= bootstrap() ?>
+		<?= theme() ?>
+		<?= librerias_UI("1.12") ?>
+		<?= librerias_validar_formulario() ?>
+		<?= librerias_arboles_ft("2.24", 'filtro'); ?>
+	</head>
 
-</style>
-<?php
-include ($ruta_db_superior."librerias_saia.php");
-echo librerias_jquery("3.3");
-echo librerias_validar_formulario("11");
-echo librerias_UI("1.12");
-echo librerias_arboles_ft("2.24", 'filtro');
+	<body>
+		<div class="container m-0 p-0 mw-100 mx-100">
+			<div class="row mx-0">
+				<div class="col-12">
 
-?>
-<form name="serieadd" id="serieadd" action="serieadd.php" method="post">
-	<table border="0" cellspacing="1" cellpadding="4" bgcolor="#CCCCCC">
-		<tr>
-			<td class="encabezado" title="Definir el tipo de serie que se esta creando" >CATEGORIA*</td>
-			<td bgcolor="#F5F5F5">
-			<?php
-			if(!empty($x_cod_padre)) {
-			    $id_cat = 'x_categoria' . $x_categoria;
-			    echo '<input type="hidden" name="x_categoria" id="' . $id_cat . '" value="' . $x_categoria  . '">';
-			    echo '<label for="' . $id_cat . '">' .  $categoria_txt[$x_categoria] . '</label>';
-			} else {
-			    foreach ($categoria_txt as $key => $value) {
-			        $id_cat = 'x_categoria' . $key;
-			        echo '<input type="radio" name="x_categoria" id="' . $id_cat . '" value="' . $key . '">';
-			        echo '<label for="' . $id_cat .  '">' . $value . '</label>';
-			    }
-			}
-			?>
-			</td>
-		</tr>
+					<form name="serieadd" id="serieadd" action="serieadd.php" method="post">
+						<table class="table tabled-bordered">
+							<tr>
+								<td>CATEGORIA*</td>
+								<td>
+								<div class="selData">
+									<input type="radio" name="categoria" value="2" <?=$categoria[2] ?>/>
+									Produccion Documental
+									<input type="radio" name="categoria" value="3" <?=$categoria[3] ?>/>
+									Otras Categorias
+								</div>
+								<div class="viewData"><?=$Serie -> getCategoria(); ?></div></td>
+							</tr>
 
-		<tr class="ocultar">
-			<td class="encabezado" title="Definir el tipo de serie que se esta creando" >TIPO*</td>
-			<td bgcolor="#F5F5F5">
-			<?php
-			if(!empty($x_cod_padre)) {
-			    $id_tvd = "x_tvd" . $x_tvd;
-			    echo '<input type="hidden" name="x_tvd" id="' . $id_tvd . '" value="' . $x_tvd  . '">';
-			    echo '<label for="' . $id_tvd . '">' .  $tipo_tvd_txt[$x_tvd] . '</label>';
-			} else {
-			    foreach ($tipo_tvd_txt as $key => $value) {
-			        $id_tvd = "x_tvd" . $key;
-			        echo '<input type="radio" name="x_tvd" id="' . $id_tvd . '" value="' . $key . '">';
-			        echo '<label for="' . $id_tvd .  '">' . $value . '</label>';
-			    }
-			}
-			?>
-			</td>
-		</tr>
+							<tr class="ocultar">
+								<td>TIPO SERIE*</td>
+								<td>
+								    <?=$Serie -> getTipo(); ?>
+								    <div class="hide">
+        								<input type="radio" name="tipo" value="1" <?=$tipo[1] ?> />
+                                        Serie
+                                        <input type="radio" name="tipo" value="2" <?=$tipo[2] ?> />
+                                        Subserie
+                                        <input type="radio" name="tipo" value="3" <?=$tipo[3] ?> />
+                                        Tipo Documental
+								    </div>
+								 </td>
+							</tr>
 
-		<tr class="ocultar">
-			<td class="encabezado" title="Definir el tipo de serie que se esta creando" >TIPO SERIE*</td>
-			<td bgcolor="#F5F5F5">
-			<?php
-			if(isset($_REQUEST["x_idserie"])){
-				if(!empty($x_cod_padre) && $x_tipo == "3") {
-    			    $id_tipo = "x_tipo" . $x_tipo;
-    			    echo '<input type="hidden" name="x_tipo" id="' . $id_tipo . '" value="' . $x_tipo  . '">';
-    			    echo '<label for="' . $id_tipo . '">' .  $tipo_serie[$x_tipo] . '</label>';
-    			} else {
-    			    foreach ($tipo_serie as $key => $value) {
-    			        $id_tipo = "x_tipo" . $key;
-    			        echo '<input type="radio" name="x_tipo" id="' . $id_tipo . '" value="' . $key . '">';
-    			        echo '<label for="' . $id_tipo .  '">' . $value . '</label><br>';
-    			    }
-    			}
-			}else{
-                echo "Serie";
-                echo '<input type="hidden" name="x_tipo" id="x_tipo1" value="1">';
-               }
-			?>
-			</td>
-		</tr>
+							<tr class="ocultar">
+								<td>C&Oacute;DIGO</td>
+								<td>
+								<input type="text" name="codigo" id="codigo" />
+								</td>
+							</tr>
 
-		<tr>
-			<td class="encabezado" title="C&oacute;digo de la serie o subserie"><span class="phpmaker" style="color: #FFFFFF;">C&Oacute;DIGO</span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker">
-				<input type="text" name="x_codigo" id="x_codigo" size="30" maxlength="20" value="<?php echo $x_codigo; ?>">
-			</span></td>
-		</tr>
+							<tr>
+								<td>NOMBRE *</td>
+								<td>
+								<input type="text" name="nombre" id="nombre" />
+								</td>
+							</tr>
 
-		<tr>
-			<td class="encabezado" title="Nombre de la serie o subserie"><span class="phpmaker" style="color: #FFFFFF;">NOMBRE *</span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker">
-				<input type="text" name="x_nombre" id="x_nombre" value="<?php echo $x_nombre; ?>">
-			</span></td>
-		</tr>
+							<tr id="trCodPadre">
+								<td>NOMBRE PADRE </td>
+								<td>
+								    <div id="divCodPadreSel" class="selData">
+								        <input type="text" name="cod_padre" id="cod_padre" value="<?=$cod_padre; ?>"/>
+								    </div>
+								    <div id="divCodPadreView" class="viewData">
+                                        <?=$nombrePadre; ?>
+                                    </div>
+								</td>
+							</tr>
 
-		<tr class="ocultar_padre">
-			<td class="encabezado"><span class="phpmaker" style="color: #FFFFFF;">NOMBRE PADRE </span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker"> <div id="divserie"><?php
-			if(!empty($x_cod_padre)) {
-			    echo $nom_padre;
-			    echo '<input type="hidden" name="x_cod_padre" id="x_cod_padre" value="' . $x_cod_padre . '" />';
-			}
-			?></div> </td>
-		</tr>
+							<tr class="ocultar">
+								<td>TIEMPO DE RESPUESTA EN (D&Iacute;AS) *</td>
+								<td>
+								<input type="number" name="dias_entrega" id="dias_entrega" value="<?=$Serie -> dias_entrega; ?>" />
+								</td>
+							</tr>
 
-		<tr class="ocultar">
-			<td class="encabezado" title="Cantidad de d&iacute;as para dar tr&aacute;mite y respuesta al documento"><span class="phpmaker" style="color: #FFFFFF;">TIEMPO DE RESPUESTA EN (D&Iacute;AS) *</span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker">
-				<input type="text" name="x_dias_entrega" id="x_dias_entrega" size="30" value="<?php echo $x_dias_entrega; ?>">
-			</span></td>
-		</tr>
+							<tr class="ocultar">
+								<td>MESES ARCHIVO GESTI&Oacute;N *</td>
+								<td>
+								<input type="number" name="retencion_gestion" id="retencion_gestion" value="<?=$Serie -> retencion_gestion; ?>" />
+								</td>
+							</tr>
 
-		<tr class="ocultar">
-			<td class="encabezado" title="Cantidad de a&ntilde;os que permanece la subserie en el archivo de gesti&oacute;n"><span class="phpmaker" style="color: #FFFFFF;">MESES ARCHIVO GESTI&Oacute;N *</span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker">
-				<input type="text" name="x_retencion_gestion" id="x_retencion_gestion" size="30" value="<?php echo $x_retencion_gestion; ?>">
-			</span></td>
-		</tr>
+							<tr class="ocultar">
+								<td>MESES ARCHIVO CENTRAL *</td>
+								<td>
+								<input type="number" name="retencion_central" id="retencion_central" value="<?=$Serie -> retencion_central; ?>" />
+								</td>
+							</tr>
 
-		<tr class="ocultar">
-			<td class="encabezado" title="Cantidad de a&ntilde;os que permanece la subserie en el archivo central"><span class="phpmaker" style="color: #FFFFFF;">MESES ARCHIVO CENTRAL *</span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker">
-				<input type="text" name="x_retencion_central" id="x_retencion_central" size="30" value="<?php echo $x_retencion_central; ?>">
-			</span></td>
-		</tr>
+							<tr class="ocultar">
+								<td>CONSERVACI&Oacute;N / ELIMINACI&Oacute;N *</td>
+								<td>
+								<input type="radio" id="conservacion1" name="conservacion" value="TOTAL" <?=$conservacion['TOTAL'] ?>>
+								Conservacion Total
+								<input type="radio" id="conservacion2" name="conservacion" value="ELIMINACION" <?=$conservacion['ELIMINACION'] ?>>
+								Eliminacion </td>
+							</tr>
 
-		<tr class="ocultar">
-			<td class="encabezado" title="El documento al pasarse al archivo central ser&aacute; conservado o eliminado?"><span class="phpmaker" style="color: #FFFFFF;">CONSERVACI&Oacute;N / ELIMINACI&Oacute;N *</span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker">
+							<tr class="ocultar">
+								<td>SELECCI&Oacute;N *</td>
+								<td>
+								<input type="radio" id="seleccion1" name="seleccion" value="1" <?=$seleccion[1] ?>/>
+								SI
+								<input type="radio" id="seleccion0" name="seleccion" value="0" <?=$seleccion[0] ?>/>
+								NO </td>
+							</tr>
 
-				<input type="radio" id="x_conservacionTOTAL" name="x_conservacion" value="TOTAL" <?php echo $conservacion["TOTAL"];?>>
-				Conservacion Total
-				<input type="radio" id="x_conservacionELIMINACION" name="x_conservacion" value="ELIMINACION" <?php echo $conservacion["ELIMINACION"];?>>
-				Eliminacion </span></td>
-		</tr>
+							<tr class="ocultar">
+								<td>DIGITALIZACI&Oacute;N</td>
+								<td>
+								<input type="radio" id="digitalizacion1" name="digitalizacion" value="1" <?=$digitalizacion[1] ?>/>
+								SI
+								<input type="radio" id="digitalizacion0" name="digitalizacion" value="0" <?=$digitalizacion[0] ?>/>
+								NO </td>
+							</tr>
 
-		<tr class="ocultar">
-			<td class="encabezado" title="El documento al pasarse al archivo central se le har&aacute; una selecci&oacute;n?"><span class="phpmaker" style="color: #FFFFFF;">SELECCI&Oacute;N *</span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker">
-				<input type="radio" id="x_seleccion1" name="x_seleccion" value="1" <?php echo $seleccion[1];?>>
-				SI
-				<input type="radio" id="x_seleccion0" name="x_seleccion" value="0" <?php echo $seleccion[0];?>>
-				NO </span></td>
-		</tr>
+							<tr class="ocultar">
+								<td>OTRO</td>
+								<td>
+								<input type="text" name="otro" id="otro" />
+								</td>
+							</tr>
 
-		<tr class="ocultar">
-			<td class="encabezado" title="El documento al pasarse al archivo central ser&aacute digitalizado?"><span class="phpmaker" style="color: #FFFFFF;">DIGITALIZACI&Oacute;N</span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker">
-				<input type="radio" id="x_digitalizacion1" name="x_digitalizacion" value="1">
-				SI
-				<input type="radio" id="x_digitalizacion0" name="x_digitalizacion" value="0">
-				NO </span></td>
-		</tr>
+							<tr class="ocultar">
+								<td>PROCEDIMIENTO CONSERVACI&Oacute;N</td>
+								<td>								<textarea cols="35" rows="4" id="procedimiento" name="procedimiento"></textarea></td>
+							</tr>
 
-		<tr class="ocultar">
-			<td class="encabezado"  title="Si va a hacerse algo diferente a Conservar, Eliminar o Seleccionar el documento"><span class="phpmaker" style="color: #FFFFFF;">OTRO</span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker">
-				<input type="text" name="x_otro" id="x_otro" size="30" maxlength="255" value="<?php echo $x_otro; ?>">
-			</span></td>
-		</tr>
+							<tr class="ocultar">
+								<td>PERMITIR COPIA *</td>
+								<td>
+								<input type="radio" id="copia1" name="copia" value="1" <?=$copia[1] ?>>
+								SI
+								<input type="radio" id="copia0" name="copia" value="0" <?=$copia[0] ?>>
+								NO </td>
+							</tr>
+							<tr class="ocultar">
+								<td>DEPENDENCIA ASOCIADA *</td>
+								<td><?=$arbol -> generar_html(); ?></td>
+							</tr>
+							<tr>
+								<td colspan="2">
+								<input type="hidden" name="a_add" value="A">
+								<button type="submit" class="btn btn-complete">
+									Adicionar
+								</button></td>
+							</tr>
+						</table>
 
-		<tr class="ocultar">
-			<td class="encabezado" title="Describir el procedimiento de conservaci&oacute;n"><span class="phpmaker" style="color: #FFFFFF;">PROCEDIMIENTO CONSERVACI&Oacute;N</span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker"> 				<textarea cols="35" rows="4" id="x_procedimiento" name="x_procedimiento"><?php echo $x_procedimiento; ?></textarea> </span></td>
-		</tr>
+					</form>
+				</div>
+			</div>
+		</div>
 
-		<tr class="ocultar">
-			<td class="encabezado" title="Decidir si se permite copias de los documentos de este tipo serial"><span class="phpmaker" style="color: #FFFFFF;">PERMITIR COPIA *</span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker">
-				<input type="radio" id="x_copia1" name="x_copia" value="1">
-				SI
-				<input type="radio" id="x_copia0" name="x_copia" value="0" checked="checked">
-				NO </span></td>
-		</tr>
-		<tr class="ocultar">
-			<td class="encabezado" title="Asociar serie/subserie a una dependencia"><span class="phpmaker" style="color: #FFFFFF;">DEPENDENCIA ASOCIADA *</span></td>
-			<td bgcolor="#F5F5F5"><span class="phpmaker">
-				<?php
-				$origen = array("url" => "arboles/arbol_dependencia.php", "ruta_db_superior" => $ruta_db_superior,
-				    "params" => array(
-				        "checkbox" => 1,
-				        "seleccionados" => $dependencia_seleccionada
-				    ));
-				$opciones_arbol = array("keyboard" => true, "selectMode" => 2, "busqueda_item" => 1, "expandir" => 3);
-				$extensiones = array("filter" => array());
-				$arbol = new ArbolFt("iddependencia", $origen, $opciones_arbol, $extensiones,$dependencia_seleccionada);
-				echo $arbol->generar_html();
-
-				?>
-			</span></td>
-		</tr>
-		<tr>
-			<td colspan="2" style="background-color: #FFFFFF;text-align: center" >
-			<input type="hidden" name="a_add" value="A">
-			<input type="submit" name="Action" value="Adicionar">
-			</td>
-		</tr>
-	</table>
-
-</form>
-
-<?php
-include_once($ruta_db_superior."footer.php");
-encriptar_sqli("serieadd", 1, "form_info", $ruta_db_superior, false, false);
-?>
-
-<script>
-var identidad = <?php echo (empty($identidad) ? 0 : $identidad);?>;
-	function cargar_datos_padre(event,data) {
-		$("#x_cod_padre").val(data.node.key);
-		$.ajax({
-			type : "POST",
-			dataType : "json",
-			url : "buscar_datos_serie.php",
-			data : {
-				idserie : data.node.key
-			},
-			success : function(datos) {
-				if (datos.exito) {
-					$('#x_dias_entrega').val(datos.dias_entrega);
-					$('#x_codigo').val(datos.codigo);
-					$('#x_retencion_gestion').val(datos.retencion_gestion);
-					$('#x_retencion_central').val(datos.retencion_central);
-					if (datos.conservacion) {
-						$('#x_conservacion' + datos.conservacion).attr('checked', true);
-					} else {
-						$("[name='x_conservacion']").attr('checked', false);
-					}
-
-					if (datos.seleccion) {
-						$('#x_seleccion' + datos.seleccion).attr('checked', true);
-					} else {
-						$("[name='x_seleccion']").attr('checked', false);
-					}
-
-					if (datos.digitalizacion) {
-						$('#x_digitalizacion' + datos.digitalizacion).attr('checked', true);
-					} else {
-						$("[name='x_digitalizacion']").attr('checked', false);
-					}
-
-					$('#x_otro').val(datos.otro);
-
-					if (datos.procedimiento) {
-						$('#x_procedimiento').text(datos.procedimiento);
-					} else {
-						$('#x_procedimiento').text("");
-					}
-
-					if (datos.copia) {
-						$('#x_copia' + datos.copia).attr('checked', true);
-					} else {
-						$("[name='x_copia']").attr('checked', false);
-					}
+		<script data-params='<?=json_encode($params); ?>'>
+			$(document).ready(function() {
+				var params = $("script[data-params]").data("params");
+				if (params.idserie) {
+					$("#trCodPadre").show();
+					$(".viewData").show();
+					$(".selData").hide();
 				} else {
-                    top.notification({
-                        message: datos.msn,
-                        type: 'error',
-                        duration: 5000
-                    });
+					$("#trCodPadre").hide();
+
+					$(".viewData").hide();
+					$(".selData").show();
 				}
-			},
-			error : function() {
-                top.notification({
-                    message: 'Error al consultar los datos de la serie padre'
-                    type: 'error',
-                    duration: 5000
-                });
-        
-			}
-		});
-	}
 
-	$(document).ready(function() {
-		xml1="arboles/arbol_dependencia.php?checkbox=true&expandir=1";
-		var dependencia_seleccionada="<?php echo $dependencia_seleccionada; ?>";
+				$("#serieadd").validate({
+					rules : {
+						categoria : {
+							required : true
+						},
+						tipo : {
+							required : true
+						},
+						nombre : {
+							required : true
+						},
 
-		if(dependencia_seleccionada && dependencia_seleccionada != '') {
-			$("#iddependencia").val(dependencia_seleccionada);
-		}
-
-		var entidades = <?php echo json_encode($entidades) ?>;
-		var dependencia_seleccionadas=0;
-
-		$("#serieadd").validate({
-			rules:{
-				x_nombre:{required:true},
-				x_tipo: {
-					required : true
-				},
-				x_tvd: {
-					required : true
-				},
-				x_categoria: {
-					required : true
-				},
-				x_dias_entrega: {
-					required : true
-				},
-				x_retencion_gestion: {
-					required : true
-				},
-				x_retencion_central: {
-					required : true
-				},
-				x_conservacion: {
-					required : true
-				},
-				x_seleccion: {
-					required : true
-				}
-			},
-			submitHandler : function(form) {
-				var x_identidad ="";
-				x_categoria = $("[name='x_categoria']:checked").val();
-				if (x_categoria == 2) {
-					x_identidad = $("#identidad").val();
-					x_iddependencia = $("#iddependencia").val();
-					x_tipo = $("[name='x_tipo']:checked").val();
-					x_cod_padre = $("#x_cod_padre").val();
-					if(x_iddependencia == ""){
-                        top.notification({
-                            message: 'Por favor seleccione a quien le va a asignar la serie',
-                            type: 'error',
-                            duration: 5000
-                        });
-						return false;
-					}
-					if (x_tipo != 1 && (x_cod_padre == "" || x_cod_padre == 0)) {
-                        top.notification({
-                            message: 'Por favor seleccione el Padre',
-                            type: 'error',
-                            duration: 5000
-                        });
-						return false;
-					} else {
+						dias_entrega : {
+							required : true
+						},
+						retencion_gestion : {
+							required : true
+						},
+						retencion_central : {
+							required : true
+						},
+						conservacion : {
+							required : true
+						},
+						seleccion : {
+							required : true
+						},
+						copia : {
+							required : true
+						},
+						fk_dependencia : {
+							required : true
+						}
+					},
+					submitHandler : function(form) {
 						form.submit();
 					}
-				}else{
-					form.submit();
-				}
-			}
-		});
-
-		$("[name='x_categoria']").change(function() {
-			$("#divserie").empty();
-			if ($(this).val() == 2) {
-				$("[name='x_tvd']").rules("add", {
-					required : true
-				});
-				$("[name='x_tipo']").rules("add", {
-					required : true
-				});
-				$("#x_dias_entrega").rules("add", {
-					required : true,
-					number : true
-				});
-				$("#x_retencion_gestion").rules("add", {
-					required : true,
-					number : true
-				});
-				$("#x_retencion_central").rules("add", {
-					required : true,
-					number : true
-				});
-				$("[name='x_seleccion']").rules("add", {
-					required : true
-				});
-				$("[name='x_conservacion']").rules("add", {
-					required : true
-				});
-				$("[name='x_copia']").rules("add", {
-					required : true
 				});
 
-				$(".ocultar").show();
-				$(".ocultar_padre").hide();
-				$("[name='x_tipo']:checked").trigger("change");
-			} else {
-				$("[name='x_tvd']").rules("remove");
-				$("[name='x_tipo']").rules("remove");
-				$("#x_dias_entrega").rules("remove");
-				$("#x_retencion_gestion").rules("remove");
-				$("#x_retencion_central").rules("remove");
-				$("[name='x_seleccion']").rules("remove");
-				$("[name='x_conservacion']").rules("remove");
-				$("[name='x_copia']").rules("remove");
-
-				$(".ocultar").hide();
-				$(".ocultar_padre").show();
-
-				xml = "arboles/arbol_serie.php?ver_categoria2=0&ver_categoria3=1&checkbox=radio";
-				$.ajax({
-					url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol_ft.php",
-					data : {
-						xml : xml,
-						campo : "x_cod_padre",
-						busqueda_item:1,
-						selectMode:1,
-						onNodeSelect : "cargar_datos_padre",
-						ruta_db_superior: "../../"
-					},
-					type : "POST",
-					async : false,
-					success : function(html_serie) {
-						$("#divserie").empty().html(html_serie);
-					},
-					error : function() {
-                        top.notification({
-                            message: 'No se pudo cargar el arbol de series',
-                            type: 'error',
-                            duration: 5000
-                        });
-					}
-				});
-
-			}
-		});
-
-		$("[name='x_categoria']:checked").trigger("change");
-
-		var cod_padre = $("#x_cod_padre").val();
-		if(cod_padre) {
-			$(".ocultar_padre").show();
-		} else {
-			$(".ocultar_padre").hide();
-		}
-		$("[name='x_tvd'],[name='x_tipo']").change(function() {
-			tipo_serie = $("[name='x_tipo']:checked").val();
-			var tvd = $("[name='x_tvd']:checked").val();
-			var cod_padre = $("#x_cod_padre").val();
-			if(tvd == undefined) {
-				tvd = $("[name='x_tvd']").val();
-			}
-			if (tvd != undefined && tipo_serie != undefined) {
-				if (tipo_serie != 1 && !cod_padre) {
-					$(".ocultar_padre").show();
-					xml = "arboles/arbol_serie.php?checkbox=radio&tipo3=0&tvd=" + tvd;
-					if (tipo_serie == 2) {
-						xml += "&tipo2=0";
-					}
-					if(cod_padre!=undefined && cod_padre!=0){
-						xml+="&seleccionados="+cod_padre;
-					}
-					$.ajax({
-						url : "<?php echo $ruta_db_superior;?>arboles/crear_arbol_ft.php",
-						data : {
-							xml : xml,
-							campo : "x_cod_padre",
-							busqueda_item:1,
-							selectMode:1,
-							onNodeSelect : "cargar_datos_padre",
-							ruta_db_superior: "../../"
-						},
-						type : "POST",
-						async : false,
-						success : function(html_serie) {
-							$("#divserie").empty().html(html_serie);
-						},
-						error : function() {
-                            top.notification({
-                                message: 'No se pudo cargar el arbol de series',
-                                type: 'error',
-                                duration: 5000
-                            });
-
+				$("[name='categoria']").change(function() {
+					if ($(this).val() == 3) {
+						$("#fk_dependencia").val('0');
+						$(".ocultar").hide();
+					} else {
+						if (!params.idserie) {
+							$("#fk_dependencia").val('');
 						}
-					});
-				} else if(!cod_padre) {
-					$(".ocultar_padre").hide();
-				}
-			}
-		});
-	});
-</script>
+						$(".ocultar").show();
+					}
+				});
+				$("[name='categoria']:checked").trigger("change");
+
+				/*
+				 $("[name='categoria']").change(function() {
+				 $("#divserie").empty();
+				 if ($(this).val() == 2) {
+				 $("[name='tvd']").rules("add", {
+				 required : true
+				 });
+				 $("[name='tipo']").rules("add", {
+				 required : true
+				 });
+				 $("#dias_entrega").rules("add", {
+				 required : true,
+				 number : true
+				 });
+				 $("#retencion_gestion").rules("add", {
+				 required : true,
+				 number : true
+				 });
+				 $("#retencion_central").rules("add", {
+				 required : true,
+				 number : true
+				 });
+				 $("[name='seleccion']").rules("add", {
+				 required : true
+				 });
+				 $("[name='conservacion']").rules("add", {
+				 required : true
+				 });
+				 $("[name='copia']").rules("add", {
+				 required : true
+				 });
+
+				 $(".ocultar").show();
+				 $(".ocultar_padre").hide();
+				 $("[name='tipo']:checked").trigger("change");
+				 } else {
+				 $("[name='tvd']").rules("remove");
+				 $("[name='tipo']").rules("remove");
+				 $("#dias_entrega").rules("remove");
+				 $("#retencion_gestion").rules("remove");
+				 $("#retencion_central").rules("remove");
+				 $("[name='seleccion']").rules("remove");
+				 $("[name='conservacion']").rules("remove");
+				 $("[name='copia']").rules("remove");
+
+				 $(".ocultar").hide();
+				 $(".ocultar_padre").show();
+
+				 xml = "arboles/arbol_serie.php?ver_categoria2=0&ver_categoria3=1&checkbox=radio";
+				 $.ajax({
+				 url : "../arboles/crear_arbol_ft.php",
+				 data : {
+				 xml : xml,
+				 campo : "cod_padre",
+				 busqueda_item : 1,
+				 selectMode : 1,
+				 onNodeSelect : "cargar_datos_padre",
+				 ruta_db_superior : "../../"
+				 },
+				 type : "POST",
+				 async : false,
+				 success : function(html_serie) {
+				 $("#divserie").empty().html(html_serie);
+				 },
+				 error : function() {
+				 top.notification({
+				 message : 'No se pudo cargar el arbol de series',
+				 type : 'error',
+				 duration : 5000
+				 });
+				 }
+				 });
+
+				 }
+				 });
+
+				 */
+
+			});
+		</script>
+	</body>
+</html>
