@@ -24,10 +24,14 @@ $Response = (object)[
 if(isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']){
     global $conn;
 
-    $findDocument = busca_filtro_tabla('lower(plantilla) as plantilla', 'documento', 'iddocumento=' . $_REQUEST['documentId'], '', $conn);
+    $findDocument = busca_filtro_tabla('lower(plantilla) as plantilla,b.*', 'documento a, formato b', 'lower(a.plantilla) = lower(b.nombre) and a.iddocumento=' . $_REQUEST['documentId'], '', $conn);
     $template = $findDocument[0]['plantilla'];
 
-    $Response->data['url'] = "formatos/{$template}/mostrar_{$template}.php";
+    $Response->data = [
+        'ruta_mostrar' => "formatos/{$template}/{$findDocument[0]['ruta_mostrar']}?iddoc={$_REQUEST['documentId']}" ,
+        'ruta_editar' => "formatos/{$template}/{$findDocument[0]['ruta_editar']}",
+        'ruta_adicionar' => "formatos/{$template}/{$findDocument[0]['ruta_adicionar']}"
+    ];
 }else{
     $Response->success = 0;
     $Response->message = "Debe iniciar sesion";

@@ -706,7 +706,7 @@ return false;
             } else {
                 $action = '<?= $ruta_db_superior ?>class_transferencia.php"';
             }
-            $texto .= '<div class=" container-fluid container-fixed-lg col-lg-8">
+            $texto .= '<div class="container-fluid container-fixed-lg col-lg-8" style="overflow: auto;" id="content_container">
                     	<!-- START card -->
                     	<div class="card card-default">
                             <div class="card-body">';
@@ -2422,6 +2422,7 @@ span.fancytree-expander {
             $(function () {
                 var configuracion=' . $opciones_json . ';
                 $("#' . $nombre_selector . '").datetimepicker(configuracion);
+                $("#content_container").height($(window).height());
             });
         </script>';
         $texto[] = "</div>";

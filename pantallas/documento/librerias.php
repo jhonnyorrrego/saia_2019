@@ -981,8 +981,7 @@ function origin_pending_document($documentId, $userCode, $number, $date, $transf
     $documentRoute = 'views/documento/acordeon.php?';
     $documentRoute.= http_build_query([
         'documentId' => $documentId,
-        'transferId' => $transferId,
-        'format' => strtolower($format)
+        'transferId' => $transferId
     ]);
 
     $html = '<div class="col-1 px-0 text-center action">
@@ -1138,13 +1137,28 @@ function temporality($date){
         return $date->format('d-m-Y');
     }
 }
-function mostrar_numero_enlace($numero,$iddoc) {
-    $titulo = "No. " . $numero;
-    if(empty($numero) || $numero == 'numero') {
-        $numero = "Ver";
-        $titulo = nombre_plantilla(null, $iddoc);
-    }
-    $campo='<div class="link kenlace_saia" enlace="ordenar.php?key='.$iddoc.'&accion=mostrar&mostrar_formato=1" conector="iframe" titulo="'.$titulo.'"><span class="badge cursor btn">'.$numero.'</span></div>';
-    return $campo;
+
+/**
+ * genera un enlace para el kaiten 
+ * que redirige al mostrar de un documento
+ *
+ * @param int $numero
+ * @param int $iddoc
+ * @return string
+ */
+function mostrar_numero_enlace($number, $documentId) {
+	if((int) $number){
+		$titulo = "No. " . $numero;
+	}else{
+		$numero = "Ver";
+		$titulo = nombre_plantilla(null, $iddoc);
+	}
+	
+	$route = 'views/documento/index_acordeon.php?documentId=' . $documentId;
+	$response = "<div class='link kenlace_saia' enlace='{$route}' conector='iframe' titulo='{$titulo}'>
+		<span class='badge cursor btn'>{$numero}</span>
+	</div>";
+
+	return $response;
 }
 ?>

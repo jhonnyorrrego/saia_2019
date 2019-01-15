@@ -622,7 +622,7 @@ function aprobar($iddoc = 0, $opcion = 0)
     actualizar_datos_documento($tipo_radicado[0]["idformato"], $iddoc);
     if ($opcion == 0) {
         if ($_REQUEST["anterior"] == $iddoc) {
-            enrutar_documento();
+            enrutar_documento('', $iddoc);
             return ($iddoc);
         } else {
             $formato_ant = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $datos_formato[0]["cod_padre"], "", $conn);
@@ -632,7 +632,7 @@ function aprobar($iddoc = 0, $opcion = 0)
                     $_REQUEST["anterior"] = $iddoc_anterior[0]["documento_iddocumento"];
                 }
             }
-            enrutar_documento();
+            enrutar_documento('', $iddoc);
         }
     }
     return $iddoc;
@@ -1120,7 +1120,7 @@ function radicar_plantilla()
  * @param string $url
  * @return void
  */
-function enrutar_documento($url = "", $documentId = 0){
+function enrutar_documento($url = "", $documentId){
 	// webservice utilitie
     if (isset($_REQUEST["no_redirecciona"])) {
         return $_REQUEST['iddoc'] ? $_REQUEST['iddoc'] : $documentId;

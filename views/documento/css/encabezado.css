@@ -1,0 +1,11 @@
+.notification {
+    position: relative;
+    cursor: pointer;
+    text-decoration: none;
+}
+.notification > .counter {
+    position: absolute;
+    font-size: 0.5em;
+    top: -9px;
+    left: 1px;
+}
