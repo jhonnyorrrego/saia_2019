@@ -167,3 +167,17 @@ function usuario_aprobador_documento($idformato,$iddoc,$retorno = 0){
 		echo $html;
 	}
 }
+
+function asunto_documento($idformato, $iddoc, $retorno = 0) {
+	global $conn;
+	$html = "";
+	$asunto = busca_filtro_tabla("descripcion", "documento", "iddocumento=" . $iddoc, "", $conn);
+	if ($asunto["numcampos"]) {
+		$html = $asunto[0]['descripcion'];
+	}
+	if ($retorno) {
+		return $html;
+	} else {
+		echo $html;
+	}
+}
