@@ -56,6 +56,7 @@ $(function () {
        		dictMaxFilesExceeded : 'No puede subir mas archivos',
        		dictResponseError : 'El servidor respondio con codigo {{statusCode}}',
        		dictDefaultMessage: 'Haga clic para elegir un archivo o Arrastre acá el archivo.',
+       		dictInvalidFileType: "No puede cargar archivos de este tipo",
     		uploadMultiple: multiple,
         	url: upload_url,
         	paramName : paramName,
@@ -101,8 +102,12 @@ $(function () {
                 }
             }
         };
-        $(this).dropzone(opciones);
-        $(this).addClass('dropzone');
+        let dropzoneControl = $(this)[0].dropzone;
+        if (!dropzoneControl) {
+        	$(this).dropzone(opciones);
+        	$(this).addClass('dropzone');
+            //dropzoneControl.destroy();
+        }
     });
 
 });
