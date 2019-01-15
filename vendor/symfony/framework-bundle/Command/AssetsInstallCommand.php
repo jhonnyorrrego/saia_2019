@@ -11,16 +11,19 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Command;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * Command that places bundle web assets into a given directory.
@@ -28,9 +31,9 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Gábor Egyed <gabor.egyed@gmail.com>
  *
- * @final since version 3.4
+ * @final
  */
-class AssetsInstallCommand extends ContainerAwareCommand
+class AssetsInstallCommand extends Command
 {
     const METHOD_COPY = 'copy';
     const METHOD_ABSOLUTE_SYMLINK = 'absolute symlink';
@@ -40,19 +43,8 @@ class AssetsInstallCommand extends ContainerAwareCommand
 
     private $filesystem;
 
-    /**
-     * @param Filesystem $filesystem
-     */
-    public function __construct($filesystem = null)
+    public function __construct(Filesystem $filesystem)
     {
-        if (!$filesystem instanceof Filesystem) {
-            @trigger_error(sprintf('%s() expects an instance of "%s" as first argument since Symfony 3.4. Not passing it is deprecated and will throw a TypeError in 4.0.', __METHOD__, Filesystem::class), E_USER_DEPRECATED);
-
-            parent::__construct($filesystem);
-
-            return;
-        }
-
         parent::__construct();
 
         $this->filesystem = $filesystem;
@@ -65,10 +57,11 @@ class AssetsInstallCommand extends ContainerAwareCommand
     {
         $this
             ->setDefinition(array(
-                new InputArgument('target', InputArgument::OPTIONAL, 'The target directory', 'public'),
+                new InputArgument('target', InputArgument::OPTIONAL, 'The target directory', null),
             ))
             ->addOption('symlink', null, InputOption::VALUE_NONE, 'Symlinks the assets instead of copying it')
             ->addOption('relative', null, InputOption::VALUE_NONE, 'Make relative symlinks')
+            ->addOption('no-cleanup', null, InputOption::VALUE_NONE, 'Do not remove the assets of the bundles that no longer exist')
             ->setDescription('Installs bundles web assets under a public directory')
             ->setHelp(<<<'EOT'
 The <info>%command.name%</info> command installs bundle assets into a given
@@ -98,26 +91,19 @@ EOT
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        // BC to be removed in 4.0
-        if (null === $this->filesystem) {
-            $this->filesystem = $this->getContainer()->get('filesystem');
-            $baseDir = $this->getContainer()->getParameter('kernel.project_dir');
-        }
-
+        /** @var KernelInterface $kernel */
         $kernel = $this->getApplication()->getKernel();
         $targetArg = rtrim($input->getArgument('target'), '/');
 
+        if (!$targetArg) {
+            $targetArg = $this->getPublicDirectory($kernel->getContainer());
+        }
+
         if (!is_dir($targetArg)) {
-            $targetArg = (isset($baseDir) ? $baseDir : $kernel->getContainer()->getParameter('kernel.project_dir')).'/'.$targetArg;
+            $targetArg = $kernel->getProjectDir().'/'.$targetArg;
 
             if (!is_dir($targetArg)) {
-                // deprecated, logic to be removed in 4.0
-                // this allows the commands to work out of the box with web/ and public/
-                if (is_dir(dirname($targetArg).'/web')) {
-                    $targetArg = dirname($targetArg).'/web';
-                } else {
-                    throw new InvalidArgumentException(sprintf('The target directory "%s" does not exist.', $input->getArgument('target')));
-                }
+                throw new InvalidArgumentException(sprintf('The target directory "%s" does not exist.', $input->getArgument('target')));
             }
         }
 
@@ -175,17 +161,17 @@ EOT
                 }
 
                 if ($method === $expectedMethod) {
-                    $rows[] = array(sprintf('<fg=green;options=bold>%s</>', '\\' === DIRECTORY_SEPARATOR ? 'OK' : "\xE2\x9C\x94" /* HEAVY CHECK MARK (U+2714) */), $message, $method);
+                    $rows[] = array(sprintf('<fg=green;options=bold>%s</>', '\\' === \DIRECTORY_SEPARATOR ? 'OK' : "\xE2\x9C\x94" /* HEAVY CHECK MARK (U+2714) */), $message, $method);
                 } else {
-                    $rows[] = array(sprintf('<fg=yellow;options=bold>%s</>', '\\' === DIRECTORY_SEPARATOR ? 'WARNING' : '!'), $message, $method);
+                    $rows[] = array(sprintf('<fg=yellow;options=bold>%s</>', '\\' === \DIRECTORY_SEPARATOR ? 'WARNING' : '!'), $message, $method);
                 }
             } catch (\Exception $e) {
                 $exitCode = 1;
-                $rows[] = array(sprintf('<fg=red;options=bold>%s</>', '\\' === DIRECTORY_SEPARATOR ? 'ERROR' : "\xE2\x9C\x98" /* HEAVY BALLOT X (U+2718) */), $message, $e->getMessage());
+                $rows[] = array(sprintf('<fg=red;options=bold>%s</>', '\\' === \DIRECTORY_SEPARATOR ? 'ERROR' : "\xE2\x9C\x98" /* HEAVY BALLOT X (U+2718) */), $message, $e->getMessage());
             }
         }
         // remove the assets of the bundles that no longer exist
-        if (is_dir($bundlesDir)) {
+        if (!$input->getOption('no-cleanup') && is_dir($bundlesDir)) {
             $dirsToRemove = Finder::create()->depth(0)->directories()->exclude($validAssetDirs)->in($bundlesDir);
             $this->filesystem->remove($dirsToRemove);
         }
@@ -210,13 +196,8 @@ EOT
      * Try to create relative symlink.
      *
      * Falling back to absolute symlink and finally hard copy.
-     *
-     * @param string $originDir
-     * @param string $targetDir
-     *
-     * @return string
      */
-    private function relativeSymlinkWithFallback($originDir, $targetDir)
+    private function relativeSymlinkWithFallback(string $originDir, string $targetDir): string
     {
         try {
             $this->symlink($originDir, $targetDir, true);
@@ -232,13 +213,8 @@ EOT
      * Try to create absolute symlink.
      *
      * Falling back to hard copy.
-     *
-     * @param string $originDir
-     * @param string $targetDir
-     *
-     * @return string
      */
-    private function absoluteSymlinkWithFallback($originDir, $targetDir)
+    private function absoluteSymlinkWithFallback(string $originDir, string $targetDir): string
     {
         try {
             $this->symlink($originDir, $targetDir);
@@ -254,17 +230,13 @@ EOT
     /**
      * Creates symbolic link.
      *
-     * @param string $originDir
-     * @param string $targetDir
-     * @param bool   $relative
-     *
      * @throws IOException if link can not be created
      */
-    private function symlink($originDir, $targetDir, $relative = false)
+    private function symlink(string $originDir, string $targetDir, bool $relative = false)
     {
         if ($relative) {
-            $this->filesystem->mkdir(dirname($targetDir));
-            $originDir = $this->filesystem->makePathRelative($originDir, realpath(dirname($targetDir)));
+            $this->filesystem->mkdir(\dirname($targetDir));
+            $originDir = $this->filesystem->makePathRelative($originDir, realpath(\dirname($targetDir)));
         }
         $this->filesystem->symlink($originDir, $targetDir);
         if (!file_exists($targetDir)) {
@@ -274,18 +246,36 @@ EOT
 
     /**
      * Copies origin to target.
-     *
-     * @param string $originDir
-     * @param string $targetDir
-     *
-     * @return string
      */
-    private function hardCopy($originDir, $targetDir)
+    private function hardCopy(string $originDir, string $targetDir): string
     {
         $this->filesystem->mkdir($targetDir, 0777);
         // We use a custom iterator to ignore VCS files
         $this->filesystem->mirror($originDir, $targetDir, Finder::create()->ignoreDotFiles(false)->in($originDir));
 
         return self::METHOD_COPY;
+    }
+
+    private function getPublicDirectory(ContainerInterface $container)
+    {
+        $defaultPublicDir = 'public';
+
+        if (!$container->hasParameter('kernel.project_dir')) {
+            return $defaultPublicDir;
+        }
+
+        $composerFilePath = $container->getParameter('kernel.project_dir').'/composer.json';
+
+        if (!file_exists($composerFilePath)) {
+            return $defaultPublicDir;
+        }
+
+        $composerConfig = json_decode(file_get_contents($composerFilePath), true);
+
+        if (isset($composerConfig['extra']['public-dir'])) {
+            return $composerConfig['extra']['public-dir'];
+        }
+
+        return $defaultPublicDir;
     }
 }

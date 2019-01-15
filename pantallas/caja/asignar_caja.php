@@ -12,7 +12,7 @@ include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_componentes.php");
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 
-$caja=busca_filtro_tabla("","caja","idcaja=".$_REQUEST["idcaja"]);
+$caja=busca_filtro_tabla("","caja","idcaja=".$_REQUEST["idcaja"],"",$conn);
 $nombre=($caja[0]["codigo_serie"]."-".$caja[0]["codigo_dependencia"]."-".$caja[0]["no_consecutivo"]);
 $seleccionados = busca_filtro_tabla("idfuncionario,nombres,apellidos,permiso", "entidad_caja e,funcionario f", "e.llave_entidad=f.idfuncionario and e.caja_idcaja=" . @$_REQUEST["idcaja"] . " AND e.entidad_identidad=1 and f.idfuncionario<>" . $caja[0]["funcionario_idfuncionario"], "", $conn);
 $table = '<table class="table table-bordered" id="funcionarios_seleccionados">

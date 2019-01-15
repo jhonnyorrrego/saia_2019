@@ -35,8 +35,8 @@ function incluir_librerias_busqueda($elemento,$indice){
 ?>
 <style>
 .row-fluid [class*="span"]{min-height:20px;}.row-fluid {min-height:20px;}.well{ margin-bottom: 3px; min-height: 11px; padding: 4px;}.alert{ margin-bottom: 3px; padding: 10px;}  body{ font-size:12px; line-height:100%; margin-top:35px;padding:0px;}.navbar-fixed-top, .navbar-fixed-bottom{ position: fixed;} .navbar-fixed-top, .navbar-fixed-bottom, .navbar-static-top{margin-right: 0px; margin-left: 0px;}
-.texto-azul{ color:#3176c8} 
-#panel_body{margin-top:0px; overflow: auto; <?php if($_SESSION["tipo_dispositivo"]=='movil'){ echo("width:100%; -webkit-overflow-scrolling:touch;");  } else{ echo("width:50%;"); } ?>} 
+.texto-azul{ color:#3176c8}
+#panel_body{margin-top:0px; overflow: auto; <?php if($_SESSION["tipo_dispositivo"]=='movil'){ echo("width:100%; -webkit-overflow-scrolling:touch;");  } else{ echo("width:50%;"); } ?>}
 #panel_detalle{margin-top:0px; border: 0px; overflow:auto;<?php if($_SESSION["tipo_dispositivo"]=='movil'){ echo("width:0%; -webkit-overflow-scrolling:touch;");} else{ echo("width:50%;");} ?>}
 </style>
 <div class="navbar navbar-fixed-top" id="menu_buscador">
@@ -187,15 +187,15 @@ function incluir_librerias_busqueda($elemento,$indice){
 
       </div>
       </li>
-      <?php if(@$_REQUEST['filtro_indicadores']){ 
+      <?php if(@$_REQUEST['filtro_indicadores']){
         $vector_indicadores=array(0=>'<span class="icon-flag"></span>',1=>'<span class="icon-flag-rojo"></span>',2=>'<span class="icon-flag-morado"></span>',3=>'<span class="icon-flag-naranja"></span>',4=>'<span class="icon-flag-amarillo"></span>',5=>'<span class="icon-flag-verde"></span>');
       ?>
-      <li> 
+      <li>
           <div class="btn-group">
                 <button class="btn btn-mini" disabled>
                         <?php echo($vector_indicadores[ intval($_REQUEST['filtro_indicadores']) ]); ?>
-                </button>          
-          </div> 
+                </button>
+          </div>
       </li>
       <?php } ?>
 	<?php
@@ -293,17 +293,17 @@ $(document).ready(function(){
 	          $("#busqueda_pagina").val(objeto.page);
 	          $("#busqueda_total_paginas").val(objeto.total);
 	          $("#fila_actual").val(objeto.actual_row);
-	          $.each(objeto.rows,function(index,item){
-	            if(objeto.page===2 && index===0){
+	          $.each(objeto.rows, function(index, item) {
+	            if(objeto.page === 2 && index === 0){
 	                $("#iframe_detalle").attr({
 	                    'src':'<?php echo($ruta_db_superior);?>pantallas/documento/detalles_documento.php?iddoc='+item.iddocumento+"&idbusqueda_componente=<?php echo($_REQUEST["idbusqueda_componente"]);?>&rand=<?php echo(rand());?>",
 	                    'height': ($("#panel_body").height())
 	                });
 	            }
 	            if(!$("#resultado_pantalla_"+item.llave).length){
-			            if(forma_cargar===1)
+			            if(forma_cargar === 1) {
 			              $("#resultado_busqueda_principal<?php echo($datos_componente);?>").prepend("<div id='resultado_pantalla_"+item.llave+"' class='well'>"+item.info+"</div>");
-			            else{
+			            } else {
 			              $("#resultado_busqueda_principal<?php echo($datos_componente);?>").append("<div id='resultado_pantalla_"+item.llave+"' class='well'>"+item.info+"</div>");
 			            }
 			          }
@@ -321,7 +321,7 @@ $(document).ready(function(){
           	$("#cantidad_total_copia").val("0");
           	finalizar_carga_datos(0);
           }
-  
+
       }
     });
   }

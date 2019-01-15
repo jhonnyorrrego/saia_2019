@@ -17,7 +17,7 @@ echo (estilo_bootstrap());
 
 include_once($ruta_db_superior."pantallas/lib/librerias_cripto.php");
 $validar_enteros=array("idcontador","x_idformato","x_contador_idcontador","x_serie_idserie");
-desencriptar_sqli('form_info'); 
+desencriptar_sqli('form_info');
 
 // Initialize common variables
 $x_idformato = Null;
@@ -1135,7 +1135,7 @@ function vincular_funcion_digitalizacion($idformato,$x_banderas){
 }
 function desvincular_funcion_responsables($idformato){
 	global $conn;
-	$formato=busca_filtro_tabla("","formato","idfotmato=".$idformato,"",$conn);
+	$formato=busca_filtro_tabla("","formato","idformato=".$idformato,"",$conn);
 	$buscar_funcion=busca_filtro_tabla("","funciones_formato A","nombre_funcion='asignar_responsables'","",$conn);
 	if(in_array($idformato,explode(",",$buscar_funcion[0]["formato"]))){
 		$formats=explode(",",$buscar_funcion[0]["formato"]);
@@ -1189,11 +1189,13 @@ function desvincular_funcion_digitalizacion($idformato,$x_banderas){
 		phpmkr_query($sql);
 	}
 	//--------------------------------------------------------
-	$buscar_funcion_accion=busca_filtro_tabla("","funciones_formato_accion","idfunciones_formato=".$buscar_funcion[0]["idfunciones_formato"]." AND formato_idformato=".$idformato,"",$conn);
-	if($buscar_funcion_accion["numcampos"]){
-		$sql="DELETE FROM funciones_formato_accion WHERE idfunciones_formato_accion=".$buscar_funcion_accion[0]["idfunciones_formato_accion"];
-		guardar_traza($sql);
-		phpmkr_query($sql);
+	if(!empty($buscar_funcion[0]["idfunciones_formato"])) {
+    	$buscar_funcion_accion=busca_filtro_tabla("","funciones_formato_accion","idfunciones_formato=".$buscar_funcion[0]["idfunciones_formato"]." AND formato_idformato=".$idformato,"",$conn);
+    	if($buscar_funcion_accion["numcampos"]){
+    		$sql="DELETE FROM funciones_formato_accion WHERE idfunciones_formato_accion=".$buscar_funcion_accion[0]["idfunciones_formato_accion"];
+    		guardar_traza($sql);
+    		phpmkr_query($sql);
+    	}
 	}
 }
 function vincular_campo_anexo($idformato){

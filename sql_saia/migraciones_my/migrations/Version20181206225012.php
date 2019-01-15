@@ -1,7 +1,7 @@
 <?php
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -1603,11 +1603,11 @@ class Version20181206225012 extends AbstractMigration {
         )
     );
 
-    public function getDescription() {
+    public function getDescription(): string {
         return 'Actualizar los compoentes para los cambios en el generador';
     }
 
-    public function preUp(Schema $schema) {
+    public function preUp(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -1619,7 +1619,7 @@ class Version20181206225012 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function up(Schema $schema) {
+    public function up(Schema $schema): void {
         $conn = $this->connection;
         foreach ($this->pantalla_componente as $value) {
             $result = $conn->fetchColumn("select idpantalla_componente from pantalla_componente where nombre=:nombre", [
@@ -1640,7 +1640,7 @@ class Version20181206225012 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function down(Schema $schema) {
+    public function down(Schema $schema): void {
         // this down() migration is auto-generated, please modify it to your needs
     }
 }

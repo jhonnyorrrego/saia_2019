@@ -39,13 +39,13 @@ if (isset($_SESSION["LOGIN" . LLAVE_SAIA]) && $_SESSION["LOGIN" . LLAVE_SAIA]) {
     $_SESSION["ruta_temp_funcionario"] = $ruta_temp_func . "_" . $_SESSION["LOGIN" . LLAVE_SAIA] . "/";
 }
 
-if ($_REQUEST['idfunc'] && !isset($_SESSION["LOGIN" . LLAVE_SAIA])) {//Utilizado para la generacion del PDF
-    include_once('pantallas/lib/librerias_cripto.php');
-    $idfuncionario_crypto = decrypt_blowfish($_REQUEST["idfunc"], LLAVE_SAIA_CRYPTO);
-    $fun = busca_filtro_tabla("login,funcionario_codigo,idfuncionario", "funcionario", "estado=1 and idfuncionario=" . $idfuncionario_crypto, "", $conn);
-    if ($fun["numcampos"]) {
-        logear_funcionario_webservice($fun[0]["login"]);
-    }
+if (isset($_REQUEST['idfunc']) && $_REQUEST['idfunc'] && !isset($_SESSION["LOGIN" . LLAVE_SAIA])) {//Utilizado para la generacion del PDF
+	include_once ('pantallas/lib/librerias_cripto.php');
+	$idfuncionario_crypto = decrypt_blowfish($_REQUEST["idfunc"], LLAVE_SAIA_CRYPTO);
+	$fun = busca_filtro_tabla("login,funcionario_codigo,idfuncionario", "funcionario", "estado=1 and idfuncionario=" . $idfuncionario_crypto, "", $conn);
+	if ($fun["numcampos"]) {
+		logear_funcionario_webservice($fun[0]["login"]);
+	}
 }
 
 
@@ -473,7 +473,7 @@ global $conn;
 	if($conn) {
 		$sqleve = "";
 		$sql = trim($strsql);
-		$sql = preg_replace("/\s*=\s*/", "=", $sql);		
+		$sql = preg_replace("/\s*=\s*/", "=", $sql);
 		$accion = strtoupper(substr($sql, 0, strpos($sql, ' ')));
 		$llave = 0;
 		$tabla = "";
@@ -3056,64 +3056,63 @@ function getRealIP()
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>  */
-function almacenar_sesion($exito, $login)
-{
-    global $conn;
-    $_SESSION["idsesion_php"] = session_id();
-    $datos = array();
-    if ($login == "") {
-        $login = usuario_actual("login");
-        $id = usuario_actual("idfuncionario");
-    } else {
-        $id = $_SESSION["idfuncionario"];
-    }
-    $iplocal = getRealIP();
-    $ipremoto = servidor_remoto();
-    if ($iplocal == "" || $ipremoto == "") {
-        if ($iplocal == "") {
-            $iplocal = $ipremoto;
-        } else {
-            $ipremoto = $iplocal;
-        }
-    }
-    if (!$exito) {
-        $intentos = busca_filtro_tabla("intento_login, idfuncionario, estado", "funcionario a", "a.login='" . $login . "'", "", $conn);
-        if ($intentos["numcampos"] && $intentos[0]["estado"] != 0) {//Desarrollo de validacion de intentos al loguearse
-            if (!$intentos[0]["intento_login"]) {
-                $consecutivo = 1;
-            } else {
-                $consecutivo = $intentos[0]["intento_login"] + 1;
-            }
-            $sql2 = "UPDATE funcionario SET intento_login=" . $consecutivo . " WHERE idfuncionario=" . $intentos[0]["idfuncionario"];
-            $conn->Ejecutar_Sql($sql2);
-            $configuracion = busca_filtro_tabla("valor", "configuracion a", "a.nombre='intentos_login'", "", $conn);
-            if ($consecutivo >= $configuracion[0]["valor"]) {
-                $correo_admin = busca_filtro_tabla("b.email", "configuracion a,funcionario b", "b.login=a.valor AND a.nombre ='login_administrador_interno'", "", $conn);
-                $sql3 = "INSERT INTO lista_negra_acceso(login,iplocal,ipremota,fecha) VALUES ('" . $login . "', '" . $iplocal . "', '" . $ipremoto . "', " . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
-                $conn->Ejecutar_Sql($sql3);
-                $sql4 = "UPDATE funcionario SET estado='0' WHERE idfuncionario=" . $intentos[0]["idfuncionario"];
-                $conn->Ejecutar_Sql($sql4);
-                $datos["mensaje"] = "Usuario inactivado por exceso de intentos. Favor comunicarse con el administrador " . $correo_admin[0]["email"];
-            }
-        }
-        $sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,fecha) VALUES('" . $iplocal . "','" . $ipremoto . "','" . $login . "',0," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
-        $conn->Ejecutar_Sql($sql);
-    } else {
-        $sql2 = "UPDATE funcionario SET intento_login=0 WHERE idfuncionario=" . $id;
-        $conn->Ejecutar_Sql($sql2);
+function almacenar_sesion($exito, $login) {
+	global $conn;
+	$_SESSION["idsesion_php"] = session_id();
+	$datos = array();
+	if ($login == "") {
+		$login = usuario_actual("login");
+		$id = usuario_actual("idfuncionario");
+	} else {
+		$id = $_SESSION["idfuncionario"] ?? null;
+	}
+	$iplocal = getRealIP();
+	$ipremoto = servidor_remoto();
+	if ($iplocal == "" || $ipremoto == "") {
+		if ($iplocal == "") {
+			$iplocal = $ipremoto;
+		} else {
+			$ipremoto = $iplocal;
+		}
+	}
+	if (!$exito) {
+		$intentos = busca_filtro_tabla("intento_login, idfuncionario, estado", "funcionario a", "a.login='" . $login . "'", "", $conn);
+		if ($intentos["numcampos"] && $intentos[0]["estado"] != 0) {//Desarrollo de validacion de intentos al loguearse
+			if (!$intentos[0]["intento_login"]) {
+				$consecutivo = 1;
+			} else {
+				$consecutivo = $intentos[0]["intento_login"] + 1;
+			}
+			$sql2 = "UPDATE funcionario SET intento_login=" . $consecutivo . " WHERE idfuncionario=" . $intentos[0]["idfuncionario"];
+			$conn -> Ejecutar_Sql($sql2);
+			$configuracion = busca_filtro_tabla("valor", "configuracion a", "a.nombre='intentos_login'", "", $conn);
+			if ($consecutivo >= $configuracion[0]["valor"]) {
+				$correo_admin = busca_filtro_tabla("b.email", "configuracion a,funcionario b", "b.login=a.valor AND a.nombre ='login_administrador_interno'", "", $conn);
+				$sql3 = "INSERT INTO lista_negra_acceso(login,iplocal,ipremota,fecha) VALUES ('" . $login . "', '" . $iplocal . "', '" . $ipremoto . "', " . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
+				$conn -> Ejecutar_Sql($sql3);
+				$sql4 = "UPDATE funcionario SET estado='0' WHERE idfuncionario=" . $intentos[0]["idfuncionario"];
+				$conn -> Ejecutar_Sql($sql4);
+				$datos["mensaje"] = "Usuario inactivado por exceso de intentos. Favor comunicarse con el administrador " . $correo_admin[0]["email"];
+			}
+		}
+		$sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,fecha) VALUES('" . $iplocal . "','" . $ipremoto . "','" . $login . "',0," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
+		$conn -> Ejecutar_Sql($sql);
+	} else {
+		$sql2 = "UPDATE funcionario SET intento_login=0 WHERE idfuncionario=" . $id;
+		$conn -> Ejecutar_Sql($sql2);
 
-        $idsesion = ultima_sesion($login);
-        if ($idsesion == "") {
-            session_regenerate_id();
-            $_SESSION["idsesion_php"] = session_id();
-            $sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,idsesion_php,fecha,funcionario_idfuncionario) VALUES('" . $iplocal . "','" . $ipremoto . "','" . $login . "'," . $exito . ",'" . $_SESSION["idsesion_php"] . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . "," . $id . ")";
-            $datos["mensaje"] = "Sesion creada";
-        } else {
-            $datos["mensaje"] = "Sesion ya existe";
-        }
-        $conn->Ejecutar_Sql($sql);
-    }
-    return ($datos);
+		$idsesion = ultima_sesion($login);
+		if ($idsesion == "") {
+			session_regenerate_id();
+			$_SESSION["idsesion_php"] = session_id();
+			$sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,idsesion_php,fecha,funcionario_idfuncionario) VALUES('" . $iplocal . "','" . $ipremoto . "','" . $login . "'," . $exito . ",'" . $_SESSION["idsesion_php"] . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . "," . $id . ")";
+			$datos["mensaje"] = "Sesion creada";
+			$conn -> Ejecutar_Sql($sql);
+		} else {
+			$datos["mensaje"] = "Sesion ya existe";
+		}
+	}
+	return ($datos);
 }
 
 /**
@@ -3165,9 +3164,8 @@ function ultima_sesion($login)
 <Salida>
 <Pre-condiciones>
 <Post-condiciones>
- */
-function salir($texto, $login)
-{
+*/
+function salir($texto, $login="") {
     global $usuactual, $conn;
     if ($login != "") {
         $iplocal = getRealIP();

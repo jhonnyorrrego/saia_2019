@@ -1,7 +1,16 @@
 <?php
 use Stringy\Stringy;
 
-class Model {
+abstract class Events {
+    abstract protected function beforeCreate();
+    abstract protected function afterCreate();
+    abstract protected function beforeUpdate();
+    abstract protected function afterUpdate();
+    abstract protected function beforeDelete();
+    abstract protected function afterDelete();
+}
+
+class Model extends  Events {
     protected $dbAttributes;
     public static $table;
     public static $primary;
@@ -12,11 +21,11 @@ class Model {
      * @param int $id row identificator
      */
     function __construct($id = null) {
-        $this->defineAttributes();
+        $this -> defineAttributes();
 
         if ($id) {
-            $this->setPK($id);
-            $this->find();
+            $this -> setPK($id);
+            $this -> find();
         }
     }
 
@@ -27,16 +36,15 @@ class Model {
      * @return void
      */
     public function __get($attribute) {
-        if (property_exists($this, $attribute) && 
-            in_array($attribute, $this->getSafeAttributes())) {
-            $response = $this->$attribute;
-        }else{
+        if (property_exists($this, $attribute) && in_array($attribute, $this -> getSafeAttributes())) {
+            $response = $this -> $attribute;
+        } else {
             $response = NULL;
         }
-        
+
         return $response;
     }
-    
+
     /**
      * set attribute value
      *
@@ -45,55 +53,54 @@ class Model {
      * @return boolean
      */
     public function __set($attribute, $value) {
-        $response = property_exists($this, $attribute) && 
-            in_array($attribute, $this->getSafeAttributes());
+        $response = property_exists($this, $attribute) && in_array($attribute, $this -> getSafeAttributes());
 
         if ($response) {
-            $this->$attribute = $value;
+            $this -> $attribute = $value;
         }
 
-        return $response;;
+        return $response;
+        ;
     }
 
     /**
      * define database attributes
      */
-    protected function defineAttributes(){
-        $this->dbAttributes = (object) [
-            'safe' => [],
-            'date' => []
-        ];
+    protected function defineAttributes() {
+        $this -> dbAttributes = (object)[
+        'safe' => [],
+        'date' => []];
     }
 
-    /** 
-     * get safe attributes 
+    /**
+     * get safe attributes
      * @return array
      */
-    public function getSafeAttributes(){
-        return $this->dbAttributes->safe;
+    public function getSafeAttributes() {
+        return $this -> dbAttributes -> safe;
     }
 
-    /** 
-     * get date attributes 
+    /**
+     * get date attributes
      * @return array
      */
-    public function getDateAttributes(){
-        return $this->dbAttributes->date;
+    public function getDateAttributes() {
+        return $this -> dbAttributes -> date;
     }
 
     /**
      * massive assignment to safe attributes
-     * @return boolean 
+     * @return boolean
      *      false if some attribute is not included on safeAttributes
      */
     public function setAttributes($attributes) {
-        $diff = array_diff(array_keys($attributes), $this->getSafeAttributes());
+        $diff = array_diff(array_keys($attributes), $this -> getSafeAttributes());
 
-        if(!count($diff)){
+        if (!count($diff)) {
             foreach ($attributes as $key => $value) {
-                $this->$key = $value;
+                $this -> $key = $value;
             }
-        }else{
+        } else {
             $error = true;
         }
 
@@ -107,8 +114,8 @@ class Model {
     public function getAttributes() {
         $data = [];
 
-        foreach ($this->getSafeAttributes() as $value){
-            $data[$value] = $this->$value;
+        foreach ($this->getSafeAttributes() as $value) {
+            $data[$value] = $this -> $value;
         }
 
         return $data;
@@ -116,10 +123,10 @@ class Model {
 
     /**
      * get the not null attributes from safeAttributes
-     * @return array 
+     * @return array
      */
     public function getNotNullAttributes() {
-        return array_filter($this->getAttributes(), function($value) {
+        return array_filter($this -> getAttributes(), function($value) {
             return count($value) && $value !== false;
         });
     }
@@ -128,25 +135,23 @@ class Model {
      * find and set the safeAttributes by pk
      */
     public function find() {
-        $data = self::findByAttributes([
-            self::getPrimaryLabel() => $this->getPK()
-        ]);
+        $data = self::findByAttributes([self::getPrimaryLabel() => $this -> getPK()]);
 
         if ($data) {
-            $this->setAttributes($data->getAttributes());
-        }else{
+            $this -> setAttributes($data -> getAttributes());
+        } else {
             throw new Exception("invalid Pk", 1);
         }
     }
 
     /**
-     * save the data on the table 
+     * save the data on the table
      */
     public function save() {
-        if ($this->getPK()) {
-            return $this->update();
+        if ($this -> getPK()) {
+            return $this -> update();
         } else {
-            return $this->create();
+            return $this -> create();
         }
     }
 
@@ -154,30 +159,39 @@ class Model {
      * insert a new record on the table
      */
     public function create() {
+        if ($this -> beforeCreate()) {
+            if ($this -> runCreate()) {
+                $this -> afterCreate();
+            }
+        }
+        return $this -> getPK();
+    }
+
+    private function runCreate() {
         $table = self::getTableName();
-        $attributes = $this->getNotNullAttributes();
-        $dateAttributes = $this->getDateAttributes();
+        $attributes = $this -> getNotNullAttributes();
+        $dateAttributes = $this -> getDateAttributes();
 
         $fields = $values = '';
-        foreach($attributes as $attribute => $value){
-            if(strlen($fields)){
+        foreach ($attributes as $attribute => $value) {
+            if (strlen($fields)) {
                 $fields .= ',';
                 $values .= ',';
             }
 
             $fields .= $attribute;
-            if(in_array($attribute, $dateAttributes)){
+            if (in_array($attribute, $dateAttributes)) {
                 $values .= fecha_db_almacenar($value, 'Y-m-d H:i:s');
-            }else{
+            } else {
                 $values .= "'" . $value . "'";
             }
         }
-        
+
         $sql = "INSERT INTO " . $table . " (" . $fields . ") values (" . $values . ")";
 
         if (phpmkr_query($sql)) {
-            $this->setPK(phpmkr_insert_id());
-            return $this->getPK();
+            $this -> setPK(phpmkr_insert_id());
+            return $this -> getPK();
         } else {
             return 0;
         }
@@ -187,9 +201,36 @@ class Model {
      * modify a record on the table by pk
      */
     public function update() {
-        return self::executeUpdate($this->getNotNullAttributes(),[
-            self::getPrimaryLabel() => $this->getPK()
-        ]);
+        $response = false;
+        if ($this -> beforeUpdate()) {
+            $response = $this -> runUpdate();
+            if ($response) {
+                $this -> afterUpdate();
+            }
+        }
+        return $response;
+    }
+
+    private function runUpdate() {
+        return self::executeUpdate($this -> getNotNullAttributes(), [self::getPrimaryLabel() => $this -> getPK()]);
+    }
+
+    public function delete() {
+        if ($this -> beforeDelete()) {
+            if ($this -> runDelete()) {
+                $this -> afterDelete();
+            }
+        }
+        return !self::findByAttributes([self::getPrimaryLabel() => $id]);
+    }
+
+    private function runDelete() {
+        return self::executeDelete([self::getPrimaryLabel() => $this -> getPK()]);
+    }
+
+    public static function executeDelete($conditions = []) {
+        $sql = 'DELETE FROM' . self::getTableName() . ' where ' . self::createCondition($conditions);
+        return phpmkr_query($sql);
     }
 
     /**
@@ -197,7 +238,7 @@ class Model {
      */
     public function getPK() {
         $pk = self::getPrimaryLabel();
-        return $this->$pk;
+        return $this -> $pk;
     }
 
     /**
@@ -208,7 +249,7 @@ class Model {
      */
     public function setPK($value) {
         $pk = self::getPrimaryLabel();
-        $this->$pk = $value;
+        $this -> $pk = $value;
     }
 
     /**
@@ -216,29 +257,29 @@ class Model {
      *
      * @param string $attribute attribute to convert
      * @param string $format required format
-     * @return string 
+     * @return string
      */
-    public function getDateAttribute($attribute, $format = 'd/m/Y H:i a'){
-        return DateController::convertDate($this->$attribute, 'Y-m-d H:i:s', $format);
+    public function getDateAttribute($attribute, $format = 'd/m/Y H:i a') {
+        return DateController::convertDate($this -> $attribute, 'Y-m-d H:i:s', $format);
     }
 
-     /**
+    /**
      * define primary key label
      * @return string
      */
-    public static function getPrimaryLabel(){
-        return self::$primary ? self::$primary : 'id'.self::getTableName();
+    public static function getPrimaryLabel() {
+        return self::$primary ? self::$primary : 'id' . self::getTableName();
     }
 
     /**
      * define table name
      */
-    public static function getTableName(){
-        if(self::$table){
+    public static function getTableName() {
+        if (self::$table) {
             $response = self::$table;
-        }else{
-            $Stringy = new Stringy(get_called_class());        
-            $response = $Stringy->underscored();
+        } else {
+            $Stringy = new Stringy(get_called_class());
+            $response = $Stringy -> underscored();
         }
 
         return $response;
@@ -251,7 +292,7 @@ class Model {
      * @param array $fields
      * @return void
      */
-    public static function findByAttributes($conditions, $fields = []){
+    public static function findByAttributes($conditions, $fields = []) {
         $data = self::findAllByAttributes($conditions, $fields, '', 1);
         return $data ? $data[0] : NULL;
     }
@@ -265,28 +306,28 @@ class Model {
      * @param integer $limit
      * @return void
      */
-    public static function findAllByAttributes($conditions, $fields = [], $order = '', $limit = 0){
+    public static function findAllByAttributes($conditions, $fields = [], $order = '', $limit = 0) {
         global $conn;
 
-        $table = self::getTableName();        
+        $table = self::getTableName();
         $select = self::createSelect($fields);
         $condition = self::createCondition($conditions);
 
-        if($limit){
+        if ($limit) {
             $records = busca_filtro_tabla_limit($select, $table, $condition, $order, 0, $limit, $conn);
-        }else{
+        } else {
             $records = busca_filtro_tabla($select, $table, $condition, $order, $conn);
         }
-        
+
         if ($records['numcampos']) {
             $response = self::convertToObjectCollection($records);
-        }else{
+        } else {
             $response = NULL;
         }
 
         return $response;
     }
-    
+
     /**
      * create select portion for sql query
      * check date attributes
@@ -294,55 +335,55 @@ class Model {
      * @param array $fields
      * @return void
      */
-    public static function createSelect($fields){
+    public static function createSelect($fields) {
         $Instance = new self;
-        $safeAttributes = $Instance->getSafeAttributes();
-        $dateAttributes = $Instance->getDateAttributes();
+        $safeAttributes = $Instance -> getSafeAttributes();
+        $dateAttributes = $Instance -> getDateAttributes();
         $select = '';
 
         $fields = count($fields) ? $fields : $safeAttributes;
 
-        foreach($fields as $attribute){
-            if(!in_array($attribute, $safeAttributes)){
+        foreach ($fields as $attribute) {
+            if (!in_array($attribute, $safeAttributes)) {
                 continue;
             }
-            
-            if(strlen($select)){
+
+            if (strlen($select)) {
                 $select .= ',';
             }
-            
-            if(in_array($attribute, $dateAttributes)){
+
+            if (in_array($attribute, $dateAttributes)) {
                 $select .= fecha_db_obtener($attribute, 'Y-m-d H:i:s') . ' as ' . $attribute;
-            }else{
+            } else {
                 $select .= $attribute;
             }
         }
-        
+
         return $select;
     }
 
     /**
      * create where portion for sql query
      * check date attributes
-     * 
+     *
      * @param array $conditions
      * @return string
      */
-    public static function createCondition($conditions){
+    public static function createCondition($conditions) {
         $condition = '';
 
-        if(count($conditions)){
+        if (count($conditions)) {
             $Instance = new self;
-            $dateAttributes = $Instance->getDateAttributes();
-            
-            foreach($conditions as $attribute => $value){
-                if(strlen($condition)){
+            $dateAttributes = $Instance -> getDateAttributes();
+
+            foreach ($conditions as $attribute => $value) {
+                if (strlen($condition)) {
                     $condition .= ' and ';
                 }
-                
-                if(in_array($attribute, $dateAttributes)){
+
+                if (in_array($attribute, $dateAttributes)) {
                     $condition .= fecha_db_obtener($attribute, 'Y-m-d H:i:s') . "=" . $value;
-                }else{
+                } else {
                     $condition .= $attribute . "='" . $value . "'";
                 }
             }
@@ -357,15 +398,15 @@ class Model {
      * @param array $records
      * @return array
      */
-    public static function convertToObjectCollection($records){
+    public static function convertToObjectCollection($records) {
         $class = get_called_class();
         $total = isset($records['numcampos']) ? $records['numcampos'] : count($records);
         $data = [];
-        for($row=0; $row < $total; $row++){                
+        for ($row = 0; $row < $total; $row++) {
             $Instance = new $class();
             foreach ($records[$row] as $key => $value) {
-                if (is_string($key) && property_exists($class , $key)) {
-                    $Instance->$key = $value;
+                if (is_string($key) && property_exists($class, $key)) {
+                    $Instance -> $key = $value;
                 }
             }
             $data[] = $Instance;
@@ -378,16 +419,16 @@ class Model {
      * create a new record on table
      *
      * @param array $attributes
-     * @return int new primary key 
+     * @return int new primary key
      */
-    public static function newRecord($attributes){
+    public static function newRecord($attributes) {
         $className = get_called_class();
         $Instance = new $className();
-        $Instance->setAttributes($attributes);
-            
-        if($Instance->create()){
-            $response = $Instance->getPK();
-        }else{
+        $Instance -> setAttributes($attributes);
+
+        if ($Instance -> create()) {
+            $response = $Instance -> getPK();
+        } else {
             $response = 0;
         }
 
@@ -401,22 +442,48 @@ class Model {
      * @param array $conditions
      * @return void
      */
-    public static function executeUpdate($fields, $conditions){        
+    public static function executeUpdate($fields, $conditions) {
         $set = '';
 
-        foreach($fields as $attribute => $value){
-            if(strlen($set)){
+        foreach ($fields as $attribute => $value) {
+            if (strlen($set)) {
                 $set .= ',';
             }
-            
-            if(in_array($attribute, $dateAttributes)){
+
+            if (in_array($attribute, $dateAttributes)) {
                 $set .= $attribute . "=" . fecha_db_almacenar($value, 'Y-m-d H:i:s');
-            }else{
+            } else {
                 $set .= $attribute . "='" . $value . "'";
             }
         }
-        
+
         $sql = 'UPDATE ' . self::getTableName() . ' set ' . $set . ' where ' . self::createCondition($conditions);
         return phpmkr_query($sql);
     }
+
+    //Interface events
+    protected function beforeCreate() {
+        return true;
+    }
+
+    protected function afterCreate() {
+        return true;
+    }
+
+    protected function beforeUpdate() {
+        return true;
+    }
+
+    protected function afterUpdate() {
+        return true;
+    }
+
+    protected function beforeDelete() {
+        return true;
+    }
+
+    protected function afterDelete() {
+        return true;
+    }
+
 }

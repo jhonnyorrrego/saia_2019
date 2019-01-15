@@ -2,7 +2,7 @@
 namespace Migrations;
 
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -14,7 +14,7 @@ class Version20180228220528 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function up(Schema $schema) {
+    public function up(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
         $this->platform->registerDoctrineTypeMapping('enum', 'string');
 
@@ -39,7 +39,7 @@ class Version20180228220528 extends AbstractMigration {
         }
     }
 
-    public function postUp(Schema $schema) {
+    public function postUp(Schema $schema): void {
         $conn = $this->connection;
 
         $funciones = $conn->fetchAll("select idfunciones_formato, formato from funciones_formato", []);
@@ -116,7 +116,7 @@ class Version20180228220528 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function down(Schema $schema) {
+    public function down(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
         $this->platform->registerDoctrineTypeMapping('enum', 'string');
         $schema->dropTable('funciones_formato_enlace');

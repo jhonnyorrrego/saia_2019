@@ -42,8 +42,8 @@ class IdReader
 
         $this->om = $om;
         $this->classMetadata = $classMetadata;
-        $this->singleId = 1 === count($ids);
-        $this->intId = $this->singleId && in_array($idType, array('integer', 'smallint', 'bigint'));
+        $this->singleId = 1 === \count($ids);
+        $this->intId = $this->singleId && \in_array($idType, array('integer', 'smallint', 'bigint'));
         $this->idField = current($ids);
 
         // single field association are resolved, since the schema column could be an int
@@ -63,7 +63,7 @@ class IdReader
      * @return bool returns `true` if the class has a single-column ID and
      *              `false` otherwise
      */
-    public function isSingleId()
+    public function isSingleId(): bool
     {
         return $this->singleId;
     }
@@ -74,7 +74,7 @@ class IdReader
      * @return bool returns `true` if the class has a single-column integer ID
      *              and `false` otherwise
      */
-    public function isIntId()
+    public function isIntId(): bool
     {
         return $this->intId;
     }
@@ -95,7 +95,7 @@ class IdReader
         }
 
         if (!$this->om->contains($object)) {
-            throw new RuntimeException(sprintf('Entity of type "%s" passed to the choice field must be managed. Maybe you forget to persist it in the entity manager?', get_class($object)));
+            throw new RuntimeException(sprintf('Entity of type "%s" passed to the choice field must be managed. Maybe you forget to persist it in the entity manager?', \get_class($object)));
         }
 
         $this->om->initializeObject($object);
@@ -116,7 +116,7 @@ class IdReader
      *
      * @return string The name of the ID field
      */
-    public function getIdField()
+    public function getIdField(): string
     {
         return $this->idField;
     }

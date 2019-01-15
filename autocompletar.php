@@ -42,16 +42,22 @@ global $conn;
 
     $arr_consulta = json_decode($consulta, true);
 
-    $campos = array();
-    $total_campos = count($arr_consulta["campotexto"]);
-    for($i=0; $i < $total_campos; $i++) {
-        $campos[] = $arr_consulta["campotexto"][$i];
-        $campos[] = "' '";
+    $campos_nombre = $arr_consulta["campotexto"];
+    if(is_array($arr_consulta["campotexto"])) {
+        $campos = array();
+        $total_campos = count($arr_consulta["campotexto"]);
+        for($i=0; $i < $total_campos; $i++) {
+            $campos[] = $arr_consulta["campotexto"][$i];
+            $campos[] = "' '";
+        }
+        $campos_nombre = concatenar_cadena_sql($campos);
     }
 
-    $campos_nombre = concatenar_cadena_sql($campos);
     $campo_id = $arr_consulta["campoid"];
-    $tablas = implode(", ", $arr_consulta["tablas"]);
+    $tablas = $arr_consulta["tablas"];
+    if(is_array($arr_consulta["campotexto"])) {
+        $tablas = implode(", ", $arr_consulta["tablas"]);
+    }
     $condicion = $arr_consulta["condicion"];
     $orden= $arr_consulta["orden"];
 
@@ -59,7 +65,6 @@ global $conn;
     // Tipo de LLenado =1 es para los funcionarios
     $usuarios = busca_filtro_tabla("$campos_nombre as nombre, $campo_id as id", $tablas, $where_final, $orden, $conn);
 
-    //print_r($usuarios); die();
     $tipo_id = "funcionario_codigo";
     $resp = array();
     for ($j = 0; $j < $usuarios["numcampos"]; $j++) {
@@ -67,8 +72,6 @@ global $conn;
         if ($usuarios[$j]["sistema"] == 0)
             $sistema = "(Sin SAIA)";
         $valor = in_array($usuarios[$j][$tipo_id], $seleccionados);
-
-        $node_id = array();
 
         $node_id = array(
             "value" => $usuarios[$j]["id"],

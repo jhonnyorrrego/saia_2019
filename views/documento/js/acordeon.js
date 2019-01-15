@@ -4,7 +4,7 @@ $(function () {
     let params = $('script[data-params]').data('params');
 
     (function init() {
-        loadDocument();
+        getFormatInformation();    
         loadHeader();
     })();
 
@@ -14,6 +14,7 @@ $(function () {
         
         if (type == 'comunication' || type == 'process') {
             let param = type == 'comunication' ? 5 : 3;
+            let title = type == 'comunication' ? 'Comunicaciones' : 'Tramites generales';
             var data = JSON.stringify([
                 {
                     kConnector: "html.page",
@@ -23,7 +24,7 @@ $(function () {
                 {
                     kConnector: "html.page",
                     url: "pantallas/formato/listar_formatos.php?idcategoria_formato=" + param,
-                    kTitle: "Tramites generales"
+                    kTitle: title
                 }
             ]);
             let route = `${baseUrl}views/dashboard/kaiten_dashboard.php?panels=${data}`;
@@ -34,17 +35,23 @@ $(function () {
         }
     });
 
-    function loadHeader() {
-        $('#document_header').load(`${baseUrl}views/documento/encabezado.php?documentId=${params.documentId}&transferId=${params.transferId}`);
+    function getFormatInformation() {
+        $.post(`${baseUrl}app/formato/consulta_rutas.php`, {
+            documentId: params.documentId,
+            key: localStorage.getItem('key')
+        }, function (response) {
+            let route = baseUrl + response.data.ruta_mostrar
+            $('#view_document').load(route);
+        }, 'json');
     }
 
-    function loadDocument() {
-        $.post(`${baseUrl}app/formato/generar_enlace.php`, {
-            view: 'mostrar',
-            documentId: params.documentId,
-            key: key
-        }, function (response) {
-            $('#view_document').load(`${baseUrl+response.data.url}?iddoc=${params.documentId}&key=${key}`);
-        }, 'json');
+    function loadHeader() {
+        let route = `${baseUrl}views/documento/encabezado.php?documentId=${params.documentId}`;
+        
+        if (params.transferId) {
+            route += `&transferId=${params.transferId}`;
+        }
+            
+        $('#document_header').load(route);
     }
 });

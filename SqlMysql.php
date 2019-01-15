@@ -321,7 +321,7 @@ class SqlMysql extends SQL2 {
      * <Pre-condiciones>
      * <Post-condiciones>
      */
-    function Busca_tabla($tabla, $campo) {
+    public function Busca_tabla($tabla, $campo = "") {
         if (!$tabla && @$_REQUEST["tabla"])
             $tabla = $_REQUEST["tabla"];
         else if (!$tabla)

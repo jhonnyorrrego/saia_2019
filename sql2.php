@@ -5,10 +5,6 @@ include_once ("SqlSqlServer.php");
 include_once ("SqlOracle.php");
 include_once ("SqlMsSql.php");
 include_once ("SqlPostgres.php");
-use SqlMysql;
-use SqlSqlServer;
-use SqlOracle;
-use SqlMsSql;
 
 abstract class SQL2 {
 	protected $consulta;
@@ -267,7 +263,7 @@ abstract class SQL2 {
 	 * <Pre-condiciones>
 	 * <Post-condiciones>
 	 */
-	public abstract function Busca_tabla($tabla, $campo);
+	public abstract function Busca_tabla($tabla, $campo = "");
 
 	/*
 	 * <Clase>SQL

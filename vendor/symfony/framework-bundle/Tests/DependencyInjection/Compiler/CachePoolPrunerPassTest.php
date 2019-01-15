@@ -19,6 +19,9 @@ use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
+/**
+ * @group legacy
+ */
 class CachePoolPrunerPassTest extends TestCase
 {
     public function testCompilerPassReplacesCommandArgument()
@@ -45,8 +48,8 @@ class CachePoolPrunerPassTest extends TestCase
     {
         $container = new ContainerBuilder();
 
-        $definitionsBefore = count($container->getDefinitions());
-        $aliasesBefore = count($container->getAliases());
+        $definitionsBefore = \count($container->getDefinitions());
+        $aliasesBefore = \count($container->getAliases());
 
         $pass = new CachePoolPrunerPass();
         $pass->process($container);

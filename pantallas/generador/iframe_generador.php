@@ -57,8 +57,7 @@ function llamado_pantalla(ruta,datos,destino,nombre){
 $(document).ready(function(){
 	$("#iframe_generador").height($(document).height());
 	$("#iframe_generador").width($("#admin_generador").width());
-	$("#izquierdo_saia").find("iframe").height($(document).height());
-	$("#izquierdo_saia").width($("#panel_izquierdo").width());
+	
 	
 });    
 </script>
@@ -67,14 +66,20 @@ $(document).ready(function(){
 
 </head>
 	<body>
-			<div class="container-fluid px-2" >
+			<div class="container-fluid px-0" >
 				<div class="row mx-0">					
-				    <div class="col-2 m-0 p-0 px-0" id="panel_izquierdo">         
-				        <div id="izquierdo_saia">
+				    <div class="col-3 m-0 p-0 px-0" id="panel_izquierdo" style="">    
+				    
+				     	<iframe scrolling="no" frameborder="0" name="arbol_formato" src="<?php echo $ruta_db_superior."pantallas/formato/listado_formatos.php?cargar_seleccionado=1&tabla=formato&alto_pantalla='100'&no_kaiten=1&id=".$_REQUEST['idformato'] ;?>" width="100%" height="100% id="arbol_formato">
+				     		
+				     	</iframe>	
+				        
+				 
+				        <!--<div id="izquierdo_saia">
 				        	
-				        </div>					   
+				        </div>-->					   
 				    </div>			
-					<div class="col-10 m-0 p-0 mw-100" id="admin_generador">
+					<div class="col mx-0 p-0" id="admin_generador">
 						<iframe frameborder="0" id="iframe_generador" width="100%" src="<?php echo $ruta_db_superior."pantallas/generador/generador_pantalla.php?idformato=".$idpantalla; ?>" scrolling="yes"></iframe> 
 					</div>
 				</div>

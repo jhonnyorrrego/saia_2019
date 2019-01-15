@@ -1,7 +1,7 @@
 <?php
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Type;
 
@@ -10,11 +10,11 @@ use Doctrine\DBAL\Types\Type;
  */
 class Version20180928160000 extends AbstractMigration {
 
-    public function getDescription() {
+    public function getDescription(): string {
         return 'Modificar expediente y caja';
     }
 
-    public function preUp(Schema $schema) {
+    public function preUp(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -31,7 +31,7 @@ class Version20180928160000 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function up(Schema $schema) {
+    public function up(Schema $schema): void {
         $tabla_exp = $schema->getTable('expediente');
         $tabla_caja = $schema->getTable('caja');
 
@@ -55,7 +55,7 @@ class Version20180928160000 extends AbstractMigration {
         }
     }
 
-    public function postUp(Schema $schema) {
+    public function postUp(Schema $schema): void {
         $conn = $this->connection;
         if ($this->connection->getDatabasePlatform()->getName() == "oracle") {
             $conn->exec($this->crear_vista_expediente_ora());
@@ -64,7 +64,7 @@ class Version20180928160000 extends AbstractMigration {
         }
     }
 
-    public function preDown(Schema $schema) {
+    public function preDown(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
             $this->platform->registerDoctrineTypeMapping('enum', 'string');
@@ -79,7 +79,7 @@ class Version20180928160000 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function down(Schema $schema) {
+    public function down(Schema $schema): void {
         $tabla_exp = $schema->getTable('expediente');
         $tabla_caja = $schema->getTable('caja');
 
@@ -94,7 +94,7 @@ class Version20180928160000 extends AbstractMigration {
         }
     }
 
-    public function postDown(Schema $schema) {
+    public function postDown(Schema $schema): void {
         $conn = $this->connection;
         if ($conn->getDatabasePlatform()->getName() == "oracle") {
             $conn->exec($this->devolver_vista_expediente_ora());

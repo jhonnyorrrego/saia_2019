@@ -12,7 +12,7 @@ include_once ($ruta_db_superior . "db.php");
 
 $objetoJson = array("key" => 0);
 
-if ($_REQUEST["id"] && $_REQUEST["cargar_partes"]) {
+if (isset($_REQUEST["id"]) && $_REQUEST["id"] && $_REQUEST["cargar_partes"]) {
     $objetoJson = array();
     $id = explode(".", $_REQUEST["id"]);
     $hijos_dep = array();
@@ -20,25 +20,18 @@ if ($_REQUEST["id"] && $_REQUEST["cargar_partes"]) {
     $hijos_otros = array();
     $hijos = array();
     if ($id[1] == 0) {
-        $hijos_dep = llena_dependencia($id[0], $id[2], true);
+        $hijos_dep = llena_dependencia($id[0], true);
         if (!empty($hijos_dep)) {
             $hijos = $hijos_dep;
         }
     }
     if ($id[0] != 0) {
-        $hijos_serie = llena_serie($id[1], $id[0], $id[2]);
+        $hijos_serie = llena_serie($id[1], $id[0]);
         if (!empty($hijos_serie)) {
             $hijos = array_merge($hijos, $hijos_serie);
         }
     }
 
-    if ($_REQUEST["serie_sin_asignar"] == 1 && $id[0] == 0) {
-        $hijos_serie = array();
-        $hijos_serie = llena_serie_sin_asignar($id[1]);
-        if (!empty($hijos_serie)) {
-            $hijos = array_merge($hijos, $hijos_serie);
-        }
-    }
     if ($_REQUEST["otras_categorias"] == 1 && $id[0] == 0) {
         $hijos_otros = llena_otras_categorias($id[1]);
         if (!empty($hijos_otros)) {
@@ -54,17 +47,12 @@ if ($_REQUEST["id"] && $_REQUEST["cargar_partes"]) {
     $hijos = array();
     $objetoJson["key"] = 0;
     $hijos_dep = array();
-    $hijos_dep = llena_dependencia(0, 0, $partes);
-    // TRD
+    $hijos_dep = llena_dependencia(0, $partes);
+
     if (!empty($hijos_dep)) {
         $hijos = $hijos_dep;
     }
-    $hijos_dep = array();
-    $hijos_dep = llena_dependencia(0, 1, $partes);
-    // TVD
-    if (!empty($hijos_dep)) {
-        $hijos = array_merge($hijos, $hijos_dep);
-    }
+
     $hijos_serie = array();
     $hijos_otros = array();
 
@@ -72,7 +60,7 @@ if ($_REQUEST["id"] && $_REQUEST["cargar_partes"]) {
         $item_oc = array();
         $item_oc["extraClasses"] = "estilo-serie";
         $item_oc["title"] = "OTRAS CATEGORIAS";
-        $item_oc["key"] = "0.0.-1";
+        $item_oc["key"] = "0.0";
 
         $item_oc["children"] = llena_otras_categorias(0, 1);
         $hijos[] = $item_oc;
@@ -83,17 +71,13 @@ if ($_REQUEST["id"] && $_REQUEST["cargar_partes"]) {
 header('Content-Type: application/json');
 echo json_encode($objetoJson);
 
-function llena_dependencia($id, $tipo = 0, $partes = false) {
+function llena_dependencia($id, $partes = false) {
     global $conn;
     $objetoJson = array();
     $parte_text = "";
     if ($id == 0) {
         $papas = busca_filtro_tabla("iddependencia,codigo,nombre,estado", "dependencia", "(cod_padre=0 or cod_padre is null)", "nombre ASC", $conn);
-        if ($tipo) {
-            $parte_text = " - TVD";
-        } else {
-            $parte_text = " - TRD";
-        }
+        $parte_text = " - TRD";
     } else {
         $papas = busca_filtro_tabla("iddependencia,codigo,nombre,estado", "dependencia", "cod_padre=" . $id, "nombre ASC", $conn);
     }
@@ -106,20 +90,24 @@ function llena_dependencia($id, $tipo = 0, $partes = false) {
             $item = array();
             $item["extraClasses"] = "estilo-dependencia";
             $item["title"] = $text;
+<<<<<<< HEAD
             $item["key"] = $papas[$i]["iddependencia"] . ".0." . $tipo;
+=======
+            $item["key"] = $papas[$i]["iddependencia"] . ".0";
 
+>>>>>>> 2e34011c15fc29a4cee51886971864394a1a9791
             $hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"], "", $conn);
-            $serie = busca_filtro_tabla("count(*) as cant", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $papas[$i]["iddependencia"] . " and s.tvd=" . $tipo . " and (s.cod_padre=0 or s.cod_padre is null)", "", $conn);
+            $serie = busca_filtro_tabla("count(*) as cant", "entidad_serie e,serie s", "e.fk_serie=s.idserie and e.fk_dependencia=" . $papas[$i]["iddependencia"] . " and (s.cod_padre=0 or s.cod_padre is null)", "", $conn);
 
             $dependencias_hijas = array();
             $series_hijas = array();
             $dependencias_hijas1 = array();
             if (!$partes) {
                 if ($hijos[0]["cant"]) {
-                    $dependencias_hijas1 = llena_dependencia($papas[$i]["iddependencia"], $tipo);
+                    $dependencias_hijas1 = llena_dependencia($papas[$i]["iddependencia"]);
                 }
                 if ($serie[0]["cant"]) {
-                    $series_hijas = llena_serie(0, $papas[$i]["iddependencia"], $tipo);
+                    $series_hijas = llena_serie(0, $papas[$i]["iddependencia"]);
                 }
                 $dependencias_hijas = array_merge($dependencias_hijas1, $series_hijas);
             } else {
@@ -139,13 +127,13 @@ function llena_dependencia($id, $tipo = 0, $partes = false) {
     return $objetoJson;
 }
 
-function llena_serie($id, $iddep, $tipo = 0) {
+function llena_serie($id, $iddep) {
     global $conn;
     $objetoJson = array();
     if ($id == 0) {
-        $papas = busca_filtro_tabla("e.identidad_serie, s.*", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $iddep . " and s.tvd=" . $tipo . " and (s.cod_padre=0 or s.cod_padre is null) and s.categoria=2", "s.nombre ASC", $conn);
+        $papas = busca_filtro_tabla("e.identidad_serie, s.*", "entidad_serie e,serie s", "e.fk_serie=s.idserie and e.fk_dependencia=" . $iddep . " and (s.cod_padre=0 or s.cod_padre is null) and s.categoria=2", "s.nombre ASC", $conn);
     } else {
-        $papas = busca_filtro_tabla("e.identidad_serie,s.*", "entidad_serie e,serie s", "e.serie_idserie=s.idserie and e.estado=1 and e.llave_entidad=" . $iddep . " and s.tvd=" . $tipo . " and s.cod_padre=" . $id . " and s.categoria=2", "s.nombre ASC", $conn);
+        $papas = busca_filtro_tabla("e.identidad_serie,s.*", "entidad_serie e,serie s", "e.fk_serie=s.idserie and e.fk_dependencia=" . $iddep . " and s.cod_padre=" . $id . " and s.categoria=2", "s.nombre ASC", $conn);
     }
     if ($papas["numcampos"]) {
         for ($i = 0; $i < $papas["numcampos"]; $i++) {
@@ -157,12 +145,12 @@ function llena_serie($id, $iddep, $tipo = 0) {
             $item = array();
             $item["extraClasses"] = "estilo-serie";
             $item["title"] = $text;
-            $item["key"] = $iddep . "." . $papas[$i]["idserie"] . "." . $tipo;
+            $item["key"] = $iddep . "." . $papas[$i]["idserie"];
 
             $item["data"] = array("entidad_serie" => $identidad_serie);
-            $hijos = busca_filtro_tabla("count(*) as cant", "serie", "tvd=" . $tipo . "  and cod_padre=" . $papas[$i]["idserie"] . " and categoria=2", "", $conn);
+            $hijos = busca_filtro_tabla("count(*) as cant", "serie", " cod_padre=" . $papas[$i]["idserie"] . " and categoria=2", "", $conn);
             if ($hijos[0]["cant"]) {
-                $item["children"] = llena_serie($papas[$i]["idserie"], $iddep, $tipo);
+                $item["children"] = llena_serie($papas[$i]["idserie"], $iddep);
             }
             $objetoJson[] = $item;
         }
@@ -170,7 +158,7 @@ function llena_serie($id, $iddep, $tipo = 0) {
     return $objetoJson;
 }
 
-function llena_serie_sin_asignar($id, $inicio = 0) {
+function llena_serie_sin_asignar($id) {
     global $conn;
     $objetoJson = array();
 
@@ -186,7 +174,7 @@ function llena_serie_sin_asignar($id, $inicio = 0) {
                 $text .= " - INACTIVO";
             }
             $item = array();
-            $asig = busca_filtro_tabla("count(*) as cant", "entidad_serie", "estado=1 and serie_idserie=" . $papas[$i]["idserie"], "", $conn);
+            $asig = busca_filtro_tabla("count(*) as cant", "entidad_serie", "estado=1 and fk_serie=" . $papas[$i]["idserie"], "", $conn);
             $style = "estilo-serie";
             if ($asig[0]["cant"] == 0 && $papas[$i]["tipo"] != 3) {
                 $style = "estilo-serie-sa";
@@ -194,7 +182,7 @@ function llena_serie_sin_asignar($id, $inicio = 0) {
 
             $item["extraClasses"] = $style;
             $item["title"] = $text;
-            $item["key"] = "0." . $papas[$i]["idserie"] . "." . $papas[$i]["tvd"];
+            $item["key"] = "0." . $papas[$i]["idserie"];
 
             $hijos = busca_filtro_tabla("count(*) as cant", "serie", "cod_padre=" . $papas[$i]["idserie"] . " and categoria=2", "", $conn);
             if ($hijos[0]["cant"]) {
@@ -206,7 +194,7 @@ function llena_serie_sin_asignar($id, $inicio = 0) {
     return $objetoJson;
 }
 
-function llena_otras_categorias($id, $inicio = 0) {
+function llena_otras_categorias($id) {
     global $conn;
     $objetoJson = array();
     if ($id == 0) {
@@ -223,7 +211,7 @@ function llena_otras_categorias($id, $inicio = 0) {
             $item = array();
             $item["extraClasses"] = "estilo-serie";
             $item["title"] = $text;
-            $item["key"] = "0." . $papas[$i]["idserie"] . ".-1";
+            $item["key"] = "0." . $papas[$i]["idserie"];
 
             $hijos = busca_filtro_tabla("count(*) as cant", "serie", "cod_padre=" . $papas[$i]["idserie"] . " and categoria=3", "", $conn);
             if ($hijos[0]["cant"]) {

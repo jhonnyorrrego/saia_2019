@@ -1,6 +1,29 @@
 CHANGELOG
 =========
 
+4.2.0
+-----
+
+ * deprecated injecting `ClassMetadataFactory` in `DoctrineExtractor`,
+   an instance of `EntityManagerInterface` should be injected instead
+ * added support for `simple_array` type
+ * the `DoctrineTransactionMiddlewareFactory` class has been removed
+
+4.1.0
+-----
+
+ * added support for datetime immutable types in form type guesser
+
+4.0.0
+-----
+
+ * the first constructor argument of the `DoctrineChoiceLoader` class must be
+   an `ObjectManager` implementation
+ * removed the `MergeDoctrineCollectionListener::onBind()` method
+ * trying to reset a non-lazy manager service using the `ManagerRegistry::resetService()`
+   method throws an exception
+ * removed the `DoctrineParserCache` class
+
 3.4.0
 -----
 

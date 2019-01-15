@@ -58,7 +58,7 @@ $x_dias = Null;
      if($_REQUEST["origen"]!="documentoview")
        $origen="ordenar.php?accion=mostrar&key=".$_REQUEST["iddocumento"];
      else
-       $origen="documentoview.php?key=".$_REQUEST["iddocumento"];  
+       $origen="documentoview.php?key=".$_REQUEST["iddocumento"]."&iddoc=".$_REQUEST["iddocumento"];  
       redirecciona($origen);
    }
    else

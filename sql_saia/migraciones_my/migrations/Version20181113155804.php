@@ -2,7 +2,7 @@
 
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -10,11 +10,11 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version20181113155804 extends AbstractMigration
 {
-	public function getDescription() {
+	public function getDescription(): string {
         return 'Elimina campos fecha extrema en caja';
     }
 
-    public function preUp(Schema $schema) {
+    public function preUp(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -24,7 +24,7 @@ class Version20181113155804 extends AbstractMigration
     /**
      * @param Schema $schema
      */
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
          $table = $schema->getTable('caja');
         if ($table && $table->hasColumn("fecha_extrema_i")) {
@@ -38,7 +38,7 @@ class Version20181113155804 extends AbstractMigration
     /**
      * @param Schema $schema
      */
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
 

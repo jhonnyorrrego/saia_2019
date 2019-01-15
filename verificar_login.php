@@ -147,7 +147,7 @@ if ($_REQUEST["userid"] <> "" && $_REQUEST["passwd"] <> "") {
 		$retorno["ingresar"] = 1;
 	} else {
 		$dato = almacenar_sesion(0, $sUserId);
-		if ($dato["mensaje"]) {
+		if (isset($dato["mensaje"])) {
 			$retorno["mensaje"] = $dato["mensaje"];
 		}
 		$retorno["ruta"] = $redirecciona;

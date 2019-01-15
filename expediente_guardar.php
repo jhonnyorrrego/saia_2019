@@ -73,8 +73,10 @@ if (@$_REQUEST["iddoc"]) { // si estoy llenando desde la pantalla del menu inter
 			}
         	/*$cantidad_eliminar = count($quitar);
         	$cantidad_adicionar = count($adicionales);
-
-	        if ($cantidad_eliminar) {
+			print_r($cantidad_eliminar);
+			print_r("<br>");
+			print_r($cantidad_adicionar);*/
+	        /*if ($cantidad_eliminar) {
 	            $expedientes_asignados = arreglo_expedientes_asignados();
 	            $nuevos_quitar = array_intersect($quitar, $expedientes_asignados);
 	            if(!empty($nuevos_quitar)) {

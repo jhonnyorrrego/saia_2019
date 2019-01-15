@@ -21,25 +21,13 @@ class ProjectServiceContainer extends Container
 
     public function __construct()
     {
-        $this->services = array();
-        $this->normalizedIds = array(
-            'bar\\foo' => 'Bar\\Foo',
-            'foo\\foo' => 'Foo\\Foo',
-        );
+        $this->services = $this->privates = array();
         $this->methodMap = array(
             'Bar\\Foo' => 'getFooService',
             'Foo\\Foo' => 'getFoo2Service',
         );
 
         $this->aliases = array();
-    }
-
-    public function getRemovedIds()
-    {
-        return array(
-            'Psr\\Container\\ContainerInterface' => true,
-            'Symfony\\Component\\DependencyInjection\\ContainerInterface' => true,
-        );
     }
 
     public function compile()
@@ -52,11 +40,12 @@ class ProjectServiceContainer extends Container
         return true;
     }
 
-    public function isFrozen()
+    public function getRemovedIds()
     {
-        @trigger_error(sprintf('The %s() method is deprecated since Symfony 3.3 and will be removed in 4.0. Use the isCompiled() method instead.', __METHOD__), E_USER_DEPRECATED);
-
-        return true;
+        return array(
+            'Psr\\Container\\ContainerInterface' => true,
+            'Symfony\\Component\\DependencyInjection\\ContainerInterface' => true,
+        );
     }
 
     /**

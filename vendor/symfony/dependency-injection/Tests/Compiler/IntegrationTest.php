@@ -14,9 +14,10 @@ namespace Symfony\Component\DependencyInjection\Tests\Compiler;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Alias;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ServiceSubscriberInterface;
 
 /**
  * This class tests the integration of the different compiler passes.
@@ -40,6 +41,7 @@ class IntegrationTest extends TestCase
         $a = $container
             ->register('a', '\stdClass')
             ->addArgument(new Reference('c'))
+            ->setPublic(true)
         ;
 
         $b = $container
@@ -70,6 +72,7 @@ class IntegrationTest extends TestCase
         $a = $container
             ->register('a', '\stdClass')
             ->addArgument(new Reference('b'))
+            ->setPublic(true)
         ;
 
         $container->setAlias('b', new Alias('c', false));
@@ -97,6 +100,7 @@ class IntegrationTest extends TestCase
             ->register('a', '\stdClass')
             ->addArgument(new Reference('b'))
             ->addMethodCall('setC', array(new Reference('c')))
+            ->setPublic(true)
         ;
 
         $container
@@ -115,6 +119,21 @@ class IntegrationTest extends TestCase
         $this->assertTrue($container->hasDefinition('a'));
         $this->assertFalse($container->hasDefinition('b'));
         $this->assertFalse($container->hasDefinition('c'), 'Service C was not inlined.');
+    }
+
+    public function testCanDecorateServiceSubscriber()
+    {
+        $container = new ContainerBuilder();
+        $container->register(ServiceSubscriberStub::class)
+            ->addTag('container.service_subscriber')
+            ->setPublic(true);
+
+        $container->register(DecoratedServiceSubscriber::class)
+            ->setDecoratedService(ServiceSubscriberStub::class);
+
+        $container->compile();
+
+        $this->assertInstanceOf(DecoratedServiceSubscriber::class, $container->get(ServiceSubscriberStub::class));
     }
 
     /**
@@ -204,7 +223,29 @@ class IntegrationTest extends TestCase
             'child_service',
             'child_service_expected',
         );
+
+        $container = new ContainerBuilder();
+        $container->registerForAutoconfiguration(IntegrationTestStub::class)
+            ->addMethodCall('setSunshine', array('supernova'));
+        yield array(
+            'instanceof_and_calls',
+            'main_service',
+            'main_service_expected',
+            $container,
+        );
     }
+}
+
+class ServiceSubscriberStub implements ServiceSubscriberInterface
+{
+    public static function getSubscribedServices()
+    {
+        return array();
+    }
+}
+
+class DecoratedServiceSubscriber
+{
 }
 
 class IntegrationTestStub extends IntegrationTestStubParent

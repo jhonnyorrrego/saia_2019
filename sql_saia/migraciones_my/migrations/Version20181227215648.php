@@ -1,7 +1,7 @@
 <?php
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -18,11 +18,11 @@ class Version20181227215648 extends AbstractMigration {
     private $busqueda_componente =
         array('busqueda_idbusqueda' => '25','tipo' => '3','conector' => '2','url' => 'views/buzones/listado.php','etiqueta' => 'Borradores','nombre' => 'borradores','orden' => '1','info' => 'Documento|{*mostrar_numero_enlace@numero,iddocumento*}|center|-|Nombre del formato|{*nombre_plantilla@plantilla,iddocumento*}|center|-|Tipo documental|{*serie_documento@serie*}|center|-|Fecha de creaci&oacute;n|{*fecha*}|center|-|Descripci&oacute;n|{*obtener_descripcion@descripcion*}|center','exportar' => 'Radicado,{*numero*}|-|Asunto,{*descripcion*}|-|Formato,plantilla|-|Fecha,{*fecha*}|-|Usuario ejecutor,{*origen_documento@iddocumento,numero,ejecutor,tipo_radicado,estado,serie,tipo_ejecutor*}','exportar_encabezado' => NULL,'encabezado_componente' => 'views/buzones/encabezado_recibidos.php','estado' => '2','ancho' => '320','cargar' => '2','campos_adicionales' => NULL,'tablas_adicionales' => 'formato C','ordenado_por' => 'a.fecha','direccion' => 'desc','agrupado_por' => NULL,'busqueda_avanzada' => NULL,'acciones_seleccionados' => NULL,'modulo_idmodulo' => NULL,'menu_busqueda_superior' => NULL,'enlace_adicionar' => NULL,'encabezado_grillas' => NULL,'llave' => 'a.iddocumento');
 
-    public function getDescription() {
+    public function getDescription(): string {
         return 'Actualizar buzon de borradores';
     }
 
-    public function preUp(Schema $schema) {
+    public function preUp(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -34,7 +34,7 @@ class Version20181227215648 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function up(Schema $schema) {
+    public function up(Schema $schema): void {
         $conn = $this->connection;
 
         $conn->beginTransaction();
@@ -49,7 +49,7 @@ class Version20181227215648 extends AbstractMigration {
         $conn->commit();
     }
 
-    public function preDown(Schema $schema) {
+    public function preDown(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -61,7 +61,7 @@ class Version20181227215648 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function down(Schema $schema) {
+    public function down(Schema $schema): void {
         // this down() migration is auto-generated, please modify it to your needs
     }
 

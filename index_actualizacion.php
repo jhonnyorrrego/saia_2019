@@ -1,5 +1,4 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9">
-
 <?php
 include_once ("db.php");
 include_once ("librerias_saia.php");
@@ -92,7 +91,7 @@ if ($_SESSION["LOGIN" . LLAVE_SAIA]!="") {
 		$condicion_coparticipantes = " OR ( a.co_participantes LIKE '%," . $funcionario_idfuncionario . ",%' OR a.co_participantes LIKE '%," . $funcionario_idfuncionario . "' OR a.co_participantes LIKE '" . $funcionario_idfuncionario . ",%' OR  a.co_participantes='" . $funcionario_idfuncionario . "' )";
 		$condicion_seguidores = " OR ( a.seguidores LIKE '%," . $funcionario_idfuncionario . ",%' OR a.seguidores LIKE '%," . $funcionario_idfuncionario . "' OR a.seguidores LIKE '" . $funcionario_idfuncionario . ",%' OR  a.seguidores='" . $funcionario_idfuncionario . "' )";
 		$condicion_evaluador = " OR a.evaluador=" . $funcionario_idfuncionario;
-		$condicion_tareas_total = "generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 AND ( a.responsable_tarea=" . $funcionario_idfuncionario . "" . $condicion_coparticipante . $condicion_coparticipantes . $condicion_seguidores . $condicion_evaluador . "  )";
+		$condicion_tareas_total = "generica=0 AND a.estado_tarea<>'TERMINADO' AND a.listado_tareas_fk<>-1 AND a.cod_padre=0 AND ( a.responsable_tarea=" . $funcionario_idfuncionario . "" . $condicion_coparticipantes . $condicion_coparticipantes . $condicion_seguidores . $condicion_evaluador . "  )";
 		$tareas_total = busca_filtro_tabla("count(*) AS cant", "tareas_listado a", $condicion_tareas_total, "", $conn);
 		//DESARROLLO TODAS LAS TAREAS
 		$componente_tareas_responsable = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente A", "A.nombre='listado_tareas_responsable'", "", $conn);
@@ -271,7 +270,7 @@ echo index_estilos('temas_main');
 $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_informacion'","",$conn);
 ?>
 <body>
-<?php if($_SESSION["tipo_dispositivo"]!="movil"){ ?>
+<?php if(isset($_SESSION["tipo_dispositivo"]) && $_SESSION["tipo_dispositivo"] != "movil"){ ?>
 <div class="footer_login">
   <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
     <tr class="footer_login_text">
@@ -311,7 +310,7 @@ $mayor_informacion=busca_filtro_tabla("valor","configuracion","nombre='mayor_inf
 <div class="user-menu-top">
 <?php
 //Menu SAIA para movil
-if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
+if(isset($_SESSION["tipo_dispositivo"]) && $_SESSION["tipo_dispositivo"]=="movil"){ ?>
 	<div id="left" class="">
 		<ul id="menu-group-1" class="nav menu">
 			<li class="item-8 deeper parent">
@@ -388,7 +387,7 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
 </div>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <?php if($_SESSION["tipo_dispositivo"]!="movil"){ ?>
+    <?php if(!isset($_SESSION["tipo_dispositivo"]) || $_SESSION["tipo_dispositivo"] != "movil"){ ?>
     <td width="275" align="left" valign="top" id="PanelLaterialMainUI">
       <div class="modbox-saia-main ui-corner-all shadow">
         <div class="modbox-saia-main-title ui-corner-top">
@@ -547,12 +546,11 @@ if($_SESSION["tipo_dispositivo"]=="movil"){ ?>
         </div-->
 <?php
 	$pagina_ini=busca_filtro_tabla("","configuracion A","nombre='pagina_inicio'","",$conn);
-	if($_SESSION["tipo_dispositivo"]=="movil"){
+	if(isset($_SESSION["tipo_dispositivo"]) && $_SESSION["tipo_dispositivo"]=="movil") {
 	    $pagina_inicio="pantallas/buscador_principal.php?idbusqueda=25&cmd=resetall";
-	}
-	elseif($pagina_ini["numcampos"]>0){
+	} else if($pagina_ini["numcampos"] > 0) {
 	    $pagina_inicio = $pagina_ini[0]["valor"];
-	}else{
+	} else {
 		$pagina_inicio = '';
 	}
 ?>
@@ -593,7 +591,7 @@ function mostrar_iconos($modulo_actual,$orden=NULL){
     else
       $tablas["numcampos"]=0;
     if($tablas["numcampos"]){
-      if($_SESSION["tipo_dispositivo"]=='movil'){
+        if(isset($_SESSION["tipo_dispositivo"]) && $_SESSION["tipo_dispositivo"]=='movil') {
         echo('<ul class="children nav-child unstyled small collapse" id="sub-item-'.$orden.'">');
       }else{
         echo('<table width="100%" border="0" cellspacing="5" cellpadding="0"><tr>');
@@ -612,13 +610,13 @@ function mostrar_iconos($modulo_actual,$orden=NULL){
         if(isset($_REQUEST["key"]) && $_REQUEST["key"]<>""){
           $tablas[$j]["enlace"]=str_replace("@key@",$_REQUEST["key"],$tablas[$j]["enlace"]);
         }
-        if($j>0&&$j%$cols==0 && $_SESSION["tipo_dispositivo"]!='movil'){
-            echo('</tr><tr>');
+        if ($j > 0 && $j % $cols == 0 && (!isset($_SESSION["tipo_dispositivo"]) ||$_SESSION["tipo_dispositivo"] != 'movil')) {
+            echo ('</tr><tr>');
         }
         if(@$tablas[$j]["enlace_pantalla"]){  //si requiere de barra de navegacion (KAITEN)
             $tablas[$j]["enlace"]="pantallas/pantallas_kaiten/principal.php?idmodulo=".$tablas[$j]["idmodulo"];
         }
-        if($_SESSION["tipo_dispositivo"]!='movil'){
+        if(!isset($_SESSION["tipo_dispositivo"]) || $_SESSION["tipo_dispositivo"]!='movil'){
           echo('<td width="'.(($cols*35)) .'px" height="44" align="center" valign="top"><a href="'.$tablas[$j]["enlace"]);
           if(!strpos($tablas[$j]["enlace"],"?"))
             echo('?cmd=resetall"');
@@ -639,7 +637,7 @@ function mostrar_iconos($modulo_actual,$orden=NULL){
                 </li>');
         }
       }
-      if($_SESSION["tipo_dispositivo"]=="movil"){
+      if(isset($_SESSION["tipo_dispositivo"]) && $_SESSION["tipo_dispositivo"]=="movil"){
         echo('</ul>');
       }else{
         for(;$j%$cols!=0;$j++){
@@ -653,6 +651,7 @@ function mostrar_iconos($modulo_actual,$orden=NULL){
 }
 
 function menu_saia() {
+    global $conn;
     if (isset($_SESSION["LOGIN" . LLAVE_SAIA]) && $_SESSION["LOGIN" . LLAVE_SAIA]) {
         $nombres = array();
         $cerrar = array();
@@ -670,7 +669,7 @@ function menu_saia() {
         $modulo = busca_filtro_tabla("A.tipo,A.etiqueta,A.idmodulo", "modulo A", "A.idmodulo IN(select distinct b.cod_padre from modulo b where b.idmodulo in(" . $lista . "))", "orden", $conn);
         for ($i = 0; $i < $modulo["numcampos"]; $i++) {
             if ($modulo["numcampos"] && $modulo[$i]["idmodulo"] && $modulo[$i]["etiqueta"] && $modulo[$i]["tipo"] == '1') {
-                if ($_SESSION["tipo_dispositivo"] == "movil") {
+                if (isset($_SESSION["tipo_dispositivo"]) && $_SESSION["tipo_dispositivo"] == "movil") {
             ?>
                 <li class="item-9 deeper parent">
                 	<a class="" href="#">

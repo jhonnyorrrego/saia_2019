@@ -319,7 +319,7 @@ class SqlPostgres extends SQL2 {
 	 * <Pre-condiciones>
 	 * <Post-condiciones>
 	 */
-	function Busca_tabla($tabla, $campo = '') {
+	function Busca_tabla($tabla, $campo = "") {
 		if (!$tabla && @$_REQUEST["tabla"])
 			$tabla = $_REQUEST["tabla"];
 		if (!$tabla)

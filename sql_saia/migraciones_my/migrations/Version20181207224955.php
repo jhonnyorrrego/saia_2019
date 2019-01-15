@@ -1,7 +1,7 @@
 <?php
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -1465,11 +1465,11 @@ class Version20181207224955 extends AbstractMigration {
    		"hidden" => 20
    ];
 
-   public function getDescription() {
+   public function getDescription(): string {
        return 'Cambios opciones de configuración';
    }
 
-   public function preUp(Schema $schema) {
+   public function preUp(Schema $schema): void {
        date_default_timezone_set("America/Bogota");
 
        if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -1481,7 +1481,7 @@ class Version20181207224955 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function up(Schema $schema) {
+    public function up(Schema $schema): void {
         //DONE: Orden en los componentes, se requiere nuevo campo en pantalla_camponente.orden
     	$cmp = $schema->getTable('pantalla_componente');
 
@@ -1498,7 +1498,7 @@ class Version20181207224955 extends AbstractMigration {
     	//DONE: En el editor de campos poner icono para editar y quitar el evento click sobre todo el componente
     }
 
-    public function postUp(Schema $schema) {
+    public function postUp(Schema $schema): void {
     	$conn = $this->connection;
 
     	foreach ($this->pantalla_componente as $value) {
@@ -1538,7 +1538,7 @@ class Version20181207224955 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function down(Schema $schema) {
+    public function down(Schema $schema): void {
         // this down() migration is auto-generated, please modify it to your needs
     }
 }

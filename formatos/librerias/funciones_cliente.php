@@ -128,3 +128,56 @@ function ver_anexos_documento($idformato, $iddoc, $retorno = 0) {
 		echo $html;
 	}
 }
+
+function creador_dependencia($idformato,$iddoc,$retorno = 0){
+	global $conn,$ruta_db_superior;
+	$html = "";
+	$nombre_tabla = busca_filtro_tabla("f.nombre_tabla", "formato f", "f.idformato=".$idformato, "", $conn);
+	if($nombre_tabla['numcampos']){
+		$consulta_dependencia = busca_filtro_tabla("vf.dependencia",$nombre_tabla[0]['nombre_tabla']." ft, vfuncionario_dc vf", "ft.documento_iddocumento=".$iddoc." and ft.dependencia=vf.iddependencia_cargo ", "", $conn);
+		if ($consulta_dependencia["numcampos"]) {
+			$html = ucwords(strtolower($consulta_dependencia[0]["dependencia"]));
+		}
+	}
+	if ($retorno) {
+		return $html;
+	} else {
+		echo $html;
+	}
+}
+
+function usuario_aprobador_documento($idformato,$iddoc,$retorno = 0){
+	global $conn,$ruta_db_superior;
+	$html = "";
+	 
+	$consulta_usuario = busca_filtro_tabla("b.destino,b.tipo_destino", "buzon_entrada b", "b.nombre = 'APROBADO' and b.archivo_idarchivo=".$iddoc, "", $conn);
+	if($consulta_usuario['numcampos']){
+		if($consulta_usuario[0]['tipo_destino']==1){
+			$consulta_aprobador = busca_filtro_tabla("nombres,apellidos","vfuncionario_dc", "funcionario_codigo=".$consulta_usuario[0]['destino']." and estado_dc=1 and estado_dep=1 and estado=1", "", $conn);
+		}else if($consulta_usuario[0]['tipo_destino']==5){
+			$consulta_aprobador = busca_filtro_tabla("nombres,apellidos","vfuncionario_dc", "iddependencia_cargo=".$consulta_usuario[0]['destino']." and estado_dc=1 and estado_dep=1 and estado=1", "", $conn);
+		}
+		if ($consulta_aprobador["numcampos"]) {
+			$html = ucwords(strtolower($consulta_aprobador[0]["nombres"] . " " . $consulta_aprobador[0]["apellidos"]));
+		}
+	}
+	if ($retorno) {
+		return $html;
+	} else {
+		echo $html;
+	}
+}
+
+function asunto_documento($idformato, $iddoc, $retorno = 0) {
+	global $conn;
+	$html = "";
+	$asunto = busca_filtro_tabla("descripcion", "documento", "iddocumento=" . $iddoc, "", $conn);
+	if ($asunto["numcampos"]) {
+		$html = $asunto[0]['descripcion'];
+	}
+	if ($retorno) {
+		return $html;
+	} else {
+		echo $html;
+	}
+}

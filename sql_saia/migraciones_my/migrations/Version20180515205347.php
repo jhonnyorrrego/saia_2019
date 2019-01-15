@@ -1,7 +1,7 @@
 <?php
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -9,11 +9,11 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version20180515205347 extends AbstractMigration {
 
-    public function getDescription() {
+    public function getDescription():string {
         return 'Mover campo busqueda.llave a busqueda_componente.llave';
     }
 
-    public function preUp(Schema $schema) {
+    public function preUp(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -26,7 +26,7 @@ class Version20180515205347 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function up(Schema $schema) {
+    public function up(Schema $schema): void {
     	$tabla_comp = $schema->getTable('busqueda_componente');
     	$this->abortIf($tabla_comp->hasColumn("llave"), 'Ya ha configurado este SAIA para bootstrap table');
 
@@ -37,7 +37,7 @@ class Version20180515205347 extends AbstractMigration {
 
     }
 
-    public function postUp(Schema $schema) {
+    public function postUp(Schema $schema): void {
 
         $conn = $this->connection;
 
@@ -84,7 +84,7 @@ class Version20180515205347 extends AbstractMigration {
 
     }
 
-    public function preDown(Schema $schema) {
+    public function preDown(Schema $schema): void {
     	date_default_timezone_set("America/Bogota");
 
     	if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -96,7 +96,7 @@ class Version20180515205347 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function down(Schema $schema) {
+    public function down(Schema $schema): void {
         $tabla_comp = $schema->getTable('busqueda_componente');
         $this->abortIf(!$tabla_comp->hasColumn("llave"), 'campo busqueda_componente.llave no existe');
 
@@ -138,7 +138,7 @@ class Version20180515205347 extends AbstractMigration {
         }
     }
 
-    function postDown(Schema $schema) {
+    function postDown(Schema $schema): void {
         $conn = $this->connection;
         $sql = "update busqueda_componente set url = replace(url, 'consulta_busqueda_tabla', 'consulta_busqueda_reporte') where url like '%consulta_busqueda_tabla%'";
         $conn->executeQuery($sql);

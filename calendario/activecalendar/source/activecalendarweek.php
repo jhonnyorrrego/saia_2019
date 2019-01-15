@@ -30,8 +30,8 @@ var $cssMonthWeek="monthweek";
 PUBLIC activeCalendarWeek() -> class constructor. Calls the main class constructor
 ********************************************************************************
 */
-function activeCalendarWeek($year=false,$month=false,$day=false,$GMTDiff="none") {
-parent::activeCalendar($year, $month, $day, $GMTDiff);
+public function __construct($year=false,$month=false,$day=false,$GMTDiff="none") {
+    parent::__construct($year, $month, $day, $GMTDiff);
 $this->GMT=$GMTDiff;
 }
 /*
@@ -227,7 +227,7 @@ function resetSelectedToToday() {
 $this->selectedyear = $this->yeartoday;
 $this->selectedmonth = $this->monthtoday;
 $this->selectedday = $this->daytoday;
-}	
+}
 }
 
 ?>

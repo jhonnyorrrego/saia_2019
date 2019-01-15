@@ -83,34 +83,33 @@ if ($datos_buscador["numcampos"]) {
         $('#contenedor_busqueda').kaiten({ 
           columnWidth : '100%',
           startup : function(dataFromURL){          
-            this.kaiten('load', { kConnector:'html.page', url:'<?php echo ("busquedas/componentes_busqueda.php?idbusqueda=" . $datos_buscador[0]["idbusqueda"] . $complemento_componente); ?>', 'kTitle':'<?php echo ($ktitle); ?>'});
+            this.kaiten('load', { kConnector:'html.page', url:'<?php echo "busquedas/componentes_busqueda.php?idbusqueda=" . $datos_buscador[0]["idbusqueda"] . $complemento_componente;?>', 'kTitle':'<?php echo $ktitle; ?>'});
             <?php if ($datos_componente["numcampos"] && acceso_modulo($datos_componente[0]["modulo_idmodulo"]) && $datos_componente[0]["estado"] != 1) { ?>
-            this.kaiten('load', { kConnector:'iframe', url:'<?php echo ($url_busqueda); ?>', 'kTitle':'<?php echo ($datos_componente[0]["etiqueta"]); ?> '});
-            <?php 
-          } ?> 
+            this.kaiten('load', { kConnector:'iframe', url:'<?php echo $url_busqueda; ?>', 'kTitle':'<?php echo $datos_componente[0]["etiqueta"];?> '});
+            <?php } ?> 
           }
         }); 
         $("#ksubmit_saia").live('click', function (){
           var enlace = $(this).attr('enlace')+"?"+$("#kformulario_saia").serialize();
-          var titulo='';          
-          if(typeof $(this).attr('title')!=='undefined'){
+          var titulo = '';          
+          if (typeof $(this).attr('title')!=='undefined'){
               titulo = $(this).attr('title');        
           }
-          else if(typeof $(this).attr('titulo')!=='undefined'){
-              titulo=$(this).attr('titulo');
+          else if (typeof $(this).attr('titulo')!=='undefined'){
+              titulo = $(this).attr('titulo');
           }
           var conector = "iframe"; 
           var datos_pantalla = { kConnector:conector, url:enlace, kTitle:titulo} ;   
           crear_pantalla_busqueda(datos_pantalla,0);
         }); 
         function crear_pantalla_busqueda(datos,elimina){
-          $panel=$('#contenedor_busqueda').kaiten("getPanel",1);
-          if(elimina){
-            if(typeof($panel)!='undefined'){
+          $panel = $('#contenedor_busqueda').kaiten("getPanel",1);
+          if (elimina){
+            if (typeof($panel)!='undefined'){
               $('#contenedor_busqueda').kaiten("removeChildren",$panel);
             }
           }  
-          datos["url"]="<?php echo ($ruta_db_superior); ?>"+datos["url"];
+          datos["url"]="<?php echo $ruta_db_superior;?>"+datos["url"];
           $('#contenedor_busqueda').kaiten("load",datos);                                                  
         }   
       </script>
@@ -123,15 +122,16 @@ if ($datos_buscador["numcampos"]) {
   error("No es posible encontrar la busqueda");
   die("No es posible encontrar la busqueda");
 }
-function acceso_modulo($idmodulo)
-{
+
+function acceso_modulo($idmodulo) {
+    global $conn;
   if ($idmodulo == '' || $idmodulo == null || $idmodulo == 0 || usuario_actual("login") == "cerok") {
     return true;
   }
   $ok = new Permiso();
-  $modulo = busca_filtro_tabla("", "modulo", "idmodulo=" . $idmodulo, "");
+  $modulo = busca_filtro_tabla("", "modulo", "idmodulo=" . $idmodulo, "", $conn);
   $acceso = $ok->acceso_modulo_perfil($modulo[0]["nombre"]);
   return $acceso;
 }
 ?>         
-</body>  
+</body>

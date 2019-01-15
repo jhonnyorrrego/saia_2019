@@ -39,7 +39,7 @@ $x_fecha_ingreso = Null;
 include ("phpmkrfn.php");
 include ("header.php");
 
-
+//print_r($_REQUEST);
 if(isset($_REQUEST["func"]) && $_REQUEST["func"]!='')
  nueva_interfaz($_REQUEST["func"]); 
 $sKey = @$_GET["key"];
@@ -138,9 +138,11 @@ return true;
 		<td class="encabezado" title="Seleccione un funcionario de la Intranet"><span class="phpmaker" style="color: #FFFFFF;">FUNCIONARIO INTRANET</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <?php
+if($x_funcionario_idfuncionario!=""){
   $func = busca_filtro_tabla("idfuncionario,".concatenar_cadena_sql(array("nombres","' '","apellidos"))." as nombre","funcionario","idfuncionario=$x_funcionario_idfuncionario","",$conn);
   if($func["numcampos"]>0)
     echo $func[0]["nombre"];
+}
 ?>
 </span></td>
 	</tr>
@@ -148,9 +150,11 @@ return true;
 		<td class="encabezado" title="Seleccione un proceso del listado"><span class="phpmaker" style="color: #FFFFFF;">DEPENDENCIA</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <?php
-$dep = busca_filtro_tabla("nombre,codigo","dependencia","iddependencia=$x_dependencia_iddependencia","",$conn);
-if($dep["numcampos"])
- echo $dep[0]["nombre"]." (".$dep[0]["codigo"].")";
+if($x_dependencia_iddependencia!="") {
+	$dep = busca_filtro_tabla("nombre,codigo","dependencia","iddependencia=$x_dependencia_iddependencia","",$conn);
+	if($dep["numcampos"])
+	 echo $dep[0]["nombre"]." (".$dep[0]["codigo"].")";
+}
 ?>
 </span></td>
 	</tr>
@@ -158,9 +162,11 @@ if($dep["numcampos"])
 		<td class="encabezado" title="Seleccione un cargo de la lista"><span class="phpmaker" style="color: #FFFFFF;">CARGO ASIGNADO</span></td>
 		<td bgcolor="#F5F5F5"><span class="phpmaker">
 <?php
+if($x_cargo_idcargo!=""){
 $cargo = busca_filtro_tabla("nombre","cargo","idcargo=$x_cargo_idcargo","",$conn);
 if($cargo["numcampos"]>0)
   echo $cargo[0]["nombre"];
+}
 ?>
 </span></td>
 	</tr>

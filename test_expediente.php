@@ -135,12 +135,16 @@ function llena_expediente($id) {
 function cantidad_tomos($idexpediente) {
 	global $conn;
 
-	$expediente_actual = busca_filtro_tabla("tomo_padre,tomo_no", "expediente", "idexpediente=" . $idexpediente, "", $conn);
-	$ccantidad_tomos = busca_filtro_tabla("idexpediente", "expediente", "tomo_padre=" . $expediente_actual[0]['tomo_padre'], "", $conn);
 	$cantidad_tomos = array();
-	$cantidad_tomos['cantidad'] = $ccantidad_tomos['numcampos'] + 1;
-	//tomos + el padre
-	$cantidad_tomos['tomo_no'] = $expediente_actual[0]['tomo_no'];
+	if(!empty($idexpediente)) {
+    	$expediente_actual = busca_filtro_tabla("tomo_padre,tomo_no", "expediente", "idexpediente=" . $idexpediente, "", $conn);
+    	if(!empty($expediente_actual[0]['tomo_padre'])) {
+        	$ccantidad_tomos = busca_filtro_tabla("idexpediente", "expediente", "tomo_padre=" . $expediente_actual[0]['tomo_padre'], "", $conn);
+        	$cantidad_tomos['cantidad'] = $ccantidad_tomos['numcampos'] + 1;
+    	}
+    	//tomos + el padre
+    	$cantidad_tomos['tomo_no'] = $expediente_actual[0]['tomo_no'];
+	}
 	return ($cantidad_tomos);
 }
 ?>

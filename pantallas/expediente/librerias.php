@@ -434,9 +434,15 @@ function negar_expediente($idexp, $tipo_entidad, $llave_entidad, $permiso = "", 
     phpmkr_query($sql1);
 }
 
-function enlaces_adicionales_expediente($idexpediente, $nombre, $estado_cierre, $propietario, $agrupador) {
+//function enlaces_adicionales_expediente($idexpediente, $nombre, $estado_cierre, $propietario, $agrupador) {
+function enlaces_adicionales_expediente($idexpediente, $nombre) {
     global $conn;
-    if ($agrupador == "agrupador") {
+    $agrupador=0;
+    $buscar_exp = busca_filtro_tabla("agrupador", "expediente", "idexpediente=" . $idexpediente, "", $conn);
+    if ($buscar_exp["numcampos"]) {
+        $agrupador=$buscar_exp[0]["agrupador"];
+	}
+    /*if ($agrupador == "agrupador") {
         $agrupador = 0;
     }
     $permiso_modulo = new Permiso();

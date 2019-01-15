@@ -12,9 +12,10 @@
 namespace Symfony\Bundle\FrameworkBundle\Tests\Command;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Command\TranslationDebugCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
-use Symfony\Bundle\FrameworkBundle\Command\TranslationDebugCommand;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel;
 
@@ -64,11 +65,28 @@ class TranslationDebugCommandTest extends TestCase
         $this->assertRegExp('/unused/', $tester->getDisplay());
     }
 
+    /**
+     * @group legacy
+     * @expectedDeprecation Storing translations in the "%ssf_translation%s/Resources/translations" directory is deprecated since Symfony 4.2, use the "%ssf_translation%s/translations" directory instead.
+     * @expectedDeprecation Storing templates in the "%ssf_translation%s/Resources/views" directory is deprecated since Symfony 4.2, use the "%ssf_translation%s/templates" directory instead.
+     */
+    public function testDebugLegacyDefaultDirectory()
+    {
+        $this->fs->mkdir($this->translationDir.'/Resources/translations');
+        $this->fs->mkdir($this->translationDir.'/Resources/views');
+
+        $tester = $this->createCommandTester(array('foo' => 'foo'), array('bar' => 'bar'));
+        $tester->execute(array('locale' => 'en'));
+
+        $this->assertRegExp('/missing/', $tester->getDisplay());
+        $this->assertRegExp('/unused/', $tester->getDisplay());
+    }
+
     public function testDebugDefaultRootDirectory()
     {
         $this->fs->remove($this->translationDir);
         $this->fs = new Filesystem();
-        $this->translationDir = sys_get_temp_dir().'/'.uniqid('sf2_translation', true);
+        $this->translationDir = sys_get_temp_dir().'/'.uniqid('sf_translation', true);
         $this->fs->mkdir($this->translationDir.'/translations');
         $this->fs->mkdir($this->translationDir.'/templates');
 
@@ -81,14 +99,16 @@ class TranslationDebugCommandTest extends TestCase
 
     public function testDebugCustomDirectory()
     {
+        $this->fs->mkdir($this->translationDir.'/customDir/translations');
+        $this->fs->mkdir($this->translationDir.'/customDir/templates');
         $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\KernelInterface')->getMock();
         $kernel->expects($this->once())
             ->method('getBundle')
-            ->with($this->equalTo($this->translationDir))
+            ->with($this->equalTo($this->translationDir.'/customDir'))
             ->willThrowException(new \InvalidArgumentException());
 
         $tester = $this->createCommandTester(array('foo' => 'foo'), array('bar' => 'bar'), $kernel);
-        $tester->execute(array('locale' => 'en', 'bundle' => $this->translationDir));
+        $tester->execute(array('locale' => 'en', 'bundle' => $this->translationDir.'/customDir'));
 
         $this->assertRegExp('/missing/', $tester->getDisplay());
         $this->assertRegExp('/unused/', $tester->getDisplay());
@@ -103,7 +123,7 @@ class TranslationDebugCommandTest extends TestCase
         $kernel->expects($this->once())
             ->method('getBundle')
             ->with($this->equalTo('dir'))
-            ->will($this->throwException(new \InvalidArgumentException()));
+            ->willThrowException(new \InvalidArgumentException());
 
         $tester = $this->createCommandTester(array(), array(), $kernel);
         $tester->execute(array('locale' => 'en', 'bundle' => 'dir'));
@@ -112,9 +132,7 @@ class TranslationDebugCommandTest extends TestCase
     protected function setUp()
     {
         $this->fs = new Filesystem();
-        $this->translationDir = sys_get_temp_dir().'/'.uniqid('sf2_translation', true);
-        $this->fs->mkdir($this->translationDir.'/Resources/translations');
-        $this->fs->mkdir($this->translationDir.'/Resources/views');
+        $this->translationDir = sys_get_temp_dir().'/'.uniqid('sf_translation', true);
         $this->fs->mkdir($this->translationDir.'/translations');
         $this->fs->mkdir($this->translationDir.'/templates');
     }
@@ -178,18 +196,16 @@ class TranslationDebugCommandTest extends TestCase
 
         $kernel
             ->expects($this->any())
-            ->method('getRootDir')
-            ->will($this->returnValue($this->translationDir));
-
-        $kernel
-            ->expects($this->any())
             ->method('getBundles')
             ->will($this->returnValue(array()));
+
+        $container = new Container();
+        $container->setParameter('kernel.root_dir', $this->translationDir);
 
         $kernel
             ->expects($this->any())
             ->method('getContainer')
-            ->will($this->returnValue($this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock()));
+            ->will($this->returnValue($container));
 
         $command = new TranslationDebugCommand($translator, $loader, $extractor, $this->translationDir.'/translations', $this->translationDir.'/templates');
 
@@ -197,51 +213,6 @@ class TranslationDebugCommandTest extends TestCase
         $application->add($command);
 
         return new CommandTester($application->find('debug:translation'));
-    }
-
-    /**
-     * @group legacy
-     * @expectedDeprecation Symfony\Bundle\FrameworkBundle\Command\TranslationDebugCommand::__construct() expects an instance of "Symfony\Component\Translation\TranslatorInterface" as first argument since Symfony 3.4. Not passing it is deprecated and will throw a TypeError in 4.0.
-     */
-    public function testLegacyDebugCommand()
-    {
-        $translator = $this->getMockBuilder('Symfony\Component\Translation\Translator')
-            ->disableOriginalConstructor()
-            ->getMock();
-        $extractor = $this->getMockBuilder('Symfony\Component\Translation\Extractor\ExtractorInterface')->getMock();
-        $loader = $this->getMockBuilder('Symfony\Bundle\FrameworkBundle\Translation\TranslationLoader')->getMock();
-        $kernel = $this->getMockBuilder('Symfony\Component\HttpKernel\KernelInterface')->getMock();
-        $kernel
-            ->expects($this->any())
-            ->method('getBundles')
-            ->will($this->returnValue(array()));
-
-        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')->getMock();
-        $container
-            ->expects($this->any())
-            ->method('get')
-            ->will($this->returnValueMap(array(
-                array('translation.extractor', 1, $extractor),
-                array('translation.reader', 1, $loader),
-                array('translator', 1, $translator),
-                array('kernel', 1, $kernel),
-            )));
-
-        $kernel
-            ->expects($this->any())
-            ->method('getContainer')
-            ->will($this->returnValue($container));
-
-        $command = new TranslationDebugCommand();
-        $command->setContainer($container);
-
-        $application = new Application($kernel);
-        $application->add($command);
-
-        $tester = new CommandTester($application->find('debug:translation'));
-        $tester->execute(array('locale' => 'en'));
-
-        $this->assertContains('No defined or extracted', $tester->getDisplay());
     }
 
     private function getBundle($path)

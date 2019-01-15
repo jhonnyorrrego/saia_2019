@@ -43,7 +43,7 @@ if($conn->verificar_existencia("banco_imagenes")) {
 if ($banco_imagenes["numcampos"]) {
 	$aleatorio = rand(0, $banco_imagenes["numcampos"]);
 	$imagen = $banco_imagenes[$aleatorio]["ruta"];
-} else {
+} else if(defined("RUTA_BANCO_IMAGENES")) {
 	$imagen = "../" . RUTA_BANCO_IMAGENES . '/undefined.jpg';
 }
 if ($carousel["numcampos"]) {

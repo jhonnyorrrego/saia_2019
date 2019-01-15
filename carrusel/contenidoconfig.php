@@ -35,9 +35,9 @@ $campos = array(
 $datos = array();
 $datos["fecha_inicio"] = fecha_db_almacenar($_REQUEST["fecha_inicio"], "Y-m-d");
 $datos["fecha_fin"] = fecha_db_almacenar($_REQUEST["fecha_fin"], "Y-m-d");
-$carrusel = busca_filtro_tabla("alto", "carrusel", "idcarrusel=" . $_REQUEST["carrusel_idcarrusel"], "", $conn);
 
 $accion = $_REQUEST["accion"];
+
 
 foreach ($campos as $fila) {
     $datos[$fila] = "'" . $_REQUEST[$fila] . "'";
@@ -47,12 +47,13 @@ switch ($accion) {
     case "adicionar":
     case "editar":
         pintar_formulario($accion);
-
         break;
     case "guardar_adicionar":
+        $carrusel = busca_filtro_tabla("alto", "carrusel", "idcarrusel=" . $_REQUEST["carrusel_idcarrusel"], "", $conn);
         guardar_adicionar($accion, $datos, $carrusel);
         break;
     case "guardar_editar":
+        $carrusel = busca_filtro_tabla("alto", "carrusel", "idcarrusel=" . $_REQUEST["carrusel_idcarrusel"], "", $conn);
         guardar_editar($accion, $datos, $carrusel);
         break;
     case "eliminar":
@@ -116,7 +117,7 @@ width:"350px"
     		submitHandler: function(form) {
 				<?php encriptar_sqli("form1",0,"form_info",$ruta_db_superior);?>
 			    form.submit();
-			    
+
 			  }
     	});
     	$.spin.imageBasePath = '../images/';

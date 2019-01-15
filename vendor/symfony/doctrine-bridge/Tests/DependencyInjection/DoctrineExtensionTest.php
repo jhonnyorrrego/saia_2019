@@ -12,8 +12,8 @@
 namespace Symfony\Bridge\Doctrine\Tests\DependencyInjection;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 
 /**
@@ -64,11 +64,11 @@ class DoctrineExtensionTest extends TestCase
         );
 
         $bundles = array(
-            'FristBundle' => 'My\FristBundle',
+            'FirstBundle' => 'My\FirstBundle',
             'SecondBundle' => 'My\SecondBundle',
         );
 
-        $reflection = new \ReflectionClass(get_class($this->extension));
+        $reflection = new \ReflectionClass(\get_class($this->extension));
         $method = $reflection->getMethod('fixManagersAutoMappings');
         $method->setAccessible(true);
 
@@ -98,7 +98,7 @@ class DoctrineExtensionTest extends TestCase
                 array(),
                 array(
                     'mappings' => array(
-                        'FristBundle' => array(
+                        'FirstBundle' => array(
                             'mapping' => true,
                             'is_bundle' => true,
                         ),
@@ -132,7 +132,7 @@ class DoctrineExtensionTest extends TestCase
                 ),
                 array(
                     'mappings' => array(
-                        'FristBundle' => array(
+                        'FirstBundle' => array(
                             'mapping' => true,
                             'is_bundle' => true,
                         ),
@@ -153,11 +153,11 @@ class DoctrineExtensionTest extends TestCase
         );
 
         $bundles = array(
-            'FristBundle' => 'My\FristBundle',
+            'FirstBundle' => 'My\FirstBundle',
             'SecondBundle' => 'My\SecondBundle',
         );
 
-        $reflection = new \ReflectionClass(get_class($this->extension));
+        $reflection = new \ReflectionClass(\get_class($this->extension));
         $method = $reflection->getMethod('fixManagersAutoMappings');
         $method->setAccessible(true);
 
@@ -181,18 +181,14 @@ class DoctrineExtensionTest extends TestCase
             array('doctrine.orm.cache.wincache.class',  array('type' => 'wincache')),
             array('doctrine.orm.cache.zenddata.class',  array('type' => 'zenddata')),
             array('doctrine.orm.cache.redis.class',     array('type' => 'redis'),     array('setRedis')),
-            array('doctrine.orm.cache.memcache.class',  array('type' => 'memcache'),  array('setMemcache')),
             array('doctrine.orm.cache.memcached.class', array('type' => 'memcached'), array('setMemcached')),
         );
     }
 
     /**
-     * @param string $class
-     * @param array  $config
-     *
      * @dataProvider providerBasicDrivers
      */
-    public function testLoadBasicCacheDriver($class, array $config, array $expectedCalls = array())
+    public function testLoadBasicCacheDriver(string $class, array $config, array $expectedCalls = array())
     {
         $container = $this->createContainer();
         $cacheName = 'metadata_cache';
@@ -273,10 +269,8 @@ class DoctrineExtensionTest extends TestCase
         return new ContainerBuilder(new ParameterBag(array_merge(array(
             'kernel.bundles' => array('FrameworkBundle' => 'Symfony\\Bundle\\FrameworkBundle\\FrameworkBundle'),
             'kernel.cache_dir' => __DIR__,
-            'kernel.debug' => false,
-            'kernel.environment' => 'test',
-            'kernel.name' => 'kernel',
-            'kernel.root_dir' => __DIR__,
+            'kernel.container_class' => 'kernel',
+            'kernel.project_dir' => __DIR__,
         ), $data)));
     }
 }

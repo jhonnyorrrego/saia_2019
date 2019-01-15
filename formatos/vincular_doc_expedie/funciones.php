@@ -49,7 +49,7 @@ $(document).ready(function (){
 		tree_serie_idserie.setOnLoadingEnd(fin_carga_arbol_serie_idserie);
 		if(ocultar==1) {
 			var idexp = '<?php echo($_REQUEST["idexpediente"]); ?>';
-			$("[name='fk_idexpediente']").val(idexp);			
+			$("[name='fk_idexpediente']").val(idexp);
 		} else {
 			tree_serie_idserie.setOnCheckHandler(function(nodeId) {
     			var ud = tree_serie_idserie.getUserData(nodeId,"idexpediente");
@@ -79,7 +79,7 @@ function fecha_documento_funcion($idformato, $iddoc) {
 
 function ver_anexos_doc_vincu($idformato, $iddoc){
 	global $conn,$ruta_db_superior;
-	$anexos=busca_filtro_tabla("ruta,etiqueta,tipo,idanexos","anexos","documento_iddocumento=".$iddoc,"");
+	$anexos=busca_filtro_tabla("ruta,etiqueta,tipo,idanexos","anexos","documento_iddocumento=".$iddoc,"", $conn);
 	$html="";
 	if($anexos["numcampos"]){
 		for ($i=0; $i <$anexos["numcampos"] ; $i++) {

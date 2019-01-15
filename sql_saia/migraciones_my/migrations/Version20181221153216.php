@@ -2,7 +2,7 @@
 
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -1512,10 +1512,10 @@ $(document).ready(function(){
     </div>
 </div>','exportar' => NULL,'exportar_encabezado' => NULL,'encabezado_componente' => 'views/buzones/encabezado_recibidos.php','estado' => '2','ancho' => '320','cargar' => '1','campos_adicionales' => NULL,'tablas_adicionales' => NULL,'ordenado_por' => NULL,'direccion' => NULL,'agrupado_por' => NULL,'busqueda_avanzada' => NULL,'acciones_seleccionados' => NULL,'modulo_idmodulo' => NULL,'menu_busqueda_superior' => NULL,'enlace_adicionar' => NULL,'encabezado_grillas' => NULL,'llave' => NULL)
     );
-    public function getDescription() {
+    public function getDescription(): string {
         return 'Actualiza busqueda y busqueda_componente, reportes de correspondencia y distribución';
     }
-    public function preUp(Schema $schema)
+    public function preUp(Schema $schema): void
     {
         date_default_timezone_set("America/Bogota");
 
@@ -1523,7 +1523,7 @@ $(document).ready(function(){
             $this->platform->registerDoctrineTypeMapping('enum', 'string');
         }
     }
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
         $conn = $this->connection;
 
@@ -1549,11 +1549,10 @@ $(document).ready(function(){
     /**
      * @param Schema $schema
      */
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
-        return true;
     }
-    public function preDown(Schema $schema) {
+    public function preDown(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {

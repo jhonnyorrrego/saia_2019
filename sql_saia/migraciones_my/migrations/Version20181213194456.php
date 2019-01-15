@@ -2,7 +2,7 @@
 
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -1410,11 +1410,11 @@ class Version20181213194456 extends AbstractMigration
 }',
     );
 
-    public function getDescription() {
+    public function getDescription(): string {
         return 'Convertir los json a ISO8859-1 para que se lean bien desde la bdd';
     }
 
-    public function preUp(Schema $schema) {
+    public function preUp(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -1426,7 +1426,7 @@ class Version20181213194456 extends AbstractMigration
      *
      * @param Schema $schema
      */
-    public function up(Schema $schema) {
+    public function up(Schema $schema): void {
         $conn = $this->connection;
 
         foreach ($this->pantalla_componente as $key => $value) {
@@ -1442,7 +1442,7 @@ class Version20181213194456 extends AbstractMigration
         }
     }
 
-    public function preDown(Schema $schema) {
+    public function preDown(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -1453,7 +1453,7 @@ class Version20181213194456 extends AbstractMigration
     /**
      * @param Schema $schema
      */
-    public function down(Schema $schema) {
+    public function down(Schema $schema): void {
         $conn = $this->connection;
 
         foreach ($this->pantalla_componente as $key => $value) {

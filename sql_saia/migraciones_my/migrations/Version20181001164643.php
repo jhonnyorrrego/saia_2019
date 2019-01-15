@@ -1,7 +1,7 @@
 <?php
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use \Doctrine\DBAL\Types\Type;
 /**
@@ -11,11 +11,11 @@ class Version20181001164643 extends AbstractMigration {
 
     private $nombre_copia;
 
-    public function getDescription() {
+    public function getDescription(): string {
         return 'Modificar permiso_serie para establecer permisos sobre la llave serie+dependencia';
     }
 
-    public function preUp(Schema $schema) {
+    public function preUp(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -34,7 +34,7 @@ class Version20181001164643 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function up(Schema $schema) {
+    public function up(Schema $schema): void {
         $tabla = $schema->getTable('permiso_serie');
         $this->skipIf($tabla->hasColumn('fk_entidad_serie'), "Ya existe la columna permiso_serie.fk_entidad_serie");
 
@@ -46,7 +46,7 @@ class Version20181001164643 extends AbstractMigration {
         ]);
     }
 
-    public function postUp(Schema $schema) {
+    public function postUp(Schema $schema): void {
         $conn = $this->connection;
 
         $tabla = $schema->getTable('permiso_serie');
@@ -88,7 +88,7 @@ class Version20181001164643 extends AbstractMigration {
         }
     }
 
-    public function preDown(Schema $schema) {
+    public function preDown(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
             $this->platform->registerDoctrineTypeMapping('enum', 'string');
@@ -104,7 +104,7 @@ class Version20181001164643 extends AbstractMigration {
      *
      * @param Schema $schema
      */
-    public function down(Schema $schema) {
+    public function down(Schema $schema): void {
         $tabla = $schema->getTable('permiso_serie');
 
         if (!$tabla->hasColumn('serie_idserie')) {
@@ -117,7 +117,7 @@ class Version20181001164643 extends AbstractMigration {
         }
     }
 
-    public function postDown(Schema $schema) {
+    public function postDown(Schema $schema): void {
         $tabla = $schema->getTable('permiso_serie');
 
         if ($tabla->hasColumn('serie_idserie')) {

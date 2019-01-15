@@ -14,9 +14,10 @@ namespace Symfony\Component\DependencyInjection\Tests\Compiler;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Argument\BoundArgument;
 use Symfony\Component\DependencyInjection\ChildDefinition;
-use Symfony\Component\DependencyInjection\Compiler\ResolveInstanceofConditionalsPass;
 use Symfony\Component\DependencyInjection\Compiler\ResolveChildDefinitionsPass;
+use Symfony\Component\DependencyInjection\Compiler\ResolveInstanceofConditionalsPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 
 class ResolveInstanceofConditionalsPassTest extends TestCase
 {
@@ -30,7 +31,7 @@ class ResolveInstanceofConditionalsPassTest extends TestCase
 
         (new ResolveInstanceofConditionalsPass())->process($container);
 
-        $parent = 'instanceof.'.parent::class.'.0.foo';
+        $parent = '.instanceof.'.parent::class.'.0.foo';
         $def = $container->getDefinition('foo');
         $this->assertEmpty($def->getInstanceofConditionals());
         $this->assertInstanceOf(ChildDefinition::class, $def);
@@ -201,16 +202,34 @@ class ResolveInstanceofConditionalsPassTest extends TestCase
     }
 
     /**
-     * @expectedException \Symfony\Component\DependencyInjection\Exception\InvalidArgumentException
-     * @expectedExceptionMessage Autoconfigured instanceof for type "PHPUnit\Framework\TestCase" defines method calls but these are not supported and should be removed.
+     * Test that autoconfigured calls are handled gracefully.
      */
-    public function testProcessThrowsExceptionForAutoconfiguredCalls()
+    public function testProcessForAutoconfiguredCalls()
     {
         $container = new ContainerBuilder();
-        $container->registerForAutoconfiguration(parent::class)
-            ->addMethodCall('setFoo');
+
+        $expected = array(
+            array('setFoo', array(
+                'plain_value',
+                '%some_parameter%',
+            )),
+            array('callBar', array()),
+            array('isBaz', array()),
+        );
+
+        $container->registerForAutoconfiguration(parent::class)->addMethodCall('setFoo', $expected[0][1]);
+        $container->registerForAutoconfiguration(self::class)->addMethodCall('callBar');
+
+        $def = $container->register('foo', self::class)->setAutoconfigured(true)->addMethodCall('isBaz');
+        $this->assertEquals(
+            array(array('isBaz', array())),
+            $def->getMethodCalls(),
+            'Definition shouldn\'t have only one method call.'
+        );
 
         (new ResolveInstanceofConditionalsPass())->process($container);
+
+        $this->assertEquals($expected, $container->findDefinition('foo')->getMethodCalls());
     }
 
     /**
@@ -243,7 +262,7 @@ class ResolveInstanceofConditionalsPassTest extends TestCase
 
         (new ResolveInstanceofConditionalsPass())->process($container);
 
-        $abstract = $container->getDefinition('abstract.instanceof.bar');
+        $abstract = $container->getDefinition('.abstract.instanceof.bar');
 
         $this->assertEmpty($abstract->getArguments());
         $this->assertEmpty($abstract->getMethodCalls());
@@ -252,7 +271,30 @@ class ResolveInstanceofConditionalsPassTest extends TestCase
         $this->assertTrue($abstract->isAbstract());
     }
 
-    public function testBindings()
+    public function testProcessForAutoconfiguredBindings()
+    {
+        $container = new ContainerBuilder();
+
+        $container->registerForAutoconfiguration(self::class)
+            ->setBindings(array(
+                '$foo' => new BoundArgument(234, false),
+                parent::class => new BoundArgument(new Reference('foo'), false),
+            ));
+
+        $container->register('foo', self::class)
+            ->setAutoconfigured(true)
+            ->setBindings(array('$foo' => new BoundArgument(123, false)));
+
+        (new ResolveInstanceofConditionalsPass())->process($container);
+
+        $expected = array(
+            '$foo' => new BoundArgument(123, false),
+            parent::class => new BoundArgument(new Reference('foo'), false),
+        );
+        $this->assertEquals($expected, $container->findDefinition('foo')->getBindings());
+    }
+
+    public function testBindingsOnInstanceofConditionals()
     {
         $container = new ContainerBuilder();
         $def = $container->register('foo', self::class)->setBindings(array('$toto' => 123));

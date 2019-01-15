@@ -2,7 +2,7 @@
 
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Types\Type;
 
@@ -11,10 +11,10 @@ use Doctrine\DBAL\Types\Type;
  */
 class Version20181024155507 extends AbstractMigration
 {
-	public function getDescription() {
+	public function getDescription(): string {
         return 'Cambio en campos de expedientes,documento y creacion tabla vista_formato';
     }
-	public function preUp(Schema $schema) {
+	public function preUp(Schema $schema): void {
         date_default_timezone_set("America/Bogota");
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
@@ -29,7 +29,7 @@ class Version20181024155507 extends AbstractMigration
     /**
      * @param Schema $schema
      */
-    public function up(Schema $schema)
+    public function up(Schema $schema): void
     {
          $tabla = $schema->getTable('expediente');
 
@@ -141,7 +141,7 @@ class Version20181024155507 extends AbstractMigration
     /**
      * @param Schema $schema
      */
-    public function down(Schema $schema)
+    public function down(Schema $schema): void
     {
 
 

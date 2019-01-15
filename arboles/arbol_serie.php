@@ -15,8 +15,8 @@ $objetoJson = array(
 );
 
 $id = 0;
-if($_GET["id"]) {
-	$id = $_GET["id"];
+if(isset($_REQUEST["id"]) && $_REQUEST["id"]) {
+    $id = $_REQUEST["id"];
 }
 $hijos_serie = array();
 // DEFAULT DATOS

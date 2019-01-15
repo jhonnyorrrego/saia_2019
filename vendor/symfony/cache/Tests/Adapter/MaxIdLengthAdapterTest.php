@@ -26,7 +26,7 @@ class MaxIdLengthAdapterTest extends TestCase
         $cache->expects($this->exactly(2))
             ->method('doHave')
             ->withConsecutive(
-                array($this->equalTo('----------:0GTYWa9n4ed8vqNlOT2iEr:')),
+                array($this->equalTo('----------:nWfzGiCgLczv3SSUzXL3kg:')),
                 array($this->equalTo('----------:---------------------------------------'))
             );
 
@@ -47,19 +47,19 @@ class MaxIdLengthAdapterTest extends TestCase
 
         // No versioning enabled
         $this->assertEquals('--------------------------:------------', $reflectionMethod->invokeArgs($cache, array(str_repeat('-', 12))));
-        $this->assertLessThanOrEqual(50, strlen($reflectionMethod->invokeArgs($cache, array(str_repeat('-', 12)))));
-        $this->assertLessThanOrEqual(50, strlen($reflectionMethod->invokeArgs($cache, array(str_repeat('-', 23)))));
-        $this->assertLessThanOrEqual(50, strlen($reflectionMethod->invokeArgs($cache, array(str_repeat('-', 40)))));
+        $this->assertLessThanOrEqual(50, \strlen($reflectionMethod->invokeArgs($cache, array(str_repeat('-', 12)))));
+        $this->assertLessThanOrEqual(50, \strlen($reflectionMethod->invokeArgs($cache, array(str_repeat('-', 23)))));
+        $this->assertLessThanOrEqual(50, \strlen($reflectionMethod->invokeArgs($cache, array(str_repeat('-', 40)))));
 
         $reflectionProperty = $reflectionClass->getProperty('versioningIsEnabled');
         $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($cache, true);
 
         // Versioning enabled
-        $this->assertEquals('--------------------------:1:------------', $reflectionMethod->invokeArgs($cache, array(str_repeat('-', 12))));
-        $this->assertLessThanOrEqual(50, strlen($reflectionMethod->invokeArgs($cache, array(str_repeat('-', 12)))));
-        $this->assertLessThanOrEqual(50, strlen($reflectionMethod->invokeArgs($cache, array(str_repeat('-', 23)))));
-        $this->assertLessThanOrEqual(50, strlen($reflectionMethod->invokeArgs($cache, array(str_repeat('-', 40)))));
+        $this->assertEquals('--------------------------:1/------------', $reflectionMethod->invokeArgs($cache, array(str_repeat('-', 12))));
+        $this->assertLessThanOrEqual(50, \strlen($reflectionMethod->invokeArgs($cache, array(str_repeat('-', 12)))));
+        $this->assertLessThanOrEqual(50, \strlen($reflectionMethod->invokeArgs($cache, array(str_repeat('-', 23)))));
+        $this->assertLessThanOrEqual(50, \strlen($reflectionMethod->invokeArgs($cache, array(str_repeat('-', 40)))));
     }
 
     /**
