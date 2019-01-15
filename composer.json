@@ -4,9 +4,6 @@
 		"firebase/php-jwt": "*",
 		"phpoffice/phpword": "*",
 		"greenlion/php-sql-parser": "*",
-		"setasign/fpdi": "*",
-		"setasign/fpdi-fpdf": "*",
-		"setasign/fpdi-tcpdf": "*",
 		"siriusphp/upload": "*",
 		"symfony/process": "*",
 		"doctrine/orm": "*",
@@ -16,10 +13,13 @@
 		"doctrine/doctrine-migrations-bundle": "*",
 		"smalot/pdfparser": "*",
 		"tecnickcom/tcpdf": "*",
-		"mpdf/mpdf": "*",
 		"aws/aws-sdk-php": "*",
 		"lasserafn/php-initial-avatar-generator": "^3.0",
-		"symfony/yaml": "^4.1"
+		"symfony/yaml": "^4.1",
+		"mpdf/mpdf": "^7.1",
+		"setasign/fpdf": "^1.8",
+		"setasign/fpdi": "v1.6",
+		"setasign/fpdi-tcpdf": "v1.6"
 	},
 	"extra": {
 		"class": "Corley\\Composer\\MyHook"

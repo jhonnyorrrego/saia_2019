@@ -63,11 +63,7 @@ $(function(){
             }
         }, 'json')
     })
-    
-    $(document).on('click', '.show_document', function(){
-        executeAction($(this));
-    });
-
+  
     $(document).on('click', '.btn_expiration', function(){
         top.topModal({
             url: `${baseUrl}views/documento/asignar_vencimiento.php`

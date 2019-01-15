@@ -6,7 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'setasign\\Fpdi\\' => array($vendorDir . '/setasign/fpdi/src'),
     'Zend\\EventManager\\' => array($vendorDir . '/zendframework/zend-eventmanager/src'),
     'Zend\\Escaper\\' => array($vendorDir . '/zendframework/zend-escaper/src'),
     'Zend\\Code\\' => array($vendorDir . '/zendframework/zend-code/src'),
@@ -41,6 +40,7 @@ return array(
     'PhpOffice\\PhpWord\\' => array($vendorDir . '/phpoffice/phpword/src/PhpWord'),
     'PhpOffice\\Common\\' => array($vendorDir . '/phpoffice/common/src/Common'),
     'PackageVersions\\' => array($vendorDir . '/ocramius/package-versions/src/PackageVersions'),
+    'Mpdf\\' => array($vendorDir . '/mpdf/mpdf/src'),
     'LasseRafn\\Initials\\' => array($vendorDir . '/lasserafn/php-initials/src'),
     'LasseRafn\\InitialAvatarGenerator\\' => array($vendorDir . '/lasserafn/php-initial-avatar-generator/src'),
     'LasseRafn\\' => array($vendorDir . '/lasserafn/php-string-script-language/src'),
@@ -62,6 +62,7 @@ return array(
     'Doctrine\\Bundle\\MigrationsBundle\\' => array($vendorDir . '/doctrine/doctrine-migrations-bundle'),
     'Doctrine\\Bundle\\DoctrineCacheBundle\\' => array($vendorDir . '/doctrine/doctrine-cache-bundle'),
     'Doctrine\\Bundle\\DoctrineBundle\\' => array($vendorDir . '/doctrine/doctrine-bundle'),
+    'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
     'Corley\\Composer\\' => array($baseDir . '/instalador'),
     'Aws\\' => array($vendorDir . '/aws/aws-sdk-php/src'),
 );

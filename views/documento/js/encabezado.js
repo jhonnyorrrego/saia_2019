@@ -4,7 +4,8 @@ $(function () {
 
     (function init() {
         toggleGoBack();
-        showFlag();                
+        showFlag();
+        showFab();
     })();
     
     $("#go_back").on('click', function(){                                
@@ -75,95 +76,27 @@ $(function () {
         }, 'json')
     });
 
-    /*var fab = new Fab({
-        selector: "#fab",
-        button: {
-            style: "large blue",
-            html: ""
-        },
-        icon:{
-            style: "fa fa-chevron-up",
-            html: ""
-        },
-        // "top-left" || "top-right" || "bottom-left" || "bottom-right"
-        position: "bottom-right",
-        // "horizontal" || "vertical"
-        direction: "vertical",
-        buttons:[
-            <?php if ($documentActions["confirmar"]): ?>
-                {
-                    button: {
-                        style: "small yellow",
-                        html: ""
-                    },
-                    icon:{
-                        style: "fa fa-check",
-                        html: ""
-                    },
-                    onClick: function(){
-                        if(window.parent.frames["arbol_formato"] !== undefined){
-                            match_iddoc = window.parent.frames["arbol_formato"].location.href.match(/(iddoc)=([\d]+)/);
-                            if(match_iddoc){
-                                var parentDocumentId = match_iddoc[2];
-                            }else{
-                                var parentDocumentId = 0;
-                            }
-                        }else{
-                            var parentDocumentId = documentId;
-                        }
-                        
-                        var route = `${baseUrl}class_transferencia.php?iddoc=${documentId}&funcion=aprobar&anterior=${parentDocumentId}`;
-                        window.open(route, "_self");
-                    }
+     /////// MENU INTERMEDIO ////////
+     $(document).on('click', '#etiquetar', function(){
+        top.topModal({
+            url: `${baseUrl}views/documento/etiquetar.php`,
+            title: 'Etiquetas',
+            size: 'modal-sm',
+            params: {
+                selections: documentId
+            },
+            buttons: {
+                success: {
+                    label: 'Guardar',
+                    class: 'btn btn-complete'
                 },
-            <?php endif; ?>
-            <?php if ($documentActions["editar"]): ?>
-                {
-                    button: {
-                        style: "small yellow",
-                        html: ""
-                    },
-                    icon:{
-                        style: "fa fa-edit",
-                        html: ""
-                    },
-                    onClick: function(){
-                        window.open("<?php echo $ruta_db_superior . FORMATOS_CLIENTE . $document[0]["nombre"] .'/'. $document[0]["ruta_editar"] ?>?iddoc=<?= $documentId ?>&idformato=<?= $document[0]["idformato"] ?>","_self");
-                    }
-                },
-            <?php endif; ?>
-            <?php if ($documentActions["ver_responsables"]): ?>
-                {
-                    button: {
-                        style: "small yellow",
-                        html: ""
-                    },
-                    icon:{
-                        style: "fa fa-users",
-                        html: ""
-                    },
-                    onClick: function(){
-                        window.open(`${baseUrl}mostrar_ruta.php?doc=${documentId}`, "_self");
-                    }
-                },
-            <?php endif; ?>
-            <?php if ($documentActions["devolucion"]) : ?>
-                {
-                    button: {
-                        style: "small yellow",
-                        html: ""
-                    },
-                    icon:{
-                        style: "fa fa-backward",
-                        html: ""
-                    },
-                    onClick: function(){
-                        window.open(`${baseUrl}class_transferencia.php?iddoc=${documentId}&funcion=formato_devolucion`,"_self");
-                    }
+                cancel: {
+                    label: 'Cancelar',
+                    class: 'btn btn-danger'
                 }
-            <?php endif; ?>
-        ]
-    });*/
+            },
+        })
+    });
 
     window.addEventListener("orientationchange", function () {
         setTimeout(() => {
@@ -189,25 +122,93 @@ $(function () {
         }
     }
 
-    /////// MENU INTERMEDIO ////////
-    $(document).on('click', '#etiquetar', function(){
-        top.topModal({
-            url: `${baseUrl}views/documento/etiquetar.php`,
-            title: 'Etiquetas',
-            size: 'modal-sm',
-            params: {
-                selections: documentId
-            },
-            buttons: {
-                success: {
-                    label: 'Guardar',
-                    class: 'btn btn-complete'
+    function showFab() {
+        let actions = $('script[data-documentactions]').data('documentactions');
+        $('script[data-documentactions]').attr('data-documentactions', '');
+        
+        if (actions.showFab) {
+            let buttons = [];
+
+            if (actions.confirm.see) {
+                buttons.push({
+                    button: {
+                        style: "small yellow",
+                        html: ""
+                    },
+                    icon:{
+                        style: "fa fa-check",
+                        html: ""
+                    },
+                    onClick: function(){                        
+                        window.open(actions.confirm.route, "_self");
+                    }
+                });
+            }
+
+            if (actions.edit.see) {
+                buttons.push({
+                    button: {
+                        style: "small yellow",
+                        html: ""
+                    },
+                    icon: {
+                        style: "fa fa-edit",
+                        html: ""
+                    },
+                    onClick: function () {                        
+                        window.open(actions.edit.route, "_self");
+                    }
+                });
+            }
+
+            if (actions.managers.see) {
+                buttons.push({
+                    button: {
+                        style: "small yellow",
+                        html: ""
+                    },
+                    icon:{
+                        style: "fa fa-users",
+                        html: ""
+                    },
+                    onClick: function(){
+                        window.open(actions.managers.route, "_self");
+                    }
+                });
+            }
+
+            if (actions.return.see) {
+                buttons.push({
+                    button: {
+                        style: "small yellow",
+                        html: ""
+                    },
+                    icon:{
+                        style: "fa fa-backward",
+                        html: ""
+                    },
+                    onClick: function(){
+                        window.open(actions.return.route,"_self");
+                    }
+                });
+            }
+
+            var fab = new Fab({
+                selector: "#fab",
+                button: {
+                    style: "blue",
+                    html: ""
                 },
-                cancel: {
-                    label: 'Cancelar',
-                    class: 'btn btn-danger'
-                }
-            },
-        })
-    });
+                icon:{
+                    style: "fa fa-arrow-left",
+                    html: ""
+                },
+                // "top-left" || "top-right" || "bottom-left" || "bottom-right"
+                position: "bottom-right",
+                // "horizontal" || "vertical"
+                direction: "horizontal",
+                buttons: buttons
+            });
+        }
+    }
 });

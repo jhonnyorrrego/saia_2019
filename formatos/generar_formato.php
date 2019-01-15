@@ -737,7 +737,7 @@ class GenerarFormato
             } else {
                 $action = '<?= $ruta_db_superior ?>class_transferencia.php"';
             }
-            $texto .= '<div class=" container-fluid container-fixed-lg col-lg-8">
+            $texto .= '<div class="container-fluid container-fixed-lg col-lg-8" style="overflow: auto;" id="content_container">
                     	<!-- START card -->
                     	<div class="card card-default">
                             <div class="card-body">';
@@ -1420,7 +1420,15 @@ class GenerarFormato
             }
             // ******************************************************************************************
             if ($formato[0]["item"] && $accion == "adicionar") {
-                $texto .= '<div "form-group"><label>ACCION A SEGUIR LUEGO DE GUARDAR</label><input type="radio" name="opcion_item" id="opcion_item1" value="adicionar">Adicionar otro&nbsp;&nbsp;<input type="radio" id="opcion_item2" name="opcion_item" value="terminar" checked>Terminar</div>';
+                $texto .= '<div "form-group">'
+                            . '<label>ACCION A SEGUIR LUEGO DE GUARDAR</label>'
+                            . '<div class="radio radio-success">'
+                                . '<input type="radio" name="opcion_item" id="opcion_item1" value="adicionar">'
+                                .'<label for="opcion_item1">Adicionar otro</label>'
+                                . '<input type="radio" name="opcion_item" id="opcion_item" value="terminar" checked>'
+                                .'<label for="opcion_item">Terminar</label>'
+                            .'</div>'
+                        . '</div>';
             }
             $wheref = "A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=" . $this->idformato . " AND A.acciones LIKE '%" . strtolower($accion[0]) . "%' ";
             if (count($listado_campos)) {
@@ -2006,7 +2014,7 @@ span.fancytree-expander {
                 $campos_adicionar = array_diff($campos, $campos_edit);
                 $campos_adicionar = array_unique($campos_adicionar);
             } else {
-                notificaciones("El formato mostrar no posee Parametros si esta seguro continue con el Proceso de lo contrario haga Click en Listar Formato y Luego Editelo");
+                notificaciones("El formato mostrar no posee Parametros si esta seguro continue con el Proceso de lo contrario haga Click en Listar Formato y Luego Editelo", "error", 5000);
             }
         }
         $tadd = "";
@@ -2016,7 +2024,7 @@ span.fancytree-expander {
         $ted .= implode(",", $campos_editar);
         $tod .= implode(",", $campos_otrosf);
         if ($campos_otrosf != "") {
-            notificaciones("Existen otros Formatos Vinculados");
+            notificaciones("Existen otros Formatos Vinculados ", "error", 5000);
         }
         $adicionales = "";
         if (@$_REQUEST["pantalla"] == "tiny") {
@@ -2463,6 +2471,7 @@ span.fancytree-expander {
             $(function () {
                 var configuracion=' . $opciones_json . ';
                 $("#' . $nombre_selector . '").datetimepicker(configuracion);
+                $("#content_container").height($(window).height());
             });
         </script>';
         $texto[] = "</div>";

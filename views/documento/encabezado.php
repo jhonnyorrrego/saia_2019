@@ -77,11 +77,7 @@ function moduleActions($parentModule){
  * el documento por el funcionario
  * 
  * @param int $documentId identificador del documento
- * @return array 
-        "ver_responsables" => boolean,
-        "editar" => boolean,
-        "devolucion" => boolean,
-        "confirmar" => boolean
+ * @return array         
  */
 function findActions($documentId){
     global $conn, $ruta_db_superior, $userId, $document;
@@ -89,8 +85,8 @@ function findActions($documentId){
     $seePreviousManagers = false;
     $seeManagers = false;
     $editButton = false;
-    $confirmButton = false;
     $returnButton = false;
+    $confirmButton = true;
 
     $permissions = array();
     $findPermissions = busca_filtro_tabla("", "permiso_documento", "funcionario='" . $userId . "' AND documento_iddocumento=" . $documentId, "", $conn);
@@ -113,18 +109,15 @@ function findActions($documentId){
         }
 
         $findCurrent = busca_filtro_tabla("A.idtransferencia as idtrans,A.destino,A.ruta_idruta", "buzon_entrada A", "A.activo=1 and A.archivo_idarchivo=" . $documentId . " and (A.nombre='POR_APROBAR') and A.destino='" . $userId . "'", "A.idtransferencia", $conn);
-        if ($findCurrent["numcampos"] > 0) {
+        if ($findCurrent["numcampos"]) {
             $findPrevious = busca_filtro_tabla("A.idtransferencia,A.ruta_idruta", "buzon_entrada A", "A.idtransferencia <" . $findCurrent[0]["idtrans"] . " and A.nombre='POR_APROBAR' and A.activo=1 and A.archivo_idarchivo=" . $documentId . " and origen='" . $userId . "'", "", $conn);
         }
-        if (!$_REQUEST["vista"]) {
-            $confirmButton = true;
-        }
-
+        
         if ($findManager["numcampos"] > 0 && $findManager[0]["destino"] != $userId) {
             $returnButton = true;
         }
 
-        if (@$findCurrent[0]["destino"] != $userId || @$findPrevious["numcampos"] > 0) {
+        if ($findCurrent[0]["destino"] != $userId || $findPrevious["numcampos"] > 0) {
             $seeManagers = false;
             if ($seePreviousManagers && in_array("r", $permissions)) {
                 $seeManagers = true;
@@ -139,12 +132,32 @@ function findActions($documentId){
         }
     }
 
-    return array(
-        "ver_responsables" => $seeManagers,
-        "editar" => $editButton,
-        "devolucion" => $returnButton,
-        "confirmar" => $confirmButton
-    );
+    $editRoute = $ruta_db_superior . FORMATOS_CLIENTE . $document[0]['nombre'] .'/'. $document[0]['ruta_editar'];
+    $editRoute.= '?' . http_build_query([
+        'iddoc' => $documentId,
+        'idformato' => $document[0]['idformato']
+    ]);
+    $response = [
+        'showFab' => $seeManagers || $editButton || $returnButton || $confirmButton,
+        "managers" => [
+            'see' => $seeManagers,
+            'route' => "{$ruta_db_superior}mostrar_ruta.php?doc={$documentId}"
+        ],
+        "edit" => [
+            'see' =>  $editButton,
+            'route' => $editRoute
+        ],
+        "return" => [
+            'see' =>  $returnButton,
+            'route' => "{$ruta_db_superior}class_transferencia.php?iddoc={$documentId}&funcion=formato_devolucion"
+        ],
+        "confirm" => [
+            'see' =>  $confirmButton,
+            'route' => "{$ruta_db_superior}class_transferencia.php?iddoc={$documentId}&funcion=aprobar"
+        ],
+    ];
+
+    return $response;
 }
 
 function getTransfer($transferId){
@@ -192,8 +205,8 @@ function plantilla($documentId, $transferId = 0){
         $moduleActions = moduleActions('menu_documento');
     }
     ?>
-    <!--<link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.css">-->
-    <style>.notification {position: relative;cursor: pointer;text-decoration: none;}.notification > .counter {position: absolute;font-size: 0.5em;top: -9px;left: 1px;}</style>
+    <link rel="stylesheet" href="<?= $ruta_db_superior ?>views/documento/css/encabezado.css">
+    <link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.css">
     <div class="col-12 p-0 m-0" id="document_information">
         <div class="row m-0 bg-info text-white px-1" style="font-size:20px;height:36px">
             <div class="col px-1 my-auto">
@@ -304,8 +317,8 @@ function plantilla($documentId, $transferId = 0){
             <div id="fab"></div>
         </div>
     </div>
-    <!--<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.js"></script>-->
-    <script src="<?= $ruta_db_superior ?>views/documento/js/encabezado.js" data-baseurl="<?= $ruta_db_superior ?>" data-documentid="<?= $documentId ?>"></script>
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.js"></script>
+    <script src="<?= $ruta_db_superior ?>views/documento/js/encabezado.js" data-baseurl="<?= $ruta_db_superior ?>" data-documentid="<?= $documentId ?>" data-documentactions='<?= json_encode($documentActions) ?>'></script>
     <?php
 }
 

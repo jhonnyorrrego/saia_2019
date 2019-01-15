@@ -4,7 +4,7 @@ $(function () {
     let params = $('script[data-params]').data('params');
 
     (function init() {
-        loadDocument();
+        getFormatInformation();    
         loadHeader();
     })();
 
@@ -35,6 +35,16 @@ $(function () {
         }
     });
 
+    function getFormatInformation() {
+        $.post(`${baseUrl}app/formato/consulta_rutas.php`, {
+            documentId: params.documentId,
+            key: localStorage.getItem('key')
+        }, function (response) {
+            let route = baseUrl + response.data.ruta_mostrar
+            $('#view_document').load(route);
+        }, 'json');
+    }
+
     function loadHeader() {
         let route = `${baseUrl}views/documento/encabezado.php?documentId=${params.documentId}`;
         
@@ -43,10 +53,5 @@ $(function () {
         }
             
         $('#document_header').load(route);
-    }
-
-    function loadDocument() {
-        let route = `${baseUrl}formatos/${params.format}/mostrar_${params.format}.php?iddoc=${params.documentId}&key=${key}`;
-        $('#view_document').load(route);
     }
 });
