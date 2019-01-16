@@ -77,6 +77,8 @@ class Ui {
                 left: $("#iframe_workspace").width() - 80
             });
         }
+
+        Ui.setWorkspacePosition();
     }
 
     static close() {
@@ -100,6 +102,16 @@ class Ui {
         function resetTimer() {
             clearTimeout(t);
             t = setTimeout(logout, 3600000)
+        }
+    }
+
+    static setWorkspacePosition() {
+        let breakpoint = localStorage.getItem('breakpoint');
+
+        if ($.inArray(breakpoint, ['xs', 'sm', 'md']) != -1) {
+            $('#workspace').css('position', 'absolute');
+        } else {
+            $('#workspace').css('position', 'relative');            
         }
     }
 }
