@@ -33,7 +33,7 @@ if (($sKey == "") || ((is_null($sKey)))) {
 	$sKey = @$_POST["key_d"];
 }
 $sDbWhere = "";
-$arRecKey = split(",",$sKey);
+$arRecKey = explode(',', $sKey);
 
 // Single delete record
 if (($sKey == "") || ((is_null($sKey)))) {
