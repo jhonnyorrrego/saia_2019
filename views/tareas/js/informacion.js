@@ -32,14 +32,7 @@ $(function(){
 
     (function init() {                
         if (!params.id) {
-            $('#final_date').datetimepicker({
-                widgetPositioning: {
-                    horizontal: 'auto',
-                    vertical: 'bottom'
-                },
-                defaultDate: moment(params.finalTime, 'YYYY-MM-DD HH:mm:ss'),
-                inline: false
-            });
+            createDatePicker();
             checkName();
         }else{
             findFormData(params.id);
@@ -76,9 +69,9 @@ $(function(){
     $('#save').on('click', function(){
         let key = localStorage.getItem('key');
         let managers = getOptions('#manager');
-        let initial = moment($('#final_date').val(), 'YYYY-MM-DDThh:mm')
+        let initial = moment($('#final_date').val(), 'DD/MM/YYYY hh:mm')
             .subtract(30, "minutes").format('YYYY-MM-DD HH:mm:ss');
-        let final = moment($('#final_date').val(), 'YYYY-MM-DDThh:mm').format('YYYY-MM-DD HH:mm:ss');
+        let final = moment($('#final_date').val(), 'DD/MM/YYYY hh:mm').format('YYYY-MM-DD HH:mm:ss');
 
         data = {
             task: params.id || 0,
@@ -158,5 +151,24 @@ $(function(){
 
     function checkName() {        
         $('#save').attr('disabled', $('#name').val().length ? false : true);
+    }
+
+    function createDatePicker() {
+        $('#final_date').datetimepicker({
+            widgetPositioning: {
+                horizontal: 'auto',
+                vertical: 'bottom'
+            },
+            defaultDate: moment(params.finalTime, 'YYYY-MM-DD HH:mm:ss'),
+            widgetParent: $('#modal_body'),
+            keepOpen: true,
+            locale: 'es',
+            format: "DD/MM/YYYY hh:mm",
+            debug: true
+        });
+        
+        $('#final_date').on('dp.change', function (e) {
+            $(this).trigger('click');
+        });
     }
 });

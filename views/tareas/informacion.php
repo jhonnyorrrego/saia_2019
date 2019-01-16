@@ -45,14 +45,11 @@ while ($max_salida > 0) {
     <label class="my-0" for="description">Instrucciones adicionales</label>
     <textarea class="form-control" id="description" rows="3"></textarea>
 </div>
-<div class="form-group advanced" style="display:none">
-    <label for="description">Instrucciones adicionales</label>
-    <textarea class="form-control" id="description" rows="3"></textarea>
-</div>
 <div class="form-group text-right">
     <button class="btn btn-complete" id="save">Crear Tarea</button>
 </div>
 <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.min.js"></script>
 <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/i18n/es.js"></script>
 <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/locales/es.js"></script>
 <script src="<?= $ruta_db_superior ?>views/tareas/js/informacion.js"></script>
