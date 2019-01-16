@@ -37,9 +37,9 @@ $(function () {
     $('.dropzone').each(function () {
     	var idcampo = $(this).attr('id');
     	var paramName = $(this).attr('name');
-    	var idcampoFormato = $(this).attr('data-idcampo-formato');
-    	var extensiones = $(this).attr('data-extensiones');
-    	var multiple_text = $(this).attr('data-multiple');
+    	var idcampoFormato = $(this).data('idcampo-formato');
+    	var extensiones = $(this).data('extensiones');
+    	var multiple_text = $(this).data('multiple');
     	var multiple = false;
     	var form_uuid = $('#form_uuid').val();
     	var maxFiles = 1;

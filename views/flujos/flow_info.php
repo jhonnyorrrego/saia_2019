@@ -33,13 +33,8 @@ $origen = array("url" => "arboles/arbol_formatos.php", "ruta_db_superior" => $ru
 $opciones_arbol = array("keyboard" => true, "selectMode" => 2);
 $extensiones = array("filter" => array());
 $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
-$idflujo = null;
-if(isset($_REQUEST["idflujo"])) {
-    $idflujo = $_REQUEST["idflujo"];
-}
 ?>
 <form>
-<input type="hidden" id="idflujo" name="idflujo" value="<?= $idflujo ?>">
 <fieldset>
 <legend>Informaci&oacute;n general</legend>
   <div class="row">
@@ -87,8 +82,6 @@ if(isset($_REQUEST["idflujo"])) {
   <div class="form-group">
     <label for="expediente_flujo">Expediente preestablecido</label>
     <input type="text" id="expediente_flujo" name="expediente" class="demo-default" value="">
-    <script>
-    </script>
   </div>
 
   <div class="form-group">
