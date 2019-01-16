@@ -14,6 +14,7 @@ class Version20180118223002 extends AbstractMigration
      * @param Schema $schema
      */
     public function up(Schema $schema): void {
+$this->skipIf(true);
         date_default_timezone_set("America/Bogota");
         $this->platform->registerDoctrineTypeMapping('enum', 'string');
         
