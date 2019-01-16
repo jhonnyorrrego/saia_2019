@@ -15,6 +15,7 @@ class Version20170921185120 extends AbstractMigration {
     }
 
     public function preUp(Schema $schema): void {
+$this->skipIf(true);
 		date_default_timezone_set("America/Bogota");
 
 		$this->abortIf($this->connection->getDatabasePlatform()->getName() != "mysql", "La migration solo puede ser ejecutada con seguridad en 'mysql'.");
