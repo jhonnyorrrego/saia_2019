@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  +-----------------------------------------------------------------------+
  | program/steps/mail/autocomplete.inc                                   |
  |                                                                       |
@@ -30,10 +30,10 @@ if ($RCMAIL->action == 'group-expand') {
         $result    = $abook->list_records($RCMAIL->config->get('contactlist_fields'));
         $members   = array();
 
-        while ($result && ($sql_arr = $result->iterate())) {
-            $emails = (array) $abook->get_col_values('email', $sql_arr, true);
+        while ($result && ($record = $result->iterate())) {
+            $emails = (array) $abook->get_col_values('email', $record, true);
             if (!empty($emails) && ($email = array_shift($emails))) {
-                $members[] = format_email_recipient($email, rcube_addressbook::compose_list_name($sql_arr));
+                $members[] = format_email_recipient($email, rcube_addressbook::compose_list_name($record));
             }
         }
 
@@ -63,15 +63,16 @@ if (!empty($book_types) && strlen($search)) {
     $sort_keys = array();
     $books_num = count($book_types);
     $search_lc = mb_strtolower($search);
+    $mode     |= rcube_addressbook::SEARCH_GROUPS;
 
     foreach ($book_types as $id) {
         $abook = $RCMAIL->get_address_book($id);
         $abook->set_pagesize($MAXNUM);
 
         if ($result = $abook->search($RCMAIL->config->get('contactlist_fields'), $search, $mode, true, true, 'email')) {
-            while ($sql_arr = $result->iterate()) {
+            while ($record = $result->iterate()) {
                 // Contact can have more than one e-mail address
-                $email_arr = (array)$abook->get_col_values('email', $sql_arr, true);
+                $email_arr = (array)$abook->get_col_values('email', $record, true);
                 $email_cnt = count($email_arr);
                 $idx       = 0;
 
@@ -80,7 +81,7 @@ if (!empty($book_types) && strlen($search)) {
                         continue;
                     }
 
-                    $name    = rcube_addressbook::compose_list_name($sql_arr);
+                    $name    = rcube_addressbook::compose_list_name($record);
                     $contact = format_email_recipient($email, $name);
 
                     // skip entries that don't match
@@ -92,10 +93,15 @@ if (!empty($book_types) && strlen($search)) {
 
                     // skip duplicates
                     if (empty($contacts[$index])) {
-                        $contact = array('name' => $contact, 'type' => $sql_arr['_type']);
+                        $contact = array('name' => $contact, 'type' => $record['_type']);
 
-                        if (($display = rcube_addressbook::compose_search_name($sql_arr, $email, $name)) && $display != $contact['name']) {
+                        if (($display = rcube_addressbook::compose_search_name($record, $email, $name)) && $display != $contact['name']) {
                             $contact['display'] = $display;
+                        }
+
+                        // groups with defined email address will not be expanded to its members' addresses
+                        if ($record['_type'] == 'group') {
+                            $contact['email'] = $email;
                         }
 
                         $contacts[$index]  = $contact;
