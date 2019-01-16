@@ -321,17 +321,11 @@ function librariesForTopModal($data){
 
 function bpmnModeler() {
     global $ruta_db_superior;
-    $ruta_lib = "assets/theme/assets/plugins/bpmn-js/3.0.4/";
+    //$ruta_lib = "assets/theme/assets/plugins/bpmn-js/3.0.4/";
+    $ruta_lib = "assets/theme/assets/plugins/bpmn-js/3.1.0/";
     $rutaModeler = $ruta_db_superior . $ruta_lib . "bpmn-modeler.development.js";
     $modeler = '<script src="' . $rutaModeler . '" type="text/javascript"></script>';
 
-    $rutaCss = $ruta_db_superior . $ruta_lib . 'bootstrap.min.css';
-    $css = '<link href="' . $rutaCss . '" rel="stylesheet" type="text/css" />';
-
-    $rutaJs = $ruta_db_superior . $ruta_lib . 'bootstrap.min.js';
-    $js = '<script type="text/javascript" src="' . $rutaJs . '"></script>';
-
-    //return $modeler . $css . $js;
     return $modeler;
 }
 

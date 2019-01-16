@@ -13,6 +13,7 @@ while ($max_salida > 0) {
 
 ?>
 <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen">
+<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css" rel="stylesheet" type="text/css" media="screen">
 <div class="form-group">
     <label class="my-0" for="name">Nombre de la tarea<span class="text-danger">*</span></label>
     <input type="text" class="form-control" id="name" placeholder="Qué desea que se realice?">
@@ -34,7 +35,7 @@ while ($max_salida > 0) {
 <div class="form-group">
     <label class="my-0" for="date_ranger">Fecha limite</label>
     <div class="input-group">
-        <input type="datetime-local" class="form-control" id="final_date">
+        <input type="text" class="form-control" id="final_date">
         <div class="input-group-append ">
             <span class="input-group-text"><i class="fa fa-calendar"></i></span>
         </div>
@@ -44,13 +45,11 @@ while ($max_salida > 0) {
     <label class="my-0" for="description">Instrucciones adicionales</label>
     <textarea class="form-control" id="description" rows="3"></textarea>
 </div>
-<div class="form-group advanced" style="display:none">
-    <label for="description">Instrucciones adicionales</label>
-    <textarea class="form-control" id="description" rows="3"></textarea>
-</div>
 <div class="form-group text-right">
     <button class="btn btn-complete" id="save">Crear Tarea</button>
 </div>
 <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.min.js"></script>
 <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/i18n/es.js"></script>
+<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/locales/es.js"></script>
 <script src="<?= $ruta_db_superior ?>views/tareas/js/informacion.js"></script>

@@ -84,10 +84,10 @@ class managesieve extends rcube_plugin
 
         // include styles
         $skin_path = $this->local_skin_path();
-        if ($this->rc->task == 'settings' || $sieve_action) {
+        if ($sieve_action || ($this->rc->task == 'settings' && empty($_REQUEST['_framed']))) {
             $this->include_stylesheet("$skin_path/managesieve.css");
         }
-        else {
+        else if ($this->rc->task == 'mail') {
             $this->include_stylesheet("$skin_path/managesieve_mail.css");
         }
 
@@ -190,8 +190,8 @@ class managesieve extends rcube_plugin
     function managesieve_actions()
     {
         // handle fetching email headers for the new filter form
-        if ($uid = rcube_utils::get_input_value('_uid', rcube_utils::INPUT_POST)) {
-            $uids    = rcmail::get_uids();
+        if ($_uid = rcube_utils::get_input_value('_uid', rcube_utils::INPUT_POST)) {
+            $uids    = rcmail::get_uids($_uid);
             $mailbox = key($uids);
             $message = new rcube_message($uids[$mailbox][0], $mailbox);
             $headers = $this->parse_headers($message->headers);
@@ -239,7 +239,7 @@ class managesieve extends rcube_plugin
             $include_path .= ini_get('include_path');
             set_include_path($include_path);
 
-            $class_name = 'rcube_sieve_' . ($type ? $type : 'engine');
+            $class_name = 'rcube_sieve_' . ($type ?: 'engine');
             $this->engine = new $class_name($this);
         }
 

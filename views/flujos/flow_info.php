@@ -33,9 +33,7 @@ $origen = array("url" => "arboles/arbol_formatos.php", "ruta_db_superior" => $ru
 $opciones_arbol = array("keyboard" => true, "selectMode" => 2);
 $extensiones = array("filter" => array());
 $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
-
 ?>
-
 <form>
 <fieldset>
 <legend>Informaci&oacute;n general</legend>
@@ -84,18 +82,16 @@ $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
   <div class="form-group">
     <label for="expediente_flujo">Expediente preestablecido</label>
     <input type="text" id="expediente_flujo" name="expediente" class="demo-default" value="">
-    <script>
-    </script>
   </div>
 
-  <div class="form-check">
+  <div class="form-group">
     <label for="formato_flujo">Elija los formatos que intervienen en este proceso*</label>
 	<?= $arbol->generar_html() ?>
   </div>
 
-  <div class="col-6">
-    <label for="expediente_flujo">Adjuntar documentación del proceso</label>
-    <div id="dropzone" class="dropzone">
+  <div class="form-group">
+    <label for="dropzone">Adjuntar documentaci&oacute;n del proceso</label>
+    <div id="dropzone" class="dropzone" data-multiple="multiple">
       <div class="dz-message"><span>Haga clic para elegir un archivo o Arrastre acá el archivo.</span></div>
     </div>
   </div>
@@ -108,7 +104,8 @@ $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
 
   </fieldset>
 
-  <button type="submit" class="btn btn-primary">Guardar</button>
-
+    <div class="form-group pb-3">
+      <button type="submit" class="btn btn-primary">Guardar</button>
+    </div>
 </form>
 <script src="<?= $ruta_db_superior ?>views/flujos/js/flujos.js" data-consulta64="<?= $consulta64 ?>"></script>
