@@ -90,12 +90,8 @@ function llena_dependencia($id, $partes = false) {
             $item = array();
             $item["extraClasses"] = "estilo-dependencia";
             $item["title"] = $text;
-<<<<<<< HEAD
-            $item["key"] = $papas[$i]["iddependencia"] . ".0." . $tipo;
-=======
             $item["key"] = $papas[$i]["iddependencia"] . ".0";
 
->>>>>>> 2e34011c15fc29a4cee51886971864394a1a9791
             $hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"], "", $conn);
             $serie = busca_filtro_tabla("count(*) as cant", "entidad_serie e,serie s", "e.fk_serie=s.idserie and e.fk_dependencia=" . $papas[$i]["iddependencia"] . " and (s.cod_padre=0 or s.cod_padre is null)", "", $conn);
 
@@ -222,4 +218,3 @@ function llena_otras_categorias($id) {
     }
     return $objetoJson;
 }
-?>
