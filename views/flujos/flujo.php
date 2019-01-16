@@ -111,6 +111,8 @@ ul.fancytree-container {
         </div>
     </div>
 
+<input type="hidden" id="idflujo" name="idflujo" value="<?= $idflujo ?>">
+
 <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/dropzone.min.js"></script>
 
 <script type="text/javascript">
