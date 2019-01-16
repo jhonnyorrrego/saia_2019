@@ -2,7 +2,7 @@
 
 namespace Migrations;
 
-use Doctrine\DBAL\Migrations\AbstractMigration;
+use Doctrine\Migrations\AbstractMigration;
 use Doctrine\DBAL\Schema\Schema;
 
 /**
@@ -10,11 +10,11 @@ use Doctrine\DBAL\Schema\Schema;
  */
 class Version20170921185120 extends AbstractMigration {
 
-    public function getDescription() {
+    public function getDescription(): string {
         return 'Crear indices unicos en busqueda, busqueda_componente, modulo, campos_formato';
     }
 
-    public function preUp(Schema $schema) {
+    public function preUp(Schema $schema): void {
 		date_default_timezone_set("America/Bogota");
 
 		$this->abortIf($this->connection->getDatabasePlatform()->getName() != "mysql", "La migration solo puede ser ejecutada con seguridad en 'mysql'.");
@@ -42,7 +42,7 @@ class Version20170921185120 extends AbstractMigration {
 	 *
 	 * @param Schema $schema
 	 */
-	public function up(Schema $schema) {
+	public function up(Schema $schema): void {
 		date_default_timezone_set("America/Bogota");
 
 		$this->abortIf($this->connection->getDatabasePlatform()->getName() != "mysql", "La migration solo puede ser ejecutada con seguridad en 'mysql'.");
@@ -104,7 +104,7 @@ class Version20170921185120 extends AbstractMigration {
 		}
 	}
 
-	public function postUp(Schema $schema) {
+	public function postUp(Schema $schema): void {
 		$table = $schema->getTable('modulo');
 		if (!$table->hasIndex("ui_modulo_nombre")) {
 			$table->addUniqueIndex([
@@ -152,7 +152,7 @@ class Version20170921185120 extends AbstractMigration {
 	 *
 	 * @param Schema $schema
 	 */
-	public function down(Schema $schema) {
+	public function down(Schema $schema): void {
 		// this down() migration is auto-generated, please modify it to your needs
 	}
 
