@@ -30,10 +30,16 @@ $(function(){
         }
     };
 
-    (function init(){
+    (function init() {                
         if (!params.id) {
-            let finaldate = moment(params.finalTime, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDThh:mm');
-            $('#final_date').val(finaldate);
+            $('#final_date').datetimepicker({
+                widgetPositioning: {
+                    horizontal: 'auto',
+                    vertical: 'bottom'
+                },
+                defaultDate: moment(params.finalTime, 'YYYY-MM-DD HH:mm:ss'),
+                inline: false
+            });
             checkName();
         }else{
             findFormData(params.id);
