@@ -201,7 +201,7 @@ function nombre_proceso($doc) {
 		return ("");
 }
 
-function logo_empresa($idformato,$iddoc) {
+function logo_empresa($idformato,$iddoc = 0) {
 	global $conn, $ruta_db_superior;
 	$logo = busca_filtro_tabla("valor", "configuracion", "nombre='logo'", "", $conn);
 	if ($logo["numcampos"]) {
@@ -232,14 +232,16 @@ function logo_encabezado() {
 		return ("");
 	}
 }
-
+/**
+ * Busca el nombre de la empresa
+ * @return string
+*/
 function nombre_empresa() {
 	global $conn;
+
 	$logo = busca_filtro_tabla("valor", "configuracion", "nombre='nombre'", "", $conn);
-	if ($logo["numcampos"]) {
-		return ($logo[0]["valor"]);
-	} else
-		return ("");
+
+	return $logo['numcampos'] ? $logo[0]["valor"] : "";
 }
 
 function estilo_formato($idformato, $iddoc, $pagina) {
@@ -267,14 +269,23 @@ function version_calidad() {
 	else
 		echo $valor[0][0];
 }
-
-function nombre_formato($idformato, $iddoc, $tipo) {
+/**
+ * Busca el nombre del formato
+ * @param int $idformato
+ * @param int $iddoc
+ * @param int $tipo si requiere return o echo
+ * @return string
+ */
+function nombre_formato($idformato, $iddoc = 0, $tipo = 0) {
 	global $conn;
-	$formato = busca_filtro_tabla("etiqueta", "formato", "idformato=$idformato", "", $conn);
-	if ($tipo)
-		return (((ucfirst($formato[0][0]))));
-	else
-		echo ucfirst($formato[0][0]);
+
+	$formato = busca_filtro_tabla("etiqueta", "formato", "idformato={$idformato}", "", $conn);
+
+	if ($tipo){
+		return ucfirst($formato[0]['etiqueta']);
+	}else{
+		echo ucfirst($formato[0]['etiqueta']);
+	}	
 }
 
 function codigo_calidad($idformato, $iddoc, $tipo) {

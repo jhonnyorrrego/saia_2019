@@ -1,24 +1,32 @@
 <?php
-$max_salida=10; // Previene algun posible ciclo infinito limitando a 10 los ../
-$ruta_db_superior=$ruta="";
-while($max_salida>0){
-	if(is_file($ruta."db.php")){
-		$ruta_db_superior=$ruta; //Preserva la ruta superior encontrada
+$max_salida = 10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+	if (is_file($ruta . "db.php")) {
+		$ruta_db_superior = $ruta; //Preserva la ruta superior encontrada
 	}
-	$ruta.="../";
+	$ruta .= "../";
 	$max_salida--;
 }
-include_once($ruta_db_superior."db.php");
-include_once($ruta_db_superior."librerias_saia.php");
-include_once($ruta_db_superior."pantallas/generador/librerias_pantalla.php");
-include_once ($ruta_db_superior . "assets/librerias.php");
-include_once($ruta_db_superior."pantallas/lib/librerias_componentes.php");
+include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "librerias_saia.php";
+include_once $ruta_db_superior . "pantallas/generador/librerias_pantalla.php";
+include_once $ruta_db_superior . "assets/librerias.php";
+include_once $ruta_db_superior . "pantallas/lib/librerias_componentes.php";
 
-if($_REQUEST["idformato"]){
-  $idpantalla=$_REQUEST["idformato"];
-  $datos_formato=busca_filtro_tabla("","formato","idformato=".$idpantalla,"",$conn);
+if ($_REQUEST["idformato"]) {
+	$idpantalla = $_REQUEST["idformato"];
+	$datos_formato = busca_filtro_tabla("", "formato", "idformato=" . $idpantalla, "", $conn);
+	$route = $ruta_db_superior . "pantallas/formato/listado_formatos.php?";
+	$route.= http_build_query([
+		"no_kaiten" => 1,
+		"id" => $idpantalla,
+		"cargar_seleccionado" => 1,
+		"tabla" => "formato"
+	]);
 }
 ?>
+<!DOCTYPE html>
 <html>
 <head>
 <title>Generador Pantallas SAIA</title>
@@ -40,60 +48,28 @@ if($_REQUEST["idformato"]){
 	<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/css/imgareaselect-default.css" rel="stylesheet" type="text/css" media="screen" />
     <link class="main-stylesheet" href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.css" rel="stylesheet" type="text/css" />
 	<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/modernizr.custom.js" type="text/javascript"></script>
-
-<script type="text/javascript">
-
-var alto=($(window).height()-8); 
-function llamado_pantalla(ruta,datos,destino,nombre){				
-  if(datos!==''){
-    ruta+="?"+datos;
-  }  
-  if(nombre === "<?php echo($_REQUEST['destino_click']);?>"){  	
-  	ruta = ruta+'&click_clase=<?php echo($_REQUEST['click_clase']); ?>';  	
-  	destino.html('<div id="panel_'+nombre+'"><iframe name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0"></iframe></div>'); 
-  }
-  	destino.html('<div id="panel_'+nombre+'"><iframe name="'+nombre+'" src="'+ruta+'" width="100%" id="'+nombre+'" frameborder="0"></iframe></div>'); 
-}
-$(document).ready(function(){
-	$("#iframe_generador").height($(document).height());
-	$("#iframe_generador").width($("#admin_generador").width());
-	
-	
-});    
-</script>
 <?php
 ?>
-
 </head>
 	<body>
 			<div class="container-fluid px-0" >
 				<div class="row mx-0">					
 				    <div class="col-3 m-0 p-0 px-0" id="panel_izquierdo" style="">    
-				    
-				     	<iframe scrolling="no" frameborder="0" name="arbol_formato" src="<?php echo $ruta_db_superior."pantallas/formato/listado_formatos.php?cargar_seleccionado=1&tabla=formato&alto_pantalla='100'&no_kaiten=1&id=".$_REQUEST['idformato'] ;?>" width="100%" height="100% id="arbol_formato">
-				     		
-				     	</iframe>	
-				        
-				 
-				        <!--<div id="izquierdo_saia">
-				        	
-				        </div>-->					   
+						 <div id="arbol_formato">
+							<?php if ($idpantalla) : ?>
+								<iframe src="<?= $route ?>" width="100%" frameborder="0"></iframe>
+							<?php endif; ?>
+						 </div>	
 				    </div>			
 					<div class="col mx-0 p-0" id="admin_generador">
-						<iframe frameborder="0" id="iframe_generador" width="100%" src="<?php echo $ruta_db_superior."pantallas/generador/generador_pantalla.php?idformato=".$idpantalla; ?>" scrolling="yes"></iframe> 
+						<iframe frameborder="0" id="iframe_generador" width="100%" src="<?php echo $ruta_db_superior . "pantallas/generador/generador_pantalla.php?idformato=" . $idpantalla; ?>" scrolling="yes"></iframe> 
 					</div>
 				</div>
 			</div>
-			
+			<script> 
+			$(document).ready(function(){
+				$("iframe").height($(window).height()-5);
+			}); 
+			</script>
 	</body>
 </html>
-<script> 
-<?php
-if(isset($idpantalla)){
-	?>
-	llamado_pantalla("<?php echo($ruta_db_superior);?>pantallas/formato/listado_formatos.php","no_kaiten=1&id=<?php echo($_REQUEST['idformato']);?>&cargar_seleccionado=1&tabla=formato&alto_pantalla="+alto,$("#izquierdo_saia"),"arbol_formato");  	
-	<?php
-}
-?>
-//llamado_pantalla("<?php echo($ruta_db_superior);?>pantallas/formato/generador_pantallas.php","",$("#contenedor_formatos"),'detalles');
-</script>

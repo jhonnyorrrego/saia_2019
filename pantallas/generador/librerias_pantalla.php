@@ -67,29 +67,78 @@ function load_pantalla($idpantalla, $generar_archivo = "", $accion = '') {
     return ($texto);
 }
 
-function load_vista_previa($idpantalla) {
-    global $conn;
-    $consultaDatos =  busca_filtro_tabla("encabezado,pie_pagina,cuerpo","formato","idformato=".$idpantalla,"",$conn);
-    $consultaEncabezados = busca_filtro_tabla("contenido","encabezado_formato","idencabezado_formato=".$consultaDatos[0]["encabezado"],"",$conn);
+function carga_vista_previa($idFormato) {
+    global $conn,$ruta_db_superior;
+    include_once $ruta_db_superior."formatos/librerias/encabezado_pie_pagina.php";
+    $consultaDatos =  busca_filtro_tabla("encabezado,pie_pagina,cuerpo","formato","idformato=".$idFormato,"",$conn);
     $encabezado = '';
     $contenido_formato = '';
     $piePagina = '';
     if($consultaDatos['numcampos']){
         if($consultaDatos[0]['encabezado']){
-            $encabezado = $consultaEncabezados[0]['contenido'];
+            $consultaEncabezados = busca_filtro_tabla("contenido","encabezado_formato","idencabezado_formato=".$consultaDatos[0]["encabezado"],"",$conn);  
+            if($consultaEncabezados['numcampos']){
+                $encabezado = $consultaEncabezados[0]['contenido']; 
+                $contenidoEncabezado = buscar_funciones_generador($encabezado, $idFormato);          
+            }            
         } 
         if($consultaDatos[0]['cuerpo']){
-            $contenidoFormato = $consultaDatos[0]['cuerpo']; 
+            $excluirFunciones=1;
+            $contenidoFormato = buscar_funciones_generador($consultaDatos[0]['cuerpo'], $idFormato, $excluirFunciones); 
         }   
         if($consultaDatos[0]['pie_pagina']){
-            $piePagina = $consultaEncabezados[0]['pie_pagina'];
-        }  
-        $tableCuerpo = "<div style='padding:20px;'>".$encabezado."</div><div style='padding:20px;'>".$contenidoFormato."</div><div style='padding:20px;'>".$piePagina."</div>";
-        echo $tableCuerpo;            
-    }   
-    
+            $consultaPie = busca_filtro_tabla("contenido","encabezado_formato","idencabezado_formato=".$consultaDatos[0]["pie_pagina"],"",$conn);
+            if($consultaPie['numcampos']){
+                $piePagina = $consultaPie[0]['contenido'];
+                $contenidoPie = buscar_funciones_generador($piePagina, $idFormato);  
+            }                                     
+        }
+
+
+
+        $tableCuerpo = "<div style='padding:20px;'>".$contenidoEncabezado."</div><div style='padding:20px;'>".$contenidoFormato."</div><div style='padding:20px;'>".$contenidoPie."</div>";
+        return $tableCuerpo;                       
+    }       
 }
 
+function buscar_funciones_generador($cuerpo, $idFormato, $excluirFunciones = 0){
+    global $conn,$ruta_db_superior;
+    $iddoc=1;
+    $tipo=1;
+    $nombreFunciones = preg_match_all('({\*([a-z]+[0-9]*[_]*[a-z]*[0-9]*[.]*[,]*[@]*)+\*})', $cuerpo, $resultadoFunciones);  
+    if ($nombreFunciones !== FALSE) {          
+        $patronesBusqueda = str_replace(array(
+            "{*",
+            "*}"
+        ), "", $resultadoFunciones[0]);        
+    }       
+    
+    foreach ($patronesBusqueda as $key => $nombreFuncion) {
+        if($excluirFunciones==1 && $nombreFuncion !='mostrar_codigo_qr'){
+            $contenidoFuncion = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.";        
+        }else if($excluirFunciones==1 && $nombreFuncion =='mostrar_codigo_qr'){
+            $imagenQr = busca_filtro_tabla("valor", "configuracion", "nombre='qr_formato'", "", $conn);
+            if ($imagenQr["numcampos"]) {
+                $tipo_almacenamiento = new SaiaStorage("archivos");             
+                $ruta_imagen = json_decode($imagenQr[0]["valor"]);               
+                if (is_object($ruta_imagen)) {
+                    if ($tipo_almacenamiento -> get_filesystem() -> has($ruta_imagen -> ruta)) {
+                        $ruta_imagen = json_encode($ruta_imagen);
+                        $archivo_binario = StorageUtils::get_binary_file($ruta_imagen);
+                    }
+                }
+            }
+            $rutaContenido = $ruta_db_superior."imagenes/qrFormato.png";
+            $contenidoFuncion ="<img src={$archivo_binario} width='109' />";            
+        }else{
+            $contenidoFuncion = call_user_func($nombreFuncion, $idFormato,$iddoc,$tipo); 
+        }
+        
+        $cuerpo = str_replace("{*".$nombreFuncion."*}", $contenidoFuncion, $cuerpo);              
+    }
+
+    return $cuerpo;
+}
 function echo_load_pantalla($idpantalla, $tipo_retorno) {
     echo (load_pantalla($idpantalla));
 }
