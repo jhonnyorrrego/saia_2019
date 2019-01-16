@@ -133,7 +133,7 @@ class Modules {
                         <tbody>
                             <tr>
                                 <td class="align-middle ${backgrounds[i]}" style="height: 95px;width: 95px;">
-                                    <i class="${g.icon} w-100 py-2" style="font-size:1.8rem"></i>
+                                    <i class="${g.icon} w-100 py-2" style="font-size:2.5rem"></i>
                                     <span class="d-block text-truncate" title="${g.name}">${g.name}</span>
                                 </td>
                             </tr>
