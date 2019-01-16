@@ -3,12 +3,12 @@ $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 
 while ($max_salida > 0) {
-    if (is_file($ruta . 'db.php')) {
-        $ruta_db_superior = $ruta;
-    }
+	if (is_file($ruta . 'db.php')) {
+		$ruta_db_superior = $ruta;
+	}
 
-    $ruta .= '../';
-    $max_salida--;
+	$ruta .= '../';
+	$max_salida--;
 }
 
 include_once $ruta_db_superior . "controllers/autoload.php";
@@ -16,157 +16,172 @@ require_once $ruta_db_superior . "arboles/crear_arbol_ft.php";
 
 $sAction = $_POST["a_add"];
 if ($sAction == "A") {
-    if ($_POST["categoria"] == 3) {
-        $_POST["dias_entrega"] = 0;
-        $_POST["retencion_gestion"] = 0;
-        $_POST["retencion_central"] = 0;
-        $_POST["copia"] = -1;
-        $_POST["tipo"] = -1;
-        $_POST["fk_dependencia"] = '';
-    }
+	if ($_POST["categoria"] == 3) {
+		$_POST["dias_entrega"] = 0;
+		$_POST["retencion_gestion"] = 0;
+		$_POST["retencion_central"] = 0;
+		$_POST["copia"] = -1;
+		$_POST["tipo"] = -1;
+		$_POST["fk_dependencia"] = '';
+	}
 
-    $attributes = [
-    'nombre' => $_POST["nombre"],
-    'cod_padre' => $_POST["cod_padre"],
-    'dias_entrega' => $_POST["dias_entrega"],
-    'codigo' => $_POST["codigo"],
-    'retencion_gestion' => $_POST["retencion_gestion"],
-    'retencion_central' => $_POST["retencion_central"],
-    'conservacion' => $_POST["conservacion"],
-    'digitalizacion' => $_POST["digitalizacion"],
-    'seleccion' => $_POST["seleccion"],
-    'otro' => $_POST["otro"],
-    'procedimiento' => $_POST["procedimiento"],
-    'copia' => $_POST["copia"],
-    'tipo' => $_POST["tipo"],
-    'estado' => 1,
-    'categoria' => $_POST["categoria"]];
+	$attributes = [
+		'nombre' => $_POST["nombre"],
+		'cod_padre' => $_POST["cod_padre"],
+		'dias_entrega' => $_POST["dias_entrega"],
+		'codigo' => $_POST["codigo"],
+		'retencion_gestion' => $_POST["retencion_gestion"],
+		'retencion_central' => $_POST["retencion_central"],
+		'conservacion' => $_POST["conservacion"],
+		'digitalizacion' => $_POST["digitalizacion"],
+		'seleccion' => $_POST["seleccion"],
+		'otro' => $_POST["otro"],
+		'procedimiento' => $_POST["procedimiento"],
+		'copia' => $_POST["copia"],
+		'tipo' => $_POST["tipo"],
+		'estado' => 1,
+		'categoria' => $_POST["categoria"]
+	];
 
-    $Serie = new Serie();
-    $Serie -> SetAttributes($attributes);
-    $response = $Serie -> createSerie();
-    if ($response['exito']) {
-        alerta($response['message']);
-    } else {
-        alerta($response['message'] . 'error');
-    }
+	$Serie = new Serie();
+	$Serie->SetAttributes($attributes);
+	$response = $Serie->createSerie($_POST['fk_dependencia']);
+	if ($response['exito']) {
+		alerta($response['message']);
+	} else {
+		alerta($response['message'], 'error');
+	}
+	echo "<script>
+		window.parent.location.href='serielist.php';
+	</script>";
+	return false;
 } else {
-    $categoria = [
-    2 => '',
-    3 => ''];
+	$categoria = [
+		2 => '',
+		3 => ''
+	];
 
-    $tipo = [
-    1 => '',
-    2 => '',
-    3 => ''];
+	$tipo = [
+		1 => '',
+		2 => '',
+		3 => ''
+	];
 
-    $conservacion = [
-    'TOTAL' => '',
-    'ELIMINACION' => ''];
+	$conservacion = [
+		'TOTAL' => '',
+		'ELIMINACION' => ''
+	];
 
-    $seleccion = [
-    0 => '',
-    1 => ''];
+	$seleccion = [
+		0 => '',
+		1 => ''
+	];
 
-    $digitalizacion = [
-    0 => '',
-    1 => ''];
-    $copia = [
-    0 => '',
-    1 => ''];
+	$digitalizacion = [
+		0 => '',
+		1 => ''
+	];
+	$copia = [
+		0 => '',
+		1 => ''
+	];
 
-    if (empty($_REQUEST)) {
-        $idserie = 0;
-        $Serie = new Serie();
-        $attributes = [
-        'nombre' => '',
-        'cod_padre' => 0,
-        'dias_entrega' => 8,
-        'codigo' => '',
-        'retencion_gestion' => 3,
-        'retencion_central' => 5,
-        'conservacion' => 'TOTAL',
-        'digitalizacion' => 0,
-        'seleccion' => 0,
-        'otro' => '',
-        'procedimiento' => '',
-        'copia' => 0,
-        'tipo' => 1,
-        'categoria' => 2];
-        $Serie -> SetAttributes($attributes);
+	if (empty($_REQUEST)) {
+		$idserie = 0;
+		$Serie = new Serie();
+		$attributes = [
+			'nombre' => '',
+			'cod_padre' => 0,
+			'dias_entrega' => 8,
+			'codigo' => '',
+			'retencion_gestion' => 3,
+			'retencion_central' => 5,
+			'conservacion' => 'TOTAL',
+			'digitalizacion' => 0,
+			'seleccion' => 0,
+			'otro' => '',
+			'procedimiento' => '',
+			'copia' => 0,
+			'tipo' => 1,
+			'categoria' => 2
+		];
+		$Serie->SetAttributes($attributes);
 
-        $key = $Serie -> tipo;
-    } else {
-        $idserie = $_REQUEST['x_idserie'];
-        $Serie = new Serie($idserie);
-        if ($Serie -> categotia == 3) {
-            $Serie -> SetAttributes([
-            'conservacion' => 'TOTAL',
-            'copia' => 1,
-            'seleccion' => 0]);
-        }
-        $key = $Serie -> tipo;
-        if ($key != 3) {
-            $key++;
-        }
-    }
+		$key = $Serie->tipo;
+	} else {
+		$idserie = $_REQUEST['x_idserie'];
+		$Serie = new Serie($idserie);
+		if ($Serie->categoria == 3) {
+			$Serie->SetAttributes([
+				'conservacion' => 'TOTAL',
+				'copia' => 1,
+				'tipo' => 1,
+				'seleccion' => 0
+			]);
+		}
+		$key = $Serie->tipo;
+		if ($key != 3) {
+			$key++;
+		}
+	}
 
-    $cod_padre = $idserie;
-    $Serie -> SetAttributes(['cod_padre' => $cod_padre]);
-    $SerieCodPadre = $Serie -> getCodPadre();
-    $nombrePadre = '';
-    if ($SerieCodPadre) {
-        $nombrePadre = $SerieCodPadre -> nombre;
-    }
+	$cod_padre = $idserie;
+	$Serie->SetAttributes(['cod_padre' => $cod_padre]);
+	$SerieCodPadre = $Serie->getCodPadre();
+	$nombrePadre = '';
+	if ($SerieCodPadre) {
+		$nombrePadre = $SerieCodPadre->nombre;
+	}
 
-    $tipo[$key] = 'checked';
-    $Serie -> SetAttributes(['tipo' => $key]);
+	$tipo[$key] = 'checked';
+	$Serie->SetAttributes(['tipo' => $key]);
 
-    $conservacion[$Serie -> conservacion] = 'checked';
-    $categoria[$Serie -> categoria] = 'checked';
-    $seleccion[$Serie -> seleccion] = 'checked';
-    $digitalizacion[$Serie -> digitalizacion] = 'checked';
-    $copia[$Serie -> copia] = 'checked';
+	$conservacion[$Serie->conservacion] = 'checked';
+	$categoria[$Serie->categoria] = 'checked';
+	$seleccion[$Serie->seleccion] = 'checked';
+	$digitalizacion[$Serie->digitalizacion] = 'checked';
+	$copia[$Serie->copia] = 'checked';
 
-    $EntidadSerie = $Serie -> getEntidadSerieFk();
-    $cant = count($EntidadSerie);
-    $idsDep = [];
-    if ($cant) {
-        for ($i = 0; $i < $cant; $i++) {
-            $idsDep[] = $EntidadSerie[$i] -> fk_dependencia;
-        }
-    }
-    $selecccionados = '';
-    if (count($idsDep)) {
-        $selecccionados = implode(",", $idsDep);
-    }
+	$EntidadSerie = $Serie->getEntidadSerieFk();
+	$cant = count($EntidadSerie);
+	$idsDep = [];
+	if ($cant) {
+		for ($i = 0; $i < $cant; $i++) {
+			$idsDep[] = $EntidadSerie[$i]->fk_dependencia;
+		}
+	}
+	$selecccionados = '';
+	if (count($idsDep)) {
+		$selecccionados = implode(",", $idsDep);
+	}
 
-    $origen = array(
-        "url" => "arboles/arbol_dependencia.php",
-        "ruta_db_superior" => $ruta_db_superior,
-        "params" => array(
-            "checkbox" => 1,
-            "seleccionados" => $selecccionados
-        )
-    );
+	$origen = array(
+		"url" => "arboles/arbol_dependencia.php",
+		"ruta_db_superior" => $ruta_db_superior,
+		"params" => array(
+			"checkbox" => 1,
+			"seleccionados" => $selecccionados
+		)
+	);
 
-    $opcionArbol = array(
-        "keyboard" => true,
-        "selectMode" => 2,
-        "busqueda_item" => 1,
-        "expandir" => 3
-    );
-    $extensiones = array("filter" => array());
-    $arbol = new ArbolFt("fk_dependencia", $origen, $opcionArbol, $extensiones);
+	$opcionArbol = array(
+		"keyboard" => true,
+		"selectMode" => 2,
+		"busqueda_item" => 1,
+		"expandir" => 3
+	);
+	$extensiones = array("filter" => array());
+	$arbol = new ArbolFt("fk_dependencia", $origen, $opcionArbol, $extensiones);
 
-    $params = [
-    'idserie' => $idserie,
-    'categoria' => $Serie -> categoria];
+	$params = [
+		'idserie' => $idserie,
+		'categoria' => $Serie->categoria
+	];
 
 }
 
 include_once $ruta_db_superior . 'assets/librerias.php';
-include_once ($ruta_db_superior . "librerias_saia.php");
+include_once $ruta_db_superior . "librerias_saia.php";
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -188,30 +203,30 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 			<div class="row mx-0">
 				<div class="col-12">
 
-					<form name="serieadd" id="serieadd" action="serieadd.php" method="post">
+					<form name="serieadd" id="serieadd" method="post">
 						<table class="table tabled-bordered">
 							<tr>
 								<td>CATEGORIA*</td>
 								<td>
 								<div class="selData">
-									<input type="radio" name="categoria" value="2" <?=$categoria[2] ?>/>
+									<input type="radio" name="categoria" value="2" <?= $categoria[2] ?>/>
 									Produccion Documental
-									<input type="radio" name="categoria" value="3" <?=$categoria[3] ?>/>
+									<input type="radio" name="categoria" value="3" <?= $categoria[3] ?>/>
 									Otras Categorias
 								</div>
-								<div class="viewData"><?=$Serie -> getCategoria(); ?></div></td>
+								<div class="viewData"><?= $Serie->getCategoria(); ?></div></td>
 							</tr>
 
 							<tr class="ocultar">
 								<td>TIPO SERIE*</td>
 								<td>
-								    <?=$Serie -> getTipo(); ?>
+								    <?= $Serie->getTipo(); ?>
 								    <div class="hide">
-        								<input type="radio" name="tipo" value="1" <?=$tipo[1] ?> />
+        								<input type="radio" name="tipo" value="1" <?= $tipo[1] ?> />
                                         Serie
-                                        <input type="radio" name="tipo" value="2" <?=$tipo[2] ?> />
+                                        <input type="radio" name="tipo" value="2" <?= $tipo[2] ?> />
                                         Subserie
-                                        <input type="radio" name="tipo" value="3" <?=$tipo[3] ?> />
+                                        <input type="radio" name="tipo" value="3" <?= $tipo[3] ?> />
                                         Tipo Documental
 								    </div>
 								 </td>
@@ -235,10 +250,10 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 								<td>NOMBRE PADRE </td>
 								<td>
 								    <div id="divCodPadreSel" class="selData">
-								        <input type="text" name="cod_padre" id="cod_padre" value="<?=$cod_padre; ?>"/>
+								        <input type="text" name="cod_padre" id="cod_padre" value="<?= $cod_padre; ?>"/>
 								    </div>
 								    <div id="divCodPadreView" class="viewData">
-                                        <?=$nombrePadre; ?>
+                                        <?= $nombrePadre; ?>
                                     </div>
 								</td>
 							</tr>
@@ -246,79 +261,79 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 							<tr class="ocultar">
 								<td>TIEMPO DE RESPUESTA EN (D&Iacute;AS) *</td>
 								<td>
-								<input type="number" name="dias_entrega" id="dias_entrega" value="<?=$Serie -> dias_entrega; ?>" />
+								<input type="number" name="dias_entrega" id="dias_entrega" value="<?= $Serie->dias_entrega; ?>" />
 								</td>
 							</tr>
 
 							<tr class="ocultar">
 								<td>MESES ARCHIVO GESTI&Oacute;N *</td>
 								<td>
-								<input type="number" name="retencion_gestion" id="retencion_gestion" value="<?=$Serie -> retencion_gestion; ?>" />
+								<input type="number" name="retencion_gestion" id="retencion_gestion" value="<?= $Serie->retencion_gestion; ?>" />
 								</td>
 							</tr>
 
 							<tr class="ocultar">
 								<td>MESES ARCHIVO CENTRAL *</td>
 								<td>
-								<input type="number" name="retencion_central" id="retencion_central" value="<?=$Serie -> retencion_central; ?>" />
+								<input type="number" name="retencion_central" id="retencion_central" value="<?= $Serie->retencion_central; ?>" />
 								</td>
 							</tr>
 
 							<tr class="ocultar">
 								<td>CONSERVACI&Oacute;N / ELIMINACI&Oacute;N *</td>
 								<td>
-								<input type="radio" id="conservacion1" name="conservacion" value="TOTAL" <?=$conservacion['TOTAL'] ?>>
+								<input type="radio" id="conservacion1" name="conservacion" value="TOTAL" <?= $conservacion['TOTAL'] ?>>
 								Conservacion Total
-								<input type="radio" id="conservacion2" name="conservacion" value="ELIMINACION" <?=$conservacion['ELIMINACION'] ?>>
+								<input type="radio" id="conservacion2" name="conservacion" value="ELIMINACION" <?= $conservacion['ELIMINACION'] ?>>
 								Eliminacion </td>
 							</tr>
 
 							<tr class="ocultar">
 								<td>SELECCI&Oacute;N *</td>
 								<td>
-								<input type="radio" id="seleccion1" name="seleccion" value="1" <?=$seleccion[1] ?>/>
+								<input type="radio" id="seleccion1" name="seleccion" value="1" <?= $seleccion[1] ?>/>
 								SI
-								<input type="radio" id="seleccion0" name="seleccion" value="0" <?=$seleccion[0] ?>/>
+								<input type="radio" id="seleccion0" name="seleccion" value="0" <?= $seleccion[0] ?>/>
 								NO </td>
 							</tr>
 
 							<tr class="ocultar">
 								<td>DIGITALIZACI&Oacute;N</td>
 								<td>
-								<input type="radio" id="digitalizacion1" name="digitalizacion" value="1" <?=$digitalizacion[1] ?>/>
+								<input type="radio" id="digitalizacion1" name="digitalizacion" value="1" <?= $digitalizacion[1] ?>/>
 								SI
-								<input type="radio" id="digitalizacion0" name="digitalizacion" value="0" <?=$digitalizacion[0] ?>/>
+								<input type="radio" id="digitalizacion0" name="digitalizacion" value="0" <?= $digitalizacion[0] ?>/>
 								NO </td>
 							</tr>
 
 							<tr class="ocultar">
 								<td>OTRO</td>
 								<td>
-								<input type="text" name="otro" id="otro" />
+								<input type="text" name="otro" id="otro" value="<?= $Serie->otro; ?>" />
 								</td>
 							</tr>
 
 							<tr class="ocultar">
 								<td>PROCEDIMIENTO CONSERVACI&Oacute;N</td>
-								<td>								<textarea cols="35" rows="4" id="procedimiento" name="procedimiento"></textarea></td>
+								<td><textarea cols="35" rows="4" id="procedimiento" name="procedimiento"><?= $Serie->procedimiento; ?></textarea></td>
 							</tr>
 
 							<tr class="ocultar">
 								<td>PERMITIR COPIA *</td>
 								<td>
-								<input type="radio" id="copia1" name="copia" value="1" <?=$copia[1] ?>>
+								<input type="radio" id="copia1" name="copia" value="1" <?= $copia[1] ?>>
 								SI
-								<input type="radio" id="copia0" name="copia" value="0" <?=$copia[0] ?>>
+								<input type="radio" id="copia0" name="copia" value="0" <?= $copia[0] ?>>
 								NO </td>
 							</tr>
 							<tr class="ocultar">
 								<td>DEPENDENCIA ASOCIADA *</td>
-								<td><?=$arbol -> generar_html(); ?></td>
+								<td><?= $arbol->generar_html(); ?></td>
 							</tr>
 							<tr>
 								<td colspan="2">
 								<input type="hidden" name="a_add" value="A">
-								<button type="submit" class="btn btn-complete">
+								<button id="guardarSerie" type="submit" class="btn btn-complete">
 									Adicionar
 								</button></td>
 							</tr>
@@ -329,7 +344,7 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 			</div>
 		</div>
 
-		<script data-params='<?=json_encode($params); ?>'>
+		<script data-params='<?= json_encode($params); ?>'>
 			$(document).ready(function() {
 				var params = $("script[data-params]").data("params");
 				if (params.idserie) {
@@ -378,6 +393,7 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 						}
 					},
 					submitHandler : function(form) {
+						$("#guardarSerie").attr('disabled',true);
 						form.submit();
 					}
 				});
@@ -394,84 +410,6 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 					}
 				});
 				$("[name='categoria']:checked").trigger("change");
-
-				/*
-				 $("[name='categoria']").change(function() {
-				 $("#divserie").empty();
-				 if ($(this).val() == 2) {
-				 $("[name='tvd']").rules("add", {
-				 required : true
-				 });
-				 $("[name='tipo']").rules("add", {
-				 required : true
-				 });
-				 $("#dias_entrega").rules("add", {
-				 required : true,
-				 number : true
-				 });
-				 $("#retencion_gestion").rules("add", {
-				 required : true,
-				 number : true
-				 });
-				 $("#retencion_central").rules("add", {
-				 required : true,
-				 number : true
-				 });
-				 $("[name='seleccion']").rules("add", {
-				 required : true
-				 });
-				 $("[name='conservacion']").rules("add", {
-				 required : true
-				 });
-				 $("[name='copia']").rules("add", {
-				 required : true
-				 });
-
-				 $(".ocultar").show();
-				 $(".ocultar_padre").hide();
-				 $("[name='tipo']:checked").trigger("change");
-				 } else {
-				 $("[name='tvd']").rules("remove");
-				 $("[name='tipo']").rules("remove");
-				 $("#dias_entrega").rules("remove");
-				 $("#retencion_gestion").rules("remove");
-				 $("#retencion_central").rules("remove");
-				 $("[name='seleccion']").rules("remove");
-				 $("[name='conservacion']").rules("remove");
-				 $("[name='copia']").rules("remove");
-
-				 $(".ocultar").hide();
-				 $(".ocultar_padre").show();
-
-				 xml = "arboles/arbol_serie.php?ver_categoria2=0&ver_categoria3=1&checkbox=radio";
-				 $.ajax({
-				 url : "../arboles/crear_arbol_ft.php",
-				 data : {
-				 xml : xml,
-				 campo : "cod_padre",
-				 busqueda_item : 1,
-				 selectMode : 1,
-				 onNodeSelect : "cargar_datos_padre",
-				 ruta_db_superior : "../../"
-				 },
-				 type : "POST",
-				 async : false,
-				 success : function(html_serie) {
-				 $("#divserie").empty().html(html_serie);
-				 },
-				 error : function() {
-				 top.notification({
-				 message : 'No se pudo cargar el arbol de series',
-				 type : 'error',
-				 duration : 5000
-				 });
-				 }
-				 });
-
-				 }
-				 });
-
-				 */
 
 			});
 		</script>

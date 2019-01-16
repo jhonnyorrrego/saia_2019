@@ -1,7 +1,8 @@
 <?php
 require_once $ruta_db_superior . 'controllers/autoload.php';
 
-class Serie extends Model {
+class Serie extends Model
+{
     protected $idserie;
     protected $nombre;
     protected $cod_padre;
@@ -23,91 +24,104 @@ class Serie extends Model {
 
     protected $seriePadre;
 
-    function __construct($id = null) {
+    function __construct($id = null)
+    {
         parent::__construct($id);
     }
 
-    protected function defineAttributes() {
-        $this -> dbAttributes = (object)['safe' => [
-        'nombre',
-        'cod_padre',
-        'dias_entrega',
-        'codigo',
-        'retencion_gestion',
-        'retencion_central',
-        'conservacion',
-        'digitalizacion',
-        'seleccion',
-        'otro',
-        'procedimiento',
-        'copia',
-        'tipo',
-        'estado',
-        'categoria',
-        'cod_arbol']];
+    protected function defineAttributes()
+    {
+        $this->dbAttributes = (object)['safe' => [
+            'nombre',
+            'cod_padre',
+            'dias_entrega',
+            'codigo',
+            'retencion_gestion',
+            'retencion_central',
+            'conservacion',
+            'digitalizacion',
+            'seleccion',
+            'otro',
+            'procedimiento',
+            'copia',
+            'tipo',
+            'estado',
+            'categoria',
+            'cod_arbol'
+        ]];
     }
 
-    protected function afterCreate() {
-        $cod_arbol = $this -> idserie;
-        $padre = $this -> getCodPadre();
+    protected function afterCreate()
+    {
+        $cod_arbol = $this->idserie;
+        $padre = $this->getCodPadre();
         if ($padre) {
-            $cod_arbol = $padre -> cod_arbol . '.' . $this -> idserie;
+            $cod_arbol = $padre->cod_arbol . '.' . $this->idserie;
         }
-        $this -> cod_arbol = $cod_arbol;
-        $this -> update();
+        $this->cod_arbol = $cod_arbol;
+        $this->update();
         return true;
     }
 
-    protected function afterDelete() {
-        $EntidadSerie = EntidadSerie::findAllByAttributes(['fk_serie' => $this -> getPK()]);
+    protected function afterDelete()
+    {
+        $EntidadSerie = EntidadSerie::findAllByAttributes(['fk_serie' => $this->getPK()]);
         if ($EntidadSerie) {
             foreach ($EntidadSerie as $instance) {
-                $instance -> delete();
+                $instance->delete();
             }
         }
         return true;
     }
 
-    public function createSerie() {
+    public function createSerie(string $dependenciasVinculadas = '')
+    {
         $response = [
-        'exito' => 0,
-        'message' => ''];
-        if ($this -> categoria == 3) {
-            if ($this -> save()) {
+            'data' => [],
+            'exito' => 0,
+            'message' => ''
+        ];
+
+        if ($this->categoria == 3) {
+            if ($this->save()) {
                 $response['exito'] = 1;
                 $response['message'] = 'Datos almacenados';
             } else {
                 $response['message'] = 'Error al crear la serie';
             }
         } else {
-            if (!empty($_POST["fk_dependencia"])) {
-                if ($this -> save()) {
-                    $dependencia = explode(",", $_POST['fk_dependencia']);
+            if (!empty($dependenciasVinculadas)) {
+                if ($this->save()) {
+                    $dependencia = explode(",", $dependenciasVinculadas);
                     $cd = count($dependencia);
                     $ok = 0;
-                    $attributes = ['fk_serie' => $this -> idserie];
-
+                    $attributes = ['fk_serie' => $this->idserie];
+                    $idsEntSe = [];
                     for ($i = 0; $i < $cd; $i++) {
                         $attributes['fk_dependencia'] = $dependencia[$i];
 
                         $EntidadSerie = new EntidadSerie();
-                        $EntidadSerie -> SetAttributes($attributes);
-                        $id = $EntidadSerie -> save();
-                        if ($id) {
-                            $response['identidad_serie'][] = $id;
+                        $EntidadSerie->SetAttributes($attributes);
+                        $infoEntidadSerie = $EntidadSerie->CreateEntidadSerie();
+                        if ($infoEntidadSerie['exito']) {
+                            $idsEntSe[] = $EntidadSerie->getPK();
                             $ok++;
                         }
                     }
                     if ($ok == $cd) {
                         $response['exito'] = 1;
+                        $response['data']['identidad_serie'] = $idsEntSe;
                         $response['message'] = 'Datos almacenados';
                     } else if ($ok) {
                         $response['exito'] = 2;
+                        $response['data']['identidad_serie'] = $idsEntSe;
                         $response['message'] = 'Serie creada, NO se vincularon todas las dependencias';
                     } else {
-                        $this -> delete();
+                        $this->delete();
                         $response['message'] = 'No se pudo vincular las dependencias a la serie';
                     }
+                } else {
+                    $response['message'] = 'Error al guardar la Serie';
                 }
             } else {
                 $response['message'] = 'Faltan las dependencias para vincular la serie';
@@ -117,68 +131,114 @@ class Serie extends Model {
         return $response;
     }
 
-    public function getTipo() {
+    public function updateSerie()
+    {
+        $response = [
+            'exito' => 0,
+            'message' => ''
+        ];
+
+        if ($this->categoria == 3) {
+            if ($this->save()) {
+                $response['exito'] = 1;
+                $response['message'] = 'Datos actualizados';
+            } else {
+                $response['message'] = 'Error al actualizar la serie';
+            }
+        } else {
+            if ($this->save()) {
+                $response['exito'] = 1;
+                $response['message'] = 'Datos actualizados';
+
+                $idsExpediente = $this->getExpedienteFk();
+                if ($idsExpediente) {
+                    foreach ($idsExpediente as $Expediente) {
+                        $attributes = [
+                            'nombre' => $this->nombre,
+                            'fondo' => $this->nombre,
+                            'descripcion' => $this->nombre,
+                            'codigo' => $this->codigo,
+                            'codigo_numero' => $this->codigo
+                        ];
+                        $Expediente->SetAttributes($attributes);
+                        $Expediente->update();
+                    }
+                }
+            }
+        }
+        return $response;
+    }
+
+
+    public function getTipo()
+    {
         $tipo = array(
             1 => 'SERIE',
             2 => 'SUBSERIE',
             3 => 'TIPO DOCUMENTAL'
         );
-        return $tipo[$this -> tipo];
+        return $tipo[$this->tipo];
     }
 
-    public function getCategoria() {
+    public function getCategoria()
+    {
         $categoria = array(
             2 => 'PRODUCCION DOCUMENTAL',
             3 => 'OTRAS CATAGORIAS'
         );
-        return $categoria[$this -> categoria];
+        return $categoria[$this->categoria];
     }
 
-    public function getConservacion() {
+    public function getConservacion()
+    {
         $conservacion = array(
             'TOTAL' => 'CONSERVACION',
             'ELIMINACION' => 'ELIMINACION'
         );
-        return $conservacion[$this -> conservacion];
+        return $conservacion[$this->conservacion];
     }
 
-    public function getLabelCampo($campo) {
+    public function getLabelCampo($campo)
+    {
         $sel = array(
             0 => 'NO',
             1 => 'SI'
         );
-        return $sel[$this -> $campo];
+        return $sel[$this->$campo];
     }
 
-    public function getEstado() {
+    public function getEstado()
+    {
         $estado = array(
             0 => 'INACTIVO',
             1 => 'ACTIVO'
         );
-        return $estado[$this -> estado];
+        return $estado[$this->estado];
     }
 
-    public function getCodPadre() {
-        if ($this -> cod_padre) {
-            if (!$this -> seriePadre) {
-                $this -> seriePadre = new self($this -> cod_padre);
+    public function getCodPadre()
+    {
+        if ($this->cod_padre) {
+            if (!$this->seriePadre) {
+                $this->seriePadre = new self($this->cod_padre);
             }
         } else {
-            $this -> seriePadre = NULL;
+            $this->seriePadre = null;
         }
-        return $this -> seriePadre;
+        return $this->seriePadre;
     }
 
-    public function countDocuments() {
+    public function countDocuments()
+    {
         $filtro_docs = false;
         $cant = 0;
         switch ($this->tipo) {
-            case 0 :
-            case 3 :
-                $filtro_docs = $this -> idserie;
+            case 0:
+            case 3:
+                $filtro_docs = $this->idserie;
                 break;
-            case 1 :
-            case 2 :
+            case 1:
+            case 2:
                 $filtro_docs = "select distinct idserie from serie where cod_arbol like '{$this->cod_arbol}.%'";
                 break;
         }
@@ -191,8 +251,14 @@ class Serie extends Model {
         return $cant;
     }
 
-    public function getEntidadSerieFk() {
-        return EntidadSerie::findAllByAttributes(['fk_serie' => $this -> idserie]);
+    public function getEntidadSerieFk()
+    {
+        return EntidadSerie::findAllByAttributes(['fk_serie' => $this->idserie]);
+    }
+
+    public function getExpedienteFk()
+    {
+        return Expediente::findAllByAttributes(['fk_serie' => $this->idserie]);
     }
 
 }

@@ -67,6 +67,29 @@ function load_pantalla($idpantalla, $generar_archivo = "", $accion = '') {
     return ($texto);
 }
 
+function load_vista_previa($idpantalla) {
+    global $conn;
+    $consultaDatos =  busca_filtro_tabla("encabezado,pie_pagina,cuerpo","formato","idformato=".$idpantalla,"",$conn);
+    $consultaEncabezados = busca_filtro_tabla("contenido","encabezado_formato","idencabezado_formato=".$consultaDatos[0]["encabezado"],"",$conn);
+    $encabezado = '';
+    $contenido_formato = '';
+    $piePagina = '';
+    if($consultaDatos['numcampos']){
+        if($consultaDatos[0]['encabezado']){
+            $encabezado = $consultaEncabezados[0]['contenido'];
+        } 
+        if($consultaDatos[0]['cuerpo']){
+            $contenidoFormato = $consultaDatos[0]['cuerpo']; 
+        }   
+        if($consultaDatos[0]['pie_pagina']){
+            $piePagina = $consultaEncabezados[0]['pie_pagina'];
+        }  
+        $tableCuerpo = "<div style='padding:20px;'>".$encabezado."</div><div style='padding:20px;'>".$contenidoFormato."</div><div style='padding:20px;'>".$piePagina."</div>";
+        echo $tableCuerpo;            
+    }   
+    
+}
+
 function echo_load_pantalla($idpantalla, $tipo_retorno) {
     echo (load_pantalla($idpantalla));
 }
