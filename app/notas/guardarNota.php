@@ -19,18 +19,28 @@ $Response = (object) array(
 );
 
 if ($_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $NotaFuncionario = new NotaFuncionario($_REQUEST['id']);
-    $NotaFuncionario->setAttributes([
-        'contenido' => $_REQUEST['content'],
-        'fk_funcionario' => $_REQUEST['key'],
-        'fecha' => date('Y-m-d'),
-        'estado' => 1
-    ]);
+    if($_REQUEST['id']){
+        $NotaFuncionario = new NotaFuncionario($_REQUEST['id']);
+        $NotaFuncionario->setAttributes([
+            'contenido' => $_REQUEST['content'],
+            'fk_funcionario' => $_REQUEST['key'],
+            'fecha' => date('Y-m-d'),
+            'estado' => 1
+        ]);
+        $pk = $NotaFuncionario->save();
+    }else{
+        $pk = NotaFuncionario::newRecord([
+            'contenido' => $_REQUEST['content'],
+            'fk_funcionario' => $_REQUEST['key'],
+            'fecha' => date('Y-m-d'),
+            'estado' => 1
+        ]);
+    }
 
-    if($NotaFuncionario->save()){
+    if($pk){
         $Response->success = 1;
         $Response->message = "Datos almacenados";
-        $Response->data = $NotaFuncionario->getPk();
+        $Response->data = $pk;
     }else{
         $Response->message = "Error al guardar!";
     }

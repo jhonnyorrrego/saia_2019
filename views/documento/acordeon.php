@@ -24,7 +24,7 @@
                         </h4>
                     </div>
                     <div id="collapseTwo" class="collapse" role="tabcard" aria-labelledby="headingTwo">
-                        <div class="card-body px-1 py-0">asd</div>
+                        <div class="card-body px-1 py-0">Se debe desarrollar la Trazabilidad</div>
                     </div>
                 </div>
                 <div class="card card-default mb-0" style="display:none" id="dinamictab_acordion">
