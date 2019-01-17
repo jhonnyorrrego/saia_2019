@@ -150,7 +150,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 			<div class="row mx-0">
 				<div class="col-12">
 
-					<form name="serieedit" id="serieedit" method="post">
+					<form name="formulario" id="formulario" method="post">
 						<table class="table tabled-bordered">
 							<tr>
 								<td>CATEGORIA*</td>
@@ -285,7 +285,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 								<td colspan="2">
 								<input type="hidden" name="a_add" value="A">
 								<input type="hidden" name="x_idserie" value="<?=$idserie;?>">
-								<button id="guardarSerie" type="submit" class="btn btn-complete">
+								<button id="editarSerie" type="submit" class="btn btn-complete">
 									Editar
 								</button></td>
 							</tr>
@@ -310,7 +310,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 					$(".selData").show();
 				}
 
-				$("#serieedit").validate({
+				$("#formulario").validate({
 					rules : {
 						categoria : {
 							required : true
@@ -345,7 +345,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 						}
 					},
 					submitHandler : function(form) {
-						$("#guardarSerie").attr('disabled',true);
+						$("#editarSerie").attr('disabled',true);
 						form.submit();
 					}
 				});
