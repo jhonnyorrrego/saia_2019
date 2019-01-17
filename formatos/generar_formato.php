@@ -2426,7 +2426,7 @@ span.fancytree-expander {
 
                 if ($accion == "adicionar") {
                     if ($campo["predeterminado"] == "now()") {
-                        $fecha_por_defecto = '<?php echo(date("Y-m-d")); ?' . '>';
+                        $fecha_por_defecto = "<?php echo(date('Y-m-d')); ?>";
                     } else {
                         $fecha_por_defecto = '';
                     }
@@ -2436,7 +2436,7 @@ span.fancytree-expander {
                 $formato_fecha = "L LT";
                 if ($accion == "adicionar") {
                     if ($campo["predeterminado"] == "now()") {
-                        $fecha_por_defecto = '<?php echo(date("Y-m-d H:i")); ?' . '>';
+                        $fecha_por_defecto = "<?php echo(date('Y-m-d H:i')); ?>";
                     } else {
                         $fecha_por_defecto = '';
                     }
@@ -2446,7 +2446,7 @@ span.fancytree-expander {
                 $formato_fecha = "LT";
                 if ($accion == "adicionar") {
                     if ($campo["predeterminado"] == "now()") {
-                        $fecha_por_defecto = '<?php echo(date("H:i")); ?' . '>';
+                        $fecha_por_defecto = "<?php echo(date('H:i')); ?>";
                     } else {
                         $fecha_por_defecto = '';
                     }

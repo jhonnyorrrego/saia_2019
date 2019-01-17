@@ -1,4 +1,4 @@
-$('.adicionar_seleccionados').live('click',function(){
+$(document).on('click', '.adicionar_seleccionados', function () {
   $(this).removeClass("adicionar_seleccionados");
   $(this).addClass("eliminar_seleccionado");
   $(this).children("i").removeClass("icon-uncheck");
@@ -17,7 +17,7 @@ $('.adicionar_seleccionados').live('click',function(){
     $('.alert-info').css("padding","4px");
   }    
 }); 
-$(".eliminar_seleccionado").live('click',function(){
+$(document).on('click', '.eliminar_seleccionado', function () {
   $(this).removeClass("eliminar_seleccionado");
   $(this).addClass("adicionar_seleccionados");
   $(this).children("i").removeClass("icon-check");
@@ -52,7 +52,7 @@ $("#restaurar_listado").click(function(){
 $("#restaurar_seleccionados").click(function(){
   $("#panel_body .well").show();
 });
-$('.adicionar_seleccionados_expediente').live('click',function(){
+$(document).on('click', '.adicionar_seleccionados_expediente', function () {
   $(this).removeClass("adicionar_seleccionados_expediente");
   $(this).addClass("eliminar_seleccionado_expediente");
   $(this).children("i").removeClass("icon-uncheck");
@@ -70,8 +70,8 @@ $('.adicionar_seleccionados_expediente').live('click',function(){
     //$('#resultado_pantalla_'+idregistro).addClass("alert-success"); 
          
   }    
-}); 
-$(".eliminar_seleccionado_expediente").live('click',function(){
+});
+$(document).on('click', '.eliminar_seleccionado_expediente', function () {
   $(this).removeClass("eliminar_seleccionado_expediente");
   $(this).addClass("adicionar_seleccionados_expediente");
   $(this).children("i").removeClass("icon-check");

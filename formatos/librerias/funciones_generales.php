@@ -1511,7 +1511,7 @@ function submit_formato($formato, $iddoc = NULL) {
                     submitHandler: function (form) {
                         // disable your button here
                         $("#continuar").hide();
-                        $("#continuar").after('<button class="btn btn-warning" disabled="true" value="Enviando..." id="boton_enviando">Enviando...</button>');
+                        $("#continuar").after('<button class="btn btn-success" disabled="true" value="Enviando..." id="boton_enviando">Enviando...</button>');
                         form.submit();
                     },
                     invalidHandler: function () {

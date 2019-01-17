@@ -91,7 +91,7 @@ function mostrar_datos_dependencias_ruta($idformato, $iddoc) {
                 1 => "Activo",
                 2 => "Inactivo"
             );
-            $tabla .= '<form id="item_prerequisitos" action="guardar_datos_dependencias.php">
+            $tabla .= '<form id="item_prerequisitos" action="'.$ruta_db_superior.'formatos/ruta_distribucion/guardar_datos_dependencias.php">
 			<table class="table table-bordered">
 			<tr style="font-weight:bold">
 			    <td><center> Fecha</center></td>
@@ -143,7 +143,7 @@ function mostrar_datos_dependencias_ruta($idformato, $iddoc) {
                     $.ajax({
                         type: "POST",
                         dataType: "json",
-                        url: "actualizar_estado_dependencias.php",
+                        url: "<? $ruta_db_superior.'formatos/ruta_distribucion/' ?>actualizar_estado_dependencias.php",
                         data: {
                             idft: idft,
                             estado: estado,
