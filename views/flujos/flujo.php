@@ -89,16 +89,16 @@ ul.fancytree-container {
             <div class="col-12">
                 <ul class="nav nav-pills nav-fill" id="tab_flujos">
                   <li class="nav-item">
-                    <a class="nav-link active" id="pills-flow_info" data-url="flow_info.php" data-toggle="pill" href="#flow_info" role="tab" aria-controls="flow_info" aria-selected="true">Informaci&oacute;n</a>
+                    <a class="nav-link active etiqueta_titulo" id="pills-flow_info" data-url="flow_info.php" data-toggle="pill" href="#flow_info" role="tab" aria-controls="flow_info" aria-selected="true">Informaci&oacute;n</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" id="pills-flow_diagram" data-url="flow_editor.php" data-toggle="pill" href="#flow_diagram" role="tab" aria-controls="flow_diagram" aria-selected="false">Flujo de proceso</a>
+                    <a class="nav-link etiqueta_titulo" id="pills-flow_diagram" data-url="flow_editor.php" data-toggle="pill" href="#flow_diagram" role="tab" aria-controls="flow_diagram" aria-selected="false">Flujo de proceso</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" id="pills-flow_notification" data-toggle="pill" href="#flow_notification" aria-controls="flow_notification" aria-selected="false">Notificaciones</a>
+                    <a class="nav-link etiqueta_titulo" id="pills-flow_notification" data-url="flow_notification.php" data-toggle="pill" href="#flow_notification" aria-controls="flow_notification" aria-selected="false">Notificaciones</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link disabled" id="pills-flow_view" data-toggle="pill" href="#flow_view" aria-controls="flow_view" aria-selected="false">Vista previa</a>
+                    <a class="nav-link disabled etiqueta_titulo" id="pills-flow_view" data-toggle="pill" href="#flow_view" aria-controls="flow_view" aria-selected="false">Vista previa</a>
                   </li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
@@ -136,6 +136,8 @@ $(document).ready(function() {
         var href = this.hash;
         var pane = $(this);
     	// ajax load from data-url
+    	//TODO: Activar para produccion
+    	//if(url && !$(href).children().length) {
     	if(url) {
         	$(href).load(url,function(result) {
     	    	pane.tab('show');
