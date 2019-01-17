@@ -1154,7 +1154,7 @@ function mostrar_numero_enlace($number, $documentId) {
 	
 	$route = 'views/documento/index_acordeon.php?documentId=' . $documentId;
 	$response = "<div class='link kenlace_saia' enlace='{$route}' conector='iframe' titulo='{$titulo}'>
-		<span class='badge cursor btn'>{$numero}</span>
+		<span class='badge cursor btn badge-inverse'>{$numero}</span>
 	</div>";
 
 	return $response;
