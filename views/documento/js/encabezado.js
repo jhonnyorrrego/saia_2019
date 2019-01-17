@@ -6,6 +6,7 @@ $(function () {
         toggleGoBack();
         showFlag();
         showFab();
+        $('[data-toggle="tooltip"]').tooltip();
     })();
     
     $("#go_back").on('click', function(){                                

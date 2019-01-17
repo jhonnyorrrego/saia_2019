@@ -1064,7 +1064,7 @@ function priority($documentId) {
         $style = '';
     }
 
-    return '<span class="my-0 text-center priority_flag cursor f-20 px-1">
+    return '<span class="my-0 text-center priority_flag cursor f-20 px-1" data-toggle="tooltip" data-placement="bottom" title="Asignar Prioridad">
         <i data-key="' . $documentId . '" class="priority fa fa-flag text-danger" ' . $style . '></i>
     </span>';
 }
