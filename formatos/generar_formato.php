@@ -476,10 +476,10 @@ class GenerarFormato
     <td>{*' . $campos[$i]['nombre'] . '*}</td>
     </tr>';
             }
-            $cuerpo_formato .= '</tbody></table>';
+            $cuerpo_formato .= '</tbody></table><br><br>{*mostrar_estado_proceso*}';
             $update_formato = "UPDATE formato set cuerpo='" . $cuerpo_formato . "' where idformato=" . $this->idformato;
             phpmkr_query($update_formato);
-            $datos_funcion = busca_filtro_tabla("", "funciones_formato A", "A.nombre_funcion in ('mostrar_codigo_qr','formato_numero','fecha_creacion','asunto_documento')", "", $conn);           
+            $datos_funcion = busca_filtro_tabla("", "funciones_formato A", "A.nombre_funcion in ('mostrar_codigo_qr','formato_numero','fecha_creacion','asunto_documento','mostrar_estado_proceso')", "", $conn);           
             if($datos_funcion['numcampos']){
                 for ($i=0; $i <$datos_funcion['numcampos'] ; $i++) { 
                     $consulta_existe_func=busca_filtro_tabla("","funciones_formato_enlace","formato_idformato=".$this->idformato." and funciones_formato_fk=".$datos_funcion[$i]['idfunciones_formato']." ","",$conn);
@@ -488,16 +488,15 @@ class GenerarFormato
                         phpmkr_query($sql_funciones);                       
                     }
                 }
-
+                $this->exito = 1;
+                $this->mensaje = "";
+                return true;
             }
-            $this->exito = 1;
-            $this->mensaje = "";
-            return true;
+            
 
         }
     }
-        $this->exito = 1;
-
+        $this->exito = 0;
         return false;
     }
     /*

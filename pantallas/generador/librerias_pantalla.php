@@ -8,14 +8,14 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
-include_once ($ruta_db_superior . "pantallas/generador/librerias.php");
-include_once ($ruta_db_superior . "pantallas/generador/librerias_formato.php");
-include_once ($ruta_db_superior . "pantallas/generador/librerias_bpmni.php");
-include_once ($ruta_db_superior . "pantallas/modulo/librerias.php");
-include_once ($ruta_db_superior . "formatos/librerias/funciones.php");
-include_once ($ruta_db_superior . "anexosdigitales/funciones_archivo.php");
+include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "librerias_saia.php";
+include_once $ruta_db_superior . "pantallas/generador/librerias.php";
+include_once $ruta_db_superior . "pantallas/generador/librerias_formato.php";
+include_once $ruta_db_superior . "pantallas/generador/librerias_bpmni.php";
+include_once $ruta_db_superior . "pantallas/modulo/librerias.php";
+include_once $ruta_db_superior . "formatos/librerias/funciones.php";
+include_once $ruta_db_superior . "anexosdigitales/funciones_archivo.php";
 
 $librerias_incluidas = array();
 
@@ -70,11 +70,14 @@ function load_pantalla($idpantalla, $generar_archivo = "", $accion = '') {
 
 function carga_vista_previa($idFormato) {
     global $conn,$ruta_db_superior;
+    
     include_once $ruta_db_superior."formatos/librerias/encabezado_pie_pagina.php";
+    
     $consultaDatos =  busca_filtro_tabla("encabezado,pie_pagina,cuerpo","formato","idformato=".$idFormato,"",$conn);
     $encabezado = '';
     $contenido_formato = '';
     $piePagina = '';
+
     if($consultaDatos['numcampos']){
         if($consultaDatos[0]['encabezado']){
             $consultaEncabezados = busca_filtro_tabla("contenido","encabezado_formato","idencabezado_formato=".$consultaDatos[0]["encabezado"],"",$conn);  
@@ -95,8 +98,6 @@ function carga_vista_previa($idFormato) {
             }                                     
         }
 
-
-
         $tableCuerpo = "<div style='padding:20px;'>".$contenidoEncabezado."</div><div style='padding:20px;'>".$contenidoFormato."</div><div style='padding:20px;'>".$contenidoPie."</div>";
         return $tableCuerpo;                       
     }       
@@ -115,7 +116,11 @@ function buscar_funciones_generador($cuerpo, $idFormato, $excluirFunciones = 0){
     }       
     
     foreach ($patronesBusqueda as $key => $nombreFuncion) {
-        if($excluirFunciones==1 && $nombreFuncion !='mostrar_codigo_qr'){
+    
+        if($excluirFunciones==1 && $nombreFuncion =='mostrar_estado_proceso'){
+            $rutaContenido = $ruta_db_superior."firmas/faltante.jpg";
+            $contenidoFuncion ="<img src={$rutaContenido} width='109' />";            
+        }else if($excluirFunciones==1 && $nombreFuncion !='mostrar_codigo_qr'){
             $contenidoFuncion = "Lorem Ipsum is simply dummy text of the printing and typesetting industry.";        
         }else if($excluirFunciones==1 && $nombreFuncion =='mostrar_codigo_qr'){
             $imagenQr = busca_filtro_tabla("valor", "configuracion", "nombre='qr_formato'", "", $conn);
@@ -164,7 +169,7 @@ function adicionar_datos_formato($datos, $tipo_retorno = 1) {
         "mensaje" => "Error al tratar de generar el adicionar de la pantalla",
         "exito" => 0
     );
-
+  
     if ($datos["nombre_formato"] == "") {
         $nombre_formato_automatico = strtolower($datos["etiqueta"]);
         $nombre_formato_automatico = preg_replace("/formato/", "", $nombre_formato_automatico); // se reemplaza la palabra formato por vacio
@@ -201,6 +206,7 @@ function adicionar_datos_formato($datos, $tipo_retorno = 1) {
     } else {
         $datos["nombre"] = trim($datos["nombre_formato"]);
         unset($datos["nombre_formato"]);
+        
         if (empty($datos["nombre"]) || preg_match("/undefined/", $datos["nombre"])) {
             $retorno["mensaje"] = "Nombre del formato incorrecto: " . $datos["nombre"];
             echo (json_encode($retorno));
@@ -208,7 +214,7 @@ function adicionar_datos_formato($datos, $tipo_retorno = 1) {
         }
     }
     // Field Banderas
-
+    
     $fieldList = array();
     if (is_array($datos["banderas"])) {
         $fieldList["banderas"] = "'" . implode(",", $datos["banderas"]) . "'";
@@ -258,6 +264,7 @@ function adicionar_datos_formato($datos, $tipo_retorno = 1) {
     $theValue = ($datos["contador_idcontador"] != 0) ? intval($datos["contador_idcontador"]) : crear_contador($datos["nombre"]);
     $fieldList["contador_idcontador"] = $theValue;
     // reinicio del contador
+    
     if ($fieldList["contador_idcontador"]) {
         $reinicio = 0;
         if ($datos["reiniciar_contador"])
@@ -267,7 +274,7 @@ function adicionar_datos_formato($datos, $tipo_retorno = 1) {
         guardar_traza($sql, "ft_" . $datos["nombre"]);
         phpmkr_query($sql, $conn);
     }
-
+   
     // Field Serie_idserie
     if ($datos["serie_idserie"] == "") { // crear la serie con el nombre del formato
         $nomb_serie_papa = busca_filtro_tabla("idserie", "serie", "lower(nombre) like 'administracion%formatos'", "", $conn);
@@ -404,7 +411,7 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
     phpmkr_query($sql_if) or die("Falla al ejecutar INSERT " . phpmkr_error() . ' SQL:' . $sql_if);
 
     $idformato = phpmkr_insert_id();
-
+    
     if (!empty($idformato)) {
         if ($x_flujo_idflujo != 0) {
             generar_campo_flujo($idformato, $x_flujo_idflujo);
@@ -421,7 +428,6 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
         insertar_anexo_formato($idformato, $documentacion, $anexos);
         crear_modulo_formato($idformato);
     }
-
     if ($fieldList["cod_padre"] && $idformato) {
 
         $formato_padre = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $fieldList["cod_padre"], "", $conn);
@@ -442,19 +448,18 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
      */
 
     if ($idformato) {
-        $retorno["adicionales"] = adicionar_pantalla_campos_formato($idformato, $fieldList);
+        $retorno["adicionales"] = adicionar_pantalla_campos_formato($idformato, $fieldList);        
         $retorno["mensaje"] = "EL m&oacute;dulo se inserta con &eacute;xito";
         $retorno["idformato"] = $idformato;
         $retorno['exito'] = 1;
     } else {
         $retorno["error"] = "Error al insertar el Formato";
-        ;
-    }
-
+    }   
+   
     if ($tipo_retorno == 1) {
-        echo (json_encode($retorno));
+        echo json_encode($retorno);
     } else {
-        return ($retorno);
+        return $retorno;
     }
 }
 
@@ -821,7 +826,7 @@ function editar_datos_pantalla($datos, $tipo_retorno = 1) {
     global $conn;
     if ($datos["idpantalla"]) {
         $pantalla_actual = busca_filtro_tabla("", "pantalla A, pantalla_campos B", "A.idpantalla=B.pantalla_idpantalla AND B.pantalla_idpantalla=" . $datos["idpantalla"], "", $conn);
-        $sql_update_datos_pantalla = "UPDATE pantalla SET nombre='" . $datos['nombre'] . "', librerias = '" . $datos['librerias'] . "', etiqueta = '" . $datos['etiqueta'] . "', funcionario_idfuncionario='" . usuario_actual('idfuncionario') . "', ayuda='" . $datos['ayuda'] . "',banderas='" . $datos['banderas'] . "' ,tiempo_autoguardado ='" . $datos['tiempo'] . "',tipo_pantalla='" . $datos["tipo_pantalla"] . "',ruta_pantalla='" . $datos["ruta_pantalla"] . "',cod_padre='" . $datos["cod_padre"] . "',clase='" . $datos["clase"] . "', prefijo='" . $datos["prefijo"] . "', ruta_almacenamiento='" . $datos["ruta_almacenamiento"] . "',aprobacion_automatica='" . $datos["aprobacion_automatica"] . "',fk_idpantalla_categoria = '" . $datos["fk_categoria_formato"] . "',versionar='" . $datos["versionar"] . "',accion_eliminar='" . $datos["accion_eliminar"] . "' WHERE idpantalla =" . $datos['idpantalla'];
+        $sql_update_datos_pantalla = "UPDATE pantalla SET nombre='" . $datos['nombre'] . "', librerias = '" . $datos['librerias'] . "', etiqueta = '" . $datos['etiqueta'] . "', funcionario_idfuncionario='" . $_SESSION['idfuncionario']. "', ayuda='" . $datos['ayuda'] . "',banderas='" . $datos['banderas'] . "' ,tiempo_autoguardado ='" . $datos['tiempo'] . "',tipo_pantalla='" . $datos["tipo_pantalla"] . "',ruta_pantalla='" . $datos["ruta_pantalla"] . "',cod_padre='" . $datos["cod_padre"] . "',clase='" . $datos["clase"] . "', prefijo='" . $datos["prefijo"] . "', ruta_almacenamiento='" . $datos["ruta_almacenamiento"] . "',aprobacion_automatica='" . $datos["aprobacion_automatica"] . "',fk_idpantalla_categoria = '" . $datos["fk_categoria_formato"] . "',versionar='" . $datos["versionar"] . "',accion_eliminar='" . $datos["accion_eliminar"] . "' WHERE idpantalla =" . $datos['idpantalla'];
         phpmkr_query($sql_update_datos_pantalla);
         // crear_campo_padre($datos['idpantalla'],$datos["cod_padre"]);
         // crear_campo_bpmni($datos['idpantalla']);
@@ -2867,7 +2872,7 @@ function vincular_libreria_pantalla($datos, $tipo_retorno) {
         $fieldList = array();
         $fieldList["formato_idformato"] = $datos['idformato'];
         $fieldList["ruta"] = $datos['ruta_libreria'];
-        $fieldList["funcionario_idfuncionario"] = usuario_actual('idfuncionario');
+        $fieldList["funcionario_idfuncionario"] = $_SESSION['idfuncionario'];
         $fieldList["orden"] = 1;
         $tabla = "formato_libreria";
         $strsql = "INSERT INTO " . $tabla . " (fecha,";
@@ -2894,23 +2899,26 @@ function crear_modulo_formato($idformato) {
     $datos_formato = busca_filtro_tabla("nombre,etiqueta,cod_padre,ruta_mostrar,ruta_adicionar", "vpantalla_formato", "idformato=" . $idformato, "", $conn);
     // este modulo debe estar creado y debe ser el modulo principal para visualizar los formatos del menu documentos
     $modulo_formato = busca_filtro_tabla("", "modulo", "(nombre = 'modulo_formatos')", "", $conn);
+    
     $papa = null;
     if ($modulo_formato["numcampos"]) {
         $submodulo_formato = busca_filtro_tabla("", "modulo", "nombre ='" . $datos_formato[0]["nombre"] . "'", "", $conn);
         if (!$submodulo_formato["numcampos"]) {
             $padre = busca_filtro_tabla("idmodulo", "vpantalla_formato A, modulo B", "idformato=" . $datos_formato[0]["cod_padre"] . " AND lower(A.nombre)=(B.nombre)", "", $conn);
+            
             if ($padre["numcampos"] > 0) {
                 $papa = $padre[0]["idmodulo"];
             } else {
                 $papa = $modulo_formato[0]["idmodulo"];
             }
             $sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,cod_padre,orden) VALUES ('" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','" . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["ruta_mostrar"] . "','" . $papa . "','1')";
-            // guardar_traza($sql, $datos_formato[0]["nombre_tabla"]);
             phpmkr_query($sql, $conn) or die("Error al crear el modulo: $sql");
             $modulo_id = phpmkr_insert_id();
-            $sql = "INSERT INTO permiso(funcionario_idfuncionario,modulo_idmodulo) VALUES('" . usuario_actual("id") . "'," . $modulo_id . ")";
-            // guardar_traza($sql, $datos_formato[0]["nombre_tabla"]);
+           
+            $sql = "INSERT INTO permiso(funcionario_idfuncionario,modulo_idmodulo) VALUES('" . $_SESSION['idfuncionario'] . "'," . $modulo_id . ")";
+            
             phpmkr_query($sql) or die("Error al crear los permisos: $sql");
+            
         } else {
             $padre = busca_filtro_tabla("idmodulo", "vpantalla_formato A, modulo B", "idformato=" . $datos_formato[0]["cod_padre"] . " AND lower(A.nombre)=(B.nombre)", "", $conn);
             if ($padre["numcampos"] > 0) {
@@ -2919,7 +2927,6 @@ function crear_modulo_formato($idformato) {
                 $papa = $modulo_formato[0]["idmodulo"];
             }
             $sql = "update modulo set nombre='" . $datos_formato[0]["nombre"] . "',etiqueta='" . $datos_formato[0]["etiqueta"] . "',cod_padre='" . $papa . "' where idmodulo=" . $submodulo_formato[0]["idmodulo"];
-            // guardar_traza($sql, $datos_formato[0]["nombre_tabla"]);
             phpmkr_query($sql, $conn);
             $modulo_id = $submodulo_formato[0]["idmodulo"];
         }
@@ -2931,15 +2938,11 @@ function crear_modulo_formato($idformato) {
             if(empty($papa)) {
                 $papa = $modulo_crear[0]["idmodulo"];
             }
-            //20181228 se cambia modulo crear por modulo_formatos
-            //$sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,cod_padre,orden) VALUES ('crear_" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','Crear " . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["ruta_adicionar"] . "','" . $modulo_crear[0]["idmodulo"] . "','1')";
             $sql = "INSERT INTO modulo(nombre,tipo,imagen,etiqueta,enlace,cod_padre,orden) VALUES ('crear_" . $datos_formato[0]["nombre"] . "','secundario','botones/formatos/modulo.gif','Crear " . $datos_formato[0]["etiqueta"] . "','formatos/" . $datos_formato[0]["ruta_adicionar"] . "','" . $papa . "','1')";
-            // /die($sql);
-            // guardar_traza($sql, $formato[0]["nombre_tabla"]);
             phpmkr_query($sql, $conn);
         }
     }
-    return ($modulo_id);
+    return $modulo_id;
 }
 
 function generar_archivos_ignorados($idpantalla, $tipo_retorno) {

@@ -329,7 +329,7 @@ if($datos_formato["numcampos"]) {
 
   </div>  <!-- FIN FILA SERIE -->
 
-  <!-- <div class="control-group">
+ <div class="control-group">
     <label class="control-label" for="banderas">Atributos del formato</label>
     <div class="controls">
       <input type="checkbox" name="tipo_edicion" id="tipo_edicion" <?php check_banderas('tipo_edicion');?>>Edicion Continua
@@ -338,7 +338,7 @@ if($datos_formato["numcampos"]) {
       <input type="checkbox" name="banderas[]" id="banderas" <?php check_banderas('aprobacion_automatica');?>>Aprobacion Automatica
       <input type="checkbox" name="banderas[]"	id="banderas" <?php check_banderas('asunto_padre');?>>Tomar el asunto del padre al responder
     </div>
-  </div> -->
+  </div> 
 
   <input type="hidden" name="mostrar" id="mostrar" <?php check_banderas('mostrar', false);?>>
   <input type="hidden" name="paginar" id="paginar" <?php check_banderas('paginar', false);?>>
@@ -569,6 +569,7 @@ $("document").ready(function(){
 	}
 
 	$("#enviar_datos_formato").click(function() {
+
 		if(formulario.valid()) {
 			$('#cargando_enviar').html("Procesando <i id='icon-cargando'>&nbsp;</i>");
 			var buttonAcep = $(this);
@@ -580,21 +581,19 @@ $("document").ready(function(){
                 url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias_pantalla.php",
                 data: "ejecutar_datos_pantalla="+buttonAcep.attr('value')+"&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+'&'+formulario.serialize()+"&nombre="+nombre_formato,
                 success: function(objeto) {
-                    if(objeto.exito) {
+                    if(objeto.exito) {               
                         $('#cargando_enviar').html("Terminado ...");
                         //var iframe = $("#iframe_generador", window.parent.document);
                         //var ruta_iframe = $(iframe).attr("src");
                         var ruta_iframe = window.location.href;
                         var ruta_iframe=$(".k-focus", window.parent.parent.document).find("iframe").attr("src");
-                        //console.log(ruta_iframe);
+                       
                         //ruta_iframe=ruta_iframe.substr(0,ruta_iframe.indexOf("generador_pantalla"));
                         //var data_iframe= { url:ruta_iframe+"generador_pantalla.php?idformato="+objeto.idformato,  kTitle:"Formato "+$("#etiqueta_formato").val()};
                         var data_iframe= { url:ruta_iframe+"&idformato="+objeto.idformato,  kTitle:"Formato "+$("#etiqueta_formato").val()};
 
                         $id = $(".k-focus", parent.parent.document).attr("id").replace("kp", "");
-                        var kaiten_actual = parent.parent.$("#contenedor_busqueda").kaiten("getPanel", ($id - 1));
-                        //#iframe_generador
-
+                        var kaiten_actual = parent.parent.$("#contenedor_busqueda").kaiten("getPanel", ($id - 1));                        
                         parent.parent.Kaiten.reload(kaiten_actual, data_iframe);
                         notificacion_saia('El registro se ha insertado exitosamente','success','topCenter',3000);
                     } else {
