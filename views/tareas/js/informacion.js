@@ -69,9 +69,9 @@ $(function(){
     $('#save').on('click', function(){
         let key = localStorage.getItem('key');
         let managers = getOptions('#manager');
-        let initial = moment($('#final_date').val(), 'DD/MM/YYYY hh:mm')
+        let initial = moment($('#final_date').val(), 'DD/MM/YYYY hh:mm a')
             .subtract(30, "minutes").format('YYYY-MM-DD HH:mm:ss');
-        let final = moment($('#final_date').val(), 'DD/MM/YYYY hh:mm').format('YYYY-MM-DD HH:mm:ss');
+        let final = moment($('#final_date').val(), 'DD/MM/YYYY hh:mm a').format('YYYY-MM-DD HH:mm:ss');
 
         data = {
             task: params.id || 0,
@@ -129,7 +129,7 @@ $(function(){
 
     function fillForm(data){
         $('#name').val(data.task.nombre);        
-        let finaldate = moment(data.task.fecha_final, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDThh:mm');
+        let finaldate = moment(data.task.fecha_final, 'YYYY-MM-DD HH:mm:ss').format('DD/MM/YYYY hh:mm a');
         $('#final_date').val(finaldate);
         $('#description').val(data.task.descripcion);
         fillSelect('#manager', data.users.managers);
@@ -159,11 +159,11 @@ $(function(){
                 horizontal: 'auto',
                 vertical: 'bottom'
             },
-            defaultDate: moment(params.finalTime, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss'),
+            defaultDate: moment(params.finalTime, 'YYYY-MM-DD HH:mm:ss'),
             widgetParent: $('#modal_body'),
             keepOpen: true,
             locale: 'es',
-            format: "DD/MM/YYYY hh:mm"
+            format: "DD/MM/YYYY hh:mm a"
         });
         
         $('#final_date').on('dp.change', function (e) {
