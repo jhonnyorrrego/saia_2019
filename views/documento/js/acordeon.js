@@ -23,7 +23,7 @@ $(function () {
                 },
                 {
                     kConnector: "html.page",
-                    url: "pantallas/formato/listar_formatos.php?idcategoria_formato=" + param,
+                    url: `pantallas/formato/listar_formatos.php?idcategoria_formato=${param}%26anterior=${params.documentId}`,
                     kTitle: title
                 }
             ]);
