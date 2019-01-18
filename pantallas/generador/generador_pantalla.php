@@ -14,21 +14,32 @@ include_once $ruta_db_superior . "db.php";
 include_once $ruta_db_superior . "librerias_saia.php";
 include_once $ruta_db_superior . "pantallas/generador/librerias_pantalla.php";
 include_once $ruta_db_superior . "pantallas/lib/librerias_componentes.php";
+$idpantalla = "nuevo";
+$idencabezadoFormato = 0;
+$contenidoEncabezado = 0;
+$contenidoPie = 0;
 
 if ($_REQUEST["idformato"]) {
 	$idpantalla = $_REQUEST["idformato"];
 	$consulta_formato = busca_filtro_tabla("cuerpo,encabezado,pie_pagina", "formato f", "idformato=" . $idpantalla, "", $conn);
-	if ($consulta_formato['numcampos']) {
-		$contenido_formato = json_encode($consulta_formato[0]['cuerpo']);
-		$consultaEncabezado = busca_filtro_tabla("contenido,etiqueta", "encabezado_formato", "idencabezado_formato=" . $consulta_formato[0]['encabezado'], "", $conn);
-		$contenidoEncabezado = json_encode($consultaEncabezado[0]['contenido']);
-		$idencabezadoFormato = $consulta_formato[0]['encabezado'];
-		$consultaPie = busca_filtro_tabla("contenido,etiqueta", "encabezado_formato", "idencabezado_formato=" . $consulta_formato[0]['pie_pagina'], "", $conn);
-		$contenidoPie = json_encode($consultaPie[0]['contenido']);		
-		$idpie = $consulta_formato[0]['pie_pagina'];	
 	
+	if ($consulta_formato['numcampos']) {
+		if ($consulta_formato[0]['cuerpo']) {
+				$contenido_formato = json_encode($consulta_formato[0]['cuerpo']);				
+		}
+		if ($consulta_formato[0]['encabezado']) {
+				$idencabezadoFormato = $consulta_formato[0]['encabezado'];
+				$consultaEncabezado = busca_filtro_tabla("contenido,etiqueta", "encabezado_formato", "idencabezado_formato=" . $consulta_formato[0]['encabezado'], "", $conn);
+				$contenidoEncabezado = json_encode($consultaEncabezado[0]['contenido']);
+		}
+		if ($consulta_formato[0]['pie_pagina']) {
+				$consultaPie = busca_filtro_tabla("contenido,etiqueta", "encabezado_formato", "idencabezado_formato=" . $consulta_formato[0]['pie_pagina'], "", $conn);
+				$contenidoPie = json_encode($consultaPie[0]['contenido']);		
+				$idpie = $consulta_formato[0]['pie_pagina'];
+		}
 	}
 }
+
 ?>
 <html>
 <head>
@@ -43,9 +54,9 @@ ul.fancytree-container {
 }
 </style>
 <?php
-echo (estilo_bootstrap());
-echo (librerias_jquery("1.8.3"));
-echo (librerias_html5());
+echo estilo_bootstrap();
+echo librerias_jquery("1.8.3");
+echo librerias_html5();
 include_once $ruta_db_superior . "assets/librerias.php" ;
 
 $campos = busca_filtro_tabla("", "pantalla_componente B", "1=1", "", $conn);
@@ -155,9 +166,8 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 						</div>
 						<div class="tab-pane" id="pantalla_previa-tab"></div>
 						<div class="tab-pane active" id="datos_formulario-tab">
-
-						<?php
-								include_once($ruta_db_superior . 'pantallas/generador/datos_pantalla.php'); 
+							<?php
+								include_once $ruta_db_superior . 'pantallas/generador/datos_pantalla.php'; 
 							?>
 						</div>
           <div class="tab-pane" id="pantalla_mostrar-tab"><br>                			
@@ -271,7 +281,7 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 					</form>
 					<script type="text/javascript">
 						var encabezados = <?php echo json_encode($contenido_enc); ?>;
-						var idencabezado = <?php echo $idencabezado; ?>;
+						var idencabezado = <?php echo $idencabezadoFormato; ?>; // aqui
 						var etiquetas = <?php echo json_encode($etiqueta_enc); ?>;
 					</script>
 					</div>
@@ -524,14 +534,26 @@ for ($i = 0; $i < $cant_js; $i++) {
 <script type="text/javascript">
 
 $(document).ready(function() {
+var idpantalla = "<?php echo $idpantalla ?>";
 $("#asignar_funciones-tab").hide();
 $("#pantalla_listar-tab").hide();
-CKEDITOR.instances.editor_mostrar.setData(<?php echo $contenido_formato ?>);
-document.getElementById("encabezado_formato").innerHTML = <?php echo $contenidoEncabezado ?>;
-document.getElementById("pie_formato").innerHTML = <?php echo $contenidoPie ?>;
-var idencabezadoFormato="<?php echo $idencabezadoFormato; ?>"
-var idPie="<?php echo $idpie; ?>"
+if(idpantalla > 0){
+	var contenidoPie = <?php echo $contenidoPie ?>;
+	var contenidoEncabezado = <?php echo $contenidoEncabezado ?>;	
+	if(contenidoEncabezado){
+		document.getElementById("encabezado_formato").innerHTML = <?php echo $contenidoEncabezado ?>;
+	}
+	if(contenidoPie){
+		
+		document.getElementById("pie_formato").innerHTML = contenidoPie;
+	}
+	CKEDITOR.instances.editor_mostrar.setData(<?php echo $contenido_formato ?>);
+	
+	var idencabezadoFormato="<?php echo $idencabezadoFormato; ?>"
+
+	var idPie="<?php echo $idpie; ?>"
 if(idencabezadoFormato==0){
+
 	$("#eliminar_encabezado").addClass('disabled');
   $("#eliminar_encabezado").prop('disabled', true);
 
@@ -567,6 +589,8 @@ $("#generar_pantalla").live("click",function() {
 	$(".generador_pantalla").removeClass("alert-error");
 	generar_pantalla("full");
 });
+}
+
 	$(document).on("click","#funcionesPropias",function(){
 		var idfuncionFormato=$(this).attr("idfuncionFormato");
 		var funcion=$(this).attr("name");
@@ -722,8 +746,8 @@ $(document).on("change","#sel_encabezado",function(){
   	if(seleccionado > 0) {
   		/*$("#adicionar_encabezado").addClass("disabled");
   		$("#adicionar_encabezado").prop('disabled', true);*/
-  		$("#modificar_encabezado").removeClass("disabled");
-  		$("#modificar_encabezado").prop('disabled', false);
+  		$("#adicionar_encabezado").removeClass("disabled");
+  		$("#adicionar_encabezado").prop('disabled', false);
       $("#eliminar_encabezado").removeClass('disabled');
       $("#eliminar_encabezado").prop('disabled', false);
 		document.getElementById("encabezado_formato").innerHTML = encabezados[seleccionado]; 	
@@ -731,7 +755,6 @@ $(document).on("change","#sel_encabezado",function(){
   	} else {
 			$("#modificar_encabezado").addClass("disabled");
   		$("#modificar_encabezado").prop('disabled', true);
-
       $("#eliminar_encabezado").addClass('disabled');
       $("#eliminar_encabezado").prop('disabled', true);
   		$("#adicionar_encabezado").addClass("disabled");
@@ -837,23 +860,23 @@ $(document).on("click", "#eliminar_encabezado", function(e) {
             		$("#sel_encabezado").empty();
             		encabezados = [];
             		$("#sel_encabezado").append('<option value="0">Por favor seleccione</option>');
-            	    $.each(data.datos, function() {
-            	    	encabezados[this.idencabezado] = this.contenido;
-            	    	etiquetas[this.idencabezado] = this.etiqueta;
-            	        $("#sel_encabezado").append('<option value="'+ this.idencabezado +'">'+ this.etiqueta +'</option>');
-            	    });
-            	    $("#adicionar_encabezado").removeClass("disabled");
-                  $("#adicionar_encabezado").prop('disabled', false);
-            	    $("#modificar_encabezado").addClass("disabled");
-                  $("#modificar_encabezado").prop('disabled', true);
-                  $("#eliminar_encabezado").addClass("disabled");
-                  $("#eliminar_encabezado").prop('disabled', true);
-            			notificacion_saia("Encabezado pagina eliminado","success","",3000);
-									$("#encabezado_formato").val("");
-            			$("#etiqueta_encabezado").val("");
-            			$("#idencabezado").val("0");
+								$.each(data.datos, function() {
+									encabezados[this.idencabezado] = this.contenido;
+									etiquetas[this.idencabezado] = this.etiqueta;
+									$("#sel_encabezado").append('<option value="'+ this.idencabezado +'">'+ this.etiqueta +'</option>');
+								});
+								$("#adicionar_encabezado").removeClass("disabled");
+								$("#adicionar_encabezado").prop('disabled', false);
+								$("#modificar_encabezado").addClass("disabled");
+								$("#modificar_encabezado").prop('disabled', true);
+								$("#eliminar_encabezado").addClass("disabled");
+								$("#eliminar_encabezado").prop('disabled', true);
+								notificacion_saia("Encabezado pagina eliminado","success","",3000);
+								$("#encabezado_formato").val("");
+								$("#etiqueta_encabezado").val("");
+								$("#idencabezado").val("0");
             	}else if(data.exito == 0){
-								notificacion_saia(data.mensaje,"success","",3000);
+								notificacion_saia(data.mensaje,"error","",3000);
 							}
             }
         });
@@ -876,7 +899,7 @@ $(document).on("click", "#limpiar_encabezado", function(e) {
     $("#adicionar_encabezado").prop('disabled', false);
     $("#modificar_encabezado").addClass("disabled");
     $("#modificar_encabezado").prop('disabled', true);
-  	//editor.setContent("");
+			//editor.setContent("");
 
 });
 
@@ -960,7 +983,7 @@ $(document).on("click", "#eliminar_pie", function(e) {
 					$("#pie_formato").val("");       	
 					$("#idpie").val("0");
 				}else if(data.exito == 0){
-								notificacion_saia(data.mensaje,"success","",3000);
+					notificacion_saia(data.mensaje,"error","",3000);
 				}
 			}
 		});
@@ -1075,7 +1098,7 @@ hs.Expander.prototype.onAfterClose = function(event) {
 			url: "<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias_formato.php",
 			data: datos,
 			success: function(data) {
-					if(data.exito == 1 && valorEncabezado!='pie=1') {						
+					if(data.exito == 1 && valorEncabezado!='pie=1' && idactual) {						
 						$("#sel_encabezado").empty();
 						encabezados = [];
 						$("#sel_encabezado").append('<option value="0">Por favor seleccione</option>');
@@ -1085,7 +1108,7 @@ hs.Expander.prototype.onAfterClose = function(event) {
 								$("#sel_encabezado").append('<option value="'+ this.idencabezado +'">'+ this.etiqueta +'</option>');
 							});									
 							$("#sel_encabezado").val(idactual).trigger('change');				
-					}else if(data.exito == 1 && valorPie =='pie=1'){
+					}else if(data.exito == 1 && valorPie =='pie=1' && idactual){
 						$("#sel_pie_pagina").empty();
 						encabezados = [];
 						$("#sel_pie_pagina").append('<option value="0">Por favor seleccione</option>');
@@ -1344,7 +1367,6 @@ $('a[data-toggle="tab"]').on('shown', function (e) {
       if(tab_acciones==false){
         $('#tabs_formulario a[href="#pantalla_previa-tab"]').tab('show');
     	}
-			// voy aca
 			$("#componentes_acciones").hide();
 			$.ajax({
 			  type:"POST",

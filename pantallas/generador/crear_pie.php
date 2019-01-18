@@ -19,6 +19,13 @@ echo librerias_validar_formulario();
 echo librerias_notificaciones();
 echo librerias_highslide();
 
+$contenidoDefecto =json_encode('<table align="center" border="1" cellspacing="0" style="border-collapse:collapse; width:100%">
+<tr>
+  <td style="text-align:center;">{*logo_empresa*}</td>
+  <td style="text-align:center;"><p><br />{*nombre_formato*}<br /><br />{*nombre_empresa*}</p></td>
+  <td style="text-align:center;">{*formato_numero*}<br><br>{*fecha_creacion*}<br><br>Pagina {PAGENO}<br></td>
+</tr>
+</table>');
 ?>
 
 <script src="<?= $ruta_db_superior ?>js/ckeditor/4.11/ckeditor_cust/ckeditor.js"></script>
@@ -31,7 +38,7 @@ echo librerias_highslide();
 						<br>
 						<form name="formulario_encabezado" id="formulario_encabezado" action="">
                   		<div id="div_etiqueta_encabezado">
-                    		<label for="etiqueta_encabezado">Etiqueta:
+                    		<label for="etiqueta_encabezado">Etiqueta del pie de p&aacute;gina:
                   				<input type="text" id="etiqueta_encabezado" name="etiqueta_encabezado">
 							</label>
                   		</div>
@@ -53,6 +60,7 @@ echo librerias_highslide();
 <script>
 
 $(function(){
+	CKEDITOR.instances.editor_pie.setData(<?php echo $contenidoDefecto ?>);
 	$(document).on("click", ".crear_pie", function(e) {
 	var formulario_encabezado = $("#formulario_encabezado");
 	formulario_encabezado.validate({
