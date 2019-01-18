@@ -159,8 +159,8 @@ if ($sAction == "A") {
 		"url" => "arboles/arbol_dependencia.php",
 		"ruta_db_superior" => $ruta_db_superior,
 		"params" => array(
-			"checkbox" => 1,
-			"seleccionados" => $selecccionados
+			"seleccionados" => $selecccionados,
+			'depserie'=>1
 		)
 	);
 
@@ -203,7 +203,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 			<div class="row mx-0">
 				<div class="col-12">
 
-					<form name="serieadd" id="serieadd" method="post">
+					<form name="formulario" id="formulario" method="post">
 						<table class="table tabled-bordered">
 							<tr>
 								<td>CATEGORIA*</td>
@@ -358,7 +358,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 					$(".selData").show();
 				}
 
-				$("#serieadd").validate({
+				$("#formulario").validate({
 					rules : {
 						categoria : {
 							required : true

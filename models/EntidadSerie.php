@@ -7,6 +7,9 @@ class EntidadSerie extends Model
     protected $identidad_serie;
     protected $fk_serie;
     protected $fk_dependencia;
+    protected $estado;
+    protected $fecha_creacion;
+    protected $fecha_eliminacion;
     protected $dbAttributes;
 
     public function __construct($id = null)
@@ -20,7 +23,14 @@ class EntidadSerie extends Model
             'safe' => [
                 'fk_serie',
                 'fk_dependencia',
+                'estado',
+                'fecha_creacion',
+                'fecha_eliminacion'
             ],
+            'date' => [
+                'fecha_creacion',
+                'fecha_eliminacion'
+            ]
         ];
     }
 
@@ -94,6 +104,35 @@ class EntidadSerie extends Model
         return $response;
     }
 
+    public function inactiveEntidadSerie()
+    {
+        $response = [
+            'data' => [],
+            'exito' => 0,
+            'message' => '',
+        ];
+        $expeVinc = $this->getExpedienteFk();
+        if ($expeVinc) {
+            $attributes = [
+                'estado' => 0,
+                'fecha_eliminacion' => date('Y-m-d H:i:s')
+            ];
+            foreach ($expeVinc as $instance) {
+                $instance->SetAttributes($attributes);
+                $instance->update();
+            }
+            $response['exito']=1;
+        } else {
+            var_dump($this->delete());
+            die("--a--");
+            if ($this->delete()) {
+
+            }
+            $response['exito'] = 1;
+        }
+        return $response;
+    }
+
     private function validArbolExp()
     {
         $response = [
@@ -161,6 +200,11 @@ class EntidadSerie extends Model
     public function getDependenciaFk()
     {
         return Dependencia::findAllByAttributes(['iddependencia' => $this->fk_dependencia]);
+    }
+
+    public function getExpedienteFk()
+    {
+        return Expediente::findAllByAttributes(['fk_entidad_serie' => $this->identidad_serie]);
     }
 
 }

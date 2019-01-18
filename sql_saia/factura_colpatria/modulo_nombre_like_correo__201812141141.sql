@@ -1,7 +1,0 @@
-﻿INSERT INTO modulo (pertenece_nucleo,nombre,tipo,imagen,etiqueta,enlace,enlace_mobil,destino,cod_padre,orden,ayuda,parametros,busqueda_idbusqueda,permiso_admin,busqueda,enlace_pantalla) VALUES 
-(1,'enviar_documento_correo','secundario','botones/intermedio/enviar_email.png','Enviar el documento por e-mail','email/email_doc.php?formato_enviar=true&no_menu=1&iddoc=@key@',NULL,'centro',1043,6,'Permite al usuario enviar por correo electr&oacute;nico el documento activo.','@key@',0,0,'1',0)
-,(1,'correo_saia','secundario','botones/principal/defaut.png','Correo SAIA','formatos/correo_saia/mostrar_correo_saia.php',NULL,'centro',236,9,'',NULL,0,0,'2',0)
-,(1,'Correo','secundario','botones/principal/radicar_email.png','Email','index_correo.php',NULL,'centro',4,3,'',NULL,0,0,'',0)
-,(0,'crear_correo_saia','secundario','botones/formatos/modulo.gif','Crear Correo SAIA','formatos/correo_saia/adicionar_correo_saia.php',NULL,'centro',1006,1,'Permite crear Correo SAIA.',NULL,NULL,0,'1',0)
-,(0,'radicacion_facturas_correo','secundario','botones/principal/reportes.png','Radicaci&oacute;n de Facturas por Correo','pantallas/buscador_principal.php?idbusqueda=117',NULL,'centro',1057,7,'','',0,0,'1',0)
-;

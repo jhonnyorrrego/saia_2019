@@ -1,4 +1,8 @@
 <?php
+
+use Saia\Entidad;
+use Saia\EntidadSerie;
+
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 
@@ -15,21 +19,14 @@ include_once $ruta_db_superior . "controllers/autoload.php";
 require_once $ruta_db_superior . "arboles/crear_arbol_ft.php";
 
 $idserie = $_REQUEST['x_idserie'];
+$sAction = $_POST["a_add"];
+
 if (!$idserie) {
 	alerta('Identificador NO encontrado', 'error');
 	return false;
 }
 
-$sAction = $_POST["a_add"];
 $Serie = new Serie($idserie);
-if ($sAction == "A") {
-
-	echo "<script>
-		window.parent.location.href='serielist.php';
-	</script>";
-	return false;
-}
-
 $EntidadSerie = $Serie->getEntidadSerieFk();
 $cant = count($EntidadSerie);
 $idsDep = [];
@@ -38,6 +35,91 @@ if ($cant) {
 		$idsDep[] = $EntidadSerie[$i]->fk_dependencia;
 	}
 }
+
+if ($sAction == "A") {
+
+	$depActuales = explode(',', $_POST['fk_dependencia']);
+
+	$eliminados = array_diff($idsDep, $depActuales);
+	$cantDelete = count($nuevos);
+
+	$nuevos = array_diff($depActuales, $idsDep);
+	$cantNew = count($nuevos);
+	$message = [];
+	$exitoDel = 1;
+	if ($cantDelete) {
+		$okDel = 0;
+		$attributes = [
+			'estado' => 0,
+			'fecha_eliminacion' => date('Y-m-d H:i:s')
+		];
+		foreach ($eliminados as $iddependencia) {
+			$instance = EntidadSerie::findAllByAttributes(
+				[
+					'fk_serie' => $idserie,
+					'fk_dependencia' => $iddependencia,
+					'estado' => 1,
+				]
+			);
+			if ($instance) {
+				$EntidadSerie=$instance[0];
+				$EntidadSerie->SetAttributes($attributes);
+				$info = $EntidadSerie->inactiveEntidadSerie();
+				if ($info['exito']) {
+					$okDel++;
+				}
+			}
+
+		}
+		if ($cantDelete == $okDel) {
+			$exitoDel = 1;
+		} elseif ($okDel) {
+			$message[] = 'NO se pudo desvincular/eliminar todas las dependencias de la serie';
+			$exitoDel = 2;
+		} else {
+			$message[] = 'Error al desvincular la serie';
+			$exitoDel = 0;
+		}
+	}
+
+	$exitoNew = 1;
+	if ($cantNew) {
+		$okNew = 0;
+		foreach ($nuevos as $iddependencia) {
+			$attributes = [
+				'fk_serie' => $idserie,
+				'fk_dependencia' => $iddependencia,
+				'estado' => 1,
+				'fecha_creacion' => date('Y-m-d H:i:s')
+			];
+			$EntidadSerie = new EntidadSerie();
+			$EntidadSerie->SetAttributes($attributes);
+			$infoEntidadSerie = $EntidadSerie->CreateEntidadSerie();
+			if ($infoEntidadSerie['exito']) {
+				$okNew++;
+			}
+		}
+		if ($cantNew == $okNew) {
+			$exitoNew = 1;
+		} elseif ($okNew) {
+			$message[] = 'No se pudieron vincular todas las dependencias a la serie ';
+			$exitoNew = 2;
+		} else {
+			$message[] = 'Error al vincular las nuevas dependencias a la serie ';
+			$exitoNew = 0;
+		}
+	}
+	if ($exitoDel == 1 && $exitoNew == 1) {
+		alerta('Datos guardados!');
+	} else {
+		alerta('Se presentaron los siguientes errores:<br/>' . implode('<br/>', $message), 'error', 6000);
+	}
+	echo "<script>
+		window.parent.location.href='serielist.php';
+	</script>";
+	return false;
+}
+
 $selecccionados = '';
 if (count($idsDep)) {
 	$selecccionados = implode(",", $idsDep);
@@ -47,7 +129,6 @@ $origen = array(
 	"url" => "arboles/arbol_dependencia.php",
 	"ruta_db_superior" => $ruta_db_superior,
 	"params" => array(
-		"checkbox" => 1,
 		"seleccionados" => $selecccionados
 	)
 );
@@ -61,14 +142,8 @@ $opcionArbol = array(
 $extensiones = array("filter" => array());
 $arbol = new ArbolFt("fk_dependencia", $origen, $opcionArbol, $extensiones);
 
-$params = [
-	'idserie' => $idserie,
-	'categoria' => $Serie->categoria
-];
-
-
 include_once $ruta_db_superior . 'assets/librerias.php';
-include_once $ruta_db_superior . "librerias_saia.php";
+include_once $ruta_db_superior . 'librerias_saia.php';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -90,7 +165,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 			<div class="row mx-0">
 				<div class="col-12">
 
-					<form name="serieadd" id="serieadd" method="post">
+					<form name="formulario" id="formulario" method="post">
 						<table class="table tabled-bordered">
 							<tr>
 								<td>DEPENDENCIA ASOCIADA *</td>
@@ -111,50 +186,11 @@ include_once $ruta_db_superior . "librerias_saia.php";
 			</div>
 		</div>
 
-		<script data-params='<?= json_encode($params); ?>'>
+		<script>
 			$(document).ready(function() {
-				var params = $("script[data-params]").data("params");
-				if (params.idserie) {
-					$("#trCodPadre").show();
-					$(".viewData").show();
-					$(".selData").hide();
-				} else {
-					$("#trCodPadre").hide();
 
-					$(".viewData").hide();
-					$(".selData").show();
-				}
-
-				$("#serieadd").validate({
+				$("#formulario").validate({
 					rules : {
-						categoria : {
-							required : true
-						},
-						tipo : {
-							required : true
-						},
-						nombre : {
-							required : true
-						},
-
-						dias_entrega : {
-							required : true
-						},
-						retencion_gestion : {
-							required : true
-						},
-						retencion_central : {
-							required : true
-						},
-						conservacion : {
-							required : true
-						},
-						seleccion : {
-							required : true
-						},
-						copia : {
-							required : true
-						},
 						fk_dependencia : {
 							required : true
 						}
