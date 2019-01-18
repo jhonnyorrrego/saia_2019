@@ -333,7 +333,7 @@ function generar_enlace_finalizar_distribucion($iddistribucion, $js = 0) {
         }
 
         if ($retornar_enlace && $distribucion[0]['estado_distribucion'] != 3) {
-            $html = '<br><a style="cursor:pointer;" class="finalizar_item_usuario_actual btn btn-mini btn-info" iddistribucion=' . $iddistribucion . '>Confirmar</a>';
+            $html = '<br><button class="finalizar_item_usuario_actual btn btn-mini btn-complete" iddistribucion=' . $iddistribucion . '>Confirmar</button>';
         }
     }//fin if js
 

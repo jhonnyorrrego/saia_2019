@@ -462,15 +462,29 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = NULL) {
  */
 
 function guardar_plantilla($idformato, $idcampo, $iddoc = NULL) {
-    echo '<tr>
-      <td class="encabezado" width="21%">GUARDAR COMO PLANTILLA</td>
-      <td width="79%" bgcolor="#F5F5F5">
-      <input type="radio" name="plantilla" id="plsi" value="1" ><label for="plsi">Si</label>
-      <input type="radio" name="plantilla" id="plno" value="0" checked><label for="plno">No</label>
-       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ASUNTO DE LA PLANTILLA&nbsp;&nbsp;&nbsp;
-       <input type="text" name="asplantilla" value="" >
-      </td>
-    </tr>';
+    $campo .= '<div class="form-group" id="tr_guardar_plantilla">
+                <label class="etiqueta_campo" title="">GUARDAR COMO PLANTILLA:</label>
+                <div class="row">
+                    <div class="px-1">
+                        <div class="radio radio-success">
+                            <input class="form-check-input" type="radio" name="plantilla" id="plsi" value="1" aria-required="true">
+                            <label class="etiqueta_selector" for="si1">Si</label>
+                        </div>
+                    </div>
+                    <div class="px-1">
+                        <!--label class="etiqueta_selector" for="asplantilla">Asunto de la plantilla: </label-->
+                        <input class="form-control" type="text" id="asplantilla" name="asplantilla" placeholder="Nombre de la plantilla">
+                    </div>
+                    <div class="col-3 px-4">
+                        <div class="radio radio-success">
+                            <input class="form-check-input" type="radio" name="plantilla" id="plno" value="0" checked aria-required="true">
+                            <label class="etiqueta_selector" for="plno">No</label>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>';
+    echo $campo;
 }
 
 /*
@@ -626,33 +640,35 @@ function anexos_fisicos($idformato, $idcampo, $iddoc = NULL) {
     global $conn;
     ?>
     <td bgcolor="#F5F5F5">
-    <?php
-    $anexos_fisicos = array();
-    $anexos_fisicos["numcampos"] = 0;
-    if ($iddoc != NULL) {
-        $tabla = busca_filtro_tabla("nombre_tabla", "formato A", "A.idformato=" . $idformato, "", $conn);
-        $anexos_fisicos = busca_filtro_tabla("A.anexos_fisicos", "" . $tabla[0]["nombre_tabla"] . " A", "A.documento_iddocumento=" . $iddoc, "", $conn);
-        if ($anexos_fisicos["numcampos"]) {
-            $listado_anexos = explode(",", $anexos_fisicos[0]["anexos_fisicos"]);
+        <?php
+        $anexos_fisicos = array();
+        $anexos_fisicos["numcampos"] = 0;
+        if ($iddoc != NULL) {
+            $tabla = busca_filtro_tabla("nombre_tabla", "formato A", "A.idformato=" . $idformato, "", $conn);
+            $anexos_fisicos = busca_filtro_tabla("A.anexos_fisicos", "" . $tabla[0]["nombre_tabla"] . " A", "A.documento_iddocumento=" . $iddoc, "", $conn);
+            if ($anexos_fisicos["numcampos"]) {
+                $listado_anexos = explode(",", $anexos_fisicos[0]["anexos_fisicos"]);
+            }
         }
-    }
-    ?>
+        ?>
         <input type="hidden" name="anexos_fisicos" id="anexos_fisicos"
-               value="<?php if ($anexos_fisicos["numcampos"]) {
-            echo $anexos_fisicos[0]["anexos_fisicos"];
-        } ?>">
+               value="<?php
+               if ($anexos_fisicos["numcampos"]) {
+                   echo $anexos_fisicos[0]["anexos_fisicos"];
+               }
+               ?>">
         <input type=button value="Adicionar Anexo F&iacute;sico"
                onclick="adicionar_anexo();"> <input type=button
                value="Borrar Anexos F&iacute;sicos"
                onclick="document.getElementById('anexos_fisicos').value = ''; document.getElementById('mostrar_archivos2').innerHTML = '';">
         <div id=mostrar_archivos2>
-    <?php
-    if ($anexos_fisicos[0]["anexos_fisicos"] != "") {
-        $cont = count($listado_anexos);
-        for ($i = 0; $cont && $i < $cont; $i++)
-            echo ("<LI>" . $listado_anexos[$i] . "</LI>");
-    }
-    ?>
+            <?php
+            if ($anexos_fisicos[0]["anexos_fisicos"] != "") {
+                $cont = count($listado_anexos);
+                for ($i = 0; $cont && $i < $cont; $i++)
+                    echo ("<LI>" . $listado_anexos[$i] . "</LI>");
+            }
+            ?>
         </div>
     </td>
     <?php
@@ -1350,33 +1366,54 @@ function formatea_campo($valor, $tipo, $llenado) {
 function asignar_responsables($campo, $idformato, $iddoc = NULL) {
     global $conn;
 
-    echo '<tr>
-      <td class="encabezado" width="21%">ASIGNAR RESPONSABLES:</td>
-      <td width="79%" bgcolor="#F5F5F5">
-      <input type="radio" name="firmado" id="una" value="una"><label for="una">Uno</label>
-      <input type="radio" name="firmado" id="varias" value="varias" checked><label for="varias">Varios</label>
-      </td>
-    </tr>
-    <tr id="tr_firma">
-      <td class="encabezado" width="21%">';
+    $campo = '<div class="form-group" id="tr_asignar_responsables">
+                <label class="etiqueta_campo" title="">ASIGNAR RESPONSABLES</label>
+                <div class="row">
+                    <div class="col-3 px-1">
+                        <div class="radio radio-success">
+                            <input class="form-check-input" type="radio" name="firmado" id="una" value="una" checked="" aria-required="true">
+                            <label class="etiqueta_selector" for="una">Uno</label>
+                        </div>
+                    </div>
+                    <div class="col-3 px-1">
+                        <div class="radio radio-success">
+                            <input class="form-check-input" type="radio" name="firmado" id="varias" value="varias" aria-required="true">
+                            <label class="etiqueta_selector" for="varias">Varios</label>
+                        </div>
+                    </div>
+                </div>
+            </div>';
     $nombre = busca_filtro_tabla("nombres,apellidos", "funcionario", "funcionario_codigo=" . usuario_actual("funcionario_codigo"), "", $conn);
-    echo codifica_encabezado(strtoupper(html_entity_decode($nombre[0]["nombres"] . " " . $nombre[0]["apellidos"])));
-    echo '
-       FIRMA:</td>
-      <td width="79%" bgcolor="#F5F5F5">
-      <input type="radio" name="obligatorio" id="si1" value="1"><label for="si1">Si</label>
-      <input type="radio" name="obligatorio" id="no1" value="0" checked><label for="no1">No</label>
-      <script type="text/javascript">
-          $("#una").click(function(){
-              $("#si1").attr("checked","checked");
-              $("#tr_firma").hide();
-          });
-          $("#varias").click(function(){
-              $("#tr_firma").show();
-          });
-      </script>
-      </td>
-    </tr>';
+    $responsable = html_entity_decode($nombre[0]["nombres"] . " " . $nombre[0]["apellidos"]);
+    $responsable = strtoupper($responsable);
+    $responsable = codifica_encabezado($responsable);
+    $campo .= '<div class="form-group" id="tr_firma">
+                <label class="etiqueta_campo" title="">' . $responsable . ' FIRMA:</label>
+                <div class="row">
+                    <div class="col-3 px-1">
+                        <div class="radio radio-success">
+                            <input class="form-check-input" type="radio" name="obligatorio" id="si1" value="1" aria-required="true">
+                            <label class="etiqueta_selector" for="si1">Si</label>
+                        </div>
+                    </div>
+                    <div class="col-3 px-1">
+                        <div class="radio radio-success">
+                            <input class="form-check-input" type="radio" name="obligatorio" id="no1" value="0" checked aria-required="true">
+                            <label class="etiqueta_selector" for="no1">No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>';
+    $campo .= '<script type="text/javascript">
+                $("#una").click(function(){
+                    $("#si1").attr("checked","checked");
+                    $("#tr_firma").hide();
+                });
+                $("#varias").click(function(){
+                    $("#tr_firma").show();
+                });
+            </script>';
+    echo($campo);
 }
 
 /*

@@ -46,7 +46,11 @@
                     return data;
                 },
                 iconClick: function(item){
-                    console.log(item);
+                    let options = {
+                        url: this.baseUrl + item.url,
+                        title: item.title
+                    };
+                    top.topModal(options);
                 }
             };
 

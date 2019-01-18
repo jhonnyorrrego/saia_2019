@@ -34,7 +34,8 @@ class TimeLine {
         div.setAttribute('class', 'timeline');
         div.innerHTML = list;
         
-        document.querySelector(this.options.selector).appendChild(div)
+        document.querySelector(this.options.selector).appendChild(div);
+        this.createEvent();
     }
 
     createTemplate(){
@@ -51,7 +52,7 @@ class TimeLine {
     createItem() {
         let baseUrl = this.options.baseUrl;
         let response = `<div class="timeline-block">
-            <div class="timeline-point success">
+            <div class="timeline-point success" data-identificator="${this.activeItem.id}">
                 <i class="${this.activeItem.icon}"></i>
             </div>
             <div class="timeline-content">
@@ -60,7 +61,7 @@ class TimeLine {
                     </div>
                     <div class="card-header clearfix">
                         <div class="user-pic">
-                            <img alt="Profile Image" width="33" height="33" src="${this.activeItem.imgRoute}">
+                            <img alt="Profile Image" width="33" height="33" src="${baseUrl + this.activeItem.imgRoute}">
                         </div>
                         <h5>${this.activeItem.userName}-${this.activeItem.title}</h5>
                     </div>
@@ -76,5 +77,15 @@ class TimeLine {
         </div>`;
     
         return response;
+    }
+
+    createEvent() {
+        let options = this.options;
+        document.querySelectorAll(`${this.options.selector} .timeline-point`).forEach(e => {
+            let item = this.events.find(i => i.id == e.getAttribute('data-identificator'));
+            e.addEventListener('click', function () {
+                options.iconClick(item);
+            });
+        });
     }
 }

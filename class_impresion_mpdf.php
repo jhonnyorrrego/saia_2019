@@ -226,7 +226,7 @@ class Imprime_Pdf {
 
 	public function imprimir() {
 	    global $conn;
-		$this -> pdf = new mPDF([
+		$this -> pdf = new \Mpdf\Mpdf([
 		'mode' => 'utf-8',
 		'format' => $this -> papel,
 		'margin_left' => $this -> margenes["izquierda"],
