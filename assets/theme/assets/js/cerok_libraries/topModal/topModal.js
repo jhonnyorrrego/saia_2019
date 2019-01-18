@@ -15,7 +15,7 @@ var topModalDefaults = {
             label: 'Cancelar',
             class: 'btn btn-danger'
         }
-    },
+    }
 };
 
 function topModal(options){

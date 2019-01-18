@@ -159,12 +159,11 @@ $(function(){
                 horizontal: 'auto',
                 vertical: 'bottom'
             },
-            defaultDate: moment(params.finalTime, 'YYYY-MM-DD HH:mm:ss'),
+            defaultDate: moment(params.finalTime, 'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DD HH:mm:ss'),
             widgetParent: $('#modal_body'),
             keepOpen: true,
             locale: 'es',
-            format: "DD/MM/YYYY hh:mm",
-            debug: true
+            format: "DD/MM/YYYY hh:mm"
         });
         
         $('#final_date').on('dp.change', function (e) {
