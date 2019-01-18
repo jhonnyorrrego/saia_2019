@@ -363,6 +363,7 @@ function actualizar_contenido_encabezado($idencabezado, $etiqueta, $contenido, $
     if (empty($idencabezado)) {
         $sql = "INSERT INTO encabezado_formato(etiqueta, contenido) VALUES ('$etiqueta', '$contenido')";
         phpmkr_query($sql);
+        $retorno["idInsertado"] = phpmkr_insert_id();
         $retorno["exito"] = 1;
     } else {
         $sql = "UPDATE encabezado_formato set etiqueta='$etiqueta', contenido='$contenido' WHERE idencabezado_formato=" . $idencabezado;
@@ -431,10 +432,28 @@ function eliminar_contenido_encabezado($idencabezado, $etiqueta, $contenido, $ti
     );
     $sql = "";
     if (!empty($idencabezado)) {
-        $sql = "DELETE FROM encabezado_formato WHERE idencabezado_formato=" . $idencabezado;
-        phpmkr_query($sql);
-        $retorno["exito"] = 1;
-        $retorno["sql"] = $sql;
+        $consulta_plantilla = busca_filtro_tabla("f.nombre","formato f,documento d","d.estado not in ('ELIMINADO') and  lower(d.plantilla) = f.nombre and f.idformato=".$_REQUEST['idFormato'],"","");
+        if($consulta_plantilla['numcampos']){
+            if(isset($_REQUEST['tipo']) && $_REQUEST['tipo']=="encabezado"){
+                $retorno["mensaje"] = "No es posible elimiar el encabezado, ya existen documentos asociados";
+            }else if(isset($_REQUEST['tipo']) && $_REQUEST['tipo']=="piePagina"){
+                $retorno["mensaje"] = "No es posible elimiar el pie de pagina, ya existen documentos asociados";
+            }
+            $retorno["exito"] = 0;          
+        }else{
+            $sql = "DELETE FROM encabezado_formato WHERE idencabezado_formato=" . $idencabezado;
+            phpmkr_query($sql);
+
+            if(isset($_REQUEST['tipo']) && $_REQUEST['tipo']=="encabezado"){
+                $updateFormato = "UPDATE formato set encabezado = 0 where idformato=".$_REQUEST['idFormato'];
+            }else if(isset($_REQUEST['tipo']) && $_REQUEST['tipo']=="piePagina"){
+                $updateFormato = "UPDATE formato set piePagina = 0 where idformato=".$_REQUEST['idFormato'];
+            } 
+            phpmkr_query($updateFormato);
+            $retorno["exito"] = 1;
+            $retorno["sql"] = $sql;
+        }
+        
     }
 
     $encabezados = busca_filtro_tabla("", "encabezado_formato", "1=1", "etiqueta", $conn);
