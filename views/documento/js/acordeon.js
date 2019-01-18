@@ -35,6 +35,17 @@ $(function () {
         }
     });
 
+    $(document).off("click", "#show_history");
+    $(document).on("click", "#show_history", function () {
+        let route = `${baseUrl}views/documento/linea_tiempo.php`;
+        $('#history_content').load(route, {
+            identificator: params.documentId
+        });
+        $('#historytab_acordion').show();
+        $('#first_ocordion_card').find('a[data-toggle="collapse"]').trigger('click');
+        $('#right_workspace').scrollTop($('#historytab_acordion').position().top);
+    });
+
     function getFormatInformation() {
         $.post(`${baseUrl}app/formato/consulta_rutas.php`, {
             documentId: params.documentId,
