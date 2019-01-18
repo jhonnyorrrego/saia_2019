@@ -744,7 +744,7 @@ class GenerarFormato
             if (!$formato[0]["item"]) {
                 $texto .= '<h5>' . codifica_encabezado(html_entity_decode(mayusculas($formato[0]["etiqueta"]))) . '</h5>';
             }
-            $texto .= '<?php llama_funcion_accion(@$_REQUEST["iddoc"],@$_REQUEST["idformato"],"ingresar","ANTERIOR"); ?>
+            $texto .= '<?php llama_funcion_accion(@$_REQUEST["iddoc"],'.$this->idformato.',"ingresar","ANTERIOR"); ?>
                        <form name="formulario_formatos" id="formulario_formatos" class="form-horizontal" role="form" autocomplete="off" method="post" action="' . $action . '" enctype="multipart/form-data">';
 
 

@@ -32,7 +32,7 @@ $encabezados=busca_filtro_tabla("","encabezado_formato","idencabezado_formato=".
 
 ?>
 
-<script src="<?= $ruta_db_superior ?>js/ckeditor/4.11/ckeditor_std/ckeditor.js"></script>
+<script src="<?= $ruta_db_superior ?>js/ckeditor/4.11/ckeditor_cust/ckeditor.js"></script>
 <div class="container-fluid">
 	<div class="row-fluid">
 		<div class="">
