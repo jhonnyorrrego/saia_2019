@@ -121,7 +121,7 @@ class EntidadSerie extends Model
                 $instance->SetAttributes($attributes);
                 $instance->update();
             }
-            $response['exito']=1;
+            $response['exito'] = 1;
         } else {
             var_dump($this->delete());
             die("--a--");
@@ -143,6 +143,30 @@ class EntidadSerie extends Model
         $Dependencia = $this->getDependenciaFk();
         if ($Dependencia) {
             $Dependencia = $Dependencia[0];
+
+            $hijosDep = busca_filtro_tabla("iddependencia", "dependencia", "codigo_arbol like '%.{$Dependencia->getPK()}.%'", "codigo_arbol asc", $conn);
+            if ($hijosDep['numcampos']) {
+                for ($i = 0; $i < $hijosDep['numcampos']; $i++) {
+                    $existEntSer = busca_filtro_tabla("identidad_serie", "entidad_serie", "fk_dependencia={$hijosDep[$i]['iddependencia']} and fk_serie={$this->fk_serie} and estado=1", "", $conn);
+                    if (!$existEntSer['numcampos']) {
+                        $attributes = [
+                            'fk_serie' => $this->fk_serie,
+                            'fk_dependencia' => $hijosDep[$i]['iddependencia'],
+                            'estado' => 1,
+                            'fecha_creacion' => date('Y-m-d H:i:s')
+                        ];
+                        $newEntSerie = new self();
+                        $newEntSerie->SetAttributes($attributes);
+                        $ok = $newEntSerie->CreateEntidadSerie();
+                        if (!$ok['exito']) {
+                            file_put_contents('logEntidadSerie.txt', print_r($ok, true));
+                        }
+                    }
+                }
+
+            }
+
+
             $idsDep = explode('.', $Dependencia->codigo_arbol);
             $idsExp = [];
             foreach ($idsDep as $key => $idDependencia) {

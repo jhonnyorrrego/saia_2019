@@ -9,6 +9,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "controllers/autoload.php";
 
 header('Content-Type: application/json');
 
@@ -24,8 +25,10 @@ class ArbolDependencia
     private $expandir = 0;
     private $condicion_ad = '';
     public $checkbox = 1;
+
     public $enableCheck = false;
     public $depserie = 0;
+    public $inactiveSelected = [];
 
     public function __construct($parametros)
     {
@@ -36,7 +39,7 @@ class ArbolDependencia
     {
         $hijos = [];
         $objetoJson = [
-            "key" => 0
+            'key' => 0
         ];
 
         $this->configurar();
@@ -45,7 +48,7 @@ class ArbolDependencia
         if (!empty($hijos_dep)) {
             $hijos = $hijos_dep;
         }
-        $objetoJson["children"] = $hijos;
+        $objetoJson['children'] = $hijos;
 
         return $objetoJson;
     }
@@ -56,17 +59,39 @@ class ArbolDependencia
             $this->condicion_ad .= " and estado=" . $this->parametros["estado"];
         }
 
+        if (!empty($this->parametros["seleccionados"])) {
+            $this->seleccionados = explode(",", $this->parametros["seleccionados"]);
+            $this->cantSel = count($this->seleccionados);
+        }
+
         if (isset($this->parametros["depserie"])) {
             $this->depserie = $this->parametros["depserie"];
+
+            if (isset($this->parametros['idserie'])) {
+                $idsDep = [];
+                $Serie = new Serie($this->parametros['idserie']);
+                $codPadre = $Serie->getCodPadre();
+                if ($codPadre) {
+                    $EntidadSerie = $codPadre->getEntidadSerieFk();
+                    $cant = count($EntidadSerie);
+                    if ($cant) {
+                        for ($i = 0; $i < $cant; $i++) {
+                            $idsDep[] = $EntidadSerie[$i]->fk_dependencia;
+                        }
+                        if ($this->cantSel) {
+                            $idsDep = array_diff($this->seleccionados, $idsDep);
+                        }
+                    }
+                }
+                $this->inactiveSelected = $idsDep;
+            } else {
+                die("Faltan Parametros obligatorios");
+            }
+
         }
 
         if (!empty($this->parametros["excluidos"])) {
             $this->condicion_ad .= " and iddependencia not in (" . $this->parametros["excluidos"] . ")";
-        }
-
-        if (!empty($this->parametros["seleccionados"])) {
-            $this->seleccionados = explode(",", $this->parametros["seleccionados"]);
-            $this->cantSel = count($this->seleccionados);
         }
 
         if (!empty($this->parametros["expandir"])) {
@@ -127,7 +152,10 @@ class ArbolDependencia
                                     unset($item["unselectableStatus"]);
                                 }
                                 if ($item["selected"]) {
-                                    $item["unselectableStatus"] = true;
+                                    if (!in_array($papas[$i]["iddependencia"], $this->inactiveSelected)) {
+                                        $item["unselectableStatus"] = true;
+                                    }
+
                                 }
 
                             }

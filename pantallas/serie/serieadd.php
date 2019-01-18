@@ -160,7 +160,8 @@ if ($sAction == "A") {
 		"ruta_db_superior" => $ruta_db_superior,
 		"params" => array(
 			"seleccionados" => $selecccionados,
-			'depserie'=>1
+			'depserie'=>1,
+			'idserie'=>$idserie
 		)
 	);
 

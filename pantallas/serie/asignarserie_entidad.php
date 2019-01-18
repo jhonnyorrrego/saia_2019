@@ -1,8 +1,4 @@
 <?php
-
-use Saia\Entidad;
-use Saia\EntidadSerie;
-
 $max_salida = 10;
 $ruta_db_superior = $ruta = '';
 
@@ -35,11 +31,27 @@ if ($cant) {
 		$idsDep[] = $EntidadSerie[$i]->fk_dependencia;
 	}
 }
+/*
+if ($Serie->tipo > 1) {
+	$idsDepPadre = [];
+	$codPadre = $Serie->getCodPadre();
+	if ($codPadre) {
+		$EntidadSeriePadre = $codPadre->getEntidadSerieFk();
+		$cantPadre = count($EntidadSeriePadre);
+		if ($cantPadre) {
+			for ($i = 0; $i < $cantPadre; $i++) {
+				$idsDepPadre[] = $EntidadSeriePadre[$i]->fk_dependencia;
+			}
+			$idsDepFaltante = array_diff($idsDepPadre, $idsDep);
+			if (count($idsDepFaltante)) {
+				$idsDep = array_merge($idsDep, $idsDepFaltante);
+			}
+		}
+	}
+}*/
 
 if ($sAction == "A") {
-
 	$depActuales = explode(',', $_POST['fk_dependencia']);
-
 	$eliminados = array_diff($idsDep, $depActuales);
 	$cantDelete = count($nuevos);
 
@@ -62,7 +74,7 @@ if ($sAction == "A") {
 				]
 			);
 			if ($instance) {
-				$EntidadSerie=$instance[0];
+				$EntidadSerie = $instance[0];
 				$EntidadSerie->SetAttributes($attributes);
 				$info = $EntidadSerie->inactiveEntidadSerie();
 				if ($info['exito']) {
@@ -122,25 +134,29 @@ if ($sAction == "A") {
 
 $selecccionados = '';
 if (count($idsDep)) {
-	$selecccionados = implode(",", $idsDep);
+	$selecccionados = implode(',', $idsDep);
 }
 
-$origen = array(
-	"url" => "arboles/arbol_dependencia.php",
-	"ruta_db_superior" => $ruta_db_superior,
-	"params" => array(
-		"seleccionados" => $selecccionados
-	)
-);
+$origen = [
+	'url' => 'arboles/arbol_dependencia.php',
+	'ruta_db_superior' => $ruta_db_superior,
+	'params' => [
+		'seleccionados' => $selecccionados,
+		'idserie' => $idserie
+	]
+];
+if ($Serie->tipo > 1) {
+	$origen['params']['depserie'] = 1;
+}
 
-$opcionArbol = array(
-	"keyboard" => true,
-	"selectMode" => 2,
-	"busqueda_item" => 1,
-	"expandir" => 3
-);
-$extensiones = array("filter" => array());
-$arbol = new ArbolFt("fk_dependencia", $origen, $opcionArbol, $extensiones);
+$opcionArbol = [
+	'keyboard' => true,
+	'selectMode' => 2,
+	'busqueda_item' => 1,
+	'expandir' => 3
+];
+$extensiones = ['filter' => []];
+$arbol = new ArbolFt('fk_dependencia', $origen, $opcionArbol, $extensiones);
 
 include_once $ruta_db_superior . 'assets/librerias.php';
 include_once $ruta_db_superior . 'librerias_saia.php';

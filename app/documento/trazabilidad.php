@@ -23,6 +23,7 @@ $equivalencia = [
     'TRANSFERIDO' => 'REENVIADO',
     'COPIA' => 'REENVIADO',
     'DEVOLUCION' => 'RESPONDIDO',
+    'APROBADO' => 'APROBADO',
     'DISTRIBUCION' => 'ENVIO DE DOCUMENTO POR CORREO',
     'REVISADO' => 'VISTO BUENO',
 ];
@@ -46,7 +47,15 @@ $expediente=busca_filtro_tabla("null as idfuncionario,null as nombre_funcionario
 //RESPUESTA
 $respuesta=busca_filtro_tabla("f.idfuncionario,".concatenar_cadena_sql(["f.nombres","' '","f.apellidos"])." as nombre_funcionario,r.fecha,'RESPUESTA' as accion","respuesta r,documento d,funcionario f","r.origen=d.iddocumento and f.funcionario_codigo=d.ejecutor and d.iddocumento=".$iddoc,"",$conn);
 
-*/
+
+DISTRIBUCION
+NOVEDAD
+
+SOLICITUD APROBACION
+RECHAZADO
+
+
+ */
 
 
 $Response = (object) array(
