@@ -391,7 +391,7 @@ function transferir_archivo_prueba($datos, $destino, $adicionales, $anexos = nul
         }
     }
 
-	if (!empty($adicionales) && is_array($adicionales)) {
+    if (!empty($adicionales) && is_array($adicionales)) {
         $otras_llaves = "," . implode(",", array_keys($adicionales));
         $otros_valores = "," . implode(",", array_values($adicionales));
         if ($otros_valores == ",") {
@@ -1080,6 +1080,11 @@ function radicar_plantilla()
         $datos["archivo_idarchivo"] = $_POST["iddoc"];
         $datos["nombre"] = "POR_APROBAR";
         $datos["tipo"] = "";
+
+        if (!is_array($adicionales)) {
+            $adicionales = [];
+        }
+
         $adicionales["activo"] = "1";
         include_once($ruta_db_superior . FORMATOS_SAIA . "librerias/funciones_generales.php");
 
@@ -1108,7 +1113,7 @@ function radicar_plantilla()
         if (in_array("e", $banderas) || $_REQUEST["webservie_aprob_doc"] == 1) {
             aprobar($_POST["iddoc"], 1);
         }
-        
+
         enrutar_documento("", $_POST["iddoc"]);
         return $_POST["iddoc"];
     }
@@ -1120,20 +1125,21 @@ function radicar_plantilla()
  * @param string $url
  * @return void
  */
-function enrutar_documento($url = "", $documentId){
+function enrutar_documento($url = "", $documentId)
+{
 	// webservice utilitie
     if (isset($_REQUEST["no_redirecciona"])) {
         return $_REQUEST['iddoc'] ? $_REQUEST['iddoc'] : $documentId;
     }
 
-    if(!$url && $documentId){
+    if (!$url && $documentId) {
         $Documento = new Documento($documentId);
         $params = http_build_query([
             'documentId' => $Documento->getPK(),
             'format' => strtolower($Documento->plantilla)
         ]);
         $url = $ruta_db_superior . "views/documento/index_acordeon.php?" . $params;
-        
+
     }
 
     redirecciona($url);
@@ -1836,33 +1842,33 @@ function verificar_ruta($fila, $id_documento)
                           onclick='window.location=\"DibujaPantalla.php?codigo=2&tipo=eliminar&id=" . $fila2["idruta"] . "\"' >
                           </span></td>
                           </tr>";
-			} else
-				echo "</tr>";
-			$i++;
-		}
-		echo "</table><input type=button value='Continuar' onclick='location=\"class_transferencia.php?funcion=llamar_buscar_ruta&iddoc=" . $_POST["iddoc"] . "\";'>";
-	}// si todo est� bien hago la transferencia
-	else {
-	    $datos = array();
-	    $adicionales = array();
-	    $destino = array();
-	    if (isset($_POST["iddoc"])) {
-			$datos["archivo_idarchivo"] = $_POST["iddoc"];
-	    } else {
-			$datos["archivo_idarchivo"] = $id_documento;
-	    }
-		$datos["nombre"] = "POR_APROBAR";
-		$datos["tipo"] = "";
-		foreach ($fila as $fila2) {
-			$datos["ruta_idruta"] = $fila2["idruta"];
-			$adicionales["activo"] = 1;
-			$datos["tipo_destino"] = $fila2["tipo_destino"];
-			$destino[0] = $fila2["destino"];
-			$datos["origen"] = $fila2["origen"];
-			transferir_archivo_prueba($datos, $destino, $adicionales);
-		}
-		echo "<script>window.location='/saia/saia1.0/documentoview.php?key=" . $_SESSION["iddoc"] . "';</script>";
-	}
+            } else
+                echo "</tr>";
+            $i++;
+        }
+        echo "</table><input type=button value='Continuar' onclick='location=\"class_transferencia.php?funcion=llamar_buscar_ruta&iddoc=" . $_POST["iddoc"] . "\";'>";
+    }// si todo est� bien hago la transferencia
+    else {
+        $datos = array();
+        $adicionales = array();
+        $destino = array();
+        if (isset($_POST["iddoc"])) {
+            $datos["archivo_idarchivo"] = $_POST["iddoc"];
+        } else {
+            $datos["archivo_idarchivo"] = $id_documento;
+        }
+        $datos["nombre"] = "POR_APROBAR";
+        $datos["tipo"] = "";
+        foreach ($fila as $fila2) {
+            $datos["ruta_idruta"] = $fila2["idruta"];
+            $adicionales["activo"] = 1;
+            $datos["tipo_destino"] = $fila2["tipo_destino"];
+            $destino[0] = $fila2["destino"];
+            $datos["origen"] = $fila2["origen"];
+            transferir_archivo_prueba($datos, $destino, $adicionales);
+        }
+        echo "<script>window.location='/saia/saia1.0/documentoview.php?key=" . $_SESSION["iddoc"] . "';</script>";
+    }
 }
 
 /*
@@ -2185,13 +2191,13 @@ function arbol_serie($condicion_adicional = '')
 }
 
 if (isset($_REQUEST["funcion"]) && trim($_REQUEST["funcion"]) != "") {
-	$funcion = str_replace("'", "", str_replace("\\", "", strtolower($_REQUEST["funcion"])));
-	if (isset($_REQUEST["parametros"]) && trim($_REQUEST["parametros"]) != "") {
-	    $params = preg_split("/;/", $_REQUEST["parametros"]);
-	    call_user_func_array($funcion, $params);
-	} else {
-	    $funcion();
-	}
+    $funcion = str_replace("'", "", str_replace("\\", "", strtolower($_REQUEST["funcion"])));
+    if (isset($_REQUEST["parametros"]) && trim($_REQUEST["parametros"]) != "") {
+        $params = preg_split("/;/", $_REQUEST["parametros"]);
+        call_user_func_array($funcion, $params);
+    } else {
+        $funcion();
+    }
 
 }
 ?>
