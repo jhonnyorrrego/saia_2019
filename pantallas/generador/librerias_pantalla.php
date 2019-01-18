@@ -33,7 +33,9 @@ if (@$_REQUEST["ejecutar_datos_pantalla"]) {
 }
 
 function load_pantalla($idpantalla, $generar_archivo = "", $accion = '') {
+   
     $consulta_campos_lectura = busca_filtro_tabla("valor", "configuracion", "nombre='campos_solo_lectura'", "", $conn);
+   
     $campos_excluir = array(
         "dependencia",
         "documento_iddocumento",
@@ -56,7 +58,6 @@ function load_pantalla($idpantalla, $generar_archivo = "", $accion = '') {
 
     $condicion_adicional = " and B.nombre not in('" . implode("', '", $campos_excluir) . "')";
     $pantalla = busca_filtro_tabla("", "formato A,campos_formato B", "A.idformato=B.formato_idformato AND A.idformato=" . $idpantalla . $condicion_adicional, "B.orden", $conn);
-
     $texto = '';
     for ($i = 0; $i < $pantalla["numcampos"]; $i++) {
         $cadena = load_pantalla_campos($pantalla[$i]["idcampos_formato"], 0, $generar_archivo, $accion, $pantalla[$i]);
@@ -64,7 +65,7 @@ function load_pantalla($idpantalla, $generar_archivo = "", $accion = '') {
     }
     $texto = str_replace("? >", "?" . ">", $texto);
     $texto = str_replace("< ?php ", "<" . "?php", $texto);
-    return ($texto);
+    return $texto;
 }
 
 function carga_vista_previa($idFormato) {

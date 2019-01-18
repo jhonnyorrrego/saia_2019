@@ -292,7 +292,7 @@ function plantilla($documentId, $transferId = 0){
                     <span class="badge badge-important counter"><?= $totalComments ?></span>
                 </span>
                 <span class="px-1 cursor fa fa-calendar f-20" data-toggle="tooltip" data-placement="bottom" title="Tarea"></span>
-                <span class="px-1 cursor fa fa-road f-20" data-toggle="tooltip" data-placement="bottom" title="Trazabilidad"></span>
+                <span class="px-1 cursor fa fa-road f-20" id="show_history" data-toggle="tooltip" data-placement="bottom" title="Trazabilidad"></span>
             </div>
             <div class="col-auto d-none d-md-block">
                 <?= expiration($document[0]['fecha_limite']) ?>

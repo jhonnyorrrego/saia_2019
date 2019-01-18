@@ -15,16 +15,16 @@
                         <div id="view_document"></div>
                     </div>
                 </div>
-                <div class="card card-default mb-0">
+                <div class="card card-default mb-0" style="display:none" id="historytab_acordion">
                     <div class="card-header py-1" role="tab" id="headingTwo">
                         <h4 class="card-title">
-                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
                             Trazabilidad del Documento
                             </a>
                         </h4>
                     </div>
-                    <div id="collapseTwo" class="collapse" role="tabcard" aria-labelledby="headingTwo">
-                        <div class="card-body px-1 py-0">Se debe desarrollar la Trazabilidad</div>
+                    <div id="collapseTwo" class="collapse show" role="tabcard" aria-labelledby="headingTwo">
+                        <div class="card-body px-1 py-0" id="history_content"></div>
                     </div>
                 </div>
                 <div class="card card-default mb-0" style="display:none" id="dinamictab_acordion">
@@ -37,8 +37,7 @@
                     </div>
                     <div id="collapseThree" class="collapse show" role="tabcard" aria-labelledby="headingThree">
                         <div class="card-body px-1 py-0">
-                            <iframe frameborder="0" id="iframe_dinamictab_acordion" width="100%" 
-                            onload="this.height = window.innerHeight - 30" ></iframe>
+                            <iframe frameborder="0" id="iframe_dinamictab_acordion" width="100%" onload="this.height = window.innerHeight - 30" ></iframe>
                         </div>
                     </div>
                 </div>
