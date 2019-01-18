@@ -34,7 +34,8 @@ $opciones_arbol = array("keyboard" => true, "selectMode" => 2);
 $extensiones = array("filter" => array());
 $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
 ?>
-<form>
+<form id="flowForm">
+<input type="hidden" id="form_uuid" value="<?php uniqid();?>">
 <fieldset>
 <legend>Informaci&oacute;n general</legend>
   <div class="row">
@@ -90,8 +91,9 @@ $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
   </div>
 
   <div class="form-group">
+    <input type="hidden" id="anexos_flujo" name="anexos_flujo" value="">
     <label class="etiqueta_campo" for="dropzone">Adjuntar documentaci&oacute;n del proceso</label>
-    <div id="dropzone" class="dropzone" data-multiple="multiple">
+    <div id="dropzone" class="dropzone" data-campo="anexos_flujo" data-multiple="multiple">
       <div class="dz-message"><span>Haga clic para elegir un archivo o Arrastre acá el archivo.</span></div>
     </div>
   </div>
@@ -105,7 +107,20 @@ $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
   </fieldset>
 
     <div class="form-group pb-3">
-      <button type="submit" class="btn btn-primary">Guardar</button>
+      <button type="submit" id="guardarFlujo" class="btn btn-primary">Guardar</button>
     </div>
 </form>
 <script src="<?= $ruta_db_superior ?>views/flujos/js/flujos.js" data-consulta64="<?= $consulta64 ?>"></script>
+<script type="text/javascript">
+$(function(){
+	$("#guardarFlujo").click(function(){
+		var formData = new FormData(document.getElementById("flowForm"));
+		formData.append('key', localStorage.getItem("key"));
+		for(var pair of formData.entries()) {
+			   console.log(pair[0]+ ': '+ pair[1]);
+			}
+		//console.log("archivos", lista_archivos);
+		return false;
+	});
+});
+</script>
