@@ -8,117 +8,142 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
-
-// TERMINA DEFAULT
+include_once $ruta_db_superior . "db.php";
 
 header('Content-Type: application/json');
 
-$arbol = new ArbolDependencia($conn, $_REQUEST);
+$arbol = new ArbolDependencia($_REQUEST);
 $objetoJson = $arbol->crear_arbol();
 echo json_encode($objetoJson);
 
-class ArbolDependencia {
-
-    private $seleccionados = "";
-
+class ArbolDependencia
+{
+    public $parametros = [];
+    private $seleccionados = [];
+    private $cantSel = 0;
     private $expandir = 0;
+    private $condicion_ad = '';
+    public $checkbox = 1;
+    public $enableCheck = false;
+    public $depserie = 0;
 
-    private $condicion_ad = "";
-
-    private $activado = false;
-
-    public function __construct($conn, $parametros) {
-        $this->conn = $conn;
+    public function __construct($parametros)
+    {
         $this->parametros = $parametros;
     }
 
-    public function crear_arbol() {
-        $id = 0;
-        $hijos = array();
-        $hijos_dep = array();
-        $objetoJson = array(
+    public function crear_arbol()
+    {
+        $hijos = [];
+        $objetoJson = [
             "key" => 0
-        );
+        ];
+
         $this->configurar();
-        if (isset($this->parametros["id"])) {
-            $objetoJson["key"] = $this->parametros["id"];
-            if ($id[0] == 0) {
-                $hijos_dep = $this->llena_dependencia($id[0]);
-                if (!empty($hijos_dep)) {
-                    $hijos[] = $hijos_dep;
-                }
-            }
-            $objetoJson["children"] = $hijos;
-        } else {
-            $objetoJson["key"] = 0;
-            $hijos_dep = $this->llena_dependencia(0); // TRD
-            if (!empty($hijos_dep)) {
-                $hijos = $hijos_dep;
-            }
-            $objetoJson["children"] = $hijos;
+
+        $hijos_dep = $this->llena_dependencia(0);
+        if (!empty($hijos_dep)) {
+            $hijos = $hijos_dep;
         }
+        $objetoJson["children"] = $hijos;
+
         return $objetoJson;
     }
 
-    private function configurar() {
-        if (isset($this->parametros["estado"])) {
+    private function configurar()
+    {
+        if (!empty($this->parametros["estado"])) {
             $this->condicion_ad .= " and estado=" . $this->parametros["estado"];
         }
+
+        if (isset($this->parametros["depserie"])) {
+            $this->depserie = $this->parametros["depserie"];
+        }
+
+        if (!empty($this->parametros["excluidos"])) {
+            $this->condicion_ad .= " and iddependencia not in (" . $this->parametros["excluidos"] . ")";
+        }
+
+        if (!empty($this->parametros["seleccionados"])) {
+            $this->seleccionados = explode(",", $this->parametros["seleccionados"]);
+            $this->cantSel = count($this->seleccionados);
+        }
+
+        if (!empty($this->parametros["expandir"])) {
+            $this->expandir = $this->parametros["expandir"];
+        }
+
         if (isset($this->parametros["checkbox"])) {
             $this->checkbox = $this->parametros["checkbox"];
         }
-        if (isset($this->parametros["excluidos"])) {
-            $this->condicion_ad .= " and iddependencia not in (" . $this->parametros["excluidos"] . ")";
-        }
-        if (isset($this->parametros["seleccionados"])) {
-            $this->seleccionados = explode(",", $this->parametros["seleccionados"]);
-        }
-        if (isset($this->parametros["expandir"])) {
-            $this->expandir = $this->parametros["expandir"];
-        }
     }
 
-    private function llena_dependencia($id) {
-        $objetoJson = array();
+    private function llena_dependencia($id, $enableCheck = false)
+    {
+        $anterior = $enableCheck;
+        $objetoJson = [];
         if ($id == 0) {
-            $papas = busca_filtro_tabla("", "dependencia", "(cod_padre=0 or cod_padre is null)" . $this->condicion_ad, "nombre ASC", $this->conn);
+            $papas = busca_filtro_tabla("", "dependencia", "(cod_padre=0 or cod_padre is null)" . $this->condicion_ad, "nombre ASC", $conn);
         } else {
-            $papas = busca_filtro_tabla("", "dependencia", "cod_padre=" . $id . $this->condicion_ad, "nombre ASC", $this->conn);
+            $papas = busca_filtro_tabla("", "dependencia", "cod_padre=" . $id . $this->condicion_ad, "nombre ASC", $conn);
         }
         if ($papas["numcampos"]) {
             for ($i = 0; $i < $papas["numcampos"]; $i++) {
+
+                $item = [];
+
                 $text = $papas[$i]["nombre"] . " (" . $papas[$i]["codigo"] . ")";
                 if ($papas[$i]["estado"] == 0) {
                     $text .= " - INACTIVO";
+                    $item["unselectableStatus"] = true;
                 }
-                $item = array();
+
                 $item["extraClasses"] = "estilo-dependencia";
                 $item["title"] = $text;
                 $item["key"] = $papas[$i]["iddependencia"];
-                $item["checkbox"] = $this->checkbox;
+
                 if ($this->expandir == 1) {
                     $item["expanded"] = true;
                 }
-                if ($papas[$i]["estado"] == 0) {
-                    $item["unselectableStatus"] = false;
-                    $item["folder"] = 1;
-                }
-                if ($this->seleccionados != "") {
+
+                if ($this->cantSel) {
                     if (in_array($papas[$i]["iddependencia"], $this->seleccionados) !== false) {
                         $item["selected"] = true;
-                        if (!$this->activado) {
-                            $item["active"] = true;
-                            $this->activado = true;
-                        }
                     }
                 }
-                $hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"] . $this->condicion_ad, "", $this->conn);
-                if ($hijos[0]["cant"]) {
-                    $item["children"] = $this->llena_dependencia($papas[$i]["iddependencia"]);
+
+                if ($this->depserie) {
+                    if ($id != 0) {
+                        $item["checkbox"] = $this->checkbox;
+                        if (!isset($item["unselectableStatus"])) {
+                            if ($this->cantSel) {
+
+                                $item["unselectableStatus"] = true;
+                                if ($item["selected"]) {
+                                    $enableCheck = true;
+                                }
+
+                                if ($enableCheck) {
+                                    unset($item["unselectableStatus"]);
+                                }
+                                if ($item["selected"]) {
+                                    $item["unselectableStatus"] = true;
+                                }
+
+                            }
+                        }
+
+
+                    }
                 } else {
-                    $item["folder"] = 0;
+                    $item["checkbox"] = $this->checkbox;
                 }
+
+                $hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"] . $this->condicion_ad, "", $conn);
+                if ($hijos[0]["cant"]) {
+                    $item["children"] = $this->llena_dependencia($papas[$i]["iddependencia"], $enableCheck);
+                }
+                $enableCheck = $anterior;
                 $objetoJson[] = $item;
             }
         }

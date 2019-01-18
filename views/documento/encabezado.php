@@ -216,15 +216,15 @@ function plantilla($documentId, $transferId = 0){
             </div>
             <div class="col-auto text-center my-auto pr-2">
                 <span class="fa fa-mail-reply px-1 cursor">
-                   <label class="d-none d-sm-inline f-12 font-heading">&nbsp;Responder</label>
+                   <label class="d-none d-sm-inline f-12 font-heading cursor">&nbsp;Responder</label>
                 </span>
                 <span class="fa fa-share px-1 d-none d-md-inline cursor">
-                   <label class="d-none d-sm-inline f-12 font-heading">&nbsp;Reenviar</label>
+                   <label class="d-none d-sm-inline f-12 font-heading cursor">&nbsp;Reenviar</label>
                 </span>
                 <div class="dropdown d-inline px-0">
                     <span data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="cursor">
                         &nbsp;<i class="fa fa-flash"></i>
-                        <label class="d-none d-sm-inline f-12 font-heading">&nbsp;Dar trámite</label>
+                        <label class="d-none d-sm-inline f-12 font-heading cursor">&nbsp;Dar trámite</label>
                     </span>
                     <div class="dropdown-menu dropdown-menu-right" role="menu" x-placement="bottom-end">
                         <a href="#" class="dropdown-item new_add" data-type="comunication">
@@ -288,11 +288,11 @@ function plantilla($documentId, $transferId = 0){
             <div class="col-auto col-md mt-2 pr-0">
                 <?= priority($documentId) ?>
                 <?= has_files($documentId, true) ?>
-                <span class="px-1 cursor fa fa-comments notification f-20" id="show_comments">
+                <span class="px-1 cursor fa fa-comments notification f-20" id="show_comments" data-toggle="tooltip" data-placement="bottom" title="Comentarios">
                     <span class="badge badge-important counter"><?= $totalComments ?></span>
                 </span>
-                <span class="px-1 cursor fa fa-calendar f-20"></span>
-                <span class="px-1 cursor fa fa-road f-20"></span>
+                <span class="px-1 cursor fa fa-calendar f-20" data-toggle="tooltip" data-placement="bottom" title="Tarea"></span>
+                <span class="px-1 cursor fa fa-road f-20" id="show_history" data-toggle="tooltip" data-placement="bottom" title="Trazabilidad"></span>
             </div>
             <div class="col-auto d-none d-md-block">
                 <?= expiration($document[0]['fecha_limite']) ?>

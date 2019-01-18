@@ -1064,7 +1064,7 @@ function priority($documentId) {
         $style = '';
     }
 
-    return '<span class="my-0 text-center priority_flag cursor f-20 px-1">
+    return '<span class="my-0 text-center priority_flag cursor f-20 px-1" data-toggle="tooltip" data-placement="bottom" title="Asignar Prioridad">
         <i data-key="' . $documentId . '" class="priority fa fa-flag text-danger" ' . $style . '></i>
     </span>';
 }
@@ -1154,7 +1154,7 @@ function mostrar_numero_enlace($number, $documentId) {
 	
 	$route = 'views/documento/index_acordeon.php?documentId=' . $documentId;
 	$response = "<div class='link kenlace_saia' enlace='{$route}' conector='iframe' titulo='{$titulo}'>
-		<span class='badge cursor btn'>{$numero}</span>
+		<span class='badge cursor btn badge-inverse'>{$numero}</span>
 	</div>";
 
 	return $response;

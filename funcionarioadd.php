@@ -138,11 +138,9 @@ switch ($sAction) {
 		break;
 	case "A" :
 		// Add
-		if (AddData($conn)) {// Add New Record
-			$_SESSION["ewmsg"] = "Adicion exitosa del registro.";
-			ob_end_clean();
-			header("Location: funcionariolist.php");
-			exit();
+		$userId = AddData($conn);
+		if ($userId) {// Add New Record
+			redirecciona("funcionario.php?key={$userId}");
 		}
 		break;
 }
@@ -472,7 +470,7 @@ function AddData($conn) {
 		}
 	}
 
-	return true;
+	return $sKeyWrk;
 }
 
 function validar_usuarios_activos_add(){

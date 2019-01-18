@@ -95,7 +95,11 @@ class Serie extends Model
                     $dependencia = explode(",", $dependenciasVinculadas);
                     $cd = count($dependencia);
                     $ok = 0;
-                    $attributes = ['fk_serie' => $this->idserie];
+                    $attributes = [
+                        'fk_serie' => $this->idserie,
+                        'estado' => 1,
+                        'fecha_creacion' => date('Y-m-d H:i:s')
+                    ];
                     $idsEntSe = [];
                     for ($i = 0; $i < $cd; $i++) {
                         $attributes['fk_dependencia'] = $dependencia[$i];

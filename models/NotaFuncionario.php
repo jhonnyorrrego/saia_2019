@@ -3,7 +3,6 @@ require_once $ruta_db_superior . 'controllers/autoload.php';
 
 class NotaFuncionario extends Model{
     protected $idnota_funcionario;
-    protected $nombre;
     protected $contenido;
     protected $fk_funcionario;
     protected $fecha;
@@ -20,7 +19,6 @@ class NotaFuncionario extends Model{
     protected function defineAttributes(){
         // set the safe attributes to update and consult
         $safeDbAttributes = [
-            'nombre',
             'contenido',
             'fk_funcionario',
             'fecha',

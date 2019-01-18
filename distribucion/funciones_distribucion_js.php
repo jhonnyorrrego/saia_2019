@@ -17,9 +17,13 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 
 <script>
     $(document).ready(function () {
-
+        $(".select_mensajeros_ditribucion").select2();
+        $("#filtro_mensajero_distribucion").select2();
+        $("#opciones_acciones_distribucion").select2();
+        $("#filtro_ventanilla_radicacion").select2();
+        
         //Mensajero - class= select_mensajeros_ditribucion
-        $('.select_mensajeros_ditribucion').live('change', function () {
+        $(document).on('change', '.select_mensajeros_ditribucion', function () {
             var mensajero = $(this).val();
             var iddistribucion = $(this).attr('iddistribucion');
             $.ajax({
@@ -45,7 +49,7 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 
 
         //Acción - class= accion_distribucion - select id: opciones_acciones_distribucion
-        $('#opciones_acciones_distribucion').live("change", function () {
+        $(document).on('change', '#opciones_acciones_distribucion', function () {
 
             var valor = $(this).val();
             if (valor == 'boton_generar_planilla') {
@@ -258,7 +262,7 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 
 
         //Filtro por mensajero - class= filtro_mensajero_distribucion
-        $('#filtro_mensajero_distribucion').live("change", function () {
+        $(document).on('change', '#filtro_mensajero_distribucion', function () {
             var mensajero = 'filtro_mensajero_distribucion|' + $(this).val();
 <?php
 $componente = $_REQUEST['idbusqueda_componente'];
@@ -269,7 +273,7 @@ $componente = $_REQUEST['idbusqueda_componente'];
         });	//FIN IF filtro_mensajero_distribucion
 
         //Filtro por ventanilla - class= filtro_ventanilla_radicacion
-        $('#filtro_ventanilla_radicacion').live("change", function () {
+        $(document).on('change', '#filtro_ventanilla_radicacion', function () {
             var ventanilla = 'filtro_ventanilla_radicacion|' + $(this).val();
 <?php
 $componente = $_REQUEST['idbusqueda_componente'];
