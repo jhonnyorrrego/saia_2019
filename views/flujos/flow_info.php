@@ -34,19 +34,20 @@ $opciones_arbol = array("keyboard" => true, "selectMode" => 2);
 $extensiones = array("filter" => array());
 $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
 ?>
-<form>
+<form id="flowForm">
+<input type="hidden" id="form_uuid" value="<?php echo uniqid();?>">
 <fieldset>
 <legend>Informaci&oacute;n general</legend>
   <div class="row">
       <div class="col-sm-9">
           <div class="form-group">
-            <label for="nombre_flujo">Nombre del proceso</label>
+            <label class="etiqueta_campo" for="nombre_flujo">Nombre del proceso</label>
             <input type="text" class="form-control" id="nombre_flujo" name="nombre" placeholder="Nombre del proceso">
           </div>
       </div>
       <div class="col-sm-3">
           <div class="form-group">
-            <label for="version_flujo">Versi&oacute;n</label>
+            <label class="etiqueta_campo" for="version_flujo">Versi&oacute;n</label>
             <input type="text" class="form-control" id="version_flujo" name="version">
           </div>
       </div>
@@ -55,7 +56,7 @@ $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
   <div class="row">
     <div class="col-sm-9">
       <div class="form-group">
-        <label for="descripcion_flujo">Descripci&oacute;n del Proceso</label>
+        <label class="etiqueta_campo" for="descripcion_flujo">Descripci&oacute;n del Proceso</label>
         <textarea class="form-control" id="descripcion_flujo" name="descripcion"></textarea>
       </div>
 	</div>
@@ -63,16 +64,16 @@ $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
 	  <div class="row">
         <div class="col-sm-12">
           <div class="form-group">
-            <label for="version_flujo">C&oacute;digo</label>
-            <input type="text" class="form-control" id="version_flujo" name="version">
+            <label class="etiqueta_campo" for="codigo_flujo">C&oacute;digo</label>
+            <input type="text" class="form-control" id="codigo_flujo" name="codigo">
           </div>
         </div>
       </div>
 	  <div class="row">
         <div class="col-sm-12">
           <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-            <label class="form-check-label" for="exampleCheck1">Mostrar código en el nombre del Formato</label>
+            <input type="checkbox" class="form-check-input" id="mostrar_codigo_flujo" name="">
+            <label class="form-check-label" for="mostrar_codigo_flujo">Mostrar código en el nombre del Formato</label>
           </div>
         </div>
       </div>
@@ -80,32 +81,52 @@ $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
   </div>
 
   <div class="form-group">
-    <label for="expediente_flujo">Expediente preestablecido</label>
+    <label class="etiqueta_campo" for="expediente_flujo">Expediente preestablecido</label>
     <input type="text" id="expediente_flujo" name="expediente" class="demo-default" value="">
   </div>
 
   <div class="form-group">
-    <label for="formato_flujo">Elija los formatos que intervienen en este proceso*</label>
+    <label class="etiqueta_campo" for="formato_flujo">Elija los formatos que intervienen en este proceso*</label>
 	<?= $arbol->generar_html() ?>
   </div>
 
   <div class="form-group">
-    <label for="dropzone">Adjuntar documentaci&oacute;n del proceso</label>
-    <div id="dropzone" class="dropzone" data-multiple="multiple">
+    <input type="hidden" id="anexos_flujo" name="anexos_flujo" value="">
+    <label class="etiqueta_campo" for="dropzone">Adjuntar documentaci&oacute;n del proceso</label>
+    <div id="dropzone" class="dropzone" data-campo="anexos_flujo" data-multiple="multiple">
       <div class="dz-message"><span>Haga clic para elegir un archivo o Arrastre acá el archivo.</span></div>
     </div>
   </div>
 
 
   <div class="form-group">
-    <label for="info_flujo">Instrucciones o políticas adicionales del proceso</label>
+    <label class="etiqueta_campo" for="info_flujo">Instrucciones o políticas adicionales del proceso</label>
     <textarea class="form-control" id="info_flujo" name="info"></textarea>
   </div>
 
   </fieldset>
 
     <div class="form-group pb-3">
-      <button type="submit" class="btn btn-primary">Guardar</button>
+      <button type="button" id="guardarFlujo" class="btn btn-primary">Guardar</button>
     </div>
 </form>
 <script src="<?= $ruta_db_superior ?>views/flujos/js/flujos.js" data-consulta64="<?= $consulta64 ?>"></script>
+<script type="text/javascript">
+$(function(){
+	$("#guardarFlujo").click(function(){
+		var formData = new FormData(document.getElementById("flowForm"));
+		formData.append('key', localStorage.getItem("key"));
+		
+		$.ajax({
+			url: "<?= $ruta_db_superior ?>app/flujo/guardarFlujo.php",
+			type: "POST",
+			data: formData,
+			processData: false,  // tell jQuery not to process the data
+			contentType: false,  // tell jQuery not to set contentType
+			success: function(response) {
+			  console.log(response);
+			}
+		});
+	});
+});
+</script>

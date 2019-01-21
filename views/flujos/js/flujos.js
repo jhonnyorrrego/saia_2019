@@ -36,7 +36,7 @@ $(function () {
     Dropzone.autoDiscover = false;
     $('.dropzone').each(function () {
     	var idcampo = $(this).attr('id');
-    	var paramName = $(this).attr('name');
+    	var paramName = $(this).data('campo');
     	var idcampoFormato = $(this).data('idcampo-formato');
     	var extensiones = $(this).data('extensiones');
     	var multiple_text = $(this).data('multiple');
@@ -82,6 +82,8 @@ $(function () {
                 return this._updateMaxFilesReachedClass();
             },
             success : function(file, response) {
+            	console.log(file);
+            	console.log(response);
             	for (var key in response) {
                 	if(Array.isArray(response[key])) {
                     	for(var i=0; i < response[key].length; i++) {
@@ -96,6 +98,7 @@ $(function () {
                 		}
                 	}
             	}
+
             	$('#'+paramName).val(Object.values(lista_archivos).join());
                 if($('#dz_campo_'+idcampoFormato).find('label.error').length) {
                     $('#dz_campo_'+idcampoFormato).find('label.error').remove()

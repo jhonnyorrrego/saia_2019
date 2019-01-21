@@ -36,7 +36,7 @@ Generated From SASS
 30. Print
 31. Demo
 -------------------------------------------------------------------*/
-@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,600');
+@import url('https://fonts.googleapis.com/css?family=Ubuntu');
 .flex-row {
   -webkit-box-orient: horizontal;
   -webkit-box-direction: normal;
@@ -269,7 +269,7 @@ body.menu-pin .overlay .overlay-brand {
   background: #f0f0f0;
   height: 28px;
   color: rgba(98, 98, 98, 0.7);
-  font-family: 'Montserrat';
+  font-family: 'Ubuntu', sans-serif;
   text-transform: uppercase;
   font-size: 10.8px;
   padding-left: 12px;
@@ -291,7 +291,7 @@ body.menu-pin .overlay .overlay-brand {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  font-family: arial;
+  font-family: 'Ubuntu', sans-serif;
 }
 .split-view .split-list .item .recipients {
   letter-spacing: 0.01em;
@@ -304,7 +304,7 @@ body.menu-pin .overlay .overlay-brand {
   max-width: 32px;
 }
 .split-view .split-list .item .subject {
-  font-family: 'Helvetica';
+  font-family: 'Ubuntu', sans-serif;
   font-size: 14.33px;
   color: #3b4752;
   -webkit-line-clamp: 2;
@@ -321,7 +321,7 @@ body.menu-pin .overlay .overlay-brand {
 }
 .split-view .split-list .item .datetime {
   color: #121212;
-  font-family: arial;
+  font-family: 'Ubuntu', sans-serif;
   font-size: 11.1px;
   position: absolute;
   right: 20px;
@@ -822,7 +822,7 @@ body.menu-pin .overlay .overlay-brand {
     line-height: 40px;
   }
   .horizontal-app-menu .menu-bar ul li a {
-    font-family: Arial, sans-serif;
+    font-family: 'Ubuntu', sans-serif;
     display: inline-block;
     padding-left: 20px !important;
     padding-right: 32px !important;
@@ -938,7 +938,7 @@ body.menu-pin .overlay .overlay-brand {
   display: block;
 }
 .secondary-sidebar .btn-compose {
-  font-family: 'Montserrat';
+  font-family: 'Ubuntu', sans-serif;
   font-size: 13px;
   font-weight: normal;
   letter-spacing: 0.02em;
@@ -947,7 +947,7 @@ body.menu-pin .overlay .overlay-brand {
 .secondary-sidebar .menu-title {
   color: rgba(120, 129, 149, 0.7);
   font-size: 10.8px;
-  font-family: 'Montserrat';
+  font-family: 'Ubuntu', sans-serif;
   font-weight: normal;
   letter-spacing: 0.03em;
 }
@@ -1206,7 +1206,7 @@ body.menu-pin .overlay .overlay-brand {
   font-size: 14px;
   vertical-align: middle;
   line-height: 12px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: 'Ubuntu', sans-serif;
 }
 .header .search-link i {
   margin-right: 15px;
@@ -1380,7 +1380,7 @@ body.menu-pin .overlay .overlay-brand {
 ------------------------------------
 */
 .breadcrumb {
-  font-family: 'Montserrat';
+  font-family: 'Ubuntu', sans-serif;
   -webkit-border-radius: 0px;
   -moz-border-radius: 0px;
   border-radius: 0px;
@@ -1643,7 +1643,7 @@ body.sidebar-visible .page-sidebar .sidebar-header .sidebar-header-controls {
   clear: both;
 }
 .page-sidebar .sidebar-menu .menu-items > li > a {
-  font-family: Arial, sans-serif;
+  font-family: 'Ubuntu', sans-serif;
   display: inline-block;
   padding-left: 32px;
   min-height: 40px;
@@ -1763,7 +1763,7 @@ body.sidebar-visible .page-sidebar .sidebar-header .sidebar-header-controls {
   display: inline-block;
   padding: 5px 0px;
   font-size: 13px;
-  font-family: Arial, sans-serif;
+  font-family: 'Ubuntu', sans-serif;
   white-space: normal;
 }
 .page-sidebar .sidebar-menu .menu-items > li ul.sub-menu > li .icon-thumbnail {
@@ -1806,7 +1806,7 @@ body.sidebar-visible .page-sidebar .sidebar-header .sidebar-header-controls {
   transition: transform 0.4s cubic-bezier(0.05, 0.74, 0.27, 0.99);
   -webkit-backface-visibility: hidden;
   -webkit-perspective: 1000;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: 'Ubuntu', sans-serif;
   -webkit-font-smoothing: antialiased;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
@@ -2398,7 +2398,7 @@ html {
 }
 body {
   color: #626262;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: 'Ubuntu', sans-serif;
   font-size: 14px;
   font-weight: normal;
   letter-spacing: 0.01em;
@@ -2418,7 +2418,7 @@ h4,
 h5,
 h6 {
   margin: 10px 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: 'Ubuntu', sans-serif;
   -webkit-font-smoothing: antialiased;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
@@ -2959,7 +2959,7 @@ hr.dotted {
   font-family: Georgia !important;
 }
 .font-heading {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: 'Ubuntu', sans-serif;
 }
 /* Wells
 ------------------------------------
@@ -3103,7 +3103,7 @@ hr.dotted {
 [Buttons Base Styles]
 */
 .btn {
-  font-family: Arial, sans-serif;
+  font-family: 'Ubuntu', sans-serif;
   font-size: 14px;
   font-weight: normal;
   letter-spacing: 0.01em;
@@ -4102,7 +4102,7 @@ Misc buttons
 */
 .badge {
   text-shadow: none;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: 'Ubuntu', sans-serif;
   font-weight: 600;
   background-color: #e6e6e6;
   font-size: 11px;
@@ -4984,7 +4984,7 @@ body > .pgn-wrapper {
   border-radius: 0;
   padding: 13px 20px;
   margin-right: 0;
-  font-family: 'Montserrat';
+  font-family: 'Ubuntu', sans-serif;
   font-weight: 500;
   letter-spacing: 0.06em;
   color: rgba(98, 98, 98, 0.7);
@@ -5473,7 +5473,7 @@ body > .pgn-wrapper {
 .nav-tab-dropdown .cs-select .cs-placeholder {
   height: 48px;
   padding: 12px 34px 15px 15px;
-  font-family: 'Montserrat';
+  font-family: 'Ubuntu', sans-serif;
   font-weight: 500;
   letter-spacing: 0.06em;
   font-size: 10.5px;
@@ -6420,7 +6420,7 @@ span.dynatree-drag-helper-img,
   padding-top: 0;
 }
 .card .card-header .card-title {
-  font-family: 'Montserrat';
+  font-family: 'Ubuntu', sans-serif;
   text-transform: uppercase;
   display: inline-block;
   letter-spacing: 0.06em;
@@ -6512,7 +6512,7 @@ span.dynatree-drag-helper-img,
   float: right;
 }
 .card.card-featured .card-title h4 {
-  font-family: 'Montserrat';
+  font-family: 'Ubuntu', sans-serif;
   font-size: 16px;
   text-transform: uppercase;
   color: #f0f0f0;
@@ -6802,7 +6802,7 @@ form legend {
   background-color: #fff;
   background-image: none;
   border: 1px solid rgba(0, 0, 0, 0.07);
-  font-family: Arial, sans-serif;
+  font-family: 'Ubuntu', sans-serif;
   -webkit-appearance: none;
   color: #2c2c2c;
   outline: 0;
@@ -7282,7 +7282,7 @@ body.rtl .checkbox label::after {
   margin-bottom: 10px;
 }
 .form-group label:not(.error) {
-  font-family: 'Montserrat';
+  font-family: 'Ubuntu', sans-serif;
   font-size: 10.5px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -7312,7 +7312,7 @@ body.rtl .checkbox label::after {
 .form-group-default.required:after {
   color: #f55753;
   content: "*";
-  font-family: arial;
+  font-family: 'Ubuntu', sans-serif;
   font-size: 20px;
   position: absolute;
   right: 12px;
@@ -7681,7 +7681,7 @@ https://github.com/eternicode/bootstrap-datepicker
   content: "\f054";
 }
 .datepicker thead tr .dow {
-  font-family: 'Montserrat';
+  font-family: 'Ubuntu', sans-serif;
   color: #6d5cae;
   text-transform: uppercase;
   font-size: 11px;
@@ -8648,7 +8648,7 @@ div.cs-skin-slide::before {
 }
 div.cs-skin-slide {
   width: auto;
-  font-family: Arial, sans-serif;
+  font-family: 'Ubuntu', sans-serif;
   color: #5e5e5e;
 }
 div.cs-skin-slide:before {
@@ -8841,7 +8841,7 @@ div.cs-skin-slide .cs-options ul li.cs-selected span {
 .table thead tr th {
   text-transform: uppercase;
   font-weight: 500;
-  font-family: 'Montserrat';
+  font-family: 'Ubuntu', sans-serif;
   font-size: 10.5px;
   letter-spacing: 0.06em;
   padding-top: 14px;
@@ -9235,7 +9235,7 @@ table.dataTable.table-condensed .sorting_desc:after {
   font-size: 12px;
 }
 .line-chart .nv-pointer-events-none .value.nv-pointer-events-none {
-  font-family: 'Montserrat';
+  font-family: 'Ubuntu', sans-serif;
   font-weight: normal;
   font-size: 11px;
   color: #afafaf;
@@ -9270,7 +9270,7 @@ table.dataTable.table-condensed .sorting_desc:after {
 .line-chart .tick text,
 .line-chart .nvd3 .nv-axis .nv-axisMaxMin text {
   fill: rgba(98, 98, 98, 0.5);
-  font-family: "Montserrat";
+  font-family: 'Ubuntu', sans-serif;
   font-size: 11px;
   text-transform: uppercase;
   font-weight: normal;
@@ -9451,7 +9451,7 @@ table.dataTable.table-condensed .sorting_desc:after {
 #tab-rickshaw-realtime #rickshaw-realtime_y_axis .rickshaw_graph .y_ticks text,
 #tab-rickshaw-realtime #rickshaw-realtime_y_axis .rickshaw_graph .x_ticks_d3 text {
   opacity: 0.35;
-  font-family: 'Montserrat';
+  font-family: 'Ubuntu', sans-serif;
   font-size: 11px;
 }
 #tab-rickshaw-bars #rickshaw-stacked-bars.rickshaw_graph .detail .dot {
@@ -9488,7 +9488,7 @@ table.dataTable.table-condensed .sorting_desc:after {
 }
 #tab-rickshaw-slider .rickshaw_graph .y_ticks text,
 #tab-rickshaw-slider .rickshaw_graph .x_ticks_d3 text {
-  font-family: 'Montserrat';
+  font-family: 'Ubuntu', sans-serif;
   font-size: 11px;
 }
 #tab-rickshaw-slider .rickshaw_range_slider_preview .frame {
@@ -9514,7 +9514,7 @@ table.dataTable.table-condensed .sorting_desc:after {
   width: auto;
 }
 #tab-rickshaw-slider .chart .x_tick.plain .title {
-  font-family: 'Montserrat';
+  font-family: 'Ubuntu', sans-serif;
   font-size: 11px;
 }
 #tab-rickshaw-slider .y_axis {
@@ -9896,14 +9896,14 @@ input.list-view-search {
   font-size: 14px;
   margin: 0;
   line-height: 22.7px;
-  font-family: arial;
+  font-family: 'Ubuntu', sans-serif;
   letter-spacing: -0.006em;
   margin-top: -3px;
 }
 .social-card.share .card-header h6 {
   font-size: 12px;
   margin: 0;
-  font-family: arial;
+  font-family: 'Ubuntu', sans-serif;
   opacity: .45;
 }
 .social-card.share .card-description {
@@ -9919,7 +9919,7 @@ input.list-view-search {
   opacity: .45;
   display: block;
   font-size: 12px;
-  font-family: arial;
+  font-family: 'Ubuntu', sans-serif;
 }
 .social-card.share .card-content {
   position: relative;
@@ -9979,7 +9979,7 @@ input.list-view-search {
 .social-card.share .card-footer .time {
   float: left;
   opacity: .45;
-  font-family: arial;
+  font-family: 'Ubuntu', sans-serif;
   margin-top: 1px;
 }
 .social-card.share .card-footer .reactions {
@@ -10203,10 +10203,10 @@ input.list-view-search {
 .split-view .split-details .email-content-wrapper .email-content .email-content-header .sender .datetime {
   color: #626262;
   opacity: .45;
-  font-family: arial;
+  font-family: 'Ubuntu', sans-serif;
 }
 .split-view .split-details .email-content-wrapper .email-content .email-content-header .subject {
-  font-family: arial;
+  font-family: 'Ubuntu', sans-serif;
   color: #3b4752;
   font-size: 15.2px;
   line-height: 17px;
@@ -10325,7 +10325,7 @@ Events / .event-container
   width: 69px;
   text-align: center;
   white-space: nowrap;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: 'Ubuntu', sans-serif;
 }
 .calendar .calendar-header .years .year > a {
   color: rgba(0, 0, 0, 0.5);
@@ -10478,7 +10478,7 @@ Events / .event-container
 .calendar .weeks-wrapper .week .day-wrapper .day.week-header {
   text-transform: uppercase;
   text-align: center;
-  font-family: 'Montserrat';
+  font-family: 'Ubuntu', sans-serif;
   letter-spacing: 0.06em;
   font-size: 10.5px;
 }
@@ -10824,7 +10824,7 @@ Events / .event-container
   font-size: 11px;
   letter-spacing: 0.06em;
   font-size: 10.5px;
-  font-family: 'Montserrat';
+  font-family: 'Ubuntu', sans-serif;
   right: 5px;
 }
 .calendar-event {
@@ -12268,7 +12268,7 @@ Main components
 .widget-14-chart_y_axis .rickshaw_graph .y_ticks text,
 .widget-14-chart_y_axis .rickshaw_graph .x_ticks_d3 text {
   opacity: 0.35;
-  font-family: 'Montserrat';
+  font-family: 'Ubuntu', sans-serif;
   font-size: 11px;
 }
 .widget-14-chart_y_axis .y_ticks.plain g:first-child {
@@ -13159,7 +13159,7 @@ Main components
   transition: all 0.1s ease-in-out;
 }
 .error-number {
-  font-family: 'Montserrat';
+  font-family: 'Ubuntu', sans-serif;
   font-size: 90px;
   line-height: 90px;
 }

@@ -476,10 +476,10 @@ class GenerarFormato
     <td>{*' . $campos[$i]['nombre'] . '*}</td>
     </tr>';
             }
-            $cuerpo_formato .= '</tbody></table>';
+            $cuerpo_formato .= '</tbody></table><br><br>{*mostrar_estado_proceso*}';
             $update_formato = "UPDATE formato set cuerpo='" . $cuerpo_formato . "' where idformato=" . $this->idformato;
             phpmkr_query($update_formato);
-            $datos_funcion = busca_filtro_tabla("", "funciones_formato A", "A.nombre_funcion in ('mostrar_codigo_qr','formato_numero','fecha_creacion','asunto_documento')", "", $conn);           
+            $datos_funcion = busca_filtro_tabla("", "funciones_formato A", "A.nombre_funcion in ('mostrar_codigo_qr','formato_numero','fecha_creacion','asunto_documento','mostrar_estado_proceso')", "", $conn);           
             if($datos_funcion['numcampos']){
                 for ($i=0; $i <$datos_funcion['numcampos'] ; $i++) { 
                     $consulta_existe_func=busca_filtro_tabla("","funciones_formato_enlace","formato_idformato=".$this->idformato." and funciones_formato_fk=".$datos_funcion[$i]['idfunciones_formato']." ","",$conn);
@@ -488,16 +488,15 @@ class GenerarFormato
                         phpmkr_query($sql_funciones);                       
                     }
                 }
-
+                $this->exito = 1;
+                $this->mensaje = "";
+                return true;
             }
-            $this->exito = 1;
-            $this->mensaje = "";
-            return true;
+            
 
         }
     }
-        $this->exito = 1;
-
+        $this->exito = 0;
         return false;
     }
     /*
@@ -707,6 +706,9 @@ class GenerarFormato
      */
     private function codifica($texto)
     {
+        $texto =strtoupper($texto);
+        $texto =str_replace("ACUTE;","acute;",$texto);
+        $texto =str_replace("NTILDE;","ntilde;",$texto);
         return $texto;
     }
 
@@ -742,7 +744,7 @@ class GenerarFormato
                     	<div class="card card-default">
                             <div class="card-body">';
             if (!$formato[0]["item"]) {
-                $texto .= '<h5>' . codifica_encabezado(html_entity_decode(mayusculas($formato[0]["etiqueta"]))) . '</h5>';
+                $texto .= '<center><h4 class="text-black">' . codifica_encabezado(html_entity_decode(mayusculas($formato[0]["etiqueta"]))) . '</h4></center>';
             }
             $texto .= '<?php llama_funcion_accion(@$_REQUEST["iddoc"],'.$this->idformato.',"ingresar","ANTERIOR"); ?>
                        <form name="formulario_formatos" id="formulario_formatos" class="form-horizontal" role="form" autocomplete="off" method="post" action="' . $action . '" enctype="multipart/form-data">';
@@ -857,7 +859,7 @@ class GenerarFormato
                         case "etiqueta":
                         case "etiqueta_titulo":
                             $texto .= '<div class="card-body" id="tr_' . $campos[$h]["nombre"] . '">
-                                        <h5 title="' . $campos[$h]["ayuda"] . '" id="' . $campos[$h]["nombre"] . '"><center><span class="etiqueta_titulo">' . $campos[$h]["valor"] . '</span></center></h5>
+                                        <h5 title="' . $campos[$h]["ayuda"] . '" id="' . $campos[$h]["nombre"] . '"><center><span class="etiqueta_titulo">' . strtoupper($campos[$h]["valor"]) . '</span></center></h5>
                                       </div>';
                             break;
                         case "etiqueta_parrafo":
@@ -1404,8 +1406,8 @@ class GenerarFormato
                             }
 
 
-                            $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
-                     <label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
+                            $texto .= '<div class="form-group form-group-default '. $obligatorio .'" id="tr_' . $campos[$h]["nombre"] . '">
+                     <label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . str_replace("ACUTE;","acute;",$this->codifica($campos[$h]["etiqueta"])) .  '</label>
                      <input class="form-control" ' . " $adicionales $tabindex" . ' type="text" ' . $ancho . ' size="100" id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . ' value="' . $valor . '">
                     </div>';
                             if ($campos[$h]["mascara"] != "") {
@@ -1738,6 +1740,39 @@ span.fancytree-expander {
                                 	src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-datetimepicker/js/locales/es.js"></script>' . $enmascarar . ' ' . $codigo_enter2tab . '
                 	</head>
                 	' . $texto . $js_archivos . '
+                        <script type="text/javascript">
+                            $(document).ready(function() {
+                                $(".form-group.form-group-default").click(function() {
+                                    $(this).find("input").focus();
+                                });
+
+                                if (!this.initFormGroupDefaultRun) {
+                                    $("body").on("focus", ".form-group.form-group-default :input", function() {
+                                        $(".form-group.form-group-default").removeClass("focused");
+                                        $(this).parents(".form-group").addClass("focused");
+                                    });
+
+                                    $("body").on("blur", ".form-group.form-group-default :input", function() {
+                                        $(this).parents(".form-group").removeClass("focused");
+                                        if ($(this).val()) {
+                                            $(this).closest(".form-group").find("label").addClass("fade");
+                                        } else {
+                                            $(this).closest(".form-group").find("label").removeClass("fade");
+                                        }
+                                    });
+
+                                    // Only run the above code once.
+                                    this.initFormGroupDefaultRun = true;
+                                }
+
+                                $(".form-group.form-group-default .checkbox, .form-group.form-group-default .radio").hover(function() {
+                                    $(this).parents(".form-group").addClass("focused");
+                                }, function() {
+                                    $(this).parents(".form-group").removeClass("focused");
+                                });
+                                
+                            });
+                        </script>
                 	</html>';
             if ($accion == "editar") {
                 $contenido .= '<?php include_once($ruta_db_superior . FORMATOS_SAIA . "librerias/footer_plantilla.php");?' . '>';

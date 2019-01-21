@@ -10,10 +10,8 @@ abstract class Events {
     abstract protected function afterDelete();
 }
 
-class Model extends  Events {
+abstract class Model extends  Events {
     protected $dbAttributes;
-    public static $table;
-    public static $primary;
 
     /**
      * class initialization
@@ -63,14 +61,26 @@ class Model extends  Events {
         ;
     }
 
+    public function getTable() {
+        if (empty($this->dbAttributes->table)) {
+            $Stringy = new Stringy(get_called_class());
+            $this->dbAttributes->table = $Stringy -> underscored();
+        }
+        return $this->dbAttributes->table;
+    }
+
+    public function getPrimary() {
+        if (empty($this->dbAttributes->primary)) {
+            $Stringy = new Stringy(get_called_class());
+            $this->dbAttributes->primary = $Stringy -> underscored();
+        }
+        return $this->dbAttributes->primary;
+    }
+
     /**
      * define database attributes
      */
-    protected function defineAttributes() {
-        $this -> dbAttributes = (object)[
-        'safe' => [],
-        'date' => []];
-    }
+    protected abstract function defineAttributes();
 
     /**
      * get safe attributes
@@ -94,11 +104,12 @@ class Model extends  Events {
      *      false if some attribute is not included on safeAttributes
      */
     public function setAttributes($attributes) {
-        $diff = array_diff(array_keys($attributes), $this -> getSafeAttributes());
-
-        if (!count($diff)) {
+        if (count($attributes)) {
+            $seguros = $this -> getSafeAttributes();
             foreach ($attributes as $key => $value) {
-                $this -> $key = $value;
+                if(in_array($key, $seguros)) {
+                    $this -> $key = $value;
+                }
             }
         } else {
             $error = true;
@@ -134,7 +145,7 @@ class Model extends  Events {
     /**
      * find and set the safeAttributes by pk
      */
-    public function find() {
+    public final function find() {
         $data = self::findByAttributes([self::getPrimaryLabel() => $this -> getPK()]);
 
         if ($data) {
@@ -158,7 +169,7 @@ class Model extends  Events {
     /**
      * insert a new record on the table
      */
-    public function create() {
+    public final function create() {
         if ($this -> beforeCreate()) {
             if ($this -> runCreate()) {
                 $this -> afterCreate();
@@ -200,7 +211,7 @@ class Model extends  Events {
     /**
      * modify a record on the table by pk
      */
-    public function update() {
+    public final function update() {
         $response = false;
         if ($this -> beforeUpdate()) {
             $response = $this -> runUpdate();
@@ -215,7 +226,7 @@ class Model extends  Events {
         return self::executeUpdate($this -> getNotNullAttributes(), [self::getPrimaryLabel() => $this -> getPK()]);
     }
 
-    public function delete() {
+    public final function delete() {
         if ($this -> beforeDelete()) {
             if ($this -> runDelete()) {
                 $this -> afterDelete();
@@ -268,21 +279,18 @@ class Model extends  Events {
      * @return string
      */
     public static function getPrimaryLabel() {
-        return self::$primary ? self::$primary : 'id' . self::getTableName();
+        $caller = get_called_class();
+        $instance = new $caller();
+        return $instance->getPrimnary();
     }
 
     /**
      * define table name
      */
     public static function getTableName() {
-        if (self::$table) {
-            $response = self::$table;
-        } else {
-            $Stringy = new Stringy(get_called_class());
-            $response = $Stringy -> underscored();
-        }
-
-        return $response;
+        $caller = get_called_class();
+        $instance = new $caller();
+        return $instance->getTable();
     }
 
     /**
@@ -336,7 +344,9 @@ class Model extends  Events {
      * @return void
      */
     public static function createSelect($fields) {
-        $Instance = new self;
+        $className = get_called_class();
+        $Instance = new $className();
+
         $safeAttributes = $Instance -> getSafeAttributes();
         $dateAttributes = $Instance -> getDateAttributes();
         $select = '';
@@ -373,7 +383,8 @@ class Model extends  Events {
         $condition = '';
 
         if (count($conditions)) {
-            $Instance = new self;
+            $className = get_called_class();
+            $Instance = new $className();
             $dateAttributes = $Instance -> getDateAttributes();
 
             foreach ($conditions as $attribute => $value) {
