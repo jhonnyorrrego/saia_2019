@@ -12,11 +12,11 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
-$response = array(
+$response = (object) [
     'data' => [],
     'message' => "",
     'success' => 0
-);
+];
 
 if ($_SESSION['idfuncionario'] == $_REQUEST['key']) {
     if ($_REQUEST['id']) {
@@ -32,7 +32,6 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['key']) {
             //"diagrama" => $_REQUEST["diagrama"],
             //"duracion" => $_REQUEST["duracion"],
             "fecha_modificacion" => date('Y-m-d'),
-            "fecha_modificacion" => $_REQUEST["fecha_modificacion"],
             "info" => $_REQUEST["info"],
             "version_actual" => 1
         ]);
@@ -53,6 +52,10 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['key']) {
         ]);
     }
 
+    //TODO: Procesar los anexos
+    if(isset($_REQUEST["anexos_flujo"]) && !empty($_REQUEST["anexos_flujo"])) {
+    	procesar_anexos($_REQUEST["anexos_flujo"]);
+    }
     if ($pk) {
         $response->success = 1;
         $response->message = "Datos almacenados";
@@ -65,3 +68,7 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['key']) {
 }
 
 echo json_encode($response);
+
+function procesar_anexos($anexos_tmp) {
+	//anexos_flujo
+}

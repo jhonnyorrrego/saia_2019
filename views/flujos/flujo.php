@@ -26,7 +26,7 @@ include_once ($ruta_db_superior . "arboles/crear_arbol_ft.php");
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <title>SAIA - SGDEA</title>
 <link rel="stylesheet" type="text/css" href="<?php echo $ruta_db_superior;?>css/selectize.css" />
-<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/css/dropzone.css" rel="stylesheet" type="text/css">
+<link href="<?= $ruta_db_superior ?>dropzone/dist/dropzone_saia.css" rel="stylesheet" type="text/css">
 
     <!-- required modeler styles -->
     <link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bpmn-js/3.1.0/assets/diagram-js.css">
@@ -113,9 +113,11 @@ ul.fancytree-container {
 
 <input type="hidden" id="idflujo" name="idflujo" value="<?= $idflujo ?>">
 
-<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/dropzone.min.js"></script>
+<script src="<?= $ruta_db_superior ?>dropzone/dist/dropzone.js"></script>
 
 <script type="text/javascript">
+var lista_archivos = new Object();
+
 $(document).ready(function() {
     /*$('a[data-toggle="pill"]').on('show.bs.tab', function (e) {
         console.log(e.target); // newly activated tab
