@@ -59,7 +59,7 @@ if ($sAction == "A") {
 	$cantNew = count($nuevos);
 	$message = [];
 	$exitoDel = 1;
-	if ($cantDelete) {
+	/*if ($cantDelete) {
 		$okDel = 0;
 		$attributes = [
 			'estado' => 0,
@@ -92,7 +92,7 @@ if ($sAction == "A") {
 			$message[] = 'Error al desvincular la serie';
 			$exitoDel = 0;
 		}
-	}
+	}*/
 
 	$exitoNew = 1;
 	if ($cantNew) {
@@ -142,7 +142,8 @@ $origen = [
 	'ruta_db_superior' => $ruta_db_superior,
 	'params' => [
 		'seleccionados' => $selecccionados,
-		'idserie' => $idserie
+		'idserie' => $idserie,
+		'origenPagina' => 'vincular'
 	]
 ];
 if ($Serie->tipo > 1) {

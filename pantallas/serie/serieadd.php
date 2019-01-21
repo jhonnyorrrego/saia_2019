@@ -161,7 +161,8 @@ if ($sAction == "A") {
 		"params" => array(
 			"seleccionados" => $selecccionados,
 			'depserie'=>1,
-			'idserie'=>$idserie
+			'idserie'=>$idserie,
+			'origenPagina' => 'add'
 		)
 	);
 

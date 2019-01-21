@@ -143,73 +143,84 @@ class EntidadSerie extends Model
         $Dependencia = $this->getDependenciaFk();
         if ($Dependencia) {
             $Dependencia = $Dependencia[0];
-
-            $hijosDep = busca_filtro_tabla("iddependencia", "dependencia", "codigo_arbol like '%.{$Dependencia->getPK()}.%'", "codigo_arbol asc", $conn);
-            if ($hijosDep['numcampos']) {
-                for ($i = 0; $i < $hijosDep['numcampos']; $i++) {
-                    $existEntSer = busca_filtro_tabla("identidad_serie", "entidad_serie", "fk_dependencia={$hijosDep[$i]['iddependencia']} and fk_serie={$this->fk_serie} and estado=1", "", $conn);
-                    if (!$existEntSer['numcampos']) {
-                        $attributes = [
-                            'fk_serie' => $this->fk_serie,
-                            'fk_dependencia' => $hijosDep[$i]['iddependencia'],
-                            'estado' => 1,
-                            'fecha_creacion' => date('Y-m-d H:i:s')
-                        ];
-                        $newEntSerie = new self();
-                        $newEntSerie->SetAttributes($attributes);
-                        $ok = $newEntSerie->CreateEntidadSerie();
-                        if (!$ok['exito']) {
-                            file_put_contents('logEntidadSerie.txt', print_r($ok, true));
+            $Serie = $this->getSerieFk();
+            if ($Serie) {
+                $Serie = $Serie[0];
+                if ($Serie->tipo != 3) {
+                    $hijosSerie = busca_filtro_tabla("idserie", "serie", "cod_padre=" . $this->fk_serie, "", $conn);
+                    if ($hijosSerie['numcampos']) {
+                        for ($i = 0; $i < $hijosSerie['numcampos']; $i++) {
+                            $fksDependencias = busca_filtro_tabla("distinct fk_dependencia", "entidad_serie", "fk_serie={$hijosSerie[$i]['idserie']} and estado=1", "", $conn);
+                            if ($fksDependencias['numcampos']) {
+                                for ($j = 0; $j < $fksDependencias['numcampos']; $j++) {
+                                    $existEntSer = busca_filtro_tabla("identidad_serie", "entidad_serie", "fk_serie={$this->fk_serie} and fk_dependencia={$fksDependencias[$j]['fk_dependencia']} and estado=1", "", $conn);
+                                    if (!$existEntSer['numcampos']) {
+                                        $attributes = [
+                                            'fk_serie' => $this->fk_serie,
+                                            'fk_dependencia' => $fksDependencias[$j]['fk_dependencia'],
+                                            'estado' => 1,
+                                            'fecha_creacion' => date('Y-m-d H:i:s')
+                                        ];
+                                        $newEntSerie = new self();
+                                        $newEntSerie->SetAttributes($attributes);
+                                        $ok = $newEntSerie->CreateEntidadSerie();
+                                        if (!$ok['exito']) {
+                                            file_put_contents('logEntidadSerie.txt', print_r($ok, true));
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
 
-            }
-
-
-            $idsDep = explode('.', $Dependencia->codigo_arbol);
-            $idsExp = [];
-            foreach ($idsDep as $key => $idDependencia) {
-                $existDep = busca_filtro_tabla("idexpediente", "expediente", "fk_dependencia={$idDependencia} and nucleo=1 and estado=1", "", $conn);
-                if ($existDep['numcampos']) {
-                    $idsExp[$key] = $existDep[0]['idexpediente'];
-                } else {
-                    $DependenciaData = new Dependencia($idDependencia);
-                    if ($key == 0) {
-                        $codPadreExp = $key;
+                $idsDep = explode('.', $Dependencia->codigo_arbol);
+                $idsExp = [];
+                foreach ($idsDep as $key => $idDependencia) {
+                    $existDep = busca_filtro_tabla("idexpediente", "expediente", "fk_dependencia={$idDependencia} and nucleo=1 and estado=1", "", $conn);
+                    if ($existDep['numcampos']) {
+                        $idsExp[$key] = $existDep[0]['idexpediente'];
                     } else {
-                        $codPadreExp = $idsExp[$key - 1];
-                    }
-                    $Expediente = new Expediente();
-                    $attributes = [
-                        'nombre' => $DependenciaData->nombre,
-                        'fondo' => $DependenciaData->nombre,
-                        'descripcion' => $DependenciaData->nombre,
-                        'codigo' => $DependenciaData->codigo,
-                        'codigo_numero' => $DependenciaData->codigo,
-                        'cod_padre' => $codPadreExp,
-                        'fk_idcaja' => 0,
-                        'propietario' => 0,
-                        'fk_serie' => 0,
-                        'fk_dependencia' => $idDependencia,
-                        'cod_arbol' => 0,
-                        'agrupador' => 1,
-                        'fk_entidad_serie' => 0,
-                        'nucleo' => 1
-                    ];
-                    $Expediente->SetAttributes($attributes);
-                    $infoExpediente = $Expediente->CreateExpediente();
-                    if ($infoExpediente['exito']) {
-                        $idsExp[$key] = $Expediente->getPK();
+                        $DependenciaData = new Dependencia($idDependencia);
+                        if ($key == 0) {
+                            $codPadreExp = $key;
+                        } else {
+                            $codPadreExp = $idsExp[$key - 1];
+                        }
+                        $Expediente = new Expediente();
+                        $attributes = [
+                            'nombre' => $DependenciaData->nombre,
+                            'fondo' => $DependenciaData->nombre,
+                            'descripcion' => $DependenciaData->nombre,
+                            'codigo' => $DependenciaData->codigo,
+                            'codigo_numero' => $DependenciaData->codigo,
+                            'cod_padre' => $codPadreExp,
+                            'fk_idcaja' => 0,
+                            'propietario' => 0,
+                            'fk_serie' => 0,
+                            'fk_dependencia' => $idDependencia,
+                            'cod_arbol' => 0,
+                            'agrupador' => 1,
+                            'fk_entidad_serie' => 0,
+                            'nucleo' => 1
+                        ];
+                        $Expediente->SetAttributes($attributes);
+                        $infoExpediente = $Expediente->CreateExpediente();
+                        if ($infoExpediente['exito']) {
+                            $idsExp[$key] = $Expediente->getPK();
+                        }
                     }
                 }
-            }
-            if (count($idsDep) == count($idsExp)) {
-                $response['exito'] = 1;
-                $response['data']['idexpediente'] = $idsExp;
+                if (count($idsDep) == count($idsExp)) {
+                    $response['exito'] = 1;
+                    $response['data']['idexpediente'] = $idsExp;
+                } else {
+                    $response['message'] = 'Error, No se crearon todos los expedientes';
+                }
             } else {
-                $response['message'] = 'Error, No se crearon todos los expedientes';
+                $response['message'] = 'Error, la serie NO existe! id:' . $this->fk_serie;
             }
+
         } else {
             $response['message'] = 'Error, la dependencia NO existe! id:' . $this->fk_dependencia;
         }

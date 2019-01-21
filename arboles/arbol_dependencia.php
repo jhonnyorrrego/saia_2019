@@ -29,6 +29,7 @@ class ArbolDependencia
     public $enableCheck = false;
     public $depserie = 0;
     public $inactiveSelected = [];
+    public $origenPagina;
 
     public function __construct($parametros)
     {
@@ -62,6 +63,9 @@ class ArbolDependencia
         if (!empty($this->parametros["seleccionados"])) {
             $this->seleccionados = explode(",", $this->parametros["seleccionados"]);
             $this->cantSel = count($this->seleccionados);
+        }
+        if (!empty($this->parametros["origenPagina"])) {
+            $this->origenPagina = $this->parametros["origenPagina"];
         }
 
         if (isset($this->parametros["depserie"])) {
@@ -152,12 +156,14 @@ class ArbolDependencia
                                     unset($item["unselectableStatus"]);
                                 }
                                 if ($item["selected"]) {
-                                    if (!in_array($papas[$i]["iddependencia"], $this->inactiveSelected)) {
+                                    if ($this->origenPagina == 'vincular') {
+                                        if (!in_array($papas[$i]["iddependencia"], $this->inactiveSelected)) {
+                                            $item["unselectableStatus"] = true;
+                                        }
+                                    } else if ($this->origenPagina == 'add') {
                                         $item["unselectableStatus"] = true;
                                     }
-
                                 }
-
                             }
                         }
 

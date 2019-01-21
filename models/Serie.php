@@ -126,7 +126,9 @@ class Serie extends Model
                         $response['message'] = 'No se pudo vincular las dependencias a la serie';
                     }
                 } else {
+                    var_dump($this->getPK());
                     $response['message'] = 'Error al guardar la Serie';
+                    die("---");
                 }
             } else {
                 $response['message'] = 'Faltan las dependencias para vincular la serie';
