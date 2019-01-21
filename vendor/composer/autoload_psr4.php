@@ -38,9 +38,11 @@ return array(
     'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
     'Psr\\Cache\\' => array($vendorDir . '/psr/cache/src'),
     'PhpOffice\\PhpWord\\' => array($vendorDir . '/phpoffice/phpword/src/PhpWord'),
+    'PhpOffice\\PhpSpreadsheet\\' => array($vendorDir . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet'),
     'PhpOffice\\Common\\' => array($vendorDir . '/phpoffice/common/src/Common'),
     'PackageVersions\\' => array($vendorDir . '/ocramius/package-versions/src/PackageVersions'),
     'Mpdf\\' => array($vendorDir . '/mpdf/mpdf/src'),
+    'Matrix\\' => array($vendorDir . '/markbaker/matrix/classes/src'),
     'LasseRafn\\Initials\\' => array($vendorDir . '/lasserafn/php-initials/src'),
     'LasseRafn\\InitialAvatarGenerator\\' => array($vendorDir . '/lasserafn/php-initial-avatar-generator/src'),
     'LasseRafn\\' => array($vendorDir . '/lasserafn/php-string-script-language/src'),
@@ -64,5 +66,6 @@ return array(
     'Doctrine\\Bundle\\DoctrineBundle\\' => array($vendorDir . '/doctrine/doctrine-bundle'),
     'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
     'Corley\\Composer\\' => array($baseDir . '/instalador'),
+    'Complex\\' => array($vendorDir . '/markbaker/complex/classes/src'),
     'Aws\\' => array($vendorDir . '/aws/aws-sdk-php/src'),
 );

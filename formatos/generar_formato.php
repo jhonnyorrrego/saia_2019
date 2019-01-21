@@ -2457,7 +2457,7 @@ span.fancytree-expander {
         } else {
             $fecha_por_defecto = '';
             if (strtoupper($campo["tipo_dato"]) == "DATE") {
-                $formato_fecha = "L";
+                $formato_fecha = "format: 'YYYY-MM-DD'";
 
                 if ($accion == "adicionar") {
                     if ($campo["predeterminado"] == "now()") {
@@ -2468,7 +2468,7 @@ span.fancytree-expander {
                 }
                 $indice_tabindex++;
             } else if (strtoupper($campo["tipo_dato"]) == "DATETIME") {
-                $formato_fecha = "L LT";
+                $formato_fecha = "YYYY-MM-DD LT";
                 if ($accion == "adicionar") {
                     if ($campo["predeterminado"] == "now()") {
                         $fecha_por_defecto = "<?php echo(date('Y-m-d H:i')); ?>";

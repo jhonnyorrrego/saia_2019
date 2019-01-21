@@ -59,7 +59,8 @@ include_once ($ruta_db_superior . "librerias_saia.php");
                 var registros_seleccionados = "";
                 var mensajero = "";
                 var error = 0;
-                $('.accion_distribucion').each(function () {
+                
+                $("input[name=btSelectItem]").each(function () {
                     var checkbox = $(this);
                     if (checkbox.is(':checked') === true) {
                         var iddistribucion = $(this).val();
@@ -111,7 +112,7 @@ include_once ($ruta_db_superior . "librerias_saia.php");
             if (valor == 'boton_finalizar_entrega') {
 
                 var registros_seleccionados = "";
-                $('.accion_distribucion').each(function () {
+                $("input[name=btSelectItem]").each(function () {
                     var checkbox = $(this);
                     if (checkbox.is(':checked') === true) {
                         var iddistribucion = $(this).val();
@@ -150,7 +151,7 @@ include_once ($ruta_db_superior . "librerias_saia.php");
             if (valor == 'boton_confirmar_recepcion_distribucion') {
 
                 var registros_seleccionados = "";
-                $('.accion_distribucion').each(function () {
+                $("input[name=btSelectItem]").each(function () {
                     var checkbox = $(this);
                     if (checkbox.is(':checked') === true) {
                         var iddistribucion = $(this).val();
@@ -190,7 +191,7 @@ include_once ($ruta_db_superior . "librerias_saia.php");
             if (valor == 'boton_finalizar_entrega_personal') {
 
                 var registros_seleccionados = "";
-                $('.accion_distribucion').each(function () {
+                $("input[name=btSelectItem]").each(function () {
                     var checkbox = $(this);
                     if (checkbox.is(':checked') === true) {
                         var iddistribucion = $(this).val();
@@ -228,10 +229,10 @@ include_once ($ruta_db_superior . "librerias_saia.php");
             }
 
             if (valor == 'seleccionar_todos_accion_distribucion') {
-                $('.accion_distribucion').attr('checked', true);
+                $("input[name=btSelectItem]").attr('checked', true);
             }
             if (valor == 'quitar_seleccionados_accion_distribucion') {
-                $('.accion_distribucion').attr('checked', false);
+                $("input[name=btSelectItem]").attr('checked', false);
             }
 
             //FILTRO TIPO ORIGEN DEL DOCUMENTO

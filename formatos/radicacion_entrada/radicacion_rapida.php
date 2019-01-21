@@ -131,24 +131,24 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 				<input type="hidden" name="target" value="_self">
 			</form>
 			<script>
-				$(document).ready(function() {
-					$("#form_radicacion_rapida").validate({
-						ignore: [],
-						submitHandler : function(form) {
-							var generar_consecutivo = $('#generar_consecutivo').val();
-							if (!generar_consecutivo || generar_consecutivo == '') {
-								top.noty({
-									text : '<b>ATENCI&Oacute;N</b><br>De seleccionar una opci&oacute;n para radicar!',
-									type : 'warning',
-									layout : 'topCenter',
-									timeout : 2500
-								});
-								return (false);
-							}
-							form.submit();
-						}
-					});
-				});
+                            $(document).ready(function() {
+                                $("#form_radicacion_rapida").validate({
+                                    ignore: [],
+                                    submitHandler : function(form) {
+                                        var generar_consecutivo = $('#generar_consecutivo').val();
+                                        if (!generar_consecutivo || generar_consecutivo == '') {
+                                            top.notification({
+                                                message: "<b>ATENCI&Oacute;N</b><br>De seleccionar una opci&oacute;n para radicar!",
+                                                type: "warning",
+                                                duration: "2500"
+                                            });
+
+                                            return (false);
+                                        }
+                                        form.submit();
+                                    }
+                                });
+                            });
 			</script>
 	</body>
 </html>
