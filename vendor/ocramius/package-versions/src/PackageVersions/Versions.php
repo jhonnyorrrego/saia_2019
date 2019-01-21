@@ -44,6 +44,8 @@ final class Versions
   'lasserafn/php-initials' => 'v2.20@ba4669e77552986998a9d1b34515a4e0c0f7acd2',
   'lasserafn/php-string-script-language' => '0.1@afde8404f211af21f7ec8b453eb84ce70bbd3692',
   'luracast/restler' => '3.0.0@188968f6a15796077350f1be9c461f8d02c559a8',
+  'markbaker/complex' => '1.4.7@1ea674a8308baf547cbcbd30c5fcd6d301b7c000',
+  'markbaker/matrix' => '1.1.4@6ea97472b5baf12119b4f31f802835b820dd6d64',
   'mpdf/mpdf' => 'v7.1.8@5a124ed382cf9241597c7ba12f98a756daa7f8df',
   'mtdowling/jmespath.php' => '2.4.0@adcc9531682cf87dfda21e1fd5d0e7a41d292fac',
   'myclabs/deep-copy' => '1.8.1@3e01bdad3e18354c3dce54466b7fbe33a9f9f7f8',
@@ -52,6 +54,8 @@ final class Versions
   'paragonie/random_compat' => 'v9.99.99@84b4dfb120c6f9b4ff7b3685f9b8f1aa365a0c95',
   'pclzip/pclzip' => '2.8.2@19dd1de9d3f5fc4d7d70175b4c344dee329f45fd',
   'phpoffice/common' => '0.2.9@edb5d32b1e3400a35a5c91e2539ed6f6ce925e4d',
+  'phpoffice/phpexcel' => '1.8.2@1441011fb7ecdd8cc689878f54f8b58a6805f870',
+  'phpoffice/phpspreadsheet' => '1.6.0@bf00f0cc5f55c354018f9a9ef15e6e3e1a229051',
   'phpoffice/phpword' => '0.16.0@7b7d4e4936014544aa706f4c03d3ac925d74beb9',
   'psr/cache' => '1.0.1@d11b50ad223250cf17b86e38383413f5a6764bf8',
   'psr/container' => '1.0.0@b7ce3b176482dbbc1245ebf52b181af44c2cf55f',
@@ -89,7 +93,7 @@ final class Versions
   'zendframework/zend-code' => '3.3.1@c21db169075c6ec4b342149f446e7b7b724f95eb',
   'zendframework/zend-escaper' => '2.6.0@31d8aafae982f9568287cb4dce987e6aff8fd074',
   'zendframework/zend-eventmanager' => '3.2.1@a5e2583a211f73604691586b8406ff7296a946dd',
-  '__root__' => 'dev-develop@398af5ac0b53e39ede65f3c35e3ac52fcd3963e5',
+  '__root__' => 'dev-develop@44bc4b11cf818ae88c65b52897965a8a80311369',
 );
 
     private function __construct()
