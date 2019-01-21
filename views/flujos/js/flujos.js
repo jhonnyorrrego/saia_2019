@@ -98,7 +98,6 @@ $(function () {
                 		}
                 	}
             	}
-            	console.log(paramName, lista_archivos, Object.values(lista_archivos).join());
 
             	$('#'+paramName).val(Object.values(lista_archivos).join());
                 if($('#dz_campo_'+idcampoFormato).find('label.error').length) {
