@@ -281,7 +281,7 @@ abstract class Model extends  Events {
     public static function getPrimaryLabel() {
         $caller = get_called_class();
         $instance = new $caller();
-        return $instance->getPrimnary();
+        return $instance->getPrimary();
     }
 
     /**
