@@ -1,5 +1,4 @@
 <?php
-require_once $ruta_db_superior . 'controllers/autoload.php';
 
 class Flujo extends Model {
 
@@ -14,9 +13,12 @@ class Flujo extends Model {
     protected $fecha_creacion;
     protected $fecha_modificacion;
     protected $version_actual;
+    protected $mostrar_codigo;
 
     function __construct($id = null) {
-        return parent::__construct($id);
+    	static::$table = "wf_flujo";
+    	static::$primary = "idflujo";
+        parent::__construct($id);
     }
 
     protected function defineAttributes() {
@@ -31,12 +33,16 @@ class Flujo extends Model {
                 "duracion",
                 "version_actual",
                 "fecha_creacion",
-                "fecha_modificacion"
+                "fecha_modificacion",
+                "info",
+            	"mostrar_codigo"
             ],
             'date' => [
                 "fecha_creacion",
                 "fecha_modificacion",
-            ]
+            ],
+            "table" => "wf_flujo",
+            "primary" => "idflujo"
         ];
     }
 

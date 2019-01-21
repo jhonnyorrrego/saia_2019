@@ -35,7 +35,7 @@ $extensiones = array("filter" => array());
 $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
 ?>
 <form id="flowForm">
-<input type="hidden" id="form_uuid" value="<?php uniqid();?>">
+<input type="hidden" id="form_uuid" value="<?php echo uniqid();?>">
 <fieldset>
 <legend>Informaci&oacute;n general</legend>
   <div class="row">
@@ -64,16 +64,16 @@ $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
 	  <div class="row">
         <div class="col-sm-12">
           <div class="form-group">
-            <label class="etiqueta_campo" for="version_flujo">C&oacute;digo</label>
-            <input type="text" class="form-control" id="version_flujo" name="version">
+            <label class="etiqueta_campo" for="codigo_flujo">C&oacute;digo</label>
+            <input type="text" class="form-control" id="codigo_flujo" name="codigo">
           </div>
         </div>
       </div>
 	  <div class="row">
         <div class="col-sm-12">
           <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-            <label class="form-check-label" for="exampleCheck1">Mostrar código en el nombre del Formato</label>
+            <input type="checkbox" class="form-check-input" id="mostrar_codigo_flujo" name="">
+            <label class="form-check-label" for="mostrar_codigo_flujo">Mostrar código en el nombre del Formato</label>
           </div>
         </div>
       </div>
@@ -107,7 +107,7 @@ $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
   </fieldset>
 
     <div class="form-group pb-3">
-      <button type="submit" id="guardarFlujo" class="btn btn-primary">Guardar</button>
+      <button type="button" id="guardarFlujo" class="btn btn-primary">Guardar</button>
     </div>
 </form>
 <script src="<?= $ruta_db_superior ?>views/flujos/js/flujos.js" data-consulta64="<?= $consulta64 ?>"></script>
@@ -116,11 +116,17 @@ $(function(){
 	$("#guardarFlujo").click(function(){
 		var formData = new FormData(document.getElementById("flowForm"));
 		formData.append('key', localStorage.getItem("key"));
-		for(var pair of formData.entries()) {
-			   console.log(pair[0]+ ': '+ pair[1]);
+		
+		$.ajax({
+			url: "<?= $ruta_db_superior ?>app/flujo/guardarFlujo.php",
+			type: "POST",
+			data: formData,
+			processData: false,  // tell jQuery not to process the data
+			contentType: false,  // tell jQuery not to set contentType
+			success: function(response) {
+			  console.log(response);
 			}
-		//console.log("archivos", lista_archivos);
-		return false;
+		});
 	});
 });
 </script>
