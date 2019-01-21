@@ -10,6 +10,7 @@ while ($max_salida > 0) {
     $ruta .= '../';
     $max_salida--;
 }
+
 $idflujo = null;
 if(isset($_REQUEST["idflujo"])) {
     $idflujo = $_REQUEST["idflujo"];
@@ -28,11 +29,11 @@ if(isset($_REQUEST["idflujo"])) {
 
 <div id="canvas"></div>
 
-<button id="save-button">Guardar diagrama</button>
+<button type="button" class="btn btn-primary btn-sm" id="save-button">Guardar diagrama</button>
 
 <script>
 
-    var diagramUrl = '<?= $ruta_db_superior ?>/views/flujos/flujo_ejemplo.bpmn';
+    var diagramUrl = '<?= $ruta_db_superior ?>views/flujos/flujo_ejemplo.bpmn';
 
     // modeler instance
     var bpmnModeler = new BpmnJS({
@@ -57,8 +58,8 @@ if(isset($_REQUEST["idflujo"])) {
 
     var events = [
   	  /*'element.hover',
-  	  'element.out',*/
-  	  'element.click',
+  	  'element.out',
+  	  'element.click',*/
   	  'element.dblclick',
   	  /*'element.mousedown',
   	  'element.mouseup'*/
@@ -68,6 +69,7 @@ if(isset($_REQUEST["idflujo"])) {
         eventBus.on(event, function(e) {
   	    // e.element = the model element
   	    // e.gfx = the graphical element
+  	    var objeto = e.element.businessObject;
   	    var tipoElem = e.element.businessObject.$type;
   	    var id = 1;
   	    if(tipoElem == "bpmn:Task" || /Gateway/.test(tipoElem) ) {
@@ -75,11 +77,12 @@ if(isset($_REQUEST["idflujo"])) {
   	    	top.topModal({
   	  	    	title: "Opciones de la tarea",
   	  	    	url: "<?= $ruta_db_superior ?>views/flujos/modal_datos_tarea.php",
-  	  	    	params: {idflujo: id, idtarea: e.element.id}
+  	  	    	params: {idflujo: id, idtarea: e.element.id, nombreTarea: objeto.name}
 	  	    });
   	    }
   	    //console.log(event, 'on', e.element);
   	    //console.log(e.element.businessObject);
+  	    console.log(e.element);
   	  });
   	});
 
@@ -93,6 +96,7 @@ if(isset($_REQUEST["idflujo"])) {
         	top.notification({type: "error", message: "No se pudo guardar el digagraam BPMN 2.0"});
           // return console.error('No se pudo guardar el digagraam BPMN 2.0', err);
         }
+        console.log(bpmnModeler); return false;
 
         $.ajax({
             url: 'test.jsp',
