@@ -507,6 +507,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
     global $conn, $ruta_db_superior;
 
     $datos = busca_filtro_tabla("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio," . fecha_db_obtener("fecha_oficio_entrada", "Y-m-d") . " AS fecha_oficio_entrada," . fecha_db_obtener("fecha_radicacion_entrada", "Y-m-d") . " AS fecha_radicacion_entrada,numero_guia,empresa_transportado,requiere_recogida,tipo_mensajeria", "ft_radicacion_entrada", "documento_iddocumento=" . $iddoc, "", $conn);
+    
     $documento = busca_filtro_tabla("numero,tipo_radicado," . fecha_db_obtener("fecha", "Y-m-d") . " AS fecha", "documento", "iddocumento=" . $iddoc, "", $conn);
     if ($documento[0]['tipo_radicado'] == 1) {
         $tipo = "E";
@@ -551,6 +552,10 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
   </table>
   <table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">';
     if ($datos[0]['tipo_origen'] == 1) {
+        print_r($datos);
+        echo("<hr>");
+        print_r($datos[0]['numero_oficio']);
+        die("--");
         $empresa_transportadora = mostrar_valor_campo('empresa_transportado', $idformato, $iddoc, 1);
         $tabla .= "<tr>
       <td style='width:25%;'><strong>N&uacute;mero Oficio:</strong></td>
@@ -568,7 +573,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
         $recogida = ($datos[0]["requiere_recogida"] == 1) ? "Si" : "No";
         $entrega = ($datos[0]["tipo_mensajeria"] == 1) ? "Si" : "No";
         $tabla .= "<tr>
-      <td style='width:25%;'><strong>Requiere servicio de recogida?:</strong></td>
+      <td style='width:23%;'><strong>Requiere servicio de recogida?:</strong></td>
       <td colspan=2 style='width:25%;'>" . $recogida . "</td>
       <td style='width:25%;'><strong>Requiere servicio de entrega?:</strong></td>
       <td colspan=2 style='width:25%;'>" . $entrega . "</td>
@@ -688,7 +693,7 @@ function post_aprobar_rad_entrada($idformato, $iddoc) {
             abrir_url($ruta_db_superior . "colilla.php?target=_self&colilla_vertical=" . $_REQUEST['colilla'] . "&key=" . $iddoc . "&enlace=" . $enlace, "_self");
             die();
         } else if ($_REQUEST["digitalizacion"] == 0) {
-            $enlace = "ordenar.php?key=" . $iddoc . "&accion=mostrar&mostrar_formato=1";
+            $enlace = "views/documento/index_acordeon.php?documentId=" . $iddoc;
             abrir_url($ruta_db_superior . "colilla.php?target=_self&key=" . $iddoc . "&colilla_vertical=" . $_REQUEST['colilla'] . "&enlace=" . $enlace, '_self');
             die();
         }
