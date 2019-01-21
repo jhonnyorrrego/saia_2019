@@ -51,6 +51,7 @@ if (@$_REQUEST["accion"] && @$_REQUEST["accion"] == "eliminar_temporal") {
 	$uploadHandler -> addRule('size', ['max' => $max_tamanio], '{label} debe ser de menos de {max} bytes', $_REQUEST["nombre_campo"]);
 	// $uploadHandler->addRule('imageratio', ['ratio' => 1], '{label} should be a sqare image', $_REQUEST["nombre_campo"]);
 
+	//print_r($_FILES);
 	$result = $uploadHandler -> process($_FILES[$_REQUEST["nombre_campo"]]);
 	$resp = array();
 	if ($result -> isValid()) {
@@ -67,6 +68,8 @@ if (@$_REQUEST["accion"] && @$_REQUEST["accion"] == "eliminar_temporal") {
 			$info = guardar($info, $uuid, $ruta_temporal);
 			$resp[$uuid] = $info;
 		}
+	} else {
+	    var_dump($result->getMessages()); die("KAPUT");
 	}
 	echo json_encode($resp);
 }

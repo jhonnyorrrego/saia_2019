@@ -81,6 +81,15 @@ ul.fancytree-container {
 .highlight:not(.djs-connection) .djs-visual > :nth-child(1) {
   fill: yellow !important; /* color elements as green */
 }
+
+.form-group label {
+letter-spacing: unset !important;
+}
+
+.table thead tr th {
+letter-spacing: unset !important;
+}
+
 </style>
 </head>
 <body>
