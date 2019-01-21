@@ -913,7 +913,7 @@ function buscar_dependencia($iformato = 0) {
 
     $html = '';
     if ($numfilas > 1) {
-        $html .= '<select class ="form-control" name="dependencia" id="dependencia" class="required">';
+        $html .= '<select class ="full-width" name="dependencia" id="dependencia" class="required">';
         if ($dep_sel == '') {
             $html .= "<option value='' selected>Por favor seleccione...</option>";
         }
@@ -925,7 +925,8 @@ function buscar_dependencia($iformato = 0) {
                 $html .= "<option value='" . $dep[$i]["iddependencia_cargo"] . "'>" . $dep[$i]["nombre"] . " - (" . $dep[$i]["cargo"] . ")</option>";
             }
         }
-        $html .= '</select>';
+        $html .= '</select>'
+                . '<script>$("#dependencia").select2();</script>';
     } else if ($numfilas == 1) {
         $html .= "<input class='required' type='hidden' value='" . $dep[0]["iddependencia_cargo"] . "' id='dependencia' name='dependencia'><label class ='form-control'>" . $dep[0]["nombre"] . " - (" . $dep[0]["cargo"] . ")</label>";
     } else {
