@@ -12,8 +12,6 @@ abstract class Events {
 
 abstract class Model extends  Events {
     protected $dbAttributes;
-    public static $table;
-    public static $primary;
 
     /**
      * class initialization
@@ -63,6 +61,22 @@ abstract class Model extends  Events {
         ;
     }
 
+    public function getTable() {
+        if (empty($this->dbAttributes->table)) {
+            $Stringy = new Stringy(get_called_class());
+            $this->dbAttributes->table = $Stringy -> underscored();
+        }
+        return $this->dbAttributes->table;
+    }
+
+    public function getPrimary() {
+        if (empty($this->dbAttributes->primary)) {
+            $Stringy = new Stringy(get_called_class());
+            $this->dbAttributes->primary = $Stringy -> underscored();
+        }
+        return $this->dbAttributes->primary;
+    }
+
     /**
      * define database attributes
      */
@@ -90,11 +104,12 @@ abstract class Model extends  Events {
      *      false if some attribute is not included on safeAttributes
      */
     public function setAttributes($attributes) {
-        $diff = array_diff(array_keys($attributes), $this -> getSafeAttributes());
-
-        if (!count($diff)) {
+        if (count($attributes)) {
+            $seguros = $this -> getSafeAttributes();
             foreach ($attributes as $key => $value) {
-                $this -> $key = $value;
+                if(in_array($key, $seguros)) {
+                    $this -> $key = $value;
+                }
             }
         } else {
             $error = true;
@@ -264,21 +279,18 @@ abstract class Model extends  Events {
      * @return string
      */
     public static function getPrimaryLabel() {
-        return self::$primary ? self::$primary : 'id' . self::getTableName();
+        $caller = get_called_class();
+        $instance = new $caller();
+        return $instance->getPrimnary();
     }
 
     /**
      * define table name
      */
     public static function getTableName() {
-        if (self::$table) {
-            $response = self::$table;
-        } else {
-            $Stringy = new Stringy(get_called_class());
-            $response = $Stringy -> underscored();
-        }
-
-        return $response;
+        $caller = get_called_class();
+        $instance = new $caller();
+        return $instance->getTable();
     }
 
     /**

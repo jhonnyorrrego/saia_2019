@@ -39,11 +39,11 @@ class AnexoTarea extends Model
         return new Funcionario($this->fk_funcionario);
     }
 
-    public function getFileSize(){        
+    public function getFileSize(){
         $data = StorageUtils::resolver_ruta($this->ruta);
         $bites = $data['clase']->get_filesystem()->size($data['ruta']);
         $size = round($bites / 1000);
-        
+
         return $size . ' Kb';
     }
 

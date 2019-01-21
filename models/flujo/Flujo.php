@@ -14,7 +14,7 @@ class Flujo extends Model {
     protected $fecha_modificacion;
     protected $version_actual;
     protected $mostrar_codigo;
-    
+
     function __construct($id = null) {
     	static::$table = "wf_flujo";
     	static::$primary = "idflujo";
@@ -40,7 +40,9 @@ class Flujo extends Model {
             'date' => [
                 "fecha_creacion",
                 "fecha_modificacion",
-            ]
+            ],
+            "table" => "wf_flujo",
+            "primary" => "idflujo"
         ];
     }
 
