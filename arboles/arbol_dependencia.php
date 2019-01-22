@@ -28,8 +28,6 @@ class ArbolDependencia
 
     public $enableCheck = false;
     public $depserie = 0;
-    public $inactiveSelected = [];
-    public $origenPagina;
 
     public function __construct($parametros)
     {
@@ -64,36 +62,7 @@ class ArbolDependencia
             $this->seleccionados = explode(",", $this->parametros["seleccionados"]);
             $this->cantSel = count($this->seleccionados);
         }
-        if (!empty($this->parametros["origenPagina"])) {
-            $this->origenPagina = $this->parametros["origenPagina"];
-        }
-
-        if (isset($this->parametros["depserie"])) {
-            $this->depserie = $this->parametros["depserie"];
-
-            if (isset($this->parametros['idserie'])) {
-                $idsDep = [];
-                $Serie = new Serie($this->parametros['idserie']);
-                $codPadre = $Serie->getCodPadre();
-                if ($codPadre) {
-                    $EntidadSerie = $codPadre->getEntidadSerieFk();
-                    $cant = count($EntidadSerie);
-                    if ($cant) {
-                        for ($i = 0; $i < $cant; $i++) {
-                            $idsDep[] = $EntidadSerie[$i]->fk_dependencia;
-                        }
-                        if ($this->cantSel) {
-                            $idsDep = array_diff($this->seleccionados, $idsDep);
-                        }
-                    }
-                }
-                $this->inactiveSelected = $idsDep;
-            } else {
-                die("Faltan Parametros obligatorios");
-            }
-
-        }
-
+        
         if (!empty($this->parametros["excluidos"])) {
             $this->condicion_ad .= " and iddependencia not in (" . $this->parametros["excluidos"] . ")";
         }
@@ -107,9 +76,8 @@ class ArbolDependencia
         }
     }
 
-    private function llena_dependencia($id, $enableCheck = false)
+    private function llena_dependencia($id)
     {
-        $anterior = $enableCheck;
         $objetoJson = [];
         if ($id == 0) {
             $papas = busca_filtro_tabla("", "dependencia", "(cod_padre=0 or cod_padre is null)" . $this->condicion_ad, "nombre ASC", $conn);
@@ -140,44 +108,12 @@ class ArbolDependencia
                         $item["selected"] = true;
                     }
                 }
-
-                if ($this->depserie) {
-                    if ($id != 0) {
-                        $item["checkbox"] = $this->checkbox;
-                        if (!isset($item["unselectableStatus"])) {
-                            if ($this->cantSel) {
-
-                                $item["unselectableStatus"] = true;
-                                if ($item["selected"]) {
-                                    $enableCheck = true;
-                                }
-
-                                if ($enableCheck) {
-                                    unset($item["unselectableStatus"]);
-                                }
-                                if ($item["selected"]) {
-                                    if ($this->origenPagina == 'vincular') {
-                                        if (!in_array($papas[$i]["iddependencia"], $this->inactiveSelected)) {
-                                            $item["unselectableStatus"] = true;
-                                        }
-                                    } else if ($this->origenPagina == 'add') {
-                                        $item["unselectableStatus"] = true;
-                                    }
-                                }
-                            }
-                        }
-
-
-                    }
-                } else {
-                    $item["checkbox"] = $this->checkbox;
-                }
-
+               
+                $item["checkbox"] = $this->checkbox;
                 $hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"] . $this->condicion_ad, "", $conn);
                 if ($hijos[0]["cant"]) {
                     $item["children"] = $this->llena_dependencia($papas[$i]["iddependencia"], $enableCheck);
                 }
-                $enableCheck = $anterior;
                 $objetoJson[] = $item;
             }
         }
