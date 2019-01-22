@@ -97,7 +97,7 @@ class UtilitiesController {
      * @return int
      *
      */
-    function dias_habiles_entre_fechas($Fecha_inicial, $Fecha_final) {
+    public static function dias_habiles_entre_fechas($Fecha_inicial, $Fecha_final) {
         global $conn;
 
         if (!is_object($Fecha_inicial) || !is_object($Fecha_final)) {

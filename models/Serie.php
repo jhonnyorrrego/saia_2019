@@ -95,6 +95,7 @@ class Serie extends Model
                 if ($this->save()) {
                     $dependencia = explode(",", $dependenciasVinculadas);
                     $cd = count($dependencia);
+
                     $ok = 0;
                     $attributes = [
                         'fk_serie' => $this->idserie,
@@ -112,7 +113,10 @@ class Serie extends Model
                             $idsEntSe[] = $EntidadSerie->getPK();
                             $ok++;
                         }
+                        ProcessExpedienteController::createEntidadSerieCodArbol($this->cod_arbol, $attributes);
+
                     }
+
                     if ($ok == $cd) {
                         $response['exito'] = 1;
                         $response['data']['identidad_serie'] = $idsEntSe;
@@ -126,9 +130,7 @@ class Serie extends Model
                         $response['message'] = 'No se pudo vincular las dependencias a la serie';
                     }
                 } else {
-                    var_dump($this->getPK());
                     $response['message'] = 'Error al guardar la Serie';
-                    die("---");
                 }
             } else {
                 $response['message'] = 'Faltan las dependencias para vincular la serie';
