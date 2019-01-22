@@ -51,8 +51,8 @@ if (@$_REQUEST["accion"] && @$_REQUEST["accion"] == "eliminar_temporal") {
 	$uploadHandler -> addRule('size', ['max' => $max_tamanio], '{label} debe ser de menos de {max} bytes', $_REQUEST["nombre_campo"]);
 	// $uploadHandler->addRule('imageratio', ['ratio' => 1], '{label} should be a sqare image', $_REQUEST["nombre_campo"]);
 
-	//print_r($_FILES);
 	$result = $uploadHandler -> process($_FILES[$_REQUEST["nombre_campo"]]);
+	//print_r($result);
 	$resp = array();
 	if ($result -> isValid()) {
 		if ($result instanceof Sirius\Upload\Result\Collection) {
