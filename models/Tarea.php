@@ -66,7 +66,7 @@ class Tarea extends Model
         $Limit = new DateTime($this->fecha_final);
         $Today = new DateTime();
 
-        $diference = UtilitiesController::dias_habiles_entre_fechas($Today, $Limit);
+        $diference = DateController::dias_habiles_entre_fechas($Today, $Limit);
 
         if($diference < 3){
             $color = '#dc3545';

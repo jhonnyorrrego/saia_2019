@@ -48,7 +48,7 @@ class Configuracion extends Model
      public static function findByNames($nombres) {
          global $conn;
          $cond = implode("','", $nombres);
-         $data = busca_filtro_tabla('nombre,valor', 'configuracion', "nombre IN('" . $cond . "'", '', $conn);
+         $data = busca_filtro_tabla('nombre,valor', 'configuracion', "nombre IN('" . $cond . "')", '', $conn);
          return self::convertToObjectCollection($data);
     }
 

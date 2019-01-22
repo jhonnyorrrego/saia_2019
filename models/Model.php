@@ -489,7 +489,10 @@ abstract class Model extends Events
     public static function executeUpdate($fields, $conditions)
     {
         $set = '';
+        $className = get_called_class();
+        $Instance = new $className();
 
+        $dateAttributes = $Instance->getDateAttributes();
         foreach ($fields as $attribute => $value) {
             if (strlen($set)) {
                 $set .= ',';
