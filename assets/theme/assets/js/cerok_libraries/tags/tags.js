@@ -27,12 +27,12 @@ class Tags {
         return this._selections;
     }
 
-    set dataBind(data = 'document'){
+    set dataBind(data){
         this._dataBind = data;
     }
 
     get dataBind(){
-        return this._dataBind;
+        return this._dataBind || 'document';
     }
     
     createList(){
