@@ -377,6 +377,7 @@ abstract class Model extends Events
 
         $safeAttributes = $Instance->getSafeAttributes();
         $dateAttributes = $Instance->getDateAttributes();
+        $safeAttributes[] = $Instance->getPkName();
         $select = '';
 
         $fields = count($fields) ? $fields : $safeAttributes;
@@ -442,6 +443,7 @@ abstract class Model extends Events
     {
         $class = get_called_class();
         $total = isset($records['numcampos']) ? $records['numcampos'] : count($records);
+
         $data = [];
         for ($row = 0; $row < $total; $row++) {
             $Instance = new $class();
