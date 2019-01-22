@@ -1,23 +1,17 @@
 <?php
-
-class UtilitiesController {
-
-    /**
-     * Genera el archivo temporal con nombre y ruta que se especifique (almacenamiento nuevo)
-     *
-     * @param string $ruta
-     *            string obtenido de la DB
-     * @param string $suf
-     *            Sufijo que se concatena al Nombre de la imagen
-     * @param string $nameFile
-     *            Nombre de la imagen
-     * @param boolean $force
-     *            para sobreescribir la imagen
-     * @param string $ruta_almacenar
-     *            ruta donde desea almacenar la imagen
-     * @author Andres.Agudelo
-     */
-    public static function getFileTemp($param = array("ruta"=>NULL,"sufijo"=>"","filename"=>NULL,"force"=>false,"ruta_almacenar"=>NULL)) {
+class UtilitiesController
+{
+    /** Genera el archivo temporal con nombre y ruta que se especifique (almacenamiento nuevo)
+     * @param array 
+     * : [ruta] string obtenido de la DB
+     * : [sufijo] string Sufijo que se concatena al Nombre de la imagen
+     * : [filename] string Nombre de la imagen
+     * : [force] boolean para sobreescribir la imagen
+     * : [ruta_almacenar] string ruta donde desea almacenar la imagen
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     * */
+    public static function getFileTemp(array $param = array("ruta" => null, "sufijo" => "", "filename" => null, "force" => false, "ruta_almacenar" => null)) : array
+    {
         global $ruta_db_superior;
         $retorno = array(
             "exito" => 0,
@@ -64,13 +58,14 @@ class UtilitiesController {
     }
 
     /**
-     *
-     * @param string $nombreModulo
-     *            nombre del modulo
+     * Retorna si tiene o no permiso sobre el modulo
+     * 
+     * @param string $nombreModulo nombre del modulo
      * @return boolean
-     * @author Andres.Agudelo
-     */
-    public static function permisoModulo($nombreModulo) {
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     * */
+    public static function permisoModulo(string $nombreModulo)
+    {
         $permiso = new PERMISO();
         return $permiso->acceso_modulo_perfil($nombreModulo);
     }
@@ -87,7 +82,8 @@ class UtilitiesController {
      *            binario a guardar
      * @return void
      */
-    public static function createFileDbRoute($route, $storageType, $content) {
+    public static function createFileDbRoute(string $route, string $storageType, string $content)
+    {
         $SaiaStorage = new SaiaStorage($storageType);
         $size = $SaiaStorage->almacenar_contenido($route, $content, false);
 
@@ -97,20 +93,42 @@ class UtilitiesController {
                 "ruta" => $route
             ]);
         } else {
-            $response = NULL;
+            $response = null;
         }
 
         return $response;
     }
 
     /**
+     * Retorna un array con instancias segun SQL
      *
+     * @param string $nameInstance : Nombre de la instancia a generar
+     * @param string $nameIdInstance : Nombre del campo que se enviar al constructor de la instancia
+     * @param string $sql : Consulta SQL 
+     * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public static function instanceSql(string $nameInstance, string $nameIdInstance, string $sql) : array
+    {
+        $data = [];
+        $consulta = ejecuta_filtro_tabla($sql);
+        if ($consulta['numcampos']) {
+            for ($i = 0; $i < $consulta['numcampos']; $i++) {
+                $data[] = new $nameInstance($consulta[$i][$nameIdInstance]);
+            }
+        }
+        return $data;
+    }
+
+    /** 
      * @param string $rutaBase
      * @param string $storageType
      * @param int $idTemp
-     * @return array|string[]
+     * @return array | string[]
      */
-    public static function moverAnexoTemporal($rutaBase, $storageType, $idTemp, $borrar = true) {
+
+    public static function moverAnexoTemporal($rutaBase, $storageType, $idTemp, $borrar = true)
+    {
         global $conn, $ruta_db_superior;
         $storage = new SaiaStorage($storageType);
         $dir_anexos = array();
@@ -135,7 +153,7 @@ class UtilitiesController {
                     );
 
                     // eliminar el temporal
-                    if($borrar) {
+                    if ($borrar) {
                         unlink($ruta_temporal);
                         unlink("$ruta_temporal.lock");
 

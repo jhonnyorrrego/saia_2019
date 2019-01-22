@@ -3336,8 +3336,12 @@ function cerrar_ventana(){
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase> */
-function ejecuta_filtro_tabla($sql2, $conn)
-{
+function ejecuta_filtro_tabla($sql2, $conn2=null){
+    global $conn;
+    if($conn2){
+        $conn= $conn2;
+    }
+
     $retorno = array();
     $rs = $conn->Ejecutar_Sql($sql2) or alerta("Error en Busqueda de Proceso SQL: $sql2");
     $temp = phpmkr_fetch_array($rs);

@@ -30,7 +30,13 @@ class Dependencia extends Model
             'codigo_arbol'
         ]];
     }
-
+    /**
+     * Se ejecuta despues de crear la dependencia
+     * Actualiza el codigo_arbol de la dependencia
+     *
+     * @return void
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
     protected function afterCreate()
     {
         $cod_arbol = $this->iddependencia;
@@ -42,7 +48,11 @@ class Dependencia extends Model
         $this->update();
         return true;
     }
-
+    /**
+     * retorna la etiqueta del estado de la dependencia
+     *
+     * @return void
+     */
     public function getEstado()
     {
         $estado = array(
@@ -51,7 +61,12 @@ class Dependencia extends Model
         );
         return $estado[$this->estado];
     }
-
+    /**
+     * retorna la instancia de la dependencia padre
+     *
+     * @return void
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
     public function getCodPadre()
     {
         if ($this->cod_padre) {

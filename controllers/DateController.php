@@ -1,5 +1,6 @@
 <?php
-class DateController {
+class DateController
+{
 
     /**
      * change date format
@@ -9,7 +10,8 @@ class DateController {
      * @param string $newFormat new format for $date
      * @return void
      */
-    public static function convertDate($date, $dateFormat, $newFormat){
+    public static function convertDate($date, $dateFormat, $newFormat)
+    {
         $DateTime = DateTime::createFromFormat($dateFormat, $date);
         return $DateTime->format($newFormat);
     }

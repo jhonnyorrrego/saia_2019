@@ -21,25 +21,20 @@ if (!$idserie) {
 	alerta('Identificador NO encontrado', 'error');
 	return false;
 }
-
 $Serie = new Serie($idserie);
 $EntidadSeries = $Serie->getEntidadSerieFk();
-var_dump($EntidadSeries);
-die();
 $idsDep = [];
 $idsEliminar = [];
 if ($EntidadSeries) {
 	foreach ($EntidadSeries as $EntSer) {
-		print_r($EntSer->getPK());
-		die("--");
-		$idsDep[] = $EntSer->fk_dependencia;
-		$idsEliminar[$EntSer->fk_dependencia] = $EntSer->getPK();
+		if($EntSer->estado){
+			$idsDep[] = $EntSer->fk_dependencia;
+			$idsEliminar[$EntSer->fk_dependencia] = $EntSer->getPK();
+		}
 	}
 }
 
 if ($sAction == "A") {
-	print_r($idsEliminar);
-	die("--");
 	$depActuales = explode(',', $_POST['fk_dependencia']);
 	$eliminados = array_diff($idsDep, $depActuales);
 	$cantDelete = count($eliminados);
@@ -52,9 +47,6 @@ if ($sAction == "A") {
 	if ($cantDelete) {
 		$okDel = 0;
 		foreach ($eliminados as $iddependencia) {
-			print_r($idsEliminar);
-			var_dump($idsEliminar[$iddependencia]);
-			die();
 			$EntidadSerie = new EntidadSerie($idsEliminar[$iddependencia]);
 			$info = $EntidadSerie->inactiveEntidadSerie();
 			if ($info['exito']) {
@@ -88,7 +80,7 @@ if ($sAction == "A") {
 			if ($infoEntidadSerie['exito']) {
 				$okNew++;
 			}
-			ProcessExpedienteController::createEntidadSerieCodArbol($Serie->cod_arbol,$attributes);
+			ProcessExpedienteController::createEntidadSerieCodArbol($Serie->cod_arbol, $attributes);
 		}
 		if ($cantNew == $okNew) {
 			$exitoNew = 1;

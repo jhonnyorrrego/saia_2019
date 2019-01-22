@@ -260,7 +260,7 @@ abstract class Model extends Events
 
     public static function executeDelete($conditions = [])
     {
-        $sql = 'DELETE FROM ' . self::getTableName() . ' where ' . self::createCondition($conditions);
+        $sql = 'DELETE FROM ' . self::getTableName() . ' WHERE ' . self::createCondition($conditions);
         return phpmkr_query($sql);
     }
 

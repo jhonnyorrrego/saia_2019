@@ -127,9 +127,9 @@ function llena_serie($id, $iddep) {
     global $conn;
     $objetoJson = array();
     if ($id == 0) {
-        $papas = busca_filtro_tabla("e.identidad_serie, s.*", "entidad_serie e,serie s", "e.fk_serie=s.idserie and e.fk_dependencia=" . $iddep . " and (s.cod_padre=0 or s.cod_padre is null) and s.categoria=2", "s.nombre ASC", $conn);
+        $papas = busca_filtro_tabla("e.identidad_serie, s.*", "entidad_serie e,serie s", "e.fk_serie=s.idserie and e.fk_dependencia=" . $iddep . " and (s.cod_padre=0 or s.cod_padre is null) and s.categoria=2 and e.estado=1", "s.nombre ASC", $conn);
     } else {
-        $papas = busca_filtro_tabla("e.identidad_serie,s.*", "entidad_serie e,serie s", "e.fk_serie=s.idserie and e.fk_dependencia=" . $iddep . " and s.cod_padre=" . $id . " and s.categoria=2", "s.nombre ASC", $conn);
+        $papas = busca_filtro_tabla("e.identidad_serie,s.*", "entidad_serie e,serie s", "e.fk_serie=s.idserie and e.fk_dependencia=" . $iddep . " and s.cod_padre=" . $id . " and s.categoria=2 and e.estado=1", "s.nombre ASC", $conn);
     }
     if ($papas["numcampos"]) {
         for ($i = 0; $i < $papas["numcampos"]; $i++) {

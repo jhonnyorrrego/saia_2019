@@ -51,7 +51,13 @@ class Serie extends Model
             'cod_arbol'
         ]];
     }
-
+    /**
+     * Se ejecuta despues de crear la serie
+     * actualiza el cod padre 
+     *
+     * @return void
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
     protected function afterCreate()
     {
         $cod_arbol = $this->idserie;
@@ -63,7 +69,13 @@ class Serie extends Model
         $this->update();
         return true;
     }
-
+    /**
+     * Se ejecuta despues de eliminar la serie
+     * Elimina las entidades series vinculadas a la serie
+     * 
+     * @return void
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
     protected function afterDelete()
     {
         $EntidadSerie = EntidadSerie::findAllByAttributes(['fk_serie' => $this->getPK()]);
@@ -74,8 +86,15 @@ class Serie extends Model
         }
         return true;
     }
-
-    public function createSerie(string $dependenciasVinculadas = '')
+    /**
+     * Crea la serie con sus correspondientes vinculaciones (expedientes, entidad serie)
+     * NO utilizar save() para crear una serie
+     *
+     * @param string $dependenciasVinculadas : Dependencias a vinculadas a la serie
+     * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function createSerie(string $dependenciasVinculadas = '') : array
     {
         $response = [
             'data' => [],
@@ -139,8 +158,14 @@ class Serie extends Model
 
         return $response;
     }
-
-    public function updateSerie()
+    /**
+     * Actualiza la serie y sus correspondientes vinculados (expedientes)
+     * NO utilizar update() para actualizar una serie
+     * 
+     * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function updateSerie() : array
     {
         $response = [
             'exito' => 0,
@@ -178,8 +203,13 @@ class Serie extends Model
         return $response;
     }
 
-
-    public function getTipo()
+    /**
+     * retornar la etiqueta del tipo de la serie
+     *
+     * @return string
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getTipo() : string
     {
         $tipo = array(
             1 => 'SERIE',
@@ -188,8 +218,13 @@ class Serie extends Model
         );
         return $tipo[$this->tipo];
     }
-
-    public function getCategoria()
+    /**
+     * retorna la etiqueta de la categoria de la serie
+     *
+     * @return string
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getCategoria() : string
     {
         $categoria = array(
             2 => 'PRODUCCION DOCUMENTAL',
@@ -197,8 +232,13 @@ class Serie extends Model
         );
         return $categoria[$this->categoria];
     }
-
-    public function getConservacion()
+    /**
+     * retorna la etiqueta de la conservacion de la serie
+     *
+     * @return string
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getConservacion() : string
     {
         $conservacion = array(
             'TOTAL' => 'CONSERVACION',
@@ -206,17 +246,28 @@ class Serie extends Model
         );
         return $conservacion[$this->conservacion];
     }
-
-    public function getLabelCampo($campo)
+    /**
+     * retorna el label si/no utilizado en etiquetas de la serie
+     *
+     * @param integer $valor  : 1 si, 2 no
+     * @return string
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getLabelCampo(int $valor) : string
     {
         $sel = array(
             0 => 'NO',
             1 => 'SI'
         );
-        return $sel[$this->$campo];
+        return $sel[$this->$valor];
     }
-
-    public function getEstado()
+    /**
+     * retorna la etiqueta del estado de la serie
+     *
+     * @return string
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getEstado() : string
     {
         $estado = array(
             0 => 'INACTIVO',
@@ -224,7 +275,12 @@ class Serie extends Model
         );
         return $estado[$this->estado];
     }
-
+    /**
+     * retorna la instancia de la serie padre
+     *
+     * @return void
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
     public function getCodPadre()
     {
         if ($this->cod_padre) {
@@ -236,8 +292,13 @@ class Serie extends Model
         }
         return $this->seriePadre;
     }
-
-    public function countDocuments()
+    /**
+     * retorna la cantidad de docuementos vinculados a la serie
+     *
+     * @return integer
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function countDocuments() : int
     {
         $filtro_docs = false;
         $cant = 0;
@@ -247,6 +308,7 @@ class Serie extends Model
                 $filtro_docs = $this->idserie;
                 break;
             case 1:
+                break;
             case 2:
                 $filtro_docs = "select distinct idserie from serie where cod_arbol like '{$this->cod_arbol}.%'";
                 break;
@@ -259,12 +321,50 @@ class Serie extends Model
         }
         return $cant;
     }
+    /**
+     * retorna array con ids o instancia de la serie
+     *
+     * @param boolean $instance : true retorna instancia, false retorna los ids
+     * @param integer $estado : utlizado en el where, estado de la consulta
+     * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getChildren($instance = true, int $estado = null) : array
+    {
+        $parteWhere = '';
+        if (!is_null($estado)) {
+            $parte = " and estado={$estado}";
+        }
+        $data = [];
+        $hijos = busca_filtro_tabla("idserie", "serie", "cod_arbol like '{$this->cod_arbol}.%' " . $parteWhere, "", $conn);
+        if ($hijos['numcampos']) {
+            for ($i = 0; $i < $hijos['numcampos']; $i++) {
+                if ($instance) {
+                    $data[] = new self($hijos[$i]['idserie']);
+                } else {
+                    $data[] = $hijos[$i]['idserie'];
+                }
 
+            }
+        }
+        return $data;
+    }
+    /**
+     * retorna las instancias de EntidadSerie vinculadas a la serie
+     *
+     * @return void
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
     public function getEntidadSerieFk()
     {
         return EntidadSerie::findAllByAttributes(['fk_serie' => $this->idserie]);
     }
-
+    /**
+     * retorna las instancias de expedientes vinculadas a la serie
+     *
+     * @return void
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
     public function getExpedienteFk()
     {
         return Expediente::findAllByAttributes(['fk_serie' => $this->idserie]);
