@@ -1,10 +1,12 @@
 <?php
 
-class AnexoFlujo extends Model {
+class FormatoFlujo extends Model {
 
-    protected $idanexo_flujo;
-    protected $fk_flujo;
+    protected $idformato_flujo;
+
     protected $fk_formato;
+
+    protected $fk_flujo;
 
     function __construct($id = null) {
         parent::__construct($id);
@@ -13,15 +15,12 @@ class AnexoFlujo extends Model {
     protected function defineAttributes() {
         $this->dbAttributes = (object) [
             'safe' => [
-                "fk_flujo",
+                "idformato_flujo",
                 "fk_formato",
-                ],
-            'date' => [
-                "fecha"
+                "fk_flujo"
             ],
-            "table" => "wf_anexo_flujo",
-            "primary" => "idanexo_flujo"
+            "table" => "wf_formato_flujo",
+            "primary" => "idformato_flujo"
         ];
     }
-
 }

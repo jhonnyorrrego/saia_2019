@@ -16,7 +16,18 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 include_once ($ruta_db_superior . "librerias_saia.php");
 include_once ($ruta_db_superior . "arboles/crear_arbol_ft.php");
 
-//echo librerias_arboles_ft("2.24", 'filtro');
+$tabLinks = ["flow_info" => "flow_info.php",
+"flow_diagram" => "flow_editor.php",
+"flow_notification" => "flow_notification.php",
+"flow_view" => "flow_view.php"];
+$idflujo = null;
+if(!empty($_REQUEST["idflujo"])) {
+    $idflujo = $_REQUEST["idflujo"];
+    foreach ($tabLinks as $key => $value) {
+        $tabLinks[$key] = $value . "?idflujo=$idflujo";
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -98,29 +109,27 @@ letter-spacing: unset !important;
             <div class="col-12">
                 <ul class="nav nav-pills nav-fill" id="tab_flujos">
                   <li class="nav-item">
-                    <a class="nav-link active etiqueta_titulo" id="pills-flow_info" data-url="flow_info.php" data-toggle="pill" href="#flow_info" role="tab" aria-controls="flow_info" aria-selected="true">Informaci&oacute;n</a>
+                    <a class="nav-link active etiqueta_titulo" id="pills-flow_info" data-url="<?= $tabLinks["flow_info"]?>" data-toggle="pill" href="#flow_info" role="tab" aria-controls="flow_info" aria-selected="true">Informaci&oacute;n</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link etiqueta_titulo" id="pills-flow_diagram" data-url="flow_editor.php" data-toggle="pill" href="#flow_diagram" role="tab" aria-controls="flow_diagram" aria-selected="false">Flujo de proceso</a>
+                    <a class="nav-link etiqueta_titulo" id="pills-flow_diagram" data-url="<?= $tabLinks["flow_diagram"]?>" data-toggle="pill" href="#flow_diagram" role="tab" aria-controls="flow_diagram" aria-selected="false">Flujo de proceso</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link etiqueta_titulo" id="pills-flow_notification" data-url="flow_notification.php" data-toggle="pill" href="#flow_notification" aria-controls="flow_notification" aria-selected="false">Notificaciones</a>
+                    <a class="nav-link etiqueta_titulo" id="pills-flow_notification" data-url="<?= $tabLinks["flow_notification"]?>" data-toggle="pill" href="#flow_notification" aria-controls="flow_notification" aria-selected="false">Notificaciones</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link disabled etiqueta_titulo" id="pills-flow_view" data-toggle="pill" href="#flow_view" aria-controls="flow_view" aria-selected="false">Vista previa</a>
+                    <a class="nav-link disabled etiqueta_titulo" id="pills-flow_view" data-url="<?= $tabLinks["flow_view"]?>" data-toggle="pill" href="#flow_view" aria-controls="flow_view" aria-selected="false">Vista previa</a>
                   </li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
                   <div class="tab-pane fade show active" id="flow_info" role="tabpanel" aria-labelledby="pills-flow_info" style="overflow-y: scroll; height: 650px; width=100%">...</div>
-                  <div class="tab-pane fade" id="flow_diagram" role="tabpanel" aria-labelledby="pills-flow_diagram" style="overflow-y: scroll; height: 650px; width=100%">...</div>
+                  <div class="tab-pane fade" id="flow_diagram" role="tabpanel" aria-labelledby="pills-flow_diagram" style="overflow-y: scroll; height: 500px; width=100%">...</div>
                   <div class="tab-pane fade" id="flow_notification" role="tabpanel" aria-labelledby="pills-flow_notification">...</div>
                   <div class="tab-pane fade" id="flow_view" role="tabpanel" aria-labelledby="pills-flow_view">...</div>
                 </div>
             </div>
         </div>
     </div>
-
-<input type="hidden" id="idflujo" name="idflujo" value="<?= $idflujo ?>">
 
 <script src="<?= $ruta_db_superior ?>dropzone/dist/dropzone.js"></script>
 
@@ -134,7 +143,7 @@ $(document).ready(function() {
     })*/
 
     $('#flow_info').load($('a.active').attr("data-url"), function(result) {
-        console.log(result);
+        //console.log(result);
     	$('a.active').tab('show');
     });
 
@@ -150,7 +159,7 @@ $(document).ready(function() {
     	//TODO: Activar para produccion
     	//if(url && !$(href).children().length) {
     	if(url) {
-        	$(href).load(url,function(result) {
+        	$(href).load(url, function(result) {
     	    	pane.tab('show');
     		});
     	}

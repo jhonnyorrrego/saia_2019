@@ -28,20 +28,21 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 <body>
     <div class="container m-0 p-0 mw-100 mx-100">
         <div class="row mx-0">
-            <div class="col-12 col-md-4 d-md-block px-1" id="acciones"><a href="flujo.php" class="btn btn-primary btn-sm py-2">Adicionar</a></div>
+            <div class="col-12 col-md-4 d-md-block px-1" id="acciones"><a href="<?= $ruta_db_superior ?>/views/flujos/flujo.php" class="btn btn-primary btn-sm py-2">Adicionar</a></div>
             <div class="col-12 col-md-8 d-md-block d-none px-1" id="espacio_vacio"></div>
         </div>
         <div class="row mx-0">
-            <div class="col-12 col-md-4 d-md-block px-1" id="mailbox"></div>
+            <div class="col-12 col-md-4 d-md-block px-1" id="listado"></div>
             <div class="col-12 col-md-8 d-md-block d-none px-1" id="right_workspace"></div>
         </div>
     </div>
     <script data-baseurl="<?= $ruta_db_superior ?>">
         $(function(){
-            let baseUrl = $('script[data-baseurl]').data('baseurl');
+            //let baseUrl = $('script[data-baseurl]').data('baseurl');
+            let baseUrl = "<?= $ruta_db_superior ?>";
             let rutaReporte = baseUrl + 'views/buzones/listado.php?idbusqueda_componente=<?= $_REQUEST['idbusqueda_componente'] ?>';
 
-            $("#mailbox").load(rutaReporte, function(){
+            $("#listado").load(rutaReporte, function(){
                 setTimeout(function() {
                     window.resizeIframe();
                 }, 1500);
@@ -69,6 +70,16 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 $(".fixed-table-container").height(frameH - paginationH - headerH);
                 $('#right_workspace').height(frameH);
             }
+
+            $
+        	$("#listado").on("click", ".kenlace_saia", function() {
+        		var enlace = baseUrl + "views/flujos/flujo.php?idflujo=";
+        		var idflujo = $(this).data("idflujo");
+
+        		enlace = enlace + idflujo;
+        		window.open(enlace, "_self");
+        	});
+
         });
     </script>
 </body>

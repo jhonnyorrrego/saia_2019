@@ -33,10 +33,10 @@ if (@$_REQUEST["accion"] && @$_REQUEST["accion"] == "eliminar_temporal") {
 	foreach ($configuracion as $fila) {
 	    switch ($fila->nombre) {
 			case 'tamanio_maximo_upload' :
-				$max_tamanio = $configuracion->valor;
+			    $max_tamanio = $fila->valor;
 				break;
 			case 'ruta_temporal' :
-				$ruta_temporal = "{$configuracion->valor}_{$usuario}/";
+				$ruta_temporal = "{$fila->valor}_{$usuario}/";
 				break;
 		}
 	}

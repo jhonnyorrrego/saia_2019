@@ -26,7 +26,7 @@ final class Version20190119045342 extends AbstractMigration {
 			"cantidad_registros" => 20,
 			"tiempo_refrescar" => 500,
 			"ruta_visualizacion" => "pantallas\/busquedas\/consulta_busqueda_tabla.php",
-			"tipo_busqueda" => 2,
+			"tipo_busqueda" => 1,
 			"elastic" => 0
 	];
 
@@ -34,7 +34,7 @@ final class Version20190119045342 extends AbstractMigration {
 			"busqueda_idbusqueda" => 133,
 			"tipo" => 3,
 			"conector" => 2,
-			"url" => "pantallas\/busquedas\/consulta_busqueda_tabla.php?idbusqueda_componente=94",
+			"url" => "pantallas\/busquedas\/consulta_busqueda_tabla.php?idbusqueda_componente=367",
 			"etiqueta" => "Listado de flujos",
 			"nombre" => "listado_nuevos_flujos",
 			"orden" => 1,
@@ -202,6 +202,8 @@ final class Version20190119045342 extends AbstractMigration {
 
 		$idbusqueda = $this->guardar("busqueda", $this->busqueda);
 		$this->busqueda_componente["busqueda_idbusqueda"] = $idbusqueda;
+		$idcomponente = $this->guardar("busqueda_componente", $this->busqueda_componente);
+		$this->busqueda_componente["url"] = 'pantallas/busquedas/consulta_busqueda_tabla.php?idbusqueda_componente=' . $idcomponente;
 		$idcomponente = $this->guardar("busqueda_componente", $this->busqueda_componente);
 		$idmodulo = $this->guardar("modulo", ["nombre" => "listado_flujos",
 				"enlace" => "views/flujos/index_flujos.php?idbusqueda_componente=$idcomponente"]);
