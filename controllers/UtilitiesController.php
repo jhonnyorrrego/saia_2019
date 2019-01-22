@@ -1,13 +1,22 @@
 <?php
+
 class UtilitiesController {
-    /** Genera el archivo temporal con nombre y ruta que se especifique (almacenamiento nuevo)
-     * @param string $ruta string obtenido de la DB
-     * @param string $suf Sufijo que se concatena al Nombre de la imagen
-     * @param string $nameFile Nombre de la imagen
-     * @param boolean $force para sobreescribir la imagen
-     * @param string $ruta_almacenar ruta donde desea almacenar la imagen
+
+    /**
+     * Genera el archivo temporal con nombre y ruta que se especifique (almacenamiento nuevo)
+     *
+     * @param string $ruta
+     *            string obtenido de la DB
+     * @param string $suf
+     *            Sufijo que se concatena al Nombre de la imagen
+     * @param string $nameFile
+     *            Nombre de la imagen
+     * @param boolean $force
+     *            para sobreescribir la imagen
+     * @param string $ruta_almacenar
+     *            ruta donde desea almacenar la imagen
      * @author Andres.Agudelo
-     * */
+     */
     public static function getFileTemp($param = array("ruta"=>NULL,"sufijo"=>"","filename"=>NULL,"force"=>false,"ruta_almacenar"=>NULL)) {
         global $ruta_db_superior;
         $retorno = array(
@@ -19,7 +28,7 @@ class UtilitiesController {
         $filebinario = StorageUtils::get_file_content($param["ruta"]);
         if ($filebinario !== false) {
             if (!$param["filename"]) {
-                $nameFile = basename(json_decode($param["ruta"]) -> ruta);
+                $nameFile = basename(json_decode($param["ruta"])->ruta);
             } else {
                 $nameFile = $param["filename"];
             }
@@ -55,32 +64,38 @@ class UtilitiesController {
     }
 
     /**
-     * @param string $nombreModulo nombre del modulo
+     *
+     * @param string $nombreModulo
+     *            nombre del modulo
      * @return boolean
      * @author Andres.Agudelo
-     * */
+     */
     public static function permisoModulo($nombreModulo) {
         $permiso = new PERMISO();
-        return $permiso -> acceso_modulo_perfil($nombreModulo);
+        return $permiso->acceso_modulo_perfil($nombreModulo);
     }
 
     /**
      * retorna el string ferencia
      * del archivo almacenado para la bd
      *
-     * @param string $route ruta destino
-     * @param string $storageType tipo para instanciar saiaStorage
-     * @param string $content binario a guardar
+     * @param string $route
+     *            ruta destino
+     * @param string $storageType
+     *            tipo para instanciar saiaStorage
+     * @param string $content
+     *            binario a guardar
      * @return void
      */
     public static function createFileDbRoute($route, $storageType, $content) {
         $SaiaStorage = new SaiaStorage($storageType);
-        $size = $SaiaStorage -> almacenar_contenido($route, $content, false);
+        $size = $SaiaStorage->almacenar_contenido($route, $content, false);
 
         if ($size) {
             $response = json_encode([
-            "servidor" => $SaiaStorage -> get_ruta_servidor(),
-            "ruta" => $route]);
+                "servidor" => $SaiaStorage->get_ruta_servidor(),
+                "ruta" => $route
+            ]);
         } else {
             $response = NULL;
         }
@@ -89,44 +104,52 @@ class UtilitiesController {
     }
 
     /**
-     * retorna la cantidad de dias habiles entre 2 fecha
      *
-     * @param Object $Fecha_inicial Objeto de la clase DateTime
-     * @param Object $Fecha_final Objeto de la clase DateTime
-     *
-     * @return int
-     *
+     * @param string $rutaBase
+     * @param string $storageType
+     * @param int $idTemp
+     * @return array|string[]
      */
-    public static function dias_habiles_entre_fechas($Fecha_inicial, $Fecha_final) {
-        global $conn;
+    public static function moverAnexoTemporal($rutaBase, $storageType, $idTemp, $borrar = true) {
+        global $conn, $ruta_db_superior;
+        $storage = new SaiaStorage($storageType);
+        $dir_anexos = array();
 
-        if (!is_object($Fecha_inicial) || !is_object($Fecha_final)) {
-            $dias_restantes = 0;
-        } else {
-            $Fecha_inicial -> setTime(0, 0, 0);
-            $Fecha_final -> setTime(0, 0, 0);
+        $archivos = busca_filtro_tabla("", "anexos_tmp", "idanexos_tmp = $idTemp", "", $conn);
+        for ($j = 0; $j < $archivos["numcampos"]; $j++) {
+            $ruta_temporal = $ruta_db_superior . $archivos[$j]["ruta"];
 
-            $diferencia = $Fecha_final -> diff($Fecha_inicial);
+            if (file_exists($ruta_temporal)) {
+                $nombre = $archivos[$j]["etiqueta"];
+                $datos_anexo = pathinfo($ruta_temporal);
 
-            if ($diferencia -> invert) {
-                $fecha_inicial = $Fecha_inicial -> format('Y-m-d');
-                $fecha_final = $Fecha_final -> format('Y-m-d');
+                $temp_filename = uniqid() . "." . $datos_anexo["extension"];
 
-                $signo = "1";
+                if (is_file($ruta_temporal)) {
+                    $resultado = $storage->copiar_contenido_externo($ruta_temporal, $rutaBase . $temp_filename);
+                }
+                if ($resultado) {
+                    $dir_anexos = array(
+                        "servidor" => $storage->get_ruta_servidor(),
+                        "ruta" => $rutaBase . $temp_filename
+                    );
+
+                    // eliminar el temporal
+                    if($borrar) {
+                        unlink($ruta_temporal);
+                        unlink("$ruta_temporal.lock");
+
+                        // Eliminar los pendientes de la tabla temporal
+                        $sql2 = "DELETE FROM anexos_tmp WHERE idanexos_tmp = " . $archivos[$j]["idanexos_tmp"];
+                        phpmkr_query($sql2) or die($sql2);
+                    }
+                } else {
+                    alerta("!Se produjo un error al copiar el archivo " . $nombre, 'error', 4000);
+                }
             } else {
-                $fecha_inicial = $Fecha_final -> format('Y-m-d');
-                $fecha_final = $Fecha_inicial -> format('Y-m-d');
-
-                $signo = "-1";
+                alerta("!No se encontró el archivo " . $nombre, 'error', 4000);
             }
-
-            $busca_festivos = busca_filtro_tabla("idasignacion", "asignacion", "documento_iddocumento='-1'  AND fecha_inicial < " . fecha_db_almacenar($fecha_final, 'Y-m-d') . " AND fecha_final > " . fecha_db_almacenar($fecha_inicial, 'Y-m-d'), "", $conn);
-            $numero_festivos = $busca_festivos['numcampos'];
-
-            $dias_restantes = ($diferencia -> days - $numero_festivos) * $signo;
         }
-
-        return $dias_restantes;
+        return $dir_anexos;
     }
-
 }

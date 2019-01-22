@@ -11,9 +11,14 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
+include_once $ruta_db_superior . 'controllers/autoload.php';
+
 $idflujo = null;
+$datosDiagrama = null;
 if(isset($_REQUEST["idflujo"])) {
     $idflujo = $_REQUEST["idflujo"];
+    $flujo = new Flujo($idflujo);
+    $datosDiagrama = $flujo->diagrama;
 }
 
 ?>
@@ -29,11 +34,12 @@ if(isset($_REQUEST["idflujo"])) {
 
 <div id="canvas"></div>
 
-<button type="button" class="btn btn-primary btn-sm" id="save-button">Guardar diagrama</button>
+<button type="button" class="btn btn-primary btn-sm" id="guardarDiagrama">Guardar diagrama</button>
 
 <script>
 
     var diagramUrl = '<?= $ruta_db_superior ?>views/flujos/flujo_ejemplo.bpmn';
+    var idflujo = "<?= $idflujo?>";
 
     // modeler instance
     var bpmnModeler = new BpmnJS({
@@ -46,7 +52,7 @@ if(isset($_REQUEST["idflujo"])) {
     var elementRegistry = bpmnModeler.get('elementRegistry');
     var element1 = elementRegistry.get('sid-52EB1772-F36E-433E-8F5B-D5DFD26E6F26');
     var elements = elementRegistry.getAll();
-    console.log(elementRegistry);
+    //console.log(elementRegistry);
 
     var modeling = bpmnModeler.get('modeling');
     var canvas = bpmnModeler.get('canvas');
@@ -96,24 +102,35 @@ if(isset($_REQUEST["idflujo"])) {
         	top.notification({type: "error", message: "No se pudo guardar el digagraam BPMN 2.0"});
           // return console.error('No se pudo guardar el digagraam BPMN 2.0', err);
         }
-        console.log(bpmnModeler); return false;
 
-        $.ajax({
-            url: 'test.jsp',
-            processData: false,
-            type: "POST",  // type should be POST
-            data: {datos: xml, idflujo: id},// send the string directly
-            success: function(response) {
-                if(response.status == 1) {
-                	top.notification({type: "success", message: response.message});
-                } else {
+        if(idflujo && idflujo != "") {
+            console.log("ID FLUJO", idflujo);
+            //console.log(bpmnModeler);
+
+            $.ajax({
+                url: '<?= $ruta_db_superior ?>app/flujo/guardarDiagrama.php',
+                type: "POST",  // type should be POST
+                data: {
+                    datos: xml,
+                    idflujo: idflujo,
+                    key: localStorage.getItem("key")
+                    },// send the string directly
+                success: function(response) {
+                    console.log(response);
+                    if(response.success == 1) {
+                    	top.notification({title: "Diagrama", type: "success", message: response.message});
+                    } else {
+                    	top.notification({type: "error", message: response.message});
+                    }
+                },
+                error: function(response) {
                 	top.notification({type: "error", message: response.message});
+                    return false;
                 }
-            },
-            error: function(response) {
-            	top.notification({type: "error", message: response.message});
-            }
-         });
+            });
+        } else {
+        	top.notification({type: "error", message: "No existe flujo para guardar el diagrama"});
+        }
         console.log('DIAGRAM', xml);
       });
     }
@@ -156,11 +173,15 @@ if(isset($_REQUEST["idflujo"])) {
 
 $(function() {
 
-	// load external diagram file via AJAX and open it
-    $.get(diagramUrl, openDiagram, 'text');
-
+	var xmlDiagrama = `<?=$datosDiagrama?>`;
+	if(idflujo && idflujo != "") {
+		openDiagram(xmlDiagrama);
+	} else {
+    	// load external diagram file via AJAX and open it
+        $.get(diagramUrl, openDiagram, 'text');
+	}
     // wire save button
-    $('#save-button').click(exportDiagram);
+    $('#guardarDiagrama').click(exportDiagram);
 
     var upload_url = 'cargar_archivos_flujo.php';
     Dropzone.autoDiscover = false;

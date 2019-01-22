@@ -2,6 +2,8 @@
 
 class Flujo extends Model {
 
+    use TFlujo;
+
     protected $idflujo;
     protected $nombre;
     protected $descripcion;
@@ -14,10 +16,9 @@ class Flujo extends Model {
     protected $fecha_modificacion;
     protected $version_actual;
     protected $mostrar_codigo;
+    protected $info;
 
     function __construct($id = null) {
-    	static::$table = "wf_flujo";
-    	static::$primary = "idflujo";
         parent::__construct($id);
     }
 
