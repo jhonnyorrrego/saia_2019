@@ -33,9 +33,8 @@ if (@$_REQUEST["ejecutar_datos_pantalla"]) {
 }
 
 function load_pantalla($idpantalla, $generar_archivo = "", $accion = '') {
-   
-    $consulta_campos_lectura = busca_filtro_tabla("valor", "configuracion", "nombre='campos_solo_lectura'", "", $conn);
-   
+    global $conn,$ruta_db_superior;
+    $consulta_campos_lectura = busca_filtro_tabla("valor", "configuracion", "nombre='campos_solo_lectura'", "", $conn);   
     $campos_excluir = array(
         "dependencia",
         "documento_iddocumento",

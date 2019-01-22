@@ -52,24 +52,24 @@ if ($_REQUEST["idformato"]) {
 ?>
 </head>
 	<body>
-			<div class="container-fluid px-0" >
-				<div class="row mx-0">					
-				    <div class="col-3 m-0 p-0 px-0" id="panel_izquierdo" style="">    
-						 <div id="arbol_formato">
-							<?php if ($idpantalla) : ?>
-								<iframe src="<?= $route ?>" width="100%" frameborder="0"></iframe>
-							<?php endif; ?>
-						 </div>	
-				    </div>			
-					<div class="col mx-0 p-0" id="admin_generador">
-						<iframe frameborder="0" id="iframe_generador" width="100%" src="<?php echo $ruta_db_superior . "pantallas/generador/generador_pantalla.php?idformato=" . $idpantalla; ?>" scrolling="yes"></iframe> 
-					</div>
+		<div class="container-fluid px-0" >
+			<div class="row mx-0">					
+				<div class="col-3 m-0 p-0 px-0" id="panel_izquierdo" style="">    
+						<div id="arbol_formato">
+						<?php if ($idpantalla) : ?>
+							<iframe src="<?= $route ?>" width="100%" frameborder="0"></iframe>
+						<?php endif; ?>
+						</div>	
+				</div>			
+				<div class="col mx-0 p-0" id="admin_generador">
+					<iframe frameborder="0" id="iframe_generador" width="100%" src="<?php echo $ruta_db_superior . "pantallas/generador/generador_pantalla.php?idformato=" . $idpantalla; ?>" scrolling="yes"></iframe> 
 				</div>
 			</div>
-			<script> 
-			$(document).ready(function(){
-				$("iframe").height($(window).height()-5);
-			}); 
-			</script>
+		</div>
+		<script> 
+		$(document).ready(function(){
+			$("iframe").height($(window).height()-5);
+		}); 
+		</script>
 	</body>
 </html>

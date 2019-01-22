@@ -22,20 +22,20 @@ $contenidoPie = 0;
 if ($_REQUEST["idformato"]) {
 	$idpantalla = $_REQUEST["idformato"];
 	$consulta_formato = busca_filtro_tabla("cuerpo,encabezado,pie_pagina", "formato f", "idformato=" . $idpantalla, "", $conn);
-	
+
 	if ($consulta_formato['numcampos']) {
 		if ($consulta_formato[0]['cuerpo']) {
-				$contenido_formato = json_encode($consulta_formato[0]['cuerpo']);				
+			$contenido_formato = json_encode($consulta_formato[0]['cuerpo']);
 		}
 		if ($consulta_formato[0]['encabezado']) {
-				$idencabezadoFormato = $consulta_formato[0]['encabezado'];
-				$consultaEncabezado = busca_filtro_tabla("contenido,etiqueta", "encabezado_formato", "idencabezado_formato=" . $consulta_formato[0]['encabezado'], "", $conn);
-				$contenidoEncabezado = json_encode($consultaEncabezado[0]['contenido']);
+			$idencabezadoFormato = $consulta_formato[0]['encabezado'];
+			$consultaEncabezado = busca_filtro_tabla("contenido,etiqueta", "encabezado_formato", "idencabezado_formato=" . $consulta_formato[0]['encabezado'], "", $conn);
+			$contenidoEncabezado = json_encode($consultaEncabezado[0]['contenido']);
 		}
 		if ($consulta_formato[0]['pie_pagina']) {
-				$consultaPie = busca_filtro_tabla("contenido,etiqueta", "encabezado_formato", "idencabezado_formato=" . $consulta_formato[0]['pie_pagina'], "", $conn);
-				$contenidoPie = json_encode($consultaPie[0]['contenido']);		
-				$idpie = $consulta_formato[0]['pie_pagina'];
+			$consultaPie = busca_filtro_tabla("contenido,etiqueta", "encabezado_formato", "idencabezado_formato=" . $consulta_formato[0]['pie_pagina'], "", $conn);
+			$contenidoPie = json_encode($consultaPie[0]['contenido']);
+			$idpie = $consulta_formato[0]['pie_pagina'];
 		}
 	}
 }
@@ -57,7 +57,7 @@ ul.fancytree-container {
 echo estilo_bootstrap();
 echo librerias_jquery("1.8.3");
 echo librerias_html5();
-include_once $ruta_db_superior . "assets/librerias.php" ;
+include_once $ruta_db_superior . "assets/librerias.php";
 
 $campos = busca_filtro_tabla("", "pantalla_componente B", "1=1", "", $conn);
 $librerias_js = array();
@@ -89,7 +89,7 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 					$texto = ""; // retorna un vacio si no existe el tipo
 					break;
 			}
-			echo ($texto);
+			echo $texto;
 		}
 	}
 }
@@ -121,22 +121,22 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 	<div class="container-fluid">
 		<div class="row-fluid">
 			<div class="span9">
-				<div class="tabbable">
+				<div class="tabbable"><br>
 					<ul class="nav nav-tabs" id="tabs_formulario">
 						<li style="width:140px;" class="active">
 							<a href="#datos_formulario-tab" data-toggle="tab" style="text-align:center;">Informaci&oacute;n</a>
 						</li>
 						<li style="width:140px;" id="generar_formulario_pantalla">
-							<a href="#formulario-tab" data-toggle="tab"style="text-align:center;">Campos</a>							
+							<a href="#formulario-tab" data-toggle="tab" style="text-align:center;">Campos</a>							
 						</li>
             <!-- <li>
                 			<a href="#librerias_formulario-tab" data-toggle="tab">3-Librerias</a>
 						</li> -->
-						<li style="width:140px;">
+						<li style="width:140px;" >
 								<a href="#pantalla_mostrar-tab" data-toggle="tab" style="text-align:center;">Dise&ntilde;o</a>
 						</li>
 						<li style="width:140px;">
-								<a href="#pantalla_previa-tab" data-toggle="tab" style="text-align:center;">Vista previa</a>
+								<a href="#pantalla_previa-tab"  data-toggle="tab" style="text-align:center;">Vista previa</a>
 						</li>
 						<!-- li>
 							<a href="#pantalla_listar-tab" data-toggle="tab">5-listar</a>
@@ -150,8 +150,13 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 						<li>
 						<!--<a href="#generar_formulario-tab" data-toggle="tab">Publicar</a>-->
 							<div class="container-fluid">
-							<div class="row"  class="span3 offset2" style="float:right">
-									<button style="background: #48b0f7;color:fff;margin-top:3px;" class="btn btn-info" id="generar_pantalla" ><span  style="color:fff; background: #48b0f7;"> Publicar</span></button>
+							<div class="row"  class="span3 offset2" style="float:left">
+									<button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px;" class="btn btn-info" id="generar_pantalla" >Publicar</button>
+									<div id="barra_principal_formato" class="barra_principal_formato" style="margin-left:10px; width:85%; display:none">
+									<div class="progress progress-striped active" style="margin-bottom: 7px;">
+										<div class="bar bar-success" id="barra_formato"></div>
+									</div>
+								</div>
 								</div>
 							</div>
 						</li>
@@ -160,44 +165,47 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 						<div class="tab-pane" id="formulario-tab">
 							<form id="contenedor_saia" class="form-horizontal">
 							<?php
-								echo load_pantalla($idpantalla);
-							?>
+						echo load_pantalla($idpantalla);
+						?>
+
 							</form>
+							<button style="background: #48b0f7;color:fff;margin-top:3px;" class="btn btn-info" id="cambiar_nav" ><span  style="color:fff; background: #48b0f7;"> Siguiente</span></button>
+
 						</div>
 						<div class="tab-pane" id="pantalla_previa-tab"></div>
 						<div class="tab-pane active" id="datos_formulario-tab">
 							<?php
-								include_once $ruta_db_superior . 'pantallas/generador/datos_pantalla.php'; 
-							?>
+						include_once $ruta_db_superior . 'pantallas/generador/datos_pantalla.php';
+						?>
 						</div>
           <div class="tab-pane" id="pantalla_mostrar-tab"><br>                			
 					<legend>Encabezado del formato</legend><br>
 					<select name="sel_encabezado" id="sel_encabezado">
 						<option value="0">Por favor Seleccione</option>
 						<?php
-							$encabezados = busca_filtro_tabla("", "encabezado_formato", "1=1", "etiqueta", $conn);
-							$contenido_enc = array();
-							$etiqueta_enc = array();
+					$encabezados = busca_filtro_tabla("", "encabezado_formato", "1=1", "etiqueta", $conn);
+					$contenido_enc = array();
+					$etiqueta_enc = array();
 
-							if($idpantalla){
-								$idencabezado = $idencabezadoFormato;
-								$etiqueta_encabezado = json_encode($consultaEncabezado[0]['etiqueta']);
-							}else{
-								$idencabezado = 0;
-								$etiqueta_encabezado = "";
-							}
+					if ($idpantalla) {
+						$idencabezado = $idencabezadoFormato;
+						$etiqueta_encabezado = json_encode($consultaEncabezado[0]['etiqueta']);
+					} else {
+						$idencabezado = 0;
+						$etiqueta_encabezado = "";
+					}
 
-							for ($i = 0; $i < $encabezados["numcampos"]; $i++) {
-								$contenido_enc[$encabezados[$i]["idencabezado_formato"]] = $encabezados[$i]["contenido"];
-								$etiqueta_enc[$encabezados[$i]["idencabezado_formato"]] = $encabezados[$i]["etiqueta"];
-								echo ("<option value='" . $encabezados[$i]["idencabezado_formato"] . "'");
-								if ($encabezados[$i]["idencabezado_formato"] == $datos_formato[0]["encabezado"]) {
-									$idencabezado = $encabezados[$i]["idencabezado_formato"];
-									$etiqueta_encabezado = $encabezados[$i]["etiqueta"];
-									echo (' selected="selected" ');
-								}
-								echo (">" . $encabezados[$i]["etiqueta"] . "</option>");
-							}
+					for ($i = 0; $i < $encabezados["numcampos"]; $i++) {
+						$contenido_enc[$encabezados[$i]["idencabezado_formato"]] = $encabezados[$i]["contenido"];
+						$etiqueta_enc[$encabezados[$i]["idencabezado_formato"]] = $encabezados[$i]["etiqueta"];
+						echo ("<option value='" . $encabezados[$i]["idencabezado_formato"] . "'");
+						if ($encabezados[$i]["idencabezado_formato"] == $datos_formato[0]["encabezado"]) {
+							$idencabezado = $encabezados[$i]["idencabezado_formato"];
+							$etiqueta_encabezado = $encabezados[$i]["etiqueta"];
+							echo (' selected="selected" ');
+						}
+						echo (">" . $encabezados[$i]["etiqueta"] . "</option>");
+					}
 					?>
 					</select>
 					<span style="cursor:pointer;font-size:18px;margin-left: 5px;" class="crear_encabezado" id="crear_encabezado" >
@@ -219,18 +227,18 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 						</div>
 							<div id="encabezado_formato" name="encabezado_formato">
 							<?php
-								if ($idencabezado) {
-									echo $contenido_enc[$idencabezado];
-								}
-							?>
+						if ($idencabezado) {
+							echo $contenido_enc[$idencabezado];
+						}
+						?>
 							</div>
           </form>
 					<legend>Cuerpo del formato</legend><br>
 					<form name="formulario_editor_mostrar" id="formulario_editor_mostrar" action="">
 						<textarea name="editor_mostrar" id="editor_mostrar" class="">
 							<?php
-								echo ($datos_formato[0]["cuerpo"]);
-							?>
+						echo ($datos_formato[0]["cuerpo"]);
+						?>
 						</textarea>
 						<script>
 							var editor_mostrar = CKEDITOR.replace("editor_mostrar");
@@ -241,23 +249,23 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 					<select name="sel_pie_pagina" id="sel_pie_pagina">
 						<option value="0">Por favor Seleccione</option>
 						<?php
-							if($idpantalla){
-								$idpie = $idpie;
-								$etiqueta_pie = json_encode($consultaPie[0]['etiqueta']);
-							}else{
-								$idpie = 0;
-								$etiqueta_pie = "";
-							}
-							$pie_pagina = $encabezados; // No volver a consultar	
-							for ($i = 0; $i < $pie_pagina["numcampos"]; $i++) {
-								echo ("<option value='" . $pie_pagina[$i]["idencabezado_formato"] . "'");
-								if ($pie_pagina[$i]["idencabezado_formato"] == $datos_formato[0]["pie_pagina"]) {
-									$idpie = $pie_pagina[$i]["idencabezado_formato"];
-									$etiqueta_pie = $pie_pagina[$i]["etiqueta"];
-									echo (' selected="selected" ');
-								}
-								echo (">" . $pie_pagina[$i]["etiqueta"] . "</option>");
-							}
+					if ($idpantalla) {
+						$idpie = $idpie;
+						$etiqueta_pie = json_encode($consultaPie[0]['etiqueta']);
+					} else {
+						$idpie = 0;
+						$etiqueta_pie = "";
+					}
+					$pie_pagina = $encabezados; // No volver a consultar	
+					for ($i = 0; $i < $pie_pagina["numcampos"]; $i++) {
+						echo ("<option value='" . $pie_pagina[$i]["idencabezado_formato"] . "'");
+						if ($pie_pagina[$i]["idencabezado_formato"] == $datos_formato[0]["pie_pagina"]) {
+							$idpie = $pie_pagina[$i]["idencabezado_formato"];
+							$etiqueta_pie = $pie_pagina[$i]["etiqueta"];
+							echo (' selected="selected" ');
+						}
+						echo (">" . $pie_pagina[$i]["etiqueta"] . "</option>");
+					}
 					?>
 					</select>
 					
@@ -277,11 +285,11 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 							<label style="display:none" for="etiqueta_pie">Etiqueta: </label>
 							<input type="hidden" id="etiqueta_pie" name="etiqueta_pie" value="<?php echo $etiqueta_pie; ?>">
 						</div>
-						<div id="pie_formato" name="pie_formato"></div>					
+						<div id="pie_formato" name="pie_formato"></div>	<br>			
 					</form>
 					<script type="text/javascript">
 						var encabezados = <?php echo json_encode($contenido_enc); ?>;
-						var idencabezado = <?php echo $idencabezadoFormato; ?>; // aqui
+						var idencabezado = <?php echo $idencabezadoFormato; ?>;
 						var etiquetas = <?php echo json_encode($etiqueta_enc); ?>;
 					</script>
 					</div>
@@ -291,17 +299,17 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 							<select name="tipo_pantalla_busqueda" id="tipo_pantalla_busqueda">
 									<option value="0">Por favor seleccione</option>
 									<?php
-										$tipo_listado = busca_filtro_tabla("", "pantalla_busqueda a", "estado=1", "etiqueta asc", $conn);
-										for ($i = 0; $i < $tipo_listado["numcampos"]; $i++) {
-											echo ('<option value="' . $tipo_listado[$i]["idpantalla_busqueda"] . '" nombre="' . $tipo_listado[$i]["nombre"] . '">' . $tipo_listado[$i]["etiqueta"] . '</option>');
-										}
-									?>
+								$tipo_listado = busca_filtro_tabla("", "pantalla_busqueda a", "estado=1", "etiqueta asc", $conn);
+								for ($i = 0; $i < $tipo_listado["numcampos"]; $i++) {
+									echo ('<option value="' . $tipo_listado[$i]["idpantalla_busqueda"] . '" nombre="' . $tipo_listado[$i]["nombre"] . '">' . $tipo_listado[$i]["etiqueta"] . '</option>');
+								}
+								?>
 							</select>
 								<?php if ($tipo_listado["numcampos"]) { ?>
 									<div width="100%" id="frame_tipo_listado"></div>
 									<?php 
-									} 
-									?>
+							}
+							?>
 								</div>
 							</form>
 						</div>
@@ -315,14 +323,14 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 
 				<div class="tab-pane" id="generar_formulario-tab">
 					<div class="accordion" id="acordion_generar">
-								  	<!-- div class="accordion-group">
-									    <div class="accordion-heading">
-                        <input type="checkbox" checked="true"class="pull-left check_genera" value="version">
-									      <a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_version_pantalla">
-									      	Crear versi&oacute;n archivos
-									      </a>
-									    </div>
-									    <div id="generar_version_pantalla" class="accordion-body collapse generador_pantalla">
+						<!-- div class="accordion-group">
+							<div class="accordion-heading">
+								<input type="checkbox" checked="true"class="pull-left check_genera" value="version">
+								<a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_generar" href="#generar_version_pantalla">
+									Crear versi&oacute;n archivos
+								</a>
+							</div>
+							<div id="generar_version_pantalla" class="accordion-body collapse generador_pantalla">
 								<div class="accordion-inner"></div>
 									    </div>
 										</div-->
@@ -533,7 +541,31 @@ for ($i = 0; $i < $cant_js; $i++) {
 
 <script type="text/javascript">
 
-$(document).ready(function() {
+	$(document).ready(function() {
+		$('#cambiar_nav').on('click', function(){
+		$("#generar_formulario_pantalla").next().find("a").trigger("click");
+
+		$.ajax({
+   	  type:'POST',
+			async: false,
+   	  url: "<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias_formato.php",
+	  	data:{
+	   	  	ejecutar_libreria_formato:'consultar_campos_formato' ,
+	   	  	idformato:$("#idformato").val(),
+	   	  	rand:Math.round(Math.random()*100000)
+	   	},	   	 
+	   	success: function(response){
+   	    if(response){
+   	      var objeto=jQuery.parseJSON(response);
+   	      if(objeto.exito){
+						generar_pantalla("full");
+   	      } else {
+   	    	  notificacion_saia(objeto.mensaje,"warning","",3500);
+   	  	  }
+   	  	}
+   	  }
+   	});
+});
 var idpantalla = "<?php echo $idpantalla ?>";
 $("#asignar_funciones-tab").hide();
 $("#pantalla_listar-tab").hide();
@@ -657,27 +689,37 @@ $("#generar_pantalla").live("click",function() {
    	});
 });
 
-function generar_pantalla(nombre_accion) {
-	
-    $("#cargando_generar_pantalla").html("<img src='<?php echo ($ruta_db_superior); ?>imagenes/cargando.gif' class='pull-left'>");
-    var ruta_generar='formatos/generar_formato.php';
+function generar_pantalla(nombre_accion) {	
+		$("#barra_principal_formato").show();
+		$("#barra_formato").html("50%");
+		$("#barra_formato").css("width","50%");
+		var ruta_generar='formatos/generar_formato.php';
     var datos = {
         idformato: $("#idformato").val(),
         accion: "full",
         llamado_ajax: 1
-    };
-
+    };	
     $.ajax({
         type:'POST',
         url: '<?php echo ($ruta_db_superior); ?>'+ruta_generar,
         data: datos,
-        success: function(html) {
+        success: function(html) {				
             if(html) {
                 var objeto=jQuery.parseJSON(html);
+								console.log(objeto)
                 if(objeto.exito==1) {
                 	notificacion_saia("Formato generado correctamente","success","",3500);
+									$("#barra_formato").html("100%");
+									$("#barra_formato").css("width","100%");		
+									CKEDITOR.instances.editor_mostrar.setData(objeto.contenido_cuerpo);
+									setTimeout(function() {
+											$(".barra_principal_formato").fadeOut(1500);
+									},3000);						
                 } else {
                     notificacion_saia(objeto.mensaje,"error","",9500);
+										setTimeout(function() {
+											$(".barra_principal_formato").fadeOut(1000);
+									},2000);
                 }
             }
         	$("#cargando_generar_pantalla").html("");

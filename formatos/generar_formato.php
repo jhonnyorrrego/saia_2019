@@ -68,6 +68,7 @@ if (isset($_REQUEST["genera"])) {
     $mensajes = array();
     $idformato = $_REQUEST["idformato"];
     $exito = true;
+    $cuerpo_formato='';
     foreach ($acciones as $accion) {
         $generar = new GenerarFormato($idformato, $accion);
         $generar->ejecutar_accion();
@@ -83,12 +84,14 @@ if (isset($_REQUEST["genera"])) {
                 $msg = $generar->mensaje["mensaje"];
             }
             $mensajes[] = $msg;
+            $cuerpo_formato = $generar->contenido_cuerpo;
         }
     }
     //$mensajes = array_unique($mensajes, SORT_STRING);
     ob_get_clean();
     $status["exito"] = $exito;
     $status["mensaje"] = $mensajes;
+    $status["contenido_cuerpo"] = $cuerpo_formato;
     ob_end_clean();
     echo json_encode($status);
     die();
@@ -109,6 +112,8 @@ class GenerarFormato
 
     public $mensaje;
 
+    public $contenido_cuerpo;
+
     public function __construct($idformato, $accion, $archivo = '')
     {
         $this->idformato = $idformato;
@@ -117,6 +122,7 @@ class GenerarFormato
         $this->incluidos = array();
         $this->exito = 0;
         $this->mensaje = "Existe un error al generar el formato " . $accion . " con id " . $idformato;
+        $this->contenido_cuerpo = "";
     }
 
     public function ejecutar_accion()
@@ -445,14 +451,7 @@ class GenerarFormato
 
         if($formato[0]['contenido']==''){
         $consulta_campos_lectura = busca_filtro_tabla("valor", "configuracion", "nombre='campos_solo_lectura'", "", $conn);
-        $campos_excluir = array(
-            "dependencia",
-            "documento_iddocumento",
-            "estado_documento",
-            "firma",
-            "serie_idserie",
-            "encabezado"
-        );
+        $campos_excluir = array();
         if ($consulta_campos_lectura['numcampos']) {
             $campos_lectura = json_decode($consulta_campos_lectura[0]['valor'], true);
             $campos_lectura = implode(",", $campos_lectura);
@@ -472,9 +471,9 @@ class GenerarFormato
             $cuerpo_formato = '<table class="table table-bordered" style="width: 100%;"><tbody><tr><td><strong>Fecha</strong></td><td>{*fecha_creacion*}&nbsp;</td><td style="text-align: center;" rowspan="2">&nbsp;{*mostrar_codigo_qr*} <br>Radicado: {*formato_numero*}</td></tr><tr><td><strong>Asunto</strong></td><td>{*asunto_documento*}</td></tr></table><br><table class="table table-bordered" style="width: 100%;"><tbody>';
             for ($i = 0; $i < $campos['numcampos']; $i++) {
                 $cuerpo_formato .= '<tr>
-    <td style="width:50%;"><strong>' . $campos[$i]['etiqueta'] . '<strong></td>
-    <td>{*' . $campos[$i]['nombre'] . '*}</td>
-    </tr>';
+            <td style="width:50%;"><strong>' . $campos[$i]['etiqueta'] . '<strong></td>
+            <td>{*' . $campos[$i]['nombre'] . '*}</td>
+            </tr>';
             }
             $cuerpo_formato .= '</tbody></table><br><br>{*mostrar_estado_proceso*}';
             $update_formato = "UPDATE formato set cuerpo='" . $cuerpo_formato . "' where idformato=" . $this->idformato;
@@ -489,15 +488,14 @@ class GenerarFormato
                     }
                 }
                 $this->exito = 1;
-                $this->mensaje = "";
+                $this->contenido_cuerpo = $cuerpo_formato;
                 return true;
             }
             
 
         }
     }
-        $this->exito = 0;
-        return false;
+        $this->exito = 1;
     }
     /*
      * <Clase>

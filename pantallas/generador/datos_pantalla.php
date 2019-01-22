@@ -22,7 +22,12 @@ if($_REQUEST['idformato']) {
 	if($formato[0]["tiempo_autoguardado"]>3000){
 		$formato[0]["tiempo_autoguardado"]=$formato[0]["tiempo_autoguardado"]/60000;
 	}
-	
+	$documentacion_formato =$formato[0]["documentacion"];
+	$anexos_formato = busca_filtro_tabla("","formato_previo","idformato=".$_REQUEST['idformato']." and idformato_previo=".$documentacion_formato,"",$conn);
+
+	if($anexos_formato["numcampos"]){
+		$ruta = $anexos_formato[0]["ruta"];
+	}
 	//$formato = json_encode($formato);
 	if($cod_proceso_pertenece){
 		$adicional_cod_proceso="&seleccionado=".$cod_proceso_pertenece;
@@ -160,7 +165,7 @@ function crear_campo_dropzone($nombre, $parametros) {
   ?>
   <div class="row-fluid"><div class="span12">
 	  <div class="control-group">
-	    <label class="control-label" for="nombre">Nombre*</label>
+	    <label class="control-label" for="nombre"><strong>Nombre*</strong></label>
 	    <div class="controls">
 	      <input type="text" name="nombre_formato" id="nombre_formato" placeholder="Nombre" value="" required readonly>
 	    </div>
@@ -177,7 +182,7 @@ function crear_campo_dropzone($nombre, $parametros) {
   <div class="row-fluid">
     <div class="span8">
       <div class="control-group">
-        <label class="control-label" for="etiqueta">Nombre del formato *</label>
+        <label class="control-label" for="etiqueta"><strong>Nombre del formato *</strong></label>
         <div class="controls">
           <input type="text" style="width: 80%;" name="etiqueta" id="etiqueta_formato" placeholder="Nombre" value="" required <?php if($_REQUEST["idformato"]) echo("readonly");?>>
         </div>
@@ -185,7 +190,7 @@ function crear_campo_dropzone($nombre, $parametros) {
     </div>
     <div class="span4">
       <div class="control-group">
-        <label class="control-label" for="version">Versi&oacute;n *</label>
+        <label class="control-label" for="version"><strong>Versi&oacute;n *</strong></label>
         <div class="controls">
           <input type="text" name="version" id="version" placeholder="Versi&oacute;n" value="" required>
         </div>
@@ -208,7 +213,7 @@ if($datos_formato["numcampos"]) {
   <div class="row-fluid">
     <div class="span8">
       <div class="control-group">
-        <label class="control-label" for="descripcion">Descripci&oacute;n del formato</label>
+        <label class="control-label" for="descripcion"><strong>Descripci&oacute;n del formato</strong></label>
         <div class="controls">
           <textarea style="width: 80%" name="descripcion_formato" id="descripcion_formato" placeholder="Descripci&oacute;n" rows="3"></textarea>
         </div>
@@ -217,7 +222,7 @@ if($datos_formato["numcampos"]) {
 
     <div class="span4">
       <div class="control-group">
-        <label class="control-label" for="tipos">Tipo de registro</label>
+        <label class="control-label" for="tipos"><strong>Tipo de registro</strong></label>
         <div class="controls">
           <select name="tipo_registro" id="tipo_registro">
             <option value="">Por favor seleccione</option>
@@ -243,7 +248,7 @@ if($datos_formato["numcampos"]) {
   <div class="row-fluid">
     <div  class="span8">
       <div class="control-group">
-       <label class="control-label" for="codigo_padre" data-toggle="tooltip" title="Seleccione el formato principal al cual pertenece">Relaci&oacute;n con otro Formato</label>
+       <label class="control-label" for="codigo_padre" data-toggle="tooltip" title="Seleccione el formato principal al cual pertenece"><strong>Relaci&oacute;n con otro Formato</strong></label>
         <div class="controls">
         	<div id="esperando_codigo_padre_formato"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
         	<?php echo($nombre_cod_padre[0]["etiqueta"]);?>
@@ -255,7 +260,7 @@ if($datos_formato["numcampos"]) {
     </div>
     <div class="span4">
       <div class="control-group">
-        <label class="control-label" for="contador">Consecutivo asociado *</label>
+        <label class="control-label" for="contador"><strong>Consecutivo asociado *</strong></label>
         <div class="controls">
           <select name="contador_idcontador" data-toggle="tooltip" title="Escoja un contador" id="contador_idcontador" required>
           	<?php
@@ -280,7 +285,7 @@ if($datos_formato["numcampos"]) {
   <div class="row-fluid"> <!-- FILA SERIE -->
     <div class="span4">
       <div class="control-group">
-        <label class="control-label" for="serie_idserie">Tipo documental asociado</label>
+        <label class="control-label" for="serie_idserie"><strong>Tipo documental asociado</strong></label>
         <div class="controls">
         	<div id="esperando_arbol_serie_formato"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
         	<?php
@@ -302,7 +307,7 @@ if($datos_formato["numcampos"]) {
 
     <div class="span4">
       <div class="control-group">
-        <label class="control-label" for="codigo_serie">C&oacute;digo</label>
+        <label class="control-label" for="codigo_serie"><strong>C&oacute;digo</strong></label>
         <div class="controls">
           <input type="text" id="codigo_serie" value="<?php
           if($datos_serie["numcampos"]) {
@@ -325,10 +330,10 @@ if($datos_formato["numcampos"]) {
   </div>  <!-- FIN FILA SERIE -->
 
  <div class="control-group">
-    <label class="control-label" for="banderas">Atributos del formato</label>
+    <label class="control-label" for="banderas"><strong>Atributos del formato</strong></label>
     <div class="controls">
       <input type="checkbox" name="tipo_edicion" id="tipo_edicion" <?php check_banderas('tipo_edicion');?>>Edicion Continua
-      <input type="checkbox" name="mostrar" id="mostrar" <?php check_banderas('mostrar');?>>Mostrar
+      <!--<input type="checkbox" name="mostrar" id="mostrar" <?php check_banderas('mostrar');?>>Mostrar-->
       <input type="checkbox" name="paginar" id="paginar" <?php check_banderas('paginar');?>>Paginar al mostrar
       <input type="checkbox" name="banderas[]" id="banderas" <?php check_banderas('aprobacion_automatica');?>>Aprobacion Automatica
       <input type="checkbox" name="banderas[]"	id="banderas" <?php check_banderas('asunto_padre');?>>Tomar el asunto del padre al responder
@@ -348,7 +353,7 @@ if($datos_formato["numcampos"]) {
       <div class="row-fluid">
         <div class="span6">
           <div class="control-group">
-            <label class="control-label" for="papel">Tama&ntilde;o de la p&aacute;gina</label>
+            <label class="control-label" for="papel"><strong>Tama&ntilde;o de la p&aacute;gina</strong></label>
             <div class="controls">
               <select name="papel" id="papel">
               	<option value="letter" <?php if(@$datos_formato[0]["papel"]=="letter") echo(' selected');?>>Carta (21,6 cm x 27,9 cm)</option>
@@ -364,10 +369,10 @@ if($datos_formato["numcampos"]) {
       <div class="row-fluid">
         <div class="span6">
           <div class="control-group">
-            <label class="control-label" for="orientacion">Orientaci&oacute;n</label>
+            <label class="control-label" for="orientacion"><strong>Orientaci&oacute;n</strong></label>
             <div class="controls">            
-              Vertical<input type="radio" name="orientacion" id="orientacion_0" value="0" <?php if(!@$datos_formato[0]["orientacion"]) echo(' checked="checked"');?>>
-               Horizontal<input type="radio" name="orientacion" id="orientacion_1" value="1" <?php if(@$datos_formato[0]["orientacion"]) echo(' checked="checked"');?>>
+               Vertical <input type="radio" name="orientacion" id="orientacion_0" value="0" <?php if(!@$datos_formato[0]["orientacion"]) echo(' checked="checked"');?>>
+               Horizontal <input type="radio" name="orientacion" id="orientacion_1" value="1" <?php if(@$datos_formato[0]["orientacion"]) echo(' checked="checked"');?>>
             </div>
           </div>
         </div>
@@ -376,7 +381,7 @@ if($datos_formato["numcampos"]) {
       <div class="row-fluid">
         <div class="span12">
           <div class="control-group">
-            <label class="control-label" for="font_size">Tama&ntilde;o de letra</label>
+            <label class="control-label" for="font_size"><strong>Tama&ntilde;o de letra</strong></label>
             <div class="controls">
               <select name="font_size" id="font_size" data-toggle="tooltip" title="Seleccione el tamaño de letra para los formatos">
               	<?php
@@ -413,7 +418,7 @@ if($datos_formato["numcampos"]) {
   	?>
 
     <div class="span6"> <!-- COLUMNA DERECHA -->
-      <label class="control-label" for="margenes">M&aacute;rgenes (cent&iacute;metros)</label>
+      <label class="control-label" for="margenes"><strong>M&aacute;rgenes (cent&iacute;metros)</strong></label>
       <div class="row-fluid">
         <div class="span2">
           <label for="msup">Superior</label>
@@ -464,7 +469,7 @@ if($datos_formato["numcampos"]) {
   <div class="row-fluid">
     <div class="span12">
       <div class="control-group">
-        <label class="control-label" for="fk_categoria_formato" data-toggle="tooltip" title="Escoja en donde ser&aacute; ubicado el formato">Categor&iacute;a del formato</label>
+        <label class="control-label" for="fk_categoria_formato" data-toggle="tooltip" title="Escoja en donde ser&aacute; ubicado el formato"><strong>Categor&iacute;a del formato</strong></label>
         <div class="controls">
         	<div id="esperando_fk_categoria_formato"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
         	<?php echo($categoria_formato[0]["nombre"]);?>
@@ -484,13 +489,14 @@ if($datos_formato["numcampos"]) {
     </div>
   </div> -->
 
-  <div class="form-actions">
+  <div class="container">
+  <div class="row-fluid">
   	<input type="hidden" name="ruta_almacenamiento" id="ruta_almacenamiento_formato" value="{*fecha_ano*}/{*fecha_mes*}/{*idformato*}">
   	<!--input type="hidden" name="prefijo" id="prefijo_formato" value=""-->
   	<input type="hidden" name="idfuncionario" id="idfuncionario" value="<?php echo(usuario_actual("idfuncionario")); ?>">
   	<input type="hidden" name="banderas_formato" id="banderas" value="">
   	<input type="hidden" name="idformato" id="idformato" value="">
-    <button type="button" name="adicionar" class="btn btn-primary" id="enviar_datos_formato" value="adicionar_datos_formato">Aceptar</button>
+    <button type="button" name="adicionar" class="btn btn-info" id="enviar_datos_formato" value="adicionar_datos_formato" style="background: #48b0f7;color:fff;"><span  style="color:fff; background: #48b0f7;">Aceptar</span></button>
     <!-- button type="reset" name="cancelar" class="btn" id="cancelar_formulario_saia" value="cancelar">Cancel</button-->
     <?php if($_REQUEST["idformato"]){?>
     <!-- button type="button" name="eliminar" class="btn btn-danger kenlace_saia_propio" id="eliminar_formulario_saia" enlace="../formatos/generador/eliminar_formato.php?idformato=<?php echo($_REQUEST['idformato']);?>" titulo="Eliminar formato" eliminar_hijos="0" value="eliminar">Eliminar</button-->
@@ -501,6 +507,7 @@ if($datos_formato["numcampos"]) {
 	echo $texto;
     ?>
     <div class="pull-right" id="cargando_enviar"></div>
+     </div>
   </div>
 </form>
 
