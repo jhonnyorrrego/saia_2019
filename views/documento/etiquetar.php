@@ -25,7 +25,7 @@
     $(function(){
         let baseUrl = Session.getBaseUrl();
         let userId = localStorage.getItem('key');
-        let selections = '<?= $_REQUEST['selections'] ?>';
+        let selections = '<?= $_REQUEST["selections"] ?>';
 
         if(typeof Tags == 'undefined'){
             $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/tags/tags.js`, r => {

@@ -33,10 +33,10 @@ if (@$_REQUEST["accion"] && @$_REQUEST["accion"] == "eliminar_temporal") {
 	foreach ($configuracion as $fila) {
 	    switch ($fila->nombre) {
 			case 'tamanio_maximo_upload' :
-				$max_tamanio = $configuracion->valor;
+			    $max_tamanio = $fila->valor;
 				break;
 			case 'ruta_temporal' :
-				$ruta_temporal = "{$configuracion->valor}_{$usuario}/";
+				$ruta_temporal = "{$fila->valor}_{$usuario}/";
 				break;
 		}
 	}
@@ -52,6 +52,7 @@ if (@$_REQUEST["accion"] && @$_REQUEST["accion"] == "eliminar_temporal") {
 	// $uploadHandler->addRule('imageratio', ['ratio' => 1], '{label} should be a sqare image', $_REQUEST["nombre_campo"]);
 
 	$result = $uploadHandler -> process($_FILES[$_REQUEST["nombre_campo"]]);
+	//print_r($result);
 	$resp = array();
 	if ($result -> isValid()) {
 		if ($result instanceof Sirius\Upload\Result\Collection) {
@@ -67,6 +68,8 @@ if (@$_REQUEST["accion"] && @$_REQUEST["accion"] == "eliminar_temporal") {
 			$info = guardar($info, $uuid, $ruta_temporal);
 			$resp[$uuid] = $info;
 		}
+	} else {
+	    var_dump($result->getMessages()); die("KAPUT");
 	}
 	echo json_encode($resp);
 }

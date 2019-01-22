@@ -82,7 +82,7 @@ $(function () {
                 return this._updateMaxFilesReachedClass();
             },
             success : function(file, response) {
-            	console.log(file);
+            	//console.log(file);
             	console.log(response);
             	for (var key in response) {
                 	if(Array.isArray(response[key])) {

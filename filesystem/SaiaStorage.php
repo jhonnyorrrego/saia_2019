@@ -78,6 +78,9 @@ class SaiaStorage {
             case 'anexos_tareas':
                 $server_path = RUTA_ANEXOS_TAREAS;
                 break;
+            case 'anexos_flujos':
+                $server_path = RUTA_ANEXOS_FLUJOS;
+                break;
             default:
                 // Usar el tipo. Ej. BACKUP
                 $server_path = $this->tipo;

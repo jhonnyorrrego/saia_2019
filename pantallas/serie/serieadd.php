@@ -106,7 +106,6 @@ if ($sAction == "A") {
 			'categoria' => 2
 		];
 		$Serie->SetAttributes($attributes);
-
 		$key = $Serie->tipo;
 	} else {
 		$idserie = $_REQUEST['x_idserie'];
@@ -142,28 +141,9 @@ if ($sAction == "A") {
 	$digitalizacion[$Serie->digitalizacion] = 'checked';
 	$copia[$Serie->copia] = 'checked';
 
-	$EntidadSerie = $Serie->getEntidadSerieFk();
-	$cant = count($EntidadSerie);
-	$idsDep = [];
-	if ($cant) {
-		for ($i = 0; $i < $cant; $i++) {
-			$idsDep[] = $EntidadSerie[$i]->fk_dependencia;
-		}
-	}
-	$selecccionados = '';
-	if (count($idsDep)) {
-		$selecccionados = implode(",", $idsDep);
-	}
-
 	$origen = array(
 		"url" => "arboles/arbol_dependencia.php",
-		"ruta_db_superior" => $ruta_db_superior,
-		"params" => array(
-			"seleccionados" => $selecccionados,
-			'depserie'=>1,
-			'idserie'=>$idserie,
-			'origenPagina' => 'add'
-		)
+		"ruta_db_superior" => $ruta_db_superior
 	);
 
 	$opcionArbol = array(

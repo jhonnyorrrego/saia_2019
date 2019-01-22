@@ -250,7 +250,7 @@ abstract class Model extends Events
                 $this->afterDelete();
             }
         }
-        return !self::findByAttributes([$this->getPkName() => $id]);
+        return !self::findByAttributes([$this->getPkName() => $this->getPK()]);
     }
 
     private function runDelete()
@@ -260,7 +260,7 @@ abstract class Model extends Events
 
     public static function executeDelete($conditions = [])
     {
-        $sql = 'DELETE FROM' . self::getTableName() . ' where ' . self::createCondition($conditions);
+        $sql = 'DELETE FROM ' . self::getTableName() . ' WHERE ' . self::createCondition($conditions);
         return phpmkr_query($sql);
     }
 
@@ -377,6 +377,7 @@ abstract class Model extends Events
 
         $safeAttributes = $Instance->getSafeAttributes();
         $dateAttributes = $Instance->getDateAttributes();
+        $safeAttributes[] = $Instance->getPkName();
         $select = '';
 
         $fields = count($fields) ? $fields : $safeAttributes;
@@ -442,6 +443,7 @@ abstract class Model extends Events
     {
         $class = get_called_class();
         $total = isset($records['numcampos']) ? $records['numcampos'] : count($records);
+
         $data = [];
         for ($row = 0; $row < $total; $row++) {
             $Instance = new $class();
@@ -487,7 +489,10 @@ abstract class Model extends Events
     public static function executeUpdate($fields, $conditions)
     {
         $set = '';
+        $className = get_called_class();
+        $Instance = new $className();
 
+        $dateAttributes = $Instance->getDateAttributes();
         foreach ($fields as $attribute => $value) {
             if (strlen($set)) {
                 $set .= ',';

@@ -21,67 +21,37 @@ if (!$idserie) {
 	alerta('Identificador NO encontrado', 'error');
 	return false;
 }
-
 $Serie = new Serie($idserie);
-$EntidadSerie = $Serie->getEntidadSerieFk();
-$cant = count($EntidadSerie);
+$EntidadSeries = $Serie->getEntidadSerieFk();
 $idsDep = [];
-if ($cant) {
-	for ($i = 0; $i < $cant; $i++) {
-		$idsDep[] = $EntidadSerie[$i]->fk_dependencia;
-	}
-}
-/*
-if ($Serie->tipo > 1) {
-	$idsDepPadre = [];
-	$codPadre = $Serie->getCodPadre();
-	if ($codPadre) {
-		$EntidadSeriePadre = $codPadre->getEntidadSerieFk();
-		$cantPadre = count($EntidadSeriePadre);
-		if ($cantPadre) {
-			for ($i = 0; $i < $cantPadre; $i++) {
-				$idsDepPadre[] = $EntidadSeriePadre[$i]->fk_dependencia;
-			}
-			$idsDepFaltante = array_diff($idsDepPadre, $idsDep);
-			if (count($idsDepFaltante)) {
-				$idsDep = array_merge($idsDep, $idsDepFaltante);
-			}
+$idsEliminar = [];
+if ($EntidadSeries) {
+	foreach ($EntidadSeries as $EntSer) {
+		if($EntSer->estado){
+			$idsDep[] = $EntSer->fk_dependencia;
+			$idsEliminar[$EntSer->fk_dependencia] = $EntSer->getPK();
 		}
 	}
-}*/
+}
 
 if ($sAction == "A") {
 	$depActuales = explode(',', $_POST['fk_dependencia']);
 	$eliminados = array_diff($idsDep, $depActuales);
-	$cantDelete = count($nuevos);
+	$cantDelete = count($eliminados);
 
 	$nuevos = array_diff($depActuales, $idsDep);
 	$cantNew = count($nuevos);
 	$message = [];
 	$exitoDel = 1;
-	/*if ($cantDelete) {
-		$okDel = 0;
-		$attributes = [
-			'estado' => 0,
-			'fecha_eliminacion' => date('Y-m-d H:i:s')
-		];
-		foreach ($eliminados as $iddependencia) {
-			$instance = EntidadSerie::findAllByAttributes(
-				[
-					'fk_serie' => $idserie,
-					'fk_dependencia' => $iddependencia,
-					'estado' => 1,
-				]
-			);
-			if ($instance) {
-				$EntidadSerie = $instance[0];
-				$EntidadSerie->SetAttributes($attributes);
-				$info = $EntidadSerie->inactiveEntidadSerie();
-				if ($info['exito']) {
-					$okDel++;
-				}
-			}
 
+	if ($cantDelete) {
+		$okDel = 0;
+		foreach ($eliminados as $iddependencia) {
+			$EntidadSerie = new EntidadSerie($idsEliminar[$iddependencia]);
+			$info = $EntidadSerie->inactiveEntidadSerie();
+			if ($info['exito']) {
+				$okDel++;
+			}
 		}
 		if ($cantDelete == $okDel) {
 			$exitoDel = 1;
@@ -92,7 +62,7 @@ if ($sAction == "A") {
 			$message[] = 'Error al desvincular la serie';
 			$exitoDel = 0;
 		}
-	}*/
+	}
 
 	$exitoNew = 1;
 	if ($cantNew) {
@@ -110,6 +80,7 @@ if ($sAction == "A") {
 			if ($infoEntidadSerie['exito']) {
 				$okNew++;
 			}
+			ProcessExpedienteController::createEntidadSerieCodArbol($Serie->cod_arbol, $attributes);
 		}
 		if ($cantNew == $okNew) {
 			$exitoNew = 1;
