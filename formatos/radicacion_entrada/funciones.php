@@ -552,10 +552,6 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
   </table>
   <table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">';
     if ($datos[0]['tipo_origen'] == 1) {
-        print_r($datos);
-        echo("<hr>");
-        print_r($datos[0]['numero_oficio']);
-        die("--");
         $empresa_transportadora = mostrar_valor_campo('empresa_transportado', $idformato, $iddoc, 1);
         $tabla .= "<tr>
       <td style='width:25%;'><strong>N&uacute;mero Oficio:</strong></td>
