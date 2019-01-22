@@ -51,25 +51,6 @@ class Expediente extends Model
         parent::__construct($id);
     }
 
-    protected function afterCreate()
-    {
-        $cod_arbol = $this->idexpediente;
-        $padre = $this->getCodPadre();
-        if ($padre) {
-            $cod_arbol = $padre->cod_arbol . '.' . $this->idexpediente;
-        }
-        $this->cod_arbol = $cod_arbol;
-        $this->update();
-        return true;
-    }
-
-    protected function afterDelete()
-    {
-        //TODO: Eliminar expediente doc y expediente abc
-        //$ExpedienteDoc = ExpedienteDoc::findAllByAttributes(['expediente_idexpediente' => $this->getPK()]);
-        return true;
-    }
-
 
     protected function defineAttributes()
     {
@@ -123,7 +104,56 @@ class Expediente extends Model
         ];
     }
 
-    public function CreateExpediente()
+    /**
+     * Se ejecuta despues de crear el expediente
+     * Actualiza el cod_arbol del expediente
+     *
+     * @return void
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    protected function afterCreate()
+    {
+        $cod_arbol = $this->idexpediente;
+        $padre = $this->getCodPadre();
+        if ($padre) {
+            $cod_arbol = $padre->cod_arbol . '.' . $this->idexpediente;
+        }
+        $this->cod_arbol = $cod_arbol;
+        $this->update();
+        return true;
+    }
+    /**
+     * Se ejecuta posterior al eliminar un expediente
+     * Elimina las documentos y el historial de cierre vinculadoa al expediente
+     *
+     * @return void
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    protected function afterDelete()
+    {
+        $ExpedienteDoc = ExpedienteDoc::findAllByAttributes(['fk_expediente' => $this->getPK()]);
+        if ($ExpedienteDoc) {
+            foreach ($ExpedienteDoc as $instance) {
+                $instance->delete();
+            }
+        }
+
+        $ExpedienteAbce = ExpedienteDoc::findAllByAttributes(['fk_expediente' => $this->getPK()]);
+        if ($ExpedienteAbce) {
+            foreach ($ExpedienteAbce as $instance) {
+                $instance->delete();
+            }
+        }
+        return true;
+    }
+    /**
+     * Crea el expediente con sus correspondientes vinculados
+     * NO utlizar save()
+     * 
+     * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function CreateExpediente() : array
     {
         $response = [
             'data' => [],
@@ -140,8 +170,13 @@ class Expediente extends Model
         }
         return $response;
     }
-
-    public function getEstado()
+    /**
+     * retorna la etiqueta del estado del expediente
+     *
+     * @return string
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getEstado() : string
     {
         $estado = array(
             0 => 'INACTIVO',
@@ -149,7 +184,12 @@ class Expediente extends Model
         );
         return $estado[$this->estado];
     }
-
+    /**
+     * retorna la instancia del expediente padre
+     *
+     * @return void
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
     public function getCodPadre()
     {
         if ($this->cod_padre) {
@@ -161,11 +201,15 @@ class Expediente extends Model
         }
         return $this->expedientePadre;
     }
-
+    /**
+     * retorna las instancias de expedientes_doc vinculadas al expediente
+     *
+     * @return void
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
     public function getExpedienteDocFk()
     {
         return ExpedienteDoc::findAllByAttributes(['idexpediente' => $this->idexpediente]);
     }
-
 
 }
