@@ -322,6 +322,41 @@ function actualizar_cuerpo_formato($idformato, $tipo_retorno) {
     }
 }
 
+function consultar_campos_formato($idformato, $tipo_retorno) {
+    global $conn, $ruta_db_superior;
+    $retorno = array(
+        "exito" => 0,
+        "mensaje" =>  "Recuerde que se deben crear campos del formato"
+    );
+    if (@$_REQUEST["idformato"]) {
+        $formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $idformato, "", $conn);
+        $consulta_campos_lectura = busca_filtro_tabla("valor", "configuracion", "nombre='campos_solo_lectura'", "", $conn);
+        
+        if ($consulta_campos_lectura['numcampos']) {
+            $campos_lectura = json_decode($consulta_campos_lectura[0]['valor'], true);
+            $campos_lectura = implode(",", $campos_lectura);
+            $campos_lectura = str_replace(",", "','", $campos_lectura);
+            $busca_idft = strpos($campos_lectura, "idft_");
+            if ($busca_idft !== false) {
+                $consulta_ft = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $idformato, "", $conn);
+                $campos_lectura = str_replace("idft_", "id" . $formato[0]['nombre_tabla'], $campos_lectura);
+                $campos_excluir[] = $campos_lectura;
+            }
+        }
+
+        $condicion_adicional = " and A.nombre not in('" . implode("', '", $campos_excluir) . "')";
+        $campos = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $idformato . " and etiqueta_html<>'campo_heredado' " . $condicion_adicional . "", "A.orden", $conn);
+        if($campos['numcampos']){
+            $retorno["exito"] = 1;
+        }
+        if ($tipo_retorno == 1)
+            echo (json_encode($retorno));
+        else {
+            return ($retorno);
+        }
+    }
+}
+
 function verificar_nombre_formato($nombre, $tipo_retorno) {
     $retorno = array(
         "exito" => 0,

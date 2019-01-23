@@ -130,8 +130,6 @@ padding:13px;
 
 
     var tree = $("#tree_campo_idformato").fancytree("getTree");
-
-
     $("input[name=search]").keyup(function(e){
 		    var coincidencias = " coincidencias";
 	        var n,
@@ -271,7 +269,7 @@ ul.fancytree-container {
 
   </head>
   <body>
-  	<div class="container">
+  	<div class="container"><br>
   		<div class="row mx-0 px-0">
 			<div class="col-auto px-0 mx-0">
 				<?= $arbol->generar_html() ?>
