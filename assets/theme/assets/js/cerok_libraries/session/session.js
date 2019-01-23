@@ -32,6 +32,8 @@ class Session {
                 Session.close();
             }
         }
+
+        Session.defineGlobalChecker();
     }
 
     set baseUrl(route) {
@@ -102,4 +104,11 @@ class Session {
         return $("#baseUrl").data('baseurl');
     }
 
+    static defineGlobalChecker() {
+        top.window.checkSession = function () {
+            if (!localStorage.getItem('key')) {
+                window.location = Session.getBaseUrl() + 'views/login/login.php';
+            }
+        }
+    }
 }

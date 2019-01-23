@@ -16,7 +16,7 @@ include_once $ruta_db_superior . "db.php";
 global $conn;
 
 $Response = new stdClass();
-$Response->success = 1;
+$Response->success = 0;
 $Response->message = "";
 
 if($_REQUEST['username']){
@@ -36,16 +36,14 @@ if($_REQUEST['username']){
 
             $administrador = html_entity_decode($busca_administrador[0]['administrador']);
             $Response->message = "Solicitud realizada, Comuniquese con " . $administrador;
+            $Response->success = 1;
         }else{
-            $Response->success = 0;
             $Response->message = "No se encuentra administrador";
         }
     }else{
-        $Response->success = 0;
         $Response->message = "Usuario invalido";
     }
 }else{
-    $Response->success = 0;
     $Response->message = "Usuario requerido";
 }
 
