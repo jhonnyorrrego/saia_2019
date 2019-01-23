@@ -36,6 +36,11 @@ $(function(){
         $(this).find('span:last').addClass('bg-institutional');
     });
 
+    document.getElementById('iframe_workspace').addEventListener('load', function () {
+        let script = $('<script>').append(`$(document).ajaxSend(() => top.window.checkSession());`);
+        $(this).contents().find('body').append(script)
+    });
+
     $(".page-sidebar").on('touchstart', function (evt) {
         xDown = getTouches(evt)[0].clientX;
         yDown = getTouches(evt)[0].clientY;

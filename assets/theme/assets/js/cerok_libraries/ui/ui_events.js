@@ -6,7 +6,9 @@ $(function () {
     
     Ui.putLogo();
     Ui.showUserInfo(session.user);
-    Ui.resizeIframe();    
+    Ui.resizeIframe();
+
+    $(document).ajaxSend(() => top.window.checkSession());
     
     $("#btn_logout").on("click", function (event) {
         event.preventDefault();
