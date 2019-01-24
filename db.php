@@ -13,57 +13,94 @@ use Gaufrette\StreamMode;
 use Imagine\Image\Box;
 use Imagine\Gd\Imagine;
 use PHPSQLParser\PHPSQLParser;
-require_once("sql2.php");
 
-if (!isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
-    session_start();
-    ob_start();
-}
+require_once 'sql2.php';
+defineGlobalVars();
 
-$error = array();
-$dat_orig = 0;
-$sql = "";
-$conn = null;
-$conn = phpmkr_db_connect();
-
-$cons_temp_func = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal' AND tipo='ruta'", "", $conn);
-$usuactual = @$_SESSION["LOGIN" . LLAVE_SAIA];
-if (isset($_SESSION["LOGIN" . LLAVE_SAIA]) && $_SESSION["LOGIN" . LLAVE_SAIA]) {
-    $_SESSION["usuario_actual"] = usuario_actual("funcionario_codigo");
-    $_SESSION["idfuncionario"] = usuario_actual("idfuncionario");
-    if ($cons_temp_func["numcampos"]) {
-        $ruta_temp_func = $cons_temp_func[0]["valor"];
-    } else {
-        $ruta_temp_func = "temporal/temporal";
+/**
+ * define las variables globales y se session
+ *
+ * @return void
+ */
+function defineGlobalVars()
+{
+    if (!isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
+        session_start();
+        ob_start();
     }
-    $_SESSION["ruta_temp_funcionario"] = $ruta_temp_func . "_" . $_SESSION["LOGIN" . LLAVE_SAIA] . "/";
+
+    $GLOBALS['sql'] = '';
+    $GLOBALS['conn'] = phpmkr_db_connect();
+    $GLOBALS['usuactual'] = $_SESSION['LOGIN' . LLAVE_SAIA] ?? '';
+
+    if (!empty($GLOBALS['usuactual'])) {
+        if (empty($_SESSION['usuario_actual']) || empty($_SESSION['idfuncionario'])) {
+            setSessionUserData();
+        }
+
+        setTemporalRoute();
+    } elseif (!empty($_REQUEST['idfunc'])) {//Utilizado para la generacion del PDF
+        include_once 'pantallas/lib/librerias_cripto.php';
+
+        $encryptedUserId = decrypt_blowfish($_REQUEST['idfunc'], LLAVE_SAIA_CRYPTO);
+        $findLogin = busca_filtro_tabla('login', 'funcionario', 'estado=1 and idfuncionario=' . $encryptedUserId, '', $GLOBALS['conn']);
+        if ($findLogin['numcampos']) {
+            logear_funcionario_webservice($findLogin[0]["login"]);
+        }
+    }
 }
 
-if (isset($_REQUEST['idfunc']) && $_REQUEST['idfunc'] && !isset($_SESSION["LOGIN" . LLAVE_SAIA])) {//Utilizado para la generacion del PDF
-	include_once ('pantallas/lib/librerias_cripto.php');
-	$idfuncionario_crypto = decrypt_blowfish($_REQUEST["idfunc"], LLAVE_SAIA_CRYPTO);
-	$fun = busca_filtro_tabla("login,funcionario_codigo,idfuncionario", "funcionario", "estado=1 and idfuncionario=" . $idfuncionario_crypto, "", $conn);
-	if ($fun["numcampos"]) {
-		logear_funcionario_webservice($fun[0]["login"]);
-	}
+/**
+ * define los valores de session
+ * que le pertenecen al usuario actual
+ *
+ * @return boolean
+ */
+function setSessionUserData()
+{
+    global $conn, $usuactual;
+
+    $findUser = busca_filtro_tabla("funcionario_codigo,idfuncionario", "funcionario", "login ='{$usuactual}'", '', $conn);
+    $_SESSION["usuario_actual"] = $findUser[0]['funcionario_codigo'];
+    $_SESSION["idfuncionario"] = $findUser[0]['funcionario_codigo'];
+
+    return $findUser['numcampos'] > 0;
 }
 
+/**
+ * define la ruta temporal del usuario
+ * en la variable session
+ *
+ * @return true
+ */
+function setTemporalRoute()
+{
+    global $conn, $usuactual;
 
+    $findConfiguration = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal' AND tipo='ruta'", "", $conn);
+    $temporalRoute = $findConfiguration[0]["valor"] ?? "temporal/temporal";
+    $_SESSION["ruta_temp_funcionario"] = "{$temporalRoute}_{$usuactual}/";
+
+    return true;
+}
+
+/**
+ * define variables globales para
+ * desarrollos desde servicios web
+ *
+ * @param string $login
+ * @return true
+ */
 function logear_funcionario_webservice($login)
 {
-    global $usuactual, $cons_temp_func;
-    $usuactual = $login;
+    $GLOBALS['usuactual'] = $login;
     $_SESSION["LOGIN" . LLAVE_SAIA] = $login;
-    $_SESSION["usuario_actual"] = usuario_actual("funcionario_codigo");
-    $_SESSION["idfuncionario"] = usuario_actual("idfuncionario");
     $_SESSION["conexion_remota"] = 1;
-    if ($cons_temp_func["numcampos"]) {
-        $ruta_temp_func = $cons_temp_func[0]["valor"];
-    } else {
-        $ruta_temp_func = "temporal/temporal";
-    }
-    $_SESSION["ruta_temp_funcionario"] = $ruta_temp_func . "_" . $_SESSION["LOGIN" . LLAVE_SAIA] . "/";
-    return;
+
+    setSessionUserData();
+    setTemporalRoute();
+
+    return true;
 }
 
 /*
@@ -418,20 +455,34 @@ function formato_cargo($nombre_cargo)
 function phpmkr_db_connect($HOST = HOST, $USER = USER, $PASS = PASS, $DB = DB, $MOTOR = MOTOR, $PORT = PORT, $BASEDATOS = BASEDATOS)
 {
     global $conn;
+
     if (!$conn) {
-        $datos = array('basedatos' => $BASEDATOS, 'db' => $DB, 'motor' => $MOTOR, 'host' => $HOST, 'user' => $USER, 'pass' => $PASS, 'port' => $PORT);
-        $con = new conexion($datos);
-        $conn = SQL2::get_instance($con, $MOTOR);
+        $conexion = new conexion([
+            'basedatos' => $BASEDATOS,
+            'db' => $DB,
+            'motor' => $MOTOR,
+            'host' => $HOST,
+            'user' => $USER,
+            'pass' => $PASS,
+            'port' => $PORT
+        ]);
+
+        $conn = SQL2::get_instance($conexion, $MOTOR);
+
         if ($conn && $conn->Conn) {
-            return ($conn);
-        } else if (!$conn) {
+            $response = $conn;
+        } elseif (!$conn) {
             error("Error al Tratar de Crear el SQL." . $conn->consulta);
-            return false;
+            $response = false;
         } else {
             error("Error al conectarse con la Base de datos." . $conn->consulta);
-            return false;
+            $response = false;
         }
-    } else return (true);
+    }else{
+        $response = $conn;
+    }
+
+    return $response;
 }
 
 
@@ -463,65 +514,66 @@ function phpmkr_db_close($conn)
 <Salida>
 <Pre-condiciones>
 <Post-condiciones>
-*/
-function phpmkr_query($strsql){
-global $conn;
+ */
+function phpmkr_query($strsql)
+{
+    global $conn;
 
-	if(!get_magic_quotes_gpc()) // SI NO ESTAN ACTIVADAS LAS MAGIC QUOTES DE PHP ESCAPA LA SECUENCIA SQL
-		$strsql = stripslashes($strsql);
-	$rs = Null;
-	if($conn) {
-		$sqleve = "";
-		$sql = trim($strsql);
-		$sql = preg_replace("/\s*=\s*/", "=", $sql);
-		$accion = strtoupper(substr($sql, 0, strpos($sql, ' ')));
-		$llave = 0;
-		$tabla = "";
-		$string_detalle = "";
-		if($accion != "SELECT") {
-	    $func = usuario_actual("funcionario_codigo");
-		} else {
-			$rs = $conn->Ejecutar_Sql($strsql);
-		}
+    if (!get_magic_quotes_gpc()) // SI NO ESTAN ACTIVADAS LAS MAGIC QUOTES DE PHP ESCAPA LA SECUENCIA SQL
+    $strsql = stripslashes($strsql);
+    $rs = null;
+    if ($conn) {
+        $sqleve = "";
+        $sql = trim($strsql);
+        $sql = preg_replace("/\s*=\s*/", "=", $sql);
+        $accion = strtoupper(substr($sql, 0, strpos($sql, ' ')));
+        $llave = 0;
+        $tabla = "";
+        $string_detalle = "";
+        if ($accion != "SELECT") {
+            $func = usuario_actual("funcionario_codigo");
+        } else {
+            $rs = $conn->Ejecutar_Sql($strsql);
+        }
 
-		$sqleve = "";
-		switch($accion) {
-			case ("SELECT"):
-				$strsql = htmlspecialchars_decode((($strsql)));
-				break;
-			case ("INSERT"):
+        $sqleve = "";
+        switch ($accion) {
+            case ("SELECT"):
+                $strsql = htmlspecialchars_decode((($strsql)));
+                break;
+            case ("INSERT"):
 
-				$values = substr($strsql, strpos("VALUES", strtoupper($strsql) + 6));
+                $values = substr($strsql, strpos("VALUES", strtoupper($strsql) + 6));
 				//$rs = $conn->Ejecutar_Sql(htmlspecialchars_decode((($strsql))));
-				$rs = $conn->Ejecutar_Sql($strsql);
+                $rs = $conn->Ejecutar_Sql($strsql);
 
-				$llave = $conn->Ultimo_Insert();
-				preg_match("/insert into (\w*\.)*(\w+)/i", strtolower($strsql), $resultados);
-				if(isset($resultados[2])) {
-					$tabla = $resultados[2];
-				} else {
-					preg_match("/insert all into (\w*\.)*(\w+)/i", strtolower($strsql), $resultados);
-					if(isset($resultados[2])) {
-						$tabla = $resultados[2];
-					} else {
-						break;
-					}
-				}
-				guardar_evento($strsql, $llave, $tabla, $func, "ADICIONAR");
-				break;
-			case ('UPDATE'):
-				$parser = new PHPSQLParser($strsql, true);
+                $llave = $conn->Ultimo_Insert();
+                preg_match("/insert into (\w*\.)*(\w+)/i", strtolower($strsql), $resultados);
+                if (isset($resultados[2])) {
+                    $tabla = $resultados[2];
+                } else {
+                    preg_match("/insert all into (\w*\.)*(\w+)/i", strtolower($strsql), $resultados);
+                    if (isset($resultados[2])) {
+                        $tabla = $resultados[2];
+                    } else {
+                        break;
+                    }
+                }
+                guardar_evento($strsql, $llave, $tabla, $func, "ADICIONAR");
+                break;
+            case ('UPDATE'):
+                $parser = new PHPSQLParser($strsql, true);
 	
 				//$campos=$parser->parsed["UPDATE"][0]["columns"];
-				$valores=$parser->parsed["WHERE"];
-				$cant=count($valores);
-				$condicion='';
-				for($i=0;$i<$cant;$i++){
-					$condicion.=$valores[$i]["base_expr"];
-					$condicion.=" ";
-				}		
-				preg_match("/update (\w*\.)*(\w+)/i", strtolower($strsql), $resultados);
-				$tabla = $resultados[2];
+                $valores = $parser->parsed["WHERE"];
+                $cant = count($valores);
+                $condicion = '';
+                for ($i = 0; $i < $cant; $i++) {
+                    $condicion .= $valores[$i]["base_expr"];
+                    $condicion .= " ";
+                }
+                preg_match("/update (\w*\.)*(\w+)/i", strtolower($strsql), $resultados);
+                $tabla = $resultados[2];
 				
 				//preg_match("/where (.+)=(.*)/", strtolower($strsql), $resultados);
 				//preg_match("/where (.+)\s*=\s*([\w]+|'[\w]+')/i", strtolower($strsql), $resultados);
@@ -529,61 +581,61 @@ global $conn;
 				//$llave = str_replace("'","",$llave);
 				//$campo_llave = $resultados[1];
 				//$detalle = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
-				$detalle = busca_filtro_tabla("", $tabla, $condicion, "", $conn);
-				$rs = $conn->Ejecutar_Sql($strsql);
+                $detalle = busca_filtro_tabla("", $tabla, $condicion, "", $conn);
+                $rs = $conn->Ejecutar_Sql($strsql);
 				//$detalle2 = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
-				$detalle2 = busca_filtro_tabla("", $tabla, $condicion, "", $conn);
+                $detalle2 = busca_filtro_tabla("", $tabla, $condicion, "", $conn);
 				// ************ miro cuales campos cambiaron en la tabla ****************
-				$nombres_campos = array();
-				if($detalle["numcampos"]) {
-					$nombres_campos = array_keys($detalle[0]);
-				}
-				$cambios = array();
-				if($detalle2["numcampos"] && $detalle["numcampos"]) {
-					for($i = 0; $i < (count($detalle[0]) / 2); $i++) {
-						if($detalle[0][$i] != $detalle2[0][$i])
-							$cambios[] = $nombres_campos[($i * 2) + 1] . "='" . codifica_encabezado(html_entity_decode(htmlspecialchars_decode($detalle[0][$i]))) . "'";
-					}
-				}
+                $nombres_campos = array();
+                if ($detalle["numcampos"]) {
+                    $nombres_campos = array_keys($detalle[0]);
+                }
+                $cambios = array();
+                if ($detalle2["numcampos"] && $detalle["numcampos"]) {
+                    for ($i = 0; $i < (count($detalle[0]) / 2); $i++) {
+                        if ($detalle[0][$i] != $detalle2[0][$i])
+                            $cambios[] = $nombres_campos[($i * 2) + 1] . "='" . codifica_encabezado(html_entity_decode(htmlspecialchars_decode($detalle[0][$i]))) . "'";
+                    }
+                }
 				//$diferencias = "update $tabla set " . implode(", ", $cambios) . " where " . $campo_llave . "=" . $llave;
-				$diferencias = "update $tabla set " . implode(", ", $cambios) . " where " . $condicion;
+                $diferencias = "update $tabla set " . implode(", ", $cambios) . " where " . $condicion;
 				// guardo el evento
-				if(count($cambios)) {
+                if (count($cambios)) {
 					//if(!is_numeric($llave)) {
-						$llave = $detalle[0]["id" . $tabla];
+                    $llave = $detalle[0]["id" . $tabla];
 					//}
-					guardar_evento($strsql, intval($llave), $tabla, $func, "MODIFICAR", $diferencias);
-				}
-				break;
-			case ('DELETE'):
-				preg_match("/delete from (\w*\.)*(\w+)/i", strtolower($strsql), $resultados);
-				$tabla = $resultados[2];
+                    guardar_evento($strsql, intval($llave), $tabla, $func, "MODIFICAR", $diferencias);
+                }
+                break;
+            case ('DELETE'):
+                preg_match("/delete from (\w*\.)*(\w+)/i", strtolower($strsql), $resultados);
+                $tabla = $resultados[2];
 				//preg_match("/where (.+)=(.*)/", strtolower($strsql), $resultados);
-				preg_match("/where (.+)\s*=\s*([\w]+|'[\w]+')/i", strtolower($strsql), $resultados);
-				$llave = trim($resultados[2]);
-				$llave = str_replace("'","",$llave);
-				$campo_llave = $resultados[1];
-				$detalle = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
-				$rs = $conn->Ejecutar_Sql(htmlspecialchars_decode((($strsql))));
-				if($detalle["numcampos"] > 0) {
-					$nombres_campos = array_keys($detalle[0]);
-					$datos1 = array();
-					$datos2 = array();
-					for($i = 0; $i < (count($detalle[0]) / 2); $i++) {
-						if($detalle[0][$i] != $detalle2[0][$i]) {
-							$datos1[] = $nombres_campos[($i * 2) + 1];
-							$datos2[] = "'" . codifica_encabezado(html_entity_decode(htmlspecialchars_decode($detalle[0][$i]))) . "'";
-						}
-					}
-					$string_detalle = "insert into $tabla(" . implode(",", $datos1) . ") values(" . implode(",", $datos2) . ")";
+                preg_match("/where (.+)\s*=\s*([\w]+|'[\w]+')/i", strtolower($strsql), $resultados);
+                $llave = trim($resultados[2]);
+                $llave = str_replace("'", "", $llave);
+                $campo_llave = $resultados[1];
+                $detalle = busca_filtro_tabla("", $tabla, $campo_llave . "=" . $llave, "", $conn);
+                $rs = $conn->Ejecutar_Sql(htmlspecialchars_decode((($strsql))));
+                if ($detalle["numcampos"] > 0) {
+                    $nombres_campos = array_keys($detalle[0]);
+                    $datos1 = array();
+                    $datos2 = array();
+                    for ($i = 0; $i < (count($detalle[0]) / 2); $i++) {
+                        if ($detalle[0][$i] != $detalle2[0][$i]) {
+                            $datos1[] = $nombres_campos[($i * 2) + 1];
+                            $datos2[] = "'" . codifica_encabezado(html_entity_decode(htmlspecialchars_decode($detalle[0][$i]))) . "'";
+                        }
+                    }
+                    $string_detalle = "insert into $tabla(" . implode(",", $datos1) . ") values(" . implode(",", $datos2) . ")";
 
-					guardar_evento($strsql, $llave, $tabla, $func, "ELIMINAR", $string_detalle);
-				}
-				break;
-			default:
-				$rs = $conn->Ejecutar_Sql($strsql);
-				break;
-		}
+                    guardar_evento($strsql, $llave, $tabla, $func, "ELIMINAR", $string_detalle);
+                }
+                break;
+            default:
+                $rs = $conn->Ejecutar_Sql($strsql);
+                break;
+        }
 
         if ($accion != "SELECT") {
             phpmkr_free_result($rs);
@@ -810,7 +862,7 @@ function phpmkr_insert_id()
         if ($buscar["numcampos"]) {
             return $buscar[0]["registro_id"];
         } else {
-            alerta(" Error al recuperar id ".$evento);
+            alerta(" Error al recuperar id " . $evento);
         }
     } else {
         alerta("Error al buscar la ultima insercion." . $rs->sql);
@@ -844,16 +896,17 @@ function phpmkr_error()
  * @param string $conn
  * @return void
  */
-function busca_filtro_tabla($campos, $tabla, $filtro, $orden, $conn){
+function busca_filtro_tabla($campos, $tabla, $filtro, $orden, $conn)
+{
     global $sql, $conn;
-   
+
     $sql = "Select ";
-    $sql.= $campos ? $campos : "*";
-    $sql.= " FROM {$tabla}";
-    $sql.= $filtro ? " WHERE {$filtro} " : ' ';
-    $sql.= $orden ? (substr(strtolower($orden), 0, 5) == "group" ?
+    $sql .= $campos ? $campos : "*";
+    $sql .= " FROM {$tabla}";
+    $sql .= $filtro ? " WHERE {$filtro} " : ' ';
+    $sql .= $orden ? (substr(strtolower($orden), 0, 5) == "group" ?
         $orden : "ORDER BY {$orden} ") : '';
-        
+
     $sql = htmlspecialchars_decode($sql);
     $rs = $conn->Ejecutar_Sql($sql);
     $temp = phpmkr_fetch_array($rs);
@@ -888,9 +941,7 @@ function busca_filtro_tabla($campos, $tabla, $filtro, $orden, $conn){
 function busca_filtro_tabla_limit($campos, $tabla, $filtro, $orden, $inicio, $registros, $conn)
 {
     global $sql, $conn;
-    if (!$conn) {
-        $conn = phpmkr_db_connect();
-    }
+
     $retorno = array();
     $temp = array();
     $retorno["tabla"] = $tabla;
@@ -1707,9 +1758,10 @@ function error($cad, $ruta = "", $file = "", $imprime_cadena = 0)
  * @param string $target ventana destino
  * @return void
  */
-function abrir_url($location, $target = "_blank"){
+function abrir_url($location, $target = "_blank")
+{
     echo "<script language='javascript'>
-        window.open(\"".$location."\",\"".$target."\");
+        window.open(\"" . $location . "\",\"" . $target . "\");
     </script>";
 }
 
@@ -1719,9 +1771,10 @@ function abrir_url($location, $target = "_blank"){
  * @param string $location url destino
  * @return void
  */
-function redirecciona($location){
+function redirecciona($location)
+{
     echo "<script language='javascript'>
-        window.location=\"" . $location ."\";
+        window.location=\"" . $location . "\";
     </script>";
 }
 /*
@@ -2872,7 +2925,8 @@ function convertir_fecha($y, $m, $d, $sep, $formato)
  * <Pre-condiciones>
  * <Post-condiciones>
  */
-function fecha_db($campo, $formato = NULL) {
+function fecha_db($campo, $formato = null)
+{
     global $conn;
     return $conn->fecha_db($campo, $formato);
 }
@@ -3056,63 +3110,64 @@ function getRealIP()
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase>  */
-function almacenar_sesion($exito, $login) {
-	global $conn;
-	$_SESSION["idsesion_php"] = session_id();
-	$datos = array();
-	if ($login == "") {
-		$login = usuario_actual("login");
-		$id = usuario_actual("idfuncionario");
-	} else {
-		$id = $_SESSION["idfuncionario"] ?? null;
-	}
-	$iplocal = getRealIP();
-	$ipremoto = servidor_remoto();
-	if ($iplocal == "" || $ipremoto == "") {
-		if ($iplocal == "") {
-			$iplocal = $ipremoto;
-		} else {
-			$ipremoto = $iplocal;
-		}
-	}
-	if (!$exito) {
-		$intentos = busca_filtro_tabla("intento_login, idfuncionario, estado", "funcionario a", "a.login='" . $login . "'", "", $conn);
-		if ($intentos["numcampos"] && $intentos[0]["estado"] != 0) {//Desarrollo de validacion de intentos al loguearse
-			if (!$intentos[0]["intento_login"]) {
-				$consecutivo = 1;
-			} else {
-				$consecutivo = $intentos[0]["intento_login"] + 1;
-			}
-			$sql2 = "UPDATE funcionario SET intento_login=" . $consecutivo . " WHERE idfuncionario=" . $intentos[0]["idfuncionario"];
-			$conn -> Ejecutar_Sql($sql2);
-			$configuracion = busca_filtro_tabla("valor", "configuracion a", "a.nombre='intentos_login'", "", $conn);
-			if ($consecutivo >= $configuracion[0]["valor"]) {
-				$correo_admin = busca_filtro_tabla("b.email", "configuracion a,funcionario b", "b.login=a.valor AND a.nombre ='login_administrador_interno'", "", $conn);
-				$sql3 = "INSERT INTO lista_negra_acceso(login,iplocal,ipremota,fecha) VALUES ('" . $login . "', '" . $iplocal . "', '" . $ipremoto . "', " . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
-				$conn -> Ejecutar_Sql($sql3);
-				$sql4 = "UPDATE funcionario SET estado='0' WHERE idfuncionario=" . $intentos[0]["idfuncionario"];
-				$conn -> Ejecutar_Sql($sql4);
-				$datos["mensaje"] = "Usuario inactivado por exceso de intentos. Favor comunicarse con el administrador " . $correo_admin[0]["email"];
-			}
-		}
-		$sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,fecha) VALUES('" . $iplocal . "','" . $ipremoto . "','" . $login . "',0," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
-		$conn -> Ejecutar_Sql($sql);
-	} else {
-		$sql2 = "UPDATE funcionario SET intento_login=0 WHERE idfuncionario=" . $id;
-		$conn -> Ejecutar_Sql($sql2);
+function almacenar_sesion($exito, $login)
+{
+    global $conn;
+    $_SESSION["idsesion_php"] = session_id();
+    $datos = array();
+    if ($login == "") {
+        $login = usuario_actual("login");
+        $id = usuario_actual("idfuncionario");
+    } else {
+        $id = $_SESSION["idfuncionario"] ?? null;
+    }
+    $iplocal = getRealIP();
+    $ipremoto = servidor_remoto();
+    if ($iplocal == "" || $ipremoto == "") {
+        if ($iplocal == "") {
+            $iplocal = $ipremoto;
+        } else {
+            $ipremoto = $iplocal;
+        }
+    }
+    if (!$exito) {
+        $intentos = busca_filtro_tabla("intento_login, idfuncionario, estado", "funcionario a", "a.login='" . $login . "'", "", $conn);
+        if ($intentos["numcampos"] && $intentos[0]["estado"] != 0) {//Desarrollo de validacion de intentos al loguearse
+            if (!$intentos[0]["intento_login"]) {
+                $consecutivo = 1;
+            } else {
+                $consecutivo = $intentos[0]["intento_login"] + 1;
+            }
+            $sql2 = "UPDATE funcionario SET intento_login=" . $consecutivo . " WHERE idfuncionario=" . $intentos[0]["idfuncionario"];
+            $conn->Ejecutar_Sql($sql2);
+            $configuracion = busca_filtro_tabla("valor", "configuracion a", "a.nombre='intentos_login'", "", $conn);
+            if ($consecutivo >= $configuracion[0]["valor"]) {
+                $correo_admin = busca_filtro_tabla("b.email", "configuracion a,funcionario b", "b.login=a.valor AND a.nombre ='login_administrador_interno'", "", $conn);
+                $sql3 = "INSERT INTO lista_negra_acceso(login,iplocal,ipremota,fecha) VALUES ('" . $login . "', '" . $iplocal . "', '" . $ipremoto . "', " . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
+                $conn->Ejecutar_Sql($sql3);
+                $sql4 = "UPDATE funcionario SET estado='0' WHERE idfuncionario=" . $intentos[0]["idfuncionario"];
+                $conn->Ejecutar_Sql($sql4);
+                $datos["mensaje"] = "Usuario inactivado por exceso de intentos. Favor comunicarse con el administrador " . $correo_admin[0]["email"];
+            }
+        }
+        $sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,fecha) VALUES('" . $iplocal . "','" . $ipremoto . "','" . $login . "',0," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . ")";
+        $conn->Ejecutar_Sql($sql);
+    } else {
+        $sql2 = "UPDATE funcionario SET intento_login=0 WHERE idfuncionario=" . $id;
+        $conn->Ejecutar_Sql($sql2);
 
-		$idsesion = ultima_sesion($login);
-		if ($idsesion == "") {
-			session_regenerate_id();
-			$_SESSION["idsesion_php"] = session_id();
-			$sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,idsesion_php,fecha,funcionario_idfuncionario) VALUES('" . $iplocal . "','" . $ipremoto . "','" . $login . "'," . $exito . ",'" . $_SESSION["idsesion_php"] . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . "," . $id . ")";
-			$datos["mensaje"] = "Sesion creada";
-			$conn -> Ejecutar_Sql($sql);
-		} else {
-			$datos["mensaje"] = "Sesion ya existe";
-		}
-	}
-	return ($datos);
+        $idsesion = ultima_sesion($login);
+        if ($idsesion == "") {
+            session_regenerate_id();
+            $_SESSION["idsesion_php"] = session_id();
+            $sql = "INSERT INTO log_acceso(iplocal,ipremota,login,exito,idsesion_php,fecha,funcionario_idfuncionario) VALUES('" . $iplocal . "','" . $ipremoto . "','" . $login . "'," . $exito . ",'" . $_SESSION["idsesion_php"] . "'," . fecha_db_almacenar(date("Y-m-d H:i:s"), "Y-m-d H:i:s") . "," . $id . ")";
+            $datos["mensaje"] = "Sesion creada";
+            $conn->Ejecutar_Sql($sql);
+        } else {
+            $datos["mensaje"] = "Sesion ya existe";
+        }
+    }
+    return ($datos);
 }
 
 /**
@@ -3122,7 +3177,8 @@ function almacenar_sesion($exito, $login) {
  * @param string $campo
  * @return void
  */
-function usuario_actual($campo) {
+function usuario_actual($campo)
+{
     global $usuactual, $conn;
 
     if (!isset($_SESSION["LOGIN" . LLAVE_SAIA])) {
@@ -3164,8 +3220,9 @@ function ultima_sesion($login)
 <Salida>
 <Pre-condiciones>
 <Post-condiciones>
-*/
-function salir($texto, $login="") {
+ */
+function salir($texto, $login = "")
+{
     global $usuactual, $conn;
     if ($login != "") {
         $iplocal = getRealIP();
@@ -3323,7 +3380,8 @@ function servidor_remoto()
 <Post-condiciones><Post-condiciones>
 </Clase>
  */
-function cerrar_ventana(){
+function cerrar_ventana()
+{
     echo "<script>window.close();</script>";
 }
 /*<Clase>
@@ -3336,10 +3394,11 @@ function cerrar_ventana(){
 <Pre-condiciones><Pre-condiciones>
 <Post-condiciones><Post-condiciones>
 </Clase> */
-function ejecuta_filtro_tabla($sql2, $conn2=null){
+function ejecuta_filtro_tabla($sql2, $conn2 = null)
+{
     global $conn;
-    if($conn2){
-        $conn= $conn2;
+    if ($conn2) {
+        $conn = $conn2;
     }
 
     $retorno = array();
@@ -3488,13 +3547,15 @@ function limpiar_cadena_sql($cadena)
 }
 
 /* Se debe enviar la cadena completa si es una cadena de texto la que se debe concatenar se deben adicionar las comillas simples ' */
-function concatenar_cadena_sql($arreglo_cadena) {
+function concatenar_cadena_sql($arreglo_cadena)
+{
     global $conn;
     return $conn->concatenar_cadena($arreglo_cadena);
 }
 
-function obtener_reemplazo($fun_codigo = 0, $tipo = 1) {
-	global $conn;
+function obtener_reemplazo($fun_codigo = 0, $tipo = 1)
+{
+    global $conn;
 	//$fun_codigo= funcionario_codigo del usuario a consultar
     $retorno = array();
     $retorno['exito'] = 0;
@@ -3582,48 +3643,50 @@ function obtener_codigo_hash_pdf($archivo, $algoritmo = "crc32", $tmp = 0)
         $ruta_db_superior = '';
     }
    // return( hash_file($algoritmo,$ruta_db_superior.$archivo) );
-   return( md5_file($ruta_db_superior.$archivo) );
+    return (md5_file($ruta_db_superior . $archivo));
 }
-function parsear_comilla_sencilla_cadena($cadena){
-	global $conn;
-	$cadena_original=$cadena;
-	$cadena_sinespacios=trim($cadena);
+function parsear_comilla_sencilla_cadena($cadena)
+{
+    global $conn;
+    $cadena_original = $cadena;
+    $cadena_sinespacios = trim($cadena);
 //	$cadena_minuscula=strtolower($cadena_sinespacios);
-	$parseada=0;
-	if(preg_match('/^select/i',$cadena_sinespacios)){
+    $parseada = 0;
+    if (preg_match('/^select/i', $cadena_sinespacios)) {
 		//$findme   = "'";
 		//$pos = strpos($cadena, $findme);
-		if (preg_match("/'/",$cadena)) {  //fue encontrada
+        if (preg_match("/'/", $cadena)) {  //fue encontrada
 			/*$motor=$conn->motor;
 			$vector_replaces=array('Oracle'=>"''",'MySql'=>"''",'SqlServer'=>"''",'MSSql'=>"''");*/
-			$cadena=str_replace("'","''",$cadena);
-			$parseada=1;
-		}
-	}else{
+            $cadena = str_replace("'", "''", $cadena);
+            $parseada = 1;
+        }
+    } else {
 		//$findme   = "'";
 		//$pos = strpos($cadena, $findme);
-		if (preg_match("/'/",$cadena)) {  //fue encontrada
-			$cadena=str_replace("'","''",$cadena);
-			$parseada=1;
-		}
-	}
-	if($parseada){
-		return($cadena);
-	}else{
-		return($cadena_original);
-	}
+        if (preg_match("/'/", $cadena)) {  //fue encontrada
+            $cadena = str_replace("'", "''", $cadena);
+            $parseada = 1;
+        }
+    }
+    if ($parseada) {
+        return ($cadena);
+    } else {
+        return ($cadena_original);
+    }
 }
-function generar_cadena_like_comas($campo,$value){
-	$cadena_like="";
-	if($campo!="" && $value!=''){
-		$cadena_like.="(";
-		$cadena_like.=" ".$campo."='".$value."'";
-		$cadena_like.=" OR ".$campo." LIKE '".$value.",%'   ";
-		$cadena_like.=" OR ".$campo." LIKE '%,".$value."'   ";
-		$cadena_like.=" OR ".$campo." LIKE '%,".$value.",%' ";
-		$cadena_like.=")";
-	}
-	return($cadena_like);
+function generar_cadena_like_comas($campo, $value)
+{
+    $cadena_like = "";
+    if ($campo != "" && $value != '') {
+        $cadena_like .= "(";
+        $cadena_like .= " " . $campo . "='" . $value . "'";
+        $cadena_like .= " OR " . $campo . " LIKE '" . $value . ",%'   ";
+        $cadena_like .= " OR " . $campo . " LIKE '%," . $value . "'   ";
+        $cadena_like .= " OR " . $campo . " LIKE '%," . $value . ",%' ";
+        $cadena_like .= ")";
+    }
+    return ($cadena_like);
 }
 
 /**
