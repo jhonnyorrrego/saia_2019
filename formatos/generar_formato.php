@@ -2455,7 +2455,7 @@ span.fancytree-expander {
         } else {
             $fecha_por_defecto = '';
             if (strtoupper($campo["tipo_dato"]) == "DATE") {
-                $formato_fecha = "format: 'YYYY-MM-DD'";
+                $formato_fecha = "YYYY-MM-DD";
 
                 if ($accion == "adicionar") {
                     if ($campo["predeterminado"] == "now()") {

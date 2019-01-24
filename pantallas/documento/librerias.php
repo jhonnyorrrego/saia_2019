@@ -968,7 +968,7 @@ function variable_busqueda() {
     return $_REQUEST['variable_busqueda'];
 }
 
-function origin_pending_document($documentId, $userCode, $number, $date, $transferId, $format) {
+function origin_pending_document($documentId, $userCode, $number, $date, $transferId) {
     global $conn, $ruta_db_superior;
 
     include_once $ruta_db_superior . 'controllers/autoload.php';

@@ -205,6 +205,17 @@ $(function () {
         xDown = null;
         yDown = null;
     });
+
+    document.getElementById('note_content').addEventListener("paste", function(e) {
+        // cancel paste
+        e.preventDefault();
+    
+        // get text representation of clipboard
+        var text = (e.originalEvent || e).clipboardData.getData('text/plain');
+    
+        // insert text manually 
+        document.execCommand("insertHTML", false, text);
+    });
     
     function getTouches(evt) {
         return evt.touches || evt.originalEvent.touches;
