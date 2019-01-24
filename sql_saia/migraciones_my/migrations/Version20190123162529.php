@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Schema\View;
 use Doctrine\Migrations\AbstractMigration;
 
 /**
@@ -28,47 +29,46 @@ final class Version20190123162529 extends AbstractMigration {
 			"tipo_busqueda" => 1,
 			"elastic" => 0
 	];
-	
 	private $busqueda_componente = [
-			"busqueda_idbusqueda" => 133,
-			"tipo" => 3,
-			"conector" => 2,
-			"url" => "pantallas\/busquedas\/consulta_busqueda_tabla.php?idbusqueda_componente=367",
-			"etiqueta" => "Listado de flujos",
-			"nombre" => "listado_nuevos_flujos",
-			"orden" => 1,
-			"info" => "<div>{*barra_superior_diagramas@id*}\n<br>\n<b>Id=><\/b> {*id*}<br>\n<b>Nombre=><\/b> {*title*}<br>\n<b>Descripci&oacute;n=><\/b> {*description*}\n<\/div>",
-			"exportar" => null,
-			"exportar_encabezado" => null,
-			"encabezado_componente" => "",
-			"estado" => 2,
-			"ancho" => 320,
-			"cargar" => 2,
-			"campos_adicionales" => null,
-			"tablas_adicionales" => null,
-			"ordenado_por" => "a.nombre",
-			"direccion" => "ASC",
-			"agrupado_por" => null,
-			"busqueda_avanzada" => null,
-			"acciones_seleccionados" => null,
-			"modulo_idmodulo" => null,
-			"menu_busqueda_superior" => null,
-			"enlace_adicionar" => "views\/flujos\/flujo.php",
-			"encabezado_grillas" => null,
-			"llave" => "a.idflujo"
+		"busqueda_idbusqueda" => 133,
+		"tipo" => 3,
+		"conector" => 2,
+		"url" => "pantallas\/busquedas\/consulta_busqueda_tabla.php?idbusqueda_componente=367",
+		"etiqueta" => "Listado de flujos",
+		"nombre" => "listado_nuevos_flujos",
+		"orden" => 1,
+		"info" => "<div>{*barra_superior_diagramas@id*}\n<br>\n<b>Id=><\/b> {*id*}<br>\n<b>Nombre=><\/b> {*title*}<br>\n<b>Descripci&oacute;n=><\/b> {*description*}\n<\/div>",
+		"exportar" => null,
+		"exportar_encabezado" => null,
+		"encabezado_componente" => "",
+		"estado" => 2,
+		"ancho" => 320,
+		"cargar" => 2,
+		"campos_adicionales" => null,
+		"tablas_adicionales" => null,
+		"ordenado_por" => "a.nombre",
+		"direccion" => "ASC",
+		"agrupado_por" => null,
+		"busqueda_avanzada" => null,
+		"acciones_seleccionados" => null,
+		"modulo_idmodulo" => null,
+		"menu_busqueda_superior" => null,
+		"enlace_adicionar" => "views\/flujos\/flujo.php",
+		"encabezado_grillas" => null,
+		"llave" => "a.idflujo"
 	];
 	
 	private $dataEvento = [
-			["evento" => "Al cambiar de estado"],
-			["evento" => "Al crear un registro nuevo"],
-			["evento" => "Al radicarse o publicarse un documento"]
+		["evento" => "Al cambiar de estado"],
+		["evento" => "Al crear un registro nuevo"],
+		["evento" => "Al radicarse o publicarse un documento"]
 	];
 	
 	
 	private $dataTipoDest = [
-			["tipo" => "Funcionarios de la Organización"],
-			["tipo" => "Asociado a campos de registros"],
-			["tipo" => "Personas externas"]
+		["tipo" => "Funcionarios de la Organización"],
+		["tipo" => "Asociado a campos de registros"],
+		["tipo" => "Personas externas"]
 	];
 	
 	public function getDescription(): string {
@@ -182,6 +182,7 @@ final class Version20190123162529 extends AbstractMigration {
 		$tabla->addColumn("email", "string", ["length" => 255]);
 		$tabla->addColumn("nombre", "string", ["length" => 255, "notnull" => false]);
 		$tabla->setPrimaryKey(["iddestinatario"]);
+		$tabla->addOption('collate', 'utf8_general_ci');
 		
 		$tabla = $schema->createTable("wf_destinatario_formato");
 		$tabla->addColumn("idformato_flujo", "integer");
@@ -233,6 +234,11 @@ final class Version20190123162529 extends AbstractMigration {
 		}
 		
 		$conn->commit();
+		
+		$sm = $conn->getSchemaManager();
+		
+		$vista = new View("vwf_dest_notificacion", $this->vistaDestinatarioNotificacion());
+		$sm->createView($vista);
 	}
 	
 	public function preDown(Schema $schema): void {
@@ -248,23 +254,36 @@ final class Version20190123162529 extends AbstractMigration {
 	 * @param Schema $schema
 	 */
 	public function down(Schema $schema): void {
-		//$this->skipIf(true, "solo se borran las tablas mientras se realizan pruebas");
-		$tablas = ["wf_evento_notificacion",
-				"wf_flujo",
-				"wf_formato_flujo",
-				"wf_notificacion",
-				"wf_tipo_destinatario",
-				"wf_actividad",
-				"wf_actividad_notificacion",
-				"wf_adjunto_notificacion",
-				"wf_dest_notificacion",
-				"wf_destinatario_saia",
-				"wf_responsable_actividad",
-				"wf_tarea_actividad",
-				"wf_destinatario_externo",
-				"wf_destinatario_formato",
-				"wf_anexo_flujo",
-				"wf_anexo_actividad"];
+			// $this->skipIf(true, "solo se borran las tablas mientras se realizan pruebas");
+			
+		$sm = $this->connection->getSchemaManager();
+		
+		$views = $sm->listViews();
+		$vistas = [];
+		foreach ($views as $view) {
+			$vistas[] = $view->getName();
+		}
+		if(in_array("vwf_dest_notificacion", $vistas)) {
+			$sm->dropView("vwf_dest_notificacion");
+		}
+		$tablas = [
+			"wf_evento_notificacion",
+			"wf_flujo",
+			"wf_formato_flujo",
+			"wf_notificacion",
+			"wf_tipo_destinatario",
+			"wf_actividad",
+			"wf_actividad_notificacion",
+			"wf_adjunto_notificacion",
+			"wf_dest_notificacion",
+			"wf_destinatario_saia",
+			"wf_responsable_actividad",
+			"wf_tarea_actividad",
+			"wf_destinatario_externo",
+			"wf_destinatario_formato",
+			"wf_anexo_flujo",
+			"wf_anexo_actividad"
+		];
 		
 		foreach($tablas as $tabla) {
 			if($schema->hasTable($tabla)) {
@@ -298,6 +317,26 @@ final class Version20190123162529 extends AbstractMigration {
 			$idreg = $conn->lastInsertId();
 		}
 		return $idreg;
+	}
+	
+	private function vistaDestinatarioNotificacion() {
+		$sql = "select dst.iddestinatario, fk_notificacion, fk_tipo_destinatario, td.tipo as tipo_destinatario, de.email
+  from wf_dest_notificacion dst
+  join wf_tipo_destinatario td on dst.fk_tipo_destinatario = td.idtipo_destinatario
+  join wf_destinatario_externo de on dst.iddestinatario = de.iddestinatario
+union 
+  select dst.iddestinatario, fk_notificacion, fk_tipo_destinatario, td.tipo as tipo_destinatario, f.email
+  from wf_dest_notificacion dst 
+  join wf_tipo_destinatario td on dst.fk_tipo_destinatario = td.idtipo_destinatario
+  join wf_destinatario_saia ds on dst.iddestinatario = ds.iddestinatario
+  join vfuncionario_dc f on ds.fk_funcionario = f.idfuncionario
+union
+  select dst.iddestinatario, fk_notificacion, fk_tipo_destinatario, td.tipo as tipo_destinatario, f.email
+  from wf_dest_notificacion dst 
+  join wf_tipo_destinatario td on dst.fk_tipo_destinatario = td.idtipo_destinatario
+  join wf_destinatario_saia ds on dst.iddestinatario = ds.iddestinatario
+  join vfuncionario_dc f on ds.fk_cargo = f.idfuncionario and f.tipo_cargo = 2";
+		return $sql;
 	}
 
 }
