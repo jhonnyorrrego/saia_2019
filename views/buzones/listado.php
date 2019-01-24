@@ -14,7 +14,7 @@ include_once $ruta_db_superior . 'db.php';
 include_once $ruta_db_superior . 'assets/librerias.php';
 
 global $conn;
-$component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_componente', 'busqueda a,busqueda_componente b', 'a.idbusqueda = b.busqueda_idbusqueda and b.idbusqueda_componente='. $_REQUEST['idbusqueda_componente'], '', $conn);
+$component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_componente', 'busqueda a,busqueda_componente b', 'a.idbusqueda = b.busqueda_idbusqueda and b.idbusqueda_componente=' . $_REQUEST['idbusqueda_componente'], '', $conn);
 ?>
 <?= bootstrapTable() ?>
 <div class="container px-0">
@@ -26,14 +26,18 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
 <script data-baseurl='<?= $ruta_db_superior ?>' id="baseUrl">
     $(function(){
         var baseUrl = '<?= $ruta_db_superior ?>';
-        var encabezado = '<?= $component[0]['encabezado_componente'] ?>'
-        var component = '<?= $_REQUEST['idbusqueda_componente'] ?>';
-        var param = '<?= $_REQUEST['variable_busqueda'] ?>';
+        var encabezado = '<?= $component[0]["encabezado_componente"] ?>'
+        var component = '<?= $_REQUEST["idbusqueda_componente"] ?>';
+        var param = '<?= $_REQUEST["variable_busqueda"] ?>';
 
         $('#table').bootstrapTable({
             url: `${baseUrl}app/busquedas/datosBootstrapTable.php?idbusqueda_componente=${component}&variable_busqueda=${param}`,
             sidePagination: 'server',
             queryParamsType: 'other',
+            cardView : true,
+            pagination: true,
+            maintainSelected: true,
+            pageSize: 15,
             columns: [{
                 field: 'info',
             }],
@@ -50,49 +54,27 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
                 return response;
             },
             onPostBody: function(){
-                var selections = $('#table')
-                    .data('selections')
-                    .split(',')
-                    .map(Number)
-                    .filter(n => n > 0);
+                var selections = $('#table').data('selections').split(',').map(Number).filter(n => n > 0);
 
-                if(sessionStorage.getItem('documentSelected')){
-                    let id = sessionStorage.getItem('documentSelected');
-                    let index = $(`input[data-id="${+id}"]`).data('index');
-                    $(`tr[data-index="${+index}"]`).addClass('selected');
-                }
+                selections.forEach(s => {
+                    $(`:checkbox[data-id=${s}]`).prop('checked', true);
+                })
 
-                if(selections.length){
-                    $('[name="btSelectItem"]').each(function (i, e) {
-                        let selected = $.inArray($(e).data('id'), selections) != -1;
-                        $(e).attr('checked', selected);
-
-                        if(selected){
-                            $(`tr[data-index="${$(e).data('index')}"]`).addClass('selected');
-                        }
-                    });
-
-                    $("#selected_rows").text(selections.length);
-                }
+                paintSelected();
             },
             onClickRow: function(row, element, field){
-                element.parent().find('tr[data-index]').each(function(i, e){
-                    if(!$(e).find(':checkbox').is(':checked'))
-                        $(e).removeClass('selected');
-                    else
-                        $(e).addClass('selected');
-
-                });
+                paintSelected();
                 element.addClass('selected');
-            },
-            cardView : true,
-            pagination: true,
-            maintainSelected: true,
-            pageSize: 15
+            }            
         });
 
-        $('#table').on('check.bs.table uncheck.bs.table', function () {
+        $('#table').on('check.bs.table uncheck.bs.table', function (row, data) {
             var selections = $(this).data('selections').split(',').map(Number).filter(n => n > 0);
+            let index = $(data.info).find(':checkbox').data('index');
+            let checkbox = $(`:checkbox[data-index=${index}]`);
+            let checked = checkbox.is(':checked');
+            
+            $(`:checkbox[data-id=${checkbox.data('id')}]`).prop('checked', checked);
 
             $('[name="btSelectItem"]').each(function (i, element) {
                 let id = $(element).data('id');
@@ -105,8 +87,20 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
             });
 
             $(this).data('selections', selections.join(','))
-            $("#selected_rows").text(selections.length);
+            paintSelected();
         });
+
+        function paintSelected(){
+            var selections = $('#table').data('selections').split(',').map(Number).filter(n => n > 0);
+            $("#selected_rows").text(selections.length);
+            $('tr[data-index]').removeClass('selected');
+
+            if(selections.length){
+                $('[name="btSelectItem"]:checked').each(function (i, e) {
+                    $(e).parents('tr[data-index]').addClass('selected');
+                });
+            }
+        }
 
         if(encabezado){
             $("#header_list").load(baseUrl+encabezado,{
@@ -118,11 +112,11 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
     });
 </script>
 <?php
-    if ($component['numcampos'] && $component[0]['ruta_libreria_pantalla']) {
-        $libraries = explode(',', $component[0]['ruta_libreria_pantalla']);
+if ($component['numcampos'] && $component[0]['ruta_libreria_pantalla']) {
+    $libraries = explode(',', $component[0]['ruta_libreria_pantalla']);
 
-        foreach ($libraries as $librarie) {
-            include_once $ruta_db_superior . $librarie;
-        }
+    foreach ($libraries as $librarie) {
+        include_once $ruta_db_superior . $librarie;
     }
+}
 ?>
