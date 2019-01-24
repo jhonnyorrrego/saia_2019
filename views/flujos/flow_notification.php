@@ -12,10 +12,22 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'librerias_saia.php';
+include_once $ruta_db_superior . 'controllers/autoload.php';
 
 echo estilo_tabla_bootstrap("1.13");
 
 echo librerias_tabla_bootstrap("1.13", false, false);
+
+$idflujo = null;
+$datosDiagrama = null;
+if(isset($_REQUEST["idflujo"])) {
+	$idflujo = $_REQUEST["idflujo"];
+	$flujo = new Flujo($idflujo);
+	$datosDiagrama = $flujo->diagrama;
+}
+
+$eventos = EventoNotificacion::findAll('', 0, true);
+
 ?>
 <div>
 	<p>Permite la configuración y personalización del envío de
@@ -34,9 +46,15 @@ echo librerias_tabla_bootstrap("1.13", false, false);
 			<label for="sel_tipo_notificacion">Seleccione en que momento se enviar&aacute; la notificaci&oacute;n</label>
 			<select class="form-control" name="" id="sel_tipo_notificacion">
 				<option value="0">Por favor seleccione...</option>
-				<option value="1">Al cambiar de estado</option>
+				<?php if(!empty($eventos)) {
+					foreach ($eventos as $evento) {
+						echo '<option value="' . $evento["idevento_notificacion"] . '">' . $evento["evento"] . '</option>';
+					}
+				}
+				?>			
+				<!-- <option value="">Al cambiar de estado</option>
 				<option value="2">Al crear un registro nuevo</option>
-				<option value="3">Al radicarse o publicarse un documento</option>
+				<option value="3">Al radicarse o publicarse un documento</option> -->
 			</select>
 			<div class="tipo_opcion tipo_opcion_1" style="display: none;">
 				<label>Elija el cambio de estado</label>
@@ -50,29 +68,29 @@ echo librerias_tabla_bootstrap("1.13", false, false);
 		</fieldset>
 	</form>
 </div>
-<table data-toggle="table">
+<!-- data-url="<?= $ruta_db_superior ?>/views/flujos/listado_notificaciones.php?idflujo=<?= $idflujo?>" -->
+<table id="tabla_notificaciones" 
+  
+  data-toggle="table"
+  data-url="listado_notificaciones.php?idflujo=<?= $idflujo?>"
+  data-height="400"
+  data-side-pagination="server"
+  data-pagination="true"
+  data-page-list="[5, 10, 20, 50, 100, 200]"
+  data-search="true">
 	<thead>
 		<tr>
-			<th>Acci&oacute;n para la notificaci&oacute;n</th>
+			<th data-field="">Acci&oacute;n para la notificaci&oacute;n</th>
 			<th>Asunto</th>
 			<th>Destinatario</th>
 			<th></th>
 		</tr>
 	</thead>
-	<tbody>
-		<tr>
-			<td>1</td>
-			<td>Item 1</td>
-			<td>$1</td>
-		</tr>
-		<tr>
-			<td>2</td>
-			<td>Item 2</td>
-			<td>$2</td>
-		</tr>
-	</tbody>
 </table>
 <script type="text/javascript">
+	//var $table = $('#tabla_notificaciones');
+	//$table.bootstrapTable();
+
 $(function(){
 	$.each(['show', 'hide'], function (i, ev) {
 	    var el = $.fn[ev];
@@ -100,5 +118,31 @@ $(function(){
 	$('.tipo_opcion').on('hide', function() {
 	      //console.log('#foo is hidden');
 	});
+
+	function ajaxRequest(params) {
+
+	    // data you may need
+	    console.log(params.data);
+
+	    $.ajax({
+	        type: "POST",
+	        url: "listado_notificaciones.php",
+	        data: "idflujo=1",
+	// You are expected to receive the generated JSON (json_encode($data))
+	        dataType: "json",
+	        success: function (data) {
+	            params.success({
+	// By default, Bootstrap table wants a "rows" property with the data
+	                "rows": data,
+	// You must provide the total item ; here let's say it is for array length
+	                "total": data.total
+	            })
+	        },
+	        error: function (er) {
+	            params.error(er);
+	        }
+	    });
+	}
+	
 });
 </script>
