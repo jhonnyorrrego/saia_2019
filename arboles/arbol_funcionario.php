@@ -8,10 +8,10 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
+include_once($ruta_db_superior . "db.php");
 
 $objetoJson = array(
-    "key" => 0
+	"key" => 0
 );
 
 $hijos = array();
@@ -53,29 +53,28 @@ $seleccionados = array();
 if (isset($_REQUEST["seleccionados"])) {
 	$seleccionados = explode(",", $_REQUEST["seleccionados"]);
 }
-$no_padre=false;  
-if($_REQUEST["sin_padre"])  
-  $no_padre=true;
+$no_padre = false;
+if ($_REQUEST["sin_padre"])
+	$no_padre = true;
 
 if (isset($_REQUEST["id"])) {
-	
-	$objetoJson["key"] = $_REQUEST["id"];	
-	$id =  $_REQUEST["id"];
-    if ($id[0] == 0) {
-        $hijos_dep = llena_dependencia($id[0]);
-        if (!empty($hijos_dep)) {
-            $hijos[] = $hijos_dep;
-        }
-    }	
+
+	$objetoJson["key"] = $_REQUEST["id"];
+	$id = $_REQUEST["id"];
+	if ($id[0] == 0) {
+		$hijos_dep = llena_dependencia($id[0]);
+		if (!empty($hijos_dep)) {
+			$hijos[] = $hijos_dep;
+		}
+	}
 	$objetoJson["children"] = $hijos;
-}
-else{
-    $objetoJson["key"] = 0;
-    $hijos_dep = llena_dependencia(0); // TRD
-    if (!empty($hijos_dep)) {
-        $hijos = $hijos_dep;
-    }
-    $objetoJson["children"] = $hijos;
+} else {
+	$objetoJson["key"] = 0;
+	$hijos_dep = llena_dependencia(0); // TRD
+	if (!empty($hijos_dep)) {
+		$hijos = $hijos_dep;
+	}
+	$objetoJson["children"] = $hijos;
 }
 //TERMINA DEFAULT
 
@@ -83,8 +82,9 @@ header('Content-Type: application/json');
 
 echo json_encode($objetoJson);
 
-function llena_dependencia($id) {
-	global $conn, $checkbox, $condicion_dep,$no_padre;
+function llena_dependencia($id)
+{
+	global $conn, $checkbox, $condicion_dep, $no_padre;
 	$objetoJson = array();
 	if ($id == 0) {
 		$papas = busca_filtro_tabla("", "dependencia", "(cod_padre=0 or cod_padre is null)" . $condicion_dep, "nombre ASC", $conn);
@@ -99,41 +99,40 @@ function llena_dependencia($id) {
 			}
 			$item = array();
 			$item["extraClasses"] = "estilo-dependencia";
-            $item["title"] = $text;
+			$item["title"] = $text;
 			$item["key"] = $papas[$i]["iddependencia"] . "#";
-			
-			if($no_padre){
-      			//$cadena .= " nocheckbox=\"1\" ";
-				//$objetoXML -> writeAttribute("nocheckbox", 1);
-				$item["unselectableStatus"]=false;
+
+			if ($no_padre) {
+				$item["unselectableStatus"] = false;
 				$item["folder"] = 1;
 			}
-			$hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"] . $condicion_dep, "", $conn);			
+			$hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"] . $condicion_dep, "", $conn);
 			$funcionario = busca_filtro_tabla("count(*) as cant", "vfuncionario_dc", "estado=1 and estado_dc=1 and iddependencia=" . $papas[$i]["iddependencia"], "", $conn);
-			$dependencias_hijas=array();
+			$dependencias_hijas = array();
 			if ($hijos[0]["cant"] || $funcionario[0]["cant"]) {
 				$dependencias_hijas = llena_dependencia($papas[$i]["iddependencia"]);
 			} else {
 				$item["folder"] = 0;
 			}
-				
-			$funcionarios_hijos = llena_funcionario($papas[$i]["iddependencia"]);
-            $dependencias_hijas = array_merge($dependencias_hijas, $funcionarios_hijos);
-            /* TERMINA SERIES */
-            if (!empty($dependencias_hijas)) {
-                $item["folder"] = true;
-                $item["children"] = $dependencias_hijas;
-            } else {
-                $item["folder"] = 0;
-            }
 
-            $objetoJson[] = $item;
+			$funcionarios_hijos = llena_funcionario($papas[$i]["iddependencia"]);
+			$dependencias_hijas = array_merge($dependencias_hijas, $funcionarios_hijos);
+            
+			if (!empty($dependencias_hijas)) {
+				$item["folder"] = true;
+				$item["children"] = $dependencias_hijas;
+			} else {
+				$item["folder"] = 0;
+			}
+
+			$objetoJson[] = $item;
 		}
 	}
 	return $objetoJson;
 }
 
-function llena_funcionario($iddep) {
+function llena_funcionario($iddep)
+{
 	global $campo, $seleccionados, $checkbox, $condicion_vfun;
 	$objetoJson = array();
 	$papas = busca_filtro_tabla("iddependencia_cargo,idfuncionario,funcionario_codigo,nombres,apellidos,cargo,dependencia", "vfuncionario_dc", "estado=1 and estado_dc=1 and iddependencia=" . $iddep, "", $conn);
@@ -142,13 +141,12 @@ function llena_funcionario($iddep) {
 			$text = $papas[$i]["nombres"] . " " . $papas[$i]["apellidos"] . " - " . $papas[$i]["cargo"];
 			$item = array();
 			$item["extraClasses"] = "estilo-dependencia";
-            $item["title"] = $text;
+			$item["title"] = $text;
 			$item["key"] = $papas[$i][$campo];
-			$item["checkbox"]=$checkbox;
+			$item["checkbox"] = $checkbox;
 			if (in_array($papas[$i][$campo], $seleccionados) !== false) {
-				$item["selected"]=true;
+				$item["selected"] = true;
 			}
-			//$item["folder"] = 0;
 			$objetoJson[] = $item;
 		}
 	}

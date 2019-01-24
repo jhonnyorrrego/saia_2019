@@ -4,6 +4,7 @@ require_once $ruta_db_superior . 'controllers/autoload.php';
 class Expediente extends Model
 {
     protected $idexpediente;
+    protected $fecha;
     protected $nombre;
     protected $descripcion;
     protected $codigo;
@@ -45,10 +46,14 @@ class Expediente extends Model
     protected $dbAttributes;
 
     protected $expedientePadre;
+    protected $permiso;
 
     public function __construct($id = null)
     {
         parent::__construct($id);
+        if ($id) {
+            $this->setAccessUser($_SESSION['idfuncionario']);
+        }
     }
 
 
@@ -56,6 +61,7 @@ class Expediente extends Model
     {
         $this->dbAttributes = (object)[
             'safe' => [
+                'fecha',
                 'nombre',
                 'descripcion',
                 'codigo',
@@ -94,9 +100,9 @@ class Expediente extends Model
                 'consecutivo_final',
                 'fk_entidad_serie',
                 'nucleo'
-
             ],
             'date' => [
+                'fecha',
                 'fecha_extrema_i',
                 'fecha_extrema_f',
                 'fecha_cierre'
@@ -138,7 +144,7 @@ class Expediente extends Model
             }
         }
 
-        $ExpedienteAbce = ExpedienteDoc::findAllByAttributes(['fk_expediente' => $this->getPK()]);
+        $ExpedienteAbce = ExpedienteAbce::findAllByAttributes(['fk_expediente' => $this->getPK()]);
         if ($ExpedienteAbce) {
             foreach ($ExpedienteAbce as $instance) {
                 $instance->delete();
@@ -201,15 +207,119 @@ class Expediente extends Model
         }
         return $this->expedientePadre;
     }
+
+
+    private function setAccessUser(int $idfuncionario)
+    {
+        $this->permiso = [
+            'a' => false,
+            'l' => false
+        ];
+        $consPermiso = busca_filtro_tabla("permiso", "permiso_expediente", "fk_expediente={$this->idexpediente} and fk_funcionario={$idfuncionario}", "", $conn);
+        if ($consPermiso['numcampos']) {
+            for ($i = 0; $i < $consPermiso['numcampos']; $i++) {
+                $permisos=explode(',',$consPermiso[$i]['permiso']);
+                foreach ($permisos as $permiso) {
+                    $this->permiso[$permiso]=true;
+                }
+            }
+        }
+
+    }
+
+
+    public function getAccessUser(string $permiso): bool
+    {
+        $response=false;
+        if (in_array($permiso, $this->permiso)) {
+            $response=$this->permiso[$permiso];
+        }
+        return $response;
+    }
+
     /**
      * retorna las instancias de expedientes_doc vinculadas al expediente
      *
-     * @return void
+     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
+     * @return array|null
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getExpedienteDocFk()
+    public function getExpedienteDocFk(int $instance = 1)
     {
-        return ExpedienteDoc::findAllByAttributes(['idexpediente' => $this->idexpediente]);
+        $data = null;
+        $response = ExpedienteDoc::findAllByAttributes(['idexpediente' => $this->idexpediente]);
+        if ($response) {
+            if ($instance) {
+                $data = $response;
+            } else {
+                $data = UtilitiesController::getIdsInstance($response);
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * retorna las instancias de la serie vinculadas al expediente
+     *
+     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
+     * @return array|null
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getSerieFk(int $instance = 1)
+    {
+        $data = null;
+        $response = Serie::findAllByAttributes(['idserie' => $this->fk_serie]);
+        if ($response) {
+            if ($instance) {
+                $data = $response;
+            } else {
+                $data = UtilitiesController::getIdsInstance($response);
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * retorna las instancias de la dependencia vinculadas al expediente
+     *
+     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
+     * @return array|null
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getDependenciaFk(int $instance = 1)
+    {
+        $data = null;
+        $response = Dependencia::findAllByAttributes(['iddependencia' => $this->fk_dependencia]);
+        if ($response) {
+            if ($instance) {
+                $data = $response;
+            } else {
+                $data = UtilitiesController::getIdsInstance($response);
+            }
+        }
+        return $data;
+    }
+
+
+    /**
+     * retorna las instancias de la entidad serie vinculadas al expediente
+     *
+     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
+     * @return array|null
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getEntidadSerieFk(int $instance = 1)
+    {
+        $data = null;
+        $response = EntidadSerie::findAllByAttributes(['identidad_serie' => $this->fk_entidad_serie]);
+        if ($response) {
+            if ($instance) {
+                $data = $response;
+            } else {
+                $data = UtilitiesController::getIdsInstance($response);
+            }
+        }
+        return $data;
     }
 
 }

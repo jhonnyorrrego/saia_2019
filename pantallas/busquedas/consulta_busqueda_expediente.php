@@ -28,10 +28,33 @@ function incluir_librerias_busqueda($elemento, $indice) {
     include_once ($ruta_db_superior . $elemento);
 }
 
+$okAddAcciones = 0;
 $idexpediente = '';
 if ($_REQUEST["idexpediente"]) {
     $idexpediente = $_REQUEST["idexpediente"];
 }
+
+if (!empty($idexpediente)) {
+    $Expediente = new Expediente($idexpediente);
+    if ($Expediente->nucleo) {
+        if ($Expediente->fk_serie) {
+            $instance = $Expediente->getSerieFk();
+            $Serie = $instance[0];
+            if ($Serie->tipo == 2) {
+                $okAddAcciones = 1;
+            } elseif ($Serie->tipo == 1) {
+                $cant = $Serie->getChildren(false, 1, 2);
+                if (!count($cant)) {
+                    $okAddAcciones = 1;
+                }
+            }
+        }
+    } else {
+        $okAddAcciones = 1;
+    }
+}
+
+
 $cod_arbol = '';
 if ($_REQUEST["cod_arbol"]) {
     $cod_arbol = $_REQUEST["cod_arbol"];
@@ -120,7 +143,7 @@ echo(estilo_bootstrap());
                 </div>
             </li>
 
-            <?php if($datos_busqueda[0]["acciones_seleccionados"]!=''):?>
+            <?php if($datos_busqueda[0]["acciones_seleccionados"]!='' && $okAddAcciones):?>
             <li>
                 <div class="btn-group">
                     <button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">
@@ -131,7 +154,7 @@ echo(estilo_bootstrap());
                             $acciones = explode(",", $datos_busqueda[0]["acciones_seleccionados"]);
                             $cantidad = count($acciones);
                             for ($i = 0; $i < $cantidad; $i++) {
-                                echo($acciones[$i]());
+                                echo ($acciones[$i]());
                             }
                         ?>
                     </ul>

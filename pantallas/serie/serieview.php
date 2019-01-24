@@ -17,6 +17,11 @@ if (!$_REQUEST["key"]) {
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
 $idserie = $_REQUEST["key"];
+if (!$idserie) {
+    alerta('Identificador NO encontrado', 'error');
+    return false;
+}
+
 $entidad_serie = $_REQUEST["identidad_serie"];
 $idnode = ($_REQUEST["idnode"] != "") ? $_REQUEST["idnode"] : 0;
 
@@ -75,7 +80,7 @@ include_once $ruta_db_superior . 'librerias_saia.php';
                     <?php endif; ?>
                     
                     <?php if ($ent) : ?>
-                        <a class="btn btn-complete my-2" href="permiso_serie.php?idserie=<?= $idserie ?>&identidad_serie=<?= $entidad_serie ?>" target="serielist">
+                        <a class="btn btn-complete my-2" href="permiso_serie.php?identidad_serie=<?= $entidad_serie ?>" target="serielist">
                             <i class="fa fa-plus"></i> Permisos
                         </a>
                         <a class="btn btn-complete mx-1" href="asignarserie_entidad.php?x_idserie=<?= $idserie ?>" target="serielist">

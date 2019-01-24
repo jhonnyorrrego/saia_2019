@@ -170,4 +170,19 @@ class UtilitiesController
         }
         return $dir_anexos;
     }
+    /**
+     * Devuelve un array con los ids de las instancias
+     *
+     * @param array $instance : Array de instancias
+     * @return array
+     */
+    public static function getIdsInstance(array $instance) : array
+    {
+        $data = [];
+        foreach ($instance as $inst) {
+            $data[] = $inst->getPK();
+        }
+        return $data;
+    }
+
 }
