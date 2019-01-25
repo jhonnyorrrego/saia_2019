@@ -30,9 +30,9 @@ if($pantalla_campos[0]["etiqueta_html"]=="campo_heredado"&&$pantalla_campos[0]["
 ?>
 <form method="POST" action="" class="form-horizontal" name="editar_pantalla_campo" id="editar_pantalla_campo">
   <fieldset id="content_form_name">
-    <legend>Eliminar Campo</legend>
+    <h5 class="label-fields">¿Est&aacute; seguro de eliminar este campo?</h5>
   </fieldset>
-  <div class="control-group">
+  <!--<div class="control-group">
     <label class="control-label" for="nombre">Nombre</label>
     <div class="controls">
       <input type="text" name="fs_nombre" id="nombre" placeholder="Nombre" value="<?php echo(@$pantalla_campos[0]["nombre"]);?>" disabled="disabled">
@@ -49,11 +49,12 @@ if($pantalla_campos[0]["etiqueta_html"]=="campo_heredado"&&$pantalla_campos[0]["
     <div class="controls">
       <input type="text" name="fs_placeholder" id="placeholder" placeholder="Marcador" value="<?php echo(@$pantalla_campos[0]["placeholder"]);?>" disabled="disabled">
     </div>
-  </div>
+  </div>-->
   <div class="form-actions">
   	<input type="hidden" name="idpantalla_campos" id="idpantalla_campos" value="<?php echo($_REQUEST["idpantalla_campos"]); ?>">
-    <button type="button" class="btn btn-primary" id="enviar_formulario_saia">Aceptar</button>
-    <button type="button" class="btn" id="cancelar_formulario_saia">Cancel</button>
+    <button  style="background: #48b0f7;color:fff;" class="btn btn-info" id="enviar_formulario_saia" ><span  style="color:fff; background: #48b0f7;">Aceptar</span></button>
+    <button  style="background: #F55753;color:fff;" class="btn btn-info" id="cancelar_formulario_saia" ><span  style="color:fff; background: #F55753;">Cancelar</span></button>
+    
     <div class="pull-right" id="cargando_enviar"></div>
   </div>
 </form>
@@ -69,7 +70,7 @@ $(document).ready(function(){
 	formulario.validate();
 	$("#enviar_formulario_saia").click(function(){
 		if(formulario.valid()){
-			$('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
+			$('#cargando_enviar').html("<div id='icon-cargando'></div>Eliminando");
 			$(this).attr('disabled', 'disabled');
       var idpantalla_campo=$("#idpantalla_campos").val();
 			$.ajax({
@@ -80,7 +81,7 @@ $(document).ready(function(){
           if(html){
             var objeto=jQuery.parseJSON(html);
             if(objeto.exito){
-              $('#cargando_enviar').html("Terminado ...");
+              $('#cargando_enviar').html("Eliminado ...");
               //$("#content").append(objeto.etiqueta_html);
               //setTimeout(notificacion_saia("Eliminaci&oacute;n realizada con &eacute;xito.","success","",2500),5000);
               $("#pc_"+idpantalla_campo,parent.document).remove();
