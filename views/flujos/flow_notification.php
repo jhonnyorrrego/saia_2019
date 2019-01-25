@@ -24,11 +24,9 @@ $opciones_arbol = array("keyboard" => true, "selectMode" => 2);
 $extensiones = array("filter" => array());
 
 $idflujo = null;
-$datosDiagrama = null;
 if(isset($_REQUEST["idflujo"])) {
 	$idflujo = $_REQUEST["idflujo"];
-	$flujo = new Flujo($idflujo);
-	$datosDiagrama = $flujo->diagrama;
+	//$flujo = new Flujo($idflujo);
 	$eventos = EventoNotificacion::findAll('', 0, true);
 	$tipoTarea = TipoElemento::findByBpmnName(TipoElemento::TIPO_TAREA);
 	$actividades = Elemento::findAllByAttributes(["fk_flujo" => $idflujo, "fk_tipo_elemento" => $tipoTarea->idtipo_elemento]);
@@ -179,6 +177,16 @@ if(isset($_REQUEST["idflujo"])) {
 	</form>
 	<script src="<?= $ruta_db_superior ?>views/flujos/js/flujos.js"></script>
 
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownDestinatario" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+Adicionar destinatario
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownDestinatario">
+    <a class="dropdown-item tipo1" href="#">Funcionarios de la Organizaci&oacute;n</a>
+    <a class="dropdown-item" href="#">Asociado a campos de registros</a>
+    <a class="dropdown-item" href="#">Personas externas</a>
+  </div>
+</div>
 </div>
 <!-- data-url="<?= $ruta_db_superior ?>/views/flujos/listado_notificaciones.php?idflujo=<?= $idflujo?>" -->
 <table id="tabla_notificaciones"
@@ -199,13 +207,21 @@ if(isset($_REQUEST["idflujo"])) {
 		</tr>
 	</thead>
 </table>
-<script type="text/javascript">
+<script type="text/javascript" data-params='{"idflujo" : "<?= $idflujo?>"}'>
 	//var $table = $('#tabla_notificaciones');
 	//$table.bootstrapTable();
 
 $(function(){
    	var idflujo = $("script[data-idflujo]").data("idflujo");
     console.log("notificacion", "idflujo", idflujo);
+    $(".tipo1").click(function() {
+	    	top.topModal({
+  	  	    	title: "Opciones de la tarea",
+  	  	    	url: "<?= $ruta_db_superior ?>views/flujos/modal_persona_saia.php",
+  	  	    	params: {idflujo: idflujo}
+	  	    });
+
+    });
 	$("#guardarNotificacion").click(function() {
 		/*if($("#notificationForm").valid()) {
 		}*/
