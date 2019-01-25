@@ -24,12 +24,12 @@ include_once($ruta_db_superior . "db.php");
         echo bootstrap();
         echo theme();
         echo librerias_notificaciones();
-        echo estilo_tabla_bootstrap("1.13");
+        echo bootstrapTable();
 
         $funciones = array();
         $datos_componente = $_REQUEST["idbusqueda_componente"];
         $datos_busqueda = busca_filtro_tabla("", "busqueda A,busqueda_componente B", "A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=" . $datos_componente, "", $conn);
-        
+
 
 
         if ($datos_busqueda[0]["ruta_libreria"]) {
@@ -43,8 +43,6 @@ include_once($ruta_db_superior . "db.php");
         }
 
         $exportar = !empty($datos_busqueda[0]["exportar"]);
-
-        echo librerias_tabla_bootstrap("1.13", false, false);
         ?>
         <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
         <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen" />
@@ -82,7 +80,7 @@ include_once($ruta_db_superior . "db.php");
         </style>
     </head>
     <body>
-        <div class="container" style="width:auto;">
+        <div class="col-12" style="width:auto;">
             <div class="row">
                 <form class="formulario_busqueda" accept-charset="UTF-8" action="" id="kformulario_saia" name="kformulario_saia" method="post" style="padding:0px;margin:0px;">
                     <input type="hidden" value="<?php echo($datos_busqueda[0]['cantidad_registros']); ?>" name="busqueda_total_registros" id="busqueda_registros">
@@ -97,37 +95,38 @@ include_once($ruta_db_superior . "db.php");
             </div>
             <div id="div_resultados">
                 <div class="btn-group" id="menu_buscador">
-<?php
-if ($datos_busqueda[0]["busqueda_avanzada"] != '') {
-    if (strpos($datos_busqueda[0]["busqueda_avanzada"], "?")) {
-        $datos_busqueda[0]["busqueda_avanzada"] .= "&";
-    } else {
-        $datos_busqueda[0]["busqueda_avanzada"] .= "?";
-    }
-    $datos_busqueda[0]["busqueda_avanzada"] .= 'idbusqueda_componente=' . $datos_busqueda[0]["idbusqueda_componente"];
-    ?>
-                        <button class="pull-left btn btn-xs btn-complete kenlace_saia" titulo="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']); ?>" title="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']); ?>" conector="iframe" enlace="<?php echo($datos_busqueda[0]['busqueda_avanzada']); ?>">B&uacute;squeda &nbsp;</button>
+                    
                         <?php
-                    }
-                    $tiene_acciones = !empty($datos_busqueda[0]["acciones_seleccionados"]);
-                    if ($tiene_acciones) {
-                        $acciones_selecionados = '';
-                        if ($datos_busqueda[0]["acciones_seleccionados"] != '') {
-                            $datos_reporte = array();
-                            $datos_reporte['idbusqueda_componente'] = $datos_busqueda[0]["idbusqueda_componente"];
-                            $datos_reporte['variable_busqueda'] = @$_REQUEST["variable_busqueda"];
-                            $acciones = explode(",", $datos_busqueda[0]["acciones_seleccionados"]);
-                            $cantidad = count($acciones);
-                            for ($i = 0; $i < $cantidad; $i++) {
-                                echo $acciones[$i]($datos_reporte);
+                        if ($datos_busqueda[0]["busqueda_avanzada"] != '') {
+                            if (strpos($datos_busqueda[0]["busqueda_avanzada"], "?")) {
+                                $datos_busqueda[0]["busqueda_avanzada"] .= "&";
+                            } else {
+                                $datos_busqueda[0]["busqueda_avanzada"] .= "?";
                             }
+                            $datos_busqueda[0]["busqueda_avanzada"] .= 'idbusqueda_componente=' . $datos_busqueda[0]["idbusqueda_componente"];
+                            ?>
+                            <button class="pull-left btn btn-xs btn-complete kenlace_saia" titulo="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']); ?>" title="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']); ?>" conector="iframe" enlace="<?php echo($datos_busqueda[0]['busqueda_avanzada']); ?>">B&uacute;squeda &nbsp;</button>
+                            <?php
                         }
-                        ?>
-                        <?php
-                    }
-                    if (@$datos_busqueda[0]["enlace_adicionar"]) {
-                        ?>
-                        <button class="btn btn-xs kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar</button></div></li>
+                        $tiene_acciones = !empty($datos_busqueda[0]["acciones_seleccionados"]);
+                        if ($tiene_acciones) {
+                            $acciones_selecionados = '';
+                            if ($datos_busqueda[0]["acciones_seleccionados"] != '') {
+                                $datos_reporte = array();
+                                $datos_reporte['idbusqueda_componente'] = $datos_busqueda[0]["idbusqueda_componente"];
+                                $datos_reporte['variable_busqueda'] = @$_REQUEST["variable_busqueda"];
+                                $acciones = explode(",", $datos_busqueda[0]["acciones_seleccionados"]);
+                                $cantidad = count($acciones);
+                                for ($i = 0; $i < $cantidad; $i++) {
+                                    echo $acciones[$i]($datos_reporte);
+                                }
+                            }
+                            ?>
+                            <?php
+                        }
+                        if (@$datos_busqueda[0]["enlace_adicionar"]) {
+                            ?>
+                            <button class="btn btn-xs kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar</button></div></li>
                         <?php
                     }/* if(@$datos_busqueda[0]["menu_busqueda_superior"]){
                       $funcion_menu=explode("@",$datos_busqueda[0]["menu_busqueda_superior"]);
@@ -138,65 +137,67 @@ if ($datos_busqueda[0]["busqueda_avanzada"] != '') {
                         echo($funcion_menu[0](@$funcion_menu[1]));
                     }
                     ?>
-                <button class="btn btn-xs btn-complete exportar_reporte_saia" enlace="pantallas/documento/busqueda_avanzada_documento.php" title="Exportar reporte" id="boton_exportar_excel" style="">Exportar</button>
-                <div class="pull-right" valign="middle"><iframe name="iframe_exportar_saia" id="iframe_exportar_saia" allowtransparency="1" frameborder="0" framespacing="2px" scrolling="no" width="100%" src=""  hspace="0" vspace="0" height="32px"></iframe></div>
-                <?php
-                $llave = null;
-                preg_match("/(\w*)\.(\w*)/", $datos_busqueda[0]["llave"], $valor_campos);
-                if (!empty($valor_campos)) {
-                    $llave = $valor_campos[2];
-                } else {
-                    $llave = trim($datos_busqueda[0]["llave"]);
-                }
-                if (empty($llave)) {
-                    $campos = explode(",", $datos_busqueda[0]["campos"]);
-                    $llave = trim($campos[0]);
-                }
-                ?>
+                    <button class="btn btn-xs btn-complete exportar_reporte_saia" enlace="pantallas/documento/busqueda_avanzada_documento.php" title="Exportar reporte" id="boton_exportar_excel" style="">Exportar</button>
+                
+                    <div class="pull-right" valign="middle"><iframe name="iframe_exportar_saia" id="iframe_exportar_saia" allowtransparency="1" frameborder="0" framespacing="2px" scrolling="no" width="100%" src=""  hspace="0" vspace="0" height="40px"></iframe></div>
+                    <?php
+                    $llave = null;
+                    preg_match("/(\w*)\.(\w*)/", $datos_busqueda[0]["llave"], $valor_campos);
+                    if (!empty($valor_campos)) {
+                        $llave = $valor_campos[2];
+                    } else {
+                        $llave = trim($datos_busqueda[0]["llave"]);
+                    }
+                    if (empty($llave)) {
+                        $campos = explode(",", $datos_busqueda[0]["campos"]);
+                        $llave = trim($campos[0]);
+                    }
+                    ?>
+           
             </div>
             <table id="tabla_resultados"
                    data-height=""
                    data-pagination="true"
-                   data-toolbar="#menu_buscador"
+                   
                    data-show-refresh="true"
                    data-maintain-selected="true"
                    >
                 <thead style="font-size: 12px;">
                     <tr>
                         <th data-field="state" data-checkbox="true"></th>
-<?php
-$lcampos1 = $datos_busqueda[0]["campos"];
-if ($datos_busqueda[0]["campos_adicionales"]) {
-    $lcampos1 .= ',' . $datos_busqueda[0]["campos_adicionales"];
-}
-$lcampos2 = explode(",", $lcampos1);
-$lcampos = array();
-foreach ($lcampos2 as $key => $valor) {
-    if (strpos($valor, ".")) {
-        $valor_campos = explode(".", $valor);
-        array_push($lcampos, trim($valor_campos[count($valor_campos) - 1]));
-    } else {
-        array_push($lcampos, trim($valor));
-    }
-}
-$info = explode("|-|", $datos_busqueda[0]["info"]);
-$can_info = count($info);
-for ($i = 0; $i < $can_info; $i++) {
-    $ordenable = "";
-    $detalle_info = explode("|", $info[$i]);
-    $dato_campo = str_replace(array(
-        "{*",
-        "*}"
-            ), "", $detalle_info[1]);
-    if (!in_array($dato_campo, $lcampos)) {
-        $funcion = explode("@", $dato_campo);
-        $dato_campo = $funcion[0];
-    } else {
-        $ordenable = 'data-sortable="true"';
-    }
-    echo ('<th data-field="' . $dato_campo . '" data-align="' . $detalle_info[2] . '" ' . $ordenable . '>' . $detalle_info[0] . '</th>');
-}
-?>
+                        <?php
+                        $lcampos1 = $datos_busqueda[0]["campos"];
+                        if ($datos_busqueda[0]["campos_adicionales"]) {
+                            $lcampos1 .= ',' . $datos_busqueda[0]["campos_adicionales"];
+                        }
+                        $lcampos2 = explode(",", $lcampos1);
+                        $lcampos = array();
+                        foreach ($lcampos2 as $key => $valor) {
+                            if (strpos($valor, ".")) {
+                                $valor_campos = explode(".", $valor);
+                                array_push($lcampos, trim($valor_campos[count($valor_campos) - 1]));
+                            } else {
+                                array_push($lcampos, trim($valor));
+                            }
+                        }
+                        $info = explode("|-|", $datos_busqueda[0]["info"]);
+                        $can_info = count($info);
+                        for ($i = 0; $i < $can_info; $i++) {
+                            $ordenable = "";
+                            $detalle_info = explode("|", $info[$i]);
+                            $dato_campo = str_replace(array(
+                                "{*",
+                                "*}"
+                                    ), "", $detalle_info[1]);
+                            if (!in_array($dato_campo, $lcampos)) {
+                                $funcion = explode("@", $dato_campo);
+                                $dato_campo = $funcion[0];
+                            } else {
+                                $ordenable = 'data-sortable="true"';
+                            }
+                            echo ('<th data-field="' . $dato_campo . '" data-align="' . $detalle_info[2] . '" ' . $ordenable . '>' . $detalle_info[0] . '</th>');
+                        }
+                        ?>
                     </tr>
                 </thead>
             </table>
@@ -268,7 +269,7 @@ for ($i = 0; $i < $can_info; $i++) {
             clickToSelect: true,
             sidePagination: 'server',
             pageSize: $("#rows").val(),
-            search: false,
+            search: true,
             cardView: false,
             pageList: [5, 10, 25, 50, 100],
             paginationVAlign: 'top',
@@ -387,7 +388,7 @@ for ($i = 0; $i < $can_info; $i++) {
             if (isChrome || isIE) {
                 var busqueda_total = $("#busqueda_total_paginas").val();
                 if (parseInt(busqueda_total) != 0) {
-                    notificacion_saia('Espere un momento por favor, hasta que se habilite el enlace de descarga', 'success', '', 9500);
+                    notificacion_saia('Espere un momento por favor, hasta que se habilite el boton de descarga <i class="fa fa-download></i>', 'success', '', 9500);
                 }
             }
             exportar_funcion_excel_reporte();
