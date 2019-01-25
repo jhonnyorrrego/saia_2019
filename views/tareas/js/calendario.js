@@ -80,6 +80,7 @@ $(function() {
         let options = {
             url: `${baseUrl}views/tareas/crear.php`,
             params: params,
+            title: 'Tarea',
             centerAlign:false,
             size: "modal-lg",
             buttons: {}

@@ -37,13 +37,8 @@ class FuncionarioTarea extends Model
      */
     public function toggleRelation($newState){
         $this->estado = $newState;
-        if($this->save()){
-            $response = $this->getPK();
-        }else{
-            $response = 0;
-        }
 
-        return $response;
+        return $this->save();
     }
 
     /**
@@ -73,7 +68,7 @@ class FuncionarioTarea extends Model
                         'tipo' => $type
                     ]);
                 }else{
-                    $data [] = $findRelation->toggleRelation(0);
+                    $data [] = $findRelation->toggleRelation(1);
                 }
             }
         }else{
