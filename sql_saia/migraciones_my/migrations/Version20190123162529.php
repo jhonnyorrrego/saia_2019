@@ -14,20 +14,20 @@ use Doctrine\Migrations\AbstractMigration;
 final class Version20190123162529 extends AbstractMigration {
 	
 	private $busqueda = [
-			"nombre" => "listado_nuevos_flujos",
-			"etiqueta" => "Listado de flujos",
-			"estado" => 1,
-			"ancho" => 200,
-			"campos" => "a.nombre,a.descripcion,a.fecha_creacion,a.fecha_modificacion",
-			"llave" => "a.idflujo",
-			"tablas" => "wf_flujo a",
-			"ruta_libreria" => "views\/flujos\/librerias.php",
-			"ruta_libreria_pantalla" => "views\/flujos\/js\/librerias.js",
-			"cantidad_registros" => 20,
-			"tiempo_refrescar" => 500,
-			"ruta_visualizacion" => "pantallas\/busquedas\/consulta_busqueda_tabla.php",
-			"tipo_busqueda" => 1,
-			"elastic" => 0
+		"nombre" => "listado_nuevos_flujos",
+		"etiqueta" => "Listado de flujos",
+		"estado" => 1,
+		"ancho" => 200,
+		"campos" => "a.nombre,a.descripcion,a.fecha_creacion,a.fecha_modificacion",
+		"llave" => "a.idflujo",
+		"tablas" => "wf_flujo a",
+		"ruta_libreria" => "views\/flujos\/librerias.php",
+		"ruta_libreria_pantalla" => "views\/flujos\/js\/librerias.js",
+		"cantidad_registros" => 20,
+		"tiempo_refrescar" => 500,
+		"ruta_visualizacion" => "pantallas\/busquedas\/consulta_busqueda_tabla.php",
+		"tipo_busqueda" => 1,
+		"elastic" => 0
 	];
 	private $busqueda_componente = [
 		"busqueda_idbusqueda" => 133,
@@ -131,18 +131,25 @@ final class Version20190123162529 extends AbstractMigration {
 		$tabla->addColumn("tipo", "string", ["length" => 255]);
 		$tabla->setPrimaryKey(["idtipo_destinatario"]);
 		
-		$tabla = $schema->createTable("wf_actividad");
-		$tabla->addColumn("idactividad", "integer", ["autoincrement" => true]);
-		$tabla->addColumn("bpmn_id", "string", ["length" => 255]);
+		$tabla = $schema->createTable("wf_elemento");
+		$tabla->addColumn("idelemento", "integer", ["autoincrement" => true]);
 		$tabla->addColumn("nombre", "string", ["length" => 255]);
+		$tabla->addColumn("bpmn_id", "string", ["length" => 255]);
 		$tabla->addColumn("fk_flujo", "integer");
 		$tabla->addColumn("fk_formato_flujo", "integer", ["notnull" => false]);
-		$tabla->setPrimaryKey(["idactividad"]);
+		$tabla->addColumn("fk_tipo_elemento", "integer");
+		$tabla->setPrimaryKey(["idelemento"]);
 		
 		$tabla = $schema->createTable("wf_actividad_notificacion");
 		$tabla->addColumn("fk_actividad", "integer");
 		$tabla->addColumn("fk_notificacion", "integer");
 		$tabla->setPrimaryKey(["fk_actividad", "fk_notificacion"]);
+		
+		$tabla = $schema->createTable("wf_tipo_elemento");
+		$tabla->addColumn("idtipo_elemento", "integer", ["autoincrement" => true]);
+		$tabla->addColumn("nombre", "string", ["length" => 255]);
+		$tabla->addColumn("nombre_bpmn", "string", ["length" => 255]);
+		$tabla->setPrimaryKey(["idtipo_elemento"]);
 		
 		$tabla = $schema->createTable("wf_adjunto_notificacion");
 		$tabla->addColumn("idadjunto", "integer", ["autoincrement" => true]);
@@ -163,6 +170,17 @@ final class Version20190123162529 extends AbstractMigration {
 		$tabla->addColumn("fk_funcionario", "string", ["length" => 10]);
 		$tabla->addColumn("fk_cargo", "string", ["length" => 10, "notnull" => false]);
 		$tabla->setPrimaryKey(["iddestinatario"]);
+		
+		$tabla = $schema->createTable("wf_enlace");
+		$tabla->addColumn("idenlace", "integer", ["autoincrement" => true]);
+		$tabla->addColumn("fk_flujo", "integer");
+		$tabla->addColumn("bpmn_id", "string", ["length" => 10]);
+		$tabla->addColumn("bpmn_origen", "string", ["length" => 255, "notnull" => false]);
+		$tabla->addColumn("bpmn_destino", "string", ["length" => 255, "notnull" => false]);
+		$tabla->addColumn("nombre", "string", ["length" => 255, "notnull" => false]);
+		$tabla->addColumn("fk_elemento_origen", "integer", ["notnull" => false]);
+		$tabla->addColumn("fk_elemento_destino", "integer", ["notnull" => false]);
+		$tabla->setPrimaryKey(["idenlace"]);
 		
 		$tabla = $schema->createTable("wf_responsable_actividad");
 		$tabla->addColumn("idresponsable_actividad", "integer", ["autoincrement" => true]);
@@ -185,9 +203,9 @@ final class Version20190123162529 extends AbstractMigration {
 		$tabla->addOption('collate', 'utf8_general_ci');
 		
 		$tabla = $schema->createTable("wf_destinatario_formato");
-		$tabla->addColumn("idformato_flujo", "integer");
 		$tabla->addColumn("iddestinatario", "integer");
-		$tabla->addColumn("fk_campo_formato", "integer", ["notnull" => false]);
+		$tabla->addColumn("fk_formato_flujo", "integer");
+		$tabla->addColumn("fk_campo_formato", "integer",  ["notnull" => false]);
 		$tabla->setPrimaryKey(["iddestinatario"]);
 		
 		$tabla = $schema->createTable("wf_anexo_flujo");
@@ -207,6 +225,7 @@ final class Version20190123162529 extends AbstractMigration {
 		$tabla->setPrimaryKey(["idanexo_actividad"]);
 		
 	}
+	
 	
 	public function postUp(Schema $schema): void {
 		$conn = $this->connection;
