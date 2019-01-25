@@ -449,13 +449,21 @@ class GenerarFormato
 
         $formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $this->idformato, "", $conn);
 
-        if($formato[0]['contenido']==''){
+        if($formato[0]['cuerpo']==''){
         $consulta_campos_lectura = busca_filtro_tabla("valor", "configuracion", "nombre='campos_solo_lectura'", "", $conn);
-        $campos_excluir = array();
+        $campos_excluir = array(
+            "dependencia",
+            "documento_iddocumento",
+            "estado_documento",
+            "firma",
+            "serie_idserie",
+            "encabezado"
+        );
         if ($consulta_campos_lectura['numcampos']) {
             $campos_lectura = json_decode($consulta_campos_lectura[0]['valor'], true);
             $campos_lectura = implode(",", $campos_lectura);
             $campos_lectura = str_replace(",", "','", $campos_lectura);
+                
             $busca_idft = strpos($campos_lectura, "idft_");
             if ($busca_idft !== false) {
                 $consulta_ft = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $this->idformato, "", $conn);
@@ -463,10 +471,10 @@ class GenerarFormato
                 $campos_excluir[] = $campos_lectura;
             }
         }
-
+         
         $condicion_adicional = " and A.nombre not in('" . implode("', '", $campos_excluir) . "')";
         $campos = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $this->idformato . " and etiqueta_html<>'campo_heredado' " . $condicion_adicional . "", "A.orden", $conn);
-
+       
         if ($campos['numcampos']) {
             $cuerpo_formato = '<table class="table table-bordered" style="width: 100%;"><tbody><tr><td><strong>Fecha</strong></td><td>{*fecha_creacion*}&nbsp;</td><td style="text-align: center;" rowspan="2">&nbsp;{*mostrar_codigo_qr*} <br>Radicado: {*formato_numero*}</td></tr><tr><td><strong>Asunto</strong></td><td>{*asunto_documento*}</td></tr></table><br><table class="table table-bordered" style="width: 100%;"><tbody>';
             for ($i = 0; $i < $campos['numcampos']; $i++) {
@@ -496,6 +504,7 @@ class GenerarFormato
         }
     }
         $this->exito = 1;
+        $this->contenido_cuerpo = $formato[0]['cuerpo'];
     }
     /*
      * <Clase>
@@ -867,7 +876,8 @@ class GenerarFormato
                             $texto .= '<hr class="border border-info" id="' . $campos[$h]["nombre"] . '">';
                             break;
                         case "password":
-                            $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
+                            
+                            $texto .= '<div class="form-group form-group-default ' . $obligatorio . '" id="tr_' . $campos[$h]["nombre"] . '">
                      <label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
                      <input class="form-control" ' . $tabindex . ' type="password" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . " $adicionales " . ' value="' . $valor . '">
                     </div>';
@@ -1403,8 +1413,10 @@ class GenerarFormato
                                 $ancho = ' style="width:' . $tam . '%;" ';
                             }
 
-
-                            $texto .= '<div class="form-group form-group-default '. $obligatorio .'" id="tr_' . $campos[$h]["nombre"] . '">
+                            if ($campos[$h]["obligatoriedad"] == 1) {
+                                $obligatorio = "required";
+                            }
+                            $texto .= '<div class="form-group form-group-default '. $obligatorio .'" ' . $ancho . ' id="tr_' . $campos[$h]["nombre"] . '">
                      <label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . str_replace("ACUTE;","acute;",$this->codifica($campos[$h]["etiqueta"])) .  '</label>
                      <input class="form-control" ' . " $adicionales $tabindex" . ' type="text" ' . $ancho . ' size="100" id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . ' value="' . $valor . '">
                     </div>';

@@ -120,12 +120,14 @@ class ArbolFt {
     private function crear_arbol() {
         if ($this -> con_filtro) {
             $this -> html .= <<<FINHTML
-               <p style="font-family: Verdana; font-size: 9px;">
-                   <label>Buscar:</label>
+            <div id="contenido_arbol">
+               <p>
+                   <label class="buscar_arboles">Buscar:</label>
                    <input name="stext_{$this->campo}" placeholder="Buscar..." autocomplete="off">
                    <button type="button" id="btnSearch_{$this->campo}">&times;</button>
                    <span id="matches_{$this->campo}"></span>
                 </p>
+            </div> 
 FINHTML;
         }
 

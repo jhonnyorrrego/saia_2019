@@ -297,9 +297,13 @@ function generar_enlace_finalizar_distribucion($iddistribucion, $js = 0) {
 				            	finaliza_manual:1
 				            },
 				            success: function(datos){
-				            	top.noty({text: "distribuci&oacute;n finalizada satisfactoriamente!",type: "success",layout: "topCenter",timeout:3500});
-				                window.location.reload();
-				        	}
+                                                top.notification({
+                                                    message: "distribuci&oacute;n finalizada satisfactoriamente!",
+                                                    type: "success",
+                                                    duration: "3500"
+                                                });
+                                                window.location.reload();
+				            }
 				    	});	 //fin ajax
 			    	} //fin if confirm						
 				});
