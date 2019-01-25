@@ -473,7 +473,7 @@ function abrir_url_digitalizacion($iddocumento, $location, $target = "_blank") {
                     "numero": "<?php print($documento[0]["numero"]); ?>",
                     "maxtabs": "50",
                     "fileFilter" : "jpg,png,pdf,tiff,tif,doc,docx",
-                    "descripcion":"<?php print(trim(strip_tags(eregi_replace("[\n|\r|\n\r]", "", $documento[0]["descripcion"]))));?>",
+                    "descripcion":"<?php print(trim(strip_tags(preg_replace("[\n|\r|\n\r]", "", $documento[0]["descripcion"]))));?>",
                     "ftp_type" : "<?php echo $ftp_type;?>"
                 };
                 var msg = {
