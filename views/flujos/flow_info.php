@@ -136,7 +136,6 @@ if(!empty($idflujo)) : ?>
     </div>
   </div>
 
-
   <div class="form-group">
     <label class="etiqueta_campo" for="info_flujo">Instrucciones o políticas adicionales del proceso</label>
     <textarea class="form-control" id="info_flujo" name="info"><?= $datos["info"] ?></textarea>

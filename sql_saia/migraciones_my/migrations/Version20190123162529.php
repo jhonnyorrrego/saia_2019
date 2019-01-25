@@ -192,6 +192,8 @@ final class Version20190123162529 extends AbstractMigration {
 		$tabla->addColumn("fk_flujo", "integer");
 		$tabla->addColumn("bpmn_id", "string", ["length" => 255]);
 		$tabla->addColumn("nombre", "string", ["length" => 255, "notnull" => false]);
+		$tabla->addColumn("bpmn_origen", "string", ["length" => 255, "notnull" => false]);
+		$tabla->addColumn("bpmn_destino", "string", ["length" => 255, "notnull" => false]);
 		$tabla->addColumn("fk_elemento_origen", "integer", ["notnull" => false]);
 		$tabla->addColumn("fk_elemento_destino", "integer", ["notnull" => false]);
 		$tabla->setPrimaryKey(["idenlace"]);

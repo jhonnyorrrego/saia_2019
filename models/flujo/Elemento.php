@@ -1,5 +1,4 @@
 <?php
-use models\flujo\TipoElemento;
 
 class Elemento extends \Model {
 	
