@@ -685,7 +685,7 @@ function post_aprobar_rad_entrada($idformato, $iddoc) {
         }
 
         if ($_REQUEST["digitalizacion"] == 1) {
-            $enlace = "paginaadd.php?key=" . $iddoc . "&enlace2=formatos/radicacion_entrada/detalles_mostrar_radicacion_entrada.php?iddoc=" . $iddoc;
+            $enlace = "paginaadd.php?key=" . $iddoc . "&enlace2=views/documento/index_acordeon.php?documentId=" . $iddoc;
             abrir_url($ruta_db_superior . "colilla.php?target=_self&colilla_vertical=" . $_REQUEST['colilla'] . "&key=" . $iddoc . "&enlace=" . $enlace, "_self");
             die();
         } else if ($_REQUEST["digitalizacion"] == 0) {
