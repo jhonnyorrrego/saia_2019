@@ -1,11 +1,11 @@
 <div class="row w-100 mx-0 my-auto" id="mail_initial_info">
     <div class="col-auto mr-auto text-left px-0 h-100">
-        <span id="actual_date">.</span>
+        <span id="actual_date"></span>
     </div>        
 </div>
 <div class="row w-100 mx-0 bg-info text-white my-auto" style="display:none" id="component_actions">
     <div class="col-auto mr-auto text-left pr-0 pl-2 my-auto">
-        <span class="fa fa-arrow-left pr-3" style="font-size:20px" id="uncheck_list"></span>
+        <span class="fa fa-arrow-left pr-3 cursor" style="font-size:20px" id="uncheck_list"></span>
         <span id="selected_rows" style="font-size:20px"></span>
     </div> 
     <div class="col-auto text-right px-0 my-auto">

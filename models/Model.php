@@ -235,7 +235,7 @@ abstract class Model extends Events
                 $this->afterUpdate();
             }
         }
-        return $response;
+        return $response ? $this->getPK() : 0;
     }
 
     private function runUpdate()
