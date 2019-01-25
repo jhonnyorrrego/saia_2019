@@ -7,9 +7,8 @@ class Expediente extends Model
     protected $fecha;
     protected $nombre;
     protected $descripcion;
-    protected $codigo;
     protected $cod_padre;
-    protected $fk_idcaja;
+    protected $fk_caja;
     protected $propietario;
     protected $fk_serie;
     protected $fk_dependencia;
@@ -24,14 +23,11 @@ class Expediente extends Model
     protected $no_carpeta;
     protected $soporte;
     protected $frecuencia_consulta;
-    protected $ubicacion;
-    protected $unidad_admin;
     protected $ruta_qr;
     protected $estado_archivo;
     protected $estado_cierre;
     protected $fecha_cierre;
     protected $funcionario_cierre;
-    protected $prox_estado_archivo;
     protected $notas_transf;
     protected $tomo_padre;
     protected $tomo_no;
@@ -52,6 +48,14 @@ class Expediente extends Model
     {
         parent::__construct($id);
         if ($id) {
+            $this->permiso = [
+                'a' => false,
+                'l' => false,
+                'v' => false,
+                'e' => false,
+                'c' => false,
+                'd' => false
+            ];
             $this->setAccessUser($_SESSION['idfuncionario']);
         }
     }
@@ -64,9 +68,8 @@ class Expediente extends Model
                 'fecha',
                 'nombre',
                 'descripcion',
-                'codigo',
                 'cod_padre',
-                'fk_idcaja',
+                'fk_caja',
                 'propietario',
                 'fk_serie',
                 'fk_dependencia',
@@ -81,14 +84,11 @@ class Expediente extends Model
                 'no_carpeta',
                 'soporte',
                 'frecuencia_consulta',
-                'ubicacion',
-                'unidad_admin',
                 'ruta_qr',
                 'estado_archivo',
                 'estado_cierre',
                 'fecha_cierre',
                 'funcionario_cierre',
-                'prox_estado_archivo',
                 'notas_transf',
                 'tomo_padre',
                 'tomo_no',
@@ -167,9 +167,20 @@ class Expediente extends Model
             'message' => '',
         ];
         if ($this->save()) {
+            if (!$this->nucleo) {
+                $instance = new EntidadExpediente();
+                $attributes = [
+                    'llave_entidad' => $this->propietario,
+                    'permiso' => 'v,e,c,d',
+                    'fecha'=> date('Y-m-d H:i:s'),
+                    'fk_entidad' => 1,
+                    'fk_expediente' => $this->propietario
+                ];
+                $instance->setAttributes($attributes);
+                $instance->CreateEntidadExpediente();
+            }
             $response['exito'] = 1;
             $response['data']['id'] = $this->idexpediente;
-
         } else {
             $this->delete();
             $response['message'] = 'Error al guardar el Expediente';
@@ -208,31 +219,51 @@ class Expediente extends Model
         return $this->expedientePadre;
     }
 
-
+    /**
+     * setea los permisos del funcionario logueado
+     *
+     * @param integer $idfuncionario : usuario logueado
+     * @return void
+     */
     private function setAccessUser(int $idfuncionario)
     {
-        $this->permiso = [
-            'a' => false,
-            'l' => false
-        ];
+
         $consPermiso = busca_filtro_tabla("permiso", "permiso_expediente", "fk_expediente={$this->idexpediente} and fk_funcionario={$idfuncionario}", "", $conn);
         if ($consPermiso['numcampos']) {
             for ($i = 0; $i < $consPermiso['numcampos']; $i++) {
-                $permisos=explode(',',$consPermiso[$i]['permiso']);
+                $permisos = explode(',', $consPermiso[$i]['permiso']);
                 foreach ($permisos as $permiso) {
-                    $this->permiso[$permiso]=true;
+                    $this->permiso[$permiso] = true;
                 }
             }
         }
+        if ($this->propietario == $_SESSION['idfuncionario']) {
+            $this->permiso = [
+                'v' => false,
+                'e' => false,
+                'c' => false,
+                'd' => false
+            ];
+        }
 
     }
-
-
-    public function getAccessUser(string $permiso): bool
+    /**
+     * obtiene los permisos del funcionario logueado
+     *
+     * @param string $permiso : 
+     * a: adicion Serie,
+     * l: lectura serie,
+     * v: ver expediente
+     * e: editar expediente
+     * c: Compartir expediente
+     * d: eliminar expediente
+     * @return boolean
+     */
+    public function getAccessUser(string $permiso) : bool
     {
-        $response=false;
+        $response = false;
         if (in_array($permiso, $this->permiso)) {
-            $response=$this->permiso[$permiso];
+            $response = $this->permiso[$permiso];
         }
         return $response;
     }

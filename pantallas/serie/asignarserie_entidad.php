@@ -80,7 +80,7 @@ if ($sAction == "A") {
 			if ($infoEntidadSerie['exito']) {
 				$okNew++;
 			}
-			ProcessExpedienteController::createEntidadSerieCodArbol($Serie->cod_arbol, $attributes);
+			ExpedienteController::createEntidadSerieCodArbol($Serie->cod_arbol, $attributes);
 		}
 		if ($cantNew == $okNew) {
 			$exitoNew = 1;

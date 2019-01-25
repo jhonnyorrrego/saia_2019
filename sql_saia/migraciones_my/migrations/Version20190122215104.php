@@ -66,7 +66,6 @@ final class Version20190122215104 extends AbstractMigration
         $tabla3->addColumn("nombre", "string", ["length" => 255]);
         $tabla3->addColumn("fecha", "datetime");
         $tabla3->addColumn("descripcion", "text", ["notnull" => false]);
-        $tabla3->addColumn("codigo", "string", ["length" => 50, "notnull" => false]);
         $tabla3->addColumn("cod_padre", "integer", ["default" => 0, "notnull" => false]);
         $tabla3->addColumn("propietario", "integer", ["comment" => "fk_funcionario"]);
         $tabla3->addColumn("cod_arbol", "text");
@@ -80,18 +79,15 @@ final class Version20190122215104 extends AbstractMigration
         $tabla3->addColumn("no_carpeta", "string", ["length" => 255, "notnull" => false]);
         $tabla3->addColumn("soporte", "integer", ["notnull" => false]);
         $tabla3->addColumn("frecuencia_consulta", "integer", ["notnull" => false]);
-        $tabla3->addColumn("ubicacion", "integer", ["notnull" => false]);
-        $tabla3->addColumn("unidad_admin", "string", ["length" => 255, "notnull" => false]);
         $tabla3->addColumn("ruta_qr", "string", ["length" => 255, "notnull" => false]);
         $tabla3->addColumn("estado_archivo", "integer", ["length" => 1, "default" => 1, "comment" => "1,Gestion;2,Central;3,Historico"]);
         $tabla3->addColumn("estado_cierre", "integer", ["length" => 1, "default" => 1, "comment" => "1,Abierto;2,Cerrado"]);
         $tabla3->addColumn("fecha_cierre", "datetime", ["notnull" => false]);
         $tabla3->addColumn("funcionario_cierre", "integer", ["notnull" => false, "comment" => "fk_funcionario"]);
-        $tabla3->addColumn("prox_estado_archivo", "integer", ["notnull" => false]);
         $tabla3->addColumn("notas_transf", "text", ["notnull" => false]);
         $tabla3->addColumn("tomo_padre", "integer", ["notnull" => false, "comment" => "fk_expediente"]);
         $tabla3->addColumn("tomo_no", "integer", ["default" => 1]);
-        $tabla3->addColumn("agrupador", "integer", ["length" => 1, "default" => 0, "comment" => "0,Expediente;1,Dependencia;2,Serie"]);
+        $tabla3->addColumn("agrupador", "integer", ["length" => 1, "default" => 0, "comment" => "0,Expediente;1,Dependencia;2,Serie;3,Separador"]);
         $tabla3->addColumn("indice_uno", "string", ["length" => 255, "notnull" => false]);
         $tabla3->addColumn("indice_dos", "string", ["length" => 255, "notnull" => false]);
         $tabla3->addColumn("indice_tres", "string", ["length" => 255, "notnull" => false]);
@@ -99,7 +95,7 @@ final class Version20190122215104 extends AbstractMigration
         $tabla3->addColumn("consecutivo_final", "string", ["length" => 255, "notnull" => false]);
         $tabla3->addColumn("nucleo", "integer", ["length" => 1, "default" => 1]);
         $tabla3->addColumn("estado", "integer", ["length" => 1, "default" => 1]);
-        $tabla3->addColumn("fk_idcaja", "integer", ["default" => 0, "notnull" => false]);
+        $tabla3->addColumn("fk_caja", "integer", ["default" => 0, "notnull" => false]);
         $tabla3->addColumn("fk_serie", "integer");
         $tabla3->addColumn("fk_dependencia", "integer");
         $tabla3->addColumn("fk_entidad_serie", "integer");
@@ -123,9 +119,20 @@ final class Version20190122215104 extends AbstractMigration
         $tabla5->addColumn("llave_entidad", "integer");
         $tabla5->addColumn("fk_entidad_serie", "integer");
         $tabla5->addColumn("tipo_permiso", "integer", ["comment" => "1:Serie;2:Candado;"]);
-        $tabla5->addColumn("permiso", "string", ["length" => 10, "comment" => "l:Lectura;a:Adicion;"]);
+        $tabla5->addColumn("permiso", "string", ["length" => 10, "comment" => "l:Lectura;a:Adicion;v:ver;e:editar;c:compartir;d:eliminar"]);
         $tabla5->addColumn("fk_expediente", "integer");
         $tabla5->setPrimaryKey(["idpermiso_expediente"]);
+
+
+        $schema->dropTable("entidad_expediente");
+        $tabla6 = $schema->createTable("entidad_expediente");
+        $tabla6->addColumn("identidad_expediente", "integer", ["autoincrement" => true]);
+        $tabla6->addColumn("fk_entidad", "integer");
+        $tabla6->addColumn("llave_entidad", "integer");
+        $tabla6->addColumn("fk_expediente", "integer");
+        $tabla6->addColumn("permiso", "string", ["length" => 10, "comment" => "v:ver;e:editar;c:compartir;d:eliminar"]);
+        $tabla6->addColumn("fecha", "datetime", ["notnull" => false]);
+        $tabla6->setPrimaryKey(["identidad_expediente"]);
 
         /*DROP VIEW vpermiso_serie;
         DROP VIEW vdependencia_serie;

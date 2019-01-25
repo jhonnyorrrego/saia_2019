@@ -49,7 +49,9 @@ function enlace_expediente($idexpediente)
         $icon = 'icon-briefcase';
     } else if ($Expediente->agrupador == 2) {
         $icon = 'icon-qrcode';
-    } else {
+    }else if($Expediente->agrupador == 3){
+
+    }else {
         if ($Expediente->estado_cierre == 1) {
             $icon = 'icon-folder-open';
         } else {
@@ -152,119 +154,75 @@ function mostrar_informacion_adicional_expediente($idexpediente)
 /** AQUI EMPIEZA LAS FUNCIONES DE CONSULTA BUSQUEDA */
 function adicionar_expediente()
 {
+    global $Expediente;
+
     $idexpediente = $_REQUEST["idexpediente"];
-    $Expediente = new Expediente($idexpediente);
-    $GLOBALS['Expediente'] = $Expediente;
+    if (!$Expediente) {
+        $Expediente = new Expediente($idexpediente);
+        $GLOBALS['Expediente'] = $Expediente;
+    }
 
-    $data = [
-        'idbusqueda_componente' => $_REQUEST['idbusqueda_componente'],
-        'idexpediente' => $idexpediente,
-        'div_actualiza' => 'resultado_busqueda' . $_REQUEST["idbusqueda_componente"],
-    ];
-    $params = http_build_query($data);
+    if ($Expediente->getAccessUser('a')) {
+        $data = [
+            'idbusqueda_componente' => $_REQUEST['idbusqueda_componente'],
+            'idexpediente' => $idexpediente,
+            'div_actualiza' => 'resultado_busqueda' . $_REQUEST["idbusqueda_componente"],
+        ];
+        $params = http_build_query($data);
+        $rutaFormato = FORMATOS_CLIENTE;
 
-    $html = <<<FINHTML
-       <li></li>
-       <li>
-            <a  href="#" conector="iframe" titulo="Adicionar Expediente" enlace="pantallas/expediente/adicionar_expediente.php?{$params}">Adicionar Expediente/Separador</a>
-       </li>
-       <li>
-            <a conector="iframe" titulo="Adicionar Documento" enlace="{FORMATOS_CLIENTE}vincular_doc_expedie/adicionar_vincular_doc_expedie.php?idexpediente=' . $idexpediente . '">Adicionar Documento</a>
+        $html = <<<FINHTML
+        <li></li>
+        <li>
+            <a href="#" id="addExpediente" enlace="pantallas/expediente/adicionar_expediente.php?{$params}">Adicionar Expediente/Separador</a>
+        </li>
+        <li>
+            <a href="#" id="addDocumentExp" enlace="{$rutaFormato}vincular_doc_expedie/adicionar_vincular_doc_expedie.php?idexpediente={$idexpediente}">Adicionar Documento</a>
         </li>
 FINHTML;
-
-    $html .= <<<FINHTML
-       <li>
-            <a conector="iframe" titulo="Adicionar Documento" enlace="{FORMATOS_CLIENTE}vincular_doc_expedie/adicionar_vincular_doc_expedie.php?idexpediente=' . $idexpediente . '">Adicionar Documento</a>
-        </li>
-FINHTML;
-
+    }
     echo $html;
 }
 
 
 function compartir_expediente()
 {
-    $permiso = new Permiso();
-    $ok1 = $permiso->acceso_modulo_perfil('compartir_expediente');
-    if ($ok1) {
-        $cadena .= '
+    global $Expediente;
+
+    $idexpediente = $_REQUEST["idexpediente"];
+    if (!$Expediente) {
+        $Expediente = new Expediente($idexpediente);
+        $GLOBALS['Expediente'] = $Expediente;
+    }
+    if ($Expediente->getAccessUser('a')) {
+        $html = <<<FINHTML
 		<li></li>
 		<li>
-		    <a  href="#" id="compartir_expediente" idbusqueda_componente="' . $_REQUEST["idbusqueda_componente"] . '" conector="iframe" titulo="Compartir Expediente" enlace="pantallas/expediente/asignar_expediente.php?div_actualiza=resultado_busqueda' . $_REQUEST["idbusqueda_componente"] . '&target_actualiza=parent&idbusqueda_componente=' . $_REQUEST["idbusqueda_componente"] . '">Compartir Expediente</a>
-		</li>';
+		    <a href="#" id="shareExp" enlace="pantallas/expediente/asignar_expediente.php">Compartir Expediente</a>
+        </li>
+FINHTML;
     }
-    echo ($cadena);
+    echo $html;
 }
-
-
 
 function transferencia_documental()
 {
-    $cadena = '<li><a href="#" id="transferencia_documental" titulo="Transferencia documental">Transferir a Archivo</a></li>
-	<script>
-		$("#transferencia_documental").click(function(){
-			var seleccionados=$("#seleccionados_expediente").val();
-			$.ajax({
-				type : "POST",
-				url : "../expediente/validar_cierre_expedientes.php",
-				data : {idexpedientes : seleccionados	},
-				dataType:"json",
-				success : function (response){
-					if(response.exito == 1){
-						enlace_katien_saia("' . FORMATOS_CLIENTE . 'transferencia_doc/adicionar_transferencia_doc.php?id="+seleccionados,"Transferencia documental","iframe","");
-					}else{
-						alert(response.msn);
-					}
-				},
-				error : function (err){
-					alert("Error al procesar la solicitud");
-				}
-			});
-
-		});
-		</script>';
+    $cadena = '<li><a href="#" id="transDocument">Transferir a Archivo</a></li>';
     echo $cadena;
 }
 
 function prestamo_documento()
 {
-    $tipo = busca_filtro_tabla("nombre", "busqueda_componente", "idbusqueda_componente=" . $_REQUEST['idbusqueda_componente'], "", $conn);
-    $estado = "";
-    switch ($tipo[0]['nombre']) {
-        case 'expediente':
-            $estado = 1;
-            break;
-        case 'documento_central':
-            $estado = 2;
-            break;
-        case 'documento_historico':
-            $estado = 3;
-            break;
-    }
-    $cadena = '<li><a href="#" id="prestamo_documento" titulo="Solicitud de prestamo de documentos">Solicitar pr&eacute;stamo</a></li>
-	<script>
-		$("#prestamo_documento").click(function(){
-			var seleccionados=$("#seleccionados_expediente").val();
-			var estado_archivo=' . $estado . ';
-			if(seleccionados){
-				enlace_katien_saia("' . FORMATOS_CLIENTE . 'solicitud_prestamo/adicionar_solicitud_prestamo.php?id="+seleccionados+"&estado_archivo="+estado_archivo,"Solicitud de prestamo","iframe","");
-			}else{
-				alert("Seleccione por lo menos un expediente");
-			}
-		});
-		</script>';
+    $cadena = '<li><a href="#" id="prestDocument">Solicitar pr&eacute;stamo</a></li>';
     echo $cadena;
 }
 
 
 function barra_superior_busqueda()
 {
-    global $conn;
+    //TODO: PENDIENTE POR REVISAR
     $permiso = new Permiso();
-
     $ok2 = $permiso->acceso_modulo_perfil('transferencia_doc');
-    $cadena = '';
 
     $reporte_inventario = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente", "nombre='reporte_expediente_grid_exp'", "", $conn);
     if ($reporte_inventario['numcampos']) {
@@ -289,31 +247,28 @@ function barra_superior_busqueda()
             $tipo = '3';
             break;
     }
-    $listado_exp_admin = busca_filtro_tabla("nombre", "busqueda_componente", "idbusqueda_componente=" . $_REQUEST['idbusqueda_componente'], "", $conn);
-    if ($listado_exp_admin[0]["nombre"] != "expediente_admin") {
-        $registros_concatenados = "cod_arbol|" . @$_REQUEST["cod_arbol"] . "|-|tipo_expediente|" . $tipo;
-        $cadena .= '<li><div class="btn-group">
-                    <button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">Listar &nbsp;
-	                   <span class="caret"></span>&nbsp;
-                    </button>
-                    <ul class="dropdown-menu" id="acciones_expedientes">';
 
-        // INICIO NUEVO DESARROLLO REPORTE EXPEDIENTES 20171004
-        $cadena .= '
-	<li></li>
-	<li>
-	    <a class="kenlace_saia" conector="iframe" idbusqueda_componente="' . $inventario . '" titulo="Inventario Documental" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?variable_busqueda=' . $registros_concatenados . '&idbusqueda_componente=' . $inventario . '">Inventario Documental</a>
-	</li>';
-        $cadena .= '
-	<li></li>
-	<li>
-	    <a class="kenlace_saia" conector="iframe"  idbusqueda_componente="' . $indice . '" titulo="indice de Expediente" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?variable_busqueda=' . @$_REQUEST["idexpediente"] . '&idbusqueda_componente=' . $indice . '">Indice de Expediente</a>
-	</li>';
-        $cadena .= '</ul></div></li>';
-    }
-    return ($cadena);
+    $registros_concatenados = "cod_arbol|" . @$_REQUEST["cod_arbol"] . "|-|tipo_expediente|" . $tipo;
+
+    $html = '<li>
+        <div class="btn-group">
+            <button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">Listar &nbsp;
+                <span class="caret"></span>&nbsp;
+            </button>
+            <ul class="dropdown-menu" id="acciones_expedientes">
+                <li></li>
+                <li>
+                    <a class="kenlace_saia" conector="iframe" idbusqueda_componente="' . $inventario . '" titulo="Inventario Documental" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?variable_busqueda=' . $registros_concatenados . '&idbusqueda_componente=' . $inventario . '">Inventario Documental</a>
+                </li>
+                <li></li>
+                <li>
+                    <a class="kenlace_saia" conector="iframe"  idbusqueda_componente="' . $indice . '" titulo="indice de Expediente" enlace="pantallas/busquedas/consulta_busqueda_reporte.php?variable_busqueda=' . @$_REQUEST["idexpediente"] . '&idbusqueda_componente=' . $indice . '">Indice de Expediente</a>
+                </li>
+            </ul>
+        </div>
+    </li>
+    <li class="divider-vertical"></li>';
+
+    return $html;
 }
 /** AQUI TERMINA LAS FUNCIONES DE CONSULTA BUSQUEDA */
-
-
-

@@ -29,6 +29,7 @@ function incluir_librerias_busqueda($elemento, $indice) {
 }
 
 $okAddAcciones = 0;
+$okPermisoAcciones =false;
 $idexpediente = '';
 if ($_REQUEST["idexpediente"]) {
     $idexpediente = $_REQUEST["idexpediente"];
@@ -36,6 +37,9 @@ if ($_REQUEST["idexpediente"]) {
 
 if (!empty($idexpediente)) {
     $Expediente = new Expediente($idexpediente);
+    $GLOBALS['Expediente'] = $Expediente;
+    
+    $okPermisoAcciones=$Expediente->getAccessUser('a');
     if ($Expediente->nucleo) {
         if ($Expediente->fk_serie) {
             $instance = $Expediente->getSerieFk();
@@ -52,12 +56,6 @@ if (!empty($idexpediente)) {
     } else {
         $okAddAcciones = 1;
     }
-}
-
-
-$cod_arbol = '';
-if ($_REQUEST["cod_arbol"]) {
-    $cod_arbol = $_REQUEST["cod_arbol"];
 }
 
 if ($datos_busqueda[0]["busqueda_avanzada"] != '') {
@@ -142,8 +140,8 @@ echo(estilo_bootstrap());
                     </ul>
                 </div>
             </li>
-
-            <?php if($datos_busqueda[0]["acciones_seleccionados"]!='' && $okAddAcciones):?>
+            <li class="divider-vertical"></li>
+            <?php if($datos_busqueda[0]["acciones_seleccionados"]!='' && $okAddAcciones && $okPermisoAcciones):?>
             <li>
                 <div class="btn-group">
                     <button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">
@@ -160,6 +158,7 @@ echo(estilo_bootstrap());
                     </ul>
                 </div>
             </li>
+            <li class="divider-vertical"></li>
             <?php
             endif;
             if(@$datos_busqueda[0]["menu_busqueda_superior"]){
@@ -167,7 +166,6 @@ echo(estilo_bootstrap());
                 echo($funcion_menu[0](@$funcion_menu[1]));
             }
             ?>
-            <li class="divider-vertical"></li>
             <li>
                 <div class="btn-group">
                     <button type="button" class="btn btn-mini " id="loadmoreajaxloader">
@@ -220,6 +218,10 @@ echo(estilo_bootstrap());
         <!-- Forma de carga -->
         <input type="hidden" value=<?=(!empty($datos_busqueda[0]["cargar"]) ? $datos_busqueda[0]["cargar"] : 0); ?>" name="forma_carga" id="forma_carga">
 
+        <!-- idexpediente -->
+        <input type="hidden" value="<?= $idexpediente; ?>" name="idexpediente" id="idexpediente">
+
+        <?php/*
         <!-- Variable busqueda -->
         <input type="hidden" value="<?=$_REQUEST["variable_busqueda"]; ?>" name="variable_busqueda" id="variable_busqueda">
         <!-- idbusqueda_filtro_temp -->
@@ -228,10 +230,10 @@ echo(estilo_bootstrap());
         <input type="hidden" value="<?=$_REQUEST["idbusqueda_filtro"]; ?>" name="idbusqueda_filtro" id="idbusqueda_filtro">
         <!-- idbusqueda_temporal -->
         <input type="hidden" value="<?=$_REQUEST["idbusqueda_temporal"]; ?>" name="idbusqueda_temporal" id="idbusqueda_temporal">
-        <!-- idexpediente -->
-        <input type="hidden" value="<?=$idexpediente; ?>" name="idexpediente" id="idexpediente">
+        
         <!-- idcaja -->
-        <input type="hidden" value="<?=$_REQUEST["idcaja"]; ?>" name="idcaja" id="idcaja">
+        <input type="hidden" value="<?=$_REQUEST["idcaja"]; ?>" name="idcaja" id="idcaja">*/
+        ?>
     </div>
 </div>
 <div class="pull-left" id="panel_detalle">

@@ -116,7 +116,7 @@ class Serie extends Model
                             $idsEntSe[] = $EntidadSerie->getPK();
                             $ok++;
                         }
-                        ProcessExpedienteController::createEntidadSerieCodArbol($this->cod_arbol, $attributes);
+                        ExpedienteController::createEntidadSerieCodArbol($this->cod_arbol, $attributes);
 
                     }
 
