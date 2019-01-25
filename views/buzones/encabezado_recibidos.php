@@ -1,6 +1,6 @@
 <div class="row w-100 mx-0 my-auto" id="mail_initial_info">
     <div class="col-auto mr-auto text-left px-0 h-100">
-        <span id="actual_date">.</span>
+        <span id="actual_date"></span>
     </div>        
 </div>
 <div class="row w-100 mx-0 bg-info text-white my-auto" style="display:none" id="component_actions">
