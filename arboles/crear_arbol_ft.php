@@ -40,6 +40,7 @@ class ArbolFt {
     private $con_funcion_click = false;
     private $con_funcion_dblclick = false;
     private $html = "";
+    private $obligatorio = 0;
 
     public function __construct($campo, $fuenteDatos, $opcionesArbol = array(), $extensiones = array()) {
         $this -> campo = $campo;
@@ -111,6 +112,9 @@ class ArbolFt {
         if (isset($this -> opcionesArbol["lazy"])) {
             $this -> opcionesArbol["lazyLoad"] = "###AquiFuncionLazy###";
         }
+        if(isset($this->opcionesArbol["obligatorio"])) {
+        	$this->obligatorio = $this -> opcionesArbol["obligatorio"];
+        }
     }
 
     private function crear_arbol() {
@@ -152,10 +156,12 @@ FINJS;
 FINJS;
         $opciones_json = preg_replace('/"###AquiFuncionSelect###"/', $cadena_funcion, $opciones_json);
         $opciones_json = preg_replace('/"###AquiFuncionLazy###"/', $funcion_lazy, $opciones_json);
-                
+        if($this->obligatorio == 1) {
+        	$obligatorio = 'class="required"';
+        }
         $this -> html .= <<<FINHTML
         <div id="treebox_{$this->campo}"></div>
-        <input type="hidden" class="required" name="{$this->campo}" id="{$this->campo}" value="{$this -> seleccionados}">
+        <input type="hidden" {$obligatorio} name="{$this->campo}" id="{$this->campo}" value="{$this -> seleccionados}">
         <script type="text/javascript">
         $(document).ready(function() {
             var configuracion={$opciones_json};
