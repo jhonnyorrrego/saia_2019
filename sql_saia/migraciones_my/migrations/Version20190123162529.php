@@ -59,16 +59,26 @@ final class Version20190123162529 extends AbstractMigration {
 	];
 	
 	private $dataEvento = [
-		["evento" => "Al cambiar de estado"],
-		["evento" => "Al crear un registro nuevo"],
-		["evento" => "Al radicarse o publicarse un documento"]
+		["idevento_notificacion" => 1, "evento" => "Al cambiar de estado"],
+		["idevento_notificacion" => 2, "evento" => "Al crear un registro nuevo"],
+		["idevento_notificacion" => 3, "evento" => "Al radicarse o publicarse un documento"]
 	];
 	
 	
 	private $dataTipoDest = [
-		["tipo" => "Funcionarios de la Organización"],
-		["tipo" => "Asociado a campos de registros"],
-		["tipo" => "Personas externas"]
+		["idtipo_destinatario" => 1, "tipo" => "Funcionarios de la Organización"],
+		["idtipo_destinatario" => 2, "tipo" => "Asociado a campos de registros"],
+		["idtipo_destinatario" => 3, "tipo" => "Personas externas"]
+	];
+	
+	private $dataTipoElemento = [
+		["nombre" => "startEvent",               "nombre_bpmn" => "startEvent"      ],
+		["nombre" => "endEvent",                 "nombre_bpmn" => "endEvent"        ],
+		["nombre" => "task",                     "nombre_bpmn" => "task"            ],
+		["nombre" => "exclusiveGateway",         "nombre_bpmn" => "exclusiveGateway"],
+		["nombre" => "parallelGateway",          "nombre_bpmn" => "parallelGateway" ],
+		["nombre" => "inclusiveGateway",         "nombre_bpmn" => "inclusiveGateway"],
+		["nombre" => "sequenceFlow",             "nombre_bpmn" => "sequenceFlow"    ],
 	];
 	
 	public function getDescription(): string {
@@ -90,7 +100,7 @@ final class Version20190123162529 extends AbstractMigration {
 	public function up(Schema $schema): void {
 		
 		$tabla = $schema->createTable("wf_evento_notificacion");
-		$tabla->addColumn("idevento_notificacion", "integer", ["autoincrement" => true]);
+		$tabla->addColumn("idevento_notificacion", "integer");
 		$tabla->addColumn("evento", "string", ["length" => 255]);
 		$tabla->setPrimaryKey(["idevento_notificacion"]);
 		
@@ -127,7 +137,7 @@ final class Version20190123162529 extends AbstractMigration {
 		$tabla->setPrimaryKey(["idnotificacion"]);
 		
 		$tabla = $schema->createTable("wf_tipo_destinatario");
-		$tabla->addColumn("idtipo_destinatario", "integer", ["autoincrement" => true]);
+		$tabla->addColumn("idtipo_destinatario", "integer");
 		$tabla->addColumn("tipo", "string", ["length" => 255]);
 		$tabla->setPrimaryKey(["idtipo_destinatario"]);
 		
@@ -251,6 +261,13 @@ final class Version20190123162529 extends AbstractMigration {
 				$conn->insert("wf_tipo_destinatario", $value);
 			}
 		}
+		
+		if($schema->hasTable("wf_tipo_elemento")) {
+			foreach ($this->dataTipoElemento as $value) {
+				$conn->insert("wf_tipo_elemento", $value);
+			}
+		}
+		
 		
 		$conn->commit();
 		
