@@ -37,7 +37,12 @@ final class Version20190123162529 extends AbstractMigration {
 		"etiqueta" => "Listado de flujos",
 		"nombre" => "listado_nuevos_flujos",
 		"orden" => 1,
-		"info" => "<div>{*barra_superior_diagramas@id*}\n<br>\n<b>Id=><\/b> {*id*}<br>\n<b>Nombre=><\/b> {*title*}<br>\n<b>Descripci&oacute;n=><\/b> {*description*}\n<\/div>",
+		"info" => '<div>
+<a href="#" class="btn btn-secondary btn-sm active kenlace_saia" role="button" data-idflujo="{*idflujo*}" data-conector="iframe" data-titulo="Flujo">Editar</a>
+<div>
+<b>Nombre</b> {*nombre*}<br>
+<b>Descripci&oacute;n</b> {*descripcion*}
+</div></div>',
 		"exportar" => null,
 		"exportar_encabezado" => null,
 		"encabezado_componente" => "",
@@ -145,6 +150,7 @@ final class Version20190123162529 extends AbstractMigration {
 		$tabla->addColumn("idelemento", "integer", ["autoincrement" => true]);
 		$tabla->addColumn("nombre", "string", ["length" => 255]);
 		$tabla->addColumn("bpmn_id", "string", ["length" => 255]);
+		$tabla->addColumn("info", "text");
 		$tabla->addColumn("fk_flujo", "integer");
 		$tabla->addColumn("fk_formato_flujo", "integer", ["notnull" => false]);
 		$tabla->addColumn("fk_tipo_elemento", "integer");
@@ -177,16 +183,14 @@ final class Version20190123162529 extends AbstractMigration {
 		
 		$tabla = $schema->createTable("wf_destinatario_saia");
 		$tabla->addColumn("iddestinatario", "integer");
-		$tabla->addColumn("fk_funcionario", "string", ["length" => 10]);
-		$tabla->addColumn("fk_cargo", "string", ["length" => 10, "notnull" => false]);
+		$tabla->addColumn("fk_funcionario", "integer");
+		$tabla->addColumn("fk_cargo", "integer", ["notnull" => false]);
 		$tabla->setPrimaryKey(["iddestinatario"]);
 		
 		$tabla = $schema->createTable("wf_enlace");
 		$tabla->addColumn("idenlace", "integer", ["autoincrement" => true]);
 		$tabla->addColumn("fk_flujo", "integer");
-		$tabla->addColumn("bpmn_id", "string", ["length" => 10]);
-		$tabla->addColumn("bpmn_origen", "string", ["length" => 255, "notnull" => false]);
-		$tabla->addColumn("bpmn_destino", "string", ["length" => 255, "notnull" => false]);
+		$tabla->addColumn("bpmn_id", "string", ["length" => 255]);
 		$tabla->addColumn("nombre", "string", ["length" => 255, "notnull" => false]);
 		$tabla->addColumn("fk_elemento_origen", "integer", ["notnull" => false]);
 		$tabla->addColumn("fk_elemento_destino", "integer", ["notnull" => false]);
@@ -308,7 +312,9 @@ final class Version20190123162529 extends AbstractMigration {
 			"wf_formato_flujo",
 			"wf_notificacion",
 			"wf_tipo_destinatario",
-			"wf_actividad",
+			"wf_elemento",
+			"wf_enlace",
+			"wf_tipo_elemento",
 			"wf_actividad_notificacion",
 			"wf_adjunto_notificacion",
 			"wf_dest_notificacion",
