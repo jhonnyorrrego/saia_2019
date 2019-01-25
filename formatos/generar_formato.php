@@ -876,7 +876,8 @@ class GenerarFormato
                             $texto .= '<hr class="border border-info" id="' . $campos[$h]["nombre"] . '">';
                             break;
                         case "password":
-                            $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
+                            
+                            $texto .= '<div class="form-group form-group-default ' . $obligatorio . '" id="tr_' . $campos[$h]["nombre"] . '">
                      <label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
                      <input class="form-control" ' . $tabindex . ' type="password" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . " $adicionales " . ' value="' . $valor . '">
                     </div>';
@@ -1412,8 +1413,10 @@ class GenerarFormato
                                 $ancho = ' style="width:' . $tam . '%;" ';
                             }
 
-
-                            $texto .= '<div class="form-group form-group-default '. $obligatorio .'" id="tr_' . $campos[$h]["nombre"] . '">
+                            if ($campos[$h]["obligatoriedad"] == 1) {
+                                $obligatorio = "required";
+                            }
+                            $texto .= '<div class="form-group form-group-default '. $obligatorio .'" ' . $ancho . ' id="tr_' . $campos[$h]["nombre"] . '">
                      <label class="etiqueta_campo" title="' . $campos[$h]["ayuda"] . '">' . str_replace("ACUTE;","acute;",$this->codifica($campos[$h]["etiqueta"])) .  '</label>
                      <input class="form-control" ' . " $adicionales $tabindex" . ' type="text" ' . $ancho . ' size="100" id="' . $campos[$h]["nombre"] . '" name="' . $campos[$h]["nombre"] . '" ' . $obligatorio . ' value="' . $valor . '">
                     </div>';
