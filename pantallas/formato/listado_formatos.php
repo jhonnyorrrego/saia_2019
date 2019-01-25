@@ -165,6 +165,7 @@ padding:13px;
 </script>
 
  <?= theme() ?>
+ 
 </head>
 <body>
 <div class="container">
@@ -278,6 +279,10 @@ ul.fancytree-container {
   		
   	</div>
 	<script type="text/javascript">
+		$(".buscar_arboles").hide();
+		$("#contenido_arbol").css({
+			"margin-top": "8px"
+		})
 		var ruta_db_superior = "<?php echo $ruta_db_superior; ?>";
 		var idformato = "<?php echo $_REQUEST['id']; ?>";
 
@@ -293,6 +298,9 @@ ul.fancytree-container {
 				}
 			}else{
 				function evento_click(event, data) {
+							/*console.log($("ul").hasClass("fancytree-treefocus"));
+						  $("ul").removeClass("fancytree-treefocus");
+							console.log($("ul").hasClass("fancytree-treefocus"));*/
 			        var nodeId = data.node.key;
 			        var title =  data.node.title;
 	        		//console.log($("#admin_generador",window.parent.document));
