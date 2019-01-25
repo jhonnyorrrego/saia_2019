@@ -48,6 +48,7 @@ if(!empty($_REQUEST["idflujo"])) {
     <!-- <script src="https://unpkg.com/bpmn-js@3.1.0/dist/bpmn-modeler.development.js"></script>  -->
 
     <?= jquery() ?>
+    <?= validate() ?>
     <?= bootstrap() ?>
     <?= icons() ?>
     <?= theme() ?>
@@ -135,7 +136,7 @@ letter-spacing: unset !important;
 
 <script type="text/javascript">
 var lista_archivos = new Object();
-
+var idflujo = 0;
 $(document).ready(function() {
     /*$('a[data-toggle="pill"]').on('show.bs.tab', function (e) {
         console.log(e.target); // newly activated tab

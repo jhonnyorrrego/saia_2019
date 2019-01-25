@@ -109,6 +109,8 @@ if(isset($_REQUEST["idflujo"])) {
 
             $.ajax({
                 url: '<?= $ruta_db_superior ?>app/flujo/guardarDiagrama.php',
+                dataType: "json",
+                async: false,
                 type: "POST",  // type should be POST
                 data: {
                     datos: xml,
@@ -174,7 +176,7 @@ if(isset($_REQUEST["idflujo"])) {
 $(function() {
 
 	var xmlDiagrama = `<?=$datosDiagrama?>`;
-	if(idflujo && idflujo != "") {
+	if(idflujo && idflujo != "" && xmlDiagrama != "") {
 		openDiagram(xmlDiagrama);
 	} else {
     	// load external diagram file via AJAX and open it

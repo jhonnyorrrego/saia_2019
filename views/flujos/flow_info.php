@@ -29,7 +29,8 @@ $consulta64 = base64_encode(json_encode($consulta));
 
 $origen = array("url" => "arboles/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior,
     "params" => array(
-        "seleccionable" => "checkbox"
+        "seleccionable" => "checkbox",
+    	"obligatorio" => 1
     ));
 //$opciones_arbol = array("keyboard" => true, "onNodeClick" => "evento_click", "busqueda_item" => 1);
 $opciones_arbol = array("keyboard" => true, "selectMode" => 2);
@@ -77,14 +78,14 @@ if(!empty($idflujo)) : ?>
   <div class="row">
       <div class="col-sm-9">
           <div class="form-group">
-            <label class="etiqueta_campo" for="nombre_flujo">Nombre del proceso</label>
-            <input type="text" class="form-control" id="nombre_flujo" name="nombre" placeholder="Nombre del proceso" value="<?= $datos["nombre"] ?>">
+            <label class="etiqueta_campo" for="nombre_flujo">Nombre del proceso *</label>
+            <input type="text" class="form-control" id="nombre_flujo" name="nombre" placeholder="Nombre del proceso" required value="<?= $datos["nombre"] ?>">
           </div>
       </div>
       <div class="col-sm-3">
           <div class="form-group">
-            <label class="etiqueta_campo" for="version_flujo">Versi&oacute;n</label>
-            <input type="text" class="form-control" id="version_flujo" name="version" value="<?= $datos["version"] ?>">
+            <label class="etiqueta_campo" for="version_flujo">Versi&oacute;n *</label>
+            <input type="text" class="form-control" id="version_flujo" name="version" required value="<?= $datos["version"] ?>">
           </div>
       </div>
   </div>
@@ -100,8 +101,8 @@ if(!empty($idflujo)) : ?>
 	  <div class="row">
         <div class="col-sm-12">
           <div class="form-group">
-            <label class="etiqueta_campo" for="codigo_flujo">C&oacute;digo</label>
-            <input type="text" class="form-control" id="codigo_flujo" name="codigo" value="<?= $datos["codigo"] ?>">
+            <label class="etiqueta_campo" for="codigo_flujo">C&oacute;digo *</label>
+            <input type="text" class="form-control" id="codigo_flujo" name="codigo" required value="<?= $datos["codigo"] ?>">
           </div>
         </div>
       </div>
@@ -150,32 +151,43 @@ if(!empty($idflujo)) : ?>
 <script src="<?= $ruta_db_superior ?>views/flujos/js/flujos.js" data-consulta64="<?= $consulta64 ?>"></script>
 <script type="text/javascript">
 $(function(){
-	$("#guardarFlujo").click(function(){
-		var formData = new FormData(document.getElementById("flowForm"));
-		formData.append('key', localStorage.getItem("key"));
-		var idflujo = $("#idflujo").val();
-		if(idflujo && idflujo != "") {
-			formData.append('idflujo', idflujo);
-		}
-		//TODO: para depurar los datos
-		/*for (var pair of formData.entries()) {
-		    console.log(pair[0]+ ', ' + pair[1]);
-		}
-		return false;*/
-		$.ajax({
-			url: "<?= $ruta_db_superior ?>app/flujo/guardarFlujo.php",
-			type: "POST",
-			data: formData,
-			processData: false,  // tell jQuery not to process the data
-			contentType: false,  // tell jQuery not to set contentType
-			success: function(response) {
-			  if(response.success == 1) {
-				  top.notification({type: "success", message: response.message});
-			  } else {
-				  top.notification({type: "error", message: response.message});
-			  }
+	$("#guardarFlujo").click(function() {
+		if($("#flowForm").valid()) {
+			var formData = new FormData(document.getElementById("flowForm"));
+			formData.append('key', localStorage.getItem("key"));
+			var idflujo = $("#idflujo").val();
+			if(idflujo && idflujo != "") {
+				formData.append('idflujo', idflujo);
 			}
-		});
+			//TODO: para depurar los datos
+			/*for (var pair of formData.entries()) {
+			    console.log(pair[0]+ ', ' + pair[1]);
+			}
+			return false;*/
+			  console.log(idflujo);
+			$.ajax({
+				dataType: "json",
+				url: "<?= $ruta_db_superior ?>app/flujo/guardarFlujo.php",
+				type: "POST",
+				data: formData,
+				async: false,
+				processData: false,  // tell jQuery not to process the data
+				contentType: false,  // tell jQuery not to set contentType
+				success: function(response) {
+				  if(response["success"] == 1) {
+					  if(response["data"]["pk"]) {
+						  idflujo = response["data"]["pk"];
+						  $("#idflujo").val(response.data.pk);
+					  }
+					  top.notification({type: "success", message: response.message});
+				  } else {
+					  top.notification({type: "error", message: response.message});
+				  }
+				}
+			});
+			console.log(idflujo);
+				
+		}
 	});
 });
 </script>
