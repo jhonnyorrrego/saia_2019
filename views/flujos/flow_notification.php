@@ -38,7 +38,7 @@ if(isset($_REQUEST["idflujo"])) {
 	foreach ($formatos as $fila) {
 		$listaIdsFmt[] = $fila["idformato"];
 	}
-		
+
 	$origen = array("url" => "arboles/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior,
 		"params" => array(
 			"seleccionable" => "checkbox",
@@ -82,7 +82,7 @@ if(isset($_REQUEST["idflujo"])) {
 								echo '<option value="' . $evento["idevento_notificacion"] . '">' . $evento["evento"] . '</option>';
 							}
 						}
-						?>			
+						?>
 					</select>
 				</div>
 			</div>
@@ -98,7 +98,7 @@ if(isset($_REQUEST["idflujo"])) {
 								echo '<option value="' . $tarea->idelemento . '">' . $tarea->nombre . '</option>';
 							}
 						}
-						?>			
+						?>
 					</select>
 				</div>
 			</div>
@@ -114,7 +114,7 @@ if(isset($_REQUEST["idflujo"])) {
 								echo '<option value="' . $formato["idformato"] . '">' . $formato["etiqueta"] . '</option>';
 							}
 						}
-						?>			
+						?>
 					</select>
 				</div>
 			</div>
@@ -137,10 +137,16 @@ if(isset($_REQUEST["idflujo"])) {
 					<textarea class="form-control" id="mensaje_notificacion" name="mensaje" required></textarea>
 				</div>
 				<div class="col col-md-4" style="height:150px; overflow: auto;">
-						<?= $arbolCampos->generar_html() ?>
+				<?php
+				if(!empty($listaIdsFmt)) {
+					echo $arbolCampos->generar_html();
+				} else {
+				    echo 'No ha seleccionado formatos para el proceso';
+				}
+				?>
 				</div>
 			</div>
-			
+
 			<div class="row mb-2">
 				<div class="col col-md-3">
 				    <input type="hidden" id="anexos_notificacion" name="anexos_notificacion" value="">
@@ -157,20 +163,26 @@ if(isset($_REQUEST["idflujo"])) {
 	    			<label for="formato_notificacion">Elija los Registros que se deben enviar adjunto al email</label>
 				</div>
 				<div class="col col-md-9">
-				    <?= $arbolFormato->generar_html() ?>
+				<?php
+				if(!empty($listaIdsFmt)) {
+				    echo $arbolFormato->generar_html();
+				} else {
+				    echo 'No ha seleccionado formatos para el proceso';
+				}
+				?>
   				</div>
 			</div>
-			
+
 		</fieldset>
 		<button type="button" class="btn btn-primary btn-sm" id="guardarNotificacion">Guardar notificaci&oacute;n</button>
-		
+
 	</form>
 	<script src="<?= $ruta_db_superior ?>views/flujos/js/flujos.js"></script>
-	
+
 </div>
 <!-- data-url="<?= $ruta_db_superior ?>/views/flujos/listado_notificaciones.php?idflujo=<?= $idflujo?>" -->
-<table id="tabla_notificaciones" 
-  
+<table id="tabla_notificaciones"
+
   data-toggle="table"
   data-url="listado_notificaciones.php?idflujo=<?= $idflujo?>"
   data-height="400"
@@ -192,13 +204,14 @@ if(isset($_REQUEST["idflujo"])) {
 	//$table.bootstrapTable();
 
 $(function(){
-
+   	var idflujo = $("script[data-idflujo]").data("idflujo");
+    console.log("notificacion", "idflujo", idflujo);
 	$("#guardarNotificacion").click(function() {
 		/*if($("#notificationForm").valid()) {
 		}*/
 		var formData = new FormData(document.getElementById("notificationForm"));
 		formData.append('key', localStorage.getItem("key"));
-		var idflujo = $("#idflujo").val();
+		//var idflujo = $("#idflujo").val();
 		if(idflujo && idflujo != "") {
 			formData.append('idflujo', idflujo);
 		}
@@ -206,8 +219,26 @@ $(function(){
 	    	console.log(pair[0]+ ' => ' + pair[1]);
 		}
 		return false;
+		$.ajax({
+			dataType: "json",
+			url: "<?= $ruta_db_superior ?>app/flujo/guardarNotificacion.php",
+			type: "POST",
+			data: formData,
+			async: false,
+			processData: false,  // tell jQuery not to process the data
+			contentType: false,  // tell jQuery not to set contentType
+			success: function(response) {
+			  if(response["success"] == 1) {
+				$('#tabla_notificaciones').bootstrapTable('refresh', {url: "listado_notificaciones.php?idflujo="+idflujo});
+				top.notification({type: "success", message: response.message});
+			  } else {
+				  top.notification({type: "error", message: response.message});
+			  }
+			}
+		});
+
 	});
-	
+
 	$.each(['show', 'hide'], function (i, ev) {
 	    var el = $.fn[ev];
 	    $.fn[ev] = function () {
@@ -232,7 +263,7 @@ $(function(){
 		});
 	});
 	$('.tipo_opcion').on('show', function() {
-	      console.log('#foo is now visible');
+	      //console.log('#foo is now visible');
 	});
 	$('.tipo_opcion').on('hide', function() {
 	      //console.log('#foo is hidden');
@@ -261,16 +292,23 @@ $(function(){
 	            params.error(er);
 	        }
 	    });
-	}	
+	}
 });
 
 function seleccionarCampo(event, data) {
-	var elemento_evento = $.ui.fancytree.getEventTargetType(event.originalEvent);
-	if(elemento_evento=="title"){	 
-		//console.log(event, data);
+	//var elemento_evento = $.ui.fancytree.getEventTargetType(event.originalEvent);
+    console.log(event, data);
+    if(!data.node.isFolder()) {
 		//alert("it works");
 		let tag = '{*' + data.node.data.nombre + '*}';
-		$("#mensaje_notificacion").append(tag);
+		var area = $("#mensaje_notificacion");
+
+	    var cursorPos = area.prop('selectionStart');
+	    var v = area.val();
+	    var textBefore = v.substring(0,  cursorPos);
+	    var textAfter  = v.substring(cursorPos, v.length);
+
+	    area.val(textBefore + tag + textAfter);
 	}
     /*var seleccionados = Array();
     var items = data.tree.getSelectedNodes();

@@ -49,7 +49,7 @@ function llena_formato($filtrar, $seleccionados = array(), $seleccionable = null
 			];
 
 			$item["expanded"] = false;
-			
+
 			$item["title"] = $papas[$i]["etiqueta"];
 			$item["key"] = $papas[$i]["idformato"];
 			$item["data"] = array(
@@ -57,6 +57,7 @@ function llena_formato($filtrar, $seleccionados = array(), $seleccionable = null
 				'version' => $papas[$i]["version"]
 			);
 			if(!empty($hijos[0]["total"])) {
+			    $item["folder"] = true;
 				// $children = llena_formato($papas[$i]["idformato"], $nivel);
 				$children = llena_campos($papas[$i]["idformato"], $seleccionados, $seleccionable);
 				if(!empty($children)) {
@@ -73,7 +74,7 @@ function llena_formato($filtrar, $seleccionados = array(), $seleccionable = null
 
 function llena_campos($id, $seleccionados = array(), $seleccionable = null) {
 	global $conn;
-	
+
 	$papas = busca_filtro_tabla("idcampos_formato, etiqueta, nombre", "campos_formato", "formato_idformato = " . $id, "etiqueta ASC", $conn);
 	$resp = array();
 	if($papas["numcampos"]) {

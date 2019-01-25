@@ -20,13 +20,6 @@ $tabLinks = ["flow_info" => "flow_info.php",
 "flow_diagram" => "flow_editor.php",
 "flow_notification" => "flow_notification.php",
 "flow_view" => "flow_view.php"];
-$idflujo = null;
-if(!empty($_REQUEST["idflujo"])) {
-    $idflujo = $_REQUEST["idflujo"];
-    foreach ($tabLinks as $key => $value) {
-        $tabLinks[$key] = $value . "?idflujo=$idflujo";
-    }
-}
 
 ?>
 <!DOCTYPE html>
@@ -123,9 +116,9 @@ letter-spacing: unset !important;
                   </li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
-                  <div class="tab-pane fade show active" id="flow_info" role="tabpanel" aria-labelledby="pills-flow_info" style="overflow-y: scroll; height: 650px; width=100%">...</div>
-                  <div class="tab-pane fade" id="flow_diagram" role="tabpanel" aria-labelledby="pills-flow_diagram" style="overflow-y: scroll; height: 500px; width=100%">...</div>
-                  <div class="tab-pane fade" id="flow_notification" role="tabpanel" aria-labelledby="pills-flow_notification">...</div>
+                  <div class="tab-pane fade show active" id="flow_info" role="tabpanel" aria-labelledby="pills-flow_info" style="overflow-y: auto; width=100%">...</div>
+                  <div class="tab-pane fade" id="flow_diagram" role="tabpanel" aria-labelledby="pills-flow_diagram" style="overflow-y: auto; width=100%">...</div>
+                  <div class="tab-pane fade" id="flow_notification" role="tabpanel" aria-labelledby="pills-flow_notification" style="overflow-y: auto; width=100%">...</div>
                   <div class="tab-pane fade" id="flow_view" role="tabpanel" aria-labelledby="pills-flow_view">...</div>
                 </div>
             </div>
@@ -134,19 +127,19 @@ letter-spacing: unset !important;
 
 <script src="<?= $ruta_db_superior ?>dropzone/dist/dropzone.js"></script>
 
-<script type="text/javascript">
+<script type="text/javascript" data-idflujo="<?=$_REQUEST["idflujo"] ?>">
 var lista_archivos = new Object();
-var idflujo = 0;
 $(document).ready(function() {
+	var idflujo = $("script[data-idflujo]").data("idflujo");
+	console.log("main", "idflujo", idflujo);
     /*$('a[data-toggle="pill"]').on('show.bs.tab', function (e) {
         console.log(e.target); // newly activated tab
         console.log(e.relatedTarget); // previous active tab
     })*/
 
-    $('#flow_info').load($('a.active').attr("data-url"), function(result) {
-        //console.log(result);
+    /*$('#flow_info').load($('a.active').attr("data-url"), function(result) {
     	$('a.active').tab('show');
-    });
+    });*/
 
     $("#pills-flow_info").trigger("click");
     $('#tab_flujos a').on('click', function (e) {
@@ -160,11 +153,23 @@ $(document).ready(function() {
     	//TODO: Activar para produccion
     	//if(url && !$(href).children().length) {
     	if(url) {
-        	$(href).load(url, function(result) {
+        	$(href).load(url, {idflujo: idflujo}, function(result) {
     	    	pane.tab('show');
     		});
     	}
 	});
+
+    if(!idflujo){
+        $('.nav-link:not(:first)').addClass('disabled');
+    }
+
+    let alto = $(window).height() - $("#tab_flujos").height();
+    $('.nav-link:first').trigger('click');
+    $("#flow_info").height(alto);
+    $("#flow_diagram").height(alto);
+    $("#flow_notification").height(alto);
+
+
 });
 </script>
 </body>

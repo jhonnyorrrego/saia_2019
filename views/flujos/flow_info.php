@@ -149,12 +149,14 @@ if(!empty($idflujo)) : ?>
 </form>
 <script src="<?= $ruta_db_superior ?>views/flujos/js/flujos.js" data-consulta64="<?= $consulta64 ?>"></script>
 <script type="text/javascript">
-$(function(){
+$(function() {
+	var idflujo = $("script[data-idflujo]").data("idflujo");
+    //console.log("info", "idflujo", idflujo);
 	$("#guardarFlujo").click(function() {
 		if($("#flowForm").valid()) {
 			var formData = new FormData(document.getElementById("flowForm"));
 			formData.append('key', localStorage.getItem("key"));
-			var idflujo = $("#idflujo").val();
+			//var idflujo = $("#idflujo").val();
 			if(idflujo && idflujo != "") {
 				formData.append('idflujo', idflujo);
 			}
@@ -163,7 +165,7 @@ $(function(){
 			    console.log(pair[0]+ ', ' + pair[1]);
 			}
 			return false;*/
-			  console.log(idflujo);
+			console.log(idflujo);
 			$.ajax({
 				dataType: "json",
 				url: "<?= $ruta_db_superior ?>app/flujo/guardarFlujo.php",
@@ -178,14 +180,19 @@ $(function(){
 						  idflujo = response["data"]["pk"];
 						  $("#idflujo").val(response.data.pk);
 					  }
-					  top.notification({type: "success", message: response.message});
+				    if(response.data.pk){
+				    	$("script[data-idflujo]").attr("data-idflujo", response.data.pk);
+				        $('.nav-link').removeClass('disabled');
+				    }
+
+					top.notification({type: "success", message: response.message});
 				  } else {
 					  top.notification({type: "error", message: response.message});
 				  }
 				}
 			});
 			console.log(idflujo);
-				
+
 		}
 	});
 });

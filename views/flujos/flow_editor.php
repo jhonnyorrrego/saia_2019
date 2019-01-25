@@ -37,9 +37,10 @@ if(isset($_REQUEST["idflujo"])) {
 <button type="button" class="btn btn-primary btn-sm" id="guardarDiagrama">Guardar diagrama</button>
 
 <script>
+    var idflujo = $("script[data-idflujo]").data("idflujo");
+    console.log("editor", "idflujo", idflujo);
 
     var diagramUrl = '<?= $ruta_db_superior ?>views/flujos/flujo_ejemplo.bpmn';
-    var idflujo = "<?= $idflujo?>";
 
     // modeler instance
     var bpmnModeler = new BpmnJS({
