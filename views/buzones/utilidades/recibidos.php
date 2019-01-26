@@ -86,16 +86,7 @@ $(function(){
             params: {
                 selections: selections
             },
-            buttons: {
-                success: {
-                    label: 'Guardar',
-                    class: 'btn btn-complete'
-                },
-                cancel: {
-                    label: 'Cancelar',
-                    class: 'btn btn-danger'
-                }
-            },
+            buttons: {}
         })
     });
 

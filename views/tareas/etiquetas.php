@@ -34,9 +34,9 @@ while ($max_salida > 0) {
             </span>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12 float-right">
-            <button class="btn btn-complete" id="save_tags">Guardar</button>
+    <div class="row pt-2">
+        <div class="col-12">
+            <button class="btn btn-complete float-right" id="save_tags">Guardar</button>
         </div>
     </div>
 </div>

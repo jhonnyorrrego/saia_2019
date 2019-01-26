@@ -30,5 +30,19 @@ class DocumentoTarea extends Model
             'date' => ['fecha']
         ];
     }
-   
+
+    public static function getTotalByDocument($documentId){
+        global $conn;
+
+        $findTotal = busca_filtro_tabla('count(*) as total', 'documento_tarea', 'fk_documento =' . $documentId, '', $conn);
+        return $findTotal[0]['total'];
+    }
+
+    public static function findTaskByDocument($documentId){
+        global $conn;
+
+        $findTotal = busca_filtro_tabla('a.*', 'tarea a, documento_tarea b', 'a.idtarea = b.fk_tarea and b.fk_documento =' . $documentId, '', $conn);
+
+        return Tarea::convertToObjectCollection($findTotal);
+    }
 }
