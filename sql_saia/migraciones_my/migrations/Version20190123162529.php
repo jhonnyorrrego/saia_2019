@@ -156,9 +156,10 @@ final class Version20190123162529 extends AbstractMigration {
 		$tabla->setPrimaryKey(["idelemento"]);
 		
 		$tabla = $schema->createTable("wf_actividad_notificacion");
+		$tabla->addColumn("idactividad_notificacion", "integer", ["autoincrement" => true]);
 		$tabla->addColumn("fk_actividad", "integer");
 		$tabla->addColumn("fk_notificacion", "integer");
-		$tabla->setPrimaryKey(["fk_actividad", "fk_notificacion"]);
+		$tabla->setPrimaryKey(["idactividad_notificacion"]);
 		
 		$tabla = $schema->createTable("wf_tipo_elemento");
 		$tabla->addColumn("idtipo_elemento", "integer", ["autoincrement" => true]);

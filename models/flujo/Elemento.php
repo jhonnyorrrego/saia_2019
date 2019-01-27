@@ -1,6 +1,6 @@
 <?php
 
-class Elemento extends \Model {
+class Elemento extends Model {
 	
 	use TFlujo;
 	
