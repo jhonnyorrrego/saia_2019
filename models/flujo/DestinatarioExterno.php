@@ -1,25 +1,23 @@
 <?php
+class DestinatarioExterno extends Model {
+    protected $email;
+    protected $nombre;
+    protected $iddestinatario;
 
+    public function __construct($id = null) {
+        parent::__construct($id = null);
+    }
 
-class DestinatarioExterno extends DestinatarioNotificacion {
-
-	protected $email; 
-	protected $nombre;
-		
-	public function __construct($id = null) {
-		parent::__construct($id = null);
-	}
-	
-	protected function defineAttributes() {
-		$misAtributos = ["safe" =>
-			"email",
-			"nombre",
-		];
-		$atributosPadre = (array)$this->dbAttributes;
-		$nuevos = array_merge($atributosPadre, $misAtributos);
-		$nuevos["table"] = "wf_destinatario_externo";
-		$this->dbAttributes->table = (object) $nuevos;
-	}
-	
+    protected function defineAttributes() {
+        $this->dbAttributes = (object) [
+            'safe' => [
+                "email",
+                "nombre",
+                "iddestinatario"
+            ],
+            "table" => "wf_destinatario_externo",
+            "primary" => "iddestinatario"
+        ];
+    }
 }
 

@@ -1,23 +1,24 @@
 <?php
+class DestinatarioCampoFormato extends Model {
+    protected $fk_formato_flujo;
+    protected $fk_campo_formato;
+    protected $iddestinatario;
 
-class DestinatarioCampoFormato extends DestinatarioNotificacion {
+    public function __construct($id = null) {
+        parent::__construct($id = null);
+    }
 
-	protected $fk_formato_flujo; 
-	protected $fk_campo_formato; 
-	
-	public function __construct($id = null) {
-		parent::__construct($id = null);
-	}
-		
-	protected function defineAttributes() {
-		$misAtributos = ["safe" =>
-			"fk_formato_flujo",
-			"fk_campo_formato",
-		];
-		$atributosPadre = (array)$this->dbAttributes;
-		$nuevos = array_merge($atributosPadre, $misAtributos);
-		$nuevos["table"] = "wf_destinatario_formato";
-		$this->dbAttributes->table = (object) $nuevos;
-	}
+    protected function defineAttributes() {
+        parent::defineAttributes();
+        $this->dbAttributes = (object) [
+            'safe' => [
+                "fk_formato_flujo",
+                "fk_campo_formato",
+                "iddestinatario"
+            ],
+            "table" => "wf_destinatario_formato",
+            "primary" => "iddestinatario"
+        ];
+    }
 }
 

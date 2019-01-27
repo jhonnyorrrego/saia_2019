@@ -1,22 +1,22 @@
 <?php
+class DestinatarioSaia extends Model {
+    protected $fk_funcionario;
+    protected $fk_cargo;
+    protected $iddestinatario;
 
-class DestinatariSaia extends DestinatarioNotificacion {
+    public function __construct($id = null) {
+        parent::__construct($id = null);
+    }
 
-	protected $fk_funcionario;
-	protected $fk_cargo;
-	
-	public function __construct($id = null) {
-		parent::__construct($id = null);
-	}
-	
-	protected function defineAttributes() {
-		$misAtributos = ["safe" =>
-			"fk_funcionario",
-		];
-		$atributosPadre = (array)$this->dbAttributes;
-		$nuevos = array_merge($atributosPadre, $misAtributos);
-		$nuevos["table"] = "wf_destinatario_saia";
-		$this->dbAttributes->table = (object) $nuevos;
-	}
+    protected function defineAttributes() {
+        $this->dbAttributes = (object) [
+            'safe' => [
+                "fk_funcionario",
+                "iddestinatario"
+            ],
+            "table" => "wf_destinatario_saia",
+            "primary" => "iddestinatario"
+        ];
+    }
 }
 
