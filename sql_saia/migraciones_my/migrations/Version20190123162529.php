@@ -379,13 +379,7 @@ union
   from wf_dest_notificacion dst
   join wf_tipo_destinatario td on dst.fk_tipo_destinatario = td.idtipo_destinatario
   join wf_destinatario_saia ds on dst.iddestinatario = ds.iddestinatario
-  join vfuncionario_dc f on ds.fk_funcionario = f.idfuncionario
-union
-  select dst.iddestinatario, fk_notificacion, fk_tipo_destinatario, td.tipo as tipo_destinatario, f.email
-  from wf_dest_notificacion dst
-  join wf_tipo_destinatario td on dst.fk_tipo_destinatario = td.idtipo_destinatario
-  join wf_destinatario_saia ds on dst.iddestinatario = ds.iddestinatario
-  join vfuncionario_dc f on ds.fk_cargo = f.idfuncionario and f.tipo_cargo = 2";
+  join vfuncionario_dc f on ds.fk_funcionario = f.idfuncionario";
 		return $sql;
 	}
 
