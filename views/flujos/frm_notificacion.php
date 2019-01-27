@@ -273,7 +273,7 @@ $(function(){
 	});
 
 	$("#guardarNotificacion").click(function() {
-		guardarNotificacion();
+		var id = guardarNotificacion();
 	});
 
 	$.each(['show', 'hide'], function (i, ev) {
