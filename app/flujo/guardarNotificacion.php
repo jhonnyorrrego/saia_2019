@@ -59,7 +59,19 @@ if($_SESSION['idfuncionario'] == $_REQUEST['key']) {
         $total = procesarFormatosNotificacion($_REQUEST["formato_notificacion"], $pk);
         $response->data["totalFormatos"] = $total;
     }
+    if ($pk) {
+        $response->success = 1;
+        $response->message = "Datos almacenados";
+        $response->data["pk"] = $pk;
+    } else {
+        $response->message = "Error al guardar!";
+    }
+} else {
+    $response->message = "Usuario incorrecto";
 }
+
+echo json_encode($response);
+
 
 function procesarAnexosNotificacion($anexos_tmp, $notificacion, $funcionario) {
     $conteoAnexos = 0;
