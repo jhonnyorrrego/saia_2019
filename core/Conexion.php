@@ -1,5 +1,6 @@
 <?php
-require_once ("define.php");
+//require_once 'define.php';
+
 class Conexion {
 	var $conn = null;
 	var $Motor, $Host, $Usuario, $Pass, $Nombredb;

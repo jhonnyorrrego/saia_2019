@@ -1,18 +1,10 @@
 <?php
 use Stringy\Stringy;
 
-abstract class Events
+abstract class Model
 {
-    abstract protected function beforeCreate();
-    abstract protected function afterCreate();
-    abstract protected function beforeUpdate();
-    abstract protected function afterUpdate();
-    abstract protected function beforeDelete();
-    abstract protected function afterDelete();
-}
-
-abstract class Model extends Events
-{
+    use TModelEvents;
+    
     protected $dbAttributes;
 
     /**
@@ -194,6 +186,8 @@ abstract class Model extends Events
 
     private function runCreate()
     {
+        global $conn;
+
         $table = self::getTableName();
         $attributes = $this->getNotNullAttributes();
         $dateAttributes = $this->getDateAttributes();
@@ -215,12 +209,11 @@ abstract class Model extends Events
 
         $sql = "INSERT INTO " . $table . " (" . $fields . ") values (" . $values . ")";
 
-        if (phpmkr_query($sql)) {
-            $this->setPK(phpmkr_insert_id());
-            return $this->getPK();
-        } else {
-            return 0;
+        if ($conn->Ejecutar_Sql($sql)) {
+            $this->setPK($conn->Ultimo_Insert());
         }
+        
+        return $this->getPK() ?? 0;
     }
 
     /**
@@ -260,8 +253,10 @@ abstract class Model extends Events
 
     public static function executeDelete($conditions = [])
     {
+        global $conn;
+
         $sql = 'DELETE FROM ' . self::getTableName() . ' WHERE ' . self::createCondition($conditions);
-        return phpmkr_query($sql);
+        return $conn->Ejecutar_Sql($sql);
     }
 
     /**
@@ -344,23 +339,89 @@ abstract class Model extends Events
     {
         global $conn;
 
-        $table = self::getTableName();
-        $select = self::createSelect($fields);
-        $condition = self::createCondition($conditions);
+        $sql = self::generateSelectSql($conditions, $fields, $order, $limit);
+        $records = $conn->executeSelect($sql, 0, $limit);
+        $response = self::convertToObjectCollection($records);
 
-        if ($limit) {
-            $records = busca_filtro_tabla_limit($select, $table, $condition, $order, 0, $limit, $conn);
-        } else {
-            $records = busca_filtro_tabla($select, $table, $condition, $order, $conn);
+        return $response;
+    }
+    
+    /**
+     * convert simple array to array of objects
+     *
+     * @param array $records
+     * @return array
+     */
+    public static function convertToObjectCollection($records)
+    {
+        $class = get_called_class();
+        $total = isset($records['numcampos']) ? $records['numcampos'] : count($records);
+
+        $data = [];
+        for ($row = 0; $row < $total; $row++) {
+            $Instance = new $class();
+            foreach ($records[$row] as $key => $value) {
+                if (is_string($key) && property_exists($class, $key)) {
+                    $Instance->$key = $value;
+                }
+            }
+            $data[] = $Instance;
         }
 
-        if ($records['numcampos']) {
-            $response = self::convertToObjectCollection($records);
+        return $data;
+    }
+
+    /**
+     * create a new record on table
+     *
+     * @param array $attributes
+     * @return int new primary key
+     */
+    public static function newRecord($attributes)
+    {
+        $className = get_called_class();
+        $Instance = new $className();
+        $Instance->setAttributes($attributes);
+
+        if ($Instance->create()) {
+            $response = $Instance->getPK();
         } else {
-            $response = null;
+            $response = 0;
         }
 
         return $response;
+    }
+
+    /**
+     * execute a update sentence
+     *
+     * @param array $fields new attributes
+     * @param array $conditions
+     * @return void
+     */
+    public static function executeUpdate($fields, $conditions)
+    {
+        global $conn;
+
+        $set = '';
+        $className = get_called_class();
+        $Instance = new $className();
+
+        $dateAttributes = $Instance->getDateAttributes();
+        foreach ($fields as $attribute => $value) {
+            if (strlen($set)) {
+                $set .= ',';
+            }
+
+            if (in_array($attribute, $dateAttributes)) {
+                $set .= $attribute . "=" . fecha_db_almacenar($value, 'Y-m-d H:i:s');
+            } else {
+                $set .= $attribute . "='" . $value . "'";
+            }
+        }
+
+        $sql = 'UPDATE ' . self::getTableName() . ' set ' . $set . ' where ' . self::createCondition($conditions);
+        return $conn->Ejecutar_Sql($sql);
     }
 
     /**
@@ -433,112 +494,15 @@ abstract class Model extends Events
         return $condition;
     }
 
-    /**
-     * convert simple array to array of objects
-     *
-     * @param array $records
-     * @return array
-     */
-    public static function convertToObjectCollection($records)
-    {
-        $class = get_called_class();
-        $total = isset($records['numcampos']) ? $records['numcampos'] : count($records);
+    public static function generateSelectSql($conditions, $fields, $order, $limit){
+        $condition = self::createCondition($conditions);
 
-        $data = [];
-        for ($row = 0; $row < $total; $row++) {
-            $Instance = new $class();
-            foreach ($records[$row] as $key => $value) {
-                if (is_string($key) && property_exists($class, $key)) {
-                    $Instance->$key = $value;
-                }
-            }
-            $data[] = $Instance;
-        }
+        $sql = "Select ";
+        $sql .= self::createSelect($fields) ?? "*";
+        $sql .= " FROM " . self::getTableName();
+        $sql .= $condition ? " WHERE {$condition} " : ' ';
+        $sql .= $order ? "ORDER BY {$order} " : '';
 
-        return $data;
+        return $sql;
     }
-
-    /**
-     * create a new record on table
-     *
-     * @param array $attributes
-     * @return int new primary key
-     */
-    public static function newRecord($attributes)
-    {
-        $className = get_called_class();
-        $Instance = new $className();
-        $Instance->setAttributes($attributes);
-
-        if ($Instance->create()) {
-            $response = $Instance->getPK();
-        } else {
-            $response = 0;
-        }
-
-        return $response;
-    }
-
-    /**
-     * execute a update sentence
-     *
-     * @param array $fields new attributes
-     * @param array $conditions
-     * @return void
-     */
-    public static function executeUpdate($fields, $conditions)
-    {
-        $set = '';
-        $className = get_called_class();
-        $Instance = new $className();
-
-        $dateAttributes = $Instance->getDateAttributes();
-        foreach ($fields as $attribute => $value) {
-            if (strlen($set)) {
-                $set .= ',';
-            }
-
-            if (in_array($attribute, $dateAttributes)) {
-                $set .= $attribute . "=" . fecha_db_almacenar($value, 'Y-m-d H:i:s');
-            } else {
-                $set .= $attribute . "='" . $value . "'";
-            }
-        }
-
-        $sql = 'UPDATE ' . self::getTableName() . ' set ' . $set . ' where ' . self::createCondition($conditions);
-        return phpmkr_query($sql);
-    }
-
-    // EVENTS
-
-    protected function beforeCreate()
-    {
-        return true;
-    }
-
-    protected function afterCreate()
-    {
-        return true;
-    }
-
-    protected function beforeUpdate()
-    {
-        return true;
-    }
-
-    protected function afterUpdate()
-    {
-        return true;
-    }
-
-    protected function beforeDelete()
-    {
-        return true;
-    }
-
-    protected function afterDelete()
-    {
-        return true;
-    }
-
 }

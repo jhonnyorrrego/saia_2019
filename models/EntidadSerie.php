@@ -1,7 +1,5 @@
 <?php
 
-require_once $ruta_db_superior . 'controllers/autoload.php';
-
 class EntidadSerie extends Model
 {
     protected $identidad_serie;

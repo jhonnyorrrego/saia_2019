@@ -1,22 +1,18 @@
 <?php
-include_once ("conexion.php");
-include_once ("SqlMysql.php");
-include_once ("SqlSqlServer.php");
-include_once ("SqlOracle.php");
-include_once ("SqlMsSql.php");
-include_once ("SqlPostgres.php");
+require_once 'autoload.php';
 
-abstract class SQL2 {
+abstract class SQL2
+{
 	protected $consulta;
 	protected $motor;
 	public $Conn;
-	public $res = NULL;
-	protected $error = NULL;
+	public $res = null;
+	protected $error = null;
 	protected $nombres_campos = array();
 	protected $tipos_campos = array();
-	protected $numcampos = NULL;
-	protected $numfilas = NULL;
-	protected $ultimoInsert = NULL;
+	protected $numcampos = null;
+	protected $numfilas = null;
+	protected $ultimoInsert = null;
 	protected $filas = 0;
 
 	/*
@@ -30,14 +26,16 @@ abstract class SQL2 {
 	 * <Pre-condiciones>debe existir una conexion a la base de datos
 	 * <Post-condiciones>
 	 */
-	public function __construct($conn, $motorBd) {
-		$this -> Conn = $conn;
-		$this -> motor = $motorBd;
+	public function __construct($conn, $motorBd)
+	{
+		$this->Conn = $conn;
+		$this->motor = $motorBd;
 	}
 
-	public function __init($conn, $motorBd) {
-		$this -> Conn = $conn;
-		$this -> motor = $motorBd;
+	public function __init($conn, $motorBd)
+	{
+		$this->Conn = $conn;
+		$this->motor = $motorBd;
 	}
 
 	/**
@@ -46,22 +44,23 @@ abstract class SQL2 {
 	 * @param $motorBd
 	 * @return NULL|SqlPostgres
 	 */
-	public static function get_instance($conn, $motorBd) {
+	public static function get_instance($conn, $motorBd)
+	{
 		$instance = null;
 		switch ($motorBd) {
-			case "MySql" :
+			case "MySql":
 				$instance = new SqlMysql($conn, $motorBd);
 				break;
-			case "Oracle" :
+			case "Oracle":
 				$instance = new SqlOracle($conn, $motorBd);
 				break;
-			case "SqlServer" :
+			case "SqlServer":
 				$instance = new SqlSqlServer($conn, $motorBd);
 				break;
-			case "MSSql" :
+			case "MSSql":
 				$instance = new SqlMsSql($conn, $motorBd);
 				break;
-			case "Postgres" :
+			case "Postgres":
 				$instance = new SqlPostgres($conn, $motorBd);
 				break;
 		}
@@ -103,9 +102,10 @@ abstract class SQL2 {
 	 * <Pre-condiciones>
 	 * <Post-condiciones>la matriz con los valores del resultado se obtiene por medio de la función Resultado
 	 */
-	function Ejecutar_Sql_Noresult($sql) {
+	function Ejecutar_Sql_Noresult($sql)
+	{
 		$sql = html_entity_decode(htmlentities(utf8_decode($sql)));
-		return $this -> Ejecutar_Sql($sql, "2");
+		return $this->Ejecutar_Sql($sql, "2");
 	}
 
 	public abstract function liberar_resultado($rs);
@@ -194,8 +194,9 @@ abstract class SQL2 {
 	 * <Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
 	 * <Post-condiciones>
 	 */
-	function Rows_Count() {
-		mysqli_affected_rows($this -> res);
+	function Rows_Count()
+	{
+		mysqli_affected_rows($this->res);
 	}
 
 	/*
@@ -209,8 +210,9 @@ abstract class SQL2 {
 	 * <Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
 	 * <Post-condiciones>
 	 */
-	function Numero_Filas($rs = Null) {
-		return ($this -> filas);
+	function Numero_Filas($rs = null)
+	{
+		return ($this->filas);
 	}
 
 	/*
@@ -345,26 +347,28 @@ abstract class SQL2 {
 
 	public abstract function invocar_radicar_documento($iddocumento, $idcontador, $funcionario);
 
-	protected function ejecuta_filtro_tabla($sql2) {
+	protected function ejecuta_filtro_tabla($sql2)
+	{
 		$retorno = array();
-		$rs = $this -> Ejecutar_Sql($sql2);
+		$rs = $this->Ejecutar_Sql($sql2);
 		// or alerta("Error en Busqueda de Proceso SQL: $sql2");
-		$temp = $this -> sacar_fila($rs);
+		$temp = $this->sacar_fila($rs);
 		$i = 0;
 		if ($temp) {
 			array_push($retorno, $temp);
 			$i++;
 		}
-		for ($temp; $temp = $this -> sacar_fila($rs); $i++) {
+		for ($temp; $temp = $this->sacar_fila($rs); $i++) {
 			array_push($retorno, $temp);
 		}
 		$retorno["numcampos"] = $i;
 		$retorno["sql"] = $sql2;
-		$this -> liberar_resultado($rs);
+		$this->liberar_resultado($rs);
 		return ($retorno);
 	}
 
-	protected function maximo_valor($valor, $maximo) {
+	protected function maximo_valor($valor, $maximo)
+	{
 		if ($valor > $maximo || $valor == "NULL") {
 			return ($maximo);
 		}
@@ -401,22 +405,23 @@ abstract class SQL2 {
 
 	protected abstract function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta);
 
-	public function formato_generar_tabla($idformato, $formato) {
+	public function formato_generar_tabla($idformato, $formato)
+	{
 		$resp = array("estado" => "KO", "mensaje" => "Error en formato_generar_tabla");
-		$datos_tabla = $this -> Busca_tabla($formato[0]["nombre_tabla"]);
+		$datos_tabla = $this->Busca_tabla($formato[0]["nombre_tabla"]);
 		$tabla_esta = $datos_tabla["numcampos"];
 		if ($datos_tabla["numcampos"]) {
-    		for ($i = 0; $i < $datos_tabla["numcampos"]; $i++) {
-    			$datos_tabla[$i] = array_change_key_case($datos_tabla[$i], CASE_LOWER);
-    		}
+			for ($i = 0; $i < $datos_tabla["numcampos"]; $i++) {
+				$datos_tabla[$i] = array_change_key_case($datos_tabla[$i], CASE_LOWER);
+			}
 			$campos_tabla = extrae_campo($datos_tabla, "field", "U,m"); // esto es para saber si existe el campo o no.
 		} else {
 			$campos_tabla = array();
 		}
 
-		$this -> crear_campos_basicos_formato($idformato, $formato);
+		$this->crear_campos_basicos_formato($idformato, $formato);
 		// 20160916 FIN Agregar el campo estado_documento si no existe
-		$campos = $this -> ejecuta_filtro_tabla("select * from campos_formato A where A.formato_idformato=" . $idformato);
+		$campos = $this->ejecuta_filtro_tabla("select * from campos_formato A where A.formato_idformato=" . $idformato);
 		if (empty($campos["numcampos"])) {
 			$resp["estado"] = "KO";
 			$resp["mensaje"] = "Problemas al Generar la tabla, No existen Campos";
@@ -424,10 +429,10 @@ abstract class SQL2 {
 		}
 
 		if ($tabla_esta) {
-			$this -> formato_elimina_indices_tabla($formato[0]["nombre_tabla"]);
+			$this->formato_elimina_indices_tabla($formato[0]["nombre_tabla"]);
 		}
 
-		$lcampos = $this -> formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta);
+		$lcampos = $this->formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta);
 
 		if (!$tabla_esta) {
 			$sql_tabla = "CREATE TABLE " . strtolower($formato[0]["nombre_tabla"]) . "(";
@@ -435,17 +440,17 @@ abstract class SQL2 {
 			$sql_tabla .= ") ";
 			guardar_traza($sql_tabla, $formato[0]["nombre_tabla"]);
 
-			if ($this -> Ejecutar_Sql($sql_tabla)) {
-				$this -> crear_indices_tabla($formato[0]["idformato"]);
+			if ($this->Ejecutar_Sql($sql_tabla)) {
+				$this->crear_indices_tabla($formato[0]["idformato"]);
 				$resp["estado"] = "OK";
 				$resp["mensaje"] = "Tabla " . $formato[0]["nombre_tabla"] . " Generada con Exito";
 			} else {
 				$resp["estado"] = "KO";
-				$resp["mensaje"] = "No es posible Generar la tabla para el Formato " . $sql_tabla . "<br />" . $this -> mostrar_error();
+				$resp["mensaje"] = "No es posible Generar la tabla para el Formato " . $sql_tabla . "<br />" . $this->mostrar_error();
 				return $resp;
 			}
 		} else {
-			$this -> crear_indices_tabla($formato[0]["idformato"]);
+			$this->crear_indices_tabla($formato[0]["idformato"]);
 			$resp["estado"] = "OK";
 			$resp["mensaje"] = "Indices para la tabla " . $formato[0]["nombre_tabla"] . " Generados con Exito";
 		}
@@ -464,11 +469,12 @@ abstract class SQL2 {
 	 * <Post-condiciones><Post-condiciones>
 	 * </Clase>
 	 */
-	protected function crear_indices_tabla($formato) {
-		$campos = $this -> ejecuta_filtro_tabla("select * from campos_formato where formato_idformato=" . $formato . " AND (banderas IS NOT NULL OR banderas<>'')");
-		$tabla = $this -> ejecuta_filtro_tabla("select nombre_tabla from formato where idformato=" . $formato);
+	protected function crear_indices_tabla($formato)
+	{
+		$campos = $this->ejecuta_filtro_tabla("select * from campos_formato where formato_idformato=" . $formato . " AND (banderas IS NOT NULL OR banderas<>'')");
+		$tabla = $this->ejecuta_filtro_tabla("select nombre_tabla from formato where idformato=" . $formato);
 		for ($i = 0; $i < $campos["numcampos"]; $i++) {
-			$this -> crear_indice($campos[$i]["banderas"], $campos[$i]["nombre"], $tabla[0]["nombre_tabla"]);
+			$this->crear_indice($campos[$i]["banderas"], $campos[$i]["nombre"], $tabla[0]["nombre_tabla"]);
 		}
 	}
 
@@ -484,7 +490,8 @@ abstract class SQL2 {
 	 * <Post-condiciones><Post-condiciones>
 	 * </Clase>
 	 */
-	protected function crear_indice($todas_banderas, $nombre_campo, $nombre_tabla) {
+	protected function crear_indice($todas_banderas, $nombre_campo, $nombre_tabla)
+	{
 		if (empty($nombre_campo)) {
 			throw new Exception();
 		}
@@ -492,7 +499,7 @@ abstract class SQL2 {
 		$nombre_campo = strtoupper($nombre_campo);
 		$banderas = explode(",", $todas_banderas);
 		for ($j = 0; $j < count($banderas); $j++) {
-			$this -> formato_crear_indice($banderas[$j], $nombre_campo, $nombre_tabla);
+			$this->formato_crear_indice($banderas[$j], $nombre_campo, $nombre_tabla);
 		}
 	}
 
@@ -508,7 +515,8 @@ abstract class SQL2 {
 	 * <Post-condiciones><Post-condiciones>
 	 * </Clase>
 	 */
-	protected function crear_campo($datos_campo, $tabla, $estructura_campo = null) {
+	protected function crear_campo($datos_campo, $tabla, $estructura_campo = null)
+	{
 		$campo = "";
 
 		if ($datos_campo["nombre"]) {
@@ -525,7 +533,7 @@ abstract class SQL2 {
 		if ((MOTOR == "MySql" || MOTOR == "Oracle") && empty($datos_campo["longitud"]) && preg_match("/(int\(|NUMBER\()11/", $campo)) {
 			$sql = "UPDATE campos_formato SET longitud=11 WHERE idcampos_formato=" . $datos_campo["idcampos_formato"];
 			guardar_traza($sql, $tabla);
-			$this -> Ejecutar_Sql($sql);
+			$this->Ejecutar_Sql($sql);
 		}
 
 		if ($estructura_campo["nulo"] != $datos_campo["obligatoriedad"] && MOTOR == "MySql") {
@@ -538,45 +546,71 @@ abstract class SQL2 {
 		return ($campo);
 	}
 
-	protected function crear_campos_basicos_formato($idformato, $formato) {
-		$pos = $this -> ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=" . $idformato . " and nombre='id{$formato[0]["nombre_tabla"]}'");
+	protected function crear_campos_basicos_formato($idformato, $formato)
+	{
+		$pos = $this->ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=" . $idformato . " and nombre='id{$formato[0]["nombre_tabla"]}'");
 		if (!$pos["numcampos"]) {
 			$sqlid = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,obligatoriedad,banderas,acciones,etiqueta_html) VALUES('" . $idformato . "','id{$formato[0]["nombre_tabla"]}','" . strtoupper($formato[0]["nombre"]) . "','INT','11','1','ai,pk','a,e','hidden')";
 			guardar_traza($sqlid, $formato[0]["nombre_tabla"]);
-			$this -> Ejecutar_Sql($sqlid) or die($sqlid);
+			$this->Ejecutar_Sql($sqlid) or die($sqlid);
 		}
-		$pos = $this -> ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=" . $idformato . " and nombre='documento_iddocumento'");
+		$pos = $this->ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=" . $idformato . " and nombre='documento_iddocumento'");
 		if (!$pos["numcampos"] && !$formato[0]["item"]) {
 			$sqldoc = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,obligatoriedad,banderas,acciones,etiqueta_html) VALUES('" . $idformato . "','documento_iddocumento','DOCUMENTO ASOCIADO','INT','11','1','i','a,e','hidden')";
 			guardar_traza($sqldoc, $formato[0]["nombre_tabla"]);
-			$this -> Ejecutar_Sql($sqldoc) or die($sqldoc);
+			$this->Ejecutar_Sql($sqldoc) or die($sqldoc);
 		}
-		$pos = $this -> ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=$idformato and nombre='dependencia'");
+		$pos = $this->ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=$idformato and nombre='dependencia'");
 		if (!$pos["numcampos"] && !$formato[0]["item"]) {
 			$sqldoc = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,obligatoriedad,banderas,acciones,etiqueta_html,valor) VALUES('" . $idformato . "','dependencia','DEPENDENCIA DEL CREADOR DEL DOCUMENTO','INT','11','1','i,fdc','a,e','hidden','{*buscar_dependencia*}')";
 			guardar_traza($sqldoc, $formato[0]["nombre_tabla"]);
-			$this -> Ejecutar_Sql($sqldoc) or die($sqldoc);
+			$this->Ejecutar_Sql($sqldoc) or die($sqldoc);
 		}
-		$pos = $this -> ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=" . $idformato . " and nombre='encabezado'");
+		$pos = $this->ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=" . $idformato . " and nombre='encabezado'");
 		if (!$pos["numcampos"] && !$formato[0]["item"]) {
 			$sqldoc = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,obligatoriedad,acciones,etiqueta_html,predeterminado) VALUES('" . $idformato . "','encabezado','ENCABEZADO','INT','11','1','a,e','hidden',1)";
 			guardar_traza($sqldoc, $formato[0]["nombre_tabla"]);
-			$this -> Ejecutar_Sql($sqldoc) or die($sqldoc);
+			$this->Ejecutar_Sql($sqldoc) or die($sqldoc);
 		}
-		$pos = $this -> ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=" . $idformato . " and nombre='firma'");
+		$pos = $this->ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=" . $idformato . " and nombre='firma'");
 		if (!$pos["numcampos"] && !$formato[0]["item"]) {
 			$sqldoc = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,obligatoriedad,banderas,acciones,etiqueta_html,predeterminado) VALUES('" . $idformato . "','firma','FIRMAS DIGITALES','INT','11','1','','a,e','hidden',1)";
 			guardar_traza($sqldoc, $formato[0]["nombre_tabla"]);
-			$this -> Ejecutar_Sql($sqldoc) or die($sqldoc);
+			$this->Ejecutar_Sql($sqldoc) or die($sqldoc);
 		}
 		// 20160916 Agregar el campo estado_documento si no existe
-		$pos = $this -> ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=" . $idformato . " and nombre='estado_documento'");
+		$pos = $this->ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=" . $idformato . " and nombre='estado_documento'");
 		if (!$pos["numcampos"] && !$formato[0]["item"]) {
 			$sqldoc = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,obligatoriedad,banderas,acciones,etiqueta_html,predeterminado) VALUES('" . $idformato . "','estado_documento','ESTADO DEL DOCUMENTO','INT','11','1','','a,e','hidden',1)";
 			guardar_traza($sqldoc, $formato[0]["nombre_tabla"]);
-			$this -> Ejecutar_Sql($sqldoc) or die($sqldoc);
+			$this->Ejecutar_Sql($sqldoc) or die($sqldoc);
 		}
 	}
 
+	/**
+	 * ejecuta una consulta
+	 *
+	 * @param string $sql
+	 * @param integer $start limite inicial
+	 * @param integer $end limite final
+	 * @return array
+	 */
+	public function executeSelect($sql, $start = 0, $end = 0)
+	{
+		$response = [];
+
+		if ($end) {
+			$result = $this->Ejecutar_Limit($sql, $start, $end);
+		} else {
+			$result = $this->Ejecutar_Sql($sql);
+		}
+
+		while (($row = $this->sacar_fila($result)) !== false) {
+			$response[] = $row;
+		}
+
+		$this->liberar_resultado($result);
+		return $response;
+	}
 }
 ?>

@@ -1,5 +1,4 @@
 <?php
-require_once $ruta_db_superior . 'controllers/autoload.php';
 
 class NotaFuncionario extends Model{
     protected $idnota_funcionario;

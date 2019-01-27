@@ -1,5 +1,4 @@
 <?php
-require_once $ruta_db_superior . 'models/model.php';
 
 class NotaPagina extends Model {
     protected $table = 'nota_pagina';
