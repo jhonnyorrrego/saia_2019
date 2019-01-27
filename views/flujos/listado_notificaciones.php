@@ -24,6 +24,8 @@ if(!empty($_REQUEST["idflujo"])) {
 		foreach($datos as &$fila) {
 			$evento = new EventoNotificacion($fila["fk_evento_notificacion"]);
 			$fila["nombre_evento"] = $evento->evento;
+			$correos = consultarDestinatarios($fila["idnotificacion"]);
+			$fila["email"] = implode(", ", $correos);
 		}
 	}
 }
@@ -34,3 +36,15 @@ $resp = [
 ];
 
 echo json_encode($resp);
+
+function consultarDestinatarios($idNotificacion) {
+    global $conn;
+    $listado = busca_filtro_tabla("email", "vwf_dest_notificacion", "fk_notificacion = $idNotificacion", "", $conn);
+    $resp = [];
+    if($listado["numcampos"]) {
+        for($i=0; $i < $listado["numcampos"]; $i++) {
+            $resp[] = $listado[$i]["email"];
+        }
+    }
+    return $resp;
+}

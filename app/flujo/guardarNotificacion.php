@@ -18,7 +18,7 @@ $response = (object) [
     'success' => 0
 ];
 
-if($_REQUEST['idflujo']) {
+if(empty($_REQUEST['idflujo'])) {
     $response['message'] = "No se especificó el flujo";
     echo json_encode($response);
     die();
@@ -32,22 +32,25 @@ if($_SESSION['idfuncionario'] == $_REQUEST['key']) {
         $flujo->setAttributes([
             "fk_flujo" => $_REQUEST['idflujo'],
             "fk_evento_notificacion" => $_REQUEST["idevento_notificacion"],
+            "fk_formato_flujo" => $_REQUEST["formato_evento"],
             "asunto" => $_REQUEST["asunto"],
-            "cuerpo" => $_REQUEST["cuerpo"]
+            "cuerpo" => $_REQUEST["mensaje"]
         ]);
         $flujo->save();
         $pk = $_REQUEST['idnotificacion'];
     } else {
         $pk = Notificacion::newRecord([
             "fk_flujo" => $_REQUEST['idflujo'],
+            "fk_evento_notificacion" => $_REQUEST["idevento_notificacion"],
+            "fk_formato_flujo" => $_REQUEST["formato_evento"],
             "asunto" => $_REQUEST["asunto"],
-            "cuerpo" => $_REQUEST["cuerpo"]
+            "cuerpo" => $_REQUEST["mensaje"]
         ]);
     }
 
-    if(!empty($pk) && !empty($_REQUEST["actividad_evento"])) {
+    if(!empty($pk) && !empty($_REQUEST["idevento_notificacion"])) {
         $pk = ActividadNotificacion::newRecord([
-            "fk_actividad" => $_REQUEST['actividad_evento'],
+            "fk_actividad" => $_REQUEST['idevento_notificacion'],
             "fk_notificacion" => $pk
         ]);
     }

@@ -12,7 +12,7 @@ trait TFlujo {
 	function findByFk($fkName, $fkValue, $asArray = false) {
 		return $this->findI([
 				$fkName => $fkValue
-		]);
+		], [], '', 0, $asArray);
 	}
 
 	function findI($conditions, $fields = [], $order = '', $limit = 0, $asArray = false) {

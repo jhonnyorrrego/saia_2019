@@ -7,6 +7,7 @@ class Notificacion extends Model {
     protected $cuerpo;
     protected $fk_flujo;
     protected $fk_evento_notificacion;
+    protected $fk_formato_flujo;
 
     function __construct($id = null) {
         parent::__construct($id);
@@ -24,7 +25,8 @@ class Notificacion extends Model {
                 "asunto",
                 "cuerpo",
                 "fk_flujo",
-                "fk_evento_notificacion"
+                "fk_evento_notificacion",
+                "fk_formato_flujo"
             ],
             "table" => "wf_notificacion",
             "primary" => "idnotificacion"

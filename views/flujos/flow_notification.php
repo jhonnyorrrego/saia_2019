@@ -34,7 +34,7 @@ if(isset($_REQUEST["idflujo"])) {
 	foreach ($formatos as $fila) {
 		$listaIdsFmt[] = $fila["idformato"];
 	}
-	
+
 }
 
 ?>
@@ -53,21 +53,19 @@ if(isset($_REQUEST["idflujo"])) {
 </div>
 
 <!-- data-url="<?= $ruta_db_superior ?>/views/flujos/listado_notificaciones.php?idflujo=<?= $idflujo?>" -->
-<table id="tabla_notificaciones"
-
+<table id="tabla_notificaciones" class="table" table-layout="fixed"
   data-toggle="table"
   data-url="listado_notificaciones.php?idflujo=<?= $idflujo?>"
-  data-height="400"
   data-side-pagination="server"
   data-pagination="true"
-  data-page-list="[5, 10, 20, 50, 100, 200]"
   data-search="true">
 	<thead>
 		<tr>
-			<th data-field="">Acci&oacute;n para la notificaci&oacute;n</th>
-			<th>Asunto</th>
-			<th>Destinatario</th>
-			<th></th>
+			<th data-field="idnotificacion" data-visible="false">Id</th>
+			<th data-field="nombre_evento">Acci&oacute;n para la notificaci&oacute;n</th>
+			<th data-field="asunto">Asunto</th>
+			<th data-field="email">Destinatario</th>
+			<th data-field="idnotificacion" data-formatter="buttonFormatter">&nbsp;</th>
 		</tr>
 	</thead>
 </table>
@@ -76,20 +74,53 @@ if(isset($_REQUEST["idflujo"])) {
 	//var $table = $('#tabla_notificaciones');
 	//$table.bootstrapTable();
 
+	// Create IE + others compatible event handler
+var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+var eventer = window[eventMethod];
+var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+// Listen to message from child window
+eventer(messageEvent, function(e) {
+  console.log('Mensaje recibido!:  ',e.data);
+	datos = e.data;
+	if(datos.accion == "recargarTabla") {
+		$('#tabla_notificaciones').bootstrapTable('refresh', {url: "listado_notificaciones.php?idflujo="+idflujo});
+	}
+}, false);
+
 $(function(){
    	var idflujo = $("script[data-idflujo]").data("idflujo");
-    console.log("notificacion", "idflujo", idflujo);
+    console.log("notificaciones", "idflujo", idflujo);
 
-	$("#crearNotificacion").click(function() {
+	$("#crearNotificacion").click(function(event, idnotificacion) {
         if($("#notificacion_frm").is(":visible")) {
         	$("#notificacion_frm").empty();
         	$("#notificacion_frm").hide();
         } else {
+            var src = "frm_notificacion.php?idflujo=<?= $idflujo ?>";
+            if(idnotificacion) {
+                src += "&idnotificacion=" + idnotificacion;
+            }
         	$("#notificacion_frm").show();
-            $('#notificacion_frm').append('<div id="iframe"><iframe src="frm_notificacion.php?idflujo=<?= $idflujo ?>" width="80%" height="600" frameborder="0"></iframe></div>');
+            $('#notificacion_frm').append('<div id="iframe"><iframe src="' + src + '"  width="90%" height="650" frameborder="0"></iframe></div>');
         }
 		//$("#notificacion_frm").toggle();
 	});
+
+	$(document).on("click", ".boton_editar", function() {
+		var id = $(this).data("idnotificacion");
+		$("#crearNotificacion").trigger("click", id);
+	} );
 });
+
+function buttonFormatter(value, row, index) {
+	//console.log(value);
+    return [
+        '<a href="#" class="boton_editar" data-idnotificacion="' + value + '">',
+        	'<i class="f-12 fa fa-edit"></i>',
+        '</a>'
+    ].join('');
+}
+
 
 </script>

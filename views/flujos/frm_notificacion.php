@@ -6,7 +6,7 @@ while ($max_salida > 0) {
 	if (is_file($ruta . 'db.php')) {
 		$ruta_db_superior = $ruta;
 	}
-	
+
 	$ruta .= '../';
 	$max_salida--;
 }
@@ -22,9 +22,18 @@ $opciones_arbol = array("keyboard" => true, "selectMode" => 2);
 $extensiones = array("filter" => array());
 
 $idflujo = null;
+$idnotificacion = null;
+
+$notificacion = null;
+if(isset($_REQUEST["idnotificacion"])) {
+    $idnotificacion = $_REQUEST["idnotificacion"];
+    $notificacion = new Notificacion($idnotificacion);
+} else {
+    $notificacion = new Notificacion();
+}
 if(isset($_REQUEST["idflujo"])) {
 	$idflujo = $_REQUEST["idflujo"];
-	//$flujo = new Flujo($idflujo);
+	$notificacion->fk_flujo = $idflujo;
 	$eventos = EventoNotificacion::findAll('', 0, true);
 	$tipoTarea = TipoElemento::findByBpmnName(TipoElemento::TIPO_TAREA);
 	$actividades = Elemento::findAllByAttributes(["fk_flujo" => $idflujo, "fk_tipo_elemento" => $tipoTarea->idtipo_elemento]);
@@ -34,8 +43,8 @@ if(isset($_REQUEST["idflujo"])) {
 	foreach ($formatos as $fila) {
 		$listaIdsFmt[] = $fila["idformato"];
 	}
-	
-	$origen = array("url" => "arboles/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior,
+
+	$origenFormatos = array("url" => "arboles/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior,
 		"params" => array(
 			"seleccionable" => "checkbox",
 			"obligatorio" => 1,
@@ -46,10 +55,19 @@ if(isset($_REQUEST["idflujo"])) {
 			"obligatorio" => 1,
 			"filtrar" => implode(",", $listaIdsFmt)
 		));
-	$arbolFormato = new ArbolFt("formato_notificacion", $origen, $opciones_arbol, $extensiones);
+
+	if(!empty($idnotificacion)) {
+	    $lista_formatos = obtenerListaFormatos($idnotificacion);
+    	if(!empty($lista_formatos)) {
+    	    $origenFormatos["params"]["seleccionados"] = implode(",", $lista_formatos);
+    	}
+	}
+	$arbolFormato = new ArbolFt("formato_notificacion", $origenFormatos, $opciones_arbol, $extensiones);
 	$arbolCampos = new ArbolFt("campos_formato_notificacion", $origenCampos, ["keyboard" => true, "selectMode" => 2, "onNodeClick" => "seleccionarCampo"], $extensiones);
 }
-
+if(empty($idflujo)) {
+    die("No se encontro parametro idflujo");
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -70,7 +88,7 @@ if(isset($_REQUEST["idflujo"])) {
 <body>
 
 	<form id="notificationForm">
-	<input type="hidden" name="idnotificacion" id="idnotificacion" value="">
+	<input type="hidden" name="idnotificacion" id="idnotificacion" value="<?= $idnotificacion ?>">
 		<fieldset>
 			<legend>Definiendo las notificaciones</legend>
 			<div class="row mb-2">
@@ -78,11 +96,15 @@ if(isset($_REQUEST["idflujo"])) {
 					<label for="sel_tipo_notificacion">Seleccione en que momento se enviar&aacute; la notificaci&oacute;n *</label>
 				</div>
 				<div class="col col-md-6">
-					<select class="form-control" name="idevento_notificacion" id="sel_tipo_notificacion" required>
+					<select class="form-control" name="idevento_notificacion" id="sel_tipo_notificacion" required value="<?= $notificacion->fk_evento_notificacion ?>">
 						<option value="0">Por favor seleccione...</option>
 						<?php if(!empty($eventos)) {
 							foreach ($eventos as $evento) {
-								echo '<option value="' . $evento["idevento_notificacion"] . '">' . $evento["evento"] . '</option>';
+							    $seleccionado = "";
+							    if($notificacion->fk_evento_notificacion == $evento["idevento_notificacion"]) {
+							        $seleccionado = 'selected="selected"';
+							    }
+							    echo '<option value="' . $evento["idevento_notificacion"] . '" ' . $seleccionado . '>' . $evento["evento"] . '</option>';
 							}
 						}
 						?>
@@ -110,7 +132,7 @@ if(isset($_REQUEST["idflujo"])) {
 					<label for="sel_formato_evento">Elija el formato asociado</label>
 				</div>
 				<div class="col col-md-6">
-					<select class="form-control" name="formato_evento" id="sel_formato_evento">
+					<select class="form-control" name="formato_evento" id="sel_formato_evento" value="<?= $notificacion->fk_formato_flujo ?>">
 						<option value="0">Por favor seleccione...</option>
 						<?php if(!empty($formatos)) {
 							foreach ($formatos as $formato) {
@@ -129,7 +151,7 @@ if(isset($_REQUEST["idflujo"])) {
 					<label for="notificacion_asunto">Asunto del email *</label>
 				</div>
 				<div class="col col-md-9">
-					<input type="text" id="asunto_notificacion" name="asunto" required>
+					<input type="text" id="asunto_notificacion" name="asunto" required value="<?= $notificacion->asunto ?>">
 				</div>
 			</div>
 			<div class="row mb-2">
@@ -137,7 +159,7 @@ if(isset($_REQUEST["idflujo"])) {
 					<label for="mensaje_notificacion">Mensaje *</label>
 				</div>
 				<div class="col col-md-5">
-					<textarea class="form-control" id="mensaje_notificacion" name="mensaje" required></textarea>
+					<textarea class="form-control" id="mensaje_notificacion" name="mensaje" required><?= $notificacion->cuerpo ?></textarea>
 				</div>
 				<div class="col col-md-4" style="height:150px; overflow: auto;">
 				<?php
@@ -179,7 +201,7 @@ if(isset($_REQUEST["idflujo"])) {
 		</fieldset>
 		<button type="button" class="btn btn-primary btn-sm" id="guardarNotificacion">Guardar notificaci&oacute;n</button>
 	</form>
-	
+
 <div class="dropdown">
   <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownDestinatario" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 Adicionar destinatario
@@ -200,7 +222,7 @@ Adicionar destinatario
         <h4 class="modal-title" id="myModalLabel">Destinatarios de correo de la Organización</h4>
       </div>
       <div class="modal-body">
-          <iframe id="frameTipoNotificacion" src="<?= $ruta_db_superior ?>views/flujos/modal_persona_saia.php" width="600" height="400" frameborder="0" allowtransparency="true"></iframe>  
+          <iframe id="frameTipoNotificacion" src="<?= $ruta_db_superior ?>views/flujos/modal_persona_saia.php" width="600" height="400" frameborder="0" allowtransparency="true"></iframe>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -219,25 +241,40 @@ Adicionar destinatario
 
 $(function(){
    	var idflujo = $("script[data-idflujo]").data("idflujo");
+   	if(!idflujo) {
+   	   	idflujo = <?= $idflujo?>;
+   	}
     console.log("notificacion", "idflujo", idflujo);
 
 	$(".tipo1").click(function() {
 		var idnotificacion = $("#idnotificacion").val();
+		//console.log(idnotificacion);
 		if(idnotificacion) {
 			var $iframe = $('#frameTipoNotificacion');
 			var url = "<?= $ruta_db_superior ?>views/flujos/modal_persona_saia.php?idnotificacion=" + idnotificacion;
 		    if ($iframe.length) {
-		        $iframe.attr('src', url);   
+		        $iframe.attr('src', url);
 				$('#modalTipoNotificacion').modal('show');
 		    }
 		} else {
 			var idnotificacion = guardarNotificacion();
-			console.log(idnotificacion);
+			if(idnotificacion) {
+				var $iframe = $('#frameTipoNotificacion');
+				var url = "<?= $ruta_db_superior ?>views/flujos/modal_persona_saia.php?idnotificacion=" + idnotificacion;
+			    if ($iframe.length) {
+			        $iframe.attr('src', url);
+					$('#modalTipoNotificacion').modal('show');
+			    }
+			} else {
+				top.notification({type: "error", message: "No se encontró notificación"});
+			}
 		}
-		
+
 	});
-    
-	$("#guardarNotificacion").click(guardarNotificacion());
+
+	$("#guardarNotificacion").click(function() {
+		guardarNotificacion();
+	});
 
 	$.each(['show', 'hide'], function (i, ev) {
 	    var el = $.fn[ev];
@@ -279,7 +316,8 @@ $(function(){
 			for (var pair of formData.entries()) {
 		    	console.log(pair[0]+ ' => ' + pair[1]);
 			}
-			return false;
+			//return false;
+			var pk = false;
 			$.ajax({
 				dataType: "json",
 				url: "<?= $ruta_db_superior ?>app/flujo/guardarNotificacion.php",
@@ -290,20 +328,24 @@ $(function(){
 				contentType: false,  // tell jQuery not to set contentType
 				success: function(response) {
 				  if(response["success"] == 1) {
-					$('#tabla_notificaciones').bootstrapTable('refresh', {url: "listado_notificaciones.php?idflujo="+idflujo});
 					top.notification({type: "success", message: response.message});
+					pk = response.data.pk;
+					$("#idnotificacion").val(pk);
+					parent.postMessage({accion: "recargarTabla", id: pk}, "*");
 				  } else {
 					  top.notification({type: "error", message: response.message});
 				  }
 				}
 			});
+			return pk;
 		}
+		return false;
 	}
-	
+
 	function ajaxRequest(params) {
 
 	    // data you may need
-	    console.log(params.data);
+	    //console.log(params.data);
 
 	    $.ajax({
 	        type: "POST",
@@ -328,7 +370,7 @@ $(function(){
 
 function seleccionarCampo(event, data) {
 	//var elemento_evento = $.ui.fancytree.getEventTargetType(event.originalEvent);
-    console.log(event, data);
+    //console.log(event, data);
     if(!data.node.isFolder()) {
 		//alert("it works");
 		let tag = '{*' + data.node.data.nombre + '*}';
@@ -344,5 +386,18 @@ function seleccionarCampo(event, data) {
 }
 
 </script>
+<?php
 
-	
+function obtenerListaFormatos($idnotificacion) {
+    global $conn;
+
+    $lista_formatos = [];
+    $formatos = busca_filtro_tabla("ff.*", "wf_adjunto_notificacion an join wf_formato_flujo ff on ff.idformato_flujo = an.fk_formato_flujo", "an.fk_notificacion= " . $idnotificacion, "", $conn);
+    for ($i = 0; $i < $formatos["numcampos"]; $i++) {
+        $lista_formatos[] = $formatos[$i]["fk_formato"];
+    }
+    return $lista_formatos;
+}
+
+?>
+
