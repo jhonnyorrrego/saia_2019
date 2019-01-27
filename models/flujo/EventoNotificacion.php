@@ -6,6 +6,10 @@ class EventoNotificacion extends Model {
 	protected $idevento_notificacion;
 	protected $evento;
 
+	const EVENTO_CAMBIO_ESTADO = 1;	// Al cambiar de estado
+	const EVENTO_CREAR_FORMATO = 2;	// Al crear un registro nuevo
+	const EVENTO_RADICAD_DOCUMENTO = 3;	// Al radicarse o publicarse un documento
+	
 	function __construct($id = null) {
 		parent::__construct($id);
 	}

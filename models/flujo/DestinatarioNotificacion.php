@@ -17,6 +17,19 @@ class DestinatarioNotificacion extends Model {
 		return $instance;
 	}
 	
+	public static function notificacionFactory($tipo, $idnotificacion) {
+		$instance = null;
+		switch ($tipo) {
+			case TIPO_CAMPO_FORMATO :
+				$instance = DestinatarioCampoFormato::conFkNotificacion($idnotificacion);
+			case TIPO_EXTERNO:
+				$instance = DestinatarioExterno::conFkNotificacion($idnotificacion);
+			case TIPO_FUNCIONARIO:
+				$instance = DestinatarioSaia::conFkNotificacion($idnotificacion);
+		}
+		return $instance;
+	}
+	
 	protected function defineAttributes() {
 		$this->dbAttributes = (object) [
 				'safe' => [

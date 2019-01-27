@@ -132,7 +132,6 @@ final class Version20190123162529 extends AbstractMigration {
 		$tabla->addColumn("fk_flujo", "integer");
 		$tabla->setPrimaryKey(["idformato_flujo"]);
 		
-		
 		$tabla = $schema->createTable("wf_notificacion");
 		$tabla->addColumn("idnotificacion", "integer", ["autoincrement" => true]);
 		$tabla->addColumn("asunto", "string", ["length" => 255]);
@@ -169,8 +168,6 @@ final class Version20190123162529 extends AbstractMigration {
 		
 		$tabla = $schema->createTable("wf_adjunto_notificacion");
 		$tabla->addColumn("idadjunto", "integer", ["autoincrement" => true]);
-		$tabla->addColumn("tipo", "integer");
-		$tabla->addColumn("nombre", "string", ["length" => 255]);
 		$tabla->addColumn("fk_notificacion", "integer");
 		$tabla->addColumn("fk_formato_flujo", "integer");
 		$tabla->setPrimaryKey(["idadjunto"]);
@@ -184,7 +181,19 @@ final class Version20190123162529 extends AbstractMigration {
 		$tabla = $schema->createTable("wf_destinatario_saia");
 		$tabla->addColumn("iddestinatario", "integer");
 		$tabla->addColumn("fk_funcionario", "integer");
-		$tabla->addColumn("fk_cargo", "integer", ["notnull" => false]);
+		$tabla->setPrimaryKey(["iddestinatario"]);
+		
+		$tabla = $schema->createTable("wf_destinatario_externo");
+		$tabla->addColumn("iddestinatario", "integer");
+		$tabla->addColumn("email", "string", ["length" => 255]);
+		$tabla->addColumn("nombre", "string", ["length" => 255, "notnull" => false]);
+		$tabla->setPrimaryKey(["iddestinatario"]);
+		$tabla->addOption('collate', 'utf8_general_ci');
+		
+		$tabla = $schema->createTable("wf_destinatario_formato");
+		$tabla->addColumn("iddestinatario", "integer");
+		$tabla->addColumn("fk_formato_flujo", "integer");
+		$tabla->addColumn("fk_campo_formato", "integer",  ["notnull" => false]);
 		$tabla->setPrimaryKey(["iddestinatario"]);
 		
 		$tabla = $schema->createTable("wf_enlace");
@@ -211,19 +220,6 @@ final class Version20190123162529 extends AbstractMigration {
 		$tabla->addColumn("fk_actividad", "integer");
 		$tabla->setPrimaryKey(["idtarea_actividad"]);
 		
-		$tabla = $schema->createTable("wf_destinatario_externo");
-		$tabla->addColumn("iddestinatario", "integer");
-		$tabla->addColumn("email", "string", ["length" => 255]);
-		$tabla->addColumn("nombre", "string", ["length" => 255, "notnull" => false]);
-		$tabla->setPrimaryKey(["iddestinatario"]);
-		$tabla->addOption('collate', 'utf8_general_ci');
-		
-		$tabla = $schema->createTable("wf_destinatario_formato");
-		$tabla->addColumn("iddestinatario", "integer");
-		$tabla->addColumn("fk_formato_flujo", "integer");
-		$tabla->addColumn("fk_campo_formato", "integer",  ["notnull" => false]);
-		$tabla->setPrimaryKey(["iddestinatario"]);
-		
 		$tabla = $schema->createTable("wf_anexo_flujo");
 		$tabla->addColumn("idanexo_flujo", "integer", ["autoincrement" => true]);
 		$tabla->addColumn("fk_flujo", "integer");
@@ -239,6 +235,14 @@ final class Version20190123162529 extends AbstractMigration {
 		$tabla->addColumn("fecha", "date", ["notnull" => false]);
 		$tabla->addColumn("fk_funcionario", "integer");
 		$tabla->setPrimaryKey(["idanexo_actividad"]);
+		
+		$tabla = $schema->createTable("wf_anexo_notificacion");
+		$tabla->addColumn("idanexo_notificacion", "integer", ["autoincrement" => true]);
+        $tabla->addColumn("fk_notificacion", "integer");
+        $tabla->addColumn("ruta", "string", ["length" => 4000, "notnull" => false]);
+        $tabla->addColumn("fecha", "date", ["notnull" => false]);
+        $tabla->addColumn("fk_funcionario", "integer");
+        $tabla->setPrimaryKey(["idanexo_notificacion"]);
 		
 	}
 	
