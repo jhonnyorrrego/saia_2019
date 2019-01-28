@@ -70,7 +70,7 @@ if(isset($_REQUEST["idflujo"])) {
 	</thead>
 </table>
 
-<script type="text/javascript" data-params='{"idflujo" : "<?= $idflujo?>"}'>
+<script type="text/javascript" id="sfn" data-idflujo="<?= $idflujo?>">
 	//var $table = $('#tabla_notificaciones');
 	//$table.bootstrapTable();
 

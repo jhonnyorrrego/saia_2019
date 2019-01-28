@@ -85,7 +85,7 @@ function mapearDatosDestinatario($datos) {
             break;
     }
     if($existe) {
-        $atributos["iddestinatario"] = $existe->iddestinatario;
+        $atributos["iddestinatario"] = $existe->getPk();
     }
 
     return $atributos;

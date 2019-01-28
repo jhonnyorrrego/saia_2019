@@ -41,7 +41,7 @@ class FlujoXML {
 	public function getDocumento() {
 		return $this->documento;
 	}
-	
+
 	public function obtenerElementos() {
 		$eventos = $this->obtenerEventos();
 		$resp = [];
@@ -51,7 +51,7 @@ class FlujoXML {
 		$resp = array_merge($resp, $eventos);
 		return $resp;
 	}
-	
+
 	private function iterarHijos($elements) {
 		$result = array();
 		if($elements) {
@@ -66,7 +66,7 @@ class FlujoXML {
 		}
 		return $result;
 	}
-	
+
 	private function extraerDatos($element) {
 		$result = null;
 		if($element) {
@@ -100,7 +100,7 @@ class FlujoXML {
 		}
 		return $result;
 	}
-	
+
 	private function iterarEnlaces(DOMNodeList $elements) {
 		$result = array();
 		if($elements) {
@@ -110,8 +110,8 @@ class FlujoXML {
 				if(empty($nombre)) {
 					$nombre = $id;
 				}
-				$tarea = ["id" => $id, 
-					"nombre" => $nombre, 
+				$tarea = ["id" => $id,
+					"nombre" => $nombre,
 					"tipo" => $element->localName,
 					"origen" => trim($element->getAttribute("sourceRef")),
 					"destino" => trim($element->getAttribute("targetRef"))
@@ -121,7 +121,7 @@ class FlujoXML {
 		}
 		return $result;
 	}
-	
+
 	public function obtenerTareas() {
 		$elements = $this->xpath->query("/{$this->ns_bp}definitions/{$this->ns_bp}process/{$this->ns_bp}task");
 		//$elements = $this->xpath->query("/definitions");
@@ -137,18 +137,18 @@ class FlujoXML {
 		$notas = $this->iterarEnlaces($elements);
 		return $notas;
 	}
-	
+
 	public function obtenerPuertas() {
-		$tiposPuerta = ["exclusiveGateway", "parallelGateway", "inclusiveGateway"];
-		$puertas = [];
-		foreach ($tiposPuerta as $tipo) {
-			$elements = $this->xpath->query("/{$this->ns_bp}definitions/{$this->ns_bp}process/{$this->ns_bp}{$tipo}");
-			$puerta = $this->iterarElementos($elements);
-			if(!empty($puerta)) {
-				$puertas [] = $puerta;
-			}
-		}
-		return $puertas;
+	    $tiposPuerta = ["exclusiveGateway", "parallelGateway", "inclusiveGateway"];
+	    $puertas = [];
+	    foreach ($tiposPuerta as $tipo) {
+	        $elements = $this->xpath->query("/{$this->ns_bp}definitions/{$this->ns_bp}process/{$this->ns_bp}{$tipo}");
+	        $puerta = $this->iterarElementos($elements);
+	        if(!empty($puerta)) {
+	            $puertas = array_merge($puertas, $puerta);
+	        }
+	    }
+	    return $puertas;
 	}
 
 	public function obtenerEventos() {
@@ -162,8 +162,8 @@ class FlujoXML {
 			}
 		}
 		return $eventos;
-	}	
-	
+	}
+
 	private function obtenerTipoElemento($id) {
 		$elements = $this->xpath->query("//*[@id='$id']");
 		$resp = null;

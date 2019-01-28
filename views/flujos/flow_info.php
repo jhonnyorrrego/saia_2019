@@ -147,8 +147,7 @@ if(!empty($idflujo)) : ?>
       <button type="button" id="guardarFlujo" class="btn btn-primary">Guardar</button>
     </div>
 </form>
-<script src="<?= $ruta_db_superior ?>views/flujos/js/flujos.js" data-consulta64="<?= $consulta64 ?>"></script>
-<script type="text/javascript">
+<script type="text/javascript" id="sfi" data-consulta64="<?= $consulta64 ?>" data-idflujo="<?= $idflujo?>">
 $(function() {
 	var idflujo = $("script[data-idflujo]").data("idflujo");
     //console.log("info", "idflujo", idflujo);
@@ -176,14 +175,20 @@ $(function() {
 				contentType: false,  // tell jQuery not to set contentType
 				success: function(response) {
 				  if(response["success"] == 1) {
-					  if(response["data"]["pk"]) {
+					  if(response.data.pk) {
 						  idflujo = response["data"]["pk"];
 						  $("#idflujo").val(response.data.pk);
+						  $("script[data-idflujo]").data("idflujo", idflujo);
+   				    	  $("script[data-idflujo]").attr("data-idflujo", response.data.pk);
+    				      $('.nav-link').removeClass('disabled');
+    				      $(".nav-link[data-url]").each(function() {
+    				    	  let url = $(this).attr('data-url');
+    				    	  if(url && url.indexOf("idflujo") < 0) {
+    				    	  	url += "?idflujo=" +idflujo;
+    				    	  }
+    				    	  $(this).attr('data-url', url);
+        				  });
 					  }
-				    if(response.data.pk){
-				    	$("script[data-idflujo]").attr("data-idflujo", response.data.pk);
-				        $('.nav-link').removeClass('disabled');
-				    }
 
 					top.notification({type: "success", message: response.message});
 				  } else {
@@ -191,7 +196,7 @@ $(function() {
 				  }
 				}
 			});
-			console.log(idflujo);
+			//console.log(idflujo);
 
 		}
 	});

@@ -127,7 +127,7 @@ letter-spacing: unset !important;
 
 <script src="<?= $ruta_db_superior ?>dropzone/dist/dropzone.js"></script>
 
-<script type="text/javascript" data-idflujo="<?=$_REQUEST["idflujo"] ?>">
+<script type="text/javascript" id="smain" data-idflujo="<?=$_REQUEST["idflujo"] ?>">
 var lista_archivos = new Object();
 $(document).ready(function() {
 	var idflujo = $("script[data-idflujo]").data("idflujo");
@@ -153,9 +153,15 @@ $(document).ready(function() {
     	//TODO: Activar para produccion
     	//if(url && !$(href).children().length) {
     	if(url) {
-        	$(href).load(url, {idflujo: idflujo}, function(result) {
-    	    	pane.tab('show');
-    		});
+        	if(idflujo) {
+            	$(href).load(url, {idflujo: idflujo}, function(result) {
+        	    	pane.tab('show');
+        		});
+        	} else {
+            	$(href).load(url, function(result) {
+        	    	pane.tab('show');
+        		});
+        	}
     	}
 	});
 

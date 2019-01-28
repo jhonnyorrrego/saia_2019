@@ -36,7 +36,7 @@ if(isset($_REQUEST["idflujo"])) {
 	$notificacion->fk_flujo = $idflujo;
 	$eventos = EventoNotificacion::findAll('', 0, true);
 	$tipoTarea = TipoElemento::findByBpmnName(TipoElemento::TIPO_TAREA);
-	$actividades = Elemento::findAllByAttributes(["fk_flujo" => $idflujo, "fk_tipo_elemento" => $tipoTarea->idtipo_elemento]);
+	$actividades = Elemento::findAllByAttributes(["fk_flujo" => $idflujo, "fk_tipo_elemento" => $tipoTarea->getPk()]);
 	$formatoFlujo= FormatoFlujo::conFkFlujo($idflujo);
 	$formatos = $formatoFlujo->findFormatosByFlujo();
 	$listaIdsFmt = [];
@@ -120,7 +120,7 @@ if(empty($idflujo)) {
 						<option value="0">Por favor seleccione...</option>
 						<?php if(!empty($actividades)) {
 							foreach ($actividades as $tarea) {
-								echo '<option value="' . $tarea->idelemento . '">' . $tarea->nombre . '</option>';
+								echo '<option value="' . $tarea->getPk() . '">' . $tarea->nombre . '</option>';
 							}
 						}
 						?>

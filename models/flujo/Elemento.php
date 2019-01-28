@@ -1,9 +1,9 @@
 <?php
 
 class Elemento extends Model {
-	
+
 	use TFlujo;
-	
+
 	protected $idelemento;
 	protected $nombre;
 	protected $bpmn_id;
@@ -17,13 +17,13 @@ class Elemento extends Model {
 		parent::__construct($id);
 		$this->getTipoElemento();
 	}
-	
+
 	public static function conFkFlujo( $id ) {
 		$instance = new self();
 		$instance->fk_flujo = $id;
 		return $instance;
 	}
-	
+
 	protected function defineAttributes() {
 		$this->dbAttributes = (object) [
 			'safe' => [
@@ -42,7 +42,7 @@ class Elemento extends Model {
 			"primary" => "idelemento"
 		];
 	}
-	
+
 	public function getTipoElemento() {
 		if(empty($this->tipo_elemento)) {
 			if(!empty($this->fk_tipo_elemento)) {
@@ -52,13 +52,14 @@ class Elemento extends Model {
 		}
 		return $this->tipo_elemento;
 	}
-	
+
 	public function setTipoElemento($tipo) {
 		$this->tipo_elemento = $tipo;
 	}
-	
-	public static function findByBpmnId($name) {
+
+	public static function findByBpmnId($idflujo, $name) {
 		return self::findByAttributes([
+		    "fk_flujo" =>  $idflujo,
 			"bpmn_id" => $name
 		]);
 	}
