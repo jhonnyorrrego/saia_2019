@@ -54,16 +54,19 @@ function load_pantalla($idpantalla, $generar_archivo = "", $accion = '') {
             $campos_excluir[] =  $campos_lectura;
         }
     }
-
     $condicion_adicional = " and B.nombre not in('" . implode("', '", $campos_excluir) . "')";
     $pantalla = busca_filtro_tabla("", "formato A,campos_formato B", "A.idformato=B.formato_idformato AND A.idformato=" . $idpantalla . $condicion_adicional, "B.orden", $conn);
+    
     $texto = '';
-    for ($i = 0; $i < $pantalla["numcampos"]; $i++) {
-        $cadena = load_pantalla_campos($pantalla[$i]["idcampos_formato"], 0, $generar_archivo, $accion, $pantalla[$i]);
-        $texto .= $cadena["codigo_html"];
-    }
-    $texto = str_replace("? >", "?" . ">", $texto);
-    $texto = str_replace("< ?php ", "<" . "?php", $texto);
+    if($pantalla['numcampos']){
+        for ($i = 0; $i < $pantalla["numcampos"]; $i++) {
+            $cadena = load_pantalla_campos($pantalla[$i]["idcampos_formato"], 0, $generar_archivo, $accion, $pantalla[$i]);
+            $texto .= $cadena["codigo_html"];
+        }
+        $texto = str_replace("? >", "?" . ">", $texto);
+        $texto = str_replace("< ?php ", "<" . "?php", $texto);
+    }  
+  
     return $texto;
 }
 

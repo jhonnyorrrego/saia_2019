@@ -13,6 +13,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 include_once $ruta_db_superior . "pantallas/lib/librerias_componentes.php";
 include_once $ruta_db_superior . "pantallas/generador/librerias_pantalla.php";
 if ($_REQUEST['idformato']) {
+
   $formato = busca_filtro_tabla("", "formato", "idformato=" . $_REQUEST['idformato'], "", $conn);
   $formato = procesar_cadena_json($formato, array("cuerpo", "ayuda", "etiqueta"));
   $cod_padre = $formato[0]["cod_padre"];
@@ -300,11 +301,7 @@ if ($formato["numcampos"]) {
       <div class="control-group">
         <label class="control-label" for="codigo_serie"><strong>C&oacute;digo</strong></label>
         <div class="controls">
-          <input type="text" id="codigo_serie" value="<?php
-                                                      if ($datos_serie["numcampos"]) {
-                                                        echo $datos_serie[0]["codigo"];
-                                                      }
-                                                      ?>" disabled="disabled">
+          <input type="text" id="codigo_serie" value="<?= $datos_serie["numcampos"] ? $datos_serie[0]["codigo"] : '' ?>" disabled="disabled">
         </div>
       </div>
     </div>
@@ -364,10 +361,10 @@ if ($formato["numcampos"]) {
             <label class="control-label" for="papel"><strong>Tama&ntilde;o de la p&aacute;gina</strong></label>
             <div class="controls">
               <select name="papel" id="papel">
-              	<option value="letter" <?php if (@$formato[0]["papel"] == "letter") echo (' selected'); ?>>Carta (21,6 cm x 27,9 cm)</option>
-              	<option value="legal" <?php if (@$formato[0]["papel"] == "legal") echo (' selected'); ?>>Legal (21,6 cm x 35,6 cm)</option>
-              	<option value="A4" <?php if (@$formato[0]["papel"] == "A4") echo (' selected'); ?>>A4 (21,0 cm x 29,7 cm)</option>
-              	<option value="A5" <?php if (@$formato[0]["papel"] == "A5") echo (' selected'); ?>>Media Carta (14,0 cm x 21,6 cm)</option>
+              	<option value="Letter" <?= $formato[0]["papel"] == "Letter" ? ' selected' : '' ?>>Carta (21,6 cm x 27,9 cm)</option>
+              	<option value="Legal" <?= $formato[0]["papel"] == "Legal" ? ' selected' : '' ?>>Legal (21,6 cm x 35,6 cm)</option>
+              	<option value="A4" <?=  $formato[0]["papel"] == "A4" ? ' selected' : '' ?>>A4 (21,0 cm x 29,7 cm)</option>
+              	<option value="A5" <?=  $formato[0]["papel"] == "A5" ? ' selected' : '' ?>>Media Carta (14,0 cm x 21,6 cm)</option>
               </select>
             </div>
           </div>

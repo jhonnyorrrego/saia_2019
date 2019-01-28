@@ -52,7 +52,10 @@ ul.fancytree-container {
     position: relative;
     border: none;
 }
+
+
 </style>
+
 <?php
 echo estilo_bootstrap();
 echo librerias_jquery("1.8.3");
@@ -112,7 +115,10 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
     }
     .nav-tabs > li > a, .nav-pills > li > a {  
     margin-right: 14px;
+	
 }
+ #droppable { width: 100%; height: 15%; padding: 0.5em; float: left; margin: 10px; }
+
 </style>
 <script src="<?php echo $ruta_db_superior; ?>js/jquery-migrate-1.4.1.js"></script>
 <script src="<?php echo $ruta_db_superior; ?>js/ckeditor/4.11/ckeditor_cust/ckeditor.js"></script>
@@ -163,10 +169,16 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
 					</ul>
 					<div class="tab-content">
 						<div class="tab-pane" id="formulario-tab">
+						<button style="background: #48b0f7;color:fff;margin-top:3px;margin-bottom:30px;float:right" class="btn btn-info" id="cambiar_nav" ><span  style="color:fff; background: #48b0f7;"> Siguiente</span></button>
 							<form id="contenedor_saia" class="form-horizontal">
-								<?= load_pantalla($idpantalla) ?>
+								<div id="droppable" class="ui-widget-header">
+									<?php
+										$formatosCampo = load_pantalla($idpantalla);
+										if($formatosCampo) : ?> 				
+										<?= $formatosCampo;  ?>
+										<?php endif; ?>										
+								</div>
 							</form>
-							<button style="background: #48b0f7;color:fff;margin-top:3px;margin-bottom:30px;float:right" class="btn btn-info" id="cambiar_nav" ><span  style="color:fff; background: #48b0f7;"> Siguiente</span></button>
 						</div>
 						<div class="tab-pane" id="pantalla_previa-tab"></div>
 						<div class="tab-pane" id="datos_formulario-tab">
@@ -293,20 +305,20 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
         </script>
         </div>
         	<div class="tab-pane" id="pantalla_listar-tab">
-						<form name="formulario_editor_listar" id="formulario_editor_listar" action="">    <br />
-						<div id="tipo_listar">Por favor seleccione un tipo de visualizaci&oacute;n:
-							<select name="tipo_pantalla_busqueda" id="tipo_pantalla_busqueda">
-									<option value="0">Por favor seleccione</option>
-									<?php
+				<form name="formulario_editor_listar" id="formulario_editor_listar" action="">    <br />
+				<div id="tipo_listar">Por favor seleccione un tipo de visualizaci&oacute;n:
+					<select name="tipo_pantalla_busqueda" id="tipo_pantalla_busqueda">
+						<option value="0">Por favor seleccione</option>
+						<?php
         $tipo_listado = busca_filtro_tabla("", "pantalla_busqueda a", "estado=1", "etiqueta asc", $conn);
         for ($i = 0; $i < $tipo_listado["numcampos"]; $i++) {
             echo ('<option value="' . $tipo_listado[$i]["idpantalla_busqueda"] . '" nombre="' . $tipo_listado[$i]["nombre"] . '">' . $tipo_listado[$i]["etiqueta"] . '</option>');
         }
         ?>
-							</select>
-								<?php if ($tipo_listado["numcampos"]) { ?>
-									<div width="100%" id="frame_tipo_listado"></div>
-									<?php 
+		</select>
+		<?php if ($tipo_listado["numcampos"]) { ?>
+			<div width="100%" id="frame_tipo_listado"></div>
+			<?php 
     }
     ?>
 								</div>
@@ -1214,7 +1226,7 @@ var form_builder = {
                     
                     var objeto=jQuery.parseJSON(html);
                     if(objeto.exito) {
-                        $("#contenedor_saia").append(objeto.codigo_html);
+                        $("#droppable").append(objeto.codigo_html);
                     }
                 }
             }
@@ -1254,17 +1266,19 @@ $(document).on('click', '.element', function() {
 $(document).on('click', '.element > input, .element > textarea, .element > label', function(e) {
     e.preventDefault();
 });
-$("#contenedor_saia").droppable({
+$("#droppable").droppable({
     accept: '.component',
     hoverClass: 'content-hover',
     drop: function(e, ui) {
-        form_builder.addComponent(ui.draggable);
+		form_builder.addComponent(ui.draggable);
+	
+		
     }
 })
 .sortable({
   placeholder: "element-placeholder",
   update: function(e, ui) {
-    var orden=$("#contenedor_saia").sortable("toArray");
+    var orden=$("#droppable").sortable("toArray");
     $.ajax({
       type:'POST',
       url: "<?php echo ($ruta_db_superior); ?>pantallas/lib/llamado_ajax.php",
@@ -1279,8 +1293,8 @@ $("#contenedor_saia").droppable({
 .disableSelection();
 //$("#configurar_pantalla_libreria").height(alto-$(".nav-tabs").height()-50);
 $(".component").draggable({
-	helper: function(e) {
-    return $(this).clone().addClass('component-drag');
+	helper: function(e) {	
+    return $(this).clone().addClass('component-drag');		
  	}
 }).click(function(e){
 	form_builder.addComponent($(this));
