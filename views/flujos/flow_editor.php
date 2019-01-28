@@ -36,7 +36,7 @@ if(isset($_REQUEST["idflujo"])) {
 
 <button type="button" class="btn btn-primary btn-sm" id="guardarDiagrama">Guardar diagrama</button>
 
-<script>
+<script type="text/javascript" data-params='{"idflujo" : "<?= $idflujo?>"}'>
     var idflujo = $("script[data-idflujo]").data("idflujo");
     console.log("editor", "idflujo", idflujo);
 
