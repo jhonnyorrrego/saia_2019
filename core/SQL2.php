@@ -3,13 +3,13 @@ require_once 'autoload.php';
 
 abstract class SQL2
 {
-	protected $consulta;
-	protected $motor;
 	public $Conn;
 	public $res = null;
+	protected $consulta;
+	protected $motor;
 	protected $error = null;
-	protected $nombres_campos = array();
-	protected $tipos_campos = array();
+	protected $nombres_campos = [];
+	protected $tipos_campos = [];
 	protected $numcampos = null;
 	protected $numfilas = null;
 	protected $ultimoInsert = null;
@@ -42,7 +42,7 @@ abstract class SQL2
 	 * Devuelve una instancia a partir de los datos de conexion y el tipo de motor
 	 * @param $conn
 	 * @param $motorBd
-	 * @return NULL|SqlPostgres
+	 * @return void
 	 */
 	public static function get_instance($conn, $motorBd)
 	{
@@ -65,7 +65,6 @@ abstract class SQL2
 				break;
 		}
 
-		// $instance->__init($server_path);
 		return $instance;
 	}
 
