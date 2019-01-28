@@ -332,7 +332,8 @@ final class Version20190123162529 extends AbstractMigration {
 			"wf_destinatario_externo",
 			"wf_destinatario_formato",
 			"wf_anexo_flujo",
-			"wf_anexo_actividad"
+			"wf_anexo_actividad",
+		    "wf_anexo_notificacion"
 		];
 
 		foreach($tablas as $tabla) {
