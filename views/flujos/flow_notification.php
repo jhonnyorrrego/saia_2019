@@ -12,10 +12,31 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'librerias_saia.php';
+include_once $ruta_db_superior . 'controllers/autoload.php';
+require_once ($ruta_db_superior . "arboles/crear_arbol_ft.php");
 
 echo estilo_tabla_bootstrap("1.13");
 
 echo librerias_tabla_bootstrap("1.13", false, false);
+
+//$opciones_arbol = array("keyboard" => true, "onNodeClick" => "evento_click", "busqueda_item" => 1);
+$opciones_arbol = array("keyboard" => true, "selectMode" => 2);
+$extensiones = array("filter" => array());
+
+$idflujo = null;
+if(isset($_REQUEST["idflujo"])) {
+	$idflujo = $_REQUEST["idflujo"];
+	//$flujo = new Flujo($idflujo);
+	$tipoTarea = TipoElemento::findByBpmnName(TipoElemento::TIPO_TAREA);
+	$formatoFlujo= FormatoFlujo::conFkFlujo($idflujo);
+	$formatos = $formatoFlujo->findFormatosByFlujo();
+	$listaIdsFmt = [];
+	foreach ($formatos as $fila) {
+		$listaIdsFmt[] = $fila["idformato"];
+	}
+
+}
+
 ?>
 <div>
 	<p>Permite la configuración y personalización del envío de
@@ -28,77 +49,78 @@ echo librerias_tabla_bootstrap("1.13", false, false);
 		class="btn btn-primary btn-sm">Crear notificaci&oacute;n</button>
 </div>
 <div id="notificacion_frm" style="display: none">
-	<form id="notificationForm" class="form-inline">
-		<fieldset>
-			<legend>Definiendo las notificaciones</legend>
-			<label for="sel_tipo_notificacion">Seleccione en que momento se enviar&aacute; la notificaci&oacute;n</label>
-			<select class="form-control" name="" id="sel_tipo_notificacion">
-				<option value="0">Por favor seleccione...</option>
-				<option value="1">Al cambiar de estado</option>
-				<option value="2">Al crear un registro nuevo</option>
-				<option value="3">Al radicarse o publicarse un documento</option>
-			</select>
-			<div class="tipo_opcion tipo_opcion_1" style="display: none;">
-				<label>Elija el cambio de estado</label>
-			</div>
-			<div class="tipo_opcion tipo_opcion_2" style="display: none;">
-				<label>Elija el formato asociado</label>
-			</div>
-			<div class="tipo_opcion tipo_opcion_3" style="display: none;">
-				<label>Elija el formato asociado</label>
-			</div>
-		</fieldset>
-	</form>
+	<script src="<?= $ruta_db_superior ?>views/flujos/js/flujos.js"></script>
 </div>
-<table data-toggle="table">
+
+<!-- data-url="<?= $ruta_db_superior ?>/views/flujos/listado_notificaciones.php?idflujo=<?= $idflujo?>" -->
+<table id="tabla_notificaciones" class="table" table-layout="fixed"
+  data-toggle="table"
+  data-url="listado_notificaciones.php?idflujo=<?= $idflujo?>"
+  data-side-pagination="server"
+  data-pagination="true"
+  data-search="true">
 	<thead>
 		<tr>
-			<th>Acci&oacute;n para la notificaci&oacute;n</th>
-			<th>Asunto</th>
-			<th>Destinatario</th>
-			<th></th>
+			<th data-field="idnotificacion" data-visible="false">Id</th>
+			<th data-field="nombre_evento">Acci&oacute;n para la notificaci&oacute;n</th>
+			<th data-field="asunto">Asunto</th>
+			<th data-field="email">Destinatario</th>
+			<th data-field="idnotificacion" data-formatter="buttonFormatter">&nbsp;</th>
 		</tr>
 	</thead>
-	<tbody>
-		<tr>
-			<td>1</td>
-			<td>Item 1</td>
-			<td>$1</td>
-		</tr>
-		<tr>
-			<td>2</td>
-			<td>Item 2</td>
-			<td>$2</td>
-		</tr>
-	</tbody>
 </table>
-<script type="text/javascript">
+
+<script type="text/javascript" id="sfn" data-idflujo="<?= $idflujo?>">
+	//var $table = $('#tabla_notificaciones');
+	//$table.bootstrapTable();
+
+	// Create IE + others compatible event handler
+var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+var eventer = window[eventMethod];
+var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+// Listen to message from child window
+eventer(messageEvent, function(e) {
+  console.log('Mensaje recibido!:  ',e.data);
+	datos = e.data;
+	if(datos.accion == "recargarTabla") {
+		$('#tabla_notificaciones').bootstrapTable('refresh', {url: "listado_notificaciones.php?idflujo="+idflujo});
+	}
+}, false);
+
 $(function(){
-	$.each(['show', 'hide'], function (i, ev) {
-	    var el = $.fn[ev];
-	    $.fn[ev] = function () {
-	      this.trigger(ev);
-	      return el.apply(this, arguments);
-	    };
+   	var idflujo = $("script[data-idflujo]").data("idflujo");
+    console.log("notificaciones", "idflujo", idflujo);
+
+	$("#crearNotificacion").click(function(event, idnotificacion) {
+        if($("#notificacion_frm").is(":visible")) {
+        	$("#notificacion_frm").empty();
+        	$("#notificacion_frm").hide();
+        } else {
+            var src = "frm_notificacion.php?idflujo=<?= $idflujo ?>";
+            if(idnotificacion) {
+                src += "&idnotificacion=" + idnotificacion;
+            }
+        	$("#notificacion_frm").show();
+            $('#notificacion_frm').append('<div id="iframe"><iframe src="' + src + '"  width="90%" height="650" frameborder="0"></iframe></div>');
+        }
+		//$("#notificacion_frm").toggle();
 	});
-	$("#crearNotificacion").click(function(){
-		$("#notificacion_frm").toggle();
-	});
-	$("#sel_tipo_notificacion").change(function() {
-		var tipo = $(this).val();
-		var nombre = "tipo_opcion_" + tipo;
-		$("." + nombre).show();
-		$(".tipo_opcion").each(function(){
-			if(!$(this).hasClass(nombre)) {
-				$(this).hide();
-			}
-		});
-	});
-	$('.tipo_opcion').on('show', function() {
-	      console.log('#foo is now visible');
-	});
-	$('.tipo_opcion').on('hide', function() {
-	      //console.log('#foo is hidden');
-	});
+
+	$(document).on("click", ".boton_editar", function() {
+		var id = $(this).data("idnotificacion");
+		$("#crearNotificacion").trigger("click", id);
+	} );
 });
+
+function buttonFormatter(value, row, index) {
+	//console.log(value);
+    return [
+        '<a href="#" class="boton_editar" data-idnotificacion="' + value + '">',
+        	'<i class="f-12 fa fa-edit"></i>',
+        '</a>'
+    ].join('');
+}
+
+
 </script>

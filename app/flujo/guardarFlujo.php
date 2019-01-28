@@ -35,7 +35,7 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['key']) {
             "info" => $_REQUEST["info"],
             "version_actual" => 1
         ]);
-        $pk = $flujo->save();
+        $pk = $_REQUEST['idflujo'];
     } else {
         $pk = Flujo::newRecord([
             "fk_funcionario" => $_REQUEST["key"],
