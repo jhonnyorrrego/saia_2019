@@ -8,9 +8,10 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
+include_once($ruta_db_superior . "db.php");
 
-function procesar_etiqueta_titulo($idcampo = '', $seleccionado = '', $accion = '', $campo = '') {
+function procesar_etiqueta_titulo($idcampo = '', $seleccionado = '', $accion = '', $campo = '')
+{
     global $conn, $ruta_db_superior;
     if ($idcampo == '') {
         return ("<div class='alert alert-error'>No existe campo para procesar</div>");
@@ -22,20 +23,19 @@ function procesar_etiqueta_titulo($idcampo = '', $seleccionado = '', $accion = '
     $datos = "<b>T&iacute;tulo de secci&oacute;n:</b> no se almacena en base de datos";
     if (!empty($seleccionado)) {
         $datos = $seleccionado;
-    } else if(!empty($campo["predeterminado"])){
+    } else if (!empty($campo["predeterminado"])) {
         $datos = $campo["predeterminado"];
-    } else if(!empty($campo["valor"])) {
+    } else if (!empty($campo["valor"])) {
         $datos = $campo["valor"];
     } else {
         $datos = "<b>T&iacute;tulo de secci&oacute;n:</b> no se almacena en base de datos";
     }
 
-    $texto = '<div class="control-group element" idpantalla_componente="' . $campo["idpantalla_componente"]. '"';
-    $texto .= '" idpantalla_campo="' . $idcampo . '" id="pc_' . $idcampo . '" nombre="' . $campo["etiqueta_html"] . '">';
-    $texto .= clase_eliminar_pantalla_componente($idcampo);
-    $texto .= "<h5>$datos</h5>";
-    $texto .= "\n</div>";
+    $eliminarComponente = clase_eliminar_pantalla_componente($idcampo);
+    $texto = "<li class='ui-state-default element' idpantalla_componente='{$campo["idpantalla_componente"]}' idpantalla_campo='{$idcampo}' id='pc_{$idcampo}' nombre='{$campo["etiqueta_html"]}'>
+        <span class='ui-icon ui-icon-arrowthick-2-n-s' style='font-size:12px;'> {$datos}</span>{$eliminarComponente}
+    </li>";
 
-    return ($texto);
+    return $texto;
 }
 ?>
