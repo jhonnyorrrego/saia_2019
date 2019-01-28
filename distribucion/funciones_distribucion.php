@@ -240,10 +240,10 @@ function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0
 	    		<th style="text-align:center;" colspan="4"><p>INFORMACI&Oacute;N DESTINO</p></th>
 	    	</tr>
 	    	<tr>
-	    		<th style="text-align:center;">Entrega F&iacute;sica</th>
-	        	<th style="text-align:center;">No. Item</th>
-	        	<th style="text-align:center;">Nombre origen</th>
-	        	<th style="text-align:center;">Nombre destino</th>
+	    		<th style="text-align:center;">ENTREGA F&Iacute;SICA</th>
+	        	<th style="text-align:center;">NO. ITEM</th>
+	        	<th style="text-align:center;">NOMBRE ORIGEN</th>
+	        	<th style="text-align:center;">NOMBRE DESTINO</th>
 	      	</tr>';
 
         for ($i = 0; $i < $distribuciones['numcampos']; $i++) {
@@ -359,7 +359,7 @@ function ver_documento_distribucion($iddocumento, $tipo_origen) {//Radicado
         1 => 'I',
         2 => 'E'
     );
-    
+
     $cadena_mostrar = $fecha . '-' . $numero . '-' . $array_tipo_origen[$tipo_origen];
     $etiqueta_formato = $datos_documento[0]['etiqueta'] . '<br>';
     $enlace_documento = '<div class="link kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $iddocumento . '" conector="iframe" titulo="No Radicado ' . $numero . '"><center><span class="badge badge-inverse">' . $etiqueta_formato . $cadena_mostrar . '</span></center></div>';
@@ -834,7 +834,6 @@ function actualizar_mensajero_ruta_distribucion($idft_ruta_distribucion, $iddepe
 }
 
 //fin function actualizar_mensajero_ruta_distribucion()
-
 //---------------------------------------------------------------------------------------------
 
 function filtro_ventanilla_radicacion() {
