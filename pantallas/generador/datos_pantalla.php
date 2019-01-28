@@ -207,6 +207,7 @@ $valor_mostrar = "0";
 if ($formato["numcampos"]) {
   $valor_item = $formato[0]["item"];
   $valor_mostrar = $formato[0]["mostrar_pdf"];
+  $descripcionFormato = html_entity_decode($formato[0]["descripcion_formato"]);
 }
 ?>
 
@@ -571,10 +572,11 @@ $("document").ready(function(){
         	$("#nombre_formato").val(nombre);
         }
 	});
-
+  var descripcion_formato = "<?php echo $descripcionFormato; ?>";
 	var formulario = $("#datos_formato");
 	var formato=<?php echo (json_encode($formato)); ?>;
-	//window.console.log(formato);
+  
+
 	var nombre_formato="";
 	if($("#nombre_formato").val()!="") {
 		var nombre_formato=$("#nombre_formato").val();
@@ -642,7 +644,7 @@ $("document").ready(function(){
         $('#nombre_formato').attr('value',formato[0].nombre);
         $('#etiqueta_formato').attr('value',formato[0].etiqueta);
         //$('#tabla_formato').attr('value',formato[0].tabla);
-        $('#descripcion_formato').attr('value',formato[0].descripcion_formato);
+        $('#descripcion_formato').attr('value',descripcion_formato);
         $('#proceso_pertenece').attr('value',formato[0].proceso_pertenece);
         $('#serie_idserie').attr('value',formato[0].serie_idserie);
         $('#version').attr('value',formato[0].version);
