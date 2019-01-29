@@ -1,8 +1,4 @@
 <?php
-require_once $ruta_db_superior . 'controllers/autoload.php';
-require_once $ruta_db_superior . 'vendor/autoload.php';
-require_once $ruta_db_superior . 'StorageUtils.php';
-require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
 
 class Funcionario extends Model {
     protected $idfuncionario;

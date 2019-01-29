@@ -40,6 +40,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 		<?= jquery() ?>
 		<?= bootstrap() ?>
 		<?= theme() ?>
+        <?= icons() ?>
 		<?= librerias_validar_formulario() ?>
 	</head>
 
@@ -63,136 +64,139 @@ include_once $ruta_db_superior . "librerias_saia.php";
                                     <div class="radio radio-info">
                                         <input type="radio" checked="checked" value="0" name="agrupador" id="AgExp">
                                         <label for="AgExp">Expediente</label>
-                                        <input type="radio"  value="no" name="agrupador" id="AgAgr">
+                                        <input type="radio"  value="1" name="agrupador" id="AgAgr">
                                         <label for="AgAgr">Separador</label>
                                     </div>
                                 </div>
 
-                                <div class="form-group required">
+                                <div class="form-group">
                                     <label>Nombre *</label>
                                     <input type="text" class="form-control" name="nombre" id="nombre">
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group ocultar">
                                     <label>Fecha Creación *</label>
                                     <span class="help">e.j. "<?= date("d/m/Y"); ?>"</span>
                                     <input type="date" class="form-control" id="fecha" name="fecha" value="<?=date("d/m/Y");?>">
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group ocultar">
                                     <label>Descripción</label>
                                     <textarea class="form-control" name="descripcion" id="descripcion"></textarea>
                                 </div>
                                 
-                                <div class="form-group">
+                                <div class="form-group ocultar">
                                     <label>Indice uno </label>
                                     <input type="text" class="form-control" name="indice_uno" id="indice_uno">
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group ocultar">
                                     <label>Indice dos </label>
                                     <input type="text" class="form-control" name="indice_dos" id="indice_dos">
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group ocultar">
                                     <label>Indice tres </label>
                                     <input type="text" class="form-control" name="indice_tres" id="indice_tres">
                                 </div>
 
 
-                                <div class="form-group">
+                                <div class="form-group ocultar">
                                     <label>Caja</label>
                                     <select class="form-control" name="fk_caja" id="fk_caja">
                                          <?= $option_cajas; ?>
                                     </select>
                                 </div>
 
-                                <hr/>
-
-                                <div class="form-group">
-                                    <label>Codigo numero</label>
-                                    <span class="help">e.j. "Código Dependencia - Código Serie - Numero"</span>
-                                    <input type="text" class="form-control" name="codDependencia" id="codDependencia" disabled="">
-                                    <input type="text" class="form-control" name="CodSerie" id="CodSerie" disabled="">
-                                    <input type="text" class="form-control" name="codigo_numero" id="codigo_numero">
+                                <div class="form-group ocultar">
+                                    <i id="iconInfAdicional" class="fa fa-minus-square"></i> Información Adicional
                                 </div>
 
-                                <div class="form-group">
-                                    <label>Fondo</label>
-                                    <input type="text" class="form-control" name="fondo" id="fondo">
+                                <div id="informacionAdicional"> 
+                                    <div class="form-group ocultar">
+                                        <label>Codigo numero</label>
+                                        <span class="help">e.j. "Código Dependencia - Código Serie - Numero"</span>
+                                        <input type="text" class="form-control" name="codDependencia" id="codDependencia" disabled="">
+                                        <input type="text" class="form-control" name="CodSerie" id="CodSerie" disabled="">
+                                        <input type="text" class="form-control" name="codigo_numero" id="codigo_numero">
+                                    </div>
+
+                                    <div class="form-group ocultar">
+                                        <label>Fondo</label>
+                                        <input type="text" class="form-control" name="fondo" id="fondo">
+                                    </div>
+
+                                    <div class="form-group ocultar">
+                                        <label>Proceso</label>
+                                        <input type="text" class="form-control" name="proceso" id="proceso">
+                                    </div>
+
+                                    <div class="form-group ocultar">
+                                        <label>Fecha extrema inicial</label>
+                                        <input type="date" class="form-control" id="fecha_extrema_i" name="fecha_extrema_i">
+                                    </div>
+
+                                    <div class="form-group ocultar">
+                                        <label>Fecha extrema final</label>
+                                        <input type="date" class="form-control" id="fecha_extrema_f" name="fecha_extrema_f">
+                                    </div>
+
+                                    <div class="form-group ocultar">
+                                        <label>Consecutivo inicial</label>
+                                        <input type="text" class="form-control" name="consecutivo_inicial" id="consecutivo_inicial">
+                                    </div>
+
+                                    <div class="form-group ocultar">
+                                        <label>Consecutivo final</label>
+                                        <input type="text" class="form-control" name="consecutivo_final" id="consecutivo_final">
+                                    </div>
+
+                                <div class="form-group ocultar">
+                                        <label>Unidad de conservación</label>
+                                        <input type="text" class="form-control" name="no_unidad_conservacion" id="no_unidad_conservacion">
+                                    </div>
+
+
+                                <div class="form-group ocultar">
+                                        <label>No de folios</label>
+                                        <input type="text" class="form-control" name="no_folios" id="no_folios">
+                                    </div>
+
+                                <div class="form-group ocultar">
+                                        <label>No de carpeta</label>
+                                        <input type="text" class="form-control" name="no_carpeta" id="no_carpeta">
+                                    </div>
+
+                                <div class="form-group ocultar">
+                                        <label>Soporte</label>
+                                        <select class="form-control" name="soporte" id="soporte">
+                                            <option value="">por favor seleccione</option>
+                                            <option value="1">CD-ROM</option>
+                                            <option value="2">DISKETE</option>
+                                            <option value="3">DVD</option>
+                                            <option value="4">DOCUMENTO</option>
+                                            <option value="5">FAX</option>
+                                            <option value="6">REVISTA O LIBRO</option>
+                                            <option value="7">VIDEO</option>
+                                            <option value="8">OTROS ANEXOS</option>
+                                        </select>
+                                    </div>
+
+                                <div class="form-group ocultar">
+                                        <label>Frecuencia</label>
+                                        <select class="form-control" name="frecuencia_consulta" id="frecuencia_consulta">
+                                            <option value="">por favor seleccione</option>
+                                            <option value="1">Alta</option>
+                                            <option value="2">Media</option>
+                                            <option value="3">Baja</option>
+                                        </select>
+                                    </div>
+
+                                <div class="form-group ocultar">
+                                        <label>Notas de transferencia</label>
+                                        <textarea class="form-control" name="notas_transf" id="notas_transf"></textarea>                                    
+                                    </div>
                                 </div>
-
-                                <div class="form-group">
-                                    <label>Proceso</label>
-                                    <input type="text" class="form-control" name="proceso" id="proceso">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Fecha extrema inicial</label>
-                                    <input type="date" class="form-control" id="fecha_extrema_i" name="fecha_extrema_i">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Fecha extrema final</label>
-                                    <input type="date" class="form-control" id="fecha_extrema_f" name="fecha_extrema_f">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Consecutivo inicial</label>
-                                    <input type="text" class="form-control" name="consecutivo_inicial" id="consecutivo_inicial">
-                                </div>
-
-                                <div class="form-group">
-                                    <label>Consecutivo final</label>
-                                    <input type="text" class="form-control" name="consecutivo_final" id="consecutivo_final">
-                                </div>
-
-                               <div class="form-group">
-                                    <label>Unidad de conservación</label>
-                                    <input type="text" class="form-control" name="no_unidad_conservacion" id="no_unidad_conservacion">
-                                </div>
-
-
-                               <div class="form-group">
-                                    <label>No de folios</label>
-                                    <input type="text" class="form-control" name="no_folios" id="no_folios">
-                                </div>
-
-                               <div class="form-group">
-                                    <label>No de carpeta</label>
-                                    <input type="text" class="form-control" name="no_carpeta" id="no_carpeta">
-                                </div>
-
-                               <div class="form-group">
-                                    <label>Soporte</label>
-                                    <select class="form-control" name="soporte" id="soporte">
-                                        <option value="">por favor seleccione</option>
-                                        <option value="1">CD-ROM</option>
-                                        <option value="2">DISKETE</option>
-                                        <option value="3">DVD</option>
-                                        <option value="4">DOCUMENTO</option>
-                                        <option value="5">FAX</option>
-                                        <option value="6">REVISTA O LIBRO</option>
-                                        <option value="7">VIDEO</option>
-                                        <option value="8">OTROS ANEXOS</option>
-                                    </select>
-                                </div>
-
-                               <div class="form-group">
-                                    <label>Frecuencia</label>
-                                    <select class="form-control" name="frecuencia_consulta" id="frecuencia_consulta">
-                                        <option value="">por favor seleccione</option>
-                                        <option value="1">Alta</option>
-                                        <option value="2">Media</option>
-                                        <option value="3">Baja</option>
-                                    </select>
-                                </div>
-
-                               <div class="form-group">
-                                    <label>Notas de transferencia</label>
-                                    <textarea class="form-control" name="notas_transf" id="notas_transf"></textarea>                                    
-                                </div>
-
                                 <div class="form-group">
                                     <input type="hidden" name="methodExp" value="createExpedienteCont">
                                     <input type="hidden" name="generarfiltro" value="1">
@@ -213,7 +217,48 @@ include_once $ruta_db_superior . "librerias_saia.php";
     
         <script type="text/javascript">
             $(document).ready(function (){
+                $("[name='agrupador']").change(function (){
+                    if($(this).val()==1){
+                        $("#fecha").rules("remove");
+                        $(".ocultar").hide();
+                    }else{
+                        $("#fecha").rules("add",{required: true});
+                        $(".ocultar").show();
+                    }
+                });
 
+                $("#iconInfAdicional").click(function (e) { 
+                    let icon=$(this).hasClass("fa-plus-square");
+                    if(icon){
+                        $(this).removeClass("fa-plus-square").addClass("fa-minus-square");
+                        $("#informacionAdicional").show();
+                    }else{
+                        $(this).removeClass("fa-minus-square").addClass("fa-plus-square");
+                        $("#informacionAdicional").hide();
+                    }                  
+                });
+                $("#iconInfAdicional").trigger("click");
+                
+                $("#formularioExp").validate({
+					rules : {
+						agrupador : {
+							required : true
+						},
+						nombre : {
+							required : true
+						},
+						fecha : {
+							required : true
+						},
+						cod_padre : {
+							required : true
+						}
+					},
+					submitHandler : function(form) {
+						$("#guardarExp").attr('disabled',true);
+						form.submit();
+					}
+				});
             });
         </script>
 

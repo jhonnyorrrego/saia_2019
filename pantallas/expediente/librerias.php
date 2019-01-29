@@ -33,120 +33,87 @@ function conditions_gestion()
 
 /** AQUI EMPIEZA LAS FUNCIONES DEL INFO */
 
-function enlace_expediente($idexpediente)
+function info_expediente($idexpediente)
 {
     $html = '';
-    $Expediente = new Expediente($idexpediente);
-    $GLOBALS['Expediente'] = $Expediente;
-
+    $ExpedienteInfo = new Expediente($idexpediente);
+    
     $data = [
         "idbusqueda_componente" => $_REQUEST["idbusqueda_componente"],
         "idexpediente" => $idexpediente
     ];
     $params = http_build_query($data);
-
-    if ($Expediente->agrupador == 1) {
-        $icon = 'icon-briefcase';
-    } else if ($Expediente->agrupador == 2) {
-        $icon = 'icon-qrcode';
-    }else if($Expediente->agrupador == 3){
-
-    }else {
-        if ($Expediente->estado_cierre == 1) {
-            $icon = 'icon-folder-open';
-        } else {
-            $icon = 'icon-folder-close';
-        }
+    $icon=[
+        0=>'icon-folder-close',
+        1=>'icon-briefcase',
+        2=>'icon-qrcode',
+        3=>'icon-book',
+    ];
+    if($ExpedienteInfo->estado_cierre == 1){
+        $icon[0]='icon-folder-open';
     }
+    $cadenaTomo="<i style='font-size:10px;'>&nbsp;&nbsp;&nbsp;&nbsp;<strong>Tomo:</strong> {$ExpedienteInfo->tomo_no} de {$ExpedienteInfo->countTomos()}</i>";
+    $clase_info = "enlace_expediente";
 
-    if ($Expediente->nucleo) {
+    if ($ExpedienteInfo->nucleo) {
         $html .= <<<FINHTML
-        <div class="link kenlace_saia" enlace="pantallas/busquedas/consulta_busqueda_expediente.php?{$params}" conector="iframe" titulo="{$Expediente->nombre}">
-            <table>
-                <tr>
-                    <td style="font-size:12px;">
-                        <i class='{$icon} pull-left'></i>&nbsp;<strong>{$Expediente->nombre}</strong>
-                    </td>
-                </tr>
-            </table>
-        </div>
+        <table style="font-size:12px;">
+            <tr class="link kenlace_saia" enlace="pantallas/busquedas/consulta_busqueda_expediente.php?{$params}" conector="iframe" titulo="{$ExpedienteInfo->nombre}">
+                <td>
+                    <i class='{$icon[$ExpedienteInfo->agrupador]}'></i>&nbsp;<strong>{$ExpedienteInfo->nombre}</strong>
+                </td>
+            </tr>
+        </table>        
 FINHTML;
     } else {
+        $btn='';
+        if($ExpedienteInfo->getAccessUser('e') || $ExpedienteInfo->getAccessUser('c')){
+            $btn.='<div class="btn btn-mini" idregistro="'.$idexpediente.'" title="Seleccionar"><i class="icon-uncheck"></i></div>';
+        }
 
+        if($ExpedienteInfo->getAccessUser('e')){
+            $btn.='<div class="btn btn-mini" idregistro="'.$idexpediente.'" title="Imprimir rotulo" conector="iframe" enlace="pantallas/caja/rotulo.php?idexpediente='.$idexpediente.'"><i class="icon-print"></i></div>';
+            $btn.='<div class="btn btn-mini" idregistro="'.$idexpediente.'" title="Crear Tomo"><i class="icon-folder-open"></i></div>';
+        }
+        
+        if($ExpedienteInfo->getAccessUser('c')){
+            $btn.='<div class="btn btn-mini" idregistro="'.$idexpediente.'" title="Compartir" conector="iframe" enlace="pantallas/expediente/asignar_expediente.php?idexpediente='.$idexpediente.'"><i class="icon-lock"></i></div>';
+        }
+
+        if($ExpedienteInfo->getAccessUser('e')){
+            $btn.='<div class="btn btn-mini" idregistro="'.$idexpediente.'" title="Editar" conector="iframe"  enlace="pantallas/expediente/editar_expediente.php?idexpediente='.$idexpediente.'&idbusqueda_componente='.$_REQUEST["idbusqueda_componente"].'&div_actualiza=resultado_pantalla_'.$idexpediente.'"><i class="icon-pencil"></i></div>';
+        }
+
+        if($ExpedienteInfo->getAccessUser('d')){
+            $btn.='<div class="btn btn-mini" idregistro="'.$idexpediente.'" title="Eliminar"><i class="icon-remove"></i></div>';
+        }
+
+        if($ExpedienteInfo->getAccessUser('v')){
+            $btn.='<div class="btn btn-mini" idregistro="'.$idexpediente.'" title="'.$ExpedienteInfo->nombre.'"><i class="icon-info-sign"></i></div>';
+        }
+        $html .= <<<FINHTML
+            <table style="font-size:12px;width:100%;">
+                <tr class="link kenlace_saia" conector="iframe" enlace="pantallas/busquedas/consulta_busqueda_expediente.php?{$params}" titulo="{$ExpedienteInfo->nombre}">
+                    <td>
+                        <i class='{$icon[$ExpedienteInfo->agrupador]}'></i>&nbsp;<strong>{$ExpedienteInfo->nombre}</strong>{$cadenaTomo}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td align="right">
+                        {$btn}
+                    </td>
+                </tr>
+                <tr>
+                    <td>{$ExpedienteInfo->getSerieFk()[0]->nombre}</td>
+                </tr>
+            </table>        
+FINHTML;
     }
 
     return $html;
-
-/*
-    $expediente_actual = busca_filtro_tabla("tomo_padre,tomo_no,serie_idserie,propietario,agrupador,cod_arbol", "expediente", "idexpediente=" . $idexpediente, "", $conn);
-    $cadena_tomos = "";
-    $icono_expediente = "icon-folder-open";
-    if (!$expediente_actual[0]['agrupador']) {
-        $tomo_padre = $idexpediente;
-        if ($expediente_actual[0]['tomo_padre']) {
-            $tomo_padre = $expediente_actual[0]['tomo_padre'];
-        }
-        $ccantidad_tomos = busca_filtro_tabla("idexpediente", "expediente", "tomo_padre=" . $tomo_padre, "", $conn);
-        $cantidad_tomos = $ccantidad_tomos['numcampos'] + 1;
-        // tomos + el padre
-        $cadena_tomos = ("&nbsp;&nbsp;&nbsp;<i><b style='font-size:10px;'>Tomo: </b></i><i style='font-size:10px;'>" . $expediente_actual[0]['tomo_no'] . " de " . $cantidad_tomos . "</i>");
-    } else {
-        $icono_expediente = "icon-bookmark";
-    }
-
-
-    $estilo_expediente = "";
-    $permiso_modulo = new Permiso();
-    $ok = $permiso_modulo->acceso_modulo_perfil('expediente_admin');
-    $ok=1;
-    if (!$ok) {
-        $permiso = new PermisosExpediente($conn, $idexpediente);
-        $permisos = $permiso->obtener_permisos();
-
-        $l = in_array(PermisosExpediente::PERMISO_EXP_LEER, $permisos);
-        $m = in_array(PermisosExpediente::PERMISO_EXP_MODIFICAR, $permisos);
-        if (empty($permisos)) {
-            $estilo_expediente = ' style="opacity: 0.40;"';
-            if (!$expediente_actual[0]['agrupador']) {
-                $icono_expediente = "icon-folder-close";
-            }
-        }
-    } else {
-        $l = 1;
-        $m = 1;
-    }
-
-    $a_html = array();
-    if ($l || $m) {
-        $a_html[] = '<div class="link kenlace_saia" enlace="pantallas/busquedas/consulta_busqueda_expediente.php?' . $req_parms . '" conector="iframe" titulo="' . $Expediente->nombre . '">';
-        $a_html[] = '<table><tr><td style="font-size:12px;">';
-        $a_html[] = "<i class='$icon pull-left' $estilo_expediente></i>&nbsp;";
-        $a_html[] = "<b>$nombre</b>&nbsp$cadena_tomos</td></tr></table></div>";
-    } else {
-        $a_html[] = "<div><table><tr><td style='font-size:12px;'>";
-        $a_html[] = "<i class='$icon pull-left' $estilo_expediente></i>&nbsp;";
-        $a_html[] = "<b>$nombre</b>&nbsp;" . $cadena_tomos;
-        $a_html[] = "</td></tr></table></div>";
-    }
-
-    return implode("", $a_html);*/
 }
 
-function mostrar_informacion_adicional_expediente($idexpediente)
-{
-    global $conn;
-    $cadena = '';
-    // EXPEDIENTE
-    $expediente_actual = busca_filtro_tabla("serie_idserie,agrupador", "expediente", "idexpediente=" . $idexpediente, "", $conn);
-    // NOMBRE DE LA SERIE
-    $serie = busca_filtro_tabla("nombre", "serie", "idserie=" . $expediente_actual[0]['serie_idserie'], "", $conn);
-
-    if ($serie['numcampos'] && !$expediente_actual[0]["agrupador"]) {
-        $cadena .= $serie[0]['nombre'];
-    }
-    $cadena .= '<br>';
-    return ($cadena);
-}
 
 /** AQUI TERMINA LAS FUNCIONES DEL INFO */
 

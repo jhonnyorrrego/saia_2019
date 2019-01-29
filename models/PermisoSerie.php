@@ -1,7 +1,5 @@
 <?php
 
-require_once $ruta_db_superior . 'controllers/autoload.php';
-
 class PermisoSerie extends Model
 {
     protected $idpermiso_serie;

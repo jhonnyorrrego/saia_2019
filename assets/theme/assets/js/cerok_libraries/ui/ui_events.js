@@ -255,7 +255,8 @@ $(function () {
             url: `${baseUrl}views/tareas/crear.php`,
             centerAlign:false,
             size: "modal-lg",
-            title: 'Tarea'
+            title: 'Tarea',
+            buttons: {}
         };
         
         $("#close_modal", window.top.document).trigger("click");

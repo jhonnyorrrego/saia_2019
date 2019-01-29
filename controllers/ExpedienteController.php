@@ -20,6 +20,9 @@ class ExpedienteController
                 $attributes['nucleo'] = 0;
                 $attributes['fk_dependencia'] = $instance->fk_dependencia;
                 $attributes['fk_entidad_serie'] = $instance->fk_entidad_serie;
+                if(empty($attributes['fecha'])){
+                    $attributes['fecha']=date('Y-m-d');
+                }
             
                 $Expediente = new Expediente();
                 $Expediente->setAttributes($attributes);
@@ -27,10 +30,17 @@ class ExpedienteController
                 if ($response['exito']) {
                     $response['message'] = 'Expediente guardado';
                     if (!empty($data['generarfiltro']) && !empty($data['idbusqueda_componente'])) {
-                        $hoy = fecha_db_almacenar(date("Y-m-d"), "Y-m-d");
-                        $insert = "INSERT INTO busqueda_filtro_temp (fk_busqueda_componente, funcionario_idfuncionario, fecha, detalle) VALUES({$data["idbusqueda_componente"]}, {$Expediente->propietario}, {$hoy}, 'idexpediente|=|{$Expediente->getPK()}')";
-                        phpmkr_query($insert);
-                        $response['data']['idbusqueda_filtro_temp'] = phpmkr_insert_id();
+                        $attributes=[
+                            'fk_busqueda_componente'=>$data["idbusqueda_componente"],
+                            'funcionario_idfuncionario'=>$Expediente->propietario,
+                            'fecha'=>date("Y-m-d"),
+                            'detalle'=>'idexpediente|=|'.$Expediente->getPK(),
+                        ];
+                        $BusquedaFiltroTemp=new BusquedaFiltroTemp();
+                        $BusquedaFiltroTemp->setAttributes($attributes);
+                        if($BusquedaFiltroTemp->save()){
+                            $response['data']['idbusqueda_filtro_temp'] = $BusquedaFiltroTemp->getPK();
+                        }
                     }
                 }
             } else {

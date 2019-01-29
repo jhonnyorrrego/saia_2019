@@ -1,5 +1,4 @@
 <?php
-require_once $ruta_db_superior . 'controllers/autoload.php';
 
 class Expediente extends Model
 {
@@ -42,7 +41,7 @@ class Expediente extends Model
     protected $dbAttributes;
 
     protected $expedientePadre;
-    protected $permiso;
+    public $permiso;
 
     public function __construct($id = null)
     {
@@ -219,6 +218,18 @@ class Expediente extends Model
         return $this->expedientePadre;
     }
 
+    public function countTomos():int{
+        $cant=1;
+        if($this->tomo_padre){
+            $data=busca_filtro_tabla("count(idexpediente) as cant","expediente","idexpediente={$this->tomo_padre}","",$conn);
+            $cant=$data[0]['cant']+1;
+        }else{
+            $data=busca_filtro_tabla("count(idexpediente) as cant","expediente","tomo_padre={$this->idexpediente}","",$conn);
+            $cant=$data[0]['cant']+1;
+        }
+        return $cant;
+    }
+
     /**
      * setea los permisos del funcionario logueado
      *
@@ -227,8 +238,12 @@ class Expediente extends Model
      */
     private function setAccessUser(int $idfuncionario)
     {
-
-        $consPermiso = busca_filtro_tabla("permiso", "permiso_expediente", "fk_expediente={$this->idexpediente} and fk_funcionario={$idfuncionario}", "", $conn);
+        $consPermiso = busca_filtro_tabla(
+        "permiso",
+        "permiso_expediente", 
+        "fk_expediente={$this->idexpediente} and fk_funcionario={$idfuncionario}",
+        "",
+        $conn);
         if ($consPermiso['numcampos']) {
             for ($i = 0; $i < $consPermiso['numcampos']; $i++) {
                 $permisos = explode(',', $consPermiso[$i]['permiso']);
@@ -239,10 +254,10 @@ class Expediente extends Model
         }
         if ($this->propietario == $_SESSION['idfuncionario']) {
             $this->permiso = [
-                'v' => false,
-                'e' => false,
-                'c' => false,
-                'd' => false
+                'v' => true,
+                'e' => true,
+                'c' => true,
+                'd' => true
             ];
         }
 

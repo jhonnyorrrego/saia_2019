@@ -39,7 +39,7 @@ function topModal(options){
         modalDialog.addClass(options.size);
     }
 
-    if (options.buttons.length) {
+    if (options.buttons.success || options.buttons.cancel) {
         modal.find('.modal-footer').show();
         if(options.buttons && options.buttons.success){
             modal.find("#btn_success").show()

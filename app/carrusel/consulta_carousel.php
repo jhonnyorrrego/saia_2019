@@ -13,10 +13,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . "db.php";
-require_once $ruta_db_superior . 'vendor/autoload.php';
-require_once $ruta_db_superior . 'StorageUtils.php';
-require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
+require_once $ruta_db_superior . 'controllers/autoload.php';
 
 $imagine = new Imagine\Gd\Imagine();
 $Response = new stdClass();
@@ -35,7 +32,7 @@ if ($carousel_content['numcampos']) {
             if ($Storage->get_filesystem()->has($Image->ruta)) {
                 $binary = StorageUtils::get_binary_file($carousel_content[$i]['imagen']);
                 $dir = 'temporal/temporal_carousel';
-                                
+
                 if (!is_dir($ruta_db_superior . $dir)) {
                     if(!mkdir($ruta_db_superior . $dir, 0777, true)){
                         throw new Exception("cant no create dir", 1);                        

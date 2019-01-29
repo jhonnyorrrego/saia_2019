@@ -1,5 +1,5 @@
 <?php
-include_once ("conexion.php");
+require_once 'autoload.php';
 
 class SqlPostgres extends SQL2 {
 

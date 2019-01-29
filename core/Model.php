@@ -1,18 +1,10 @@
 <?php
 use Stringy\Stringy;
 
-abstract class Events
+abstract class Model
 {
-    abstract protected function beforeCreate();
-    abstract protected function afterCreate();
-    abstract protected function beforeUpdate();
-    abstract protected function afterUpdate();
-    abstract protected function beforeDelete();
-    abstract protected function afterDelete();
-}
-
-abstract class Model extends Events
-{
+    use TModelEvents;
+    
     protected $dbAttributes;
 
     /**
@@ -194,6 +186,8 @@ abstract class Model extends Events
 
     private function runCreate()
     {
+        $conection = Conexion::getConetion();
+
         $table = self::getTableName();
         $attributes = $this->getNotNullAttributes();
         $dateAttributes = $this->getDateAttributes();
@@ -207,7 +201,7 @@ abstract class Model extends Events
 
             $fields .= $attribute;
             if (in_array($attribute, $dateAttributes)) {
-                $values .= fecha_db_almacenar($value, 'Y-m-d H:i:s');
+                $values .= $conection->fecha_db_almacenar($value, 'Y-m-d H:i:s');
             } else {
                 $values .= "'" . $value . "'";
             }
@@ -215,12 +209,11 @@ abstract class Model extends Events
 
         $sql = "INSERT INTO " . $table . " (" . $fields . ") values (" . $values . ")";
 
-        if (phpmkr_query($sql)) {
-            $this->setPK(phpmkr_insert_id());
-            return $this->getPK();
-        } else {
-            return 0;
+        if ($conection->Ejecutar_Sql($sql)) {
+            $this->setPK($conection->Ultimo_Insert());
         }
+        
+        return $this->getPK() ?? 0;
     }
 
     /**
@@ -261,7 +254,7 @@ abstract class Model extends Events
     public static function executeDelete($conditions = [])
     {
         $sql = 'DELETE FROM ' . self::getTableName() . ' WHERE ' . self::createCondition($conditions);
-        return phpmkr_query($sql);
+        return Conexion::getConetion()->Ejecutar_Sql($sql);
     }
 
     /**
@@ -342,97 +335,13 @@ abstract class Model extends Events
      */
     public static function findAllByAttributes($conditions, $fields = [], $order = '', $limit = 0)
     {
-        global $conn;
-
-        $table = self::getTableName();
-        $select = self::createSelect($fields);
-        $condition = self::createCondition($conditions);
-
-        if ($limit) {
-            $records = busca_filtro_tabla_limit($select, $table, $condition, $order, 0, $limit, $conn);
-        } else {
-            $records = busca_filtro_tabla($select, $table, $condition, $order, $conn);
-        }
-
-        if ($records['numcampos']) {
-            $response = self::convertToObjectCollection($records);
-        } else {
-            $response = null;
-        }
+        $sql = self::generateSelectSql($conditions, $fields, $order, $limit);
+        $records = Conexion::getConetion()->executeSelect($sql, 0, $limit);
+        $response = self::convertToObjectCollection($records);
 
         return $response;
     }
-
-    /**
-     * create select portion for sql query
-     * check date attributes
-     *
-     * @param array $fields
-     * @return void
-     */
-    public static function createSelect($fields)
-    {
-        $className = get_called_class();
-        $Instance = new $className();
-
-        $safeAttributes = $Instance->getSafeAttributes();
-        $dateAttributes = $Instance->getDateAttributes();
-        $safeAttributes[] = $Instance->getPkName();
-        $select = '';
-
-        $fields = count($fields) ? $fields : $safeAttributes;
-
-        foreach ($fields as $attribute) {
-            if (!in_array($attribute, $safeAttributes)) {
-                continue;
-            }
-
-            if (strlen($select)) {
-                $select .= ',';
-            }
-
-            if (in_array($attribute, $dateAttributes)) {
-                $select .= fecha_db_obtener($attribute, 'Y-m-d H:i:s') . ' as ' . $attribute;
-            } else {
-                $select .= $attribute;
-            }
-        }
-
-        return $select;
-    }
-
-    /**
-     * create where portion for sql query
-     * check date attributes
-     *
-     * @param array $conditions
-     * @return string
-     */
-    public static function createCondition($conditions)
-    {
-        $condition = '';
-
-        if (count($conditions)) {
-            $className = get_called_class();
-            $Instance = new $className();
-            $dateAttributes = $Instance->getDateAttributes();
-
-            foreach ($conditions as $attribute => $value) {
-                if (strlen($condition)) {
-                    $condition .= ' and ';
-                }
-
-                if (in_array($attribute, $dateAttributes)) {
-                    $condition .= fecha_db_obtener($attribute, 'Y-m-d H:i:s') . "=" . $value;
-                } else {
-                    $condition .= $attribute . "='" . $value . "'";
-                }
-            }
-        }
-
-        return $condition;
-    }
-
+    
     /**
      * convert simple array to array of objects
      *
@@ -488,6 +397,8 @@ abstract class Model extends Events
      */
     public static function executeUpdate($fields, $conditions)
     {
+        $conection = Conexion::getConetion();
+
         $set = '';
         $className = get_called_class();
         $Instance = new $className();
@@ -499,46 +410,96 @@ abstract class Model extends Events
             }
 
             if (in_array($attribute, $dateAttributes)) {
-                $set .= $attribute . "=" . fecha_db_almacenar($value, 'Y-m-d H:i:s');
+                $set .= $attribute . "=" . $conection->fecha_db_almacenar($value, 'Y-m-d H:i:s');
             } else {
                 $set .= $attribute . "='" . $value . "'";
             }
         }
 
         $sql = 'UPDATE ' . self::getTableName() . ' set ' . $set . ' where ' . self::createCondition($conditions);
-        return phpmkr_query($sql);
+        return $conection->Ejecutar_Sql($sql);
     }
 
-    // EVENTS
-
-    protected function beforeCreate()
+    /**
+     * create select portion for sql query
+     * check date attributes
+     *
+     * @param array $fields
+     * @return void
+     */
+    public static function createSelect($fields)
     {
-        return true;
+        $className = get_called_class();
+        $Instance = new $className();
+
+        $safeAttributes = $Instance->getSafeAttributes();
+        $dateAttributes = $Instance->getDateAttributes();
+        $safeAttributes[] = $Instance->getPkName();
+        $select = '';
+
+        $fields = count($fields) ? $fields : $safeAttributes;
+
+        foreach ($fields as $attribute) {
+            if (!in_array($attribute, $safeAttributes)) {
+                continue;
+            }
+
+            if (strlen($select)) {
+                $select .= ',';
+            }
+
+            if (in_array($attribute, $dateAttributes)) {
+                $select .= Conexion::getConetion()->fecha_db_obtener($attribute, 'Y-m-d H:i:s') . ' as ' . $attribute;
+            } else {
+                $select .= $attribute;
+            }
+        }
+
+        return $select;
     }
 
-    protected function afterCreate()
-    {
-        return true;
+    /**
+     * create where portion for sql query
+     * check date attributes
+     *
+     * @param array $conditions
+     * @return string
+     */
+    public static function createCondition($conditions)
+    {        
+        $condition = '';
+
+        if (count($conditions)) {
+            $className = get_called_class();
+            $Instance = new $className();
+            $dateAttributes = $Instance->getDateAttributes();
+
+            foreach ($conditions as $attribute => $value) {
+                if (strlen($condition)) {
+                    $condition .= ' and ';
+                }
+
+                if (in_array($attribute, $dateAttributes)) {
+                    $condition .= Conexion::getConetion()->fecha_db_obtener($attribute, 'Y-m-d H:i:s') . "=" . $value;
+                } else {
+                    $condition .= $attribute . "='" . $value . "'";
+                }
+            }
+        }
+
+        return $condition;
     }
 
-    protected function beforeUpdate()
-    {
-        return true;
-    }
+    public static function generateSelectSql($conditions, $fields, $order, $limit){
+        $condition = self::createCondition($conditions);
 
-    protected function afterUpdate()
-    {
-        return true;
-    }
+        $sql = "Select ";
+        $sql .= self::createSelect($fields) ?? "*";
+        $sql .= " FROM " . self::getTableName();
+        $sql .= $condition ? " WHERE {$condition} " : ' ';
+        $sql .= $order ? "ORDER BY {$order} " : '';
 
-    protected function beforeDelete()
-    {
-        return true;
-    }
-
-    protected function afterDelete()
-    {
-        return true;
+        return $sql;
     }
 
 }

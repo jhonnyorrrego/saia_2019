@@ -8,14 +8,14 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
-include_once($ruta_db_superior . "db.php");
+include_once $ruta_db_superior . "db.php";
 
-$objetoJson = array(
+$objetoJson = [
 	"key" => 0
-);
+];
 
-$hijos = array();
-$hijos_dep = array();
+$hijos = [];
+$hijos_dep = [];
 $id = 0;
 if ($_GET["id"]) {
 	$id = $_GET["id"];
@@ -105,6 +105,8 @@ function llena_dependencia($id)
 			if ($no_padre) {
 				$item["unselectableStatus"] = false;
 				$item["folder"] = 1;
+			} else {
+				$item["checkbox"] = true;
 			}
 			$hijos = busca_filtro_tabla("count(*) as cant", "dependencia", "cod_padre=" . $papas[$i]["iddependencia"] . $condicion_dep, "", $conn);
 			$funcionario = busca_filtro_tabla("count(*) as cant", "vfuncionario_dc", "estado=1 and estado_dc=1 and iddependencia=" . $papas[$i]["iddependencia"], "", $conn);
