@@ -19,12 +19,16 @@ include_once ($ruta_db_superior . "distribucion/funciones_distribucion.php");
 function mostrar_radicado_entrada($idformato, $iddoc) {
     global $conn;
     $fecha = date('Y-m-d');
+    $campo = '<label class="form-control" id="numero_radicado">';
     if ($_REQUEST["iddoc"]) {
         $doc = busca_filtro_tabla("", "documento a", "iddocumento=" . $_REQUEST["iddoc"], "", $conn);
-        echo '<td id="numero_radicado"><b>' . $doc[0]["numero"] . '</b></td>';
+        $campo .= '<b>' . $doc[0]["numero"] . '</b>';
     } else {
-        echo '<td id="numero_radicado">' . $fecha . "-<b>" . muestra_contador("radicacion_entrada") . '</b>-E</td>';
+        $campo .= $fecha . "-<b>" . muestra_contador("radicacion_entrada") . '</b>-E';
     }
+    $campo .= '</label>';
+
+    echo $campo;
 }
 
 /* EDITAR */
@@ -507,7 +511,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
     global $conn, $ruta_db_superior;
 
     $datos = busca_filtro_tabla("serie_idserie,descripcion,descripcion_anexos,descripcion_general,tipo_origen,numero_oficio," . fecha_db_obtener("fecha_oficio_entrada", "Y-m-d") . " AS fecha_oficio_entrada," . fecha_db_obtener("fecha_radicacion_entrada", "Y-m-d") . " AS fecha_radicacion_entrada,numero_guia,empresa_transportado,requiere_recogida,tipo_mensajeria", "ft_radicacion_entrada", "documento_iddocumento=" . $iddoc, "", $conn);
-    
+
     $documento = busca_filtro_tabla("numero,tipo_radicado," . fecha_db_obtener("fecha", "Y-m-d") . " AS fecha", "documento", "iddocumento=" . $iddoc, "", $conn);
     if ($documento[0]['tipo_radicado'] == 1) {
         $tipo = "E";
@@ -517,7 +521,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
     if ($datos["numcampos"]) {
         $numero_radicado = $datos[0]['fecha_radicacion_entrada'] . "-" . $documento[0]['numero'] . "-" . $tipo;
     }
-    if (!empty($datos[0]["serie_idserie"])){
+    if (!empty($datos[0]["serie_idserie"])) {
         $tipo_documento = busca_filtro_tabla("nombre", "serie", "idserie=" . $datos[0]["serie_idserie"], "", $conn);
     }
     $anexos = busca_filtro_tabla("etiqueta", "anexos", "documento_iddocumento=" . $iddoc, "", $conn);
@@ -535,18 +539,18 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
 
     $tabla = '<table class="table table-bordered" style="width: 100%; text-align:left;" border="1">
   <tr>
-    <td style="width: 23%;"><b>Fecha de radicaci&oacute;n:</b></td>
+    <td style="width: 23%;"><b>FFECHA DE RADICACI&Oacute;N:</b></td>
     <td style="width: 18%;">' . $fecha_radicacion . '</td>
-    <td style="width: 18%;"><b>No. Radicado:</b></td>
+    <td style="width: 18%;"><b>NO. RADICADO:</b></td>
     <td style="width: 18%;">' . $numero_radicado . '</td>
     <td style="text-align:center; width: 23%;" colspan="2" rowspan="3">' . $img . '</td>
   </tr>
   <tr>
-    <td><b>Tipo de documento:</b></td>
+    <td><b>TIPO DE DOCUMENTO:</b></td>
     <td colspan="3">' . $tipo_documento[0]["nombre"] . '</td>
   </tr>
   <tr>
-    <td><b>Descripci&oacute;n o asunto:</b></td>
+    <td><b>DESCRIPCI&Oacute;N O ASUNTO:</b></td>
     <td colspan="3">' . $datos[0]["descripcion"] . '</td>
   </tr>
   </table>
@@ -554,33 +558,33 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
     if ($datos[0]['tipo_origen'] == 1) {
         $empresa_transportadora = mostrar_valor_campo('empresa_transportado', $idformato, $iddoc, 1);
         $tabla .= "<tr>
-      <td style='width:25%;'><strong>N&uacute;mero Oficio:</strong></td>
+      <td style='width:25%;'><strong>N&Uacute;MERO OFICIO:</strong></td>
       <td colspan='2' style='width:25%;'>" . $datos[0]['numero_oficio'] . "</td>
-      <td style='width:25%;'><strong>Fecha Oficio:</strong></td>
+      <td style='width:25%;'><strong>FECHA OFICIO:</strong></td>
       <td colspan='2' style='width:25%;'>" . $datos[0]['fecha_oficio_entrada'] . "</td>
    </tr>
    <tr>
-      <td><strong>N&uacute;mero Gu&iacute;a:</strong></td>
+      <td><strong>N&Uacute;MERO DE GU&Iacute;A:</strong></td>
       <td colspan='2'>" . $datos[0]['numero_guia'] . "</td>
-      <td><strong>Empresa Transportadora:</strong></td>
+      <td><strong>EMPRESA TRANSPORTADORA:</strong></td>
       <td colspan='2'>" . $empresa_transportadora . "</td>
    </tr>";
     } else {
         $recogida = ($datos[0]["requiere_recogida"] == 1) ? "Si" : "No";
         $entrega = ($datos[0]["tipo_mensajeria"] == 1) ? "Si" : "No";
         $tabla .= "<tr>
-      <td style='width:23%;'><strong>Requiere servicio de recogida?:</strong></td>
+      <td style='width:23%;'><strong>REQUIERE SERVICIO DE RECOGIDA?:</strong></td>
       <td colspan=2 style='width:25%;'>" . $recogida . "</td>
-      <td style='width:25%;'><strong>Requiere servicio de entrega?:</strong></td>
+      <td style='width:25%;'><strong>RQUIERE SERVICIO DE ENTREGA?:</strong></td>
       <td colspan=2 style='width:25%;'>" . $entrega . "</td>
    </tr>";
     }
 
     $tabla .= '
 	  <tr>
-	    <td><b>Anexos digitales:</b></td>
+	    <td><b>ANEXOS DIGITALES:</b></td>
 	    <td colspan="2">' . $nombre_anexos . '</td>
-	    <td><b>Anexos F&iacute;sicos:</b></td>
+	    <td><b>ANEXOS F&Iacute;SICOS:</b></td>
 	    <td colspan="2">' . $datos[0]["descripcion_anexos"] . '</td>
 	  </tr>';
     $tabla .= '</table>';

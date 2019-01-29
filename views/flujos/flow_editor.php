@@ -36,10 +36,11 @@ if(isset($_REQUEST["idflujo"])) {
 
 <button type="button" class="btn btn-primary btn-sm" id="guardarDiagrama">Guardar diagrama</button>
 
-<script>
+<script type="text/javascript" id="sfe" data-idflujo="<?= $idflujo?>">
+    var idflujo = $("script[data-idflujo]").data("idflujo");
+    console.log("editor", "idflujo", idflujo);
 
     var diagramUrl = '<?= $ruta_db_superior ?>views/flujos/flujo_ejemplo.bpmn';
-    var idflujo = "<?= $idflujo?>";
 
     // modeler instance
     var bpmnModeler = new BpmnJS({
@@ -109,6 +110,8 @@ if(isset($_REQUEST["idflujo"])) {
 
             $.ajax({
                 url: '<?= $ruta_db_superior ?>app/flujo/guardarDiagrama.php',
+                dataType: "json",
+                async: false,
                 type: "POST",  // type should be POST
                 data: {
                     datos: xml,
@@ -174,7 +177,7 @@ if(isset($_REQUEST["idflujo"])) {
 $(function() {
 
 	var xmlDiagrama = `<?=$datosDiagrama?>`;
-	if(idflujo && idflujo != "") {
+	if(idflujo && idflujo != "" && xmlDiagrama != "") {
 		openDiagram(xmlDiagrama);
 	} else {
     	// load external diagram file via AJAX and open it
