@@ -200,6 +200,7 @@ function plantilla($documentId, $transferId = 0){
     $Transfer = getTransfer($transferId);
     $temporality = $Transfer->fecha ? temporality($Transfer->fecha) : '';
     $totalComments = ComentarioDocumento::getTotalByDocument($documentId);
+    $totalTasks = DocumentoTarea::getTotalByDocument($documentId);
 
     if($_REQUEST['tipo'] !== 5){
         $moduleActions = moduleActions('menu_documento');
@@ -247,7 +248,7 @@ function plantilla($documentId, $transferId = 0){
                     </span>
                     <div class="dropdown-menu dropdown-menu-right" role="menu" x-placement="bottom-end">
                         <?php foreach ($moduleActions as $key => $item): ?>
-                            <span id="<?= $item['nombre'] ?>" class="dropdown-item menu_options text-truncate" data-url="<?= $ruta_db_superior . $item['enlace']?>" class="text-body" style="line-height:28px;">
+                            <span id="<?= $item['nombre'] ?>" class="dropdown-item menu_options text-truncate" data-url="<?= $item['enlace']?>" class="text-body" style="line-height:28px;">
                                 <i class="<?= $item['imagen'] ?>"></i> <?= $item['etiqueta']?>
                             </span>
                             <?php if($key == 4 || $key == 11): ?>
@@ -291,7 +292,9 @@ function plantilla($documentId, $transferId = 0){
                 <span class="px-1 cursor fa fa-comments notification f-20" id="show_comments" data-toggle="tooltip" data-placement="bottom" title="Comentarios">
                     <span class="badge badge-important counter"><?= $totalComments ?></span>
                 </span>
-                <span class="px-1 cursor fa fa-calendar f-20" data-toggle="tooltip" data-placement="bottom" title="Tarea"></span>
+                <span class="px-1 cursor fa fa-calendar notification f-20" id="show_task" data-toggle="tooltip" data-placement="bottom" title="Tareas">
+                    <span class="badge badge-important counter"><?= $totalTasks ?></span>
+                </span>
                 <span class="px-1 cursor fa fa-road f-20" id="show_history" data-toggle="tooltip" data-placement="bottom" title="Trazabilidad"></span>
             </div>
             <div class="col-auto d-none d-md-block">

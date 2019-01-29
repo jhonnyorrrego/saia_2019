@@ -509,7 +509,8 @@ abstract class Model extends Events
         return phpmkr_query($sql);
     }
 
-    //Interface events
+    // EVENTS
+
     protected function beforeCreate()
     {
         return true;

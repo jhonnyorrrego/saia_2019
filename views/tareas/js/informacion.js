@@ -1,6 +1,6 @@
 $(function(){
     let baseUrl = Session.getBaseUrl();
-    let params = JSON.parse($('script[data-params]').attr('data-params'));
+    let params = $('script[data-params]').data('params');
     let language = {
         errorLoading: function () {
             return "La carga falló" 
@@ -30,7 +30,9 @@ $(function(){
         }
     };
 
-    (function init() {                
+    (function init() {
+        defineButtonLabel();
+
         if (!params.id) {
             createDatePicker();
             checkName();
@@ -66,7 +68,7 @@ $(function(){
         checkName();
     });
     
-    $('#save').on('click', function(){
+    $('#save_task').on('click', function(){
         let key = localStorage.getItem('key');
         let managers = getOptions('#manager');
         let initial = moment($('#final_date').val(), 'DD/MM/YYYY hh:mm a')
@@ -82,6 +84,7 @@ $(function(){
             initialDate: initial,
             finalDate: final,
             description: $('#description').val(),
+            documentId: params.documentId
         }
         
         $.post(`${baseUrl}/app/tareas/guardar.php`, data, function(response){
@@ -150,16 +153,20 @@ $(function(){
     }
 
     function checkName() {        
-        $('#save').attr('disabled', $('#name').val().length ? false : true);
+        $('#save_task').attr('disabled', $('#name').val().length ? false : true);
     }
 
     function createDatePicker() {
+        let time = params.finalTime ?
+            moment(params.finalTime, 'YYYY-MM-DD HH:mm:ss') :
+            moment();
+        
         $('#final_date').datetimepicker({
             widgetPositioning: {
                 horizontal: 'auto',
                 vertical: 'bottom'
             },
-            defaultDate: moment(params.finalTime, 'YYYY-MM-DD HH:mm:ss'),
+            defaultDate: time,
             widgetParent: $('#modal_body'),
             keepOpen: true,
             locale: 'es',
@@ -169,5 +176,13 @@ $(function(){
         $('#final_date').on('dp.change', function (e) {
             $(this).trigger('click');
         });
+    }
+
+    function defineButtonLabel() {
+        if (params.id) {
+            $('#save_task').text('Guardar');
+        } else {
+            $('#save_task').text('Crear Tarea');
+        }
     }
 });

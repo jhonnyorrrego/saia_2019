@@ -463,7 +463,7 @@ function editar_anexos_digitales($idformato, $idcampo, $iddoc = NULL) {
 
 function guardar_plantilla($idformato, $idcampo, $iddoc = NULL) {
     $campo .= '<div class="form-group" id="tr_guardar_plantilla">
-                <label class="etiqueta_campo" title="">GUARDAR COMO PLANTILLA:</label>
+                <label title="">GUARDAR COMO PLANTILLA:</label>
                 <div class="row">
                     <div class="px-1">
                         <div class="radio radio-success">
@@ -1368,7 +1368,7 @@ function asignar_responsables($campo, $idformato, $iddoc = NULL) {
     global $conn;
 
     $campo = '<div class="form-group" id="tr_asignar_responsables">
-                <label class="etiqueta_campo" title="">ASIGNAR RESPONSABLES</label>
+                <label title="">ASIGNAR RESPONSABLES</label>
                 <div class="row">
                     <div class="col-3 px-1">
                         <div class="radio radio-success">
@@ -1389,7 +1389,7 @@ function asignar_responsables($campo, $idformato, $iddoc = NULL) {
     $responsable = strtoupper($responsable);
     $responsable = codifica_encabezado($responsable);
     $campo .= '<div class="form-group" id="tr_firma">
-                <label class="etiqueta_campo" title="">' . $responsable . ' FIRMA:</label>
+                <label title="">' . $responsable . ' FIRMA:</label>
                 <div class="row">
                     <div class="col-3 px-1">
                         <div class="radio radio-success">
@@ -1511,7 +1511,7 @@ function submit_formato($formato, $iddoc = NULL) {
                 }
             }
         }
-        echo('<div class="col-md-9">
+        echo('<div class="col-md-9 form-group">
                      <button class="btn btn-complete submit" type="submit" id="continuar" value="Continuar">Continuar</button>');
         if ($datos_f["numcampos"] && $datos_f[0]["item"]) {
             echo('<button class="btn btn-danger cancel" onClick="javascript:redirecciona_padre(); return false;" id="cancel" value="Cancelar" >Cancelar</button>');

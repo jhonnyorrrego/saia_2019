@@ -19,7 +19,7 @@ $source = array(
     "url" => "app/arbol/proceso_formato.php",
     "ruta_db_superior" => $ruta_db_superior,
     "params" => array(
-        "iddocumento" => $_REQUEST['iddocumento']
+        "documentId" => $_REQUEST['documentId']
     )
 );
 $treeOptions = array(
