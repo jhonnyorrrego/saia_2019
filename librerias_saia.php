@@ -133,7 +133,6 @@ function estilo_principal($estilo = "estilo_lightness")
 {
     global $raiz_saia;
     $texto = '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'asset/css/main.css">';
-    $texto .= index_estilos('temas_main');
     $texto .= $estilo();
     return $texto;
 }
@@ -163,7 +162,6 @@ function estilo_bootstrap($version = "saia")
             $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/css/bootstrap_reescribir.css">';
             $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'pantallas/lib/librerias_css.css">';
             $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/saia/css/bootstrap_iconos_segundarios.css">';
-            $texto .= index_estilos('temas_bootstrap');
             return $texto;
     }
     $texto = '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap/' . $version . '/css/bootstrap.css">';
@@ -417,7 +415,6 @@ function librerias_kaiten()
     $texto .= '<script type="text/javascript" src="' . $raiz_saia . 'pantallas/anexos/js/jquery.ui.widget.js" ></script>';
     $texto .= '<script type="text/javascript" src="' . $raiz_saia . 'js/kaiten.js"></script>';
     $texto .= '<script type="text/javascript" src="' . $raiz_saia . 'js/jquery.ba-resize.min.js"></script>';
-    $texto .= index_estilos('temas_kaiten');
     return $texto;
 }
 
