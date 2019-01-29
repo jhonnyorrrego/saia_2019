@@ -208,8 +208,8 @@ Adicionar destinatario
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownDestinatario">
     <a class="dropdown-item tipo1" href="#" data-toggle="modal">Funcionarios de la Organizaci&oacute;n</a>
-    <a class="dropdown-item" href="#">Asociado a campos de registros</a>
-    <a class="dropdown-item" href="#">Personas externas</a>
+    <a class="dropdown-item tipo2" href="#">Asociado a campos de registros</a>
+    <a class="dropdown-item tipo3" href="#">Personas externas</a>
   </div>
 </div>
 
@@ -269,7 +269,53 @@ $(function(){
 				top.notification({type: "error", message: "No se encontró notificación"});
 			}
 		}
+	});
 
+	$(".tipo2").click(function() {
+		var idnotificacion = $("#idnotificacion").val();
+		//console.log(idnotificacion);
+		var url = "<?= $ruta_db_superior ?>views/flujos/modal_persona_campos.php?idnotificacion=" + idnotificacion;
+		var $iframe = $('#frameTipoNotificacion');
+		if(idnotificacion) {
+		    if ($iframe.length) {
+		        $iframe.attr('src', url);
+				$('#modalTipoNotificacion').modal('show');
+		    }
+		} else {
+			var idnotificacion = guardarNotificacion();
+			if(idnotificacion) {
+			    if ($iframe.length) {
+			        $iframe.attr('src', url);
+					$('#modalTipoNotificacion').modal('show');
+			    }
+			} else {
+				top.notification({type: "error", message: "No se encontró notificación"});
+			}
+		}
+	});
+
+
+	$(".tipo3").click(function() {
+		var idnotificacion = $("#idnotificacion").val();
+		//console.log(idnotificacion);
+		var url = "<?= $ruta_db_superior ?>views/flujos/modal_persona_externa.php?idnotificacion=" + idnotificacion;
+		var $iframe = $('#frameTipoNotificacion');
+		if(idnotificacion) {
+		    if ($iframe.length) {
+		        $iframe.attr('src', url);
+				$('#modalTipoNotificacion').modal('show');
+		    }
+		} else {
+			var idnotificacion = guardarNotificacion();
+			if(idnotificacion) {
+			    if ($iframe.length) {
+			        $iframe.attr('src', url);
+					$('#modalTipoNotificacion').modal('show');
+			    }
+			} else {
+				top.notification({type: "error", message: "No se encontró notificación"});
+			}
+		}
 	});
 
 	$("#guardarNotificacion").click(function() {

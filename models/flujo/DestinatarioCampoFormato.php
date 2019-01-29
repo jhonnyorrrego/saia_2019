@@ -9,7 +9,6 @@ class DestinatarioCampoFormato extends Model {
     }
 
     protected function defineAttributes() {
-        parent::defineAttributes();
         $this->dbAttributes = (object) [
             'safe' => [
                 "fk_formato_flujo",

@@ -150,7 +150,7 @@ final class Version20190123162529 extends AbstractMigration {
 		$tabla->addColumn("idelemento", "integer", ["autoincrement" => true]);
 		$tabla->addColumn("nombre", "string", ["length" => 255]);
 		$tabla->addColumn("bpmn_id", "string", ["length" => 255]);
-		$tabla->addColumn("info", "text");
+		$tabla->addColumn("info", "text", ["notnull" => false]);
 		$tabla->addColumn("fk_flujo", "integer");
 		$tabla->addColumn("fk_formato_flujo", "integer", ["notnull" => false]);
 		$tabla->addColumn("fk_tipo_elemento", "integer");

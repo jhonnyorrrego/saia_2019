@@ -29,22 +29,24 @@ if(isset($_REQUEST["seleccionable"])) {
 	}
 }
 
-$filtroEmail = null;
-if(isset($_REQUEST["filtro_email"])) {
-    $filtroEmail = $_REQUEST["filtro_email"];
+$idnotificacion = null;
+if(isset($_REQUEST["idnotificacion"])) {
+    $idnotificacion = $_REQUEST["idnotificacion"];
 }
 
 
-$objetoJson = llena_formato($filtrar, $seleccionados, $seleccionable, $filtroEmail);
+$objetoJson = llena_formato($filtrar, $idnotificacion, $seleccionados, $seleccionable);
 
 header('Content-Type: application/json');
 
 echo json_encode($objetoJson);
 
-function llena_formato($filtrar, $seleccionados = array(), $seleccionable = null, $filtroEmail = null) {
+function llena_formato($filtrar, $idnotificacion, $seleccionados = array(), $seleccionable = null) {
 	global $conn;
 
-	$papas = busca_filtro_tabla("idformato, etiqueta,descripcion_formato,version", "formato", "item <> 1 AND idformato IN(" . $filtrar . ")", "etiqueta ASC", $conn);
+	$idflujo = $filtrar;
+	$papas = busca_filtro_tabla("f.idformato, f.etiqueta, f.descripcion_formato, f.version, ff.idformato_flujo",
+	        "wf_formato_flujo ff join formato f on ff.fk_formato = f.idformato", "f.item <> 1 AND ff.fk_flujo = $idflujo", "etiqueta ASC", $conn);
 
 	$resp = array();
 	if($papas["numcampos"]) {
@@ -57,7 +59,7 @@ function llena_formato($filtrar, $seleccionados = array(), $seleccionable = null
 			$item["expanded"] = false;
 
 			$item["title"] = $papas[$i]["etiqueta"];
-			$item["key"] = $papas[$i]["idformato"];
+			$item["key"] = $papas[$i]["idformato_flujo"];
 			$item["data"] = array(
 				'descripcion' => $papas[$i]["descripcion_formato"],
 				'version' => $papas[$i]["version"]
@@ -65,7 +67,7 @@ function llena_formato($filtrar, $seleccionados = array(), $seleccionable = null
 			if(!empty($hijos[0]["total"])) {
 			    $item["folder"] = true;
 				// $children = llena_formato($papas[$i]["idformato"], $nivel);
-			    $children = llena_campos($papas[$i]["idformato"], $seleccionados, $seleccionable, $filtroEmail);
+			    $children = llena_campos($papas[$i]["idformato"], $seleccionados, $seleccionable, $idnotificacion, $papas[$i]["idformato_flujo"]);
 				if(!empty($children)) {
 					$item["children"] = $children;
 				}
@@ -78,13 +80,10 @@ function llena_formato($filtrar, $seleccionados = array(), $seleccionable = null
 	return $resp;
 }
 
-function llena_campos($id, $seleccionados = array(), $seleccionable = null, $filtroEmail = null) {
+function llena_campos($id, $seleccionados = array(), $seleccionable = null, $idnotificacion, $idformato_flujo) {
 	global $conn;
 
-	$filtroCampo = "formato_idformato = " . $id;
-	if(!empty($filtroEmail)) {
-	    $filtroCampo .= " and (etiqueta like '%correo%' or etiqueta like '%mail%' )";
-	}
+	$filtroCampo = "formato_idformato = $id and (etiqueta like '%correo%' or etiqueta like '%mail%' )";
 	$papas = busca_filtro_tabla("idcampos_formato, etiqueta, nombre", "campos_formato", $filtroCampo, "etiqueta ASC", $conn);
 	$resp = array();
 	if($papas["numcampos"]) {
@@ -100,8 +99,17 @@ function llena_campos($id, $seleccionados = array(), $seleccionable = null, $fil
 			$item["key"] = $papas[$i]["idcampos_formato"];
 			$item["data"] = array(
 				'idformato' => $id,
-				'nombre' => $papas[$i]["nombre"]
+				'nombre' => $papas[$i]["nombre"],
+			    "iddestinatario" => null
 			);
+
+			$destinos = busca_filtro_tabla("dn.iddestinatario",
+			        "wf_dest_notificacion dn join wf_destinatario_formato df on dn.iddestinatario = df.iddestinatario",
+			        "dn.fk_notificacion = $idnotificacion and df.fk_formato_flujo = $idformato_flujo and df.fk_campo_formato = " . $papas[$i]["idcampos_formato"], "", $conn);
+			if($destinos["numcampos"]) {
+			    $item["data"]["iddestinatario"] = $destinos[0]["iddestinatario"];
+			}
+
 			if($seleccionable) {
 				$item["checkbox"] = $seleccionable;
 			}
