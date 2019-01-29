@@ -77,12 +77,6 @@ ul.fancytree-container {
     stroke: rgba(66, 180, 21, 0.7) !important; /* color elements as red */
 }
 
-#save-button {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-}
-
 .highlight:not(.djs-connection) .djs-visual > :nth-child(1) {
   fill: yellow !important; /* color elements as green */
 }

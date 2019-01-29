@@ -50,9 +50,9 @@ if(isset($_REQUEST["idflujo"])) {
       }
     });
 
-    var elementRegistry = bpmnModeler.get('elementRegistry');
-    var element1 = elementRegistry.get('sid-52EB1772-F36E-433E-8F5B-D5DFD26E6F26');
-    var elements = elementRegistry.getAll();
+    //var elementRegistry = bpmnModeler.get('elementRegistry');
+    //var element1 = elementRegistry.get('sid-52EB1772-F36E-433E-8F5B-D5DFD26E6F26');
+    //var elements = elementRegistry.getAll();
     //console.log(elementRegistry);
 
     var modeling = bpmnModeler.get('modeling');
