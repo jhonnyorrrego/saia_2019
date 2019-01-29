@@ -20,12 +20,17 @@
             </span>
         </div>
     </div>
+    <div class="row pt-2">
+        <div class="col-12">
+            <button class="btn btn-complete float-right" id="save_relation">Guardar</button>
+        </div>
+    </div>
 </div>
 <script>
     $(function(){
         let baseUrl = Session.getBaseUrl();
         let userId = localStorage.getItem('key');
-        let selections = '<?= $_REQUEST["selections"] ?>';
+        let selections = '<?= $_REQUEST["selections"] ? $_REQUEST["selections"] : $_REQUEST["documentId"]  ?>';
 
         if(typeof Tags == 'undefined'){
             $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/tags/tags.js`, r => {
@@ -37,7 +42,7 @@
             showTags(userId, selections);
         }
 
-        $('#btn_success').on('click', e => {
+        $('#save_relation').on('click', e => {
             let tags = {};
 
             $('.checkbox_tag').each(function(i, c){

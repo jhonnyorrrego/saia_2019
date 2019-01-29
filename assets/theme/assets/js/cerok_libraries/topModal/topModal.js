@@ -20,54 +20,67 @@ var topModalDefaults = {
 
 function topModal(options){
     var modal = $('#dinamic_modal', window.top.document);
+    var modalDialog = modal.find('.modal-dialog');
     var options = $.extend({}, topModalDefaults, options);
 
     modal.find("#btn_success").off("click");
     modal.find('#modal_body').html('');
     modal.find('#modal_title').text(options.title);
+    modalDialog.removeClass('modal-lg modal-sm modal-xl');
 
     if(options.centerAlign){
-        modal.find('.modal-dialog').addClass('modal-dialog-centered');
+        modalDialog.addClass('modal-dialog-centered');
     }else{
-        modal.find('.modal-dialog').removeClass('modal-dialog-centered');
+        modalDialog.removeClass('modal-dialog-centered');
     }
     
     if ($.inArray(options.size, ['modal-lg', 'modal-sm', 'modal-xl']) != -1) {
-        modal.find('.modal-dialog').removeClass('modal-lg modal-sm modal-xl');
-        modal.find('.modal-dialog').addClass(options.size);
+        modalDialog.removeClass('modal-lg modal-sm modal-xl');
+        modalDialog.addClass(options.size);
     }
 
-    if(options.buttons && options.buttons.success){
-        modal.find("#btn_success").show()
-            .text(options.buttons.success.label)
-            .addClass(options.buttons.success.class);
-    }else{
-        modal.find("#btn_success").hide();
-    }
-
-    if(options.buttons && options.buttons.cancel){
-        modal.find("#close_modal").show()
-            .text(options.buttons.cancel.label)
-            .addClass(options.buttons.cancel.class);
-    }else{
-        modal.find("#close_modal").hide();
+    if (options.buttons.length) {
+        modal.find('.modal-footer').show();
+        if(options.buttons && options.buttons.success){
+            modal.find("#btn_success").show()
+                .text(options.buttons.success.label)
+                .addClass(options.buttons.success.class);
+        }else{
+            modal.find("#btn_success").hide();
+        }
+    
+        if(options.buttons && options.buttons.cancel){
+            modal.find("#close_modal").show()
+                .text(options.buttons.cancel.label)
+                .addClass(options.buttons.cancel.class);
+        }else{
+            modal.find("#close_modal").hide();
+        }        
+    } else {
+        modal.find('.modal-footer').hide();
     }
 
     if(options.url && !options.html){
         modal.find('#modal_body').load(options.url, options.params,function(response, status, xhr){
             if (status == 'success'){                
-                modal.find('#modal_body').prepend('<hr>');
+                modal.find('#modal_body').prepend('<hr class="mt-1">');
             }else{
                 console.error('failed to load');
                 modal.find('#modal_body').html('');
             }
 
-            $("[data-target='#dinamic_modal']", window.top.document).trigger('click');
+            openModal();
         });
     }else if(options.html && options.content){
         modal.find('#modal_body').html(options.content);
         modal.find('#modal_body').prepend('<hr>');
         
+        openModal();
+    }
+}
+
+function openModal() {
+    if (!$('#dinamic_modal', window.top.document).is(':visible')) {
         $("[data-target='#dinamic_modal']", window.top.document).trigger('click');
     }
 }

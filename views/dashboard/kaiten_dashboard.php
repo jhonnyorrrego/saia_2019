@@ -23,7 +23,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 
-    <?= bootstrap() ?>
+    <?= cssBootstrap() ?>
     <?= icons() ?>
     <?= kaiten() ?>
     <?= librerias_acciones_kaiten() ?>

@@ -74,5 +74,5 @@ $tabs = [[
         if(!"<?= $_REQUEST['id'] ?>".length){
             $('.tasktab:not(:first)').addClass('disabled');
         }
-    })
+    });
 </script>

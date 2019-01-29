@@ -42,17 +42,17 @@
         </div>
     </div>
 </div>
-<div class="row">
+<div class="row pt-2">
     <div class="col-12">
-        <div class="form-group">
+        <div class="form-group float-right">
             <button class="btn btn-complete" id="save_state">Guardar</button>
         </div>
     </div>
 </div>
-<div class="row pt-3">
+<div class="row">
     <div class="col-12">
         <div class="table-responsive">
-            <table class="table table-striped" id="state_history" style="display:none">
+            <table class="table table-striped pt-3" id="state_history" style="display:none">
                 <tr>
                     <td>Fecha</td>
                     <td>Responsable</td>

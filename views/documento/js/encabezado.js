@@ -10,7 +10,7 @@ $(function () {
     })();
     
     $("#go_back").on('click', function(){                                
-        $("#mailbox,#right_workspace", parent.document).toggleClass('d-none');                
+        $("#mailbox,#right_workspace").toggleClass('d-none');                
     });
 
     $("#show_comments").on('click', function(){
@@ -30,10 +30,27 @@ $(function () {
         let options = {
             url: `${baseUrl}views/arbol/proceso_formato.php`,
             params: {
-                iddocumento: documentId
+                documentId: documentId
             },
             title: 'Proceso',
             size: 'modal-sm',
+            buttons: {
+                cancel: {
+                    label: 'Cerrar',
+                    class: 'btn btn-danger'
+                }
+            }
+        };
+        top.topModal(options);
+    });
+
+    $("#show_task").on('click', function(){
+        let options = {
+            url: `${baseUrl}views/tareas/lista_documento.php`,
+            params: {
+                documentId: documentId
+            },
+            title: 'Tareas',
             buttons: {
                 cancel: {
                     label: 'Cerrar',
@@ -78,24 +95,15 @@ $(function () {
     });
 
      /////// MENU INTERMEDIO ////////
-     $(document).on('click', '#etiquetar', function(){
+    $('.menu_options').on('click', function () {
+        let route = $(this).data('url');
         top.topModal({
-            url: `${baseUrl}views/documento/etiquetar.php`,
-            title: 'Etiquetas',
-            size: 'modal-sm',
+            url: baseUrl + route,
+            title: $(this).text(),
             params: {
-                selections: documentId
+                documentId: documentId
             },
-            buttons: {
-                success: {
-                    label: 'Guardar',
-                    class: 'btn btn-complete'
-                },
-                cancel: {
-                    label: 'Cancelar',
-                    class: 'btn btn-danger'
-                }
-            },
+            buttons: {}
         })
     });
 
@@ -110,7 +118,7 @@ $(function () {
     });
 
     function toggleGoBack(){                
-        if($("#mailbox", parent.document).is(':hidden')){
+        if($("#mailbox").is(':hidden')){
             $("#go_back").show();
         }else{
             $("#go_back").hide();

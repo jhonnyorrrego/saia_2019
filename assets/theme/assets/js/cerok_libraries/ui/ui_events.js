@@ -253,12 +253,9 @@ $(function () {
     function taskAction() {
         let options = {
             url: `${baseUrl}views/tareas/crear.php`,
-            params: {
-                finalTime: moment().format('YYYY-MM-DD HH:mm:ss')
-            },
             centerAlign:false,
             size: "modal-lg",
-            buttons: {}
+            title: 'Tarea'
         };
         
         $("#close_modal", window.top.document).trigger("click");

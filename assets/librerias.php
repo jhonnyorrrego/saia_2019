@@ -54,13 +54,26 @@ function bootstrap()
     $routePopper = $ruta_db_superior . 'assets/theme/assets/plugins/popper/umd/popper.min.js';
     $popper = '<script src="' . $routePopper . '" type="text/javascript"></script>';
 
-    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap/css/bootstrap.min.css';
-    $css = '<link href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
+    $css = cssBootstrap();
 
     $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap/js/bootstrap.min.js';
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
     return $popper . $css . $js;
+}
+
+/**
+ * retorna el enlace al archivo css de bootstrap
+ * v4.1.0 minificado
+ * @return string
+ */
+function cssBootstrap(){
+    global $ruta_db_superior;
+
+    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap/css/bootstrap.min.css';
+    $css = '<link href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
+
+    return $css;
 }
 /**
  * retorna los enlaces css , js y locale

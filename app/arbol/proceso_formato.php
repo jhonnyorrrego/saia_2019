@@ -21,7 +21,7 @@ function findDocumentChilds($documentId){
     $ouput = array(
         'title' => substr($document[0]['descripcion'], 0, 40),
         'key' => $documentId,
-        'active' => $documentId == $_REQUEST['iddocumento']
+        'active' => $documentId == $_REQUEST['documentId']
     );
 
     $documentChilds = busca_filtro_tabla('d.iddocumento', 'documento a, formato b, formato c, documento d', 'lower(a.plantilla) = lower(b.nombre) and c.cod_padre = b.idformato and lower(d.plantilla) = lower(c.nombre) and a.iddocumento = ' . $documentId, '', $conn);
@@ -35,7 +35,7 @@ function findDocumentChilds($documentId){
     return $ouput;
 }
 
-$parentId = buscar_papa_primero($_REQUEST['iddocumento']);
+$parentId = buscar_papa_primero($_REQUEST['documentId']);
 $ouput = findDocumentChilds($parentId);
 header('Content-Type: application/json');
 echo json_encode(array($ouput));
