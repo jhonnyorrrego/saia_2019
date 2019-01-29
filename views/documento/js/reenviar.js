@@ -1,7 +1,7 @@
 $(function () {
     let baseUrl = Session.getBaseUrl();
+    let documentId = $('script[data-identificator]').data('identificator');
     let loadedFiles = [];
-    let treeUsers = [];
     let language = {
         errorLoading: function () {
             return "La carga falló"
@@ -60,7 +60,7 @@ $(function () {
         checkbox: true,
         selectMode: 3,
         source: {
-            url: `${baseUrl}arboles/arbol_funcionario.php?checkbox=1&idcampofun=idfuncionario`
+            url: `${baseUrl}arboles/arbol_funcionario.php?checkbox=1&idcampofun=funcionario_codigo`
         }
     });
 
@@ -93,14 +93,36 @@ $(function () {
     });
 
     $('#btn_success').on('click', function () {
-        $.post(`${baseUrl}app/documento/transferir.php`, {
-            key: localStorage.getItem('key'),
-            destination: getUsers(),
-            message: $('#message').val(),
-            files: loadedFiles
-        }, function (response) {
-            console.log(response);
-        }, 'json');
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            url: `${baseUrl}app/documento/transferir.php`,
+            data: {
+                key: localStorage.getItem('key'),
+                documentId: documentId,
+                destination: getUsers(),
+                message: $('#message').val(),
+                files: loadedFiles
+            },
+            beforeSend: function () {
+                $('#btn_success,#spiner').parent().toggle();
+            },
+            success: function (response) {
+                $('#btn_success,#spiner').parent().toggle();
+                if (response.success) {
+                    top.notification({
+                        type: 'success',
+                        message: response.message
+                    });
+                    $('#close_modal').trigger('click');
+                } else {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
+            }
+        });
     });
 
     function getUsers() {

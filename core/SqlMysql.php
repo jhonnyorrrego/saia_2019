@@ -65,40 +65,34 @@ class SqlMysql extends SQL2
      */
     function Ejecutar_Sql($sql)
     {
-        $strsql = trim($sql);
-        $strsql = str_replace(" =", "=", $strsql);
-        $strsql = str_replace("= ", "=", $strsql);
-        $accion = strtoupper(substr($strsql, 0, strpos($strsql, ' ')));
-        if ($accion == "INSERT" || $accion == "UPDATE") {
+        $sql = trim($sql);
+        $accion = strtok(strtolower($sql), ' ');
+        $this->filas = 0;
+
+        if (in_array(strtolower($accion), ["insert", "update"])) {
             $this->ultimoInsert = 0;
             $sql = htmlentities($sql, ENT_NOQUOTES, "UTF-8", false);
             $sql = htmlspecialchars_decode($sql, ENT_NOQUOTES);
         }
 
-        $this->filas = 0;
-        if ($sql && $sql != "" && $this->Conn->conn) {
-            $this->res = mysqli_query($this->Conn->conn, $sql); // or die("ERROR SQL ".mysqli_error($this->Conn->conn)." en ".$_SERVER["PHP_SELF"]." ->".$sql);// or error//("Error al Ejecutar: $sql --- ".mysql_error());
+        if ($sql && $this->Conn->conn) {
+            $this->res = mysqli_query($this->Conn->conn, $sql);
 
             if ($this->res) {
-                if (strpos(strtolower($sql), "insert") !== false) {
+                $this->ultimoInsert = 0;
+                if ($accion == "insert") {
                     $this->ultimoInsert = $this->Ultimo_Insert();
-                } else if (strpos(strtolower($sql), "select") !== false) {
-                    $this->ultimoInsert = 0;
+                } else if ($accion == "select") {
                     $this->filas = $this->res->num_rows;
-                } else {
-                    $this->ultimoInsert = 0;
                 }
 
-                $this->consulta = trim($sql);
-                // $fin=strpos($this->consulta," ");
-                // $accion=substr($this->consulta,0,$fin);
+                $this->consulta = $sql;
             } else if (defined("DEBUGEAR") && DEBUGEAR == 1) {
                 $e = mysqli_error($this->Conn->conn);
                 debug_print_backtrace();
                 trigger_error($e . " $sql", E_USER_ERROR);
-                return false;
             }
-            return ($this->res);
+            return $this->res ?? false;
         }
     }
 
@@ -376,14 +370,10 @@ class SqlMysql extends SQL2
     function Ejecutar_Limit($sql, $inicio, $fin)
     {
         $cuantos = $fin - $inicio + 1;
-        if ($inicio < 0)
-            $inicio = 0;
-
+        $inicio = $inicio < 0 ? 0 : $inicio;
         $consulta = "$sql LIMIT $inicio,$cuantos";
-        $consulta = str_replace("key", "'key'", $consulta);
-        // echo $consulta;
-        $res = mysqli_query($this->Conn->conn, $consulta); // or die("consulta fallida ".mysqli_error($conn->Conn->conn));
-        return ($res);
+        //$consulta = str_replace("key", "'key'", $consulta);
+        return mysqli_query($this->Conn->conn, $consulta);
     }
 
     /*
@@ -437,10 +427,7 @@ class SqlMysql extends SQL2
      */
     function Ultimo_Insert()
     {
-        if ($this->ultimoInsert) {
-            return $this->ultimoInsert;
-        }
-        return @mysqli_insert_id($this->Conn->conn);
+        return $this->ultimoInsert ? $this->ultimoInsert : @mysqli_insert_id($this->Conn->conn);
     }
 
     function Guardar_log($strsql)
@@ -504,15 +491,8 @@ class SqlMysql extends SQL2
                 'yyyy' => '%Y'
             );
             $resfecha = $formato;
-            foreach ($reemplazos as $ph => $mot) { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
+            foreach ($reemplazos as $ph => $mot) {
                 $resfecha = preg_replace('/' . $ph . '/', "$mot", $resfecha);
-                /*
-                 * $resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
-                 * $resfecha=ereg_replace("( )$ph([-/:])", "\\1$mot\\2", $resfecha);
-                 * $resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
-                 * $resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
-                 * $resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora
-                 */
             }
 
             $fsql = "DATE_FORMAT('$fecha','$resfecha')";
@@ -522,11 +502,10 @@ class SqlMysql extends SQL2
         return $fsql;
     }
 
-    // Fin Funcion fecha_db_almacenar
     function fecha_db_obtener($campo, $formato = null)
     {
         if (!$formato)
-            $formato = "Y-m-d"; // formato por defecto php
+            $formato = "Y-m-d";
 
         $reemplazos = array(
             'd' => '%d',
@@ -541,34 +520,22 @@ class SqlMysql extends SQL2
             'yyyy' => '%Y'
         );
         $resfecha = $formato;
-        foreach ($reemplazos as $ph => $mot) { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
+        foreach ($reemplazos as $ph => $mot) {
             $resfecha = preg_replace('/' . $ph . '/', "$mot", $resfecha);
-            /*
-             * $resfecha=preg_replace('/'.$ph.'/', "$mot", $resfecha);
-             * $resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
-             * $resfecha=ereg_replace("( )$ph([-/:])", "\\1$mot\\2", $resfecha);
-             * $resfecha=ereg_replace("^$ph", "$mot", $resfecha);
-             * $resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
-             * $resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
-             * $resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora
-             */
         }
         $fsql = "DATE_FORMAT($campo,'$resfecha')";
         return $fsql;
     }
 
-    // Fin Funcion fecha_db_obtener
     function mostrar_error()
     {
-        if ($this->error != "")
-            echo ($this->error . " en \"" . $this->consulta . "\"");
+        if ($this->error)
+            echo $this->error . " en \"" . $this->consulta . "\"";
     }
 
-    function fecha_db($campo, $formato = null)
+    function fecha_db($campo, $resfecha = null)
     {
-        if (!$formato)
-            $formato = "Y-m-d"; // formato por defecto php
-
+        $resfecha = $resfecha ?? "Y-m-d";
         $reemplazos = array(
             'd' => '%d',
             'm' => '%m',
@@ -581,16 +548,14 @@ class SqlMysql extends SQL2
             'M' => '%b',
             'yyyy' => '%Y'
         );
-        $resfecha = $formato;
-        foreach ($reemplazos as $ph => $mot) { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
+
+        foreach ($reemplazos as $ph => $mot) {
             $resfecha = preg_replace('/' . $ph . '/', "$mot", $resfecha);
         }
-        $fsql = "DATE_FORMAT($campo,'$resfecha')";
 
-        return $fsql;
+        return "DATE_FORMAT($campo,'$resfecha')";
     }
 
-    // Fin Funcion fecha_db_obtener
     function case_fecha($dato, $compara, $valor1, $valor2)
     {
         if ($compara = "" || $compara == 0)

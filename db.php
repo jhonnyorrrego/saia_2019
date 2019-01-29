@@ -59,7 +59,7 @@ function setSessionUserData()
 
     $findUser = busca_filtro_tabla("funcionario_codigo,idfuncionario", "funcionario", "login ='{$usuactual}'", '', $conn);
     $_SESSION["usuario_actual"] = $findUser[0]['funcionario_codigo'];
-    $_SESSION["idfuncionario"] = $findUser[0]['funcionario_codigo'];
+    $_SESSION["idfuncionario"] = $findUser[0]['idfuncionario'];
 
     return $findUser['numcampos'] > 0;
 }
