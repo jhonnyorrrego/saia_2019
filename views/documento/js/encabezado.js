@@ -26,6 +26,29 @@ $(function () {
         top.topModal(options);
     });
 
+    $('#resend').on('click', function () {
+        let options = {
+            url: `${baseUrl}views/documento/reenviar.php`,
+            params: {
+                documentId: documentId,
+                type: 1
+            },
+            title: 'Reenviar',
+            size: 'modal-lg',
+            buttons: {
+                success: {
+                    label: 'Enviar',
+                    class: 'btn btn-complete'
+                },
+                cancel: {
+                    label: 'Cancelar',
+                    class: 'btn btn-danger'
+                }
+            }
+        };
+        top.topModal(options);
+    })
+
     $("#show_tree").on('click', function(){
         let options = {
             url: `${baseUrl}views/arbol/proceso_formato.php`,

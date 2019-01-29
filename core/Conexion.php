@@ -1,10 +1,14 @@
 <?php
-//require_once 'define.php';
 
-class Conexion {
-	var $conn = null;
-	var $Motor, $Host, $Usuario, $Pass, $Nombredb;
-	var $Puerto;
+class Conexion
+{
+	public $conn = null;
+	public $Motor;
+	public $Host;
+	public $Usuario;
+	public $Pass;
+	public $Nombredb;
+	public $Puerto;
 	/*
 	 <Clase>Conexion
 	 <Nombre>Conexion
@@ -17,24 +21,25 @@ class Conexion {
 	 <Pre-condiciones>
 	 <Post-condiciones>
 	 */
-	function __construct($datos = NULL) {
-		if ($datos !== NULL) {
-			$this -> Motor = $datos["motor"];
-			$this -> Host = $datos["host"];
-			$this -> Usuario = $datos["user"];
-			$this -> Pass = $datos["pass"];
-			$this -> Nombredb = $datos["basedatos"];
-			$this -> Db = $datos["db"];
-			$this -> Puerto = $datos["port"];
+	function __construct($datos = null)
+	{
+		if ($datos !== null) {
+			$this->Motor = $datos["motor"];
+			$this->Host = $datos["host"];
+			$this->Usuario = $datos["user"];
+			$this->Pass = $datos["pass"];
+			$this->Nombredb = $datos["basedatos"];
+			$this->Db = $datos["db"];
+			$this->Puerto = $datos["port"];
 		} else {
-			$this -> Motor = MOTOR;
-			$this -> Host = HOST;
-			$this -> Usuario = USER;
-			$this -> Pass = PASS;
-			$this -> Nombredb = BASEDATOS;
-			$this -> Puerto = PORT;
+			$this->Motor = MOTOR;
+			$this->Host = HOST;
+			$this->Usuario = USER;
+			$this->Pass = PASS;
+			$this->Nombredb = BASEDATOS;
+			$this->Puerto = PORT;
 		}
-		$this -> Conectar();
+		$this->Conectar();
 	}
 
 	/*
@@ -48,19 +53,20 @@ class Conexion {
 	 <Pre-condiciones>
 	 <Post-condiciones>
 	 */
-	function Conectar() {
+	function Conectar()
+	{
 		switch ($this->Motor) {
-			case "MySql" :
-				$this -> Conectar_Mysql();
+			case "MySql":
+				$this->Conectar_Mysql();
 				break;
-			case "Oracle" :
-				$this -> Conectar_Oracle();
+			case "Oracle":
+				$this->Conectar_Oracle();
 				break;
-			case "SqlServer" :
-				$this -> Conectar_SqlServer();
+			case "SqlServer":
+				$this->Conectar_SqlServer();
 				break;
-			case "MSSql" :
-				$this -> Conectar_MSSql();
+			case "MSSql":
+				$this->Conectar_MSSql();
 				break;
 		}
 
@@ -77,34 +83,38 @@ class Conexion {
 	 <Pre-condiciones>
 	 <Post-condiciones>
 	 */
-	function Conectar_Mysql() {
-		$this -> conn = mysqli_connect($this -> Host, $this -> Usuario, $this -> Pass, $this -> Db, $this -> Puerto) or alerta("NO SE PUEDE CONECTAR A LA BASE DE DATOS " . $this -> Db . ": " . mysqli_connect_error());
+	function Conectar_Mysql()
+	{
+		$this->conn = mysqli_connect($this->Host, $this->Usuario, $this->Pass, $this->Db, $this->Puerto) or alerta("NO SE PUEDE CONECTAR A LA BASE DE DATOS " . $this->Db . ": " . mysqli_connect_error());
 	}
 
-	function Conectar_SqlServer() {
-		if ($this -> Puerto)
-			$conecta = $this -> Host . "\\" . $this -> Nombredb . "," . $this -> Puerto;
-		else if ($this -> Host)
-			$conecta = $this -> Host . "\\" . $this -> Nombredb;
+	function Conectar_SqlServer()
+	{
+		if ($this->Puerto)
+			$conecta = $this->Host . "\\" . $this->Nombredb . "," . $this->Puerto;
+		else if ($this->Host)
+			$conecta = $this->Host . "\\" . $this->Nombredb;
 		else
-			$conecta = $this -> Nombredb;
-		$this -> conn = sqlsrv_connect($conecta, array(
-			"UID" => $this -> Usuario,
-			"PWD" => $this -> Pass,
-			"Database" => $this -> Db
+			$conecta = $this->Nombredb;
+		$this->conn = sqlsrv_connect($conecta, array(
+			"UID" => $this->Usuario,
+			"PWD" => $this->Pass,
+			"Database" => $this->Db
 		)) or print_r(sqlsrv_errors());
-		sqlsrv_query($this -> conn, "USE " . $this -> Db);
+		sqlsrv_query($this->conn, "USE " . $this->Db);
 	}
 
-	function Conectar_MSSql() {
+	function Conectar_MSSql()
+	{
 
-		$this -> conn = mssql_connect($this -> Host, $this -> Usuario, $this -> Pass) or print_r(mssql_get_last_message());
-		mssql_query("USE " . $this -> Db, $this -> conn);
+		$this->conn = mssql_connect($this->Host, $this->Usuario, $this->Pass) or print_r(mssql_get_last_message());
+		mssql_query("USE " . $this->Db, $this->conn);
 
 	}
 
-	function Conectar_Oracle() {
-		$this -> conn = @oci_connect($this -> Usuario, $this -> Pass, "(DESCRIPTION =(ADDRESS =(PROTOCOL = TCP)(HOST = " . $this -> Host . ")(PORT =" . $this -> Puerto . "))(CONNECT_DATA = (SID = " . $this -> Nombredb . ")))");
+	function Conectar_Oracle()
+	{
+		$this->conn = @oci_connect($this->Usuario, $this->Pass, "(DESCRIPTION =(ADDRESS =(PROTOCOL = TCP)(HOST = " . $this->Host . ")(PORT =" . $this->Puerto . "))(CONNECT_DATA = (SID = " . $this->Nombredb . ")))");
 	}
 
 	/*
@@ -118,23 +128,24 @@ class Conexion {
 	 <Pre-condiciones>que exista una conexion a la base de datos
 	 <Post-condiciones>
 	 */
-	function Desconecta() {
+	function Desconecta()
+	{
 		switch ($this->Motor) {
-			case "MySql" :
-				if ($this -> conn)
-					mysqli_close($this -> conn);
+			case "MySql":
+				if ($this->conn)
+					mysqli_close($this->conn);
 				break;
-			case "Oracle" :
-				if ($this -> conn)
-					oci_close($this -> conn);
+			case "Oracle":
+				if ($this->conn)
+					oci_close($this->conn);
 				break;
-			case "SqlServer" :
-				if ($this -> conn)
-					sqlsrv_close($this -> conn);
+			case "SqlServer":
+				if ($this->conn)
+					sqlsrv_close($this->conn);
 				break;
-			case "MSSql" :
-				if ($this -> conn)
-					mssql_close($this -> conn);
+			case "MSSql":
+				if ($this->conn)
+					mssql_close($this->conn);
 				break;
 		}
 
@@ -151,14 +162,15 @@ class Conexion {
 	 <Pre-condiciones>
 	 <Post-condiciones>
 	 */
-	function Reconexion($nueva_db) {/*
+	function Reconexion($nueva_db)
+	{/*
 		 if($nueva_db=="radica_camara")
 		 $this->Nombredb="saia8";
 		 if ($nueva_db=="formulario")
 		 $this->Nombredb="framework";
 		 */
-		$this -> Nombredb = DB;
-		mysqli_select_db($this -> conn, $this -> Nombredb) or die("error al conectarse a la bd: " . $nueva_db);
+		$this->Nombredb = DB;
+		mysqli_select_db($this->conn, $this->Nombredb) or die("error al conectarse a la bd: " . $nueva_db);
 	}
 
 	/*
@@ -172,8 +184,9 @@ class Conexion {
 	 <Pre-condiciones>
 	 <Post-condiciones>
 	 */
-	function Get_Motor() {
-		return $this -> Motor;
+	function Get_Motor()
+	{
+		return $this->Motor;
 	}
 
 	/*
@@ -187,8 +200,9 @@ class Conexion {
 	 <Pre-condiciones>
 	 <Post-condiciones>
 	 */
-	function Set_Motor($value) {
-		$this -> Motor = value;
+	function Set_Motor($value)
+	{
+		$this->Motor = value;
 	}
 
 	/*
@@ -203,9 +217,24 @@ class Conexion {
 	 <Post-condiciones>
 	 */
 
-	function Obtener_Conexion() {
-		return $this -> conn;
+	function Obtener_Conexion()
+	{
+		return $this->conn;
 	}
 
+	public static function getConetion()
+	{
+		$Conexion = new Conexion([
+			'basedatos' => BASEDATOS,
+			'db' => DB,
+			'motor' => MOTOR,
+			'host' => HOST,
+			'user' => USER,
+			'pass' => PASS,
+			'port' => PORT
+		]);
+
+		return SQL2::get_instance($Conexion, MOTOR);
+	}
 }
 ?>

@@ -186,7 +186,7 @@ abstract class Model
 
     private function runCreate()
     {
-        global $conn;
+        $conection = Conexion::getConetion();
 
         $table = self::getTableName();
         $attributes = $this->getNotNullAttributes();
@@ -201,7 +201,7 @@ abstract class Model
 
             $fields .= $attribute;
             if (in_array($attribute, $dateAttributes)) {
-                $values .= fecha_db_almacenar($value, 'Y-m-d H:i:s');
+                $values .= $conection->fecha_db_almacenar($value, 'Y-m-d H:i:s');
             } else {
                 $values .= "'" . $value . "'";
             }
@@ -209,8 +209,8 @@ abstract class Model
 
         $sql = "INSERT INTO " . $table . " (" . $fields . ") values (" . $values . ")";
 
-        if ($conn->Ejecutar_Sql($sql)) {
-            $this->setPK($conn->Ultimo_Insert());
+        if ($conection->Ejecutar_Sql($sql)) {
+            $this->setPK($conection->Ultimo_Insert());
         }
         
         return $this->getPK() ?? 0;
@@ -253,10 +253,8 @@ abstract class Model
 
     public static function executeDelete($conditions = [])
     {
-        global $conn;
-
         $sql = 'DELETE FROM ' . self::getTableName() . ' WHERE ' . self::createCondition($conditions);
-        return $conn->Ejecutar_Sql($sql);
+        return Conexion::getConetion()->Ejecutar_Sql($sql);
     }
 
     /**
@@ -337,10 +335,8 @@ abstract class Model
      */
     public static function findAllByAttributes($conditions, $fields = [], $order = '', $limit = 0)
     {
-        global $conn;
-
         $sql = self::generateSelectSql($conditions, $fields, $order, $limit);
-        $records = $conn->executeSelect($sql, 0, $limit);
+        $records = Conexion::getConetion()->executeSelect($sql, 0, $limit);
         $response = self::convertToObjectCollection($records);
 
         return $response;
@@ -401,7 +397,7 @@ abstract class Model
      */
     public static function executeUpdate($fields, $conditions)
     {
-        global $conn;
+        $conection = Conexion::getConetion();
 
         $set = '';
         $className = get_called_class();
@@ -414,14 +410,14 @@ abstract class Model
             }
 
             if (in_array($attribute, $dateAttributes)) {
-                $set .= $attribute . "=" . fecha_db_almacenar($value, 'Y-m-d H:i:s');
+                $set .= $attribute . "=" . $conection->fecha_db_almacenar($value, 'Y-m-d H:i:s');
             } else {
                 $set .= $attribute . "='" . $value . "'";
             }
         }
 
         $sql = 'UPDATE ' . self::getTableName() . ' set ' . $set . ' where ' . self::createCondition($conditions);
-        return $conn->Ejecutar_Sql($sql);
+        return $conection->Ejecutar_Sql($sql);
     }
 
     /**
@@ -453,7 +449,7 @@ abstract class Model
             }
 
             if (in_array($attribute, $dateAttributes)) {
-                $select .= fecha_db_obtener($attribute, 'Y-m-d H:i:s') . ' as ' . $attribute;
+                $select .= Conexion::getConetion()->fecha_db_obtener($attribute, 'Y-m-d H:i:s') . ' as ' . $attribute;
             } else {
                 $select .= $attribute;
             }
@@ -470,7 +466,7 @@ abstract class Model
      * @return string
      */
     public static function createCondition($conditions)
-    {
+    {        
         $condition = '';
 
         if (count($conditions)) {
@@ -484,7 +480,7 @@ abstract class Model
                 }
 
                 if (in_array($attribute, $dateAttributes)) {
-                    $condition .= fecha_db_obtener($attribute, 'Y-m-d H:i:s') . "=" . $value;
+                    $condition .= Conexion::getConetion()->fecha_db_obtener($attribute, 'Y-m-d H:i:s') . "=" . $value;
                 } else {
                     $condition .= $attribute . "='" . $value . "'";
                 }
@@ -505,4 +501,5 @@ abstract class Model
 
         return $sql;
     }
+
 }

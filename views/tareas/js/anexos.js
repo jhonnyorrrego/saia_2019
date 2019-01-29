@@ -3,7 +3,7 @@ $(function () {
     let params = $('script[data-params]').data('params');
     let loadedFiles = [];
     let myDropzone = new Dropzone("#dropzone", {
-        url: `${baseUrl}app/tareas/cargar_anexos.php`,
+        url: `${baseUrl}app/temporal/cargar_anexos.php`,
         dictDefaultMessage: 'Haga clic para elegir un archivo o Arrastre acá el archivo.',
         params: {
             key: localStorage.getItem('key')

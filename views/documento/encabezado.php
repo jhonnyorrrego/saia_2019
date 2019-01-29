@@ -219,7 +219,7 @@ function plantilla($documentId, $transferId = 0){
                 <span class="fa fa-mail-reply px-1 cursor">
                    <label class="d-none d-sm-inline f-12 font-heading cursor">&nbsp;Responder</label>
                 </span>
-                <span class="fa fa-share px-1 d-none d-md-inline cursor">
+                <span class="fa fa-share px-1 d-none d-md-inline cursor" id="resend">
                    <label class="d-none d-sm-inline f-12 font-heading cursor">&nbsp;Reenviar</label>
                 </span>
                 <div class="dropdown d-inline px-0">

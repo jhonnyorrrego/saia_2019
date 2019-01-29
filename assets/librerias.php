@@ -142,15 +142,9 @@ function icons()
 {
     global $ruta_db_superior;
 
-    /*$routePages = $ruta_db_superior . 'assets/theme/pages/css/pages-icons.css';
-    $pg = '<link class="main-stylesheet" href="' . $routePages . '" rel="stylesheet" type="text/css" />';
-    */
     $routeAwesome = $ruta_db_superior . 'assets/theme/assets/plugins/font-awesome/css/font-awesome.css';
     $fa = '<link class="main-stylesheet" href="' . $routeAwesome . '" rel="stylesheet" type="text/css" />';
 
-    /*$routeLine = $ruta_db_superior . 'assets/theme/assets/plugins/simple-line-icons/simple-line-icons.css';
-    $sl = '<link class="main-stylesheet" href="' . $routeLine . '" rel="stylesheet" type="text/css" />';
-    */
     return $fa;
 }
 
@@ -334,7 +328,7 @@ function librariesForTopModal($data){
 
 function bpmnModeler() {
     global $ruta_db_superior;
-    //$ruta_lib = "assets/theme/assets/plugins/bpmn-js/3.0.4/";
+
     $ruta_lib = "assets/theme/assets/plugins/bpmn-js/3.1.0/";
     $rutaModeler = $ruta_db_superior . $ruta_lib . "bpmn-modeler.development.js";
     $modeler = '<script src="' . $rutaModeler . '" type="text/javascript"></script>';
@@ -354,6 +348,5 @@ function bpmnViewer() {
     $rutaJs = $ruta_db_superior . $ruta_lib . 'bootstrap.min.js';
     $js = '<script type="text/javascript" src="' . $rutaJs . '"></script>';
 
-    //return $modeler . $css . $js;
     return $viewer;
 }

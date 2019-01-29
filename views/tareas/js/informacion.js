@@ -70,7 +70,7 @@ $(function(){
     
     $('#save_task').on('click', function(){
         let key = localStorage.getItem('key');
-        let managers = getOptions('#manager');
+        let managers = $('#manager').val();
         let initial = moment($('#final_date').val(), 'DD/MM/YYYY hh:mm a')
             .subtract(30, "minutes").format('YYYY-MM-DD HH:mm:ss');
         let final = moment($('#final_date').val(), 'DD/MM/YYYY hh:mm a').format('YYYY-MM-DD HH:mm:ss');
@@ -101,18 +101,6 @@ $(function(){
             }
         }, 'json')
     });
-
-    function getOptions(selector){
-        let data = [];
-
-        if($(selector).children().length){
-            $.each($(selector).children(), function(i, e){
-                data.push($(e).val());
-            });
-        }
-
-        return data;
-    }
 
     function findFormData(id){
         $.post(`${baseUrl}app/tareas/consulta.php`, {

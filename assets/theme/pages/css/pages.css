@@ -7417,6 +7417,7 @@ body.rtl .checkbox label::after {
 }
 .form-group-default textarea.form-control {
   padding-top: 5px;
+  height: 60px;
 }
 .form-group-default label {
   margin: 0;
@@ -7682,7 +7683,7 @@ https://github.com/eternicode/bootstrap-datepicker
 }
 .datepicker thead tr .dow {
   font-family: 'Ubuntu', sans-serif;
-  color: #6d5cae;
+  color: #48b0f7;
   text-transform: uppercase;
   font-size: 11px;
 }
