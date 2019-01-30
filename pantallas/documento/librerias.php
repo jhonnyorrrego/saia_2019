@@ -983,7 +983,7 @@ function origin_pending_document($documentId, $userCode, $number, $date, $transf
     ]);
 
     $html = '<div class="col-1 px-0 text-center action">
-        <input type="hidden" value="' . $documentId . '" class="identificator">'
+        <input type="hidden" data-transfer="'.$transferId.'" value="' . $documentId . '" class="identificator">'
             . $roundedImage .
             '</div>
     <div class="col show_document cursor principal_action" data-url="' . $documentRoute . '" titulo="Documento No.' . $number . '">
