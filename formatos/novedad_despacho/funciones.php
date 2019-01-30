@@ -34,28 +34,31 @@ function cargar_items_radicacion($idformato,$iddoc){
 		<table style='width:100%;border-collapse:collapse;border-color:#cac8c8;border-style:solid;border-width:1px;'  border='1'>
 		<tr style='font-weight:bold;text-align:center;'>
 			<td>
+                            <div class='checkbox check-success'>  
 				<input type='checkbox' name='boton_todos' id='boton_todos' value='todos'>
+                                <label for='boton_todos' ></label>
+                            </div>
 			</td>
 			<td>
-				TR&Aacute;MITE
+                            TR&Aacute;MITE
 			</td>
 			<td>
-				TIPO
+                            TIPO
 			</td>
 			<td>
-				Rad. Item
+                            Rad. Item
 			</td>
 			<td>
-				FECHA DE RECIBO
+                            FECHA DE RECIBO
 			</td>	
 			<td>
-				ORIGEN	
+                            ORIGEN	
 			</td>
 			<td>
-				DESTINO	
+                            DESTINO	
 			</td>	
 			<td>
-				ASUNTO
+                            ASUNTO
 			</td>																			
 		</tr>
 	";
@@ -65,7 +68,10 @@ function cargar_items_radicacion($idformato,$iddoc){
     	 
     	 <tr>
     	 	<td style='text-align:center; width:5%'>
-    	 		<input type='checkbox' name='item_radicacion[]' value='".$registros[$i]['iddistribucion']."' />
+                    <div class='checkbox check-success'>
+    	 		<input type='checkbox' name='item_radicacion[]' value='".$registros[$i]['iddistribucion']."' id='item_radicacion_".$registros[$i]['iddistribucion']."'/>
+                        <label for='item_radicacion_".$registros[$i]['iddistribucion']."' ></label>
+                    </div>
     	 	</td>
     	 	<td style='text-align:center; width:5%'>
     	 		".mostrar_diligencia_distribucion($registros[$i]["tipo_origen"],$registros[$i]["estado_recogida"])."
@@ -157,14 +163,17 @@ function generar_select_novedad($idformato,$iddoc){
 	global $ruta_db_superior,$conn;
 	
 	$configuracion_tipo_novedad=busca_filtro_tabla("valor","configuracion","nombre='novedad_despacho' AND tipo='tipo_novedad'","",$conn);
-	$select='<td><select name="novedad" id="novedad"><option value="">Por favor seleccione...</option>';
+	$select='<select class="full-width" name="novedad" id="novedad"><option value="">Por favor seleccione...</option>';
 	if($configuracion_tipo_novedad['numcampos']){
 		$vector_novedades=explode(',',$configuracion_tipo_novedad[0]['valor']);
 		for($i=0;$i<count($vector_novedades);$i++){
 			$select.='<option value="'.htmlspecialchars($vector_novedades[$i]).'">'.codifica_encabezado(html_entity_decode($vector_novedades[$i])).'</option>';
 		}
 	}
-	$select.='</select></td>';	
+	$select.='</select>';
+        $select.="<script>
+                        $('#novedad').select2();
+                </script>";
 	echo($select);
 }
 ?>

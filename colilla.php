@@ -187,9 +187,9 @@ $atras = "1";
 if (@$_REQUEST["enlace"]) {
 	$_REQUEST["enlace"] = str_replace("|", "&", $_REQUEST["enlace"]);
 	if (strpos($_REQUEST["enlace"], '?') > 0) {
-		$enlace = $_REQUEST["enlace"] . "&key=" . $doc;
+		$enlace = $_REQUEST["enlace"] . "&documentId=" . $doc;
 	} else {
-		$enlace = $_REQUEST["enlace"] . "?key=" . $doc;
+		$enlace = $_REQUEST["enlace"] . "?documentId=" . $doc;
 	}
 } else {
 	if ($datos[0]["plantilla"]) {

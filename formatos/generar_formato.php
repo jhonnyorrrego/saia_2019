@@ -704,7 +704,7 @@ class GenerarFormato {
 
     private function codifica($texto) {
         $texto = strtoupper($texto);
-        $texto = str_replace(["ACUTE;","NTILDE;","&IQUEST;"], ["acute;","ntilde;","&iquest;"], $texto);
+        $texto = str_replace(["ACUTE;","NTILDE;","IQUEST;"], ["acute;","Ntilde;","iquest;"], $texto);
         return $texto;
     }
 
@@ -743,7 +743,7 @@ class GenerarFormato {
                 $texto .= '<center><h4 class="text-black">' . codifica_encabezado(html_entity_decode(mayusculas($formato[0]["etiqueta"]))) . '</h4></center>';
             }
             $texto .= '<?php llama_funcion_accion(@$_REQUEST["iddoc"],' . $this->idformato . ',"ingresar","ANTERIOR"); ?>
-                       <form name="formulario_formatos" id="formulario_formatos" class="form-horizontal" role="form" autocomplete="off" method="post" action="' . $action . '" enctype="multipart/form-data">';
+                       <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="' . $action . '" enctype="multipart/form-data">';
 
 
             $librerias = array();
@@ -855,7 +855,7 @@ class GenerarFormato {
                         case "etiqueta":
                         case "etiqueta_titulo":
                             $texto .= '<div class="card-body" id="tr_' . $campos[$h]["nombre"] . '">
-                                        <h5 title="' . $campos[$h]["ayuda"] . '" id="' . $campos[$h]["nombre"] . '"><center><span class="etiqueta_titulo">' . strtoupper($campos[$h]["valor"]) . '</span></center></h5>
+                                        <h5 title="' . $campos[$h]["ayuda"] . '" id="' . $campos[$h]["nombre"] . '"><center><span class="etiqueta_titulo">' . $this->codifica($campos[$h]["valor"]) . '</span></center></h5>
                                       </div>';
                             break;
                         case "etiqueta_parrafo":
