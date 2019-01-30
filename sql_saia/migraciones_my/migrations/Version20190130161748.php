@@ -49,9 +49,6 @@ final class Version20190130161748 extends AbstractMigration
             "notnull" => true,
             "default" => 1
         ]);
-        
-        $sql = "update buzon_salida set recibido=1, enviado=1";
-        $this->connection->executeUpdate($sql, []);
 
         $this->connection->update('busqueda_condicion', [
             "codigo_where" => "a.archivo_idarchivo = b.iddocumento and lower(a.nombre) in ('delegado', 'copia','transferido','distribucion','revisado','aprobado','devolucion') and b.estado <> 'ELIMINADO' and a.recibido = 1 and a.destino = {*code_logged_user*}"
