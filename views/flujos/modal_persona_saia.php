@@ -202,6 +202,7 @@ function guardarDestinatario(idnotificacion, data) {
 			  if(response["success"] == 1) {
 				top.notification({type: "success", message: response.message});
 				pk = response.data.pk;
+				parent.parent.postMessage({accion: "recargarTabla", id: pk}, "*");
 			  } else {
 				  top.notification({type: "error", message: response.message});
 			  }
@@ -235,6 +236,7 @@ function eliminarDestinatarios(idnotificacion, ids) {
 			  if(response["success"] == 1) {
 				top.notification({type: "success", message: response.message});
 				pk = true;
+				parent.parent.postMessage({accion: "recargarTabla", id: pk}, "*");
 			  } else {
 				  top.notification({type: "error", message: response.message});
 			  }

@@ -29,13 +29,19 @@ if(isset($_REQUEST["seleccionable"])) {
 	}
 }
 
-$objetoJson = llena_formato($filtrar, $seleccionados, $seleccionable);
+$filtroEmail = null;
+if(isset($_REQUEST["filtro_email"])) {
+    $filtroEmail = $_REQUEST["filtro_email"];
+}
+
+
+$objetoJson = llena_formato($filtrar, $seleccionados, $seleccionable, $filtroEmail);
 
 header('Content-Type: application/json');
 
 echo json_encode($objetoJson);
 
-function llena_formato($filtrar, $seleccionados = array(), $seleccionable = null) {
+function llena_formato($filtrar, $seleccionados = array(), $seleccionable = null, $filtroEmail = null) {
 	global $conn;
 
 	$papas = busca_filtro_tabla("idformato, etiqueta,descripcion_formato,version", "formato", "item <> 1 AND idformato IN(" . $filtrar . ")", "etiqueta ASC", $conn);
@@ -59,7 +65,7 @@ function llena_formato($filtrar, $seleccionados = array(), $seleccionable = null
 			if(!empty($hijos[0]["total"])) {
 			    $item["folder"] = true;
 				// $children = llena_formato($papas[$i]["idformato"], $nivel);
-				$children = llena_campos($papas[$i]["idformato"], $seleccionados, $seleccionable);
+			    $children = llena_campos($papas[$i]["idformato"], $seleccionados, $seleccionable, $filtroEmail);
 				if(!empty($children)) {
 					$item["children"] = $children;
 				}
@@ -72,10 +78,14 @@ function llena_formato($filtrar, $seleccionados = array(), $seleccionable = null
 	return $resp;
 }
 
-function llena_campos($id, $seleccionados = array(), $seleccionable = null) {
+function llena_campos($id, $seleccionados = array(), $seleccionable = null, $filtroEmail = null) {
 	global $conn;
 
-	$papas = busca_filtro_tabla("idcampos_formato, etiqueta, nombre", "campos_formato", "formato_idformato = " . $id, "etiqueta ASC", $conn);
+	$filtroCampo = "formato_idformato = " . $id;
+	if(!empty($filtroEmail)) {
+	    $filtroCampo .= " and (etiqueta like '%correo%' or etiqueta like '%mail%' )";
+	}
+	$papas = busca_filtro_tabla("idcampos_formato, etiqueta, nombre", "campos_formato", $filtroCampo, "etiqueta ASC", $conn);
 	$resp = array();
 	if($papas["numcampos"]) {
 		for($i = 0; $i < $papas["numcampos"]; $i++) {
@@ -83,7 +93,7 @@ function llena_campos($id, $seleccionados = array(), $seleccionable = null) {
 				"extraClasses" => "estilo-arbol kenlace_saia"
 			];
 			$item["expanded"] = true;
-			if(in_array($papas[$i]["idformato"], $seleccionados)) {
+			if(in_array($papas[$i]["idcampos_formato"], $seleccionados)) {
 				$item["selected"] = true;
 			}
 			$item["title"] = $papas[$i]["etiqueta"];

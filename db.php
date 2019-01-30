@@ -1,10 +1,8 @@
 <?php
-require_once 'define.php';
-require_once 'conexion.php';
-require_once 'sql2.php';
+require_once 'core/autoload.php';
+require_once 'vendor/autoload.php';
 require_once 'StorageUtils.php';
 require_once 'filesystem/SaiaStorage.php';
-require_once 'vendor/autoload.php';
 
 date_default_timezone_set('America/Bogota');
 
@@ -14,7 +12,6 @@ use Imagine\Image\Box;
 use Imagine\Gd\Imagine;
 use PHPSQLParser\PHPSQLParser;
 
-require_once 'sql2.php';
 defineGlobalVars();
 
 /**
@@ -62,7 +59,7 @@ function setSessionUserData()
 
     $findUser = busca_filtro_tabla("funcionario_codigo,idfuncionario", "funcionario", "login ='{$usuactual}'", '', $conn);
     $_SESSION["usuario_actual"] = $findUser[0]['funcionario_codigo'];
-    $_SESSION["idfuncionario"] = $findUser[0]['funcionario_codigo'];
+    $_SESSION["idfuncionario"] = $findUser[0]['idfuncionario'];
 
     return $findUser['numcampos'] > 0;
 }
@@ -457,7 +454,7 @@ function phpmkr_db_connect($HOST = HOST, $USER = USER, $PASS = PASS, $DB = DB, $
     global $conn;
 
     if (!$conn) {
-        $conexion = new conexion([
+        $conexion = new Conexion([
             'basedatos' => $BASEDATOS,
             'db' => $DB,
             'motor' => $MOTOR,

@@ -1,9 +1,11 @@
 <?php
-include_once ("conexion.php");
+require_once 'autoload.php';
 
-class SqlMysql extends SQL2 {
+class SqlMysql extends SQL2
+{
 
-    public function __construct($conn, $motorBd) {
+    public function __construct($conn, $motorBd)
+    {
         parent::__construct($conn, $motorBd);
     }
 
@@ -20,7 +22,8 @@ class SqlMysql extends SQL2 {
      * <Pre-condiciones>
      * <Post-condiciones>
      */
-    function Buscar($campos, $tablas, $where, $order_by) {
+    function Buscar($campos, $tablas, $where, $order_by)
+    {
         if ($campos == "" || $campos == null)
             $campos = "*";
         $this->consulta = "SELECT " . $campos . " FROM " . $tablas;
@@ -40,7 +43,8 @@ class SqlMysql extends SQL2 {
         }
     }
 
-    function liberar_resultado($rs) {
+    function liberar_resultado($rs)
+    {
         if (!$rs) {
             $rs = $this->res;
         }
@@ -59,62 +63,59 @@ class SqlMysql extends SQL2 {
      * <Pre-condiciones>
      * <Post-condiciones>la matriz con los valores del resultado se obtiene por medio de la función Resultado
      */
-    function Ejecutar_Sql($sql) {
-        $strsql = trim($sql);
-        $strsql = str_replace(" =", "=", $strsql);
-        $strsql = str_replace("= ", "=", $strsql);
-        $accion = strtoupper(substr($strsql, 0, strpos($strsql, ' ')));
-        if ($accion == "INSERT" || $accion == "UPDATE") {
+    function Ejecutar_Sql($sql)
+    {
+        $sql = trim($sql);
+        $accion = strtok(strtolower($sql), ' ');
+        $this->filas = 0;
+
+        if (in_array(strtolower($accion), ["insert", "update"])) {
             $this->ultimoInsert = 0;
             $sql = htmlentities($sql, ENT_NOQUOTES, "UTF-8", false);
             $sql = htmlspecialchars_decode($sql, ENT_NOQUOTES);
         }
 
-        $this->filas = 0;
-        if ($sql && $sql != "" && $this->Conn->conn) {
-            $this->res = mysqli_query($this->Conn->conn, $sql); // or die("ERROR SQL ".mysqli_error($this->Conn->conn)." en ".$_SERVER["PHP_SELF"]." ->".$sql);// or error//("Error al Ejecutar: $sql --- ".mysql_error());
+        if ($sql && $this->Conn->conn) {
+            $this->res = mysqli_query($this->Conn->conn, $sql);
 
             if ($this->res) {
-                if (strpos(strtolower($sql), "insert") !== false) {
+                $this->ultimoInsert = 0;
+                if ($accion == "insert") {
                     $this->ultimoInsert = $this->Ultimo_Insert();
-                } else if (strpos(strtolower($sql), "select") !== false) {
-                    $this->ultimoInsert = 0;
+                } else if ($accion == "select") {
                     $this->filas = $this->res->num_rows;
-                } else {
-                    $this->ultimoInsert = 0;
                 }
 
-                $this->consulta = trim($sql);
-                // $fin=strpos($this->consulta," ");
-                // $accion=substr($this->consulta,0,$fin);
-            } else if(defined("DEBUGEAR") && DEBUGEAR == 1) {
+                $this->consulta = $sql;
+            } else if (defined("DEBUGEAR") && DEBUGEAR == 1) {
                 $e = mysqli_error($this->Conn->conn);
-				debug_print_backtrace();
+                debug_print_backtrace();
                 trigger_error($e . " $sql", E_USER_ERROR);
-                return false;
             }
-            return ($this->res);
+            return $this->res ?? false;
         }
     }
 
-    function sacar_fila($rs = Null) {
+    function sacar_fila($rs = null)
+    {
         if ($rs)
             $this->res = $rs;
         if ($arreglo = @mysqli_fetch_array($this->res, MYSQLI_BOTH)) {
             $this->filas++;
             return ($arreglo);
         } else {
-            return (FALSE);
+            return (false);
         }
     }
 
-    function sacar_fila_vector($rs = Null) {
-        if ($rs == Null)
+    function sacar_fila_vector($rs = null)
+    {
+        if ($rs == null)
             $rs = $this->res;
         if ($arreglo = @mysqli_fetch_row($rs)) {
             return ($arreglo);
         } else
-            return (FALSE);
+            return (false);
     }
 
     /*
@@ -129,7 +130,8 @@ class SqlMysql extends SQL2 {
      * <Pre-condiciones>
      * <Post-condiciones>
      */
-    function Insertar($campos, $tabla, $valores) {
+    function Insertar($campos, $tabla, $valores)
+    {
         if ($campos == "" || $campos == null)
             $insert = "INSERT INTO " . $tabla . " VALUES (" . $valores . ")";
         else
@@ -152,7 +154,8 @@ class SqlMysql extends SQL2 {
      * <Post-condiciones>
      */
     // función update para mysql
-    function Modificar($tabla, $actualizaciones, $where) {
+    function Modificar($tabla, $actualizaciones, $where)
+    {
         $actualizaciones = html_entity_decode(htmlentities(utf8_decode($actualizaciones)));
         if ($where != null && $where != "")
             $update = "UPDATE " . $tabla . " SET " . $actualizaciones . " WHERE " . $where;
@@ -175,7 +178,8 @@ class SqlMysql extends SQL2 {
      * <Pre-condiciones>
      * <Post-condiciones>
      */
-    function Ejecutar_Sql_Tipo($sql) {
+    function Ejecutar_Sql_Tipo($sql)
+    {
         $sql = html_entity_decode(htmlentities(utf8_decode($sql)));
         $this->consulta = $sql;
         $this->res = mysqli_query($this->Conn->conn, $this->consulta);
@@ -198,7 +202,8 @@ class SqlMysql extends SQL2 {
      * <Pre-condiciones>
      * <Post-condiciones>
      */
-    function Eliminar($tabla, $where) {
+    function Eliminar($tabla, $where)
+    {
         if ($where != null && $where != "")
             $delete = "DELETE FROM " . $tabla . " WHERE " . $where;
         else
@@ -220,7 +225,8 @@ class SqlMysql extends SQL2 {
      * <Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
      * <Post-condiciones>
      */
-    function Resultado() {
+    function Resultado()
+    {
         $resultado["sql"] = $this->consulta;
         $resultado["numcampos"] = $this->Numero_Filas();
         if ($this->Numero_Filas() > 0) {
@@ -252,7 +258,8 @@ class SqlMysql extends SQL2 {
      * <Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
      * <Post-condiciones>
      */
-    function Tipo_Campo($rs, $pos) {
+    function Tipo_Campo($rs, $pos)
+    {
         $dato = mysqli_fetch_field_direct($rs, $pos);
         return ($dato->type);
     }
@@ -268,7 +275,8 @@ class SqlMysql extends SQL2 {
      * <Pre-condiciones>$this->res debe apuntar al objeto de consulta utilizado la última vez
      * <Post-condiciones>
      */
-    function Nombre_Campo($rs, $pos) {
+    function Nombre_Campo($rs, $pos)
+    {
         $dato = mysqli_fetch_field_direct($rs, $pos);
         return ($dato->name);
     }
@@ -284,7 +292,8 @@ class SqlMysql extends SQL2 {
      * <Pre-condiciones>
      * <Post-condiciones>
      */
-    function Lista_Tabla($db) {
+    function Lista_Tabla($db)
+    {
         $this->res = mysqli_query($this->Conn->conn, "SHOW TABLES") or die("Error en la Ejecucución del Proceso SQL: " . mysqli_error($this->Conn->conn));
         while ($row = mysqli_fetch_row($this->res))
             $resultado[] = $row[0];
@@ -302,7 +311,8 @@ class SqlMysql extends SQL2 {
      * <Pre-condiciones>
      * <Post-condiciones>
      */
-    function Lista_Bd() {
+    function Lista_Bd()
+    {
         $this->res = mysqli_query($this->Conn->conn, "SHOW DATABASES") or die("Error " . mysqli_error($this->Conn->conn));
         while ($row = mysqli_fetch_row($this->res))
             $resultado[] = $row[0];
@@ -321,7 +331,8 @@ class SqlMysql extends SQL2 {
      * <Pre-condiciones>
      * <Post-condiciones>
      */
-    public function Busca_tabla($tabla, $campo = "") {
+    public function Busca_tabla($tabla, $campo = "")
+    {
         if (!$tabla && @$_REQUEST["tabla"])
             $tabla = $_REQUEST["tabla"];
         else if (!$tabla)
@@ -339,7 +350,7 @@ class SqlMysql extends SQL2 {
         if ($i) {
             return $resultado;
         } else {
-            return (FALSE);
+            return (false);
         }
     }
 
@@ -356,16 +367,13 @@ class SqlMysql extends SQL2 {
      * <Post-condiciones>
      */
     // devuelve los registro en el rango $inicio:$fin de la consulta, para mysql
-    function Ejecutar_Limit($sql, $inicio, $fin) {
+    function Ejecutar_Limit($sql, $inicio, $fin)
+    {
         $cuantos = $fin - $inicio + 1;
-        if ($inicio < 0)
-            $inicio = 0;
-
+        $inicio = $inicio < 0 ? 0 : $inicio;
         $consulta = "$sql LIMIT $inicio,$cuantos";
-        $consulta = str_replace("key", "'key'", $consulta);
-        // echo $consulta;
-        $res = mysqli_query($this->Conn->conn, $consulta); // or die("consulta fallida ".mysqli_error($conn->Conn->conn));
-        return ($res);
+        //$consulta = str_replace("key", "'key'", $consulta);
+        return mysqli_query($this->Conn->conn, $consulta);
     }
 
     /*
@@ -379,7 +387,8 @@ class SqlMysql extends SQL2 {
      * <Pre-condiciones>
      * <Post-condiciones>
      */
-    function Total_Registros_Tabla($tabla) {
+    function Total_Registros_Tabla($tabla)
+    {
         $this->consulta = "SELECT COUNT( * ) AS TOTAL FROM " . $tabla;
         $this->res = mysqli_query($this->Conn->conn, $this->consulta);
         $total = mysqli_fetch_row($this->res);
@@ -397,7 +406,8 @@ class SqlMysql extends SQL2 {
      * <Pre-condiciones>
      * <Post-condiciones>
      */
-    function Numero_Campos($rs) {
+    function Numero_Campos($rs)
+    {
         if (!$rs) {
             return (0);
         }
@@ -415,14 +425,13 @@ class SqlMysql extends SQL2 {
      * <Pre-condiciones>
      * <Post-condiciones>
      */
-    function Ultimo_Insert() {
-        if ($this->ultimoInsert) {
-            return $this->ultimoInsert;
-        }
-        return @mysqli_insert_id($this->Conn->conn);
+    function Ultimo_Insert()
+    {
+        return $this->ultimoInsert ? $this->ultimoInsert : @mysqli_insert_id($this->Conn->conn);
     }
 
-    function Guardar_log($strsql) {
+    function Guardar_log($strsql)
+    {
         $sqleve = "";
         $sql = trim($strsql);
         $sql = str_replace('', '', $sql);
@@ -446,13 +455,15 @@ class SqlMysql extends SQL2 {
         }
     }
 
-    function resta_fechas($fecha1, $fecha2) {
+    function resta_fechas($fecha1, $fecha2)
+    {
         if ($fecha2 == "")
             $fecha2 = "CURDATE()";
         return "DATEDIFF($fecha1,$fecha2)";
     }
 
-    function fecha_db_almacenar($fecha, $formato = NULL) {
+    function fecha_db_almacenar($fecha, $formato = null)
+    {
         if (is_object($fecha)) {
             $fecha = $fecha->format($formato);
         }
@@ -480,15 +491,8 @@ class SqlMysql extends SQL2 {
                 'yyyy' => '%Y'
             );
             $resfecha = $formato;
-            foreach ($reemplazos as $ph => $mot) { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
+            foreach ($reemplazos as $ph => $mot) {
                 $resfecha = preg_replace('/' . $ph . '/', "$mot", $resfecha);
-                /*
-                 * $resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
-                 * $resfecha=ereg_replace("( )$ph([-/:])", "\\1$mot\\2", $resfecha);
-                 * $resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
-                 * $resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
-                 * $resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora
-                 */
             }
 
             $fsql = "DATE_FORMAT('$fecha','$resfecha')";
@@ -498,10 +502,10 @@ class SqlMysql extends SQL2 {
         return $fsql;
     }
 
-    // Fin Funcion fecha_db_almacenar
-    function fecha_db_obtener($campo, $formato = NULL) {
+    function fecha_db_obtener($campo, $formato = null)
+    {
         if (!$formato)
-            $formato = "Y-m-d"; // formato por defecto php
+            $formato = "Y-m-d";
 
         $reemplazos = array(
             'd' => '%d',
@@ -516,32 +520,22 @@ class SqlMysql extends SQL2 {
             'yyyy' => '%Y'
         );
         $resfecha = $formato;
-        foreach ($reemplazos as $ph => $mot) { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
+        foreach ($reemplazos as $ph => $mot) {
             $resfecha = preg_replace('/' . $ph . '/', "$mot", $resfecha);
-            /*
-             * $resfecha=preg_replace('/'.$ph.'/', "$mot", $resfecha);
-             * $resfecha=ereg_replace("^$ph([-/:])", "$mot\\1", $resfecha);
-             * $resfecha=ereg_replace("( )$ph([-/:])", "\\1$mot\\2", $resfecha);
-             * $resfecha=ereg_replace("^$ph", "$mot", $resfecha);
-             * $resfecha=ereg_replace("([-/:])$ph([-/:])", "\\1$mot\\2", $resfecha);
-             * $resfecha=ereg_replace("([-/:])$ph$", "\\1$mot", $resfecha);
-             * $resfecha=ereg_replace("$ph( )", "$mot\\1", $resfecha); // espacio entre fecha y hora
-             */
         }
         $fsql = "DATE_FORMAT($campo,'$resfecha')";
         return $fsql;
     }
 
-    // Fin Funcion fecha_db_obtener
-    function mostrar_error() {
-        if ($this->error != "")
-            echo ($this->error . " en \"" . $this->consulta . "\"");
+    function mostrar_error()
+    {
+        if ($this->error)
+            echo $this->error . " en \"" . $this->consulta . "\"";
     }
 
-    function fecha_db($campo, $formato = NULL) {
-        if (!$formato)
-            $formato = "Y-m-d"; // formato por defecto php
-
+    function fecha_db($campo, $resfecha = null)
+    {
+        $resfecha = $resfecha ?? "Y-m-d";
         $reemplazos = array(
             'd' => '%d',
             'm' => '%m',
@@ -554,40 +548,43 @@ class SqlMysql extends SQL2 {
             'M' => '%b',
             'yyyy' => '%Y'
         );
-        $resfecha = $formato;
-        foreach ($reemplazos as $ph => $mot) { // echo $ph," = ",$mot,"<br>","^$ph([-/:])", "%Y\\1","<br>";
+
+        foreach ($reemplazos as $ph => $mot) {
             $resfecha = preg_replace('/' . $ph . '/', "$mot", $resfecha);
         }
-        $fsql = "DATE_FORMAT($campo,'$resfecha')";
 
-        return $fsql;
+        return "DATE_FORMAT($campo,'$resfecha')";
     }
 
-    // Fin Funcion fecha_db_obtener
-    function case_fecha($dato, $compara, $valor1, $valor2) {
+    function case_fecha($dato, $compara, $valor1, $valor2)
+    {
         if ($compara = "" || $compara == 0)
             $compara = ">0";
         return ("IF($dato$compara,$valor2,$valor1)");
     }
 
-    function suma_fechas($fecha1, $cantidad, $tipo = "") {
+    function suma_fechas($fecha1, $cantidad, $tipo = "")
+    {
         if ($tipo == "")
             $tipo = 'DAY';
         return "DATE_ADD($fecha1, INTERVAL $cantidad $tipo)";
     }
 
-    function resta_horas($fecha1, $fecha2) {
+    function resta_horas($fecha1, $fecha2)
+    {
         if ($fecha2 == "")
             $fecha2 = "CURDATE()";
         return "timediff($fecha1,$fecha2)";
     }
 
-    function fecha_actual($fecha1, $fecha2) {
+    function fecha_actual($fecha1, $fecha2)
+    {
         return "CURDATE()";
     }
 
     // /Recibe la fecha inicial y la fecha que se debe controlar o fecha de referencia, si tiempo =1 es que la fecha iniicial esta por encima ese tiempo de la fecha de control ejemplo si fecha_inicial=2010-11-11 y fecha_control=2011-12-11 quiere decir que ha pasado 1 año , 1 mes y 0 dias desde la fecha inicial a la de control
-    function compara_fechas($fecha_control, $fecha_inicial) {
+    function compara_fechas($fecha_control, $fecha_inicial)
+    {
         if (!strlen($fecha_control)) {
             $fecha_control = date('Y-m-d');
         }
@@ -595,13 +592,15 @@ class SqlMysql extends SQL2 {
         return ($resultado);
     }
 
-    function invocar_radicar_documento($iddocumento, $idcontador, $funcionario) {
+    function invocar_radicar_documento($iddocumento, $idcontador, $funcionario)
+    {
         $strsql = "CALL sp_asignar_radicado($iddocumento, $idcontador, $funcionario)";
         $this->Ejecutar_Sql($strsql) or die($strsql);
     }
 
-    function listar_campos_tabla($tabla = NULL, $tipo_retorno = 0) {
-        if ($tabla == NULL)
+    function listar_campos_tabla($tabla = null, $tipo_retorno = 0)
+    {
+        if ($tabla == null)
             $tabla = $_REQUEST["tabla"];
         $datos_tabla = $this->Ejecutar_Sql("DESCRIBE " . $tabla);
         while ($fila = $this->sacar_fila($datos_tabla)) { // print_r($fila);
@@ -614,8 +613,9 @@ class SqlMysql extends SQL2 {
         return ($lista_campos);
     }
 
-    function guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $log = 1) {
-        $resultado = TRUE;
+    function guardar_lob($campo, $tabla, $condicion, $contenido, $tipo, $log = 1)
+    {
+        $resultado = true;
         if ($tipo == "archivo") {
             $sql = "update $tabla set $campo='" . addslashes($contenido) . "' where $condicion";
             mysqli_query($this->Conn->conn, $sql);
@@ -642,7 +642,8 @@ class SqlMysql extends SQL2 {
         return ($resultado);
     }
 
-    public function campo_formato_tipo_dato($tipo_dato, $longitud, $predeterminado, $banderas = null) {
+    public function campo_formato_tipo_dato($tipo_dato, $longitud, $predeterminado, $banderas = null)
+    {
         switch (strtoupper(@$tipo_dato)) {
             case "NUMBER":
                 $campo .= " decimal";
@@ -720,7 +721,8 @@ class SqlMysql extends SQL2 {
         return $campo;
     }
 
-    public function formato_crear_indice($bandera, $nombre_campo, $nombre_tabla) {
+    public function formato_crear_indice($bandera, $nombre_campo, $nombre_tabla)
+    {
         $nombre_tabla = strtolower($nombre_tabla);
         $nombre_campo = strtolower($nombre_campo);
         $traza = array();
@@ -767,7 +769,8 @@ class SqlMysql extends SQL2 {
         return $traza;
     }
 
-    protected function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta) {
+    protected function formato_generar_tabla_motor($idformato, $formato, $campos_tabla, $campos, $tabla_esta)
+    {
         $lcampos = array();
         for ($i = 0; $i < $campos["numcampos"]; $i++) {
             $datos_campo = ejecuta_filtro_tabla("SELECT (CASE IS_NULLABLE WHEN 'YES' THEN 1 WHEN 'N0' THEN 0 END) as nulo FROM INFORMATION_SCHEMA.COLUMNS WHERE table_schema = '" . DB . "' AND table_name='{$formato[0]["nombre_tabla"]}' and column_name LIKE '{$campos[$i]["nombre"]}'", $this);
@@ -803,7 +806,8 @@ class SqlMysql extends SQL2 {
         return $lcampos;
     }
 
-    protected function formato_elimina_indices_tabla($tabla) {
+    protected function formato_elimina_indices_tabla($tabla)
+    {
         $tabla = strtoupper($tabla);
         $indices = $this->ejecuta_filtro_tabla("SHOW INDEX FROM " . strtolower($tabla), $conn);
         for ($i = 0; $i < $indices["numcampos"]; $i++) {
@@ -812,7 +816,8 @@ class SqlMysql extends SQL2 {
         return;
     }
 
-    protected function elimina_indice_campo($tabla, $campo) {
+    protected function elimina_indice_campo($tabla, $campo)
+    {
         if ($campo["Key_name"] == "PRIMARY") {
             if ($this->verificar_existencia($tabla)) {
                 $sql = "ALTER TABLE " . strtolower($tabla) . " CHANGE " . $campo["Column_name"] . " " . $campo["Column_name"] . " INT( 11 ) NOT NULL";
@@ -830,12 +835,14 @@ class SqlMysql extends SQL2 {
         return;
     }
 
-    public function verificar_existencia($table) {
+    public function verificar_existencia($table)
+    {
         $res = $this->Ejecutar_sql("SHOW TABLES LIKE '$table'");
         return mysqli_num_rows($res) > 0;
     }
 
-    private function verificar_existencia_idx_col($tabla, $campo, $ret_iname = false) {
+    private function verificar_existencia_idx_col($tabla, $campo, $ret_iname = false)
+    {
         $sql_existe_idx = "SELECT INDEX_NAME as existe FROM information_schema.statistics WHERE INDEX_SCHEMA='" . DB . "' AND TABLE_NAME='$tabla' AND COLUMN_NAME='$campo'";
 
         $rs = $this->Ejecutar_sql($sql_existe_idx);
@@ -849,7 +856,8 @@ class SqlMysql extends SQL2 {
         return false;
     }
 
-    private function verificar_existencia_idx_nombre($tabla, $nombre_idx) {
+    private function verificar_existencia_idx_nombre($tabla, $nombre_idx)
+    {
         $sql_existe_idx = "SELECT INDEX_NAME as existe FROM information_schema.statistics WHERE INDEX_SCHEMA='" . DB . "' AND TABLE_NAME='$tabla' AND INDEX_NAME='$nombre_idx'";
 
         $rs = $this->Ejecutar_sql($sql_existe_idx);
@@ -860,7 +868,8 @@ class SqlMysql extends SQL2 {
         return false;
     }
 
-    private function verificar_existencia_llave($tabla, $campo) {
+    private function verificar_existencia_llave($tabla, $campo)
+    {
         $sql_existe_idx = "SELECT COLUMN_KEY as existe FROM information_schema.columns WHERE table_schema = '" . DB . "' and table_name='$tabla' and column_key = 'PRI'";
 
         $rs = $this->Ejecutar_sql($sql_existe_idx);
@@ -871,7 +880,8 @@ class SqlMysql extends SQL2 {
         return false;
     }
 
-    public function concatenar_cadena($arreglo_cadena) {
+    public function concatenar_cadena($arreglo_cadena)
+    {
         $cadena_final = '';
         if (@$arreglo_cadena[($i + 1)] == "") {
             return ($arreglo_cadena[0]);

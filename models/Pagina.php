@@ -1,5 +1,4 @@
 <?php
-require_once $ruta_db_superior . 'controllers/autoload.php';
 
 class Pagina extends Model {
     public static $primary = 'consecutivo';

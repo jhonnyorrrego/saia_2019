@@ -97,7 +97,7 @@ function llena_formato($id, $nivel = 0, $seleccionados = array(), $filtrar = nul
             $item["title"] = $papas[$i]["etiqueta"];
             $item["key"] = $papas[$i]["idformato"];
             $item["data"] = array(
-                'descripcion' => $papas[$i]["descripcion_formato"],
+                'descripcion' => html_entity_decode($papas[$i]["descripcion_formato"]),
                 'version' => $papas[$i]["version"]
             );
             if (!empty($hijos[0]["total"])) {

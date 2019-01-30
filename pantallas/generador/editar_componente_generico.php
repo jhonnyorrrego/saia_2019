@@ -10,9 +10,9 @@ while($max_salida>0){
 }
 include_once($ruta_db_superior . "assets/librerias.php");
 
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
-include_once ($ruta_db_superior . "pantallas/generador/librerias.php");
+include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "librerias_saia.php";
+include_once $ruta_db_superior . "pantallas/generador/librerias.php";
 
 $componente = busca_filtro_tabla("nombre, etiqueta, clase, opciones_propias", "pantalla_componente", "idpantalla_componente=" . $_REQUEST["idpantalla_componente"], "", $conn);
 $texto_titulo = $componente[0]["etiqueta"];

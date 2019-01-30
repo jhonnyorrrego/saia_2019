@@ -1,12 +1,12 @@
 <?php
-include_once ("db.php");
-include_once ("pantallas/lib/librerias_cripto.php");
+include_once "db.php";
+include_once "pantallas/lib/librerias_cripto.php";
 $salida = 0;
 $bValidPwd = false;
 $retorno["ingresar"] = 0;
 $retorno["mensaje"] = "El nombre de usuario o contrase&ntilde;a introducidos no son correctos! intente de nuevo";
 $redirecciona = '#';
-$admin=0;
+$admin = 0;
 $redirecciona_exito = 'index_' . $_REQUEST["INDEX"] . ".php";
 
 if ($_REQUEST["userid"] <> "" && $_REQUEST["passwd"] <> "") {
@@ -35,7 +35,7 @@ if ($_REQUEST["userid"] <> "" && $_REQUEST["passwd"] <> "") {
 			$_SESSION["LOGIN" . LLAVE_SAIA] = $sUserId;
 			$retorno["ingresar"] = 1;
 			$retorno["ruta"] = $redirecciona_exito;
-			$admin=1;
+			$admin = 1;
 			$bValidPwd = true;
 		} else {
 			$retorno["mensaje"] = "El funcionario esta inactivo o no pertenece al sistema! por favor comuniquese con el administrador del sistema.";
@@ -85,7 +85,7 @@ if ($_REQUEST["userid"] <> "" && $_REQUEST["passwd"] <> "") {
 										$retorno["mensaje"] = "Se ha alcanzado el limite de conexiones concurrentes";
 									} else {
 										$_SESSION["LOGIN" . LLAVE_SAIA] = $usuario[0]["login"];
-										$bValidPwd = TRUE;
+										$bValidPwd = true;
 									}
 								} else {
 									$retorno["mensaje"] = "Error en la clave de acceso! intente de nuevo";
@@ -99,7 +99,7 @@ if ($_REQUEST["userid"] <> "" && $_REQUEST["passwd"] <> "") {
 										$retorno["mensaje"] = "Se ha alcanzado el limite de conexiones concurrentes";
 									} else {
 										$_SESSION["LOGIN" . LLAVE_SAIA] = $usuario[0]["login"];
-										$bValidPwd = TRUE;
+										$bValidPwd = true;
 									}
 								}
 							} else {
@@ -130,7 +130,7 @@ if ($_REQUEST["userid"] <> "" && $_REQUEST["passwd"] <> "") {
 		} else {
 			setCookie("saia_userid", "", 0);
 		}
-		include_once ("tarea_limpiar_carpeta.php");
+		include_once("tarea_limpiar_carpeta.php");
 		$cons_temp_func = busca_filtro_tabla("valor", "configuracion", "nombre='ruta_temporal' AND tipo='ruta'", "", $conn);
 		if ($cons_temp_func["numcampos"]) {
 			$ruta_temp_func = $cons_temp_func[0]["valor"];
@@ -138,9 +138,9 @@ if ($_REQUEST["userid"] <> "" && $_REQUEST["passwd"] <> "") {
 			$ruta_temp_func = "temporal/temporal";
 		}
 		borrar_archivos_carpeta($ruta_temp_func . "_" . $sUserId, false);
-		if($admin){
+		if ($admin) {
 			$retorno["mensaje"] = "IMPORTANTE! Acaba de ingresar como Administrador del sistema, todas las acciones realizadas son registradas bajo su responsabilidad";
-		}else{
+		} else {
 			$retorno["mensaje"] = "Bienvenido has ingresado al sistema SAIA";
 		}
 		$retorno["ruta"] = $redirecciona_exito;
@@ -155,9 +155,10 @@ if ($_REQUEST["userid"] <> "" && $_REQUEST["passwd"] <> "") {
 } else {
 	$retorno["ruta"] = $redirecciona;
 }
-echo(stripslashes(json_encode($retorno)));
+echo (stripslashes(json_encode($retorno)));
 
-function buscar_fun_dir_activo($user, $clave) {
+function buscar_fun_dir_activo($user, $clave)
+{
 	$retorno = array(
 		"ingreso" => 0,
 		"mensaje" => "Error! Por favor ingrse el usuario y la clave"
@@ -168,17 +169,17 @@ function buscar_fun_dir_activo($user, $clave) {
 		$conf = busca_filtro_tabla("nombre,valor", "configuracion A", "tipo='LDAP'", "", $conn);
 		if ($conf["numcampos"]) {
 			for ($i = 0; $i < $conf["numcampos"]; $i++) {
-				switch($conf[$i]["nombre"]) {
-					case 'servidor' :
+				switch ($conf[$i]["nombre"]) {
+					case 'servidor':
 						$servidor = $conf[$i]["valor"];
 						break;
-					case 'usuario' :
+					case 'usuario':
 						$usuario = $conf[$i]["valor"];
 						break;
-					case 'pass' :
+					case 'pass':
 						$pass = $conf[$i]["valor"];
 						break;
-					case 'identificacion' :
+					case 'identificacion':
 						$identificacion = $conf[$i]["valor"];
 						break;
 				}

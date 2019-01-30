@@ -208,8 +208,8 @@ Adicionar destinatario
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownDestinatario">
     <a class="dropdown-item tipo1" href="#" data-toggle="modal">Funcionarios de la Organizaci&oacute;n</a>
-    <a class="dropdown-item" href="#">Asociado a campos de registros</a>
-    <a class="dropdown-item" href="#">Personas externas</a>
+    <a class="dropdown-item tipo2" href="#">Asociado a campos de registros</a>
+    <a class="dropdown-item tipo3" href="#">Personas externas</a>
   </div>
 </div>
 
@@ -219,7 +219,7 @@ Adicionar destinatario
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Destinatarios de correo de la Organización</h4>
+        <h4 class="modal-title" id="myModalLabel">Ventana Modal</h4>
       </div>
       <div class="modal-body">
           <iframe id="frameTipoNotificacion" src="<?= $ruta_db_superior ?>views/flujos/modal_persona_saia.php" width="600" height="400" frameborder="0" allowtransparency="true"></iframe>
@@ -249,9 +249,10 @@ $(function(){
 	$(".tipo1").click(function() {
 		var idnotificacion = $("#idnotificacion").val();
 		//console.log(idnotificacion);
+		var $iframe = $('#frameTipoNotificacion');
+		var url = "<?= $ruta_db_superior ?>views/flujos/modal_persona_saia.php?idnotificacion=" + idnotificacion;
+		$("#myModalLabel").html("Destinatarios de correo de la Organización");
 		if(idnotificacion) {
-			var $iframe = $('#frameTipoNotificacion');
-			var url = "<?= $ruta_db_superior ?>views/flujos/modal_persona_saia.php?idnotificacion=" + idnotificacion;
 		    if ($iframe.length) {
 		        $iframe.attr('src', url);
 				$('#modalTipoNotificacion').modal('show');
@@ -259,8 +260,6 @@ $(function(){
 		} else {
 			var idnotificacion = guardarNotificacion();
 			if(idnotificacion) {
-				var $iframe = $('#frameTipoNotificacion');
-				var url = "<?= $ruta_db_superior ?>views/flujos/modal_persona_saia.php?idnotificacion=" + idnotificacion;
 			    if ($iframe.length) {
 			        $iframe.attr('src', url);
 					$('#modalTipoNotificacion').modal('show');
@@ -269,7 +268,55 @@ $(function(){
 				top.notification({type: "error", message: "No se encontró notificación"});
 			}
 		}
+	});
 
+	$(".tipo2").click(function() {
+		var idnotificacion = $("#idnotificacion").val();
+		//console.log(idnotificacion);
+		var url = "<?= $ruta_db_superior ?>views/flujos/modal_persona_campos.php?idnotificacion=" + idnotificacion;
+		var $iframe = $('#frameTipoNotificacion');
+		$("#myModalLabel").html("Destinatarios de correo desde campo de formato");
+		if(idnotificacion) {
+		    if ($iframe.length) {
+		        $iframe.attr('src', url);
+				$('#modalTipoNotificacion').modal('show');
+		    }
+		} else {
+			var idnotificacion = guardarNotificacion();
+			if(idnotificacion) {
+			    if ($iframe.length) {
+			        $iframe.attr('src', url);
+					$('#modalTipoNotificacion').modal('show');
+			    }
+			} else {
+				top.notification({type: "error", message: "No se encontró notificación"});
+			}
+		}
+	});
+
+
+	$(".tipo3").click(function() {
+		var idnotificacion = $("#idnotificacion").val();
+		//console.log(idnotificacion);
+		var url = "<?= $ruta_db_superior ?>views/flujos/modal_persona_externa.php?idnotificacion=" + idnotificacion;
+		var $iframe = $('#frameTipoNotificacion');
+		$("#myModalLabel").html("Destinatarios de correo Externos");
+		if(idnotificacion) {
+		    if ($iframe.length) {
+		        $iframe.attr('src', url);
+				$('#modalTipoNotificacion').modal('show');
+		    }
+		} else {
+			var idnotificacion = guardarNotificacion();
+			if(idnotificacion) {
+			    if ($iframe.length) {
+			        $iframe.attr('src', url);
+					$('#modalTipoNotificacion').modal('show');
+			    }
+			} else {
+				top.notification({type: "error", message: "No se encontró notificación"});
+			}
+		}
 	});
 
 	$("#guardarNotificacion").click(function() {
