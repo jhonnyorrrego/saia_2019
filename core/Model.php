@@ -186,7 +186,7 @@ abstract class Model
 
     private function runCreate()
     {
-        $conection = Conexion::getConetion();
+        $conection = Conexion::getConnection();
 
         $table = self::getTableName();
         $attributes = $this->getNotNullAttributes();
@@ -254,7 +254,7 @@ abstract class Model
     public static function executeDelete($conditions = [])
     {
         $sql = 'DELETE FROM ' . self::getTableName() . ' WHERE ' . self::createCondition($conditions);
-        return Conexion::getConetion()->Ejecutar_Sql($sql);
+        return Conexion::getConnection()->Ejecutar_Sql($sql);
     }
 
     /**
@@ -336,7 +336,7 @@ abstract class Model
     public static function findAllByAttributes($conditions, $fields = [], $order = '', $limit = 0)
     {
         $sql = self::generateSelectSql($conditions, $fields, $order, $limit);
-        $records = Conexion::getConetion()->executeSelect($sql, 0, $limit);
+        $records = Conexion::getConnection()->executeSelect($sql, 0, $limit);
         $response = self::convertToObjectCollection($records);
 
         return $response;
@@ -397,7 +397,7 @@ abstract class Model
      */
     public static function executeUpdate($fields, $conditions)
     {
-        $conection = Conexion::getConetion();
+        $conection = Conexion::getConnection();
 
         $set = '';
         $className = get_called_class();
@@ -449,7 +449,7 @@ abstract class Model
             }
 
             if (in_array($attribute, $dateAttributes)) {
-                $select .= Conexion::getConetion()->fecha_db_obtener($attribute, 'Y-m-d H:i:s') . ' as ' . $attribute;
+                $select .= Conexion::getConnection()->fecha_db_obtener($attribute, 'Y-m-d H:i:s') . ' as ' . $attribute;
             } else {
                 $select .= $attribute;
             }
@@ -480,7 +480,7 @@ abstract class Model
                 }
 
                 if (in_array($attribute, $dateAttributes)) {
-                    $condition .= Conexion::getConetion()->fecha_db_obtener($attribute, 'Y-m-d H:i:s') . "=" . $value;
+                    $condition .= Conexion::getConnection()->fecha_db_obtener($attribute, 'Y-m-d H:i:s') . "=" . $value;
                 } else {
                     $condition .= $attribute . "='" . $value . "'";
                 }
