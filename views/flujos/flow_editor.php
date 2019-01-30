@@ -83,7 +83,7 @@ if(isset($_REQUEST["idflujo"])) {
   	    var id = 1;
   	    if(tipoElem === "bpmn:Task" || /Gateway/.test(tipoElem) ) {
   	    	canvas.addMarker(e.element, 'highlight');
-                let strParam = jQuery.param({idflujo: id, idtarea: e.element.id, nombreTarea: objeto.name});
+                let strParam = jQuery.param({idflujo: id, bpmn_id: e.element.id, nombreTarea: objeto.name});
                 let url = '<?= $ruta_db_superior ?>views/flujos/modal_datos_tarea.php?' + strParam;
                 let opcionesModal = {
                     loading: true,
@@ -95,7 +95,7 @@ if(isset($_REQUEST["idflujo"])) {
   	    }
   	    //console.log(event, 'on', e.element);
   	    //console.log(e.element.businessObject);
-  	    console.log(e.element);
+  	    //console.log(e.element);
   	  });
   	});
 
