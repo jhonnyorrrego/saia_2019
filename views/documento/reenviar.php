@@ -59,7 +59,12 @@ include_once $ruta_db_superior . "librerias_saia.php";
         <div id="dropzone" class="dropzone" style="min-height:150px"></div>
     </div>
 </div>
+<div class="row mt-3">
+    <div class="col-12" style="display:none">
+        <div class="float-right progress-circle-indeterminate" id="spiner"></div>
+    </div>
+</div>
 <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/dropzone.min.js"></script>
 <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.min.js"></script>
 <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/i18n/es.js"></script>
-<script src="<?= $ruta_db_superior ?>views/documento/js/reenviar.js"></script>
+<script src="<?= $ruta_db_superior ?>views/documento/js/reenviar.js" data-identificator="<?= $_REQUEST['documentId'] ?>"></script>

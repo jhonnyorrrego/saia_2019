@@ -222,7 +222,7 @@ class Conexion
 		return $this->conn;
 	}
 
-	public static function getConetion()
+	public static function getConnection()
 	{
 		$Conexion = new Conexion([
 			'basedatos' => BASEDATOS,
