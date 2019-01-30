@@ -17,7 +17,7 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 $idflujo = $_REQUEST['idflujo'];
 $tabs = [
     [
-        "url" => "tab1.php", "href" => "descripcion", "icon" => "fa fa-cog",
+        "url" => "tab_desc_tarea.php", "href" => "descripcion", "icon" => "fa fa-cog",
     ],
     [
         "url" => "tab2.php", "href" => "actividades", "icon" => "fa fa-tasks",
@@ -50,6 +50,8 @@ $tabs = [
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <title>SAIA - SGDEA</title>
 
+<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen">
+
     <?= jquery() ?>
     <?= validate() ?>
     <?= bootstrap() ?>
@@ -76,7 +78,11 @@ $tabs = [
     <?php foreach ($tabs as $tab): ?>
         <div class="tab-pane fade" id="<?= $tab['href'] ?>" role="tabpanel" aria-labelledby="<?= $tab['href'] ?>-tab"></div>
     <?php endforeach; ?>
-</div>   
+</div>
+    
+<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.min.js"></script>
+<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/i18n/es.js"></script>
+
 <script data-params='<?= json_encode($_REQUEST) ?>'>
     var idflujo = "<?= $_REQUEST['idflujo'] ?>";
     
