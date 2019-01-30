@@ -362,7 +362,7 @@ function ver_documento_distribucion($iddocumento, $tipo_origen) {//Radicado
 
     $cadena_mostrar = $fecha . '-' . $numero . '-' . $array_tipo_origen[$tipo_origen];
     $etiqueta_formato = $datos_documento[0]['etiqueta'] . '<br>';
-    $enlace_documento = '<div class="link kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $iddocumento . '" conector="iframe" titulo="No Radicado ' . $numero . '"><center><span class="badge badge-inverse">' . $etiqueta_formato . $cadena_mostrar . '</span></center></div>';
+    $enlace_documento = '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $iddocumento . '" conector="iframe" titulo="No Radicado ' . $numero . '"><center><button class="btn btn-complete">' . $etiqueta_formato . $cadena_mostrar . '</button></center></div>';
 
     return ($enlace_documento);
 }
@@ -532,7 +532,7 @@ function mostrar_planilla_diligencia_distribucion($iddistribucion) {//Planilla A
     if ($planillas['numcampos']) {
         $html = '';
         for ($i = 0; $i < $planillas['numcampos']; $i++) {
-            $html .= '<div class="link kenlace_saia" enlace="ordenar.php?key=' . $planillas[$i]['iddocumento'] . '&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado ' . $planillas[$i]['numero'] . '"><center><span class="badge">' . $planillas[$i]['numero'] . "</span></center></div>\n";
+            $html .= '<div class="kenlace_saia" enlace="ordenar.php?key=' . $planillas[$i]['iddocumento'] . '&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado ' . $planillas[$i]['numero'] . '"><center><button class="btn btn-complete">' . $planillas[$i]['numero'] . "</button></center></div>\n";
         }
     }
     return ($html);
