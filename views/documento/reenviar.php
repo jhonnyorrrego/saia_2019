@@ -67,4 +67,4 @@ include_once $ruta_db_superior . "librerias_saia.php";
 <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/dropzone.min.js"></script>
 <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.min.js"></script>
 <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/i18n/es.js"></script>
-<script src="<?= $ruta_db_superior ?>views/documento/js/reenviar.js" data-identificator="<?= $_REQUEST['documentId'] ?>"></script>
+<script src="<?= $ruta_db_superior ?>views/documento/js/reenviar.js" data-params='<?= json_encode($_REQUEST) ?>'></script>

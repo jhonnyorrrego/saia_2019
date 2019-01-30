@@ -1,6 +1,6 @@
 $(function () {
     let baseUrl = Session.getBaseUrl();
-    let documentId = $('script[data-identificator]').data('identificator');
+    let params = $('script[data-params]').data('params');
     let loadedFiles = [];
     let language = {
         errorLoading: function () {
@@ -100,7 +100,7 @@ $(function () {
             url: `${baseUrl}app/documento/transferir.php`,
             data: {
                 key: localStorage.getItem('key'),
-                documentId: documentId,
+                documentId: params.documentId,
                 destination: getUsers(),
                 message: $('#message').val(),
                 files: loadedFiles
@@ -136,4 +136,37 @@ $(function () {
 
         return users;
     }
+
+    (function defaultUsers(params) {
+        if (parseInt(params.type) == 2) {
+            var data = {
+                defaultUser: params.userInfo.user,
+                key: localStorage.getItem('key')
+            };
+        } else if (parseInt(params.type) == 3) {
+            var data = {
+                documentId: params.documentId,
+                key: localStorage.getItem('key')
+            };
+        }
+
+        $.ajax({
+            type: 'GET',
+            dataType: 'json',
+            url: `${baseUrl}app/funcionario/autocompletar.php`,
+            data: data,
+            success: function (response) {
+                response.data.forEach(u => {
+                    var option = new Option(u.text, u.id, true, true);
+                    $('#select_users').append(option).trigger('change');
+                })
+                $('#select_users').trigger({
+                    type: 'select2:select',
+                    params: {
+                        data: data
+                    }
+                });
+            }
+        })
+    })(params);
 });

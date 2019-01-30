@@ -205,6 +205,11 @@ function plantilla($documentId, $transferId = 0){
     if($_REQUEST['tipo'] !== 5){
         $moduleActions = moduleActions('menu_documento');
     }
+
+    $userInfo = [
+        'user' => $Transfer->user->getPK(),
+        'name' => $Transfer->user->getName()
+    ];
     ?>
     <link rel="stylesheet" href="<?= $ruta_db_superior ?>views/documento/css/encabezado.css">
     <link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/fabjs/fab.css">
@@ -216,7 +221,7 @@ function plantilla($documentId, $transferId = 0){
                 <span class="cursor fa fa-angle-double-down" id="show_tree"></span>
             </div>
             <div class="col-auto text-center my-auto pr-2">
-                <span class="fa fa-mail-reply px-1 cursor">
+                <span class="fa fa-mail-reply px-1 cursor" id="reply">
                    <label class="d-none d-sm-inline f-12 font-heading cursor">&nbsp;Responder</label>
                 </span>
                 <span class="fa fa-share px-1 d-none d-md-inline cursor" id="resend">
@@ -248,7 +253,7 @@ function plantilla($documentId, $transferId = 0){
                     </span>
                     <div class="dropdown-menu dropdown-menu-right" role="menu" x-placement="bottom-end">
                         <?php foreach ($moduleActions as $key => $item): ?>
-                            <span id="<?= $item['nombre'] ?>" class="dropdown-item menu_options text-truncate" data-url="<?= $item['enlace']?>" class="text-body" style="line-height:28px;">
+                            <span id="<?= $item['nombre'] ?>" class="dropdown-item menu_options text-truncate cursor" data-url="<?= $item['enlace']?>" class="text-body" style="line-height:28px;">
                                 <i class="<?= $item['imagen'] ?>"></i> <?= $item['etiqueta']?>
                             </span>
                             <?php if($key == 4 || $key == 11): ?>
@@ -263,13 +268,14 @@ function plantilla($documentId, $transferId = 0){
             <div class="col col-md-auto px-0 mx-0">
                 <div class="row px-0 mx-0">
                     <div class="col-auto text-center p-1">
+                        <input type="hidden" id="userInfo" data-info='<?= json_encode($userInfo) ?>'>
                         <?= roundedImage($Transfer->user->getImage('foto_recorte')) ?>
                     </div>
                     <div class="col px-1">
                         <div class="row" style="line-height:1.5">
                             <div class="col-12">
                                 <span class="bold">
-                                    <?= $document[0]['numero']?> - <?= $Transfer->user->getName() ?>
+                                    <?= $document[0]['numero']?> - <?= $userInfo['name'] ?>
                                 </span>
                             </div>
                         </div>

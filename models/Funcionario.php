@@ -250,4 +250,21 @@ class Funcionario extends Model {
         }
         return $data;
     }
+
+    public static function findByDocumentTransfer($documentId){
+        $sql = "select origen,destino from buzon_salida where archivo_idarchivo = {$documentId}";
+        $records = Conexion::getConnection()->executeSelect($sql);
+
+        $users = [];
+        foreach ($records as $key => $value) {
+            $users[] = $value['origen'];
+            $users[] = $value['destino'];
+        }
+
+        $users = array_unique($users);
+        $list = implode(',', $users);
+        $sql = "select * from funcionario where funcionario_codigo in ({$list})";        
+        $records = Conexion::getConnection()->executeSelect($sql);
+        return self::convertToObjectCollection($records);
+    }
 }
