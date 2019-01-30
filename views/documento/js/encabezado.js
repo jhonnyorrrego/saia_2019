@@ -26,7 +26,7 @@ $(function () {
         top.topModal(options);
     });
 
-    $('#resend').on('click', function () {
+    $('#resend,#reenviar').on('click', function () {
         let options = {
             url: `${baseUrl}views/documento/reenviar.php`,
             params: {
@@ -118,7 +118,7 @@ $(function () {
     });
 
      /////// MENU INTERMEDIO ////////
-    $('.menu_options').on('click', function () {
+    $('#crear_tarea,#etiquetar').on('click', function () {
         let route = $(this).data('url');
         top.topModal({
             url: baseUrl + route,
