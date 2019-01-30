@@ -36,6 +36,8 @@ if(isset($_REQUEST["idflujo"])) {
 
 <button type="button" class="btn btn-primary btn-sm" id="guardarDiagrama">Guardar diagrama</button>
 
+<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/eModal/eModal.min.js"></script>
+
 <script type="text/javascript" id="sfe" data-idflujo="<?= $idflujo?>">
     var idflujo = $("script[data-idflujo]").data("idflujo");
     console.log("editor", "idflujo", idflujo);
@@ -79,13 +81,17 @@ if(isset($_REQUEST["idflujo"])) {
   	    var objeto = e.element.businessObject;
   	    var tipoElem = e.element.businessObject.$type;
   	    var id = 1;
-  	    if(tipoElem == "bpmn:Task" || /Gateway/.test(tipoElem) ) {
+  	    if(tipoElem === "bpmn:Task" || /Gateway/.test(tipoElem) ) {
   	    	canvas.addMarker(e.element, 'highlight');
-  	    	top.topModal({
-  	  	    	title: "Opciones de la tarea",
-  	  	    	url: "<?= $ruta_db_superior ?>views/flujos/modal_datos_tarea.php",
-  	  	    	params: {idflujo: id, idtarea: e.element.id, nombreTarea: objeto.name}
-	  	    });
+                let strParam = jQuery.param({idflujo: id, idtarea: e.element.id, nombreTarea: objeto.name});
+                let url = '<?= $ruta_db_superior ?>views/flujos/modal_datos_tarea.php?' + strParam;
+                let opcionesModal = {
+                    loading: true,
+                    loadingHtml: '<h5>Cargando...</h5><div class=progress><div class="progress-bar progress-bar-striped active" style="width: 100%"></div></div>',
+                    size: eModal.size.lg /*xl*/
+                };
+                eModal.setEModalOptions(opcionesModal);
+                eModal.iframe(url, '&nbsp');
   	    }
   	    //console.log(event, 'on', e.element);
   	    //console.log(e.element.businessObject);
