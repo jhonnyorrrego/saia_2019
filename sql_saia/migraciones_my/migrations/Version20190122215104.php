@@ -68,6 +68,7 @@ final class Version20190122215104 extends AbstractMigration
         $tabla3->addColumn("descripcion", "text", ["notnull" => false]);
         $tabla3->addColumn("cod_padre", "integer", ["default" => 0, "notnull" => false]);
         $tabla3->addColumn("propietario", "integer", ["comment" => "fk_funcionario"]);
+        $tabla3->addColumn("responsable", "integer", ["comment" => "fk_funcionario"]);
         $tabla3->addColumn("cod_arbol", "text");
         $tabla3->addColumn("codigo_numero", "string", ["length" => 255, "notnull" => false]);
         $tabla3->addColumn("fondo", "string", ["length" => 255, "notnull" => false]);
@@ -119,6 +120,7 @@ final class Version20190122215104 extends AbstractMigration
         $tabla5->addColumn("llave_entidad", "integer");
         $tabla5->addColumn("fk_entidad_serie", "integer");
         $tabla5->addColumn("tipo_permiso", "integer", ["comment" => "1:Serie;2:Candado;"]);
+        $tabla5->addColumn("tipo_funcionario", "integer", ["default" => 0, "comment" => "1:Creador;2:Responsable;0,Otros"]);
         $tabla5->addColumn("permiso", "string", ["length" => 10, "comment" => "l:Lectura;a:Adicion;v:ver;e:editar;c:compartir;d:eliminar"]);
         $tabla5->addColumn("fk_expediente", "integer");
         $tabla5->setPrimaryKey(["idpermiso_expediente"]);
@@ -131,12 +133,37 @@ final class Version20190122215104 extends AbstractMigration
         $tabla6->addColumn("llave_entidad", "integer");
         $tabla6->addColumn("fk_expediente", "integer");
         $tabla6->addColumn("permiso", "string", ["length" => 10, "comment" => "v:ver;e:editar;c:compartir;d:eliminar"]);
+        $tabla6->addColumn("tipo_funcionario", "integer",["default"=>0, "comment"=>"1:Creador;2:Responsable;0,Otros"]);
         $tabla6->addColumn("fecha", "datetime", ["notnull" => false]);
         $tabla6->setPrimaryKey(["identidad_expediente"]);
 
-        /*DROP VIEW vpermiso_serie;
+        $schema->dropTable("expediente_doc");
+        $tabla7 = $schema->createTable("expediente_doc");
+        $tabla7->addColumn("idexpediente_doc", "integer", ["autoincrement" => true]);
+        $tabla7->addColumn("fk_expediente", "integer");
+        $tabla7->addColumn("fk_documento", "integer");
+        $tabla7->addColumn("fk_funcionario", "integer");
+        $tabla7->addColumn("fecha", "datetime");
+        $tabla7->setPrimaryKey(["idexpediente_doc"]);
+
+        /*
+        permiso
+
+        delete permiso
+        232 editar_expediente
+        128 adicionar_expediente
+        1387 eliminar_documento_expediente
+        1432 asignar_expediente
+        1431 eliminar_expediente
+        1711 compartir_expediente
+        1986 mover_expediente
+
+        DROP VIEW vpermiso_serie;
         DROP VIEW vdependencia_serie;
-        DROP VIEW vpermiso_serie_entidad;*/
+        DROP VIEW vpermiso_serie_entidad;
+        DROP VIEW vexpediente_serie;
+
+         */
         
     }
 

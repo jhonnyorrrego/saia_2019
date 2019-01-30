@@ -8,6 +8,7 @@ class PermisoExpediente extends Model
     protected $llave_entidad;
     protected $fk_entidad_serie;
     protected $tipo_permiso;
+    protected $tipo_funcionario;
     protected $permiso;
     protected $fk_expediente;
 
@@ -27,11 +28,13 @@ class PermisoExpediente extends Model
                 'llave_entidad',
                 'fk_entidad_serie',
                 'tipo_permiso',
+                'tipo_funcionario',
                 'permiso',
                 'fk_expediente'
             ]
         ];
     }
+
     /**
      * Elimina los permisos sobre los expedientes
      *
@@ -44,7 +47,7 @@ class PermisoExpediente extends Model
      */
     public static function deleteAllPermisoExpediente(int $fkEntidadSerie, int $llaveEntidad, int $fkEntidad, int $tipoPermiso)
     {
-        $sql = "DELETE FROM permiso_expediente WHERE fk_entidad_serie={$fkEntidadSerie} AND llave_entidad={$llaveEntidad} AND fk_entidad={$fkEntidad} AND tipo_permiso={$tipoPermiso}";
+        $sql = "DELETE FROM permiso_expediente WHERE fk_entidad_serie={$fkEntidadSerie} AND llave_entidad={$llaveEntidad} AND fk_entidad={$fkEntidad} AND tipo_permiso={$tipoPermiso} and tipo_funcionario=0";
         phpmkr_query($sql);
         return;
     }
@@ -63,16 +66,16 @@ class PermisoExpediente extends Model
     {
         switch ($fkEntidadSerie) {
             case 1:
-                $sql = "INSERT INTO permiso_expediente (fk_funcionario,fk_entidad,llave_entidad,fk_entidad_serie,tipo_permiso,permiso,fk_expediente)
-                SELECT {$llaveEntidad},{$fkEntidad},{$llaveEntidad},{$fkEntidadSerie},{$tipoPermiso},'{$permiso}',idexpediente FROM expediente WHERE fk_entidad_serie={$fkEntidadSerie}";
+                $sql = "INSERT INTO permiso_expediente (fk_funcionario,fk_entidad,llave_entidad,fk_entidad_serie,tipo_permiso,permiso,tipo_funcionario,fk_expediente)
+                SELECT {$llaveEntidad},{$fkEntidad},{$llaveEntidad},{$fkEntidadSerie},{$tipoPermiso},'{$permiso}',0,idexpediente FROM expediente WHERE fk_entidad_serie={$fkEntidadSerie}";
                 phpmkr_query($sql);
                 break;
             case 2:
                 $funcionarios = busca_filtro_tabla("DISTINCT idfuncionario", "vfuncionario_dc", "estado=1 and estado_dc=1 and iddependencia={$llaveEntidad}", "", $conn);
                 if ($funcionarios['numcampos']) {
                     for ($i = 0; $i < $funcionarios['numcampos']; $i++) {
-                        $sql = "INSERT INTO permiso_expediente (fk_funcionario,fk_entidad,llave_entidad,fk_entidad_serie,tipo_permiso,permiso,fk_expediente)
-                        SELECT {$funcionarios[$i]['idfuncionario']},{$fkEntidad},{$llaveEntidad},{$fkEntidadSerie},{$tipoPermiso},'{$permiso}',idexpediente FROM expediente WHERE fk_entidad_serie={$fkEntidadSerie}";
+                        $sql = "INSERT INTO permiso_expediente (fk_funcionario,fk_entidad,llave_entidad,fk_entidad_serie,tipo_permiso,permiso,tipo_funcionario,fk_expediente)
+                        SELECT {$funcionarios[$i]['idfuncionario']},{$fkEntidad},{$llaveEntidad},{$fkEntidadSerie},{$tipoPermiso},'{$permiso}',0,idexpediente FROM expediente WHERE fk_entidad_serie={$fkEntidadSerie}";
                         phpmkr_query($sql);
                     }
                 }
@@ -82,8 +85,8 @@ class PermisoExpediente extends Model
                 $funcionarios = busca_filtro_tabla("DISTINCT idfuncionario", "vfuncionario_dc", "estado=1 and estado_dc=1 and idcargo={$llaveEntidad}", "", $conn);
                 if ($funcionarios['numcampos']) {
                     for ($i = 0; $i < $funcionarios['numcampos']; $i++) {
-                        $sql = "INSERT INTO permiso_expediente (fk_funcionario,fk_entidad,llave_entidad,fk_entidad_serie,tipo_permiso,permiso,fk_expediente)
-                        SELECT {$funcionarios[$i]['idfuncionario']},{$fkEntidad},{$llaveEntidad},{$fkEntidadSerie},{$tipoPermiso},'{$permiso}',idexpediente FROM expediente WHERE fk_entidad_serie={$fkEntidadSerie}";
+                        $sql = "INSERT INTO permiso_expediente (fk_funcionario,fk_entidad,llave_entidad,fk_entidad_serie,tipo_permiso,permiso,tipo_funcionario,fk_expediente)
+                        SELECT {$funcionarios[$i]['idfuncionario']},{$fkEntidad},{$llaveEntidad},{$fkEntidadSerie},{$tipoPermiso},'{$permiso}',0,idexpediente FROM expediente WHERE fk_entidad_serie={$fkEntidadSerie}";
                         phpmkr_query($sql);
                     }
                 }

@@ -11,9 +11,9 @@ while ($max_salida > 0) {
 
 require_once $ruta_db_superior . "controllers/autoload.php";
 
-$idexpediente=$_REQUEST['idexpediente'];
-if(!$idexpediente){
-    return ;
+$idexpediente = $_REQUEST['idexpediente'];
+if (!$idexpediente) {
+    return;
 }
 
 //TODO: PENDIENTE DE VALIDAR
@@ -21,7 +21,7 @@ $cajas = busca_filtro_tabla("distinct a.idcaja,a.no_consecutivo", "caja a,entida
 $option_cajas = '<option value="">Por favor seleccione...</option>';
 for ($i = 0; $i < $cajas["numcampos"]; $i++) {
     $selected = "";
-    if ($_REQUEST["fk_idcaja"] == $cajas[$i]["idcaja"]) {
+    if ($_REQUEST["fk_caja"] == $cajas[$i]["caja"]) {
         $selected = "selected";
     }
     $option_cajas .= "<option value='" . $cajas[$i]["idcaja"] . "' " . $selected . ">" . $cajas[$i]["no_consecutivo"] . "</option>";
@@ -52,7 +52,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
                     <div class="card card-default">
                         <div class="card-header ">
                             <div class="card-title">
-                                CREAR EXPEDIENTE/SEPARADOR
+                                EDITAR EXPEDIENTE/SEPARADOR
                             </div>
                         </div>
 
@@ -195,7 +195,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
                                     <input type="hidden" name="methodExp" value="createExpedienteCont">
                                     <input type="hidden" name="generarfiltro" value="1">
                                     <input type="hidden" id="cod_padre" name="cod_padre" value="<?= $idexpediente ?>">
-                                    <input type="hidden" id="idbusqueda_componente" name="idbusqueda_componente" value="<?=$_REQUEST['idbusqueda_componente']?>">
+                                    <input type="hidden" id="idbusqueda_componente" name="idbusqueda_componente" value="<?= $_REQUEST['idbusqueda_componente'] ?>">
                                     <button id="guardarExp" type="submit" class="btn btn-primary">
                                         Adicionar
                                     </button></td>
@@ -245,7 +245,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 					},
 					submitHandler : function(form) {
                         $("#guardarExp").attr('disabled',true);
-                        var ruta_db_superior='<?=$ruta_db_superior;?>';
+                        var ruta_db_superior='<?= $ruta_db_superior; ?>';
                         var idcomponente=$("#idbusqueda_componente").val(); 
                         var codPadre=$("#cod_padre").val(); 
 

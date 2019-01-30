@@ -1,12 +1,12 @@
 <script>
 $(document).ready(function(){
 
-    $("#addExpediente,#addDocumentExp").live("click",function(){    
+    $("#addExpediente,#addDocumentExp").on("click",function(){    
         window.open("<?=$ruta_db_superior?>"+$(this).attr("enlace"),"iframe_detalle");
     });
 
 
-    $("#shareExp").live("click",function(){    
+    $("#shareExp").on("click",function(){    
         let seleccionados=$("#seleccionados_expediente").val();
         if(seleccionados){
             window.open("<?= $ruta_db_superior ?>"+$(this).attr("enlace")+"&idexpediente="+seleccionados,"iframe_detalle");
@@ -15,7 +15,7 @@ $(document).ready(function(){
         }
     });
 
-    $("#transDocument").live("click",function(){ 
+    $("#transDocument").on("click",function(){
         let seleccionados=$("#seleccionados_expediente").val();
         $.ajax({
             type : "POST",
@@ -45,23 +45,178 @@ $(document).ready(function(){
 		}
 	});
 
-/*
-  $(".enlace_expediente").live("click",function(){
-    if($(this).attr("enlace") !==undefined && $(this).attr("enlace") !==''){
-      $("#iframe_detalle").attr({
-         'src':'<?php echo ($ruta_db_superior); ?>'+$(this).attr("enlace")+"&rand=<?php echo (rand()); ?>",
-         'height': ($("#panel_body").height())
+  //Selector check/uncheck
+  
+	$(".selExp").on("click",function(){
+		let i=$(this).children("i");
+		if(i.hasClass("icon-uncheck")){
+			i.removeClass("icon-uncheck").addClass("icon-check");
+		}else{
+			i.removeClass("icon-check").addClass("icon-uncheck");
+		}
+	});
+  
+  // Informacion del expediente
+
+   $(".infoExp").on("click",function(){
+    let idexp=$(this).data("id");
+    let idcomp=$(this).data("componente");
+    $("#iframe_detalle").attr({
+      'src':'<?=$ruta_db_superior?>pantallas/expediente/detalles_expediente.php?idexpediente='+idexp+'&idbusqueda_componente='+idcomp
+    });  
+  });
+
+  // Creacion de tomo del expediente
+
+  $(".tomoExp").on("click",function(){
+    let idexp=$(this).data("id");
+    var idcomponente=$(this).data("componente");
+    if(confirm("Esta seguro de crear un tomo a este expediente?")){
+      $.ajax({
+        type : 'POST',
+        async:false,
+        url: "<?= $ruta_db_superior ?>pantallas/expediente/ejecutar_acciones.php",
+        data: {methodExp:'createTomoExpedienteCont',idexpediente:idexp},
+        dataType: 'json',
+        success: function(response){
+          if(response.exito){
+            top.notification({
+              message : "Tomo creado",
+              type : "success",
+              duration : 3000
+            });
+            window.location.reload();
+          }else{
+            top.notification({
+              message : response.message,
+              type : "error",
+              duration : 3000
+            });
+          }
+        },
+        error : function() {
+          top.notification({
+            message : "Error al procesar la solicitud",
+            type : "error",
+            duration : 3000
+          });
+        }
       });
     }
-    else{
-      $("#iframe_detalle").attr({
-         'src':'<?php echo ($ruta_db_superior); ?>pantallas/expediente/detalles_expediente.php?idexpediente='+$(this).attr("idregistro")+"&idbusqueda_componente=<?php echo ($_REQUEST["idbusqueda_componente"]); ?>&rand=<?php echo (rand()); ?>",
-         'height': ($("#panel_body").height())
-      });  
-    }  
   });
+
+  // Editar el expediente
+
+   $(".editExp").on("click",function(){
+    let idexp=$(this).data("id");
+    let idcomp=$(this).data("componente");
+    $("#iframe_detalle").attr({
+      'src':'<?= $ruta_db_superior ?>pantallas/expediente/editar_expediente.php?idexpediente='+idexp+'&idbusqueda_componente='+idcomp
+    });  
+  });
+
+/*
+$(document).on('click', '.adicionar_seleccionados', function () {
+  $(this).removeClass("adicionar_seleccionados");
+  $(this).addClass("eliminar_seleccionado");
+  $(this).children("i").removeClass("icon-uncheck");
+  $(this).children("i").addClass("icon-check");
+  var idregistro=$(this).attr('idregistro');
+  if(idregistro!='undefined'){
+    if($("#seleccionados").val()==''){
+      $("#seleccionados").val(idregistro);
+    }
+    else{
+      $("#seleccionados").val($("#seleccionados").val()+","+idregistro);            
+    }
+    $('#resultado_pantalla_'+idregistro).removeClass("well");
+    $('#resultado_pantalla_'+idregistro).addClass("alert");
+    $('#resultado_pantalla_'+idregistro).addClass("alert-info"); 
+    $('.alert-info').css("padding","4px");
+  }    
+}); 
+$(document).on('click', '.eliminar_seleccionado', function () {
+  $(this).removeClass("eliminar_seleccionado");
+  $(this).addClass("adicionar_seleccionados");
+  $(this).children("i").removeClass("icon-check");
+  $(this).children("i").addClass("icon-uncheck");
+  var idregistro=$(this).attr('idregistro');
+  if($("#seleccionados").val()!=''){
+      var selec=$("#seleccionados").val().split(",");
+      var unicos=$.unique(selec);
+      var idx=unicos.indexOf(idregistro);
+      if(idx!=-1){  
+        unicos.splice(idx,1);
+        $("#seleccionados").val(unicos);
+      }
+    }
+    else{
+      alert("no existen datos seleccionados");
+    }
+  $("#seleccionado_"+idregistro).remove();  
+  $('#resultado_pantalla_'+idregistro).removeClass("alert");
+  $('#resultado_pantalla_'+idregistro).removeClass("alert-info");
+  $('#resultado_pantalla_'+idregistro).addClass("well");
+});
+$("#filtrar_seleccionados").click(function(){
+  $("#panel_body .well").hide();
+});
+$("#restaurar_listado").click(function(){
+  $("#panel_body .alert").addClass("well");
+  $("#panel_body .alert").removeClass("alert");  
+  $("#panel_body .alert").removeClass("alert-info");
+  $("#panel_body .well").show();
+});
+$("#restaurar_seleccionados").click(function(){
+  $("#panel_body .well").show();
+});
+$(document).on('click', '.adicionar_seleccionados_expediente', function () {
+  $(this).removeClass("adicionar_seleccionados_expediente");
+  $(this).addClass("eliminar_seleccionado_expediente");
+  $(this).children("i").removeClass("icon-uncheck");
+  $(this).children("i").addClass("icon-check");
+  var idregistro=$(this).attr('idregistro');
+  if(idregistro!='undefined'){
+    if($("#seleccionados_expediente").val()==''){
+      $("#seleccionados_expediente").val(idregistro);
+    }
+    else{
+      $("#seleccionados_expediente").val($("#seleccionados_expediente").val()+","+idregistro);            
+    }
+         
+  }    
+});
+$(document).on('click', '.eliminar_seleccionado_expediente', function () {
+  $(this).removeClass("eliminar_seleccionado_expediente");
+  $(this).addClass("adicionar_seleccionados_expediente");
+  $(this).children("i").removeClass("icon-check");
+  $(this).children("i").addClass("icon-uncheck");
+  var idregistro=$(this).attr('idregistro');
+  if($("#seleccionados_expediente").val()!=''){
+      var selec=$("#seleccionados_expediente").val().split(",");
+      var unicos=$.unique(selec);
+      var idx=unicos.indexOf(idregistro);
+      if(idx!=-1){  
+        unicos.splice(idx,1);
+        $("#seleccionados_expediente").val(unicos);
+      }
+    }
+    else{
+      alert("no existen datos seleccionados");
+    }
+  $("#seleccionado_"+idregistro).remove();  
+  $('#resultado_pantalla_'+idregistro).removeClass("alert");
+  $('#resultado_pantalla_'+idregistro).removeClass("alert-success");
+  $('#resultado_pantalla_'+idregistro).addClass("well");
+});
+
+
+//--------
+
+
+ 
   
-  $(".eliminar_expediente").live("click",function(){
+  $(".eliminar_expediente").on("click",function(){
   	var idregistro=$(this).attr("idregistro");
   	var cantidad=parseInt($("#contador_docs_"+$(this).attr("idregistro")).html());
   	if(cantidad>0){
@@ -89,31 +244,9 @@ $(document).ready(function(){
 		}
   });
 
-
-  $(".crear_tomo_expediente").live("click",function(){
-  	var idregistro=$(this).attr("idregistro");
-  	var confirmacion=confirm("Esta seguro de crear un tomo a este expediente?");
-  	if(confirmacion){
-	  	$.ajax({
-	      type:'GET',
-	      async:false,
-	      url: "<?php echo ($ruta_db_superior); ?>pantallas/expediente/ejecutar_acciones.php",
-	      data: "ejecutar_expediente=crear_tomo_expediente&tipo_retorno=1&idexpediente="+idregistro,
-	      success: function(html2){
-	        if(html2){
-	          var objeto2=jQuery.parseJSON(html2);
-	          if(objeto2.exito){
-	          	notificacion_saia(objeto2.mensaje,"success","",2500);
-							window.location.reload();
-	          }
-	        }
-	      }
-	    });
-		}
-  });
+ 
   
-  
-  $(".sacar_expediente").live("click",function(){
+  $(".sacar_expediente").on("click",function(){
   	var iddocumento=$(this).attr("iddocumento");
   	var idexpediente=$(this).attr("idexpediente");
   	if(iddocumento && idexpediente){
@@ -142,7 +275,7 @@ $(document).ready(function(){
   
   
  //usted no tiene autorizacion para acceder, favor solicitar 
- $('.enlace_documento_bloqueado').live('click',function(){
+ $('.enlace_documento_bloqueado').on('click',function(){
    
    var iddoc=$(this).attr('iddoc');
     $.ajax({

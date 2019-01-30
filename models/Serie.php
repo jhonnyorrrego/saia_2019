@@ -310,23 +310,23 @@ class Serie extends Model
      */
     public function countDocuments() : int
     {
-        $filtro_docs = false;
+        $filtroDocs = false;
         $cant = 0;
         switch ($this->tipo) {
             case 0:
             case 3:
-                $filtro_docs = $this->idserie;
+                $filtroDocs = $this->idserie;
                 break;
             case 1:
                 break;
             case 2:
-                $filtro_docs = "select distinct idserie from serie where cod_arbol like '{$this->cod_arbol}.%'";
+                $filtroDocs = "select distinct idserie from serie where cod_arbol like '{$this->cod_arbol}.%'";
                 break;
         }
-        if ($filtro_docs !== false) {
-            $docs_vinculados = busca_filtro_tabla("count(*) as cant", "documento", "estado not in ('ELIMINADO') and serie in ({$filtro_docs})", "", $conn);
-            if ($docs_vinculados[0]["cant"]) {
-                $cant = $docs_vinculados[0]["cant"];
+        if ($filtroDocs !== false) {
+            $docsVinculados = busca_filtro_tabla("count(*) as cant", "documento", "estado not in ('ELIMINADO') and serie in ({$filtroDocs})", "", $conn);
+            if ($docsVinculados[0]["cant"]) {
+                $cant = $docsVinculados[0]["cant"];
             }
         }
         return $cant;

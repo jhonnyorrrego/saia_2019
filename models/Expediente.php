@@ -9,6 +9,7 @@ class Expediente extends Model
     protected $cod_padre;
     protected $fk_caja;
     protected $propietario;
+    protected $responsable;
     protected $fk_serie;
     protected $fk_dependencia;
     protected $cod_arbol;
@@ -70,6 +71,7 @@ class Expediente extends Model
                 'cod_padre',
                 'fk_caja',
                 'propietario',
+                'responsable',
                 'fk_serie',
                 'fk_dependencia',
                 'cod_arbol',
@@ -170,15 +172,17 @@ class Expediente extends Model
                 $instance = new EntidadExpediente();
                 $attributes = [
                     'llave_entidad' => $this->propietario,
+                    'tipo_funcionario' => 1,
                     'permiso' => 'v,e,c,d',
-                    'fecha'=> date('Y-m-d H:i:s'),
+                    'fecha' => date('Y-m-d H:i:s'),
                     'fk_entidad' => 1,
-                    'fk_expediente' => $this->propietario
+                    'fk_expediente' => $this->idexpediente
                 ];
                 $instance->setAttributes($attributes);
                 $instance->CreateEntidadExpediente();
             }
             $response['exito'] = 1;
+            $response['message'] = 'Datos guardados correctamente';
             $response['data']['id'] = $this->idexpediente;
         } else {
             $this->delete();
@@ -217,17 +221,117 @@ class Expediente extends Model
         }
         return $this->expedientePadre;
     }
+    /**
+     * Retorna el nombre del propietario
+     *
+     * @return string
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getPropietario() : string
+    {
+        $response = '';
+        $data = $this->getFuncionarioFk();
+        if ($data) {
+            $response = $data[0]->nombres . ' ' . $data[0]->apellidos;
+        }
+        return $response;
+    }
+    /**
+     * Retorna el nombre del funcionario responsable
+     *
+     * @return string
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getResponsable() : string
+    {
+        $response = '';
+        $data = $this->getFuncionarioFk(1, 'responsable');
+        if ($data) {
+            $response = $data[0]->nombres . ' ' . $data[0]->apellidos;
+        }
+        return $response;
+    }
 
-    public function countTomos():int{
-        $cant=1;
-        if($this->tomo_padre){
-            $data=busca_filtro_tabla("count(idexpediente) as cant","expediente","idexpediente={$this->tomo_padre}","",$conn);
-            $cant=$data[0]['cant']+1;
-        }else{
-            $data=busca_filtro_tabla("count(idexpediente) as cant","expediente","tomo_padre={$this->idexpediente}","",$conn);
-            $cant=$data[0]['cant']+1;
+    public function getSoporte()
+    {
+        $soporte = [
+            1 => 'CD - ROM',
+            2 => 'DISKETE',
+            3 => 'DVD',
+            4 => 'DOCUMENTO',
+            5 => 'FAX',
+            6 => 'REVISTA O LIBRO',
+            7 => 'VIDEO',
+            8 => 'OTROS ANEXOS'
+        ];
+        return $soporte[$this->soporte];
+    }
+
+    public function getFrecuenciaConsulta()
+    {
+        $frecuencia = [
+            1 => 'Alta',
+            2 => 'Media',
+            3 => 'Baja'
+        ];
+        return $frecuencia[$this->frecuencia_consulta];
+    }
+
+    /**
+     * Cuenta la cantidad de tomos de un expediente
+     *
+     * @return integer
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function countTomos() : int
+    {
+        $cant = 1;
+        if ($this->tomo_padre) {
+            $data = busca_filtro_tabla("count(idexpediente) as cant", "expediente", "tomo_padre={$this->tomo_padre}", "", $conn);
+            $cant = $data[0]['cant'] + 1;
+        } else {
+            $data = busca_filtro_tabla("count(idexpediente) as cant", "expediente", "tomo_padre={$this->idexpediente}", "", $conn);
+            $cant = $data[0]['cant'] + 1;
         }
         return $cant;
+    }
+    /**
+     * Cuenta los documentos que existen en un expediente
+     *
+     * @return integer
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function countDocuments() : int
+    {
+        return ExpedienteDoc::countDocumentsExp($this->idexpediente);
+    }
+
+    /**
+     * Cuenta los expedientes que existen dentro de un expediente
+     *
+     * @param integer $tipoAg : identificador del agrupador (expediente,separador, serie, dependencia)
+     * @return integer
+     */
+    public function countExpediente(int $tipoAg = 0) : int
+    {
+        $cant = 0;
+        $sql = "SELECT COUNT(idexpediente) as cant FROM expediente WHERE agrupador={$tipoAg} and cod_padre={$this->idexpediente}";
+        $response = UtilitiesController::ejecutaSelect($sql);
+        if ($response['numcampos']) {
+            $cant = $response[0]['cant'];
+        }
+        return $cant;
+    }
+
+    public function getAgrupador()
+    {
+        $data = [
+            0 => 'Expediente',
+            1 => 'Dependencia',
+            2 => 'Serie',
+            3 => 'Separador'
+        ];
+        return $tipoAgrupador = $data[$this->agrupador];
     }
 
     /**
@@ -238,29 +342,40 @@ class Expediente extends Model
      */
     private function setAccessUser(int $idfuncionario)
     {
-        $consPermiso = busca_filtro_tabla(
-        "permiso",
-        "permiso_expediente", 
-        "fk_expediente={$this->idexpediente} and fk_funcionario={$idfuncionario}",
-        "",
-        $conn);
-        if ($consPermiso['numcampos']) {
-            for ($i = 0; $i < $consPermiso['numcampos']; $i++) {
-                $permisos = explode(',', $consPermiso[$i]['permiso']);
-                foreach ($permisos as $permiso) {
-                    $this->permiso[$permiso] = true;
-                }
-            }
-        }
-        if ($this->propietario == $_SESSION['idfuncionario']) {
+        if (UtilitiesController::permisoModulo('expediente_admin')) {
             $this->permiso = [
+                'a' => true,
+                'l' => true,
                 'v' => true,
                 'e' => true,
                 'c' => true,
                 'd' => true
             ];
+        } else {
+            $consPermiso = busca_filtro_tabla(
+                "permiso",
+                "permiso_expediente",
+                "fk_expediente={$this->idexpediente} and fk_funcionario={$idfuncionario}",
+                "",
+                $conn
+            );
+            if ($consPermiso['numcampos']) {
+                for ($i = 0; $i < $consPermiso['numcampos']; $i++) {
+                    $permisos = explode(',', $consPermiso[$i]['permiso']);
+                    foreach ($permisos as $permiso) {
+                        $this->permiso[$permiso] = true;
+                    }
+                }
+            }
+            if ($this->propietario == $_SESSION['idfuncionario'] || $this->responsable == $_SESSION['idfuncionario']) {
+                $this->permiso = [
+                    'v' => true,
+                    'e' => true,
+                    'c' => true,
+                    'd' => true
+                ];
+            }
         }
-
     }
     /**
      * obtiene los permisos del funcionario logueado
@@ -358,6 +473,29 @@ class Expediente extends Model
     {
         $data = null;
         $response = EntidadSerie::findAllByAttributes(['identidad_serie' => $this->fk_entidad_serie]);
+        if ($response) {
+            if ($instance) {
+                $data = $response;
+            } else {
+                $data = UtilitiesController::getIdsInstance($response);
+            }
+        }
+        return $data;
+    }
+
+
+    /**
+     * retorna las instancia del funcionario (creador,responsable) vinculada al expediente
+     *
+     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
+     * @param string $campo :  Nombre del campo (propietario - responsable)
+     * @return array|null
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getFuncionarioFk(int $instance = 1, string $campo = "propietario")
+    {
+        $data = null;
+        $response = Funcionario::findAllByAttributes(['idfuncionario' => $this->$campo]);
         if ($response) {
             if ($instance) {
                 $data = $response;

@@ -8,7 +8,7 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
+include_once($ruta_db_superior . "db.php");
 usuario_actual("login");
 
 // pagina actual inicia en 1
@@ -168,11 +168,12 @@ foreach ($campos as $valor) {
 
 $lcampos = $campos;
 
+
 $campos_consulta = strtolower(implode(",", $lcampos));
 $tablas_consulta = strtolower(implode(",", $tablas));
 
 $funciones_tablas = parsear_datos_plantilla_visual($tablas_consulta);
-foreach ($funciones_tablas AS $key => $valor) {
+foreach ($funciones_tablas as $key => $valor) {
     unset($valor_variables);
     $valor_variables = array();
     $funcion = explode("@", $valor);
@@ -235,7 +236,7 @@ if (@$_REQUEST["idbusqueda_temporal"]) {
 if (!$_REQUEST["cantidad_total"]) {
     if (MOTOR == 'SqlServer' || MOTOR == 'MSSql') {
         $consulta_conteo = "WITH conteo AS (SELECT " . $campos_consulta . " FROM " . $tablas_consulta . " WHERE " . $condicion . $ordenar_consulta . ") SELECT COUNT(*) as cant FROM conteo";
-        $conteo_filas = $conn -> Ejecutar_sql($consulta_conteo);
+        $conteo_filas = $conn->Ejecutar_sql($consulta_conteo);
         $result = phpmkr_fetch_array($conteo_filas);
         $result[0] = array();
         $result[0]['cant'] = $result['cant'];
@@ -258,9 +259,10 @@ if (!$_REQUEST["cantidad_total"]) {
     $result[0]['cant'] = @$_REQUEST["cantidad_total"];
 }
 
-$response = new stdClass();
-$response -> exito = 0;
-$response -> mensaje = 'Error inesperado';
+$response = [
+    'exito' => 0,
+    'mensaje' => 'Error inesperado'
+];
 
 $count = $result[0]['cant'];
 if ($aux_limit == "todos") {
@@ -268,26 +270,26 @@ if ($aux_limit == "todos") {
 }
 if ($count > 0) {
     $total_pages = ceil($count / $limit);
-    $response -> total_pages = $total_pages;
-    $response -> records = $count;
+    $response['total_pages'] = $total_pages;
+    $response['records'] = $count;
 
     if ($start) {
-        $response -> page = $page + 1;
+        $response['page'] = $page + 1;
     } else {
-        $response -> page = 1;
+        $response['page'] = 1;
     }
 
-    if ($response -> page > $response -> total_pages) {
-        $response -> exito = 2;
-        $response -> mensaje = "Fin del listado";
+    if ($response['page'] > $response['total_pages']) {
+        $response['exito'] = 2;
+        $response['mensaje'] = "Fin del listado";
     } else {
 
         $result = busca_filtro_tabla_limit($campos_consulta, $tablas_consulta, $condicion, $ordenar_consulta2, intval($start), intval($limit), $conn);
-        $response -> sql = $result["sql"];
+        $response['sql'] = $result["sql"];
 
         if ($result["numcampos"]) {
-            $response -> exito = 1;
-            $response -> mensaje = "Registros encontrados";
+            $response['exito'] = 1;
+            $response['mensaje'] = "Registros encontrados";
 
             $cant_campos = count($lcampos);
             $info_base = str_replace('"', "'", $datos_busqueda[0]["info"]);
@@ -305,7 +307,7 @@ if ($count > 0) {
             $listado_funciones = parsear_datos_plantilla_visual($info_base, implode(",", $lcampos));
 
             for ($i = 0; $i < $result["numcampos"]; $i++) {
-                $response -> rows[$i] = new stdClass();
+                $response['rows'][$i] = [];
                 unset($listado_campos);
                 $listado_campos = array();
 
@@ -313,12 +315,12 @@ if ($count > 0) {
                 for ($j = 0; $j < $cant_campos; $j++) {
                     $caden = ' \ ';
                     if (is_object($result[$i][$lcampos[$j]])) {// para mssql y sqlserver
-                        $result[$i][$lcampos[$j]] = $result[$i][$lcampos[$j]] -> date;
+                        $result[$i][$lcampos[$j]] = $result[$i][$lcampos[$j]]->date;
                     }
-                    $response -> rows[$i] -> $lcampos[$j] = str_replace('"', "", str_replace(trim($caden), "", $result[$i][$lcampos[$j]]));
+                    $response['rows'][$i][$lcampos[$j]] = str_replace('"', "", str_replace(trim($caden), "", $result[$i][$lcampos[$j]]));
                     $info = str_replace("{*" . $lcampos[$j] . "*}", addslashes($result[$i][$lcampos[$j]]), $info);
                 }
-
+     
                 foreach ($listado_funciones as $key => $valor) {
                     unset($valor_variables);
                     $valor_variables = array();
@@ -337,28 +339,26 @@ if ($count > 0) {
                     }
                 }
                 if ($datos_busqueda[0]["tipo_busqueda"] == 1) {
-                    $response -> rows[$i] -> info = "<div id='resultado_pantalla_" . $result[$i][$llave] . "' class='well'></div>";
-                    $response -> rows[$i] -> info = str_replace("\n", "", str_replace("\r", "", $info));
-                    $response -> rows[$i] -> llave = $result[$i][$llave];
+                    $response['rows'][$i]['info'] = "<div id='resultado_pantalla_" . $result[$i][$llave] . "' class='well'></div>";
+                    $response['rows'][$i]['info'] = str_replace("\n", "", str_replace("\r", "", $info));
+                    $response['rows'][$i]['llave'] = $result[$i][$llave];
                 }
             }
         }
-        $response -> actual_row = $actual_row + $result["numcampos"];
-        if ($response -> actual_row > $response -> records) {
-            $response -> actual_row = $response -> records;
+        $response['actual_row'] = $actual_row + $result["numcampos"];
+        if ($response['actual_row'] > $response['records']) {
+            $response['actual_row'] = $response['records'];
         }
     }
 } else {
-    $response -> exito = 3;
+    $response['exito'] = 3;
     //$response -> sql = $result["sql"];
-    $response -> mensaje = "No existen registros";
+    $response['mensaje'] = "No existen registros";
 }
+echo json_encode($response);
 
-if (!@$_REQUEST["no_imprime"]) {
-    echo json_encode($response);
-}
-
-function crear_condicion_sql($idbusqueda, $idcomponente, $filtros = '') {
+function crear_condicion_sql($idbusqueda, $idcomponente, $filtros = '')
+{
     global $conn;
     $condicion_filtro = '';
     $datos_condicion = busca_filtro_tabla("", "busqueda_condicion_enlace A, busqueda_condicion B", "B.idbusqueda_condicion=A.fk_busqueda_condicion AND (B.fk_busqueda_componente=" . $idcomponente . " or B.busqueda_idbusqueda=" . $idbusqueda . ") AND cod_padre IS NULL " . $condicion_filtro, "orden", $conn);
@@ -396,9 +396,10 @@ function crear_condicion_sql($idbusqueda, $idcomponente, $filtros = '') {
     return ('(' . $condicion . ')');
 }
 
-function parsear_datos_plantilla_visual($cadena, $campos = array()) {
+function parsear_datos_plantilla_visual($cadena, $campos = array())
+{
     $result = preg_match_all('({\*([a-z]+[0-9]*[_]*[a-z]*[0-9]*[.]*[,]*[@]*)+\*})', $cadena, $resultado);
-    if ($result !== FALSE) {
+    if ($result !== false) {
         $patrones = str_replace(array(
             "{*",
             "*}"
@@ -413,8 +414,9 @@ function parsear_datos_plantilla_visual($cadena, $campos = array()) {
     return ($listado_funciones);
 }
 
-function incluir_librerias_busqueda($elemento, $indice) {
+function incluir_librerias_busqueda($elemento, $indice)
+{
     global $ruta_db_superior;
-    include_once ($ruta_db_superior . $elemento);
+    include_once($ruta_db_superior . $elemento);
 }
 ?>

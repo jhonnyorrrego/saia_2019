@@ -8,8 +8,9 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
+include_once($ruta_db_superior . "db.php");
+include_once($ruta_db_superior . "librerias_saia.php");
+include_once $ruta_db_superior . 'assets/librerias.php';
 usuario_actual("login");
 
 if (@$_REQUEST["idbusqueda_componente"]) {
@@ -23,13 +24,14 @@ if ($datos_busqueda[0]["ruta_libreria"]) {
     $librerias = array_unique(explode(",", $datos_busqueda[0]["ruta_libreria"]));
     array_walk($librerias, "incluir_librerias_busqueda");
 }
-function incluir_librerias_busqueda($elemento, $indice) {
+function incluir_librerias_busqueda($elemento, $indice)
+{
     global $ruta_db_superior;
-    include_once ($ruta_db_superior . $elemento);
+    include_once($ruta_db_superior . $elemento);
 }
 
 $okAddAcciones = 0;
-$okPermisoAcciones =false;
+$okPermisoAcciones = false;
 $idexpediente = '';
 if ($_REQUEST["idexpediente"]) {
     $idexpediente = $_REQUEST["idexpediente"];
@@ -38,8 +40,8 @@ if ($_REQUEST["idexpediente"]) {
 if (!empty($idexpediente)) {
     $Expediente = new Expediente($idexpediente);
     $GLOBALS['Expediente'] = $Expediente;
-    
-    $okPermisoAcciones=$Expediente->getAccessUser('a');
+
+    $okPermisoAcciones = $Expediente->getAccessUser('a');
     if ($Expediente->nucleo) {
         if ($Expediente->fk_serie) {
             $instance = $Expediente->getSerieFk();
@@ -67,12 +69,13 @@ if ($datos_busqueda[0]["busqueda_avanzada"] != '') {
     $datos_busqueda[0]["busqueda_avanzada"] .= 'idbusqueda_componente=' . $datos_busqueda[0]["idbusqueda_componente"];
 }
 
-echo(librerias_html5());
-echo(librerias_jquery("1.7"));
-echo(estilo_bootstrap());
+echo (librerias_html5());
+//echo(librerias_jquery("1.7"));
+echo jquery();
+echo (estilo_bootstrap());
 ?>
 <meta http-equiv="X-UA-Compatible" content="IE=9">
-<link rel="stylesheet" type="text/css" media="screen" href="<?=$ruta_db_superior;?>pantallas/lib/librerias_css.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?= $ruta_db_superior; ?>pantallas/lib/librerias_css.css" />
 <style>
     .row-fluid [class*="span"] {
         min-height: 20px;
@@ -84,10 +87,6 @@ echo(estilo_bootstrap());
         margin-bottom: 3px;
         min-height: 11px;
         padding: 4px;
-    }
-    .alert {
-        margin-bottom: 3px;
-        padding: 10px;
     }
     body {
         font-size: 12px;
@@ -102,18 +101,17 @@ echo(estilo_bootstrap());
         margin-right: 0px;
         margin-left: 0px;
     }
-    .texto-azul {
-        color: #3176c8
-    }
 
     #panel_body {
         margin-top: 0px;
-        overflow: auto; <?= ($_SESSION["tipo_dispositivo"] == 'movil') ? "width:0%; -webkit-overflow-scrolling:touch;" : "width:50%;"; ?>
+        overflow: auto;
+        width: 50%;
     }
     #panel_detalle {
         margin-top: 0px;
         border: 0px;
-        overflow: auto; <?= ($_SESSION["tipo_dispositivo"] == 'movil') ? "width:0%; -webkit-overflow-scrolling:touch;" : "width:50%;"; ?>
+        overflow: auto; 
+        width: 50%;
     }
 </style>
 <div class="navbar navbar-fixed-top" id="menu_buscador">
@@ -132,16 +130,16 @@ echo(estilo_bootstrap());
                             Busqueda de:
                         </li>
                         <li>
-                            <a href="#" class="kenlace_saia" title="B&uacute;squeda <?=$datos_busqueda[0]['etiqueta']; ?>" conector="iframe" enlace="<?php echo($datos_busqueda[0]['busqueda_avanzada']); ?>" titulo="Formulario B&uacute;queda">Expedientes</a>
+                            <a href="#" class="kenlace_saia" title="B&uacute;squeda <?= $datos_busqueda[0]['etiqueta']; ?>" conector="iframe" enlace="<?php echo ($datos_busqueda[0]['busqueda_avanzada']); ?>" titulo="Formulario B&uacute;queda">Expedientes</a>
                         </li>
                         <li>
-                            <a href="#" class="kenlace_saia" title="B&uacute;squeda Documentos en el Expediente" conector="iframe" enlace="pantallas/documento/busqueda_avanzada_documento.php?idbusqueda_componente=<?=$busq_docu[0]["idbusqueda_componente"]; ?>&idexpediente=<?=$idexpediente; ?>" titulo="Formulario B&uacute;queda">Documentos</a>
+                            <a href="#" class="kenlace_saia" title="B&uacute;squeda Documentos en el Expediente" conector="iframe" enlace="pantallas/documento/busqueda_avanzada_documento.php?idbusqueda_componente=<?= $busq_docu[0]["idbusqueda_componente"]; ?>&idexpediente=<?= $idexpediente; ?>" titulo="Formulario B&uacute;queda">Documentos</a>
                         </li>
                     </ul>
                 </div>
             </li>
             <li class="divider-vertical"></li>
-            <?php if($datos_busqueda[0]["acciones_seleccionados"]!='' && $okAddAcciones && $okPermisoAcciones):?>
+            <?php if ($datos_busqueda[0]["acciones_seleccionados"] != '' && $okAddAcciones && $okPermisoAcciones) : ?>
             <li>
                 <div class="btn-group">
                     <button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">
@@ -149,11 +147,11 @@ echo(estilo_bootstrap());
                     </button>
                     <ul class="dropdown-menu" id='listado_seleccionados'>
                         <?php
-                            $acciones = explode(",", $datos_busqueda[0]["acciones_seleccionados"]);
-                            $cantidad = count($acciones);
-                            for ($i = 0; $i < $cantidad; $i++) {
-                                echo ($acciones[$i]());
-                            }
+                        $acciones = explode(",", $datos_busqueda[0]["acciones_seleccionados"]);
+                        $cantidad = count($acciones);
+                        for ($i = 0; $i < $cantidad; $i++) {
+                            echo ($acciones[$i]());
+                        }
                         ?>
                     </ul>
                 </div>
@@ -161,9 +159,9 @@ echo(estilo_bootstrap());
             <li class="divider-vertical"></li>
             <?php
             endif;
-            if(@$datos_busqueda[0]["menu_busqueda_superior"]){
-                $funcion_menu=explode("@",$datos_busqueda[0]["menu_busqueda_superior"]);
-                echo($funcion_menu[0](@$funcion_menu[1]));
+            if (@$datos_busqueda[0]["menu_busqueda_superior"]) {
+                $funcion_menu = explode("@", $datos_busqueda[0]["menu_busqueda_superior"]);
+                echo ($funcion_menu[0](@$funcion_menu[1]));
             }
             ?>
             <li>
@@ -195,15 +193,15 @@ echo(estilo_bootstrap());
 
 <br/>
 <div class="panel_body pull-left" id="panel_body">
-    <div id="resultado_busqueda_principal<?=$idbusqueda_componente; ?>" class="panel_hidden">
-        <div id="resultado_busqueda<?=$idbusqueda_componente; ?>"></div>
-        <div id="resultado_busqueda<?=$busqueda_documento_expediente[0]["idbusqueda_componente"]; ?>"></div>
+    <div id="resultado_busqueda_principal<?= $idbusqueda_componente; ?>" class="panel_hidden">
+        <div id="resultado_busqueda<?= $idbusqueda_componente; ?>"></div>
+        <div id="resultado_busqueda<?= $busqueda_documento_expediente[0]["idbusqueda_componente"]; ?>"></div>
 
         <input type="hidden" id="seleccionados" value="" name="seleccionados">
         <input type="hidden" id="seleccionados_expediente" value="" name="seleccionados_expediente">
 
         <!-- Registros por pagina -->
-        <input type="hidden" value="<?=$datos_busqueda[0]['cantidad_registros']; ?>" name="cantxpage" id="cantxpage">
+        <input type="hidden" value="<?= $datos_busqueda[0]['cantidad_registros']; ?>" name="cantxpage" id="cantxpage">
         <!-- Pagina actual-->
         <input type="hidden" value="1" name="actualpage" id="actualpage">
         <!-- Total Paginas-->
@@ -213,17 +211,18 @@ echo(estilo_bootstrap());
         <!-- Cantidad de registros totales -->
         <input type="hidden" value="0" name="cantidad_total" id="cantidad_total">
         <!-- idbusqueda_componente -->
-        <input type="hidden" value="<?=$idbusqueda_componente; ?>" name="idcomponente_exp" id="idcomponente_exp">
-        <input type="hidden" value="<?=$busqueda_documento_expediente[0]['idbusqueda_componente']; ?>" name="idcomponente_exp_doc" id="idcomponente_exp_doc">
+        <input type="hidden" value="<?= $idbusqueda_componente; ?>" name="idcomponente_exp" id="idcomponente_exp">
+        <input type="hidden" value="<?= $busqueda_documento_expediente[0]['idbusqueda_componente']; ?>" name="idcomponente_exp_doc" id="idcomponente_exp_doc">
         <!-- Forma de carga -->
-        <input type="hidden" value=<?=(!empty($datos_busqueda[0]["cargar"]) ? $datos_busqueda[0]["cargar"] : 0); ?>" name="forma_carga" id="forma_carga">
+        <input type="hidden" value=<?= (!empty($datos_busqueda[0]["cargar"]) ? $datos_busqueda[0]["cargar"] : 0); ?>" name="forma_carga" id="forma_carga">
 
         <!-- idexpediente -->
         <input type="hidden" value="<?= $idexpediente; ?>" name="idexpediente" id="idexpediente">
 
-        <?php/*
         <!-- Variable busqueda -->
-        <input type="hidden" value="<?=$_REQUEST["variable_busqueda"]; ?>" name="variable_busqueda" id="variable_busqueda">
+        <input type="hidden" value="<?= $_REQUEST["variable_busqueda"]; ?>" name="variable_busqueda" id="variable_busqueda">
+
+        <?php/*
         <!-- idbusqueda_filtro_temp -->
         <input type="hidden" value="<?=$_REQUEST["idbusqueda_filtro_temp"]; ?>" name="idbusqueda_filtro_temp" id="idbusqueda_filtro_temp">
         <!-- idbusqueda_filtro -->
@@ -237,10 +236,9 @@ echo(estilo_bootstrap());
     </div>
 </div>
 <div class="pull-left" id="panel_detalle">
-    <iframe id="iframe_detalle" name="iframe_detalle" style="width: 100%;" frameborder="no"></iframe>
+    <iframe id="iframe_detalle" name="iframe_detalle" style="width: 100%; height:100%" frameborder="no"></iframe>
 </div>
 
-<script type="text/javascript" src="<?php echo($ruta_db_superior."pantallas/lib/main.js");?>"></script>
 <script>
     $(document).ready(function() {
         window.parent.$(".block-iframe").attr("style", "margin-top:0px; width: 100%; border:0px solid; overflow:auto; -webkit-overflow-scrolling:touch;");
@@ -277,16 +275,6 @@ echo(estilo_bootstrap());
             cargar_datos_scroll();
         });
 
-        $('.dropdown input, .dropdown label .dropdownn select').click(function(e) {
-            e.stopPropagation();
-        });
-        $(".well").live("mouseenter", function() {
-            $(this).addClass("muted");
-        });
-        $(".well").live("mouseleave", function() {
-            $(this).removeClass("muted");
-        });
-
         function cargar_datos_scroll() {
             if (!carga_final_exp) {
                 $.ajax({
@@ -299,18 +287,13 @@ echo(estilo_bootstrap());
                         actual_row : $("#actualrow").val(),
                         cantidad_total : $("#cantidad_total").val(),
                         variable_busqueda : $("#variable_busqueda").val(),
-                        idbusqueda_filtro_temp : $("#idbusqueda_filtro_temp").val(),
-                        idbusqueda_filtro : $("#idbusqueda_filtro").val(),
-                        idbusqueda_temporal : $("#idbusqueda_temporal").val(),
-                        idexpediente : $("#idexpediente").val(),
-                        idcaja : $("#idcaja").val()
+                        idexpediente : $("#idexpediente").val()
                     },
                     dataType : 'json',
                     async : false, // Si se quita al bajar el scroll llama dos veces o mas la peticion
                     success : function(objeto) {
                         if (objeto.exito) {
-                            let
-                            scroll = 1;
+                            let scroll = 1;
                             if (objeto.exito == 1) {
                                 $("#actualpage").val(objeto.page);
                                 $("#totalpage").val(objeto.total_pages);
@@ -320,8 +303,7 @@ echo(estilo_bootstrap());
                                 $.each(objeto.rows, function(index, item) {
                                     if (objeto.page == 1 && index === 0) {
                                         $("#iframe_detalle").attr({
-                                            'src':'<?=$ruta_db_superior;?>pantallas/expediente/detalles_expediente.php?idexpediente='+item.idexpediente+"&idbusqueda_componente="+idbusqueda_componente+"&rand=<?=rand();?>",
-                                            'height' : ($("#panel_body").height())
+                                            'src':'<?= $ruta_db_superior; ?>pantallas/expediente/detalles_expediente.php?idexpediente='+item.idexpediente+"&idbusqueda_componente="+idbusqueda_componente+"&rand=<?= rand(); ?>"
                                         });
                                     }
                                     if (forma_cargar == 1) {
@@ -375,18 +357,13 @@ echo(estilo_bootstrap());
                         actual_row : $("#actualrow").val(),
                         cantidad_total : $("#cantidad_total").val(),
                         variable_busqueda : $("#variable_busqueda").val(),
-                        idbusqueda_filtro_temp : $("#idbusqueda_filtro_temp").val(),
-                        idbusqueda_filtro : $("#idbusqueda_filtro").val(),
-                        idbusqueda_temporal : $("#idbusqueda_temporal").val(),
-                        idexpediente : $("#idexpediente").val(),
-                        idcaja : $("#idcaja").val()
+                        idexpediente : $("#idexpediente").val()
                     },
                     dataType : 'json',
                     async : false, // Si se quita al bajar el scroll llama dos veces o mas la peticion
                     success : function(objeto) {
                         if (objeto.exito) {
-                            let
-                            scroll = 1;
+                            let scroll = 1;
                             if (objeto.exito == 1) {
                                 $("#actualpage").val(objeto.page);
                                 $("#totalpage").val(objeto.total_pages);
@@ -436,14 +413,15 @@ echo(estilo_bootstrap());
 </script>
 
 <?php
-echo(librerias_bootstrap());
-echo(librerias_tooltips());
-echo(librerias_acciones_kaiten());
+
+echo (librerias_bootstrap());
+//echo (librerias_tooltips());
+echo (librerias_acciones_kaiten());
 
 if ($datos_busqueda[0]["ruta_libreria_pantalla"]) {
     $librerias = explode(",", $datos_busqueda[0]["ruta_libreria_pantalla"]);
-    foreach ($librerias AS $key => $valor) {
-        include_once ($ruta_db_superior . $valor);
+    foreach ($librerias as $key => $valor) {
+        include_once($ruta_db_superior . $valor);
     }
 }
 ?>

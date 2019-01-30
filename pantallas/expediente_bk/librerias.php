@@ -442,7 +442,7 @@ function enlaces_adicionales_expediente($idexpediente, $nombre) {
     if ($buscar_exp["numcampos"]) {
         $agrupador=$buscar_exp[0]["agrupador"];
 	}
-    /*if ($agrupador == "agrupador") {
+    if ($agrupador == "agrupador") {
         $agrupador = 0;
     }
     $permiso_modulo = new Permiso();

@@ -1,7 +1,13 @@
 <?php
 class ExpedienteController
 {
-
+    /**
+     * Procesa los datos del formulario y crea el expediente
+     *
+     * @param array $data : array con los datos del formulario
+     * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
     public function createExpedienteCont(array $data = []) : array
     {
         $response = [
@@ -9,36 +15,38 @@ class ExpedienteController
             'exito' => 0,
             'message' => 'Faltan los datos a procesar'
         ];
+
         if (!empty($data)) {
             if (!empty($data['cod_padre'])) {
                 $instance = new Expediente($data['cod_padre']);
-                
+
                 $attributes = $data;
-                $attributes['propietario']= $_SESSION['idfuncionario'];
+                $attributes['propietario'] = $_SESSION['idfuncionario'];
+                $attributes['responsable'] = $_SESSION['idfuncionario'];
                 $attributes['estado_archivo'] = $instance->estado_archivo;
                 $attributes['fk_serie'] = $instance->fk_serie;
                 $attributes['nucleo'] = 0;
                 $attributes['fk_dependencia'] = $instance->fk_dependencia;
                 $attributes['fk_entidad_serie'] = $instance->fk_entidad_serie;
-                if(empty($attributes['fecha'])){
-                    $attributes['fecha']=date('Y-m-d');
+                if (empty($attributes['fecha'])) {
+                    $attributes['fecha'] = date('Y-m-d H:i:s');
                 }
-            
+
                 $Expediente = new Expediente();
                 $Expediente->setAttributes($attributes);
                 $response = $Expediente->CreateExpediente();
                 if ($response['exito']) {
                     $response['message'] = 'Expediente guardado';
                     if (!empty($data['generarfiltro']) && !empty($data['idbusqueda_componente'])) {
-                        $attributes=[
-                            'fk_busqueda_componente'=>$data["idbusqueda_componente"],
-                            'funcionario_idfuncionario'=>$Expediente->propietario,
-                            'fecha'=>date("Y-m-d"),
-                            'detalle'=>'idexpediente|=|'.$Expediente->getPK(),
+                        $attributes = [
+                            'fk_busqueda_componente' => $data["idbusqueda_componente"],
+                            'funcionario_idfuncionario' => $Expediente->propietario,
+                            'fecha' => date("Y-m-d H:i:s"),
+                            'detalle' => 'idexpediente|=|' . $Expediente->getPK(),
                         ];
-                        $BusquedaFiltroTemp=new BusquedaFiltroTemp();
+                        $BusquedaFiltroTemp = new BusquedaFiltroTemp();
                         $BusquedaFiltroTemp->setAttributes($attributes);
-                        if($BusquedaFiltroTemp->save()){
+                        if ($BusquedaFiltroTemp->save()) {
                             $response['data']['idbusqueda_filtro_temp'] = $BusquedaFiltroTemp->getPK();
                         }
                     }
@@ -49,6 +57,62 @@ class ExpedienteController
         }
         return ($response);
     }
+
+    /**
+     * Procesa los datos del formulario y crea el tomo del expediente
+     *
+     * @param array $data : array con los datos del formulario
+     * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function createTomoExpedienteCont(array $data = []) : array
+    {
+        $response = [
+            'data' => [],
+            'exito' => 0,
+            'message' => 'Faltan los datos a procesar'
+        ];
+        if (!empty($data)) {
+            if ($data['idexpediente']) {
+                $Expediente = new Expediente($data['idexpediente']);
+                $cant = $Expediente->countTomos();
+
+                $ExpTomo = clone $Expediente;
+                $ExpTomo->setPK(0);
+                $attributes = [
+                    'fecha' => date('Y-m-d H:i:s'),
+                    'propietario' => $_SESSION['idfuncionario'],
+                    'responsable' => $_SESSION['idfuncionario'],
+                    'tomo_padre' => $data['idexpediente'],
+                    'tomo_no' => $cant+1,
+                    'cod_arbol' => 0
+                ];
+                $ExpTomo->setAttributes($attributes);
+                $info = $ExpTomo->CreateExpediente();
+                $response = $info;
+
+                if($info['exito']){
+                    $response['data']['cod_padre']=$ExpTomo->cod_padre;
+                    if (!empty($data['generarfiltro']) && !empty($data['idbusqueda_componente'])) {
+                        $attributes = [
+                            'fk_busqueda_componente' => $data["idbusqueda_componente"],
+                            'funcionario_idfuncionario' => $ExpTomo->propietario,
+                            'fecha' => date("Y-m-d H:i:s"),
+                            'detalle' => 'idexpediente|=|' . $ExpTomo->getPK(),
+                        ];
+                        $BusquedaFiltroTemp = new BusquedaFiltroTemp();
+                        $BusquedaFiltroTemp->setAttributes($attributes);
+                        if ($BusquedaFiltroTemp->save()) {
+                            $response['data']['idbusqueda_filtro_temp'] = $BusquedaFiltroTemp->getPK();
+                        }
+                    }
+                }                
+            }
+        }
+
+        return $response;
+    }
+
 
     /**
      * Crea la jerarquia de entidad entidad serie

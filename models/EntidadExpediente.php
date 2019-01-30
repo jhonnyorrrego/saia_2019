@@ -5,6 +5,7 @@ class EntidadExpediente extends Model
     protected $identidad_expediente;
     protected $llave_entidad;
     protected $permiso;
+    protected $tipo_funcionario;
     protected $fecha;
     protected $fk_entidad;
     protected $fk_expediente;
@@ -23,6 +24,7 @@ class EntidadExpediente extends Model
             'safe' => [
                 'llave_entidad',
                 'permiso',
+                'tipo_funcionario',
                 'fecha',
                 'fk_entidad',
                 'fk_expediente'
@@ -50,8 +52,34 @@ class EntidadExpediente extends Model
         if ($this->save()) {
             $instance = $this->getExpedienteFk();
             if ($instance) {
-                PermisoExpediente::deleteAllPermisoExpediente($instance[0]->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 2);
-                PermisoExpediente::insertAllPermisoExpediente($instance[0]->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 2, $this->permiso);
+                $permisoExp= $instance[0];
+                if ($this->tipo_funcionario) {
+                    if ($this->tipo_funcionario == 1) {
+                        $idfun = $permisoExp->propietario;
+                    } else {
+                        $idfun = $permisoExp->responsable;
+                    }
+                    $attributes = [
+                        'fk_funcionario' => $idfun,
+                        'fk_entidad' => 1,
+                        'llave_entidad' => $idfun,
+                        'fk_entidad_serie' => $permisoExp->fk_entidad_serie,
+                        'tipo_permiso' => 2,
+                        'tipo_funcionario' => $this->tipo_funcionario,
+                        'permiso' => $this->permiso,
+                        'fk_expediente' => $this->fk_expediente
+                    ];
+                    $PermisoExpediente = new PermisoExpediente();
+                    $PermisoExpediente->setAttributes($attributes);
+                    $PermisoExpediente->save();
+                }
+                $data = PermisoSerie::findAllByAttributes(['fk_entidad_serie' => $permisoExp->fk_entidad_serie]);
+                if($data){
+                    foreach ($data as $ins) {
+                        PermisoExpediente::deleteAllPermisoExpediente($ins->fk_entidad_serie, $ins->llave_entidad, $ins->fk_entidad, 1);
+                        PermisoExpediente::insertAllPermisoExpediente($ins->fk_entidad_serie, $ins->llave_entidad, $ins->fk_entidad, 1, $ins->permiso);
+                    }
+                }
             }
             $response['exito'] = 1;
             $response['data']['id'] = $this->idexpediente;
@@ -60,7 +88,6 @@ class EntidadExpediente extends Model
         }
         return $response;
     }
-
 
     /**
      * retorna las instancia de entidad vinculadas a la entidad expediente
