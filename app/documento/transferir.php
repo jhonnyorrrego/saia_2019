@@ -14,6 +14,7 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
+include_once $ruta_db_superior . 'formatos/librerias/funciones_generales.php';
 
 $Response = (object) array(
     'data' => new stdClass(),
@@ -22,9 +23,37 @@ $Response = (object) array(
 );
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $users = array_unique($_REQUEST['destination']);
-    //$users = array_map('remove')
+    if(count($_REQUEST['destination']) && $_REQUEST['documentId']){
+        $users = array_unique($_REQUEST['destination']);
+        $users = array_filter($users, function($v, $k){
+            return strpos($v, '#') == false;
+        }, ARRAY_FILTER_USE_BOTH);
+        $userList = implode('@', $users);
+        
+        transferencia_automatica(0, $_REQUEST['documentId'], $userList, 3, $_REQUEST['message'], "TRANSFERIDO");
 
+        foreach($_REQUEST['files'] as $route){
+            $content = file_get_contents($ruta_db_superior . $route);
+            $routePath = explode('/', $route);
+            $extensionParts = explode('.', end($routePath));
+            $route = 'anexo_transferencia/' . end($routePath);
+    
+            $dbRoute = UtilitiesController::createFileDbRoute($route, 'archivos', $content);
+    
+            Anexos::newRecord([
+                'documento_iddocumento' => $_REQUEST['documentId'],
+                'ruta' => $dbRoute,
+                'etiqueta' => end($routePath),
+                'tipo' => end($extensionParts),
+                'fecha_anexo' => date('Y-m-d H:i:s')
+            ]);
+        }
+
+        $Response->message = 'Documento Transferido';
+        $Response->success = 1;
+    }else{
+        $Response->message = 'Debe indicar el destino';
+    }
 } else {
     $Response->message = "Debe iniciar sesion";
 }
