@@ -77,11 +77,8 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 						function onNodeSelect(nodeId){
 							if(nodeId.indexOf('#',0)==-1){
 								$('#generar_consecutivo').val(nodeId);
-								if(nodeId=='radicacion_salida'){
-									$('#enlace').val("ordenar.php?accion=mostrar&mostrar_formato=1");
-								}else{
-									$('#enlace').val("ordenar.php?accion=mostrar&mostrar_formato=1");  //ordenar.php?accion=mostrar&mostrar_formato=1
-								}
+								$('#enlace').val("views/documento/index_acordeon.php");
+
 							}
 						}
 						function fin_cargando_serie() {

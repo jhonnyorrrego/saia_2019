@@ -4,7 +4,10 @@ $(function () {
     let loadedFiles = [];
     let myDropzone = new Dropzone("#dropzone", {
         url: `${baseUrl}app/temporal/cargar_anexos.php`,
-        dictDefaultMessage: 'Haga clic para elegir un archivo o Arrastre acá el archivo.',
+        maxFilesize: 3,
+        maxFiles: 3,
+        dictFileTooBig: 'Tamaño máximo {{maxFilesize}} MB',
+        dictMaxFilesExceeded: 'Máximo 3 archivos',
         params: {
             key: localStorage.getItem('key')
         },
