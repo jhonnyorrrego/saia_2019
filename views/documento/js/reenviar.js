@@ -34,6 +34,7 @@ $(function () {
     let myDropzone = new Dropzone("#dropzone", {
         url: `${baseUrl}app/temporal/cargar_anexos.php`,
         dictDefaultMessage: 'Haga clic para elegir un archivo o Arrastre acá el archivo.',
+        maxFilesize: 2,
         params: {
             key: localStorage.getItem('key')
         },

@@ -8,26 +8,28 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
+include_once($ruta_db_superior . "db.php");
+include_once($ruta_db_superior . "librerias_saia.php");
 
-class GenerarBuscar {
+class GenerarBuscar
+{
 
     private $idformato;
 
     private $accion;
 
     private $incluidos;
-    
+
     public $exito;
-    
+
     public $mensaje;
 
-    public function __construct($idformato, $accion) {
+    public function __construct($idformato, $accion)
+    {
         $this->idformato = $idformato;
         $this->accion = $accion;
-        $this->exito=0;
-        $this->mensaje="Error al generar el formato con id ".$idformato;
+        $this->exito = 0;
+        $this->mensaje = "Error al generar el formato con id " . $idformato;
     }
 
     /*
@@ -42,10 +44,12 @@ class GenerarBuscar {
      * <Post-condiciones><Post-condiciones>
      * </Clase>
      */
-    public function crear_formato_buscar() {
+    public function crear_formato_buscar()
+    {
         global $conn, $ruta_db_superior;
         $datos_detalles["numcampos"] = 0;
         $texto = '';
+        $idformato = $this->idformato;
         $includes = "";
         $this->incluidos = array();
         $obligatorio = "";
@@ -153,7 +157,7 @@ class GenerarBuscar {
                         break;
                     case "radio":
                                         /* En los campos de este tipo se debe validar que valor contenga un listado con las siguentes caracteristicas*/
-                                        $texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">' . $this->generar_condicion($campos[$h]["nombre"]) . '
+                        $texto .= '<tr id="tr_' . $campos[$h]["nombre"] . '">' . $this->generar_condicion($campos[$h]["nombre"]) . '
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>' . $this->generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]);
 
                         $texto .= '<td bgcolor="#F5F5F5">' . $this->arma_funcion("genera_campo_listados_editar", $idformato . "," . $campos[$h]["idcampos_formato"], 'buscar') . '</td></tr>';
@@ -173,7 +177,7 @@ class GenerarBuscar {
                                         /*parametros:
                                          nombre del select padre; sql select padre| nombre del select hijo; sql select hijo....
                                          (ej: departamento;select iddepartamento as id,nombre from departamento order by nombre| municipio; select idmunicipio as id,nombre from municipio where departamento_iddepartamento=)*/
-                                        $parametros = explode("|", $campos[$h]["valor"]);
+                        $parametros = explode("|", $campos[$h]["valor"]);
                         if (count($parametros) < 2)
                             alerta_formatos("Por favor verifique los parametros de configuracion de su select dependiente " . $campos[$h]["etiqueta"]);
                         else {
@@ -188,8 +192,8 @@ class GenerarBuscar {
                                          ej: nombres,apellidos;idfuncionario;funcionario
 
                                          Queda pendiente La parte de la busqueda.
-                                         */
-                                        $texto .= '<tr>
+                         */
+                        $texto .= '<tr>
                    <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>' . $this->generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]) . '
                    <td bgcolor="#F5F5F5">';
                         $texto .= '<input type="text" size="30" ' . $adicionales . ' value="" id="input' . $campos[$h]["idcampos_formato"] . '" onkeyup="lookup(this.value,' . $campos[$h]["idcampos_formato"] . ');" onblur="fill(this.value,' . $campos[$h]["idcampos_formato"] . ');" />
@@ -216,8 +220,8 @@ class GenerarBuscar {
                                          arreglo[4] Busqueda
                                          arreglo[5] Almacenar 0=>iddato 1=>valordato
                                          arreglo[6] Tipo de arbol 0=>funcionarios 1=>series 2=>dependencias
-                                         */
-                                        $arreglo = explode(";", $campos[$h]["valor"]);
+                         */
+                        $arreglo = explode(";", $campos[$h]["valor"]);
                         if (isset($arreglo) && $arreglo[0] != "") {
                             $ruta = "\"" . $arreglo[0] . "\"";
                         } else {
@@ -522,13 +526,13 @@ class GenerarBuscar {
                 $contenido .= '<?php include_once("../librerias/footer_plantilla.php");?' . '>';
             $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/buscar_" . $formato[0]["nombre"] . ".php", $contenido);
             if ($mostrar != "") {
-            	$this->exito=1;
-            	$this->mensaje="Formato buscar Creado con exito por favor verificar la carpeta " . dirname($mostrar);
+                $this->exito = 1;
+                $this->mensaje = "Formato buscar Creado con exito por favor verificar la carpeta " . dirname($mostrar);
                 alerta_formatos("Formato Buscar  Creado con exito por favor verificar la carpeta " . dirname($mostrar));
             }
         } else {
-        	$this->exito=0;
-        	$this->mensaje="No es posible generar el Formato";
+            $this->exito = 0;
+            $this->mensaje = "No es posible generar el Formato";
             alerta_formatos("No es posible generar el Formato");
         }
     }
@@ -545,7 +549,8 @@ class GenerarBuscar {
      * <Post-condiciones><Post-condiciones>
      * </Clase>
      */
-    private function generar_condicion($nombre) {
+    private function generar_condicion($nombre)
+    {
         $texto = '<div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor(\'bqsaiaenlace_' . $nombre . '\',this.id)">
 		    Y
@@ -570,7 +575,8 @@ class GenerarBuscar {
      * <Post-condiciones><Post-condiciones>
      * </Clase>
      */
-    private function generar_comparacion($tipo, $nombre) {
+    private function generar_comparacion($tipo, $nombre)
+    {
         $texto = '';
         $listado = array();
         switch ($tipo) {
@@ -607,7 +613,8 @@ class GenerarBuscar {
      * <Post-condiciones><Post-condiciones>
      * </Clase>
      */
-    private function incluir($cad, $tipo, $eval = 0) {
+    private function incluir($cad, $tipo, $eval = 0)
+    {
         $includes = "";
         $lib = explode(",", $cad);
         switch ($tipo) {
@@ -646,7 +653,8 @@ class GenerarBuscar {
      * <Post-condiciones><Post-condiciones>
      * </Clase>
      */
-    private function incluir_libreria($nombre, $tipo) {
+    private function incluir_libreria($nombre, $tipo)
+    {
         $includes = "";
         if (!is_file(FORMATOS_SAIA . "librerias/" . $nombre)) {
             if (!crear_archivo(FORMATOS_SAIA . "librerias/" . $nombre)) {
@@ -669,7 +677,8 @@ class GenerarBuscar {
      * <Post-condiciones><Post-condiciones>
      * </Clase>
      */
-    function arma_funcion($nombre, $parametros, $accion) {
+    function arma_funcion($nombre, $parametros, $accion)
+    {
         if ($parametros != "" && $accion != "adicionar" && $accion != 'buscar')
             $parametros .= ",";
         if ($accion == "mostrar")
@@ -695,7 +704,8 @@ class GenerarBuscar {
      * <Post-condiciones><Post-condiciones>
      * </Clase>
      */
-    function codifica($texto) {
+    function codifica($texto)
+    {
         // strtoupper(codifica_encabezado(html_entity_decode($campos[$h]["etiqueta"].generar_comparacion($campos[$h]["tipo_dato"],$campos[$h]["nombre"]))))
         return mayusculas($texto);
     }
