@@ -40,7 +40,8 @@ final class Version20190131134951 extends AbstractMigration
 
         $this->connection->update('busqueda_componente', [
             "ordenado_por" => "a.idtransferencia",
-            "direccion" => "DESC"
+            "direccion" => "DESC",
+            "info" => "<div class='' style='line-height:1;font-size: 12px;'><div class='row mx-0'>{*origin_pending_document@iddocumento,destino,numero,fecha,idtransferencia*}</div><div class='row mx-0'><div class='col-1 px-0'><div class='row p-0 m-0'><div class='col-12 p-0 text-center'>{*unread@iddocumento,fecha*}</div><div class='col-12 p-0 text-center'>{*has_files@iddocumento*}</div><div class='col-12 p-0 text-center'>{*priority@iddocumento*}</div></div></div><div class='col-11 pr-0'><p class='text-justify' style='line-height: 1;'>{*obtener_descripcion@descripcion*}</p></div></div><div class='row mx-0 pt-1'><div class='col-1 px-0 text-center'><span class='my-2' id='checkbox_location' ></span></div><div class='col'>{*documental_type@iddocumento*}</div><div class='col-auto text-right pr-0'>{*expiration@fecha_limite*}</div></div></div>"
         ],[
             'nombre' => 'documentos_enviados'
         ]);
