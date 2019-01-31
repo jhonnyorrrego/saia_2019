@@ -1,12 +1,12 @@
 <?php
-require_once ("db.php");
+require_once("db.php");
 if (stristr($_SERVER["HTTP_ACCEPT"], "application/xhtml+xml")) {
 	header("Content-type: application/xhtml+xml");
 } else {
 	header("Content-type: text/xml");
 }
 
-echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?" . ">");
+echo ("<?xml version=\"1.0\" encoding=\"UTF-8\"?" . ">");
 
 $actual = usuario_actual("idfuncionario");
 $id = @$_REQUEST["id"];
@@ -34,7 +34,8 @@ if (@$_REQUEST["rol"])
 $no_padre = false;
 if (@$_REQUEST["sin_padre"])
 	$no_padre = true;
-if (@$_REQUEST["series"]) {$nuevas = array();
+if (@$_REQUEST["series"]) {
+	$nuevas = array();
 	$series = explode(",", $_REQUEST["series"]);
 	for ($i = 0; $i < count($series); $i++)//quito las categorias de la lista de series
 	{
@@ -45,11 +46,13 @@ if (@$_REQUEST["series"]) {$nuevas = array();
 	$asignados = busca_filtro_tabla("distinct funcionario_codigo", "entidad_serie,funcionario", "entidad_identidad=1 and llave_entidad=idfuncionario and serie_idserie=" . implode(" and serie_idserie=", $series), "", $conn);
 	$seleccionados = extrae_campo($asignados, "funcionario_codigo", "U");
 }
-if (@$_REQUEST["tipo_entidad"] && @$_REQUEST["llave_entidad"]) {$codigo = busca_filtro_tabla("funcionario_codigo", "funcionario", "idfuncionario=" . $_REQUEST["llave_entidad"], "", $conn);
+if (@$_REQUEST["tipo_entidad"] && @$_REQUEST["llave_entidad"]) {
+	$codigo = busca_filtro_tabla("funcionario_codigo", "funcionario", "idfuncionario=" . $_REQUEST["llave_entidad"], "", $conn);
 	$seleccionados = array($codigo[0][0]);
 }
 
-if (@$_REQUEST["expediente"] && @$_REQUEST["accion"]) {$asignados = busca_filtro_tabla("funcionario", "permiso_expediente_func", "expediente_idexpediente=" . $_REQUEST["expediente"] . " and " . $_REQUEST["accion"] . "=1", "", $conn);
+if (@$_REQUEST["expediente"] && @$_REQUEST["accion"]) {
+	$asignados = busca_filtro_tabla("funcionario", "permiso_expediente_func", "expediente_idexpediente=" . $_REQUEST["expediente"] . " and " . $_REQUEST["accion"] . "=1", "", $conn);
 	$seleccionados = extrae_campo($asignados, "funcionario", "U");
 }
 if (@$_REQUEST["key"])
@@ -67,23 +70,23 @@ if ($flujos["numcampos"]) {
 		if ($flujos[$i]["estado_paso_documento"] > 3) {
 			//Verifico que existen flujos pendientes
 			$verifica_flujo = $verifica_flujo + 1;
-			switch($flujos[$i]["entidad_identidad"]) {
-				case 1 :
+			switch ($flujos[$i]["entidad_identidad"]) {
+				case 1:
 					//funcionario
 					array_push($funcionarios_flujo, $flujos[$i]["llave_entidad"]);
 					break;
-				case 2 :
+				case 2:
 					//dependencia
 					array_push($dependencias_flujo, $flujos[$i]["llave_entidad"]);
 					break;
-				case 3 :
+				case 3:
 					//ejecutor
 					break;
-				case 4 :
+				case 4:
 					//cargo
 					array_push($cargos_flujo, $flujos[$i]["llave_entidad"]);
 					break;
-				case 5 :
+				case 5:
 					//dependencia cargo
 					//echo("PPPP");
 					break;
@@ -102,68 +105,73 @@ if ($flujos["numcampos"]) {
 		//Tiene un flujo en un documento pero no tiene un flujo con actividades pendientes
 		$verifica_flujo = -1;
 	}
-	echo("<tree id=\"0\">\n");
+	echo ("<tree id=\"0\">\n");
 	$cadena3 = llena_dependencia($padre_dependencia, 0, 2);
 	$entra1 = 0;
 	if ($cadena3 != "") {
-		echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-		echo("text=\"Dependencias\" id=\"dependencias_flujo\" nocheckbox=\"1\" >\n");
-		echo($cadena3);
-		echo("</item>\n");
+		echo ("<item style=\"font-family:verdana; font-size:7pt;\" ");
+		echo ("text=\"Dependencias\" id=\"dependencias_flujo\" nocheckbox=\"1\" >\n");
+		echo ($cadena3);
+		echo ("</item>\n");
 		$entra1 = 1;
 	}
 	$cadena4 = llena_cargos(0, 0, 4);
 	if ($cadena4 != "") {
-		echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-		echo("text=\"Cargos\" id=\"cargos_flujo\"  nocheckbox=\"1\" >\n");
+		echo ("<item style=\"font-family:verdana; font-size:7pt;\" ");
+		echo ("text=\"Cargos\" id=\"cargos_flujo\"  nocheckbox=\"1\" >\n");
 		echo $cadena4;
-		echo("</item>\n");
+		echo ("</item>\n");
 		$entra1 = 1;
 	}
 	$cadena5 = llena_dependencia($padre_dependencia, 0, 1);
 	if ($cadena5 != "") {
-		echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-		echo("text=\"Funcionarios\" id=\"funcionarios_flujo\"  nocheckbox=\"1\">\n");
+		echo ("<item style=\"font-family:verdana; font-size:7pt;\" ");
+		echo ("text=\"Funcionarios\" id=\"funcionarios_flujo\"  nocheckbox=\"1\">\n");
 		echo $cadena5;
-		echo("</item>\n");
+		echo ("</item>\n");
 		$entra1 = 1;
 	}
 	if (!$entra1) {
-		echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-		echo("text=\"Sin acciones sobre el flujo\" nocheckbox=\"1\" id=\"sin_flujo\" > \n");
-		echo("</item>\n");
+		echo ("<item style=\"font-family:verdana; font-size:7pt;\" ");
+		echo ("text=\"Sin acciones sobre el flujo\" nocheckbox=\"1\" id=\"sin_flujo\" > \n");
+		echo ("</item>\n");
 	}
 
-} elseif ($id) {$inicio = busca_filtro_tabla("*", "funcionario", "funcionario_codigo='$id'", "", $conn);
-	echo("<tree id=\"0\">\n");
-	echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
-	echo("text=\"" . htmlspecialchars(($inicio[0]["nombres"] . " " . $inicio[0]["apellidos"])) . " \" id=\"" . $inicio[0]["funcionario_codigo"] . "\" checked=\"1\" >\n");
-	echo("</item>\n");
-} else {echo("<tree id=\"0\">\n");
+} elseif ($id) {
+	$inicio = busca_filtro_tabla("*", "funcionario", "funcionario_codigo='$id'", "", $conn);
+	echo ("<tree id=\"0\">\n");
+	echo ("<item style=\"font-family:verdana; font-size:7pt;\" ");
+	echo ("text=\"" . htmlspecialchars(($inicio[0]["nombres"] . " " . $inicio[0]["apellidos"])) . " \" id=\"" . $inicio[0]["funcionario_codigo"] . "\" checked=\"1\" >\n");
+	echo ("</item>\n");
+} else {
+	echo ("<tree id=\"0\">\n");
 	echo llena_dependencia($padre_dependencia, 0);
 
-	if (isset($_REQUEST["inactivos"]) && $_REQUEST["inactivos"]) {$cadena = ("<item style=\"font-family:verdana; font-size:7pt;\" ");
+	if (isset($_REQUEST["inactivos"]) && $_REQUEST["inactivos"]) {
+		$cadena = ("<item style=\"font-family:verdana; font-size:7pt;\" ");
 		$cadena .= ("text=\"Usuarios inactivos\" id=\"UI#\" >\n");
 		$cadena .= funcionarios_inactivos();
 		$cadena .= ("</item>\n");
 		echo $cadena;
 	}
-	if (isset($_REQUEST["sin_rol"]) && $_REQUEST["sin_rol"]) {$cadena = ("<item style=\"font-family:verdana; font-size:7pt;\" ");
+	if (isset($_REQUEST["sin_rol"]) && $_REQUEST["sin_rol"]) {
+		$cadena = ("<item style=\"font-family:verdana; font-size:7pt;\" ");
 		$cadena .= ("text=\"Usuarios sin rol activo\" id=\"RI#\" >\n");
 		$cadena .= funcionarios_sin_rol();
 		$cadena .= ("</item>\n");
 		echo $cadena;
 	}
 }
-echo("</tree>\n");
+echo ("</tree>\n");
 ?>
 <?php
-function llena_dependencia($codigo, $ruta, $tipo_llenado = "") {
+function llena_dependencia($codigo, $ruta, $tipo_llenado = "")
+{
 	global $conn, $sql, $seleccionados, $no_padre, $verifica_flujo;
 	if ($verifica_flujo == -1) {
 		return ("");
 	}
-	$llenado = FALSE;
+	$llenado = false;
 	$cadena = "";
 	if ($codigo == 0) {
 		$prof = busca_filtro_tabla("", "dependencia", "(cod_padre is null OR cod_padre=0) AND estado=1", "", $conn);
@@ -188,15 +196,17 @@ function llena_dependencia($codigo, $ruta, $tipo_llenado = "") {
 			$hijos = busca_filtro_tabla("*", "dependencia A", " estado=1 AND A.cod_padre=" . $prof[0]["iddependencia"], "A.nombre ASC", $conn);
 			//print_r($hijos);
 			if ($hijos["numcampos"]) {
-				for ($i = 0; $i < $hijos["numcampos"]; $i++) {$valor = in_array($hijos[$i]["iddependencia"] . "d", $seleccionados);
+				for ($i = 0; $i < $hijos["numcampos"]; $i++) {
+					$valor = in_array($hijos[$i]["iddependencia"] . "d", $seleccionados);
 					//alerta($valor);
-					if ($valor != "" && $valor != Null)
+					if ($valor != "" && $valor != null)
 						$adicional = " checked=\"1\" ";
 					else
 						$adicional = "";
 					//      $llenado=llena_dependencia($hijos[$i]["iddependencia"],$ruta);
 					$codigo_hijos = llena_dependencia($hijos[$i]["iddependencia"], 0, $tipo_llenado);
-					if ($codigo_hijos <> "") {$cadena .= ("<item style=\"font-family:verdana; font-size:7pt;\" $adicional ");
+					if ($codigo_hijos <> "") {
+						$cadena .= ("<item style=\"font-family:verdana; font-size:7pt;\" $adicional ");
 						$cadena .= ("text=\"" . codifica_encabezado(htmlspecialchars(formato_cargo($hijos[$i]["nombre"]))) . "\" id=\"" . $hijos[$i]["iddependencia"] . "#\"");
 						if ($no_padre || $tipo_llenado == 1)
 							$cadena .= " nocheckbox=\"1\" ";
@@ -222,12 +232,13 @@ function llena_dependencia($codigo, $ruta, $tipo_llenado = "") {
 	}
 }
 
-function llena_cargos($codigo, $ruta, $tipo_llenado = "") {
+function llena_cargos($codigo, $ruta, $tipo_llenado = "")
+{
 	global $conn, $sql, $seleccionados, $no_padre, $verifica_flujo;
 	if ($verifica_flujo == -1) {
 		return ("");
 	}
-	$llenado = FALSE;
+	$llenado = false;
 	$cadena = "";
 	if ($codigo == 0) {
 		$prof = busca_filtro_tabla("", "cargo", "cod_padre is null AND estado=1", "", $conn);
@@ -249,15 +260,17 @@ function llena_cargos($codigo, $ruta, $tipo_llenado = "") {
 			$hijos = busca_filtro_tabla("*", "cargo A", " estado=1 AND A.cod_padre=" . $prof[0]["idcargo"], "A.nombre ASC", $conn);
 			//print_r($hijos);
 			if ($hijos["numcampos"]) {
-				for ($i = 0; $i < $hijos["numcampos"]; $i++) {$valor = in_array($hijos[$i]["idcargo"] . "c", $seleccionados);
+				for ($i = 0; $i < $hijos["numcampos"]; $i++) {
+					$valor = in_array($hijos[$i]["idcargo"] . "c", $seleccionados);
 					//alerta($valor);
-					if ($valor != "" && $valor != Null)
+					if ($valor != "" && $valor != null)
 						$adicional = " checked=\"1\" ";
 					else
 						$adicional = "";
 					//      $llenado=llena_dependencia($hijos[$i]["iddependencia"],$ruta);
 					$codigo_hijos = llena_cargos($hijos[$i]["idcargo"], 0, $tipo_llenado);
-					if ($codigo_hijos <> "") {$cadena .= ("<item style=\"font-family:verdana; font-size:7pt;\" $adicional ");
+					if ($codigo_hijos <> "") {
+						$cadena .= ("<item style=\"font-family:verdana; font-size:7pt;\" $adicional ");
 						$cadena .= ("text=\"" . codifica_encabezado(htmlspecialchars(formato_cargo(strtolower($hijos[$i]["nombre"])))) . "\" id=\"" . $hijos[$i]["idcargo"] . "*\"");
 						if ($no_padre)
 							$cadena .= " nocheckbox=\"1\" ";
@@ -275,7 +288,8 @@ function llena_cargos($codigo, $ruta, $tipo_llenado = "") {
 	}
 }
 
-function llena_funcionarios($codigo, $ruta, $tipo_llenado) {
+function llena_funcionarios($codigo, $ruta, $tipo_llenado)
+{
 	global $conn, $sql, $seleccionados, $excluidos, $tipo_arbol, $funcionarios_flujo, $dependencias_flujo, $cargos_flujo, $verifica_flujo;
 	//Bandera que se utiliza para verificar que tipo de llenado sea diferente de 0 y que cumpla por lo menos con 1 de los datos
 	$ingreso = 0;
@@ -319,13 +333,14 @@ function llena_funcionarios($codigo, $ruta, $tipo_llenado) {
 		$ruta = "";
 	else
 		$ruta = "%" . $ruta;
-	for ($j = 0; $j < $usuarios["numcampos"]; $j++) { $sistema = "";
+	for ($j = 0; $j < $usuarios["numcampos"]; $j++) {
+		$sistema = "";
 		if ($usuarios[$j]["sistema"] == 0)
 			$sistema = "(Sin SAIA)";
 		$valor = in_array($usuarios[$j][$tipo_id], $seleccionados);
 		//alerta($valor);
 		$adicional = "";
-		if ($valor != "" && $valor != Null)
+		if ($valor != "" && $valor != null)
 			$adicional = " checked=\"1\" ";
 		$func .= ("<item style=\"font-family:verdana; font-size:7pt;\" $adicional ");
 		if ($usuarios[$j]["nombres_ord"])
@@ -340,7 +355,8 @@ function llena_funcionarios($codigo, $ruta, $tipo_llenado) {
 		return ("");
 }
 
-function llena_funcionario($codigo, $ruta) {
+function llena_funcionario($codigo, $ruta)
+{
 	global $conn, $sql, $verifica_flujo;
 	if ($verifica_flujo == -1) {
 		return ("");
@@ -350,25 +366,27 @@ function llena_funcionario($codigo, $ruta) {
 		$sistema = "";
 		if ($usuarios[0]["sistema"] == 0)
 			$sistema = "Sin SAIA";
-		echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
+		echo ("<item style=\"font-family:verdana; font-size:7pt;\" ");
 		if ($usuarios[0]["nombres_ord"])
-			echo("text=\"" . ucwords(codifica_encabezado(htmlspecialchars(strtolower($usuarios[0]["nombres_ord"] . " " . $usuarios[0]["apellidos"])))) . " (" . $usuarios[0]["funcionario_codigo"] . ") $sistema\" id=\"" . $usuarios[0]["funcionario_codigo"] . "%$ruta\" ruta=\"$ruta\">");
+			echo ("text=\"" . ucwords(codifica_encabezado(htmlspecialchars(strtolower($usuarios[0]["nombres_ord"] . " " . $usuarios[0]["apellidos"])))) . " (" . $usuarios[0]["funcionario_codigo"] . ") $sistema\" id=\"" . $usuarios[0]["funcionario_codigo"] . "%$ruta\" ruta=\"$ruta\">");
 		else
-			echo("text=\"" . codifica_encabezado(htmlspecialchars($usuarios[0]["login"] . "\" id=\"" . $usuarios[0]["funcionario_codigo"])) . "\" ruta=\"$ruta\">");
-		echo("</item>\n");
-		return (TRUE);
+			echo ("text=\"" . codifica_encabezado(htmlspecialchars($usuarios[0]["login"] . "\" id=\"" . $usuarios[0]["funcionario_codigo"])) . "\" ruta=\"$ruta\">");
+		echo ("</item>\n");
+		return (true);
 	}
-	return (FALSE);
+	return (false);
 }
 
-function funcionarios_inactivos() {
+function funcionarios_inactivos()
+{
 	global $conn, $verifica_flujo;
 	if ($verifica_flujo == -1) {
 		return ("");
 	}
 	$usuarios = busca_filtro_tabla("A.login,A.funcionario_codigo,TRIM(UPPER(A.nombres)) AS nombres_ord,TRIM(UPPER(A.apellidos)) AS apellidos", "funcionario A", "estado=0", "nombres_ord,apellidos ASC", $conn);
 	$func = "";
-	for ($j = 0; $j < $usuarios["numcampos"]; $j++) { $func .= ("<item style=\"font-family:verdana; font-size:7pt;\" ");
+	for ($j = 0; $j < $usuarios["numcampos"]; $j++) {
+		$func .= ("<item style=\"font-family:verdana; font-size:7pt;\" ");
 		if ($usuarios[$j]["nombres_ord"])
 			$func .= ("text=\"" . ucwords(codifica_encabezado(htmlspecialchars(strtolower($usuarios[$j]["nombres_ord"] . " " . $usuarios[$j]["apellidos"])))) . "\" id=\"" . $usuarios[$j]["funcionario_codigo"] . "\" >");
 		else
@@ -381,14 +399,16 @@ function funcionarios_inactivos() {
 		return ("");
 }
 
-function funcionarios_sin_rol() {
+function funcionarios_sin_rol()
+{
 	global $conn, $seleccionados, $verifica_flujo;
 	if ($verifica_flujo == -1) {
 		return ("");
 	}
 	$usuarios = busca_filtro_tabla("A.login,A.funcionario_codigo,TRIM(UPPER(A.nombres)) AS nombres_ord,TRIM(UPPER(A.apellidos)) AS apellidos", "funcionario A", "estado=1 and idfuncionario not in(select funcionario_idfuncionario from dependencia_cargo where estado=1)", "nombres_ord,apellidos ASC", $conn);
 	$func = "";
-	for ($j = 0; $j < $usuarios["numcampos"]; $j++) { $func .= ("<item style=\"font-family:verdana; font-size:7pt;\" ");
+	for ($j = 0; $j < $usuarios["numcampos"]; $j++) {
+		$func .= ("<item style=\"font-family:verdana; font-size:7pt;\" ");
 		if ($usuarios[$j]["nombres_ord"])
 			$func .= ("text=\"" . ucwords(codifica_encabezado(htmlspecialchars(strtolower($usuarios[$j]["nombres_ord"] . " " . $usuarios[$j]["apellidos"])))) . "\" id=\"" . $usuarios[$j]["funcionario_codigo"] . "\" ");
 		else
@@ -397,18 +417,20 @@ function funcionarios_sin_rol() {
 			$func .= " checked=\"true\" ";
 		$func .= ("></item>\n");
 	}
-	if ($usuarios["numcampos"])
+	if ($usuarios["numcampos"]){
 		return ($func);
-	else
-		return ("");
+	}else{
+		return "";
+	}
 }
 
-function llena_ruta($doc) {
+function llena_ruta($doc)
+{
 	global $conn, $sql;
 	if ($verifica_flujo == -1) {
 		return ("");
 	}
-	$llenado = FALSE;
+	$llenado = false;
 	$origen = usuario_actual("funcionario_codigo");
 	$documento = busca_filtro_tabla("", "documento", "iddocumento=" . $doc, "", $conn);
 	if ($documento["numcampos"]) {
@@ -432,9 +454,10 @@ function llena_ruta($doc) {
 	return $llenado;
 }
 
-function codifica_caracteres($original) {
+function codifica_caracteres($original)
+{
 	$codificada = str_replace("ACUTE;", "acute;", $original);
 	$codificada = str_replace("TILDE;", "tilde;", $codificada);
-	return ($codificada);
+	return $codificada;
 }
 ?>
