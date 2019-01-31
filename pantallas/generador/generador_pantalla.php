@@ -591,10 +591,10 @@ for ($i = 0; $i < $cant_js; $i++) {
 $(document).ready(function() {
     $("#generar_pantalla").click(function(e) {
         if(e.which) {
-            alert("dsds");
+            
         }
         else {
-            alert("trigger")
+            
         }
     });
     $("#cambiar_vista").hide();
