@@ -90,6 +90,31 @@ $(function(){
         })
     });
 
+    $(document).on('click', '#remove_documents', function(){
+        let firstTr = $(`:checkbox:checked`).first().parents('tr[data-index]');
+        let transfer = firstTr.find('[data-transfer]').data('transfer');
+        let selections = $('#table').data('selections').split(',').map(Number);
+
+        $.post(`${baseUrl}app/busquedas/sacar_transferencia.php`, {
+            key: localStorage.getItem('key'),
+            selections: selections,
+            transfer: transfer
+        }, function(response){
+            if(response.success){
+                top.notification({
+                    type: 'success',
+                    message: response.message
+                });
+                $('#table').bootstrapTable('refresh')
+            }else{
+                top.notification({
+                    type: 'error',
+                    message: response.message
+                });
+            }
+        }, 'json');
+    });
+
     $(document).on('click', 'tr[data-index]', function(e){
         if(!$(e.target).hasClass('action')){
             let node = $(this).find('.principal_action');

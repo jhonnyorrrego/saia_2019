@@ -15,11 +15,11 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
-$Response = (object)array(
+$Response = (object)[
     'success' => 1,
     'message' => '',
-    'data' => (object)array()
-);
+    'data' => []
+];
 
 if($_REQUEST['color'] && $_SESSION['idfuncionario']){
     $Configuracion = Configuracion::findByName('color_institucional');

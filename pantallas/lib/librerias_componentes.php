@@ -5,11 +5,11 @@ function fecha_actual_saia($idpantalla_campos) {
 
 function obtener_ruta_db_superior($idpantalla_campos) {
 	global $ruta_db_superior;
-	return ($ruta_db_superior);
+	return $ruta_db_superior;
 }
 
 function clase_eliminar_pantalla_componente($idpantalla_campos) {
-	return ('<div class="close" idpantalla_campos="' . $idpantalla_campos . '">&times;</div>');
+	return '<div class="close" idpantalla_campos="' . $idpantalla_campos . '">&times;</div>';
 }
 
 function cargar_default_arbol_funcionarios($campo, $seleccionado) {
@@ -22,11 +22,11 @@ function cargar_default_arbol_funcionarios($campo, $seleccionado) {
 		}
 		$texto .= '</select><br /><br />';
 	}
-	return ($texto);
+	return $texto;
 }
 
 function generar_llave_md5_saia() {
 	$md5 = md5(date("Y-m-d H:i:s"));
-	return ($md5);
+	return $md5;
 }
 ?>

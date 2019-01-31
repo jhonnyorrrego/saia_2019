@@ -31,11 +31,10 @@ function procesar_etiqueta_parrafo($idcampo = '', $seleccionado = '', $accion = 
         $datos = "<b>Texto descriptivo:</b> no se almacena en base de datos";
     }
 
-    $texto = '<div class="control-group element" idpantalla_componente="' . $campo["idpantalla_componente"]. '"';
-    $texto .= '" idpantalla_campo="' . $idcampo . '" id="pc_' . $idcampo . '" nombre="' . $campo["etiqueta_html"] . '">';
-    $texto .= clase_eliminar_pantalla_componente($idcampo);
-    $texto .= "<p>$datos</p>";
-    $texto .= "\n</div>";
+    $eliminarComponente = clase_eliminar_pantalla_componente($idcampo);
+    $texto = "<li class='ui-state-default element' idpantalla_componente='{$campo["idpantalla_componente"]}' idpantalla_campo='{$idcampo}' id='pc_{$idcampo}' nombre='{$campo["etiqueta_html"]}'>
+        <span class='ui-icon ui-icon-arrowthick-2-n-s' style='font-size:12px;'> {$datos}</span> {$eliminarComponente}
+    </li>";
 
     return ($texto);
 }

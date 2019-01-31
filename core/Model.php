@@ -217,13 +217,16 @@ abstract class Model
     }
 
     /**
-     * modify a record on the table by pk
+     * modify a record
+     *
+     * @param boolean $force omitir valores null
+     * @return void
      */
-    public final function update()
+    public final function update($force = false)
     {
         $response = false;
         if ($this->beforeUpdate()) {
-            $response = $this->runUpdate();
+            $response = $this->runUpdate($force);
             if ($response) {
                 $this->afterUpdate();
             }
@@ -231,9 +234,10 @@ abstract class Model
         return $response ? $this->getPK() : 0;
     }
 
-    private function runUpdate()
+    private function runUpdate($force)
     {
-        return self::executeUpdate($this->getNotNullAttributes(), [$this->getPkName() => $this->getPK()]);
+        $attributes = $force ? $this->getAttributes() : $this->getNotNullAttributes();
+        return self::executeUpdate($attributes, [$this->getPkName() => $this->getPK()]);
     }
 
     public final function delete()

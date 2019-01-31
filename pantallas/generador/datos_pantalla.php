@@ -641,20 +641,20 @@ $("document").ready(function(){
 	});
 
 	if(formato!==null && formato.numcampos) {
-        $('#nombre_formato').attr('value',formato[0].nombre);
-        $('#etiqueta_formato').attr('value',formato[0].etiqueta);
-        //$('#tabla_formato').attr('value',formato[0].tabla);
-        $('#descripcion_formato').attr('value',descripcion_formato);
-        $('#proceso_pertenece').attr('value',formato[0].proceso_pertenece);
-        $('#serie_idserie').attr('value',formato[0].serie_idserie);
-        $('#version').attr('value',formato[0].version);
-        $('#librerias_formato').attr('value',formato[0].librerias);
-        $('#etiqueta_formato').attr('value',formato[0].etiqueta);
-        $('#ruta_formato').attr('value',formato[0].ruta_formato);
-        $('#ayuda_formato').attr('value',formato[0].ayuda);
-        //$('#prefijo_formato').attr('value',formato[0].prefijo);
-        $('#ruta_almacenamiento_formato').attr('value',formato[0].ruta_almacenamiento);
-        $('#idformato').attr('value',formato[0].idformato);
+        $('#nombre_formato').val(formato[0].nombre);
+        $('#etiqueta_formato').val(formato[0].etiqueta);
+        //$('#tabla_formato').val(formato[0].tabla);
+        $('#descripcion_formato').val(descripcion_formato);
+        $('#proceso_pertenece').val(formato[0].proceso_pertenece);
+        $('#serie_idserie').val(formato[0].serie_idserie);
+        $('#version').val(formato[0].version);
+        $('#librerias_formato').val(formato[0].librerias);
+        $('#etiqueta_formato').val(formato[0].etiqueta);
+        $('#ruta_formato').val(formato[0].ruta_formato);
+        $('#ayuda_formato').val(formato[0].ayuda);
+        //$('#prefijo_formato').val(formato[0].prefijo);
+        $('#ruta_almacenamiento_formato').val(formato[0].ruta_almacenamiento);
+        $('#idformato').val(formato[0].idformato);
         $('#tipo_formato_'+formato[0].tipo_formato).attr('checked',"checked");
         $('#versionar_'+formato[0].versionar).attr('checked',"checked");
         $('#accion_eliminar_'+formato[0].accion_eliminar).attr('checked',"checked");
@@ -662,7 +662,7 @@ $("document").ready(function(){
         	$("#campos_formato").show();
         }
         $('#aprobacion_automatica_'+formato[0].aprobacion_automatica).attr('checked',"checked");
-        $('#enviar_datos_formato').attr('value','editar_datos_formato');
+        $('#enviar_datos_formato').val('editar_datos_formato');
   	    $('#tabs_formulario a[href="#datos_formulario-tab"]').tab('show');
   	    $('#componentes_acciones').hide();
   	    $('.nav li').removeClass('disabled');

@@ -24,19 +24,22 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
     $data = array();
     $parent = $_REQUEST['parent'] ? $_REQUEST['parent'] : 0;
     $component = BusquedaComponente::findByName('etiquetados');
-    $tags = Etiqueta::findActiveByUser($_REQUEST['iduser']);
+    $tags = Etiqueta::findAllByAttributes([
+        'estado' => 1,
+        'fk_funcionario' => $_REQUEST['iduser']
+    ]);
 
-    foreach($tags as $tag){
+    foreach($tags as $Etiqueta){
         $url = 'views/buzones/index.php?';
         $url .= http_build_query([
-            'variable_busqueda' => $tag['idetiqueta'],
+            'variable_busqueda' => $Etiqueta->getPK(),
             'idbusqueda_componente' => $component['idbusqueda_componente']
         ]);
 
         $data[] = array(
-            'idmodule' => $tag['idetiqueta'],
+            'idmodule' => $Etiqueta->getPK(),
             'isParent' => false,
-            'name' => html_entity_decode($tag['nombre']),
+            'name' => html_entity_decode($Etiqueta->nombre),
             'icon' => 'fa fa-tag',
             'type' => 'tag',
             'url' => $url
@@ -45,7 +48,7 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['iduser']) {
 
     $Response->data = $data;
 } else {
-    $Response->message = 'Usuario invalido';
+    $Response->message = 'Debe iniciar sesion';
     $Response->success = 0;
 }
 

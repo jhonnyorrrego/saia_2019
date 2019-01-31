@@ -38,13 +38,16 @@ global $conn;
 		$seleccionado=$campo["predeterminado"];
 	}
   if($accion==''){
+    $eliminarCampo = clase_eliminar_pantalla_componente($idcampo); 
     $adicionales_conector_hidden=' type="text" class="elemento_formulario" placeholder="'.$campo["placeholder"].'"  disabled="disabled" ';
-    $encabezado_conector_hidden='<div class="control-group element" idpantalla_componente="'.$campo["idpantalla_componente"].'" idpantalla_campo="'.$idcampo.'" id="pc_'.$idcampo.'" nombre="'.$campo["nombre_componente"].'">'.clase_eliminar_pantalla_componente($idcampo).'<label class="control-label" for="'.$campo["nombre"].'">'.$campo["etiqueta"];
+    $encabezado_conector_hidden = "<li class ='ui-state-default element' idpantalla_componente = '{$campo["idpantalla_componente"]}' idpantalla_campo = '{$idcampo}' id = 'pc_{$idcampo}' nombre = '{$campo["etiqueta_html"]}' >{$eliminarCampo}
+    <span class='ui-icon ui-icon-arrowthick-2-n-s' style='font-size:12px;'><b>{$campo["etiqueta"]}";   
+    
     if($campo["obligatoriedad"]){
       $encabezado_conector_hidden.='*';
     }
-    $encabezado_conector_hidden.='</label><div class="controls">';
-    $pie_conector_hidden='</div></div>';
+    $encabezado_conector_hidden.='</span><div class="controls">';
+    $pie_conector_hidden='</div></li>';
   }
   $texto.=$encabezado_conector_hidden.'<input '.$adicionales_conector_hidden.' name="'.$campo["nombre"].'" id="'.$campo["nombre"].'" value="'.$seleccionado.'">'.$pie_conector_hidden;  
 	return($texto);
