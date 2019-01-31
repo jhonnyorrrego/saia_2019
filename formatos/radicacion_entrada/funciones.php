@@ -560,7 +560,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
         $tabla .= "<tr>
       <td style='width:25%;'><strong>N&Uacute;MERO OFICIO:</strong></td>
       <td colspan='2' style='width:25%;'>" . $datos[0]['numero_oficio'] . "</td>
-      <td style='width:25%;'><strong>FECHA OFICIO:</strong></td>
+      <td style='width:25%;'><strong>FECHA DOCUMENTO ENTRADA:</strong></td>
       <td colspan='2' style='width:25%;'>" . $datos[0]['fecha_oficio_entrada'] . "</td>
    </tr>
    <tr>

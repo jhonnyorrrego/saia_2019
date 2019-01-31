@@ -15,13 +15,19 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
 $Response = (object) array(
-    'data' => new stdClass(),
+    'data' => [],
     'message' => '',
-    'success' => 1,
+    'success' => 0,
 );
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']){
-    $funcionarios = Funcionario::findAllByTerm($_REQUEST['term']);
+    if(!empty($_REQUEST['term'])){
+        $funcionarios = Funcionario::findAllByTerm($_REQUEST['term']);
+    }else if(!empty($_REQUEST['defaultUser'])){
+        $funcionarios[] = new Funcionario($_REQUEST['defaultUser']);
+    }else if(!empty($_REQUEST['documentId'])){
+        $funcionarios = Funcionario::findByDocumentTransfer($_REQUEST['documentId']);
+    }
 
     if(count($funcionarios)){
         $data = [];
@@ -34,9 +40,9 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         }
 
         $Response->data = $data;
+        $Response->success = 1;
     }else{
-        $Response->message = "Error al guardar";
-        $Response->success = 0;
+        $Response->message = "No se encontraron registros";
     }
 } else {
     $Response->message = "Debe iniciar sesion";
