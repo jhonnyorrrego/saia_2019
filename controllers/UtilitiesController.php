@@ -184,26 +184,7 @@ class UtilitiesController
         }
         return $data;
     }
-    /**
-     * Ejecuta Select en la DB y retorna datos
-     *
-     * @param string $sql : Select a ejecutar
-     * @return array
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    public static function ejecutaSelect(string $sql) : array
-    {
-        $data = [
-            'numcampos' => 0
-        ];
-        $records = Conexion::getConnection()->executeSelect($sql);
-        $cant = count($records);
-        if ($cant) {
-            $data = $records;
-            $data['numcampos'] = $cant;
-        }
-        return $data;
-    }
+
     /**
      * filtra el array eliminando los datos vacios
      *

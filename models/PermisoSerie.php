@@ -29,7 +29,7 @@ class PermisoSerie extends Model
 
     /**
      * Crea el permiso de la serie con sus correspondientes vinculaciones (Permiso expediente)
-     * NO utilizar save() para crear una permiso de serie
+     * NO utilizar save/create para crear una permiso de serie
      *
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
@@ -42,7 +42,7 @@ class PermisoSerie extends Model
             'exito' => 0,
             'message' => ''
         ];
-        if ($this->save()) {
+        if ($this->create()) {
             PermisoExpediente::deleteAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1);
             PermisoExpediente::insertAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1, $this->permiso);
 
@@ -60,9 +60,10 @@ class PermisoSerie extends Model
      */
     public function updatePermisoSerie()
     {
-        $this->update();
-        PermisoExpediente::deleteAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1);
-        PermisoExpediente::insertAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1, $this->permiso);
+        if ($this->update()) {
+            PermisoExpediente::deleteAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1);
+            PermisoExpediente::insertAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1, $this->permiso);
+        }
     }
     /**
      * Elimina el permiso sobre la serie y sus correspondientes vinculados (permiso expediente)

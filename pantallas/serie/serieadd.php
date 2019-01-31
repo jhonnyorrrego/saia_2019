@@ -44,7 +44,7 @@ if ($sAction == "A") {
 	];
 
 	$Serie = new Serie();
-	$Serie->SetAttributes($attributes);
+	$Serie->SetAttributes(UtilitiesController::cleanForm($attributes));
 	$response = $Serie->createSerie($_POST['fk_dependencia']);
 	if ($response['exito']) {
 		alerta($response['message']);

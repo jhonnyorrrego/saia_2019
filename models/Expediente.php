@@ -126,8 +126,7 @@ class Expediente extends Model
             $cod_arbol = $padre->cod_arbol . '.' . $this->idexpediente;
         }
         $this->cod_arbol = $cod_arbol;
-        $this->update();
-        return true;
+        return $this->update();
     }
     /**
      * Se ejecuta posterior al eliminar un expediente
@@ -145,17 +144,17 @@ class Expediente extends Model
             }
         }
 
-        $ExpedienteAbce = ExpedienteAbce::findAllByAttributes(['fk_expediente' => $this->getPK()]);
+        /*$ExpedienteAbce = ExpedienteAbce::findAllByAttributes(['fk_expediente' => $this->getPK()]);
         if ($ExpedienteAbce) {
             foreach ($ExpedienteAbce as $instance) {
                 $instance->delete();
             }
-        }
+        }*/
         return true;
     }
     /**
      * Crea el expediente con sus correspondientes vinculados
-     * NO utlizar save()
+     * NO utlizar save/create
      * 
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
@@ -167,7 +166,7 @@ class Expediente extends Model
             'exito' => 0,
             'message' => '',
         ];
-        if ($this->save()) {
+        if ($this->create()) {
             if (!$this->nucleo) {
                 $instance = new EntidadExpediente();
                 $attributes = [
@@ -198,11 +197,8 @@ class Expediente extends Model
      */
     public function getEstado() : string
     {
-        $estado = array(
-            0 => 'INACTIVO',
-            1 => 'ACTIVO'
-        );
-        return $estado[$this->estado];
+        $data = $this->keyValueField('estado');
+        return $data[$this->estado];
     }
     /**
      * retorna la instancia del expediente padre
@@ -254,27 +250,14 @@ class Expediente extends Model
 
     public function getSoporte()
     {
-        $soporte = [
-            1 => 'CD - ROM',
-            2 => 'DISKETE',
-            3 => 'DVD',
-            4 => 'DOCUMENTO',
-            5 => 'FAX',
-            6 => 'REVISTA O LIBRO',
-            7 => 'VIDEO',
-            8 => 'OTROS ANEXOS'
-        ];
-        return $soporte[$this->soporte];
+        $data = $this->keyValueField('soporte');
+        return $data[$this->soporte];
     }
 
     public function getFrecuenciaConsulta()
     {
-        $frecuencia = [
-            1 => 'Alta',
-            2 => 'Media',
-            3 => 'Baja'
-        ];
-        return $frecuencia[$this->frecuencia_consulta];
+        $data = $this->keyValueField('frecuencia_consulta');
+        return $data[$this->frecuencia_consulta];
     }
 
     /**
@@ -287,10 +270,12 @@ class Expediente extends Model
     {
         $cant = 1;
         if ($this->tomo_padre) {
-            $data = busca_filtro_tabla("count(idexpediente) as cant", "expediente", "tomo_padre={$this->tomo_padre}", "", $conn);
+            $sql = "SELECT count(idexpediente) as cant FROM expediente WHERE tomo_padre={$this->tomo_padre}";
+            $data = $this->search($sql);
             $cant = $data[0]['cant'] + 1;
         } else {
-            $data = busca_filtro_tabla("count(idexpediente) as cant", "expediente", "tomo_padre={$this->idexpediente}", "", $conn);
+            $sql = "SELECT count(idexpediente) as cant FROM expediente WHERE tomo_padre={$this->idexpediente}";
+            $data = $this->search($sql);
             $cant = $data[0]['cant'] + 1;
         }
         return $cant;
@@ -316,8 +301,8 @@ class Expediente extends Model
     {
         $cant = 0;
         $sql = "SELECT COUNT(idexpediente) as cant FROM expediente WHERE agrupador={$tipoAg} and cod_padre={$this->idexpediente}";
-        $response = UtilitiesController::ejecutaSelect($sql);
-        if ($response['numcampos']) {
+        $response = $this->search($sql);
+        if ($response) {
             $cant = $response[0]['cant'];
         }
         return $cant;
@@ -325,13 +310,8 @@ class Expediente extends Model
 
     public function getAgrupador()
     {
-        $data = [
-            0 => 'Expediente',
-            1 => 'Dependencia',
-            2 => 'Serie',
-            3 => 'Separador'
-        ];
-        return $tipoAgrupador = $data[$this->agrupador];
+        $data = $this->keyValueField('agrupador');
+        return $data = $data[$this->agrupador];
     }
 
     /**
@@ -352,16 +332,11 @@ class Expediente extends Model
                 'd' => true
             ];
         } else {
-            $consPermiso = busca_filtro_tabla(
-                "permiso",
-                "permiso_expediente",
-                "fk_expediente={$this->idexpediente} and fk_funcionario={$idfuncionario}",
-                "",
-                $conn
-            );
-            if ($consPermiso['numcampos']) {
-                for ($i = 0; $i < $consPermiso['numcampos']; $i++) {
-                    $permisos = explode(',', $consPermiso[$i]['permiso']);
+            $sql = "SELECT permiso FROM permiso_expediente WHERE fk_expediente={$this->idexpediente} and fk_funcionario={$idfuncionario}";
+            $consPermiso = $this->search($sql);
+            if ($consPermiso) {
+                foreach ($consPermiso as $fila) {
+                    $permisos = explode(',', $fila['permiso']);
                     foreach ($permisos as $permiso) {
                         $this->permiso[$permiso] = true;
                     }
@@ -505,5 +480,69 @@ class Expediente extends Model
         }
         return $data;
     }
+    /**
+     * Crea el HTML de un campo
+     *
+     * @param string $campo : Nombre del campo en la DB
+     * @param string $etiqHtml : Etiqueta HTML
+     * @param integer $selected : ID del cual desea este checkeado/seleccionado
+     * @return string
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public static function getHtmlField(string $campo, string $etiqHtml, $selected = 0) : string
+    {
+        $html = '';
+        switch ($etiqHtml) {
+            case 'select':
+                $data = self::keyValueField($campo);
+                foreach ($data as $key => $value) {
+                    if ($selected == $key) {
+                        $html .= "<option value='{$key}' selected>{$value}</option>";
+                    } else {
+                        $html .= "<option value='{$key}'>{$value}</option>";
+                    }
+                }
+                break;
+        }
+        return $html;
+    }
 
+
+    /**
+     * Obtiene los datos de los campos key y value
+     *
+     * @param string $campo : nombre del campo en la db
+     * @return array
+     */
+    public static function keyValueField(string $campo) : array
+    {
+        $response['estado'] = [
+            0 => 'INACTIVO',
+            1 => 'ACTIVO'
+        ];
+        $response['soporte'] = [
+            1 => 'CD - ROM',
+            2 => 'DISKETE',
+            3 => 'DVD',
+            4 => 'DOCUMENTO',
+            5 => 'FAX',
+            6 => 'REVISTA O LIBRO',
+            7 => 'VIDEO',
+            8 => 'OTROS ANEXOS'
+        ];
+        $response['frecuencia_consulta'] = [
+            1 => 'Alta',
+            2 => 'Media',
+            3 => 'Baja'
+        ];
+
+        $response['agrupador'] = [
+            0 => 'Expediente',
+            1 => 'Dependencia',
+            2 => 'Serie',
+            3 => 'Separador'
+        ];
+
+        return $response[$campo];
+    }
 }

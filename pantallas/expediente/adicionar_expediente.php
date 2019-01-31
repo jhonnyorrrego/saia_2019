@@ -16,16 +16,9 @@ if(!$idexpediente){
     return ;
 }
 
-//TODO: PENDIENTE DE VALIDAR
-$cajas = busca_filtro_tabla("distinct a.idcaja,a.no_consecutivo", "caja a,entidad_caja e", "a.idcaja=e.caja_idcaja and e.estado=1 and ((e.entidad_identidad=1 and e.llave_entidad=" . $_SESSION["idfuncionario"] . ") or a.funcionario_idfuncionario=" . $_SESSION["idfuncionario"] . ")", "", $conn);
-$option_cajas = '<option value="">Por favor seleccione...</option>';
-for ($i = 0; $i < $cajas["numcampos"]; $i++) {
-    $selected = "";
-    if ($_REQUEST["fk_idcaja"] == $cajas[$i]["idcaja"]) {
-        $selected = "selected";
-    }
-    $option_cajas .= "<option value='" . $cajas[$i]["idcaja"] . "' " . $selected . ">" . $cajas[$i]["no_consecutivo"] . "</option>";
-}
+$ExpCodPadre=new Expediente($idexpediente);
+$Dep=$ExpCodPadre->getDependenciaFk()[0];
+$Serie=$ExpCodPadre->getSerieFk()[0];
 
 include_once $ruta_db_superior . 'assets/librerias.php';
 include_once $ruta_db_superior . "librerias_saia.php";
@@ -98,7 +91,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
                                 <div class="form-group ocultar">
                                     <label>Caja</label>
                                     <select class="form-control" name="fk_caja" id="fk_caja">
-                                         <?= $option_cajas; ?>
+                                        <option value="">por favor seleccione</option>
                                     </select>
                                 </div>
 
@@ -110,14 +103,14 @@ include_once $ruta_db_superior . "librerias_saia.php";
                                     <div class="form-group ocultar">
                                         <label>Codigo numero</label>
                                         <span class="help">e.j. "Código Dependencia - Código Serie - Numero"</span>
-                                        <input type="text" class="form-control" name="codDependencia" id="codDependencia" disabled="">
-                                        <input type="text" class="form-control" name="CodSerie" id="CodSerie" disabled="">
+                                        <input type="text" class="form-control" name="codDependencia" id="codDependencia" value="<?=$Dep->codigo; ?>" disabled="">
+                                        <input type="text" class="form-control" name="CodSerie" id="CodSerie" value="<?=$Serie->codigo?>" disabled="">
                                         <input type="text" class="form-control" name="codigo_numero" id="codigo_numero">
                                     </div>
 
                                     <div class="form-group ocultar">
                                         <label>Fondo</label>
-                                        <input type="text" class="form-control" name="fondo" id="fondo">
+                                        <input type="text" class="form-control" name="fondo" id="fondo" value="<?=$Dep->nombre; ?>">
                                     </div>
 
                                     <div class="form-group ocultar">
@@ -165,14 +158,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
                                         <label>Soporte</label>
                                         <select class="form-control" name="soporte" id="soporte">
                                             <option value="">por favor seleccione</option>
-                                            <option value="1">CD-ROM</option>
-                                            <option value="2">DISKETE</option>
-                                            <option value="3">DVD</option>
-                                            <option value="4">DOCUMENTO</option>
-                                            <option value="5">FAX</option>
-                                            <option value="6">REVISTA O LIBRO</option>
-                                            <option value="7">VIDEO</option>
-                                            <option value="8">OTROS ANEXOS</option>
+                                            <?=Expediente::getHtmlField('soporte','select')?>
                                         </select>
                                     </div>
 
@@ -180,9 +166,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
                                         <label>Frecuencia</label>
                                         <select class="form-control" name="frecuencia_consulta" id="frecuencia_consulta">
                                             <option value="">por favor seleccione</option>
-                                            <option value="1">Alta</option>
-                                            <option value="2">Media</option>
-                                            <option value="3">Baja</option>
+                                            <?= Expediente::getHtmlField('frecuencia_consulta', 'select') ?>
                                         </select>
                                     </div>
 
@@ -244,7 +228,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 						}
 					},
 					submitHandler : function(form) {
-                        $("#guardarExp").attr('disabled',true);
+                        //$("#guardarExp").attr('disabled',true);
                         var ruta_db_superior='<?=$ruta_db_superior;?>';
                         var idcomponente=$("#idbusqueda_componente").val(); 
                         var codPadre=$("#cod_padre").val(); 

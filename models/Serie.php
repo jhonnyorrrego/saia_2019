@@ -30,24 +30,26 @@ class Serie extends Model
 
     protected function defineAttributes()
     {
-        $this->dbAttributes = (object)['safe' => [
-            'nombre',
-            'cod_padre',
-            'dias_entrega',
-            'codigo',
-            'retencion_gestion',
-            'retencion_central',
-            'conservacion',
-            'digitalizacion',
-            'seleccion',
-            'otro',
-            'procedimiento',
-            'copia',
-            'tipo',
-            'estado',
-            'categoria',
-            'cod_arbol'
-        ]];
+        $this->dbAttributes = (object)[
+            'safe' => [
+                'nombre',
+                'cod_padre',
+                'dias_entrega',
+                'codigo',
+                'retencion_gestion',
+                'retencion_central',
+                'conservacion',
+                'digitalizacion',
+                'seleccion',
+                'otro',
+                'procedimiento',
+                'copia',
+                'tipo',
+                'estado',
+                'categoria',
+                'cod_arbol'
+            ]
+        ];
     }
     /**
      * Se ejecuta despues de crear la serie
@@ -64,13 +66,12 @@ class Serie extends Model
             $codArbol = $padre->cod_arbol . '.' . $this->idserie;
         }
         $this->cod_arbol = $codArbol;
-        $this->update();
-        return true;
+        return $this->update();
     }
 
     /**
      * Crea la serie con sus correspondientes vinculaciones (expedientes, entidad serie)
-     * NO utilizar save() para crear una serie
+     * NO utilizar create() para crear una serie
      *
      * @param string $dependenciasVinculadas : Dependencias a vinculadas a la serie
      * @return array
@@ -85,7 +86,7 @@ class Serie extends Model
         ];
 
         if ($this->categoria == 3) {
-            if ($this->save()) {
+            if ($this->create()) {
                 $response['exito'] = 1;
                 $response['message'] = 'Datos almacenados';
             } else {
@@ -93,7 +94,7 @@ class Serie extends Model
             }
         } else {
             if (!empty($dependenciasVinculadas)) {
-                if ($this->save()) {
+                if ($this->create()) {
                     $dependencia = explode(",", $dependenciasVinculadas);
                     $cd = count($dependencia);
 
@@ -154,7 +155,7 @@ class Serie extends Model
             'message' => ''
         ];
         if ($this->categoria == 3) {
-            if ($this->save()) {
+            if ($this->update()) {
                 $response['exito'] = 1;
                 $response['message'] = 'Datos actualizados';
             } else {
@@ -174,13 +175,15 @@ class Serie extends Model
                 $this->cod_arbol = $codArbol;
             }
 
-            if ($this->save()) {
+            if ($this->update()) {
                 $response['exito'] = 1;
                 $response['message'] = 'Datos actualizados';
 
                 if ($updateArbol) {
                     $update = "UPDATE serie SET cod_arbol=replace(cod_arbol,'{$codArbolAnt}','{$this->cod_arbol}') WHERE cod_arbol LIKE '{$codArbolAnt}.%'";
-                    phpmkr_query($udpate);
+                    if (!$this->query($update)) {
+                        $response['message2'] = 'Error al actualizar el cod arbol';
+                    }
                 }
 
                 $idsExpediente = $this->getExpedienteFk();
@@ -194,7 +197,9 @@ class Serie extends Model
                             'codigo_numero' => $this->codigo
                         ];
                         $Expediente->SetAttributes($attributes);
-                        $Expediente->update();
+                        if (!$Expediente->update()) {
+                            $response['message2'] .= 'Error al actualizar el expediente';
+                        }
                     }
                 }
 
@@ -324,7 +329,8 @@ class Serie extends Model
                 break;
         }
         if ($filtroDocs !== false) {
-            $docsVinculados = busca_filtro_tabla("count(*) as cant", "documento", "estado not in ('ELIMINADO') and serie in ({$filtroDocs})", "", $conn);
+            $select = "select count(*) as cant from documento where estado not in ('ELIMINADO') and serie in ({$filtroDocs})";
+            $docsVinculados = $this->search($select);
             if ($docsVinculados[0]["cant"]) {
                 $cant = $docsVinculados[0]["cant"];
             }
@@ -350,15 +356,15 @@ class Serie extends Model
             $parteWhere .= " and tipo={$tipo}";
         }
         $data = [];
-        $hijos = busca_filtro_tabla("idserie", "serie", "cod_arbol like '{$this->cod_arbol}.%' " . $parteWhere, "", $conn);
-        if ($hijos['numcampos']) {
-            for ($i = 0; $i < $hijos['numcampos']; $i++) {
+        $sql = "SELECT idserie FROM serie WHERE cod_arbol like '{$this->cod_arbol}.%' {$parteWhere}";
+        $hijos = $this->search($sql);
+        if ($hijos) {
+            foreach ($hijos as $fila) {
                 if ($instance) {
-                    $data[] = new self($hijos[$i]['idserie']);
+                    $data[] = new self($fila['idserie']);
                 } else {
-                    $data[] = $hijos[$i]['idserie'];
+                    $data[] = $fila['idserie'];
                 }
-
             }
         }
         return $data;

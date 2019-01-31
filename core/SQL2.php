@@ -326,9 +326,9 @@ abstract class SQL2
 
 	public abstract function resta_fechas($fecha1, $fecha2);
 
-	public abstract function fecha_db_almacenar($fecha, $formato);
+	public static abstract function fecha_db_almacenar($fecha, $formato);
 
-	public abstract function fecha_db_obtener($campo, $formato);
+	public static abstract function fecha_db_obtener($campo, $formato);
 
 	public abstract function mostrar_error();
 

@@ -49,7 +49,7 @@ if ($sAction == "A") {
 		'estado' => $_POST['estado'],
 		'categoria' => $_POST['categoria']
 	];
-	$Serie->SetAttributes($attributes);
+	$Serie->SetAttributes(UtilitiesController::cleanForm($attributes));
 	$response = $Serie->updateSerie();
 	if ($response['exito']) {
 		alerta($response['message']);

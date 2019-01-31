@@ -37,7 +37,7 @@ class EntidadExpediente extends Model
 
     /**
      * Crea la Entidad expediente con sus correspondientes vinculados
-     * NO utlizar save()
+     * NO utlizar create/save
      * 
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
@@ -49,7 +49,7 @@ class EntidadExpediente extends Model
             'exito' => 0,
             'message' => '',
         ];
-        if ($this->save()) {
+        if ($this->create()) {
             $instance = $this->getExpedienteFk();
             if ($instance) {
                 $permisoExp= $instance[0];
@@ -71,7 +71,7 @@ class EntidadExpediente extends Model
                     ];
                     $PermisoExpediente = new PermisoExpediente();
                     $PermisoExpediente->setAttributes($attributes);
-                    $PermisoExpediente->save();
+                    $PermisoExpediente->create();
                 }
                 $data = PermisoSerie::findAllByAttributes(['fk_entidad_serie' => $permisoExp->fk_entidad_serie]);
                 if($data){

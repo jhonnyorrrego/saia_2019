@@ -346,7 +346,7 @@ else
 		return "DATEDIFF(DAY,$fecha2,$fecha1)";
 	}
 
-	function fecha_db_almacenar($fecha, $formato = NULL) {
+	static function fecha_db_almacenar($fecha, $formato = NULL) {
 		if (is_object($fecha)) {
 			$fecha = $fecha->format($formato);
 		}
@@ -380,7 +380,7 @@ else
 	}
 
 	// Fin Funcion fecha_db_almacenar
-	function fecha_db_obtener($campo, $formato = NULL) {
+	static function fecha_db_obtener($campo, $formato = NULL) {
 		if (!$formato)
 			$formato = "Y-m-d"; // formato por defecto php
 

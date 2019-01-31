@@ -26,6 +26,7 @@ class ExpedienteController
                 $attributes['estado_archivo'] = $instance->estado_archivo;
                 $attributes['fk_serie'] = $instance->fk_serie;
                 $attributes['nucleo'] = 0;
+                $attributes['cod_arbol'] = 0;
                 $attributes['fk_dependencia'] = $instance->fk_dependencia;
                 $attributes['fk_entidad_serie'] = $instance->fk_entidad_serie;
                 if (empty($attributes['fecha'])) {
@@ -33,14 +34,14 @@ class ExpedienteController
                 }
 
                 $Expediente = new Expediente();
-                $Expediente->setAttributes($attributes);
+                $Expediente->setAttributes(UtilitiesController::cleanForm($attributes));
                 $response = $Expediente->CreateExpediente();
                 if ($response['exito']) {
                     $response['message'] = 'Expediente guardado';
                     if (!empty($data['generarfiltro']) && !empty($data['idbusqueda_componente'])) {
                         $attributes = [
                             'fk_busqueda_componente' => $data["idbusqueda_componente"],
-                            'funcionario_idfuncionario' => $Expediente->propietario,
+                            'funcionario_idfuncionario' => $_SESSION['idfuncionario'],
                             'fecha' => date("Y-m-d H:i:s"),
                             'detalle' => 'idexpediente|=|' . $Expediente->getPK(),
                         ];
@@ -52,7 +53,56 @@ class ExpedienteController
                     }
                 }
             } else {
-                $response['message'] = 'falta el expediente padre';
+                $response['message'] = 'falta campos obligatorios expediente padre';
+            }
+        }
+        return ($response);
+    }
+
+    /**
+     * Procesa los datos del formulario y actualiza el expediente
+     *
+     * @param array $data : array con los datos del formulario
+     * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function updateExpedienteCont(array $data = []) : array
+    {
+        $response = [
+            'data' => [],
+            'exito' => 0,
+            'message' => 'Faltan los datos a procesar'
+        ];
+
+        if (!empty($data)) {
+            if (!empty($data['cod_padre']) && !empty($data['idexpediente'])) {
+                $Expediente = new Expediente($data['idexpediente']);
+                $data=[
+                    'nombre'=>'NULL'
+                ];
+                $Expediente->setAttributes($data);
+
+var_dump($Expediente->update(true));
+die("---");
+
+                if ($Expediente->update()) {
+                    $response['message'] = 'Expediente actualizado';
+                    if (!empty($data['generarfiltro']) && !empty($data['idbusqueda_componente'])) {
+                        $attributes = [
+                            'fk_busqueda_componente' => $data["idbusqueda_componente"],
+                            'funcionario_idfuncionario' => $_SESSION['idfuncionario'],
+                            'fecha' => date("Y-m-d H:i:s"),
+                            'detalle' => 'idexpediente|=|' . $Expediente->getPK(),
+                        ];
+                        $BusquedaFiltroTemp = new BusquedaFiltroTemp();
+                        $BusquedaFiltroTemp->setAttributes($attributes);
+                        if ($BusquedaFiltroTemp->save()) {
+                            $response['data']['idbusqueda_filtro_temp'] = $BusquedaFiltroTemp->getPK();
+                        }
+                    }
+                }
+            } else {
+                $response['message'] = 'faltal campos obligatorios expediente/expediente padre';
             }
         }
         return ($response);
@@ -84,15 +134,15 @@ class ExpedienteController
                     'propietario' => $_SESSION['idfuncionario'],
                     'responsable' => $_SESSION['idfuncionario'],
                     'tomo_padre' => $data['idexpediente'],
-                    'tomo_no' => $cant+1,
+                    'tomo_no' => $cant + 1,
                     'cod_arbol' => 0
                 ];
                 $ExpTomo->setAttributes($attributes);
                 $info = $ExpTomo->CreateExpediente();
                 $response = $info;
 
-                if($info['exito']){
-                    $response['data']['cod_padre']=$ExpTomo->cod_padre;
+                if ($info['exito']) {
+                    $response['data']['cod_padre'] = $ExpTomo->cod_padre;
                     if (!empty($data['generarfiltro']) && !empty($data['idbusqueda_componente'])) {
                         $attributes = [
                             'fk_busqueda_componente' => $data["idbusqueda_componente"],
@@ -106,7 +156,7 @@ class ExpedienteController
                             $response['data']['idbusqueda_filtro_temp'] = $BusquedaFiltroTemp->getPK();
                         }
                     }
-                }                
+                }
             }
         }
 
@@ -136,8 +186,9 @@ class ExpedienteController
         if ($cant) {
             $ok = 0;
             foreach ($SeriesPadres as $id) {
-                $exist = busca_filtro_tabla("identidad_serie", "entidad_serie", "fk_serie={$id} and fk_dependencia={$attributes['fk_dependencia']} and estado=1", "", $conn);
-                if (!$exist['numcampos']) {
+                $sql = "SELECT identidad_serie FROM entidad_serie WHERE fk_serie={$id} and fk_dependencia={$attributes['fk_dependencia']} and estado=1";
+                $exit=StaticSql::search($sql);
+                if (!$exist) {
                     $attributesPadre = $attributes;
                     $attributesPadre['fk_serie'] = $id;
 

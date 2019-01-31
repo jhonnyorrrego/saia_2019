@@ -15,17 +15,28 @@ $idexpediente = $_REQUEST['idexpediente'];
 if (!$idexpediente) {
     return;
 }
+$Expediente=new Expediente($idexpediente);
+$Dep=$Expediente->getDependenciaFk()[0];
+$Serie=$Expediente->getSerieFk()[0];
 
-//TODO: PENDIENTE DE VALIDAR
-$cajas = busca_filtro_tabla("distinct a.idcaja,a.no_consecutivo", "caja a,entidad_caja e", "a.idcaja=e.caja_idcaja and e.estado=1 and ((e.entidad_identidad=1 and e.llave_entidad=" . $_SESSION["idfuncionario"] . ") or a.funcionario_idfuncionario=" . $_SESSION["idfuncionario"] . ")", "", $conn);
-$option_cajas = '<option value="">Por favor seleccione...</option>';
-for ($i = 0; $i < $cajas["numcampos"]; $i++) {
-    $selected = "";
-    if ($_REQUEST["fk_caja"] == $cajas[$i]["caja"]) {
-        $selected = "selected";
-    }
-    $option_cajas .= "<option value='" . $cajas[$i]["idcaja"] . "' " . $selected . ">" . $cajas[$i]["no_consecutivo"] . "</option>";
+$ag=[
+    0=>'',
+    3=>''
+];
+$ag[$Expediente->agrupador]='checked';
+
+$fecExtIni='';
+if($Expediente->fecha_extrema_i){
+    $fecExtIni= DateController::convertDate($Expediente->fecha_extrema_i, 'Y-m-d H:i:s', 'Y-m-d');
 }
+$fecExtFin='';
+if ($Expediente->fecha_extrema_f) {
+    $fecExtFin = DateController::convertDate($Expediente->fecha_extrema_f, 'Y-m-d H:i:s', 'Y-m-d');
+}
+$params =[
+    'agrupador'=> intval($Expediente->agrupador),
+    'countDocuments'=> $Expediente->countDocuments()
+];
 
 include_once $ruta_db_superior . 'assets/librerias.php';
 include_once $ruta_db_superior . "librerias_saia.php";
@@ -62,43 +73,44 @@ include_once $ruta_db_superior . "librerias_saia.php";
                                 <div class="form-group required">
                                     <label>Tipo *</label>
                                     <div class="radio radio-info">
-                                        <input type="radio" checked="checked" value="0" name="agrupador" id="AgExp">
+                                        <input type="radio" checked="checked" value="0" name="agrupador" id="AgExp" <?=$ag[0]?> >
                                         <label for="AgExp">Expediente</label>
-                                        <input type="radio"  value="3" name="agrupador" id="AgAgr">
+                                        <input type="radio"  value="3" name="agrupador" id="AgAgr" <?=$ag[3]?>>
                                         <label for="AgAgr">Separador</label>
                                     </div>
+                                    <span class="help" id="notaAgr"></span>
                                 </div>
 
                                 <div class="form-group">
                                     <label>Nombre *</label>
-                                    <input type="text" class="form-control" name="nombre" id="nombre">
+                                    <input type="text" class="form-control" name="nombre" id="nombre" value="<?=$Expediente->nombre?>">
                                 </div>
 
                                 <div class="form-group ocultar">
                                     <label>Descripción</label>
-                                    <textarea class="form-control" name="descripcion" id="descripcion"></textarea>
+                                    <textarea class="form-control" name="descripcion" id="descripcion"><?=$Expediente->descripcion?></textarea>
                                 </div>
                                 
                                 <div class="form-group ocultar">
                                     <label>Indice uno </label>
-                                    <input type="text" class="form-control" name="indice_uno" id="indice_uno">
+                                    <input type="text" class="form-control" name="indice_uno" id="indice_uno" value="<?=$Expediente->indice_uno?>">
                                 </div>
 
                                 <div class="form-group ocultar">
                                     <label>Indice dos </label>
-                                    <input type="text" class="form-control" name="indice_dos" id="indice_dos">
+                                    <input type="text" class="form-control" name="indice_dos" id="indice_dos" value="<?=$Expediente->indice_dos?>">
                                 </div>
 
                                 <div class="form-group ocultar">
                                     <label>Indice tres </label>
-                                    <input type="text" class="form-control" name="indice_tres" id="indice_tres">
+                                    <input type="text" class="form-control" name="indice_tres" id="indice_tres" value="<?=$Expediente->indice_tres?>">
                                 </div>
 
 
                                 <div class="form-group ocultar">
                                     <label>Caja</label>
                                     <select class="form-control" name="fk_caja" id="fk_caja">
-                                         <?= $option_cajas; ?>
+                                         <option value="">por favor seleccione</option>
                                     </select>
                                 </div>
 
@@ -110,69 +122,62 @@ include_once $ruta_db_superior . "librerias_saia.php";
                                     <div class="form-group ocultar">
                                         <label>Codigo numero</label>
                                         <span class="help">e.j. "Código Dependencia - Código Serie - Numero"</span>
-                                        <input type="text" class="form-control" name="codDependencia" id="codDependencia" disabled="">
-                                        <input type="text" class="form-control" name="CodSerie" id="CodSerie" disabled="">
-                                        <input type="text" class="form-control" name="codigo_numero" id="codigo_numero">
+                                        <input type="text" class="form-control" name="codDependencia" id="codDependencia" value="<?=$Dep->codigo; ?>" disabled="">
+                                        <input type="text" class="form-control" name="CodSerie" id="CodSerie" value="<?=$Serie->codigo?>" disabled="">
+                                        <input type="text" class="form-control" name="codigo_numero" id="codigo_numero" value="<?=$Expediente->codigo_numero?>">
                                     </div>
 
                                     <div class="form-group ocultar">
                                         <label>Fondo</label>
-                                        <input type="text" class="form-control" name="fondo" id="fondo">
+                                        <input type="text" class="form-control" name="fondo" id="fondo" value="<?=$Expediente->fondo?>">
                                     </div>
 
                                     <div class="form-group ocultar">
                                         <label>Proceso</label>
-                                        <input type="text" class="form-control" name="proceso" id="proceso">
+                                        <input type="text" class="form-control" name="proceso" id="proceso" value="<?=$Expediente->proceso?>">
                                     </div>
 
                                     <div class="form-group ocultar">
                                         <label>Fecha extrema inicial</label>
-                                        <input type="date" class="form-control" id="fecha_extrema_i" name="fecha_extrema_i">
+                                        <input type="date" class="form-control" id="fecha_extrema_i" name="fecha_extrema_i" value="<?= $fecExtIni ?>">
                                     </div>
 
                                     <div class="form-group ocultar">
                                         <label>Fecha extrema final</label>
-                                        <input type="date" class="form-control" id="fecha_extrema_f" name="fecha_extrema_f">
+                                        <input type="date" class="form-control" id="fecha_extrema_f" name="fecha_extrema_f" value="<?= $fecExtFin ?>">
                                     </div>
 
                                     <div class="form-group ocultar">
                                         <label>Consecutivo inicial</label>
-                                        <input type="text" class="form-control" name="consecutivo_inicial" id="consecutivo_inicial">
+                                        <input type="text" class="form-control" name="consecutivo_inicial" id="consecutivo_inicial" value="<?=$Expediente->consecutivo_inicial?>">
                                     </div>
 
                                     <div class="form-group ocultar">
                                         <label>Consecutivo final</label>
-                                        <input type="text" class="form-control" name="consecutivo_final" id="consecutivo_final">
+                                        <input type="text" class="form-control" name="consecutivo_final" id="consecutivo_final" value="<?=$Expediente->consecutivo_final?>">
                                     </div>
 
                                 <div class="form-group ocultar">
                                         <label>Unidad de conservación</label>
-                                        <input type="text" class="form-control" name="no_unidad_conservacion" id="no_unidad_conservacion">
+                                        <input type="text" class="form-control" name="no_unidad_conservacion" id="no_unidad_conservacion" value="<?=$Expediente->no_unidad_conservacion?>">
                                     </div>
 
 
                                 <div class="form-group ocultar">
                                         <label>No de folios</label>
-                                        <input type="text" class="form-control" name="no_folios" id="no_folios">
+                                        <input type="text" class="form-control" name="no_folios" id="no_folios" value="<?=$Expediente->no_folios?>">
                                     </div>
 
                                 <div class="form-group ocultar">
                                         <label>No de carpeta</label>
-                                        <input type="text" class="form-control" name="no_carpeta" id="no_carpeta">
+                                        <input type="text" class="form-control" name="no_carpeta" id="no_carpeta" value="<?=$Expediente->no_carpeta?>">
                                     </div>
 
                                 <div class="form-group ocultar">
                                         <label>Soporte</label>
                                         <select class="form-control" name="soporte" id="soporte">
                                             <option value="">por favor seleccione</option>
-                                            <option value="1">CD-ROM</option>
-                                            <option value="2">DISKETE</option>
-                                            <option value="3">DVD</option>
-                                            <option value="4">DOCUMENTO</option>
-                                            <option value="5">FAX</option>
-                                            <option value="6">REVISTA O LIBRO</option>
-                                            <option value="7">VIDEO</option>
-                                            <option value="8">OTROS ANEXOS</option>
+                                            <?= $Expediente->getHtmlField('soporte', 'select', $Expediente->soporte) ?>
                                         </select>
                                     </div>
 
@@ -180,24 +185,23 @@ include_once $ruta_db_superior . "librerias_saia.php";
                                         <label>Frecuencia</label>
                                         <select class="form-control" name="frecuencia_consulta" id="frecuencia_consulta">
                                             <option value="">por favor seleccione</option>
-                                            <option value="1">Alta</option>
-                                            <option value="2">Media</option>
-                                            <option value="3">Baja</option>
+                                            <?= $Expediente->getHtmlField('frecuencia_consulta', 'select',$Expediente->frecuencia_consulta) ?>
                                         </select>
                                     </div>
 
                                 <div class="form-group ocultar">
                                         <label>Notas de transferencia</label>
-                                        <textarea class="form-control" name="notas_transf" id="notas_transf"></textarea>                                    
+                                        <textarea class="form-control" name="notas_transf" id="notas_transf"><?=$Expediente->notas_transf?></textarea>                                    
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="hidden" name="methodExp" value="createExpedienteCont">
+                                    <input type="hidden" name="methodExp" value="updateExpedienteCont">
                                     <input type="hidden" name="generarfiltro" value="1">
-                                    <input type="hidden" id="cod_padre" name="cod_padre" value="<?= $idexpediente ?>">
+                                    <input type="hidden" id="cod_padre" name="cod_padre" value="<?= $Expediente->cod_padre ?>">
+                                    <input type="hidden" id="idexpediente" name="idexpediente" value="<?= $idexpediente ?>">
                                     <input type="hidden" id="idbusqueda_componente" name="idbusqueda_componente" value="<?= $_REQUEST['idbusqueda_componente'] ?>">
                                     <button id="guardarExp" type="submit" class="btn btn-primary">
-                                        Adicionar
+                                        Editar
                                     </button></td>
                                 </div>
 
@@ -211,6 +215,15 @@ include_once $ruta_db_superior . "librerias_saia.php";
     
         <script type="text/javascript">
             $(document).ready(function (){
+                var params=<?=json_encode($params)?>;
+                if(!params.agrupador){
+                    if(params.countDocuments){
+                        $("#AgAgr").remove();
+                        $('label[for="AgAgr"]').remove();
+                        $("#notaAgr").text("Este expediente tiene documentos vinculados, NO se permite cambiar a Separador");
+                    }
+                }
+       
                 $("[name='agrupador']").change(function (){
                     if($(this).val()==3){
                         $(".ocultar").hide();
@@ -218,6 +231,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
                         $(".ocultar").show();
                     }
                 });
+                $("[name='agrupador']:checked").trigger("change");
 
                 $("#iconInfAdicional").click(function (e) { 
                     let icon=$(this).hasClass("fa-plus-square");
@@ -241,13 +255,17 @@ include_once $ruta_db_superior . "librerias_saia.php";
 						},
 						cod_padre : {
 							required : true
+						},
+						idexpediente : {
+							required : true
 						}
 					},
 					submitHandler : function(form) {
-                        $("#guardarExp").attr('disabled',true);
+                        //$("#guardarExp").attr('disabled',true);
                         var ruta_db_superior='<?= $ruta_db_superior; ?>';
                         var idcomponente=$("#idbusqueda_componente").val(); 
                         var codPadre=$("#cod_padre").val(); 
+                        var idexpediente=$("#idexpediente").val(); 
 
                         $.ajax({
                             type : 'POST',
@@ -273,6 +291,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
                                         dataType : 'json',
                                         success : function(objeto2) {
                                             if (objeto2.exito) {
+                                                $("#resultado_pantalla_"+idexpediente).remove();
                                                 $("#resultado_busqueda"+idcomponente, parent.document).prepend(objeto2.rows[0].info);
                                             }else{
                                                 top.notification({
@@ -295,8 +314,9 @@ include_once $ruta_db_superior . "librerias_saia.php";
                                         type : "success",
                                         duration : 3000
                                     });
-                                    window.open("detalles_expediente.php?idexpediente=" + objeto.data.id + "&idbusqueda_componente=" + idcomponente + "&rand=" + Math.round(Math.random() * 100000), "_self");
+                                    window.open("detalles_expediente.php?idexpediente=" + idexpediente + "&idbusqueda_componente=" + idcomponente + "&rand=" + Math.round(Math.random() * 100000), "_self");
                                 } else {
+                                    $("#guardarExp").attr('disabled',false);
                                     top.notification({
                                         message : objeto.message,
                                         type : "error",
@@ -306,7 +326,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
                             },
                             error : function() {
                                 top.notification({
-                                    message : "Error al procesar la solicitud (guardar expediente)",
+                                    message : "Error al procesar la solicitud (actualizar el expediente)",
                                     type : "error",
                                     duration : 3000
                                 });

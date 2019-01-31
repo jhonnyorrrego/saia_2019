@@ -1,10 +1,10 @@
 <?php
 use Stringy\Stringy;
 
-abstract class Model
+abstract class Model extends StaticSql
 {
     use TModelEvents;
-    
+
     protected $dbAttributes;
 
     /**
@@ -186,7 +186,6 @@ abstract class Model
 
     private function runCreate()
     {
-        $conection = Conexion::getConnection();
 
         $table = self::getTableName();
         $attributes = $this->getNotNullAttributes();
@@ -201,18 +200,15 @@ abstract class Model
 
             $fields .= $attribute;
             if (in_array($attribute, $dateAttributes)) {
-                $values .= $conection->fecha_db_almacenar($value, 'Y-m-d H:i:s');
+                $values .= self::setDateFormat($value, 'Y-m-d H:i:s');
             } else {
                 $values .= "'" . $value . "'";
             }
         }
 
         $sql = "INSERT INTO " . $table . " (" . $fields . ") values (" . $values . ")";
+        $this->setPK(self::insert($sql));
 
-        if ($conection->Ejecutar_Sql($sql)) {
-            $this->setPK($conection->Ultimo_Insert());
-        }
-        
         return $this->getPK() ?? 0;
     }
 
@@ -258,7 +254,7 @@ abstract class Model
     public static function executeDelete($conditions = [])
     {
         $sql = 'DELETE FROM ' . self::getTableName() . ' WHERE ' . self::createCondition($conditions);
-        return Conexion::getConnection()->Ejecutar_Sql($sql);
+        return self::query($sql);
     }
 
     /**
@@ -340,12 +336,12 @@ abstract class Model
     public static function findAllByAttributes($conditions, $fields = [], $order = '', $limit = 0)
     {
         $sql = self::generateSelectSql($conditions, $fields, $order, $limit);
-        $records = Conexion::getConnection()->executeSelect($sql, 0, $limit);
+        $records = self::search($sql, 0, $limit);
         $response = self::convertToObjectCollection($records);
 
         return $response;
     }
-    
+
     /**
      * convert simple array to array of objects
      *
@@ -401,8 +397,6 @@ abstract class Model
      */
     public static function executeUpdate($fields, $conditions)
     {
-        $conection = Conexion::getConnection();
-
         $set = '';
         $className = get_called_class();
         $Instance = new $className();
@@ -414,14 +408,14 @@ abstract class Model
             }
 
             if (in_array($attribute, $dateAttributes)) {
-                $set .= $attribute . "=" . $conection->fecha_db_almacenar($value, 'Y-m-d H:i:s');
+                $set .= $attribute . "=" . self::setDateFormat($value, 'Y-m-d H:i:s');
             } else {
                 $set .= $attribute . "='" . $value . "'";
             }
         }
 
-        $sql = 'UPDATE ' . self::getTableName() . ' set ' . $set . ' where ' . self::createCondition($conditions);
-        return $conection->Ejecutar_Sql($sql);
+        $sql = 'UPDATE ' . self::getTableName() . ' SET ' . $set . ' WHERE ' . self::createCondition($conditions);
+        return self::query($sql);
     }
 
     /**
@@ -453,7 +447,7 @@ abstract class Model
             }
 
             if (in_array($attribute, $dateAttributes)) {
-                $select .= Conexion::getConnection()->fecha_db_obtener($attribute, 'Y-m-d H:i:s') . ' as ' . $attribute;
+                $select .= self::getDateFormat($attribute, 'Y-m-d H:i:s') . ' as ' . $attribute;
             } else {
                 $select .= $attribute;
             }
@@ -470,7 +464,7 @@ abstract class Model
      * @return string
      */
     public static function createCondition($conditions)
-    {        
+    {
         $condition = '';
 
         if (count($conditions)) {
@@ -484,7 +478,7 @@ abstract class Model
                 }
 
                 if (in_array($attribute, $dateAttributes)) {
-                    $condition .= Conexion::getConnection()->fecha_db_obtener($attribute, 'Y-m-d H:i:s') . "=" . $value;
+                    $condition .= self::getDateFormat($attribute, 'Y-m-d H:i:s') . "=" . $value;
                 } else {
                     $condition .= $attribute . "='" . $value . "'";
                 }
@@ -494,7 +488,8 @@ abstract class Model
         return $condition;
     }
 
-    public static function generateSelectSql($conditions, $fields, $order, $limit){
+    public static function generateSelectSql($conditions, $fields, $order, $limit)
+    {
         $condition = self::createCondition($conditions);
 
         $sql = "Select ";

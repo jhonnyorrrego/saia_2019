@@ -53,7 +53,7 @@ class EntidadSerie extends Model
 
     /**
      * Crea la entidad serie con sus correspondientes vinculaciones (expedientes)
-     * NO utilizar save() para crear una entidad serie
+     * NO utilizar save/create para crear una entidad serie
      * 
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
@@ -65,14 +65,18 @@ class EntidadSerie extends Model
             'exito' => 0,
             'message' => '',
         ];
-        $existEntSer = busca_filtro_tabla("identidad_serie", "entidad_serie", "fk_serie={$this->fk_serie} and fk_dependencia={$this->fk_dependencia} and estado=0", "", $conn);
-        if ($existEntSer['numcampos']) {
+        $sql= "SELECT identidad_serie FROM entidad_serie WHERE fk_serie={$this->fk_serie} and fk_dependencia={$this->fk_dependencia} and estado=0";
+        $existEntSer=$this->search($sql);
+        if ($existEntSer) {
             $instance = new self($existEntSer[0]['identidad_serie']);
             $instance->estado = 1;
-            $instance->update();
-            $response['exito'] = 1;
+            if($instance->update()){
+                $response['exito'] = 1;
+            }else{
+                $response['message']='Error al actualizar la entidad serie';
+            }
         } else {
-            if ($this->save()) {
+            if ($this->create()) {
                 $ValidArbolExp = $this->validArbolExp();
 
                 if ($ValidArbolExp['exito']) {
@@ -82,20 +86,15 @@ class EntidadSerie extends Model
                         if ($Serie->tipo == 1) {
                             $codPadreExp = end($ValidArbolExp['data']['idexpediente']);
                         } else {
-                            $consPadre = busca_filtro_tabla("idexpediente", "expediente", "fk_dependencia={$this->fk_dependencia} and fk_serie={$Serie->cod_padre} and nucleo=1 and estado=1", "", $conn);
-                            if ($consPadre['numcampos']) {
+                            $sql= "SELECT idexpediente FROM expediente WHERE fk_dependencia={$this->fk_dependencia} and fk_serie={$Serie->cod_padre} and nucleo=1 and estado=1";
+                            $consPadre =$this->search($sql);
+                            if ($consPadre) {
                                 $codPadreExp = $consPadre[0]['idexpediente'];
                             }
                         }
-                        $existExp = busca_filtro_tabla(
-                            "idexpediente",
-                            "expediente",
-                            "fk_dependencia={$this->fk_dependencia} and fk_serie={$this->fk_serie} 
-                                and nucleo=1 and estado=1 and agrupador=2",
-                            "",
-                            $conn
-                        );
-                        if (!$existExp['numcampos']) {
+                        $sql="SELECT idexpediente FROM expediente WHERE fk_dependencia={$this->fk_dependencia} and fk_serie={$this->fk_serie} and nucleo=1 and estado=1 and agrupador=2";
+                        $existExp =$this->search($sql);
+                        if (!$existExp) {
                             $Expediente = new Expediente();
                             $attributes = [
                                 'fecha' => date('Y-m-d H:i:s'),
@@ -154,8 +153,11 @@ class EntidadSerie extends Model
 
         $this->estado = 0;
         $this->fecha_eliminacion = date('Y-m-d H:i:s');
-        $this->update();
-        $response['exito'] = 1;
+        if($this->update()){
+            $response['exito'] = 1;
+        }else{
+            $response['message']='Error al inactivar la entidad serie';
+        }
         return $response;
     }
     /**
@@ -179,14 +181,9 @@ class EntidadSerie extends Model
             $idsExp = [];
             foreach ($idsDep as $key => $idDependencia) {
                 //TODO: El estado de expediente solo debe cambiarse cuando se elimine la serie que hace relacion
-                $existDep = busca_filtro_tabla(
-                    "idexpediente",
-                    "expediente",
-                    "fk_dependencia={$idDependencia} and nucleo=1 and estado=1 and agrupador=1",
-                    "",
-                    $conn
-                );
-                if ($existDep['numcampos']) {
+                $sql="SELECT idexpediente FROM expediente WHERE fk_dependencia={$idDependencia} and nucleo=1 and estado=1 and agrupador=1";
+                $existDep=$this->search($sql);
+                if ($existDep) {
                     $idsExp[$key] = $existDep[0]['idexpediente'];
                 } else {
                     $DependenciaData = new Dependencia($idDependencia);

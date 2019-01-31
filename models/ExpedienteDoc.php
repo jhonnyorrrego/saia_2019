@@ -40,8 +40,8 @@ class ExpedienteDoc extends Model
     {
         $cant = 0;
         $sql = "SELECT COUNT(idexpediente_doc) AS cant FROM expediente_doc ed,documento d WHERE ed.fk_documento=d.iddocumento and d.estado not in ('ELIMINADO') and ed.fk_expediente={$idexpediente}";
-        $response = UtilitiesController::ejecutaSelect($sql);
-        if ($response['numcampos']) {
+        $response = StaticSql::search($sql);
+        if ($response) {
             $cant = $response[0]['cant'];
         }
         return $cant;
