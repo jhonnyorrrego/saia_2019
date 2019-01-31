@@ -36,14 +36,17 @@ function procesar_usuario_actual($idcampo='',$seleccionado='',$accion='',$campo=
     	$seleccionado=$campo["valor"];
 		}
   }
-	//if($accion==''){               
+	//if($accion==''){       
+    $eliminarCampo = clase_eliminar_pantalla_componente($idcampo);                    
     $adicionales_hidden=' type="text" class="elemento_formulario" placeholder="'.$campo["placeholder"].'"  disabled="disabled" ';
-    $encabezado_hidden='<div class="control-group element" idpantalla_componente="'.$campo["idpantalla_componente"].'" idpantalla_campo="'.$idcampo.'" id="pc_'.$idcampo.'" nombre="'.$campo["etiqueta_html"].'">'.clase_eliminar_pantalla_componente($idcampo).'<label class="control-label" for="'.$campo["nombre"].'"><b>'.$campo["etiqueta"];
+    $encabezado_hidden = "<li class ='ui-state-default element' idpantalla_componente = '{$campo["idpantalla_componente"]}' idpantalla_campo = '{$idcampo}' id = 'pc_{$idcampo}' nombre = '{$campo["etiqueta_html"]}' >{$eliminarCampo}
+    <span class='ui-icon ui-icon-arrowthick-2-n-s' style='font-size:12px;'><b>{$campo["etiqueta"]}";
+   
     if($campo["obligatoriedad"]){
       $encabezado_hidden.='*';
     }
-    $encabezado_hidden.='</b></label><div class="controls">';
-    $pie_hidden='</div></div>';
+    $encabezado_hidden.='</b></span><div class="controls">';
+    $pie_hidden='</div></li>';
   //}
   $parsea_valor=explode(";",$campo["valor"]);
   $cadena=array();

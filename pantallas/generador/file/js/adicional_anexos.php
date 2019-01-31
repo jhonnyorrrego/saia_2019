@@ -79,7 +79,7 @@ $(".anexos").fileupload({
 		falla_archivos++; 		
 	});    
 });
-$(".borrar_anexo").live('click',function(){
+$(".borrar_anexo").on('click',function(){
 	var nombre_campo=$(this).attr("campo");
 	var nombre_anexo=$(this).attr("anexo");
 	$.ajax({
@@ -98,7 +98,7 @@ $(".borrar_anexo").live('click',function(){
 	$(this).parent().remove();
 });
 
-$(".borrar_anexo_original").live('click',function(){
+$(".borrar_anexo_original").on('click',function(){
 	var confirmar=confirm("Esta seguro de eliminar este anexo?");
 	if(confirmar){
 		var idanexos=$(this).attr("idanexos");
