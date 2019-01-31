@@ -31,6 +31,7 @@ if ($_SESSION['idfuncionario'] && $_SESSION['idfuncionario'] == $_REQUEST['key']
     } else {//enviados
         $sql = "update buzon_salida set enviado = 0 where archivo_idarchivo in ({$documentList}) and origen={$_REQUEST['key']}";
     }
+    
     $update = Conexion::getConnection()->Ejecutar_Sql($sql);
 
     if ($update) {
