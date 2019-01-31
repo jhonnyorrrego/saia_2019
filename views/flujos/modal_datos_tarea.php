@@ -31,7 +31,7 @@ $tabs = [
         "url" => "tab_desc_tarea.php", "href" => "descripcion", "icon" => "fa fa-cog",
     ],
     [
-        "url" => "tab2.php", "href" => "actividades", "icon" => "fa fa-tasks",
+        "url" => "tab_tareas_actividad.php", "href" => "tareas", "icon" => "fa fa-tasks",
     ],
     [
         "url" => "tab3.php", "href" => "entrada", "icon" => "fa fa-sign-in",
@@ -81,16 +81,16 @@ $tabs = [
     </head>
     <body>
 
-        <ul class="nav nav-tabs" id="taskTab" role="tablist">
+        <ul class="nav nav-tabs" id="tabsActividad" role="tablist">
             <?php foreach ($tabs as $tab): ?>
                 <li class="nav-item">
-                    <a class="nav-link tasktab" data-toggle="tab" href="#<?= $tab['href'] ?>" data-url="<?= $tab['url'] ?>" role="tab" style="min-width:auto">
+                    <a class="nav-link tab_actividad" data-toggle="tab" href="#<?= $tab['href'] ?>" data-url="<?= $tab['url'] ?>" role="tab" style="min-width:auto">
                         <i class="f-12 <?= $tab['icon'] ?>"></i>
                     </a>
                 </li>
             <?php endforeach; ?>
         </ul>
-        <div class="tab-content" id="taskTabContent">
+        <div class="tab-content" id="contenidoTabsActividad">
             <?php foreach ($tabs as $tab): ?>
                 <div class="tab-pane fade" id="<?= $tab['href'] ?>" role="tabpanel" aria-labelledby="<?= $tab['href'] ?>-tab"></div>
             <?php endforeach; ?>
@@ -105,7 +105,7 @@ $tabs = [
             $(function () {
 
                 var params = $("script[data-params]").data("params");
-                $('.tasktab').on('shown.bs.tab', function (e) {
+                $('.tab_actividad').on('shown.bs.tab', function (e) {
                     let tab = $(e.target);
                     let container = $(tab.attr('href'))
                     console.log("params", params);
@@ -115,10 +115,10 @@ $tabs = [
                     container.load(url);
                 });
 
-                $('.tasktab:first').trigger('click');
+                $('.tab_actividad:first').trigger('click');
 
                 /*if(idflujo.length > 0){
-                 $('.tasktab:not(:first)').addClass('disabled');
+                 $('.tab_actividad:not(:first)').addClass('disabled');
                  }*/
             });
         </script>

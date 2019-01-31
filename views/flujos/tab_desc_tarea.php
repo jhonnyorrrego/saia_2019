@@ -42,7 +42,7 @@ if (!empty($_REQUEST["idactividad"])) {
         </div>
 
         <div class="form-group">
-            <label for="info_actividad">Instrucciones o políticas adicionales del proceso</label>
+            <label for="info_actividad">Instrucciones adicionales</label>
             <textarea class="form-control" id="info_actividad" name="info"><?= $datos["info"] ?></textarea>
         </div>
 
