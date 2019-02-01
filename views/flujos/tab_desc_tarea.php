@@ -239,8 +239,8 @@ if (!empty($_REQUEST["idactividad"])) {
                 ids: ids
             };
 
-            console.log(idactividad, data);
-            return false;
+            //console.log(idactividad, data);
+            //return false;
             //TODO: Falta pedir confirmacion al usuario
 
             var pk = false;
