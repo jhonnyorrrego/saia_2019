@@ -4,10 +4,15 @@ class Elemento extends Model {
 
 	use TFlujo;
 
+	const TIPO_CALIDAD_IN = 1;
+	const TIPO_CALIDAD_OUT = 2;
+
 	protected $idelemento;
 	protected $nombre;
 	protected $bpmn_id;
 	protected $info;
+	protected $req_calidad_in;
+	protected $req_calidad_out;
 	protected $fk_flujo;
 	protected $fk_formato_flujo;
 	protected $fk_tipo_elemento;
@@ -31,6 +36,8 @@ class Elemento extends Model {
 				"bpmn_id",
 				"info",
 				"fk_flujo",
+			    "req_calidad_in",
+			    "req_calidad_out",
 				"fk_formato_flujo",
 				"fk_tipo_elemento"
 			],

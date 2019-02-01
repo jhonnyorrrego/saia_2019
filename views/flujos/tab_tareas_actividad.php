@@ -16,15 +16,15 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 include_once $ruta_db_superior . 'librerias_saia.php';
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
-$idnotificacion = null;
+$idactividad = null;
 $tipo_destinatario = TipoDestinatario::TIPO_EXTERNO;
-if (!empty($_REQUEST["idnotificacion"])) {
-    $idnotificacion = $_REQUEST["idnotificacion"];
+if (!empty($_REQUEST["idactividad"])) {
+    $idactividad = $_REQUEST["idactividad"];
 }
 ?>
 <div class="container">
     <form id="formDestExt">
-        <input type="hidden" name="fk_notificacion" value="<?= $idnotificacion ?>">
+        <input type="hidden" name="fk_actividad" value="<?= $idactividad ?>">
         <div class="row py-1 mt-1">
             <div class="col col-md-8">
                 <div class="form-control form-group-default">
@@ -55,7 +55,7 @@ if (!empty($_REQUEST["idnotificacion"])) {
     </div>
     <table class="table table-striped table-bordered table-hover" id="tabla_destinatarios"
            data-toggle="table"
-           data-url="listado_destinatarios_externos.php?idnotificacion=<?= $idnotificacion ?>"
+           data-url="listado_destinatarios_externos.php?idactividad=<?= $idactividad ?>"
            data-click-to-select="true"
            data-show-toggle="true"
            data-show-columns="true"
@@ -63,7 +63,7 @@ if (!empty($_REQUEST["idnotificacion"])) {
         <thead>
             <tr>
                 <th data-field="state" data-checkbox="true"></th>
-                <th data-field="iddestinatario" data-visible="false">IdDest</th>
+                <th data-field="idtarea" data-visible="false">IdDest</th>
                 <th data-field="tipo">Tipo</th>
                 <th data-field="nombre">Nombre</th>
             </tr>
@@ -77,56 +77,56 @@ if (!empty($_REQUEST["idnotificacion"])) {
     var $botonEliminar = $('#boton_eliminar')
     var $botonGuardar = $('#btnSaveExtPerson')
 
-    var idnotificacion = "<?= $idnotificacion ?>";
-    var tipodestinatario = "<?= $tipo_destinatario ?>";
+    var idactividad = "<?= $idactividad ?>";
+    //var tipo_tarea = "<?= $tipo_destinatario ?>";
 
     $botonGuardar.click(function () {
         var datos = $tabla.bootstrapTable('getData');
 
-        var email = $("#email").val();
         var nombre = $("#nombre").val();
+        var obligatorio = $("#obligatorio").val();
         var existe = false;
         for (var key in datos) {
             var obj = datos[key];
-            if (obj.email == email) {
+            if (obj.nombre == nombre) {
                 existe = true;
                 break;
             }
         }
         if (!existe) {
-            var data = {email: email, nombre: nombre};
-            var id = guardarDestinatario(idnotificacion, data);
-            data["iddestinatario"] = id;
+            var data = {obligatorio: obligatorio, nombre: nombre};
+            var id = guardarTareaActividad(idactividad, data);
+            data["idtarea"] = id;
             $tabla.bootstrapTable('append', data);
         }
     });
 
     $botonEliminar.click(function () {
         var ids = $.map($tabla.bootstrapTable('getSelections'), function (row) {
-            return row.iddestinatario
+            return row.idtarea
         });
-        var estado = eliminarDestinatarios(idnotificacion, ids.join(","));
+        var estado = eliminarDestinatarios(idactividad, ids.join(","));
         if (estado) {
             $tabla.bootstrapTable('remove', {
-                field: 'iddestinatario',
+                field: 'idtarea',
                 values: ids
             });
         }
     });
 
-    function guardarDestinatario(idnotificacion, data) {
+    function guardarTareaActividad(idactividad, data) {
         if (data) {
             data['key'] = localStorage.getItem("key");
-            data["fk_notificacion"] = idnotificacion;
-            data["fk_tipo_destinatario"] = tipodestinatario;
+            data["fk_actividad"] = idactividad;
+            data["obligatorio"] = obligatorio;
             data["fk_funcionario"] = data.idfuncionario;
 
-            //console.log(idnotificacion, data);
+            //console.log(idactividad, data);
             //return false;
             var pk = false;
             $.ajax({
                 dataType: "json",
-                url: "<?= $ruta_db_superior ?>app/flujo/guardarDestinatario.php",
+                url: "<?= $ruta_db_superior ?>app/flujo/guardarTareaActividad.php",
                 type: "POST",
                 data: data,
                 async: false,
@@ -144,16 +144,16 @@ if (!empty($_REQUEST["idnotificacion"])) {
         }
         return false;
     }
-    function eliminarDestinatarios(idnotificacion, ids) {
+    function eliminarDestinatarios(idactividad, ids) {
         if (ids) {
             var data = {
                 key: localStorage.getItem("key"),
-                fk_notificacion: idnotificacion,
-                fk_tipo_destinatario: tipodestinatario,
+                fk_actividad: idactividad,
+                obligatorio: obligatorio,
                 ids: ids
             };
 
-            //console.log(idnotificacion, data);
+            //console.log(idactividad, data);
             //return false;
             //TODO: Falta pedir confirmacion al usuario
 
