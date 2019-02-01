@@ -33,7 +33,7 @@ if (!empty($_REQUEST["idactividad"])) {
                 </div>
             </div>
             <div class="col col-md-4">
-                <div class="form-check form-group-default align-middle">
+                <div class="form-check align-middle">
                     <input class="form-check-input" type="checkbox" value="" id="chkObligatorio" name="obligatorio">
                     <label class="form-check-label" for="chkObligatorio">
                         Obligatoria
@@ -53,9 +53,9 @@ if (!empty($_REQUEST["idactividad"])) {
     <div id="toolbar">
         <a href="#" id="boton_eliminar" class="btn btn-secondary" title="Eliminar"><i class="f-12 fa fa-trash"></i></a>
     </div>
-    <table class="table table-striped table-bordered table-hover" id="tabla_destinatarios"
+    <table class="table table-striped table-bordered table-hover" id="tabla_tareas"
            data-toggle="table"
-           data-url="listado_destinatarios_externos.php?idactividad=<?= $idactividad ?>"
+           data-url="listado_tareas_actividad.php?idactividad=<?= $idactividad ?>"
            data-click-to-select="true"
            data-show-toggle="true"
            data-show-columns="true"
@@ -72,19 +72,23 @@ if (!empty($_REQUEST["idactividad"])) {
 </div>
 
 <script>
-    var $tabla = $("#tabla_destinatarios");
+    var $tabla = $("#tabla_tareas");
 
     var $botonEliminar = $('#boton_eliminar')
     var $botonGuardar = $('#btnSaveExtPerson')
 
     var idactividad = "<?= $idactividad ?>";
     //var tipo_tarea = "<?= $tipo_destinatario ?>";
+    var obligatorio = 0;
 
     $botonGuardar.click(function () {
         var datos = $tabla.bootstrapTable('getData');
 
         var nombre = $("#nombre").val();
-        var obligatorio = $("#obligatorio").val();
+        if($("#chkObligatorio").is(':checked')) {
+            obligatorio = 1;
+        }
+        console.log("obligatorio", obligatorio);
         var existe = false;
         for (var key in datos) {
             var obj = datos[key];
@@ -93,6 +97,7 @@ if (!empty($_REQUEST["idactividad"])) {
                 break;
             }
         }
+        console.log("existe", existe);
         if (!existe) {
             var data = {obligatorio: obligatorio, nombre: nombre};
             var id = guardarTareaActividad(idactividad, data);

@@ -27,10 +27,13 @@ final class Version20190130122415 extends AbstractMigration {
         if ($schema->hasTable("wf_responsable_actividad")) {
             $sm->dropTable("wf_responsable_actividad");
         }
+        if ($schema->hasTable("wf_actividad")) {
+            $sm->dropTable("wf_actividad");
+        }
     }
 
     public function up(Schema $schema): void {
-        if (!$schema->hasTable("wf_elemento")) {
+        if ($schema->hasTable("wf_elemento")) {
             $tabla = $schema->getTable("wf_elemento");
 
             if(!$tabla->hasColumn("req_calidad_in")) {
@@ -40,6 +43,12 @@ final class Version20190130122415 extends AbstractMigration {
                 $tabla->addColumn("req_calidad_out", "text", ["notnull" => false]);
             }
         }
+
+        if ($schema->hasTable("wf_tarea_actividad")) {
+            $tabla = $schema->getTable("wf_tarea_actividad");
+            $tabla->addColumn("obligatorio", "integer", ["default" => 0]);
+        }
+
         if (!$schema->hasTable("wf_responsable_actividad")) {
             $tabla = $schema->createTable("wf_responsable_actividad");
             $tabla->addColumn("idresponsable_actividad", "integer", ["autoincrement" => true]);
@@ -98,7 +107,6 @@ final class Version20190130122415 extends AbstractMigration {
             $tabla->addColumn("fk_impacto", "integer");
             $tabla->setPrimaryKey(["idriesgo"]);
         }
-
 
         if(!$schema->hasTable("wf_decision_actividad")) {
             $tabla = $schema->createTable("wf_decision_actividad");
