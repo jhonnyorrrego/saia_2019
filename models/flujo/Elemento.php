@@ -41,10 +41,6 @@ class Elemento extends Model {
 				"fk_formato_flujo",
 				"fk_tipo_elemento"
 			],
-			'date' => [
-				"fecha_creacion",
-				"fecha_modificacion"
-			],
 			"table" => "wf_elemento",
 			"primary" => "idelemento"
 		];

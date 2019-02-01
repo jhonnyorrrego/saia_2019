@@ -20,7 +20,7 @@ class ActividadNotificacion extends Model {
 	
 	protected function defineAttributes() {
 		$this->dbAttributes = (object) [
-			'safe' => [
+            "safe" => [
 				"fk_actividad",
 				"fk_notificacion"
 			],

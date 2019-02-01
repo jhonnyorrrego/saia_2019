@@ -1,11 +1,11 @@
 <?php
 
-class AdjuntoNotificacion extends Model {
+class DestNotificacion extends Model {
 
-    protected $idadjunto;
+    protected $iddestinatario;
     protected $fk_notificacion;
-    protected $fk_formato_flujo;
-    
+    protected $fk_tipo_destinatario;
+
     function __construct($id = null) {
         parent::__construct($id);
     }
@@ -14,10 +14,10 @@ class AdjuntoNotificacion extends Model {
         $this->dbAttributes = (object) [
             "safe" => [
                 "fk_notificacion",
-                "fk_formato_flujo"
-                ],
-            "table" => "wf_adjunto_notificacion",
-            "primary" => "idadjunto"
+                "fk_tipo_destinatario"
+            ],
+            "table" => "wf_dest_notificacion",
+            "primary" => "iddestinatario"
         ];
     }
 

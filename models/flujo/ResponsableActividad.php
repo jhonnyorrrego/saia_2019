@@ -21,10 +21,10 @@ class ResponsableActividad extends Model {
 
     protected function defineAttributes() {
         $this->dbAttributes = (object) [
-        'safe' => [
+        "safe" => [
         "tipo_responsable",
         "fk_responsable",
-        "fk_actividad",
+        "fk_actividad"
         ],
         "table" => "wf_responsable_actividad",
         "primary" => "idresponsable_actividad"
