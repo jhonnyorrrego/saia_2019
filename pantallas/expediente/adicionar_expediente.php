@@ -228,7 +228,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 						}
 					},
 					submitHandler : function(form) {
-                        //$("#guardarExp").attr('disabled',true);
+                        $("#guardarExp").attr('disabled',true);
                         var ruta_db_superior='<?=$ruta_db_superior;?>';
                         var idcomponente=$("#idbusqueda_componente").val(); 
                         var codPadre=$("#cod_padre").val(); 

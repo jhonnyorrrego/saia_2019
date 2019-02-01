@@ -24,11 +24,43 @@ final class Version20190122215104 extends AbstractMigration
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
             $this->platform->registerDoctrineTypeMapping('enum', 'string');
         }
+
+        if ($schema->hasTable("serie")) {
+            $schema->dropTable("serie");
+        }
+
+        if ($schema->hasTable("entidad_serie")) {
+            $schema->dropTable("entidad_serie");
+        }
+
+        if ($schema->hasTable("permiso_serie")) {
+            $schema->dropTable("permiso_serie");
+        }
+
+        if ($schema->hasTable("expediente")) {
+            $schema->dropTable("expediente");
+        }
+
+        if ($schema->hasTable("entidad_expediente")) {
+            $schema->dropTable("entidad_expediente");
+        }
+
+        if ($schema->hasTable("permiso_expediente")) {
+            $schema->dropTable("permiso_expediente");
+        }
+
+        if ($schema->hasTable("expediente_doc")) {
+            $schema->dropTable("expediente_doc");
+        }
+
+        if ($schema->hasTable("expediente_eli")) {
+            $schema->dropTable("expediente_eli");
+        }
     }
 
     public function up(Schema $schema) : void
     {
-        $schema->dropTable("serie");
+
         $tabla = $schema->createTable("serie");
         $tabla->addColumn("idserie", "integer", ["autoincrement" => true]);
         $tabla->addColumn("nombre", "string", ["length" => 255]);
@@ -49,7 +81,7 @@ final class Version20190122215104 extends AbstractMigration
         $tabla->addColumn("cod_arbol", "string", ["length" => 255, "notnull" => false]);
         $tabla->setPrimaryKey(["idserie"]);
 
-        $schema->dropTable("entidad_serie");
+
         $tabla2 = $schema->createTable("entidad_serie");
         $tabla2->addColumn("identidad_serie", "integer", ["autoincrement" => true]);
         $tabla2->addColumn("fk_serie", "integer", ["default" => 0]);
@@ -60,7 +92,6 @@ final class Version20190122215104 extends AbstractMigration
         $tabla2->setPrimaryKey(["identidad_serie"]);
 
 
-        $schema->dropTable("expediente");
         $tabla3 = $schema->createTable("expediente");
         $tabla3->addColumn("idexpediente", "integer", ["autoincrement" => true]);
         $tabla3->addColumn("nombre", "string", ["length" => 255]);
@@ -96,13 +127,14 @@ final class Version20190122215104 extends AbstractMigration
         $tabla3->addColumn("consecutivo_final", "string", ["length" => 255, "notnull" => false]);
         $tabla3->addColumn("nucleo", "integer", ["length" => 1, "default" => 1]);
         $tabla3->addColumn("estado", "integer", ["length" => 1, "default" => 1]);
-        $tabla3->addColumn("fk_caja", "integer", ["default" => 0, "notnull" => false]);
+        $tabla3->addColumn("fk_expediente_eli", "integer", ["notnull" => false]);
+        $tabla3->addColumn("fk_caja", "integer", ["notnull" => false]);
         $tabla3->addColumn("fk_serie", "integer");
         $tabla3->addColumn("fk_dependencia", "integer");
         $tabla3->addColumn("fk_entidad_serie", "integer");
         $tabla3->setPrimaryKey(["idexpediente"]);
 
-        $schema->dropTable("permiso_serie");
+
         $tabla4 = $schema->createTable("permiso_serie");
         $tabla4->addColumn("idpermiso_serie", "integer", ["autoincrement" => true]);
         $tabla4->addColumn("fk_entidad", "integer");
@@ -112,7 +144,6 @@ final class Version20190122215104 extends AbstractMigration
         $tabla4->setPrimaryKey(["idpermiso_serie"]);
 
 
-        $schema->dropTable("permiso_expediente");
         $tabla5 = $schema->createTable("permiso_expediente");
         $tabla5->addColumn("idpermiso_expediente", "integer", ["autoincrement" => true]);
         $tabla5->addColumn("fk_funcionario", "integer");
@@ -126,18 +157,17 @@ final class Version20190122215104 extends AbstractMigration
         $tabla5->setPrimaryKey(["idpermiso_expediente"]);
 
 
-        $schema->dropTable("entidad_expediente");
         $tabla6 = $schema->createTable("entidad_expediente");
         $tabla6->addColumn("identidad_expediente", "integer", ["autoincrement" => true]);
         $tabla6->addColumn("fk_entidad", "integer");
         $tabla6->addColumn("llave_entidad", "integer");
         $tabla6->addColumn("fk_expediente", "integer");
         $tabla6->addColumn("permiso", "string", ["length" => 10, "comment" => "v:ver;e:editar;c:compartir;d:eliminar"]);
-        $tabla6->addColumn("tipo_funcionario", "integer",["default"=>0, "comment"=>"1:Creador;2:Responsable;0,Otros"]);
+        $tabla6->addColumn("tipo_funcionario", "integer", ["default" => 0, "comment" => "1:Creador;2:Responsable;0,Otros"]);
         $tabla6->addColumn("fecha", "datetime", ["notnull" => false]);
         $tabla6->setPrimaryKey(["identidad_expediente"]);
 
-        $schema->dropTable("expediente_doc");
+
         $tabla7 = $schema->createTable("expediente_doc");
         $tabla7->addColumn("idexpediente_doc", "integer", ["autoincrement" => true]);
         $tabla7->addColumn("fk_expediente", "integer");
@@ -145,6 +175,15 @@ final class Version20190122215104 extends AbstractMigration
         $tabla7->addColumn("fk_funcionario", "integer");
         $tabla7->addColumn("fecha", "datetime");
         $tabla7->setPrimaryKey(["idexpediente_doc"]);
+
+        $tabla8 = $schema->createTable("expediente_eli");
+        $tabla8->addColumn("idexpediente_eli", "integer", ["autoincrement" => true]);
+        $tabla8->addColumn("fk_expediente", "integer");
+        $tabla8->addColumn("fk_funcionario", "integer");
+        $tabla8->addColumn("fecha_eliminacion", "datetime");
+        $tabla8->addColumn("fecha_restauracion", "datetime", ["notnull" => false]);
+        $tabla8->setPrimaryKey(["idexpediente_eli"]);
+
 
         /*
         permiso
@@ -164,7 +203,7 @@ final class Version20190122215104 extends AbstractMigration
         DROP VIEW vexpediente_serie;
 
          */
-        
+
     }
 
     public function down(Schema $schema) : void

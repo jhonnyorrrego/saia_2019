@@ -407,7 +407,9 @@ abstract class Model extends StaticSql
                 $set .= ',';
             }
 
-            if (in_array($attribute, $dateAttributes)) {
+            if ($value == "NULL") {
+                $set .= $attribute . "=" . $value;
+            } else if (in_array($attribute, $dateAttributes)) {
                 $set .= $attribute . "=" . self::setDateFormat($value, 'Y-m-d H:i:s');
             } else {
                 $set .= $attribute . "='" . $value . "'";

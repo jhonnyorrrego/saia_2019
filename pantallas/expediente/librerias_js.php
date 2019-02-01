@@ -1,12 +1,11 @@
 <script>
 $(document).ready(function(){
 
-    $("#addExpediente,#addDocumentExp").on("click",function(){    
+    $(document).on("click", "#addExpediente,#addDocumentExp", function() {  
         window.open("<?=$ruta_db_superior?>"+$(this).attr("enlace"),"iframe_detalle");
     });
 
-
-    $("#shareExp").on("click",function(){    
+    $(document).on("click","#shareExp",function(){    
         let seleccionados=$("#seleccionados_expediente").val();
         if(seleccionados){
             window.open("<?= $ruta_db_superior ?>"+$(this).attr("enlace")+"&idexpediente="+seleccionados,"iframe_detalle");
@@ -15,7 +14,7 @@ $(document).ready(function(){
         }
     });
 
-    $("#transDocument").on("click",function(){
+    $(document).on("click","#transDocument",function(){
         let seleccionados=$("#seleccionados_expediente").val();
         $.ajax({
             type : "POST",
@@ -35,7 +34,7 @@ $(document).ready(function(){
         });
     });
 
-	$("#prestDocument").click(function(){
+	$(document).on("click","#prestDocument",function(){
 		var seleccionados=$("#seleccionados_expediente").val();
 		var estado_archivo='$estado';
 		if(seleccionados){
@@ -47,7 +46,7 @@ $(document).ready(function(){
 
   //Selector check/uncheck
   
-	$(".selExp").on("click",function(){
+	$(document).on("click",".selExp",function(){
 		let i=$(this).children("i");
 		if(i.hasClass("icon-uncheck")){
 			i.removeClass("icon-uncheck").addClass("icon-check");
@@ -58,7 +57,7 @@ $(document).ready(function(){
   
   // Informacion del expediente
 
-   $(".infoExp").on("click",function(){
+  $(document).on("click",".infoExp",function(){
     let idexp=$(this).data("id");
     let idcomp=$(this).data("componente");
     $("#iframe_detalle").attr({
@@ -68,7 +67,7 @@ $(document).ready(function(){
 
   // Creacion de tomo del expediente
 
-  $(".tomoExp").on("click",function(){
+  $(document).on("click",".tomoExp",function(){
     let idexp=$(this).data("id");
     var idcomponente=$(this).data("componente");
     if(confirm("Esta seguro de crear un tomo a este expediente?")){
@@ -107,12 +106,49 @@ $(document).ready(function(){
 
   // Editar el expediente
 
-   $(".editExp").on("click",function(){
+  $(document).on("click",".editExp",function(){
     let idexp=$(this).data("id");
     let idcomp=$(this).data("componente");
     $("#iframe_detalle").attr({
       'src':'<?= $ruta_db_superior ?>pantallas/expediente/editar_expediente.php?idexpediente='+idexp+'&idbusqueda_componente='+idcomp
     });  
+  });
+
+  //Eliminar el expediente
+ $(document).on("click",".delExp",function(){
+    let idexp=$(this).data("id");
+    if(confirm("Esta seguro de eliminar el expediente?")){
+      $.ajax({
+        type : 'POST',
+        async:false,
+        url: "<?= $ruta_db_superior ?>pantallas/expediente/ejecutar_acciones.php",
+        data: {methodExp:'deleteExpedienteCont',idexpediente:idexp},
+        dataType: 'json',
+        success: function(response){
+          if(response.exito){
+            $("#resultado_pantalla_"+idexp).remove();
+            top.notification({
+              message : "Expediente eliminado",
+              type : "success",
+              duration : 3000
+            });
+          }else{
+            top.notification({
+              message : response.message,
+              type : "error",
+              duration : 3000
+            });
+          }
+        },
+        error : function() {
+          top.notification({
+            message : "Error al procesar la solicitud",
+            type : "error",
+            duration : 3000
+          });
+        }
+      });
+    }
   });
 
 /*

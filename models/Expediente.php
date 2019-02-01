@@ -3,15 +3,12 @@
 class Expediente extends Model
 {
     protected $idexpediente;
-    protected $fecha;
     protected $nombre;
+    protected $fecha;
     protected $descripcion;
     protected $cod_padre;
-    protected $fk_caja;
     protected $propietario;
     protected $responsable;
-    protected $fk_serie;
-    protected $fk_dependencia;
     protected $cod_arbol;
     protected $codigo_numero;
     protected $fondo;
@@ -37,8 +34,14 @@ class Expediente extends Model
     protected $indice_tres;
     protected $consecutivo_inicial;
     protected $consecutivo_final;
-    protected $fk_entidad_serie;
     protected $nucleo;
+    protected $estado;
+    protected $fk_expediente_eli;
+    protected $fk_caja;
+    protected $fk_serie;
+    protected $fk_dependencia;
+    protected $fk_entidad_serie;
+    
     protected $dbAttributes;
 
     protected $expedientePadre;
@@ -100,7 +103,9 @@ class Expediente extends Model
                 'consecutivo_inicial',
                 'consecutivo_final',
                 'fk_entidad_serie',
-                'nucleo'
+                'nucleo',
+                'estado',
+                'fk_expediente_eli'
             ],
             'date' => [
                 'fecha',

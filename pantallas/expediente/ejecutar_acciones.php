@@ -11,9 +11,10 @@ while ($max_salida > 0) {
 
 require_once $ruta_db_superior . "controllers/autoload.php";
 
-$data = UtilitiesController::cleanForm($_REQUEST);
-$accionExp = $data['methodExp'] ?? 0;
+$setNull= $_REQUEST['setNull'] ?? 0 ;
+$data = UtilitiesController::cleanForm($_REQUEST,$setNull);
 
+$accionExp = $data['methodExp'] ?? 0;
 $response = [
     'data' => [],
     'exito' => 0,

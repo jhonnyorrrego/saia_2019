@@ -90,8 +90,8 @@ FINHTML;
         }
 
         if ($ExpedienteInfo->getAccessUser('e')) {
-            $btn .= '<div class="btn btn-mini rotExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Imprimir rotulo" conector="iframe" enlace="pantallas/caja/rotulo.php?idexpediente=' . $idexpediente . '"><i class="icon-print"></i></div>';
-            if (!$ExpedienteInfo->tomo_padre) {
+            if(!$ExpedienteInfo->agrupador){
+                $btn .= '<div class="btn btn-mini rotExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Imprimir rotulo" conector="iframe" enlace="pantallas/caja/rotulo.php?idexpediente=' . $idexpediente . '"><i class="icon-print"></i></div>';
                 $btn .= '<div class="btn btn-mini tomoExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Crear Tomo"><i class="icon-th-list"></i></div>';
             }
         }
@@ -101,7 +101,7 @@ FINHTML;
         }
 
         if ($ExpedienteInfo->getAccessUser('e')) {
-            $btn .= '<div class="btn btn-mini editExp" data-id="' . $idexpediente . '" data-componente="'. $idcomp .'" title="Editar" conector="iframe"  enlace="pantallas/expediente/editar_expediente.php"><i class="icon-pencil"></i></div>';
+            $btn .= '<div class="btn btn-mini editExp" data-id="' . $idexpediente . '" data-componente="'. $idcomp .'" title="Editar"><i class="icon-pencil"></i></div>';
         }
 
         if ($ExpedienteInfo->getAccessUser('d')) {

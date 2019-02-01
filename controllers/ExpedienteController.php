@@ -77,16 +77,31 @@ class ExpedienteController
         if (!empty($data)) {
             if (!empty($data['cod_padre']) && !empty($data['idexpediente'])) {
                 $Expediente = new Expediente($data['idexpediente']);
-                $data=[
-                    'nombre'=>'NULL'
-                ];
+                if ($data['agrupador'] == 3) {
+                    $data['descripcion'] = 'NULL';
+                    $data['indice_uno'] = 'NULL';
+                    $data['indice_dos'] = 'NULL';
+                    $data['indice_tres'] = 'NULL';
+                    $data['fk_caja'] = 'NULL';
+                    $data['codigo_numero'] = 'NULL';
+                    $data['fondo'] = 'NULL';
+                    $data['proceso'] = 'NULL';
+                    $data['fecha_extrema_i'] = 'NULL';
+                    $data['fecha_extrema_f'] = 'NULL';
+                    $data['consecutivo_inicial'] = 'NULL';
+                    $data['consecutivo_final'] = 'NULL';
+                    $data['no_unidad_conservacion'] = 'NULL';
+                    $data['no_folios'] = 'NULL';
+                    $data['no_carpeta'] = 'NULL';
+                    $data['soporte'] = 'NULL';
+                    $data['frecuencia_consulta'] = 'NULL';
+                    $data['notas_transf'] = 'NULL';
+                }
                 $Expediente->setAttributes($data);
-
-var_dump($Expediente->update(true));
-die("---");
 
                 if ($Expediente->update()) {
                     $response['message'] = 'Expediente actualizado';
+                    $response['exito'] = 1;
                     if (!empty($data['generarfiltro']) && !empty($data['idbusqueda_componente'])) {
                         $attributes = [
                             'fk_busqueda_componente' => $data["idbusqueda_componente"],
@@ -109,6 +124,104 @@ die("---");
     }
 
     /**
+     * Elimina el expediente y lo mueve a la papelera
+     *
+     * @param array $data : array con el idexpediente
+     * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+
+    public function deleteExpedienteCont(array $data = []) : array
+    {
+
+        $response = [
+            'exito' => 0,
+            'message' => 'Faltan los datos a procesar'
+        ];
+
+        if (!empty($data['idexpediente'])) {
+            $Expediente = new Expediente($data['idexpediente']);
+            if ($Expediente->estado == 1) {
+                $sql = "SELECT count(idexpediente_eli) as cant FROM expediente_eli WHERE fk_expediente={$data['idexpediente']} AND fecha_restauracion IS NULL";
+                $exis = StaticSql::search($sql);
+                if (!$exis[0]['cant']) {
+                    $ExpDel = new ExpedienteEli();
+                    $attributes = [
+                        'fk_expediente' => $data['idexpediente'],
+                        'fk_funcionario' => $_SESSION['idfuncionario'],
+                        'fecha_eliminacion' => date('Y-m-d H:i:s')
+                    ];
+                    $ExpDel->setAttributes($attributes);
+                    if ($ExpDel->create()) {
+                        $sql = "UPDATE expediente SET estado=0,fk_expediente_eli={$ExpDel->getPK()} WHERE idexpediente={$data['idexpediente']} OR cod_arbol like '{$Expediente->cod_arbol}.%' ";
+                        if (StaticSql::query($sql)) {
+                            $response['exito'] = 1;
+                            $response['message'] = 'Expediente eliminado';
+                        } else {
+                            $ExpDel->delete();
+                            $response['message'] = 'Error al eliminar el expediente';
+                        }
+                    }
+                } else {
+                    $response['message'] = 'No se puede eliminar el expediente, contacte al administrador';
+                }
+            } else {
+                $response['message'] = 'El expediente se encuentra inactivo';
+            }
+        } else {
+            $response['message'] = 'Falta el identificar del expediente';
+        }
+        return ($response);
+    }
+
+    /**
+     * Restaura un expediente eliminado
+     *
+     * @param array $data : array con el idexpediente
+     * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+
+    public function restoreExpedienteCont(array $data = []) : array
+    {
+
+        $response = [
+            'exito' => 0,
+            'message' => 'Faltan los datos a procesar'
+        ];
+
+        if (!empty($data['idexpediente'])) {
+            $Expediente = new Expediente($data['idexpediente']);
+            if ($Expediente->estado == 0) {
+                $sql = "SELECT idexpediente_eli FROM expediente_eli WHERE fk_expediente={$data['idexpediente']} AND fecha_restauracion IS NULL";
+                $instance = UtilitiesController::instanceSql('ExpedienteEli', 'idexpediente_eli', $sql);
+                if ($instance) {
+                    $ExpDel = $instance[0];
+                    $ExpDel->fecha_restauracion = date('Y-m-d H:i:s');
+                    if ($ExpDel->update()) {
+                        $sql = "UPDATE expediente SET estado=1,fk_expediente_eli=NULL WHERE idexpediente={$data['idexpediente']} OR cod_arbol like '{$Expediente->cod_arbol}.%' ";
+                        if (StaticSql::query($sql)) {
+                            $response['exito'] = 1;
+                            $response['message'] = 'Expediente restaurado';
+                        } else {
+                            $ExpDel->fecha_restauracion = 'NULL';
+                            $ExpDel->update();
+                            $response['message'] = 'Error al restaurar el expediente';
+                        }
+                    }
+                } else {
+                    $response['message'] = 'No se puede restaurar el expediente, contacte al administrador';
+                }
+            } else {
+                $response['message'] = 'El expediente NO se encuentra eliminado';
+            }
+        } else {
+            $response['message'] = 'Falta el identificar del expediente';
+        }
+        return ($response);
+    }
+
+    /**
      * Procesa los datos del formulario y crea el tomo del expediente
      *
      * @param array $data : array con los datos del formulario
@@ -125,6 +238,10 @@ die("---");
         if (!empty($data)) {
             if ($data['idexpediente']) {
                 $Expediente = new Expediente($data['idexpediente']);
+                $tomoPadre= $data['idexpediente'];
+                if($Expediente->tomo_padre){
+                    $tomoPadre = $Expediente->tomo_padre;
+                }
                 $cant = $Expediente->countTomos();
 
                 $ExpTomo = clone $Expediente;
@@ -133,7 +250,7 @@ die("---");
                     'fecha' => date('Y-m-d H:i:s'),
                     'propietario' => $_SESSION['idfuncionario'],
                     'responsable' => $_SESSION['idfuncionario'],
-                    'tomo_padre' => $data['idexpediente'],
+                    'tomo_padre' => $tomoPadre,
                     'tomo_no' => $cant + 1,
                     'cod_arbol' => 0
                 ];
@@ -187,7 +304,7 @@ die("---");
             $ok = 0;
             foreach ($SeriesPadres as $id) {
                 $sql = "SELECT identidad_serie FROM entidad_serie WHERE fk_serie={$id} and fk_dependencia={$attributes['fk_dependencia']} and estado=1";
-                $exit=StaticSql::search($sql);
+                $exit = StaticSql::search($sql);
                 if (!$exist) {
                     $attributesPadre = $attributes;
                     $attributesPadre['fk_serie'] = $id;

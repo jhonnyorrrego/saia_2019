@@ -35,7 +35,8 @@ if ($Expediente->fecha_extrema_f) {
 }
 $params =[
     'agrupador'=> intval($Expediente->agrupador),
-    'countDocuments'=> $Expediente->countDocuments()
+    'countDocuments'=> $Expediente->countDocuments(),
+    'countTomos' =>$Expediente->countTomos()
 ];
 
 include_once $ruta_db_superior . 'assets/librerias.php';
@@ -70,7 +71,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
                         <div class="card-body">
     
                             <form role="form" method="post" name="formularioExp" id="formularioExp">
-                                <div class="form-group required">
+                                <div class="form-group">
                                     <label>Tipo *</label>
                                     <div class="radio radio-info">
                                         <input type="radio" checked="checked" value="0" name="agrupador" id="AgExp" <?=$ag[0]?> >
@@ -196,6 +197,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
                                 </div>
                                 <div class="form-group">
                                     <input type="hidden" name="methodExp" value="updateExpedienteCont">
+                                    <input type="hidden" name="setNull" value="1">
                                     <input type="hidden" name="generarfiltro" value="1">
                                     <input type="hidden" id="cod_padre" name="cod_padre" value="<?= $Expediente->cod_padre ?>">
                                     <input type="hidden" id="idexpediente" name="idexpediente" value="<?= $idexpediente ?>">
@@ -217,10 +219,10 @@ include_once $ruta_db_superior . "librerias_saia.php";
             $(document).ready(function (){
                 var params=<?=json_encode($params)?>;
                 if(!params.agrupador){
-                    if(params.countDocuments){
+                    if(params.countDocuments || params.countTomos>1){
                         $("#AgAgr").remove();
                         $('label[for="AgAgr"]').remove();
-                        $("#notaAgr").text("Este expediente tiene documentos vinculados, NO se permite cambiar a Separador");
+                        $("#notaAgr").text("Este expediente tiene documentos/tomos vinculados");
                     }
                 }
        
@@ -291,8 +293,9 @@ include_once $ruta_db_superior . "librerias_saia.php";
                                         dataType : 'json',
                                         success : function(objeto2) {
                                             if (objeto2.exito) {
-                                                $("#resultado_pantalla_"+idexpediente).remove();
-                                                $("#resultado_busqueda"+idcomponente, parent.document).prepend(objeto2.rows[0].info);
+                                                $("#resultado_pantalla_"+idexpediente,parent.document).addClass("removeDiv");
+                                                $(".removeDiv", parent.document).after(objeto2.rows[0].info);
+                                                 $(".removeDiv", parent.document).remove();
                                             }else{
                                                 top.notification({
                                                     message : "Error al actualizar el listado, por favor actualice el listado",
