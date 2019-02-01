@@ -19,18 +19,18 @@ $idencabezadoFormato = 0;
 $contenidoEncabezado = 0;
 $contenidoPie = 0;
 $ocultarTexto = 0;
+$publicar = 0;
 if ($_REQUEST["idformato"]) {
     include_once $ruta_db_superior . "pantallas/generador/librerias.php";
     $idpantalla = $_REQUEST["idformato"];
     $camposNucleo = " and A.nombre not in('" . implode("', '", camposNucleo($idpantalla)) . "')";
     $camposFormato = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $_REQUEST['idformato'] . " and etiqueta_html<>'campo_heredado' " . $camposNucleo . "", "A.orden", $conn);
-    
     if($camposFormato['numcampos']){
         $ocultarTexto = 1;
     }
-    $consulta_formato = busca_filtro_tabla("cuerpo,encabezado,pie_pagina", "formato f", "idformato=" . $idpantalla, "", $conn);
-
+    $consulta_formato = busca_filtro_tabla("cuerpo,encabezado,pie_pagina,publicar,nombre", "formato f", "idformato=" . $idpantalla, "", $conn);
     if ($consulta_formato['numcampos']) {
+        $publicar = $consulta_formato[0]['publicar'];
         if ($consulta_formato[0]['cuerpo']) {
             $contenido_formato = json_encode($consulta_formato[0]['cuerpo']);
         }
@@ -125,10 +125,8 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
         padding-top: 0px;
     }
 
-    .nav-tabs>li>a,
-    .nav-pills>li>a {
-        margin-right: 14px;
-
+    .nav-tabs>li>a {
+        background: #fff !important;
     }
 
     #droppable {
@@ -139,6 +137,9 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
         margin-bottom: 20px;
         border: 1px dashed #48b0f7;
     }
+    #droppable ul{
+       list-style:none;
+       }
     </style>
     <script src="<?php echo $ruta_db_superior; ?>js/ckeditor/4.11/ckeditor_cust/ckeditor.js"></script>
 </head>
@@ -149,22 +150,24 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
             <div class="span9">
                 <div class="tabbable"><br>
                     <ul class="nav nav-tabs" id="tabs_formulario">
-                        <li style="width:140px;" id="pantalla_principal">
+                        <li style="width:100px;" id="pantalla_principal">
                             <a href="#datos_formulario-tab" data-toggle="tab"
                                 style="text-align:center;">Informaci&oacute;n</a>
                         </li>
-                        <li style="width:140px;" id="generar_formulario_pantalla">
+                        <li style="width:100px;" id="generar_formulario_pantalla">
                             <a href="#formulario-tab" data-toggle="tab" style="text-align:center;">Campos</a>
                         </li>
                         <!-- <li>
                 			<a href="#librerias_formulario-tab" data-toggle="tab">3-Librerias</a>
 						</li> -->
-                        <li style="width:140px;" id="diseno_formulario_pantalla">
-                            <a href="#pantalla_mostrar-tab" data-toggle="tab"
-                                style="text-align:center;">Dise&ntilde;o</a>
+                        <li style="width:100px;" id="diseno_formulario_pantalla">
+                            <a href="#pantalla_mostrar-tab" data-toggle="tab" style="text-align:center;">Dise&ntilde;o</a>
                         </li>
-                        <li style="width:140px;" id="vista_formulario_pantalla">
+                        <li style="width:110px;" id="vista_formulario_pantalla">
                             <a href="#pantalla_previa-tab" data-toggle="tab" style="text-align:center;">Vista previa</a>
+                        </li>
+                        <li style="width:100px;" id="vista_formulario_permisos">
+                            <a href="#pantalla_previa-permiso" data-toggle="tab" style="text-align:center;">Permisos</a>
                         </li>
                         <!-- li>
 							<a href="#pantalla_listar-tab" data-toggle="tab">5-listar</a>
@@ -180,11 +183,12 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
                             <div class="container-fluid">
                                 <div class="row" class="span3 offset2" style="float:left">
                                     <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" id="cambiar_nav"><span style="color:fff; background: #48b0f7;">Siguiente</span></button>
+                                    <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" id="cambiar_nav_basico"><span style="color:fff; background: #48b0f7;">Siguiente</span></button>
                                     <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" data-vista="campos_previa" id="cambiar_campos"><span style="color:fff; background: #48b0f7;"> Siguiente</span></button>                                    
                                     <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" data-vista="vista_previa" id="cambiar_vista"><span style="color:fff; background: #48b0f7;"> Siguiente</span></button>
                                     <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" id="generar_pantalla">Publicar</button>
-                                    <div id="barra_principal_formato" class="barra_principal_formato"
-                                        style="margin-left:10px; width:85%; display:none">
+                                    <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" id="cambiar_nav_permiso">Siguiente</button>
+                                    <div id="barra_principal_formato" class="barra_principal_formato" style="margin-left:10px; width:85%; display:none">
                                         <div class="progress progress-striped active" style="margin-bottom: 7px;">
                                             <div class="bar bar-success" id="barra_formato"></div>
                                         </div>
@@ -194,10 +198,8 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
                         </li>
                     </ul>
                     <div class="tab-content">
-                        <div class="tab-pane" id="formulario-tab">
-                        
-                            <div id="droppable" class="ui-widget-header">
-                            
+                        <div class="tab-pane" id="formulario-tab">                       
+                            <div id="droppable" class="ui-widget-header">                            
 								<ul id="list">
                                     <li id="list_one" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Arrastre los campos aquí</li>
                                 <?php
@@ -209,6 +211,11 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
                             </div>
                         </div>
                         <div class="tab-pane" id="pantalla_previa-tab"></div>
+                        <div class="tab-pane" id="pantalla_previa-permiso">
+                        <h5 class="title">Permisos del formato a:</h5><br>
+                        <input type="hidden" id="nombreFormato" value="<?= $consulta_formato[0]['nombre']; ?>">
+                            <?= consultarPermisosPerfil(); ?>
+                        </div>
                         <div class="tab-pane" id="datos_formulario-tab">
                             <?php
                                 include_once $ruta_db_superior . 'pantallas/generador/datos_pantalla.php';
@@ -589,21 +596,24 @@ for ($i = 0; $i < $cant_js; $i++) {
 
 <script type="text/javascript">
 $(document).ready(function() {
-    $("#generar_pantalla").click(function(e) {
-        if(e.which) {
-            
-        }
-        else {
-            
-        }
-    });
     $("#cambiar_vista").hide();
     $("#generar_pantalla").hide();
+    $("#cambiar_nav").show();
     $('#cambiar_vista').on('click', function() {
         $("#diseno_formulario_pantalla").removeClass("disabled");
         $("#vista_formulario_pantalla").removeClass("disabled");
         $("#diseno_formulario_pantalla").next().find("a").trigger("click");
     });
+    $('#cambiar_nav_basico').on('click', function() {
+        $("#diseno_formulario_pantalla").removeClass("disabled");
+        $("#generar_formulario_pantalla").next().find("a").trigger("click");
+    });
+     $('#cambiar_nav_permiso').on('click', function() {
+        $("#vista_formulario_permisos").removeClass("disabled");
+        $("#vista_formulario_pantalla").next().find("a").trigger("click");
+     
+    });
+    
     $('#cambiar_campos').on('click', function() {
         $("#pantalla_principal").next().find("a").trigger("click");
     });
@@ -635,18 +645,25 @@ $(document).ready(function() {
     $("#asignar_funciones-tab").hide();
     $("#pantalla_listar-tab").hide();
     if (idpantalla) {
+        var publicar = <?= $publicar ?>;
         var ocultarTexto = <?= $ocultarTexto ?>;
         if(ocultarTexto==1){
             $("#list_one").hide();
         }
+        
         $("#pantalla_principal").removeClass("active");
         $("#datos_formulario-tab").removeClass("active");
         $("#generar_formulario_pantalla").addClass("active");
         $("#diseno_formulario_pantalla").addClass("disabled");
         $("#vista_formulario_pantalla").addClass("disabled");
+        $("#vista_formulario_permisos").addClass("disabled");
         
         $("#formulario-tab").addClass("active");
-        $('#cambiar_nav').show();
+        if(publicar==1){
+            $("#cambiar_nav").hide();
+            $("#cambiar_nav_basico").show();
+        }
+        
         $('#componentes_acciones').show();
         var contenidoPie = <?php echo $contenidoPie ?>;
         var contenidoEncabezado = <?php echo $contenidoEncabezado ?>;
@@ -700,6 +717,9 @@ $(document).ready(function() {
             generar_pantalla("full");
         });
     }
+    if( $('.permisos').prop('checked') ) {
+    alert('Seleccionado');
+}
 
     $(document).on("click", "#funcionesPropias", function() {
         var idfuncionFormato = $(this).attr("idfuncionFormato");
@@ -807,6 +827,9 @@ $(document).ready(function() {
                         setTimeout(function() {
                             $(".barra_principal_formato").fadeOut(1500);
                         }, 3000);
+                        if(objeto.publicar==1){
+                           publicar=objeto.publicar;  
+                        }
                     } else {
                         notificacion_saia(objeto.mensaje, "error", "", 9500);
                         setTimeout(function() {
@@ -1503,12 +1526,14 @@ $(document).ready(function() {
                 if (tab_acciones == false) {
                     $('#tabs_formulario a[href="#pantalla_mostrar-tab"]').tab('show');
                 }
-                break;
+            break;
             case 'pantalla_previa-tab':
                 $('#cambiar_vista').hide();
                 $('#cambiar_nav').hide();
                 $('#cambiar_campos').hide();
-                $('#generar_pantalla').show();
+                $("#cambiar_nav_basico").hide();
+                $("#generar_pantalla").hide();
+                $("#cambiar_nav_permiso").show();
                 if (tab_acciones == false) {
                     $('#tabs_formulario a[href="#pantalla_previa-tab"]').tab('show');
                 }
@@ -1533,6 +1558,52 @@ $(document).ready(function() {
                     }
                 });
                 break;
+             case 'pantalla_previa-permiso':
+                $('#cambiar_nav').hide();
+                $('#cambiar_campos').hide();
+                $('#cambiar_vista').hide();
+                $("#cambiar_nav_basico").hide();
+                $("#cambiar_nav_permiso").hide();
+                if (tab_acciones == false) {
+                    $('#tabs_formulario a[href="#pantalla_previa-permiso"]').tab('show');
+                }
+                 $('#generar_pantalla').show();
+                 $( '.permisos' ).on( 'click', function() {
+                    if( $(this).is(':checked') ){
+                    $.ajax({
+                        type: 'POST',
+                        url: '<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias_pantalla.php?permisosFormato=1',
+                        data: {idformato: $("#idformato").val(),idperfil:$(this).val() ,nombreFormato : $("#nombreFormato").val()},
+                        success: function(response) {
+                            if (response) {
+                                var objeto = jQuery.parseJSON(response);
+                                if (objeto.exito==1) {
+                                    notificacion_saia(objeto.mensaje, "success", "", 3000);
+                                }else{
+                                    notificacion_saia(objeto.mensaje, "error", "", 3000);
+                                }
+                            }
+                        }
+                    }); 
+                    } else {
+                        $.ajax({
+                        type: 'POST',
+                        url: '<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias_pantalla.php?eliminarPermisoFormato=1',
+                        data: {idformato: $("#idformato").val(),idperfil:$(this).val() ,nombreFormato : $("#nombreFormato").val()},
+                        success: function(response) {
+                            if (response) {
+                                var objeto = jQuery.parseJSON(response);
+                                if (objeto.exito==1) {
+                                    notificacion_saia(objeto.mensaje, "success", "", 3000);
+                                }else{
+                                    notificacion_saia(objeto.mensaje, "error", "", 3000);
+                                }
+                            }
+                        }
+                    }); 
+                    }
+                });
+            break; 
             case 'funciones-tab':
                 if (tab_acciones == false) {
                     $('#tabs_formulario a[href="#pantalla_mostrar-tab"]').tab('show');
@@ -1552,15 +1623,22 @@ $(document).ready(function() {
                         }
                     }
                 });
-
                 break;
             case 'pantalla_mostrar-tab':
-                $("#generar_pantalla").trigger("click");
+                if(publicar!=1){
+                     $("#generar_pantalla").trigger("click");
+                }else{
+                    $('#cambiar_nav').hide();
+                    $("#cambiar_nav_basico").show();
+                }
+                           
                 tab_acciones = true;
                 $('#tabs_opciones a[href="#funciones-tab"]').tab('show');
                 $('#cambiar_nav').hide();
                 $('#generar_pantalla').hide();
                 $('#cambiar_campos').hide();
+                $("#cambiar_nav_basico").hide();
+                $('#cambiar_nav_permiso').hide();
                 $('#cambiar_vista').show();
                 break;
             case 'pantalla_listar-tab':
@@ -1579,8 +1657,13 @@ $(document).ready(function() {
                 $("#generar_pantalla").hide();
                 $('#cambiar_vista').hide();
                 $('#cambiar_campos').hide();
-                $('#cambiar_nav').show();
-
+                $('#cambiar_nav_permiso').hide();                
+                if(publicar==1){
+                    $('#cambiar_nav').hide();
+                    $("#cambiar_nav_basico").show();
+                }else{
+                  $('#cambiar_nav').show();
+                }
                 break;
             case 'datos_formulario-tab':
                 tab_acciones = false;
@@ -1588,7 +1671,10 @@ $(document).ready(function() {
                 $('#cambiar_campos').show();
                 $('#cambiar_nav').hide();
                 $('#cambiar_vista').hide();
+                $("#cambiar_nav_basico").hide();
                 $('#generar_pantalla').hide();
+                $('#cambiar_nav_permiso').hide();
+
                 break;
             case 'librerias_formulario-tab':
                 tab_acciones = false;
