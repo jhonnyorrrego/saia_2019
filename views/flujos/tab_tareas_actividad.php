@@ -17,7 +17,7 @@ include_once $ruta_db_superior . 'librerias_saia.php';
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
 $idactividad = null;
-$tipo_destinatario = TipoDestinatario::TIPO_EXTERNO;
+//$tipo_destinatario = TipoDestinatario::TIPO_EXTERNO;
 if (!empty($_REQUEST["idactividad"])) {
     $idactividad = $_REQUEST["idactividad"];
 }
@@ -73,6 +73,7 @@ if (!empty($_REQUEST["idactividad"])) {
 
 <script>
     var $tabla = $("#tabla_tareas");
+    $tabla.bootstrapTable();
 
     var $botonEliminar = $('#boton_eliminar')
     var $botonGuardar = $('#btnSaveExtPerson')
@@ -110,7 +111,7 @@ if (!empty($_REQUEST["idactividad"])) {
         var ids = $.map($tabla.bootstrapTable('getSelections'), function (row) {
             return row.idtarea
         });
-        var estado = eliminarDestinatarios(idactividad, ids.join(","));
+        var estado = eliminarTareaActividad(idactividad, ids.join(","));
         if (estado) {
             $tabla.bootstrapTable('remove', {
                 field: 'idtarea',
@@ -149,7 +150,8 @@ if (!empty($_REQUEST["idactividad"])) {
         }
         return false;
     }
-    function eliminarDestinatarios(idactividad, ids) {
+
+    function eliminarTareaActividad(idactividad, ids) {
         if (ids) {
             var data = {
                 key: localStorage.getItem("key"),
@@ -165,7 +167,7 @@ if (!empty($_REQUEST["idactividad"])) {
             var pk = false;
             $.ajax({
                 dataType: "json",
-                url: "<?= $ruta_db_superior ?>app/flujo/borrarDestinatarioExterno.php",
+                url: "<?= $ruta_db_superior ?>app/flujo/borrarTareaActividad.php",
                 type: "POST",
                 data: data,
                 async: false,

@@ -246,7 +246,7 @@ if (!empty($_REQUEST["idactividad"])) {
             var pk = false;
             $.ajax({
                 dataType: "json",
-                url: "<?= $ruta_db_superior ?>app/flujo/borrarResponbableActividad.php",
+                url: "<?= $ruta_db_superior ?>app/flujo/borrarResponsableActividad.php",
                 type: "POST",
                 data: data,
                 async: false,
