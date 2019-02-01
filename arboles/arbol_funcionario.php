@@ -119,7 +119,7 @@ function llena_dependencia($id)
 
 			$funcionarios_hijos = llena_funcionario($papas[$i]["iddependencia"]);
 			$dependencias_hijas = array_merge($dependencias_hijas, $funcionarios_hijos);
-            /* TERMINA SERIES */
+            
 			if (!empty($dependencias_hijas)) {
 				$item["folder"] = true;
 				$item["children"] = $dependencias_hijas;
@@ -149,7 +149,6 @@ function llena_funcionario($iddep)
 			if (in_array($papas[$i][$campo], $seleccionados) !== false) {
 				$item["selected"] = true;
 			}
-			//$item["folder"] = 0;
 			$objetoJson[] = $item;
 		}
 	}

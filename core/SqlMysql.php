@@ -462,7 +462,7 @@ class SqlMysql extends SQL2
         return "DATEDIFF($fecha1,$fecha2)";
     }
 
-    function fecha_db_almacenar($fecha, $formato = null)
+    static function fecha_db_almacenar($fecha, $formato = null)
     {
         if (is_object($fecha)) {
             $fecha = $fecha->format($formato);
@@ -502,7 +502,7 @@ class SqlMysql extends SQL2
         return $fsql;
     }
 
-    function fecha_db_obtener($campo, $formato = null)
+   static function fecha_db_obtener($campo, $formato = null)
     {
         if (!$formato)
             $formato = "Y-m-d";

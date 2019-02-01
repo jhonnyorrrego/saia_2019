@@ -170,4 +170,35 @@ class UtilitiesController
         }
         return $dir_anexos;
     }
+    /**
+     * Devuelve un array con los ids de las instancias
+     *
+     * @param array $instance : Array de instancias
+     * @return array
+     */
+    public static function getIdsInstance(array $instance) : array
+    {
+        $data = [];
+        foreach ($instance as $inst) {
+            $data[] = $inst->getPK();
+        }
+        return $data;
+    }
+
+    /**
+     * filtra el array eliminando los datos vacios
+     *
+     * @param array $data : valores a procesar
+     * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public static function cleanForm(array $data) : array
+    {
+        $response = array_filter($data, function ($val, $key) {
+            return trim($val) != '';
+        }, ARRAY_FILTER_USE_BOTH);
+
+        return $response;
+    }
+
 }

@@ -11,7 +11,7 @@ while ($max_salida > 0) {
 	$max_salida--;
 }
 
-include_once $ruta_db_superior . "controllers/autoload.php";
+require_once $ruta_db_superior . "controllers/autoload.php";
 require_once $ruta_db_superior . "arboles/crear_arbol_ft.php";
 
 $idserie = $_REQUEST['x_idserie'];
@@ -49,8 +49,7 @@ if ($sAction == "A") {
 		'estado' => $_POST['estado'],
 		'categoria' => $_POST['categoria']
 	];
-
-	$Serie->SetAttributes($attributes);
+	$Serie->SetAttributes(UtilitiesController::cleanForm($attributes));
 	$response = $Serie->updateSerie();
 	if ($response['exito']) {
 		alerta($response['message']);
@@ -74,8 +73,8 @@ if ($sAction == "A") {
 	];
 
 	$conservacion = [
-		'TOTAL' => '',
-		'ELIMINACION' => ''
+		1 => '',
+		0 => ''
 	];
 
 	$seleccion = [
@@ -99,7 +98,7 @@ if ($sAction == "A") {
 	];
 	if ($Serie->categoria == 3) {
 		$Serie->SetAttributes([
-			'conservacion' => 'TOTAL',
+			'conservacion' => 1,
 			'copia' => 1,
 			'tipo' => 1,
 			'seleccion' => 0
@@ -229,9 +228,9 @@ include_once $ruta_db_superior . "librerias_saia.php";
 							<tr class="ocultar">
 								<td>CONSERVACI&Oacute;N / ELIMINACI&Oacute;N *</td>
 								<td>
-								<input type="radio" id="conservacion1" name="conservacion" value="TOTAL" <?= $conservacion['TOTAL'] ?>>
-								Conservacion Total
-								<input type="radio" id="conservacion2" name="conservacion" value="ELIMINACION" <?= $conservacion['ELIMINACION'] ?>>
+								<input type="radio" id="conservacion1" name="conservacion" value="1" <?= $conservacion[1] ?>>
+								Conservacion
+								<input type="radio" id="conservacion2" name="conservacion" value="0" <?= $conservacion[0] ?>>
 								Eliminacion </td>
 							</tr>
 

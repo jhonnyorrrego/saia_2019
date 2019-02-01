@@ -18,9 +18,16 @@ $idpantalla = 0;
 $idencabezadoFormato = 0;
 $contenidoEncabezado = 0;
 $contenidoPie = 0;
-
+$ocultarTexto = 0;
 if ($_REQUEST["idformato"]) {
+    include_once $ruta_db_superior . "pantallas/generador/librerias.php";
     $idpantalla = $_REQUEST["idformato"];
+    $camposNucleo = " and A.nombre not in('" . implode("', '", camposNucleo($idpantalla)) . "')";
+    $camposFormato = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $_REQUEST['idformato'] . " and etiqueta_html<>'campo_heredado' " . $camposNucleo . "", "A.orden", $conn);
+    
+    if($camposFormato['numcampos']){
+        $ocultarTexto = 1;
+    }
     $consulta_formato = busca_filtro_tabla("cuerpo,encabezado,pie_pagina", "formato f", "idformato=" . $idpantalla, "", $conn);
 
     if ($consulta_formato['numcampos']) {
@@ -54,7 +61,6 @@ if ($_REQUEST["idformato"]) {
         border: none;
     }
     </style>
-
     <?php
 echo estilo_bootstrap();
 echo librerias_jquery("1.8.3");
@@ -134,7 +140,6 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
         border: 1px dashed #48b0f7;
     }
     </style>
-    <script src="<?php echo $ruta_db_superior; ?>js/jquery-migrate-1.4.1.js"></script>
     <script src="<?php echo $ruta_db_superior; ?>js/ckeditor/4.11/ckeditor_cust/ckeditor.js"></script>
 </head>
 
@@ -158,7 +163,7 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
                             <a href="#pantalla_mostrar-tab" data-toggle="tab"
                                 style="text-align:center;">Dise&ntilde;o</a>
                         </li>
-                        <li style="width:140px;">
+                        <li style="width:140px;" id="vista_formulario_pantalla">
                             <a href="#pantalla_previa-tab" data-toggle="tab" style="text-align:center;">Vista previa</a>
                         </li>
                         <!-- li>
@@ -174,9 +179,10 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
                             <!--<a href="#generar_formulario-tab" data-toggle="tab">Publicar</a>-->
                             <div class="container-fluid">
                                 <div class="row" class="span3 offset2" style="float:left">
-                                    <button
-                                        style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px;"
-                                        class="btn btn-info" id="generar_pantalla">Publicar</button>
+                                    <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" id="cambiar_nav"><span style="color:fff; background: #48b0f7;">Siguiente</span></button>
+                                    <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" data-vista="campos_previa" id="cambiar_campos"><span style="color:fff; background: #48b0f7;"> Siguiente</span></button>                                    
+                                    <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" data-vista="vista_previa" id="cambiar_vista"><span style="color:fff; background: #48b0f7;"> Siguiente</span></button>
+                                    <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" id="generar_pantalla">Publicar</button>
                                     <div id="barra_principal_formato" class="barra_principal_formato"
                                         style="margin-left:10px; width:85%; display:none">
                                         <div class="progress progress-striped active" style="margin-bottom: 7px;">
@@ -189,10 +195,11 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane" id="formulario-tab">
-                            <button style="background: #48b0f7;color:fff;float:right;margin-top: 10px;margin-right: 18px;" class="btn btn-info" id="cambiar_nav"><span style="color:fff; background: #48b0f7;">Siguiente</span></button>
+                        
                             <div id="droppable" class="ui-widget-header">
+                            
 								<ul id="list">
-                                    <li class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Arrastre los campos aquí</li>
+                                    <li id="list_one" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>Arrastre los campos aquí</li>
                                 <?php
 								$formatosCampo = load_pantalla($idpantalla);
 								if($formatosCampo) : ?>
@@ -207,13 +214,7 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
                                 include_once $ruta_db_superior . 'pantallas/generador/datos_pantalla.php';
                             ?>
                         </div>
-                        <div>
-                            <button
-                                style="background: #48b0f7;color:fff;float:right;margin-top:10px;    margin-right: 17px;"
-                                class="btn btn-info" data-vista="vista_previa" id="cambiar_vista">
-                                <span style="color:fff; background: #48b0f7;"> Siguiente</span>
-                            </button>
-                        </div>
+                        
                         <div class="tab-pane" id="pantalla_mostrar-tab"><br>
                             <h5 class="title">Encabezado del formato</h5><br>
                             <select name="sel_encabezado" id="sel_encabezado">
@@ -588,11 +589,26 @@ for ($i = 0; $i < $cant_js; $i++) {
 
 <script type="text/javascript">
 $(document).ready(function() {
+    $("#generar_pantalla").click(function(e) {
+        if(e.which) {
+            
+        }
+        else {
+            
+        }
+    });
     $("#cambiar_vista").hide();
+    $("#generar_pantalla").hide();
     $('#cambiar_vista').on('click', function() {
+        $("#diseno_formulario_pantalla").removeClass("disabled");
+        $("#vista_formulario_pantalla").removeClass("disabled");
         $("#diseno_formulario_pantalla").next().find("a").trigger("click");
     });
+    $('#cambiar_campos').on('click', function() {
+        $("#pantalla_principal").next().find("a").trigger("click");
+    });
     $('#cambiar_nav').on('click', function() {
+        $("#diseno_formulario_pantalla").removeClass("disabled");
         $("#generar_formulario_pantalla").next().find("a").trigger("click");
         $.ajax({
             type: 'POST',
@@ -619,10 +635,18 @@ $(document).ready(function() {
     $("#asignar_funciones-tab").hide();
     $("#pantalla_listar-tab").hide();
     if (idpantalla) {
+        var ocultarTexto = <?= $ocultarTexto ?>;
+        if(ocultarTexto==1){
+            $("#list_one").hide();
+        }
         $("#pantalla_principal").removeClass("active");
         $("#datos_formulario-tab").removeClass("active");
         $("#generar_formulario_pantalla").addClass("active");
+        $("#diseno_formulario_pantalla").addClass("disabled");
+        $("#vista_formulario_pantalla").addClass("disabled");
+        
         $("#formulario-tab").addClass("active");
+        $('#cambiar_nav').show();
         $('#componentes_acciones').show();
         var contenidoPie = <?php echo $contenidoPie ?>;
         var contenidoEncabezado = <?php echo $contenidoEncabezado ?>;
@@ -669,7 +693,7 @@ $(document).ready(function() {
 
         $("#sel_encabezado").val(idencabezadoFormato);
         $("#sel_pie_pagina").val(idPie);
-        $("#generar_pantalla").live("click", function() {
+        $("#generar_pantalla").on("click", function() {
             $(".generador_pantalla").find(".accordion-inner").html("");
             $(".generador_pantalla").removeClass("alert-success");
             $(".generador_pantalla").removeClass("alert-error");
@@ -1300,9 +1324,10 @@ $(document).ready(function() {
         }
     };
     $(document).on('click', '.element > .close', function(e) {
+        let idFormato= $("#idformato").val();
         e.stopPropagation();
         hs.htmlExpand(null, {
-            src: "eliminar_pantalla_campo.php?idpantalla_campos=" + $(this).attr(
+            src: "eliminar_pantalla_campo.php?idformato="+idFormato+"&idpantalla_campos=" + $(this).attr(
                 "idpantalla_campos"),
             objectType: 'iframe',
             outlineType: 'rounded-white',
@@ -1342,9 +1367,8 @@ $(document).ready(function() {
             accept: '.component',
             hoverClass: 'content-hover',
             drop: function(e, ui) {
+                $("#list_one").hide();
                 form_builder.addComponent(ui.draggable);
-
-
             }
         })
         .sortable({
@@ -1370,32 +1394,9 @@ $(document).ready(function() {
         }
     }).click(function(e) {
         form_builder.addComponent($(this));
+        $("#list_one").hide();
     });
-    //ace.require("ace/ext/language_tools");
-    /*var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/chrome");
-    editor.getSession().setMode("ace/mode/php");
-    editor.setOptions({
-        enableBasicAutocompletion: true,
-        enableLiveAutoComplete: true,
-        enableSnippets: true
-    });
-    var snippetManager = ace.require("ace/snippets").snippetManager;
-    var config = ace.require("ace/config");
-    ace.config.loadModule("ace/snippets/php", function(m) {
-    if (m) {
-      snippetManager.files.php = m;
-      m.snippets = snippetManager.parseSnippetFile(m.snippetText);
-
-      // or do this if you already have them parsed
-      m.snippets.push({
-        content: "buscar_filtro_tabla(${1:''},${2:''},${3:''},${4:''},${6:conn});",
-        name: "busca_filtro_tabla",
-        tabTrigger: "bft"
-      });
-      snippetManager.register(m.snippets, m.scope);
-      }
-    });*/
+   
     tree3 = new dhtmlXTreeObject("treeboxbox_tree3", "100%", (alto - 65), 0);
     tree3.setImagePath("<?php echo ($ruta_db_superior); ?>imgs/");
     tree3.enableTreeImages(false);
@@ -1484,24 +1485,7 @@ $(document).ready(function() {
             eval('document.layers["esperando_archivo"]');
         document.poppedLayer.style.visibility = "visible";
     }
-    $('a[data-toggle="tab"]').on('show', function(e) {
-        var id = e.target.toString().split("#");
-        switch (id[1]) {
-            case 'formulario-tab':
-                $("#cambiar_vista").hide();
-                $.ajax({
-                    type: 'POST',
-                    url: '<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias_pantalla.php?ejecutar_libreria_pantalla=echo_load_pantalla',
-                    data: 'idformato=' + $("#idformato").val(),
-                    success: function(html) {
-                        if (html) {
-                            $('#droppable').html(html);
-                        }
-                    }
-                });
-                break;
-        }
-    });
+   
     $('a[data-toggle="tab"]').on('shown', function(e) {
 
         $("#componentes_acciones").show();
@@ -1519,14 +1503,12 @@ $(document).ready(function() {
                 if (tab_acciones == false) {
                     $('#tabs_formulario a[href="#pantalla_mostrar-tab"]').tab('show');
                 }
-                tree4.deleteChildItems(0);
-                tree4.enableSmartXMLParsing(true);
-                tree4.loadXML(
-                    "<?php echo ($ruta_db_superior); ?>pantallas/generador/arbol_funciones_campos.php?pantalla_idpantalla=" +
-                    $("#idformato").val() + "&extensiones_permitidas=php");
                 break;
             case 'pantalla_previa-tab':
                 $('#cambiar_vista').hide();
+                $('#cambiar_nav').hide();
+                $('#cambiar_campos').hide();
+                $('#generar_pantalla').show();
                 if (tab_acciones == false) {
                     $('#tabs_formulario a[href="#pantalla_previa-tab"]').tab('show');
                 }
@@ -1576,25 +1558,14 @@ $(document).ready(function() {
                 $("#generar_pantalla").trigger("click");
                 tab_acciones = true;
                 $('#tabs_opciones a[href="#funciones-tab"]').tab('show');
+                $('#cambiar_nav').hide();
+                $('#generar_pantalla').hide();
+                $('#cambiar_campos').hide();
                 $('#cambiar_vista').show();
                 break;
             case 'pantalla_listar-tab':
                 tab_acciones = true;
                 $('#tabs_opciones a[href="#funciones-tab"]').tab('show');
-                tree4.deleteChildItems(0);
-                tree4.enableSmartXMLParsing(true);
-                tree4.loadXML(
-                    "<?php echo ($ruta_db_superior); ?>pantallas/generador/arbol_funciones_campos.php?pantalla_idpantalla=" +
-                    $("#idformato").val() + "&extensiones_permitidas=php");
-                <?php
-    $listado_busqueda = busca_filtro_tabla("", "busqueda a", "lower(nombre) like 'pantalla_" . strtolower($pantalla_temp[0]["nombre"]) . "'", "", $conn);
-    if ($listado_busqueda["numcampos"]) { ?>
-                $("#tipo_pantalla_busqueda option[value=<?php echo ($listado_busqueda[0]["
-                    tipo_busqueda "]); ?>]").attr("selected", true);
-                $("#tipo_pantalla_busqueda").change();
-                <?php 
-}
-?>
                 break;
             case 'componentes-tab':
                 tab_acciones = false;
@@ -1605,12 +1576,19 @@ $(document).ready(function() {
                 $('#tabs_opciones a[href="#componentes-tab"]').tab('show');
                 $('#componente_tab').show();
                 $('#funciones_tab').hide();
+                $("#generar_pantalla").hide();
                 $('#cambiar_vista').hide();
+                $('#cambiar_campos').hide();
+                $('#cambiar_nav').show();
 
                 break;
             case 'datos_formulario-tab':
                 tab_acciones = false;
                 $('#componentes_acciones').hide();
+                $('#cambiar_campos').show();
+                $('#cambiar_nav').hide();
+                $('#cambiar_vista').hide();
+                $('#generar_pantalla').hide();
                 break;
             case 'librerias_formulario-tab':
                 tab_acciones = false;
@@ -1654,7 +1632,7 @@ $(document).ready(function() {
                 break;
         }
     });
-    $(".eliminar_libreria").live("click", function() {
+    $(".eliminar_libreria").on("click", function() {
         var include = $(this).attr("idformato_libreria");
         $(this).addClass("cargando");
         $(this).removeClass(".eliminar_libreria");
@@ -1683,7 +1661,7 @@ $(document).ready(function() {
             }
         });
     });
-    $(".configurar_libreria").live("click", function() {
+    $(".configurar_libreria").on("click", function() {
         hs.htmlExpand(null, {
             src: "configurar_pantalla_libreria.php?idpantalla_libreria=" + $(this).attr(
                 "idpantalla_libreria"),
@@ -1695,16 +1673,6 @@ $(document).ready(function() {
             height: 300
         });
     });
-
-    tree4 = new dhtmlXTreeObject("treeboxbox_tree4", "100%", (alto - 50), 0);
-    tree4.setImagePath("<?php echo ($ruta_db_superior); ?>imgs/");
-    tree4.enableTreeImages(false);
-    tree4.enableTextSigns(true);
-    tree4.enableAutoTooltips(true);
-    tree4.setOnLoadingStart(cargando_mostrar);
-    tree4.setOnLoadingEnd(fin_cargando_mostrar);
-    tree4.setOnClickHandler(insertar_mostrar);
-    tree4.enableThreeStateCheckboxes(true);
 
     function fin_cargando_mostrar() {
 
@@ -1734,49 +1702,9 @@ $(document).ready(function() {
         document.poppedLayer.style.visibility = "visible";
     }
 
-    function insertar_mostrar(nodeId) {
-        var tipo = nodeId.split("_");
 
-        if (tipo[0] === "func") {
-            //tinymce.activeEditor.execCommand('mceInsertContent', false, tree4.getUserData(nodeId,"myfunc"));
-            $.ajax({
-                type: 'POST',
-                url: "<?php echo ($ruta_db_superior); ?>pantallas/lib/llamado_ajax.php",
-                data: "librerias=pantallas/generador/librerias_formato.php&funcion=vincular_funciones_formatos&parametros=" +
-                    tree4.getUserData(nodeId, "mylib_id") + ";" + tree4.getUserData(nodeId, "myfunc") +
-                    "&idformato=" + $("#idformato").val() + "&rand=" + Math.round(Math.random() *
-                        100000),
-                success: function(html) {
-                    if (html) {
-                        var objeto = jQuery.parseJSON(html);
-                        if (objeto.exito) {
-                            notificacion_saia(objeto.mensaje, "success", "", 3500);
-                        } else {
-                            notificacion_saia(objeto.mensaje, "error", "", 3500);
-                        }
-                    }
-                }
-            });
-        } else if (tipo[0] === "campo") {
-            //tinymce.activeEditor.execCommand('mceInsertContent', false, tree4.getUserData(nodeId,"mycampo"));
-        } else if (tipo[0] === "esquema") {
-            notificacion_saia("Cargando", "alert", "", 3000);
-            $.ajax({
-                type: 'POST',
-                url: '<?php echo ($ruta_db_superior); ?>' + tree4.getUserData(nodeId, "myesquema"),
-                success: function(html) {
-                    if (html) {
-                        cerrar_notificaciones_saia();
-                        //tinymce.activeEditor.execCommand('mceInsertContent', false, html);
-                    }
-                }
-            });
-        } else {
-            tree4.openItem(nodeId);
-        }
-    }
 
-    $('#idpantalla_funcion_exe').live("change", function() {
+    $('#idpantalla_funcion_exe').on("change", function() {
         var idpantalla_funcion_exe = $('#idpantalla_funcion_exe').val();
         var nombre_funcion_insertar = $('#nombre_funcion_insertar').val();
         nombre_funcion_insertar = '{*' + nombre_funcion_insertar + '@' + idpantalla_funcion_exe + '*}';
@@ -1800,10 +1728,6 @@ $(document).ready(function() {
     });
 
 
-
-    $(".eliminar_campos_tabla_pantalla").live("click", function() {
-        alert($(this).attr("tabla") + "--" + $(this).attr("idpantalla"));
-    });
     $("#tipo_pantalla_busqueda").change(function() {
         $("#frame_tipo_listado").html(
             "<img src='<?php echo ($ruta_db_superior); ?>imagenes/cargando.gif'>");

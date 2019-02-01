@@ -8,13 +8,13 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
+include_once $ruta_db_superior . "db.php";
 
 function procesar_textarea_cke($idcampo = '', $seleccionado = '', $accion = '', $campo = '') {
     global $conn, $ruta_db_superior;
     $campo = '';
     if ($idcampo == '') {
-        return ("<div class='alert alert-error'>No existe campo para procesar</div>");
+        return "<div class='alert alert-error'>No existe campo para procesar</div>";
     }
     if ($campo == '') {
         $dato = busca_filtro_tabla("A.*, B.idpantalla_componente", "campos_formato A,pantalla_componente B", "A.etiqueta_html=B.nombre AND A.idcampos_formato=" . $idcampo, "", $conn);
@@ -26,14 +26,14 @@ function procesar_textarea_cke($idcampo = '', $seleccionado = '', $accion = '', 
         $selec = $campo["predeterminado"];
     }
     $texto = <<<FINTAG
-    <div class="control-group element" idpantalla_componente="{$campo["idpantalla_componente"]}" idpantalla_campo="{$idcampo}" id="pc_{$idcampo}" nombre="{$campo["etiqueta_html"]}">
+    <li class='ui-state-default element' idpantalla_componente='{$campo["idpantalla_componente"]}' idpantalla_campo='{$idcampo}' id='pc_{$idcampo}' nombre='{$campo["etiqueta_html"]}'>
 FINTAG;
     $texto .= clase_eliminar_pantalla_componente($idcampo);
     $obligatoriedad = "";
     if ($campo["obligatoriedad"]) {
         $obligatoriedad = '*';
     }
-    $texto .= '<label class="control-label" for="{$campo["nombre"]}"><b>' . $campo["etiqueta"] . $obligatoriedad . '</b></label>';
+    $texto .="<span class='ui-icon ui-icon-arrowthick-2-n-s' style='font-size:12px;'><b>{$campo["etiqueta"]} {$obligatoriedad}</b></span>"; 
 
     $texto .= '<div class="controls"><textarea name="' . $campo["nombre"] . '" id="' . $campo["nombre"] . '">' . $selec . '</textarea>';
     $texto .= <<<FINJS
@@ -45,8 +45,8 @@ FINTAG;
     };
     var editor = CKEDITOR.replace('{$campo["nombre"]}', config);
     </script></div>
-</div>
+</li>
 FINJS;
-    return ($texto);
+    return $texto;
 }
 ?>

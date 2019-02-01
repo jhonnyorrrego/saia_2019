@@ -28,14 +28,16 @@ global $conn;
   if($seleccionado==''){
     $seleccionado=$campo["predeterminado"];
   }
-  if($accion==''){               
+  if($accion==''){
+    $eliminarCampo = clase_eliminar_pantalla_componente($idcampo);              
     $adicionales_accion_pantalla=' type="text" class="elemento_formulario" placeholder="'.$campo["placeholder"].'"  disabled="disabled" ';
-    $encabezado_accion_pantalla='<div class="control-group element" idpantalla_componente="'.$campo["idpantalla_componente"].'" idpantalla_campo="'.$idcampo.'" id="pc_'.$idcampo.'" nombre="'.$campo["nombre_componente"].'">'.clase_eliminar_pantalla_componente($idcampo).'<label class="control-label" for="'.$campo["nombre"].'">'.$campo["etiqueta"];
+    $encabezado_accion_pantalla = "<li class ='ui-state-default element' idpantalla_componente = '{$campo["idpantalla_componente"]}' idpantalla_campo = '{$idcampo}' id = 'pc_{$idcampo}' nombre = '{$campo["etiqueta_html"]}' >{$eliminarCampo}
+    <span class='ui-icon ui-icon-arrowthick-2-n-s' style='font-size:12px;'><b>{$campo["etiqueta"]}";
     if($campo["obligatoriedad"]){
       $encabezado_accion_pantalla.='*';
     }
-    $encabezado_accion_pantalla.='</label><div class="controls">';
-    $pie_accion_pantalla='</div></div>';
+    $encabezado_accion_pantalla.='</span><div class="controls">';
+    $pie_accion_pantalla='</div></li>';
     $texto.=$encabezado_accion_pantalla.'<input "'.$adicionales_accion_pantalla.'" name="'.$campo["nombre"].'" id="'.$campo["nombre"].'" value="'.$seleccionado.'">'.$pie_accion_pantalla;
   }
   if($dato[0]["formato_idformato"]){

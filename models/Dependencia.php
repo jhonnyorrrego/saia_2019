@@ -44,8 +44,7 @@ class Dependencia extends Model
             $cod_arbol = $padre->codigo_arbol . '.' . $this->iddependencia;
         }
         $this->codigo_arbol = $cod_arbol;
-        $this->update();
-        return true;
+        return $this->update();
     }
     /**
      * retorna la etiqueta del estado de la dependencia

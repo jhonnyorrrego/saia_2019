@@ -44,17 +44,16 @@ class EntidadSerie extends Model
             $PermisoSerie = PermisoSerie::findAllByAttributes(['fk_entidad_serie' => $this->getPK()]);
             if ($PermisoSerie) {
                 foreach ($PermisoSerie as $instance) {
-                    $instance->delete();
+                    $instance->deletePermisoSerie();
                 }
             }
         }
-
         return true;
     }
 
     /**
      * Crea la entidad serie con sus correspondientes vinculaciones (expedientes)
-     * NO utilizar save() para crear una entidad serie
+     * NO utilizar save/create para crear una entidad serie
      * 
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
@@ -66,14 +65,18 @@ class EntidadSerie extends Model
             'exito' => 0,
             'message' => '',
         ];
-        $existEntSer = busca_filtro_tabla("identidad_serie", "entidad_serie", "fk_serie={$this->fk_serie} and fk_dependencia={$this->fk_dependencia} and estado=0", "", $conn);
-        if ($existEntSer['numcampos']) {
+        $sql= "SELECT identidad_serie FROM entidad_serie WHERE fk_serie={$this->fk_serie} and fk_dependencia={$this->fk_dependencia} and estado=0";
+        $existEntSer=$this->search($sql);
+        if ($existEntSer) {
             $instance = new self($existEntSer[0]['identidad_serie']);
             $instance->estado = 1;
-            $instance->update();
-            $response['exito'] = 1;
+            if($instance->update()){
+                $response['exito'] = 1;
+            }else{
+                $response['message']='Error al actualizar la entidad serie';
+            }
         } else {
-            if ($this->save()) {
+            if ($this->create()) {
                 $ValidArbolExp = $this->validArbolExp();
 
                 if ($ValidArbolExp['exito']) {
@@ -83,30 +86,26 @@ class EntidadSerie extends Model
                         if ($Serie->tipo == 1) {
                             $codPadreExp = end($ValidArbolExp['data']['idexpediente']);
                         } else {
-                            $consPadre = busca_filtro_tabla("idexpediente", "expediente", "fk_dependencia={$this->fk_dependencia} and fk_serie={$Serie->cod_padre} and nucleo=1 and estado=1", "", $conn);
-                            if ($consPadre['numcampos']) {
+                            $sql= "SELECT idexpediente FROM expediente WHERE fk_dependencia={$this->fk_dependencia} and fk_serie={$Serie->cod_padre} and nucleo=1 and estado=1";
+                            $consPadre =$this->search($sql);
+                            if ($consPadre) {
                                 $codPadreExp = $consPadre[0]['idexpediente'];
                             }
                         }
-                        $existExp = busca_filtro_tabla(
-                            "idexpediente",
-                            "expediente",
-                            "fk_dependencia={$this->fk_dependencia} and fk_serie={$this->fk_serie} 
-                                and nucleo=1 and estado=1 and agrupador=2",
-                            "",
-                            $conn
-                        );
-                        if (!$existExp['numcampos']) {
+                        $sql="SELECT idexpediente FROM expediente WHERE fk_dependencia={$this->fk_dependencia} and fk_serie={$this->fk_serie} and nucleo=1 and estado=1 and agrupador=2";
+                        $existExp =$this->search($sql);
+                        if (!$existExp) {
                             $Expediente = new Expediente();
                             $attributes = [
+                                'fecha' => date('Y-m-d H:i:s'),
                                 'nombre' => $Serie->nombre,
                                 'fondo' => $Serie->nombre,
                                 'descripcion' => $Serie->nombre,
-                                'codigo' => $Serie->codigo,
                                 'codigo_numero' => $Serie->codigo,
                                 'cod_padre' => $codPadreExp,
-                                'fk_idcaja' => 0,
+                                'fk_caja' => 0,
                                 'propietario' => 0,
+                                'responsable' => 0,
                                 'fk_serie' => $this->fk_serie,
                                 'fk_dependencia' => $this->fk_dependencia,
                                 'cod_arbol' => 0,
@@ -154,23 +153,11 @@ class EntidadSerie extends Model
 
         $this->estado = 0;
         $this->fecha_eliminacion = date('Y-m-d H:i:s');
-        $this->update();
-
-        //TODO: NO se debe inactivar la serie entidad serie hijas
-       /* $instance = $this->getSerieFk();
-        if ($instance) {
-            $Serie = $instance[0];
-            $sql = "SELECT identidad_serie FROM entidad_serie WHERE estado=1 and fk_dependencia={$this->fk_dependencia} and fk_serie in (SELECT idserie FROM serie WHERE cod_arbol like '{$Serie->cod_arbol}.%' and estado=1)";
-            $hijos = UtilitiesController::instanceSql('EntidadSerie', 'identidad_serie', $sql);
-            if (!empty($hijos)) {
-                foreach ($hijos as $EntidadSerie) {
-                    $EntidadSerie->estado = 0;
-                    $EntidadSerie->fecha_eliminacion = date('Y-m-d H:i:s');
-                    $EntidadSerie->update();
-                }
-            }
-        }*/
-        $response['exito'] = 1;
+        if($this->update()){
+            $response['exito'] = 1;
+        }else{
+            $response['message']='Error al inactivar la entidad serie';
+        }
         return $response;
     }
     /**
@@ -194,14 +181,9 @@ class EntidadSerie extends Model
             $idsExp = [];
             foreach ($idsDep as $key => $idDependencia) {
                 //TODO: El estado de expediente solo debe cambiarse cuando se elimine la serie que hace relacion
-                $existDep = busca_filtro_tabla(
-                    "idexpediente",
-                    "expediente",
-                    "fk_dependencia={$idDependencia} and nucleo=1 and estado=1 and agrupador=1",
-                    "",
-                    $conn
-                );
-                if ($existDep['numcampos']) {
+                $sql="SELECT idexpediente FROM expediente WHERE fk_dependencia={$idDependencia} and nucleo=1 and estado=1 and agrupador=1";
+                $existDep=$this->search($sql);
+                if ($existDep) {
                     $idsExp[$key] = $existDep[0]['idexpediente'];
                 } else {
                     $DependenciaData = new Dependencia($idDependencia);
@@ -212,14 +194,15 @@ class EntidadSerie extends Model
                     }
                     $Expediente = new Expediente();
                     $attributes = [
+                        'fecha' => date('Y-m-d H:i:s'),
                         'nombre' => $DependenciaData->nombre,
                         'fondo' => $DependenciaData->nombre,
                         'descripcion' => $DependenciaData->nombre,
-                        'codigo' => $DependenciaData->codigo,
                         'codigo_numero' => $DependenciaData->codigo,
                         'cod_padre' => $codPadreExp,
-                        'fk_idcaja' => 0,
+                        'fk_caja' => 0,
                         'propietario' => 0,
+                        'responsable' => 0,
                         'fk_serie' => 0,
                         'fk_dependencia' => $idDependencia,
                         'cod_arbol' => 0,
@@ -248,32 +231,83 @@ class EntidadSerie extends Model
     /**
      * Obtiene la serie vinculada a la entidad serie
      *
-     * @return void
+     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
+     * @return array|null
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getSerieFk()
+    public function getSerieFk(int $instance = 1)
     {
-        return Serie::findAllByAttributes(['idserie' => $this->fk_serie]);
+        $data = null;
+        $response = Serie::findAllByAttributes(['idserie' => $this->fk_serie]);
+        if ($response) {
+            if ($instance) {
+                $data = $response;
+            } else {
+                $data = UtilitiesController::getIdsInstance($response);
+            }
+        }
+        return $data;
     }
     /**
      * Obtiene la dependencia vinculada a la entidad serie
      *
-     * @return void
+     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
+     * @return array|null
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getDependenciaFk()
+    public function getDependenciaFk(int $instance = 1)
     {
-        return Dependencia::findAllByAttributes(['iddependencia' => $this->fk_dependencia]);
+        $data = null;
+        $response = Dependencia::findAllByAttributes(['iddependencia' => $this->fk_dependencia]);
+        if ($response) {
+            if ($instance) {
+                $data = $response;
+            } else {
+                $data = UtilitiesController::getIdsInstance($response);
+            }
+        }
+        return $data;
     }
     /**
      * Obtiene los expedientes vinculados a la entidad serie
      *
-     * @return void
+     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
+     * @return array|null
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getExpedienteFk()
+    public function getExpedienteFk(int $instance = 1)
     {
-        return Expediente::findAllByAttributes(['fk_entidad_serie' => $this->identidad_serie]);
+        $data = null;
+        $response = Expediente::findAllByAttributes(['fk_entidad_serie' => $this->identidad_serie]);
+        if ($response) {
+            if ($instance) {
+                $data = $response;
+            } else {
+                $data = UtilitiesController::getIdsInstance($response);
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * Obtiene los permisos vinculados a la entidad serie
+     *
+     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
+     * @return array|null
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getPermisoSerieFk(int $instance = 1)
+    {
+        $data = null;
+        $response = PermisoSerie::findAllByAttributes(['fk_entidad_serie' => $this->identidad_serie]);
+        if ($response) {
+            if ($instance) {
+                $data = $response;
+            } else {
+                $data = UtilitiesController::getIdsInstance($response);
+            }
+        }
+        return $data;
     }
 
 }

@@ -326,9 +326,9 @@ abstract class SQL2
 
 	public abstract function resta_fechas($fecha1, $fecha2);
 
-	public abstract function fecha_db_almacenar($fecha, $formato);
+	public static abstract function fecha_db_almacenar($fecha, $formato);
 
-	public abstract function fecha_db_obtener($campo, $formato);
+	public static abstract function fecha_db_obtener($campo, $formato);
 
 	public abstract function mostrar_error();
 
@@ -561,7 +561,7 @@ abstract class SQL2
 		}
 		$pos = $this->ejecuta_filtro_tabla("select nombre from campos_formato where formato_idformato=$idformato and nombre='dependencia'");
 		if (!$pos["numcampos"] && !$formato[0]["item"]) {
-			$sqldoc = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,obligatoriedad,banderas,acciones,etiqueta_html,valor) VALUES('" . $idformato . "','dependencia','DEPENDENCIA DEL CREADOR DEL DOCUMENTO','INT','11','1','i,fdc','a,e','hidden','{*buscar_dependencia*}')";
+			$sqldoc = "INSERT INTO campos_formato(formato_idformato,nombre,etiqueta,tipo_dato,longitud,obligatoriedad,banderas,acciones,etiqueta_html,valor,orden) VALUES('" . $idformato . "','dependencia','DEPENDENCIA DEL CREADOR DEL DOCUMENTO','INT','11','1','i,fdc','a,e','hidden','{*buscar_dependencia*}',1)";
 			guardar_traza($sqldoc, $formato[0]["nombre_tabla"]);
 			$this->Ejecutar_Sql($sqldoc) or die($sqldoc);
 		}
