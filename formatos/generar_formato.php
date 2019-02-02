@@ -36,6 +36,7 @@ if (isset($_REQUEST["genera"])) {
         $idformato = $_REQUEST["idformato"];
         $generar = new GenerarFormato($idformato, $accion, $archivo);
         $redireccion = $generar->ejecutar_accion();
+        
     } else {
         alerta_formatos("por favor seleccione un Formato a Generar");
         $redireccion = "formatolist.php";
@@ -68,8 +69,17 @@ if (isset($_REQUEST["genera"])) {
     ];
     $mensajes = array();
     $idformato = $_REQUEST["idformato"];
+
     $exito = true;
     $cuerpo_formato = '';
+    $publicar = 0;
+    
+    $camposDescripcion = GenerarFormato::validarCampoDescripcion($idformato);
+    if($camposDescripcion['publicarFormato']==0){
+        $status['mensaje'] = $camposDescripcion['mensaje'];
+        echo json_encode($status);
+        die();
+    }
     foreach ($acciones as $accion) {
         $generar = new GenerarFormato($idformato, $accion);
         $generar->ejecutar_accion();
@@ -86,6 +96,12 @@ if (isset($_REQUEST["genera"])) {
             }
             $mensajes[] = $msg;
             $cuerpo_formato = $generar->contenido_cuerpo;
+            $publicar = $generar->publicar;
+            if($publicar==1){
+                $updatePublicar = "UPDATE formato set publicar = {$publicar} where idformato = {$idformato}";
+                phpmkr_query($updatePublicar);
+            }
+           
         }
     }
     //$mensajes = array_unique($mensajes, SORT_STRING);
@@ -93,6 +109,7 @@ if (isset($_REQUEST["genera"])) {
     $status["exito"] = $exito;
     $status["mensaje"] = $mensajes;
     $status["contenido_cuerpo"] = $cuerpo_formato;
+    $status["publicar"] = $publicar;
     ob_end_clean();
     echo json_encode($status);
     die();
@@ -107,6 +124,7 @@ class GenerarFormato {
     public $exito;
     public $mensaje;
     public $contenido_cuerpo;
+    public $publicar;
 
     public function __construct($idformato, $accion, $archivo = '') {
         $this->idformato = $idformato;
@@ -116,6 +134,25 @@ class GenerarFormato {
         $this->exito = 0;
         $this->mensaje = "Existe un error al generar el formato " . $accion . " con id " . $idformato;
         $this->contenido_cuerpo = "";
+        $this->publicar = 0;
+    }
+
+    /**
+     * Realiza una consulta a la DB (campos_formato)
+     * retorna un array validando si existe campo descripcion en el formato
+     * @param string $idformato :  id del formato
+     * @return array
+     * @author fredy.osorio <fredy.osorio@cerok.com>
+     */    
+    public static function validarCampoDescripcion($idformato){
+        $retorno = ["publicarFormato" => 1, "mensaje" => ''];
+        $consultaFormato = "SELECT acciones FROM campos_formato WHERE formato_idformato = {$idformato} and (acciones like 'p' or acciones like '%,p,%' or acciones like '%,p')";
+        $camposFormato = StaticSql::search($consultaFormato);
+        if(!$camposFormato){
+            $retorno['publicarFormato'] = 0;
+            $retorno['mensaje'] = 'Debe seleccionar alguno de los campos para incluirse en la descripción de los documentos';
+        }
+        return $retorno;
     }
 
     public function ejecutar_accion() {
@@ -491,6 +528,9 @@ class GenerarFormato {
                     return true;
                 }
             }
+        }
+        if($formato[0]['publicar']==0){
+            $this->publicar = 1;
         }
         $this->exito = 1;
         $this->contenido_cuerpo = $formato[0]['cuerpo'];

@@ -229,7 +229,7 @@ echo librerias_jquery("2.2");
     	datos["idpantalla_campos"] = idpantalla_campo;
 
     	var evitar_html=["arbol_fancytree", "datetime", "textarea_cke"];
-
+        
     	$.ajax({
             type:'POST',
             url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias.php",
@@ -237,21 +237,17 @@ echo librerias_jquery("2.2");
             async: false,
             dataType: "json",
             success: function(objeto) {
-                //console.log(objeto);
+
                 if(objeto && objeto.exito) {
                     $('#cargando_enviar').html("Terminado ...");
-                    //$("#content").append(objeto.etiqueta_html);
-                    //setTimeout(notificacion_saia("Actualizaci&oacute;n realizada con &eacute;xito.","success","",2500),5000);
                     $("#pc_"+idpantalla_campo, parent.document).find(".control-label").html("<b>" + objeto.etiqueta + "</b>");
                     if(!evitar_html.includes(nombre_componente)) {
                     	$("#pc_"+idpantalla_campo,parent.document).replaceWith(objeto.codigo_html);
                     }
-                    //$("#pc_"+idpantalla_campo,parent.document).find(".elemento_formulario").attr("placeholder",objeto.placeholder);
                     parent.hs.close();
                 }
             }
         });
-
 	}
 	</script>
 </body>

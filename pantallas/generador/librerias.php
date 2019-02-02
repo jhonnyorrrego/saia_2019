@@ -83,13 +83,12 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
 
 		$datos = kma_valor_campo($datos, $pantalla_campos[0]["etiqueta_html"]);
 	    //die();
-
 		$sql_update = array();
 		foreach ($datos as $key => $value) {
 			if (preg_match("/^fs_/", $key)) {
 				switch ($key) {
 					case 'fs_acciones':
-						if ($value) {
+						if ($value=='true') {
 							array_push($acciones, "p");
 						}
 						$value = implode(",", $acciones);
@@ -120,6 +119,7 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
 				array_push($sql_update, preg_replace('/^fs_/', '', $key) . "='" . $value . "'");
 			}
 		}
+	
 		if (count($sql_update)) {
 			$sql2 = "UPDATE campos_formato SET " . implode(", ", $sql_update) . " WHERE idcampos_formato=" . $idpantalla_campos;
 			//$retorno["sql"] = $sql2; // Solo para depurar
