@@ -23,13 +23,13 @@ if (!empty($_REQUEST["idactividad"])) {
 }
 ?>
 <div class="container">
-    <form id="formDestExt">
+    <form id="frmTareaActividad">
         <input type="hidden" name="fk_actividad" value="<?= $idactividad ?>">
         <div class="row py-1 mt-1">
             <div class="col col-md-8">
                 <div class="form-control form-group-default">
                 <label>Nombre</label>
-                <input class="form-control form-control-sm" id="nombre" name="nombre" type="text" placeholder="Qu&eacute; desea que se realice &quest;">
+                <input class="form-control form-control-sm" id="nombre_tarea" name="nombre" type="text" placeholder="Qu&eacute; desea que se realice &quest;">
                 </div>
             </div>
             <div class="col col-md-4">
@@ -43,15 +43,15 @@ if (!empty($_REQUEST["idactividad"])) {
         </div>
         <div class="row pr-2 mt-1">
             <div class="col col-md-8">
-                <button type="button" class="btn btn-primary btn-sm float-right" id="btnSaveExtPerson">Guardar</button>
+                <button type="button" class="btn btn-primary btn-sm float-right" id="btnGuardarTareaActividad">Guardar</button>
             </div>
         </div>
 
     </form>
 </div>
 <div class="container-fluid">
-    <div id="toolbar">
-        <a href="#" id="boton_eliminar" class="btn btn-secondary" title="Eliminar"><i class="f-12 fa fa-trash"></i></a>
+    <div id="toolbar_tabla_tareas">
+        <a href="#" id="boton_eliminar_tarea" class="btn btn-secondary" title="Eliminar"><i class="f-12 fa fa-trash"></i></a>
     </div>
     <table class="table table-striped table-bordered table-hover" id="tabla_tareas"
            data-toggle="table"
@@ -63,8 +63,8 @@ if (!empty($_REQUEST["idactividad"])) {
         <thead>
             <tr>
                 <th data-field="state" data-checkbox="true"></th>
-                <th data-field="idtarea" data-visible="false">IdDest</th>
-                <th data-field="tipo">Tipo</th>
+                <th data-field="idtarea" data-visible="false">IdTarea</th>
+                <th data-field="obligatorio">Tipo</th>
                 <th data-field="nombre">Nombre</th>
             </tr>
         </thead>
@@ -75,18 +75,18 @@ if (!empty($_REQUEST["idactividad"])) {
     var $tabla = $("#tabla_tareas");
     $tabla.bootstrapTable();
 
-    var $botonEliminar = $('#boton_eliminar')
-    var $botonGuardar = $('#btnSaveExtPerson')
+    var $botonEliminarTarea = $('#boton_eliminar_tarea')
+    var $botonGuardarTarea = $('#btnGuardarTareaActividad')
 
     var idactividad = "<?= $idactividad ?>";
     //var tipo_tarea = "<?= $tipo_destinatario ?>";
     var obligatorio = 0;
 
-    $botonGuardar.click(function () {
+    $botonGuardarTarea.click(function () {
         var datos = $tabla.bootstrapTable('getData');
 
-        var nombre = $("#nombre").val();
-        if($("#chkObligatorio").is(':checked')) {
+        var nombre = $("#frmTareaActividad #nombre_tarea").val();
+        if($("#frmTareaActividad #chkObligatorio").is(':checked')) {
             obligatorio = 1;
         }
         console.log("obligatorio", obligatorio);
@@ -107,14 +107,14 @@ if (!empty($_REQUEST["idactividad"])) {
         }
     });
 
-    $botonEliminar.click(function () {
+    $botonEliminarTarea.click(function () {
         var ids = $.map($tabla.bootstrapTable('getSelections'), function (row) {
-            return row.idtarea
+            return row.idtarea_actividad
         });
         var estado = eliminarTareaActividad(idactividad, ids.join(","));
         if (estado) {
             $tabla.bootstrapTable('remove', {
-                field: 'idtarea',
+                field: 'idtarea_actividad',
                 values: ids
             });
         }

@@ -25,8 +25,8 @@ if (!empty($_REQUEST["idactividad"])) {
 <div>
     <form id="frmActividad">
         <div class="form-group">
-            <label for="nombre">Nombre del paso *</label>
-            <input type="email" class="form-control" id="nombre" name="nombre" placeholder="Escriba el nombre del paso" value="<?= $actividad->nombre ?>">
+            <label for="nombre_actividad">Nombre del paso *</label>
+            <input type="email" class="form-control" id="nombre_actividad" name="nombre" placeholder="Escriba el nombre del paso" value="<?= $actividad->nombre ?>">
         </div>
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="tipo_responsable" id="radioCargo1" value="cargo">
@@ -43,7 +43,7 @@ if (!empty($_REQUEST["idactividad"])) {
 
         <div class="form-group">
             <label for="info_actividad">Instrucciones adicionales</label>
-            <textarea class="form-control" id="info_actividad" name="info"><?= $datos["info"] ?></textarea>
+            <textarea class="form-control" id="info_actividad" name="info"><?= $actividad->info ?></textarea>
         </div>
 
     </form>
