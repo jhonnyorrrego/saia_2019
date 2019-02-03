@@ -71,12 +71,34 @@ if (!empty($_REQUEST["idactividad"])) {
     </table>
 </div>
 
+<div class="container">
+    <form id="frmQualityReqIn">
+
+        <div class="row py-1 mt-1">
+            <div class="col col-md-12">
+                <div class="form-group">
+                    <label for="info_actividad">Requisitos de calidad</label>
+                    <textarea class="form-control" id="req_calidad_in" name="req_calidad_in"><?= $actividad->req_calidad_in ?></textarea>
+                </div>
+	        </div>
+        </div>
+        <div class="row py-1 mt-1">
+            <div class="col col-md-12">
+                <div class="float-right">
+                    <button type="button" id="cancelarReqCalidadIn" class="btn btn-danger">Cancelar</button>
+                    <button type="button" id="guardarReqCalidadIn" class="btn btn-primary">Guardar cambios</button>
+    	        </div>
+	        </div>
+        </div>
+	</form>
+</div>
+
 <script>
     var $tabla = $("#tabla_req_in");
     $tabla.bootstrapTable();
 
-    var $botonEliminarRequisito = $('#boton_eliminar_req_in')
-    var $botonGuardarRequisitoIn = $('#btnGuardarRequisitoIn')
+    var $botonEliminarRequisito = $('#boton_eliminar_req_in');
+    var $botonGuardarRequisitoIn = $('#btnGuardarRequisitoIn');
 
     var idactividad = "<?= $idactividad ?>";
     var tipo_requisito = "<?= $tipo_requisito ?>";
@@ -105,6 +127,23 @@ if (!empty($_REQUEST["idactividad"])) {
             data["idrequisito_calidad"] = id;
             $tabla.bootstrapTable('append', data);
         }
+    });
+
+    $('#guardarReqCalidadIn').click(function () {
+        let req_in = $("#frmQualityReqIn #req_calidad_in").val();
+        var data = {requisito: req_in, tipo: tipo_requisito};
+        var id = guardarRequisitoActividad(idactividad, data);
+    });
+    $("#cancelarReqCalidadIn").click(function () {
+        let nombre = $("#frmActividad #nombre_actividad").val();
+        let data = params;
+        if(params && nombre && params.nombreTarea && params.nombreTarea != nombre) {
+            data["accion"] = "cerrarModalActividad";
+        } else {
+            data = {accion: "cerrarModalActividad", idactividad: idactividad, nombre_actividad: nombre};
+        }
+        parent.postMessage(data, "*");
+
     });
 
     $botonEliminarRequisito.click(function () {
@@ -138,7 +177,35 @@ if (!empty($_REQUEST["idactividad"])) {
                     if (response["success"] == 1) {
                         top.notification({type: "success", message: response.message});
                         pk = response.data.pk;
-                        parent.parent.postMessage({accion: "recargarTabla", id: pk}, "*");
+                        //parent.parent.postMessage({accion: "recargarTabla", id: pk}, "*");
+                    } else {
+                        top.notification({type: "error", message: response.message});
+                    }
+                }
+            });
+            return pk;
+        }
+        return false;
+    }
+
+    function guardarRequisitoCalidadActividadIn(idactividad, data) {
+        if (data) {
+            data['key'] = localStorage.getItem("key");
+            data["idelemento"] = idactividad;
+
+            //console.log(idactividad, data);
+            //return false;
+            var pk = false;
+            $.ajax({
+                dataType: "json",
+                url: "<?= $ruta_db_superior ?>app/flujo/guardarRequisitoActividad.php",
+                type: "POST",
+                data: data,
+                async: false,
+                success: function (response) {
+                    if (response["success"] == 1) {
+                        top.notification({type: "success", message: response.message});
+                        pk = response.data.pk;
                     } else {
                         top.notification({type: "error", message: response.message});
                     }

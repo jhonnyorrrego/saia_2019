@@ -96,6 +96,35 @@ $tabLinks = ["flow_info" => "flow_info.php",
 
 <script type="text/javascript" id="smain" data-idflujo="<?=$_REQUEST["idflujo"] ?>">
 var lista_archivos = new Object();
+
+// Create IE + others compatible event handler
+var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+var eventer = window[eventMethod];
+var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+// Listen to message from child window
+eventer(messageEvent, function(e) {
+  console.log('Mensaje recibido!:  ', e.data);
+	datos = e.data;
+	if(datos.accion == "recargarTabla") {
+		$('#tabla_notificaciones').bootstrapTable('refresh', {url: "listado_notificaciones.php?idflujo="+idflujo});
+	} else if(datos.accion == "cerrarModalActividad") {
+		if(modalActividad) {
+			modalActividad.close();
+			var modeling = bpmnModeler.get('modeling');
+			var elementRegistry = bpmnModeler.get('elementRegistry');
+			var element = elementRegistry.get(datos.bpmn_id);
+			console.log("elemento", element);
+			//actualizar el diagrama
+			modeling.updateProperties(element, {name : datos.nombreTarea});
+
+		} else {
+			console.log("No se encontro modalActividad");
+		}
+	}
+}, false);
+
+
 $(document).ready(function() {
 	var idflujo = $("script[data-idflujo]").data("idflujo");
 	console.log("main", "idflujo", idflujo);

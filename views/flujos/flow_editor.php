@@ -72,6 +72,7 @@ if(isset($_REQUEST["idflujo"])) {
   	  'element.mouseup'*/
   	];
 
+    var modalActividad = null;
     events.forEach(function(event) {
         eventBus.on(event, function(e) {
   	    // e.element = the model element
@@ -97,7 +98,7 @@ if(isset($_REQUEST["idflujo"])) {
             	        this.content.style.borderTop = 'none';
             	    }
             	};
-                jsPanel.create(jspanelOpts);
+                modalActividad = jsPanel.create(jspanelOpts);
   	    }
 
   	  });

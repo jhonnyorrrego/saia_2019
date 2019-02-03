@@ -102,10 +102,11 @@ $tabs = [
 
         <script data-params='<?= json_encode($params) ?>'>
             var idflujo = "<?= $_REQUEST['idflujo'] ?>";
+            var params = null;
 
             $(function () {
 
-                var params = $("script[data-params]").data("params");
+                params = $("script[data-params]").data("params");
                 $('.tab_actividad').on('shown.bs.tab', function (e) {
                     let tab = $(e.target);
                     let container = $(tab.attr('href'))
