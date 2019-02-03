@@ -46,7 +46,12 @@ final class Version20190130122415 extends AbstractMigration {
 
         if ($schema->hasTable("wf_tarea_actividad")) {
             $tabla = $schema->getTable("wf_tarea_actividad");
-            $tabla->addColumn("obligatorio", "integer", ["default" => 0]);
+            if(!$tabla->hasColumn("obligatorio")) {
+                $tabla->addColumn("obligatorio", "integer", ["default" => 0]);
+            }
+            if($tabla->hasColumn("descripcion")) {
+                $tabla->dropColumn("descripcion");
+            }
         }
 
         if (!$schema->hasTable("wf_responsable_actividad")) {

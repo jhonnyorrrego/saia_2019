@@ -36,8 +36,6 @@ if(isset($_REQUEST["idflujo"])) {
 
 <button type="button" class="btn btn-primary btn-sm" id="guardarDiagrama">Guardar diagrama</button>
 
-<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/eModal/eModal.min.js"></script>
-
 <script type="text/javascript" id="sfe" data-idflujo="<?= $idflujo?>">
     var idflujo = $("script[data-idflujo]").data("idflujo");
     console.log("editor", "idflujo", idflujo);
@@ -85,17 +83,23 @@ if(isset($_REQUEST["idflujo"])) {
   	    	canvas.addMarker(e.element, 'highlight');
                 let strParam = jQuery.param({idflujo: id, bpmn_id: e.element.id, nombreTarea: objeto.name});
                 let url = '<?= $ruta_db_superior ?>views/flujos/modal_datos_tarea.php?' + strParam;
-                let opcionesModal = {
-                    loading: true,
-                    loadingHtml: '<h5>Cargando...</h5><div class=progress><div class="progress-bar progress-bar-striped active" style="width: 100%"></div></div>',
-                    size: eModal.size.lg /*xl*/
-                };
-                eModal.setEModalOptions(opcionesModal);
-                eModal.iframe(url, '&nbsp');
+
+                jspanelOpts = {
+                	headerTitle: '',
+                	iconfont:    'fa',
+                	theme: 'primary',
+            	    position:    'center-top 0 58',
+            	    contentSize: '800 600',
+            	    borderRadius: '6px',
+            	    content:     '<iframe src="' + url + '" style="width: 100%; height: 100%; border:none;"></iframe>',
+            	    callback: function () {
+            	        this.header.style.borderBottom = 'none';
+            	        this.content.style.borderTop = 'none';
+            	    }
+            	};
+                jsPanel.create(jspanelOpts);
   	    }
-  	    //console.log(event, 'on', e.element);
-  	    //console.log(e.element.businessObject);
-  	    //console.log(e.element);
+
   	  });
   	});
 

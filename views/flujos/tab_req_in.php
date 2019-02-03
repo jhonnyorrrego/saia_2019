@@ -17,25 +17,25 @@ include_once $ruta_db_superior . 'librerias_saia.php';
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
 $idactividad = null;
-//$tipo_destinatario = TipoDestinatario::TIPO_EXTERNO;
+$tipo_requisito = ReqCalidadActiv::TIPO_ENTRADA;
 if (!empty($_REQUEST["idactividad"])) {
     $idactividad = $_REQUEST["idactividad"];
 }
 ?>
 <div class="container">
-    <form id="frmTareaActividad">
+    <form id="frmReqIn">
         <input type="hidden" name="fk_actividad" value="<?= $idactividad ?>">
         <div class="row py-1 mt-1">
             <div class="col col-md-8">
                 <div class="form-control form-group-default">
-                <label>Nombre</label>
-                <input class="form-control form-control-sm" id="nombre_tarea" name="nombre" type="text" placeholder="Qu&eacute; desea que se realice &quest;">
+                <label>Informaci&oacute;n de entrada</label>
+                <input class="form-control form-control-sm" id="requisito_in" name="nombre" type="text" placeholder="Qu&eacute; se requiere previo a realizar este paso&quest;">
                 </div>
             </div>
             <div class="col col-md-4">
                 <div class="form-check align-middle">
-                    <input class="form-check-input" type="checkbox" value="" id="chkObligatorio" name="obligatorio">
-                    <label class="form-check-label" for="chkObligatorio">
+                    <input class="form-check-input" type="checkbox" value="" id="obligatorio_in" name="obligatorio">
+                    <label class="form-check-label" for="obligatorio_in">
                         Obligatoria
                     </label>
                 </div>
@@ -43,19 +43,19 @@ if (!empty($_REQUEST["idactividad"])) {
         </div>
         <div class="row pr-2 mt-1">
             <div class="col col-md-8">
-                <button type="button" class="btn btn-primary btn-sm float-right" id="btnGuardarTareaActividad">Guardar</button>
+                <button type="button" class="btn btn-primary btn-sm float-right" id="btnGuardarRequisitoIn">Guardar</button>
             </div>
         </div>
 
     </form>
 </div>
 <div class="container-fluid">
-    <div id="toolbar_tabla_tareas">
-        <a href="#" id="boton_eliminar_tarea" class="btn btn-secondary" title="Eliminar"><i class="f-12 fa fa-trash"></i></a>
+    <div id="toolbar_tabla_req_in">
+        <a href="#" id="boton_eliminar_req_in" class="btn btn-secondary" title="Eliminar"><i class="f-12 fa fa-trash"></i></a>
     </div>
-    <table class="table table-striped table-bordered table-hover" id="tabla_tareas"
+    <table class="table table-striped table-bordered table-hover" id="tabla_req_in"
            data-toggle="table"
-           data-url="listado_tareas_actividad.php?idactividad=<?= $idactividad ?>"
+           data-url="listado_req_actividad.php?idactividad=<?= $idactividad ?>&tipo=<?= $tipo_requisito ?>"
            data-click-to-select="true"
            data-show-toggle="true"
            data-show-columns="true"
@@ -63,30 +63,30 @@ if (!empty($_REQUEST["idactividad"])) {
         <thead>
             <tr>
                 <th data-field="state" data-checkbox="true"></th>
-                <th data-field="idtarea" data-visible="false">IdTarea</th>
-                <th data-field="obligatorio">Tipo</th>
-                <th data-field="nombre">Nombre</th>
+                <th data-field="idrequisito_calidad" data-visible="false">IdReq</th>
+                <th data-field="obligatorio" data-formatter="obligatorioFormatterIn">Tipo</th>
+                <th data-field="requisito">Nombre</th>
             </tr>
         </thead>
     </table>
 </div>
 
 <script>
-    var $tabla = $("#tabla_tareas");
+    var $tabla = $("#tabla_req_in");
     $tabla.bootstrapTable();
 
-    var $botonEliminarTarea = $('#boton_eliminar_tarea')
-    var $botonGuardarTarea = $('#btnGuardarTareaActividad')
+    var $botonEliminarRequisito = $('#boton_eliminar_req_in')
+    var $botonGuardarRequisitoIn = $('#btnGuardarRequisitoIn')
 
     var idactividad = "<?= $idactividad ?>";
-    //var tipo_tarea = "<?= $tipo_destinatario ?>";
+    var tipo_requisito = "<?= $tipo_requisito ?>";
     var obligatorio = 0;
-
-    $botonGuardarTarea.click(function () {
+    //console.log('tipo_requisito', tipo_requisito);
+    $botonGuardarRequisitoIn.click(function () {
         var datos = $tabla.bootstrapTable('getData');
 
-        var nombre = $("#frmTareaActividad #nombre_tarea").val();
-        if($("#frmTareaActividad #chkObligatorio").is(':checked')) {
+        var nombre = $("#frmReqIn #requisito_in").val();
+        if($("#frmReqIn #obligatorio_in").is(':checked')) {
             obligatorio = 1;
         }
         //console.log("obligatorio", obligatorio);
@@ -98,41 +98,39 @@ if (!empty($_REQUEST["idactividad"])) {
                 break;
             }
         }
-        console.log("existe", existe);
+        //console.log("existe", existe);
         if (!existe) {
-            var data = {obligatorio: obligatorio, nombre: nombre};
-            var id = guardarTareaActividad(idactividad, data);
-            data["idtarea"] = id;
+            var data = {obligatorio: obligatorio, requisito: nombre, tipo: tipo_requisito};
+            var id = guardarRequisitoActividad(idactividad, data);
+            data["idrequisito_calidad"] = id;
             $tabla.bootstrapTable('append', data);
         }
     });
 
-    $botonEliminarTarea.click(function () {
+    $botonEliminarRequisito.click(function () {
         var ids = $.map($tabla.bootstrapTable('getSelections'), function (row) {
-            return row.idtarea_actividad
+            return row.idrequisito_calidad
         });
-        var estado = eliminarTareaActividad(idactividad, ids.join(","));
+        var estado = eliminarRequisitoActividad(idactividad, ids.join(","));
         if (estado) {
             $tabla.bootstrapTable('remove', {
-                field: 'idtarea_actividad',
+                field: 'idrequisito_calidad',
                 values: ids
             });
         }
     });
 
-    function guardarTareaActividad(idactividad, data) {
+    function guardarRequisitoActividad(idactividad, data) {
         if (data) {
             data['key'] = localStorage.getItem("key");
             data["fk_actividad"] = idactividad;
-            data["obligatorio"] = obligatorio;
-            data["fk_funcionario"] = data.idfuncionario;
 
             //console.log(idactividad, data);
             //return false;
             var pk = false;
             $.ajax({
                 dataType: "json",
-                url: "<?= $ruta_db_superior ?>app/flujo/guardarTareaActividad.php",
+                url: "<?= $ruta_db_superior ?>app/flujo/guardarRequisitoActividad.php",
                 type: "POST",
                 data: data,
                 async: false,
@@ -151,7 +149,7 @@ if (!empty($_REQUEST["idactividad"])) {
         return false;
     }
 
-    function eliminarTareaActividad(idactividad, ids) {
+    function eliminarRequisitoActividad(idactividad, ids) {
         if (ids) {
             var data = {
                 key: localStorage.getItem("key"),
@@ -167,7 +165,7 @@ if (!empty($_REQUEST["idactividad"])) {
             var pk = false;
             $.ajax({
                 dataType: "json",
-                url: "<?= $ruta_db_superior ?>app/flujo/borrarTareaActividad.php",
+                url: "<?= $ruta_db_superior ?>app/flujo/borrarRequisitoActividad.php",
                 type: "POST",
                 data: data,
                 async: false,
@@ -185,6 +183,15 @@ if (!empty($_REQUEST["idactividad"])) {
             return pk;
         }
         return false;
+    }
+
+    function obligatorioFormatterIn(value, row, index) {
+    	//console.log(value);
+        if(value == '1') {
+            return "Obligatoria";
+        } else {
+            return "Opcional";
+        }
     }
 
 </script>

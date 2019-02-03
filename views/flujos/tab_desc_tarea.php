@@ -114,10 +114,15 @@ if (!empty($_REQUEST["idactividad"])) {
 
     $("#funcionario").on("select2:opening", function () {
         if ($('input:checked[type=radio][name=tipo_responsable]').length == 0) {
-            eModal.alert({
-                message: 'Debe seleccionar un tipo de responsable',
-                title: 'Atención',
-                buttons: [{text: 'Aceptar', style: 'info', close: true}]});
+        	jsPanel.hint.create({
+        	    position:    'center-top 0 15 down',
+        	    headerControls: 'closeonly',
+        	    iconfont:    'fa',
+        	    contentSize: '330 auto',
+        	    content:     '<p>Debe seleccionar un tipo de responsable</p>',
+        	    theme:       'warning',
+        	    headerTitle: '<i class="fa fa-exclamation-triangle"></i> Atenci&oacute;n'
+        	});
             return false;
         }
         $(this).data("open", true);

@@ -41,6 +41,31 @@ trait TFlujo {
 		return $response;
 	}
 
+	static function findS($table, $conditions, $fields = [], $order = '', $limit = 0, $asArray = false) {
+	    global $conn;
+
+	    $select = self::createSelect($fields);
+	    $condition = self::createCondition($conditions);
+
+	    if($limit) {
+	        $records = busca_filtro_tabla_limit($select, $table, $condition, $order, 0, $limit, $conn);
+	    } else {
+	        $records = busca_filtro_tabla($select, $table, $condition, $order, $conn);
+	    }
+
+	    if($records['numcampos']) {
+	        if($asArray) {
+	            $response = self::convertToArray($records);
+	        } else {
+	            $response = self::convertToObjectCollection($records);
+	        }
+	    } else {
+	        $response = null;
+	    }
+
+	    return $response;
+	}
+
 	static function findAll($order = '', $limit = 0, $asArray = false) {
 		global $conn;
 		$table = self::getTableName();

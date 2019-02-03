@@ -34,10 +34,10 @@ $tabs = [
         "url" => "tab_tareas_actividad.php", "href" => "tareas", "icon" => "fa fa-tasks",
     ],
     [
-        "url" => "tab3.php", "href" => "entrada", "icon" => "fa fa-sign-in",
+        "url" => "tab_req_in.php", "href" => "entrada", "icon" => "fa fa-sign-in",
     ],
     [
-        "url" => "tab4.php", "href" => "salida", "icon" => "fa fa-sign-out",
+        "url" => "tab_req_out.php", "href" => "salida", "icon" => "fa fa-sign-out",
     ],
     [
         "url" => "tab5.php", "href" => "anexos", "icon" => "fa fa-paperclip",
@@ -63,6 +63,8 @@ $tabs = [
 
         <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen">
 
+	    <link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/jspanel.css">
+
         <?= estilo_tabla_bootstrap("1.13") ?>
 
         <?= jquery() ?>
@@ -73,11 +75,10 @@ $tabs = [
         <?= librerias_UI("1.12") ?>
 
         <?= librerias_tabla_bootstrap("1.13", false, false) ?>
-        <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/eModal/eModal.min.js"></script>
 
-        <style type="text/css">
+	    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/jspanel.js"></script>
+        <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/extensions/hint/jspanel.hint.js"></script>
 
-        </style>
     </head>
     <body>
 
