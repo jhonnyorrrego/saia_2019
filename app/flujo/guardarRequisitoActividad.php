@@ -37,6 +37,24 @@ if($_SESSION['idfuncionario'] == $_REQUEST['key']) {
         $atributos["tipo_requisito"] = $_REQUEST['tipo'];
         $atributos["obligatorio"] = $_REQUEST['obligatorio'];
         $pk = ReqCalidadActiv::newRecord($atributos);
+    } else if(!empty($_REQUEST['idelemento'])) {
+        $atributos = [];
+        $idelemento = $_REQUEST['idelemento'];
+        $campo = null;
+        $tipo_requisito = $_REQUEST['tipo'];
+        if($tipo_requisito == 1) {
+            $campo = "req_calidad_in";
+        } else if($tipo_requisito == 2) {
+            $campo = "req_calidad_out";
+        }
+        if(!empty($campo)) {
+            $atributos[$campo] = $_REQUEST['requisito'];
+            $elemento = new Elemento($idelemento);
+            $elemento->setAttributes($atributos);
+            $elemento->save();
+        } else {
+            $response->message = "Debe especificar el tipo de requisito (entrada/salida)";
+        }
     }
     if($pk) {
         $response->success = 1;
