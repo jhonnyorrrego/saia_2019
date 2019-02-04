@@ -222,7 +222,8 @@ echo (estilo_bootstrap());
         <!-- Variable busqueda -->
         <input type="hidden" value="<?= $_REQUEST["variable_busqueda"]; ?>" name="variable_busqueda" id="variable_busqueda">
 
-        <?php/*
+        <?php
+        /*
         <!-- idbusqueda_filtro_temp -->
         <input type="hidden" value="<?=$_REQUEST["idbusqueda_filtro_temp"]; ?>" name="idbusqueda_filtro_temp" id="idbusqueda_filtro_temp">
         <!-- idbusqueda_filtro -->

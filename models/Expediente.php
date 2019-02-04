@@ -41,7 +41,7 @@ class Expediente extends Model
     protected $fk_serie;
     protected $fk_dependencia;
     protected $fk_entidad_serie;
-    
+
     protected $dbAttributes;
 
     protected $expedientePadre;
@@ -54,7 +54,6 @@ class Expediente extends Model
             $this->permiso = [
                 'a' => false,
                 'l' => false,
-                'v' => false,
                 'e' => false,
                 'c' => false,
                 'd' => false
@@ -177,7 +176,7 @@ class Expediente extends Model
                 $attributes = [
                     'llave_entidad' => $this->propietario,
                     'tipo_funcionario' => 1,
-                    'permiso' => 'v,e,c,d',
+                    'permiso' => 'e,d,c',
                     'fecha' => date('Y-m-d H:i:s'),
                     'fk_entidad' => 1,
                     'fk_expediente' => $this->idexpediente
@@ -318,6 +317,20 @@ class Expediente extends Model
         $data = $this->keyValueField('agrupador');
         return $data = $data[$this->agrupador];
     }
+    /**
+     * Valida si el funcionario es reponsable de un expediente
+     *
+     * @return boolean
+     * @author Name <email@email.com>
+     */
+    public function isResponsable() : bool
+    {
+        $response = false;
+        if ($this->propietario == $_SESSION['idfuncionario'] || $this->responsable == $_SESSION['idfuncionario']) {
+            $response = true;
+        }
+        return $response;
+    }
 
     /**
      * setea los permisos del funcionario logueado
@@ -331,7 +344,6 @@ class Expediente extends Model
             $this->permiso = [
                 'a' => true,
                 'l' => true,
-                'v' => true,
                 'e' => true,
                 'c' => true,
                 'd' => true
@@ -347,13 +359,10 @@ class Expediente extends Model
                     }
                 }
             }
-            if ($this->propietario == $_SESSION['idfuncionario'] || $this->responsable == $_SESSION['idfuncionario']) {
-                $this->permiso = [
-                    'v' => true,
-                    'e' => true,
-                    'c' => true,
-                    'd' => true
-                ];
+            if ($this->isResponsable()) {
+                $this->permiso['e'] = true;
+                $this->permiso['d'] = true;
+                $this->permiso['c'] = true;
             }
         }
     }
@@ -363,7 +372,6 @@ class Expediente extends Model
      * @param string $permiso : 
      * a: adicion Serie,
      * l: lectura serie,
-     * v: ver expediente
      * e: editar expediente
      * c: Compartir expediente
      * d: eliminar expediente

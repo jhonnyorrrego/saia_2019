@@ -85,32 +85,23 @@ function info_expediente($idexpediente)
 FINHTML;
 
     } else {
-        if ($ExpedienteInfo->getAccessUser('e') || $ExpedienteInfo->getAccessUser('c')) {
-            $btn .= '<div class="btn btn-mini selExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Seleccionar"><i class="icon-uncheck"></i></div>';
-        }
+        $btn .= '<div class="btn btn-mini selExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Seleccionar"><i class="icon-uncheck"></i></div>';
 
-        if ($ExpedienteInfo->getAccessUser('e')) {
+        if(!$ExpedienteInfo->agrupador){
+            $btn .= '<div class="btn btn-mini rotExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Imprimir rotulo" conector="iframe" enlace="pantallas/caja/rotulo.php?idexpediente=' . $idexpediente . '"><i class="icon-print"></i></div>';
+        }
+        
+        if($ExpedienteInfo->isResponsable()){
             if(!$ExpedienteInfo->agrupador){
-                $btn .= '<div class="btn btn-mini rotExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Imprimir rotulo" conector="iframe" enlace="pantallas/caja/rotulo.php?idexpediente=' . $idexpediente . '"><i class="icon-print"></i></div>';
                 $btn .= '<div class="btn btn-mini tomoExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Crear Tomo"><i class="icon-th-list"></i></div>';
             }
-        }
-
-        if ($ExpedienteInfo->getAccessUser('c')) {
             $btn .= '<div class="btn btn-mini shareExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Compartir" conector="iframe" enlace="pantallas/expediente/asignar_expediente.php?idexpediente=' . $idexpediente . '"><i class="icon-share"></i></div>';
-        }
-
-        if ($ExpedienteInfo->getAccessUser('e')) {
             $btn .= '<div class="btn btn-mini editExp" data-id="' . $idexpediente . '" data-componente="'. $idcomp .'" title="Editar"><i class="icon-pencil"></i></div>';
-        }
-
-        if ($ExpedienteInfo->getAccessUser('d')) {
             $btn .= '<div class="btn btn-mini delExp" data-id="' . $idexpediente . '" data-componente="'. $idcomp .'" title="Eliminar"><i class="icon-remove"></i></div>';
+
         }
 
-        if ($ExpedienteInfo->getAccessUser('v')) {
-            $btn .= '<div class="btn btn-mini infoExp" data-id="' . $idexpediente . '" data-componente="'. $idcomp .'" title="' . $ExpedienteInfo->nombre . '"><i class="icon-info-sign"></i></div>';
-        }
+        $btn .= '<div class="btn btn-mini infoExp" data-id="' . $idexpediente . '" data-componente="'. $idcomp .'" title="' . $ExpedienteInfo->nombre . '"><i class="icon-info-sign"></i></div>';
 
         if ($ExpedienteInfo->agrupador == 3) {
             $html .= <<<FINHTML

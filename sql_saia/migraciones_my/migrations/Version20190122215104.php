@@ -25,6 +25,43 @@ final class Version20190122215104 extends AbstractMigration
             $this->platform->registerDoctrineTypeMapping('enum', 'string');
         }
 
+       /* if ($schema->hasTable("serie")) {
+            $schema->dropTable("serie");
+        }
+
+        if ($schema->hasTable("entidad_serie")) {
+            $schema->dropTable("entidad_serie");
+        }
+
+        if ($schema->hasTable("permiso_serie")) {
+            $schema->dropTable("permiso_serie");
+        }
+
+        if ($schema->hasTable("expediente")) {
+            $schema->dropTable("expediente");
+        }
+
+        if ($schema->hasTable("entidad_expediente")) {
+            $schema->dropTable("entidad_expediente");
+        }
+
+        if ($schema->hasTable("permiso_expediente")) {
+            $schema->dropTable("permiso_expediente");
+        }
+
+        if ($schema->hasTable("expediente_doc")) {
+            $schema->dropTable("expediente_doc");
+        }
+
+        if ($schema->hasTable("expediente_eli")) {
+            $schema->dropTable("expediente_eli");
+        }*/
+        
+    }
+
+    public function up(Schema $schema) : void
+    {
+
         if ($schema->hasTable("serie")) {
             $schema->dropTable("serie");
         }
@@ -56,10 +93,8 @@ final class Version20190122215104 extends AbstractMigration
         if ($schema->hasTable("expediente_eli")) {
             $schema->dropTable("expediente_eli");
         }
-    }
+        
 
-    public function up(Schema $schema) : void
-    {
 
         $tabla = $schema->createTable("serie");
         $tabla->addColumn("idserie", "integer", ["autoincrement" => true]);
@@ -82,6 +117,9 @@ final class Version20190122215104 extends AbstractMigration
         $tabla->setPrimaryKey(["idserie"]);
 
 
+        if ($schema->hasTable("entidad_serie")) {
+            $schema->dropTable("entidad_serie");
+        }
         $tabla2 = $schema->createTable("entidad_serie");
         $tabla2->addColumn("identidad_serie", "integer", ["autoincrement" => true]);
         $tabla2->addColumn("fk_serie", "integer", ["default" => 0]);
@@ -152,7 +190,7 @@ final class Version20190122215104 extends AbstractMigration
         $tabla5->addColumn("fk_entidad_serie", "integer");
         $tabla5->addColumn("tipo_permiso", "integer", ["comment" => "1:Serie;2:Candado;"]);
         $tabla5->addColumn("tipo_funcionario", "integer", ["default" => 0, "comment" => "1:Creador;2:Responsable;0,Otros"]);
-        $tabla5->addColumn("permiso", "string", ["length" => 10, "comment" => "l:Lectura;a:Adicion;v:ver;e:editar;c:compartir;d:eliminar"]);
+        $tabla5->addColumn("permiso", "string", ["length" => 10, "comment" => "l:Lectura;a:Adicion;e;Editar;d;Eliminar;c:Compartir"]);
         $tabla5->addColumn("fk_expediente", "integer");
         $tabla5->setPrimaryKey(["idpermiso_expediente"]);
 
@@ -162,7 +200,7 @@ final class Version20190122215104 extends AbstractMigration
         $tabla6->addColumn("fk_entidad", "integer");
         $tabla6->addColumn("llave_entidad", "integer");
         $tabla6->addColumn("fk_expediente", "integer");
-        $tabla6->addColumn("permiso", "string", ["length" => 10, "comment" => "v:ver;e:editar;c:compartir;d:eliminar"]);
+        $tabla6->addColumn("permiso", "string", ["length" => 10, "comment" => "d:Eliminar;e:Editarc:Compartir"]);
         $tabla6->addColumn("tipo_funcionario", "integer", ["default" => 0, "comment" => "1:Creador;2:Responsable;0,Otros"]);
         $tabla6->addColumn("fecha", "datetime", ["notnull" => false]);
         $tabla6->setPrimaryKey(["identidad_expediente"]);
