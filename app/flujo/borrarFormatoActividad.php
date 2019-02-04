@@ -19,22 +19,17 @@ $response = (object) [
 ];
 
 if(empty($_REQUEST['fk_actividad'])) {
-    $response->message = "No se especificó la actividad";
+    $response->message = "No se especificó notificación";
     echo json_encode($response);
     die();
 }
 
-/*
- * data["idnotificacion"] = idnotificacion;
- * data["fk_tipo_destinatario"] = tipodestinatario;
- */
 if($_SESSION['idfuncionario'] == $_REQUEST['key']) {
-
     $eliminados = 0;
 
     $lista = explode(",", $_REQUEST["ids"]);
     foreach ($lista as $id) {
-        $a = DecisionActividad::executeDelete(["iddecision_actividad" => $id]);
+        $a = FormatoActividad::executeDelete(["idformato_actividad" => $id]);
         if($a) {
             $eliminados++;
         }

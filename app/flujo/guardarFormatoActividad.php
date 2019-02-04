@@ -19,33 +19,26 @@ $response = (object) [
 ];
 
 if(empty($_REQUEST['fk_actividad'])) {
-    $response->message = "No se especificó la actividad";
+    $response->message = "No se especificó notificación";
     echo json_encode($response);
     die();
 }
 
-/*
- * data["idnotificacion"] = idnotificacion;
- * data["fk_tipo_destinatario"] = tipodestinatario;
- */
 if($_SESSION['idfuncionario'] == $_REQUEST['key']) {
+    if(!empty($_REQUEST['fk_formato_flujo'])) {
 
-    $eliminados = 0;
-
-    $lista = explode(",", $_REQUEST["ids"]);
-    foreach ($lista as $id) {
-        $a = DecisionActividad::executeDelete(["iddecision_actividad" => $id]);
-        if($a) {
-            $eliminados++;
-        }
+        $atributos = [
+            "fk_actividad" => $_REQUEST['fk_actividad'],
+            "fk_formato_flujo" => $_REQUEST['fk_formato_flujo']
+        ];
+        $pk = FormatoActividad::newRecord($atributos);
     }
-
-    if($eliminados) {
+    if($pk) {
         $response->success = 1;
-        $response->message = "Datos eliminados";
-        $response->data["pk"] = $eliminados;
+        $response->message = "Datos almacenados";
+        $response->data["pk"] = $pk;
     } else {
-        $response->message = "Error al borrar!";
+        $response->message = "Error al guardar!";
     }
 } else {
     $response->message = "Usuario incorrecto";
