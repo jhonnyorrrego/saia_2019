@@ -32,10 +32,17 @@ $tabLinks = ["flow_info" => "flow_info.php",
 <link rel="stylesheet" type="text/css" href="<?php echo $ruta_db_superior;?>css/selectize.css" />
 <link href="<?= $ruta_db_superior ?>dropzone/dist/dropzone_saia.css" rel="stylesheet" type="text/css">
 
+    <link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/jspanel.css">
+
     <!-- required modeler styles -->
     <link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bpmn-js/3.1.0/assets/diagram-js.css">
     <link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bpmn-js/3.1.0/assets/bpmn-font/css/bpmn.css">
 
+    <link rel="stylesheet" href="<?= $ruta_db_superior ?>views/flujos/css/flujos.css">
+
+<style type="text/css">
+
+</style>
     <!-- modeler distro -->
     <?= bpmnModeler() ?>
     <!-- <script src="https://unpkg.com/bpmn-js@3.1.0/dist/bpmn-modeler.development.js"></script>  -->
@@ -50,52 +57,12 @@ $tabLinks = ["flow_info" => "flow_info.php",
 
 <script type="text/javascript" src="<?php echo $ruta_db_superior;?>js/selectize.js"></script>
 
-<style type="text/css">
-ul.fancytree-container {
-    border: none;
-}
 
-#canvas {
-    height: 100%;
-    padding: 0;
-    margin: 0;
-}
+    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/jspanel.js"></script>
+    <!-- optionally load jsPanel extensions -->
+    <!-- <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/extensions/modal/jspanel.modal.js"></script> -->
 
-.diagram-note {
-    background-color: rgba(66, 180, 21, 0.7);
-    color: White;
-    border-radius: 5px;
-    font-family: Arial;
-    font-size: 12px;
-    padding: 5px;
-    min-height: 16px;
-    width: 50px;
-    text-align: center;
-}
 
-.needs-discussion:not(.djs-connection) .djs-visual > :nth-child(1) {
-    stroke: rgba(66, 180, 21, 0.7) !important; /* color elements as red */
-}
-
-#save-button {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-}
-
-.highlight:not(.djs-connection) .djs-visual > :nth-child(1) {
-  fill: yellow !important; /* color elements as green */
-}
-
-.form-group label {
-letter-spacing: unset !important;
-}
-
-.table thead tr th {
-letter-spacing: unset !important;
-}
-
-</style>
 </head>
 <body>
     <div class="container-fluid px-0 mx-0">
@@ -116,9 +83,9 @@ letter-spacing: unset !important;
                   </li>
                 </ul>
                 <div class="tab-content" id="myTabContent">
-                  <div class="tab-pane fade show active" id="flow_info" role="tabpanel" aria-labelledby="pills-flow_info" style="overflow-y: auto; width=100%">...</div>
-                  <div class="tab-pane fade" id="flow_diagram" role="tabpanel" aria-labelledby="pills-flow_diagram" style="overflow-y: auto; width=100%">...</div>
-                  <div class="tab-pane fade" id="flow_notification" role="tabpanel" aria-labelledby="pills-flow_notification" style="overflow-y: auto; width=100%">...</div>
+                  <div class="tab-pane fade show active" id="flow_info" role="tabpanel" aria-labelledby="pills-flow_info" style="overflow-y: auto; width:100%">...</div>
+                  <div class="tab-pane fade" id="flow_diagram" role="tabpanel" aria-labelledby="pills-flow_diagram" style="overflow-y: auto; width:100%">...</div>
+                  <div class="tab-pane fade" id="flow_notification" role="tabpanel" aria-labelledby="pills-flow_notification" style="overflow-y: auto; width:100%">...</div>
                   <div class="tab-pane fade" id="flow_view" role="tabpanel" aria-labelledby="pills-flow_view">...</div>
                 </div>
             </div>
@@ -129,6 +96,35 @@ letter-spacing: unset !important;
 
 <script type="text/javascript" id="smain" data-idflujo="<?=$_REQUEST["idflujo"] ?>">
 var lista_archivos = new Object();
+
+// Create IE + others compatible event handler
+var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+var eventer = window[eventMethod];
+var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+
+// Listen to message from child window
+eventer(messageEvent, function(e) {
+  console.log('Mensaje recibido!:  ', e.data);
+	datos = e.data;
+	if(datos.accion == "recargarTabla") {
+		$('#tabla_notificaciones').bootstrapTable('refresh', {url: "listado_notificaciones.php?idflujo="+idflujo});
+	} else if(datos.accion == "cerrarModalActividad") {
+		if(modalActividad) {
+			modalActividad.close();
+			var modeling = bpmnModeler.get('modeling');
+			var elementRegistry = bpmnModeler.get('elementRegistry');
+			var element = elementRegistry.get(datos.bpmn_id);
+			console.log("elemento", element);
+			//actualizar el diagrama
+			modeling.updateProperties(element, {name : datos.nombreTarea});
+
+		} else {
+			console.log("No se encontro modalActividad");
+		}
+	}
+}, false);
+
+
 $(document).ready(function() {
 	var idflujo = $("script[data-idflujo]").data("idflujo");
 	console.log("main", "idflujo", idflujo);
