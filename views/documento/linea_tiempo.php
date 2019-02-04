@@ -5,7 +5,7 @@
 <script>
     $(function(){
         let baseUrl = $('script[data-baseurl]').data('baseurl');
-        let documentId = "<?= $_REQUEST['identificator'] ?>";
+        let documentId = "<?= $_REQUEST['documentId'] ?>";
 
         if(typeof TimeLine == 'undefined'){
             $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/timeLine/timeLine.js`, function(){
