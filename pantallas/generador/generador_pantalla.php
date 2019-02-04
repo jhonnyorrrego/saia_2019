@@ -596,6 +596,25 @@ for ($i = 0; $i < $cant_js; $i++) {
 
 <script type="text/javascript">
 $(document).ready(function() {
+    $.ajax({
+        type: 'POST',
+        url: "<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias_formato.php",
+        data: {
+            ejecutar_libreria_formato: 'consultarPermisos',
+            nombreFormato: $("#nombreFormato").val()
+        },
+        success: function(response) {
+            if (response) {
+                var objeto = jQuery.parseJSON(response);
+                if (objeto.permisos) {
+                    var permisosPerfil = objeto.permisos.join();
+                    $.each(objeto.permisos,function(i,e){
+                        $('[name="permisosPerfil"][value='+e+']').attr('checked', true);
+                    });
+                }
+            }
+        }
+    });
     $("#cambiar_vista").hide();
     $("#generar_pantalla").hide();
     $("#cambiar_nav").show();
@@ -717,9 +736,7 @@ $(document).ready(function() {
             generar_pantalla("full");
         });
     }
-    if( $('.permisos').prop('checked') ) {
-    alert('Seleccionado');
-}
+
 
     $(document).on("click", "#funcionesPropias", function() {
         var idfuncionFormato = $(this).attr("idfuncionFormato");
@@ -769,7 +786,7 @@ $(document).ready(function() {
         $.ajax({
             type: 'POST',
             url: "<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias_formato.php",
-            data: {
+            dataa: {
                 ejecutar_libreria_formato: 'actualizar_cuerpo_formato',
                 contenido: contenido_editor,
                 idformato: $("#idformato").val(),
