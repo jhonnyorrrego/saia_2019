@@ -31,6 +31,13 @@ if (@$_REQUEST["ejecutar_datos_pantalla"]) {
     }
     $_REQUEST["ejecutar_datos_pantalla"]($_REQUEST, @$_REQUEST["tipo_retorno"]);
 }
+if($_REQUEST['permisosFormato']){
+    permisosFormato($_REQUEST['idformato'],$_REQUEST['idperfil'],$_REQUEST['nombreFormato']);
+}
+
+if ($_REQUEST['eliminarPermisoFormato']) {
+    eliminarPermisoFormato($_REQUEST['idformato'], $_REQUEST['idperfil'], $_REQUEST['nombreFormato']);
+}
 
 function load_pantalla($idpantalla, $generar_archivo = "", $accion = '') {
     global $conn,$ruta_db_superior;
@@ -62,10 +69,9 @@ function load_pantalla($idpantalla, $generar_archivo = "", $accion = '') {
         for ($i = 0; $i < $pantalla["numcampos"]; $i++) {
             $cadena = load_pantalla_campos($pantalla[$i]["idcampos_formato"], 0, $generar_archivo, $accion, $pantalla[$i]);
             $texto .= $cadena["codigo_html"];
-            
            
         }
-
+     
         $texto = str_replace("? >", "?" . ">", $texto);
         $texto = str_replace("< ?php ", "<" . "?php", $texto);
     }  
@@ -454,7 +460,7 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
 
     if ($idformato) {
         $retorno["adicionales"] = adicionar_pantalla_campos_formato($idformato, $fieldList);        
-        $retorno["mensaje"] = "EL m&oacute;dulo se inserta con &eacute;xito";
+        $retorno["mensaje"] = "EL formato se guardo con éxito";
         $retorno["idformato"] = $idformato;
         $retorno['exito'] = 1;
     } else {
@@ -793,8 +799,8 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
 
         $formato_padre = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $fieldList["cod_padre"], "", $conn);
         $strsql_icf = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, banderas, etiqueta_html,placeholder) VALUES (" . $idformato . ",'" . $formato_padre[0]["nombre_tabla"] . "', " . $fieldList["nombre"] . ", 'INT', 11, 1," . $fieldList["cod_padre"] . ", 'a','" . str_replace("'", "", $fieldList["etiqueta"]) . "(Formato padre)', 'fk', 'detalle','Formato padre')";
-        guardar_traza($strsql_icf, "ft_" . $datos["nombre"]);
-        phpmkr_query($strsql_icf) or die("Falla al Ejecutar INSERT " . phpmkr_error() . ' SQL:' . $strsql_icf);
+        //guardar_traza($strsql_icf, "ft_" . $datos["nombre"]);
+        //phpmkr_query($strsql_icf) or die("Falla al Ejecutar INSERT " . phpmkr_error() . ' SQL:' . $strsql_icf);
     }
     if ($idformato && !$fieldList["item"]) {
         $strsql_icf2 = "INSERT INTO campos_formato (formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, predeterminado, acciones, ayuda, banderas, etiqueta_html) VALUES (" . $idformato . ",'estado_documento', 'ESTADO DEL DOCUMENTO', 'VARCHAR', 255, 0,'', 'a','', '', 'hidden')";
@@ -812,7 +818,7 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
 
     if ($datos["idformato"]) {
         $retorno["adicionales"] = adicionar_pantalla_campos_formato($idformato, $fieldList);
-        $retorno["mensaje"] = "EL m&oacute;dulo se inserta con &eacute;xito";
+        $retorno["mensaje"] = "EL formato se actualizó con éxito";
         $retorno["idformato"] = $datos["idformato"];
         $retorno['exito'] = 1;
     } else {
@@ -934,7 +940,7 @@ function load_componentes($tipo_retorno) {
         $texto = '<div class="accordion" id="acordion_componentes">';
         for ($i = 0; $i < $categorias["numcampos"]; $i++) {
             $texto .= '<div class="accordion-group"><div class="accordion-heading">';
-            $texto .= '<a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_componentes" href="#categoria_' . $categorias[$i]["nombre"] . '">';
+            $texto .= '<a class="accordion-toggle" data-toggle="collapse" data-parent="#acordion_componentes" href="#">';
             $texto .= $categorias[$i]["categoria"];
             $texto .= '</a>';
             $texto .= '</div>';
@@ -3205,4 +3211,44 @@ function validar_nombres($texto) {
     }
     return $nuevo_texto;
 }
+
+function consultarPermisosPerfil(){
+    global $conn;
+    $permisos='';
+    $consultaPermisos = busca_filtro_tabla("A.idperfil, A.nombre", "perfil A","", "A.nombre ASC",$conn);
+    if($consultaPermisos['numcampos']){
+        $permisos ='<div>';
+        for ($i=0; $i < $consultaPermisos['numcampos'] ; $i++) {
+            $permisos.= "<label class='checkbox inline'>
+            <input class='permisos' type='checkbox' id='{$consultaPermisos[$i]["idperfil"]}' value='{$consultaPermisos[$i]["idperfil"]}'> {$consultaPermisos[$i]["nombre"]}
+            </label>";
+        }
+        $permisos.= '</div>';
+    }
+    return $permisos;
+}
+
+function permisosFormato($idformato,$idperfil,$nombreFormato){
+    global $conn;
+    $retorno = ["exito" => 0, "mensaje" => ''];
+    $consultaModulo = busca_filtro_tabla("idmodulo","modulo","nombre='{$nombreFormato}' and enlace='formatos/mostrar_{$nombreFormato}.php' ","",$conn);
+    if($consultaModulo['numcampos']){
+        $consultarPermiso = busca_filtro_tabla("","permiso_perfil","modulo_idmodulo={$consultaModulo[0]['idmodulo']}","",$conn);
+        if($consultarPermiso['numcampos']){
+            $retorno['exito'] = 0;
+            $retorno['mensaje'] = 'El permiso ya existe asignado';
+        }else{
+            $guardarPermiso = "INSERT INTO permiso_perfil(modulo_idmodulo,perfil_idperfil,caracteristica_propio,caracteristica_grupo,caracteristica_total) VALUES ({$consultaModulo[0]['idmodulo']},{$idperfil["idperfil"]},'lame','lame','lame')";
+            phpmkr_query($guardarPermiso);
+            $retorno['exito'] = 1;
+            $retorno['mensaje'] = 'Permiso asignado correctamente al formato';
+        }       
+    }
+    echo json_encode($retorno);
+}
+
+function eliminarPermisoFormato($idformato, $idperfil, $nombreFormato){
+    global $conn;
+}
+
 ?>

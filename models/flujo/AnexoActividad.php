@@ -14,12 +14,13 @@ class AnexoActividad extends Model {
 
     protected function defineAttributes() {
         $this->dbAttributes = (object) [
-            'safe' => [
+            "safe" => [
                 "fk_actividad",
                 "ruta",
-                "fk_funcionario",
+                "fecha",
+                "fk_funcionario"
                 ],
-            'date' => [
+            "date" => [
                 "fecha"
             ],
             "table" => "wf_anexo_actividad",

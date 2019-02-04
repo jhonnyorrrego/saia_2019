@@ -585,7 +585,7 @@ $("document").ready(function(){
 	$("#enviar_datos_formato").click(function() {
 
 		if(formulario.valid()) {
-			$('#cargando_enviar').html("Procesando <i id='icon-cargando'>&nbsp;</i>");
+			
 			var buttonAcep = $(this);
 			//buttonAcep.attr('disabled', 'disabled');
 			//parsear_items();
@@ -596,9 +596,8 @@ $("document").ready(function(){
                 data: "ejecutar_datos_pantalla="+buttonAcep.attr('value')+"&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+'&'+formulario.serialize()+"&nombre="+nombre_formato,
                 success: function(objeto) {
                     if(objeto.exito) {               
-                        $('#cargando_enviar').html("Terminado ...");
-                        notificacion_saia('El registro se ha insertado exitosamente','success','topCenter',3000);
-                        window.parent.location.href = window.parent.location.pathname+"?idformato="+objeto.idformato;
+                        notificacion_saia(objeto.mensaje,'success','topCenter',3000);
+                        window.location.href = window.location.pathname+"?idformato="+objeto.idformato;
 
                       } else {
                     	notificacion_saia(objeto.error,'error','topCenter',3000);

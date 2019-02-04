@@ -1,5 +1,7 @@
 <?php
+
 class TipoDestinatario extends Model {
+
 	protected $idtipo_destinatario;
 	protected $tipo;
 
@@ -19,11 +21,12 @@ class TipoDestinatario extends Model {
 	
 	protected function defineAttributes() {
 		$this->dbAttributes = (object) [
-				'safe' => [
+            "safe" => [
 						"tipo"
 				],
 				"table" => "wf_tipo_destinatario",
 				"primary" => "idtipo_destinatario"
 		];
 	}
+
 }

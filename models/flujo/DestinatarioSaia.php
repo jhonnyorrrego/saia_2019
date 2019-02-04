@@ -5,12 +5,12 @@ class DestinatarioSaia extends Model {
     protected $iddestinatario;
 
     public function __construct($id = null) {
-        parent::__construct($id = null);
+        parent::__construct($id);
     }
 
     protected function defineAttributes() {
         $this->dbAttributes = (object) [
-            'safe' => [
+            "safe" => [
                 "fk_funcionario",
                 "iddestinatario"
             ],
