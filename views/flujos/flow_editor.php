@@ -50,9 +50,9 @@ if(isset($_REQUEST["idflujo"])) {
       }
     });
 
-    var elementRegistry = bpmnModeler.get('elementRegistry');
-    var element1 = elementRegistry.get('sid-52EB1772-F36E-433E-8F5B-D5DFD26E6F26');
-    var elements = elementRegistry.getAll();
+    //var elementRegistry = bpmnModeler.get('elementRegistry');
+    //var element1 = elementRegistry.get('sid-52EB1772-F36E-433E-8F5B-D5DFD26E6F26');
+    //var elements = elementRegistry.getAll();
     //console.log(elementRegistry);
 
     var modeling = bpmnModeler.get('modeling');
@@ -72,6 +72,7 @@ if(isset($_REQUEST["idflujo"])) {
   	  'element.mouseup'*/
   	];
 
+    var modalActividad = null;
     events.forEach(function(event) {
         eventBus.on(event, function(e) {
   	    // e.element = the model element
@@ -79,17 +80,27 @@ if(isset($_REQUEST["idflujo"])) {
   	    var objeto = e.element.businessObject;
   	    var tipoElem = e.element.businessObject.$type;
   	    var id = 1;
-  	    if(tipoElem == "bpmn:Task" || /Gateway/.test(tipoElem) ) {
+  	    if(tipoElem === "bpmn:Task" || /Gateway/.test(tipoElem) ) {
   	    	canvas.addMarker(e.element, 'highlight');
-  	    	top.topModal({
-  	  	    	title: "Opciones de la tarea",
-  	  	    	url: "<?= $ruta_db_superior ?>views/flujos/modal_datos_tarea.php",
-  	  	    	params: {idflujo: id, idtarea: e.element.id, nombreTarea: objeto.name}
-	  	    });
+                let strParam = jQuery.param({idflujo: id, bpmn_id: e.element.id, nombreTarea: objeto.name});
+                let url = '<?= $ruta_db_superior ?>views/flujos/modal_datos_tarea.php?' + strParam;
+
+                jspanelOpts = {
+                	headerTitle: '',
+                	iconfont:    'fa',
+                	theme: 'primary',
+            	    position:    'center-top 0 58',
+            	    contentSize: '800 600',
+            	    borderRadius: '6px',
+            	    content:     '<iframe src="' + url + '" style="width: 100%; height: 100%; border:none;"></iframe>',
+            	    callback: function () {
+            	        this.header.style.borderBottom = 'none';
+            	        this.content.style.borderTop = 'none';
+            	    }
+            	};
+                modalActividad = jsPanel.create(jspanelOpts);
   	    }
-  	    //console.log(event, 'on', e.element);
-  	    //console.log(e.element.businessObject);
-  	    console.log(e.element);
+
   	  });
   	});
 

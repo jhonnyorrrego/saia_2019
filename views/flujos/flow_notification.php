@@ -74,20 +74,6 @@ if(isset($_REQUEST["idflujo"])) {
 	//var $table = $('#tabla_notificaciones');
 	//$table.bootstrapTable();
 
-	// Create IE + others compatible event handler
-var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-var eventer = window[eventMethod];
-var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
-
-// Listen to message from child window
-eventer(messageEvent, function(e) {
-  console.log('Mensaje recibido!:  ',e.data);
-	datos = e.data;
-	if(datos.accion == "recargarTabla") {
-		$('#tabla_notificaciones').bootstrapTable('refresh', {url: "listado_notificaciones.php?idflujo="+idflujo});
-	}
-}, false);
-
 $(function(){
    	var idflujo = $("script[data-idflujo]").data("idflujo");
     console.log("notificaciones", "idflujo", idflujo);

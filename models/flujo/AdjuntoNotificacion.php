@@ -12,7 +12,7 @@ class AdjuntoNotificacion extends Model {
 
     protected function defineAttributes() {
         $this->dbAttributes = (object) [
-            'safe' => [
+            "safe" => [
                 "fk_notificacion",
                 "fk_formato_flujo"
                 ],
