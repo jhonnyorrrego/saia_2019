@@ -19,17 +19,15 @@ $datos = [];
 if(!empty($_REQUEST["idactividad"])) {
     $idactividad = $_REQUEST["idactividad"];
 
-    $listadoTareas = busca_filtro_tabla("r.idriesgo, r.fk_actividad, r.riesgo, r.descripcion, ir.impacto, pr.probabilidad",
-            "wf_riesgo_actividad r join wf_tipo_prob_riesgo pr on pr.idtipo_probabilidad = r.fk_probabilidad
-             join wf_tipo_impacto_riesgo ir on ir.idtipo_impacto = r.fk_impacto",
-            "r.fk_actividad = $idactividad", "", $conn);
+    $listado = busca_filtro_tabla("fa.idfuncionario_actividad, fa.fk_funcionario, f.login, f.nombres, f.apellidos, f.email",
+        "wf_funcionario_actividad fa join funcionario f on fa.fk_funcionario = f.idfuncionario", "fa.fk_actividad = $idactividad", "", $conn);
 
-    if($listadoTareas["numcampos"]) {
-        $total = isset($listadoTareas['numcampos']) ? $listadoTareas['numcampos'] : count($listadoTareas);
+    if($listado["numcampos"]) {
+        $total = isset($listado['numcampos']) ? $listado['numcampos'] : count($listado);
 
         for($row = 0; $row < $total; $row++) {
             $fila = [];
-            foreach($listadoTareas[$row] as $key => $value) {
+            foreach($listado[$row] as $key => $value) {
                 if(is_string($key)) {
                     $fila[$key] = $value;
                 }

@@ -43,7 +43,7 @@ $tabs = [
         "url" => "tab5.php", "href" => "anexos", "icon" => "fa fa-paperclip",
     ],
     [
-        "url" => "tab6.php", "href" => "participantes", "icon" => "fa fa-users",
+        "url" => "tab_funcionarios_actividad.php", "href" => "participantes", "icon" => "fa fa-users",
     ],
     [
         "url" => "tab_riesgo.php", "href" => "riesgos", "icon" => "fa fa-exclamation-triangle",
@@ -73,6 +73,7 @@ $tabs = [
         <?= icons() ?>
         <?= theme() ?>
         <?= librerias_UI("1.12") ?>
+		<?= librerias_arboles_ft("2.24")?>
 
         <?= librerias_tabla_bootstrap("1.13", false, false) ?>
 

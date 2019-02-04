@@ -62,6 +62,7 @@ if(!empty($_REQUEST["idnotificacion"])) {
 		data-click-to-select="true"
 		data-show-toggle="true"
 		data-show-columns="true"
+		data-toolbar="#toolbar"
 		data-pagination="true">
 		    <thead>
 		    <tr>

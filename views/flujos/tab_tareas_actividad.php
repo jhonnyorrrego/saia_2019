@@ -59,12 +59,13 @@ if (!empty($_REQUEST["idactividad"])) {
            data-click-to-select="true"
            data-show-toggle="true"
            data-show-columns="true"
+           data-toolbar="#toolbar_tabla_tareas"
            data-pagination="true">
         <thead>
             <tr>
                 <th data-field="state" data-checkbox="true"></th>
                 <th data-field="idtarea" data-visible="false">IdTarea</th>
-                <th data-field="obligatorio">Tipo</th>
+                <th data-field="obligatorio" data-formatter="obligatorioFormatterTask">Tipo</th>
                 <th data-field="nombre">Nombre</th>
             </tr>
         </thead>
@@ -185,6 +186,15 @@ if (!empty($_REQUEST["idactividad"])) {
             return pk;
         }
         return false;
+    }
+
+    function obligatorioFormatterTask(value, row, index) {
+    	//console.log(value);
+        if(value == '1') {
+            return "Obligatoria";
+        } else {
+            return "Opcional";
+        }
     }
 
 </script>

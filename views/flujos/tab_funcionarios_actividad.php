@@ -16,14 +16,8 @@ include_once $ruta_db_superior . 'controllers/autoload.php';
 $idflujo = $_REQUEST['idflujo'];
 $actividad = null;
 $idactividad = null;
-$prob_riesgo = [];
-$impacto_riesgo = [];
 if (!empty($_REQUEST["idactividad"])) {
-    $actividad = new Elemento($_REQUEST["idactividad"]);
-    $idactividad = $actividad->getPk();
-
-    $prob_riesgo = TipoProbRiesgo::findAll("", 0, true);
-    $impacto_riesgo = TipoImpactoRiesgo::findAll("", 0, true);
+    $idactividad = $_REQUEST["idactividad"];
 }
 ?>
 
@@ -31,32 +25,33 @@ if (!empty($_REQUEST["idactividad"])) {
 	<div class="row">
 	    <div class="col">
 	        <div class="form-group">
-	            <label class="my-0" for="colaborador">Destinatarios</label>
-	            <select class="form-control" style="width:400px;" id="colaborador"></select>
+	            <label class="my-0" for="colaborador">Colaboradores</label>
+	            <select class="form-control" style="width:400px;" id="colaborador" data-placeholder="Qui&eacute;n debe estar enterado"></select>
 	        </div>
 	    </div>
 	</div>
 
 	<div class="row">
 	    <div class="col-12" id="colaborador_list">
-	    <div id="toolbar">
-  		<a href="#" id="boton_eliminar" class="btn btn-secondary" title="Eliminar"><i class="f-12 fa fa-trash"></i></a>
+	    <div id="toolbar_tabla_funcionario_actividad">
+  		<a href="#" id="boton_eliminar_funcionario_actividad" class="btn btn-secondary" title="Eliminar"><i class="f-12 fa fa-trash"></i></a>
 		</div>
-		<table class="table table-striped table-bordered table-hover" cellspacing="0" id="tabla_destinatarios"
-		  data-toggle="table"
-  data-url="listado_destinatarios_saia.php?idnotificacion=<?= $idnotificacion?>"
-		data-click-to-select="true"
-		data-show-toggle="true"
-		data-show-columns="true"
-		data-pagination="true">
+		<table class="table table-striped table-bordered table-hover" cellspacing="0" id="tabla_funcionario_actividad"
+    		data-toggle="table"
+      		data-url="listado_funcionario_actividad.php?idactividad=<?= $idactividad?>"
+    		data-click-to-select="true"
+    		data-show-toggle="true"
+    		data-show-columns="true"
+    		data-toolbar="#toolbar_tabla_funcionario_actividad"
+    		data-pagination="true">
 		    <thead>
 		    <tr>
 		      <th data-field="state" data-checkbox="true"></th>
-		        <th data-field="iddestinatario" data-visible="false">IdDest</th>
-		        <th data-field="idfuncionario" data-visible="false">IdFunc</th>
+		        <th data-field="idfuncionario_actividad" data-visible="false">IdDest</th>
+		        <th data-field="fk_funcionario" data-visible="false">IdFunc</th>
 		        <th data-field="nombres" >Nombre</th>
 		        <th data-field="apellidos">Apellido</th>
-		        <th data-field="email" >Correo</th>
+		        <th data-field="login" >Usuario</th>
 		    </tr>
 		    </thead>
 		</table>
@@ -68,21 +63,21 @@ if (!empty($_REQUEST["idactividad"])) {
 <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/i18n/es.js"></script>
 
 <script>
-var $tabla = $("#tabla_destinatarios");
+var $tabla = $("#tabla_funcionario_actividad");
+$tabla.bootstrapTable();
 
-var $botonEliminar = $('#boton_eliminar')
+var $botonEliminar = $('#boton_eliminar_funcionario_actividad')
 
-var idnotificacion = "<?= $idnotificacion ?>";
-var tipodestinatario = "<?= $tipo_destinatario?>";
+var idactividad = "<?= $idactividad ?>";
 
 $botonEliminar.click(function () {
     var ids = $.map($tabla.bootstrapTable('getSelections'), function (row) {
-      return row.iddestinatario
+      return row.idfuncionario_actividad
     });
-    var estado = eliminarDestinatarios(idnotificacion, ids.join(","));
+    var estado = eliminarFuncionarioActividad(idactividad, ids.join(","));
     if(estado) {
         $tabla.bootstrapTable('remove', {
-            field: 'iddestinatario',
+            field: 'idfuncionario_actividad',
             values: ids
         });
     }
@@ -102,8 +97,8 @@ $('#colaborador').select2({
 	minimumInputLength: 2,
 	templateResult: formatearRespuesta,
 	templateSelection: formatRepoSelection
-
 });
+
 $('#colaborador').on('select2:select', function (e) {
 	//console.log(e.params.data);
 	var datos = $tabla.bootstrapTable('getData');
@@ -111,21 +106,20 @@ $('#colaborador').on('select2:select', function (e) {
     var existe = false;
     for (var key in datos) {
     	var obj = datos[key];
-    	if(obj.idfuncionario == e.params.data.idfuncionario) {
+    	if(obj.fk_funcionario == e.params.data.idfuncionario) {
     		existe = true;
     		break;
     	}
     }
 	if(!existe) {
 		var datos = e.params.data;
-		var id = guardarDestinatario(idnotificacion, e.params.data);
-		e.params.data["iddestinatario"] = id;
+		var id = guardarFuncionarioActividad(idactividad, e.params.data);
+		e.params.data["idfuncionario_actividad"] = id;
 		$tabla.bootstrapTable('append', e.params.data);
 	}
 	$(this).val(null).trigger('change');
 });
 
-//$('#tabla_destinatarios tbody tr').append('<td><a href="#" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i> Edit </a><a href="#" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i> Delete </a></td>');
 function procesarResultados(data) {
 	var datos = $.map(data, function (obj) {
 		  obj.id = obj.idfuncionario || obj.funcionario_codigo; // replace pk with your identifier
@@ -157,30 +151,29 @@ function formatearRespuesta (repo) {
 	  "<div class='select2-result-repository__meta'>" +
 	    "<div class='select2-result-repository__title'>" + nombre + "</div>";
 
-	if (repo.email) {
-	  markup += "<div class='select2-result-repository__description'>" + repo.email + "</div>";
+	if (repo.login) {
+	  markup += "<div class='select2-result-repository__description'>" + repo.login + "</div>";
 	}
 	return markup;
 }
 
 function formatRepoSelection (repo) {
 	//console.log(repo);
-	return repo.email || repo.text;
+	return repo.login || repo.text;
 }
 
-function guardarDestinatario(idnotificacion, data) {
+function guardarFuncionarioActividad(idactividad, data) {
 	if(data) {
 		data['key'] = localStorage.getItem("key");
-		data["fk_notificacion"] = idnotificacion;
-		data["fk_tipo_destinatario"] = tipodestinatario;
+		data["fk_actividad"] = idactividad;
 		data["fk_funcionario"] = data.idfuncionario;
 
-	    //console.log(idnotificacion, data);
+	    //console.log(idactividad, data);
 		//return false;
 		var pk = false;
 		$.ajax({
 			dataType: "json",
-			url: "<?= $ruta_db_superior ?>app/flujo/guardarDestinatario.php",
+			url: "<?= $ruta_db_superior ?>app/flujo/guardarFuncionarioActividad.php",
 			type: "POST",
 			data: data,
 			async: false,
@@ -188,33 +181,34 @@ function guardarDestinatario(idnotificacion, data) {
 			  if(response["success"] == 1) {
 				top.notification({type: "success", message: response.message});
 				pk = response.data.pk;
-				parent.parent.postMessage({accion: "recargarTabla", id: pk}, "*");
 			  } else {
 				  top.notification({type: "error", message: response.message});
 			  }
+			},
+			error: function(response) {
+				  top.notification({type: "error", message: "No se pudo guardar"});
 			}
 		});
 		return pk;
 	}
 	return false;
 }
-function eliminarDestinatarios(idnotificacion, ids) {
+function eliminarFuncionarioActividad(idactividad, ids) {
 	if(ids) {
 		var data = {
 			key: localStorage.getItem("key"),
-			fk_notificacion: idnotificacion,
-			fk_tipo_destinatario: tipodestinatario,
+			fk_actividad: idactividad,
 			ids: ids
 		};
 
-	    //console.log(idnotificacion, data);
+	    //console.log(idactividad, data);
 		//return false;
 		//TODO: Falta pedir confirmacion al usuario
 
 		var pk = false;
 		$.ajax({
 			dataType: "json",
-			url: "<?= $ruta_db_superior ?>app/flujo/borrarDestinatarioSaia.php",
+			url: "<?= $ruta_db_superior ?>app/flujo/borrarFuncionarioActividad.php",
 			type: "POST",
 			data: data,
 			async: false,

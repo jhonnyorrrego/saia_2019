@@ -26,13 +26,15 @@ if (!empty($_REQUEST["idactividad"])) {
 ?>
 
 <div>
-    <form id="frmdecisionActividad">
-        <div class="form-group">
-            <label for="nombre_decision">Nombre de la decisi&oacute;n</label>
-            <input type="email" class="form-control" id="nombre_decision" name="decision" placeholder="Nombre de la decisi&oacute;n" value="">
-        </div>
-        <div class="row">
-            <div class="col col-md-6">
+    <form id="frmDecisionActividad">
+        <div class="row h-100">
+            <div class="col col-md-7">
+                <div class="form-group form-group-default">
+                    <label for="nombre_decision">Nombre de la decisi&oacute;n</label>
+                    <input type="email" class="form-control" id="nombre_decision" name="decision" placeholder="Nombre de la decisi&oacute;n" value="">
+                </div>
+            </div>
+            <div class="col col-md-5">
                 <div class="form-group">
                     <label class="my-0" for="selTipoDecision">Tipo de decisi&oacute;n</label>
                     <select class="form-control" id="selTipoDecision">
@@ -47,8 +49,8 @@ if (!empty($_REQUEST["idactividad"])) {
         </div>
 
         <div class="row pr-2 mt-1">
-            <div class="col col-md-8">
-                <button type="button" class="btn btn-primary btn-sm float-right" id="btnGuardarDecision">Guardar</button>
+            <div class="col col-md-12">
+                <button type="button" class="btn btn-primary btn-sm float-right" id="btnGuardarDecision">Agregar Decisi&oacute;n</button>
             </div>
         </div>
 
@@ -61,10 +63,11 @@ if (!empty($_REQUEST["idactividad"])) {
     </div>
     <table class="table table-striped table-bordered table-hover" id="tabla_decisiones"
            data-toggle="table"
-           data-url="listado_decisiones_actividad.php?idactividad=<?= $idactividad ?>"
+           data-url="listado_decision_actividad.php?idactividad=<?= $idactividad ?>"
            data-click-to-select="true"
            data-show-toggle="true"
            data-show-columns="true"
+           data-toolbar="#toolbar_tabla_decisiones"
            data-pagination="true">
         <thead>
             <tr>
@@ -80,7 +83,7 @@ if (!empty($_REQUEST["idactividad"])) {
 
 <script>
 
-var $tabla = $("#tabla_req_in");
+var $tabla = $("#tabla_decisiones");
 $tabla.bootstrapTable();
 
 var $botonEliminarDecision = $('#boton_eliminar_decision');
@@ -93,8 +96,8 @@ $botonGuardarDecision.click(function () {
 
     var decision = $("#frmDecisionActividad #nombre_decision").val();
     var fk_tipo_decision = $("#frmDecisionActividad #selTipoDecision").val();
+    var texto_tipo = $("#frmDecisionActividad #selTipoDecision option:selected").text();
 
-    //console.log("obligatorio", obligatorio);
     var existe = false;
     for (var key in datos) {
         var obj = datos[key];
@@ -107,8 +110,12 @@ $botonGuardarDecision.click(function () {
     if (!existe) {
         var data = {decision: decision, fk_tipo_decision: fk_tipo_decision};
         var id = guardarDecisionActividad(idactividad, data);
-        data["iddecision_actividad"] = id;
-        $tabla.bootstrapTable('append', data);
+        if(id) {
+            data["iddecision_actividad"] = id;
+            data["tipo_decision"] = texto_tipo;
+            $tabla.bootstrapTable('append', data);
+            document.getElementById("frmDecisionActividad").reset();
+        }
     }
 });
 

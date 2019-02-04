@@ -88,11 +88,14 @@ if(isset($_REQUEST["idflujo"])) {
                 jspanelOpts = {
                 	headerTitle: '',
                 	iconfont:    'fa',
-                	theme: 'primary',
-            	    position:    'center-top 0 58',
-            	    contentSize: '800 600',
+                	theme: 'dark',
+                    position: {
+                        my: "center-top",
+                        at: "center-top"
+                    },
+                    contentSize: '800 600',
             	    borderRadius: '6px',
-            	    content:     '<iframe src="' + url + '" style="width: 100%; height: 100%; border:none;"></iframe>',
+            	    content:     '<iframe src="' + url + '" style="width: 100%; height: 90%; border:none; overflow:hidden auto;"></iframe>',
             	    callback: function () {
             	        this.header.style.borderBottom = 'none';
             	        this.content.style.borderTop = 'none';

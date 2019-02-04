@@ -1,10 +1,10 @@
 <?php
 
-class FormatoActividad extends Model {
+class FuncionarioActividad extends Model {
 
-    protected $idformato_actividad;
+    protected $idfuncionario_actividad;
     protected $fk_actividad;
-    protected $fk_formato_flujo;
+    protected $fk_funcionario;
 
     function __construct($id = null) {
         parent::__construct($id);
@@ -14,10 +14,11 @@ class FormatoActividad extends Model {
         $this->dbAttributes = (object) [
             "safe" => [
                 "fk_actividad",
-                "fk_formato_flujo",
+                "fk_funcionario"
             ],
-            "table" => "wf_formato_actividad",
-            "primary" => "idformato_actividad"
+            "table" => "wf_funcionario_actividad",
+            "primary" => "idfuncionario_actividad"
         ];
     }
+
 }
