@@ -647,4 +647,23 @@ function registrar_funciones_pie_formato($idencabezado,$idformato,$id_pie_anteri
 	}
 return $ok;
 }
+
+function consultarPermisos(){
+    global $conn;
+    $nombreFormato = $_REQUEST['nombreFormato'];
+    $retorno = ["exito" => 0, "permisos" => []];
+    $consultaModulo = busca_filtro_tabla("idmodulo", "modulo", "nombre='{$nombreFormato}' and enlace='formatos/mostrar_{$nombreFormato}.php' ", "", $conn);
+    
+    if ($consultaModulo['numcampos']) {
+        $consultarPermiso = busca_filtro_tabla("perfil_idperfil", "permiso_perfil", "modulo_idmodulo={$consultaModulo[0]['idmodulo']}", "", $conn);
+        if($consultarPermiso['numcampos']){
+            for ($i=0; $i < $consultarPermiso['numcampos'] ; $i++) { 
+               $permisos[]= $consultarPermiso[$i][perfil_idperfil];
+            }
+            $retorno["permisos"] = $permisos;
+        }
+    }
+    echo json_encode($retorno);
+
+}
 ?>
