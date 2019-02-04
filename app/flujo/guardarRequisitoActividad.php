@@ -18,7 +18,7 @@ $response = (object) [
     'success' => 0
 ];
 
-if(empty($_REQUEST['fk_actividad'])) {
+if(empty($_REQUEST['fk_actividad']) && empty($_REQUEST['idelemento'])) {
     $response->message = "No se especificó la actividad";
     echo json_encode($response);
     die();
@@ -29,15 +29,7 @@ if(empty($_REQUEST['fk_actividad'])) {
  * data["fk_tipo_destinatario"] = tipodestinatario;
  */
 if($_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    if(!empty($_REQUEST['fk_actividad'])) {
-
-        $atributos = [];
-        $atributos["fk_actividad"] = $_REQUEST['fk_actividad'];
-        $atributos["requisito"] = $_REQUEST['requisito'];
-        $atributos["tipo_requisito"] = $_REQUEST['tipo'];
-        $atributos["obligatorio"] = $_REQUEST['obligatorio'];
-        $pk = ReqCalidadActiv::newRecord($atributos);
-    } else if(!empty($_REQUEST['idelemento'])) {
+    if(!empty($_REQUEST['idelemento'])) {
         $atributos = [];
         $idelemento = $_REQUEST['idelemento'];
         $campo = null;
@@ -55,6 +47,13 @@ if($_SESSION['idfuncionario'] == $_REQUEST['key']) {
         } else {
             $response->message = "Debe especificar el tipo de requisito (entrada/salida)";
         }
+    } else if(!empty($_REQUEST['fk_actividad'])) {
+        $atributos = [];
+        $atributos["fk_actividad"] = $_REQUEST['fk_actividad'];
+        $atributos["requisito"] = $_REQUEST['requisito'];
+        $atributos["tipo_requisito"] = $_REQUEST['tipo'];
+        $atributos["obligatorio"] = $_REQUEST['obligatorio'];
+        $pk = ReqCalidadActiv::newRecord($atributos);
     }
     if($pk) {
         $response->success = 1;

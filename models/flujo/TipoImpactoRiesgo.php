@@ -2,6 +2,8 @@
 
 class TipoImpactoRiesgo extends Model {
 
+    use TFlujo;
+
     protected $idtipo_impacto;
     protected $impacto;
 

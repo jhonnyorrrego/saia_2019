@@ -2,6 +2,8 @@
 
 class TipoProbRiesgo extends Model {
 
+    use TFlujo;
+
     protected $idtipo_probabilidad;
     protected $probabilidad;
 

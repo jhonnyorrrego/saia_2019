@@ -46,10 +46,10 @@ $tabs = [
         "url" => "tab6.php", "href" => "participantes", "icon" => "fa fa-users",
     ],
     [
-        "url" => "tab7.php", "href" => "riesgos", "icon" => "fa fa-exclamation-triangle",
+        "url" => "tab_riesgo.php", "href" => "riesgos", "icon" => "fa fa-exclamation-triangle",
     ],
     [
-        "url" => "tab8.php", "href" => "decision", "icon" => "fa fa-thumbs-up",
+        "url" => "tab_decision.php", "href" => "decision", "icon" => "fa fa-thumbs-up",
     ]
 ];
 ?>

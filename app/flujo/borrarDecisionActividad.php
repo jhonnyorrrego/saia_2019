@@ -31,13 +31,11 @@ if(empty($_REQUEST['fk_actividad'])) {
 if($_SESSION['idfuncionario'] == $_REQUEST['key']) {
     if(!empty($_REQUEST['fk_actividad'])) {
 
-        $idactividad = $_REQUEST['fk_actividad'];
-
         $eliminados = 0;
 
         $lista = explode(",", $_REQUEST["ids"]);
         foreach ($lista as $id) {
-            $a = ReqCalidadActiv::executeDelete(['fk_actividad' =>$idactividad, "idrequisito_calidad" => $id]);
+            $a = DecisionActividad::executeDelete(["iddecision_actividad" => $id]);
             if($a) {
                 $eliminados++;
             }

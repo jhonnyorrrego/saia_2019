@@ -77,7 +77,7 @@ if (!empty($_REQUEST["idactividad"])) {
         <div class="row py-1 mt-1">
             <div class="col col-md-12">
                 <div class="form-group">
-                    <label for="info_actividad">Requisitos de calidad</label>
+                    <label for="req_calidad_in">Requisitos de calidad</label>
                     <textarea class="form-control" id="req_calidad_in" name="req_calidad_in"><?= $actividad->req_calidad_in ?></textarea>
                 </div>
 	        </div>
@@ -132,7 +132,7 @@ if (!empty($_REQUEST["idactividad"])) {
     $('#guardarReqCalidadIn').click(function () {
         let req_in = $("#frmQualityReqIn #req_calidad_in").val();
         var data = {requisito: req_in, tipo: tipo_requisito};
-        var id = guardarRequisitoActividad(idactividad, data);
+        var id = guardarRequisitoCalidadActividadIn(idactividad, data);
     });
     $("#cancelarReqCalidadIn").click(function () {
         let nombre = $("#frmActividad #nombre_actividad").val();
@@ -260,5 +260,4 @@ if (!empty($_REQUEST["idactividad"])) {
             return "Opcional";
         }
     }
-
 </script>

@@ -31,25 +31,18 @@ if(empty($_REQUEST['fk_actividad'])) {
 if($_SESSION['idfuncionario'] == $_REQUEST['key']) {
     if(!empty($_REQUEST['fk_actividad'])) {
 
-        $idactividad = $_REQUEST['fk_actividad'];
-
-        $eliminados = 0;
-
-        $lista = explode(",", $_REQUEST["ids"]);
-        foreach ($lista as $id) {
-            $a = ReqCalidadActiv::executeDelete(['fk_actividad' =>$idactividad, "idrequisito_calidad" => $id]);
-            if($a) {
-                $eliminados++;
-            }
-        }
-
+        $atributos = [];
+        $atributos["fk_actividad"] = $_REQUEST['fk_actividad'];
+        $atributos["decision"] = $_REQUEST['decision'];
+        $atributos["fk_tipo_decision"] = $_REQUEST['fk_tipo_decision'];
+        $pk = DecisionActividad::newRecord($atributos);
     }
-    if($eliminados) {
+    if($pk) {
         $response->success = 1;
-        $response->message = "Datos eliminados";
-        $response->data["pk"] = $eliminados;
+        $response->message = "Datos almacenados";
+        $response->data["pk"] = $pk;
     } else {
-        $response->message = "Error al borrar!";
+        $response->message = "Error al guardar!";
     }
 } else {
     $response->message = "Usuario incorrecto";
