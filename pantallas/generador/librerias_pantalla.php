@@ -8,6 +8,7 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
+
 include_once $ruta_db_superior . "db.php";
 include_once $ruta_db_superior . "librerias_saia.php";
 include_once $ruta_db_superior . "pantallas/generador/librerias.php";
@@ -35,7 +36,7 @@ if($_REQUEST['permisosFormato']){
     permisosFormato($_REQUEST['idformato'],$_REQUEST['idperfil'],$_REQUEST['nombreFormato']);
 }
 
-if ($_REQUEST['eliminarPermisoFormato']) {
+if ($_REQUEST['eliminarPermisoFormato']) {    
     eliminarPermisoFormato($_REQUEST['idformato'], $_REQUEST['idperfil'], $_REQUEST['nombreFormato']);
 }
 
@@ -3220,7 +3221,7 @@ function consultarPermisosPerfil(){
         $permisos ='<div>';
         for ($i=0; $i < $consultaPermisos['numcampos'] ; $i++) {
             $permisos.= "<label class='checkbox inline'>
-            <input class='permisos' type='checkbox' id='{$consultaPermisos[$i]["idperfil"]}' value='{$consultaPermisos[$i]["idperfil"]}'> {$consultaPermisos[$i]["nombre"]}
+            <input class='permisos' type='checkbox' id='{$consultaPermisos[$i]["idperfil"]}' name='permisosPerfil' value='{$consultaPermisos[$i]["idperfil"]}'> {$consultaPermisos[$i]["nombre"]}
             </label>";
         }
         $permisos.= '</div>';
@@ -3233,7 +3234,8 @@ function permisosFormato($idformato,$idperfil,$nombreFormato){
     $retorno = ["exito" => 0, "mensaje" => ''];
     $consultaModulo = busca_filtro_tabla("idmodulo","modulo","nombre='{$nombreFormato}' and enlace='formatos/mostrar_{$nombreFormato}.php' ","",$conn);
     if($consultaModulo['numcampos']){
-        $consultarPermiso = busca_filtro_tabla("","permiso_perfil","modulo_idmodulo={$consultaModulo[0]['idmodulo']}","",$conn);
+        $consultarPermiso = busca_filtro_tabla("","permiso_perfil","modulo_idmodulo={$consultaModulo[0]['idmodulo']} and perfil_idperfil = {$idperfil}","",$conn);
+
         if($consultarPermiso['numcampos']){
             $retorno['exito'] = 0;
             $retorno['mensaje'] = 'El permiso ya existe asignado';
@@ -3249,6 +3251,18 @@ function permisosFormato($idformato,$idperfil,$nombreFormato){
 
 function eliminarPermisoFormato($idformato, $idperfil, $nombreFormato){
     global $conn;
+    $retorno = ["exito" => 0, "mensaje" => ''];
+    $consultaModulo = busca_filtro_tabla("idmodulo", "modulo", "nombre='{$nombreFormato}' and enlace='formatos/mostrar_{$nombreFormato}.php' ", "", $conn);
+    if ($consultaModulo['numcampos']) {
+        $consultarPermiso = busca_filtro_tabla("", "permiso_perfil", "modulo_idmodulo={$consultaModulo[0]['idmodulo']}", "", $conn);
+        if ($consultarPermiso['numcampos']) {
+            $eliminarPermiso = "DELETE from permiso_perfil where idpermiso_perfil = {$consultarPermiso[0]['idpermiso_perfil']} and perfil_idperfil = {$idperfil}";
+            phpmkr_query($eliminarPermiso);
+            $retorno['exito'] = 1;
+            $retorno['mensaje'] = "Permiso eliminado correctamente";
+        }
+    }
+    echo json_encode($retorno);
 }
 
 ?>
