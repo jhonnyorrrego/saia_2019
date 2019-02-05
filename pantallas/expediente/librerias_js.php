@@ -1,17 +1,18 @@
 <script>
 $(document).ready(function(){
 
-    $(document).on("click", "#addExpediente,#addDocumentExp", function() {  
-        window.open("<?=$ruta_db_superior?>"+$(this).attr("enlace"),"iframe_detalle");
-    });
-
-    $(document).on("click","#shareExp",function(){    
-        let seleccionados=$("#seleccionados_expediente").val();
-        if(seleccionados){
-            window.open("<?= $ruta_db_superior ?>"+$(this).attr("enlace")+"&idexpediente="+seleccionados,"iframe_detalle");
-        }else{
-            alert("Seleccione por lo menos un expediente");
-        }
+    $(document).on("click", "#addExpediente,#addDocumentExp", function() {
+      let idexp=$(this).data("id");
+      let idcomp=$(this).data("componente");
+      if($(this).attr("id")=="addExpediente"){
+        $("#iframe_detalle").attr({
+          'src':'<?= $ruta_db_superior ?>pantallas/expediente/adicionar_expediente.php?codPadre='+idexp+'&idbusqueda_componente='+idcomp
+        });
+      }else{
+        $("#iframe_detalle").attr({
+          'src':'<?= $ruta_db_superior.FORMATOS_CLIENTE ?>vincular_doc_expedie/adicionar_vincular_doc_expedie.php?idexpediente='+idexp+'&idbusqueda_componente='+idcomp
+        });
+      }
     });
 
     $(document).on("click","#transDocument",function(){
@@ -34,25 +35,19 @@ $(document).ready(function(){
         });
     });
 
-	$(document).on("click","#prestDocument",function(){
-		var seleccionados=$("#seleccionados_expediente").val();
-		var estado_archivo='$estado';
-		if(seleccionados){
-			enlace_katien_saia("<?= FORMATOS_CLIENTE ?>solicitud_prestamo/adicionar_solicitud_prestamo.php?id="+seleccionados+"&estado_archivo="+estado_archivo,"Solicitud de prestamo","iframe","");
-		}else{
-			alert("Seleccione por lo menos un expediente");
-		}
-	});
-
   //Selector check/uncheck
   
 	$(document).on("click",".selExp",function(){
 		let i=$(this).children("i");
+    let idexp=$(this).data("id");
 		if(i.hasClass("icon-uncheck")){
 			i.removeClass("icon-uncheck").addClass("icon-check");
+      $('#resultado_pantalla_'+idexp).addClass("alert-info");
 		}else{
 			i.removeClass("icon-check").addClass("icon-uncheck");
+      $('#resultado_pantalla_'+idexp).removeClass("alert-info");
 		}
+    
 	});
   
   // Informacion del expediente
@@ -60,6 +55,8 @@ $(document).ready(function(){
   $(document).on("click",".infoExp",function(){
     let idexp=$(this).data("id");
     let idcomp=$(this).data("componente");
+    $("[id^='resultado_pantalla_']").removeClass("alert-warning");
+    $('#resultado_pantalla_'+idexp).addClass("alert-warning");
     $("#iframe_detalle").attr({
       'src':'<?=$ruta_db_superior?>pantallas/expediente/detalles_expediente.php?idexpediente='+idexp+'&idbusqueda_componente='+idcomp
     });  
@@ -151,185 +148,31 @@ $(document).ready(function(){
     }
   });
 
-/*
-$(document).on('click', '.adicionar_seleccionados', function () {
-  $(this).removeClass("adicionar_seleccionados");
-  $(this).addClass("eliminar_seleccionado");
-  $(this).children("i").removeClass("icon-uncheck");
-  $(this).children("i").addClass("icon-check");
-  var idregistro=$(this).attr('idregistro');
-  if(idregistro!='undefined'){
-    if($("#seleccionados").val()==''){
-      $("#seleccionados").val(idregistro);
-    }
-    else{
-      $("#seleccionados").val($("#seleccionados").val()+","+idregistro);            
-    }
-    $('#resultado_pantalla_'+idregistro).removeClass("well");
-    $('#resultado_pantalla_'+idregistro).addClass("alert");
-    $('#resultado_pantalla_'+idregistro).addClass("alert-info"); 
-    $('.alert-info').css("padding","4px");
-  }    
-}); 
-$(document).on('click', '.eliminar_seleccionado', function () {
-  $(this).removeClass("eliminar_seleccionado");
-  $(this).addClass("adicionar_seleccionados");
-  $(this).children("i").removeClass("icon-check");
-  $(this).children("i").addClass("icon-uncheck");
-  var idregistro=$(this).attr('idregistro');
-  if($("#seleccionados").val()!=''){
-      var selec=$("#seleccionados").val().split(",");
-      var unicos=$.unique(selec);
-      var idx=unicos.indexOf(idregistro);
-      if(idx!=-1){  
-        unicos.splice(idx,1);
-        $("#seleccionados").val(unicos);
+  // Compartir documento
+  $(document).on("click","#shareExp,.shareExp",function(){
+    let idcomp=$(this).data("componente");
+    if($(this).attr("id")=="shareExp"){
+      if($(".selExp > .icon-check").length){
+        let ids=[];
+        let i=0;
+        $(".icon-check").each(function() {
+          ids[i]=$(this).parent().data("id");
+          i++;
+        });
+        
+       $("#iframe_detalle").attr({
+          'src':'<?= $ruta_db_superior ?>pantallas/expediente/asignar_permiso_expediente.php?opcion=2&ids='+ids+'&idbusqueda_componente='+idcomp
+        });
+      }else{
+        alert("Seleccione por lo menos un expediente");
       }
+    }else{
+      let idexp=$(this).data("id");      
+      $("#iframe_detalle").attr({
+        'src':'<?= $ruta_db_superior ?>pantallas/expediente/asignar_permiso_expediente.php?opcion=1&idexpediente='+idexp+'&idbusqueda_componente='+idcomp
+      });  
     }
-    else{
-      alert("no existen datos seleccionados");
-    }
-  $("#seleccionado_"+idregistro).remove();  
-  $('#resultado_pantalla_'+idregistro).removeClass("alert");
-  $('#resultado_pantalla_'+idregistro).removeClass("alert-info");
-  $('#resultado_pantalla_'+idregistro).addClass("well");
-});
-$("#filtrar_seleccionados").click(function(){
-  $("#panel_body .well").hide();
-});
-$("#restaurar_listado").click(function(){
-  $("#panel_body .alert").addClass("well");
-  $("#panel_body .alert").removeClass("alert");  
-  $("#panel_body .alert").removeClass("alert-info");
-  $("#panel_body .well").show();
-});
-$("#restaurar_seleccionados").click(function(){
-  $("#panel_body .well").show();
-});
-$(document).on('click', '.adicionar_seleccionados_expediente', function () {
-  $(this).removeClass("adicionar_seleccionados_expediente");
-  $(this).addClass("eliminar_seleccionado_expediente");
-  $(this).children("i").removeClass("icon-uncheck");
-  $(this).children("i").addClass("icon-check");
-  var idregistro=$(this).attr('idregistro');
-  if(idregistro!='undefined'){
-    if($("#seleccionados_expediente").val()==''){
-      $("#seleccionados_expediente").val(idregistro);
-    }
-    else{
-      $("#seleccionados_expediente").val($("#seleccionados_expediente").val()+","+idregistro);            
-    }
-         
-  }    
-});
-$(document).on('click', '.eliminar_seleccionado_expediente', function () {
-  $(this).removeClass("eliminar_seleccionado_expediente");
-  $(this).addClass("adicionar_seleccionados_expediente");
-  $(this).children("i").removeClass("icon-check");
-  $(this).children("i").addClass("icon-uncheck");
-  var idregistro=$(this).attr('idregistro');
-  if($("#seleccionados_expediente").val()!=''){
-      var selec=$("#seleccionados_expediente").val().split(",");
-      var unicos=$.unique(selec);
-      var idx=unicos.indexOf(idregistro);
-      if(idx!=-1){  
-        unicos.splice(idx,1);
-        $("#seleccionados_expediente").val(unicos);
-      }
-    }
-    else{
-      alert("no existen datos seleccionados");
-    }
-  $("#seleccionado_"+idregistro).remove();  
-  $('#resultado_pantalla_'+idregistro).removeClass("alert");
-  $('#resultado_pantalla_'+idregistro).removeClass("alert-success");
-  $('#resultado_pantalla_'+idregistro).addClass("well");
-});
-
-
-//--------
-
-
- 
-  
-  $(".eliminar_expediente").on("click",function(){
-  	var idregistro=$(this).attr("idregistro");
-  	var cantidad=parseInt($("#contador_docs_"+$(this).attr("idregistro")).html());
-  	if(cantidad>0){
-  		notificacion_saia("El expediente tiene documentos almacenados, desvinculelos para eliminar","warning","",3000);
-  		return false;
-  	}
-  	var confirmacion=confirm("Esta seguro de eliminar este expediente?");
-  	if(confirmacion){
-	  	$.ajax({
-	      type:'GET',
-	      async:false,
-	      url: "<?php echo ($ruta_db_superior); ?>pantallas/expediente/ejecutar_acciones.php",
-	      data: "ejecutar_expediente=delete_expediente&tipo_retorno=1&idexpediente="+idregistro,
-	      success: function(html2){
-	        if(html2){
-	          var objeto2=jQuery.parseJSON(html2);
-	          if(objeto2.exito){
-	          	notificacion_saia(objeto2.mensaje,"success","",2500);
-	          	$("#resultado_pantalla_"+idregistro).remove();
-	          	window.location.reload();
-	          }
-	        }
-	      }
-	    });
-		}
-  });
-
- 
-  
-  $(".sacar_expediente").on("click",function(){
-  	var iddocumento=$(this).attr("iddocumento");
-  	var idexpediente=$(this).attr("idexpediente");
-  	if(iddocumento && idexpediente){
-  		var confirmacion=confirm("Esta seguro de eliminar el documento de este expediente?");
-	  	if(confirmacion){
-	  		var padre=$(this).parent().parent().parent();
-		  	$.ajax({
-		      type:'GET',
-		      async:false,
-		      url: "<?php echo ($ruta_db_superior); ?>pantallas/expediente/ejecutar_acciones.php",
-		      data: "ejecutar_expediente=delete_documento_expediente&tipo_retorno=1&idexpediente="+idexpediente+"&iddocumento="+iddocumento,
-		      success: function(html2){
-		        if(html2){
-		          var objeto2=jQuery.parseJSON(html2);
-		          if(objeto2.exito){
-		          	notificacion_saia(objeto2.mensaje,"success","",2500);
-		          	padre.remove();
-		          }
-		        }
-		      }
-		    });
-			}
-  	}
   });
   
-  
-  
- //usted no tiene autorizacion para acceder, favor solicitar 
- $('.enlace_documento_bloqueado').on('click',function(){
-   
-   var iddoc=$(this).attr('iddoc');
-    $.ajax({
-        type:'POST',
-        dataType: 'json',
-        url: "<?php echo ($ruta_db_superior); ?>pantallas/expediente/ejecutar_acciones.php",
-        data: {
-            iddoc:iddoc,
-            ejecutar_expediente:'obtener_rastro_documento_expediente'
-        },
-        success: function(datos){
-            var alerta="<b>ATENCI&Oacute;N!<b><br><br>Usted no tiene autorizaci&oacute;n para acceder, favor solicitar el permiso a: "+datos.msn;
-            notificacion_saia(alerta,"warning","",6000);
-          }
-      });       
-     
- });
-
-$('.enlace_documento_bloqueado').parent().css("opacity","0.2");*/
 });
 </script>

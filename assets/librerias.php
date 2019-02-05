@@ -1,4 +1,5 @@
 <?php
+
 /**
  * retorna script para cargar
  * jquery v3.2.1 minificado
@@ -36,10 +37,10 @@ function jqueryUi()
 {
     global $ruta_db_superior;
 
-    $route_js =  $ruta_db_superior . 'assets/theme/assets/plugins/jquery-ui/jquery-ui.min.js';
+    $route_js = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-ui/jquery-ui.min.js';
     $route_css = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-ui/jquery-ui-1.10.1.custom.min.css';
     $css = '<link type="text/css" href="' . $route_css . '" rel="stylesheet"/>';
-    $js =  '<script type="text/javascript" src="' . $route_js . '"></script>';
+    $js = '<script type="text/javascript" src="' . $route_js . '"></script>';
     return $css . "\n" . $js;
 }
 
@@ -67,7 +68,8 @@ function bootstrap()
  * v4.1.0 minificado
  * @return string
  */
-function cssBootstrap(){
+function cssBootstrap()
+{
     global $ruta_db_superior;
 
     $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap/css/bootstrap.min.css';
@@ -240,7 +242,7 @@ function scrollBar()
 
 /**
  * retorna enlaces para el uso
- * de la libreria jquery validate
+ * de la libreria jquery validate v1.13.0
  */
 function validate()
 {
@@ -290,7 +292,8 @@ function arboles_ft($version = "2.30", $opciones = '', $tema = "lion")
  * retorna libreria para ejecucion
  * de ventana modal en el top
  */
-function topModal(){
+function topModal()
+{
     global $ruta_db_superior;
 
     $routeJs = $ruta_db_superior . 'assets/theme/assets/js/cerok_libraries/topModal/topModal.js';
@@ -307,12 +310,13 @@ function topModal(){
  * @return string <script> incluye las librerias
  * cuando el documento esta listo
  */
-function librariesForTopModal($data){
+function librariesForTopModal($data)
+{
     $data = implode('', $data);
-    $libraries = str_replace('</script>','<\/script>', $data);
+    $libraries = str_replace('</script>', '<\/script>', $data);
 
     return "<script type='text/javascript'>
-        div = $('<div>').append('". $libraries ."');
+        div = $('<div>').append('" . $libraries . "');
 
         $.each(div.children(), function(i, e){
             if(e.href){
@@ -326,7 +330,8 @@ function librariesForTopModal($data){
     </script>";
 }
 
-function bpmnModeler() {
+function bpmnModeler()
+{
     global $ruta_db_superior;
 
     $ruta_lib = "assets/theme/assets/plugins/bpmn-js/3.1.0/";
@@ -335,8 +340,9 @@ function bpmnModeler() {
 
     return $modeler;
 }
-
-function bpmnViewer() {
+//TODO: VALIDAR ESTA LIBRERIA NO UTILIZAN EL JS Y EL CSS
+function bpmnViewer()
+{
     global $ruta_db_superior;
     $ruta_lib = "assets/theme/assets/plugins/bpmn-js/3.0.4/";
     $rutaViewer = $ruta_db_superior . $ruta_lib . "bpmn-viewer.development.js";
@@ -349,4 +355,20 @@ function bpmnViewer() {
     $js = '<script type="text/javascript" src="' . $rutaJs . '"></script>';
 
     return $viewer;
+}
+/**
+ * retorna enlaces para el uso
+ * de la libreria select2 v4.0 .4
+ */
+function select2()
+{
+    global $ruta_db_superior;
+
+    $ruta_lib = $ruta_db_superior . 'assets/theme/assets/plugins/select2/';
+    $css = '<link href="' . $ruta_lib . 'css/select2.min.css" rel="stylesheet" type="text/css" />';
+
+    $js = '<script src="' . $ruta_lib . 'js/select2.min.js" type="text/javascript"></script>';
+    $js .= '<script src="' . $ruta_lib . 'js/i18n/es.js" type="text/javascript"></script>';
+
+    return $css . $js;
 }

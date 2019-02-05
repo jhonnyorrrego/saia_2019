@@ -302,15 +302,16 @@ echo (estilo_bootstrap());
                                 $("#cantidad_total").val(objeto.records);
 
                                 $.each(objeto.rows, function(index, item) {
-                                    if (objeto.page == 1 && index === 0) {
-                                        $("#iframe_detalle").attr({
-                                            'src':'<?= $ruta_db_superior; ?>pantallas/expediente/detalles_expediente.php?idexpediente='+item.idexpediente+"&idbusqueda_componente="+idbusqueda_componente+"&rand=<?= rand(); ?>"
-                                        });
-                                    }
                                     if (forma_cargar == 1) {
                                         $("#resultado_busqueda" + idbusqueda_componente).prepend(item.info);
                                     } else {
                                         $("#resultado_busqueda" + idbusqueda_componente).append(item.info);
+                                    }
+                                    if (objeto.page == 1 && index === 0) {
+                                        $('#resultado_pantalla_'+item.idexpediente).addClass("alert-warning");
+                                        $("#iframe_detalle").attr({
+                                            'src':'<?= $ruta_db_superior; ?>pantallas/expediente/detalles_expediente.php?idexpediente='+item.idexpediente+"&idbusqueda_componente="+idbusqueda_componente+"&rand=<?= rand(); ?>"
+                                        });
                                     }
                                 });
                                 if (parseInt(objeto.actual_row) < parseInt(objeto.records)) {

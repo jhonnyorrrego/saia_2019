@@ -235,6 +235,9 @@ final class Version20190122215104 extends AbstractMigration
         1711 compartir_expediente
         1986 mover_expediente
 
+        validar
+        transferencia_doc
+
         DROP VIEW vpermiso_serie;
         DROP VIEW vdependencia_serie;
         DROP VIEW vpermiso_serie_entidad;

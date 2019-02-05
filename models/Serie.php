@@ -116,7 +116,6 @@ class Serie extends Model
                             $ok++;
                         }
                         ExpedienteController::createEntidadSerieCodArbol($this->cod_arbol, $attributes);
-
                     }
 
                     if ($ok == $cd) {

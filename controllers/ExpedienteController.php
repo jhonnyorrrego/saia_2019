@@ -1,6 +1,216 @@
 <?php
 class ExpedienteController
 {
+
+    /**
+     * Actualiza el responsable del expediente
+     *
+     * @param array $data :id del expediente y id del funcionario
+     * @return array
+     */
+    public static function updateResponsableExpedienteCont(array $data = []) : array
+    {
+        $response = [
+            'exito' => 0,
+            'message' => 'Faltan los datos a procesar'
+        ];
+        if (!empty($data)) {
+            if (!empty($data['idexpediente'])) {
+                if (!empty($data['responsable'])) {
+                    $Expediente = new Expediente($data['idexpediente']);
+                    $Expediente->responsable = $data['responsable'];
+                    if ($Expediente->update()) {
+                        $response['exito'] = 1;
+                        $response['message'] = 'responsable actualizado';
+                    }
+                } else {
+                    $response['message'] = 'faltan el identificador del responsable';
+                }
+            } else {
+                $response['message'] = 'faltan el identificador del expediente';
+            }
+        }
+        return $response;
+    }
+
+    /**
+     * Inserta permisos al expediente
+     * Solo inserta el compartir
+     *
+     * @param array $data : ids de los expedientes / ids de los funcionarios
+     * @return array
+     */
+    public static function insertPemisoExpedienteCont(array $data = []) : array
+    {
+        $response = [
+            'exito' => 0,
+            'message' => 'Faltan los datos a procesar'
+        ];
+        if (!empty($data)) {
+            if (!empty($data['idsExp'])) {
+                if (!empty($data['idfuncionario'])) {
+
+                    $idExp = explode(',', $data['idsExp']);
+                    $cant = 0;
+                    $success = 0;
+
+                    foreach ($data['idfuncionario'] as $user) {
+                        $sql = "SELECT idpermiso_expediente FROM permiso_expediente WHERE fk_entidad=1 AND tipo_funcionario=0 AND tipo_permiso=2 AND fk_funcionario={$user}";
+                        foreach ($idExp as $idexpediente) {
+                            $cant++;
+                            $sql .= " AND fk_expediente={$idexpediente}";
+                            $record = StaticSql::search($sql);
+                            if ($record) {
+                                $PermisoExpediente = new PermisoExpediente($record[0]['idpermiso_expediente']);
+                                $PermisoExpediente->setAccess("c");
+                                $PermisoExpediente->permiso = implode(',', $PermisoExpediente->access);
+                                if ($PermisoExpediente->update()) {
+                                    $success++;
+                                }
+                            } else {
+                                $Exp = new Expediente($idexpediente);
+                                $attributes = [
+                                    'fk_funcionario' => $user,
+                                    'fk_entidad' => 1,
+                                    'llave_entidad' => $user,
+                                    'fk_entidad_serie' => $Exp->fk_entidad_serie,
+                                    'tipo_permiso' => 2,
+                                    'tipo_funcionario' => 0,
+                                    'permiso' => 'c',
+                                    'fk_expediente' => $idexpediente
+                                ];
+                                $PermisoExpediente = new PermisoExpediente();
+                                $PermisoExpediente->setAttributes($attributes);
+                                if ($PermisoExpediente->create()) {
+                                    $success++;
+                                }
+                            }
+                        }
+                    }
+                    if ($cant == $success) {
+                        $response['exito'] = 1;
+                        $response['message'] = 'Permiso adicionado!';
+                    } else if ($success) {
+                        $response['exito'] = 2;
+                        $response['message'] = 'No se adicionaron todos los permisos';
+                    } else {
+                        $response['message'] = 'Error al vincular el permiso a los expedientes';
+                    }
+
+                } else {
+                    $response['message'] = 'faltan el identificador del funcionario(s)';
+                }
+            } else {
+                $response['message'] = 'faltan el identificador del expediente';
+            }
+        }
+        return $response;
+    }
+
+    /**
+     * retorna los datos para ser procesador por SELECT2
+     *
+     * @param array $data
+     * @return array
+     */
+    public static function listFuncionarios(array $data = []) : array
+    {
+        $response = [
+            'results' => []
+        ];
+        if ($data['search'] != "") {
+            $sql = "SELECT idfuncionario,nombres,apellidos FROM funcionario WHERE estado=1 and (lower(nombres) like '%{$data['search']}%' OR lower(apellidos) like '%{$data['search']}%' ) ";
+            if (!empty($data['where'])) {
+                $sql .= $data['where'];
+            }
+            $records = StaticSql::search($sql);
+            if ($records) {
+                $results = [];
+                foreach ($records as $record) {
+                    $results[] = [
+                        'id' => $record['idfuncionario'],
+                        'text' => $record['nombres'] . ' ' . $record['apellidos']
+                    ];
+                }
+                $response['results'] = $results;
+            }
+        }
+        return $response;
+    }
+
+    /**
+     * Elimina el permiso de Compartir expediente 
+     *
+     * @param array $data : array debe tener el idpermiso_expediente
+     * @return array
+     */
+    public static function deletePemisoExpedienteCont(array $data = []) : array
+    {
+        $response = [
+            'exito' => 0,
+            'message' => 'Faltan los datos a procesar'
+        ];
+        if (!empty($data)) {
+            if (!empty($data['idpermiso'])) {
+                $permisoExpediente = new PermisoExpediente($data['idpermiso']);
+                if ($permisoExpediente->deletePermisoExpediente("c")) {
+                    $response['message'] = 'Permiso eliminado!';
+                    $response['exito'] = 1;
+                } else {
+                    $response['message'] = 'No se pudo eliminar el permiso';
+                }
+            } else {
+                $response['message'] = 'faltan el identificador del permiso';
+            }
+        }
+        return $response;
+    }
+    /**
+     * Retorna los funciorios
+     * con permisos sobre los expedientes
+     *
+     * @param array $data : array con los ids del los expedientes
+     * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public static function getPermisoExpedienteCont(array $data = []) : array
+    {
+        $response = [
+            'data' => [],
+            'exito' => 0,
+            'message' => 'Faltan los datos a procesar'
+        ];
+
+        if (!empty($data)) {
+            if (!empty($data['idexpediente'])) {
+                $sql = "SELECT DISTINCT f.nombres,f.apellidos,p.idpermiso_expediente,e.nombre as nombre_expediente FROM permiso_expediente p,funcionario f,expediente e WHERE p.fk_funcionario=f.idfuncionario AND e.idexpediente=p.fk_expediente AND p.tipo_funcionario=0 AND p.fk_entidad=1 AND p.permiso like '%c%'";
+                if (is_array($data['idexpediente'])) {
+                    $sql .= " AND p.fk_expediente in (" . implode(',', $data['idexpediente']) . ")";
+                } else {
+                    $sql .= " AND p.fk_expediente={$data['idexpediente']}";
+                }
+
+                $records = StaticSql::search($sql);
+                if ($records) {
+                    $permisos = [];
+                    foreach ($records as $record) {
+                        $permisos[] = [
+                            'idpermiso' => $record['idpermiso_expediente'],
+                            'nombreExpediente' => $record['nombre_expediente'],
+                            'funcionario' => $record['nombres'] . ' ' . $record['apellidos']
+                        ];
+                    }
+                    $response['data'] = $permisos;
+                }
+                $response['exito'] = 1;
+                $response['message'] = 'Funcionarios cargados';
+            } else {
+                $response['message'] = 'faltan los identificadores de los expedientes';
+            }
+        }
+        return $response;
+    }
+
     /**
      * Procesa los datos del formulario y crea el expediente
      *
@@ -8,7 +218,7 @@ class ExpedienteController
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function createExpedienteCont(array $data = []) : array
+    public static function createExpedienteCont(array $data = []) : array
     {
         $response = [
             'data' => [],
@@ -66,7 +276,7 @@ class ExpedienteController
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function updateExpedienteCont(array $data = []) : array
+    public static function updateExpedienteCont(array $data = []) : array
     {
         $response = [
             'data' => [],
@@ -131,7 +341,7 @@ class ExpedienteController
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
 
-    public function deleteExpedienteCont(array $data = []) : array
+    public static function deleteExpedienteCont(array $data = []) : array
     {
 
         $response = [
@@ -182,7 +392,7 @@ class ExpedienteController
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
 
-    public function restoreExpedienteCont(array $data = []) : array
+    public static function restoreExpedienteCont(array $data = []) : array
     {
 
         $response = [
@@ -228,7 +438,7 @@ class ExpedienteController
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function createTomoExpedienteCont(array $data = []) : array
+    public static function createTomoExpedienteCont(array $data = []) : array
     {
         $response = [
             'data' => [],
@@ -238,8 +448,8 @@ class ExpedienteController
         if (!empty($data)) {
             if ($data['idexpediente']) {
                 $Expediente = new Expediente($data['idexpediente']);
-                $tomoPadre= $data['idexpediente'];
-                if($Expediente->tomo_padre){
+                $tomoPadre = $data['idexpediente'];
+                if ($Expediente->tomo_padre) {
                     $tomoPadre = $Expediente->tomo_padre;
                 }
                 $cant = $Expediente->countTomos();
@@ -298,13 +508,13 @@ class ExpedienteController
         ];
         $SeriesPadres = explode('.', $codArbol);
         $idActual = array_pop($SeriesPadres);
-        $cant = count($SeriesPadres);
         unset($idActual);
+        $cant = count($SeriesPadres);
         if ($cant) {
             $ok = 0;
             foreach ($SeriesPadres as $id) {
                 $sql = "SELECT identidad_serie FROM entidad_serie WHERE fk_serie={$id} and fk_dependencia={$attributes['fk_dependencia']} and estado=1";
-                $exit = StaticSql::search($sql);
+                $exist = StaticSql::search($sql);
                 if (!$exist) {
                     $attributesPadre = $attributes;
                     $attributesPadre['fk_serie'] = $id;

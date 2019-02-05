@@ -344,7 +344,7 @@ class Expediente extends Model
             $this->permiso = [
                 'a' => true,
                 'l' => true,
-                'e' => true,
+                'e' => true,    
                 'c' => true,
                 'd' => true
             ];

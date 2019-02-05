@@ -26,9 +26,13 @@ if ($Expediente->fecha_extrema_f) {
     $fecExtFin = DateController::convertDate($Expediente->fecha_extrema_f, 'Y-m-d H:i:s', 'Y-m-d');
 }
 
+$params=[
+    'idexpediente'=>$idexpediente,
+    'baseUrl'=>$ruta_db_superior
+];
+
 
 include_once $ruta_db_superior . 'assets/librerias.php';
-include_once $ruta_db_superior . "librerias_saia.php";
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -106,7 +110,12 @@ include_once $ruta_db_superior . "librerias_saia.php";
 
                             <tr>
                                 <td>Responsable: </td>
-                                <td><?= $Expediente->getResponsable() ?></td>
+                                <td>
+                                    <?= $Expediente->getResponsable() ?>
+                                    <?php if($Expediente->isResponsable()):?>
+                                        <button class="btn btn-info" id="openModal"><i class="fa fa-user"></i></button>
+                                    <?php endif;?>
+                                </td>
                             </tr>
 
                             <tr>
@@ -242,8 +251,24 @@ include_once $ruta_db_superior . "librerias_saia.php";
     
         <script type="text/javascript">
             $(document).ready(function (){
+                var params=<?=json_encode($params)?>;
 
-             $(".inf").click(function (e) {
+                $("#openModal").click(function (){
+                    let options = {
+                        url: `${params.baseUrl}pantallas/expediente/cambiar_responsable.php`,
+                        params: {
+                            idexpediente:params.idexpediente
+                        }, 
+                        size: "modal-lg",
+                        title: "Actualizar responsable",
+                        centerAlign: false,
+                        buttons: {}
+                    };
+                    top.topModal(options);
+                });
+
+
+                $(".inf").click(function (e) {
                     let table=$(this).data("table"); 
                     let icon=$(this).hasClass("fa-plus-square");
                     if(icon){

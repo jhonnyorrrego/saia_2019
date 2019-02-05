@@ -16,7 +16,6 @@ $data = UtilitiesController::cleanForm($_REQUEST,$setNull);
 
 $accionExp = $data['methodExp'] ?? 0;
 $response = [
-    'data' => [],
     'exito' => 0,
     'message' => 'Faltan datos obligatorios'
 ];

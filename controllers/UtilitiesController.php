@@ -196,7 +196,7 @@ class UtilitiesController
     public static function cleanForm(array $data, int $setNull = 0) : array
     {
         if ($setNull) {
-            array_walk($data, function (&$element, $key) {
+            array_walk_recursive($data, function (&$element, $key) {
                 if (trim($element) != '') {
                     $element = trim($element);
                 } else {
@@ -205,15 +205,14 @@ class UtilitiesController
             });
             $response = $data;
         } else {
-            array_walk($data, function (&$element, $key) {
+            array_walk_recursive($data, function (&$element, $key) {
                 if (trim($element) != '') {
                     $element = trim($element);
                 }
-            });
+            });            
             $response = array_filter($data, function ($val, $key) {
-                return trim($val) != '';
+                return trim($val) != '' || is_array($val);
             }, ARRAY_FILTER_USE_BOTH);
-
         }
         return $response;
     }

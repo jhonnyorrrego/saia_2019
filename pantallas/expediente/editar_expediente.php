@@ -12,10 +12,11 @@ while ($max_salida > 0) {
 require_once $ruta_db_superior . "controllers/autoload.php";
 
 $idexpediente = $_REQUEST['idexpediente'];
-if (!$idexpediente) {
+$Expediente = new Expediente($idexpediente);
+if (!$idexpediente || !$Expediente->isResponsable()) {
     return;
 }
-$Expediente=new Expediente($idexpediente);
+
 $Dep=$Expediente->getDependenciaFk()[0];
 $Serie=$Expediente->getSerieFk()[0];
 
@@ -36,11 +37,11 @@ if ($Expediente->fecha_extrema_f) {
 $params =[
     'agrupador'=> intval($Expediente->agrupador),
     'countDocuments'=> $Expediente->countDocuments(),
-    'countTomos' =>$Expediente->countTomos()
+    'countTomos' =>$Expediente->countTomos(),
+    'baseUrl'=>$ruta_db_superior
 ];
 
 include_once $ruta_db_superior . 'assets/librerias.php';
-include_once $ruta_db_superior . "librerias_saia.php";
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -53,7 +54,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 		<?= bootstrap() ?>
 		<?= theme() ?>
         <?= icons() ?>
-		<?= librerias_validar_formulario() ?>
+		<?= validate() ?>
 	</head>
 
 	<body>
@@ -263,8 +264,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 						}
 					},
 					submitHandler : function(form) {
-                        //$("#guardarExp").attr('disabled',true);
-                        var ruta_db_superior='<?= $ruta_db_superior; ?>';
+                        $("#guardarExp").attr('disabled',true);
                         var idcomponente=$("#idbusqueda_componente").val(); 
                         var codPadre=$("#cod_padre").val(); 
                         var idexpediente=$("#idexpediente").val(); 
@@ -272,7 +272,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
                         $.ajax({
                             type : 'POST',
                             async : false,
-                            url: ruta_db_superior+"pantallas/expediente/ejecutar_acciones.php",
+                            url: `${params.baseUrl}pantallas/expediente/ejecutar_acciones.php`,
                             data : $("#formularioExp").serialize(),
                             dataType : 'json',
                             success : function(objeto) {
@@ -280,7 +280,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
                                     $.ajax({
                                         type : 'POST',
                                         async : false,
-                                        url: ruta_db_superior+"pantallas/busquedas/servidor_busqueda_exp.php",
+                                        url: `${params.baseUrl}pantallas/busquedas/servidor_busqueda_exp.php`,
                                         data : {
                                             idbusqueda_componente : idcomponente,
                                             page : 1,
@@ -295,7 +295,8 @@ include_once $ruta_db_superior . "librerias_saia.php";
                                             if (objeto2.exito) {
                                                 $("#resultado_pantalla_"+idexpediente,parent.document).addClass("removeDiv");
                                                 $(".removeDiv", parent.document).after(objeto2.rows[0].info);
-                                                 $(".removeDiv", parent.document).remove();
+                                                $(".removeDiv", parent.document).remove();
+                                                $('#resultado_pantalla_'+objeto2.rows[0].idexpediente, parent.document).addClass("alert-warning");
                                             }else{
                                                 top.notification({
                                                     message : "Error al actualizar el listado, por favor actualice el listado",

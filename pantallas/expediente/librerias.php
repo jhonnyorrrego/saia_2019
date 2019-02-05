@@ -15,16 +15,17 @@ require_once $ruta_db_superior . "controllers/autoload.php";
 
 /** AQUI EMPIEZA LAS FUNCIONES DE LAS CONDICIONES */
 
-function conditions_gestion()
+function conditions()
 {
     $idexp = $_REQUEST['idexpediente'];
-
-    $where = 'v.estado_archivo=1';
     if (empty($idexp)) {
-        $where .= ' and v.cod_padre=0';
+        $where .= " AND v.cod_padre=0";
     } else {
-        $where .= " and v.cod_padre={$idexp}";
+        $where .= " AND v.cod_padre={$idexp}";
     }
+
+    $where .= " AND (v.agrupador =1 OR fk_funcionario={$_SESSION['idfuncionario']})";
+
     return $where;
 }
 
@@ -86,21 +87,18 @@ FINHTML;
 
     } else {
         $btn .= '<div class="btn btn-mini selExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Seleccionar"><i class="icon-uncheck"></i></div>';
-
-        if(!$ExpedienteInfo->agrupador){
-            $btn .= '<div class="btn btn-mini rotExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Imprimir rotulo" conector="iframe" enlace="pantallas/caja/rotulo.php?idexpediente=' . $idexpediente . '"><i class="icon-print"></i></div>';
+        if($ExpedienteInfo->getAccessUser("c")){
+            $btn .= '<div class="btn btn-mini shareExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Compartir" ><i class="icon-share"></i></div>';
         }
         
         if($ExpedienteInfo->isResponsable()){
             if(!$ExpedienteInfo->agrupador){
+                $btn .= '<div class="btn btn-mini rotExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Imprimir rotulo" conector="iframe" enlace="pantallas/caja/rotulo.php?idexpediente=' . $idexpediente . '"><i class="icon-print"></i></div>';
                 $btn .= '<div class="btn btn-mini tomoExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Crear Tomo"><i class="icon-th-list"></i></div>';
             }
-            $btn .= '<div class="btn btn-mini shareExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Compartir" conector="iframe" enlace="pantallas/expediente/asignar_expediente.php?idexpediente=' . $idexpediente . '"><i class="icon-share"></i></div>';
             $btn .= '<div class="btn btn-mini editExp" data-id="' . $idexpediente . '" data-componente="'. $idcomp .'" title="Editar"><i class="icon-pencil"></i></div>';
             $btn .= '<div class="btn btn-mini delExp" data-id="' . $idexpediente . '" data-componente="'. $idcomp .'" title="Eliminar"><i class="icon-remove"></i></div>';
-
         }
-
         $btn .= '<div class="btn btn-mini infoExp" data-id="' . $idexpediente . '" data-componente="'. $idcomp .'" title="' . $ExpedienteInfo->nombre . '"><i class="icon-info-sign"></i></div>';
 
         if ($ExpedienteInfo->agrupador == 3) {
@@ -153,7 +151,8 @@ FINHTML;
 function adicionar_expediente()
 {
     global $Expediente;
-
+    
+    $idcomp = $_REQUEST["idbusqueda_componente"];
     $idexpediente = $_REQUEST["idexpediente"];
     if (!$Expediente) {
         $Expediente = new Expediente($idexpediente);
@@ -161,20 +160,12 @@ function adicionar_expediente()
     }
 
     if ($Expediente->getAccessUser('a')) {
-        $data = [
-            'idbusqueda_componente' => $_REQUEST['idbusqueda_componente'],
-            'idexpediente' => $idexpediente
-        ];
-        $params = http_build_query($data);
-        $rutaFormato = FORMATOS_CLIENTE;
-
         $html = <<<FINHTML
-        <li></li>
         <li>
-            <a href="#" id="addExpediente" enlace="pantallas/expediente/adicionar_expediente.php?{$params}">Adicionar Expediente/Separador</a>
+            <a href="#" id="addExpediente" data-id="{$idexpediente}" data-componente="{$idcomp}">Adicionar Expediente/Separador</a>
         </li>
         <li>
-            <a href="#" id="addDocumentExp" enlace="{$rutaFormato}vincular_doc_expedie/adicionar_vincular_doc_expedie.php?idexpediente={$idexpediente}">Adicionar Documento</a>
+            <a href="#" id="addDocumentExp" data-id="{$idexpediente}" data-componente="{$idcomp}">Adicionar Documento</a>
         </li>
 FINHTML;
     }
@@ -184,42 +175,27 @@ FINHTML;
 
 function compartir_expediente()
 {
-    global $Expediente;
-
-    $idexpediente = $_REQUEST["idexpediente"];
-    if (!$Expediente) {
-        $Expediente = new Expediente($idexpediente);
-        $GLOBALS['Expediente'] = $Expediente;
-    }
-    if ($Expediente->getAccessUser('c')) {
-        $html = <<<FINHTML
-		<li></li>
-		<li>
-		    <a href="#" id="shareExp" enlace="pantallas/expediente/asignar_expediente.php">Compartir Expediente</a>
-        </li>
-FINHTML;
-    }
+    $idcomp = $_REQUEST["idbusqueda_componente"];
+    $html = '<li><a href="#" id="shareExp" data-componente="'. $idcomp .'">Compartir Expediente</a></li>';
     echo $html;
 }
 
 function transferencia_documental()
 {
-    $cadena = '<li><a href="#" id="transDocument">Transferir a Archivo</a></li>';
-    echo $cadena;
+    $html = '<li><a href="#" id="transDocument">Transferir a Archivo</a></li>';
+    echo $html;
 }
-
-function prestamo_documento()
-{
-    $cadena = '<li><a href="#" id="prestDocument">Solicitar pr&eacute;stamo</a></li>';
-    echo $cadena;
-}
-
 
 function barra_superior_busqueda()
 {
-    //TODO: PENDIENTE POR REVISAR
-    $permiso = new Permiso();
-    $ok2 = $permiso->acceso_modulo_perfil('transferencia_doc');
+    global $Expediente;
+
+    $idcomp = $_REQUEST["idbusqueda_componente"];
+    $idexpediente = $_REQUEST["idexpediente"];
+    if (!$Expediente) {
+        $Expediente = new Expediente($idexpediente);
+        $GLOBALS['Expediente'] = $Expediente;
+    }
 
     $reporte_inventario = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente", "nombre='reporte_expediente_grid_exp'", "", $conn);
     if ($reporte_inventario['numcampos']) {
@@ -263,8 +239,7 @@ function barra_superior_busqueda()
                 </li>
             </ul>
         </div>
-    </li>
-    <li class="divider-vertical"></li>';
+    </li>';
 
     return $html;
 }
