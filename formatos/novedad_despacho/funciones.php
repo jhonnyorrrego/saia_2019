@@ -141,33 +141,28 @@ function mostrar_novedad_despacho_anexo_soporte($idformato, $iddoc) {
             $href = '';
 
             $ruta_imagen = json_decode($anexos[$j]['ruta']);
-            
+
             if (is_object($ruta_imagen)) {
                 if ($tipo_almacenamiento->get_filesystem()->has($ruta_imagen->ruta)) {
                     $ruta64 = base64_encode($anexos[$j]["ruta"]);
-                    print_r(json_decode($anexos[$j]['ruta'],true));
-                    echo("<hr>");
-                    $ruta_abrir = UtilitiesController::getFileTemp(json_decode($anexos[$j]['ruta'],true));
-                    //$ruta_abrir = "filesystem/mostrar_binario.php?ruta=$ruta64";
-                    
-                    print_r($ruta_abrir);
-                    echo("<hr>");
-                    $href = $ruta_abrir;
+                    $ruta_abrir = "filesystem/mostrar_binario.php?ruta=$ruta64";
+
+                    $href = $ruta_db_superior . $ruta_abrir;
                 }
             }
 
             $tabla .= "<li>"
-                    . "<a onclick=\"modal_anexos(".$href.")\" style='cursor:pointer'>" . $anexos[$j]['etiqueta'] . "</a></li>";
+                    . "<a onclick=\"modal_anexos('" . $href . "')\" style='cursor:pointer'>" . $anexos[$j]['etiqueta'] . "</a></li>";
         }
         $tabla .= '<script>
                     function modal_anexos(url){
                         let options = {
-                                        url: url,
-                                        centerAlign:false,
-                                        size: "modal-lg",
-                                        title: "Anexos",
-                                        buttons: {}
-                                       };
+                            html: true,
+                            content: `<img width="100%" height="100%" src="' . $href . '">`,
+                            centerAlign:true,
+                            size: "modal-xl",
+                            buttons: {}
+                        };
                         top.topModal(options);
                     }
                    </script>';
