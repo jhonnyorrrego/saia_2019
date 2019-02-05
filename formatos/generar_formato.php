@@ -439,7 +439,18 @@ class GenerarFormato {
             $includes .= $include_formato;
             $includes .= $this->incluir_libreria("header_nuevo.php", "librerias");
             $estilo_letra_default = "<style> table{font-size: " . $formato[0]['font_size'] . ";} </style>";
-            $contenido = $includes . $estilo_letra_default . $texto . $this->incluir_libreria("footer_nuevo.php", "librerias");
+            $contenido = '<!DOCTYPE html>
+                            <html>
+                                <head>
+                                    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+                                    <meta charset="utf-8" />
+                                    <meta name="viewport"
+                                    	content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
+                                    <meta name="apple-mobile-web-app-capable" content="yes">
+                                    <meta name="apple-touch-fullscreen" content="yes">
+                                    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+                                    <meta content="" name="description" />
+                                    <meta content="" name="Cero K" /> ' .$includes . $estilo_letra_default . $texto . $this->incluir_libreria("footer_nuevo.php", "librerias");
             $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $contenido);
             if ($mostrar !== false) {
                 notificaciones("Formato mostrar Creado con exito por favor verificar la carpeta " . dirname($mostrar), "success", 2000);
