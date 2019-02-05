@@ -1,6 +1,6 @@
 $(function () {
     let baseUrl = Session.getBaseUrl();
-    let params = $('script[data-params]').data('params');
+    let params = JSON.parse($('script[data-params]').attr('data-params'));
     let loadedFiles = [];
     let myDropzone = new Dropzone("#dropzone", {
         url: `${baseUrl}app/temporal/cargar_anexos.php`,
@@ -61,7 +61,7 @@ $(function () {
     function findFileHistory(taskId) {
         $.post(`${baseUrl}app/tareas/consulta_anexos.php`, {
             key: localStorage.getItem('key'),
-            task: params.id
+            task: taskId
         }, function (response) {
             if (response.success) {
                 fillTable(response.data)

@@ -304,9 +304,11 @@ function actualizar_encabezado_pie($idformato, $tipo, $valor) {
 }
 
 function actualizar_cuerpo_formato($idformato, $tipo_retorno) {
+
     $retorno = array(
         "exito" => 0
     );
+   
     $retorno["mensaje"] = "Existe un error al actualizar el cuerpo del formato";
     if (@$_REQUEST["contenido"]) {
         $sql = "UPDATE formato set cuerpo='" . $_REQUEST["contenido"] . "' WHERE idformato=" . $idformato;
@@ -646,5 +648,24 @@ function registrar_funciones_pie_formato($idencabezado,$idformato,$id_pie_anteri
 		}
 	}
 return $ok;
+}
+
+function consultarPermisos(){
+    global $conn;
+    $nombreFormato = $_REQUEST['nombreFormato'];
+    $retorno = ["exito" => 0, "permisos" => []];
+    $consultaModulo = busca_filtro_tabla("idmodulo", "modulo", "nombre='{$nombreFormato}' and enlace='formatos/mostrar_{$nombreFormato}.php' ", "", $conn);
+    
+    if ($consultaModulo['numcampos']) {
+        $consultarPermiso = busca_filtro_tabla("perfil_idperfil", "permiso_perfil", "modulo_idmodulo={$consultaModulo[0]['idmodulo']}", "", $conn);
+        if($consultarPermiso['numcampos']){
+            for ($i=0; $i < $consultarPermiso['numcampos'] ; $i++) { 
+               $permisos[]= $consultarPermiso[$i][perfil_idperfil];
+            }
+            $retorno["permisos"] = $permisos;
+        }
+    }
+    echo json_encode($retorno);
+
 }
 ?>

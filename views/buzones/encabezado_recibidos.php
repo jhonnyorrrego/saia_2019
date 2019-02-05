@@ -9,9 +9,6 @@
         <span id="selected_rows" style="font-size:20px"></span>
     </div> 
     <div class="col-auto text-right px-0 my-auto">
-        <span class="cursor py-0 px-2" data-toggle="tooltip" data-placement="bottom" title="Reenviar Documento" id="share_document">
-            <i class="fa fa-share" style="font-size:20px"></i>
-        </span>
         <span class="cursor py-0 px-2" data-toggle="tooltip" data-placement="bottom" title="Sacar de mi Buzón" id="remove_documents">
             <i class="fa fa-sign-out" style="font-size:20px"></i>
         </span>            
