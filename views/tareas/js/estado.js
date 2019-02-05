@@ -1,6 +1,6 @@
 $(function(){
-    let baseUrl = Session.getBaseUrl();
-    let params = $('script[data-params]').data('params');    
+    var baseUrl = Session.getBaseUrl();
+    var params = JSON.parse($('script[data-params]').attr('data-params'));
 
     (function init(){
         findState(params.id);

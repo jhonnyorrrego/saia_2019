@@ -10,17 +10,16 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once($ruta_db_superior . "db.php");
+include_once $ruta_db_superior . "db.php";
 
 if (!$_SESSION["LOGIN" . LLAVE_SAIA] && isset($_REQUEST["LOGIN"]) && @$_REQUEST["conexion_remota"]) {
     logear_funcionario_webservice($_REQUEST["LOGIN"]);
 }
 
-include_once($ruta_db_superior . FORMATOS_SAIA . "librerias/funciones.php");
-include_once($ruta_db_superior . FORMATOS_SAIA . "generar_formato_buscar.php");
-include_once($ruta_db_superior . "pantallas/documento/class_documento_elastic.php");
-include_once($ruta_db_superior . "arboles/crear_arbol_ft.php");
-
+include_once $ruta_db_superior . FORMATOS_SAIA . "librerias/funciones.php";
+include_once $ruta_db_superior . FORMATOS_SAIA . "generar_formato_buscar.php";
+include_once $ruta_db_superior . "pantallas/documento/class_documento_elastic.php";
+include_once $ruta_db_superior . "arboles/crear_arbol_ft.php";
 include_once $ruta_db_superior . "pantallas/lib/librerias_notificaciones.php";
 
 if (isset($_REQUEST["archivo"]) && !empty($_REQUEST["archivo"])) {
@@ -36,9 +35,9 @@ if (isset($_REQUEST["genera"])) {
         $idformato = $_REQUEST["idformato"];
         $generar = new GenerarFormato($idformato, $accion, $archivo);
         $redireccion = $generar->ejecutar_accion();
-        
+
     } else {
-        alerta_formatos("por favor seleccione un Formato a Generar");
+        alerta("por favor seleccione un Formato a Generar");
         $redireccion = "formatolist.php";
         if ($archivo != '') {
             $redireccion = $archivo;
@@ -73,9 +72,9 @@ if (isset($_REQUEST["genera"])) {
     $exito = true;
     $cuerpo_formato = '';
     $publicar = 0;
-    
+
     $camposDescripcion = GenerarFormato::validarCampoDescripcion($idformato);
-    if($camposDescripcion['publicarFormato']==0){
+    if ($camposDescripcion['publicarFormato'] == 0) {
         $status['mensaje'] = $camposDescripcion['mensaje'];
         echo json_encode($status);
         die();
@@ -97,11 +96,11 @@ if (isset($_REQUEST["genera"])) {
             $mensajes[] = $msg;
             $cuerpo_formato = $generar->contenido_cuerpo;
             $publicar = $generar->publicar;
-            if($publicar==1){
+            if ($publicar == 1) {
                 $updatePublicar = "UPDATE formato set publicar = {$publicar} where idformato = {$idformato}";
                 phpmkr_query($updatePublicar);
             }
-           
+
         }
     }
     //$mensajes = array_unique($mensajes, SORT_STRING);
@@ -115,7 +114,8 @@ if (isset($_REQUEST["genera"])) {
     die();
 }
 
-class GenerarFormato {
+class GenerarFormato
+{
 
     private $accion;
     private $idformato;
@@ -126,7 +126,8 @@ class GenerarFormato {
     public $contenido_cuerpo;
     public $publicar;
 
-    public function __construct($idformato, $accion, $archivo = '') {
+    public function __construct($idformato, $accion, $archivo = '')
+    {
         $this->idformato = $idformato;
         $this->accion = $accion;
         $this->archivo = $archivo;
@@ -143,19 +144,21 @@ class GenerarFormato {
      * @param string $idformato :  id del formato
      * @return array
      * @author fredy.osorio <fredy.osorio@cerok.com>
-     */    
-    public static function validarCampoDescripcion($idformato){
+     */
+    public static function validarCampoDescripcion($idformato)
+    {
         $retorno = ["publicarFormato" => 1, "mensaje" => ''];
         $consultaFormato = "SELECT acciones FROM campos_formato WHERE formato_idformato = {$idformato} and (acciones like 'p' or acciones like '%,p,%' or acciones like '%,p')";
         $camposFormato = StaticSql::search($consultaFormato);
-        if(!$camposFormato){
+        if (!$camposFormato) {
             $retorno['publicarFormato'] = 0;
             $retorno['mensaje'] = 'Debe seleccionar alguno de los campos para incluirse en la descripción de los documentos';
         }
         return $retorno;
     }
 
-    public function ejecutar_accion() {
+    public function ejecutar_accion()
+    {
         // ir a la carpeta anterior
         $ruta_padre = dirname(__DIR__);
         chdir($ruta_padre);
@@ -236,7 +239,8 @@ class GenerarFormato {
      * </Clase>
      */
 
-    public function generar_tabla() {
+    public function generar_tabla()
+    {
         global $conn;
         $sql_tabla = "";
         $lcampos = array();
@@ -251,9 +255,9 @@ class GenerarFormato {
                 $this->exito = 0;
             }
             $this->mensaje = $resp["mensaje"];
-            alerta_formatos($resp["mensaje"]);
+            alerta($resp["mensaje"]);
         } else {
-            alerta_formatos("No es posible Generar la tabla para el Formato");
+            alerta("No es posible Generar la tabla para el Formato");
             return (false);
         }
     }
@@ -271,7 +275,8 @@ class GenerarFormato {
      * </Clase>
      */
 
-    private function es_indice($campo, $tabla, $indice) {
+    private function es_indice($campo, $tabla, $indice)
+    {
         global $conn;
         $indice = ejecuta_filtro_tabla("SHOW INDEX FROM " . strtolower($tabla) . " WHERE Column_name LIKE '" . $campo . "'", $conn);
         if (!$indice["numcampos"]) {
@@ -293,51 +298,39 @@ class GenerarFormato {
      * </Clase>
      */
 
-    private function maximo_valor($valor, $maximo) {
+    private function maximo_valor($valor, $maximo)
+    {
         if ($valor > $maximo || $valor == "NULL")
             return ($maximo);
         else
             return ($valor);
     }
 
-    /*
-     * <Clase>
-     * <Nombre>crear_formato_mostrar</Nombre>
-     * <Parametros>$idformato:id del formato</Parametros>
-     * <Responsabilidades>Se encarga de crear el archivo con el mostrar del formato correspondiente basandose en la configuraciones realizadas<Responsabilidades>
-     * <Notas></Notas>
-     * <Excepciones></Excepciones>
-     * <Salida></Salida>
-     * <Pre-condiciones><Pre-condiciones>
-     * <Post-condiciones><Post-condiciones>
-     * </Clase>
-     */
-
-    public function crear_formato_mostrar() {
+    public function crear_formato_mostrar()
+    {
         global $conn;
+
         $include_formato = '';
         $texto = '';
         $formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $this->idformato, "", $conn);
         if ($formato["numcampos"]) {
+            $contenido_detalles = '';
+
             if (strpos($formato[0]["banderas"], "acordeon") !== false) {
-                $texto .= '<frameset cols="410,*" >';
-                $texto .= '<frame name="arbol_formato" id="arbol_formato" src="../../' . FORMATOS_SAIA . 'librerias/formato_detalles.php?idformato=' . $this->idformato . '&iddoc=<?php echo($_REQUEST[' . "'" . "iddoc" . "'" . ']); ? >" marginwidth="0" marginheight="0" scrolling="no" >';
+                $contenido_detalles .= '<frameset cols="410,*" >';
+                $contenido_detalles .= '<frame name="arbol_formato" id="arbol_formato" src="../../' . FORMATOS_SAIA . 'librerias/formato_detalles.php?idformato=' . $this->idformato . '&iddoc=<?php echo($_REQUEST[' . "'" . "iddoc" . "'" . ']); ? >" marginwidth="0" marginheight="0" scrolling="no" >';
             } else {
-                $texto .= '<frameset cols="250,*" >';
-                $texto .= '<frame name="arbol_formato" id="arbol_formato" src="../../' . FORMATOS_SAIA . 'arboles/arbolformato_documento.php?idformato=' . $this->idformato . '&iddoc=<?php echo($_REQUEST[' . "'" . "iddoc" . "'" . ']); ? >" marginwidth="0" marginheight="0" scrolling="auto" >';
+                $contenido_detalles .= '<frameset cols="250,*" >';
+                $contenido_detalles .= '<frame name="arbol_formato" id="arbol_formato" src="../../' . FORMATOS_SAIA . 'arboles/arbolformato_documento.php?idformato=' . $this->idformato . '&iddoc=<?php echo($_REQUEST[' . "'" . "iddoc" . "'" . ']); ? >" marginwidth="0" marginheight="0" scrolling="auto" >';
             }
-            $texto .= '<frame name="detalles" src="" border="0" marginwidth="20px" marginheight="10" scrolling="auto"></frameset>';
-            $contenido_detalles = $texto;
+            $contenido_detalles .= '<frame name="detalles" src="" border="0" marginwidth="20px" marginheight="10" scrolling="auto"></frameset>';
 
             if (!crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/detalles_" . $formato[0]["ruta_mostrar"], $contenido_detalles)) {
-                alerta_formatos("No es posible crear el Archivo de detalles");
+                alerta("No es posible crear el Archivo de detalles");
             }
-            $texto = '';
 
-            $texto .= '<tr><td>';
             $archivos = 0;
             $texto .= htmlspecialchars_decode($formato[0]["cuerpo"]);
-            $texto .= '</td></tr>';
             $librerias = array();
             $campos = busca_filtro_tabla("*", "campos_formato A", "A.formato_idformato=" . $this->idformato, "", $conn);
             $lcampos = extrae_campo($campos, "nombre", "U");
@@ -395,11 +388,11 @@ class GenerarFormato {
                                     $include_formato .= $this->incluir("'../" . $funciones[$i]["ruta"] . "'", "librerias");
                                 } else { // si no existe en ninguna de las dos
                                     // trato de crearlo dentro de la carpeta del formato actual
-                                    alerta_formatos("Las funciones del Formato " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"] . " son requeridas  no se han encontrado");
+                                    alerta("Las funciones del Formato " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"] . " son requeridas  no se han encontrado");
                                     if (crear_archivo(FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
                                         $include_formato .= $this->incluir("'" . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"] . "'", "librerias");
                                     } else {
-                                        alerta_formatos("No es posible generar el archivo " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+                                        alerta("No es posible generar el archivo " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
                                     }
                                 }
                             }
@@ -418,7 +411,7 @@ class GenerarFormato {
                         if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
                             $include_formato .= $this->incluir("'" . $funciones[$i]["ruta"] . "'", "librerias");
                         } else {
-                            alerta_formatos("907 No es posible generar el archivo " . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+                            alerta("907 No es posible generar el archivo " . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
                         }
                     }
                 }
@@ -438,8 +431,10 @@ class GenerarFormato {
             }
             $includes .= $include_formato;
             $includes .= $this->incluir_libreria("header_nuevo.php", "librerias");
-            $estilo_letra_default = "<style> table{font-size: " . $formato[0]['font_size'] . ";} </style>";
-            $contenido = '<!DOCTYPE html>
+            
+            if(!$formato[0]['mostrar_pdf']){
+                $validacion_tipo = '<?php if(!$_REQUEST["tipo"] || $_REQUEST["tipo"] != 5): ?>';
+                $validacion_tipo.= '<!DOCTYPE html>
                             <html>
                                 <head>
                                     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
@@ -450,8 +445,15 @@ class GenerarFormato {
                                     <meta name="apple-touch-fullscreen" content="yes">
                                     <meta name="apple-mobile-web-app-status-bar-style" content="default">
                                     <meta content="" name="description" />
-                                    <meta content="" name="Cero K" /> ' .$includes . $estilo_letra_default . $texto . $this->incluir_libreria("footer_nuevo.php", "librerias");
-            $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $contenido);
+                                    <meta content="" name="Cero K" />'.$includes . $texto . $this->incluir_libreria("footer_nuevo.php", "librerias");
+                $validacion_tipo.= '<?php else: ?>';
+                $validacion_tipo.= $this->generar_mostrar_pdf();
+                $validacion_tipo.= '<?php endif; ?>';
+            }else{
+                $validacion_tipo = $this->generar_mostrar_pdf();
+            }
+
+            $mostrar = crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $formato[0]["ruta_mostrar"], $validacion_tipo);
             if ($mostrar !== false) {
                 notificaciones("Formato mostrar Creado con exito por favor verificar la carpeta " . dirname($mostrar), "success", 2000);
                 $this->exito = 1;
@@ -467,7 +469,41 @@ class GenerarFormato {
             $this->exito = 0;
             $this->mensaje = "Formato no encontrado";
         }
-        return (false);
+        return false;
+    }
+
+    public function generar_mostrar_pdf(){
+        $string = '<?php
+        include_once "../../controllers/autoload.php";
+        include_once "../../pantallas/lib/librerias_cripto.php";
+        
+        global $conn;
+        $iddocumento = $_REQUEST["iddoc"];
+        $formato = busca_filtro_tabla("", "formato a,documento b", "lower(b.plantilla)= lower(a.nombre) and b.iddocumento=".$iddocumento, "", $conn);
+        if ($formato[0]["pdf"] && $formato[0]["mostrar_pdf"] == 1) {
+            $ruta = "/pantallas/documento/visor_documento.php?iddoc={$iddocumento}&rnd=" . rand(0, 100);
+        } else {
+            if ($formato[0]["mostrar_pdf"] == 1) {
+                $ruta = "/pantallas/documento/visor_documento.php?iddoc={$iddocumento}&actualizar_pdf=1&rnd=" . rand(0, 100);
+            } else if ($formato[0]["mostrar_pdf"] == 2) {
+                $ruta = "/pantallas/documento/visor_documento.php?pdf_word=1&iddoc={$iddocumento}&rnd=" . rand(0, 100);
+            }
+        }
+        
+        $idfuncionario = encrypt_blowfish($_SESSION["idfuncionario"], LLAVE_SAIA_CRYPTO);
+        $url = PROTOCOLO_CONEXION . RUTA_PDF . $ruta . "&idfunc=" . $idfuncionario;
+        $ch = curl_init();
+        if (strpos(PROTOCOLO_CONEXION, "https") !== false) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        }
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        echo curl_exec($ch);
+        curl_close($ch);
+        ?>';
+
+        return $string;
     }
 
     /*
@@ -483,7 +519,8 @@ class GenerarFormato {
      * </Clase>
      */
 
-    public function crear_cuerpo_formato() {
+    public function crear_cuerpo_formato()
+    {
         global $conn, $ruta_db_superior;
 
         $formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $this->idformato, "", $conn);
@@ -540,7 +577,7 @@ class GenerarFormato {
                 }
             }
         }
-        if($formato[0]['publicar']==0){
+        if ($formato[0]['publicar'] == 0) {
             $this->publicar = 1;
         }
         $this->exito = 1;
@@ -560,7 +597,8 @@ class GenerarFormato {
      * </Clase>
      */
 
-    private function generar_vista() {
+    private function generar_vista()
+    {
         global $conn;
         $vista = busca_filtro_tabla("*", "vista_formato A", "A.idvista_formato=" . $this->idformato, "", $conn);
         if ($vista["numcampos"]) {
@@ -601,9 +639,9 @@ class GenerarFormato {
                     }
                 }
             } else
-                alerta_formatos("La Vista del formato no posee Parametros si esta seguro continue con el Proceso de lo contrario haga Click en Listar Vistas Formato y Luego Editela");
+                alerta("La Vista del formato no posee Parametros si esta seguro continue con el Proceso de lo contrario haga Click en Listar Vistas Formato y Luego Editela");
         } else
-            alerta_formatos('No existen la vista seleccionada');
+            alerta('No existen la vista seleccionada');
 
         $this->crear_vista_formato($l1tablas);
     }
@@ -621,7 +659,8 @@ class GenerarFormato {
      * </Clase>
      */
 
-    private function crear_vista_formato($arreglo) {
+    private function crear_vista_formato($arreglo)
+    {
         global $conn;
         $vista = busca_filtro_tabla("*", "vista_formato A", "A.idvista_formato=" . $this->idformato, "", $conn);
         $includes = '';
@@ -679,11 +718,11 @@ class GenerarFormato {
                             $includes .= $this->incluir("../" . $funciones[$i]["ruta"], "librerias");
                         } else if ($eslibreria === false) { // si no existe en ninguna de las dos
                             // trato de crearlo dentro de la carpeta del formato actual
-                            alerta_formatos("Las funciones del Formato " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"] . " son requeridas  no se han encontrado");
+                            alerta("Las funciones del Formato " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"] . " son requeridas  no se han encontrado");
                             if (crear_archivo(FORMATOS_CLIENTE . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
                                 $includes .= $this->incluir($dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"], "librerias");
                             } else
-                                alerta_formatos("1073 No es posible generar el archivo " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+                                alerta("1073 No es posible generar el archivo " . $dato_formato_orig[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
                         }
                     }
                 } else {
@@ -696,7 +735,7 @@ class GenerarFormato {
                         if (crear_archivo(FORMATOS_CLIENTE . $fpadre[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
                             $includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
                         } else
-                            alerta_formatos("1087 No es posible generar el archivo " . $fpadre[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+                            alerta("1087 No es posible generar el archivo " . $fpadre[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
                     }
                 }
                 if ($funciones[$i]["parametros"] != "") {
@@ -727,14 +766,14 @@ class GenerarFormato {
                         phpmkr_query($sql, $conn);
                     }
                 } else
-                    alerta_formatos("El modulo Formatos No existe por favor insertarlo a la tabla modulos");
-                alerta_formatos("Vista Creada con exito por favor verificar la carpeta " . dirname($mostrar));
+                    alerta("El modulo Formatos No existe por favor insertarlo a la tabla modulos");
+                alerta("Vista Creada con exito por favor verificar la carpeta " . dirname($mostrar));
                 $this->exito = 1;
                 $this->mensaje = "Vista Creada con exito por favor verificar la carpeta " . dirname($mostrar);
                 return (true);
             }
         } else {
-            alerta_formatos("No es posible generar el Formato");
+            alerta("No es posible generar el Formato");
             $this->exito = 0;
             $this->mensaje = "No es posible generar la Vista del formato";
         }
@@ -753,9 +792,10 @@ class GenerarFormato {
      * </Clase>
      */
 
-    private function codifica($texto) {
+    private function codifica($texto)
+    {
         $texto = strtoupper($texto);
-        $texto = str_replace(["ACUTE;","NTILDE;","IQUEST;"], ["acute;","Ntilde;","iquest;"], $texto);
+        $texto = str_replace(["ACUTE;", "NTILDE;", "IQUEST;"], ["acute;", "Ntilde;", "iquest;"], $texto);
         return $texto;
     }
 
@@ -772,7 +812,8 @@ class GenerarFormato {
      * </Clase>
      */
 
-    public function crear_formato_ae($accion) {
+    public function crear_formato_ae($accion)
+    {
         global $conn;
         $datos_detalles["numcampos"] = 0;
         $texto = '';
@@ -1084,7 +1125,7 @@ class GenerarFormato {
                               (ej: departamento;select iddepartamento as id,nombre from departamento order by nombre| municipio; select idmunicipio as id,nombre from municipio where departamento_iddepartamento=) */
                             $parametros = explode("|", $campos[$h]["valor"]);
                             if (count($parametros) < 2)
-                                alerta_formatos("Por favor verifique los parametros de configuracion de su select dependiente " . $campos[$h]["etiqueta"]);
+                                alerta("Por favor verifique los parametros de configuracion de su select dependiente " . $campos[$h]["etiqueta"]);
                             else {
                                 $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
                                           <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>';
@@ -1473,14 +1514,14 @@ class GenerarFormato {
             // ******************************************************************************************
             if ($formato[0]["item"] && $accion == "adicionar") {
                 $texto .= '<div "form-group">'
-                        . '<label>ACCION A SEGUIR LUEGO DE GUARDAR</label>'
-                        . '<div class="radio radio-success">'
-                        . '<input type="radio" name="opcion_item" id="opcion_item1" value="adicionar">'
-                        . '<label for="opcion_item1">Adicionar otro</label>'
-                        . '<input type="radio" name="opcion_item" id="opcion_item" value="terminar" checked>'
-                        . '<label for="opcion_item">Terminar</label>'
-                        . '</div>'
-                        . '</div>';
+                    . '<label>ACCION A SEGUIR LUEGO DE GUARDAR</label>'
+                    . '<div class="radio radio-success">'
+                    . '<input type="radio" name="opcion_item" id="opcion_item1" value="adicionar">'
+                    . '<label for="opcion_item1">Adicionar otro</label>'
+                    . '<input type="radio" name="opcion_item" id="opcion_item" value="terminar" checked>'
+                    . '<label for="opcion_item">Terminar</label>'
+                    . '</div>'
+                    . '</div>';
             }
             $wheref = "A.idfunciones_formato=B.funciones_formato_fk AND B.formato_idformato=" . $this->idformato . " AND A.acciones LIKE '%" . strtolower($accion[0]) . "%' ";
             if (count($listado_campos)) {
@@ -1508,7 +1549,7 @@ class GenerarFormato {
                             if (crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"])) {
                                 $includes .= $this->incluir("'" . $funciones[$i]["ruta"] . "'", "librerias");
                             } else {
-                                alerta_formatos("No es posible generar el archivo " . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+                                alerta("No es posible generar el archivo " . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
                             }
                         }
                     }
@@ -1528,7 +1569,7 @@ class GenerarFormato {
                         if (crear_archivo($ruta_real)) {
                             $includes .= $this->incluir("'" . $funciones[$i]["ruta"] . "'", "librerias");
                         } else {
-                            alerta_formatos("1863 No es posible generar el archivo " . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
+                            alerta("1863 No es posible generar el archivo " . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/" . $funciones[$i]["ruta"]);
                         }
                     }
                 }
@@ -1551,7 +1592,7 @@ class GenerarFormato {
                 }
                 $texto .= '<input type="hidden" name="campo_descripcion" value="' . $valor . '">';
             } else {
-                alerta_formatos("Recuerde asignar el campo que sera almacenado como descripcion del documento");
+                alerta("Recuerde asignar el campo que sera almacenado como descripcion del documento");
             }
             if ($accion == "editar") {
                 $texto .= '<input type="hidden" name="formato" value="' . $this->idformato . '">';
@@ -1862,7 +1903,8 @@ span.fancytree-expander {
      * </Clase>
      */
 
-    public function generar_comparacion($tipo, $nombre) {
+    public function generar_comparacion($tipo, $nombre)
+    {
         $listado_like = array(
             "Similar" => "LIKE|%|%",
             "Inicia Con" => "LIKE|%|@",
@@ -1919,7 +1961,8 @@ span.fancytree-expander {
      * </Clase>
      */
 
-    private function incluir($cad, $tipo, $eval = 0) {
+    private function incluir($cad, $tipo, $eval = 0)
+    {
         $includes = "";
         $lib = explode(",", $cad);
         switch ($tipo) {
@@ -1947,7 +1990,7 @@ span.fancytree-expander {
                     if (crear_archivo($lib[$j])) {
                         $includes .= $texto1 . $lib[$j] . $texto2;
                     } else {
-                        alerta_formatos("Problemas al generar el Formato en " . $lib[$j]);
+                        alerta("Problemas al generar el Formato en " . $lib[$j]);
                         return ("");
                     }
                 } else {
@@ -1972,11 +2015,12 @@ span.fancytree-expander {
      * </Clase>
      */
 
-    private function incluir_libreria($nombre, $tipo) {
+    private function incluir_libreria($nombre, $tipo)
+    {
         $includes = "";
         if (!is_file(FORMATOS_SAIA . "librerias/" . $nombre)) {
             if (!crear_archivo(FORMATOS_SAIA . "librerias/" . $nombre)) {
-                alerta_formatos("No es posible generar el archivo " . $nombre);
+                alerta("No es posible generar el archivo " . $nombre);
             }
         }
         if ($tipo == 'librerias') {
@@ -2001,7 +2045,8 @@ span.fancytree-expander {
      * </Clase>
      */
 
-    private function arma_funcion($nombre, $parametros, $accion) {
+    private function arma_funcion($nombre, $parametros, $accion)
+    {
         if ($parametros != "" && $accion != "adicionar" && $accion != 'buscar')
             $parametros .= ",";
         if ($accion == "mostrar") {
@@ -2031,7 +2076,8 @@ span.fancytree-expander {
      * </Clase>
      */
 
-    private function generar_formato() {
+    private function generar_formato()
+    {
         global $conn, $ruta_db_superior;
         $formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $this->idformato, "", $conn);
         $encabezado = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["encabezado"] . "'", "", $conn);
@@ -2122,7 +2168,8 @@ span.fancytree-expander {
         return $redireccion;
     }
 
-    private function busca_funcion_test($nombre_test, $ruta) {
+    private function busca_funcion_test($nombre_test, $ruta)
+    {
         global $ruta_db_superior;
         $url = explode(".php?", $ruta);
 
@@ -2164,7 +2211,8 @@ span.fancytree-expander {
         }
     }
 
-    private function crea_campo_autocompletar($nombre, $parametros) {
+    private function crea_campo_autocompletar($nombre, $parametros)
+    {
 
         /* {"tipo":"multiple","url":"../../autocompletar.php","campoid":"funcionario_codigo","campotexto":["nombres","apellidos"],"tablas":["funcionario"],"condicion":"estado=1","orden":""} */
         if ($parametros->tipo == "simple") {
@@ -2221,7 +2269,8 @@ span.fancytree-expander {
         return ($campo);
     }
 
-    private function crear_campo_dropzone($nombre, $parametros) {
+    private function crear_campo_dropzone($nombre, $parametros)
+    {
         $upload_max_size = ini_get('upload_max_filesize');
         $maximo = return_megabytes($upload_max_size);
         $js_archivos = "<script type='text/javascript'>
@@ -2310,7 +2359,8 @@ span.fancytree-expander {
         return $js_archivos;
     }
 
-    private function procesar_componente_numero($campo, $indice_tabindex, $moneda = false) {
+    private function procesar_componente_numero($campo, $indice_tabindex, $moneda = false)
+    {
         $valor = $campo["valor"];
 
         $obligatorio = "";
@@ -2412,7 +2462,8 @@ span.fancytree-expander {
         return implode("\n", $texto);
     }
 
-    private function procesar_componente_fecha($campo, $indice_tabindex, $accion) {
+    private function procesar_componente_fecha($campo, $indice_tabindex, $accion)
+    {
         $tabindex = ' tabindex="' . $indice_tabindex . ' "';
         if ($campo["obligatoriedad"]) {
             $obliga = "*";
