@@ -124,6 +124,8 @@ function reporte_entradas2($idformato, $iddoc) {
 	$logo = busca_filtro_tabla("valor", "configuracion", "nombre='logo'", "", $conn);
 
 	$texto .= '<br />';
+        $texto .= '<label><b>Mensajero: '.$funcionario[0]['nombres'].' '.$funcionario[0]['apellidos'].'</b></label>';
+        $texto .= '<br /><br />';
 	$texto .= '<table style="border-collapse:collapse;width:100%" border="1">';
 	$texto .= '<thead><tr>';
 	$texto .= '<td style="text-align:center;"><b>TRAMITE</b></td>';
