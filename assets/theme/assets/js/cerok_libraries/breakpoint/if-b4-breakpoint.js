@@ -1,7 +1,6 @@
-function checkSize (){
+function checkSize (){ 
     var envs = {xs:"d-none", sm:"d-sm-none", md:"d-md-none", lg:"d-lg-none", xl:"d-xl-none"};
     var env = "";
-
     var $el = $("<div>");
     $el.appendTo($("body"));
 
@@ -15,6 +14,7 @@ function checkSize (){
     $el.remove();
     
     localStorage.setItem('breakpoint', env);
+    console.log(localStorage,env)
     return env; 
 } 
 
@@ -22,6 +22,8 @@ $(document).ready(function(){
 	checkSize();
     
     window.addEventListener("orientationchange", function () {
-        checkSize();
+        setTimeout(() => {
+            checkSize();
+        }, 500);
     }, false);
 });
