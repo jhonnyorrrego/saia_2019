@@ -547,7 +547,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
 
     </style>
         <div class="row px-2">
-            <div class="table-responsive">
+            <div class="col-md-12">
                 <table class="table table-condensed" style="width: 100%; text-align:left;" border="0" cellspacing="0">
                     <thead>
                         <tr>
@@ -559,7 +559,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
             </div>
         </div>
         <div class="row px-2">
-            <div class="table-responsive">
+            <div class="col-md-12">
                 <table class="table table-condensed" style="width: 100%;margin-top: 2%;margin-bottom: 2%;" border="0" cellspacing="0">
                 <thead>';
                     if ($datos[0]['tipo_origen'] == 1) {
@@ -567,7 +567,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
                         $tabla .= "<tr>
                         <td style='border:none;width: 19%;' class=''><strong>TIPO DE ORIGEN:</strong></td>
                         <td style='border:none;width: 23%;'>" . mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1) . "</td>
-                        <td style='border:none;'><strong>N&Uacute;MERO DE GU&Iacute;A:</strong></td>
+                        <td style='border:none;width: 23%;'><strong>N&Uacute;MERO DE GU&Iacute;A:</strong></td>
                         <td style='border:none;'>" . $datos[0]['numero_guia'] . "</td>
                 </tr>
                     <tr>
@@ -609,7 +609,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
                         <td style="border:none;" colspan="2">' . $nombre_anexos . '</td>
                     
                     </tr>';
-    $tabla .= '</div>';
+    $tabla .= '</div></div></thead></table>';
     echo $tabla;
 }
 

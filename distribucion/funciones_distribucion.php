@@ -237,7 +237,7 @@ function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0
     if ($distribuciones['numcampos']) {
         $tabla = '
             <div class="row">
-            <div class="table-responsive">
+            <div class="col-md-12">
             <table class="table  table-condensed" style="width: 100%; text-align:left;margin-bottom:5%;" border="0">
             <thead>
             <tr>
