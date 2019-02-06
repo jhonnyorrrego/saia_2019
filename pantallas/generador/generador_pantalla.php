@@ -783,10 +783,11 @@ $(document).ready(function() {
     });
     $(document).on("click", "#actualizar_cuerpo_formato", function() {
         var contenido_editor = CKEDITOR.instances['editor_mostrar'].getData();
+        
         $.ajax({
             type: 'POST',
             url: "<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias_formato.php",
-            dataa: {
+            data: {
                 ejecutar_libreria_formato: 'actualizar_cuerpo_formato',
                 contenido: contenido_editor,
                 idformato: $("#idformato").val(),

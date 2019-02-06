@@ -11,7 +11,6 @@ while ($max_salida > 0) {
 }
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
-include_once $ruta_db_superior . 'assets/librerias.php';
 
 $iddoc = $_REQUEST["iddoc"];
 $datos = busca_filtro_tabla("A.pdf,A.plantilla,B.mostrar_pdf,A.numero,B.idformato", "documento A,formato B", "lower(A.plantilla)=B.nombre AND A.iddocumento=" . $iddoc, "", $conn);
@@ -45,8 +44,6 @@ if (isset($_REQUEST['pdf_word'])) {
 	}
 }
 $pdf = $ruta_db_superior . $export;
-if (@$_REQUEST["vista"]) {
-	$pdf .= "&vista=" . $_REQUEST["vista"];
-}
+
 ?>
-<iframe id="detalles" width="100%" onload="this.height = window.innerHeight - 20" frameborder="0" name="detalles" src="<?php echo($pdf); ?>"></iframe>
+<iframe width="100%" frameborder="0" onload="this.height = window.innerHeight - 20" src="<?= $pdf ?>"></iframe>

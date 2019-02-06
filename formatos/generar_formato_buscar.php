@@ -152,7 +152,7 @@ class GenerarBuscar
                             $texto .= '"><?php selector_fecha("' . $campos[$h]["nombre"] . '_2","formulario_formatos","Y-m-d H:i",date("m"),date("Y"),"default.css","../../","AD:VALOR"); ?' . '>';
                             $fecha++;
                         } else
-                            alerta_formatos("No esta definido su formato de Fecha");
+                            alerta("No esta definido su formato de Fecha");
                         $texto .= '</td></tr>';
                         break;
                     case "radio":
@@ -179,7 +179,7 @@ class GenerarBuscar
                                          (ej: departamento;select iddepartamento as id,nombre from departamento order by nombre| municipio; select idmunicipio as id,nombre from municipio where departamento_iddepartamento=)*/
                         $parametros = explode("|", $campos[$h]["valor"]);
                         if (count($parametros) < 2)
-                            alerta_formatos("Por favor verifique los parametros de configuracion de su select dependiente " . $campos[$h]["etiqueta"]);
+                            alerta("Por favor verifique los parametros de configuracion de su select dependiente " . $campos[$h]["etiqueta"]);
                         else {
                             $texto .= '<tr>' . $this->generar_condicion($campos[$h]["nombre"]) . '
                      <td class="encabezado" width="20%" title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</td>' . $this->generar_comparacion($campos[$h]["tipo_dato"], $campos[$h]["nombre"]);
@@ -405,7 +405,7 @@ class GenerarBuscar
                             if (crear_archivo($ruta_real)) {
                                 $includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
                             } else {
-                                alerta_formatos("FB 464 No es posible generar el archivo " . $ruta_real);
+                                alerta("FB 464 No es posible generar el archivo " . $ruta_real);
                             }
                         }
                     }
@@ -425,7 +425,7 @@ class GenerarBuscar
                         if (crear_archivo($ruta_real)) {
                             $includes .= $this->incluir($funciones[$i]["ruta"], "librerias");
                         } else {
-                            alerta_formatos("FB 486 No es posible generar el archivo " . $ruta_real);
+                            alerta("FB 486 No es posible generar el archivo " . $ruta_real);
                         }
                     }
                 }
@@ -448,7 +448,7 @@ class GenerarBuscar
                 }
                 $texto .= '<input type="hidden" name="campo_descripcion" value="' . $valor . '">';
             } else {
-                alerta_formatos("Recuerde asignar el campo que sera almacenado como descripcion del documento");
+                alerta("Recuerde asignar el campo que sera almacenado como descripcion del documento");
             }
             if ($accion == "editar") {
                 $texto .= '<input type="hidden" name="formato" value="' . $idformato . '">';
@@ -528,12 +528,12 @@ class GenerarBuscar
             if ($mostrar != "") {
                 $this->exito = 1;
                 $this->mensaje = "Formato buscar Creado con exito por favor verificar la carpeta " . dirname($mostrar);
-                alerta_formatos("Formato Buscar  Creado con exito por favor verificar la carpeta " . dirname($mostrar));
+                alerta("Formato Buscar  Creado con exito por favor verificar la carpeta " . dirname($mostrar));
             }
         } else {
             $this->exito = 0;
             $this->mensaje = "No es posible generar el Formato";
-            alerta_formatos("No es posible generar el Formato");
+            alerta("No es posible generar el Formato");
         }
     }
 
@@ -658,7 +658,7 @@ class GenerarBuscar
         $includes = "";
         if (!is_file(FORMATOS_SAIA . "librerias/" . $nombre)) {
             if (!crear_archivo(FORMATOS_SAIA . "librerias/" . $nombre)) {
-                alerta_formatos("No es posible generar el archivo " . $nombre);
+                alerta("No es posible generar el archivo " . $nombre);
             }
         }
         $includes .= $this->incluir("../../" . FORMATOS_SAIA . "librerias/" . $nombre, $tipo);

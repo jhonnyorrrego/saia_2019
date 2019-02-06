@@ -17,28 +17,29 @@ include_once $ruta_db_superior . "pantallas/lib/librerias_fechas.php";
 include_once $ruta_db_superior . "workflow/libreria_paso.php";
 include_once $ruta_db_superior . "formatos/librerias/funciones_generales.php";
 
-function barra_inferior_documento($iddoc, $numero) {
+function barra_inferior_documento($iddoc, $numero)
+{
     $dato_prioridad = busca_filtro_tabla("", "prioridad_documento", "documento_iddocumento=" . $iddoc . " AND funcionario_idfuncionario=" . usuario_actual("idfuncionario"), "fecha_asignacion DESC", $conn);
 
     $prioridad = "icon-flag";
     if ($dato_prioridad["numcampos"]) {
         switch ($dato_prioridad[0]["prioridad"]) {
-            case 1 :
+            case 1:
                 $prioridad = 'icon-flag-rojo';
                 break;
-            case 2 :
+            case 2:
                 $prioridad = 'icon-flag-morado';
                 break;
-            case 3 :
+            case 3:
                 $prioridad = 'icon-flag-naranja';
                 break;
-            case 4 :
+            case 4:
                 $prioridad = 'icon-flag-amarillo';
                 break;
-            case 5 :
+            case 5:
                 $prioridad = 'icon-flag-verde';
                 break;
-            default :
+            default:
                 $prioridad = 'icon-flag';
                 break;
         }
@@ -73,7 +74,8 @@ function barra_inferior_documento($iddoc, $numero) {
     return ($texto);
 }
 
-function fecha_barra_documento($iddoc) {
+function fecha_barra_documento($iddoc)
+{
     $fecha_vencimiento = fecha_documento($iddoc);
     $texto .= '<div class="btn-group fecha_barra_documento pull-right">';
     $texto .= '<button type="button" class="btn btn-mini tooltip_saia ' . $fecha_vencimiento[0] . '" title="Vence" idregistro="' . $iddoc . '"><i class="icon-time icon-white"></i> ' . mostrar_fecha_saia($fecha_vencimiento[1]) . '</button>';
@@ -81,7 +83,8 @@ function fecha_barra_documento($iddoc) {
     return ($texto);
 }
 
-function barra_estandar_documento($iddoc, $funcionario) {
+function barra_estandar_documento($iddoc, $funcionario)
+{
     $cant_anexos = 0;
     $cant_notas = 0;
     $cant_paginas = 0;
@@ -93,7 +96,8 @@ function barra_estandar_documento($iddoc, $funcionario) {
     return ($texto);
 }
 
-function barra_adicional_documento($iddoc) {
+function barra_adicional_documento($iddoc)
+{
     $texto = '';
     $cant_actividades = contar_tareas_flujo($iddoc);
     $cant_tareas = contar_tareas($iddoc);
@@ -139,7 +143,8 @@ function barra_adicional_documento($iddoc) {
     return ($texto);
 }
 
-function contar_tareas($iddoc) {
+function contar_tareas($iddoc)
+{
     global $conn;
     $tareas = busca_filtro_tabla("A.*," . resta_fechas("A.fecha_vencimiento", "'" . date("Y-m-d") . "'") . " AS dias", "tareas A", "documento_iddocumento=" . $iddoc, "", $conn);
     $fin = $tareas["numcampos"];
@@ -167,11 +172,12 @@ function contar_tareas($iddoc) {
     return array($clase, $realizados, $fin);
 }
 
-function origen_documento($doc, $numero, $origen = "", $tipo_radicado = "", $estado = "", $serie = "", $tipo_ejecutor = "") {
+function origen_documento($doc, $numero, $origen = "", $tipo_radicado = "", $estado = "", $serie = "", $tipo_ejecutor = "")
+{
     $ruta = "";
     $numero = intval($numero);
     $pre_texto = '';
-    if (in_array($estado, array("APROBADO", "GESTION", "CENTRAL", "HISTORICO", "ACTIVO")) !== FALSE) {
+    if (in_array($estado, array("APROBADO", "GESTION", "CENTRAL", "HISTORICO", "ACTIVO")) !== false) {
         $docu = busca_filtro_tabla("lower(plantilla) as plantilla, nombre_tabla,cod_padre,idformato", "documento A, formato B", "A.iddocumento=" . $doc . " AND lower(plantilla)=lower(B.nombre)", "", $conn);
         if ($docu[0]["plantilla"] == 'radicacion_entrada' || $docu[0]["plantilla"] == 'radicacion_salida') {
             $remitente = busca_filtro_tabla("", $docu[0]["nombre_tabla"] . " A, datos_ejecutor B, ejecutor C", "persona_natural=B.iddatos_ejecutor AND ejecutor_idejecutor=idejecutor AND A.documento_iddocumento=" . $doc, "", $conn);
@@ -216,11 +222,12 @@ function origen_documento($doc, $numero, $origen = "", $tipo_radicado = "", $est
     return ($pre_texto);
 }
 
-function origen_documento_excel($doc, $numero, $origen = "", $tipo_radicado = "", $estado = "", $serie = "", $tipo_ejecutor = "") {
+function origen_documento_excel($doc, $numero, $origen = "", $tipo_radicado = "", $estado = "", $serie = "", $tipo_ejecutor = "")
+{
     $ruta = "";
     $numero = intval($numero);
     $pre_texto = '';
-    if (in_array($estado, array("APROBADO", "GESTION", "CENTRAL", "HISTORICO", "ACTIVO")) !== FALSE) {
+    if (in_array($estado, array("APROBADO", "GESTION", "CENTRAL", "HISTORICO", "ACTIVO")) !== false) {
         $docu = busca_filtro_tabla("lower(plantilla) as plantilla, nombre_tabla,cod_padre,idformato", "documento A, formato B", "A.iddocumento=" . $doc . " AND lower(plantilla)=lower(B.nombre)", "", $conn);
         if ($docu[0]["cod_padre"]) {
             $papa = buscar_papa_primero($doc);
@@ -268,13 +275,14 @@ function origen_documento_excel($doc, $numero, $origen = "", $tipo_radicado = ""
     return ($pre_texto);
 }
 
-function contar_tareas_flujo($iddoc) {
+function contar_tareas_flujo($iddoc)
+{
     global $conn;
     $idpaso_documento = busca_filtro_tabla("", "paso_documento", "documento_iddocumento=" . $iddoc, "idpaso_documento desc", $conn);
     if ($idpaso_documento["numcampos"] == 0) {
         return 0;
     }
-    include_once ($ruta_db_superior . "workflow/libreria_paso.php");
+    include_once($ruta_db_superior . "workflow/libreria_paso.php");
     $flujo = estado_flujo_instancia($idpaso_documento[0]["idpaso_documento"]);
     $pasoo = busca_filtro_tabla("", "paso_documento", "diagram_iddiagram_instance=" . $flujo[0]["iddiagram_instance"] . " and paso_idpaso=" . $flujo[0]["paso_idpaso"], "idpaso_documento desc", $conn);
 
@@ -296,10 +304,11 @@ function contar_tareas_flujo($iddoc) {
         $color = 'btn-warning'; //amarillo
     }
 
-    return ( array($color, $terminados, $actividades["numcampos"]));
+    return (array($color, $terminados, $actividades["numcampos"]));
 }
 
-function documento_leido($iddoc) {
+function documento_leido($iddoc)
+{
     $pendiente = busca_filtro_tabla(fecha_db_obtener("fecha_inicial", "Y-m-d H:i:s") . " as fecha_inicial", "asignacion", "documento_iddocumento=" . $iddoc . " and llave_entidad=" . $_SESSION["usuario_actual"], "fecha_inicial DESC", $conn);
     $leido["numcampos"] = 0;
     $dato_leido[1] = "icon-no_leido";
@@ -316,7 +325,8 @@ function documento_leido($iddoc) {
     return ($dato_leido);
 }
 
-function contar_cantidad($doc, $funcionario, $tipo) {
+function contar_cantidad($doc, $funcionario, $tipo)
+{
     global $conn;
     $cantidades = array();
     if ($tipo == 'adjuntos_documento' || $tipo == 'todos') {
@@ -359,7 +369,8 @@ function contar_cantidad($doc, $funcionario, $tipo) {
     return ($cantidades);
 }
 
-function serie_documento($idserie) {
+function serie_documento($idserie)
+{
     if ($idserie == 'serie') {
         return ("Sin Serie Asignada");
     }
@@ -370,7 +381,8 @@ function serie_documento($idserie) {
     return ("Sin Serie Asignada");
 }
 
-function vincular_documentos() {
+function vincular_documentos()
+{
     global $ruta_db_superior;
     $texto = '<li><a href="#" id="vincular_documentos">Vincular documentos</a></li>';
     $texto .= '<script>
@@ -398,7 +410,8 @@ function vincular_documentos() {
     return $texto;
 }
 
-function deseleccionar_documento($ldocs) {
+function deseleccionar_documento($ldocs)
+{
     $ldocs = array_unique($ldocs);
     $docs_eliminados = array();
     $cant = count($ldocs);
@@ -408,10 +421,11 @@ function deseleccionar_documento($ldocs) {
         phpmkr_query($sql2);
         array_push($docs_eliminados, $ldocs[$i]);
     }
-    return ( array("mensaje" => "Los documentos con No(" . implode(",", $docs_eliminados) . ")se han deseleccionado", "tipo" => "alert"));
+    return (array("mensaje" => "Los documentos con No(" . implode(",", $docs_eliminados) . ")se han deseleccionado", "tipo" => "alert"));
 }
 
-function fecha_creacion_documento($fecha0, $plantilla = Null, $doc = Null) {
+function fecha_creacion_documento($fecha0, $plantilla = null, $doc = null)
+{
     global $conn;
     if ($fecha0 == 'fecha_inicial' || $fecha0 == 'fecha' || $fecha0 == '') {
         $asignacion = busca_filtro_tabla(fecha_db_obtener("a.fecha_inicial", "Y-m-d H:i:s") . " as fecha_asig, a.*", "asignacion a", "a.documento_iddocumento=" . $doc, "", $conn);
@@ -454,7 +468,8 @@ function fecha_creacion_documento($fecha0, $plantilla = Null, $doc = Null) {
     return ($texto);
 }
 
-function nombre_plantilla($plantilla, $iddoc = Null) {
+function nombre_plantilla($plantilla, $iddoc = null)
+{
     $tablas = "formato f";
     $where = "lower(f.nombre)='" . strtolower($plantilla) . "'";
     if (!empty($iddoc) && (empty($plantilla) || $plantilla == 'plantilla')) {
@@ -477,7 +492,8 @@ function nombre_plantilla($plantilla, $iddoc = Null) {
     }
 }
 
-function mostrar_documentos_vinculados($iddoc) {
+function mostrar_documentos_vinculados($iddoc)
+{
     $vinculados = datos_documentos_vinculados($iddoc);
     $funcionario = $_SESSION["usuario_actual"];
     $texto = '';
@@ -497,16 +513,19 @@ function mostrar_documentos_vinculados($iddoc) {
     return ($texto);
 }
 
-function datos_documentos_vinculados($iddoc) {
+function datos_documentos_vinculados($iddoc)
+{
     $dato = busca_filtro_tabla("", "documento_vinculados A,documento B", "A.documento_destino=B.iddocumento AND documento_origen=" . $iddoc, "", $conn);
     return ($dato);
 }
 
-function permisos_documento($iddoc, $funcionario) {
-    return(1);
+function permisos_documento($iddoc, $funcionario)
+{
+    return (1);
 }
 
-function filtro_funcionario($funcionario) {
+function filtro_funcionario($funcionario)
+{
     if ($funcionario == 'funcionario') {
         $retorno = " AND B.llave_entidad='" . usuario_actual("funcionario_codigo") . "'";
     } else {
@@ -518,18 +537,19 @@ function filtro_funcionario($funcionario) {
     return ($retorno);
 }
 
-function barra_inferior_documentos_activos($iddoc, $numero) {
+function barra_inferior_documentos_activos($iddoc, $numero)
+{
     $dato_prioridad = busca_filtro_tabla("", "prioridad_documento", "documento_iddocumento=" . $iddoc, "fecha_asignacion DESC", $conn);
     $prioridad = "icon-flag";
     if ($dato_prioridad["numcampos"]) {
         switch ($dato_prioridad[0]["prioridad"]) {
-            case 1 :
+            case 1:
                 $prioridad = 'icon-star';
                 break;
-            case 2 :
+            case 2:
                 $prioridad = 'icon-star-empty';
                 break;
-            default :
+            default:
                 $prioridad = 'icon-flag';
                 break;
         }
@@ -548,18 +568,19 @@ function barra_inferior_documentos_activos($iddoc, $numero) {
     return ((str_replace("\\r", "", str_replace("\\n", "", $texto))));
 }
 
-function barra_inferior_documentos_noactivos($iddoc, $numero) {
+function barra_inferior_documentos_noactivos($iddoc, $numero)
+{
     $dato_prioridad = busca_filtro_tabla("", "prioridad_documento", "documento_iddocumento=" . $iddoc, "fecha_asignacion DESC", $conn);
     $prioridad = "icon-flag";
     if ($dato_prioridad["numcampos"]) {
         switch ($dato_prioridad[0]["prioridad"]) {
-            case 1 :
+            case 1:
                 $prioridad = 'icon-star';
                 break;
-            case 2 :
+            case 2:
                 $prioridad = 'icon-star-empty';
                 break;
-            default :
+            default:
                 $prioridad = 'icon-flag';
                 break;
         }
@@ -574,17 +595,19 @@ function barra_inferior_documentos_noactivos($iddoc, $numero) {
     return (str_replace("\\r", "", str_replace("\\n", "", $texto)));
 }
 
-function exportar_excel() {
+function exportar_excel()
+{
     global $conn;
     $texto = '<li class="divider-vertical"></li><li><div class="btn-group">
           <button class="btn btn-mini btn-primary exportar_listado_saia pull-left" enlace="pantallas/documento/busqueda_avanzada_documento.php" title="Exportar reporte" id="boton_exportar_excel" style="display:none">Exportar a excel</button></div></li><li id="barra_exp_ppal" style="margin-top:5px;margin-left:5px;width:100px"></li>';
     //return($texto);
 }
 
-function origen_documento2_excel($doc, $numero, $origen = "", $tipo_radicado = "", $estado = "", $serie = "", $tipo_ejecutor = "") {
+function origen_documento2_excel($doc, $numero, $origen = "", $tipo_radicado = "", $estado = "", $serie = "", $tipo_ejecutor = "")
+{
     $ruta = "";
     $numero = intval($numero);
-    if (in_array($estado, array("GESTION", "CENTRAL", "HISTORICO")) !== FALSE || $tipo_radicado == 1 || $tipo_radicado == 2) {
+    if (in_array($estado, array("GESTION", "CENTRAL", "HISTORICO")) !== false || $tipo_radicado == 1 || $tipo_radicado == 2) {
         $docu = busca_filtro_tabla("lower(plantilla) as plantilla, nombre_tabla", "documento A, formato B", "A.iddocumento=" . $doc . " AND lower(plantilla)=lower(B.nombre)", "", $conn);
         if ($docu[0]["plantilla"] == 'radicacion_entrada' || $docu[0]["plantilla"] == 'radicacion_salida' || $docu[0]["plantilla"] == 'radicacion_peticiones') {
             $remitente = busca_filtro_tabla("", $docu[0]["nombre_tabla"] . " A, datos_ejecutor B, ejecutor C", "persona_natural=B.iddatos_ejecutor AND ejecutor_idejecutor=idejecutor AND A.documento_iddocumento=" . $doc, "", $conn);
@@ -625,10 +648,10 @@ function origen_documento2_excel($doc, $numero, $origen = "", $tipo_radicado = "
         $adicional = "";
         if ($ruta["numcampos"]) {
             switch ($ruta[0]["tipo_origen"]) {
-                case 5 :
+                case 5:
                     $campo = "iddependencia_cargo";
                     break;
-                default :
+                default:
                     $campo = "funcionario_codigo";
                     break;
             }
@@ -659,35 +682,40 @@ function origen_documento2_excel($doc, $numero, $origen = "", $tipo_radicado = "
     return (str_replace('"', " ", str_replace("'", " ", $ruta)));
 }
 
-function obtener_pantilla_documento($plantilla) {
+function obtener_pantilla_documento($plantilla)
+{
     global $conn;
 
     return (nombre_plantilla($plantilla));
 }
 
-function obtener_descripcion($descripcion) {
+function obtener_descripcion($descripcion)
+{
     return delimita(strip_tags($descripcion), 150);
 }
 
-function obtener_iddocumento() {
+function obtener_iddocumento()
+{
     return ($_REQUEST['iddocumento']);
 }
 
-function mostrar_prioridad_tareas($prioridad) {
+function mostrar_prioridad_tareas($prioridad)
+{
     switch ($prioridad) {
-        case 0 :
+        case 0:
             return ("Baja");
             break;
-        case 1 :
+        case 1:
             return ("Media");
             break;
-        case 2 :
+        case 2:
             return ("Alta");
             break;
     }
 }
 
-function filtro_despacho() {
+function filtro_despacho()
+{
     global $ruta_db_superior;
 
     if ($_REQUEST['variable_busqueda'] && $_REQUEST['variable_busqueda'] != '') {
@@ -701,7 +729,8 @@ function filtro_despacho() {
     }
 }
 
-function carga_soporte_ingresados($iddocumento) {
+function carga_soporte_ingresados($iddocumento)
+{
     global $ruta_db_superior;
     if (isset($_REQUEST['variable_busqueda'])) {
         $texto = '<li><a href="#" id="cargar_soporte">Cargar soporte</a></li>';
@@ -719,7 +748,8 @@ function carga_soporte_ingresados($iddocumento) {
     }
 }
 
-function vincular_documentos_busqueda() {
+function vincular_documentos_busqueda()
+{
     global $ruta_db_superior;
     $texto = '<li><a href="#" id="distribucion_interna_doc">Despacho fisico</a></li>';
     $texto .= '<script>
@@ -736,7 +766,8 @@ function vincular_documentos_busqueda() {
     return $texto;
 }
 
-function iddoc_distribuidos() {
+function iddoc_distribuidos()
+{
     global $conn;
     $distribuidos = busca_filtro_tabla("docs_seleccionados", "ft_despacho_ingresados", "", "", $conn);
     $iddoc = array();
@@ -764,7 +795,8 @@ function iddoc_distribuidos() {
     return ($where);
 }
 
-function iddoc_no_distribuidos() {
+function iddoc_no_distribuidos()
+{
     global $conn;
     $distribuidos = busca_filtro_tabla("docs_seleccionados", "ft_despacho_ingresados", "", "", $conn);
 
@@ -793,7 +825,8 @@ function iddoc_no_distribuidos() {
     return ($where);
 }
 
-function mostrar_fecha_limite_documento($iddoc) {
+function mostrar_fecha_limite_documento($iddoc)
+{
     global $conn, $ruta_db_superior;
 
     $parametro_expediente = '';
@@ -808,7 +841,7 @@ function mostrar_fecha_limite_documento($iddoc) {
     if ($fecha_limite == '0000-00-00' || is_null($fecha_limite)) {
         $fecha_limite = '<button type="button" titulo="Sin definir" conector="iframe" class="kenlace_saia btn btn-mini boton_fecha_limite" enlace="' . $enlace_fecha_limite . '" iddoc="' . $iddoc . '" idbusqueda_componente="' . @$_REQUEST['idbusqueda_componente'] . '">Sin definir</button>';
     } else {
-        include_once ($ruta_db_superior . "pantallas/lib/librerias_fechas.php");
+        include_once($ruta_db_superior . "pantallas/lib/librerias_fechas.php");
         $hoy = date('Y-m-d');
         $limite = $fecha_limite;
         $interval = resta_dos_fechas_saia($hoy, $limite);
@@ -836,12 +869,14 @@ function mostrar_fecha_limite_documento($iddoc) {
     return ('<div class="pull-right"><b>Vence:&nbsp;</b>' . $fecha_limite . '</div>');
 }
 
-function filtro_funcionario_etiquetados() {
+function filtro_funcionario_etiquetados()
+{
     $condicional_etiquetados = "AND d.funcionario='" . usuario_actual('funcionario_codigo') . "'";
     return ($condicional_etiquetados);
 }
 
-function mostrar_nombre_etiquetas($iddoc) {
+function mostrar_nombre_etiquetas($iddoc)
+{
     global $conn;
     $usuario = usuario_actual('funcionario_codigo');
     $etiquetados = busca_filtro_tabla("c.nombre", "documento_etiqueta b, etiqueta c", "b.documento_iddocumento=" . $iddoc . " AND  b.etiqueta_idetiqueta=c.idetiqueta AND c.funcionario=" . $usuario, "", $conn);
@@ -855,12 +890,13 @@ function mostrar_nombre_etiquetas($iddoc) {
     return ($nombre_etiquetas);
 }
 
-function origen_documento2($doc, $numero, $origen = "", $tipo_radicado = "", $estado = "", $serie = "", $tipo_ejecutor = "", $ejecutor = "", $plantilla = "") {
+function origen_documento2($doc, $numero, $origen = "", $tipo_radicado = "", $estado = "", $serie = "", $tipo_ejecutor = "", $ejecutor = "", $plantilla = "")
+{
     $ruta = "";
     $plantilla = strtolower($plantilla);
     $numero = intval($numero);
     $dato_serie = serie_documento($serie);
-    if (in_array($estado, array("GESTION", "CENTRAL", "HISTORICO")) !== FALSE || $tipo_radicado == 1 || $tipo_radicado == 2) {
+    if (in_array($estado, array("GESTION", "CENTRAL", "HISTORICO")) !== false || $tipo_radicado == 1 || $tipo_radicado == 2) {
         $docu = busca_filtro_tabla("nombre_tabla", "formato B", "lower(B.nombre)='" . $plantilla . "'", "", $conn);
         if ($plantilla == 'radicacion_entrada' || $plantilla == 'radicacion_salida' || $plantilla == 'radicacion_peticiones') {
             $remitente = busca_filtro_tabla("", $docu[0]["nombre_tabla"] . " A, datos_ejecutor B, ejecutor C", "persona_natural=B.iddatos_ejecutor AND ejecutor_idejecutor=idejecutor AND A.documento_iddocumento=" . $doc, "", $conn);
@@ -914,10 +950,10 @@ function origen_documento2($doc, $numero, $origen = "", $tipo_radicado = "", $es
         $adicional = "";
         if ($ruta["numcampos"]) {
             switch ($ruta[0]["tipo_origen"]) {
-                case 5 :
+                case 5:
                     $campo = "iddependencia_cargo";
                     break;
-                default :
+                default:
                     $campo = "funcionario_codigo";
                     break;
             }
@@ -960,15 +996,29 @@ function origen_documento2($doc, $numero, $origen = "", $tipo_radicado = "", $es
  * @return int retorna el funcionario codigo
  * para las cosultas de los buzones
  */
-function code_logged_user() {
+function code_logged_user()
+{
     return usuario_actual('funcionario_codigo');
 }
 
-function variable_busqueda() {
+function variable_busqueda()
+{
     return $_REQUEST['variable_busqueda'];
 }
 
-function origin_pending_document($documentId, $userCode, $number, $date, $transferId) {
+/**
+ * genera la parte superior de los buzones
+ * recibidos y enviados
+ *
+ * @param int $documentId
+ * @param int $userCode
+ * @param int $number
+ * @param string $date
+ * @param int $transferId
+ * @return void
+ */
+function origin_pending_document($documentId, $userCode, $number, $date, $transferId)
+{
     global $conn, $ruta_db_superior;
 
     include_once $ruta_db_superior . 'controllers/autoload.php';
@@ -983,9 +1033,9 @@ function origin_pending_document($documentId, $userCode, $number, $date, $transf
     ]);
 
     $html = '<div class="col-1 px-0 text-center action">
-        <input type="hidden" data-transfer="'.$transferId.'" value="' . $documentId . '" class="identificator">'
-            . $roundedImage .
-            '</div>
+        <input type="hidden" data-transfer="' . $transferId . '" value="' . $documentId . '" class="identificator">'
+        . $roundedImage .
+        '</div>
     <div class="col show_document cursor principal_action" data-url="' . $documentRoute . '" titulo="Documento No.' . $number . '">
         <span class="mt-1 hint-text">' . $number . " - " . $Funcionario->getName() . '</span>
     </div>
@@ -1001,7 +1051,8 @@ function origin_pending_document($documentId, $userCode, $number, $date, $transf
  * @param string $route ruta de la imagen
  * @return string html de la imagen
  */
-function roundedImage($route) {
+function roundedImage($route)
+{
     global $ruta_db_superior;
 
     $routeImage = $ruta_db_superior . $route;
@@ -1010,27 +1061,33 @@ function roundedImage($route) {
     </span>';
 }
 
-function limit_description($description, $limit = 150) {
-    if (strlen($description) > $limit)
-        $description = substr($description, 0, $limit - 3) . '...';
-
-    return $description;
-}
-
-function unread($iddocumento, $fecha) {
+/**
+ * determina si un documento ya fue leido por el usuario actual
+ *
+ * @param int $iddocumento
+ * @param string $fecha
+ * @return void
+ */
+function unread($iddocumento, $fecha)
+{
     global $conn;
 
-    $idfuncionario = usuario_actual('funcionario_codigo');
+    $idfuncionario = $_SESSION["usuario_actual"];
     $leido = busca_filtro_tabla("idtransferencia", "buzon_salida", "archivo_idarchivo=" . $iddocumento . " and origen=" . $idfuncionario . " and (nombre='LEIDO' or nombre='BORRADOR') and " . fecha_db_obtener("fecha", "Y-m-d H:i:s") . " >= '" . $fecha . "'", "", $conn);
 
-    if (!$leido["numcampos"])
-        return '<h6 class="my-0 text-center unread"><i class="fa fa-circle text-complete"></i></h6>';
-    else
-        return '';
+    return !$leido["numcampos"] ? '<h6 class="my-0 text-center unread"><i class="fa fa-circle text-complete"></i></h6>' : '';
 }
 
-function has_files($documentId, $showConunter = false) {
-    global $conn, $ruta_db_superior;
+/**
+ * determina si un documento contiene anexos
+ *
+ * @param int $documentId
+ * @param boolean $showCounter
+ * @return string
+ */
+function has_files($documentId, $showCounter = false)
+{
+    global $conn;
 
     $response = '';
     if ($documentId) {
@@ -1038,13 +1095,11 @@ function has_files($documentId, $showConunter = false) {
         $pages = busca_filtro_tabla('count(*) as cant', 'pagina', 'id_documento =' . $documentId, '', $conn);
 
         if ($files[0]['cant'] || $pages[0]['cant']) {
-            if ($showConunter) {
+            if ($showCounter) {
                 $total = $files[0]["cant"] + $pages[0]['cant'];
 
-                $response = '<span class="my-0 text-center f-20 px-1">
-                    <a href="' . $ruta_db_superior . 'views/pagina/pagina.php?iddoc=' . $documentId . '" class="fa fa-paperclip notification  text-master">
-                        <span class="badge badge-important counter">' . $total . '</span>
-                    </a>
+                $response = '<span class="px-1 cursor fa fa-paperclip notification f-20" id="show_files" data-toggle="tooltip" data-placement="bottom" title="Anexos">
+                    <span class="badge badge-important counter">' . $total . '</span>
                 </span>';
             } else {
                 $response = '<span class="my-0 text-center cursor fa fa-paperclip f-20"></span>';
@@ -1054,7 +1109,14 @@ function has_files($documentId, $showConunter = false) {
     return $response;
 }
 
-function priority($documentId) {
+/**
+ * muestra la prioridad del documento
+ *
+ * @param int $documentId
+ * @return string
+ */
+function priority($documentId)
+{
     global $conn;
     $class = 'text-dark';
     $findPriority = busca_filtro_tabla('prioridad', 'prioridad_documento', 'fk_documento=' . $documentId, '', $conn);
@@ -1069,18 +1131,33 @@ function priority($documentId) {
     </span>';
 }
 
-function documental_type($documentId) {
+/**
+ * muestra el tipo documental del documento
+ *
+ * @param int $documentId
+ * @return string
+ */
+function documental_type($documentId)
+{
     global $conn;
 
     $findSerie = busca_filtro_tabla('LOWER(b.nombre)', 'documento a,serie b', 'a.serie = b.idserie and a.iddocumento=' . $documentId, '', $conn);
 
-    if ($findSerie['numcampos'] && $findSerie[0][0])
+    if ($findSerie['numcampos'] && $findSerie[0][0]) {
         return '<span class="hint-text">' . ucfirst($findSerie[0][0]) . '</span>';
-    else
+    } else {
         return '';
+    }
 }
 
-function expiration($date) {
+/**
+ * calcula el vencimiento de un documento
+ *
+ * @param string $date
+ * @return string
+ */
+function expiration($date)
+{
     if (strtotime($date)) {
         $Limit = new DateTime($date);
         $Today = new DateTime();
@@ -1105,7 +1182,14 @@ function expiration($date) {
     }
 }
 
-function temporality($date) {
+/**
+ * calcula la temporalidad de un documento
+ *
+ * @param string $date
+ * @return string
+ */
+function temporality($date)
+{
     $date = DateTime::createFromFormat('Y-m-d H:i:s', $date);
     $timeFromDate = strtotime($date->format('Y-m-d H:i:s'));
     $diference = strtotime("now") - $timeFromDate;
@@ -1144,20 +1228,21 @@ function temporality($date) {
  * @param int $iddoc
  * @return string
  */
-function mostrar_numero_enlace($number, $documentId) {
-	if((int) $number){
-		$titulo = "No. " . $numero;
-	}else{
-		$numero = "Ver";
-		$titulo = nombre_plantilla(null, $iddoc);
-	}
-	
-	$route = 'views/documento/index_acordeon.php?documentId=' . $documentId;
-	$response = "<div class='link kenlace_saia' enlace='{$route}' conector='iframe' titulo='{$titulo}'>
+function mostrar_numero_enlace($number, $documentId)
+{
+    if ((int)$number) {
+        $titulo = "No. " . $numero;
+    } else {
+        $numero = "Ver";
+        $titulo = nombre_plantilla(null, $iddoc);
+    }
+
+    $route = 'views/documento/index_acordeon.php?documentId=' . $documentId;
+    $response = "<div class='link kenlace_saia' enlace='{$route}' conector='iframe' titulo='{$titulo}'>
 		<span class='badge cursor btn badge-inverse'>{$numero}</span>
 	</div>";
 
-	return $response;
+    return $response;
 }
 
 ?>

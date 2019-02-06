@@ -28,10 +28,8 @@ $(function () {
                 }
             ]);
             let route = `${baseUrl}views/dashboard/kaiten_dashboard.php?panels=${data}`;
-            $('#iframe_dinamictab_acordion').attr('src', route);
-            $('#dinamictab_acordion').show();
-            $('#first_ocordion_card').find('a[data-toggle="collapse"]').trigger('click');
-            $('#right_workspace').scrollTop($('#dinamictab_acordion').position().top);
+            $('#iframe_dinamictab_accordion').attr('src', route);
+            showTab('#dinamictab_accordion');
         }
     });
 
@@ -39,12 +37,26 @@ $(function () {
     $(document).on("click", "#show_history", function () {
         let route = `${baseUrl}views/documento/linea_tiempo.php`;
         $('#history_content').load(route, {
-            identificator: params.documentId
+            documentId: params.documentId
         });
-        $('#historytab_acordion').show();
-        $('#first_ocordion_card').find('a[data-toggle="collapse"]').trigger('click');
-        $('#right_workspace').scrollTop($('#historytab_acordion').position().top);
+        showTab('#historytab_accordion');
     });
+
+    $(document).off("click", "#show_files");
+    $(document).on("click", "#show_files", function () {
+        let route = `${baseUrl}views/pagina/pagina.php`;
+        $('#files_tab').load(route, {
+            documentId: params.documentId
+        });
+        showTab('#filestab_accordion');
+    });    
+
+    function showTab(selector) {
+        $("#accordion [role='tabcard']").removeClass('show');
+        $("#accordion [aria-expanded='true']").attr('aria-expanded', 'false').addClass('collapsed');
+        $('#right_workspace').scrollTop($(selector).position().top);
+        $(selector).show().find('a[data-toggle="collapse"]').trigger('click');
+    }
 
     function getFormatInformation() {
         $.post(`${baseUrl}app/formato/consulta_rutas.php`, {

@@ -304,9 +304,11 @@ function actualizar_encabezado_pie($idformato, $tipo, $valor) {
 }
 
 function actualizar_cuerpo_formato($idformato, $tipo_retorno) {
+
     $retorno = array(
         "exito" => 0
     );
+   
     $retorno["mensaje"] = "Existe un error al actualizar el cuerpo del formato";
     if (@$_REQUEST["contenido"]) {
         $sql = "UPDATE formato set cuerpo='" . $_REQUEST["contenido"] . "' WHERE idformato=" . $idformato;
