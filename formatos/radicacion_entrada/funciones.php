@@ -539,11 +539,8 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
     $tabla = '<style>
         .table.table-condensed thead tr td {
         padding-top: 2px;
-        padding-bottom: 2px;
-        
-        
+        padding-bottom: 2px;            
     }
-   
     .table.table-condensed {
         table-layout: auto;
     }
@@ -568,15 +565,15 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
                     if ($datos[0]['tipo_origen'] == 1) {
                         $empresa_transportadora = mostrar_valor_campo('empresa_transportado', $idformato, $iddoc, 1);
                         $tabla .= "<tr>
-                        <td style='border:none;width: 20%;' class=''><strong>TIPO DE ORIGEN:</strong></td>
-                        <td style='border:none;width: 44%;'>" . mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1) . "</td>
+                        <td style='border:none;width: 19%;' class=''><strong>TIPO DE ORIGEN:</strong></td>
+                        <td style='border:none;width: 23%;'>" . mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1) . "</td>
                         <td style='border:none;'><strong>N&Uacute;MERO DE GU&Iacute;A:</strong></td>
                         <td style='border:none;'>" . $datos[0]['numero_guia'] . "</td>
                 </tr>
                     <tr>
                         <td style='border:none;'><strong>NO. OFICIO:</strong></td>
                         <td style='border:none;'>" . $datos[0]['numero_oficio'] . "</td>
-                        <td style='border:none;width: 25%;' ><strong>EMPRESA TRANSPORTADORA:</strong></td>
+                        <td style='border:none;width: 22%;' ><strong>EMPRESA TRANSPORTADORA:</strong></td>
                         <td style='border:none;'>" . $empresa_transportadora . "</td>
                         
                 </tr>

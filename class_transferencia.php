@@ -778,10 +778,10 @@ function mostrar_estado_proceso($idformato, $iddoc)
                         echo '<td align="left">';
                         if ($firma[0]["firma"] != "") {
                             $pagina_actual = $_SERVER["PHP_SELF"];
-                            echo '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/' . FORMATOS_SAIA . 'librerias/mostrar_foto.php?codigo=' . $fila["funcionario_codigo"];
+                            echo '<img class="d-none d-md-block" src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/' . FORMATOS_SAIA . 'librerias/mostrar_foto.php?codigo=' . $fila["funcionario_codigo"];
                             echo '" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '"/><br />';
                         } else
-                            echo '<img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/firmas/blanco.jpg" width="100" height="' . $alto_firma[0]["valor"] . '" ><br />';
+                            echo '<img class="d-none d-md-block" src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/firmas/blanco.jpg" width="100" height="' . $alto_firma[0]["valor"] . '" ><br />';
 
                         echo "<strong>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</strong>&nbsp;&nbsp;&nbsp;<br />";
                         if ($cargos["numcampos"]) {
@@ -827,7 +827,7 @@ function mostrar_estado_proceso($idformato, $iddoc)
                         $_REQUEST["tabla"] = "ruta";
                         $_REQUEST["firma"] = "1";
                         require_once($ruta_db_superior . FORMATOS_SAIA . "librerias/mostrar_foto_manual.php");
-                        $parte = '<td><img src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/carpeta_temporal_firma/imagen_temporal' . $_REQUEST["llave_seleccion"] . '.jpg" width="200" height="100">';
+                        $parte = '<td><img class="d-none d-md-block" src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/carpeta_temporal_firma/imagen_temporal' . $_REQUEST["llave_seleccion"] . '.jpg" width="200" height="100">';
 
                         $parte .= "<br /><strong>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</strong><br />";
                         if ($cargos["numcampos"]) {
