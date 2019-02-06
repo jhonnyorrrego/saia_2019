@@ -82,7 +82,7 @@ $(function () {
 
     function setSize() {
         let sizeDocument = localStorage.getItem('breakpoint');
-        console.log(sizeDocument);
+        
             if (sizeDocument == 'xs') {
                 var sizeFont = parseFloat($('#documento').css("font-size"));
                 sizeFont = Math.round(sizeFont * 0.4);
