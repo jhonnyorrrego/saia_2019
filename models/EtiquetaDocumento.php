@@ -45,17 +45,4 @@ class EtiquetaDocumento extends Model
 
         return $response;
     }
-
-    public static function deleteByTag($tagId){
-        global $conn;
-
-        if($tagId){
-            $delete = 'delete from etiqueta_documento where fk_etiqueta =' . $tagId;
-            $response = phpmkr_query($delete);
-        }else{
-            $response = false;
-        }
-
-        return $response;
-    }
 }
