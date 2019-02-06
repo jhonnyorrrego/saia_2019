@@ -2,10 +2,11 @@ $(function () {
     let key = localStorage.getItem('key');
     let baseUrl = $('script[data-baseurl]').data('baseurl');
     let params = $('script[data-params]').data('params');
-
+    let sizeFont = 0;
     (function init() {
         getFormatInformation();    
         loadHeader();
+        
     })();
 
     $(document).off("click", ".new_add");
@@ -65,8 +66,9 @@ $(function () {
         }, function (response) {
             let route = baseUrl + response.data.ruta_mostrar
             $('#view_document').load(route,function(){
-                setSize();
-              
+                sizeFont = $('#documento').find("p").css("font-size")                
+                setSize(); 
+                                            
             });
         }, 'json');
     }
@@ -80,39 +82,33 @@ $(function () {
             
         $('#document_header').load(route);
     }
+    
+
+    window.addEventListener("orientationchange", function () {
+        setTimeout(() => {
+            setSize();
+        }, 500);
+    }, false);
 
     function setSize() {
-        let sizeDocument = localStorage.getItem('breakpoint');
         
-        window.addEventListener("orientationchange", function () {
-            
-            if (orientation == '0' && sizeDocument == 'xs'){
-                setXs();
-            } else if (orientation == '0' && sizeDocument == 'sm'){
-                setSm();
-            }
-        }, false);
-       
-            if (sizeDocument == 'xs') {
-                setXs();
+        let sizeDocument = localStorage.getItem('breakpoint'); 
+            if (sizeDocument == 'xs') {              
+                setValores();
             }
             if (sizeDocument == 'sm') {
-                setSm();
+                setValores();
             }
     }
 
-    function setXs(){
-        var sizeFont = parseFloat($('#documento').css("font-size"));
-        sizeFont = Math.round(sizeFont * 0.4);
-        var sizeEncabezado = parseFloat($(".page_margin_top").css('height'));
-        sizeEncabezado = Math.round(sizeEncabezado * 0.6);
-        var sizePie = parseFloat($(".page_content").css('height'));
-        sizePie = Math.round(sizePie * 0.600);
-        $(".page_margin_top").css('height', sizeEncabezado + "px");
-        $(".page_content").css('height', sizePie + "px");
-        $('#documento').css("font-size", sizeFont + "px");
+    function setValores(){
+
+        var xsFont = parseFloat(sizeFont);
+        var widthIni = 480;
+        var widthAct = parseFloat($(".page_content").css('width')) * xsFont /  widthIni;
+        $('#documento').css("font-size", widthAct + "px");
         $('#documento').find("img")
-        $('#documento').find("p").css("font-size", sizeFont + "px")
+        $('#documento').find("p").css("font-size", widthAct + "px")
         var contenidoImg = $("#documento").find("img");
         contenidoImg.each(function (i) {
             var sizeImg = parseFloat($(this).attr("width"));
@@ -122,17 +118,16 @@ $(function () {
     }
 
     function setSm() {
-        var sizeFont = parseFloat($('#documento').css("font-size"));
-        sizeFont = Math.round(sizeFont * 0.7);
+       
+        var smFont = Math.round(parseFloat(sizeFont) * 0.7);
         var sizeEncabezado = parseFloat($(".page_margin_top").css('height'));
         sizeEncabezado = Math.round(sizeEncabezado * 0.9);
         var sizePie = parseFloat($(".page_content").css('height'));
         sizePie = Math.round(sizePie * 0.700);
-        $(".page_margin_top").css('height', sizeEncabezado + "px");
-        $(".page_content").css('height', sizePie + "px");
-        $('#documento').css("font-size", sizeFont + "px");
+
+        $('#documento').css("font-size", smFont + "px");
         $('#documento').find("img")
-        $('#documento').find("p").css("font-size", sizeFont + "px")
+        $('#documento').find("p").css("font-size", smFont + "px")
         var contenidoImg = $("#documento").find("img");
         contenidoImg.each(function (i) {
             var sizeImg = parseFloat($(this).attr("width"));

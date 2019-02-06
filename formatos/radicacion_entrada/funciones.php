@@ -574,7 +574,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
                         <td style='border:none;'><strong>NO. OFICIO:</strong></td>
                         <td style='border:none;'>" . $datos[0]['numero_oficio'] . "</td>
                         <td style='border:none;width: 22%;' ><strong>EMPRESA TRANSPORTADORA:</strong></td>
-                        <td style='border:none;'>" . $empresa_transportadora . "</td>
+                        <td px-0 style='border:none;'>" . $empresa_transportadora . "</td>
                         
                 </tr>
                 <tr>
