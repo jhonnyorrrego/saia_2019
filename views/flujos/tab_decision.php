@@ -25,38 +25,6 @@ if (!empty($_REQUEST["idactividad"])) {
 }
 ?>
 
-<!-- div>
-    <form id="frmDecisionActividad">
-        <div class="row h-100">
-            <div class="col col-md-7">
-                <div class="form-group form-group-default">
-                    <label for="nombre_decision">Nombre de la decisi&oacute;n</label>
-                    <input type="email" class="form-control" id="nombre_decision" name="decision" placeholder="Nombre de la decisi&oacute;n" value="">
-                </div>
-            </div>
-            <div class="col col-md-5">
-                <div class="form-group">
-                    <label class="my-0" for="selTipoDecision">Tipo de decisi&oacute;n</label>
-                    <select class="form-control" id="selTipoDecision">
-                    <option value="0">Por favor selecione...</option>
-                    <?php
-                    foreach ($enlaces as $decis) : ?>
-                        <option value="<?= $decis["idenlace"] ?>"><?=$decis["nombre"]  ?></option>
-                    <?php endforeach;?>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="row pr-2 mt-1">
-            <div class="col col-md-12">
-                <button type="button" class="btn btn-primary btn-sm float-right" id="btnGuardarDecision">Agregar Decisi&oacute;n</button>
-            </div>
-        </div>
-
-    </form>
-</div>
- -->
 <div class="container-fluid">
     <div id="toolbar_tabla_elementos">
         <a href="#" id="boton_eliminar_decision" class="btn btn-secondary" title="Eliminar"><i class="f-12 fa fa-trash"></i></a>
@@ -117,20 +85,7 @@ var $botonGuardarDecision = $('#btnGuardarDecision');
 
 var idactividad = "<?= $idactividad ?>";
 
-console.log("params", params);
-
-$botonEliminarDecision.click(function () {
-    var ids = $.map($tabla.bootstrapTable('getSelections'), function (row) {
-        return row.iddecision_actividad
-    });
-    var estado = eliminarDecisionActividad(idactividad, ids.join(","));
-    if (estado) {
-        $tabla.bootstrapTable('remove', {
-            field: 'iddecision_actividad',
-            values: ids
-        });
-    }
-});
+//console.log("params", params);
 
 function guardarEnlaceFlujo(data) {
     if (data) {
@@ -147,40 +102,6 @@ function guardarEnlaceFlujo(data) {
                 if (response["success"] == 1) {
                     top.notification({type: "success", message: response.message});
                     pk = response.data;
-                    //parent.parent.postMessage({accion: "recargarTabla", id: pk}, "*");
-                } else {
-                    top.notification({type: "error", message: response.message});
-                }
-            }
-        });
-        return pk;
-    }
-    return false;
-}
-
-function eliminarDecisionActividad(idactividad, ids) {
-    if (ids) {
-        var data = {
-            key: localStorage.getItem("key"),
-            fk_actividad: idactividad,
-            ids: ids
-        };
-
-        //console.log(idactividad, data);
-        //return false;
-        //TODO: Falta pedir confirmacion al usuario
-
-        var pk = false;
-        $.ajax({
-            dataType: "json",
-            url: "<?= $ruta_db_superior ?>app/flujo/borrarDecisionActividad.php",
-            type: "POST",
-            data: data,
-            async: false,
-            success: function (response) {
-                if (response["success"] == 1) {
-                    top.notification({type: "success", message: response.message});
-                    pk = true;
                     //parent.parent.postMessage({accion: "recargarTabla", id: pk}, "*");
                 } else {
                     top.notification({type: "error", message: response.message});
