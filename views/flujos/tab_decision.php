@@ -16,16 +16,16 @@ include_once $ruta_db_superior . 'controllers/autoload.php';
 $idflujo = $_REQUEST['idflujo'];
 $actividad = null;
 $idactividad = null;
-$tipo_decision = [];
+$enlaces = [];
 if (!empty($_REQUEST["idactividad"])) {
     $actividad = new Elemento($_REQUEST["idactividad"]);
     $idactividad = $actividad->getPk();
 
-    $tipo_decision = TipoDecisionActiv::findAll("", 0, true);
+    $enlaces = Enlace::findByEnlaceOrigen($idflujo, $actividad->bpmn_id);
 }
 ?>
 
-<div>
+<!-- div>
     <form id="frmDecisionActividad">
         <div class="row h-100">
             <div class="col col-md-7">
@@ -40,8 +40,8 @@ if (!empty($_REQUEST["idactividad"])) {
                     <select class="form-control" id="selTipoDecision">
                     <option value="0">Por favor selecione...</option>
                     <?php
-                    foreach ($tipo_decision as $decis) : ?>
-                        <option value="<?= $decis["idtipo_decision_activ"] ?>"><?=$decis["tipo_decision"]  ?></option>
+                    foreach ($enlaces as $decis) : ?>
+                        <option value="<?= $decis["idenlace"] ?>"><?=$decis["nombre"]  ?></option>
                     <?php endforeach;?>
                     </select>
                 </div>
@@ -56,26 +56,27 @@ if (!empty($_REQUEST["idactividad"])) {
 
     </form>
 </div>
-
+ -->
 <div class="container-fluid">
-    <div id="toolbar_tabla_decisiones">
+    <div id="toolbar_tabla_elementos">
         <a href="#" id="boton_eliminar_decision" class="btn btn-secondary" title="Eliminar"><i class="f-12 fa fa-trash"></i></a>
     </div>
-    <table class="table table-striped table-bordered table-hover" id="tabla_decisiones"
+    <table class="table table-striped table-bordered table-hover" id="tabla_elementos"
            data-toggle="table"
-           data-url="listado_decision_actividad.php?idactividad=<?= $idactividad ?>"
+           data-url="listado_enlaces_decision.php?idflujo=<?= $idflujo ?>&bpmn_id=<?= $actividad->bpmn_id ?>"
            data-click-to-select="true"
            data-show-toggle="true"
            data-show-columns="true"
-           data-toolbar="#toolbar_tabla_decisiones"
+           data-toolbar="#toolbar_tabla_elementos"
            data-pagination="true">
         <thead>
             <tr>
-                <th data-field="state" data-checkbox="true"></th>
-                <th data-field="iddecision_actividad" data-visible="false">Id</th>
-                <th data-field="fk_tipo_decision" data-visible="false">IdTipo</th>
-                <th data-field="decision">Nombre de la decisi&oacute;n</th>
-                <th data-field="tipo_decision">Tipo de decisi&oacute;n</th>
+                <!-- <th data-field="state" data-checkbox="true"></th>  -->
+                <th data-field="idenlace" data-visible="false">Id</th>
+                <th data-field="bpmn_id" data-visible="false">IdBpmn</th>
+                <th data-field="nombre" data-editable="true">Nombre de la decisi&oacute;n</th>
+                <th data-field="nombre_dst">Hacia el paso</th>
+                <th data-field="bpmn_id_dst" data-visible="false">IdBpmnDst</th>
             </tr>
         </thead>
     </table>
@@ -83,42 +84,40 @@ if (!empty($_REQUEST["idactividad"])) {
 
 <script>
 
-var $tabla = $("#tabla_decisiones");
+var $tabla = $("#tabla_elementos");
 $tabla.bootstrapTable();
+
+$.fn.editable.defaults.mode = 'inline';
+
+$tabla.on('editable-save.bs.table', function(evt, field, row, oldValue, $el){
+	//console.log(field);
+	console.log(row);
+	//console.log(oldValue);
+	//console.log($el);
+	//$el.classList.remove("editable-unsaved");
+
+    var data = guardarEnlaceFlujo(row);
+    if(data) {
+        parent.postMessage({accion: "actualizarDiagrama", bpmn_id: data.bpmn_id, nombreTarea: data.nombre}, "*");
+    }
+
+	return true;
+});
+
+$tabla.on('editable-hidden.bs.table', function(evt, field, row, $el, reason) {
+	//console.log(reason);
+	//reason: cancel|nochange|save
+	if(reason == 'save' && $el.hasClass("editable-unsaved")) {
+		$el.removeClass('editable-unsaved');
+	}
+});
 
 var $botonEliminarDecision = $('#boton_eliminar_decision');
 var $botonGuardarDecision = $('#btnGuardarDecision');
 
 var idactividad = "<?= $idactividad ?>";
 
-$botonGuardarDecision.click(function () {
-    var datos = $tabla.bootstrapTable('getData');
-
-    var decision = $("#frmDecisionActividad #nombre_decision").val();
-    var fk_tipo_decision = $("#frmDecisionActividad #selTipoDecision").val();
-    var texto_tipo = $("#frmDecisionActividad #selTipoDecision option:selected").text();
-
-    var existe = false;
-    for (var key in datos) {
-        var obj = datos[key];
-        if (obj.decision == decision && obj.fk_tipo_decision == fk_tipo_decision) {
-            existe = true;
-            break;
-        }
-    }
-    //console.log("existe", existe);
-    if (!existe) {
-        var data = {decision: decision, fk_tipo_decision: fk_tipo_decision};
-        var id = guardarDecisionActividad(idactividad, data);
-        if(id) {
-            data["iddecision_actividad"] = id;
-            data["tipo_decision"] = texto_tipo;
-            $tabla.bootstrapTable('append', data);
-            document.getElementById("frmDecisionActividad").reset();
-        }
-    }
-});
-
+console.log("params", params);
 
 $botonEliminarDecision.click(function () {
     var ids = $.map($tabla.bootstrapTable('getSelections'), function (row) {
@@ -133,24 +132,21 @@ $botonEliminarDecision.click(function () {
     }
 });
 
-function guardarDecisionActividad(idactividad, data) {
+function guardarEnlaceFlujo(data) {
     if (data) {
         data['key'] = localStorage.getItem("key");
-        data["fk_actividad"] = idactividad;
 
-        //console.log(idactividad, data);
-        //return false;
         var pk = false;
         $.ajax({
             dataType: "json",
-            url: "<?= $ruta_db_superior ?>app/flujo/guardarDecisionActividad.php",
+            url: "<?= $ruta_db_superior ?>app/flujo/guardarEnlaceFlujo.php",
             type: "POST",
             data: data,
             async: false,
             success: function (response) {
                 if (response["success"] == 1) {
                     top.notification({type: "success", message: response.message});
-                    pk = response.data.pk;
+                    pk = response.data;
                     //parent.parent.postMessage({accion: "recargarTabla", id: pk}, "*");
                 } else {
                     top.notification({type: "error", message: response.message});

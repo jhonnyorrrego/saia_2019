@@ -79,33 +79,53 @@ if(isset($_REQUEST["idflujo"])) {
   	    // e.gfx = the graphical element
   	    var objeto = e.element.businessObject;
   	    var tipoElem = e.element.businessObject.$type;
-  	    var id = 1;
-  	    if(tipoElem === "bpmn:Task" || /Gateway/.test(tipoElem) ) {
-  	    	canvas.addMarker(e.element, 'highlight');
-                let strParam = jQuery.param({idflujo: id, bpmn_id: e.element.id, nombreTarea: objeto.name});
-                let url = '<?= $ruta_db_superior ?>views/flujos/modal_datos_tarea.php?' + strParam;
+  	    //var id = 1;
+  	    if(/Task/.test(tipoElem) || /Gateway/.test(tipoElem)) {
+  	    	//canvas.addMarker(e.element, 'highlight');
 
-                jspanelOpts = {
-                	headerTitle: '',
-                	iconfont:    'fa',
-                	theme: 'dark',
-                    position: {
-                        my: "center-top",
-                        at: "center-top"
-                    },
-                    contentSize: '800 600',
-            	    borderRadius: '6px',
-            	    content:     '<iframe src="' + url + '" style="width: 100%; height: 90%; border:none; overflow:hidden auto;"></iframe>',
-            	    callback: function () {
-            	        this.header.style.borderBottom = 'none';
-            	        this.content.style.borderTop = 'none';
-            	    }
-            	};
-                modalActividad = jsPanel.create(jspanelOpts);
+            let strParam = jQuery.param({
+                idflujo: idflujo,
+                bpmn_id: e.element.id,
+                nombreTarea: objeto.name,
+                tipoBpmn:tipoElem,
+            });
+
+            let url = '<?= $ruta_db_superior ?>views/flujos/modal_datos_tarea.php?' + strParam;
+
+            let jspanelOpts = {
+            	headerTitle: '',
+            	iconfont:    'fa',
+            	theme: 'dark',
+                position: {
+                    my: "center-top",
+                    at: "center-top"
+                },
+                contentSize: '800 600',
+        	    borderRadius: '6px',
+        	    content:     '<iframe src="' + url + '" style="width: 100%; height: 90%; border:none; overflow:hidden auto;"></iframe>',
+        	    callback: function () {
+        	        this.header.style.borderBottom = 'none';
+        	        this.content.style.borderTop = 'none';
+        	    }
+        	};
+            modalActividad = jsPanel.create(jspanelOpts);
   	    }
-
   	  });
   	});
+
+    function iterarElementos(obj) {
+    	  var result = [];
+    	  for (var id in obj) {
+    	    try {
+    	      if (typeof(obj[id]) == "function") {
+    	        result.push(id + ": " + obj[id].toString());
+    	      }
+    	    } catch (err) {
+    	      result.push(id + ": inaccessible");
+    	    }
+    	  }
+    	  return result;
+    }
 
     /**
      * Save diagram contents and print them to the console.

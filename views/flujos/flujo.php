@@ -121,6 +121,19 @@ eventer(messageEvent, function(e) {
 		} else {
 			console.log("No se encontro modalActividad");
 		}
+	} else if(datos.accion == "actualizarDiagrama") {
+		if(modalActividad) {
+			//modalActividad.close();
+			var modeling = bpmnModeler.get('modeling');
+			var elementRegistry = bpmnModeler.get('elementRegistry');
+			var element = elementRegistry.get(datos.bpmn_id);
+			console.log("elemento", element);
+			//actualizar el diagrama
+			modeling.updateProperties(element, {name : datos.nombreTarea});
+
+		} else {
+			console.log("No se encontro modalActividad");
+		}
 	}
 }, false);
 
