@@ -66,6 +66,7 @@ $(function () {
             let route = baseUrl + response.data.ruta_mostrar
             $('#view_document').load(route,function(){
                 setSize();
+              
             });
         }, 'json');
     }
@@ -83,25 +84,60 @@ $(function () {
     function setSize() {
         let sizeDocument = localStorage.getItem('breakpoint');
         
-            if (sizeDocument == 'xs') {
-                var sizeFont = parseFloat($('#documento').css("font-size"));
-                sizeFont = Math.round(sizeFont * 0.4);
-                var sizeEncabezado = parseFloat($(".page_margin_top").css('height'));
-                sizeEncabezado = Math.round(sizeEncabezado * 0.6);
-                var sizePie = parseFloat($(".page_content").css('height'));
-                sizePie = Math.round(sizePie * 0.600);
-                $(".page_margin_top").css('height', sizeEncabezado+"px");
-                $(".page_content").css('height', sizePie + "px");
-                $('#documento').css("font-size", sizeFont+"px");
-                $('#documento').find("img")
-                $('#documento').find("p").css("font-size", sizeFont+"px")
-                var contenidoImg = $("#documento").find("img");
-                contenidoImg.each(function (i) { 
-                    var sizeImg = parseFloat($(this).attr("width")); 
-                    sizeImg = sizeImg * 2;
-                    $(this).css("width", sizeImg+"%");
-                });
-                //$('#documento').find("p").css("font-size", "7px")
+        window.addEventListener("orientationchange", function () {
+            
+            if (orientation == '0' && sizeDocument == 'xs'){
+                setXs();
+            } else if (orientation == '0' && sizeDocument == 'sm'){
+                setSm();
             }
+        }, false);
+       
+            if (sizeDocument == 'xs') {
+                setXs();
+            }
+            if (sizeDocument == 'sm') {
+                setSm();
+            }
+    }
+
+    function setXs(){
+        var sizeFont = parseFloat($('#documento').css("font-size"));
+        sizeFont = Math.round(sizeFont * 0.4);
+        var sizeEncabezado = parseFloat($(".page_margin_top").css('height'));
+        sizeEncabezado = Math.round(sizeEncabezado * 0.6);
+        var sizePie = parseFloat($(".page_content").css('height'));
+        sizePie = Math.round(sizePie * 0.600);
+        $(".page_margin_top").css('height', sizeEncabezado + "px");
+        $(".page_content").css('height', sizePie + "px");
+        $('#documento').css("font-size", sizeFont + "px");
+        $('#documento').find("img")
+        $('#documento').find("p").css("font-size", sizeFont + "px")
+        var contenidoImg = $("#documento").find("img");
+        contenidoImg.each(function (i) {
+            var sizeImg = parseFloat($(this).attr("width"));
+            sizeImg = sizeImg * 2;
+            $(this).css("width", sizeImg + "%");
+        });
+    }
+
+    function setSm() {
+        var sizeFont = parseFloat($('#documento').css("font-size"));
+        sizeFont = Math.round(sizeFont * 0.7);
+        var sizeEncabezado = parseFloat($(".page_margin_top").css('height'));
+        sizeEncabezado = Math.round(sizeEncabezado * 0.9);
+        var sizePie = parseFloat($(".page_content").css('height'));
+        sizePie = Math.round(sizePie * 0.700);
+        $(".page_margin_top").css('height', sizeEncabezado + "px");
+        $(".page_content").css('height', sizePie + "px");
+        $('#documento').css("font-size", sizeFont + "px");
+        $('#documento').find("img")
+        $('#documento').find("p").css("font-size", sizeFont + "px")
+        var contenidoImg = $("#documento").find("img");
+        contenidoImg.each(function (i) {
+            var sizeImg = parseFloat($(this).attr("width"));
+            sizeImg = sizeImg * 1.5;
+            $(this).css("width", sizeImg + "%");
+        });
     }
 });
