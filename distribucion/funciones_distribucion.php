@@ -338,6 +338,7 @@ function generar_enlace_finalizar_distribucion($iddistribucion, $js = 0) {
         }
 
         if ($retornar_enlace && $distribucion[0]['estado_distribucion'] != 3) {
+            //se comenta el boton hasta nueva indicacion de ubicacion
             $html = '<br><button class="finalizar_item_usuario_actual btn btn-mini btn-complete" iddistribucion=' . $iddistribucion . '>Confirmar</button>';
         }
     }//fin if js
@@ -597,10 +598,10 @@ function retornar_ubicacion_origen_destino_distribucion($tipo, $valor) {
     $ubicacion = '';
     if ($tipo == 1) {//iddependencia_cargo
         $datos = busca_filtro_tabla("cargo,dependencia", "vfuncionario_dc", "iddependencia_cargo=" . $valor, "", $conn);
-        $ubicacion = '<b>Dependencia:</b> ' . $datos[0]['dependencia'] . '<br><b>Cargo: </b> ' . $datos[0]['cargo'] . '';
+        $ubicacion = $datos[0]['dependencia'] . '<br> ' . $datos[0]['cargo'] . '';
     } else {//iddatos_ejecutor
         $datos = busca_filtro_tabla("direccion,cargo", "ejecutor a, datos_ejecutor b", "a.idejecutor=b.ejecutor_idejecutor AND b.iddatos_ejecutor=" . $valor, "", $conn);
-        $ubicacion = '<b>Direcci&oacute;n:</b> ' . $datos[0]['direccion'] . '<br/><b>Cargo: </b> ' . $datos[0]['cargo'];
+        $ubicacion = $datos[0]['direccion'] . '<br/> ' . $datos[0]['cargo'];
     }
     return ($ubicacion);
 }
@@ -615,7 +616,7 @@ function retornar_origen_destino_distribucion($tipo, $valor) {
         $datos = busca_filtro_tabla("nombre", "ejecutor a, datos_ejecutor b", "a.idejecutor=b.ejecutor_idejecutor AND b.iddatos_ejecutor=" . $valor, "", $conn);
         $nombre = $datos[0]['nombre'];
     }
-    return ($nombre);
+    return $nombre;
 }
 
 function condicion_adicional_distribucion() {
