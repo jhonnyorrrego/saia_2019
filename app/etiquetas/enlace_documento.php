@@ -1,4 +1,6 @@
 <?php
+
+use Symfony\Component\DependencyInjection\Tests\Compiler\E;
 session_start();
 
 $max_salida = 10;
@@ -29,18 +31,18 @@ if($_SESSION['idfuncionario'] == $_REQUEST['key']){
         $selections = explode(',', $_REQUEST['selections']);
 
         foreach ($_REQUEST['tags'] as $tagId => $value){
-            if($value == 1){
-                foreach ($selections as $documentId){
-                    $EtiquetaDocumento = new EtiquetaDocumento();
-                    $EtiquetaDocumento->setAttributes([
+            foreach ($selections as $documentId){
+                EtiquetaDocumento::executeDelete([
+                    'fk_etiqueta' => $tagId,
+                    'fk_documento' => $documentId
+                ]);
+
+                if($value == 1){
+                    EtiquetaDocumento::newRecord([
                         'fk_documento' => $documentId,
                         'fk_etiqueta' => $tagId
                     ]);
-                        
-                    $EtiquetaDocumento->save();
                 }
-            }else if(!$value){
-                EtiquetaDocumento::deleteByTag($tagId);
             }
         }
     }

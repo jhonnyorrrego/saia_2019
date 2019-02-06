@@ -36,7 +36,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <script data-baseurl="<?= $ruta_db_superior ?>">
         $(function(){
             let baseUrl = $('script[data-baseurl]').data('baseurl');
-            let mailRoute = baseUrl + 'views/buzones/listado.php?idbusqueda_componente=<?= $_REQUEST['idbusqueda_componente'] ?>';
+            let mailRoute = baseUrl + 'views/buzones/listado.php?idbusqueda_componente=<?= $_REQUEST["idbusqueda_componente"] ?>';
 
             $("#mailbox").load(mailRoute, function(){
                 setTimeout(() => {

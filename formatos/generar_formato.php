@@ -434,7 +434,18 @@ class GenerarFormato
             
             if(!$formato[0]['mostrar_pdf']){
                 $validacion_tipo = '<?php if(!$_REQUEST["tipo"] || $_REQUEST["tipo"] != 5): ?>';
-                $validacion_tipo.= $includes . $texto . $this->incluir_libreria("footer_nuevo.php", "librerias");
+                $validacion_tipo.= '<!DOCTYPE html>
+                            <html>
+                                <head>
+                                    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+                                    <meta charset="utf-8" />
+                                    <meta name="viewport"
+                                    	content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
+                                    <meta name="apple-mobile-web-app-capable" content="yes">
+                                    <meta name="apple-touch-fullscreen" content="yes">
+                                    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+                                    <meta content="" name="description" />
+                                    <meta content="" name="Cero K" />'.$includes . $texto . $this->incluir_libreria("footer_nuevo.php", "librerias");
                 $validacion_tipo.= '<?php else: ?>';
                 $validacion_tipo.= $this->generar_mostrar_pdf();
                 $validacion_tipo.= '<?php endif; ?>';

@@ -9,14 +9,16 @@ class Tarea extends Model
     protected $descripcion;
     protected $dbAttributes;
 
-    function __construct($id = null) {
+    function __construct($id = null)
+    {
         return parent::__construct($id);
     }
 
     /**
      * define values for dbAttributes
      */
-    protected function defineAttributes(){
+    protected function defineAttributes()
+    {
         // set the safe attributes to update and consult
         $safeDbAttributes = [
             'nombre',
@@ -26,9 +28,9 @@ class Tarea extends Model
         ];
 
         // set the date attributes on the schema
-        $dateAttributes = [ 'fecha_inicial','fecha_final'];
+        $dateAttributes = ['fecha_inicial', 'fecha_final'];
 
-        $this->dbAttributes = (object) [
+        $this->dbAttributes = (object)[
             'safe' => $safeDbAttributes,
             'date' => $dateAttributes
         ];
@@ -39,7 +41,8 @@ class Tarea extends Model
      *
      * @return string
      */
-    public function getName(){
+    public function getName()
+    {
         return ucfirst(trim(strtolower($this->nombre)));
     }
 
@@ -48,7 +51,8 @@ class Tarea extends Model
      *
      * @return DateTime
      */
-    public function getInitialDate(){
+    public function getInitialDate()
+    {
         return $this->fecha_inicial;
     }
 
@@ -57,21 +61,23 @@ class Tarea extends Model
      *
      * @return DateTime
      */
-    public function getFinalDate(){
+    public function getFinalDate()
+    {
         return $this->fecha_final;
     }
 
-    public function getColor(){
+    public function getColor()
+    {
         $Limit = new DateTime($this->fecha_final);
         $Today = new DateTime();
 
         $diference = DateController::dias_habiles_entre_fechas($Today, $Limit);
 
-        if($diference < 3){
+        if ($diference < 3) {
             $color = '#dc3545';
-        }elseif($diference >= 3 && $diference <= 8){
+        } elseif ($diference >= 3 && $diference <= 8) {
             $color = '#ffc107';
-        }else{
+        } else {
             $color = '#17a2b8';
         }
 
@@ -88,11 +94,12 @@ class Tarea extends Model
      * @param int $type tipo de relacion 1,responsable.2,seguidor.3,creador
      * @return array objetos de la clase tarea
      */
-    public static function findBetweenDates($userId, $initialDate, $finalDate, $type){
+    public static function findBetweenDates($userId, $initialDate, $finalDate, $type)
+    {
         global $conn;
 
         $tables = self::getTableName() . ' a,' . FuncionarioTarea::getTableName() . ' b';
-        $findRecords = busca_filtro_tabla('a.*', $tables, "a.idtarea = b.fk_tarea and b.estado=1 and b.fk_funcionario =" . $userId . " and b.tipo= " . $type . " and " . fecha_db_obtener('a.fecha_inicial', 'Y-m-d H:i:s') . ">='" . $initialDate . "' and " . fecha_db_obtener('a.fecha_final', 'Y-m-d H:i:s') . "<='". $finalDate . "'", '', $conn);
+        $findRecords = busca_filtro_tabla('a.*', $tables, "a.idtarea = b.fk_tarea and b.estado=1 and b.fk_funcionario =" . $userId . " and b.tipo= " . $type . " and " . fecha_db_obtener('a.fecha_inicial', 'Y-m-d H:i:s') . ">='" . $initialDate . "' and " . fecha_db_obtener('a.fecha_final', 'Y-m-d H:i:s') . "<='" . $finalDate . "'", '', $conn);
 
         return self::convertToObjectCollection($findRecords);
     }

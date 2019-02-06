@@ -7,6 +7,7 @@ class Pagina extends Model
     protected $pagina;
     protected $ruta;
     protected $fecha_pagina;
+    protected $consecutivo;
     protected $dbAttributes;
 
     function __construct($id = null)
@@ -105,7 +106,14 @@ class Pagina extends Model
     protected function getUrlTemp($campo, $sufijo, $nameFile, $force)
     {
         $urlTemp = false;
-        $urlImg = UtilitiesController::getFileTemp($campo, $sufijo, $nameFile, $force);
+        $params = [
+            "ruta" => $campo,
+            "sufijo" => $sufijo,
+            "filename" => $nameFile,
+            "force" => $force,
+            "ruta_almacenar" => null
+        ];
+        $urlImg = UtilitiesController::getFileTemp($params);
         if ($urlImg["exito"]) {
             $urlTemp = $urlImg["url"];
         }

@@ -10,6 +10,7 @@ class AnexoTarea extends Model
     protected $descripcion;
     protected $version;
     protected $fecha;
+    protected $user;
     protected $dbAttributes;
 
     function __construct($id = null) {
@@ -35,7 +36,11 @@ class AnexoTarea extends Model
     }
 
     public function getUser(){
-        return new Funcionario($this->fk_funcionario);
+        if(!$this->user){
+            $this->user = new Funcionario($this->fk_funcionario);
+        }
+
+        return $this->user;
     }
 
     public function getFileSize(){
