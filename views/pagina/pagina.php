@@ -11,14 +11,14 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . "controllers/autoload.php";
 
-$iddocumento = $_REQUEST["documentId"];$iddocumento=18;
+$iddocumento = $_REQUEST["documentId"];
 $paginas = Pagina::findAllByAttributes(['id_documento' => $iddocumento]);
-
 ?>
 <!DOCTYPE>
 <html>
 
 <head>
+    <meta charset="UTF-8">
     <link href="<?= $ruta_db_superior; ?>assets/theme/assets/plugins/owl-carousel/assets/owl.carousel.css"
         rel="stylesheet" type="text/css" media="screen" />
     <link href="<?= $ruta_db_superior; ?>assets/theme/assets/plugins/owl-carousel/assets/owl.theme.default.min.css"
@@ -34,42 +34,44 @@ $paginas = Pagina::findAllByAttributes(['id_documento' => $iddocumento]);
 
 <body>
     <div class="container-fluid bg-master-lightest px-4">
-        <div class="row">
-            <div class="col-12">
-                <a href="#" id="addNoty" class="btn btn-mini float-right"><i class="fa fa-comment-o"></i></a>
-                <?php if (UtilitiesController::permisoModulo("editar_paginas")) : ?>
-                <a href="listar_pagina.php?iddoc=<?= $iddocumento; ?>" class="btn btn-mini float-right"><i
-                        class="fa fa-edit"></i></a>
-                <?php endif; ?>
+        <?php if ($paginas) : ?>
+            <div class="row">
+                <div class="col-12">
+                    <a href="#" id="addNoty" class="btn btn-mini float-right"><i class="fa fa-comment-o"></i></a>
+                    <?php if (UtilitiesController::permisoModulo("editar_paginas")) : ?>
+                    <a href="listar_pagina.php?iddoc=<?= $iddocumento; ?>" class="btn btn-mini float-right"><i
+                            class="fa fa-edit"></i></a>
+                    <?php endif; ?>
+                </div>
             </div>
-        </div>
-        <hr />
-        <div class="row">
-            <div class="col-12 owl-carousel text-center">
-                <?php
-                for ($i = 0; $i < $paginas["numcampos"]; $i++) :
-                    $fileMin = $paginas["data"][$i]->getUrlImagenTemp();
-                    $fileMax = $paginas["data"][$i]->getUrlRutaTemp();
-                    if ($fileMin !== false && $fileMax !== false) : ?>
-                    <div data-image="<?= $fileMin; ?>" data-src="<?= $fileMax; ?>" data-toggle="tooltip"
-                        data-placement="bottom" title="P&aacute;gina No <?= $paginas["data"][$i]->getPagina(); ?>"></div>
+            <div class="row">
+                <div class="col-12 owl-carousel text-center">
                     <?php
-                    endif;
-                endfor;
-                ?>
-            </div>
-        </div>
-        <hr />
-        <div class="row">
-            <div class="col-12" id="divPagina">
-                <?php if ($paginas["numcampos"]) : ?>
-                <span id="num_pagina" data-id="<?= $paginas["data"][0]->getPK(); ?>" class="float-right">P&aacute;gina
-                    No <?= $paginas["data"][0]->getPagina(); ?></span>
-                <img id="img-pagina" class="w-100" src="<?= $paginas["data"][0]->getUrlRutaTemp(); ?>" />
-                <?php endif; ?>
-            </div>
-        </div>
+                    foreach ($paginas as $key => $Pagina) :
+                        $fileMin = $Pagina->getUrlImagenTemp();
+                        $fileMax = $Pagina->getUrlRutaTemp();
 
+                        if ($fileMin !== false && $fileMax !== false) : ?>
+                        <div data-image="<?= $fileMin; ?>" data-src="<?= $fileMax; ?>" data-toggle="tooltip"
+                            data-placement="bottom" title="P&aacute;gina No <?= $Pagina->getPagina(); ?>"
+                            data-id="<?= $Pagina->getPK() ?>"></div>
+                        <?php endif ?>
+                    <?php endforeach ?>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12" id="divPagina">
+                    <span id="num_pagina" data-id="" class="float-right"></span>
+                    <img id="img-pagina" class="w-100" src="" />
+                </div>
+            </div>
+        <?php else: ?>
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-danger">El documento no tiene páginas digitalizadas</div>
+                </div>
+            </div>
+        <?php endif; ?>
     </div>
     <script src="<?= $ruta_db_superior; ?>assets/theme/assets/plugins/owl-carousel/owl.carousel.min.js"
         type="text/javascript"></script>
@@ -92,9 +94,9 @@ $paginas = Pagina::findAllByAttributes(['id_documento' => $iddocumento]);
                             <textarea class="w-100" id="text-${data.id}">${data.text}</textarea>
                         </div>
                         <div class="col-12">
-                          <input type="text" id="json-${data.id}" value='${data.json}'>
-                          <span class="btn btn-danger float-right delete" data-id="${data.id}">Eliminar</span>
+                          <input type="hidden" id="json-${data.id}" value='${data.json}'>
                           <span class="btn btn-complete float-right save" data-id="${data.id}">Guardar</span>
+                          <span class="btn btn-danger float-right delete" data-id="${data.id}">Eliminar</span>
                         </div>
                     </div>`;
             return html;
@@ -151,15 +153,35 @@ $paginas = Pagina::findAllByAttributes(['id_documento' => $iddocumento]);
             }
         }
 
+        $(document).off("click", "#addNoty");
         $(document).on("click", "#addNoty", function() {
             appendNota(null, 1);
         });
 
+        $(document).off("click", ".delete");
         $(document).on("click", ".delete", function() {
             let id = $(this).data("id");
             $("#" + id).remove();
+
+            $.post(`${baseUrl}app/nota_pagina/eliminar.php`, {
+                key: key,
+                id: id
+            }, function(response) {
+                if (response.success) {
+                    top.notification({
+                        type: 'success',
+                        message: response.message
+                    });
+                } else {
+                    top.notification({
+                        type: 'error',
+                        message: response.message
+                    });
+                }
+            }, 'json');
         });
 
+        $(document).off("click", ".save");
         $(document).on("click", ".save", function() {
             let id = $(this).data("id");
             let dataInfo = {
@@ -177,15 +199,22 @@ $paginas = Pagina::findAllByAttributes(['id_documento' => $iddocumento]);
                 dataType: 'json',
                 success: function(data) {
                     if (data.success) {
-                        toastr.success(data.message);
+                        top.notification({
+                            type: 'success',
+                            message: data.message
+                        });
                     } else {
-                        toastr.error(data.message);
+                        top.notification({
+                            type: 'error',
+                            message: data.message
+                        });
                     }
                 },
                 error: function() {
-                    toastr.error(
-                        'Error! No es posible actualizar la informaci&oacute;n de la nota'
-                    );
+                    top.notification({
+                        type: 'error',
+                        message: 'Error! No es posible actualizar la informaci&oacute;n de la nota'
+                    });
                 }
             });
 
@@ -202,18 +231,24 @@ $paginas = Pagina::findAllByAttributes(['id_documento' => $iddocumento]);
                 },
                 type: 'post',
                 dataType: 'json',
-                success: function(data) {
-                    if (data.success == 1) {
-                        for (i = 0; i < data.numcampos; i++) {
-                            $("#divPagina").append(appendNota(data[i].info, 0));
+                success: function(response) {
+                    if (response.success == 1) {
+                        for (i = 0; i < response.data.length; i++) {
+                            $("#divPagina").append(appendNota(response.data[i], 0));
                         }
                         initdrag();
-                    } else if (data.success == 0) {
-                        toastr.error(data.message);
+                    } else {
+                        top.notification({
+                            type: 'error',
+                            message: data.message
+                        });
                     }
                 },
                 error: function() {
-                    toastr.error('Error! No es posible cargar la informaci&oacute;n');
+                    top.notification({
+                        type: 'error',
+                        message: 'Error! No es posible cargar la informaci&oacute;n'
+                    });
                 }
             });
         }
@@ -233,10 +268,12 @@ $paginas = Pagina::findAllByAttributes(['id_documento' => $iddocumento]);
 
                 var title = $(this).attr('title');
                 $("#num_pagina").empty().text(title);
+                $("#num_pagina").data('id', $(this).data('id'));
                 $(".draggable").remove();
                 listarNotas();
             });
         });
+        $('.owl-carousel > div:first').trigger('click');
 
         var owl = $('.owl-carousel');
         owl.owlCarousel({

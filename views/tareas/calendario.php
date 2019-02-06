@@ -17,4 +17,4 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 <div id='calendar'></div>
 <script src='<?= $ruta_db_superior ?>assets/theme/assets/plugins/fullcalendar-3.9.0/fullcalendar.min.js'></script>
 <script src='<?= $ruta_db_superior ?>assets/theme/assets/plugins/fullcalendar-3.9.0/locale/es.js'></script>
-<script src='<?= $ruta_db_superior ?>views/tareas/js/calendario.js' data-baseurl="<?= $ruta_db_superior ?>"></script>
+<script src='<?= $ruta_db_superior ?>views/tareas/js/calendario.js'></script>
