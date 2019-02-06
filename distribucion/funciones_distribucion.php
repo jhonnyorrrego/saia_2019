@@ -263,7 +263,7 @@ function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0
 					<br>
 					' . retornar_ubicacion_origen_destino_distribucion($distribuciones[$i]['tipo_destino'], $distribuciones[$i]['destino']) . '
 				</td>
-            </tr>';
+			</tr>';
         }
 
         $tabla .= '<thead></table></div></div>';
@@ -570,22 +570,6 @@ function opciones_acciones_distribucion($datos) {
         $cadena_acciones .= "<option value='boton_finalizar_entrega_personal'>Finalizar sin planilla</option>";
     }
 
-    //SELECCIONAR Y QUITAR SELECCIONADOS
-    $cadena_acciones .= "<optgroup label='Seleccionar Distribuciones...'>";
-    $cadena_acciones .= "<option value='seleccionar_todos_accion_distribucion'>Todos</option>";
-    $cadena_acciones .= "<option value='quitar_seleccionados_accion_distribucion'>Niguno</option>";
-    $cadena_acciones .= "</optgroup>";
-    //FIN SELECCIONAR Y QUITAR SELECCIONADOS
-    //SELECCIONAR Y QUITAR SELECCIONADOS
-    $cadena_acciones .= "<optgroup label='Filtrar Origen...'>";
-    $cadena_acciones .= "<option value='filtrar_tipo_origen_externo'>Externo</option>";
-    //PARA COLPATRIA Entrada
-    $cadena_acciones .= "<option value='filtrar_tipo_origen_interno'>Interno</option>";
-    //PARA COLPATRIA Salida a externo
-    $cadena_acciones .= "<option value='filtrar_tipo_origen_todos'>Mostrar Todos</option>";
-    $cadena_acciones .= "</optgroup>";
-    //FIN SELECCIONAR Y QUITAR SELECCIONADOS
-
     $cadena_acciones .= "</select>";
 
     return ($cadena_acciones);
@@ -836,42 +820,6 @@ function actualizar_mensajero_ruta_distribucion($idft_ruta_distribucion, $iddepe
 
 //fin function actualizar_mensajero_ruta_distribucion()
 //---------------------------------------------------------------------------------------------
-
-function filtro_ventanilla_radicacion() {
-    global $ruta_db_superior, $conn;
-
-    $select = "";
-    $administrador_mensajeria = validar_administrador_mensajeria();
-    $ver_select = false;
-    if ($administrador_mensajeria) {
-        $ver_select = true;
-    }
-
-    if ($ver_select) {
-
-        $select = "<select class='pull-left btn btn-mini dropdown-toggle' style='height:22px; margin-left: 10px;' name='filtro_ventanilla_radicacion' id='filtro_ventanilla_radicacion'>";
-        $select .= "<option value=''>Todas Las Ventanillas</option>";
-        $datos = busca_filtro_tabla("nombre,valor,idcf_ventanilla", "cf_ventanilla", "estado=1", "", $conn);
-
-        //if($vector_variable_busqueda[0]=='filtro_mensajero_distribucion' && $vector_variable_busqueda[1]){
-        $vector_variable_busqueda = explode('|', @$_REQUEST['variable_busqueda']);
-
-        for ($i = 0; $i < $datos['numcampos']; $i++) {
-            $selected = '';
-            if ($vector_variable_busqueda[0] == 'filtro_ventanilla_radicacion' && $vector_variable_busqueda[1]) {
-                if ($vector_variable_busqueda[1]) {
-                    if ($vector_variable_busqueda[1] == $datos[$i]['idcf_ventanilla']) {
-                        $selected = 'selected';
-                    }
-                }
-            }
-            $select .= "<option value='" . $datos[$i]['idcf_ventanilla'] . "' " . $selected . ">" . $datos[$i]['nombre'] . "</option>";
-        }
-        $select .= "</select>";
-    }//fin if $ver_select
-    return $select;
-}
-
 function filtro_mensajero_distribucion() {
     global $ruta_db_superior, $conn;
 
