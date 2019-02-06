@@ -174,15 +174,14 @@ class Expediente extends Model
             if (!$this->nucleo) {
                 $instance = new EntidadExpediente();
                 $attributes = [
-                    'llave_entidad' => $this->propietario,
+                    'fk_funcionario' => $this->propietario,
                     'tipo_funcionario' => 1,
                     'permiso' => 'e,d,c',
                     'fecha' => date('Y-m-d H:i:s'),
-                    'fk_entidad' => 1,
                     'fk_expediente' => $this->idexpediente
                 ];
                 $instance->setAttributes($attributes);
-                $instance->CreateEntidadExpediente();
+                $instance->createEntidadExpediente();
             }
             $response['exito'] = 1;
             $response['message'] = 'Datos guardados correctamente';
@@ -340,7 +339,8 @@ class Expediente extends Model
      */
     private function setAccessUser(int $idfuncionario)
     {
-        if (UtilitiesController::permisoModulo('expediente_admin')) {
+        //DESCOMENTAR CUAMBIAR CUANDO TERMINE EL DESARROLLO
+        /*if (UtilitiesController::permisoModulo('expediente_admin')) {
             $this->permiso = [
                 'a' => true,
                 'l' => true,
@@ -348,7 +348,7 @@ class Expediente extends Model
                 'c' => true,
                 'd' => true
             ];
-        } else {
+        } else {*/
             $sql = "SELECT permiso FROM permiso_expediente WHERE fk_expediente={$this->idexpediente} and fk_funcionario={$idfuncionario}";
             $consPermiso = $this->search($sql);
             if ($consPermiso) {
@@ -364,7 +364,7 @@ class Expediente extends Model
                 $this->permiso['d'] = true;
                 $this->permiso['c'] = true;
             }
-        }
+        //}
     }
     /**
      * obtiene los permisos del funcionario logueado

@@ -27,6 +27,10 @@ class PermisoSerie extends Model
         ];
     }
 
+    public function afterDelete(){
+        return PermisoExpediente::deleteAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1);
+    }
+
     /**
      * Crea el permiso de la serie con sus correspondientes vinculaciones (Permiso expediente)
      * NO utilizar save/create para crear una permiso de serie
@@ -43,11 +47,15 @@ class PermisoSerie extends Model
             'message' => ''
         ];
         if ($this->create()) {
-            PermisoExpediente::deleteAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1);
-            PermisoExpediente::insertAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1, $this->permiso);
-
-            $response['data']['id'] = $this->idpermiso_serie;
-            $response['exito'] = 1;
+            $okDel = PermisoExpediente::deleteAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1);
+            $okIns = PermisoExpediente::insertAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1, $this->permiso);
+            if ($okDel && $okIns) {
+                $response['data']['id'] = $this->idpermiso_serie;
+                $response['exito'] = 1;
+            } else {
+                $response['message'] = 'No se pudo crear los permiso sobre los expedientes';
+                $this->delete();
+            }
         }
         return $response;
     }
@@ -55,15 +63,22 @@ class PermisoSerie extends Model
      * Actualiza el permiso y sus correspondientes vinculados (permiso expedientes)
      * NO utilizar update() para actualizar un permiso
      * 
-     * @return void
+     * @return bool
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
     public function updatePermisoSerie()
     {
+        $response = false;
         if ($this->update()) {
-            PermisoExpediente::deleteAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1);
-            PermisoExpediente::insertAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1, $this->permiso);
+            $okDel = PermisoExpediente::deleteAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1);
+            $okIns = PermisoExpediente::insertAllPermisoExpediente($this->fk_entidad_serie, $this->llave_entidad, $this->fk_entidad, 1, $this->permiso);
+            if ($okDel && $okIns) {
+                $response = true;
+            }else{
+                $this->delete();
+            }
         }
+        return $response;
     }
     /**
      * Elimina el permiso sobre la serie y sus correspondientes vinculados (permiso expediente)

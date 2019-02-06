@@ -55,33 +55,30 @@ class ExpedienteController
                     $success = 0;
 
                     foreach ($data['idfuncionario'] as $user) {
-                        $sql = "SELECT idpermiso_expediente FROM permiso_expediente WHERE fk_entidad=1 AND tipo_funcionario=0 AND tipo_permiso=2 AND fk_funcionario={$user}";
+                        $sql = "SELECT identidad_expediente FROM entidad_expediente WHERE tipo_funcionario=0 AND fk_funcionario={$user}";
                         foreach ($idExp as $idexpediente) {
                             $cant++;
                             $sql .= " AND fk_expediente={$idexpediente}";
                             $record = StaticSql::search($sql);
                             if ($record) {
-                                $PermisoExpediente = new PermisoExpediente($record[0]['idpermiso_expediente']);
-                                $PermisoExpediente->setAccess("c");
-                                $PermisoExpediente->permiso = implode(',', $PermisoExpediente->access);
-                                if ($PermisoExpediente->update()) {
+                                $EntidadExpediente = new EntidadExpediente($record[0]['identidad_expediente']);
+                                $EntidadExpediente->setAccessPermits("c");
+                                $info = $EntidadExpediente->updateEntidadExpediente();
+                                if ($info['exito']) {
                                     $success++;
                                 }
                             } else {
-                                $Exp = new Expediente($idexpediente);
                                 $attributes = [
                                     'fk_funcionario' => $user,
-                                    'fk_entidad' => 1,
-                                    'llave_entidad' => $user,
-                                    'fk_entidad_serie' => $Exp->fk_entidad_serie,
-                                    'tipo_permiso' => 2,
+                                    'fecha' => date('Y-m-d H:i:s'),
                                     'tipo_funcionario' => 0,
                                     'permiso' => 'c',
                                     'fk_expediente' => $idexpediente
                                 ];
-                                $PermisoExpediente = new PermisoExpediente();
-                                $PermisoExpediente->setAttributes($attributes);
-                                if ($PermisoExpediente->create()) {
+                                $EntidadExpediente = new EntidadExpediente();
+                                $EntidadExpediente->setAttributes($attributes);
+                                $info = $EntidadExpediente->createEntidadExpediente();
+                                if ($info['exito']) {
                                     $success++;
                                 }
                             }

@@ -13,14 +13,9 @@ class PermisoExpediente extends Model
     protected $fk_expediente;
     protected $dbAttributes;
 
-    public $access;
-
     public function __construct($id = null)
     {
         parent::__construct($id);
-        if ($id) {
-            $this->setAccess();
-        }
     }
 
     protected function defineAttributes()
@@ -38,44 +33,6 @@ class PermisoExpediente extends Model
             ]
         ];
     }
-
-    public function setAccess(string $permiso=null)
-    {
-        if($permiso){
-            $this->access[$permiso] =$permiso;
-        }else{
-            $arrayPermiso= explode(',', $this->permiso);
-            foreach ($arrayPermiso as $value) {
-                $this->access[$value] =  $value;
-            }
-        }
-    }
-
-    public function deletePermisoExpediente(string $permidoDel = null) : bool
-    {
-        $response = false;
-        if ($permidoDel) {
-            if (in_array($permidoDel, $this->access)) {
-                unset($this->access[$permidoDel]);
-                if (empty($this->access)) {
-                    if ($this->delete()) {
-                        $response = true;
-                    }
-                } else {
-                    $this->permiso = implode(',', $this->access);
-                    if ($this->update()) {
-                        $response = true;
-                    }
-                }
-            }
-        } else {
-            if ($this->delete()) {
-                $response = true;
-            }
-        }
-        return $response;
-    }
-
 
     /**
      * retorna las instancia de funcionarios vinculadas al permiso del expediente
@@ -165,14 +122,13 @@ class PermisoExpediente extends Model
      * @param integer $llaveEntidad
      * @param integer $fkEntidad
      * @param integer $tipoPermiso
-     * @return void
+     * @return bool
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
     public static function deleteAllPermisoExpediente(int $fkEntidadSerie, int $llaveEntidad, int $fkEntidad, int $tipoPermiso)
     {
         $sql = "DELETE FROM permiso_expediente WHERE fk_entidad_serie={$fkEntidadSerie} AND llave_entidad={$llaveEntidad} AND fk_entidad={$fkEntidad} AND tipo_permiso={$tipoPermiso} and tipo_funcionario=0";
-        StaticSql::query($sql);
-        return;
+        return StaticSql::query($sql);
     }
     /**
      * Inserta los permisos sobre los expedientes
@@ -182,16 +138,19 @@ class PermisoExpediente extends Model
      * @param integer $fkEntidad
      * @param integer $tipoPermiso
      * @param string $Permiso
-     * @return void
+     * @return bool
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
     public static function insertAllPermisoExpediente(int $fkEntidadSerie, int $llaveEntidad, int $fkEntidad, int $tipoPermiso, string $permiso)
     {
-        switch ($fkEntidadSerie) {
+        $response = false;
+        switch ($fkEntidad) {
             case 1:
                 $sql = "INSERT INTO permiso_expediente (fk_funcionario,fk_entidad,llave_entidad,fk_entidad_serie,tipo_permiso,permiso,tipo_funcionario,fk_expediente)
                 SELECT {$llaveEntidad},{$fkEntidad},{$llaveEntidad},{$fkEntidadSerie},{$tipoPermiso},'{$permiso}',0,idexpediente FROM expediente WHERE fk_entidad_serie={$fkEntidadSerie}";
-                StaticSql::insert($sql);
+                if (StaticSql::insert($sql)) {
+                    $response = true;
+                }
                 break;
             case 2:
                 $sql = "SELECT DISTINCT idfuncionario FROM vfuncionario_dc WHERE estado=1 and estado_dc=1 and iddependencia={$llaveEntidad}";
@@ -200,7 +159,9 @@ class PermisoExpediente extends Model
                     foreach ($funcionarios as $fila) {
                         $sql = "INSERT INTO permiso_expediente (fk_funcionario,fk_entidad,llave_entidad,fk_entidad_serie,tipo_permiso,permiso,tipo_funcionario,fk_expediente)
                         SELECT {$fila['idfuncionario']},{$fkEntidad},{$llaveEntidad},{$fkEntidadSerie},{$tipoPermiso},'{$permiso}',0,idexpediente FROM expediente WHERE fk_entidad_serie={$fkEntidadSerie}";
-                        StaticSql::insert($sql);
+                        if (StaticSql::insert($sql)) {
+                            $response = true;
+                        }
                     }
                 }
                 break;
@@ -212,11 +173,13 @@ class PermisoExpediente extends Model
                     foreach ($funcionarios as $fila) {
                         $sql = "INSERT INTO permiso_expediente (fk_funcionario,fk_entidad,llave_entidad,fk_entidad_serie,tipo_permiso,permiso,tipo_funcionario,fk_expediente)
                         SELECT {$fila['idfuncionario']},{$fkEntidad},{$llaveEntidad},{$fkEntidadSerie},{$tipoPermiso},'{$permiso}',0,idexpediente FROM expediente WHERE fk_entidad_serie={$fkEntidadSerie}";
-                        StaticSql::insert($sql);
+                        if (StaticSql::insert($sql)) {
+                            $response = true;
+                        }
                     }
                 }
                 break;
         }
-        return;
+        return $response;
     }
 }

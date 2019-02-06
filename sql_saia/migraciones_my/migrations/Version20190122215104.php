@@ -197,8 +197,7 @@ final class Version20190122215104 extends AbstractMigration
 
         $tabla6 = $schema->createTable("entidad_expediente");
         $tabla6->addColumn("identidad_expediente", "integer", ["autoincrement" => true]);
-        $tabla6->addColumn("fk_entidad", "integer");
-        $tabla6->addColumn("llave_entidad", "integer");
+        $tabla6->addColumn("fk_funcionario", "integer");
         $tabla6->addColumn("fk_expediente", "integer");
         $tabla6->addColumn("permiso", "string", ["length" => 10, "comment" => "d:Eliminar;e:Editarc:Compartir"]);
         $tabla6->addColumn("tipo_funcionario", "integer", ["default" => 0, "comment" => "1:Creador;2:Responsable;0,Otros"]);

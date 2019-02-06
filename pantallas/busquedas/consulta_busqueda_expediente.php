@@ -59,7 +59,6 @@ if (!empty($idexpediente)) {
         $okAddAcciones = 1;
     }
 }
-
 if ($datos_busqueda[0]["busqueda_avanzada"] != '') {
     if (strpos($datos_busqueda[0]["busqueda_avanzada"], "?")) {
         $datos_busqueda[0]["busqueda_avanzada"] .= "&";
@@ -70,7 +69,6 @@ if ($datos_busqueda[0]["busqueda_avanzada"] != '') {
 }
 
 echo (librerias_html5());
-//echo(librerias_jquery("1.7"));
 echo jquery();
 echo (estilo_bootstrap());
 ?>
@@ -222,18 +220,6 @@ echo (estilo_bootstrap());
         <!-- Variable busqueda -->
         <input type="hidden" value="<?= $_REQUEST["variable_busqueda"]; ?>" name="variable_busqueda" id="variable_busqueda">
 
-        <?php
-        /*
-        <!-- idbusqueda_filtro_temp -->
-        <input type="hidden" value="<?=$_REQUEST["idbusqueda_filtro_temp"]; ?>" name="idbusqueda_filtro_temp" id="idbusqueda_filtro_temp">
-        <!-- idbusqueda_filtro -->
-        <input type="hidden" value="<?=$_REQUEST["idbusqueda_filtro"]; ?>" name="idbusqueda_filtro" id="idbusqueda_filtro">
-        <!-- idbusqueda_temporal -->
-        <input type="hidden" value="<?=$_REQUEST["idbusqueda_temporal"]; ?>" name="idbusqueda_temporal" id="idbusqueda_temporal">
-        
-        <!-- idcaja -->
-        <input type="hidden" value="<?=$_REQUEST["idcaja"]; ?>" name="idcaja" id="idcaja">*/
-        ?>
     </div>
 </div>
 <div class="pull-left" id="panel_detalle">
