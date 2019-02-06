@@ -82,10 +82,16 @@ $(function () {
 
     function setSize() {
         let sizeDocument = localStorage.getItem('breakpoint');
+        console.log(sizeDocument);
             if (sizeDocument == 'xs') {
                 var sizeFont = parseFloat($('#documento').css("font-size"));
                 sizeFont = Math.round(sizeFont * 0.4);
-                console.log
+                var sizeEncabezado = parseFloat($(".page_margin_top").css('height'));
+                sizeEncabezado = Math.round(sizeEncabezado * 0.6);
+                var sizePie = parseFloat($(".page_content").css('height'));
+                sizePie = Math.round(sizePie * 0.600);
+                $(".page_margin_top").css('height', sizeEncabezado+"px");
+                $(".page_content").css('height', sizePie + "px");
                 $('#documento').css("font-size", sizeFont+"px");
                 $('#documento').find("img")
                 $('#documento').find("p").css("font-size", sizeFont+"px")

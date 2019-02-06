@@ -800,7 +800,9 @@ function mostrar_estado_proceso($idformato, $iddoc)
 							<br /><p class='my-0'><b>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</b></p><br />";
                         if ($cargos["numcampos"]) {
                             for ($h = 0; $h < $cargos["numcampos"]; $h++)
-                                echo formato_cargo($cargos[$h]["nombre"]) . "<br/>";
+                                echo "<p><b>".formato_cargo($cargos[$h]["nombre"]) . "</b></p></br>";
+                        } else {
+                            echo "</p>";
                         }
                         if ($iniciales == ($fila["funcionario_codigo"]))
                             $firma_actual = true;
@@ -809,7 +811,7 @@ function mostrar_estado_proceso($idformato, $iddoc)
                     $firmas++;
                 } elseif ($fila["obligatorio"] == 2) {// Revisado
                     if ($fila["nombre"] == "POR_APROBAR")
-                        $revisados .= "<tr><td style='width:100%; border:none;'><br/><span class='phpmaker'>Revis&oacute; : " . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "-" . formato_cargo($cargos[0]["nombre"]) . " (Pendiente)</span></td></tr>";
+                        $revisados .= "<tr><td style='width:100%;border:none;'><br/><span class='phpmaker'>Revis&oacute; : " . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "-" . formato_cargo($cargos[0]["nombre"]) . " (Pendiente)</span></td></tr>";
                     elseif ($fila["nombre"] == "APROBADO" || $fila["nombre"] == "REVISADO")
                         $revisados .= "<tr><td style='width:100%;border:none;'><br/><span class='phpmaker'>Revis&oacute; : " . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "-" . formato_cargo($cargos[0]["nombre"]) . "</span> </td></tr>";
                 } elseif ($fila["obligatorio"] == 5) {// Firma externa
@@ -818,7 +820,7 @@ function mostrar_estado_proceso($idformato, $iddoc)
                         $fila_abierta = 1;
                     }
                     if ($fila["nombre"] == "POR_APROBAR" && $fila["firma_externa"] == '') {
-                        $firmar = "&nbsp;&nbsp;";
+                        $firmar = "";
                         if ($_SESSION['usuario_actual'] == $fila["funcionario_codigo"]) {
                             $firmar = firma_externa_funcion($idformato, $iddoc, "ruta", "firma_externa", "idruta", $fila["idruta"], "&confirmar=1", 1);
                             $ocultar_confirmar++;
@@ -851,7 +853,7 @@ function mostrar_estado_proceso($idformato, $iddoc)
 
             if ($firmas < $num_cols && $fila_abierta == 1) {
                 while ($firmas < $num_cols) {
-                    echo "<td>&nbsp;</td>";
+                    echo "<td style='border:none;'></td>";
                     $firmas++;
                 }
                 echo "</tr>";
