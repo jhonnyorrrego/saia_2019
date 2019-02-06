@@ -23,9 +23,9 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
         <table id="table" data-selections=""></table>
     </div>
 </div>
-<script data-baseurl='<?= $ruta_db_superior ?>' id="baseUrl">
+<script>
     $(function(){
-        var baseUrl = '<?= $ruta_db_superior ?>';
+        var baseUrl = $("script[data-baseurl]").data('baseurl');
         var encabezado = '<?= $component[0]["encabezado_componente"] ?>'
         var component = '<?= $_REQUEST["idbusqueda_componente"] ?>';
         var param = '<?= $_REQUEST["variable_busqueda"] ?>';
@@ -40,6 +40,7 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
             pageSize: 15,
             columns: [{
                 field: 'info',
+                title: ''
             }],
             responseHandler: function(response){
                 for (let index = 0; index < response.rows.length; index++) {
@@ -58,7 +59,8 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
 
                 selections.forEach(s => {
                     $(`:checkbox[data-id=${s}]`).prop('checked', true);
-                })
+                });
+                $('.card-view .title').hide();
 
                 paintSelected();
             },

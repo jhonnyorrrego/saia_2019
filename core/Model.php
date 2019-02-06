@@ -336,10 +336,8 @@ abstract class Model extends StaticSql
     public static function findAllByAttributes($conditions, $fields = [], $order = '', $limit = 0)
     {
         $sql = self::generateSelectSql($conditions, $fields, $order, $limit);
-        $records = self::search($sql, 0, $limit);
-        $response = self::convertToObjectCollection($records);
-
-        return $response;
+        $records = self::search($sql, 0, $limit);        
+        return self::convertToObjectCollection($records);
     }
 
     /**

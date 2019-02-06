@@ -10,8 +10,15 @@ class UtilitiesController
      * : [ruta_almacenar] string ruta donde desea almacenar la imagen
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      * */
-    public static function getFileTemp(array $param = array("ruta" => null, "sufijo" => "", "filename" => null, "force" => false, "ruta_almacenar" => null)) : array
-    {
+    public static function getFileTemp(
+        array $param = [
+            "ruta" => null,
+            "sufijo" => "",
+            "filename" => null,
+            "force" => false,
+            "ruta_almacenar" => null
+        ]
+    ) : array {
         global $ruta_db_superior;
         $retorno = array(
             "exito" => 0,

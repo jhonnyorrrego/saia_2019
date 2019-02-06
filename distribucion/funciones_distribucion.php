@@ -235,29 +235,30 @@ function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0
     $distribuciones = busca_filtro_tabla("numero_distribucion,tipo_origen,origen,tipo_destino,destino,estado_distribucion,iddistribucion", "distribucion", "documento_iddocumento=" . $iddoc, "", $conn);
     $tabla = '';
     if ($distribuciones['numcampos']) {
-        $tabla = '<table class="table table-bordered" style="width: 100%; text-align:left;" border="1">
-	    	<tr>
-	    		<th style="text-align:center;" colspan="4"><p>INFORMACI&Oacute;N DESTINO</p></th>
-	    	</tr>
-	    	<tr>
-	    		<th style="text-align:center;">ENTREGA F&Iacute;SICA</th>
-	        	<th style="text-align:center;">NO. ITEM</th>
-	        	<th style="text-align:center;">NOMBRE ORIGEN</th>
-	        	<th style="text-align:center;">NOMBRE DESTINO</th>
+        $tabla = '
+            <div class="row">
+            <div class="col-md-12">
+            <table class="table  table-condensed" style="width: 100%; text-align:left;margin-bottom:5%;" border="0">
+            <thead>
+            <tr>
+            <td style="text-align:center;" style="width:8%;"><b class="hint-text">NO. ITEM</b></td>
+            <td style="text-align:center;" style="width:8%;"><b class="hint-text">ENTREGA F&Iacute;SICA</b></td>
+            <td style="text-align:center;" style="width:10%;"><b class="hint-text">ORIGEN</b></td>
+            <td style="text-align:center;" style="width:20%;"><b class="hint-text">DESTINO</b></td>
 	      	</tr>';
 
         for ($i = 0; $i < $distribuciones['numcampos']; $i++) {
             $enlace_finalizar_distribucion = generar_enlace_finalizar_distribucion($distribuciones[$i]['iddistribucion']);
 
             $tabla .= '<tr>
-				<td style="text-align:center;"> ' . ver_estado_distribucion($distribuciones[$i]['estado_distribucion']) . $enlace_finalizar_distribucion . ' </td>
-				<td style="text-align:center;"> ' . $distribuciones[$i]['numero_distribucion'] . ' </td>
-				<td> 
+				<td style="text-align:center;" style="width:8%;"> ' . $distribuciones[$i]['numero_distribucion'] . ' </td>
+				<td style="text-align:center;" style="width:8%;"> ' . ver_estado_distribucion($distribuciones[$i]['estado_distribucion']) . $enlace_finalizar_distribucion . ' </td>
+				<td style="text-align:center;"> 
 					' . retornar_origen_destino_distribucion($distribuciones[$i]['tipo_origen'], $distribuciones[$i]['origen']) . ' 
 					<br>
 					' . retornar_ubicacion_origen_destino_distribucion($distribuciones[$i]['tipo_origen'], $distribuciones[$i]['origen']) . '
 				</td>
-				<td> 
+				<td style="text-align:center;"> 
 					' . retornar_origen_destino_distribucion($distribuciones[$i]['tipo_destino'], $distribuciones[$i]['destino']) . ' 
 					<br>
 					' . retornar_ubicacion_origen_destino_distribucion($distribuciones[$i]['tipo_destino'], $distribuciones[$i]['destino']) . '
@@ -265,7 +266,7 @@ function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0
 			</tr>';
         }
 
-        $tabla .= '</table>';
+        $tabla .= '<thead></table></div></div>';
         $tabla .= generar_enlace_finalizar_distribucion(0, 1);
     }
     if ($retorno) {

@@ -45,7 +45,10 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
                 'ruta' => $dbRoute,
                 'etiqueta' => end($routePath),
                 'tipo' => end($extensionParts),
-                'fecha_anexo' => date('Y-m-d H:i:s')
+                'fecha_anexo' => date('Y-m-d H:i:s'),
+                'fk_funcionario' => $_REQUEST['key'],
+                'estado' => 1,
+                'version' => 1
             ]);
         }
 
