@@ -59,6 +59,7 @@ if (!empty($_REQUEST["idactividad"])) {
            data-click-to-select="true"
            data-show-toggle="true"
            data-show-columns="true"
+           data-toolbar="#toolbar_tabla_req_in"
            data-pagination="true">
         <thead>
             <tr>
