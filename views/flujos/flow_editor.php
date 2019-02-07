@@ -112,32 +112,52 @@ if (isset($_REQUEST["idflujo"])) {
         });
     });
 
-    function iterarElementos(obj) {
-        var result = [];
-        for (var id in obj) {
-            try {
-                if (typeof (obj[id]) == "function") {
-                    result.push(id + ": " + obj[id].toString());
-                }
-            } catch (err) {
-                result.push(id + ": inaccessible");
-            }
-        }
-        return result;
-    }
-
     /**
      * Save diagram contents and print them to the console.
      */
     function exportDiagram() {
-        bpmnModeler.saveXML({format: true}, function (err, xml) {
-            if (err) {
-                //console.error('No se pudo guardar el digagraam BPMN 2.0', err);
-                top.notification({type: "error", message: "No se pudo guardar el digagraam BPMN 2.0"});
-                // return console.error('No se pudo guardar el digagraam BPMN 2.0', err);
-            }
-            guardarDiagrama(idflujo, xml);
-        });
+        if(bpmnModeler) {
+            bpmnModeler.saveXML({format: true}, function (err, xml) {
+                if (err) {
+                    //console.error('No se pudo guardar el diagrama BPMN 2.0', err);
+                    top.notification({type: "error", message: "No se pudo guardar el diagrama BPMN 2.0"});
+                    // return console.error('No se pudo guardar el digagraam BPMN 2.0', err);
+                }
+                if (idflujo && idflujo != "") {
+                    console.log("ID FLUJO", idflujo);
+                    //console.log(bpmnModeler);
+
+                    $.ajax({
+                        url: '<?= $ruta_db_superior ?>app/flujo/guardarDiagrama.php',
+                        dataType: "json",
+                        async: false,
+                        type: "POST", // type should be POST
+                        data: {
+                            datos: xml,
+                            idflujo: idflujo,
+                            key: localStorage.getItem("key")
+                        }, // send the string directly
+                        success: function (response) {
+                            console.log(response);
+                            if (response.success == 1) {
+                                top.notification({title: "Diagrama", type: "success", message: response.message});
+                            } else {
+                                top.notification({type: "error", message: response.message});
+                            }
+                        },
+                        error: function (response) {
+                            top.notification({type: "error", message: response.message});
+                            return false;
+                        }
+                    });
+                } else {
+                    top.notification({type: "error", message: "No existe flujo para guardar el diagrama"});
+                }
+                //console.log('DIAGRAM', xml);
+            });
+        } else {
+            top.notification({type: "error", message: "No se encontró instancia de bpmnModeler"});
+        }
     }
 
     /**
@@ -173,40 +193,6 @@ if (isset($_REQUEST["idflujo"])) {
             // add marker
             canvas.addMarker('SCAN_OK', 'needs-discussion');
         });
-    }
-
-    function guardarDiagrama(idflujo, xml) {
-        if (idflujo && idflujo != "") {
-            console.log("ID FLUJO", idflujo);
-            //console.log(bpmnModeler);
-
-            $.ajax({
-                url: '<?= $ruta_db_superior ?>app/flujo/guardarDiagrama.php',
-                dataType: "json",
-                async: false,
-                type: "POST", // type should be POST
-                data: {
-                    datos: xml,
-                    idflujo: idflujo,
-                    key: localStorage.getItem("key")
-                }, // send the string directly
-                success: function (response) {
-                    console.log(response);
-                    if (response.success == 1) {
-                        top.notification({title: "Diagrama", type: "success", message: response.message});
-                    } else {
-                        top.notification({type: "error", message: response.message});
-                    }
-                },
-                error: function (response) {
-                    top.notification({type: "error", message: response.message});
-                    return false;
-                }
-            });
-        } else {
-            top.notification({type: "error", message: "No existe flujo para guardar el diagrama"});
-        }
-        //console.log('DIAGRAM', xml);
     }
 
     $(function () {

@@ -66,9 +66,49 @@ if(!empty($_REQUEST["idactividad"])) {
             <select class="form-control" style="width:400px;" id="funcionario" data-placeholder="Seleccione el cargo"></select>
         </div>
 
+        <div class="row">
+            <div class=col col-md-12">
+                <div id="toolbar_tabla_responsable">
+                    <a href="#" id="boton_eliminar" class="btn btn-secondary" title="Eliminar"><i class="f-12 fa fa-trash"></i></a>
+                </div>
+                <table class="table table-striped table-bordered table-hover" cellspacing="0" id="tabla_responsable"
+                       data-toggle="table"
+                       data-url="listado_responsables_actividad.php?idactividad=<?= $idactividad ?>"
+                       data-click-to-select="true"
+                       data-show-toggle="true"
+                       data-show-columns="true"
+                       data-toolbar="#toolbar_tabla_responsable"
+                       data-pagination="true">
+                    <thead>
+                        <tr>
+                            <th data-field="state" data-checkbox="true"></th>
+                            <th data-field="idresponsable_actividad" data-visible="false">IdResp</th>
+                            <th data-field="fk_responsable" data-visible="false">FkTipo</th>
+                            <th data-field="tipo_responsable" data-visible="false">IdTipo</th>
+                            <th data-field="texto_tipo">Tipo</th>
+                            <th data-field="nombre" >Nombre</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
         <div class="form-group form-group-default">
             <label for="info_actividad">Instrucciones adicionales</label>
             <textarea class="form-control" id="info_actividad" name="info" placeholder="Puede describir con mas detalle la tarea"><?= $actividad->info ?></textarea>
+        </div>
+
+        <div class="row">
+            <div class="row mt-3">
+                <div class="col col-md-12">
+                    <div style="height:150px; overflow: auto;">
+                    <label>Elija los formatos que intervienen en este proceso</label>
+                    <?php
+                    	echo $arbolFormatos->generar_html();
+                    ?>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="row py-1 mt-1">
@@ -81,44 +121,6 @@ if(!empty($_REQUEST["idactividad"])) {
         </div>
 
     </form>
-</div>
-
-<div class="container-fluid">
-<div id="toolbar_tabla_responsable">
-    <a href="#" id="boton_eliminar" class="btn btn-secondary" title="Eliminar"><i class="f-12 fa fa-trash"></i></a>
-</div>
-<table class="table table-striped table-bordered table-hover" cellspacing="0" id="tabla_responsable"
-       data-toggle="table"
-       data-url="listado_responsables_actividad.php?idactividad=<?= $idactividad ?>"
-       data-click-to-select="true"
-       data-show-toggle="true"
-       data-show-columns="true"
-       data-toolbar="#toolbar_tabla_responsable"
-       data-pagination="true">
-    <thead>
-        <tr>
-            <th data-field="state" data-checkbox="true"></th>
-            <th data-field="idresponsable_actividad" data-visible="false">IdResp</th>
-            <th data-field="fk_responsable" data-visible="false">FkTipo</th>
-            <th data-field="tipo_responsable" data-visible="false">IdTipo</th>
-            <th data-field="texto_tipo">Tipo</th>
-            <th data-field="nombre" >Nombre</th>
-        </tr>
-    </thead>
-</table>
-</div>
-
-<div class="container">
-    <div class="row mt-3">
-        <div class="col col-md-12">
-            <div style="height:150px; overflow: auto;">
-            <label>Elija los formatos que intervienen en este proceso</label>
-            <?php
-            	echo $arbolFormatos->generar_html();
-            ?>
-            </div>
-        </div>
-    </div>
 </div>
 
 <script>

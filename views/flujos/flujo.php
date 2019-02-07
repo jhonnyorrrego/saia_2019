@@ -131,6 +131,7 @@ $tabLinks = ["flow_info" => "flow_info.php",
                 //console.log("elemento", element);
                 //actualizar el diagrama
                 modeling.updateProperties(element, {name: datos.nombreTarea});
+                exportDiagram();
             }
 
             $(document).ready(function () {
