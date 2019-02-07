@@ -21,17 +21,20 @@ $Response = (object)[
     'data' => []
 ];
 
-if($_REQUEST['color'] && $_SESSION['idfuncionario']){
-    $Configuracion = Configuracion::findByName('color_institucional');
-    $Configuracion->setValue($_REQUEST['color']);
+if ($_REQUEST['color'] && $_SESSION['idfuncionario']) {
+    $success = Configuracion::executeUpdate([
+        'valor' => $_REQUEST['color']
+    ], [
+        'nombre' => 'color_institucional'
+    ]);
 
-    if($Configuracion->save()){
+    if ($success) {
         $Response->message = 'Datos actualizados';
-    }else{
+    } else {
         $Response->success = 0;
         $Response->message = "Error al guardar";
     }
-}else{
+} else {
     $Response->success = 0;
     $Response->message = 'Debe seleccionar un color';
 }

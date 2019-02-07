@@ -154,20 +154,22 @@ class EntidadExpediente extends Model
                     $response['message'] = 'Error al vincular los permisos al expediente';
                     $this->delete();
                 }else{
-                    if($this->tipo_funcionario!=1 && $Expediente->agrupador!=1){
-                        //Se valida que el funcionario tenga permisos sobre los expedientes padres
-                        $sql = "SELECT identidad_expediente FROM entidad_expediente WHERE tipo_funcionario={$this->tipo_funcionario} AND fk_funcionario={$this->fk_funcionario} AND fk_expediente={$Expediente->cod_padre}";
-                        if(!$this->search($sql)){
-                            $attributes = [
-                                'fk_funcionario' => $this->fk_funcionario,
-                                'fecha' => date('Y-m-d H:i:s'),
-                                'tipo_funcionario' => $this->tipo_funcionario,
-                                'permiso' => 'v',
-                                'fk_expediente' => $Expediente->cod_padre
-                            ];
-                            $EntidadExpediente = new EntidadExpediente();
-                            $EntidadExpediente->setAttributes($attributes);
-                            $info = $EntidadExpediente->createEntidadExpediente(false);
+                    if($this->tipo_funcionario!=1 && $Expediente->getCodPadre()){
+                        if($Expediente->getCodPadre()->agrupador!=1){
+                            //Se valida que el funcionario tenga permisos sobre los expedientes padres
+                            $sql = "SELECT identidad_expediente FROM entidad_expediente WHERE tipo_funcionario={$this->tipo_funcionario} AND fk_funcionario={$this->fk_funcionario} AND fk_expediente={$Expediente->cod_padre}";
+                            if (!$this->search($sql)) {
+                                $attributes = [
+                                    'fk_funcionario' => $this->fk_funcionario,
+                                    'fecha' => date('Y-m-d H:i:s'),
+                                    'tipo_funcionario' => $this->tipo_funcionario,
+                                    'permiso' => 'v',
+                                    'fk_expediente' => $Expediente->cod_padre
+                                ];
+                                $EntidadExpediente = new EntidadExpediente();
+                                $EntidadExpediente->setAttributes($attributes);
+                                $info = $EntidadExpediente->createEntidadExpediente(false);
+                            }
                         }
                     }
                     if($updatePermisos){

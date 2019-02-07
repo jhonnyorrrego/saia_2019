@@ -86,8 +86,11 @@ function info_expediente($idexpediente)
 FINHTML;
 
     } else {
-        $btn .= '<div class="btn btn-mini selExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Seleccionar"><i class="icon-uncheck"></i></div>';
-        if($ExpedienteInfo->getAccessUser("c")){
+        if(!$ExpedienteInfo->getAccessUser('v')){
+            $btn .= '<div class="btn btn-mini selExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Seleccionar"><i class="icon-uncheck"></i></div>';
+        }
+
+        if($ExpedienteInfo->getAccessUser('c')){
             $btn .= '<div class="btn btn-mini shareExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Compartir" ><i class="icon-share"></i></div>';
         }
         

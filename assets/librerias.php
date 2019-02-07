@@ -79,7 +79,7 @@ function cssBootstrap()
 }
 /**
  * retorna los enlaces css , js y locale
- * de bootstrap table v1.12.1 minificados
+ * de bootstrap table v1.13.1 minificados
  */
 function bootstrapTable()
 {
@@ -92,9 +92,9 @@ function bootstrapTable()
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
     $locale = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/1.13/locale/bootstrap-table-es-ES.min.js';
-    $languaje = '<script src="' . $locale . '" type="text/javascript"></script>';
+    $language = '<script src="' . $locale . '" type="text/javascript"></script>';
 
-    return $css . $js . $languaje;
+    return $css . $js . $language;
 }
 
 /**

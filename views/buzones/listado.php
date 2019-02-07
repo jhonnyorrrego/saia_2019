@@ -29,8 +29,9 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
         var encabezado = '<?= $component[0]["encabezado_componente"] ?>'
         var component = '<?= $_REQUEST["idbusqueda_componente"] ?>';
         var param = '<?= $_REQUEST["variable_busqueda"] ?>';
+        var table = $('#table');
 
-        $('#table').bootstrapTable({
+        table.bootstrapTable({
             url: `${baseUrl}app/busquedas/datosBootstrapTable.php?idbusqueda_componente=${component}&variable_busqueda=${param}`,
             sidePagination: 'server',
             queryParamsType: 'other',
@@ -55,12 +56,13 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
                 return response;
             },
             onPostBody: function(){
-                var selections = $('#table').data('selections').split(',').map(Number).filter(n => n > 0);
-
+                $('.card-view .title').hide();
+                table.parents('.bootstrap-table').addClass('w-100');
+                
+                var selections = table.data('selections').split(',').map(Number).filter(n => n > 0);
                 selections.forEach(s => {
                     $(`:checkbox[data-id=${s}]`).prop('checked', true);
                 });
-                $('.card-view .title').hide();
 
                 paintSelected();
             },
@@ -70,7 +72,7 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
             }            
         });
 
-        $('#table').on('check.bs.table uncheck.bs.table', function (row, data) {
+        table.on('check.bs.table uncheck.bs.table', function (row, data) {
             var selections = $(this).data('selections').split(',').map(Number).filter(n => n > 0);
             let index = $(data.info).find(':checkbox').data('index');
             let checkbox = $(`:checkbox[data-index=${index}]`);
@@ -93,7 +95,7 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
         });
 
         function paintSelected(){
-            var selections = $('#table').data('selections').split(',').map(Number).filter(n => n > 0);
+            var selections = table.data('selections').split(',').map(Number).filter(n => n > 0);
             $("#selected_rows").text(selections.length);
             $('tr[data-index]').removeClass('selected');
 

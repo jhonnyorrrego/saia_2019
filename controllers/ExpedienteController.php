@@ -77,7 +77,7 @@ class ExpedienteController
                                 ];
                                 $EntidadExpediente = new EntidadExpediente();
                                 $EntidadExpediente->setAttributes($attributes);
-                                $info = $EntidadExpediente->createEntidadExpediente();
+                                $info = $EntidadExpediente->createEntidadExpediente(false);
                                 if ($info['exito']) {
                                     $success++;
                                 }

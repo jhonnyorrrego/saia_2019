@@ -56,7 +56,8 @@ class Expediente extends Model
                 'l' => false,
                 'e' => false,
                 'c' => false,
-                'd' => false
+                'd' => false,
+                'v' => false
             ];
             $this->setAccessUser($_SESSION['idfuncionario']);
         }
@@ -346,7 +347,8 @@ class Expediente extends Model
                 'l' => true,
                 'e' => true,    
                 'c' => true,
-                'd' => true
+                'd' => true,
+                'v' => false
             ];
         } else {*/
             $sql = "SELECT permiso FROM permiso_expediente WHERE fk_expediente={$this->idexpediente} and fk_funcionario={$idfuncionario}";
@@ -363,6 +365,7 @@ class Expediente extends Model
                 $this->permiso['e'] = true;
                 $this->permiso['d'] = true;
                 $this->permiso['c'] = true;
+                $this->permiso['v'] = false;
             }
         //}
     }
