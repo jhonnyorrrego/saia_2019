@@ -94,7 +94,7 @@ include_once($ruta_db_superior . "db.php");
                 </form>
             </div>
             <div id="div_resultados">
-                <div class="btn-group" id="menu_buscador">
+                <div id="menu_buscador">
                     
                         <?php
                         if ($datos_busqueda[0]["busqueda_avanzada"] != '') {
@@ -105,7 +105,7 @@ include_once($ruta_db_superior . "db.php");
                             }
                             $datos_busqueda[0]["busqueda_avanzada"] .= 'idbusqueda_componente=' . $datos_busqueda[0]["idbusqueda_componente"];
                             ?>
-                            <button class="pull-left btn btn-xs btn-complete kenlace_saia" titulo="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']); ?>" title="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']); ?>" conector="iframe" enlace="<?php echo($datos_busqueda[0]['busqueda_avanzada']); ?>">B&uacute;squeda &nbsp;</button>
+                            <button class="pull-left btn btn-sm btn-complete kenlace_saia" titulo="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']); ?>" title="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']); ?>" conector="iframe" enlace="<?php echo($datos_busqueda[0]['busqueda_avanzada']); ?>">B&uacute;squeda &nbsp;</button>
                             <?php
                         }
                         $tiene_acciones = !empty($datos_busqueda[0]["acciones_seleccionados"]);
@@ -126,7 +126,7 @@ include_once($ruta_db_superior . "db.php");
                         }
                         if (@$datos_busqueda[0]["enlace_adicionar"]) {
                             ?>
-                            <button class="btn btn-xs kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar</button></div></li>
+                            <button class="btn btn-sm kenlace_saia" conector="iframe" id="adicionar_pantalla" destino="_self" title="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" titulo="Adicionar <?php echo($datos_busqueda[0]["etiqueta"]); ?>" enlace="<?php echo($datos_busqueda[0]["enlace_adicionar"]); ?>">Adicionar</button></div></li>
                         <?php
                     }/* if(@$datos_busqueda[0]["menu_busqueda_superior"]){
                       $funcion_menu=explode("@",$datos_busqueda[0]["menu_busqueda_superior"]);
@@ -137,7 +137,7 @@ include_once($ruta_db_superior . "db.php");
                         echo($funcion_menu[0](@$funcion_menu[1]));
                     }
                     ?>
-                    <button class="btn btn-xs btn-complete exportar_reporte_saia" enlace="pantallas/documento/busqueda_avanzada_documento.php" title="Exportar reporte" id="boton_exportar_excel" style="">Exportar</button>
+                    <button class="btn btn-sm btn-complete exportar_reporte_saia" enlace="pantallas/documento/busqueda_avanzada_documento.php" title="Exportar reporte" id="boton_exportar_excel" style="">Exportar</button>
                 
                     <div class="pull-right" valign="middle"><iframe name="iframe_exportar_saia" id="iframe_exportar_saia" allowtransparency="1" frameborder="0" framespacing="2px" scrolling="no" width="100%" src=""  hspace="0" vspace="0" height="40px"></iframe></div>
                     <?php
@@ -158,7 +158,7 @@ include_once($ruta_db_superior . "db.php");
             <table id="tabla_resultados"
                    data-height=""
                    data-pagination="true"
-                   
+                   data-toolbar="#menu_buscador"
                    data-show-refresh="true"
                    data-maintain-selected="true"
                    >
@@ -269,7 +269,7 @@ include_once($ruta_db_superior . "db.php");
             clickToSelect: true,
             sidePagination: 'server',
             pageSize: $("#rows").val(),
-            search: true,
+            search: false,
             cardView: false,
             pageList: [5, 10, 25, 50, 100],
             paginationVAlign: 'top',

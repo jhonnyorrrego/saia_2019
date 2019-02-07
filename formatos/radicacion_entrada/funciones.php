@@ -536,58 +536,80 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
     }
 
     $img = mostrar_codigo_qr($idformato, $iddoc, true);
-
-    $tabla = '<table class="table table-bordered" style="width: 100%; text-align:left;" border="1">
-  <tr>
-    <td style="width: 23%;"><b>FFECHA DE RADICACI&Oacute;N:</b></td>
-    <td style="width: 18%;">' . $fecha_radicacion . '</td>
-    <td style="width: 18%;"><b>NO. RADICADO:</b></td>
-    <td style="width: 18%;">' . $numero_radicado . '</td>
-    <td style="text-align:center; width: 23%;" colspan="2" rowspan="3">' . $img . '</td>
-  </tr>
-  <tr>
-    <td><b>TIPO DE DOCUMENTO:</b></td>
-    <td colspan="3">' . $tipo_documento[0]["nombre"] . '</td>
-  </tr>
-  <tr>
-    <td><b>DESCRIPCI&Oacute;N O ASUNTO:</b></td>
-    <td colspan="3">' . $datos[0]["descripcion"] . '</td>
-  </tr>
-  </table>
-  <table class="table table-bordered" style="width: 100%; font-size:10px; text-align:left;" border="1">';
-    if ($datos[0]['tipo_origen'] == 1) {
-        $empresa_transportadora = mostrar_valor_campo('empresa_transportado', $idformato, $iddoc, 1);
-        $tabla .= "<tr>
-      <td style='width:25%;'><strong>N&Uacute;MERO OFICIO:</strong></td>
-      <td colspan='2' style='width:25%;'>" . $datos[0]['numero_oficio'] . "</td>
-      <td style='width:25%;'><strong>FECHA DOCUMENTO ENTRADA:</strong></td>
-      <td colspan='2' style='width:25%;'>" . $datos[0]['fecha_oficio_entrada'] . "</td>
-   </tr>
-   <tr>
-      <td><strong>N&Uacute;MERO DE GU&Iacute;A:</strong></td>
-      <td colspan='2'>" . $datos[0]['numero_guia'] . "</td>
-      <td><strong>EMPRESA TRANSPORTADORA:</strong></td>
-      <td colspan='2'>" . $empresa_transportadora . "</td>
-   </tr>";
-    } else {
-        $recogida = ($datos[0]["requiere_recogida"] == 1) ? "Si" : "No";
-        $entrega = ($datos[0]["tipo_mensajeria"] == 1) ? "Si" : "No";
-        $tabla .= "<tr>
-      <td style='width:23%;'><strong>REQUIERE SERVICIO DE RECOGIDA?:</strong></td>
-      <td colspan=2 style='width:25%;'>" . $recogida . "</td>
-      <td style='width:25%;'><strong>RQUIERE SERVICIO DE ENTREGA?:</strong></td>
-      <td colspan=2 style='width:25%;'>" . $entrega . "</td>
-   </tr>";
+    $tabla = '<style>
+        .table.table-condensed thead tr td {
+        padding-top: 2px;
+        padding-bottom: 2px;            
+    }
+    .table.table-condensed {
+        table-layout: auto;
     }
 
-    $tabla .= '
-	  <tr>
-	    <td><b>ANEXOS DIGITALES:</b></td>
-	    <td colspan="2">' . $nombre_anexos . '</td>
-	    <td><b>ANEXOS F&Iacute;SICOS:</b></td>
-	    <td colspan="2">' . $datos[0]["descripcion_anexos"] . '</td>
-	  </tr>';
-    $tabla .= '</table>';
+    </style>
+        <div class="row px-2">
+            <div class="col-md-12">
+                <table class="table table-condensed" style="width: 100%; text-align:left;" border="0" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <td style="border:none;"><b>FECHA DE RADICACI&Oacute;N: </b> ' . $fecha_radicacion . '<br><b>TIPO DE DOCUMENTO:</b> ' . $tipo_documento[0]["nombre"] . '<br><b>ASUNTO:</b> ' . $datos[0]["descripcion"] . '</td>
+                            <td style="text-align:right;border:none;" colspan="2" rowspan="3"><p style="margin-right:8%;">' . $img . '</p><b>REGISTRO No. : ' . $numero_radicado . '</b></td>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+        <div class="row px-2">
+            <div class="col-md-12">
+                <table class="table table-condensed" style="width: 100%;margin-top: 2%;margin-bottom: 2%;" border="0" cellspacing="0">
+                <thead>';
+                    if ($datos[0]['tipo_origen'] == 1) {
+                        $empresa_transportadora = mostrar_valor_campo('empresa_transportado', $idformato, $iddoc, 1);
+                        $tabla .= "<tr>
+                        <td style='border:none;width: 19%;' class=''><strong>TIPO DE ORIGEN:</strong></td>
+                        <td style='border:none;width: 23%;'>" . mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1) . "</td>
+                        <td style='border:none;width: 23%;'><strong>N&Uacute;MERO DE GU&Iacute;A:</strong></td>
+                        <td style='border:none;'>" . $datos[0]['numero_guia'] . "</td>
+                </tr>
+                    <tr>
+                        <td style='border:none;'><strong>NO. OFICIO:</strong></td>
+                        <td style='border:none;'>" . $datos[0]['numero_oficio'] . "</td>
+                        <td style='border:none;width: 22%;' ><strong>EMPRESA TRANSPORTADORA:</strong></td>
+                        <td style='border:none;'>" . $empresa_transportadora . "</td>
+                        
+                </tr>
+                <tr>
+                    <td style='border:none;'><strong>FECHA DEL DOCUMENTO:</strong></td>
+                    <td style='border:none;'>" . $datos[0]['fecha_oficio_entrada'] . "</td>
+                    <td style='border:none;'><strong>ANEXOS F&Iacute;SICOS:</strong></td>
+                    <td style='border:none;'>" . $datos[0]['descripcion_anexos'] . "</td>
+                    
+                </tr>";
+                    } else {
+                        $recogida = ($datos[0]["requiere_recogida"] == 1) ? "Si" : "No";
+                        $entrega = ($datos[0]["tipo_mensajeria"] == 1) ? "Si" : "No";
+                        $tabla .= "
+                            <tr>
+                            <td style='border:none;'><strong>TIPO DE ORIGEN:</strong></td>
+                            <td style='border:none;'>" .mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1). "</td>
+                            <td style='border:none;'><strong>REQUIERE SERVICIO DE RECOGIDA?:</strong></td>
+                            <td style='border:none;'>" . $recogida . "</td>
+                        </tr>
+                        <tr>
+                            <td style='border:none;'><strong>REQUIERE SERVICIO DE ENTREGA?:</strong></td>
+                            <td style='border:none;'>" . $entrega . "</td>
+                            <td style='border:none;'><strong>ANEXOS F&Iacute;SICOS:</strong></td>
+                            <td style='border:none;'>" . $datos[0]['descripcion_anexos'] . "</td>      
+                        </tr>";
+
+                    }
+
+                    $tabla .= '
+                    <tr>
+                        <td style="border:none;"><b>ANEXOS DIGITALES:</b></td>
+                        <td style="border:none;" colspan="2">' . $nombre_anexos . '</td>
+                    
+                    </tr>';
+    $tabla .= '</div></div></thead></table>';
     echo $tabla;
 }
 
@@ -605,7 +627,7 @@ function obtener_informacion_proveedor($idformato, $iddoc) {
             if ($info[0]["empresa"]) {
                 $texto[] = "<b>Empresa:</b>" . $info[0]["empresa"];
             }
-            echo(implode(", &nbsp;", $texto));
+            return implode(", &nbsp;", $texto);
         }
     } else {
         $array_concat = array(
@@ -621,7 +643,7 @@ function obtener_informacion_proveedor($idformato, $iddoc) {
                 $texto[] = "<b>Nombre:</b> " . $origen[0]["nombre"];
                 $texto[] = "<b>Dependencia:</b> " . $origen[0]["dependencia"];
                 $texto[] = "<b>Cargo:</b> " . $origen[0]["cargo"];
-                echo(implode("<br />", $texto));
+                return implode("<br />", $texto);
             }
         }
     }
@@ -629,7 +651,7 @@ function obtener_informacion_proveedor($idformato, $iddoc) {
 
 function mostrar_item_destino_radicacion($idformato, $iddoc) {
     global $conn;
-    echo mostrar_listado_distribucion_documento($idformato, $iddoc, 1);
+   echo mostrar_listado_distribucion_documento($idformato, $iddoc, 1);
 }
 
 function mostrar_copia_electronica($idformato, $iddoc) {

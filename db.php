@@ -429,7 +429,7 @@ function formato_cargo($nombre_cargo)
             $cargo .= ucwords($pal[$i]) . " ";
         }
     }
-    return ($cargo);
+    return $cargo;
 }
 
 
@@ -2357,6 +2357,14 @@ function alerta_javascript($message, $back)
     volver($back);
 }
 
+/**
+ * genera una alerta javascript
+ *
+ * @param string $message mensaje a mostrar
+ * @param string $type tipo de alerta: success,error,info,warning
+ * @param integer $duration tiempo en pantalla
+ * @return void
+ */
 function alerta($message, $type = 'success', $duration = 3000)
 {
     if ($_REQUEST["llamado_ajax"]) {
@@ -2370,11 +2378,6 @@ function alerta($message, $type = 'success', $duration = 3000)
             duration: "' . $duration . '"
         });
     </script>';
-}
-
-function alerta_formatos($message, $type = 'success', $duration = 3000)
-{
-    return alerta($message, $type, $duration);
 }
 
 /*

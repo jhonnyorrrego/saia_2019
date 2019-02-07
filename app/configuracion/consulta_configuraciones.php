@@ -13,37 +13,34 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . "db.php";
-require_once $ruta_db_superior . 'StorageUtils.php';
-require_once $ruta_db_superior . 'filesystem/SaiaStorage.php';
+include_once $ruta_db_superior . "controllers/autoload.php";
 
-$Response = new stdClass();
-$Response->success = 1;
-$Response->data = "";
+$Response = (Object)[
+    'success' => 1,
+    'data' => []
+];
 
 $configurations = implode("','", $_REQUEST['configurations']);
-$findConfigurations = busca_filtro_tabla("nombre,valor", "configuracion", "nombre in ('" . $configurations . "')", "", $conn);
-$data = array();
+$sql = "select nombre,valor from configuracion where nombre in ('{$configurations}')";
+$findConfigurations = StaticSql::search($sql);
 
-if ($findConfigurations['numcampos']) {
-    for ($i = 0; $i < $findConfigurations['numcampos']; $i++) {
-        $Object = json_decode($findConfigurations[$i]['valor']);
+if ($findConfigurations) {
+    foreach ($findConfigurations as $key => $configuration) {
+        $Object = json_decode($configuration['valor']);
         if ($Object->ruta) {
             $tipo_almacenamiento = new SaiaStorage("archivos");
             if ($tipo_almacenamiento->get_filesystem()->has($Object->ruta)) {
-                $value = StorageUtils::get_binary_file($findConfigurations[$i]['valor']);
+                $value = StorageUtils::get_binary_file($configuration['valor']);
             }
         }else{
-            $value = $findConfigurations[$i]['valor'];
+            $value = $configuration['valor'];
         }
 
-        $data[] = array(
-            'name' => $findConfigurations[$i]['nombre'],
+        $Response->data[] = [
+            'name' => $configuration['nombre'],
             'value' => $value,
-        );
+        ];
     }
-
-    $Response->data = $data;
 } else {
     $Response->success = 0;
 }
