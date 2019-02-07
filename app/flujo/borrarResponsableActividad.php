@@ -25,19 +25,17 @@ if(empty($_REQUEST['fk_actividad'])) {
 }
 
 if($_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    if(!empty($_REQUEST['fk_actividad'])) {
 
-        $eliminados = 0;
+    $eliminados = 0;
 
-        $lista = explode(",", $_REQUEST["ids"]);
-        foreach ($lista as $id) {
-            $a = ResponsableActividad::executeDelete(["idresponsable_actividad" => $id]);
-            if($a) {
-                $eliminados++;
-            }
+    $lista = explode(",", $_REQUEST["ids"]);
+    foreach ($lista as $id) {
+        $a = ResponsableActividad::executeDelete(["idresponsable_actividad" => $id]);
+        if($a) {
+            $eliminados++;
         }
-
     }
+
     if($eliminados) {
         $response->success = 1;
         $response->message = "Datos eliminados";

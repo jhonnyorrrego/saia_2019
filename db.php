@@ -429,7 +429,7 @@ function formato_cargo($nombre_cargo)
             $cargo .= ucwords($pal[$i]) . " ";
         }
     }
-    return ($cargo);
+    return $cargo;
 }
 
 
