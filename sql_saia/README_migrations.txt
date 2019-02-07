@@ -33,7 +33,6 @@ Una vez modificada la clase que se genera, se debe ejecutar
 En windows:
 php ../../vendor/doctrine/migrations/bin/doctrine-migrations.php migrations:migrate
 
-
 Opcionalmente se puede pasar el parámetro --write-sql para generar un .sql de las sentencias ejecutadas.
 
 DEVOLVER UNA MIGRACION
