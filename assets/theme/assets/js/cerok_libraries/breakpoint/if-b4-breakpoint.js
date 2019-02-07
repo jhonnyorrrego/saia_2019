@@ -14,7 +14,6 @@ function checkSize (){
     $el.remove();
     
     localStorage.setItem('breakpoint', env);
-    console.log(localStorage,env)
     return env; 
 } 
 

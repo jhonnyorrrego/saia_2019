@@ -94,14 +94,20 @@ $(function () {
         
         let sizeDocument = localStorage.getItem('breakpoint'); 
             if (sizeDocument == 'xs') {              
-                setValores();
+                setValores(sizeDocument);
             }
             if (sizeDocument == 'sm') {
-                setValores();
+                setValores(sizeDocument);
+            }
+            if (sizeDocument == 'lg') {
+                setValores(sizeDocument);
+            }
+            if (sizeDocument == 'md') {
+                setValores(sizeDocument);
             }
     }
 
-    function setValores(){
+    function setValores(sizeDocument){
 
         var xsFont = parseFloat(sizeFont);
         var widthIni = 480;
@@ -111,27 +117,20 @@ $(function () {
         $('#documento').find("p").css("font-size", widthAct + "px")
         var contenidoImg = $("#documento").find("img");
         contenidoImg.each(function (i) {
-            var sizeImg = parseFloat($(this).attr("width"));
-            sizeImg = sizeImg * 2;
-            $(this).css("width", sizeImg + "%");
-        });
-    }
-
-    function setSm() {
-       
-        var smFont = Math.round(parseFloat(sizeFont) * 0.7);
-        var sizeEncabezado = parseFloat($(".page_margin_top").css('height'));
-        sizeEncabezado = Math.round(sizeEncabezado * 0.9);
-        var sizePie = parseFloat($(".page_content").css('height'));
-        sizePie = Math.round(sizePie * 0.700);
-
-        $('#documento').css("font-size", smFont + "px");
-        $('#documento').find("img")
-        $('#documento').find("p").css("font-size", smFont + "px")
-        var contenidoImg = $("#documento").find("img");
-        contenidoImg.each(function (i) {
-            var sizeImg = parseFloat($(this).attr("width"));
-            sizeImg = sizeImg * 1.5;
+            var sizeImg = parseFloat($(this).attr("width"));          
+            if (sizeImg >= 50 && sizeDocument != 'xl'){
+                sizeImg = sizeImg * 1.1;
+            }else if(sizeImg <= 50 && sizeDocument =='lg'){
+                sizeImg = sizeImg * 1.2;
+            }
+            else if (sizeImg <= 50 && sizeDocument == 'xs') {
+                sizeImg = sizeImg * 2.6;
+            }
+            else if (sizeImg <= 50 && sizeDocument == 'sm') {
+                sizeImg = sizeImg * 1.7;
+            } else if (sizeImg <= 50 && sizeDocument == 'md') {
+                sizeImg = sizeImg * 1.4;
+            }
             $(this).css("width", sizeImg + "%");
         });
     }
