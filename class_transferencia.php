@@ -1510,19 +1510,17 @@ function guardar_documento($iddoc, $tipo = 0)
 
 function actualizar_datos_documento($idformato, $iddoc)
 {
-    include_once(FORMATOS_SAIA . "librerias/funciones_generales.php");
+    include_once FORMATOS_SAIA . "librerias/funciones_generales.php";
+
     if (isset($_REQUEST["campo_descripcion"])) {
         $campo = busca_filtro_tabla("nombre,etiqueta", "campos_formato", "idcampos_formato IN(" . $_REQUEST["campo_descripcion"] . ")", "orden", $conn);
     } else if ($idformato) {
         $campo = busca_filtro_tabla("idcampos_formato,nombre,etiqueta,formato_idformato", "campos_formato cf", "cf.formato_idformato='" . $idformato . "' AND (acciones like 'p' or acciones like '%,p' or acciones like 'p,%' or acciones like '%,p,%')", "orden", $conn);
     }
     if ($campo["numcampos"]) {
+        $descripcion = '';
         for ($i = 0; $i < $campo["numcampos"]; $i++) {
-            if ($i == 0) {
-                $descripcion = "<strong>" . $campo[$i]["etiqueta"] . ": </strong>" . mostrar_valor_campo($campo[$i]["nombre"], $idformato, $iddoc, 1);
-            } else {
-                $descripcion .= "<br/><strong>" . $campo[$i]["etiqueta"] . ": </strong>" . mostrar_valor_campo($campo[$i]["nombre"], $idformato, $iddoc, 1);
-            }
+            $descripcion .= $campo[$i]["etiqueta"] . ": " . mostrar_valor_campo($campo[$i]["nombre"], $idformato, $iddoc, 1) . '<br>';
         }
     }
     $idserie = 0;

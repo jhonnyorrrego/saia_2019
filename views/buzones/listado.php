@@ -39,6 +39,7 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
             pagination: true,
             maintainSelected: true,
             pageSize: 15,
+            height: $(window).height() - $('#header_list').height(),
             columns: [{
                 field: 'info',
                 title: ''

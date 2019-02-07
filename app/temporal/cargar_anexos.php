@@ -22,19 +22,25 @@ $Response = (object) array(
 );
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $dir = $ruta_db_superior . $_SESSION["ruta_temp_funcionario"];
+    $dir = $_SESSION["ruta_temp_funcionario"];
 
-    if (!is_dir($dir)) {
-        mkdir($dir, 0777);
+    if(!empty($_REQUEST['dir'])){
+        $dir .= 'anexos/' . $_REQUEST['dir'] . '/';
+    }
+
+    $relative = $ruta_db_superior . $dir;
+
+    if (!is_dir($relative)) {
+        mkdir($relative, 0777, true);
     }else{
-        chmod($dir, 0777);
+        chmod($relative, 0777);
     }
 
     $temporalRoutes = [];
     foreach($_FILES as $key => $file){
         $content = file_get_contents($file['tmp_name']);
-        if(file_put_contents($dir . $file['name'], $content) !== false){
-            $temporalRoutes[] = $_SESSION["ruta_temp_funcionario"] . $file['name'];
+        if(file_put_contents($relative . $file['name'], $content) !== false){
+            $temporalRoutes[] = $dir . $file['name'];
         }
     }
 

@@ -1,95 +1,153 @@
 $(function () {
     let baseUrl = Session.getBaseUrl();
     let params = JSON.parse($('script[data-params]').attr('data-params'));
-    let loadedFiles = [];
-    let myDropzone = new Dropzone("#dropzone", {
-        url: `${baseUrl}app/temporal/cargar_anexos.php`,
-        maxFilesize: 3,
-        maxFiles: 3,
-        dictFileTooBig: 'Tamaño máximo {{maxFilesize}} MB',
-        dictMaxFilesExceeded: 'Máximo 3 archivos',
-        params: {
-            key: localStorage.getItem('key')
-        },
-        paramName: 'task_file',
-        init: function () {
-            this.on("success", function (file, response) {
-                response = jQuery.parseJSON(response)
+    let files = null;
 
-                if (response.success) {
-                    response.data.forEach(e => {
-                        loadedFiles.push(e);
-                    });
+    if(typeof Files == 'undefined'){
+        $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/files/files.js`, function(){
+            files = init();
+        });
+    }else{
+        files = init();
+    }
 
-                    $('#upload').removeAttr('disabled');
-                } else {
-                    top.notification({
-                        type: 'error',
-                        message: response.message
-                    })
-                }
-            })
-        }
+    function init() {
+        let options = {
+            selector: '#task_files',
+            dropzone: {
+                url: `${baseUrl}app/temporal/cargar_anexos.php`,
+                dictDefaultMessage: 'Haga clic para elegir un archivo o Arrastre acá el archivo.',
+                maxFilesize: 3,
+                maxFiles: 3,
+                dictFileTooBig: 'Tamaño máximo {{maxFilesize}} MB',
+                dictMaxFilesExceeded: 'Máximo 3 archivos',
+                params: {
+                    key: localStorage.getItem('key'),
+                    dir: 'tarea'
+                },
+                paramName: 'task_file'                
+            },
+            bootstrapTable: {
+                url: `${baseUrl}app/tareas/consulta_anexos.php`,
+                sidePagination: 'server',
+                queryParamsType: 'other',
+                queryParams: function (queryParams) {
+                    queryParams.task = params.id;
+                    queryParams.key = localStorage.getItem('key');
+                    return queryParams;
+                },
+                pagination: true,
+                pageSize: 5,
+                classes: 'table table-sm table-hover mt-0',
+                theadClasses: 'thead-light',
+                columns: [
+                    {
+                        field: 'icono',
+                        title: ''
+                    },
+                    {
+                        field: 'nombre',
+                        title: 'nombre'
+                    },
+                    {
+                        field: 'version',
+                        title: 'version'
+                    },
+                    {
+                        field: 'clase',
+                        title: 'clase'
+                    },
+                    {
+                        field: 'responsable',
+                        title: 'responsable'
+                    },
+                    {
+                        field: 'incluido',
+                        title: 'incluido'
+                    },
+                    {
+                        field: 'tamaño',
+                        title: 'tamaño'
+                    },
+                    {
+                        field: 'tipo',
+                        title: 'tipo'
+                    }, {
+                        field: 'options',
+                        title: '',
+                        align: 'center',
+                        formatter: operateFormatter
+                    }
+                ]
+            },
+            save: function (description, files) {
+                $.post(`${baseUrl}app/tareas/almacenar_anexos.php`, {
+                    key: localStorage.getItem('key'),
+                    routes: files,
+                    description: description,
+                    task: params.id,
+                    dir: 'tarea'
+                }, function (response) {
+                    if (response.success) {
+                        top.notification({
+                            type: 'success',
+                            message: response.message,
+                        });
+                    }
+                }, 'json');
+            }
+        };
+    
+        return new Files(options);
+    }
+
+
+    function operateFormatter() {
+        return `<div class="dropdown" id="file_actions">
+            <span class="fa fa-chevron-circle-down cursor f-20" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></span>
+            <div class="dropdown-menu dropdown-menu-left bg-white" role="menu">
+                <a href="#" class="dropdown-item edit">
+                    <i class="fa fa-edit"></i> Editar datos del anexo
+                </a>
+                <a href="#" class="dropdown-item version">
+                    <i class="fa fa-cloud-upload"></i> Cargar nueva versión
+                </a>
+                <a href="#" class="dropdown-item delete">
+                    <i class="fa fa-trash"></i> Eliminar
+                </a>
+                <a href="#" class="dropdown-item access">
+                    <i class="fa fa-lock"></i> Permisos
+                </a>                        
+            </div>
+        </div>`;
+    }
+
+    $('#show_pages').on('click', function () {
+        $('#pages_container').load(`${baseUrl}views/pagina/pagina.php`, {
+            documentId: params.documentId
+        });
     });
+    
+    $(document).off('click', '#file_actions .edit');
+    $(document).on('click', '#file_actions .edit', function () {
+        let table = files.getTable();
+        let dropzone = files.getDropzone();
 
-    (function init(){
-        findFileHistory(params.id);
-    })();
-
-    $('#upload').on('click', function() {
-        $.post(`${baseUrl}app/tareas/almacenar_anexos.php`, {
-            key: localStorage.getItem('key'),
-            routes: loadedFiles,
-            description: $('#file_description').val(),
-            task: params.id
-        }, function (response) {
-            if(response.success){
-                loadedFiles = [];
-                top.notification({
-                    type: 'success',
-                    message: response.message,
-                });
-
-                findFileHistory(params.id);
-                $('#upload').attr('disabled', true);
-                $('#file_description').val('');
-                myDropzone.removeAllFiles();
-            }
-        }, 'json')
-    })
-
-    function findFileHistory(taskId) {
-        $.post(`${baseUrl}app/tareas/consulta_anexos.php`, {
-            key: localStorage.getItem('key'),
-            task: taskId
-        }, function (response) {
-            if (response.success) {
-                fillTable(response.data)
-            } else {
-                top.notification({
-                    type: 'error',
-                    message: responsa.message
-                })
-            }
-        }, 'json')
-    }
-
-    function fillTable(data) {
-        if (data.length) {
-            $('#file_history > tbody').find('tr:not(:first)').remove();
-            data.forEach(f => {
-                $('#file_history > tbody').append(`
-                    <tr id="${f.id}">
-                        <td>${f.name}</td>
-                        <td class="text-center">${f.version}</td>
-                        <td>${f.description}</td>
-                        <td>${f.user}</td>
-                        <td class="text-center">${f.date}</td>
-                        <td class="text-center">${f.size}</td>
-                    </tr>
-                `);
-            })
-            $('#file_history').show();
-        }
-    }
+        console.log(table, dropzone);
+    });
+    
+    $(document).off('click', '#file_actions .version');
+    $(document).on('click', '#file_actions .version', function () {
+        alert('version');
+    });
+    
+    $(document).off('click', '#file_actions .delete');
+    $(document).on('click', '#file_actions .delete', function () {
+        alert('delete');
+    });
+    
+    $(document).off('click', '#file_actions .access');
+    $(document).on('click', '#file_actions .access', function () {
+        alert('access');
+    });
 });

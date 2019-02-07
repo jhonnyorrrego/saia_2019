@@ -684,14 +684,12 @@ function origen_documento2_excel($doc, $numero, $origen = "", $tipo_radicado = "
 
 function obtener_pantilla_documento($plantilla)
 {
-    global $conn;
-
-    return (nombre_plantilla($plantilla));
+    return nombre_plantilla($plantilla);
 }
 
 function obtener_descripcion($descripcion)
 {
-    return delimita(strip_tags($descripcion), 150);
+    return delimita($descripcion, 150);
 }
 
 function obtener_iddocumento()

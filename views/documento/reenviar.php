@@ -19,8 +19,6 @@ include_once $ruta_db_superior . "librerias_saia.php";
 <?= librerias_UI("1.12") ?>
 <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet"
     type="text/css" media="screen">
-<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/css/dropzone.css" rel="stylesheet"
-    type="text/css">
 <link href="<?= $ruta_db_superior ?>views/arbol/css/arbol.css" rel="stylesheet" type="text/css">
 <div class="row">
     <div class="col-12">
@@ -64,7 +62,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
         <div class="float-right progress-circle-indeterminate" id="spiner"></div>
     </div>
 </div>
-<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/dropzone.min.js"></script>
+<?= dropzone() ?>
 <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/select2.min.js"></script>
 <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/js/i18n/es.js"></script>
 <script src="<?= $ruta_db_superior ?>views/documento/js/reenviar.js" data-params='<?= json_encode($_REQUEST) ?>'></script>

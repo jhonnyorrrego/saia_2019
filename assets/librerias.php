@@ -356,3 +356,20 @@ function bpmnViewer()
 
     return $viewer;
 }
+
+/**
+ * retorna los enlaces para incluir 
+ * el dropzone  v5.5
+ * @return void
+ */
+function dropzone(){
+    global $ruta_db_superior;
+
+    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/dropzone/custom.css';
+    $css = '<link class="main-stylesheet" href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
+
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/dropzone/min/dropzone.min.js';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+
+    return $css . $js;
+}
