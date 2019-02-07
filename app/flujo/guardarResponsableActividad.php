@@ -28,9 +28,11 @@ if (empty($_REQUEST['fk_actividad'])) {
 if ($_SESSION['idfuncionario'] == $_REQUEST['key']) {
     if (!empty($_REQUEST['fk_actividad'])) {
 
-        $atributos["fk_responsable"] = $_REQUEST["fk_responsable"];
-        $atributos["fk_actividad"] = $_REQUEST['fk_actividad'];
-        $atributos["tipo_responsable"] = $_REQUEST['tipo_responsable'];
+        $atributos = [
+        "fk_responsable" => $_REQUEST["fk_responsable"],
+        "fk_actividad" => $_REQUEST['fk_actividad'],
+        "tipo_responsable" => $_REQUEST['tipo_responsable']
+        ];
         $pk = ResponsableActividad::newRecord($atributos);
     }
     if ($pk) {

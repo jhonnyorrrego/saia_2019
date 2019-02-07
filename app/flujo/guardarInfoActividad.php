@@ -18,8 +18,8 @@ $response = (object) [
     'success' => 0
 ];
 
-if(empty($_REQUEST['fk_actividad'])) {
-    $response->message = "No se especificó la actividad";
+if(empty($_REQUEST['idelemento'])) {
+    $response->message = "No se especificó el paso";
     echo json_encode($response);
     die();
 }
@@ -29,23 +29,19 @@ if(empty($_REQUEST['fk_actividad'])) {
  * data["fk_tipo_destinatario"] = tipodestinatario;
  */
 if($_SESSION['idfuncionario'] == $_REQUEST['key']) {
-
-    $eliminados = 0;
-
-    $lista = explode(",", $_REQUEST["ids"]);
-    foreach ($lista as $id) {
-        $a = DecisionActividad::executeDelete(["iddecision_actividad" => $id]);
-        if($a) {
-            $eliminados++;
-        }
-    }
-
-    if($eliminados) {
+    $atributos = [];
+    $idelemento = $_REQUEST['idelemento'];
+    $atributos['info'] = $_REQUEST['info'];
+    $atributos['nombre'] = $_REQUEST['nombre'];
+    $elemento = new Elemento($idelemento);
+    $elemento->setAttributes($atributos);
+    $pk = $elemento->save();
+    if($pk) {
         $response->success = 1;
-        $response->message = "Datos eliminados";
-        $response->data["pk"] = $eliminados;
+        $response->message = "Datos almacenados";
+        $response->data = $elemento->getAttributes();
     } else {
-        $response->message = "Error al borrar!";
+        $response->message = "Error al guardar!";
     }
 } else {
     $response->message = "Usuario incorrecto";
