@@ -1045,23 +1045,21 @@ function ejecuta_filtro($sql1, $con)
     }
     return ($resultado);
 }
-/*
-<Clase>
-<Nombre>delimita
-<Parametros>$cad: cadena, $long: longitud que se desea delimitar
-<Responsabilidades>cortar la cadena $cad para que no sobrepase la longitud $long
-<Notas>
-<Excepciones>
-<Salida>
-<Pre-condiciones>
-<Post-condiciones>
+
+/**
+ * recorta un string
+ *
+ * @param string $string
+ * @param int $length
+ * @return void
  */
-function delimita($cad, $long)
+function delimita($string, $length)
 {
-    if (strlen($cad) < $long)
-        return ($cad);
-    else
-        return (substr($cad, 0, $long - 3) . "<B> ... </B>");
+    if(strlen($string) > $length){
+        $string = substr($string, 0, $length - 3) . '...';
+    }
+
+    return $string;
 }
 /*
 <Clase>

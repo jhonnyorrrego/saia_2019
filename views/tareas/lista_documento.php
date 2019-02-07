@@ -51,6 +51,7 @@
                         click: function(item){
                             let options = {
                                 url: `${baseUrl}views/tareas/crear.php`,
+                                title: 'Tarea',
                                 params: {
                                     id: item.id
                                 },

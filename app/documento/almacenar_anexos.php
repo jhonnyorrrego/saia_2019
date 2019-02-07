@@ -27,19 +27,20 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         $content = file_get_contents($ruta_db_superior . $route);
         $routePath = explode('/', $route);
         $extensionParts = explode('.', end($routePath));
-        $route = $_REQUEST['task'] . '/' . time().'-'.rand(0,1000) . '.' . end($extensionParts);
+        $route = 'soporte/' . $_REQUEST['documentId'] . '/' . time().'-'.rand(0,1000) . '.' . end($extensionParts);
 
-        $dbRoute = UtilitiesController::createFileDbRoute($route, 'anexos_tareas', $content);
-
-        $data[] = AnexoTarea::newRecord([
-            'fk_funcionario' => $_REQUEST['key'],
-            'fk_tarea' => $_REQUEST['task'],
+        $dbRoute = UtilitiesController::createFileDbRoute($route, 'archivos', $content);
+    
+    
+        Anexos::newRecord([
+            'documento_iddocumento' => $_REQUEST['documentId'],
             'ruta' => $dbRoute,
-            'descripcion' => $_REQUEST['description'],
-            'version' => 1,
+            'etiqueta' => end($routePath),
+            'tipo' => end($extensionParts),
+            'fecha_anexo' => date('Y-m-d H:i:s'),
+            'fk_funcionario' => $_REQUEST['key'],
             'estado' => 1,
-            'fecha' => date('Y-m-d H:i:s'),
-            'etiqueta' => end($routePath)
+            'version' => 1
         ]);
     }
 

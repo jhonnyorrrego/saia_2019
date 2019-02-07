@@ -21,10 +21,14 @@ $response = [
 ];
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
+    $order = Anexos::getPrimaryLabel() . ' ' . $_REQUEST['sortOrder'];
+    $offset = ($_REQUEST['pageNumber']-1)  * $_REQUEST['pageSize'];
+    $limit = $offset + $_REQUEST['pageSize'] - 1; // se lo suman en sql2 ???
+
     $anexos = Anexos::findAllByAttributes([
         'documento_iddocumento' => $_REQUEST['documentId'],
         'estado' => 1
-    ]);
+    ], [], $order, $offset, $limit);
 
     foreach ($anexos as $key => $Anexo) {
         $response ['rows'][] = [
@@ -38,8 +42,11 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
             'tipo' => $Anexo->getType()
         ];
     }
-
-    $response['total'] = count($response ['rows']);
+    
+    $response['total'] = Anexos::countRecords([
+        'documento_iddocumento' => $_REQUEST['documentId'],
+        'estado' => 1
+    ]);
 }
 
 echo json_encode($response);
