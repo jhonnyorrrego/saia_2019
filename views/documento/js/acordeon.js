@@ -93,6 +93,7 @@ $(function () {
     function setSize() {
         
         let sizeDocument = localStorage.getItem('breakpoint'); 
+        console.log(sizeDocument)
             if (sizeDocument == 'xs') {              
                 setValores(sizeDocument);
             }
@@ -110,11 +111,20 @@ $(function () {
     function setValores(sizeDocument){
 
         var xsFont = parseFloat(sizeFont);
-        var widthIni = 480;
+        if(sizeDocument == 'sm'){
+            var widthIni = 668;
+        }else if(sizeDocument == 'xs'){
+            var widthIni = 480;
+        }
+        
         var widthAct = parseFloat($(".page_content").css('width')) * xsFont /  widthIni;
-        $('#documento').css("font-size", widthAct + "px");
+        if (sizeDocument == 'xs' || sizeDocument == 'sm'){
+            $('#documento').css("font-size", widthAct + "px");
+            $('#documento').find("p").css("font-size", widthAct + "px")
+        }
+        
         $('#documento').find("img")
-        $('#documento').find("p").css("font-size", widthAct + "px")
+      
         var contenidoImg = $("#documento").find("img");
         contenidoImg.each(function (i) {
             var sizeImg = parseFloat($(this).attr("width"));          
