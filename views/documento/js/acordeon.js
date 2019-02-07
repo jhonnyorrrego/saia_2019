@@ -134,7 +134,7 @@ $(function () {
                 sizeImg = sizeImg * 1.2;
             }
             else if (sizeImg <= 50 && sizeDocument == 'xs') {
-                sizeImg = sizeImg * 2.6;
+                sizeImg = sizeImg * 1.5;
             }
             else if (sizeImg <= 50 && sizeDocument == 'sm') {
                 sizeImg = sizeImg * 1.7;
