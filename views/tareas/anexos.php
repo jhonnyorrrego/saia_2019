@@ -15,9 +15,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 ?>
 
 <div class="row mx-0">
-    <div class="col-12">
-        <div id="task_files"></div>
-    </div>
+    <div class="col-12" id="task_files"></div>
 </div>
 
 <?= dropzone() ?>

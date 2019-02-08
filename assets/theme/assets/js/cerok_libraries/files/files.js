@@ -23,17 +23,25 @@ class Files {
     }
 
     createForm() {
-        let form = `<div class="row">
-            <div class="col-6">
+        let form = `<div class="row mx-0">
+            <div class="col-12 col-md-6 pl-0">
                 <div id="myDropzone" class="dropzone"></div>
             </div>
-            <div class="col-6">
-                <div class="form-group">
-                    <textarea id="file_description" rows="3" class="form-control" placeholder="Descripción del anexo"></textarea>
+            <div class="col-12 col-md-6">
+                <div class="row pt-2">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <textarea id="file_description" rows="3" class="form-control" placeholder="Descripción del anexo"></textarea>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <button class="btn btn-complete float-right" id="upload">Guardar anexos</button>
-                </div>        
+                <div class="row pt-2">
+                    <div class="col-12">
+                        <div class="form-group text-right">
+                            <button class="btn btn-complete" id="upload">Guardar anexos</button>
+                        </div>
+                    </div>
+                </div>                
             </div>
         </div>`;
         $(this.options.selector).append(form);
