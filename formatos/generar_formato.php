@@ -1005,7 +1005,7 @@ class GenerarFormato
                                 $texto .= ');';
                                 if (isset($params_ft["checkbox"])) {
                                     $texto .= '$origen_' . $idcampo_ft . '["params"]["checkbox"]="' . $params_ft["checkbox"] . '";';
-                                    if ($params_ft["checkbox"] == "1") {
+                                    if ($params_ft["checkbox"] == "checkbox") {
                                         $opc_ft .= '"selectMode" => 2,';
                                     } else {
                                         $opc_ft .= '"selectMode" => 1,';
