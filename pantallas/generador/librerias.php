@@ -105,7 +105,7 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
 					case "fs_opciones":
 					case "fs_estilo":
 						if (is_array($value)) {
-							$value = json_encode($value);
+							$value = json_encode($value, JSON_UNESCAPED_UNICODE);
 						}
 						$retorno[$key] = $value;
 						break;
@@ -119,6 +119,7 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
 				array_push($sql_update, preg_replace('/^fs_/', '', $key) . "='" . $value . "'");
 			}
 		}
+		
 	
 		if (count($sql_update)) {
 			$sql2 = "UPDATE campos_formato SET " . implode(", ", $sql_update) . " WHERE idcampos_formato=" . $idpantalla_campos;
@@ -323,7 +324,7 @@ function load_pantalla_campos($idpantalla_campos, $tipo_retorno = 1, $generar_ar
 					'',
 					$pantalla_campos[0]
 				));
-				$texto = str_replace($value, $proceso_componente, $texto);
+				$texto = str_replace($value, html_entity_decode(utf8_decode($proceso_componente)), $texto);
 			}
 		}
 		$retorno["codigo_html"] = $texto;
