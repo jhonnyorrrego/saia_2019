@@ -60,7 +60,7 @@ $tabLinks = ["flow_info" => "flow_info.php",
 
         <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/jspanel.js"></script>
         <!-- optionally load jsPanel extensions -->
-        <!-- <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/extensions/modal/jspanel.modal.js"></script> -->
+         <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/extensions/modal/jspanel.modal.js"></script>
 
 
     </head>
