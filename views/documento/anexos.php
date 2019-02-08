@@ -27,9 +27,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             <div class="tab-content">
                 <div class="tab-pane active" id="document_files">
                     <div class="row">
-                        <div class="col-12">
-                            <table id="files_table"></table>
-                        </div>
+                        <div class="col-12" id="files_table"></div>
                     </div>
                 </div>
                 <div class="tab-pane " id="document_pages">
