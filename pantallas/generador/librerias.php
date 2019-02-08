@@ -105,20 +105,23 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
 					case "fs_opciones":
 					case "fs_estilo":
 						if (is_array($value)) {
-							$value = json_encode($value);
+							$value = json_encode($value, JSON_UNESCAPED_UNICODE);
 						}
 						$retorno[$key] = $value;
 						break;
 					case "fs_obligatoriedad":
 						if ($value == "true") {
 							$value = 1;
+							$retorno["obligatoriedad"] = $value;
 						} else {
 							$value = 0;
+							$retorno["obligatoriedad"] = 0;
 						}
 				}
 				array_push($sql_update, preg_replace('/^fs_/', '', $key) . "='" . $value . "'");
 			}
 		}
+		
 	
 		if (count($sql_update)) {
 			$sql2 = "UPDATE campos_formato SET " . implode(", ", $sql_update) . " WHERE idcampos_formato=" . $idpantalla_campos;
@@ -276,7 +279,7 @@ function load_pantalla_campos($idpantalla_campos, $tipo_retorno = 1, $generar_ar
 		"exito" => 0
 	);
 	$pantalla_campos = get_pantalla_campos($idpantalla_campos, 0);
-	
+
 	if ($pantalla_campos["numcampos"] && (strpos($pantalla_campos[0]["acciones"], substr($accion, 0, 1)) !== false || $accion == '' || $accion == 'retorno_campo')) {
 		$retorno["exito"] = 1;
 		$texto = $pantalla_campos[0]["componente"];
@@ -323,8 +326,10 @@ function load_pantalla_campos($idpantalla_campos, $tipo_retorno = 1, $generar_ar
 					'',
 					$pantalla_campos[0]
 				));
-				$texto = str_replace($value, $proceso_componente, $texto);
+
+				$texto = str_replace($value, html_entity_decode(utf8_decode($proceso_componente)), $texto);
 			}
+			
 		}
 		$retorno["codigo_html"] = $texto;
 	}

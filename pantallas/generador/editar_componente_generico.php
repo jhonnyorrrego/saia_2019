@@ -237,13 +237,19 @@ echo librerias_jquery("2.2");
             async: false,
             dataType: "json",
             success: function(objeto) {
-
                 if(objeto && objeto.exito) {
                     $('#cargando_enviar').html("Terminado ...");
                     $("#pc_"+idpantalla_campo, parent.document).find(".control-label").html("<b>" + objeto.etiqueta + "</b>");
                     if(!evitar_html.includes(nombre_componente)) {
                     	$("#pc_"+idpantalla_campo,parent.document).replaceWith(objeto.codigo_html);
-                    }
+                    }else{
+						if(objeto.etiqueta_html=="fecha" && objeto.obligatoriedad!=0){
+							$("#pc_"+idpantalla_campo+" span:first",parent.document).html("<b>"+objeto.etiqueta+"*</b>");
+						}else if(objeto.etiqueta_html=="fecha" && objeto.obligatoriedad==0){
+							$("#pc_"+idpantalla_campo+" span:first",parent.document).html("<b>"+objeto.etiqueta+"</b>");
+
+						}
+					}
                     parent.hs.close();
                 }
             }
@@ -262,8 +268,8 @@ function obtener_valores_campo($idcampo_formato, $opciones_defecto) {
     $campo_formato = busca_filtro_tabla("nombre, etiqueta, opciones, estilo, ayuda", "campos_formato", "idcampos_formato=$idcampo_formato", "", $conn);
 
     if($campo_formato["numcampos"]) {
-        $opciones = json_decode(mb_convert_encoding($campo_formato[0]["opciones"], 'UTF-8', 'UTF-8'), true);
-        //$opciones_propias = json_decode(utf8_encode($pantalla_campos[0]["opciones_propias"]), true);
+        $opciones = json_decode(html_entity_decode($campo_formato[0]["opciones"]), true);
+		//$opciones_propias = json_decode(utf8_encode($pantalla_campos[0]["opciones_propias"]), true);
         if (json_last_error() === JSON_ERROR_NONE && !empty($opciones)) {
             $resp["fs_opciones"] = $opciones;
         }
