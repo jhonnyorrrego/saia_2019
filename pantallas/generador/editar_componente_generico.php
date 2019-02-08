@@ -237,13 +237,19 @@ echo librerias_jquery("2.2");
             async: false,
             dataType: "json",
             success: function(objeto) {
-
                 if(objeto && objeto.exito) {
                     $('#cargando_enviar').html("Terminado ...");
                     $("#pc_"+idpantalla_campo, parent.document).find(".control-label").html("<b>" + objeto.etiqueta + "</b>");
                     if(!evitar_html.includes(nombre_componente)) {
                     	$("#pc_"+idpantalla_campo,parent.document).replaceWith(objeto.codigo_html);
-                    }
+                    }else{
+						if(objeto.etiqueta_html=="fecha" && objeto.obligatoriedad!=0){
+							$("#pc_"+idpantalla_campo+" span:first",parent.document).html("<b>"+objeto.etiqueta+"*</b>");
+						}else if(objeto.etiqueta_html=="fecha" && objeto.obligatoriedad==0){
+							$("#pc_"+idpantalla_campo+" span:first",parent.document).html("<b>"+objeto.etiqueta+"</b>");
+
+						}
+					}
                     parent.hs.close();
                 }
             }
