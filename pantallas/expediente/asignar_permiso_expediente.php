@@ -151,7 +151,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                 if(response.exito){
                   loadTable();
                   top.notification({
-                    message : response.message,
+                    message : 'Permiso Eliminado!',
                     type : "success",
                     duration : 3000
                   });

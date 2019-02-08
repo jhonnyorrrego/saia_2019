@@ -107,6 +107,7 @@ class EntidadExpediente extends Model
         ];
         if ($this->update()) {
             $response['exito'] = 1;
+            $response['message'] = 'Entidad expediente actualizado!';
             $sql = "SELECT idpermiso_expediente FROM permiso_expediente WHERE tipo_permiso=2 AND fk_entidad=1 AND tipo_funcionario={$this->tipo_funcionario} AND fk_expediente={$this->fk_expediente}";
             $record = $this->search($sql);
             if ($record) {

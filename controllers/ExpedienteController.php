@@ -3,6 +3,63 @@ class ExpedienteController
 {
 
     /**
+     * Apertura y cierre de los expedientes
+     *
+     * @param array $data 
+     * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public static function aperturaCierreExpedienteCont(array $data = []) : array
+    {
+        $response = [
+            'exito' => 0,
+            'message' => ''
+        ];
+        if (!empty($data['idexpediente'])) {
+            $Expediente = new Expediente($data['idexpediente']);
+            $estadoActual = $Expediente->estado_cierre;
+ 
+            if ($estadoActual == 1) {
+                $ok = $Expediente->canClose();
+                $Expediente->estado_cierre = 2;
+                $Expediente->fecha_cierre = date('Y-m-d H:i:s');
+                $Expediente->funcionario_cierre = $_SESSION['idfuncionario'];
+            } else {
+                $ok = true;
+                $Expediente->estado_cierre = 1;
+                $Expediente->fecha_cierre = 'NULL';
+                $Expediente->funcionario_cierre = 'NULL';
+            }
+            if ($ok) {
+                if ($Expediente->update()) {
+                    $response['exito'] = 1;
+                    $attributes = [
+                        'fk_expediente' => $data['idexpediente'],
+                        'fk_funcionario' => $_SESSION['idfuncionario'],
+                        'accion' => $Expediente->estado_cierre,
+                        'observacion' => $data['observacion'],
+                        'fecha_accion' => date('Y-m-d H:i:s')
+                    ];
+                    $ExpedienteCierre = new ExpedienteCierre();
+                    $ExpedienteCierre->setAttributes($attributes);
+                    if (!$ExpedienteCierre->create()) {
+                        $Expediente->estado_cierre = $estadoActual;
+                        $Expediente->update();
+
+                        $response['exito'] = 0;
+                        $response['message'] = 'Error al crear el historial del cambio';
+                    }
+                }
+            } else {
+                $response['message'] = 'Debe cerrar primero los expedientes inferiores';
+            }
+        } else {
+            $response['message'] = 'faltan el identificador del expediente';
+        }
+        return $response;
+    }
+
+    /**
      * Actualiza el responsable del expediente
      *
      * @param array $data :id del expediente y id del funcionario
@@ -374,7 +431,7 @@ class ExpedienteController
                     ];
                     $ExpDel->setAttributes($attributes);
                     if ($ExpDel->create()) {
-                        $sql = "UPDATE expediente SET estado=0,fk_expediente_eli={$ExpDel->getPK()} WHERE idexpediente={$data['idexpediente']} OR cod_arbol like '{$Expediente->cod_arbol}.%' ";
+                        $sql = "UPDATE expediente SET estado=0,fk_expediente_eli={$ExpDel->getPK()} WHERE idexpediente={$data['idexpediente']} OR (cod_arbol like '{$Expediente->cod_arbol}.%' AND estado=1)";
                         if (StaticSql::query($sql)) {
                             $response['exito'] = 1;
                             $response['message'] = 'Expediente eliminado';
@@ -414,24 +471,38 @@ class ExpedienteController
         if (!empty($data['idexpediente'])) {
             $Expediente = new Expediente($data['idexpediente']);
             if ($Expediente->estado == 0) {
-                $sql = "SELECT idexpediente_eli FROM expediente_eli WHERE fk_expediente={$data['idexpediente']} AND fecha_restauracion IS NULL";
-                $instance = UtilitiesController::instanceSql('ExpedienteEli', 'idexpediente_eli', $sql);
-                if ($instance) {
-                    $ExpDel = $instance[0];
-                    $ExpDel->fecha_restauracion = date('Y-m-d H:i:s');
-                    if ($ExpDel->update()) {
-                        $sql = "UPDATE expediente SET estado=1,fk_expediente_eli=NULL WHERE idexpediente={$data['idexpediente']} OR cod_arbol like '{$Expediente->cod_arbol}.%' ";
-                        if (StaticSql::query($sql)) {
-                            $response['exito'] = 1;
-                            $response['message'] = 'Expediente restaurado';
+                $Expadre = $Expediente->getCodPadre();
+                if ($Expadre) {
+                    if ($Expadre->estado) {
+                        if ($Expadre->estado_cierre == 2) {
+                            $response['message'] = 'No se puede restaurar el expediente, el expediente superior se encuentra cerrado';
                         } else {
-                            $ExpDel->fecha_restauracion = 'NULL';
-                            $ExpDel->update();
-                            $response['message'] = 'Error al restaurar el expediente';
+                            $sql = "SELECT idexpediente_eli FROM expediente_eli WHERE fk_expediente={$data['idexpediente']} AND fecha_restauracion IS NULL";
+                            $instance = UtilitiesController::instanceSql('ExpedienteEli', 'idexpediente_eli', $sql);
+                            if ($instance) {
+                                $ExpDel = $instance[0];
+                                $ExpDel->fecha_restauracion = date('Y-m-d H:i:s');
+                                if ($ExpDel->update()) {
+                                    $sql = "UPDATE expediente SET estado=1,fk_expediente_eli=NULL WHERE idexpediente={$data['idexpediente']} OR cod_arbol like '{$Expediente->cod_arbol}.%' ";
+                                    if (StaticSql::query($sql)) {
+                                        $response['exito'] = 1;
+                                        $response['message'] = 'Expediente restaurado';
+                                    } else {
+                                        $ExpDel->fecha_restauracion = 'NULL';
+                                        $ExpDel->update();
+                                        $response['message'] = 'Error al restaurar el expediente';
+                                    }
+                                }
+                            } else {
+                                $response['message'] = 'No se puede restaurar el expediente, contacte al administrador';
+                            }
                         }
+                    } else {
+                        $response['message'] = 'No se puede restaurar el expediente, el expediente superior se encuentra eliminado';
                     }
+
                 } else {
-                    $response['message'] = 'No se puede restaurar el expediente, contacte al administrador';
+                    $response['message'] = 'No se encuentran datos del expediente superior';
                 }
             } else {
                 $response['message'] = 'El expediente NO se encuentra eliminado';

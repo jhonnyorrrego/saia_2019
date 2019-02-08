@@ -162,9 +162,9 @@ function adicionar_expediente()
         $Expediente = new Expediente($idexpediente);
         $GLOBALS['Expediente'] = $Expediente;
     }
-
-    if ($Expediente->getAccessUser('a')) {
-        $html = <<<FINHTML
+    if($Expediente->estado_cierre==1){
+        if ($Expediente->getAccessUser('a')) {
+            $html = <<<FINHTML
         <li>
             <a href="#" id="addExpediente" data-id="{$idexpediente}" data-componente="{$idcomp}">Adicionar Expediente/Separador</a>
         </li>
@@ -172,7 +172,9 @@ function adicionar_expediente()
             <a href="#" id="addDocumentExp" data-id="{$idexpediente}" data-componente="{$idcomp}">Adicionar Documento</a>
         </li>
 FINHTML;
+        }
     }
+
     echo $html;
 }
 

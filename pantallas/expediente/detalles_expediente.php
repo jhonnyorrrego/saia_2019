@@ -45,6 +45,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 		<?= bootstrap() ?>
 		<?= theme() ?>
         <?= icons() ?>
+        <?= validate() ?>
 	</head>
 
 	<body>
@@ -111,7 +112,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                             <tr>
                                 <td>Responsable: </td>
                                 <td>
-                                    <?= $Expediente->getResponsable() ?>
+                                    <?= $Expediente->getResponsable() ?><br/>
                                     <?php if($Expediente->isResponsable()):?>
                                         <button class="btn btn-info" id="openModal"><i class="fa fa-user"></i></button>
                                     <?php endif;?>
@@ -143,6 +144,44 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                 <td><?= $Expediente->fk_caja ?></td>
                             </tr>
 
+                           <tr>
+                                <td>
+                                    Cierre y apertura:<br/>
+                                    Estado: <?= $Expediente->getEstadoCierre() ?><br/>
+                                    <?php if($Expediente->estado_cierre==2):?>
+                                    Funcionario: <?= $Expediente->getFuncionarioFk('funcionario_cierre')[0]->getName() ?><br/>
+                                    Fecha: <?= $Expediente->fecha_cierre ?><br/>
+                                    <?php endif; ?>                                    
+                                </td>
+                                <td>
+                                    <?php if ($Expediente->isResponsable()) : ?>
+                                        <form role="form" name="formCierre" id="formCierre">
+                                            <div class="form-group form-group-default input-group">
+                                                <div class="form-input-group">
+                                                    <label>Observaciones</label>
+                                                    <input type="text" class="form-control" name="observacion" id="observacion" required="true">
+                                                </div>
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text btn btn-complete" id="guardarHistorial">
+                                                           <?php if($Expediente->estado_cierre==2):?>
+                                                            <i class="fa fa-folder-open"></i>
+                                                        <?php else: ?>
+                                                            <i class="fa fa-folder"></i>
+                                                        <?php endif; ?>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    <?php endif; ?>
+                                    <a href="#" id="openModalCierre">Historial de apertura/cierre <i class="fa fa-link"></i> </a>
+                                </td>
+                            </tr>
+                            <?php if($Expediente->estado_cierre==2):?>
+                                <tr>
+                                    <td>Alerta de retención:</td>
+                                    <td><?= $Expediente->infoRetencion() ?></td>
+                                </tr>
+                            <?php endif; ?>
                         </table>
 
                         <div>
@@ -227,7 +266,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                 <td><?= $Expediente->countExpediente(3) ?></td>
                             </tr>
 
-                        <tr>
+                            <tr>
                                 <td>Consecutivo inicial:</td>
                                 <td><?= $Expediente->consecutivo_inicial ?></td>
                             </tr>
@@ -242,7 +281,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                 <td>Tomo:</td>
                                 <td><?= $Expediente->tomo_no ?> de <?= $Expediente->countTomos() ?></td>
                             </tr>
-
                         </table>
                     <?php endif;?>
 				</div>
@@ -265,6 +303,66 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         buttons: {}
                     };
                     top.topModal(options);
+                });
+
+                $("#openModalCierre").click(function (){
+                    let options = {
+                        url: `${params.baseUrl}pantallas/expediente/historial_cierre.php`,
+                        params: {
+                            idexpediente:params.idexpediente
+                        }, 
+                        size: "modal-lg",
+                        title: "Historial de apertura y cierre del expediente",
+                        centerAlign: false,
+                        buttons: {}
+                    };
+                    top.topModal(options);
+                });
+
+                $("#guardarHistorial").click(function(){
+                    if($(this).attr("disable")!="disabled"){
+                        $("#formCierre").submit();
+                    }
+                })
+                $("#formCierre").validate({
+					rules : {
+						observacion : {
+							required : true
+						}
+					},
+					submitHandler : function(form) {
+                        $("#guardarHistorial").attr('disabled',true);
+                        $.ajax({
+                            type : 'POST',
+                            async : false,
+                            url: `${params.baseUrl}pantallas/expediente/ejecutar_acciones.php`,
+                            data: {methodExp:'aperturaCierreExpedienteCont',idexpediente:params.idexpediente,observacion:$("#observacion").val()},
+                            dataType : 'json',
+                            success : function(response) {
+                                if (response.exito) {
+                                 top.notification({
+                                        message : "Expediente actualizado!",
+                                        type : "success",
+                                        duration : 3000
+                                    });
+                                }else{
+                                    top.notification({
+                                        message : response.message,
+                                        type : "warning",
+                                        duration : 3000
+                                    });
+                                }
+                            },
+                            error : function() {
+                                top.notification({
+                                    message : "Error al procesar la solicitud",
+                                    type : "error",
+                                    duration : 3000
+                                });
+                            }
+                        });
+                        window.location.reload();
+                    }
                 });
 
 

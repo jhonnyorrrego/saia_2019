@@ -149,12 +149,12 @@ class Expediente extends Model
             }
         }
 
-        /*$ExpedienteAbce = ExpedienteAbce::findAllByAttributes(['fk_expediente' => $this->getPK()]);
-        if ($ExpedienteAbce) {
-            foreach ($ExpedienteAbce as $instance) {
+        $ExpedienteCierre = ExpedienteCierre::findAllByAttributes(['fk_expediente' => $this->getPK()]);
+        if ($ExpedienteCierre) {
+            foreach ($ExpedienteCierre as $instance) {
                 $instance->delete();
             }
-        }*/
+        }
         return true;
     }
     /**
@@ -201,24 +201,24 @@ class Expediente extends Model
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function updateResponsable(int $responAnt): array
+    public function updateResponsable(int $responAnt) : array
     {
         $response = [
             'exito' => 0,
             'message' => '',
         ];
-        if($this->responsable==$responAnt){
-            $response['exito']=1;
-        }else{        
+        if ($this->responsable == $responAnt) {
+            $response['exito'] = 1;
+        } else {
             if ($this->update()) {
-                $sql= "SELECT identidad_expediente FROM entidad_expediente WHERE tipo_funcionario=2 AND fk_expediente={$this->idexpediente}";
-                $idEnt=$this->search($sql);
-                if($idEnt){
+                $sql = "SELECT identidad_expediente FROM entidad_expediente WHERE tipo_funcionario=2 AND fk_expediente={$this->idexpediente}";
+                $idEnt = $this->search($sql);
+                if ($idEnt) {
                     $EntidadExpediente = new EntidadExpediente($idEnt[0]['identidad_expediente']);
                     $EntidadExpediente->fk_funcionario = $this->responsable;
                     $EntidadExpediente->fecha = date('Y-m-d H:i:s');
-                    $response=$EntidadExpediente->updateEntidadExpediente();
-                }else{
+                    $response = $EntidadExpediente->updateEntidadExpediente();
+                } else {
                     $attributes = [
                         'fk_funcionario' => $this->responsable,
                         'fk_expediente' => $this->idexpediente,
@@ -245,6 +245,18 @@ class Expediente extends Model
     {
         $data = $this->keyValueField('estado');
         return $data[$this->estado];
+    }
+
+    /**
+     * retorna la etiqueta del estado de cierre del expediente
+     *
+     * @return string
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getEstadoCierre() : string
+    {
+        $data = $this->keyValueField('estado_cierre');
+        return $data[$this->estado_cierre];
     }
     /**
      * retorna la instancia del expediente padre
@@ -287,7 +299,7 @@ class Expediente extends Model
     public function getResponsable() : string
     {
         $response = '';
-        $data = $this->getFuncionarioFk(1, 'responsable');
+        $data = $this->getFuncionarioFk('responsable');
         if ($data) {
             $response = $data[0]->nombres . ' ' . $data[0]->apellidos;
         }
@@ -375,6 +387,53 @@ class Expediente extends Model
     }
 
     /**
+     * valida si un expediente se puede cerrar
+     *
+     * @return boolean
+     */
+    public function canClose() : bool
+    {
+        $response = false;
+        $sql = "SELECT count(idexpediente) as cant FROM expediente WHERE cod_arbol like '{$this->cod_arbol}.%' AND agrupador=0 AND estado=1 AND estado_cierre=1";
+        $cant = $this->search($sql);
+        if (!$cant[0]['cant']) {
+            $response = true;
+        }
+        return $response;
+    }
+
+    public function infoRetencion() : string
+    {
+        $response = '';
+        if ($this->estado_cierre == 2) {
+            $infoSerie = $this->getSerieFk();
+            if ($infoSerie) {
+                $tiempo = 'P' . $infoSerie[0]->retencion_gestion . 'M';
+                $fecha = new DateTime($this->fecha_cierre);
+                $fecha->add(new DateInterval($tiempo));
+                $intervalo = $fecha->diff(new DateTime(date('Y-m-d')));
+
+                if ($intervalo->y) {
+                    $texto = $intervalo->format('y% años, %m meses, %d días');
+                } elseif ($intervalo->m) {
+                    $texto = $intervalo->format('%m meses, %d días');
+                } else {
+                    $texto = $intervalo->format('%d días');
+                }
+                if ($intervalo->invert) {
+                    $response = 'Faltan ' . $texto;
+                } else {
+                    $response = 'Se ha superado el tiempo de retención en ' . $texto;
+                }
+            } else {
+                $response = 'No se encuentra la serie';
+            }
+        }
+
+        return $response;
+    }
+
+    /**
      * setea los permisos del funcionario logueado
      *
      * @param integer $idfuncionario : usuario logueado
@@ -432,7 +491,7 @@ class Expediente extends Model
     }
 
     /**
-     * retorna las instancias de expedientes_doc vinculadas al expediente
+     * retorna las instancias de expediente doc vinculadas al expediente
      *
      * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
      * @return array|null
@@ -440,103 +499,75 @@ class Expediente extends Model
      */
     public function getExpedienteDocFk(int $instance = 1)
     {
-        $data = null;
-        $response = ExpedienteDoc::findAllByAttributes(['idexpediente' => $this->idexpediente]);
-        if ($response) {
-            if ($instance) {
-                $data = $response;
-            } else {
-                $data = UtilitiesController::getIdsInstance($response);
-            }
+        if ($instance) {
+            $data = ExpedienteDoc::findAllByAttributes(['idexpediente' => $this->idexpediente]);
+        } else {
+            $data = ExpedienteDoc::findColumn('idexpediente_doc', ['idexpediente' => $this->idexpediente]);
         }
+
         return $data;
     }
 
     /**
-     * retorna las instancias de la serie vinculadas al expediente
+     * retorna las instancias de Expediente cierre vinculadas al expediente
      *
      * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
      * @return array|null
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getSerieFk(int $instance = 1)
+    public function getExpedienteCierreFk(int $instance = 1)
     {
-        $data = null;
-        $response = Serie::findAllByAttributes(['idserie' => $this->fk_serie]);
-        if ($response) {
-            if ($instance) {
-                $data = $response;
-            } else {
-                $data = UtilitiesController::getIdsInstance($response);
-            }
+        if ($instance) {
+            $data = ExpedienteCierre::findAllByAttributes(['fk_expediente' => $this->idexpediente],[],'idexpediente_cierre desc');
+        } else {
+            $data = ExpedienteCierre::findColumn('idexpediente_cierre', ['fk_expediente' => $this->idexpediente]);
         }
         return $data;
     }
 
     /**
-     * retorna las instancias de la dependencia vinculadas al expediente
+     * retorna la instancia de la serie vinculadas al expediente
      *
-     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
      * @return array|null
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getDependenciaFk(int $instance = 1)
+    public function getSerieFk()
     {
-        $data = null;
-        $response = Dependencia::findAllByAttributes(['iddependencia' => $this->fk_dependencia]);
-        if ($response) {
-            if ($instance) {
-                $data = $response;
-            } else {
-                $data = UtilitiesController::getIdsInstance($response);
-            }
-        }
-        return $data;
+        return Serie::findAllByAttributes(['idserie' => $this->fk_serie]);
     }
 
-
     /**
-     * retorna las instancias de la entidad serie vinculadas al expediente
+     * retorna la instancia de la dependencia vinculada al expediente
      *
-     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
      * @return array|null
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getEntidadSerieFk(int $instance = 1)
+    public function getDependenciaFk()
     {
-        $data = null;
-        $response = EntidadSerie::findAllByAttributes(['identidad_serie' => $this->fk_entidad_serie]);
-        if ($response) {
-            if ($instance) {
-                $data = $response;
-            } else {
-                $data = UtilitiesController::getIdsInstance($response);
-            }
-        }
-        return $data;
+        return Dependencia::findAllByAttributes(['iddependencia' => $this->fk_dependencia]);
     }
 
+    /**
+     * retorna la instancia de la entidad serie vinculadas al expediente
+     *
+     * @return array|null
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getEntidadSerieFk()
+    {
+        return EntidadSerie::findAllByAttributes(['identidad_serie' => $this->fk_entidad_serie]);
+    }
 
     /**
-     * retorna las instancia del funcionario (creador,responsable) vinculada al expediente
+     * retorna la instancia del funcionario (creador,responsable) vinculada al expediente
      *
-     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
      * @param string $campo :  Nombre del campo (propietario - responsable)
      * @return array|null
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getFuncionarioFk(int $instance = 1, string $campo = "propietario")
+    public function getFuncionarioFk(string $campo = "propietario")
     {
-        $data = null;
-        $response = Funcionario::findAllByAttributes(['idfuncionario' => $this->$campo]);
-        if ($response) {
-            if ($instance) {
-                $data = $response;
-            } else {
-                $data = UtilitiesController::getIdsInstance($response);
-            }
-        }
-        return $data;
+        return Funcionario::findAllByAttributes(['idfuncionario' => $this->$campo]);
     }
     /**
      * Crea el HTML de un campo
@@ -578,6 +609,12 @@ class Expediente extends Model
             0 => 'INACTIVO',
             1 => 'ACTIVO'
         ];
+
+        $response['estado_cierre'] = [
+            1 => 'Abierto',
+            2 => 'Cerrado'
+        ];
+
         $response['soporte'] = [
             1 => 'CD - ROM',
             2 => 'DISKETE',

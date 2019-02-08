@@ -23,7 +23,11 @@ final class Version20190122215104 extends AbstractMigration
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
             $this->platform->registerDoctrineTypeMapping('enum', 'string');
-        }
+        }        
+    }
+
+    public function up(Schema $schema) : void
+    {
 
         if ($schema->hasTable("serie")) {
             $schema->dropTable("serie");
@@ -56,46 +60,15 @@ final class Version20190122215104 extends AbstractMigration
         if ($schema->hasTable("expediente_eli")) {
             $schema->dropTable("expediente_eli");
         }
+
+        if ($schema->hasTable("expediente_abce")) {
+            $schema->dropTable("expediente_abce");
+        }
+
+        if ($schema->hasTable("expediente_cierre")) {
+            $schema->dropTable("expediente_cierre");
+        }
         
-    }
-
-    public function up(Schema $schema) : void
-    {
-
-        /*if ($schema->hasTable("serie")) {
-            $schema->dropTable("serie");
-        }
-
-        if ($schema->hasTable("entidad_serie")) {
-            $schema->dropTable("entidad_serie");
-        }
-
-        if ($schema->hasTable("permiso_serie")) {
-            $schema->dropTable("permiso_serie");
-        }
-
-        if ($schema->hasTable("expediente")) {
-            $schema->dropTable("expediente");
-        }
-
-        if ($schema->hasTable("entidad_expediente")) {
-            $schema->dropTable("entidad_expediente");
-        }
-
-        if ($schema->hasTable("permiso_expediente")) {
-            $schema->dropTable("permiso_expediente");
-        }
-
-        if ($schema->hasTable("expediente_doc")) {
-            $schema->dropTable("expediente_doc");
-        }
-
-        if ($schema->hasTable("expediente_eli")) {
-            $schema->dropTable("expediente_eli");
-        }*/
-        
-
-
         $tabla = $schema->createTable("serie");
         $tabla->addColumn("idserie", "integer", ["autoincrement" => true]);
         $tabla->addColumn("nombre", "string", ["length" => 255]);
@@ -218,6 +191,16 @@ final class Version20190122215104 extends AbstractMigration
         $tabla8->addColumn("fecha_restauracion", "datetime", ["notnull" => false]);
         $tabla8->setPrimaryKey(["idexpediente_eli"]);
 
+
+        $tabla9 = $schema->createTable("expediente_cierre");
+        $tabla9->addColumn("idexpediente_cierre", "integer", ["autoincrement" => true]);
+        $tabla9->addColumn("fk_expediente", "integer");
+        $tabla9->addColumn("fk_funcionario", "integer");
+        $tabla9->addColumn("accion", "integer", ["comment" => "1:Abierto;2:Cierre;"]);
+        $tabla9->addColumn("fecha_accion", "datetime");
+        $tabla9->addColumn("observacion", "text", ["notnull" => false]);
+        $tabla9->setPrimaryKey(["idexpediente_cierre"]);
+
         $this->addSql("DELETE FROM busqueda WHERE idbusqueda=37");
         $this->addSql("INSERT INTO busqueda (idbusqueda, nombre, etiqueta, estado, ancho, campos, llave, tablas, ruta_libreria, ruta_libreria_pantalla, cantidad_registros, tiempo_refrescar, ruta_visualizacion, tipo_busqueda, badge_cantidades, elastic) VALUES (37, 'expediente', ' Mis expedientes', 1, 200, NULL, NULL, 'vpermiso_expediente v', 'pantallas/expediente/librerias.php', 'pantallas/expediente/librerias_js.php', 20, 500, 'pantallas/busquedas/consulta_busqueda_expediente.php', 1, NULL, 0)");
         
@@ -232,6 +215,7 @@ final class Version20190122215104 extends AbstractMigration
 
         $this->addSql("DELETE FROM busqueda_condicion WHERE fk_busqueda_componente = 111");
         $this->addSql("INSERT INTO busqueda_condicion (idbusqueda_condicion, busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES (82, NULL, 111, 'v.idexpediente=ed.fk_expediente AND ed.fk_documento=d.iddocumento AND d.estado not in (\'ELIMINADO\') AND v.idexpediente={*conditions_exp_documents*}', 'expediente documento')");
+
 
         /*$sql= "CREATE OR REPLACE VIEW vpermiso_expediente AS
         SELECT
