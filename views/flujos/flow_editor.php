@@ -92,6 +92,12 @@ if (isset($_REQUEST["idflujo"])) {
                 let url = '<?= $ruta_db_superior ?>views/flujos/modal_datos_tarea.php?' + strParam;
 
                 let jspanelOpts = {
+                    dragit: {
+                        containment: [60, 5, 5, 5],
+                        snap: true
+                    },
+                    ziBase: 10000,
+                    /*syncMargins: true,*/
                     headerTitle: '',
                     iconfont: 'fa',
                     theme: 'dark',

@@ -66,11 +66,9 @@ if (!empty($_REQUEST["idactividad"])) {
 var $tabla = $("#tabla_funcionario_actividad");
 $tabla.bootstrapTable();
 
-var $botonEliminar = $('#boton_eliminar_funcionario_actividad')
-
 var idactividad = "<?= $idactividad ?>";
 
-$botonEliminar.click(function () {
+$('#boton_eliminar_funcionario_actividad').click(function () {
     var ids = $.map($tabla.bootstrapTable('getSelections'), function (row) {
       return row.idfuncionario_actividad
     });
