@@ -29,7 +29,8 @@ $tabLinks = ["flow_info" => "flow_info.php",
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>SAIA - SGDEA</title>
         <link rel="stylesheet" type="text/css" href="<?php echo $ruta_db_superior; ?>css/selectize.css" />
-        <link href="<?= $ruta_db_superior ?>dropzone/dist/dropzone_saia.css" rel="stylesheet" type="text/css">
+
+<!--        <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/dropzone/css/dropzone.css" rel="stylesheet" type="text/css">-->
 
         <link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/jspanel.css">
 
@@ -53,9 +54,9 @@ $tabLinks = ["flow_info" => "flow_info.php",
         <?= theme() ?>
         <?= librerias_UI("1.12") ?>
         <?= librerias_arboles_ft("2.24") ?>
+        <?= dropzone() ?>
 
         <script type="text/javascript" src="<?php echo $ruta_db_superior; ?>js/selectize.js"></script>
-
 
         <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/jspanel.js"></script>
         <!-- optionally load jsPanel extensions -->
@@ -90,8 +91,6 @@ $tabLinks = ["flow_info" => "flow_info.php",
                 </div>
             </div>
         </div>
-
-        <script src="<?= $ruta_db_superior ?>dropzone/dist/dropzone.js"></script>
 
         <script type="text/javascript" id="smain" data-idflujo="<?= $_REQUEST["idflujo"] ?>">
             var lista_archivos = new Object();
