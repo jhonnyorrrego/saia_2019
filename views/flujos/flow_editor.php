@@ -92,6 +92,12 @@ if (isset($_REQUEST["idflujo"])) {
                 let url = '<?= $ruta_db_superior ?>views/flujos/modal_datos_tarea.php?' + strParam;
 
                 let jspanelOpts = {
+                    dragit: {
+                        containment: [60, 5, 5, 5],
+                        snap: true
+                    },
+                    ziBase: 10000,
+                    /*syncMargins: true,*/
                     headerTitle: '',
                     iconfont: 'fa',
                     theme: 'dark',
@@ -124,7 +130,7 @@ if (isset($_REQUEST["idflujo"])) {
                     // return console.error('No se pudo guardar el digagraam BPMN 2.0', err);
                 }
                 if (idflujo && idflujo != "") {
-                    console.log("ID FLUJO", idflujo);
+                    //console.log("ID FLUJO", idflujo);
                     //console.log(bpmnModeler);
 
                     $.ajax({
@@ -138,7 +144,7 @@ if (isset($_REQUEST["idflujo"])) {
                             key: localStorage.getItem("key")
                         }, // send the string directly
                         success: function (response) {
-                            console.log(response);
+                            //console.log(response);
                             if (response.success == 1) {
                                 top.notification({title: "Diagrama", type: "success", message: response.message});
                             } else {

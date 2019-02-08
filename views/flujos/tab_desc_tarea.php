@@ -69,7 +69,7 @@ if(!empty($_REQUEST["idactividad"])) {
         <div class="row">
             <div class=col col-md-12">
                 <div id="toolbar_tabla_responsable">
-                    <a href="#" id="boton_eliminar" class="btn btn-secondary" title="Eliminar"><i class="f-12 fa fa-trash"></i></a>
+                    <a href="#" id="boton_eliminar_responsable_actividad" class="btn btn-secondary" title="Eliminar"><i class="f-12 fa fa-trash"></i></a>
                 </div>
                 <table class="table table-striped table-bordered table-hover" cellspacing="0" id="tabla_responsable"
                        data-toggle="table"
@@ -124,12 +124,12 @@ if(!empty($_REQUEST["idactividad"])) {
 </div>
 
 <script>
-    var $tabla = $("#tabla_responsable");
+    var $tablaRespAct = $("#tabla_responsable");
     var idactividad = "<?= $idactividad ?>";
-    $tabla.bootstrapTable();
+    $tablaRespAct.bootstrapTable();
 
     $("#guardarDescTarea").click(function () {
-        var datos = $tabla.bootstrapTable('getData');
+        var datos = $tablaRespAct.bootstrapTable('getData');
 
         let nombre = $("#frmActividad #nombre_actividad").val();
         let info = $("#frmActividad #info_actividad").val();
@@ -143,6 +143,18 @@ if(!empty($_REQUEST["idactividad"])) {
         }
     });
 
+    $("#boton_eliminar_responsable_actividad").click(function () {
+        var ids = $.map($tablaRespAct.bootstrapTable('getSelections'), function (row) {
+          return row.idresponsable_actividad
+        });
+        var estado = eliminarResponsables(idactividad, ids.join(","));
+        if(estado) {
+            $tablaRespAct.bootstrapTable('remove', {
+                field: 'idresponsable_actividad',
+                values: ids
+            });
+        }
+    });
 
     $('#funcionario').select2({
         language: "es",
@@ -184,6 +196,7 @@ if(!empty($_REQUEST["idactividad"])) {
     $("#funcionario").on("select2:opening", function () {
         if ($('input:checked[type=radio][name=tipo_responsable]').length == 0) {
         	jsPanel.hint.create({
+                autoclose:      3000,
         	    position:    'center-top 0 15 down',
         	    headerControls: 'closeonly',
         	    iconfont:    'fa',
@@ -199,7 +212,7 @@ if(!empty($_REQUEST["idactividad"])) {
 
     $('#funcionario').on('select2:select', function (e) {
         //console.log("par entrada", e.params.data);
-        var datos = $tabla.bootstrapTable('getData');
+        var datos = $tablaRespAct.bootstrapTable('getData');
         //console.log("Tabla", datos);
         var existe = false;
         for (var key in datos) {
@@ -214,7 +227,7 @@ if(!empty($_REQUEST["idactividad"])) {
             var id = guardarResponsable(idactividad, e.params.data);
             if(id) {
                 datos["idresponsable_actividad"] = id;
-                $tabla.bootstrapTable('append', datos);
+                $tablaRespAct.bootstrapTable('append', datos);
             }
         }
         $(this).val(null).trigger('change');

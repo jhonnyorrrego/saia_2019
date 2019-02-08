@@ -341,7 +341,7 @@ if ($formato["numcampos"]) {
       <input type="checkbox" class="tipo_edicion" name="tipo_edicion" id="tipo_edicion" <?php check_banderas('tipo_edicion'); ?>><span class="tipo_edicion">Edicion Continua</span>
       <!--<input type="checkbox" name="mostrar" id="mostrar" <?php check_banderas('mostrar'); ?>>Mostrar-->
       <input type="checkbox" class="paginar" name="paginar" id="paginar" <?php check_banderas('paginar'); ?>><span class="paginar">Paginar al mostrar</span>
-      <input type="checkbox" name="banderas[]" id="banderas" <?php check_banderas('aprobacion_automatica'); ?>>Aprobacion Automatica
+      <input type="checkbox" name="banderas[]" id="banderas" <?=check_banderas('aprobacion_automatica');?>>Aprobacion Automatica
       <input type="checkbox" name="banderas[]"	style="display:none;" id="banderas" <?php check_banderas('asunto_padre'); ?> checked><!--Tomar el asunto del padre al responder-->
     </div>
   </div> 
@@ -740,16 +740,17 @@ function parsear_items(){
 <?php
 function check_banderas($bandera, $chequear = true)
 {
-  global $datos_formato;
+  global $formato;
+
   if ($bandera == "aprobacion_automatica") {
-    echo (' value="e" ');
-    if (strpos("e", $formato[0]["banderas"]) !== false) {
-      echo (' checked="checked" ');
+    echo ' value="e" ';
+    if (strpos($formato[0]["banderas"], "e") !== false) {
+      echo ' checked="checked" ';
     }
   } else if ($bandera == "asunto_padre") {
-    echo (' value="r" ');
-    if (strpos("r", $formato[0]["banderas"]) !== false) {
-      echo (' checked="checked" ');
+    echo ' value="r" ';
+    if (strpos($formato[0]["banderas"],"r" ) !== false) {
+      echo ' checked="checked" ';
     }
   } else if ($bandera && $formato[0][$bandera]) {
     $texto = ' value="' . $formato[0][$bandera] . '"';
