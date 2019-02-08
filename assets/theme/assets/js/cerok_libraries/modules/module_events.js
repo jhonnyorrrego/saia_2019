@@ -38,7 +38,7 @@ $(function(){
 
     document.getElementById('iframe_workspace').addEventListener('load', function () {
         let script = $('<script>').append(`$(document).ajaxSend(() => top.window.checkSession());`);
-        $(this).contents().find('body').append(script)
+        $(this).contents().find('body').prepend(script)
     });
 
     $(".page-sidebar").on('touchstart', function (evt) {

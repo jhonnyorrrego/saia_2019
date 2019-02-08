@@ -34,9 +34,13 @@ $(function () {
     let myDropzone = new Dropzone("#dropzone", {
         url: `${baseUrl}app/temporal/cargar_anexos.php`,
         dictDefaultMessage: 'Haga clic para elegir un archivo o Arrastre acá el archivo.',
-        maxFilesize: 2,
+        maxFilesize: 3,
+        maxFiles: 3,
+        dictFileTooBig: 'Tamaño máximo {{maxFilesize}} MB',
+        dictMaxFilesExceeded: 'Máximo 3 archivos',
         params: {
-            key: localStorage.getItem('key')
+            key: localStorage.getItem('key'),
+            dir: 'documento'
         },
         paramName: 'task_file',
         init: function () {
@@ -103,7 +107,8 @@ $(function () {
                 documentId: params.documentId,
                 destination: getUsers(),
                 message: $('#message').val(),
-                files: loadedFiles
+                files: loadedFiles,
+                dir: 'documento'
             },
             beforeSend: function () {
                 $('#btn_success,#spiner').parent().toggle();

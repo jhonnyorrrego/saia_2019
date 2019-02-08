@@ -10,6 +10,9 @@ class AnexoTarea extends Model
     protected $descripcion;
     protected $version;
     protected $fecha;
+    protected $etiqueta;
+    protected $user;
+    protected $extension;
     protected $dbAttributes;
 
     function __construct($id = null) {
@@ -28,14 +31,19 @@ class AnexoTarea extends Model
                 'estado',
                 'descripcion',
                 'version',
-                'fecha'
+                'fecha',
+                'etiqueta'
             ],
             'date' => ['fecha']
         ];
     }
 
     public function getUser(){
-        return new Funcionario($this->fk_funcionario);
+        if(!$this->user){
+            $this->user = new Funcionario($this->fk_funcionario);
+        }
+
+        return $this->user;
     }
 
     public function getFileSize(){
@@ -46,17 +54,42 @@ class AnexoTarea extends Model
         return $size . ' Kb';
     }
 
-    public function getFileName(){
-        $file = json_decode($this->ruta);
-        $filePath = explode('/', $file->ruta);
-        return end($filePath);
-    }
-
-    public function getVersion(){
-        return $this->version;
-    }
-
     public function getDescription(){
         return $this->descripcion;
+    }
+
+    public function getExtension(){
+        if(!$this->extension){
+            $parts = explode('.', $this->etiqueta);
+            $this->extension = end($parts);
+        }
+
+        return $this->extension;
+    }
+
+    public function getIcon()
+    {
+        switch (strtolower($this->getExtension())) {
+            case 'csv':
+            case 'xls':
+            case 'xlsx':
+                $icon = 'fa-file-excel-o';
+                break;
+            case 'png':
+            case 'jpg':
+                $icon = 'fa-file-picture-o';
+                break;
+            case 'pdf':
+                $icon = 'fa-file-pdf-o';
+                break;
+            case 'docx':
+                $icon = 'fa-file-word-o';
+                break;
+            default:
+                $icon = 'fa-file-o';
+                break;
+        }
+
+        return "<i class='fa {$icon}'></i>";
     }
 }

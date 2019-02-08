@@ -29,21 +29,19 @@ if(empty($_REQUEST['fk_actividad'])) {
  * data["fk_tipo_destinatario"] = tipodestinatario;
  */
 if($_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    if(!empty($_REQUEST['fk_actividad'])) {
 
-        $idactividad = $_REQUEST['fk_actividad'];
+    $idactividad = $_REQUEST['fk_actividad'];
 
-        $eliminados = 0;
+    $eliminados = 0;
 
-        $lista = explode(",", $_REQUEST["ids"]);
-        foreach ($lista as $id) {
-            $a = ReqCalidadActiv::executeDelete(['fk_actividad' =>$idactividad, "idrequisito_calidad" => $id]);
-            if($a) {
-                $eliminados++;
-            }
+    $lista = explode(",", $_REQUEST["ids"]);
+    foreach ($lista as $id) {
+        $a = ReqCalidadActiv::executeDelete(['fk_actividad' =>$idactividad, "idrequisito_calidad" => $id]);
+        if($a) {
+            $eliminados++;
         }
-
     }
+
     if($eliminados) {
         $response->success = 1;
         $response->message = "Datos eliminados";

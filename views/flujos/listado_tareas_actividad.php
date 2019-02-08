@@ -19,7 +19,7 @@ $datos = [];
 if(!empty($_REQUEST["idactividad"])) {
     $idactividad = $_REQUEST["idactividad"];
 
-    $listadoTareas = busca_filtro_tabla("t.idtarea_actividad, t.fk_actividad, t.nombre",
+    $listadoTareas = busca_filtro_tabla("t.idtarea_actividad, t.fk_actividad, t.nombre, t.obligatorio",
             "wf_tarea_actividad t",
             "t.fk_actividad = $idactividad", "", $conn);
 

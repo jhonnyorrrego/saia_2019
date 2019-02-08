@@ -320,7 +320,7 @@ abstract class Model extends StaticSql
      */
     public static function findByAttributes($conditions, $fields = [])
     {
-        $data = self::findAllByAttributes($conditions, $fields, '', 1);
+        $data = self::findAllByAttributes($conditions, $fields, '', 0, 1);
         return $data ? $data[0] : null;
     }
 
@@ -333,13 +333,48 @@ abstract class Model extends StaticSql
      * @param integer $limit
      * @return void
      */
-    public static function findAllByAttributes($conditions, $fields = [], $order = '', $limit = 0)
+    public static function findAllByAttributes($conditions, $fields = [], $order = '', $offset = 0, $limit = 0)
     {
-        $sql = self::generateSelectSql($conditions, $fields, $order, $limit);
-        $records = self::search($sql, 0, $limit);
-        $response = self::convertToObjectCollection($records);
+        $sql = self::generateSelectSql($conditions, $fields, $order);
+        $records = self::search($sql, $offset, $limit);
+        return self::convertToObjectCollection($records);
+    }
 
-        return $response;
+    /**
+     * busca una columna especifica
+     *
+     * @param string $field nombre de la columna
+     * @param array $conditions
+     * @param string $order
+     * @return void
+     */
+    public static function findColumn($field, $conditions = [], $order = '')
+    {
+        $sql = self::generateSelectSql($conditions, [$field], $order);
+        $records = self::search($sql, $offset, $limit);
+
+        $data = [];
+        foreach ($records as $key => $value) {
+            $data[] = $value[0];
+        }
+
+        return $data;
+    }
+
+    /**
+     * consulta la cantidad de registros
+     * que cumplen con una condicion
+     *
+     * @param array $conditions
+     * @return int
+     */
+    public static function countRecords($conditions = [])
+    {
+        $condition = self::createCondition($conditions);
+        $sql = 'select count(*) as total from ' . self::getTableName() . ' where ' . $condition;
+        $record = self::search($sql);
+
+        return $record[0]['total'];
     }
 
     /**
@@ -488,7 +523,7 @@ abstract class Model extends StaticSql
         return $condition;
     }
 
-    public static function generateSelectSql($conditions, $fields, $order, $limit)
+    public static function generateSelectSql($conditions, $fields, $order)
     {
         $condition = self::createCondition($conditions);
 

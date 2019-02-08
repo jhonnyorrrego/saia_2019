@@ -1,6 +1,6 @@
 <script>
 $(function(){
-    var baseUrl = $("#baseUrl").data('baseurl');
+    var baseUrl = $("script[data-baseurl]").data('baseurl');
 
     $('#table').on('check.bs.table uncheck.bs.table', function () {
         if ($(this).data('selections').length){
@@ -105,7 +105,8 @@ $(function(){
                     type: 'success',
                     message: response.message
                 });
-                $('#table').bootstrapTable('refresh')
+                $('#table').bootstrapTable('refresh');
+                $('#uncheck_list').trigger('click');
             }else{
                 top.notification({
                     type: 'error',
@@ -115,7 +116,7 @@ $(function(){
         }, 'json');
     });
 
-    $(document).on('click', 'tr[data-index]', function(e){
+    $(document).on('click', '#table tr[data-index]', function(e){
         if(!$(e.target).hasClass('action')){
             let node = $(this).find('.principal_action');
             executeAction(node);

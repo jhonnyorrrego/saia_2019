@@ -13,7 +13,7 @@ function showNotification(options){
         "closeButton": options.closeButton,
         "debug": false,
         "newestOnTop": true,
-        "progressBar": true,
+        "progressBar": false,
         "positionClass": "toast-top-right",
         "preventDuplicates": true,
         "onclick": null,

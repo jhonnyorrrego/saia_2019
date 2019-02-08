@@ -44,7 +44,7 @@ $(function () {
 
     $(document).off("click", "#show_files");
     $(document).on("click", "#show_files", function () {
-        let route = `${baseUrl}views/pagina/pagina.php`;
+        let route = `${baseUrl}views/documento/anexos.php`;
         $('#files_tab').load(route, {
             documentId: params.documentId
         });

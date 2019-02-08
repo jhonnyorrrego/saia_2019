@@ -11,7 +11,7 @@ while ($max_salida > 0) {
     $max_salida--;
 }
 
-include_once $ruta_db_superior . 'models/notaPagina.php';
+include_once $ruta_db_superior . 'controllers/autoload.php';
 
 $retorno = array(
     "success" => 0,
@@ -31,13 +31,13 @@ if ($_SESSION['idfuncionario'] == $_POST['key']) {
         "top" => $pWidth,
         "left" => $pHeight
     );
-    $_POST["posicion"] = json_encode($posicion);
+    $_POST["posicion"] = json_encode($posicion);    
     $nota = new NotaPagina($id);
-    $nota -> setAttributes($_POST);
-    if ($nota -> save()) {
+    $nota->setAttributes($_POST);
+    if ($nota->save()) {
         $retorno["success"] = 1;
         $retorno["message"] = "Datos almacenados";
-        $retorno["idnota_pagina"] = $nota -> getPk();
+        $retorno["idnota_pagina"] = $nota->getPk();
     } else {
         $retorno["message"] = "Error al actualizar la informaci&oacute;n!";
     }
