@@ -11,8 +11,7 @@ $(function () {
 
     $(document).off("click", ".new_add");
     $(document).on("click", ".new_add", function () {
-        let type = $(this).data('type');
-        
+        let type = $(this).data('type');       
         if (type == 'comunication' || type == 'process') {
             let param = type == 'comunication' ? 5 : 3;
             let title = type == 'comunication' ? 'Comunicaciones' : 'Tramites generales';
@@ -91,26 +90,24 @@ $(function () {
     }, false);
 
     function setSize() {
-        
         let sizeDocument = localStorage.getItem('breakpoint'); 
-        console.log(sizeDocument)
-            if (sizeDocument == 'xs') {              
-                setValores(sizeDocument);
-            }
-            if (sizeDocument == 'sm') {
-                setValores(sizeDocument);
-            }
-            if (sizeDocument == 'lg') {
-                setValores(sizeDocument);
-            }
-            if (sizeDocument == 'md') {
-                setValores(sizeDocument);
-            }
+        if (sizeDocument == 'xs') {              
+            setValores(sizeDocument);
+        }
+        if (sizeDocument == 'sm') {
+            setValores(sizeDocument);
+        }
+        if (sizeDocument == 'lg') {
+            setValores(sizeDocument);
+        }
+        if (sizeDocument == 'md') {
+            setValores(sizeDocument);
+        }
     }
 
     function setValores(sizeDocument){
-
         var xsFont = parseFloat(sizeFont);
+
         if(sizeDocument == 'sm'){
             var widthIni = 668;
         }else if(sizeDocument == 'xs'){

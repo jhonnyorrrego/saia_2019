@@ -46,7 +46,7 @@ if (isset($_REQUEST["excluidos_rol"])) {
 	$condicion_dep .= " and iddependencia_cargo not in (" . $_REQUEST["excluidos_rol"] . ")";
 }
 if (isset($_REQUEST["checkbox"])) {
-	$checkbox = $_REQUEST["checkbox"];
+	$checkbox = "1";
 }
 
 $seleccionados = array();
@@ -136,6 +136,7 @@ function llena_dependencia($id)
 function llena_funcionario($iddep)
 {
 	global $campo, $seleccionados, $checkbox, $condicion_vfun;
+
 	$objetoJson = array();
 	$papas = busca_filtro_tabla("iddependencia_cargo,idfuncionario,funcionario_codigo,nombres,apellidos,cargo,dependencia", "vfuncionario_dc", "estado=1 and estado_dc=1 and iddependencia=" . $iddep, "", $conn);
 	if ($papas["numcampos"]) {
