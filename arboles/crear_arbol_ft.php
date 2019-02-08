@@ -226,7 +226,7 @@ FINHTML;
           }
           $("button#btnSearch_{$this->campo}").attr("disabled", false);
           $("span#matches_{$this->campo}").text("(" + n + coincidencias + ")");
-      }).focus();
+      });
 
       $("button#btnSearch_{$this->campo}").click(function(e){
           $("input[name=stext_{$this->campo}]").val("");

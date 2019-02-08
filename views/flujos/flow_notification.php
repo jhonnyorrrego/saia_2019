@@ -36,37 +36,54 @@ if (isset($_REQUEST["idflujo"])) {
     }
 }
 ?>
-<div>
-    <p>Permite la configuración y personalización del envío de
-        notificaciones en tiempo real a usuario del Sistema o usuarios
-        externos notificando el cambio de estado y/o enviando documentación
-        que se haya creado.</p>
-</div>
-<div>
-    <button type="button" id="crearNotificacion"
-            class="btn btn-primary btn-sm">Crear notificaci&oacute;n</button>
-</div>
-<div id="notificacion_frm" style="display: none">
-    <script src="<?= $ruta_db_superior ?>views/flujos/js/flujos.js"></script>
-</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col col-12">
+            Permite la configuración y personalización del envío de
+            notificaciones en tiempo real a usuario del Sistema o usuarios
+            externos notificando el cambio de estado y/o enviando documentación
+            que se haya creado.
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-12 mt-2">
+            <button type="button" id="crearNotificacion"
+                    class="btn btn-primary btn-sm">Crear notificaci&oacute;n</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col col-12" id="notificacion_frm" style="display: none">
+            <script src="<?= $ruta_db_superior ?>views/flujos/js/flujos.js"></script>
+        </div>
+    </div>
 
 <!-- data-url="<?= $ruta_db_superior ?>/views/flujos/listado_notificaciones.php?idflujo=<?= $idflujo ?>" -->
-<table id="tabla_notificaciones" class="table" table-layout="fixed"
-       data-toggle="table"
-       data-url="listado_notificaciones.php?idflujo=<?= $idflujo ?>"
-       data-side-pagination="server"
-       data-pagination="true"
-       data-search="true">
-    <thead>
-        <tr>
-            <th data-field="idnotificacion" data-visible="false">Id</th>
-            <th data-field="nombre_evento">Acci&oacute;n para la notificaci&oacute;n</th>
-            <th data-field="asunto">Asunto</th>
-            <th data-field="email">Destinatario</th>
-            <th data-field="idnotificacion" data-formatter="buttonFormatter">&nbsp;</th>
-        </tr>
-    </thead>
-</table>
+
+    <div class="row">
+        <div class="col col-12 mt-4">
+
+            <table id="tabla_notificaciones" class="table" table-layout="fixed"
+                   data-toggle="table"
+                   data-url="listado_notificaciones.php?idflujo=<?= $idflujo ?>"
+                   data-side-pagination="server"
+                   data-pagination="true"
+                   data-search="false">
+                <thead>
+                    <tr>
+                        <th data-field="idnotificacion" data-visible="false">Id</th>
+                        <th data-field="nombre_evento">Acci&oacute;n para la notificaci&oacute;n</th>
+                        <th data-field="asunto">Asunto</th>
+                        <th data-field="email">Destinatario</th>
+                        <th data-field="idnotificacion" data-formatter="buttonFormatter">&nbsp;</th>
+                    </tr>
+                </thead>
+            </table>
+
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript" id="sfn" data-idflujo="<?= $idflujo ?>">
     //var $table = $('#tabla_notificaciones');

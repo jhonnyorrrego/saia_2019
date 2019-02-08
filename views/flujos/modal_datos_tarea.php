@@ -90,6 +90,8 @@ if($tipoElemento != TipoElemento::TIPO_TAREA) {
 
 	    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/jspanel.js"></script>
         <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/extensions/hint/jspanel.hint.js"></script>
+        <!-- <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/extensions/modal/jspanel.modal.js"></script> -->
+
 		<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap4-editable/js/bootstrap-editable.js"></script>
 
         <script src="<?= $ruta_db_superior ?>css/bootstrap_table/1.13.4/extensions/editable/bootstrap-table-editable.js"></script>
