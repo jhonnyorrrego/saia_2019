@@ -26,7 +26,8 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     foreach($_REQUEST['routes'] as $route){
         $content = file_get_contents($ruta_db_superior . $route);
         $routePath = explode('/', $route);
-        $route = $_REQUEST['task'] . '/' . end($routePath);
+        $extensionParts = explode('.', end($routePath));
+        $route = $_REQUEST['task'] . '/' . time().'-'.rand(0,1000) . '.' . end($extensionParts);
 
         $dbRoute = UtilitiesController::createFileDbRoute($route, 'anexos_tareas', $content);
 
@@ -37,7 +38,8 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
             'descripcion' => $_REQUEST['description'],
             'version' => 1,
             'estado' => 1,
-            'fecha' => date('Y-m-d H:i:s')
+            'fecha' => date('Y-m-d H:i:s'),
+            'etiqueta' => end($routePath)
         ]);
     }
 

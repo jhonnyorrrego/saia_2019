@@ -369,6 +369,21 @@ function select2()
 
     $js = '<script src="' . $ruta_lib . 'js/select2.min.js" type="text/javascript"></script>';
     $js .= '<script src="' . $ruta_lib . 'js/i18n/es.js" type="text/javascript"></script>';
+    return $css . $js;
+}
+/**
+ * retorna los enlaces para incluir 
+ * el dropzone  v5.5
+ * @return void
+ */
+function dropzone(){
+    global $ruta_db_superior;
+
+    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/dropzone/custom.css';
+    $css = '<link class="main-stylesheet" href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
+
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/dropzone/min/dropzone.min.js';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
     return $css . $js;
 }

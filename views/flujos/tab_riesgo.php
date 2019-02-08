@@ -29,13 +29,13 @@ if (!empty($_REQUEST["idactividad"])) {
 
 <div>
     <form id="frmRiesgoActividad">
-        <div class="form-group">
+        <div class="form-group form-group-default">
             <label for="nombre_riesgo">Riesgo identificado del Paso</label>
             <input type="email" class="form-control" id="nombre_riesgo" name="riesgo" placeholder="Escriba el riesgo del paso" value="">
         </div>
-        <div class="form-group">
+        <div class="form-group form-group-default">
             <label for="descripcion_riesgo">Descripción del riesgo</label>
-            <textarea class="form-control" id="descripcion_riesgo" name="descripcion_riesgo"></textarea>
+            <textarea class="form-control" id="descripcion_riesgo" name="descripcion_riesgo" placeholder="Describa el riesgo"></textarea>
         </div>
         <div class="row">
             <div class="col col-md-6">
@@ -66,7 +66,7 @@ if (!empty($_REQUEST["idactividad"])) {
 
         <div class="row pr-2 mt-1">
             <div class="col col-md-8">
-                <button type="button" class="btn btn-primary btn-sm float-right" id="btnGuardarRiesgo">Guardar</button>
+                <button type="button" class="btn btn-primary btn-sm float-right" id="btnGuardarRiesgo">Agregar Riesgo</button>
             </div>
         </div>
 
@@ -83,6 +83,7 @@ if (!empty($_REQUEST["idactividad"])) {
            data-click-to-select="true"
            data-show-toggle="true"
            data-show-columns="true"
+           data-toolbar="#toolbar_tabla_riesgos"
            data-pagination="true">
         <thead>
             <tr>
@@ -99,7 +100,7 @@ if (!empty($_REQUEST["idactividad"])) {
 
 <script>
 
-var $tabla = $("#tabla_req_in");
+var $tabla = $("#tabla_riesgos");
 $tabla.bootstrapTable();
 
 var $botonEliminarRiesgo = $('#boton_eliminar_riesgo');
@@ -116,8 +117,9 @@ $botonGuardarRiesgo.click(function () {
     var descripcion = $("#frmRiesgoActividad #descripcion_riesgo").val();
     var fk_probabilidad = $("#frmRiesgoActividad #selProbRiesgo").val();
     var fk_impacto = $("#frmRiesgoActividad #selImpactoRiesgo").val();
+    var texto_prob = $("#frmRiesgoActividad #selProbRiesgo option:selected").text();
+    var texto_impa = $("#frmRiesgoActividad #selImpactoRiesgo option:selected").text();
 
-    //console.log("obligatorio", obligatorio);
     var existe = false;
     for (var key in datos) {
         var obj = datos[key];
@@ -126,12 +128,16 @@ $botonGuardarRiesgo.click(function () {
             break;
         }
     }
-    //console.log("existe", existe);
     if (!existe) {
         var data = {descripcion: descripcion, riesgo: riesgo, fk_probabilidad: fk_probabilidad, fk_impacto: fk_impacto};
         var id = guardarRiesgoActividad(idactividad, data);
-        data["idriesgo"] = id;
-        $tabla.bootstrapTable('append', data);
+        if(id) {
+            data["idriesgo"] = id;
+            data["impacto"] = texto_impa;
+            data["probabilidad"] = texto_prob;
+            $tabla.bootstrapTable('append', data);
+            document.getElementById("frmRiesgoActividad").reset();
+        }
     }
 });
 

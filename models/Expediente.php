@@ -193,6 +193,48 @@ class Expediente extends Model
         }
         return $response;
     }
+
+    /**
+     * Actualiza el reponsable del expediente
+     *
+     * @param integer $responAnt : idfuncionario del Responsable anterior
+     * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function updateResponsable(int $responAnt): array
+    {
+        $response = [
+            'exito' => 0,
+            'message' => '',
+        ];
+        if($this->responsable==$responAnt){
+            $response['exito']=1;
+        }else{        
+            if ($this->update()) {
+                $sql= "SELECT identidad_expediente FROM entidad_expediente WHERE tipo_funcionario=2 AND fk_expediente={$this->idexpediente}";
+                $idEnt=$this->search($sql);
+                if($idEnt){
+                    $EntidadExpediente = new EntidadExpediente($idEnt[0]['identidad_expediente']);
+                    $EntidadExpediente->fk_funcionario = $this->responsable;
+                    $EntidadExpediente->fecha = date('Y-m-d H:i:s');
+                    $response=$EntidadExpediente->updateEntidadExpediente();
+                }else{
+                    $attributes = [
+                        'fk_funcionario' => $this->responsable,
+                        'fk_expediente' => $this->idexpediente,
+                        'permiso' => 'c,d,e',
+                        'tipo_funcionario' => 2,
+                        'fecha' => date('Y-m-d H:i:s')
+                    ];
+                    $EntidadExpediente = new EntidadExpediente();
+                    $EntidadExpediente->setAttributes($attributes);
+                    $response = $EntidadExpediente->createEntidadExpediente(false);
+                }
+            }
+        }
+        return $response;
+    }
+
     /**
      * retorna la etiqueta del estado del expediente
      *
@@ -351,22 +393,22 @@ class Expediente extends Model
                 'v' => false
             ];
         } else {*/
-            $sql = "SELECT permiso FROM permiso_expediente WHERE fk_expediente={$this->idexpediente} and fk_funcionario={$idfuncionario}";
-            $consPermiso = $this->search($sql);
-            if ($consPermiso) {
-                foreach ($consPermiso as $fila) {
-                    $permisos = explode(',', $fila['permiso']);
-                    foreach ($permisos as $permiso) {
-                        $this->permiso[$permiso] = true;
-                    }
+        $sql = "SELECT permiso FROM permiso_expediente WHERE fk_expediente={$this->idexpediente} and fk_funcionario={$idfuncionario}";
+        $consPermiso = $this->search($sql);
+        if ($consPermiso) {
+            foreach ($consPermiso as $fila) {
+                $permisos = explode(',', $fila['permiso']);
+                foreach ($permisos as $permiso) {
+                    $this->permiso[$permiso] = true;
                 }
             }
-            if ($this->isResponsable()) {
-                $this->permiso['e'] = true;
-                $this->permiso['d'] = true;
-                $this->permiso['c'] = true;
-                $this->permiso['v'] = false;
-            }
+        }
+        if ($this->isResponsable()) {
+            $this->permiso['e'] = true;
+            $this->permiso['d'] = true;
+            $this->permiso['c'] = true;
+            $this->permiso['v'] = false;
+        }
         //}
     }
     /**

@@ -16,63 +16,35 @@ include_once $ruta_db_superior . 'controllers/autoload.php';
 $idflujo = $_REQUEST['idflujo'];
 $actividad = null;
 $idactividad = null;
-$tipo_decision = [];
+$enlaces = [];
 if (!empty($_REQUEST["idactividad"])) {
     $actividad = new Elemento($_REQUEST["idactividad"]);
     $idactividad = $actividad->getPk();
 
-    $tipo_decision = TipoDecisionActiv::findAll("", 0, true);
+    $enlaces = Enlace::findByEnlaceOrigen($idflujo, $actividad->bpmn_id);
 }
 ?>
 
-<div>
-    <form id="frmdecisionActividad">
-        <div class="form-group">
-            <label for="nombre_decision">Nombre de la decisi&oacute;n</label>
-            <input type="email" class="form-control" id="nombre_decision" name="decision" placeholder="Nombre de la decisi&oacute;n" value="">
-        </div>
-        <div class="row">
-            <div class="col col-md-6">
-                <div class="form-group">
-                    <label class="my-0" for="selTipoDecision">Tipo de decisi&oacute;n</label>
-                    <select class="form-control" id="selTipoDecision">
-                    <option value="0">Por favor selecione...</option>
-                    <?php
-                    foreach ($tipo_decision as $decis) : ?>
-                        <option value="<?= $decis["idtipo_decision_activ"] ?>"><?=$decis["tipo_decision"]  ?></option>
-                    <?php endforeach;?>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="row pr-2 mt-1">
-            <div class="col col-md-8">
-                <button type="button" class="btn btn-primary btn-sm float-right" id="btnGuardarDecision">Guardar</button>
-            </div>
-        </div>
-
-    </form>
-</div>
-
 <div class="container-fluid">
-    <div id="toolbar_tabla_decisiones">
+    <div id="toolbar_tabla_elementos">
         <a href="#" id="boton_eliminar_decision" class="btn btn-secondary" title="Eliminar"><i class="f-12 fa fa-trash"></i></a>
     </div>
-    <table class="table table-striped table-bordered table-hover" id="tabla_decisiones"
+    <table class="table table-striped table-bordered table-hover" id="tabla_elementos"
            data-toggle="table"
-           data-url="listado_decisiones_actividad.php?idactividad=<?= $idactividad ?>"
+           data-url="listado_enlaces_decision.php?idflujo=<?= $idflujo ?>&bpmn_id=<?= $actividad->bpmn_id ?>"
            data-click-to-select="true"
            data-show-toggle="true"
            data-show-columns="true"
+           data-toolbar="#toolbar_tabla_elementos"
            data-pagination="true">
         <thead>
             <tr>
-                <th data-field="state" data-checkbox="true"></th>
-                <th data-field="iddecision_actividad" data-visible="false">Id</th>
-                <th data-field="fk_tipo_decision" data-visible="false">IdTipo</th>
-                <th data-field="decision">Nombre de la decisi&oacute;n</th>
-                <th data-field="tipo_decision">Tipo de decisi&oacute;n</th>
+                <!-- <th data-field="state" data-checkbox="true"></th>  -->
+                <th data-field="idenlace" data-visible="false">Id</th>
+                <th data-field="bpmn_id" data-visible="false">IdBpmn</th>
+                <th data-field="nombre" data-editable="true">Nombre de la decisi&oacute;n</th>
+                <th data-field="nombre_dst">Hacia el paso</th>
+                <th data-field="bpmn_id_dst" data-visible="false">IdBpmnDst</th>
             </tr>
         </thead>
     </table>
@@ -80,104 +52,56 @@ if (!empty($_REQUEST["idactividad"])) {
 
 <script>
 
-var $tabla = $("#tabla_req_in");
+var $tabla = $("#tabla_elementos");
 $tabla.bootstrapTable();
+
+$.fn.editable.defaults.mode = 'inline';
+
+$tabla.on('editable-save.bs.table', function(evt, field, row, oldValue, $el){
+	//console.log(field);
+	console.log(row);
+	//console.log(oldValue);
+	//console.log($el);
+	//$el.classList.remove("editable-unsaved");
+
+    var data = guardarEnlaceFlujo(row);
+    if(data) {
+        parent.postMessage({accion: "actualizarDiagrama", bpmn_id: data.bpmn_id, nombreTarea: data.nombre}, "*");
+    }
+
+	return true;
+});
+
+$tabla.on('editable-hidden.bs.table', function(evt, field, row, $el, reason) {
+	//console.log(reason);
+	//reason: cancel|nochange|save
+	if(reason == 'save' && $el.hasClass("editable-unsaved")) {
+		$el.removeClass('editable-unsaved');
+	}
+});
 
 var $botonEliminarDecision = $('#boton_eliminar_decision');
 var $botonGuardarDecision = $('#btnGuardarDecision');
 
 var idactividad = "<?= $idactividad ?>";
 
-$botonGuardarDecision.click(function () {
-    var datos = $tabla.bootstrapTable('getData');
+//console.log("params", params);
 
-    var decision = $("#frmDecisionActividad #nombre_decision").val();
-    var fk_tipo_decision = $("#frmDecisionActividad #selTipoDecision").val();
-
-    //console.log("obligatorio", obligatorio);
-    var existe = false;
-    for (var key in datos) {
-        var obj = datos[key];
-        if (obj.decision == decision && obj.fk_tipo_decision == fk_tipo_decision) {
-            existe = true;
-            break;
-        }
-    }
-    //console.log("existe", existe);
-    if (!existe) {
-        var data = {decision: decision, fk_tipo_decision: fk_tipo_decision};
-        var id = guardarDecisionActividad(idactividad, data);
-        data["iddecision_actividad"] = id;
-        $tabla.bootstrapTable('append', data);
-    }
-});
-
-
-$botonEliminarDecision.click(function () {
-    var ids = $.map($tabla.bootstrapTable('getSelections'), function (row) {
-        return row.iddecision_actividad
-    });
-    var estado = eliminarDecisionActividad(idactividad, ids.join(","));
-    if (estado) {
-        $tabla.bootstrapTable('remove', {
-            field: 'iddecision_actividad',
-            values: ids
-        });
-    }
-});
-
-function guardarDecisionActividad(idactividad, data) {
+function guardarEnlaceFlujo(data) {
     if (data) {
         data['key'] = localStorage.getItem("key");
-        data["fk_actividad"] = idactividad;
 
-        //console.log(idactividad, data);
-        //return false;
         var pk = false;
         $.ajax({
             dataType: "json",
-            url: "<?= $ruta_db_superior ?>app/flujo/guardarDecisionActividad.php",
+            url: "<?= $ruta_db_superior ?>app/flujo/guardarEnlaceFlujo.php",
             type: "POST",
             data: data,
             async: false,
             success: function (response) {
                 if (response["success"] == 1) {
                     top.notification({type: "success", message: response.message});
-                    pk = response.data.pk;
-                    //parent.parent.postMessage({accion: "recargarTabla", id: pk}, "*");
-                } else {
-                    top.notification({type: "error", message: response.message});
-                }
-            }
-        });
-        return pk;
-    }
-    return false;
-}
-
-function eliminarDecisionActividad(idactividad, ids) {
-    if (ids) {
-        var data = {
-            key: localStorage.getItem("key"),
-            fk_actividad: idactividad,
-            ids: ids
-        };
-
-        //console.log(idactividad, data);
-        //return false;
-        //TODO: Falta pedir confirmacion al usuario
-
-        var pk = false;
-        $.ajax({
-            dataType: "json",
-            url: "<?= $ruta_db_superior ?>app/flujo/borrarDecisionActividad.php",
-            type: "POST",
-            data: data,
-            async: false,
-            success: function (response) {
-                if (response["success"] == 1) {
-                    top.notification({type: "success", message: response.message});
-                    pk = true;
+                    pk = response.data;
                     //parent.parent.postMessage({accion: "recargarTabla", id: pk}, "*");
                 } else {
                     top.notification({type: "error", message: response.message});

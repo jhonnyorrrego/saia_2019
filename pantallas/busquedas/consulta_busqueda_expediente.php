@@ -42,6 +42,7 @@ if (!empty($idexpediente)) {
     $GLOBALS['Expediente'] = $Expediente;
 
     $okPermisoAcciones = $Expediente->getAccessUser('a');
+    $okviewdocs = $Expediente->getAccessUser('c');
     if ($Expediente->nucleo) {
         if ($Expediente->fk_serie) {
             $instance = $Expediente->getSerieFk();
@@ -217,6 +218,9 @@ echo (estilo_bootstrap());
         <!-- idexpediente -->
         <input type="hidden" value="<?= $idexpediente; ?>" name="idexpediente" id="idexpediente">
 
+        <!-- Permiso de ver los documentos -->
+        <input type="hidden" value="<?= $okviewdocs?>" name="okviewdocs" id="okviewdocs">
+
         <!-- Variable busqueda -->
         <input type="hidden" value="<?= $_REQUEST["variable_busqueda"]; ?>" name="variable_busqueda" id="variable_busqueda">
 
@@ -231,6 +235,7 @@ echo (estilo_bootstrap());
         window.parent.$(".block-iframe").attr("style", "margin-top:0px; width: 100%; border:0px solid; overflow:auto; -webkit-overflow-scrolling:touch;");
 
         var idbusqueda_componente = $("#idcomponente_exp").val();
+        var okviewdocs = $("#okviewdocs").val();
         var idbusqueda_componente_doc = $("#idcomponente_exp_doc").val();
         var forma_cargar = $("#forma_carga").val();
         var espacio_menu = $("#menu_buscador").height() + 18;
@@ -304,16 +309,24 @@ echo (estilo_bootstrap());
                                     scroll = 0;
                                 }
                             }
+
                             if (scroll) {
                                 carga_final_exp = true;
                                 $("#actualpage").val("1");
                                 $("#totalpage").val("1");
                                 $("#actualrow").val("0");
                                 $("#cantidad_total").val("0");
-                                cargar_datos_scroll2();
+                                if(okviewdocs){
+                                    cargar_datos_scroll2();
+                                }else{
+                                    carga_final_doc = true;
+                                    $('#loadmoreajaxloader').html("Finalizado");
+                                    $('#loadmoreajaxloader').attr("disabled", true);
+                                }
                             } else {
                                 $('#loadmoreajaxloader').html("M&aacute;s Resultados");
                             }
+
                         } else {
                             top.notification({
                                 message : objeto.mensaje,
@@ -368,15 +381,21 @@ echo (estilo_bootstrap());
                                 if (parseInt(objeto.actual_row) < parseInt(objeto.records)) {
                                     scroll = 0;
                                 }
-                            }
 
-                            if (scroll) {
+                                if (scroll) {
+                                    carga_final_doc = true;
+                                    $('#loadmoreajaxloader').html("Finalizado");
+                                    $('#loadmoreajaxloader').attr("disabled", true);
+                                } else {
+                                    $('#loadmoreajaxloader').html("M&aacute;s Resultados");
+                                }
+                            }else{
                                 carga_final_doc = true;
                                 $('#loadmoreajaxloader').html("Finalizado");
                                 $('#loadmoreajaxloader').attr("disabled", true);
-                            } else {
-                                $('#loadmoreajaxloader').html("M&aacute;s Resultados");
                             }
+
+              
                         } else {
                             top.notification({
                                 message : objeto.mensaje,

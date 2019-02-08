@@ -86,11 +86,8 @@ function info_expediente($idexpediente)
 FINHTML;
 
     } else {
-        if(!$ExpedienteInfo->getAccessUser('v')){
-            $btn .= '<div class="btn btn-mini selExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Seleccionar"><i class="icon-uncheck"></i></div>';
-        }
-
         if($ExpedienteInfo->getAccessUser('c')){
+            $btn .= '<div class="btn btn-mini selExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Seleccionar"><i class="icon-uncheck"></i></div>';
             $btn .= '<div class="btn btn-mini shareExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Compartir" ><i class="icon-share"></i></div>';
         }
         
@@ -104,10 +101,14 @@ FINHTML;
         }
         $btn .= '<div class="btn btn-mini infoExp" data-id="' . $idexpediente . '" data-componente="'. $idcomp .'" title="' . $ExpedienteInfo->nombre . '"><i class="icon-info-sign"></i></div>';
 
+        $link = '';
+        if ($ExpedienteInfo->getAccessUser('c') || $ExpedienteInfo->getAccessUser('v')) {
+            $link = 'class ="link kenlace_saia" conector = "iframe" enlace = "pantallas/busquedas/consulta_busqueda_expediente.php?' . $params . '" titulo = "' . $ExpedienteInfo->nombre . '"';
+        }
         if ($ExpedienteInfo->agrupador == 3) {
             $html .= <<<FINHTML
             <table style="font-size:12px;width:100%;">
-                <tr class="link kenlace_saia" conector="iframe" enlace="pantallas/busquedas/consulta_busqueda_expediente.php?{$params}" titulo="{$ExpedienteInfo->nombre}">
+                <tr {$link}>
                     <td>
                         <i class='{$icon[$ExpedienteInfo->agrupador]}'></i>&nbsp;<strong>{$ExpedienteInfo->nombre}</strong>
                     </td>
@@ -124,7 +125,7 @@ FINHTML;
             $cadenaTomo = "<i style='font-size:10px;'>&nbsp;&nbsp;&nbsp;&nbsp;<strong>Tomo:</strong> {$ExpedienteInfo->tomo_no} de {$ExpedienteInfo->countTomos()}</i>";
             $html .= <<<FINHTML
             <table style="font-size:12px;width:100%;">
-                <tr class="link kenlace_saia" conector="iframe" enlace="pantallas/busquedas/consulta_busqueda_expediente.php?{$params}" titulo="{$ExpedienteInfo->nombre}">
+                <tr {$link}>
                     <td>
                         <i class='{$icon[$ExpedienteInfo->agrupador]}'></i>&nbsp;<strong>{$ExpedienteInfo->nombre}</strong>{$cadenaTomo}
                     </td>

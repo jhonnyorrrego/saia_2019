@@ -11,22 +11,20 @@ class EntidadExpediente extends Model
     protected $dbAttributes;
 
     protected $accessPermits;
-    protected $updateAccess;
 
     public function __construct($id = null)
     {
         parent::__construct($id);
         if ($id) {
-            $this->updateAccess = false;
             $this->accessPermits = [
                 'd' => false,
                 'e' => false,
                 'c' => false,
                 'v' => false
             ];
-            $perm=explode(',',$this->permiso);
-            foreach($perm as $value){
-                $this->accessPermits[$value]=true;
+            $perm = explode(',', $this->permiso);
+            foreach ($perm as $value) {
+                $this->accessPermits[$value] = true;
             }
         }
     }
@@ -47,6 +45,23 @@ class EntidadExpediente extends Model
             ]
         ];
     }
+    /**
+     * Se ejecuta despues de eliminar una entidadExpediente
+     *
+     * @return void
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function afterDelete()
+    {
+        $sql = "SELECT idpermiso_expediente FROM permiso_expediente WHERE fk_entidad=1 AND tipo_permiso=2 AND tipo_funcionario={$this->tipo_funcionario} AND fk_expediente={$this->fk_expediente}";
+        $records = UtilitiesController::instanceSql('PermisoExpediente', 'idpermiso_expediente', $sql);
+        if ($records) {
+            foreach ($$records as $instance) {
+                $instance->delete();
+            }
+        }
+        return true;
+    }
 
     /**
      * Setea los permisos
@@ -55,24 +70,21 @@ class EntidadExpediente extends Model
      * e: editar expediente
      * c: Compartir expediente
      * d: eliminar expediente
+     * @param bool $estado: true para dar el permiso, false para quitar
      * @return boolean
      */
-    public function setAccessPermits(string $permiso = null) : bool
+    public function setAccessPermits(string $permiso = null,bool $estado=true) : bool
     {
         $response = false;
         if ($permiso) {
             if (array_key_exists($permiso, $this->accessPermits)) {
-                $this->accessPermits[$permiso] = true;
+                $this->accessPermits[$permiso] = $estado;
                 $perm = [];
                 foreach ($this->accessPermits as $key => $value) {
                     if ($value) {
                         $perm[$key] = $key;
                     }
                 }
-                if(count($perm)>1){
-                    unset($perm['v']);
-                }
-                $this->updateAccess = true;
                 $this->permiso = implode(',', $perm);
                 $response = true;
             }
@@ -95,35 +107,36 @@ class EntidadExpediente extends Model
         ];
         if ($this->update()) {
             $response['exito'] = 1;
-            if ($this->updateAccess) {
-                $sql = "SELECT idpermiso_expediente FROM permiso_expediente WHERE tipo_permiso=2  AND fk_entidad=1 AND tipo_funcionario={$this->tipo_funcionario} AND fk_funcionario={$this->fk_funcionario} AND fk_expediente={$this->fk_expediente}";
-                $record = $this->search($sql);
-                if ($record) {
-                    $PermisoExpediente = new PermisoExpediente($record[0]['idpermiso_expediente']);
-                    $PermisoExpediente->permiso = $this->permiso;
-                    if (!$PermisoExpediente->update()) {
-                        $response['exito'] = 0;
-                        $response['message'] = 'No se pudo actualizar el permiso del expediente';
-                    }
-                }else{
+            $sql = "SELECT idpermiso_expediente FROM permiso_expediente WHERE tipo_permiso=2 AND fk_entidad=1 AND tipo_funcionario={$this->tipo_funcionario} AND fk_expediente={$this->fk_expediente}";
+            $record = $this->search($sql);
+            if ($record) {
+                $PermisoExpediente = new PermisoExpediente($record[0]['idpermiso_expediente']);
+                $PermisoExpediente->permiso = $this->permiso;
+                $PermisoExpediente->fk_funcionario = $this->fk_funcionario;
+                $PermisoExpediente->llave_entidad = $this->fk_funcionario;
+                if (!$PermisoExpediente->update()) {
                     $response['exito'] = 0;
-                    $response['message'] = 'No se pudo actualizar el permiso del expediente';
-                    $this->delete();
+                    $response['message'] = 'No se pudo actualizar el permiso del expediente2';
                 }
+            } else {
+                $response['exito'] = 0;
+                $response['message'] = 'No se pudo actualizar el permiso del expediente1';
+                $this->delete();
             }
+
         }
         return $response;
     }
 
-/**
- * Crea la Entidad expediente con sus correspondientes vinculados
- * NO utlizar create/save
- *
- * @param boolean $updatePermisos : true para recargar los permisos, 
- * utilizado cuando es un expediente nuevo
- * @return array
- */
-    public function createEntidadExpediente(bool $updatePermisos=true) : array
+    /**
+     * Crea la Entidad expediente con sus correspondientes vinculados
+     * NO utlizar create/save
+     *
+     * @param boolean $updatePermisos : true para recargar los permisos, 
+     * utilizado cuando es un expediente nuevo
+     * @return array
+     */
+    public function createEntidadExpediente(bool $updatePermisos = true) : array
     {
         $response = [
             'data' => [],
@@ -149,13 +162,13 @@ class EntidadExpediente extends Model
                 ];
                 $PermisoExpediente = new PermisoExpediente();
                 $PermisoExpediente->setAttributes($attributes);
-                if(!$PermisoExpediente->create()){
+                if (!$PermisoExpediente->create()) {
                     $response['exito'] = 0;
                     $response['message'] = 'Error al vincular los permisos al expediente';
                     $this->delete();
-                }else{
-                    if($this->tipo_funcionario!=1 && $Expediente->getCodPadre()){
-                        if($Expediente->getCodPadre()->agrupador!=1){
+                } else {
+                    if ($this->tipo_funcionario != 1 && $Expediente->getCodPadre()) {
+                        if ($Expediente->getCodPadre()->agrupador != 1) {
                             //Se valida que el funcionario tenga permisos sobre los expedientes padres
                             $sql = "SELECT identidad_expediente FROM entidad_expediente WHERE tipo_funcionario={$this->tipo_funcionario} AND fk_funcionario={$this->fk_funcionario} AND fk_expediente={$Expediente->cod_padre}";
                             if (!$this->search($sql)) {
@@ -172,7 +185,7 @@ class EntidadExpediente extends Model
                             }
                         }
                     }
-                    if($updatePermisos){
+                    if ($updatePermisos) {
                         //Se asgina el permiso a todos los funcionarios del nuevo expediente
                         $data = PermisoSerie::findAllByAttributes(['fk_entidad_serie' => $Expediente->fk_entidad_serie]);
                         if ($data) {

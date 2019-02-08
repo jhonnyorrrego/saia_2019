@@ -29,16 +29,14 @@ if(empty($_REQUEST['fk_actividad'])) {
  * data["fk_tipo_destinatario"] = tipodestinatario;
  */
 if($_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    if(!empty($_REQUEST['fk_actividad'])) {
 
-        $atributos = [];
-        $atributos["fk_actividad"] = $_REQUEST['fk_actividad'];
-        $atributos["riesgo"] = $_REQUEST['riesgo'];
-        $atributos["descripcion"] = $_REQUEST['descripcion'];
-        $atributos["fk_probabilidad"] = $_REQUEST['fk_probabilidad'];
-        $atributos["fk_impacto"] = $_REQUEST['fk_impacto'];
-        $pk = RiesgoActividad::newRecord($atributos);
-    }
+    $atributos = [];
+    $atributos["fk_actividad"] = $_REQUEST['fk_actividad'];
+    $atributos["riesgo"] = $_REQUEST['riesgo'];
+    $atributos["descripcion"] = $_REQUEST['descripcion'];
+    $atributos["fk_probabilidad"] = $_REQUEST['fk_probabilidad'];
+    $atributos["fk_impacto"] = $_REQUEST['fk_impacto'];
+    $pk = RiesgoActividad::newRecord($atributos);
     if($pk) {
         $response->success = 1;
         $response->message = "Datos almacenados";

@@ -7,6 +7,7 @@ class ExpedienteController
      *
      * @param array $data :id del expediente y id del funcionario
      * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
     public static function updateResponsableExpedienteCont(array $data = []) : array
     {
@@ -18,10 +19,11 @@ class ExpedienteController
             if (!empty($data['idexpediente'])) {
                 if (!empty($data['responsable'])) {
                     $Expediente = new Expediente($data['idexpediente']);
-                    $Expediente->responsable = $data['responsable'];
-                    if ($Expediente->update()) {
-                        $response['exito'] = 1;
-                        $response['message'] = 'responsable actualizado';
+                    $responsableAnt = $Expediente->responsable;
+                    $Expediente->responsable = $data['responsable'][0];
+                    $response = $Expediente->updateResponsable($responsableAnt);
+                    if ($response['exito']) {
+                        $response['message'] = 'Responsable actualizado!';
                     }
                 } else {
                     $response['message'] = 'faltan el identificador del responsable';
@@ -39,6 +41,7 @@ class ExpedienteController
      *
      * @param array $data : ids de los expedientes / ids de los funcionarios
      * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
     public static function insertPemisoExpedienteCont(array $data = []) : array
     {
@@ -62,7 +65,8 @@ class ExpedienteController
                             $record = StaticSql::search($sql);
                             if ($record) {
                                 $EntidadExpediente = new EntidadExpediente($record[0]['identidad_expediente']);
-                                $EntidadExpediente->setAccessPermits("c");
+                                $EntidadExpediente->setAccessPermits('c');
+                                $EntidadExpediente->setAccessPermits('v');
                                 $info = $EntidadExpediente->updateEntidadExpediente();
                                 if ($info['exito']) {
                                     $success++;
@@ -72,7 +76,7 @@ class ExpedienteController
                                     'fk_funcionario' => $user,
                                     'fecha' => date('Y-m-d H:i:s'),
                                     'tipo_funcionario' => 0,
-                                    'permiso' => 'c',
+                                    'permiso' => 'c,v',
                                     'fk_expediente' => $idexpediente
                                 ];
                                 $EntidadExpediente = new EntidadExpediente();
@@ -109,6 +113,7 @@ class ExpedienteController
      *
      * @param array $data
      * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
     public static function listFuncionarios(array $data = []) : array
     {
@@ -140,6 +145,7 @@ class ExpedienteController
      *
      * @param array $data : array debe tener el idpermiso_expediente
      * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
     public static function deletePemisoExpedienteCont(array $data = []) : array
     {
@@ -149,12 +155,20 @@ class ExpedienteController
         ];
         if (!empty($data)) {
             if (!empty($data['idpermiso'])) {
-                $permisoExpediente = new PermisoExpediente($data['idpermiso']);
-                if ($permisoExpediente->deletePermisoExpediente("c")) {
-                    $response['message'] = 'Permiso eliminado!';
-                    $response['exito'] = 1;
+                $sql = "SELECT identidad_expediente FROM permiso_expediente p,entidad_expediente ex WHERE p.fk_funcionario=ex.fk_funcionario AND p.fk_expediente=ex.fk_expediente AND p.tipo_funcionario=ex.tipo_funcionario AND p.idpermiso_expediente={$data['idpermiso']}";
+                $instance = UtilitiesController::instanceSql('EntidadExpediente', 'identidad_expediente', $sql);
+                if ($instance) {
+                    $EntidadExpediente = $instance[0];
+                    $EntidadExpediente->setAccessPermits('c', false);
+                    $response = $EntidadExpediente->updateEntidadExpediente();
                 } else {
-                    $response['message'] = 'No se pudo eliminar el permiso';
+                    $permisoExpediente = new PermisoExpediente($data['idpermiso']);
+                    if ($permisoExpediente->delete()) {
+                        $response['message'] = 'Permiso eliminado!';
+                        $response['exito'] = 1;
+                    } else {
+                        $response['message'] = 'No se pudo eliminar el permiso';
+                    }
                 }
             } else {
                 $response['message'] = 'faltan el identificador del permiso';

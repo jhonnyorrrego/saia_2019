@@ -133,12 +133,11 @@ function guardarElemento($idflujo, $elemento) {
 }
 
 function guardarEnlace($idflujo, $elemento) {
-    $nombreTipo = $elemento['tipo'];
-    $elem = Elemento::findByBpmnId($idflujo, $elemento["id"]);
+    $enlace = Enlace::findByBpmnId($idflujo, $elemento["id"]);
     $elemOrig = Elemento::findByBpmnId($idflujo, $elemento["origen"]);
     $elemDest = Elemento::findByBpmnId($idflujo, $elemento["destino"]);
     $pkelem = null;
-    if(empty($elem)) {
+    if(empty($enlace)) {
         $pkelem = Enlace::newRecord([
             "fk_flujo" => $idflujo,
             "bpmn_id" => $elemento["id"],
@@ -149,9 +148,9 @@ function guardarEnlace($idflujo, $elemento) {
             "fk_elemento_destino" => $elemDest ? $elemDest->getPk() : null,
         ]);
     } else {
-        $elem = new Enlace();
+        $elem = new Enlace($enlace->getPk());
         $elem->setAttributes([
-            "fk_flujo" => $idflujo,
+            // "fk_flujo" => $idflujo,
             // "bpmn_id" => $elemento["id"],
             "bpmn_origen" => $elemento["origen"],
             "bpmn_destino" => $elemento["destino"],

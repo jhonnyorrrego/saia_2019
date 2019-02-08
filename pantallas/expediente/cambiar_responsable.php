@@ -79,6 +79,10 @@ $(document).ready(function (){
 		}
 	});
 
+	$('#responsable').on("select2:selecting", function (e) { 
+		$('#responsable').val('').trigger('change');
+	});
+	
 	$("#formularioExp").validate({
 		rules : {
 			responsable : {
@@ -101,6 +105,7 @@ $(document).ready(function (){
 				dataType: 'json',
 				success: function(response){
 					if(response.exito){
+						$("#dinamic_modal").modal('hide');
 						top.notification({
 							message : response.message,
 							type : 'success',

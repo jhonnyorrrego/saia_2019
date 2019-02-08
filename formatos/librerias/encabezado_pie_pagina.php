@@ -216,7 +216,7 @@ function logo_empresa($idformato, $iddoc = 0) {
             if ($tipo_almacenamiento->get_filesystem()->has($ruta_imagen->ruta)) {
                 $ruta_imagen = json_encode($ruta_imagen);
                 $archivo_binario = StorageUtils::get_binary_file($ruta_imagen);
-                return '<img src="' . $archivo_binario . '" width="30%" />';
+                return '<img src="' . $archivo_binario . '" width="40%" />';
             }
         }
     } else

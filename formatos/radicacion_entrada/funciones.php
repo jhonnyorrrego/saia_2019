@@ -552,7 +552,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
                     <thead>
                         <tr>
                             <td style="border:none;"><b>FECHA DE RADICACI&Oacute;N: </b> ' . $fecha_radicacion . '<br><b>TIPO DE DOCUMENTO:</b> ' . $tipo_documento[0]["nombre"] . '<br><b>ASUNTO:</b> ' . $datos[0]["descripcion"] . '</td>
-                            <td style="text-align:right;border:none;" colspan="2" rowspan="3"><p style="margin-right:8%;">' . $img . '</p><b>REGISTRO No. : ' . $numero_radicado . '</b></td>
+                            <td style="float:right;border:none;" colspan="2" rowspan="3"><p style="text-align:center;">' . $img . '</p><b style="text-align:center;">REGISTRO No. : ' . $numero_radicado . '</b></td>
                         </tr>
                     </thead>
                 </table>
@@ -565,7 +565,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
                     if ($datos[0]['tipo_origen'] == 1) {
                         $empresa_transportadora = mostrar_valor_campo('empresa_transportado', $idformato, $iddoc, 1);
                         $tabla .= "<tr>
-                        <td style='border:none;width: 19%;' class=''><strong>TIPO DE ORIGEN:</strong></td>
+                        <td class='pr-0' style='border:none;width: 19%;'><strong>TIPO DE ORIGEN:</strong></td>
                         <td style='border:none;width: 23%;'>" . mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1) . "</td>
                         <td style='border:none;width: 23%;'><strong>N&Uacute;MERO DE GU&Iacute;A:</strong></td>
                         <td style='border:none;'>" . $datos[0]['numero_guia'] . "</td>
@@ -574,7 +574,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
                         <td style='border:none;'><strong>NO. OFICIO:</strong></td>
                         <td style='border:none;'>" . $datos[0]['numero_oficio'] . "</td>
                         <td style='border:none;width: 22%;' ><strong>EMPRESA TRANSPORTADORA:</strong></td>
-                        <td style='border:none;'>" . $empresa_transportadora . "</td>
+                        <td px-0 style='border:none;'>" . $empresa_transportadora . "</td>
                         
                 </tr>
                 <tr>
