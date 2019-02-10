@@ -149,7 +149,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                     Cierre y apertura:<br/>
                                     Estado: <?= $Expediente->getEstadoCierre() ?><br/>
                                     <?php if($Expediente->estado_cierre==2):?>
-                                    Funcionario: <?= $Expediente->getFuncionarioFk('funcionario_cierre')[0]->getName() ?><br/>
+                                    Funcionario: <?= $Expediente->getRelationFk('Funcionario','funcionario_cierre')->getName() ?><br/>
                                     Fecha: <?= $Expediente->fecha_cierre ?><br/>
                                     <?php endif; ?>                                    
                                 </td>

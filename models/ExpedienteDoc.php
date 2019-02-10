@@ -46,4 +46,5 @@ class ExpedienteDoc extends Model
         }
         return $cant;
     }
+
 }

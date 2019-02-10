@@ -80,9 +80,8 @@ class EntidadSerie extends Model
                 $ValidArbolExp = $this->validArbolExp();
 
                 if ($ValidArbolExp['exito']) {
-                    $Serie = $this->getSerieFk();
+                    $Serie = $this->getRelationFk('Serie');
                     if ($Serie) {
-                        $Serie = $Serie[0];
                         $codPadreExp = end($ValidArbolExp['data']['idexpediente']);
                         $ok = 1;
                         if ($Serie->tipo != 1) {
@@ -123,7 +122,7 @@ class EntidadSerie extends Model
                                 }
                             }
                         }
-                        
+
                         if ($ok) {
                             $sql = "SELECT idexpediente FROM expediente WHERE fk_dependencia={$this->fk_dependencia} and fk_serie={$this->fk_serie} and nucleo=1 and estado=1 and agrupador=2";
                             $existExp = $this->search($sql);
@@ -209,10 +208,8 @@ class EntidadSerie extends Model
             'exito' => 0,
             'message' => ''
         ];
-        $Dependencia = $this->getDependenciaFk();
+        $Dependencia = $this->getRelationFk('Dependencia');
         if ($Dependencia) {
-            $Dependencia = $Dependencia[0];
-
             $idsDep = explode('.', $Dependencia->codigo_arbol);
             $idsExp = [];
             foreach ($idsDep as $key => $idDependencia) {
@@ -264,63 +261,20 @@ class EntidadSerie extends Model
         }
         return $response;
     }
-    /**
-     * Obtiene la serie vinculada a la entidad serie
-     *
-     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
-     * @return array|null
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    public function getSerieFk(int $instance = 1)
-    {
-        $data = null;
-        $response = Serie::findAllByAttributes(['idserie' => $this->fk_serie]);
-        if ($response) {
-            if ($instance) {
-                $data = $response;
-            } else {
-                $data = UtilitiesController::getIdsInstance($response);
-            }
-        }
-        return $data;
-    }
-    /**
-     * Obtiene la dependencia vinculada a la entidad serie
-     *
-     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
-     * @return array|null
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    public function getDependenciaFk(int $instance = 1)
-    {
-        $data = null;
-        $response = Dependencia::findAllByAttributes(['iddependencia' => $this->fk_dependencia]);
-        if ($response) {
-            if ($instance) {
-                $data = $response;
-            } else {
-                $data = UtilitiesController::getIdsInstance($response);
-            }
-        }
-        return $data;
-    }
+
     /**
      * Obtiene los expedientes vinculados a la entidad serie
      *
-     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
+     * @param int $instance : 1, retorna las instancias; 0, retorna solo los ids
      * @return array|null
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
     public function getExpedienteFk(int $instance = 1)
     {
-        $data = null;
-        $response = Expediente::findAllByAttributes(['fk_entidad_serie' => $this->identidad_serie]);
-        if ($response) {
-            if ($instance) {
-                $data = $response;
-            } else {
-                $data = UtilitiesController::getIdsInstance($response);
-            }
+        if ($instance) {
+            $data = Expediente::findAllByAttributes(['fk_entidad_serie' => $this->identidad_serie]);
+        } else {
+            $data = Expediente::findColumn('idexpediente', ['fk_entidad_serie' => $this->identidad_serie]);
         }
         return $data;
     }
@@ -328,20 +282,16 @@ class EntidadSerie extends Model
     /**
      * Obtiene los permisos vinculados a la entidad serie
      *
-     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
+     * @param int $instance : 1, retorna las instancias; 0, retorna solo los ids
      * @return array|null
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
     public function getPermisoSerieFk(int $instance = 1)
     {
-        $data = null;
-        $response = PermisoSerie::findAllByAttributes(['fk_entidad_serie' => $this->identidad_serie]);
-        if ($response) {
-            if ($instance) {
-                $data = $response;
-            } else {
-                $data = UtilitiesController::getIdsInstance($response);
-            }
+        if ($instance) {
+            $data = PermisoSerie::findAllByAttributes(['fk_entidad_serie' => $this->identidad_serie]);
+        } else {
+            $data = PermisoSerie::findColumn('idpermiso_serie', ['fk_entidad_serie' => $this->identidad_serie]);
         }
         return $data;
     }

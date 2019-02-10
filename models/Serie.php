@@ -369,7 +369,7 @@ class Serie extends Model
         return $data;
     }
     /**
-     * retorna las instancias de EntidadSerie vinculadas a la serie
+     * retorna las instancias de EntidadSerie vinculadas
      *
      * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
      * @return array|null
@@ -377,15 +377,12 @@ class Serie extends Model
      */
     public function getEntidadSerieFk(int $instance = 1)
     {
-        $data = null;
-        $response = EntidadSerie::findAllByAttributes(['fk_serie' => $this->idserie]);
-        if ($response) {
-            if ($instance) {
-                $data = $response;
-            } else {
-                $data = UtilitiesController::getIdsInstance($response);
-            }
+        if ($instance) {
+            $data = EntidadSerie::findAllByAttributes(['fk_serie' => $this->idserie]);
+        } else {
+            $data = EntidadSerie::findColumn('idserie', ['fk_serie' => $this->idserie]);
         }
+
         return $data;
     }
     /**
@@ -393,19 +390,16 @@ class Serie extends Model
      * 
      * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
      * @return array|null
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     * @author Andres.Agudelo    <andres.agudelo@cerok.com>
      */
     public function getExpedienteFk(int $instance = 1)
     {
-        $data = null;
-        $response = Expediente::findAllByAttributes(['fk_serie' => $this->idserie]);
-        if ($response) {
-            if ($instance) {
-                $data = $response;
-            } else {
-                $data = UtilitiesController::getIdsInstance($response);
-            }
+        if ($instance) {
+            $data = Expediente::findAllByAttributes(['fk_serie' => $this->idserie]);
+        } else {
+            $data = Expediente::findAllByAttributes(['fk_serie' => $this->idserie]);
         }
+
         return $data;
     }
 

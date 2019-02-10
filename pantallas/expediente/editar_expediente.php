@@ -17,8 +17,8 @@ if (!$idexpediente || !$Expediente->isResponsable()) {
     return;
 }
 
-$Dep=$Expediente->getDependenciaFk()[0];
-$Serie=$Expediente->getSerieFk()[0];
+$Dep=$Expediente->getRelationFk('Dependencia');
+$Serie=$Expediente->getRelationFk('Serie');
 
 $ag=[
     0=>'',

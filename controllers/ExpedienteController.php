@@ -18,7 +18,7 @@ class ExpedienteController
         if (!empty($data['idexpediente'])) {
             $Expediente = new Expediente($data['idexpediente']);
             $estadoActual = $Expediente->estado_cierre;
- 
+
             if ($estadoActual == 1) {
                 $ok = $Expediente->canClose();
                 $Expediente->estado_cierre = 2;

@@ -39,9 +39,9 @@ class ExpedienteCierre extends Model
     public function getFuncionario() : string
     {
         $response = '';
-        $instance = $this->getFuncionarioFk();
+        $instance = $this->getRelationFk('Funcionario');
         if ($instance) {
-            $response = $instance[0]->getName();
+            $response = $instance->getName();
         }
         return $response;
     }
@@ -60,25 +60,4 @@ class ExpedienteCierre extends Model
         return $accion[$this->accion];
     }
 
-    /**
-     * retorna la instancia de funcionario vinculado al cierre
-     *
-     * @return array|null
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    public function getFuncionarioFk()
-    {
-        return Funcionario::findAllByAttributes(['idfuncionario' => $this->fk_funcionario]);
-    }
-
-    /**
-     * retorna la instancia del expediente vinculado al cierre
-     *
-     * @return array|null
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    public function getExpedienteFk()
-    {
-        return Expediente::findAllByAttributes(['idexpediente' => $this->fk_expediente]);
-    }
 }

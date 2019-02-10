@@ -284,9 +284,9 @@ class Expediente extends Model
     public function getPropietario() : string
     {
         $response = '';
-        $data = $this->getFuncionarioFk();
+        $data = $this->getRelationFk('Funcionario', 'propietario');
         if ($data) {
-            $response = $data[0]->nombres . ' ' . $data[0]->apellidos;
+            $response = $data->nombres . ' ' . $data->apellidos;
         }
         return $response;
     }
@@ -299,9 +299,9 @@ class Expediente extends Model
     public function getResponsable() : string
     {
         $response = '';
-        $data = $this->getFuncionarioFk('responsable');
+        $data = $this->getRelationFk('Funcionario', 'responsable');
         if ($data) {
-            $response = $data[0]->nombres . ' ' . $data[0]->apellidos;
+            $response = $data->nombres . ' ' . $data->apellidos;
         }
         return $response;
     }
@@ -406,9 +406,9 @@ class Expediente extends Model
     {
         $response = '';
         if ($this->estado_cierre == 2) {
-            $infoSerie = $this->getSerieFk();
+            $infoSerie = $this->getRelationFk('Serie');
             if ($infoSerie) {
-                $tiempo = 'P' . $infoSerie[0]->retencion_gestion . 'M';
+                $tiempo = 'P' . $infoSerie->retencion_gestion . 'M';
                 $fecha = new DateTime($this->fecha_cierre);
                 $fecha->add(new DateInterval($tiempo));
                 $intervalo = $fecha->diff(new DateTime(date('Y-m-d')));
@@ -493,7 +493,7 @@ class Expediente extends Model
     /**
      * retorna las instancias de expediente doc vinculadas al expediente
      *
-     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
+     * @param int $instance : 1, retorna las instancias; 0, retorna solo los ids
      * @return array|null
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
@@ -511,64 +511,20 @@ class Expediente extends Model
     /**
      * retorna las instancias de Expediente cierre vinculadas al expediente
      *
-     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
+     * @param int $instance : 1, retorna las instancias; 0, retorna solo los ids
      * @return array|null
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
     public function getExpedienteCierreFk(int $instance = 1)
     {
         if ($instance) {
-            $data = ExpedienteCierre::findAllByAttributes(['fk_expediente' => $this->idexpediente],[],'idexpediente_cierre desc');
+            $data = ExpedienteCierre::findAllByAttributes(['fk_expediente' => $this->idexpediente], [], 'idexpediente_cierre desc');
         } else {
             $data = ExpedienteCierre::findColumn('idexpediente_cierre', ['fk_expediente' => $this->idexpediente]);
         }
         return $data;
     }
 
-    /**
-     * retorna la instancia de la serie vinculadas al expediente
-     *
-     * @return array|null
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    public function getSerieFk()
-    {
-        return Serie::findAllByAttributes(['idserie' => $this->fk_serie]);
-    }
-
-    /**
-     * retorna la instancia de la dependencia vinculada al expediente
-     *
-     * @return array|null
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    public function getDependenciaFk()
-    {
-        return Dependencia::findAllByAttributes(['iddependencia' => $this->fk_dependencia]);
-    }
-
-    /**
-     * retorna la instancia de la entidad serie vinculadas al expediente
-     *
-     * @return array|null
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    public function getEntidadSerieFk()
-    {
-        return EntidadSerie::findAllByAttributes(['identidad_serie' => $this->fk_entidad_serie]);
-    }
-
-    /**
-     * retorna la instancia del funcionario (creador,responsable) vinculada al expediente
-     *
-     * @param string $campo :  Nombre del campo (propietario - responsable)
-     * @return array|null
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    public function getFuncionarioFk(string $campo = "propietario")
-    {
-        return Funcionario::findAllByAttributes(['idfuncionario' => $this->$campo]);
-    }
     /**
      * Crea el HTML de un campo
      *

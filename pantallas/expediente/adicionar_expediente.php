@@ -17,8 +17,8 @@ if(!$idexpediente){
 }
 
 $ExpCodPadre=new Expediente($idexpediente);
-$Dep=$ExpCodPadre->getDependenciaFk()[0];
-$Serie=$ExpCodPadre->getSerieFk()[0];
+$Dep=$ExpCodPadre->getRelationFk('Dependencia');
+$Serie=$ExpCodPadre->getRelationFk('Serie');
 
 include_once $ruta_db_superior . 'assets/librerias.php';
 

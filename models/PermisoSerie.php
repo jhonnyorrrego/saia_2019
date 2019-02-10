@@ -96,44 +96,4 @@ class PermisoSerie extends Model
         return $response;
     }
 
-    /**
-     * retorna las instancia de entidad serie vinculadas al permiso
-     * 
-     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
-     * @return array|null
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    public function getEntidadSerieFk(int $instance = 1)
-    {
-        $data = null;
-        $response = EntidadSerie::findAllByAttributes(['identidad_serie' => $this->fk_entidad_serie]);
-        if ($response) {
-            if ($instance) {
-                $data = $response;
-            } else {
-                $data = UtilitiesController::getIdsInstance($response);
-            }
-        }
-        return $data;
-    }
-    /**
-     * retorna las instancia de entidad vinculadas al permiso
-     * 
-     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
-     * @return array|null
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    public function getEntidadFk(int $instance = 1)
-    {
-        $data = null;
-        $response = Entidad::findAllByAttributes(['identidad' => $this->fk_entidad]);
-        if ($response) {
-            if ($instance) {
-                $data = $response;
-            } else {
-                $data = UtilitiesController::getIdsInstance($response);
-            }
-        }
-        return $data;
-    }
 }

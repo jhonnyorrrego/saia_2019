@@ -73,7 +73,7 @@ class EntidadExpediente extends Model
      * @param bool $estado: true para dar el permiso, false para quitar
      * @return boolean
      */
-    public function setAccessPermits(string $permiso = null,bool $estado=true) : bool
+    public function setAccessPermits(string $permiso = null, bool $estado = true) : bool
     {
         $response = false;
         if ($permiso) {
@@ -148,9 +148,8 @@ class EntidadExpediente extends Model
             $response['exito'] = 1;
             $response['data']['id'] = $this->identidad_expediente;
 
-            $instance = $this->getExpedienteFk();
-            if ($instance) {
-                $Expediente = $instance[0];
+            $Expediente = $this->getRelationFk('Expediente');
+            if ($Expediente) {
                 $attributes = [
                     'fk_funcionario' => $this->fk_funcionario,
                     'fk_entidad' => 1,
@@ -203,47 +202,4 @@ class EntidadExpediente extends Model
         }
         return $response;
     }
-
-    /**
-     * retorna las instancia de funcionario vinculada a la entidad expediente
-     * 
-     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
-     * @return array|null
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    public function getFuncionarioFk(int $instance = 1)
-    {
-        $data = null;
-        $response = Funcionario::findAllByAttributes(['idfuncionario' => $this->fk_funcionario]);
-        if ($response) {
-            if ($instance) {
-                $data = $response;
-            } else {
-                $data = UtilitiesController::getIdsInstance($response);
-            }
-        }
-        return $data;
-    }
-
-    /**
-     * retorna las instancia de expediente vinculada a la entidad expediente
-     * 
-     * @param int $instance : 1, retorna las instancias, 0, retorna solo los ids
-     * @return array|null
-     * @author Andres.Agudelo <andres.agudelo@cerok.com>
-     */
-    public function getExpedienteFk(int $instance = 1)
-    {
-        $data = null;
-        $response = Expediente::findAllByAttributes(['idexpediente' => $this->fk_expediente]);
-        if ($response) {
-            if ($instance) {
-                $data = $response;
-            } else {
-                $data = UtilitiesController::getIdsInstance($response);
-            }
-        }
-        return $data;
-    }
-
 }
