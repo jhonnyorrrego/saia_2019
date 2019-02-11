@@ -112,30 +112,37 @@ if (isset($_REQUEST["idflujo"])) {
             var id = $(this).data("idnotificacion");
             $("#crearNotificacion").trigger("click", id);
         });
+
         $(document).on("click", ".boton_eliminar_notificacion", function () {
-            var ftb = [
-                '<a href="#" id="btn-cancelar" class="jsPanel-ftr-btn"><i class="fa fa-close" style="font-size:24px;"></i> No</a>&nbsp;',
-                '<a href="#" id="btn-aceptar" class="jsPanel-ftr-btn"><i class="fa fa-check" style="font-size:24px;color:red"></i> Si</a>',
-            ];
             var id = $(this).data("idnotificacion");
-            //$("#crearNotificacion").trigger("click", id);
-            jsPanel.modal.create({
-                contentSize:   '300 120',
-                footerToolbar: ftb,
-                content: "<p>&nbsp;</p><center><h4>Desea eliminar?<h4></center>",
-                headerRemove:  true,
-                callback: function (panel) {
-                    jsPanel.pointerup.forEach(function (evt) {
-                        panel.footer.querySelector('#btn-aceptar').addEventListener(evt, function () {
-                            //panel.content.innerHTML = 'Click en Aceptar';
-                            panel.close();
-                        });
-                        panel.footer.querySelector('#btn-cancelar').addEventListener(evt, function () {
-                            panel.close();
-                        });
-                    });
-                }
-            });
+
+            var data = {
+                key: localStorage.getItem("key"),
+                idnotificacion: id
+            };
+
+            var pk = false;
+
+            if (confirm('Desea eliminar la notificación? Se eliminaran todos los registros asociados.')) {
+                $.ajax({
+                    dataType: "json",
+                    url: "<?= $ruta_db_superior ?>app/flujo/borrarNotificacion.php",
+                    type: "POST",
+                    data: data,
+                    async: false,
+                    success: function (response) {
+                        if (response["success"] == 1) {
+                            top.notification({type: "success", message: response.message});
+                            pk = true;
+                            //parent.parent.postMessage({accion: "recargarTabla", id: pk}, "*");
+                            postMessage({accion: "recargarTabla", id: id}, "*");
+                        } else {
+                            top.notification({type: "error", message: response.message});
+                        }
+                    }
+                });
+            }
+            return pk;
 
         });
     });
@@ -148,7 +155,7 @@ if (isset($_REQUEST["idflujo"])) {
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
               <a class="dropdown-item boton_editar_notificacion" href="#" data-idnotificacion="${value}"><i class="f-10 fa fa-edit"></i> Editar</a>
-              <a class="dropdown-item boton_eliminar_notificacion" href="#"><i class="f-10 fa fa-trash"></i> Eliminar</a>
+              <a class="dropdown-item boton_eliminar_notificacion" href="#" data-idnotificacion="${value}"><i class="f-10 fa fa-trash"></i> Eliminar</a>
             </div>
           </div>
         `;

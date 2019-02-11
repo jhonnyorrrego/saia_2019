@@ -88,7 +88,7 @@ if (empty($idflujo)) {
     </head>
     <body>
 
-        <div class="container"
+        <div class="container">
              <form id="notificationForm">
                 <input type="hidden" name="idnotificacion" id="idnotificacion" value="<?= $idnotificacion ?>">
                 <fieldset>
@@ -330,7 +330,6 @@ if (empty($idflujo)) {
                         }
                     }
                 });
-
 
                 $(".tipo3").click(function () {
                     var idnotificacion = $("#idnotificacion").val();

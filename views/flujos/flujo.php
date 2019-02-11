@@ -105,6 +105,7 @@ $tabLinks = ["flow_info" => "flow_info.php",
                 console.log('Mensaje recibido!:  ', e.data);
                 let datos = e.data;
                 if (datos.accion == "recargarTabla") {
+                    console.log(idflujo);
                     $('#tabla_notificaciones').bootstrapTable('refresh', {url: "listado_notificaciones.php?idflujo=" + idflujo});
                 } else if (datos.accion == "cerrarModalActividad") {
                     if (modalActividad) {
