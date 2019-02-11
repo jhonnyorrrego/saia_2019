@@ -288,6 +288,9 @@ if (empty($idflujo)) {
                     //console.log(idnotificacion);
                     var $iframe = $('#frameTipoNotificacion');
                     var url = "<?= $ruta_db_superior ?>views/flujos/modal_persona_saia.php?idnotificacion=" + idnotificacion;
+
+                    //abrirModalDestinatario(url, "Destinatarios de correo de la Organización");
+
                     $("#myModalLabel").html("Destinatarios de correo de la Organización");
                     if (idnotificacion) {
                         if ($iframe.length) {
@@ -387,6 +390,32 @@ if (empty($idflujo)) {
                     //console.log('#foo is hidden');
                 });
 
+                function abrirModalDestinatario(url, titulo) {
+                    let jspanelOpts = {
+                        dragit: {
+                            containment: [60, 5, 5, 5],
+                            snap: true
+                        },
+                        ziBase: 10000,
+                        /*syncMargins: true,*/
+                        headerTitle: titulo,
+                        iconfont: 'fa',
+                        theme: 'dark',
+                        position: {
+                            my: "center-top",
+                            at: "center-top"
+                        },
+                        contentSize: '600 400',
+                        borderRadius: '6px',
+                        content: '<iframe src="' + url + '" style="width: 100%; height: 90%; border:none; overflow:hidden auto;"></iframe>',
+                        callback: function () {
+                            this.header.style.borderBottom = 'none';
+                            this.content.style.borderTop = 'none';
+                        }
+                    };
+                    modalDestinatario = jsPanel.create(jspanelOpts);
+
+                }
 
                 function guardarNotificacion() {
                     if ($("#notificationForm").valid()) {
@@ -425,30 +454,6 @@ if (empty($idflujo)) {
                     return false;
                 }
 
-                function ajaxRequest(params) {
-
-                    // data you may need
-                    //console.log(params.data);
-
-                    $.ajax({
-                        type: "POST",
-                        url: "listado_notificaciones.php",
-                        data: "idflujo=1",
-                        // You are expected to receive the generated JSON (json_encode($data))
-                        dataType: "json",
-                        success: function (data) {
-                            params.success({
-                                // By default, Bootstrap table wants a "rows" property with the data
-                                "rows": data,
-                                // You must provide the total item ; here let's say it is for array length
-                                "total": data.total
-                            })
-                        },
-                        error: function (er) {
-                            params.error(er);
-                        }
-                    });
-                }
             });
 
             function seleccionarCampo(event, data) {

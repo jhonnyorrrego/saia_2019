@@ -67,6 +67,7 @@ if(!empty($_REQUEST["idnotificacion"])) {
 <?= jquery() ?>
 <?= bootstrap() ?>
 <?= icons() ?>
+<?= theme() ?>
 
 <?= librerias_UI("1.12") ?>
 <?= librerias_arboles_ft("2.24")?>
