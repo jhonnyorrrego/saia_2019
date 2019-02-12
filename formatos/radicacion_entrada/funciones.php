@@ -546,7 +546,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
     }
 
     </style>
-        <div class="row px-2">
+        <div class="row">
             <div class="col-md-12">
                 <table class="table table-condensed" style="width: 100%; text-align:left;" border="0" cellspacing="0">
                     <thead>
@@ -558,7 +558,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
                 </table>
             </div>
         </div>
-        <div class="row px-2">
+        <div class="row">
             <div class="col-md-12">
                 <table class="table table-condensed" style="width: 100%;margin-top: 2%;margin-bottom: 2%;" border="0" cellspacing="0">
                 <thead>';
@@ -670,9 +670,10 @@ function mostrar_copia_electronica($idformato, $iddoc) {
     }
 
     </style>';
-            $tabla .= '<table class="table table-condensed" style="width: 100%; text-align:left;" border="0" cellspacing="0">';
-            $tabla .= '<tr><td style="border:none;width: 15%;"><b>Copia Electr&oacute;nica a:</b></td> <td style="border:none;">' . $info . '</td></tr>';
-            $tabla .= '</table>';
+            $tabla .= '<div class="row px-2">
+            <div class="col-md-12"><table class="table table-condensed" style="width: 100%; text-align:left;" border="0" cellspacing="0"><thead>';
+            $tabla .= '<tr><td style="border:none;width: 100%;"><b>Copia Electr&oacute;nica a:&nbsp;&nbsp;&nbsp;</b>' . $info .'</td></tr>';
+            $tabla .= '</thead></table></div></div>';
         }
     }
     echo $tabla;
