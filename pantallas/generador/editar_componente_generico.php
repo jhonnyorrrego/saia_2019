@@ -228,7 +228,7 @@ echo librerias_jquery("2.2");
     	datos["tipo_retorno"] = 1;
     	datos["idpantalla_campos"] = idpantalla_campo;
 
-    	var evitar_html=["arbol_fancytree", "datetime", "textarea_cke"];
+    	var evitar_html=["datetime", "textarea_cke"];
         
     	$.ajax({
             type:'POST',
@@ -247,7 +247,10 @@ echo librerias_jquery("2.2");
 							$("#pc_"+idpantalla_campo+" span:first",parent.document).html("<b>"+objeto.etiqueta+"*</b>");
 						}else if(objeto.etiqueta_html=="fecha" && objeto.obligatoriedad==0){
 							$("#pc_"+idpantalla_campo+" span:first",parent.document).html("<b>"+objeto.etiqueta+"</b>");
-
+						}else if(objeto.etiqueta_html=="textarea_cke" && objeto.obligatoriedad!=0){
+							$("#pc_"+idpantalla_campo+" span:first",parent.document).html("<b>"+objeto.etiqueta+"*</b>");
+						}else if(objeto.etiqueta_html=="textarea_cke" && objeto.obligatoriedad==0){
+							$("#pc_"+idpantalla_campo+" span:first",parent.document).html("<b>"+objeto.etiqueta+"</b>");
 						}
 					}
                     parent.hs.close();

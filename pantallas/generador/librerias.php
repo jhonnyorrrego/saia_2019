@@ -662,6 +662,17 @@ function camposNucleo($idformato)
 	return array_filter($campos_excluir);
 }
 
+function validarCamposObligatorios($idformato){
+	$retorno = ["exito" => 1, "mensaje" => ''];
+	$consultaFormato = "SELECT acciones FROM campos_formato WHERE formato_idformato = {$idformato} and (acciones like 'p' or acciones like '%,p,%' or acciones like '%,p')";
+	$camposFormato = StaticSql::search($consultaFormato);
+	if (!$camposFormato) {
+		$retorno['mensaje'] = 'Debe seleccionar alguno de los campos para incluirse en la descripción de los documentos';
+		$retorno['exito'] = 0;
+	}
+	echo json_encode($retorno, JSON_UNESCAPED_UNICODE);
+}
+
 if (@$_REQUEST["ejecutar_pantalla_campo"]) {
 	if (!@$_REQUEST["tipo_retorno"]) {
 		$_REQUEST["tipo_retorno"] = 1;
@@ -673,5 +684,9 @@ if (@$_REQUEST["ejecutar_campos_formato"]) {
 		$_REQUEST["tipo_retorno"] = 1;
 	}
 	$_REQUEST["ejecutar_campos_formato"]($_REQUEST["idpantalla_campos"], $_REQUEST["tipo_retorno"]);
+}
+
+if($_REQUEST['ejecutarLibreria']){
+	validarCamposObligatorios($_REQUEST['idformato']);
 }
 ?>

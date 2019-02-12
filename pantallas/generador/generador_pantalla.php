@@ -624,8 +624,27 @@ $(document).ready(function() {
         $("#diseno_formulario_pantalla").next().find("a").trigger("click");
     });
     $('#cambiar_nav_basico').on('click', function() {
-        $("#diseno_formulario_pantalla").removeClass("disabled");
-        $("#generar_formulario_pantalla").next().find("a").trigger("click");
+        $.ajax({
+            type: 'POST',
+            url: '<?php echo ($ruta_db_superior); ?>' + 'pantallas/generador/librerias.php',
+            data: {
+                ejecutarLibreria: 'validarCamposObligatorios',
+                idformato: $("#idformato").val()
+            },
+            success: function(response) {
+                if(response){
+                     var objeto = jQuery.parseJSON(response);         
+                    if(objeto.exito!=1){
+                        notificacion_saia(objeto.mensaje, "error", "", 3500);
+                    }else{
+                        $("#diseno_formulario_pantalla").removeClass("disabled");
+                        $("#generar_formulario_pantalla").next().find("a").trigger("click");
+                    }
+                } 
+               
+            }
+        });
+       
     });
      $('#cambiar_nav_permiso').on('click', function() {
         $("#vista_formulario_permisos").removeClass("disabled");
@@ -637,8 +656,6 @@ $(document).ready(function() {
         $("#pantalla_principal").next().find("a").trigger("click");
     });
     $('#cambiar_nav').on('click', function() {
-        $("#diseno_formulario_pantalla").removeClass("disabled");
-        $("#generar_formulario_pantalla").next().find("a").trigger("click");
         $.ajax({
             type: 'POST',
             async: false,
@@ -652,9 +669,11 @@ $(document).ready(function() {
                 if (response) {
                     var objeto = jQuery.parseJSON(response);
                     if (objeto.exito) {
+                        $("#diseno_formulario_pantalla").removeClass("disabled");
+                        $("#generar_formulario_pantalla").next().find("a").trigger("click");
                         generar_pantalla("full");
                     } else {
-                        notificacion_saia(objeto.mensaje, "warning", "", 3500);
+                        notificacion_saia(objeto.mensaje, "error", "", 3500);
                     }
                 }
             }
