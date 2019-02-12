@@ -589,9 +589,9 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
                         $entrega = ($datos[0]["tipo_mensajeria"] == 1) ? "Si" : "No";
                         $tabla .= "
                             <tr>
-                            <td style='border:none;'><strong>TIPO DE ORIGEN:</strong></td>
-                            <td style='border:none;'>" .mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1). "</td>
-                            <td style='border:none;'><strong>REQUIERE SERVICIO DE RECOGIDA?:</strong></td>
+                            <td class='pr-0' style='border:none;width: 23%;'><strong>TIPO DE ORIGEN:</strong></td>
+                            <td style='border:none;width: 23%;'>" .mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1). "</td>
+                            <td style='border:none;width: 23%;'><strong>REQUIERE SERVICIO DE RECOGIDA?:</strong></td>
                             <td style='border:none;'>" . $recogida . "</td>
                         </tr>
                         <tr>

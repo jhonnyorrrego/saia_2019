@@ -594,6 +594,7 @@ for ($i = 0; $i < $cant_js; $i++) {
 <!--script src="<?php echo ($ruta_db_superior) ?>pantallas/generador/editor/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?php echo ($ruta_db_superior) ?>pantallas/generador/editor/ext-language_tools.js"></script-->
 
+
 <script type="text/javascript">
 $(document).ready(function() {
     $.ajax({
@@ -1296,7 +1297,20 @@ $(document).ready(function() {
         }
     });
     hs.graphicsDir = '<?php echo ($ruta_db_superior); ?>images/highslide/';
+
+    var count_click = 0;
+    function count_click_add() {
+        count_click += 1;
+        return count_click;
+    }
+    hs.Expander.prototype.onInit = function(sender) {
+        var cantidadClicks = count_click_add(); 
+        if(cantidadClicks>1){
+            return false;
+        }
+    };
     hs.Expander.prototype.onAfterClose = function(event) {
+        count_click=0;
         var editor_enlace = event.src.split('?');
 
         if (editor_enlace[0] == 'editor_encabezado.php' || editor_enlace[0] == 'crear_encabezado_pie.php' ||
@@ -1409,16 +1423,18 @@ $(document).ready(function() {
                 "idpantalla_componente") + "&idpantalla_campos=" + $(this).attr("idpantalla_campo");
         }
         var opciones = {
+  
             src: ulr_hs,
             objectType: 'iframe',
             outlineType: 'rounded-white',
             wrapperClassName: 'highslide-wrapper drag-header',
-            preserveContent: false,
+            preserveContent: true,
             width: 600,
             height: 500
         };
         hs.htmlExpand(null, opciones);
     });
+
 
     $(document).on('click', '.element > input, .element > textarea, .element > label', function(e) {
         e.preventDefault();
