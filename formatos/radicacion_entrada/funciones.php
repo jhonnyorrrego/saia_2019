@@ -660,8 +660,8 @@ function mostrar_copia_electronica($idformato, $iddoc) {
     if ($datos[0]['tipo_destino'] == 2) {//INTERNO
         $info = mostrar_valor_campo('copia_a', $idformato, $iddoc, 1);
         if ($info) {
-            $tabla = '<table class="table table-bordered" style="width: 100%;" border="1">';
-            $tabla .= '<tr><td><b>Copia Electr&oacute;nica a:</b></td> <td>' . $info . '</td></tr>';
+            $tabla = '<table class="table table-condensed" style="width: 100%; text-align:left;" border="0" cellspacing="0">';
+            $tabla .= '<tr><td style="border:none;width: 15%;"><b>Copia Electr&oacute;nica a:</b></td> <td style="border:none;">' . $info . '</td></tr>';
             $tabla .= '</table>';
         }
     }
