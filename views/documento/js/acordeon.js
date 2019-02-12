@@ -119,7 +119,7 @@ $(function () {
             if (sizeImg >= 50 && sizeDocument != 'xl'){
                 sizeImg = sizeImg * 1.1;
             }else if (sizeImg <= 50 && sizeDocument == 'xl') {
-                sizeImg = sizeImg * 0.8;
+                sizeImg = sizeImg * 1.2;
             }else if(sizeImg <= 50 && sizeDocument =='lg'){
                 sizeImg = sizeImg * 1.2;
             }
