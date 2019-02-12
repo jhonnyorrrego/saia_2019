@@ -84,6 +84,7 @@ if (empty($idflujo)) {
         <?= librerias_UI("1.12") ?>
         <?= librerias_tabla_bootstrap("1.13", false, false) ?>
         <?= librerias_arboles_ft("2.24") ?>
+        <?= dropzone() ?>
 
     </head>
     <body>
@@ -94,69 +95,69 @@ if (empty($idflujo)) {
                 <fieldset>
                     <legend>Definiendo las notificaciones</legend>
                     <div class="row mb-2">
-                        <div class="col col-md-3">
-                            <label for="sel_tipo_notificacion">Seleccione en que momento se enviar&aacute; la notificaci&oacute;n *</label>
-                        </div>
-                        <div class="col col-md-6">
-                            <select class="form-control" name="idevento_notificacion" id="sel_tipo_notificacion" required value="<?= $notificacion->fk_evento_notificacion ?>">
-                                <option value="0">Por favor seleccione...</option>
-                                <?php
-                                if (!empty($eventos)) {
-                                    foreach ($eventos as $evento) {
-                                        $seleccionado = "";
-                                        if ($notificacion->fk_evento_notificacion == $evento["idevento_notificacion"]) {
-                                            $seleccionado = 'selected="selected"';
+                        <div class="col col-md-12">
+                            <div class="form-group">
+                                <label for="sel_tipo_notificacion">Seleccione en que momento se enviar&aacute; la notificaci&oacute;n *</label>
+                                <select class="form-control" name="idevento_notificacion" id="sel_tipo_notificacion" required value="<?= $notificacion->fk_evento_notificacion ?>">
+                                    <option value="0">Por favor seleccione...</option>
+                                    <?php
+                                    if (!empty($eventos)) {
+                                        foreach ($eventos as $evento) {
+                                            $seleccionado = "";
+                                            if ($notificacion->fk_evento_notificacion == $evento["idevento_notificacion"]) {
+                                                $seleccionado = 'selected="selected"';
+                                            }
+                                            echo '<option value="' . $evento["idevento_notificacion"] . '" ' . $seleccionado . '>' . $evento["evento"] . '</option>';
                                         }
-                                        echo '<option value="' . $evento["idevento_notificacion"] . '" ' . $seleccionado . '>' . $evento["evento"] . '</option>';
                                     }
-                                }
-                                ?>
-                            </select>
+                                    ?>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="row mb-2 tipo_opcion tipo_opcion_1" style="display: none;">
-                        <div class="col col-md-3">
-                            <label for="sel_actividad_evento">Elija el cambio de estado</label>
-                        </div>
-                        <div class="col col-md-6">
-                            <select class="form-control" name="actividad_evento" id="sel_actividad_evento">
-                                <option value="0">Por favor seleccione...</option>
-                                <?php
-                                if (!empty($actividades)) {
-                                    foreach ($actividades as $tarea) {
-                                        echo '<option value="' . $tarea->getPk() . '">' . $tarea->nombre . '</option>';
+                        <div class="col col-md-12">
+                            <div class="form-group">
+                                <label for="sel_actividad_evento">Elija el cambio de estado</label>
+                                <select class="form-control" name="actividad_evento" id="sel_actividad_evento">
+                                    <option value="0">Por favor seleccione...</option>
+                                    <?php
+                                    if (!empty($actividades)) {
+                                        foreach ($actividades as $tarea) {
+                                            echo '<option value="' . $tarea->getPk() . '">' . $tarea->nombre . '</option>';
+                                        }
                                     }
-                                }
-                                ?>
-                            </select>
+                                    ?>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="row mb-2 tipo_opcion tipo_opcion_2" style="display: none;">
-                        <div class="col col-md-3">
+                        <div class="col col-md-12">
+                            <div class="form-group">
                             <label for="sel_formato_evento">Elija el formato asociado</label>
-                        </div>
-                        <div class="col col-md-6">
-                            <select class="form-control" name="formato_evento" id="sel_formato_evento" value="<?= $notificacion->fk_formato_flujo ?>">
-                                <option value="0">Por favor seleccione...</option>
-                                <?php
-                                if (!empty($formatos)) {
-                                    foreach ($formatos as $formato) {
-                                        echo '<option value="' . $formato["idformato"] . '">' . $formato["etiqueta"] . '</option>';
+                                <select class="form-control" name="formato_evento" id="sel_formato_evento" value="<?= $notificacion->fk_formato_flujo ?>">
+                                    <option value="0">Por favor seleccione...</option>
+                                    <?php
+                                    if (!empty($formatos)) {
+                                        foreach ($formatos as $formato) {
+                                            echo '<option value="' . $formato["idformato"] . '">' . $formato["etiqueta"] . '</option>';
+                                        }
                                     }
-                                }
-                                ?>
-                            </select>
+                                    ?>
+                                </select>
+                            </div>
                         </div>
-                    </div>
+                   </div>
                     <!-- <div class="tipo_opcion tipo_opcion_3" style="display: none;">
                         <label>Elija el formato asociado</label>
                     </div> -->
                     <div class="row mb-2">
-                        <div class="col col-md-3">
-                            <label for="notificacion_asunto">Asunto del email *</label>
-                        </div>
-                        <div class="col col-md-9">
-                            <input type="text" id="asunto_notificacion" name="asunto" required value="<?= $notificacion->asunto ?>">
+                        <div class="col col-md-12">
+                            <div class="form-group form-group-default">
+                                <label for="asunto_notificacion">Asunto del email *</label>
+                                <input class="form-control" type="text" id="asunto_notificacion" name="asunto" required value="<?= $notificacion->asunto ?>">
+                            </div>
                         </div>
                     </div>
                     <div class="row mb-2">
@@ -164,9 +165,10 @@ if (empty($idflujo)) {
                             <label for="mensaje_notificacion">Mensaje *</label>
                         </div>
                         <div class="col col-md-5">
-                            <textarea class="form-control" id="mensaje_notificacion" name="mensaje" required><?= $notificacion->cuerpo ?></textarea>
+                            <textarea class="form-control" id="mensaje_notificacion" name="mensaje" required rows="5"><?= $notificacion->cuerpo ?></textarea>
                         </div>
                         <div class="col col-md-4" style="height:150px; overflow: auto;">
+                            <label for="campos_formato_notificacion">Etiquetas automáticas de email</label>
                             <?php
                             if (!empty($listaIdsFmt)) {
                                 echo $arbolCampos->generar_html();
