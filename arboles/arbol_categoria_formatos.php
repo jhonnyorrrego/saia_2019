@@ -49,9 +49,9 @@ function buscar_papa($idcategoriaFormato)
         return $idcategoriaFormato;
     }
 }
-$objetoJson = array(
+$objetoJson = [
     "key" => 0
-);
+];
 
 $seleccionable = null;
 if (isset($_REQUEST["seleccionable"])) {
