@@ -35,6 +35,7 @@ if (!empty($_REQUEST["idnotificacion"])) {
         <?= jquery() ?>
         <?= bootstrap() ?>
         <?= icons() ?>
+        <?= theme() ?>
         <?= librerias_tabla_bootstrap("1.13", false, false) ?>
 
     </head>
