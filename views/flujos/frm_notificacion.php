@@ -86,11 +86,14 @@ if (empty($idflujo)) {
         <?= librerias_arboles_ft("2.24") ?>
         <?= dropzone() ?>
 
+        <script type="text/javascript" src="js/notificaciones.js" ></script>
+
     </head>
     <body>
 
         <div class="container">
              <form id="notificationForm">
+                <input type="hidden" id="form_uuid_notif" value="<?= uniqid() ?>">
                 <input type="hidden" name="idnotificacion" id="idnotificacion" value="<?= $idnotificacion ?>">
                 <fieldset>
                     <legend>Definiendo las notificaciones</legend>
@@ -184,6 +187,7 @@ if (empty($idflujo)) {
                             <input type="hidden" id="anexos_notificacion" name="anexos_notificacion" value="">
                             <label for="dropzone">Adjuntar anexos preestablecidos que se enviar&aacute;n en cada notificaci&oacute;n</label>
                         </div>
+
                         <div class="col col-md-9">
                             <div id="dropzone" class="dropzone" data-campo="anexos_notificacion" data-multiple="multiple">
                                 <div class="dz-message"><span>Haga clic para elegir un archivo o Arrastre acá el archivo.</span></div>

@@ -107,7 +107,15 @@ $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="mostrar_codigo_flujo" name="mostrar_codigo" value="<?= $datos["mostrar_codigo"] ?>">
+                            <input type="checkbox" class="form-check-input" id="mostrar_codigo_flujo" name="mostrar_codigo"
+                            <?php
+                            if(isset($datos) && isset($datos["mostrar_codigo"])) {
+                                echo (!empty($datos["mostrar_codigo"]) ? " checked" : " ");
+                            } else {
+                                echo " ";
+                            }
+                            ?>
+                            >
                             <label class="form-check-label" for="mostrar_codigo_flujo">Mostrar código en el nombre del Formato</label>
                         </div>
                     </div>
@@ -157,6 +165,14 @@ $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
                 //var idflujo = $("#idflujo").val();
                 if (idflujo && idflujo != "") {
                     formData.append('idflujo', idflujo);
+                }
+                let mostar_codigo = formData.get("mostrar_codigo");
+                if(!mostar_codigo) {
+                	formData.append("mostrar_codigo", 0);
+                } else if(mostar_codigo == "on") {
+                	formData.append("mostrar_codigo", 1);
+                } else {
+                	formData.append("mostrar_codigo", 0);
                 }
                 //TODO: para depurar los datos
                 /*for (var pair of formData.entries()) {
