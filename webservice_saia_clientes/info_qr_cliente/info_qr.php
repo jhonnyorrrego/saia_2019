@@ -4,7 +4,9 @@ include_once ('define.php');
 
 $cliente = new nusoap_client(SERVIDOR_INFO_QR);
 $retorno = $cliente -> call('generar_html_info_qr', array(json_encode($_REQUEST["key_cripto"])));
+
 $array = json_decode($retorno, true);
+
 $table = '';
 $logo = '';
 $table2 = '';

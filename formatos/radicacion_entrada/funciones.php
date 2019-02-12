@@ -546,7 +546,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
     }
 
     </style>
-        <div class="row px-2">
+        <div class="row">
             <div class="col-md-12">
                 <table class="table table-condensed" style="width: 100%; text-align:left;" border="0" cellspacing="0">
                     <thead>
@@ -558,7 +558,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
                 </table>
             </div>
         </div>
-        <div class="row px-2">
+        <div class="row">
             <div class="col-md-12">
                 <table class="table table-condensed" style="width: 100%;margin-top: 2%;margin-bottom: 2%;" border="0" cellspacing="0">
                 <thead>';
@@ -589,9 +589,9 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc) {
                         $entrega = ($datos[0]["tipo_mensajeria"] == 1) ? "Si" : "No";
                         $tabla .= "
                             <tr>
-                            <td style='border:none;'><strong>TIPO DE ORIGEN:</strong></td>
-                            <td style='border:none;'>" .mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1). "</td>
-                            <td style='border:none;'><strong>REQUIERE SERVICIO DE RECOGIDA?:</strong></td>
+                            <td class='pr-0' style='border:none;width: 23%;'><strong>TIPO DE ORIGEN:</strong></td>
+                            <td style='border:none;width: 23%;'>" .mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1). "</td>
+                            <td style='border:none;width: 23%;'><strong>REQUIERE SERVICIO DE RECOGIDA?:</strong></td>
                             <td style='border:none;'>" . $recogida . "</td>
                         </tr>
                         <tr>
@@ -660,9 +660,20 @@ function mostrar_copia_electronica($idformato, $iddoc) {
     if ($datos[0]['tipo_destino'] == 2) {//INTERNO
         $info = mostrar_valor_campo('copia_a', $idformato, $iddoc, 1);
         if ($info) {
-            $tabla = '<table class="table table-bordered" style="width: 100%;" border="1">';
-            $tabla .= '<tr><td><b>Copia Electr&oacute;nica a:</b></td> <td>' . $info . '</td></tr>';
-            $tabla .= '</table>';
+            $tabla = '<style>
+        .table.table-condensed thead tr td {
+        padding-top: 2px;
+        padding-bottom: 2px;            
+    }
+    .table.table-condensed {
+        table-layout: auto;
+    }
+
+    </style>';
+            $tabla .= '<div class="row px-2">
+            <div class="col-md-12"><table class="table table-condensed" style="width: 100%; text-align:left;" border="0" cellspacing="0"><thead>';
+            $tabla .= '<tr><td style="border:none;width: 100%;"><b>Copia Electr&oacute;nica a:&nbsp;&nbsp;&nbsp;</b>' . $info .'</td></tr>';
+            $tabla .= '</thead></table></div></div>';
         }
     }
     echo $tabla;

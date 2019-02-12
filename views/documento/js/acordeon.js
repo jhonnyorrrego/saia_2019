@@ -90,6 +90,7 @@ $(function () {
     }, false);
 
     function setSize() {
+        
         let sizeDocument = localStorage.getItem('breakpoint'); 
         if (sizeDocument == 'xs') {              
             setValores(sizeDocument);
@@ -131,10 +132,10 @@ $(function () {
                 sizeImg = sizeImg * 1.2;
             }
             else if (sizeImg <= 50 && sizeDocument == 'xs') {
-                sizeImg = sizeImg * 1.5;
+                sizeImg = sizeImg * 1.7;
             }
             else if (sizeImg <= 50 && sizeDocument == 'sm') {
-                sizeImg = sizeImg * 1.7;
+                sizeImg = sizeImg * 1.5;
             } else if (sizeImg <= 50 && sizeDocument == 'md') {
                 sizeImg = sizeImg * 1.4;
             }
