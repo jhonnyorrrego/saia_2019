@@ -92,21 +92,11 @@ $(function () {
     function setSize() {
         
         let sizeDocument = localStorage.getItem('breakpoint'); 
-        if (sizeDocument == 'xs') {              
-            setValores(sizeDocument);
-        }
-        if (sizeDocument == 'sm') {
-            setValores(sizeDocument);
-        }
-        if (sizeDocument == 'lg') {
-            setValores(sizeDocument);
-        }
-        if (sizeDocument == 'md') {
-            setValores(sizeDocument);
-        }
+        setValores(sizeDocument);
     }
 
     function setValores(sizeDocument){
+       
         var xsFont = parseFloat(sizeFont);
 
         if(sizeDocument == 'sm'){
@@ -128,16 +118,18 @@ $(function () {
             var sizeImg = parseFloat($(this).attr("width"));          
             if (sizeImg >= 50 && sizeDocument != 'xl'){
                 sizeImg = sizeImg * 1.1;
+            }else if (sizeImg <= 50 && sizeDocument == 'xl') {
+                sizeImg = sizeImg * 0.8;
             }else if(sizeImg <= 50 && sizeDocument =='lg'){
                 sizeImg = sizeImg * 1.2;
             }
             else if (sizeImg <= 50 && sizeDocument == 'xs') {
-                sizeImg = sizeImg * 1.7;
+                sizeImg = sizeImg * 1.3;
             }
             else if (sizeImg <= 50 && sizeDocument == 'sm') {
-                sizeImg = sizeImg * 1.5;
-            } else if (sizeImg <= 50 && sizeDocument == 'md') {
                 sizeImg = sizeImg * 1.4;
+            } else if (sizeImg <= 50 && sizeDocument == 'md') {
+                sizeImg = sizeImg * 1.5;
             }
             $(this).css("width", sizeImg + "%");
         });
