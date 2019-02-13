@@ -12,7 +12,13 @@ while($max_salida > 0) {
 include_once ($ruta_db_superior . "db.php");
 
 if (!@$_SESSION["LOGIN" . LLAVE_SAIA]) {
-	logear_funcionario_webservice("radicador_web");
+    if(function_exists("logear_funcionario_webservice")) {
+    	logear_funcionario_webservice("radicador_web");
+    } else {
+        $GLOBALS['usuactual'] = "radicador_web";
+        $_SESSION["LOGIN" . LLAVE_SAIA] = "radicador_web";
+        $_SESSION["conexion_remota"] = 1;
+    }
 }
 
 class Digitalizacion {
