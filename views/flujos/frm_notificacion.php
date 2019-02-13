@@ -216,7 +216,7 @@ if (empty($idflujo)) {
 
         <div class="container">
             <div class="row">
-                <div class="dropdown">
+                <div class="dropdown" id="divDdDestinatario">
                     <button class="btn btn-warning btn-sm dropdown-toggle" type="button" id="dropdownDestinatario" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Adicionar destinatario
                     </button>
@@ -285,12 +285,18 @@ if (empty($idflujo)) {
                 if (!idflujo) {
                     idflujo = <?= $idflujo ?>;
                 }
+
+                let idnotificacion = $("#idnotificacion").val();
+                if(idnotificacion && idnotificacion > 0) {
+                   $("#divDdDestinatario").toggleClass("invisible");
+                }
+
                 //console.log("notificacion", "idflujo", idflujo);
                 //var $table = $('#tabla_notificaciones');
                 $("#tabla_destinatarios2").bootstrapTable();
 
                 $(".tipo1").click(function () {
-                    var idnotificacion = $("#idnotificacion").val();
+                    let idnotificacion = $("#idnotificacion").val();
                     //console.log(idnotificacion);
                     var $iframe = $('#frameTipoNotificacion');
                     var url = "<?= $ruta_db_superior ?>views/flujos/modal_persona_saia.php?idnotificacion=" + idnotificacion;
@@ -304,7 +310,7 @@ if (empty($idflujo)) {
                             $('#modalTipoNotificacion').modal('show');
                         }
                     } else {
-                        var idnotificacion = guardarNotificacion();
+                        idnotificacion = guardarNotificacion();
                         if (idnotificacion) {
                             if ($iframe.length) {
                                 $iframe.attr('src', url);
@@ -450,6 +456,9 @@ if (empty($idflujo)) {
                                     pk = response.data.pk;
                                     $("#idnotificacion").val(pk);
                                     parent.postMessage({accion: "recargarTabla", id: pk}, "*");
+                                    if(pk && pk > 0) {
+                                        $("#divDdDestinatario").toggleClass("invisible");
+                                    }
                                 } else {
                                     top.notification({type: "error", message: response.message});
                                 }

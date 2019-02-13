@@ -60,7 +60,8 @@ $tabLinks = ["flow_info" => "flow_info.php",
 
         <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/jspanel.js"></script>
         <!-- optionally load jsPanel extensions -->
-         <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/extensions/modal/jspanel.modal.js"></script>
+        <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/extensions/modal/jspanel.modal.js"></script>
+        <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/extensions/hint/jspanel.hint.js"></script>
 
 
     </head>
@@ -94,7 +95,6 @@ $tabLinks = ["flow_info" => "flow_info.php",
 
         <script type="text/javascript" id="smain" data-idflujo="<?= $_REQUEST["idflujo"] ?>">
             var lista_archivos = new Object();
-
 // Create IE + others compatible event handler
             var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
             var eventer = window[eventMethod];
@@ -102,6 +102,8 @@ $tabLinks = ["flow_info" => "flow_info.php",
 
 // Listen to message from child window
             eventer(messageEvent, function (e) {
+                let idflujo = $("script[data-idflujo]").data("idflujo");
+
                 console.log('Mensaje recibido!:  ', e.data);
                 let datos = e.data;
                 if (datos.accion == "recargarTabla") {

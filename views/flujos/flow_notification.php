@@ -88,7 +88,11 @@ if (isset($_REQUEST["idflujo"])) {
     //$table.bootstrapTable();
 
     $(function () {
-        var idflujo = $("script[data-idflujo]").data("idflujo");
+        if (typeof idflujo === 'undefined') {
+            var idflujo = $("script[data-idflujo]").data("idflujo");
+        } else {
+            idflujo = $("script[data-idflujo]").data("idflujo");
+        }
         console.log("notificaciones", "idflujo", idflujo);
 
         $("#crearNotificacion").click(function (event, idnotificacion) {
@@ -106,11 +110,13 @@ if (isset($_REQUEST["idflujo"])) {
             //$("#notificacion_frm").toggle();
         });
 
+        $(document).off("click", ".boton_editar_notificacion");
         $(document).on("click", ".boton_editar_notificacion", function () {
             var id = $(this).data("idnotificacion");
             $("#crearNotificacion").trigger("click", id);
         });
 
+        $(document).off("click", ".boton_eliminar_notificacion");
         $(document).on("click", ".boton_eliminar_notificacion", function () {
             var id = $(this).data("idnotificacion");
 
