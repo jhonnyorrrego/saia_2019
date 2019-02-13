@@ -111,17 +111,14 @@ class Files {
             $(this).parent().find('.file_option').toggleClass('d-none');
 
             switch ($(this).data('type')) {
-                case 'edit':
-                    Files.edit($(this).data('key'));
-                    break;
                 case 'upload':
-                    Files.upload($(this).data('key'));
+                    Files.upload($(this).data('id'));
                     break;
                 case 'delete':
-                    Files.delete($(this).data('key'));
+                    Files.delete($(this).data('id'));
                     break;
                 case 'access':
-                    Files.access($(this).data('key'));
+                    Files.access($(this).data('id'));
                     break;
             }
         });
@@ -205,7 +202,6 @@ class Files {
     static OptionButttons(value, row, index) {
         return [
             `<span class="file_option fa fa-chevron-circle-down cursor f-20"><br></span>`,
-            `<span data-type="edit" data-id="${row.id}" class="file_option fa fa-edit cursor f-20 d-none"><br></span>`,
             `<span data-type="upload" data-id="${row.id}" class="file_option fa fa-cloud-upload cursor f-20 d-none"><br></span>`,
             `<span data-type="delete" data-id="${row.id}" class="file_option fa fa-trash cursor f-20 d-none"><br></span>`,
             `<span data-type="access" data-id="${row.id}" class="file_option fa fa-lock cursor f-20 d-none"><br></span>`,
@@ -249,10 +245,7 @@ class Files {
     static isObject(item) {
         return (item && typeof item === 'object' && !Array.isArray(item));
     }
-
-    static edit(key) {
-        alert(key);
-    }
+    
     static upload(key) {
         alert(key);
     }

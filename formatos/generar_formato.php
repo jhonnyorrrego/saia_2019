@@ -1639,8 +1639,6 @@ class GenerarFormato
             $includes .= '<?= pace() ?>
                         <?= jquery() ?>
                         <?= bootstrap() ?>
-                        <?= breakpoint() ?>
-                        <?= toastr() ?>
                         <?= icons() ?>
                         <?= moment() ?>';
             $includes .= "<?= validate() ?>";
