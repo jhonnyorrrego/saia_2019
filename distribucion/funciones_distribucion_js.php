@@ -21,7 +21,7 @@ include_once ($ruta_db_superior . "librerias_saia.php");
         $("#filtro_mensajero_distribucion").select2();
         $("#opciones_acciones_distribucion").select2();
         $("#filtro_ventanilla_radicacion").select2();
-        
+
         //Mensajero - class= select_mensajeros_ditribucion
         $(document).on('change', '.select_mensajeros_ditribucion', function () {
             var mensajero = $(this).val();
@@ -46,12 +46,11 @@ include_once ($ruta_db_superior . "librerias_saia.php");
             });
         });
 
-
-
         //Acción - class= accion_distribucion - select id: opciones_acciones_distribucion
-        $(document).on('change', '#opciones_acciones_distribucion', function () {
+        $("#opciones_acciones_distribucion").on("select2:select", function (e) {
+            //$(document).on('change', '#opciones_acciones_distribucion', function () {
+            var valor = e.params.data.id;
 
-            var valor = $(this).val();
             if (valor == 'boton_generar_planilla') {
                 /*Genera Planilla de Mensajeros*/
                 var mensajero_temp = "";
@@ -59,7 +58,7 @@ include_once ($ruta_db_superior . "librerias_saia.php");
                 var registros_seleccionados = "";
                 var mensajero = "";
                 var error = 0;
-                
+
                 $("input[name=btSelectItem]").each(function () {
                     var checkbox = $(this);
                     if (checkbox.is(':checked') === true) {
@@ -254,6 +253,48 @@ include_once ($ruta_db_superior . "librerias_saia.php");
 <?php $componente = $_REQUEST['idbusqueda_componente']; ?>
                 var componente = '<?php echo($componente); ?>';
                 window.location.href = "<?php echo $ruta_db_superior; ?>pantallas/busquedas/consulta_busqueda_tabla.php?idbusqueda_componente=" + componente + "&variable_busqueda=" + tipo_origen;
+            }
+            var elemento = e.params.data.element;
+            if ($(elemento).hasClass("select_mensajeros_ditribucion")) {
+
+                var mensajero = $(this).val();
+                var registros_seleccionados = "";
+                $("input[name=btSelectItem]").each(function () {
+                    var checkbox = $(this);
+                    if (checkbox.is(':checked') === true) {
+                        var iddistribucion = $(this).val();
+                        registros_seleccionados += iddistribucion + ",";
+                    }
+                });
+
+                registros_seleccionados = registros_seleccionados.substring(0, registros_seleccionados.length - 1);
+                if (registros_seleccionados == "") {
+                    top.notification({
+                        message: "No ha seleccionado ninguna distribuci&oacute;n",
+                        type: "warning",
+                        duration: "3500"
+                    });
+                } else {
+                    $.ajax({
+                        type: "POST",
+                        dataType: 'json',
+                        data: {
+                            mensajero: mensajero,
+                            iddistribucion: registros_seleccionados,
+                            ejecutar_accion: 'cambiar_mensajero_distribucion'
+                        },
+                        url: '<?php echo($ruta_db_superior); ?>distribucion/ejecutar_acciones_distribucion.php',
+                        success: function (data) {
+                            if (data.exito) {
+                                notificacion_saia('Mensajero asignado exitosamente', 'success', '', 4000);
+                            } else {
+                                notificacion_saia(data.msn, 'error', '', 4000);
+                            }
+                            window.location.reload();
+                        }
+                    });
+                }
+
             }
             //FIN FILTRO TIPO ORIGEN DEL DOCUMENTO
 
