@@ -105,7 +105,7 @@ include_once($ruta_db_superior . "db.php");
                             }
                             $datos_busqueda[0]["busqueda_avanzada"] .= 'idbusqueda_componente=' . $datos_busqueda[0]["idbusqueda_componente"];
                             ?>
-                            <button class="pull-left btn btn-sm btn-complete kenlace_saia" titulo="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']); ?>" title="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']); ?>" conector="iframe" enlace="<?php echo($datos_busqueda[0]['busqueda_avanzada']); ?>">B&uacute;squeda &nbsp;</button>
+                            <button class="btn btn-secondary kenlace_saia" titulo="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']); ?>" title="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']); ?>" conector="iframe" enlace="<?php echo($datos_busqueda[0]['busqueda_avanzada']); ?>"><i class="fa fa-search"></i></button>
                             <?php
                         }
                         $tiene_acciones = !empty($datos_busqueda[0]["acciones_seleccionados"]);
@@ -137,9 +137,9 @@ include_once($ruta_db_superior . "db.php");
                         echo($funcion_menu[0](@$funcion_menu[1]));
                     }
                     ?>
-                    <button class="btn btn-sm btn-complete exportar_reporte_saia" enlace="pantallas/documento/busqueda_avanzada_documento.php" title="Exportar reporte" id="boton_exportar_excel" style="">Exportar</button>
+                    <button class="btn btn-secondary exportar_reporte_saia" enlace="pantallas/documento/busqueda_avanzada_documento.php" title="Descargar" id="boton_exportar_excel" style=""><i class="fa fa-download"></i></button>
                 
-                    <div class="pull-right" valign="middle"><iframe name="iframe_exportar_saia" id="iframe_exportar_saia" allowtransparency="1" frameborder="0" framespacing="2px" scrolling="no" width="100%" src=""  hspace="0" vspace="0" height="40px"></iframe></div>
+                    <div class="pull-right" valign="middle"><iframe name="iframe_exportar_saia" id="iframe_exportar_saia" allowtransparency="1" frameborder="0" framespacing="2px" scrolling="no" width="10%" src=""  hspace="0" vspace="0" height="40px"></iframe></div>
                     <?php
                     $llave = null;
                     preg_match("/(\w*)\.(\w*)/", $datos_busqueda[0]["llave"], $valor_campos);
@@ -195,6 +195,7 @@ include_once($ruta_db_superior . "db.php");
                             } else {
                                 $ordenable = 'data-sortable="true"';
                             }
+                            
                             echo ('<th data-field="' . $dato_campo . '" data-align="' . $detalle_info[2] . '" ' . $ordenable . '>' . $detalle_info[0] . '</th>');
                         }
                         ?>
@@ -272,7 +273,7 @@ include_once($ruta_db_superior . "db.php");
             search: false,
             cardView: false,
             pageList: [5, 10, 25, 50, 100],
-            paginationVAlign: 'top',
+            paginationVAlign: 'bottom',
             showColumns: true,
             maintainSelected: true,
             idField: llave,
