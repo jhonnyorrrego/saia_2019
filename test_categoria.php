@@ -63,8 +63,7 @@ if($papas["numcampos"])
     echo("<item style=\"font-family:verdana; font-size:7pt;\" ");
 	if($tipo!=1){
     	echo("text=\"".htmlspecialchars($papas[$i]["nombre"])." \" id=\"-1\" nocheckbox=\"1\" >");
-	}
-	else{
+	}else{
 		$estado='';
 		if($papas[$i]["estado"]==1){
 			$estado=' (Activo)';

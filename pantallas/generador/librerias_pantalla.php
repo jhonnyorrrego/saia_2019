@@ -556,12 +556,33 @@ function eliminar_datos_clase_padre($idpantalla, $clase) {
     }
 }
 
+function buscarPapaCategoria($idcategoriaFormato)
+{
+    
+    if (is_array($idcategoriaFormato) !== false) {
+        $idcategoriaFormato = implode(",", $idcategoriaFormato);
+    }
+    $exit = $exit + 1;
+    if ($exit > 20) {
+        return false;
+    }
+    $categoriaFormato = busca_filtro_tabla("", "categoria_formato", "idcategoria_formato in(" . $idcategoriaFormato . ") and cod_padre<>0", "", $conn);
+
+    if ($categoriaFormato["numcampos"] > 0 && $categoriaFormato[0]["cod_padre"] > 0) {
+        $padre = busca_filtro_tabla("", "categoria_formato", "idcategoria_formato=" . $categoriaFormato[0]["cod_padre"], "", $conn);
+        $id_padre = buscarPapaCategoria($padre[0]["idcategoria_formato"]);
+        return $id_padre;
+    } else {
+        return $idcategoriaFormato;
+    }
+}
+
 function editar_datos_formato($datos, $tipo_retorno = 1) {
     global $ruta_db_superior;
-    $retorno = array(
+    $retorno = [
         "mensaje" => "Error al tratar de generar el adicionar de la pantalla",
         "exito" => 0
-    );
+    ];
     if (!$datos["idformato"]) {
 
         $retorno["mensaje"] = "Error al tratar de editar un formato sin identificador ";
@@ -575,6 +596,13 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
         if ($buscar_formato["numcampos"]) {
             $datos["nombre"] = $buscar_formato[0]["nombre"];
         }
+    }
+    if($_REQUEST['fk_categoria_formato']){
+        $datos['fk_categoria_formato'] = buscarPapaCategoria($_REQUEST['fk_categoria_formato']);
+        $datos['fk_categoria_formato'] = $datos['fk_categoria_formato'] .",". $_REQUEST['fk_categoria_formato'];
+        $datos['fk_categoria_formato'] = explode(',', $datos['fk_categoria_formato']);
+        $datos['fk_categoria_formato'] = array_unique($datos['fk_categoria_formato']);
+        $datos['fk_categoria_formato'] = implode(",", $datos['fk_categoria_formato']);
     }
 
     $fieldList = array();

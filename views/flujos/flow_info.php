@@ -75,14 +75,14 @@ $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
         <legend>Informaci&oacute;n general</legend>
         <div class="row">
             <div class="col-sm-9">
-                <div class="form-group">
-                    <label class="etiqueta_campo" for="nombre_flujo">Nombre del proceso *</label>
+                <div class="form-group form-group-default">
+                    <label  for="nombre_flujo">Nombre del proceso *</label>
                     <input type="text" class="form-control" id="nombre_flujo" name="nombre" placeholder="Nombre del proceso" required value="<?= $datos["nombre"] ?>">
                 </div>
             </div>
             <div class="col-sm-3">
-                <div class="form-group">
-                    <label class="etiqueta_campo" for="version_flujo">Versi&oacute;n *</label>
+                <div class="form-group form-group-default">
+                    <label  for="version_flujo">Versi&oacute;n *</label>
                     <input type="text" class="form-control" id="version_flujo" name="version" required value="<?= $datos["version"] ?>">
                 </div>
             </div>
@@ -90,16 +90,16 @@ $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
 
         <div class="row">
             <div class="col-sm-9">
-                <div class="form-group">
-                    <label class="etiqueta_campo" for="descripcion_flujo">Descripci&oacute;n del Proceso</label>
+                <div class="form-group form-group-default">
+                    <label  for="descripcion_flujo">Descripci&oacute;n del Proceso</label>
                     <textarea class="form-control" id="descripcion_flujo" name="descripcion"><?= $datos["descripcion"] ?></textarea>
                 </div>
             </div>
             <div class="col-sm-3">
                 <div class="row">
                     <div class="col-sm-12">
-                        <div class="form-group">
-                            <label class="etiqueta_campo" for="codigo_flujo">C&oacute;digo *</label>
+                        <div class="form-group form-group-default">
+                            <label  for="codigo_flujo">C&oacute;digo *</label>
                             <input type="text" class="form-control" id="codigo_flujo" name="codigo" required value="<?= $datos["codigo"] ?>">
                         </div>
                     </div>
@@ -107,7 +107,15 @@ $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="mostrar_codigo_flujo" name="mostrar_codigo" value="<?= $datos["mostrar_codigo"] ?>">
+                            <input type="checkbox" class="form-check-input" id="mostrar_codigo_flujo" name="mostrar_codigo"
+                            <?php
+                            if(isset($datos) && isset($datos["mostrar_codigo"])) {
+                                echo (!empty($datos["mostrar_codigo"]) ? " checked" : " ");
+                            } else {
+                                echo " ";
+                            }
+                            ?>
+                            >
                             <label class="form-check-label" for="mostrar_codigo_flujo">Mostrar código en el nombre del Formato</label>
                         </div>
                     </div>
@@ -116,26 +124,26 @@ $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
         </div>
 
         <div class="form-group">
-            <label class="etiqueta_campo" for="expediente_flujo">Expediente preestablecido</label>
+            <label for="expediente_flujo">Expediente preestablecido</label>
             <input type="text" id="expediente_flujo" name="expediente" class="demo-default"
                    placeholder="Puede elegir la ubicaci&oacute;n preestablecidad para todos los registros" value="<?= $datos["expediente"] ?>">
         </div>
 
         <div class="form-group">
-            <label class="etiqueta_campo" for="formato_flujo">Elija los formatos que intervienen en este proceso*</label>
+            <label for="formato_flujo">Elija los formatos que intervienen en este proceso*</label>
 <?= $arbol->generar_html() ?>
         </div>
 
         <div class="form-group">
             <input type="hidden" id="anexos_flujo" name="anexos_flujo" value="">
-            <label class="etiqueta_campo" for="dropzone">Adjuntar documentaci&oacute;n del proceso</label>
+            <label  for="dropzone">Adjuntar documentaci&oacute;n del proceso</label>
             <div id="dropzone" class="dropzone" data-campo="anexos_flujo" data-multiple="multiple">
                 <div class="dz-message"><span>Haga clic para elegir un archivo o Arrastre acá el archivo.</span></div>
             </div>
         </div>
 
         <div class="form-group">
-            <label class="etiqueta_campo" for="info_flujo">Instrucciones o políticas adicionales del proceso</label>
+            <label  for="info_flujo">Instrucciones o políticas adicionales del proceso</label>
             <textarea class="form-control" id="info_flujo" name="info"><?= $datos["info"] ?></textarea>
         </div>
 
@@ -157,6 +165,14 @@ $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
                 //var idflujo = $("#idflujo").val();
                 if (idflujo && idflujo != "") {
                     formData.append('idflujo', idflujo);
+                }
+                let mostar_codigo = formData.get("mostrar_codigo");
+                if(!mostar_codigo) {
+                	formData.append("mostrar_codigo", 0);
+                } else if(mostar_codigo == "on") {
+                	formData.append("mostrar_codigo", 1);
+                } else {
+                	formData.append("mostrar_codigo", 0);
                 }
                 //TODO: para depurar los datos
                 /*for (var pair of formData.entries()) {

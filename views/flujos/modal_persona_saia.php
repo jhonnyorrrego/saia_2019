@@ -34,6 +34,7 @@ if (!empty($_REQUEST["idnotificacion"])) {
         <?= jquery() ?>
         <?= bootstrap() ?>
         <?= icons() ?>
+        <?= theme() ?>
         <?= bootstrapTable() ?>
 
     </head>
