@@ -21,7 +21,6 @@ include_once($ruta_db_superior."librerias_saia.php");
 include_once($ruta_db_superior."pantallas/documento/librerias.php");
 
 echo(estilo_bootstrap("3.2"));
-echo estilo_tabla_bootstrap("1.11");
 
 $funciones=array();
 $datos_componente=$_REQUEST["idbusqueda_componente"];
@@ -29,7 +28,7 @@ $datos_busqueda=busca_filtro_tabla("","busqueda A,busqueda_componente B","A.idbu
 echo(librerias_jquery("1.8"));
 echo(librerias_bootstrap("3.2"));
 
-echo librerias_tabla_bootstrap("1.11", false, true);
+echo librerias_tabla_bootstrap(true);
 
 if($datos_busqueda[0]["ruta_libreria"]){
   $librerias=array_unique(explode(",",$datos_busqueda[0]["ruta_libreria"]));

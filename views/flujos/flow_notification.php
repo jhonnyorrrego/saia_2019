@@ -15,9 +15,7 @@ include_once $ruta_db_superior . 'librerias_saia.php';
 include_once $ruta_db_superior . 'controllers/autoload.php';
 require_once ($ruta_db_superior . "arboles/crear_arbol_ft.php");
 
-echo estilo_tabla_bootstrap("1.13");
-
-echo librerias_tabla_bootstrap("1.13", false, false);
+echo bootstrapTable();
 
 //$opciones_arbol = array("keyboard" => true, "onNodeClick" => "evento_click", "busqueda_item" => 1);
 $opciones_arbol = array("keyboard" => true, "selectMode" => 2);
