@@ -3260,11 +3260,9 @@ function consultarPermisosPerfil(){
 function permisosFormato($idformato,$idperfil,$nombreFormato){
     global $conn;
     $retorno = ["exito" => 0, "mensaje" => ''];
-    $consultaModulo = busca_filtro_tabla("idmodulo","modulo","nombre='{$nombreFormato}' and enlace='formatos/mostrar_{$nombreFormato}.php' ","",$conn);
-    
+    $consultaModulo = busca_filtro_tabla("idmodulo","modulo","nombre='crear_{$nombreFormato}' and enlace='formatos/adicionar_{$nombreFormato}.php' ","",$conn);
     if($consultaModulo['numcampos']){
         $consultarPermiso = busca_filtro_tabla("","permiso_perfil","modulo_idmodulo={$consultaModulo[0]['idmodulo']} and perfil_idperfil = {$idperfil}","",$conn);
-
         if($consultarPermiso['numcampos']){
             $retorno['exito'] = 0;
             $retorno['mensaje'] = 'El permiso ya existe asignado';
@@ -3281,7 +3279,7 @@ function permisosFormato($idformato,$idperfil,$nombreFormato){
 function eliminarPermisoFormato($idformato, $idperfil, $nombreFormato){
     global $conn;
     $retorno = ["exito" => 0, "mensaje" => ''];
-    $consultaModulo = busca_filtro_tabla("idmodulo", "modulo", "nombre='{$nombreFormato}' and enlace='formatos/mostrar_{$nombreFormato}.php' ", "", $conn);
+    $consultaModulo = busca_filtro_tabla("idmodulo", "modulo", "nombre='crear_{$nombreFormato}' and enlace='formatos/adicionar_{$nombreFormato}.php' ", "", $conn);
     if ($consultaModulo['numcampos']) {
         $consultarPermiso = busca_filtro_tabla("", "permiso_perfil", "modulo_idmodulo={$consultaModulo[0]['idmodulo']}", "", $conn);
         if ($consultarPermiso['numcampos']) {
