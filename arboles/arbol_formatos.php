@@ -96,9 +96,7 @@ function llena_formato($id, $nivel = 0, $seleccionados = array(), $filtrar = nul
 
             $item["expanded"] = true;
             
-            if (in_array($papas[$i]["idformato"],$seleccionados)) {           
-                $item["selected"] = true;
-            }
+            
           
             $item["title"] = $papas[$i]["etiqueta"];
             $item["key"] = $papas[$i]["idformato"];
