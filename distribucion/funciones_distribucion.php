@@ -610,8 +610,8 @@ function retornar_origen_destino_distribucion($tipo, $valor) {
     global $conn;
 
     if ($tipo == 1) {//iddependencia_cargo
-        $datos = busca_filtro_tabla("nombres,apellidos", "vfuncionario_dc", "iddependencia_cargo=" . $valor, "", $conn);
-        $nombre = $datos[0]['nombres'] . ' ' . $datos[0]['apellidos'];
+        $datos = busca_filtro_tabla("nombres,apellidos,login", "vfuncionario_dc", "iddependencia_cargo=" . $valor, "", $conn);
+        $nombre = $datos[0]['nombres'] . ' ' . $datos[0]['apellidos'] . ' ('.$datos[0]['login'].')';
     } else {//iddatos_ejecutor
         $datos = busca_filtro_tabla("nombre", "ejecutor a, datos_ejecutor b", "a.idejecutor=b.ejecutor_idejecutor AND b.iddatos_ejecutor=" . $valor, "", $conn);
         $nombre = $datos[0]['nombre'];

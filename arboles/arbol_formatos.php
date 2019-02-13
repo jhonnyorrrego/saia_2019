@@ -85,9 +85,6 @@ function llena_formato($id, $nivel = 0, $seleccionados = array(), $filtrar = nul
     } else {
         $papas = busca_filtro_tabla("idformato, etiqueta,descripcion_formato,version", "formato", "item <> 1 AND cod_padre=" . $id . $adicionales. $formatoExcluido, "etiqueta ASC", $conn);
     }
-    if(isset($_REQUEST['seleccionado'])){
-        $seleccionados = $_REQUEST['seleccionado'];
-    }
     $resp = array();
     if ($papas["numcampos"]) {
         for ($i = 0; $i < $papas["numcampos"]; $i++) {
@@ -99,7 +96,7 @@ function llena_formato($id, $nivel = 0, $seleccionados = array(), $filtrar = nul
 
             $item["expanded"] = true;
             
-            if ($papas[$i]["idformato"] == $seleccionados) {           
+            if (in_array($papas[$i]["idformato"],$seleccionados)) {           
                 $item["selected"] = true;
             }
           

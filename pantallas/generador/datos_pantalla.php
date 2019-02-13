@@ -45,7 +45,7 @@ if ($_REQUEST['idformato']) {
     $adicional_categoria = "&seleccionado=" . $categoria;
   }
 
-  $origen = array("url" => "arboles/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("id" => $_REQUEST['id'], "excluido" => $_REQUEST['idformato'], "seleccionado" => $cod_padre, "seleccionable" => "radio"));
+  $origen = array("url" => "arboles/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("id" => $_REQUEST['id'], "excluido" => $_REQUEST['idformato'], "seleccionados" => $cod_padre, "seleccionable" => "radio"));
   $opciones_arbol = array("keyboard" => true, "selectMode" => 1, "seleccionarClick" => 1, "busqueda_item" => 1, "checkbox" => radio);
   $extensiones = array("filter" => array());
   $arbol = new ArbolFt("codigo_padre_formato", $origen, $opciones_arbol, $extensiones, $validaciones);

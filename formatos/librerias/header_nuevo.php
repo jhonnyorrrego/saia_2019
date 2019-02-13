@@ -190,5 +190,5 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
                     echo crear_encabezado_pie_pagina(stripslashes($encabezado[0][0]), $iddocumento, $formato[0]["idformato"], $pagina);
                 } ?>
             </div>
-            <div id="pag_content-0" class="page_content mt-0">
+            <div id="pag_content-0" class="page_content">
                 <div id="page_overflow">
