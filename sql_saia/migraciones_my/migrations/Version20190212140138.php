@@ -36,8 +36,7 @@ final class Version20190212140138 extends AbstractMigration
         $anexo_log = $schema->createTable('anexo_log');
         $anexo_log->addColumn('idanexo_log', 'integer', [
             'notnull' => true,
-            'length' => 11,
-            'autoincrement' => true
+            'length' => 11
         ]);
         $anexo_log->addColumn('fk_log', 'integer', [
             'notnull' => true,
