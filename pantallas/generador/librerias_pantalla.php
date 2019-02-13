@@ -3261,6 +3261,7 @@ function permisosFormato($idformato,$idperfil,$nombreFormato){
     global $conn;
     $retorno = ["exito" => 0, "mensaje" => ''];
     $consultaModulo = busca_filtro_tabla("idmodulo","modulo","nombre='{$nombreFormato}' and enlace='formatos/mostrar_{$nombreFormato}.php' ","",$conn);
+    
     if($consultaModulo['numcampos']){
         $consultarPermiso = busca_filtro_tabla("","permiso_perfil","modulo_idmodulo={$consultaModulo[0]['idmodulo']} and perfil_idperfil = {$idperfil}","",$conn);
 
@@ -3268,7 +3269,7 @@ function permisosFormato($idformato,$idperfil,$nombreFormato){
             $retorno['exito'] = 0;
             $retorno['mensaje'] = 'El permiso ya existe asignado';
         }else{
-            $guardarPermiso = "INSERT INTO permiso_perfil(modulo_idmodulo,perfil_idperfil,caracteristica_propio,caracteristica_grupo,caracteristica_total) VALUES ({$consultaModulo[0]['idmodulo']},{$idperfil["idperfil"]},'lame','lame','lame')";
+            $guardarPermiso = "INSERT INTO permiso_perfil(modulo_idmodulo,perfil_idperfil,caracteristica_propio,caracteristica_grupo,caracteristica_total) VALUES ({$consultaModulo[0]['idmodulo']},{$idperfil},'lame','lame','lame')";
             phpmkr_query($guardarPermiso);
             $retorno['exito'] = 1;
             $retorno['mensaje'] = 'Permiso asignado correctamente al formato';
