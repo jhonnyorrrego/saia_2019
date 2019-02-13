@@ -21,33 +21,29 @@ $response = [
 ];
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $order = AnexoTarea::getPrimaryLabel() . ' ' . $_REQUEST['sortOrder'];
-    $offset = ($_REQUEST['pageNumber']-1)  * $_REQUEST['pageSize'];
-    $limit = $offset + $_REQUEST['pageSize'] - 1; // se lo suman en sql2 ???
+    $params = new stdClass();
+    $params->order = Anexo::getPrimaryLabel() . ' ' . $_REQUEST['sortOrder'];
+    $params->offset = ($_REQUEST['pageNumber'] - 1) * $_REQUEST['pageSize'];
+    $params->limit = $params->offset + $_REQUEST['pageSize'] - 1; // se lo suman en sql2 ???
+    $params->task = $_REQUEST['task'];
 
-    $anexos = AnexoTarea::findAllByAttributes([
-        'fk_tarea' => $_REQUEST['task'],
-        'estado' => 1
-    ], [], $order, $offset, $limit);
+    $anexos = Tarea::findActiveFiles($params);
 
-    foreach ($anexos as $key => $AnexoTarea) {
-        $response ['rows'][] = [
-            'key' => $AnexoTarea->getPK(),
-            'icon' => $AnexoTarea->getIcon(),
-            'name' => $AnexoTarea->etiqueta,
-            'version' => $AnexoTarea->version,
-            'description' => $AnexoTarea->descripcion,
-            'class' => $AnexoTarea->getExtension(),
-            'user' => $AnexoTarea->getUser()->getName(),
-            'date' => $AnexoTarea->getDateAttribute('fecha'),
-            'size' => $AnexoTarea->getFileSize()
+    foreach ($anexos as $key => $Anexo) {
+        $response['rows'][] = [
+            'id' => $Anexo->getPK(),
+            'icono' => $Anexo->getIcon(),
+            'etiqueta' => $Anexo->etiqueta,
+            'version' => $Anexo->version,
+            'descripcion' => $Anexo->descripcion,
+            'extension' => $Anexo->extension,
+            'usuario' => $Anexo->getLastLog()->getUser()->getName(),
+            'fecha' => $Anexo->getLastLog()->getDateAttribute('fecha'),
+            'peso' => $Anexo->getFileSize()
         ];
     }
-    
-    $response['total'] = AnexoTarea::countRecords([
-        'fk_tarea' => $_REQUEST['task'],
-        'estado' => 1
-    ]);
+
+    $response['total'] = Tarea::countActiveFiles($params->task);
 }
 
 echo json_encode($response);

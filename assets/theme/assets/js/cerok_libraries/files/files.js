@@ -89,13 +89,13 @@ class Files {
 
     createBootstrapTable() {
         this._bootstrapTable = $('#table_files');
-        this._bt = this.getTable().bootstrapTable(this.options.bootstrapTable);
+        this._bootstrapTable.bootstrapTable(this.options.bootstrapTable);
     }
 
     createEvents() {
         let instance = this;
 
-        $('#upload_file').on('click', function () {console.log(1111);
+        $('#upload_file').on('click', function () {
             if (instance._loadedFiles.length) {
                 instance.save($('#file_description').val());
             } else {
@@ -107,22 +107,22 @@ class Files {
         });
 
         $(document).off('click', '.file_option');
-        $(document).on('click', '.file_option', function () {console.log(1123);
+        $(document).on('click', '.file_option', function () {
             $(this).parent().find('.file_option').toggleClass('d-none');
 
             switch ($(this).data('type')) {
                 case 'edit':
                     Files.edit($(this).data('key'));
-                break;
+                    break;
                 case 'upload':
                     Files.upload($(this).data('key'));
-                break;
+                    break;
                 case 'delete':
                     Files.delete($(this).data('key'));
-                break;
+                    break;
                 case 'access':
                     Files.access($(this).data('key'));
-                break;
+                    break;
             }
         });
     }
@@ -177,21 +177,24 @@ class Files {
                 classes: 'table table-sm table-hover mt-0',
                 theadClasses: 'thead-light',
                 columns: [
-                    { field: 'icon', title: '' },
-                    { field: 'name', title: 'nombre' },
-                    { field: 'description', title: 'descripcion' },
+                    { field: 'icono', title: '' },
+                    { field: 'etiqueta', title: 'nombre', editable: { mode: 'inline' } },
+                    { field: 'descripcion', title: 'descripcion', editable: { mode: 'inline' } },
                     { field: 'version', title: 'version' },
-                    { field: 'class', title: 'clase' },
-                    { field: 'user', title: 'responsable' },
-                    { field: 'date', title: 'incluido' },
-                    { field: 'size', title: 'tamaño' },
+                    { field: 'extension', title: 'clase' },
+                    { field: 'usuario', title: 'responsable' },
+                    { field: 'fecha', title: 'fecha' },
+                    { field: 'peso', title: 'tamaño' },
                     {
                         field: 'options',
                         title: '',
                         align: 'center',
                         formatter: Files.OptionButttons
                     }
-                ]
+                ],
+                onEditableSave: function (field, row, oldValue, $el) {
+                    console.log(arguments);
+                }
             },
             save: function (description, files) {
                 console.log(arguments);
@@ -202,10 +205,10 @@ class Files {
     static OptionButttons(value, row, index) {
         return [
             `<span class="file_option fa fa-chevron-circle-down cursor f-20"><br></span>`,
-            `<span data-type="edit" data-key="${row.key}" class="file_option fa fa-edit cursor f-20 d-none"><br></span>`,
-            `<span data-type="upload" data-key="${row.key}" class="file_option fa fa-cloud-upload cursor f-20 d-none"><br></span>`,
-            `<span data-type="delete" data-key="${row.key}" class="file_option fa fa-trash cursor f-20 d-none"><br></span>`,
-            `<span data-type="access" data-key="${row.key}" class="file_option fa fa-lock cursor f-20 d-none"><br></span>`,
+            `<span data-type="edit" data-id="${row.id}" class="file_option fa fa-edit cursor f-20 d-none"><br></span>`,
+            `<span data-type="upload" data-id="${row.id}" class="file_option fa fa-cloud-upload cursor f-20 d-none"><br></span>`,
+            `<span data-type="delete" data-id="${row.id}" class="file_option fa fa-trash cursor f-20 d-none"><br></span>`,
+            `<span data-type="access" data-id="${row.id}" class="file_option fa fa-lock cursor f-20 d-none"><br></span>`,
         ].join('');
     }
 
@@ -247,16 +250,16 @@ class Files {
         return (item && typeof item === 'object' && !Array.isArray(item));
     }
 
-    static edit(key){
+    static edit(key) {
         alert(key);
     }
-    static upload(key){
+    static upload(key) {
         alert(key);
     }
-    static delete(key){
+    static delete(key) {
         alert(key);
     }
-    static access(key){
+    static access(key) {
         alert(key);
     }
 }

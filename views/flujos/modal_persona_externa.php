@@ -30,12 +30,10 @@ if(!empty($_REQUEST["idnotificacion"])) {
 	<meta name="description" content="">
 
 
-<?= estilo_tabla_bootstrap("1.13") ?>
-
 <?= jquery() ?>
 <?= bootstrap() ?>
 <?= icons() ?>
-<?= librerias_tabla_bootstrap("1.13", false, false) ?>
+<?= bootstrapTable() ?>
 
 </head>
 <body>

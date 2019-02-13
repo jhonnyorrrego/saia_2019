@@ -24,9 +24,31 @@ $(function () {
             bootstrapTable: {
                 url: `${baseUrl}app/tareas/consulta_anexos.php`,
                 queryParams: function (queryParams) {
+                    queryParams.sortOrder = 'desc';
                     queryParams.task = params.id;
                     queryParams.key = localStorage.getItem('key');
                     return queryParams;
+                },
+                onEditableSave: function (field, row) {
+                    let data = {
+                        key: localStorage.getItem('key'),
+                        fileId: row.id,
+                        fields: {}
+                    };
+                    data.fields[field] = row[field];
+                    $.post(`${baseUrl}app/anexos/modificar.php`, data, function (response) {
+                        if (response.success) {
+                            top.notification({
+                                type: 'success',
+                                message: response.message,
+                            });
+                        } else {
+                            top.notification({
+                                type: 'error',
+                                message: response.message,
+                            });
+                        }
+                    }, 'json');
                 }
             },
             save: function (description, files) {
