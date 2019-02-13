@@ -62,16 +62,15 @@ if(!empty($_REQUEST["idnotificacion"])) {
 	<meta name="description" content="">
 
 
-<?= estilo_tabla_bootstrap("1.13") ?>
-
 <?= jquery() ?>
 <?= bootstrap() ?>
 <?= icons() ?>
+<?= theme() ?>
 
 <?= librerias_UI("1.12") ?>
 <?= librerias_arboles_ft("2.24")?>
 
-<?= librerias_tabla_bootstrap("1.13", false, false) ?>
+<?= bootstrapTable() ?>
 
 </head>
 <body>

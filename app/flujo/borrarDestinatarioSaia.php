@@ -29,7 +29,7 @@ if(empty($_REQUEST['fk_notificacion'])) {
  * data["fk_tipo_destinatario"] = tipodestinatario;
  */
 if($_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    if(!empty($_REQUEST['fk_notificacion']) && !empty($_REQUEST['fk_tipo_destinatario'])) {
+    if(!empty($_REQUEST['fk_tipo_destinatario'])) {
 
         /*data = {
             key: localStorage.getItem("key"),

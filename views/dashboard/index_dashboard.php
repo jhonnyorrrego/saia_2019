@@ -60,11 +60,9 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             });
             
             window.resizeIframe = function (){
-                let frameH = $(window).height();
-                let paginationH = $('.fixed-table-pagination').height();
-                let headerH = $('#header_list').height();
-                $(".fixed-table-container").height(frameH - paginationH - headerH);
-                $('#right_workspace').height(frameH);
+                let height = $(window).height() - $('#header_list').height();
+                $('#right_workspace').height($(window).height());
+                $('#table').bootstrapTable( 'resetView' , {height: height} );
             }
         });
     </script>

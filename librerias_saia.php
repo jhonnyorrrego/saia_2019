@@ -12,6 +12,7 @@ while ($max_salida > 0) {
 }
 
 include_once $raiz_saia . "db.php";
+include_once $raiz_saia . "assets/librerias.php";
 
 function librerias_jquery($version = "1.7.2")
 {
@@ -168,52 +169,11 @@ function estilo_bootstrap($version = "saia")
     return $texto;
 }
 
-function estilo_tabla_bootstrap($version = "1.13")
+function librerias_tabla_bootstrap($toolbar = false)
 {
-    global $raiz_saia;
-    switch ($version) {
-        case "1.13":
-            $version = "1.13.1";
-            break;
-        case "1.12":
-            $version = "1.12.1";
-            break;
-        case "1.11":
-            $version = "1.11.1";
-            break;
-        case "1.10":
-            $version = "1.10.1";
-            break;
-    }
-    $texto = '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/bootstrap_table/' . $version . '/bootstrap-table.css">';
-    return $texto;
-}
-
-function librerias_tabla_bootstrap($version = "1.13", $export = false, $avanzado = false)
-{
-    global $raiz_saia;
-    switch ($version) {
-        case "1.13":
-            $version = "1.13.1";
-            break;
-        case "1.12":
-            $version = "1.12.1";
-            break;
-        case "1.11":
-            $version = "1.11.1";
-            break;
-        case "1.10":
-            $version = "1.10.1";
-            break;
-    }
-    $texto = '<script type="text/javascript" src="' . $raiz_saia . 'css/bootstrap_table/' . $version . '/bootstrap-table.js"></script>';
-
-    $texto .= '<script src="' . $raiz_saia . 'css/bootstrap_table/' . $version . '/locale/bootstrap-table-es-ES.js"></script>';
-    if ($export) {
-        $texto .= '<script src="' . $raiz_saia . 'css/bootstrap_table/' . $version . '/extensions/export/bootstrap-table-export.js"></script>';
-    }
+    $texto = bootstrapTable();
     if ($avanzado) {
-        $texto .= '<script src="' . $raiz_saia . 'css/bootstrap_table/' . $version . '/extensions/toolbar/bootstrap-table-toolbar.js"></script>';
+        $texto .= '<script src="' . $raiz_saia . 'assets/theme/assets/plugins/bootstrap-table/extensions/toolbar/bootstrap-table-toolbar.min.js"></script>';
     }
 
     return $texto;

@@ -14,34 +14,19 @@ function jquery()
 
 /**
  * retorna script para cargar
- * jquery Mobile  v1.4.5 minificado
- */
-function jqueryMobile()
-{
-    global $ruta_db_superior;
-
-    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-mobile/jquery.mobile-1.4.5.min.css';
-    $css = '<link href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
-
-    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-mobile/jquery.mobile-1.4.5.min.js';
-    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
-
-    return $css . $js;
-}
-
-/**
- * retorna script para cargar
- * jquery ui  v1.11.1 minificado
+ * jquery ui  v1.12.1 minificado
  */
 function jqueryUi()
 {
     global $ruta_db_superior;
 
-    $route_js = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-ui/jquery-ui.min.js';
-    $route_css = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-ui/jquery-ui-1.10.1.custom.min.css';
-    $css = '<link type="text/css" href="' . $route_css . '" rel="stylesheet"/>';
-    $js = '<script type="text/javascript" src="' . $route_js . '"></script>';
-    return $css . "\n" . $js;
+    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-ui/jquery-ui.min.css';
+    $css = '<link href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
+
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/jquery-ui/jquery-ui.min.js';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+
+    return $css . $js;
 }
 
 /**
@@ -85,16 +70,36 @@ function bootstrapTable()
 {
     global $ruta_db_superior;
 
-    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/1.13/bootstrap-table.min.css';
+    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/bootstrap-table.min.css';
     $css = '<link href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
 
-    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/1.13/bootstrap-table.min.js';
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/bootstrap-table.min.js';
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
-    $locale = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/1.13/locale/bootstrap-table-es-ES.min.js';
+    $locale = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/locale/bootstrap-table-es-ES.min.js';
     $language = '<script src="' . $locale . '" type="text/javascript"></script>';
 
     return $css . $js . $language;
+}
+
+/**
+ * retorna los enlaces css , js y locale
+ * de bootstrap table editable
+ */
+function bootstrapTableEditable()
+{
+    global $ruta_db_superior;
+
+    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap4-editable/css/bootstrap-editable.css';
+    $css = '<link href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
+
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap4-editable/js/bootstrap-editable.min.js';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+
+    $btEditable = $ruta_db_superior . 'assets/theme/assets/plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.min.js';
+    $editable = '<script src="' . $btEditable . '" type="text/javascript"></script>';
+
+    return $css . $js . $editable;
 }
 
 /**
@@ -355,4 +360,21 @@ function bpmnViewer()
     $js = '<script type="text/javascript" src="' . $rutaJs . '"></script>';
 
     return $viewer;
+}
+
+/**
+ * retorna los enlaces para incluir 
+ * el dropzone  v5.5
+ * @return void
+ */
+function dropzone(){
+    global $ruta_db_superior;
+
+    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/dropzone/custom.css';
+    $css = '<link class="main-stylesheet" href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
+
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/dropzone/min/dropzone.min.js';
+    $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
+
+    return $css . $js;
 }

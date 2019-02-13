@@ -2,16 +2,16 @@ $(function () {
     let key = localStorage.getItem('key');
     let baseUrl = $('script[data-baseurl]').data('baseurl');
     let params = $('script[data-params]').data('params');
-
+    let sizeFont = 0;
     (function init() {
         getFormatInformation();    
         loadHeader();
+        
     })();
 
     $(document).off("click", ".new_add");
     $(document).on("click", ".new_add", function () {
-        let type = $(this).data('type');
-        
+        let type = $(this).data('type');       
         if (type == 'comunication' || type == 'process') {
             let param = type == 'comunication' ? 5 : 3;
             let title = type == 'comunication' ? 'Comunicaciones' : 'Tramites generales';
@@ -65,7 +65,9 @@ $(function () {
         }, function (response) {
             let route = baseUrl + response.data.ruta_mostrar
             $('#view_document').load(route,function(){
-                setSize();
+                sizeFont = $('#documento').find("p").css("font-size")                
+                setSize(); 
+                                            
             });
         }, 'json');
     }
@@ -79,29 +81,57 @@ $(function () {
             
         $('#document_header').load(route);
     }
+    
+
+    window.addEventListener("orientationchange", function () {
+        setTimeout(() => {
+            setSize();
+        }, 500);
+    }, false);
 
     function setSize() {
-        let sizeDocument = localStorage.getItem('breakpoint');
         
-            if (sizeDocument == 'xs') {
-                var sizeFont = parseFloat($('#documento').css("font-size"));
-                sizeFont = Math.round(sizeFont * 0.4);
-                var sizeEncabezado = parseFloat($(".page_margin_top").css('height'));
-                sizeEncabezado = Math.round(sizeEncabezado * 0.6);
-                var sizePie = parseFloat($(".page_content").css('height'));
-                sizePie = Math.round(sizePie * 0.600);
-                $(".page_margin_top").css('height', sizeEncabezado+"px");
-                $(".page_content").css('height', sizePie + "px");
-                $('#documento').css("font-size", sizeFont+"px");
-                $('#documento').find("img")
-                $('#documento').find("p").css("font-size", sizeFont+"px")
-                var contenidoImg = $("#documento").find("img");
-                contenidoImg.each(function (i) { 
-                    var sizeImg = parseFloat($(this).attr("width")); 
-                    sizeImg = sizeImg * 2;
-                    $(this).css("width", sizeImg+"%");
-                });
-                //$('#documento').find("p").css("font-size", "7px")
+        let sizeDocument = localStorage.getItem('breakpoint'); 
+        setValores(sizeDocument);
+    }
+
+    function setValores(sizeDocument){
+       
+        var xsFont = parseFloat(sizeFont);
+
+        if(sizeDocument == 'sm'){
+            var widthIni = 668;
+        }else if(sizeDocument == 'xs'){
+            var widthIni = 480;
+        }
+        
+        var widthAct = parseFloat($(".page_content").css('width')) * xsFont /  widthIni;
+        if (sizeDocument == 'xs' || sizeDocument == 'sm'){
+            $('#documento').css("font-size", widthAct + "px");
+            $('#documento').find("p").css("font-size", widthAct + "px")
+        }
+        
+        $('#documento').find("img")
+      
+        var contenidoImg = $("#documento").find("img");
+        contenidoImg.each(function (i) {
+            var sizeImg = parseFloat($(this).attr("width"));          
+            if (sizeImg >= 50 && sizeDocument != 'xl'){
+                sizeImg = sizeImg * 1.1;
+            }else if (sizeImg <= 50 && sizeDocument == 'xl') {
+                sizeImg = sizeImg * 1.2;
+            }else if(sizeImg <= 50 && sizeDocument =='lg'){
+                sizeImg = sizeImg * 1.2;
             }
+            else if (sizeImg <= 50 && sizeDocument == 'xs') {
+                sizeImg = sizeImg * 1.3;
+            }
+            else if (sizeImg <= 50 && sizeDocument == 'sm') {
+                sizeImg = sizeImg * 1.4;
+            } else if (sizeImg <= 50 && sizeDocument == 'md') {
+                sizeImg = sizeImg * 1.5;
+            }
+            $(this).css("width", sizeImg + "%");
+        });
     }
 });

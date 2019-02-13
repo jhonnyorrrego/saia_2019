@@ -1,3 +1,5 @@
+<?php
+
 class FormatoActividad extends Model {
 
     protected $idformato_actividad;
@@ -11,11 +13,8 @@ class FormatoActividad extends Model {
     protected function defineAttributes() {
         $this->dbAttributes = (object) [
             "safe" => [
-                "idformato_actividad",
                 "fk_actividad",
                 "fk_formato_flujo",
-            ],
-            "date" => [
             ],
             "table" => "wf_formato_actividad",
             "primary" => "idformato_actividad"

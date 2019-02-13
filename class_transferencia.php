@@ -778,10 +778,10 @@ function mostrar_estado_proceso($idformato, $iddoc)
                         echo '<td style="border:none;" align="left">';
                         if ($firma[0]["firma"] != "") {
                             $pagina_actual = $_SERVER["PHP_SELF"];
-                            echo '<img class="d-none d-md-block" src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/' . FORMATOS_SAIA . 'librerias/mostrar_foto.php?codigo=' . $fila["funcionario_codigo"];
+                            echo '<img class="d-none d-lg-block d-xl-none" src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/' . FORMATOS_SAIA . 'librerias/mostrar_foto.php?codigo=' . $fila["funcionario_codigo"];
                             echo '" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '"/><br />';
                         } else
-                            echo '<img class="d-none d-md-block" src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/firmas/blanco.jpg" width="100" height="' . $alto_firma[0]["valor"] . '" ><br />';
+                            echo '<img class="d-none d-lg-block d-xl-none" src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/firmas/blanco.jpg" width="100" height="' . $alto_firma[0]["valor"] . '" ><br />';
 
                         echo "<p class='my-0'><strong>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</strong><br /></p>";
                         if ($cargos["numcampos"]) {
@@ -833,7 +833,7 @@ function mostrar_estado_proceso($idformato, $iddoc)
                         $_REQUEST["tabla"] = "ruta";
                         $_REQUEST["firma"] = "1";
                         require_once($ruta_db_superior . FORMATOS_SAIA . "librerias/mostrar_foto_manual.php");
-                        $parte = '<td style="border:none;"><img class="d-none d-md-block" src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/carpeta_temporal_firma/imagen_temporal' . $_REQUEST["llave_seleccion"] . '.jpg" width="200" height="100">';
+                        $parte = '<td style="border:none;"><img class="d-none d-lg-block d-xl-none" src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/carpeta_temporal_firma/imagen_temporal' . $_REQUEST["llave_seleccion"] . '.jpg" width="200" height="100">';
 
                         $parte .= "<br /><strong>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</strong><br />";
                         if ($cargos["numcampos"]) {
@@ -1510,19 +1510,17 @@ function guardar_documento($iddoc, $tipo = 0)
 
 function actualizar_datos_documento($idformato, $iddoc)
 {
-    include_once(FORMATOS_SAIA . "librerias/funciones_generales.php");
+    include_once FORMATOS_SAIA . "librerias/funciones_generales.php";
+
     if (isset($_REQUEST["campo_descripcion"])) {
         $campo = busca_filtro_tabla("nombre,etiqueta", "campos_formato", "idcampos_formato IN(" . $_REQUEST["campo_descripcion"] . ")", "orden", $conn);
     } else if ($idformato) {
         $campo = busca_filtro_tabla("idcampos_formato,nombre,etiqueta,formato_idformato", "campos_formato cf", "cf.formato_idformato='" . $idformato . "' AND (acciones like 'p' or acciones like '%,p' or acciones like 'p,%' or acciones like '%,p,%')", "orden", $conn);
     }
     if ($campo["numcampos"]) {
+        $descripcion = '';
         for ($i = 0; $i < $campo["numcampos"]; $i++) {
-            if ($i == 0) {
-                $descripcion = "<strong>" . $campo[$i]["etiqueta"] . ": </strong>" . mostrar_valor_campo($campo[$i]["nombre"], $idformato, $iddoc, 1);
-            } else {
-                $descripcion .= "<br/><strong>" . $campo[$i]["etiqueta"] . ": </strong>" . mostrar_valor_campo($campo[$i]["nombre"], $idformato, $iddoc, 1);
-            }
+            $descripcion .= $campo[$i]["etiqueta"] . ": " . mostrar_valor_campo($campo[$i]["nombre"], $idformato, $iddoc, 1) . '<br>';
         }
     }
     $idserie = 0;

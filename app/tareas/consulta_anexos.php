@@ -15,33 +15,35 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
-$Response = (object) [
-    'data' => [],
-    'message' => "",
-    'success' => 0
+$response = [
+    'total' => 0,
+    'rows' => []
 ];
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $data = AnexoTarea::findAllByAttributes([
-        'estado' => 1,
-        'fk_tarea' => $_REQUEST['task']
-    ], [], AnexoTarea::getPrimaryLabel() . ' desc');
+    $params = new stdClass();
+    $params->order = Anexo::getPrimaryLabel() . ' ' . $_REQUEST['sortOrder'];
+    $params->offset = ($_REQUEST['pageNumber'] - 1) * $_REQUEST['pageSize'];
+    $params->limit = $params->offset + $_REQUEST['pageSize'] - 1; // se lo suman en sql2 ???
+    $params->task = $_REQUEST['task'];
 
-    foreach ($data as $AnexoTarea) {
-        $Response->data [] = [
-            'id' => $AnexoTarea->getPK(),
-            'user' => $AnexoTarea->getUser()->getName(),
-            'date' => $AnexoTarea->getDateAttribute('fecha'),
-            'size' => $AnexoTarea->getFileSize(),
-            'name' => $AnexoTarea->getFileName(),
-            'version' => $AnexoTarea->getVersion(),
-            'description' => $AnexoTarea->getDescription()
+    $anexos = Tarea::findActiveFiles($params);
+
+    foreach ($anexos as $key => $Anexo) {
+        $response['rows'][] = [
+            'id' => $Anexo->getPK(),
+            'icono' => $Anexo->getIcon(),
+            'etiqueta' => $Anexo->etiqueta,
+            'version' => $Anexo->version,
+            'descripcion' => $Anexo->descripcion,
+            'extension' => $Anexo->extension,
+            'usuario' => $Anexo->getLastLog()->getUser()->getName(),
+            'fecha' => $Anexo->getLastLog()->getDateAttribute('fecha'),
+            'peso' => $Anexo->getFileSize()
         ];
     }
 
-    $Response->success = 1;
-} else {
-    $Response->message = "Debe iniciar sesion";
+    $response['total'] = Tarea::countActiveFiles($params->task);
 }
 
-echo json_encode($Response);
+echo json_encode($response);

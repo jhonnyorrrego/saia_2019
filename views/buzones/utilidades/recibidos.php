@@ -105,7 +105,8 @@ $(function(){
                     type: 'success',
                     message: response.message
                 });
-                $('#table').bootstrapTable('refresh')
+                $('#table').bootstrapTable('refresh');
+                $('#uncheck_list').trigger('click');
             }else{
                 top.notification({
                     type: 'error',

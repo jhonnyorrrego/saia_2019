@@ -29,12 +29,13 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['key']) {
             "codigo" => $_REQUEST["codigo"],
             "version" => $_REQUEST["version"],
             "expediente" => $_REQUEST["expediente"],
-            // "diagrama" => $_REQUEST["diagrama"],
+            "mostrar_codigo" => $_REQUEST["mostrar_codigo"],
             // "duracion" => $_REQUEST["duracion"],
             "fecha_modificacion" => date('Y-m-d'),
             "info" => $_REQUEST["info"],
             "version_actual" => 1
         ]);
+        $flujo->save();
         $pk = $_REQUEST['idflujo'];
     } else {
         $pk = Flujo::newRecord([
@@ -44,7 +45,7 @@ if ($_SESSION['idfuncionario'] == $_REQUEST['key']) {
             "codigo" => $_REQUEST["codigo"],
             "version" => $_REQUEST["version"],
             "expediente" => $_REQUEST["expediente"],
-            // "diagrama" => $_REQUEST["diagrama"],
+            "mostrar_codigo" => $_REQUEST["mostrar_codigo"],
             // "duracion" => $_REQUEST["duracion"],
             "fecha_creacion" => date('Y-m-d'),
             "info" => $_REQUEST["info"],

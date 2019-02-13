@@ -87,7 +87,7 @@ class Ui {
     }
 
     static inactiveTime() {
-        var t;
+        /*var t;
         document.onclick = resetTimer;
     
         function logout() {
@@ -102,7 +102,7 @@ class Ui {
         function resetTimer() {
             clearTimeout(t);
             t = setTimeout(logout, 3600000)
-        }
+        }*/
     }
 
     static setWorkspacePosition() {

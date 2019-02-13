@@ -30,12 +30,11 @@ if(!empty($_REQUEST["idnotificacion"])) {
 	<meta name="description" content="">
 
 
-<?= estilo_tabla_bootstrap("1.13") ?>
-
 <?= jquery() ?>
 <?= bootstrap() ?>
 <?= icons() ?>
-<?= librerias_tabla_bootstrap("1.13", false, false) ?>
+<?= theme() ?>
+<?= bootstrapTable() ?>
 
 </head>
 <body>
@@ -68,6 +67,7 @@ if(!empty($_REQUEST["idnotificacion"])) {
 		data-click-to-select="true"
 		data-show-toggle="true"
 		data-show-columns="true"
+		data-toolbar="#toolbar"
 		data-pagination="true">
 		    <thead>
 		    <tr>

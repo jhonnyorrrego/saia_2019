@@ -19,11 +19,20 @@ $params = $_REQUEST;
 $idflujo = $params['idflujo'];
 $bpmn_id = null;
 $idactividad = null;
+$tipoElemento = null;
 if(!empty($_REQUEST["bpmn_id"])) {
     $bpmn_id = $_REQUEST["bpmn_id"];
     $actividad = Elemento::findByBpmnId($idflujo, $bpmn_id);
     $idactividad = $actividad->getPk();
     $params["idactividad"] = $idactividad;
+
+    if(!empty($params["tipoBpmn"])) {
+        if(preg_match("/Gateway/", $params["tipoBpmn"])) {
+            $tipoElemento = TipoElemento::TIPO_COND_EXCLUSIVA;
+        } else if(preg_match("/Task/", $params["tipoBpmn"])) {
+            $tipoElemento = TipoElemento::TIPO_TAREA;
+        }
+    }
 }
 
 $tabs = [
@@ -43,15 +52,15 @@ $tabs = [
         "url" => "tab5.php", "href" => "anexos", "icon" => "fa fa-paperclip",
     ],
     [
-        "url" => "tab6.php", "href" => "participantes", "icon" => "fa fa-users",
+        "url" => "tab_funcionarios_actividad.php", "href" => "participantes", "icon" => "fa fa-users",
     ],
     [
         "url" => "tab_riesgo.php", "href" => "riesgos", "icon" => "fa fa-exclamation-triangle",
-    ],
-    [
-        "url" => "tab_decision.php", "href" => "decision", "icon" => "fa fa-thumbs-up",
     ]
 ];
+if($tipoElemento != TipoElemento::TIPO_TAREA) {
+    $tabs[] = ["url" => "tab_decision.php", "href" => "decision", "icon" => "fa fa-thumbs-up"];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -65,7 +74,7 @@ $tabs = [
 
 	    <link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/jspanel.css">
 
-        <?= estilo_tabla_bootstrap("1.13") ?>
+		<link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap4-editable/css/bootstrap-editable.css">
 
         <?= jquery() ?>
         <?= validate() ?>
@@ -73,11 +82,17 @@ $tabs = [
         <?= icons() ?>
         <?= theme() ?>
         <?= librerias_UI("1.12") ?>
+		<?= librerias_arboles_ft("2.24")?>
 
-        <?= librerias_tabla_bootstrap("1.13", false, false) ?>
+        <?= bootstrapTable() ?>
 
 	    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/jspanel.js"></script>
         <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/extensions/hint/jspanel.hint.js"></script>
+        <!-- <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/extensions/modal/jspanel.modal.js"></script> -->
+
+		<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap4-editable/js/bootstrap-editable.js"></script>
+
+        <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.min.js"></script>
 
     </head>
     <body>
@@ -110,7 +125,7 @@ $tabs = [
                 $('.tab_actividad').on('shown.bs.tab', function (e) {
                     let tab = $(e.target);
                     let container = $(tab.attr('href'))
-                    console.log("params", params);
+                    //console.log("params", params);
                     let url = tab.data('url');
                     let strParam = jQuery.param(params);
                     url += "?" + strParam;
@@ -119,9 +134,6 @@ $tabs = [
 
                 $('.tab_actividad:first').trigger('click');
 
-                /*if(idflujo.length > 0){
-                 $('.tab_actividad:not(:first)').addClass('disabled');
-                 }*/
             });
         </script>
     </body>
