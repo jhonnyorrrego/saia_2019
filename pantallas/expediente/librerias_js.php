@@ -71,8 +71,8 @@ $(document).ready(function(){
       $.ajax({
         type : 'POST',
         async:false,
-        url: "<?= $ruta_db_superior ?>pantallas/expediente/ejecutar_acciones.php",
-        data: {methodExp:'createTomoExpedienteCont',idexpediente:idexp},
+        url: "<?= $ruta_db_superior ?>pantallas/ejecutar_acciones.php",
+        data: {nameInstance:'ExpedienteController',methodInstance:'createTomoExpedienteCont',idexpediente:idexp},
         dataType: 'json',
         success: function(response){
           if(response.exito){
@@ -118,8 +118,8 @@ $(document).ready(function(){
       $.ajax({
         type : 'POST',
         async:false,
-        url: "<?= $ruta_db_superior ?>pantallas/expediente/ejecutar_acciones.php",
-        data: {methodExp:'deleteExpedienteCont',idexpediente:idexp},
+        url: "<?= $ruta_db_superior ?>pantallas/ejecutar_acciones.php",
+        data: {nameInstance:'ExpedienteController',methodInstance:'deleteExpedienteCont',idexpediente:idexp},
         dataType: 'json',
         success: function(response){
           if(response.exito){

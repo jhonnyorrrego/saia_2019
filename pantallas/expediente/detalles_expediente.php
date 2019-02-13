@@ -53,7 +53,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 			<div class="row mx-0">
 				<div class="col-12">
                     <div>
-                        <i id="iconInfExp" data-table="tableInfoExp" class="fa fa-plus-square inf"></i> Información
+                        <i data-table="tableInfoExp" class="fa fa-plus-square inf"></i> Información
                     </div>
 
                     <?php if($Expediente->agrupador==1):?>
@@ -141,7 +141,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 
                             <tr>
                                 <td>Vinculado a la Caja:</td>
-                                <td><?= $Expediente->fk_caja ?></td>
+                                <td><?= $Expediente->getCaja() ?></td>
                             </tr>
 
                            <tr>
@@ -335,8 +335,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         $.ajax({
                             type : 'POST',
                             async : false,
-                            url: `${params.baseUrl}pantallas/expediente/ejecutar_acciones.php`,
-                            data: {methodExp:'aperturaCierreExpedienteCont',idexpediente:params.idexpediente,observacion:$("#observacion").val()},
+                            url: `${params.baseUrl}pantallas/ejecutar_acciones.php`,
+                            data: {nameInstance:'ExpedienteController',methodInstance:'aperturaCierreExpedienteCont',idexpediente:params.idexpediente,observacion:$("#observacion").val()},
                             dataType : 'json',
                             success : function(response) {
                                 if (response.exito) {

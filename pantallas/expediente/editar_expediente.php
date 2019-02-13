@@ -108,12 +108,13 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                     <input type="text" class="form-control" name="indice_tres" id="indice_tres" value="<?=$Expediente->indice_tres?>">
                                 </div>
 
-
                                 <div class="form-group ocultar">
-                                    <label>Caja</label>
+                                    <label>Caja</label>                                    
                                     <select class="form-control" name="fk_caja" id="fk_caja">
-                                         <option value="">por favor seleccione</option>
+                                        <option value="">por favor seleccione</option>
+                                        <?= Expediente::getHtmlCaja($Expediente) ?>
                                     </select>
+                                    <input type="hidden" name="cajaAnt" id="cajaAnt" value="<?= $Expediente->getCodPadre()->fk_caja?>">
                                 </div>
 
                                 <div class="form-group ocultar">
@@ -197,9 +198,11 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="hidden" name="methodExp" value="updateExpedienteCont">
+                                    <input type="hidden" name="methodInstance" value="updateExpedienteCont">
+                                    <input type="hidden" name="nameInstance" value="ExpedienteController">
+
                                     <input type="hidden" name="setNull" value="1">
-                                    <input type="hidden" name="generarfiltro" value="1">
+                                    <input type="hidden" name="generarFiltro" value="1">
                                     <input type="hidden" id="cod_padre" name="cod_padre" value="<?= $Expediente->cod_padre ?>">
                                     <input type="hidden" id="idexpediente" name="idexpediente" value="<?= $idexpediente ?>">
                                     <input type="hidden" id="idbusqueda_componente" name="idbusqueda_componente" value="<?= $_REQUEST['idbusqueda_componente'] ?>">
@@ -235,6 +238,22 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                     }
                 });
                 $("[name='agrupador']:checked").trigger("change");
+
+
+                $("#fk_caja").change(function (){
+                    let actual=$(this).val();
+                    let padre=$("#cajaAnt").val();
+                    if(padre!=0 && actual!=0){
+                        if(actual!=padre){
+                            top.notification({                                
+                                message : "Esta ingresando una caja diferente a la caja del expediente superior",
+                                type : "warning",
+                                duration : 8000
+                            });
+                        }
+
+                    }
+                });
 
                 $("#iconInfAdicional").click(function (e) { 
                     let icon=$(this).hasClass("fa-plus-square");
@@ -272,7 +291,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         $.ajax({
                             type : 'POST',
                             async : false,
-                            url: `${params.baseUrl}pantallas/expediente/ejecutar_acciones.php`,
+                            url: `${params.baseUrl}pantallas/ejecutar_acciones.php`,
                             data : $("#formularioExp").serialize(),
                             dataType : 'json',
                             success : function(objeto) {

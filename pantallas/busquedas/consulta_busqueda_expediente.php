@@ -45,8 +45,7 @@ if (!empty($idexpediente)) {
     $okviewdocs = $Expediente->getAccessUser('c');
     if ($Expediente->nucleo) {
         if ($Expediente->fk_serie) {
-            $instance = $Expediente->getSerieFk();
-            $Serie = $instance[0];
+            $Serie = $Expediente->getRelationFk('Serie');
             if ($Serie->tipo == 2) {
                 $okAddAcciones = 1;
             } elseif ($Serie->tipo == 1) {
@@ -69,9 +68,9 @@ if ($datos_busqueda[0]["busqueda_avanzada"] != '') {
     $datos_busqueda[0]["busqueda_avanzada"] .= 'idbusqueda_componente=' . $datos_busqueda[0]["idbusqueda_componente"];
 }
 
-echo (librerias_html5());
+echo librerias_html5();
 echo jquery();
-echo (estilo_bootstrap());
+echo estilo_bootstrap();
 ?>
 <meta http-equiv="X-UA-Compatible" content="IE=9">
 <link rel="stylesheet" type="text/css" media="screen" href="<?= $ruta_db_superior; ?>pantallas/lib/librerias_css.css" />
@@ -129,7 +128,7 @@ echo (estilo_bootstrap());
                             Busqueda de:
                         </li>
                         <li>
-                            <a href="#" class="kenlace_saia" title="B&uacute;squeda <?= $datos_busqueda[0]['etiqueta']; ?>" conector="iframe" enlace="<?php echo ($datos_busqueda[0]['busqueda_avanzada']); ?>" titulo="Formulario B&uacute;queda">Expedientes</a>
+                            <a href="#" class="kenlace_saia" title="B&uacute;squeda <?= $datos_busqueda[0]['etiqueta']; ?>" conector="iframe" enlace="<?=$datos_busqueda[0]['busqueda_avanzada']?>" titulo="Formulario B&uacute;queda">Expedientes</a>
                         </li>
                         <li>
                             <a href="#" class="kenlace_saia" title="B&uacute;squeda Documentos en el Expediente" conector="iframe" enlace="pantallas/documento/busqueda_avanzada_documento.php?idbusqueda_componente=<?= $busq_docu[0]["idbusqueda_componente"]; ?>&idexpediente=<?= $idexpediente; ?>" titulo="Formulario B&uacute;queda">Documentos</a>
@@ -149,7 +148,7 @@ echo (estilo_bootstrap());
                         $acciones = explode(",", $datos_busqueda[0]["acciones_seleccionados"]);
                         $cantidad = count($acciones);
                         for ($i = 0; $i < $cantidad; $i++) {
-                            echo ($acciones[$i]());
+                            echo $acciones[$i]();
                         }
                         ?>
                     </ul>
@@ -195,9 +194,6 @@ echo (estilo_bootstrap());
     <div id="resultado_busqueda_principal<?= $idbusqueda_componente; ?>" class="panel_hidden">
         <div id="resultado_busqueda<?= $idbusqueda_componente; ?>"></div>
         <div id="resultado_busqueda<?= $busqueda_documento_expediente[0]["idbusqueda_componente"]; ?>"></div>
-
-        <input type="hidden" id="seleccionados" value="" name="seleccionados">
-        <input type="hidden" id="seleccionados_expediente" value="" name="seleccionados_expediente">
 
         <!-- Registros por pagina -->
         <input type="hidden" value="<?= $datos_busqueda[0]['cantidad_registros']; ?>" name="cantxpage" id="cantxpage">
@@ -420,9 +416,7 @@ echo (estilo_bootstrap());
 </script>
 
 <?php
-
 echo (librerias_bootstrap());
-//echo (librerias_tooltips());
 echo (librerias_acciones_kaiten());
 
 if ($datos_busqueda[0]["ruta_libreria_pantalla"]) {

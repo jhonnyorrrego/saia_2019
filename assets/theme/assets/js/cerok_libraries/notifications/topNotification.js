@@ -4,6 +4,7 @@ var defaultOptions = {
     duration: 5000, //time for show the notification
     title: '', //notification title
     closeButton: true,
+    positionClass: 'toast-top-right'
 };
 
 function showNotification(options){
@@ -14,7 +15,7 @@ function showNotification(options){
         "debug": false,
         "newestOnTop": true,
         "progressBar": false,
-        "positionClass": "toast-top-right",
+        "positionClass": options.positionClass,
         "preventDuplicates": true,
         "onclick": null,
         "showDuration": "300",

@@ -244,7 +244,7 @@ class Expediente extends Model
     public function getEstado() : string
     {
         $data = $this->keyValueField('estado');
-        return $data[$this->estado];
+        return $data[$this->estado] ?? '';
     }
 
     /**
@@ -256,7 +256,7 @@ class Expediente extends Model
     public function getEstadoCierre() : string
     {
         $data = $this->keyValueField('estado_cierre');
-        return $data[$this->estado_cierre];
+        return $data[$this->estado_cierre] ?? '';
     }
     /**
      * retorna la instancia del expediente padre
@@ -306,16 +306,28 @@ class Expediente extends Model
         return $response;
     }
 
+    /**
+     * Retorna el codigo de la caja vinculada
+     *
+     * @return string
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getCaja() : string
+    {
+        $data = $this->getRelationFk('Caja');
+        return $data ? $data->codigo : '';
+    }
+
     public function getSoporte()
     {
         $data = $this->keyValueField('soporte');
-        return $data[$this->soporte];
+        return $data[$this->soporte] ?? '';
     }
 
     public function getFrecuenciaConsulta()
     {
         $data = $this->keyValueField('frecuencia_consulta');
-        return $data[$this->frecuencia_consulta];
+        return $data[$this->frecuencia_consulta] ?? '';
     }
 
     /**
@@ -369,7 +381,7 @@ class Expediente extends Model
     public function getAgrupador()
     {
         $data = $this->keyValueField('agrupador');
-        return $data = $data[$this->agrupador];
+        return $data[$this->agrupador] ?? '';
     }
     /**
      * Valida si el funcionario es reponsable de un expediente
@@ -524,6 +536,28 @@ class Expediente extends Model
         }
         return $data;
     }
+
+    public static function getHtmlCaja(Expediente $Expediente = null) : string
+    {
+        $html = '';
+        if ($Expediente) {
+            $sql = "SELECT c.idcaja,c.codigo FROM caja_entidadserie ce,caja c, entidad_serie e 
+            WHERE ce.fk_caja=c.idcaja AND ce.fk_entidad_serie=e.identidad_serie AND e.estado=1 
+            AND c.estado_archivo={$Expediente->estado_archivo} AND ce.fk_entidad_serie={$Expediente->fk_entidad_serie}";
+            $records = StaticSql::search($sql);
+            if ($records) {
+                foreach ($records as $record) {
+                    if ($Expediente->fk_caja == $record['idcaja']) {
+                        $html .= "<option value='{$record['idcaja']}' selected>{$record['codigo']}</option>";
+                    } else {
+                        $html .= "<option value='{$record['idcaja']}'>{$record['codigo']}</option>";
+                    }
+                }
+            }
+        }
+        return $html;
+    }
+
 
     /**
      * Crea el HTML de un campo

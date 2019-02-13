@@ -23,12 +23,11 @@ final class Version20190122215104 extends AbstractMigration
 
         if ($this->connection->getDatabasePlatform()->getName() == "mysql") {
             $this->platform->registerDoctrineTypeMapping('enum', 'string');
-        }        
+        }
     }
 
     public function up(Schema $schema) : void
     {
-
         if ($schema->hasTable("serie")) {
             $schema->dropTable("serie");
         }
@@ -68,7 +67,15 @@ final class Version20190122215104 extends AbstractMigration
         if ($schema->hasTable("expediente_cierre")) {
             $schema->dropTable("expediente_cierre");
         }
-        
+
+        if ($schema->hasTable("caja")) {
+            $schema->dropTable("caja");
+        }
+
+        if ($schema->hasTable("caja_entidadserie")) {
+            $schema->dropTable("caja_entidadserie");
+        }
+
         $tabla = $schema->createTable("serie");
         $tabla->addColumn("idserie", "integer", ["autoincrement" => true]);
         $tabla->addColumn("nombre", "string", ["length" => 255]);
@@ -183,6 +190,7 @@ final class Version20190122215104 extends AbstractMigration
         $tabla7->addColumn("fecha", "datetime");
         $tabla7->setPrimaryKey(["idexpediente_doc"]);
 
+
         $tabla8 = $schema->createTable("expediente_eli");
         $tabla8->addColumn("idexpediente_eli", "integer", ["autoincrement" => true]);
         $tabla8->addColumn("fk_expediente", "integer");
@@ -201,20 +209,73 @@ final class Version20190122215104 extends AbstractMigration
         $tabla9->addColumn("observacion", "text", ["notnull" => false]);
         $tabla9->setPrimaryKey(["idexpediente_cierre"]);
 
+
+        $tabla10 = $schema->createTable("caja");
+        $tabla10->addColumn("idcaja", "integer", ["autoincrement" => true]);
+        $tabla10->addColumn("codigo", "string", ["length" => 255]);
+        $tabla10->addColumn("estado_archivo", "integer", ["length" => 1, "default" => 1, "comment" => "1,Gestion;2,Central;3,Historico"]);
+        $tabla10->addColumn("seccion", "string", ["length" => 255, "notnull" => false]);
+        $tabla10->addColumn("subseccion", "string", ["length" => 255, "notnull" => false]);
+        $tabla10->addColumn("division", "string", ["length" => 255, "notnull" => false]);
+        $tabla10->addColumn("modulo", "string", ["length" => 255, "notnull" => false]);
+        $tabla10->addColumn("panel", "string", ["length" => 255, "notnull" => false]);
+        $tabla10->addColumn("nivel", "string", ["length" => 255, "notnull" => false]);
+        $tabla10->addColumn("fondo", "string", ["length" => 255, "notnull" => false]);
+        $tabla10->addColumn("material", "integer", ["comment" => "1,Carton;2,Otro", "notnull" => false]);
+        $tabla10->addColumn("seguridad", "integer", ["comment" => "1,Confidencia;2,Publico;3,Rutinario", "notnull" => false]);
+        $tabla10->addColumn("propietario", "integer", ["comment" => "fk_funcionario"]);
+        $tabla10->addColumn("responsable", "integer", ["comment" => "fk_funcionario"]);
+        $tabla10->addColumn("fecha_creacion", "datetime", ["notnull" => false]);
+        $tabla10->addColumn("estado", "integer", ["default" => 1, "comment" => "1,Activo;0,Inactivo"]);
+        $tabla10->addColumn("fecha_eliminacion", "datetime", ["notnull" => false]);
+        $tabla10->setPrimaryKey(["idcaja"]);
+
+
+        $tabla11 = $schema->createTable("caja_entidadserie");
+        $tabla11->addColumn("idcaja_entidadserie", "integer", ["autoincrement" => true]);
+        $tabla11->addColumn("fk_caja", "integer");
+        $tabla11->addColumn("fk_entidad_serie", "integer");
+        $tabla11->addColumn("fecha_creacion", "datetime", ["notnull" => false]);
+        $tabla11->addUniqueIndex(["fk_caja", "fk_entidad_serie"]);
+        $tabla11->setPrimaryKey(["idcaja_entidadserie"]);
+
+
         $this->addSql("DELETE FROM busqueda WHERE idbusqueda=37");
+                
+        $this->addSql("DELETE FROM busqueda_componente WHERE idbusqueda_componente=9");
+        $this->addSql("DELETE FROM busqueda_componente WHERE idbusqueda_componente=10");
+        $this->addSql("DELETE FROM busqueda_componente WHERE idbusqueda_componente=110");
+        $this->addSql("DELETE FROM busqueda_componente WHERE idbusqueda_componente=111");
+        $this->addSql("DELETE FROM busqueda_componente WHERE idbusqueda_componente=368");
+
+        $this->addSql("DELETE FROM busqueda_condicion WHERE fk_busqueda_componente=9");
+        $this->addSql("DELETE FROM busqueda_condicion WHERE fk_busqueda_componente=10");
+        $this->addSql("DELETE FROM busqueda_condicion WHERE fk_busqueda_componente=110");
+        $this->addSql("DELETE FROM busqueda_condicion WHERE fk_busqueda_componente=111");
+        $this->addSql("DELETE FROM busqueda_condicion WHERE fk_busqueda_componente=368");
+
         $this->addSql("INSERT INTO busqueda (idbusqueda, nombre, etiqueta, estado, ancho, campos, llave, tablas, ruta_libreria, ruta_libreria_pantalla, cantidad_registros, tiempo_refrescar, ruta_visualizacion, tipo_busqueda, badge_cantidades, elastic) VALUES (37, 'expediente', ' Mis expedientes', 1, 200, NULL, NULL, 'vpermiso_expediente v', 'pantallas/expediente/librerias.php', 'pantallas/expediente/librerias_js.php', 20, 500, 'pantallas/busquedas/consulta_busqueda_expediente.php', 1, NULL, 0)");
         
-        $this->addSql("DELETE FROM busqueda_componente WHERE idbusqueda_componente=110");
+        $this->addSql("INSERT INTO busqueda_componente (idbusqueda_componente, busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas, llave) VALUES (9, 37, 3, 2, 'pantallas/busquedas/consulta_busqueda_expediente.php', 'Archivo Hist&oacute;rico', 'documento_historico', 3, '<div id=\"resultado_pantalla_{*idexpediente*}\" class=\"well\">{*info_expediente@idexpediente*}</div>', NULL, NULL, NULL, 1, 320, 2, NULL, NULL, 'v.nombre', 'asc', 'v.idexpediente', 'pantallas/expediente/buscar_expediente.php', 'adicionar_expediente,compartir_expediente,transferencia_documental', 1646, 'barra_superior_busqueda', NULL, NULL, 'v.idexpediente')");
+        $this->addSql("INSERT INTO busqueda_componente (idbusqueda_componente, busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas, llave) VALUES (10, 37, 3, 2, 'pantallas/busquedas/consulta_busqueda_expediente.php', 'Archivo Central', 'documento_central', 2, '<div id=\"resultado_pantalla_{*idexpediente*}\" class=\"well\">{*info_expediente@idexpediente*}</div>', NULL, NULL, NULL, 1, 320, 2, NULL, NULL, 'v.nombre', 'asc', 'v.idexpediente', 'pantallas/expediente/buscar_expediente.php', 'adicionar_expediente,compartir_expediente,transferencia_documental', 1645, 'barra_superior_busqueda', NULL, NULL, 'v.idexpediente')");
         $this->addSql("INSERT INTO busqueda_componente (idbusqueda_componente, busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas, llave) VALUES (110, 37, 3, 2, 'pantallas/busquedas/consulta_busqueda_expediente.php', 'Archivo de Gesti&oacute;n', 'expediente', 1, '<div id=\"resultado_pantalla_{*idexpediente*}\" class=\"well\">{*info_expediente@idexpediente*}</div>', NULL, NULL, NULL, 2, 320, 2, NULL, NULL, 'v.nombre', 'asc', 'v.idexpediente', 'pantallas/expediente/buscar_expediente.php', 'adicionar_expediente,compartir_expediente,transferencia_documental', 1644, 'barra_superior_busqueda', NULL, NULL, 'v.idexpediente')");
-        
-        $this->addSql("DELETE FROM busqueda_condicion WHERE fk_busqueda_componente = 110");
-        $this->addSql("INSERT INTO busqueda_condicion (idbusqueda_condicion, busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES (81, NULL, 110, 'v.estado_archivo=1 {*conditions*}', 'Gestion')");
+        $this->addSql("INSERT INTO busqueda_componente (idbusqueda_componente, busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas, llave) VALUES (111, 37, 3, 2, 'pantallas/busquedas/consulta_busqueda.php', 'Expediente Documento', 'expediente_documento', 1, '<div id=\"resultado_pantalla_{*iddocumento*}\" class=\"well\">{*numero*}</div>', NULL, NULL, NULL, 0, 320, 2, 'd.numero', 'documento d,expediente_doc ed', 'd.fecha', 'desc', 'd.iddocumento,d.descripcion', NULL, NULL, 0, NULL, NULL, NULL, 'd.iddocumento')");
 
-        $this->addSql("DELETE FROM busqueda_componente WHERE idbusqueda_componente=111");
-        $this->addSql("INSERT INTO busqueda_componente (idbusqueda_componente, busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas, llave) VALUES (111, 37, 3, 2, 'pantallas/busquedas/consulta_busqueda.php', 'Expediente Documento', 'expediente_documento', 1, '<div id=\"resultado_pantalla_{*iddocumento*}\" class=\"well\">{*numero*}</div>', NULL, NULL, NULL, 0, 320, 2, 'd.numero', 'documento d,expediente_doc ed', 'd.fecha', 'desc', 'd.iddocumento,d.numero', NULL, NULL, 0, NULL, NULL, NULL, 'd.iddocumento')");
+        $this->addSql("INSERT INTO busqueda_condicion (busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES (NULL, 9, 'v.estado_archivo=3 {*conditions*}', 'Historico')");
+        $this->addSql("INSERT INTO busqueda_condicion (busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES (NULL, 10, 'v.estado_archivo=2 {*conditions*}', 'Central')");
+        $this->addSql("INSERT INTO busqueda_condicion (busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES (NULL, 110, 'v.estado_archivo=1 {*conditions*}', 'Gestion')");
+        $this->addSql("INSERT INTO busqueda_condicion (busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES (NULL, 111, 'v.idexpediente=ed.fk_expediente AND ed.fk_documento=d.iddocumento AND d.estado not in (\'ELIMINADO\') AND v.idexpediente={*conditions_exp_documents*}', 'Documentos del Expediente')");
 
-        $this->addSql("DELETE FROM busqueda_condicion WHERE fk_busqueda_componente = 111");
-        $this->addSql("INSERT INTO busqueda_condicion (idbusqueda_condicion, busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES (82, NULL, 111, 'v.idexpediente=ed.fk_expediente AND ed.fk_documento=d.iddocumento AND d.estado not in (\'ELIMINADO\') AND v.idexpediente={*conditions_exp_documents*}', 'expediente documento')");
+        $this->addSql("DELETE FROM busqueda WHERE idbusqueda=48");
+        $this->addSql("DELETE FROM busqueda_componente WHERE idbusqueda_componente=323");
+        $this->addSql("DELETE FROM busqueda_condicion WHERE fk_busqueda_componente=323");
+
+        $this->addSql("INSERT INTO busqueda (idbusqueda, nombre, etiqueta, estado, ancho, campos, llave, tablas, ruta_libreria, ruta_libreria_pantalla, cantidad_registros, tiempo_refrescar, ruta_visualizacion, tipo_busqueda, badge_cantidades, elastic) VALUES (48, 'cajas', 'Cajas', 1, 200, NULL, NULL, 'caja', 'pantallas/caja/librerias.php', 'pantallas/caja/librerias_js.php', 20, 500, 'pantallas/busquedas/consulta_busqueda_caja.php', 1, NULL, 0)");
+
+        $this->addSql("INSERT INTO busqueda_componente (idbusqueda_componente, busqueda_idbusqueda, tipo, conector, url, etiqueta, nombre, orden, info, exportar, exportar_encabezado, encabezado_componente, estado, ancho, cargar, campos_adicionales, tablas_adicionales, ordenado_por, direccion, agrupado_por, busqueda_avanzada, acciones_seleccionados, modulo_idmodulo, menu_busqueda_superior, enlace_adicionar, encabezado_grillas, llave) VALUES (323, 48, 3, 2, 'pantallas/busquedas/consulta_busqueda_caja.php', 'Cajas', 'caja', 1, '<div id=\"resultado_pantalla_{*idcaja*}\" class=\"well\">{*info_caja@idcaja*}</div>', NULL, NULL, NULL, 2, 320, 2, NULL, NULL, 'idcaja', 'asc', NULL, 'pantallas/caja/buscar_caja.php?idbusqueda_componente=323', NULL, NULL, NULL, 'pantallas/caja/adicionar_caja.php?idbusqueda_componente=323', NULL, 'idcaja')");
+
+        $this->addSql("INSERT INTO busqueda_condicion (busqueda_idbusqueda, fk_busqueda_componente, codigo_where, etiqueta_condicion) VALUES (NULL, 323, '{*conditions_caja*}', 'Cajas')");
+
 
 
         /*$sql= "CREATE OR REPLACE VIEW vpermiso_expediente AS

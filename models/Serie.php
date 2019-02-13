@@ -69,6 +69,16 @@ class Serie extends Model
         return $this->update();
     }
 
+    protected function afterDelete(){
+        $PermisoSerie = EntidadSerie::findAllByAttributes(['fk_serie' => $this->idserie]);
+        if($PermisoSerie){
+            foreach ($PermisoSerie as $instance) {
+                $instance->delete();
+            }
+        }
+        return;
+    }
+
     /**
      * Crea la serie con sus correspondientes vinculaciones (expedientes, entidad serie)
      * NO utilizar create() para crear una serie
@@ -397,7 +407,7 @@ class Serie extends Model
         if ($instance) {
             $data = Expediente::findAllByAttributes(['fk_serie' => $this->idserie]);
         } else {
-            $data = Expediente::findAllByAttributes(['fk_serie' => $this->idserie]);
+            $data = Expediente::findColumn('idexpediente',['fk_serie' => $this->idserie]);
         }
 
         return $data;

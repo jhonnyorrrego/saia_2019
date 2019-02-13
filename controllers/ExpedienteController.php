@@ -166,7 +166,8 @@ class ExpedienteController
     }
 
     /**
-     * retorna los datos para ser procesador por SELECT2
+     * retorna los datos de los funcionarios 
+     * para ser procesador por SELECT2
      *
      * @param array $data
      * @return array
@@ -297,7 +298,9 @@ class ExpedienteController
         if (!empty($data)) {
             if (!empty($data['cod_padre'])) {
                 $instance = new Expediente($data['cod_padre']);
-
+                if(!$data['fk_caja'] && !$data['agrupador']){
+                    $data['fk_caja']=$instance->fk_caja;
+                }
                 $attributes = $data;
                 $attributes['propietario'] = $_SESSION['idfuncionario'];
                 $attributes['responsable'] = $_SESSION['idfuncionario'];
@@ -316,7 +319,7 @@ class ExpedienteController
                 $response = $Expediente->CreateExpediente();
                 if ($response['exito']) {
                     $response['message'] = 'Expediente guardado';
-                    if (!empty($data['generarfiltro']) && !empty($data['idbusqueda_componente'])) {
+                    if (!empty($data['generarFiltro']) && !empty($data['idbusqueda_componente'])) {
                         $attributes = [
                             'fk_busqueda_componente' => $data["idbusqueda_componente"],
                             'funcionario_idfuncionario' => $_SESSION['idfuncionario'],
@@ -325,7 +328,7 @@ class ExpedienteController
                         ];
                         $BusquedaFiltroTemp = new BusquedaFiltroTemp();
                         $BusquedaFiltroTemp->setAttributes($attributes);
-                        if ($BusquedaFiltroTemp->save()) {
+                        if ($BusquedaFiltroTemp->create()) {
                             $response['data']['idbusqueda_filtro_temp'] = $BusquedaFiltroTemp->getPK();
                         }
                     }
@@ -355,12 +358,13 @@ class ExpedienteController
         if (!empty($data)) {
             if (!empty($data['cod_padre']) && !empty($data['idexpediente'])) {
                 $Expediente = new Expediente($data['idexpediente']);
+                $editChildren = 0;
                 if ($data['agrupador'] == 3) {
                     $data['descripcion'] = 'NULL';
                     $data['indice_uno'] = 'NULL';
                     $data['indice_dos'] = 'NULL';
                     $data['indice_tres'] = 'NULL';
-                    $data['fk_caja'] = 'NULL';
+                    $data['fk_caja'] = 0;
                     $data['codigo_numero'] = 'NULL';
                     $data['fondo'] = 'NULL';
                     $data['proceso'] = 'NULL';
@@ -374,13 +378,21 @@ class ExpedienteController
                     $data['soporte'] = 'NULL';
                     $data['frecuencia_consulta'] = 'NULL';
                     $data['notas_transf'] = 'NULL';
+                }else{
+                    $editChildren=1;
                 }
                 $Expediente->setAttributes($data);
 
                 if ($Expediente->update()) {
                     $response['message'] = 'Expediente actualizado';
                     $response['exito'] = 1;
-                    if (!empty($data['generarfiltro']) && !empty($data['idbusqueda_componente'])) {
+
+                    if($editChildren){
+                        $sql="UPDATE expediente SET fk_caja={$Expediente->fk_caja} WHERE cod_arbol like '{$Expediente->cod_arbol}.%' AND agrupador=0";
+                        StaticSql::query($sql);
+                    }
+
+                    if (!empty($data['generarFiltro']) && !empty($data['idbusqueda_componente'])) {
                         $attributes = [
                             'fk_busqueda_componente' => $data["idbusqueda_componente"],
                             'funcionario_idfuncionario' => $_SESSION['idfuncionario'],
@@ -389,7 +401,7 @@ class ExpedienteController
                         ];
                         $BusquedaFiltroTemp = new BusquedaFiltroTemp();
                         $BusquedaFiltroTemp->setAttributes($attributes);
-                        if ($BusquedaFiltroTemp->save()) {
+                        if ($BusquedaFiltroTemp->create()) {
                             $response['data']['idbusqueda_filtro_temp'] = $BusquedaFiltroTemp->getPK();
                         }
                     }
@@ -552,7 +564,7 @@ class ExpedienteController
 
                 if ($info['exito']) {
                     $response['data']['cod_padre'] = $ExpTomo->cod_padre;
-                    if (!empty($data['generarfiltro']) && !empty($data['idbusqueda_componente'])) {
+                    if (!empty($data['generarFiltro']) && !empty($data['idbusqueda_componente'])) {
                         $attributes = [
                             'fk_busqueda_componente' => $data["idbusqueda_componente"],
                             'funcionario_idfuncionario' => $ExpTomo->propietario,
@@ -561,7 +573,7 @@ class ExpedienteController
                         ];
                         $BusquedaFiltroTemp = new BusquedaFiltroTemp();
                         $BusquedaFiltroTemp->setAttributes($attributes);
-                        if ($BusquedaFiltroTemp->save()) {
+                        if ($BusquedaFiltroTemp->create()) {
                             $response['data']['idbusqueda_filtro_temp'] = $BusquedaFiltroTemp->getPK();
                         }
                     }

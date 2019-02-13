@@ -96,7 +96,9 @@ $params=[
                                     <label>Caja</label>
                                     <select class="form-control" name="fk_caja" id="fk_caja">
                                         <option value="">por favor seleccione</option>
+                                        <?= Expediente::getHtmlCaja($ExpCodPadre) ?>
                                     </select>
+                                    <input type="hidden" name="cajaAnt" id="cajaAnt" value="<?= $ExpCodPadre->fk_caja ?>">
                                 </div>
 
                                 <div class="form-group ocultar">
@@ -142,23 +144,23 @@ $params=[
                                         <input type="text" class="form-control" name="consecutivo_final" id="consecutivo_final">
                                     </div>
 
-                                <div class="form-group ocultar">
+                                    <div class="form-group ocultar">
                                         <label>Unidad de conservación</label>
                                         <input type="text" class="form-control" name="no_unidad_conservacion" id="no_unidad_conservacion">
                                     </div>
 
 
-                                <div class="form-group ocultar">
+                                    <div class="form-group ocultar">
                                         <label>No de folios</label>
                                         <input type="text" class="form-control" name="no_folios" id="no_folios">
                                     </div>
 
-                                <div class="form-group ocultar">
+                                    <div class="form-group ocultar">
                                         <label>No de carpeta</label>
                                         <input type="text" class="form-control" name="no_carpeta" id="no_carpeta">
                                     </div>
 
-                                <div class="form-group ocultar">
+                                    <div class="form-group ocultar">
                                         <label>Soporte</label>
                                         <select class="form-control" name="soporte" id="soporte">
                                             <option value="">por favor seleccione</option>
@@ -166,7 +168,7 @@ $params=[
                                         </select>
                                     </div>
 
-                                <div class="form-group ocultar">
+                                    <div class="form-group ocultar">
                                         <label>Frecuencia</label>
                                         <select class="form-control" name="frecuencia_consulta" id="frecuencia_consulta">
                                             <option value="">por favor seleccione</option>
@@ -174,19 +176,22 @@ $params=[
                                         </select>
                                     </div>
 
-                                <div class="form-group ocultar">
+                                    <div class="form-group ocultar">
                                         <label>Notas de transferencia</label>
                                         <textarea class="form-control" name="notas_transf" id="notas_transf"></textarea>                                    
                                     </div>
+                                    
                                 </div>
+
                                 <div class="form-group">
-                                    <input type="hidden" name="methodExp" value="createExpedienteCont">
-                                    <input type="hidden" name="generarfiltro" value="1">
+                                    <input type="hidden" name="methodInstance" value="createExpedienteCont">
+                                    <input type="hidden" name="nameInstance" value="ExpedienteController">
+                                    <input type="hidden" name="generarFiltro" value="1">
                                     <input type="hidden" id="cod_padre" name="cod_padre" value="<?= $idexpediente ?>">
                                     <input type="hidden" id="idbusqueda_componente" name="idbusqueda_componente" value="<?=$_REQUEST['idbusqueda_componente']?>">
                                     <button id="guardarExp" type="submit" class="btn btn-primary">
                                         Adicionar
-                                    </button></td>
+                                    </button>
                                 </div>
 
                             </form>
@@ -219,7 +224,22 @@ $params=[
                     }                  
                 });
                 $("#iconInfAdicional").trigger("click");
-                
+
+                $("#fk_caja").change(function (){
+                    let actual=$(this).val();
+                    let padre=$("#cajaAnt").val();
+                    if(padre!=0 && actual!=0){
+                        if(actual!=padre){
+                            top.notification({                                
+                                message : "Esta ingresando una caja diferente a la caja del expediente superior",
+                                type : "warning",
+                                duration : 8000
+                            });
+                        }
+
+                    }
+                });
+
                 $("#formularioExp").validate({
 					rules : {
 						agrupador : {
@@ -240,7 +260,7 @@ $params=[
                         $.ajax({
                             type : 'POST',
                             async : false,
-                            url: `${params.baseUrl}pantallas/expediente/ejecutar_acciones.php`,
+                            url: `${params.baseUrl}pantallas/ejecutar_acciones.php`,
                             data : $("#formularioExp").serialize(),
                             dataType : 'json',
                             success : function(objeto) {

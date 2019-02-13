@@ -11,14 +11,14 @@ while ($max_salida > 0) {
 
 require_once $ruta_db_superior . "controllers/autoload.php";
 
-$idexpediente = $_REQUEST['idexpediente'];
-$Expediente = new Expediente($idexpediente);
-if (!$idexpediente || !$Expediente->isResponsable()) {
+$idcaja = $_REQUEST['idcaja'];
+$Caja = new Caja($idcaja);
+if (!$idcaja || !$Caja->isResponsable()) {
 	return;
 }
 
 $params = [
-	'responsable' => $Expediente->responsable,
+	'responsable' => $Caja->responsable,
 	'baseUrl' => $ruta_db_superior
 ];
 
@@ -26,11 +26,11 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 echo validate();
 echo select2();
 ?>
-<form id="formularioExp" name="formularioExp" class="form-horizontal">
+<form id="formularioCaja" name="formularioCaja" class="form-horizontal">
 	<div class="form-group row">
 		<label for="actual" class="col-md-4 control-label">Responsable actual</label>
 		<div class="col-md-8">
-			<input class="form-control" type="text" value="<?= $Expediente->getResponsable() ?>">
+			<input class="form-control" type="text" value="<?= $Caja->getResponsable() ?>">
 		</div>
 	</div>
 
@@ -43,7 +43,7 @@ echo select2();
 	
 	<div class="row">
 		<div class="col-md-12">
-			<input type="hidden" id="idexpediente" name="idexpediente" value="<?= $idexpediente ?>">
+			<input type="hidden" id="idcaja" name="idcaja" value="<?= $idcaja ?>">
 			<button class="btn btn-complete" id="btnActualizar">Actualizar</button>
 		</div>
 	</div>
@@ -84,24 +84,24 @@ $(document).ready(function (){
 		$('#responsable').val('').trigger('change');
 	});
 	
-	$("#formularioExp").validate({
+	$("#formularioCaja").validate({
 		rules : {
 			responsable : {
 				required : true
 			},
-			idexpediente : {
+			idcaja : {
 				required : true
 			}
 		},
 		submitHandler : function(form) {
-			let idexpediente=$("#idexpediente").val();
+			let idcaja=$("#idcaja").val();
 			let funcionario=$("#responsable").val();
 			$('#nombre').val(null).trigger('change');
 			$.ajax({
 				type : 'POST',
 				async:false,
 				url: `${params.baseUrl}pantallas/ejecutar_acciones.php`,
-				data: {nameInstance:'ExpedienteController',methodInstance:'updateResponsableExpedienteCont',idexpediente:idexpediente,responsable:funcionario},
+				data: {nameInstance:'CajaController',methodInstance:'updateResponsableCajaCont',idcaja:idcaja,responsable:funcionario},
 				dataType: 'json',
 				success: function(response){
 					if(response.exito){

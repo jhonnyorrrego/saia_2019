@@ -542,21 +542,21 @@ abstract class Model extends StaticSql
      * retorna la instancia de la relacion dada
      *
      * @param string $instance : Nombre de la instancia
-     * @param string $FieldName : Nombre del campo
+     * @param string $fieldName : Nombre del campo
      * @return array|null
      * @author Andre.Agudelo <andres.agudelo@cerok.com>
      */
-    public function getRelationFk(string $instance = null, string $FieldName = null)
+    public function getRelationFk(string $instance = null, string $fieldName = null)
     {
         $response = null;
         if ($instance) {
-            if (!$FieldName) {
+            if (!$fieldName) {
                 $fieldName = 'fk_' . $instance::getTableName();
             }
             $Stringy = new Stringy($instance);
             $NameIdInstance = 'id' . $Stringy->underscored();
 
-            $data = $instance::findAllByAttributes([$NameIdInstance => $this->$FieldName]);
+            $data = $instance::findAllByAttributes([$NameIdInstance => $this->$fieldName]);
             $response = $data ? $data[0] : null;
         }
         return $response;

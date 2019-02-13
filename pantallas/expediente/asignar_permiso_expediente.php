@@ -99,8 +99,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
           $.ajax({
             type : 'POST',
             async:false,
-            url: `${params.baseUrl}pantallas/expediente/ejecutar_acciones.php`,
-            data: {methodExp:'getPermisoExpedienteCont',idexpediente:params.idexpediente},
+            url: `${params.baseUrl}pantallas/ejecutar_acciones.php`,
+            data: {nameInstance:'ExpedienteController',methodInstance:'getPermisoExpedienteCont',idexpediente:params.idexpediente},
             dataType: 'json',
             success: function(response){
               if(response.exito){
@@ -144,8 +144,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             $.ajax({
               type : 'POST',
               async:false,
-              url: `${params.baseUrl}pantallas/expediente/ejecutar_acciones.php`,
-              data: {methodExp:'deletePemisoExpedienteCont',idpermiso:idpermisoExpediente},
+              url: `${params.baseUrl}pantallas/ejecutar_acciones.php`,
+              data: {nameInstance:'ExpedienteController',methodInstance:'deletePemisoExpedienteCont',idpermiso:idpermisoExpediente},
               dataType: 'json',
               success: function(response){
                 if(response.exito){
@@ -179,13 +179,14 @@ include_once $ruta_db_superior . 'assets/librerias.php';
           multiple:true,
           minimumInputLength: 4,
           ajax: {
-            url: `${params.baseUrl}pantallas/expediente/ejecutar_acciones.php`,
+            url: `${params.baseUrl}pantallas/ejecutar_acciones.php`,
             dataType: 'json',
             quietMillis: 1000,
             data: function (params) {
               var query = {
                 search: params.term,
-                methodExp: 'listFuncionarios'
+                methodInstance: 'listFuncionarios',
+                nameInstance: 'ExpedienteController'
               }
               return query;
             },
@@ -218,8 +219,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             $.ajax({
               type : 'POST',
               async:false,
-              url: `${params.baseUrl}pantallas/expediente/ejecutar_acciones.php`,
-              data: {methodExp:'insertPemisoExpedienteCont',idsExp:idexpediente,idfuncionario:funcionario},
+              url: `${params.baseUrl}pantallas/ejecutar_acciones.php`,
+              data: {nameInstance:'ExpedienteController',methodInstance:'insertPemisoExpedienteCont',idsExp:idexpediente,idfuncionario:funcionario},
               dataType: 'json',
               success: function(response){
                 if(response.exito){
