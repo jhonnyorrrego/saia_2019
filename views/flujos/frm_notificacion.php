@@ -163,14 +163,14 @@ if (empty($idflujo)) {
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-2">
-                        <div class="col col-md-3">
-                            <label for="mensaje_notificacion">Mensaje *</label>
+                    <div class="row">
+                        <div class="col col-md-7">
+                            <div class="form-group form-group-default">
+                                <label for="mensaje_notificacion">Mensaje *</label>
+                                <textarea class="form-control" id="mensaje_notificacion" name="mensaje" required rows="10"  style="height:100%;"><?= $notificacion->cuerpo ?></textarea>
+                            </div>
                         </div>
-                        <div class="col col-md-5">
-                            <textarea class="form-control" id="mensaje_notificacion" name="mensaje" required rows="5"><?= $notificacion->cuerpo ?></textarea>
-                        </div>
-                        <div class="col col-md-4" style="height:150px; overflow: auto;">
+                        <div class="col col-md-5" style="height:200px; overflow: auto;">
                             <label for="campos_formato_notificacion">Etiquetas automáticas de email</label>
                             <?php
                             if (!empty($listaIdsFmt)) {
@@ -195,10 +195,8 @@ if (empty($idflujo)) {
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <div class="col col-md-3">
-                            <label for="formato_notificacion">Elija los Registros que se deben enviar adjunto al email</label>
-                        </div>
                         <div class="col col-md-9">
+                            <label for="formato_notificacion">Elija los Registros que se deben enviar adjunto al email</label>
                             <?php
                             if (!empty($listaIdsFmt)) {
                                 echo $arbolFormato->generar_html();
