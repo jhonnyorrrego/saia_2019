@@ -326,6 +326,7 @@ function actualizar_cuerpo_formato($idformato, $tipo_retorno) {
 
 function consultar_campos_formato($idformato, $tipo_retorno) {
     global $conn, $ruta_db_superior;
+    $tipo_retorno=1;
     $retorno = array(
         "exito" => 0,
         "mensaje" =>  "Recuerde que se deben crear campos del formato"
@@ -345,14 +346,20 @@ function consultar_campos_formato($idformato, $tipo_retorno) {
                 $campos_excluir[] = $campos_lectura;
             }
         }
-
+        include_once($ruta_db_superior . "pantallas/generador/librerias.php");
+        $camposNucleo = " and A.nombre not in('" . implode("', '", camposNucleo($idformato)) . "')";
         $condicion_adicional = " and A.nombre not in('" . implode("', '", $campos_excluir) . "')";
-        $campos = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $idformato . " and etiqueta_html<>'campo_heredado' " . $condicion_adicional . "", "A.orden", $conn);
+        $campos = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $idformato . " and etiqueta_html<>'campo_heredado' " . $condicion_adicional . " " . $camposNucleo . "", "A.orden", $conn);
         if($campos['numcampos']){
-            $retorno["exito"] = 1;
+            $camposDescripcion = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $idformato . " and etiqueta_html<>'campo_heredado' " . $condicion_adicional . " and (acciones like 'p' or acciones like '%,p,%' or acciones like '%,p') ", "A.orden", $conn);
+            if($camposDescripcion['numcampos']){
+                $retorno["exito"] = 1;
+            }else{
+		        $retorno['mensaje'] = 'Debe seleccionar alguno de los campos para incluirse en la descripción de los documentos';  
+            }           
         }
         if ($tipo_retorno == 1)
-            echo (json_encode($retorno));
+            echo json_encode($retorno, JSON_UNESCAPED_UNICODE);
         else {
             return ($retorno);
         }

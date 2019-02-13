@@ -74,8 +74,6 @@ if($tipoElemento != TipoElemento::TIPO_TAREA) {
 
 	    <link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/jspanel.css">
 
-        <?= estilo_tabla_bootstrap("1.13") ?>
-
 		<link rel="stylesheet" href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap4-editable/css/bootstrap-editable.css">
 
         <?= jquery() ?>
@@ -86,7 +84,7 @@ if($tipoElemento != TipoElemento::TIPO_TAREA) {
         <?= librerias_UI("1.12") ?>
 		<?= librerias_arboles_ft("2.24")?>
 
-        <?= librerias_tabla_bootstrap("1.13", false, false) ?>
+        <?= bootstrapTable() ?>
 
 	    <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/jspanel.js"></script>
         <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/extensions/hint/jspanel.hint.js"></script>
@@ -94,7 +92,7 @@ if($tipoElemento != TipoElemento::TIPO_TAREA) {
 
 		<script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap4-editable/js/bootstrap-editable.js"></script>
 
-        <script src="<?= $ruta_db_superior ?>css/bootstrap_table/1.13.4/extensions/editable/bootstrap-table-editable.js"></script>
+        <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/bootstrap-table/extensions/editable/bootstrap-table-editable.min.js"></script>
 
     </head>
     <body>

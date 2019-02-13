@@ -282,7 +282,7 @@ class GenerarFormato
         if (!$indice["numcampos"]) {
             return (false);
         }
-        return (true);
+        return true;
     }
 
     /*

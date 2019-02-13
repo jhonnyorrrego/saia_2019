@@ -30,13 +30,12 @@ if (!empty($_REQUEST["idnotificacion"])) {
         <meta name="description" content="">
 
         <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen">
-        <?= estilo_tabla_bootstrap("1.13") ?>
 
         <?= jquery() ?>
         <?= bootstrap() ?>
         <?= icons() ?>
         <?= theme() ?>
-        <?= librerias_tabla_bootstrap("1.13", false, false) ?>
+        <?= bootstrapTable() ?>
 
     </head>
     <body>

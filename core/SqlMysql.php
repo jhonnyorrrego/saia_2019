@@ -502,7 +502,7 @@ class SqlMysql extends SQL2
         return $fsql;
     }
 
-   static function fecha_db_obtener($campo, $formato = null)
+    static function fecha_db_obtener($campo, $formato = null)
     {
         if (!$formato)
             $formato = "Y-m-d";

@@ -15,7 +15,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
-$Response = (object) array(
+$Response = (object)array(
     'data' => new stdClass(),
     'message' => "",
     'success' => 0
@@ -23,30 +23,34 @@ $Response = (object) array(
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
     $data = [];
-    foreach($_REQUEST['routes'] as $route){
+    foreach ($_REQUEST['routes'] as $route) {
         $content = file_get_contents($ruta_db_superior . $route);
         $routePath = explode('/', $route);
         $extensionParts = explode('.', end($routePath));
-        $route = $_REQUEST['task'] . '/' . time().'-'.rand(0,1000) . '.' . end($extensionParts);
-
+        $storageName = time() . '-' . rand(0, 1000) . '.' . end($extensionParts);
+        $route = date('Y') . '/' . date('m') . '/' . date('d') . '/' . $_REQUEST['task'] . '/' . $storageName;
         $dbRoute = UtilitiesController::createFileDbRoute($route, 'anexos_tareas', $content);
 
-        $data[] = AnexoTarea::newRecord([
-            'fk_funcionario' => $_REQUEST['key'],
-            'fk_tarea' => $_REQUEST['task'],
+        $pk = Anexo::newRecord([
             'ruta' => $dbRoute,
-            'descripcion' => $_REQUEST['description'],
-            'version' => 1,
-            'estado' => 1,
-            'fecha' => date('Y-m-d H:i:s'),
-            'etiqueta' => end($routePath)
+            'etiqueta' => end($routePath),
+            'nombre' => $storageName,
+            'extension' => end($extensionParts),
+            'descripcion' => $_REQUEST['description']
         ]);
+
+        if ($pk) {
+            $data[] = TareaAnexo::newRecord([
+                'fk_anexo' => $pk,
+                'fk_tarea' => $_REQUEST['task']
+            ]);
+        }
     }
 
-    if(count($data)){
+    if (count($data)) {
         $Response->message = 'Anexos cargados';
         $Response->success = 1;
-    }else{
+    } else {
         $Response->message = 'Imposible guardar';
     }
 } else {

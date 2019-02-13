@@ -115,20 +115,6 @@ padding:13px;
       }
     });
 
-
-    /* Handle custom checkbox clicks */
-     /*$("#tree_campo_idformato").on("onNodeClick", function(e){
-     	console.log($.ui.fancytree.getEventTargetType())
-      	var node = $.ui.fancytree.getNode(e),
-        $input = $(e.target);
-      	e.stopPropagation();  // prevent fancytree activate for this row
-      	var nodeId = node.key;
-		var title =  node.title;
-		    	//abrir_kaiten("pantallas/generador/iframe_generador.php?nokaiten=1&idformato="+nodeId,title);
-        	//window.location= ruta_db_superior+"pantallas/generador/generador_pantalla.php?idformato="+nodeId;
-    });*/
-
-
     var tree = $("#tree_campo_idformato").fancytree("getTree");
     $("input[name=search]").keyup(function(e){
 		    var coincidencias = " coincidencias";
@@ -227,8 +213,8 @@ $(document).ready(function() {
 </html>
 <?php
 }else{
-	echo (librerias_jquery("3.3"));
-	echo (estilo_bootstrap());
+	echo librerias_jquery("3.3");
+	echo estilo_bootstrap();
 	echo librerias_UI("1.12");
 	echo librerias_arboles_ft("2.24", 'filtro');
 	$origen = array("url" => "arboles/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior,"params" => array("id" => $_REQUEST['id'],"cargar_seleccionado" => $_REQUEST['cargar_seleccionado']));
@@ -272,11 +258,10 @@ ul.fancytree-container {
   <body>
   	<div class="container"><br>
   		<div class="row mx-0 px-0">
-			<div class="col-auto px-0 mx-0">
-				<?= $arbol->generar_html() ?>
-		  	</div>
-		  </div>
-  		
+				<div class="col-auto px-0 mx-0">
+					<?= $arbol->generar_html() ?>
+				</div>
+		  </div>		
   	</div>
 	<script type="text/javascript">
 		$(".buscar_arboles").hide();
@@ -292,40 +277,22 @@ ul.fancytree-container {
 			        var title =  data.node.title;
 			        var elemento_evento = $.ui.fancytree.getEventTargetType(event.originalEvent);
 			        if(elemento_evento == 'title') {
-			        	abrir_kaiten("pantallas/generador/iframe_generador.php?nokaiten=1&idformato="+nodeId,title);
-			        	//window.location= ruta_db_superior+"pantallas/generador/generador_pantalla.php?idformato="+nodeId;
-					}
+			        	abrir_kaiten("pantallas/generador/iframe_generador.php?nokaiten=1&idformato="+nodeId,title);					}
 				}
 			}else{
 				function evento_click(event, data) {
-							/*console.log($("ul").hasClass("fancytree-treefocus"));
-						  $("ul").removeClass("fancytree-treefocus");
-							console.log($("ul").hasClass("fancytree-treefocus"));*/
 			        var nodeId = data.node.key;
-			        var title =  data.node.title;
-	        		//console.log($("#admin_generador",window.parent.document));
+			        var title =  data.node.title
 	        		var elemento_evento = $.ui.fancytree.getEventTargetType(event.originalEvent);
 			        if(elemento_evento == 'title') {
 		        		$("#iframe_generador",window.parent.document).attr("src", ruta_db_superior+"pantallas/generador/generador_pantalla.php?idformato="+nodeId)
-			        	//window.location= ruta_db_superior+"pantallas/generador/generador_pantalla.php?idformato="+nodeId;
 					}
-					//$("#admin_generador").attr("src","vacio.php");
-			        /*var elemento_evento = $.ui.fancytree.getEventTargetType(event.originalEvent);
-			        if(elemento_evento == 'title') {*/
-			        	/*$("#admin_generador",window.parent.document).load(ruta_db_superior+"pantallas/generador/generador_pantalla.php?idformato="+idformato+" admin_generador",
-				        	function(response){
-				        		$("#admin_generador",window.parent.document).html($(response).find("#admin_generador").contents());
-				        		//console.log($("#admin_generador",window.parent.document).length)
-				        		}
-			        	)
-							//$("#admin_generador").load("vacio.php");*/
-				//}
 				}
 			}
 		</script>
 	</body>
 </html>
 <?php
-//echo librerias_UI("1.12");
+
 }
 ?>

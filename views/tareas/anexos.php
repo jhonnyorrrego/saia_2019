@@ -20,4 +20,5 @@ include_once $ruta_db_superior . 'assets/librerias.php';
 
 <?= dropzone() ?>
 <?= bootstrapTable() ?>
+<?= bootstrapTableEditable() ?>
 <script src="<?= $ruta_db_superior ?>views/tareas/js/anexos.js"></script>

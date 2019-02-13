@@ -44,7 +44,7 @@ $nombre_proceso = mb_strtoupper($nombre_proceso);
                     </tr>
                     <?php for ($i = 0; $i < $lista_formatos['numcampos']; $i++) :
                         if (UtilitiesController::permisoModulo('crear_' . $lista_formatos[$i]['nombre'])) :
-                            $etiqueta = codifica_encabezado(html_entity_decode($lista_formatos[$i]['etiqueta']));
+                            $etiqueta = $lista_formatos[$i]['etiqueta'];
                             $etiqueta = ucwords(strtolower($etiqueta));
 
                             $enlace_adicionar = FORMATOS_CLIENTE . $lista_formatos[$i]['nombre'] . '/' . $lista_formatos[$i]['ruta_adicionar'] . '?';

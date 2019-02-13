@@ -12,7 +12,12 @@ include_once $ruta_db_superior . "db.php";
 include_once $ruta_db_superior . "librerias_saia.php";
 include_once $ruta_db_superior . "pantallas/lib/librerias_componentes.php";
 include_once $ruta_db_superior . "pantallas/generador/librerias_pantalla.php";
+include_once($ruta_db_superior . "arboles/crear_arbol_ft.php");
+
+
 if ($_REQUEST['idformato']) {
+  echo librerias_UI("1.12");
+  echo librerias_arboles_ft("2.24", 'filtro');
 
   $formato = busca_filtro_tabla("", "formato", "idformato=" . $_REQUEST['idformato'], "", $conn);
   $formato = procesar_cadena_json($formato, array("cuerpo", "ayuda", "etiqueta"));
@@ -41,6 +46,16 @@ if ($_REQUEST['idformato']) {
     $nombre_categoria = busca_filtro_tabla("", "categoria_formato a", "a.idcategoria_formato=" . $categoria, "", $conn);
     $adicional_categoria = "&seleccionado=" . $categoria;
   }
+
+  $origen = array("url" => "arboles/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("id" => $_REQUEST['id'], "excluido" => $_REQUEST['idformato'], "seleccionado" => $cod_padre, "seleccionable" => "radio"));
+  $opciones_arbol = array("keyboard" => true, "selectMode" => 1, "seleccionarClick" => 1, "busqueda_item" => 1, "checkbox" => radio);
+  $extensiones = array("filter" => array());
+  $arbol = new ArbolFt("codigo_padre_formato", $origen, $opciones_arbol, $extensiones, $validaciones);
+
+  $origenCategoria = array("url" => "arboles/arbol_categoria_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("tipo" => "1", "seleccionados" => $formato[0]["fk_categoria_formato"], "seleccionable" => "checkbox"));
+  $opcionesArbolCategoria = array("keyboard" => true, "selectMode" => 3, "seleccionarClick" => 1, "busqueda_item" => 1, "checkbox" => checkbox);
+  $extensionesCategoria = array("filter" => array());
+  $arbolCategoria = new ArbolFt("fk_categoria_formato", $origenCategoria, $opcionesArbolCategoria, $extensionesCategoria, $validaciones);
 }
 /**
  * Esta funcion puede servir para
@@ -323,12 +338,12 @@ if ($formato["numcampos"]) {
       <div class="control-group">
        <label class="control-label" for="codigo_padre" data-toggle="tooltip" title="Seleccione el formato principal al cual pertenece"><strong>Relaci&oacute;n con otro Formato</strong></label>
         <div class="controls">
-        	<div id="esperando_codigo_padre_formato"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
-        	<?php echo ($nombre_cod_padre[0]["etiqueta"]); ?>
-          <div id="treebox_codigo_padre_formato" class="arbol_saia"></div>
-          <input id="codigo_padre_formato" type="hidden" name="cod_padre" value="<?php echo ($cod_padre); ?>">
-          <?php crear_arbol("codigo_padre_formato", $ruta_db_superior . "test_formatos.php?tabla=formato&excluido=" . $_REQUEST['idformato'] . $adicional_cod_padre); ?>
+          <?php echo ($nombre_cod_padre[0]["etiqueta"]); ?>
+          <div class="col-auto px-0 mx-0">
+            <input id="codigo_padre_formato" type="hidden" name="cod_padre" value="<?php echo ($cod_padre); ?>">
+            <?= $arbol->generar_html() ?>
           </div>
+         </div>
       </div>
     </div>
   
@@ -341,7 +356,7 @@ if ($formato["numcampos"]) {
       <input type="checkbox" class="tipo_edicion" name="tipo_edicion" id="tipo_edicion" <?php check_banderas('tipo_edicion'); ?>><span class="tipo_edicion">Edicion Continua</span>
       <!--<input type="checkbox" name="mostrar" id="mostrar" <?php check_banderas('mostrar'); ?>>Mostrar-->
       <input type="checkbox" class="paginar" name="paginar" id="paginar" <?php check_banderas('paginar'); ?>><span class="paginar">Paginar al mostrar</span>
-      <input type="checkbox" name="banderas[]" id="banderas" <?=check_banderas('aprobacion_automatica');?>>Aprobacion Automatica
+      <input type="checkbox" name="banderas[]" id="banderas" <?= check_banderas('aprobacion_automatica'); ?>>Aprobacion Automatica
       <input type="checkbox" name="banderas[]"	style="display:none;" id="banderas" <?php check_banderas('asunto_padre'); ?> checked><!--Tomar el asunto del padre al responder-->
     </div>
   </div> 
@@ -364,8 +379,8 @@ if ($formato["numcampos"]) {
               <select name="papel" id="papel">
               	<option value="Letter" <?= $formato[0]["papel"] == "Letter" ? ' selected' : '' ?>>Carta (21,6 cm x 27,9 cm)</option>
               	<option value="Legal" <?= $formato[0]["papel"] == "Legal" ? ' selected' : '' ?>>Legal (21,6 cm x 35,6 cm)</option>
-              	<option value="A4" <?=  $formato[0]["papel"] == "A4" ? ' selected' : '' ?>>A4 (21,0 cm x 29,7 cm)</option>
-              	<option value="A5" <?=  $formato[0]["papel"] == "A5" ? ' selected' : '' ?>>Media Carta (14,0 cm x 21,6 cm)</option>
+              	<option value="A4" <?= $formato[0]["papel"] == "A4" ? ' selected' : '' ?>>A4 (21,0 cm x 29,7 cm)</option>
+              	<option value="A5" <?= $formato[0]["papel"] == "A5" ? ' selected' : '' ?>>Media Carta (14,0 cm x 21,6 cm)</option>
               </select>
             </div>
           </div>
@@ -477,11 +492,7 @@ if ($formato["numcampos"]) {
       <div class="control-group">
         <label class="control-label" for="fk_categoria_formato" data-toggle="tooltip" title="Escoja en donde ser&aacute; ubicado el formato"><strong>Categor&iacute;a del formato</strong></label>
         <div class="controls">
-        	<div id="esperando_fk_categoria_formato"><img src="<?php echo $ruta_db_superior; ?>imagenes/cargando.gif"></div>
-        	<?php echo ($categoria_formato[0]["nombre"]); ?>
-          <div id="treebox_fk_categoria_formato" class="arbol_saia"></div>
-          <input id="fk_categoria_formato" type="hidden" name="fk_categoria_formato" value="<?php echo ($formato[0]["fk_categoria_formato"]); ?>">
-          <?php crear_arbol("fk_categoria_formato", $ruta_db_superior . "test_categoria.php?tipo=1&seleccionados=" . @$formato[0]["fk_categoria_formato"], "checkbox"); ?>
+          <?= $arbolCategoria->generar_html() ?>
         </div>
       </div>
     </div>
@@ -597,7 +608,7 @@ $("document").ready(function(){
                 success: function(objeto) {
                     if(objeto.exito) {               
                         notificacion_saia(objeto.mensaje,'success','topCenter',3000);
-                        window.location.href = window.location.pathname+"?idformato="+objeto.idformato;
+                        window.parent.location.href = window.parent.location.pathname+"?idformato="+objeto.idformato;
 
                       } else {
                     	notificacion_saia(objeto.error,'error','topCenter',3000);
@@ -749,7 +760,7 @@ function check_banderas($bandera, $chequear = true)
     }
   } else if ($bandera == "asunto_padre") {
     echo ' value="r" ';
-    if (strpos($formato[0]["banderas"],"r" ) !== false) {
+    if (strpos($formato[0]["banderas"], "r") !== false) {
       echo ' checked="checked" ';
     }
   } else if ($bandera && $formato[0][$bandera]) {
