@@ -210,20 +210,24 @@ if (empty($idflujo)) {
                     </div>
 
                 </fieldset>
-                <button type="button" class="btn btn-primary btn-sm" id="guardarNotificacion">Guardar notificaci&oacute;n</button>
             </form>
         </div>
 
         <div class="container">
-            <div class="row">
-                <div class="dropdown" id="divDdDestinatario">
-                    <button class="btn btn-warning btn-sm dropdown-toggle" type="button" id="dropdownDestinatario" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Adicionar destinatario
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownDestinatario">
-                        <a class="dropdown-item tipo1" href="#" data-toggle="modal">Funcionarios de la Organizaci&oacute;n</a>
-                        <a class="dropdown-item tipo2" href="#">Asociado a campos de registros</a>
-                        <a class="dropdown-item tipo3" href="#">Personas externas</a>
+            <div class="row mt-3">
+                <div class="col col-md-3">
+                    <button type="button" class="btn btn-primary btn-sm" id="guardarNotificacion">Guardar notificaci&oacute;n</button>
+                </div>
+                <div class="col col-md-3">
+                    <div class="dropdown" id="divDdDestinatario">
+                        <button class="btn btn-warning btn-sm dropdown-toggle" type="button" id="dropdownDestinatario" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Adicionar destinatario
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownDestinatario">
+                            <a class="dropdown-item tipo1" href="#" data-toggle="modal">Funcionarios de la Organizaci&oacute;n</a>
+                            <a class="dropdown-item tipo2" href="#">Asociado a campos de registros</a>
+                            <a class="dropdown-item tipo3" href="#">Personas externas</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -288,7 +292,9 @@ if (empty($idflujo)) {
 
                 let idnotificacion = $("#idnotificacion").val();
                 if(idnotificacion && idnotificacion > 0) {
-                   $("#divDdDestinatario").toggleClass("invisible");
+                   $("#divDdDestinatario").addClass("visible");
+                } else {
+                   $("#divDdDestinatario").addClass("invisible");
                 }
 
                 //console.log("notificacion", "idflujo", idflujo);
