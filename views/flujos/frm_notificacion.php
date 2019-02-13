@@ -163,14 +163,14 @@ if (empty($idflujo)) {
                             </div>
                         </div>
                     </div>
-                    <div class="row mb-2">
-                        <div class="col col-md-3">
-                            <label for="mensaje_notificacion">Mensaje *</label>
+                    <div class="row">
+                        <div class="col col-md-7">
+                            <div class="form-group form-group-default">
+                                <label for="mensaje_notificacion">Mensaje *</label>
+                                <textarea class="form-control" id="mensaje_notificacion" name="mensaje" required rows="10"  style="height:100%;"><?= $notificacion->cuerpo ?></textarea>
+                            </div>
                         </div>
-                        <div class="col col-md-5">
-                            <textarea class="form-control" id="mensaje_notificacion" name="mensaje" required rows="5"><?= $notificacion->cuerpo ?></textarea>
-                        </div>
-                        <div class="col col-md-4" style="height:150px; overflow: auto;">
+                        <div class="col col-md-5" style="height:200px; overflow: auto;">
                             <label for="campos_formato_notificacion">Etiquetas automáticas de email</label>
                             <?php
                             if (!empty($listaIdsFmt)) {
@@ -195,10 +195,8 @@ if (empty($idflujo)) {
                         </div>
                     </div>
                     <div class="row mb-2">
-                        <div class="col col-md-3">
-                            <label for="formato_notificacion">Elija los Registros que se deben enviar adjunto al email</label>
-                        </div>
                         <div class="col col-md-9">
+                            <label for="formato_notificacion">Elija los Registros que se deben enviar adjunto al email</label>
                             <?php
                             if (!empty($listaIdsFmt)) {
                                 echo $arbolFormato->generar_html();
@@ -210,20 +208,24 @@ if (empty($idflujo)) {
                     </div>
 
                 </fieldset>
-                <button type="button" class="btn btn-primary btn-sm" id="guardarNotificacion">Guardar notificaci&oacute;n</button>
             </form>
         </div>
 
         <div class="container">
-            <div class="row">
-                <div class="dropdown">
-                    <button class="btn btn-warning btn-sm dropdown-toggle" type="button" id="dropdownDestinatario" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Adicionar destinatario
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownDestinatario">
-                        <a class="dropdown-item tipo1" href="#" data-toggle="modal">Funcionarios de la Organizaci&oacute;n</a>
-                        <a class="dropdown-item tipo2" href="#">Asociado a campos de registros</a>
-                        <a class="dropdown-item tipo3" href="#">Personas externas</a>
+            <div class="row mt-3">
+                <div class="col col-md-3">
+                    <button type="button" class="btn btn-primary btn-sm" id="guardarNotificacion">Guardar notificaci&oacute;n</button>
+                </div>
+                <div class="col col-md-3">
+                    <div class="dropdown" id="divDdDestinatario">
+                        <button class="btn btn-warning btn-sm dropdown-toggle" type="button" id="dropdownDestinatario" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Adicionar destinatario
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownDestinatario">
+                            <a class="dropdown-item tipo1" href="#" data-toggle="modal">Funcionarios de la Organizaci&oacute;n</a>
+                            <a class="dropdown-item tipo2" href="#">Asociado a campos de registros</a>
+                            <a class="dropdown-item tipo3" href="#">Personas externas</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -285,12 +287,20 @@ if (empty($idflujo)) {
                 if (!idflujo) {
                     idflujo = <?= $idflujo ?>;
                 }
+
+                let idnotificacion = $("#idnotificacion").val();
+                if(idnotificacion && idnotificacion > 0) {
+                   $("#divDdDestinatario").addClass("visible");
+                } else {
+                   $("#divDdDestinatario").addClass("invisible");
+                }
+
                 //console.log("notificacion", "idflujo", idflujo);
                 //var $table = $('#tabla_notificaciones');
                 $("#tabla_destinatarios2").bootstrapTable();
 
                 $(".tipo1").click(function () {
-                    var idnotificacion = $("#idnotificacion").val();
+                    let idnotificacion = $("#idnotificacion").val();
                     //console.log(idnotificacion);
                     var $iframe = $('#frameTipoNotificacion');
                     var url = "<?= $ruta_db_superior ?>views/flujos/modal_persona_saia.php?idnotificacion=" + idnotificacion;
@@ -304,7 +314,7 @@ if (empty($idflujo)) {
                             $('#modalTipoNotificacion').modal('show');
                         }
                     } else {
-                        var idnotificacion = guardarNotificacion();
+                        idnotificacion = guardarNotificacion();
                         if (idnotificacion) {
                             if ($iframe.length) {
                                 $iframe.attr('src', url);
@@ -450,6 +460,9 @@ if (empty($idflujo)) {
                                     pk = response.data.pk;
                                     $("#idnotificacion").val(pk);
                                     parent.postMessage({accion: "recargarTabla", id: pk}, "*");
+                                    if(pk && pk > 0) {
+                                        $("#divDdDestinatario").toggleClass("invisible");
+                                    }
                                 } else {
                                     top.notification({type: "error", message: response.message});
                                 }
