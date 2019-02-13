@@ -735,12 +735,12 @@ function mostrar_estado_proceso($idformato, $iddoc)
             array_unique($resultado);
             $ancho_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='ancho_firma'", "", $conn);
             if (!$ancho_firma["numcampos"]) {
-                $ancho_firma[0]["valor"] = 200;
+                $ancho_firma[0]["valor"] = "20%";
             }
 
             $alto_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='alto_firma'", "", $conn);
             if (!$alto_firma["numcampos"]) {
-                $alto_firma[0]["valor"] = 100;
+                $alto_firma[0]["valor"] = "20%";
             }
             $tamano_fuente = busca_filtro_tabla("valor", "configuracion A", "A.nombre='tamano_letra'", "", $conn);
             if (!$tamano_fuente["numcampos"]) {
@@ -778,10 +778,10 @@ function mostrar_estado_proceso($idformato, $iddoc)
                         echo '<td style="border:none;" align="left">';
                         if ($firma[0]["firma"] != "") {
                             $pagina_actual = $_SERVER["PHP_SELF"];
-                            echo '<img class="d-none d-lg-block d-xl-none" src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/' . FORMATOS_SAIA . 'librerias/mostrar_foto.php?codigo=' . $fila["funcionario_codigo"];
+                            echo '<img class="d-none d-lg-block" src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/' . FORMATOS_SAIA . 'librerias/mostrar_foto.php?codigo=' . $fila["funcionario_codigo"];
                             echo '" width="' . $ancho_firma[0]["valor"] . '" height="' . $alto_firma[0]["valor"] . '"/><br />';
                         } else
-                            echo '<img class="d-none d-lg-block d-xl-none" src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/firmas/blanco.jpg" width="100" height="' . $alto_firma[0]["valor"] . '" ><br />';
+                            echo '<img class="d-none d-lg-block" src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/firmas/blanco.jpg" width="100" height="' . $alto_firma[0]["valor"] . '" ><br />';
 
                         echo "<p class='my-0'><strong>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</strong><br /></p>";
                         if ($cargos["numcampos"]) {
@@ -833,7 +833,7 @@ function mostrar_estado_proceso($idformato, $iddoc)
                         $_REQUEST["tabla"] = "ruta";
                         $_REQUEST["firma"] = "1";
                         require_once($ruta_db_superior . FORMATOS_SAIA . "librerias/mostrar_foto_manual.php");
-                        $parte = '<td style="border:none;"><img class="d-none d-lg-block d-xl-none" src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/carpeta_temporal_firma/imagen_temporal' . $_REQUEST["llave_seleccion"] . '.jpg" width="200" height="100">';
+                        $parte = '<td style="border:none;"><img class="d-none d-lg-block" src="' . PROTOCOLO_CONEXION . RUTA_PDF_LOCAL . '/carpeta_temporal_firma/imagen_temporal' . $_REQUEST["llave_seleccion"] . '.jpg" width="200" height="100">';
 
                         $parte .= "<br /><strong>" . mayusculas($fila["nombres"] . " " . $fila["apellidos"]) . "</strong><br />";
                         if ($cargos["numcampos"]) {

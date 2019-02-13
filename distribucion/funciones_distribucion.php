@@ -235,29 +235,30 @@ function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0
     $distribuciones = busca_filtro_tabla("numero_distribucion,tipo_origen,origen,tipo_destino,destino,estado_distribucion,iddistribucion", "distribucion", "documento_iddocumento=" . $iddoc, "", $conn);
     $tabla = '';
     if ($distribuciones['numcampos']) {
-        $tabla = '<table class="table table-bordered" style="width: 100%; text-align:left;" border="1">
-	    	<tr>
-	    		<th style="text-align:center;" colspan="4"><p>INFORMACI&Oacute;N DESTINO</p></th>
-	    	</tr>
-	    	<tr>
-	    		<th style="text-align:center;">ENTREGA F&Iacute;SICA</th>
-	        	<th style="text-align:center;">NO. ITEM</th>
-	        	<th style="text-align:center;">NOMBRE ORIGEN</th>
-	        	<th style="text-align:center;">NOMBRE DESTINO</th>
+        $tabla = '
+            <div class="row">
+            <div class="col-md-12">
+            <table class="table  table-condensed" style="width: 100%; text-align:left;margin-bottom:5%;" border="0">
+            <thead>
+            <tr>
+            <td style="text-align:center;" style="width:8%;"><b class="hint-text">NO. ITEM</b></td>
+            <td style="text-align:center;" style="width:8%;"><b class="hint-text">ENTREGA F&Iacute;SICA</b></td>
+            <td style="text-align:center;" style="width:10%;"><b class="hint-text">ORIGEN</b></td>
+            <td style="text-align:center;" style="width:20%;"><b class="hint-text">DESTINO</b></td>
 	      	</tr>';
 
         for ($i = 0; $i < $distribuciones['numcampos']; $i++) {
             $enlace_finalizar_distribucion = generar_enlace_finalizar_distribucion($distribuciones[$i]['iddistribucion']);
 
             $tabla .= '<tr>
-				<td style="text-align:center;"> ' . ver_estado_distribucion($distribuciones[$i]['estado_distribucion']) . $enlace_finalizar_distribucion . ' </td>
-				<td style="text-align:center;"> ' . $distribuciones[$i]['numero_distribucion'] . ' </td>
-				<td> 
+				<td style="text-align:center;" style="width:8%;"> ' . $distribuciones[$i]['numero_distribucion'] . ' </td>
+				<td style="text-align:center;" style="width:8%;"> ' . ver_estado_distribucion($distribuciones[$i]['estado_distribucion']) . $enlace_finalizar_distribucion . ' </td>
+				<td style="text-align:center;"> 
 					' . retornar_origen_destino_distribucion($distribuciones[$i]['tipo_origen'], $distribuciones[$i]['origen']) . ' 
 					<br>
 					' . retornar_ubicacion_origen_destino_distribucion($distribuciones[$i]['tipo_origen'], $distribuciones[$i]['origen']) . '
 				</td>
-				<td> 
+				<td style="text-align:center;"> 
 					' . retornar_origen_destino_distribucion($distribuciones[$i]['tipo_destino'], $distribuciones[$i]['destino']) . ' 
 					<br>
 					' . retornar_ubicacion_origen_destino_distribucion($distribuciones[$i]['tipo_destino'], $distribuciones[$i]['destino']) . '
@@ -265,7 +266,7 @@ function mostrar_listado_distribucion_documento($idformato, $iddoc, $retorno = 0
 			</tr>';
         }
 
-        $tabla .= '</table>';
+        $tabla .= '<thead></table></div></div>';
         $tabla .= generar_enlace_finalizar_distribucion(0, 1);
     }
     if ($retorno) {
@@ -336,7 +337,8 @@ function generar_enlace_finalizar_distribucion($iddistribucion, $js = 0) {
         }
 
         if ($retornar_enlace && $distribucion[0]['estado_distribucion'] != 3) {
-            $html = '<br><button class="finalizar_item_usuario_actual btn btn-mini btn-complete" iddistribucion=' . $iddistribucion . '>Confirmar</button>';
+            //se comenta el boton hasta nueva indicacion de ubicacion
+            //$html = '<br><button class="finalizar_item_usuario_actual btn btn-mini btn-complete" iddistribucion=' . $iddistribucion . '>Confirmar</button>';
         }
     }//fin if js
 
@@ -360,8 +362,8 @@ function ver_documento_distribucion($iddocumento, $tipo_origen) {//Radicado
     );
 
     $cadena_mostrar = $numero . '-' . $array_tipo_origen[$tipo_origen];
-    
-    $enlace_documento = '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $iddocumento . '" conector="iframe" titulo="No Registro ' . $numero . '"><center><button class="btn btn-complete">'  . $cadena_mostrar . '</button></center></div>';
+
+    $enlace_documento = '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $iddocumento . '" conector="iframe" titulo="No Registro ' . $numero . '"><center><button class="btn btn-complete">' . $cadena_mostrar . '</button></center></div>';
 
     return ($enlace_documento);
 }
@@ -564,10 +566,10 @@ function retornar_ubicacion_origen_destino_distribucion($tipo, $valor) {
     $ubicacion = '';
     if ($tipo == 1) {//iddependencia_cargo
         $datos = busca_filtro_tabla("cargo,dependencia", "vfuncionario_dc", "iddependencia_cargo=" . $valor, "", $conn);
-        $ubicacion = '<b>Dependencia:</b> ' . $datos[0]['dependencia'] . '<br><b>Cargo: </b> ' . $datos[0]['cargo'] . '';
+        $ubicacion = $datos[0]['dependencia'] . '<br> ' . $datos[0]['cargo'] . '';
     } else {//iddatos_ejecutor
         $datos = busca_filtro_tabla("direccion,cargo", "ejecutor a, datos_ejecutor b", "a.idejecutor=b.ejecutor_idejecutor AND b.iddatos_ejecutor=" . $valor, "", $conn);
-        $ubicacion = '<b>Direcci&oacute;n:</b> ' . $datos[0]['direccion'] . '<br/><b>Cargo: </b> ' . $datos[0]['cargo'];
+        $ubicacion = $datos[0]['direccion'] . '<br/> ' . $datos[0]['cargo'];
     }
     return ($ubicacion);
 }
@@ -582,7 +584,7 @@ function retornar_origen_destino_distribucion($tipo, $valor) {
         $datos = busca_filtro_tabla("nombre", "ejecutor a, datos_ejecutor b", "a.idejecutor=b.ejecutor_idejecutor AND b.iddatos_ejecutor=" . $valor, "", $conn);
         $nombre = $datos[0]['nombre'];
     }
-    return ($nombre);
+    return $nombre;
 }
 
 function condicion_adicional_distribucion() {

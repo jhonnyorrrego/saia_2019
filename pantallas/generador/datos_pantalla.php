@@ -13,12 +13,10 @@ include_once $ruta_db_superior . "librerias_saia.php";
 include_once $ruta_db_superior . "pantallas/lib/librerias_componentes.php";
 include_once $ruta_db_superior . "pantallas/generador/librerias_pantalla.php";
 include_once($ruta_db_superior . "arboles/crear_arbol_ft.php");
-
+echo librerias_UI("1.12");
+echo librerias_arboles_ft("2.24", 'filtro');
 
 if ($_REQUEST['idformato']) {
-  echo librerias_UI("1.12");
-  echo librerias_arboles_ft("2.24", 'filtro');
-
   $formato = busca_filtro_tabla("", "formato", "idformato=" . $_REQUEST['idformato'], "", $conn);
   $formato = procesar_cadena_json($formato, array("cuerpo", "ayuda", "etiqueta"));
   $cod_padre = $formato[0]["cod_padre"];
@@ -52,10 +50,22 @@ if ($_REQUEST['idformato']) {
   $extensiones = array("filter" => array());
   $arbol = new ArbolFt("codigo_padre_formato", $origen, $opciones_arbol, $extensiones, $validaciones);
 
-  $origenCategoria = array("url" => "arboles/arbol_categoria_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("tipo" => "1", "seleccionados" => $formato[0]["fk_categoria_formato"], "seleccionable" => "checkbox"));
+  $origenCategoria = array("url" => "arboles/arbol_categoria_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("tipo" => "1", "seleccionado" => $formato[0]["fk_categoria_formato"], "seleccionable" => "checkbox"));
   $opcionesArbolCategoria = array("keyboard" => true, "selectMode" => 3, "seleccionarClick" => 1, "busqueda_item" => 1, "checkbox" => checkbox);
   $extensionesCategoria = array("filter" => array());
   $arbolCategoria = new ArbolFt("fk_categoria_formato", $origenCategoria, $opcionesArbolCategoria, $extensionesCategoria, $validaciones);
+}else{
+  
+  $origen = array("url" => "arboles/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("seleccionable" => "radio"));
+  $opciones_arbol = array("keyboard" => true, "selectMode" => 1, "seleccionarClick" => 1, "busqueda_item" => 1, "checkbox" => radio);
+  $extensiones = array("filter" => array());
+  $arbol = new ArbolFt("codigo_padre_formato", $origen, $opciones_arbol, $extensiones, $validaciones);
+
+  $origenCategoria = array("url" => "arboles/arbol_categoria_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("tipo" => "1", "seleccionado" => $formato[0]["fk_categoria_formato"], "seleccionable" => "checkbox"));
+  $opcionesArbolCategoria = array("keyboard" => true, "selectMode" => 3, "seleccionarClick" => 1, "busqueda_item" => 1, "checkbox" => checkbox);
+  $extensionesCategoria = array("filter" => array());
+  $arbolCategoria = new ArbolFt("fk_categoria_formato", $origenCategoria, $opcionesArbolCategoria, $extensionesCategoria, $validaciones);
+
 }
 /**
  * Esta funcion puede servir para

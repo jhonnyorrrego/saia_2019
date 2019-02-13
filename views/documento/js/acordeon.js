@@ -90,8 +90,8 @@ $(function () {
     }, false);
 
     function setSize() {
-        
         let sizeDocument = localStorage.getItem('breakpoint'); 
+
         setValores(sizeDocument);
     }
 
@@ -103,9 +103,12 @@ $(function () {
             var widthIni = 668;
         }else if(sizeDocument == 'xs'){
             var widthIni = 480;
+        } else if (sizeDocument == 'xl') {
+            var widthIni = 960;
         }
-        
+     
         var widthAct = parseFloat($(".page_content").css('width')) * xsFont /  widthIni;
+        
         if (sizeDocument == 'xs' || sizeDocument == 'sm'){
             $('#documento').css("font-size", widthAct + "px");
             $('#documento').find("p").css("font-size", widthAct + "px")
@@ -115,11 +118,11 @@ $(function () {
       
         var contenidoImg = $("#documento").find("img");
         contenidoImg.each(function (i) {
-            var sizeImg = parseFloat($(this).attr("width"));          
+            var sizeImg = parseFloat($(this).attr("width"));        
             if (sizeImg >= 50 && sizeDocument != 'xl'){
                 sizeImg = sizeImg * 1.1;
-            }else if (sizeImg <= 50 && sizeDocument == 'xl') {
-                sizeImg = sizeImg * 1.2;
+            } else if (sizeImg <= 50 && sizeDocument == 'xl' && widthAct <'10') {
+                sizeImg = sizeImg * 1.3;
             }else if(sizeImg <= 50 && sizeDocument =='lg'){
                 sizeImg = sizeImg * 1.2;
             }
