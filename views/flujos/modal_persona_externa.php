@@ -145,6 +145,7 @@ function guardarDestinatario(idnotificacion, data) {
 				top.notification({type: "success", message: response.message});
 				pk = response.data.pk;
 				parent.parent.postMessage({accion: "recargarTabla", id: pk}, "*");
+                                parent.postMessage({accion: "recargarTablaDestinatarios", idnotificacion: idnotificacion}, "*");
 			  } else {
 				  top.notification({type: "error", message: response.message});
 			  }

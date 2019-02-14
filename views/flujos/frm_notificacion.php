@@ -282,6 +282,19 @@ if (empty($idflujo)) {
             //var $table = $('#tabla_notificaciones');
             //$table.bootstrapTable();
 
+            var metodoEventoNotificaciones = window.addEventListener ? "addEventListener" : "attachEvent";
+            var manejadorEventosNotificaciones = window[metodoEventoNotificaciones];
+            var mensajeEventoNotificacion = metodoEventoNotificaciones == "attachEvent" ? "onmessage" : "message";
+
+// Listen to message from child window
+            manejadorEventosNotificaciones(mensajeEventoNotificacion, function (e) {
+                console.log('Notificaciones: Mensaje recibido!:  ', e.data);
+                let datos = e.data;
+                if (datos.accion == "recargarTablaDestinatarios") {
+                    $('#tabla_destinatarios2').bootstrapTable('refresh', {url: "listado_destinatarios.php?idnotificacion=" + datos.idnotificacion});
+                }
+            }, false);
+
             $(function () {
                 var idflujo = $("script[data-idflujo]").data("idflujo");
                 if (!idflujo) {
