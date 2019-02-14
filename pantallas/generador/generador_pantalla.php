@@ -803,7 +803,7 @@ $(document).ready(function() {
     });
     $(document).on("click", "#actualizar_cuerpo_formato", function() {
         var contenido_editor = CKEDITOR.instances['editor_mostrar'].getData();
-        console.log(contenido_editor); return false;
+        
         $.ajax({
             type: 'POST',
             url: "<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias_formato.php",
