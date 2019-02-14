@@ -19,7 +19,10 @@ final class Version20190213135037 extends AbstractMigration
 
     public function up(Schema $schema) : void
     {
-       $componente1 = [
+        if ($schema->hasTable("funciones_formato")) {
+            $tabla = $schema->getTable("funciones_formato");
+            $tabla->dropColumn("formato");
+            $componente1 = [
                 'nombre' => "{*asunto_documento*}",
                 'nombre_funcion' => "asunto_documento",
                 'etiqueta' => "Descripci&oacute;n del documento",
@@ -27,12 +30,14 @@ final class Version20190213135037 extends AbstractMigration
                 'ruta' => "../../formatos/librerias/funciones_cliente.php",
                 'acciones' => "m"
 
-        ];
-
-        $this->connection->insert('funciones_formato', $componente1);
+            ];
+            $this->connection->insert('funciones_formato', $componente1);
+            
+        }
+     
         $this->connection->update('modulo', ['etiqueta' => 'Registro de correspondencia'], ["nombre" => "radicacion_entrada"]);
         $this->connection->update('modulo', ['etiqueta' => 'Crear Registro de correspondencia'], ["nombre" => "crear_radicacion_entrada"]);
-        $this->connection->update('modulo', ['etiqueta' => 'Registro de correspondencia'], ["nombre" => "radicacion_entrada"]);
+        $this->connection->update('formato', ['etiqueta' => 'Registro de correspondencia'], ["nombre" => "radicacion_entrada"]);
     }
 
     public function preUp(Schema $schema): void {
