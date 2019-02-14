@@ -331,7 +331,6 @@ class GenerarFormato
 
             $archivos = 0;
             $texto .= htmlspecialchars_decode($formato[0]["cuerpo"]);
-            print_r($texto);die();
             $librerias = array();
             $campos = busca_filtro_tabla("*", "campos_formato A", "A.formato_idformato=" . $this->idformato, "", $conn);
             $lcampos = extrae_campo($campos, "nombre", "U");
