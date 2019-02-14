@@ -32,7 +32,7 @@ function mostrar_codigo_qr($idformato, $iddoc, $retorno = 0, $width = 50)
 		if (is_object($ruta_qr)) {
 			if ($tipo_almacenamiento->get_filesystem()->has($ruta_qr->ruta)) {
 				$archivo_binario = StorageUtils::get_binary_file($codigo_qr[0]['ruta_qr']);
-				$img = '<img src="' . $archivo_binario . '" style="width:' . $width . '% ">';
+				$img = '<img src="' . $archivo_binario . '" width=' . $width . '% >';
 			}
 		}
 	}
@@ -43,7 +43,7 @@ function mostrar_codigo_qr($idformato, $iddoc, $retorno = 0, $width = 50)
 			if (is_object($ruta_qr)) {
 				if ($tipo_almacenamiento->get_filesystem()->has($ruta_qr->ruta)) {
 					$archivo_binario = StorageUtils::get_binary_file($respuesta['ruta_qr']);
-					$img = '<img src="' . $archivo_binario . '" style="width:' . $width . '% ">';
+					$img = '<img src="' . $archivo_binario . '" width=' . $width . '% >';
 				}
 			}
 		} else {
