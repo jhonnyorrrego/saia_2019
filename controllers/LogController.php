@@ -7,6 +7,7 @@ class LogController
         switch ($event) {
             case LogAccion::CREAR:
             case LogAccion::BORRAR:
+            case LogAccion::VERSIONAR:
                 $logId = self::insertEvent($event, $userId);
                 break;
             case LogAccion::EDITAR:

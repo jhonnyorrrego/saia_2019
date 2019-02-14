@@ -53,7 +53,7 @@ class Anexo extends Model
         $this->clone = new self($this->getPK());
         return $this->clone->getPK();
     }
-    
+
     protected function afterUpdate()
     {
         return LogController::create(LogAccion::EDITAR, 'AnexoLog', $this);
@@ -112,5 +112,16 @@ SQL;
         }
 
         return $this->log;
+    }
+
+    public function storage()
+    {
+        $this->estado = 0;
+        
+        if($this->save()){
+            return LogController::create(LogAccion::VERSIONAR, 'AnexoLog', $this);
+        }
+
+        return false;
     }
 }

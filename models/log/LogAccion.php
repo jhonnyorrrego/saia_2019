@@ -10,6 +10,7 @@ class LogAccion extends Model
     const CREAR = 1;
     const EDITAR = 2;
     const BORRAR = 3;
+    const VERSIONAR = 4;
 
     function __construct($id = null)
     {

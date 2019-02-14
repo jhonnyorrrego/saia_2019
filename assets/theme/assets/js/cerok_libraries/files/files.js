@@ -14,6 +14,14 @@ class Files {
         return this._options;
     }
 
+    set active(id) {
+        this._activeFile = id;
+    }
+
+    get active() {
+        return this._activeFile || null;
+    }
+
     init() {
         let validate = Files.validate(this.options.selector);
 
@@ -42,7 +50,12 @@ class Files {
                 <div class="row pt-2">
                     <div class="col-12">
                         <div class="form-group text-right">
-                            <button class="btn btn-complete" id="upload_file">Guardar anexos</button>
+                            <button class="btn btn-complete btn-block" id="upload_file">Guardar anexos</button>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group text-right">
+                            <button class="btn btn-danger btn-block hide" id="stop_upload">Cancelar</button>
                         </div>
                     </div>
                 </div>                
@@ -125,15 +138,22 @@ class Files {
     }
 
     save(description) {
-        this.options.save(description, this._loadedFiles);
-        this.reset();
-        this.getTable().bootstrapTable('refresh');
+        if (this.options.save(description, this._loadedFiles, this.active)) {
+            this.reset();
+            this.getTable().bootstrapTable('refresh');
+        } else {
+            console.error('error al guardar');
+        }
     }
 
     reset() {
-        $('#file_description').val('');
+        this.active = 0;
         this._loadedFiles = [];
+        $('#file_description').val('');
+        this.getStopButton().addClass('hide');
         this.getDropzone().removeAllFiles();
+        this.getDropzone().options.maxFiles = this.options.dropzone.maxFiles;
+        this.getDropzone().options.dictMaxFilesExceeded = this.options.dropzone.dictMaxFilesExceeded;
     }
 
     getTable() {
@@ -142,6 +162,10 @@ class Files {
 
     getDropzone() {
         return this._dropzone
+    }
+
+    getStopButton() {
+        return $('#stop_upload');
     }
 
     static getDefaultOptions() {
@@ -247,8 +271,13 @@ class Files {
     }
 
     upload(key) {
-        alert(key);
+        this.active = key;
+        this.getDropzone().options.maxFiles = 1;
+        this.getDropzone().options.dictMaxFilesExceeded = "Máximo 1 archivo";
+        this.getDropzone().hiddenFileInput.click();
+        this.getStopButton().removeClass('hide');
     }
+
     delete(key) {
         let filesInstance = this;
         top.confirm({

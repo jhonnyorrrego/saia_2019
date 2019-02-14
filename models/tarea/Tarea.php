@@ -115,7 +115,8 @@ class Tarea extends Model
                 on b.fk_tarea = c.idtarea
             where 
                 c.idtarea = $params->task and
-                a.eliminado = 0
+                a.eliminado = 0 and 
+                a.estado = 1
             order by $params->order
 SQL;
         $records = StaticSql::search($sql, $params->offset, $params->limit);
