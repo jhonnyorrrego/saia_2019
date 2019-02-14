@@ -85,7 +85,6 @@ function llena_formato($id, $nivel = 0, $seleccionados = array(), $filtrar = nul
     } else {
         $papas = busca_filtro_tabla("idformato, etiqueta,descripcion_formato,version", "formato", "item <> 1 AND cod_padre=" . $id . $adicionales. $formatoExcluido, "etiqueta ASC", $conn);
     }
-
     $resp = array();
     if ($papas["numcampos"]) {
         for ($i = 0; $i < $papas["numcampos"]; $i++) {
@@ -123,4 +122,3 @@ function llena_formato($id, $nivel = 0, $seleccionados = array(), $filtrar = nul
 
     return $resp;
 }
-?>

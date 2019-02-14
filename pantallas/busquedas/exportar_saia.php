@@ -14,17 +14,18 @@ include_once($ruta_db_superior . "assets/librerias.php");
 echo(librerias_html5());
 echo jquery();
 echo bootstrap();
-
 ?>
 <link class="main-stylesheet"
-          href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.css"
-          rel="stylesheet" type="text/css" />
-    <link
-        href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/font-awesome/css/font-awesome.css"
-        rel="stylesheet" type="text/css" />
+      href="<?= $ruta_db_superior ?>assets/theme/pages/css/pages.css"
+      rel="stylesheet" type="text/css" />
+<link
+    href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/font-awesome/css/font-awesome.css"
+    rel="stylesheet" type="text/css" />
 <body style="background-color: transparent;">
-    <div id="barra_exp_ppal" style="margin-top:2px;margin-left:2px;width:100px; height:25px;">
-        <div class="progress progress-striped active" style="margin-bottom: 0px;"><div class="bar bar-success" id="barra_exp" ></div></div>
+    <div  id="barra_exp_ppal">
+        <div class="progress-circle-indeterminate progress-circle-complete" style="width:100%">
+        </div>
+    </div>
     </div>
     <?php
     $_REQUEST["no_imprime"] = 1;
@@ -60,7 +61,9 @@ echo bootstrap();
 
                 echo('<script type="text/javascript">');
                 if ($porcentaje == 100) {
-                    $texto = '$("#barra_exp_ppal").html("<a href=\'' . $ruta_db_superior . $_REQUEST["ruta_exportar_saia"] . '\' align=\'center\'><button title=\'Descargar\' class=\'btn btn-xm btn-complete\'><i class=\'fa fa-download\'></i></button></a>");';
+                    $texto = 'var href = \'' . $ruta_db_superior . $_REQUEST["ruta_exportar_saia"] . '\';'
+                            . 'window.location.href = href;'
+                            . '$("#barra_exp_ppal").html("").removeClass("progress");';
                 } else {
                     $texto = '$("#barra_exp").html("' . $porcentaje . '%");
 						$("#barra_exp").css("width","' . $porcentaje . '%");';

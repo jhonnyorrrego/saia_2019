@@ -580,7 +580,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
         $empresa_transportadora = mostrar_valor_campo('empresa_transportado', $idformato, $iddoc, 1);
         $tabla .= "<tr>
                         <td class='pr-0' style='border:none;width: 19%;'><strong>TIPO DE ORIGEN:</strong></td>
-                        <td style='border:none;width: 13%;'>" . mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1) . "</td>
+                        <td style='border:none;width: 18%;'>" . mostrar_valor_campo('tipo_origen', $idformato, $iddoc, 1) . "</td>
                         <td style='border:none;width: 23%;'><strong>N&Uacute;MERO DE GU&Iacute;A:</strong></td>
                         <td style='border:none;'>" . $datos[0]['numero_guia'] . "</td>
                 </tr>

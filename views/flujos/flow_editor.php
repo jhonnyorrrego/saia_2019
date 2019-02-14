@@ -40,6 +40,7 @@ if (isset($_REQUEST["idflujo"])) {
     console.log("editor", "idflujo", idflujo);
 
     var diagramUrl = '<?= $ruta_db_superior ?>views/flujos/flujo_ejemplo.bpmn';
+    var xmlDiagrama = `<?= $datosDiagrama ?>`;
 
     // modeler instance
     var bpmnModeler = new BpmnJS({
@@ -78,8 +79,8 @@ if (isset($_REQUEST["idflujo"])) {
             // e.gfx = the graphical element
             var objeto = e.element.businessObject;
             var tipoElem = e.element.businessObject.$type;
-            //var id = 1;
-            if (/Task/.test(tipoElem) || /Gateway/.test(tipoElem)) {
+
+            if (xmlDiagrama != "" && (/Task/.test(tipoElem) || /Gateway/.test(tipoElem))) {
                 //canvas.addMarker(e.element, 'highlight');
 
                 let strParam = jQuery.param({
@@ -114,6 +115,17 @@ if (isset($_REQUEST["idflujo"])) {
                     }
                 };
                 modalActividad = jsPanel.create(jspanelOpts);
+            } else if(xmlDiagrama == "") {
+                jsPanel.hint.create({
+                    autoclose:      3000,
+                    position:    'center-top 0 100 down',
+                    headerControls: 'closeonly',
+                    iconfont:    'fa',
+                    contentSize: '330 auto',
+                    content:     '<p>Debe guardar el diagrama</p>',
+                    theme:       'warning',
+                    headerTitle: '<i class="fa fa-exclamation-triangle"></i> Atenci&oacute;n'
+                });
             }
         });
     });
@@ -147,6 +159,7 @@ if (isset($_REQUEST["idflujo"])) {
                             //console.log(response);
                             if (response.success == 1) {
                                 top.notification({title: "Diagrama", type: "success", message: response.message});
+                                xmlDiagrama = xml;
                             } else {
                                 top.notification({type: "error", message: response.message});
                             }
@@ -202,8 +215,6 @@ if (isset($_REQUEST["idflujo"])) {
     }
 
     $(function () {
-
-        var xmlDiagrama = `<?= $datosDiagrama ?>`;
         if (idflujo && idflujo != "" && xmlDiagrama != "") {
             openDiagram(xmlDiagrama);
         } else {
