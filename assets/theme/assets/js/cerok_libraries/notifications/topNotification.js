@@ -23,7 +23,7 @@ let iziDefaultOptions = {
     layout: 1,
     balloon: false,
     close: true,
-    closeOnEscape: false,
+    closeOnEscape: true,
     closeOnClick: false,
     displayMode: 0, // once, replace
     position: 'topRight', // bottomRight, bottomLeft, topRight, topLeft, topCenter, bottomCenter, center
