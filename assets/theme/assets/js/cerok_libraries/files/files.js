@@ -50,12 +50,12 @@ class Files {
                 <div class="row pt-2">
                     <div class="col-12">
                         <div class="form-group text-right">
-                            <button class="btn btn-complete btn-block" id="upload_file">Guardar anexos</button>
+                            <button type="button" class="btn btn-complete btn-block" id="upload_file">Guardar anexos</button>
                         </div>
                     </div>
                     <div class="col-12">
                         <div class="form-group text-right">
-                            <button class="btn btn-danger btn-block hide" id="stop_upload">Cancelar</button>
+                            <button type="button" class="btn btn-danger btn-block hide" id="stop_upload">Cancelar</button>
                         </div>
                     </div>
                 </div>                
