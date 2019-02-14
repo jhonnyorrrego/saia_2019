@@ -11,7 +11,7 @@ let iziDefaultOptions = {
     messageLineHeight: '',
     backgroundColor: '',
     theme: 'light', // dark
-    color: '', // blue, red, green, yellow
+    color: 'blue', // blue, red, green, yellow
     icon: '',
     iconText: '',
     iconColor: '',
@@ -19,7 +19,7 @@ let iziDefaultOptions = {
     image: '',
     imageWidth: 50,
     maxWidth: null,
-    zindex: null,
+    zindex: 99999,
     layout: 1,
     balloon: false,
     close: true,
@@ -73,8 +73,18 @@ function convertTypeToColor(type) {
     return data[type];
 }
 
+function showConfirm(options) {
+    options = $.extend({}, iziDefaultOptions, options);
+
+    if (options.type) {
+        options.color = convertTypeToColor(options.type);
+    }
+
+    iziToast.question(options);
+}
+
 window.notification = function (options) {
-    if (typeof top.toastr == 'undefined') {
+    if (typeof top.iziToast == 'undefined') {
         let baseUrl = top.jQuery("#baseUrl", window.top.document).data('baseurl');
         top.jQuery.get(`${baseUrl}assets/theme/assets/plugins/iziToast/css/iziToast.min.css`, function (r) {
             $('head').append($('<style>').html(r));
@@ -84,5 +94,19 @@ window.notification = function (options) {
         })
     } else {
         showNotification(options);
+    }
+}
+
+window.confirm = function (options) {
+    if (typeof top.iziToast == 'undefined') {
+        let baseUrl = top.jQuery("#baseUrl", window.top.document).data('baseurl');
+        top.jQuery.get(`${baseUrl}assets/theme/assets/plugins/iziToast/css/iziToast.min.css`, function (r) {
+            $('head').append($('<style>').html(r));
+            top.jQuery.getScript(`${baseUrl}assets/theme/assets/plugins/iziToast/js/iziToast.min.js`, function () {
+                showConfirm(options);
+            })
+        })
+    } else {
+        showConfirm(options);
     }
 }
