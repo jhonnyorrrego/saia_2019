@@ -274,7 +274,7 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
                                         <input type="hidden" id="etiqueta_encabezado" name="etiqueta_encabezado"
                                             value="<?php echo $etiqueta_encabezado; ?>"></label>
                                 </div>
-                                <div id="encabezado_formato" name="encabezado_formato">
+                                <div id="encabezado_formato" name="encabezado_formato" class="container-fluid">
                                     <?php
 									if ($idencabezado) {
 										echo $contenido_enc[$idencabezado];

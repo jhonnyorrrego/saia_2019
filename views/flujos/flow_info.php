@@ -157,7 +157,7 @@ $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
 <script type="text/javascript" id="sfi" data-idflujo="<?= $idflujo ?>">
     $(function () {
         var idflujo = $("script[data-idflujo]").data("idflujo");
-        //console.log("info", "idflujo", idflujo);
+        console.log("info", "idflujo", idflujo);
         $("#guardarFlujo").click(function () {
             if ($("#flowForm").valid()) {
                 var formData = new FormData(document.getElementById("flowForm"));

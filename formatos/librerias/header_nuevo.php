@@ -180,7 +180,7 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
 <div class="container bg-master-lightest mx-0 px-2 px-md-2 mw-100">
     <div id="documento" class="row p-0 m-0">
         <div id="pag-0" class="col-12 page_border bg-white">
-            <div class="page_margin_top" id="doc_header">
+            <div class="page_margin_top mb-0" id="doc_header">
                 <?php if ($encabezado["numcampos"]) {
                     if (!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] == 1) {
                         $pagina = 0;
