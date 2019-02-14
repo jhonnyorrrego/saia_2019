@@ -1,10 +1,10 @@
 <?php
 
-class AnexoLog extends Model
+class TareaLog extends Model
 {
-    protected $idanexo_log;
+    protected $idtarea_log;
     protected $fk_log;
-    protected $fk_anexo;
+    protected $fk_tarea;
     protected $dbAttributes;
 
     function __construct($id = null)
@@ -20,17 +20,17 @@ class AnexoLog extends Model
         $this->dbAttributes = (object)[
             'safe' => [
                 'fk_log',
-                'fk_anexo'
+                'fk_tarea'
             ],
             'date' => []
         ];
     }
 
-    public static function newLogRelation($logId, $fileId)
+    public static function newLogRelation($logId, $taskId)
     {
         return self::newRecord([
-            'fk_anexo' => $fileId,
-            'fk_log' => $logId
+            'fk_log' => $logId,
+            'fk_tarea' => $taskId
         ]);
     }
 }

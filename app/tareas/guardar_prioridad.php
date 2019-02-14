@@ -22,9 +22,9 @@ $Response = (object) array(
 );
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    PrioridadTarea::takeOffByTask($_REQUEST['task']);
+    TareaPrioridad::takeOffByTask($_REQUEST['task']);
 
-    $pk = PrioridadTarea::newRecord([
+    $pk = TareaPrioridad::newRecord([
         'fk_funcionario' => $_REQUEST['key'],
         'fk_tarea' => $_REQUEST['task'],
         'prioridad' => $_REQUEST['priority'],

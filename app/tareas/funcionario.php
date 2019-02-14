@@ -32,8 +32,8 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
             $data[] = [
                 'id' => $Tarea->getPK(),
                 'title' => $Tarea->getName(),
-                'start' => $Tarea->getInitialDate(),
-                'end' => $Tarea->getFinalDate(),
+                'start' => $Tarea->fecha_inicial,
+                'end' => $Tarea->fecha_final,
                 'color' => $Tarea->getColor()
             ];
         }

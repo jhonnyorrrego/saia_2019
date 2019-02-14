@@ -43,22 +43,42 @@ class Anexo extends Model
         ];
     }
 
+    /**
+     * evento de base de datos
+     * se ejecuta despues de crear un nuevo registro
+     * @return void
+     */
     protected function afterCreate()
     {
         return LogController::create(LogAccion::CREAR, 'AnexoLog', $this);
     }
 
+    /**
+     * evento de base de datos
+     * se ejecuta antes de modificar un registro
+     * @return void
+     */
     protected function beforeUpdate()
     {
         $this->clone = new self($this->getPK());
         return $this->clone->getPK();
     }
 
+    /**
+     * evento de base de datos
+     * se ejecuta despues de modificar un registro
+     * @return void
+     */
     protected function afterUpdate()
     {
         return LogController::create(LogAccion::EDITAR, 'AnexoLog', $this);
     }
 
+    /**
+     * calcula el peso del anexo
+     *
+     * @return string
+     */
     public function getFileSize()
     {
         $data = StorageUtils::resolver_ruta($this->ruta);
@@ -68,11 +88,11 @@ class Anexo extends Model
         return $size . ' Kb';
     }
 
-    public function getDescription()
-    {
-        return $this->descripcion;
-    }
-
+    /**
+     * calcula el icono en base a la extension
+     *
+     * @return string
+     */
     public function getIcon()
     {
         switch (strtolower($this->extension)) {
@@ -99,6 +119,12 @@ class Anexo extends Model
         return "<i class='fa {$icon}'></i>";
     }
 
+    /**
+     * retorna una instancia de log
+     * con el ultimo movimiento
+     *
+     * @return object
+     */
     public function getLastLog()
     {
         if (!$this->log) {
@@ -114,6 +140,11 @@ SQL;
         return $this->log;
     }
 
+    /**
+     * versiona el anexo
+     *
+     * @return boolean
+     */
     public function storage()
     {
         $this->estado = 0;

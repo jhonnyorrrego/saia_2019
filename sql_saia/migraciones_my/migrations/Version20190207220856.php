@@ -27,18 +27,6 @@ final class Version20190207220856 extends AbstractMigration
 
     public function up(Schema $schema) : void
     {
-        $this->connection->executeQuery("truncate table anexo_tarea");
-        $table = $schema->getTable('anexo_tarea');
-
-        if($table->hasColumn('etiqueta')){
-            $table->dropColumn('etiqueta');
-        }
-
-        $table->addColumn("etiqueta", "string", [
-            "length" => 255,
-            "notnull" => true
-        ]);
-
     }
 
     public function down(Schema $schema) : void

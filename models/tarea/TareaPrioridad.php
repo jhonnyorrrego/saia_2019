@@ -1,8 +1,8 @@
 <?php
 
-class PrioridadTarea extends Model
+class TareaPrioridad extends Model
 {
-    protected $idprioridad_tarea;
+    protected $idtarea_prioridad;
     protected $fk_funcionario;
     protected $fk_tarea;
     protected $prioridad;
@@ -37,11 +37,24 @@ class PrioridadTarea extends Model
     public static function findHistoryByTask($taskId){
         global $conn;
 
-        $tables = self::getTableName() . ' a,' . Funcionario::getTableName() . ' b';
-        $findRecords = busca_filtro_tabla('a.idprioridad_tarea,a.fecha,a.estado,a.prioridad,b.nombres,b.apellidos', $tables, 'a.fk_funcionario = b.idfuncionario and a.fk_tarea =' . $taskId, 'idprioridad_tarea desc', $conn);
+        $sql = <<<SQL
+            select 
+                a.idtarea_prioridad,
+                a.fecha,
+                a.estado,
+                a.prioridad,
+                b.nombres,
+                b.apellidos
+            from 
+                tarea_prioridad a join
+                funcionario b on
+                a.fk_funcionario = b.idfuncionario
+            where 
+                a.fk_tarea = {$taskId}
+            order by idtarea_prioridad desc
+SQL;
 
-        unset($findRecords['numcampos'], $findRecords['tabla'], $findRecords['sql']);
-        return $findRecords;
+        return StaticSql::search($sql);
     }
 
     public static function getPriority($priority){
