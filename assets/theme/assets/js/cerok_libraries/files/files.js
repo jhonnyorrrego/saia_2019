@@ -112,13 +112,13 @@ class Files {
 
             switch ($(this).data('type')) {
                 case 'upload':
-                    Files.upload($(this).data('id'));
+                    instance.upload($(this).data('id'));
                     break;
                 case 'delete':
-                    Files.delete($(this).data('id'));
+                    instance.delete($(this).data('id'));
                     break;
                 case 'access':
-                    Files.access($(this).data('id'));
+                    instance.access($(this).data('id'));
                     break;
             }
         });
@@ -245,14 +245,40 @@ class Files {
     static isObject(item) {
         return (item && typeof item === 'object' && !Array.isArray(item));
     }
-    
-    static upload(key) {
+
+    upload(key) {
         alert(key);
     }
-    static delete(key) {
-        alert(key);
+    delete(key) {
+        let filesInstance = this;
+        top.confirm({
+            id: 'question',
+            type: 'error',
+            title: 'Eliminando!',
+            message: 'Está seguro de eliminar este registro?',
+            position: 'center',
+            timeout: 0,
+            buttons: [
+                [
+                    '<button><b>YES</b></button>',
+                    function (instance, toast) {
+                        if (filesInstance.options.delete(key)) {
+                            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                            filesInstance.getTable().bootstrapTable('refresh');
+                        }
+                    },
+                    true
+                ],
+                [
+                    '<button>NO</button>',
+                    function (instance, toast) {
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                    }
+                ],
+            ]
+        });
     }
-    static access(key) {
+    access(key) {
         alert(key);
     }
 }

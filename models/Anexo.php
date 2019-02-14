@@ -48,16 +48,12 @@ class Anexo extends Model
         return LogController::create(LogAccion::CREAR, 'AnexoLog', $this);
     }
 
-    protected function afterDelete()
-    {
-        return LogController::create(LogAccion::BORRAR, 'AnexoLog', $this);
-    }
-
     protected function beforeUpdate()
     {
         $this->clone = new self($this->getPK());
         return $this->clone->getPK();
     }
+    
     protected function afterUpdate()
     {
         return LogController::create(LogAccion::EDITAR, 'AnexoLog', $this);
@@ -105,7 +101,7 @@ class Anexo extends Model
 
     public function getLastLog()
     {
-        if(!$this->log){
+        if (!$this->log) {
             $sql = <<<SQL
             select max(fk_log) as idlog
             from anexo_log 

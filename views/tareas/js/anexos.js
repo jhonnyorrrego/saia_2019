@@ -66,6 +66,26 @@ $(function () {
                         });
                     }
                 }, 'json');
+            },
+            delete: function (key) {
+                let success = false;
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: `${baseUrl}app/anexos/eliminar.php`,
+                    async: false,
+                    data: {
+                        key: localStorage.getItem('key'),
+                        fileId: key
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            success = true;
+                        }
+                    }
+                });
+
+                return success;
             }
         };
 
