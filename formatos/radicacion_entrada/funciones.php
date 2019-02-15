@@ -623,7 +623,7 @@ function mostrar_informacion_general_radicacion($idformato, $iddoc)
                         <td style="border:none;" colspan="2">' . $nombre_anexos . '</td>
                     
                     </tr>';
-    $tabla .= '</div></div></thead></table>';
+    $tabla .= '</div></div></thead></table></div></div>';
     echo $tabla;
 }
 
