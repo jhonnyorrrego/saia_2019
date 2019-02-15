@@ -111,7 +111,7 @@ echo librerias_jquery("2.2");
 </head>
 
 <body>
-    <h5><b>Configuraci&oacute;n del campo - <?=$texto_titulo?></b></h5>
+    <h5><b>Configuraci&oacute;n del campo - <?=html_entity_decode(utf8_encode($texto_titulo))?></b></h5>
     <div class="container">
     	<form id="editar_pantalla_campo" name="editar_pantalla_campo"></form>
     	<div id="res" class="alert"></div>
