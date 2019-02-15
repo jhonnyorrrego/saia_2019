@@ -11,6 +11,7 @@ class PermisoExpediente extends Model
     protected $tipo_funcionario;
     protected $permiso;
     protected $fk_expediente;
+    
     protected $dbAttributes;
 
     public function __construct($id = null)

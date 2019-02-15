@@ -41,12 +41,6 @@ function conditions_exp_documents()
     return $where;
 }
 
-function conditions_caja_expediente()
-{
-    $where= "e.agrupador=0 AND e.estado=1 AND e.fk_caja=1 AND EXISTS (SELECT null FROM expediente e2 WHERE e2.idexpediente=e.cod_padre and e2.fk_caja<>1)";
-    return $where;
-}
-
 /** AQUI TERMINA LAS FUNCIONES DE LAS CONDICIONES */
 
 

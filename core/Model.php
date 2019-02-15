@@ -357,7 +357,6 @@ abstract class Model extends StaticSql
         foreach ($records as $key => $value) {
             $data[] = $value[0];
         }
-
         return $data;
     }
 

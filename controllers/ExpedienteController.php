@@ -439,7 +439,8 @@ class ExpedienteController
                     $attributes = [
                         'fk_expediente' => $data['idexpediente'],
                         'fk_funcionario' => $_SESSION['idfuncionario'],
-                        'fecha_eliminacion' => date('Y-m-d H:i:s')
+                        'fecha_eliminacion' => date('Y-m-d H:i:s'),
+                        'fk_caja' => 0
                     ];
                     $ExpDel->setAttributes($attributes);
                     if ($ExpDel->create()) {
@@ -495,7 +496,7 @@ class ExpedienteController
                                 $ExpDel = $instance[0];
                                 $ExpDel->fecha_restauracion = date('Y-m-d H:i:s');
                                 if ($ExpDel->update()) {
-                                    $sql = "UPDATE expediente SET estado=1,fk_expediente_eli=NULL WHERE idexpediente={$data['idexpediente']} OR cod_arbol like '{$Expediente->cod_arbol}.%' ";
+                                    $sql = "UPDATE expediente SET estado=1,fk_expediente_eli=NULL WHERE fk_expediente_eli={$ExpDel->getPK()}";
                                     if (StaticSql::query($sql)) {
                                         $response['exito'] = 1;
                                         $response['message'] = 'Expediente restaurado';
@@ -520,7 +521,7 @@ class ExpedienteController
                 $response['message'] = 'El expediente NO se encuentra eliminado';
             }
         } else {
-            $response['message'] = 'Falta el identificar del expediente';
+            $response['message'] = 'Falta el identificador del expediente';
         }
         return ($response);
     }

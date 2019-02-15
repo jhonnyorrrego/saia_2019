@@ -9,6 +9,7 @@ class Dependencia extends Model
     protected $tipo;
     protected $estado;
     protected $codigo_arbol;
+    
     protected $dbAttributes;
 
     protected $DependenciaPadre;

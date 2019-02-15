@@ -20,8 +20,10 @@ class Caja extends Model
     protected $responsable;
     protected $fecha_creacion;
     protected $estado;
-    protected $fecha_eliminacion;
-
+    protected $fk_caja_eli;
+    
+    protected $dbAttributes;
+    
     function __construct($id = null)
     {
         parent::__construct($id);
@@ -46,11 +48,10 @@ class Caja extends Model
                 'responsable',
                 'fecha_creacion',
                 'estado',
-                'fecha_eliminacion'
+                'fk_caja_eli'
             ],
             'date' => [
-                'fecha_creacion',
-                'fecha_eliminacion'
+                'fecha_creacion'
             ]
         ];
     }
@@ -76,12 +77,8 @@ class Caja extends Model
      */
     public function getPropietario() : string
     {
-        $response = '';
         $data = $this->getRelationFk('Funcionario', 'propietario');
-        if ($data) {
-            $response = $data->nombres . ' ' . $data->apellidos;
-        }
-        return $response;
+        return $data ? $data->nombres . ' ' . $data->apellidos : '';
     }
     /**
      * Retorna el nombre del funcionario responsable
@@ -91,12 +88,8 @@ class Caja extends Model
      */
     public function getResponsable() : string
     {
-        $response = '';
         $data = $this->getRelationFk('Funcionario', 'responsable');
-        if ($data) {
-            $response = $data->nombres . ' ' . $data->apellidos;
-        }
-        return $response;
+        return $data ? $data->nombres . ' ' . $data->apellidos : '';
     }
 
     /**
@@ -134,7 +127,31 @@ class Caja extends Model
         $data = $this->keyValueField('estado_archivo');
         return $data[$this->estado_archivo] ?? '';
     }
-    
+
+    /**
+     * Cuenta los documentos que existen en una caja
+     *
+     * @return integer
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function countDocuments() : int
+    {
+        return ExpedienteDoc::countDocumentsCaja($this->idcaja);
+    }
+
+
+    /**
+     * Cuenta los expedientes que existen dentro de una caja
+     * incluye expedientes inferiores
+     *
+     * @param integer $tipoAg : identificador del agrupador (expediente,separador, serie, dependencia)
+     * @return integer
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function countAllExpediente() : int
+    {
+        return Expediente::countAllExpedienteCaja($this->idcaja);
+    }
 
     /**
      * Crea el HTML de un campo

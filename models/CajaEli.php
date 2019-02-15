@@ -1,10 +1,11 @@
 <?php
 
-class ExpedienteEli extends Model
+class CajaEli extends Model
 {
 
-    protected $idexpediente_eli;
-    protected $fk_expediente;
+    protected $idcaja_eli;
+    protected $fk_caja;
+    protected $eliminar_expediente;
     protected $fk_funcionario;
     protected $fecha_eliminacion;
     protected $fecha_restauracion;
@@ -20,7 +21,8 @@ class ExpedienteEli extends Model
     {
         $this->dbAttributes = (object)[
             'safe' => [
-                'fk_expediente',
+                'fk_caja',
+                'eliminar_expediente',
                 'fk_funcionario',
                 'fecha_eliminacion',
                 'fecha_restauracion'

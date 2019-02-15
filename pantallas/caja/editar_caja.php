@@ -18,7 +18,8 @@ if (!$idcaja || !$Caja->isResponsable()) {
 }
 
 $params = [
-    'baseUrl' => $ruta_db_superior
+    'baseUrl' => $ruta_db_superior,
+    'countExpediente' => $Caja->countAllExpediente()
 ];
 
 include_once $ruta_db_superior . 'assets/librerias.php';
@@ -55,6 +56,20 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                 <div class="form-group">
                                     <label>Codigo *</label>
                                     <input type="text" class="form-control" name="codigo" id="codigo" value="<?=$Caja->codigo?>">
+                                </div>
+
+                                <div class="form-group" id="divTipoDisabled" style="display:none">
+                                    <label>Tipo *</label>
+                                    <span class="help">No se permite editar el tipo, tiene expedientes vinculados</span>
+                                    <input type="text" disabled="true" class="form-control" value="<?= $Caja->getEstadoArchivo() ?>">
+                                </div>
+
+                                <div class="form-group" id="divTipo">
+                                    <label>Tipo *</label>
+                                    <select class="form-control" name="estado_archivo" id="estado_archivo">
+                                        <option value="">por favor seleccione</option>
+                                        <?= $Caja->getHtmlField('estado_archivo', 'select',$Caja->estado_archivo) ?>
+                                    </select>
                                 </div>
 
                                 <div class="form-group">
@@ -97,7 +112,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                     <label>Material</label>
                                     <select class="form-control" name="material" id="material">
                                         <option value="">por favor seleccione</option>
-                                        <?= Caja::getHtmlField('material', 'select', $Caja->material) ?>
+                                        <?= $Caja->getHtmlField('material', 'select', $Caja->material) ?>
                                     </select>
                                 </div>
 
@@ -105,7 +120,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                                     <label>Seguridad</label>
                                     <select class="form-control" name="seguridad" id="seguridad">
                                         <option value="">por favor seleccione</option>
-                                        <?= Caja::getHtmlField('seguridad', 'select',$Caja->seguridad) ?>
+                                        <?= $Caja->getHtmlField('seguridad', 'select',$Caja->seguridad) ?>
                                     </select>
                                 </div>
 
@@ -132,7 +147,10 @@ include_once $ruta_db_superior . 'assets/librerias.php';
         <script type="text/javascript">
             $(document).ready(function (){
                 var params=<?= json_encode($params) ?>;
-                
+                if(params.countExpediente){
+                    $("#divTipo").remove();
+                    $("#divTipoDisabled").show();
+                }
                 $("#formularioCaja").validate({
 					rules : {
 						codigo : {

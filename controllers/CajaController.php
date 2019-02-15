@@ -128,7 +128,78 @@ class CajaController
 
     public static function deleteCajaCont(array $data = []) : array
     {
-        /*
+        $response = [
+            'exito' => 0,
+            'message' => 'Faltan datos a procesar'
+        ];
+
+        if (!empty($data['idcaja'])) {
+            $Caja = new Caja($data['idcaja']);
+            if ($Caja->estado == 1) {
+                $sql = "SELECT count(idcaja_eli) as cant FROM caja_eli WHERE fk_caja={$data['idcaja']} AND fecha_restauracion IS NULL";
+                $exis = StaticSql::search($sql);
+                if (!$exis[0]['cant']) {
+                    $CajaEli = new CajaEli();
+                    $attributes = [
+                        'fk_caja' => $data['idcaja'],
+                        'eliminar_expediente' => $data['eliminar_expediente'],
+                        'fk_funcionario' => $_SESSION['idfuncionario'],
+                        'fecha_eliminacion' => date('Y-m-d H:i:s')
+                    ];
+                    $CajaEli->setAttributes($attributes);
+                    if ($CajaEli->create()) {
+                        $Caja->estado = 0;
+                        $Caja->fk_caja_eli = $CajaEli->getPK();
+                        if ($Caja->update()) {
+                            $response['message'] = 'Caja eliminada';
+                            if ($data['eliminar_expediente']) {
+                                $sql = "UPDATE expediente SET estado=0,fk_caja_eli={$CajaEli->getPK()} WHERE fk_caja={$data['idcaja']} AND estado=1";
+                                if (StaticSql::query($sql)) {
+                                    $response['exito'] = 1;
+                                } else {
+                                    $CajaEli->delete();
+                                    $Caja->estado = 1;
+                                    $Caja->fk_caja_eli = 'NULL';
+                                    $Caja->update();
+                                    $response['message'] = 'Error al eliminar los expedientes de la caja';
+                                }
+                            } else {
+                                $sql = "UPDATE expediente SET fk_caja=NULL WHERE fk_caja={$data['idcaja']}";
+                                if (StaticSql::query($sql)) {
+                                    $response['exito'] = 1;
+                                } else {
+                                    $response['message'] = 'Error al actualizar la caja de los expedientes';
+                                }
+                            }
+
+                        } else {
+                            $CajaEli->delete();
+                            $response['message'] = 'Error al eliminar la Caja';
+                        }
+                    }
+                } else {
+                    $response['message'] = 'No se puede eliminar el Caja, contacte al administrador';
+                }
+            } else {
+                $response['message'] = 'El Caja ya se ha eliminado';
+            }
+        } else {
+            $response['message'] = 'Falta el identificar de la Caja';
+        }
+        return ($response);
+    }
+
+    /**
+     * Restaura la caja Eliminada
+     *
+     * @param array $data : array con idcaja
+     * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+
+    public static function restoreCajaCont(array $data = []) : array
+    {
+
         $response = [
             'exito' => 0,
             'message' => 'Faltan los datos a procesar'
@@ -136,38 +207,56 @@ class CajaController
 
         if (!empty($data['idcaja'])) {
             $Caja = new Caja($data['idcaja']);
-            if ($Caja->estado == 1) {
-                $sql = "SELECT count(idcaja_eli) as cant FROM Caja_eli WHERE fk_Caja={$data['idcaja']} AND fecha_restauracion IS NULL";
-                $exis = StaticSql::search($sql);
-                if (!$exis[0]['cant']) {
-                    $ExpDel = new CajaEli();
-                    $attributes = [
-                        'fk_Caja' => $data['idcaja'],
-                        'fk_funcionario' => $_SESSION['idfuncionario'],
-                        'fecha_eliminacion' => date('Y-m-d H:i:s')
-                    ];
-                    $ExpDel->setAttributes($attributes);
-                    if ($ExpDel->create()) {
-                        $sql = "UPDATE Caja SET estado=0,fk_Caja_eli={$ExpDel->getPK()} WHERE idcaja={$data['idcaja']} OR (cod_arbol like '{$Caja->cod_arbol}.%' AND estado=1)";
-                        if (StaticSql::query($sql)) {
-                            $response['exito'] = 1;
-                            $response['message'] = 'Caja eliminado';
+            if ($Caja->estado == 0) {
+                $sql = "SELECT idcaja_eli FROM caja_eli WHERE fk_caja={$data['idcaja']} AND fecha_restauracion IS NULL";
+                $instance = UtilitiesController::instanceSql('CajaEli', 'idcaja_eli', $sql);
+                if ($instance) {
+                    $Caja->estado = 1;
+                    $Caja->fk_caja_eli = 'NULL';
+                    if ($Caja->update()) {
+                        $CajaDel = $instance[0];
+                        $CajaDel->fecha_restauracion = date('Y-m-d H:i:s');
+                        if ($CajaDel->update()) {
+                            $response['message'] = 'Caja restaurada';
+                            if ($CajaDel->eliminar_expediente) {
+                                $sql = "UPDATE expediente SET estado=1,fk_caja_eli=NULL WHERE fk_caja_eli={$CajaDel->getPK()}";
+                                if (StaticSql::query($sql)) {
+                                    $response['exito'] = 1;
+                                } else {
+
+                                    $Caja->estado = 0;
+                                    $Caja->fk_caja_eli = $CajaDel->getPK();
+                                    $Caja->update();
+
+                                    $CajaDel->fecha_restauracion = 'NULL';
+                                    $CajaDel->update();
+                                    $response['message'] = 'No se pudieron restaurar los expedientes vinculados a la caja';
+                                }
+                            } else {
+                                $response['exito'] = 1;
+                            }
                         } else {
-                            $ExpDel->delete();
-                            $response['message'] = 'Error al eliminar el Caja';
+                            $Caja->estado = 0;
+                            $Caja->fk_caja_eli = $CajaDel->getPK();
+                            $Caja->update();
+                            $response['message'] = 'No se pudo registrar la solicitud de restauracion';
                         }
+                    } else {
+                        $response['message'] = 'No se pudo restaurar la caja';
                     }
+
                 } else {
-                    $response['message'] = 'No se puede eliminar el Caja, contacte al administrador';
+                    $response['message'] = 'No se puede restaurar la caja, contacte al administrador';
                 }
             } else {
-                $response['message'] = 'El Caja se encuentra inactivo';
+                $response['message'] = 'La caja NO se encuentra eliminada';
             }
         } else {
-            $response['message'] = 'Falta el identificar del Caja';
+            $response['message'] = 'Falta el identificador de la caja';
         }
-        return ($response);*/
+        return ($response);
     }
+
 
     /**
      * Retorna los vinculaciones de la caja

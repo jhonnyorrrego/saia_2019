@@ -38,13 +38,23 @@ class ExpedienteDoc extends Model
      */
     public static function countDocumentsExp(int $idexpediente) : int
     {
-        $cant = 0;
-        $sql = "SELECT COUNT(idexpediente_doc) AS cant FROM expediente_doc ed,documento d WHERE ed.fk_documento=d.iddocumento and d.estado not in ('ELIMINADO') and ed.fk_expediente={$idexpediente}";
+        $sql = "SELECT COUNT(idexpediente_doc) AS cant FROM expediente_doc ed,documento d WHERE ed.fk_documento=d.iddocumento AND d.estado NOT IN ('ELIMINADO') AND ed.fk_expediente={$idexpediente}";
         $response = StaticSql::search($sql);
-        if ($response) {
-            $cant = $response[0]['cant'];
-        }
-        return $cant;
+        return $response ? $response[0]['cant'] : 0;
+    }
+
+    /**
+     * Retorna la cantidad de documentos que tiene una caja
+     *
+     * @param integer $idcaja :identificador de la caja
+     * @return integer
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public static function countDocumentsCaja(int $idcaja) : int
+    {
+        $sql = "SELECT COUNT(idexpediente_doc) AS cant FROM expediente e,expediente_doc ed,documento d WHERE e.idexpediente=ed.fk_expediente AND ed.fk_documento=d.iddocumento AND d.estado NOT IN ('ELIMINADO') AND e.estado=1 AND e.fk_caja={$idcaja}";
+        $response = StaticSql::search($sql);
+        return $response ? $response[0]['cant'] : 0;
     }
 
 }

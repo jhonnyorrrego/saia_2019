@@ -84,13 +84,16 @@ echo estilo_bootstrap();
 <div class="navbar navbar-fixed-top" id="menu_buscador">
     <div class="navbar-inner">
         <ul class="nav pull-left">
-            <li>
-                <div class="btn-group">
-                    <button class="btn btn-mini kenlace_saia" titulo="B&uacute;squeda <?= $datos_busqueda[0]['etiqueta']?>" title="B&uacute;squeda <?=$datos_busqueda[0]['etiqueta']?>" conector="iframe" enlace="<?=$datos_busqueda[0]['busqueda_avanzada']?>">B&uacute;squeda &nbsp;</button>
-                </div>
-            </li>
-            <li class="divider-vertical"></li>
-            <?php if ($datos_busqueda[0]["acciones_seleccionados"] != '') : ?>
+            <?php if($datos_busqueda[0]['busqueda_avanzada']):?>
+                <li>
+                    <div class="btn-group">
+                        <button class="btn btn-mini kenlace_saia" titulo="B&uacute;squeda <?= $datos_busqueda[0]['etiqueta']?>" title="B&uacute;squeda <?=$datos_busqueda[0]['etiqueta']?>" conector="iframe" enlace="<?=$datos_busqueda[0]['busqueda_avanzada']?>">B&uacute;squeda &nbsp;</button>
+                    </div>
+                </li>
+                <li class="divider-vertical"></li>
+            <?php
+            endif;
+            if ($datos_busqueda[0]["acciones_seleccionados"] != '') : ?>
             <li>
                 <div class="btn-group">
                     <button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">
@@ -110,7 +113,7 @@ echo estilo_bootstrap();
             <li class="divider-vertical"></li>
             <?php
             endif;
-            if (@$datos_busqueda[0]["menu_busqueda_superior"]) {
+            if ($datos_busqueda[0]["menu_busqueda_superior"]) {
                 $funcion_menu = explode("@", $datos_busqueda[0]["menu_busqueda_superior"]);
                 echo ($funcion_menu[0](@$funcion_menu[1]));
             }
@@ -169,6 +172,9 @@ echo estilo_bootstrap();
         <input type="hidden" value="<?= $idbusqueda_componente; ?>" name="idbusqueda_componente" id="idbusqueda_componente">
         <!-- Forma de carga -->
         <input type="hidden" value=<?= !empty($datos_busqueda[0]["cargar"]) ? $datos_busqueda[0]["cargar"] : 0; ?>" name="forma_carga" id="forma_carga">
+        <!-- Registro actual -->
+        <input type="hidden" value="<?=$_REQUEST['idcaja']?>" name="idcaja" id="idcaja">
+        <!-- Cantidad de registros totales -->
     </div>
 </div>
 <div class="pull-left" id="panel_detalle">
@@ -219,7 +225,8 @@ echo estilo_bootstrap();
                         page : $("#actualpage").val(),
                         rows : $("#cantxpage").val(),
                         actual_row : $("#actualrow").val(),
-                        cantidad_total : $("#cantidad_total").val()
+                        cantidad_total : $("#cantidad_total").val(),
+                        idcaja : $("#idcaja").val()
                     },
                     dataType : 'json',
                     async : false, // Si se quita al bajar el scroll llama dos veces o mas la peticion
@@ -239,10 +246,17 @@ echo estilo_bootstrap();
                                         $("#resultado_busqueda" + idbusqueda_componente).append(item.info);
                                     }
                                     if (objeto.page == 1 && index === 0) {
-                                        $('#resultado_pantalla_'+item.idcaja).addClass("alert-warning");
-                                        $("#iframe_detalle").attr({
-                                            'src':'<?= $ruta_db_superior; ?>pantallas/caja/detalles_caja.php?idcaja='+item.idcaja+"&idbusqueda_componente="+idbusqueda_componente+"&rand=<?= rand(); ?>"
-                                        });
+                                        if(item.idcaja){
+                                            $('#resultado_pantalla_'+item.idcaja).addClass("alert-warning");
+                                            $("#iframe_detalle").attr({
+                                                'src':'<?= $ruta_db_superior; ?>pantallas/caja/detalles_caja.php?idcaja='+item.idcaja+"&idbusqueda_componente="+idbusqueda_componente+"&rand=<?= rand(); ?>"
+                                            });
+                                        }else if(item.idexpediente){
+                                            $('#resultado_pantalla_'+item.idexpediente).addClass("alert-warning");
+                                            $("#iframe_detalle").attr({
+                                                'src':'<?= $ruta_db_superior; ?>pantallas/expediente/detalles_expediente.php?idexpediente='+item.idexpediente+"&idbusqueda_componente="+idbusqueda_componente+"&rand=<?= rand(); ?>"
+                                            });
+                                        }
                                     }
                                 });
                                 if (parseInt(objeto.actual_row) < parseInt(objeto.records)) {

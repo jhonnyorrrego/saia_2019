@@ -8,6 +8,7 @@ class EntidadSerie extends Model
     protected $estado;
     protected $fecha_creacion;
     protected $fecha_eliminacion;
+    
     protected $dbAttributes;
 
     public function __construct($id = null)

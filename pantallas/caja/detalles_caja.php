@@ -111,6 +111,23 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                             <td><?= $Caja->getSeguridad() ?></td>
                         </tr>
                     </table>
+
+                       <div>
+                            <i data-table="tableInfoContenido" class="fa fa-minus-square inf"></i> Información de contenido
+                        </div>
+
+                        <table class="table" id="tableInfoContenido">
+                            <tr>
+                                <td>Total de expedientes:</td>
+                                <td><?= $Caja->countAllExpediente() ?></td>
+                            </tr>
+                            
+                            <tr>
+                                <td>Total de documentos:</td>
+                                <td><?= $Caja->countDocuments() ?></td>
+                            </tr>
+                        </table>
+
 				</div>
 			</div>
         </div>

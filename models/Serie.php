@@ -19,6 +19,7 @@ class Serie extends Model
     protected $estado;
     protected $categoria;
     protected $cod_arbol;
+    
     protected $dbAttributes;
 
     protected $seriePadre;

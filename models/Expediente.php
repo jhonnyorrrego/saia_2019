@@ -283,12 +283,8 @@ class Expediente extends Model
      */
     public function getPropietario() : string
     {
-        $response = '';
         $data = $this->getRelationFk('Funcionario', 'propietario');
-        if ($data) {
-            $response = $data->nombres . ' ' . $data->apellidos;
-        }
-        return $response;
+        return $data ? $data->nombres . ' ' . $data->apellidos : '';
     }
     /**
      * Retorna el nombre del funcionario responsable
@@ -298,12 +294,8 @@ class Expediente extends Model
      */
     public function getResponsable() : string
     {
-        $response = '';
         $data = $this->getRelationFk('Funcionario', 'responsable');
-        if ($data) {
-            $response = $data->nombres . ' ' . $data->apellidos;
-        }
-        return $response;
+        return $data ? $data->nombres . ' ' . $data->apellidos : '';
     }
 
     /**
@@ -338,17 +330,14 @@ class Expediente extends Model
      */
     public function countTomos() : int
     {
-        $cant = 1;
         if ($this->tomo_padre) {
             $sql = "SELECT count(idexpediente) as cant FROM expediente WHERE tomo_padre={$this->tomo_padre}";
             $data = $this->search($sql);
-            $cant = $data[0]['cant'] + 1;
         } else {
             $sql = "SELECT count(idexpediente) as cant FROM expediente WHERE tomo_padre={$this->idexpediente}";
             $data = $this->search($sql);
-            $cant = $data[0]['cant'] + 1;
         }
-        return $cant;
+        return $data ? $data[0]['cant'] + 1 : 1;
     }
     /**
      * Cuenta los documentos que existen en un expediente
@@ -366,19 +355,36 @@ class Expediente extends Model
      *
      * @param integer $tipoAg : identificador del agrupador (expediente,separador, serie, dependencia)
      * @return integer
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
     public function countExpediente(int $tipoAg = 0) : int
     {
-        $cant = 0;
-        $sql = "SELECT COUNT(idexpediente) as cant FROM expediente WHERE agrupador={$tipoAg} and cod_padre={$this->idexpediente}";
+        $sql = "SELECT COUNT(idexpediente) as cant FROM expediente WHERE agrupador={$tipoAg} AND cod_padre={$this->idexpediente} AND estado=1";
         $response = $this->search($sql);
-        if ($response) {
-            $cant = $response[0]['cant'];
-        }
-        return $cant;
+        return $response ? $response[0]['cant'] : 0;
     }
 
-    public function getAgrupador()
+    /**
+     * Cuenta los expedientes que existen dentro de una caja
+     *
+     * @param integer $idcaja : identificador de la caja
+     * @return integer
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public static function countAllExpedienteCaja(int $idcaja=null) : int
+    {
+        $sql = "SELECT COUNT(idexpediente) as cant FROM expediente WHERE agrupador=0 AND fk_caja={$idcaja} AND estado=1";
+        $response = StaticSql::search($sql);
+        return $response ? $response[0]['cant'] : 0;
+    }
+
+/**
+ * obtiene la etiqueta del agraupdor
+ *
+ * @return string
+ * @author Andres.Agudelo <andres.agudelo@cerok.com>
+ */
+    public function getAgrupador():string
     {
         $data = $this->keyValueField('agrupador');
         return $data[$this->agrupador] ?? '';
@@ -387,7 +393,7 @@ class Expediente extends Model
      * Valida si el funcionario es reponsable de un expediente
      *
      * @return boolean
-     * @author Name <email@email.com>
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
     public function isResponsable() : bool
     {
@@ -402,6 +408,7 @@ class Expediente extends Model
      * valida si un expediente se puede cerrar
      *
      * @return boolean
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
     public function canClose() : bool
     {
@@ -450,6 +457,7 @@ class Expediente extends Model
      *
      * @param integer $idfuncionario : usuario logueado
      * @return void
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
     private function setAccessUser(int $idfuncionario)
     {
@@ -492,6 +500,7 @@ class Expediente extends Model
      * c: Compartir expediente
      * d: eliminar expediente
      * @return boolean
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
     public function getAccessUser(string $permiso) : bool
     {
@@ -542,7 +551,7 @@ class Expediente extends Model
         $html = '';
         if ($Expediente) {
             $sql = "SELECT c.idcaja,c.codigo FROM caja_entidadserie ce,caja c, entidad_serie e 
-            WHERE ce.fk_caja=c.idcaja AND ce.fk_entidad_serie=e.identidad_serie AND e.estado=1 
+            WHERE ce.fk_caja=c.idcaja AND ce.fk_entidad_serie=e.identidad_serie AND e.estado=1 AND c.estado=1
             AND c.estado_archivo={$Expediente->estado_archivo} AND ce.fk_entidad_serie={$Expediente->fk_entidad_serie}";
             $records = StaticSql::search($sql);
             if ($records) {
@@ -592,6 +601,7 @@ class Expediente extends Model
      *
      * @param string $campo : nombre del campo en la db
      * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
     public static function keyValueField(string $campo) : array
     {

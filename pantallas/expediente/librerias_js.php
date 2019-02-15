@@ -1,39 +1,44 @@
 <script>
 $(document).ready(function(){
 
-    $(document).on("click", "#addExpediente,#addDocumentExp", function() {
-      let idexp=$(this).data("id");
-      let idcomp=$(this).data("componente");
-      if($(this).attr("id")=="addExpediente"){
-        $("#iframe_detalle").attr({
-          'src':'<?= $ruta_db_superior ?>pantallas/expediente/adicionar_expediente.php?codPadre='+idexp+'&idbusqueda_componente='+idcomp
-        });
-      }else{
-        $("#iframe_detalle").attr({
-          'src':'<?= $ruta_db_superior.FORMATOS_CLIENTE ?>vincular_doc_expedie/adicionar_vincular_doc_expedie.php?idexpediente='+idexp+'&idbusqueda_componente='+idcomp
-        });
-      }
-    });
+  function colorWell(idexp){
+    $("[id^='resultado_pantalla_']").removeClass("alert-warning");
+    $('#resultado_pantalla_'+idexp).addClass("alert-warning");
+  }
 
-    $(document).on("click","#transDocument",function(){
-        let seleccionados=$("#seleccionados_expediente").val();
-        $.ajax({
-            type : "POST",
-            url : "../expediente/validar_cierre_expedientes.php",
-            data : {idexpedientes : seleccionados},
-            dataType:"json",
-            success : function (response){
-                if(response.exito == 1){
-                    enlace_katien_saia("<?= FORMATOS_CLIENTE ?>transferencia_doc/adicionar_transferencia_doc.php?id="+seleccionados,"Transferencia documental","iframe","");
-                }else{
-                    alert(response.msn);
-                }
-            },
-            error : function (err){
-                alert("Error al procesar la solicitud");
-            }
-        });
-    });
+  $(document).on("click", "#addExpediente,#addDocumentExp", function() {
+    let idexp=$(this).data("id");
+    let idcomp=$(this).data("componente");
+    if($(this).attr("id")=="addExpediente"){
+      $("#iframe_detalle").attr({
+        'src':'<?= $ruta_db_superior ?>pantallas/expediente/adicionar_expediente.php?codPadre='+idexp+'&idbusqueda_componente='+idcomp
+      });
+    }else{
+      $("#iframe_detalle").attr({
+        'src':'<?= $ruta_db_superior.FORMATOS_CLIENTE ?>vincular_doc_expedie/adicionar_vincular_doc_expedie.php?idexpediente='+idexp+'&idbusqueda_componente='+idcomp
+      });
+    }
+  });
+
+  $(document).on("click","#transDocument",function(){
+      let seleccionados=$("#seleccionados_expediente").val();
+      $.ajax({
+          type : "POST",
+          url : "../expediente/validar_cierre_expedientes.php",
+          data : {idexpedientes : seleccionados},
+          dataType:"json",
+          success : function (response){
+              if(response.exito == 1){
+                  enlace_katien_saia("<?= FORMATOS_CLIENTE ?>transferencia_doc/adicionar_transferencia_doc.php?id="+seleccionados,"Transferencia documental","iframe","");
+              }else{
+                  alert(response.msn);
+              }
+          },
+          error : function (err){
+              alert("Error al procesar la solicitud");
+          }
+      });
+  });
 
   //Selector check/uncheck
   
@@ -55,8 +60,7 @@ $(document).ready(function(){
   $(document).on("click",".infoExp",function(){
     let idexp=$(this).data("id");
     let idcomp=$(this).data("componente");
-    $("[id^='resultado_pantalla_']").removeClass("alert-warning");
-    $('#resultado_pantalla_'+idexp).addClass("alert-warning");
+    colorWell(idexp);
     $("#iframe_detalle").attr({
       'src':'<?=$ruta_db_superior?>pantallas/expediente/detalles_expediente.php?idexpediente='+idexp+'&idbusqueda_componente='+idcomp
     });  
@@ -67,6 +71,7 @@ $(document).ready(function(){
   $(document).on("click",".tomoExp",function(){
     let idexp=$(this).data("id");
     var idcomponente=$(this).data("componente");
+
     if(confirm("Esta seguro de crear un tomo a este expediente?")){
       $.ajax({
         type : 'POST',
@@ -106,6 +111,7 @@ $(document).ready(function(){
   $(document).on("click",".editExp",function(){
     let idexp=$(this).data("id");
     let idcomp=$(this).data("componente");
+    colorWell(idexp);
     $("#iframe_detalle").attr({
       'src':'<?= $ruta_db_superior ?>pantallas/expediente/editar_expediente.php?idexpediente='+idexp+'&idbusqueda_componente='+idcomp
     });  
@@ -114,6 +120,7 @@ $(document).ready(function(){
   //Eliminar el expediente
  $(document).on("click",".delExp",function(){
     let idexp=$(this).data("id");
+
     if(confirm("Esta seguro de eliminar el expediente?")){
       $.ajax({
         type : 'POST',
@@ -167,7 +174,8 @@ $(document).ready(function(){
         alert("Seleccione por lo menos un expediente");
       }
     }else{
-      let idexp=$(this).data("id");      
+      let idexp=$(this).data("id");     
+      colorWell(idexp);
       $("#iframe_detalle").attr({
         'src':'<?= $ruta_db_superior ?>pantallas/expediente/asignar_permiso_expediente.php?opcion=1&idexpediente='+idexp+'&idbusqueda_componente='+idcomp
       });  
