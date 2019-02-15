@@ -558,7 +558,7 @@ function eliminar_datos_clase_padre($idpantalla, $clase) {
 
 function buscarPapaCategoria($idcategoriaFormato)
 {
-    
+   
     if (is_array($idcategoriaFormato) !== false) {
         $idcategoriaFormato = implode(",", $idcategoriaFormato);
     }
@@ -595,6 +595,31 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
         $buscar_formato = busca_filtro_tabla("", "formato", "idformato=" . $datos["idformato"], "", $conn);
         if ($buscar_formato["numcampos"]) {
             $datos["nombre"] = $buscar_formato[0]["nombre"];
+            if(!$datos['cod_padre']){
+                $consultaPadre = busca_filtro_tabla("","formato","idformato={$buscar_formato[0]['cod_padre']}","",$conn);
+                if($consultaPadre['numcampos']){
+                    $tablaDocumento = explode("ft_", $consultaPadre[0]['nombre_tabla']);
+                    $consultaDocumentos = busca_filtro_tabla("","documento","lower(plantilla) = '{$tablaDocumento[1]}'","",$conn);
+                    if($consultaDocumentos['numcampos']){
+                        $retorno['error'] = 'No se puede cambiar la relacion del proceso porque ya tiene documentos asociados';
+                        $retorno['exito'] = 0;
+                        echo json_encode($retorno);
+                        die();
+                    }
+                }
+            }else{
+                $tablaDocumento = explode("ft_", $buscar_formato[0]['nombre_tabla']);
+                $consultaDocumentos = busca_filtro_tabla("", "documento", "lower(plantilla) = '{$tablaDocumento[1]}'", "", $conn);
+                
+                if ($consultaDocumentos['numcampos']) {
+                    $retorno['error'] = 'No se puede cambiar la relacion del proceso porque ya tiene documentos asociados';
+                    $retorno['exito'] = 0;
+                    echo json_encode($retorno);
+                    die();
+                   
+                    
+                }
+            }
         }
     }
     if($_REQUEST['fk_categoria_formato']){
@@ -757,8 +782,10 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
     }
 
     // Field cod_padre
+    
     $theValue = ($datos["cod_padre"] != 0) ? intval($datos["cod_padre"]) : 0;
     $fieldList["cod_padre"] = $theValue;
+    
 
     // Field Tipo Edicion continua
     $theValue = ($datos["tipo_edicion"] != 0) ? intval($datos["tipo_edicion"]) : 0;
@@ -858,7 +885,7 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
     if ($tipo_retorno == 1) {
         echo (json_encode($retorno));
     } else {
-        return ($retorno);
+        return $retorno;
     }
 }
 

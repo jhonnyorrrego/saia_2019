@@ -110,6 +110,10 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
             }
         } 
     ?>
+    <script>
+        var ancho =  "<?= $ancho_paginador ?>";
+        var alto =  "<?= $alto_paginador ?>";
+    </script>
     <style type="text/css">
         .page_border {
             border: 1px solid #CACACA;
@@ -146,15 +150,16 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
     <?php if ($formato[0]["paginar"] == '1') : ?>
         <script>
             $(document).ready(function(){
-                var alto_papel = parseInt('<?= $alto_paginador ?>');
-                var alto_encabezado = parseInt('<?= $tam_pagina["margen_superior"] + 30 ?>');
-                var alto_pie_pagina = parseInt('<?= $tam_pagina["margen_inferior"] + 20 ?>');
+                var alto_papel = '<?= $alto_paginador ?>';
+                var alto_encabezado = '<?= $tam_pagina["margen_superior"] + 30 ?>';
+                var alto_pie_pagina = '<?= $tam_pagina["margen_inferior"] + 20 ?>';
                 var altopagina = alto_papel-(alto_encabezado+alto_pie_pagina);
                 var alto = $("#page_overflow").height();
                 var paginas = Math.ceil(alto/altopagina);
                 var contenido = $("#page_overflow").html();
                 var encabezado = $("#doc_header").html();
                 var piedepagina = $("#doc_footer").html();
+
                 for(i = 1;i < paginas;i++){
                     var altoPaginActual = altopagina*i;
                     var pagina = `

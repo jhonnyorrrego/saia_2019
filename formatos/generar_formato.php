@@ -522,35 +522,45 @@ class GenerarFormato
     public function crear_cuerpo_formato()
     {
         global $conn, $ruta_db_superior;
-
+       
         $formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $this->idformato, "", $conn);
-
+       
         if ($formato[0]['cuerpo'] == '') {
             $consulta_campos_lectura = busca_filtro_tabla("valor", "configuracion", "nombre='campos_solo_lectura'", "", $conn);
-            $campos_excluir = array(
+
+            $campos_excluir = [
                 "dependencia",
                 "documento_iddocumento",
                 "estado_documento",
                 "firma",
                 "serie_idserie",
                 "encabezado"
-            );
+            ];
             if ($consulta_campos_lectura['numcampos']) {
                 $campos_lectura = json_decode($consulta_campos_lectura[0]['valor'], true);
+                $consultaEtiquetas = busca_filtro_tabla("nombre", "campos_formato", "formato_idformato = {$this->idformato} and (nombre like '%{$campos_lectura['titulo']}%' or nombre like '%{$campos_lectura['linea']}%')", "", $conn);
+                if($consultaEtiquetas['numcampos']){
+                   for ($k=0; $k <$consultaEtiquetas['numcampos'] ; $k++) {
+                        $campos_excluir[] = $consultaEtiquetas[$k]['nombre']; 
+                   }
+                }
+                
                 $campos_lectura = implode(",", $campos_lectura);
                 $campos_lectura = str_replace(",", "','", $campos_lectura);
 
                 $busca_idft = strpos($campos_lectura, "idft_");
+                
                 if ($busca_idft !== false) {
                     $consulta_ft = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $this->idformato, "", $conn);
                     $campos_lectura = str_replace("idft_", "id" . $formato[0]['nombre_tabla'], $campos_lectura);
-                    $campos_excluir[] = $campos_lectura;
+                    $campos_excluir[] = $campos_lectura;           
                 }
             }
 
             $condicion_adicional = " and A.nombre not in('" . implode("', '", $campos_excluir) . "')";
+          
             $campos = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $this->idformato . " and etiqueta_html<>'campo_heredado' " . $condicion_adicional . "", "A.orden", $conn);
-
+ 
             if ($campos['numcampos']) {
                 $cuerpo_formato = '<table class="table table-bordered" style="width: 100%;"><tbody><tr><td><strong>Fecha</strong></td><td>{*fecha_creacion*}&nbsp;</td><td style="text-align: center;" rowspan="2">&nbsp;{*mostrar_codigo_qr*} <br>Radicado: {*formato_numero*}</td></tr><tr><td><strong>Asunto</strong></td><td>{*asunto_documento*}</td></tr></table><br><table class="table table-bordered" style="width: 100%;"><tbody>';
                 for ($i = 0; $i < $campos['numcampos']; $i++) {
