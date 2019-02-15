@@ -117,8 +117,6 @@ $config = busca_filtro_tabla("valor", "configuracion", "nombre='color_encabezado
 ?>
 <?= jquery() ?>
 <?= bootstrap() ?>
-<?= breakpoint() ?>
-<?= toastr() ?>
 <?= icons() ?>
 <style type="text/css">
 <!--

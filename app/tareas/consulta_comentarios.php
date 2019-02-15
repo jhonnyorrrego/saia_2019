@@ -22,20 +22,20 @@ $Response = (object)array(
 );
 
 if($_SESSION['idfuncionario'] == $_REQUEST['key'] && $_REQUEST['relation']){
-    $comments = ComentarioTarea::findAllByAttributes([
+    $comments = TareaComentario::findAllByAttributes([
         'fk_tarea' => $_REQUEST['relation']
     ]);
 
     $data = [];
-    foreach ($comments as $key => $ComentarioTarea) {
+    foreach ($comments as $key => $TareaComentario) {
         $data[] = [
             'user' => [
-                'key' => $ComentarioTarea->getUser()->getPk(),
-                'name' => $ComentarioTarea->getUser()->getName(),
-                'image' => $ComentarioTarea->getUser()->getImage('foto_recorte')
+                'key' => $TareaComentario->getUser()->getPk(),
+                'name' => $TareaComentario->getUser()->getName(),
+                'image' => $TareaComentario->getUser()->getImage('foto_recorte')
             ],
-            'comment' => $ComentarioTarea->getComment(),
-            'temporality' => $ComentarioTarea->getDate('d-m-Y h:i a')
+            'comment' => $TareaComentario->getComment(),
+            'temporality' => $TareaComentario->getDate('d-m-Y h:i a')
         ];
     }
 

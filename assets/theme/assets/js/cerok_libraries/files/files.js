@@ -14,6 +14,14 @@ class Files {
         return this._options;
     }
 
+    set active(id) {
+        this._activeFile = id;
+    }
+
+    get active() {
+        return this._activeFile || null;
+    }
+
     init() {
         let validate = Files.validate(this.options.selector);
 
@@ -42,7 +50,12 @@ class Files {
                 <div class="row pt-2">
                     <div class="col-12">
                         <div class="form-group text-right">
-                            <button class="btn btn-complete" id="upload_file">Guardar anexos</button>
+                            <button type="button" class="btn btn-complete btn-block" id="upload_file">Guardar anexos</button>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group text-right">
+                            <button type="button" class="btn btn-danger btn-block hide" id="stop_upload">Cancelar</button>
                         </div>
                     </div>
                 </div>                
@@ -111,32 +124,36 @@ class Files {
             $(this).parent().find('.file_option').toggleClass('d-none');
 
             switch ($(this).data('type')) {
-                case 'edit':
-                    Files.edit($(this).data('key'));
-                    break;
                 case 'upload':
-                    Files.upload($(this).data('key'));
+                    instance.upload($(this).data('id'));
                     break;
                 case 'delete':
-                    Files.delete($(this).data('key'));
+                    instance.delete($(this).data('id'));
                     break;
                 case 'access':
-                    Files.access($(this).data('key'));
+                    instance.access($(this).data('id'));
                     break;
             }
         });
     }
 
     save(description) {
-        this.options.save(description, this._loadedFiles);
-        this.reset();
-        this.getTable().bootstrapTable('refresh');
+        if (this.options.save(description, this._loadedFiles, this.active)) {
+            this.reset();
+            this.getTable().bootstrapTable('refresh');
+        } else {
+            console.error('error al guardar');
+        }
     }
 
     reset() {
-        $('#file_description').val('');
+        this.active = 0;
         this._loadedFiles = [];
+        $('#file_description').val('');
+        this.getStopButton().addClass('hide');
         this.getDropzone().removeAllFiles();
+        this.getDropzone().options.maxFiles = this.options.dropzone.maxFiles;
+        this.getDropzone().options.dictMaxFilesExceeded = this.options.dropzone.dictMaxFilesExceeded;
     }
 
     getTable() {
@@ -145,6 +162,10 @@ class Files {
 
     getDropzone() {
         return this._dropzone
+    }
+
+    getStopButton() {
+        return $('#stop_upload');
     }
 
     static getDefaultOptions() {
@@ -205,7 +226,6 @@ class Files {
     static OptionButttons(value, row, index) {
         return [
             `<span class="file_option fa fa-chevron-circle-down cursor f-20"><br></span>`,
-            `<span data-type="edit" data-id="${row.id}" class="file_option fa fa-edit cursor f-20 d-none"><br></span>`,
             `<span data-type="upload" data-id="${row.id}" class="file_option fa fa-cloud-upload cursor f-20 d-none"><br></span>`,
             `<span data-type="delete" data-id="${row.id}" class="file_option fa fa-trash cursor f-20 d-none"><br></span>`,
             `<span data-type="access" data-id="${row.id}" class="file_option fa fa-lock cursor f-20 d-none"><br></span>`,
@@ -250,16 +270,44 @@ class Files {
         return (item && typeof item === 'object' && !Array.isArray(item));
     }
 
-    static edit(key) {
-        alert(key);
+    upload(key) {
+        this.active = key;
+        this.getDropzone().options.maxFiles = 1;
+        this.getDropzone().options.dictMaxFilesExceeded = "Máximo 1 archivo";
+        this.getDropzone().hiddenFileInput.click();
+        this.getStopButton().removeClass('hide');
     }
-    static upload(key) {
-        alert(key);
+
+    delete(key) {
+        let filesInstance = this;
+        top.confirm({
+            id: 'question',
+            type: 'error',
+            title: 'Eliminando!',
+            message: 'Está seguro de eliminar este registro?',
+            position: 'center',
+            timeout: 0,
+            buttons: [
+                [
+                    '<button><b>YES</b></button>',
+                    function (instance, toast) {
+                        if (filesInstance.options.delete(key)) {
+                            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                            filesInstance.getTable().bootstrapTable('refresh');
+                        }
+                    },
+                    true
+                ],
+                [
+                    '<button>NO</button>',
+                    function (instance, toast) {
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                    }
+                ],
+            ]
+        });
     }
-    static delete(key) {
-        alert(key);
-    }
-    static access(key) {
+    access(key) {
         alert(key);
     }
 }

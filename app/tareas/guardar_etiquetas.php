@@ -24,15 +24,15 @@ $Response = (object)array(
 if($_SESSION['idfuncionario'] == $_REQUEST['key'] && $_REQUEST['task']){
     foreach ($_REQUEST['tags'] as $tagId => $value){
         if($value == 1){
-            $EtiquetaTarea = EtiquetaTarea::findByAttributes([
+            $TareaEtiqueta = TareaEtiqueta::findByAttributes([
                 'fk_tarea' => $_REQUEST['task'],
                 'fk_etiqueta' => $tagId
             ]);
 
-            if($EtiquetaTarea){
-                $EtiquetaTarea->toggleRelaction(1);
+            if($TareaEtiqueta){
+                $TareaEtiqueta->toggleRelaction(1);
             }else{
-                EtiquetaTarea::newRecord([
+                TareaEtiqueta::newRecord([
                     'fk_tarea' => $_REQUEST['task'],
                     'fk_funcionario' => $_REQUEST['key'],
                     'fk_etiqueta' => $tagId,
@@ -40,7 +40,7 @@ if($_SESSION['idfuncionario'] == $_REQUEST['key'] && $_REQUEST['task']){
                 ]);
             }
         }else if(!$value){
-            EtiquetaTarea::executeUpdate([
+            TareaEtiqueta::executeUpdate([
                 'estado' => 0
             ],[
                 'fk_tarea' => $_REQUEST['task'],

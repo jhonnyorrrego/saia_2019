@@ -9,6 +9,8 @@ class Tarea extends Model
     protected $descripcion;
     protected $dbAttributes;
 
+    public $clone;
+
     function __construct($id = null)
     {
         return parent::__construct($id);
@@ -37,6 +39,37 @@ class Tarea extends Model
     }
 
     /**
+     * evento de base de datos
+     * se ejecuta despues de crear un nuevo registro
+     * @return void
+     */
+    protected function afterCreate()
+    {
+        return LogController::create(LogAccion::CREAR, 'TareaLog', $this);
+    }
+
+    /**
+     * evento de base de datos
+     * se ejecuta antes de modificar un registro
+     * @return void
+     */
+    protected function beforeUpdate()
+    {
+        $this->clone = new self($this->getPK());
+        return $this->clone->getPK();
+    }
+
+    /**
+     * evento de base de datos
+     * se ejecuta despues de modificar un registro
+     * @return void
+     */
+    protected function afterUpdate()
+    {
+        return LogController::create(LogAccion::EDITAR, 'TareaLog', $this);
+    }
+
+    /**
      * retorna el nombre
      *
      * @return string
@@ -47,25 +80,10 @@ class Tarea extends Model
     }
 
     /**
-     * retorna la fecha inicial
+     * calcular el color de la tarea
      *
-     * @return DateTime
+     * @return string
      */
-    public function getInitialDate()
-    {
-        return $this->fecha_inicial;
-    }
-
-    /**
-     * retorna la fecha final
-     *
-     * @return DateTime
-     */
-    public function getFinalDate()
-    {
-        return $this->fecha_final;
-    }
-
     public function getColor()
     {
         $Limit = new DateTime($this->fecha_final);
@@ -98,12 +116,18 @@ class Tarea extends Model
     {
         global $conn;
 
-        $tables = self::getTableName() . ' a,' . FuncionarioTarea::getTableName() . ' b';
+        $tables = self::getTableName() . ' a,' . TareaFuncionario::getTableName() . ' b';
         $findRecords = busca_filtro_tabla('a.*', $tables, "a.idtarea = b.fk_tarea and b.estado=1 and b.fk_funcionario =" . $userId . " and b.tipo= " . $type . " and " . fecha_db_obtener('a.fecha_inicial', 'Y-m-d H:i:s') . ">='" . $initialDate . "' and " . fecha_db_obtener('a.fecha_final', 'Y-m-d H:i:s') . "<='" . $finalDate . "'", '', $conn);
 
         return self::convertToObjectCollection($findRecords);
     }
 
+    /**
+     * busca los anexos activos de la tarea
+     *
+     * @param object $params
+     * @return void
+     */
     public static function findActiveFiles($params)
     {
         $sql = <<<SQL
@@ -115,13 +139,20 @@ class Tarea extends Model
                 on b.fk_tarea = c.idtarea
             where 
                 c.idtarea = $params->task and
-                a.eliminado = 0
+                a.eliminado = 0 and 
+                a.estado = 1
             order by $params->order
 SQL;
         $records = StaticSql::search($sql, $params->offset, $params->limit);
         return Anexo::convertToObjectCollection($records);
     }
 
+    /**
+     * cuenta los anexos activos de la tarea
+     *
+     * @param int $taskId
+     * @return void
+     */
     public static function countActiveFiles($taskId)
     {
         $sql = <<<SQL
@@ -133,7 +164,8 @@ SQL;
             on b.fk_tarea = c.idtarea
         where 
             c.idtarea = {$taskId} and
-            a.eliminado = 0
+            a.eliminado = 0 and 
+            a.estado = 1
 SQL;
         $record = StaticSql::search($sql);
         return $record[0]['total'];

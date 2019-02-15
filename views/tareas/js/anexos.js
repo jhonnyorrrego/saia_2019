@@ -51,21 +51,53 @@ $(function () {
                     }, 'json');
                 }
             },
-            save: function (description, files) {
-                $.post(`${baseUrl}app/tareas/almacenar_anexos.php`, {
-                    key: localStorage.getItem('key'),
-                    routes: files,
-                    description: description,
-                    task: params.id,
-                    dir: 'tarea'
-                }, function (response) {
-                    if (response.success) {
-                        top.notification({
-                            type: 'success',
-                            message: response.message,
-                        });
+            save: function (description, files, fileId) {
+                let success = false;
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: `${baseUrl}app/tareas/almacenar_anexos.php`,
+                    async: false,
+                    data: {
+                        key: localStorage.getItem('key'),
+                        routes: files,
+                        description: description,
+                        task: params.id,
+                        dir: 'tarea',
+                        fileId: fileId
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            top.notification({
+                                type: 'success',
+                                message: response.message,
+                            });
+                            success = true;
+                        }
                     }
-                }, 'json');
+                });
+
+                return success;
+            },
+            delete: function (key) {
+                let success = false;
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: `${baseUrl}app/anexos/eliminar.php`,
+                    async: false,
+                    data: {
+                        key: localStorage.getItem('key'),
+                        fileId: key
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            success = true;
+                        }
+                    }
+                });
+
+                return success;
             }
         };
 

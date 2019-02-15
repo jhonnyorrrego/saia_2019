@@ -27,21 +27,21 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         'fk_funcionario' => $_REQUEST['user'],
         'tipo' => 2
     ];
-    $FuncionarioTarea = FuncionarioTarea::findByAttributes($data);
+    $TareaFuncionario = TareaFuncionario::findByAttributes($data);
     
-    if($_REQUEST['remove'] && $_REQUEST['remove'] && $FuncionarioTarea){
-        if($FuncionarioTarea->toggleRelation(0)){
+    if($_REQUEST['remove'] && $_REQUEST['remove'] && $TareaFuncionario){
+        if($TareaFuncionario->toggleRelation(0)){
             $Response->message = 'Usuario Eliminado';
-            $Response->data = $FuncionarioTarea->getPK();
+            $Response->data = $TareaFuncionario->getPK();
         }else{
             $Response->message = "Error al guardar";
             $Response->success = 0;
         }
     }else{
-        if($FuncionarioTarea){
-            $pk = $FuncionarioTarea->toggleRelation(1);
+        if($TareaFuncionario){
+            $pk = $TareaFuncionario->toggleRelation(1);
         }else{
-            $pk = FuncionarioTarea::newRecord($data);
+            $pk = TareaFuncionario::newRecord($data);
         }
 
         if($pk){

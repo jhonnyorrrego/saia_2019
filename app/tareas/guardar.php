@@ -31,12 +31,12 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     ]);
     
     if($Tarea->save()){
-        FuncionarioTarea::inactiveRelationsByTask($Tarea->getPK(), 3);
-        FuncionarioTarea::assignUser($Tarea->getPk(), [$_REQUEST['key']], 3);
+        TareaFuncionario::inactiveRelationsByTask($Tarea->getPK(), 3);
+        TareaFuncionario::assignUser($Tarea->getPk(), [$_REQUEST['key']], 3);
 
         if(isset($_REQUEST['managers'])){
-            FuncionarioTarea::inactiveRelationsByTask($Tarea->getPK(), 1);
-            FuncionarioTarea::assignUser($Tarea->getPk(), $_REQUEST['managers'], 1);
+            TareaFuncionario::inactiveRelationsByTask($Tarea->getPK(), 1);
+            TareaFuncionario::assignUser($Tarea->getPk(), $_REQUEST['managers'], 1);
         }
 
         if(!empty($_REQUEST['documentId'])){

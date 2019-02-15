@@ -1,16 +1,11 @@
 <?php
 
-class LogAccion extends Model
+class TareaLog extends Model
 {
-    protected $idlog_accion;
-    protected $nombre;
-    protected $descripcion;
+    protected $idtarea_log;
+    protected $fk_log;
+    protected $fk_tarea;
     protected $dbAttributes;
-
-    const CREAR = 1;
-    const EDITAR = 2;
-    const BORRAR = 3;
-    const VERSIONAR = 4;
 
     function __construct($id = null)
     {
@@ -24,12 +19,18 @@ class LogAccion extends Model
     {
         $this->dbAttributes = (object)[
             'safe' => [
-                'nombre',
-                'descripcion',
+                'fk_log',
+                'fk_tarea'
             ],
             'date' => []
         ];
     }
 
-    
+    public static function newLogRelation($logId, $taskId)
+    {
+        return self::newRecord([
+            'fk_log' => $logId,
+            'fk_tarea' => $taskId
+        ]);
+    }
 }

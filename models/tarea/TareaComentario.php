@@ -1,8 +1,8 @@
 <?php
 
-class ComentarioTarea extends Model
+class TareaComentario extends Model
 {
-    protected $idcomentario_tarea;
+    protected $idtarea_comentario;
     protected $fk_funcionario;
     protected $fk_tarea;
     protected $comentario;
