@@ -82,7 +82,6 @@ $(function () {
         $('#document_header').load(route);
     }
 
-
     window.addEventListener("orientationchange", function () {
         setTimeout(() => {
             setSize();
@@ -91,12 +90,10 @@ $(function () {
 
     function setSize() {
         let sizeDocument = localStorage.getItem('breakpoint');
-        console.log(sizeDocument)
         setValores(sizeDocument);
     }
 
     function setValores(sizeDocument) {
-
         var xsFont = parseFloat(sizeFont);
 
         if (sizeDocument == 'sm') {

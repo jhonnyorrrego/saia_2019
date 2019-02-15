@@ -8,7 +8,6 @@ class Tarea extends Model
     protected $fecha_final;
     protected $descripcion;
     protected $dbAttributes;
-
     public $clone;
 
     function __construct($id = null)
@@ -126,6 +125,7 @@ class Tarea extends Model
      * busca los anexos activos de la tarea
      *
      * @param object $params
+     * *  [task, order, offset, limit ]
      * @return void
      */
     public static function findActiveFiles($params)

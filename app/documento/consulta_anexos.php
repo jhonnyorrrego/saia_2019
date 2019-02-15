@@ -27,26 +27,29 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 
     $anexos = Anexos::findAllByAttributes([
         'documento_iddocumento' => $_REQUEST['documentId'],
-        'estado' => 1
+        'estado' => 1,
+        'eliminado' => 0
     ], [], $order, $offset, $limit);
 
     foreach ($anexos as $key => $Anexo) {
         $response ['rows'][] = [
             'id' => $Anexo->getPK(),
-            'icono' => $Anexo->getIcon(),
-            'etiqueta' => $Anexo->getName(),
+            'icono' => $Anexo->getIcon($Anexo->tipo),
+            'etiqueta' => $Anexo->etiqueta,
             'version' => $Anexo->version,
+            'descripcion' => $Anexo->descripcion,
             'extension' => $Anexo->tipo,
-            'usuario' => $Anexo->getUser()->getName(),
-            'fecha' => $Anexo->getDateAttribute('fecha_anexo'),
-            'peso' => $Anexo->getFileSize(),
+            'usuario' => $Anexo->getLastUser()->getName(),
+            'fecha' => $Anexo->getDate(),
+            'peso' => $Anexo->getFileSize($Anexo->ruta),
             'tipo' => $Anexo->getType()
         ];
     }
     
     $response['total'] = Anexos::countRecords([
         'documento_iddocumento' => $_REQUEST['documentId'],
-        'estado' => 1
+        'estado' => 1,
+        'eliminado' => 0
     ]);
 }
 

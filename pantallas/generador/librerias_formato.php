@@ -350,10 +350,22 @@ function consultar_campos_formato($idformato, $tipo_retorno) {
         $camposNucleo = " and A.nombre not in('" . implode("', '", camposNucleo($idformato)) . "')";
         $condicion_adicional = " and A.nombre not in('" . implode("', '", $campos_excluir) . "')";
         $campos = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $idformato . " and etiqueta_html<>'campo_heredado' " . $condicion_adicional . " " . $camposNucleo . "", "A.orden", $conn);
+        
         if($campos['numcampos']){
             $camposDescripcion = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $idformato . " and etiqueta_html<>'campo_heredado' " . $condicion_adicional . " and (acciones like 'p' or acciones like '%,p,%' or acciones like '%,p') ", "A.orden", $conn);
             if($camposDescripcion['numcampos']){
                 $retorno["exito"] = 1;
+                $consultaFormato = "SELECT valor,etiqueta FROM campos_formato WHERE formato_idformato = {$idformato} and etiqueta_html ='arbol_fancytree'";
+                $camposFormato = StaticSql::search($consultaFormato);
+                if ($camposFormato) {
+                    for ($i = 0; $i < count($camposFormato); $i++) {
+                        $url = json_decode($camposFormato[$i]['valor'], true);
+                        if (!$url['url']) {
+                            $retorno['exito'] = 0;
+                            $retorno['mensaje'] = "Debe seleccionar el tipo de arbol antes de continuar";
+                        }
+                    }
+                }
             }else{
 		        $retorno['mensaje'] = 'Debe seleccionar alguno de los campos para incluirse en la descripción de los documentos';  
             }           

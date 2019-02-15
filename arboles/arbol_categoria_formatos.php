@@ -91,7 +91,7 @@ function llena_formato($id, $nivel = 0, $cod_padre, $seleccionados = null, $sele
         $seleccionados = explode(",",$_REQUEST['seleccionados']);
         
     }
-   
+
     $resp = array();
     if ($papas["numcampos"]) {
         for ($i = 0; $i < $papas["numcampos"]; $i++) {

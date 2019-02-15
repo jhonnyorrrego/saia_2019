@@ -15,7 +15,7 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
-$Response = (object) array(
+$Response = (object)array(
     'data' => new stdClass(),
     'message' => "",
     'success' => 0
@@ -23,31 +23,46 @@ $Response = (object) array(
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
     $data = [];
-    foreach($_REQUEST['routes'] as $route){
+    foreach ($_REQUEST['routes'] as $route) {
         $content = file_get_contents($ruta_db_superior . $route);
         $routePath = explode('/', $route);
         $extensionParts = explode('.', end($routePath));
-        $route = 'soporte/' . $_REQUEST['documentId'] . '/' . time().'-'.rand(0,1000) . '.' . end($extensionParts);
+        $storageName = time() . '-' . rand(0, 1000) . '.' . end($extensionParts);
 
+        $Documento = new Documento($_REQUEST['documentId']);
+        $route = $Documento->estado . '/' . date('Y-m-d') . '/' . $_REQUEST['documentId'] . '/anexos/' . $storageName;
         $dbRoute = UtilitiesController::createFileDbRoute($route, 'archivos', $content);
-    
-    
-        Anexos::newRecord([
+
+        $Anexos = new Anexos();
+        $Anexos->setAttributes([
             'documento_iddocumento' => $_REQUEST['documentId'],
             'ruta' => $dbRoute,
             'etiqueta' => end($routePath),
             'tipo' => end($extensionParts),
+            'descripcion' => $_REQUEST['description'],
             'fecha_anexo' => date('Y-m-d H:i:s'),
-            'fk_funcionario' => $_REQUEST['key'],
-            'estado' => 1,
-            'version' => 1
+            'fk_funcionario' => $_REQUEST['key']
         ]);
+
+        if($_REQUEST['fileId']){
+            $OldRecord = new Anexos($_REQUEST['fileId']);
+            $OldRecord->storage();            
+
+            $Anexos->setAttributes([
+                'version' => ++$OldRecord->version,
+                'fk_anexos' => $OldRecord->getPK()
+            ]);
+        }
+
+        if ($Anexos->save()) {
+            $data[] = $Anexos->getPK();
+        }
     }
 
-    if(count($data)){
+    if (count($data)) {
         $Response->message = 'Anexos cargados';
         $Response->success = 1;
-    }else{
+    } else {
         $Response->message = 'Imposible guardar';
     }
 } else {
