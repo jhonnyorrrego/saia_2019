@@ -538,7 +538,7 @@ class GenerarFormato
             ];
             if ($consulta_campos_lectura['numcampos']) {
                 $campos_lectura = json_decode($consulta_campos_lectura[0]['valor'], true);
-                $consultaEtiquetas = busca_filtro_tabla("nombre", "campos_formato", "formato_idformato = {$this->idformato} and (nombre like '%{$campos_lectura['titulo']}%' or nombre like '%{$campos_lectura['linea']}%')", "", $conn);
+                $consultaEtiquetas = busca_filtro_tabla("nombre", "campos_formato", "formato_idformato = {$this->idformato} and (nombre like '%{$campos_lectura['titulo']}%' or nombre like '%{$campos_lectura['linea']}%' or nombre like '%{$campos_lectura['ft_relacion']}%')", "", $conn);
                 if($consultaEtiquetas['numcampos']){
                    for ($k=0; $k <$consultaEtiquetas['numcampos'] ; $k++) {
                         $campos_excluir[] = $consultaEtiquetas[$k]['nombre']; 
