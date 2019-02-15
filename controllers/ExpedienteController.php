@@ -1,6 +1,80 @@
 <?php
 class ExpedienteController
 {
+    /**
+     * elimina un acceso directo
+     *
+     * @param array $data: idexpediente
+     * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public static function deleteDirectExpedienteCont(array $data = []) : array
+    {
+        $response = [
+            'exito' => 0,
+            'message' => ''
+        ];
+
+        if (!empty($data['idexpediente'])) {
+            $instance = ExpedienteDirecto::findAllByAttributes([
+                'fk_expediente' => $data['idexpediente'],
+                'fk_funcionario' => $_SESSION['idfuncionario']
+            ]);
+            if ($instance) {
+                if ($instance[0]->delete()) {
+                    $response['exito'] = 1;
+                    $response['message'] = 'Se ha eliminado el acceso directo';
+                } else {
+                    $response['message'] = 'No se pudo eliminar el acceso directo';
+                }
+
+            } else {
+                $response['message'] = 'El acceso al expediente ya ha sido eliminado';
+            }
+        } else {
+            $response['message'] = 'faltan el identificador del expediente';
+        }
+
+        return $response;
+    }
+    /**
+     * Crea un acceso directo al expediente
+     *
+     * @param array $data: idexpediente
+     * @return array
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public static function directExpedienteCont(array $data = []) : array
+    {
+        $response = [
+            'exito' => 0,
+            'message' => ''
+        ];
+        if (!empty($data['idexpediente'])) {
+            $sql = "SELECT idexpediente_directo FROM expediente_directo WHERE fk_funcionario={$_SESSION['idfuncionario']} AND fk_expediente={$data['idexpediente']}";
+            $record = StaticSql::search($sql);
+            if (!$record) {
+                $Directo = new ExpedienteDirecto();
+                $attributes = [
+                    'fk_funcionario' => $_SESSION['idfuncionario'],
+                    'fk_expediente' => $data['idexpediente'],
+                    'fecha_creacion' => date('Y-m-d H:i:s')
+                ];
+                $Directo->setAttributes($attributes);
+                if ($Directo->create()) {
+                    $response['exito'] = 1;
+                    $response['message'] = 'Acceso creado!';
+                } else {
+                    $response['message'] = 'No se pudo crear el acceso directo';
+                }
+            } else {
+                $response['message'] = 'Ya existe un acceso directo a este expediente';
+            }
+        } else {
+            $response['message'] = 'faltan el identificador del expediente';
+        }
+        return $response;
+    }
 
     /**
      * Apertura y cierre de los expedientes
@@ -298,8 +372,8 @@ class ExpedienteController
         if (!empty($data)) {
             if (!empty($data['cod_padre'])) {
                 $instance = new Expediente($data['cod_padre']);
-                if(!$data['fk_caja'] && !$data['agrupador']){
-                    $data['fk_caja']=$instance->fk_caja;
+                if (!$data['fk_caja'] && !$data['agrupador']) {
+                    $data['fk_caja'] = $instance->fk_caja;
                 }
                 $attributes = $data;
                 $attributes['propietario'] = $_SESSION['idfuncionario'];
@@ -378,8 +452,8 @@ class ExpedienteController
                     $data['soporte'] = 'NULL';
                     $data['frecuencia_consulta'] = 'NULL';
                     $data['notas_transf'] = 'NULL';
-                }else{
-                    $editChildren=1;
+                } else {
+                    $editChildren = 1;
                 }
                 $Expediente->setAttributes($data);
 
@@ -387,8 +461,8 @@ class ExpedienteController
                     $response['message'] = 'Expediente actualizado';
                     $response['exito'] = 1;
 
-                    if($editChildren){
-                        $sql="UPDATE expediente SET fk_caja={$Expediente->fk_caja} WHERE cod_arbol like '{$Expediente->cod_arbol}.%' AND agrupador=0";
+                    if ($editChildren) {
+                        $sql = "UPDATE expediente SET fk_caja={$Expediente->fk_caja} WHERE cod_arbol like '{$Expediente->cod_arbol}.%' AND agrupador=0";
                         StaticSql::query($sql);
                     }
 

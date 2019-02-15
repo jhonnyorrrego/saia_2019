@@ -53,7 +53,7 @@ include_once $ruta_db_superior . 'assets/librerias.php';
             </div>
             <div class="form-group">
               <input type="hidden" id="idcaja" name="idcaja" value="<?=$idcaja?>">
-              <input type="hidden" name="methodInstance" value="restoreCajaCont">
+              <input type="hidden" name="methodInstance" value="deleteCajaCont">
               <input type="hidden" name="nameInstance" value="CajaController">
               <button id="delCaja" type="submit" class="btn btn-danger">
                 Eliminar
@@ -95,6 +95,8 @@ include_once $ruta_db_superior . 'assets/librerias.php';
                         duration : 3000
                       });
                   }
+                  parent.window.location.reload();
+                  window.location.href=`${params.baseUrl}vacio.php`;
                 },
                 error : function() {
                   top.notification({

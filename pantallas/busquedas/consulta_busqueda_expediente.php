@@ -115,6 +115,7 @@ echo estilo_bootstrap();
 <div class="navbar navbar-fixed-top" id="menu_buscador">
     <div class="navbar-inner">
         <ul class="nav pull-left">
+            <?php if (!$_REQUEST["hiddenBusqueda"]) : ?>
             <li>
                 <div class="btn-group">
                     <button type="button" class="btn btn-mini">
@@ -137,7 +138,9 @@ echo estilo_bootstrap();
                 </div>
             </li>
             <li class="divider-vertical"></li>
-            <?php if ($datos_busqueda[0]["acciones_seleccionados"] != '' && $okAddAcciones && $okPermisoAcciones) : ?>
+            <?php
+            endif;
+            if ($datos_busqueda[0]["acciones_seleccionados"] != '' && $okAddAcciones && $okPermisoAcciones) : ?>
             <li>
                 <div class="btn-group">
                     <button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">
@@ -185,6 +188,7 @@ echo estilo_bootstrap();
                         </li>
                     </ul>
                 </div>
+            </li>
         </ul>
     </div>
 </div>

@@ -61,33 +61,33 @@ function info_caja($idcaja)
 
         $link = 'class ="link kenlace_saia" conector = "iframe" enlace = "pantallas/busquedas/consulta_busqueda_caja.php?' . $params . '" titulo = "' . $Caja->codigo . '"';
         $html .= <<<FINHTML
-    <table style="font-size:12px;width:100%;">
-        <tr {$link}>
-            <td>
-                <i class='icon-book'></i>&nbsp;<strong>{$Caja->codigo}</strong>
-            </td>
-        </tr>
-        <tr>
-            <td align="right">
-                {$btn}
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <strong>Tipo:</strong> {$Caja->getEstadoArchivo()}
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <strong>Fondo:</strong> {$Caja->fondo}
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <strong>Sección:</strong> {$Caja->seccion}
-            </td>
-        </tr>
-    </table>        
+        <table style="font-size:12px;width:100%;">
+            <tr {$link}>
+                <td>
+                    <i class='icon-book'></i>&nbsp;<strong>{$Caja->codigo}</strong>
+                </td>
+            </tr>
+            <tr>
+                <td align="right">
+                    {$btn}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Tipo:</strong> {$Caja->getEstadoArchivo()}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Fondo:</strong> {$Caja->fondo}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Sección:</strong> {$Caja->seccion}
+                </td>
+            </tr>
+        </table>        
 FINHTML;
     }
     return $html;

@@ -299,6 +299,18 @@ class Expediente extends Model
     }
 
     /**
+     * retorna la etiqueta del campo estado_archivo
+     *
+     * @return string
+     * @author Andres.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getEstadoArchivo() : string
+    {
+        $data = $this->keyValueField('estado_archivo');
+        return $data[$this->estado_archivo] ?? '';
+    }
+
+    /**
      * Retorna el codigo de la caja vinculada
      *
      * @return string
@@ -608,6 +620,12 @@ class Expediente extends Model
         $response['estado'] = [
             0 => 'INACTIVO',
             1 => 'ACTIVO'
+        ];
+
+        $response['estado_archivo'] = [
+            1 => 'Gestion',
+            2 => 'Central',
+            3 => 'Historico'
         ];
 
         $response['estado_cierre'] = [

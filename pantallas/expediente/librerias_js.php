@@ -131,6 +131,9 @@ $(document).ready(function(){
         success: function(response){
           if(response.exito){
             $("#resultado_pantalla_"+idexp).remove();
+            $("#iframe_detalle").attr({
+              'src':'<?= $ruta_db_superior ?>vacio.php'
+            }); 
             top.notification({
               message : "Expediente eliminado",
               type : "success",
@@ -181,6 +184,131 @@ $(document).ready(function(){
       });  
     }
   });
+
+
+  //Crar acceso directo al expediente
+ $(document).on("click",".directExp",function(){
+    let idexp=$(this).data("id");
+
+    if(confirm("Esta seguro de crear el acceso directo?")){
+      $.ajax({
+        type : 'POST',
+        async:false,
+        url: "<?= $ruta_db_superior ?>pantallas/ejecutar_acciones.php",
+        data: {nameInstance:'ExpedienteController',methodInstance:'directExpedienteCont',idexpediente:idexp},
+        dataType: 'json',
+        success: function(response){
+          if(response.exito){
+            top.notification({
+              message : response.message,
+              type : "success",
+              duration : 3000
+            });
+          }else{
+            top.notification({
+              message : response.message,
+              type : "error",
+              duration : 3000
+            });
+          }
+        },
+        error : function() {
+          top.notification({
+            message : "Error al procesar la solicitud",
+            type : "error",
+            duration : 3000
+          });
+        }
+      });
+    }
+  });
   
+  //Papelera Restaurar 
+ $(document).on("click",".restore",function(){
+    var id=$(this).data("id");
+    var tabla=$(this).data("tabla");
+
+    let params={nameInstance:'ExpedienteController',methodInstance:'restoreExpedienteCont',idexpediente:id};
+    if(tabla=='caja'){
+      params={nameInstance:'CajaController',methodInstance:'restoreCajaCont',idcaja:id};
+    }
+
+    if(confirm("Esta seguro de realizar la acción?")){
+      $.ajax({
+        type : 'POST',
+        async:false,
+        url: "<?= $ruta_db_superior ?>pantallas/ejecutar_acciones.php",
+        data: params,
+        dataType: 'json',
+        success: function(response){
+          if(response.exito){
+            top.notification({
+              message : response.message,
+              type : "success",
+              duration : 3000
+            });
+            console.log("#resultado_pantalla_"+id+"-"+tabla)
+            $("#resultado_pantalla_"+id+"-"+tabla).remove();
+          }else{
+            top.notification({
+              message : response.message,
+              type : "error",
+              duration : 3000
+            });
+          }
+        },
+        error : function() {
+          top.notification({
+            message : "Error al procesar la solicitud",
+            type : "error",
+            duration : 3000
+          });
+        }
+      });
+    }
+  });
+
+ //Eliminar el acceso directo
+ $(document).on("click",".delDirectoExp",function(){
+    let idexp=$(this).data("id");
+
+    if(confirm("Esta seguro de eliminar el acceso directo?")){
+      $.ajax({
+        type : 'POST',
+        async:false,
+        url: "<?= $ruta_db_superior ?>pantallas/ejecutar_acciones.php",
+        data: {nameInstance:'ExpedienteController',methodInstance:'deleteDirectExpedienteCont',idexpediente:idexp},
+        dataType: 'json',
+        success: function(response){
+          if(response.exito){
+            $("#resultado_pantalla_"+idexp).remove();
+            $("#iframe_detalle").attr({
+              'src':'<?= $ruta_db_superior ?>vacio.php'
+            }); 
+            top.notification({
+              message : response.message,
+              type : "success",
+              duration : 3000
+            });
+          }else{
+            top.notification({
+              message : response.message,
+              type : "error",
+              duration : 3000
+            });
+          }
+        },
+        error : function() {
+          top.notification({
+            message : "Error al procesar la solicitud",
+            type : "error",
+            duration : 3000
+          });
+        }
+      });
+    }
+  });
+
+
 });
 </script>
