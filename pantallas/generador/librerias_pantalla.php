@@ -611,7 +611,7 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
                 }
             }else{*/
                 $tablaDocumento = explode("ft_", $buscar_formato[0]['nombre_tabla']);
-                print_r($tablaDocumento);die();
+
                 $consultaDocumentos = busca_filtro_tabla("", "documento", "lower(plantilla) = '{$tablaDocumento[1]}'", "", $conn);
                 if ($consultaDocumentos['numcampos']) {
                     $retorno['error'] = 'No se puede cambiar la relacion del proceso porque ya tiene documentos asociados';
