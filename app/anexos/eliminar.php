@@ -15,28 +15,21 @@ while ($max_salida > 0) {
 
 include_once $ruta_db_superior . 'controllers/autoload.php';
 
-$Response = (object) array(
+$Response = (object)array(
     'data' => new stdClass(),
     'message' => "",
-    'success' => 0,
+    'success' => 0
 );
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    TareaPrioridad::takeOffByTask($_REQUEST['task']);
+    $Anexo = new Anexo($_REQUEST['fileId']);
+    $Anexo->eliminado = 1;
 
-    $pk = TareaPrioridad::newRecord([
-        'fk_funcionario' => $_REQUEST['key'],
-        'fk_tarea' => $_REQUEST['task'],
-        'prioridad' => $_REQUEST['priority'],
-        'fecha' => date('Y-m-d H:i:s'),
-        'estado' => 1
-    ]);
-
-    if($pk){
-        $Response->message = "Prioridad asignada";
+    if($Anexo->save()){
         $Response->success = 1;
+        $Response->message = "Registro eliminado";
     }else{
-        $Response->message = "Error al guardar";
+        $Response->message = "Error al eliminar";
     }
 } else {
     $Response->message = "Debe iniciar sesion";

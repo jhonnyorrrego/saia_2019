@@ -22,8 +22,6 @@ global $conn;
     <head>
     	<?= jquery() ?>
         <?= bootstrap() ?>
-        <?= breakpoint() ?>
-        <?= toastr() ?>
         <?= icons() ?>
         <?= moment() ?>
         <?= validate() ?>

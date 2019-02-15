@@ -1,8 +1,8 @@
 <?php
 
-class EtiquetaTarea extends Model
+class TareaEtiqueta extends Model
 {
-    protected $idetiqueta_tarea;
+    protected $idtarea_etiqueta;
     protected $fk_tarea;
     protected $fk_funcionario;
     protected $fk_etiqueta;
@@ -19,7 +19,7 @@ class EtiquetaTarea extends Model
     protected function defineAttributes(){
         $this->dbAttributes = (object) [
             'safe' => [
-                'idetiqueta_tarea',
+                'idtarea_etiqueta',
                 'fk_tarea',
                 'fk_funcionario',
                 'fk_etiqueta',
@@ -38,13 +38,13 @@ class EtiquetaTarea extends Model
      * @return boolean
      */
     public static function isActive($tagId, $taskId){
-        $EtiquetaTarea = self::findByAttributes([
+        $total = self::countRecords([
             'fk_tarea' => $taskId,
             'fk_etiqueta' => $tagId,
             'estado' => 1
         ]);
-
-        return $EtiquetaTarea ? 1 : 0;
+        
+        return $total ? 1 : 0;
     }
 
     public function toggleRelaction($state){

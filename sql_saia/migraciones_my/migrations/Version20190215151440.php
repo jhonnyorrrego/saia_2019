@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Migrations;
 
@@ -10,12 +10,13 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190212124228 extends AbstractMigration
+final class Version20190215151440 extends AbstractMigration
 {
     public function getDescription() : string
     {
         return '';
     }
+
     public function preUp(Schema $schema) : void
     {
         date_default_timezone_set("America/Bogota");
@@ -27,11 +28,13 @@ final class Version20190212124228 extends AbstractMigration
 
     public function up(Schema $schema) : void
     {
-        $this->addSql('truncate table log_accion');
-        $this->addSql("insert into log_accion (idlog_accion,nombre,descripcion) values ('1','CREAR','crea un registro')");
-        $this->addSql("insert into log_accion (idlog_accion,nombre,descripcion) values ('2','EDITAR','edita un registro')");
-        $this->addSql("insert into log_accion (idlog_accion,nombre,descripcion) values ('3','BORRAR','elimina un registro')");
-        $this->addSql("insert into log_accion (idlog_accion,nombre,descripcion) values ('4','VERSIONAR','oculta el registro para mostrar una version actualizada')");
+        if($schema->hasTable('anexo_log')){
+            $table = $schema->getTable('anexo_log');
+            $table->changeColumn('idanexo_log', [
+                'length' => 11,
+                'autoincrement' => true
+            ]);
+        }
 
     }
 

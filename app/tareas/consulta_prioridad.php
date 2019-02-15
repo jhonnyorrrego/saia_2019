@@ -22,15 +22,15 @@ $Response = (object) array(
 );
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $data = PrioridadTarea::findHistoryByTask($_REQUEST['task']);
+    $data = TareaPrioridad::findHistoryByTask($_REQUEST['task']);
 
     foreach($data as $item){
         $date = DateController::convertDate($item['fecha'], 'Y-m-d H:i:s', 'd/m/Y H:i a');
         $Response->data[] = [
-            'id' => $item['idprioridad_tarea'],
+            'id' => $item['idtarea_prioridad'],
             'date' => $date,
             'user' => ucfirst(strtolower($item['nombres'] . ' ' . $item['apellidos'])),
-            'priorityLabel' => PrioridadTarea::getPriority($item['prioridad']),
+            'priorityLabel' => TareaPrioridad::getPriority($item['prioridad']),
             'priority' => $item['prioridad'],
             'state' => $item['estado']
         ];

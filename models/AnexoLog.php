@@ -26,10 +26,10 @@ class AnexoLog extends Model
         ];
     }
 
-    public static function newLogRelation($logId, $anexoId)
+    public static function newLogRelation($logId, $fileId)
     {
         return self::newRecord([
-            'fk_anexo' => $anexoId,
+            'fk_anexo' => $fileId,
             'fk_log' => $logId
         ]);
     }

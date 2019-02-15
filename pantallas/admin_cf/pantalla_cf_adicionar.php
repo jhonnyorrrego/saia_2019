@@ -19,7 +19,6 @@ include_once($ruta_db_superior."assets/librerias.php");
 <?= jquery() ?>
 <?= bootstrap() ?>
 <?= breakpoint() ?>
-<?= toastr() ?>
 <?= icons() ?>
 <?= moment() ?><?= validate() ?>
 <link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/select2/css/select2.min.css" rel="stylesheet" type="text/css" media="screen">

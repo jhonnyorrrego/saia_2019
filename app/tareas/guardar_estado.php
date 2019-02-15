@@ -22,9 +22,9 @@ $Response = (object) array(
 );
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    EstadoTarea::takeOffByTask($_REQUEST['task']);
+    TareaEstado::takeOffByTask($_REQUEST['task']);
 
-    $pk = EstadoTarea::newRecord([
+    $pk = TareaEstado::newRecord([
         'fk_funcionario' => $_REQUEST['key'],
         'fk_tarea' => $_REQUEST['task'],
         'descripcion' => $_REQUEST['description'],

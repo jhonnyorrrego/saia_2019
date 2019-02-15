@@ -12,7 +12,7 @@ include_once $ruta_db_superior . "db.php";
 include_once $ruta_db_superior . "librerias_saia.php";
 include_once $ruta_db_superior . "pantallas/lib/librerias_componentes.php";
 include_once $ruta_db_superior . "pantallas/generador/librerias_pantalla.php";
-include_once($ruta_db_superior . "arboles/crear_arbol_ft.php");
+include_once $ruta_db_superior . "arboles/crear_arbol_ft.php";
 echo librerias_UI("1.12");
 echo librerias_arboles_ft("2.24", 'filtro');
 
@@ -50,7 +50,7 @@ if ($_REQUEST['idformato']) {
   $extensiones = array("filter" => array());
   $arbol = new ArbolFt("codigo_padre_formato", $origen, $opciones_arbol, $extensiones, $validaciones);
 
-  $origenCategoria = array("url" => "arboles/arbol_categoria_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("tipo" => "1", "seleccionado" => $formato[0]["fk_categoria_formato"], "seleccionable" => "checkbox"));
+  $origenCategoria = array("url" => "arboles/arbol_categoria_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("tipo" => "1", "seleccionados" => $formato[0]["fk_categoria_formato"], "seleccionable" => "checkbox"));
   $opcionesArbolCategoria = array("keyboard" => true, "selectMode" => 3, "seleccionarClick" => 1, "busqueda_item" => 1, "checkbox" => checkbox);
   $extensionesCategoria = array("filter" => array());
   $arbolCategoria = new ArbolFt("fk_categoria_formato", $origenCategoria, $opcionesArbolCategoria, $extensionesCategoria, $validaciones);
@@ -542,9 +542,8 @@ if ($formato["numcampos"]) {
 <?php
 echo $js_archivos;
 //echo(librerias_jquery("1.7"));
-echo (librerias_notificaciones());
-echo (librerias_kaiten());
-echo (librerias_acciones_kaiten());
+echo librerias_notificaciones();
+
 ?>
 
 <script type="text/javascript">
