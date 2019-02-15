@@ -2,11 +2,11 @@ $(function () {
     let baseUrl = $('script[data-baseurl]').data('baseurl');
     let params = $('script[data-fileparams]').data('fileparams');
 
-    if(typeof Files == 'undefined'){
-        $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/files/files.js`, function(){
+    if (typeof Files == 'undefined') {
+        $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/files/files.js`, function () {
             files = init();
         });
-    }else{
+    } else {
         files = init();
     }
 
@@ -24,44 +24,83 @@ $(function () {
             bootstrapTable: {
                 url: `${baseUrl}app/documento/consulta_anexos.php`,
                 queryParams: function (queryParams) {
+                    queryParams.sortOrder = 'desc';
                     queryParams.documentId = params.documentId;
                     queryParams.key = localStorage.getItem('key');
                     return queryParams;
                 },
-                columns: [
-                    { field: 'icon', title: '' },
-                    { field: 'name', title: 'nombre' },
-                    { field: 'version', title: 'version' },
-                    { field: 'class', title: 'clase' },
-                    { field: 'user', title: 'responsable' },
-                    { field: 'date', title: 'incluido' },
-                    { field: 'size', title: 'tamaño' },
-                    { field: 'type', title: 'Tipo'},
-                    {
-                        field: 'options',
-                        title: '',
-                        align: 'center',
-                        formatter: Files.OptionButttons
-                    }
-                ]
+                onEditableSave: function (field, row) {
+                    let data = {
+                        key: localStorage.getItem('key'),
+                        fileId: row.id,
+                        fields: {}
+                    };
+                    data.fields[field] = row[field];
+                    $.post(`${baseUrl}app/anexos_documento/modificar.php`, data, function (response) {
+                        if (response.success) {
+                            top.notification({
+                                type: 'success',
+                                message: response.message,
+                            });
+                        } else {
+                            top.notification({
+                                type: 'error',
+                                message: response.message,
+                            });
+                        }
+                    }, 'json');
+                }
             },
-            save: function (description, files) {
-                $.post(`${baseUrl}app/documento/almacenar_anexos.php`, {
-                    key: localStorage.getItem('key'),
-                    routes: files,
-                    description: description,
-                    documentId: params.documentId
-                }, function (response) {
-                    if (response.success) {
-                        top.notification({
-                            type: 'success',
-                            message: response.message,
-                        });
+            save: function (description, files, fileId) {
+                let success = false;
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: `${baseUrl}app/documento/almacenar_anexos.php`,
+                    async: false,
+                    data: {
+                        key: localStorage.getItem('key'),
+                        routes: files,
+                        description: description,
+                        documentId: params.documentId,
+                        dir: 'documento',
+                        fileId: fileId
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            top.notification({
+                                type: 'success',
+                                message: response.message,
+                            });
+                            success = true;
+                        }
                     }
-                }, 'json');
+                });
+
+                return success;
+            },
+            delete: function (key) {
+                let success = false;
+                $.ajax({
+                    type: 'POST',
+                    dataType: 'json',
+                    url: `${baseUrl}app/anexos_documento/eliminar.php`,
+                    async: false,
+                    data: {
+                        key: localStorage.getItem('key'),
+                        fileId: key
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            success = true;
+                        }
+                    }
+                });
+
+                return success;
             }
         };
-    
+
         return new Files(options);
     }
 

@@ -32,14 +32,14 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     foreach ($anexos as $key => $Anexo) {
         $response['rows'][] = [
             'id' => $Anexo->getPK(),
-            'icono' => $Anexo->getIcon(),
+            'icono' => $Anexo->getIcon($Anexo->extension),
             'etiqueta' => $Anexo->etiqueta,
             'version' => $Anexo->version,
             'descripcion' => $Anexo->descripcion,
             'extension' => $Anexo->extension,
             'usuario' => $Anexo->getLastLog()->getUser()->getName(),
             'fecha' => $Anexo->getLastLog()->getDateAttribute('fecha'),
-            'peso' => $Anexo->getFileSize()
+            'peso' => $Anexo->getFileSize($Anexo->ruta)
         ];
     }
 

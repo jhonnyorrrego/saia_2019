@@ -119,6 +119,10 @@ class Files {
             }
         });
 
+        $('#stop_upload').on('click', function () {
+            instance.reset();
+        });
+
         $(document).off('click', '.file_option');
         $(document).on('click', '.file_option', function () {
             $(this).parent().find('.file_option').toggleClass('d-none');
@@ -271,6 +275,7 @@ class Files {
     }
 
     upload(key) {
+        this.reset();
         this.active = key;
         this.getDropzone().options.maxFiles = 1;
         this.getDropzone().options.dictMaxFilesExceeded = "Máximo 1 archivo";
