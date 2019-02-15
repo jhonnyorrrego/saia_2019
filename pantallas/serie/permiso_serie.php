@@ -19,14 +19,8 @@ if (!$identidadSerie) {
 	return false;
 }
 $EntidadSerie = new EntidadSerie($identidadSerie);
-$instance = $EntidadSerie->getSerieFk();
-if ($instance) {
-	$Serie = $instance[0];
-}
-$instance2 = $EntidadSerie->getDependenciaFk();
-if ($instance2) {
-	$Dependencia = $instance2[0];
-}
+$Serie = $EntidadSerie->getRelationFk('Serie');
+$Dependencia = $EntidadSerie->getRelationFk('Dependencia');
 
 $instance3 = $EntidadSerie->getPermisoSerieFk();
 $seleccionados = [

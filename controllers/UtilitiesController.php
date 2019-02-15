@@ -118,10 +118,10 @@ class UtilitiesController
     public static function instanceSql(string $nameInstance, string $nameIdInstance, string $sql) : array
     {
         $data = [];
-        $consulta = ejecuta_filtro_tabla($sql);
-        if ($consulta['numcampos']) {
-            for ($i = 0; $i < $consulta['numcampos']; $i++) {
-                $data[] = new $nameInstance($consulta[$i][$nameIdInstance]);
+        $consulta = StaticSql::search($sql);
+        if ($consulta) {
+            foreach ($consulta as $records) {
+                $data[] = new $nameInstance($records[$nameIdInstance]);
             }
         }
         return $data;
@@ -177,34 +177,36 @@ class UtilitiesController
         }
         return $dir_anexos;
     }
-    /**
-     * Devuelve un array con los ids de las instancias
-     *
-     * @param array $instance : Array de instancias
-     * @return array
-     */
-    public static function getIdsInstance(array $instance) : array
-    {
-        $data = [];
-        foreach ($instance as $inst) {
-            $data[] = $inst->getPK();
-        }
-        return $data;
-    }
 
     /**
      * filtra el array eliminando los datos vacios
      *
      * @param array $data : valores a procesar
+     * @param int $setnull : 1 para setear los valores vacios a null
      * @return array
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
-    public static function cleanForm(array $data) : array
+    public static function cleanForm(array $data, int $setNull = 0) : array
     {
-        $response = array_filter($data, function ($val, $key) {
-            return trim($val) != '';
-        }, ARRAY_FILTER_USE_BOTH);
-
+        if ($setNull) {
+            array_walk_recursive($data, function (&$element, $key) {
+                if (trim($element) != '') {
+                    $element = trim($element);
+                } else {
+                    $element = 'NULL';
+                }
+            });
+            $response = $data;
+        } else {
+            array_walk_recursive($data, function (&$element, $key) {
+                if (trim($element) != '') {
+                    $element = trim($element);
+                }
+            });            
+            $response = array_filter($data, function ($val, $key) {
+                return trim($val) != '' || is_array($val);
+            }, ARRAY_FILTER_USE_BOTH);
+        }
         return $response;
     }
 

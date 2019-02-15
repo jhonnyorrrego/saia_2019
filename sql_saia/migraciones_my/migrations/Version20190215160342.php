@@ -68,7 +68,7 @@ final class Version20190215160342 extends AbstractMigration
                     'notnull' => true
                 ]);
                 $anexos->addColumn('etiqueta', 'string', [
-                    'length' => 50,
+                    'length' => 100,
                     'notnull' => true
                 ]);
                 $anexos->addColumn('tipo', 'string', [

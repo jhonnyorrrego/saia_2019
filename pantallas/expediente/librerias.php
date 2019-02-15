@@ -15,16 +15,17 @@ require_once $ruta_db_superior . "controllers/autoload.php";
 
 /** AQUI EMPIEZA LAS FUNCIONES DE LAS CONDICIONES */
 
-function conditions_gestion()
+function conditions()
 {
     $idexp = $_REQUEST['idexpediente'];
-
-    $where = 'v.estado_archivo=1';
     if (empty($idexp)) {
-        $where .= ' and v.cod_padre=0';
+        $where .= " AND v.cod_padre=0";
     } else {
-        $where .= " and v.cod_padre={$idexp}";
+        $where .= " AND v.cod_padre={$idexp}";
     }
+
+    $where .= " AND (v.agrupador =1 OR fk_funcionario={$_SESSION['idfuncionario']})";
+
     return $where;
 }
 
@@ -49,7 +50,7 @@ function info_expediente($idexpediente)
 {
     $html = '';
     $ExpedienteInfo = new Expediente($idexpediente);
-    $idcomp= $_REQUEST["idbusqueda_componente"];
+    $idcomp = $_REQUEST["idbusqueda_componente"];
 
     $data = [
         "idbusqueda_componente" => $idcomp,
@@ -65,9 +66,9 @@ function info_expediente($idexpediente)
     if ($ExpedienteInfo->estado_cierre == 1) {
         $icon[0] = 'icon-folder-open';
     }
-            
+
     if ($ExpedienteInfo->nucleo) {
-        $btn = '<div class="btn btn-mini infoExp" data-id="' . $idexpediente . '" data-componente="'. $idcomp .'" title="' . $ExpedienteInfo->nombre . '"><i class="icon-info-sign"></i></div>';
+        $btn = '<div class="btn btn-mini infoExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="' . $ExpedienteInfo->nombre . '"><i class="icon-info-sign"></i></div>';
 
         $html .= <<<FINHTML
         <table style="font-size:12px;width:100%;">
@@ -85,37 +86,30 @@ function info_expediente($idexpediente)
 FINHTML;
 
     } else {
-        if ($ExpedienteInfo->getAccessUser('e') || $ExpedienteInfo->getAccessUser('c')) {
+        if ($ExpedienteInfo->getAccessUser('c')) {
             $btn .= '<div class="btn btn-mini selExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Seleccionar"><i class="icon-uncheck"></i></div>';
+            $btn .= '<div class="btn btn-mini shareExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Compartir" ><i class="icon-share"></i></div>';
         }
 
-        if ($ExpedienteInfo->getAccessUser('e')) {
-            $btn .= '<div class="btn btn-mini rotExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Imprimir rotulo" conector="iframe" enlace="pantallas/caja/rotulo.php?idexpediente=' . $idexpediente . '"><i class="icon-print"></i></div>';
-            if (!$ExpedienteInfo->tomo_padre) {
+        if ($ExpedienteInfo->isResponsable()) {
+            if (!$ExpedienteInfo->agrupador) {
+                $btn .= '<div class="btn btn-mini rotExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Imprimir rotulo" conector="iframe" enlace="pantallas/caja/rotulo.php?idexpediente=' . $idexpediente . '"><i class="icon-print"></i></div>';
                 $btn .= '<div class="btn btn-mini tomoExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Crear Tomo"><i class="icon-th-list"></i></div>';
             }
+            $btn .= '<div class="btn btn-mini editExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Editar"><i class="icon-pencil"></i></div>';
+            $btn .= '<div class="btn btn-mini delExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Eliminar"><i class="icon-remove"></i></div>';
         }
+        $btn .= '<div class="btn btn-mini infoExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="' . $ExpedienteInfo->nombre . '"><i class="icon-info-sign"></i></div>';
+        $btn .= '<div class="btn btn-mini directExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="' . $ExpedienteInfo->nombre . '"><i class="icon-star-empty"></i></div>';
 
-        if ($ExpedienteInfo->getAccessUser('c')) {
-            $btn .= '<div class="btn btn-mini shareExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Compartir" conector="iframe" enlace="pantallas/expediente/asignar_expediente.php?idexpediente=' . $idexpediente . '"><i class="icon-share"></i></div>';
+        $link = '';
+        if ($ExpedienteInfo->getAccessUser('c') || $ExpedienteInfo->getAccessUser('v')) {
+            $link = 'class ="link kenlace_saia" conector = "iframe" enlace = "pantallas/busquedas/consulta_busqueda_expediente.php?' . $params . '" titulo = "' . $ExpedienteInfo->nombre . '"';
         }
-
-        if ($ExpedienteInfo->getAccessUser('e')) {
-            $btn .= '<div class="btn btn-mini editExp" data-id="' . $idexpediente . '" data-componente="'. $idcomp .'" title="Editar" conector="iframe"  enlace="pantallas/expediente/editar_expediente.php"><i class="icon-pencil"></i></div>';
-        }
-
-        if ($ExpedienteInfo->getAccessUser('d')) {
-            $btn .= '<div class="btn btn-mini delExp" data-id="' . $idexpediente . '" data-componente="'. $idcomp .'" title="Eliminar"><i class="icon-remove"></i></div>';
-        }
-
-        if ($ExpedienteInfo->getAccessUser('v')) {
-            $btn .= '<div class="btn btn-mini infoExp" data-id="' . $idexpediente . '" data-componente="'. $idcomp .'" title="' . $ExpedienteInfo->nombre . '"><i class="icon-info-sign"></i></div>';
-        }
-
         if ($ExpedienteInfo->agrupador == 3) {
             $html .= <<<FINHTML
             <table style="font-size:12px;width:100%;">
-                <tr class="link kenlace_saia" conector="iframe" enlace="pantallas/busquedas/consulta_busqueda_expediente.php?{$params}" titulo="{$ExpedienteInfo->nombre}">
+                <tr {$link}>
                     <td>
                         <i class='{$icon[$ExpedienteInfo->agrupador]}'></i>&nbsp;<strong>{$ExpedienteInfo->nombre}</strong>
                     </td>
@@ -132,7 +126,7 @@ FINHTML;
             $cadenaTomo = "<i style='font-size:10px;'>&nbsp;&nbsp;&nbsp;&nbsp;<strong>Tomo:</strong> {$ExpedienteInfo->tomo_no} de {$ExpedienteInfo->countTomos()}</i>";
             $html .= <<<FINHTML
             <table style="font-size:12px;width:100%;">
-                <tr class="link kenlace_saia" conector="iframe" enlace="pantallas/busquedas/consulta_busqueda_expediente.php?{$params}" titulo="{$ExpedienteInfo->nombre}">
+                <tr {$link}>
                     <td>
                         <i class='{$icon[$ExpedienteInfo->agrupador]}'></i>&nbsp;<strong>{$ExpedienteInfo->nombre}</strong>{$cadenaTomo}
                     </td>
@@ -144,7 +138,7 @@ FINHTML;
                     </td>
                 </tr>
                 <tr>
-                    <td>{$ExpedienteInfo->getSerieFk()[0]->nombre}</td>
+                    <td>{$ExpedienteInfo->getRelationFk('Serie')->nombre}</td>
                 </tr>
             </table>        
 FINHTML;
@@ -154,81 +148,281 @@ FINHTML;
     return $html;
 }
 
+function info_restaurar($id, $idtabla, $tipo)
+{
 
-/** AQUI TERMINA LAS FUNCIONES DEL INFO */
+    if (strtolower($tipo) == 'expediente') {
+        $ExpEli = new ExpedienteEli($id);
+        $Expediente = new Expediente($idtabla);
+
+        $icon = [
+            0 => 'icon-folder-close',
+        ];
+        if ($Expediente->estado_cierre == 1) {
+            $icon[0] = 'icon-folder-open';
+        }
+
+        $html .= <<<FINHTML
+        <table style="font-size:12px;width:100%;">
+            <tr>
+                <td style="text-align:center;width:50%;" colspan="2">INFORMACIÓN DEL EXPEDIENTE</td>
+                <td style="text-align:center;width:50%;" colspan="2">INFORMACION DE LA ELIMINACIÓN</td>
+            </tr>
+
+            <tr>
+                <td colspan="4">
+                    <i class='{$icon[$Expediente->agrupador]}'></i>&nbsp;<strong>{$Expediente->nombre}</strong>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>Tipo:</strong>
+                </td>
+                <td>
+                    {$Expediente->getEstadoArchivo()}
+                </td>
+
+                <td>
+                    <strong>Fecha de eliminación:</strong>
+                </td>
+                <td>
+                    {$ExpEli->fecha_eliminacion}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Serie:</strong>
+                </td>
+                <td>
+                    {$Expediente->getRelationFk('Serie')->nombre}
+                </td>
+
+                <td>
+                    <strong>Funcionario:</strong>
+                </td>
+                <td>
+                    {$ExpEli->getRelationFk('Funcionario')->getName()}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Responsable:</strong>
+                </td>
+                <td>
+                    {$Expediente->getResponsable()}
+                </td>
+
+                <td>
+                    <strong>Restaurar:</strong>
+                </td>
+                <td>
+                    <button class="btn btn-mini btn-primary restore" data-id="{$idtabla}" data-tabla="expediente">Restaurar</button>
+                </td>
+            </tr>
+        </table>        
+FINHTML;
+
+    } else {
+        $Caja = new Caja($idtabla);
+        $CajaEli = new CajaEli($id);
+        $html .= <<<FINHTML
+        <table style="font-size:12px;width:100%;">
+            <tr>
+                <td style="text-align:center;width:50%;"  colspan="2">INFORMACIÓN DE LA CAJA</td>
+                <td style="text-align:center;width:50%;"  colspan="2">INFORMACION DE LA ELIMINACIÓN</td>
+            </tr>
+
+            <tr>
+                <td colspan="4">
+                    <i class='icon-book'></i>&nbsp;<strong>{$Caja->codigo}</strong>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>Tipo:</strong>
+                </td>
+                <td>
+                    {$Caja->getEstadoArchivo()}
+                </td>
+
+                <td>
+                    <strong>Fecha de eliminación:</strong>
+                </td>
+                <td>
+                    {$CajaEli->fecha_eliminacion}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Fondo:</strong>
+                </td>
+                <td>
+                    {$Caja->fondo}
+                </td>
+
+                <td>
+                    <strong>Funcionario:</strong>
+                </td>
+                <td>
+                    {$CajaEli->getRelationFk('Funcionario')->getName()}
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Responsable:</strong>
+                </td>
+                <td>
+                    {$Caja->getResponsable()}
+                </td>
+
+                <td>
+                    <strong>Restaurar:</strong>
+                </td>
+                <td>
+                    <button class="btn btn-mini btn-primary restore" data-id="{$idtabla}" data-tabla="caja">Restaurar</button>
+                </td>
+            </tr>
+        </table>        
+FINHTML;
+    }
+    return $html;
+}
+
+function info_expediente_directo($idexpediente)
+{
+    $ExpedienteInfo = new Expediente($idexpediente);
+    $idcomp = $_REQUEST["idbusqueda_componente"];
+
+    $comp = [
+        1 => 'expediente_gestion',
+        2 => 'expediente_central',
+        3 => 'expediente_historico'
+    ];
+    $record = BusquedaComponente::findColumn('idbusqueda_componente', ['nombre' => $comp[$ExpedienteInfo->estado_archivo]]);
+    if($record){
+        $data = [
+            "idbusqueda_componente" => $record[0],
+            "idexpediente" => $idexpediente
+        ];
+        $params = http_build_query($data);
+        $icon = 'icon-folder-close';
+        if ($ExpedienteInfo->estado_cierre == 1) {
+            $icon = 'icon-folder-open';
+        }
+        $link = '';
+        if ($ExpedienteInfo->getAccessUser('c') || $ExpedienteInfo->getAccessUser('v')) {
+            $link = 'class ="link kenlace_saia" conector = "iframe" enlace = "pantallas/busquedas/consulta_busqueda_expediente.php?' . $params . '" titulo = "' . $ExpedienteInfo->nombre . '"';
+        }
+        $btn .= '<div class="btn btn-mini delDirectoExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="Eliminar"><i class="icon-remove"></i></div>';
+        $btn .= '<div class="btn btn-mini infoExp" data-id="' . $idexpediente . '" data-componente="' . $idcomp . '" title="' . $ExpedienteInfo->nombre . '"><i class="icon-info-sign"></i></div>';
+        if ($ExpedienteInfo->agrupador == 3) {
+            $html .= <<<FINHTML
+            <table style="font-size:12px;width:100%;">
+                <tr {$link}>
+                    <td>
+                        <i class='icon-book'></i>&nbsp;<strong>{$ExpedienteInfo->nombre}</strong>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td align="right">
+                        {$btn}
+                    </td>
+                </tr>
+            </table>        
+FINHTML;
+        } else {
+            $cadenaTomo = "<i style='font-size:10px;'>&nbsp;&nbsp;&nbsp;&nbsp;<strong>Tomo:</strong> {$ExpedienteInfo->tomo_no} de {$ExpedienteInfo->countTomos()}</i>";
+            $html .= <<<FINHTML
+            <table style="font-size:12px;width:100%;">
+                <tr {$link}>
+                    <td>
+                        <i class='{$icon}'></i>&nbsp;<strong>{$ExpedienteInfo->nombre}</strong>{$cadenaTomo}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td align="right">
+                        {$btn}
+                    </td>
+                </tr>
+                <tr>
+                    <td>{$ExpedienteInfo->getRelationFk('Serie')->nombre}</td>
+                </tr>
+            </table>        
+FINHTML;
+        }
+    }else{
+        $html="NO se encuentra el componente";
+    }
+    return $html;
+}
+
+/** TERMINA LAS FUNCIONES DEL INFO */
 
 
-/** AQUI EMPIEZA LAS FUNCIONES DE CONSULTA BUSQUEDA */
+/** EMPIEZA LAS FUNCIONES DE CONSULTA BUSQUEDA */
 function adicionar_expediente()
 {
     global $Expediente;
 
+    $idcomp = $_REQUEST["idbusqueda_componente"];
     $idexpediente = $_REQUEST["idexpediente"];
     if (!$Expediente) {
         $Expediente = new Expediente($idexpediente);
         $GLOBALS['Expediente'] = $Expediente;
     }
-
-    if ($Expediente->getAccessUser('a')) {
-        $data = [
-            'idbusqueda_componente' => $_REQUEST['idbusqueda_componente'],
-            'idexpediente' => $idexpediente
-        ];
-        $params = http_build_query($data);
-        $rutaFormato = FORMATOS_CLIENTE;
-
-        $html = <<<FINHTML
-        <li></li>
+    if ($Expediente->estado_cierre == 1) {
+        if ($Expediente->getAccessUser('a')) {
+            $html = <<<FINHTML
         <li>
-            <a href="#" id="addExpediente" enlace="pantallas/expediente/adicionar_expediente.php?{$params}">Adicionar Expediente/Separador</a>
+            <a href="#" id="addExpediente" data-id="{$idexpediente}" data-componente="{$idcomp}">Adicionar Expediente/Separador</a>
         </li>
         <li>
-            <a href="#" id="addDocumentExp" enlace="{$rutaFormato}vincular_doc_expedie/adicionar_vincular_doc_expedie.php?idexpediente={$idexpediente}">Adicionar Documento</a>
+            <a href="#" id="addDocumentExp" data-id="{$idexpediente}" data-componente="{$idcomp}">Adicionar Documento</a>
         </li>
 FINHTML;
+        }
     }
+
     echo $html;
 }
 
 
 function compartir_expediente()
 {
-    global $Expediente;
-
-    $idexpediente = $_REQUEST["idexpediente"];
-    if (!$Expediente) {
-        $Expediente = new Expediente($idexpediente);
-        $GLOBALS['Expediente'] = $Expediente;
-    }
-    if ($Expediente->getAccessUser('c')) {
-        $html = <<<FINHTML
-		<li></li>
-		<li>
-		    <a href="#" id="shareExp" enlace="pantallas/expediente/asignar_expediente.php">Compartir Expediente</a>
-        </li>
-FINHTML;
-    }
+    $idcomp = $_REQUEST["idbusqueda_componente"];
+    $html = '<li><a href="#" id="shareExp" data-componente="' . $idcomp . '">Compartir Expediente</a></li>';
     echo $html;
 }
 
 function transferencia_documental()
 {
-    $cadena = '<li><a href="#" id="transDocument">Transferir a Archivo</a></li>';
-    echo $cadena;
+    global $Expediente;
+    $html='';
+    $idexpediente = $_REQUEST["idexpediente"];
+    if (!$Expediente) {
+        $Expediente = new Expediente($idexpediente);
+        $GLOBALS['Expediente'] = $Expediente;
+    }
+    if($Expediente->estado_archivo!=3){
+        $html = '<li><a href="#" id="transDocument">Transferir a Archivo</a></li>';
+    }
+    echo $html;
 }
-
-function prestamo_documento()
-{
-    $cadena = '<li><a href="#" id="prestDocument">Solicitar pr&eacute;stamo</a></li>';
-    echo $cadena;
-}
-
 
 function barra_superior_busqueda()
 {
-    //TODO: PENDIENTE POR REVISAR
-    $permiso = new Permiso();
-    $ok2 = $permiso->acceso_modulo_perfil('transferencia_doc');
+    global $Expediente;
+
+    $idcomp = $_REQUEST["idbusqueda_componente"];
+    $idexpediente = $_REQUEST["idexpediente"];
+    if (!$Expediente) {
+        $Expediente = new Expediente($idexpediente);
+        $GLOBALS['Expediente'] = $Expediente;
+    }
 
     $reporte_inventario = busca_filtro_tabla("idbusqueda_componente", "busqueda_componente", "nombre='reporte_expediente_grid_exp'", "", $conn);
     if ($reporte_inventario['numcampos']) {
@@ -277,4 +471,4 @@ function barra_superior_busqueda()
 
     return $html;
 }
-/** AQUI TERMINA LAS FUNCIONES DE CONSULTA BUSQUEDA */
+/** TERMINA LAS FUNCIONES DE CONSULTA BUSQUEDA */
