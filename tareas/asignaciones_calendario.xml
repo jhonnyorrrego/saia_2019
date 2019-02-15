@@ -1,7 +1,0 @@
-<?php header('Content-Type: text/xml');?>
-<?xml version="1.0" encoding="UTF-8"?>
-<event>
-<title>Prueba</title>
-<start>2010-02-03 10:00:00</start>
-<end>2009-02-03 12:00:00</end>
-</event>

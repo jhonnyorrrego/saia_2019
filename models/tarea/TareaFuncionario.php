@@ -1,8 +1,8 @@
 <?php
 
-class FuncionarioTarea extends Model
+class TareaFuncionario extends Model
 {
-    protected $idfuncionario_tarea;
+    protected $idtarea_funcionario;
     protected $fk_funcionario;
     protected $fk_tarea;
     protected $tipo;
@@ -32,7 +32,7 @@ class FuncionarioTarea extends Model
      * activa la ralacion entre
      * el funcionario y la tarea
      *
-     * @return int idfuncionario_tarea
+     * @return int idtarea_funcionario
      */
     public function toggleRelation($newState){
         $this->estado = $newState;

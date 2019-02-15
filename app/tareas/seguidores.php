@@ -22,7 +22,7 @@ $Response = (object) array(
 );
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $data = FuncionarioTarea::findUsersByType($_REQUEST['task'], 2);
+    $data = TareaFuncionario::findUsersByType($_REQUEST['task'], 2);
 
     foreach($data as $key => $Funcionario){
         $data[$key] = [

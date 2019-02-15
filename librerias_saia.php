@@ -51,18 +51,6 @@ function librerias_jquery($version = "1.7.2")
     return $texto;
 }
 
-function librerias_fechas($hora = 0)
-{
-    global $raiz_saia;
-    $texto = '';
-    $texto .= '<link rel="stylesheet" href="' . $raiz_saia . 'css/ui-lightness/jquery-ui-1.8.4.custom.css" type="text/css" media="all" />';
-    $texto .= librerias_UI();
-    if ($hora) {
-        $texto .= '<script src="' . $raiz_saia . 'js/jquery-ui-timepicker-addon.js" type="text/javascript"></script>';
-    }
-    return $texto;
-}
-
 function librerias_UI($version = "1.8.17")
 {
     global $raiz_saia;
@@ -95,31 +83,10 @@ function estilo_jqgrid()
     return $texto;
 }
 
-function estilo_excite()
-{
-    global $raiz_saia;
-    $texto = '<link rel="stylesheet" href="' . $raiz_saia . 'css/excite-bike/excite-bike-ui.css" type="text/css" media="all" />';
-    return $texto;
-}
-
 function estilo_lightness()
 {
     global $raiz_saia;
     $texto = '<link rel="stylesheet" href="' . $raiz_saia . 'css/ui-lightness/jquery-ui-1.8.17.css" type="text/css" media="all" />';
-    return $texto;
-}
-
-function estilo_darkness()
-{
-    global $raiz_saia;
-    $texto = '<link rel="stylesheet" href="' . $raiz_saia . 'css/ui-darkness/jquery-ui-1.8.css" type="text/css" media="all" />';
-    return $texto;
-}
-
-function estilo_smoothness()
-{
-    global $raiz_saia;
-    $texto = '<link rel="stylesheet" href="' . $raiz_saia . 'asset/css/smoothness/jquery-ui.css" type="text/css" />';
     return $texto;
 }
 
@@ -279,44 +246,6 @@ function librerias_tiny()
     return $texto;
 }
 
-function libreria_php($ruta, $retorno = 0)
-{
-    global $raiz_saia;
-    if ($retorno) {
-        $texto = '<?php include_once($ruta_db_superior."' . $ruta . '"); ?' . '>';
-        return $texto;
-    } else {
-        include_once($raiz_saia . $ruta);
-    }
-    return '';
-}
-
-function funcion_php($nombre, $parametros = '', $libreria = '', $retorno = 0)
-{
-    global $raiz_saia;
-    $texto = '';
-    if ($libreria) {
-        $texto .= libreria_php($libreria, $retorno);
-    }
-    if ($retorno) {
-        $texto .= '<?php ' . $nombre . '(' . $parametros . '); ?' . '>';
-        return $texto;
-    } else {
-        include_once($raiz_saia . $ruta);
-    }
-    return '';
-}
-
-function librerias_editor_php()
-{
-    global $raiz_saia;
-    $texto = '';
-    $texto = '<script src="' . $raiz_saia . 'js/ace_editor_php/ace-noconflict.js" type="text/javascript" charset="utf-8"></script>
-<script src="' . $raiz_saia . 'js/ace_editor_php/theme-dreamweaver-noconflict.js" type="text/javascript" charset="utf-8"></script>
-<script src="' . $raiz_saia . 'js/ace_editor_php/mode-php-noconflict.js" type="text/javascript" charset="utf-8"></script>';
-    return $texto;
-}
-
 function librerias_principal()
 {
     global $raiz_saia;
@@ -337,59 +266,10 @@ function librerias_tooltips()
     return $texto;
 }
 
-function librerias_mascaras_texto()
-{
-    // Proximo desarrrollo de jquery ui
-    global $raiz_saia;
-    $texto = '';
-    $texto .= '<script src="' . $raiz_saia . 'js/jquery.maskedinput.js" type="text/javascript" charset="utf-8"></script>';
-    return $texto;
-}
-
-function librerias_easing()
-{
-    global $raiz_saia;
-    $texto = '';
-    $texto .= '<script src="' . $raiz_saia . 'js/jquery.easing.min.js" type="text/javascript" charset="utf-8"></script>';
-    return $texto;
-}
-
-function librerias_supersize()
-{
-    global $raiz_saia;
-    $texto = '';
-    $texto .= '<script src="' . $raiz_saia . 'js/supersized.3.2.7.min.js" type="text/javascript" charset="utf-8"></script>';
-    $texto .= '<script src="' . $raiz_saia . 'js/supersized.shutter.js" type="text/javascript" charset="utf-8"></script>';
-    $texto .= '<link rel="stylesheet" href="' . $raiz_saia . 'css/supersized.css" type="text/css" />';
-    $texto .= '<link rel="stylesheet" href="' . $raiz_saia . 'css/supersized.shutter.css" type="text/css" />';
-    return $texto;
-}
-
-function librerias_kaiten()
-{
-    global $raiz_saia;
-    $texto = '';
-    $texto .= '<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">';
-    $texto .= '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />';
-    $texto .= '<link rel="stylesheet" type="text/css" href="' . $raiz_saia . 'css/kaiten.min.css" />';
-    $texto .= '<script type="text/javascript" src="' . $raiz_saia . 'pantallas/anexos/js/jquery.ui.widget.js" ></script>';
-    $texto .= '<script type="text/javascript" src="' . $raiz_saia . 'js/kaiten.js"></script>';
-    $texto .= '<script type="text/javascript" src="' . $raiz_saia . 'js/jquery.ba-resize.min.js"></script>';
-    return $texto;
-}
-
 function librerias_acciones_kaiten()
 {
     global $raiz_saia;
     $texto = '<script type="text/javascript" src="' . $raiz_saia . 'pantallas/lib/acciones_kaiten.js"></script>';
-    return $texto;
-}
-
-function librerias_scroll_infinito()
-{
-    global $raiz_saia;
-    $texto = '';
-    $texto .= '<script src="' . $raiz_saia . 'js/jquery.infini_scroll.js" type="text/javascript" charset="utf-8"></script>';
     return $texto;
 }
 

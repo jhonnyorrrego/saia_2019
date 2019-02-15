@@ -31,6 +31,7 @@ final class Version20190212124228 extends AbstractMigration
         $this->addSql("insert into log_accion (idlog_accion,nombre,descripcion) values ('1','CREAR','crea un registro')");
         $this->addSql("insert into log_accion (idlog_accion,nombre,descripcion) values ('2','EDITAR','edita un registro')");
         $this->addSql("insert into log_accion (idlog_accion,nombre,descripcion) values ('3','BORRAR','elimina un registro')");
+        $this->addSql("insert into log_accion (idlog_accion,nombre,descripcion) values ('4','VERSIONAR','oculta el registro para mostrar una version actualizada')");
 
     }
 

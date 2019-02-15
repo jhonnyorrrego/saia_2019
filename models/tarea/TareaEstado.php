@@ -1,8 +1,8 @@
 <?php
 
-class EstadoTarea extends Model
+class TareaEstado extends Model
 {
-    protected $idestado_tarea;
+    protected $idtarea_estado;
     protected $fk_funcionario;
     protected $fk_tarea;
     protected $fecha;
@@ -40,7 +40,7 @@ class EstadoTarea extends Model
         global $conn;
 
         $tables = self::getTableName() . ' a,' . Funcionario::getTableName() . ' b';
-        $findRecords = busca_filtro_tabla('a.idestado_tarea,a.fecha,a.estado,a.valor,a.descripcion,b.nombres,b.apellidos', $tables, 'a.fk_funcionario = b.idfuncionario and a.fk_tarea =' . $taskId, 'idestado_tarea desc', $conn);
+        $findRecords = busca_filtro_tabla('a.idtarea_estado,a.fecha,a.estado,a.valor,a.descripcion,b.nombres,b.apellidos', $tables, 'a.fk_funcionario = b.idfuncionario and a.fk_tarea =' . $taskId, 'idtarea_estado desc', $conn);
 
         unset($findRecords['numcampos'], $findRecords['tabla'], $findRecords['sql']);
         return $findRecords;

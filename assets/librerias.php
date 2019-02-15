@@ -104,16 +104,16 @@ function bootstrapTableEditable()
 
 /**
  * retorna los enlaces css y js
- * de toastr v2.1.3 minificados
+ * de izitoast v1.4.0 minificados
  */
-function toastr()
+function notificacion()
 {
     global $ruta_db_superior;
 
-    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/toastr/toastr.min.css';
+    $routeCss = $ruta_db_superior . 'assets/theme/assets/plugins/iziToast/css/iziToast.min.css';
     $css = '<link href="' . $routeCss . '" rel="stylesheet" type="text/css" />';
 
-    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/toastr/toastr.min.js';
+    $routeJs = $ruta_db_superior . 'assets/theme/assets/plugins/iziToast/js/iziToast.min.js';
     $js = '<script type="text/javascript" src="' . $routeJs . '"></script>';
 
     return $css . $js;

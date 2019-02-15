@@ -23,8 +23,8 @@ $Response = (object) array(
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
     $Tarea = new Tarea($_REQUEST['task']);
-    $managers = FuncionarioTarea::findUsersByType($_REQUEST['task'], 1);
-    $followers = FuncionarioTarea::findUsersByType($_REQUEST['task'], 2);
+    $managers = TareaFuncionario::findUsersByType($_REQUEST['task'], 1);
+    $followers = TareaFuncionario::findUsersByType($_REQUEST['task'], 2);
 
     $data = [];
     foreach($managers as $key => $Funcionario){

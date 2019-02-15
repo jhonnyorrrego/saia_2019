@@ -22,7 +22,7 @@ $Response = (object) array(
 );
 
 if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST['key']) {
-    $data = EstadoTarea::findHistoryByTask($_REQUEST['task']);
+    $data = TareaEstado::findHistoryByTask($_REQUEST['task']);
 
     foreach($data as $item){
         $date = DateController::convertDate($item['fecha'], 'Y-m-d H:i:s', 'd/m/Y H:i a');
@@ -30,7 +30,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
             'id' => $item['idestado_tarea'],
             'date' => $date,
             'user' => ucfirst(strtolower($item['nombres'] . ' ' . $item['apellidos'])),
-            'stateLabel' => EstadoTarea::getState($item['valor']),
+            'stateLabel' => TareaEstado::getState($item['valor']),
             'description' => $item['descripcion'],
             'value' => $item['valor'],
             'state' => $item['estado']

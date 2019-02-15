@@ -39,7 +39,7 @@ if($_SESSION['idfuncionario'] == $_REQUEST['key']){
         }else if($_REQUEST['dataBind'] == 'task'){
             foreach($tags as $key => $Etiqueta){
                 $Response->data[] = [
-                    'checkboxType' => EtiquetaTarea::isActive($Etiqueta->getPK(), $_REQUEST['selections']),
+                    'checkboxType' => TareaEtiqueta::isActive($Etiqueta->getPK(), $_REQUEST['selections']),
                     'idetiqueta' => $Etiqueta->getPK(),
                     'nombre' => $Etiqueta->nombre
                 ];

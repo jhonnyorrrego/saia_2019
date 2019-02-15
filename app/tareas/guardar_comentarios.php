@@ -22,7 +22,7 @@ $Response = (object)array(
 );
 
 if($_SESSION['idfuncionario'] == $_REQUEST['key'] && $_REQUEST['relation']){
-    $pk = ComentarioTarea::newRecord([
+    $pk = TareaComentario::newRecord([
         'fk_funcionario' => $_REQUEST['key'],
         'fk_tarea' => $_REQUEST['relation'],
         'comentario' => $_REQUEST['comment']['comment'],

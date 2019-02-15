@@ -31,7 +31,8 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
         $route = date('Y') . '/' . date('m') . '/' . date('d') . '/' . $_REQUEST['task'] . '/' . $storageName;
         $dbRoute = UtilitiesController::createFileDbRoute($route, 'anexos_tareas', $content);
 
-        $pk = Anexo::newRecord([
+        $Anexo = new Anexo();
+        $Anexo->setAttributes([
             'ruta' => $dbRoute,
             'etiqueta' => end($routePath),
             'nombre' => $storageName,
@@ -39,9 +40,19 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
             'descripcion' => $_REQUEST['description']
         ]);
 
-        if ($pk) {
+        if($_REQUEST['fileId']){
+            $OldRecord = new Anexo($_REQUEST['fileId']);
+            $OldRecord->storage();            
+
+            $Anexo->setAttributes([
+                'version' => ++$OldRecord->version,
+                'fk_anexo' => $OldRecord->getPK()
+            ]);
+        }
+
+        if ($Anexo->save()) {
             $data[] = TareaAnexo::newRecord([
-                'fk_anexo' => $pk,
+                'fk_anexo' => $Anexo->getPK(),
                 'fk_tarea' => $_REQUEST['task']
             ]);
         }
