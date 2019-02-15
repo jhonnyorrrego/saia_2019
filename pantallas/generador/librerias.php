@@ -8,6 +8,7 @@ while ($max_salida > 0) {
 	$ruta .= "../";
 	$max_salida--;
 }
+
 include_once($ruta_db_superior . "db.php");
 include_once($ruta_db_superior . "librerias_saia.php");
 include_once($ruta_db_superior . "pantallas/lib/librerias_xml.php");
@@ -663,12 +664,25 @@ function camposNucleo($idformato)
 }
 
 function validarCamposObligatorios($idformato){
+	
 	$retorno = ["exito" => 1, "mensaje" => ''];
 	$consultaFormato = "SELECT acciones FROM campos_formato WHERE formato_idformato = {$idformato} and (acciones like 'p' or acciones like '%,p,%' or acciones like '%,p')";
 	$camposFormato = StaticSql::search($consultaFormato);
 	if (!$camposFormato) {
 		$retorno['mensaje'] = 'Debe seleccionar alguno de los campos para incluirse en la descripción de los documentos';
 		$retorno['exito'] = 0;
+	}else{
+		$consultaFormato = "SELECT valor,etiqueta FROM campos_formato WHERE formato_idformato = {$idformato} and etiqueta_html ='arbol_fancytree'";
+		$camposFormato = StaticSql::search($consultaFormato);
+		if ($camposFormato) {
+			for ($i = 0; $i < count($camposFormato); $i++) {
+				$url = json_decode($camposFormato[$i]['valor'], true);
+				if (!$url['url']) {
+					$retorno['error'] = 0;
+					$retorno['mensaje'] = "Debe seleccionar el tipo de arbol antes de continuar";
+				}
+			}
+		}
 	}
 	echo json_encode($retorno, JSON_UNESCAPED_UNICODE);
 }
