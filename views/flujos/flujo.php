@@ -56,6 +56,9 @@ $tabLinks = ["flow_info" => "flow_info.php",
         <?= librerias_arboles_ft("2.24") ?>
         <?= dropzone() ?>
 
+        <?= bootstrapTable() ?>
+        <?= bootstrapTableEditable() ?>
+                
         <script type="text/javascript" src="<?php echo $ruta_db_superior; ?>js/selectize.js"></script>
 
         <script src="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jspanel4/jspanel.js"></script>

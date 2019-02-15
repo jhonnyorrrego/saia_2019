@@ -135,10 +135,9 @@ $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
         </div>
 
         <div class="form-group">
-            <input type="hidden" id="anexos_flujo" name="anexos_flujo" value="">
-            <label  for="dropzone">Adjuntar documentaci&oacute;n del proceso</label>
-            <div id="dropzone" class="dropzone" data-campo="anexos_flujo" data-multiple="multiple">
-                <div class="dz-message"><span>Haga clic para elegir un archivo o Arrastre acá el archivo.</span></div>
+            <label  for="anexos_flujo">Adjuntar documentaci&oacute;n del proceso</label>
+            <div id="anexos_flujo">
+                
             </div>
         </div>
 
@@ -154,6 +153,7 @@ $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
     </div>
 </form>
 <script src="<?= $ruta_db_superior ?>views/flujos/js/flujos.js" data-consulta64="<?= $consulta64 ?>"></script>
+<script src="<?= $ruta_db_superior ?>views/flujos/js/anexos.js"></script>
 <script type="text/javascript" id="sfi" data-idflujo="<?= $idflujo ?>">
     $(function () {
         var idflujo = $("script[data-idflujo]").data("idflujo");

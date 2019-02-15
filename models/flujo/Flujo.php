@@ -1,6 +1,6 @@
 <?php
 
-class Flujo extends Model {
+class Flujo extends Model implements IAnexos {
 
     use TFlujo;
 
@@ -24,27 +24,44 @@ class Flujo extends Model {
 
     protected function defineAttributes() {
         $this->dbAttributes = (object) [
-            'safe' => [
-                "nombre",
-                "descripcion",
-                "codigo",
-                "version",
-                "expediente",
-                "diagrama",
-                "duracion",
-                "version_actual",
-                "fecha_creacion",
-                "fecha_modificacion",
-                "info",
-            	"mostrar_codigo"
-            ],
-            'date' => [
-                "fecha_creacion",
-                "fecha_modificacion",
-            ],
-            "table" => "wf_flujo",
-            "primary" => "idflujo"
+                    'safe' => [
+                        "nombre",
+                        "descripcion",
+                        "codigo",
+                        "version",
+                        "expediente",
+                        "diagrama",
+                        "duracion",
+                        "version_actual",
+                        "fecha_creacion",
+                        "fecha_modificacion",
+                        "info",
+                        "mostrar_codigo"
+                    ],
+                    'date' => [
+                        "fecha_creacion",
+                        "fecha_modificacion",
+                    ],
+                    "table" => "wf_flujo",
+                    "primary" => "idflujo"
         ];
+    }
+
+    public function findActiveFiles($params) {
+        $sql = <<<SQL
+            select a.*
+            from anexo a 
+            join wf_anexo_flujo af
+                on a.idanexo = af.fk_anexo 
+            join flujo f
+                on af.fk_flujo = f.idflujo
+            where 
+                f.idflujo = $this->idflujo and a.eliminado = 0
+            order by $params->order
+SQL;
+        $records = StaticSql::search($sql, $params->offset, $params->limit);
+        
+        return self::convertToArray($records);
     }
 
 }
