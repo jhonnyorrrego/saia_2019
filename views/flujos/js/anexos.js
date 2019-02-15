@@ -52,12 +52,14 @@ $(function () {
                 }
             },
             save: function (description, files) {
-                $.post(`${baseUrl}app/tareas/almacenar_anexos.php`, {
+                $.post(`${baseUrl}app/flujo/guardar_anexos.php`, {
                     key: localStorage.getItem('key'),
-                    routes: files,
-                    description: description,
-                    task: id,
-                    dir: 'flujo'
+                    archivos: files,
+                    descripcion: description,
+                    id: id,
+                    dir: 'flujo',
+                    fkName: 'fk_flujo',
+                    modelName: "AnexoFlujo"
                 }, function (response) {
                     if (response.success) {
                         top.notification({
