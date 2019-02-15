@@ -624,7 +624,7 @@ $(document).ready(function() {
         $("#vista_formulario_pantalla").removeClass("disabled");
         $("#diseno_formulario_pantalla").next().find("a").trigger("click");
     });
-    $('#cambiar_nav_basico').on('click', function() {
+    $('#cambiar_nav_basico').on('click', function() { 
         $.ajax({
             type: 'POST',
             url: '<?php echo ($ruta_db_superior); ?>' + 'pantallas/generador/librerias.php',
@@ -634,14 +634,14 @@ $(document).ready(function() {
             },
             success: function(response) {
                 if(response){
-                     var objeto = jQuery.parseJSON(response);         
-                    if(objeto.exito!=1){
+                     var objeto = jQuery.parseJSON(response);   
+                    if(objeto.exito!=1 || objeto.error == 0){
                         notificacion_saia(objeto.mensaje, "error", "", 3500);
                     }else{
                         $("#diseno_formulario_pantalla").removeClass("disabled");
                         $("#generar_formulario_pantalla").next().find("a").trigger("click");
                     }
-                } 
+                }
                
             }
         });
