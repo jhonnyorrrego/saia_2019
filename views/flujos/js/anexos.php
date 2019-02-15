@@ -1,9 +1,24 @@
+<?php
+$max_salida = 10; // Previene algun posible ciclo infinito limitando a 10 los ../
+$ruta_db_superior = $ruta = "";
+while ($max_salida > 0) {
+    if (is_file($ruta . "db.php")) {
+        $ruta_db_superior = $ruta; // Preserva la ruta superior encontrada
+    }
+    $ruta .= "../";
+    $max_salida--;
+}
+
+header('Content-Type: application/javascript');
+$idflujo = $_REQUEST["idflujo"];
+$baseUrl = $_REQUEST["baseUrl"];
+$script = <<<JS
 $(function () {
-    let baseUrl = "../../";
-    let idflujo = $('script[data-params]').data('idflujo') || 0;
-    console.log("idflujo", idflujo);
+    let baseUrl = "{$baseUrl}";
+    let idflujo = "{$idflujo}";
+    //console.log("idflujo", idflujo);
     if (typeof Files == 'undefined') {
-        $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/files/files.js`, function () {
+        $.getScript(`{$baseUrl}assets/theme/assets/js/cerok_libraries/files/files.js`, function () {
             files = init(idflujo);
         });
     } else {
@@ -11,19 +26,19 @@ $(function () {
     }
 
     function init(id) {
-        console.log("idflujo", id);
+        //console.log("idflujo", id);
         let options = {
             baseUrl: baseUrl,
             selector: '#anexos_flujo',
             dropzone: {
-                url: `${baseUrl}app/temporal/cargar_anexos.php`,
+                url: `{$baseUrl}app/temporal/cargar_anexos.php`,
                 params: {
                     key: localStorage.getItem('key'),
                     dir: 'flujo'
                 }
             },
             bootstrapTable: {
-                url: `${baseUrl}app/flujo/consulta_anexos.php`,
+                url: `{$baseUrl}app/flujo/consulta_anexos.php`,
                 queryParams: function (queryParams) {
                     queryParams.sortOrder = 'desc';
                     queryParams.modelName = "Flujo";
@@ -37,7 +52,7 @@ $(function () {
                         fields: {}
                     };
                     data.fields[field] = row[field];
-                    $.post(`${baseUrl}app/anexos/modificar.php`, data, function (response) {
+                    $.post(`{$baseUrl}app/anexos/modificar.php`, data, function (response) {
                         if (response.success) {
                             top.notification({
                                 type: 'success',
@@ -57,7 +72,7 @@ $(function () {
                 $.ajax({
                     type: 'POST',
                     dataType: 'json',
-                    url: `${baseUrl}app/flujo/guardar_anexos.php`,
+                    url: `{$baseUrl}app/flujo/guardar_anexos.php`,
                     async: false,
                     data: {
                         key: localStorage.getItem('key'),
@@ -87,7 +102,7 @@ $(function () {
                 $.ajax({
                     type: 'POST',
                     dataType: 'json',
-                    url: `${baseUrl}app/anexos/eliminar.php`,
+                    url: `{$baseUrl}app/anexos/eliminar.php`,
                     async: false,
                     data: {
                         key: localStorage.getItem('key'),
@@ -107,3 +122,6 @@ $(function () {
         return new Files(options);
     }
 });
+JS;
+
+echo $script;

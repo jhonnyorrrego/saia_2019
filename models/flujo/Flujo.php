@@ -60,6 +60,7 @@ class Flujo extends Model implements IAnexos {
             order by $params->order
 SQL;
         $records = StaticSql::search($sql, $params->offset, $params->limit);
+        var_dump($records);
         
         return self::convertToArray($records);
     }

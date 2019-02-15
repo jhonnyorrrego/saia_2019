@@ -28,6 +28,8 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     $params->offset = ($_REQUEST['pageNumber'] - 1) * $_REQUEST['pageSize'];
     $params->limit = $params->offset + $_REQUEST['pageSize'] - 1; // se lo suman en sql2 ???
 
+    var_dump($params);
+    
     $anexos = $instance->findActiveFiles($params);
     $response['rows'] = $anexos;
 

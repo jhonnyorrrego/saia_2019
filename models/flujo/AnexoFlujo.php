@@ -4,9 +4,7 @@ class AnexoFlujo extends Model {
 
     protected $idanexo_flujo;
     protected $fk_flujo;
-    protected $ruta;
-    protected $fecha;
-    protected $fk_funcionario;
+    protected $fk_anexo;
 
     function __construct($id = null) {
         parent::__construct($id);
@@ -16,9 +14,7 @@ class AnexoFlujo extends Model {
         $this->dbAttributes = (object) [
             "safe" => [
                 "fk_flujo",
-                "ruta",
-                "fecha",
-                "fk_funcionario"
+                "fk_anexo"
                 ],
             "date" => [
                 "fecha"
