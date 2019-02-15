@@ -32,11 +32,6 @@ include_once $ruta_db_superior . 'assets/librerias.php';
     <link rel="icon" type="image/png" href="<?= $ruta_db_superior ?>assets/images/favicon-32x32.png" sizes="32x32" />
     <link rel="icon" type="image/png" href="<?= $ruta_db_superior ?>assets/images/favicon-16x16.png" sizes="16x16" />
 	<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css" rel="stylesheet" type="text/css" media="screen" />
-<<<<<<< HEAD
-	<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/switchery/css/switchery.min.css" rel="stylesheet" type="text/css" media="screen" />
-	<link href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-imgareaselect/css/imgareaselect-default.css" rel="stylesheet" type="text/css" media="screen" />
-=======
->>>>>>> e8d7caa612781488f0cbb5dce11ea0dfceeb4781
     <style>
         .autocomplete-suggestions { border: 1px solid #E6E6E6; background: #FFF; overflow: auto; }
         .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
