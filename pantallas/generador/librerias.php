@@ -669,7 +669,7 @@ function validarCamposObligatorios($idformato){
 	$consultaFormato = "SELECT acciones FROM campos_formato WHERE formato_idformato = {$idformato} and (acciones like 'p' or acciones like '%,p,%' or acciones like '%,p')";
 	$camposFormato = StaticSql::search($consultaFormato);
 	if (!$camposFormato) {
-		$retorno['mensaje'] = '1Debe seleccionar alguno de los campos para incluirse en la descripción de los documentos';
+		$retorno['mensaje'] = 'Debe seleccionar alguno de los campos para incluirse en la descripción de los documentos';
 		$retorno['exito'] = 0;
 	}else{
 		$consultaFormato = "SELECT valor,etiqueta FROM campos_formato WHERE formato_idformato = {$idformato} and etiqueta_html ='arbol_fancytree'";
