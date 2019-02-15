@@ -74,11 +74,17 @@ if (isset($_REQUEST["genera"])) {
     $publicar = 0;
 
     $camposDescripcion = GenerarFormato::validarCampoDescripcion($idformato);
+    
     if ($camposDescripcion['publicarFormato'] == 0) {
         $status['mensaje'] = $camposDescripcion['mensaje'];
         echo json_encode($status);
         die();
-    }
+    }else if($camposDescripcion['error'] == 0){
+        $status['mensaje'] = $camposDescripcion['mensaje'];
+        echo json_encode($status);
+        die();
+    } 
+
     foreach ($acciones as $accion) {
         $generar = new GenerarFormato($idformato, $accion);
         $generar->ejecutar_accion();
@@ -147,15 +153,28 @@ class GenerarFormato
      */
     public static function validarCampoDescripcion($idformato)
     {
-        $retorno = ["publicarFormato" => 1, "mensaje" => ''];
+        $retorno = ["publicarFormato" => 1, "mensaje" => '', "error" => 1];
         $consultaFormato = "SELECT acciones FROM campos_formato WHERE formato_idformato = {$idformato} and (acciones like 'p' or acciones like '%,p,%' or acciones like '%,p')";
         $camposFormato = StaticSql::search($consultaFormato);
         if (!$camposFormato) {
             $retorno['publicarFormato'] = 0;
             $retorno['mensaje'] = 'Debe seleccionar alguno de los campos para incluirse en la descripción de los documentos';
+        }else{
+            $consultaFormato = "SELECT valor,etiqueta FROM campos_formato WHERE formato_idformato = {$idformato} and etiqueta_html ='arbol_fancytree'";
+            $camposFormato = StaticSql::search($consultaFormato);
+            if ($camposFormato) {
+                for ($i = 0; $i < count($camposFormato); $i++) {
+                    $url = json_decode($camposFormato[$i]['valor'], true);
+                    if (!$url['url']) {
+                        $retorno['error'] = 0;
+                        $retorno['mensaje'] = "Debe seleccionar el tipo de arbol antes de continuar";
+                    }
+                }
+            }
         }
         return $retorno;
     }
+
 
     public function ejecutar_accion()
     {
@@ -538,7 +557,7 @@ class GenerarFormato
             ];
             if ($consulta_campos_lectura['numcampos']) {
                 $campos_lectura = json_decode($consulta_campos_lectura[0]['valor'], true);
-                $consultaEtiquetas = busca_filtro_tabla("nombre", "campos_formato", "formato_idformato = {$this->idformato} and (nombre like '%{$campos_lectura['titulo']}%' or nombre like '%{$campos_lectura['linea']}%')", "", $conn);
+                $consultaEtiquetas = busca_filtro_tabla("nombre", "campos_formato", "formato_idformato = {$this->idformato} and (nombre like '%{$campos_lectura['titulo']}%' or nombre like '%{$campos_lectura['linea']}%' or nombre like '%{$campos_lectura['ft_relacion']}%')", "", $conn);
                 if($consultaEtiquetas['numcampos']){
                    for ($k=0; $k <$consultaEtiquetas['numcampos'] ; $k++) {
                         $campos_excluir[] = $consultaEtiquetas[$k]['nombre']; 

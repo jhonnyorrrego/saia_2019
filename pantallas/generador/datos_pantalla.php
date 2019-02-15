@@ -543,8 +543,7 @@ if ($formato["numcampos"]) {
 echo $js_archivos;
 //echo(librerias_jquery("1.7"));
 echo librerias_notificaciones();
-echo librerias_kaiten();
-echo librerias_acciones_kaiten();
+
 ?>
 
 <script type="text/javascript">

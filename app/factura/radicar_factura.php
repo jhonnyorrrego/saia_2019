@@ -403,6 +403,9 @@ function obtener_ejecutor($datos) {
     $datos_persona = array();
 
     if (!empty($datos)) {
+        $datos = array_map(function($val) {
+            return trim(trim($val, "'"));
+        }, $datos);
 
         $nombre = trim(trim($datos["nombre_proveedor"], "'"));
         $identificacion = trim(trim($datos["nit_proveedor"], "'"));
@@ -483,9 +486,9 @@ function obtener_ejecutor($datos) {
         $condicion_actualiza = "";
         for ($i = 0; $i < count($campos_ejecutor); $i++) {
             if (isset($datos_persona[$campos_ejecutor[$i]])) {
-                if ($datos_persona[$campos_ejecutor[$i]]) {
+                if (in_array($campos_ejecutor[$i], $campos_todos) && $datos_persona[$campos_ejecutor[$i]]) {
                     $condicion_actualiza .= " AND {$campos_ejecutor[$i]} = '{$datos_persona[$campos_ejecutor[$i]]}'";
-                } else {
+                } else if (in_array($campos_ejecutor[$i], $campos_todos)) {
                     $condicion_actualiza .= " AND {$campos_ejecutor[$i]} IS NULL or {$campos_ejecutor[$i] } = '')";
                 }
             }
