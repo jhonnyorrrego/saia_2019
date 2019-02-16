@@ -226,7 +226,14 @@ function adicionar_datos_formato($datos, $tipo_retorno = 1) {
         }
     }
     // Field Banderas
-    
+    if ($_REQUEST['fk_categoria_formato']) {
+        $datos['fk_categoria_formato'] = buscarPapaCategoria($_REQUEST['fk_categoria_formato']);
+        $datos['fk_categoria_formato'] = $datos['fk_categoria_formato'] . "," . $_REQUEST['fk_categoria_formato'];
+        $datos['fk_categoria_formato'] = explode(',', $datos['fk_categoria_formato']);
+        $datos['fk_categoria_formato'] = array_unique($datos['fk_categoria_formato']);
+        $datos['fk_categoria_formato'] = implode(",", $datos['fk_categoria_formato']);
+    }
+   
     $fieldList = array();
     if (is_array($datos["banderas"])) {
         $fieldList["banderas"] = "'" . implode(",", $datos["banderas"]) . "'";
@@ -596,7 +603,7 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
         if ($buscar_formato["numcampos"]) {
             $datos["nombre"] = $buscar_formato[0]["nombre"];
            
-            /*if(empty($datos['cod_padre'])){
+            if(empty($datos['cod_padre'])){
                 $consultaPadre = busca_filtro_tabla("","formato","idformato={$buscar_formato[0]['cod_padre']}","",$conn);
                 if($consultaPadre['numcampos']){
                     $tablaDocumento = explode("ft_", $consultaPadre[0]['nombre_tabla']);
@@ -609,7 +616,7 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
                         die();
                     }
                 }
-            }else{*/
+            }else{
                 $tablaDocumento = explode("ft_", $buscar_formato[0]['nombre_tabla']);
 
                 $consultaDocumentos = busca_filtro_tabla("", "documento", "lower(plantilla) = '{$tablaDocumento[1]}'", "", $conn);
@@ -620,6 +627,7 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
                     die(); 
             }
         }
+        }
     }
     if($_REQUEST['fk_categoria_formato']){
         $datos['fk_categoria_formato'] = buscarPapaCategoria($_REQUEST['fk_categoria_formato']);
@@ -628,7 +636,7 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
         $datos['fk_categoria_formato'] = array_unique($datos['fk_categoria_formato']);
         $datos['fk_categoria_formato'] = implode(",", $datos['fk_categoria_formato']);
     }
-
+   
     $fieldList = array();
     // Field Banderas
     if (is_array($datos["banderas"]))

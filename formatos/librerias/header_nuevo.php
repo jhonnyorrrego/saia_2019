@@ -151,9 +151,9 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
         <script>
             $(document).ready(function(){
                 var alto_papel = '<?= $alto_paginador ?>';
-                var alto_encabezado = '<?= $tam_pagina["margen_superior"] + 30 ?>';
-                var alto_pie_pagina = '<?= $tam_pagina["margen_inferior"] + 20 ?>';
-                var altopagina = alto_papel-(alto_encabezado+alto_pie_pagina);
+                var alto_encabezado = '<?= $tam_pagina["margen_superior"] ?>';
+                var alto_pie_pagina = '<?= $tam_pagina["margen_inferior"] ?>';
+                var altopagina = +alto_papel-(parseInt(alto_encabezado)+parseInt(alto_pie_pagina));
                 var alto = $("#page_overflow").height();
                 var paginas = Math.ceil(alto/altopagina);
                 var contenido = $("#page_overflow").html();
@@ -166,7 +166,7 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
                     <div id="pag-${i}" class="col-12 page_border bg-white">
                         <div class="page_margin_top">${encabezado}</div>
                         <div id="pag_content-${i}" class="page_content">
-                            <div style="margin-top:-${altoPaginActual}'px">${contenido}</div>
+                            <div style="margin-top:-${altoPaginActual}px">${contenido}</div>
                         </div>
                         <div class="page_margin_bottom">${piedepagina}</div>
                     </div>`;
@@ -182,12 +182,7 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
         <div id="pag-0" class="col-12 page_border bg-white">
             <div class="page_margin_top mb-0" id="doc_header">
                 <?php if ($encabezado["numcampos"]) {
-                    if (!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] == 1) {
-                        $pagina = 0;
-                    } else {
-                        $pagina = 1;
-                    }
-                    echo crear_encabezado_pie_pagina(stripslashes($encabezado[0][0]), $iddocumento, $formato[0]["idformato"], $pagina);
+                    echo crear_encabezado_pie_pagina(stripslashes($encabezado[0][0]), $iddocumento, $formato[0]["idformato"], 0);
                 } ?>
             </div>
             <div id="pag_content-0" class="page_content">
