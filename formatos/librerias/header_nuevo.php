@@ -136,45 +136,12 @@ $fuente = busca_filtro_tabla("valor", "configuracion", "nombre='tipo_letra'", ""
 
         .page_margin_top {
             height: <?= $tam_pagina["margen_superior"] . 'px' ?>;
-            
-        }
-
-        .page_content {
-            height: <?= $porcentajePx - $tam_pagina["margen_superior"] - $tam_pagina["margen_inferior"] . 'px' ?>;
         }
 
         .page_margin_bottom {
             height: <?= $tam_pagina["margen_inferior"] . 'px' ?>;
         }
     </style>
-    <?php if ($formato[0]["paginar"] == '1') : ?>
-        <script>
-            $(document).ready(function(){
-                var alto_papel = '<?= $alto_paginador ?>';
-                var alto_encabezado = '<?= $tam_pagina["margen_superior"] ?>';
-                var alto_pie_pagina = '<?= $tam_pagina["margen_inferior"] ?>';
-                var altopagina = +alto_papel-(parseInt(alto_encabezado)+parseInt(alto_pie_pagina));
-                var alto = $("#page_overflow").height();
-                var paginas = Math.ceil(alto/altopagina);
-                var contenido = $("#page_overflow").html();
-                var encabezado = $("#doc_header").html();
-                var piedepagina = $("#doc_footer").html();
-
-                for(i = 1;i < paginas;i++){
-                    var altoPaginActual = altopagina*i;
-                    var pagina = `
-                    <div id="pag-${i}" class="col-12 page_border bg-white">
-                        <div class="page_margin_top">${encabezado}</div>
-                        <div id="pag_content-${i}" class="page_content">
-                            <div style="margin-top:-${altoPaginActual}px">${contenido}</div>
-                        </div>
-                        <div class="page_margin_bottom">${piedepagina}</div>
-                    </div>`;
-                    $("#documento").append(pagina);
-                }
-            });
-        </script>
-    <?php endif; ?>
 </head>
 <body>
 <div class="container bg-master-lightest mx-0 px-2 px-md-2 mw-100">
