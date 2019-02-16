@@ -976,6 +976,7 @@ $(document).ready(function() {
             success: function(html) {
                 if (html) {
                     var objeto = jQuery.parseJSON(html);
+                    console.log(objeto); return false;
                     if (objeto.exito) {
                         notificacion_saia("Encabezado actualizado", "success", "", 3000);
                     }
