@@ -95,7 +95,7 @@ $(function () {
 
     function setValores(sizeDocument) {
         var xsFont = parseFloat(sizeFont);
-
+        
         if (sizeDocument == 'sm') {
             var widthIni = 668;
         } else if (sizeDocument == 'xs') {
@@ -105,7 +105,8 @@ $(function () {
         }
 
         var widthAct = parseFloat($(".page_content").css('width')) * xsFont / widthIni;
-
+        var qrHeight = $("#qr").height();
+        var width = $("#qr").width();
         if (sizeDocument == 'xs' || sizeDocument == 'sm') {
             $('#documento').css("font-size", widthAct + "px");
             $('#documento').find("p").css("font-size", widthAct + "px")
@@ -113,7 +114,9 @@ $(function () {
 
         $('#documento').find("img")
 
-        var contenidoImg = $("#documento").find("img");
+        var contenidoImg = $("#documento").find("img:not('#qr')");
+        var contenidoQr = $("#documento").find('#qr');
+        redimensionarQr(sizeDocument, widthAct);
         contenidoImg.each(function (i) {
             var sizeImg = parseFloat($(this).attr("width"));
             if (sizeImg >= 50 && sizeDocument != 'xl') {
@@ -135,5 +138,23 @@ $(function () {
             }
             $(this).css("width", sizeImg + "%");
         });
+    }
+    function redimensionarQr(sizeDocument, widthAct) {
+        console.log(sizeDocument, widthAct);
+        var sizeImg = parseFloat($("#qr").attr("width"));
+        var sizeH = parseFloat($("#qr").attr("width"));
+         if (sizeDocument == 'xs') {
+            sizeImg = sizeImg * 0.5;
+            sizeH = sizeH * 0.5;
+            $("#qr").css("width", sizeImg + "%");
+            $("#qr").css("height", sizeH + "%");
+        }
+        else if (sizeDocument == 'sm' && widthAct < '8') {
+            sizeImg = sizeImg * 0.4;
+            sizeH = sizeH * 0.4;
+            $("#qr").css("width", sizeImg + "%");
+            $("#qr").css("height", sizeH + "%");
+        }
+        
     }
 });

@@ -19,7 +19,7 @@ function adicionar_pantalla_campos($idpantalla, $idpantalla_componente, $tipo_re
 	global $conn, $ruta_db_superior;
 	$retorno = ["exito" => 0];
 	$dato = busca_filtro_tabla("", "pantalla_componente", "idpantalla_componente=" . $idpantalla_componente, "", $conn);
-
+	
 	if ($dato["numcampos"]) {
 		$archivos = array();
 		$funciones = array();
@@ -399,7 +399,11 @@ function delete_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
 				$pantalla_campos[0]["eliminar"]($pantalla_campos);
 			}
 		}
+		$consultarTabla = busca_filtro_tabla("f.nombre_tabla,cf.nombre,cf.tipo_dato,cf.longitud","formato f, campos_formato cf","f.idformato=cf.formato_idformato and f.idformato={$_REQUEST['idformato']} and cf.idcampos_formato={$idpantalla_campos}","",$conn);
+		$quitarObligatoriedad = "ALTER TABLE {$consultarTabla[0]['nombre_tabla']} modify {$consultarTabla[0]['nombre']} {$consultarTabla[0]['tipo_dato']}({$consultarTabla[0]['longitud']}) null";
+		phpmkr_query($quitarObligatoriedad);
 		$sql_delete = 'DELETE FROM campos_formato WHERE idcampos_formato=' . $idpantalla_campos;
+		
 		$retorno["exito"] = 1;
 		$retorno["sql"] = $sql_delete;
 		$eliminarCampo = phpmkr_query($sql_delete);

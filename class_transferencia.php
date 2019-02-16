@@ -735,12 +735,12 @@ function mostrar_estado_proceso($idformato, $iddoc)
             array_unique($resultado);
             $ancho_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='ancho_firma'", "", $conn);
             if (!$ancho_firma["numcampos"]) {
-                $ancho_firma[0]["valor"] = "20%";
+                $ancho_firma[0]["valor"] = "40%";
             }
 
             $alto_firma = busca_filtro_tabla("valor", "configuracion A", "A.nombre='alto_firma'", "", $conn);
             if (!$alto_firma["numcampos"]) {
-                $alto_firma[0]["valor"] = "20%";
+                $alto_firma[0]["valor"] = "40%";
             }
             $tamano_fuente = busca_filtro_tabla("valor", "configuracion A", "A.nombre='tamano_letra'", "", $conn);
             if (!$tamano_fuente["numcampos"]) {
