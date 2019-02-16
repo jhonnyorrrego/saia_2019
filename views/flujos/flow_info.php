@@ -153,9 +153,9 @@ $arbol = new ArbolFt("formato_flujo", $origen, $opciones_arbol, $extensiones);
     </div>
 </form>
 <script src="<?= $ruta_db_superior ?>views/flujos/js/flujos.js" data-consulta64="<?= $consulta64 ?>"></script>
-
+<script src="<?= $ruta_db_superior ?>views/flujos/js/anexos.js" data-baseurl="<?= $ruta_db_superior ?>" data-idflujo="<?= $idflujo ?>"></script>
 <?php
-echo '<script src="' . $ruta_db_superior . 'views/flujos/js/anexos.php?baseUrl=' . $ruta_db_superior . '&idflujo=' . $idflujo . '"></script>';
+//echo '<script src="' . $ruta_db_superior . 'views/flujos/js/anexos.js"' . 'data-base_url="' . $ruta_db_superior . '" data-idflujo="' . $idflujo . '"></script>';
 ?>
 <script type="text/javascript" id="sfi" data-idflujo="<?= $idflujo ?>">
     $(function () {
@@ -206,6 +206,7 @@ echo '<script src="' . $ruta_db_superior . 'views/flujos/js/anexos.php?baseUrl='
                                     }
                                     $(this).attr('data-url', url);
                                 });
+                                initAnexosFlujo(idflujo);
                             }
 
                             top.notification({type: "success", message: response.message});

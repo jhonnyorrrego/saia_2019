@@ -53,14 +53,13 @@ class Flujo extends Model implements IAnexos {
             from anexo a 
             join wf_anexo_flujo af
                 on a.idanexo = af.fk_anexo 
-            join flujo f
+            join wf_flujo f
                 on af.fk_flujo = f.idflujo
             where 
                 f.idflujo = $this->idflujo and a.eliminado = 0
             order by $params->order
 SQL;
         $records = StaticSql::search($sql, $params->offset, $params->limit);
-        var_dump($records);
         
         return self::convertToArray($records);
     }

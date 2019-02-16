@@ -43,6 +43,7 @@ $(function () {
                     queryParams.sortOrder = 'desc';
                     queryParams.modelName = "Flujo";
                     queryParams.key = localStorage.getItem('key');
+                    queryParams["id"] = id;
                     return queryParams;
                 },
                 onEditableSave: function (field, row) {

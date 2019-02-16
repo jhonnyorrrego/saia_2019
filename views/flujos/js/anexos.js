@@ -1,17 +1,20 @@
 $(function () {
-    let baseUrl = "../../";
-    let idflujo = $('script[data-params]').data('idflujo') || 0;
-    console.log("idflujo", idflujo);
+    let baseUrl = $("script[data-baseurl]", parent.document).data('baseurl') || "../../";
+    let idflujo = $('script[data-idflujo]').data('idflujo') || 0;
+    //console.log("idflujo", idflujo);
     if (typeof Files == 'undefined') {
         $.getScript(`${baseUrl}assets/theme/assets/js/cerok_libraries/files/files.js`, function () {
-            files = init(idflujo);
+            files = initAnexosFlujo(idflujo);
         });
     } else {
-        files = init(idflujo);
+        files = initAnexosFlujo(idflujo);
     }
 
-    function init(id) {
-        console.log("idflujo", id);
+    window.initAnexosFlujo = function (id) {
+        //console.log("id", id);
+        if(id == 0) {
+            return false;
+        }
         let options = {
             baseUrl: baseUrl,
             selector: '#anexos_flujo',
@@ -28,6 +31,7 @@ $(function () {
                     queryParams.sortOrder = 'desc';
                     queryParams.modelName = "Flujo";
                     queryParams.key = localStorage.getItem('key');
+                    queryParams["id"] = id;
                     return queryParams;
                 },
                 onEditableSave: function (field, row) {
