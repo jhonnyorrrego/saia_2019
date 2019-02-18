@@ -2494,8 +2494,12 @@ span.fancytree-expander {
     private function procesar_componente_fecha($campo, $indice_tabindex, $accion)
     {
         $tabindex = ' tabindex="' . $indice_tabindex . ' "';
+        $classRequired = '';
+        $required = '';
         if ($campo["obligatoriedad"]) {
             $obliga = "*";
+            $classRequired = "form-group form-group-default";
+            $required = 'required';
         } else {
             $obliga = "";
         }
@@ -2506,10 +2510,10 @@ span.fancytree-expander {
         //$nombre_selector =  "dtp_" . $campo["nombre"];
         $nombre_selector = $campo["nombre"];
 
-        $texto[] = '<div class="form-group" id="tr_' . $campo["nombre"] . '">';
+        $texto[] = '<div class="form-group '.$classRequired.' id="tr_' . $campo["nombre"] . '">';
         $texto[] = '<label title="' . $campo["ayuda"] . '">' . $this->codifica($campo["etiqueta"]) . $obliga . '</label>';
         $texto[] = '<div class="input-group">';
-        $texto[] = '<input ' . $tabindex . ' type="text" class="form-control" ' . ' id="' . $campo["nombre"] . '" name="' . $campo["nombre"] . '">';
+        $texto[] = '<input ' . $tabindex . ' type="text" class="form-control" ' . ' id="' . $campo["nombre"] . '"  '.$required.' name="' . $campo["nombre"] . '">';
         $texto[] = '<span class="input-group-text"><i class="fa fa-calendar"></i></span>';
 
         if (!empty($campo["opciones"])) {
