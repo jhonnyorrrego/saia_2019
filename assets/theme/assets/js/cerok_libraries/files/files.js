@@ -139,6 +139,14 @@ class Files {
                     break;
             }
         });
+
+        instance.getTable().on('expand-row.bs.table', function (event, index, row, $detail) {
+            if (row.version > 1) {
+                instance.expand(row, $detail);
+            } else {
+                $detail.html('<div class="alert alert-info my-0">No existen versiones para este anexo.</div>');
+            }
+        })
     }
 
     save(description) {
@@ -172,6 +180,33 @@ class Files {
         return $('#stop_upload');
     }
 
+    getExpandOptions(row) {
+        return Files.generateOptions(Files.getExpandDefaultOptions(row), this.options.expandBootstrapTable(row));
+    }
+
+    static getExpandDefaultOptions(row) {
+        return {
+            classes: 'table table-sm table-hover mt-0',
+            theadClasses: 'thead-light',
+            queryParams: function (queryParams) {
+                queryParams.sortOrder = 'desc';
+                queryParams.fileId = row.id;
+                queryParams.key = localStorage.getItem('key');
+                return queryParams;
+            },
+            columns: [
+                { field: 'icono', title: '' },
+                { field: 'etiqueta', title: 'nombre' },
+                { field: 'descripcion', title: 'descripcion' },
+                { field: 'version', title: 'version' },
+                { field: 'extension', title: 'clase' },
+                { field: 'usuario', title: 'responsable' },
+                { field: 'fecha', title: 'fecha' },
+                { field: 'peso', title: 'tamaño' }
+            ]
+        }
+    }
+
     static getDefaultOptions() {
         return {
             baseUrl: '',
@@ -199,17 +234,17 @@ class Files {
                 },
                 pagination: true,
                 pageSize: 5,
-                classes: 'table table-sm table-hover mt-0',
+                classes: 'table table-hover mt-0',
                 theadClasses: 'thead-light',
                 columns: [
                     { field: 'icono', title: '' },
                     { field: 'etiqueta', title: 'nombre', editable: { mode: 'inline' } },
                     { field: 'descripcion', title: 'descripcion', editable: { mode: 'inline' } },
-                    { field: 'version', title: 'version' },
-                    { field: 'extension', title: 'clase' },
+                    { field: 'version', title: 'version', align: 'center' },
+                    { field: 'extension', title: 'clase', align: 'center' },
                     { field: 'usuario', title: 'responsable' },
-                    { field: 'fecha', title: 'fecha' },
-                    { field: 'peso', title: 'tamaño' },
+                    { field: 'fecha', title: 'fecha', align: 'center' },
+                    { field: 'peso', title: 'tamaño', align: 'center' },
                     {
                         field: 'options',
                         title: '',
@@ -217,13 +252,11 @@ class Files {
                         formatter: Files.OptionButttons
                     }
                 ],
-                onEditableSave: function (field, row, oldValue, $el) {
-                    console.log(arguments);
-                }
+                detailView: true,
+                onEditableSave: function (field, row, oldValue, $el) { console.log(arguments); }
             },
-            save: function (description, files) {
-                console.log(arguments);
-            }
+            save: function (description, files) { console.log(arguments); },
+            expand: function (field, row, element) { console.log(arguments); }
         };
     }
 
@@ -312,7 +345,13 @@ class Files {
             ]
         });
     }
+
     access(key) {
         alert(key);
+    }
+
+    expand(row, element) {
+        let options = this.getExpandOptions(row);
+        element.html('<table></table>').find('table').bootstrapTable(options);
     }
 }
