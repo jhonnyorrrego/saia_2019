@@ -27,24 +27,26 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     $params->order = $class::getPrimaryLabel() . ' ' . $_REQUEST['sortOrder'];
     $params->offset = ($_REQUEST['pageNumber'] - 1) * $_REQUEST['pageSize'];
     $params->limit = $params->offset + $_REQUEST['pageSize'] - 1; // se lo suman en sql2 ???
-  
+
     $anexos = $instance->findActiveFiles($params);
-    $response['rows'] = $anexos;
 
-    /*foreach ($anexos as $key => $Anexo) {
+    foreach ($anexos as $fila) {
+        $anexo = new Anexo($fila["idanexo"]);
+        $logAnexo = $anexo->getLastLog();
         $response['rows'][] = [
-            'id' => $Anexo->getPK(),
-            'icono' => $Anexo->getIcon(),
-            'etiqueta' => $Anexo->etiqueta,
-            'version' => $Anexo->version,
-            'descripcion' => $Anexo->descripcion,
-            'extension' => $Anexo->extension,
-            'usuario' => $Anexo->getLastLog()->getUser()->getName(),
-            'fecha' => $Anexo->getLastLog()->getDateAttribute('fecha'),
-            'peso' => $Anexo->getFileSize()
+            'id' => $anexo->getPK(),
+            'icono' => $anexo->getIcon($anexo->extension),
+            'etiqueta' => $anexo->etiqueta,
+            'version' => $anexo->version,
+            'descripcion' => $anexo->descripcion,
+            'extension' => $anexo->extension,
+            'usuario' => $logAnexo->getUser()->getName(),
+            'fecha' => $logAnexo->getDateAttribute('fecha'),
+            'peso' => $anexo->getFileSize($anexo->ruta)
         ];
-    }*/
+    }
 
+    //$response['rows'] = $anexos;
     $response['total'] = count($anexos);
 }
 

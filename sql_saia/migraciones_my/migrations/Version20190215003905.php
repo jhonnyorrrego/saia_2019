@@ -38,7 +38,7 @@ final class Version20190215003905 extends AbstractMigration {
                 "idanexo_flujo"
             ]);
         }
-                
+
         if(!$schema->hasTable("wf_anexo_actividad")) {
             $tabla = $schema->createTable("wf_anexo_actividad");
             $tabla->addColumn("idanexo_actividad", "integer", [
@@ -62,7 +62,7 @@ final class Version20190215003905 extends AbstractMigration {
                 "idanexo_notificacion"
             ]);
         }
-        
+
     }
 
     public function down(Schema $schema): void {
@@ -78,9 +78,12 @@ final class Version20190215003905 extends AbstractMigration {
             "wf_anexo_notificacion"
         ];
 
+        $conn = $this->connection;
+        $sm = $conn->getSchemaManager();
+
         foreach ($tablas as $tabla) {
             if ($schema->hasTable($tabla)) {
-                $schema->dropTable($tabla);
+                $sm->dropTable($tabla);
             }
         }
     }
