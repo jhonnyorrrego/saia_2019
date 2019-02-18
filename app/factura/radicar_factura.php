@@ -39,9 +39,11 @@ if (isset($_REQUEST["datos_correo"])) {
     }
 }
 
-logear_funcionario_webservice("radicador_web");
+//$nombre_formato = 'factura_electronica';
+$nombre_formato = 'radicacion_facturas';
+//logear_funcionario_webservice("radicador_web");
 $datos_funcionario = busca_filtro_tabla("idfuncionario, funcionario_codigo, login", "funcionario", "idfuncionario=$saia_key", "", $conn);
-$formato = busca_filtro_tabla("idformato", "formato", "nombre='factura_electronica'", "", $conn);
+$formato = busca_filtro_tabla("idformato", "formato", "nombre='{$nombre_formato}'", "", $conn);
 $idformato = $formato[0]["idformato"];
 
 if ($datos_funcionario["numcampos"]) {
@@ -277,17 +279,17 @@ function mover_correo_buzon($info_correo) {
 }
 
 function radicar_factura($datos) {
-    global $ruta_db_superior, $conn;
+    global $ruta_db_superior, $conn, $nombre_formato;
     include_once ($ruta_db_superior . "class_transferencia.php");
     if (!empty($datos)) {
-        $tabla = "ft_radicacion_facturas";
+        $tabla = "ft_{$nombre_formato}";
         $dependencia = busca_filtro_tabla("funcionario_codigo,iddependencia_cargo,login", "vfuncionario_dc", "idfuncionario=" . $_SESSION["idfuncionario"] . " AND estado_dc=1", "", $conn);
         $serie = busca_filtro_tabla("predeterminado", "formato A,campos_formato B", "A.nombre_tabla='" . $tabla . "' AND A.idformato=B.formato_idformato AND B.nombre='serie_idserie'", "", $conn);
         $campos_formato = busca_filtro_tabla("", "formato A,campos_formato B", "A.nombre_tabla='" . $tabla . "' AND A.idformato=B.formato_idformato AND (acciones like 'p' or acciones like '%,p' or acciones like 'p,%' or acciones like '%,p,%')", "", $conn);
         $campos = extrae_campo($campos_formato, "idcampos_formato");
 
         $_REQUEST["num_factura"] = $datos["num_factura"];
-        $_REQUEST["fecha_emision"] = $datos["fecha_factura"];
+        $_REQUEST["fecha_factura"] = $datos["fecha_factura"];
         $_REQUEST["fecha_radicado"] = date('Y-m-d H-i-s');
 
         $_REQUEST["anexos_digitales"] = $datos["anexos"];
@@ -310,7 +312,7 @@ function radicar_factura($datos) {
         $_REQUEST["ejecutor"] = $dependencia[0]["funcionario_codigo"];
 
         $_REQUEST["campo_descripcion"] = implode(",", $campos);
-        $_REQUEST["formato"] = "factura_electronica";
+        $_REQUEST["formato"] = "{$nombre_formato}";
         $_REQUEST["idformato"] = $campos_formato[0]["idformato"];
         $_REQUEST["tabla"] = $tabla;
         $_REQUEST["no_redirecciona"] = 1;
@@ -342,7 +344,7 @@ function radicar_factura($datos) {
 function guardar_anexos($datos, $idformato, $iddoc) {
     global $conn, $ruta_db_superior;
     require_once ($ruta_db_superior . "anexosdigitales/funciones_archivo.php");
-    // $datos = busca_filtro_tabla("anexos,numero", "ft_factura_electronica,documento", "documento_iddocumento=iddocumento and documento_iddocumento=" . $iddoc, "", $conn);
+    // $datos = busca_filtro_tabla("anexos,numero", "ft_{$nombre_formato},documento", "documento_iddocumento=iddocumento and documento_iddocumento=" . $iddoc, "", $conn);
     $vector = $datos;
     $total = count($vector);
     for ($i = 0; $i < $total; $i++) {
