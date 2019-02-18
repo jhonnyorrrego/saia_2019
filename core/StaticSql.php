@@ -40,6 +40,7 @@ class StaticSql
      *
      * @param string $sql : Sql insert
      * @return integer 
+     * Cuando es una insercion masiva retorna el primer id ingresado
      * @author Andres.Agudelo <andres.agudelo@cerok.com>
      */
     public static function insert(string $sql) : int

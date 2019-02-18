@@ -247,7 +247,7 @@ function scrollBar()
 
 /**
  * retorna enlaces para el uso
- * de la libreria jquery validate
+ * de la libreria jquery validate v1.13.0
  */
 function validate()
 {
@@ -345,7 +345,7 @@ function bpmnModeler()
 
     return $modeler;
 }
-
+//TODO: VALIDAR ESTA LIBRERIA NO UTILIZAN EL JS Y EL CSS
 function bpmnViewer()
 {
     global $ruta_db_superior;
@@ -361,7 +361,21 @@ function bpmnViewer()
 
     return $viewer;
 }
+/**
+ * retorna enlaces para el uso
+ * de la libreria select2 v4.0 .4
+ */
+function select2()
+{
+    global $ruta_db_superior;
 
+    $ruta_lib = $ruta_db_superior . 'assets/theme/assets/plugins/select2/';
+    $css = '<link href="' . $ruta_lib . 'css/select2.min.css" rel="stylesheet" type="text/css" />';
+
+    $js = '<script src="' . $ruta_lib . 'js/select2.min.js" type="text/javascript"></script>';
+    $js .= '<script src="' . $ruta_lib . 'js/i18n/es.js" type="text/javascript"></script>';
+    return $css . $js;
+}
 /**
  * retorna los enlaces para incluir 
  * el dropzone  v5.5

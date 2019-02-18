@@ -411,38 +411,45 @@ function verificar_nombre_formato($nombre, $tipo_retorno) {
 
 function actualizar_contenido_encabezado($idencabezado, $etiqueta, $contenido, $tipo_retorno = 1) {
     global $conn;
-    $retorno = array(
-        "exito" => 0
-    );
+    $retorno = ["exito" => 0 , "mensaje" => ''];
     $sql = "";
-    $contenido = addslashes(stripslashes($contenido));
-    if (empty($idencabezado)) {
-        $sql = "INSERT INTO encabezado_formato(etiqueta, contenido) VALUES ('$etiqueta', '$contenido')";
-        phpmkr_query($sql);
-        $retorno["idInsertado"] = phpmkr_insert_id();
-        $retorno["exito"] = 1;
-    } else {
-        $sql = "UPDATE encabezado_formato set etiqueta='$etiqueta', contenido='$contenido' WHERE idencabezado_formato=" . $idencabezado;
-        phpmkr_query($sql);
-        $retorno["exito"] = 1;
+    if($idencabezado){
+        $consultaEncabezado = busca_filtro_tabla("", "encabezado_formato", "etiqueta='{$etiqueta}' and idencabezado_formato not in ({$idencabezado})", "", $conn);
+    }else{
+        $consultaEncabezado = busca_filtro_tabla("", "encabezado_formato", "etiqueta='{$etiqueta}'", "", $conn);
     }
-    $retorno["sql"] = $sql;
+    if($consultaEncabezado['numcampos']){
+        $retorno["exito"] = 0;
+        $retorno["mensaje"] = 'Ya existe un encabezado creado con ese nombre';
+    }else{
+        $contenido = addslashes(stripslashes($contenido));
+        if (empty($idencabezado)) {
+            $sql = "INSERT INTO encabezado_formato(etiqueta, contenido) VALUES ('$etiqueta', '$contenido')";
+            phpmkr_query($sql);
+            $retorno["idInsertado"] = phpmkr_insert_id();
+            $retorno["exito"] = 1;
+        } else {
+            $sql = "UPDATE encabezado_formato set etiqueta='$etiqueta', contenido='$contenido' WHERE idencabezado_formato=" . $idencabezado;
+            phpmkr_query($sql);
+            $retorno["exito"] = 1;
+        }
+        $retorno["sql"] = $sql;
 
-    $encabezados = busca_filtro_tabla("", "encabezado_formato", "1=1", "etiqueta", $conn);
-    $datos = array();
-    for ($i = 0; $i < $encabezados["numcampos"]; $i++) {
-        $fila = array(
-            "idencabezado" => $encabezados[$i]["idencabezado_formato"],
-            "etiqueta" => $encabezados[$i]["etiqueta"],
-            "contenido" => $encabezados[$i]["contenido"]
-        );
-        $datos[] = $fila;
+        $encabezados = busca_filtro_tabla("", "encabezado_formato", "1=1", "etiqueta", $conn);
+        $datos = array();
+        for ($i = 0; $i < $encabezados["numcampos"]; $i++) {
+            $fila = array(
+                "idencabezado" => $encabezados[$i]["idencabezado_formato"],
+                "etiqueta" => $encabezados[$i]["etiqueta"],
+                "contenido" => $encabezados[$i]["contenido"]
+            );
+            $datos[] = $fila;
+        }
+
+        if (!empty($datos)) {
+            $retorno["datos"] = $datos;
+        }
     }
-
-    if (!empty($datos)) {
-        $retorno["datos"] = $datos;
-    }
-
     if ($tipo_retorno == 1) {
         echo (json_encode($retorno));
     } else {

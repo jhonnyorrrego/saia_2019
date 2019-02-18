@@ -169,8 +169,8 @@ foreach ($campos as $valor) {
 $lcampos = $campos;
 
 
-$campos_consulta = strtolower(implode(",", $lcampos));
-$tablas_consulta = strtolower(implode(",", $tablas));
+$campos_consulta = implode(",", $lcampos);
+$tablas_consulta = implode(",", $tablas);
 
 $funciones_tablas = parsear_datos_plantilla_visual($tablas_consulta);
 foreach ($funciones_tablas as $key => $valor) {
@@ -203,12 +203,12 @@ if ($sidx && $sord) {
     $ordenar_consulta2 .= " ORDER BY " . $sidx . " " . $sord;
 }
 
-$ordenar_consulta = strtolower($ordenar_consulta);
+$ordenar_consulta = $ordenar_consulta;
 //Sin order by
-$ordenar_consulta2 = strtolower($ordenar_consulta2);
+$ordenar_consulta2 = $ordenar_consulta2;
 // Con order by
 
-$condicion = str_replace("%y-%m-%d", "%Y-%m-%d", strtolower($condicion));
+$condicion = str_replace("%y-%m-%d", "%Y-%m-%d", $condicion);
 if (@$_REQUEST["idbusqueda_temporal"]) {
     $datos = busca_filtro_tabla("tabla_adicional,where_adicional", "busqueda_filtro", "idbusqueda_filtro=" . $_REQUEST["idbusqueda_temporal"], "", $conn);
     if ($datos["numcampos"]) {

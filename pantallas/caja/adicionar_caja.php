@@ -2,280 +2,219 @@
 $max_salida = 6;
 $ruta_db_superior = $ruta = "";
 while ($max_salida > 0) {
-    if (is_file($ruta . "db.php")) { $ruta_db_superior = $ruta;
-    } $ruta .= "../";
+    if (is_file($ruta . "db.php")) {
+        $ruta_db_superior = $ruta;
+    }
+    $ruta .= "../";
     $max_salida--;
 }
 
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "pantallas/lib/librerias_cripto.php");
-include_once ($ruta_db_superior . "pantallas/lib/librerias_componentes.php");
-include_once($ruta_db_superior."librerias_saia.php");
+require_once $ruta_db_superior . "controllers/autoload.php";
 
-function mostrar_seleccionados_caja($id,$campo="nombre",$tabla){
-    global $conn;
-    $dato=busca_filtro_tabla($campo,$tabla,"id".$tabla."='".$id."'","",$conn);
-    $etiquetas=extrae_campo($dato,$campo,"m");
-    return(ucwords(implode(", ",$etiquetas)));
-}
+$params=[
+    'baseUrl'=>$ruta_db_superior
+];
+
+include_once $ruta_db_superior . 'assets/librerias.php';
 ?>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior); ?>css/bootstrap/saia/css/bootstrap.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior); ?>css/bootstrap/saia/css/bootstrap-responsive.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior); ?>pantallas/lib/librerias_css.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior); ?>css/bootstrap/saia/css/bootstrap_reescribir.css"/>
-<link rel="stylesheet" type="text/css" href="<?php echo($ruta_db_superior); ?>css/bootstrap/saia/css/bootstrap-datetimepicker.min.css"/>
-<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery-1.7.min.js"></script>
-<?php 
-echo(librerias_arboles());
-?>
-<form name="formulario_caja" id="formulario_caja" method="post">
-    <input type="hidden" name="obtener_idbusqueda_filtro_temp" value="1"/>
-    <input type="hidden" name="idbusqueda_componente" id="idbusqueda_componente" value="<?=$_REQUEST["idbusqueda_componente"];?>"/>
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<title>SAIA - SGDEA</title>
+		<?= jquery() ?>
+		<?= bootstrap() ?>
+		<?= theme() ?>
+        <?= icons() ?>
+		<?= validate() ?>
+	</head>
 
-    <legend>
-        Crear caja
-    </legend>
-    <div class="control-group element">
-        <label class="control-label" for="ubicacion">Ubicaci&oacute;n </label>
-        <div class="controls">
-            <select name="ubicacion" id="ubicacion">
-                <option value="">Por favor seleccione...</option>
-                <option value="1" <?=($datos[0]["ubicacion"] == 1) ? "selected" : ""; ?>>Central</option>
-                <option value="2" <?=($datos[0]["ubicacion"] == 2) ? "selected" : ""; ?>>Gesti&oacute;n</option>
-                <option value="3" <?=($datos[0]["ubicacion"] == 3) ? "selected" : ""; ?>>Historico</option>
-            </select>
-        </div>
-    </div>
+	<body>
+		<div class="container m-0 p-0 mw-100 mx-100">
+			<div class="row mx-0">
+				<div class="col-12">
 
-    <div class="control-group element">
-        <label class="control-label" for="codigo">Codigo * </label>
-        <div class="controls">
-            <input type="text"  id="cod_consecutivo" required="required" name="no_consecutivo" value="" style="width:30%;">
-        </div>
-    </div>
+                    <div class="card card-default">
+                        <div class="card-header ">
+                            <div class="card-title">
+                                CREAR CAJA
+                            </div>
+                        </div>
 
-    <div class="control-group element">
-        <label class="control-label" for="fondo">Fondo </label>
-        <div class="controls">
-            <input type="text" name="fondo" id="fondo" value="">
-        </div>
-    </div>
-
-    <div class="control-group element">
-        <label class="control-label" for="seccion">Seccion </label>
-        <div class="controls">
-            <input type="text" name="seccion" id="seccion" value="">
-        </div>
-    </div>
-
-    <div class="control-group element">
-        <label class="control-label" for="subseccion">Subseccion </label>
-        <div class="controls">
-            <input type="text" name="subseccion" id="subseccion" value="">
-        </div>
-    </div>
-
-    <div class="control-group element">
-        <label class="control-label" for="division">Ubicaci&oacute;n exacta </label>
-        <div class="controls">
-            <input type="text" name="division" id="division" value="">
-        </div>
-    </div>
-
-    <div class="control-group element">
-        <label class="control-label" for="modulo">Estanter&iacute;a </label>
-        <div class="controls">
-            <input type="text" name="modulo" id="modulo" value="">
-        </div>
-    </div>
-    <div class="control-group element">
-        <label class="control-label" for="panel">Entrepa&ntilde;o </label>
-        <div class="controls">
-            <input type="text" name="panel" id="panel" value="">
-        </div>
-    </div>
-    <div class="control-group element">
-        <label class="control-label" for="nivel">Nivel </label>
-        <div class="controls">
-            <input type="text" name="nivel" id="nivel" value="">
-        </div>
-    </div>
-    <div class="control-group element">
-        <label class="control-label" for="material">Material </label>
-        <div class="controls">
-            <select name="material" id="material">
-                <option value="">Seleccione.</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="control-group element">
-        <label class="control-label" for="seguridad">Seguridad </label>
-        <div class="controls">
-            <select name="seguridad" id="seguridad">
-                <option value="">Por favor seleccione...</option>
-                <option value="1" <?=($datos[0]["seguridad"] == 1) ? "selected" : ""; ?>>Confidencial</option>
-                <option value="2" <?=($datos[0]["seguridad"] == 2) ? "selected" : ""; ?>>Publica</option>
-                <option value="3" <?=($datos[0]["seguridad"] == 3) ? "selected" : ""; ?>>Rutinario</option>
-                <option value="4" <?=($datos[0]["seguridad"] == 4) ? "selected" : ""; ?>>Restringido al cargo asignado</option>
-            </select>
-        </div>
-    </div>
-
-    <input type="hidden" name="funcionario_idfuncionario" id="funcionario_idfuncionario" value="<?php echo(usuario_actual('idfuncionario')); ?>">
-
-    <input type="hidden" name="key_formulario_saia" value="<?=generar_llave_md5_saia(); ?>">
-    <input type="hidden"  name="ejecutar_caja" value="set_caja"/>
-    <input type="hidden"  name="tipo_retorno" value="1"/>
-    <div>
-        <button class="btn btn-primary btn-mini" id="submit_formulario_caja">
-            Aceptar
-        </button>
-        <button class="btn btn-mini" id="cancel_formulario_caja">
-            Cancelar
-        </button>
-
-        <div id="cargando_enviar" class="pull-right"></div>
-    </div>
-</form>
-<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/bootstrap/saia/bootstrap.js"></script>
-<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/jquery.validate_v1.js"></script>
-<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/idiomas/jquery.validates.es.js"></script>
-<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/noty/jquery.noty.js"></script>
-<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/noty/layouts/topCenter.js"></script>
-<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/noty/themes/default.js"></script>
-<script type="text/javascript" src="<?php echo($ruta_db_superior);?>pantallas/lib/librerias_notificaciones.js"></script>
-<script type="text/javascript" src="<?php echo($ruta_db_superior);?>pantallas/lib/librerias_codificacion.js"></script>
-<script type="text/javascript" src="<?php echo($ruta_db_superior);?>js/bootstrap/saia/bootstrap-datetimepicker.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function(){
+                        <div class="card-body">
     
-    function llenar_campos_codigo(iddependencia, idserie) {
-        $.ajax({
-            type : "GET",
-            url : "<?php echo $ruta_db_superior."pantallas/caja/consulta_codigos.php"?>",
-            data : {
-                idserie : idserie,
-                iddependencia : iddependencia
-            },
-            success : function(response) {
-                var response = $.parseJSON(response);
-                $("#cod_serie").val(response.codigo_serie);
-                $("#cod_dependencia").val(response.codigo_dependencia);
-                $("#fondo").val(response.nombre_dependencia);
-            },
-            error : function() {
-                alert("error consultando los codigos");
-            }
-        });
-    }
+                            <form role="form" method="post" name="formularioCaja" id="formularioCaja">
+                                <div class="form-group">
+                                    <label>Codigo *</label>
+                                    <input type="text" class="form-control" name="codigo" id="codigo">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Tipo *</label>
+                                    <select class="form-control" name="estado_archivo" id="estado_archivo">
+                                        <option value="">por favor seleccione</option>
+                                        <?= Caja::getHtmlField('estado_archivo', 'select') ?>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Fondo</label>
+                                    <input type="text" class="form-control" name="fondo" id="fondo">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Sección</label>
+                                    <input type="text" class="form-control" name="seccion" id="seccion">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Subsección </label>
+                                    <input type="text" class="form-control" name="subseccion" id="subseccion">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>División </label>
+                                    <input type="text" class="form-control" name="division" id="division">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Módulo</label>
+                                    <input type="text" class="form-control" name="modulo" id="modulo">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Panel</label>
+                                    <input type="text" class="form-control" name="panel" id="panel">
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Nivel</label>
+                                    <input type="text" class="form-control" name="nivel" id="nivel">
+                                </div>
 
 
-	$("#cod_consecutivo").change(function() {
-    	var consecutivo = $(this).val();
-    	$.ajax({
-            type: "POST",
-            url: '<?php echo($ruta_db_superior); ?>pantallas/caja/verificar_consecutivo.php',
-            data:{consecutivo:consecutivo},
-            success: function(respuesta){
-            	if(respuesta==0){
-        			notificacion_saia("El consecutivo ya existe, por favor digitar uno diferente","error","",4000);
-        			$("#cod_consecutivo").val(" ");
-        		}
-            }
-		});
-	});
-	consultar_materiales_caja();
-	
-    function consultar_materiales_caja() {
-        $.ajax({
-            type : "GET",
-            url : "<?php echo $ruta_db_superior."pantallas/caja/consulta_materiales_caja.php"?>",
-            success : function(response) {
-                response = $.parseJSON(response);
-                $.each(response, function(index, value) {
-                    $("#material").append(new Option(value.nombre, value.valor));
-                });
-            },
-            error : function() {
-                alert("error consultando los materiales");
-            }
-        });
-    }
+                                <div class="form-group">
+                                    <label>Material</label>
+                                    <select class="form-control" name="material" id="material">
+                                        <option value="">por favor seleccione</option>
+                                        <?= Caja::getHtmlField('material', 'select') ?>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Seguridad</label>
+                                    <select class="form-control" name="seguridad" id="seguridad">
+                                        <option value="">por favor seleccione</option>
+                                        <?= Caja::getHtmlField('seguridad', 'select') ?>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="hidden" name="methodInstance" value="createCajaCont">
+                                    <input type="hidden" name="nameInstance" value="CajaController">
+                                    <input type="hidden" name="generarFiltro" value="1">
+                                    <input type="hidden" id="idbusqueda_componente" name="idbusqueda_componente" value="<?=$_REQUEST['idbusqueda_componente']?>">
+                                    <button id="guardarCaja" type="submit" class="btn btn-primary">
+                                        Adicionar
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+
+				</div>
+			</div>
+        </div>
     
-    $('#fecha_extrema_i').datetimepicker({
-        language : 'es',
-        pick12HourFormat : true,
-        pickTime : false
-    });
-    $('#fecha_extrema_f').datetimepicker({
-        language : 'es',
-        pick12HourFormat : true,
-        pickTime : false
-    });
-	
-    var formulario_caja = $("#formulario_caja");
-    formulario_caja.validate({
-        "rules" : {
-            "numero" : {
-                "required" : true
-            }
-        },
-        submitHandler : function(form) {
-        }
-    });
-  
-  $("#submit_formulario_caja").click(function() {
-        if (formulario_caja.valid()) {
-            $('#cargando_enviar').html("<div id='icon-cargando'></div>Procesando");
-            $(this).attr('disabled', 'disabled');
-            <?php encriptar_sqli("formulario_caja",0,"form_info",$ruta_db_superior,false,false); ?>
+        <script type="text/javascript">
+            $(document).ready(function (){
+                var params=<?=json_encode($params)?>;
+                
+                $("#formularioCaja").validate({
+					rules : {
+						codigo : {
+							required : true
+						},
+                        estado_archivo:{
+                            required : true
+                        }
+					},
+					submitHandler : function(form) {
+                        $("#guardarCaja").attr('disabled',true);
+                        var idcomponente=$("#idbusqueda_componente").val(); 
 
-            $.ajax({
-                type : 'POST',
-                async : false,
-                url: "<?php echo($ruta_db_superior);?>pantallas/caja/ejecutar_acciones.php",
-                data : "rand=" + Math.round(Math.random() * 100000) + "&" + formulario_caja.serialize(),
-                dataType : 'json',
-                success : function(objeto) {
-                    if (objeto.exito) {
-                        let idcomponente='<?=$_REQUEST["idbusqueda_componente"];?>';
                         $.ajax({
                             type : 'POST',
                             async : false,
-                            url: "<?php echo($ruta_db_superior);?>pantallas/busquedas/servidor_busqueda_exp.php",
-                            data: {
-                               idbusqueda_componente:idcomponente,
-                                page : 1,
-                                rows : 1,
-                                actual_row : 0,
-                                cantidad_total : 1,
-                                idbusqueda_filtro_temp : objeto.idbusqueda_filtro_temp,
-                            },
-                            dataType:"json",
-                            success : function(objeto2) {
-                                if (objeto2.exito) {
-                                    $("#<?php echo($_REQUEST['div_actualiza']);?>", parent.document).prepend(objeto2.rows[0].info);
+                            url: `${params.baseUrl}pantallas/ejecutar_acciones.php`,
+                            data : $("#formularioCaja").serialize(),
+                            dataType : 'json',
+                            success : function(objeto) {
+                                if (objeto.exito) {
+                                    $.ajax({
+                                        type : 'POST',
+                                        async : false,
+                                        url: `${params.baseUrl}pantallas/busquedas/servidor_busqueda_exp.php`,
+                                        data : {
+                                            idbusqueda_componente : idcomponente,
+                                            page : 1,
+                                            rows : 1,
+                                            actual_row : 0,
+                                            cantidad_total : 1,
+                                            idbusqueda_filtro_temp : objeto.data.idbusqueda_filtro_temp
+                                        },
+                                        dataType : 'json',
+                                        success : function(objeto2) {
+                                            if (objeto2.exito) {
+                                                $("#resultado_busqueda"+idcomponente, parent.document).prepend(objeto2.rows[0].info);
+                                                $("[id^='resultado_pantalla_']", parent.document).removeClass("alert-warning");
+                                                $('#resultado_pantalla_'+objeto2.rows[0].idcaja, parent.document).addClass("alert-warning");
+                                            }else{
+                                                top.notification({
+                                                    message : "Error al actualizar el listado, por favor actualice el listado",
+                                                    type : "error",
+                                                    duration : 3000
+                                                });
+                                            }
+                                        },
+                                        error : function() {
+                                            top.notification({
+                                                message : "Error al actualizar el listado, por favor actualice el listado.",
+                                                type : "error",
+                                                duration : 3000
+                                            });
+                                        }
+                                    });
+                                    top.notification({
+                                        message : objeto.message,
+                                        type : "success",
+                                        duration : 3000
+                                    });
+                                    window.open("detalles_caja.php?idcaja=" + objeto.data.id + "&idbusqueda_componente=" + idcomponente + "&rand=" + Math.round(Math.random() * 100000), "_self");
+                                } else {
+                                    top.notification({
+                                        message : objeto.message,
+                                        type : "error",
+                                        duration : 3000
+                                    });
                                 }
+                            },
+                            error : function() {
+                                top.notification({
+                                    message : "Error al procesar la solicitud (guardar expediente)",
+                                    type : "error",
+                                    duration : 3000
+                                });
                             }
                         });
-                        $('#cargando_enviar').html("Terminado ...");
-                        notificacion_saia(objeto.mensaje, "success", "", 2500);
-                        window.open("detalles_caja.php?idcaja="+objeto.idcaja+"&idbusqueda_componente="+idcomponente+"&rand="+Math.round(Math.random()*100000),"_self");
-                    } else{
-                        $('#cargando_enviar').html("Terminado ...");
-                        notificacion_saia(objeto.mensaje, "error", "", 8500);
-                    }
-                }
+						return false;
+					}
+				});
             });
-            
-        } else {
-            notificacion_saia("Formulario con errores", "error", "", 8500);
-        }
-   });
-    
+        </script>
 
-});
-</script>
+    </body>           
+</html>

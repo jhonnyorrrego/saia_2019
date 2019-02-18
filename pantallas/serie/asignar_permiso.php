@@ -55,8 +55,11 @@ if ($_POST['accion'] == 1) {
                 }
             } else {
                 $PermisoSerie->permiso = 'l';
-                $PermisoSerie->updatePermisoSerie();
-                $id = $PermisoSerie->getPK();
+                if ($PermisoSerie->updatePermisoSerie()) {
+                    $id = $PermisoSerie->getPK();
+                } else {
+                    $id = 0;
+                }
             }
 
             if ($id) {
@@ -85,13 +88,18 @@ if ($_POST['accion'] == 1) {
 } else if ($_POST['accion'] == 2 && !empty($_POST['idpermiso_serie']) && !empty($_POST['permiso'])) {
     $permisoSerie = new PermisoSerie($_POST['idpermiso_serie']);
     $permisoAnt = $permisoSerie->permiso;
-    if ($permisoAnt != $_POST["permiso"]) {
-        $permisoSerie->permiso = $_POST["permiso"];
-        $permisoSerie->updatePermisoSerie();
-    }
     $response['exito'] = 1;
     $response['type'] = 'success';
     $response['message'] = 'Permiso actualizado!';
+    if ($permisoAnt != $_POST["permiso"]) {
+        $permisoSerie->permiso = $_POST["permiso"];
+        if (!$permisoSerie->updatePermisoSerie()) {
+            $response['exito'] = 0;
+            $response['type'] = 'error';
+            $response['message'] = 'Error al actualizar el permiso!';
+        }
+    }
+
 }
 
 echo json_encode($response);

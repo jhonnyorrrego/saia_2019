@@ -19,8 +19,10 @@ echo librerias_validar_formulario();
 echo librerias_notificaciones();
 echo librerias_highslide();
 
-$contenidoDefecto = json_encode('<table align="center" border="1" cellspacing="0" style="border-collapse:collapse; width:100%">
-<tr>
+$contenidoDefecto = json_encode('<div class="row">
+<div class="col-md-12">
+<table border="0" cellspacing="0" class="table table-condensed" style="text-align:left; width:100%">
+	<tbody>
   <td rowspan="3" style="text-align:center;">{*logo_empresa*}</td>
   <td style="text-align:center;">{*nombre_empresa*}</td>
   <td style="text-align:center;">{*formato_numero*}</td>
@@ -32,8 +34,9 @@ $contenidoDefecto = json_encode('<table align="center" border="1" cellspacing="0
 <tr>
   <td></td>
   <td style="text-align:center;">Pagina {PAGENO}</td>
-</tr>
-</table>');
+</tr></tbody>
+</table></div>
+</div>');
 
 ?>
 
@@ -109,7 +112,10 @@ $(function(){
                     $("#sel_encabezado",window.parent.document).attr("idencabezado",data.idInsertado);
             		notificacion_saia("Encabezado creado","success","",3000);
             		parent.hs.close();           		                                  
-            	}
+            	}else{
+					notificacion_saia(data.mensaje,"error","",3000);
+            		parent.hs.close();  
+				}
             }
         });
 	  }

@@ -226,7 +226,14 @@ function adicionar_datos_formato($datos, $tipo_retorno = 1) {
         }
     }
     // Field Banderas
-    
+    if ($_REQUEST['fk_categoria_formato']) {
+        $datos['fk_categoria_formato'] = buscarPapaCategoria($_REQUEST['fk_categoria_formato']);
+        $datos['fk_categoria_formato'] = $datos['fk_categoria_formato'] . "," . $_REQUEST['fk_categoria_formato'];
+        $datos['fk_categoria_formato'] = explode(',', $datos['fk_categoria_formato']);
+        $datos['fk_categoria_formato'] = array_unique($datos['fk_categoria_formato']);
+        $datos['fk_categoria_formato'] = implode(",", $datos['fk_categoria_formato']);
+    }
+   
     $fieldList = array();
     if (is_array($datos["banderas"])) {
         $fieldList["banderas"] = "'" . implode(",", $datos["banderas"]) . "'";
@@ -595,11 +602,13 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
         $buscar_formato = busca_filtro_tabla("", "formato", "idformato=" . $datos["idformato"], "", $conn);
         if ($buscar_formato["numcampos"]) {
             $datos["nombre"] = $buscar_formato[0]["nombre"];
-            if(!$datos['cod_padre']){
+           
+            if(empty($datos['cod_padre'])){
                 $consultaPadre = busca_filtro_tabla("","formato","idformato={$buscar_formato[0]['cod_padre']}","",$conn);
                 if($consultaPadre['numcampos']){
                     $tablaDocumento = explode("ft_", $consultaPadre[0]['nombre_tabla']);
                     $consultaDocumentos = busca_filtro_tabla("","documento","lower(plantilla) = '{$tablaDocumento[1]}'","",$conn);
+                    
                     if($consultaDocumentos['numcampos']){
                         $retorno['error'] = 'No se puede cambiar la relacion del proceso porque ya tiene documentos asociados';
                         $retorno['exito'] = 0;
@@ -609,17 +618,15 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
                 }
             }else{
                 $tablaDocumento = explode("ft_", $buscar_formato[0]['nombre_tabla']);
+
                 $consultaDocumentos = busca_filtro_tabla("", "documento", "lower(plantilla) = '{$tablaDocumento[1]}'", "", $conn);
-                
                 if ($consultaDocumentos['numcampos']) {
                     $retorno['error'] = 'No se puede cambiar la relacion del proceso porque ya tiene documentos asociados';
                     $retorno['exito'] = 0;
                     echo json_encode($retorno);
-                    die();
-                   
-                    
-                }
+                    die(); 
             }
+        }
         }
     }
     if($_REQUEST['fk_categoria_formato']){
@@ -629,7 +636,7 @@ function editar_datos_formato($datos, $tipo_retorno = 1) {
         $datos['fk_categoria_formato'] = array_unique($datos['fk_categoria_formato']);
         $datos['fk_categoria_formato'] = implode(",", $datos['fk_categoria_formato']);
     }
-
+   
     $fieldList = array();
     // Field Banderas
     if (is_array($datos["banderas"]))

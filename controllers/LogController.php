@@ -2,13 +2,23 @@
 
 class LogController
 {
+    /**
+     * crea el log sobre la accion ejecutada
+     *
+     * @param integer $event constante del modelo LogAccion
+     * @param string $relation modelo en el que se 
+     *      guardara la relacion con log ej: AnexoLog
+     * @param object $object objeto que tendra la mutacion
+     * @param integer $userId identificador del funcionario responsable
+     * @return boolean
+     */
     public static function create($event, $relation, $object, $userId = 0)
     {
         switch ($event) {
             case LogAccion::CREAR:
             case LogAccion::BORRAR:
             case LogAccion::VERSIONAR:
-                $logId = self::insertEvent($event, $userId);
+                $logId = self::simpleEvent($event, $userId);
                 break;
             case LogAccion::EDITAR:
                 $logId = self::updateEvent($object, $event, $userId);
@@ -22,7 +32,15 @@ class LogController
         return $pkRelation > 0;
     }
 
-    public static function insertEvent($event, $userId)
+    /**
+     * crea el registro en log sobre la mutacion
+     *
+     * @param integer $event constante del modelo LogAccion
+     * @param integer $userId identificador del funcionario responsable
+     *      default $_SESSION[idfuncionario]
+     * @return integer nuevo idlog
+     */
+    public static function simpleEvent($event, $userId)
     {
         $userId = $userId ? $userId : $_SESSION['idfuncionario'];
         return Log::newRecord([
@@ -32,9 +50,18 @@ class LogController
         ]);
     }
 
+     /**
+     * crea los registros de log_historial
+     * cuando el evento es una modificacion
+     *
+     * @param object $object objeto que tendra la mutacion
+     * @param integer $event constante del modelo LogAccion
+     * @param integer $userId identificador del funcionario responsable
+     * @return integer idlog relacionado con las modificaciones
+     */
     public static function updateEvent($object, $event, $userId)
     {
-        $logId = self::insertEvent($event, $userId);
+        $logId = self::simpleEvent($event, $userId);
         foreach ($object->getAttributes() as $attribute => $value) {
             if ($object->$attribute != $object->clone->$attribute) {
                 LogHistorial::newRecord([
