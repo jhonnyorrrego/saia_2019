@@ -140,7 +140,6 @@ $(function () {
         });
     }
     function redimensionarQr(sizeDocument, widthAct) {
-        console.log(sizeDocument, widthAct);
         var sizeImg = parseFloat($("#qr").attr("width"));
         var sizeH = parseFloat($("#qr").attr("width"));
          if (sizeDocument == 'xs') {
