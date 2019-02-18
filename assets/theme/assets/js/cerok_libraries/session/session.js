@@ -74,6 +74,9 @@ class Session {
                 async: false,
                 success: function (response) {
                     if (response.success) {
+                        if (!response.data) {
+                            Session.close();
+                        }
                         access = response.data;
                     }
                 }
