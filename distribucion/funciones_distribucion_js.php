@@ -67,7 +67,7 @@ include_once ($ruta_db_superior . "librerias_saia.php");
                         if ($.inArray(idruta, idruta_dist) == -1) {
                             idruta_dist.push(idruta);
                         }
-                        mensajero = $('#select_mensajeros_ditribucion_' + iddistribucion).val();
+                        mensajero = $('#select_mensajeros_ditribucion_' + iddistribucion).attr('valor');
                         if (!mensajero) {
                             error = 2;
                         }

@@ -59,6 +59,7 @@ if (isset($_REQUEST["genera"])) {
     );
     ob_start();
     $acciones = [
+        "formato",
         "tabla",
         "adicionar",
         "editar",
@@ -74,7 +75,7 @@ if (isset($_REQUEST["genera"])) {
     $publicar = 0;
 
     $camposDescripcion = GenerarFormato::validarCampoDescripcion($idformato);
-    
+
     if ($camposDescripcion['publicarFormato'] == 0) {
         $status['mensaje'] = $camposDescripcion['mensaje'];
         echo json_encode($status);
@@ -83,7 +84,7 @@ if (isset($_REQUEST["genera"])) {
         $status['mensaje'] = $camposDescripcion['mensaje'];
         echo json_encode($status);
         die();
-    } 
+    }
 
     foreach ($acciones as $accion) {
         $generar = new GenerarFormato($idformato, $accion);
@@ -158,7 +159,7 @@ class GenerarFormato
         $camposFormato = StaticSql::search($consultaFormato);
         if (!$camposFormato) {
             $retorno['publicarFormato'] = 0;
-            $retorno['mensaje'] = 'Debe seleccionar alguno de los campos para incluirse en la descripción de los documentos';
+            $retorno['mensaje'] = 'Debe seleccionar alguno de los campos para incluirse en la descripciÃ³n de los documentos';
         }else{
             $consultaFormato = "SELECT valor,etiqueta FROM campos_formato WHERE formato_idformato = {$idformato} and etiqueta_html ='arbol_fancytree'";
             $camposFormato = StaticSql::search($consultaFormato);
@@ -249,7 +250,7 @@ class GenerarFormato
      * <Clase>
      * <Nombre>generar_tabla</Nombre>
      * <Parametros>$idformato:</Parametros>
-     * <Responsabilidades>Crear automaticamente los campos predeterminados como la serie,documento_iddocumento, la llave primaria... etc, verifica si la tabla est� creada, crea o actualiza la tabla con todos los campos como se han definido previamente<Responsabilidades>
+     * <Responsabilidades>Crear automaticamente los campos predeterminados como la serie,documento_iddocumento, la llave primaria... etc, verifica si la tabla estï¿½ creada, crea o actualiza la tabla con todos los campos como se han definido previamente<Responsabilidades>
      * <Notas></Notas>
      * <Excepciones></Excepciones>
      * <Salida></Salida>
@@ -307,11 +308,11 @@ class GenerarFormato
     /*
      * <Clase>
      * <Nombre>maximo_valor</Nombre>
-     * <Parametros>$valor:valor asignado por configuraci�n;$maximo:valor m�ximo aceptado por el tipo de dato</Parametros>
-     * <Responsabilidades>Valida si el valor que se est� asignando al tipo de dato est� en el rango permitido, si no lo est� devuelve el m�ximo<Responsabilidades>
+     * <Parametros>$valor:valor asignado por configuraciï¿½n;$maximo:valor mï¿½ximo aceptado por el tipo de dato</Parametros>
+     * <Responsabilidades>Valida si el valor que se estï¿½ asignando al tipo de dato estï¿½ en el rango permitido, si no lo estï¿½ devuelve el mï¿½ximo<Responsabilidades>
      * <Notas></Notas>
      * <Excepciones></Excepciones>
-     * <Salida>devuelve el n�mero m�ximo permitido</Salida>
+     * <Salida>devuelve el nï¿½mero mï¿½ximo permitido</Salida>
      * <Pre-condiciones><Pre-condiciones>
      * <Post-condiciones><Post-condiciones>
      * </Clase>
@@ -450,7 +451,7 @@ class GenerarFormato
             }
             $includes .= $include_formato;
             $includes .= $this->incluir_libreria("header_nuevo.php", "librerias");
-            
+
             if(!$formato[0]['mostrar_pdf']){
                 $validacion_tipo = '<?php if(!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] != 5): ?>';
                 $validacion_tipo.= '<!DOCTYPE html>
@@ -541,9 +542,9 @@ class GenerarFormato
     public function crear_cuerpo_formato()
     {
         global $conn, $ruta_db_superior;
-       
+
         $formato = busca_filtro_tabla("*", "formato A", "A.idformato=" . $this->idformato, "", $conn);
-       
+
         if ($formato[0]['cuerpo'] == '') {
             $consulta_campos_lectura = busca_filtro_tabla("valor", "configuracion", "nombre='campos_solo_lectura'", "", $conn);
 
@@ -559,27 +560,27 @@ class GenerarFormato
                 $campos_lectura = json_decode($consulta_campos_lectura[0]['valor'], true);
                 $consultaEtiquetas = busca_filtro_tabla("nombre", "campos_formato", "formato_idformato = {$this->idformato} and (nombre like '%{$campos_lectura['titulo']}%' or nombre like '%{$campos_lectura['linea']}%' or nombre like '%{$campos_lectura['ft_relacion']}%')", "", $conn);
                 if($consultaEtiquetas['numcampos']){
-                   for ($k=0; $k <$consultaEtiquetas['numcampos'] ; $k++) {
-                        $campos_excluir[] = $consultaEtiquetas[$k]['nombre']; 
-                   }
+                    for ($k=0; $k <$consultaEtiquetas['numcampos'] ; $k++) {
+                        $campos_excluir[] = $consultaEtiquetas[$k]['nombre'];
+                    }
                 }
-                
+
                 $campos_lectura = implode(",", $campos_lectura);
                 $campos_lectura = str_replace(",", "','", $campos_lectura);
 
                 $busca_idft = strpos($campos_lectura, "idft_");
-                
+
                 if ($busca_idft !== false) {
                     $consulta_ft = busca_filtro_tabla("nombre_tabla", "formato", "idformato=" . $this->idformato, "", $conn);
                     $campos_lectura = str_replace("idft_", "id" . $formato[0]['nombre_tabla'], $campos_lectura);
-                    $campos_excluir[] = $campos_lectura;           
+                    $campos_excluir[] = $campos_lectura;
                 }
             }
 
             $condicion_adicional = " and A.nombre not in('" . implode("', '", $campos_excluir) . "')";
-          
+
             $campos = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $this->idformato . " and etiqueta_html<>'campo_heredado' " . $condicion_adicional . "", "A.orden", $conn);
- 
+
             if ($campos['numcampos']) {
                 $cuerpo_formato = '<table class="table table-bordered" style="width: 100%;"><tbody><tr><td><strong>Fecha</strong></td><td>{*fecha_creacion*}&nbsp;</td><td style="text-align: center;" rowspan="2">&nbsp;{*mostrar_codigo_qr*} <br>Radicado: {*formato_numero*}</td></tr><tr><td><strong>Asunto</strong></td><td>{*asunto_documento*}</td></tr></table><br><table class="table table-bordered" style="width: 100%;"><tbody>';
                 for ($i = 0; $i < $campos['numcampos']; $i++) {
@@ -617,7 +618,7 @@ class GenerarFormato
      * <Clase>
      * <Nombre>generar_vista</Nombre>
      * <Parametros>$idformato:id de la vista</Parametros>
-     * <Responsabilidades>Se encarga de revisar que todas las funciones y campos asociados a la vista se encuentren previamente configurados, antes de proceder a llamar la funci�n que genera el archivo con el mostrar de la vista<Responsabilidades>
+     * <Responsabilidades>Se encarga de revisar que todas las funciones y campos asociados a la vista se encuentren previamente configurados, antes de proceder a llamar la funciï¿½n que genera el archivo con el mostrar de la vista<Responsabilidades>
      * <Notas></Notas>
      * <Excepciones></Excepciones>
      * <Salida></Salida>
@@ -680,7 +681,7 @@ class GenerarFormato
      * <Nombre>crear_vista_formato</Nombre>
      * <Parametros>$idformato:id de la vista;$arreglo:contiene como llave los nombres de los campos y como valor el id del formato padre de la vista</Parametros>
      * <Responsabilidades>Se encarga de crear el archivo para mostrar en pantalla la vista seleccionada<Responsabilidades>
-     * <Notas>si se necesita alguna funci�n, o un campo, �stos debe estar registrados como asociados al formato padre de la vista, de lo contrario no funciona</Notas>
+     * <Notas>si se necesita alguna funciï¿½n, o un campo, ï¿½stos debe estar registrados como asociados al formato padre de la vista, de lo contrario no funciona</Notas>
      * <Excepciones></Excepciones>
      * <Salida></Salida>
      * <Pre-condiciones><Pre-condiciones>
@@ -812,7 +813,7 @@ class GenerarFormato
      * <Clase>
      * <Nombre>codifica</Nombre>
      * <Parametros>$texto:texto que se desea codificar</Parametros>
-     * <Responsabilidades>llama la funci�n que pasa el texto a mayusculas y devuelve el nuevo texto modificado<Responsabilidades>
+     * <Responsabilidades>llama la funciï¿½n que pasa el texto a mayusculas y devuelve el nuevo texto modificado<Responsabilidades>
      * <Notas></Notas>
      * <Excepciones></Excepciones>
      * <Salida></Salida>
@@ -832,7 +833,7 @@ class GenerarFormato
      * <Clase>
      * <Nombre>crear_formato_ae</Nombre>
      * <Parametros>$idformato:id del formato;$accion:adicionar o editar</Parametros>
-     * <Responsabilidades>Crea el archivo en el adicionar o el editar del formato segun la configuraci�n realizada<Responsabilidades>
+     * <Responsabilidades>Crea el archivo en el adicionar o el editar del formato segun la configuraciï¿½n realizada<Responsabilidades>
      * <Notas></Notas>
      * <Excepciones></Excepciones>
      * <Salida></Salida>
@@ -1116,16 +1117,12 @@ class GenerarFormato
                             $fecha++;
                             break;
                         case "radio":
-                            $classRadios = '';
-                            if($campos[$h]["obligatoriedad"]){
-                                $classRadios = 'required';
-                                $labelRequired = '<label id="'.$campos[$h]["nombre"].'-error" class="error" for="'.$campos[$h]["nombre"].'" style="display: none;"></label>';
-
-                            }
                             /* En los campos de este tipo se debe validar que valor contenga un listado con las siguentes caracteristicas */
-                            $texto .= '<div class="form-group  '. $classRadios.'" id="tr_' . $campos[$h]["nombre"] . '">
-                            <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>';
-                            $texto .= $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . $labelRequired.'<br></div>';
+                            $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
+	                        <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
+                                     ';
+
+                            $texto .= $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . '</div>';
                             break;
                         case "link":
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
@@ -1925,7 +1922,7 @@ span.fancytree-expander {
      * <Clase>
      * <Nombre>generar_comparacion</Nombre>
      * <Parametros>$tipo:tipo de campo sobre el que se va a hacer la comparacion;$nombre:nombre del campo</Parametros>
-     * <Responsabilidades>genera un listado con las opciones de comparaci�n posibles seg�n el tipo de campo<Responsabilidades>
+     * <Responsabilidades>genera un listado con las opciones de comparaciï¿½n posibles segï¿½n el tipo de campo<Responsabilidades>
      * <Notas>usado para la pantalla de busqueda del formato</Notas>
      * <Excepciones></Excepciones>
      * <Salida></Salida>
@@ -2066,8 +2063,8 @@ span.fancytree-expander {
     /*
      * <Clase>
      * <Nombre>arma_funcion</Nombre>
-     * <Parametros>$nombre:nombre de la funci�n;$parametros:parametros que se le deben pasar;$accion:formato al cual corresponde (adicionar,editar,buscar)</Parametros>
-     * <Responsabilidades>Crea la cadena de texto necesaria para hacer el llamado a la funci�n especificada<Responsabilidades>
+     * <Parametros>$nombre:nombre de la funciï¿½n;$parametros:parametros que se le deben pasar;$accion:formato al cual corresponde (adicionar,editar,buscar)</Parametros>
+     * <Responsabilidades>Crea la cadena de texto necesaria para hacer el llamado a la funciï¿½n especificada<Responsabilidades>
      * <Notas></Notas>
      * <Excepciones></Excepciones>
      * <Salida></Salida>
@@ -2121,13 +2118,12 @@ span.fancytree-expander {
             "mostrar_" . $formato[0]['nombre'] . ".php",
             "detalles_mostrar_" . $formato[0]['nombre'] . ".php"
         );
-        if (intval($formato[0]["pertenece_nucleo"]) == 0) {
-            $data = array("*");
-        }
-        $fp = fopen($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/.gitignore", 'w+');
+        crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/.gitignore", "");
+        /*
+        $fp = fopen(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/.gitignore", 'w') or die("no creo el archivo");
         fwrite($fp, implode("\n", $data));
         fclose($fp);
-        chmod($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/.gitignore", PERMISOS_ARCHIVOS);
+        chmod($ruta_db_superior . FORMATOS_CLIENTE . $formato[0]["nombre"] . "/.gitignore", PERMISOS_ARCHIVOS);*/
         $pie = busca_filtro_tabla("contenido", "encabezado_formato", "idencabezado_formato='" . $formato[0]["pie_pagina"] . "'", "", $conn);
         $lcampos = "";
         $regs = array();
@@ -2306,7 +2302,7 @@ span.fancytree-expander {
         $maximo = return_megabytes($upload_max_size);
         $js_archivos = "<script type='text/javascript'>
             var upload_url = '../../dropzone/cargar_archivos_formato.php';
-            var mensaje = 'Arrastre aqui� los archivos';
+            var mensaje = 'Arrastre aquiï¿½ los archivos';
             Dropzone.autoDiscover = false;
             var lista_archivos = new Object();
             $(document).ready(function () {
@@ -2496,29 +2492,26 @@ span.fancytree-expander {
     private function procesar_componente_fecha($campo, $indice_tabindex, $accion)
     {
         $tabindex = ' tabindex="' . $indice_tabindex . ' "';
-      
+        $classRequired = '';
+        $required = '';
+        if ($campo["obligatoriedad"]) {
+            $obliga = "*";
+            $classRequired = "form-group form-group-default";
+            $required = 'required';
+        } else {
+            $obliga = "";
+        }
         //$formato_fecha="L";
         $formato_fecha = "YYYY-MM-DD";
         $texto = array();
 
         //$nombre_selector =  "dtp_" . $campo["nombre"];
         $nombre_selector = $campo["nombre"];
-        $labelRequired = '';
-        $required = '';
-        if ($campo["obligatoriedad"]) {
-            $obliga = "*";
-            $labelRequired = '<label id="'.$campo["nombre"]. '-error" class="error" for="'.$campo["nombre"].'" style="display: none;"></label>';
-            $required = 'required';
-        } else {
-            $obliga = "";
-        }
 
-        $texto[] = '<div class="form-group" id="tr_' . $campo["nombre"] . '">';
-        $texto[] = '<label for="' . $campo["nombre"] . '">' . $this->codifica($campo["etiqueta"]) . '</label>';
-        $texto[] = $labelRequired;
-        $texto[] = '<div class="input-group date">';      
-        $texto[] = '<input ' . $tabindex . ' type="text" class="form-control" ' . ' id="' . $campo["nombre"] . '"  ' . $required . ' name="' . $campo["nombre"] . '" />';
-        $texto[] = '<div class="input-group-append">';
+        $texto[] = '<div class="form-group '.$classRequired.' id="tr_' . $campo["nombre"] . '">';
+        $texto[] = '<label title="' . $campo["ayuda"] . '">' . $this->codifica($campo["etiqueta"]) . $obliga . '</label>';
+        $texto[] = '<div class="input-group">';
+        $texto[] = '<input ' . $tabindex . ' type="text" class="form-control" ' . ' id="' . $campo["nombre"] . '"  '.$required.' name="' . $campo["nombre"] . '">';
         $texto[] = '<span class="input-group-text"><i class="fa fa-calendar"></i></span>';
 
         if (!empty($campo["opciones"])) {
@@ -2636,7 +2629,6 @@ span.fancytree-expander {
                 $("#content_container").height($(window).height());
             });
         </script>';
-        $texto[] = "</div>";
         $texto[] = "</div>";
 
         return implode("\n", $texto);
