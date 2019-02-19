@@ -46,7 +46,7 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
 
             $Anexo->setAttributes([
                 'version' => ++$OldRecord->version,
-                'fk_anexo' => $OldRecord->getPK()
+                'fk_anexo' => $OldRecord->fk_anexo ? $OldRecord->fk_anexo : $OldRecord->getPK()
             ]);
         }
 
