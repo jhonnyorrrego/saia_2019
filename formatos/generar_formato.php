@@ -1116,12 +1116,16 @@ class GenerarFormato
                             $fecha++;
                             break;
                         case "radio":
-                            /* En los campos de este tipo se debe validar que valor contenga un listado con las siguentes caracteristicas */
-                            $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
-	                        <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
-                                     ';
+                            $classRadios = '';
+                            if($campos[$h]["obligatoriedad"]){
+                                $classRadios = 'required';
+                                $labelRequired = '<label id="'.$campos[$h]["nombre"].'-error" class="error" for="'.$campos[$h]["nombre"].'" style="display: none;"></label>';
 
-                            $texto .= $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . '</div>';
+                            }
+                            /* En los campos de este tipo se debe validar que valor contenga un listado con las siguentes caracteristicas */
+                            $texto .= '<div class="form-group  '. $classRadios.'" id="tr_' . $campos[$h]["nombre"] . '">
+                            <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>';
+                            $texto .= $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . $labelRequired.'<br></div>';
                             break;
                         case "link":
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
@@ -2492,26 +2496,29 @@ span.fancytree-expander {
     private function procesar_componente_fecha($campo, $indice_tabindex, $accion)
     {
         $tabindex = ' tabindex="' . $indice_tabindex . ' "';
-        $classRequired = '';
-        $required = '';
-        if ($campo["obligatoriedad"]) {
-            $obliga = "*";
-            $classRequired = "form-group form-group-default";
-            $required = 'required';
-        } else {
-            $obliga = "";
-        }
+      
         //$formato_fecha="L";
         $formato_fecha = "YYYY-MM-DD";
         $texto = array();
 
         //$nombre_selector =  "dtp_" . $campo["nombre"];
         $nombre_selector = $campo["nombre"];
+        $labelRequired = '';
+        $required = '';
+        if ($campo["obligatoriedad"]) {
+            $obliga = "*";
+            $labelRequired = '<label id="'.$campo["nombre"]. '-error" class="error" for="'.$campo["nombre"].'" style="display: none;"></label>';
+            $required = 'required';
+        } else {
+            $obliga = "";
+        }
 
-        $texto[] = '<div class="form-group '.$classRequired.' id="tr_' . $campo["nombre"] . '">';
-        $texto[] = '<label title="' . $campo["ayuda"] . '">' . $this->codifica($campo["etiqueta"]) . $obliga . '</label>';
-        $texto[] = '<div class="input-group">';
-        $texto[] = '<input ' . $tabindex . ' type="text" class="form-control" ' . ' id="' . $campo["nombre"] . '"  '.$required.' name="' . $campo["nombre"] . '">';
+        $texto[] = '<div class="form-group" id="tr_' . $campo["nombre"] . '">';
+        $texto[] = '<label for="' . $campo["nombre"] . '">' . $this->codifica($campo["etiqueta"]) . '</label>';
+        $texto[] = $labelRequired;
+        $texto[] = '<div class="input-group date">';      
+        $texto[] = '<input ' . $tabindex . ' type="text" class="form-control" ' . ' id="' . $campo["nombre"] . '"  ' . $required . ' name="' . $campo["nombre"] . '" />';
+        $texto[] = '<div class="input-group-append">';
         $texto[] = '<span class="input-group-text"><i class="fa fa-calendar"></i></span>';
 
         if (!empty($campo["opciones"])) {
@@ -2629,6 +2636,7 @@ span.fancytree-expander {
                 $("#content_container").height($(window).height());
             });
         </script>';
+        $texto[] = "</div>";
         $texto[] = "</div>";
 
         return implode("\n", $texto);
