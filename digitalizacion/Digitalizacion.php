@@ -176,6 +176,146 @@ class Digitalizacion {
 	 * Manually routed method.
 	 * we can specify as many routes as we want
 	 *
+	 * @url POST consultar_info_idf
+	 * @url POST consultar_info_idf/{idfuncionario}
+	 */
+	public function consultar_info_idf($idfuncionario) {
+		global $conn;
+
+		// Sort out the parameters and grab their data
+
+		$resp = array(
+				"status" => 0,
+				"message" => "Error de ejecucion"
+		);
+
+		if ($idfuncionario) {
+			// TODO: Posiblemente filtrar por fecha
+			// fecha_db_obtener();
+			$datos_dig = busca_filtro_tabla("t.*", "tarea_dig t", "estado=1 and idfuncionario = '$idfuncionario'", "", $conn);
+			if ($datos_dig["numcampos"]) {
+
+				$user_info = busca_filtro_tabla("f.login", "funcionario f", "idfuncionario = $idfuncionario", "", $conn);
+
+				$params = array();
+				$configuracion["numcampos"] = 0;
+				$configuracion = busca_filtro_tabla("A.*", "configuracion A", "tipo IN('ruta', 'clave', 'usuario', 'peso', 'imagen', 'ftp')", "", $conn);
+				$documento = busca_filtro_tabla("d.numero,d.descripcion", "documento d", "d.iddocumento=" . $datos_dig[0]["iddocumento"], "", $conn);
+				if (!$documento["numcampos"]) {
+					$resp["message"] = "No se encontró información del documento";
+					return $resp;
+				}
+				if (!$configuracion["numcampos"]) {
+					$resp["message"] = "No se encontró configuración";
+					return $resp;
+				}
+				for($i = 0; $i < $configuracion["numcampos"]; $i++) {
+					switch ($configuracion[$i]["nombre"]) {
+						case "ruta_servidor" :
+							$dir = $configuracion[$i]["valor"];
+							$params["host"] = $configuracion[$i]["valor"];
+							break;
+						case "ruta_ftp" :
+							$params["dftp"] = $configuracion[$i]["valor"];
+							break;
+						case "ruta_temporal" :
+							$params["url"] = $configuracion[$i]["valor"];
+							break;
+						case "puerto_ftp" :
+							$puerto_ftp = $configuracion[$i]["valor"];
+							if (empty($configuracion[$i]["valor"])) {
+								$params["port"] = 21;
+							} else {
+								$params["port"] = $configuracion[$i]["valor"];
+							}
+							break;
+						case "clave_ftp" :
+							if ($configuracion[$i]['encrypt']) {
+								include_once ('../pantallas/lib/librerias_cripto.php');
+								$configuracion[$i]['valor'] = decrypt_blowfish($configuracion[$i]['valor'], LLAVE_SAIA_CRYPTO);
+							}
+							$params["clave"] = $configuracion[$i]["valor"];
+							break;
+						case "usuario_ftp" :
+							$params["usuario"] = $configuracion[$i]["valor"];
+							break;
+						case "maximo_tamanio_upload" :
+							$peso = $configuracion[$i]["valor"];
+							break;
+						case "ancho_imagen" :
+							$params["ancho"] = $configuracion[$i]["valor"];
+							break;
+						case "alto_imagen" :
+							$params["alto"] = $configuracion[$i]["valor"];
+							break;
+						case 'tipo_ftp':
+							$params["ftp_type"] = $configuracion[$i]["valor"];
+							break;
+						case "img_max_upload_size" :
+							$img_max_size = 16777216;
+							if($configuracion[$i]["valor"]) {
+								$img_max_size = $configuracion[$i]["valor"];
+							}
+							$params["max_upload_size"] = $img_max_size;
+							break;
+					}
+				}
+				if ($params["dftp"]) {
+					$params["dftp"] .= "_" . $user_info[0]["login"];
+				}
+				if ($params["url"]) {
+					$params["url"] .= "_" . $user_info[0]["login"];
+				}
+
+				if(!$params["ftp_type"] || $params["ftp_type"]==''){
+					$params["ftp_type"] = "ftp";
+				}
+
+				$params["radica"] = $datos_dig[0]["iddocumento"];
+				$params["numero"] = $documento[0]["numero"];
+				// $params["descripcion"] = "<html>" . $documento[0]["descripcion"] . "</html>";
+
+				// parseo descripcion
+				$documento[0]["descripcion"] = codifica_encabezado(html_entity_decode($documento[0]["descripcion"]));
+				if ($documento[0]["descripcion"] != '') {
+					if (strlen($documento[0]["descripcion"]) > 30) {
+						$documento[0]["descripcion"] = substr($documento[0]["descripcion"], 0, 30) . '...';
+					}
+				}
+
+				$descripcion = preg_replace("/<br\W*?\/?>/i", "$1 ", $documento[0]["descripcion"]);
+				$params["descripcion"] = strip_tags($descripcion);
+				$params["verLog"] = "false";
+				$params["idtarea"] = $datos_dig[0]["idtarea_dig"];
+
+				$resp = array(
+						"status" => 1,
+						"message" => "OK",
+						"iddoc" => $datos_dig[0]["iddocumento"],
+						"idfunc" => $datos_dig[0]["idfuncionario"],
+						"idtarea" => $datos_dig[0]["idtarea_dig"],
+						"datos" => $params
+				);
+			} else {
+				$resp = array(
+						"status" => 0,
+						"message" => "No se encontr&oacute; informaci&oacute; para digitalizar del usuario: $user"
+				);
+			}
+		} else {
+			$resp = array(
+					"status" => 0,
+					"message" => "Login incorrecto"
+			);
+		}
+
+		return $resp;
+	}
+
+	/**
+	 * Manually routed method.
+	 * we can specify as many routes as we want
+	 *
 	 * @url POST actualizar_estado
 	 * @url POST actualizar_estado/{id_tarea}
 	 */
@@ -344,7 +484,9 @@ class Digitalizacion {
 					"message" => "OK",
 					"idfunc" => $idfunc
 			);
-		}
+		} else {
+            $resp["message"] = "Usuario o contraseña incorrectos";
+        }
 
 		return $resp;
 	}
