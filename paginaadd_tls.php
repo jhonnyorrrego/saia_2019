@@ -336,7 +336,7 @@ if($buscar_tarea["numcampos"]) {
     var iddoc = "<?php echo $key;?>";
     var idfunc = "<?php echo $funcionario;?>";
     //get the IP addresses associated with an account
-    function getIPs(callback){
+    function getIPs(callback) {
         var ip_dups = {};
         //compatibility for firefox and chrome
         var RTCPeerConnection = /*window.RTCPeerConnection ||*/ window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
@@ -373,29 +373,29 @@ if($buscar_tarea["numcampos"]) {
             callback(displayAddrs.join("") || "");
         }
 
-		    function grepSDP(sdp) {
-		        var hosts = [];
-		        sdp.split('\r\n').forEach(function (line) {
-                    // c.f. http://tools.ietf.org/html/rfc4566#page-39
-		        	//console.log('texto : ' , line);
-		            if (~line.indexOf("a=candidate")) {     // http://tools.ietf.org/html/rfc4566#section-5.13
-		                var parts = line.split(' '),        // http://tools.ietf.org/html/rfc5245#section-15.1
-		                    addr = parts[4],
-		                    type = parts[7];
-		                if (type === 'host') {
-		                	if(addr.indexOf(":") < 0 && addr != '0.0.0.0'){
-		                		updateDisplay(addr);
-		                	}
-		                }
-		            } else if (~line.indexOf("c=")) {       // http://tools.ietf.org/html/rfc4566#section-5.7
-		                var parts = line.split(' '),
-		                    addr = parts[2];
-		                if(addr.indexOf(":") < 0 && addr != '0.0.0.0') {
-		                	updateDisplay(addr);
-		                }
-		            }
-                });
-		    }
+        function grepSDP(sdp) {
+            var hosts = [];
+            sdp.split('\r\n').forEach(function (line) {
+                // c.f. http://tools.ietf.org/html/rfc4566#page-39
+                //console.log('texto : ' , line);
+                if (~line.indexOf("a=candidate")) {     // http://tools.ietf.org/html/rfc4566#section-5.13
+                    var parts = line.split(' '),        // http://tools.ietf.org/html/rfc5245#section-15.1
+                        addr = parts[4],
+                        type = parts[7];
+                    if (type === 'host') {
+                        if(addr.indexOf(":") < 0 && addr != '0.0.0.0'){
+                            updateDisplay(addr);
+                        }
+                    }
+                } else if (~line.indexOf("c=")) {       // http://tools.ietf.org/html/rfc4566#section-5.7
+                    var parts = line.split(' '),
+                        addr = parts[2];
+                    if(addr.indexOf(":") < 0 && addr != '0.0.0.0') {
+                        updateDisplay(addr);
+                    }
+                }
+            });
+        }
 		})();
     }
     //insert IP addresses into the page
