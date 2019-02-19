@@ -339,63 +339,64 @@ if($buscar_tarea["numcampos"]) {
     function getIPs(callback){
         var ip_dups = {};
         //compatibility for firefox and chrome
-        var RTCPeerConnection = window.RTCPeerConnection
-            || window.mozRTCPeerConnection
-            || window.webkitRTCPeerConnection;
-        var useWebKit = !!window.webkitRTCPeerConnection;
-        //bypass naive webrtc blocking using an iframe
-        if(!RTCPeerConnection){
-            //NOTE: you need to have an iframe in the page right above the script tag
-            //
-            //<iframe id="iframe" sandbox="allow-same-origin" style="display: none"></iframe>
-            //<script>...getIPs called in here...
-            //
-            var win = iframe.contentWindow;
-            RTCPeerConnection = win.RTCPeerConnection
-                || win.mozRTCPeerConnection
-                || win.webkitRTCPeerConnection;
-            useWebKit = !!win.webkitRTCPeerConnection;
-        }
-        //minimal requirements for data connection
-        var mediaConstraints = {
-            optional: [{RtpDataChannels: true}]
+        var RTCPeerConnection = /*window.RTCPeerConnection ||*/ window.webkitRTCPeerConnection || window.mozRTCPeerConnection;
+
+		if (RTCPeerConnection) (function () {
+		    var rtc = new RTCPeerConnection({iceServers:[]});
+		    if (1 || window.mozRTCPeerConnection) {      // FF [and now Chrome!] needs a channel/stream to proceed
+		        rtc.createDataChannel('', {reliable:false});
         };
-        var servers = {iceServers: [{urls: "stun:stun.services.mozilla.com"}]};
-        //construct a new RTCPeerConnection
-        var pc = new RTCPeerConnection(servers, mediaConstraints);
-        function handleCandidate(candidate){
-            //match just the IP address
-            var ip_regex = /([0-9]{1,3}(\.[0-9]{1,3}){3}|[a-f0-9]{1,4}(:[a-f0-9]{1,4}){7})/;
-			var dirs_ip = ip_regex.exec(candidate);
-            var ip_addr = dirs_ip == null ? dirs_ip: dirs_ip[1];
-            //remove duplicates
-            if(ip_dups[ip_addr] === undefined) {
-                callback(ip_addr);
-			}
-            ip_dups[ip_addr] = true;
-        }
-        //listen for candidate events
-        pc.onicecandidate = function(ice){
-            //skip non-candidate events
-            if(ice.candidate)
-                handleCandidate(ice.candidate.candidate);
+
+        rtc.onicecandidate = function (evt) {
+            // convert the candidate to SDP so we can run it through our general parser
+            // see https://twitter.com/lancestout/status/525796175425720320 for details
+            if (evt.candidate) {
+                grepSDP("a="+evt.candidate.candidate);
+            }
         };
-        //create a bogus data channel
-        pc.createDataChannel("");
-        //create an offer sdp
-        pc.createOffer(function(result){
-            //trigger the stun server request
-            pc.setLocalDescription(result, function(){}, function(){});
-        }, function(){});
-        //wait for a while to let everything done
-        setTimeout(function(){
-            //read candidate info from local description
-            var lines = pc.localDescription.sdp.split('\n');
-            lines.forEach(function(line){
-                if(line.indexOf('a=candidate:') === 0)
-                    handleCandidate(line);
+        rtc.createOffer(function (offerDesc) {
+            grepSDP(offerDesc.sdp);
+            rtc.setLocalDescription(offerDesc);
+        }, function (e) { console.warn("offer failed", e); });
+
+        var addrs = Object.create(null);
+        addrs["0.0.0.0"] = false;
+        function updateDisplay(newAddr) {
+            if (newAddr in addrs) {
+                return;
+            } else {
+                addrs[newAddr] = true;
+            }
+            var displayAddrs = Object.keys(addrs).filter(function (k) {
+                return addrs[k];
             });
-        }, 1000);
+            callback(displayAddrs.join("") || "");
+        }
+
+		    function grepSDP(sdp) {
+		        var hosts = [];
+		        sdp.split('\r\n').forEach(function (line) {
+                    // c.f. http://tools.ietf.org/html/rfc4566#page-39
+		        	//console.log('texto : ' , line);
+		            if (~line.indexOf("a=candidate")) {     // http://tools.ietf.org/html/rfc4566#section-5.13
+		                var parts = line.split(' '),        // http://tools.ietf.org/html/rfc5245#section-15.1
+		                    addr = parts[4],
+		                    type = parts[7];
+		                if (type === 'host') {
+		                	if(addr.indexOf(":") < 0 && addr != '0.0.0.0'){
+		                		updateDisplay(addr);
+		                	}
+		                }
+		            } else if (~line.indexOf("c=")) {       // http://tools.ietf.org/html/rfc4566#section-5.7
+		                var parts = line.split(' '),
+		                    addr = parts[2];
+		                if(addr.indexOf(":") < 0 && addr != '0.0.0.0') {
+		                	updateDisplay(addr);
+		                }
+		            }
+                });
+		    }
+		})();
     }
     //insert IP addresses into the page
     getIPs(function(ip){
