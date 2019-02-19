@@ -3299,7 +3299,7 @@ function permisosFormato($idformato,$idperfil,$nombreFormato){
         $consultarPermiso = busca_filtro_tabla("","permiso_perfil","modulo_idmodulo={$consultaModulo[0]['idmodulo']} and perfil_idperfil = {$idperfil}","",$conn);
         if($consultarPermiso['numcampos']){
             $retorno['exito'] = 0;
-            $retorno['mensaje'] = 'El permiso ya existe asignado';
+            $retorno['mensaje'] = 'El permiso ya se encuentra asignado';
         }else{
             $guardarPermiso = "INSERT INTO permiso_perfil(modulo_idmodulo,perfil_idperfil,caracteristica_propio,caracteristica_grupo,caracteristica_total) VALUES ({$consultaModulo[0]['idmodulo']},{$idperfil},'lame','lame','lame')";
             phpmkr_query($guardarPermiso);

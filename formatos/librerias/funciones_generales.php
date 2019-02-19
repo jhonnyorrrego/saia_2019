@@ -740,11 +740,11 @@ function genera_campo_listados_editar($idformato, $idcampo, $iddoc = null, $busc
     $accion = strtoupper(substr($sql, 0, strpos($sql, ' ')));
     $llenado = "";
     // ***************** validaciones ******************
-    $classRequired = '';
+    $labelRequired = '';
     $required = '';
     if ($campo[0]["obligatoriedad"]){
         $obligatorio[] = "class='required'";
-        $classRequired = "form-group-default required";
+        $labelRequired = '<label id="' . $campos[$h]["nombre"] . '-error" class="error" for="' . $campos[$h]["nombre"] . '" style="display: none;"></label>';
         $required = 'required';
 
     }
