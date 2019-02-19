@@ -8,21 +8,24 @@ while ($max_salida > 0) {
     $ruta .= "../";
     $max_salida--;
 }
-include_once ($ruta_db_superior . "db.php");
-include_once ($ruta_db_superior . "librerias_saia.php");
+include_once $ruta_db_superior . "db.php";
+include_once $ruta_db_superior . "librerias_saia.php";
+include_once $ruta_db_superior . 'assets/librerias.php';
 usuario_actual("login");
 
 if (@$_REQUEST["idbusqueda_componente"]) {
     $idbusqueda_componente = $_REQUEST["idbusqueda_componente"];
 }
 $datos_busqueda = busca_filtro_tabla("", "busqueda A,busqueda_componente B", "A.idbusqueda=B.busqueda_idbusqueda AND B.idbusqueda_componente=" . $idbusqueda_componente, "", $conn);
+
 if ($datos_busqueda[0]["ruta_libreria"]) {
     $librerias = array_unique(explode(",", $datos_busqueda[0]["ruta_libreria"]));
     array_walk($librerias, "incluir_librerias_busqueda");
 }
-function incluir_librerias_busqueda($elemento, $indice) {
+function incluir_librerias_busqueda($elemento, $indice)
+{
     global $ruta_db_superior;
-    include_once ($ruta_db_superior . $elemento);
+    include_once $ruta_db_superior . $elemento;
 }
 
 if ($datos_busqueda[0]["busqueda_avanzada"] != '') {
@@ -34,12 +37,12 @@ if ($datos_busqueda[0]["busqueda_avanzada"] != '') {
     $datos_busqueda[0]["busqueda_avanzada"] .= 'idbusqueda_componente=' . $datos_busqueda[0]["idbusqueda_componente"];
 }
 
-echo(librerias_html5());
-echo(librerias_jquery("1.7"));
-echo(estilo_bootstrap());
+echo librerias_html5();
+echo jquery();
+echo estilo_bootstrap();
 ?>
 <meta http-equiv="X-UA-Compatible" content="IE=9">
-<link rel="stylesheet" type="text/css" media="screen" href="<?=$ruta_db_superior;?>pantallas/lib/librerias_css.css" />
+<link rel="stylesheet" type="text/css" media="screen" href="<?= $ruta_db_superior; ?>pantallas/lib/librerias_css.css" />
 <style>
     .row-fluid [class*="span"] {
         min-height: 20px;
@@ -51,10 +54,6 @@ echo(estilo_bootstrap());
         margin-bottom: 3px;
         min-height: 11px;
         padding: 4px;
-    }
-    .alert {
-        margin-bottom: 3px;
-        padding: 10px;
     }
     body {
         font-size: 12px;
@@ -69,30 +68,32 @@ echo(estilo_bootstrap());
         margin-right: 0px;
         margin-left: 0px;
     }
-    .texto-azul {
-        color: #3176c8
-    }
 
     #panel_body {
         margin-top: 0px;
-        overflow: auto; <?= ($_SESSION["tipo_dispositivo"] == 'movil') ? "width:0%; -webkit-overflow-scrolling:touch;" : "width:50%;"; ?>
+        overflow: auto;
+        width: 50%;
     }
     #panel_detalle {
         margin-top: 0px;
         border: 0px;
-        overflow: auto; <?= ($_SESSION["tipo_dispositivo"] == 'movil') ? "width:0%; -webkit-overflow-scrolling:touch;" : "width:50%;"; ?>
+        overflow: auto; 
+        width: 50%;
     }
 </style>
 <div class="navbar navbar-fixed-top" id="menu_buscador">
     <div class="navbar-inner">
         <ul class="nav pull-left">
-            <li>
-                <div class="btn-group">
-                    <button class="btn btn-mini kenlace_saia" titulo="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>" title="B&uacute;squeda <?php echo($datos_busqueda[0]['etiqueta']);?>" conector="iframe" enlace="<?php echo($datos_busqueda[0]['busqueda_avanzada']);?>">B&uacute;squeda &nbsp;</button>
-                </div>
-            </li>
-
-            <?php if($datos_busqueda[0]["acciones_seleccionados"]!=''):?>
+            <?php if($datos_busqueda[0]['busqueda_avanzada']):?>
+                <li>
+                    <div class="btn-group">
+                        <button class="btn btn-mini kenlace_saia" titulo="B&uacute;squeda <?= $datos_busqueda[0]['etiqueta']?>" title="B&uacute;squeda <?=$datos_busqueda[0]['etiqueta']?>" conector="iframe" enlace="<?=$datos_busqueda[0]['busqueda_avanzada']?>">B&uacute;squeda &nbsp;</button>
+                    </div>
+                </li>
+                <li class="divider-vertical"></li>
+            <?php
+            endif;
+            if ($datos_busqueda[0]["acciones_seleccionados"] != '') : ?>
             <li>
                 <div class="btn-group">
                     <button class="btn dropdown-toggle btn-mini" data-toggle="dropdown">
@@ -100,23 +101,32 @@ echo(estilo_bootstrap());
                     </button>
                     <ul class="dropdown-menu" id='listado_seleccionados'>
                         <?php
-                            $acciones = explode(",", $datos_busqueda[0]["acciones_seleccionados"]);
-                            $cantidad = count($acciones);
-                            for ($i = 0; $i < $cantidad; $i++) {
-                                echo($acciones[$i]());
-                            }
+                        $acciones = explode(",", $datos_busqueda[0]["acciones_seleccionados"]);
+                        $cantidad = count($acciones);
+                        for ($i = 0; $i < $cantidad; $i++) {
+                            echo $acciones[$i]();
+                        }
                         ?>
                     </ul>
                 </div>
             </li>
+            <li class="divider-vertical"></li>
             <?php
             endif;
-            if(@$datos_busqueda[0]["menu_busqueda_superior"]){
-                $funcion_menu=explode("@",$datos_busqueda[0]["menu_busqueda_superior"]);
-                echo($funcion_menu[0](@$funcion_menu[1]));
+            if ($datos_busqueda[0]["menu_busqueda_superior"]) {
+                $funcion_menu = explode("@", $datos_busqueda[0]["menu_busqueda_superior"]);
+                echo ($funcion_menu[0](@$funcion_menu[1]));
             }
-            ?>
-            <li class="divider-vertical"></li>
+
+            if($datos_busqueda[0]["enlace_adicionar"]):?>
+                <li>
+                    <div class="btn-group">                    
+                        <a class="btn btn-mini" href="<?=$ruta_db_superior.$datos_busqueda[0]["enlace_adicionar"]?>" target="iframe_detalle">Adicionar</a>
+                    </div>
+                </li>
+                <li class="divider-vertical"></li>
+            <?php endif;?>
+
             <li>
                 <div class="btn-group">
                     <button type="button" class="btn btn-mini " id="loadmoreajaxloader">
@@ -146,13 +156,10 @@ echo(estilo_bootstrap());
 
 <br/>
 <div class="panel_body pull-left" id="panel_body">
-    <div id="resultado_busqueda_principal<?=$idbusqueda_componente; ?>" class="panel_hidden">
-        <div id="resultado_busqueda<?=$idbusqueda_componente; ?>"></div>
-        
-        <input type="hidden" id="seleccionados" value="" name="seleccionados">
-        
+    <div id="resultado_busqueda_principal<?= $idbusqueda_componente; ?>" class="panel_hidden">
+        <div id="resultado_busqueda<?= $idbusqueda_componente; ?>"></div>
         <!-- Registros por pagina -->
-        <input type="hidden" value="<?=$datos_busqueda[0]['cantidad_registros']; ?>" name="cantxpage" id="cantxpage">
+        <input type="hidden" value="<?= $datos_busqueda[0]['cantidad_registros']; ?>" name="cantxpage" id="cantxpage">
         <!-- Pagina actual-->
         <input type="hidden" value="1" name="actualpage" id="actualpage">
         <!-- Total Paginas-->
@@ -162,39 +169,29 @@ echo(estilo_bootstrap());
         <!-- Cantidad de registros totales -->
         <input type="hidden" value="0" name="cantidad_total" id="cantidad_total">
         <!-- idbusqueda_componente -->
-        <input type="hidden" value="<?=$idbusqueda_componente; ?>" name="idcomponente_caja" id="idcomponente_caja">
-        
+        <input type="hidden" value="<?= $idbusqueda_componente; ?>" name="idbusqueda_componente" id="idbusqueda_componente">
         <!-- Forma de carga -->
-        <input type="hidden" value=<?=(!empty($datos_busqueda[0]["cargar"]) ? $datos_busqueda[0]["cargar"] : 0); ?>" name="forma_carga" id="forma_carga">
-
-        <!-- Variable busqueda -->
-        <input type="hidden" value="<?=$_REQUEST["variable_busqueda"]; ?>" name="variable_busqueda" id="variable_busqueda">
-        <!-- idbusqueda_filtro_temp -->
-        <input type="hidden" value="<?=$_REQUEST["idbusqueda_filtro_temp"]; ?>" name="idbusqueda_filtro_temp" id="idbusqueda_filtro_temp">
-        <!-- idbusqueda_filtro -->
-        <input type="hidden" value="<?=$_REQUEST["idbusqueda_filtro"]; ?>" name="idbusqueda_filtro" id="idbusqueda_filtro">
-        <!-- idbusqueda_temporal -->
-        <input type="hidden" value="<?=$_REQUEST["idbusqueda_temporal"]; ?>" name="idbusqueda_temporal" id="idbusqueda_temporal">
-        <!-- idcaja -->
-        <input type="hidden" value="<?=$_REQUEST["idcaja"]; ?>" name="idcaja" id="idcaja">
+        <input type="hidden" value=<?= !empty($datos_busqueda[0]["cargar"]) ? $datos_busqueda[0]["cargar"] : 0; ?>" name="forma_carga" id="forma_carga">
+        <!-- Registro actual -->
+        <input type="hidden" value="<?=$_REQUEST['idcaja']?>" name="idcaja" id="idcaja">
+        <!-- Cantidad de registros totales -->
     </div>
 </div>
 <div class="pull-left" id="panel_detalle">
-    <iframe id="iframe_detalle" name="iframe_detalle" style="width: 100%;" frameborder="no"></iframe>
+    <iframe id="iframe_detalle" name="iframe_detalle" style="width: 100%; height:100%" frameborder="no"></iframe>
 </div>
 
-<script type="text/javascript" src="<?php echo($ruta_db_superior."pantallas/lib/main.js");?>"></script>
 <script>
     $(document).ready(function() {
         window.parent.$(".block-iframe").attr("style", "margin-top:0px; width: 100%; border:0px solid; overflow:auto; -webkit-overflow-scrolling:touch;");
 
-        var idbusqueda_componente = $("#idcomponente_caja").val();
+        var idbusqueda_componente = $("#idbusqueda_componente").val();
         var forma_cargar = $("#forma_carga").val();
         var espacio_menu = $("#menu_buscador").height() + 18;
 
         var alto_inicial = ($(window).height() - espacio_menu);
-        var carga_final_caja = false;
-
+        var carga_final = false;
+        
         $("#panel_body").height(alto_inicial);
         $("#panel_detalle").height(alto_inicial);
         $("#iframe_detalle").height(alto_inicial);
@@ -203,7 +200,7 @@ echo(estilo_bootstrap());
 
         $("#panel_body").scroll(function() {
             if (($("#panel_body").scrollTop() >= $("#resultado_busqueda_principal" + idbusqueda_componente).height() - $("#panel_body").height())) {
-                if (!carga_final_caja) {
+                if (!carga_final) {
                     cargar_datos_scroll();
                 }
             }
@@ -218,28 +215,17 @@ echo(estilo_bootstrap());
             cargar_datos_scroll();
         });
 
-        $(".well").live("mouseenter", function() {
-            $(this).addClass("muted");
-        });
-        $(".well").live("mouseleave", function() {
-            $(this).removeClass("muted");
-        });
-
         function cargar_datos_scroll() {
-            if (!carga_final_caja) {
+            if (!carga_final) {
                 $.ajax({
                     type : 'POST',
                     url : "servidor_busqueda_exp.php",
                     data : {
-                        idbusqueda_componente : $("#idcomponente_caja").val(),
+                        idbusqueda_componente : $("#idbusqueda_componente").val(),
                         page : $("#actualpage").val(),
                         rows : $("#cantxpage").val(),
                         actual_row : $("#actualrow").val(),
                         cantidad_total : $("#cantidad_total").val(),
-                        variable_busqueda : $("#variable_busqueda").val(),
-                        idbusqueda_filtro_temp : $("#idbusqueda_filtro_temp").val(),
-                        idbusqueda_filtro : $("#idbusqueda_filtro").val(),
-                        idbusqueda_temporal : $("#idbusqueda_temporal").val(),
                         idcaja : $("#idcaja").val()
                     },
                     dataType : 'json',
@@ -254,44 +240,51 @@ echo(estilo_bootstrap());
                                 $("#cantidad_total").val(objeto.records);
 
                                 $.each(objeto.rows, function(index, item) {
-                                    if (objeto.page == 1 && index === 0) {
-                                        $("#iframe_detalle").attr({
-                                            'src':'<?=$ruta_db_superior;?>pantallas/caja/detalles_caja.php?idcaja='+item.idcaja+"&idbusqueda_componente="+idbusqueda_componente+"&rand=<?=rand();?>",
-                                            'height' : ($("#panel_body").height())
-                                        });
-                                    }
                                     if (forma_cargar == 1) {
                                         $("#resultado_busqueda" + idbusqueda_componente).prepend(item.info);
                                     } else {
                                         $("#resultado_busqueda" + idbusqueda_componente).append(item.info);
+                                    }
+                                    if (objeto.page == 1 && index === 0) {
+                                        if(item.idcaja){
+                                            $('#resultado_pantalla_'+item.idcaja).addClass("alert-warning");
+                                            $("#iframe_detalle").attr({
+                                                'src':'<?= $ruta_db_superior; ?>pantallas/caja/detalles_caja.php?idcaja='+item.idcaja+"&idbusqueda_componente="+idbusqueda_componente+"&rand=<?= rand(); ?>"
+                                            });
+                                        }else if(item.idexpediente){
+                                            $('#resultado_pantalla_'+item.idexpediente).addClass("alert-warning");
+                                            $("#iframe_detalle").attr({
+                                                'src':'<?= $ruta_db_superior; ?>pantallas/expediente/detalles_expediente.php?idexpediente='+item.idexpediente+"&idbusqueda_componente="+idbusqueda_componente+"&rand=<?= rand(); ?>"
+                                            });
+                                        }
                                     }
                                 });
                                 if (parseInt(objeto.actual_row) < parseInt(objeto.records)) {
                                     scroll = 0;
                                 }
                             }
+
                             if (scroll) {
-                                carga_final_caja = true;
+                                carga_final = true;
                                 $('#loadmoreajaxloader').html("Finalizado");
                                 $('#loadmoreajaxloader').attr("disabled", true);
                             } else {
                                 $('#loadmoreajaxloader').html("M&aacute;s Resultados");
                             }
+
                         } else {
-                            top.noty({
-                                text : objeto.mensaje,
-                                type : 'error',
-                                layout : 'topCenter',
-                                timeout : 5000
+                            top.notification({
+                                message : objeto.mensaje,
+                                type : "error",
+                                duration : 3000
                             });
                         }
                     },
                     error : function() {
-                        top.noty({
-                            text : "Error al procesar la solicitud",
-                            type : 'error',
-                            layout : 'topCenter',
-                            timeout : 5000
+                        top.notification({
+                            message : "Error al procesar la solicitud",
+                            type : "error",
+                            duration : 3000
                         });
                     }
                 });
@@ -302,14 +295,14 @@ echo(estilo_bootstrap());
 </script>
 
 <?php
-echo(librerias_bootstrap());
-echo(librerias_tooltips());
-echo(librerias_acciones_kaiten());
+
+echo (librerias_bootstrap());
+echo (librerias_acciones_kaiten());
 
 if ($datos_busqueda[0]["ruta_libreria_pantalla"]) {
     $librerias = explode(",", $datos_busqueda[0]["ruta_libreria_pantalla"]);
-    foreach ($librerias AS $key => $valor) {
-        include_once ($ruta_db_superior . $valor);
+    foreach ($librerias as $key => $valor) {
+        include_once($ruta_db_superior . $valor);
     }
 }
 ?>

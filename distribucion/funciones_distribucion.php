@@ -515,7 +515,7 @@ function mostrar_planilla_diligencia_distribucion($iddistribucion)
     if ($planillas['numcampos']) {
         $html = '';
         for ($i = 0; $i < $planillas['numcampos']; $i++) {
-            $html .= '<div class="kenlace_saia" enlace="ordenar.php?key=' . $planillas[$i]['iddocumento'] . '&amp;accion=mostrar&amp;mostrar_formato=1" conector="iframe" titulo="No Radicado ' . $planillas[$i]['numero'] . '"><center><button class="btn btn-complete">' . $planillas[$i]['numero'] . "</button></center></div>\n";
+            $html .= '<div class="kenlace_saia" enlace="views/documento/index_acordeon.php?documentId=' . $planillas[$i]['iddocumento'] . '" conector="iframe" titulo="No Radicado ' . $planillas[$i]['numero'] . '"><center><button class="btn btn-complete">' . $planillas[$i]['numero'] . "</button></center></div>\n";
         }
     }
     return ($html);
@@ -590,8 +590,8 @@ function retornar_ubicacion_origen_destino_distribucion($tipo, $valor)
         $datos = busca_filtro_tabla("cargo,dependencia", "vfuncionario_dc", "iddependencia_cargo=" . $valor, "", $conn);
         $ubicacion = $datos[0]['dependencia'] . '<br> ' . $datos[0]['cargo'] . '';
     } else {//iddatos_ejecutor
-        $datos = busca_filtro_tabla("direccion,cargo", "ejecutor a, datos_ejecutor b", "a.idejecutor=b.ejecutor_idejecutor AND b.iddatos_ejecutor=" . $valor, "", $conn);
-        $ubicacion = $datos[0]['direccion'] . '<br/> ' . $datos[0]['cargo'];
+        $datos = busca_filtro_tabla("direccion,cargo,c.nombre", "ejecutor a, datos_ejecutor b, municipio c", "c.idmunicipio=b.ciudad AND a.idejecutor=b.ejecutor_idejecutor AND b.iddatos_ejecutor=" . $valor, "", $conn);
+        $ubicacion = $datos[0]['direccion'] . '<br/> ' .$datos[0]['nombre'];
     }
     return ($ubicacion);
 }

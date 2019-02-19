@@ -94,5 +94,4 @@ class Documento extends Model
             'date' => $dateAttributes
         ];
     }
-
 }

@@ -357,7 +357,6 @@ abstract class Model extends StaticSql
         foreach ($records as $key => $value) {
             $data[] = $value[0];
         }
-
         return $data;
     }
 
@@ -442,7 +441,9 @@ abstract class Model extends StaticSql
                 $set .= ',';
             }
 
-            if (in_array($attribute, $dateAttributes)) {
+            if ($value == "NULL") {
+                $set .= $attribute . "=" . $value;
+            } else if (in_array($attribute, $dateAttributes)) {
                 $set .= $attribute . "=" . self::setDateFormat($value, 'Y-m-d H:i:s');
             } else {
                 $set .= $attribute . "='" . $value . "'";
@@ -536,4 +537,27 @@ abstract class Model extends StaticSql
         return $sql;
     }
 
+    /**
+     * retorna la instancia de la relacion dada
+     *
+     * @param string $instance : Nombre de la instancia
+     * @param string $fieldName : Nombre del campo
+     * @return array|null
+     * @author Andre.Agudelo <andres.agudelo@cerok.com>
+     */
+    public function getRelationFk(string $instance = null, string $fieldName = null)
+    {
+        $response = null;
+        if ($instance) {
+            if (!$fieldName) {
+                $fieldName = 'fk_' . $instance::getTableName();
+            }
+            $Stringy = new Stringy($instance);
+            $NameIdInstance = 'id' . $Stringy->underscored();
+
+            $data = $instance::findAllByAttributes([$NameIdInstance => $this->$fieldName]);
+            $response = $data ? $data[0] : null;
+        }
+        return $response;
+    }
 }

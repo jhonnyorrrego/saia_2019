@@ -14,6 +14,14 @@ class Files {
         return this._options;
     }
 
+    set active(id) {
+        this._activeFile = id;
+    }
+
+    get active() {
+        return this._activeFile || null;
+    }
+
     init() {
         let validate = Files.validate(this.options.selector);
 
@@ -42,7 +50,12 @@ class Files {
                 <div class="row pt-2">
                     <div class="col-12">
                         <div class="form-group text-right">
-                            <button class="btn btn-complete" id="upload_file">Guardar anexos</button>
+                            <button type="button" class="btn btn-complete btn-block" id="upload_file">Guardar anexos</button>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group text-right">
+                            <button type="button" class="btn btn-danger btn-block hide" id="stop_upload">Cancelar</button>
                         </div>
                     </div>
                 </div>                
@@ -106,37 +119,53 @@ class Files {
             }
         });
 
+        $('#stop_upload').on('click', function () {
+            instance.reset();
+        });
+
         $(document).off('click', '.file_option');
         $(document).on('click', '.file_option', function () {
             $(this).parent().find('.file_option').toggleClass('d-none');
 
             switch ($(this).data('type')) {
-                case 'edit':
-                    Files.edit($(this).data('key'));
-                    break;
                 case 'upload':
-                    Files.upload($(this).data('key'));
+                    instance.upload($(this).data('id'));
                     break;
                 case 'delete':
-                    Files.delete($(this).data('key'));
+                    instance.delete($(this).data('id'));
                     break;
                 case 'access':
-                    Files.access($(this).data('key'));
+                    instance.access($(this).data('id'));
                     break;
             }
         });
+
+        instance.getTable().on('expand-row.bs.table', function (event, index, row, $detail) {
+            if (row.version > 1) {
+                instance.expand(row, $detail);
+            } else {
+                $detail.html('<div class="alert alert-info my-0">No existen versiones para este anexo.</div>');
+            }
+        })
     }
 
     save(description) {
-        this.options.save(description, this._loadedFiles);
-        this.reset();
-        this.getTable().bootstrapTable('refresh');
+        if (this.options.save(description, this._loadedFiles, this.active)) {
+            this.reset();
+            this.getTable().bootstrapTable('refresh');
+        } else {
+            console.error('error al guardar');
+        }
     }
 
     reset() {
-        $('#file_description').val('');
+        this.active = 0;
         this._loadedFiles = [];
+        $('#file_description').val('');
+        this.getStopButton().addClass('hide');
         this.getDropzone().removeAllFiles();
+        this.getDropzone().options.maxFiles = this.options.dropzone.maxFiles;
+        this.getDropzone().options.dictMaxFilesExceeded = this.options.dropzone.dictMaxFilesExceeded;
     }
 
     getTable() {
@@ -145,6 +174,37 @@ class Files {
 
     getDropzone() {
         return this._dropzone
+    }
+
+    getStopButton() {
+        return $('#stop_upload');
+    }
+
+    getExpandOptions(row) {
+        return Files.generateOptions(Files.getExpandDefaultOptions(row), this.options.expandBootstrapTable(row));
+    }
+
+    static getExpandDefaultOptions(row) {
+        return {
+            classes: 'table table-sm table-hover mt-0',
+            theadClasses: 'thead-light',
+            queryParams: function (queryParams) {
+                queryParams.sortOrder = 'desc';
+                queryParams.fileId = row.id;
+                queryParams.key = localStorage.getItem('key');
+                return queryParams;
+            },
+            columns: [
+                { field: 'icono', title: '' },
+                { field: 'etiqueta', title: 'nombre' },
+                { field: 'descripcion', title: 'descripcion' },
+                { field: 'version', title: 'version' },
+                { field: 'extension', title: 'clase' },
+                { field: 'usuario', title: 'responsable' },
+                { field: 'fecha', title: 'fecha' },
+                { field: 'peso', title: 'tamaño' }
+            ]
+        }
     }
 
     static getDefaultOptions() {
@@ -174,17 +234,17 @@ class Files {
                 },
                 pagination: true,
                 pageSize: 5,
-                classes: 'table table-sm table-hover mt-0',
+                classes: 'table table-hover mt-0',
                 theadClasses: 'thead-light',
                 columns: [
                     { field: 'icono', title: '' },
                     { field: 'etiqueta', title: 'nombre', editable: { mode: 'inline' } },
                     { field: 'descripcion', title: 'descripcion', editable: { mode: 'inline' } },
-                    { field: 'version', title: 'version' },
-                    { field: 'extension', title: 'clase' },
+                    { field: 'version', title: 'version', align: 'center' },
+                    { field: 'extension', title: 'clase', align: 'center' },
                     { field: 'usuario', title: 'responsable' },
-                    { field: 'fecha', title: 'fecha' },
-                    { field: 'peso', title: 'tamaño' },
+                    { field: 'fecha', title: 'fecha', align: 'center' },
+                    { field: 'peso', title: 'tamaño', align: 'center' },
                     {
                         field: 'options',
                         title: '',
@@ -192,20 +252,17 @@ class Files {
                         formatter: Files.OptionButttons
                     }
                 ],
-                onEditableSave: function (field, row, oldValue, $el) {
-                    console.log(arguments);
-                }
+                detailView: true,
+                onEditableSave: function (field, row, oldValue, $el) { console.log(arguments); }
             },
-            save: function (description, files) {
-                console.log(arguments);
-            }
+            save: function (description, files) { console.log(arguments); },
+            expand: function (field, row, element) { console.log(arguments); }
         };
     }
 
     static OptionButttons(value, row, index) {
         return [
             `<span class="file_option fa fa-chevron-circle-down cursor f-20"><br></span>`,
-            `<span data-type="edit" data-id="${row.id}" class="file_option fa fa-edit cursor f-20 d-none"><br></span>`,
             `<span data-type="upload" data-id="${row.id}" class="file_option fa fa-cloud-upload cursor f-20 d-none"><br></span>`,
             `<span data-type="delete" data-id="${row.id}" class="file_option fa fa-trash cursor f-20 d-none"><br></span>`,
             `<span data-type="access" data-id="${row.id}" class="file_option fa fa-lock cursor f-20 d-none"><br></span>`,
@@ -250,16 +307,51 @@ class Files {
         return (item && typeof item === 'object' && !Array.isArray(item));
     }
 
-    static edit(key) {
+    upload(key) {
+        this.reset();
+        this.active = key;
+        this.getDropzone().options.maxFiles = 1;
+        this.getDropzone().options.dictMaxFilesExceeded = "Máximo 1 archivo";
+        this.getDropzone().hiddenFileInput.click();
+        this.getStopButton().removeClass('hide');
+    }
+
+    delete(key) {
+        let filesInstance = this;
+        top.confirm({
+            id: 'question',
+            type: 'error',
+            title: 'Eliminando!',
+            message: 'Está seguro de eliminar este registro?',
+            position: 'center',
+            timeout: 0,
+            buttons: [
+                [
+                    '<button><b>YES</b></button>',
+                    function (instance, toast) {
+                        if (filesInstance.options.delete(key)) {
+                            instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                            filesInstance.getTable().bootstrapTable('refresh');
+                        }
+                    },
+                    true
+                ],
+                [
+                    '<button>NO</button>',
+                    function (instance, toast) {
+                        instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                    }
+                ],
+            ]
+        });
+    }
+
+    access(key) {
         alert(key);
     }
-    static upload(key) {
-        alert(key);
-    }
-    static delete(key) {
-        alert(key);
-    }
-    static access(key) {
-        alert(key);
+
+    expand(row, element) {
+        let options = this.getExpandOptions(row);
+        element.html('<table></table>').find('table').bootstrapTable(options);
     }
 }

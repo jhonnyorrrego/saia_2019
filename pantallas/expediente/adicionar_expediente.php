@@ -11,17 +11,21 @@ while ($max_salida > 0) {
 
 require_once $ruta_db_superior . "controllers/autoload.php";
 
-$idexpediente=$_REQUEST['idexpediente'];
+$idexpediente=$_REQUEST['codPadre'];
 if(!$idexpediente){
     return ;
 }
 
 $ExpCodPadre=new Expediente($idexpediente);
-$Dep=$ExpCodPadre->getDependenciaFk()[0];
-$Serie=$ExpCodPadre->getSerieFk()[0];
+$Dep=$ExpCodPadre->getRelationFk('Dependencia');
+$Serie=$ExpCodPadre->getRelationFk('Serie');
 
 include_once $ruta_db_superior . 'assets/librerias.php';
-include_once $ruta_db_superior . "librerias_saia.php";
+
+$params=[
+    'baseUrl'=>$ruta_db_superior
+]
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -34,7 +38,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
 		<?= bootstrap() ?>
 		<?= theme() ?>
         <?= icons() ?>
-		<?= librerias_validar_formulario() ?>
+		<?= validate() ?>
 	</head>
 
 	<body>
@@ -92,7 +96,9 @@ include_once $ruta_db_superior . "librerias_saia.php";
                                     <label>Caja</label>
                                     <select class="form-control" name="fk_caja" id="fk_caja">
                                         <option value="">por favor seleccione</option>
+                                        <?= Expediente::getHtmlCaja($ExpCodPadre) ?>
                                     </select>
+                                    <input type="hidden" name="cajaAnt" id="cajaAnt" value="<?= $ExpCodPadre->fk_caja ?>">
                                 </div>
 
                                 <div class="form-group ocultar">
@@ -138,23 +144,23 @@ include_once $ruta_db_superior . "librerias_saia.php";
                                         <input type="text" class="form-control" name="consecutivo_final" id="consecutivo_final">
                                     </div>
 
-                                <div class="form-group ocultar">
+                                    <div class="form-group ocultar">
                                         <label>Unidad de conservación</label>
                                         <input type="text" class="form-control" name="no_unidad_conservacion" id="no_unidad_conservacion">
                                     </div>
 
 
-                                <div class="form-group ocultar">
+                                    <div class="form-group ocultar">
                                         <label>No de folios</label>
                                         <input type="text" class="form-control" name="no_folios" id="no_folios">
                                     </div>
 
-                                <div class="form-group ocultar">
+                                    <div class="form-group ocultar">
                                         <label>No de carpeta</label>
                                         <input type="text" class="form-control" name="no_carpeta" id="no_carpeta">
                                     </div>
 
-                                <div class="form-group ocultar">
+                                    <div class="form-group ocultar">
                                         <label>Soporte</label>
                                         <select class="form-control" name="soporte" id="soporte">
                                             <option value="">por favor seleccione</option>
@@ -162,7 +168,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
                                         </select>
                                     </div>
 
-                                <div class="form-group ocultar">
+                                    <div class="form-group ocultar">
                                         <label>Frecuencia</label>
                                         <select class="form-control" name="frecuencia_consulta" id="frecuencia_consulta">
                                             <option value="">por favor seleccione</option>
@@ -170,19 +176,22 @@ include_once $ruta_db_superior . "librerias_saia.php";
                                         </select>
                                     </div>
 
-                                <div class="form-group ocultar">
+                                    <div class="form-group ocultar">
                                         <label>Notas de transferencia</label>
                                         <textarea class="form-control" name="notas_transf" id="notas_transf"></textarea>                                    
                                     </div>
+                                    
                                 </div>
+
                                 <div class="form-group">
-                                    <input type="hidden" name="methodExp" value="createExpedienteCont">
-                                    <input type="hidden" name="generarfiltro" value="1">
+                                    <input type="hidden" name="methodInstance" value="createExpedienteCont">
+                                    <input type="hidden" name="nameInstance" value="ExpedienteController">
+                                    <input type="hidden" name="generarFiltro" value="1">
                                     <input type="hidden" id="cod_padre" name="cod_padre" value="<?= $idexpediente ?>">
                                     <input type="hidden" id="idbusqueda_componente" name="idbusqueda_componente" value="<?=$_REQUEST['idbusqueda_componente']?>">
                                     <button id="guardarExp" type="submit" class="btn btn-primary">
                                         Adicionar
-                                    </button></td>
+                                    </button>
                                 </div>
 
                             </form>
@@ -195,6 +204,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
     
         <script type="text/javascript">
             $(document).ready(function (){
+                var params=<?=json_encode($params)?>;
                 $("[name='agrupador']").change(function (){
                     if($(this).val()==3){
                         $(".ocultar").hide();
@@ -214,7 +224,22 @@ include_once $ruta_db_superior . "librerias_saia.php";
                     }                  
                 });
                 $("#iconInfAdicional").trigger("click");
-                
+
+                $("#fk_caja").change(function (){
+                    let actual=$(this).val();
+                    let padre=$("#cajaAnt").val();
+                    if(padre!=0 && actual!=0){
+                        if(actual!=padre){
+                            top.notification({                                
+                                message : "Esta ingresando una caja diferente a la caja del expediente superior",
+                                type : "warning",
+                                duration : 8000
+                            });
+                        }
+
+                    }
+                });
+
                 $("#formularioExp").validate({
 					rules : {
 						agrupador : {
@@ -228,15 +253,14 @@ include_once $ruta_db_superior . "librerias_saia.php";
 						}
 					},
 					submitHandler : function(form) {
-                        //$("#guardarExp").attr('disabled',true);
-                        var ruta_db_superior='<?=$ruta_db_superior;?>';
+                        $("#guardarExp").attr('disabled',true);
                         var idcomponente=$("#idbusqueda_componente").val(); 
                         var codPadre=$("#cod_padre").val(); 
 
                         $.ajax({
                             type : 'POST',
                             async : false,
-                            url: ruta_db_superior+"pantallas/expediente/ejecutar_acciones.php",
+                            url: `${params.baseUrl}pantallas/ejecutar_acciones.php`,
                             data : $("#formularioExp").serialize(),
                             dataType : 'json',
                             success : function(objeto) {
@@ -244,7 +268,7 @@ include_once $ruta_db_superior . "librerias_saia.php";
                                     $.ajax({
                                         type : 'POST',
                                         async : false,
-                                        url: ruta_db_superior+"pantallas/busquedas/servidor_busqueda_exp.php",
+                                        url: `${params.baseUrl}pantallas/busquedas/servidor_busqueda_exp.php`,
                                         data : {
                                             idbusqueda_componente : idcomponente,
                                             page : 1,
@@ -258,6 +282,8 @@ include_once $ruta_db_superior . "librerias_saia.php";
                                         success : function(objeto2) {
                                             if (objeto2.exito) {
                                                 $("#resultado_busqueda"+idcomponente, parent.document).prepend(objeto2.rows[0].info);
+                                                $("[id^='resultado_pantalla_']", parent.document).removeClass("alert-warning");
+                                                $('#resultado_pantalla_'+objeto2.rows[0].idexpediente, parent.document).addClass("alert-warning");
                                             }else{
                                                 top.notification({
                                                     message : "Error al actualizar el listado, por favor actualice el listado",

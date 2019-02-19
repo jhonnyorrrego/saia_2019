@@ -27,19 +27,23 @@ if (isset($_SESSION['idfuncionario']) && $_SESSION['idfuncionario'] == $_REQUEST
     $params->limit = $params->offset + $_REQUEST['pageSize'] - 1; // se lo suman en sql2 ???
     $params->task = $_REQUEST['task'];
 
-    $anexos = Tarea::findActiveFiles($params);
+    if(!$_REQUEST['fileId']){
+        $anexos = Tarea::findActiveFiles($params);
+    }else{
+        $anexos = Anexo::findHistory($_REQUEST['fileId']);
+    }
 
     foreach ($anexos as $key => $Anexo) {
         $response['rows'][] = [
             'id' => $Anexo->getPK(),
-            'icono' => $Anexo->getIcon(),
+            'icono' => $Anexo->getIcon($Anexo->extension),
             'etiqueta' => $Anexo->etiqueta,
             'version' => $Anexo->version,
             'descripcion' => $Anexo->descripcion,
             'extension' => $Anexo->extension,
             'usuario' => $Anexo->getLastLog()->getUser()->getName(),
             'fecha' => $Anexo->getLastLog()->getDateAttribute('fecha'),
-            'peso' => $Anexo->getFileSize()
+            'peso' => $Anexo->getFileSize($Anexo->ruta)
         ];
     }
 
