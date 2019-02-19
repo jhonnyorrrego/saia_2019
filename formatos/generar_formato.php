@@ -2118,7 +2118,7 @@ span.fancytree-expander {
             "mostrar_" . $formato[0]['nombre'] . ".php",
             "detalles_mostrar_" . $formato[0]['nombre'] . ".php"
         );
-        crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/.gitignore", "");
+        crear_archivo(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/.gitignore", implode("\n", $data));
         /*
         $fp = fopen(FORMATOS_CLIENTE . $formato[0]["nombre"] . "/.gitignore", 'w') or die("no creo el archivo");
         fwrite($fp, implode("\n", $data));
