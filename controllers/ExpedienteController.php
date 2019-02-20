@@ -287,8 +287,8 @@ class ExpedienteController
         ];
         if (!empty($data)) {
             if (!empty($data['idpermiso'])) {
-                $sql = "SELECT identidad_expediente FROM permiso_expediente p,entidad_expediente ex WHERE p.fk_funcionario=ex.fk_funcionario AND p.fk_expediente=ex.fk_expediente AND p.tipo_funcionario=ex.tipo_funcionario AND p.idpermiso_expediente={$data['idpermiso']}";
-                $instance = UtilitiesController::instanceSql('EntidadExpediente', 'identidad_expediente', $sql);
+                $sql = "SELECT ex.* FROM permiso_expediente p,entidad_expediente ex WHERE p.fk_funcionario=ex.fk_funcionario AND p.fk_expediente=ex.fk_expediente AND p.tipo_funcionario=ex.tipo_funcionario AND p.idpermiso_expediente={$data['idpermiso']}";
+                $instance = EntidadExpediente::findBySql($sql,true);
                 if ($instance) {
                     $EntidadExpediente = $instance[0];
                     $EntidadExpediente->setAccessPermits('c', false);
@@ -564,8 +564,8 @@ class ExpedienteController
                         if ($Expadre->estado_cierre == 2) {
                             $response['message'] = 'No se puede restaurar el expediente, el expediente superior se encuentra cerrado';
                         } else {
-                            $sql = "SELECT idexpediente_eli FROM expediente_eli WHERE fk_expediente={$data['idexpediente']} AND fecha_restauracion IS NULL";
-                            $instance = UtilitiesController::instanceSql('ExpedienteEli', 'idexpediente_eli', $sql);
+                            $sql = "SELECT * FROM expediente_eli WHERE fk_expediente={$data['idexpediente']} AND fecha_restauracion IS NULL";
+                            $instance = ExpedienteEli::findBySql($sql,true);
                             if ($instance) {
                                 $ExpDel = $instance[0];
                                 $ExpDel->fecha_restauracion = date('Y-m-d H:i:s');

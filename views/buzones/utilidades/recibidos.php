@@ -90,6 +90,19 @@ $(function(){
         })
     });
 
+    $(document).on('click', '#clasif_expediente', function(){
+        let selections = $('#table').data('selections');
+        top.topModal({
+            url: `${baseUrl}views/documento/clasificar_expediente.php`,
+            title: 'Clasificar documento a un expediente',
+            size: 'modal-xl',
+            params: {
+                selections: selections
+            },
+            buttons: {}
+        })
+    });
+
     $(document).on('click', '#remove_documents', function(){
         let firstTr = $(`:checkbox:checked`).first().parents('tr[data-index]');
         let transfer = firstTr.find('[data-transfer]').data('transfer');

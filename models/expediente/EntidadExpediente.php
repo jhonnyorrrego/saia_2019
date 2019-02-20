@@ -30,7 +30,6 @@ class EntidadExpediente extends Model
         }
     }
 
-
     protected function defineAttributes()
     {
         $this->dbAttributes = (object)[
@@ -55,7 +54,7 @@ class EntidadExpediente extends Model
     public function afterDelete()
     {
         $sql = "SELECT idpermiso_expediente FROM permiso_expediente WHERE fk_entidad=1 AND tipo_permiso=2 AND tipo_funcionario={$this->tipo_funcionario} AND fk_expediente={$this->fk_expediente}";
-        $records = UtilitiesController::instanceSql('PermisoExpediente', 'idpermiso_expediente', $sql);
+        $records = PermisoExpediente::findBySql($sql,true);
         if ($records) {
             foreach ($$records as $instance) {
                 $instance->delete();
