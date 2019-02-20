@@ -186,7 +186,6 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
                                     <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" id="cambiar_nav_basico"><span style="color:fff; background: #48b0f7;">Siguiente</span></button>
                                     <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" data-vista="campos_previa" id="cambiar_campos"><span style="color:fff; background: #48b0f7;"> Siguiente</span></button>                                    
                                     <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" data-vista="vista_previa" id="cambiar_vista"><span style="color:fff; background: #48b0f7;"> Siguiente</span></button>
-                                    <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" id="generar_pantalla">Publicar</button>
                                     <button style="background: #48b0f7; color:fff; margin-top:3px; margin-left:10px;margin-bottom: 7px; display:none;" class="btn btn-info" id="cambiar_nav_permiso">Siguiente</button>
                                     <div id="barra_principal_formato" class="barra_principal_formato" style="margin-left:10px; width:85%; display:none">
                                         <div class="progress progress-striped active" style="margin-bottom: 7px;">
@@ -212,9 +211,15 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
                         </div>
                         <div class="tab-pane" id="pantalla_previa-tab"></div>
                         <div class="tab-pane" id="pantalla_previa-permiso">
+                        
                         <h5 class="title">Permisos del formato a:</h5><br>
                         <input type="hidden" id="nombreFormato" value="<?= $consulta_formato[0]['nombre']; ?>">
                             <?= consultarPermisosPerfil(); ?>
+                             <div class="control-group">
+                                <div class="controls">
+                                <button style="background: #48b0f7; color:fff;margin-top: 20px;" class="btn btn-info" id="generar_pantalla">Publicar</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="tab-pane" id="datos_formulario-tab">
                             <?php
@@ -749,11 +754,18 @@ $(document).ready(function() {
 
         $("#sel_encabezado").val(idencabezadoFormato);
         $("#sel_pie_pagina").val(idPie);
-        $("#generar_pantalla").on("click", function() {
+        $("#generar_pantalla").on("click", function(e) {
+            var checkeados = [];
+            $("input[name='permisosPerfil']").each(function(){
+              if($(this).is(":checked")){
+                   checkeados.push($(this).val());
+              }
+            });
+
             $(".generador_pantalla").find(".accordion-inner").html("");
             $(".generador_pantalla").removeClass("alert-success");
             $(".generador_pantalla").removeClass("alert-error");
-            generar_pantalla("full");
+            generar_pantalla("full",checkeados);
         });
     }
 
@@ -826,7 +838,7 @@ $(document).ready(function() {
         });
     });
 
-    function generar_pantalla(nombre_accion) {
+    function generar_pantalla(nombre_accion,permisosPerfil) {
         $("#barra_principal_formato").show();
         $("#barra_formato").html("0%");
         $("#barra_formato").css("width", "0%");
@@ -834,6 +846,8 @@ $(document).ready(function() {
         var datos = {
             idformato: $("#idformato").val(),
             accion: "full",
+            permisosPerfil : permisosPerfil,
+            nombreFormato: $("#nombreFormato").val(),
             llamado_ajax: 1
         };
         var interval = null;
@@ -857,7 +871,19 @@ $(document).ready(function() {
                 window.clearInterval(interval)
                 if (html) {
                     var objeto = jQuery.parseJSON(html);
-                    if (objeto.exito == 1) {
+                    
+                    if (objeto.exito == 1 && objeto.permisos) {
+                        $("#barra_formato").html("100%");
+                        $("#barra_formato").css("width", "100%");
+                        notificacion_saia("Formato generado y "+objeto.permisos, "success", "", 3500);
+                        CKEDITOR.instances.editor_mostrar.setData(objeto.contenido_cuerpo);
+                        setTimeout(function() {
+                            $(".barra_principal_formato").fadeOut(1500);
+                        }, 3000);
+                        if(objeto.publicar==1){
+                           publicar=objeto.publicar;  
+                        }
+                    }else if (objeto.exito == 1 && !objeto.permisos) {
                         $("#barra_formato").html("100%");
                         $("#barra_formato").css("width", "100%");
                         notificacion_saia("Formato generado correctamente", "success", "", 3500);
@@ -869,7 +895,7 @@ $(document).ready(function() {
                            publicar=objeto.publicar;  
                         }
                     } else {
-                        notificacion_saia(objeto.mensaje, "error", "", 9500);
+                        //notificacion_saia(objeto.mensaje, "error", "", 9500);
                         setTimeout(function() {
                             $(".barra_principal_formato").fadeOut(1000);
                         }, 2000);
@@ -1622,7 +1648,7 @@ $(document).ready(function() {
                     $('#tabs_formulario a[href="#pantalla_previa-permiso"]').tab('show');
                 }
                  $('#generar_pantalla').show();
-                 $( '.permisos' ).on( 'click', function() {
+                /* $( '.permisos' ).on( 'click', function() {
                     if( $(this).is(':checked') ){
                     $.ajax({
                         type: 'POST',
@@ -1656,7 +1682,7 @@ $(document).ready(function() {
                         }
                     }); 
                     }
-                });
+                });*/
             break; 
             case 'funciones-tab':
                 if (tab_acciones == false) {

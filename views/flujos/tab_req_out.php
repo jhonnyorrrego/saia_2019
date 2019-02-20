@@ -29,7 +29,7 @@ if (!empty($_REQUEST["idactividad"])) {
             <div class="col col-md-8">
                 <div class="form-control form-group-default">
                 <label>Informaci&oacute;n de entrada</label>
-                <input class="form-control form-control-sm" id="requisito_out" name="nombre" type="text" placeholder="Qu&eacute; se requiere previo a realizar este paso&quest;">
+                <input class="form-control form-control" id="requisito_out" name="nombre" type="text" placeholder="Qu&eacute; se requiere previo a realizar este paso&quest;">
                 </div>
             </div>
             <div class="col col-md-4">
@@ -43,7 +43,7 @@ if (!empty($_REQUEST["idactividad"])) {
         </div>
         <div class="row pr-2 mt-1">
             <div class="col col-md-8">
-                <button type="button" class="btn btn-primary btn-sm float-right" id="btnGuardarRequisitoIOut">Guardar</button>
+                <button type="button" class="btn btn-primary btn-sm float-right" id="btnGuardarRequisitoOut">Guardar</button>
             </div>
         </div>
 
@@ -98,8 +98,8 @@ if (!empty($_REQUEST["idactividad"])) {
     var $tabla = $("#tabla_req_out");
     $tabla.bootstrapTable();
 
-    var $botonEliminarRequisito = $('#boton_eliminar_req_out')
-    var $botonGuardarRequisitoOut = $('#btnGuardarRequisitoOut')
+    //var $botonEliminarRequisito = $('#boton_eliminar_req_out');
+    var $botonGuardarRequisitoOut = $('#btnGuardarRequisitoOut');
 
     var idactividad = "<?= $idactividad ?>";
     var tipo_requisito = "<?= $tipo_requisito ?>";
@@ -131,8 +131,8 @@ if (!empty($_REQUEST["idactividad"])) {
     });
 
     $('#guardarReqCalidadOut').click(function () {
-        let req_in = $("#frmQualityReqOut #req_calidad_out").val();
-        var data = {requisito: req_in, tipo: tipo_requisito, idrequisito: idactividad};
+        let req_out = $("#frmQualityReqOut #req_calidad_out").val();
+        var data = {requisito: req_out, tipo: tipo_requisito};
         var id = guardarRequisitoCalidadActividadOut(idactividad, data);
     });
     $("#cancelarReqCalidadOut").click(function () {
@@ -147,7 +147,7 @@ if (!empty($_REQUEST["idactividad"])) {
 
     });
 
-    $botonEliminarRequisito.click(function () {
+    $('#boton_eliminar_req_out').click(function () {
         var ids = $.map($tabla.bootstrapTable('getSelections'), function (row) {
             return row.idrequisito_calidad
         });

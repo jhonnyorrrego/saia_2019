@@ -98,7 +98,12 @@ $(function () {
                 });
 
                 return success;
-            }
+            },
+            expandBootstrapTable: function (row) {
+                return {
+                    url: `${baseUrl}app/tareas/consulta_anexos.php`
+                }
+            },
         };
 
         return new Files(options);

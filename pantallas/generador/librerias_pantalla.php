@@ -445,7 +445,7 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
             vincular_campo_anexo($idformato);
         }
         insertar_anexo_formato($idformato, $documentacion, $anexos);
-        crear_modulo_formato($idformato);
+        //crear_modulo_formato($idformato);
     }
     if ($fieldList["cod_padre"] && $idformato) {
 
@@ -855,7 +855,7 @@ detalles_mostrar_" . $datos["nombre"] . ".php";
         }
         // $retorno["documentacion"]=$idformato." - ".$documentacion." - ".$anexos;
         // insertar_anexo_formato($idformato,$documentacion,$anexos);
-        crear_modulo_formato($idformato);
+        //crear_modulo_formato($idformato);
     }
 
     if ($fieldList["cod_padre"] && $idformato) {
@@ -3295,35 +3295,30 @@ function permisosFormato($idformato,$idperfil,$nombreFormato){
     global $conn;
     $retorno = ["exito" => 0, "mensaje" => ''];
     $consultaModulo = busca_filtro_tabla("idmodulo","modulo","nombre='crear_{$nombreFormato}' and enlace='formatos/adicionar_{$nombreFormato}.php' ","",$conn);
+    $eliminarPermisos = "DELETE from permiso_perfil where  modulo_idmodulo ={$consultaModulo[0]['idmodulo']}";
+    phpmkr_query($eliminarPermisos);
     if($consultaModulo['numcampos']){
-        $consultarPermiso = busca_filtro_tabla("","permiso_perfil","modulo_idmodulo={$consultaModulo[0]['idmodulo']} and perfil_idperfil = {$idperfil}","",$conn);
-        if($consultarPermiso['numcampos']){
-            $retorno['exito'] = 0;
-            $retorno['mensaje'] = 'El permiso ya existe asignado';
-        }else{
-            $guardarPermiso = "INSERT INTO permiso_perfil(modulo_idmodulo,perfil_idperfil,caracteristica_propio,caracteristica_grupo,caracteristica_total) VALUES ({$consultaModulo[0]['idmodulo']},{$idperfil},'lame','lame','lame')";
+        for ($i=0; $i < count($idperfil) ; $i++) {
+            $guardarPermiso = "INSERT INTO permiso_perfil(modulo_idmodulo,perfil_idperfil,caracteristica_propio,caracteristica_grupo,caracteristica_total) VALUES ({$consultaModulo[0]['idmodulo']},{$idperfil[$i]},'lame','lame','lame')";
             phpmkr_query($guardarPermiso);
             $retorno['exito'] = 1;
-            $retorno['mensaje'] = 'Permiso asignado correctamente al formato';
-        }       
+            $retorno['mensaje'] = 'permisos asignados correctamente'; 
+        }
     }
-    echo json_encode($retorno);
+    return  $retorno;
 }
 
-function eliminarPermisoFormato($idformato, $idperfil, $nombreFormato){
+function eliminarPermisoFormato($idformato, $nombreFormato){
     global $conn;
     $retorno = ["exito" => 0, "mensaje" => ''];
     $consultaModulo = busca_filtro_tabla("idmodulo", "modulo", "nombre='crear_{$nombreFormato}' and enlace='formatos/adicionar_{$nombreFormato}.php' ", "", $conn);
-    if ($consultaModulo['numcampos']) {
-        $consultarPermiso = busca_filtro_tabla("", "permiso_perfil", "modulo_idmodulo={$consultaModulo[0]['idmodulo']}", "", $conn);
-        if ($consultarPermiso['numcampos']) {
-            $eliminarPermiso = "DELETE from permiso_perfil where idpermiso_perfil = {$consultarPermiso[0]['idpermiso_perfil']} and perfil_idperfil = {$idperfil}";
-            phpmkr_query($eliminarPermiso);
-            $retorno['exito'] = 1;
-            $retorno['mensaje'] = "Permiso eliminado correctamente";
-        }
+    $eliminarPermisos = "DELETE from permiso_perfil where  modulo_idmodulo ={$consultaModulo[0]['idmodulo']}";
+    $deletePermisos = phpmkr_query($eliminarPermisos);
+    if($deletePermisos){
+        $retorno['exito'] = 1;
+        $retorno['mensaje'] = 'permisos eliminados correctamente';
     }
-    echo json_encode($retorno);
+    return $retorno;
 }
 
 ?>

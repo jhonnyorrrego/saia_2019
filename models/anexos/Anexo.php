@@ -3,7 +3,7 @@
 class Anexo extends Model
 {
     use TAnexo;
-    
+
     protected $idanexo;
     protected $ruta;
     protected $etiqueta;
@@ -105,11 +105,32 @@ SQL;
     public function storage()
     {
         $this->estado = 0;
-        
-        if($this->save()){
+
+        if ($this->save()) {
             return LogController::create(LogAccion::VERSIONAR, 'AnexoLog', $this);
         }
 
         return false;
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param [type] $fileId
+     * @return void
+     */
+    public function findHistory($fileId)
+    {
+        $Anexo = new Anexo($fileId);
+
+        if($Anexo->fk_anexo){
+            $sql = "select * from anexo where idanexo <>{$fileId} and (fk_anexo={$Anexo->fk_anexo} or idanexo = {$Anexo->fk_anexo}) order by idanexo desc";
+            $records = StaticSql::search($sql);
+            $response = Anexo::convertToObjectCollection($records);
+        }else{
+            $response = [];
+        }
+
+        return $response;
     }
 }
