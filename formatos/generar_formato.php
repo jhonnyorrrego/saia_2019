@@ -53,10 +53,11 @@ if (isset($_REQUEST["genera"])) {
     redirecciona($redireccion);
     die();
 } else if (isset($_REQUEST["accion"]) && $_REQUEST["accion"] == "full" && isset($_REQUEST["idformato"])) {
-    $status = array(
+    $status = [
         "exito" => 0,
         "mensaje" => ["No se pudo generar el formato"]
-    );
+    ];
+   
     ob_start();
     $acciones = [
         "tabla",
@@ -106,8 +107,14 @@ if (isset($_REQUEST["genera"])) {
                 $updatePublicar = "UPDATE formato set publicar = {$publicar} where idformato = {$idformato}";
                 phpmkr_query($updatePublicar);
             }
-
-        }
+            include_once $ruta_db_superior."/pantallas/generador/librerias_pantalla.php";
+            $idmodulo = crear_modulo_formato($idformato);
+            if($_REQUEST['permisosPerfil']){
+                $permisosFormato = permisosFormato($idformato, $_REQUEST['permisosPerfil'], $_REQUEST['nombreFormato']);
+            }else{
+                $permisosFormato = eliminarPermisoFormato($idformato, $_REQUEST['nombreFormato']);
+            }
+        }         
     }
     //$mensajes = array_unique($mensajes, SORT_STRING);
     ob_get_clean();
@@ -115,6 +122,9 @@ if (isset($_REQUEST["genera"])) {
     $status["mensaje"] = $mensajes;
     $status["contenido_cuerpo"] = $cuerpo_formato;
     $status["publicar"] = $publicar;
+    $status["permisos"] = $permisosFormato['mensaje'];
+    $status["estadoPermisos"] = $permisosFormato['exito'];
+    
     ob_end_clean();
     echo json_encode($status);
     die();
