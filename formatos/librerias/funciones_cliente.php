@@ -170,10 +170,13 @@ function usuario_aprobador_documento($idformato,$iddoc,$retorno = 0){
 
 function asunto_documento($idformato, $iddoc, $retorno = 0) {
 	global $conn;
-	$html = "";
-	$asunto = busca_filtro_tabla("descripcion", "documento", "iddocumento=" . $iddoc, "", $conn);
-	if ($asunto["numcampos"]) {
-		$html = $asunto[0]['descripcion'];
+	$tablaFt = busca_filtro_tabla("nombre_tabla","formato","idformato={$idformato}","",$conn);	
+	$consultaCampos = busca_filtro_tabla("nombre", "campos_formato", "formato_idformato={$idformato} and (acciones like 'p' or acciones like '%,p,%' or acciones like '%,p')", "", $conn);
+	$html = '';
+	if($consultaCampos['numcampos']){
+		for ($i = 0; $i < $consultaCampos['numcampos']; $i++) {
+			$html .= mostrar_valor_campo($consultaCampos[$i]["nombre"], $idformato, $iddoc, 1) . '<br>';
+		}
 	}
 	if ($retorno) {
 		return $html;
