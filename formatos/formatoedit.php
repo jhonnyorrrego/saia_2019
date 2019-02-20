@@ -342,7 +342,7 @@ return true;
 		<td bgcolor="#F5F5F5">
       <span class="phpmaker">
         <?php
-          $serie=busca_filtro_tabla("","serie A","tvd=0","lower(nombre) asc",$conn);
+          $serie=busca_filtro_tabla("","serie A","","lower(nombre) asc",$conn);
 
         $inicio2='<SELECT name="x_serie_idserie"><OPTION value="0" selected>Sin Serie Documental</OPTION><OPTION value="">Crear Serie Documental</OPTION>';
         $fin2='</SELECT>';
