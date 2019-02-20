@@ -261,9 +261,10 @@ function adicionar_pantalla_campos_formato($idpantalla, $datos)
         $retorno["documento"] = phpmkr_insert_id();
         $retorno["documento_sql"] = $sql2;
     }
-    $campo_formato = busca_filtro_tabla("", "campos_formato", "nombre='idft_" . $datos["nombre_tabla"] . "' AND formato_idformato=" . $idpantalla, "", $conn);
+    $nombre_tabla = trim($datos["nombre_tabla"], "'");
+    $campo_formato = busca_filtro_tabla("", "campos_formato", "nombre='idft_" . $nombre_tabla . "' AND formato_idformato=" . $idpantalla, "", $conn);
     if (!$campo_formato["numcampos"]) {
-        $sql2 = "INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(" . $idpantalla . ",'id" . $datos["nombre_tabla"] . "','Identificador de formato','int','11',0,'','a','Identificador unico del formato (llave primaria)','','ai,pk','hidden',0,0,'id" . $datos["nombre_tabla"] . "')";
+        $sql2 = "INSERT INTO campos_formato(formato_idformato, nombre, etiqueta, tipo_dato, longitud, obligatoriedad, valor, acciones, ayuda, predeterminado, banderas, etiqueta_html, orden, fila_visible,placeholder) VALUE(" . $idpantalla . ",'id" . $nombre_tabla . "','Identificador de formato','int','11',0,'','a','Identificador unico del formato (llave primaria)','','ai,pk','hidden',0,0,'id" . $nombre_tabla . "')";
         phpmkr_query($sql2);
         $retorno["idformato"] = phpmkr_insert_id();
         $retorno["idformato_sql"] = $sql2;
@@ -592,10 +593,10 @@ function registrar_funciones_encabezado_formato($idencabezado, $idformato, $id_e
 	//print_r($funciones_borrar);
 
     for ($i = 1; $i <= count($funciones_borrar); $i++) {
-        $buscar_funciones_formato = busca_filtro_tabla("", "funciones_formato ff, funciones_formato_enlace ffe", "ff.nombre_funcion='" . $funciones_borrar[$i] . "' and ff.idfunciones_formato = ffe.funciones_formato_fk and ffe.formato_idformato=" . $idformato, "", $conn);		
+        $buscar_funciones_formato = busca_filtro_tabla("", "funciones_formato ff, funciones_formato_enlace ffe", "ff.nombre_funcion='" . $funciones_borrar[$i] . "' and ff.idfunciones_formato = ffe.funciones_formato_fk and ffe.formato_idformato=" . $idformato, "", $conn);
 		//print_r($buscar_funciones_formato["sql"]);
         if ($buscar_funciones_formato["numcampos"]) {
-			//delete funciones_formato_enlace			
+			//delete funciones_formato_enlace
             $delete = "DELETE FROM funciones_formato_enlace WHERE idfunciones_formato_enlace=" . $buscar_funciones_formato[0]["idfunciones_formato_enlace"];
             phpmkr_query($delete);
         }
@@ -628,7 +629,7 @@ function registrar_funciones_encabezado_formato($idencabezado, $idformato, $id_e
             phpmkr_query($insert_ffe);
             $ok = phpmkr_insert_id();
         }
-    }		
+    }
 	//}
     return $ok;
 }
@@ -650,10 +651,10 @@ function registrar_funciones_pie_formato($idencabezado, $idformato, $id_pie_ante
     $funciones_borrar = array_diff($funciones_pie_anterior[1], $buscar_pie_nuevo[1]);
 
     for ($i = 1; $i <= count($funciones_borrar); $i++) {
-        $buscar_funciones_formato = busca_filtro_tabla("", "funciones_formato ff, funciones_formato_enlace ffe", "ff.nombre_funcion='" . $funciones_borrar[$i] . "' and ff.idfunciones_formato = ffe.funciones_formato_fk and ffe.formato_idformato=" . $idformato, "", $conn);		
+        $buscar_funciones_formato = busca_filtro_tabla("", "funciones_formato ff, funciones_formato_enlace ffe", "ff.nombre_funcion='" . $funciones_borrar[$i] . "' and ff.idfunciones_formato = ffe.funciones_formato_fk and ffe.formato_idformato=" . $idformato, "", $conn);
 		//print_r($buscar_funciones_formato["sql"]);
         if ($buscar_funciones_formato["numcampos"]) {
-			//delete funciones_formato_enlace			
+			//delete funciones_formato_enlace
             $delete = "DELETE FROM funciones_formato_enlace WHERE idfunciones_formato_enlace=" . $buscar_funciones_formato[0]["idfunciones_formato_enlace"];
             phpmkr_query($delete);
         }
