@@ -58,6 +58,7 @@ if (isset($_REQUEST["genera"])) {
         "mensaje" => ["No se pudo generar el formato"]
     ];
    
+    
     ob_start();
     $acciones = [
         "formato",
