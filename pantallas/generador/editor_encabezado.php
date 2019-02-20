@@ -112,8 +112,7 @@ $(function(){
             url: "<?php echo($ruta_db_superior);?>pantallas/generador/librerias_formato.php",
             data: datos,
             success: function(data) {
-            	if(data.exito == 1) {   
-					console.log(data);return false;         		
+            	if(data.exito == 1) {          		
             		notificacion_saia("Encabezado pagina actualizado","success","",3000);
             		parent.hs.close();           		                                  
             	}
