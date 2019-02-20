@@ -3317,7 +3317,7 @@ function eliminarPermisoFormato($idformato, $nombreFormato){
     $deletePermisos = phpmkr_query($eliminarPermisos);
     if($deletePermisos){
         $retorno['exito'] = 1;
-        $retorno['mensaje'] = 'permisos eliminados correctamente';
+        //$retorno['mensaje'] = 'permisos eliminados correctamente';
     }
     return $retorno;
 }
