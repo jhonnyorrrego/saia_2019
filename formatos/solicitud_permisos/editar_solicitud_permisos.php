@@ -67,12 +67,16 @@
                             <div class="card-body"><center><h4 class="text-black">SOLICITUD DE PERMISOS</h4></center><?php llama_funcion_accion(@$_REQUEST["iddoc"],419,"ingresar","ANTERIOR"); ?>
                        <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>class_transferencia.php"" enctype="multipart/form-data"><div class="card-body" id="tr_etiqueta_titulo_1100262650">
                                         <h5 title="Info general del titulo" id="etiqueta_titulo_1100262650"><center><span class="etiqueta_titulo">INFORMACI&Oacute;N PRINCIPAL</span></center></h5>
-                                      </div><input type="hidden" name="idft_solicitud_permisos" value="<?php echo(mostrar_valor_campo('idft_solicitud_permisos',419,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(419,6941,$_REQUEST['iddoc']);?></div><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',419,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',419,$_REQUEST['iddoc'])); ?>"><hr class="border border-info" id="etiqueta_linea_1872295254"><div class="card-body" id="tr_etiqueta_titulo_625604532">
+                                      </div><input type="hidden" name="idft_solicitud_permisos" value="<?php echo(mostrar_valor_campo('idft_solicitud_permisos',419,$_REQUEST['iddoc'])); ?>"><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(419,6941,$_REQUEST['iddoc']);?></div><input type="hidden" name="encabezado" value="<?php echo(mostrar_valor_campo('encabezado',419,$_REQUEST['iddoc'])); ?>"><input type="hidden" name="firma" value="<?php echo(mostrar_valor_campo('firma',419,$_REQUEST['iddoc'])); ?>"><div class="form-group form-group-default "  id="tr_">
+                                        <label title=""></label>
+                                        <input class="form-control"  maxlength="11"   tabindex='1'  type="text"  size="100" id="" name=""  value="<?php echo(mostrar_valor_campo('',419,$_REQUEST['iddoc'])); ?>">
+                                       </div><hr class="border border-info" id="etiqueta_linea_1872295254"><div class="card-body" id="tr_etiqueta_titulo_625604532">
                                         <h5 title="" id="etiqueta_titulo_625604532"><center><span class="etiqueta_titulo"></span></center></h5>
-                                      </div><div class="form-group form-group form-group-default id="tr_fecha_permiso">
+                                      </div><div class="form-group" id="tr_checkbox_1174048118">
+                                        <label title="">SELECCI&Oacute;N M&Uacute;LTIPLE*</label><?php genera_campo_listados_editar(419,7647,$_REQUEST['iddoc']);?></div><div class="form-group form-group form-group-default id="tr_fecha_permiso">
 <label title="">FECHA DEL PERMISO*</label>
 <div class="input-group">
-<input  tabindex="1 " type="text" class="form-control"  id="fecha_permiso"  required name="fecha_permiso">
+<input  tabindex="2 " type="text" class="form-control"  id="fecha_permiso"  required name="fecha_permiso">
 <span class="input-group-text"><i class="fa fa-calendar"></i></span>
 </div>
 <script type="text/javascript">
@@ -98,7 +102,7 @@
                                             outlineWhileAnimating: true, preserveContent: false, width: 400 } )">Administrar Anexos</a>
                                             </div>'; ?></div></div><div class="form-group" id="tr_observaciones">
                                         <label title="">OBSERVACIONES*</label>
-                                        <div class="celda_transparente"><textarea  tabindex='3'  name="observaciones" id="observaciones" cols="53" rows="3" class="form-control required"><?php echo(mostrar_valor_campo('observaciones',419,$_REQUEST['iddoc'])); ?></textarea><script>
+                                        <div class="celda_transparente"><textarea  tabindex='4'  name="observaciones" id="observaciones" cols="53" rows="3" class="form-control required"><?php echo(mostrar_valor_campo('observaciones',419,$_REQUEST['iddoc'])); ?></textarea><script>
                             var config = {
                                 removePlugins : "preview,copyformatting,save,sourcedialog,flash,iframe,forms,sourcearea,base64image,div,showblocks,smiley"
                             };

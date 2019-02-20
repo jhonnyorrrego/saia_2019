@@ -1,4 +1,4 @@
-<html><title>.: NOVEDAD DESPACHO MENSAJEROS:.</title><head><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php echo(librerias_jquery('1.7')); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../../formatos/librerias/header_formato.php"); ?><?php echo(librerias_jquery('1.8')); ?><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/jquery.fcbkcomplete.js"></script><link rel="stylesheet" type="text/css" href="../../css/style_fcbkcomplete.css"/></head><body bgcolor="#F5F5F5"><form name="formulario_formatos" id="formulario_formatos" method="post" action="../librerias/funciones_buscador.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4" border="0"><tr><td colspan="4" class="encabezado_list">B&Uacute;SQUEDA NOVEDAD DESPACHO MENSAJEROS</td></tr><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php echo(librerias_jquery('1.7')); ?><tr id="tr_dependencia"><div class="btn-group" data-toggle="buttons-radio" >
+<html><title>.: NOVEDAD DESPACHO MENSAJEROS:.</title><head><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php echo(librerias_jquery('1.7')); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php include_once("funciones.php"); ?><?php echo(librerias_jquery('1.8')); ?><script type="text/javascript" src="../../js/jquery.validate.js"></script><script type="text/javascript" src="../../js/title2note.js"></script><script type="text/javascript" src="../../js/jquery.fcbkcomplete.js"></script><link rel="stylesheet" type="text/css" href="../../css/style_fcbkcomplete.css"/></head><body bgcolor="#F5F5F5"><form name="formulario_formatos" id="formulario_formatos" method="post" action="../librerias/funciones_buscador.php" enctype="multipart/form-data"><table width="100%" cellspacing="1" cellpadding="4" border="0"><tr><td colspan="4" class="encabezado_list">B&Uacute;SQUEDA NOVEDAD DESPACHO MENSAJEROS</td></tr><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../formatos/librerias/estilo_formulario.php"); ?><script type="text/javascript" src="../../formatos/librerias/funciones_formatos.js"></script><?php echo(librerias_jquery('1.7')); ?><tr id="tr_dependencia"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_dependencia',this.id)">
 		    Y
 		  </button>
@@ -36,7 +36,16 @@
                       });
                       });
                      </script></td>
-                    </tr><tr id="tr_idft_novedad_despacho"><div class="btn-group" data-toggle="buttons-radio" >
+                    </tr><tr><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_item_radicacion',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_item_radicacion',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_item_radicacion" id="bqsaiaenlace_item_radicacion" value="y" />
+		</div>
+                  <td class="encabezado" width="20%" title="">ITEMS DE PLANILLA</td><input type="hidden" name="bksaiacondicion_item_radicacion" id="bksaiacondicion_item_radicacion" value="like"><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(411,5097,'',1,'buscar');?></td></tr><tr id="tr_idft_novedad_despacho"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_idft_novedad_despacho',this.id)">
 		    Y
 		  </button>
@@ -55,7 +64,16 @@
                       });
                       });
                      </script></td>
-                    </tr><tr id="tr_estado_documento"><div class="btn-group" data-toggle="buttons-radio" >
+                    </tr><tr><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_novedad',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_novedad',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_novedad" id="bqsaiaenlace_novedad" value="y" />
+		</div>
+                     <td class="encabezado" width="20%" title="">NOVEDAD</td><input type="hidden" name="bksaiacondicion_novedad" id="bksaiacondicion_novedad" value="like_total"><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(411,5098,'',1,'buscar');?></td></tr><tr id="tr_estado_documento"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_estado_documento',this.id)">
 		    Y
 		  </button>
@@ -69,6 +87,44 @@
                      $(document).ready(function()
                       {
                       $("#estado_documento").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
+                    </tr><tr id="tr_observaciones"><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_observaciones',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_observaciones',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_observaciones" id="bqsaiaenlace_observaciones" value="y" />
+		</div>
+                     <td class="encabezado" width="20%" title="">OBSERVACIONES</td><input type="hidden" name="bksaiacondicion_observaciones" id="bksaiacondicion_observaciones" value="like">
+                     <td bgcolor="#F5F5F5"><select multiple id="observaciones" name="observaciones"></select><script>
+                     $(document).ready(function()
+                      {
+                      $("#observaciones").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
+                    </tr><tr id="tr_anexo_soporte"><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_anexo_soporte',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_anexo_soporte',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_anexo_soporte" id="bqsaiaenlace_anexo_soporte" value="y" />
+		</div>
+                     <td class="encabezado" width="20%" title="">ANEXOS/SOPORTE DE ENTREGA</td><input type="hidden" name="bksaiacondicion_anexo_soporte" id="bksaiacondicion_anexo_soporte" value="like">
+                     <td bgcolor="#F5F5F5"><select multiple id="anexo_soporte" name="anexo_soporte"></select><script>
+                     $(document).ready(function()
+                      {
+                      $("#anexo_soporte").fcbkcomplete({
                         complete_text:"Presione enter para agregar una palabra.",
                         newel: true
                       });
@@ -88,43 +144,6 @@
                      $(document).ready(function()
                       {
                       $("#serie_idserie").fcbkcomplete({
-                        complete_text:"Presione enter para agregar una palabra.",
-                        newel: true
-                      });
-                      });
-                     </script></td>
-                    </tr><tr><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_item_radicacion',this.id)">
-		    Y
-		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_item_radicacion',this.id)">
-		    O
-		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_item_radicacion" id="bqsaiaenlace_item_radicacion" value="y" />
-		</div>
-                  <td class="encabezado" width="20%" title="">ITEMS DE PLANILLA</td><input type="hidden" name="bksaiacondicion_item_radicacion" id="bksaiacondicion_item_radicacion" value="like"><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(411,5097,'',1,'buscar');?></td></tr><tr><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_novedad',this.id)">
-		    Y
-		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_novedad',this.id)">
-		    O
-		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_novedad" id="bqsaiaenlace_novedad" value="y" />
-		</div>
-                     <td class="encabezado" width="20%" title="">NOVEDAD</td><input type="hidden" name="bksaiacondicion_novedad" id="bksaiacondicion_novedad" value="like_total"><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(411,5098,'',1,'buscar');?></td></tr><tr id="tr_observaciones"><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_observaciones',this.id)">
-		    Y
-		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_observaciones',this.id)">
-		    O
-		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_observaciones" id="bqsaiaenlace_observaciones" value="y" />
-		</div>
-                     <td class="encabezado" width="20%" title="">OBSERVACIONES</td><input type="hidden" name="bksaiacondicion_observaciones" id="bksaiacondicion_observaciones" value="like">
-                     <td bgcolor="#F5F5F5"><select multiple id="observaciones" name="observaciones"></select><script>
-                     $(document).ready(function()
-                      {
-                      $("#observaciones").fcbkcomplete({
                         complete_text:"Presione enter para agregar una palabra.",
                         newel: true
                       });
@@ -187,26 +206,7 @@
                       });
                       });
                      </script></td>
-                    </tr><tr id="tr_anexo_soporte"><div class="btn-group" data-toggle="buttons-radio" >
-		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_anexo_soporte',this.id)">
-		    Y
-		  </button>
-		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_anexo_soporte',this.id)">
-		    O
-		  </button-->
-		  <input type="hidden" name="bqsaiaenlace_anexo_soporte" id="bqsaiaenlace_anexo_soporte" value="y" />
-		</div>
-                     <td class="encabezado" width="20%" title="">ANEXOS/SOPORTE DE ENTREGA</td><input type="hidden" name="bksaiacondicion_anexo_soporte" id="bksaiacondicion_anexo_soporte" value="like">
-                     <td bgcolor="#F5F5F5"><select multiple id="anexo_soporte" name="anexo_soporte"></select><script>
-                     $(document).ready(function()
-                      {
-                      $("#anexo_soporte").fcbkcomplete({
-                        complete_text:"Presione enter para agregar una palabra.",
-                        newel: true
-                      });
-                      });
-                     </script></td>
-                    </tr><input type="hidden" name="campo_descripcion" value="5097"><input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?>"><input type="hidden" name="anterior" value="<?php echo $_REQUEST["anterior"]; ?>"><?php submit_formato(411);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
+                    </tr><input type="hidden" name="campo_descripcion" value="5097,7414"><input type="hidden" name="padre" value="<?php echo $_REQUEST["padre"]; ?>"><input type="hidden" name="anterior" value="<?php echo $_REQUEST["anterior"]; ?>"><?php submit_formato(411);?></table><?php if(@$_REQUEST["campo__retorno"]){ ?>
                 <input type="hidden" name="campo__retorno" value="<?php echo($_REQUEST["campo__retorno"]); ?>">
               <?php }
                if(@$_REQUEST["formulario__retorno"]){ ?>

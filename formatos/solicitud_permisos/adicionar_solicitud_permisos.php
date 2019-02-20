@@ -67,12 +67,16 @@
                             <div class="card-body"><center><h4 class="text-black">SOLICITUD DE PERMISOS</h4></center><?php llama_funcion_accion(@$_REQUEST["iddoc"],419,"ingresar","ANTERIOR"); ?>
                        <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>class_transferencia.php"" enctype="multipart/form-data"><input type="hidden" name="estado_documento" value="<?php echo(validar_valor_campo(6928)); ?>"><input type="hidden" name="serie_idserie" value="<?php echo(validar_valor_campo(6929)); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(validar_valor_campo(6930)); ?>"><div class="card-body" id="tr_etiqueta_titulo_1100262650">
                                         <h5 title="Info general del titulo" id="etiqueta_titulo_1100262650"><center><span class="etiqueta_titulo">INFORMACI&Oacute;N PRINCIPAL</span></center></h5>
-                                      </div><input type="hidden" name="idft_solicitud_permisos" value="<?php echo(validar_valor_campo(6940)); ?>"><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(419,6941);?></div><input type="hidden" name="encabezado" value="<?php echo(validar_valor_campo(6942)); ?>"><input type="hidden" name="firma" value="<?php echo(validar_valor_campo(6943)); ?>"><hr class="border border-info" id="etiqueta_linea_1872295254"><div class="card-body" id="tr_etiqueta_titulo_625604532">
+                                      </div><input type="hidden" name="idft_solicitud_permisos" value="<?php echo(validar_valor_campo(6940)); ?>"><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(419,6941);?></div><input type="hidden" name="encabezado" value="<?php echo(validar_valor_campo(6942)); ?>"><input type="hidden" name="firma" value="<?php echo(validar_valor_campo(6943)); ?>"><div class="form-group form-group-default "  id="tr_">
+                                        <label title=""></label>
+                                        <input class="form-control"  maxlength="11"   tabindex='1'  type="text"  size="100" id="" name=""  value="<?php echo(validar_valor_campo(7643)); ?>">
+                                       </div><hr class="border border-info" id="etiqueta_linea_1872295254"><div class="card-body" id="tr_etiqueta_titulo_625604532">
                                         <h5 title="" id="etiqueta_titulo_625604532"><center><span class="etiqueta_titulo"></span></center></h5>
-                                      </div><div class="form-group form-group form-group-default id="tr_fecha_permiso">
+                                      </div><div class="form-group" id="tr_checkbox_1174048118">
+                                        <label title="">SELECCI&Oacute;N M&Uacute;LTIPLE*</label><?php genera_campo_listados_editar(419,7647,$_REQUEST['iddoc']);?></div><div class="form-group form-group form-group-default id="tr_fecha_permiso">
 <label title="">FECHA DEL PERMISO*</label>
 <div class="input-group">
-<input  tabindex="1 " type="text" class="form-control"  id="fecha_permiso"  required name="fecha_permiso">
+<input  tabindex="2 " type="text" class="form-control"  id="fecha_permiso"  required name="fecha_permiso">
 <span class="input-group-text"><i class="fa fa-calendar"></i></span>
 </div>
 <script type="text/javascript">
@@ -94,7 +98,7 @@
                                        </div>
                                        <div class="card-body no-scroll no-padding"><div id="dz_campo_6939" class="saia_dz dropzone no-margin" data-nombre-campo="adjunte_la_prueba" data-idformato="419" data-idcampo-formato="6939" data-extensiones=".pdf, .doc, .docx, .jpg, .jpeg, .gif, .png, .bmp, .xls, .xlsx, .ppt" data-multiple="multiple"><div class="dz-message"><span>Arrastra el anexo hasta aqu&iacute;. </br> O si prefieres...</br></br> <span class="boton_upload">Elije un anexo para subir.</span> </span></div></div></div></div><div class="form-group" id="tr_observaciones">
                                         <label title="">OBSERVACIONES*</label>
-                                        <div class="celda_transparente"><textarea  tabindex='3'  name="observaciones" id="observaciones" cols="53" rows="3" class="form-control required"><?php echo(validar_valor_campo(6938)); ?></textarea><script>
+                                        <div class="celda_transparente"><textarea  tabindex='4'  name="observaciones" id="observaciones" cols="53" rows="3" class="form-control required"><?php echo(validar_valor_campo(6938)); ?></textarea><script>
                             var config = {
                                 removePlugins : "preview,copyformatting,save,sourcedialog,flash,iframe,forms,sourcearea,base64image,div,showblocks,smiley"
                             };
@@ -102,7 +106,7 @@
                             </script>
                             </div></div><input type="hidden" name="campo_descripcion" value="6936,6937,6938"><tr><td colspan='2'><?php submit_formato(419);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("-") . "-" . uniqid());?>'></form></body>
       <script type="text/javascript">
-      setInterval("auto_save('fecha_permiso,elija_el_tipo_permiso,observaciones','solicitud_permisos')",300000);
+      setInterval("auto_save('checkbox_1174048118,fecha_permiso,elija_el_tipo_permiso,observaciones','solicitud_permisos')",300000);
       </script><script type='text/javascript'>
             var upload_url = '../../dropzone/cargar_archivos_formato.php';
             var mensaje = 'Arrastre aquiï¿½ los archivos';

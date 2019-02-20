@@ -150,6 +150,25 @@
                       });
                       });
                      </script></td>
+                    </tr><tr id="tr_"><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_" id="bqsaiaenlace_" value="y" />
+		</div>
+                     <td class="encabezado" width="20%" title=""></td><input type="hidden" name="bksaiacondicion_" id="bksaiacondicion_" value="like">
+                     <td bgcolor="#F5F5F5"><select multiple id="" name=""></select><script>
+                     $(document).ready(function()
+                      {
+                      $("#").fcbkcomplete({
+                        complete_text:"Presione enter para agregar una palabra.",
+                        newel: true
+                      });
+                      });
+                     </script></td>
                     </tr><tr id="tr_etiqueta_linea_1872295254"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_etiqueta_linea_1872295254',this.id)">
 		    Y
@@ -188,7 +207,16 @@
                       });
                       });
                      </script></td>
-                    </tr></td></tr><tr id="tr_elija_el_tipo_permiso"><div class="btn-group" data-toggle="buttons-radio" >
+                    </tr><tr><div class="btn-group" data-toggle="buttons-radio" >
+		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_checkbox_1174048118',this.id)">
+		    Y
+		  </button>
+		  <button type="button" class="btn btn-mini" data-toggle="button" id="o" onclick="llenar_valor('bqsaiaenlace_checkbox_1174048118',this.id)">
+		    O
+		  </button-->
+		  <input type="hidden" name="bqsaiaenlace_checkbox_1174048118" id="bqsaiaenlace_checkbox_1174048118" value="y" />
+		</div>
+                  <td class="encabezado" width="20%" title="">SELECCI&Oacute;N M&Uacute;LTIPLE</td><input type="hidden" name="bksaiacondicion_checkbox_1174048118" id="bksaiacondicion_checkbox_1174048118" value="like"><td bgcolor="#F5F5F5"><?php genera_campo_listados_editar(419,7647,'',1,'buscar');?></td></tr></td></tr><tr id="tr_elija_el_tipo_permiso"><div class="btn-group" data-toggle="buttons-radio" >
 		  <!--button type="button" class="btn btn-mini" data-toggle="button" id="y" onclick="llenar_valor('bqsaiaenlace_elija_el_tipo_permiso',this.id)">
 		    Y
 		  </button>

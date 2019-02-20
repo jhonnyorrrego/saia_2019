@@ -1,41 +1,104 @@
-<?php include_once("../../librerias_saia.php"); ?><?php echo(librerias_jquery('1.7')); ?><?php include_once("../../formatos/librerias/funciones_generales.php"); ?><?php include_once("../../class_transferencia.php"); ?><?php include_once("../carta/../librerias/encabezado_pie_pagina.php"); ?><?php include_once("funciones.php"); ?><?php include_once("../carta/../../pantallas/qr/librerias.php"); ?><?php include_once("../../distribucion/funciones_distribucion.php"); ?><?php include_once("../../formatos/librerias/header_nuevo.php"); ?><tr><td><p style="text-align: left;"><?php enlace_llenar_datos_radicacion_rapida_pqrsf(305,$_REQUEST['iddoc']);?></p>
-<table style="border-collapse: collapse; width: 100%;" border="1">
-<tbody>
-<tr>
-<td style="text-align: left; width: 20%;"><strong>&nbsp;Estado PQRSF</strong></td>
-<td style="text-align: left; width: 25%;">&nbsp;<?php mostrar_valor_campo('estado_reporte',305,$_REQUEST['iddoc']);?></td>
-<td style="text-align: left; width: 20%;">&nbsp;<strong>Fecha Cambio Estado</strong></td>
-<td style="text-align: left; width: 15%;">&nbsp;<?php ver_fecha_reporte(305,$_REQUEST['iddoc']);?></td>
-<td style="text-align: center; width: 20%;" rowspan="5"><?php mostrar_codigo_qr(305,$_REQUEST['iddoc']);?></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>&nbsp;Tipo Comentario:</strong></td>
-<td style="text-align: left;" colspan="3">&nbsp;<?php mostrar_valor_campo('tipo',305,$_REQUEST['iddoc']);?><strong></strong></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>&nbsp;Nombre Completo:</strong></td>
-<td>&nbsp;<?php mostrar_valor_campo('nombre',305,$_REQUEST['iddoc']);?></td>
-<td>&nbsp;<strong>Documento:</strong></td>
-<td>&nbsp;<?php mostrar_valor_campo('documento',305,$_REQUEST['iddoc']);?></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>&nbsp;Email:&nbsp;</strong></td>
-<td style="text-align: left;">&nbsp;<?php mostrar_valor_campo('email',305,$_REQUEST['iddoc']);?></td>
-<td style="text-align: left;">&nbsp;<strong>Telefono o Celular:</strong></td>
-<td style="text-align: left;">&nbsp;<?php mostrar_valor_campo('telefono',305,$_REQUEST['iddoc']);?></td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>&nbsp;<strong>Rol en la Insitucion:</strong></strong></td>
-<td style="text-align: left;" colspan="3">&nbsp;<?php mostrar_valor_campo('rol_institucion',305,$_REQUEST['iddoc']);?></td>
-</tr>
-<tr>
-<td style="text-align: left;" colspan="5"><strong>&nbsp;Comentario:</strong>&nbsp;<?php mostrar_valor_campo('comentarios',305,$_REQUEST['iddoc']);?></td>
-</tr>
-<tr>
-<td colspan="5">&nbsp;<strong>Documento Soporte del Comentario:&nbsp;</strong><?php mostrar_valor_campo('anexos',305,$_REQUEST['iddoc']);?></td>
-</tr>
-</tbody>
+<?php if(!isset($_REQUEST["tipo"]) || $_REQUEST["tipo"] != 5): ?><!DOCTYPE html>
+                            <html>
+                                <head>
+                                    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+                                    <meta charset="utf-8" />
+                                    <meta name="viewport"
+                                    	content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
+                                    <meta name="apple-mobile-web-app-capable" content="yes">
+                                    <meta name="apple-touch-fullscreen" content="yes">
+                                    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+                                    <meta content="" name="description" />
+                                    <meta content="" name="Cero K" /><?php include_once('../../librerias_saia.php'); ?><?php include_once('../../formatos/librerias/funciones_generales.php'); ?><?php include_once('../../class_transferencia.php'); ?><?php include_once('../carta/../librerias/encabezado_pie_pagina.php'); ?><?php include_once('../radicacion_entrada/../librerias/encabezado_pie_pagina.php'); ?><?php include_once('../memorando/../librerias/encabezado_pie_pagina.php'); ?><?php include_once('../carta/../../pantallas/qr/librerias.php'); ?><?php include_once('../../formatos/librerias/header_nuevo.php'); ?><table class="table table-bordered" style="width:100%">
+	<tbody>
+		<tr>
+			<td><strong>Fecha</strong></td>
+			<td><?php if(isset($_REQUEST["iddoc"])){fecha_creacion(459,$_REQUEST['iddoc']);}?>&nbsp;</td>
+			<td rowspan="2" style="text-align:center">&nbsp;<?php if(isset($_REQUEST["iddoc"])){mostrar_codigo_qr(459,$_REQUEST['iddoc']);}?><br />
+			Radicado: <?php if(isset($_REQUEST["iddoc"])){formato_numero(459,$_REQUEST['iddoc']);}?></td>
+		</tr>
+		<tr>
+			<td><strong>Asunto</strong></td>
+			<td><?php if(isset($_REQUEST["iddoc"])){asunto_documento(459,$_REQUEST['iddoc']);}?></td>
+		</tr>
+	</tbody>
 </table>
-<p><br /><?php mostrar_datos_hijos(305,$_REQUEST['iddoc']);?></p>
-<p><?php mostrar_listado_distribucion_documento(305,$_REQUEST['iddoc']);?></p>
-<p><?php mostrar_estado_proceso(305,$_REQUEST['iddoc']);?></p></td></tr><?php include_once("../../formatos/librerias/footer_nuevo.php"); ?>
+
+<p>&nbsp;</p>
+
+<table class="table table-bordered" style="width:100%">
+	<tbody>
+		<tr>
+			<td style="width:50%"><strong>T&iacute;tulo de secci&oacute;n</strong></td>
+			<td><?php if(isset($_REQUEST["iddoc"])){mostrar_valor_campo('etiqueta_titulo_657648566',459,$_REQUEST['iddoc']);}?></td>
+		</tr>
+		<tr>
+			<td style="width:50%"><strong>ADJUNTOS</strong></td>
+			<td><?php if(isset($_REQUEST["iddoc"])){mostrar_valor_campo('adjuntos',459,$_REQUEST['iddoc']);}?></td>
+		</tr>
+		<tr>
+			<td style="width:50%"><strong>L&iacute;nea de separaci&oacute;n</strong></td>
+			<td><?php if(isset($_REQUEST["iddoc"])){mostrar_valor_campo('etiqueta_linea_1840635814',459,$_REQUEST['iddoc']);}?></td>
+		</tr>
+		<tr>
+			<td style="width:50%"><strong>FECHA</strong></td>
+			<td><?php if(isset($_REQUEST["iddoc"])){mostrar_valor_campo('fecha',459,$_REQUEST['iddoc']);}?></td>
+		</tr>
+		<tr>
+			<td style="width:50%"><strong>No.CEDULA</strong></td>
+			<td><?php if(isset($_REQUEST["iddoc"])){mostrar_valor_campo('nocedula',459,$_REQUEST['iddoc']);}?></td>
+		</tr>
+		<tr>
+			<td style="width:50%"><strong>NOMBRE COMPLETO</strong></td>
+			<td><?php if(isset($_REQUEST["iddoc"])){mostrar_valor_campo('nombre_completo',459,$_REQUEST['iddoc']);}?></td>
+		</tr>
+		<tr>
+			<td style="width:50%"><strong>TIPO DE SOLICITUD</strong></td>
+			<td><?php if(isset($_REQUEST["iddoc"])){mostrar_valor_campo('tipo_solicitud',459,$_REQUEST['iddoc']);}?></td>
+		</tr>
+		<tr>
+			<td style="width:50%"><strong>MEDIO DE LA SOLICITUD</strong></td>
+			<td><?php if(isset($_REQUEST["iddoc"])){mostrar_valor_campo('medio_la_solicitud',459,$_REQUEST['iddoc']);}?></td>
+		</tr>
+		<tr>
+			<td style="width:50%"><strong>COMENTARIO O DESCRIPCI&Oacute;N</strong></td>
+			<td><?php if(isset($_REQUEST["iddoc"])){mostrar_valor_campo('comentario_descripcion',459,$_REQUEST['iddoc']);}?></td>
+		</tr>
+	</tbody>
+</table>
+
+<p>&nbsp;
+<p><br />
+<?php if(isset($_REQUEST["iddoc"])){mostrar_estado_proceso(459,$_REQUEST['iddoc']);}?></p>
+</p>
+
+<p>&nbsp;</p>
+<?php include_once('../../formatos/librerias/footer_nuevo.php'); ?><?php else: ?><?php
+        include_once "../../controllers/autoload.php";
+        include_once "../../pantallas/lib/librerias_cripto.php";
+        
+        global $conn;
+        $iddocumento = $_REQUEST["iddoc"];
+        $formato = busca_filtro_tabla("", "formato a,documento b", "lower(b.plantilla)= lower(a.nombre) and b.iddocumento=".$iddocumento, "", $conn);
+        if ($formato[0]["pdf"] && $formato[0]["mostrar_pdf"] == 1) {
+            $ruta = "/pantallas/documento/visor_documento.php?iddoc={$iddocumento}&rnd=" . rand(0, 100);
+        } else {
+            if ($formato[0]["mostrar_pdf"] == 1) {
+                $ruta = "/pantallas/documento/visor_documento.php?iddoc={$iddocumento}&actualizar_pdf=1&rnd=" . rand(0, 100);
+            } else if ($formato[0]["mostrar_pdf"] == 2) {
+                $ruta = "/pantallas/documento/visor_documento.php?pdf_word=1&iddoc={$iddocumento}&rnd=" . rand(0, 100);
+            }
+        }
+        
+        $idfuncionario = encrypt_blowfish($_SESSION["idfuncionario"], LLAVE_SAIA_CRYPTO);
+        $url = PROTOCOLO_CONEXION . RUTA_PDF . $ruta . "&idfunc=" . $idfuncionario;
+        $ch = curl_init();
+        if (strpos(PROTOCOLO_CONEXION, "https") !== false) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        }
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        echo curl_exec($ch);
+        curl_close($ch);
+        ?><?php endif; ?>

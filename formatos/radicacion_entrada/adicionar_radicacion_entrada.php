@@ -17,7 +17,7 @@
                                 <head>
                                     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
                                     <meta charset="utf-8" />
-                                    <title>.:ADICIONAR RADICACI&Oacute;N DE CORRESPONDENCIA:.</title>
+                                    <title>.:ADICIONAR REGISTRO DE CORRESPONDENCIA:.</title>
                                     <meta name="viewport"
                                     	content="width=device-width, initial-scale=1.0, maximum-scale=10.0, shrink-to-fit=no" />
                                     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -28,7 +28,26 @@
                         <?= jquery() ?>
                         <?= bootstrap() ?>
                         <?= icons() ?>
-                        <?= moment() ?><?= validate() ?><script type="text/javascript" src="<?= $ruta_db_superior ?>js/title2note.js"></script><script type="text/javascript" src="<?= $ruta_db_superior ?>js/dhtmlXCommon.js"></script><script type="text/javascript" src="<?= $ruta_db_superior ?>js/dhtmlXTree.js"></script><link rel="STYLESHEET" type="text/css" href="<?= $ruta_db_superior ?>css/dhtmlXTree.css"><script type="text/javascript" src="<?= $ruta_db_superior ?>dropzone/dist/dropzone.js"></script><?php include_once('<?=  ?>anexosdigitales/funciones_archivo.php'); ?><script type="text/javascript" src="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link href="<?= $ruta_db_superior ?>dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" /><script type="text/javascript"> hs.graphicsDir = "<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/graphics/"; hs.outlineType = "rounded-white";</script>
+                        <?= moment() ?><?= validate() ?><style>
+ul.fancytree-container {
+	width: 80%;
+	height: 80%;
+	overflow: auto;
+	position: relative;
+	border: none !important;
+    outline:none !important;
+}
+span.fancytree-title {
+    font-family: verdana;
+	font-size: 7pt;
+}
+span.fancytree-checkbox.fancytree-radio {
+    vertical-align: middle;
+}
+span.fancytree-expander {
+    vertical-align: middle !important;
+}
+</style><?php include_once($ruta_db_superior . "arboles/crear_arbol_ft.php"); ?><?= jqueryUi() ?><?= arboles_ft("2.30", "filtro", "lion") ?><script type="text/javascript" src="<?= $ruta_db_superior ?>js/title2note.js"></script><script type="text/javascript" src="<?= $ruta_db_superior ?>js/dhtmlXCommon.js"></script><script type="text/javascript" src="<?= $ruta_db_superior ?>js/dhtmlXTree.js"></script><link rel="STYLESHEET" type="text/css" href="<?= $ruta_db_superior ?>css/dhtmlXTree.css"><script type="text/javascript" src="<?= $ruta_db_superior ?>dropzone/dist/dropzone.js"></script><?php include_once('<?=  ?>anexosdigitales/funciones_archivo.php'); ?><script type="text/javascript" src="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide-with-html.js"></script><link rel="stylesheet" type="text/css" href="<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/highslide.css" /></style><link href="<?= $ruta_db_superior ?>dropzone/dist/dropzone_saia.css" type="text/css" rel="stylesheet" /><script type="text/javascript"> hs.graphicsDir = "<?= $ruta_db_superior ?>anexosdigitales/highslide-5.0.0/highslide/graphics/"; hs.outlineType = "rounded-white";</script>
                 	<link
                                 	href="<?= $ruta_db_superior ?>assets/theme/assets/plugins/jquery-scrollbar/jquery.scrollbar.css"
                                 	rel="stylesheet" type="text/css" media="screen" />
@@ -64,21 +83,21 @@
                 	<div class="container-fluid container-fixed-lg col-lg-8" style="overflow: auto;" id="content_container">
                     	<!-- START card -->
                     	<div class="card card-default">
-                            <div class="card-body"><center><h4 class="text-black">RADICACIÓN DE CORRESPONDENCIA</h4></center><?php llama_funcion_accion(@$_REQUEST["iddoc"],3,"ingresar","ANTERIOR"); ?>
+                            <div class="card-body"><center><h4 class="text-black">REGISTRO DE CORRESPONDENCIA</h4></center><?php llama_funcion_accion(@$_REQUEST["iddoc"],3,"ingresar","ANTERIOR"); ?>
                        <form name="formulario_formatos" id="formulario_formatos" role="form" autocomplete="off" method="post" action="<?= $ruta_db_superior ?>class_transferencia.php"" enctype="multipart/form-data"><input type="hidden" name="despachado" value="<?php echo(validar_valor_campo(4977)); ?>"><input type="hidden" name="estado_documento" value="<?php echo(validar_valor_campo(4824)); ?>"><div class="form-group" id="tr_dependencia"><label title="">DEPENDENCIA DEL CREADOR DEL DOCUMENTO*</label><?php buscar_dependencia(3,48);?></div><div class="card-body" id="tr_etiqueta_datos_gener">
                                         <h5 title="" id="etiqueta_datos_gener"><center><span class="etiqueta_titulo"><CENTER><STRONG>DATOS GENERALES</STRONG></CENTER></span></center></h5>
                                       </div><div class="form-group" id="tr_fecha_radicacion_entrada"><label title="">FECHA DE RADICACI&Oacute;N*</label><?php fecha_formato(3,53);?></div><div class="form-group" id="tr_numero_radicado"><label title="">N&Uacute;MERO DE RADICADO</label><?php mostrar_radicado_entrada(3,54);?></div><div class="form-group" id="tr_tipo_origen">
 	                        <label title="">ORIGEN DEL DOCUMENTO*</label>
-                                     <?php genera_campo_listados_editar(3,4966,$_REQUEST['iddoc']);?></div><div class="form-group  id="tr_fecha_oficio_entrada">
-<label title="">FECHA DOCUMENTO ENTRADA</label>
+                                     <?php genera_campo_listados_editar(3,4966,$_REQUEST['iddoc']);?></div><div class="form-group  id="tr_fecha_documento">
+<label title="">FECHA DEL DOCUMENTO</label>
 <div class="input-group">
-<input  tabindex="1 " type="text" class="form-control"  id="fecha_oficio_entrada"   name="fecha_oficio_entrada">
+<input  tabindex="1 " type="text" class="form-control"  id="fecha_documento"   name="fecha_documento">
 <span class="input-group-text"><i class="fa fa-calendar"></i></span>
 </div>
 <script type="text/javascript">
             $(function () {
                 var configuracion={"format":"YYYY-MM-DD","locale":"es","useCurrent":true};
-                $("#fecha_oficio_entrada").datetimepicker(configuracion);
+                $("#fecha_documento").datetimepicker(configuracion);
                 $("#content_container").height($(window).height());
             });
         </script>
@@ -172,83 +191,17 @@
                                         <h5 title="" id="etiqueta_destino"><center><span class="etiqueta_titulo"><CENTER><STRONG>INFORMACI&Oacute;N DESTINO</STRONG></CENTER></span></center></h5>
                                       </div><div class="form-group" id="tr_tipo_destino">
 	                        <label title="">DESTINO DEL DOCUMENTO*</label>
-                                     <?php genera_campo_listados_editar(3,4968,$_REQUEST['iddoc']);?></div><div class="form-group" id="tr_destino">
-                                <label title="">DESTINO*</label><div class="form-control"><div id="seleccionados"><?php if(isset($_REQUEST["iddoc"])){mostrar_seleccionados(3,43,'5
-',$_REQUEST['iddoc']);}?></div><br/>Buscar: <input  tabindex='8'  type="text" id="stext_destino" width="200px" size="25" onblur="closetree_destino()"> <input type="hidden" id="idclosetree_destino">
-                                <a href="javascript:void(0)" onclick="tree_destino.findItem((document.getElementById('stext_destino').value),0,1)">
-                                    <img src="../../botones/general/buscar.png"border="0px">
-                                </a>
-                                    <a href="javascript:void(0)" onclick="tree_destino.findItem((document.getElementById('stext_destino').value),1)">
-                                        <img src="../../botones/general/anterior.png"border="0px">
-                                    </a>
-                                <a href="javascript:void(0)" onclick="tree_destino.findItem((document.getElementById('stext_destino').value))">
-                                    <img src="../../botones/general/siguiente.png"border="0px"></a><br/><input type="hidden"  name="destino" id="destino"   value="" ><label style="display:none" class="error" for="destino">Campo obligatorio.</label><div id="esperando_destino">
-                                    <img src="../../imagenes/cargando.gif">
-                                </div>
-                                <div id="treeboxbox_destino" height="90%"></div><script type="text/javascript">
-                                var browserType;
-                                if (document.layers) {browserType = "nn4"}
-                                if (document.all) {browserType = "ie"}
-                                if (window.navigator.userAgent.toLowerCase().match("gecko")) {
-                                    browserType= "gecko"
-                                }
-                                tree_destino=new dhtmlXTreeObject("treeboxbox_destino","100%","100%",0);
-                                tree_destino.setImagePath("../../imgs/");
-                                tree_destino.enableTreeImages("false");
-                                tree_destino.enableTreeLines("false");
-                                tree_destino.enableIEImageFix(true);tree_destino.enableCheckBoxes(1);
-                                    tree_destino.enableThreeStateCheckboxes(1);tree_destino.setOnLoadingStart(cargando_destino);
-                                tree_destino.setOnLoadingEnd(fin_cargando_destino);tree_destino.enableSmartXMLParsing(true);tree_destino.loadXML("../../test.php?rol=1");tree_destino.setOnCheckHandler(onNodeSelect_destino);
-
-                                    function onNodeSelect_destino(nodeId){
-                                        valor_destino=document.getElementById("destino");
-                                        destinos=tree_destino.getAllChecked();
-                                        nuevo=destinos.replace(/\,{2,}(d)*/gi,",");
-                                        nuevo=nuevo.replace(/\,$/gi,"");
-                                        vector=destinos.split(",");
-                                        for(i=0;i<vector.length;i++){
-                                            if(vector[i].indexOf("_")!=-1){
-                                                vector[i]=vector[i].substr(0,vector[i].indexOf("_"));
-                                            }
-                                            nuevo=vector.join(",");
-                                            if(vector[i].indexOf("#")!=-1){
-                                                hijos=tree_destino.getAllSubItems(vector[i]);
-                                                hijos=hijos.replace(/\,{2,}(d)*/gi,",");
-                                                hijos=hijos.replace(/\,$/gi,"");
-                                                vectorh=hijos.split(",");
-
-                                                for(h=0;h<vectorh.length;h++){
-                                                    if(vectorh[h].indexOf("_")!=-1)
-                                                    vectorh[h]=vectorh[h].substr(0,vectorh[h].indexOf("_"));
-                                                    nuevo=eliminarItem(nuevo,vectorh[h]);
-                                                }
-                                            }
-                                        }
-                                        nuevo=nuevo.replace(/\,{2,}(d)*/gi,",");
-                                        nuevo=nuevo.replace(/\,$/gi,"");
-                                        valor_destino.value=nuevo;
-                                    }function fin_cargando_destino() {
-                                    if (browserType == "gecko" ) {
-                                        document.poppedLayer = eval('document.getElementById("esperando_destino")');
-                                    } else if (browserType == "ie") {
-                                        document.poppedLayer = eval('document.getElementById("esperando_destino")');
-                                    } else {
-                                        document.poppedLayer = eval('document.layers["esperando_destino"]');
-                                    }
-                                    document.poppedLayer.style.display = "none";
-                                }
-
-                                function cargando_destino() {
-                                    if (browserType == "gecko" ) {
-                                        document.poppedLayer = eval('document.getElementById("esperando_destino")');
-                                    } else if (browserType == "ie") {
-                                        document.poppedLayer = eval('document.getElementById("esperando_destino")');
-                                    } else {
-                                        document.poppedLayer = eval('document.layers["esperando_destino"]');
-                                    }
-                                    document.poppedLayer.style.display = "";
-                                }</script></div></div><div class="form-group" id="tr_serie_idserie">
-                                <label title="Radicacion entrada">TIPO DOCUMENTAL</label><div class="form-control"><div id="seleccionados"><?php if(isset($_REQUEST["iddoc"])){mostrar_seleccionados(3,52,'1',$_REQUEST['iddoc']);}?></div><br/>Buscar: <input  tabindex='9'  type="text" id="stext_serie_idserie" width="200px" size="25" onblur="closetree_serie_idserie()"> <input type="hidden" id="idclosetree_serie_idserie">
+                                     <?php genera_campo_listados_editar(3,4968,$_REQUEST['iddoc']);?></div><?php $origen_43 = array(
+                                    "url" => "arboles/arbol_funcionario.php?idcampofun=1",
+                                    "ruta_db_superior" => $ruta_db_superior,"params" => array("idcampofun" => "1",),);$opciones_arbol_43 = array(
+                                    "keyboard" => true,"selectMode" => 1,"seleccionarClick" => 1,"busqueda_item" => "true", 
+                                );
+                                $extensiones_43 = array(
+                                    "filter" => array()
+                                );
+                                $arbol_43 = new ArbolFt("destino", $origen_43, $opciones_arbol_43, $extensiones_43);
+                                echo $arbol_43->generar_html();?><div class="form-group" id="tr_serie_idserie">
+                                <label title="Radicacion entrada">TIPO DOCUMENTAL</label><div class="form-control"><div id="seleccionados"><?php if(isset($_REQUEST["iddoc"])){mostrar_seleccionados(3,52,'1',$_REQUEST['iddoc']);}?></div><br/>Buscar: <input  tabindex='8'  type="text" id="stext_serie_idserie" width="200px" size="25" onblur="closetree_serie_idserie()"> <input type="hidden" id="idclosetree_serie_idserie">
                                 <a href="javascript:void(0)" onclick="tree_serie_idserie.findItem((document.getElementById('stext_serie_idserie').value),0,1)">
                                     <img src="../../botones/general/buscar.png"border="0px">
                                 </a>
@@ -305,7 +258,7 @@
                                     }
                                     document.poppedLayer.style.display = "";
                                 }</script></div></div><div class="form-group" id="tr_copia_a">
-                                <label title="">COPIA ELECTR&Oacute;NICA A</label><div class="form-control"><div id="seleccionados"><?php if(isset($_REQUEST["iddoc"])){mostrar_seleccionados(3,44,'5',$_REQUEST['iddoc']);}?></div><br/>Buscar: <input  tabindex='10'  type="text" id="stext_copia_a" width="200px" size="25" onblur="closetree_copia_a()"> <input type="hidden" id="idclosetree_copia_a">
+                                <label title="">COPIA ELECTR&Oacute;NICA A</label><div class="form-control"><div id="seleccionados"><?php if(isset($_REQUEST["iddoc"])){mostrar_seleccionados(3,44,'5',$_REQUEST['iddoc']);}?></div><br/>Buscar: <input  tabindex='9'  type="text" id="stext_copia_a" width="200px" size="25" onblur="closetree_copia_a()"> <input type="hidden" id="idclosetree_copia_a">
                                 <a href="javascript:void(0)" onclick="tree_copia_a.findItem((document.getElementById('stext_copia_a').value),0,1)">
                                     <img src="../../botones/general/buscar.png"border="0px">
                                 </a>
@@ -382,7 +335,7 @@
                                         <label title="">PERSONA NATURAL O JUR&Iacute;DICA*</label>
                                         <input type="hidden" maxlength="255"  name="persona_natural_dest" id="persona_natural_dest" value=""><?php componente_ejecutor("4969",@$_REQUEST["iddoc"]); ?></div><input type="hidden" name="encabezado" value="<?php echo(validar_valor_campo(49)); ?>"><input type="hidden" name="documento_iddocumento" value="<?php echo(validar_valor_campo(47)); ?>"><input type="hidden" name="idft_radicacion_entrada" value="<?php echo(validar_valor_campo(46)); ?>"><input type="hidden" name="estado_radicado" value="<?php echo(validar_valor_campo(56)); ?>"><input type="hidden" name="firma" value="<?php echo(validar_valor_campo(50)); ?>"><div class="form-group" id="tr_colilla">
 	                        <label title="">COLILLA*</label>
-                                     <?php genera_campo_listados_editar(3,7009,$_REQUEST['iddoc']);?></div><?php quitar_descripcion_entrada(3,NULL);?><?php tipo_radicado_radicacion(3,NULL);?><?php serie_documental_radicacion(3,NULL);?><?php digitalizar_formato(3,NULL);?><input type="hidden" name="campo_descripcion" value="39,54"><tr><td colspan='2'><?php submit_formato(3);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
+                                     <?php genera_campo_listados_editar(3,7009,$_REQUEST['iddoc']);?></div><?php quitar_descripcion_entrada(3,NULL);?><?php tipo_radicado_radicacion(3,NULL);?><?php serie_documental_radicacion(3,NULL);?><?php digitalizar_formato(3,NULL);?><input type="hidden" name="campo_descripcion" value="39"><tr><td colspan='2'><?php submit_formato(3);?></td></tr></table><input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''><input type='hidden' name='form_uuid'       id='form_uuid'       value='<?php echo (uniqid("-") . "-" . uniqid());?>'></form></body><script type='text/javascript'>
             var upload_url = '../../dropzone/cargar_archivos_formato.php';
             var mensaje = 'Arrastre aquiï¿½ los archivos';
             Dropzone.autoDiscover = false;
