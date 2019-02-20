@@ -120,13 +120,14 @@ function buscar_funciones_generador($cuerpo, $idFormato, $excluirFunciones = 0){
     $iddoc=1;
     $tipo=1;
     $nombreFunciones = preg_match_all('({\*([a-z]+[0-9]*[_]*[a-z]*[0-9]*[.]*[,]*[@]*)+\*})', $cuerpo, $resultadoFunciones);  
+   
     if ($nombreFunciones !== FALSE) {          
         $patronesBusqueda = str_replace(array(
             "{*",
             "*}"
         ), "", $resultadoFunciones[0]);        
-    }       
-    
+    }
+   
     foreach ($patronesBusqueda as $key => $nombreFuncion) {
     
         if($excluirFunciones==1 && $nombreFuncion =='mostrar_estado_proceso'){
@@ -149,9 +150,9 @@ function buscar_funciones_generador($cuerpo, $idFormato, $excluirFunciones = 0){
             $rutaContenido = $ruta_db_superior."imagenes/qrFormato.png";
             $contenidoFuncion ="<img src={$archivo_binario} width='109' />";            
         }else{
-            $contenidoFuncion = call_user_func($nombreFuncion, $idFormato,$iddoc,$tipo); 
+            $contenidoFuncion = call_user_func($nombreFuncion, $idFormato,$iddoc,$tipo,"width"); 
         }
-        
+   
         $cuerpo = str_replace("{*".$nombreFuncion."*}", $contenidoFuncion, $cuerpo);              
     }
 
