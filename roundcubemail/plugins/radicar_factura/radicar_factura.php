@@ -72,13 +72,14 @@ class radicar_factura extends rcube_plugin {
         }
 
         $info_correo = array();
-        $conteo_xml = 0;
         $idgrupo = uniqid();
         $buzon = null;
         foreach (rcmail::get_uids() as $mbox => $uids) {
             if(empty($buzon)) {
                 $buzon = $mbox;
             }
+            $conteo_xml = 0;
+            $conteo_pdf = 0;
             foreach ($uids as $idcorreo) {
                 $tempfiles = array();
                 $dato_correo = array();
@@ -118,6 +119,9 @@ class radicar_factura extends rcube_plugin {
                     if (preg_match("/xml/i", $ext_arch)) {
                         $conteo_xml++;
                     }
+                    if (preg_match("/pdf/i", $ext_arch)) {
+                        $conteo_pdf++;
+                    }
                     $tmpfn = $temp_dir . uniqid() . "___" . $this->_convert_filename($filename);
                     $tmpfp = fopen($tmpfn, 'w');
                     $tempfiles[] = $tmpfn;
@@ -132,6 +136,14 @@ class radicar_factura extends rcube_plugin {
                 $dato_correo["adjuntos"] = $tempfiles;
                 if ($conteo_xml < 1) {
                     $rcmail->output->command('display_message', $this->gettext('errarchivosxml'), 'error');
+                    return false;
+                }
+                if ($conteo_pdf < 1) {
+                    $rcmail->output->command('display_message', $this->gettext('errarchivospdf'), 'error');
+                    return false;
+                }
+                if ($conteo_pdf != $conteo_xml) {
+                    $rcmail->output->command('display_message', $this->gettext('errnumarchivos'), 'error');
                     return false;
                 }
                 $info_correo[] = $dato_correo;
