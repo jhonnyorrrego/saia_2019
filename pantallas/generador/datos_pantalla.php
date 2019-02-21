@@ -91,87 +91,6 @@ function procesar_cadena_json($resultado, $lista_valores)
   return ($resultado);
 }
 
-function crear_campo_dropzone($nombre, $parametros)
-{
-  $js_archivos = "<script type='text/javascript'>
-            var upload_url = '../../dropzone/cargar_archivos_anexos.php';
-            var mensaje = 'Arrastre aquí los archivos';
-            Dropzone.autoDiscover = false;
-            var lista_archivos = new Object();
-            $(document).ready(function () {
-                Dropzone.autoDiscover = false;
-                $('.saia_dz').each(function () {
-                    var paramName = $(this).attr('data-nombre-campo');
-                	var extensiones = $(this).attr('data-extensiones');
-                	var multiple_text = $(this).attr('data-multiple');
-                	var multiple = false;
-                	var form_uuid = $('#form_uuid').val();
-                	var maxFiles = 1;
-                	if(multiple_text == 'multiple') {
-                		multiple = true;
-                		maxFiles = 10;
-                	}
-                    var opciones = {
-                    	ignoreHiddenFiles : true,
-                    	maxFiles : maxFiles,
-                    	acceptedFiles: extensiones,
-                   		addRemoveLinks: true,
-                   		dictRemoveFile: 'Quitar anexo',
-                   		dictMaxFilesExceeded : 'No puede subir mas archivos',
-                   		dictResponseError : 'El servidor respondió con código {{statusCode}}',
-                		uploadMultiple: multiple,
-                    	url: upload_url,
-                    	paramName : paramName,
-                    	params : {
-                        	nombre_campo : paramName,
-                        	uuid : form_uuid
-                        },
-                            removedfile : function(file) {
-                                if(lista_archivos && lista_archivos[file.upload.uuid]) {
-                                	$.ajax({
-                                		url: upload_url,
-                                		type: 'POST',
-                                		data: {
-                                    		accion:'eliminar_temporal',
-                                        	archivo: lista_archivos[file.upload.uuid]}
-                                		});
-                                }
-                                if (file.previewElement != null && file.previewElement.parentNode != null) {
-                                    file.previewElement.parentNode.removeChild(file.previewElement);
-                                	delete lista_archivos[file.upload.uuid];
-                                	$('#'+paramName).val(Object.values(lista_archivos).join());
-                                }
-                                return this._updateMaxFilesReachedClass();
-                            },
-                            success : function(file, response) {
-
-                            	for (var key in response) {
-                                	if(Array.isArray(response[key])) {
-                                    	for(var i=0; i < response[key].length; i++) {
-                                    		archivo=response[key][i];
-                                        	if(archivo.original_name == file.upload.filename) {
-                                        		lista_archivos[file.upload.uuid] = archivo.id;
-                                        	}
-                                    	}
-                                	} else {
-                                		if(response[key].original_name == file.upload.filename) {
-                                    		lista_archivos[file.upload.uuid] = response[key].id;
-                                		}
-                                	}
-                            	}
-                            	$('#'+paramName).val(Object.values(lista_archivos).join());
-                                if($('#dz_campo').find('label.error').length) {
-                                    $('#dz_campo').find('label.error').remove()
-                                }
-                            }
-                    };
-                    $(this).dropzone(opciones);
-                    $(this).addClass('dropzone');
-                });
-            });</script>";
-  return $js_archivos;
-}
-
 ?>
 <!DOCTYPE html>
 <html >
@@ -179,6 +98,22 @@ function crear_campo_dropzone($nombre, $parametros)
 <meta charset="utf-8" />
 <style type="text/css">
 .arbol_saia>.containerTableStyle {overflow:hidden;}
+ul.fancytree-container {
+	overflow: auto;
+	position: relative;
+	border: none !important;
+    outline:none !important;
+}
+span.fancytree-title {
+    font-family: Ubuntu, sans-serif;
+	font-size: 12px;
+}
+span.fancytree-checkbox.fancytree-radio {
+    vertical-align: middle;
+}
+span.fancytree-expander {
+    vertical-align: middle !important;
+}
 </style>
 
 	<script type="text/javascript" src="<?= $ruta_db_superior ?>pantallas/generador/editar_componente_generico.js"></script>
@@ -187,27 +122,7 @@ function crear_campo_dropzone($nombre, $parametros)
 <body>
 <h4 class="title" style="margin-top: 20px;">Información general</h4><hr style="margin-top:10px;">
 <form name="datos_formato" id="datos_formato">
-  <?php
-  if ($_SESSION["LOGIN" . LLAVE_SAIA] == "cerok") {
-    ?>
-  <div class="row-fluid"><div class="span12">
-	  <div class="control-group">
-	    <label class="control-label" for="nombre"><strong>Nombre<span class="require-input">*</span> </strong></label>
-	    <div class="controls">
-	      <input type="text" name="nombre_formato" id="nombre_formato" placeholder="Nombre" value="" required readonly>
-	    </div>
-	  </div>
-	  </div></div>
-	 <?php
-
-} else {
-  ?>
-      <input type="hidden" name="nombre_formato" id="nombre_formato" value="" required>
-<?php
-
-}
-?>
-
+ <input type="hidden" name="nombre_formato" id="nombre_formato" value="" required>
   <div class="row-fluid">
     <div class="span8">
       <div class="control-group">
@@ -377,7 +292,7 @@ if ($formato["numcampos"]) {
   <input type="hidden" name="paginar" id="paginar" <?php check_banderas('paginar', false); ?>>
 
 <p>&nbsp;</p>
-  <h5>Configuraci&oacute;n de página</h5>
+  <h4 class="title" style="margin-top: 20px;">Configuraci&oacute;n de página</h4><hr style="margin-top:10px;">
   <hr>
 
   <div class="row-fluid">
@@ -542,7 +457,6 @@ if ($formato["numcampos"]) {
 </form>
 
 <?php
-echo $js_archivos;
 //echo(librerias_jquery("1.7"));
 echo librerias_notificaciones();
 
@@ -754,10 +668,8 @@ function parsear_items(){
 	}
 	$("#prefijo_formato").val("ft_");
 }
-</script>
 
-</body>
-</html>
+</script>
 
 <?php
 function check_banderas($bandera, $chequear = true)
@@ -865,6 +777,9 @@ $("document").ready(function(){
 	}
 });
 </script>
+
+</body>
+</html>
 	<?php
 
 }

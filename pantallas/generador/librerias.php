@@ -75,6 +75,7 @@ function set_pantalla_campos($idpantalla_campos, $tipo_retorno = 1)
 		"exito" => 0,
 		"idpantalla_campos" => $idpantalla_campos
 	);
+	
 	$pantalla_campos = busca_filtro_tabla("idcampos_formato,nombre,etiqueta_html", "campos_formato", "idcampos_formato=" . $idpantalla_campos, "", $conn);
 	$acciones = array("a", "e", "b");
 	if ($pantalla_campos["numcampos"]) {
