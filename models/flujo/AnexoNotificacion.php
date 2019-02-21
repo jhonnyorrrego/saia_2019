@@ -6,8 +6,8 @@ class AnexoNotificacion extends Model {
     protected $fk_notificacion;
     protected $ruta;
     protected $fecha;
-    protected $fk_funcionario;
-    
+    protected $fk_anexo;
+
     function __construct($id = null) {
         parent::__construct($id);
     }
@@ -16,13 +16,8 @@ class AnexoNotificacion extends Model {
         $this->dbAttributes = (object) [
             "safe" => [
                 "fk_notificacion",
-                "ruta",
-                "fecha",
-                "fk_funcionario"
+                "fk_anexo"
                 ],
-            "date" => [
-                "fecha"
-            ],
             "table" => "wf_anexo_notificacion",
             "primary" => "idanexo_notificacion"
         ];

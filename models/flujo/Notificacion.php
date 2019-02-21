@@ -1,5 +1,5 @@
 <?php
-class Notificacion extends Model {
+class Notificacion extends Model implements IAnexos {
 
     use TFlujo;
     protected $idnotificacion;
@@ -39,4 +39,22 @@ class Notificacion extends Model {
         }
         return null;
     }
+
+    public function findActiveFiles($params) {
+        $sql = <<<SQL
+            select a.*
+            from anexo a
+            join wf_idanexo_notificacion af
+                on a.idanexo = af.fk_anexo
+            join wf_notificacion f
+                on af.fk_notificacion = f.idnotificacion
+            where
+                f.idnotificacion = $this->idnotificacion and a.eliminado = 0
+            order by $params->order
+SQL;
+        $records = StaticSql::search($sql, $params->offset, $params->limit);
+
+        return self::convertToArray($records);
+    }
+
 }
