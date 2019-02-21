@@ -61,7 +61,6 @@ if (isset($_REQUEST["genera"])) {
     
     ob_start();
     $acciones = [
-        "formato",
         "tabla",
         "adicionar",
         "editar",
@@ -75,9 +74,9 @@ if (isset($_REQUEST["genera"])) {
     $exito = true;
     $cuerpo_formato = '';
     $publicar = 0;
-
+    
     $camposDescripcion = GenerarFormato::validarCampoDescripcion($idformato);
-
+   
     if ($camposDescripcion['publicarFormato'] == 0) {
         $status['mensaje'] = $camposDescripcion['mensaje'];
         echo json_encode($status);
@@ -91,6 +90,7 @@ if (isset($_REQUEST["genera"])) {
     foreach ($acciones as $accion) {
         $generar = new GenerarFormato($idformato, $accion);
         $generar->ejecutar_accion();
+      
         if (!$generar->exito) {
             $mensajes[] = "Error en la accion $accion";
             $mensajes[] = $generar->mensaje;
@@ -111,6 +111,7 @@ if (isset($_REQUEST["genera"])) {
             }
             include_once $ruta_db_superior."/pantallas/generador/librerias_pantalla.php";
             $idmodulo = crear_modulo_formato($idformato);
+           
             if($_REQUEST['permisosPerfil']){
                 $permisosFormato = permisosFormato($idformato, $_REQUEST['permisosPerfil'], $_REQUEST['nombreFormato']);
             }else{
