@@ -27,11 +27,13 @@ if ($_REQUEST['idformato']) {
     $formato[0]["tiempo_autoguardado"] = $formato[0]["tiempo_autoguardado"] / 60000;
   }
   $documentacion_formato = $formato[0]["documentacion"];
-  $anexos_formato = busca_filtro_tabla("", "formato_previo", "idformato=" . $_REQUEST['idformato'] . " and idformato_previo=" . $documentacion_formato, "", $conn);
-
-  if ($anexos_formato["numcampos"]) {
-    $ruta = $anexos_formato[0]["ruta"];
+  if($documentacion_formato){
+    $anexos_formato = busca_filtro_tabla("", "formato_previo", "idformato=" . $_REQUEST['idformato'] . " and idformato_previo=" . $documentacion_formato, "", $conn);
+    if ($anexos_formato["numcampos"]) {
+      $ruta = $anexos_formato[0]["ruta"];
+    }
   }
+  
 	//$formato = json_encode($formato);
   if ($cod_proceso_pertenece) {
     $adicional_cod_proceso = "&seleccionado=" . $cod_proceso_pertenece;
@@ -41,7 +43,7 @@ if ($_REQUEST['idformato']) {
     $adicional_cod_padre = "&seleccionado=" . $cod_padre;
   }
   if ($categoria) {
-    $nombre_categoria = busca_filtro_tabla("", "categoria_formato a", "a.idcategoria_formato=" . $categoria, "", $conn);
+    $nombre_categoria = busca_filtro_tabla("", "categoria_formato a", "a.idcategoria_formato IN($categoria)", "", $conn);
     $adicional_categoria = "&seleccionado=" . $categoria;
   }
 
@@ -55,7 +57,7 @@ if ($_REQUEST['idformato']) {
   $extensionesCategoria = array("filter" => array());
   $arbolCategoria = new ArbolFt("fk_categoria_formato", $origenCategoria, $opcionesArbolCategoria, $extensionesCategoria, $validaciones);
 }else{
-  
+
   $origen = array("url" => "arboles/arbol_formatos.php", "ruta_db_superior" => $ruta_db_superior, "params" => array("seleccionable" => "radio"));
   $opciones_arbol = array("keyboard" => true, "selectMode" => 1, "seleccionarClick" => 1, "busqueda_item" => 1, "checkbox" => radio);
   $extensiones = array("filter" => array());
@@ -239,7 +241,7 @@ if ($formato["numcampos"]) {
   <input type="hidden" name="item" id="item" value="<?= $valor_item ?>">
   <input type="hidden" name="mostrar_pdf" id="mostrar_pdf" value="<?= $valor_mostrar ?>">
   <div class="row-fluid">
-  
+
     <div class="span6">
       <div class="control-group">
         <label class="control-label" for="contador"><strong>Consecutivo asociado<span class="require-input">*</span></strong></label>
@@ -276,7 +278,7 @@ if ($formato["numcampos"]) {
       </div>
     </div>
 
-    
+
   </div>
 
   <div class="row-fluid">
@@ -356,7 +358,7 @@ if ($formato["numcampos"]) {
          </div>
       </div>
     </div>
-  
+
   </div>
 
 
@@ -369,7 +371,7 @@ if ($formato["numcampos"]) {
       <input type="checkbox" name="banderas[]" id="banderas" <?= check_banderas('aprobacion_automatica'); ?>>Aprobacion Automatica
       <input type="checkbox" name="banderas[]"	style="display:none;" id="banderas" <?php check_banderas('asunto_padre'); ?> checked><!--Tomar el asunto del padre al responder-->
     </div>
-  </div> 
+  </div>
 
   <input type="hidden" name="mostrar" id="mostrar" <?php check_banderas('mostrar', false); ?>>
   <input type="hidden" name="paginar" id="paginar" <?php check_banderas('paginar', false); ?>>
@@ -401,7 +403,7 @@ if ($formato["numcampos"]) {
         <div class="span6">
           <div class="control-group">
             <label class="control-label" for="orientacion"><strong>Orientaci&oacute;n</strong></label>
-            <div class="controls">            
+            <div class="controls">
               <input type="radio" name="orientacion" id="orientacion_0" value="0" <?php if (!@$formato[0]["orientacion"]) echo (' checked="checked"'); ?>> Vertical  &nbsp;&nbsp;
               <input type="radio" name="orientacion" id="orientacion_1" value="1" <?php if (@$formato[0]["orientacion"]) echo (' checked="checked"'); ?>> Horizontal
             </div>
@@ -527,7 +529,7 @@ if ($formato["numcampos"]) {
     <!-- button type="reset" name="cancelar" class="btn" id="cancelar_formulario_saia" value="cancelar">Cancel</button-->
     <?php if ($_REQUEST["idformato"]) { ?>
     <!-- button type="button" name="eliminar" class="btn btn-danger kenlace_saia_propio" id="eliminar_formulario_saia" enlace="../formatos/generador/eliminar_formato.php?idformato=<?php echo ($_REQUEST['idformato']); ?>" titulo="Eliminar formato" eliminar_hijos="0" value="eliminar">Eliminar</button-->
-    <?php 
+    <?php
   }
   $texto .= "<input type='hidden' name='permisos_anexos' id='permisos_anexos' value=''>";
   $id_unico = uniqid();
@@ -595,7 +597,7 @@ $("document").ready(function(){
   var descripcion_formato = "<?php echo $descripcionFormato; ?>";
 	var formulario = $("#datos_formato");
 	var formato=<?php echo (json_encode($formato)); ?>;
-  
+
 
 	var nombre_formato="";
 	if($("#nombre_formato").val()!="") {
@@ -605,7 +607,7 @@ $("document").ready(function(){
 	$("#enviar_datos_formato").click(function() {
 
 		if(formulario.valid()) {
-			
+
 			var buttonAcep = $(this);
 			//buttonAcep.attr('disabled', 'disabled');
 			//parsear_items();
@@ -615,7 +617,7 @@ $("document").ready(function(){
                 url: "<?php echo ($ruta_db_superior); ?>pantallas/generador/librerias_pantalla.php",
                 data: "ejecutar_datos_pantalla="+buttonAcep.attr('value')+"&tipo_retorno=1&rand="+Math.round(Math.random()*100000)+'&'+formulario.serialize()+"&nombre="+nombre_formato,
                 success: function(objeto) {
-                    if(objeto.exito) {               
+                    if(objeto.exito) {
                         notificacion_saia(objeto.mensaje,'success','topCenter',3000);
                         window.parent.location.href = window.parent.location.pathname+"?idformato="+objeto.idformato;
 
@@ -826,7 +828,7 @@ $("document").ready(function(){
 			valor_destino.value="";
 		}
 	}
-  <?php 
+  <?php
 } else {
   ?>
   tree_<?php echo ($nombre); ?>.setOnCheckHandler(onNodeSelect_check_<?php echo ($nombre); ?>);

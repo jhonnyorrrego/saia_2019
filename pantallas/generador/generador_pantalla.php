@@ -871,7 +871,6 @@ $(document).ready(function() {
                 window.clearInterval(interval)
                 if (html) {
                     var objeto = jQuery.parseJSON(html);
-                    
                     if (objeto.exito == 1 && objeto.permisos) {
                         $("#barra_formato").html("100%");
                         $("#barra_formato").css("width", "100%");
