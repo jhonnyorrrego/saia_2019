@@ -139,12 +139,12 @@ class radicar_factura extends rcube_plugin {
                     return false;
                 }
                 if ($conteo_pdf < 1) {
-                    $rcmail->output->command('display_message', $this->gettext('errarchivospdf'), 'error');
-                    return false;
+                    $rcmail->output->command('display_message', $this->gettext('errarchivospdf'), 'notice');
+                    //return false;
                 }
                 if ($conteo_pdf != $conteo_xml) {
-                    $rcmail->output->command('display_message', $this->gettext('errnumarchivos'), 'error');
-                    return false;
+                    $rcmail->output->command('display_message', $this->gettext('errnumarchivos'), 'notice');
+                    //return false;
                 }
                 $info_correo[] = $dato_correo;
             }
