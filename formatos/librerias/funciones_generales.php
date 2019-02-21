@@ -964,7 +964,7 @@ function buscar_dependencia($iformato = 0)
 
     $html = '';
     if ($numfilas > 1) {
-        $html .= '<select class ="full-width" name="dependencia" id="dependencia" class="required">';
+        $html .= '<select class ="full-width" name="dependencia" id="dependencia" required>';
         if ($dep_sel == '') {
             $html .= "<option value='' selected>Por favor seleccione...</option>";
         }
@@ -1572,7 +1572,7 @@ function submit_formato($formato, $iddoc = null)
                 }
             }
         }
-        echo ('<div class="col-md-9 form-group">
+        echo ('<div class="col-md-9 form-group px-0 pt-3">
                      <button class="btn btn-complete submit" type="submit" id="continuar" value="Continuar">Continuar</button>');
         if ($datos_f["numcampos"] && $datos_f[0]["item"]) {
             echo ('<button class="btn btn-danger cancel" onClick="javascript:redirecciona_padre(); return false;" id="cancel" value="Cancelar" >Cancelar</button>');

@@ -1038,7 +1038,8 @@ class GenerarFormato
                                     $param_url .= '"' . $key . '" => "' . $value . '",';
                                 }
 
-                                $texto .= '<?php $origen_' . $idcampo_ft . ' = array(
+                                $texto .= '<div class="form-group  ' . $obligatorio . '" id="tr_' . $campos[$h]["nombre"] . '">
+                                        <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label><?php $origen_' . $idcampo_ft . ' = array(
                                     "url" => "' . $params_ft["url"] . '",
                                     "ruta_db_superior" => $ruta_db_superior,';
                                 if (!empty($param_url)) {
@@ -1081,7 +1082,7 @@ class GenerarFormato
                                     "filter" => array()
                                 );
                                 $arbol_' . $idcampo_ft . ' = new ArbolFt("' . $campos[$h]["nombre"] . '", $origen_' . $idcampo_ft . ', $opciones_arbol_' . $idcampo_ft . ', $extensiones_' . $idcampo_ft . ');
-                                echo $arbol_' . $idcampo_ft . '->generar_html();?>';
+                                echo $arbol_' . $idcampo_ft . '->generar_html();?></div>';
                                 $arboles_fancy++;
                             }
 
@@ -1130,11 +1131,15 @@ class GenerarFormato
                             break;
                         case "radio":
                             /* En los campos de este tipo se debe validar que valor contenga un listado con las siguentes caracteristicas */
-                            $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
-	                        <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta"]) . $obliga . '</label>
-                                     ';
-
-                            $texto .= $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . '</div>';
+                            $classRadios = '';
+                            if($campos[$h]["obligatoriedad"]){
+                                $classRadios = 'required';
+                                $labelRequired = '<label id="'.$campos[$h]["no mbre"].'-error" class="error" f or="'.$campos[$h]["nombre"].'" style="display: none;"></label>';
+                            }
+                              /* En los campos de  e ste tipo se debe validar que  v alor contenga un list a do con las siguentes caracteristicas */
+                            $texto .= '<div class="form-group  '. $classRadios.'" id="tr_' . $campos[$h]["nombre"] . '">
+                            <label title="' . $campos[$h]["ayuda"] . '">' . $this->codifica($campos[$h]["etiqueta" ]) . $obliga .   '</label>';
+                            $texto .= $this->arma_funcion("genera_campo_listados_editar", $this->idformato . "," . $campos[$h]["idcampos_formato"], 'editar') . $labelRequired.'<br></div>';
                             break;
                         case "link":
                             $texto .= '<div class="form-group" id="tr_' . $campos[$h]["nombre"] . '">
@@ -2504,26 +2509,28 @@ span.fancytree-expander {
     private function procesar_componente_fecha($campo, $indice_tabindex, $accion)
     {
         $tabindex = ' tabindex="' . $indice_tabindex . ' "';
-        $classRequired = '';
-        $required = '';
-        if ($campo["obligatoriedad"]) {
-            $obliga = "*";
-            $classRequired = "form-group form-group-default";
-            $required = 'required';
-        } else {
-            $obliga = "";
-        }
+      
         //$formato_fecha="L";
         $formato_fecha = "YYYY-MM-DD";
         $texto = array();
 
         //$nombre_selector =  "dtp_" . $campo["nombre"];
         $nombre_selector = $campo["nombre"];
-
-        $texto[] = '<div class="form-group '.$classRequired.' id="tr_' . $campo["nombre"] . '">';
-        $texto[] = '<label title="' . $campo["ayuda"] . '">' . $this->codifica($campo["etiqueta"]) . $obliga . '</label>';
-        $texto[] = '<div class="input-group">';
-        $texto[] = '<input ' . $tabindex . ' type="text" class="form-control" ' . ' id="' . $campo["nombre"] . '"  '.$required.' name="' . $campo["nombre"] . '">';
+        $labelRequired = '';
+        $required = '';
+        if ($campo["obligatoriedad"]) {
+            $obliga = "*";
+            $labelRequired = '<label id="'.$campo["nombre"]. '-error" class="error" for="'.$campo["nombre"].'" style="display: none;"></label>';
+            $required = 'required';
+        } else {
+            $obliga = "";
+        }
+        $texto[] = '<div class="form-group" id="tr_' . $campo["nombre"] . '">';
+        $texto[] = '<label for="' . $campo["nombre"] . '">' . $this->codifica($campo["etiqueta"]) . '</label>';
+        $texto[] = $labelRequired;
+        $texto[] = '<div class="input-group date">';
+        $texto[] = '<input ' . $tabindex . ' type="text" class="form-control" ' . ' id="' . $campo["nombre"] . '"  ' . $required . ' name="' . $campo["nombre"] . '" />';
+        $texto[] = '<div class="input-group-append">';
         $texto[] = '<span class="input-group-text"><i class="fa fa-calendar"></i></span>';
 
         if (!empty($campo["opciones"])) {
@@ -2641,6 +2648,7 @@ span.fancytree-expander {
                 $("#content_container").height($(window).height());
             });
         </script>';
+        $texto[] = "</div>";
         $texto[] = "</div>";
 
         return implode("\n", $texto);
