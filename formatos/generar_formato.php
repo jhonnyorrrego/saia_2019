@@ -570,7 +570,7 @@ class GenerarFormato
             ];
             if ($consulta_campos_lectura['numcampos']) {
                 $campos_lectura = json_decode($consulta_campos_lectura[0]['valor'], true);
-                $consultaEtiquetas = busca_filtro_tabla("nombre", "campos_formato", "formato_idformato = {$this->idformato} and (nombre like '%{$campos_lectura['titulo']}%' or nombre like '%{$campos_lectura['linea']}%' or nombre like '%{$campos_lectura['ft_relacion']}%')", "", $conn);
+                $consultaEtiquetas = busca_filtro_tabla("nombre", "campos_formato", "formato_idformato = {$this->idformato} and (nombre like '%{$campos_lectura['titulo']}%' or nombre like '%{$campos_lectura['linea']}%' or nombre like '%{$campos_lectura['ft_relacion']}%' or nombre like '%{$campos_lectura['texto_descr']}%')", "", $conn);
                 if($consultaEtiquetas['numcampos']){
                     for ($k=0; $k <$consultaEtiquetas['numcampos'] ; $k++) {
                         $campos_excluir[] = $consultaEtiquetas[$k]['nombre'];
@@ -592,7 +592,6 @@ class GenerarFormato
             $condicion_adicional = " and A.nombre not in('" . implode("', '", $campos_excluir) . "')";
 
             $campos = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $this->idformato . " and etiqueta_html<>'campo_heredado' " . $condicion_adicional . "", "A.orden", $conn);
-
             if ($campos['numcampos']) {
                 $cuerpo_formato = '<style>
         .table.table-condensed thead tr td {
@@ -607,7 +606,17 @@ class GenerarFormato
         <div class="row">
             <div class="col-md-12">
                 <table class="table table-bordered table-condensed" style="width: 100%; text-align:left;margin-bottom: 5%;" border="1" cellspacing="0">
-                    <thead><tr><td><strong>Fecha</strong></td><td>{*fecha_creacion*}&nbsp;</td><td style="text-align: center;" rowspan="2">&nbsp;{*mostrar_codigo_qr*} <br>Radicado: {*formato_numero*}</td></tr><tr><td><strong>Asunto</strong></td><td>{*asunto_documento*}</td></tr></table><br><table class="table table-bordered table-condensed" style="width: 100%;"><tbody>';
+                    <thead>
+                    <tr>
+                    <td><strong>Fecha</strong></td>
+                    <td>{*fecha_creacion*}&nbsp;</td>
+                    <td style="text-align: center;" rowspan="2">&nbsp;{*mostrar_codigo_qr*} <br>Radicado: {*formato_numero*}</td></tr>
+                    <tr><td><strong>Asunto</strong></td>
+                    <td>{*asunto_documento*}</td></tr>
+                    </thead>
+                </table><br>
+                <table class="table table-bordered table-condensed" style="width: 100%;">
+                <thead>';
                 for ($i = 0; $i < $campos['numcampos']; $i++) {
                     $cuerpo_formato .= '<tr>
             <td style="width:50%;"><strong>' . $campos[$i]['etiqueta'] . '<strong></td>

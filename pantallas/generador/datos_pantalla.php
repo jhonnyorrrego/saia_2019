@@ -97,7 +97,6 @@ function procesar_cadena_json($resultado, $lista_valores)
 <head>
 <meta charset="utf-8" />
 <style type="text/css">
-
 .arbol_saia>.containerTableStyle {overflow:hidden;}
 ul.fancytree-container {
 	overflow: auto;
@@ -434,7 +433,6 @@ if ($formato["numcampos"]) {
     </div>
   </div>
 
-  <div class="container">
   <div class="row-fluid">
   	<input type="hidden" name="ruta_almacenamiento" id="ruta_almacenamiento_formato" value="{*fecha_ano*}/{*fecha_mes*}/{*idformato*}">
   	<!--input type="hidden" name="prefijo" id="prefijo_formato" value=""-->
@@ -454,7 +452,6 @@ if ($formato["numcampos"]) {
   ?>
     <div class="pull-right" id="cargando_enviar"></div>
      </div>
-  </div>
 </form>
 
 <?php

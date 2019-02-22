@@ -13,6 +13,8 @@ while ($max_salida > 0) {
 include_once $ruta_db_superior . 'db.php';
 include_once $ruta_db_superior . 'assets/librerias.php';
 
+$params = (!empty($_REQUEST)) ? $_REQUEST : [];
+
 global $conn;
 $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_componente', 'busqueda a,busqueda_componente b', 'a.idbusqueda = b.busqueda_idbusqueda and b.idbusqueda_componente=' . $_REQUEST['idbusqueda_componente'], '', $conn);
 ?>
@@ -26,13 +28,17 @@ $component = busca_filtro_tabla('a.ruta_libreria_pantalla,b.encabezado_component
 <script>
     $(function(){
         var baseUrl = $("script[data-baseurl]").data('baseurl');
+        var params = <?= json_encode($params); ?>;
+        var component = params.idbusqueda_componente;
         var encabezado = '<?= $component[0]["encabezado_componente"] ?>'
-        var component = '<?= $_REQUEST["idbusqueda_componente"] ?>';
-        var param = '<?= $_REQUEST["variable_busqueda"] ?>';
         var table = $('#table');
-
+        
         table.bootstrapTable({
-            url: `${baseUrl}app/busquedas/datosBootstrapTable.php?idbusqueda_componente=${component}&variable_busqueda=${param}`,
+            url: `${baseUrl}app/busquedas/datosBootstrapTable.php`,
+            queryParams: function (queryParams) {
+                queryParams=$.extend(queryParams, params);                
+                return queryParams;
+            },
             sidePagination: 'server',
             queryParamsType: 'other',
             cardView : true,

@@ -6,6 +6,8 @@ class ExpedienteDoc extends Model
     protected $fk_funcionario;
     protected $fk_expediente;
     protected $fk_documento;
+    protected $tipo;
+    protected $fecha_indice;
     protected $fecha;
 
     protected $dbAttributes;
@@ -22,13 +24,17 @@ class ExpedienteDoc extends Model
                 'fk_funcionario',
                 'fk_expediente',
                 'fk_documento',
-                'fecha'
+                'tipo',
+                'fecha',
+                'fecha_indice'
             ],
             'date' => [
-                'fecha'
+                'fecha',
+                'fecha_indice'
             ]
         ];
     }
+    
     /**
      * Retorna la cantidad de documentos de un expediente
      *

@@ -16,17 +16,17 @@ include_once $ruta_db_superior . 'pantallas/lib/librerias_cripto.php';
 $idfuncionario = encrypt_blowfish($_SESSION["idfuncionario"], LLAVE_SAIA_CRYPTO);
 $actualRow = ($_REQUEST['pageNumber'] - 1 ) * $_REQUEST['pageSize'];
 
-$params = http_build_query(array(
-    'idbusqueda_componente' =>  $_REQUEST["idbusqueda_componente"],
-    'variable_busqueda' =>  $_REQUEST["variable_busqueda"],
-    'idfunc' => $idfuncionario,
+$dataParams=[
+    'idfunc'=>$idfuncionario,
     'page' => $_REQUEST['pageNumber'],
     'rows' => $_REQUEST['pageSize'],
     'actual_row' => $actualRow
-));
+];
+unset($_REQUEST['pageNumber'],$_REQUEST['pageSize']);
 
-$url = PROTOCOLO_CONEXION . RUTA_PDF . '/pantallas/busquedas/servidor_busqueda.php?' . $params;
+$params=array_merge($dataParams,$_REQUEST);
 
+$url = PROTOCOLO_CONEXION . RUTA_PDF . '/pantallas/busquedas/servidor_busqueda_exp.php?' . http_build_query($params);
 
 if($_REQUEST['debug']){
     echo '<pre>';var_dump($url);echo '</pre>';exit;
