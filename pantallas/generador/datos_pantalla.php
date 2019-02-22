@@ -97,6 +97,7 @@ function procesar_cadena_json($resultado, $lista_valores)
 <head>
 <meta charset="utf-8" />
 <style type="text/css">
+
 .arbol_saia>.containerTableStyle {overflow:hidden;}
 ul.fancytree-container {
 	overflow: auto;
@@ -114,6 +115,7 @@ span.fancytree-checkbox.fancytree-radio {
 span.fancytree-expander {
     vertical-align: middle !important;
 }
+
 </style>
 
 	<script type="text/javascript" src="<?= $ruta_db_superior ?>pantallas/generador/editar_componente_generico.js"></script>
@@ -425,13 +427,12 @@ if ($formato["numcampos"]) {
     </div>
   </div>
 
-  <!-- <div class="control-group">
-    <label class="control-label" for="funcion_predeterminada">Ruta de aprobaci&oacute;n</label>
+ <div class="control-group">
+    <label class="control-label" for="funcion_predeterminada"><strong>Ruta de aprobaci&oacute;n</strong></label>
     <div class="controls">
-      Varios responsables<input type="checkbox" name="funcion_predeterminada[]" id="funcion_predeterminada_1" value="1" data-toggle="tooltip" title="Opción que realiza ruta de aprobación">
-      Digitalizaci&oacute;n<input type="checkbox" name="funcion_predeterminada[]" id="funcion_predeterminada_2" value="2" data-toggle="tooltip" title="Opción que indica si el formato permite digitalizar">
+      Varios responsables <input type="checkbox" name="funcion_predeterminada[]" id="funcion_predeterminada_1" value="1" data-toggle="tooltip" title="Opción que realiza ruta de aprobación">
     </div>
-  </div> -->
+  </div>
 
   <div class="container">
   <div class="row-fluid">
