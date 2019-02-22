@@ -395,6 +395,9 @@ abstract class Model extends StaticSql
                     $Instance->$key = $value;
                 }
             }
+            if(method_exists($Instance,'massiveAssigned')){
+                $Instance->massiveAssigned();
+            }
             $data[] = $Instance;
         }
 
@@ -560,4 +563,16 @@ abstract class Model extends StaticSql
         }
         return $response;
     }
+
+
+    public static function findBySql($sql, $getInstance = false)
+    {
+        $data = self::search($sql);
+        if ($getInstance) {
+            $className = get_called_class();
+            $data = $className::convertToObjectCollection($data);
+        }
+        return $data;
+    }
+
 }

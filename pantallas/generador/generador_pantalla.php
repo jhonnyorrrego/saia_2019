@@ -144,6 +144,7 @@ for ($i = 0; $i < $campos["numcampos"]; $i++) {
     #droppable ul{
        list-style:none;
        }
+
     </style>
     <script src="<?php echo $ruta_db_superior; ?>js/ckeditor/4.11/ckeditor_cust/ckeditor.js"></script>
 </head>
