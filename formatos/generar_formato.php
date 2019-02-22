@@ -594,14 +594,30 @@ class GenerarFormato
             $campos = busca_filtro_tabla("", "campos_formato A", "A.formato_idformato=" . $this->idformato . " and etiqueta_html<>'campo_heredado' " . $condicion_adicional . "", "A.orden", $conn);
 
             if ($campos['numcampos']) {
-                $cuerpo_formato = '<table class="table table-bordered" style="width: 100%;"><tbody><tr><td><strong>Fecha</strong></td><td>{*fecha_creacion*}&nbsp;</td><td style="text-align: center;" rowspan="2">&nbsp;{*mostrar_codigo_qr*} <br>Radicado: {*formato_numero*}</td></tr><tr><td><strong>Asunto</strong></td><td>{*asunto_documento*}</td></tr></table><br><table class="table table-bordered" style="width: 100%;"><tbody>';
+                $cuerpo_formato = '<style>
+        .table.table-condensed thead tr td {
+        padding-top: 2px;
+        padding-bottom: 2px;            
+    }
+    .table.table-condensed {
+        table-layout: auto;
+    }
+
+    </style>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-bordered table-condensed" style="width: 100%; text-align:left;margin-bottom: 5%;" border="1" cellspacing="0">
+                    <thead><tr><td><strong>Fecha</strong></td><td>{*fecha_creacion*}&nbsp;</td><td style="text-align: center;" rowspan="2">&nbsp;{*mostrar_codigo_qr*} <br>Radicado: {*formato_numero*}</td></tr><tr><td><strong>Asunto</strong></td><td>{*asunto_documento*}</td></tr></table><br><table class="table table-bordered" style="width: 100%;"><tbody>';
                 for ($i = 0; $i < $campos['numcampos']; $i++) {
                     $cuerpo_formato .= '<tr>
             <td style="width:50%;"><strong>' . $campos[$i]['etiqueta'] . '<strong></td>
             <td>{*' . $campos[$i]['nombre'] . '*}</td>
             </tr>';
                 }
-                $cuerpo_formato .= '</tbody></table><br><br>{*mostrar_estado_proceso*}';
+                $cuerpo_formato .= '</thead>
+                </table>
+            </div>
+        </div><br><br>{*mostrar_estado_proceso*}';
                 $update_formato = "UPDATE formato set cuerpo='" . $cuerpo_formato . "' where idformato=" . $this->idformato;
                 phpmkr_query($update_formato);
                 $datos_funcion = busca_filtro_tabla("", "funciones_formato A", "A.nombre_funcion in ('mostrar_codigo_qr','formato_numero','fecha_creacion','asunto_documento','mostrar_estado_proceso')", "", $conn);
